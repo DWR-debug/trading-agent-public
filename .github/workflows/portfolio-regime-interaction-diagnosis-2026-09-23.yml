@@ -51,7 +51,7 @@ jobs:
 
       - name: Dritte Failure-Diagnose laden
         env:
-          GH_TOKEN: __TOKEN__
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           curl --fail --location             --header "Authorization: Bearer ${GH_TOKEN}"             --header "Accept: application/vnd.github+json"             "https://api.github.com/repos/DWR-debug/trading-agent-public/actions/artifacts/10745788019/zip"             --output third_diagnosis.zip
