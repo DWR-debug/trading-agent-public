@@ -1,7 +1,57 @@
 # Trading Agent — Entwicklungsstand und Zielbild
 
-Stand: 2026-09-22
-Basis: aktueller `master`-Stand; synchronisiert nach PR #81 und den abgeschlossenen Regime-/Failure-Diagnostik-Layern
+Stand: 2026-09-23
+Basis: aktueller `master`-Stand nach PR #22, Commit `a2215f8`
+
+## Aktueller Forschungscheckpoint — 2026-09-23
+
+### Sicherheitsstatus
+
+- `PAPER_ONLY = True`
+- `LIVE_TRADING_ENABLED = False`
+- keine Live-Ausführung
+- keine Research-Orders
+- keine Gate-Lockerung
+
+### Evidenzlage
+
+Der unveränderte 50/50 + 10%-Vol-Budget-Kandidat wurde inzwischen auf drei vollständig symbol-disjunkten Validierungssätzen geprüft. Die Holdouts waren positiv, die Risiko-/Rolling-Gates jedoch wiederholt unzureichend. Der gemeinsame Failure-Fingerprint über die unabhängigen Validierungen umfasst insbesondere Holdout-Drawdown, Research-Drawdown, Rolling-Durchschnittsdrawdown und Rolling-Profit-Factor.
+
+Die Portfolio-/Sleeve-Interaktionsdiagnose über den zweiten und dritten Satz ergab:
+- 3 Research-Fenster mit gleichzeitig negativer Trend- und CS-Sleeve
+- 10 Fenster mit größerem Cross-Sectional-Drawdown
+- mittlere Sleeve-Renditekorrelation: 0,647708
+- mittlere Median-Skalierung des Vol-Budgets: 0,801701
+
+### Präregistrierter Risk-Timing-Control
+
+Zwei unabhängig gepaarte Controls vergleichen unverändert 63 gegen 21 Sessions realised volatility. Es wurde jeweils nur das Risikofenster verändert; Daten, Signale, Sleeve-Gewichte, Kosten, Execution und Research/Holdout-Split blieben fix.
+
+Zweiter Validierungssatz:
+- Research Return: 4,903 % -> 4,799 %
+- Research Drawdown: 24,869 % -> 20,476 %
+- Holdout Return: 10,324 % -> 9,861 %
+- Holdout Drawdown: 16,432 % -> 17,069 %
+
+Dritter Validierungssatz:
+- Research Return: 14,394 % -> 16,869 %
+- Research Drawdown: 21,273 % -> 22,676 %
+- Holdout Return: 18,485 % -> 13,611 %
+- Holdout Drawdown: 12,751 % -> 13,425 %
+
+Der 21-Sessions-Control zeigt damit keinen konsistenten Vorteil über die unabhängigen Holdouts. Es gibt deshalb derzeit keinen methodischen Grund, das bestehende 63-Sessions-Fenster global zu ersetzen oder daraus eine Produktionsänderung abzuleiten.
+
+### Archivierte Research-Controls
+
+- PR #19: Portfolio-Regime-/Sleeve-Interaktionsdiagnose — gemerged
+- PR #20: 63-vs-21 Risk-Timing-Control auf dem zweiten Validierungssatz — gemerged
+- PR #22: 63-vs-21 Risk-Timing-Control als unabhängige dritte Replikation — gemerged
+
+### Nächster methodischer Schritt
+
+Keine weitere Parameteroptimierung. Zuerst wird der bestehende Risk-Layer des 63-Sessions-Baselines auf den zwei unabhängigen Validation-Artefakten deskriptiv zerlegt: Beitrag der Vol-Skalierung, verbleibender Drawdown, Profit-Factor-/Return-Effekt und Kosten-/Turnover-Effekt. Erst danach kommt ein weiterer präregistrierter Counterfactual oder ein neuer unabhängiger Validierungssatz infrage.
+
+Der Kandidat, die Gate-Schwellen und die Produktionslogik bleiben bis dahin unverändert.
 
 ## Sicherheitsgrundsatz
 
