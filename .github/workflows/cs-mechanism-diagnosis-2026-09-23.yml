@@ -1,0 +1,100 @@
+name: Cross-Sectional Mechanism Diagnosis 2026-09-23
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - master
+    paths:
+      - "automation/cs_mechanism_diagnosis_2026_09_23.py"
+      - "tests/test_cs_mechanism_diagnosis_2026_09_23.py"
+      - ".github/workflows/cs-mechanism-diagnosis-2026-09-23.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Immutable Validation Artifact herunterladen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl --fail --location             --header "Authorization: Bearer ${GH_TOKEN}"             --header "Accept: application/vnd.github+json"             "https://api.github.com/repos/DWR-debug/trading-agent-public/actions/artifacts/10740188093/zip"             --output validation-artifact.zip
+          echo "eed3ec6105dec7bc8616ab989ce6f086107b249f7fa087f6e851709af6e47354  validation-artifact.zip" | sha256sum -c -
+          mkdir -p validation-artifact
+          unzip -q validation-artifact.zip -d validation-artifact
+
+      - name: Mechanismus-Diagnose ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.cs_mechanism_diagnosis_2026_09_23             --artifact-root validation-artifact             --output cs_mechanism_diagnosis_2026_09_23.json
+
+      - name: Diagnoseintegrität prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path("cs_mechanism_diagnosis_2026_09_23.json")
+          document = json.loads(path.read_text(encoding="utf-8"))
+          stored = document.pop("diagnostic_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(
+                  document,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+
+          assert stored == actual
+          assert document["status"] == "COMPLETED"
+          assert document["input"]["source_candidate_status"] == "BLOCKED"
+          assert document["input"]["selection_rule"].startswith("fixed 12-1 momentum")
+          assert document["safety"]["paper_only"] is True
+          assert document["safety"]["live_trading_enabled"] is False
+          assert document["safety"]["orders_enabled"] is False
+
+          print("MECHANISM_DIAGNOSIS_INTEGRITY_VALID")
+          print("DIAGNOSTIC_FINGERPRINT:", stored)
+          print("RESEARCH_SELECTION_SPREAD:", document["research"]["selection_spread_period_return"])
+          print("RESEARCH_FORWARD_NEGATIVE_RATIO:", document["research"]["negative_forward_spread_ratio"])
+          print("RESEARCH_REVERSAL_RATIO:", document["research"]["positive_score_negative_forward_spread_ratio"])
+          print("RESEARCH_SCORE_FORWARD_CORRELATION:", document["research"]["score_forward_spread_correlation"])
+          PY
+
+      - name: Diagnose-Artefakt sichern
+        uses: actions/upload-artifact@v4
+        with:
+          name: cs-mechanism-diagnosis-2026-09-23-${{ github.run_id }}
+          path: cs_mechanism_diagnosis_2026_09_23.json
+          if-no-files-found: error
+          retention-days: 30
