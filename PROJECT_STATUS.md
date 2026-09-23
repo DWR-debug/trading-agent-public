@@ -1,7 +1,7 @@
 # Trading Agent — Entwicklungsstand und Zielbild
 
 Stand: 2026-09-23
-Basis: aktueller `master`-Stand nach PR #22, Commit `a2215f8`
+Basis: aktueller `master`-Stand nach PR #24, Commit `e7ad9e0`
 
 ## Aktueller Forschungscheckpoint — 2026-09-23
 
@@ -47,11 +47,39 @@ Der 21-Sessions-Control zeigt damit keinen konsistenten Vorteil über die unabh�
 - PR #20: 63-vs-21 Risk-Timing-Control auf dem zweiten Validierungssatz — gemerged
 - PR #22: 63-vs-21 Risk-Timing-Control als unabhängige dritte Replikation — gemerged
 
+### Abgeschlossene Risk-Layer-Attribution
+
+PR #24 ist gemerged und die Attribution auf dem zweiten und dritten unabhängigen Validation-Artifact vollständig reproduziert.
+
+Zweiter Validierungssatz, Vol-Budget minus unskaliert:
+- Research Return: -44,603 Prozentpunkte
+- Research Drawdown: -13,337 Prozentpunkte
+- Research Profit Factor: -0,0384
+- Research Kosten-/Turnover-Drag: 5,656 Prozentpunkte
+- Holdout Return: -17,387 Prozentpunkte
+- Holdout Drawdown: -8,330 Prozentpunkte
+- Holdout Profit Factor: -0,0404
+- Holdout Kosten-/Turnover-Drag: 1,955 Prozentpunkte
+
+Dritter Validierungssatz, Vol-Budget minus unskaliert:
+- Research Return: -12,653 Prozentpunkte
+- Research Drawdown: -9,988 Prozentpunkte
+- Research Profit Factor: -0,0141
+- Research Kosten-/Turnover-Drag: 6,443 Prozentpunkte
+- Holdout Return: -9,199 Prozentpunkte
+- Holdout Drawdown: -3,907 Prozentpunkte
+- Holdout Profit Factor: -0,0237
+- Holdout Kosten-/Turnover-Drag: 2,428 Prozentpunkte
+
+Der gemeinsame Befund ist konsistent: Das bestehende 63-Sessions-/10%-Vol-Budget wirkt auf beiden unabhängigen Sätzen als deutlicher Drawdown-Dämpfer, reduziert aber gleichzeitig Return und Profit Factor. Der Kosten-/Turnover-Drag ist zusätzlich messbar, aber der Risk-Layer-Effekt besteht nicht ausschließlich aus Kosten.
+
+Die beiden 63-vs-21-Controls bleiben damit ebenfalls gemischt; die 21-Sessions-Variante wird nicht als globale Ersatzkonfiguration übernommen.
+
 ### Nächster methodischer Schritt
 
-Keine weitere Parameteroptimierung. Zuerst wird der bestehende Risk-Layer des 63-Sessions-Baselines auf den zwei unabhängigen Validation-Artefakten deskriptiv zerlegt: Beitrag der Vol-Skalierung, verbleibender Drawdown, Profit-Factor-/Return-Effekt und Kosten-/Turnover-Effekt. Erst danach kommt ein weiterer präregistrierter Counterfactual oder ein neuer unabhängiger Validierungssatz infrage.
+Keine Parameteroptimierung. Der nächste Control sollte die beobachtete Drawdown-Reduktion nun gegen die konkrete Form der De-Risking-Aktivierung zerlegen, insbesondere zeitliche Konzentration der Skalierungsphasen und ihr Zusammenhang mit den schlechtesten Portfolio-/Sleeve-Tagen. Das soll weiterhin auf bereits archivierten, unabhängigen Daten mit einer einzigen vorab definierten Kontrollfrage geschehen.
 
-Der Kandidat, die Gate-Schwellen und die Produktionslogik bleiben bis dahin unverändert.
+Kandidat, Gate-Schwellen und Produktionslogik bleiben unverändert.
 
 ## Sicherheitsgrundsatz
 
