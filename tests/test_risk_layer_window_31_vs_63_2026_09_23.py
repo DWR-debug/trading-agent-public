@@ -63,7 +63,7 @@ def test_consensus_requires_both_timing_and_non_deterioration_for_support():
 
     tradeoff = {
         "validation_1": case(True, True, False, False),
-        "validation_2": case(True, True, True, True),
+        "validation_2": case(True, True, False, False),
         "validation_3": case(True, True, True, True),
         "validation_4": case(False, False, True, True),
     }
