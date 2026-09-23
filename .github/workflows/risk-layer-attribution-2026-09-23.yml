@@ -72,7 +72,8 @@ jobs:
         run: |
           set -euo pipefail
           curl --fail --location             --header "Authorization: Bearer ${GH_TOKEN}"             --header "Accept: application/vnd.github+json"             "https://api.github.com/repos/DWR-debug/trading-agent-public/actions/artifacts/${SECOND_ARTIFACT_ID}/zip"             --output second.zip
-          echo "${SECOND_ARTIFACT_DIGEST}  second.zip" | sha256sum -c -
+          actual=$(sha256sum second.zip | awk '{print $1}')
+          test "${actual}" = "${SECOND_ARTIFACT_DIGEST}"
           mkdir -p artifact_root
           unzip -q second.zip -d artifact_root
 
@@ -82,7 +83,8 @@ jobs:
         run: |
           set -euo pipefail
           curl --fail --location             --header "Authorization: Bearer ${GH_TOKEN}"             --header "Accept: application/vnd.github+json"             "https://api.github.com/repos/DWR-debug/trading-agent-public/actions/artifacts/${THIRD_ARTIFACT_ID}/zip"             --output third.zip
-          echo "${THIRD_ARTIFACT_DIGEST}  third.zip" | sha256sum -c -
+          actual=$(sha256sum third.zip | awk '{print $1}')
+          test "${actual}" = "${THIRD_ARTIFACT_DIGEST}"
           unzip -q third.zip -d artifact_root
 
       - name: Risk-Layer-Attribution ausführen
