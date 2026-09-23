@@ -29,7 +29,7 @@ CASES = (
         "root": "research/independent_validation_2026_09_23",
         "trend_universe": "validation_2026_09_23_trend",
         "cs_universe": "validation_2026_09_23_cs",
-        "archive_fingerprint": "eed3ec6105dc7bc8616ab989ce6f086107b249f7fa087f6e851709af6e47354",
+        "archive_fingerprint": "eed3ec6105dec7bc8616ab989ce6f086107b249f7fa087f6e851709af6e47354",
     },
     {
         "name": "third_validation",
