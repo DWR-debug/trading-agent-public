@@ -3,14 +3,13 @@ name: Risk Timing Control 63 vs 21 — Public
 on:
   push:
     branches:
-      - research/risk-timing-control-2026-09-23-public
+      - research/risk-timing-control-63-vs-21-third-2026-09-23-public
   pull_request:
     types:
       - opened
       - synchronize
     branches:
       - master
-      - research/failure-diagnosis-2026-09-23
     paths:
       - "automation/risk_timing_control_63_vs_21.py"
       - "tests/test_risk_timing_control_63_vs_21_public.py"
@@ -30,8 +29,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     env:
-      SOURCE_RUN_ID: "35839443616"
-      SOURCE_ARTIFACT_ID: "10740188093"
+      SOURCE_RUN_ID: "35851876264"
+      SOURCE_ARTIFACT_ID: "10745697729"
       SOURCE_ARTIFACT_DIGEST: "eed3ec6105dec7bc8616ab989ce6f086107b249f7fa087f6e851709af6e47354"
 
     steps:
@@ -75,15 +74,15 @@ jobs:
       - name: Source Contract verifizieren
         run: |
           set -euo pipefail
-          test -f source_artifact/research/independent_validation_2026_09_23/report.json
-          test -f source_artifact/research/independent_validation_2026_09_23/adjusted_close_archive.json
-          test -f source_artifact/research/independent_validation_2026_09_23/data_trend_manifest.json
-          test -f source_artifact/research/independent_validation_2026_09_23/data_cs_manifest.json
+          test -f source_artifact/research/third_independent_validation_2026_09_23/report.json
+          test -f source_artifact/research/third_independent_validation_2026_09_23/adjusted_close_archive.json
+          test -f source_artifact/research/third_independent_validation_2026_09_23/data_trend_manifest.json
+          test -f source_artifact/research/third_independent_validation_2026_09_23/data_cs_manifest.json
           python - <<'PY'
           import json
           from pathlib import Path
 
-          root = Path("source_artifact/research/independent_validation_2026_09_23")
+          root = Path("source_artifact/research/third_independent_validation_2026_09_23")
           report = json.loads((root / "report.json").read_text(encoding="utf-8"))
           archive = json.loads((root / "adjusted_close_archive.json").read_text(encoding="utf-8"))
 
