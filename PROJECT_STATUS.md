@@ -1,7 +1,7 @@
 # Trading Agent — aktueller Gesamtcheckpoint
 
 Stand: 2026-09-23
-Basis: `master` nach PR #40.
+Basis: `master` nach PR #42 (`226c85ae68eddbeac8e94e334d63d70540e49172`).
 
 ## Gesamtstatus
 
@@ -40,6 +40,24 @@ Nicht erfüllt sind weiterhin die vier Risikoprobleme:
 Research-Drawdown, Rolling-Research-PF, durchschnittlicher Rolling-Drawdown
 und Holdout-Drawdown. Daher bleibt der Kandidat `BLOCKED` und wird nicht in
 Produktion übernommen.
+
+### 2a. Vierfacher unabhängiger Validierungs-Konsens
+
+Die feste Tagesarchitektur wurde inzwischen in vier vollständig symbol-disjunkten ETF-Familien unter demselben Protokoll geprüft. Alle vier Runs sind technisch `COMPLETED`, aber alle vier Kandidatenberichte bleiben `BLOCKED`.
+
+- Research-Drawdown-Gate: 4/4 Fehlversuche
+- Rolling-PF-Gate: 4/4 Fehlversuche
+- durchschnittliches Rolling-Drawdown-Gate: 4/4 Fehlversuche
+- Holdout-Drawdown-Gate: 3/4 Fehlversuche
+- Holdout-Rendite: 4/4 positiv
+- 1,5x- und 2x-Kostenstress: 4/4 nichtnegativ
+
+Der vierte Satz (SCHB, VO, VB, VXF, VXUS, VGK, IAU, AGG / KBE, KCE, IYZ, IHI, XHB) reproduziert den Risikobefund mit Research-DD 19,50%, Rolling-PF 1,064, Rolling-Average-DD 15,47% und Holdout-DD 16,03%; Holdout-Return bleibt +27,30%.
+
+Der Konsens liefert weiterhin keine universelle Ein-Sleeve-Ursache. Deshalb werden Parameter, Sleeve-Gewichte, Gates und Kosten nicht nachträglich verändert.
+
+Dauerhafte Evidenzablage: `docs/four_validation_consensus_2026_09_23.md` und `research/checkpoints/four_validation_consensus_2026_09_23.json`.
+
 
 ### 3. Micro-Trading: aktueller Abschluss des 5m-Controls
 
