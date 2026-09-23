@@ -1,7 +1,7 @@
 # Trading Agent — Entwicklungsstand und Zielbild
 
 Stand: 2026-09-23
-Basis: aktueller `master`-Stand nach PR #26, Commit `805e8fc`
+Basis: aktueller `master`-Stand nach PR #28, Commit `2e2efc0`
 
 ## Aktueller Forschungscheckpoint — 2026-09-23
 
@@ -93,9 +93,33 @@ Dritter Validierungssatz:
 
 Damit ist die Aktivierung im Research beider unabhängiger Sätze leicht um schlechte Portfolio-Tage konzentriert, aber diese Beziehung repliziert sich im Holdout nicht konsistent. Gleichzeitig zeigt insbesondere der zweite Holdout eine ausgeprägte Sättigung des bestehenden Risikolayers.
 
+### Abgeschlossene sleeve-spezifische Timing-Diagnose
+
+PR #28 ist gemerged. Die Aktivierung des bestehenden 63-Sessions-/10%-Volatilitätsbudgets wurde gegen die jeweils schlechtesten 5% Tage der beiden Sleeves untersucht.
+
+Research, zweiter Validierungssatz:
+- Trend-Konzentrationsverhältnis: 1,109
+- Cross-Sectional-Konzentrationsverhältnis: 1,160
+- Korrelation Skalierung vs. Trend-Rendite: -0,0108
+- Korrelation Skalierung vs. Cross-Sectional-Rendite: -0,0463
+
+Research, dritter Validierungssatz:
+- Trend-Konzentrationsverhältnis: 1,372
+- Cross-Sectional-Konzentrationsverhältnis: 1,512
+- Korrelation Skalierung vs. Trend-Rendite: -0,0204
+- Korrelation Skalierung vs. Cross-Sectional-Rendite: -0,0207
+
+Holdout, dritter Validierungssatz:
+- Trend-Konzentrationsverhältnis: 1,210
+- Cross-Sectional-Konzentrationsverhältnis: 1,166
+
+Im zweiten Holdout lag das Konzentrationsverhältnis für beide Sleeves bei 1,0, da der Risk-Layer bereits an allen 700 Holdout-Tagen aktiv war.
+
+Damit ist der Risk-Layer im Research beider unabhängiger Sätze etwas stärker um Cross-Sectional-Stress konzentriert als um Trend-Stress. Die sehr kleinen Scale-/Sleeve-Renditekorrelationen zeigen gleichzeitig, dass die De-Risking-Skalierung nicht einfach eine unmittelbare Reaktion auf den Tagesreturn einer einzelnen Sleeve ist. Der bislang stärkste gemeinsame Befund bleibt daher die lange Persistenz des Risk-Layers.
+
 ### Nächster methodischer Schritt
 
-Keine Parameteroptimierung. Der nächste Control zerlegt diese Timing-Struktur sleeve-spezifisch: Trend- und Cross-Sectional-Sleeve werden getrennt gegen ihre jeweils schlechtesten 5%-Tage untersucht. Ziel ist festzustellen, ob die De-Risking-Schicht vor allem auf gemeinsamen Portfolio-Stress oder auf die Schwäche einer einzelnen Sleeve reagiert.
+Keine Parameteroptimierung. Als nächstes wird die Persistenz selbst deskriptiv zerlegt: Start- und Stop-Ereignisse der 63-Sessions-De-Risking-Phasen werden gegen die vorhergehende realisierte Volatilität und die nachfolgenden 5-/20-/60-Tage-Portfolioergebnisse gestellt. Die Analyse wird vorab fest definierte Horizonte verwenden, ausschließlich auf den bereits archivierten unabhängigen Daten, und keine neuen Schwellen oder Parameter daraus ableiten.
 
 Kandidat, 63-Sessions-Fenster, Gate-Schwellen und Produktionslogik bleiben unverändert.
 
