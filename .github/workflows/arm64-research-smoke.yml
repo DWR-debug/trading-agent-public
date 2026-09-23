@@ -1,0 +1,114 @@
+name: ARM64 Research Smoke Test
+
+on:
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-arm64-smoke
+  cancel-in-progress: false
+
+jobs:
+  arm64-research-smoke:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Architektur prüfen
+        run: |
+          python - <<'PY'
+          import platform
+          assert platform.machine().lower() in {"aarch64", "arm64"}, platform.machine()
+          print(f"ARM64 OK: {platform.machine()}")
+          PY
+
+      - name: Abhängigkeiten installieren
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Paper-Trading-Sicherheit prüfen
+        run: |
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+
+      - name: Kleinen lokalen Research-Lauf prüfen
+        run: |
+          python - <<'PY'
+          from datetime import datetime, timedelta, timezone
+          from tempfile import TemporaryDirectory
+
+          from automation.backtest_runner import run_dataset
+          from backtesting.models import Candle
+          from config.parameter_space import ParameterSpace
+          from data.market_store import MarketDataStore
+
+          start = datetime(2026, 1, 1, tzinfo=timezone.utc)
+          candles = tuple(
+              Candle(
+                  timestamp=start + timedelta(minutes=i),
+                  open=100.0 + i,
+                  high=100.0 + i,
+                  low=100.0 + i,
+                  close=100.0 + i,
+                  volume=1000.0,
+              )
+              for i in range(50)
+          )
+
+          parameter_space = ParameterSpace(
+              momentum_lookbacks=[3],
+              mean_reversion_windows=[5],
+              mean_reversion_thresholds=[0.02],
+              risk_per_trade_values=[0.01],
+              leverage_values=[1.0],
+          )
+
+          with TemporaryDirectory() as tmp:
+              store = MarketDataStore(tmp)
+              store.save("TEST", "1h", candles)
+
+              result = run_dataset(
+                  "TEST",
+                  "1h",
+                  store=store,
+                  parameter_space=parameter_space,
+                  optimizer_top_n=1,
+                  train_ratio=0.7,
+                  rolling_train_size=20,
+                  rolling_test_size=10,
+                  rolling_step_size=10,
+                  minimum_trades_required=1,
+              )
+
+          assert result["safety"]["paper_only"] is True
+          assert result["safety"]["live_trading_enabled"] is False
+          assert result["candle_count"] == 50
+          assert result["research_candle_count"] == 45
+          assert result["holdout_candle_count"] == 5
+          assert result["walk_forward"]["train_candles"] == 31
+          assert result["walk_forward"]["test_candles"] == 14
+          assert result["rolling_walk_forward"]["summary"]["window_count"] == 2
+          assert result["holdout"]["trade_count"] >= 0
+          print("ARM64 LOCAL RESEARCH SMOKE OK")
+          PY

@@ -1,0 +1,142 @@
+name: Cross Sectional Momentum Same Universe Control
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - master
+    paths:
+      - "automation/cross_sectional_cross_asset_control.py"
+      - "tests/test_cross_sectional_cross_asset_control.py"
+      - ".github/workflows/cross-sectional-cross-asset-control.yml"
+      - "automation/cross_asset_trend_replication.py"
+      - "automation/cross_sectional_momentum_replication.py"
+      - "automation/prepare_research_data.py"
+      - "research/asset_universes.py"
+      - "data/yahoo_loader.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-cross-sectional-cross-asset-control
+  cancel-in-progress: true
+
+jobs:
+  control:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 240
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Paper-Trading-Sicherheit prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+
+      - name: Cross-Asset-Historie vorbereiten
+        run: |
+          set -euo pipefail
+          python -m automation.prepare_research_data             --target-count 3500             --universe cross_asset_trend             --output research/cs_cross_asset/manifest.json
+
+      - name: Datenmanifest verifizieren
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("research/cs_cross_asset/manifest.json")
+          manifest = json.loads(path.read_text(encoding="utf-8"))
+
+          assert manifest["universe"] == "cross_asset_trend"
+          assert manifest["source"] == "yahoo_chart"
+          assert manifest["target_count"] == 3500
+          assert len(manifest["datasets"]) == 8
+          assert all(
+              item["candle_count"] == 3500
+              for item in manifest["datasets"]
+          )
+          assert manifest["safety"]["paper_only"] is True
+          assert manifest["safety"]["live_trading_enabled"] is False
+          assert manifest["safety"]["orders_enabled"] is False
+
+          print("CS CROSS-ASSET MANIFEST VERIFIED")
+          print("MANIFEST_FINGERPRINT:", manifest["manifest_fingerprint"])
+          PY
+
+      - name: Cross-Sectional-Control ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.cross_sectional_cross_asset_control             --data-dir data/market_data             --manifest research/cs_cross_asset/manifest.json             --output research/cs_cross_asset/report.json
+
+      - name: Ergebnis-Fingerprint prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path("research/cs_cross_asset/report.json")
+          report = json.loads(path.read_text(encoding="utf-8"))
+
+          stored = report.pop("report_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(
+                  report,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+
+          assert stored == actual
+          assert report["status"] == "COMPLETED"
+          assert report["methodology"]["same_universe_as_time_series_trend"] is True
+          assert report["methodology"]["optimization_used"] is False
+          assert report["methodology"]["selection_profile_used"] is False
+          assert report["methodology"]["holdout_is_blind_to_selection"] is True
+          assert report["safety"]["paper_only"] is True
+          assert report["safety"]["live_trading_enabled"] is False
+          assert report["safety"]["orders_enabled"] is False
+
+          print("REPORT_FINGERPRINT: VALID")
+          print("REPORT_FINGERPRINT:", stored)
+          PY
+
+      - name: CS-Cross-Asset-Artefakte sichern
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cs-cross-asset-control-${{ github.run_id }}
+          path: |
+            research/cs_cross_asset/
+            data/market_data/
+          if-no-files-found: error
+          retention-days: 30

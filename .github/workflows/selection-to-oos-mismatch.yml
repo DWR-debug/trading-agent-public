@@ -1,0 +1,112 @@
+name: Selection-to-OOS Mismatch Analysis
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - master
+    paths:
+      - "automation/rolling_geometry_control.py"
+      - "automation/selection_to_oos_control.py"
+      - "automation/selection_to_oos_mismatch_analysis.py"
+      - "validation/rolling_walk_forward.py"
+      - "tests/test_rolling_walk_forward.py"
+      - "tests/test_selection_to_oos_control.py"
+      - "tests/test_selection_to_oos_mismatch_analysis.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-selection-to-oos-mismatch
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 360
+    env:
+      SOURCE_RUN_ID: "35750723097"
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+      - name: Paper-Trading-Sicherheit prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+      - name: Immutable Rolling-Control-Artifact laden
+        uses: actions/download-artifact@v5
+        with:
+          name: rolling-geometry-control
+          path: source_artifact
+          run-id: ${{ env.SOURCE_RUN_ID }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Source-Artifact prüfen
+        run: |
+          set -euo pipefail
+          test -f source_artifact/research/rolling_geometry_control/rolling_geometry_control.json
+          test -f source_artifact/research/rolling_geometry_control/data_manifest.json
+          test -f source_artifact/research/rolling_geometry_control/raw_archive_manifest.json
+          test -d source_artifact/data/market_data
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          root = Path("source_artifact/research/rolling_geometry_control")
+          rolling = json.loads((root / "rolling_geometry_control.json").read_text(encoding="utf-8"))
+          manifest = json.loads((root / "data_manifest.json").read_text(encoding="utf-8"))
+          archive = json.loads((root / "raw_archive_manifest.json").read_text(encoding="utf-8"))
+          assert rolling["diagnostic_type"] == "rolling_geometry_time_phase_control"
+          assert rolling["target_count"] == 5000
+          assert rolling["research_candle_count"] == 4500
+          assert manifest["manifest_fingerprint"] == archive["manifest_fingerprint"]
+          assert manifest["provenance"]["run_id"] == os.environ["SOURCE_RUN_ID"]
+          assert rolling["safety"]["paper_only"] is True
+          assert rolling["safety"]["live_trading_enabled"] is False
+          assert rolling["safety"]["orders_enabled"] is False
+          print("SOURCE ARTIFACT VERIFIED")
+          PY
+      - name: Selection-to-OOS-Control reproduzieren
+        run: |
+          set -euo pipefail
+          python -m automation.selection_to_oos_control \
+            --source-rolling-json source_artifact/research/rolling_geometry_control/rolling_geometry_control.json \
+            --source-manifest source_artifact/research/rolling_geometry_control/data_manifest.json \
+            --archive-manifest source_artifact/research/rolling_geometry_control/raw_archive_manifest.json \
+            --data-dir source_artifact/data/market_data \
+            --output-dir research/selection_to_oos_control
+      - name: Selection-to-OOS-Mismatch analysieren
+        run: |
+          set -euo pipefail
+          python -m automation.selection_to_oos_mismatch_analysis \
+            --control-json research/selection_to_oos_control/selection_to_oos_control.json \
+            --archive-manifest source_artifact/research/rolling_geometry_control/raw_archive_manifest.json \
+            --output-dir research/selection_to_oos_mismatch
+      - name: Research-Artefakte sichern
+        uses: actions/upload-artifact@v4
+        with:
+          name: selection-to-oos-mismatch-analysis
+          path: |
+            research/selection_to_oos_control/
+            research/selection_to_oos_mismatch/
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,134 @@
+name: Autonomous Stock Research
+
+on:
+  schedule:
+    - cron: "30 3 * * *"
+  workflow_dispatch:
+    inputs:
+      universe:
+        description: Aktienuniversum
+        required: true
+        default: small_cap_high_volatility
+        type: choice
+        options:
+          - small_cap_high_volatility
+          - liquid_high_volatility
+          - penny_stock
+          - european_volatile
+          - benchmark
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/research-autonomous.yml"
+      - "automation/backtest_runner.py"
+      - "automation/one_command_research.py"
+      - "automation/prepare_research_data.py"
+      - "automation/research_workflow.py"
+      - "automation/research_run.py"
+      - "research/**"
+      - "validation/research_gates.py"
+      - "validation/walk_forward.py"
+      - "validation/rolling_walk_forward.py"
+      - "backtesting/**"
+      - "optimization/**"
+      - "strategies/**"
+      - "config/**"
+      - "data/yahoo_loader.py"
+      - "data/market_store.py"
+      - "data/market_updater.py"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-autonomous-research-${{ inputs.universe || 'small_cap_high_volatility' }}
+  cancel-in-progress: false
+
+env:
+  RESEARCH_UNIVERSE: ${{ inputs.universe || 'small_cap_high_volatility' }}
+
+jobs:
+  research:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 120
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Paper-Trading-Sicherheit prüfen
+        run: |
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+
+      - name: Aktien-Research mit adaptiver Historie ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.one_command_research             --universe "${RESEARCH_UNIVERSE}"             --minimum-count 1000
+
+      - name: Research-Ergebnis zusammenfassen und Gate-Status protokollieren
+        run: |
+          set -euo pipefail
+          report=$(find "research/runs/${RESEARCH_UNIVERSE}/reports"             -maxdepth 1 -type f -name 'analysis_*.json' -print | sort | tail -n 1)
+          test -n "${report}"
+          python - "${report}" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          path = Path(sys.argv[1])
+          report = json.loads(path.read_text(encoding="utf-8"))
+
+          from automation.research_workflow import verify_result_fingerprint
+
+          verify_result_fingerprint(report)
+          print("RESEARCH_RESULT_FINGERPRINT: VALID")
+
+          status = report.get("status")
+          failed = report.get("failed_gates", [])
+          fingerprint = report.get("run_manifest", {}).get("run_fingerprint")
+
+          print("RESEARCH_REPORT:", path)
+          print("RESEARCH_STATUS:", status)
+          print("RUN_FINGERPRINT:", fingerprint)
+          print("FAILED_GATES:", failed)
+
+          if status not in {"PASSED", "BLOCKED"}:
+              raise SystemExit(
+                  "UNGÜLTIGER RESEARCH-STATUS: " + repr(status)
+              )
+
+          print(
+              "RESEARCH GATES:",
+              "PASSED" if status == "PASSED" else "BLOCKED",
+          )
+          PY
+
+      - name: Research-Artefakte sichern
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: autonomous-research-${{ env.RESEARCH_UNIVERSE }}-${{ github.run_id }}
+          path: |
+            research/runs/${{ env.RESEARCH_UNIVERSE }}/
+            data/market_data/
+          if-no-files-found: warn
+          retention-days: 30

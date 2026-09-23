@@ -1,0 +1,96 @@
+name: Training Selection Stability Control
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-selection-stability
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 360
+    env:
+      SOURCE_SELECTION_RUN_ID: "35757944587"
+      SOURCE_ROLLING_RUN_ID: "35750723097"
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Tests
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+          python -m pytest -q
+      - name: Selection-to-OOS-Artifact laden
+        uses: actions/download-artifact@v5
+        with:
+          name: selection-to-oos-mismatch-analysis
+          path: source_selection_artifact
+          run-id: ${{ env.SOURCE_SELECTION_RUN_ID }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Immutable Rolling-Control-Artifact laden
+        uses: actions/download-artifact@v5
+        with:
+          name: rolling-geometry-control
+          path: source_rolling_artifact
+          run-id: ${{ env.SOURCE_ROLLING_RUN_ID }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Source prüfen
+        run: |
+          set -euo pipefail
+          test -f source_selection_artifact/selection_to_oos_control/selection_to_oos_control.json
+          test -f source_rolling_artifact/research/rolling_geometry_control/data_manifest.json
+          test -f source_rolling_artifact/research/rolling_geometry_control/raw_archive_manifest.json
+          test -d source_rolling_artifact/data/market_data
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          selection_root = Path("source_selection_artifact/selection_to_oos_control")
+          rolling_root = Path("source_rolling_artifact/research/rolling_geometry_control")
+          control = json.loads((selection_root / "selection_to_oos_control.json").read_text())
+          rolling = json.loads((rolling_root / "rolling_geometry_control.json").read_text())
+          manifest = json.loads((rolling_root / "data_manifest.json").read_text())
+          archive = json.loads((rolling_root / "raw_archive_manifest.json").read_text())
+          assert control["diagnostic_type"] == "rolling_selection_to_oos_control"
+          assert control["source_diagnostic_fingerprint"] == rolling["diagnostic_fingerprint"]
+          assert control["source_run_id"] == os.environ["SOURCE_ROLLING_RUN_ID"]
+          assert manifest["manifest_fingerprint"] == control["source_manifest_fingerprint"]
+          assert archive["manifest_fingerprint"] == manifest["manifest_fingerprint"]
+          assert control["safety"]["paper_only"] is True
+          assert control["safety"]["live_trading_enabled"] is False
+          assert control["safety"]["orders_enabled"] is False
+          assert rolling["safety"]["paper_only"] is True
+          assert rolling["safety"]["live_trading_enabled"] is False
+          assert rolling["safety"]["orders_enabled"] is False
+          print("SOURCE VERIFIED")
+          PY
+      - name: Training-only Selection-Stability-Control
+        run: |
+          python -m automation.selection_stability_control \
+            --control-json source_selection_artifact/selection_to_oos_control/selection_to_oos_control.json \
+            --archive-manifest source_rolling_artifact/research/rolling_geometry_control/data_manifest.json \
+            --data-dir source_rolling_artifact/data/market_data \
+            --output-dir research/selection_stability
+      - name: Research-Artefakt sichern
+        uses: actions/upload-artifact@v4
+        with:
+          name: training-selection-stability-control
+          path: research/selection_stability/
+          if-no-files-found: error
+          retention-days: 30

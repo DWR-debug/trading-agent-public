@@ -1,0 +1,71 @@
+name: Candidate Migration Analysis
+
+on:
+  push:
+    branches:
+      - diagnostics/candidate-migration-2026-09-22
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    env:
+      SOURCE_RUN_ID: "35747170025"
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: python -m pip install pytest
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+      - name: Paper-Trading-Sicherheit prüfen
+        run: |
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+      - name: Quellartefakt laden
+        uses: actions/download-artifact@v5
+        with:
+          name: rolling-geometry-control
+          path: source_artifact
+          run-id: 35747170025
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Quellreport verifizieren
+        run: |
+          set -euo pipefail
+          test -f source_artifact/rolling_geometry_control.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("source_artifact/rolling_geometry_control.json")
+          r=json.loads(p.read_text(encoding="utf-8"))
+          assert r["diagnostic_fingerprint"]
+          assert r["diagnostic_type"] == "rolling_geometry_time_phase_control"
+          print("SOURCE_REPORT OK")
+          PY
+      - name: Migrationsanalyse ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.candidate_migration_analysis \
+            --input-json source_artifact/rolling_geometry_control.json \
+            --output-dir research/candidate_migration
+      - name: Analyse-Artefakt sichern
+        uses: actions/upload-artifact@v4
+        with:
+          name: candidate-migration-analysis
+          path: research/candidate_migration/
+          if-no-files-found: error
+          retention-days: 30

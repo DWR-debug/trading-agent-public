@@ -1,0 +1,144 @@
+name: Literature Strategy Lab
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - master
+    paths:
+      - "automation/literature_strategy_lab.py"
+      - "tests/test_literature_strategy_lab.py"
+      - ".github/workflows/literature-strategy-lab.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-literature-strategy-lab
+  cancel-in-progress: true
+
+env:
+  SOURCE_RUN_ID: "35766606233"
+  SOURCE_ARTIFACT_NAME: "rolling-geometry-archive-replay-exact"
+
+jobs:
+  lab:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 180
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Paper-Trading-Sicherheit prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+
+      - name: Exaktes Datenarchiv laden
+        uses: actions/download-artifact@v5
+        with:
+          name: ${{ env.SOURCE_ARTIFACT_NAME }}
+          path: source_artifact
+          run-id: ${{ env.SOURCE_RUN_ID }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Datenidentität verifizieren
+        run: |
+          set -euo pipefail
+          test -f source_artifact/research/rolling_geometry_control/data_manifest.json
+          test -d source_artifact/data/market_data
+
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          root = Path("source_artifact/research/rolling_geometry_control")
+          manifest = json.loads((root / "data_manifest.json").read_text(encoding="utf-8"))
+
+          expected_archive_digest = (
+              "sha256:128d99bd79978181e5660cda3bcd34a969e8bd8ac9ae7374b3eba369b25c7599"
+          )
+          assert manifest["provenance"]["run_id"] == "35766606233"
+          assert manifest["target_count"] == 5000
+          assert manifest["manifest_fingerprint"] == (
+              "c44fb5f5f651796bd2fee073c46d15153ac6f4df47008fe324666a91dc6aa379"
+          )
+          print("ARCHIVE_ARTIFACT_DIGEST:", expected_archive_digest)
+          print("MANIFEST_FINGERPRINT:", manifest["manifest_fingerprint"])
+          PY
+
+      - name: Literaturinformiertes Strategie-Labor ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.literature_strategy_lab             --data-dir source_artifact/data/market_data             --manifest source_artifact/research/rolling_geometry_control/data_manifest.json             --output research/literature_strategy_lab/report.json
+
+      - name: Ergebnis-Fingerprint und Methodik prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path("research/literature_strategy_lab/report.json")
+          report = json.loads(path.read_text(encoding="utf-8"))
+
+          stored = report.pop("report_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(
+                  report,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+
+          assert stored == actual
+          assert report["status"] == "COMPLETED"
+          assert report["methodology"]["strategy_rules_are_pre_registered"] is True
+          assert report["methodology"]["optimization_used"] is False
+          assert report["methodology"]["selection_profile_used"] is False
+          assert report["methodology"]["execution"] == (
+              "decision_at_close_t_then_next_session_open_execution"
+          )
+          assert report["safety"]["paper_only"] is True
+          assert report["safety"]["live_trading_enabled"] is False
+          assert report["safety"]["orders_enabled"] is False
+
+          print("REPORT_FINGERPRINT: VALID")
+          print("REPORT_FINGERPRINT:", stored)
+          PY
+
+      - name: Labor-Artefakte sichern
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: literature-strategy-lab-${{ github.run_id }}
+          path: research/literature_strategy_lab/
+          if-no-files-found: error
+          retention-days: 30

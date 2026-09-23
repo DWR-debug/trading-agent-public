@@ -1,0 +1,96 @@
+name: Controlled Hypothesis Re-Experiment
+
+on:
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  REPLAY_RUN_ID: "35766606233"
+  REPLAY_ARTIFACT_NAME: "rolling-geometry-archive-replay-exact"
+  REFERENCE_RUN_ID: "35747170025"
+  REFERENCE_DATA_FINGERPRINTS: "IWM=51a385563ebd0a3a659d844bcbeccab354f79fd52c1d521633865ff0de476821,QQQ=7923245473b99e9f9f32dafe58d48c3ba101454048eba04a9c14508aacc3b52f,SPY=8c62c32b84fa68b7633670302f90a7f935dc047a1a7ae33cc0e561e79f8266a3"
+
+jobs:
+  verify:
+    if: ${{ github.head_ref == 'research/controlled-hypothesis-reexperiment-2026-09-22' && github.event_name == 'pull_request' }}
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: python -m pip install pytest
+      - name: Gegenexperiment-Regressionstests
+        run: python -m pytest -q tests/test_controlled_hypothesis_reexperiment.py
+      - name: Paper-Trading-Sicherheit prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+
+  reexperiment:
+    if: ${{ (github.event_name == 'pull_request' && github.head_ref == 'research/controlled-hypothesis-reexperiment-2026-09-22') || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 45
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: python -m pip install pytest
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+      - name: Paper-Trading-Sicherheit prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+      - name: Verifiziertes Replay-Artifact laden
+        uses: actions/download-artifact@v5
+        with:
+          name: ${{ env.REPLAY_ARTIFACT_NAME }}
+          path: source_replay
+          run-id: ${{ env.REPLAY_RUN_ID }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Replay-Quelle und Roharchiv laden
+        run: |
+          set -euo pipefail
+          find source_replay -maxdepth 6 -type f -print | sort
+          test -d source_replay
+          echo "EXACT REPLAY ARTIFACT DOWNLOADED"
+      - name: Gepaarte kontrollierte Gegenanalyse
+        run: |
+          set -euo pipefail
+          python -m automation.controlled_hypothesis_reexperiment \
+            --rolling-json source_replay/research/rolling_geometry_control/rolling_geometry_control.json \
+            --manifest-json source_replay/research/rolling_geometry_control/data_manifest.json \
+            --data-dir source_replay/data/market_data \
+            --output-dir research/controlled_hypothesis_reexperiment
+      - name: Gegenexperiment-Artifact sichern
+        uses: actions/upload-artifact@v4
+        with:
+          name: controlled-hypothesis-reexperiment
+          path: research/controlled_hypothesis_reexperiment/
+          if-no-files-found: error
+          retention-days: 30

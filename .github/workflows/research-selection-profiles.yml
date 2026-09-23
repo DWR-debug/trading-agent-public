@@ -1,0 +1,115 @@
+name: Selection Profile Research Experiments
+
+on:
+  workflow_dispatch:
+    inputs:
+      universe:
+        description: Aktienuniversum
+        required: true
+        default: small_cap_high_volatility
+        type: choice
+        options:
+          - small_cap_high_volatility
+          - liquid_high_volatility
+          - penny_stock
+          - european_volatile
+          - benchmark
+      minimum_count:
+        description: Mindestanzahl historischer Candles
+        required: true
+        default: "1000"
+        type: string
+      target_count:
+        description: Zielanzahl historischer Candles je Asset
+        required: true
+        default: "5000"
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-selection-experiments-${{ inputs.universe }}
+  cancel-in-progress: false
+
+env:
+  RESEARCH_UNIVERSE: ${{ inputs.universe }}
+  RESEARCH_MINIMUM_COUNT: ${{ inputs.minimum_count }}
+  RESEARCH_TARGET_COUNT: ${{ inputs.target_count }}
+
+jobs:
+  selection-experiments:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 360
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Paper-Trading-Sicherheit prüfen
+        run: |
+          python - <<'PY'
+          from config import settings
+
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+
+      - name: Selection-Profile vollständig ausführen
+        run: |
+          python -m automation.selection_profile_experiments \
+            --universe "${RESEARCH_UNIVERSE}" \
+            --minimum-count "${RESEARCH_MINIMUM_COUNT}" \
+            --target-count "${RESEARCH_TARGET_COUNT}"
+
+      - name: Evidenzfamilie aggregieren
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from automation.research_evidence import write_evidence_summary
+
+          root = (
+              Path("research/runs")
+              / "${{ env.RESEARCH_UNIVERSE }}"
+              / "selection_profiles"
+          )
+          reports = []
+          for report_path in sorted(root.glob("*/reports/analysis_*.json")):
+              reports.append(json.loads(report_path.read_text(encoding="utf-8")))
+
+          if not reports:
+              raise SystemExit("Keine Research-Reports für Evidenzfamilie gefunden.")
+
+          summary = write_evidence_summary(
+              root / "evidence_summary.json",
+              reports,
+          )
+          print("EVIDENCE_FAMILY_REPORT:", root / "evidence_summary.json")
+          print("EVIDENCE_FINGERPRINT:", summary["evidence_fingerprint"])
+          print("EVIDENCE_REPORT_COUNT:", summary["report_count"])
+          PY
+      - name: Selection-Experiment-Artefakte sichern
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: selection-profile-experiment-${{ env.RESEARCH_UNIVERSE }}-${{ github.run_id }}
+          path: research/runs/${{ env.RESEARCH_UNIVERSE }}/selection_profiles/
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,93 @@
+name: Prepare Research Data
+
+# Automatic Research trigger verification
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_count:
+        description: Historische Candles je Datensatz
+        required: true
+        default: "10000"
+        type: string
+  schedule:
+    - cron: "15 2 * * *"
+  push:
+    branches:
+      - master
+    paths:
+      - "data/binance_loader.py"
+      - "data/market_updater.py"
+      - "data/market_store.py"
+      - "automation/prepare_research_data.py"
+      - ".github/workflows/prepare-research-data.yml"
+
+permissions:
+  contents: read
+
+env:
+  TARGET_COUNT: ${{ inputs.target_count || '10000' }}
+
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Tests
+        run: python -m pytest -q
+
+      - name: Paper-Trading-Sicherheit prüfen
+        run: |
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+
+      - name: Historische Research-Daten vorbereiten
+        run: python -m automation.prepare_research_data --target-count "$TARGET_COUNT"
+
+      - name: Manifest validieren
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path("research/data_manifest.json")
+          data = json.loads(path.read_text(encoding="utf-8"))
+
+          expected_count = int(os.environ["TARGET_COUNT"])
+          assert data["source"] == "binance_public_klines"
+          assert data["safety"]["paper_only"] is True
+          assert data["safety"]["live_trading_enabled"] is False
+          assert data["safety"]["orders_enabled"] is False
+          assert len(data["datasets"]) == 4
+          for item in data["datasets"]:
+              assert item["candle_count"] == expected_count
+          print("RESEARCH DATA MANIFEST OK")
+
+      - name: Daten als Artifact sichern
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-data-${{ github.run_id }}
+          path: |
+            data/market_data/**/*.csv
+            research/data_manifest.json
+          if-no-files-found: error
+          retention-days: 14
