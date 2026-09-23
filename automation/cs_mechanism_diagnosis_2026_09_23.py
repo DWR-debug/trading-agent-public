@@ -234,19 +234,29 @@ def _summary(rows: list[dict], rebalances: list[dict]) -> dict:
     }
 
 
-def _cost_and_interaction_summary(simulated: list[dict], selection_rows: list[dict], start: int, end: int) -> dict:
+def _cost_and_interaction_summary(
+    simulated: list[dict],
+    portfolio_turnover: list[float],
+    selection_rows: list[dict],
+    start: int,
+    end: int,
+) -> dict:
     segment_sim = simulated[start:end]
     segment_selection = selection_rows[start:end]
     gross = [item["gross_return"] for item in segment_sim]
     net = [item["net_return"] for item in segment_sim]
-    total_turnover = sum(item["turnover"] for item in segment_sim)
+    total_turnover = sum(portfolio_turnover[start:end])
     cs_turnover = sum(item["cross_sectional_turnover"] for item in segment_selection)
 
     return {
         "portfolio_gross_period_return": _period_return(gross),
         "portfolio_net_period_return": _period_return(net),
         "portfolio_cost_drag_compounded_difference": _period_return(gross) - _period_return(net),
-        "cross_sectional_turnover_share": (0.5 * cs_turnover) / total_turnover if total_turnover > 0.0 else 0.0,
+        "cross_sectional_turnover_share": (
+            (0.5 * cs_turnover) / total_turnover
+            if total_turnover > 0.0
+            else 0.0
+        ),
     }
 
 
@@ -299,9 +309,35 @@ def run_diagnosis(artifact_root: Path, output_path: Path) -> dict:
     if abs(recomputed - reference["research"]["period_return"]) > 1e-12:
         raise ValueError("Research-Return-Reproduktion fehlgeschlagen.")
 
+    portfolio_turnover = []
+    previous_scale = 1.0
+    for row, sim in zip(rows, simulated):
+        turnover = sim["scale"] * row["turnover"] + abs(sim["scale"] - previous_scale)
+        portfolio_turnover.append(turnover)
+        previous_scale = sim["scale"]
+
+    if len(portfolio_turnover) != len(simulated):
+        raise ValueError("Turnover-Rekonstruktion hat eine unerwartete Länge.")
+
+    timestamp_mismatches = [
+        index
+        for index, (selection_row, portfolio_row) in enumerate(
+            zip(selection_rows, rows[:RESEARCH_COUNT])
+        )
+        if selection_row["timestamp"] != portfolio_row["timestamp"]
+    ]
+    if timestamp_mismatches:
+        raise ValueError(
+            "Cross-Sectional- und Portfolio-Zeitachse sind nicht identisch."
+        )
+
     windows = []
     for index, start, end in WINDOWS:
-        window_rebalances = [item for item in research_rebalances if start <= item["index"] < end]
+        window_rebalances = [
+            item
+            for item in research_rebalances
+            if start <= item["index"] < end
+        ]
         windows.append(
             {
                 "window_index": index,
@@ -309,7 +345,11 @@ def run_diagnosis(artifact_root: Path, output_path: Path) -> dict:
                 "end_timestamp": selection_rows[end - 1]["timestamp"].isoformat(),
                 "selection": _summary(selection_rows[start:end], window_rebalances),
                 "cost_and_interaction": _cost_and_interaction_summary(
-                    simulated, selection_rows, start, end
+                    simulated,
+                    portfolio_turnover,
+                    selection_rows,
+                    start,
+                    end,
                 ),
             }
         )
