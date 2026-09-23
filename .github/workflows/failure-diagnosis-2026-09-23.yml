@@ -1,0 +1,63 @@
+name: Failure Risk Diagnosis 2026-09-23
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - master
+    paths:
+      - "automation/failure_diagnosis_2026_09_23.py"
+      - "tests/test_failure_diagnosis_2026_09_23.py"
+      - ".github/workflows/failure-diagnosis-2026-09-23.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Immutable Validation Artifact herunterladen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl --fail --location             --header "Authorization: Bearer ${GH_TOKEN}"             --header "Accept: application/vnd.github+json"             "https://api.github.com/repos/DWR-debug/trading-agent-public/actions/artifacts/10740188093/zip"             --output validation-artifact.zip
+          echo "eed3ec6105dec7bc8616ab989ce6f086107b249f7fa087f6e851709af6e47354  validation-artifact.zip" | sha256sum -c -
+          mkdir -p validation-artifact
+          unzip -q validation-artifact.zip -d validation-artifact
+
+      - name: Failure-/Risk-Diagnose ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.failure_diagnosis_2026_09_23             --artifact-root validation-artifact             --output failure_diagnosis_2026_09_23.json
+
+      - name: Diagnose-Artefakt sichern
+        uses: actions/upload-artifact@v4
+        with:
+          name: failure-diagnosis-2026-09-23-${{ github.run_id }}
+          path: failure_diagnosis_2026_09_23.json
+          if-no-files-found: error
+          retention-days: 30
