@@ -1,7 +1,7 @@
 # Trading Agent — Entwicklungsstand und Zielbild
 
 Stand: 2026-09-23
-Basis: aktueller `master`-Stand nach PR #24, Commit `e7ad9e0`
+Basis: aktueller `master`-Stand nach PR #26, Commit `805e8fc`
 
 ## Aktueller Forschungscheckpoint — 2026-09-23
 
@@ -75,11 +75,29 @@ Der gemeinsame Befund ist konsistent: Das bestehende 63-Sessions-/10%-Vol-Budget
 
 Die beiden 63-vs-21-Controls bleiben damit ebenfalls gemischt; die 21-Sessions-Variante wird nicht als globale Ersatzkonfiguration übernommen.
 
+### Abgeschlossene Timing-Diagnose
+
+PR #26 ist gemerged. Die zeitliche Aktivierung des bestehenden 63-Sessions-/10%-Volatilitätsbudgets wurde auf beiden unabhängigen Validation-Artefakten gegen die schlechtesten 5% der Portfolio-Tage untersucht.
+
+Zweiter Validierungssatz:
+- Research De-Risking: 84,35% aller Tage; schlechteste 5%: 90,71%; Konzentrationsverhältnis 1,076
+- 93,57% der schlechtesten 5%-Tage hatten bereits am Vortag De-Risking
+- mittlere De-Risking-Phase: 181,5 Tage; maximale Phase: 971 Tage
+- Holdout: De-Risking auf 100% der 700 Tage
+
+Dritter Validierungssatz:
+- Research De-Risking: 45,82% aller Tage; schlechteste 5%: 50,71%; Konzentrationsverhältnis 1,107
+- 49,29% der schlechtesten 5%-Tage hatten bereits am Vortag De-Risking
+- mittlere De-Risking-Phase: 75,4 Tage; maximale Phase: 639 Tage
+- Holdout De-Risking: 66,14% aller Tage; schlechteste 5%: 62,86%; Konzentrationsverhältnis 0,950
+
+Damit ist die Aktivierung im Research beider unabhängiger Sätze leicht um schlechte Portfolio-Tage konzentriert, aber diese Beziehung repliziert sich im Holdout nicht konsistent. Gleichzeitig zeigt insbesondere der zweite Holdout eine ausgeprägte Sättigung des bestehenden Risikolayers.
+
 ### Nächster methodischer Schritt
 
-Keine Parameteroptimierung. Der nächste Control sollte die beobachtete Drawdown-Reduktion nun gegen die konkrete Form der De-Risking-Aktivierung zerlegen, insbesondere zeitliche Konzentration der Skalierungsphasen und ihr Zusammenhang mit den schlechtesten Portfolio-/Sleeve-Tagen. Das soll weiterhin auf bereits archivierten, unabhängigen Daten mit einer einzigen vorab definierten Kontrollfrage geschehen.
+Keine Parameteroptimierung. Der nächste Control zerlegt diese Timing-Struktur sleeve-spezifisch: Trend- und Cross-Sectional-Sleeve werden getrennt gegen ihre jeweils schlechtesten 5%-Tage untersucht. Ziel ist festzustellen, ob die De-Risking-Schicht vor allem auf gemeinsamen Portfolio-Stress oder auf die Schwäche einer einzelnen Sleeve reagiert.
 
-Kandidat, Gate-Schwellen und Produktionslogik bleiben unverändert.
+Kandidat, 63-Sessions-Fenster, Gate-Schwellen und Produktionslogik bleiben unverändert.
 
 ## Sicherheitsgrundsatz
 
