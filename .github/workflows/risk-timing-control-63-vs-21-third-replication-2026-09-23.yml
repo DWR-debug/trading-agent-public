@@ -107,7 +107,7 @@ jobs:
       - name: 63-vs-21 Risk-Timing-Control ausführen
         run: |
           set -euo pipefail
-          python -m automation.risk_timing_control_63_vs_21             --artifact-root source_artifact             --output research/risk_timing_control/third_replication_2026_09_23.json
+          python -m automation.risk_timing_control_63_vs_21_third_2026_09_23             --artifact-root source_artifact             --output research/risk_timing_control/third_replication_2026_09_23.json
 
       - name: Ergebnisintegrität und Safety verifizieren
         run: |
