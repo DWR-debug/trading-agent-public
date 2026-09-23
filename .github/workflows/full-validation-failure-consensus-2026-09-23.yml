@@ -1,0 +1,102 @@
+name: Full Validation Failure Consensus 2026-09-23
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - master
+    paths:
+      - "automation/full_validation_failure_consensus_2026_09_23.py"
+      - "tests/test_full_validation_failure_consensus_2026_09_23.py"
+      - ".github/workflows/full-validation-failure-consensus-2026-09-23.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  consensus:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Zweite Validation laden
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl --fail --location --header "Authorization: Bearer ${GH_TOKEN}" --header "Accept: application/vnd.github+json"             "https://api.github.com/repos/DWR-debug/trading-agent-public/actions/artifacts/10740188093/zip"             --output second_validation.zip
+          echo "eed3ec6105dec7bc8616ab989ce6f086107b249f7fa087f6e851709af6e47354  second_validation.zip" | sha256sum -c -
+          mkdir -p second_validation
+          unzip -q second_validation.zip -d second_validation
+
+      - name: Dritte Validation laden
+        env:
+          GH_TOKEN: __TOKEN__
+        run: |
+          set -euo pipefail
+          curl --fail --location --header "Authorization: Bearer ${GH_TOKEN}" --header "Accept: application/vnd.github+json"             "https://api.github.com/repos/DWR-debug/trading-agent-public/actions/artifacts/10745697729/zip"             --output third_validation.zip
+          echo "b6a408b41abb218d285e06af4b91f66da3ed4ce431aef72907ca5873ffa2c731  third_validation.zip" | sha256sum -c -
+          mkdir -p third_validation
+          unzip -q third_validation.zip -d third_validation
+
+      - name: Failure-Consensus ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.full_validation_failure_consensus_2026_09_23             --second-root second_validation             --third-root third_validation             --output full_validation_failure_consensus_2026_09_23.json
+
+      - name: Konsistenz und Safety prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path("full_validation_failure_consensus_2026_09_23.json")
+          document = json.loads(path.read_text(encoding="utf-8"))
+          stored = document.pop("consensus_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(document, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("utf-8")
+          ).hexdigest()
+          assert stored == actual
+          assert document["status"] == "COMPLETED"
+          assert document["consensus"]["expected_shared_risk_signature_reproduced"] is True
+          assert document["consensus"]["both_candidate_status_blocked"] is True
+          assert document["consensus"]["both_holdout_returns_positive"] is True
+          assert document["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+          }
+          print("FULL_VALIDATION_FAILURE_CONSENSUS_INTEGRITY_VALID")
+          print("SHARED_FAILURES:", document["consensus"]["shared_failed_gate_checks"])
+          print("CONSENSUS_FINGERPRINT:", stored)
+          PY
+
+      - name: Consensus-Artefakt sichern
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-validation-failure-consensus-2026-09-23-${{ github.run_id }}
+          path: full_validation_failure_consensus_2026_09_23.json
+          if-no-files-found: error
+          retention-days: 30
