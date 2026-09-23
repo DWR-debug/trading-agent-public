@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "checkpoint_type": "risk_layer_drawdown_speed_2026_09_23",
+  "status": "COMPLETED",
+  "run_id": 35869892043,
+  "artifact_id": 10754138069,
+  "artifact_digest": "sha256:8d5f0416c8c3e4f85b19c2609e2e7fb6a4b3c2f4f988aa13ab9149765db474f6",
+  "diagnostic_fingerprint": "c62f63b28a3a3cce86496d3919d02ef390f1babfc0fbf1c28894db2eb24cf81a",
+  "scope": {
+    "datasets": 4,
+    "research_windows": 20,
+    "holdout_used_for_decision": false
+  },
+  "replication_counts": {
+    "rapid_more_delayed_than_slow": 3,
+    "rapid_less_onset_active_than_slow": 4
+  },
+  "decision_rule": "replicated_rapid_drawdown_onset_lag",
+  "rapid_threshold_days": 31,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false
+  },
+  "next_hypothesis": "Compare a fixed 31-session versus 63-session risk-layer estimation window at the same 10% annualized volatility target; no intermediate windows and no holdout selection."
+}
