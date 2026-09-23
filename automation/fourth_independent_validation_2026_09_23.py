@@ -164,7 +164,7 @@ def run_validation(
             "fully_disjoint_from_prior_universes": True,
             "out_of_time_validation": False,
             "adjusted_close_fingerprints": adjusted_close_fingerprints,
-            "adjusted_close_archive_fingerprint": adjusted_close_fingerprint,
+            "adjusted_close_archive_fingerprint": adjusted_close_archive_fingerprint,
         },
         "methodology": {
             "architecture": (
