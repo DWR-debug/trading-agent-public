@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "checkpoint_type": "sleeve_aggregation_ablation_2026_09_23",
+  "status": "COMPLETED",
+  "run_id": 35868801320,
+  "artifact_id": 10754210829,
+  "artifact_digest": "sha256:66bed2768cce7a7ef9f8a1d0ab937eb00273f4b45cfedc721ac9239feef2e21e",
+  "diagnostic_fingerprint": "f8f8c18e004dc3bd6eda4851d4d9b384f38994b921e92dbed93bb8dcf9caf125",
+  "research_only": true,
+  "holdout_used_for_decision": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false
+  },
+  "replication_counts": {
+    "trend_dominates_mix_on_dd_and_pf": 1,
+    "cross_sectional_only_dominates_mix_on_dd_and_pf": 2,
+    "mix_dd_higher_than_both": 0,
+    "mix_pf_lower_than_both": 0
+  },
+  "decision_rule": "no_universal_aggregation_contrast",
+  "conclusion": "The fixed 50/50 aggregation is not a replicated universal source of the risk/rolling failure gates across four symbol-disjoint validation datasets."
+}
