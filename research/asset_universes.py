@@ -82,6 +82,28 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("XLK", "XLF", "XLE", "XLV", "XLI"),
         target_count=3500,
     ),
+    AssetUniverse(
+        name="validation_2026_09_23_trend",
+        priority=9,
+        description=(
+            "Second fully disjoint ETF validation universe for the fixed trend sleeve; "
+            "symbols are pre-registered before data acquisition and intentionally avoid "
+            "all prior research universes."
+        ),
+        symbols=("VTI", "VEA", "VTV", "VUG", "XLB", "XLP", "XLU", "XLY"),
+        target_count=3500,
+    ),
+    AssetUniverse(
+        name="validation_2026_09_23_cs",
+        priority=10,
+        description=(
+            "Second fully disjoint sector/industry ETF validation universe for the fixed "
+            "cross-sectional momentum sleeve; symbols are pre-registered before data "
+            "acquisition and intentionally avoid all prior research universes."
+        ),
+        symbols=("XBI", "KRE", "XME", "XOP", "XRT"),
+        target_count=3500,
+    ),
 )
 
 
