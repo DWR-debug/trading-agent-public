@@ -1,7 +1,7 @@
 # Trading Agent — Entwicklungsstand und Zielbild
 
 Stand: 2026-09-23
-Basis: aktueller `master`-Stand nach PR #28, Commit `2e2efc0`
+Basis: aktueller `master`-Stand nach PR #30, Commit `1f4a3ad`
 
 ## Aktueller Forschungscheckpoint — 2026-09-23
 
@@ -117,9 +117,36 @@ Im zweiten Holdout lag das Konzentrationsverhältnis für beide Sleeves bei 1,0,
 
 Damit ist der Risk-Layer im Research beider unabhängiger Sätze etwas stärker um Cross-Sectional-Stress konzentriert als um Trend-Stress. Die sehr kleinen Scale-/Sleeve-Renditekorrelationen zeigen gleichzeitig, dass die De-Risking-Skalierung nicht einfach eine unmittelbare Reaktion auf den Tagesreturn einer einzelnen Sleeve ist. Der bislang stärkste gemeinsame Befund bleibt daher die lange Persistenz des Risk-Layers.
 
-### Nächster methodischer Schritt
+### Abgeschlossener Persistenz-Control
 
-Keine Parameteroptimierung. Als nächstes wird die Persistenz selbst deskriptiv zerlegt: Start- und Stop-Ereignisse der 63-Sessions-De-Risking-Phasen werden gegen die vorhergehende realisierte Volatilität und die nachfolgenden 5-/20-/60-Tage-Portfolioergebnisse gestellt. Die Analyse wird vorab fest definierte Horizonte verwenden, ausschließlich auf den bereits archivierten unabhängigen Daten, und keine neuen Schwellen oder Parameter daraus ableiten.
+PR #30 ist gemerged. Aktivierungs- und Recovery-Ereignisse des festen 63-Sessions-/10%-Volatilitätsbudgets wurden auf beiden unabhängigen Validation-Artefakten mit vorab fixierten 5-/20-/60-Tage-Horizonten untersucht.
+
+Zweiter Validierungssatz:
+- Research: 13 Aktivierungen, mittlere Vorab-Volatilität 10,47%; mittlere Forward-Rendite nach Aktivierung +0,652% / -0,109% / -3,481% für 5 / 20 / 60 Tage
+- Research: 12 Recoveries; mittlere Forward-Rendite danach +0,258% / -0,671% / -3,554%
+- Holdout: nur 1 Aktivierung; danach -0,861% / +1,006% / +5,792%; keine Recovery innerhalb des Holdout-Fensters
+
+Dritter Validierungssatz:
+- Research: 17 Aktivierungen, mittlere Vorab-Volatilität 10,60%; mittlere Forward-Rendite nach Aktivierung +0,364% / -0,492% / +0,050%
+- Research: 16 Recoveries; mittlere Forward-Rendite danach -0,020% / -0,303% / -0,314%
+- Holdout: 9 Aktivierungen; danach -0,332% / -0,694% / +3,332%
+- Holdout: 8 Recoveries; danach +0,627% / +0,199% / +3,957%
+
+Die Eventzahlen sind klein und die 60-Tage-Fenster überlappen; diese Kennzahlen sind deshalb deskriptiv und nicht kausal interpretierbar. Es zeigt sich kein über beide unabhängigen Sätze konsistentes Vorzeichenmuster, aus dem eine Event-basierte Änderung der Risk-Layer-Logik abgeleitet werden sollte.
+
+### Aktueller Gesamtbefund
+
+Die Forschungs-Pipeline hat damit:
+- drei vollständig unabhängige Validation-Sätze
+- wiederholt positive Holdout-Renditen
+- wiederholt unzureichende Risiko-/Rolling-Eigenschaften
+- einen replizierten Drawdown-Dämpfungseffekt des 63er-Vol-Budgets
+- einen replizierten Return-/PF-Kosteneffekt des Vol-Budgets
+- keinen replizierten globalen Vorteil des 21er-Vol-Fensters
+- einen langen, teils gesättigten De-Risking-Zustand
+- keinen konsistenten Event-Vorteil nach Aktivierung oder Recovery
+
+Damit ist die nächste sinnvolle Ebene nicht weiteres Feintuning des bestehenden Risk-Layers. Methodisch gerechtfertigt ist jetzt eine formale Konsolidierung des Failure-Fingerprints über alle drei unabhängigen Validation-Sätze und eine klar abgegrenzte Architektur-Hypothese für einen einzelnen nächsten Control. Erst danach sollte erneut ein unabhängiger Replikationslauf erfolgen.
 
 Kandidat, 63-Sessions-Fenster, Gate-Schwellen und Produktionslogik bleiben unverändert.
 
