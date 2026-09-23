@@ -1,0 +1,183 @@
+name: Risk Layer Drawdown Onset 2026-09-23
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - master
+    paths:
+      - "automation/risk_layer_drawdown_onset_2026_09_23.py"
+      - "tests/test_risk_layer_drawdown_onset_2026_09_23.py"
+      - "docs/risk_layer_drawdown_onset_2026_09_23_preregistration.md"
+      - ".github/workflows/risk-layer-drawdown-onset-2026-09-23.yml"
+      - "automation/candidate_validation_50_50_vol_budget.py"
+      - "config/**"
+      - "data/**"
+      - "research/**"
+      - "validation/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-risk-layer-drawdown-onset-2026-09-23
+  cancel-in-progress: true
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Paper-Trading-Sicherheit prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+
+      - name: Vier immutable Validierungsartefakte laden
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/risk_onset_sources
+          declare -A artifacts=(
+            [10751817990]=candidate-validation-50-50-vol-budget-2026-09-23.zip
+            [10740188093]=second-validation-2026-09-23.zip
+            [10745697729]=third-validation-2026-09-23.zip
+            [10753545703]=fourth-independent-validation-2026-09-23.zip
+          )
+          for artifact_id in "${!artifacts[@]}"; do
+            file="/tmp/${artifacts[$artifact_id]}"
+            gh api               -H "Accept: application/vnd.github+json"               "/repos/${GITHUB_REPOSITORY}/actions/artifacts/${artifact_id}/zip"               > "$file"
+            unzip -q "$file" -d /tmp/risk_onset_sources
+          done
+
+          test -f /tmp/risk_onset_sources/research/candidate_validation/report.json
+          test -f /tmp/risk_onset_sources/research/independent_validation_2026_09_23/report.json
+          test -f /tmp/risk_onset_sources/research/third_independent_validation_2026_09_23/report.json
+          test -f /tmp/risk_onset_sources/research/fourth_independent_validation_2026_09_23/report.json
+          echo "IMMUTABLE_VALIDATION_ARTIFACTS_READY"
+
+      - name: Preregistration fail-closed verifizieren
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from automation.risk_layer_drawdown_onset_2026_09_23 import (
+              CASES,
+              RESEARCH_COUNT,
+          )
+
+          assert RESEARCH_COUNT == 2798
+          assert [case["artifact_id"] for case in CASES] == [
+              10751817990,
+              10740188093,
+              10745697729,
+              10753545703,
+          ]
+          prereg = Path("docs/risk_layer_drawdown_onset_2026_09_23_preregistration.md")
+          text = prereg.read_text(encoding="utf-8")
+          for token in (
+              "2.798 Research-Returns",
+              "mindestens zwei Drawdown-Tage",
+              "3 von 4",
+              "PAPER_ONLY=True",
+          ):
+              assert token in text
+          print("RISK_LAYER_ONSET_PREREGISTRATION_VERIFIED")
+          PY
+
+      - name: Drawdown-Onset-Diagnose ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.risk_layer_drawdown_onset_2026_09_23             --source-root /tmp/risk_onset_sources             --output research/risk_layer_drawdown_onset_2026_09_23/report.json
+
+      - name: Ergebnisintegrität und Research-only-Scope prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path(
+              "research/risk_layer_drawdown_onset_2026_09_23/report.json"
+          )
+          result = json.loads(path.read_text(encoding="utf-8"))
+          stored = result.pop("diagnostic_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(
+                  result,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+
+          assert stored == actual
+          assert result["status"] == "COMPLETED"
+          assert result["scope"]["holdout_used_for_decision"] is False
+          assert result["scope"]["holdout_metrics_reported"] is False
+          assert result["scope"]["parameter_search"] is False
+          assert result["scope"]["selection"] is False
+          assert result["scope"]["gate_changes"] is False
+          assert result["scope"]["production_mutation"] is False
+          assert result["methodology"]["candidate_architecture_fixed"] is True
+          assert result["methodology"]["risk_layer_window_sessions"] == 63
+          assert result["methodology"]["risk_layer_target_annualized_volatility"] == 0.10
+          assert result["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+          }
+          assert len(result["cases"]) == 4
+          assert all(
+              case["max_drawdown_percent"] > 0.0
+              for case in result["cases"].values()
+          )
+          assert result["consensus"]["decision_rule"].startswith(
+              ("replicated_delayed_risk_layer_onset:",
+               "replicated_proactive_risk_layer_onset:",
+               "mixed_risk_layer_onset:")
+          )
+          print("RISK_LAYER_ONSET_RESULT_INTEGRITY_OK")
+          print("DIAGNOSTIC_FINGERPRINT:", stored)
+          print("DECISION_RULE:", result["consensus"]["decision_rule"])
+          print("REPLICATION_COUNTS:", result["consensus"]["replication_counts"])
+          PY
+
+      - name: Diagnoseartefakt sichern
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: risk-layer-drawdown-onset-2026-09-23-${{ github.run_id }}
+          path: research/risk_layer_drawdown_onset_2026_09_23/
+          if-no-files-found: error
+          retention-days: 30
