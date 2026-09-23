@@ -1,7 +1,7 @@
 # Trading Agent — Entwicklungsstand und Zielbild
 
 Stand: 2026-09-23
-Basis: aktueller `master`-Stand nach PR #30, Commit `1f4a3ad`
+Basis: aktueller `master`-Stand nach PR #33.
 
 ## Aktueller Forschungscheckpoint — 2026-09-23
 
@@ -12,143 +12,124 @@ Basis: aktueller `master`-Stand nach PR #30, Commit `1f4a3ad`
 - keine Live-Ausführung
 - keine Research-Orders
 - keine Gate-Lockerung
+- keine automatische Aktivierung von Short-/Leverage-Micro-Trading
 
-### Evidenzlage
+### Evidenzlage des täglichen Kandidaten
 
-Der unveränderte 50/50 + 10%-Vol-Budget-Kandidat wurde inzwischen auf drei vollständig symbol-disjunkten Validierungssätzen geprüft. Die Holdouts waren positiv, die Risiko-/Rolling-Gates jedoch wiederholt unzureichend. Der gemeinsame Failure-Fingerprint über die unabhängigen Validierungen umfasst insbesondere Holdout-Drawdown, Research-Drawdown, Rolling-Durchschnittsdrawdown und Rolling-Profit-Factor.
+Der unveränderte 50/50 + 10%-Vol-Budget-Kandidat wurde auf drei vollständig
+symbol-disjunkten Validierungssätzen geprüft. Die Holdouts waren positiv, die
+Risiko-/Rolling-Gates jedoch wiederholt unzureichend. Der gemeinsame Failure-
+Fingerprint umfasst insbesondere Holdout-Drawdown, Research-Drawdown,
+Rolling-Durchschnittsdrawdown und Rolling-Profit-Factor.
 
-Die Portfolio-/Sleeve-Interaktionsdiagnose über den zweiten und dritten Satz ergab:
-- 3 Research-Fenster mit gleichzeitig negativer Trend- und CS-Sleeve
-- 10 Fenster mit größerem Cross-Sectional-Drawdown
-- mittlere Sleeve-Renditekorrelation: 0,647708
-- mittlere Median-Skalierung des Vol-Budgets: 0,801701
+Der 63-Sessions-/10%-Vol-Control dämpft den Drawdown replizierbar, reduziert
+aber ebenfalls Return und Profit Factor. Der 21-Sessions-Control zeigt keinen
+konsistenten Holdout-Vorteil. Timing-, sleeve-spezifische und Event-Analysen
+ergaben keinen replizierten Änderungsgrund.
 
-### Präregistrierter Risk-Timing-Control
+### Micro-/Intraday-Controls
 
-Zwei unabhängig gepaarte Controls vergleichen unverändert 63 gegen 21 Sessions realised volatility. Es wurde jeweils nur das Risikofenster verändert; Daten, Signale, Sleeve-Gewichte, Kosten, Execution und Research/Holdout-Split blieben fix.
+#### PR #32 — Long/Flat 15m Sidecar
 
-Zweiter Validierungssatz:
-- Research Return: 4,903 % -> 4,799 %
-- Research Drawdown: 24,869 % -> 20,476 %
-- Holdout Return: 10,324 % -> 9,861 %
-- Holdout Drawdown: 16,432 % -> 17,069 %
+PR #32 ist gemerged.
 
-Dritter Validierungssatz:
-- Research Return: 14,394 % -> 16,869 %
-- Research Drawdown: 21,273 % -> 22,676 %
-- Holdout Return: 18,485 % -> 13,611 %
-- Holdout Drawdown: 12,751 % -> 13,425 %
+Kontrollsatz:
+- BTCUSDT + ETHUSDT
+- 15-Minuten-Bars
+- 100.000 Candles je Asset
+- 80% Research / 20% Holdout
+- 5 feste Research-Rolling-Fenster
+- keine Optimierung und keine Auswahl zwischen Hypothesen
+- Point-in-Time-Ausführung: abgeschlossenes Signalbar -> nächster Open -> derselbe Close
 
-Der 21-Sessions-Control zeigt damit keinen konsistenten Vorteil über die unabhängigen Holdouts. Es gibt deshalb derzeit keinen methodischen Grund, das bestehende 63-Sessions-Fenster global zu ersetzen oder daraus eine Produktionsänderung abzuleiten.
+Vorab getestete Hypothesen:
+- Continuation: Long nach positivem Vorbar
+- Reversal: Long nach negativem Vorbar
 
-### Archivierte Research-Controls
+Befund im Holdout:
+- beide Long/Flat-Hypothesen fallen unter dem getesteten Kostensatz auf nahezu -100%
+- Buy-and-Hold über BTC/ETH war im selben Kontrolllauf deutlich positiv
+- der Sidecar ist damit kein Produktionskandidat
 
-- PR #19: Portfolio-Regime-/Sleeve-Interaktionsdiagnose — gemerged
-- PR #20: 63-vs-21 Risk-Timing-Control auf dem zweiten Validierungssatz — gemerged
-- PR #22: 63-vs-21 Risk-Timing-Control als unabhängige dritte Replikation — gemerged
+Technischer Kontrollstatus:
+- 399 Tests
+- Paper-Only-Safety grün
+- Ergebnis-Fingerprint geprüft
+- Research-Daten und Ergebnis als GitHub-Artifact archiviert
 
-### Abgeschlossene Risk-Layer-Attribution
+#### PR #33 — Directional Short/Long + fester Hebel
 
-PR #24 ist gemerged und die Attribution auf dem zweiten und dritten unabhängigen Validation-Artifact vollständig reproduziert.
+PR #33 ist gemerged.
 
-Zweiter Validierungssatz, Vol-Budget minus unskaliert:
-- Research Return: -44,603 Prozentpunkte
-- Research Drawdown: -13,337 Prozentpunkte
-- Research Profit Factor: -0,0384
-- Research Kosten-/Turnover-Drag: 5,656 Prozentpunkte
-- Holdout Return: -17,387 Prozentpunkte
-- Holdout Drawdown: -8,330 Prozentpunkte
-- Holdout Profit Factor: -0,0404
-- Holdout Kosten-/Turnover-Drag: 1,955 Prozentpunkte
+Der Kontrollsatz wurde vollständig symbol-disjunkt zum ersten Micro-Sidecar
+gewählt:
+- SOLUSDT
+- BNBUSDT
+- XRPUSDT
+- ADAUSDT
 
-Dritter Validierungssatz, Vol-Budget minus unskaliert:
-- Research Return: -12,653 Prozentpunkte
-- Research Drawdown: -9,988 Prozentpunkte
-- Research Profit Factor: -0,0141
-- Research Kosten-/Turnover-Drag: 6,443 Prozentpunkte
-- Holdout Return: -9,199 Prozentpunkte
-- Holdout Drawdown: -3,907 Prozentpunkte
-- Holdout Profit Factor: -0,0237
-- Holdout Kosten-/Turnover-Drag: 2,428 Prozentpunkte
+Unveränderte 15m-/100k-/80:20-Geometrie; zusätzlich feste Exposure-Stufen
+1x / 2x / 3x und Kosten-Sensitivität 0x / 0,5x / 1x / 2x / 4x des bestehenden
+0,15%-Projekt-Basissatzes.
 
-Der gemeinsame Befund ist konsistent: Das bestehende 63-Sessions-/10%-Vol-Budget wirkt auf beiden unabhängigen Sätzen als deutlicher Drawdown-Dämpfer, reduziert aber gleichzeitig Return und Profit Factor. Der Kosten-/Turnover-Drag ist zusätzlich messbar, aber der Risk-Layer-Effekt besteht nicht ausschließlich aus Kosten.
+Vorab feste Richtungs-Hypothesen:
+- Directional continuation: positiv -> Long, negativ -> Short
+- Directional reversal: positiv -> Short, negativ -> Long
 
-Die beiden 63-vs-21-Controls bleiben damit ebenfalls gemischt; die 21-Sessions-Variante wird nicht als globale Ersatzkonfiguration übernommen.
+Holdout-Befund, 0x Kosten:
+- Continuation 1x: -43,89%, DD 55,38%, PF 0,966
+- Continuation 2x: -71,92%, DD 81,60%, PF 0,966
+- Continuation 3x: -87,46%, DD 92,98%, PF 0,966
+- Reversal 1x: +58,88%, DD 28,06%, PF 1,036
+- Reversal 2x: +124,94%, DD 49,88%, PF 1,036
+- Reversal 3x: +183,60%, DD 66,19%, PF 1,036
 
-### Abgeschlossene Timing-Diagnose
+Der Reversal-Befund ist ausschließlich vor Kosten positiv und zugleich extrem
+turnover-intensiv:
+- 1x Holdout-Turnover: 20.653,5 Portfolio-Einheiten
+- 3x Holdout-Turnover: 61.960,5
+- bereits bei 0,5x Kosten (~0,075% je Turnover-Einheit) fällt der Holdout
+  bei 1x, 2x und 3x auf nahezu -100% und PF deutlich unter 1
 
-PR #26 ist gemerged. Die zeitliche Aktivierung des bestehenden 63-Sessions-/10%-Volatilitätsbudgets wurde auf beiden unabhängigen Validation-Artefakten gegen die schlechtesten 5% der Portfolio-Tage untersucht.
+Die 3x-Ergebnisse sind deshalb keine belastbare Aussage über "schnelle hohe
+Gewinne". Der Hebel skaliert hier einen nur knapp positiven Vor-Kosten-PF und
+gleichzeitig die Drawdown- und Ausführungsexponierung. Die Long/Short-Frage
+bleibt damit als Forschungsfrage interessant, aber der bisher gemessene Edge
+ist nicht kostentragfähig.
 
-Zweiter Validierungssatz:
-- Research De-Risking: 84,35% aller Tage; schlechteste 5%: 90,71%; Konzentrationsverhältnis 1,076
-- 93,57% der schlechtesten 5%-Tage hatten bereits am Vortag De-Risking
-- mittlere De-Risking-Phase: 181,5 Tage; maximale Phase: 971 Tage
-- Holdout: De-Risking auf 100% der 700 Tage
+Technischer Kontrollstatus:
+- 403 Tests
+- Paper-Only-Safety grün
+- Hebelobergrenze 3x geprüft
+- Integritäts-Fingerprint geprüft
+- symbol-disjunkte Datenbasis und Research-Artifact archiviert
+- keine Orders, keine Produktionsintegration
 
-Dritter Validierungssatz:
-- Research De-Risking: 45,82% aller Tage; schlechteste 5%: 50,71%; Konzentrationsverhältnis 1,107
-- 49,29% der schlechtesten 5%-Tage hatten bereits am Vortag De-Risking
-- mittlere De-Risking-Phase: 75,4 Tage; maximale Phase: 639 Tage
-- Holdout De-Risking: 66,14% aller Tage; schlechteste 5%: 62,86%; Konzentrationsverhältnis 0,950
+### Gesamtkonsequenz
 
-Damit ist die Aktivierung im Research beider unabhängiger Sätze leicht um schlechte Portfolio-Tage konzentriert, aber diese Beziehung repliziert sich im Holdout nicht konsistent. Gleichzeitig zeigt insbesondere der zweite Holdout eine ausgeprägte Sättigung des bestehenden Risikolayers.
+Die Micro-Controls verändern den täglichen ETF-Kandidaten nicht.
 
-### Abgeschlossene sleeve-spezifische Timing-Diagnose
+Die bisherige Evidenz rechtfertigt derzeit:
+- keinen Produktionswechsel auf Intraday/Micro-Trading
+- keine globale Aktivierung von Shorting
+- keine Erhöhung des Projekt-Hebels über 3x
+- keine datengetriebene Auswahl einer Micro-Hypothese anhand dieses Holdouts
 
-PR #28 ist gemerged. Die Aktivierung des bestehenden 63-Sessions-/10%-Volatilitätsbudgets wurde gegen die jeweils schlechtesten 5% Tage der beiden Sleeves untersucht.
+Die einzige methodisch offene und direkt aus PR #33 ableitbare Kontrollfrage ist
+nun die **Kosten-/Turnover-These**: Bleibt die Reversal-Spur bestehen, wenn die
+Position nicht nach jedem einzelnen 15m-Bar neu gedreht wird, sondern nur über
+vorab feste längere Holding-Horizonte gehalten wird?
 
-Research, zweiter Validierungssatz:
-- Trend-Konzentrationsverhältnis: 1,109
-- Cross-Sectional-Konzentrationsverhältnis: 1,160
-- Korrelation Skalierung vs. Trend-Rendite: -0,0108
-- Korrelation Skalierung vs. Cross-Sectional-Rendite: -0,0463
+Der nächste Control bleibt deshalb streng präregistriert:
+- neues symbol-disjunktes Universum
+- beide Richtungs-Hypothesen weiterhin parallel
+- feste Holding-Horizonte
+- feste 1x / 2x / 3x Exposure
+- feste Kosten-Stressstufen
+- kein Tuning, keine Hypothesen-Auswahl, keine Produktionsintegration
 
-Research, dritter Validierungssatz:
-- Trend-Konzentrationsverhältnis: 1,372
-- Cross-Sectional-Konzentrationsverhältnis: 1,512
-- Korrelation Skalierung vs. Trend-Rendite: -0,0204
-- Korrelation Skalierung vs. Cross-Sectional-Rendite: -0,0207
-
-Holdout, dritter Validierungssatz:
-- Trend-Konzentrationsverhältnis: 1,210
-- Cross-Sectional-Konzentrationsverhältnis: 1,166
-
-Im zweiten Holdout lag das Konzentrationsverhältnis für beide Sleeves bei 1,0, da der Risk-Layer bereits an allen 700 Holdout-Tagen aktiv war.
-
-Damit ist der Risk-Layer im Research beider unabhängiger Sätze etwas stärker um Cross-Sectional-Stress konzentriert als um Trend-Stress. Die sehr kleinen Scale-/Sleeve-Renditekorrelationen zeigen gleichzeitig, dass die De-Risking-Skalierung nicht einfach eine unmittelbare Reaktion auf den Tagesreturn einer einzelnen Sleeve ist. Der bislang stärkste gemeinsame Befund bleibt daher die lange Persistenz des Risk-Layers.
-
-### Abgeschlossener Persistenz-Control
-
-PR #30 ist gemerged. Aktivierungs- und Recovery-Ereignisse des festen 63-Sessions-/10%-Volatilitätsbudgets wurden auf beiden unabhängigen Validation-Artefakten mit vorab fixierten 5-/20-/60-Tage-Horizonten untersucht.
-
-Zweiter Validierungssatz:
-- Research: 13 Aktivierungen, mittlere Vorab-Volatilität 10,47%; mittlere Forward-Rendite nach Aktivierung +0,652% / -0,109% / -3,481% für 5 / 20 / 60 Tage
-- Research: 12 Recoveries; mittlere Forward-Rendite danach +0,258% / -0,671% / -3,554%
-- Holdout: nur 1 Aktivierung; danach -0,861% / +1,006% / +5,792%; keine Recovery innerhalb des Holdout-Fensters
-
-Dritter Validierungssatz:
-- Research: 17 Aktivierungen, mittlere Vorab-Volatilität 10,60%; mittlere Forward-Rendite nach Aktivierung +0,364% / -0,492% / +0,050%
-- Research: 16 Recoveries; mittlere Forward-Rendite danach -0,020% / -0,303% / -0,314%
-- Holdout: 9 Aktivierungen; danach -0,332% / -0,694% / +3,332%
-- Holdout: 8 Recoveries; danach +0,627% / +0,199% / +3,957%
-
-Die Eventzahlen sind klein und die 60-Tage-Fenster überlappen; diese Kennzahlen sind deshalb deskriptiv und nicht kausal interpretierbar. Es zeigt sich kein über beide unabhängigen Sätze konsistentes Vorzeichenmuster, aus dem eine Event-basierte Änderung der Risk-Layer-Logik abgeleitet werden sollte.
-
-### Aktueller Gesamtbefund
-
-Die Forschungs-Pipeline hat damit:
-- drei vollständig unabhängige Validation-Sätze
-- wiederholt positive Holdout-Renditen
-- wiederholt unzureichende Risiko-/Rolling-Eigenschaften
-- einen replizierten Drawdown-Dämpfungseffekt des 63er-Vol-Budgets
-- einen replizierten Return-/PF-Kosteneffekt des Vol-Budgets
-- keinen replizierten globalen Vorteil des 21er-Vol-Fensters
-- einen langen, teils gesättigten De-Risking-Zustand
-- keinen konsistenten Event-Vorteil nach Aktivierung oder Recovery
-
-Damit ist die nächste sinnvolle Ebene nicht weiteres Feintuning des bestehenden Risk-Layers. Methodisch gerechtfertigt ist jetzt eine formale Konsolidierung des Failure-Fingerprints über alle drei unabhängigen Validation-Sätze und eine klar abgegrenzte Architektur-Hypothese für einen einzelnen nächsten Control. Erst danach sollte erneut ein unabhängiger Replikationslauf erfolgen.
-
-Kandidat, 63-Sessions-Fenster, Gate-Schwellen und Produktionslogik bleiben unverändert.
+Erst ein positives, kostenrobustes und unabhängig repliziertes Muster würde einen
+weiteren realistischeren Execution-Control rechtfertigen.
 
 ## Sicherheitsgrundsatz
 
