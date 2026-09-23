@@ -41,14 +41,10 @@ jobs:
 
       - name: Immutable Validation Artifact herunterladen
         env:
-          GH_TOKEN: \${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          curl --fail --location \
-            --header "Authorization: Bearer \${GH_TOKEN}" \
-            --header "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/DWR-debug/trading-agent-public/actions/artifacts/10740188093/zip" \
-            --output validation-artifact.zip
+          curl --fail --location             --header "Authorization: Bearer ${GH_TOKEN}"             --header "Accept: application/vnd.github+json"             "https://api.github.com/repos/DWR-debug/trading-agent-public/actions/artifacts/10740188093/zip"             --output validation-artifact.zip
           echo "eed3ec6105dec7bc8616ab989ce6f086107b249f7fa087f6e851709af6e47354  validation-artifact.zip" | sha256sum -c -
           mkdir -p validation-artifact
           unzip -q validation-artifact.zip -d validation-artifact
@@ -56,9 +52,7 @@ jobs:
       - name: Mechanismus-Diagnose ausführen
         run: |
           set -euo pipefail
-          python -m automation.cs_mechanism_diagnosis_2026_09_23 \
-            --artifact-root validation-artifact \
-            --output cs_mechanism_diagnosis_2026_09_23.json
+          python -m automation.cs_mechanism_diagnosis_2026_09_23             --artifact-root validation-artifact             --output cs_mechanism_diagnosis_2026_09_23.json
 
       - name: Diagnoseintegrität prüfen
         run: |
@@ -100,7 +94,7 @@ jobs:
       - name: Diagnose-Artefakt sichern
         uses: actions/upload-artifact@v4
         with:
-          name: cs-mechanism-diagnosis-2026-09-23-\${{ github.run_id }}
+          name: cs-mechanism-diagnosis-2026-09-23-${{ github.run_id }}
           path: cs_mechanism_diagnosis_2026_09_23.json
           if-no-files-found: error
           retention-days: 30
