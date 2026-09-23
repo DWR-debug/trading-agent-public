@@ -270,28 +270,6 @@ def _research_metrics(simulated: list[dict]) -> dict[str, Any]:
     }
 
 
-def _variant_result(rows: tuple[dict, ...], trend_share: float) -> dict[str, Any]:
-    out: dict[str, Any] = {}
-    for name, multiplier in COST_SCENARIOS:
-        simulated = base._simulate(
-            _compose_rows_from_base(rows, trend_share),
-            multiplier,
-            True,
-            False,
-        )
-        out[name] = _research_metrics(simulated)
-    return out
-
-
-def _compose_rows_from_base(rows: tuple[dict, ...], trend_share: float) -> tuple[dict, ...]:
-    # rows passed here are 50/50 only, so this helper is intentionally not used
-    # for variant changes. It exists solely as a type guard for callers that
-    # accidentally try to simulate a non-50/50 row set.
-    if trend_share != 0.5:
-        raise ValueError("Variant composition requires original sleeve rows.")
-    return rows
-
-
 def evaluate_case(source_root: Path, case: dict[str, Any]) -> dict[str, Any]:
     verified = _verify_report_and_archive(source_root, case)
     root = verified["root"]
