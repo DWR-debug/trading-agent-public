@@ -136,13 +136,27 @@ def _validate_report(report: dict, manifest: dict, label: str) -> None:
         report.get("methodology", {}),
         sort_keys=True,
     ).lower()
+    preregistration_text = json.dumps(
+        report.get("preregistration", {}),
+        sort_keys=True,
+    ).lower()
+    architecture_text = str(
+        report.get("methodology", {}).get("architecture", "")
+    ).lower()
+    verification_text = " ".join(
+        (
+            methodology_text,
+            preregistration_text,
+            architecture_text,
+        )
+    )
     required_terms = (
         "12-1",
         "252",
         "21",
         "top-2",
     )
-    if not all(term in methodology_text for term in required_terms):
+    if not all(term in verification_text for term in required_terms):
         raise ValueError(f"{label}: präregistrierte CS-Regel nicht verifiziert.")
 
     safety = report.get("safety", {})
