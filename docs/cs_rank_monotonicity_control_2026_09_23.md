@@ -50,3 +50,7 @@ Holdout-Returns werden nicht verwendet.
 - PAPER_ONLY=True
 - LIVE_TRADING_ENABLED=False
 - orders_enabled=False
+
+## CI-Reproduzierbarkeit
+
+Die beiden historischen Research-Artifacts werden im Public-Workflow über einen verifizierten Repository-API-Download bezogen und vor Analyse per SHA-256 geprüft.
