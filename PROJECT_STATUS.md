@@ -42,6 +42,21 @@ und Holdout-Drawdown. Daher bleibt der Kandidat `BLOCKED` und wird nicht in
 Produktion übernommen.
 
 
+
+### 2c. Risk-Layer-Drawdown-Speed
+
+Die bestehende 63-Session-/10%-Volatility-Risk-Layer wurde über alle 20 festen Research-Rolling-Fenster der vier unabhängigen Validierungen auf Rapid-vs-Slow-Drawdown-Onset untersucht.
+
+- Rapid = maximale Drawdown-Episode <=31 Sessions
+- Delayed-or-Never-Rate Rapid > Slow in 3/4 Datensätzen
+- Rapid am Episodenbeginn bereits de-risked: 0/1, 0/2, 0/1 in den drei Datensätzen mit Rapid-Episoden; insgesamt unter der Slow-Rate in 4/4
+
+Der präregistrierte Befund lautet `replicated_rapid_drawdown_onset_lag`. Dies ist ein deskriptiver Mechanismus-Hinweis, kein Kausalitätsnachweis.
+
+Die nächste Forschung ist deshalb eng auf den Risk-Layer-Lag begrenzt: 31 Sessions versus 63 Sessions bei identischem 10%-Volatilitätsziel. Keine Zwischenwerte, keine nachträgliche Parameterauswahl und kein Holdout-Selection.
+
+Dauerhafte Ergebnisablage: `docs/risk_layer_drawdown_speed_2026_09_23_result.md` und `research/checkpoints/risk_layer_drawdown_speed_2026_09_23.json`.
+
 ### 2b. Sleeve-Aggregations-Ablation
 
 Die vier bereits archivierten, vollständig symbol-disjunkten Validierungssätze wurden ausschließlich über ihre 2.798 Research-Returns mit drei vorab fixierten Aggregationen geprüft: Trend-only 100/0, aktueller Mix 50/50 und Cross-Sectional-only 0/100.
