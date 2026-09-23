@@ -48,14 +48,12 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Zweite unabhängige Validation laden
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          curl --fail --location             --header "Authorization: Bearer ${GH_TOKEN}"             --header "Accept: application/vnd.github+json"             "https://api.github.com/repos/DWR-debug/trading-agent-public/actions/artifacts/10740188093/zip"             --output second_artifact.zip
-          echo "eed3ec6105dec7bc8616ab989ce6f086107b249f7fa087f6e851709af6e47354  second_artifact.zip" | sha256sum -c -
-          mkdir -p second_artifact
-          unzip -q second_artifact.zip -d second_artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: independent-validation-2026-09-23-35843034284
+          path: second_artifact
+          run-id: 35843034284
+          github-token: \${{ secrets.GITHUB_TOKEN }}
 
       - name: Cross-Validation ausführen
         run: |
