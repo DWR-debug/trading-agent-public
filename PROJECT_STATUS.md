@@ -1,7 +1,7 @@
 # Trading Agent — Entwicklungsstand und Zielbild
 
 Stand: 2026-09-23
-Basis: aktueller `master`-Stand nach PR #35.
+Basis: aktueller `master`-Stand nach PR #37.
 
 ## Aktueller Forschungscheckpoint — 2026-09-23
 
@@ -42,147 +42,121 @@ Kontrollsatz:
 - keine Optimierung und keine Auswahl zwischen Hypothesen
 - Point-in-Time-Ausführung: abgeschlossenes Signalbar -> nächster Open -> derselbe Close
 
-Vorab getestete Hypothesen:
-- Continuation: Long nach positivem Vorbar
-- Reversal: Long nach negativem Vorbar
-
-Befund im Holdout:
-- beide Long/Flat-Hypothesen fallen unter dem getesteten Kostensatz auf nahezu -100%
-- Buy-and-Hold über BTC/ETH war im selben Kontrolllauf deutlich positiv
-- der Sidecar ist damit kein Produktionskandidat
-
-Technischer Kontrollstatus:
-- 399 Tests
-- Paper-Only-Safety grün
-- Ergebnis-Fingerprint geprüft
-- Research-Daten und Ergebnis als GitHub-Artifact archiviert
+Holdout:
+- Continuation und Reversal fallen unter dem getesteten 0,15%-Basiskostensatz
+  beide auf nahezu -100%
+- Buy-and-Hold über BTC/ETH war im selben Kontrolllauf positiv
 
 #### PR #33 — Directional Short/Long + fester Hebel
 
 PR #33 ist gemerged.
 
 Vollständig symbol-disjunkter Kontrollsatz:
-- SOLUSDT
-- BNBUSDT
-- XRPUSDT
-- ADAUSDT
+SOLUSDT / BNBUSDT / XRPUSDT / ADAUSDT.
 
-Zusätzlich feste Exposure-Stufen 1x / 2x / 3x sowie Kosten-Sensitivität
-0x / 0,5x / 1x / 2x / 4x des bestehenden 0,15%-Basissatzes.
-
-Vorab feste Richtungs-Hypothesen:
-- Directional continuation: positiv -> Long, negativ -> Short
-- Directional reversal: positiv -> Short, negativ -> Long
+Feste Richtungen:
+- Continuation: positiv -> Long, negativ -> Short
+- Reversal: positiv -> Short, negativ -> Long
 
 Holdout, 0x Kosten:
 - Continuation 1x: -43,89%, DD 55,38%, PF 0,966
-- Continuation 2x: -71,92%, DD 81,60%, PF 0,966
-- Continuation 3x: -87,46%, DD 92,98%, PF 0,966
 - Reversal 1x: +58,88%, DD 28,06%, PF 1,036
-- Reversal 2x: +124,94%, DD 49,88%, PF 1,036
 - Reversal 3x: +183,60%, DD 66,19%, PF 1,036
 
-Bereits bei 0,5x Kosten (~0,075% je Turnover-Einheit) fällt der Reversal-
-Holdout bei 1x, 2x und 3x auf nahezu -100%. Der 1x-Holdout-Turnover lag bei
-20.653,5, bei 3x bei 61.960,5.
-
-Damit zeigte sich: Short/Long allein erzeugt keinen robusten Edge; der Hebel
-skaliert vor allem einen sehr kleinen Vor-Kosten-Effekt und dessen Risiko.
+Der Reversal-Effekt kollabierte bereits bei 0,5x des Projekt-Basissatzes
+(~0,075% je Turnover-Einheit) auf nahezu -100%.
 
 #### PR #35 — Holding-Horizon / Turnover-Control
 
-PR #35 ist gemerged. Dieser dritte Micro-Control prüfte die Turnover-These auf
-einem weiteren vollständig symbol-disjunkten Universum:
-- DOGEUSDT
-- LTCUSDT
-- LINKUSDT
-- AVAXUSDT
+PR #35 ist gemerged.
 
-Unverändert:
-- 100.000 15m-Candles je Asset
-- 80% Research / 20% Holdout
-- beide Richtungs-Hypothesen parallel
-- 5 feste Research-Rolling-Fenster
-- 1x / 2x / 3x Exposure
-- keine Parameteroptimierung oder Hypothesen-Auswahl
+Vollständig symbol-disjunkt:
+DOGEUSDT / LTCUSDT / LINKUSDT / AVAXUSDT.
 
-Vorab feste Holding-Horizonte:
+Vorab feste Horizonte:
 - H1 = 15 Minuten
 - H4 = 60 Minuten
 - H16 = 240 Minuten
 
-Kostenstufen:
-- 0x
-- 0,1x
-- 0,25x
-- 0,5x
-- 1x des 0,15%-Basissatzes
+Reversal, 1x, Holdout:
+- H1 / 0x: +89,12%, DD 31,45%, PF 1,046, Turnover 40.000
+- H4 / 0x: +227,50%, DD 11,86%, PF 1,082, Turnover 9.999
+- H4 / 0,1x: -26,91%, PF 0,984
+- H16 / 0x: +66,17%, DD 17,07%, PF 1,037, Turnover 2.499
+- H16 / 0,1x: +14,22%, DD 21,96%, PF 1,013
+- H16 / 0,25x: -34,92%, PF 0,977
 
-Holdout, Reversal, 1x:
-- H1 bei 0x: +89,12%, DD 31,45%, PF 1,046, Turnover 40.000
-- H4 bei 0x: +227,50%, DD 11,86%, PF 1,082, Turnover 9.999
-- H4 bei 0,1x: -26,91%, DD 38,70%, PF 0,984
-- H16 bei 0x: +66,17%, DD 17,07%, PF 1,037, Turnover 2.499
-- H16 bei 0,1x: +14,22%, DD 21,96%, PF 1,013
-- H16 bei 0,25x: -34,92%, DD 38,78%, PF 0,977
+Der Turnover sinkt mit der Haltedauer stark, aber die ökonomische Robustheit
+bleibt unzureichend. Beim H16/1x/0x-Research waren vier von fünf Rolling-
+Fenstern negativ.
 
-Auch 3x erzeugt keine belastbare wirtschaftliche Robustheit:
-H16/3x ist vor Kosten mit +213,24% positiv, fällt aber bei 0,1x Kosten auf
-+1,70% bei 57,15% Drawdown und PF 1,013.
+#### PR #37 — unabhängige Holding-Horizon-Replikation
 
-Die Continuation-Hypothese bleibt in diesem neuen Universum bereits vor Kosten
-über alle drei getesteten Horizonte negativ.
+PR #37 ist gemerged.
 
-Die Rolling-Horizon-Diagnose zeigt gleichzeitig keine stabile Profitübertragung:
-Beim Reversal-H16/1x/0x-Research waren vier von fünf Rolling-Fenstern negativ
-(-30,22%, -29,92%, -30,20%, +7,31%, -13,87%). Beim H4 waren die Research-
-Fenster ebenfalls gemischt.
+Identisches Protokoll auf einem vierten, vollständig symbol-disjunkten Satz:
+DOTUSDT / ATOMUSDT / UNIUSDT / NEARUSDT.
 
-Der Control bestätigt damit, dass längere Haltedauer den Turnover stark senkt
-und den Vor-Kosten-Effekt verändern kann. Er zeigt aber noch keinen robusten,
-kostenfesten Micro-Edge: H4 kollabiert bereits bei 0,1x Kosten, H16 übersteht
-0,1x nur knapp und scheitert bei 0,25x.
+Die Replikation ergibt:
+- Continuation ist bei 1x/0x über H1, H4 und H16 negativ.
+- Reversal ist bei 1x/0x:
+  - H1: +179,82%, DD 45,40%, PF 1,059, Turnover 40.000
+  - H4: +41,61%, DD 33,84%, PF 1,023, Turnover 9.999
+  - H16: -4,98%, DD 31,57%, PF 1,002, Turnover 2.499
+- Bereits bei 0,1x Kosten sind die Reversal-Holdouts H1/H4/H16 jeweils
+  deutlich negativ.
+- Auch bei H16 zeigt die Forschung keine stabile Übertragung: drei von fünf
+  Rolling-Fenstern sind negativ; der Gesamt-Holdout-PF liegt praktisch bei 1.
+
+Damit wurde die in PR #35 beobachtete H16-/0,1x-Spur nicht repliziert.
+Der bisherige einfache 15m-Directional-Reversal-Ansatz ist daher kein belastbarer
+Micro-Edge und wird nicht in die Produktionsarchitektur übernommen.
 
 Technischer Kontrollstatus:
-- 409 Tests
+- 412 Tests
 - Paper-Only-Safety grün
-- feste 1x / 2x / 3x-Grenze geprüft
-- Ergebnis-Fingerprint: `c311e6f165dcf853ea4ccb4ff93417fe41867057a350a1f83c384beb4cc05801`
-- Artifact-ID: `10750340828`
+- vollständiger Protokoll-/Symbol-Guard grün
+- Ergebnis-Fingerprint:
+  `47646775594402e9e39bd687272c1ad1955a4fe75013b642d59dea2a3575d17a`
+- Artifact-ID: `10750207859`
 - keine Orders, keine Produktionsintegration
 
 ### Aktueller Micro-Gesamtbefund
 
-Über drei unabhängige Micro-/Intraday-Kontrollen zeigt sich:
-- Continuation war über die getesteten Universen vor Kosten nicht tragfähig.
-- Reversal zeigt wiederholt kleine bis starke Vor-Kosten-Returns, aber mit
-  Profit Factors nur etwa 1,03–1,08 und hoher Turnover-/Kostenempfindlichkeit.
-- Längere Holding-Horizonte senken den Turnover substantiell.
-- Ein positiver Holdout bei 16 Bars und 0,1x Kosten reicht wegen PF 1,013,
-  21,96% Drawdown und negativer Mehrheit der Research-Rolling-Fenster nicht
-  für eine robuste Schlussfolgerung.
-- Hebel verstärkt in den bisherigen Controls primär Rendite, Drawdown und
-  Kostenexponierung; er erzeugt keinen eigenständigen Nachweis eines Edges.
+Vier voneinander unabhängige Micro-Kontrollen zeigen ein konsistentes
+wissenschaftliches Bild:
 
-Daher bleiben Daily-ETF-Kandidat und globale Projektkonfiguration unverändert.
-Short/Long und Hebel werden weiterhin nur in Paper-Only-Forschungszweigen
-untersucht.
+- Ein einfacher 15m-Continuation-Ansatz trägt nicht.
+- Ein einfacher 15m-Reversal-Ansatz kann starke Vor-Kosten-Returns erzeugen,
+  aber diese sind extrem sensitiv auf Kosten und Turnover.
+- Längere Holding-Horizonte reduzieren Turnover, erzeugen aber keinen replizierten
+  kostenrobusten Edge.
+- Shorting und 3x Hebel vergrößern die Exposure; sie liefern keinen separaten
+  Evidenznachweis für einen nachhaltigen Edge.
+- Die bisher getestete Micro-Familie bleibt damit ein Forschungsbefund, nicht
+  ein Produktionskandidat.
 
-### Nächster Micro-Control
+### Ein letzter andersartiger Micro-Control
 
-Die jetzt methodisch offene Frage ist die unabhängige Replikation des gesamten
-Holding-Horizon-Designs auf einem vierten, vollständig symbol-disjunkten
-Universum. Das Design wird dabei nicht auf das aktuelle Holdout angepasst:
-- gleiche H1/H4/H16-Horizonte
-- gleiche 1x/2x/3x Exposure-Stufen
-- gleiche Kosten-Sensitivität
-- beide Richtungs-Hypothesen parallel
-- gleiche 15m-/100k-/80:20-Geometrie
-- keine Auswahl oder Optimierung
+Statt die gescheiterte Bar-to-Bar-Richtung weiter zu variieren, wird genau ein
+andersartiger, literaturbasierter Kontrollmechanismus geprüft: der sogenannte
+Turn-of-the-Candle-Effekt, bei dem sich Renditen an den 15-Minuten-Grenzen
+konzentrieren sollen.
 
-Nur bei positiver, kostenrobuster und über unabhängige Rolling-Fenster
-replizierter Evidenz wäre danach ein realistischeres Futures-/Execution-Modell
-gerechtfertigt.
+Dieser Ansatz ist methodisch anders, weil das Signal kalender-/zeitbasiert ist
+und nicht aus der Richtung des unmittelbar vorherigen Bars abgeleitet wird.
+
+Der Control bleibt strikt getrennt:
+- neue symbol-disjunkte 5m-Datenbasis
+- feste UTC-Minutenmodulo-Regel für 00/15/30/45
+- feste Long-/Short-Richtung als Gegenkontrollen
+- 1x / 2x / 3x Exposure
+- feste Kosten-Sensitivität
+- keine Optimierung und keine Übernahme in die Tagesstrategie
+
+Ein positives Ergebnis wäre weiterhin nur eine Forschungsreplikation. Erst bei
+robuster, kostenfester und unabhängiger Evidenz würde ein realistischerer
+Execution-Control folgen.
 
 ## Sicherheitsgrundsatz
 
