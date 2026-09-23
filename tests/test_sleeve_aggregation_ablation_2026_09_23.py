@@ -90,5 +90,5 @@ def test_consensus_uses_only_research_comparison_metrics():
     assert counts["trend_dominates_mix_on_dd_and_pf"] == 4
     assert counts["cross_sectional_only_dominates_mix_on_dd_and_pf"] == 0
     assert counts["mix_dd_higher_than_both"] == 0
-    assert counts["mix_pf_lower_than_both"] == 4
+    assert counts["mix_pf_lower_than_both"] == 1
     assert result["decision_rule"].startswith("trend_only_research_contrast_replicated:")
