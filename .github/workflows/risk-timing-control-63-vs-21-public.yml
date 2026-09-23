@@ -1,0 +1,165 @@
+name: Risk Timing Control 63 vs 21 — Public
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "automation/risk_timing_control_63_vs_21.py"
+      - "tests/test_risk_timing_control_63_vs_21_public.py"
+      - ".github/workflows/risk-timing-control-63-vs-21-public.yml"
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - master
+    paths:
+      - "automation/risk_timing_control_63_vs_21.py"
+      - "tests/test_risk_timing_control_63_vs_21_public.py"
+      - ".github/workflows/risk-timing-control-63-vs-21-public.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-public-risk-timing-control-63-vs-21
+  cancel-in-progress: true
+
+jobs:
+  control:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      SOURCE_RUN_ID: "35839443616"
+      SOURCE_ARTIFACT_ID: "10740188093"
+      SOURCE_ARTIFACT_DIGEST: "eed3ec6105dec7bc8616ab989ce6f086107b249f7fa087f6e851709af6e47354"
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Paper-Trading-Sicherheit prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+
+      - name: Immutable Public Validation Artifact laden
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl --fail --location             --header "Authorization: Bearer ${GH_TOKEN}"             --header "Accept: application/vnd.github+json"             "https://api.github.com/repos/DWR-debug/trading-agent-public/actions/artifacts/${SOURCE_ARTIFACT_ID}/zip"             --output validation-artifact.zip
+          echo "${SOURCE_ARTIFACT_DIGEST}  validation-artifact.zip" | sha256sum -c -
+          mkdir -p source_artifact
+          unzip -q validation-artifact.zip -d source_artifact
+
+      - name: Source Contract verifizieren
+        run: |
+          set -euo pipefail
+          test -f source_artifact/research/independent_validation_2026_09_23/report.json
+          test -f source_artifact/research/independent_validation_2026_09_23/adjusted_close_archive.json
+          test -f source_artifact/research/independent_validation_2026_09_23/data_trend_manifest.json
+          test -f source_artifact/research/independent_validation_2026_09_23/data_cs_manifest.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("source_artifact/research/independent_validation_2026_09_23")
+          report = json.loads((root / "report.json").read_text(encoding="utf-8"))
+          archive = json.loads((root / "adjusted_close_archive.json").read_text(encoding="utf-8"))
+
+          assert report["status"] == "COMPLETED"
+          assert report["source"]["fully_disjoint_from_prior_universes"] is True
+          assert report["source"]["out_of_time_validation"] is False
+          assert report["methodology"]["optimization_used"] is False
+          assert report["methodology"]["selection_profile_used"] is False
+          assert report["methodology"]["signal_parameters_changed"] is False
+          assert report["methodology"]["sleeve_weights_changed"] is False
+          assert report["methodology"]["production_strategy_changed"] is False
+          assert report["methodology"]["orders_enabled"] is False
+          assert archive["archive_fingerprint"] == report["source"]["adjusted_close_archive_fingerprint"]
+          assert report["safety"]["paper_only"] is True
+          assert report["safety"]["live_trading_enabled"] is False
+          assert report["safety"]["orders_enabled"] is False
+          print("SOURCE_CONTRACT_OK")
+          print("SOURCE_RUN_ID:", "${SOURCE_RUN_ID}")
+          print("SOURCE_REPORT_FINGERPRINT:", report["report_fingerprint"])
+          PY
+
+      - name: 63-vs-21 Risk-Timing-Control ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.risk_timing_control_63_vs_21             --artifact-root source_artifact             --output research/risk_timing_control/risk_timing_control.json
+
+      - name: Ergebnisintegrität und Safety verifizieren
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path("research/risk_timing_control/risk_timing_control.json")
+          result = json.loads(path.read_text(encoding="utf-8"))
+          stored = result.pop("diagnostic_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(
+                  result,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+
+          assert stored == actual
+          assert result["status"] == "COMPLETED"
+          assert result["hypothesis"]["baseline_vol_window_sessions"] == 63
+          assert result["hypothesis"]["counterfactual_vol_window_sessions"] == 21
+          assert result["hypothesis"]["parameter_search"] is False
+          assert result["hypothesis"]["selection"] is False
+          assert result["interpretation_scope"]["paired_same_data"] is True
+          assert result["interpretation_scope"]["paired_same_split"] is True
+          assert result["interpretation_scope"]["paired_same_execution_model"] is True
+          assert result["interpretation_scope"]["no_gate_recomputation_for_counterfactual"] is True
+          assert result["safety"]["paper_only"] is True
+          assert result["safety"]["live_trading_enabled"] is False
+          assert result["safety"]["orders_enabled"] is False
+          print("RISK_TIMING_CONTROL_INTEGRITY_OK")
+          print("DIAGNOSTIC_FINGERPRINT:", stored)
+          print("BASELINE_RESEARCH_RETURN:", result["baseline_63"]["research"]["period_return"])
+          print("COUNTERFACTUAL_RESEARCH_RETURN:", result["counterfactual_21"]["research"]["period_return"])
+          print("BASELINE_HOLDOUT_RETURN:", result["baseline_63"]["holdout"]["period_return"])
+          print("COUNTERFACTUAL_HOLDOUT_RETURN:", result["counterfactual_21"]["holdout"]["period_return"])
+          PY
+
+      - name: Control-Artefakt sichern
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: risk-timing-control-63-vs-21-public-${{ github.run_id }}
+          path: research/risk_timing_control/
+          if-no-files-found: error
+          retention-days: 30
