@@ -1,4 +1,123 @@
-# Trading Agent — Entwicklungsstand und Zielbild
+# Trading Agent — aktueller Gesamtcheckpoint
+
+Stand: 2026-09-23
+Basis: `master` nach PR #40.
+
+## Gesamtstatus
+
+### 1. Sicherheitszustand
+
+- `PAPER_ONLY = True`
+- `LIVE_TRADING_ENABLED = False`
+- keine Live-Ausführung
+- keine Research-Orders
+- keine Gate-Lockerung
+- maximale Research-Exposure bleibt 3x und entspricht der bestehenden Projektobergrenze
+
+### 2. Hauptstrategie / Tagesebene
+
+Der aktuelle Forschungsfokus ist die feste Architektur aus:
+
+- Cross-Asset SMA 50/200 inverse-volatility Trend-Sleeve
+- 12-1 Cross-Sectional-Momentum Top-2 Long-only
+- feste 50/50-Aggregation
+- 10% annualisiertes Realized-Volatility-Budget über 63 Sessions, nur De-Risking
+
+Auf einem vollständig unabhängigen Validierungssatz blieb der Holdout positiv:
+
+- Research Return: +42,30%
+- Research Drawdown: 16,81%
+- Research PF: 1,075
+- Holdout Return: +29,78%
+- Holdout Drawdown: 12,01%
+- Holdout PF: 1,194
+- OOS/IS: 0,704
+- profitable Research-Rolling-Fenster: 4/5
+- 1,5x Kosten: +28,58% Holdout
+- 2x Kosten: +27,39% Holdout
+
+Nicht erfüllt sind weiterhin die vier Risikoprobleme:
+Research-Drawdown, Rolling-Research-PF, durchschnittlicher Rolling-Drawdown
+und Holdout-Drawdown. Daher bleibt der Kandidat `BLOCKED` und wird nicht in
+Produktion übernommen.
+
+### 3. Micro-Trading: aktueller Abschluss des 5m-Controls
+
+PR #39 und der anschließende CI-Fix PR #40 sind gemerged.
+
+Der reproduzierte 5m-Control wurde vollständig und ohne Fehler archiviert:
+
+- Run: 35864646499
+- Artifact-ID: 10752437642
+- Artifact-Digest: sha256:dd61e11247d0c8016efd4200419176aa44b589002071922415fd987a06700a26
+- Ergebnis-Fingerprint: 4b1328912a1b8dac35e1a4bbf2993e449a48c04d352f7e987d0ffeb3aa367fb5
+- vollständige Testsuite im Control: 430 bestanden
+- Paper-Only und Ergebnisintegrität: bestanden
+- keine Orders
+
+5m-Ergebnis auf AAVEUSDT / XLMUSDT / ALGOUSDT / FILUSDT:
+
+- Long 1x, 0x Kosten: +32,33% Holdout, DD 9,32%, PF 1,069, Turn-t-Stat 1,83
+- Long 1x, 0,25x Kosten: -99,11% Holdout
+- Short 1x, 0x Kosten: -26,34% Holdout, DD 32,42%, PF 0,935
+- Buy-and-Hold-Proxy: +34,32% Holdout
+
+Der 5m-Control liefert damit keinen eigenständigen kostenrobusten Nachweis.
+Der Long-0x-Befund liegt nahe am Buy-and-Hold-Proxy und fällt bereits bei einem
+Bruchteil des Projektkosten-Basissatzes massiv ab. Short liefert bereits ohne
+Kosten einen negativen Holdout-Befund.
+
+Wichtige methodische Einschränkung: Die zugrunde liegende Literatur untersucht
+1-Minuten-Renditen an den Minuten 00/15/30/45. Unser 5m-Control ist deshalb nur
+eine grobe Replikation und keine direkte Reproduktion des publizierten Designs.
+Das publizierte Ergebnis ist folglich weder durch diesen 5m-Control bestätigt
+noch allein dadurch widerlegt.
+
+### 4. Micro-Familie insgesamt
+
+Die bisherige Micro-Familie wurde inzwischen auf mehreren vollständig
+symbol-disjunkten Universen kontrolliert:
+
+- 15m Continuation / Reversal
+- Directional Short / Long mit 1x-3x
+- Holding Horizons H1 / H4 / H16
+- unabhängige Holding-Horizon-Replikation
+- 5m Turn-of-the-Candle-Control
+
+Der wiederkehrende Befund ist: Vor-Kosten-Returns können bei einfachen
+Reversal-/Calendar-Time-Regeln stark erscheinen, aber Kosten, Turnover,
+Drawdown oder unabhängige Replikation entfernen den Robustheitsnachweis.
+Deshalb bleibt Micro-Trading ein Forschungszweig und wird nicht in die
+Tagesstrategie integriert.
+
+### 5. Gesamtfokus ab jetzt
+
+Die Priorität liegt wieder klar auf der täglichen Hauptstrategie und deren
+Robustheitsengpass. Die bisherigen Micro-Experimente werden als abgeschlossene
+Forschungsfamilie behandelt; kein weiteres Micro-Tuning wird aus den bisherigen
+Ergebnissen abgeleitet.
+
+Der nächste fachliche Arbeitsschritt ist:
+
+1. die vier verbliebenen Failure-Gates des unabhängigen Tageskandidaten weiter
+   zu zerlegen,
+2. daraus nur bei reproduzierbarem, vorab formulierbarem Kontrast genau ein
+   gepaartes Risiko-/Architektur-Gegenexperiment abzuleiten,
+3. anschließend eine weitere unabhängige Validierung statt Parameter-Tuning zu
+   verwenden.
+
+Parallel bleiben Provenienz, Recovery und dauerhafte Checkpoint-Archivierung
+technische Pflichtbestandteile.
+
+## Literaturreferenz für den Micro-Control
+
+Shanaev, Vasenin und Stepanov, „Turn-of-the-candle effect in bitcoin returns“,
+Heliyon 9(3), 2023, DOI 10.1016/j.heliyon.2023.e14236.
+Die Studie nutzt 1-Minuten-Daten und definiert den Turn-of-the-Candle-Effekt an
+Minute 00/15/30/45. Das Repository verwendet diese Arbeit ausschließlich als
+Hypotheseninspiration; Ergebnisse werden unabhängig überprüft.
+
+---
 
 Stand: 2026-09-23
 Basis: aktueller `master`-Stand nach PR #37.
