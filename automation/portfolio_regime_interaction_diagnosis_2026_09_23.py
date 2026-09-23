@@ -51,6 +51,76 @@ def _load_and_verify_diagnosis(
     return diagnosis
 
 
+def _window_interaction_snapshot(diagnosis: dict) -> dict:
+    windows = []
+    for window in diagnosis["windows"]:
+        portfolio = window["portfolio"]
+        trend = window["trend_sleeve"]
+        cs = window["cross_sectional_sleeve"]
+        windows.append(
+            {
+                "window_index": window["window_index"],
+                "start_timestamp": window["start_timestamp"],
+                "end_timestamp": window["end_timestamp"],
+                "portfolio_period_return": portfolio["period_return"],
+                "portfolio_max_drawdown_percent": portfolio["max_drawdown_percent"],
+                "portfolio_profit_factor": portfolio["profit_factor"],
+                "trend_period_return": trend["period_return"],
+                "trend_profit_factor": trend["profit_factor"],
+                "trend_drawdown_percent": trend["max_drawdown_percent"],
+                "cs_period_return": cs["period_return"],
+                "cs_profit_factor": cs["profit_factor"],
+                "cs_drawdown_percent": cs["max_drawdown_percent"],
+                "sleeve_return_correlation": window["sleeve_return_correlation"],
+                "median_scale": window["median_scale"],
+                "minimum_scale": window["minimum_scale"],
+                "both_sleeves_negative": (
+                    trend["period_return"] < 0.0
+                    and cs["period_return"] < 0.0
+                ),
+                "cross_sectional_drawdown_larger": (
+                    cs["max_drawdown_percent"] > trend["max_drawdown_percent"]
+                ),
+            }
+        )
+    return {"windows": windows}
+
+
+def _conditional_means(windows: list[dict]) -> dict:
+    failing = [row for row in windows if row["portfolio_period_return"] <= 0.0]
+    non_failing = [row for row in windows if row["portfolio_period_return"] > 0.0]
+
+    def averages(rows: list[dict]) -> dict:
+        if not rows:
+            return {
+                "window_count": 0,
+                "mean_sleeve_return_correlation": None,
+                "mean_median_scale": None,
+                "mean_minimum_scale": None,
+                "both_sleeves_negative_ratio": None,
+                "cross_sectional_drawdown_larger_ratio": None,
+            }
+        return {
+            "window_count": len(rows),
+            "mean_sleeve_return_correlation": mean(
+                row["sleeve_return_correlation"] for row in rows
+            ),
+            "mean_median_scale": mean(row["median_scale"] for row in rows),
+            "mean_minimum_scale": mean(row["minimum_scale"] for row in rows),
+            "both_sleeves_negative_ratio": mean(
+                row["both_sleeves_negative"] for row in rows
+            ),
+            "cross_sectional_drawdown_larger_ratio": mean(
+                row["cross_sectional_drawdown_larger"] for row in rows
+            ),
+        }
+
+    return {
+        "portfolio_non_positive_windows": averages(failing),
+        "portfolio_positive_windows": averages(non_failing),
+    }
+
+
 def _dataset_analysis(
     diagnosis: dict,
     label: str,
