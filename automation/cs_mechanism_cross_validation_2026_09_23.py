@@ -132,32 +132,35 @@ def _validate_report(report: dict, manifest: dict, label: str) -> None:
     if not manifest.get("manifest_fingerprint"):
         raise ValueError(f"{label}: Manifest-Fingerprint fehlt.")
 
-    methodology_text = json.dumps(
-        report.get("methodology", {}),
-        sort_keys=True,
+    methodology = report.get("methodology", {})
+    preregistration = report.get("preregistration", {})
+    architecture_text = str(
+        methodology.get("architecture", "")
     ).lower()
     preregistration_text = json.dumps(
-        report.get("preregistration", {}),
+        preregistration,
         sort_keys=True,
     ).lower()
-    architecture_text = str(
-        report.get("methodology", {}).get("architecture", "")
-    ).lower()
-    verification_text = " ".join(
-        (
-            methodology_text,
-            preregistration_text,
-            architecture_text,
+    if "12-1 cs momentum top-2 long-only" not in architecture_text:
+        raise ValueError(
+            f"{label}: feste 12-1-CS-Top-2-Architektur nicht verifiziert."
         )
-    )
-    required_terms = (
-        "12-1",
-        "252",
-        "21",
-        "top-2",
-    )
-    if not all(term in verification_text for term in required_terms):
-        raise ValueError(f"{label}: präregistrierte CS-Regel nicht verifiziert.")
+    if preregistration.get("concrete_universes_fixed_before_data_acquisition") is not True:
+        raise ValueError(
+            f"{label}: präregistrierte Universen nicht verifiziert."
+        )
+    if preregistration.get("selection_after_results") is not False:
+        raise ValueError(
+            f"{label}: Selection-after-results Guard verletzt."
+        )
+    if preregistration.get("asset_replacement_after_results") is not False:
+        raise ValueError(
+            f"{label}: Asset-replacement-after-results Guard verletzt."
+        )
+    if "selection_profile_used" in methodology and methodology["selection_profile_used"] is not False:
+        raise ValueError(
+            f"{label}: Selection-profile Guard verletzt."
+        )
 
     safety = report.get("safety", {})
     if safety.get("paper_only") is not True:
