@@ -134,30 +134,61 @@ def _validate_report(report: dict, manifest: dict, label: str) -> None:
 
     methodology = report.get("methodology", {})
     preregistration = report.get("preregistration", {})
-    architecture_text = str(
+
+    primary_rule = str(
+        methodology.get("primary_rule", "")
+    ).lower()
+    architecture = str(
         methodology.get("architecture", "")
     ).lower()
-    preregistration_text = json.dumps(
-        preregistration,
-        sort_keys=True,
-    ).lower()
-    if "12-1 cs momentum top-2 long-only" not in architecture_text:
+
+    fixed_rule_verified = (
+        "12-1 cross-sectional momentum, top-2 long-only" in primary_rule
+        or "12-1 cs momentum top-2 long-only" in architecture
+    )
+    if not fixed_rule_verified:
         raise ValueError(
-            f"{label}: feste 12-1-CS-Top-2-Architektur nicht verifiziert."
+            f"{label}: feste 12-1-CS-Top-2-Regel nicht verifiziert."
         )
-    if preregistration.get("concrete_universes_fixed_before_data_acquisition") is not True:
-        raise ValueError(
-            f"{label}: präregistrierte Universen nicht verifiziert."
-        )
-    if preregistration.get("selection_after_results") is not False:
-        raise ValueError(
-            f"{label}: Selection-after-results Guard verletzt."
-        )
-    if preregistration.get("asset_replacement_after_results") is not False:
-        raise ValueError(
-            f"{label}: Asset-replacement-after-results Guard verletzt."
-        )
-    if "selection_profile_used" in methodology and methodology["selection_profile_used"] is not False:
+
+    if "formation_window_sessions" in methodology:
+        if int(methodology["formation_window_sessions"]) != LOOKBACK:
+            raise ValueError(
+                f"{label}: Formation-Länge stimmt nicht mit {LOOKBACK} überein."
+            )
+    if "skip_sessions" in methodology:
+        if int(methodology["skip_sessions"]) != SKIP:
+            raise ValueError(
+                f"{label}: Skip-Länge stimmt nicht mit {SKIP} überein."
+            )
+    if "rebalance_sessions" in methodology:
+        if int(methodology["rebalance_sessions"]) != REBALANCE:
+            raise ValueError(
+                f"{label}: Rebalance-Länge stimmt nicht mit {REBALANCE} überein."
+            )
+    if "top_n" in methodology:
+        if int(methodology["top_n"]) != TOP_N:
+            raise ValueError(
+                f"{label}: Top-N stimmt nicht mit {TOP_N} überein."
+            )
+
+    if preregistration:
+        if preregistration.get(
+            "concrete_universes_fixed_before_data_acquisition"
+        ) is not True:
+            raise ValueError(
+                f"{label}: präregistrierte Universen nicht verifiziert."
+            )
+        if preregistration.get("selection_after_results") is not False:
+            raise ValueError(
+                f"{label}: Selection-after-results Guard verletzt."
+            )
+        if preregistration.get("asset_replacement_after_results") is not False:
+            raise ValueError(
+                f"{label}: Asset-replacement-after-results Guard verletzt."
+            )
+
+    if methodology.get("selection_profile_used") is not False:
         raise ValueError(
             f"{label}: Selection-profile Guard verletzt."
         )
