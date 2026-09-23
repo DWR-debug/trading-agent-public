@@ -1,0 +1,135 @@
+name: CS Rank Monotonicity Control 2026-09-23
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - master
+    paths:
+      - "automation/cs_rank_monotonicity_control_2026_09_23.py"
+      - "tests/test_cs_rank_monotonicity_control_2026_09_23.py"
+      - ".github/workflows/cs-rank-monotonicity-control-2026-09-23.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  rank_control:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Erste unabhängige CS-Replikation laden
+        uses: actions/download-artifact@v5
+        with:
+          name: cs-momentum-replication-35840185031
+          path: first_artifact
+          run-id: 35840185031
+          github-token: \${{ secrets.GITHUB_TOKEN }}
+
+      - name: Zweite unabhängige Validation laden
+        env:
+          GH_TOKEN: \${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl --fail --location \
+            --header "Authorization: Bearer \${GH_TOKEN}" \
+            --header "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/DWR-debug/trading-agent-public/actions/artifacts/10740188093/zip" \
+            --output second_artifact.zip
+          echo "eed3ec6105dec7bc8616ab989ce6f086107b249f7fa087f6e851709af6e47354  second_artifact.zip" | sha256sum -c -
+          mkdir -p second_artifact
+          unzip -q second_artifact.zip -d second_artifact
+
+      - name: Rank-Monotonicity-Control ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.cs_rank_monotonicity_control_2026_09_23 \
+            --first-root first_artifact \
+            --second-root second_artifact \
+            --output cs_rank_monotonicity_control_2026_09_23.json
+
+      - name: Integrität und Sicherheitsvertrag prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path("cs_rank_monotonicity_control_2026_09_23.json")
+          document = json.loads(path.read_text(encoding="utf-8"))
+          stored = document.pop("rank_control_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(
+                  document,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+
+          assert stored == actual
+          assert document["status"] == "COMPLETED"
+          assert document["fixed_rule"]["reported_ranks"] == [1,2,3,4,5]
+          assert document["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+          }
+          for label in ("first_validation", "second_validation"):
+              assert document["datasets"][label]["formation_count"] > 0
+              assert set(document["datasets"][label]["rank_summary"]) == {"1","2","3","4","5"}
+
+          print("CS_RANK_MONOTONICITY_INTEGRITY_VALID")
+          for label in ("first_validation", "second_validation"):
+              data = document["datasets"][label]
+              print(label)
+              print(
+                  "pooled_corr=",
+                  data["pooled_rank_position_vs_forward_return_correlation"],
+                  "full_monotone_ratio=",
+                  data["full_rank_path_monotone_ratio"],
+                  "adjacent_ratio=",
+                  data["adjacent_non_increasing_ratio"],
+              )
+              for rank, row in data["rank_summary"].items():
+                  print(
+                      "rank=",
+                      rank,
+                      "mean_forward=",
+                      row["mean_forward_return"],
+                      "positive_ratio=",
+                      row["positive_forward_ratio"],
+                  )
+          print("RANK_CONTROL_FINGERPRINT:", stored)
+          PY
+
+      - name: Rank-Control-Artefakt sichern
+        uses: actions/upload-artifact@v4
+        with:
+          name: cs-rank-monotonicity-control-2026-09-23-\${{ github.run_id }}
+          path: cs_rank_monotonicity_control_2026_09_23.json
+          if-no-files-found: error
+          retention-days: 30
