@@ -32,7 +32,6 @@ from automation.candidate_validation_50_50_vol_budget import (
 from automation.independent_validation_2026_09_23 import (
     CS_UNIVERSE,
     TREND_UNIVERSE,
-    _manifest as _independent_manifest,
 )
 from config import settings
 
@@ -212,11 +211,13 @@ def analyze(artifact_root: Path) -> dict[str, Any]:
     if report["source"]["adjusted_close_archive_fingerprint"] != archive_fp:
         raise ValueError("Adjusted-close archive does not match source report.")
 
-    trend_manifest = _independent_manifest(
-        artifact_root / "research/independent_validation_2026_09_23/data_trend_manifest.json"
+    trend_manifest = _manifest(
+        artifact_root / "research/independent_validation_2026_09_23/data_trend_manifest.json",
+        TREND_UNIVERSE,
     )
-    cs_manifest = _independent_manifest(
-        artifact_root / "research/independent_validation_2026_09_23/data_cs_manifest.json"
+    cs_manifest = _manifest(
+        artifact_root / "research/independent_validation_2026_09_23/data_cs_manifest.json",
+        CS_UNIVERSE,
     )
     data_dir = artifact_root / "data/market_data"
     trend = _assets(data_dir, trend_manifest)
