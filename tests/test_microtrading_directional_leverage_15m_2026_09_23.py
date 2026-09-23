@@ -40,3 +40,19 @@ def test_stats_tracks_gross_and_net_results():
 
 def test_stats_handles_empty_input():
     assert _stats([], 0, 0) == {"bar_count": 0}
+
+
+from datetime import datetime, timezone
+
+from automation.microtrading_directional_leverage_15m_2026_09_23 import _align_assets
+
+
+def test_alignment_uses_common_timestamps_when_one_asset_lacks_a_bar():
+    t0 = datetime(2026, 1, 1, tzinfo=timezone.utc)
+    rows_a = [
+        {"timestamp": t0, "net_return": 0.0, "gross_return": 0.0, "turnover": 0.0, "gross_exposure": 1.0, "position_changed": 0},
+        {"timestamp": t0.replace(hour=0, minute=15), "net_return": 0.01, "gross_return": 0.01, "turnover": 0.0, "gross_exposure": 1.0, "position_changed": 0},
+    ]
+    rows_b = [rows_a[0]]
+    aligned = _align_assets({"SOLUSDT": rows_a, "BNBUSDT": rows_a, "XRPUSDT": rows_a, "ADAUSDT": rows_b})
+    assert len(aligned) == 1
