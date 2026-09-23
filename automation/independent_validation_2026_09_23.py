@@ -120,6 +120,7 @@ def run_validation(
         "datasets": adjusted_archive,
     }
     adjusted_archive_fingerprint = base._fp(adjusted_archive_document)
+    adjusted_archive_document["archive_fingerprint"] = adjusted_archive_fingerprint
     archive_path = output_path.with_name("adjusted_close_archive.json")
     archive_path.parent.mkdir(parents=True, exist_ok=True)
     archive_path.write_text(
