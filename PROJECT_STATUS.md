@@ -84,16 +84,38 @@ Die 63-Session-Referenz bleibt unverändert; es erfolgt keine weitere Suche
 Dauerhafte Evidenzablage: docs/risk_layer_window_31_vs_63_2026_09_23_result.md
 und research/checkpoints/risk_layer_window_31_vs_63_2026_09_23.json.
 
-### 2e. Aktuelle nächste Forschungsfrage
+### 2e. Parameter-Free Shock Guard
 
-Der verbleibende Mechanismus ist damit nicht überzeugend durch die Fensterlänge
-erklärt. Der nächste zulässige Schritt ist eine einzelne, parameterfreie bzw.
-aus dem bestehenden Volatilitätsziel direkt abgeleitete Reaktionslogik-Ablation
-für schnelle Schocks. Sie darf erst nach vollständiger Preregistration und
-Research-only-Ausführung auf den vier bestehenden Sätzen beurteilt werden.
+Die aus dem negativen 31-vs-63-Control abgeleitete parameterfreie Shock-Guard-Intervention
+wurde auf vier unabhängigen Sätzen geprüft. Sie verwendet
+`max(63er-Vol, abs(previous_unscaled_return) * sqrt(252))` bei unverändertem 10%-Ziel.
 
-Produktionsstatus bleibt BLOCKED; keine Parameter-, Gewichts-, Gate- oder
-Kostenänderung wird aus den bisherigen Befunden abgeleitet.
+- Rapid-Delayed-Rate verbessert: 2/4
+- Rapid-Onset-Active-Rate verbessert: 1/4
+- Research-DD nicht schlechter: 0/4
+- Research-Rolling-PF nicht schlechter: 0/4
+
+Der präregistrierte Timing-/Robustheitsnachweis wird klar verfehlt. Keine Shock-Guard-
+Variante und kein frei gewählter Shock-Faktor werden daraus weiterentwickelt.
+
+Dauerhafte Evidenzablage: docs/risk_layer_parameter_free_shock_guard_2026_09_23_result.md
+und research/checkpoints/risk_layer_parameter_free_shock_guard_2026_09_23.json.
+
+### 2f. Aktuelle nächste Forschungsfrage
+
+Die bisherigen Interventionen zeigen damit: Weder Sleeve-Aggregation, Fensterlänge
+noch eine direkte Ein-Tages-Schockverstärkung erklären die Risk-/Rolling-Failures
+universell.
+
+Der nächste Schritt ist deshalb wieder Root-Cause-Diagnose: Die bestehende
+Portfolio-Regime-/Sleeve-Interaktionsanalyse wird auf alle vier unabhängigen
+Validierungsfamilien vereinheitlicht. Ziel ist ein belastbarer Kontrast zwischen
+gemeinsamer Sleeve-Schwäche, einzelner Sleeve-Schwäche und der Wirkung der
+De-Risking-Skalierung. Erst ein replizierter Kontrast darf eine neue Intervention
+begründen.
+
+Produktionsstatus bleibt BLOCKED; Parameter, Gewichte, Gates und Kosten bleiben
+unverändert.
 
 ### 3. Micro-Trading: aktueller Abschluss des 5m-Controls
 
