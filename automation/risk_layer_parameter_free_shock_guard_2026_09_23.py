@@ -115,11 +115,12 @@ def _simulate_shock_guard(rows: tuple[dict, ...]) -> list[dict[str, Any]]:
 
 
 def _research_metrics(simulated: list[dict[str, Any]]) -> dict[str, Any]:
+    research_rows = simulated[:RESEARCH_COUNT]
     research = base._stats(simulated, 0, RESEARCH_COUNT)
     rolling = base._rolling(simulated, RESEARCH_COUNT)
-    summary = base._summary(simulated[:RESEARCH_COUNT], rolling)
+    summary = base._summary(research_rows, rolling)
 
-    return {
+    result = {
         "research_return": research["period_return"],
         "research_drawdown_percent": research["max_drawdown_percent"],
         "research_profit_factor": research["profit_factor"],
@@ -128,15 +129,23 @@ def _research_metrics(simulated: list[dict[str, Any]]) -> dict[str, Any]:
         "profitable_rolling_windows": summary["profitable_windows"],
         "profitable_window_ratio": summary["profitable_window_ratio"],
         "research_median_scale": sorted(
-            row["scale"] for row in simulated[:RESEARCH_COUNT]
+            row["scale"] for row in research_rows
         )[RESEARCH_COUNT // 2],
         "research_minimum_scale": min(
-            row["scale"] for row in simulated[:RESEARCH_COUNT]
+            row["scale"] for row in research_rows
         ),
         "research_de_risk_fraction": sum(
-            row["scale"] < 1.0 for row in simulated[:RESEARCH_COUNT]
+            row["scale"] < 1.0 for row in research_rows
         ) / RESEARCH_COUNT,
-        "research_shock_guard_activation_fraction": sum(
+    }
+
+    has_shock_fields = all(
+        "one_day_shock_vol_estimate" in row
+        and "trailing_realized_vol_estimate" in row
+        for row in research_rows
+    )
+    result["research_shock_guard_activation_fraction"] = (
+        sum(
             (
                 row["one_day_shock_vol_estimate"] is not None
                 and row["trailing_realized_vol_estimate"] is not None
@@ -144,9 +153,12 @@ def _research_metrics(simulated: list[dict[str, Any]]) -> dict[str, Any]:
                 > row["trailing_realized_vol_estimate"]
                 and row["one_day_shock_vol_estimate"] > TARGET_VOL
             )
-            for row in simulated[:RESEARCH_COUNT]
-        ) / RESEARCH_COUNT,
-    }
+            for row in research_rows
+        ) / RESEARCH_COUNT
+        if has_shock_fields
+        else None
+    )
+    return result
 
 
 def _timing_metrics(simulated: list[dict[str, Any]]) -> dict[str, Any]:
