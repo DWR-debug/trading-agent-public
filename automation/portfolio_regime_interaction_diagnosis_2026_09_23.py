@@ -139,6 +139,11 @@ def _dataset_analysis(
         window_data,
         key=lambda row: row["portfolio_max_drawdown_percent"],
     )
+    failure_details = diagnosis.get("failure_signature")
+    if failure_details is None:
+        failure_details = diagnosis.get("diagnosis", {})
+    if "max_drawdown_interval" not in failure_details:
+        raise ValueError(f"{label}: max_drawdown_interval fehlt.")
 
     return {
         "label": label,
@@ -150,7 +155,7 @@ def _dataset_analysis(
             "rows": window_data,
             "conditional_means": _conditional_means(window_data),
             "worst_window_by_max_drawdown": max_dd,
-            "recorded_max_drawdown_interval": diagnosis["failure_signature"]["max_drawdown_interval"],
+            "recorded_max_drawdown_interval": failure_details["max_drawdown_interval"],
             "both_sleeves_negative_windows": [
                 row["window_index"]
                 for row in window_data
