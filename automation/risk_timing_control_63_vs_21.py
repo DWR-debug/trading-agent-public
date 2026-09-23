@@ -200,7 +200,7 @@ def analyze(artifact_root: Path) -> dict[str, Any]:
 
     archive_path = (
         artifact_root
-        / "research/independent_validation_2026_09_23/adjusted_close_archive.json"
+        / "research/third_independent_validation_2026_09_23/adjusted_close_archive.json"
     )
     archive = json.loads(archive_path.read_text(encoding="utf-8"))
     archive_fp = archive.get("archive_fingerprint")
@@ -212,11 +212,11 @@ def analyze(artifact_root: Path) -> dict[str, Any]:
         raise ValueError("Adjusted-close archive does not match source report.")
 
     trend_manifest = _manifest(
-        artifact_root / "research/independent_validation_2026_09_23/data_trend_manifest.json",
+        artifact_root / "research/third_independent_validation_2026_09_23/data_trend_manifest.json",
         TREND_UNIVERSE,
     )
     cs_manifest = _manifest(
-        artifact_root / "research/independent_validation_2026_09_23/data_cs_manifest.json",
+        artifact_root / "research/third_independent_validation_2026_09_23/data_cs_manifest.json",
         CS_UNIVERSE,
     )
     data_dir = artifact_root / "data/market_data"
