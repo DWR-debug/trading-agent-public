@@ -29,14 +29,14 @@ from automation.candidate_validation_50_50_vol_budget import (
     _manifest,
     _scenario,
 )
-from automation.independent_validation_2026_09_23 import (
+from automation.independent_validation_2026_09_23_third import (
     CS_UNIVERSE,
     TREND_UNIVERSE,
 )
 from config import settings
 
-SOURCE_RUN_ID = 35839443616
-SOURCE_ARTIFACT_ID = 10740188093
+SOURCE_RUN_ID = 35851876264
+SOURCE_ARTIFACT_ID = 10745697729
 SOURCE_ARTIFACT_DIGEST = "sha256:eed3ec6105dec7bc8616ab989ce6f086107b249f7fa087f6e851709af6e47354"
 BASELINE_VOL_WINDOW = 63
 COUNTERFACTUAL_VOL_WINDOW = 21
@@ -186,7 +186,7 @@ def analyze(artifact_root: Path) -> dict[str, Any]:
         raise RuntimeError("Paper-Only safety contract violated.")
 
     report = json.loads(
-        (artifact_root / "research/independent_validation_2026_09_23/report.json").read_text(
+        (artifact_root / "research/third_independent_validation_2026_09_23/report.json").read_text(
             encoding="utf-8"
         )
     )
