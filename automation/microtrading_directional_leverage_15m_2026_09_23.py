@@ -291,7 +291,17 @@ def analyze(data_dir: Path, output_path: Path) -> dict[str, Any]:
         assets[symbol] = candles
         manifests[symbol] = manifest
 
-    expected_rows = min(len(v) for v in assets.values()) - 2
+    common_timestamps = set.intersection(
+        *[
+            {candle.timestamp for candle in candles[2:]}
+            for candles in assets.values()
+        ]
+    )
+    expected_rows = len(common_timestamps)
+    if expected_rows < TARGET_COUNT - 10:
+        raise ValueError(
+            f"Too few common timestamps across assets: {expected_rows} < {TARGET_COUNT - 10}"
+        )
     research_end = int(expected_rows * RESEARCH_RATIO)
 
     results: dict[str, Any] = {}
