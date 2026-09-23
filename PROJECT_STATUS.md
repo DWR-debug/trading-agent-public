@@ -23,70 +23,77 @@ Der aktuelle Forschungsfokus ist die feste Architektur aus:
 - feste 50/50-Aggregation
 - 10% annualisiertes Realized-Volatility-Budget über 63 Sessions, nur De-Risking
 
-Auf einem vollständig unabhängigen Validierungssatz blieb der Holdout positiv:
+Der Fixed Candidate wurde in vier vollständig symbol-disjunkten ETF-Familien geprüft. Alle vier Kandidatenberichte bleiben BLOCKED.
 
-- Research Return: +42,30%
-- Research Drawdown: 16,81%
-- Research PF: 1,075
-- Holdout Return: +29,78%
-- Holdout Drawdown: 12,01%
-- Holdout PF: 1,194
-- OOS/IS: 0,704
-- profitable Research-Rolling-Fenster: 4/5
-- 1,5x Kosten: +28,58% Holdout
-- 2x Kosten: +27,39% Holdout
-
-Nicht erfüllt sind weiterhin die vier Risikoprobleme:
-Research-Drawdown, Rolling-Research-PF, durchschnittlicher Rolling-Drawdown
-und Holdout-Drawdown. Daher bleibt der Kandidat `BLOCKED` und wird nicht in
-Produktion übernommen.
-
-
-
-### 2c. Risk-Layer-Drawdown-Speed
-
-Die bestehende 63-Session-/10%-Volatility-Risk-Layer wurde über alle 20 festen Research-Rolling-Fenster der vier unabhängigen Validierungen auf Rapid-vs-Slow-Drawdown-Onset untersucht.
-
-- Rapid = maximale Drawdown-Episode <=31 Sessions
-- Delayed-or-Never-Rate Rapid > Slow in 3/4 Datensätzen
-- Rapid am Episodenbeginn bereits de-risked: 0/1, 0/2, 0/1 in den drei Datensätzen mit Rapid-Episoden; insgesamt unter der Slow-Rate in 4/4
-
-Der präregistrierte Befund lautet `replicated_rapid_drawdown_onset_lag`. Dies ist ein deskriptiver Mechanismus-Hinweis, kein Kausalitätsnachweis.
-
-Die nächste Forschung ist deshalb eng auf den Risk-Layer-Lag begrenzt: 31 Sessions versus 63 Sessions bei identischem 10%-Volatilitätsziel. Keine Zwischenwerte, keine nachträgliche Parameterauswahl und kein Holdout-Selection.
-
-Dauerhafte Ergebnisablage: `docs/risk_layer_drawdown_speed_2026_09_23_result.md` und `research/checkpoints/risk_layer_drawdown_speed_2026_09_23.json`.
-
-### 2b. Sleeve-Aggregations-Ablation
-
-Die vier bereits archivierten, vollständig symbol-disjunkten Validierungssätze wurden ausschließlich über ihre 2.798 Research-Returns mit drei vorab fixierten Aggregationen geprüft: Trend-only 100/0, aktueller Mix 50/50 und Cross-Sectional-only 0/100.
-
-- Trend-only dominiert 50/50 auf Research-DD und Rolling-PF: 1/4 Sätze
-- Cross-Sectional-only dominiert 50/50 auf beiden Kriterien: 2/4 Sätze
-- 50/50 gleichzeitig schlechter als beide Single-Sleeves bei DD und Rolling-PF: 0/4
-- präregistrierte 3/4-Schwelle: nicht erreicht
-
-Der Befund ist `no_universal_aggregation_contrast`. Es gibt damit keinen belastbaren Grund für eine nachträgliche Gewichtsverschiebung.
-
-Dauerhafte Ergebnisablage: `docs/sleeve_aggregation_ablation_2026_09_23_result.md` und `research/checkpoints/sleeve_aggregation_ablation_2026_09_23.json`.
+- Research-Drawdown-Gate: 4/4 FAIL
+- Rolling-PF-Gate: 4/4 FAIL
+- durchschnittliches Rolling-Drawdown-Gate: 4/4 FAIL
+- Holdout-Drawdown-Gate: 3/4 FAIL
+- Holdout-Rendite: 4/4 positiv
+- 1,5x-/2x-Kostenstress: 4/4 nichtnegativ
 
 ### 2a. Vierfacher unabhängiger Validierungs-Konsens
 
-Die feste Tagesarchitektur wurde inzwischen in vier vollständig symbol-disjunkten ETF-Familien unter demselben Protokoll geprüft. Alle vier Runs sind technisch `COMPLETED`, aber alle vier Kandidatenberichte bleiben `BLOCKED`.
+Der robuste Risiko-/Rolling-Failure ist damit über vier vollständig symbol-disjunkte
+Validierungsfamilien repliziert. Der Befund hängt nicht mehr an einer einzelnen
+Asset-Familie oder einem einzelnen historischen Satz.
 
-- Research-Drawdown-Gate: 4/4 Fehlversuche
-- Rolling-PF-Gate: 4/4 Fehlversuche
-- durchschnittliches Rolling-Drawdown-Gate: 4/4 Fehlversuche
-- Holdout-Drawdown-Gate: 3/4 Fehlversuche
-- Holdout-Rendite: 4/4 positiv
-- 1,5x- und 2x-Kostenstress: 4/4 nichtnegativ
+Dauerhafte Evidenzablage: docs/four_validation_consensus_2026_09_23.md und
+research/checkpoints/four_validation_consensus_2026_09_23.json.
 
-Der vierte Satz (SCHB, VO, VB, VXF, VXUS, VGK, IAU, AGG / KBE, KCE, IYZ, IHI, XHB) reproduziert den Risikobefund mit Research-DD 19,50%, Rolling-PF 1,064, Rolling-Average-DD 15,47% und Holdout-DD 16,03%; Holdout-Return bleibt +27,30%.
+### 2b. Sleeve-Aggregations-Ablation
 
-Der Konsens liefert weiterhin keine universelle Ein-Sleeve-Ursache. Deshalb werden Parameter, Sleeve-Gewichte, Gates und Kosten nicht nachträglich verändert.
+Trend-only, 50/50 und Cross-Sectional-only wurden auf denselben vier immutable
+Validierungsartefakten ausschließlich im Research verglichen.
 
-Dauerhafte Evidenzablage: `docs/four_validation_consensus_2026_09_23.md` und `research/checkpoints/four_validation_consensus_2026_09_23.json`.
+- Trend-only dominiert 50/50 auf DD + Rolling-PF: 1/4
+- Cross-Sectional-only dominiert 50/50 auf DD + Rolling-PF: 2/4
+- 50/50 gleichzeitig schlechter als beide Single-Sleeves: 0/4
+- 3/4-Replikationsschwelle: nicht erreicht
 
+Der Befund lautet no_universal_aggregation_contrast. Keine Gewichtsverschiebung.
+
+Dauerhafte Evidenzablage: docs/sleeve_aggregation_ablation_2026_09_23_result.md
+und research/checkpoints/sleeve_aggregation_ablation_2026_09_23.json.
+
+### 2c. Risk-Layer-Drawdown-Speed
+
+Über alle 20 festen Research-Rolling-Fenster der vier Validierungen war bei
+Rapid-Drawdowns die Delayed-or-Never-Rate in 3/4 Datensätzen höher als bei Slow
+Drawdowns; am Episodenbeginn war Rapid in 4/4 seltener bereits de-risked.
+
+Das ergab den deskriptiven Mechanismus-Hinweis replicated_rapid_drawdown_onset_lag.
+
+Dauerhafte Evidenzablage: docs/risk_layer_drawdown_speed_2026_09_23_result.md
+und research/checkpoints/risk_layer_drawdown_speed_2026_09_23.json.
+
+### 2d. Risk-Layer-Window 31 vs 63
+
+Die daraus präregistrierte Einzelintervention wurde durchgeführt:
+
+- Rapid-Delayed-Rate verbessert: 1/4
+- Rapid-Onset-Active-Rate verbessert: 1/4
+- Research-DD nicht schlechter: 3/4
+- Research-Rolling-PF nicht schlechter: 4/4
+
+Der Timing-Kontrast erreicht die geforderte 3/4-Schwelle nicht. Die Hypothese
+eines universellen Fensterlängen-Mechanismus ist damit nicht unterstützt.
+Die 63-Session-Referenz bleibt unverändert; es erfolgt keine weitere Suche
+über Fensterlängen und keine fünfte Validierung dieser Variante.
+
+Dauerhafte Evidenzablage: docs/risk_layer_window_31_vs_63_2026_09_23_result.md
+und research/checkpoints/risk_layer_window_31_vs_63_2026_09_23.json.
+
+### 2e. Aktuelle nächste Forschungsfrage
+
+Der verbleibende Mechanismus ist damit nicht überzeugend durch die Fensterlänge
+erklärt. Der nächste zulässige Schritt ist eine einzelne, parameterfreie bzw.
+aus dem bestehenden Volatilitätsziel direkt abgeleitete Reaktionslogik-Ablation
+für schnelle Schocks. Sie darf erst nach vollständiger Preregistration und
+Research-only-Ausführung auf den vier bestehenden Sätzen beurteilt werden.
+
+Produktionsstatus bleibt BLOCKED; keine Parameter-, Gewichts-, Gate- oder
+Kostenänderung wird aus den bisherigen Befunden abgeleitet.
 
 ### 3. Micro-Trading: aktueller Abschluss des 5m-Controls
 
