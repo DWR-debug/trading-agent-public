@@ -1,0 +1,208 @@
+name: Independent Candidate Validation 2026-09-23
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - master
+    paths:
+      - "automation/independent_validation_2026_09_23.py"
+      - "tests/test_independent_validation_2026_09_23.py"
+      - "research/asset_universes.py"
+      - ".github/workflows/independent-validation-2026-09-23.yml"
+      - "automation/candidate_validation_50_50_vol_budget.py"
+      - "automation/prepare_research_data.py"
+      - "automation/cross_asset_trend_replication.py"
+      - "backtesting/**"
+      - "config/**"
+      - "data/**"
+      - "research/**"
+      - "validation/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-independent-validation-2026-09-23
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Paper-Trading-Sicherheit prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+
+      - name: Neue Trend-Daten vorbereiten
+        run: |
+          set -euo pipefail
+          python -m automation.prepare_research_data \
+            --target-count 3500 \
+            --universe validation_2026_09_23_trend \
+            --output research/independent_validation_2026_09_23/data_trend_manifest.json
+
+      - name: Neue Cross-Sectional-Daten vorbereiten
+        run: |
+          set -euo pipefail
+          python -m automation.prepare_research_data \
+            --target-count 3500 \
+            --universe validation_2026_09_23_cs \
+            --output research/independent_validation_2026_09_23/data_cs_manifest.json
+
+      - name: Pre-Registration und Manifeste fail-closed verifizieren
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from config import settings
+          from research.asset_universes import get_universe, list_universes
+
+          expected = (
+              ("validation_2026_09_23_trend", Path("research/independent_validation_2026_09_23/data_trend_manifest.json")),
+              ("validation_2026_09_23_cs", Path("research/independent_validation_2026_09_23/data_cs_manifest.json")),
+          )
+
+          for universe_name, path in expected:
+              manifest = json.loads(path.read_text(encoding="utf-8"))
+              universe = get_universe(universe_name)
+              assert manifest["universe"] == universe_name
+              assert manifest["target_count"] == 3500
+              assert tuple(item["symbol"] for item in manifest["datasets"]) == tuple(universe.symbols)
+              assert all(item["candle_count"] == 3500 for item in manifest["datasets"])
+              assert manifest["safety"]["paper_only"] is True
+              assert manifest["safety"]["live_trading_enabled"] is False
+
+          new_symbols = set(get_universe("validation_2026_09_23_trend").symbols)
+          new_symbols.update(get_universe("validation_2026_09_23_cs").symbols)
+          prior_symbols = set()
+          for universe in list_universes():
+              if universe.name.startswith("validation_2026_09_23_"):
+                  continue
+              prior_symbols.update(universe.symbols)
+          assert new_symbols.isdisjoint(prior_symbols)
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+
+          print("PREREGISTRATION_AND_MANIFESTS_VERIFIED")
+          PY
+
+      - name: Fixed Candidate Validation ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.independent_validation_2026_09_23 \
+            --trend-data-dir data/market_data \
+            --trend-manifest research/independent_validation_2026_09_23/data_trend_manifest.json \
+            --cs-data-dir data/market_data \
+            --cs-manifest research/independent_validation_2026_09_23/data_cs_manifest.json \
+            --output research/independent_validation_2026_09_23/report.json
+
+      - name: Ergebnisintegrität und Safety verifizieren
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path("research/independent_validation_2026_09_23/report.json")
+          report = json.loads(path.read_text(encoding="utf-8"))
+          stored = report.pop("report_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(
+                  report,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+
+          assert stored == actual
+          assert report["status"] == "COMPLETED"
+          assert report["candidate_status"] in {"PASS", "BLOCKED"}
+          assert report["source"]["fully_disjoint_from_prior_universes"] is True
+          assert report["preregistration"]["concrete_universes_fixed_before_data_acquisition"] is True
+          assert report["preregistration"]["selection_after_results"] is False
+          assert report["preregistration"]["asset_replacement_after_results"] is False
+          assert report["methodology"]["optimization_used"] is False
+          assert report["methodology"]["selection_profile_used"] is False
+          assert report["methodology"]["signal_parameters_changed"] is False
+          assert report["methodology"]["sleeve_weights_changed"] is False
+          assert report["methodology"]["production_strategy_changed"] is False
+          assert report["methodology"]["orders_enabled"] is False
+          assert report["safety"]["paper_only"] is True
+          assert report["safety"]["live_trading_enabled"] is False
+          assert report["safety"]["orders_enabled"] is False
+
+          archive_path = Path("research/independent_validation_2026_09_23/adjusted_close_archive.json")
+          archive = json.loads(archive_path.read_text(encoding="utf-8"))
+          archive_stored = archive.pop("archive_fingerprint")
+          archive_actual = hashlib.sha256(
+              json.dumps(
+                  archive,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+          assert archive_stored == archive_actual
+          assert archive_stored == report["source"]["adjusted_close_archive_fingerprint"]
+
+          print("REPORT_AND_ARCHIVE_FINGERPRINTS_VALID")
+          print("REPORT_FINGERPRINT:", stored)
+          base = report["scenarios"]["base"]["vol_budget_10pct"]["price_only"]
+          print("CANDIDATE_STATUS:", report["candidate_status"])
+          print("BASE_RESEARCH_RETURN:", base["research"]["period_return"])
+          print("BASE_RESEARCH_DD:", base["research"]["max_drawdown_percent"])
+          print("BASE_RESEARCH_PF:", base["research"]["profit_factor"])
+          print("BASE_HOLDOUT_RETURN:", base["holdout"]["period_return"])
+          print("BASE_HOLDOUT_DD:", base["holdout"]["max_drawdown_percent"])
+          print("BASE_HOLDOUT_PF:", base["holdout"]["profit_factor"])
+          print("OOS_IS_RATIO:", base["oos_to_is_return_ratio"])
+          print("ROLLING_PF:", base["rolling_summary"]["overall_profit_factor"])
+          print("ROLLING_AVG_DD:", base["rolling_summary"]["average_drawdown_percent"])
+          PY
+
+      - name: Validierungsartefakte sichern
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: independent-validation-2026-09-23-${{ github.run_id }}
+          path: |
+            research/independent_validation_2026_09_23/
+            data/market_data/
+          if-no-files-found: error
+          retention-days: 30
