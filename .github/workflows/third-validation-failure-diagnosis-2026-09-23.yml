@@ -1,0 +1,132 @@
+name: Third Validation Failure Risk Diagnosis 2026-09-23
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - master
+    paths:
+      - "automation/third_validation_failure_diagnosis_2026_09_23.py"
+      - "tests/test_third_validation_failure_diagnosis_2026_09_23.py"
+      - ".github/workflows/third-validation-failure-diagnosis-2026-09-23.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Immutable Third-Validation-Artifact laden
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl --fail --location             --header "Authorization: Bearer ${GH_TOKEN}"             --header "Accept: application/vnd.github+json"             "https://api.github.com/repos/DWR-debug/trading-agent-public/actions/artifacts/10745697729/zip"             --output third_validation_artifact.zip
+          echo "b6a408b41abb218d285e06af4b91f66da3ed4ce431aef72907ca5873ffa2c731  third_validation_artifact.zip" | sha256sum -c -
+          mkdir -p third_validation_artifact
+          unzip -q third_validation_artifact.zip -d third_validation_artifact
+
+      - name: Artifact-Report-Integrität vor Diagnose verifizieren
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path("third_validation_artifact/research/third_independent_validation_2026_09_23/report.json")
+          report = json.loads(path.read_text(encoding="utf-8"))
+          stored = report.pop("report_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(report, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("utf-8")
+          ).hexdigest()
+          assert stored == actual
+          assert report["candidate_status"] == "BLOCKED"
+          assert report["source"]["fully_disjoint_from_prior_universes"] is True
+          assert report["safety"]["paper_only"] is True
+          assert report["safety"]["live_trading_enabled"] is False
+          assert report["safety"]["orders_enabled"] is False
+          print("THIRD_SOURCE_ARTIFACT_INTEGRITY_VALID")
+          print("SOURCE_REPORT_FINGERPRINT:", stored)
+          PY
+
+      - name: Failure-/Risk-Diagnose ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.third_validation_failure_diagnosis_2026_09_23             --artifact-root third_validation_artifact             --output third_validation_failure_diagnosis_2026_09_23.json
+
+      - name: Diagnoseintegrität und Safety verifizieren
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path("third_validation_failure_diagnosis_2026_09_23.json")
+          document = json.loads(path.read_text(encoding="utf-8"))
+          stored = document.pop("diagnostic_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(document, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("utf-8")
+          ).hexdigest()
+
+          assert stored == actual
+          assert document["status"] == "COMPLETED"
+          assert document["input"]["source_candidate_status"] == "BLOCKED"
+          assert document["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+          }
+          assert document["failure_signature"]["portfolio_negative_window_count"] >= 0
+          assert document["failure_signature"]["cross_sectional_negative_window_count"] >= 0
+          assert document["failure_signature"]["trend_negative_window_count"] >= 0
+
+          print("THIRD_FAILURE_DIAGNOSIS_INTEGRITY_VALID")
+          print("DIAGNOSTIC_FINGERPRINT:", stored)
+          print("FAILURE_SIGNATURE:", json.dumps(document["failure_signature"], sort_keys=True))
+          for window in document["windows"]:
+              print(
+                  "WINDOW",
+                  window["window_index"],
+                  "PORTFOLIO_RETURN",
+                  window["portfolio"]["period_return"],
+                  "CS_RETURN",
+                  window["cross_sectional_sleeve"]["period_return"],
+                  "TREND_RETURN",
+                  window["trend_sleeve"]["period_return"],
+                  "MEDIAN_SCALE",
+                  window["median_scale"],
+              )
+          PY
+
+      - name: Diagnose-Artefakt sichern
+        uses: actions/upload-artifact@v4
+        with:
+          name: third-validation-failure-diagnosis-2026-09-23-${{ github.run_id }}
+          path: third_validation_failure_diagnosis_2026_09_23.json
+          if-no-files-found: error
+          retention-days: 30
