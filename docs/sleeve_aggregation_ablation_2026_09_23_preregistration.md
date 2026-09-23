@@ -25,7 +25,7 @@ Validierungsartefakte verwendet:
 - Run 35851876264 / Artifact 10745697729
 - Run 35867637587 / Artifact 10753545703
 
-Die zugrunde liegenden 13+13? nein: 13 Symbole je? werden nicht neu ausgewählt,
+Die zugrunde liegenden 52 Symbole über vier Validierungssätze werden nicht neu ausgewählt,
 ersetzt oder nach Ergebnissen gefiltert. Die vier vorhandenen Universen bleiben
 unverändert.
 
