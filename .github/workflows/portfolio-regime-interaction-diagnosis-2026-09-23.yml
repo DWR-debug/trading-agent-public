@@ -1,0 +1,143 @@
+name: Portfolio Regime Interaction Diagnosis 2026-09-23
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "automation/portfolio_regime_interaction_diagnosis_2026_09_23.py"
+      - "tests/test_portfolio_regime_interaction_diagnosis_2026_09_23.py"
+      - ".github/workflows/portfolio-regime-interaction-diagnosis-2026-09-23.yml"
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - master
+    paths:
+      - "automation/portfolio_regime_interaction_diagnosis_2026_09_23.py"
+      - "tests/test_portfolio_regime_interaction_diagnosis_2026_09_23.py"
+      - ".github/workflows/portfolio-regime-interaction-diagnosis-2026-09-23.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  interaction_diagnosis:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Zweite Failure-Diagnose laden
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl --fail --location             --header "Authorization: Bearer ${GH_TOKEN}"             --header "Accept: application/vnd.github+json"             "https://api.github.com/repos/DWR-debug/trading-agent-public/actions/artifacts/10742595425/zip"             --output second_diagnosis.zip
+          echo "2ffd23b58dcbf7e4a6a19a71f7570a9050641a33fb5a2d95dc468df038780831  second_diagnosis.zip" | sha256sum -c -
+          mkdir -p second_diagnosis
+          unzip -q second_diagnosis.zip -d second_diagnosis
+
+      - name: Dritte Failure-Diagnose laden
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl --fail --location             --header "Authorization: Bearer ${GH_TOKEN}"             --header "Accept: application/vnd.github+json"             "https://api.github.com/repos/DWR-debug/trading-agent-public/actions/artifacts/10745788019/zip"             --output third_diagnosis.zip
+          echo "a33f7711346b4abcbf5430b6c879ce0fd41acab9d51c597903588dc75d312e47  third_diagnosis.zip" | sha256sum -c -
+          mkdir -p third_diagnosis
+          unzip -q third_diagnosis.zip -d third_diagnosis
+
+      - name: Portfolio-Regime-Interaktion ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.portfolio_regime_interaction_diagnosis_2026_09_23             --second-root second_diagnosis             --third-root third_diagnosis             --output portfolio_regime_interaction_diagnosis_2026_09_23.json
+
+      - name: Integrität und Safety prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path("portfolio_regime_interaction_diagnosis_2026_09_23.json")
+          document = json.loads(path.read_text(encoding="utf-8"))
+          stored = document.pop("interaction_diagnostic_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(
+                  document,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+
+          assert stored == actual
+          assert document["status"] == "COMPLETED"
+          assert document["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+          }
+          assert document["cross_validation"]["shared_failure_fingerprint"] == [
+              "holdout_drawdown",
+              "research_drawdown",
+              "rolling_average_drawdown",
+              "rolling_profit_factor",
+          ]
+          assert len(document["cross_validation"]["negative_portfolio_windows"]) > 0
+          print("PORTFOLIO_INTERACTION_INTEGRITY_VALID")
+          print("DIAGNOSTIC_FINGERPRINT:", stored)
+          print(
+              "BOTH_SLEEVES_NEGATIVE_WINDOWS:",
+              document["cross_validation"]["common_descriptive_metrics"][
+                  "both_sleeves_negative_window_count"
+              ],
+          )
+          print(
+              "CS_LARGER_DD_WINDOWS:",
+              document["cross_validation"]["common_descriptive_metrics"][
+                  "cross_sectional_drawdown_larger_window_count"
+              ],
+          )
+          print(
+              "MEAN_SLEEVE_CORRELATION:",
+              document["cross_validation"]["common_descriptive_metrics"][
+                  "mean_sleeve_return_correlation"
+              ],
+          )
+          print(
+              "MEAN_MEDIAN_SCALE:",
+              document["cross_validation"]["common_descriptive_metrics"][
+                  "mean_median_scale"
+              ],
+          )
+          PY
+
+      - name: Interaktions-Diagnose sichern
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-regime-interaction-diagnosis-2026-09-23-${{ github.run_id }}
+          path: portfolio_regime_interaction_diagnosis_2026_09_23.json
+          if-no-files-found: error
+          retention-days: 30
