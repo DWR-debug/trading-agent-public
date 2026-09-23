@@ -189,13 +189,20 @@ def run_diagnosis(
     cs_weights = base._cs_weights(cs)
     all_assets = {**trend, **cs}
 
+    # _return_rows uses the adjusted-close mapping to bridge the
+    # timestamped bar sequence. Passing empty mappings causes the
+    # time-index KeyError seen in the first public formal run.
+    close_proxy = {
+        symbol: {bar.timestamp: bar.close for bar in bars}
+        for symbol, bars in all_assets.items()
+    }
     rows = base._align(
         trend,
         trend_weights,
-        {symbol: {} for symbol in trend},
+        {symbol: close_proxy[symbol] for symbol in trend},
         cs,
         cs_weights,
-        {symbol: {} for symbol in cs},
+        {symbol: close_proxy[symbol] for symbol in cs},
     )
 
     simulated = base._simulate(
