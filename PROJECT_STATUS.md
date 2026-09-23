@@ -1,7 +1,7 @@
 # Trading Agent — aktueller Gesamtcheckpoint
 
 Stand: 2026-09-23
-Basis: `master` nach PR #42 (`226c85ae68eddbeac8e94e334d63d70540e49172`).
+Basis: `master` nach PR #44 (Sleeve-Aggregations-Ablation).
 
 ## Gesamtstatus
 
@@ -40,6 +40,20 @@ Nicht erfüllt sind weiterhin die vier Risikoprobleme:
 Research-Drawdown, Rolling-Research-PF, durchschnittlicher Rolling-Drawdown
 und Holdout-Drawdown. Daher bleibt der Kandidat `BLOCKED` und wird nicht in
 Produktion übernommen.
+
+
+### 2b. Sleeve-Aggregations-Ablation
+
+Die vier bereits archivierten, vollständig symbol-disjunkten Validierungssätze wurden ausschließlich über ihre 2.798 Research-Returns mit drei vorab fixierten Aggregationen geprüft: Trend-only 100/0, aktueller Mix 50/50 und Cross-Sectional-only 0/100.
+
+- Trend-only dominiert 50/50 auf Research-DD und Rolling-PF: 1/4 Sätze
+- Cross-Sectional-only dominiert 50/50 auf beiden Kriterien: 2/4 Sätze
+- 50/50 gleichzeitig schlechter als beide Single-Sleeves bei DD und Rolling-PF: 0/4
+- präregistrierte 3/4-Schwelle: nicht erreicht
+
+Der Befund ist `no_universal_aggregation_contrast`. Es gibt damit keinen belastbaren Grund für eine nachträgliche Gewichtsverschiebung.
+
+Dauerhafte Ergebnisablage: `docs/sleeve_aggregation_ablation_2026_09_23_result.md` und `research/checkpoints/sleeve_aggregation_ablation_2026_09_23.json`.
 
 ### 2a. Vierfacher unabhängiger Validierungs-Konsens
 
