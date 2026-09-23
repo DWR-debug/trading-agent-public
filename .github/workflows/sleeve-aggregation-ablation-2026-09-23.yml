@@ -1,0 +1,186 @@
+name: Sleeve Aggregation Ablation 2026-09-23
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - master
+    paths:
+      - "automation/sleeve_aggregation_ablation_2026_09_23.py"
+      - "tests/test_sleeve_aggregation_ablation_2026_09_23.py"
+      - "docs/sleeve_aggregation_ablation_2026_09_23_preregistration.md"
+      - ".github/workflows/sleeve-aggregation-ablation-2026-09-23.yml"
+      - "automation/candidate_validation_50_50_vol_budget.py"
+      - "config/**"
+      - "data/**"
+      - "research/**"
+      - "validation/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-sleeve-aggregation-ablation-2026-09-23
+  cancel-in-progress: true
+
+jobs:
+  ablation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Paper-Trading-Sicherheit prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+
+      - name: Vier immutable Validierungsartefakte laden
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/ablation_sources
+          declare -A artifacts=(
+            [10751817990]=candidate-validation-50-50-vol-budget-2026-09-23.zip
+            [10740188093]=second-validation-2026-09-23.zip
+            [10745697729]=third-validation-2026-09-23.zip
+            [10753545703]=fourth-independent-validation-2026-09-23.zip
+          )
+          for artifact_id in "${!artifacts[@]}"; do
+            file="/tmp/${artifacts[$artifact_id]}"
+            gh api               -H "Accept: application/vnd.github+json"               "/repos/${GITHUB_REPOSITORY}/actions/artifacts/${artifact_id}/zip"               > "$file"
+            unzip -q "$file" -d /tmp/ablation_sources
+          done
+
+          test -f /tmp/ablation_sources/research/candidate_validation/report.json
+          test -f /tmp/ablation_sources/research/independent_validation_2026_09_23/report.json
+          test -f /tmp/ablation_sources/research/third_independent_validation_2026_09_23/report.json
+          test -f /tmp/ablation_sources/research/fourth_independent_validation_2026_09_23/report.json
+          echo "IMMUTABLE_VALIDATION_ARTIFACTS_READY"
+
+      - name: Preregistration fail-closed verifizieren
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from automation.sleeve_aggregation_ablation_2026_09_23 import (
+              CASES,
+              COST_SCENARIOS,
+              RESEARCH_COUNT,
+              VARIANTS,
+          )
+
+          assert RESEARCH_COUNT == 2798
+          assert VARIANTS == (
+              ("trend_only_100_0", 1.0),
+              ("equal_weight_50_50", 0.5),
+              ("cross_sectional_only_0_100", 0.0),
+          )
+          assert COST_SCENARIOS == (
+              ("base", 1.0),
+              ("stress_1_5x_cost", 1.5),
+              ("stress_2x_cost", 2.0),
+          )
+          assert [case["artifact_id"] for case in CASES] == [
+              10751817990,
+              10740188093,
+              10745697729,
+              10753545703,
+          ]
+          prereg = Path("docs/sleeve_aggregation_ablation_2026_09_23_preregistration.md")
+          text = prereg.read_text(encoding="utf-8")
+          for token in ("100% Trend", "50% Trend", "100% Cross-Sectional", "2.798", "3 von 4"):
+              assert token in text
+          print("ABLATION_PREREGISTRATION_VERIFIED")
+          PY
+
+      - name: Sleeve-Aggregations-Ablation ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.sleeve_aggregation_ablation_2026_09_23             --source-root /tmp/ablation_sources             --output research/sleeve_aggregation_ablation_2026_09_23/report.json
+
+      - name: Ergebnisintegrität und Research-only-Scope prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path(
+              "research/sleeve_aggregation_ablation_2026_09_23/report.json"
+          )
+          result = json.loads(path.read_text(encoding="utf-8"))
+          stored = result.pop("diagnostic_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(
+                  result,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+          assert stored == actual
+          assert result["status"] == "COMPLETED"
+          assert result["scope"]["holdout_used_for_decision"] is False
+          assert result["scope"]["holdout_metrics_reported"] is False
+          assert result["scope"]["parameter_search"] is False
+          assert result["scope"]["asset_selection"] is False
+          assert result["scope"]["gate_change"] is False
+          assert result["scope"]["production_mutation"] is False
+          assert result["methodology"]["research_only_decision_rule"] is True
+          assert result["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+          }
+          for case in result["cases"].values():
+              assert case["research_only_assertion"] is True
+              for variant in case["variants"].values():
+                  for scenario in variant.values():
+                      assert scenario["research_day_count"] == 2798
+                      assert "holdout_return" not in scenario
+                      assert "holdout_drawdown_percent" not in scenario
+                      assert "holdout_profit_factor" not in scenario
+
+          print("ABLATION_RESULT_INTEGRITY_OK")
+          print("DIAGNOSTIC_FINGERPRINT:", stored)
+          print("DECISION_RULE:", result["consensus"]["decision_rule"])
+          print("REPLICATION_COUNTS:", result["consensus"]["replication_counts"])
+          PY
+
+      - name: Ablationsartefakt sichern
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sleeve-aggregation-ablation-2026-09-23-${{ github.run_id }}
+          path: research/sleeve_aggregation_ablation_2026_09_23/
+          if-no-files-found: error
+          retention-days: 30
