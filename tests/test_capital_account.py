@@ -45,7 +45,7 @@ def test_contribution_increases_protected_capital():
 
 def test_withdrawal_cannot_reduce_protected_capital():
     account = CapitalAccount()
-    account.record_realized_profit(100.0)
+    account.record_realized_pnl(100.0)
 
     with pytest.raises(CapitalAccountingError):
         account.record_profit_withdrawal(101.0)
