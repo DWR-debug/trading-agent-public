@@ -45,6 +45,74 @@ COST_SCENARIOS = (
     ("stress_2x_cost", 2.0),
 )
 
+DEFAULT_PREREGISTRATION = (
+    ROOT
+    / "research"
+    / "preregistrations"
+    / "trial_039_network_momentum_2026_09_24.json"
+)
+
+
+def _activate_preregistration(
+    preregistration_path: str | Path,
+) -> dict:
+    """Load and validate the fixed mechanism contract for a single trial."""
+    global TRIAL_ID, UNIVERSE, SYMBOLS
+    global REQUESTED_CANDLES, COMMON_CANDLES
+    global RESEARCH_RETURNS, HOLDOUT_RETURNS
+
+    path = Path(preregistration_path)
+    if not path.is_absolute():
+        path = ROOT / path
+    spec = json.loads(path.read_text(encoding="utf-8"))
+
+    if spec.get("research_family") not in {
+        "cross_asset_network_momentum",
+        "cross_asset_network_momentum_repair",
+    }:
+        raise ValueError("T039/T040 Network Momentum preregistration required.")
+
+    rules = spec["rule"]
+    expected = {
+        "own_trend_lookback": OWN_LOOKBACK,
+        "skip": SKIP,
+        "peer_lag": PEER_LAG,
+        "correlation_lookback": CORR_LOOKBACK,
+        "blend_weight": BLEND_WEIGHT,
+    }
+    actual = {
+        "own_trend_lookback": int(rules["own_trend_lookback"]),
+        "skip": int(rules["skip"]),
+        "peer_lag": int(rules["peer_lag"]),
+        "correlation_lookback": int(rules["correlation_lookback"]),
+        "blend_weight": float(rules["blend_weight"]),
+    }
+    if actual != expected:
+        raise ValueError(
+            "Preregistration changes the fixed Network Momentum mechanism."
+        )
+
+    symbols = tuple(spec["symbols"])
+    if len(symbols) != 12 or len(symbols) != len(set(symbols)):
+        raise ValueError("Network Momentum requires exactly 12 unique symbols.")
+
+    TRIAL_ID = str(spec["trial_id"])
+    UNIVERSE = str(spec["universe"])
+    SYMBOLS = symbols
+    REQUESTED_CANDLES = int(spec["requested_candles"])
+    COMMON_CANDLES = int(spec["target_candles"])
+    RESEARCH_RETURNS = int(spec["split"]["research_return_periods"])
+    HOLDOUT_RETURNS = int(spec["split"]["holdout_return_periods"])
+
+    if REQUESTED_CANDLES != 3520:
+        raise ValueError("Network Momentum data contract requires 3520 candles.")
+    if COMMON_CANDLES != 3500:
+        raise ValueError("Network Momentum common-calendar target must be 3500.")
+    if RESEARCH_RETURNS != 2798 or HOLDOUT_RETURNS != 700:
+        raise ValueError("Network Momentum split contract must be 2798/700.")
+
+    return spec
+
 
 @dataclass(frozen=True)
 class Bar:
@@ -107,10 +175,10 @@ def _load_snapshot(preflight_path: Path) -> dict[str, tuple[Bar, ...]]:
         preflight_path.read_text(encoding="utf-8")
     )
     if payload.get("trial_id") != TRIAL_ID:
-        raise ValueError("Falsche Trial-ID im Coverage-Preflight.")
+        raise ValueError("Coverage-Preflight gehört nicht zur aktivierten Trial-ID.")
     if payload.get("status") != "coverage_passed":
         raise ValueError(
-            "T039-Forschung ist ohne Coverage-Pass gesperrt."
+            f"{TRIAL_ID}-Forschung ist ohne Coverage-Pass gesperrt."
         )
 
     snapshot = payload.get("data_snapshot") or {}
@@ -963,7 +1031,10 @@ def _evaluate(
 def run_trial(
     preflight_path: str | Path,
     output_path: str | Path,
+    preregistration_path: str | Path = DEFAULT_PREREGISTRATION,
 ) -> dict:
+    _activate_preregistration(preregistration_path)
+
     if settings.PAPER_ONLY is not True:
         raise RuntimeError("T039 requires PAPER_ONLY=True.")
     if settings.LIVE_TRADING_ENABLED is not False:
@@ -1066,11 +1137,16 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--coverage", required=True)
     parser.add_argument("--output", required=True)
+    parser.add_argument(
+        "--preregistration",
+        default=str(DEFAULT_PREREGISTRATION),
+    )
     args = parser.parse_args()
 
     report = run_trial(
         args.coverage,
         args.output,
+        args.preregistration,
     )
     print("T039_STATUS:", report["status"])
     print(
