@@ -92,3 +92,14 @@ def test_merge_gate_results_is_deterministic():
     gates = merge_gate_results({"zeta": True, "alpha": False})
     assert [gate.name for gate in gates] == ["alpha", "zeta"]
     assert [gate.passed for gate in gates] == [False, True]
+def test_gate_passed_must_be_bool():
+    with pytest.raises(EvidenceContractError):
+        snapshot(gates=(GateResult("research_dd", 1),))
+
+
+def test_gate_names_must_be_unique():
+    with pytest.raises(EvidenceContractError):
+        snapshot(gates=(
+            GateResult("research_dd", True),
+            GateResult("research_dd", False),
+        ))
