@@ -37,6 +37,7 @@ on:
     branches:
       - master
       - research/execute-t041
+      - research/execute-t041-frozen
     paths:
       - "automation/research_orchestrator.py"
       - "automation/live_market_observer.py"
@@ -47,7 +48,9 @@ on:
       - "automation/coverage_preflight.py"
       - "automation/adversarial_failure_diagnosis.py"
       - "automation/cross_trial_failure_diagnosis.py"
+      - "automation/portfolio_risk_control_min_variance.py"
       - "tests/test_cross_trial_failure_diagnosis.py"
+      - "tests/test_portfolio_risk_control_min_variance.py"
       - "docs/cross_trial_failure_diagnosis_2026_09_24.md"
       - "research/evidence/cross_trial_failure_diagnosis_2026_09_24.json"
       - "tests/test_adversarial_failure_diagnosis.py"
@@ -64,6 +67,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: trading-agent-unified-research
@@ -98,16 +102,29 @@ jobs:
           assert settings.LIVE_TRADING_ENABLED is False
           print("PAPER-ONLY SAFETY OK")
           PY
+      - name: T041 frozen coverage run id
+        if: github.ref == 'refs/heads/research/execute-t041-frozen'
+        run: |
+          set -euo pipefail
+          run_id=$(python -c 'import json; from pathlib import Path; print(json.loads(Path("research/evidence/t041_coverage_pass_2026_09_24.json").read_text(encoding="utf-8"))["workflow"]["run_id"])')
+          test -n "$run_id"
+          echo "T041_COVERAGE_RUN_ID=$run_id" >> "$GITHUB_ENV"
       - name: Unified Orchestrator
         env:
           ORCHESTRATOR_MODE: ${{ inputs.mode || 'observe' }}
           ORCHESTRATOR_UNIVERSE: ${{ inputs.universe || 'benchmark' }}
         run: |
           set -euo pipefail
-          if [ "$GITHUB_REF" = "refs/heads/research/execute-t041" ]; then
+          if [ "$GITHUB_REF" = "refs/heads/research/execute-t041-frozen" ]; then
             test "$GITHUB_EVENT_NAME" = "push"
             test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
             test "$(git log -1 --pretty=%s)" = "Research authorization: execute T041 formal performance"
+            test -n "$T041_COVERAGE_RUN_ID"
+            gh run download "$T041_COVERAGE_RUN_ID" --repo "$GITHUB_REPOSITORY" --name "unified-research-$T041_COVERAGE_RUN_ID" --dir /tmp/t041-frozen
+            test -f /tmp/t041-frozen/coverage_preflight/T-2026-09-24-041/coverage_preflight_20260924T214018Z.json
+            test -f /tmp/t041-frozen/coverage_preflight/T-2026-09-24-041/coverage_preflight_20260924T214019Z.json
+            mkdir -p research/runs
+            cp -R /tmp/t041-frozen/coverage_preflight research/runs/
             python -m automation.research_orchestrator \
               --mode research_t041 \
               --universe benchmark

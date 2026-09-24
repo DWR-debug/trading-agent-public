@@ -173,55 +173,46 @@ def run(
             Path("research/preregistrations")
             / "trial_041_portfolio_risk_control_cs_2026_09_24.json"
         )
-        trend_coverage = run_preflight(
-            trend_preregistration,
-            output_root=root / "coverage_preflight_t041_trend",
-        )
-        cs_coverage = run_preflight(
-            cs_preregistration,
-            output_root=root / "coverage_preflight_t041_cs",
-        )
-        if (
-            trend_coverage["status"] != "coverage_passed"
-            or cs_coverage["status"] != "coverage_passed"
+        frozen_evidence_path = Path("research/evidence/t041_coverage_pass_2026_09_24.json")
+        if not frozen_evidence_path.exists():
+            raise FileNotFoundError("T041 frozen coverage evidence is required before formal performance.")
+        frozen_evidence = json.loads(frozen_evidence_path.read_text(encoding="utf-8"))
+        expected_trial = "T-2026-09-24-041"
+        if frozen_evidence.get("trial_id") != expected_trial:
+            raise ValueError("Frozen T041 coverage evidence has the wrong trial id.")
+        if frozen_evidence.get("status") != "COVERAGE_PASSED_PERFORMANCE_PENDING":
+            raise ValueError("Frozen T041 coverage evidence is not performance-approved.")
+        trend_expected = frozen_evidence["coverage"]["trend"]["coverage_fingerprint"]
+        cs_expected = frozen_evidence["coverage"]["cross_sectional"]["coverage_fingerprint"]
+        trend_coverage_path = root / "coverage_preflight" / expected_trial / "coverage_preflight_20260924T214018Z.json"
+        cs_coverage_path = root / "coverage_preflight" / expected_trial / "coverage_preflight_20260924T214019Z.json"
+        for coverage_path, expected_fingerprint, label in (
+            (trend_coverage_path, trend_expected, "trend"),
+            (cs_coverage_path, cs_expected, "cross-sectional"),
         ):
-            status = (
-                "DATA_INVALID"
-                if (
-                    trend_coverage["status"] != "coverage_passed"
-                    or cs_coverage["status"] != "coverage_passed"
-                )
-                else "BLOCKED"
-            )
-            snapshot = _state_snapshot(
-                mode=mode,
-                universe="T041-PORTFOLIO-RISK-CONTROL",
-                status=status,
-                run_fingerprint=(
-                    f"{trend_coverage['coverage_fingerprint']}:"
-                    f"{cs_coverage['coverage_fingerprint']}"
-                ),
-            )
-        else:
-            output = (
-                root
-                / "validation_2026_09_24_portfolio_risk_control"
-                / "formal"
-                / "t041.json"
-            )
-            report = run_t041_trial(
-                trend_coverage["output"],
-                cs_coverage["output"],
-                trend_preregistration,
-                cs_preregistration,
-                output,
-            )
-            snapshot = _state_snapshot(
-                mode=mode,
-                universe="T041-PORTFOLIO-RISK-CONTROL",
-                status=report["status"],
-                run_fingerprint=report["report_fingerprint"],
-            )
+            if not coverage_path.exists():
+                raise FileNotFoundError(f"Frozen T041 {label} coverage snapshot is missing: {coverage_path}")
+            coverage_payload = json.loads(coverage_path.read_text(encoding="utf-8"))
+            if coverage_payload.get("trial_id") != expected_trial:
+                raise ValueError(f"Frozen T041 {label} coverage has the wrong trial id.")
+            if coverage_payload.get("status") != "coverage_passed":
+                raise ValueError(f"Frozen T041 {label} coverage is not a passed preflight.")
+            if coverage_payload.get("coverage_fingerprint") != expected_fingerprint:
+                raise ValueError(f"Frozen T041 {label} coverage fingerprint mismatch.")
+        output = root / "validation_2026_09_24_portfolio_risk_control" / "formal" / "t041.json"
+        report = run_t041_trial(
+            trend_coverage_path,
+            cs_coverage_path,
+            trend_preregistration,
+            cs_preregistration,
+            output,
+        )
+        snapshot = _state_snapshot(
+            mode=mode,
+            universe="T041-PORTFOLIO-RISK-CONTROL",
+            status=report["status"],
+            run_fingerprint=report["report_fingerprint"],
+        )
     elif mode == "research":
         if universe in PREREGISTRATIONS:
             preregistration = _preregistration_for(universe)
