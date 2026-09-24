@@ -136,17 +136,33 @@ Der präregistrierte Timing-Nachweis wird verfehlt. Die EWMA-Variante wird nicht
 Dauerhafte Evidenzablage: docs/risk_layer_ewma_094_2026_09_24_result.md
 und research/checkpoints/risk_layer_ewma_094_2026_09_24.json.
 
-### 2h. Aktuelle nächste Forschungsfrage
+### 2h. Risk-Layer Following-Return-Diagnose
 
-Die Risikomanagement-Hypothesen wurden damit weiter eingegrenzt. Als nächster
-isolierter Diagnoseschritt wird geprüft, ob die bestehende 63-Session-
-De-Risking-Skalierung überhaupt einen günstigen nachgelagerten Return-
-Zusammenhang besitzt. Gemessen wird ausschließlich die folgende Research-
-Periode nach einem De-Risking-Zustand versus nach einem unskalierten Zustand.
+Die bestehende 63-Session-/10%-Risk-Layer wurde auf vier unabhängigen Research-
+Sätzen auf die unmittelbar folgende unskalierte Periode untersucht.
 
-Diese Diagnose verändert weder Exposure noch Gates und verwendet nur die vier
-immutable Research-Datensätze. Ziel ist die Prüfung der empirischen Voraussetzung
-für Volatility Timing, bevor irgendeine neue Risk-Logik erwogen wird.
+- günstige Volatility-Timing-Beziehung: 0/4
+- ungünstige Beziehung: 4/4
+- in allen vier Sätzen höhere mittlere Folgerendite nach De-Risking
+- in allen vier Sätzen höhere positive Folgerenditenrate nach De-Risking
+
+Der Befund ist deskriptiv und nicht kausal. Er zeigt jedoch, dass die empirische
+Richtung des klassischen Volatility-Timing-Arguments auf der unmittelbaren
+Tagesebene in unserem Fixed Candidate nicht repliziert wird.
+
+Dauerhafte Evidenzablage: docs/risk_layer_following_return_diagnosis_2026_09_24_result.md
+und research/checkpoints/risk_layer_following_return_diagnosis_2026_09_24.json.
+
+### 2i. Aktuelle nächste Forschungsfrage
+
+Da der Gegenbefund auf der Folgerenditenebene eindeutig ist, wird nicht direkt
+die Risk-Layer-Logik invertiert. Zunächst wird die Horizontabhängigkeit geprüft:
+unskalierte kumulierte Folgerenditen nach aktivem De-Risking versus Vollrisiko
+über 1, 5, 20 und 60 Research-Tage.
+
+Die Untersuchung bleibt rein deskriptiv und verwendet keine neuen Daten, keine
+Parameteroptimierung und keinen Holdout. Sie soll klären, ob der Gegenbefund nur
+kurzfristige Mean-Reversion reflektiert oder auch auf längeren Horizonten anhält.
 
 Produktionsstatus bleibt BLOCKED; Parameter, Gewichte, Gates und Kosten bleiben
 unverändert.
