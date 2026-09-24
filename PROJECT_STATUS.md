@@ -2763,3 +2763,42 @@ Konsequenz: 033 wird nicht als Performanceergebnis gewertet. Für 034 wird IEMG 
 - PAPER_ONLY=True
 - LIVE_TRADING_ENABLED=False
 - keine Orders
+
+
+## Aktueller Checkpoint — Trial 034 Fixed ETF Relative-Value Pairs — 2026-09-24
+
+Trial T-2026-09-24-034 wurde vollständig auf `DWR-debug/trading-agent-public` ausgeführt und als **NO_SUPPORT / archived_rejected** abgeschlossen.
+
+- Workflow: `36045225948`
+- Artifact: `10827469931`
+- 10/10 Symbole × 3.520 Candles Coverage; 3.500 Candles/Asset im Research-Run
+- 3.498 gemeinsame PIT-Returns; 2.798 Research / 700 Holdout
+- 679 Tests und alle Vorprüfungen grün
+
+### Befund
+
+Research Return: -18,92 %; DD 19,01 %; PF 0,599; 85 abgeschlossene Trades.
+Holdout Return: -0,71 %; DD 1,39 %; PF 0,855; nur 6 abgeschlossene Trades.
+
+Keines der fünf Research-Rolling-Fenster war profitabel. 1,5x-/2x-Kostenstress
+bleiben im Holdout negativ.
+
+### Konsequenz
+
+Die getestete Cointegration-/Z-Score-ETF-Pairs-Familie wird nicht weiter auf
+irgendeiner dieser fünf Regeln verfeinert. Kein Pair-Tuning, keine ADF-Lockerung,
+kein VIX-Overlay und keine Produktionseinbindung.
+
+### Nächster methodischer Fokus
+
+Als nächstes wird ein orthogonaler Cross-Asset-Carry-/Trend-State-Control geprüft.
+Auch dieser folgt Coverage-Preflight -> Präregistrierung -> blinder Research-
+und Holdout-Test -> gegebenenfalls Borrow-/Execution-/Liquidity-Audit ->
+erst danach separater 30-Tage-Paper-Test.
+
+### Sicherheitsstatus
+
+- PAPER_ONLY=True
+- LIVE_TRADING_ENABLED=False
+- keine Research-Orders
+- keine Live-Ausführung
