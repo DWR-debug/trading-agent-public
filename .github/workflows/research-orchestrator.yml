@@ -6,13 +6,14 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: Beobachtung, T039-Coverage-Preflight oder formaler Research-Lauf
+        description: Beobachtung, T039-Coverage-Preflight, T040-Coverage-Discovery oder formaler Research-Lauf
         required: true
         default: observe
         type: choice
         options:
           - observe
           - preflight
+          - discover_coverage
           - research
       universe:
         description: Research-Universum
@@ -34,6 +35,7 @@ on:
       - "automation/one_command_research.py"
       - "automation/research_workflow.py"
       - "automation/network_momentum_lab.py"
+      - "automation/coverage_candidate_discovery.py"
       - "research/**"
       - "docs/preregistration_trial_039_network_momentum_2026_09_24.md"
       - "validation/**"
@@ -87,6 +89,9 @@ jobs:
               --universe benchmark
             python -m automation.research_orchestrator \
               --mode preflight \
+              --universe validation_2026_09_24_network_momentum_t039
+            python -m automation.research_orchestrator \
+              --mode discover_coverage \
               --universe validation_2026_09_24_network_momentum_t039
           else
             python -m automation.research_orchestrator \
