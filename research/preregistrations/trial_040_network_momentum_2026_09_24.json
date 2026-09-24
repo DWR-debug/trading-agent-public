@@ -48,12 +48,18 @@
     "only_changed_symbol": "FTGC",
     "replaced_with": "BIV",
     "selection_basis": "first coverage-valid candidate from fixed T040 coverage pool in source order",
-    "performance_used_for_selection": false
+    "performance_used_for_selection": false,
+    "coverage_discovery_id": "T040-COVERAGE-CANDIDATES-2026-09-24",
+    "coverage_discovery_fingerprint": "d5a189c99dcac3263090212ea259df01a7c2f2fac15f89f84f03f0b29495afab",
+    "coverage_valid_at_selection": true
   },
   "disjointness": {
     "fully_symbol_disjoint": false,
     "allowed_overlap_universe": "validation_2026_09_24_network_momentum_t039",
-    "reason": "T040 is a repair successor; 11 symbols and the mechanism remain unchanged. BIV itself was coverage-checked as unused by all existing universes before selection."
+    "reason": "T040 is a repair successor; 11 symbols and the mechanism remain unchanged. BIV itself was coverage-checked as unused by all existing universes before selection.",
+    "allowed_overlap_universes": [
+      "validation_2026_09_24_network_momentum_t039"
+    ]
   },
   "point_in_time": {
     "past_information_only": true,
