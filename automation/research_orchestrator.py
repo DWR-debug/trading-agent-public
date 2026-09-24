@@ -84,7 +84,7 @@ def run(
         )
         snapshot = _state_snapshot(
             mode=mode,
-            universe=universe,
+            universe=payload["universe"],
             status=payload["status"],
             run_fingerprint=payload["coverage_fingerprint"],
         )
