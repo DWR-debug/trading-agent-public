@@ -30,7 +30,7 @@ def test_t039_research_is_coverage_gated(monkeypatch, tmp_path):
             "output": str(tmp_path / "coverage.json"),
         }
 
-    def fake_trial(coverage_path, output_path):
+    def fake_trial(coverage_path, output_path, preregistration):
         calls.append(("trial", str(coverage_path), str(output_path)))
         return {
             "status": "BLOCKED",
