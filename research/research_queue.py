@@ -1,7 +1,9 @@
 """Deterministic research queue for autonomous, gated experimentation."""
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Iterable
 
 
@@ -75,37 +77,16 @@ class ResearchQueue:
 
 
 def default_research_queue() -> ResearchQueue:
-    return ResearchQueue(
-        (
-            ResearchTask(
-                "Q-001-TRIAL-017",
-                "event_intelligence",
-                "Political/geopolitical event flow can improve point-in-time market-impact classification.",
-            ),
-            ResearchTask(
-                "Q-002-ADVERSARIAL",
-                "research_governance",
-                "Fragile apparent alpha should degrade under latency, cost and perturbation stress.",
-            ),
-            ResearchTask(
-                "Q-003-PORTFOLIO-RISK",
-                "portfolio_risk",
-                "Cross-strategy correlation, concentration and joint losses can improve exposure controls.",
-            ),
-            ResearchTask(
-                "Q-004-CHAMPION-CHALLENGER",
-                "research_governance",
-                "A frozen evidence contract can prevent promotion based only on peak backtest results.",
-            ),
-            ResearchTask(
-                "Q-005-VOLATILITY",
-                "volatility",
-                "Volatility-regime information may provide an orthogonal, cost-aware signal or risk overlay.",
-            ),
-            ResearchTask(
-                "Q-006-RELATIVE-VALUE",
-                "relative_value",
-                "Stable cross-asset relationships may add diversification without relying on trend persistence.",
-            ),
+    """Load the durable machine-readable queue used by autonomous orchestration."""
+    path = Path(__file__).with_name("research_queue.json")
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    tasks = tuple(
+        ResearchTask(
+            task_id=item["task_id"],
+            research_family=item["research_family"],
+            hypothesis=item["hypothesis"],
+            status=item.get("status", "PENDING"),
         )
+        for item in payload["tasks"]
     )
+    return ResearchQueue(tasks)
