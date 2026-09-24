@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "checkpoint_type": "risk_layer_forward_horizon_profile_2026_09_24_result",
+  "status": "COMPLETED",
+  "run_id": 35966861806,
+  "artifact_id": 10794218742,
+  "artifact_digest": "sha256:07b63055dae48b9f346fbe613e410355855fd7feff68032e3170c14a7b340d21",
+  "diagnostic_fingerprint": "a8179c3b2082084c6efa32c168a808d550dd8d42f4efcd71fdb13530b7295286",
+  "horizon_consensus": {
+    "1": {
+      "favorable": 0,
+      "adverse": 4,
+      "mixed_or_inconclusive": 0
+    },
+    "5": {
+      "favorable": 0,
+      "adverse": 4,
+      "mixed_or_inconclusive": 0
+    },
+    "20": {
+      "favorable": 0,
+      "adverse": 3,
+      "mixed_or_inconclusive": 1
+    },
+    "60": {
+      "favorable": 0,
+      "adverse": 4,
+      "mixed_or_inconclusive": 0
+    }
+  },
+  "conclusion": "The adverse relationship after de-risking is not confined to the next day; it persists through 5 and 60 Research periods and is present in 3/4 at 20 periods.",
+  "descriptive_not_causal": true,
+  "holdout_used_for_decision": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false
+  },
+  "next_step": "Fixed 63-session downside-volatility risk-layer control at the same 10% target."
+}
