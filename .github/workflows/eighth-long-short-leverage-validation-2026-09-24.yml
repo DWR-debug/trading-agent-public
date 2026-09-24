@@ -1,0 +1,146 @@
+name: Eighth Long Short Leverage Validation 2026-09-24
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [master]
+  push:
+    branches:
+      - research/leverage-long-short-validation-2026-09-24
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-eighth-leverage-long-short
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Paper-only-Sicherheit prüfen
+        run: |
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER_ONLY_SAFETY_OK")
+          PY
+
+      - name: Daten vorbereiten
+        run: |
+          set -euo pipefail
+          python -m automation.prepare_research_data             --target-count 3500             --universe validation_2026_09_24_eighth_leverage             --output research/eighth_long_short_leverage_2026_09_24/data_manifest.json
+
+      - name: Disjunktheit prüfen
+        run: |
+          python - <<'PY'
+          from research.asset_universes import get_universe, list_universes
+
+          name = "validation_2026_09_24_eighth_leverage"
+          symbols = set(get_universe(name).symbols)
+          for universe in list_universes():
+              if universe.name == name:
+                  continue
+              assert symbols.isdisjoint(universe.symbols), f"Overlap with {universe.name}"
+          print("EIGHTH_VALIDATION_FULLY_DISJOINT_OK")
+          PY
+
+      - name: Präregistrierung prüfen
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path("docs/eighth_long_short_leverage_validation_2026_09_24_preregistration.md").read_text(encoding="utf-8")
+          for token in ("T-2026-09-24-012", "3500", "2798", "700", "1.5x", "2x", "3x", "PAPER_ONLY=True"):
+              assert token in text
+          print("PREREGISTRATION_VERIFIED")
+          PY
+
+      - name: Achte Long/Short-/Leverage-Validierung
+        run: |
+          python -m automation.eighth_long_short_leverage_validation_2026_09_24             --data-dir data/market_data             --manifest research/eighth_long_short_leverage_2026_09_24/data_manifest.json             --output research/eighth_long_short_leverage_2026_09_24/report.json
+
+      - name: Ergebnisintegrität prüfen
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path("research/eighth_long_short_leverage_2026_09_24/report.json")
+          report = json.loads(path.read_text(encoding="utf-8"))
+          stored = report.pop("report_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(
+                  report,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+
+          assert stored == actual
+          assert report["source"]["common_candle_count"] == 3500
+          assert report["source"]["common_return_count"] == 3498
+          assert report["source"]["fully_symbol_disjoint_validation_set"] is True
+          assert report["methodology"]["optimization_used"] is False
+          assert report["methodology"]["selection_used"] is False
+          assert report["methodology"]["holdout_used_for_selection"] is False
+          assert report["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+          }
+
+          print("RESULT_INTEGRITY_OK")
+          for name, scenarios in report["variants"].items():
+              base = scenarios["base"]
+              print(
+                  name,
+                  "RESEARCH_RETURN=",
+                  base["research"]["period_return"],
+                  "RESEARCH_DD=",
+                  base["research"]["max_drawdown_percent"],
+                  "RESEARCH_PF=",
+                  base["research"]["profit_factor"],
+                  "HOLDOUT_RETURN=",
+                  base["holdout"]["period_return"],
+                  "HOLDOUT_DD=",
+                  base["holdout"]["max_drawdown_percent"],
+                  "HOLDOUT_PF=",
+                  base["holdout"]["profit_factor"],
+                  "RUINED=",
+                  base["ruined"],
+              )
+          PY
+
+      - name: Validierungsartefakte sichern
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eighth-long-short-leverage-validation-2026-09-24-${{ github.run_id }}
+          path: research/eighth_long_short_leverage_2026_09_24/
+          if-no-files-found: error
+          retention-days: 30
