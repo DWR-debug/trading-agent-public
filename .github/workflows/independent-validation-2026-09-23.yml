@@ -1,25 +1,6 @@
 name: Independent Candidate Validation 2026-09-23
 
 on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-    branches:
-      - master
-    paths:
-      - "automation/independent_validation_2026_09_23.py"
-      - "tests/test_independent_validation_2026_09_23.py"
-      - "research/asset_universes.py"
-      - ".github/workflows/independent-validation-2026-09-23.yml"
-      - "automation/candidate_validation_50_50_vol_budget.py"
-      - "automation/prepare_research_data.py"
-      - "automation/cross_asset_trend_replication.py"
-      - "backtesting/**"
-      - "config/**"
-      - "data/**"
-      - "research/**"
-      - "validation/**"
   workflow_dispatch:
 
 permissions:
