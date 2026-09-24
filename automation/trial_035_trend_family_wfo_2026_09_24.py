@@ -137,7 +137,7 @@ def run_validation(data_dir,manifest_path,output_path):
 
     report={
       "schema_version":1,"trial_id":TRIAL_ID,"status":"COMPLETED","research_only":True,
-      "candidate_status":"VALIDATED_PASS" if gate_contract["all_checks_passed"] else "BLOCKED",
+      "candidate_status":"PASSED_CONTROL" if gate_contract["all_checks_passed"] else "BLOCKED",
       "hypothesis":"A fixed family-level WFO selector among three already-tested trend families transfers OOS and remains positive in the blind Holdout on a new multi-asset universe.",
       "source":{"universe":UNIVERSE,"symbols":list(assets),"target_candles":TARGET_COUNT,"research_count":RESEARCH_COUNT,"holdout_count":HOLDOUT_COUNT,
                 "fully_symbol_disjoint":True,"coverage_preflight_common_calendar_count":3520,"manifest_fingerprint":m["manifest_fingerprint"]},
