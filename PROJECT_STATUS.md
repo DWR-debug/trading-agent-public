@@ -23,16 +23,16 @@ Bezahlte Agenten-/API-Nutzung ist projektseitig deaktiviert. Agenten/Codex dürf
 
 ## Aktueller Research-Schritt — Trial 039
 
-T039 ist jetzt präregistriert und als nächster formaler Research-Schritt reserviert.
+T039 wurde am 24.09.2026 durch den automatisierten Coverage-Preflight korrekt als **DATA_INVALID** beendet.
 
-- Universe: EIRL, ENZL, NORW, EDEN, FXF, FXC, CEW, EIDO, SCHO, MINT, FTGC, RWX
-- gegenüber T038 ausschließlich `COMT → FTGC`
-- 3.520 Daily-Candles je Symbol im Coverage-Preflight; mindestens 3.500 gemeinsame Candles
-- Coverage-Preflight ist automatisiert und fail-closed
-- Performance- und Holdout-Auswertung bleiben bis zum Coverage-Pass gesperrt
-- Der deterministische Network-Momentum-Signalpfad ist implementiert und als separates Research-Labor getestet
-- Die formale T039-Auswertung ist ausschließlich nach erfolgreichem Coverage-Pass freigegeben und wird nur über den expliziten Research-Modus ausgelöst
-- keine automatische Promotion und keine Orders
+- FTGC: 3.247 statt 3.520 angeforderter abgeschlossener Daily-Candles
+- gemeinsamer Kalender: 3.247 statt mindestens 3.500
+- Performanceauswertung: nicht durchgeführt
+- OOS-Auswertung: nicht durchgeführt
+- Holdout-Auswertung: nicht durchgeführt
+- Datenvertrag: nicht gelockert
+- Network-Momentum-Regel: unverändert und weiterhin implementiert
+- nächster reservierter Schritt: T040 — Coverage-only-Discovery für einen neuen, deterministisch gewählten Ersatz aus festem Kandidatenpool
 
 ## T039 Engine — technische Umsetzung
 
