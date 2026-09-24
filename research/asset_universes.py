@@ -276,6 +276,17 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=3500,
     ),
 
+    AssetUniverse(
+        name="validation_2026_09_24_sleeve_volatility_parity_confirmation",
+        priority=39,
+        description=(
+            "Fully symbol-disjoint confirmation universe for Trial 030; fixed monthly "
+            "inverse-volatility parity between unchanged Trend and Cross-Sectional sleeves."
+        ),
+        symbols=("VV","VHT","VFH","VIS","VAW","VDE","VPU","VGT","SPDW","SPMB","SPEM","SPTL","SPIP"),
+        target_count=3500,
+    ),
+
 )
 
 
