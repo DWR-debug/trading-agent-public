@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "trial_id": "T-2026-09-24-034",
+  "status": "preregistered",
+  "research_family": "fixed_cointegration_gated_etf_relative_value",
+  "hypothesis": "Five fixed ex ante ETF pairs can provide a standalone market-neutral positive-return stream after project fees and slippage.",
+  "pairs": [
+    [
+      "VTWO",
+      "IJR",
+      "us_small_cap"
+    ],
+    [
+      "QQEW",
+      "ONEQ",
+      "nasdaq_equity"
+    ],
+    [
+      "EEMV",
+      "SCHE",
+      "emerging_markets"
+    ],
+    [
+      "IGIB",
+      "SPIB",
+      "investment_grade_corporates"
+    ],
+    [
+      "SCHP",
+      "STIP",
+      "us_tips"
+    ]
+  ],
+  "target_candles_per_symbol": 3500,
+  "coverage_preflight": {
+    "workflow_run_id": 36044264502,
+    "artifact_id": 10827702970,
+    "artifact_sha256": "sha256:6579ea3ec57b99204941e6678ac2cb69e0cf4b60855c064a9888cd092ad3b9c6",
+    "common_calendar_count": 3520,
+    "coverage_fingerprint": "b4102c8e01e442ca5657426b96f0dc97ec919783299408946975f49b05c445a4",
+    "performance_selection_used": false
+  },
+  "formation_window_sessions": 200,
+  "zscore_window_sessions": 200,
+  "rebalance_spacing_sessions": 21,
+  "entry_abs_z": 1.65,
+  "exit_abs_z": 0.75,
+  "adf_pvalue_threshold": 0.05,
+  "gross_exposure_cap": 1,
+  "net_exposure_target": 0,
+  "fee_bps": 10,
+  "slippage_bps": 5,
+  "cost_stress": [
+    1.5,
+    2
+  ],
+  "pair_search": false,
+  "parameter_search": false,
+  "threshold_search": false,
+  "holdout_used_for_selection": false,
+  "borrow_costs_modeled": false,
+  "dividend_cashflows_modeled": false,
+  "paper_only": true,
+  "live_trading_enabled": false,
+  "orders_enabled": false
+}
