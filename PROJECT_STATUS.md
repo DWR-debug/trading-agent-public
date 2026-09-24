@@ -309,10 +309,10 @@ methodisch reproduzierbar ausgeführt.
 
 - Workflow-Run: 36006749490
 - Artifact-ID: 10810214406
-- Artifact-Digest: sha256:1d7ebd14a4da359908ec2d10011598e6689b47f9d81605ae2a62aec53d33835b
+- Artifact-Digest: sha256:c00a489e5604a83e5f1d66123ff612d0f0fba92170f355870721f507c9cfad43
 - Code-Commit: 546fd8aad0008923bb63f70936b57882f579ef9f
 - Report-Fingerprint: 27df7c6ba36083d599d39c65fdd5fd089ec9216bd03211a42b8530c75ee3e85a
-- Market-Manifest-Fingerprint: 561c0d76fe6bbb4435f7399179f4e9f0542138c8d8a1586e3012f49465f9e031
+- Market-Manifest-Fingerprint: 181895cab3682cf89694d085f71802b802b183e7ffa02c9cfa64d04ffe07cdc4
 - 8 Assets, 3.500 Candles je Asset, 3.498 Returns
 - Research/Holdout: 2.798 / 700
 - vollständige Testsuite: 615 bestanden
