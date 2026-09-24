@@ -64,11 +64,14 @@ def test_summary_marks_worst_bucket_and_state_difference():
 def test_consensus_requires_three_of_four_for_replication():
     def case(rebound=False, reversal=False, combined=False):
         return {
-            "case_flags": {
-                "rebound_enriched": rebound,
-                "cs_reversal_enriched": reversal,
-                "combined_enriched": combined,
-            }
+            "source": {},
+            "analysis": {
+                "case_flags": {
+                    "rebound_enriched": rebound,
+                    "cs_reversal_enriched": reversal,
+                    "combined_enriched": combined,
+                }
+            },
         }
 
     cases = {
@@ -85,10 +88,12 @@ def test_consensus_requires_three_of_four_for_replication():
 def test_consensus_is_inconclusive_below_replication_threshold():
     cases = {
         "validation_1": {
-            "case_flags": {
-                "rebound_enriched": True,
-                "cs_reversal_enriched": False,
-                "combined_enriched": False,
+            "analysis": {
+                "case_flags": {
+                    "rebound_enriched": True,
+                    "cs_reversal_enriched": False,
+                    "combined_enriched": False,
+                }
             }
         },
         "validation_2": {
