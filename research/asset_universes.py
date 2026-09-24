@@ -347,6 +347,26 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=3520,
     ),
 
+    AssetUniverse(
+        name="validation_2026_09_24_portfolio_risk_control_trend",
+        priority=53,
+        description=(
+            "Fresh fully symbol-disjoint ETF universe for Trial 041; fixed trend "
+            "sleeve input for correlation-aware minimum-variance allocation."
+        ),
+        symbols=("VONE", "VONG", "VONV", "VOE", "VOT", "IWB", "IUSG", "IUSV"),
+        target_count=3500,
+    ),
+    AssetUniverse(
+        name="validation_2026_09_24_portfolio_risk_control_cs",
+        priority=54,
+        description=(
+            "Fresh fully symbol-disjoint ETF universe for Trial 041; fixed "
+            "cross-sectional momentum sleeve input for correlation-aware allocation."
+        ),
+        symbols=("IWS", "IWP", "IJS", "IJJ", "IJK"),
+        target_count=3500,
+    ),
 )
 
 
