@@ -2712,3 +2712,22 @@ reichen nicht für eine Promotion.
 Der aktuelle Master ist jetzt `52f51aff2e9aeb828f8d3c5c2889bd4960cef0f8`; Trial 031 ist in
 `research/evidence/trial_ledger.json`, in einem dauerhaften Result-Checkpoint
 und in der Projektdokumentation archiviert.
+
+
+## Aktueller Checkpoint — Trial 032 Relative-Value Coverage DATA_INVALID — 2026-09-24
+
+Trial T-2026-09-24-032 wurde vor jeder Performanceauswertung als **DATA_INVALID** beendet.
+
+- Coverage-Workflow: `36043628557`
+- QQQM: 1.493 statt 3.520 angeforderter Tages-Candles
+- keine Research-/Holdout-Evaluation
+- kein Datenvertrag gelockert
+- keine Performanceauswahl
+
+Konsequenz: 032 wird nicht als Performanceergebnis gewertet. Für den nächsten
+Preflight ersetzt 033 ausschließlich QQQM durch QQEW; alle übrigen Paare bleiben
+unverändert.
+
+- PAPER_ONLY=True
+- LIVE_TRADING_ENABLED=False
+- keine Orders
