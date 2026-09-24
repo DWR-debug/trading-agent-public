@@ -204,7 +204,7 @@ def observe_universe(
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         json.dumps(payload, indent=2, ensure_ascii=False, allow_nan=False)
-        + "\\n",
+        + "\n",
         encoding="utf-8",
     )
     return payload

@@ -62,7 +62,7 @@ Die feste 50/50-Kontrolle erreicht im Holdout +43,08 % Return / 23,08 % DD / PF 
 Die zwischenzeitlichen technischen Versuche 36063501638, 36063700160 und 36064061902 sind separat als nicht-wertbare Ausführungsversuche dokumentiert.
 ## Q004 Live-/Updated-Data Discovery — 2026-09-24
 
-Die laufende Discovery beobachtet zwei komplementäre, feste Universen: `benchmark` und `cross_asset_trend`. Pro Symbol werden maximal 1.000 abgeschlossene Tages-Candles genutzt; zusätzlich werden fixe Lag-Korrelationen (1/5/21 Sessions), 21-Tages-Volatilität und 252-Tages-Trendreturndaten beschrieben. Die Beobachtung dient ausschließlich zur Hypothesenbildung. Jede daraus abgeleitete Performancehypothese benötigt eine neue, separat präregistrierte Coverage- und Holdout-Kette.
+Die laufende Discovery beobachtet zwei komplementäre, feste Universen: `benchmark` und `cross_asset_trend`. Pro Symbol werden maximal 1.000 abgeschlossene Tages-Candles genutzt; zusätzlich werden fixe Lag-Korrelationen (1/5/21 Sessions), 21-Tages-Volatilität und 252-Tages-Trendreturndaten beschrieben. Die Beobachtung dient ausschließlich zur Hypothesenbildung. Jede daraus abgeleitete Performancehypothese benötigt eine neue, separat präregistrierte Coverage- und Holdout-Kette. Der erste Lauf `36065231678` wird wegen eines technischen JSON-Serialisierungsfehlers nicht als wissenschaftliche Evidenz verwendet; der Fehler wird vor Wiederholung reproduzierbar per Test abgesichert.
 
 ## T039 Engine — technische Umsetzung
 

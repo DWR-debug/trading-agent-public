@@ -81,13 +81,15 @@
     "t041_scientific_outcome": "NO_PROMOTION_EVIDENCE",
     "t041_absolute_gates_passed": false,
     "t041_non_deterioration_gates_passed": false,
-    "q004_discovery_status": "RUN_REQUESTED",
+    "q004_discovery_status": "TECHNICAL_REPAIR_REQUIRED",
     "q004_observation_universes": [
       "benchmark",
       "cross_asset_trend"
     ],
     "q004_observation_candles": 1000,
-    "q004_selection_used": false
+    "q004_selection_used": false,
+    "q004_last_invalid_workflow_run": 36065231678,
+    "q004_invalid_reason": "Observer wrote a literal backslash-n after the JSON document; no scientific interpretation retained."
   },
   "agent_usage_efficiency": {
     "policy": "deterministic_actions_for_computation_and_agent_use_for_architecture_review_synthesis",
