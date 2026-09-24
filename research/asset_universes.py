@@ -358,16 +358,6 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=3500,
     ),
     AssetUniverse(
-        name="validation_2026_09_24_volatility_managed_tsm",
-        priority=55,
-        description=(
-            "Fresh fully symbol-disjoint ETF universe for Trial 042; fixed "
-            "long/short 252-day time-series momentum with de-risk-only inverse-variance scaling."
-        ),
-        symbols=("DLS", "DEM", "EES", "EWX", "HDV", "SPHD", "VOOG", "VOOV", "OEF", "IWV"),
-        target_count=3500,
-    ),
-    AssetUniverse(
         name="validation_2026_09_24_portfolio_risk_control_cs",
         priority=54,
         description=(
@@ -375,6 +365,17 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
             "cross-sectional momentum sleeve input for correlation-aware allocation."
         ),
         symbols=("IWS", "IWP", "IJS", "IJJ", "IJK"),
+        target_count=3500,
+    ),
+
+    AssetUniverse(
+        name="validation_2026_09_24_volatility_managed_tsm",
+        priority=55,
+        description=(
+            "Fresh fully symbol-disjoint ETF universe for Trial 042; fixed "
+            "long/short 252-day time-series momentum with de-risk-only inverse-variance scaling."
+        ),
+        symbols=("DLS", "DEM", "EES", "EWX", "HDV", "SPHD", "VOOG", "VOOV", "OEF", "IWV"),
         target_count=3500,
     ),
 )
