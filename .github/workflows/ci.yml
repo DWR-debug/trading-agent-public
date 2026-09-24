@@ -102,6 +102,53 @@ jobs:
               "Before another return-generating strategy family"
           )
 
+          for prereg_path, expected_universe, expected_symbols in (
+              (
+                  "research/preregistrations/trial_041_portfolio_risk_control_trend_2026_09_24.json",
+                  "validation_2026_09_24_portfolio_risk_control_trend",
+                  ("VONE", "VONG", "VONV", "VOE", "VOT", "IWB", "IUSG", "IUSV"),
+              ),
+              (
+                  "research/preregistrations/trial_041_portfolio_risk_control_cs_2026_09_24.json",
+                  "validation_2026_09_24_portfolio_risk_control_cs",
+                  ("IWS", "IWP", "IJS", "IJJ", "IJK"),
+              ),
+          ):
+              t041 = json.loads(Path(prereg_path).read_text(encoding="utf-8"))
+              assert t041["trial_id"] == "T-2026-09-24-041"
+              assert t041["universe"] == expected_universe
+              assert tuple(t041["symbols"]) == expected_symbols
+              assert t041["requested_candles"] == 3500
+              assert t041["target_candles"] == 3500
+              assert t041["coverage_gate"]["performance_allowed_before_coverage_pass"] is False
+              assert t041["coverage_gate"]["holdout_used_for_selection"] is False
+              assert t041["search_scope"] == {
+                  "parameter_search": False,
+                  "threshold_search": False,
+                  "asset_selection_by_performance": False,
+                  "variant_search": False,
+                  "holdout_used_for_selection": False,
+              }
+              assert t041["safety"] == {
+                  "paper_only": True,
+                  "live_trading_enabled": False,
+                  "orders_enabled": False,
+                  "automatic_promotion": False,
+              }
+
+          all_t041_symbols = (
+              "VONE", "VONG", "VONV", "VOE", "VOT", "IWB", "IUSG", "IUSV",
+              "IWS", "IWP", "IJS", "IJJ", "IJK",
+          )
+          assert len(all_t041_symbols) == len(set(all_t041_symbols))
+          assert not set(all_t041_symbols).intersection(
+              set().union(*(
+                  set(u.symbols)
+                  for u in __import__("research.asset_universes", fromlist=["list_universes"]).list_universes()
+                  if not u.name.startswith("validation_2026_09_24_portfolio_risk_control_")
+              ))
+          )
+
           print("RESEARCH GOVERNANCE OK")
           PY
       - name: Project-State validieren
@@ -115,5 +162,8 @@ jobs:
           assert state['agent_usage']['paid_api_budget_usd'] == 0.0
           assert state['agent_usage']['auto_paid_api_calls'] is False
           assert state['agent_usage']['free_credit_only'] is True
+          assert state['current_preregistered_trial'] == 'T-2026-09-24-041'
+          assert state['current_trial_status'] == 'PREREGISTERED_COVERAGE_PENDING'
+          assert state['engineering_notes']['current_queue_task'] == 'Q-003-PORTFOLIO-RISK-CONTROL'
           print('PROJECT STATE OK')
           PY

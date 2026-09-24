@@ -29,6 +29,32 @@ Discovery-Beobachtungen sind ausdrücklich keine Profitabilitätsnachweise und d
 Die deterministische Forschungsmaschine funktioniert vollständig ohne Agentencredits.
 Bezahlte Agenten-/API-Nutzung ist projektseitig deaktiviert. Agenten/Codex dürfen nur bei extern verifiziertem kostenfreiem Kontingent eingesetzt werden. Es gibt keinen Mechanismus zum Nachladen von Credits.
 
+## Aktueller Research-Schritt — Trial 041
+
+T041 ist als **präregistrierter Portfolio-Risk-Control** vorbereitet. Die Hypothese verwendet
+eine fixe, kovarianzbewusste Minimum-Variance-Allokation zwischen zwei unveränderten Sleeves.
+Vor jeder Performanceauswertung müssen beide neuen, vollständig symbol-disjunkten Datenuniversen
+den Coverage-Preflight bestehen.
+
+Trend-Leg: VONE, VONG, VONV, VOE, VOT, IWB, IUSG, IUSV  
+Cross-Sectional-Leg: IWS, IWP, IJS, IJJ, IJK
+
+Präregistrierte Regel:
+- 63 vorherige gemeinsame Sleeve-Returns;
+- monatliche Neubestimmung;
+- Minimum-Variance-Gewicht nach der vorab fixierten Varianz-/Kovarianz-Formel;
+- Gewicht strikt auf 0 bis 100 % begrenzt;
+- keine Short-Positionen, kein Leverage, keine Parameter- oder Gewichtssuche.
+
+T041 ist aktuell **PREREGISTERED_COVERAGE_PENDING**. Es gibt noch keine neue
+Performanceevidenz und keine Holdout-Nutzung.
+
+Safety:
+- PAPER_ONLY=True
+- LIVE_TRADING_ENABLED=False
+- orders_enabled=False
+- automatic_promotion=False
+
 ## Aktueller Research-Schritt — Trial 040
 
 T040 wurde am 24.09.2026 nach bestandenem Coverage-Gate formal ausgewertet und als **BLOCKED / NO_PROMOTION_EVIDENCE** archiviert.

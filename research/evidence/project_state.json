@@ -5,8 +5,8 @@
   "master_commit": "202aa40431e633cc3e0ba78e37f39077afaf4ad1",
   "latest_formal_trial": "T-2026-09-24-040",
   "latest_trial_status": "BLOCKED",
-  "next_reserved_trial": "NONE_PENDING_NEW_PREREGISTRATION",
-  "next_research_focus": "New fully symbol-disjoint portfolio risk-control/allocation hypothesis motivated by T028; coverage-only candidate discovery precedes preregistration",
+  "next_reserved_trial": "T-2026-09-24-041",
+  "next_research_focus": "T041 coverage-only preflight on two fresh disjoint sleeve universes; no performance evaluation before both coverage passes",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -42,8 +42,8 @@
     ".github/workflows/research-orchestrator.yml",
     ".github/workflows/paper-30-day-experiment-harness.yml"
   ],
-  "current_preregistered_trial": "T-2026-09-24-040",
-  "current_trial_status": "BLOCKED_NEGATIVE_EVIDENCE_ARCHIVED",
+  "current_preregistered_trial": "T-2026-09-24-041",
+  "current_trial_status": "PREREGISTERED_COVERAGE_PENDING",
   "engineering_notes": {
     "t039_preregistered": true,
     "coverage_preflight_active": true,
@@ -60,6 +60,13 @@
     "automatic_formal_execution_requires_preregistration": true,
     "last_completed_queue_task": "Q-002-ADVERSARIAL-FAILURE-DIAGNOSIS",
     "last_completed_diagnosis_fingerprint": "92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea",
-    "cross_trial_failure_diagnosis_implemented": true
+    "cross_trial_failure_diagnosis_implemented": true,
+    "t041_preregistered": true,
+    "t041_formal_runner_implemented": true,
+    "t041_coverage_required_before_performance": true,
+    "t041_universes": [
+      "validation_2026_09_24_portfolio_risk_control_trend",
+      "validation_2026_09_24_portfolio_risk_control_cs"
+    ]
   }
 }

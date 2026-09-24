@@ -19,6 +19,7 @@ from automation.network_momentum_lab import run_trial as run_t039_trial
 from automation.coverage_candidate_discovery import run_discovery
 from automation.adversarial_failure_diagnosis import write_report as write_failure_diagnosis
 from automation.cross_trial_failure_diagnosis import write_report as write_cross_trial_diagnosis
+from automation.portfolio_risk_control_min_variance import run_trial as run_t041_trial
 from automation.one_command_research import run_universe
 
 
@@ -35,13 +36,25 @@ PREREGISTRATIONS = {
     ),
 }
 
+COVERAGE_PREREGISTRATIONS = {
+    **PREREGISTRATIONS,
+    "validation_2026_09_24_portfolio_risk_control_trend": (
+        Path("research/preregistrations")
+        / "trial_041_portfolio_risk_control_trend_2026_09_24.json"
+    ),
+    "validation_2026_09_24_portfolio_risk_control_cs": (
+        Path("research/preregistrations")
+        / "trial_041_portfolio_risk_control_cs_2026_09_24.json"
+    ),
+}
+
 
 def _preregistration_for(universe: str) -> Path:
     try:
-        return PREREGISTRATIONS[universe]
+        return COVERAGE_PREREGISTRATIONS[universe]
     except KeyError as exc:
         raise ValueError(
-            f"Keine Network-Momentum-Präregistrierung für {universe}."
+            f"Keine Präregistrierung für {universe}."
         ) from exc
 
 
@@ -151,6 +164,64 @@ def run(
             status=report["status"],
             run_fingerprint=report["fingerprint"],
         )
+    elif mode == "research_t041":
+        trend_preregistration = (
+            Path("research/preregistrations")
+            / "trial_041_portfolio_risk_control_trend_2026_09_24.json"
+        )
+        cs_preregistration = (
+            Path("research/preregistrations")
+            / "trial_041_portfolio_risk_control_cs_2026_09_24.json"
+        )
+        trend_coverage = run_preflight(
+            trend_preregistration,
+            output_root=root / "coverage_preflight_t041_trend",
+        )
+        cs_coverage = run_preflight(
+            cs_preregistration,
+            output_root=root / "coverage_preflight_t041_cs",
+        )
+        if (
+            trend_coverage["status"] != "coverage_passed"
+            or cs_coverage["status"] != "coverage_passed"
+        ):
+            status = (
+                "DATA_INVALID"
+                if (
+                    trend_coverage["status"] != "coverage_passed"
+                    or cs_coverage["status"] != "coverage_passed"
+                )
+                else "BLOCKED"
+            )
+            snapshot = _state_snapshot(
+                mode=mode,
+                universe="T041-PORTFOLIO-RISK-CONTROL",
+                status=status,
+                run_fingerprint=(
+                    f"{trend_coverage['coverage_fingerprint']}:"
+                    f"{cs_coverage['coverage_fingerprint']}"
+                ),
+            )
+        else:
+            output = (
+                root
+                / "validation_2026_09_24_portfolio_risk_control"
+                / "formal"
+                / "t041.json"
+            )
+            report = run_t041_trial(
+                trend_coverage["output"],
+                cs_coverage["output"],
+                trend_preregistration,
+                cs_preregistration,
+                output,
+            )
+            snapshot = _state_snapshot(
+                mode=mode,
+                universe="T041-PORTFOLIO-RISK-CONTROL",
+                status=report["status"],
+                run_fingerprint=report["report_fingerprint"],
+            )
     elif mode == "research":
         if universe in PREREGISTRATIONS:
             preregistration = _preregistration_for(universe)
@@ -201,7 +272,7 @@ def run(
                 run_fingerprint=report.get("run_manifest", {}).get("run_fingerprint"),
             )
     else:
-        raise ValueError("mode must be observe, preflight, discover_coverage, diagnose_failure, diagnose_history, or research")
+        raise ValueError("mode must be observe, preflight, discover_coverage, diagnose_failure, diagnose_history, research, or research_t041")
 
     path = root / universe / "orchestrator_state.json"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -214,7 +285,7 @@ def run(
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=("observe", "preflight", "discover_coverage", "diagnose_failure", "diagnose_history", "research"), required=True)
+    parser.add_argument("--mode", choices=("observe", "preflight", "discover_coverage", "diagnose_failure", "diagnose_history", "research", "research_t041"), required=True)
     parser.add_argument("--universe", default=DEFAULT_UNIVERSE)
     parser.add_argument("--output-root", default="research/runs")
     parser.add_argument("--total", type=int, default=None)
