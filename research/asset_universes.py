@@ -232,7 +232,6 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("INTC", "QCOM", "AVGO", "HON", "LMT", "RTX", "CSX", "NSC"),
         target_count=3500,
     ),
-)
     AssetUniverse(
         name="validation_2026_09_24_idio_volatility_us_stocks",
         priority=34,
@@ -243,6 +242,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("COST", "TMO", "LIN", "DE", "EMR", "SBUX", "VZ", "MA"),
         target_count=3500,
     ),
+)
 
 
 
