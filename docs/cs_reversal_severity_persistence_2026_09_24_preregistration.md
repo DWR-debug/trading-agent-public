@@ -29,7 +29,7 @@ Es wird kein neuer Reversal-Schwellenwert eingeführt.
 ### Schweregrad
 
 Für Reversal- und Nicht-Reversal-Tage werden Beobachtungszahl, Anteil,
-Mittelwert, Median, Minimum, Mittelwertdifferenz, Worst-5%-Enrichment und der
+Mittelwert, Median, Minimum, Mittelwertdifferenz, schlechtesten 5%-Enrichment und der
 Anteil der negativen Portfolio-Return-Masse ausgewiesen.
 
 ### Persistenz
