@@ -61,7 +61,8 @@ jobs:
           print("PAPER-ONLY SAFETY OK")
           PY
 
-      # Technical acquisition buffer only; validation script slices exactly 3,500 common timestamps.\n      - name: Siebte Trend-Daten vorbereiten
+      # Technical acquisition buffer only; validation script slices exactly 3,500 common timestamps.
+      - name: Siebte Trend-Daten vorbereiten
         run: |
           set -euo pipefail
           python -m automation.prepare_research_data             --target-count 3510             --universe validation_2026_09_24_seventh_trend             --output research/seventh_multi_strategy_complementarity_2026_09_24/data_trend_manifest.json
