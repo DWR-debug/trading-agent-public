@@ -43,7 +43,7 @@ def test_daily_aggregation_is_international_and_conflict_aware():
         [
             event(1, 3, -3.0, 4),
             event(1, 4, -5.0, 9),
-            event(1, 2, 2.0, 2),
+            event(1, 2, 2.0, 2, articles=2),
             event(1, 4, -2.0, 2, "USA", "USA"),
         ],
         international_only=True,
