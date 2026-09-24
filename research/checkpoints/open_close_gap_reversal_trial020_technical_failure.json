@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "trial_id": "T-2026-09-24-020",
+  "status": "archived_technical_failure",
+  "research_family": "overnight_intraday_gap_reversal",
+  "workflow_run_id": 36009263715,
+  "code_commit_sha": "e4d960ecc8f06aaceaa1ddc1997fda6c2c9ebcd5",
+  "symbols": [
+    "SPYG",
+    "SPYV",
+    "SPTM",
+    "SPMD",
+    "SDY",
+    "RWR",
+    "XNTK",
+    "XPH"
+  ],
+  "required_common_candles": 3500,
+  "achieved_common_candles": 3322,
+  "alignment_attempts": 5,
+  "research_result_available": false,
+  "holdout_result_available": false,
+  "selection_used": false,
+  "parameter_search_used": false,
+  "reason": "Historical Yahoo acquisition remained at 3,322 common timestamps after five acquisition attempts.",
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false
+  }
+}
