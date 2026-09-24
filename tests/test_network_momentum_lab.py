@@ -18,7 +18,7 @@ from automation.network_momentum_lab import (
 
 def _trend_series(length: int = 650):
     return [
-        float(index % 31) / 31.0
+        float(index)
         for index in range(length)
     ]
 
