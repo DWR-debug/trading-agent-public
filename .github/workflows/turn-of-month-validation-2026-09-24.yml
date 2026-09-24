@@ -11,6 +11,9 @@ on:
       - "tests/test_turn_of_month_alpha.py"
       - "docs/turn_of_month_validation_2026_09_24_preregistration.md"
       - ".github/workflows/turn-of-month-validation-2026-09-24.yml"
+  push:
+    branches:
+      - research/turn-of-month-validation-2026-09-24
   workflow_dispatch:
 
 permissions:
