@@ -14,7 +14,7 @@ def test_initial_capital_is_500_eur():
 
 def test_only_realized_profit_above_capital_base_is_distributable():
     account = CapitalAccount()
-    account.record_realized_profit(100.0)
+    account.record_realized_pnl(100.0)
     account.update_equity(600.0)
 
     assert account.distributable_profit_eur == pytest.approx(100.0)
@@ -49,3 +49,13 @@ def test_withdrawal_cannot_reduce_protected_capital():
 
     with pytest.raises(CapitalAccountingError):
         account.record_profit_withdrawal(101.0)
+
+
+def test_realized_loss_reduces_distributable_profit():
+    account = CapitalAccount()
+    account.record_realized_pnl(100.0)
+    account.record_realized_pnl(-80.0)
+    account.update_equity(520.0)
+
+    assert account.snapshot().net_realized_pnl_eur == pytest.approx(20.0)
+    assert account.distributable_profit_eur == pytest.approx(20.0)
