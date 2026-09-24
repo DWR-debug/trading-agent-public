@@ -339,11 +339,29 @@ def main() -> None:
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
     report = run_validation(Path(args.data_dir), Path(args.manifest), Path(args.output))
-    print("EIGHTH_VALIDATION_STATUS:", report["status"])
+    print("TRIAL_014_VALIDATION_STATUS:", report["status"])
     print("REPORT_FINGERPRINT:", report["report_fingerprint"])
     for name, scenarios in report["variants"].items():
         base = scenarios["base"]
-        print(name, "RESEARCH_RETURN=", base["research"]["period_return"], "RESEARCH_DD=", base["research"]["max_drawdown_percent"], "HOLDOUT_RETURN=", base["holdout"]["period_return"], "HOLDOUT_DD=", base["holdout"]["max_drawdown_percent"], "HOLDOUT_PF=", base["holdout"]["profit_factor"] )
+        print(
+            name,
+            "RESEARCH_RETURN=",
+            base["research"]["period_return"],
+            "RESEARCH_DD=",
+            base["research"]["max_drawdown_percent"],
+            "HOLDOUT_RETURN=",
+            base["holdout"]["period_return"],
+            "HOLDOUT_DD=",
+            base["holdout"]["max_drawdown_percent"],
+            "HOLDOUT_PF=",
+            base["holdout"]["profit_factor"],
+            "RUINED=",
+            base["ruined"],
+            "MAX_GROSS=",
+            base["maximum_gross_exposure"],
+            "MAX_SHORT=",
+            base["maximum_short_exposure"],
+        )
 
 
 if __name__ == "__main__":
