@@ -192,8 +192,12 @@ jobs:
           assert state['current_preregistered_trial'] == 'T-2026-09-24-042'
           assert state['latest_formal_trial'] == 'T-2026-09-24-041'
           assert state['latest_trial_status'] == 'BLOCKED'
-          assert state['current_trial_status'] == 'PREREGISTERED_COVERAGE_PENDING'
+          assert state['current_trial_status'] == 'COVERAGE_PASSED_PERFORMANCE_PENDING'
           assert state['engineering_notes']['current_queue_task'] == 'Q-006-VOLATILITY-RELATIVE-VALUE'
           assert state['engineering_notes']['t042_preregistered'] is True
+          assert state['engineering_notes']['t042_coverage_status'] == 'PASSED'
+          assert state['engineering_notes']['t042_performance_allowed'] is True
+          assert state['engineering_notes']['t042_coverage_workflow_run'] == 36066657371
+          assert state['engineering_notes']['t042_coverage_fingerprint'] == '67a42d1a4832413e4a0a6dc36e1d47dd5c92a25923ea86c8d1c11a1d29e30d24'
           print('PROJECT STATE OK')
           PY
