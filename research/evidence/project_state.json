@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "updated": "2026-09-24",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "8b1d32a44311d1cffe1647b1cef608ae2dd4bd1b",
+  "master_commit": "b2b67415defe36159bb130d84ab727da01e3d9b8",
   "latest_formal_trial": "T-2026-09-24-038",
   "latest_trial_status": "DATA_INVALID",
   "next_reserved_trial": "T-2026-09-24-039",
-  "next_research_focus": "Cross-Asset Network Momentum with COMT replaced by FTGC after coverage preflight",
+  "next_research_focus": "T039 deterministic Network Momentum signal implementation, then one fail-closed coverage-to-formal-evaluation path",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -41,5 +41,13 @@
     ".github/workflows/ci.yml",
     ".github/workflows/research-orchestrator.yml",
     ".github/workflows/paper-30-day-experiment-harness.yml"
-  ]
+  ],
+  "current_preregistered_trial": "T-2026-09-24-039",
+  "current_trial_status": "PREREGISTERED_COVERAGE_PENDING",
+  "engineering_notes": {
+    "t039_preregistered": true,
+    "coverage_preflight_active": true,
+    "formal_performance_implemented": false,
+    "automatic_promotion": false
+  }
 }

@@ -21,6 +21,18 @@ Discovery-Beobachtungen sind ausdrücklich keine Profitabilitätsnachweise und d
 Die deterministische Forschungsmaschine funktioniert vollständig ohne Agentencredits.
 Bezahlte Agenten-/API-Nutzung ist projektseitig deaktiviert. Agenten/Codex dürfen nur bei extern verifiziertem kostenfreiem Kontingent eingesetzt werden. Es gibt keinen Mechanismus zum Nachladen von Credits.
 
+## Aktueller Research-Schritt — Trial 039
+
+T039 ist jetzt präregistriert und als nächster formaler Research-Schritt reserviert.
+
+- Universe: EIRL, ENZL, NORW, EDEN, FXF, FXC, CEW, EIDO, SCHO, MINT, FTGC, RWX
+- gegenüber T038 ausschließlich `COMT → FTGC`
+- 3.520 Daily-Candles je Symbol im Coverage-Preflight; mindestens 3.500 gemeinsame Candles
+- Coverage-Preflight ist automatisiert und fail-closed
+- Performance- und Holdout-Auswertung bleiben bis zum Coverage-Pass gesperrt
+- Der deterministische Network-Momentum-Signalpfad ist noch die verbleibende Implementierungsstufe
+- keine automatische Promotion und keine Orders
+
 ## Sicherheitsstatus
 
 - PAPER_ONLY=True
