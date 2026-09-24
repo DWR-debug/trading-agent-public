@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from portfolio.capital_account import CapitalAccount, CapitalAccountingError
+from portfolio.capital_account import CapitalAccount
 
 
 class IncomePolicyError(ValueError):
