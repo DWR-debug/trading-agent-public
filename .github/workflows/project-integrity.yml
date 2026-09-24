@@ -1,0 +1,46 @@
+name: Project Integrity Check
+
+on:
+  pull_request:
+    paths:
+      - "PROJECT_STATUS.md"
+      - "docs/PROJECT_CONTEXT.md"
+      - "docs/PROJECT_CONTEXT_INGESTION.md"
+      - "docs/research_archaeology_2026_09_24.md"
+      - "research/evidence/project_context.json"
+      - "docs/CHAT_CONTEXT_2026_09_24.md"
+      - "docs/PRE_CLEANUP_INVENTORY_2026_09_24.md"
+      - "research/evidence/trial_ledger.json"
+      - "automation/project_integrity_check.py"
+  push:
+    branches: ["master"]
+    paths:
+      - "PROJECT_STATUS.md"
+      - "docs/PROJECT_CONTEXT.md"
+      - "docs/PROJECT_CONTEXT_INGESTION.md"
+      - "docs/research_archaeology_2026_09_24.md"
+      - "research/evidence/project_context.json"
+      - "research/evidence/trial_ledger.json"
+      - "automation/project_integrity_check.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-project-integrity
+  cancel-in-progress: false
+
+jobs:
+  integrity:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 15
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Integritätsprüfung
+        run: python automation/project_integrity_check.py
