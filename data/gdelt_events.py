@@ -92,20 +92,52 @@ def parse_event_row(row: Iterable[str]) -> GDELTEvent:
         source_url=_text(values, source_index),
     )
 
-def parse_event_tsv(text: str) -> Iterable[GDELTEvent]:
+def parse_event_tsv(
+    text: str,
+    *,
+    strict: bool = True,
+    stats: dict[str, int] | None = None,
+) -> Iterable[GDELTEvent]:
     for row in csv.reader(io.StringIO(text), delimiter="\t"):
-        if row and any(cell.strip() for cell in row):
+        if not row or not any(cell.strip() for cell in row):
+            continue
+        if stats is not None:
+            stats["rows_seen"] = stats.get("rows_seen", 0) + 1
+        try:
             yield parse_event_row(row)
+        except (ValueError, GDELTEventError):
+            if strict:
+                raise
+            if stats is not None:
+                stats["rows_skipped"] = stats.get("rows_skipped", 0) + 1
 
-def parse_event_zip(path: str | Path) -> Iterable[GDELTEvent]:
+def parse_event_zip(
+    path: str | Path,
+    *,
+    strict: bool = True,
+    stats: dict[str, int] | None = None,
+) -> Iterable[GDELTEvent]:
     with zipfile.ZipFile(path) as archive:
         for name in archive.namelist():
-            if name.endswith(".export.CSV") or name.endswith(".csv"):
-                with archive.open(name) as raw:
-                    reader = csv.reader(io.TextIOWrapper(raw, encoding="utf-8", errors="replace"), delimiter="\t")
-                    for row in reader:
-                        if row and any(cell.strip() for cell in row):
-                            yield parse_event_row(row)
+            if not (name.endswith(".export.CSV") or name.endswith(".csv")):
+                continue
+            with archive.open(name) as raw:
+                reader = csv.reader(
+                    io.TextIOWrapper(raw, encoding="utf-8", errors="replace"),
+                    delimiter="\t",
+                )
+                for row in reader:
+                    if not row or not any(cell.strip() for cell in row):
+                        continue
+                    if stats is not None:
+                        stats["rows_seen"] = stats.get("rows_seen", 0) + 1
+                    try:
+                        yield parse_event_row(row)
+                    except (ValueError, GDELTEventError):
+                        if strict:
+                            raise
+                        if stats is not None:
+                            stats["rows_skipped"] = stats.get("rows_skipped", 0) + 1
 
 def daily_export_url(day: datetime) -> str:
     return f"https://data.gdeltproject.org/events/{day.astimezone(timezone.utc):%Y%m%d}.export.CSV.zip"
