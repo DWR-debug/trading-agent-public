@@ -35,13 +35,25 @@ PREREGISTRATIONS = {
     ),
 }
 
+COVERAGE_PREREGISTRATIONS = {
+    **PREREGISTRATIONS,
+    "validation_2026_09_24_portfolio_risk_control_trend": (
+        Path("research/preregistrations")
+        / "trial_041_portfolio_risk_control_trend_2026_09_24.json"
+    ),
+    "validation_2026_09_24_portfolio_risk_control_cs": (
+        Path("research/preregistrations")
+        / "trial_041_portfolio_risk_control_cs_2026_09_24.json"
+    ),
+}
+
 
 def _preregistration_for(universe: str) -> Path:
     try:
-        return PREREGISTRATIONS[universe]
+        return COVERAGE_PREREGISTRATIONS[universe]
     except KeyError as exc:
         raise ValueError(
-            f"Keine Network-Momentum-Präregistrierung für {universe}."
+            f"Keine Präregistrierung für {universe}."
         ) from exc
 
 
