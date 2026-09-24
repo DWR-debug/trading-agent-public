@@ -1,0 +1,154 @@
+name: Seventh Multi-Strategy Complementarity Validation 2026-09-24
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [master]
+    paths:
+      - "automation/multi_strategy_complementarity_validation_2026_09_24.py"
+      - "tests/test_multi_strategy_complementarity_validation_2026_09_24.py"
+      - "research/asset_universes.py"
+      - "docs/multi_strategy_complementarity_validation_2026_09_24_preregistration.md"
+      - ".github/workflows/multi-strategy-complementarity-validation-2026-09-24.yml"
+      - "automation/prepare_research_data.py"
+      - "automation/candidate_validation_50_50_vol_budget.py"
+      - "data/**"
+      - "research/**"
+      - "validation/**"
+      - "config/**"
+  push:
+    branches:
+      - research/seventh-multi-strategy-complementarity-2026-09-24
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-seventh-multi-strategy-complementarity
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Paper-only-Sicherheit prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+
+      - name: Siebte Trend-Daten vorbereiten
+        run: |
+          set -euo pipefail
+          python -m automation.prepare_research_data             --target-count 3500             --universe validation_2026_09_24_seventh_trend             --output research/seventh_multi_strategy_complementarity_2026_09_24/data_trend_manifest.json
+
+      - name: Siebte Cross-Sectional-Daten vorbereiten
+        run: |
+          set -euo pipefail
+          python -m automation.prepare_research_data             --target-count 3500             --universe validation_2026_09_24_seventh_cs             --output research/seventh_multi_strategy_complementarity_2026_09_24/data_cs_manifest.json
+
+      - name: Symbol-Disjunktheit fail-closed prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from research.asset_universes import get_universe, list_universes
+          names = (
+              "validation_2026_09_24_seventh_trend",
+              "validation_2026_09_24_seventh_cs",
+          )
+          combined = set(get_universe(names[0]).symbols) | set(get_universe(names[1]).symbols)
+          assert set(get_universe(names[0]).symbols).isdisjoint(get_universe(names[1]).symbols)
+          for universe in list_universes():
+              if universe.name in names:
+                  continue
+              assert combined.isdisjoint(universe.symbols), f"Overlap with {universe.name}"
+          print("SEVENTH_VALIDATION_FULLY_DISJOINT_OK")
+          PY
+
+      - name: Präregistrierung prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          text = Path("docs/multi_strategy_complementarity_validation_2026_09_24_preregistration.md").read_text(encoding="utf-8")
+          for token in ("T-2026-09-24-011", "3500", "2798", "700", "50/50", "PAPER_ONLY=True"):
+              assert token in text
+          print("PREREGISTRATION_VERIFIED")
+          PY
+
+      - name: Siebte Komplementaritätsvalidierung ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.multi_strategy_complementarity_validation_2026_09_24             --trend-data-dir data/market_data             --trend-manifest research/seventh_multi_strategy_complementarity_2026_09_24/data_trend_manifest.json             --cs-data-dir data/market_data             --cs-manifest research/seventh_multi_strategy_complementarity_2026_09_24/data_cs_manifest.json             --output research/seventh_multi_strategy_complementarity_2026_09_24/report.json
+
+      - name: Ergebnisintegrität prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path("research/seventh_multi_strategy_complementarity_2026_09_24/report.json")
+          report = json.loads(path.read_text(encoding="utf-8"))
+          stored = report.pop("report_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(
+                  report,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+
+          assert stored == actual
+          assert report["source"]["common_candle_count"] == 3500
+          assert report["source"]["common_return_count"] == 3498
+          assert report["source"]["fully_symbol_disjoint_validation_set"] is True
+          assert report["methodology"]["optimization_used"] is False
+          assert report["methodology"]["selection_used"] is False
+          assert report["methodology"]["holdout_used_for_selection"] is False
+          assert report["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+          }
+
+          print("RESULT_INTEGRITY_OK")
+          print("COMPLEMENTARITY_DIAGNOSTICS:", report["complementarity_diagnostics"])
+          print("REPORT_FINGERPRINT:", stored)
+          PY
+
+      - name: Validierungsartefakte sichern
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seventh-multi-strategy-complementarity-validation-2026-09-24-${{ github.run_id }}
+          path: research/seventh_multi_strategy_complementarity_2026_09_24/
+          if-no-files-found: error
+          retention-days: 30
