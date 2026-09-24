@@ -1,7 +1,16 @@
 name: Trial 030 Sleeve Volatility Parity Confirmation 2026-09-24
 on:
   push:
-    branches: ["research/trial-030-sleeve-volatility-parity-confirmation-2026-09-24"]
+    branches:
+      - master
+      - research/trial-030-sleeve-volatility-parity-confirmation-2026-09-24
+    paths:
+      - "automation/trial_030_sleeve_volatility_parity_2026_09_24.py"
+      - "tests/test_trial_030_sleeve_volatility_parity_2026_09_24.py"
+      - "research/asset_universes.py"
+      - "docs/trial_030_sleeve_volatility_parity_confirmation_preregistration_2026_09_24.md"
+      - "research/checkpoints/trial_030_sleeve_volatility_parity_confirmation_preregistration_2026_09_24.json"
+      - ".github/workflows/trial-030-sleeve-volatility-parity-confirmation-2026-09-24.yml"
   pull_request:
     types: [opened, synchronize]
     branches: [master]
