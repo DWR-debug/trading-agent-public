@@ -13,6 +13,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+from automation.coverage_preflight import run_preflight
 from automation.live_market_observer import observe_universe
 from automation.one_command_research import run_universe
 
@@ -72,6 +73,21 @@ def run(
             status=payload["status"],
             observation_fingerprint=payload["observation_fingerprint"],
         )
+    elif mode == "preflight":
+        preregistration = (
+            Path("research/preregistrations")
+            / "trial_039_network_momentum_2026_09_24.json"
+        )
+        payload = run_preflight(
+            preregistration,
+            output_root=root / "coverage_preflight",
+        )
+        snapshot = _state_snapshot(
+            mode=mode,
+            universe=universe,
+            status=payload["status"],
+            run_fingerprint=payload["coverage_fingerprint"],
+        )
     elif mode == "research":
         report = run_universe(
             universe,
@@ -100,7 +116,7 @@ def run(
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=("observe", "research"), required=True)
+    parser.add_argument("--mode", choices=("observe", "preflight", "research"), required=True)
     parser.add_argument("--universe", default=DEFAULT_UNIVERSE)
     parser.add_argument("--output-root", default="research/runs")
     parser.add_argument("--total", type=int, default=None)
