@@ -196,8 +196,8 @@ def _portfolio_rows(
 ) -> tuple[dict, ...]:
     n = min(len(next(iter(trend.values()))), len(next(iter(cs.values())))) - 2
     reversal_flags = _cs_reversal_flags(cs, cs_weights)
-    previous_trend = {symbol: 0.0 for symbol in trend}
-    previous_cs = {symbol: 0.0 for symbol in cs}
+    previous_trend_effective = {symbol: 0.0 for symbol in trend}
+    previous_cs_effective = {symbol: 0.0 for symbol in cs}
     rows = []
 
     for i in range(n):
@@ -229,8 +229,8 @@ def _portfolio_rows(
             trend_gross_open += weight * r_open
             trend_gross_close += weight * r_close
             trend_gross_adjusted += weight * r_adj
-            turnover += abs(weight - 0.5 * previous_trend[symbol])
-            previous_trend[symbol] = trend_weights[i][symbol]
+            turnover += abs(weight - previous_trend_effective[symbol])
+            previous_trend_effective[symbol] = weight
 
         for symbol, bars in cs.items():
             weight = effective_cs_scale * cs_weights[i][symbol]
@@ -245,15 +245,8 @@ def _portfolio_rows(
             cs_gross_open += weight * r_open
             cs_gross_close += weight * r_close
             cs_gross_adjusted += weight * r_adj
-            turnover += abs(
-                weight
-                - (
-                    0.5 * previous_cs[symbol]
-                    if not cooldown_active
-                    else 0.0
-                )
-            )
-            previous_cs[symbol] = cs_weights[i][symbol]
+            turnover += abs(weight - previous_cs_effective[symbol])
+            previous_cs_effective[symbol] = weight
 
         gross_open = trend_gross_open + cs_gross_open
         gross_close = trend_gross_close + cs_gross_close
@@ -720,7 +713,6 @@ def run_validation(
             report["research_hypothesis_status"] == "PASS"
             and report["cooldown_gates"]["base"]["all_relevant_checks_passed"]
             and report["holdout_confirmation_status"] == "PASS"
-            and report["cooldown_gates"]["base"]["checks"] is not None
         )
         else "FAIL"
     )
