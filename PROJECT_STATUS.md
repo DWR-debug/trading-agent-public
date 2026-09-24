@@ -2656,3 +2656,59 @@ Keine weitere Risk-Parity-/Volatility-Parity-Suche und kein Tuning dieses Contro
 - LIVE_TRADING_ENABLED=False
 - keine Research-Orders
 - keine Live-Ausführung
+
+
+## Aktueller Gesamtcheckpoint — Trial 031 abgeschlossen — 2026-09-24
+
+Trial T-2026-09-24-031 wurde auf dem öffentlichen Arbeitsrepository vollständig ausgeführt, ausgewertet und anschließend archiviert.
+
+- PR #142: gemerged
+- Merge-Commit: `52f51aff2e9aeb828f8d3c5c2889bd4960cef0f8`
+- Research-Workflow: `36043071782`
+- Artifact: `10826903506`
+- Artifact-Digest: `sha256:9b42882a4ee9082c2b6194f4b671513b7da50685d850bac561aaa3df1bab551a`
+- Report-Fingerprint: `f22e6cad28fbfbf73495f35da056b0bb8fe80c30ecd7d54deb09385452533cad`
+- 13/13 vollständig disjunkte ETFs; 3.500 Candles je Asset; 3.498 gemeinsame PIT-Returnperioden
+- Research/Holdout: 2.798 / 700
+- Trial-031-Prereq und Research: beide grün
+- korrigierte vollständige Testsuite: **671 passed**
+- Paper-only: keine Orders
+
+### Fachlicher Befund
+
+**NO_SUPPORT / archived_rejected**
+
+Risk-adjusted CS gegenüber Fixed 50/50:
+
+- Research Return: -8,37 % vs. +1,65 %
+- Research Max DD: 26,77 % vs. 22,65 %
+- Research PF: 0,994 vs. 1,011
+- Holdout Return: +24,47 % vs. +27,14 %
+- Holdout Max DD: 14,56 % vs. 15,59 %
+- Holdout PF: 1,150 vs. 1,165
+- profitable Rolling-Fenster: 3/5
+- Rolling-PF: 0,994
+- OOS/IS: 0,00
+
+Der Control verfehlt damit mehrere absolute Research-Gates und die wesentlichen
+Nicht-Verschlechterungsbedingungen. Positive Holdout-/Kostenstress-Teilbefunde
+reichen nicht für eine Promotion.
+
+### Konsequenz
+
+- keine Integration in die Produktionsstrategie
+- kein Tuning der risikoadjustierten Momentumfamilie
+- Fixed Candidate bleibt **BLOCKED**
+- kein 30-Tage-Paper-Experiment freigeschaltet
+- nächste Forschung wechselt wieder auf eine orthogonale, signal- oder
+  architekturbezogene Kontrollfrage außerhalb der bereits mehrfach geprüften
+  Volatilitäts-/Risk-Layer-Varianten
+- für jeden neuen Trial weiterhin: Coverage-Preflight vor Präregistrierung,
+  vollständig disjunktes Universum, blinder Holdout, identischer Kostenvertrag,
+  keine Holdout-Selektion
+
+### Synchronisationsstand
+
+Der aktuelle Master ist jetzt `52f51aff2e9aeb828f8d3c5c2889bd4960cef0f8`; Trial 031 ist in
+`research/evidence/trial_ledger.json`, in einem dauerhaften Result-Checkpoint
+und in der Projektdokumentation archiviert.
