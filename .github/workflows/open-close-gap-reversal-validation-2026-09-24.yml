@@ -53,7 +53,7 @@ jobs:
           python - <<'PY'
           from config import settings
           assert settings.PAPER_ONLY is True
-          assert settings.LSPSM_TRADING_ENABLED is False
+          assert settings.LIVE_TRADING_ENABLED is False
           print("PAPER-ONLY SAFETY OK")
           PY
 
@@ -70,7 +70,7 @@ jobs:
               if item.name == "validation_2026_09_24_open_close_gap_reversal_v2":
                   continue
               assert combined.isdisjoint(item.symbols), f"Overlap with {item.name}"
-          print("OPEN_CLOSE_GAP_UNSPSMRSE_DISJOINT_OK")
+          print("OPEN_CLOSE_GAP_UNIVERSE_DISJOINT_OK")
           PY
 
       - name: Market-Daten vorbereiten
