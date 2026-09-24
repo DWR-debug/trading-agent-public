@@ -14,7 +14,7 @@ Die Intervention ist eine neue Informationsquelle. Es findet keine Optimierung d
 
 - 3.520 angeforderte Daily-Candles je Symbol im Coverage-Preflight
 - mindestens 3.500 gemeinsame Candles erforderlich
-- 3.500 Research-Candles
+- 3.500 nutzbare gemeinsame Candles
 - 700 blinder Holdout
 - vollständig symbol-disjunkt zur bisherigen Research-Basis
 - ausschließlich `COMT -> FTGC` gegenüber T038 geändert
@@ -26,13 +26,13 @@ Die bestehende SMA-50/200-Long/Flat-Trendlogik bildet die Referenz.
 Der Challenger verändert ausschließlich die Richtungsinformation:
 
 1. Eigener 252-Session-Cumulative-Return mit 21-Session-Skip.
-2. Für jeden Peer wird derselbe Trendreturn um exakt 21 Sessions nach hinten verschoben.
-3. Je Ziel/Peer werden aus den vorherigen 252 abgeschlossenen Sessions die lineare Lead-Lag-Korrelationen bestimmt.
+2. Für jeden Peer wird derselbe kontinuierliche 252/21-Trendreturn um exakt 21 Sessions nach hinten verschoben.
+3. Je Ziel/Peer wird aus den vorherigen 252 abgeschlossenen Sessions die lineare Korrelation zwischen Zieltrend und dem um 21 Sessions verzögerten Peer-Trend bestimmt.
 4. Nur positive Korrelationen werden als positive Netzwerk-Links verwendet.
 5. Der Network-Score ist der mit den positiven Korrelationen gewichtete Mittelwert der Peer-Trend-Signale.
 6. Ohne positiven Link ist der Network-Score 0.
 7. Die finale Richtung ist ein fixer 50/50-Blend aus eigenem Trend und normalisiertem Network-Score.
-8. Inverse Volatilitätsgewichtung, monatliche Rebalancierung, 10%-Volatilitätsbudget sowie Kosten-/Ausführungssemantik bleiben unverändert.
+8. Inverse Volatilitätsgewichtung, monatliche Rebalancierung, 10%-Volatilitätsbudget sowie die bestehende Close-to-Next-Open-Ausführungs- und Kostensemantik bleiben unverändert.
 
 Es gibt keine Suche über Lookbacks, Lags, Korrelationsschwellen, Peer-Anzahl oder Mischungsverhältnis.
 
@@ -72,3 +72,7 @@ Zusätzlich zu den regulären Projekt-Gates gelten:
 `LIVE_TRADING_ENABLED=False`  
 `orders_enabled=False`  
 Keine Orders und keine automatische Promotion.
+
+## Split-Konvention
+
+Der T039-Vertrag folgt exakt der etablierten T038-Konvention: Nach dem Coverage-Preflight werden die letzten 3.500 gemeinsamen Candles als nutzbarer Forschungsdatensatz verwendet. Davon entfallen 2.800 Candles auf Research und 700 auf den blinden Holdout. Durch die Close-to-Next-Open-/Following-Open-Renditekonstruktion ergeben sich 2.798 Research-Returnperioden und insgesamt 3.498 PIT-Returnperioden.
