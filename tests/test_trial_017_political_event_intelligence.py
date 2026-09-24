@@ -50,8 +50,9 @@ def test_market_day_event_excludes_same_day_return():
         date(2025, 1, 8): 105.0,
         date(2025, 1, 9): 106.0,
     }
-    one, _ = _event_forward_returns(closes, date(2025, 1, 3))
+    one, five = _event_forward_returns(closes, date(2025, 1, 3))
     assert abs(one - (103.0 / 101.0 - 1.0)) < 1e-12
+    assert five is None
 
 
 def test_trial_uses_international_event_filter_and_remains_paper_only(tmp_path):
