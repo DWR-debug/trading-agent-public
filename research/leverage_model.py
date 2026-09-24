@@ -161,6 +161,65 @@ def portfolio_period_return(
 
     raise LeverageModelError(f"Unsupported leverage mode: {config.mode}")
 
+def simulate_portfolio_path(
+    underlying_returns: tuple[float, ...],
+    gross_exposures: tuple[float, ...],
+    short_exposures: tuple[float, ...],
+    config: LeverageConfig | None = None,
+) -> LeveragedPathResult:
+    """Replay a multi-position long/short portfolio with leverage costs."""
+    if not (
+        len(underlying_returns)
+        == len(gross_exposures)
+        == len(short_exposures)
+    ):
+        raise LeverageModelError("Portfolio series must have equal length.")
+    config = config or LeverageConfig()
+    equity = 1.0
+    peak = 1.0
+    minimum = 1.0
+    maximum_drawdown = 0.0
+    ruined = False
+    observations: list[float] = []
+    for underlying_return, gross, short in zip(
+        underlying_returns,
+        gross_exposures,
+        short_exposures,
+    ):
+        if ruined:
+            observations.append(0.0)
+            continue
+        net_return = portfolio_period_return(
+            underlying_return,
+            gross,
+            short,
+            config,
+        )
+        new_equity = equity * (1.0 + net_return)
+        if new_equity <= 0.0:
+            equity = 0.0
+            ruined = True
+            minimum = 0.0
+            maximum_drawdown = 1.0
+            observations.append(-1.0)
+            continue
+        equity = new_equity
+        minimum = min(minimum, equity)
+        peak = max(peak, equity)
+        maximum_drawdown = max(
+            maximum_drawdown,
+            1.0 - equity / peak,
+        )
+        observations.append(net_return)
+    return LeveragedPathResult(
+        final_equity=equity,
+        total_return=equity - 1.0,
+        minimum_equity=minimum,
+        maximum_drawdown=maximum_drawdown,
+        ruined=ruined,
+        observations=tuple(observations),
+    )
+
 
 def simulate_leveraged_path(
     underlying_returns: tuple[float, ...],
