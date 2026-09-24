@@ -5,6 +5,7 @@ from research.leverage_model import (
     LeverageMode,
     LeverageModelError,
     period_return,
+    portfolio_period_return,
     simulate_leveraged_path,
 )
 
@@ -23,6 +24,17 @@ def test_margin_financing_and_short_borrow_are_separate_costs():
     )
     value = period_return(-0.01, -1.0, config)
     expected = 0.02 - (0.10 / 252.0) - (0.40 / 252.0)
+    assert value == pytest.approx(expected)
+
+
+def test_portfolio_model_separates_gross_and_short_exposure():
+    config = LeverageConfig(
+        multiple=2.0,
+        financing_rate_annual=0.05,
+        short_borrow_rate_annual=0.10,
+    )
+    value = portfolio_period_return(0.01, 1.0, 0.5, config)
+    expected = 0.02 - (0.05 / 252.0) - (0.10 / 252.0)
     assert value == pytest.approx(expected)
 
 
