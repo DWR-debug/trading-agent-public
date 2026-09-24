@@ -1,0 +1,188 @@
+name: Trial 015 Mean Reversion Global ETF Validation 2026-09-24
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [master]
+    paths:
+      - "automation/trial_015_mean_reversion_global_etf_2026_09_24.py"
+      - "tests/test_trial_015_mean_reversion_global_etf_2026_09_24.py"
+      - "research/asset_universes.py"
+      - "docs/trial_015_mean_reversion_global_etf_preregistration_2026_09_24.md"
+      - ".github/workflows/trial-015-mean-reversion-global-etf-2026-09-24.yml"
+      - "strategies/mean_reversion.py"
+      - "strategies/signals.py"
+      - "automation/prepare_research_data.py"
+      - "backtesting/**"
+      - "config/**"
+      - "data/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-trial-015-mean-reversion
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Paper-Trading-Sicherheit prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+
+      - name: Trial-015-Daten vorbereiten
+        run: |
+          set -euo pipefail
+          python -m automation.prepare_research_data             --target-count 3500             --universe validation_2026_09_24_fifteenth_mean_reversion             --output research/trial_015_mean_reversion_global_etf_2026_09_24/data_manifest.json
+
+      - name: Präregistrierung, Disjunktheit und Manifest fail-closed prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from config import settings
+          from research.asset_universes import get_universe, list_universes
+
+          universe_name = "validation_2026_09_24_fifteenth_mean_reversion"
+          manifest_path = Path(
+              "research/trial_015_mean_reversion_global_etf_2026_09_24/data_manifest.json"
+          )
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+          universe = get_universe(universe_name)
+
+          assert manifest["universe"] == universe_name
+          assert manifest["target_count"] == 3500
+          assert tuple(x["symbol"] for x in manifest["datasets"]) == universe.symbols
+          assert all(x["candle_count"] == 3500 for x in manifest["datasets"])
+          assert manifest["calendar_alignment"]["mode"] == "timestamp_intersection_tail"
+          assert manifest["calendar_alignment"]["aligned_candle_count"] == 3500
+          assert manifest["safety"]["paper_only"] is True
+          assert manifest["safety"]["live_trading_enabled"] is False
+
+          current = set(universe.symbols)
+          prior = set()
+          for item in list_universes():
+              if item.name != universe_name:
+                  prior.update(item.symbols)
+
+          closed_pr79 = {
+              "SLV", "RSP", "VYM", "VIG", "DVY", "EPP", "EWU", "EWZ",
+              "AAPL", "MSFT", "AMZN", "META", "GOOGL"
+          }
+          assert current.isdisjoint(prior)
+          assert current.isdisjoint(closed_pr79)
+
+          prereg = Path(
+              "docs/trial_015_mean_reversion_global_etf_preregistration_2026_09_24.md"
+          ).read_text(encoding="utf-8")
+          for symbol in universe.symbols:
+              assert symbol in prereg
+
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("TRIAL_015_PREREGISTRATION_VERIFIED")
+          print("TRIAL_015_SYMBOL_COUNT:", len(current))
+          PY
+
+      - name: Trial 015 ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.trial_015_mean_reversion_global_etf_2026_09_24             --data-dir data/market_data             --manifest research/trial_015_mean_reversion_global_etf_2026_09_24/data_manifest.json             --output research/trial_015_mean_reversion_global_etf_2026_09_24/report.json
+
+      - name: Ergebnisfingerprint und Safety prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path(
+              "research/trial_015_mean_reversion_global_etf_2026_09_24/report.json"
+          )
+          report = json.loads(path.read_text(encoding="utf-8"))
+          stored = report.pop("report_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(
+                  report,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+          assert stored == actual
+          assert report["status"] == "COMPLETED"
+          assert report["preregistration"]["selection_after_results"] is False
+          assert report["preregistration"]["parameter_optimization"] is False
+          assert report["preregistration"]["holdout_selection"] is False
+          assert report["source"]["fully_symbol_disjoint_from_master_universes"] is True
+          assert report["source"]["historical_prior_closed_pr79_symbols_excluded"] is True
+          assert report["methodology"]["mean_reversion_long_only"] is True
+          assert report["methodology"]["optimization_used"] is False
+          assert report["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+          }
+          print("TRIAL_015_REPORT_AND_SAFETY_VERIFIED")
+          print("REPORT_FINGERPRINT:", stored)
+          for scenario, values in report["scenarios"].items():
+              mr = values["mean_reversion"]
+              blend = values["blend_50_50"]
+              print(
+                  scenario,
+                  "MR_RESEARCH_RETURN=", mr["research"]["return"],
+                  "MR_RESEARCH_DD=", mr["research"]["max_drawdown_percent"],
+                  "MR_HOLDOUT_RETURN=", mr["holdout"]["return"],
+                  "BLEND_RESEARCH_RETURN=", blend["research"]["return"],
+                  "BLEND_HOLDOUT_RETURN=", blend["holdout"]["return"],
+              )
+          PY
+
+      - name: Validierungsartefakte sichern
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trial-015-mean-reversion-global-etf-${{ github.run_id }}
+          path: |
+            research/trial_015_mean_reversion_global_etf_2026_09_24/
+            data/market_data/EWC/
+            data/market_data/EWH/
+            data/market_data/EWI/
+            data/market_data/EWK/
+            data/market_data/EWN/
+            data/market_data/EWP/
+            data/market_data/EWY/
+            data/market_data/EWT/
+          if-no-files-found: error
+          retention-days: 30
