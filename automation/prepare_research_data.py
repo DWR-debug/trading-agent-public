@@ -45,6 +45,64 @@ def manifest_fingerprint(manifest: dict) -> str:
     payload.pop("manifest_fingerprint", None)
     return _hash(payload)
 
+def _common_timestamps(
+    candles_by_key: dict[tuple[str, str], tuple],
+) -> tuple:
+    if not candles_by_key:
+        raise ValueError("Mindestens ein Asset muss für die Kalenderausrichtung vorhanden sein.")
+
+    timestamp_sets = [
+        {candle.timestamp for candle in candles}
+        for candles in candles_by_key.values()
+    ]
+    common = set.intersection(*timestamp_sets)
+    return tuple(sorted(common))
+
+
+def _trim_to_common_calendar(
+    store: MarketDataStore,
+    prepared: list[tuple[str, str, str]],
+    target_count: int,
+) -> dict[str, int]:
+    """Persist the last target_count timestamps shared by every asset.
+
+    The function fails closed when the common timestamp intersection is too
+    short. It never fills missing candles and never changes candle values.
+    """
+    if target_count < 1:
+        raise ValueError("target_count muss mindestens 1 sein.")
+
+    candles_by_key = {
+        (symbol, interval): tuple(store.load(symbol, interval))
+        for symbol, interval, _source in prepared
+    }
+    common = _common_timestamps(candles_by_key)
+
+    if len(common) < target_count:
+        raise ValueError(
+            f"Zu wenig gemeinsame Kalender-Candles: {len(common)} statt mindestens "
+            f"{target_count}."
+        )
+
+    selected = common[-target_count:]
+    selected_set = set(selected)
+
+    for (symbol, interval), candles in candles_by_key.items():
+        by_timestamp = {candle.timestamp: candle for candle in candles}
+        aligned = tuple(by_timestamp[ts] for ts in selected)
+        if len(aligned) != target_count:
+            raise ValueError(
+                f"{symbol} {interval}: Kalenderausrichtung ergab {len(aligned)} "
+                f"Candles statt {target_count}."
+            )
+        store.save(symbol, interval, aligned)
+
+    return {
+        "raw_common_candle_count": len(common),
+        "aligned_candle_count": target_count,
+    }
+
+
 def workflow_provenance() -> dict[str, str | None]:
     """Capture immutable workflow context without adding credentials."""
 
@@ -89,32 +147,67 @@ def prepare(
     else:
         stock_universe = get_universe(universe)
         target_count = target_count or stock_universe.target_count
-        prepared = []
+        prepared = [
+            (symbol.upper(), stock_universe.interval, "yahoo_chart")
+            for symbol in stock_universe.symbols
+        ]
         vendor_quality: dict[str, dict[str, int]] = {}
-        for symbol in stock_universe.symbols:
-            vendor_report: dict[str, int] = {}
+        acquisition_count = target_count
+        alignment_attempts = 0
+        max_alignment_attempts = 5
 
-            def partial_loader(symbol: str, interval: str, total: int):
-                return load_yahoo_history(
+        while True:
+            vendor_quality = {}
+            for symbol, interval, _source in prepared:
+                vendor_report: dict[str, int] = {}
+
+                def partial_loader(
+                    loader_symbol: str,
+                    loader_interval: str,
+                    total: int,
+                    *,
+                    _report=vendor_report,
+                ):
+                    return load_yahoo_history(
+                        loader_symbol,
+                        loader_interval,
+                        total,
+                        allow_partial=True,
+                        skip_invalid_ohlc=True,
+                        quality_report=_report,
+                    )
+
+                update_dataset(
                     symbol,
                     interval,
-                    total,
-                    allow_partial=True,
-                    skip_invalid_ohlc=True,
-                    quality_report=vendor_report,
+                    acquisition_count,
+                    store=store,
+                    loader=partial_loader,
+                )
+                vendor_quality[symbol] = vendor_report
+
+            candles_by_key = {
+                (symbol, interval): tuple(store.load(symbol, interval))
+                for symbol, interval, _source in prepared
+            }
+            common_count = len(_common_timestamps(candles_by_key))
+            if common_count >= target_count:
+                break
+
+            alignment_attempts += 1
+            if alignment_attempts >= max_alignment_attempts:
+                raise ValueError(
+                    f"Gemeinsamer Kalender bleibt zu kurz: {common_count} statt "
+                    f"{target_count} nach {max_alignment_attempts} Akquisitionen."
                 )
 
-            result = update_dataset(
-                symbol,
-                stock_universe.interval,
-                target_count,
-                store=store,
-                loader=partial_loader,
-            )
-            vendor_quality[result.symbol] = vendor_report
-            prepared.append(
-                (result.symbol, result.interval, "yahoo_chart")
-            )
+            acquisition_count += target_count - common_count + 1
+
+        alignment = _trim_to_common_calendar(
+            store,
+            prepared,
+            target_count,
+        )
 
     datasets = []
 
@@ -123,13 +216,9 @@ def prepare(
         validate_research_dataset(
             candles,
             interval,
-            expected_count=target_count if universe is None else None,
+            expected_count=target_count,
             now=validation_now,
         )
-        if universe is not None and len(candles) < minimum_count:
-            raise ValueError(
-                f"Zu wenig Historie für {symbol}: {len(candles)} statt mindestens {minimum_count} Candles."
-            )
 
         datasets.append(
             {
@@ -155,6 +244,19 @@ def prepare(
         "target_count": target_count,
         "minimum_count": minimum_count if universe is not None else None,
         "provenance": workflow_provenance(),
+        "calendar_alignment": (
+            {
+                "mode": "timestamp_intersection_tail",
+                "raw_common_candle_count_before_trim": alignment["raw_common_candle_count"],
+                "aligned_candle_count": alignment["aligned_candle_count"],
+                "acquisition_candle_count": acquisition_count,
+                "alignment_attempts": alignment_attempts,
+            }
+            if universe is not None
+            else {
+                "mode": "not_applicable",
+            }
+        ),
         "datasets": datasets,
         "safety": {
             "paper_only": True,
