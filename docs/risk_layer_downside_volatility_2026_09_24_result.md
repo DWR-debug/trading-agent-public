@@ -32,7 +32,7 @@ aber das genügt nicht für den vorab definierten Nachweis.
 
 ## Größenordnung
 
-| Validierung | Return-Differenz 31? nein: Downside minus Total | DD-Differenz | Rolling-PF-Differenz |
+| Validierung | Return-Differenz 31? nein: Downside-Volatility minus Total-Volatility | DD-Differenz | Rolling-PF-Differenz |
 |---|---:|---:|---:|
 | 1 | +9,514 %-Pkt. | +2,067 %-Pkt. | +0,0056 |
 | 2 | +7,897 %-Pkt. | +2,596 %-Pkt. | +0,0097 |
