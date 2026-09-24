@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "trial_id": "T-2026-09-24-020",
+  "status": "preregistered",
+  "research_family": "overnight_intraday_gap_reversal",
+  "hypothesis": "Fixed parameter-free reversal of each asset's overnight gap produces robust positive same-day intraday return on a fully symbol-disjoint ETF universe.",
+  "symbols": ["SPYG", "SPYV", "SPTM", "SPMD", "SDY", "RWR", "XNTK", "XPH"],
+  "return_count": {"total": 3498, "research": 2798, "holdout": 700},
+  "strategy_variants": 1,
+  "parameter_search": false,
+  "threshold_search": false,
+  "asset_selection": false,
+  "holdout_used_for_selection": false,
+  "costs": {
+    "fee_rate": 0.001,
+    "slippage_rate": 0.0005,
+    "stress_multipliers": [1.5, 2.0]
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false
+  }
+}
