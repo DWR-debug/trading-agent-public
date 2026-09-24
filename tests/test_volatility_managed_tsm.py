@@ -20,7 +20,7 @@ def test_tsm_signal_uses_only_prior_closes():
     closes[252] = 110.0
     closes[253] = 1_000_000.0
     assert _tsm_signal(closes, 254) == 1
-    closes[253] = -1.0
+    closes[254] = -1.0
     assert _tsm_signal(closes, 254) == 1
 
 
