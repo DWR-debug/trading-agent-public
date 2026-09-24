@@ -2653,6 +2653,125 @@
         "live_trading_enabled": false,
         "orders_enabled": false
       }
+    },
+    {
+      "trial_id": "T-2026-09-24-034",
+      "recorded_at": "2026-09-24",
+      "status": "archived_rejected",
+      "research_family": "fixed_cointegration_gated_etf_relative_value",
+      "hypothesis": {
+        "text": "Five fixed ex ante ETF pairs with monthly ADF cointegration eligibility and daily price-ratio mean reversion can provide a standalone market-neutral return stream after project costs."
+      },
+      "data_scope": {
+        "target_candles_per_symbol": 3500,
+        "common_return_count": 3498,
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "fully_symbol_disjoint_validation_set": true,
+        "pairs": [
+          [
+            "VTWO",
+            "IJR"
+          ],
+          [
+            "QQEW",
+            "ONEQ"
+          ],
+          [
+            "EEMV",
+            "SCHE"
+          ],
+          [
+            "IGIB",
+            "SPIB"
+          ],
+          [
+            "SCHP",
+            "STIP"
+          ]
+        ],
+        "coverage_preflight_workflow_id": 36044264502,
+        "coverage_preflight_artifact_id": 10827700370,
+        "coverage_preflight_fingerprint": "b4102c8e01e442ca5657426b96f0dc97ec919783299408946975f49b05c445a4"
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "pair_search": false,
+        "parameter_search": false,
+        "threshold_search": false,
+        "holdout_used_for_selection": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "five pairs fixed ex ante; no pair selection by performance",
+        "selection_family_id": "fixed-cointegration-gated-etf-relative-value-2026-09-24"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 36045225948,
+        "artifact_id": 10827469931,
+        "artifact_sha256": "sha256:c90990863e1844977352a50cd6023c9ccca215e98de5dfa2225782f90bc468f3",
+        "report_fingerprint": "pending_from_archived_report",
+        "code_head_sha": "d4359b81929be13d3d6dc86b9f0617a6acd846b0",
+        "all_checks_passed": false,
+        "key_metrics": {
+          "research_return_percent": -18.924544276335,
+          "research_drawdown_percent": 19.01292208581514,
+          "research_profit_factor": 0.5988111477088774,
+          "research_trade_count": 85,
+          "rolling_profitable_window_ratio": 0,
+          "rolling_profit_factor": 0.5988111477088774,
+          "average_rolling_drawdown_percent": 4.452247603181767,
+          "holdout_return_percent": -0.7088395725081797,
+          "holdout_drawdown_percent": 1.3893976869612357,
+          "holdout_profit_factor": 0.8553531994992126,
+          "holdout_trade_count": 6,
+          "holdout_active_day_ratio": 0.09,
+          "stress_1_5x_holdout_return_percent": -1.6000027411465334,
+          "stress_2x_holdout_return_percent": -2.48382853933391
+        },
+        "pair_diagnostics": {
+          "VTWO/IJR": {
+            "eligible_rebalance_ratio": 0.06369426751592357,
+            "entry_count": 12,
+            "exit_count": 12
+          },
+          "QQEW/ONEQ": {
+            "eligible_rebalance_ratio": 0.12101910828025478,
+            "entry_count": 14,
+            "exit_count": 14
+          },
+          "EEMV/SCHE": {
+            "eligible_rebalance_ratio": 0.05732484076433121,
+            "entry_count": 6,
+            "exit_count": 6
+          },
+          "IGIB/SPIB": {
+            "eligible_rebalance_ratio": 0.2802547770700637,
+            "entry_count": 50,
+            "exit_count": 50
+          },
+          "SCHP/STIP": {
+            "eligible_rebalance_ratio": 0.07643312101910828,
+            "entry_count": 9,
+            "exit_count": 9
+          }
+        }
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
     }
   ]
 }
