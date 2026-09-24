@@ -11,7 +11,7 @@ from research.asset_universes import list_universes
 
 CANDIDATES=(
     "VV","VHT","VFH","VIS","VAW","VDE","VPU","VGT",
-    "SPDW","SPMD","SPEM","SPTL","SPIP",
+    "SPDW","SPMB","SPEM","SPTL","SPIP",
 )
 TARGET_FETCH=3520
 TARGET_COMMON=3500
