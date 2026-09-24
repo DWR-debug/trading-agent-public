@@ -37,6 +37,7 @@ from research.protocol import dataset_fingerprint
 TREND_UNIVERSE = "validation_2026_09_24_seventh_trend"
 CS_UNIVERSE = "validation_2026_09_24_seventh_cs"
 TARGET_COUNT = 3500
+ACQUISITION_COUNT = 3510
 EXPECTED_COMMON_RETURNS = 3498
 
 
@@ -54,7 +55,7 @@ def _manifest(path: Path, universe_name: str) -> dict:
     symbols = tuple(item["symbol"] for item in data.get("datasets", []))
     if data.get("universe") != universe_name or symbols != universe.symbols:
         raise ValueError(f"Manifest passt nicht zu {universe_name}.")
-    if data.get("target_count") != TARGET_COUNT or data.get("source") != "yahoo_chart":
+    if data.get("target_count", 0) < TARGET_COUNT or data.get("source") != "yahoo_chart":
         raise ValueError(f"Unerwartete Datenbasis für {universe_name}.")
     safety = data.get("safety", {})
     if safety.get("paper_only") is not True or safety.get("live_trading_enabled") is not False:
@@ -67,13 +68,13 @@ def _assets(data_dir: Path, manifest: dict) -> dict[str, tuple]:
     for item in manifest["datasets"]:
         symbol = item["symbol"]
         bars = load_bars(data_dir / symbol / "1d.csv", expected_count=int(item["candle_count"]))
-        if len(bars) != TARGET_COUNT or dataset_fingerprint(bars) != item["fingerprint"]:
+        if len(bars) < TARGET_COUNT or dataset_fingerprint(bars) != item["fingerprint"]:
             raise ValueError(f"{symbol}: Dataset-Identität/Fingerprint nicht verifiziert.")
         out[symbol] = bars
     common = set.intersection(*[{bar.timestamp for bar in bars} for bars in out.values()])
-    if len(common) != TARGET_COUNT:
-        raise ValueError(f"Erwarte exakt {TARGET_COUNT} gemeinsame Candles, erhalten: {len(common)}")
-    ordered = sorted(common)
+    if len(common) < TARGET_COUNT:
+        raise ValueError(f"Erwarte mindestens {TARGET_COUNT} gemeinsame Candles, erhalten: {len(common)}")
+    ordered = sorted(common)[-TARGET_COUNT:]
     return {symbol: tuple({bar.timestamp: bar for bar in bars}[ts] for ts in ordered) for symbol, bars in out.items()}
 
 
