@@ -111,7 +111,8 @@ def run_trial(
         raise ValueError("end must be after start and assets must be non-empty.")
 
     raw_dir = Path("research/trial_017_political_event_intelligence/raw")
-    if event_loader is None:
+    using_downloaded_events = event_loader is None
+    if using_downloaded_events:
         def event_loader(day: date) -> Iterable[GDELTEvent]:
             path = raw_dir / f"{day.isoformat()}.zip"
             if not path.exists():
@@ -128,7 +129,7 @@ def run_trial(
     parse_stats = {"rows_seen": 0, "rows_skipped": 0}
     day = start
     while day <= end:
-        if event_loader is None:
+        if using_downloaded_events:
             day_stats = {"rows_seen": 0, "rows_skipped": 0}
             events.extend(parse_event_zip(raw_dir / f"{day.isoformat()}.zip", strict=False, stats=day_stats))
             parse_stats["rows_seen"] += day_stats["rows_seen"]
