@@ -1,0 +1,128 @@
+name: Trial 035 Trend Family WFO Control 2026-09-24
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [master]
+    paths:
+      - "automation/trial_035_trend_family_wfo_2026_09_24.py"
+      - "docs/trial_035_trend_family_wfo_preregistration_2026_09_24.md"
+      - "research/checkpoints/trial_035_trend_family_wfo_preregistration_2026_09_24.json"
+      - "research/checkpoints/trial_035_coverage_preflight_2026_09_24.json"
+      - "tests/test_trial_035_trend_family_wfo_2026_09_24.py"
+      - ".github/workflows/trial-035-trend-family-wfo-control-2026-09-24.yml"
+      - "automation/cross_asset_trend_replication.py"
+      - "research/asset_universes.py"
+  push:
+    branches: ["research/trial-035-wfo-clean-v2-2026-09-24"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-trial-035-wfo-control
+  cancel-in-progress: false
+
+jobs:
+  research:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 180
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest statsmodels==0.15.0
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+      - name: Paper-only-Sicherheit
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+      - name: Präregistrierung und Coverage-Evidenz prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("docs/trial_035_trend_family_wfo_preregistration_2026_09_24.md").read_text(encoding="utf-8")
+          for marker in (
+              "T-2026-09-24-035",
+              "SPTM","IWR","RWR","SCHZ","VGSH","VGLT","DJP","MOO","GCC","REM",
+              "1.398","280","2.798","700",
+              "PAPER_ONLY=True","LIVE_TRADING_ENABLED=False"
+          ):
+              assert marker in p, marker
+          c=json.loads(Path("research/checkpoints/trial_035_coverage_preflight_2026_09_24.json").read_text(encoding="utf-8"))
+          assert c["trial_id"]=="T-2026-09-24-035"
+          assert c["status"]=="coverage_passed"
+          assert c["common_calendar_count"]>=3500
+          assert c["performance_selection_used"] is False
+          assert c["paper_only"] is True and c["live_trading_enabled"] is False and c["orders_enabled"] is False
+          assert c["coverage_fingerprint"]=="f3902d7247663446763a8bf78f370961ddf1cad9c8056b4c993a62745c75c253"
+          print("TRIAL_035_PREREG_OK")
+          print("TRIAL_035_COVERAGE_PREFLIGHT_RUN: 36048203151")
+          print("TRIAL_035_COVERAGE_ARTIFACT: 10828838810")
+          print("TRIAL_035_COVERAGE_ARTIFACT_SHA256: e29df32161babcd3a6677d456a4b5572d81afb0c0613e69c62d8c45e4d4dcbfa")
+          print("TRIAL_035_COVERAGE_FINGERPRINT:", c["coverage_fingerprint"])
+          PY
+      - name: Research-Daten vorbereiten
+        run: |
+          set -euo pipefail
+          python -m automation.prepare_research_data             --target-count 3500             --universe validation_2026_09_24_trend_family_wfo_candidate             --output research/trial_035_trend_family_wfo_2026_09_24/manifest.json
+      - name: Trial-035-WFO-Control ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.trial_035_trend_family_wfo_2026_09_24             --data-dir data/market_data             --manifest research/trial_035_trend_family_wfo_2026_09_24/manifest.json             --output research/trial_035_trend_family_wfo_2026_09_24/report.json
+      - name: Ergebnisintegrität prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          p=Path("research/trial_035_trend_family_wfo_2026_09_24/report.json")
+          r=json.loads(p.read_text(encoding="utf-8"))
+          stored=r.pop("report_fingerprint")
+          actual=hashlib.sha256(json.dumps(r,sort_keys=True,separators=(",",":"),ensure_ascii=True,allow_nan=False).encode()).hexdigest()
+          assert stored==actual
+          assert r["trial_id"]=="T-2026-09-24-035"
+          assert r["status"]=="COMPLETED"
+          assert r["research_only"] is True
+          assert r["source"]["target_candles"]==3500
+          assert r["source"]["research_count"]==2798
+          assert r["source"]["holdout_count"]==700
+          assert r["source"]["fully_symbol_disjoint"] is True
+          assert r["methodology"]["parameter_search"] is False
+          assert r["methodology"]["holdout_used_for_selection"] is False
+          assert r["methodology"]["train_size"]==1398
+          assert r["methodology"]["test_size"]==280
+          assert r["methodology"]["research_windows"]==5
+          assert r["safety"]=={"paper_only":True,"live_trading_enabled":False,"orders_enabled":False}
+          print("TRIAL_035_RESULT_INTEGRITY_OK")
+          print("TRIAL_035_REPORT_FINGERPRINT:",stored)
+          print("TRIAL_035_FINAL_FAMILY:",r["selection"]["final_holdout_family"])
+          print("TRIAL_035_GATE_CONTRACT:",json.dumps(r["gate_contract"],sort_keys=True))
+          PY
+      - name: Artefakte sichern
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: trial-035-trend-family-wfo
+          path: |
+            research/trial_035_trend_family_wfo_2026_09_24/
+            research/checkpoints/trial_035_coverage_preflight_2026_09_24.json
+          if-no-files-found: error
+          retention-days: 30
