@@ -140,6 +140,8 @@ def _aggregate_sleeves(
             trend_rows[index - 1]["timestamp"].year,
             trend_rows[index - 1]["timestamp"].month,
         )
+        previous_trend = 0.5 if index == 0 else previous_trend_weight
+        previous_cs = 1.0 - previous_trend
         if new_month:
             trend_weight, cs_weight = _sleeve_parity_weights(
                 trend_history, cs_history
@@ -149,10 +151,9 @@ def _aggregate_sleeves(
         else:
             cs_weight = 1.0 - trend_weight
 
-        prev_cs_weight = 1.0 - trend_weight if index > 0 else 0.5
         allocation_turnover = (
-            abs(trend_weight - (0.5 if index == 0 else previous_trend_weight))
-            + abs(cs_weight - prev_cs_weight)
+            abs(trend_weight - previous_trend)
+            + abs(cs_weight - previous_cs)
         )
 
         rows.append(
