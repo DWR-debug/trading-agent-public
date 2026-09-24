@@ -51,6 +51,82 @@ Regeln:
 - Formale Research-/Actions-Ausführung soll über `trading-agent-public` erfolgen.
 - Paper-only bleibt verbindlich: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, keine Live-Orders.
 
+## Aktueller Checkpoint — Trial 025 Marktresidualvolatilität — 2026-09-24
+
+Trial T-2026-09-24-025 wurde vollständig und reproduzierbar als einzelner,
+vorab präregistrierter Control ausgeführt und anschließend archiviert.
+
+### Technischer Nachweis
+
+- PR #128: gemerged
+- Merge-Commit: `16be871e5607df8555957e277d1275fe724dc494`
+- Workflow-Run: `36022604471`
+- Artifact-ID: `10818270142`
+- Artifact-ZIP-SHA256: `183d51f7ae4cdfb817f1a6aa62c8960b6343da10a8db2e306c73f904bd4125d5`
+- Report-Fingerprint: `9f2088cb95fb6f7d0d5e3a1b9e6b2857c03c5904871cad4cefaffef9533e860e`
+- Manifest-Fingerprint: `bc146938fa2b112b23bc71503c1649fcf9d84f802b2ce27dc8c8e9a8441f5ed7`
+- 8 vollständig symbol-disjunkte U.S.-Aktien: COST, TMO, LIN, DE, EMR, SBUX, VZ, MA
+- 3.500 Candles je Asset
+- 3.498 gemeinsame Point-in-Time-Returnperioden
+- Research/Holdout: 2.798 / 700
+- vollständige Testsuite, Safety, Disjointness, Präregistrierung, Kostenvertrag und Ergebnisintegrität: bestanden
+- keine Parameter-, Threshold-, Auswahlbreiten- oder Asset-Suche
+- keine Holdout-Selektion
+- keine Orders
+
+### Fachlicher Befund
+
+**Entscheidung: NO_SUPPORT / archived_rejected**
+
+Base:
+- Research Return: +150,43 %
+- Research Drawdown: 26,08 %
+- Research PF: 1,118
+- Research Rolling: 5/5 profitabel
+- Holdout Return: +35,37 %
+- Holdout Drawdown: 15,06 %
+- Holdout PF: 1,156
+- OOS/Research Return Ratio: 0,235
+- 1,5x Kostenstress Holdout: +35,06 %
+- 2,0x Kostenstress Holdout: +34,76 %
+- Low-Residual-Vol minus High-Residual-Vol: -2,13 bps/Tag Research; -2,21 bps/Tag Holdout
+- Gesamtturnover: 23,0
+
+Damit bestehen Return-, PF-, Rolling- und Kostenstress-Prüfungen, während
+Research-/Holdout-Drawdown, OOS/Research und der präregistrierte
+Low-vs-High-Residual-Volatility-Edge verfehlt werden.
+
+### Deskriptive Failure-Diagnose
+
+Die fünf festen Research-Fenster zeigen:
+- Fenster 1: +3,59 % Return / 8,55 % DD / PF 1,054
+- Fenster 2: +3,19 % / 16,81 % / 1,030
+- Fenster 3: +50,56 % / 19,05 % / 1,234
+- Fenster 4: +54,76 % / 24,79 % / 1,220
+- Fenster 5: +0,55 % / 26,08 % / 1,017
+
+Der Research-Ertrag wird damit stark von den mittleren zwei Fenstern getragen;
+das letzte Fenster endet nahezu flat bei zugleich höchstem Drawdown. Das ist
+ein deskriptiver Hinweis auf zeitlich uneinheitliche Ergebnisqualität, keine
+kausale Marktregime-Aussage.
+
+Dauerhafte Evidenz:
+- `docs/trial_025_idiosyncratic_volatility_result_2026_09_24.md`
+- `docs/trial_025_idiosyncratic_volatility_failure_diagnosis_2026_09_24.md`
+- `research/checkpoints/trial_025_idiosyncratic_volatility_2026_09_24_result.json`
+- `research/evidence/trial_ledger.json`
+
+### Konsequenz
+
+Trial 025 wird nicht integriert. Es folgt keine nachträgliche Suche über
+Lookback, Auswahlbreite, Residualisierungsmodell, Marktdefinition oder
+verwandte Volatilitätsparameter.
+
+Der nächste fachliche Schritt bleibt eine **separat vorregistrierte und
+methodisch unabhängige Kontrollfrage**. Bis dahin bleiben Strategie,
+Parameterraum, Gewichte, Gates und Produktionsstatus unverändert.
+
+
 # Trading Agent — aktueller Gesamtcheckpoint
 
 Stand: 2026-09-24
