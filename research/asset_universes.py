@@ -209,7 +209,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
             "Fixed fully symbol-disjoint ETF universe for a pre-registered "
             "overnight-gap versus same-day intraday reversal control."
         ),
-        symbols=("SPLG", "IJR", "IEFA", "IEMG", "IVE", "IVW", "VOE", "VOT"),
+        symbols=("SPYM", "IJR", "IEFA", "IEMG", "IVE", "IVW", "VOE", "VOT"),
         target_count=3500,
     ),
 )
