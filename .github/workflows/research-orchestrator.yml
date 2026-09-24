@@ -34,7 +34,9 @@ on:
           - validation_2026_09_24_portfolio_risk_control_trend
           - validation_2026_09_24_portfolio_risk_control_cs
   push:
-    branches: [master]
+    branches:
+      - master
+      - research/execute-t041
     paths:
       - "automation/research_orchestrator.py"
       - "automation/live_market_observer.py"
@@ -102,7 +104,14 @@ jobs:
           ORCHESTRATOR_UNIVERSE: ${{ inputs.universe || 'benchmark' }}
         run: |
           set -euo pipefail
-          if [ "$GITHUB_EVENT_NAME" = "schedule" ] || [ "$GITHUB_EVENT_NAME" = "push" ]; then
+          if [ "$GITHUB_REF" = "refs/heads/research/execute-t041" ]; then
+            test "$GITHUB_EVENT_NAME" = "push"
+            test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+            test "$(git log -1 --pretty=%s)" = "Research authorization: execute T041 formal performance"
+            python -m automation.research_orchestrator \
+              --mode research_t041 \
+              --universe benchmark
+          elif [ "$GITHUB_EVENT_NAME" = "schedule" ] || [ "$GITHUB_EVENT_NAME" = "push" ]; then
             python -m automation.research_orchestrator \
               --mode observe \
               --universe benchmark
