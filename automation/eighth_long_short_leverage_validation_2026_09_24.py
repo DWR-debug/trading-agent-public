@@ -146,7 +146,6 @@ def _simulate(rows: tuple[dict, ...], multiple: float, *, trading_multiplier: fl
     gross_profit = 0.0
     gross_loss = 0.0
     net_returns = []
-    previous_leveraged_turnover = 0.0
     ruined = False
     for index, row in enumerate(rows):
         net_return = portfolio_period_return(
@@ -181,7 +180,6 @@ def _simulate(rows: tuple[dict, ...], multiple: float, *, trading_multiplier: fl
         elif net_return < 0.0:
             gross_loss -= net_return
         net_returns.append(net_return)
-        previous_leveraged_turnover = multiple * row["turnover"]
     profit_factor = gross_profit / gross_loss if gross_loss > 0 else ("inf" if gross_profit > 0 else 0.0)
     return {
         "period_return": equity - 1.0,
@@ -214,40 +212,6 @@ def _stats(returns: tuple[float, ...]) -> dict:
     return {"period_return": equity - 1.0, "max_drawdown_percent": max_dd * 100.0, "profit_factor": pf}
 
 
-def _rolling(returns: tuple[float, ...]) -> dict:
-    width = RESEARCH_COUNT // 5
-    windows = []
-    start = 0
-    for i in range(5):
-        end = RESEARCH_COUNT if i == 4 else start + width
-        item = _stats(returns[start:end])
-        item["window_index"] = i + 1
-        windows.append(item)
-        start = end
-    return {
-        "windows": windows,
-        "profitable_window_ratio": sum(item["period_return"] > 0 for item in windows) / len(windows),
-        "profit_factor": _pf_from_returns(tuple(value for w in windows for value in _window_returns_placeholder(w))),
-        "average_drawdown_percent": sum(item["max_drawdown_percent"] for item in windows) / len(windows),
-    }
-
-
-def _window_returns_placeholder(window: dict) -> tuple[float, ...]:
-    return ()
-
-
-def _pf_from_returns(values: tuple[float, ...]) -> float | str:
-    if not values:
-        return 0.0
-    gp = sum(value for value in values if value > 0)
-    gl = -sum(value for value in values if value < 0)
-    return gp / gl if gl > 0 else ("inf" if gp > 0 else 0.0)
-
-
-def _segment_stats(returns: tuple[float, ...], start: int, end: int) -> dict:
-    return _stats(returns[start:end])
-
-
 def _summary(returns: tuple[float, ...]) -> dict:
     windows = []
     width = RESEARCH_COUNT // 5
@@ -269,7 +233,7 @@ def _summary(returns: tuple[float, ...]) -> dict:
     }
 
 
-def _variant(rows, multiple: float, long_short: bool) -> dict:
+def _variant(rows, multiple: float) -> dict:
     results = {}
     for name, trading_multiplier, financing, borrow in (
         ("base", 1.0, 0.0, 0.0),
@@ -313,9 +277,9 @@ def run_validation(data_dir: Path, manifest_path: Path, output_path: Path) -> di
     rows_long_short = _portfolio_rows(assets, long_short)
 
     variants = {}
-    variants["long_flat_1x_margin"] = _variant(rows_long_flat, 1.0, False)
+    variants["long_flat_1x_margin"] = _variant(rows_long_flat, 1.0)
     for multiple in LEVERAGE_VARIANTS:
-        variants[f"long_short_{multiple:g}x_margin"] = _variant(rows_long_short, multiple, True)
+        variants[f"long_short_{multiple:g}x_margin"] = _variant(rows_long_short, multiple)
 
     report = {
         "schema_version": 1,
