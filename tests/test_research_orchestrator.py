@@ -50,3 +50,22 @@ def test_t039_research_is_coverage_gated(monkeypatch, tmp_path):
     assert calls[1][0] == "trial"
     assert snapshot["status"] == "BLOCKED"
     assert snapshot["safety"]["orders_enabled"] is False
+
+
+def test_discover_coverage_mode_is_safe(monkeypatch, tmp_path):
+    from automation import research_orchestrator
+
+    monkeypatch.setattr(
+        research_orchestrator,
+        "run_discovery",
+        lambda output: {
+            "coverage_valid_candidates": ["BIV"],
+            "fingerprint": "discovery-fp",
+        },
+    )
+    snapshot = research_orchestrator.run(
+        mode="discover_coverage",
+        output_root=tmp_path,
+    )
+    assert snapshot["status"] == "CANDIDATES_AVAILABLE"
+    assert snapshot["safety"]["orders_enabled"] is False
