@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: Beobachtung, T039-Coverage-Preflight, T040-Coverage-Discovery oder formaler Research-Lauf
+        description: Beobachtung, Coverage-Preflight, Coverage-Discovery oder formaler Research-Lauf
         required: true
         default: observe
         type: choice
@@ -27,6 +27,7 @@ on:
           - benchmark
           - cross_asset_trend
           - validation_2026_09_24_network_momentum_t039
+          - validation_2026_09_24_network_momentum_t040
   push:
     branches: [master]
     paths:
@@ -36,8 +37,11 @@ on:
       - "automation/research_workflow.py"
       - "automation/network_momentum_lab.py"
       - "automation/coverage_candidate_discovery.py"
+      - "automation/coverage_preflight.py"
       - "research/**"
       - "docs/preregistration_trial_039_network_momentum_2026_09_24.md"
+      - "docs/preregistration_trial_040_network_momentum_repair_2026_09_24.md"
+      - "research/preregistrations/trial_040_network_momentum_2026_09_24.json"
       - "validation/**"
       - "backtesting/**"
       - "optimization/**"
@@ -57,6 +61,8 @@ jobs:
     steps:
       - name: Repository auschecken
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
       - name: Python einrichten
         uses: actions/setup-python@v6
         with:
@@ -89,10 +95,16 @@ jobs:
               --universe benchmark
             python -m automation.research_orchestrator \
               --mode preflight \
-              --universe validation_2026_09_24_network_momentum_t039
+              --universe validation_2026_09_24_network_momentum_t040
             python -m automation.research_orchestrator \
               --mode discover_coverage \
-              --universe validation_2026_09_24_network_momentum_t039
+              --universe validation_2026_09_24_network_momentum_t040
+
+            if [ "$GITHUB_EVENT_NAME" = "push" ] && git diff-tree --no-commit-id --name-only -r HEAD^ HEAD | grep -Fxq "research/preregistrations/trial_040_network_momentum_2026_09_24.json"; then
+              python -m automation.research_orchestrator \
+                --mode research \
+                --universe validation_2026_09_24_network_momentum_t040
+            fi
           else
             python -m automation.research_orchestrator \
               --mode "$ORCHESTRATOR_MODE" \
