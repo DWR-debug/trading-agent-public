@@ -2539,3 +2539,55 @@ Dauerhafte Ablage:
 - LIVE_TRADING_ENABLED=False
 - keine Research-Orders
 - keine Live-Ausführung
+
+
+## Aktueller Checkpoint — Trial 028 Per-Sleeve Volatility Budget — 2026-09-24
+
+Trial T-2026-09-24-028 wurde vollständig und reproduzierbar ausgeführt und als **NO_SUPPORT / archived_rejected** abgeschlossen.
+
+### Technischer Nachweis
+
+- PR #134 gemerged
+- finaler Workflow: `36038357899`
+- Artifact-ID: `10825414801`
+- Artifact-SHA256: `sha256:1d733848e28cdecf0c7ea9a5a85dcf0cf9f089fa79eeaafe341c424743c74834`
+- Report-Fingerprint: `ee00872c970d9c6935ced344a5642b5b17e27e8ce072a97462518b5a203bc57a`
+- Manifest-Fingerprint: `f99f1b40c931c860987c26c65fe988a9d140c866f7370fddad2e40af2ec9b2dd`
+- 13 neue vollständig symbol-disjunkte ETFs
+- 3.500 Candles je Asset
+- 3.498 gemeinsame PIT-Returns
+- 2.798 Research / 700 Holdout
+- 662 Tests und alle Vorprüfungen: grün
+- keine Orders
+
+### Fachlicher Befund
+
+Der per-Sleeve-Volatilitäts-Control reduziert den Research-Drawdown von 22,48 % auf 17,55 %, erhöht den Research-PF von 1,075 auf 1,085 und reduziert den Holdout-Drawdown von 10,25 % auf 9,65 %; gleichzeitig sinkt der Research-Return um 0,44 Prozentpunkte und der Holdout-Return um 0,21 Prozentpunkte.
+
+Damit bleibt der Control **BLOCKED / NO_SUPPORT**: alle Research-Risiko-/PF-Gates sind noch nicht vollständig erfüllt und die Return-Nicht-Verschlechterung gegenüber dem Fixed Candidate scheitert.
+
+### Konsequenz
+
+- kein Tuning
+- keine weitere Cash-/Volatilitäts-Gate-Suche
+- keine Produktionsintegration
+- keine Echtgeldfreigabe
+- keine Orders
+
+### Nächster methodischer Fokus
+
+Kapitalallokation zwischen den bestehenden Sleeves: ein einmalig präregistrierter,
+fixer Risk-Parity-/Risk-Contribution-Control auf einem neuen vollständig
+symbol-disjunkten Datensatz, mit identischem Kosten-, PIT- und Holdout-Vertrag.
+
+Dauerhafte Ablage:
+- `docs/trial_028_per_sleeve_vol_budget_result_2026_09_24.md`
+- `research/checkpoints/trial_028_per_sleeve_vol_budget_result_2026_09_24.json`
+- `research/evidence/trial_ledger.json`
+
+### Sicherheitsstatus
+
+- PAPER_ONLY=True
+- LIVE_TRADING_ENABLED=False
+- keine Research-Orders
+- keine Live-Ausführung
