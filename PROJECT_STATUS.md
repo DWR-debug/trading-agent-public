@@ -1,5 +1,13 @@
 # Aktueller Gesamtstatus — 2026-09-24
 
+## Repository-Recovery — 2026-09-24
+
+Ein fehlerhafter direkter Governance-Tree-Sync (`8e30803d...`) erzeugte kurzzeitig einen
+unvollständigen Root-Tree. Der Commit wurde unter
+`recovery/broken-tree-sync-8e30803d` gesichert; `master` wurde auf den vollständigen
+PR-163-Merge-Commit `871cd54244c5343c23b3720b17880e87df5e4979` zurückgesetzt.
+Die formale Research-Evidenz blieb unverändert und wurde nicht verloren.
+
 ## Unified Research Engine
 
 Seit dem Architekturumbau ist die aktive GitHub-Actions-Oberfläche bewusst auf drei dauerhafte Workflows reduziert:
