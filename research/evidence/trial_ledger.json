@@ -2008,6 +2008,126 @@
         "live_trading_enabled": false,
         "orders_enabled": false
       }
+    },
+    {
+      "trial_id": "T-2026-09-24-027",
+      "recorded_at": "2026-09-24",
+      "status": "archived_rejected",
+      "research_family": "tsm_ensemble_trend_sleeve_replacement",
+      "hypothesis": {
+        "text": "Replacing only the fixed SMA 50/200 long-only trend signal with a fixed majority-vote TSM ensemble over 63/126/252 sessions improves candidate quality while preserving the fixed cross-sectional sleeve and risk layer."
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10820593251
+        ],
+        "artifact_digest": "sha256:1320c20515be7d24e64f23d9af7090ab4c9f9bb53b6e17c16b924a84e878c247",
+        "manifest_fingerprint": "c817bd74d4912316726dbc51347fe0dab22049acadd753bef0bdece89fe59748",
+        "fully_symbol_disjoint_validation_set": true,
+        "trend_symbols": [
+          "IVV",
+          "ITOT",
+          "SCHX",
+          "SCHF",
+          "SPAB",
+          "IEI",
+          "MBB",
+          "VCSH"
+        ],
+        "cross_sectional_symbols": [
+          "IYJ",
+          "IYC",
+          "IYM",
+          "IYK",
+          "IYW"
+        ],
+        "common_returns": 3498
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered single hypothesis; no holdout selection",
+        "selection_family_id": "tsm-ensemble-trend-sleeve-replacement-2026-09-24",
+        "selection_metric": "absolute Research gates plus non-worsening comparison against the fixed 50/50 candidate on the same validation set"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 36029169717,
+        "artifact_id": 10820593251,
+        "artifact_sha256": "1320c20515be7d24e64f23d9af7090ab4c9f9bb53b6e17c16b924a84e878c247",
+        "report_fingerprint": "57b87f09de867cb2ef535aaf7e6132618d5e116ca36b04d9968cc8c5b327cf51",
+        "code_commit_sha": "169b239c188678c71d3d9bb9ae092e785832c72e",
+        "all_checks_passed": false,
+        "key_metrics": {
+          "fixed_research_return_percent": 57.55357983903355,
+          "fixed_research_drawdown_percent": 16.3444444024894,
+          "fixed_research_profit_factor": 1.0956517837613973,
+          "fixed_holdout_return_percent": 26.54548561335117,
+          "fixed_holdout_drawdown_percent": 13.449714874345975,
+          "fixed_holdout_profit_factor": 1.1643339519228775,
+          "tsm_research_return_percent": 56.75671193309189,
+          "tsm_research_drawdown_percent": 16.518499675074427,
+          "tsm_research_profit_factor": 1.0958921334797123,
+          "tsm_research_profitable_rolling_windows": 4,
+          "tsm_research_rolling_profit_factor": 1.0958921334797116,
+          "tsm_research_average_rolling_drawdown_percent": 13.318187913186971,
+          "tsm_oos_to_is_return_ratio": 0.521051206810266,
+          "tsm_holdout_return_percent": 29.57315324732015,
+          "tsm_holdout_drawdown_percent": 10.66019327355523,
+          "tsm_holdout_profit_factor": 1.1823201179025096,
+          "tsm_total_return_holdout_percent": 34.80494537133252,
+          "tsm_total_return_holdout_drawdown_percent": 10.249591133096558,
+          "tsm_total_return_holdout_profit_factor": 1.2114439602909792,
+          "tsm_stress_2x_holdout_return_percent": 26.83211735886628
+        },
+        "gate_results": {
+          "research_return_positive": true,
+          "research_drawdown": false,
+          "research_profit_factor": false,
+          "rolling_profit_factor": false,
+          "rolling_profitable_window_ratio": true,
+          "rolling_average_drawdown": false,
+          "oos_to_is_return_ratio": true,
+          "holdout_return_positive": true,
+          "holdout_profit_factor": true,
+          "holdout_drawdown": false,
+          "stress_1_5x_nonnegative": true,
+          "stress_2x_nonnegative": true,
+          "total_return_sensitivity_nonnegative": true,
+          "research_return_not_below_fixed": false,
+          "research_drawdown_not_worse_vs_fixed": false,
+          "research_profit_factor_not_below_fixed": true,
+          "rolling_pf_not_below_fixed": true,
+          "rolling_profitable_ratio_not_below_fixed": true,
+          "rolling_average_drawdown_not_worse_vs_fixed": false,
+          "oos_to_is_not_below_fixed": true,
+          "holdout_return_not_below_fixed": true,
+          "holdout_pf_not_below_fixed": true,
+          "holdout_drawdown_not_worse_vs_fixed": true
+        }
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
     }
   ]
 }
