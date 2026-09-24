@@ -91,6 +91,8 @@ Eine spätere Echtgeldstufe benötigt einen eigenen, ausdrücklich dokumentierte
 
 **Seit 2026-09-24 ist ausschließlich `DWR-debug/trading-agent-public` die Standard- und operative Arbeitsquelle für das Trading-Agent-Projekt.**
 
+**Verbindliche Actions-Regel:** Sämtliche GitHub-Actions-Workflows für Research, Tests, CI, Validierung, Artefakt-Erzeugung und formale Experimente laufen ausschließlich aus `DWR-debug/trading-agent-public`. Das private Repository `DWR-debug/trading-agent` wird nicht als Actions-Ausführungsquelle verwendet.
+
 Regeln:
 - Neue Chats mit Bezug auf den Trading Agent starten die Statusprüfung ausschließlich gegen `DWR-debug/trading-agent-public`.
 - Der aktuelle `master` dieses öffentlichen Repositories ist die primäre Quelle für Projektstatus, Research-Registry, Checkpoints, Workflows und formale Forschungsartefakte.
