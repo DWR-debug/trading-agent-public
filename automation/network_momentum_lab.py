@@ -116,18 +116,15 @@ def _activate_preregistration(
     REQUESTED_CANDLES = int(spec["requested_candles"])
     COMMON_CANDLES = int(spec["target_candles"])
     split = spec["split"]
-    RESEARCH_RETURNS = int(
-        split.get(
-            "research_return_periods",
-            split["pit_research_return_periods"],
-        )
-    )
-    HOLDOUT_RETURNS = int(
-        split.get(
-            "holdout_return_periods",
-            split["holdout_candles"],
-        )
-    )
+    research_returns = split.get("research_return_periods")
+    if research_returns is None:
+        research_returns = split["pit_research_return_periods"]
+    holdout_returns = split.get("holdout_return_periods")
+    if holdout_returns is None:
+        holdout_returns = split["holdout_candles"]
+
+    RESEARCH_RETURNS = int(research_returns)
+    HOLDOUT_RETURNS = int(holdout_returns)
 
     if REQUESTED_CANDLES != 3520:
         raise ValueError("Network Momentum data contract requires 3520 candles.")
