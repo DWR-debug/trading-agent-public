@@ -15,7 +15,7 @@ class CapitalAccountingError(ValueError):
 class CapitalSnapshot:
     contributed_capital_eur: float
     equity_eur: float
-    realized_profit_eur: float
+    net_realized_pnl_eur: float
     withdrawn_profit_eur: float
     distributable_profit_eur: float
 
@@ -35,7 +35,7 @@ class CapitalAccount:
 
         self.contributed_capital_eur = float(initial_capital_eur)
         self.equity_eur = float(initial_capital_eur)
-        self.realized_profit_eur = 0.0
+        self.net_realized_pnl_eur = 0.0
         self.withdrawn_profit_eur = 0.0
 
     def record_contribution(self, amount_eur: float) -> None:
@@ -51,21 +51,21 @@ class CapitalAccount:
 
         self.equity_eur = float(equity_eur)
 
-    def record_realized_profit(self, amount_eur: float) -> None:
-        """Classify profit without mutating broker-reported equity.
+    def record_realized_pnl(self, amount_eur: float) -> None:
+        """Record net realized P&L without mutating broker-reported equity.
 
-        The execution/account layer remains the source of truth for equity.
-        Keeping the two updates separate prevents double-counting.
+        Positive and negative realized results are both accepted. Equity remains
+        the execution/account layer's source of truth.
         """
-        if amount_eur <= 0:
-            raise CapitalAccountingError("Realized profit must be > 0.")
+        if not isinstance(amount_eur, (int, float)):
+            raise CapitalAccountingError("Realized P&L must be numeric.")
 
-        self.realized_profit_eur += float(amount_eur)
+        self.net_realized_pnl_eur += float(amount_eur)
 
     @property
     def distributable_profit_eur(self) -> float:
         realized_available = (
-            self.realized_profit_eur - self.withdrawn_profit_eur
+            self.net_realized_pnl_eur - self.withdrawn_profit_eur
         )
         capital_surplus = self.equity_eur - self.contributed_capital_eur
         return max(0.0, min(realized_available, capital_surplus))
@@ -86,7 +86,7 @@ class CapitalAccount:
         return CapitalSnapshot(
             contributed_capital_eur=self.contributed_capital_eur,
             equity_eur=self.equity_eur,
-            realized_profit_eur=self.realized_profit_eur,
+            net_realized_pnl_eur=self.net_realized_pnl_eur,
             withdrawn_profit_eur=self.withdrawn_profit_eur,
             distributable_profit_eur=self.distributable_profit_eur,
         )
