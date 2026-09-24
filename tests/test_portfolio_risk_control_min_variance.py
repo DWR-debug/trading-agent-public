@@ -30,3 +30,14 @@ def test_min_variance_is_clamped_long_only():
     cross = cross[:COVARIANCE_WINDOW]
     weight = min_variance_weight(trend, cross)
     assert 0.0 <= weight <= 1.0
+
+
+
+def test_summary_includes_blind_holdout_partition():
+    from automation.portfolio_risk_control_min_variance import _summary
+
+    summary = _summary([0.01] * 8 + [-0.02] * 2, 8)
+
+    assert summary["research"]["day_count"] == 8
+    assert summary["holdout"]["day_count"] == 2
+    assert summary["holdout"]["period_return"] < 0.0

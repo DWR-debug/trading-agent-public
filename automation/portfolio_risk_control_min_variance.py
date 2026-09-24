@@ -365,10 +365,14 @@ def _summary(
     research = _stats(values, 0, research_end)
     development = _stats(values, 0, development_end)
     oos = _stats(values, development_end, research_end)
+    holdout = _stats(values, research_end, len(values))
     rolling = _rolling(values, research_end)
 
     return {
         "research": research,
+        "development": development,
+        "oos": oos,
+        "holdout": holdout,
         "development": development,
         "oos": oos,
         "oos_to_is_return_ratio": (
