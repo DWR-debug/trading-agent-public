@@ -172,6 +172,16 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("EWC", "EWH", "EWI", "EWK", "EWN", "EWP", "EWY", "EWT"),
         target_count=3500,
     ),
+    AssetUniverse(
+        name="validation_2026_09_24_sixteenth_cross_asset_cs",
+        priority=20,
+        description=(
+            "Sixteenth fully symbol-disjoint validation universe spanning "
+            "commodities, currencies and fixed income for 12-1 cross-sectional momentum."
+        ),
+        symbols=("DBA", "DBB", "FXA", "FXY", "MUB", "SHV", "EMB", "BWX"),
+        target_count=3500,
+    ),
 )
 
 
