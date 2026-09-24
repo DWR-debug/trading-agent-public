@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "trial_id": "T-2026-09-24-041",
+  "trial_type": "portfolio_risk_control",
+  "leg": "cross_sectional",
+  "research_family": "portfolio_risk_control",
+  "hypothesis": "Eine fest definierte, kovarianzbewusste Minimum-Variance-Allokation zwischen den unveränderten Trend- und Cross-Sectional-Momentum-Sleeves kann die Risikoqualität verbessern, ohne Rendite- oder Evidenz-Gates gegenüber der fixen 50/50-Kontrolle zu verschlechtern.",
+  "universe": "validation_2026_09_24_portfolio_risk_control_cs",
+  "symbols": [
+    "IWS",
+    "IWP",
+    "IJS",
+    "IJJ",
+    "IJK"
+  ],
+  "interval": "1d",
+  "requested_candles": 3500,
+  "target_candles": 3500,
+  "coverage_gate": {
+    "performance_allowed_before_coverage_pass": false,
+    "holdout_used_for_selection": false
+  },
+  "data_contract": {
+    "target_common_calendar": 3500,
+    "research_return_periods": 2798,
+    "holdout_return_periods": 700,
+    "point_in_time": true
+  },
+  "search_scope": {
+    "parameter_search": false,
+    "threshold_search": false,
+    "asset_selection_by_performance": false,
+    "variant_search": false,
+    "holdout_used_for_selection": false
+  },
+  "disjointness": {
+    "fully_symbol_disjoint_from_existing_universes": true,
+    "allowed_overlap_universes": []
+  },
+  "replacement": null,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
