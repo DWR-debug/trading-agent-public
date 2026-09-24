@@ -309,6 +309,17 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=3500,
     ),
 
+    AssetUniverse(
+        name="validation_2026_09_24_trend_family_wfo_candidate",
+        priority=50,
+        description=(
+            "Coverage-only validation universe for Trial 035; ten fully symbol-disjoint "
+            "multi-asset instruments for family-level walk-forward selection."
+        ),
+        symbols=("SPTM","IWR","RWR","SCHZ","VGSH","VGLT","DJP","MOO","GCC","REM"),
+        target_count=3500,
+    ),
+
 )
 
 
