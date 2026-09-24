@@ -25,7 +25,7 @@ keine Asset-Auswahl.
 
 Universum:
 
-SPYG, SPYV, SPTM, SPMD, SPSM, SDY, RWL, XNTK
+SPYG, SPYV, SPTM, SPMD, SDY, RWR, XNTK, XPH
 
 Die verwendeten Preise werden aus Yahoo-OHLC und Adjusted Close so rekonstruiert,
 dass Open und Close konsistent split-/dividendenbereinigt werden. Das Signal
