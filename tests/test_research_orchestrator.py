@@ -14,3 +14,39 @@ def test_snapshot_is_safe_and_credit_free_by_default():
     }
     assert snapshot["agent_usage"]["paid_api_budget_usd"] == 0.0
     assert snapshot["agent_usage"]["auto_paid_api_calls"] is False
+
+
+def test_t039_research_is_coverage_gated(monkeypatch, tmp_path):
+    from automation import research_orchestrator
+
+    calls = []
+
+    def fake_preflight(preregistration, *, output_root):
+        calls.append(("preflight", str(preregistration), str(output_root)))
+        return {
+            "status": "coverage_passed",
+            "universe": "validation_2026_09_24_network_momentum_t039",
+            "coverage_fingerprint": "coverage-fp",
+            "output": str(tmp_path / "coverage.json"),
+        }
+
+    def fake_trial(coverage_path, output_path):
+        calls.append(("trial", str(coverage_path), str(output_path)))
+        return {
+            "status": "BLOCKED",
+            "report_fingerprint": "report-fp",
+        }
+
+    monkeypatch.setattr(research_orchestrator, "run_preflight", fake_preflight)
+    monkeypatch.setattr(research_orchestrator, "run_t039_trial", fake_trial)
+
+    snapshot = research_orchestrator.run(
+        mode="research",
+        universe="validation_2026_09_24_network_momentum_t039",
+        output_root=tmp_path,
+    )
+
+    assert calls[0][0] == "preflight"
+    assert calls[1][0] == "trial"
+    assert snapshot["status"] == "BLOCKED"
+    assert snapshot["safety"]["orders_enabled"] is False

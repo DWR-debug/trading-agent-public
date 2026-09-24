@@ -15,6 +15,7 @@ from pathlib import Path
 
 from automation.coverage_preflight import run_preflight
 from automation.live_market_observer import observe_universe
+from automation.network_momentum_lab import run_trial as run_t039_trial
 from automation.one_command_research import run_universe
 
 
@@ -89,21 +90,55 @@ def run(
             run_fingerprint=payload["coverage_fingerprint"],
         )
     elif mode == "research":
-        report = run_universe(
-            universe,
-            minimum_count=1000,
-            target_count=total,
-            resume=resume,
-            run_root=root / universe,
-        )
-        snapshot = _state_snapshot(
-            mode=mode,
-            universe=universe,
-            status=report.get("status", "UNKNOWN"),
-            run_fingerprint=report.get("run_manifest", {}).get("run_fingerprint"),
-        )
+        if universe == "validation_2026_09_24_network_momentum_t039":
+            coverage = run_preflight(
+                Path("research/preregistrations")
+                / "trial_039_network_momentum_2026_09_24.json",
+                output_root=root / "coverage_preflight",
+            )
+            if coverage["status"] != "coverage_passed":
+                snapshot = _state_snapshot(
+                    mode=mode,
+                    universe=universe,
+                    status=coverage["status"],
+                    run_fingerprint=coverage["coverage_fingerprint"],
+                )
+            else:
+                coverage_path = Path(coverage["output"])
+                if not coverage_path.is_absolute():
+                    coverage_path = Path.cwd() / coverage_path
+                output = (
+                    root
+                    / universe
+                    / "formal"
+                    / "trial_039.json"
+                )
+                report = run_t039_trial(
+                    coverage_path,
+                    output,
+                )
+                snapshot = _state_snapshot(
+                    mode=mode,
+                    universe=universe,
+                    status=report["status"],
+                    run_fingerprint=report["report_fingerprint"],
+                )
+        else:
+            report = run_universe(
+                universe,
+                minimum_count=1000,
+                target_count=total,
+                resume=resume,
+                run_root=root / universe,
+            )
+            snapshot = _state_snapshot(
+                mode=mode,
+                universe=universe,
+                status=report.get("status", "UNKNOWN"),
+                run_fingerprint=report.get("run_manifest", {}).get("run_fingerprint"),
+            )
     else:
-        raise ValueError("mode must be observe or research")
+        raise ValueError("mode must be observe, preflight, or research")
 
     path = root / universe / "orchestrator_state.json"
     path.parent.mkdir(parents=True, exist_ok=True)

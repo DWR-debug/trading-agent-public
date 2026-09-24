@@ -8,6 +8,7 @@ and never places orders.
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 from datetime import datetime, timezone
@@ -16,6 +17,7 @@ from pathlib import Path
 from config import settings
 from data.yahoo_loader import load_yahoo_history
 from research.asset_universes import get_universe, list_universes
+from research.protocol import dataset_fingerprint
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -80,6 +82,7 @@ def run_preflight(
     quality: dict[str, dict[str, int]] = {}
     errors: dict[str, str] = {}
     histories = {}
+    bars_by_symbol = {}
     datasets = []
 
     for symbol in symbols:
@@ -101,6 +104,7 @@ def run_preflight(
         counts[symbol] = len(bars)
         quality[symbol] = report
         histories[symbol] = {bar.timestamp for bar in bars}
+        bars_by_symbol[symbol] = tuple(bars)
         datasets.append(
             {
                 "symbol": symbol,
@@ -165,6 +169,7 @@ def run_preflight(
             else "NO_SCIENTIFIC_OUTCOME"
         ),
         "failure_reasons": reasons,
+        "data_snapshot": None,
         "safety": {
             "paper_only": True,
             "live_trading_enabled": False,
@@ -172,14 +177,47 @@ def run_preflight(
             "automatic_promotion": False,
         },
     }
-    payload["coverage_fingerprint"] = _fingerprint(payload)
-
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     out_dir = Path(output_root)
     if not out_dir.is_absolute():
         out_dir = ROOT / out_dir
     out_dir = out_dir / trial_id
     out_dir.mkdir(parents=True, exist_ok=True)
+
+    if status == "coverage_passed":
+        snapshot_dir = out_dir / "datasets"
+        snapshot_dir.mkdir(parents=True, exist_ok=True)
+        snapshot_datasets = []
+        for symbol in symbols:
+            bars = bars_by_symbol[symbol]
+            csv_path = snapshot_dir / symbol / f"{interval}.csv"
+            csv_path.parent.mkdir(parents=True, exist_ok=True)
+            with csv_path.open("w", encoding="utf-8", newline="") as handle:
+                writer = csv.writer(handle)
+                writer.writerow(("timestamp", "open", "high", "low", "close", "volume"))
+                for bar in bars:
+                    writer.writerow((
+                        bar.timestamp.isoformat(),
+                        bar.open,
+                        bar.high,
+                        bar.low,
+                        bar.close,
+                        bar.volume,
+                    ))
+            snapshot_datasets.append({
+                "symbol": symbol,
+                "interval": interval,
+                "path": (str(csv_path.relative_to(ROOT)) if csv_path.is_relative_to(ROOT) else str(csv_path)),
+                "candle_count": len(bars),
+                "fingerprint": dataset_fingerprint(bars),
+            })
+        payload["data_snapshot"] = {
+            "format": "csv_ohlcv",
+            "datasets": snapshot_datasets,
+        }
+
+    payload["coverage_fingerprint"] = _fingerprint(payload)
+
     output = out_dir / f"coverage_preflight_{timestamp}.json"
     output.write_text(
         json.dumps(payload, indent=2, ensure_ascii=False, allow_nan=False) + "\n",

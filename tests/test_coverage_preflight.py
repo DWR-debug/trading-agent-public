@@ -13,10 +13,18 @@ def test_coverage_preflight_passes_without_performance(monkeypatch, tmp_path):
     base = datetime(2010, 1, 1, tzinfo=timezone.utc)
 
     class Bar:
-        def __init__(self, ts):
+        def __init__(self, ts, value):
             self.timestamp = ts
+            self.open = value
+            self.high = value + 1.0
+            self.low = value - 1.0
+            self.close = value + 0.25
+            self.volume = value
 
-    bars = tuple(Bar(base + timedelta(days=i)) for i in range(3520))
+    bars = tuple(
+        Bar(base + timedelta(days=i), 100.0 + i)
+        for i in range(3520)
+    )
 
     def fake_loader(symbol, interval, total, **kwargs):
         assert symbol in symbols

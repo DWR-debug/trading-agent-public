@@ -4,13 +4,23 @@
   "question": "Kann ein fest definierter, ausschließlich aus vergangenen Cross-Asset-Lead-Lag-Beziehungen abgeleiteter Network-Momentum-Zustand den bestehenden eigenpreis-basierten Trend-Signalpfad auf einem neuen, vollständig symbol-disjunkten Multi-Asset-Datensatz verbessern?",
   "universe": "validation_2026_09_24_network_momentum_t039",
   "symbols": [
-    "EIRL", "ENZL", "NORW", "EDEN", "FXF", "FXC",
-    "CEW", "EIDO", "SCHO", "MINT", "FTGC", "RWX"
+    "EIRL",
+    "ENZL",
+    "NORW",
+    "EDEN",
+    "FXF",
+    "FXC",
+    "CEW",
+    "EIDO",
+    "SCHO",
+    "MINT",
+    "FTGC",
+    "RWX"
   ],
   "interval": "1d",
   "requested_candles": 3520,
   "target_candles": 3500,
-  "research_candles": 3500,
+  "research_candles": 2800,
   "holdout_candles": 700,
   "rule": {
     "reference": "fixed SMA-50/200 long/flat trend logic",
@@ -20,7 +30,8 @@
     "positive_links_only": true,
     "network_score": "correlation-weighted mean of positive peer trend signals; zero if no positive link exists",
     "final_direction": "fixed 50/50 blend of own trend signal and normalized network score",
-    "portfolio": "unchanged inverse-volatility weighting, monthly rebalancing, 10% volatility budget and existing cost/execution semantics"
+    "portfolio": "unchanged inverse-volatility weighting, monthly rebalancing, 10% volatility budget and existing cost/execution semantics",
+    "correlation_basis": "252-session continuous 252/21 trend returns; peer series shifted by 21 sessions"
   },
   "point_in_time": {
     "past_information_only": true,
@@ -42,15 +53,15 @@
   },
   "evidence_contract": {
     "positive_research_return": true,
-    "research_max_drawdown_lte": 0.10,
-    "research_profit_factor_gte": 1.10,
-    "rolling_profit_factor_gte": 1.10,
-    "profitable_rolling_windows_gte": 0.50,
-    "average_rolling_drawdown_lte": 0.10,
+    "research_max_drawdown_lte": 0.1,
+    "research_profit_factor_gte": 1.1,
+    "rolling_profit_factor_gte": 1.1,
+    "profitable_rolling_windows_gte": 0.5,
+    "average_rolling_drawdown_lte": 0.1,
     "oos_to_research_return_ratio_gte": 0.25,
     "positive_holdout_return": true,
-    "holdout_profit_factor_gte": 1.10,
-    "holdout_drawdown_lte": 0.10,
+    "holdout_profit_factor_gte": 1.1,
+    "holdout_drawdown_lte": 0.1,
     "holdout_return_nonnegative_under_cost_stress": true,
     "non_deterioration_vs_fixed_candidate": true
   },
@@ -59,5 +70,18 @@
     "live_trading_enabled": false,
     "orders_enabled": false,
     "automatic_promotion": false
+  },
+  "execution": {
+    "decision": "monthly close",
+    "entry": "next completed session open",
+    "return_measure": "following open to next following open"
+  },
+  "split": {
+    "usable_candles": 3500,
+    "research_candles": 2800,
+    "holdout_candles": 700,
+    "pit_return_periods_total": 3498,
+    "pit_research_return_periods": 2798,
+    "reason": "T038/T039 use the final 3,500 common aligned candles; two boundary sessions are consumed by close-to-next-open/following-open return construction."
   }
 }
