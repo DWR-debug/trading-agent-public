@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "study_id": "CAPITAL-INCOME-STRESS-2026-09-24",
+  "status": "archived_diagnostic",
+  "workflow_run_id": 35989864728,
+  "artifact_id": 10803478746,
+  "artifact_sha256": "c05fc46dae6a086153b067d263ac6f86c988cf9dd42e1e4b00dd754f9d2fd407",
+  "report_fingerprint": "733c22814e1e3b539d9853a073c3016c48d7075e41a1c1a67d75c1dbcacab2b1",
+  "design": {
+    "scenario_count": 6,
+    "policy_count": 3,
+    "periods_per_scenario": 252,
+    "optimization_used": false,
+    "selection_used": false,
+    "forecasts_used": false
+  },
+  "policies": {
+    "full_payout": {
+      "payout_fraction": 1,
+      "capitalization_fraction": 0,
+      "reserve_eur": 0
+    },
+    "balanced_capitalization": {
+      "payout_fraction": 0.5,
+      "capitalization_fraction": 0.25,
+      "reserve_eur": 0
+    },
+    "protected_income": {
+      "payout_fraction": 0.5,
+      "capitalization_fraction": 0,
+      "reserve_eur": 25
+    }
+  },
+  "highlights": {
+    "early_drawdown_full_payout": {
+      "total_payout_eur": 52.893673806127374,
+      "final_equity_eur": 500.0000000000001,
+      "max_drawdown_percent": 18.984262218452706,
+      "sequence_payout_difference_eur": -106.9914222149117
+    },
+    "early_drawdown_balanced_capitalization": {
+      "total_payout_eur": 32.25509179252349,
+      "final_equity_eur": 521.5408876581946,
+      "max_drawdown_percent": 18.984262218452706,
+      "sequence_payout_difference_eur": -76.38784536559263
+    },
+    "late_drawdown_full_payout": {
+      "total_payout_eur": 159.88509602103906,
+      "final_equity_eur": 405.07868890773653,
+      "max_drawdown_percent": 21.49462994435548,
+      "sequence_payout_difference_eur": 106.9914222149117
+    },
+    "late_drawdown_balanced_capitalization": {
+      "total_payout_eur": 108.64293715811611,
+      "final_equity_eur": 453.85702637406035,
+      "max_drawdown_percent": 20.651935306313828,
+      "sequence_payout_difference_eur": 76.38784536559263
+    },
+    "whipsaw_protected_income": {
+      "total_payout_eur": 0,
+      "final_equity_eur": 498.9930073337041,
+      "max_drawdown_percent": 0.5990025231665141,
+      "sequence_payout_difference_eur": 0
+    }
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false
+  }
+}
