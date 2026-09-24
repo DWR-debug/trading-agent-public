@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-24T12:50:00+02:00",
+  "generated_at": "2026-09-24T12:54:00+02:00",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -779,6 +779,60 @@
           "blend_base_positive_windows": 2,
           "blend_stress_negative_windows": 5
         }
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "CAPITAL-INCOME-STRESS-2026-09-24",
+      "recorded_at": "2026-09-24T12:54:00+02:00",
+      "status": "archived_diagnostic",
+      "research_family": "capital_income_sustainability",
+      "hypothesis": {
+        "text": "Der Kapital-/Entnahmepfad muss unter unterschiedlichen Renditereihenfolgen, Reserven und Ausschüttungs-/Kapitalisierungsregeln transparent und deterministisch stressgetestet werden können."
+      },
+      "data_scope": {
+        "research_count": null,
+        "holdout_count": null,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10803478746
+        ],
+        "synthetic_scenario_count": 6,
+        "policy_count": 3,
+        "periods_per_scenario": 252
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-declared scenario/policy matrix; no optimization or outcome selection",
+        "selection_family_id": "capital-income-stress-2026-09-24",
+        "selection_metric": "capital preservation, payout path, drawdown and sequence sensitivity"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "technical_status": "COMPLETED",
+        "workflow_run_id": 35989864728,
+        "artifact_id": 10803478746,
+        "artifact_sha256": "c05fc46dae6a086153b067d263ac6f86c988cf9dd42e1e4b00dd754f9d2fd407",
+        "report_fingerprint": "733c22814e1e3b539d9853a073c3016c48d7075e41a1c1a67d75c1dbcacab2b1",
+        "key_finding": "Early versus late drawdown sequences with otherwise identical return blocks can produce materially different cumulative payouts and ending capital; therefore income sustainability is sequence-sensitive."
       },
       "safety": {
         "paper_only": true,
