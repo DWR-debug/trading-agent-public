@@ -70,6 +70,22 @@ class CapitalAccount:
         capital_surplus = self.equity_eur - self.contributed_capital_eur
         return max(0.0, min(realized_available, capital_surplus))
 
+    def capitalize_profit(self, amount_eur: float) -> None:
+        """Move distributable realized profit into protected capital.
+
+        Equity is unchanged. The capitalized amount is no longer
+        distributable through the withdrawal interface.
+        """
+        if amount_eur <= 0:
+            raise CapitalAccountingError("Capitalization must be > 0.")
+
+        if amount_eur > self.distributable_profit_eur + 1e-12:
+            raise CapitalAccountingError(
+                "Capitalization exceeds currently distributable realized profit."
+            )
+
+        self.contributed_capital_eur += float(amount_eur)
+
     def record_profit_withdrawal(self, amount_eur: float) -> None:
         if amount_eur <= 0:
             raise CapitalAccountingError("Withdrawal must be > 0.")
