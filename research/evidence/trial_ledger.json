@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-24T10:30:00+02:00",
+  "generated_at": "2026-09-24T12:50:00+02:00",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -656,6 +656,128 @@
           "max_short_1_5x": 1.5,
           "max_short_2x": 2,
           "max_short_3x": 3
+        }
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-015",
+      "recorded_at": "2026-09-24T12:50:00+02:00",
+      "status": "archived_rejected",
+      "research_family": "additional_return_source_mean_reversion",
+      "hypothesis": {
+        "text": "Eine fest präregistrierte 5-Sessionen-Mean-Reversion mit 2%-Band liefert auf einem vollständig neuen globalen ETF-Universum eine robuste zusätzliche long-only Ertragsquelle."
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10803393326
+        ],
+        "manifest_fingerprint": "fe66674879d494560cee43b3a55d635f421df0f2f916a1965604ce302b97b431",
+        "fully_symbol_disjoint_validation_set": true,
+        "symbols": [
+          "EWC",
+          "EWH",
+          "EWI",
+          "EWK",
+          "EWN",
+          "EWP",
+          "EWY",
+          "EWT"
+        ]
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered single hypothesis with fixed SMA 50/200 reference and fixed 50/50 blend",
+        "selection_family_id": "mean-reversion-additional-return-2026-09-24",
+        "selection_metric": "Research/Holdout return, drawdown, profit factor, rolling stability and cost stress"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 35989469745,
+        "artifact_id": 10803393326,
+        "artifact_sha256": "528b8e82e6c0ff42ad223477718f7e94ba0a433faf1333ede839cabfae86b96e6",
+        "report_fingerprint": "37026149b73efe9bfd5b5f641c4d3838487542ec3c869c70ddd8c84b3ddc14ae",
+        "base": {
+          "mean_reversion": {
+            "research_return_percent": -37.748487816496755,
+            "research_max_drawdown_percent": 53.952929050917376,
+            "research_profit_factor": 0.9705468239472957,
+            "holdout_return_percent": 38.74835236078764,
+            "holdout_max_drawdown_percent": 19.08171616285106,
+            "holdout_profit_factor": 1.1480984425535075
+          },
+          "sma_50_200_reference": {
+            "research_return_percent": -9.166576020407591,
+            "research_max_drawdown_percent": 45.395605682547746,
+            "research_profit_factor": 1.0026779889873019,
+            "holdout_return_percent": 71.66761443234999,
+            "holdout_max_drawdown_percent": 19.790399796153736,
+            "holdout_profit_factor": 1.2328568081748958
+          },
+          "blend_50_50": {
+            "research_return_percent": -23.44280854228209,
+            "research_max_drawdown_percent": 47.67848112110035,
+            "research_profit_factor": 0.983787283356248,
+            "holdout_return_percent": 54.8464453880964,
+            "holdout_max_drawdown_percent": 19.23892183560827,
+            "holdout_profit_factor": 1.1952880028203752
+          }
+        },
+        "realistic_stress": {
+          "mean_reversion": {
+            "research_return_percent": -61.16699700800422,
+            "research_max_drawdown_percent": 69.32382815207714,
+            "research_profit_factor": 0.9270270182001584,
+            "holdout_return_percent": 19.298283836526743,
+            "holdout_max_drawdown_percent": 21.017833751053217,
+            "holdout_profit_factor": 1.086005966282243
+          },
+          "sma_50_200_reference": {
+            "research_return_percent": -17.632039735962934,
+            "research_max_drawdown_percent": 46.616455546916114,
+            "research_profit_factor": 0.9898604266149963,
+            "holdout_return_percent": 68.17658489543801,
+            "holdout_max_drawdown_percent": 20.517569652808596,
+            "holdout_profit_factor": 1.2237847370267536
+          },
+          "blend_50_50": {
+            "research_return_percent": -42.40540369275335,
+            "research_max_drawdown_percent": 54.01839057378923,
+            "research_profit_factor": 0.9522228125250943,
+            "holdout_return_percent": 42.13034337194468,
+            "holdout_max_drawdown_percent": 20.720029344458236,
+            "holdout_profit_factor": 1.1580399713931189
+          }
+        },
+        "rolling_observation": {
+          "mean_reversion_base_negative_windows": 3,
+          "mean_reversion_base_positive_windows": 2,
+          "mean_reversion_stress_negative_windows": 5,
+          "blend_base_negative_windows": 3,
+          "blend_base_positive_windows": 2,
+          "blend_stress_negative_windows": 5
         }
       },
       "safety": {
