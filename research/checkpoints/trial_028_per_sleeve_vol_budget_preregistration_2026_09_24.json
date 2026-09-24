@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "trial_id": "T-2026-09-24-028",
+  "status": "preregistered",
+  "research_family": "per_sleeve_volatility_budget",
+  "hypothesis": "Applying the existing 63-session/10% volatility budget separately to the Trend and Cross-Sectional sleeves before fixed 50/50 aggregation reduces sleeve-driven drawdown concentration without reducing holdout performance versus the fixed candidate.",
+  "trend_symbols": [
+    "SPLV",
+    "SPHQ",
+    "SPYG",
+    "SPYV",
+    "FXI",
+    "GDX",
+    "PFF",
+    "CWB"
+  ],
+  "cross_sectional_symbols": [
+    "XSD",
+    "IBB",
+    "ITA",
+    "XAR",
+    "XES"
+  ],
+  "target_candles": 3500,
+  "common_returns": 3498,
+  "research_count": 2798,
+  "holdout_count": 700,
+  "risk_budget_window_sessions": 63,
+  "target_annualized_volatility": 0.1,
+  "strategy_variants": 1,
+  "parameter_search": false,
+  "threshold_search": false,
+  "selection_used": false,
+  "holdout_used_for_selection": false,
+  "paper_only": true,
+  "live_trading_enabled": false,
+  "orders_enabled": false
+}
