@@ -7,7 +7,7 @@ def test_queue_is_deterministic_and_tracks_current_t039_priority():
     queue = default_research_queue()
     first = queue.next_task()
     assert first is not None
-    assert first.task_id == "Q-001-T039-NETWORK-MOMENTUM"
+    assert first.task_id == "Q-001-T040-NETWORK-MOMENTUM-REPAIR"
     queue.set_status(first.task_id, "RUNNING")
     queue.set_status(first.task_id, "COMPLETED")
     assert queue.next_task().task_id == "Q-002-LIVE-DISCOVERY"
