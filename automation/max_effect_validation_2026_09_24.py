@@ -13,6 +13,7 @@ from pathlib import Path
 from backtesting.models import Candle
 from config import settings
 from data.market_store import MarketDataStore
+from execution.cost_contract import ResearchExecutionCostContract, validate_research_cost_compatibility
 from research.fixed_max_effect import daily_close_returns, low_max_assets, previous_month_max
 
 TRIAL_ID = "T-2026-09-24-023"
@@ -22,7 +23,8 @@ TARGET_COUNT = 3500
 RESEARCH_COUNT = 2798
 HOLDOUT_COUNT = 700
 SELECT_COUNT = 4
-BASE_COST = 0.0015
+COST_CONTRACT = ResearchExecutionCostContract()
+BASE_COST = COST_CONTRACT.total_one_way_bps / 10_000.0
 
 
 def _fp(value: object) -> str:
@@ -82,57 +84,80 @@ def _load_assets(data_dir: Path, manifest: dict) -> dict[str, list[Candle]]:
     return assets
 
 
-def _signal_paths(
+def _selections(
+    timestamps: list,
+    returns_by_symbol: dict[str, tuple[float, ...]],
+) -> dict[tuple[int, int], tuple[tuple[str, ...], tuple[str, ...]]]:
+    max_by_symbol = {
+        symbol: previous_month_max(timestamps, returns_by_symbol[symbol])
+        for symbol in SYMBOLS
+    }
+    selections: dict[tuple[int, int], tuple[tuple[str, ...], tuple[str, ...]]] = {}
+    months = sorted({_month_key(ts) for ts in timestamps})
+    for month in months:
+        values = {
+            symbol: max_by_symbol[symbol][month]
+            for symbol in SYMBOLS
+            if month in max_by_symbol[symbol]
+        }
+        if len(values) != len(SYMBOLS):
+            continue
+        low = low_max_assets(SYMBOLS, values, select_count=SELECT_COUNT)
+        high = tuple(
+            symbol
+            for symbol, _value in sorted(
+                ((symbol, values[symbol]) for symbol in SYMBOLS),
+                key=lambda item: (-item[1], item[0]),
+            )[:SELECT_COUNT]
+        )
+        selections[month] = (low, high)
+    return selections
+
+
+def _month_key(timestamp) -> tuple[int, int]:
+    return timestamp.year, timestamp.month
+
+
+def _portfolio_returns(
     assets: dict[str, list[Candle]],
-) -> tuple[list[float], list[float], list[float]]:
+    *,
+    cost_multiplier: float,
+) -> tuple[list[float], list[float | None], int, float]:
     timestamps = [c.timestamp for c in assets[SYMBOLS[0]]]
     returns_by_symbol = {
         symbol: daily_close_returns([c.close for c in assets[symbol]])
         for symbol in SYMBOLS
     }
+    selections = _selections(timestamps, returns_by_symbol)
 
-    max_by_symbol_month = {
-        symbol: previous_month_max(timestamps, returns_by_symbol[symbol])
-        for symbol in SYMBOLS
-    }
-
-    candidate_returns: list[float] = []
-    low_control_returns: list[float] = []
-    high_control_returns: list[float] = []
-    edge_returns: list[float] = []
+    portfolio_returns: list[float] = []
+    edge_by_row: list[float | None] = []
     previous_target = {symbol: 0.0 for symbol in SYMBOLS}
+    turnover_total = 0.0
 
     for row in range(TARGET_COUNT - 2):
-        decision_timestamp = timestamps[row]
-        month = (decision_timestamp.year, decision_timestamp.month)
-
-        max_values = {
-            symbol: max_by_symbol_month[symbol][month]
-            for symbol in SYMBOLS
-            if month in max_by_symbol_month[symbol]
-        }
-
-        if len(max_values) != len(SYMBOLS):
+        month = _month_key(timestamps[row])
+        selected = selections.get(month)
+        if selected is None:
             target = {symbol: 0.0 for symbol in SYMBOLS}
-            low_assets: tuple[str, ...] = ()
-            high_assets: tuple[str, ...] = ()
+            edge_by_row.append(None)
         else:
-            low_assets = low_max_assets(
-                SYMBOLS,
-                max_values,
-                select_count=SELECT_COUNT,
-            )
-            high_assets = tuple(
-                symbol
-                for symbol, _value in sorted(
-                    ((symbol, max_values[symbol]) for symbol in SYMBOLS),
-                    key=lambda item: (-item[1], item[0]),
-                )[:SELECT_COUNT]
-            )
+            low_assets, high_assets = selected
             target = {
                 symbol: (1.0 / SELECT_COUNT if symbol in low_assets else 0.0)
                 for symbol in SYMBOLS
             }
+            realized = {
+                symbol: (
+                    assets[symbol][row + 2].close
+                    / assets[symbol][row + 1].close
+                    - 1.0
+                )
+                for symbol in SYMBOLS
+            }
+            low_return = sum(realized[symbol] for symbol in low_assets) / SELECT_COUNT
+            high_return = sum(realized[symbol] for symbol in high_assets) / SELECT_COUNT
+            edge_by_row.append(low_return - high_return)
 
         realized = {
             symbol: (
@@ -142,23 +167,18 @@ def _signal_paths(
             )
             for symbol in SYMBOLS
         }
-
         turnover = sum(
             abs(target[symbol] - previous_target[symbol])
             for symbol in SYMBOLS
         )
-        portfolio = sum(target[symbol] * realized[symbol] for symbol in SYMBOLS)
-        candidate_returns.append(portfolio - BASE_COST * turnover)
-
-        if low_assets:
-            low = sum(realized[symbol] for symbol in low_assets) / SELECT_COUNT
-            high = sum(realized[symbol] for symbol in high_assets) / SELECT_COUNT
-            low_control_returns.append(low)
-            high_control_returns.append(high)
-            edge_returns.append(low - high)
+        turnover_total += turnover
+        gross_return = sum(target[symbol] * realized[symbol] for symbol in SYMBOLS)
+        portfolio_returns.append(
+            gross_return - BASE_COST * cost_multiplier * turnover
+        )
         previous_target = target
 
-    return candidate_returns, low_control_returns, edge_returns
+    return portfolio_returns, edge_by_row, len(selections), turnover_total
 
 
 def _metrics(values: list[float], split: int) -> dict:
@@ -170,13 +190,13 @@ def _metrics(values: list[float], split: int) -> dict:
         losses = 0.0
         for value in series:
             if not -1.0 < value:
-                raise ValueError("Return below -100% is invalid.")
+                raise ValueError("Return at or below -100% is invalid.")
             equity *= 1.0 + value
             peak = max(peak, equity)
             max_dd = max(max_dd, 1.0 - equity / peak)
-            if value > 0:
+            if value > 0.0:
                 gains += value
-            elif value < 0:
+            elif value < 0.0:
                 losses += -value
         return {
             "return": equity - 1.0,
@@ -197,100 +217,70 @@ def _metrics(values: list[float], split: int) -> dict:
         "research": research,
         "holdout": {**holdout, "oos_to_research_return_ratio": oos},
         "rolling_research": rolling,
-        "rolling_profitable_window_ratio": (
-            sum(item["return"] > 0 for item in rolling) / len(rolling)
-        ),
+        "rolling_profitable_window_ratio": sum(
+            item["return"] > 0 for item in rolling
+        ) / len(rolling),
     }
 
 
-def _edge_metrics(
-    low_returns: list[float],
-    edge_returns: list[float],
-    split: int,
-) -> dict:
-    if not low_returns or not edge_returns:
-        raise ValueError("No MAX signal observations available.")
-    boundaries = [round(i * split / 5) for i in range(6)]
-    edge_research = edge_returns[:split]
-    edge_holdout = edge_returns[split : split + HOLDOUT_COUNT]
+def _edge_metrics(edge_by_row: list[float | None], split: int) -> dict:
+    if len(edge_by_row) != TARGET_COUNT - 2:
+        raise ValueError("MAX edge series length must equal the 3498 PIT return rows.")
+
+    research_values = [
+        value for value in edge_by_row[:split] if value is not None
+    ]
+    holdout_values = [
+        value for value in edge_by_row[split : split + HOLDOUT_COUNT]
+        if value is not None
+    ]
+    if not research_values or not holdout_values:
+        raise ValueError("MAX edge has no observations in one of the required splits.")
+
     return {
-        "research_mean_low_minus_high_daily_return": sum(edge_research) / len(edge_research)
-        if edge_research else 0.0,
-        "holdout_mean_low_minus_high_daily_return": sum(edge_holdout) / len(edge_holdout)
-        if edge_holdout else 0.0,
-        "research_edge_observation_count": len(edge_research),
-        "holdout_edge_observation_count": len(edge_holdout),
-        "low_max_daily_return_mean_research": sum(low_returns[:split]) / len(low_returns[:split]),
-        "low_max_daily_return_mean_holdout": sum(low_returns[split : split + HOLDOUT_COUNT])
-        / len(low_returns[split : split + HOLDOUT_COUNT]),
+        "research_mean_low_minus_high_daily_return": sum(research_values) / len(research_values),
+        "holdout_mean_low_minus_high_daily_return": sum(holdout_values) / len(holdout_values),
+        "research_edge_observation_count": len(research_values),
+        "holdout_edge_observation_count": len(holdout_values),
     }
 
 
 def run(data_dir: Path, manifest_path: Path, output_path: Path) -> dict:
     if settings.PAPER_ONLY is not True or settings.LIVE_TRADING_ENABLED is not False:
         raise RuntimeError("Paper-only safety contract violated.")
+    COST_CONTRACT.validate()
+    validate_research_cost_compatibility(
+        fee_rate=COST_CONTRACT.fee_bps / 10_000.0,
+        slippage_rate=COST_CONTRACT.slippage_bps / 10_000.0,
+        contract=COST_CONTRACT,
+    )
 
     manifest = _load_manifest(manifest_path)
     assets = _load_assets(data_dir, manifest)
-    candidate, low_control, edge = _signal_paths(assets)
 
     scenarios: dict[str, dict] = {}
+    edge_by_row: list[float | None] = []
+    selection_month_count = 0
+    turnover_base = 0.0
+
     for name, multiplier in (
         ("base", 1.0),
         ("stress_1_5x_cost", 1.5),
         ("stress_2x_cost", 2.0),
     ):
-        if multiplier == 1.0:
-            values = candidate
-        else:
-            # Re-run the deterministic path so stress affects only costs.
-            values = []
-            timestamps = [c.timestamp for c in assets[SYMBOLS[0]]]
-            returns_by_symbol = {
-                symbol: daily_close_returns([c.close for c in assets[symbol]])
-                for symbol in SYMBOLS
-            }
-            max_by_symbol_month = {
-                symbol: previous_month_max(timestamps, returns_by_symbol[symbol])
-                for symbol in SYMBOLS
-            }
-            previous_target = {symbol: 0.0 for symbol in SYMBOLS}
-            for row in range(TARGET_COUNT - 2):
-                month = (timestamps[row].year, timestamps[row].month)
-                max_values = {
-                    symbol: max_by_symbol_month[symbol][month]
-                    for symbol in SYMBOLS
-                    if month in max_by_symbol_month[symbol]
-                }
-                target = (
-                    {
-                        symbol: (
-                            1.0 / SELECT_COUNT
-                            if symbol in low_max_assets(SYMBOLS, max_values, select_count=SELECT_COUNT)
-                            else 0.0
-                        )
-                        for symbol in SYMBOLS
-                    }
-                    if len(max_values) == len(SYMBOLS)
-                    else {symbol: 0.0 for symbol in SYMBOLS}
-                )
-                realized = {
-                    symbol: assets[symbol][row + 2].close
-                    / assets[symbol][row + 1].close
-                    - 1.0
-                    for symbol in SYMBOLS
-                }
-                turnover = sum(abs(target[symbol] - previous_target[symbol]) for symbol in SYMBOLS)
-                values.append(
-                    sum(target[symbol] * realized[symbol] for symbol in SYMBOLS)
-                    - BASE_COST * multiplier * turnover
-                )
-                previous_target = target
-
+        values, current_edge, selections, turnover = _portfolio_returns(
+            assets,
+            cost_multiplier=multiplier,
+        )
+        if not edge_by_row:
+            edge_by_row = current_edge
+            selection_month_count = selections
+            turnover_base = turnover
+        elif current_edge != edge_by_row or selections != selection_month_count:
+            raise ValueError("Signal path changed between cost scenarios.")
         scenarios[name] = _metrics(values, RESEARCH_COUNT)
 
-    edge = _edge_metrics(low_control, edge, RESEARCH_COUNT)
-
+    edge = _edge_metrics(edge_by_row, RESEARCH_COUNT)
     checks = {
         "research_return_positive": scenarios["base"]["research"]["return"] > 0.0,
         "research_drawdown": scenarios["base"]["research"]["max_drawdown_percent"] <= 10.0,
@@ -298,12 +288,8 @@ def run(data_dir: Path, manifest_path: Path, output_path: Path) -> dict:
             scenarios["base"]["research"]["profit_factor"] is not None
             and scenarios["base"]["research"]["profit_factor"] >= 1.10
         ),
-        "rolling_profitable_window_ratio": (
-            scenarios["base"]["rolling_profitable_window_ratio"] >= 0.50
-        ),
-        "oos_to_is_return_ratio": (
-            scenarios["base"]["holdout"]["oos_to_research_return_ratio"] >= 0.25
-        ),
+        "rolling_profitable_window_ratio": scenarios["base"]["rolling_profitable_window_ratio"] >= 0.50,
+        "oos_to_is_return_ratio": scenarios["base"]["holdout"]["oos_to_research_return_ratio"] >= 0.25,
         "holdout_return_positive": scenarios["base"]["holdout"]["return"] > 0.0,
         "holdout_drawdown": scenarios["base"]["holdout"]["max_drawdown_percent"] <= 10.0,
         "holdout_profit_factor": (
@@ -315,6 +301,7 @@ def run(data_dir: Path, manifest_path: Path, output_path: Path) -> dict:
         "research_max_effect_edge_positive": edge["research_mean_low_minus_high_daily_return"] > 0.0,
         "holdout_max_effect_edge_positive": edge["holdout_mean_low_minus_high_daily_return"] > 0.0,
     }
+    decision = "VALIDATED_PASS" if all(checks.values()) else "NO_SUPPORT"
 
     report = {
         "schema_version": 1,
@@ -341,21 +328,26 @@ def run(data_dir: Path, manifest_path: Path, output_path: Path) -> dict:
             "manifest_fingerprint": manifest["manifest_fingerprint"],
         },
         "methodology": {
-            "signal": "maximum daily close-to-close return in immediately preceding calendar month",
+            "signal": "maximum daily close-to-close return within the immediately preceding completed calendar month",
             "direction": "long four lowest-MAX assets",
             "select_count": SELECT_COUNT,
             "portfolio_gross_exposure": 1.0,
-            "rebalance": "monthly on calendar-month transition",
+            "rebalance": "calendar-month transition",
             "execution": "decision timestamp t -> realized close-to-close return t+1 to t+2",
-            "base_cost_rate": BASE_COST,
+            "fee_bps": COST_CONTRACT.fee_bps,
+            "slippage_bps": COST_CONTRACT.slippage_bps,
             "cost_stress_multipliers": [1.5, 2.0],
+            "leverage": 1.0,
+            "shorting": False,
         },
         "edge_measure": edge,
+        "selection_month_count": selection_month_count,
+        "base_total_turnover": turnover_base,
         "scenarios": scenarios,
         "decision": {
             "checks": checks,
             "all_checks_passed": all(checks.values()),
-            "result": "VALIDATED_PASS" if all(checks.values()) else "NO_SUPPORT",
+            "result": decision,
         },
         "safety": {
             "paper_only": True,
