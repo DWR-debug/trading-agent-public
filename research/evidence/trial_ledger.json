@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-24T17:00:00+02:00",
+  "generated_at": "2026-09-24T17:20:00+02:00",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -1692,6 +1692,113 @@
           "holdout_return_percent": 32.82316721681098,
           "holdout_max_drawdown_percent": 16.3869697443375,
           "holdout_profit_factor": 1.1253667297883216
+        }
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-024",
+      "recorded_at": "2026-09-24T17:20:00+02:00",
+      "status": "archived_rejected",
+      "research_family": "cross_sectional_low_volatility",
+      "hypothesis": {
+        "text": "Eine feste monatliche Long-Auswahl der vier Assets mit der niedrigsten realisierten 252-Sessionen-Volatilität erzielt robuste positive Renditen und einen positiven Low-Vol-vs-High-Vol-Edge."
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10814949024
+        ],
+        "artifact_digest": "sha256:a4a1a0bb5870b45859b22d72f2d13b8881106f7d88785d265172ad751736c134",
+        "manifest_fingerprint": "b8359acf7d532c6989dd41b31d6d8fdd836b3b1668c20b6fcadf3e2cfc0695da",
+        "fully_symbol_disjoint_validation_set": true,
+        "symbols": [
+          "INTC",
+          "QCOM",
+          "AVGO",
+          "HON",
+          "LMT",
+          "RTX",
+          "CSX",
+          "NSC"
+        ],
+        "aligned_common_candles": 3500,
+        "common_returns": 3498
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered single hypothesis; no holdout selection",
+        "selection_family_id": "cross-sectional-low-volatility-2026-09-24",
+        "selection_metric": "fixed Research/Holdout return, drawdown, profit factor, rolling stability, OOS/Research, cost stress and Low-Vol-vs-High-Vol edge"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 36018203202,
+        "artifact_id": 10814949024,
+        "artifact_sha256": "a4a1a0bb5870b45859b22d72f2d13b8881106f7d88785d265172ad751736c134",
+        "report_fingerprint": "feb4376f1da051aa157efba098354ffce13ecc75969b4ded849dd90f8e9f1203",
+        "workflow_code_sha": "feead383cde51b310a535cbeb439a616bf0ec246",
+        "branch_head_sha": "59a67bc63033fe0ca938ec17069c3ac4d8c78225",
+        "all_checks_passed": false,
+        "gate_results": {
+          "research_return_positive": true,
+          "research_drawdown": false,
+          "research_profit_factor": true,
+          "rolling_profitable_window_ratio": true,
+          "oos_to_is_return_ratio": true,
+          "holdout_return_positive": true,
+          "holdout_drawdown": false,
+          "holdout_profit_factor": true,
+          "stress_1_5x_nonnegative": true,
+          "stress_2x_nonnegative": true,
+          "research_low_vol_edge_positive": false,
+          "holdout_low_vol_edge_positive": false
+        },
+        "base": {
+          "research_return_percent": 146.08055611184807,
+          "research_max_drawdown_percent": 42.52600831216293,
+          "research_profit_factor": 1.1083724806991266,
+          "research_rolling_profitable_windows": 5,
+          "research_rolling_window_count": 5,
+          "holdout_return_percent": 46.02987574428217,
+          "holdout_max_drawdown_percent": 18.543434821216554,
+          "holdout_profit_factor": 1.1752694317234715,
+          "oos_to_is_return_ratio": 0.31509926419665957,
+          "research_mean_low_vol_edge": -0.00031712465056545373,
+          "holdout_mean_low_vol_edge": -0.0010395520734488844,
+          "selection_month_count": 155,
+          "base_total_turnover": 12
+        },
+        "stress_1_5x_cost": {
+          "holdout_return_percent": 45.81057167194456,
+          "holdout_max_drawdown_percent": 18.543434821216554,
+          "holdout_profit_factor": 1.1746073155738226
+        },
+        "stress_2x_cost": {
+          "holdout_return_percent": 45.59151469828744,
+          "holdout_max_drawdown_percent": 18.543434821216607,
+          "holdout_profit_factor": 1.1739454093882453
         }
       },
       "safety": {
