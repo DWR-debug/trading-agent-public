@@ -21,9 +21,10 @@ def test_previous_month_max_is_lagged_by_calendar_month():
         datetime(2026, 1, 30, tzinfo=timezone.utc),
         datetime(2026, 2, 2, tzinfo=timezone.utc),
         datetime(2026, 2, 3, tzinfo=timezone.utc),
+        datetime(2026, 2, 4, tzinfo=timezone.utc),
         datetime(2026, 3, 2, tzinfo=timezone.utc),
     ]
-    returns = (0.0, 0.02, -0.01, 0.03)
+    returns = (0.0, 0.02, 0.02, -0.01, 0.03)
     values = previous_month_max(timestamps, returns)
     assert values[(2026, 2)] == pytest.approx(0.0)
     assert values[(2026, 3)] == pytest.approx(0.02)
