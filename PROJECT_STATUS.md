@@ -2656,3 +2656,36 @@ Keine weitere Risk-Parity-/Volatility-Parity-Suche und kein Tuning dieses Contro
 - LIVE_TRADING_ENABLED=False
 - keine Research-Orders
 - keine Live-Ausführung
+
+
+## Aktueller Checkpoint — Trial 031 Risk-Adjusted Cross-Sectional Momentum — 2026-09-24
+
+Trial T-2026-09-24-031 wurde vollständig auf `DWR-debug/trading-agent-public` ausgeführt und als **NO_SUPPORT / archived_rejected** abgeschlossen.
+
+- Workflow: `36043071782`
+- Artifact: `10826903506`
+- Artifact-SHA256: `sha256:9b42882a4ee9082c2b6194f4b671513b7da50685d850bac561aaa3df1bab551a`
+- Report-Fingerprint: `f22e6cad28fbfbf73495f35da056b0bb8fe80c30ecd7d54deb09385452533cad`
+- 13 neue disjunkte ETFs; 3.500 Candles/Asset; 3.498 gemeinsame PIT-Returns
+- 2.798 Research / 700 Holdout
+- 670 Tests und sämtliche Trial-Gates/Integritätsprüfungen grün
+- keine Orders
+
+### Befund
+
+Fixed Candidate: Research +1,65 %, DD 22,65 %, PF 1,011; Holdout +27,14 %, DD 15,59 %, PF 1,165.
+
+Risk-Adjusted CS: Research -8,37 %, DD 26,77 %, PF 0,994; Holdout +24,47 %, DD 14,56 %, PF 1,150.
+
+Die Intervention senkt den Holdout-DD um rund 1,03 Prozentpunkte, verschlechtert jedoch die Research-Seite deutlich und verfehlt den Gesamtvertrag.
+
+### Konsequenz
+
+Keine weitere Lookup-/Skip-/Volatilitätsdefinition-Suche dieses Controls. Der nächste Fokus wechselt zur Relative-Value-Familie gemäß Research-Queue.
+
+### Sicherheitsstatus
+
+- PAPER_ONLY=True
+- LIVE_TRADING_ENABLED=False
+- keine Research-Orders
+- keine Live-Ausführung
