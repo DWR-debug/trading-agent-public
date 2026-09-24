@@ -15,6 +15,7 @@ on:
           - preflight
           - discover_coverage
           - diagnose_failure
+          - diagnose_history
           - research
       universe:
         description: Research-Universum
@@ -40,6 +41,10 @@ on:
       - "automation/coverage_candidate_discovery.py"
       - "automation/coverage_preflight.py"
       - "automation/adversarial_failure_diagnosis.py"
+      - "automation/cross_trial_failure_diagnosis.py"
+      - "tests/test_cross_trial_failure_diagnosis.py"
+      - "docs/cross_trial_failure_diagnosis_2026_09_24.md"
+      - "research/evidence/cross_trial_failure_diagnosis_2026_09_24.json"
       - "tests/test_adversarial_failure_diagnosis.py"
       - "docs/t040_failure_diagnosis_2026_09_24.md"
       - "research/evidence/t040_failure_diagnosis_2026_09_24.json"
@@ -106,6 +111,9 @@ jobs:
               --universe validation_2026_09_24_network_momentum_t040
             python -m automation.research_orchestrator \
               --mode diagnose_failure \
+              --universe validation_2026_09_24_network_momentum_t040
+            python -m automation.research_orchestrator \
+              --mode diagnose_history \
               --universe validation_2026_09_24_network_momentum_t040
 
             if [ "$GITHUB_EVENT_NAME" = "push" ] && git diff-tree --no-commit-id --name-only -r HEAD^ HEAD | grep -Fxq "research/preregistrations/trial_040_network_momentum_2026_09_24.json"; then
