@@ -57,7 +57,7 @@ def test_summary_preserves_exact_research_and_holdout_counts():
 def test_summary_oos_ratio_is_inside_research_only():
     values = [0.001] * EVALUATION_COUNT
     summary = _summary(values, RESEARCH_COUNT)
-    assert summary["oos"]["day_count"] == int(RESEARCH_COUNT * 0.20)
+    assert summary["oos"]["day_count"] == RESEARCH_COUNT - int(RESEARCH_COUNT * 0.80)
     assert summary["holdout"]["day_count"] == 700
 
 
