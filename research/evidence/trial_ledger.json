@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-24T16:04:00+02:00",
+  "generated_at": "2026-09-24T16:10:00+02:00",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -1103,7 +1103,7 @@
         "artifact_ids": [
           10810214406
         ],
-        "manifest_fingerprint": "561c0d76fe6bbb4435f7399179f4e9f0542138c8d8a1586e3012f49465f9e031",
+        "manifest_fingerprint": "181895cab3682cf89694d085f71802b802b183e7ffa02c9cfa64d04ffe07cdc4",
         "fully_symbol_disjoint_validation_set": true,
         "symbols": [
           "EWS",
@@ -1142,7 +1142,7 @@
         "validation_status": "NO_SUPPORT",
         "workflow_run_id": 36006749490,
         "artifact_id": 10810214406,
-        "artifact_sha256": "1d7ebd14a4da359908ec2d10011598e6689b47f9d81605ae2a62aec53d33835b",
+        "artifact_sha256": "c00a489e5604a83e5f1d66123ff612d0f0fba92170f355870721f507c9cfad43",
         "report_fingerprint": "27df7c6ba36083d599d39c65fdd5fd089ec9216bd03211a42b8530c75ee3e85a",
         "code_commit_sha": "546fd8aad0008923bb63f70936b57882f579ef9f",
         "all_checks_passed": false,
@@ -1373,6 +1373,109 @@
         "code_commit_sha": "e4d960ecc8f06aaceaa1ddc1997fda6c2c9ebcd5",
         "reason": "Historical Yahoo acquisition reached only 3,322 common timestamps after five acquisition attempts, below the fixed 3,500-candle contract. The gap-reversal research/backtest was never executed.",
         "no_artifact_generated": true
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-021",
+      "recorded_at": "2026-09-24T16:10:00+02:00",
+      "status": "archived_rejected",
+      "research_family": "overnight_intraday_gap_reversal",
+      "hypothesis": {
+        "text": "Eine feste, parameterfreie Gegenposition zum Overnight-Gap eines vollständig neuen U.S.-Aktienuniversums erzeugt robuste positive Same-Day-Intraday-Rendite."
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10812385942
+        ],
+        "fully_symbol_disjoint_validation_set": true,
+        "symbols": [
+          "JNJ",
+          "KO",
+          "PG",
+          "WMT",
+          "XOM",
+          "CVX",
+          "MCD",
+          "PEP"
+        ],
+        "aligned_common_candles": 3500
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered single hypothesis; no selection from holdout",
+        "selection_family_id": "overnight-intraday-gap-reversal-2026-09-24",
+        "selection_metric": "fixed Research/Holdout return, drawdown, profit factor, rolling stability, OOS/IS and cost stress"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 36010070504,
+        "artifact_id": 10812385942,
+        "report_fingerprint": "8af136b92c4c114d16fe6951d609f20939c15c840d9952c878e5de15d9cdb2da",
+        "code_commit_sha": "24a47f77306d76b930b81a73e96ed5748d1bf88d",
+        "all_checks_passed": false,
+        "gate_results": {
+          "research_return_positive": false,
+          "research_drawdown": false,
+          "research_profit_factor": false,
+          "rolling_profitable_window_ratio": false,
+          "oos_to_is_return_ratio": false,
+          "holdout_return_positive": false,
+          "holdout_profit_factor": false,
+          "holdout_drawdown": false,
+          "stress_1_5x_nonnegative": false,
+          "stress_2x_nonnegative": false,
+          "gap_reversal_edge_positive": false
+        },
+        "base": {
+          "research_return_percent": -99.97057855746215,
+          "research_max_drawdown_percent": 99.97057855746215,
+          "research_profit_factor": 0.21703376190824308,
+          "research_rolling_profitable_windows": 0,
+          "research_rolling_window_count": 5,
+          "research_mean_gap_reversal_edge": -8.400562882763254e-7,
+          "holdout_return_percent": -88.11711013116025,
+          "holdout_max_drawdown_percent": 88.15950842369524,
+          "holdout_profit_factor": 0.20967776193088936,
+          "holdout_mean_gap_reversal_edge": 0.000005330770367560059,
+          "oos_to_is_return_ratio": 0,
+          "research_turnover": 5595,
+          "holdout_turnover": 1399.75
+        },
+        "stress_1_5x_cost": {
+          "research_return_percent": -99.9995639384629,
+          "holdout_return_percent": -95.85758596484558,
+          "holdout_profit_factor": 0.10154514626326876,
+          "holdout_max_drawdown_percent": 95.86696088869758
+        },
+        "stress_2x_cost": {
+          "research_return_percent": -99.999993577945,
+          "holdout_return_percent": -98.55823118083075,
+          "holdout_profit_factor": 0.05417177411293265,
+          "holdout_max_drawdown_percent": 98.55961043817936
+        }
       },
       "safety": {
         "paper_only": true,
