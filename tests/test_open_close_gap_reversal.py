@@ -16,19 +16,19 @@ def test_policy_has_eight_equal_weight_symbols():
 def test_negative_gap_is_long():
     policy = OpenCloseGapReversalPolicy()
     assert policy.signal(-0.01) == 1
-    assert policy.target_weight(-0.01, "SPYG") == pytest.approx(0.125)
+    assert policy.target_weight(-0.01, "SPYM") == pytest.approx(0.125)
 
 
 def test_positive_gap_is_short():
     policy = OpenCloseGapReversalPolicy()
     assert policy.signal(0.01) == -1
-    assert policy.target_weight(0.01, "SPYG") == pytest.approx(-0.125)
+    assert policy.target_weight(0.01, "SPYM") == pytest.approx(-0.125)
 
 
 def test_zero_gap_is_flat():
     policy = OpenCloseGapReversalPolicy()
     assert policy.signal(0.0) == 0
-    assert policy.target_weight(0.0, "SPYG") == pytest.approx(0.0)
+    assert policy.target_weight(0.0, "SPYM") == pytest.approx(0.0)
 
 
 def test_unknown_symbol_is_rejected():
