@@ -152,6 +152,29 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
     ),
 
 
+    AssetUniverse(
+        name="validation_2026_09_24_sixth_trend",
+        priority=15,
+        description=(
+            "Sixth fully symbol-disjoint ETF validation universe for the fixed trend sleeve; "
+            "symbols are pre-registered before data acquisition and avoid all prior validation "
+            "universes."
+        ),
+        symbols=("IVV", "EWC", "EWW", "EWY", "EWT", "EIS", "EDV", "MUB"),
+        target_count=3500,
+    ),
+    AssetUniverse(
+        name="validation_2026_09_24_sixth_cs",
+        priority=16,
+        description=(
+            "Sixth fully symbol-disjoint sector/industry ETF validation universe for the fixed "
+            "cross-sectional sleeve; symbols are pre-registered before data acquisition and "
+            "avoid all prior validation universes."
+        ),
+        symbols=("XSD", "XAR", "XHE", "XPH", "XNTK"),
+        target_count=3500,
+    ),
+
 )
 
 
