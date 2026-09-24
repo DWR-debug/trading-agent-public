@@ -17,11 +17,29 @@ def _mode(r=.2,dd=5.0,pf=1.2,rpf=1.2,ratio=.6,rdd=5.0,oos=.5,h=.1,hdd=5.0,hpf=1.
             "holdout":{"period_return":h,"max_drawdown_percent":hdd,"profit_factor":hpf}}
 
 def _scenario():
-    m=_mode()
-    wrap={"price_only":m,"total_return_sensitivity":m}
-    return {"base":{"fixed_candidate":{"price_only":m},"risk_adjusted_candidate":wrap},
-            "stress_1_5x_cost":{"fixed_candidate":{"price_only":m},"risk_adjusted_candidate":wrap},
-            "stress_2x_cost":{"fixed_candidate":{"price_only":m},"risk_adjusted_candidate":wrap}}
+    return {
+        "base": {
+            "fixed_candidate": {"price_only": _mode()},
+            "risk_adjusted_candidate": {
+                "price_only": _mode(),
+                "total_return_sensitivity": _mode(),
+            },
+        },
+        "stress_1_5x_cost": {
+            "fixed_candidate": {"price_only": _mode()},
+            "risk_adjusted_candidate": {
+                "price_only": _mode(),
+                "total_return_sensitivity": _mode(),
+            },
+        },
+        "stress_2x_cost": {
+            "fixed_candidate": {"price_only": _mode()},
+            "risk_adjusted_candidate": {
+                "price_only": _mode(),
+                "total_return_sensitivity": _mode(),
+            },
+        },
+    }
 
 def test_gate_contract_passes_for_equal_strong_candidate():
     r=_gates(_scenario(),ResearchGateConfig())
