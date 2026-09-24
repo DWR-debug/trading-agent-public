@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-24T15:10:00+02:00",
+  "generated_at": "2026-09-24T15:36:18+02:00",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -1081,6 +1081,121 @@
         "research_result_available": false,
         "holdout_result_available": false,
         "reason": "No complete historical event-data coverage could be established for the preregistered 2025-04-01 to 2025-09-30 window; no backtest report was produced."
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-017",
+      "recorded_at": "2026-09-24T15:36:18+02:00",
+      "status": "archived_rejected",
+      "research_family": "calendar_alpha",
+      "hypothesis": {
+        "text": "Eine feste Vier-Tage-Turn-of-Month-Exposition auf einem vollständig neuen globalen Country-ETF-Universum erzeugt höhere durchschnittliche Tagesrenditen innerhalb des TOM-Fensters als außerhalb und weist zugleich robuste kostenbereinigte Portfolioeigenschaften auf."
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10810214406
+        ],
+        "manifest_fingerprint": "561c0d76fe6bbb4435f7399179f4e9f0542138c8d8a1586e3012f49465f9e031",
+        "fully_symbol_disjoint_validation_set": true,
+        "symbols": [
+          "EWS",
+          "EWM",
+          "EZA",
+          "ECH",
+          "EPU",
+          "EIDO",
+          "THD",
+          "EPHE"
+        ],
+        "aligned_common_candles": 3500
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered single hypothesis; no selection from holdout",
+        "selection_family_id": "turn-of-month-calendar-alpha-2026-09-24",
+        "selection_metric": "Research/Holdout return, drawdown, profit factor, rolling stability, OOS/IS and fixed cost stress"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 36006749490,
+        "artifact_id": 10810214406,
+        "artifact_sha256": "1d7ebd14a4da359908ec2d10011598e6689b47f9d81605ae2a62aec53d33835b",
+        "report_fingerprint": "27df7c6ba36083d599d39c65fdd5fd089ec9216bd03211a42b8530c75ee3e85a",
+        "code_commit_sha": "546fd8aad0008923bb63f70936b57882f579ef9f",
+        "all_checks_passed": false,
+        "gate_results": {
+          "research_tom_mean_gt_non_tom": true,
+          "holdout_tom_mean_gt_non_tom": true,
+          "research_drawdown": false,
+          "research_profit_factor": false,
+          "rolling_profitable_window_ratio": true,
+          "oos_to_is_return_ratio": false,
+          "holdout_return_positive": false,
+          "holdout_profit_factor": false,
+          "holdout_drawdown": true,
+          "stress_1_5x_nonnegative": false,
+          "stress_2x_nonnegative": false
+        },
+        "base": {
+          "research_return_percent": -11.672864792449145,
+          "research_max_drawdown_percent": 24.400351564558353,
+          "research_profit_factor": 0.9628354075010963,
+          "research_tom_mean_gross_daily_return": 0.000578656233570285,
+          "research_non_tom_mean_gross_daily_return": -0.0002102561376379289,
+          "research_tom_minus_non_tom_mean_daily_return": 0.0007889123712082138,
+          "research_tom_day_count": 536,
+          "research_turnover": 267,
+          "holdout_return_percent": -1.917149039004118,
+          "holdout_max_drawdown_percent": 9.294053585535478,
+          "holdout_profit_factor": 0.9773086346547498,
+          "holdout_tom_mean_gross_daily_return": 0.0006752650545186475,
+          "holdout_non_tom_mean_gross_daily_return": 0.0004882174743970992,
+          "holdout_tom_minus_non_tom_mean_daily_return": 0.00018704758012154832,
+          "holdout_tom_day_count": 133,
+          "holdout_turnover": 68,
+          "oos_to_is_return_ratio": 0,
+          "research_profitable_rolling_windows": 3,
+          "research_rolling_window_count": 5
+        },
+        "stress_1_5x_cost": {
+          "research_return_percent": -27.73554709832637,
+          "research_max_drawdown_percent": 32.57370130427765,
+          "research_profit_factor": 0.8878499692002486,
+          "holdout_return_percent": -6.805555029598087,
+          "holdout_max_drawdown_percent": 10.385589899889169,
+          "holdout_profit_factor": 0.8911808057534765
+        },
+        "stress_2x_cost": {
+          "research_return_percent": -40.88608645708655,
+          "research_max_drawdown_percent": 44.466699177900416,
+          "research_profit_factor": 0.8218723448405485,
+          "holdout_return_percent": -11.453731271559143,
+          "holdout_max_drawdown_percent": 14.469442074263672,
+          "holdout_profit_factor": 0.8173571906152338
+        }
       },
       "safety": {
         "paper_only": true,
