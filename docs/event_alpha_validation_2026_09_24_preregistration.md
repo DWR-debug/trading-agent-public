@@ -65,6 +65,8 @@ Produktionsparameter oder Gates.
 
 Es gibt keine Parameter-, Schwellenwert-, Asset- oder Varianten-Suche.
 
+Das Eventfenster ist damit exakt `previous_market_day <= event_date < target_market_day`.
+
 Eine spätere Promotion erfordert einen separat definierten Evidence-Contract
 und unabhängige Bestätigung. Ein positives Ergebnis dieses einzelnen Controls
 allein reicht nicht für eine Produktionsintegration.
