@@ -102,7 +102,7 @@ jobs:
           ).read_text(encoding="utf-8"))
           assert q005["status"] == "COMPLETED"
           assert "automatic_selection=false" in q005["verified"]
-                    history_diagnosis = json.loads(Path(
+          history_diagnosis = json.loads(Path(
               "research/evidence/cross_trial_failure_diagnosis_2026_09_24.json"
           ).read_text(encoding="utf-8"))
           assert history_diagnosis["status"] == "DIAGNOSTIC_ONLY"
