@@ -1,3 +1,18 @@
+## Neue Forschungsphase 2026-09-24
+
+Schwerpunkt ist jetzt ein modularer Forschungsstack:
+Research Lifecycle -> orthogonale Alpha-Familien -> Event/Macro Context ->
+Portfolio Allocation -> Risk Overlay -> Execution Simulation -> Paper Monitoring.
+
+Pflichtbausteine dieser Phase:
+- reproduzierbare Research-Queue und Graveyard
+- adversarial robustness
+- Champion/Challenger
+- Korrelation und Drawdown-Kopplung
+- realistische Kosten-/Latenztests
+- point-in-time Event Intelligence
+- erst danach experimentelle Long/Short- und Leverage-Exposure
+
 # Trading Agent – Ziele und Maßnahmen
 
 ## Hauptziel
