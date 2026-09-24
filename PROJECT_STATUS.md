@@ -55,10 +55,15 @@ Die feste 50/50-Kontrolle erreicht im Holdout +43,08 % Return / 23,08 % DD / PF 
 - keine Promotion
 - keine Parameter-/Gewichts-/Threshold-Suche
 - keine Änderung der Gates
-- Q003 wird als BLOCKED geschlossen
-- nächster Schwerpunkt: Q006 `VOLATILITY-RELATIVE-VALUE`
+- Q003 ist als BLOCKED geschlossen
+- aktueller Schwerpunkt: Q004 `LIVE-DISCOVERY`
+- Discovery ist Beobachtung, keine Performanceevidenz und keine Holdout-Selektion
 
 Die zwischenzeitlichen technischen Versuche 36063501638, 36063700160 und 36064061902 sind separat als nicht-wertbare Ausführungsversuche dokumentiert.
+## Q004 Live-/Updated-Data Discovery — 2026-09-24
+
+Die laufende Discovery beobachtet zwei komplementäre, feste Universen: `benchmark` und `cross_asset_trend`. Pro Symbol werden maximal 1.000 abgeschlossene Tages-Candles genutzt; zusätzlich werden fixe Lag-Korrelationen (1/5/21 Sessions), 21-Tages-Volatilität und 252-Tages-Trendreturndaten beschrieben. Die Beobachtung dient ausschließlich zur Hypothesenbildung. Jede daraus abgeleitete Performancehypothese benötigt eine neue, separat präregistrierte Coverage- und Holdout-Kette.
+
 ## T039 Engine — technische Umsetzung
 
 - separater Research-only Network-Momentum-Lab außerhalb der Produktionsstrategie

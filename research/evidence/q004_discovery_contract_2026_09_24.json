@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "queue_task": "Q-004-LIVE-DISCOVERY",
+  "status": "RUN_REQUESTED",
+  "observation_universes": ["benchmark", "cross_asset_trend"],
+  "max_candles_per_symbol": 1000,
+  "diagnostics": ["return_1", "annualized_vol_21", "trend_return_252", "lag_correlation_1_5_21"],
+  "selection_used": false,
+  "holdout_used": false,
+  "performance_evaluation": false,
+  "new_preregistration_required": true,
+  "safety": {"paper_only": true, "live_trading_enabled": false, "orders_enabled": false, "automatic_promotion": false}
+}

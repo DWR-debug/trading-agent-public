@@ -4,8 +4,8 @@
 
 1. T040 Network Momentum Repair: **BLOCKED**. Coverage war valide, aber die festen Evidenz-Gates wurden klar verfehlt.
 2. Adversarial Failure-Diagnose: **COMPLETED**. T040 wurde strukturell analysiert; zusätzlich wurden T022/T023/T025/T027/T028 als historische Vergleichsbasis ausgewertet.
-3. **Portfolio Risk Control**: nächster formaler Fokus. Die T028-Beobachtung wird als Motivation genutzt, nicht als Selection- oder Promotion-Beleg.
-4. Laufende Live-/Updated-Data Discovery über feste Markt- und Lead-Lag-Diagnostiken.
+3. **Portfolio Risk Control**: T041 ausgeführt und BLOCKED. Keine Gewichtungs-/Lookback-Nachsuche.
+4. **Laufende Live-/Updated-Data Discovery** über `benchmark` plus `cross_asset_trend`; Discovery erzeugt nur Kandidaten und keine Performanceevidenz.
 5. Champion / Challenger unter unverändertem Evidence-Vertrag.
 6. Danach neue Volatility- und Relative-Value-Familien, falls die Evidenzlage dies trägt.
 

@@ -80,13 +80,21 @@
     "t041_formal_report_fingerprint": "300fd4224b2a9df9a5f2bdcc55381fd5b239049605c7744c77ec43a15c6fdf7a",
     "t041_scientific_outcome": "NO_PROMOTION_EVIDENCE",
     "t041_absolute_gates_passed": false,
-    "t041_non_deterioration_gates_passed": false
+    "t041_non_deterioration_gates_passed": false,
+    "q004_discovery_status": "RUN_REQUESTED",
+    "q004_observation_universes": [
+      "benchmark",
+      "cross_asset_trend"
+    ],
+    "q004_observation_candles": 1000,
+    "q004_selection_used": false
   },
   "agent_usage_efficiency": {
     "policy": "deterministic_actions_for_computation_and_agent_use_for_architecture_review_synthesis",
     "paid_api_budget_usd": 0,
     "auto_paid_api_calls": false,
     "free_credit_only": true,
-    "lessons_recorded": "reuse_frozen_artifacts; batch_independent_evidence_fetches; fail_fast_contract_tests; no_agent_spend_for_deterministic_backtests"
+    "lessons_recorded": "reuse_frozen_artifacts; batch_independent_evidence_fetches; fail_fast_contract_tests; no_agent_spend_for_deterministic_backtests",
+    "q004_discovery_policy": "one broad cross-asset observation plus benchmark; no performance selection; discovery candidates require fresh preregistration"
   }
 }

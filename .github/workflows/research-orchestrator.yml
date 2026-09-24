@@ -129,6 +129,9 @@ jobs:
               --mode observe \
               --universe benchmark
             python -m automation.research_orchestrator \
+              --mode observe \
+              --universe cross_asset_trend
+            python -m automation.research_orchestrator \
               --mode preflight \
               --universe validation_2026_09_24_portfolio_risk_control_trend
             python -m automation.research_orchestrator \
