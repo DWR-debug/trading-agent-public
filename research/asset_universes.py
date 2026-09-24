@@ -184,7 +184,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
     ),
     AssetUniverse(
         name="validation_2026_09_24_seventh_trend",
-        priority=15,
+        priority=21,
         description=(
             "Seventh fully disjoint US-listed ETF validation universe for "
             "trend-family and multi-strategy complementarity research."
@@ -194,7 +194,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
     ),
     AssetUniverse(
         name="validation_2026_09_24_seventh_cs",
-        priority=16,
+        priority=22,
         description=(
             "Seventh fully disjoint large-cap equity universe for "
             "cross-sectional momentum and multi-strategy complementarity research."
