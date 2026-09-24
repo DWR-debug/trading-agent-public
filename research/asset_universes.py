@@ -151,7 +151,16 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=3500,
     ),
 
-
+    AssetUniverse(
+        name="validation_2026_09_24_eighth_leverage",
+        priority=17,
+        description=(
+            "Eighth fully disjoint cross-asset ETF universe for pre-registered "
+            "long/short and leverage research."
+        ),
+        symbols=("ITOT", "IEMG", "SCHD", "ACWI", "EMB", "GLTR", "FXY", "EWQ"),
+        target_count=3500,
+    ),
 )
 
 
