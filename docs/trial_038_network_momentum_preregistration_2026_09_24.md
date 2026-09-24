@@ -16,7 +16,7 @@ eigenständige Prüfung, nicht Evidenz für unsere ETF-Implementierung.
 
 ## Feste Validierungsbasis
 
-`EIRL`, `ENZL`, `NORW`, `EDEN`, `FXF`, `FXC`, `CEW`, `MINT`, `SCHO`, `IUSB`, `COMT`, `RWX`
+`EIRL`, `ENZL`, `NORW`, `EDEN`, `FXF`, `FXC`, `CEW`, `MINT`, `SCHO`, `MINT`, `COMT`, `RWX`
 
 - 3.500 Research-Candles je Symbol
 - 700 blinder Holdout
