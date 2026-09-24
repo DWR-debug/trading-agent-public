@@ -177,6 +177,6 @@ jobs:
           assert state['latest_formal_trial'] == 'T-2026-09-24-041'
           assert state['latest_trial_status'] == 'BLOCKED'
           assert state['current_trial_status'] == 'BLOCKED'
-          assert state['engineering_notes']['current_queue_task'] == 'Q-004-LIVE-DISCOVERY'
+          assert state['engineering_notes']['current_queue_task'] == 'Q-006-VOLATILITY-RELATIVE-VALUE'
           print('PROJECT STATE OK')
           PY
