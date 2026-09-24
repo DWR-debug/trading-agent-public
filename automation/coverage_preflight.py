@@ -139,6 +139,7 @@ def run_preflight(
         "schema_version": "1.0",
         "trial_id": trial_id,
         "research_family": spec["research_family"],
+        "universe": universe_name,
         "preregistration": str(prereg_path.relative_to(ROOT)),
         "recorded_at": datetime.now(timezone.utc).isoformat(),
         "status": status,
@@ -184,7 +185,10 @@ def run_preflight(
         json.dumps(payload, indent=2, ensure_ascii=False, allow_nan=False) + "\n",
         encoding="utf-8",
     )
-    payload["output"] = str(output.relative_to(ROOT))
+    try:
+        payload["output"] = str(output.relative_to(ROOT))
+    except ValueError:
+        payload["output"] = str(output)
 
     print(json.dumps(payload, indent=2, ensure_ascii=False))
     return payload
