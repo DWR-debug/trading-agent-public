@@ -31,7 +31,7 @@ Cross-Sectional:
 IYC, IYE, IYF, IYK, IYM
 
 Alle Assets werden auf 3.500 gemeinsame Candles ausgerichtet; danach werden
-2.798 Research- und 700 Holdout-Return-Perioden ausgewertet.
+2798 Research- und 700 Holdout-Return-Perioden ausgewertet.
 
 Der Satz muss gegenüber den vier bisherigen Validierungssätzen vollständig
 symbol-disjunkt bleiben.
