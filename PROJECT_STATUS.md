@@ -1,3 +1,19 @@
+## Aktueller Checkpoint — Trial 037 Network Momentum Coverage DATA_INVALID — 2026-09-24
+
+Trial T-2026-09-24-037 wurde vor jeder Performanceauswertung als **DATA_INVALID** beendet.
+
+- Coverage-Workflow: `36049959117`
+- `IUSB`: 3.088 statt 3.520 angeforderter Candles
+- Tests, Safety und Disjointness: grün
+- keine Research-/Holdout-Evaluation
+- kein Datenvertrag gelockert
+- keine Performanceaussage
+
+Die Network-Momentum-Hypothese bleibt damit ungetestet.
+
+Für T038 wird ausschließlich `IUSB` durch `MINT` ersetzt; die übrigen Symbole,
+die präregistrierte Network-Momentum-Regel und der Datenvertrag bleiben unverändert.
+
 ## Aktueller Checkpoint — Trial 036 Network Momentum Coverage DATA_INVALID — 2026-09-24
 
 Trial T-2026-09-24-036 wurde vor jeder Performanceauswertung als **DATA_INVALID** beendet.
