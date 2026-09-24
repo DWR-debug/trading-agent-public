@@ -56,15 +56,27 @@ def _float(row: list[str], index: int, *, default: float | None = None) -> float
 def _parse_timestamp(value: str) -> datetime:
     if not value:
         raise GDELTEventError("DATEADDED is empty.")
-    return datetime.strptime(value, "%Y%m%d%H%M%S").replace(tzinfo=timezone.utc)
+    if len(value) == 8:
+        return datetime.strptime(value, "%Y%m%d").replace(tzinfo=timezone.utc)
+    if len(value) == 14:
+        return datetime.strptime(value, "%Y%m%d%H%M%S").replace(tzinfo=timezone.utc)
+    raise GDELTEventError(f"Unsupported DATEADDED format: {value!r}")
+
+def _schema_indexes(field_count: int) -> tuple[int, int, int]:
+    if field_count >= 61:
+        return 61, 59, 60
+    if field_count == 58:
+        return 58, 56, 57
+    raise GDELTEventError(
+        f"Unsupported GDELT Event field count: {field_count}; expected 58 or 61."
+    )
 
 def parse_event_row(row: Iterable[str]) -> GDELTEvent:
     values = list(row)
-    if len(values) < GDELT_EVENT_FIELD_COUNT:
-        raise GDELTEventError(f"Expected at least {GDELT_EVENT_FIELD_COUNT} fields, got {len(values)}.")
+    _, date_index, source_index = _schema_indexes(len(values))
     return GDELTEvent(
         event_id=_int(values, 0),
-        date_added=_parse_timestamp(_text(values, DATEADDED_INDEX)),
+        date_added=_parse_timestamp(_text(values, date_index)),
         event_code=_text(values, 26),
         event_base_code=_text(values, 27),
         event_root_code=_text(values, 28),
@@ -77,7 +89,7 @@ def parse_event_row(row: Iterable[str]) -> GDELTEvent:
         actor1_country_code=_text(values, 7),
         actor2_country_code=_text(values, 17),
         actor_geo_country_code=_text(values, 52),
-        source_url=_text(values, SOURCEURL_INDEX),
+        source_url=_text(values, source_index),
     )
 
 def parse_event_tsv(text: str) -> Iterable[GDELTEvent]:
