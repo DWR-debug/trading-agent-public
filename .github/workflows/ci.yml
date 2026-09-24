@@ -120,7 +120,7 @@ jobs:
           assert t042_prereg["universe"] == "validation_2026_09_24_volatility_managed_tsm"
           assert tuple(t042_prereg["symbols"]) == (
               "DLS", "DEM", "EES", "EWX", "HDV",
-              "SPHD", "VOOG", "VOOV", "OEF", "IWV"
+              "SCHA", "VOOG", "VOOV", "OEF", "IWV"
           )
           assert t042_prereg["requested_candles"] == 3500
           assert t042_prereg["coverage_gate"]["performance_allowed_before_coverage_pass"] is False
