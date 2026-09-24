@@ -34,7 +34,7 @@ Entnahme-/Kapitalpfad-Sensitivität, kein probabilistischer Forecast.
 Die Methodik wird durch aktuelle Retirement-Income-Forschung motiviert, in der
 Sequence-of-Returns-Risk und flexible Ausgabenansätze explizit berücksichtigt
 werden. Die dort publizierten Entnahmesätze werden nicht als Trading-Agent-
-Defaults übernommen. citeturn687841search9turn687841search36
+Defaults übernommen.
 
 Für die Suche nach Ertragsquellen bleibt die Literatur getrennt: Zeitreihen-
 momentum wurde über 58 liquide Futures aus Aktienindizes, Währungen,
