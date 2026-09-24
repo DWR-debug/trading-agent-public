@@ -169,6 +169,9 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
             "Fifteenth fully symbol-disjoint validation universe for a fixed "
             "long-only short-horizon mean-reversion control."
         ),
+        symbols=("EWC", "EWH", "EWI", "EWK", "EWN", "EWP", "EWY", "EWT"),
+        target_count=3500,
+    ),
     AssetUniverse(
         name="validation_2026_09_24_sixteenth_cross_asset_cs",
         priority=20,
@@ -177,9 +180,6 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
             "commodities, currencies and fixed income for 12-1 cross-sectional momentum."
         ),
         symbols=("DBA", "DBB", "FXA", "FXY", "MUB", "SHV", "EMB", "BWX"),
-        target_count=3500,
-    ),
-        symbols=("EWC", "EWH", "EWI", "EWK", "EWN", "EWP", "EWY", "EWT"),
         target_count=3500,
     ),
 )
