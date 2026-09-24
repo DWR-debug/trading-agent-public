@@ -80,7 +80,7 @@ jobs:
           ORCHESTRATOR_UNIVERSE: ${{ inputs.universe || 'benchmark' }}
         run: |
           set -euo pipefail
-          if [ "$GITHUB_EVENT_NAME" = "schedule" ]; then
+          if [ "$GITHUB_EVENT_NAME" = "schedule" ] || [ "$GITHUB_EVENT_NAME" = "push" ]; then
             python -m automation.research_orchestrator \
               --mode observe \
               --universe benchmark
