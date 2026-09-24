@@ -67,8 +67,6 @@ def _event_forward_returns(
     if origin_index < 0:
         return None
     horizon_index = next_index + 4
-    if horizon_index >= len(days):
-        return None
     origin = closes[days[origin_index]]
     five_day = (
         closes[days[horizon_index]] / origin - 1.0
