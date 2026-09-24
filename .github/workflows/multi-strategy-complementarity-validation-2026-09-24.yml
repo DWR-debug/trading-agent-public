@@ -140,6 +140,25 @@ jobs:
           }
 
           print("RESULT_INTEGRITY_OK")
+          for family in ("trend", "cross_sectional", "blend_50_50"):
+              base = report["scenarios"]["base"][family]
+              print(
+                  family,
+                  "RESEARCH_RETURN",
+                  base["research"]["period_return"],
+                  "RESEARCH_DD",
+                  base["research"]["max_drawdown_percent"],
+                  "RESEARCH_PF",
+                  base["research"]["profit_factor"],
+                  "HOLDOUT_RETURN",
+                  base["holdout"]["period_return"],
+                  "HOLDOUT_DD",
+                  base["holdout"]["max_drawdown_percent"],
+                  "HOLDOUT_PF",
+                  base["holdout"]["profit_factor"],
+                  "ROLLING_PF",
+                  base["rolling_summary"]["overall_profit_factor"],
+              )
           print("COMPLEMENTARITY_DIAGNOSTICS:", report["complementarity_diagnostics"])
           print("REPORT_FINGERPRINT:", stored)
           PY
