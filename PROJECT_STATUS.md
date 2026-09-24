@@ -31,57 +31,36 @@ Bezahlte Agenten-/API-Nutzung ist projektseitig deaktiviert. Agenten/Codex dürf
 
 ## Aktueller Research-Schritt — Trial 041
 
-T041 ist als **präregistrierter Portfolio-Risk-Control** vorbereitet. Die Hypothese verwendet
-eine fixe, kovarianzbewusste Minimum-Variance-Allokation zwischen zwei unveränderten Sleeves.
-Vor jeder Performanceauswertung müssen beide neuen, vollständig symbol-disjunkten Datenuniversen
-den Coverage-Preflight bestehen.
+T041 ist als **präregistrierter Portfolio-Risk-Control** vorbereitet und hat den vollständigen Coverage-Preflight bestanden.
 
-Trend-Leg: VONE, VONG, VONV, VOE, VOT, IWB, IUSG, IUSV  
-Cross-Sectional-Leg: IWS, IWP, IJS, IJJ, IJK
+Coverage-Workflow: `36062869642`  
+Artifact: `10834724131`  
+Artifact-SHA256: `f51fbc4bdc802fc2388d6516404c12b37fcf2232fe7b6d52aad99e9062ab2e74`
 
-Präregistrierte Regel:
+- Trend-Leg: 8/8 Symbole mit jeweils 3.500 Candles, gemeinsamer Kalender 3.500
+- Cross-Sectional-Leg: 5/5 Symbole mit jeweils 3.500 Candles, gemeinsamer Kalender 3.500
+- keine fehlenden Symbole
+- keine unzureichende Historie
+- keine Datenfehler
+- Trend-Coverage-Fingerprint: `ebc08e73d9fad83da343e2ed15289b4ed05d4774346fb409994989f166469bab`
+- Cross-Sectional-Coverage-Fingerprint: `091fdc69edec4541c39654fabf308d64bbb7b7b80a9861a2cbe5492cd8ba3bf8`
+
+T041 steht damit bei **COVERAGE_PASSED_PERFORMANCE_PENDING**. Die Performanceauswertung
+ist noch nicht erfolgt; insbesondere wurde kein Holdout zur Auswahl verwendet.
+
+Die präregistrierte Regel bleibt unverändert:
 - 63 vorherige gemeinsame Sleeve-Returns;
 - monatliche Neubestimmung;
-- Minimum-Variance-Gewicht nach der vorab fixierten Varianz-/Kovarianz-Formel;
-- Gewicht strikt auf 0 bis 100 % begrenzt;
-- keine Short-Positionen, kein Leverage, keine Parameter- oder Gewichtssuche.
-
-T041 ist aktuell **PREREGISTERED_COVERAGE_PENDING**. Es gibt noch keine neue
-Performanceevidenz und keine Holdout-Nutzung.
+- kovarianzbewusste Minimum-Variance-Allokation;
+- Gewicht strikt 0 bis 100 %;
+- kein Shorting und kein Leverage;
+- keine Parameter- oder Gewichtssuche.
 
 Safety:
 - PAPER_ONLY=True
 - LIVE_TRADING_ENABLED=False
 - orders_enabled=False
 - automatic_promotion=False
-
-## Aktueller Research-Schritt — Trial 040
-
-T040 wurde am 24.09.2026 nach bestandenem Coverage-Gate formal ausgewertet und als **BLOCKED / NO_PROMOTION_EVIDENCE** archiviert.
-
-- 12 Symbole, 3.520 Candles je Symbol, 3.500 gemeinsame Candles
-- 2.798 Research-Returnperioden / 700 blinder Holdout
-- Research Return: -33,96 %
-- Research Max-DD: 41,45 %
-- Research PF: 0,907
-- Holdout Return: -11,99 %
-- Holdout Max-DD: 17,08 %
-- Holdout PF: 0,923
-- 5/5 Research-Rolling-Fenster nicht profitabel
-- 1,5x-Kostenstress Holdout: -15,81 %
-- 2x-Kostenstress Holdout: -19,47 %
-- gegenüber der festen SMA-50/200-Kontrolle schlechter bei Research-Rendite, Research-DD, Research-PF, Holdout-Rendite und Holdout-PF
-- keine Parameteränderung, keine Holdout-Auswahl, keine Gate-Lockerung
-- keine Produktionseinbindung
-
-Die Network-Momentum-Variante wird deshalb **nicht nachoptimiert**. Die Evidenz wird als
-negativer Befund für genau diesen präregistrierten Mechanismus archiviert.
-
-### Nächster Forschungsschritt
-
-**Adversarial Failure-Diagnose**: rein ableitende Untersuchung der T040-Versagenssignatur und
-relevanter früherer salvageable Beobachtungen. Ziel ist Ursachenstrukturierung vor einer neuen
-Performancehypothese, ohne Parameter-/Asset-/Holdout-Auswahl.
 
 ## T039 Engine — technische Umsetzung
 
