@@ -132,6 +132,54 @@ Parameterraum, Gewichte, Gates und Produktionsstatus unverändert.
 Stand: 2026-09-24
 Basis: aktueller `master`-Stand nach PR #112 (Trial-021-Archivierung), PR #113 (Portfolio-/Execution-Foundation) und den zuvor integrierten Research-Governance-/Regime-Layern.
 
+## Infrastruktur-Checkpoint — Paper-only 30-Tage-Experiment-Harness — 2026-09-24
+
+Der technische Zielpfad für ein späteres autonomes 30-Tage-Experiment ist jetzt
+um einen fail-closed Paper-Harness ergänzt.
+
+### Implementiert
+
+- PR #129 gemerged
+- Merge-Commit: `00bf1c834b38e63ec0c6bd3993a2ef8d1344d3b7`
+- exakt eine bereits Evidence-eligible Strategy-ID pro Experiment
+- Evidence-Gate: nur `VALIDATED_PASS`
+- Holdout-Selektion blockiert den Lauf
+- exakt 30 Tagesreturns
+- Returns müssen bereits netto des deklarierten Kostenvertrags sein
+- atomarer Checkpoint nach jedem Tag
+- Resume nur bei identischem Evidence-/Return-/Kapital-Fingerprint
+- reproduzierbarer Abschlussbericht
+- 10 EUR als Default-Simulationskapital
+- vollständiger CI-Harness mit synthetischem Validierungsfall: grün
+
+Dauerhafte Dateien:
+- `automation/paper_30_day_experiment.py`
+- `tests/test_paper_30_day_experiment.py`
+- `docs/PAPER_30_DAY_EXPERIMENT.md`
+- `.github/workflows/paper-30-day-experiment-harness.yml`
+
+### Methodische Bedeutung
+
+Der Harness führt keine Strategieauswahl durch und ersetzt weder
+Marktdatenakquise noch einen Broker-/Execution-Layer. Er stellt die
+Kapital-/Checkpoint-/Evidence-Stufe bereit, sobald eine Strategie vorher
+unabhängig validiert wurde.
+
+Der aktuelle Fixed Candidate ist weiterhin **BLOCKED**. Deshalb wird derzeit
+kein 10-EUR-Echtgeld- oder Live-Experiment gestartet.
+
+### Nächste technische Stufe
+
+Vor einer späteren Echtgeldfreigabe sind noch mindestens:
+- ein tatsächlich evidence-eligible Kandidat;
+- verifizierte Markt-/Venue-Daten;
+- Mindestorder-/Gebühren-/Slippage-/Liquiditätsprüfung;
+- ein explizit freigegebener Live-Ausführungspfad;
+- eine separat dokumentierte Echtgeldfreigabe
+
+erforderlich.
+
+
 ## Gesamtstatus
 
 ### 1. Sicherheitszustand
