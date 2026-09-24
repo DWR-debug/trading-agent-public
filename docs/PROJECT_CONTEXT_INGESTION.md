@@ -7,6 +7,8 @@ ohne technische oder wissenschaftliche Tatsachen zu vermischen.
 
 ## Unterstützte Quellen
 
+Der bisher verfügbare Kontext ist in `docs/CHAT_CONTEXT_2026_09_24.md` als Ausgangsbestand dokumentiert.
+
 1. Chat-Evidenz, die in der aktuellen Unterhaltung zugänglich ist.
 2. Vorherige Projektzusammenfassungen oder Kontextinformationen, die in der Unterhaltung verfügbar sind.
 3. Vom Benutzer bereitgestellte Chat-Exporte, Transkripte oder relevante Ausschnitte.
