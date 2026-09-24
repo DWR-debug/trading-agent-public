@@ -511,7 +511,7 @@ def _research_hypothesis_check(
         "research_return_not_worse": (
             c_roll["total_net_return"] >= b_roll["total_net_return"]
         ),
-    )
+    }
     return {
         "checks": checks,
         "all_checks_passed": all(checks.values()),
