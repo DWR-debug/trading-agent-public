@@ -2304,6 +2304,126 @@
         "live_trading_enabled": false,
         "orders_enabled": false
       }
+    },
+    {
+      "trial_id": "T-2026-09-24-030",
+      "recorded_at": "2026-09-24",
+      "status": "archived_rejected",
+      "research_family": "sleeve_volatility_parity_confirmation",
+      "hypothesis": {
+        "text": "Monthly inverse-volatility parity between unchanged Trend and Cross-Sectional sleeves, using prior 63 completed sleeve returns, improves risk concentration without reducing holdout performance versus fixed 50/50."
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10825679094
+        ],
+        "artifact_digest": "sha256:cc46dfadb3581fab21012b651b857b32e06a43dc37399d45479423da899f2191",
+        "manifest_fingerprint": "9ef4c9fa58e6a8a573d0836379572d7a441a2fb5300fc4eca33155b2059cf224",
+        "fully_symbol_disjoint_validation_set": true,
+        "trend_symbols": [
+          "VV",
+          "VHT",
+          "VFH",
+          "VIS",
+          "VAW",
+          "VDE",
+          "VPU",
+          "VGT"
+        ],
+        "cross_sectional_symbols": [
+          "SPDW",
+          "SPMB",
+          "SPEM",
+          "SPTL",
+          "SPIP"
+        ],
+        "common_returns": 3498
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered single hypothesis; no holdout selection",
+        "selection_family_id": "sleeve-volatility-parity-confirmation-2026-09-24",
+        "selection_metric": "absolute gates plus non-worsening comparison against fixed 50/50 candidate"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 36040997311,
+        "artifact_id": 10825679094,
+        "artifact_sha256": "cc46dfadb3581fab21012b651b857b32e06a43dc37399d45479423da899f2191",
+        "report_fingerprint": "26cc96a1d7210a97443016f5374fccc2e1c466ce2eb1f6859ca778c9a3eefabe",
+        "code_commit_sha": "2018c30a4c3ad6afb01208861328666d1ec74b98",
+        "all_checks_passed": false,
+        "key_metrics": {
+          "fixed_research_return_percent": 32.69304886190834,
+          "fixed_research_drawdown_percent": 18.295815828244642,
+          "fixed_research_profit_factor": 1.0642074483997912,
+          "fixed_holdout_return_percent": 23.543481873667215,
+          "fixed_holdout_drawdown_percent": 12.373922346262834,
+          "fixed_holdout_profit_factor": 1.1484373029131294,
+          "parity_research_return_percent": 21.189031831906235,
+          "parity_research_drawdown_percent": 19.191053123266077,
+          "parity_research_profit_factor": 1.0464228676646035,
+          "parity_rolling_profit_factor": 1.0464228676646006,
+          "parity_average_rolling_drawdown_percent": 14.151271161543466,
+          "parity_oos_to_is_return_ratio": 1.1119654683518048,
+          "parity_holdout_return_percent": 23.561471704886916,
+          "parity_holdout_drawdown_percent": 12.319624838215715,
+          "parity_holdout_profit_factor": 1.1492958108036917,
+          "parity_total_return_holdout_percent": 30.17660226740855,
+          "parity_total_return_holdout_drawdown_percent": 11.447481327724917,
+          "parity_total_return_holdout_profit_factor": 1.1871711018661346,
+          "parity_stress_1_5x_holdout_return_percent": 22.466167462122844,
+          "parity_stress_2x_holdout_return_percent": 21.38043476559799
+        },
+        "gate_results": {
+          "research_return_positive": true,
+          "research_drawdown": false,
+          "research_profit_factor": false,
+          "rolling_profit_factor": false,
+          "rolling_profitable_window_ratio": true,
+          "rolling_average_drawdown": false,
+          "oos_to_is_return_ratio": true,
+          "holdout_return_positive": true,
+          "holdout_profit_factor": true,
+          "holdout_drawdown": false,
+          "stress_1_5x_nonnegative": true,
+          "stress_2x_nonnegative": true,
+          "total_return_sensitivity_nonnegative": true,
+          "research_return_not_below_fixed": false,
+          "research_drawdown_not_worse_vs_fixed": false,
+          "research_profit_factor_not_below_fixed": false,
+          "rolling_pf_not_below_fixed": false,
+          "rolling_profitable_ratio_not_below_fixed": true,
+          "rolling_average_drawdown_not_worse_vs_fixed": false,
+          "oos_to_is_not_below_fixed": true,
+          "holdout_return_not_below_fixed": true,
+          "holdout_pf_not_below_fixed": true,
+          "holdout_drawdown_not_worse_vs_fixed": true
+        }
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
     }
   ]
 }
