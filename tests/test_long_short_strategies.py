@@ -10,7 +10,7 @@ def test_sma_long_short_has_both_signed_states():
     signal = sma_50_200_long_short_signal(closes)
     assert signal[-1] == 1
 
-    down = tuple(list(closes[:200]) + [150.0 - i * 2 for i in range(20)])
+    down = tuple([200.0] * 200 + [60.0 - i * 2 for i in range(20)])
     signal_down = sma_50_200_long_short_signal(down)
     assert signal_down[-1] == -1
 
