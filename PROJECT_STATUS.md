@@ -507,7 +507,7 @@ Der Long-0x-Befund liegt nahe am Buy-and-Hold-Proxy und fällt bereits bei einem
 Bruchteil des Projektkosten-Basissatzes massiv ab. Short liefert bereits ohne
 Kosten einen negativen Holdout-Befund.
 
-Wi### 5. Gesamtfokus ab jetzt
+### 5. Gesamtfokus ab jetzt
 
 Die Gap-Reversal-Familie ist methodisch abgeschlossen:
 - Trials 018 und 019 scheiterten technisch an der 3.500-Candle-Datenhürde.
