@@ -643,6 +643,35 @@ positiv, beseitigt aber weder den Drawdown-Failure noch die OOS-Schwäche.
 Der Control wird nicht integriert. Die Failure-Diagnose ist deskriptiv; es wird
 keine Kausalität oder Übertragbarkeit auf die Literatur behauptet.
 
+### 2ac. Low-Volatility Cross-Sectional Control — Trial 024 — 2026-09-24
+
+Trial T-2026-09-24-024 wurde vollständig und reproduzierbar auf einem neuen,
+vollständig symbol-disjunkten U.S.-Aktienuniversum ausgeführt.
+
+- Workflow-Run: 36018203202
+- Artifact-ID: 10814949024
+- Report-Fingerprint: feb4376f1da051aa157efba098354ffce13ecc75969b4ded849dd90f8e9f1203
+- Manifest-Fingerprint: b8359acf7d532c6989dd41b31d6d8fdd836b3b1668c20b6fcadf3e2cfc0695da
+- Code-SHA des Research-Laufs: feead383cde51b310a535cbeb439a616bf0ec246
+- INTC, QCOM, AVGO, HON, LMT, RTX, CSX, NSC
+- 3.500 Candles/Asset, 3.498 Returns, Research/Holdout 2.798/700
+- vollständige Vorprüfungen und Ergebnisintegrität: grün
+- keine Parameter-/Threshold-/Asset-Suche, keine Holdout-Selektion, keine Orders
+
+Basis:
+- Research: +146,08%, DD 42,53%, PF 1,108, Rolling 5/5
+- Holdout: +46,03%, DD 18,54%, PF 1,175
+- OOS/Research-Ratio: 0,315
+- Low-Vol minus High-Vol: Research -3,17 bps/Tag; Holdout -10,40 bps/Tag
+- 1,5x Kostenstress Holdout: +45,81%
+- 2x Kostenstress Holdout: +45,59%
+
+Entscheidung: NO_SUPPORT / archived_rejected.
+
+Die Low-Vol-Charakteristik erfüllt zwar Return-, PF-, Rolling-, OOS/Research- und
+Kostenstress-Bedingungen, verfehlt aber die absoluten Drawdown-Gates und den
+Low-Vol-Edge bereits im Research sowie erneut im Holdout. Keine weitere
+Low-Vol-Suche oder Produktionsintegration.
 ### 3. Micro-Trading: aktueller Abschluss des 5m-Controls
 
 PR #39 und der anschließende CI-Fix PR #40 sind gemerged.
