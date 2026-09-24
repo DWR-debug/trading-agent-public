@@ -13,7 +13,6 @@ def test_queue_is_deterministic_and_tracks_current_priority():
 
 def test_queue_rejects_invalid_transition():
     queue = default_research_queue()
-    queue = default_research_queue()
     blocked = queue.all()[0]
     assert blocked.status == "BLOCKED"
     with pytest.raises(ResearchQueueError):
