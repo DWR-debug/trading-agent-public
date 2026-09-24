@@ -1,0 +1,59 @@
+name: Trial 018 Event Risk-Off Overlay
+
+on:
+  push:
+    branches:
+      - trial-018-event-riskoff-2026-09-24
+
+permissions:
+  contents: read
+
+jobs:
+  trial:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+      - name: Paper-Only-Safety
+        run: |
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+      - name: Trial 018 Q1 Research / Q2 Holdout
+        run: |
+          python -m automation.trial_018_event_riskoff --start "2025-01-01" --end "2025-06-30"
+      - name: Ergebnisvertrag
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path("research/trial_018_event_riskoff/report.json").read_text(encoding="utf-8"))
+          assert r["research_only"] is True
+          assert r["selection_used"] is False
+          assert r["parameter_search_used"] is False
+          assert r["fixed_policy"]["gross_exposure"] == 1.0
+          assert r["fixed_policy"]["net_exposure"] == 0.0
+          assert r["point_in_time_contract"]["signal_available_before_target_open"] is True
+          assert r["safety"] == {"paper_only": True, "live_trading_enabled": False, "orders_enabled": False}
+          print("TRIAL_018_REPORT_OK")
+          print("SUMMARY:", json.dumps(r["summary"], sort_keys=True))
+          PY
+      - name: Kompaktes Artefakt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trial-018-event-riskoff-${{ github.sha }}
+          path: research/trial_018_event_riskoff/report.json
+          if-no-files-found: warn
+          retention-days: 30
