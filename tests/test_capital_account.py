@@ -35,7 +35,7 @@ def test_unrealized_equity_gain_does_not_create_distributable_profit():
 def test_contribution_increases_protected_capital():
     account = CapitalAccount()
     account.record_contribution(250.0)
-    account.record_realized_profit(50.0)
+    account.record_realized_pnl(50.0)
     account.update_equity(800.0)
 
     assert account.snapshot().contributed_capital_eur == pytest.approx(750.0)
