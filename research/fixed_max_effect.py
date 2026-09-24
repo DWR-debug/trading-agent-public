@@ -39,8 +39,13 @@ def previous_month_max(
     if len(timestamps) != len(daily_returns):
         raise ValueError("Timestamps and daily returns must have equal length.")
     by_month: dict[tuple[int, int], list[float]] = defaultdict(list)
-    for timestamp, value in zip(timestamps, daily_returns):
-        by_month[_month_key(timestamp)].append(value)
+    for index, (timestamp, value) in enumerate(zip(timestamps, daily_returns)):
+        if index == 0:
+            continue
+        previous_month = _month_key(timestamps[index - 1])
+        current_month = _month_key(timestamp)
+        if current_month == previous_month:
+            by_month[current_month].append(value)
 
     ordered_months = sorted(by_month)
     result: dict[tuple[int, int], float] = {}
