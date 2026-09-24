@@ -16,6 +16,8 @@ Unterstützt:
 
 from dataclasses import dataclass
 
+from execution.cost_contract import ResearchExecutionCostContract
+
 
 @dataclass
 class Position:
@@ -34,9 +36,16 @@ class PaperBroker:
         initial_capital: float = 500.0,
         fee_rate: float = 0.0005,
         slippage_rate: float = 0.0005,
+        *,
+        cost_contract: ResearchExecutionCostContract | None = None,
     ):
         if initial_capital <= 0:
             raise ValueError("Startkapital muss größer als 0 sein.")
+
+        if cost_contract is not None:
+            cost_contract.validate()
+            fee_rate = cost_contract.fee_bps / 10_000.0
+            slippage_rate = cost_contract.slippage_bps / 10_000.0
 
         self.initial_capital = initial_capital
         self.cash = initial_capital
