@@ -1,7 +1,7 @@
 # Trading Agent — aktueller Gesamtcheckpoint
 
 Stand: 2026-09-24
-Basis: aktueller `master`-Stand nach PR #95 (siebte Komplementaritätsvalidierung), PR #96 (Evidence Governance) und PR #97 (Regime-Feature-Layer).
+Basis: aktueller `master`-Stand nach PR #112 (Trial-021-Archivierung), PR #113 (Portfolio-/Execution-Foundation) und den zuvor integrierten Research-Governance-/Regime-Layern.
 
 ## Gesamtstatus
 
@@ -414,11 +414,14 @@ Methodische Konsequenz: Dies ist weder ein positives noch ein negatives Alpha-Er
 Trial T-2026-09-24-021 wurde auf einem vollständig symbol-disjunkten U.S.-Aktienuniversum vollständig und reproduzierbar ausgeführt. Die Daten-, Safety-, Präregistrations- und Integritätsprüfungen bestanden; der eigentliche Research-/Holdout-Control wurde vollständig gerechnet.
 
 - Workflow-Run: 36010070504
+- Artifact-ID: 10812385942
+- Artifact-Digest: sha256:c00a489e5604a83e5f1d66123ff612d0f0fba92170f355870721f507c9cfad43
 - 8 Assets: JNJ, KO, PG, WMT, XOM, CVX, MCD, PEP
 - 3.500 Candles/Asset, 3.498 Returns, Research/Holdout 2.798/700
 - vollständige Testsuite: 617 bestanden
 - Paper-only, Universums-Disjointness, Präregistrierung und Ergebnisintegrität: bestanden
 - Report-Fingerprint: 8af136b92c4c114d16fe6951d609f20939c15c840d9952c878e5de15d9cdb2da
+- Manifest-Fingerprint: 181895cab3682cf89694d085f71802b802b183e7ffa02c9cfa64d04ffe07cdc4
 - Code-Commit: 24a47f77306d76b930b81a73e96ed5748d1bf88d
 
 ### Fachlicher Befund
@@ -504,23 +507,28 @@ Der Long-0x-Befund liegt nahe am Buy-and-Hold-Proxy und fällt bereits bei einem
 Bruchteil des Projektkosten-Basissatzes massiv ab. Short liefert bereits ohne
 Kosten einen negativen Holdout-Befund.
 
-Wi### 5. Gesamtfokus ab jetzt
+### 5. Gesamtfokus ab jetzt
 
 Die Gap-Reversal-Familie ist methodisch abgeschlossen:
 - Trials 018 und 019 scheiterten technisch an der 3.500-Candle-Datenhürde.
-- Trial 020 scheiterte ebenfalls technisch bei 3.322 gemeinsamen Candles.
+- Trial 020 scheiterte technisch bei 3.322 gemeinsamen Candles.
 - Trial 021 lieferte einen vollständigen negativen Research-/Holdout-Befund.
 - Es werden keine weiteren Gap-Reversal-Varianten, Schwellenwerte oder Asset-Suchen
   aus diesem Befund abgeleitet.
 
-Der nächste Schwerpunkt liegt daher auf der Portfolio-/Execution-Schicht:
-1. opt-in ExecutionCostModel gegen bestehende Broker-/Backtest-Semantik abgleichen,
-2. Portfolio-Allocator auf die fixierten Trend-/Cross-Sectional-Sleeves anwenden,
-3. erst danach eine einzelne, vorab definierte Portfolio-Hypothese auf einem unabhängigen
-   Datensatz validieren.
+Die technische Portfolio-/Execution-Foundation ist in master integriert:
+- deterministische Portfolio-Constraint-Prüfung
+- explizites opt-in Kostenmodell
+- Round-Trip- und Short-Borrow-Kosten
+- keine Änderung der bisherigen Broker-/Backtest-Defaults
 
-Bestehende Strategien, Parameter, Gewichte und Gates bleiben bis zu einer expliziten
-Research-Validierung unverändert.
+Der nächste fachliche Schritt ist eine einzelne, präregistrierte Portfolio-Hypothese
+auf einem neuen, vollständig symbol-disjunkten Datensatz. Dabei bleiben die
+zugrunde liegenden Trend-/Cross-Sectional-Signale unverändert; nur die
+Portfolioaggregation wird als Forschungsfrage geprüft.
+
+Parallel bleiben Provenienz, Recovery, Paper-only-Sicherheit und dauerhafte
+Checkpoint-Archivierung Pflichtbestandteile.
 
 ## Sicherheitsstatus
 
@@ -529,30 +537,6 @@ Research-Validierung unverändert.
 - keine Live-Ausführung
 - keine Research-Orders
 - keine Gate-Lockerung
-
-n stark erscheinen, aber Kosten, Turnover,
-Drawdown oder unabhängige Replikation entfernen den Robustheitsnachweis.
-Deshalb bleibt Micro-Trading ein Forschungszweig und wird nicht in die
-Tagesstrategie integriert.
-
-### 5. Gesamtfokus ab jetzt
-
-Die Priorität liegt wieder klar auf der täglichen Hauptstrategie und deren
-Robustheitsengpass. Die bisherigen Micro-Experimente werden als abgeschlossene
-Forschungsfamilie behandelt; kein weiteres Micro-Tuning wird aus den bisherigen
-Ergebnissen abgeleitet.
-
-Der nächste fachliche Arbeitsschritt ist:
-
-1. die vier verbliebenen Failure-Gates des unabhängigen Tageskandidaten weiter
-   zu zerlegen,
-2. daraus nur bei reproduzierbarem, vorab formulierbarem Kontrast genau ein
-   gepaartes Risiko-/Architektur-Gegenexperiment abzuleiten,
-3. anschließend eine weitere unabhängige Validierung statt Parameter-Tuning zu
-   verwenden.
-
-Parallel bleiben Provenienz, Recovery und dauerhafte Checkpoint-Archivierung
-technische Pflichtbestandteile.
 
 ## Literaturreferenz für den Micro-Control
 
