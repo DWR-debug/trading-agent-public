@@ -216,6 +216,7 @@ def run_validation(
     from automation.candidate_validation_50_50_vol_budget import load_bars
 
     prices: dict[str, dict[date, float]] = {}
+    adjusted_price_fingerprints: dict[str, str] = {}
     for item in manifest["datasets"]:
         symbol = item["symbol"]
         bars = load_bars(
@@ -227,13 +228,19 @@ def run_validation(
             or dataset_fingerprint(bars) != item["fingerprint"]
         ):
             raise ValueError(f"{symbol}: dataset fingerprint mismatch")
-        prices[symbol] = {
-            bar.timestamp.date(): bar.close
-            for bar in bars
-        }
+        adjusted = _yahoo_daily(
+            symbol,
+            RESEARCH_START - timedelta(days=7),
+            HOLDOUT_END + timedelta(days=7),
+        )
+        prices[symbol] = adjusted
+        adjusted_price_fingerprints[symbol] = _fp(
+            sorted((day.isoformat(), value) for day, value in adjusted.items())
+        )
 
+    event_feature_start = RESEARCH_START - timedelta(days=7)
     features, event_parse_stats = _event_features(
-        RESEARCH_START,
+        event_feature_start,
         HOLDOUT_END,
         event_raw_dir,
     )
@@ -277,10 +284,12 @@ def run_validation(
             "market_assets": list(ASSETS),
             "market_candles_per_asset": TARGET_COUNT,
             "market_manifest_fingerprint": manifest.get("manifest_fingerprint"),
+            "adjusted_price_series_fingerprints": adjusted_price_fingerprints,
             "event_research_start": RESEARCH_START.isoformat(),
             "event_research_end": RESEARCH_END.isoformat(),
             "event_holdout_start": HOLDOUT_START.isoformat(),
             "event_holdout_end": HOLDOUT_END.isoformat(),
+            "event_feature_start": event_feature_start.isoformat(),
             "fully_symbol_disjoint_validation_set": True,
         },
         "policy": {
