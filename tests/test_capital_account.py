@@ -15,6 +15,7 @@ def test_initial_capital_is_500_eur():
 def test_only_realized_profit_above_capital_base_is_distributable():
     account = CapitalAccount()
     account.record_realized_profit(100.0)
+    account.update_equity(600.0)
 
     assert account.distributable_profit_eur == pytest.approx(100.0)
 
@@ -35,6 +36,7 @@ def test_contribution_increases_protected_capital():
     account = CapitalAccount()
     account.record_contribution(250.0)
     account.record_realized_profit(50.0)
+    account.update_equity(800.0)
 
     assert account.snapshot().contributed_capital_eur == pytest.approx(750.0)
     assert account.snapshot().equity_eur == pytest.approx(800.0)
