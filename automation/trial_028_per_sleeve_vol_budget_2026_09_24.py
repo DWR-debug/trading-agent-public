@@ -578,7 +578,7 @@ def run_validation(
             net = (
                 0.5 * trend_scale * trend_adjusted
                 + 0.5 * cs_scale * cs_adjusted
-                - (FEE_RATE + SLIPPAGE_RATE) * (
+                - (FEE_RATE + SLIPPAGE_RATE) * multiplier * (
                     0.5 * tr["scaled_turnover"]
                     + 0.5 * cr["scaled_turnover"]
                 )
