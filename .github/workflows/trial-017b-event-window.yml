@@ -1,0 +1,63 @@
+name: Trial 017b Event Window Control
+
+on:
+  push:
+    branches:
+      - trial-017b-event-window-2026-09-24
+
+permissions:
+  contents: read
+
+jobs:
+  control:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+      - name: Paper-Only-Safety
+        run: |
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+      - name: Trial 017b Q1 Control
+        run: |
+          python -m automation.trial_017b_event_window_control --start "2025-01-01" --end "2025-03-31"
+      - name: Ergebnisvertrag
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path("research/trial_017b_event_window/report.json").read_text(encoding="utf-8"))
+          assert r["trial_id"] == "017b"
+          assert r["research_only"] is True
+          assert r["selection_used"] is False
+          assert r["parameter_search_used"] is False
+          assert r["point_in_time_contract"]["same_target_market_return_reused_for_multiple_event_dates"] is False
+          assert r["safety"] == {"paper_only": True, "live_trading_enabled": False, "orders_enabled": False}
+          assert len(r["observations"]) == len({x["target_market_day"] for x in r["observations"]})
+          assert r["summary"]["qualifying_event_windows"]["observation_count"] > 0
+          assert r["summary"]["no_qualifying_event_windows"]["observation_count"] > 0
+          print("TRIAL_017B_REPORT_OK")
+          print("OBSERVATIONS:", len(r["observations"]))
+          print("EVENT_WINDOWS:", r["summary"]["qualifying_event_windows"]["observation_count"])
+          print("NO_EVENT_WINDOWS:", r["summary"]["no_qualifying_event_windows"]["observation_count"])
+          PY
+      - name: Artefakte
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trial-017b-event-window-${{ github.sha }}
+          path: research/trial_017b_event_window/
+          if-no-files-found: warn
+          retention-days: 30
