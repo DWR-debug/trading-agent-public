@@ -130,10 +130,14 @@ def _research_metrics(simulated: list[dict[str, Any]]) -> dict[str, Any]:
         "research_de_risk_fraction": sum(
             row["scale"] < 1.0 for row in research_rows
         ) / RESEARCH_COUNT,
-        "downside_vol_zero_fraction": sum(
-            row["downside_vol_estimate"] == 0.0
-            for row in research_rows
-        ) / RESEARCH_COUNT,
+        "downside_vol_zero_fraction": (
+            sum(
+                row["downside_vol_estimate"] == 0.0
+                for row in research_rows
+            ) / RESEARCH_COUNT
+            if all("downside_vol_estimate" in row for row in research_rows)
+            else None
+        ),
     }
 
 
