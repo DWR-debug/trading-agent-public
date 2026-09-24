@@ -17,6 +17,7 @@ from automation.coverage_preflight import run_preflight
 from automation.live_market_observer import observe_universe
 from automation.network_momentum_lab import run_trial as run_t039_trial
 from automation.coverage_candidate_discovery import run_discovery
+from automation.adversarial_failure_diagnosis import write_report as write_failure_diagnosis
 from automation.one_command_research import run_universe
 
 
@@ -121,6 +122,20 @@ def run(
             ),
             run_fingerprint=report["fingerprint"],
         )
+    elif mode == "diagnose_failure":
+        report = write_failure_diagnosis(
+            output_path=(
+                root
+                / "diagnostics"
+                / "t040_failure_diagnosis.json"
+            ),
+        )
+        snapshot = _state_snapshot(
+            mode=mode,
+            universe="T040-FAILURE-DIAGNOSIS",
+            status=report["status"],
+            run_fingerprint=report["fingerprint"],
+        )
     elif mode == "research":
         if universe in PREREGISTRATIONS:
             preregistration = _preregistration_for(universe)
@@ -171,7 +186,7 @@ def run(
                 run_fingerprint=report.get("run_manifest", {}).get("run_fingerprint"),
             )
     else:
-        raise ValueError("mode must be observe, preflight, discover_coverage, or research")
+        raise ValueError("mode must be observe, preflight, discover_coverage, diagnose_failure, or research")
 
     path = root / universe / "orchestrator_state.json"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -184,7 +199,7 @@ def run(
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=("observe", "preflight", "discover_coverage", "research"), required=True)
+    parser.add_argument("--mode", choices=("observe", "preflight", "discover_coverage", "diagnose_failure", "research"), required=True)
     parser.add_argument("--universe", default=DEFAULT_UNIVERSE)
     parser.add_argument("--output-root", default="research/runs")
     parser.add_argument("--total", type=int, default=None)
