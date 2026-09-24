@@ -86,41 +86,24 @@ def test_consensus_requires_three_of_four_for_replication():
 
 
 def test_consensus_is_inconclusive_below_replication_threshold():
-    cases = {
-        "validation_1": {
+    def case(rebound=False, reversal=False, combined=False):
+        return {
             "analysis": {
                 "case_flags": {
-                    "rebound_enriched": True,
-                    "cs_reversal_enriched": False,
-                    "combined_enriched": False,
+                    "rebound_enriched": rebound,
+                    "cs_reversal_enriched": reversal,
+                    "combined_enriched": combined,
                 }
             }
-        },
-        "validation_2": {
-            "analysis": {
-                "case_flags": {
-                "rebound_enriched": True,
-                "cs_reversal_enriched": False,
-                "combined_enriched": False,
-            }
-        },
-        "validation_3": {
-            "analysis": {
-                "case_flags": {
-                "rebound_enriched": False,
-                "cs_reversal_enriched": False,
-                "combined_enriched": False,
-            }
-        },
-        "validation_4": {
-            "analysis": {
-                "case_flags": {
-                "rebound_enriched": False,
-                "cs_reversal_enriched": False,
-                "combined_enriched": False,
-            }
-        },
+        }
+
+    cases = {
+        "validation_1": case(rebound=True),
+        "validation_2": case(rebound=True),
+        "validation_3": case(),
+        "validation_4": case(),
     }
-    assert _consensus(cases)["interpretation"] == (
+    result = _consensus(cases)
+    assert result["interpretation"] == (
         "no_replicated_reversal_rebound_state"
     )
