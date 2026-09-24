@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "updated": "2026-09-24",
+  "repository": "DWR-debug/trading-agent-public",
+  "documents": {
+    "project_context": "docs/PROJECT_CONTEXT.md",
+    "chat_context_ingestion": "docs/PROJECT_CONTEXT_INGESTION.md",
+    "research_archaeology": "docs/research_archaeology_2026_09_24.md"
+  },
+  "source_precedence": {
+    "technical_truth": "public master",
+    "evidence_truth": "research/evidence/trial_ledger.json + checkpoints + reports + workflow/artifact provenance",
+    "project_intent": "PROJECT_CONTEXT.md + imported chat context",
+    "current_work_state": "PROJECT_STATUS.md + research queue"
+  },
+  "chat_import": {
+    "full_account_history_automatically_available": false,
+    "supported_sources": [
+      "current conversation context",
+      "available prior project context/summaries",
+      "user-provided exports/transcripts",
+      "GitHub PR/issue discussions"
+    ],
+    "classification": [
+      "TECHNICAL_FACT",
+      "PROJECT_DECISION",
+      "RESEARCH_HYPOTHESIS",
+      "RESEARCH_EVIDENCE",
+      "DESIGN_PRINCIPLE",
+      "IDEA_ONLY"
+    ]
+  },
+  "archaeology_status": "pre-cleanup read-only completed for recent formal evidence; formal trial records unchanged",
+  "salvageable_observations": [
+    "T-2026-09-24-022",
+    "T-2026-09-24-023",
+    "T-2026-09-24-025",
+    "T-2026-09-24-027",
+    "T-2026-09-24-028"
+  ],
+  "data_quality_trials": [
+    "T-2026-09-24-029",
+    "T-2026-09-24-032",
+    "T-2026-09-24-033"
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false
+  }
+}
