@@ -28,7 +28,11 @@ def test_fixed_downside_volatility_contract():
 def test_downside_vol_uses_negative_returns_only_and_zero_threshold():
     history = [-0.01, 0.02, -0.02, 0.0]
     result = _downside_vol(history * 16, 63)
-    expected = math.sqrt((16 * (0.01**2 + 0.02**2)) / 63.0) * math.sqrt(252.0)
+    sample = (history * 16)[-63:]
+    expected = (
+        math.sqrt(sum(value * value for value in sample if value < 0.0) / 63.0)
+        * math.sqrt(252.0)
+    )
     assert math.isclose(result, expected, rel_tol=0, abs_tol=1e-15)
 
 
