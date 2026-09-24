@@ -97,7 +97,9 @@ jobs:
           text = Path("docs/multi_strategy_complementarity_validation_2026_09_24_preregistration.md").read_text(encoding="utf-8")
           for token in ("T-2026-09-24-011", "3.500", "2798", "700", "50/50", "PAPER_ONLY=True"):
               assert token in text
-          missing = [token for token in ("T-2026-09-24-011", "3.500", "2798", "700", "50/50", "PAPER_ONLY=True") if token not in text]\n          assert not missing, f"Missing preregistration tokens: {missing}"\n          print("PREREGISTRATION_VERIFIED")
+          missing = [token for token in ("T-2026-09-24-011", "3.500", "2798", "700", "50/50", "PAPER_ONLY=True") if token not in text]
+          assert not missing, f"Missing preregistration tokens: {missing}"
+          print("PREREGISTRATION_VERIFIED")
           PY
 
       - name: Siebte Komplementaritätsvalidierung ausführen
