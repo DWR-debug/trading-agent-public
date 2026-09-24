@@ -9,6 +9,8 @@ Kostenstress noch positiv ist?
 
 ## Einzige Hypothese
 
+Trial-ID: EVENT-ALPHA-2026-09-24-001
+
 Auf einem neuen, vollständig symbol-disjunkten Marktuniversum wird ausschließlich
 folgende Regel geprüft:
 
@@ -27,7 +29,10 @@ beiden bereits festgelegten Bedingungen vorliegt:
    ein materialer Konflikt.
 
 Die Ereignisaggregation erfolgt ausschließlich aus bereits abgeschlossenen
-GDELT-Daten. Die Zielrendite ist Previous-Close -> Target-Close.
+GDELT-Daten. Das Eventfenster umfasst den vorherigen Markttag inklusive bis
+zum Zielhandelstag exklusiv, damit Freitag-/Wochenendereignisse in den
+Montagszustand eingehen können. Die Zielrendite ist weiterhin Previous-Close
+-> Target-Close und wird niemals als Event-Feature verwendet.
 
 ## Daten
 
