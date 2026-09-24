@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "trial_id": "T-2026-09-24-022",
+  "status": "archived_rejected",
+  "workflow_run_id": 36012719190,
+  "artifact_id": 10813113637,
+  "artifact_sha256": "a2419c933b4f0d84adf4cd7e187deb1bfa4261691bffa12f1dddf829bbeb1ed7",
+  "report_fingerprint": "feeb659b4c0ac59082e333200327e1b44407902c6f69e5fd72f75dd9c16c4313",
+  "code_commit_sha": "757da1ba764db79c9c602f6f5cd71f035cbbecf2",
+  "trend_manifest_fingerprint": "e102276bb387ca7174271c663402d17f445d77fcd3cde23d0e54854b807ab657",
+  "cs_manifest_fingerprint": "2a4dd8c6d67041c388fb41518faf6d16d68e8d785356b322e8380de5f69d72ab",
+  "symbols": {
+    "trend": [
+      "IBM",
+      "GE",
+      "CAT",
+      "MMM",
+      "HD",
+      "LOW",
+      "UNP",
+      "NKE"
+    ],
+    "cross_sectional": [
+      "BAC",
+      "JPM",
+      "GS",
+      "MS",
+      "C"
+    ]
+  },
+  "return_count": {
+    "total": 3498,
+    "research": 2798,
+    "holdout": 700
+  },
+  "decision": "NO_SUPPORT",
+  "dynamic": {
+    "research_return_percent": 103.89593951927733,
+    "research_drawdown_percent": 42.927390164913895,
+    "research_profit_factor": 1.0899192281764745,
+    "holdout_return_percent": 100.51790518436871,
+    "holdout_drawdown_percent": 23.828610096377613,
+    "holdout_profit_factor": 1.2730248430056925,
+    "rolling_profitable_windows": 4
+  },
+  "fixed_50_50": {
+    "research_return_percent": 121.72883758632143,
+    "research_drawdown_percent": 41.28938399816662,
+    "research_profit_factor": 1.0934127675413032,
+    "holdout_return_percent": 114.9172501482314,
+    "holdout_drawdown_percent": 24.871436700003425,
+    "holdout_profit_factor": 1.2890922663828694
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false
+  }
+}

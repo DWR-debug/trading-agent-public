@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-24T16:10:00+02:00",
+  "generated_at": "2026-09-24T16:30:00+02:00",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -1475,6 +1475,118 @@
           "holdout_return_percent": -98.55823118083075,
           "holdout_profit_factor": 0.05417177411293265,
           "holdout_max_drawdown_percent": 98.55961043817936
+        }
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-022",
+      "recorded_at": "2026-09-24T16:30:00+02:00",
+      "status": "archived_rejected",
+      "research_family": "portfolio_allocation",
+      "hypothesis": {
+        "text": "Eine feste, lagged 63-Sessionen-Inverse-Volatilitäts-Allokation zwischen den bereits etablierten Trend- und Cross-Sectional-Momentum-Sleeves verbessert die robuste Portfolioqualität gegenüber der fixen 50/50-Referenz ohne Return/PF-Verschlechterung."
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10813113637
+        ],
+        "artifact_digest": "sha256:a2419c933b4f0d84adf4cd7e187deb1bfa4261691bffa12f1dddf829bbeb1ed7",
+        "manifest_fingerprints": {
+          "trend": "e102276bb387ca7174271c663402d17f445d77fcd3cde23d0e54854b807ab657",
+          "cross_sectional": "2a4dd8c6d67041c388fb41518faf6d16d68e8d785356b322e8380de5f69d72ab"
+        },
+        "fully_symbol_disjoint_validation_sets": true,
+        "trend_symbols": [
+          "IBM",
+          "GE",
+          "CAT",
+          "MMM",
+          "HD",
+          "LOW",
+          "UNP",
+          "NKE"
+        ],
+        "cross_sectional_symbols": [
+          "BAC",
+          "JPM",
+          "GS",
+          "MS",
+          "C"
+        ],
+        "aligned_common_returns": 3498
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered single portfolio hypothesis; no holdout selection",
+        "selection_family_id": "portfolio-allocation-risk-parity-2026-09-24",
+        "selection_metric": "fixed absolute gates plus six non-worsening checks vs 50/50"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 36012719190,
+        "artifact_id": 10813113637,
+        "artifact_sha256": "a2419c933b4f0d84adf4cd7e187deb1bfa4261691bffa12f1dddf829bbeb1ed7",
+        "report_fingerprint": "feeb659b4c0ac59082e333200327e1b44407902c6f69e5fd72f75dd9c16c4313",
+        "code_commit_sha": "757da1ba764db79c9c602f6f5cd71f035cbbecf2",
+        "all_checks_passed": false,
+        "key_metrics": {
+          "dynamic_research_return_percent": 103.89593951927733,
+          "dynamic_research_drawdown_percent": 42.927390164913895,
+          "dynamic_research_profit_factor": 1.0899192281764745,
+          "dynamic_holdout_return_percent": 100.51790518436871,
+          "dynamic_holdout_drawdown_percent": 23.828610096377613,
+          "dynamic_holdout_profit_factor": 1.2730248430056925,
+          "dynamic_rolling_profitable_windows": 4,
+          "dynamic_oos_to_is_ratio": 0.967486368085811,
+          "dynamic_holdout_turnover": 17.1844472204604,
+          "dynamic_holdout_allocation_turnover": 4.966544804282975,
+          "fixed_research_return_percent": 121.72883758632143,
+          "fixed_research_drawdown_percent": 41.28938399816662,
+          "fixed_research_profit_factor": 1.0934127675413032,
+          "fixed_holdout_return_percent": 114.9172501482314,
+          "fixed_holdout_drawdown_percent": 24.871436700003425,
+          "fixed_holdout_profit_factor": 1.2890922663828694
+        },
+        "gate_results": {
+          "research_return_positive": true,
+          "research_drawdown": false,
+          "research_profit_factor": false,
+          "rolling_profitable_window_ratio": true,
+          "oos_to_is_return_ratio": true,
+          "holdout_return_positive": true,
+          "holdout_profit_factor": true,
+          "holdout_drawdown": false,
+          "stress_1_5x_nonnegative": true,
+          "stress_2x_nonnegative": true,
+          "research_return_not_below_50_50": false,
+          "research_drawdown_not_above_50_50": false,
+          "research_profit_factor_not_below_50_50": false,
+          "holdout_return_not_below_50_50": false,
+          "holdout_drawdown_not_above_50_50": true,
+          "holdout_profit_factor_not_below_50_50": false
         }
       },
       "safety": {
