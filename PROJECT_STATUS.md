@@ -2709,7 +2709,7 @@ reichen nicht für eine Promotion.
 
 ### Synchronisationsstand
 
-Der aktuelle Master ist jetzt `dd53156f8094cdb40517703c0274915ae00cf2d8`; Trial 031 ist in
+Der Master enthält Trial 031 und dessen vollständige Archivierung; der exakte aktuelle HEAD wird direkt aus dem GitHub-Master-Ref gelesen. Trial 031 ist in
 `research/evidence/trial_ledger.json`, in einem dauerhaften Result-Checkpoint
 und in der Projektdokumentation archiviert.
 
@@ -2731,3 +2731,49 @@ unverändert.
 - PAPER_ONLY=True
 - LIVE_TRADING_ENABLED=False
 - keine Orders
+
+
+## Aktueller Forschungsprozess — Trial 032 Coverage Preflight — 2026-09-24
+
+Trial T-2026-09-24-032 ist **noch nicht präregistriert**. Vor der Präregistrierung wurde zunächst ausschließlich die Datenabdeckung geprüft.
+
+### Erster Preflight-Versuch
+
+- Branch: `preflight/trial-032-residual-momentum-2026-09-24`
+- Workflow: `36043662320`
+- 671 Tests: grün
+- Paper-only-Sicherheit: grün
+- Universe-Disjunktheit: grün
+- Coverage-Stopp: `PBS` lieferte über den produktiven Yahoo-Chart-Datenpfad HTTP 404
+- keine Performanceauswertung
+- keine Holdout-Nutzung
+- keine Orders
+
+Der Fehler ist eine Datenverfügbarkeits-/Tickerfrage und wird nicht durch Lockerung des Datenvertrags umgangen.
+
+### Korrektur vor Präregistrierung
+
+`PBS` wurde gegen `PSJ` ersetzt. `PSJ` wurde laut Yahoo-/Zacks-Quelle bereits am 23.06.2005 aufgelegt und ist damit grundsätzlich alt genug für die geforderte Historie; die endgültige Zulassung erfolgt ausschließlich durch den erneuten Coverage-Preflight.
+
+- Retry-Commit: `462a3ed1accf0175f100b3587c075e72b11a4fb8`
+- neuer Coverage-Workflow: `36043780167`
+- Status beim letzten Check: **queued**
+- keine Präregistrierung vor bestandenem Retry
+
+### Hypothesenbasis für Trial 032
+
+Die fachliche Kandidatenfamilie ist **Residual Momentum**: Cross-Sectional-Momentum wird nicht anhand der Rohtrendrendite, sondern anhand um einen breiten Markt bereinigter Renditekomponenten gerankt. Die Literatur berichtet, dass residualisiertes Momentum gegenüber konventionellem Total-Return-Momentum robustere bzw. risiko-adjustiertere Eigenschaften zeigen kann; diese Literatur dient ausschließlich als Hypothesenmotivation, nicht als Nachweis für ETFs oder unser konkretes Portfolio.
+
+Geplanter unveränderter Architekturrahmen nach bestandenem Coverage-Preflight:
+
+- 50/50 Trend + Cross-Sectional
+- bestehende SMA-50/200-Trend-Sleeve
+- Top-2 long-only CS
+- 63-Sessionen-/10%-Volatilitätsbudget
+- 10 bps Fee + 5 bps Slippage
+- 1,5x-/2x-Kostenstress
+- 2.798 Research / 700 blinder Holdout
+- keine Parameter-, Threshold- oder Varianten-Suche
+- keine Orders
+
+Die geplante Intervention wird vor Präregistrierung nochmals auf PIT-Korrektheit und Datenverfügbarkeit geprüft.
