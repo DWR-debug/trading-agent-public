@@ -6,12 +6,13 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: Beobachtung oder formaler Research-Lauf
+        description: Beobachtung, T039-Coverage-Preflight oder formaler Research-Lauf
         required: true
         default: observe
         type: choice
         options:
           - observe
+          - preflight
           - research
       universe:
         description: Research-Universum
@@ -24,6 +25,7 @@ on:
           - european_volatile
           - benchmark
           - cross_asset_trend
+          - validation_2026_09_24_network_momentum_t039
   push:
     branches: [master]
     paths:
@@ -32,6 +34,7 @@ on:
       - "automation/one_command_research.py"
       - "automation/research_workflow.py"
       - "research/**"
+      - "docs/preregistration_trial_039_network_momentum_2026_09_24.md"
       - "validation/**"
       - "backtesting/**"
       - "optimization/**"
@@ -77,9 +80,18 @@ jobs:
           ORCHESTRATOR_UNIVERSE: ${{ inputs.universe || 'benchmark' }}
         run: |
           set -euo pipefail
-          python -m automation.research_orchestrator \
-            --mode "$ORCHESTRATOR_MODE" \
-            --universe "$ORCHESTRATOR_UNIVERSE"
+          if [ "$GITHUB_EVENT_NAME" = "schedule" ]; then
+            python -m automation.research_orchestrator \
+              --mode observe \
+              --universe benchmark
+            python -m automation.research_orchestrator \
+              --mode preflight \
+              --universe validation_2026_09_24_network_momentum_t039
+          else
+            python -m automation.research_orchestrator \
+              --mode "$ORCHESTRATOR_MODE" \
+              --universe "$ORCHESTRATOR_UNIVERSE"
+          fi
       - name: Ergebnis und Snapshot sichern
         if: always()
         uses: actions/upload-artifact@v6
