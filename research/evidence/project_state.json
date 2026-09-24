@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "updated": "2026-09-24",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "202aa40431e633cc3e0ba78e37f39077afaf4ad1",
+  "master_commit": "298334438a66235353e79c5671fec1dc61faca96",
   "latest_formal_trial": "T-2026-09-24-040",
   "latest_trial_status": "BLOCKED",
   "next_reserved_trial": "T-2026-09-24-041",
-  "next_research_focus": "T041 coverage-only preflight on two fresh disjoint sleeve universes; no performance evaluation before both coverage passes",
+  "next_research_focus": "T041 formal performance evaluation on the frozen coverage snapshot; no holdout selection and no parameter search",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -43,7 +43,7 @@
     ".github/workflows/paper-30-day-experiment-harness.yml"
   ],
   "current_preregistered_trial": "T-2026-09-24-041",
-  "current_trial_status": "PREREGISTERED_COVERAGE_PENDING",
+  "current_trial_status": "COVERAGE_PASSED_PERFORMANCE_PENDING",
   "engineering_notes": {
     "t039_preregistered": true,
     "coverage_preflight_active": true,
@@ -67,6 +67,12 @@
     "t041_universes": [
       "validation_2026_09_24_portfolio_risk_control_trend",
       "validation_2026_09_24_portfolio_risk_control_cs"
-    ]
+    ],
+    "t041_coverage_status": "PASSED",
+    "t041_coverage_workflow_run": 36062869642,
+    "t041_coverage_artifact_id": 10834724131,
+    "t041_trend_coverage_fingerprint": "ebc08e73d9fad83da343e2ed15289b4ed05d4774346fb409994989f166469bab",
+    "t041_cs_coverage_fingerprint": "091fdc69edec4541c39654fabf308d64bbb7b7b80a9861a2cbe5492cd8ba3bf8",
+    "t041_performance_allowed": true
   }
 }
