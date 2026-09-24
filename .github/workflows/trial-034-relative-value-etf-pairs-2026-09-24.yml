@@ -1,0 +1,183 @@
+name: Trial 034 Fixed ETF Relative-Value Pairs 2026-09-24
+
+on:
+  push:
+    branches: ["research/trial-034-relative-value-etf-pairs-2026-09-24"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-trial-034-relative-value
+  cancel-in-progress: false
+
+jobs:
+  prereq:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 90
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest statsmodels==0.15.0
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+      - name: Paper-only-Sicherheit
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+      - name: Universe und Paar-Set prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from automation.trial_034_relative_value_etf_pairs_2026_09_24 import (
+              PAIR_SPECS, SYMBOLS, UNIVERSE, TARGET_COUNT
+          )
+          from research.asset_universes import get_universe, list_universes
+          expected_pairs=(
+              ("VTWO","IJR","us_small_cap"),
+              ("QQEW","ONEQ","nasdaq_equity"),
+              ("EEMV","SCHE","emerging_markets"),
+              ("IGIB","SPIB","investment_grade_corporates"),
+              ("SCHP","STIP","us_tips"),
+          )
+          expected=tuple(x for pair in expected_pairs for x in pair[:2])
+          assert PAIR_SPECS==expected_pairs
+          assert SYMBOLS==expected
+          target=get_universe(UNIVERSE)
+          assert tuple(target.symbols)==expected
+          assert target.target_count==TARGET_COUNT
+          for item in list_universes():
+              if item.name!=UNIVERSE:
+                  assert set(expected).isdisjoint(item.symbols), item.name
+          print("TRIAL_034_UNIVERSE_DISJOINT_OK")
+          PY
+      - name: Präregistrierung prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          doc=Path("docs/trial_034_relative_value_etf_pairs_preregistration_2026_09_24.md").read_text(encoding="utf-8")
+          required=(
+              "T-2026-09-24-034","VTWO","IJR","QQEW","ONEQ","EEMV","SCHE","IGIB","SPIB","SCHP","STIP",
+              "200","1,65","0,75","0,05","3.500","2.798","700",
+              "PAPER_ONLY=True","LIVE_TRADING_ENABLED=False","orders_enabled=False"
+          )
+          missing=[x for x in required if x not in doc]
+          assert not missing, missing
+          c=json.loads(Path("research/checkpoints/trial_034_relative_value_etf_pairs_preregistration_2026_09_24.json").read_text(encoding="utf-8"))
+          assert c["trial_id"]=="T-2026-09-24-034"
+          assert c["pair_search"] is False
+          assert c["parameter_search"] is False
+          assert c["threshold_search"] is False
+          assert c["holdout_used_for_selection"] is False
+          assert c["borrow_costs_modeled"] is False
+          assert c["dividend_cashflows_modeled"] is False
+          assert c["net_exposure_target"]==0.0
+          assert c["gross_exposure_cap"]==1.0
+          print("TRIAL_034_PREREGISTRATION_OK")
+          PY
+      - name: Coverage-Preflight verankern
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          c={
+              "workflow_run_id":36044264502,
+              "artifact_id":10827702970,
+              "artifact_digest":"sha256:6579ea3ec57b99204941e6678ac2cb69e0cf4b60855c064a9888cd092ad3b9c6",
+              "coverage_fingerprint":"b4102c8e01e442ca5657426b96f0dc97ec919783299408946975f49b05c445a4",
+              "common_calendar_count":3520
+          }
+          assert c["common_calendar_count"]>=3500
+          print("TRIAL_034_COVERAGE_PRECHECK_OK")
+          PY
+      - name: Kostenvertrag prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from execution.cost_contract import ResearchExecutionCostContract
+          c=ResearchExecutionCostContract()
+          c.validate()
+          assert c.fee_bps==10.0 and c.slippage_bps==5.0 and c.total_one_way_bps==15.0
+          print("TRIAL_034_COST_CONTRACT_OK")
+          PY
+
+  research:
+    needs: prereq
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 240
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest statsmodels==0.15.0
+      - name: Research-Daten vorbereiten
+        run: |
+          set -euo pipefail
+          python -m automation.prepare_research_data             --target-count 3500             --universe validation_2026_09_24_relative_value_etf_pairs_v3             --output research/trial_034_relative_value_etf_pairs_2026_09_24/manifest.json
+      - name: Trial-034-Control ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.trial_034_relative_value_etf_pairs_2026_09_24             --data-dir data/market_data             --manifest research/trial_034_relative_value_etf_pairs_2026_09_24/manifest.json             --output research/trial_034_relative_value_etf_pairs_2026_09_24/report.json
+      - name: Ergebnisintegrität prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          p=Path("research/trial_034_relative_value_etf_pairs_2026_09_24/report.json")
+          r=json.loads(p.read_text(encoding="utf-8"))
+          stored=r.pop("report_fingerprint")
+          actual=hashlib.sha256(
+              json.dumps(r,sort_keys=True,separators=(",",":"),ensure_ascii=True,allow_nan=False).encode()
+          ).hexdigest()
+          assert stored==actual
+          assert r["trial_id"]=="T-2026-09-24-034"
+          assert r["status"]=="COMPLETED"
+          assert r["research_only"] is True
+          assert r["source"]["target_candles_per_symbol"]==3500
+          assert r["source"]["common_return_count"]==3498
+          assert r["source"]["research_count"]==2798
+          assert r["source"]["holdout_count"]==700
+          assert r["source"]["fully_symbol_disjoint"] is True
+          assert r["methodology"]["parameter_search"] is False
+          assert r["methodology"]["pair_search"] is False
+          assert r["methodology"]["holdout_used_for_selection"] is False
+          assert r["safety"]=={"paper_only":True,"live_trading_enabled":False,"orders_enabled":False}
+          print("TRIAL_034_RESULT_INTEGRITY_OK")
+          print("TRIAL_034_REPORT_FINGERPRINT:",stored)
+          print("TRIAL_034_CANDIDATE_STATUS:",r["candidate_status"])
+          print("TRIAL_034_CHECKS:",json.dumps(r["gate_contract"],sort_keys=True))
+          PY
+      - name: Artefakte sichern
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: trial-034-relative-value-etf-pairs
+          path: |
+            research/trial_034_relative_value_etf_pairs_2026_09_24/
+            data/market_data/
+          if-no-files-found: error
+          retention-days: 30
