@@ -44,7 +44,7 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           from research.asset_universes import list_universes
-          symbols=["EIRL","ENZL","NORW","EDEN","FXF","FXC","CEW","MINT","SCHO","IUSB","COMT","RWX"]
+          symbols=["EIRL","ENZL","NORW","EDEN","FXF","FXC","CEW","EIDO","SCHO","MINT","COMT","RWX"]
           target=set(symbols)
           for item in list_universes():
               assert target.isdisjoint(item.symbols), item.name
@@ -58,7 +58,7 @@ jobs:
           import json
           from pathlib import Path
           from data.yahoo_loader import load_yahoo_history
-          symbols=["EIRL","ENZL","NORW","EDEN","FXF","FXC","CEW","MINT","SCHO","IUSB","COMT","RWX"]
+          symbols=["EIRL","ENZL","NORW","EDEN","FXF","FXC","CEW","EIDO","SCHO","MINT","COMT","RWX"]
           histories={}
           counts={}
           for s in symbols:
