@@ -211,7 +211,9 @@ def diagnose(evidence_path: str | Path = EVIDENCE_PATH) -> dict:
             "paid_agent_api_budget_usd": 0.0,
         },
     }
-    report["fingerprint"] = _fingerprint(report)
+    fingerprint_input = dict(report)
+    fingerprint_input.pop("recorded_at", None)
+    report["fingerprint"] = _fingerprint(fingerprint_input)
     return report
 
 
