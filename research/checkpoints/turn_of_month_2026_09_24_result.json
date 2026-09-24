@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "trial_id": "T-2026-09-24-017",
+  "status": "archived_rejected",
+  "research_family": "calendar_alpha",
+  "hypothesis": "Fixed four-day Turn-of-Month exposure on a fully disjoint global country-equity ETF universe yields higher average daily returns during the TOM window than outside it, with robust cost-adjusted portfolio properties.",
+  "workflow": {
+    "run_id": 36006749490,
+    "artifact_id": 10810214406,
+    "artifact_sha256": "1d7ebd14a4da359908ec2d10011598e6689b47f9d81605ae2a62aec53d33835b",
+    "code_commit_sha": "546fd8aad0008923bb63f70936b57882f579ef9f",
+    "report_fingerprint": "27df7c6ba36083d599d39c65fdd5fd089ec9216bd03211a42b8530c75ee3e85a"
+  },
+  "data_scope": {
+    "symbols": [
+      "EWS",
+      "EWM",
+      "EZA",
+      "ECH",
+      "EPU",
+      "EIDO",
+      "THD",
+      "EPHE"
+    ],
+    "market_candles_per_asset": 3500,
+    "return_count": 3498,
+    "research_count": 2798,
+    "holdout_count": 700,
+    "manifest_fingerprint": "561c0d76fe6bbb4435f7399179f4e9f0542138c8d8a1586e3012f49465f9e031",
+    "fully_symbol_disjoint_validation_set": true
+  },
+  "policy": {
+    "window": "last trading day of month + first three trading days of following month",
+    "equal_weight": 0.125,
+    "gross_exposure": 1,
+    "net_exposure": 1,
+    "price_field": "unadjusted close"
+  },
+  "research_checks": {
+    "research_tom_mean_gt_non_tom": true,
+    "holdout_tom_mean_gt_non_tom": true,
+    "research_drawdown": false,
+    "research_profit_factor": false,
+    "rolling_profitable_window_ratio": true,
+    "oos_to_is_return_ratio": false,
+    "holdout_return_positive": false,
+    "holdout_profit_factor": false,
+    "holdout_drawdown": true,
+    "stress_1_5x_nonnegative": false,
+    "stress_2x_nonnegative": false
+  },
+  "key_metrics": {
+    "research_return_percent": -11.672864792449145,
+    "research_drawdown_percent": 24.400351564558353,
+    "research_profit_factor": 0.9628354075010963,
+    "holdout_return_percent": -1.917149039004118,
+    "holdout_drawdown_percent": 9.294053585535478,
+    "holdout_profit_factor": 0.9773086346547498,
+    "research_rolling_profitable_windows": 3,
+    "oos_to_is_return_ratio": 0,
+    "research_tom_minus_non_tom_mean_daily_return": 0.0007889123712082138,
+    "holdout_tom_minus_non_tom_mean_daily_return": 0.00018704758012154832
+  },
+  "status_detail": "NO_SUPPORT",
+  "selection_used": false,
+  "parameter_search_used": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false
+  }
+}
