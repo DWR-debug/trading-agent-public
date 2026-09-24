@@ -1900,6 +1900,114 @@
           "holdout_low_residual_vol_edge_positive": false
         }
       }
+    },
+    {
+      "trial_id": "T-2026-09-24-026",
+      "recorded_at": "2026-09-24T18:24:50+02:00",
+      "status": "archived_rejected",
+      "research_family": "common_market_momentum_state_gate",
+      "hypothesis": {
+        "text": "Ein festes gemeinsames 252-Sessionen-Momentum-Signal aus ACWI, nach dem bestehenden 63-Sessionen/10%-Volatilitätsbudget als Gesamtportfolio-Gate angewendet, verbessert Risiko und Robustheit ohne Verschlechterung der Holdout-Rendite gegenüber dem festen 50/50-Kandidaten."
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10820420657
+        ],
+        "artifact_digest": "sha256:600c70bbb015c026208299dcee6ac3b370d580d7f29da2fcabdc7518e69c3523",
+        "manifest_fingerprint": "6b8b0405adb5b95b31b14b4b81432eaa789dead64860c027c7cd22b159a29dda",
+        "fully_symbol_disjoint_validation_set": true,
+        "portfolio_symbols": [
+          "VBR",
+          "VSS",
+          "VCIT",
+          "BIL",
+          "GSG",
+          "VPL",
+          "EWQ",
+          "EWL",
+          "EWW",
+          "EZU",
+          "ILF",
+          "SCHD",
+          "USMV"
+        ],
+        "signal_proxy": "ACWI",
+        "common_returns": 3498
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "präregistrierte Einzelhypothese; kein Holdout-Selection",
+        "selection_family_id": "common-market-momentum-state-gate-2026-09-24",
+        "selection_metric": "absolute Research-Gates plus fünf Nicht-Verschlechterungsbedingungen gegenüber dem fixierten 50/50-Kandidaten"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 36026930038,
+        "artifact_id": 10820420657,
+        "artifact_sha256": "600c70bbb015c026208299dcee6ac3b370d580d7f29da2fcabdc7518e69c3523",
+        "report_fingerprint": "094e7d6264ecfc96dbe8ce3b1770543754e1df66a5fa572fafa6c6a071c47e73",
+        "code_commit_sha": "1877e2e20337d4c889231b77a9ac03c5d5101f5a",
+        "all_checks_passed": false,
+        "key_metrics": {
+          "baseline_research_return_percent": 27.5755322097488,
+          "baseline_research_drawdown_percent": 23.370580805269782,
+          "baseline_research_profit_factor": 1.053902588315332,
+          "baseline_holdout_return_percent": 1.4100373998015892,
+          "baseline_holdout_drawdown_percent": 19.95139313513109,
+          "baseline_holdout_profit_factor": 1.018320341513842,
+          "gate_research_return_percent": -4.985414434663393,
+          "gate_research_drawdown_percent": 34.00996680554796,
+          "gate_research_profit_factor": 0.9959117112251292,
+          "gate_holdout_return_percent": -0.7933513980491691,
+          "gate_holdout_drawdown_percent": 19.68735663416027,
+          "gate_holdout_profit_factor": 1.003221922672014,
+          "gate_research_profitable_rolling_windows": 2,
+          "gate_research_gate_on_rate_percent": 76.73338098641888,
+          "gate_holdout_gate_on_rate_percent": 99.57142857142857
+        },
+        "gate_results": {
+          "research_return_positive": false,
+          "research_drawdown": false,
+          "research_profit_factor": false,
+          "rolling_profit_factor": false,
+          "rolling_profitable_window_ratio": false,
+          "rolling_average_drawdown": false,
+          "oos_to_is_return_ratio": false,
+          "holdout_return_positive": false,
+          "holdout_profit_factor": false,
+          "holdout_drawdown": false,
+          "stress_1_5x_nonnegative": false,
+          "stress_2x_nonnegative": false,
+          "research_drawdown_not_worse": false,
+          "research_rolling_pf_not_worse": false,
+          "holdout_return_not_worse": false,
+          "holdout_drawdown_not_worse": true,
+          "holdout_pf_not_worse": false
+        }
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
     }
   ]
 }

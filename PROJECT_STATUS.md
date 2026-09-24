@@ -2404,3 +2404,75 @@ Bis dahin bleiben Strategie, Parameterraum, Selection und Gates unverändert.
 - keine Live-Ausführung
 - keine Research-Orders
 - keine Gate-Lockerung
+
+## Aktueller Checkpoint — Trial 026 Common-Market-Momentum-Gate — 2026-09-24
+
+Trial T-2026-09-24-026 wurde vollständig und reproduzierbar auf
+DWR-debug/trading-agent-public ausgeführt und als NO_SUPPORT /
+archived_rejected abgeschlossen.
+
+### Technischer Nachweis
+
+- PR #130, anschließend gemerged
+- Merge-Commit: f6d3e27d000df688b65a46c2407e349f75ed5651
+- Workflow-Run: 36026930038
+- Artifact-ID: 10820420657
+- Artifact-SHA256: sha256:600c70bbb015c026208299dcee6ac3b370d580d7f29da2fcabdc7518e69c3523
+- Report-Fingerprint: 094e7d6264ecfc96dbe8ce3b1770543754e1df66a5fa572fafa6c6a071c47e73
+- Manifest-Fingerprint: 6b8b0405adb5b95b31b14b4b81432eaa789dead64860c027c7cd22b159a29dda
+- 3.500 Candles je Symbol
+- 3.498 gemeinsame PIT-Returns
+- 2.798 Research / 700 Holdout
+- vollständige Vorprüfungen und Ergebnisintegrität: grün
+- keine Orders
+
+### Fachlicher Befund
+
+Die feste Common-Market-Gate-Intervention verschlechterte den festen
+50/50-Kandidaten deutlich:
+
+- Research: +27,58 % -> -4,99 %
+- Research-DD: 23,37 % -> 34,01 %
+- Research-PF: 1,054 -> 0,996
+- profitable Rolling-Fenster: 4/5 -> 2/5
+- Holdout: +1,41 % -> -0,79 %
+- Holdout-DD: 19,95 % -> 19,69 %
+- Holdout-PF: 1,018 -> 1,003
+
+Nur der Holdout-Drawdown wurde marginal verbessert. Die Intervention verfehlte
+sämtliche zwölf absoluten Prüfkriterien und vier der fünf
+Nicht-Verschlechterungsbedingungen.
+
+Das Gate war im Research in 76,73 % und im Holdout in 99,57 % der Perioden
+aktiv. Trotz nahezu vollständiger Aktivierung im Holdout blieb die
+Holdout-Rendite negativ. Dieser Befund ist deskriptiv.
+
+### Konsequenz
+
+- keine Threshold-/Lookback-Suche
+- keine zweite Gate-Variante auf demselben Datensatz
+- keine Änderung am festen Kandidaten
+- keine Leverage-/Short-Ausweitung
+- keine Produktionsintegration
+- keine Orders
+
+### Nächster methodischer Fokus
+
+Nach Trial 026 wird die Forschung nicht in eine weitere allgemeine
+Volatilitäts-/Cash-Gate-Suche ausgeweitet. Die bereits vorhandene
+Cross-Sectional-Reversal-Diagnostik ist die nächste vorgesehene
+orthogonale Hypothesenquelle. Eine daraus abgeleitete Intervention muss erneut
+präregistriert, vollständig symbol-disjunkt und holdout-blind validiert werden.
+
+Dauerhafte Ablage:
+
+- docs/trial_026_common_market_momentum_gate_result_2026_09_24.md
+- research/checkpoints/trial_026_common_market_momentum_gate_result_2026_09_24.json
+- research/evidence/trial_ledger.json
+
+### Sicherheitsstatus
+
+- PAPER_ONLY=True
+- LIVE_TRADING_ENABLED=False
+- keine Research-Orders
+- keine Live-Ausführung
