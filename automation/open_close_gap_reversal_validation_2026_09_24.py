@@ -16,7 +16,7 @@ from config import settings
 from research.asset_universes import get_universe
 from research.protocol import dataset_fingerprint
 
-TARGET_UNSPSMRSE = "validation_2026_09_24_open_close_gap_reversal_v2"
+TARGET_UNIVERSE = "validation_2026_09_24_open_close_gap_reversal_v2"
 TARGET_COUNT = 3500
 RESEARCH_COUNT = 2798
 HOLDOUT_COUNT = 700
@@ -42,10 +42,10 @@ def _fp(value: object) -> str:
 
 def _load_manifest(path: Path) -> dict:
     manifest = json.loads(path.read_text(encoding="utf-8"))
-    universe = get_universe(TARGET_UNSPSMRSE)
+    universe = get_universe(TARGET_UNIVERSE)
     symbols = tuple(item["symbol"] for item in manifest.get("datasets", []))
     if (
-        manifest.get("universe") != TARGET_UNSPSMRSE
+        manifest.get("universe") != TARGET_UNIVERSE
         or manifest.get("target_count") != TARGET_COUNT
         or symbols != ASSETS
         or manifest.get("source") != "yahoo_chart"
@@ -261,7 +261,7 @@ def _scenario(rows: tuple[dict, ...], multiplier: float) -> dict:
 
 
 def run_validation(*, data_dir: Path, market_manifest: Path, output: Path) -> dict:
-    if settings.PAPER_ONLY is not True or settings.LSPSM_TRADING_ENABLED is not False:
+    if settings.PAPER_ONLY is not True or settings.LIVE_TRADING_ENABLED is not False:
         raise RuntimeError("Paper-only safety contract violated.")
     manifest = _load_manifest(market_manifest)
     assets = _load_assets(data_dir, manifest)
