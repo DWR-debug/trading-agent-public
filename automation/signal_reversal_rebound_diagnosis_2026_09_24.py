@@ -477,9 +477,9 @@ def _case_analysis(
 
 
 def _consensus(cases: dict[str, dict[str, Any]]) -> dict[str, Any]:
-    rebound = sum(case["case_flags"]["rebound_enriched"] for case in cases.values())
-    reversal = sum(case["case_flags"]["cs_reversal_enriched"] for case in cases.values())
-    combined = sum(case["case_flags"]["combined_enriched"] for case in cases.values())
+    rebound = sum(case["analysis"]["case_flags"]["rebound_enriched"] for case in cases.values())
+    reversal = sum(case["analysis"]["case_flags"]["cs_reversal_enriched"] for case in cases.values())
+    combined = sum(case["analysis"]["case_flags"]["combined_enriched"] for case in cases.values())
 
     return {
         "replication_counts": {
