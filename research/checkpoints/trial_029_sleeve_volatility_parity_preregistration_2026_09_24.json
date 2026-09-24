@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "trial_id": "T-2026-09-24-029",
+  "status": "preregistered",
+  "research_family": "sleeve_volatility_parity",
+  "hypothesis": "Replace only fixed 50/50 sleeve capital allocation with monthly inverse-volatility parity based on the prior 63 completed sleeve returns while preserving both signals and the aggregate 63-session/10% volatility budget.",
+  "trend_symbols": [
+    "IWB",
+    "IEFA",
+    "BIV",
+    "BSV",
+    "VGIT",
+    "JNK",
+    "HDV",
+    "DBE"
+  ],
+  "cross_sectional_symbols": [
+    "IYF",
+    "IYE",
+    "IYG",
+    "DJP",
+    "EPHE"
+  ],
+  "target_candles": 3500,
+  "common_returns": 3498,
+  "research_count": 2798,
+  "holdout_count": 700,
+  "sleeve_volatility_window": 63,
+  "rebalance_frequency": "monthly",
+  "warmup_equal_weight": true,
+  "strategy_variants": 1,
+  "parameter_search": false,
+  "threshold_search": false,
+  "selection_used": false,
+  "holdout_used_for_selection": false,
+  "paper_only": true,
+  "live_trading_enabled": false,
+  "orders_enabled": false
+}
