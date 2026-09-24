@@ -12,6 +12,7 @@ import os
 from pathlib import Path
 
 from backtesting.models import Candle
+from data.market_store import MarketDataStore
 from config import settings
 from strategies.mean_reversion import MeanReversionStrategy
 from strategies.signals import SignalType
@@ -66,11 +67,8 @@ def _load_assets(data_dir: Path, manifest: dict) -> dict[str, list[Candle]]:
     assets: dict[str, list[Candle]] = {}
     for item in manifest["datasets"]:
         symbol = item["symbol"]
-        path = data_dir / symbol / "1d.json"
-        if not path.exists():
-            raise FileNotFoundError(f"Missing market-data file: {path}")
-        rows = json.loads(path.read_text(encoding="utf-8"))
-        candles = [Candle.from_dict(row) for row in rows]
+        store = MarketDataStore(data_dir)
+        candles = store.load(symbol, "1d")
         if len(candles) != TARGET_COUNT:
             raise ValueError(f"{symbol}: expected {TARGET_COUNT} candles.")
         assets[symbol] = candles
