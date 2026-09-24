@@ -298,6 +298,17 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=3500,
     ),
 
+    AssetUniverse(
+        name="validation_2026_09_24_relative_value_etf_pairs_v2",
+        priority=46,
+        description=(
+            "Coverage-only validation universe for Trial 033; five fixed ex ante "
+            "economic ETF relative-value pairs with corrected historical coverage."
+        ),
+        symbols=("VTWO","IJR","QQEW","ONEQ","IEMG","SCHE","IGIB","SPIB","SCHP","STIP"),
+        target_count=3500,
+    ),
+
 )
 
 
