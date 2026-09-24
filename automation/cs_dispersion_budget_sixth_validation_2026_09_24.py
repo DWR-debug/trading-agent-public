@@ -152,7 +152,7 @@ def _effective_cs_weights(
             scale = 1.0 if current <= 0.0 else min(1.0, reference / current)
         result.append(
             {
-                symbol: 0.5 * weight * scale
+                symbol: weight * scale
                 for symbol, weight in weights.items()
             }
         )
@@ -432,7 +432,7 @@ def run_validation(
         raise ValueError("Trend- und CS-Universum sind nicht disjunkt.")
 
     trend_weights = base._build_weight_path(trend, TREND_STRATEGY)
-    fixed_cs_weights = _cs_weights(cs)
+    fixed_cs_weights = base._cs_weights(cs)
     effective_cs_weights = _effective_cs_weights(cs, fixed_cs_weights)
 
     all_assets = {**trend, **cs}
