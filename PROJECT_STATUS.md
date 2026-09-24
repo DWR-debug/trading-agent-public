@@ -1,3 +1,42 @@
+# Aktueller Gesamtstatus — 2026-09-24
+
+## Unified Research Engine
+
+Seit dem Architekturumbau ist die aktive GitHub-Actions-Oberfläche bewusst auf drei dauerhafte Workflows reduziert:
+
+- .github/workflows/ci.yml
+- .github/workflows/research-orchestrator.yml
+- .github/workflows/paper-30-day-experiment-harness.yml
+
+Die früheren Trial-, Diagnose- und Preflight-Workflows bleiben über Git-Historie und Research-Provenienz nachvollziehbar, sind aber keine aktive Ausführungsoberfläche mehr.
+
+Die Research Engine arbeitet jetzt zweistufig:
+1. laufende Beobachtung aktueller/aktualisierter Marktdaten;
+2. formale Forschung nur nach neuer Präregistrierung und unverändertem Evidence-Vertrag.
+
+Discovery-Beobachtungen sind ausdrücklich keine Profitabilitätsnachweise und dürfen keinen Holdout zur Auswahl verwenden.
+
+## Agenten-/Credit-Regel
+
+Die deterministische Forschungsmaschine funktioniert vollständig ohne Agentencredits.
+Bezahlte Agenten-/API-Nutzung ist projektseitig deaktiviert. Agenten/Codex dürfen nur bei extern verifiziertem kostenfreiem Kontingent eingesetzt werden. Es gibt keinen Mechanismus zum Nachladen von Credits.
+
+## Sicherheitsstatus
+
+- PAPER_ONLY=True
+- LIVE_TRADING_ENABLED=False
+- orders_enabled=False
+- keine Research-Orders
+- keine automatische Echtgeldpromotion
+
+## Kontinuität
+
+Kanonischer Maschinenzustand: research/evidence/project_state.json
+Kanonischer Evidence-Ledger: research/evidence/trial_ledger.json
+Kanonischer technischer Stand: DWR-debug/trading-agent-public/master
+
+---
+
 ## Aktueller Checkpoint — Trial 038 Network Momentum Coverage DATA_INVALID — 2026-09-24
 
 Trial T-2026-09-24-038 wurde vor jeder Performanceauswertung als **DATA_INVALID** beendet.
