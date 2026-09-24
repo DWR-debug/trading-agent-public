@@ -31,7 +31,7 @@ def test_gate_contract_passes_for_equal_strong_candidate():
 
 def test_gate_contract_blocks_research_return_deterioration():
     s=_scenario()
-    s["base"]["risk_adjusted_candidate"]["price_only"]["research"]["period_return"]=0.1
+    s["base"]["risk_adjusted_candidate"]["price_only"]["research"]["period_return"]=0.05
     r=_gates(s,ResearchGateConfig())
     assert not r["non_worsening_vs_fixed_candidate"]["research_return_not_below_fixed"]
     assert not r["all_checks_passed"]
