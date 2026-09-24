@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-24T19:37:21Z",
+  "generated_at": "2026-09-24T19:41:06Z",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -2860,6 +2860,61 @@
           "holdout_drawdown": true,
           "holdout_stress_2x_nonnegative": true
         }
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-036",
+      "recorded_at": "2026-09-24T19:41:06Z",
+      "status": "data_invalid",
+      "research_family": "cross_asset_network_momentum",
+      "hypothesis": {
+        "text": "Ein fest definierter Cross-Asset-Lead-Lag/Network-Momentum-Zustand ergänzt den eigenen Trendpfad auf einem neuen disjunkten Multi-Asset-Datensatz."
+      },
+      "data_scope": {
+        "requested_candles": 3520,
+        "target_candles": 3500,
+        "symbols": [
+          "EIRL",
+          "ENZL",
+          "NORW",
+          "EDEN",
+          "FXF",
+          "FXC",
+          "CEW",
+          "CYB",
+          "SCHO",
+          "IUSB",
+          "COMT",
+          "RWX"
+        ],
+        "invalid_symbol": "CYB",
+        "performance_evaluation": false,
+        "holdout_evaluation": false,
+        "performance_selection_used": false
+      },
+      "search_scope": {
+        "raw_trial_count": 0,
+        "parameter_search": false,
+        "variant_search": false,
+        "holdout_used_for_selection": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "coverage preflight only"
+      },
+      "outcome": {
+        "validation_status": "DATA_INVALID",
+        "scientific_outcome": "NO_SCIENTIFIC_OUTCOME",
+        "workflow_run_id": 36049739991,
+        "error": "Yahoo HTTP 404: Not Found for CYB",
+        "no_performance_claim": true,
+        "result_document": "docs/trial_036_network_momentum_data_invalid_2026_09_24.md",
+        "result_checkpoint": "research/checkpoints/trial_036_network_momentum_data_invalid_2026_09_24.json"
       },
       "safety": {
         "paper_only": true,
