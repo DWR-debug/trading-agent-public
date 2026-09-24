@@ -57,8 +57,8 @@ jobs:
 
           task = default_research_queue().next_task()
           assert task is not None
-          assert task.task_id == "Q-001-T040-NETWORK-MOMENTUM-REPAIR"
-          assert task.research_family == "cross_asset_network_momentum_repair"
+          assert task.task_id == "Q-002-ADVERSARIAL-FAILURE-DIAGNOSIS"
+          assert task.research_family == "research_governance"
 
           assert prereg["search_scope"]["holdout_used_for_selection"] is False
           assert prereg["coverage_gate"]["performance_allowed_before_coverage_pass"] is False
