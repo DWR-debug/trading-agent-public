@@ -163,7 +163,7 @@ jobs:
           assert state['agent_usage']['auto_paid_api_calls'] is False
           assert state['agent_usage']['free_credit_only'] is True
           assert state['current_preregistered_trial'] == 'T-2026-09-24-041'
-          assert state['current_trial_status'] == 'PREREGISTERED_COVERAGE_PENDING'
+          assert state['current_trial_status'] == 'COVERAGE_PASSED_PERFORMANCE_PENDING'
           assert state['engineering_notes']['current_queue_task'] == 'Q-003-PORTFOLIO-RISK-CONTROL'
           print('PROJECT STATE OK')
           PY
