@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "trial_id": "T-2026-09-24-024",
+  "status": "preregistered",
+  "research_family": "cross_sectional_low_volatility",
+  "universe": "validation_2026_09_24_low_volatility_us_stocks",
+  "symbols": [
+    "INTC",
+    "QCOM",
+    "AVGO",
+    "HON",
+    "LMT",
+    "RTX",
+    "CSX",
+    "NSC"
+  ],
+  "target_candles": 3500,
+  "common_returns": 3498,
+  "research_count": 2798,
+  "holdout_count": 700,
+  "lookback_sessions": 252,
+  "select_count": 4,
+  "volatility_measure": "standard deviation of daily close-to-close returns",
+  "measurement_window": "immediately preceding 252 completed sessions ending before current month",
+  "direction": "long four lowest-volatility assets",
+  "gross_exposure": 1,
+  "leverage": 1,
+  "shorting": false,
+  "fee_bps": 10,
+  "slippage_bps": 5,
+  "stress_multipliers": [
+    1.5,
+    2
+  ],
+  "strategy_variants": 1,
+  "parameter_search": false,
+  "threshold_search": false,
+  "holdout_selection": false,
+  "paper_only": true,
+  "live_trading_enabled": false,
+  "orders_enabled": false
+}
