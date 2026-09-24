@@ -287,6 +287,17 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=3500,
     ),
 
+    AssetUniverse(
+        name="validation_2026_09_24_risk_adjusted_momentum_candidate",
+        priority=40,
+        description=(
+            "Coverage-only validation universe for Trial 031; fixed cross-sectional "
+            "risk-adjusted momentum candidate with formation-period volatility."
+        ),
+        symbols=("EIS","EPU","ECH","EWS","EWM","EZA","TUR","THD","VDC","VCR","VOX","IAT","XTN"),
+        target_count=3500,
+    ),
+
 )
 
 
