@@ -20,6 +20,7 @@ from automation.coverage_candidate_discovery import run_discovery
 from automation.adversarial_failure_diagnosis import write_report as write_failure_diagnosis
 from automation.cross_trial_failure_diagnosis import write_report as write_cross_trial_diagnosis
 from automation.portfolio_risk_control_min_variance import run_trial as run_t041_trial
+from automation.volatility_managed_tsm import run_trial as run_t042_trial
 from automation.one_command_research import run_universe
 
 
@@ -217,6 +218,61 @@ def run(
             status=report["status"],
             run_fingerprint=report["report_fingerprint"],
         )
+    elif mode == "research_t042":
+        preregistration = (
+            Path("research/preregistrations")
+            / "trial_042_volatility_managed_tsm_2026_09_24.json"
+        )
+        frozen_evidence_path = Path(
+            "research/evidence/t042_coverage_pass_2026_09_24.json"
+        )
+        if not frozen_evidence_path.exists():
+            raise FileNotFoundError(
+                "T042 frozen coverage evidence is required before formal performance."
+            )
+        frozen = json.loads(
+            frozen_evidence_path.read_text(encoding="utf-8")
+        )
+        if frozen.get("trial_id") != "T-2026-09-24-042":
+            raise ValueError("Frozen T042 coverage evidence has the wrong trial id.")
+        if frozen.get("status") != "COVERAGE_PASSED_PERFORMANCE_PENDING":
+            raise ValueError("Frozen T042 coverage is not performance-approved.")
+        expected_fingerprint = frozen.get("coverage_fingerprint")
+        coverage_dir = (
+            Path("research/runs")
+            / "coverage_preflight"
+            / "T-2026-09-24-042"
+        )
+        candidates = sorted(
+            coverage_dir.glob("coverage_preflight_*.json")
+        )
+        if len(candidates) != 1:
+            raise ValueError(
+                f"T042 requires exactly one frozen coverage JSON, found {len(candidates)}."
+            )
+        coverage_path = candidates[0]
+        coverage_payload = json.loads(
+            coverage_path.read_text(encoding="utf-8")
+        )
+        if coverage_payload.get("coverage_fingerprint") != expected_fingerprint:
+            raise ValueError("T042 frozen coverage fingerprint mismatch.")
+        output = (
+            root
+            / "validation_2026_09_24_volatility_managed_tsm"
+            / "formal"
+            / "t042.json"
+        )
+        report = run_t042_trial(
+            coverage_path,
+            preregistration,
+            output,
+        )
+        snapshot = _state_snapshot(
+            mode=mode,
+            universe=universe,
+            status=report["status"],
+            run_fingerprint=report["report_fingerprint"],
+        )
     elif mode == "research":
         if universe in PREREGISTRATIONS:
             preregistration = _preregistration_for(universe)
@@ -267,7 +323,7 @@ def run(
                 run_fingerprint=report.get("run_manifest", {}).get("run_fingerprint"),
             )
     else:
-        raise ValueError("mode must be observe, preflight, discover_coverage, diagnose_failure, diagnose_history, research, or research_t041")
+        raise ValueError("mode must be observe, preflight, discover_coverage, diagnose_failure, diagnose_history, research, research_t041, or research_t042")
 
     path = root / universe / "orchestrator_state.json"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -280,7 +336,7 @@ def run(
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=("observe", "preflight", "discover_coverage", "diagnose_failure", "diagnose_history", "research", "research_t041"), required=True)
+    parser.add_argument("--mode", choices=("observe", "preflight", "discover_coverage", "diagnose_failure", "diagnose_history", "research", "research_t041", "research_t042"), required=True)
     parser.add_argument("--universe", default=DEFAULT_UNIVERSE)
     parser.add_argument("--output-root", default="research/runs")
     parser.add_argument("--total", type=int, default=None)
