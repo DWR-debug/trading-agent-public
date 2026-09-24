@@ -2,12 +2,12 @@
   "schema_version": "1.0",
   "updated": "2026-09-24",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "528b91b4ed0750efec50671a4cf8f43c637c2690",
-  "latest_formal_trial": "T-2026-09-24-037",
+  "master_commit": "8b1d32a44311d1cffe1647b1cef608ae2dd4bd1b",
+  "latest_formal_trial": "T-2026-09-24-038",
   "latest_trial_status": "DATA_INVALID",
-  "next_reserved_trial": "T-2026-09-24-038",
-  "next_research_focus": "Cross-Asset Network Momentum after coverage preflight",
-  "cleanup_status": "architecture_unification",
+  "next_reserved_trial": "T-2026-09-24-039",
+  "next_research_focus": "Cross-Asset Network Momentum with COMT replaced by FTGC after coverage preflight",
+  "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
     "project_integrity": true,
@@ -36,5 +36,10 @@
     "canonical_status": "PROJECT_STATUS.md",
     "canonical_ledger": "research/evidence/trial_ledger.json",
     "canonical_state": "research/evidence/project_state.json"
-  }
+  },
+  "active_workflows": [
+    ".github/workflows/ci.yml",
+    ".github/workflows/research-orchestrator.yml",
+    ".github/workflows/paper-30-day-experiment-harness.yml"
+  ]
 }
