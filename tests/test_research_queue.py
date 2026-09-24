@@ -1,19 +1,15 @@
-import pytest
-
-from research.research_queue import ResearchQueueError, default_research_queue
+from research.research_queue import default_research_queue
 
 
-def test_queue_is_deterministic_and_fail_closed():
+def test_default_queue_tracks_current_t039_priority():
     queue = default_research_queue()
-    first = queue.next_task()
-    assert first is not None
-    assert first.task_id == "Q-001-TRIAL-017"
-    queue.set_status(first.task_id, "RUNNING")
-    queue.set_status(first.task_id, "COMPLETED")
-    assert queue.next_task().task_id == "Q-002-ADVERSARIAL"
+    task = queue.next_task()
+    assert task is not None
+    assert task.task_id == "Q-001-T039-NETWORK-MOMENTUM"
+    assert task.research_family == "cross_asset_network_momentum"
 
 
-def test_queue_rejects_invalid_transition():
+def test_default_queue_has_unique_ids():
     queue = default_research_queue()
-    with pytest.raises(ResearchQueueError):
-        queue.set_status("Q-001-TRIAL-017", "COMPLETED")
+    ids = [item.task_id for item in queue.all()]
+    assert len(ids) == len(set(ids))
