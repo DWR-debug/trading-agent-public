@@ -1,3 +1,51 @@
+## Übergeordnetes Ziel: sehr kurze Zeit bis zu hohem Kapitalaufbau — 2026-09-24
+
+
+Die operative Forschung verfolgt neben den technischen Qualitätszielen ein übergeordnetes,
+vom Projektauftrag vorgegebenes Ziel: Wegen der beschriebenen finanziellen Ausgangslage
+soll — soweit dies mit belastbarer Evidenz vereinbar ist — eine Strategie identifiziert
+werden, die in möglichst kurzer Zeit einen hohen Kapitalaufbau ermöglicht.
+
+Dabei gilt ausdrücklich:
+
+- Die Dringlichkeit des Ziels darf nicht in eine Behauptung umgedeutet werden, dass sehr hohe
+  Gewinne innerhalb kurzer Zeit zuverlässig erreichbar seien.
+- Das Research darf deshalb hohe Renditepotenziale untersuchen, muss aber Renditepotenzial,
+  Verlustwahrscheinlichkeit, Drawdown, Hebelwirkung, Kosten, Liquidität und Ruin-/Totalverlustrisiko
+  getrennt ausweisen.
+- Hypothesen, die nur wegen des Zielbilds attraktiv erscheinen, dürfen nicht als Evidenz
+  behandelt werden. Keine Auswahl, Parameteränderung, Gateänderung oder Promotion erfolgt
+  allein zur Steigerung einer gewünschten Renditekennzahl.
+- Die besondere finanzielle Dringlichkeit ist ein Anforderungsparameter des Projekts, aber
+  keine Ausnahme von Reproduzierbarkeit, Out-of-Sample-/Holdout-Prüfung, Kostenrealismus,
+  Robustheit und Paper-Only-Safety.
+- Insbesondere darf notwendiges Familiengeld nicht als risikoloses Experimentkapital
+  behandelt werden.
+- Ein späterer Echtgeldpfad bleibt ein separates, ausdrücklich freizugebendes Gateway und
+  darf weder aus dem Zielbild noch aus positiven Backtest-/Research-Ergebnissen automatisch
+  aktiviert werden.
+
+### Priorisierte Forschungsfrage
+
+Unter diesen Randbedingungen soll die Forschung systematisch prüfen, ob sich ein
+wirtschaftlich tragfähiger, möglichst schneller Kapitalaufbau durch Kombination aus
+robustem Edge, kontrolliertem Risiko, gegebenenfalls explizit untersuchtem Leverage,
+Long-/Short-Mechanismen, geeigneten Märkten/Venues und realistischer Ausführbarkeit
+nachweisen lässt.
+
+Dabei ist zwischen drei Ebenen strikt zu unterscheiden:
+
+1. **Nachweisbarer Edge:** reproduzierbare OOS-/Holdout-Evidenz unter realistischen Kosten.
+2. **Kapitalwachstum:** Simulation der Kapitalentwicklung unter definiertem Risiko und
+   gegebenenfalls Leverage; Szenarien sind keine Zusagen.
+3. **Echtgeldfähigkeit:** erst nach separater Prüfung von Markt, Venue, Mindestorder,
+   Gebühren, Slippage, Liquidität, technischem Orderpfad und ausdrücklicher Live-Freigabe.
+
+Dieses übergeordnete Ziel ändert den Sicherheitsvertrag nicht:
+`PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, keine Live-Orders und keine
+automatische Echtgeldpromotion.
+
+
 ## Zielbild: autonomes 30-Tage-Trading-Experiment mit optionalem Echtgeldpfad
 
 Der langfristige Zielpfad ist ein möglichst autonomes 30-Tage-Trading-Experiment mit zunächst klar getrennter Forschung und einer **nur nach ausdrücklich bestätigter Freigabe** möglichen Echtgeldstufe.
