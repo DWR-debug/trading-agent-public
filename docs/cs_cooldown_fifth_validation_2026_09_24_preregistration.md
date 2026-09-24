@@ -14,7 +14,7 @@ Open-to-Open-Periode beobachtet wurde, wird ausschließlich für die **nächste*
 Return-Periode das gesamte 50%-CS-Sleevegewicht auf 0 gesetzt und in Cash gehalten.
 Das Trend-Sleeve bleibt unverändert bei 50%.
 
-Es gibt genau eine Cooldown-Periode: 1 Session. Keine Suche nach anderen
+Es gibt genau eine Cooldown-Periode: 1 Session. Die zugrunde liegende Rebalance-Struktur bleibt 21-Session.
 Längen, Schwellenwerten, Gewichten oder Varianten.
 
 Wichtig: Die Reversal-Periode selbst wird nicht verändert. Das verhindert
