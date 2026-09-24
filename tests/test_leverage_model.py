@@ -6,6 +6,7 @@ from research.leverage_model import (
     LeverageModelError,
     period_return,
     portfolio_period_return,
+    simulate_portfolio_path,
     simulate_leveraged_path,
 )
 
@@ -55,3 +56,15 @@ def test_leveraged_path_fails_closed_at_zero_equity():
 def test_lengths_must_match():
     with pytest.raises(LeverageModelError):
         simulate_leveraged_path((0.01,), ())
+
+def test_portfolio_path_supports_simultaneous_long_and_short_exposure():
+    config = LeverageConfig(multiple=1.5)
+    result = simulate_portfolio_path(
+        (0.01, -0.01),
+        (1.0, 1.0),
+        (0.5, 0.5),
+        config,
+    )
+
+    assert result.final_equity > 0.0
+    assert result.ruined is False
