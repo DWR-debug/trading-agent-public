@@ -532,6 +532,37 @@ Der nächste methodische Schritt ist eine Failure-Diagnose der Portfolioaggregat
 insbesondere die Trennung von Allokations-Turnover/Kosten, Sleeve-Risiko und der
 Frage, ob die dynamische Gewichtsänderung tatsächlich die Drawdown-Failures adressiert.
 
+### 2w. Portfolio Risk-Parity Failure-Diagnose — 2026-09-24
+
+Trial 022 wurde nicht promotet. Die deskriptive Failure-Diagnose ist abgeschlossen.
+Sie führt keine neue Parameter- oder Gewichtssuche und keine Gateänderung durch.
+
+- Holdout-Drawdown gegenüber 50/50: ca. 1,04 Prozentpunkte niedriger
+- Holdout-Return gegenüber 50/50: ca. 14,40 Prozentpunkte niedriger
+- zusätzlicher Allokations-Turnover: 4,97
+- mechanischer zusätzlicher Holdout-Kosten-Drag: ca. 0,64 Prozentpunkte
+- durchschnittliche Holdout-Gewichte: 59,46% Trend / 40,54% Cross-Sectional
+- das verbleibende Return-Residuum wird ausdrücklich nicht kausal interpretiert
+
+Konsequenz:
+- kein Risk-Parity-Tuning
+- keine Lookback-/Cap-/Normalisierungssuche
+- keine Produktionsintegration der dynamischen Allokation
+
+### 2x. Execution-Kosten-Semantik-Audit — 2026-09-24
+
+Der Research-Kostenstandard ist jetzt explizit als Contract abgesichert:
+10 bps Fee + 5 bps Slippage = 15 bps One-Way bzw. 30 bps Round Trip.
+
+BacktestEngine und ExecutionCostModel entsprechen diesem Contract. Der historische
+PaperBroker-Default liegt bei 5 bps Fee + 5 bps Slippage und wird deshalb fail-closed
+als nicht research-kompatibel erkannt. Der PaperBroker wurde nicht rückwirkend verändert.
+
+Dauerhafte Ablage:
+- execution/cost_contract.py
+- docs/EXECUTION_COST_AUDIT.md
+- research/checkpoints/execution_cost_audit_2026_09_24.json
+
 ### 3. Micro-Trading: aktueller Abschluss des 5m-Controls
 
 PR #39 und der anschließende CI-Fix PR #40 sind gemerged.
