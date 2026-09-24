@@ -222,6 +222,16 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("BAC", "JPM", "GS", "MS", "C"),
         target_count=3500,
     ),
+    AssetUniverse(
+        name="validation_2026_09_24_max_effect_us_stocks",
+        priority=32,
+        description=(
+            "Fixed fully symbol-disjoint U.S. stock universe for the pre-registered "
+            "MAX/lotttery-characteristic cross-sectional control."
+        ),
+        symbols=("ORCL", "CSCO", "TXN", "ADP", "UPS", "ABT", "GILD", "AMGN"),
+        target_count=3500,
+    ),
 )
 
 
