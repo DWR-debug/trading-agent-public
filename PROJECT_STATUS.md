@@ -1,3 +1,44 @@
+## Zielbild: autonomes 30-Tage-Trading-Experiment mit optionalem Echtgeldpfad
+
+Der langfristige Zielpfad ist ein möglichst autonomes 30-Tage-Trading-Experiment mit zunächst klar getrennter Forschung und einer **nur nach ausdrücklich bestätigter Freigabe** möglichen Echtgeldstufe.
+
+### Ziel und Risikorealität
+
+- Ziel eines möglichen Echtgeldversuchs: maximal möglicher Kontostand nach 30 Tagen.
+- Es wird ausdrücklich nicht unterstellt, dass eine Strategie aus 10 EUR zuverlässig einen hohen Betrag erzeugen kann.
+- Größere angestrebte Multiplikatoren gehen typischerweise mit höherem Verlustrisiko bis hin zum Totalverlust einher.
+- Familienrelevantes oder notwendiges Geld soll nicht als risikoloses Kapital behandelt werden.
+
+### Voraussetzungen für einen möglichen Echtgeldpfad
+
+Ein späterer Echtgeldversuch setzt separat voraus:
+1. ein ausdrücklich für Totalverlust freigegebenes Budget, z. B. 10 EUR;
+2. eine ausdrückliche Echtgeld-/Live-Ausführungsfreigabe;
+3. einen tatsächlich geeigneten Handelsplatz nach Prüfung von Gebühren, Mindestorders, Märkten und Bedingungen;
+4. verlässlichen Datenzugriff;
+5. eine technische Schnittstelle für Marktdaten und – nur nach Live-Freigabe – Orders;
+6. explizite, messbare Regeln dafür, welche Risiken und Aktionen zulässig sind.
+
+Die Formulierung „möglichst wenig operative Grenzen“ wird dabei als großer, aber kontrollierter Suchraum verstanden und nicht als Freigabe für blindes oder unbegrenztes Handeln.
+
+### Angestrebter autonome Forschungs- und Entscheidungsweg
+
+Daten → Marktuniversum → Gebühren → Liquidität → Volatilität → Strategien → Backtests → Walk-Forward → Robustheit → Positionsgrößen → tatsächliche Ausführbarkeit → laufende Neubewertung.
+
+Der bestehende Trading Agent soll dabei als Infrastruktur dienen, insbesondere für Daten, Backtesting, Research-Governance, Risiko- und Portfolio-Controller, PaperBroker sowie spätere Ausführbarkeitsprüfungen.
+
+Vor einem möglichen Echtgeldschritt müssen die bekannten Backtesting-Schwachstellen geschlossen und die Kandidaten gegen historische Daten reproduzierbar geprüft werden. Ein Echtgeldtest wird nur dann betrachtet, wenn technische Ausführbarkeit, Datenqualität, Kosten-/Slippage-Semantik, Robustheit und Sicherheitsverträge nachweisbar erfüllt sind.
+
+### Aktueller Sicherheitsstatus
+
+Dieses Zielbild **ändert den aktuellen Sicherheitsvertrag nicht**:
+- `PAPER_ONLY=True`
+- `LIVE_TRADING_ENABLED=False`
+- keine Live-Orders
+- keine automatische Echtgeldpromotion
+
+Eine spätere Echtgeldstufe benötigt einen eigenen, ausdrücklich dokumentierten Freigabe- und Governance-Schritt.
+
 ## Verbindliche Arbeitsquelle / Default Repository
 
 **Seit 2026-09-24 ist ausschließlich `DWR-debug/trading-agent-public` die Standard- und operative Arbeitsquelle für das Trading-Agent-Projekt.**
