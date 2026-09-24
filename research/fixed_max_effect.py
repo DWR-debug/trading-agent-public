@@ -78,7 +78,7 @@ def build_monthly_weight_path(
     returns_by_symbol: dict[str, tuple[float, ...]],
     *,
     select_count: int = SELECT_COUNT,
-) -> tuple[tuple[float, ...], dict[tuple[int, int], tuple[str, ...]]]:
+) -> tuple[tuple[tuple[float, float], ...], dict[tuple[int, int], tuple[str, ...]]]:
     symbols = tuple(sorted(returns_by_symbol))
     if not symbols:
         raise ValueError("At least one symbol is required.")
@@ -93,7 +93,7 @@ def build_monthly_weight_path(
         for month, value in month_values.items():
             max_by_symbol_month.setdefault(month, {})[symbol] = value
 
-    weights: list[float] = []
+    weights: list[tuple[float, float]] = []
     target_sets: dict[tuple[int, int], tuple[str, ...]] = {}
     previous_weights = {symbol: 0.0 for symbol in symbols}
 
