@@ -112,7 +112,7 @@ def test_update_existing_dataset_merges():
         ]
 
 
-def test_refresh_count_limits_download():
+def test_refresh_count_limits_download_when_target_is_already_available():
     calls = []
 
     def tracking_loader(symbol, interval, limit):
@@ -131,7 +131,7 @@ def test_refresh_count_limits_download():
                     start + timedelta(hours=index),
                     50 + index,
                 )
-                for index in range(5)
+                for index in range(20)
             ],
         )
 
@@ -146,6 +146,44 @@ def test_refresh_count_limits_download():
 
     assert calls == [3]
 
+
+
+def test_existing_dataset_expands_when_requested_target_is_larger():
+    calls = []
+
+    def tracking_loader(symbol, interval, limit):
+        calls.append(limit)
+        return fake_loader(symbol, interval, limit)
+
+    with TemporaryDirectory() as tmp:
+        store = MarketDataStore(tmp)
+        start = datetime(2025, 12, 1, tzinfo=timezone.utc)
+        store.save(
+            "BTCUSDT",
+            "1h",
+            [
+                make_candle(
+                    start + timedelta(hours=index),
+                    50 + index,
+                )
+                for index in range(5)
+            ],
+        )
+
+        result = update_dataset(
+            "BTCUSDT",
+            "1h",
+            8,
+            store=store,
+            loader=tracking_loader,
+            refresh_count=2,
+        )
+
+        assert calls == [8]
+        assert result.previous_count == 5
+        assert result.fetched_count == 8
+        assert result.final_count == 8
+        assert len(store.load("BTCUSDT", "1h")) == 8
 
 def test_update_all():
     with TemporaryDirectory() as tmp:
