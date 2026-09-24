@@ -2777,3 +2777,20 @@ Geplanter unveränderter Architekturrahmen nach bestandenem Coverage-Preflight:
 - keine Orders
 
 Die geplante Intervention wird vor Präregistrierung nochmals auf PIT-Korrektheit und Datenverfügbarkeit geprüft.
+
+
+## Aktueller Checkpoint — Trial 033 Relative-Value Coverage DATA_INVALID — 2026-09-24
+
+Trial 033 wurde vor jeder Performanceauswertung als **DATA_INVALID** beendet.
+
+- Coverage-Workflow: `36043884651`
+- IEMG: 3.496 statt 3.520 Daily-Candles
+- keine Research-/Holdout-Evaluation
+- kein Datenvertrag gelockert
+
+Konsequenz: 033 wird nicht als Performanceergebnis gewertet. Für 034 wird
+IEMG ausschließlich durch EEMV ersetzt; alle übrigen Relative-Value-Paare bleiben unverändert.
+
+- PAPER_ONLY=True
+- LIVE_TRADING_ENABLED=False
+- keine Orders
