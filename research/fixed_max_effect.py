@@ -47,12 +47,19 @@ def previous_month_max(
         if current_month == previous_month:
             by_month[current_month].append(value)
 
-    ordered_months = sorted(by_month)
+    ordered_months: list[tuple[int, int]] = []
+    for timestamp in timestamps:
+        month = _month_key(timestamp)
+        if month not in ordered_months:
+            ordered_months.append(month)
+
     result: dict[tuple[int, int], float] = {}
     for index in range(1, len(ordered_months)):
         previous = ordered_months[index - 1]
         current = ordered_months[index]
-        result[current] = max(by_month[previous])
+        values = by_month.get(previous)
+        if values:
+            result[current] = max(values)
     return result
 
 
