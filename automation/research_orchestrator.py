@@ -46,6 +46,10 @@ COVERAGE_PREREGISTRATIONS = {
         Path("research/preregistrations")
         / "trial_041_portfolio_risk_control_cs_2026_09_24.json"
     ),
+    "validation_2026_09_24_volatility_managed_tsm": (
+        Path("research/preregistrations")
+        / "trial_042_volatility_managed_tsm_2026_09_24.json"
+    ),
 }
 
 

@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0",
+  "trial_id": "T-2026-09-24-042",
+  "trial_type": "volatility_managed_time_series_momentum",
+  "research_family": "volatility_and_relative_value",
+  "hypothesis": "Eine feste de-risk-only inverse-Varianz-Skalierung eines monatlich rebalancierten 252-Tage-Long/Short-TSM-Signals kann die robuste Risikoqualität gegenüber dem unveränderten gleichgewichteten TSM-Control verbessern, ohne Rendite- oder Evidenz-Gates zu verschlechtern.",
+  "universe": "validation_2026_09_24_volatility_managed_tsm",
+  "symbols": [
+    "DLS",
+    "DEM",
+    "EES",
+    "EWX",
+    "HDV",
+    "SPHD",
+    "VOOG",
+    "VOOV",
+    "OEF",
+    "IWV"
+  ],
+  "interval": "1d",
+  "requested_candles": 3500,
+  "target_candles": 3500,
+  "mechanism": {
+    "signal": "sign(close[t-1] / close[t-253] - 1)",
+    "signal_lookback_sessions": 252,
+    "realized_volatility_lookback_sessions": 21,
+    "annualized_target_volatility": 0.1,
+    "scaling": "min(1.0, target_variance / trailing_realized_variance)",
+    "scaling_target_variance": 0.01,
+    "de_risk_only": true,
+    "gross_exposure_cap": 1,
+    "baseline_control": "same 252-day long/short TSM signal with equal 1/N absolute weights",
+    "rebalance": "first trading session of each calendar month using information available through prior session close",
+    "leverage": 1,
+    "short_allowed": true
+  },
+  "cost_model": {
+    "base_fee_bps": 10,
+    "base_slippage_bps": 5,
+    "scenarios": [
+      "base",
+      "1.5x",
+      "2x"
+    ]
+  },
+  "data_contract": {
+    "target_common_calendar": 3500,
+    "research_return_periods": 2798,
+    "holdout_return_periods": 700,
+    "point_in_time": true
+  },
+  "rolling_evaluation": {
+    "windows": 5,
+    "selection_window_only_for_training_parameters": false
+  },
+  "gates": {
+    "research_return_positive": true,
+    "research_max_drawdown_lte_percent": 10,
+    "research_profit_factor_gte": 1.1,
+    "rolling_min_profit_factor_gte": 1.1,
+    "rolling_profitable_window_ratio_gte": 0.5,
+    "rolling_average_drawdown_lte_percent": 10,
+    "oos_to_is_return_ratio_gte": 0.25,
+    "holdout_return_positive": true,
+    "holdout_profit_factor_gte": 1.1,
+    "holdout_max_drawdown_lte_percent": 10,
+    "stress_holdout_return_nonnegative_at_1_5x": true,
+    "stress_holdout_return_nonnegative_at_2x": true,
+    "non_deterioration_vs_equal_weight_control": true
+  },
+  "search_scope": {
+    "parameter_search": false,
+    "threshold_search": false,
+    "asset_selection_by_performance": false,
+    "variant_search": false,
+    "holdout_used_for_selection": false
+  },
+  "disjointness": {
+    "fully_symbol_disjoint_from_existing_universes": true,
+    "allowed_overlap_universes": []
+  },
+  "coverage_gate": {
+    "performance_allowed_before_coverage_pass": false,
+    "holdout_used_for_selection": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}

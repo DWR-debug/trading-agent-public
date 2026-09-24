@@ -113,6 +113,22 @@ jobs:
               "Before another return-generating strategy family"
           )
 
+          t042_prereg = json.loads(Path(
+              "research/preregistrations/trial_042_volatility_managed_tsm_2026_09_24.json"
+          ).read_text(encoding="utf-8"))
+          assert t042_prereg["trial_id"] == "T-2026-09-24-042"
+          assert t042_prereg["universe"] == "validation_2026_09_24_volatility_managed_tsm"
+          assert tuple(t042_prereg["symbols"]) == (
+              "DLS", "DEM", "EES", "EWX", "HDV",
+              "SPHD", "VOOG", "VOOV", "OEF", "IWV"
+          )
+          assert t042_prereg["requested_candles"] == 3500
+          assert t042_prereg["coverage_gate"]["performance_allowed_before_coverage_pass"] is False
+          assert t042_prereg["search_scope"]["parameter_search"] is False
+          assert t042_prereg["search_scope"]["holdout_used_for_selection"] is False
+          assert t042_prereg["safety"]["paper_only"] is True
+          assert t042_prereg["safety"]["live_trading_enabled"] is False
+
           for prereg_path, expected_universe, expected_symbols in (
               (
                   "research/preregistrations/trial_041_portfolio_risk_control_trend_2026_09_24.json",
@@ -173,10 +189,11 @@ jobs:
           assert state['agent_usage']['paid_api_budget_usd'] == 0.0
           assert state['agent_usage']['auto_paid_api_calls'] is False
           assert state['agent_usage']['free_credit_only'] is True
-          assert state['current_preregistered_trial'] == 'T-2026-09-24-041'
+          assert state['current_preregistered_trial'] == 'T-2026-09-24-042'
           assert state['latest_formal_trial'] == 'T-2026-09-24-041'
           assert state['latest_trial_status'] == 'BLOCKED'
-          assert state['current_trial_status'] == 'BLOCKED'
+          assert state['current_trial_status'] == 'PREREGISTERED_COVERAGE_PENDING'
           assert state['engineering_notes']['current_queue_task'] == 'Q-006-VOLATILITY-RELATIVE-VALUE'
+          assert state['engineering_notes']['t042_preregistered'] is True
           print('PROJECT STATE OK')
           PY

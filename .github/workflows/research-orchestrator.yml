@@ -29,6 +29,7 @@ on:
           - european_volatile
           - benchmark
           - cross_asset_trend
+          - validation_2026_09_24_volatility_managed_tsm
           - validation_2026_09_24_network_momentum_t039
           - validation_2026_09_24_network_momentum_t040
           - validation_2026_09_24_portfolio_risk_control_trend
@@ -36,6 +37,7 @@ on:
   push:
     branches:
       - master
+      - research/execute-t042-coverage
     paths:
       - "automation/research_orchestrator.py"
       - "automation/live_market_observer.py"
@@ -113,7 +115,13 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          if [ "$ORCHESTRATOR_MODE" = "research_t041" ]; then
+          if [ "$GITHUB_REF" = "refs/heads/research/execute-t042-coverage" ]; then
+            test "$GITHUB_EVENT_NAME" = "push"
+            test "$(git log -1 --pretty=%s)" = "Research authorization: execute T042 coverage"
+            python -m automation.research_orchestrator \
+              --mode preflight \
+              --universe validation_2026_09_24_volatility_managed_tsm
+          elif [ "$ORCHESTRATOR_MODE" = "research_t041" ]; then
             test "$GITHUB_EVENT_NAME" = "workflow_dispatch"
             test -n "$T041_COVERAGE_RUN_ID"
             gh run download "$T041_COVERAGE_RUN_ID" --repo "$GITHUB_REPOSITORY" --name "unified-research-$T041_COVERAGE_RUN_ID" --dir /tmp/t041-frozen

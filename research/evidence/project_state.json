@@ -5,8 +5,8 @@
   "master_commit": "e920a3df2181a052a4bf38b64500a7777f782094",
   "latest_formal_trial": "T-2026-09-24-041",
   "latest_trial_status": "BLOCKED",
-  "next_reserved_trial": null,
-  "next_research_focus": "Q-006-VOLATILITY-RELATIVE-VALUE: neue orthogonale Volatilitäts-/Relative-Value-Hypothese; zuerst Präregistrierung und Coverage, keine Nachoptimierung von T041.",
+  "next_reserved_trial": "T-2026-09-24-042",
+  "next_research_focus": "T042 coverage preflight on the frozen preregistration; no performance execution until coverage_passed.",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -42,8 +42,8 @@
     ".github/workflows/research-orchestrator.yml",
     ".github/workflows/paper-30-day-experiment-harness.yml"
   ],
-  "current_preregistered_trial": "T-2026-09-24-041",
-  "current_trial_status": "BLOCKED",
+  "current_preregistered_trial": "T-2026-09-24-042",
+  "current_trial_status": "PREREGISTERED_COVERAGE_PENDING",
   "engineering_notes": {
     "t039_preregistered": true,
     "coverage_preflight_active": true,
@@ -96,7 +96,22 @@
     "q004_benchmark_observation_fingerprint": "7e29f40fa5fb26c3b86b462a7232894093333250f8290d9ec81d826e81e0e870",
     "q004_cross_asset_observation_fingerprint": "da8e4a25b558653fbd7327ab1b1258dc55537382aa8666091d0e850be52a57a2",
     "q004_formal_trial_created": false,
-    "q005_governance_audit_status": "COMPLETED"
+    "q005_governance_audit_status": "COMPLETED",
+    "t042_preregistered": true,
+    "t042_coverage_required_before_performance": true,
+    "t042_universe": "validation_2026_09_24_volatility_managed_tsm",
+    "t042_symbols": [
+      "DLS",
+      "DEM",
+      "EES",
+      "EWX",
+      "HDV",
+      "SPHD",
+      "VOOG",
+      "VOOV",
+      "OEF",
+      "IWV"
+    ]
   },
   "agent_usage_efficiency": {
     "policy": "deterministic_actions_for_computation_and_agent_use_for_architecture_review_synthesis",
