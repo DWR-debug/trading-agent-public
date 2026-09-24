@@ -344,6 +344,15 @@ def analyze(source_root: Path) -> dict[str, Any]:
             "orders_enabled": False,
         },
     }
+    # Fingerprint the exact JSON-representable form that will be persisted.
+    # This keeps verification stable across dict-key/type normalization.
+    result = json.loads(
+        json.dumps(
+            result,
+            ensure_ascii=False,
+            allow_nan=False,
+        )
+    )
     result["diagnostic_fingerprint"] = _fp(result)
     return result
 
