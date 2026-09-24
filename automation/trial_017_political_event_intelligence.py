@@ -130,8 +130,16 @@ def run_trial(
     day = start
     while day <= end:
         if using_downloaded_events:
+            path = raw_dir / f"{day.isoformat()}.zip"
+            if not path.exists():
+                download_daily_export(
+                    datetime.combine(day, datetime.min.time(), tzinfo=timezone.utc),
+                    path,
+                )
             day_stats = {"rows_seen": 0, "rows_skipped": 0}
-            events.extend(parse_event_zip(raw_dir / f"{day.isoformat()}.zip", strict=False, stats=day_stats))
+            events.extend(
+                parse_event_zip(path, strict=False, stats=day_stats)
+            )
             parse_stats["rows_seen"] += day_stats["rows_seen"]
             parse_stats["rows_skipped"] += day_stats["rows_skipped"]
         else:
