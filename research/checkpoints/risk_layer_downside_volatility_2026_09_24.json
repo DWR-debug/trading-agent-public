@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "checkpoint_type": "risk_layer_downside_volatility_2026_09_24_result",
+  "status": "COMPLETED",
+  "run_id": 35967492892,
+  "artifact_id": 10794543588,
+  "artifact_digest": "sha256:2d044a9318c8c1101ae054331695f9a65230729d639bd2d632cd6b7d03087d47",
+  "experiment_fingerprint": "cf73052691dba0220e08a8b0ef15de1fbe175f2e694b6e7bb22c38774f645700",
+  "replication_counts": {
+    "rapid_delayed_rate_improved": 0,
+    "rapid_onset_active_rate_improved": 0,
+    "research_drawdown_non_deteriorated": 0,
+    "rolling_pf_non_deteriorated": 4
+  },
+  "decision_rule": "downside_volatility_not_supported",
+  "conclusion": "Downside-volatility scaling did not improve Rapid-Drawdown timing and increased Research DD in all four independent validation families; it is not adopted.",
+  "holdout_used_for_decision": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false
+  },
+  "next_step": "Shift research focus from volatility-metric variants to underlying signal/portfolio drawdown formation and repair timestamp-based validation alignment (Issue #55)."
+}
