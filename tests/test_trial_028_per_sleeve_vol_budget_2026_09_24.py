@@ -82,6 +82,7 @@ def test_gate_contract_passes_for_equal_strong_candidate():
 
 def test_gate_contract_blocks_holdout_deterioration():
     scenario = _scenario()
+    scenario["base"]["fixed_candidate"]["holdout"]["period_return"] = 0.10
     scenario["base"]["per_sleeve_vol_budget"]["holdout"]["period_return"] = 0.05
     result = _gates(scenario, ResearchGateConfig())
     assert result["non_worsening_vs_fixed_candidate"]["holdout_return_not_below_fixed"] is False
