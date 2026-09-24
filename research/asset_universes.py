@@ -305,7 +305,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
             "Fully symbol-disjoint validation universe for Trial 032; fixed market-residual "
             "momentum research control with a single broad-market benchmark proxy."
         ),
-        symbols=("ACWX","FEZ","SCHE","SCHC","UNG","PPLT","CPER","IGOV","OIH","XPH","XHE","XSW","PBS"),
+        symbols=("ACWX","FEZ","SCHE","SCHC","UNG","PPLT","CPER","IGOV","OIH","XPH","XHE","XSW","PSJ"),
         target_count=3500,
     ),
 
