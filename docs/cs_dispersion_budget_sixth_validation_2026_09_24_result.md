@@ -10,10 +10,10 @@ symbol-disjunkten Validierungssatz mit exakt 3.500 gemeinsamen Candles und
 oder Schwellenwertsuche. Der Holdout wurde ausschließlich als Bestätigung
 verwendet.
 
-Validation Artifact: 10799487056
+Validation Artifact: 10799293827
 
 Report-Fingerprint:
-62134f7eb851b83d7a5852b1751b15019c308ec5c0f098ff25733c8a7056de59
+ce7db03ddee10928ded0b859a6748c077198bcbe7974d514ccdb77ac6a80f64a
 
 ## Präregistrierte Regel
 
