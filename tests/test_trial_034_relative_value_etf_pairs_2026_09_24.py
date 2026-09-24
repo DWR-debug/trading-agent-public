@@ -38,29 +38,29 @@ def test_ineligible_pair_forces_flat():
 
 def test_weights_are_market_neutral_and_gross_capped():
     pair_states=(
-        _state((1,),left="A",right="B"),
-        _state((-1,),left="C",right="D"),
+        _state((1,),left="VTWO",right="IJR"),
+        _state((-1,),left="QQEW",right="ONEQ"),
     )
     weights=_weights_from_states(pair_states,0)
     assert abs(sum(weights.values())) < 1e-12
     assert abs(sum(abs(x) for x in weights.values())-1.0) < 1e-12
-    assert weights["A"]>0 and weights["B"]<0
-    assert weights["C"]<0 and weights["D"]>0
+    assert weights["VTWO"]>0 and weights["IJR"]<0
+    assert weights["QQEW"]<0 and weights["ONEQ"]>0
 
 def test_no_active_pairs_means_cash():
     pair_states=(
-        _state((0,),left="A",right="B"),
-        _state((0,),left="C",right="D"),
+        _state((0,),left="VTWO",right="IJR"),
+        _state((0,),left="QQEW",right="ONEQ"),
     )
     weights=_weights_from_states(pair_states,0)
     assert all(abs(v)<1e-12 for v in weights.values())
 
 def test_two_active_pairs_split_gross_equally():
     pair_states=(
-        _state((1,),left="A",right="B"),
-        _state((1,),left="C",right="D"),
+        _state((1,),left="VTWO",right="IJR"),
+        _state((1,),left="QQEW",right="ONEQ"),
     )
     weights=_weights_from_states(pair_states,0)
     assert abs(sum(abs(x) for x in weights.values())-1.0)<1e-12
-    assert abs(weights["A"]-0.25)<1e-12
-    assert abs(weights["B"]+0.25)<1e-12
+    assert abs(weights["VTWO"]-0.25)<1e-12
+    assert abs(weights["IJR"]+0.25)<1e-12
