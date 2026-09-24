@@ -333,9 +333,6 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=3520,
     ),
 
-
-
-,
     AssetUniverse(
         name="validation_2026_09_24_network_momentum_t040",
         priority=52,
