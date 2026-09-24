@@ -24,7 +24,8 @@ def test_daily_58_and_intraday_61_dateadded_formats_are_supported():
     event58 = parse_event_row(values58)
     assert event58.date_added.isoformat() == "2026-09-24T12:30:00+00:00"
     
-    values61 = values58 + ["", "", "", "20260924123000", "https://example.com/61"]
+    values61 = values58[:56] + ["", "", "", "20260924123000", "https://example.com/61"]
+    assert len(values61) == 61
     event61 = parse_event_row(values61)
     assert event61.date_added.isoformat() == "2026-09-24T12:30:00+00:00"
     assert event61.source_url == "https://example.com/61"
