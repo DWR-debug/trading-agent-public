@@ -48,7 +48,7 @@ jobs:
           target=set(symbols)
           for item in list_universes():
               assert target.isdisjoint(item.symbols), item.name
-          print("TRIAL_036_UNIVERSE_DISJOINT_OK")
+          print("TRIAL_037_UNIVERSE_DISJOINT_OK")
           PY
       - name: Coverage
         run: |
@@ -85,9 +85,9 @@ jobs:
           (out/"trial_037_coverage_preflight_2026_09_24.json").write_text(
               json.dumps(m,indent=2),encoding="utf-8"
           )
-          print("TRIAL_036_COVERAGE_OK:",len(common))
-          print("TRIAL_036_COUNTS:",counts)
-          print("TRIAL_036_COVERAGE_FINGERPRINT:",m["coverage_fingerprint"])
+          print("TRIAL_037_COVERAGE_OK:",len(common))
+          print("TRIAL_037_COUNTS:",counts)
+          print("TRIAL_037_COVERAGE_FINGERPRINT:",m["coverage_fingerprint"])
           PY
       - name: Artefakt sichern
         if: always()
