@@ -202,6 +202,26 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("AAPL", "MSFT", "AMZN", "META", "GOOGL"),
         target_count=3500,
     ),
+    AssetUniverse(
+        name="validation_2026_09_24_portfolio_risk_parity_trend",
+        priority=30,
+        description=(
+            "Fixed fully symbol-disjoint U.S. stock universe for the pre-registered "
+            "portfolio allocation trend sleeve control."
+        ),
+        symbols=("IBM", "GE", "CAT", "MMM", "HD", "LOW", "UNP", "NKE"),
+        target_count=3500,
+    ),
+    AssetUniverse(
+        name="validation_2026_09_24_portfolio_risk_parity_cs",
+        priority=31,
+        description=(
+            "Fixed fully symbol-disjoint U.S. stock universe for the pre-registered "
+            "portfolio allocation cross-sectional momentum sleeve control."
+        ),
+        symbols=("BAC", "JPM", "GS", "MS", "C"),
+        target_count=3500,
+    ),
 )
 
 
