@@ -394,7 +394,7 @@ def _gates(
             stress2["holdout"]["period_return"] >= 0.0
         ),
         "total_return_sensitivity_nonnegative": (
-            base["total_return_sensitivity"]["holdout"]["period_return"]
+            scenarios["base"]["total_return_sensitivity"]["holdout"]["period_return"]
             >= 0.0
         ),
     }
