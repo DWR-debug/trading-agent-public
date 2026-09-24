@@ -3,10 +3,10 @@
   "updated": "2026-09-24",
   "repository": "DWR-debug/trading-agent-public",
   "master_commit": "e920a3df2181a052a4bf38b64500a7777f782094",
-  "latest_formal_trial": "T-2026-09-24-040",
+  "latest_formal_trial": "T-2026-09-24-041",
   "latest_trial_status": "BLOCKED",
-  "next_reserved_trial": "T-2026-09-24-041",
-  "next_research_focus": "T041 formal performance evaluation on the frozen coverage snapshot; no holdout selection and no parameter search",
+  "next_reserved_trial": null,
+  "next_research_focus": "Q-006-VOLATILITY-RELATIVE-VALUE: neue orthogonale Volatilitäts-/Relative-Value-Hypothese; zuerst Präregistrierung und Coverage, keine T041-Parameternachsuche.",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -43,7 +43,7 @@
     ".github/workflows/paper-30-day-experiment-harness.yml"
   ],
   "current_preregistered_trial": "T-2026-09-24-041",
-  "current_trial_status": "COVERAGE_PASSED_PERFORMANCE_PENDING",
+  "current_trial_status": "BLOCKED",
   "engineering_notes": {
     "t039_preregistered": true,
     "coverage_preflight_active": true,
@@ -56,9 +56,9 @@
     "next_trial_candidate_selection": "coverage_only_fixed_pool",
     "t040_formal_completed": true,
     "t040_negative_evidence_archived": true,
-    "current_queue_task": "Q-003-PORTFOLIO-RISK-CONTROL",
+    "current_queue_task": "Q-006-VOLATILITY-RELATIVE-VALUE",
     "automatic_formal_execution_requires_preregistration": true,
-    "last_completed_queue_task": "Q-002-ADVERSARIAL-FAILURE-DIAGNOSIS",
+    "last_completed_queue_task": "Q-003-PORTFOLIO-RISK-CONTROL",
     "last_completed_diagnosis_fingerprint": "92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea",
     "cross_trial_failure_diagnosis_implemented": true,
     "t041_preregistered": true,
@@ -73,6 +73,20 @@
     "t041_coverage_artifact_id": 10834724131,
     "t041_trend_coverage_fingerprint": "ebc08e73d9fad83da343e2ed15289b4ed05d4774346fb409994989f166469bab",
     "t041_cs_coverage_fingerprint": "091fdc69edec4541c39654fabf308d64bbb7b7b80a9861a2cbe5492cd8ba3bf8",
-    "t041_performance_allowed": true
+    "t041_performance_allowed": false,
+    "t041_formal_workflow_run": 36064175211,
+    "t041_formal_artifact_id": 10835847008,
+    "t041_formal_artifact_sha256": "sha256:ceefba93fc79ec95eb83d6def33ace1ec5068f6dbc0ddf98f8d651b49821198a",
+    "t041_formal_report_fingerprint": "300fd4224b2a9df9a5f2bdcc55381fd5b239049605c7744c77ec43a15c6fdf7a",
+    "t041_scientific_outcome": "NO_PROMOTION_EVIDENCE",
+    "t041_absolute_gates_passed": false,
+    "t041_non_deterioration_gates_passed": false
+  },
+  "agent_usage_efficiency": {
+    "policy": "deterministic_actions_for_computation_and_agent_use_for_architecture_review_synthesis",
+    "paid_api_budget_usd": 0,
+    "auto_paid_api_calls": false,
+    "free_credit_only": true,
+    "lessons_recorded": "reuse_frozen_artifacts; batch_independent_evidence_fetches; fail_fast_contract_tests; no_agent_spend_for_deterministic_backtests"
   }
 }

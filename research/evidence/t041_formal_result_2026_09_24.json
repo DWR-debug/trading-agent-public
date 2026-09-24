@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "trial_id": "T-2026-09-24-041",
+  "status": "BLOCKED",
+  "scientific_outcome": "NO_PROMOTION_EVIDENCE",
+  "workflow": {
+    "run_id": 36064175211,
+    "artifact_id": 10835847008,
+    "artifact_sha256": "sha256:ceefba93fc79ec95eb83d6def33ace1ec5068f6dbc0ddf98f8d651b49821198a"
+  },
+  "source": {
+    "trend_coverage_fingerprint": "ebc08e73d9fad83da343e2ed15289b4ed05d4774346fb409994989f166469bab",
+    "cs_coverage_fingerprint": "091fdc69edec4541c39654fabf308d64bbb7b7b80a9861a2cbe5492cd8ba3bf8",
+    "common_return_count": 3498,
+    "research_count": 2798,
+    "holdout_count": 700
+  },
+  "metrics": {
+    "challenger": {
+      "research_return_percent": 81.26430519864867,
+      "research_drawdown_percent": 37.26934996208925,
+      "research_profit_factor": 1.1024750217082746,
+      "oos_to_is_return_ratio": 0.04733175869772497,
+      "holdout_return_percent": 44.18043954294708,
+      "holdout_drawdown_percent": 19.62622407577188,
+      "holdout_profit_factor": 1.214159896179047,
+      "rolling_min_profit_factor": 1.0323572021676664,
+      "rolling_profitable_window_ratio": 1,
+      "rolling_average_drawdown_percent": 18.54060271045571
+    },
+    "fixed_50_50": {
+      "research_return_percent": 101.7401053772189,
+      "research_drawdown_percent": 35.29081337240415,
+      "research_profit_factor": 1.0997690567406064,
+      "holdout_return_percent": 43.07712210089594,
+      "holdout_drawdown_percent": 23.083954101904926,
+      "holdout_profit_factor": 1.1789510626601014
+    }
+  },
+  "gates": {
+    "all_absolute_passed": false,
+    "all_non_deterioration_passed": false,
+    "failed_absolute": [
+      "research_drawdown_lte_10pct",
+      "rolling_profit_factor_gte_1_10",
+      "average_rolling_drawdown_lte_10pct",
+      "oos_to_is_return_ratio_gte_0_25",
+      "holdout_drawdown_lte_10pct"
+    ],
+    "failed_non_deterioration": [
+      "research_return_not_below_fixed",
+      "research_drawdown_not_worse_vs_fixed"
+    ]
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "holdout_used_for_selection": false,
+  "parameter_search": false,
+  "weight_search": false
+}

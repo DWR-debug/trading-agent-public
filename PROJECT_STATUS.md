@@ -29,39 +29,36 @@ Discovery-Beobachtungen sind ausdrücklich keine Profitabilitätsnachweise und d
 Die deterministische Forschungsmaschine funktioniert vollständig ohne Agentencredits.
 Bezahlte Agenten-/API-Nutzung ist projektseitig deaktiviert. Agenten/Codex dürfen nur bei extern verifiziertem kostenfreiem Kontingent eingesetzt werden. Es gibt keinen Mechanismus zum Nachladen von Credits.
 
-## Aktueller Research-Schritt — Trial 041
+## Aktueller Research-Schritt — Trial 041 — FORMAL ABGESCHLOSSEN
 
-T041 ist als **präregistrierter Portfolio-Risk-Control** vorbereitet und hat den vollständigen Coverage-Preflight bestanden.
+T041 wurde auf dem eingefrorenen Coverage-Snapshot formal ausgewertet und als **NO_SUPPORT / archived_rejected** geschlossen.
 
-Coverage-Workflow: `36062869642`  
-Artifact: `10834724131`  
-Artifact-SHA256: `f51fbc4bdc802fc2388d6516404c12b37fcf2232fe7b6d52aad99e9062ab2e74`
+- Formal-Workflow: `36064175211`
+- Artifact: `10835847008`
+- Artifact-SHA256: `ceefba93fc79ec95eb83d6def33ace1ec5068f6dbc0ddf98f8d651b49821198a`
+- Report-Fingerprint: `300fd4224b2a9df9a5f2bdcc55381fd5b239049605c7744c77ec43a15c6fdf7a`
+- Research/Holdout: 2.798 / 700
+- Frozen Trend-Coverage-Fingerprint: `ebc08e73d9fad83da343e2ed15289b4ed05d4774346fb409994989f166469bab`
+- Frozen CS-Coverage-Fingerprint: `091fdc69edec4541c39654fabf308d64bbb7b7b80a9861a2cbe5492cd8ba3bf8`
 
-- Trend-Leg: 8/8 Symbole mit jeweils 3.500 Candles, gemeinsamer Kalender 3.500
-- Cross-Sectional-Leg: 5/5 Symbole mit jeweils 3.500 Candles, gemeinsamer Kalender 3.500
-- keine fehlenden Symbole
-- keine unzureichende Historie
-- keine Datenfehler
-- Trend-Coverage-Fingerprint: `ebc08e73d9fad83da343e2ed15289b4ed05d4774346fb409994989f166469bab`
-- Cross-Sectional-Coverage-Fingerprint: `091fdc69edec4541c39654fabf308d64bbb7b7b80a9861a2cbe5492cd8ba3bf8`
+### Base-Befund
 
-T041 steht damit bei **COVERAGE_PASSED_PERFORMANCE_PENDING**. Die Performanceauswertung
-ist noch nicht erfolgt; insbesondere wurde kein Holdout zur Auswahl verwendet.
+- Challenger Research: +81,26 % Return / 37,27 % DD / PF 1,102
+- Challenger Holdout: +44,18 % Return / 19,63 % DD / PF 1,214
+- OOS/IS-Return-Ratio: 0,047
+- minimale Rolling-PF: 1,032
 
-Die präregistrierte Regel bleibt unverändert:
-- 63 vorherige gemeinsame Sleeve-Returns;
-- monatliche Neubestimmung;
-- kovarianzbewusste Minimum-Variance-Allokation;
-- Gewicht strikt 0 bis 100 %;
-- kein Shorting und kein Leverage;
-- keine Parameter- oder Gewichtssuche.
+Die feste 50/50-Kontrolle erreicht im Holdout +43,08 % Return / 23,08 % DD / PF 1,179. Der Challenger reduziert den Holdout-Drawdown und verbessert den Holdout-PF, verfehlt aber weiterhin das 10-%-Drawdown-Gate und verschlechtert im Research Return und Drawdown gegenüber 50/50.
 
-Safety:
-- PAPER_ONLY=True
-- LIVE_TRADING_ENABLED=False
-- orders_enabled=False
-- automatic_promotion=False
+### Konsequenz
 
+- keine Promotion
+- keine Parameter-/Gewichts-/Threshold-Suche
+- keine Änderung der Gates
+- Q003 wird als BLOCKED geschlossen
+- nächster Schwerpunkt: Q006 `VOLATILITY-RELATIVE-VALUE`
+
+Die zwischenzeitlichen technischen Versuche 36063501638, 36063700160 und 36064061902 sind separat als nicht-wertbare Ausführungsversuche dokumentiert.
 ## T039 Engine — technische Umsetzung
 
 - separater Research-only Network-Momentum-Lab außerhalb der Produktionsstrategie

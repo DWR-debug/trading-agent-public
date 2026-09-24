@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-24T19:47:43Z",
+  "generated_at": "2026-09-24T21:53:09Z",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -3035,6 +3035,91 @@
         ],
         "malformed_intermediate_runs_excluded_from_formal_evidence": true
       },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-041",
+      "recorded_at": "2026-09-24T21:53:09Z",
+      "status": "archived_rejected",
+      "research_family": "portfolio_risk_control",
+      "hypothesis": {
+        "text": "Eine feste, kovarianzbewusste Minimum-Variance-Allokation zwischen unveränderten Trend- und 12-1-Cross-Sectional-Sleeves verbessert robuste Risikoqualität ohne Verschlechterung gegenüber fixem 50/50."
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "common_return_count": 3498,
+        "holdout_used_for_selection": false,
+        "fully_symbol_disjoint_validation_set": true,
+        "coverage_workflow_id": 36062869642,
+        "coverage_artifact_id": 10834724131,
+        "coverage_artifact_sha256": "sha256:f51fbc4bdc802fc2388d6516404c12b37fcf2232fe7b6d52aad99e9062ab2e74",
+        "trend_coverage_fingerprint": "ebc08e73d9fad83da343e2ed15289b4ed05d4774346fb409994989f166469bab",
+        "cs_coverage_fingerprint": "091fdc69edec4541c39654fabf308d64bbb7b7b80a9861a2cbe5492cd8ba3bf8"
+      },
+      "search_scope": {
+        "parameter_search": false,
+        "weight_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "holdout_used_for_selection": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "single pre-registered challenger versus fixed 50/50 control",
+        "selection_family_id": "portfolio-risk-control-2026-09-24"
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 36064175211,
+        "artifact_id": 10835847008,
+        "artifact_sha256": "sha256:ceefba93fc79ec95eb83d6def33ace1ec5068f6dbc0ddf98f8d651b49821198a",
+        "report_fingerprint": "300fd4224b2a9df9a5f2bdcc55381fd5b239049605c7744c77ec43a15c6fdf7a",
+        "research_return_percent": 81.26430519864867,
+        "research_drawdown_percent": 37.26934996208925,
+        "research_profit_factor": 1.1024750217082746,
+        "rolling_min_profit_factor": 1.0323572021676664,
+        "rolling_profitable_window_ratio": 1,
+        "rolling_average_drawdown_percent": 18.54060271045571,
+        "oos_to_is_return_ratio": 0.04733175869772497,
+        "holdout_return_percent": 44.18043954294708,
+        "holdout_drawdown_percent": 19.62622407577188,
+        "holdout_profit_factor": 1.214159896179047,
+        "fixed_control_research_return_percent": 101.7401053772189,
+        "fixed_control_research_drawdown_percent": 35.29081337240415,
+        "fixed_control_research_profit_factor": 1.0997690567406064,
+        "fixed_control_holdout_return_percent": 43.07712210089594,
+        "fixed_control_holdout_drawdown_percent": 23.083954101904926,
+        "fixed_control_holdout_profit_factor": 1.1789510626601014,
+        "absolute_gates_passed": false,
+        "non_deterioration_gates_passed": false
+      },
+      "technical_attempts": [
+        {
+          "run_id": 36063501638,
+          "status": "invalid_technical",
+          "reason": "runner KeyError on missing holdout partition"
+        },
+        {
+          "run_id": 36063700160,
+          "status": "invalid_scientific",
+          "reason": "fresh coverage was reacquired instead of using the frozen coverage snapshot"
+        },
+        {
+          "run_id": 36064061902,
+          "status": "invalid_technical",
+          "reason": "GitHub CLI GH_TOKEN was missing before frozen artifact download"
+        },
+        {
+          "run_id": 36064175211,
+          "status": "valid_formal_run",
+          "reason": "713 tests and paper-only safety passed; frozen coverage fingerprints matched"
+        }
+      ],
       "safety": {
         "paper_only": true,
         "live_trading_enabled": false,
