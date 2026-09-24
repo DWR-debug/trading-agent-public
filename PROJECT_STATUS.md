@@ -2476,3 +2476,66 @@ Dauerhafte Ablage:
 - LIVE_TRADING_ENABLED=False
 - keine Research-Orders
 - keine Live-Ausführung
+
+
+## Aktueller Checkpoint — Trial 027 Fixed TSM Ensemble Trend Sleeve — 2026-09-24
+
+Trial T-2026-09-24-027 wurde vollständig auf `DWR-debug/trading-agent-public`
+ausgeführt und als **NO_SUPPORT / archived_rejected** abgeschlossen.
+
+### Technischer Nachweis
+
+- PR #132 gemerged
+- Workflow-Run: `36029169717`
+- Artifact-ID: `10820593251`
+- Artifact-SHA256: `sha256:1320c20515be7d24e64f23d9af7090ab4c9f9bb53b6e17c16b924a84e878c247`
+- Report-Fingerprint: `57b87f09de867cb2ef535aaf7e6132618d5e116ca36b04d9968cc8c5b327cf51`
+- Manifest-Fingerprint: `c817bd74d4912316726dbc51347fe0dab22049acadd753bef0bdece89fe59748`
+- 13 neue vollständig symbol-disjunkte ETFs
+- 3.500 Candles je Asset
+- 3.498 gemeinsame PIT-Returns
+- 2.798 Research / 700 Holdout
+- Vorprüfungen, vollständige Testsuite, Safety und Ergebnisintegrität: grün
+- keine Orders
+
+### Fachlicher Befund
+
+Fixed Candidate vs. TSM Challenger im Base-Szenario:
+
+- Research Return: +57,55 % -> +56,76 %
+- Research DD: 16,34 % -> 16,52 %
+- Research PF: 1,096 -> 1,096
+- profitable Rolling-Fenster: 4/5 -> 4/5
+- Ø Rolling DD: 12,82 % -> 13,32 %
+- OOS/IS: 0,461 -> 0,521
+- Holdout Return: +26,55 % -> +29,57 %
+- Holdout DD: 13,45 % -> 10,66 %
+- Holdout PF: 1,164 -> 1,182
+
+Der Challenger verfehlt weiterhin Research-Drawdown, Research-PF,
+Rolling-PF, durchschnittlichen Rolling-Drawdown und Holdout-Drawdown.
+Der Nicht-Verschlechterungsvertrag scheitert bei Research-Return,
+Research-Drawdown und durchschnittlichem Rolling-Drawdown.
+
+### Konsequenz
+
+- keine TSM-Lookback-Suche
+- keine TSM-Definition ändern
+- keine Gewichtsanpassung
+- keine Gate-Lockerung
+- keine Produktionsintegration
+- keine Echtgeldfreigabe
+- keine Orders
+
+Dauerhafte Ablage:
+
+- `docs/trial_027_tsm_ensemble_trend_sleeve_result_2026_09_24.md`
+- `research/checkpoints/trial_027_tsm_ensemble_trend_sleeve_result_2026_09_24.json`
+- `research/evidence/trial_ledger.json`
+
+### Sicherheitsstatus
+
+- PAPER_ONLY=True
+- LIVE_TRADING_ENABLED=False
+- keine Research-Orders
+- keine Live-Ausführung
