@@ -21,7 +21,7 @@ class AssetUniverse:
     source: str = "yahoo_chart"
 
 
-UNSPSMRSES: tuple[AssetUniverse, ...] = (
+UNIVERSES: tuple[AssetUniverse, ...] = (
     AssetUniverse(
         name="small_cap_high_volatility",
         priority=1,
@@ -216,15 +216,15 @@ UNSPSMRSES: tuple[AssetUniverse, ...] = (
 
 
 def get_universe(name: str) -> AssetUniverse:
-    for universe in UNSPSMRSES:
+    for universe in UNIVERSES:
         if universe.name == name:
             return universe
-    available = ", ".join(item.name for item in UNSPSMRSES)
+    available = ", ".join(item.name for item in UNIVERSES)
     raise ValueError(f"Unbekanntes Aktienuniversum: {name}. Verfügbar: {available}")
 
 
 def list_universes() -> tuple[AssetUniverse, ...]:
-    return UNSPSMRSES
+    return UNIVERSES
 
 
 def datasets_for(name: str) -> tuple[tuple[str, str, int], ...]:
