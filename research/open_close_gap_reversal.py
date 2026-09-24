@@ -13,14 +13,14 @@ class OpenCloseGapReversalPolicy:
     """Equal-weight, parameter-free reversal of each asset's overnight gap."""
 
     symbols: tuple[str, ...] = (
-        "SPYG",
-        "SPYV",
-        "SPTM",
-        "SPMD",
-        "SDY",
-        "RWR",
-        "XNTK",
-        "XPH",
+        "JNJ",
+        "KO",
+        "PG",
+        "WMT",
+        "XOM",
+        "CVX",
+        "MCD",
+        "PEP",
     )
 
     def __post_init__(self) -> None:
