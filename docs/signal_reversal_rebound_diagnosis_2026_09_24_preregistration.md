@@ -106,3 +106,7 @@ Nur bei einem replizierten Befund darf daraus anschließend eine separat präreg
 eng definierte Architekturhypothese für einen neuen, vollständig symbol-disjunkten
 Validierungssatz abgeleitet werden. Der Holdout dieser vier Datensätze bleibt für diese
 Entscheidung ausgeschlossen.
+
+## Sicherheitsvertrag
+
+`PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`; Orders sind nicht aktiviert.
