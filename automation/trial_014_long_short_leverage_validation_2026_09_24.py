@@ -256,6 +256,8 @@ def _variant(rows, multiple: float) -> dict:
             "holdout": _stats(holdout),
             "research_rolling": _summary(result["returns"]),
             "ruined": result["ruined"],
+            "maximum_gross_exposure": result["maximum_gross_exposure"],
+            "maximum_short_exposure": result["maximum_short_exposure"],
         }
     return results
 
