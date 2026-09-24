@@ -12,11 +12,15 @@ def test_min_variance_is_half_for_identical_sleeves():
 
 def test_min_variance_prefers_lower_variance_when_covariance_is_fixed():
     trend = [0.005, -0.005] * (COVARIANCE_WINDOW // 2 + 1)
-    cross = [0.02, -0.02] * (COVARIANCE_WINDOW // 2 + 1)
+    cross = [0.01, 0.005, -0.01, -0.005] * (COVARIANCE_WINDOW // 4 + 1)
     trend = trend[:COVARIANCE_WINDOW]
     cross = cross[:COVARIANCE_WINDOW]
     weight = min_variance_weight(trend, cross)
     assert 0.70 < weight < 0.90
+
+
+def test_min_variance_requires_63_prior_observations():
+    assert min_variance_weight([0.01] * (COVARIANCE_WINDOW - 1), [0.01] * (COVARIANCE_WINDOW - 1)) == 0.5
 
 
 def test_min_variance_is_clamped_long_only():
