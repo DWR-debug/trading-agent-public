@@ -202,6 +202,18 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("AAPL", "MSFT", "AMZN", "META", "GOOGL"),
         target_count=3500,
     ),
+
+    AssetUniverse(
+        name="validation_2026_09_24_event_alpha",
+        priority=24,
+        description=(
+            "Research-only market universe for the fixed political/event "
+            "relative-value alpha control."
+        ),
+        symbols=("IWB", "GDX", "BIL"),
+        target_count=3500,
+    ),
+
 )
 
 
