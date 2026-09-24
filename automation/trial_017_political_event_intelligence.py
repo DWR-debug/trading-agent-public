@@ -56,7 +56,7 @@ def _yahoo_daily(symbol: str, start: date, end: date) -> dict[date, float]:
 
 def _event_forward_returns(
     closes: dict[date, float], event_day: date
-) -> tuple[float, float] | None:
+) -> tuple[float, float | None] | None:
     days = sorted(closes)
     if not days:
         return None
@@ -70,9 +70,14 @@ def _event_forward_returns(
     if horizon_index >= len(days):
         return None
     origin = closes[days[origin_index]]
+    five_day = (
+        closes[days[horizon_index]] / origin - 1.0
+        if horizon_index < len(days)
+        else None
+    )
     return (
         closes[days[next_index]] / origin - 1.0,
-        closes[days[horizon_index]] / origin - 1.0,
+        five_day,
     )
 
 
