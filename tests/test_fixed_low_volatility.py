@@ -21,11 +21,9 @@ def test_prior_month_low_vol_uses_only_completed_previous_month():
     timestamps = [
         datetime(2026, 1, 1, tzinfo=timezone.utc) + timedelta(days=i)
         for i in range(260)
-    ]
-    returns = tuple(
-        0.001 if i < 259 else 0.50
-        for i in range(260)
-    )
+    ] + [datetime(2026, 10, 1, tzinfo=timezone.utc)]
+
+    returns = tuple([0.001] * 260 + [0.50])
 
     values = prior_month_low_vol(
         timestamps,
@@ -33,9 +31,10 @@ def test_prior_month_low_vol_uses_only_completed_previous_month():
         lookback_sessions=252,
     )
 
-    # The February selection must use the completed January observations only.
-    assert (2026, 2) in values
-    assert values[(2026, 2)] < 0.01
+    # The cross-month return dated October 1 must not enter September's MAX/VOL
+    # history. October can use the 252 completed sessions ending in September.
+    assert (2026, 10) in values
+    assert values[(2026, 10)] < 0.01
 
 
 def test_low_vol_assets_uses_deterministic_tie_break():
