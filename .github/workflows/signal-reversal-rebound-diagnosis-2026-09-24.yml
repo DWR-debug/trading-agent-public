@@ -170,7 +170,7 @@ jobs:
           assert methodology["cs_skip_sessions"] == 21
           assert methodology["cs_rebalance_sessions"] == 21
           assert methodology["cs_top_n"] == 2
-          assert methodology["prior_decline_sessions"] if False else True
+          assert scope["prior_decline_sessions"] == 20
           assert methodology["worst_bucket_percent"] == 5
           assert methodology["replication_threshold"] == ">=3/4 validations"
           assert methodology["descriptive_not_causal"] is True
