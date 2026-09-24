@@ -52,11 +52,15 @@ class CapitalAccount:
         self.equity_eur = float(equity_eur)
 
     def record_realized_profit(self, amount_eur: float) -> None:
+        """Classify profit without mutating broker-reported equity.
+
+        The execution/account layer remains the source of truth for equity.
+        Keeping the two updates separate prevents double-counting.
+        """
         if amount_eur <= 0:
             raise CapitalAccountingError("Realized profit must be > 0.")
 
         self.realized_profit_eur += float(amount_eur)
-        self.equity_eur += float(amount_eur)
 
     @property
     def distributable_profit_eur(self) -> float:
