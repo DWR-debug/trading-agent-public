@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "updated": "2026-09-24",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "b2b67415defe36159bb130d84ab727da01e3d9b8",
+  "master_commit": "b8ee3cdfb58d1de9b1e8c111a20d896bda739680",
   "latest_formal_trial": "T-2026-09-24-038",
   "latest_trial_status": "DATA_INVALID",
   "next_reserved_trial": "T-2026-09-24-039",
-  "next_research_focus": "T039 deterministic Network Momentum signal implementation, then one fail-closed coverage-to-formal-evaluation path",
+  "next_research_focus": "T039 automated coverage preflight; on explicit formal research dispatch, run the fixed Network Momentum lab only after coverage_passed",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -43,11 +43,13 @@
     ".github/workflows/paper-30-day-experiment-harness.yml"
   ],
   "current_preregistered_trial": "T-2026-09-24-039",
-  "current_trial_status": "PREREGISTERED_COVERAGE_PENDING",
+  "current_trial_status": "PREREGISTERED_FORMAL_ENGINE_READY_COVERAGE_PENDING",
   "engineering_notes": {
     "t039_preregistered": true,
     "coverage_preflight_active": true,
-    "formal_performance_implemented": false,
-    "automatic_promotion": false
+    "formal_performance_implemented": true,
+    "automatic_promotion": false,
+    "formal_research_requires_coverage_pass": true,
+    "pushes_run_observation_and_coverage_preflight": true
   }
 }
