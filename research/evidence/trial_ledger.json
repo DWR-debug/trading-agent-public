@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-24T15:56:00+02:00",
+  "generated_at": "2026-09-24T16:04:00+02:00",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -1312,6 +1312,65 @@
         "technical_status": "INVALID_NO_RESEARCH_RESULT",
         "workflow_run_id": 36008838474,
         "code_commit_sha": "0207942727f204382c89b09a575a0fcd456685fb",
+        "reason": "Historical Yahoo acquisition reached only 3,322 common timestamps after five acquisition attempts, below the fixed 3,500-candle contract. The gap-reversal research/backtest was never executed.",
+        "no_artifact_generated": true
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-020",
+      "recorded_at": "2026-09-24T16:04:00+02:00",
+      "status": "archived_technical_failure",
+      "research_family": "overnight_intraday_gap_reversal",
+      "hypothesis": {
+        "text": "Eine feste, parameterfreie Gegenposition zum Overnight-Gap eines vollständig neuen ETF-Universums erzeugt robuste positive Same-Day-Intraday-Rendite."
+      },
+      "data_scope": {
+        "research_count": null,
+        "holdout_count": null,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [],
+        "fully_symbol_disjoint_validation_set": true,
+        "symbols": [
+          "SPYG",
+          "SPYV",
+          "SPTM",
+          "SPMD",
+          "SDY",
+          "RWR",
+          "XNTK",
+          "XPH"
+        ]
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered single hypothesis; technical run terminated before research result",
+        "selection_family_id": "overnight-intraday-gap-reversal-2026-09-24",
+        "selection_metric": null
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "technical_status": "INVALID_NO_RESEARCH_RESULT",
+        "workflow_run_id": 36009263715,
+        "code_commit_sha": "e4d960ecc8f06aaceaa1ddc1997fda6c2c9ebcd5",
         "reason": "Historical Yahoo acquisition reached only 3,322 common timestamps after five acquisition attempts, below the fixed 3,500-candle contract. The gap-reversal research/backtest was never executed.",
         "no_artifact_generated": true
       },
