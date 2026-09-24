@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "trial_id": "T-2026-09-24-016",
+  "status": "archived_rejected",
+  "workflow_run_id": 35990335834,
+  "artifact_id": 10803962414,
+  "artifact_sha256": "e09b7a3ff668dbea2b75470bfa8506d9da120f356fa494465d3783188540ad4c",
+  "report_fingerprint": "fa9c9046a7f48588fe12a5347a13350f446f6cdfd65fae9d7d097058160272ea",
+  "manifest_fingerprint": "c4502fe1da2d783ea77e3d75a80b2931362b419f4d30b63f88dfc9cb8a54ae54",
+  "code_version": "fe44af1452e0de61164fcbecef0416ce8bcbf360",
+  "universe": {
+    "name": "validation_2026_09_24_sixteenth_cross_asset_cs",
+    "symbols": [
+      "DBA",
+      "DBB",
+      "FXA",
+      "FXY",
+      "MUB",
+      "SHV",
+      "EMB",
+      "BWX"
+    ],
+    "target_candles": 3500,
+    "common_returns": 3498,
+    "research_count": 2798,
+    "holdout_count": 700,
+    "fully_symbol_disjoint": true
+  },
+  "methodology": {
+    "formation_sessions": 252,
+    "skip_sessions": 21,
+    "rebalance_sessions": 21,
+    "top_n": 2,
+    "long_only": true,
+    "leverage": 1,
+    "base_cost_rate": 0.0015,
+    "stress_multiplier": 2,
+    "optimization_used": false,
+    "holdout_selection_used": false
+  },
+  "outcomes": {
+    "base": {
+      "cs_momentum": {
+        "research_return_percent": 0.1051899327605188,
+        "research_max_drawdown_percent": 30.509257086973484,
+        "research_profit_factor": 1.0097743142363809,
+        "holdout_return_percent": 4.703909082526403,
+        "holdout_max_drawdown_percent": 13.637900974190664,
+        "rolling_positive_windows": 2
+      },
+      "sma_reference": {
+        "research_return_percent": -16.853717737449603,
+        "research_max_drawdown_percent": 24.89231863464476,
+        "holdout_return_percent": 1.8057293992344015,
+        "holdout_max_drawdown_percent": 8.007705717967074,
+        "rolling_positive_windows": 1
+      },
+      "equal_weight": {
+        "research_return_percent": -20.398823164545032,
+        "research_max_drawdown_percent": 26.77430033336409,
+        "holdout_return_percent": 9.051112580570342,
+        "holdout_max_drawdown_percent": 6.887476178408258,
+        "rolling_positive_windows": 1
+      },
+      "blend_50_50": {
+        "research_return_percent": -8.46731669916988,
+        "research_max_drawdown_percent": 26.766972028640335,
+        "holdout_return_percent": 3.440342941241312,
+        "holdout_max_drawdown_percent": 8.803610436724863,
+        "rolling_positive_windows": 2
+      }
+    },
+    "stress_2x_cost": {
+      "cs_momentum": {
+        "research_return_percent": -7.70293170774774,
+        "research_max_drawdown_percent": 33.17414208680541,
+        "research_profit_factor": 0.9921364758217825,
+        "holdout_return_percent": 2.2079904970568442,
+        "holdout_max_drawdown_percent": 13.769138545255776,
+        "rolling_positive_windows": 2
+      },
+      "sma_reference": {
+        "research_return_percent": -23.153368101255168,
+        "research_max_drawdown_percent": 26.484442259672225,
+        "holdout_return_percent": -0.16914163091296125,
+        "holdout_max_drawdown_percent": 8.493471244149575,
+        "rolling_positive_windows": 1
+      },
+      "equal_weight": {
+        "research_return_percent": -20.51843354230447,
+        "research_max_drawdown_percent": 26.884330787020893,
+        "holdout_return_percent": 9.051112580570342,
+        "holdout_max_drawdown_percent": 6.887476178408258,
+        "rolling_positive_windows": 1
+      },
+      "blend_50_50": {
+        "research_return_percent": -15.50049381578974,
+        "research_max_drawdown_percent": 29.754056130193085,
+        "holdout_return_percent": 1.206184790114495,
+        "holdout_max_drawdown_percent": 9.210670503265906,
+        "rolling_positive_windows": 2
+      }
+    }
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false
+  }
+}
