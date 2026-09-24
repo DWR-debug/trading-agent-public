@@ -28,24 +28,32 @@ CASES = (
         "artifact_id": 10751817990,
         "run_id": 35865847394,
         "root": "research/candidate_validation",
+        "trend_universe": "validation_trend",
+        "cs_universe": "validation_cs",
     },
     {
         "name": "validation_2",
         "artifact_id": 10740188093,
         "run_id": 35839443616,
         "root": "research/independent_validation_2026_09_23",
+        "trend_universe": "validation_2026_09_23_trend",
+        "cs_universe": "validation_2026_09_23_cs",
     },
     {
         "name": "validation_3",
         "artifact_id": 10745697729,
         "run_id": 35851876264,
         "root": "research/third_independent_validation_2026_09_23",
+        "trend_universe": "validation_2026_09_23_third_trend",
+        "cs_universe": "validation_2026_09_23_third_cs",
     },
     {
         "name": "validation_4",
         "artifact_id": 10753545703,
         "run_id": 35867637587,
         "root": "research/fourth_independent_validation_2026_09_23",
+        "trend_universe": "validation_2026_09_23_fourth_trend",
+        "cs_universe": "validation_2026_09_23_fourth_cs",
     },
 )
 
