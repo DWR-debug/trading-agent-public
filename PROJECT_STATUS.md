@@ -452,6 +452,32 @@ Dauerhafte Evidenzablage:
 
 Der nächste Forschungsschritt muss eine orthogonale Alpha-Familie prüfen.
 
+### 2u. Portfolio-/Execution-Foundation — 2026-09-24
+
+Nach Abschluss der unabhängigen Alpha-Controls wurde eine rein technische
+Foundation für die spätere Portfolio- und Execution-Schicht ergänzt.
+
+Portfolio:
+- deterministische Validierung bereits festgelegter signierter Exposures
+- explizite Gross-, Net- und Per-Symbol-Limits
+- deterministische Sleeve-Komposition
+- keine automatische Normalisierung, Optimierung oder Auswahl
+
+Execution/Kosten:
+- separates opt-in Kostenmodell für Gebühr, Slippage und Spread
+- explizite Round-Trip-Kosten
+- explizite Short-Borrow-Kosten pro Tag
+- bestehende PaperBroker-/Backtest-Defaults wurden bewusst nicht verändert
+
+Die Foundation verändert keine bestehende Strategie, keine Research-Gates,
+keine Produktionskonfiguration und führt keine Orders aus.
+
+Dauerhafte Evidenzablage:
+- portfolio/allocator.py
+- execution/cost_model.py
+- docs/PORTFOLIO_EXECUTION_FOUNDATION.md
+- research/checkpoints/portfolio_execution_foundation_2026_09_24.json
+
 ### 3. Micro-Trading: aktueller Abschluss des 5m-Controls
 
 PR #39 und der anschließende CI-Fix PR #40 sind gemerged.
@@ -478,25 +504,33 @@ Der Long-0x-Befund liegt nahe am Buy-and-Hold-Proxy und fällt bereits bei einem
 Bruchteil des Projektkosten-Basissatzes massiv ab. Short liefert bereits ohne
 Kosten einen negativen Holdout-Befund.
 
-Wichtige methodische Einschränkung: Die zugrunde liegende Literatur untersucht
-1-Minuten-Renditen an den Minuten 00/15/30/45. Unser 5m-Control ist deshalb nur
-eine grobe Replikation und keine direkte Reproduktion des publizierten Designs.
-Das publizierte Ergebnis ist folglich weder durch diesen 5m-Control bestätigt
-noch allein dadurch widerlegt.
+Wi### 5. Gesamtfokus ab jetzt
 
-### 4. Micro-Familie insgesamt
+Die Gap-Reversal-Familie ist methodisch abgeschlossen:
+- Trials 018 und 019 scheiterten technisch an der 3.500-Candle-Datenhürde.
+- Trial 020 scheiterte ebenfalls technisch bei 3.322 gemeinsamen Candles.
+- Trial 021 lieferte einen vollständigen negativen Research-/Holdout-Befund.
+- Es werden keine weiteren Gap-Reversal-Varianten, Schwellenwerte oder Asset-Suchen
+  aus diesem Befund abgeleitet.
 
-Die bisherige Micro-Familie wurde inzwischen auf mehreren vollständig
-symbol-disjunkten Universen kontrolliert:
+Der nächste Schwerpunkt liegt daher auf der Portfolio-/Execution-Schicht:
+1. opt-in ExecutionCostModel gegen bestehende Broker-/Backtest-Semantik abgleichen,
+2. Portfolio-Allocator auf die fixierten Trend-/Cross-Sectional-Sleeves anwenden,
+3. erst danach eine einzelne, vorab definierte Portfolio-Hypothese auf einem unabhängigen
+   Datensatz validieren.
 
-- 15m Continuation / Reversal
-- Directional Short / Long mit 1x-3x
-- Holding Horizons H1 / H4 / H16
-- unabhängige Holding-Horizon-Replikation
-- 5m Turn-of-the-Candle-Control
+Bestehende Strategien, Parameter, Gewichte und Gates bleiben bis zu einer expliziten
+Research-Validierung unverändert.
 
-Der wiederkehrende Befund ist: Vor-Kosten-Returns können bei einfachen
-Reversal-/Calendar-Time-Regeln stark erscheinen, aber Kosten, Turnover,
+## Sicherheitsstatus
+
+- PAPER_ONLY = True
+- LIVE_TRADING_ENABLED = False
+- keine Live-Ausführung
+- keine Research-Orders
+- keine Gate-Lockerung
+
+n stark erscheinen, aber Kosten, Turnover,
 Drawdown oder unabhängige Replikation entfernen den Robustheitsnachweis.
 Deshalb bleibt Micro-Trading ein Forschungszweig und wird nicht in die
 Tagesstrategie integriert.
