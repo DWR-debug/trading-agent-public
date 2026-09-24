@@ -24,7 +24,7 @@ def test_half_spread_is_added_to_one_way_price_impact_and_cost():
 
 def test_short_borrow_cost_is_deterministic():
     model = ExecutionCostModel(short_borrow_annual_bps=252.0)
-    assert model.short_borrow_cost(1000.0, days=5) == pytest.approx(5.0)
+    assert model.short_borrow_cost(1000.0, days=5) == pytest.approx(0.5)
 
 
 def test_invalid_execution_parameters_fail_closed():
