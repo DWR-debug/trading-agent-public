@@ -98,7 +98,7 @@ def _build_rows(
         window_features = [
             item
             for event_day, item in features.items()
-            if previous_day < event_day < target_day
+            if previous_day <= event_day < target_day
         ]
         qualifying = any(
             item.international_material_conflict_count > 0
