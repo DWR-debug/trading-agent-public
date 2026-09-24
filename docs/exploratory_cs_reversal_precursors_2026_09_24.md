@@ -15,7 +15,7 @@ Vorab festgelegte, zeitlich verfügbare Merkmale:
 - Gap der unveränderten 252/21-Signal-Scores zwischen Top-2 und Nichtgewinnern;
 - Position innerhalb des festen 21-Session-Rebalance-Zyklus.
 
-Es werden keine Modelle trainiert, keine Schwellenwerte gesucht und keine
+Es werden keine Modelle trainiert, keine Schwellenwerte und keine
 Strategie-, Gate- oder Produktionsänderungen vorgenommen.
 
 Die Analyse dient ausschließlich dazu, einen möglichen Vorläufer eines
