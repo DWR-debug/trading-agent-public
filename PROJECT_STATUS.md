@@ -2591,3 +2591,35 @@ Dauerhafte Ablage:
 - LIVE_TRADING_ENABLED=False
 - keine Research-Orders
 - keine Live-Ausführung
+
+
+## Aktueller Checkpoint — Trial 029 DATA_INVALID — 2026-09-24
+
+Trial T-2026-09-24-029 wurde vor jeder Performanceauswertung als **DATA_INVALID** abgeschlossen.
+
+- Workflow: `36039285580`
+- Artifact: `10826146206`
+- Artifact-SHA256: `sha256:652627afbe7ab0cb39d374d986a32d265c779d9f96b27f233d3b8108477fc036`
+- Ziel: 3.500 Candles je Symbol
+- 12/13 Symbole: 3.520 Candles
+- IEFA: 3.496 Candles
+- gemeinsamer Kalender: 3.496
+- keine Research-/Holdout-Evaluation
+- keine wissenschaftliche Performanceaussage
+
+Die Abweichung entstand durch die tatsächliche historische Abdeckung von IEFA;
+der Datenvertrag wurde weder gelockert noch nachträglich angepasst.
+
+### Konsequenz
+
+Trial 029 wird nicht als negatives Performance-Ergebnis gewertet. Der nächste
+Researchsatz wird vor der Präregistrierung ausschließlich auf historische
+Datenabdeckung und gemeinsamen Kalender vorgeprüft. Erst ein bestandenes
+Coverage-Preflight wird als neuer, vollständig disjunkter Trial präregistriert.
+
+### Sicherheitsstatus
+
+- PAPER_ONLY=True
+- LIVE_TRADING_ENABLED=False
+- keine Research-Orders
+- keine Live-Ausführung
