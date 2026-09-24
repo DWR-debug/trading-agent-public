@@ -104,6 +104,63 @@ def period_return(
 
     raise LeverageModelError(f"Unsupported leverage mode: {config.mode}")
 
+def portfolio_period_return(
+    underlying_return: float,
+    gross_exposure: float,
+    short_exposure: float,
+    config: LeverageConfig,
+) -> float:
+    """Apply leverage and financing to a multi-position portfolio.
+
+    `underlying_return` is the period P&L of the normalized base portfolio,
+    `gross_exposure` is its absolute notional before leverage, and
+    `short_exposure` is the absolute short notional before leverage.
+    """
+    if not isfinite(underlying_return) or underlying_return <= -1.0:
+        raise LeverageModelError(
+            "underlying_return must be finite and greater than -100%."
+        )
+    if not isfinite(gross_exposure) or gross_exposure < 0.0:
+        raise LeverageModelError(
+            "gross_exposure must be finite and >= 0."
+        )
+    if not isfinite(short_exposure) or short_exposure < 0.0:
+        raise LeverageModelError(
+            "short_exposure must be finite and >= 0."
+        )
+    if short_exposure > gross_exposure + 1e-12:
+        raise LeverageModelError(
+            "short_exposure cannot exceed gross_exposure."
+        )
+
+    leveraged_return = underlying_return * config.multiple
+
+    if config.mode is LeverageMode.MARGIN:
+        leveraged_gross = gross_exposure * config.multiple
+        borrowed = max(0.0, leveraged_gross - 1.0)
+        financing = (
+            borrowed
+            * config.financing_rate_annual
+            / config.periods_per_year
+        )
+        borrow = (
+            short_exposure
+            * config.multiple
+            * config.short_borrow_rate_annual
+            / config.periods_per_year
+        )
+        return leveraged_return - financing - borrow
+
+    if config.mode is LeverageMode.DAILY_RESET_PRODUCT:
+        product_fee = (
+            gross_exposure
+            * config.product_fee_annual
+            / config.periods_per_year
+        )
+        return leveraged_return - product_fee
+
+    raise LeverageModelError(f"Unsupported leverage mode: {config.mode}")
+
 
 def simulate_leveraged_path(
     underlying_returns: tuple[float, ...],
