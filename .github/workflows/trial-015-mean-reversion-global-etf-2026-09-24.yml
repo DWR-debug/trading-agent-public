@@ -1,21 +1,6 @@
 name: Trial 015 Mean Reversion Global ETF Validation 2026-09-24
 
 on:
-  pull_request:
-    types: [opened, synchronize]
-    branches: [master]
-    paths:
-      - "automation/trial_015_mean_reversion_global_etf_2026_09_24.py"
-      - "tests/test_trial_015_mean_reversion_global_etf_2026_09_24.py"
-      - "research/asset_universes.py"
-      - "docs/trial_015_mean_reversion_global_etf_preregistration_2026_09_24.md"
-      - ".github/workflows/trial-015-mean-reversion-global-etf-2026-09-24.yml"
-      - "strategies/mean_reversion.py"
-      - "strategies/signals.py"
-      - "automation/prepare_research_data.py"
-      - "backtesting/**"
-      - "config/**"
-      - "data/**"
   workflow_dispatch:
 
 permissions:
