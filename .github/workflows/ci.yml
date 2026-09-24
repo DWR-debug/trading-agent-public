@@ -57,8 +57,8 @@ jobs:
 
           task = default_research_queue().next_task()
           assert task is not None
-          assert task.task_id == "Q-004-LIVE-DISCOVERY"
-          assert task.research_family == "live_or_updated_data_discovery"
+          assert task.task_id == "Q-006-VOLATILITY-RELATIVE-VALUE"
+          assert task.research_family == "volatility_and_relative_value"
 
           assert prereg["search_scope"]["holdout_used_for_selection"] is False
           assert prereg["coverage_gate"]["performance_allowed_before_coverage_pass"] is False
@@ -91,7 +91,18 @@ jobs:
               "broad_negative_with_control_deterioration"
           )
           assert "no_holdout_selection" in diagnosis["non_actions"]
-          history_diagnosis = json.loads(Path(
+          q004 = json.loads(Path(
+              "research/evidence/q004_discovery_result_36065403704.json"
+          ).read_text(encoding="utf-8"))
+          assert q004["status"] == "COMPLETED"
+          assert q004["selection_used"] is False
+          assert q004["holdout_used"] is False
+          q005 = json.loads(Path(
+              "research/evidence/q005_governance_audit_2026_09_24.json"
+          ).read_text(encoding="utf-8"))
+          assert q005["status"] == "COMPLETED"
+          assert "automatic_selection=false" in q005["verified"]
+                    history_diagnosis = json.loads(Path(
               "research/evidence/cross_trial_failure_diagnosis_2026_09_24.json"
           ).read_text(encoding="utf-8"))
           assert history_diagnosis["status"] == "DIAGNOSTIC_ONLY"
