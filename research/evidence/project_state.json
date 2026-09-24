@@ -6,7 +6,7 @@
   "latest_formal_trial": "T-2026-09-24-041",
   "latest_trial_status": "BLOCKED",
   "next_reserved_trial": null,
-  "next_research_focus": "Q-004-LIVE-DISCOVERY: point-in-time Marktbeobachtung und Hypothesenfindung; keine Performance- oder Holdout-Selektion.",
+  "next_research_focus": "Q-006-VOLATILITY-RELATIVE-VALUE: neue orthogonale Volatilitäts-/Relative-Value-Hypothese; zuerst Präregistrierung und Coverage, keine Nachoptimierung von T041.",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -56,9 +56,9 @@
     "next_trial_candidate_selection": "coverage_only_fixed_pool",
     "t040_formal_completed": true,
     "t040_negative_evidence_archived": true,
-    "current_queue_task": "Q-004-LIVE-DISCOVERY",
+    "current_queue_task": "Q-006-VOLATILITY-RELATIVE-VALUE",
     "automatic_formal_execution_requires_preregistration": true,
-    "last_completed_queue_task": "Q-003-PORTFOLIO-RISK-CONTROL",
+    "last_completed_queue_task": "Q-005-CHAMPION-CHALLENGER",
     "last_completed_diagnosis_fingerprint": "92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea",
     "cross_trial_failure_diagnosis_implemented": true,
     "t041_preregistered": true,
@@ -81,7 +81,7 @@
     "t041_scientific_outcome": "NO_PROMOTION_EVIDENCE",
     "t041_absolute_gates_passed": false,
     "t041_non_deterioration_gates_passed": false,
-    "q004_discovery_status": "TECHNICAL_REPAIR_REQUIRED",
+    "q004_discovery_status": "COMPLETED",
     "q004_observation_universes": [
       "benchmark",
       "cross_asset_trend"
@@ -89,14 +89,22 @@
     "q004_observation_candles": 1000,
     "q004_selection_used": false,
     "q004_last_invalid_workflow_run": 36065231678,
-    "q004_invalid_reason": "Observer wrote a literal backslash-n after the JSON document; no scientific interpretation retained."
+    "q004_invalid_reason": "Observer wrote a literal backslash-n after the JSON document; no scientific interpretation retained.",
+    "q004_discovery_workflow_run": 36065403704,
+    "q004_discovery_artifact_id": 10836470039,
+    "q004_discovery_artifact_sha256": "sha256:dcac6030640681df8a7ef0c149a81aa9edd40872e0f9fd90ff3efb6b4adda497",
+    "q004_benchmark_observation_fingerprint": "7e29f40fa5fb26c3b86b462a7232894093333250f8290d9ec81d826e81e0e870",
+    "q004_cross_asset_observation_fingerprint": "da8e4a25b558653fbd7327ab1b1258dc55537382aa8666091d0e850be52a57a2",
+    "q004_formal_trial_created": false,
+    "q005_governance_audit_status": "COMPLETED"
   },
   "agent_usage_efficiency": {
     "policy": "deterministic_actions_for_computation_and_agent_use_for_architecture_review_synthesis",
     "paid_api_budget_usd": 0,
     "auto_paid_api_calls": false,
     "free_credit_only": true,
-    "lessons_recorded": "reuse_frozen_artifacts; batch_independent_evidence_fetches; fail_fast_contract_tests; no_agent_spend_for_deterministic_backtests",
-    "q004_discovery_policy": "one broad cross-asset observation plus benchmark; no performance selection; discovery candidates require fresh preregistration"
+    "lessons_recorded": "reuse_frozen_artifacts; batch_independent_evidence_fetches; fail_fast_contract_tests; no_agent_spend_for_deterministic_backtests; do_not_formalize_single_snapshot_weak_discovery",
+    "q004_discovery_policy": "one broad cross-asset observation plus benchmark; no performance selection; discovery candidates require fresh preregistration",
+    "q006_policy": "mechanism-first preregistration; fresh disjoint coverage; no T041 parameter/weight retuning"
   }
 }
