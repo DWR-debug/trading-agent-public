@@ -1,0 +1,399 @@
+{
+  "schema_version": 1,
+  "ledger_name": "research_trial_ledger",
+  "generated_at": "2026-09-24T10:53:00+02:00",
+  "policy": {
+    "immutable_history": true,
+    "unknown_values_are_null": true,
+    "independent_trial_count_must_be_explicit": true,
+    "pbo_dsr_do_not_override_existing_gates": true,
+    "paper_only": true
+  },
+  "trials": [
+    {
+      "trial_id": "T-2026-09-24-001",
+      "recorded_at": "2026-09-24T10:53:00+02:00",
+      "status": "archived_rejected",
+      "research_family": "risk_layer",
+      "hypothesis": {
+        "text": "31-session versus 63-session risk-layer window"
+      },
+      "data_scope": {
+        "research_count": null,
+        "holdout_count": null,
+        "holdout_used_for_selection": false,
+        "artifact_ids": []
+      },
+      "search_scope": {
+        "raw_trial_count": null,
+        "independent_trial_count": null,
+        "parameter_search": true,
+        "threshold_search": false,
+        "variant_search": true
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "fixed family comparison",
+        "selection_family_id": "risk-layer-2026-09",
+        "selection_metric": "research/OOS robustness"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": null,
+        "ready": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-002",
+      "recorded_at": "2026-09-24T10:53:00+02:00",
+      "status": "archived_rejected",
+      "research_family": "risk_layer",
+      "hypothesis": {
+        "text": "EWMA risk-layer variant"
+      },
+      "data_scope": {
+        "research_count": null,
+        "holdout_count": null,
+        "holdout_used_for_selection": false,
+        "artifact_ids": []
+      },
+      "search_scope": {
+        "raw_trial_count": null,
+        "independent_trial_count": null,
+        "parameter_search": true,
+        "threshold_search": false,
+        "variant_search": true
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "fixed family comparison",
+        "selection_family_id": "risk-layer-2026-09",
+        "selection_metric": "research/OOS robustness"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": null,
+        "ready": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-003",
+      "recorded_at": "2026-09-24T10:53:00+02:00",
+      "status": "archived_rejected",
+      "research_family": "risk_layer",
+      "hypothesis": {
+        "text": "parameter-free one-day shock guard"
+      },
+      "data_scope": {
+        "research_count": null,
+        "holdout_count": null,
+        "holdout_used_for_selection": false,
+        "artifact_ids": []
+      },
+      "search_scope": {
+        "raw_trial_count": null,
+        "independent_trial_count": null,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": true
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "fixed family comparison",
+        "selection_family_id": "risk-layer-2026-09",
+        "selection_metric": "research/OOS robustness"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": null,
+        "ready": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-004",
+      "recorded_at": "2026-09-24T10:53:00+02:00",
+      "status": "archived_rejected",
+      "research_family": "risk_layer",
+      "hypothesis": {
+        "text": "63-session downside-volatility variant"
+      },
+      "data_scope": {
+        "research_count": null,
+        "holdout_count": null,
+        "holdout_used_for_selection": false,
+        "artifact_ids": []
+      },
+      "search_scope": {
+        "raw_trial_count": null,
+        "independent_trial_count": null,
+        "parameter_search": true,
+        "threshold_search": false,
+        "variant_search": true
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "fixed family comparison",
+        "selection_family_id": "risk-layer-2026-09",
+        "selection_metric": "research/OOS robustness"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": null,
+        "ready": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-005",
+      "recorded_at": "2026-09-24T10:53:00+02:00",
+      "status": "archived_diagnostic",
+      "research_family": "signal_diagnosis",
+      "hypothesis": {
+        "text": "signal reversal/rebound diagnosis"
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10751817990,
+          10740188093,
+          10745697729,
+          10753545703
+        ]
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "none",
+        "selection_family_id": "diagnostic/signal-reversal",
+        "selection_metric": null
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": null,
+        "ready": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-006",
+      "recorded_at": "2026-09-24T10:53:00+02:00",
+      "status": "archived_diagnostic",
+      "research_family": "signal_diagnosis",
+      "hypothesis": {
+        "text": "CS reversal severity/persistence diagnosis"
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10751817990,
+          10740188093,
+          10745697729,
+          10753545703
+        ]
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "none",
+        "selection_family_id": "diagnostic/cs-reversal",
+        "selection_metric": null
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": null,
+        "ready": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-007",
+      "recorded_at": "2026-09-24T10:53:00+02:00",
+      "status": "archived_rejected",
+      "research_family": "architecture_hypothesis",
+      "hypothesis": {
+        "text": "one-session CS cooldown after observed reversal"
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10798118481
+        ]
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered single hypothesis",
+        "selection_family_id": "cs-cooldown-2026-09-24",
+        "selection_metric": "fixed Research/Holdout non-worsening checks"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": null,
+        "ready": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-008",
+      "recorded_at": "2026-09-24T10:53:00+02:00",
+      "status": "archived_diagnostic",
+      "research_family": "signal_diagnosis",
+      "hypothesis": {
+        "text": "exploratory CS reversal follow-through"
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10798706717
+        ]
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "none",
+        "selection_family_id": "diagnostic/cs-followthrough",
+        "selection_metric": null
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": null,
+        "ready": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-009",
+      "recorded_at": "2026-09-24T10:53:00+02:00",
+      "status": "archived_diagnostic",
+      "research_family": "signal_diagnosis",
+      "hypothesis": {
+        "text": "exploratory CS reversal precursors"
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10798717695
+        ]
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "none",
+        "selection_family_id": "diagnostic/cs-precursors",
+        "selection_metric": null
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": null,
+        "ready": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    }
+  ]
+}
