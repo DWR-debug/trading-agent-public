@@ -1,34 +1,35 @@
 # Research Queue — 2026-09-24
 
-Die Queue ist ein Governance- und Orchestrierungsartefakt. Sie erzeugt keine
-Orders und verändert keine Produktionskonfiguration.
-
 ## Aktuelle Reihenfolge
 
-1. T040 — Network Momentum Repair: **BLOCKED**. Coverage war valide, die festen Evidenz-Gates wurden klar verfehlt.
-2. Adversarial Failure-Diagnose der T040-Negativevidenz und der bisherigen salvageable Beobachtungen.
-3. Laufende Live-/Updated-Data Discovery über feste Markt- und Lead-Lag-Diagnostiken.
-4. Portfolio Risk / Correlation als orthogonale Allokationsfrage.
+1. T040 Network Momentum Repair: **BLOCKED**. Coverage war valide, aber die festen Evidenz-Gates wurden klar verfehlt.
+2. Adversarial Failure-Diagnose: **COMPLETED**. T040 wurde strukturell analysiert; zusätzlich wurden T022/T023/T025/T027/T028 als historische Vergleichsbasis ausgewertet.
+3. **Portfolio Risk Control**: nächster formaler Fokus. Die T028-Beobachtung wird als Motivation genutzt, nicht als Selection- oder Promotion-Beleg.
+4. Laufende Live-/Updated-Data Discovery über feste Markt- und Lead-Lag-Diagnostiken.
 5. Champion / Challenger unter unverändertem Evidence-Vertrag.
 6. Danach neue Volatility- und Relative-Value-Familien, falls die Evidenzlage dies trägt.
 
-## Orchestrierungsregel
+## Governance
 
-Die laufende Discovery darf neue Hypothesen-Kandidaten erzeugen, aber keine bestehende
-Hypothese nachträglich verändern und keinen Holdout zur Auswahl verwenden.
+Neue Performancehypothesen werden separat präregistriert und benötigen vor jeder Auswertung einen
+Daten-/Coverage-Pass. Holdout-Ergebnisse dürfen niemals zur Asset-, Parameter- oder Hypothesenauswahl
+verwendet werden.
 
-Formale Forschung folgt:
+Failure-Diagnose ist rein ableitend und darf keine Parameter, Assets oder Gates nachträglich verändern.
 
-Coverage-Preflight -> Präregistrierung -> Research/OOS -> Rolling-WF -> Robustheit ->
-Kostenstress -> blinder Holdout -> Evidence-Gates -> Archivierung.
-
-Failure-Diagnose ist rein ableitend: Sie darf keine Parameter, Assets, Schwellen oder
-Holdout-Ergebnisse zur Auswahl verwenden.
-
-Leverage und Short bleiben Exposure-Varianten und sind kein Ersatz für einen nachgewiesenen Edge.
+T028 ist ausschließlich ein Risk-Control-Hinweis. Ein möglicher neuer Portfolio-Risk-Trial muss
+auf einem neuen, vollständig symbol-disjunkten Validierungsuniversum und mit vorab fixierter Regel laufen.
 
 ## Laufende Beobachtung
 
 Der Unified Research Orchestrator beobachtet standardmäßig das Benchmark-Universum täglich.
-Beobachtungen werden mit Zeitpunkt und Fingerprint als Artifact gesichert. Die Maschine darf
-daraus Hypothesen erzeugen, aber erst ein neuer formal registrierter Trial kann Evidenz erzeugen.
+Beobachtungen werden mit Zeitpunkt und Fingerprint als Artifact gesichert. Discovery kann Hypothesen
+erzeugen; erst eine neue Präregistrierung darf formale Evidenz erzeugen.
+
+## Sicherheit
+
+PAPER_ONLY=True  
+LIVE_TRADING_ENABLED=False  
+orders_enabled=False  
+automatic_promotion=False  
+bezahlte Agenten-/API-Nutzung: 0 USD
