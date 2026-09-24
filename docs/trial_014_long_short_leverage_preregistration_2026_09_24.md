@@ -28,8 +28,8 @@ VOO, VT, VWO, VEU, IWD, IWF, IWN, IWO
 US-gelistete ETFs, vollständig symbol-disjunkt zu allen bereits registrierten
 Universen.
 
-3.500 gemeinsame Tages-Candles je Asset, 3.498 Return-Perioden, Research/Holdout
-2.798 / 700.
+3500 gemeinsame Tages-Candles je Asset, 3.498 Return-Perioden, Research/Holdout
+2798 / 700.
 
 ## Kostenstress
 
