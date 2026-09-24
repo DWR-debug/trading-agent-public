@@ -1,0 +1,150 @@
+name: Open/Close Gap-Reversal Alpha Validation 2026-09-24
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [master]
+    paths:
+      - "automation/open_close_gap_reversal_validation_2026_09_24.py"
+      - "research/open_close_gap_reversal.py"
+      - "research/asset_universes.py"
+      - "tests/test_open_close_gap_reversal.py"
+      - "docs/open_close_gap_reversal_validation_2026_09_24_preregistration.md"
+      - "research/checkpoints/open_close_gap_reversal_2026_09_24_preregistration.json"
+      - ".github/workflows/open-close-gap-reversal-validation-2026-09-24.yml"
+  push:
+    branches:
+      - research/open-close-gap-reversal-validation-2026-09-24
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-open-close-gap-reversal-validation
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 180
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Paper-only-Sicherheit prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+
+      - name: Universum-Disjointness prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from research.asset_universes import get_universe, list_universes
+          expected = ("SPLG", "IJR", "IEFA", "IEMG", "IVE", "IVW", "VOE", "VOT")
+          universe = get_universe("validation_2026_09_24_open_close_gap_reversal")
+          assert tuple(universe.symbols) == expected
+          combined = set(expected)
+          for item in list_universes():
+              if item.name == "validation_2026_09_24_open_close_gap_reversal":
+                  continue
+              assert combined.isdisjoint(item.symbols), f"Overlap with {item.name}"
+          print("OPEN_CLOSE_GAP_UNIVERSE_DISJOINT_OK")
+          PY
+
+      - name: Market-Daten vorbereiten
+        run: |
+          set -euo pipefail
+          python -m automation.prepare_research_data             --target-count 3500             --universe validation_2026_09_24_open_close_gap_reversal             --output research/open_close_gap_reversal_validation_2026_09_24/data_manifest.json
+
+      - name: Präregistrierung prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          text = Path("docs/open_close_gap_reversal_validation_2026_09_24_preregistration.md").read_text(encoding="utf-8")
+          required = (
+              "T-2026-09-24-018",
+              "SPLG", "IJR", "IEFA", "IEMG", "IVE", "IVW", "VOE", "VOT",
+              "2.798", "700", "3.500", "0,10%", "PAPER_ONLY=True"
+          )
+          missing = [token for token in required if token not in text]
+          assert not missing, f"Missing preregistration tokens: {missing}"
+          print("OPEN_CLOSE_GAP_PREREGISTRATION_VERIFIED")
+          PY
+
+      - name: Open/Close Gap-Reversal Validierung ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.open_close_gap_reversal_validation_2026_09_24             --data-dir data/market_data             --market-manifest research/open_close_gap_reversal_validation_2026_09_24/data_manifest.json             --output research/open_close_gap_reversal_validation_2026_09_24/report.json
+
+      - name: Ergebnisintegrität prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          path = Path("research/open_close_gap_reversal_validation_2026_09_24/report.json")
+          report = json.loads(path.read_text(encoding="utf-8"))
+          stored = report.pop("report_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(
+                  report,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+          assert stored == actual
+          assert report["trial_id"] == "T-2026-09-24-018"
+          assert report["research_only"] is True
+          assert report["selection_used"] is False
+          assert report["parameter_search_used"] is False
+          assert report["methodology"]["strategy_variants"] == 1
+          assert report["methodology"]["holdout_used_for_selection"] is False
+          assert report["data_scope"]["market_candles_per_asset"] == 3500
+          assert report["data_scope"]["research_return_count"] == 2798
+          assert report["data_scope"]["holdout_return_count"] == 700
+          assert report["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+          }
+          print("OPEN_CLOSE_GAP_RESULT_INTEGRITY_OK")
+          print("DECISION:", json.dumps(report["decision"], sort_keys=True))
+          print("SCENARIOS:", json.dumps(report["scenarios"], sort_keys=True))
+          print("REPORT_FINGERPRINT:", stored)
+          PY
+
+      - name: Validierungsartefakte sichern
+        uses: actions/upload-artifact@v4
+        with:
+          name: open-close-gap-reversal-validation-2026-09-24-${{ github.run_id }}
+          path: |
+            research/open_close_gap_reversal_validation_2026_09_24/report.json
+            research/open_close_gap_reversal_validation_2026_09_24/data_manifest.json
+          if-no-files-found: error
+          retention-days: 30
