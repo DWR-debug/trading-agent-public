@@ -67,6 +67,23 @@ def run_discovery(
         for universe in list_universes()
         for symbol in universe.symbols
     }
+    reserved_replacement = None
+    reserved_path = (
+        ROOT
+        / "research"
+        / "preregistrations"
+        / "trial_040_network_momentum_2026_09_24.json"
+    )
+    if reserved_path.exists():
+        try:
+            reserved_replacement = json.loads(
+                reserved_path.read_text(encoding="utf-8")
+            ).get("replacement", {}).get("replaced_with")
+        except (OSError, json.JSONDecodeError):
+            reserved_replacement = None
+    if reserved_replacement:
+        used_symbols.discard(reserved_replacement)
+
     overlap = sorted(
         symbol
         for symbol in CANDIDATE_POOL
