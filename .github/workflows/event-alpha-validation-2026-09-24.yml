@@ -1,0 +1,200 @@
+name: Event Alpha Validation 2026-09-24
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [master]
+    paths:
+      - "automation/event_alpha_validation_2026_09_24.py"
+      - "research/event_alpha.py"
+      - "tests/test_event_alpha.py"
+      - "research/asset_universes.py"
+      - "docs/event_alpha_validation_2026_09_24_preregistration.md"
+      - ".github/workflows/event-alpha-validation-2026-09-24.yml"
+      - "automation/prepare_research_data.py"
+      - "data/**"
+      - "research/**"
+      - "config/**"
+  push:
+    branches:
+      - research/event-alpha-validation-2026-09-24
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-event-alpha-validation
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 240
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Paper-only-Sicherheit prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+
+      - name: Event-Alpha-Manifest prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from research.asset_universes import get_universe, list_universes
+          expected = ("IWB", "GDX", "BIL")
+          universe = get_universe("validation_2026_09_24_event_alpha")
+          assert tuple(universe.symbols) == expected
+          combined = set(expected)
+          for item in list_universes():
+              if item.name == "validation_2026_09_24_event_alpha":
+                  continue
+              assert combined.isdisjoint(item.symbols), f"Overlap with {item.name}"
+          print("EVENT_ALPHA_UNIVERSE_DISJOINT_OK")
+          PY
+
+      - name: Market-Daten vorbereiten
+        run: |
+          set -euo pipefail
+          python -m automation.prepare_research_data \
+            --target-count 3500 \
+            --universe validation_2026_09_24_event_alpha \
+            --output research/event_alpha_validation_2026_09_24/data_manifest.json
+
+      - name: Präregistrierung prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          text = Path("docs/event_alpha_validation_2026_09_24_preregistration.md").read_text(encoding="utf-8")
+          required = (
+              "EVENT-ALPHA-2026-09-24-001",
+              "IWB",
+              "GDX",
+              "BIL",
+              "2025-04-01",
+              "2025-09-30",
+              "0,10%",
+              "PAPER_ONLY=True",
+          )
+          missing = [token for token in required if token not in text]
+          assert not missing, f"Missing preregistration tokens: {missing}"
+          print("EVENT_ALPHA_PREREGISTRATION_VERIFIED")
+          PY
+
+      - name: Event-Alpha-Validierung ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.event_alpha_validation_2026_09_24 \
+            --market-dir data/market_data \
+            --market-manifest research/event_alpha_validation_2026_09_24/data_manifest.json \
+            --event-raw-dir research/event_alpha_validation_2026_09_24/raw \
+            --output research/event_alpha_validation_2026_09_24/report.json
+
+      - name: Ergebnisintegrität prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path("research/event_alpha_validation_2026_09_24/report.json")
+          report = json.loads(path.read_text(encoding="utf-8"))
+          stored = report.pop("report_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(
+                  report,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+
+          assert stored == actual
+          assert report["trial_id"] == "EVENT-ALPHA-2026-09-24-001"
+          assert report["research_only"] is True
+          assert report["selection_used"] is False
+          assert report["parameter_search_used"] is False
+          assert report["methodology"]["strategy_variants"] == 1
+          assert report["methodology"]["holdout_used_for_selection"] is False
+          assert report["data_scope"]["market_candles_per_asset"] == 3500
+          assert report["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+          }
+          assert report["event_data_quality"]["event_rows_seen"] >= 0
+          print("EVENT_ALPHA_RESULT_INTEGRITY_OK")
+          print("SCENARIOS:", json.dumps(report["scenarios"], sort_keys=True))
+          print("EVENT_DATA_QUALITY:", json.dumps(report["event_data_quality"], sort_keys=True))
+          print("REPORT_FINGERPRINT:", stored)
+          PY
+
+      - name: Kompaktes Event-Rohdaten-Manifest
+        if: always()
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          raw = Path("research/event_alpha_validation_2026_09_24/raw")
+          files = []
+          for path in sorted(raw.glob("*.zip")):
+              files.append(
+                  {
+                      "name": path.name,
+                      "size_bytes": path.stat().st_size,
+                      "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                  }
+              )
+          manifest = {
+              "schema_version": 1,
+              "source": "GDELT 2.0 daily event exports",
+              "file_count": len(files),
+              "files": files,
+          }
+          raw_manifest = raw.parent / "event_raw_manifest.json"
+          raw_manifest.write_text(
+              json.dumps(manifest, indent=2, ensure_ascii=False),
+              encoding="utf-8",
+          )
+          print("EVENT_RAW_FILES:", len(files))
+          PY
+
+      - name: Artefakte sichern
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: event-alpha-validation-2026-09-24-\${{ github.run_id }}
+          path: |
+            research/event_alpha_validation_2026_09_24/report.json
+            research/event_alpha_validation_2026_09_24/data_manifest.json
+            research/event_alpha_validation_2026_09_24/event_raw_manifest.json
+          if-no-files-found: warn
+          retention-days: 30
