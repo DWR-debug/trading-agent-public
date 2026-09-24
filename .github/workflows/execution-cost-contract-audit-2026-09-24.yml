@@ -1,0 +1,74 @@
+name: Execution Cost Contract Audit 2026-09-24
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [master]
+    paths:
+      - "execution/cost_contract.py"
+      - "tests/test_execution_cost_contract.py"
+      - "docs/EXECUTION_COST_AUDIT.md"
+      - "research/checkpoints/execution_cost_audit_2026_09_24.json"
+      - ".github/workflows/execution-cost-contract-audit-2026-09-24.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: pytest installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Kosten-Semantik prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from execution.cost_contract import (
+              ResearchExecutionCostContract,
+              paper_broker_research_compatibility,
+              validate_research_cost_compatibility,
+          )
+
+          contract = ResearchExecutionCostContract()
+          contract.validate()
+          validate_research_cost_compatibility(
+              fee_rate=0.001,
+              slippage_rate=0.0005,
+          )
+
+          broker = paper_broker_research_compatibility()
+          assert broker["research_compatible"] is False
+          assert broker["paper_broker_default_fee_bps"] == 5.0
+          assert broker["paper_broker_default_slippage_bps"] == 5.0
+          print("EXECUTION COST CONTRACT AUDIT OK")
+          print(broker)
+          PY
+
+      - name: Paper-only-Sicherheit prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
