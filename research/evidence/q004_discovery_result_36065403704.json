@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "queue_task": "Q-004-LIVE-DISCOVERY",
+  "status": "COMPLETED",
+  "workflow_run_id": 36065403704,
+  "artifact_id": 10836470039,
+  "artifact_sha256": "sha256:dcac6030640681df8a7ef0c149a81aa9edd40872e0f9fd90ff3efb6b4adda497",
+  "observations": [
+    {
+      "universe": "benchmark",
+      "common_calendar_count": 1000,
+      "observation_fingerprint": "7e29f40fa5fb26c3b86b462a7232894093333250f8290d9ec81d826e81e0e870"
+    },
+    {
+      "universe": "cross_asset_trend",
+      "common_calendar_count": 999,
+      "observation_fingerprint": "da8e4a25b558653fbd7327ab1b1258dc55537382aa8666091d0e850be52a57a2"
+    }
+  ],
+  "selection_used": false,
+  "holdout_used": false,
+  "performance_evaluation": false,
+  "top_discovery_patterns": [
+    "benchmark: IWM->SPY lag1 corr -0.0616",
+    "cross_asset_trend: IWM->SPY lag1 corr -0.0638",
+    "cross_asset_trend: DBC->IWM lag21 corr +0.0537",
+    "cross_asset_trend: DBC->EFA lag21 corr +0.0527",
+    "cross_asset_trend: TLT->UUP lag21 corr -0.0486"
+  ],
+  "conclusion": "Observation-only; the single snapshot did not justify selecting a formal performance hypothesis.",
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
