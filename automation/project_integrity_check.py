@@ -18,6 +18,8 @@ REQUIRED_FILES = (
     ROOT / "docs" / "PROJECT_CONTEXT_INGESTION.md",
     ROOT / "docs" / "research_archaeology_2026_09_24.md",
     ROOT / "research" / "evidence" / "project_context.json",
+    ROOT / "docs" / "CHAT_CONTEXT_2026_09_24.md",
+    ROOT / "docs" / "PRE_CLEANUP_INVENTORY_2026_09_24.md",
     ROOT / "research" / "evidence" / "trial_ledger.json",
 )
 
@@ -62,6 +64,8 @@ def main() -> None:
         ("project_context", "docs/PROJECT_CONTEXT.md"),
         ("chat_context_ingestion", "docs/PROJECT_CONTEXT_INGESTION.md"),
         ("research_archaeology", "docs/research_archaeology_2026_09_24.md"),
+        ("chat_context", "docs/CHAT_CONTEXT_2026_09_24.md"),
+        ("pre_cleanup_inventory", "docs/PRE_CLEANUP_INVENTORY_2026_09_24.md"),
     ):
         if documents.get(key) != relpath:
             fail(f"context index document mismatch: {key}")
