@@ -19,7 +19,11 @@ Selection-Benchmark, der die erwartete maximale Sharpe Ratio einer Familie von
 Trial-Ergebnissen unter einer Nullhypothese ohne Skill approximiert. Der
 Benchmark steigt mit der Zahl der deklarierten unabhängigen Trials und deren
 Sharpe-Streuung. Die Methode adressiert damit explizit Selection Bias und
-Nicht-Normalität. citeturn558533search1turn191262search0
+Nicht-Normalität.
+
+Referenz: David H. Bailey und Marcos Lopez de Prado, The Deflated Sharpe Ratio:
+Correcting for Selection Bias, Backtest Overfitting and Non-Normality,
+Journal of Portfolio Management 40(5), 94–107 (2014), DOI 10.3905/jpm.2014.40.5.94.
 
 ### Bewusste Designentscheidung
 
@@ -58,4 +62,7 @@ Die Probability of Backtest Overfitting (PBO) über Combinatorial Symmetric
 Cross-Validation (CSCV) ist eine komplementäre Prozessdiagnose. Sie untersucht,
 wie häufig der In-Sample-Sieger out-of-sample unter den Kandidaten zurückfällt.
 Das ist für unsere Auswahlfamilien perspektivisch besonders relevant.
-citeturn558533search0
+
+Referenz: David H. Bailey, Jonathan Borwein, Marcos Lopez de Prado und Qiji
+Jim Zhu, The Probability of Backtest Overfitting, Journal of Computational
+Finance (2015), DOI 10.2139/ssrn.2326253.
