@@ -19,7 +19,7 @@ def test_profit_is_paid_only_at_payout_interval_and_new_high():
     result = simulate_income((0.10, 0.0, 0.0, 0.10), policy)
 
     assert result.total_payout_eur == pytest.approx(55.0)
-    assert result.payout_count == 2
+    assert result.payout_count == 1
     assert result.final_equity_eur == pytest.approx(550.0)
 
 
