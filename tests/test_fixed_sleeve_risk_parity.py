@@ -19,7 +19,7 @@ def test_allocator_is_lagged_and_ignores_current_return():
 
 def test_more_volatile_sleeve_receives_less_weight():
     trend = tuple([0.01, -0.01] * 40)
-    cross = tuple([0.001] * len(trend))
+    cross = tuple([0.0011, 0.0009] * 40)
     weights = lagged_inverse_vol_weights(trend, cross)
     assert weights[-1]["cross_sectional"] > 0.9
     assert weights[-1]["trend"] < 0.1
