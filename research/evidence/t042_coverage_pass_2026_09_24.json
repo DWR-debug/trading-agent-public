@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "trial_id": "T-2026-09-24-042",
+  "status": "COVERAGE_PASSED_PERFORMANCE_PENDING",
+  "workflow_run_id": 36066657371,
+  "artifact_id": 10836511485,
+  "artifact_sha256": "sha256:38ee8db7a1c85135fc000b1a7b5d2d1ee31283ff9981558af31866ba60f01437",
+  "coverage_fingerprint": "67a42d1a4832413e4a0a6dc36e1d47dd5c92a25923ea86c8d1c11a1d29e30d24",
+  "universe": "validation_2026_09_24_volatility_managed_tsm",
+  "symbols": [
+    "DLS",
+    "DEM",
+    "EES",
+    "EWX",
+    "HDV",
+    "SCHA",
+    "VOOG",
+    "VOOV",
+    "OEF",
+    "IWV"
+  ],
+  "per_symbol_count": 3500,
+  "common_calendar_count": 3500,
+  "requested_candles": 3500,
+  "replacement": {
+    "replaced_symbol": "SPHD",
+    "replacement_symbol": "SCHA",
+    "reason": "SPHD had 3494 candles in first coverage attempt.",
+    "prior_workflow_run_id": 36066487376
+  },
+  "performance_evaluation": false,
+  "holdout_evaluation": false,
+  "selection_used": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
