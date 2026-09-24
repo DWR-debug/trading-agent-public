@@ -253,8 +253,6 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=3500,
     ),
 
-)
-
     AssetUniverse(
         name="validation_2026_09_24_tsm_ensemble_candidate",
         priority=36,
@@ -262,10 +260,11 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
             "Fully symbol-disjoint validation universe for Trial 027; fixed long-only "
             "TSM ensemble trend-sleeve replacement."
         ),
-        symbols=("IVV", "ITOT", "SCHX", "SCHF", "SPAB", "IEI", "MBB", "VCSH", "IYJ", "IYC", "IYM", "IYK", "IYW"),
+        symbols=("IVV","ITOT","SCHX","SCHF","SPAB","IEI","MBB","VCSH","IYJ","IYC","IYM","IYK","IYW"),
         target_count=3500,
     ),
 
+)
 
 
 
