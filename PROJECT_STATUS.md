@@ -532,6 +532,31 @@ Der nächste methodische Schritt ist eine Failure-Diagnose der Portfolioaggregat
 insbesondere die Trennung von Allokations-Turnover/Kosten, Sleeve-Risiko und der
 Frage, ob die dynamische Gewichtsänderung tatsächlich die Drawdown-Failures adressiert.
 
+### 2w. Portfolio Risk-Parity Failure-Diagnose — 2026-09-24
+
+Trial 022 wurde nicht promotet. Die anschließende deskriptive Failure-Diagnose wurde
+als eigener Research-/Diagnostics-Baustein abgeschlossen und führt keine neue
+Parameter- oder Gewichtssuche durch.
+
+Wesentliche Befunde:
+- Holdout-Drawdown verbessert sich gegenüber 50/50 um rund 1,04 Prozentpunkte,
+  bleibt mit 23,83% aber deutlich oberhalb des 10%-Gates.
+- Holdout-Return liegt rund 14,40 Prozentpunkte unter 50/50.
+- Der zusätzliche Allokations-Turnover beträgt 4,97 Einheiten; sein mechanischer
+  Kosten-Drag erklärt nur rund 0,64 Prozentpunkte des Holdout-Return-Abstands.
+- Im Research beträgt der zusätzliche Kosten-Drag rund 2,81 Prozentpunkte bei
+  rund 17,83 Prozentpunkten Return-Abstand.
+- Die dynamische Regel tiltete im Mittel auf rund 59,46% Trend und 40,54%
+  Cross-Sectional; dies ist eine deskriptive Beobachtung, keine kausale Attribution.
+
+Konsequenz:
+- kein weiteres Risk-Parity-Tuning
+- keine Lookback-/Cap-/Normalisierungssuche
+- keine Produktionsintegration der dynamischen Allokation
+
+Die nächste Phase konzentriert sich auf die technische Execution-/Kostenhärtung
+und danach auf eine klar abgegrenzte, vorab begründete orthogonale Forschungsfrage.
+
 ### 3. Micro-Trading: aktueller Abschluss des 5m-Controls
 
 PR #39 und der anschließende CI-Fix PR #40 sind gemerged.
