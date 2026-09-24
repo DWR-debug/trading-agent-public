@@ -31,7 +31,7 @@ Alle Symbole sind gegenüber allen bisher registrierten Universen symbol-disjunk
 Pro Asset werden exakt 3.500 gemeinsame Candles ausgerichtet; die Portfolio-
 Zeitreihe muss 3.498 Return-Perioden liefern.
 
-Research/Holdout: 2.798 / 700.
+Research/Holdout: 2798 / 700.
 
 ## Vorab definierte Erfolgskriterien
 
