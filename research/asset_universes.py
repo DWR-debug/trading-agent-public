@@ -232,7 +232,18 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("INTC", "QCOM", "AVGO", "HON", "LMT", "RTX", "CSX", "NSC"),
         target_count=3500,
     ),
+    AssetUniverse(
+        name="validation_2026_09_24_idio_volatility_us_stocks",
+        priority=34,
+        description=(
+            "Fixed fully symbol-disjoint U.S. stock universe for the "
+            "pre-registered Trial 025 market-residual-volatility control."
+        ),
+        symbols=("COST", "TMO", "LIN", "DE", "EMR", "SBUX", "VZ", "MA"),
+        target_count=3500,
+    ),
 )
+
 
 
 def get_universe(name: str) -> AssetUniverse:

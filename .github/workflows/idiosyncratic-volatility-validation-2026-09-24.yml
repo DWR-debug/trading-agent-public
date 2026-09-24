@@ -1,0 +1,188 @@
+name: Idiosyncratic Volatility Validation 2026-09-24
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [master]
+    paths:
+      - "automation/idiosyncratic_volatility_validation_2026_09_24.py"
+      - "research/fixed_idiosyncratic_volatility.py"
+      - "research/asset_universes.py"
+      - "execution/cost_contract.py"
+      - "tests/test_fixed_idiosyncratic_volatility.py"
+      - "docs/trial_025_idiosyncratic_volatility_preregistration_2026_09_24.md"
+      - "research/checkpoints/trial_025_idiosyncratic_volatility_preregistration_2026_09_24.json"
+      - ".github/workflows/idiosyncratic-volatility-validation-2026-09-24.yml"
+  push:
+    branches:
+      - research/idiosyncratic-volatility-validation-2026-09-24
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-idiosyncratic-volatility-validation
+  cancel-in-progress: true
+
+jobs:
+  prereq:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+      - name: Paper-only-Sicherheit
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+      - name: Universe Disjointness
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from research.asset_universes import get_universe, list_universes
+          expected = ("COST", "TMO", "LIN", "DE", "EMR", "SBUX", "VZ", "MA")
+          target = get_universe("validation_2026_09_24_idio_volatility_us_stocks")
+          assert tuple(target.symbols) == expected
+          assert target.target_count == 3500
+          for item in list_universes():
+              if item.name == target.name:
+                  continue
+              assert set(expected).isdisjoint(item.symbols), item.name
+          print("TRIAL_025_UNIVERSE_DISJOINT_OK")
+          PY
+      - name: Trial-025-Präregistrierung prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          doc = Path("docs/trial_025_idiosyncratic_volatility_preregistration_2026_09_24.md").read_text(encoding="utf-8")
+          required = (
+              "T-2026-09-24-025",
+              "COST", "TMO", "LIN", "DE", "EMR", "SBUX", "VZ", "MA",
+              "3.500", "3.498", "2.798", "700", "252",
+              "Leave-One-Out", "vier Assets mit der niedrigsten",
+              "15 bps One-Way", "1,5x", "2,0x",
+              "PAPER_ONLY = True", "LIVE_TRADING_ENABLED = False",
+              "holdout_selection = false",
+          )
+          missing = [item for item in required if item not in doc]
+          assert not missing, missing
+          checkpoint = json.loads(Path("research/checkpoints/trial_025_idiosyncratic_volatility_preregistration_2026_09_24.json").read_text(encoding="utf-8"))
+          assert checkpoint["trial_id"] == "T-2026-09-24-025"
+          assert checkpoint["lookback_sessions"] == 252
+          assert checkpoint["select_count"] == 4
+          assert checkpoint["strategy_variants"] == 1
+          assert checkpoint["parameter_search"] is False
+          assert checkpoint["threshold_search"] is False
+          assert checkpoint["holdout_selection"] is False
+          assert checkpoint["paper_only"] is True
+          print("TRIAL_025_PREREGISTRATION_OK")
+          PY
+      - name: Kostenvertrag prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from execution.cost_contract import ResearchExecutionCostContract
+          contract = ResearchExecutionCostContract()
+          contract.validate()
+          assert contract.fee_bps == 10.0
+          assert contract.slippage_bps == 5.0
+          assert contract.total_one_way_bps == 15.0
+          print("TRIAL_025_COST_CONTRACT_OK")
+          PY
+
+  research:
+    needs: prereq
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 180
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+      - name: Research-Daten vorbereiten
+        run: |
+          set -euo pipefail
+          python -m automation.prepare_research_data \
+            --target-count 3500 \
+            --universe validation_2026_09_24_idio_volatility_us_stocks \
+            --output research/idiosyncratic_volatility_validation_2026_09_24/manifest.json
+      - name: Trial-025-Control ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.idiosyncratic_volatility_validation_2026_09_24 \
+            --data-dir data/market_data \
+            --manifest research/idiosyncratic_volatility_validation_2026_09_24/manifest.json \
+            --output research/idiosyncratic_volatility_validation_2026_09_24/report.json
+      - name: Ergebnisintegrität prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          path = Path("research/idiosyncratic_volatility_validation_2026_09_24/report.json")
+          report = json.loads(path.read_text(encoding="utf-8"))
+          fingerprint = report.pop("report_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(
+                  report,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+          assert fingerprint == actual
+          assert report["trial_id"] == "T-2026-09-24-025"
+          assert report["research_only"] is True
+          assert report["preregistration"]["strategy_variants"] == 1
+          assert report["preregistration"]["parameter_search"] is False
+          assert report["preregistration"]["threshold_search"] is False
+          assert report["preregistration"]["holdout_selection"] is False
+          assert report["source"]["target_candles"] == 3500
+          assert report["source"]["common_returns"] == 3498
+          assert report["source"]["research_count"] == 2798
+          assert report["source"]["holdout_count"] == 700
+          assert report["source"]["fully_symbol_disjoint"] is True
+          assert report["safety"] == {"paper_only": True, "live_trading_enabled": False, "orders_enabled": False}
+          print("TRIAL_025_RESULT_INTEGRITY_OK")
+          print("TRIAL_025_DECISION:", json.dumps(report["decision"], sort_keys=True))
+          print("TRIAL_025_REPORT_FINGERPRINT:", fingerprint)
+          PY
+      - name: Artefakte sichern
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: idiosyncratic-volatility-validation-2026-09-24-${{ github.run_id }}
+          path: |
+            research/idiosyncratic_volatility_validation_2026_09_24/report.json
+            research/idiosyncratic_volatility_validation_2026_09_24/manifest.json
+          if-no-files-found: error
+          retention-days: 30

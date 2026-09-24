@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-24T17:20:00+02:00",
+  "generated_at": "2026-09-24",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -1805,6 +1805,100 @@
         "paper_only": true,
         "live_trading_enabled": false,
         "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-025",
+      "recorded_at": "2026-09-24",
+      "status": "archived_rejected",
+      "research_family": "cross_sectional_market_residual_volatility",
+      "hypothesis": {
+        "text": "Assets with the lowest market-residual volatility over the prior 252 completed sessions outperform the four highest-residual-volatility assets in the following calendar month after costs."
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10818270142
+        ],
+        "fully_symbol_disjoint_validation_set": true,
+        "symbols": [
+          "COST",
+          "TMO",
+          "LIN",
+          "DE",
+          "EMR",
+          "SBUX",
+          "VZ",
+          "MA"
+        ],
+        "report_fingerprint": "9f2088cb95fb6f7d0d5e3a1b9e6b2857c03c5904871cad4cefaffef9533e860e",
+        "manifest_fingerprint": "bc146938fa2b112b23bc71503c1649fcf9d84f802b2ce27dc8c8e9a8441f5ed7",
+        "artifact_digest_sha256": "183d51f7ae4cdfb817f1a6aa62c8960b6343da10a8db2e306c73f904bd4125d5"
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered single hypothesis",
+        "selection_family_id": "cross-sectional-market-residual-volatility-2026-09-24",
+        "selection_metric": "fixed Research/Holdout return, drawdown, profit factor, rolling stability, OOS/Research, cost stress and low-vs-high residual-volatility edge"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 36022604471,
+        "artifact_id": 10818270142,
+        "report_fingerprint": "9f2088cb95fb6f7d0d5e3a1b9e6b2857c03c5904871cad4cefaffef9533e860e",
+        "all_checks_passed": false,
+        "key_metrics": {
+          "research_return_percent": 150.43062116974636,
+          "research_max_drawdown_percent": 26.084746028391937,
+          "research_profit_factor": 1.118285368297002,
+          "research_rolling_profitable_windows": 5,
+          "research_rolling_window_count": 5,
+          "holdout_return_percent": 35.36678645414133,
+          "holdout_max_drawdown_percent": 15.05591220926087,
+          "holdout_profit_factor": 1.1557797114069652,
+          "oos_to_research_return_ratio": 0.23510363900068817,
+          "holdout_1_5x_cost_return_percent": 35.06271115412809,
+          "holdout_2x_cost_return_percent": 34.75920525888074,
+          "research_mean_low_residual_vol_edge": -0.00021325101103298786,
+          "holdout_mean_low_residual_vol_edge": -0.0002208342161736738,
+          "total_turnover": 23
+        },
+        "gate_results": {
+          "research_return_positive": true,
+          "research_drawdown": false,
+          "research_profit_factor": true,
+          "rolling_profitable_window_ratio": true,
+          "oos_to_research_return_ratio": false,
+          "holdout_return_positive": true,
+          "holdout_drawdown": false,
+          "holdout_profit_factor": true,
+          "stress_1_5x_nonnegative": true,
+          "stress_2x_nonnegative": true,
+          "research_low_residual_vol_edge_positive": false,
+          "holdout_low_residual_vol_edge_positive": false
+        }
       }
     }
   ]
