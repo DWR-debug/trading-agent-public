@@ -187,6 +187,14 @@ def _simulate(rows: tuple[dict, ...], multiple: float, *, trading_multiplier: fl
         "minimum_equity": min_equity,
         "profit_factor": profit_factor,
         "ruined": ruined,
+        "maximum_gross_exposure": max(
+            (row["gross_exposure"] * multiple for row in rows),
+            default=0.0,
+        ),
+        "maximum_short_exposure": max(
+            (row["short_exposure"] * multiple for row in rows),
+            default=0.0,
+        ),
         "returns": tuple(net_returns),
     }
 
