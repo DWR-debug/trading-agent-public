@@ -1,0 +1,114 @@
+name: Trial 032 Coverage Preflight 2026-09-24
+
+on:
+  push:
+    branches:
+      - "preflight/trial-032-residual-momentum-2026-09-24"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-trial-032-coverage
+  cancel-in-progress: false
+
+jobs:
+  coverage:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 60
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+      - name: Paper-only-Sicherheit
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+      - name: Universe Disjointness
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from research.asset_universes import get_universe, list_universes
+          expected=("ACWX","FEZ","SCHE","SCHC","UNG","PPLT","CPER","IGOV","OIH","XPH","XHE","XSW","PBS")
+          target=get_universe("validation_2026_09_24_residual_momentum_candidate")
+          assert tuple(target.symbols)==expected
+          assert target.target_count==3500
+          for item in list_universes():
+              if item.name!=target.name:
+                  assert set(expected).isdisjoint(item.symbols), item.name
+          print("TRIAL_032_UNIVERSE_DISJOINT_OK")
+          PY
+      - name: Coverage
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          from data.yahoo_loader import load_yahoo_history
+
+          symbols=("ACWX","FEZ","SCHE","SCHC","UNG","PPLT","CPER","IGOV","OIH","XPH","XHE","XSW","PBS")
+          benchmark="SPY"
+          histories={}
+          counts={}
+          for s in symbols + (benchmark,):
+              bars=load_yahoo_history(s,"1d",3520,allow_partial=False,skip_invalid_ohlc=True)
+              counts[s]=len(bars)
+              assert len(bars)==3520,(s,len(bars))
+              histories[s]={b.timestamp for b in bars}
+
+          common=set.intersection(*(histories[s] for s in symbols))
+          benchmark_common=common & histories[benchmark]
+          assert len(common)>=3500,len(common)
+          assert len(benchmark_common)>=3500,len(benchmark_common)
+
+          manifest={
+              "trial_id":"T-2026-09-24-032",
+              "status":"coverage_passed",
+              "symbols":list(symbols),
+              "benchmark_symbol":benchmark,
+              "per_symbol_counts":counts,
+              "common_calendar_count":len(common),
+              "common_calendar_with_benchmark_count":len(benchmark_common),
+              "performance_selection_used":False,
+              "paper_only":True,
+              "live_trading_enabled":False,
+              "orders_enabled":False,
+          }
+          raw=json.dumps(manifest,sort_keys=True,separators=(",",":"),ensure_ascii=True)
+          manifest["coverage_fingerprint"]=hashlib.sha256(raw.encode()).hexdigest()
+
+          out=Path("research/checkpoints")
+          out.mkdir(parents=True,exist_ok=True)
+          path=out/"trial_032_coverage_preflight_2026_09_24.json"
+          path.write_text(json.dumps(manifest,indent=2),encoding="utf-8")
+
+          print("TRIAL_032_COVERAGE_OK:",len(common))
+          print("TRIAL_032_BENCHMARK_COVERAGE_OK:",len(benchmark_common))
+          print("TRIAL_032_COUNTS:",counts)
+          print("TRIAL_032_COVERAGE_FINGERPRINT:",manifest["coverage_fingerprint"])
+          PY
+      - name: Coverage-Artefakt sichern
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: trial-032-coverage-preflight
+          path: research/checkpoints/trial_032_coverage_preflight_2026_09_24.json
+          if-no-files-found: error
+          retention-days: 30
