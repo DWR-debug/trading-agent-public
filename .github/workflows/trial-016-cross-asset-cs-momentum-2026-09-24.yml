@@ -1,19 +1,6 @@
 name: Trial 016 Cross Asset CS Momentum Validation 2026-09-24
 
 on:
-  pull_request:
-    types: [opened, synchronize]
-    branches: [master]
-    paths:
-      - "automation/trial_016_cross_asset_cs_momentum_2026_09_24.py"
-      - "tests/test_trial_016_cross_asset_cs_momentum_2026_09_24.py"
-      - "research/asset_universes.py"
-      - "docs/trial_016_cross_asset_cs_momentum_preregistration_2026_09_24.md"
-      - ".github/workflows/trial-016-cross-asset-cs-momentum-2026-09-24.yml"
-      - "automation/prepare_research_data.py"
-      - "backtesting/**"
-      - "config/**"
-      - "data/**"
   workflow_dispatch:
 
 permissions:
