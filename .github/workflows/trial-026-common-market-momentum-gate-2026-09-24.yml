@@ -1,16 +1,6 @@
 name: Trial 026 Common Market Momentum Gate 2026-09-24
 
 on:
-  pull_request:
-    types: [opened, synchronize]
-    branches: [master]
-    paths:
-      - "automation/trial_026_common_market_momentum_gate_2026_09_24.py"
-      - "tests/test_trial_026_common_market_momentum_gate_2026_09_24.py"
-      - "research/asset_universes.py"
-      - "docs/trial_026_common_market_momentum_gate_preregistration_2026_09_24.md"
-      - "research/checkpoints/trial_026_common_market_momentum_gate_preregistration_2026_09_24.json"
-      - ".github/workflows/trial-026-common-market-momentum-gate-2026-09-24.yml"
   push:
     branches:
       - "research/trial-026-common-market-momentum-gate-2026-09-24"
