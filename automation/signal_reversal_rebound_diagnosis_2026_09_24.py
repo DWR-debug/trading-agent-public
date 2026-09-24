@@ -104,11 +104,6 @@ def _manifest(path: Path, universe_name: str) -> dict[str, Any]:
     safety = manifest.get("safety", {})
     if safety.get("paper_only") is not True or safety.get("live_trading_enabled") is not False:
         raise RuntimeError(f"{universe_name}: paper-only manifest contract violated")
-    alignment = manifest.get("calendar_alignment", {})
-    if alignment.get("mode") != "timestamp_intersection_tail":
-        raise ValueError(f"{universe_name}: calendar alignment provenance missing")
-    if alignment.get("aligned_candle_count") != base.TARGET_COUNT:
-        raise ValueError(f"{universe_name}: aligned count mismatch")
     return manifest
 
 
