@@ -1,0 +1,102 @@
+name: Capital Income Scenario Stress 2026-09-24
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [master]
+    paths:
+      - "automation/capital_income_scenario_stress_2026_09_24.py"
+      - "portfolio/income_stress.py"
+      - "portfolio/capital_account.py"
+      - "tests/test_capital_income_scenario_stress_2026_09_24.py"
+      - ".github/workflows/capital-income-scenario-stress-2026-09-24.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+      - name: Paper-Trading-Sicherheit prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+      - name: Szenarioanalyse ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.capital_income_scenario_stress_2026_09_24             --output research/capital_income_scenario_stress_2026_09_24/report.json
+      - name: Fingerprint und Schutzregeln verifizieren
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path("research/capital_income_scenario_stress_2026_09_24/report.json")
+          report = json.loads(path.read_text(encoding="utf-8"))
+          stored = report.pop("report_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(
+                  report,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+          assert stored == actual
+          assert report["status"] == "COMPLETED"
+          assert report["design"]["optimization_used"] is False
+          assert report["design"]["selection_used"] is False
+          assert report["design"]["forecasts_used"] is False
+          assert report["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+          }
+          assert set(report["scenarios"]) == {
+              "flat",
+              "steady_growth",
+              "volatile_growth",
+              "early_drawdown",
+              "late_drawdown",
+              "whipsaw",
+          }
+          assert set(report["policies"]) == {
+              "full_payout",
+              "balanced_capitalization",
+              "protected_income",
+          }
+          print("CAPITAL-INCOME-STRESS VERIFIED")
+          print("REPORT_FINGERPRINT:", stored)
+          PY
+      - name: Ergebnisartefakt sichern
+        uses: actions/upload-artifact@v4
+        with:
+          name: capital-income-scenario-stress-2026-09-24-${{ github.run_id }}
+          path: research/capital_income_scenario_stress_2026_09_24/report.json
+          if-no-files-found: error
+          retention-days: 30
