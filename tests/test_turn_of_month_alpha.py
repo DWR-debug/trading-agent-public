@@ -25,6 +25,7 @@ def calendar():
 
 
 def test_policy_is_fixed_eight_asset_one_x_long():
+    # Fixture intentionally starts before the month-end boundary.
     policy = TurnOfMonthPolicy()
     weights = policy.weights_for_day(date(2025, 2, 4), calendar())
     assert len(weights) == 8
