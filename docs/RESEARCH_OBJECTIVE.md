@@ -59,6 +59,27 @@ Dabei sind insbesondere zu prüfen:
 
 Der Agent muss reproduzierbar, überwachbar, ausfallsicher, pausierbar und wiederaufnehmbar sein. Forschung, Backtests und späteres Paper Trading müssen sauber von einer möglichen zukünftigen Produktion getrennt bleiben.
 
+## 3.5 Startkapital und Einkommensmodell
+
+Das initiale Forschungs- und Simulationskapital beträgt **500 EUR**.
+
+Dieses Startkapital ist als dauerhaft arbeitendes Grundkapital zu behandeln. Die Forschung optimiert nicht auf einen vollständigen Kapitalverbrauch zugunsten kurzfristiger Entnahmen.
+
+Das Grundprinzip des späteren Einkommensmodells lautet:
+
+**500 EUR Startkapital → Trading-Performance → realisierter Gewinn → prüfbarer ausschüttbarer Überschuss → Auszahlung → verbleibendes Arbeitskapital**
+
+Dabei gilt:
+
+- Auszahlungen dürfen nicht aus notwendigem Grundkapital erfolgen.
+- Bei Verlust- oder Drawdown-Phasen besteht kein Anspruch auf eine feste Auszahlung.
+- Ein ausreichender Risiko- und Kapitalpuffer muss vor jeder späteren Entnahme berücksichtigt werden.
+- Die tatsächliche Auszahlungshöhe ist erfolgsabhängig und wird nicht als feste Renditegarantie vorausgesetzt.
+- Zusätzliches Kapital darf später eingezahlt oder erwirtschaftetes Kapital bewusst im System belassen werden.
+- Das Modell muss eine spätere Skalierung des Arbeitskapitals ermöglichen, ohne die Strategie logisch zu verändern oder historische Ergebnisse nachträglich umzudeuten.
+
+Die konkrete Ausschüttungsregel, der minimale Kapitalpuffer und die Wiederanlage-/Aufstockungsregeln werden als eigene Research-Frage präregistriert, bevor sie für eine Produktionsfreigabe verwendet werden.
+
 ## 4. Formale Forschungsaufgabe
 
 Die Forschung ist als **risikobeschränkte Optimierungsaufgabe** zu verstehen:
@@ -70,6 +91,36 @@ Dabei ist die Reihenfolge entscheidend:
 **Nicht:** maximale Rendite und anschließend Risiko reduzieren.
 
 **Sondern:** ein akzeptables Risikoniveau einhalten und innerhalb dieses Rahmens die bestmögliche robuste Einkommensfähigkeit suchen.
+
+
+## 4.5 Multi-Strategie als Kernarchitektur
+
+Der Agent soll nicht auf eine einzelne Strategie festgelegt werden.
+
+Die Forschung untersucht deshalb ein **Portfolio komplementärer Strategien**, die unterschiedliche Marktbedingungen adressieren können. Ziel ist nicht, für jede Marktsituation eine vermeintlich perfekte Strategie vorherzusagen, sondern nur solche Strategien zu aktivieren bzw. höher zu gewichten, deren Eignung durch unabhängige Evidenz und den aktuellen Risikokontext unterstützt wird.
+
+Eine zukünftige Multi-Strategie-Architektur soll daher mindestens berücksichtigen:
+
+- unterschiedliche und möglichst orthogonale Quellen des erwarteten Vorteils,
+- unterschiedliche Marktregime und deren Unsicherheit,
+- Wechselwirkungen zwischen Strategien,
+- gemeinsame und individuelle Drawdowns,
+- Korrelation und Konzentrationsrisiko,
+- Kosten durch Umschichtungen,
+- Ausfall einer einzelnen Strategie,
+- konservatives Verhalten bei unklarer Regime-Lage.
+
+Wesentlich ist:
+
+> Der Agent soll nicht „immer handeln“, sondern zwischen **geeignetem Handeln, reduzierter Exposition und Nicht-Handeln** unterscheiden können.
+
+Eine Regime-Erkennung darf nicht aufgrund eines nachträglichen Backtest-Fits als zuverlässig angenommen werden. Sie muss selbst Out-of-Sample und unter unabhängigen Validierungen nachweisen, dass die dynamische Auswahl oder Gewichtung einen robusten Mehrwert gegenüber einer festen Kombination erzeugt.
+
+### Zielbild der Agentenlogik
+
+**Marktdaten → Regime-/Zustandsanalyse → Auswahl aus validierten Strategien → Risiko-/Positionsallokation → Portfolio-Risikokontrolle → Ausführung → laufende Überwachung → Kapital-/Gewinnrechnung → ggf. Auszahlung**
+
+Die einzelnen Stufen müssen voneinander getrennt, testbar und fail-closed sein.
 
 ## 5. Wissenschaftliche Evidenz
 
