@@ -120,22 +120,38 @@ selbst eine Reaktion auf bereits eingetretene Schwäche sein.
 Dauerhafte Evidenzablage: docs/fourset_portfolio_regime_sleeve_interaction_2026_09_23_result.md
 und research/checkpoints/fourset_portfolio_regime_sleeve_interaction_2026_09_23.json.
 
-### 2g. Aktuelle nächste Forschungsfrage
+### 2g. Risk-Layer-EWMA(0,94)
 
-Die bisherige Evidenz grenzt Sleeve-Gewichte, Fensterlänge und direkte Shock-
-Verstärkung als universelle Erklärung ab. Externe Risikoforschung legt zusätzlich
-nahe, Volatilität als Forecast statt ausschließlich als rückblickenden 63-Session-
-Schätzer zu behandeln: RiskMetrics dokumentiert für tägliche Volatilität eine feste
-EWMA-Zerfallsrate von λ=0,94; neuere Regime-Switching-Arbeiten untersuchen ebenfalls
-nichtlineare Volatilitätszustände, betonen aber die Unsicherheit der täglichen OOS-
-Verbesserung.
+Ein einzelner, extern fixierter RiskMetrics-style EWMA-Control wurde auf den
+vier unabhängigen Research-Sätzen durchgeführt.
 
-Deshalb wird genau ein weiterer, vorab fixer Research-Control geprüft:
-63-Session-Referenz versus EWMA(λ=0,94), beide mit demselben 10%-Jahresziel.
-Kein λ-Suchlauf, keine weitere Forecast-Variante und keine Holdout-Nutzung.
+- Rapid-Delayed-Rate verbessert: 1/4
+- Rapid-Onset-Active-Rate verbessert: 1/4
+- Research-DD nicht schlechter: 2/4
+- Research-Rolling-PF nicht schlechter: 0/4
+
+Der präregistrierte Timing-Nachweis wird verfehlt. Die EWMA-Variante wird nicht
+übernommen; es gibt keinen lambda-Suchlauf und keine fünfte Validierung.
+
+Dauerhafte Evidenzablage: docs/risk_layer_ewma_094_2026_09_24_result.md
+und research/checkpoints/risk_layer_ewma_094_2026_09_24.json.
+
+### 2h. Aktuelle nächste Forschungsfrage
+
+Die Risikomanagement-Hypothesen wurden damit weiter eingegrenzt. Als nächster
+isolierter Diagnoseschritt wird geprüft, ob die bestehende 63-Session-
+De-Risking-Skalierung überhaupt einen günstigen nachgelagerten Return-
+Zusammenhang besitzt. Gemessen wird ausschließlich die folgende Research-
+Periode nach einem De-Risking-Zustand versus nach einem unskalierten Zustand.
+
+Diese Diagnose verändert weder Exposure noch Gates und verwendet nur die vier
+immutable Research-Datensätze. Ziel ist die Prüfung der empirischen Voraussetzung
+für Volatility Timing, bevor irgendeine neue Risk-Logik erwogen wird.
 
 Produktionsstatus bleibt BLOCKED; Parameter, Gewichte, Gates und Kosten bleiben
-unverändert.### 3. Micro-Trading: aktueller Abschluss des 5m-Controls
+unverändert.
+
+### 3. Micro-Trading: aktueller Abschluss des 5m-Controls
 
 PR #39 und der anschließende CI-Fix PR #40 sind gemerged.
 
