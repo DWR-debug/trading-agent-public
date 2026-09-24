@@ -1,5 +1,6 @@
 import pytest
 
+from portfolio.capital_account import CapitalAccount, CapitalAccountingError
 from portfolio.income_stress import (
     CapitalIncomePolicy,
     IncomePolicyError,
@@ -19,7 +20,7 @@ def test_later_loss_reduces_future_distributable_profit():
 
     assert result.observations[0].payout_eur == pytest.approx(50.0)
     assert result.observations[1].payout_eur == pytest.approx(0.0)
-    assert result.final_equity_eur == pytest.approx(522.5)
+    assert result.final_equity_eur == pytest.approx(475.0)
     assert result.total_payout_eur == pytest.approx(50.0)
 
 
@@ -107,3 +108,21 @@ def test_policy_rejects_over_allocation():
 def test_full_loss_is_rejected():
     with pytest.raises(IncomePolicyError):
         simulate_capital_withdrawals((-1.0,))
+
+
+
+def test_capital_account_can_promote_distributable_profit():
+    account = CapitalAccount(500.0)
+    account.update_equity(550.0)
+    account.record_realized_pnl(50.0)
+    account.capitalize_profit(20.0)
+    assert account.contributed_capital_eur == pytest.approx(520.0)
+    assert account.equity_eur == pytest.approx(550.0)
+    assert account.distributable_profit_eur == pytest.approx(30.0)
+
+
+def test_capitalization_cannot_exceed_distributable_profit():
+    account = CapitalAccount(500.0)
+    account.update_equity(505.0)
+    with pytest.raises(CapitalAccountingError):
+        account.capitalize_profit(10.0)
