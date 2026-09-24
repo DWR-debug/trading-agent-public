@@ -77,6 +77,15 @@ def run_preflight(
             "allowed_overlap_universes", []
         )
     )
+    if allowed_overlap:
+        if spec.get("trial_type") != "repair_successor":
+            raise RuntimeError(
+                "Symbol overlap is only permitted for an explicit repair successor."
+            )
+        if not spec.get("parent_trial_id"):
+            raise RuntimeError(
+                "Repair successor with symbol overlap requires parent_trial_id."
+            )
     for other in list_universes():
         if other.name == universe_name or other.name in allowed_overlap:
             continue
