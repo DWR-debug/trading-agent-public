@@ -1,0 +1,174 @@
+name: Trial 026 Common Market Momentum Gate 2026-09-24
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [master]
+    paths:
+      - "automation/trial_026_common_market_momentum_gate_2026_09_24.py"
+      - "tests/test_trial_026_common_market_momentum_gate_2026_09_24.py"
+      - "research/asset_universes.py"
+      - "docs/trial_026_common_market_momentum_gate_preregistration_2026_09_24.md"
+      - "research/checkpoints/trial_026_common_market_momentum_gate_preregistration_2026_09_24.json"
+      - ".github/workflows/trial-026-common-market-momentum-gate-2026-09-24.yml"
+  push:
+    branches:
+      - "research/trial-026-common-market-momentum-gate-2026-09-24"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-trial-026-common-market-momentum-gate
+  cancel-in-progress: true
+
+jobs:
+  prereq:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 45
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+      - name: Paper-only-Sicherheit
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+      - name: Universe Disjointness
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from research.asset_universes import get_universe, list_universes
+          expected = ("VBR", "VSS", "VCIT", "BIL", "GSG", "VPL", "EWQ", "EWL", "EWW", "EZU", "ILF", "SCHD", "USMV", "ACWI")
+          target = get_universe("validation_2026_09_24_common_market_momentum_gate")
+          assert tuple(target.symbols) == expected
+          assert target.target_count == 3500
+          for item in list_universes():
+              if item.name == target.name:
+                  continue
+              assert set(expected).isdisjoint(item.symbols), item.name
+          print("TRIAL_026_UNIVERSE_DISJOINT_OK")
+          PY
+      - name: Präregistrierung prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          doc = Path("docs/trial_026_common_market_momentum_gate_preregistration_2026_09_24.md").read_text(encoding="utf-8")
+          required = (
+              "T-2026-09-24-026", "ACWI", "VBR", "VSS", "VCIT", "BIL", "GSG",
+              "VPL", "EWQ", "EWL", "EWW", "EZU", "ILF", "SCHD", "USMV",
+              "3.500", "3.498", "2.798", "700", "252", "10%-Volatilitätsbudget",
+              "PAPER_ONLY=True", "LIVE_TRADING_ENABLED=False",
+          )
+          missing = [item for item in required if item not in doc]
+          assert not missing, missing
+          checkpoint = json.loads(Path("research/checkpoints/trial_026_common_market_momentum_gate_preregistration_2026_09_24.json").read_text(encoding="utf-8"))
+          assert checkpoint["trial_id"] == "T-2026-09-24-026"
+          assert checkpoint["market_momentum_lookback_sessions"] == 252
+          assert checkpoint["strategy_variants"] == 1
+          assert checkpoint["parameter_search"] is False
+          assert checkpoint["holdout_used_for_selection"] is False
+          assert checkpoint["orders_enabled"] is False
+          print("TRIAL_026_PREREGISTRATION_OK")
+          PY
+      - name: Kostenvertrag prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from execution.cost_contract import ResearchExecutionCostContract
+          contract = ResearchExecutionCostContract()
+          contract.validate()
+          assert contract.fee_bps == 10.0
+          assert contract.slippage_bps == 5.0
+          assert contract.total_one_way_bps == 15.0
+          print("TRIAL_026_COST_CONTRACT_OK")
+          PY
+
+  research:
+    needs: prereq
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 240
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+      - name: Research-Daten vorbereiten
+        run: |
+          set -euo pipefail
+          python -m automation.prepare_research_data \
+            --target-count 3500 \
+            --universe validation_2026_09_24_common_market_momentum_gate \
+            --output research/trial_026_common_market_momentum_gate_2026_09_24/manifest.json
+      - name: Trial-026-Control ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.trial_026_common_market_momentum_gate_2026_09_24 \
+            --data-dir data/market_data \
+            --manifest research/trial_026_common_market_momentum_gate_2026_09_24/manifest.json \
+            --output research/trial_026_common_market_momentum_gate_2026_09_24/report.json
+      - name: Ergebnisintegrität prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          path = Path("research/trial_026_common_market_momentum_gate_2026_09_24/report.json")
+          report = json.loads(path.read_text(encoding="utf-8"))
+          stored = report.pop("report_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(report, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("utf-8")
+          ).hexdigest()
+          assert stored == actual
+          assert report["trial_id"] == "T-2026-09-24-026"
+          assert report["status"] == "COMPLETED"
+          assert report["research_only"] is True
+          assert report["methodology"]["optimization_used"] is False
+          assert report["methodology"]["holdout_used_for_selection"] is False
+          assert report["source"]["common_returns"] == 3498
+          assert report["source"]["research_count"] == 2798
+          assert report["source"]["holdout_count"] == 700
+          assert report["source"]["fully_symbol_disjoint"] is True
+          assert report["source"]["signal_is_external_to_traded_portfolio"] is True
+          assert report["safety"] == {"paper_only": True, "live_trading_enabled": False, "orders_enabled": False}
+          print("TRIAL_026_RESULT_INTEGRITY_OK")
+          print("TRIAL_026_REPORT_FINGERPRINT:", stored)
+          print("TRIAL_026_DECISION:", json.dumps(report["decision_contract"], sort_keys=True))
+          PY
+      - name: Artefakte sichern
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: trial-026-common-market-momentum-gate
+          path: |
+            research/trial_026_common_market_momentum_gate_2026_09_24/
+            data/market_data/
+          if-no-files-found: error
+          retention-days: 30
