@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "updated": "2026-09-24",
+  "repository": "DWR-debug/trading-agent-public",
+  "master_commit": "528b91b4ed0750efec50671a4cf8f43c637c2690",
+  "latest_formal_trial": "T-2026-09-24-037",
+  "latest_trial_status": "DATA_INVALID",
+  "next_reserved_trial": "T-2026-09-24-038",
+  "next_research_focus": "Cross-Asset Network Momentum after coverage preflight",
+  "cleanup_status": "architecture_unification",
+  "quality_assurance": {
+    "deterministic_ci": true,
+    "project_integrity": true,
+    "immutable_trial_ledger": true,
+    "holdout_blind": true,
+    "paper_only": true
+  },
+  "active_research_model": {
+    "discovery": "live_or_updated_market_data_observation",
+    "hypothesis": "new_pre_registered_trial_only",
+    "validation": "preflight_to_holdout_and_evidence_gates"
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false
+  },
+  "agent_usage": {
+    "paid_api_budget_usd": 0,
+    "auto_paid_api_calls": false,
+    "free_credit_only": true,
+    "credit_balance_auto_detected": false
+  },
+  "continuity": {
+    "canonical_context": "docs/PROJECT_CONTEXT.md",
+    "canonical_status": "PROJECT_STATUS.md",
+    "canonical_ledger": "research/evidence/trial_ledger.json",
+    "canonical_state": "research/evidence/project_state.json"
+  }
+}
