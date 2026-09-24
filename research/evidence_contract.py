@@ -71,6 +71,8 @@ class EvidenceSnapshot:
             raise EvidenceContractError("research_count and holdout_count must be >= 1.")
         if not isinstance(self.holdout_used_for_selection, bool):
             raise EvidenceContractError("holdout_used_for_selection must be bool.")
+        if not self.gates:
+            raise EvidenceContractError("Evidence snapshots require at least one named gate.")
         if (self.paper_only, self.live_trading_enabled, self.orders_enabled) != (True, False, False):
             raise EvidenceContractError("Safety contract requires paper-only and disabled orders.")
 
