@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "trial_id": "T-2026-09-24-022",
+  "status": "preregistered",
+  "research_family": "portfolio_allocation",
+  "hypothesis": "A fixed lagged 63-session inverse-volatility allocation between the already established Trend and Cross-Sectional Momentum sleeves improves portfolio robustness versus the fixed 50/50 reference without degrading return or profit factor.",
+  "trend_symbols": ["IBM", "GE", "CAT", "MMM", "HD", "LOW", "UNP", "NKE"],
+  "cross_sectional_symbols": ["BAC", "JPM", "GS", "MS", "C"],
+  "target_count_per_asset": 3500,
+  "return_count": {"total": 3498, "research": 2798, "holdout": 700},
+  "allocator": {
+    "lookback_sessions": 63,
+    "weighting": "inverse realized volatility",
+    "lagged": true,
+    "fallback_weights": {"trend": 0.5, "cross_sectional": 0.5},
+    "gross_exposure": 1.0,
+    "optimization": false,
+    "selection": false
+  },
+  "holdout_used_for_selection": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false
+  }
+}
