@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "trial_id": "T-2026-09-24-035",
+  "recorded_at": "2026-09-24T19:37:21Z",
+  "status": "archived_rejected",
+  "research_family": "trend_family_walk_forward_transfer",
+  "hypothesis": "Eine feste Family-Level-WFO-Auswahl aus drei bereits untersuchten Trendfamilien überträgt auf einen neuen vollständig disjunkten Multi-Asset-Datensatz OOS und bleibt im blinden Holdout positiv.",
+  "data_scope": {
+    "target_candles_per_symbol": 3500,
+    "common_return_count": 3498,
+    "research_count": 2798,
+    "holdout_count": 700,
+    "holdout_used_for_selection": false,
+    "fully_symbol_disjoint_validation_set": true,
+    "symbols": [
+      "SPTM",
+      "IWR",
+      "RWR",
+      "SCHZ",
+      "VGSH",
+      "VGLT",
+      "DJP",
+      "MOO",
+      "GCC",
+      "REM"
+    ],
+    "coverage_preflight_workflow_id": 36048203151,
+    "coverage_preflight_artifact_id": 10828838810,
+    "coverage_preflight_artifact_sha256": "e29df32161babcd3a6677d456a4b5572d81afb0c0613e69c62d8c45e4d4dcbfa",
+    "coverage_preflight_fingerprint": "f3902d7247663446763a8bf78f370961ddf1cad9c8056b4c993a62745c75c253",
+    "manifest_fingerprint": "35b1945569bce3271caabcfa6032da286537d851b31961946a4ca9f0ae67ddfe"
+  },
+  "search_scope": {
+    "raw_trial_count": 1,
+    "independent_trial_count": 1,
+    "parameter_search": false,
+    "variant_search": false,
+    "selection_profile_used": false,
+    "holdout_used_for_selection": false
+  },
+  "selection": {
+    "selected": false,
+    "selection_method": "präregistrierte Auswahl aus exakt drei Familien; ausschließlich Training, kein Holdout",
+    "family_counts": {
+      "sma_50_200_inverse_vol": 3,
+      "blend_tsm_sma_inverse_vol": 2
+    },
+    "final_holdout_family": "blend_tsm_sma_inverse_vol"
+  },
+  "outcome": {
+    "validation_status": "NO_SUPPORT",
+    "workflow_run_id": 36049312220,
+    "artifact_id": 10829279056,
+    "artifact_sha256": "fb109731fc767f1ac64bf3ffa458d12e7980c08c113e1803cb9f741e2486b94b",
+    "report_fingerprint": "c2ecd54663d29e48c3456887d2a9ed2cc4e92f362c71b1115099192d54f918d4",
+    "all_checks_passed": false,
+    "key_metrics": {
+      "oos_return_percent": -27.202888468037933,
+      "oos_drawdown_percent": 31.22774387088908,
+      "oos_profit_factor": 0.898680192065029,
+      "oos_positive_window_ratio": 0.2,
+      "oos_stress_2x_return_percent": -30.498951791140392,
+      "holdout_return_percent": 9.573398938751666,
+      "holdout_drawdown_percent": 7.539164627872763,
+      "holdout_profit_factor": 1.1108175734829895,
+      "holdout_stress_2x_return_percent": 5.646969295582771,
+      "holdout_stress_2x_profit_factor": 1.0670610413261725
+    },
+    "gate_results": {
+      "oos_return_positive": false,
+      "oos_profit_factor": false,
+      "oos_positive_window_ratio": false,
+      "holdout_return_positive": true,
+      "holdout_profit_factor": true,
+      "holdout_drawdown": true,
+      "holdout_stress_2x_nonnegative": true
+    }
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false
+  }
+}
