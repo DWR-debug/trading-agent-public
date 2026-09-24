@@ -49,7 +49,14 @@ def _corr(left: list[float], right: list[float]) -> float:
     dr = math.sqrt(sum((x - mr) ** 2 for x in right))
     if dl == 0 or dr == 0:
         return float("nan")
-    return sum((a - ml) * (b - mr) for a, b in zip(left, right)) / (dl * dr)
+    correlation = sum((a - ml) * (b - mr) for a, b in zip(left, right)) / (dl * dr)
+    # Floating-point arithmetic can turn exact +/-1 correlations into values
+    # such as 0.9999999999999998; clamp numerically saturated results.
+    if abs(correlation - 1.0) < 1e-12:
+        return 1.0
+    if abs(correlation + 1.0) < 1e-12:
+        return -1.0
+    return correlation
 
 
 def _lagged_corr(target: list[float], peer: list[float], lag: int) -> float:
@@ -197,7 +204,7 @@ def observe_universe(
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         json.dumps(payload, indent=2, ensure_ascii=False, allow_nan=False)
-        + "\n",
+        + "\\n",
         encoding="utf-8",
     )
     return payload

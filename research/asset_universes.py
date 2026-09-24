@@ -319,6 +319,21 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("SPTM","IWR","RWR","SCHZ","VGSH","VGLT","DJP","MOO","GCC","REM"),
         target_count=3500,
     ),
+    AssetUniverse(
+        name="validation_2026_09_24_network_momentum_t039",
+        priority=51,
+        description=(
+            "Pre-registered fully symbol-disjoint validation universe for Trial 039; "
+            "fixed cross-asset network-momentum challenger with COMT replaced by FTGC."
+        ),
+        symbols=(
+            "EIRL", "ENZL", "NORW", "EDEN", "FXF", "FXC",
+            "CEW", "EIDO", "SCHO", "MINT", "FTGC", "RWX",
+        ),
+        target_count=3520,
+    ),
+
+
 
 )
 
