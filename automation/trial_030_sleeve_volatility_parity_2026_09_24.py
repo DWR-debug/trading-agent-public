@@ -1,4 +1,4 @@
-"""Trial 029: fixed inverse-volatility parity between the two sleeves.
+"""Trial 030: fixed inverse-volatility parity between the two sleeves.
 
 Research-only. Existing Trend and Cross-Sectional signals remain unchanged.
 Only the capital allocation between the two sleeves changes from fixed 50/50
@@ -30,8 +30,8 @@ from validation.research_gates import ResearchGateConfig
 
 TRIAL_ID = "T-2026-09-24-030"
 UNIVERSE = "validation_2026_09_24_sleeve_volatility_parity_confirmation"
-TREND_SYMBOLS = ("IWB", "IEFA", "BIV", "BSV", "VGIT", "JNK", "HDV", "DBE")
-CS_SYMBOLS = ("IYF", "IYE", "IYG", "DJP", "EPHE")
+TREND_SYMBOLS = ("VV", "VHT", "VFH", "VIS", "VAW", "VDE", "VPU", "VGT")
+CS_SYMBOLS = ("SPDW", "SPMB", "SPEM", "SPTL", "SPIP")
 PORTFOLIO_SYMBOLS = TREND_SYMBOLS + CS_SYMBOLS
 
 TARGET_COUNT = 3500
