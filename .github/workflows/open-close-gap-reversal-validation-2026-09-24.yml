@@ -53,7 +53,7 @@ jobs:
           python - <<'PY'
           from config import settings
           assert settings.PAPER_ONLY is True
-          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.LSPSM_TRADING_ENABLED is False
           print("PAPER-ONLY SAFETY OK")
           PY
 
@@ -70,7 +70,7 @@ jobs:
               if item.name == "validation_2026_09_24_open_close_gap_reversal_v2":
                   continue
               assert combined.isdisjoint(item.symbols), f"Overlap with {item.name}"
-          print("OPEN_CLOSE_GAP_UNIVERSE_DISJOINT_OK")
+          print("OPEN_CLOSE_GAP_UNSPSMRSE_DISJOINT_OK")
           PY
 
       - name: Market-Daten vorbereiten
@@ -86,7 +86,7 @@ jobs:
           text = Path("docs/open_close_gap_reversal_validation_2026_09_24_preregistration.md").read_text(encoding="utf-8")
           required = (
               "T-2026-09-24-019",
-              "SPYG", "IJR", "IEFA", "IEMG", "IVE", "IVW", "VOE", "VOT",
+              "SPYG", "SPYV", "SPTM", "SPMD", "SPSM", "SDY", "RWL", "XNTK",
               "2.798", "700", "3.500", "0,10%", "PAPER_ONLY=True"
           )
           missing = [token for token in required if token not in text]
