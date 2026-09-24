@@ -1,21 +1,30 @@
 # Trial 017 — Political Event Intelligence
 
-Der erste Trial prüft ausschließlich, ob politische/geopolitische Ereignisse
-punktgenau strukturiert und ohne Same-Day-Leakage mit späteren Marktrenditen
-verbunden werden können. Er ist ein deskriptiver Control, kein
-Produktionskandidat.
+## Pilotstand
 
-GDELT 2.0 Event Exports liefern EventCode, EventBaseCode, EventRootCode,
-QuadClass, GoldsteinScale sowie Medienaufmerksamkeitsfelder. Für zeitkritische
-Verarbeitung wird DATEADDED in UTC verwendet.
+Der historische Pilot verwendet ausschließlich internationale Ereignisse mit
+beiden Actor-Country-Codes befüllt und mindestens 3 erwähnenden Artikeln. Diese
+Qualitätsregel folgt einem dokumentierten GDELT-Analysebeispiel; sie ist für den
+Pilot fest und wird nicht optimiert.
 
-Feste Features:
-event_count, material_conflict_count, verbal_conflict_count,
-material_cooperation_count, negative_goldstein_sum,
-mention_weighted_conflict, source_count, mean_tone, conflict_flag.
+## Point-in-Time
 
-Markt-Basis: SPY, TLT und GLD adjusted close. Tag D wird ausschließlich mit
-der nächsten verfügbaren Marktrendite und einem festen Fünf-Tage-Horizont
-verbunden.
+DATEADDED ist UTC. Ein Ereignis am Handelstag D wird mit dem ersten
+Markttag strikt nach D verbunden. Fällt D auf ein Wochenende oder einen
+Marktfeiertag, wird der letzte Schluss vor D als Ausgangspunkt für die nächste
+Marktbewegung verwendet. Die Performance des Ereignistags wird nicht als
+Auswahlkriterium verwendet.
 
-Keine Parameter-, Schwellenwert- oder Holdout-Selektion im Baseline-Trial.
+Der Fünf-Tage-Horizont ist der fünfte Markt-Tag strikt nach D.
+
+## Controls
+
+Der Bericht enthält zusätzlich eine Marktbasis über alle verfügbaren
+Handelstage und die Differenz der Ereignistagsmittelwerte zur Marktbasis.
+Damit wird nicht nur „Konflikttage gegen Nicht-Konflikttage“ betrachtet.
+
+## Forschungsstatus
+
+Der Pilot ist ein deskriptiver Control. Er darf weder Produktionsparameter
+noch die Portfolioallokation verändern. Ein positives Ergebnis ist noch kein
+handelbarer Edge.
