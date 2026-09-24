@@ -71,11 +71,7 @@ def _assets(data_dir: Path, manifest: dict) -> dict[str, tuple]:
         if len(bars) < TARGET_COUNT or dataset_fingerprint(bars) != item["fingerprint"]:
             raise ValueError(f"{symbol}: Dataset-Identität/Fingerprint nicht verifiziert.")
         out[symbol] = bars
-    common = set.intersection(*[{bar.timestamp for bar in bars} for bars in out.values()])
-    if len(common) < TARGET_COUNT:
-        raise ValueError(f"Erwarte mindestens {TARGET_COUNT} gemeinsame Candles, erhalten: {len(common)}")
-    ordered = sorted(common)[-TARGET_COUNT:]
-    return {symbol: tuple({bar.timestamp: bar for bar in bars}[ts] for ts in ordered) for symbol, bars in out.items()}
+    return {symbol: tuple(bars) for symbol, bars in out.items()}
 
 
 def _blend_rows(trend_rows: dict, cs_rows: dict) -> tuple[dict, ...]:
@@ -176,9 +172,17 @@ def run_validation(trend_dir: Path, trend_manifest_path: Path, cs_dir: Path, cs_
 
     trend = _assets(trend_dir, trend_manifest)
     cs = _assets(cs_dir, cs_manifest)
-    common = set.intersection(*[{bar.timestamp for bar in bars} for bars in {**trend, **cs}.values()])
-    if len(common) != TARGET_COUNT:
-        raise ValueError(f"Erwarte exakt {TARGET_COUNT} gemeinsame Candles, erhalten: {len(common)}")
+    all_assets = {**trend, **cs}
+    common = set.intersection(*[{bar.timestamp for bar in bars} for bars in all_assets.values()])
+    if len(common) < TARGET_COUNT:
+        raise ValueError(f"Erwarte mindestens {TARGET_COUNT} gemeinsame Candles, erhalten: {len(common)}")
+    ordered_common = sorted(common)[-TARGET_COUNT:]
+    aligned = {
+        symbol: tuple({bar.timestamp: bar for bar in bars}[ts] for ts in ordered_common)
+        for symbol, bars in all_assets.items()
+    }
+    trend = {symbol: aligned[symbol] for symbol in trend}
+    cs = {symbol: aligned[symbol] for symbol in cs}
 
     trend_weights = _build_weight_path(trend, "sma_50_200_inverse_vol")
     cs_weights = _cs_weights(cs)
