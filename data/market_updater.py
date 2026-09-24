@@ -61,11 +61,14 @@ def update_dataset(
     existing = store.load(symbol, interval)
     previous_count = len(existing)
 
-    # Initialer Import: vollständige Zielmenge laden.
-    # Bestehender Datensatz: nur den aktuellen Bereich auffrischen.
+    # Initialer Import und historische Erweiterung laden die vollständige
+    # angeforderte Zielmenge. Bestehende Datensätze werden nur dann auf
+    # refresh_count begrenzt, wenn sie bereits mindestens target_count Candles
+    # enthalten. Das erlaubt deterministisches Rückwärts-Erweitern, z.B. für
+    # gemeinsame Kalenderausrichtung mehrerer Assets.
     fetch_count = (
         target_count
-        if not existing
+        if len(existing) < target_count
         else min(target_count, refresh_count)
     )
 
