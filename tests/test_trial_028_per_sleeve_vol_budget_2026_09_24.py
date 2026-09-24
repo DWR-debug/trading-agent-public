@@ -84,6 +84,7 @@ def test_gate_contract_passes_for_equal_strong_candidate():
     assert result["all_absolute_passed"] is True
     assert result["all_non_worsening_passed"] is True
     assert result["all_checks_passed"] is True
+    assert result["absolute"]["total_return_sensitivity_nonnegative"] is True
 
 
 def test_gate_contract_blocks_holdout_deterioration():
