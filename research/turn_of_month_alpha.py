@@ -37,19 +37,19 @@ class TurnOfMonthPolicy:
             raise TurnOfMonthAlphaError(
                 "Target day must exist on the supplied trading calendar."
             )
+
         months: dict[tuple[int, int], list[date]] = {}
         for value in trading_days:
             months.setdefault((value.year, value.month), []).append(value)
+
         month_keys = tuple(months)
-        day_month = (day.year, day.month)
-        current_index = month_keys.index(day_month)
-        current_month_days = months[day_month]
-        if day == current_month_days[-1]:
-            return True
-        if current_index + 1 >= len(month_keys):
-            return False
-        next_month_days = months[month_keys[current_index + 1]]
-        return day in next_month_days[:3]
+        active_days: set[date] = set()
+        for index, key in enumerate(month_keys):
+            active_days.add(months[key][-1])
+            if index + 1 < len(month_keys):
+                active_days.update(months[month_keys[index + 1]][:3])
+
+        return day in active_days
 
     def weights_for_day(
         self,
