@@ -207,7 +207,7 @@ def run_preflight(
             snapshot_datasets.append({
                 "symbol": symbol,
                 "interval": interval,
-                "path": str(csv_path.relative_to(ROOT)),
+                "path": (str(csv_path.relative_to(ROOT)) if csv_path.is_relative_to(ROOT) else str(csv_path)),
                 "candle_count": len(bars),
                 "fingerprint": dataset_fingerprint(bars),
             })
