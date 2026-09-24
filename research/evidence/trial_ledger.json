@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-24T13:04:00+02:00",
+  "generated_at": "2026-09-24T15:10:00+02:00",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -1015,6 +1015,72 @@
           "blend_positive_research": true,
           "blend_positive_holdout": true
         }
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "EVENT-ALPHA-2026-09-24-001",
+      "recorded_at": "2026-09-24T15:10:00+02:00",
+      "status": "archived_technical_failure",
+      "research_family": "political_event_alpha",
+      "hypothesis": {
+        "text": "Strikt PIT definiertes internationales Konflikt-Ereignisfenster erzeugt eine kurzfristige marktneutrale relative Bewegung zwischen IWB, GDX und BIL nach Kosten."
+      },
+      "data_scope": {
+        "research_count": null,
+        "holdout_count": null,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10808552519,
+          10809202708
+        ],
+        "fully_symbol_disjoint_validation_set": true,
+        "last_complete_event_day": "2025-06-13"
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered fixed single hypothesis; no holdout selection",
+        "selection_family_id": "political-event-alpha-2026-09-24",
+        "selection_metric": null
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "technical_status": "INVALID_NO_RESEARCH_RESULT",
+        "workflow_runs": [
+          {
+            "workflow_run_id": 36001720932,
+            "artifact_id": 10808552519,
+            "artifact_sha256": "341a35797dad6192445a243ab9253b729d8a950b6f977665ac8ed893f8a5897b",
+            "failure": "HTTP 404 on required historical GDELT daily export"
+          },
+          {
+            "workflow_run_id": 36003014680,
+            "artifact_id": 10809202708,
+            "artifact_sha256": "692b1bd7160d9544e86b438ee26d014e113cc99247d22f937ad35797b9db16d5",
+            "failure": "HTTP 404 on required primary GDELT export and tested AWS fallback"
+          }
+        ],
+        "research_result_available": false,
+        "holdout_result_available": false,
+        "reason": "No complete historical event-data coverage could be established for the preregistered 2025-04-01 to 2025-09-30 window; no backtest report was produced."
       },
       "safety": {
         "paper_only": true,
