@@ -25,7 +25,6 @@ def calendar():
 
 
 def test_policy_is_fixed_eight_asset_one_x_long():
-    # Fixture intentionally starts before the month-end boundary.
     policy = TurnOfMonthPolicy()
     weights = policy.weights_for_day(date(2025, 2, 4), calendar())
     assert len(weights) == 8
@@ -35,8 +34,9 @@ def test_policy_is_fixed_eight_asset_one_x_long():
 def test_four_day_turn_of_month_window():
     days = calendar()
     policy = TurnOfMonthPolicy()
-    assert not policy.is_active(date(2025, 1, 28), days)
-    assert policy.is_active(date(2025, 1, 29), days)
+    assert not policy.is_active(date(2025, 1, 27), days)
+    assert not policy.is_active(date(2025, 1, 29), days)
+    assert not policy.is_active(date(2025, 1, 30), days)
     assert policy.is_active(date(2025, 1, 31), days)
     assert policy.is_active(date(2025, 2, 3), days)
     assert policy.is_active(date(2025, 2, 4), days)
@@ -50,4 +50,4 @@ def test_four_day_turn_of_month_window():
 
 def test_unknown_day_is_rejected():
     with pytest.raises(TurnOfMonthAlphaError):
-        TurnOfMonthPolicy().is_active(date(2025, 1, 28), calendar())
+        TurnOfMonthPolicy().is_active(date(2025, 1, 26), calendar())
