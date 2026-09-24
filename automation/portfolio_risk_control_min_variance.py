@@ -373,8 +373,6 @@ def _summary(
         "development": development,
         "oos": oos,
         "holdout": holdout,
-        "development": development,
-        "oos": oos,
         "oos_to_is_return_ratio": (
             oos["period_return"] / development["period_return"]
             if development["period_return"] > 0.0
