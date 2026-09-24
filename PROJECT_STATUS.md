@@ -30,8 +30,22 @@ T039 ist jetzt präregistriert und als nächster formaler Research-Schritt reser
 - 3.520 Daily-Candles je Symbol im Coverage-Preflight; mindestens 3.500 gemeinsame Candles
 - Coverage-Preflight ist automatisiert und fail-closed
 - Performance- und Holdout-Auswertung bleiben bis zum Coverage-Pass gesperrt
-- Der deterministische Network-Momentum-Signalpfad ist noch die verbleibende Implementierungsstufe
+- Der deterministische Network-Momentum-Signalpfad ist implementiert und als separates Research-Labor getestet
+- Die formale T039-Auswertung ist ausschließlich nach erfolgreichem Coverage-Pass freigegeben und wird nur über den expliziten Research-Modus ausgelöst
 - keine automatische Promotion und keine Orders
+
+## T039 Engine — technische Umsetzung
+
+- separater Research-only Network-Momentum-Lab außerhalb der Produktionsstrategie
+- 252/21 eigener Trend, 21-Session Peer-Lag, 252-Session Lead-Lag-Korrelation
+- nur positive Netzwerk-Links, fixer 50/50-Blend
+- monatliches Rebalancing, inverse Volatilität, 10%-Volatilitätsbudget
+- 1,5x- und 2x-Kostenstress
+- feste SMA-50/200-Long/Flat-Kontrolle
+- keine Parameter- oder Holdout-Selektion
+- Coverage-Snapshot wird vor formaler Auswertung unverändert archiviert
+- Push/Schedule: Beobachtung + T039-Coverage-Preflight
+- formale Forschung: nur nach Coverage-Pass und explizitem Research-Dispatch
 
 ## Sicherheitsstatus
 
