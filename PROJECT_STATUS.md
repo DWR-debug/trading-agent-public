@@ -1,3 +1,51 @@
+## Aktueller Checkpoint — Trial 035 Trend Family WFO — 2026-09-24
+
+Trial T-2026-09-24-035 wurde auf einer vollständig symbol-disjunkten neuen 10-ETF-Basis
+als präregistrierter Family-Level-WFO-Control vollständig ausgeführt.
+
+### Technischer Nachweis
+
+- Research-Workflow: `36049312220`
+- Artifact: `10829279056`
+- Artifact-ZIP-SHA256: `fb109731fc767f1ac64bf3ffa458d12e7980c08c113e1803cb9f741e2486b94b`
+- Report-Fingerprint: `c2ecd54663d29e48c3456887d2a9ed2cc4e92f362c71b1115099192d54f918d4`
+- Coverage-Preflight: `36048203151`
+- Coverage-Fingerprint: `f3902d7247663446763a8bf78f370961ddf1cad9c8056b4c993a62745c75c253`
+- 10/10 Symbole: SPTM, IWR, RWR, SCHZ, VGSH, VGLT, DJP, MOO, GCC, REM
+- 3.500 Candles je Asset im Research; 3.520 im Coverage-Preflight
+- 2.798 Research-Returns / 700 blinder Holdout
+- 683 Tests im finalen Research-Lauf
+- PAPER_ONLY=True / LIVE_TRADING_ENABLED=False
+
+### Befund
+
+**NO_SUPPORT / archived_rejected**
+
+WFO-OOS:
+- Return: -27,20 %
+- Max Drawdown: 31,23 %
+- Profit Factor: 0,899
+- positive OOS-Fenster: 1/5
+- 2x-Kostenstress: -30,50 %
+
+Holdout der im fünften Research-Fenster gewählten `blend_tsm_sma_inverse_vol`-Familie:
+- Return: +9,57 %
+- Max Drawdown: 7,54 %
+- Profit Factor: 1,111
+- 2x-Kostenstress Return: +5,65 %
+
+Der Holdout war positiv, aber der präregistrierte WFO-OOS-Transfervertrag wurde klar verfehlt.
+Der positive Holdout wird nicht zur rückwirkenden Auswahl oder Optimierung verwendet.
+
+### Konsequenz
+
+- Keine Produktionseinbindung.
+- Keine Wiederholung als Optimierung der WFO-Geometrie.
+- Keine Holdout-Auswahl.
+- Keine Änderung der bestehenden Gates.
+- Der nächste Forschungsschritt soll eine neue Informationsquelle prüfen, nicht die bisherigen
+  Trend-/Volatilitätsparameter weiter feinjustieren.
+
 ## Kontext- und Evidence-Governance — Pre-Cleanup Archaeology — 2026-09-24
 
 Vor einer technischen Bereinigung wurde die formale Research-Historie einer ersten
@@ -2767,18 +2815,6 @@ unverändert.
 
 Die Trial-ID `T-2026-09-24-032` ist bereits formal für **Relative Value ETF Pairs** vergeben und als **DATA_INVALID** archiviert. Sie wird nicht für eine andere Hypothesenfamilie wiederverwendet.
 
-Ein zwischenzeitlicher Residual-Momentum-Entwurf wurde ausschließlich auf einer nicht gemergten Preflight-Branch aufgebaut. Diese Branch wurde wegen nicht verfügbarer Yahoo-Ticker verworfen und ist **kein formaler Trial-Ergebnisstand**.
-
-Konsequenz:
-
-- T032 bleibt unverändert **DATA_INVALID / relative_value_etf_pairs**
-- Residual Momentum erhält bei erneuter Verfolgung die nächste freie Trial-ID: **T033**
-- kein Performance-Experiment ohne bestandenes Coverage-Preflight
-- kein Lockern des Datenvertrags
-- weiterhin PAPER_ONLY=True und LIVE_TRADING_ENABLED=False
-
-
-
 ## Aktueller Checkpoint — Trial 033 Relative-Value Coverage DATA_INVALID — 2026-09-24
 
 Trial 033 wurde vor jeder Performanceauswertung als **DATA_INVALID** beendet.
@@ -2821,10 +2857,16 @@ kein VIX-Overlay und keine Produktionseinbindung.
 
 ### Nächster methodischer Fokus
 
-Als nächstes wird ein orthogonaler Cross-Asset-Carry-/Trend-State-Control geprüft.
-Auch dieser folgt Coverage-Preflight -> Präregistrierung -> blinder Research-
-und Holdout-Test -> gegebenenfalls Borrow-/Execution-/Liquidity-Audit ->
-erst danach separater 30-Tage-Paper-Test.
+Nach T035 wird keine weitere Suche innerhalb derselben Family-WFO-Geometrie durchgeführt.
+Die nächste unabhängige Forschungsrichtung ist eine neue Informationsquelle:
+
+1. Cross-Asset Network Momentum / Trend-Spillover — zuerst Coverage und präregistrierte Incremental-Value-Prüfung.
+2. Trend-Signal-Variabilität — nur als separate, fixed-rule Hypothese.
+3. Echter Carry-Conditioned Trend State — strategisch interessant, aber bis zur Beschaffung
+   einer reproduzierbaren Futures-/Forward-Carry-Datenquelle zunächst blockiert.
+
+Jede Richtung folgt erneut Coverage-Preflight -> Präregistrierung -> Research/OOS -> blinder Holdout
+-> Kostenstress -> formaler Evidence-Gate.
 
 ### Sicherheitsstatus
 
