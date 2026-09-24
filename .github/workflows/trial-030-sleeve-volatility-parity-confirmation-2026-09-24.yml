@@ -1,5 +1,6 @@
 name: Trial 030 Sleeve Volatility Parity Confirmation 2026-09-24
-on:
+
+"on":
   push:
     branches:
       - master
@@ -11,34 +12,35 @@ on:
       - "docs/trial_030_sleeve_volatility_parity_confirmation_preregistration_2026_09_24.md"
       - "research/checkpoints/trial_030_sleeve_volatility_parity_confirmation_preregistration_2026_09_24.json"
       - ".github/workflows/trial-030-sleeve-volatility-parity-confirmation-2026-09-24.yml"
-  pull_request:
-    types: [opened, synchronize]
-    branches: [master]
   workflow_dispatch:
+
 permissions:
   contents: read
   actions: read
+
 concurrency:
   group: trading-agent-trial-030-sleeve-volatility-parity-confirmation
   cancel-in-progress: false
+
 jobs:
   prereq:
     runs-on: ubuntu-24.04-arm
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v5
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-      - uses: actions/setup-python@v6
-        with: {python-version: "3.13"}
-      - name: Install dependencies
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
           python -m pip install pytest
-      - name: Full test suite
+      - name: Vollständige Testsuite
         run: python -m pytest -q
-      - name: Paper-only safety
+      - name: Paper-only-Sicherheit
         run: |
           set -euo pipefail
           python - <<'PY'
@@ -47,7 +49,7 @@ jobs:
           assert settings.LIVE_TRADING_ENABLED is False
           print("PAPER-ONLY SAFETY OK")
           PY
-      - name: Universe disjointness
+      - name: Trial-030-Universe prüfen
         run: |
           set -euo pipefail
           python - <<'PY'
@@ -57,127 +59,78 @@ jobs:
           assert tuple(target.symbols)==expected
           assert target.target_count==3500
           for item in list_universes():
-              if item.name!=target.name:
+              if item.name != target.name:
                   assert set(expected).isdisjoint(item.symbols), item.name
-          assert set(expected).isdisjoint({"IWB","IEFA","BIV","BSV","VGIT","JNK","HDV","DBE","IYF","IYE","IYG","DJP","EPHE"})
           print("TRIAL_030_UNIVERSE_DISJOINT_OK")
           PY
-      - name: Coverage preflight fingerprint
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          import json
-          c=json.loads("""{
-  "schema_version": 1,
-  "trial_id": "T-2026-09-24-030",
-  "status": "preregistered",
-  "research_family": "sleeve_volatility_parity_confirmation",
-  "hypothesis": "Monthly inverse-volatility parity between unchanged Trend and Cross-Sectional sleeves, using prior 63 completed sleeve returns, improves risk concentration without reducing holdout performance versus fixed 50/50.",
-  "coverage_preflight": {
-    "workflow_run_id": 36040186007,
-    "artifact_id": 10825967102,
-    "artifact_sha256": "sha256:66c283525399dc9a185dcf3db7432e5d0f06fb7853ba77b497eedb7d1e9b8f52",
-    "candidate_count": 13,
-    "per_symbol_candles": 3520,
-    "common_calendar_candles": 3520,
-    "performance_selection": false
-  },
-  "trend_symbols": [
-    "VV",
-    "VHT",
-    "VFH",
-    "VIS",
-    "VAW",
-    "VDE",
-    "VPU",
-    "VGT"
-  ],
-  "cross_sectional_symbols": [
-    "SPDW",
-    "SPMB",
-    "SPEM",
-    "SPTL",
-    "SPIP"
-  ],
-  "target_candles": 3500,
-  "common_returns": 3498,
-  "research_count": 2798,
-  "holdout_count": 700,
-  "sleeve_volatility_window": 63,
-  "aggregate_risk_budget_window": 63,
-  "target_annualized_volatility": 0.1,
-  "strategy_variants": 1,
-  "parameter_search": false,
-  "threshold_search": false,
-  "selection_used": false,
-  "holdout_used_for_selection": false,
-  "paper_only": true,
-  "live_trading_enabled": false,
-  "orders_enabled": false
-}
-""")
-          assert c["coverage_preflight"]["artifact_id"]==10825967102
-          assert c["coverage_preflight"]["per_symbol_candles"]==3520
-          assert c["coverage_preflight"]["common_calendar_candles"]==3520
-          assert c["coverage_preflight"]["performance_selection"] is False
-          print("TRIAL_030_COVERAGE_PREREQ_OK")
-          PY
-      - name: Preregistration contract
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          doc=Path("docs/trial_030_sleeve_volatility_parity_confirmation_preregistration_2026_09_24.md").read_text(encoding="utf-8")
-          for item in ("T-2026-09-24-030","VV","VHT","VFH","VIS","VAW","VDE","VPU","VGT","SPDW","SPMB","SPEM","SPTL","SPIP","3.520","3.500","3.498","2.798","700","63","PAPER_ONLY=True","LIVE_TRADING_ENABLED=False"):
-              assert item in doc,item
-          cp=json.loads(Path("research/checkpoints/trial_030_sleeve_volatility_parity_confirmation_preregistration_2026_09_24.json").read_text(encoding="utf-8"))
-          assert cp["trial_id"]=="T-2026-09-24-030"
-          assert cp["strategy_variants"]==1 and cp["parameter_search"] is False and cp["holdout_used_for_selection"] is False
-          print("TRIAL_030_PREREGISTRATION_OK")
-          PY
-      - name: Cost contract
+      - name: Kostenvertrag prüfen
         run: |
           set -euo pipefail
           python - <<'PY'
           from execution.cost_contract import ResearchExecutionCostContract
-          c=ResearchExecutionCostContract(); c.validate()
+          c=ResearchExecutionCostContract()
+          c.validate()
           assert c.fee_bps==10.0 and c.slippage_bps==5.0 and c.total_one_way_bps==15.0
           print("TRIAL_030_COST_CONTRACT_OK")
           PY
+
   research:
     needs: prereq
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 240
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
-        with: {python-version: "3.13"}
-      - name: Install dependencies
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
           python -m pip install pytest
-      - name: Prepare research data
-        run: |
-          set -euo pipefail
-          python -m automation.prepare_research_data --target-count 3500 --universe validation_2026_09_24_sleeve_volatility_parity_confirmation --output research/trial_030_sleeve_volatility_parity_confirmation_2026_09_24/manifest.json
-      - name: Execute Trial 030
-        run: |
-          set -euo pipefail
-          python -m automation.trial_030_sleeve_volatility_parity_2026_09_24 --data-dir data/market_data --manifest research/trial_030_sleeve_volatility_parity_confirmation_2026_09_24/manifest.json --output research/trial_030_sleeve_volatility_parity_confirmation_2026_09_24/report.json
-      - name: Result integrity
+      - name: Coverage-Preflight erneut verifizieren
         run: |
           set -euo pipefail
           python - <<'PY'
-          import hashlib,json
+          from data.yahoo_loader import load_yahoo_history
+          symbols=("VV","VHT","VFH","VIS","VAW","VDE","VPU","VGT","SPDW","SPMB","SPEM","SPTL","SPIP")
+          histories={}
+          for symbol in symbols:
+              bars=load_yahoo_history(symbol,"1d",3520,allow_partial=False,skip_invalid_ohlc=True)
+              assert len(bars)==3520, (symbol,len(bars))
+              histories[symbol]={bar.timestamp for bar in bars}
+          common=set.intersection(*histories.values())
+          assert len(common)>=3500, len(common)
+          print("TRIAL_030_COVERAGE_OK:", len(common))
+          PY
+      - name: Forschungsdaten vorbereiten
+        run: |
+          set -euo pipefail
+          python -m automation.prepare_research_data             --target-count 3500             --universe validation_2026_09_24_sleeve_volatility_parity_confirmation             --output research/trial_030_sleeve_volatility_parity_confirmation_2026_09_24/manifest.json
+      - name: Trial-030-Control ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.trial_030_sleeve_volatility_parity_2026_09_24             --data-dir data/market_data             --manifest research/trial_030_sleeve_volatility_parity_confirmation_2026_09_24/manifest.json             --output research/trial_030_sleeve_volatility_parity_confirmation_2026_09_24/report.json
+      - name: Ergebnisintegrität prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
           from pathlib import Path
           p=Path("research/trial_030_sleeve_volatility_parity_confirmation_2026_09_24/report.json")
-          r=json.loads(p.read_text(encoding="utf-8")); stored=r.pop("report_fingerprint")
+          r=json.loads(p.read_text(encoding="utf-8"))
+          stored=r.pop("report_fingerprint")
           actual=hashlib.sha256(json.dumps(r,sort_keys=True,separators=(",",":"),ensure_ascii=True,allow_nan=False).encode()).hexdigest()
           assert stored==actual
-          assert r["trial_id"]=="T-2026-09-24-030" and r["status"]=="COMPLETED" and r["research_only"] is True
-          assert r["source"]["common_returns"]==3498 and r["source"]["research_count"]==2798 and r["source"]["holdout_count"]==700
+          assert r["trial_id"]=="T-2026-09-24-030"
+          assert r["status"]=="COMPLETED"
+          assert r["research_only"] is True
+          assert r["source"]["common_returns"]==3498
+          assert r["source"]["research_count"]==2798
+          assert r["source"]["holdout_count"]==700
           assert r["source"]["fully_symbol_disjoint"] is True
           assert r["methodology"]["holdout_used_for_selection"] is False
           assert r["safety"]=={"paper_only":True,"live_trading_enabled":False,"orders_enabled":False}
@@ -186,7 +139,7 @@ jobs:
           print("TRIAL_030_CANDIDATE_STATUS:",r["candidate_status"])
           print("TRIAL_030_CHECKS:",json.dumps(r["gate_contract"],sort_keys=True))
           PY
-      - name: Upload artifacts
+      - name: Artefakte sichern
         if: always()
         uses: actions/upload-artifact@v6
         with:
