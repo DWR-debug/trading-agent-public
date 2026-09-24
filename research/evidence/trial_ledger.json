@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-24T21:53:09Z",
+  "generated_at": "2026-09-24T22:27:05Z",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -3124,6 +3124,95 @@
         "paper_only": true,
         "live_trading_enabled": false,
         "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-042",
+      "recorded_at": "2026-09-24T22:27:05Z",
+      "status": "archived_rejected",
+      "research_family": "volatility_managed_time_series_momentum",
+      "hypothesis": {
+        "text": "Eine feste de-risk-only inverse-Varianz-Skalierung eines monatlich rebalancierten 252-Tage-Long/Short-TSM-Signals kann die robuste Risikoqualität gegenüber dem unveränderten gleichgewichteten TSM-Control verbessern, ohne Rendite- oder Evidenz-Gates zu verschlechtern."
+      },
+      "data_scope": {
+        "target_candles_per_symbol": 3500,
+        "common_return_count": 3498,
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "fully_symbol_disjoint_validation_set": true,
+        "symbols": [
+          "DLS",
+          "DEM",
+          "EES",
+          "EWX",
+          "HDV",
+          "SCHA",
+          "VOOG",
+          "VOOV",
+          "OEF",
+          "IWV"
+        ],
+        "coverage_workflow_id": 36066657371,
+        "coverage_artifact_id": 10836511485,
+        "coverage_artifact_sha256": "sha256:38ee8db7a1c85135fc000b1a7b5d2d1ee31283ff9981558af31866ba60f01437",
+        "coverage_fingerprint": "67a42d1a4832413e4a0a6dc36e1d47dd5c92a25923ea86c8d1c11a1d29e30d24"
+      },
+      "search_scope": {
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "asset_selection_by_performance": false,
+        "holdout_used_for_selection": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "single pre-registered challenger versus equal-weight TSM control",
+        "selection_family_id": "volatility-managed-tsm-2026-09-24"
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 36067421482,
+        "artifact_id": 10836732201,
+        "artifact_sha256": "sha256:d974e3ca032d32aea80078797ed9958bb11ac41c76f1ff38503d2a6acca18a4e",
+        "report_fingerprint": "a4733d320e47a0cfe6a7a44792dab8bff7d4e75c928e8c83d4a903cb5f80b44d",
+        "scientific_outcome": "NO_PROMOTION_EVIDENCE",
+        "key_metrics": {
+          "base_research_return_percent": 1.561091006509785,
+          "base_research_drawdown_percent": 19.914457370080175,
+          "base_research_profit_factor": 1.0107380858983885,
+          "base_rolling_min_profit_factor": 0.88207,
+          "base_rolling_profitable_window_ratio": 0.8,
+          "base_rolling_average_drawdown_percent": 9.884,
+          "base_oos_to_is_return_ratio": -0.7725665180675461,
+          "base_holdout_return_percent": 19.820187195140694,
+          "base_holdout_drawdown_percent": 6.449295674984445,
+          "base_holdout_profit_factor": 1.2118372720413453,
+          "stress_1_5x_holdout_return_percent": 19.023484824297277,
+          "stress_2x_holdout_return_percent": 18.23189915150175
+        },
+        "gate_results": {
+          "absolute_passed": false,
+          "non_deterioration_passed": false,
+          "failed_absolute": [
+            "research_drawdown_lte_10pct",
+            "research_profit_factor_gte_1_10",
+            "rolling_profit_factor_gte_1_10",
+            "oos_to_is_return_ratio_gte_0_25"
+          ],
+          "failed_non_deterioration": [
+            "rolling_pf_not_below_control",
+            "oos_to_is_not_below_control",
+            "holdout_return_not_below_control",
+            "holdout_profit_factor_not_below_control"
+          ]
+        }
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
       }
     }
   ]
