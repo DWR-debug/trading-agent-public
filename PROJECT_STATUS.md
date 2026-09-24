@@ -171,19 +171,41 @@ bestätigt. Der Befund bleibt deskriptiv und nicht kausal.
 Dauerhafte Evidenzablage: docs/risk_layer_forward_horizon_profile_2026_09_24_result.md
 und research/checkpoints/risk_layer_forward_horizon_profile_2026_09_24.json.
 
-### 2j. Aktuelle nächste Forschungsfrage
+### 2j. Downside-Volatility-Control
 
-Die bestehende Total-Volatility-Risk-Layer zeigt über mehrere Horizonte keinen
-günstigen Return-Timing-Zusammenhang. Externe Forschung von Wang & Yan (2021)
-untersucht deshalb Downside-Volatility als alternative Risikometrik und berichtet
-stärkeres Return-Timing gegenüber Total-Volatility in ihren Daten.
+Der extern motivierte 63-Session-Downside-Volatility-Control wurde auf vier
+unabhängigen Research-Sätzen geprüft.
 
-Der nächste zulässige Schritt ist genau ein fixer 63-Session-Downside-Volatility-
-Control bei unverändertem 10%-Ziel. Keine Schwellenwertsuche, kein alternatives
-Fenster, keine weitere Downside-Definition und keine Holdout-Nutzung.
+- Rapid-Delayed-Rate verbessert: 0/4
+- Rapid-Onset-Active-Rate verbessert: 0/4
+- Research-DD nicht schlechter: 0/4
+- Research-Rolling-PF nicht schlechter: 4/4
 
-Produktionsstatus bleibt BLOCKED; Parameter, Gewichte, Gates und Kosten bleiben
-unverändert.
+Die Variante erhöht zwar den Rolling-PF konsistent leicht, verschlechtert aber
+Research-Drawdown in 4/4 und verbessert keine der präregistrierten Timing-Metriken.
+Sie wird deshalb nicht übernommen.
+
+Dauerhafte Evidenzablage: docs/risk_layer_downside_volatility_2026_09_24_result.md
+und research/checkpoints/risk_layer_downside_volatility_2026_09_24.json.
+
+### 2k. Aktueller Forschungsfokus
+
+Die Risk-Layer-Volatilitätsfamilie ist damit weitgehend abgegrenzt:
+
+- 31 statt 63 Sessions: nicht unterstützt
+- EWMA(0,94): nicht unterstützt
+- parameterfreier Ein-Tages-Shock-Guard: nicht unterstützt
+- Downside-Volatility: nicht unterstützt
+
+Die bestehende 63-Session-/10%-Risk-Layer bleibt unverändert.
+
+Die nächste Priorität ist daher nicht weiteres Risk-Layer-Tuning, sondern
+(1) Reparatur der timestamp-basierten Daten-/Kalenderausrichtung in Issue #55
+und danach (2) gezielte Diagnose bzw. Gegenexperimente zur eigentlichen
+Signal-/Portfolio-Drawdown-Entstehung auf sauber ausgerichteten Daten.
+
+Produktionsstatus bleibt BLOCKED; keine Parameter-, Gewichts-, Gate- oder
+Kostenänderung wird aus den bisherigen Risk-Layer-Controls abgeleitet.
 
 ### 3. Micro-Trading: aktueller Abschluss des 5m-Controls
 
