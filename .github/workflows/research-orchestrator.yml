@@ -30,6 +30,8 @@ on:
           - cross_asset_trend
           - validation_2026_09_24_network_momentum_t039
           - validation_2026_09_24_network_momentum_t040
+          - validation_2026_09_24_portfolio_risk_control_trend
+          - validation_2026_09_24_portfolio_risk_control_cs
   push:
     branches: [master]
     paths:
@@ -105,22 +107,10 @@ jobs:
               --universe benchmark
             python -m automation.research_orchestrator \
               --mode preflight \
-              --universe validation_2026_09_24_network_momentum_t040
+              --universe validation_2026_09_24_portfolio_risk_control_trend
             python -m automation.research_orchestrator \
-              --mode discover_coverage \
-              --universe validation_2026_09_24_network_momentum_t040
-            python -m automation.research_orchestrator \
-              --mode diagnose_failure \
-              --universe validation_2026_09_24_network_momentum_t040
-            python -m automation.research_orchestrator \
-              --mode diagnose_history \
-              --universe validation_2026_09_24_network_momentum_t040
-
-            if [ "$GITHUB_EVENT_NAME" = "push" ] && git diff-tree --no-commit-id --name-only -r HEAD^ HEAD | grep -Fxq "research/preregistrations/trial_040_network_momentum_2026_09_24.json"; then
-              python -m automation.research_orchestrator \
-                --mode research \
-                --universe validation_2026_09_24_network_momentum_t040
-            fi
+              --mode preflight \
+              --universe validation_2026_09_24_portfolio_risk_control_cs
           else
             python -m automation.research_orchestrator \
               --mode "$ORCHESTRATOR_MODE" \
