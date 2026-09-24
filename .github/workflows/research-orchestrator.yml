@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: Beobachtung, Coverage-Preflight, Coverage-Discovery oder formaler Research-Lauf
+        description: Beobachtung, Coverage-Preflight, Coverage-Discovery oder expliziter formaler Research-Lauf
         required: true
         default: observe
         type: choice
@@ -17,6 +17,7 @@ on:
           - diagnose_failure
           - diagnose_history
           - research
+          - research_t041
       universe:
         description: Research-Universum
         required: true
