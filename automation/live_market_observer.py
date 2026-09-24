@@ -49,8 +49,7 @@ def _corr(left: list[float], right: list[float]) -> float:
     dr = math.sqrt(sum((x - mr) ** 2 for x in right))
     if dl == 0 or dr == 0:
         return float("nan")
-    return sum((a - ml) * (b - mr) for a, b in zip(left, right)) / (dl * dr)
-
+    correlation = sum((a - ml) * (b - mr) for a, b in zip(left, right)) / (dl * dr)\n    # Floating-point arithmetic can turn exact +/-1 correlations into values\n    # such as 0.9999999999999998; clamp numerically saturated results.\n    if abs(correlation - 1.0) < 1e-12:\n        return 1.0\n    if abs(correlation + 1.0) < 1e-12:\n        return -1.0\n    return correlation\n
 
 def _lagged_corr(target: list[float], peer: list[float], lag: int) -> float:
     if lag < 1 or len(target) <= lag or len(peer) <= lag:
