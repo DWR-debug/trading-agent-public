@@ -113,6 +113,7 @@ jobs:
         env:
           ORCHESTRATOR_MODE: ${{ inputs.mode || 'observe' }}
           ORCHESTRATOR_UNIVERSE: ${{ inputs.universe || 'benchmark' }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           if [ "$GITHUB_REF" = "refs/heads/research/execute-t041-frozen" ]; then
