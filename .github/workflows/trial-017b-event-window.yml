@@ -52,12 +52,16 @@ jobs:
           print("OBSERVATIONS:", len(r["observations"]))
           print("EVENT_WINDOWS:", r["summary"]["qualifying_event_windows"]["observation_count"])
           print("NO_EVENT_WINDOWS:", r["summary"]["no_qualifying_event_windows"]["observation_count"])
+          print("SUMMARY:", json.dumps(r["summary"], sort_keys=True))
+          print("DATA_QUALITY:", json.dumps(r["data_quality"], sort_keys=True))
           PY
-      - name: Artefakte
+      - name: Kompakte Artefakte
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: trial-017b-event-window-${{ github.sha }}
-          path: research/trial_017b_event_window/
+          name: trial-017b-event-window-compact-${{ github.sha }}
+          path: |
+            research/trial_017b_event_window/report.json
+            research/trial_017b_event_window/raw_manifest.json
           if-no-files-found: warn
           retention-days: 30
