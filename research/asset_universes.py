@@ -264,6 +264,18 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=3500,
     ),
 
+
+    AssetUniverse(
+        name="validation_2026_09_24_per_sleeve_vol_budget",
+        priority=37,
+        description=(
+            "Fully symbol-disjoint validation universe for Trial 028; per-sleeve "
+            "volatility-budget risk reexperiment."
+        ),
+        symbols=("SPLV","SPHQ","SPYG","SPYV","FXI","GDX","PFF","CWB","XSD","IBB","ITA","XAR","XES"),
+        target_count=3500,
+    ),
+
 )
 
 
