@@ -76,6 +76,20 @@ Eine spätere Promotion erfordert einen separat definierten Evidence-Contract
 und unabhängige Bestätigung. Ein positives Ergebnis dieses einzelnen Controls
 allein reicht nicht für eine Produktionsintegration.
 
+## Technische Datenakquisitions-Klarstellung
+
+Am 2026-09-24 wurde nach einem technischen 404-Fehler des primären GDELT-Tagesarchivs
+präzisierend festgehalten: Für dieselben historischen GDELT-2.0-Ereignistage darf
+bei fehlender Primärdatei der öffentlich registrierte AWS-Spiegel
+(s3://gdelt-open-data/events/) als reine Transport-/Bezugsalternative verwendet
+werden. Die Forschungsregel, Ereignisfenster, Zeiträume, Asset-Gewichte, Kosten,
+Selection-Regeln und Gates bleiben unverändert. Es werden keine fehlenden Tage
+übersprungen, interpoliert oder durch andere Datensätze ersetzt. Die tatsächliche
+Quelle jedes Tages wird im Rohdaten-Manifest dokumentiert.
+
+Diese Klarstellung ist eine technische Reproduzierbarkeitsmaßnahme nach dem ersten
+fehlgeschlagenen Lauf und keine Forschungsvariation.
+
 ## Sicherheit
 
 PAPER_ONLY=True
