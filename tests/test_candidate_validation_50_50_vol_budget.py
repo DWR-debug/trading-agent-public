@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta, timezone
 from types import SimpleNamespace
-from types import SimpleNamespace
 
 from automation.candidate_validation_50_50_vol_budget import (
     HOLDOUT_COUNT,
