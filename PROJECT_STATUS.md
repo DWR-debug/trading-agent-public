@@ -153,16 +153,34 @@ Tagesebene in unserem Fixed Candidate nicht repliziert wird.
 Dauerhafte Evidenzablage: docs/risk_layer_following_return_diagnosis_2026_09_24_result.md
 und research/checkpoints/risk_layer_following_return_diagnosis_2026_09_24.json.
 
-### 2i. Aktuelle nächste Forschungsfrage
+### 2i. Risk-Layer Forward-Horizon-Profil
 
-Da der Gegenbefund auf der Folgerenditenebene eindeutig ist, wird nicht direkt
-die Risk-Layer-Logik invertiert. Zunächst wird die Horizontabhängigkeit geprüft:
-unskalierte kumulierte Folgerenditen nach aktivem De-Risking versus Vollrisiko
-über 1, 5, 20 und 60 Research-Tage.
+Der 4/4-Gegenbefund der Folgerendite wurde auf festen Research-Horizonten
+erweitert. Günstig/ungünstig wird anhand von Mittelwert und positiver Renditerate
+der unskalierten kumulierten Folgerendite klassifiziert.
 
-Die Untersuchung bleibt rein deskriptiv und verwendet keine neuen Daten, keine
-Parameteroptimierung und keinen Holdout. Sie soll klären, ob der Gegenbefund nur
-kurzfristige Mean-Reversion reflektiert oder auch auf längeren Horizonten anhält.
+- 1 Tag: ungünstig 4/4
+- 5 Tage: ungünstig 4/4
+- 20 Tage: ungünstig 3/4, gemischt 1/4
+- 60 Tage: ungünstig 4/4
+
+Die Beziehung ist damit nicht auf die nächste Tagesperiode begrenzt. Die
+Hypothese eines rein kurzfristigen Mean-Reversion-Gegenbefunds wird nicht
+bestätigt. Der Befund bleibt deskriptiv und nicht kausal.
+
+Dauerhafte Evidenzablage: docs/risk_layer_forward_horizon_profile_2026_09_24_result.md
+und research/checkpoints/risk_layer_forward_horizon_profile_2026_09_24.json.
+
+### 2j. Aktuelle nächste Forschungsfrage
+
+Die bestehende Total-Volatility-Risk-Layer zeigt über mehrere Horizonte keinen
+günstigen Return-Timing-Zusammenhang. Externe Forschung von Wang & Yan (2021)
+untersucht deshalb Downside-Volatility als alternative Risikometrik und berichtet
+stärkeres Return-Timing gegenüber Total-Volatility in ihren Daten.
+
+Der nächste zulässige Schritt ist genau ein fixer 63-Session-Downside-Volatility-
+Control bei unverändertem 10%-Ziel. Keine Schwellenwertsuche, kein alternatives
+Fenster, keine weitere Downside-Definition und keine Holdout-Nutzung.
 
 Produktionsstatus bleibt BLOCKED; Parameter, Gewichte, Gates und Kosten bleiben
 unverändert.
