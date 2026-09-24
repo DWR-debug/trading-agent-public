@@ -72,10 +72,18 @@ def run_preflight(
         raise RuntimeError("Universe target_count does not match requested coverage.")
 
     target_set = set(symbols)
+    allowed_overlap = set(
+        spec.get("disjointness", {}).get(
+            "allowed_overlap_universes", []
+        )
+    )
     for other in list_universes():
-        if other.name != universe_name and target_set.intersection(other.symbols):
+        if other.name == universe_name or other.name in allowed_overlap:
+            continue
+        overlap = sorted(target_set.intersection(other.symbols))
+        if overlap:
             raise RuntimeError(
-                f"Universe is not symbol-disjoint from {other.name}."
+                f"Universe is not symbol-disjoint from {other.name}: {overlap}"
             )
 
     counts: dict[str, int] = {}
