@@ -202,6 +202,17 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("AAPL", "MSFT", "AMZN", "META", "GOOGL"),
         target_count=3500,
     ),
+    AssetUniverse(
+        name="validation_2026_09_24_turn_of_month",
+        priority=25,
+        description=(
+            "Fixed global country-equity ETF universe for a pre-registered "
+            "turn-of-month calendar-alpha control."
+        ),
+        symbols=("EWS", "EWM", "EZA", "ECH", "EPU", "EIDO", "THD", "EPHE"),
+        target_count=3500,
+    ),
+
 )
 
 
