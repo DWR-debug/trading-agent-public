@@ -151,7 +151,16 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=3500,
     ),
 
-
+    AssetUniverse(
+        name="validation_2026_09_24_thirteenth_leverage",
+        priority=18,
+        description=(
+            "Thirteenth fully disjoint US-listed ETF universe for long/short "
+            "and leverage research after the technically invalid Trial 012."
+        ),
+        symbols=("ITOT", "IEMG", "SCHD", "ACWI", "EMB", "GLTR", "PFF", "FEZ"),
+        target_count=3500,
+    ),
 )
 
 
