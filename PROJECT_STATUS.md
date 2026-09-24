@@ -21,18 +21,33 @@ Discovery-Beobachtungen sind ausdrücklich keine Profitabilitätsnachweise und d
 Die deterministische Forschungsmaschine funktioniert vollständig ohne Agentencredits.
 Bezahlte Agenten-/API-Nutzung ist projektseitig deaktiviert. Agenten/Codex dürfen nur bei extern verifiziertem kostenfreiem Kontingent eingesetzt werden. Es gibt keinen Mechanismus zum Nachladen von Credits.
 
-## Aktueller Research-Schritt — Trial 039
+## Aktueller Research-Schritt — Trial 040
 
-T039 wurde am 24.09.2026 durch den automatisierten Coverage-Preflight korrekt als **DATA_INVALID** beendet.
+T040 wurde am 24.09.2026 nach bestandenem Coverage-Gate formal ausgewertet und als **BLOCKED / NO_PROMOTION_EVIDENCE** archiviert.
 
-- FTGC: 3.247 statt 3.520 angeforderter abgeschlossener Daily-Candles
-- gemeinsamer Kalender: 3.247 statt mindestens 3.500
-- Performanceauswertung: nicht durchgeführt
-- OOS-Auswertung: nicht durchgeführt
-- Holdout-Auswertung: nicht durchgeführt
-- Datenvertrag: nicht gelockert
-- Network-Momentum-Regel: unverändert und weiterhin implementiert
-- nächster reservierter Schritt: T040 — Coverage-only-Discovery für einen neuen, deterministisch gewählten Ersatz aus festem Kandidatenpool
+- 12 Symbole, 3.520 Candles je Symbol, 3.500 gemeinsame Candles
+- 2.798 Research-Returnperioden / 700 blinder Holdout
+- Research Return: -33,96 %
+- Research Max-DD: 41,45 %
+- Research PF: 0,907
+- Holdout Return: -11,99 %
+- Holdout Max-DD: 17,08 %
+- Holdout PF: 0,923
+- 5/5 Research-Rolling-Fenster nicht profitabel
+- 1,5x-Kostenstress Holdout: -15,81 %
+- 2x-Kostenstress Holdout: -19,47 %
+- gegenüber der festen SMA-50/200-Kontrolle schlechter bei Research-Rendite, Research-DD, Research-PF, Holdout-Rendite und Holdout-PF
+- keine Parameteränderung, keine Holdout-Auswahl, keine Gate-Lockerung
+- keine Produktionseinbindung
+
+Die Network-Momentum-Variante wird deshalb **nicht nachoptimiert**. Die Evidenz wird als
+negativer Befund für genau diesen präregistrierten Mechanismus archiviert.
+
+### Nächster Forschungsschritt
+
+**Adversarial Failure-Diagnose**: rein ableitende Untersuchung der T040-Versagenssignatur und
+relevanter früherer salvageable Beobachtungen. Ziel ist Ursachenstrukturierung vor einer neuen
+Performancehypothese, ohne Parameter-/Asset-/Holdout-Auswahl.
 
 ## T039 Engine — technische Umsetzung
 
@@ -44,7 +59,7 @@ T039 wurde am 24.09.2026 durch den automatisierten Coverage-Preflight korrekt al
 - feste SMA-50/200-Long/Flat-Kontrolle
 - keine Parameter- oder Holdout-Selektion
 - Coverage-Snapshot wird vor formaler Auswertung unverändert archiviert
-- Push/Schedule: Beobachtung + T039-Coverage-Preflight
+- Push/Schedule: Beobachtung + T040-Coverage-Preflight + Coverage-Discovery + Failure-Diagnose
 - formale Forschung: nur nach Coverage-Pass und explizitem Research-Dispatch
 
 ## Sicherheitsstatus

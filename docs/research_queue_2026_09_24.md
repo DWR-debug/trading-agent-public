@@ -5,9 +5,9 @@ Orders und verändert keine Produktionskonfiguration.
 
 ## Aktuelle Reihenfolge
 
-1. T039 — Cross-Asset Network Momentum mit COMT durch FTGC ersetzt; zuerst Coverage-Preflight.
-2. Laufende Live-/Updated-Data Discovery über feste Markt- und Lead-Lag-Diagnostiken.
-3. Adversarial Robustness und Failure-Diagnose der bisherigen salvageable Beobachtungen.
+1. T040 — Network Momentum Repair: **BLOCKED**. Coverage war valide, die festen Evidenz-Gates wurden klar verfehlt.
+2. Adversarial Failure-Diagnose der T040-Negativevidenz und der bisherigen salvageable Beobachtungen.
+3. Laufende Live-/Updated-Data Discovery über feste Markt- und Lead-Lag-Diagnostiken.
 4. Portfolio Risk / Correlation als orthogonale Allokationsfrage.
 5. Champion / Challenger unter unverändertem Evidence-Vertrag.
 6. Danach neue Volatility- und Relative-Value-Familien, falls die Evidenzlage dies trägt.
@@ -21,6 +21,9 @@ Formale Forschung folgt:
 
 Coverage-Preflight -> Präregistrierung -> Research/OOS -> Rolling-WF -> Robustheit ->
 Kostenstress -> blinder Holdout -> Evidence-Gates -> Archivierung.
+
+Failure-Diagnose ist rein ableitend: Sie darf keine Parameter, Assets, Schwellen oder
+Holdout-Ergebnisse zur Auswahl verwenden.
 
 Leverage und Short bleiben Exposure-Varianten und sind kein Ersatz für einen nachgewiesenen Edge.
 
