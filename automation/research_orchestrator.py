@@ -16,6 +16,7 @@ from pathlib import Path
 from automation.coverage_preflight import run_preflight
 from automation.live_market_observer import observe_universe
 from automation.network_momentum_lab import run_trial as run_t039_trial
+from automation.coverage_candidate_discovery import run_discovery
 from automation.one_command_research import run_universe
 
 
@@ -89,6 +90,20 @@ def run(
             status=payload["status"],
             run_fingerprint=payload["coverage_fingerprint"],
         )
+    elif mode == "discover_coverage":
+        report = run_discovery(
+            output=root / "coverage_discovery" / "t040_candidates.json",
+        )
+        snapshot = _state_snapshot(
+            mode=mode,
+            universe="T040-COVERAGE-CANDIDATE-POOL",
+            status=(
+                "CANDIDATES_AVAILABLE"
+                if report["coverage_valid_candidates"]
+                else "NO_COVERAGE_VALID_CANDIDATE"
+            ),
+            run_fingerprint=report["fingerprint"],
+        )
     elif mode == "research":
         if universe == "validation_2026_09_24_network_momentum_t039":
             coverage = run_preflight(
@@ -138,7 +153,7 @@ def run(
                 run_fingerprint=report.get("run_manifest", {}).get("run_fingerprint"),
             )
     else:
-        raise ValueError("mode must be observe, preflight, or research")
+        raise ValueError("mode must be observe, preflight, discover_coverage, or research")
 
     path = root / universe / "orchestrator_state.json"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -151,7 +166,7 @@ def run(
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=("observe", "preflight", "research"), required=True)
+    parser.add_argument("--mode", choices=("observe", "preflight", "discover_coverage", "research"), required=True)
     parser.add_argument("--universe", default=DEFAULT_UNIVERSE)
     parser.add_argument("--output-root", default="research/runs")
     parser.add_argument("--total", type=int, default=None)
