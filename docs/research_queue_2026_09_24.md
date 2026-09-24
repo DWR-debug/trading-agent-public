@@ -6,7 +6,7 @@ Orders und verändert keine Produktionskonfiguration.
 ## Aktuelle Reihenfolge
 
 1. T040 — Network Momentum Repair: **BLOCKED**. Coverage war valide, die festen Evidenz-Gates wurden klar verfehlt.
-2. Adversarial Failure-Diagnose der T040-Negativevidenz und der bisherigen salvageable Beobachtungen.
+2. Adversarial Failure-Diagnose: **COMPLETED**. T040 wurde rein aus dem unveränderlichen Evidence-Record diagnostiziert; keine Auswahl oder Nachoptimierung.
 3. Laufende Live-/Updated-Data Discovery über feste Markt- und Lead-Lag-Diagnostiken.
 4. Portfolio Risk / Correlation als orthogonale Allokationsfrage.
 5. Champion / Challenger unter unverändertem Evidence-Vertrag.
