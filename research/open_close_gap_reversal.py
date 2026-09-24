@@ -14,13 +14,13 @@ class OpenCloseGapReversalPolicy:
 
     symbols: tuple[str, ...] = (
         "SPYG",
-        "IJR",
-        "IEFA",
-        "IEMG",
-        "IVE",
-        "IVW",
-        "VOE",
-        "VOT",
+        "SPYV",
+        "SPTM",
+        "SPMD",
+        "SPSM",
+        "SDY",
+        "RWL",
+        "XNTK",
     )
 
     def __post_init__(self) -> None:
