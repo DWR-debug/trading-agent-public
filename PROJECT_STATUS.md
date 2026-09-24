@@ -2623,3 +2623,36 @@ Coverage-Preflight wird als neuer, vollständig disjunkter Trial präregistriert
 - LIVE_TRADING_ENABLED=False
 - keine Research-Orders
 - keine Live-Ausführung
+
+
+## Aktueller Checkpoint — Trial 030 Sleeve Volatility Parity Confirmation — 2026-09-24
+
+Trial T-2026-09-24-030 wurde vollständig auf `DWR-debug/trading-agent-public` ausgeführt und als **NO_SUPPORT / archived_rejected** abgeschlossen.
+
+- Coverage-Preflight: `36040186007`
+- Research-Workflow: `36040997311`
+- Artifact: `10825679094`
+- Artifact-SHA256: `sha256:cc46dfadb3581fab21012b651b857b32e06a43dc37399d45479423da899f2191`
+- Report-Fingerprint: `26cc96a1d7210a97443016f5374fccc2e1c466ce2eb1f6859ca778c9a3eefabe`
+- Manifest-Fingerprint: `9ef4c9fa58e6a8a573d0836379572d7a441a2fb5300fc4eca33155b2059cf224`
+- 3.498 gemeinsame PIT-Returns; 2.798 Research / 700 Holdout
+- vollständige Vorprüfungen und Ergebnisintegrität grün; keine Orders
+
+### Befund
+
+Fixed 50/50: Research +32,69 %, DD 18,30 %, PF 1,064; Holdout +23,54 %, DD 12,37 %, PF 1,148.
+
+Sleeve-Parity: Research +21,19 %, DD 19,19 %, PF 1,046; Holdout +23,56 %, DD 12,32 %, PF 1,149.
+
+Damit verbessert der Control die Holdout-Seite nur marginal, verfehlt aber die Research-Gates und den Nicht-Verschlechterungsvertrag.
+
+### Konsequenz
+
+Keine weitere Risk-Parity-/Volatility-Parity-Suche und kein Tuning dieses Controls. Der nächste Fokus wechselt auf einen signalbasierten Cross-Sectional-Control: feste 12-1-Rendite geteilt durch formation-periodische Realized Volatility, auf einem neuen vollständig disjunkten Universum.
+
+### Sicherheitsstatus
+
+- PAPER_ONLY=True
+- LIVE_TRADING_ENABLED=False
+- keine Research-Orders
+- keine Live-Ausführung
