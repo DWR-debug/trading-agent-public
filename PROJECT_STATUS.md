@@ -199,13 +199,18 @@ Die Risk-Layer-Volatilitätsfamilie ist damit weitgehend abgegrenzt:
 
 Die bestehende 63-Session-/10%-Risk-Layer bleibt unverändert.
 
-Die nächste Priorität ist daher nicht weiteres Risk-Layer-Tuning, sondern
-(1) Reparatur der timestamp-basierten Daten-/Kalenderausrichtung in Issue #55
-und danach (2) gezielte Diagnose bzw. Gegenexperimente zur eigentlichen
-Signal-/Portfolio-Drawdown-Entstehung auf sauber ausgerichteten Daten.
+Die timestamp-basierte Daten-/Kalenderausrichtung aus Issue #55 ist bereits
+implementiert und durch Regressionstests abgesichert. Gemeinsame Research-Daten
+werden deterministisch über die Timestamp-Schnittmenge ausgerichtet; bei zu
+kurzer Schnittmenge wird fail-closed abgebrochen.
 
-Produktionsstatus bleibt BLOCKED; keine Parameter-, Gewichts-, Gate- oder
-Kostenänderung wird aus den bisherigen Risk-Layer-Controls abgeleitet.
+Damit ist die Daten-/Kalenderseite kein offener Blocker mehr. Der nächste
+fachliche Schwerpunkt liegt bei gezielter Diagnose bzw. neuen Gegenexperimenten
+zur eigentlichen Signal-/Portfolio-Drawdown-Entstehung auf sauber ausgerichteten
+Daten.
+
+Produktionsstatus bleibt BLOCKED; keine Parameter-, Gewichts- oder Gateänderung
+wird aus den bisherigen Risk-Layer-Controls abgeleitet.
 
 ### 2l. Siebte Multi-Strategie-Komplementaritätsvalidierung — 2026-09-24
 
@@ -563,6 +568,33 @@ Dauerhafte Ablage:
 - docs/EXECUTION_COST_AUDIT.md
 - research/checkpoints/execution_cost_audit_2026_09_24.json
 
+### 2y. PaperBroker Research-Kostenpfad — 2026-09-24
+
+Der historische PaperBroker-Default bleibt unverändert bei 5 bps Fee + 5 bps
+Slippage. Für research-kompatible Paper-Simulation existiert jetzt ein expliziter
+Opt-in über den zentralen ResearchExecutionCostContract mit 10 bps Fee + 5 bps
+Slippage.
+
+Die vollständige Regression und der dedizierte Kosten-Audit sind grün.
+Keine Strategie-, Gate- oder historische Ergebnisänderung.
+
+### 2z. Governed Champion/Challenger-Accounting — 2026-09-24
+
+Die bestehende Champion/Challenger-Schicht ist jetzt an den zentralen
+Evidence-Contract gebunden.
+
+- Vergleich nur bereits vorhandener Evidence-Snapshots
+- gemeinsame Gates und Provenienzänderungen werden deterministisch dokumentiert
+- Holdout-Nutzung zur Selektion wird explizit blockierend markiert
+- Paper-only-Sicherheit wird geprüft
+- kein Ranking, kein Gewinner, keine automatische Promotion
+- keine Parameter-, Gewicht-, Threshold- oder Asset-Suche
+
+Dauerhafte Ablage:
+- research/champion_challenger.py
+- docs/GOVERNED_CHAMPION_CHALLENGER_ACCOUNTING.md
+- research/checkpoints/governed_champion_challenger_accounting_2026_09_24.json
+
 ### 3. Micro-Trading: aktueller Abschluss des 5m-Controls
 
 PR #39 und der anschließende CI-Fix PR #40 sind gemerged.
@@ -595,19 +627,19 @@ Die Gap-Reversal-Familie ist abgeschlossen: technische Trials 018–020 und
 vollständiger negativer Trial 021; kein weiteres Gap-Reversal-Tuning.
 
 Trial 022 zur lagged 63-Sessionen-Inverse-Volatilitäts-Allokation ist ebenfalls
-abgeschlossen und nicht promotet. Die Failure-Diagnose zeigt nur eine moderate
+abgeschlossen und nicht promotet. Die Failure-Diagnose zeigte nur eine moderate
 Drawdown-Verbesserung bei gleichzeitigem Return-/PF-Rückgang gegenüber 50/50.
 
-Die Portfolio-/Execution-Foundation und der Execution-Kostenvertrag sind in master:
-- deterministische Portfolio-Constraint-Prüfung
-- explizite Fee-/Slippage-/Spread-/Borrow-Semantik
-- fail-closed Erkennung des Legacy-PaperBroker-Kosten-Drifts
+Die Daten-/Kalenderausrichtung ist technisch gehärtet. Execution-Kosten sind
+über einen zentralen Contract abgesichert und für den PaperBroker explizit
+research-kompatibel konfigurierbar. Champion/Challenger-Accounting ist an den
+Evidence-Contract gebunden und trifft selbst keine Auswahl- oder Promotions-
+entscheidung.
 
-Nächster Schwerpunkt:
-1. Kosten-/Execution-Semantik in den Research-Routinen zentral absichern.
-2. Champion/Challenger-Accounting für bestehende Kandidaten ergänzen.
-3. Erst danach die nächste wirklich orthogonale Alpha-Familie mit einer einzelnen
-   präregistrierten Hypothese validieren.
+Nächster Forschungsschritt:
+Eine einzelne, orthogonale, vorab präregistrierte Alpha-Hypothese auf einem
+vollständig neuen und symbol-disjunkten Datensatz. Vorab werden Datenverfügbarkeit,
+PIT-Semantik, Kostenvertrag, Safety und Holdout-Nichtauswahl in CI geprüft.
 
 Bestehende Signale, Parameter, Gewichte und Gates bleiben unverändert.
 Kein Live-Trading und keine automatische Produktionspromotion.
