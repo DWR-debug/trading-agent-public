@@ -62,6 +62,11 @@ jobs:
 
           assert prereg["search_scope"]["holdout_used_for_selection"] is False
           assert prereg["coverage_gate"]["performance_allowed_before_coverage_pass"] is False
+          assert prereg["target_candles"] == 3500
+          assert prereg["research_candles"] == 2800
+          assert prereg["holdout_candles"] == 700
+          assert prereg["split"]["pit_research_return_periods"] == 2798
+          assert prereg["split"]["pit_return_periods_total"] == 3498
           assert prereg["safety"] == {
               "paper_only": True,
               "live_trading_enabled": False,
