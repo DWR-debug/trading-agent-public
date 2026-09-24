@@ -17,7 +17,7 @@ jobs:
       - name: Install dependencies
         run: python -m pip install --upgrade pip
       - name: Run coverage-only preflight
-        run: python automation/preflight_trial_030_coverage_2026_09_24.py
+        run: python -m automation.preflight_trial_030_coverage_2026_09_24
       - name: Upload preflight report
         if: always()
         uses: actions/upload-artifact@v6
