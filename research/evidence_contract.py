@@ -29,6 +29,8 @@ class GateResult:
     def __post_init__(self) -> None:
         if not self.name.strip():
             raise EvidenceContractError("Gate name must not be empty.")
+        if not isinstance(self.passed, bool):
+            raise EvidenceContractError("Gate passed must be bool.")
         for label, value in (("observed", self.observed), ("threshold", self.threshold)):
             if value is not None and not math.isfinite(float(value)):
                 raise EvidenceContractError(f"{label} must be finite when present.")
@@ -73,6 +75,9 @@ class EvidenceSnapshot:
             raise EvidenceContractError("holdout_used_for_selection must be bool.")
         if not self.gates:
             raise EvidenceContractError("Evidence snapshots require at least one named gate.")
+        gate_names = [gate.name for gate in self.gates]
+        if len(gate_names) != len(set(gate_names)):
+            raise EvidenceContractError("Evidence gate names must be unique.")
         if (self.paper_only, self.live_trading_enabled, self.orders_enabled) != (True, False, False):
             raise EvidenceContractError("Safety contract requires paper-only and disabled orders.")
 
