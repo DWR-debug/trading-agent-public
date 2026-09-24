@@ -70,6 +70,22 @@ Performancehypothese, ohne Parameter-/Asset-/Holdout-Auswahl.
 - Push/Schedule: Beobachtung + T040-Coverage-Preflight + Coverage-Discovery + Failure-Diagnose
 - formale Forschung: nur nach Coverage-Pass und explizitem Research-Dispatch
 
+## Historische Failure-Diagnose
+
+Die T040-Versagenssignatur wurde nicht nur einzeln, sondern gegen die fünf relevanten historischen
+salvageable Beobachtungen T022/T023/T025/T027/T028 ausgewertet.
+
+Festgestellte wiederkehrende Muster:
+
+- Risk-Gates versagen wiederholt auch bei attraktiven absoluten Renditemetriken.
+- Mechanismus-spezifische Edge-/OOS-Gates können hinter hohen aggregierten Renditen scheitern.
+- Ein attraktiver Holdout rettet keinen früheren Research-/Risk-/Mechanismusfehler.
+- T028 zeigt einen eigenständigen Risk-Control-Hinweis: geringere Drawdowns und leicht bessere PFs
+  gegenüber der festen Kontrolle, aber weiterhin kein Promotion-Pass.
+
+Daraus folgt kein neuer Parameter- oder Asset-Tuning-Auftrag. Der nächste formale Fokus ist eine neue,
+vollständig symbol-disjunkte Portfolio-Risk-Control-Hypothese mit eigener Präregistrierung.
+
 ## Sicherheitsstatus
 
 - PAPER_ONLY=True
