@@ -2549,6 +2549,58 @@
         "live_trading_enabled": false,
         "orders_enabled": false
       }
+    },
+    {
+      "trial_id": "T-2026-09-24-032",
+      "recorded_at": "2026-09-24",
+      "status": "data_invalid",
+      "research_family": "relative_value_etf_pairs",
+      "hypothesis": {
+        "text": "Coverage preflight for five fixed ex ante ETF relative-value pairs before any performance evaluation."
+      },
+      "data_scope": {
+        "target_candles": 3500,
+        "requested_candles": 3520,
+        "performance_evaluation": false,
+        "holdout_evaluation": false,
+        "symbols": [
+          "VTWO",
+          "IJR",
+          "QQQM",
+          "ONEQ",
+          "IEMG",
+          "SCHE",
+          "IGIB",
+          "SPIB",
+          "SCHP",
+          "STIP"
+        ],
+        "invalid_symbol": "QQQM",
+        "invalid_candle_count": 1493,
+        "required_candle_count": 3520
+      },
+      "search_scope": {
+        "raw_trial_count": 0,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "holdout_used_for_selection": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "coverage preflight only"
+      },
+      "outcome": {
+        "validation_status": "DATA_INVALID",
+        "workflow_run_id": 36043628557,
+        "error": "Yahoo lieferte nur 1493 von 3520 angeforderten Candles für QQQM.",
+        "no_performance_claim": true
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
     }
   ]
 }
