@@ -91,20 +91,16 @@ def test_network_engine_keeps_direction_long_or_flat():
 
 
 def test_preregistration_activation_accepts_t039_and_t040():
-    from automation.network_momentum_lab import (
-        DEFAULT_PREREGISTRATION,
-        _activate_preregistration,
-        TRIAL_ID,
-        SYMBOLS,
-    )
-    t039 = _activate_preregistration(DEFAULT_PREREGISTRATION)
-    assert t039["trial_id"] == "T-2026-09-24-039"
-    assert TRIAL_ID == "T-2026-09-24-039"
-    assert SYMBOLS[10] == "FTGC"
+    import automation.network_momentum_lab as lab
 
-    t040 = _activate_preregistration(
+    t039 = lab._activate_preregistration(lab.DEFAULT_PREREGISTRATION)
+    assert t039["trial_id"] == "T-2026-09-24-039"
+    assert lab.TRIAL_ID == "T-2026-09-24-039"
+    assert lab.SYMBOLS[10] == "FTGC"
+
+    t040 = lab._activate_preregistration(
         "research/preregistrations/trial_040_network_momentum_2026_09_24.json"
     )
     assert t040["trial_id"] == "T-2026-09-24-040"
-    assert TRIAL_ID == "T-2026-09-24-040"
-    assert SYMBOLS[10] == "BIV"
+    assert lab.TRIAL_ID == "T-2026-09-24-040"
+    assert lab.SYMBOLS[10] == "BIV"
