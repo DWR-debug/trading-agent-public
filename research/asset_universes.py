@@ -182,6 +182,26 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("DBA", "DBB", "FXA", "FXY", "MUB", "SHV", "EMB", "BWX"),
         target_count=3500,
     ),
+    AssetUniverse(
+        name="validation_2026_09_24_seventh_trend",
+        priority=21,
+        description=(
+            "Seventh fully disjoint US-listed ETF validation universe for "
+            "trend-family and multi-strategy complementarity research."
+        ),
+        symbols=("SLV", "RSP", "VYM", "VIG", "DVY", "EPP", "EWU", "EWZ"),
+        target_count=3500,
+    ),
+    AssetUniverse(
+        name="validation_2026_09_24_seventh_cs",
+        priority=22,
+        description=(
+            "Seventh fully disjoint large-cap equity universe for "
+            "cross-sectional momentum and multi-strategy complementarity research."
+        ),
+        symbols=("AAPL", "MSFT", "AMZN", "META", "GOOGL"),
+        target_count=3500,
+    ),
 )
 
 
