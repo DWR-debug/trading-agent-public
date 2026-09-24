@@ -1,3 +1,18 @@
+## Aktueller Checkpoint — Trial 036 Network Momentum Coverage DATA_INVALID — 2026-09-24
+
+Trial T-2026-09-24-036 wurde vor jeder Performanceauswertung als **DATA_INVALID** beendet.
+
+- Coverage-Workflow: `36049739991`
+- `CYB`: Yahoo HTTP 404
+- keine Research-/Holdout-Evaluation
+- kein Datenvertrag gelockert
+- keine Performanceaussage
+
+Die Network-Momentum-Hypothese bleibt damit **ungetestet**.
+
+Für T037 wird ausschließlich `CYB` durch `EIDO` ersetzt; die übrigen Symbole und die
+präregistrierte Network-Momentum-Regel bleiben unverändert.
+
 ## Aktueller Checkpoint — Trial 035 Trend Family WFO — 2026-09-24
 
 Trial T-2026-09-24-035 wurde auf einer vollständig symbol-disjunkten neuen 10-ETF-Basis
