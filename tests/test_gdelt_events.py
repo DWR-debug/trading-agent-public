@@ -39,7 +39,7 @@ def test_daily_dateonly_is_supported():
 
 
 def test_non_strict_parser_counts_skipped_rows():
-    bad = "\t".join([""] * 10) + "\n"
+    bad = "\t".join(["x"] + [""] * 9) + "\n"
     stats = {}
     assert tuple(parse_event_tsv(bad, strict=False, stats=stats)) == ()
     assert stats["rows_seen"] == 1
