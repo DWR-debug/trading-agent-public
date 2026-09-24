@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "trial_id": "T-2026-09-24-023",
+  "status": "archived_rejected",
+  "research_family": "cross_sectional_max_effect",
+  "workflow_run_id": 36016871406,
+  "artifact_id": 10815121247,
+  "artifact_sha256": "58bfcf5d3ee264df34ebb99dd6322fcb5f24c2ec9169d455b1068488da9e71c5",
+  "report_fingerprint": "bfaeb216996b2f32acd55fff06e217344f24de6aca373a661bedd873c06bb594",
+  "manifest_fingerprint": "66a17c515f85af51cfbd6d4402fc67c9d2c6cbb215eefdfe459052e2d5618d6b",
+  "workflow_code_sha": "3b05c02c16901329112814bdb1c7d3486df88fff",
+  "branch_head_sha": "dfd29f361b91f41316313f2b75fe42f3c013a4b3",
+  "universe": {
+    "name": "validation_2026_09_24_max_effect_us_stocks",
+    "symbols": [
+      "ORCL",
+      "CSCO",
+      "TXN",
+      "ADP",
+      "UPS",
+      "ABT",
+      "GILD",
+      "AMGN"
+    ],
+    "target_candles": 3500,
+    "common_returns": 3498,
+    "research_count": 2798,
+    "holdout_count": 700,
+    "fully_symbol_disjoint": true
+  },
+  "methodology": {
+    "signal": "maximum daily close-to-close return within immediately preceding completed calendar month",
+    "direction": "long four lowest-MAX assets",
+    "select_count": 4,
+    "gross_exposure": 1,
+    "leverage": 1,
+    "shorting": false,
+    "fee_bps": 10,
+    "slippage_bps": 5,
+    "stress_multipliers": [
+      1.5,
+      2
+    ],
+    "strategy_variants": 1,
+    "parameter_search": false,
+    "threshold_search": false,
+    "holdout_selection": false
+  },
+  "outcome": {
+    "decision": "NO_SUPPORT",
+    "research": {
+      "return_percent": 285.8384653467733,
+      "drawdown_percent": 24.627086363044526,
+      "profit_factor": 1.147813931100505,
+      "rolling_profitable_windows": 4,
+      "rolling_window_count": 5
+    },
+    "holdout": {
+      "return_percent": 38.85122925720121,
+      "drawdown_percent": 16.258926604304648,
+      "profit_factor": 1.1440866258526323,
+      "oos_to_research_return_ratio": 0.13592022756653033
+    },
+    "max_edge": {
+      "research_daily": 0.00014367672845823338,
+      "holdout_daily": -0.00004064077951666479
+    },
+    "stress_1_5x_holdout_return_percent": 35.80488082837414,
+    "stress_2x_holdout_return_percent": 32.82316721681098,
+    "all_checks_passed": false
+  },
+  "gate_results": {
+    "research_return_positive": true,
+    "research_drawdown": false,
+    "research_profit_factor": true,
+    "rolling_profitable_window_ratio": true,
+    "oos_to_is_return_ratio": false,
+    "holdout_return_positive": true,
+    "holdout_drawdown": false,
+    "holdout_profit_factor": true,
+    "stress_1_5x_nonnegative": true,
+    "stress_2x_nonnegative": true,
+    "research_max_effect_edge_positive": true,
+    "holdout_max_effect_edge_positive": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false
+  }
+}
