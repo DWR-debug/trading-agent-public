@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "trial_id": "T-2026-09-24-027",
+  "status": "preregistered",
+  "research_family": "tsm_ensemble_trend_sleeve_replacement",
+  "hypothesis": "Replacing only the fixed SMA 50/200 long-only trend signal with a fixed majority-vote TSM ensemble over 63/126/252 sessions improves candidate quality while preserving the fixed cross-sectional sleeve and risk layer.",
+  "trend_symbols": [
+    "IVV",
+    "ITOT",
+    "SCHX",
+    "SCHF",
+    "SPAB",
+    "IEI",
+    "MBB",
+    "VCSH"
+  ],
+  "cross_sectional_symbols": [
+    "IYJ",
+    "IYC",
+    "IYM",
+    "IYK",
+    "IYW"
+  ],
+  "target_candles": 3500,
+  "common_returns": 3498,
+  "research_count": 2798,
+  "holdout_count": 700,
+  "tsm_lookbacks": [
+    63,
+    126,
+    252
+  ],
+  "trend_rebalance_sessions": 21,
+  "trend_volatility_window": 60,
+  "trend_asset_weight_cap": 0.25,
+  "risk_budget_window_sessions": 63,
+  "target_annualized_volatility": 0.1,
+  "strategy_variants": 1,
+  "parameter_search": false,
+  "threshold_search": false,
+  "selection_used": false,
+  "holdout_used_for_selection": false,
+  "paper_only": true,
+  "live_trading_enabled": false,
+  "orders_enabled": false
+}
