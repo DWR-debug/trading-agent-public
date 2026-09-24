@@ -253,8 +253,16 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=3500,
     ),
 
-)
-
+    AssetUniverse(
+        name="validation_2026_09_24_common_market_momentum_gate",
+        priority=35,
+        description=(
+            "Fully symbol-disjoint validation universe for Trial 026; thirteen traded "
+            "assets plus one external ACWI common-market signal proxy."
+        ),
+        symbols=("VBR", "VSS", "VCIT", "BIL", "GSG", "VPL", "EWQ", "EWL", "EWW", "EZU", "ILF", "SCHD", "USMV", "ACWI"),
+        target_count=3500,
+    ),
     AssetUniverse(
         name="validation_2026_09_24_tsm_ensemble_candidate",
         priority=36,
@@ -262,10 +270,11 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
             "Fully symbol-disjoint validation universe for Trial 027; fixed long-only "
             "TSM ensemble trend-sleeve replacement."
         ),
-        symbols=("IVV","ITOT","SCHX","SCHF","SPAB","IEI","MBB","VCSH","IYJ","IYC","IYM","IYK","IYW"),
+        symbols=("IVV", "ITOT", "SCHX", "SCHF", "SPAB", "IEI", "MBB", "VCSH", "IYJ", "IYC", "IYM", "IYK", "IYW"),
         target_count=3500,
     ),
 
+)
 
 
 
