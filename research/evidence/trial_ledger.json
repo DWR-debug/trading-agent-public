@@ -919,6 +919,108 @@
         "live_trading_enabled": false,
         "orders_enabled": false
       }
+    },
+    {
+      "trial_id": "T-2026-09-24-011",
+      "recorded_at": "2026-09-24T14:47:00+02:00",
+      "status": "archived_rejected",
+      "research_family": "multi_strategy_complementarity",
+      "hypothesis": {
+        "text": "Feste 50/50-Kombination aus langfristiger Trendfamilie und 12-1 Cross-Sectional-Momentum zeigt auf einem neuen vollständig symbol-disjunkten Satz komplementäre Risiko-/Stabilitätseigenschaften."
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10808382149
+        ],
+        "fully_symbol_disjoint_validation_set": true,
+        "trend_symbols": [
+          "SLV",
+          "RSP",
+          "VYM",
+          "VIG",
+          "DVY",
+          "EPP",
+          "EWU",
+          "EWZ"
+        ],
+        "cross_sectional_symbols": [
+          "AAPL",
+          "MSFT",
+          "AMZN",
+          "META",
+          "GOOGL"
+        ]
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered fixed multi-strategy control; no holdout selection",
+        "selection_family_id": "multi-strategy-complementarity-2026-09-24",
+        "selection_metric": "fixed Research/Holdout complementarity diagnostics"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 36001213390,
+        "artifact_id": 10808382149,
+        "artifact_zip_sha256": "fb1d6f7be425c4a138a935038e5bb2cda7dc505d551526df64cfec8c77ab18df",
+        "report_fingerprint": "730fa24672298e943d8b146184aa6919281b1345a6dbd04461bd476efa4a0654",
+        "base": {
+          "trend": {
+            "research_return_percent": 7.03055708990703,
+            "research_max_drawdown_percent": 25.714909374767238,
+            "research_profit_factor": 1.0221115441892275,
+            "holdout_return_percent": 25.610850561328547,
+            "holdout_max_drawdown_percent": 13.128971749827356,
+            "holdout_profit_factor": 1.1649347884482386
+          },
+          "cross_sectional": {
+            "research_return_percent": 171.16575106576667,
+            "research_max_drawdown_percent": 14.264304191966449,
+            "research_profit_factor": 1.1833284784897165,
+            "holdout_return_percent": 27.99225453074561,
+            "holdout_max_drawdown_percent": 12.854891655522383,
+            "holdout_profit_factor": 1.1703683417435982
+          },
+          "blend_50_50": {
+            "research_return_percent": 109.7049694493217,
+            "research_max_drawdown_percent": 15.611401963823312,
+            "research_profit_factor": 1.1352015547612062,
+            "holdout_return_percent": 30.67705745867397,
+            "holdout_max_drawdown_percent": 13.694391389907878,
+            "holdout_profit_factor": 1.1810913138686514
+          }
+        },
+        "diagnostics": {
+          "research_drawdown_not_worse_than_both": false,
+          "research_rolling_pf_not_worse_than_both": false,
+          "holdout_drawdown_not_worse_than_both": false,
+          "holdout_pf_not_worse_than_both": true,
+          "blend_positive_research": true,
+          "blend_positive_holdout": true
+        }
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
     }
   ]
 }
