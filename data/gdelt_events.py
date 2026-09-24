@@ -9,9 +9,9 @@ from pathlib import Path
 from typing import Iterable
 from urllib.request import Request, urlopen
 
-GDELT_EVENT_FIELD_COUNT = 61
-DATEADDED_INDEX = 59
-SOURCEURL_INDEX = 60
+GDELT_EVENT_FIELD_COUNT = 58
+DATEADDED_INDEX = 56
+SOURCEURL_INDEX = 57
 
 class GDELTEventError(ValueError):
     """Raised for malformed GDELT event records."""
