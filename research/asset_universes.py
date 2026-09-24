@@ -318,7 +318,8 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         ),
         symbols=("SPTM","IWR","RWR","SCHZ","VGSH","VGLT","DJP","MOO","GCC","REM"),
         target_count=3500,
-    ),    AssetUniverse(
+    ),
+    AssetUniverse(
         name="validation_2026_09_24_network_momentum_t039",
         priority=51,
         description=(
