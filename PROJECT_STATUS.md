@@ -1,3 +1,15 @@
+## Verbindliche Arbeitsquelle / Default Repository
+
+**Seit 2026-09-24 ist ausschließlich `DWR-debug/trading-agent-public` die Standard- und operative Arbeitsquelle für das Trading-Agent-Projekt.**
+
+Regeln:
+- Neue Chats mit Bezug auf den Trading Agent starten die Statusprüfung ausschließlich gegen `DWR-debug/trading-agent-public`.
+- Der aktuelle `master` dieses öffentlichen Repositories ist die primäre Quelle für Projektstatus, Research-Registry, Checkpoints, Workflows und formale Forschungsartefakte.
+- Das Repository `DWR-debug/trading-agent` (privat) wird **nicht** als Standardquelle verwendet.
+- Private `trading-agent`-Stände dürfen nur verwendet oder verglichen werden, wenn dies ausdrücklich angefordert wird.
+- Formale Research-/Actions-Ausführung soll über `trading-agent-public` erfolgen.
+- Paper-only bleibt verbindlich: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, keine Live-Orders.
+
 # Trading Agent — aktueller Gesamtcheckpoint
 
 Stand: 2026-09-24
