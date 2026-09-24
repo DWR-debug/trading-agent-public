@@ -97,21 +97,24 @@ def test_consensus_is_inconclusive_below_replication_threshold():
             }
         },
         "validation_2": {
-            "case_flags": {
+            "analysis": {
+                "case_flags": {
                 "rebound_enriched": True,
                 "cs_reversal_enriched": False,
                 "combined_enriched": False,
             }
         },
         "validation_3": {
-            "case_flags": {
+            "analysis": {
+                "case_flags": {
                 "rebound_enriched": False,
                 "cs_reversal_enriched": False,
                 "combined_enriched": False,
             }
         },
         "validation_4": {
-            "case_flags": {
+            "analysis": {
+                "case_flags": {
                 "rebound_enriched": False,
                 "cs_reversal_enriched": False,
                 "combined_enriched": False,
