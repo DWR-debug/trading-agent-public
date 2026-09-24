@@ -10,7 +10,7 @@ from data.yahoo_loader import load_yahoo_history
 from research.asset_universes import list_universes
 
 CANDIDATES=(
-    "SPLG","VV","IYV","IJR","IWS","VHT","VFH","VDC",
+    "SPYM","VV","IYV","IJR","IWS","VHT","VFH","VDC",
     "VOX","VCR","EWS","THD","GDXJ",
 )
 TARGET_FETCH=3520
