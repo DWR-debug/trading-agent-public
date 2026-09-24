@@ -125,9 +125,16 @@ def run_trial(
         market_loader = _yahoo_daily
 
     events: list[GDELTEvent] = []
+    parse_stats = {"rows_seen": 0, "rows_skipped": 0}
     day = start
     while day <= end:
-        events.extend(event_loader(day))
+        if event_loader is None:
+            day_stats = {"rows_seen": 0, "rows_skipped": 0}
+            events.extend(parse_event_zip(raw_dir / f"{day.isoformat()}.zip", strict=False, stats=day_stats))
+            parse_stats["rows_seen"] += day_stats["rows_seen"]
+            parse_stats["rows_skipped"] += day_stats["rows_skipped"]
+        else:
+            events.extend(event_loader(day))
         day += timedelta(days=1)
 
     features = {
@@ -234,6 +241,14 @@ def run_trial(
         "research_only": True,
         "selection_used": False,
         "parameter_search_used": False,
+        "data_quality": {
+            "event_rows_seen": parse_stats["rows_seen"],
+            "event_rows_skipped": parse_stats["rows_skipped"],
+            "event_row_skip_rate": (
+                parse_stats["rows_skipped"] / parse_stats["rows_seen"]
+                if parse_stats["rows_seen"] else 0.0
+            ),
+        },
         "data_scope": {
             "start": start.isoformat(),
             "end": end.isoformat(),
