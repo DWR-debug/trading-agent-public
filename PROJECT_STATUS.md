@@ -1,7 +1,7 @@
 # Trading Agent — aktueller Gesamtcheckpoint
 
-Stand: 2026-09-23
-Basis: `master` nach PR #44 (Sleeve-Aggregations-Ablation).
+Stand: 2026-09-24
+Basis: aktueller `master`-Stand nach PR #95 (siebte Komplementaritätsvalidierung), PR #96 (Evidence Governance) und PR #97 (Regime-Feature-Layer).
 
 ## Gesamtstatus
 
@@ -206,6 +206,89 @@ Signal-/Portfolio-Drawdown-Entstehung auf sauber ausgerichteten Daten.
 
 Produktionsstatus bleibt BLOCKED; keine Parameter-, Gewichts-, Gate- oder
 Kostenänderung wird aus den bisherigen Risk-Layer-Controls abgeleitet.
+
+### 2l. Siebte Multi-Strategie-Komplementaritätsvalidierung — 2026-09-24
+
+Der präregistrierte siebte Control wurde auf einem neuen vollständig symbol-disjunkten
+Datensatz erfolgreich technisch und methodisch ausgeführt.
+
+- Workflow-Run: 36001213390
+- Artifact-ID: 10808382149
+- Report-Fingerprint: 730fa24672298e943d8b146184aa6919281b1345a6dbd04461bd476efa4a0654
+- 3.500 gemeinsame Tages-Candles
+- 3.498 gemeinsame Point-in-Time-Return-Perioden
+- Research/Holdout: 2.798 / 700
+- vollständige Testsuite, Safety, Präregistrierung und Ergebnisintegrität: grün
+
+Basis-Szenario:
+
+- Trend-only: Research +7,03%, DD 25,71%, PF 1,0221; Holdout +25,61%, DD 13,13%, PF 1,1649
+- Cross-sectional-only: Research +171,17%, DD 14,26%, PF 1,1833; Holdout +27,99%, DD 12,85%, PF 1,1704
+- 50/50-Blend: Research +109,70%, DD 15,61%, PF 1,1352; Holdout +30,68%, DD 13,69%, PF 1,1811
+
+Die vorab definierten Komplementaritätsvergleiche zeigen keinen universellen
+Komplementaritätsnachweis auf diesem siebten Satz:
+
+- Research-DD des Blends nicht schlechter als beide Einzelvarianten: nein
+- Research-Rolling-PF des Blends nicht schlechter als beide Einzelvarianten: nein
+- Holdout-DD des Blends nicht schlechter als beide Einzelvarianten: nein
+- Holdout-PF des Blends nicht schlechter als beide Einzelvarianten: ja
+- Blend-Rendite positiv in Research und Holdout: ja
+
+Entscheidung: NO_UNIVERSAL_COMPLEMENTARITY_EVIDENCE. Keine Gewichtsanpassung,
+keine weitere Gewichtssuche auf diesem Datensatz und keine Produktionsintegration.
+
+Dauerhafte Evidenzablage:
+docs/multi_strategy_complementarity_validation_2026_09_24_result.md
+und
+research/checkpoints/seventh_multi_strategy_complementarity_2026_09_24.json.
+
+### 2m. Research-/Evidence-Governance
+
+Der Research-Prozess besitzt jetzt einen fail-closed Evidence-Contract.
+
+Jede promotionsrelevante Evidenz kann an Trial-ID, Artifact-Digest, Report-/Manifest-
+Fingerprint, Code-Commit, Research-/Holdout-Scope, benannte Gates und den Safety-
+Vertrag gebunden werden. Holdout-Nutzung zur Selektion blockiert die Evidence.
+Fehlende Gates, ungültige Provenienz und nicht bestandene Gates führen nicht zu
+einer automatischen Freigabe.
+
+Dauerhafte Ablage:
+research/evidence_contract.py
+und
+docs/EVIDENCE_GOVERNANCE.md.
+
+Der Contract ersetzt oder lockert keine bestehenden Research-/Holdout-/Rolling-
+oder Kostenstress-Gates.
+
+### 2n. Regime-/Meta-Layer
+
+Ein erster reiner Beobachtungs-Layer ist in master integriert.
+
+Er berechnet ausschließlich aus bereits beobachteten Returns:
+
+- annualisierte realisierte Volatilität
+- positive Asset-Breite
+- Downside-Breite
+- Cross-Sectional-Dispersion
+- mittlere paarweise Korrelation
+
+Es gibt noch keine unvalidierte automatische Regimeklassifikation. Der sichere
+Unknown-State-Pfad bleibt damit erhalten; ein unvalidierter Marktstatus führt
+weiterhin zu HOLD_CASH.
+
+### 2o. Political/Event-Alpha
+
+Trial-017/017b ist als gehärtete, PIT-fähige Event-Intelligence-Pipeline in master
+integriert.
+
+Der erste neue Event-Alpha-Control ist als PR #98 präregistriert und läuft aktuell
+durch die formale CI-/Research-Pipeline. Die feste Hypothese verwendet eine
+marktneutrale relative Positionierung auf IWB/GDX/BIL mit exakt 1,0x Brutto- und
+0,0x Nettoexposition. Es gibt keine Varianten- oder Parameter-Suche.
+
+Bis zum abgeschlossenen OOS-/Kosten-/Integritätsnachweis wird die Event-Familie
+nicht in Produktion oder Allokation übernommen.
 
 ### 3. Micro-Trading: aktueller Abschluss des 5m-Controls
 
