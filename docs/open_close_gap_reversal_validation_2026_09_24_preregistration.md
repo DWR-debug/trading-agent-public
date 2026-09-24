@@ -107,6 +107,6 @@ als Evidenz unseres Controls übernommen.
 ## Sicherheit
 
 PAPER_ONLY=True
-LIVE_TRADING_ENABLED=False
+LSPSM_TRADING_ENABLED=False
 orders_enabled=False
 Keine Orders.
