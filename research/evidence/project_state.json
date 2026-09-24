@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "updated": "2026-09-24",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "b8ee3cdfb58d1de9b1e8c111a20d896bda739680",
-  "latest_formal_trial": "T-2026-09-24-039",
-  "latest_trial_status": "DATA_INVALID",
-  "next_reserved_trial": "T-2026-09-24-040",
-  "next_research_focus": "Coverage-only discovery: deterministically scan a predeclared candidate pool for a data-valid replacement, then preregister T040 without changing the Network Momentum rule",
+  "master_commit": "0177711805044c3785f1f5ff5821c791076123cb",
+  "latest_formal_trial": "T-2026-09-24-040",
+  "latest_trial_status": "BLOCKED",
+  "next_reserved_trial": "NONE_PENDING_NEW_PREREGISTRATION",
+  "next_research_focus": "Adversarial failure diagnosis of T040 and prior salvageable observations; no Network Momentum tuning",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -42,8 +42,8 @@
     ".github/workflows/research-orchestrator.yml",
     ".github/workflows/paper-30-day-experiment-harness.yml"
   ],
-  "current_preregistered_trial": "T-2026-09-24-039",
-  "current_trial_status": "DATA_INVALID_COVERAGE_BLOCKED",
+  "current_preregistered_trial": "T-2026-09-24-040",
+  "current_trial_status": "BLOCKED_NEGATIVE_EVIDENCE_ARCHIVED",
   "engineering_notes": {
     "t039_preregistered": true,
     "coverage_preflight_active": true,
@@ -53,6 +53,10 @@
     "pushes_run_observation_and_coverage_preflight": true,
     "t039_data_valid": false,
     "formal_performance_blocked_by_coverage": true,
-    "next_trial_candidate_selection": "coverage_only_fixed_pool"
+    "next_trial_candidate_selection": "coverage_only_fixed_pool",
+    "t040_formal_completed": true,
+    "t040_negative_evidence_archived": true,
+    "current_queue_task": "Q-002-ADVERSARIAL-FAILURE-DIAGNOSIS",
+    "automatic_formal_execution_requires_preregistration": true
   }
 }
