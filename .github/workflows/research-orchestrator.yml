@@ -38,6 +38,7 @@ on:
     branches:
       - master
       - research/execute-t042-coverage
+      - research/execute-t042-coverage-repair
     paths:
       - "automation/research_orchestrator.py"
       - "automation/live_market_observer.py"
@@ -115,7 +116,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          if [ "$GITHUB_REF" = "refs/heads/research/execute-t042-coverage" ]; then
+          if [ "$GITHUB_REF" = "refs/heads/research/execute-t042-coverage" ] || [ "$GITHUB_REF" = "refs/heads/research/execute-t042-coverage-repair" ]; then
             test "$GITHUB_EVENT_NAME" = "push"
             test "$(git log -1 --pretty=%s)" = "Research authorization: execute T042 coverage"
             python -m automation.research_orchestrator \
