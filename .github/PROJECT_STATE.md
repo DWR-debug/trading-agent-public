@@ -1,4 +1,15 @@
-## Architektur-Checkpoint 2026-09-24
+## Verifizierter Projektstand — 2026-09-24
+
+Master: `3409d52f2f70d8864fa43984d2785db698af69c7`
+PR #93 ist gemerged. Der Architektur-Branch wurde damit integriert.
+
+Verifiziert:
+- Trading Agent Tests: 581 passed
+- Paper-Only Safety: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False)
+- Candidate Validation: erfolgreich
+- Master Push CI: Trading Agent Tests, Test und Autonomous Stock Research erfolgreich
+- Production Candidate bleibt BLOCKED
+- Trial 017 ist als Research-only Baseline integriert; die eigentliche Datenausführung erfolgt separat und verändert keine Produktionsparameter.
 
 Aktueller Entwicklungszweig: architecture-2026-09-24
 
