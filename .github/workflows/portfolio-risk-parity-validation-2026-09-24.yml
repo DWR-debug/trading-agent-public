@@ -1,0 +1,183 @@
+name: Portfolio Risk-Parity Validation 2026-09-24
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [master]
+    paths:
+      - "automation/portfolio_risk_parity_validation_2026_09_24.py"
+      - "research/fixed_sleeve_risk_parity.py"
+      - "research/asset_universes.py"
+      - "tests/test_fixed_sleeve_risk_parity.py"
+      - "docs/portfolio_risk_parity_validation_2026_09_24_preregistration.md"
+      - "research/checkpoints/portfolio_risk_parity_2026_09_24_preregistration.json"
+      - ".github/workflows/portfolio-risk-parity-validation-2026-09-24.yml"
+  push:
+    branches:
+      - research/portfolio-risk-parity-validation-2026-09-24
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-portfolio-risk-parity-validation
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 180
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Paper-only-Sicherheit prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+
+      - name: Universums-Disjointness prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from research.asset_universes import get_universe, list_universes
+
+          trend_expected = ("IBM", "GE", "CAT", "MMM", "HD", "LOW", "UNP", "NKE")
+          cs_expected = ("BAC", "JPM", "GS", "MS", "C")
+
+          trend = get_universe("validation_2026_09_24_portfolio_risk_parity_trend")
+          cs = get_universe("validation_2026_09_24_portfolio_risk_parity_cs")
+
+          assert tuple(trend.symbols) == trend_expected
+          assert tuple(cs.symbols) == cs_expected
+          assert set(trend_expected).isdisjoint(cs_expected)
+
+          combined = set(trend_expected) | set(cs_expected)
+          for item in list_universes():
+              if item.name in {
+                  "validation_2026_09_24_portfolio_risk_parity_trend",
+                  "validation_2026_09_24_portfolio_risk_parity_cs",
+              }:
+                  continue
+              assert combined.isdisjoint(
+                  item.symbols
+              ), f"Overlap with {item.name}"
+
+          print("PORTFOLIO_RISK_PARITY_UNIVERSE_DISJOINT_OK")
+          PY
+
+      - name: Trend-Market-Daten vorbereiten
+        run: |
+          set -euo pipefail
+          python -m automation.prepare_research_data             --target-count 3500             --universe validation_2026_09_24_portfolio_risk_parity_trend             --output research/portfolio_risk_parity_validation_2026_09_24/trend_manifest.json
+
+      - name: CS-Market-Daten vorbereiten
+        run: |
+          set -euo pipefail
+          python -m automation.prepare_research_data             --target-count 3500             --universe validation_2026_09_24_portfolio_risk_parity_cs             --output research/portfolio_risk_parity_validation_2026_09_24/cs_manifest.json
+
+      - name: Präregistrierung prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          prereg = Path(
+              "docs/portfolio_risk_parity_validation_2026_09_24_preregistration.md"
+          ).read_text(encoding="utf-8")
+          required = (
+              "T-2026-09-24-022",
+              "IBM", "GE", "CAT", "MMM", "HD", "LOW", "UNP", "NKE",
+              "BAC", "JPM", "GS", "MS", "C",
+              "63", "2.798", "700", "3.500",
+              "0,10%", "1,5x", "2,0x",
+              "PAPER_ONLY=True",
+          )
+          missing = [token for token in required if token not in prereg]
+          assert not missing, f"Missing preregistration tokens: {missing}"
+          assert "Holdout wird nicht" in prereg
+          print("PORTFOLIO_RISK_PARITY_PREREGISTRATION_VERIFIED")
+          PY
+
+      - name: Portfolio-Risk-Parity-Validierung ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.portfolio_risk_parity_validation_2026_09_24             --trend-data-dir data/market_data             --trend-manifest research/portfolio_risk_parity_validation_2026_09_24/trend_manifest.json             --cs-data-dir data/market_data             --cs-manifest research/portfolio_risk_parity_validation_2026_09_24/cs_manifest.json             --output research/portfolio_risk_parity_validation_2026_09_24/report.json
+
+      - name: Ergebnisintegrität prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path(
+              "research/portfolio_risk_parity_validation_2026_09_24/report.json"
+          )
+          report = json.loads(path.read_text(encoding="utf-8"))
+          stored = report.pop("report_fingerprint")
+
+          actual = hashlib.sha256(
+              json.dumps(
+                  report,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+
+          assert stored == actual
+          assert report["trial_id"] == "T-2026-09-24-022"
+          assert report["research_only"] is True
+          assert report["selection_used"] is False
+          assert report["parameter_search_used"] is False
+          assert report["methodology"]["strategy_variants"] == 1
+          assert report["methodology"]["holdout_used_for_selection"] is False
+          assert report["data_scope"]["market_candles_per_asset"] == 3500
+          assert report["data_scope"]["research_return_count"] == 2798
+          assert report["data_scope"]["holdout_return_count"] == 700
+          assert report["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+          }
+
+          print("PORTFOLIO_RISK_PARITY_RESULT_INTEGRITY_OK")
+          print("DECISION:", json.dumps(report["decision"], sort_keys=True))
+          print("SCENARIOS:", json.dumps(report["scenarios"], sort_keys=True))
+          print("REPORT_FINGERPRINT:", stored)
+          PY
+
+      - name: Validierungsartefakte sichern
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-risk-parity-validation-2026-09-24-${{ github.run_id }}
+          path: |
+            research/portfolio_risk_parity_validation_2026_09_24/report.json
+            research/portfolio_risk_parity_validation_2026_09_24/trend_manifest.json
+            research/portfolio_risk_parity_validation_2026_09_24/cs_manifest.json
+          if-no-files-found: error
+          retention-days: 30
