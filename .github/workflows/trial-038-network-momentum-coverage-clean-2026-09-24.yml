@@ -1,0 +1,97 @@
+name: Trial 038 Network Momentum Coverage Preflight 2026-09-24
+
+on:
+  push:
+    branches: ["preflight/trial-038-network-momentum-clean-2026-09-24"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-trial-038-clean-coverage
+  cancel-in-progress: false
+
+jobs:
+  coverage:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 90
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest statsmodels==0.15.0
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+      - name: Paper-only-Sicherheit
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+      - name: Feste Universe-Definition prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from research.asset_universes import list_universes
+          symbols=["EIRL","ENZL","NORW","EDEN","FXF","FXC","CEW","EIDO","SCHO","MINT","COMT","RWX"]
+          target=set(symbols)
+          assert len(target)==12
+          for item in list_universes():
+              assert target.isdisjoint(item.symbols), item.name
+          print("TRIAL_038_UNIVERSE_DISJOINT_OK")
+          PY
+      - name: Coverage
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          from data.yahoo_loader import load_yahoo_history
+          symbols=["EIRL","ENZL","NORW","EDEN","FXF","FXC","CEW","EIDO","SCHO","MINT","COMT","RWX"]
+          counts={}
+          histories={}
+          for symbol in symbols:
+              bars=load_yahoo_history(symbol,"1d",3520,allow_partial=False,skip_invalid_ohlc=True)
+              counts[symbol]=len(bars)
+              assert len(bars)==3520,(symbol,len(bars))
+              histories[symbol]={bar.timestamp for bar in bars}
+          common=set.intersection(*histories.values())
+          assert len(common)>=3500,len(common)
+          m={
+            "trial_id":"T-2026-09-24-038",
+            "status":"coverage_passed",
+            "symbols":symbols,
+            "per_symbol_counts":counts,
+            "common_calendar_count":len(common),
+            "performance_selection_used":False,
+            "paper_only":True,
+            "live_trading_enabled":False,
+            "orders_enabled":False
+          }
+          raw=json.dumps(m,sort_keys=True,separators=(",",":"),ensure_ascii=True)
+          m["coverage_fingerprint"]=hashlib.sha256(raw.encode()).hexdigest()
+          out=Path("research/checkpoints"); out.mkdir(parents=True,exist_ok=True)
+          (out/"trial_038_coverage_preflight_2026_09_24.json").write_text(json.dumps(m,indent=2),encoding="utf-8")
+          print("TRIAL_038_COVERAGE_OK:",len(common))
+          print("TRIAL_038_COUNTS:",counts)
+          print("TRIAL_038_COVERAGE_FINGERPRINT:",m["coverage_fingerprint"])
+          PY
+      - name: Artefakt sichern
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: trial-038-coverage-preflight-clean
+          path: research/checkpoints/trial_038_coverage_preflight_2026_09_24.json
+          if-no-files-found: error
+          retention-days: 30

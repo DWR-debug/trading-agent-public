@@ -1,3 +1,22 @@
+## Aktueller Checkpoint — Trial 038 Network Momentum Coverage DATA_INVALID — 2026-09-24
+
+Trial T-2026-09-24-038 wurde vor jeder Performanceauswertung als **DATA_INVALID** beendet.
+
+- Coverage-Workflow: `36050479582`
+- vollständig geprüfte 12er-Liste: EIRL, ENZL, NORW, EDEN, FXF, FXC, CEW, EIDO, SCHO, MINT, COMT, RWX
+- `COMT`: 3.000 statt 3.520 angeforderter Daily-Candles
+- Tests, Safety und Disjointness: grün
+- keine Research-/Holdout-Evaluation
+- kein Datenvertrag gelockert
+- keine Performanceaussage
+
+Die Network-Momentum-Hypothese bleibt damit ungetestet. Die fehlerhaften Zwischenläufe
+aus den früheren T038-Kopien sind reine Scratch-Ausführungen und keine wissenschaftlichen
+Trial-Ergebnisse.
+
+Für T039 wird ausschließlich `COMT` durch `FTGC` ersetzt. Alle übrigen Symbole,
+die Network-Momentum-Regel und der Datenvertrag bleiben unverändert.
+
 ## Aktueller Checkpoint — Trial 037 Network Momentum Coverage DATA_INVALID — 2026-09-24
 
 Trial T-2026-09-24-037 wurde vor jeder Performanceauswertung als **DATA_INVALID** beendet.

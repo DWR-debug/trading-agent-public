@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-24T19:43:03Z",
+  "generated_at": "2026-09-24T19:47:43Z",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -2972,6 +2972,68 @@
         "no_performance_claim": true,
         "result_document": "docs/trial_037_network_momentum_data_invalid_2026_09_24.md",
         "result_checkpoint": "research/checkpoints/trial_037_network_momentum_data_invalid_2026_09_24.json"
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-038",
+      "recorded_at": "2026-09-24T19:47:43Z",
+      "status": "data_invalid",
+      "research_family": "cross_asset_network_momentum",
+      "hypothesis": {
+        "text": "Ein fest definierter Cross-Asset-Lead-Lag/Network-Momentum-Zustand ergänzt den eigenen Trendpfad auf einem neuen disjunkten Multi-Asset-Datensatz."
+      },
+      "data_scope": {
+        "requested_candles": 3520,
+        "target_candles": 3500,
+        "symbols": [
+          "EIRL",
+          "ENZL",
+          "NORW",
+          "EDEN",
+          "FXF",
+          "FXC",
+          "CEW",
+          "EIDO",
+          "SCHO",
+          "MINT",
+          "COMT",
+          "RWX"
+        ],
+        "invalid_symbol": "COMT",
+        "invalid_candle_count": 3000,
+        "required_candle_count": 3520,
+        "performance_evaluation": false,
+        "holdout_evaluation": false,
+        "performance_selection_used": false
+      },
+      "search_scope": {
+        "raw_trial_count": 0,
+        "parameter_search": false,
+        "variant_search": false,
+        "holdout_used_for_selection": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "coverage preflight only"
+      },
+      "outcome": {
+        "validation_status": "DATA_INVALID",
+        "scientific_outcome": "NO_SCIENTIFIC_OUTCOME",
+        "workflow_run_id": 36050479582,
+        "error": "Yahoo lieferte nur 3000 von 3520 angeforderten Candles für COMT.",
+        "no_performance_claim": true,
+        "result_document": "docs/trial_038_network_momentum_data_invalid_2026_09_24.md",
+        "result_checkpoint": "research/checkpoints/trial_038_network_momentum_data_invalid_2026_09_24.json",
+        "malformed_intermediate_run_ids": [
+          36050139453,
+          36050264167
+        ],
+        "malformed_intermediate_runs_excluded_from_formal_evidence": true
       },
       "safety": {
         "paper_only": true,
