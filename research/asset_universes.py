@@ -298,6 +298,17 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=3500,
     ),
 
+    AssetUniverse(
+        name="validation_2026_09_24_residual_momentum_candidate",
+        priority=41,
+        description=(
+            "Fully symbol-disjoint validation universe for Trial 032; fixed market-residual "
+            "momentum research control with a single broad-market benchmark proxy."
+        ),
+        symbols=("ACWX","FEZ","SCHE","SCHC","UNG","PPLT","CPER","IGOV","OIH","XPH","XHE","XSW","PBS"),
+        target_count=3500,
+    ),
+
 )
 
 
