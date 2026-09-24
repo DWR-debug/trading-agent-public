@@ -86,7 +86,7 @@ jobs:
           text = Path("docs/open_close_gap_reversal_validation_2026_09_24_preregistration.md").read_text(encoding="utf-8")
           required = (
               "T-2026-09-24-020",
-              "SPYG", "SPYV", "SPTM", "SPMD", "SPSM", "SDY", "RWL", "XNTK",
+              "SPYG", "SPYV", "SPTM", "SPMD", "SDY", "RWR", "XNTK", "XPH",
               "2.798", "700", "3.500", "0,10%", "PAPER_ONLY=True"
           )
           missing = [token for token in required if token not in text]
