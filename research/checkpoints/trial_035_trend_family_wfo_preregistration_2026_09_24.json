@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "trial_id": "T-2026-09-24-035",
+  "status": "preregistered",
+  "research_family": "trend_family_walk_forward_transfer",
+  "universe": "validation_2026_09_24_trend_family_wfo_candidate",
+  "symbols": [
+    "SPTM",
+    "IWR",
+    "RWR",
+    "SCHZ",
+    "VGSH",
+    "VGLT",
+    "DJP",
+    "MOO",
+    "GCC",
+    "REM"
+  ],
+  "target_candles": 3500,
+  "common_returns": 3498,
+  "research_count": 2800,
+  "holdout_count": 700,
+  "families": [
+    "tsm_monthly_equal",
+    "sma_50_200_inverse_vol",
+    "blend_tsm_sma_inverse_vol"
+  ],
+  "training_size": 1400,
+  "test_size": 280,
+  "step_size": 280,
+  "research_windows": 5,
+  "selection_rule": "highest training profit factor; tie by higher training return; tie by lower training drawdown; final lexicographic family name",
+  "holdout_rule": "freeze family selected in fifth Research window",
+  "coverage_preflight": {
+    "workflow_run_id": 36046054250,
+    "artifact_id": 10829105161,
+    "artifact_sha256": "sha256:c48cac3262719b2178011a93f62568193a9e2967d7dc756cb259828d6942a0fa4",
+    "common_calendar_count": 3520,
+    "performance_selection_used": false
+  },
+  "parameter_search": false,
+  "variant_search": false,
+  "selection_profile_used": false,
+  "holdout_used_for_selection": false,
+  "base_fee_bps": 10,
+  "base_slippage_bps": 5,
+  "stress_multiplier": 2,
+  "paper_only": true,
+  "live_trading_enabled": false,
+  "orders_enabled": false
+}
