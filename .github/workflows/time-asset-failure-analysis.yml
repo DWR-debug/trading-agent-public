@@ -3,7 +3,7 @@ name: Time Asset Failure Analysis
 on:
   pull_request:
     branches:
-      - master
+      - ci-disabled
   workflow_run:
     workflows:
       - Candidate Migration Analysis
