@@ -12,6 +12,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
+ACTIVE_WORKFLOWS = {
+    "ci.yml",
+    "research-orchestrator.yml",
+    "paper-30-day-experiment-harness.yml",
+}
+
 REQUIRED_FILES = (
     ROOT / "PROJECT_STATUS.md",
     ROOT / "docs" / "PROJECT_CONTEXT.md",
@@ -29,6 +35,13 @@ def fail(message: str) -> None:
 
 
 def main() -> None:
+    workflow_dir = ROOT / ".github" / "workflows"
+    active_workflows = {path.name for path in workflow_dir.glob("*.yml")}
+    if active_workflows != ACTIVE_WORKFLOWS:
+        fail(
+            "unexpected active workflows: "
+            + ", ".join(sorted(active_workflows - ACTIVE_WORKFLOWS))
+        )
     for path in REQUIRED_FILES:
         if not path.exists():
             fail(f"missing required file: {path.relative_to(ROOT)}")

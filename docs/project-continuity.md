@@ -15,7 +15,7 @@ Dauerhafter Projekt-Handoff für die Fortsetzung über ChatGPT-Chats, Geräte un
 
 ## Quellen der Wahrheit
 
-1. GitHub `DWR-debug/trading-agent`: technische Quelle der Wahrheit für Code, Tests, Workflows, Commits und reproduzierbare Research-Infrastruktur.
+1. GitHub `DWR-debug/trading-agent-public`: technische Quelle der Wahrheit für Code, Tests, Workflows, Commits und reproduzierbare Research-Infrastruktur.
 2. ChatGPT-Projekt: Zusammenarbeit, Entscheidungen, Ziele, Erklärungen und Research-Diskussionen.
 3. Research-Reports, Manifests und Checkpoints: Evidenz für einzelne Research-Läufe.
 4. Pixel 8a / S8: primär Kontrolle und Verifikation; Entwicklung möglichst über PC/GitHub.
@@ -126,6 +126,14 @@ Ziel:
 Dabei bleibt die bestehende gated Research-Pipeline die einzige Ausführungsbasis.
 
 Nach PR #22 folgt der automatische Hypothesen-/Experiment-Layer.
+
+## Vereinheitlichte Research Engine
+
+Seit dem Architekturumbau ist die aktive Workflow-Oberfläche auf einen zentralen CI-Workflow, einen zentralen Research-Orchestrator und den dauerhaften 30-Tage-Harness reduziert. Historische Trial-Workflows bleiben über die Git-Historie reproduzierbar, sind aber nicht mehr aktive Ausführungsquellen.
+
+Die Research Engine beobachtet regelmäßig aktuelle Marktdaten. Explorative Live-/Updated-Data-Beobachtungen erzeugen nur Hypothesen-Kandidaten. Eine formale Hypothese benötigt weiterhin Präregistrierung, blinden Holdout und Evidence-Gates.
+
+Agentenarbeit ist optional und kostenfrei-only. Das Repository selbst besitzt keinen bezahlten Agentenpfad.
 
 ## Research-Ergebnis vs. Workflow-Status
 

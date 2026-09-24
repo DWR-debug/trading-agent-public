@@ -1,0 +1,90 @@
+name: Unified Research Orchestrator
+
+on:
+  schedule:
+    - cron: "30 3 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Beobachtung oder formaler Research-Lauf
+        required: true
+        default: observe
+        type: choice
+        options:
+          - observe
+          - research
+      universe:
+        description: Research-Universum
+        required: true
+        default: benchmark
+        type: choice
+        options:
+          - small_cap_high_volatility
+          - liquid_high_volatility
+          - european_volatile
+          - benchmark
+          - cross_asset_trend
+  push:
+    branches: [master]
+    paths:
+      - "automation/research_orchestrator.py"
+      - "automation/live_market_observer.py"
+      - "automation/one_command_research.py"
+      - "automation/research_workflow.py"
+      - "research/**"
+      - "validation/**"
+      - "backtesting/**"
+      - "optimization/**"
+      - "data/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-unified-research
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 120
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest statsmodels==0.15.0
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+      - name: Paper-only-Safety
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+      - name: Unified Orchestrator
+        env:
+          ORCHESTRATOR_MODE: ${{ inputs.mode || 'observe' }}
+          ORCHESTRATOR_UNIVERSE: ${{ inputs.universe || 'benchmark' }}
+        run: |
+          set -euo pipefail
+          python -m automation.research_orchestrator \
+            --mode "$ORCHESTRATOR_MODE" \
+            --universe "$ORCHESTRATOR_UNIVERSE"
+      - name: Ergebnis und Snapshot sichern
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: unified-research-${{ github.run_id }}
+          path: research/runs/
+          if-no-files-found: warn
+          retention-days: 30
