@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-24T12:54:00+02:00",
+  "generated_at": "2026-09-24T13:04:00+02:00",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -833,6 +833,86 @@
         "artifact_sha256": "c05fc46dae6a086153b067d263ac6f86c988cf9dd42e1e4b00dd754f9d2fd407",
         "report_fingerprint": "733c22814e1e3b539d9853a073c3016c48d7075e41a1c1a67d75c1dbcacab2b1",
         "key_finding": "Early versus late drawdown sequences with otherwise identical return blocks can produce materially different cumulative payouts and ending capital; therefore income sustainability is sequence-sensitive."
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-016",
+      "recorded_at": "2026-09-24T13:04:00+02:00",
+      "status": "archived_rejected",
+      "research_family": "additional_return_source_cross_asset_cs_momentum",
+      "hypothesis": {
+        "text": "Eine fest präregistrierte 12-1-Cross-Sectional-Momentum-Regel auf einem vollständig neuen Nicht-Aktien-ETF-Universum liefert eine robuste zusätzliche long-only Ertragsquelle."
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10803962414
+        ],
+        "manifest_fingerprint": "c4502fe1da2d783ea77e3d75a80b2931362b419f4d30b63f88dfc9cb8a54ae54",
+        "fully_symbol_disjoint_validation_set": true,
+        "symbols": [
+          "DBA",
+          "DBB",
+          "FXA",
+          "FXY",
+          "MUB",
+          "SHV",
+          "EMB",
+          "BWX"
+        ],
+        "aligned_common_candles": 3500
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered single 12-1 CS rule with fixed SMA reference, equal-weight control and fixed 50/50 blend",
+        "selection_family_id": "cross-asset-cs-momentum-2026-09-24",
+        "selection_metric": "Research/Holdout return, drawdown, profit factor, rolling stability and 2x cost stress"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 35990335834,
+        "artifact_id": 10803962414,
+        "artifact_sha256": "e09b7a3ff668dbea2b75470bfa8506d9da120f356fa494465d3783188540ad4c",
+        "report_fingerprint": "fa9c9046a7f48588fe12a5347a13350f446f6cdfd65fae9d7d097058160272ea",
+        "base": {
+          "cs_momentum_research_return_percent": 0.1051899327605188,
+          "cs_momentum_research_max_drawdown_percent": 30.509257086973484,
+          "cs_momentum_research_profit_factor": 1.0097743142363809,
+          "cs_momentum_holdout_return_percent": 4.703909082526403,
+          "cs_momentum_holdout_max_drawdown_percent": 13.637900974190664,
+          "cs_momentum_rolling_positive_windows": 2
+        },
+        "stress_2x_cost": {
+          "cs_momentum_research_return_percent": -7.70293170774774,
+          "cs_momentum_research_max_drawdown_percent": 33.17414208680541,
+          "cs_momentum_research_profit_factor": 0.9921364758217825,
+          "cs_momentum_holdout_return_percent": 2.2079904970568442,
+          "cs_momentum_holdout_max_drawdown_percent": 13.769138545255776,
+          "cs_momentum_rolling_positive_windows": 2
+        },
+        "key_finding": "Research return was near zero with material drawdown and became negative under doubled costs; only 2 of 5 research rolling windows were positive. Holdout was positive but not sufficient for support."
       },
       "safety": {
         "paper_only": true,
