@@ -1,3 +1,33 @@
+## Kontext- und Evidence-Governance — Pre-Cleanup Archaeology — 2026-09-24
+
+Vor einer technischen Bereinigung wurde die formale Research-Historie einer ersten
+read-only Archaeology unterzogen.
+
+Dauerhafte Kontext-/Governance-Dateien:
+- `docs/PROJECT_CONTEXT.md` — gemeinsamer Projektkontext und Quellenmodell
+- `docs/PROJECT_CONTEXT_INGESTION.md` — Import- und Klassifikationsregeln für noch verfügbare Chats
+- `docs/research_archaeology_2026_09_24.md` — vorläufige Nutzwert-/Spurenanalyse verworfener Trials
+- `research/evidence/project_context.json` — maschinenlesbarer Kontextindex
+
+Wichtige Regel:
+**Der öffentliche GitHub-`master` ist technische Referenz, aber nicht das alleinige Projektgedächtnis.**
+Projektabsicht, langlebige Entscheidungen und zugängliche Chat-Evidenz bleiben als eigene Kontextebene erhalten.
+Bei Konflikten wird nicht stillschweigend überschrieben.
+
+Die Archaeology hat insbesondere T022, T023, T025, T027 und T028 als historische
+`SALVAGEABLE_OBSERVATION`-Kandidaten markiert. Das bedeutet ausdrücklich weder
+Promotion noch Wiedereröffnung dieser Trials. T014, T015, T016, T024, T026, T030 und
+T031 bleiben vor allem negative/diagnostische Evidenz; T029, T032 und T033 bleiben
+reine Datenqualitätsbefunde.
+
+**Keine formalen Trial-Ergebnisse wurden verändert und vor Abschluss einer
+Abhängigkeitsprüfung wird nichts aus der Evidence-Kette gelöscht.**
+
+Die nächsten Bereinigungsschritte sind daher:
+Abhängigkeits-/Provenienzprüfung → Workflow-/Branch-Noise klassifizieren →
+redundante Artefakte erst danach bereinigen → neue Forschungsfragen ausschließlich
+aus sauber dokumentierten, unabhängigen Beobachtungen ableiten.
+
 ## Übergeordnetes Ziel: sehr kurze Zeit bis zu hohem Kapitalaufbau — 2026-09-24
 
 
