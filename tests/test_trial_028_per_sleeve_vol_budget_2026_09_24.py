@@ -44,8 +44,7 @@ def _scenario():
     return {
         "base": {
             "fixed_candidate": mode,
-            "per_sleeve_vol_budget": mode,
-            "total_return_sensitivity": mode,
+            "per_sleeve_vol_budget": {**mode, "total_return_sensitivity": mode},
         },
         "stress_1_5x_cost": {
             "fixed_candidate": mode,
