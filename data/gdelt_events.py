@@ -209,4 +209,3 @@ def download_daily_export(day: datetime, destination: str | Path) -> Path:
         encoding="utf-8",
     )
     return destination
-"
