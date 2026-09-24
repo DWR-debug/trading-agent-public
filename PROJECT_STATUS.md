@@ -101,23 +101,41 @@ Variante und kein frei gewählter Shock-Faktor werden daraus weiterentwickelt.
 Dauerhafte Evidenzablage: docs/risk_layer_parameter_free_shock_guard_2026_09_23_result.md
 und research/checkpoints/risk_layer_parameter_free_shock_guard_2026_09_23.json.
 
-### 2f. Aktuelle nächste Forschungsfrage
+### 2f. Vierfach-Regime-/Sleeve-Diagnose
 
-Die bisherigen Interventionen zeigen damit: Weder Sleeve-Aggregation, Fensterlänge
-noch eine direkte Ein-Tages-Schockverstärkung erklären die Risk-/Rolling-Failures
-universell.
+Auf vier vollständig symbol-disjunkten Validierungsfamilien und 20 festen Research-
+Fenstern wurden negative Portfoliofenster weiter zerlegt:
 
-Der nächste Schritt ist deshalb wieder Root-Cause-Diagnose: Die bestehende
-Portfolio-Regime-/Sleeve-Interaktionsanalyse wird auf alle vier unabhängigen
-Validierungsfamilien vereinheitlicht. Ziel ist ein belastbarer Kontrast zwischen
-gemeinsamer Sleeve-Schwäche, einzelner Sleeve-Schwäche und der Wirkung der
-De-Risking-Skalierung. Erst ein replizierter Kontrast darf eine neue Intervention
-begründen.
+- 6/20 Portfoliofenster negativ
+- 3/6 gemeinsame Trend+Cross-Sectional-Schwäche
+- 1/6 reine Trend-Schwäche
+- 2/6 reine Cross-Sectional-Schwäche
+- mittlerer De-Risk-Anteil in negativen Fenstern: 81,08%
+- mittlerer De-Risk-Anteil in positiven Fenstern: 49,05%
+
+Der Befund ist deskriptiv. Er liefert keinen universellen Single-Sleeve-Verursacher
+und beweist nicht, dass das De-Risking die Verluste verursacht; hohe Skalierung kann
+selbst eine Reaktion auf bereits eingetretene Schwäche sein.
+
+Dauerhafte Evidenzablage: docs/fourset_portfolio_regime_sleeve_interaction_2026_09_23_result.md
+und research/checkpoints/fourset_portfolio_regime_sleeve_interaction_2026_09_23.json.
+
+### 2g. Aktuelle nächste Forschungsfrage
+
+Die bisherige Evidenz grenzt Sleeve-Gewichte, Fensterlänge und direkte Shock-
+Verstärkung als universelle Erklärung ab. Externe Risikoforschung legt zusätzlich
+nahe, Volatilität als Forecast statt ausschließlich als rückblickenden 63-Session-
+Schätzer zu behandeln: RiskMetrics dokumentiert für tägliche Volatilität eine feste
+EWMA-Zerfallsrate von λ=0,94; neuere Regime-Switching-Arbeiten untersuchen ebenfalls
+nichtlineare Volatilitätszustände, betonen aber die Unsicherheit der täglichen OOS-
+Verbesserung.
+
+Deshalb wird genau ein weiterer, vorab fixer Research-Control geprüft:
+63-Session-Referenz versus EWMA(λ=0,94), beide mit demselben 10%-Jahresziel.
+Kein λ-Suchlauf, keine weitere Forecast-Variante und keine Holdout-Nutzung.
 
 Produktionsstatus bleibt BLOCKED; Parameter, Gewichte, Gates und Kosten bleiben
-unverändert.
-
-### 3. Micro-Trading: aktueller Abschluss des 5m-Controls
+unverändert.### 3. Micro-Trading: aktueller Abschluss des 5m-Controls
 
 PR #39 und der anschließende CI-Fix PR #40 sind gemerged.
 
