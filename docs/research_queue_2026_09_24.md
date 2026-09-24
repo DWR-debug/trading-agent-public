@@ -5,12 +5,12 @@ Orders und verändert keine Produktionskonfiguration.
 
 ## Aktuelle Reihenfolge
 
-1. T038 — Cross-Asset Network Momentum, nachdem der Coverage-Preflight erfolgreich ist.
+1. T039 — Cross-Asset Network Momentum mit COMT durch FTGC ersetzt; zuerst Coverage-Preflight.
 2. Laufende Live-/Updated-Data Discovery über feste Markt- und Lead-Lag-Diagnostiken.
-3. Adversarial Robustness und Failure-Diagnose der bisher salvageable Beobachtungen.
+3. Adversarial Robustness und Failure-Diagnose der bisherigen salvageable Beobachtungen.
 4. Portfolio Risk / Correlation als orthogonale Allokationsfrage.
 5. Champion / Challenger unter unverändertem Evidence-Vertrag.
-6. Nur danach neue Volatility- und Relative-Value-Familien.
+6. Danach neue Volatility- und Relative-Value-Familien, falls die Evidenzlage dies trägt.
 
 ## Orchestrierungsregel
 
@@ -28,4 +28,4 @@ Leverage und Short bleiben Exposure-Varianten und sind kein Ersatz für einen na
 
 Der Unified Research Orchestrator beobachtet standardmäßig das Benchmark-Universum täglich.
 Beobachtungen werden mit Zeitpunkt und Fingerprint als Artifact gesichert. Die Maschine darf
-daraus Hypothesen ableiten, aber erst ein neuer formal registrierter Trial kann Evidenz erzeugen.
+daraus Hypothesen erzeugen, aber erst ein neuer formal registrierter Trial kann Evidenz erzeugen.
