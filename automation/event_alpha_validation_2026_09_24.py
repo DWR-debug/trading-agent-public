@@ -10,6 +10,7 @@ from pathlib import Path
 from config import settings
 from research.asset_universes import get_universe
 from research.event_intelligence import aggregate_daily_events
+from research.protocol import dataset_fingerprint
 from research.event_alpha import EventRelativeValuePolicy
 
 TARGET_UNIVERSE = "validation_2026_09_24_event_alpha"
@@ -50,9 +51,10 @@ def _yahoo_daily(symbol: str, start: date, end: date) -> dict[date, float]:
         if value is not None
     }
 
-def _event_features(start: date, end: date, raw_dir: Path) -> dict[date, object]:
+def _event_features(start: date, end: date, raw_dir: Path) -> tuple[dict[date, object], dict[str, int]]:
     from data.gdelt_events import download_daily_export, parse_event_zip
     events = []
+    parse_stats = {"rows_seen": 0, "rows_skipped": 0}
     day = start
     while day <= end:
         path = raw_dir / f"{day.isoformat()}.zip"
@@ -61,16 +63,19 @@ def _event_features(start: date, end: date, raw_dir: Path) -> dict[date, object]
                 datetime.combine(day, datetime.min.time(), tzinfo=timezone.utc),
                 path,
             )
-        events.extend(parse_event_zip(path, strict=False))
+        stats = {"rows_seen": 0, "rows_skipped": 0}
+        events.extend(parse_event_zip(path, strict=False, stats=stats))
+        parse_stats["rows_seen"] += stats["rows_seen"]
+        parse_stats["rows_skipped"] += stats["rows_skipped"]
         day += timedelta(days=1)
-    return {
+    return ({
         item.event_date: item
         for item in aggregate_daily_events(
             events,
             international_only=True,
             high_confidence_only=True,
         )
-    }
+    }, parse_stats)
 
 def _build_rows(
     prices: dict[str, dict[date, float]],
@@ -182,6 +187,7 @@ def _stats(rows: list[dict], cost_multiplier: float) -> dict:
 def run_validation(
     *,
     market_dir: Path,
+    market_manifest: Path,
     event_raw_dir: Path,
     output: Path,
 ) -> dict:
@@ -191,22 +197,42 @@ def run_validation(
     if tuple(universe.symbols) != ASSETS:
         raise ValueError("Event-alpha universe registration mismatch.")
 
+    manifest = json.loads(market_manifest.read_text(encoding="utf-8"))
+    manifest_symbols = tuple(item["symbol"] for item in manifest.get("datasets", []))
+    if (
+        manifest.get("universe") != TARGET_UNIVERSE
+        or manifest.get("target_count") != TARGET_COUNT
+        or manifest_symbols != ASSETS
+        or manifest.get("source") != "yahoo_chart"
+    ):
+        raise ValueError("Event-alpha market manifest contract mismatch.")
+    safety_manifest = manifest.get("safety", {})
+    if (
+        safety_manifest.get("paper_only") is not True
+        or safety_manifest.get("live_trading_enabled") is not False
+    ):
+        raise RuntimeError("Market manifest safety contract violated.")
+
     from automation.candidate_validation_50_50_vol_budget import load_bars
 
     prices: dict[str, dict[date, float]] = {}
-    for symbol in ASSETS:
+    for item in manifest["datasets"]:
+        symbol = item["symbol"]
         bars = load_bars(
             market_dir / symbol / "1d.csv",
-            expected_count=TARGET_COUNT,
+            expected_count=int(item["candle_count"]),
         )
-        if len(bars) != TARGET_COUNT:
-            raise ValueError(f"{symbol}: expected {TARGET_COUNT} candles")
+        if (
+            len(bars) != TARGET_COUNT
+            or dataset_fingerprint(bars) != item["fingerprint"]
+        ):
+            raise ValueError(f"{symbol}: dataset fingerprint mismatch")
         prices[symbol] = {
             bar.timestamp.date(): bar.close
             for bar in bars
         }
 
-    features = _event_features(
+    features, event_parse_stats = _event_features(
         RESEARCH_START,
         HOLDOUT_END,
         event_raw_dir,
@@ -250,6 +276,7 @@ def run_validation(
         "data_scope": {
             "market_assets": list(ASSETS),
             "market_candles_per_asset": TARGET_COUNT,
+            "market_manifest_fingerprint": manifest.get("manifest_fingerprint"),
             "event_research_start": RESEARCH_START.isoformat(),
             "event_research_end": RESEARCH_END.isoformat(),
             "event_holdout_start": HOLDOUT_START.isoformat(),
@@ -276,6 +303,14 @@ def run_validation(
             "strategy_variants": 1,
             "parameter_search": False,
         },
+        "event_data_quality": {
+            "event_rows_seen": event_parse_stats["rows_seen"],
+            "event_rows_skipped": event_parse_stats["rows_skipped"],
+            "event_row_skip_rate": (
+                event_parse_stats["rows_skipped"] / event_parse_stats["rows_seen"]
+                if event_parse_stats["rows_seen"] else 0.0
+            ),
+        },
         "scenarios": scenarios,
         "safety": {
             "paper_only": True,
@@ -294,11 +329,13 @@ def run_validation(
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--market-dir", required=True)
+    parser.add_argument("--market-manifest", required=True)
     parser.add_argument("--event-raw-dir", required=True)
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
     report = run_validation(
         market_dir=Path(args.market_dir),
+        market_manifest=Path(args.market_manifest),
         event_raw_dir=Path(args.event_raw_dir),
         output=Path(args.output),
     )
