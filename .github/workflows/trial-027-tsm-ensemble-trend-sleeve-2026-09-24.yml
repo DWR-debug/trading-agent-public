@@ -18,8 +18,8 @@ permissions:
   contents: read
   actions: read
 concurrency:
-  group: trading-agent-trial-027-tsm-ensemble
-  cancel-in-progress: true
+  group: trading-agent-trial-027-tsm-ensemble-${{ github.event_name }}
+  cancel-in-progress: false
 jobs:
   prereq:
     runs-on: ubuntu-24.04-arm
