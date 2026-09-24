@@ -40,21 +40,27 @@ def _mode(
 
 
 def _scenario():
-    mode = _mode()
     return {
         "base": {
-            "fixed_candidate": mode,
-            "per_sleeve_vol_budget": {**mode, "total_return_sensitivity": mode},
+            "fixed_candidate": _mode(),
+            "per_sleeve_vol_budget": {
+                **_mode(),
+                "total_return_sensitivity": _mode(),
+            },
         },
         "stress_1_5x_cost": {
-            "fixed_candidate": mode,
-            "per_sleeve_vol_budget": mode,
-            "total_return_sensitivity": mode,
+            "fixed_candidate": _mode(),
+            "per_sleeve_vol_budget": {
+                **_mode(),
+                "total_return_sensitivity": _mode(),
+            },
         },
         "stress_2x_cost": {
-            "fixed_candidate": mode,
-            "per_sleeve_vol_budget": mode,
-            "total_return_sensitivity": mode,
+            "fixed_candidate": _mode(),
+            "per_sleeve_vol_budget": {
+                **_mode(),
+                "total_return_sensitivity": _mode(),
+            },
         },
     }
 
