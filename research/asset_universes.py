@@ -151,6 +151,17 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=3500,
     ),
 
+
+    AssetUniverse(
+        name="validation_2026_09_24_fifteenth_mean_reversion",
+        priority=19,
+        description=(
+            "Fifteenth fully symbol-disjoint validation universe for a fixed "
+            "long-only short-horizon mean-reversion control."
+        ),
+        symbols=("EWC", "EWH", "EWI", "EWK", "EWN", "EWP", "EWY", "EWT"),
+        target_count=3500,
+    ),
     AssetUniverse(
         name="validation_2026_09_24_fourteenth_leverage",
         priority=18,
