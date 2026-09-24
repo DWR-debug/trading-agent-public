@@ -36,7 +36,6 @@ on:
   push:
     branches:
       - master
-      - research/execute-t041-frozen
     paths:
       - "automation/research_orchestrator.py"
       - "automation/live_market_observer.py"
@@ -47,6 +46,7 @@ on:
       - "automation/coverage_preflight.py"
       - "automation/adversarial_failure_diagnosis.py"
       - "automation/cross_trial_failure_diagnosis.py"
+      - ".github/workflows/research-orchestrator.yml"
       - "tests/test_cross_trial_failure_diagnosis.py"
       - "docs/cross_trial_failure_diagnosis_2026_09_24.md"
       - "research/evidence/cross_trial_failure_diagnosis_2026_09_24.json"
@@ -64,7 +64,6 @@ on:
 
 permissions:
   contents: read
-  actions: read
   actions: read
 
 concurrency:
@@ -101,7 +100,7 @@ jobs:
           print("PAPER-ONLY SAFETY OK")
           PY
       - name: T041 frozen coverage run id
-        if: github.ref == 'refs/heads/research/execute-t041-frozen'
+        if: inputs.mode == 'research_t041'
         run: |
           set -euo pipefail
           run_id=$(python -c 'import json; from pathlib import Path; print(json.loads(Path("research/evidence/t041_coverage_pass_2026_09_24.json").read_text(encoding="utf-8"))["workflow"]["run_id"])')
