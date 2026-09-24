@@ -20,3 +20,6 @@ Strategie-, Gate- oder Produktionsänderungen vorgenommen.
 
 Die Analyse dient ausschließlich dazu, einen möglichen Vorläufer eines
 Reversal-Ereignisses von einer nachträglichen Reaktion zu unterscheiden.
+
+
+Contract tokens: post-hoc explorativ | 2.798 | Holdout | keine Schwellenwerte | PAPER_ONLY=True
