@@ -69,9 +69,11 @@ def _tom_days(days: tuple[date, ...]) -> set[date]:
     months: dict[tuple[int, int], list[date]] = {}
     for day in days:
         months.setdefault((day.year, day.month), []).append(day)
-    for month_days in months.values():
-        flags.update(month_days[:3])
-        flags.add(month_days[-1])
+    month_keys = tuple(months)
+    for index, key in enumerate(month_keys):
+        flags.add(months[key][-1])
+        if index + 1 < len(month_keys):
+            flags.update(months[month_keys[index + 1]][:3])
     return flags
 
 
@@ -257,7 +259,7 @@ def run_validation(*, data_dir: Path, market_manifest: Path, output: Path) -> di
             "holdout_used_for_selection": False,
             "strategy_variants": 1,
             "parameter_search": False,
-            "tom_window_definition": "target_day is one of the first three or the last trading day of its calendar month",
+            "tom_window_definition": "target_day is the last trading day of its month or one of the first three trading days of the following month",
         },
         "scenarios": scenarios,
         "decision": {"checks": checks, "all_checks_passed": all(checks.values())},
