@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "trial_id": "T-2026-09-24-031",
+  "status": "preregistered",
+  "research_family": "risk_adjusted_cross_sectional_momentum",
+  "hypothesis": "Replace only the 12-1 raw-return CS ranking with 12-1 return divided by same-window realized volatility.",
+  "coverage_preflight": {
+    "workflow_run_id": 36042442309,
+    "artifact_id": 10827700335,
+    "artifact_sha256": "sha256:2b2bb1b19cc2740c525626327e6bf0f2303dea0f4365bbc0a40169eebe9ee1aa",
+    "common_calendar_count": 3520,
+    "performance_selection_used": false,
+    "coverage_fingerprint": "cc21adf1e1c12a28932e9eec1e246fa498781e0b583f92a52f85b5af24ca566b"
+  },
+  "trend_symbols": [
+    "EIS",
+    "EPU",
+    "ECH",
+    "EWS",
+    "EWM",
+    "EZA",
+    "TUR",
+    "THD"
+  ],
+  "cross_sectional_symbols": [
+    "VDC",
+    "VCR",
+    "VOX",
+    "IAT",
+    "XTN"
+  ],
+  "target_candles": 3500,
+  "common_returns": 3498,
+  "research_count": 2798,
+  "holdout_count": 700,
+  "cs_lookback": 252,
+  "cs_skip": 21,
+  "cs_rebalance": 21,
+  "cs_top_n": 2,
+  "formation_vol_window": 252,
+  "risk_budget_window_sessions": 63,
+  "target_annualized_volatility": 0.1,
+  "strategy_variants": 1,
+  "parameter_search": false,
+  "threshold_search": false,
+  "variant_search": false,
+  "selection_used": false,
+  "holdout_used_for_selection": false,
+  "paper_only": true,
+  "live_trading_enabled": false,
+  "orders_enabled": false
+}
