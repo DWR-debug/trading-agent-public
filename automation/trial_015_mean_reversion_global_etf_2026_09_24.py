@@ -145,17 +145,17 @@ def _metrics(returns: list[float], split: int) -> dict:
         return {
             "return": equity - 1.0,
             "max_drawdown_percent": max_dd * 100.0,
-            "profit_factor": gains / losses if losses else float("inf"),
+            "profit_factor": gains / losses if losses else None,
             "positive_return_ratio": (
                 sum(v > 0.0 for v in values) / len(values) if values else 0.0
             ),
             "count": len(values),
         }
 
-    window_size = split // 5
+    boundaries = [round(i * split / 5) for i in range(6)]
     rolling = [
-        segment(returns[start:min(start + window_size, split)])
-        for start in range(0, split, window_size)
+        segment(returns[boundaries[i] : boundaries[i + 1]])
+        for i in range(5)
     ]
     return {
         "research": segment(returns[:split]),
@@ -235,6 +235,7 @@ def run(data_dir: Path, manifest_path: Path, output_path: Path) -> dict:
             "base_cost_rate": BASE_COST,
             "stress_multiplier": STRESS_MULTIPLIER,
             "optimization_used": False,
+            "rolling_research_windows_cover_full_research_span": True,
         },
         "scenarios": scenarios,
         "safety": {
