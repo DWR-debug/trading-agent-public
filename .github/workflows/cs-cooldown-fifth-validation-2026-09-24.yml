@@ -1,0 +1,207 @@
+name: CS Cooldown Fifth Validation 2026-09-24
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [master]
+    paths:
+      - "automation/cs_cooldown_fifth_validation_2026_09_24.py"
+      - "tests/test_cs_cooldown_fifth_validation_2026_09_24.py"
+      - "research/asset_universes.py"
+      - "docs/cs_cooldown_fifth_validation_2026_09_24_preregistration.md"
+      - ".github/workflows/cs-cooldown-fifth-validation-2026-09-24.yml"
+      - "automation/prepare_research_data.py"
+      - "automation/candidate_validation_50_50_vol_budget.py"
+      - "data/**"
+      - "research/**"
+      - "validation/**"
+      - "config/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-cs-cooldown-fifth-validation-2026-09-24
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Paper-Trading-Sicherheit prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+
+      - name: Fünfte Trend-Daten vorbereiten
+        run: |
+          set -euo pipefail
+          python -m automation.prepare_research_data             --target-count 3500             --universe validation_2026_09_24_fifth_trend             --output research/cs_cooldown_fifth_validation_2026_09_24/data_trend_manifest.json
+
+      - name: Fünfte CS-Daten vorbereiten
+        run: |
+          set -euo pipefail
+          python -m automation.prepare_research_data             --target-count 3500             --universe validation_2026_09_24_fifth_cs             --output research/cs_cooldown_fifth_validation_2026_09_24/data_cs_manifest.json
+
+      - name: Vollständige Disjunktheit fail-closed verifizieren
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from research.asset_universes import get_universe, list_universes
+          import json
+
+          names = (
+              "validation_2026_09_24_fifth_trend",
+              "validation_2026_09_24_fifth_cs",
+          )
+          manifests = []
+          for name, path in zip(
+              names,
+              (
+                  Path("research/cs_cooldown_fifth_validation_2026_09_24/data_trend_manifest.json"),
+                  Path("research/cs_cooldown_fifth_validation_2026_09_24/data_cs_manifest.json"),
+              ),
+          ):
+              manifest = json.loads(path.read_text(encoding="utf-8"))
+              universe = get_universe(name)
+              assert tuple(item["symbol"] for item in manifest["datasets"]) == universe.symbols
+              assert manifest["target_count"] == 3500
+              manifests.append(set(universe.symbols))
+
+          assert manifests[0].isdisjoint(manifests[1])
+
+          new_symbols = manifests[0] | manifests[1]
+          for universe in list_universes():
+              if universe.name in names:
+                  continue
+              assert new_symbols.isdisjoint(
+                  universe.symbols
+              ), f"Overlap with {universe.name}"
+
+          print("FIFTH_VALIDATION_FULLY_DISJOINT_OK")
+          PY
+
+      - name: Präregistrierung fail-closed verifizieren
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from automation.cs_cooldown_fifth_validation_2026_09_24 import (
+              COOLDOWN_SESSIONS,
+              CS_REBALANCE,
+              CS_TOP_N,
+              HOLDOUT_COUNT,
+              RESEARCH_COUNT,
+              TARGET_COUNT,
+          )
+          assert COOLDOWN_SESSIONS == 1
+          assert CS_REBALANCE == 21
+          assert CS_TOP_N == 2
+          assert TARGET_COUNT == 3500
+          assert RESEARCH_COUNT == 2798
+          assert HOLDOUT_COUNT == 700
+          prereg = Path(
+              "docs/cs_cooldown_fifth_validation_2026_09_24_preregistration.md"
+          ).read_text(encoding="utf-8")
+          for token in (
+              "Ein-Sitzungs-CS-Cooldown",
+              "Cross-Sectional-Winner-Reversal",
+              "21-Session",
+              "2798",
+              "700",
+              "Holdout",
+              "PAPER_ONLY=True",
+          ):
+              assert token in prereg
+          print("PREREGISTRATION_VERIFIED")
+          PY
+
+      - name: Fünfte Validierung ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.cs_cooldown_fifth_validation_2026_09_24             --trend-data-dir data/market_data             --trend-manifest research/cs_cooldown_fifth_validation_2026_09_24/data_trend_manifest.json             --cs-data-dir data/market_data             --cs-manifest research/cs_cooldown_fifth_validation_2026_09_24/data_cs_manifest.json             --output research/cs_cooldown_fifth_validation_2026_09_24/report.json
+
+      - name: Ergebnisintegrität und Safety verifizieren
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path(
+              "research/cs_cooldown_fifth_validation_2026_09_24/report.json"
+          )
+          report = json.loads(path.read_text(encoding="utf-8"))
+          stored = report.pop("report_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(
+                  report,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+
+          assert stored == actual
+          assert report["status"] == "COMPLETED"
+          assert report["source"]["fully_symbol_disjoint_validation_set"] is True
+          assert report["methodology"]["parameter_search"] is False
+          assert report["methodology"]["holdout_used_for_selection"] is False
+          assert report["methodology"]["production_mutation"] is False
+          assert report["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+          }
+          assert report["scope"] == {
+              "new_data_downloads": True,
+              "new_disjoint_validation_set": True,
+              "research_holdout_split": "2798 / 700",
+              "holdout_used_for_selection": False,
+          }
+          assert report["research_hypothesis_status"] in {"PASS", "FAIL"}
+          assert report["holdout_confirmation_status"] in {"PASS", "FAIL"}
+          print("CS_COOLDOWN_RESULT_INTEGRITY_OK")
+          print("RESEARCH_HYPOTHESIS_STATUS:", report["research_hypothesis_status"])
+          print("HOLDOUT_CONFIRMATION_STATUS:", report["holdout_confirmation_status"])
+          print("RESEARCH_VALIDATION_STATUS:", report["research_validation_status"])
+          print("REPORT_FINGERPRINT:", stored)
+          PY
+
+      - name: Validierungsartefakte sichern
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cs-cooldown-fifth-validation-2026-09-24-${{ github.run_id }}
+          path: research/cs_cooldown_fifth_validation_2026_09_24/
+          if-no-files-found: error
+          retention-days: 30
