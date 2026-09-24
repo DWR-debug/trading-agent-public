@@ -81,7 +81,7 @@ mindestens 10 Research-Beobachtungen vorliegen, die Enrichment Ratio der schlech
 5% > 1 ist und die mittlere Portfolio-Rendite im Zustand unter jener der Nicht-Zustands-
 Tage liegt.
 
-Eine replizierte Diagnose erfordert denselben Flag in mindestens 3 von 4 Validierungen.
+Eine replizierte Diagnose erfordert denselben Flag in mindestens 3 von 4 Validierungen (`>=3/4`).
 Diese Regel erzeugt keine Änderung an Kandidat, Parametern oder Gates.
 
 ## Unverändert
