@@ -85,7 +85,6 @@ def _trim_to_common_calendar(
         )
 
     selected = common[-target_count:]
-    selected_set = set(selected)
 
     for (symbol, interval), candles in candles_by_key.items():
         by_timestamp = {candle.timestamp: candle for candle in candles}
@@ -147,6 +146,10 @@ def prepare(
     else:
         stock_universe = get_universe(universe)
         target_count = target_count or stock_universe.target_count
+        if target_count < minimum_count:
+            raise ValueError(
+                f"target_count muss für Aktienuniversen mindestens {minimum_count} sein."
+            )
         prepared = [
             (symbol.upper(), stock_universe.interval, "yahoo_chart")
             for symbol in stock_universe.symbols
