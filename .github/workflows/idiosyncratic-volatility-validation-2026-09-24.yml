@@ -180,7 +180,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: idiosyncratic-volatility-validation-2026-09-24-\${{ github.run_id }}
+          name: idiosyncratic-volatility-validation-2026-09-24-${{ github.run_id }}
           path: |
             research/idiosyncratic_volatility_validation_2026_09_24/report.json
             research/idiosyncratic_volatility_validation_2026_09_24/manifest.json
