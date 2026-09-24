@@ -27,9 +27,10 @@ def _mode(r=.2,dd=5.0,pf=1.2,rpf=1.2,ratio=.6,rdd=5.0,oos=.5,h=.1,hdd=5.0,hpf=1.
 
 def _scenario():
     m=_mode()
-    return {"base":{"fixed_candidate":m,"tsm_ensemble_candidate":m},
-            "stress_1_5x_cost":{"fixed_candidate":m,"tsm_ensemble_candidate":m},
-            "stress_2x_cost":{"fixed_candidate":m,"tsm_ensemble_candidate":m}}
+    wrapped={"price_only":m}
+    return {"base":{"fixed_candidate":wrapped,"tsm_ensemble_candidate":wrapped},
+            "stress_1_5x_cost":{"fixed_candidate":wrapped,"tsm_ensemble_candidate":wrapped},
+            "stress_2x_cost":{"fixed_candidate":wrapped,"tsm_ensemble_candidate":wrapped}}
 
 def test_gate_contract_passes_for_equal_strong_candidate():
     r=_gates(_scenario(),ResearchGateConfig())
@@ -39,7 +40,7 @@ def test_gate_contract_passes_for_equal_strong_candidate():
 
 def test_gate_contract_blocks_deterioration_vs_fixed():
     s=_scenario()
-    s["base"]["tsm_ensemble_candidate"]=_mode(r=.1)
+    s["base"]["tsm_ensemble_candidate"]={"price_only":_mode(r=.1)}
     r=_gates(s,ResearchGateConfig())
     assert not r["non_worsening_vs_fixed_candidate"]["research_return_not_below_fixed"]
     assert not r["all_checks_passed"]
