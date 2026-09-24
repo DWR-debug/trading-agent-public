@@ -9,6 +9,7 @@ permissions:
   contents: read
   actions: read
 
+# Governance retrigger: run from the synchronized preflight branch only.
 concurrency:
   group: trading-agent-trial-035-coverage
   cancel-in-progress: false
