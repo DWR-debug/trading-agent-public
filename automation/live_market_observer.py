@@ -141,8 +141,31 @@ def observe_universe(
                     ),
                 })
 
+    discovery = [
+        item
+        for item in pairwise
+        if item["correlation"] is not None
+    ]
+    discovery.sort(
+        key=lambda item: (
+            -abs(item["correlation"]),
+            item["left"],
+            item["right"],
+            item["lag_sessions"],
+        )
+    )
+    hypothesis_candidates = [
+        {
+            **item,
+            "classification": "DISCOVERY_ONLY",
+            "requires_preregistration": True,
+            "holdout_used": False,
+        }
+        for item in discovery[:10]
+    ]
+
     payload = {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "status": "OBSERVATION_ONLY",
         "observed_at": datetime.now(timezone.utc).isoformat(),
         "universe": universe,
@@ -153,6 +176,7 @@ def observe_universe(
         "common_calendar_count": len(common_sorted),
         "observations": observations,
         "pairwise_fixed_lag_correlations": pairwise,
+        "hypothesis_candidates": hypothesis_candidates,
         "selection_used": False,
         "holdout_used": False,
         "paper_only": True,
