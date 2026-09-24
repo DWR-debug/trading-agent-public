@@ -61,15 +61,15 @@ jobs:
           print("PAPER-ONLY SAFETY OK")
           PY
 
-      - name: Siebte Trend-Daten vorbereiten
+      # Technical acquisition buffer only; validation script slices exactly 3,500 common timestamps.\n      - name: Siebte Trend-Daten vorbereiten
         run: |
           set -euo pipefail
-          python -m automation.prepare_research_data             --target-count 3500             --universe validation_2026_09_24_seventh_trend             --output research/seventh_multi_strategy_complementarity_2026_09_24/data_trend_manifest.json
+          python -m automation.prepare_research_data             --target-count 3510             --universe validation_2026_09_24_seventh_trend             --output research/seventh_multi_strategy_complementarity_2026_09_24/data_trend_manifest.json
 
       - name: Siebte Cross-Sectional-Daten vorbereiten
         run: |
           set -euo pipefail
-          python -m automation.prepare_research_data             --target-count 3500             --universe validation_2026_09_24_seventh_cs             --output research/seventh_multi_strategy_complementarity_2026_09_24/data_cs_manifest.json
+          python -m automation.prepare_research_data             --target-count 3510             --universe validation_2026_09_24_seventh_cs             --output research/seventh_multi_strategy_complementarity_2026_09_24/data_cs_manifest.json
 
       - name: Symbol-Disjunktheit fail-closed prüfen
         run: |
