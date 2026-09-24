@@ -202,6 +202,16 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("AAPL", "MSFT", "AMZN", "META", "GOOGL"),
         target_count=3500,
     ),
+    AssetUniverse(
+        name="validation_2026_09_24_open_close_gap_reversal_v3",
+        priority=28,
+        description=(
+            "Fixed fully symbol-disjoint older US-listed ETF universe for a pre-registered "
+            "overnight-gap versus same-day intraday reversal control."
+        ),
+        symbols=("SPYG", "SPYV", "SPTM", "SPMD", "SDY", "RWR", "XNTK", "XPH"),
+        target_count=3500,
+    ),
 )
 
 
