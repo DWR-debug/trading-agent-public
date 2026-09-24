@@ -2,6 +2,9 @@ name: Trial 030 Sleeve Volatility Parity Confirmation 2026-09-24
 on:
   push:
     branches: ["research/trial-030-sleeve-volatility-parity-confirmation-2026-09-24"]
+  pull_request:
+    types: [opened, synchronize]
+    branches: [master]
   workflow_dispatch:
 permissions:
   contents: read
@@ -15,6 +18,8 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-python@v6
         with: {python-version: "3.13"}
       - name: Install dependencies
