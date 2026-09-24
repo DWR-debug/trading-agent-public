@@ -16,7 +16,7 @@ def test_queue_is_deterministic_and_tracks_current_t039_priority():
 def test_queue_rejects_invalid_transition():
     queue = default_research_queue()
     with pytest.raises(ResearchQueueError):
-        queue.set_status("Q-001-T039-NETWORK-MOMENTUM", "COMPLETED")
+        queue.set_status("Q-001-T040-NETWORK-MOMENTUM-REPAIR", "COMPLETED")
 
 
 def test_default_queue_has_unique_ids():
