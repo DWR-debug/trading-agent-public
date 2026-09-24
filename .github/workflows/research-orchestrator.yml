@@ -18,6 +18,7 @@ on:
           - diagnose_history
           - research
           - research_t041
+          - research_t042
       universe:
         description: Research-Universum
         required: true
@@ -39,6 +40,7 @@ on:
       - master
       - research/execute-t042-coverage
       - research/execute-t042-coverage-repair
+      - research/execute-t042-formal
     paths:
       - "automation/research_orchestrator.py"
       - "automation/live_market_observer.py"
@@ -102,6 +104,13 @@ jobs:
           assert settings.LIVE_TRADING_ENABLED is False
           print("PAPER-ONLY SAFETY OK")
           PY
+      - name: T042 frozen coverage run id
+        if: github.ref == 'refs/heads/research/execute-t042-formal'
+        run: |
+          set -euo pipefail
+          run_id=$(python -c 'import json; from pathlib import Path; print(json.loads(Path("research/evidence/t042_coverage_pass_2026_09_24.json").read_text(encoding="utf-8"))["workflow_run_id"])')
+          test -n "$run_id"
+          echo "T042_COVERAGE_RUN_ID=$run_id" >> "$GITHUB_ENV"
       - name: T041 frozen coverage run id
         if: inputs.mode == 'research_t041'
         run: |
@@ -116,7 +125,18 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          if [ "$GITHUB_REF" = "refs/heads/research/execute-t042-coverage" ] || [ "$GITHUB_REF" = "refs/heads/research/execute-t042-coverage-repair" ]; then
+          if [ "$GITHUB_REF" = "refs/heads/research/execute-t042-formal" ]; then
+            test "$GITHUB_EVENT_NAME" = "push"
+            test "$(git log -1 --pretty=%s)" = "Research authorization: execute T042 formal performance"
+            test -n "$T042_COVERAGE_RUN_ID"
+            gh run download "$T042_COVERAGE_RUN_ID" --repo "$GITHUB_REPOSITORY" --name "unified-research-$T042_COVERAGE_RUN_ID" --dir /tmp/t042-frozen
+            test -f /tmp/t042-frozen/coverage_preflight/T-2026-09-24-042/coverage_preflight_20260924T221913Z.json
+            mkdir -p research/runs
+            cp -R /tmp/t042-frozen/coverage_preflight research/runs/
+            python -m automation.research_orchestrator \
+              --mode research_t042 \
+              --universe validation_2026_09_24_volatility_managed_tsm
+          elif [ "$GITHUB_REF" = "refs/heads/research/execute-t042-coverage" ] || [ "$GITHUB_REF" = "refs/heads/research/execute-t042-coverage-repair" ]; then
             test "$GITHUB_EVENT_NAME" = "push"
             test "$(git log -1 --pretty=%s)" = "Research authorization: execute T042 coverage"
             python -m automation.research_orchestrator \
