@@ -7,7 +7,7 @@ def test_queue_is_deterministic_and_tracks_current_priority():
     queue = default_research_queue()
     first = queue.next_task()
     assert first is not None
-    assert first.task_id == "Q-003-LIVE-DISCOVERY"
+    assert first.task_id == "Q-003-PORTFOLIO-RISK-CONTROL"
     assert queue.all()[1].status == "COMPLETED"
 
 
