@@ -69,7 +69,7 @@ Für den 700-Tage-Holdout wird ausschließlich die Familie verwendet, die im fü
 
 ## Präregistrierter Research-Vertrag
 
-Für einen VALIDATED_PASS müssen gleichzeitig gelten:
+Für einen PASSED_CONTROL müssen gleichzeitig gelten:
 
 ### OOS
 
