@@ -65,3 +65,44 @@ def test_coverage_preflight_marks_short_history_data_invalid(monkeypatch, tmp_pa
     assert result["scientific_outcome"] == "NO_SCIENTIFIC_OUTCOME"
     assert result["performance_evaluation"] is False
     assert result["holdout_evaluation"] is False
+
+
+def test_t040_repair_overlap_is_allowed_only_when_explicit(monkeypatch, tmp_path):
+    from pathlib import Path
+    import json
+
+    from automation import coverage_preflight
+
+    prereg_path = Path(
+        "research/preregistrations/trial_040_network_momentum_2026_09_24.json"
+    )
+    symbols = tuple(
+        json.loads(prereg_path.read_text(encoding="utf-8"))["symbols"]
+    )
+    from datetime import datetime, timedelta, timezone
+
+    base = datetime(2010, 1, 1, tzinfo=timezone.utc)
+
+    class Bar:
+        def __init__(self, i):
+            self.timestamp = base + timedelta(days=i)
+            self.open = 100.0 + i
+            self.high = self.open + 1.0
+            self.low = self.open - 1.0
+            self.close = self.open + 0.25
+            self.volume = 1000.0 + i
+
+    bars = [Bar(i) for i in range(3520)]
+
+    monkeypatch.setattr(
+        coverage_preflight,
+        "load_yahoo_history",
+        lambda symbol, interval, total, **kwargs: list(bars),
+    )
+    result = coverage_preflight.run_preflight(
+        prereg_path,
+        output_root=tmp_path,
+    )
+    assert result["status"] == "coverage_passed"
+    assert result["performance_evaluation"] is False
+    assert result["holdout_evaluation"] is False

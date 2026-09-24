@@ -333,7 +333,19 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=3520,
     ),
 
-
+    AssetUniverse(
+        name="validation_2026_09_24_network_momentum_t040",
+        priority=52,
+        description=(
+            "Repair successor for Trial 039 with one fixed coverage replacement "
+            "FTGC -> BIV; all other symbols and the Network Momentum mechanism remain unchanged."
+        ),
+        symbols=(
+            "EIRL", "ENZL", "NORW", "EDEN", "FXF", "FXC",
+            "CEW", "EIDO", "SCHO", "MINT", "BIV", "RWX",
+        ),
+        target_count=3520,
+    ),
 
 )
 

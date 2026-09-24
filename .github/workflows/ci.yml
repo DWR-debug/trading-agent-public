@@ -48,7 +48,7 @@ jobs:
           from research.research_queue import default_research_queue
 
           prereg = json.loads(Path(
-              "research/preregistrations/trial_039_network_momentum_2026_09_24.json"
+              "research/preregistrations/trial_040_network_momentum_2026_09_24.json"
           ).read_text(encoding="utf-8"))
           universe = get_universe(prereg["universe"])
           assert tuple(universe.symbols) == tuple(prereg["symbols"])
@@ -57,16 +57,19 @@ jobs:
 
           task = default_research_queue().next_task()
           assert task is not None
-          assert task.task_id == "Q-001-T039-NETWORK-MOMENTUM"
-          assert task.research_family == "cross_asset_network_momentum"
+          assert task.task_id == "Q-001-T040-NETWORK-MOMENTUM-REPAIR"
+          assert task.research_family == "cross_asset_network_momentum_repair"
 
           assert prereg["search_scope"]["holdout_used_for_selection"] is False
           assert prereg["coverage_gate"]["performance_allowed_before_coverage_pass"] is False
           assert prereg["target_candles"] == 3500
           assert prereg["research_candles"] == 2800
           assert prereg["holdout_candles"] == 700
-          assert prereg["split"]["pit_research_return_periods"] == 2798
+          assert prereg["split"]["research_return_periods"] == 2798
           assert prereg["split"]["pit_return_periods_total"] == 3498
+          assert prereg["trial_type"] == "repair_successor"
+          assert prereg["parent_trial_id"] == "T-2026-09-24-039"
+          assert prereg["replacement"]["replaced_with"] == "BIV"
           assert prereg["safety"] == {
               "paper_only": True,
               "live_trading_enabled": False,

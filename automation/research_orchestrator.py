@@ -22,6 +22,26 @@ from automation.one_command_research import run_universe
 
 DEFAULT_UNIVERSE = "benchmark"
 
+PREREGISTRATIONS = {
+    "validation_2026_09_24_network_momentum_t039": (
+        Path("research/preregistrations")
+        / "trial_039_network_momentum_2026_09_24.json"
+    ),
+    "validation_2026_09_24_network_momentum_t040": (
+        Path("research/preregistrations")
+        / "trial_040_network_momentum_2026_09_24.json"
+    ),
+}
+
+
+def _preregistration_for(universe: str) -> Path:
+    try:
+        return PREREGISTRATIONS[universe]
+    except KeyError as exc:
+        raise ValueError(
+            f"Keine Network-Momentum-Präregistrierung für {universe}."
+        ) from exc
+
 
 def _state_snapshot(
     *,
@@ -76,10 +96,7 @@ def run(
             observation_fingerprint=payload["observation_fingerprint"],
         )
     elif mode == "preflight":
-        preregistration = (
-            Path("research/preregistrations")
-            / "trial_039_network_momentum_2026_09_24.json"
-        )
+        preregistration = _preregistration_for(universe)
         payload = run_preflight(
             preregistration,
             output_root=root / "coverage_preflight",
@@ -105,10 +122,10 @@ def run(
             run_fingerprint=report["fingerprint"],
         )
     elif mode == "research":
-        if universe == "validation_2026_09_24_network_momentum_t039":
+        if universe in PREREGISTRATIONS:
+            preregistration = _preregistration_for(universe)
             coverage = run_preflight(
-                Path("research/preregistrations")
-                / "trial_039_network_momentum_2026_09_24.json",
+                preregistration,
                 output_root=root / "coverage_preflight",
             )
             if coverage["status"] != "coverage_passed":
@@ -126,11 +143,12 @@ def run(
                     root
                     / universe
                     / "formal"
-                    / "trial_039.json"
+                    / f"{universe.split('_')[-1]}.json"
                 )
                 report = run_t039_trial(
                     coverage_path,
                     output,
+                    preregistration,
                 )
                 snapshot = _state_snapshot(
                     mode=mode,

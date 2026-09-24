@@ -72,10 +72,49 @@ def run_preflight(
         raise RuntimeError("Universe target_count does not match requested coverage.")
 
     target_set = set(symbols)
-    for other in list_universes():
-        if other.name != universe_name and target_set.intersection(other.symbols):
+    allowed_overlap = set(
+        spec.get("disjointness", {}).get(
+            "allowed_overlap_universes", []
+        )
+    )
+    if allowed_overlap:
+        if spec.get("trial_type") != "repair_successor":
             raise RuntimeError(
-                f"Universe is not symbol-disjoint from {other.name}."
+                "Symbol overlap is only permitted for an explicit repair successor."
+            )
+        if not spec.get("parent_trial_id"):
+            raise RuntimeError(
+                "Repair successor with symbol overlap requires parent_trial_id."
+            )
+    repair_successors = set()
+    preregistration_dir = ROOT / "research" / "preregistrations"
+    for candidate in preregistration_dir.glob("trial_*.json"):
+        try:
+            successor = json.loads(
+                candidate.read_text(encoding="utf-8")
+            )
+        except (OSError, json.JSONDecodeError):
+            continue
+        if (
+            successor.get("trial_type") == "repair_successor"
+            and successor.get("parent_trial_id") == trial_id
+            and successor.get("disjointness", {}).get(
+                "allowed_overlap_universes", []
+            ) == [universe_name]
+        ):
+            repair_successors.add(successor.get("universe"))
+
+    for other in list_universes():
+        if (
+            other.name == universe_name
+            or other.name in allowed_overlap
+            or other.name in repair_successors
+        ):
+            continue
+        overlap = sorted(target_set.intersection(other.symbols))
+        if overlap:
+            raise RuntimeError(
+                f"Universe is not symbol-disjoint from {other.name}: {overlap}"
             )
 
     counts: dict[str, int] = {}
