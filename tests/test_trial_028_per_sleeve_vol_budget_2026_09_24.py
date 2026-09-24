@@ -83,3 +83,19 @@ def test_gate_contract_blocks_holdout_deterioration():
     result = _gates(scenario, ResearchGateConfig())
     assert result["non_worsening_vs_fixed_candidate"]["holdout_return_not_below_fixed"] is False
     assert result["all_checks_passed"] is False
+
+
+def test_total_return_cost_multiplier_changes_cost_drag():
+    from automation.trial_028_per_sleeve_vol_budget_2026_09_24 import _simulate_sleeve
+
+    rows = tuple(
+        {
+            "timestamp": i,
+            "gross_open": 0.0,
+            "turnover": 1.0,
+        }
+        for i in range(2)
+    )
+    base = _simulate_sleeve(rows, 1.0)
+    stress = _simulate_sleeve(rows, 2.0)
+    assert stress[0]["net_return"] < base[0]["net_return"]
