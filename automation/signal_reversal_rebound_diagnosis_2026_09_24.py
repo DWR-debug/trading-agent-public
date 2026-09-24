@@ -179,27 +179,6 @@ def _load_case(source_root: Path, case: dict[str, Any]) -> tuple[dict[str, tuple
     return trend, cs
 
 
-def _eq_weight_return(
-    assets: dict[str, tuple],
-    timestamps: list[datetime],
-    timestamp_to_index: dict[datetime, int],
-) -> list[float]:
-    if not assets:
-        return []
-    returns: list[float] = []
-    for timestamp in timestamps:
-        idx = timestamp_to_index[timestamp]
-        values = []
-        for bars in assets.values():
-            current = bars[idx + 2].open
-            previous = bars[idx + 1].open
-            if previous <= 0:
-                raise ValueError("Encountered non-positive open price")
-            values.append(current / previous - 1.0)
-        returns.append(sum(values) / len(values))
-    return returns
-
-
 def _prior_close_return(
     assets: dict[str, tuple],
     index: int,
@@ -226,88 +205,82 @@ def _case_rows(
 ) -> list[dict[str, Any]]:
     trend_weights = base._build_weight_path(trend, base.TREND_STRATEGY)
     cs_weights = base._cs_weights(cs)
-
-    portfolio_rows = tuple(
-        {
-            "timestamp": row_t["timestamp"],
-            "gross_open": 0.5 * row_t["gross_open"] + 0.5 * row_c["gross_open"],
-            "turnover": 0.5 * row_t["turnover"] + 0.5 * row_c["turnover"],
-        }
-        for row_t, row_c in zip(
-            base._return_rows(
-                trend,
-                trend_weights,
-                {symbol: {} for symbol in trend},
-            ),
-            base._return_rows(
-                cs,
-                cs_weights,
-                {symbol: {} for symbol in cs},
-            ),
-        )
-    )
-
-    timestamps = [row["timestamp"] for row in portfolio_rows]
-    index_by_timestamp = {
-        timestamp: index
-        for index, timestamp in enumerate(timestamps)
-    }
-
     all_assets = {**trend, **cs}
-    asset_index_by_timestamp = {
-        bars[0].timestamp: index
-        for index, bars in enumerate(())
-    }
-    del asset_index_by_timestamp
+    previous_trend = {symbol: 0.0 for symbol in trend}
+    previous_cs = {symbol: 0.0 for symbol in cs}
 
-    # All validation universes were aligned to the same 3,500-candle calendar.
-    # The first portfolio return corresponds to candle index 0 decision time.
     rows: list[dict[str, Any]] = []
-    for return_index, row in enumerate(portfolio_rows):
-        asset_index = return_index
-        timestamp = row["timestamp"]
-        market_returns = []
-        for bars in all_assets.values():
-            current = bars[asset_index + 2].open
-            previous = bars[asset_index + 1].open
-            market_returns.append(current / previous - 1.0)
+    return_count = min(
+        len(next(iter(trend.values()))),
+        len(next(iter(cs.values()))),
+    ) - 2
 
-        proxy_current = sum(market_returns) / len(market_returns)
+    for i in range(return_count):
+        trend_gross = 0.0
+        cs_gross = 0.0
+        trend_turnover = 0.0
+        cs_turnover = 0.0
+
+        for symbol, bars in trend.items():
+            value = bars[i + 2].open / bars[i + 1].open - 1.0
+            weight = trend_weights[i][symbol]
+            trend_gross += weight * value
+            trend_turnover += abs(weight - previous_trend[symbol])
+            previous_trend[symbol] = weight
+
+        for symbol, bars in cs.items():
+            value = bars[i + 2].open / bars[i + 1].open - 1.0
+            weight = cs_weights[i][symbol]
+            cs_gross += weight * value
+            cs_turnover += abs(weight - previous_cs[symbol])
+            previous_cs[symbol] = weight
+
+        gross_open = 0.5 * trend_gross + 0.5 * cs_gross
+        turnover = 0.5 * trend_turnover + 0.5 * cs_turnover
+        portfolio_net = gross_open - (base.FEE_RATE + base.SLIPPAGE_RATE) * turnover
+
+        proxy_values = []
+        for bars in all_assets.values():
+            previous_open = bars[i + 1].open
+            current_open = bars[i + 2].open
+            if previous_open <= 0:
+                raise ValueError("Encountered non-positive open price")
+            proxy_values.append(current_open / previous_open - 1.0)
+        proxy_current = sum(proxy_values) / len(proxy_values)
+
         prior_decline = (
-            _prior_close_return(all_assets, asset_index + 1, PRIOR_DECLINE_SESSIONS)
-            if asset_index + 1 >= PRIOR_DECLINE_SESSIONS
+            _prior_close_return(all_assets, i, PRIOR_DECLINE_SESSIONS)
+            if i >= PRIOR_DECLINE_SESSIONS
             else None
         )
 
-        selected = _cs_selected_symbols(cs_weights[asset_index])
-        if len(selected) == 2:
+        selected = _cs_selected_symbols(cs_weights[i])
+        cs_spread = None
+        if len(selected) == base.CS_TOP_N:
             selected_returns = []
             nonselected_returns = []
             for symbol, bars in cs.items():
-                current = bars[asset_index + 2].open
-                previous = bars[asset_index + 1].open
-                value = current / previous - 1.0
+                previous_open = bars[i + 1].open
+                current_open = bars[i + 2].open
+                value = current_open / previous_open - 1.0
                 if symbol in selected:
                     selected_returns.append(value)
                 else:
                     nonselected_returns.append(value)
-            winner_return = sum(selected_returns) / len(selected_returns)
-            loser_return = sum(nonselected_returns) / len(nonselected_returns)
-            cs_spread = winner_return - loser_return
-        else:
-            cs_spread = None
-
-        simulated_portfolio = {
-            "net_return": row["gross_open"]
-            - (base.FEE_RATE + base.SLIPPAGE_RATE) * row["turnover"],
-        }
+            if not selected_returns or not nonselected_returns:
+                raise ValueError("CS winner/nonwinner groups must both be non-empty")
+            cs_spread = (
+                sum(selected_returns) / len(selected_returns)
+                - sum(nonselected_returns) / len(nonselected_returns)
+            )
 
         rows.append(
             {
-                "timestamp": timestamp,
-                "portfolio_net_return": simulated_portfolio["net_return"],
-                "trend_net_return": None,
-                "cs_net_return": None,
+                "timestamp": next(iter(trend.values()))[i + 2].timestamp,
+                "portfolio_net_return": portfolio_net,
+                "trend_gross_return": trend_gross,
+                "cs_gross_return": cs_gross,
+                "turnover": turnover,
                 "proxy_current_open_return": proxy_current,
                 "prior_20d_proxy_close_return": prior_decline,
                 "rebound_after_decline": (
