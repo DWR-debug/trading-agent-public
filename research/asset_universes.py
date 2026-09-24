@@ -286,7 +286,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("VV","VHT","VFH","VIS","VAW","VDE","VPU","VGT","SPDW","SPMB","SPEM","SPTL","SPIP"),
         target_count=3500,
     ),
-,
+
     AssetUniverse(
         name="validation_2026_09_24_risk_adjusted_momentum_candidate",
         priority=40,
