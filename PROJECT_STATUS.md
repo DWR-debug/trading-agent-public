@@ -282,13 +282,24 @@ weiterhin zu HOLD_CASH.
 Trial-017/017b ist als gehärtete, PIT-fähige Event-Intelligence-Pipeline in master
 integriert.
 
-Der erste neue Event-Alpha-Control ist als PR #98 präregistriert und läuft aktuell
-durch die formale CI-/Research-Pipeline. Die feste Hypothese verwendet eine
-marktneutrale relative Positionierung auf IWB/GDX/BIL mit exakt 1,0x Brutto- und
-0,0x Nettoexposition. Es gibt keine Varianten- oder Parameter-Suche.
+Der erste neue Event-Alpha-Control (EVENT-ALPHA-2026-09-24-001) wurde technisch
+geschlossen und archiviert. Zwei Ausführungen bestanden Tests, Paper-only-Sicherheit,
+Universums-Disjointness und Präregistrationsprüfung, konnten den Research-/Holdout-
+Report jedoch wegen fehlender historischer GDELT-Tagesdateien im festgelegten
+2025-04-01 bis 2025-09-30 Fenster nicht vollständig erzeugen.
 
-Bis zum abgeschlossenen OOS-/Kosten-/Integritätsnachweis wird die Event-Familie
-nicht in Produktion oder Allokation übernommen.
+- Lauf 36001720932: HTTP 404 beim benötigten historischen GDELT-Tagesexport
+- Lauf 36003014680: HTTP 404 sowohl Primärquelle als auch getesteter AWS-Fallback
+- Letzter vollständig akquirierter Eventtag: 2025-06-13
+- kein Alpha-Ergebnis, keine Holdout-Auswahl, keine Parameteränderung
+- keine Produktionsintegration
+
+Die technische Abschlussdokumentation liegt in
+docs/event_alpha_validation_2026_09_24_technical_closure.md sowie im
+Checkpoint research/checkpoints/event_alpha_2026_09_24_technical_failure.json.
+
+Eine erneute Event-Alpha-Validierung erfordert zuerst einen vollständig verifizierten
+historischen Event-Datenbezug und wäre als neuer Control separat zu präregistrieren.
 
 ### 3. Micro-Trading: aktueller Abschluss des 5m-Controls
 
