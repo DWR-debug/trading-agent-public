@@ -91,6 +91,17 @@ jobs:
               "broad_negative_with_control_deterioration"
           )
           assert "no_holdout_selection" in diagnosis["non_actions"]
+          history_diagnosis = json.loads(Path(
+              "research/evidence/cross_trial_failure_diagnosis_2026_09_24.json"
+          ).read_text(encoding="utf-8"))
+          assert history_diagnosis["status"] == "DIAGNOSTIC_ONLY"
+          assert history_diagnosis["salvageable_observations"][
+              "t028_per_sleeve_volatility_budget"
+          ] is True
+          assert history_diagnosis["next_research_question"].startswith(
+              "Before another return-generating strategy family"
+          )
+
           print("RESEARCH GOVERNANCE OK")
           PY
       - name: Project-State validieren
