@@ -595,6 +595,54 @@ Dauerhafte Ablage:
 - docs/GOVERNED_CHAMPION_CHALLENGER_ACCOUNTING.md
 - research/checkpoints/governed_champion_challenger_accounting_2026_09_24.json
 
+### 2aa. MAX-Effect Cross-Sectional Control — Trial 023 — 2026-09-24
+
+Trial T-2026-09-24-023 wurde vollständig und reproduzierbar auf einem neuen,
+vollständig symbol-disjunkten U.S.-Aktienuniversum ausgeführt.
+
+- Workflow-Run: 36016871406
+- Artifact-ID: 10815121247
+- Report-Fingerprint: bfaeb216996b2f32acd55fff06e217344f24de6aca373a661bedd873c06bb594
+- Manifest-Fingerprint: 66a17c515f85af51cfbd6d4402fc67c9d2c6cbb215eefdfe459052e2d5618d6b
+- Code-SHA des Workflow-Laufs: 3b05c02c16901329112814bdb1c7d3486df88fff
+- ORCL, CSCO, TXN, ADP, UPS, ABT, GILD, AMGN
+- 3.500 Candles/Asset, 3.498 Returns, Research/Holdout 2.798/700
+- vollständige Vorprüfungen, Ergebnisintegrität und Artifact-Upload: grün
+- keine Parameter-/Threshold-/Asset-Suche, keine Holdout-Selektion, keine Orders
+
+Basis:
+
+- Research: +285,84%, DD 24,63%, PF 1,148, Rolling 4/5
+- Holdout: +38,85%, DD 16,26%, PF 1,144
+- OOS/Research-Ratio: 0,136
+- Low-MAX minus High-MAX: Research +1,44 bps/Tag; Holdout -0,41 bps/Tag
+- 1,5x Kostenstress Holdout: +35,80%
+- 2x Kostenstress Holdout: +32,82%
+
+Entscheidung: NO_SUPPORT / archived_rejected.
+
+Die absoluten Drawdown-Gates, die OOS/Research-Schwelle und der positive
+Holdout-MAX-Edge werden verfehlt. Keine MAX-Varianten-, Fenster-, Auswahlbreiten-
+oder Kosten-Suche wird daraus abgeleitet.
+
+Dauerhafte Evidenzablage:
+- docs/trial_023_max_effect_result_2026_09_24.md
+- research/checkpoints/trial_023_max_effect_result_2026_09_24.json
+- research/evidence/trial_ledger.json
+
+### 2ab. MAX-Effect Failure-Diagnose — 2026-09-24
+
+Der wichtigste deskriptive Befund ist die fehlende Holdout-Stabilität des
+Charakteristiksignals: Der Low-MAX-vs-High-MAX-Edge dreht von +1,44 bps/Tag im
+Research auf -0,41 bps/Tag im Holdout.
+
+Zusätzlich liegen die Holdout-Rendite nur bei +38,85%, der Holdout-Drawdown bei
+16,26% und die OOS/Research-Ratio bei 0,136. Der Kostenstress bleibt zwar
+positiv, beseitigt aber weder den Drawdown-Failure noch die OOS-Schwäche.
+
+Der Control wird nicht integriert. Die Failure-Diagnose ist deskriptiv; es wird
+keine Kausalität oder Übertragbarkeit auf die Literatur behauptet.
+
 ### 3. Micro-Trading: aktueller Abschluss des 5m-Controls
 
 PR #39 und der anschließende CI-Fix PR #40 sind gemerged.
@@ -626,20 +674,21 @@ Kosten einen negativen Holdout-Befund.
 Die Gap-Reversal-Familie ist abgeschlossen: technische Trials 018–020 und
 vollständiger negativer Trial 021; kein weiteres Gap-Reversal-Tuning.
 
-Trial 022 zur lagged 63-Sessionen-Inverse-Volatilitäts-Allokation ist ebenfalls
-abgeschlossen und nicht promotet. Die Failure-Diagnose zeigte nur eine moderate
-Drawdown-Verbesserung bei gleichzeitigem Return-/PF-Rückgang gegenüber 50/50.
+Trial 022 zur lagged 63-Sessionen-Inverse-Volatilitäts-Allokation ist abgeschlossen
+und nicht promotet. Die Failure-Diagnose zeigte keine ausreichende Robustheit.
 
-Die Daten-/Kalenderausrichtung ist technisch gehärtet. Execution-Kosten sind
-über einen zentralen Contract abgesichert und für den PaperBroker explizit
-research-kompatibel konfigurierbar. Champion/Challenger-Accounting ist an den
-Evidence-Contract gebunden und trifft selbst keine Auswahl- oder Promotions-
-entscheidung.
+Trial 023 zur monatlichen Low-MAX-Charakteristik ist ebenfalls abgeschlossen und
+nicht promotet. Der Research-Edge dreht im Holdout ins Negative; Drawdown und
+OOS/Research bleiben unzureichend. Keine weitere MAX-Suche.
+
+Daten-/Kalenderausrichtung, Execution-Kostenvertrag und Champion/Challenger-
+Accounting sind technisch gehärtet.
 
 Nächster Forschungsschritt:
-Eine einzelne, orthogonale, vorab präregistrierte Alpha-Hypothese auf einem
-vollständig neuen und symbol-disjunkten Datensatz. Vorab werden Datenverfügbarkeit,
-PIT-Semantik, Kostenvertrag, Safety und Holdout-Nichtauswahl in CI geprüft.
+Eine einzelne, orthogonale, vorab präregistrierte Charakteristik- oder Signal-
+Hypothese auf einem vollständig neuen und symbol-disjunkten Datensatz. Vor dem
+Research-Lauf werden Datenverfügbarkeit, PIT-Semantik, Kostenvertrag, Safety und
+Holdout-Nichtauswahl in CI geprüft.
 
 Bestehende Signale, Parameter, Gewichte und Gates bleiben unverändert.
 Kein Live-Trading und keine automatische Produktionspromotion.
