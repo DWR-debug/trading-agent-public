@@ -1,16 +1,6 @@
 # Trial 027 workflow; run only from the public repository.
 name: Trial 027 TSM Ensemble Trend Sleeve 2026-09-24
 on:
-  pull_request:
-    types: [opened, synchronize]
-    branches: [master]
-    paths:
-      - "automation/trial_027_tsm_ensemble_trend_sleeve_2026_09_24.py"
-      - "tests/test_trial_027_tsm_ensemble_trend_sleeve_2026_09_24.py"
-      - "research/asset_universes.py"
-      - "docs/trial_027_tsm_ensemble_trend_sleeve_preregistration_2026_09_24.md"
-      - "research/checkpoints/trial_027_tsm_ensemble_trend_sleeve_preregistration_2026_09_24.json"
-      - ".github/workflows/trial-027-tsm-ensemble-trend-sleeve-2026-09-24.yml"
   push:
     branches: ["research/trial-027-tsm-ensemble-trend-sleeve-2026-09-24"]
   workflow_dispatch:
