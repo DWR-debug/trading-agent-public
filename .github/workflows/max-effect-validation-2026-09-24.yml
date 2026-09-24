@@ -1,0 +1,207 @@
+name: MAX Effect Validation 2026-09-24
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [master]
+    paths:
+      - "automation/max_effect_validation_2026_09_24.py"
+      - "research/fixed_max_effect.py"
+      - "research/asset_universes.py"
+      - "execution/cost_contract.py"
+      - "tests/test_fixed_max_effect.py"
+      - "docs/trial_023_max_effect_preregistration_2026_09_24.md"
+      - "research/checkpoints/trial_023_max_effect_preregistration_2026_09_24.json"
+      - ".github/workflows/max-effect-validation-2026-09-24.yml"
+  push:
+    branches:
+      - research/max-effect-validation-2026-09-24
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-max-effect-validation
+  cancel-in-progress: true
+
+jobs:
+  prereq:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Vollständige Testsuite
+        run: python -m pytest -q
+
+      - name: Paper-only-Sicherheit
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+
+      - name: MAX-Universum-Disjointness
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from research.asset_universes import get_universe, list_universes
+
+          expected = ("ORCL", "CSCO", "TXN", "ADP", "UPS", "ABT", "GILD", "AMGN")
+          target = get_universe("validation_2026_09_24_max_effect_us_stocks")
+          assert tuple(target.symbols) == expected
+          assert target.target_count == 3500
+
+          for item in list_universes():
+              if item.name == target.name:
+                  continue
+              assert set(expected).isdisjoint(item.symbols), item.name
+
+          print("MAX_EFFECT_UNIVERSE_DISJOINT_OK")
+          PY
+
+      - name: Präregistrierung prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          doc = Path("docs/trial_023_max_effect_preregistration_2026_09_24.md").read_text(encoding="utf-8")
+          required = (
+              "T-2026-09-24-023",
+              "ORCL", "CSCO", "TXN", "ADP", "UPS", "ABT", "GILD", "AMGN",
+              "3.500", "3.498", "2.798", "700",
+              "vier Assets mit dem niedrigsten MAX",
+              "15 bps One-Way",
+              "1,5x", "2,0x",
+              "PAPER_ONLY = True",
+              "LIVE_TRADING_ENABLED = False",
+              "holdout_selection = false",
+          )
+          missing = [item for item in required if item not in doc]
+          assert not missing, f"Missing preregistration tokens: {missing}"
+
+          checkpoint = json.loads(
+              Path("research/checkpoints/trial_023_max_effect_preregistration_2026_09_24.json")
+              .read_text(encoding="utf-8")
+          )
+          assert checkpoint["trial_id"] == "T-2026-09-24-023"
+          assert checkpoint["strategy_variants"] == 1
+          assert checkpoint["parameter_search"] is False
+          assert checkpoint["threshold_search"] is False
+          assert checkpoint["holdout_selection"] is False
+          print("MAX_EFFECT_PREREGISTRATION_OK")
+          PY
+
+      - name: Kostenvertrag prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from execution.cost_contract import ResearchExecutionCostContract
+
+          contract = ResearchExecutionCostContract()
+          contract.validate()
+          assert contract.fee_bps == 10.0
+          assert contract.slippage_bps == 5.0
+          assert contract.total_one_way_bps == 15.0
+          print("MAX_EFFECT_COST_CONTRACT_OK")
+          PY
+
+  research:
+    needs: prereq
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 180
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Research-Daten vorbereiten
+        run: |
+          set -euo pipefail
+          python -m automation.prepare_research_data             --target-count 3500             --universe validation_2026_09_24_max_effect_us_stocks             --output research/max_effect_validation_2026_09_24/manifest.json
+
+      - name: MAX-Control ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.max_effect_validation_2026_09_24             --data-dir data/market_data             --manifest research/max_effect_validation_2026_09_24/manifest.json             --output research/max_effect_validation_2026_09_24/report.json
+
+      - name: Ergebnisintegrität prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path("research/max_effect_validation_2026_09_24/report.json")
+          report = json.loads(path.read_text(encoding="utf-8"))
+          fingerprint = report.pop("report_fingerprint")
+          actual = hashlib.sha256(
+              json.dumps(
+                  report,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  ensure_ascii=True,
+                  allow_nan=False,
+              ).encode("utf-8")
+          ).hexdigest()
+
+          assert fingerprint == actual
+          assert report["trial_id"] == "T-2026-09-24-023"
+          assert report["research_only"] is True
+          assert report["preregistration"]["strategy_variants"] == 1
+          assert report["preregistration"]["parameter_search"] is False
+          assert report["preregistration"]["threshold_search"] is False
+          assert report["preregistration"]["holdout_selection"] is False
+          assert report["source"]["target_candles"] == 3500
+          assert report["source"]["common_returns"] == 3498
+          assert report["source"]["research_count"] == 2798
+          assert report["source"]["holdout_count"] == 700
+          assert report["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+          }
+          print("MAX_EFFECT_RESULT_INTEGRITY_OK")
+          print("MAX_EFFECT_DECISION:", json.dumps(report["decision"], sort_keys=True))
+          print("MAX_EFFECT_REPORT_FINGERPRINT:", fingerprint)
+          PY
+
+      - name: Artefakte sichern
+        uses: actions/upload-artifact@v4
+        with:
+          name: max-effect-validation-2026-09-24-${{ github.run_id }}
+          path: |
+            research/max_effect_validation_2026_09_24/report.json
+            research/max_effect_validation_2026_09_24/manifest.json
+          if-no-files-found: error
+          retention-days: 30
