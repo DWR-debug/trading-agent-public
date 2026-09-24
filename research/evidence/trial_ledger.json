@@ -2254,6 +2254,56 @@
         "live_trading_enabled": false,
         "orders_enabled": false
       }
+    },
+    {
+      "trial_id": "T-2026-09-24-029",
+      "recorded_at": "2026-09-24",
+      "status": "data_invalid",
+      "research_family": "sleeve_volatility_parity",
+      "scientific_outcome": "NO_SCIENTIFIC_OUTCOME",
+      "reason": "Preregistered data contract requires 3,500 candles and 3,498 common PIT returns; IEFA provided only 3,496 candles, so common calendar length was 3,496.",
+      "data_scope": {
+        "requested_symbols": [
+          "IWB",
+          "IEFA",
+          "BIV",
+          "BSV",
+          "VGIT",
+          "JNK",
+          "HDV",
+          "DBE",
+          "IYF",
+          "IYE",
+          "IYG",
+          "DJP",
+          "EPHE"
+        ],
+        "limiting_symbol": "IEFA",
+        "limiting_symbol_count": 3496,
+        "other_symbol_count": 3520,
+        "common_calendar_count": 3496,
+        "research_count": 2798,
+        "holdout_count": 700,
+        "performance_selection_used": false
+      },
+      "evidence": {
+        "workflow_run_id": 36039285580,
+        "artifact_id": 10826146206,
+        "artifact_sha256": "sha256:652627afbe7ab0cb39d374d986a32d265c779d9f96b27f233d3b8108477fc036",
+        "failure": "ValueError: Gemeinsamer Kalender bleibt zu kurz: 3496 statt 3500 nach 5 Akquisitionen."
+      },
+      "governance": {
+        "modified_after_failure": false,
+        "target_count_relaxed": false,
+        "symbol_replacement_after_failure": false,
+        "no_return_metrics_produced": true,
+        "no_candidate_selection": true
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
     }
   ]
 }
