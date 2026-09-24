@@ -75,7 +75,7 @@ jobs:
           doc=Path("docs/trial_034_relative_value_etf_pairs_preregistration_2026_09_24.md").read_text(encoding="utf-8")
           required=(
               "T-2026-09-24-034","VTWO","IJR","QQEW","ONEQ","EEMV","SCHE","IGIB","SPIB","SCHP","STIP",
-              "200","1.65","0.75","0.05","3.500","2.798","700",
+              "200","1,65","0,75","0,05","3.500","2.798","700",
               "PAPER_ONLY=True","LIVE_TRADING_ENABLED=False","orders_enabled=False"
           )
           missing=[x for x in required if x not in doc]
