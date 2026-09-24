@@ -51,19 +51,11 @@ T040 wurde am 24.09.2026 nach bestandenem Coverage-Gate formal ausgewertet und a
 Die Network-Momentum-Variante wird deshalb **nicht nachoptimiert**. Die Evidenz wird als
 negativer Befund für genau diesen präregistrierten Mechanismus archiviert.
 
-### Abgeschlossener Diagnoseschritt
-
-Die **Adversarial Failure-Diagnose** von T040 ist abgeschlossen und als rein ableitende Evidenz
-archiviert. Sie verwendet ausschließlich den unveränderlichen T040-Evidence-Record und nimmt
-keine Parameter-, Asset- oder Holdout-Auswahl vor. Diagnose-Fingerprint:
-`92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea`.
-
 ### Nächster Forschungsschritt
 
-**Live-/Updated-Data Discovery**: feste Markt- und Lead-Lag-Diagnostiken auf aktuellen bzw.
-aktualisierten Daten, ausschließlich als Discovery-Artefakte. Eine Beobachtung ist kein
-Profitabilitätsnachweis; ein daraus abgeleiteter Kandidat benötigt vor jeder Performance-
-auswertung eine neue Präregistrierung und denselben unveränderten Evidence-Vertrag.
+**Adversarial Failure-Diagnose**: rein ableitende Untersuchung der T040-Versagenssignatur und
+relevanter früherer salvageable Beobachtungen. Ziel ist Ursachenstrukturierung vor einer neuen
+Performancehypothese, ohne Parameter-/Asset-/Holdout-Auswahl.
 
 ## T039 Engine — technische Umsetzung
 
@@ -77,6 +69,22 @@ auswertung eine neue Präregistrierung und denselben unveränderten Evidence-Ver
 - Coverage-Snapshot wird vor formaler Auswertung unverändert archiviert
 - Push/Schedule: Beobachtung + T040-Coverage-Preflight + Coverage-Discovery + Failure-Diagnose
 - formale Forschung: nur nach Coverage-Pass und explizitem Research-Dispatch
+
+## Historische Failure-Diagnose
+
+Die T040-Versagenssignatur wurde nicht nur einzeln, sondern gegen die fünf relevanten historischen
+salvageable Beobachtungen T022/T023/T025/T027/T028 ausgewertet.
+
+Festgestellte wiederkehrende Muster:
+
+- Risk-Gates versagen wiederholt auch bei attraktiven absoluten Renditemetriken.
+- Mechanismus-spezifische Edge-/OOS-Gates können hinter hohen aggregierten Renditen scheitern.
+- Ein attraktiver Holdout rettet keinen früheren Research-/Risk-/Mechanismusfehler.
+- T028 zeigt einen eigenständigen Risk-Control-Hinweis: geringere Drawdowns und leicht bessere PFs
+  gegenüber der festen Kontrolle, aber weiterhin kein Promotion-Pass.
+
+Daraus folgt kein neuer Parameter- oder Asset-Tuning-Auftrag. Der nächste formale Fokus ist eine neue,
+vollständig symbol-disjunkte Portfolio-Risk-Control-Hypothese mit eigener Präregistrierung.
 
 ## Sicherheitsstatus
 

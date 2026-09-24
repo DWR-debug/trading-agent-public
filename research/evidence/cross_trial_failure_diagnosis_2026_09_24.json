@@ -1,0 +1,126 @@
+{
+  "schema_version": "1.0",
+  "diagnosis_id": "CROSS-TRIAL-FAILURE-DIAGNOSIS-2026-09-24",
+  "recorded_at": "2026-09-24T21:25:00Z",
+  "source": {
+    "ledger": "research/evidence/trial_ledger.json",
+    "trial_ids": [
+      "T-2026-09-24-022",
+      "T-2026-09-24-023",
+      "T-2026-09-24-025",
+      "T-2026-09-24-027",
+      "T-2026-09-24-028"
+    ]
+  },
+  "status": "DIAGNOSTIC_ONLY",
+  "trial_summaries": [
+    {
+      "trial_id": "T-2026-09-24-022",
+      "research_family": "portfolio_allocation",
+      "failure_modes": [
+        "research_risk_gate",
+        "research_profit_factor_gate",
+        "control_relative_non_deterioration"
+      ]
+    },
+    {
+      "trial_id": "T-2026-09-24-023",
+      "research_family": "cross_sectional_max_effect",
+      "failure_modes": [
+        "research_risk_gate",
+        "oos_stability_gate",
+        "holdout_risk_gate",
+        "mechanism_edge_gate"
+      ]
+    },
+    {
+      "trial_id": "T-2026-09-24-025",
+      "research_family": "cross_sectional_market_residual_volatility",
+      "failure_modes": [
+        "research_risk_gate",
+        "oos_stability_gate",
+        "holdout_risk_gate",
+        "mechanism_edge_gate"
+      ]
+    },
+    {
+      "trial_id": "T-2026-09-24-027",
+      "research_family": "tsm_ensemble_trend_sleeve_replacement",
+      "failure_modes": [
+        "research_risk_gate",
+        "research_profit_factor_gate",
+        "holdout_risk_gate",
+        "control_relative_non_deterioration"
+      ]
+    },
+    {
+      "trial_id": "T-2026-09-24-028",
+      "research_family": "per_sleeve_volatility_budget",
+      "failure_modes": [
+        "research_risk_gate",
+        "research_profit_factor_gate",
+        "control_relative_non_deterioration"
+      ]
+    }
+  ],
+  "cross_trial_patterns": [
+    {
+      "pattern_id": "P1",
+      "name": "risk_gate_recurrence",
+      "evidence_trials": [
+        "T-2026-09-24-022",
+        "T-2026-09-24-023",
+        "T-2026-09-24-025",
+        "T-2026-09-24-027",
+        "T-2026-09-24-028"
+      ]
+    },
+    {
+      "pattern_id": "P2",
+      "name": "mechanism_edge_can_fail_behind_good_aggregate_returns",
+      "evidence_trials": [
+        "T-2026-09-24-023",
+        "T-2026-09-24-025"
+      ]
+    },
+    {
+      "pattern_id": "P3",
+      "name": "holdout_is_not_a_rescue",
+      "evidence_trials": [
+        "T-2026-09-24-022",
+        "T-2026-09-24-023",
+        "T-2026-09-24-025",
+        "T-2026-09-24-027",
+        "T-2026-09-24-028"
+      ]
+    },
+    {
+      "pattern_id": "P4",
+      "name": "risk_control_can_be_useful_without_alpha_proof",
+      "evidence_trials": [
+        "T-2026-09-24-028"
+      ]
+    }
+  ],
+  "salvageable_observations": {
+    "t028_per_sleeve_volatility_budget": true,
+    "interpretation": "Risk-control hypothesis only; not an alpha/promotion candidate."
+  },
+  "non_actions": [
+    "no_parameter_reselection",
+    "no_asset_reselection",
+    "no_holdout_selection",
+    "no_gate_relaxation",
+    "no_backtest_rerun",
+    "no_production_promotion"
+  ],
+  "next_research_question": "Before another return-generating strategy family is promoted, test a new, fully pre-registered risk-control/allocation hypothesis on a fresh symbol-disjoint universe, using T028 only as motivation and not as a selection mechanism.",
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false,
+    "paid_agent_api_budget_usd": 0.0
+  },
+  "fingerprint": "b3c4444f84d75d0dcea6ede834b55f1576732835d5af329bd4cc85a0484612d2"
+}

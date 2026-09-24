@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "updated": "2026-09-24",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "ca66972cdbba4dcc684a02da7adfff37847c2754",
+  "master_commit": "202aa40431e633cc3e0ba78e37f39077afaf4ad1",
   "latest_formal_trial": "T-2026-09-24-040",
   "latest_trial_status": "BLOCKED",
   "next_reserved_trial": "NONE_PENDING_NEW_PREREGISTRATION",
-  "next_research_focus": "Live/updated-data discovery via fixed diagnostics; no T040 tuning",
+  "next_research_focus": "New fully symbol-disjoint portfolio risk-control/allocation hypothesis motivated by T028; coverage-only candidate discovery precedes preregistration",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -56,9 +56,10 @@
     "next_trial_candidate_selection": "coverage_only_fixed_pool",
     "t040_formal_completed": true,
     "t040_negative_evidence_archived": true,
-    "current_queue_task": "Q-003-LIVE-DISCOVERY",
+    "current_queue_task": "Q-003-PORTFOLIO-RISK-CONTROL",
     "automatic_formal_execution_requires_preregistration": true,
     "last_completed_queue_task": "Q-002-ADVERSARIAL-FAILURE-DIAGNOSIS",
-    "last_completed_diagnosis_fingerprint": "92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea"
+    "last_completed_diagnosis_fingerprint": "92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea",
+    "cross_trial_failure_diagnosis_implemented": true
   }
 }
