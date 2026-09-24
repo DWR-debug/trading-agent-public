@@ -62,7 +62,11 @@ Die feste 50/50-Kontrolle erreicht im Holdout +43,08 % Return / 23,08 % DD / PF 
 Die zwischenzeitlichen technischen Versuche 36063501638, 36063700160 und 36064061902 sind separat als nicht-wertbare Ausführungsversuche dokumentiert.
 ## Q004 Live-/Updated-Data Discovery — 2026-09-24
 
-Die laufende Discovery beobachtet zwei komplementäre, feste Universen: `benchmark` und `cross_asset_trend`. Pro Symbol werden maximal 1.000 abgeschlossene Tages-Candles genutzt; zusätzlich werden fixe Lag-Korrelationen (1/5/21 Sessions), 21-Tages-Volatilität und 252-Tages-Trendreturndaten beschrieben. Die Beobachtung dient ausschließlich zur Hypothesenbildung. Jede daraus abgeleitete Performancehypothese benötigt eine neue, separat präregistrierte Coverage- und Holdout-Kette. Der erste Lauf `36065231678` wird wegen eines technischen JSON-Serialisierungsfehlers nicht als wissenschaftliche Evidenz verwendet; der Fehler wird vor Wiederholung reproduzierbar per Test abgesichert.
+Die laufende Discovery beobachtet zwei komplementäre, feste Universen: `benchmark` und `cross_asset_trend`. Pro Symbol werden maximal 1.000 abgeschlossene Tages-Candles genutzt; zusätzlich werden fixe Lag-Korrelationen (1/5/21 Sessions), 21-Tages-Volatilität und 252-Tages-Trendreturndaten beschrieben. Die Beobachtung dient ausschließlich zur Hypothesenbildung. Jede daraus abgeleitete Performancehypothese benötigt eine neue, separat präregistrierte Coverage- und Holdout-Kette. Der erste Lauf `36065231678` wurde wegen eines technischen JSON-Serialisierungsfehlers als ungültig archiviert; der Fehler ist nun per Test abgesichert. Der gültige Q004-Zyklus ist `36065403704`.
+
+## Q006 Volatility / Relative Value — NEXT
+
+Q006 ist jetzt der nächste formale Forschungsschwerpunkt. T041 wird nicht über Lookback, Gewichte, Rebalance-Timing oder Caps nachoptimiert. Der neue Versuch muss einen orthogonalen Mechanismus testen, ein frisches symbol-disjunktes Universum verwenden und vor jeder Performanceauswertung einen Coverage-Pass bestehen.
 
 ## T039 Engine — technische Umsetzung
 
