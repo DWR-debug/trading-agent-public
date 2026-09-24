@@ -38,6 +38,38 @@ jobs:
         run: python -m pytest -q
       - name: Projektintegrität
         run: python automation/project_integrity_check.py
+      - name: Research-Governance
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from research.asset_universes import get_universe
+          from research.research_queue import default_research_queue
+
+          prereg = json.loads(Path(
+              "research/preregistrations/trial_039_network_momentum_2026_09_24.json"
+          ).read_text(encoding="utf-8"))
+          universe = get_universe(prereg["universe"])
+          assert tuple(universe.symbols) == tuple(prereg["symbols"])
+          assert universe.interval == prereg["interval"]
+          assert universe.target_count == prereg["requested_candles"]
+
+          task = default_research_queue().next_task()
+          assert task is not None
+          assert task.task_id == "Q-001-T039-NETWORK-MOMENTUM"
+          assert task.research_family == "cross_asset_network_momentum"
+
+          assert prereg["search_scope"]["holdout_used_for_selection"] is False
+          assert prereg["coverage_gate"]["performance_allowed_before_coverage_pass"] is False
+          assert prereg["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+              "automatic_promotion": False,
+          }
+          print("RESEARCH GOVERNANCE OK")
+          PY
       - name: Project-State validieren
         run: |
           python - <<'PY'
