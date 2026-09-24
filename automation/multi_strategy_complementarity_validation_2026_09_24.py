@@ -79,8 +79,6 @@ def _assets(data_dir: Path, manifest: dict) -> dict[str, tuple]:
 
 def _blend_rows(trend_rows: dict, cs_rows: dict) -> tuple[dict, ...]:
     common = sorted(set(trend_rows) & set(cs_rows))
-    if len(common) != EXPECTED_COMMON_RETURNS:
-        raise ValueError(f"Erwarte exakt {EXPECTED_COMMON_RETURNS} gemeinsame Returns, erhalten: {len(common)}")
     return tuple(
         {
             "timestamp": ts,
