@@ -9,7 +9,7 @@ Pilot fest und wird nicht optimiert.
 
 ## Point-in-Time
 
-DATEADDED ist UTC. Ein Ereignis am Handelstag D wird mit dem ersten
+Die tägliche GDELT-Archivdatei verwendet das 58-Spalten-Format; DATEADDED ist dabei das vorletzte Feld und wird als UTC-Timestamp verarbeitet. Ein Ereignis am Handelstag D wird mit dem ersten
 Markttag strikt nach D verbunden. Fällt D auf ein Wochenende oder einen
 Marktfeiertag, wird der letzte Schluss vor D als Ausgangspunkt für die nächste
 Marktbewegung verwendet. Die Performance des Ereignistags wird nicht als
