@@ -143,7 +143,7 @@ def run(
                     root
                     / universe
                     / "formal"
-                    / f"{universe.rsplit("_", 1)[-1]}.json"
+                    / f"{universe.split('_')[-1]}.json"
                 )
                 report = run_t039_trial(
                     coverage_path,
