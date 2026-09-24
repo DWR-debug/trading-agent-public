@@ -1,24 +1,6 @@
 name: Candidate Validation 50/50 Vol Budget
 
 on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-    branches:
-      - master
-    paths:
-      - "automation/candidate_validation_50_50_vol_budget.py"
-      - "tests/test_candidate_validation_50_50_vol_budget.py"
-      - "research/asset_universes.py"
-      - ".github/workflows/candidate-validation-50-50-vol-budget.yml"
-      - "automation/prepare_research_data.py"
-      - "automation/cross_asset_trend_replication.py"
-      - "backtesting/**"
-      - "config/**"
-      - "data/**"
-      - "research/**"
-      - "validation/**"
   workflow_dispatch:
 
 permissions:
