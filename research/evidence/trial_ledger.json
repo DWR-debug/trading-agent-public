@@ -394,6 +394,72 @@
         "live_trading_enabled": false,
         "orders_enabled": false
       }
+    },
+    {
+      "trial_id": "T-2026-09-24-010",
+      "recorded_at": "2026-09-24T10:54:00+02:00",
+      "status": "archived_rejected",
+      "research_family": "architecture_hypothesis",
+      "hypothesis": {
+        "text": "CS-Dispersion-Risikobudget: fixe Top-2-CS-Auswahl mit kontinuierlicher Abwärts-Skalierung des 50%-CS-Sleeves bei erhöhter 21-Session-Cross-Sectional-Dispersion relativ zum vorherigen 63-Session-Dispersionmedian"
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10799487056
+        ],
+        "trend_manifest_fingerprint": "31aac92a7c2eb59b4974eed97a1334c8c8fd599c7fa69404ed63c9ef7e1849e6",
+        "cs_manifest_fingerprint": "7e459e8f3bc55b9ad98d08a641740269143dbbf880c25552fa54c85d9a6de139",
+        "fully_symbol_disjoint_validation_set": true
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered single hypothesis",
+        "selection_family_id": "cs-dispersion-budget-2026-09-24",
+        "selection_metric": "fixed Research/Holdout non-worsening checks"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "research_hypothesis_status": "FAIL",
+        "holdout_confirmation_status": "FAIL",
+        "research_validation_status": "FAIL",
+        "baseline_research_return_percent": 53.44616799060622,
+        "candidate_research_return_percent": 40.93433008232856,
+        "baseline_research_max_drawdown_percent": 20.77480270676836,
+        "candidate_research_max_drawdown_percent": 22.1503743201094,
+        "baseline_rolling_profit_factor": 1.0804678031483417,
+        "candidate_rolling_profit_factor": 1.0675730070865412,
+        "baseline_rolling_average_drawdown_percent": 15.592750563913167,
+        "candidate_rolling_average_drawdown_percent": 15.728606482985407,
+        "baseline_holdout_return_percent": 38.53322917867909,
+        "candidate_holdout_return_percent": 33.32590275308234,
+        "baseline_holdout_max_drawdown_percent": 10.389313575789338,
+        "candidate_holdout_max_drawdown_percent": 9.867421568727941,
+        "baseline_holdout_profit_factor": 1.214716340923592,
+        "candidate_holdout_profit_factor": 1.1902293464941225,
+        "report_fingerprint": "62134f7eb851b83d7a5852b1751b15019c308ec5c0f098ff25733c8a7056de59"
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
     }
   ]
 }
