@@ -172,6 +172,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("EWC", "EWH", "EWI", "EWK", "EWN", "EWP", "EWY", "EWT"),
         target_count=3500,
     ),
+)
 
 
 def get_universe(name: str) -> AssetUniverse:
