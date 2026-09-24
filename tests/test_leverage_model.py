@@ -45,6 +45,13 @@ def test_daily_reset_product_is_path_dependent():
     assert path.final_equity == pytest.approx(0.96)
 
 
+def test_short_can_lose_more_than_basis_notional_but_simulation_fails_closed():
+    config = LeverageConfig(multiple=1.0)
+    result = simulate_leveraged_path((2.0,), (-1.0,), config)
+    assert result.ruined is True
+    assert result.final_equity == pytest.approx(0.0)
+
+
 def test_leveraged_path_fails_closed_at_zero_equity():
     config = LeverageConfig(multiple=3.0)
     path = simulate_leveraged_path((-0.40,), (1.0,), config)
