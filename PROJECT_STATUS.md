@@ -532,6 +532,37 @@ Der nächste methodische Schritt ist eine Failure-Diagnose der Portfolioaggregat
 insbesondere die Trennung von Allokations-Turnover/Kosten, Sleeve-Risiko und der
 Frage, ob die dynamische Gewichtsänderung tatsächlich die Drawdown-Failures adressiert.
 
+### 2w. Portfolio Risk-Parity Failure-Diagnose — 2026-09-24
+
+Trial 022 wurde nicht promotet. Die deskriptive Failure-Diagnose ist abgeschlossen.
+Sie führt keine neue Parameter- oder Gewichtssuche und keine Gateänderung durch.
+
+- Holdout-Drawdown gegenüber 50/50: ca. 1,04 Prozentpunkte niedriger
+- Holdout-Return gegenüber 50/50: ca. 14,40 Prozentpunkte niedriger
+- zusätzlicher Allokations-Turnover: 4,97
+- mechanischer zusätzlicher Holdout-Kosten-Drag: ca. 0,64 Prozentpunkte
+- durchschnittliche Holdout-Gewichte: 59,46% Trend / 40,54% Cross-Sectional
+- das verbleibende Return-Residuum wird ausdrücklich nicht kausal interpretiert
+
+Konsequenz:
+- kein Risk-Parity-Tuning
+- keine Lookback-/Cap-/Normalisierungssuche
+- keine Produktionsintegration der dynamischen Allokation
+
+### 2x. Execution-Kosten-Semantik-Audit — 2026-09-24
+
+Der Research-Kostenstandard ist jetzt explizit als Contract abgesichert:
+10 bps Fee + 5 bps Slippage = 15 bps One-Way bzw. 30 bps Round Trip.
+
+BacktestEngine und ExecutionCostModel entsprechen diesem Contract. Der historische
+PaperBroker-Default liegt bei 5 bps Fee + 5 bps Slippage und wird deshalb fail-closed
+als nicht research-kompatibel erkannt. Der PaperBroker wurde nicht rückwirkend verändert.
+
+Dauerhafte Ablage:
+- execution/cost_contract.py
+- docs/EXECUTION_COST_AUDIT.md
+- research/checkpoints/execution_cost_audit_2026_09_24.json
+
 ### 3. Micro-Trading: aktueller Abschluss des 5m-Controls
 
 PR #39 und der anschließende CI-Fix PR #40 sind gemerged.
@@ -560,34 +591,26 @@ Kosten einen negativen Holdout-Befund.
 
 ### 5. Gesamtfokus ab jetzt
 
-Die Gap-Reversal-Familie ist methodisch abgeschlossen:
-- Trials 018 und 019 scheiterten technisch an der 3.500-Candle-Datenhürde.
-- Trial 020 scheiterte technisch bei 3.322 gemeinsamen Candles.
-- Trial 021 lieferte einen vollständigen negativen Research-/Holdout-Befund.
-- Es werden keine weiteren Gap-Reversal-Varianten, Schwellenwerte oder Asset-Suchen
-  aus diesem Befund abgeleitet.
+Die Gap-Reversal-Familie ist abgeschlossen: technische Trials 018–020 und
+vollständiger negativer Trial 021; kein weiteres Gap-Reversal-Tuning.
 
-Die technische Portfolio-/Execution-Foundation ist in master integriert:
+Trial 022 zur lagged 63-Sessionen-Inverse-Volatilitäts-Allokation ist ebenfalls
+abgeschlossen und nicht promotet. Die Failure-Diagnose zeigt nur eine moderate
+Drawdown-Verbesserung bei gleichzeitigem Return-/PF-Rückgang gegenüber 50/50.
+
+Die Portfolio-/Execution-Foundation und der Execution-Kostenvertrag sind in master:
 - deterministische Portfolio-Constraint-Prüfung
-- explizites opt-in Kostenmodell
-- Round-Trip- und Short-Borrow-Kosten
-- keine Änderung der bisherigen Broker-/Backtest-Defaults
+- explizite Fee-/Slippage-/Spread-/Borrow-Semantik
+- fail-closed Erkennung des Legacy-PaperBroker-Kosten-Drifts
 
-Der nächste fachliche Schritt ist eine einzelne, präregistrierte Portfolio-Hypothese
-auf einem neuen, vollständig symbol-disjunkten Datensatz. Dabei bleiben die
-zugrunde liegenden Trend-/Cross-Sectional-Signale unverändert; nur die
-Portfolioaggregation wird als Forschungsfrage geprüft.
+Nächster Schwerpunkt:
+1. Kosten-/Execution-Semantik in den Research-Routinen zentral absichern.
+2. Champion/Challenger-Accounting für bestehende Kandidaten ergänzen.
+3. Erst danach die nächste wirklich orthogonale Alpha-Familie mit einer einzelnen
+   präregistrierten Hypothese validieren.
 
-Parallel bleiben Provenienz, Recovery, Paper-only-Sicherheit und dauerhafte
-Checkpoint-Archivierung Pflichtbestandteile.
-
-## Sicherheitsstatus
-
-- PAPER_ONLY = True
-- LIVE_TRADING_ENABLED = False
-- keine Live-Ausführung
-- keine Research-Orders
-- keine Gate-Lockerung
+Bestehende Signale, Parameter, Gewichte und Gates bleiben unverändert.
+Kein Live-Trading und keine automatische Produktionspromotion.
 
 ## Literaturreferenz für den Micro-Control
 
