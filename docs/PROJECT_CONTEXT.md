@@ -117,6 +117,10 @@ Trial verwendet werden.
 
 ## 6. Chat-Kontext: was aufgenommen werden darf
 
+Die aktuell verfügbare, projektbezogene Chat-Kontext-Evidenz ist zusätzlich in
+`docs/CHAT_CONTEXT_2026_09_24.md` dokumentiert. Sie enthält bewusst nur belastbare,
+dauerhafte Projektinformationen und keinen vollständigen Chat-Export.
+
 Verfügbare Chat-Evidenz ist ein legitimer Bestandteil des Projektkontexts, sofern sie tatsächlich
 zugänglich ist.
 
