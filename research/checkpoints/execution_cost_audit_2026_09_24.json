@@ -1,29 +1,35 @@
 {
   "schema_version": 1,
   "checkpoint_id": "EXECUTION-COST-AUDIT-2026-09-24",
-  "status": "completed",
+  "status": "completed_with_explicit_research_paper_path",
   "research_contract": {
-    "fee_bps": 10.0,
-    "slippage_bps": 5.0,
-    "one_way_total_bps": 15.0,
-    "round_trip_total_bps": 30.0
+    "fee_bps": 10,
+    "slippage_bps": 5,
+    "one_way_total_bps": 15,
+    "round_trip_total_bps": 30
   },
   "components": {
     "backtest_engine": {
-      "fee_bps": 10.0,
-      "slippage_bps": 5.0,
+      "fee_bps": 10,
+      "slippage_bps": 5,
       "research_compatible": true
     },
     "execution_cost_model": {
-      "fee_bps": 10.0,
-      "slippage_bps": 5.0,
+      "fee_bps": 10,
+      "slippage_bps": 5,
       "research_compatible": true
     },
     "paper_broker": {
-      "fee_bps": 5.0,
-      "slippage_bps": 5.0,
+      "fee_bps": 5,
+      "slippage_bps": 5,
       "research_compatible": false,
-      "legacy_default": true
+      "legacy_default": true,
+      "research_cost_opt_in": {
+        "fee_bps": 10,
+        "slippage_bps": 5,
+        "compatible": true,
+        "default_changed": false
+      }
     }
   },
   "no_historical_result_mutation": true,

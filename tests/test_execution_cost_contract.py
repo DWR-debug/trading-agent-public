@@ -44,3 +44,13 @@ def test_paper_broker_legacy_default_is_explicitly_flagged():
     assert status["paper_broker_default_slippage_bps"] == pytest.approx(5.0)
     assert status["research_compatible"] is False
     assert status["status"] == "LEGACY_BROKER_DEFAULT_NOT_RESEARCH_COMPATIBLE"
+
+
+
+def test_paper_broker_can_opt_in_to_research_cost_contract():
+    from execution.paper_broker import PaperBroker
+
+    broker = PaperBroker(cost_contract=ResearchExecutionCostContract())
+
+    assert broker.fee_rate == pytest.approx(0.001)
+    assert broker.slippage_rate == pytest.approx(0.0005)

@@ -13,9 +13,11 @@ Das opt-in ExecutionCostModel entspricht diesem Standard.
 Der aktuelle BacktestEngine verwendet dieselben Default-Werte und ist damit
 research-kompatibel.
 
-Der aktuelle PaperBroker verwendet dagegen historisch bedingt 5 bps Fee +
-5 bps Slippage. Damit ist sein Default nicht mit dem Research-Kostenvertrag
-kompatibel.
+Der aktuelle PaperBroker verwendet historisch bedingt weiterhin 5 bps Fee +
+5 bps Slippage als Legacy-Default. Dieser Default bleibt bewusst unverändert.
+Zusätzlich gibt es jetzt einen expliziten Opt-in-Pfad `cost_contract=ResearchExecutionCostContract()`,
+der den Broker für research-kompatible Paper-Simulation auf 10 bps Fee + 5 bps
+Slippage konfiguriert.
 
 ## Schutzmaßnahme
 
