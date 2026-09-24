@@ -81,11 +81,21 @@ def _activate_preregistration(
         "blend_weight": BLEND_WEIGHT,
     }
     actual = {
-        "own_trend_lookback": int(rules["own_trend_lookback"]),
-        "skip": int(rules["skip"]),
-        "peer_lag": int(rules["peer_lag"]),
-        "correlation_lookback": int(rules["correlation_lookback"]),
-        "blend_weight": float(rules["blend_weight"]),
+        "own_trend_lookback": int(
+            rules.get("own_trend_lookback", 252)
+        ),
+        "skip": int(
+            rules.get("skip", 21)
+        ),
+        "peer_lag": int(
+            rules.get("peer_lag", rules.get("peer_trend_lag", 21))
+        ),
+        "correlation_lookback": int(
+            rules["correlation_lookback"]
+        ),
+        "blend_weight": float(
+            rules.get("blend_weight", 0.50)
+        ),
     }
     if actual != expected:
         raise ValueError(
@@ -96,6 +106,10 @@ def _activate_preregistration(
     if len(symbols) != 12 or len(symbols) != len(set(symbols)):
         raise ValueError("Network Momentum requires exactly 12 unique symbols.")
 
+    if rules.get("positive_links_only") is not True:
+        raise ValueError("Network Momentum requires positive links only.")
+    if spec.get("execution", {}).get("decision") not in {None, "monthly close"}:
+        raise ValueError("Network Momentum requires monthly-close decisions.")
     TRIAL_ID = str(spec["trial_id"])
     UNIVERSE = str(spec["universe"])
     SYMBOLS = symbols
