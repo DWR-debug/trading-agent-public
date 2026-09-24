@@ -18,7 +18,7 @@ def test_sleeve_vol_warmup_is_none():
 
 
 def test_inverse_vol_parity_moves_weight_toward_lower_vol_sleeve():
-    trend = [0.001] * SLEEVE_VOL_WINDOW
+    trend = [0.0015 if i % 2 else 0.0005 for i in range(SLEEVE_VOL_WINDOW)]
     cs = [0.03 if i % 2 else -0.03 for i in range(SLEEVE_VOL_WINDOW)]
     trend_weight, cs_weight = _sleeve_parity_weights(trend, cs)
     assert trend_weight > 0.5
