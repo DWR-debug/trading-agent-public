@@ -57,7 +57,7 @@ jobs:
 
           task = default_research_queue().next_task()
           assert task is not None
-          assert task.task_id == "Q-001-T039-NETWORK-MOMENTUM"
+          assert task.task_id == "Q-001-T040-NETWORK-MOMENTUM-REPAIR"
           assert task.research_family == "cross_asset_network_momentum"
 
           assert prereg["search_scope"]["holdout_used_for_selection"] is False
