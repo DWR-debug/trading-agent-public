@@ -13,7 +13,7 @@ class OpenCloseGapReversalPolicy:
     """Equal-weight, parameter-free reversal of each asset's overnight gap."""
 
     symbols: tuple[str, ...] = (
-        "SPLG",
+        "SPYM",
         "IJR",
         "IEFA",
         "IEMG",
