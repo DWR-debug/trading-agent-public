@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "trial_id": "T-2026-09-24-041",
+  "recorded_at": "2026-09-24T21:40:21Z",
+  "status": "COVERAGE_PASSED_PERFORMANCE_PENDING",
+  "workflow": {
+    "run_id": 36062869642,
+    "artifact_id": 10834724131,
+    "artifact_name": "unified-research-36062869642",
+    "artifact_sha256": "f51fbc4bdc802fc2388d6516404c12b37fcf2232fe7b6d52aad99e9062ab2e74",
+    "artifact_expires_at": "2026-10-24T21:40:20Z"
+  },
+  "coverage": {
+    "trend": {
+      "universe": "validation_2026_09_24_portfolio_risk_control_trend",
+      "symbols": [
+        "VONE",
+        "VONG",
+        "VONV",
+        "VOE",
+        "VOT",
+        "IWB",
+        "IUSG",
+        "IUSV"
+      ],
+      "per_symbol_candles": 3500,
+      "common_calendar_count": 3500,
+      "coverage_fingerprint": "ebc08e73d9fad83da343e2ed15289b4ed05d4774346fb409994989f166469bab"
+    },
+    "cross_sectional": {
+      "universe": "validation_2026_09_24_portfolio_risk_control_cs",
+      "symbols": [
+        "IWS",
+        "IWP",
+        "IJS",
+        "IJJ",
+        "IJK"
+      ],
+      "per_symbol_candles": 3500,
+      "common_calendar_count": 3500,
+      "coverage_fingerprint": "091fdc69edec4541c39654fabf308d64bbb7b7b80a9861a2cbe5492cd8ba3bf8"
+    },
+    "missing_symbols": [],
+    "insufficient_symbols": [],
+    "errors": {},
+    "performance_evaluation": false,
+    "holdout_evaluation": false,
+    "holdout_used_for_selection": false,
+    "selection_used": false
+  },
+  "methodology_contract": {
+    "fixed_covariance_lookback_sessions": 63,
+    "monthly_rebalance": true,
+    "long_only_weights": [
+      0,
+      1
+    ],
+    "leverage": false,
+    "shorting": false,
+    "parameter_search": false,
+    "weight_search": false,
+    "gate_change": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
