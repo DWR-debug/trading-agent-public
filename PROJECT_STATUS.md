@@ -591,34 +591,26 @@ Kosten einen negativen Holdout-Befund.
 
 ### 5. Gesamtfokus ab jetzt
 
-Die Gap-Reversal-Familie ist methodisch abgeschlossen:
-- Trials 018 und 019 scheiterten technisch an der 3.500-Candle-Datenhürde.
-- Trial 020 scheiterte technisch bei 3.322 gemeinsamen Candles.
-- Trial 021 lieferte einen vollständigen negativen Research-/Holdout-Befund.
-- Es werden keine weiteren Gap-Reversal-Varianten, Schwellenwerte oder Asset-Suchen
-  aus diesem Befund abgeleitet.
+Die Gap-Reversal-Familie ist abgeschlossen: technische Trials 018–020 und
+vollständiger negativer Trial 021; kein weiteres Gap-Reversal-Tuning.
 
-Die technische Portfolio-/Execution-Foundation ist in master integriert:
+Trial 022 zur lagged 63-Sessionen-Inverse-Volatilitäts-Allokation ist ebenfalls
+abgeschlossen und nicht promotet. Die Failure-Diagnose zeigt nur eine moderate
+Drawdown-Verbesserung bei gleichzeitigem Return-/PF-Rückgang gegenüber 50/50.
+
+Die Portfolio-/Execution-Foundation und der Execution-Kostenvertrag sind in master:
 - deterministische Portfolio-Constraint-Prüfung
-- explizites opt-in Kostenmodell
-- Round-Trip- und Short-Borrow-Kosten
-- keine Änderung der bisherigen Broker-/Backtest-Defaults
+- explizite Fee-/Slippage-/Spread-/Borrow-Semantik
+- fail-closed Erkennung des Legacy-PaperBroker-Kosten-Drifts
 
-Der nächste fachliche Schritt ist eine einzelne, präregistrierte Portfolio-Hypothese
-auf einem neuen, vollständig symbol-disjunkten Datensatz. Dabei bleiben die
-zugrunde liegenden Trend-/Cross-Sectional-Signale unverändert; nur die
-Portfolioaggregation wird als Forschungsfrage geprüft.
+Nächster Schwerpunkt:
+1. Kosten-/Execution-Semantik in den Research-Routinen zentral absichern.
+2. Champion/Challenger-Accounting für bestehende Kandidaten ergänzen.
+3. Erst danach die nächste wirklich orthogonale Alpha-Familie mit einer einzelnen
+   präregistrierten Hypothese validieren.
 
-Parallel bleiben Provenienz, Recovery, Paper-only-Sicherheit und dauerhafte
-Checkpoint-Archivierung Pflichtbestandteile.
-
-## Sicherheitsstatus
-
-- PAPER_ONLY = True
-- LIVE_TRADING_ENABLED = False
-- keine Live-Ausführung
-- keine Research-Orders
-- keine Gate-Lockerung
+Bestehende Signale, Parameter, Gewichte und Gates bleiben unverändert.
+Kein Live-Trading und keine automatische Produktionspromotion.
 
 ## Literaturreferenz für den Micro-Control
 
