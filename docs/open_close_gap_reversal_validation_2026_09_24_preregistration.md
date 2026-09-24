@@ -25,7 +25,7 @@ keine Asset-Auswahl.
 
 Universum:
 
-SPLG, IJR, IEFA, IEMG, IVE, IVW, VOE, VOT
+SPYM, IJR, IEFA, IEMG, IVE, IVW, VOE, VOT
 
 Die verwendeten Preise werden aus Yahoo-OHLC und Adjusted Close so rekonstruiert,
 dass Open und Close konsistent split-/dividendenbereinigt werden. Das Signal
