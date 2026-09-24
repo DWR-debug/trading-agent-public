@@ -86,8 +86,30 @@ def run_preflight(
             raise RuntimeError(
                 "Repair successor with symbol overlap requires parent_trial_id."
             )
+    repair_successors = set()
+    preregistration_dir = ROOT / "research" / "preregistrations"
+    for candidate in preregistration_dir.glob("trial_*.json"):
+        try:
+            successor = json.loads(
+                candidate.read_text(encoding="utf-8")
+            )
+        except (OSError, json.JSONDecodeError):
+            continue
+        if (
+            successor.get("trial_type") == "repair_successor"
+            and successor.get("parent_trial_id") == trial_id
+            and successor.get("disjointness", {}).get(
+                "allowed_overlap_universes", []
+            ) == [universe_name]
+        ):
+            repair_successors.add(successor.get("universe"))
+
     for other in list_universes():
-        if other.name == universe_name or other.name in allowed_overlap:
+        if (
+            other.name == universe_name
+            or other.name in allowed_overlap
+            or other.name in repair_successors
+        ):
             continue
         overlap = sorted(target_set.intersection(other.symbols))
         if overlap:
