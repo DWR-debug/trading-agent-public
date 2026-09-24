@@ -1,3 +1,25 @@
+## Architektur-Checkpoint 2026-09-24
+
+Aktueller Entwicklungszweig: architecture-2026-09-24
+
+Neu umgesetzt:
+- fail-closed Strategy Lifecycle und Research Graveyard
+- Adversarial Validation primitives
+- Champion/Challenger Evidence Contract
+- Portfolio Risk Overlay
+- point-in-time GDELT Event Parser und Event Intelligence
+- Trial 017 Political Event Intelligence Baseline
+- deterministische Timestamp-/Kalender-Ausrichtung für Candidate Validation
+
+Der bestehende Production Candidate bleibt BLOCKED. PAPER_ONLY=True,
+LIVE_TRADING_ENABLED=False und orders_enabled=False bleiben unverändert.
+
+Nächster Gate:
+- vollständige CI-Suite
+- Review des Timestamp-Vertrags
+- anschließend PR-Merge nur bei grüner Suite
+- danach Trial-017-Datenausführung zunächst als Research-Control
+
 # Trading Agent – Projektstatus und Checkpoint
 
 Stand: 2026-09-20

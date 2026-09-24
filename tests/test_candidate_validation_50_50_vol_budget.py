@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, timezone
 from types import SimpleNamespace
 
 from automation.candidate_validation_50_50_vol_budget import (
@@ -145,3 +146,14 @@ def test_total_return_delta_is_explicit():
 def test_raw_candle_return_split_is_exact():
     assert TARGET_COUNT - 2 == RESEARCH_COUNT + HOLDOUT_COUNT
     assert HOLDOUT_COUNT == 700
+
+
+from automation.candidate_validation_50_50_vol_budget import _align_assets_by_latest_start
+
+def test_latest_start_calendar_preserves_target_length():
+    start = datetime(2026, 1, 1, tzinfo=timezone.utc)
+    early = tuple(SimpleNamespace(timestamp=start + timedelta(days=i), open=100.0, close=100.0) for i in range(6))
+    late = tuple(SimpleNamespace(timestamp=start + timedelta(days=i), open=100.0, close=100.0) for i in range(1, 6))
+    aligned = _align_assets_by_latest_start({"early": early, "late": late})
+    assert all(len(series) == 5 for series in aligned.values())
+    assert [bar.timestamp for bar in aligned["early"]] == [bar.timestamp for bar in late]

@@ -74,6 +74,28 @@ def _manifest(path: Path, universe_name: str) -> dict:
     return data
 
 
+def _align_assets_by_latest_start(assets: dict[str, tuple]) -> dict[str, tuple]:
+    if not assets:
+        return {}
+    starts = {symbol: bars[0].timestamp for symbol, bars in assets.items() if bars}
+    if len(starts) != len(assets):
+        raise ValueError("All assets need at least one candle.")
+    reference_symbol = max(starts, key=starts.get)
+    reference_timestamps = tuple(bar.timestamp for bar in assets[reference_symbol])
+    reference_set = set(reference_timestamps)
+    aligned: dict[str, tuple] = {}
+    for symbol, bars in assets.items():
+        by_timestamp = {bar.timestamp: bar for bar in bars}
+        missing = reference_set.difference(by_timestamp)
+        if missing:
+            sample = ", ".join(sorted(ts.isoformat() for ts in missing)[:3])
+            raise ValueError(
+                f"{symbol}: reference calendar has missing timestamps ({sample})."
+            )
+        aligned[symbol] = tuple(by_timestamp[timestamp] for timestamp in reference_timestamps)
+    return aligned
+
+
 def _assets(data_dir: Path, manifest: dict) -> dict[str, tuple]:
     out = {}
     for item in manifest["datasets"]:
@@ -83,20 +105,17 @@ def _assets(data_dir: Path, manifest: dict) -> dict[str, tuple]:
             expected_count=int(item["candle_count"]),
         )
         if len(bars) != TARGET_COUNT or dataset_fingerprint(bars) != item["fingerprint"]:
-            raise ValueError(f"{symbol}: Dataset-Identität/Fingerprint nicht verifiziert.")
+            raise ValueError(f"{symbol}: Dataset-Identität/Fingerprint stimmt nicht.")
         out[symbol] = bars
-    common = set.intersection(
-        *[{bar.timestamp for bar in bars} for bars in out.values()]
-    )
-    if len(common) < 3300:
-        raise ValueError(f"Zu wenig gemeinsame Handelstage: {len(common)}")
-    ordered = sorted(common)
-    return {
-        symbol: tuple({bar.timestamp: bar for bar in bars}[ts] for ts in ordered)
-        for symbol, bars in out.items()
-    }
 
-
+    if not out:
+        raise ValueError("Mindestens ein Asset wird benötigt.")
+    if len({len(bars) for bars in out.values()}) != 1:
+        raise ValueError("Asset-Kalender müssen dieselbe Candle-Anzahl besitzen.")
+    aligned = _align_assets_by_latest_start(out)
+    if len(next(iter(aligned.values()))) != TARGET_COUNT:
+        raise ValueError("Referenzkalender-Ausrichtung hat die Zielhistorie verändert.")
+    return aligned
 def _cs_weights(assets: dict[str, tuple]) -> tuple[dict[str, float], ...]:
     n = min(len(v) for v in assets.values())
     current = {s: 0.0 for s in assets}
@@ -176,39 +195,75 @@ def _return_rows(
     weights: tuple[dict[str, float], ...],
     adjusted: dict[str, dict[datetime, float]],
 ) -> tuple[dict, ...]:
-    n = min(len(v) for v in assets.values())
-    previous = {s: 0.0 for s in assets}
-    rows = []
-    for i in range(n - 2):
-        gross_open = 0.0
-        gross_close = 0.0
-        gross_adjusted_close = 0.0
-        turnover = 0.0
-        for symbol, bars in assets.items():
-            weight = weights[i].get(symbol, 0.0)
-            r_open = bars[i + 2].open / bars[i + 1].open - 1.0
-            r_close = bars[i + 2].close / bars[i + 1].close - 1.0
-            adj = adjusted[symbol]
-            r_adj = (
-                adj[bars[i + 2].timestamp] / adj[bars[i + 1].timestamp] - 1.0
+    """Build two-session PIT returns by timestamp, never by position."""
+    if not assets:
+        return ()
+    for symbol, bars in assets.items():
+        if len(weights) != len(bars):
+            raise ValueError(
+                f"weights length for {symbol} ({len(weights)}) must match asset length ({len(bars)})."
             )
-            gross_open += weight * r_open
-            gross_close += weight * r_close
-            gross_adjusted_close += weight * r_adj
-            turnover += abs(weight - previous[symbol])
-            previous[symbol] = weight
-        rows.append(
-            {
-                "timestamp": bars[i + 2].timestamp,
-                "gross_open": gross_open,
-                "gross_close": gross_close,
-                "gross_adjusted_close": gross_adjusted_close,
-                "turnover": turnover,
+        if len(bars) < 3:
+            raise ValueError(f"{symbol}: at least 3 candles are required.")
+
+    per_asset: dict[str, dict[datetime, dict[str, float]]] = {}
+    realization_timestamps: set[datetime] = set()
+    for symbol, bars in assets.items():
+        weight_by_time = {
+            bars[index].timestamp: float(weights[index].get(symbol, 0.0))
+            for index in range(len(bars))
+        }
+        adjusted_values = adjusted.get(symbol)
+        if adjusted_values is None:
+            raise ValueError(f"Missing adjusted-close series for {symbol}.")
+        rows = {}
+        previous_weight = 0.0
+        for index in range(2, len(bars)):
+            decision_timestamp = bars[index - 2].timestamp
+            previous_timestamp = bars[index - 1].timestamp
+            timestamp = bars[index].timestamp
+            if not previous_timestamp < timestamp:
+                raise ValueError(f"{symbol}: timestamps must be strictly increasing.")
+            try:
+                adjusted_return = adjusted_values[timestamp] / adjusted_values[previous_timestamp] - 1.0
+            except KeyError as exc:
+                raise ValueError(
+                    f"{symbol}: adjusted close missing at {exc.args[0]!s}."
+                ) from exc
+            target_weight = weight_by_time[decision_timestamp]
+            rows[timestamp] = {
+                "gross_open": bars[index].open / bars[index - 1].open - 1.0,
+                "gross_close": bars[index].close / bars[index - 1].close - 1.0,
+                "gross_adjusted_close": adjusted_return,
+                "turnover": abs(target_weight - previous_weight),
+                "weight": target_weight,
             }
-        )
-    return tuple(rows)
+            previous_weight = target_weight
+            realization_timestamps.add(timestamp)
+        per_asset[symbol] = rows
 
+    common = sorted(set.intersection(*(set(rows) for rows in per_asset.values())))
+    if len(common) < 1:
+        raise ValueError("No common realization timestamps after PIT construction.")
 
+    output = []
+    for timestamp in common:
+        gross_open = gross_close = gross_adjusted_close = turnover = 0.0
+        for symbol, rows in per_asset.items():
+            row = rows[timestamp]
+            weight = row["weight"]
+            gross_open += weight * row["gross_open"]
+            gross_close += weight * row["gross_close"]
+            gross_adjusted_close += weight * row["gross_adjusted_close"]
+            turnover += row["turnover"]
+        output.append({
+            "timestamp": timestamp,
+            "gross_open": gross_open,
+            "gross_close": gross_close,
+            "gross_adjusted_close": gross_adjusted_close,
+            "turnover": turnover,
+        })
+    return tuple(output)
 def _align(
     trend: dict[str, tuple],
     trend_weights: tuple[dict[str, float], ...],
