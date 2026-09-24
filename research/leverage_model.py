@@ -69,10 +69,8 @@ def period_return(
     Values between -1 and +1 represent partial exposure. The leverage
     multiple scales that signed exposure.
     """
-    if not isfinite(underlying_return) or underlying_return <= -1.0:
-        raise LeverageModelError(
-            "underlying_return must be finite and greater than -100%."
-        )
+    if not isfinite(underlying_return):
+        raise LeverageModelError("underlying_return must be finite.")
     if not isfinite(signed_exposure):
         raise LeverageModelError("signed_exposure must be finite.")
 
@@ -116,10 +114,8 @@ def portfolio_period_return(
     `gross_exposure` is its absolute notional before leverage, and
     `short_exposure` is the absolute short notional before leverage.
     """
-    if not isfinite(underlying_return) or underlying_return <= -1.0:
-        raise LeverageModelError(
-            "underlying_return must be finite and greater than -100%."
-        )
+    if not isfinite(underlying_return):
+        raise LeverageModelError("underlying_return must be finite.")
     if not isfinite(gross_exposure) or gross_exposure < 0.0:
         raise LeverageModelError(
             "gross_exposure must be finite and >= 0."
