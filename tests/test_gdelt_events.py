@@ -36,3 +36,11 @@ def test_daily_dateonly_is_supported():
     values[56] = "20250101"
     event = parse_event_row(values)
     assert event.date_added.isoformat() == "2025-01-01T00:00:00+00:00"
+
+
+def test_non_strict_parser_counts_skipped_rows():
+    bad = "\t".join([""] * 10) + "\n"
+    stats = {}
+    assert tuple(parse_event_tsv(bad, strict=False, stats=stats)) == ()
+    assert stats["rows_seen"] == 1
+    assert stats["rows_skipped"] == 1
