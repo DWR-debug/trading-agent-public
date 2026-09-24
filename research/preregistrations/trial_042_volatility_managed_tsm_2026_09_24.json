@@ -11,7 +11,7 @@
     "EES",
     "EWX",
     "HDV",
-    "SPHD",
+    "SCHA",
     "VOOG",
     "VOOV",
     "OEF",
@@ -88,5 +88,15 @@
     "live_trading_enabled": false,
     "orders_enabled": false,
     "automatic_promotion": false
+  },
+  "replacement": {
+    "replaced_symbol": "SPHD",
+    "replacement_symbol": "SCHA",
+    "reason": "Coverage DATA_INVALID: SPHD returned 3494 of 3500 required candles.",
+    "prior_coverage_workflow": 36066487376,
+    "prior_coverage_fingerprint": "26a4f5531b7b27648a49badab64b5464ecc68f04009be21c6a25057ec024393e",
+    "no_rule_change": true,
+    "no_gate_change": true,
+    "no_holdout_use": true
   }
 }

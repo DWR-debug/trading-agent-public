@@ -375,7 +375,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
             "Fresh fully symbol-disjoint ETF universe for Trial 042; fixed "
             "long/short 252-day time-series momentum with de-risk-only inverse-variance scaling."
         ),
-        symbols=("DLS", "DEM", "EES", "EWX", "HDV", "SPHD", "VOOG", "VOOV", "OEF", "IWV"),
+        symbols=("DLS", "DEM", "EES", "EWX", "HDV", "SCHA", "VOOG", "VOOV", "OEF", "IWV"),
         target_count=3500,
     ),
 )
