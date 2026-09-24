@@ -191,7 +191,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: event-alpha-validation-2026-09-24-\${{ github.run_id }}
+          name: event-alpha-validation-2026-09-24-${{ github.run_id }}
           path: |
             research/event_alpha_validation_2026_09_24/report.json
             research/event_alpha_validation_2026_09_24/data_manifest.json
