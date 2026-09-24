@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "updated": "2026-09-24",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "871cd54244c5343c23b3720b17880e87df5e4979",
+  "master_commit": "ca66972cdbba4dcc684a02da7adfff37847c2754",
   "latest_formal_trial": "T-2026-09-24-040",
   "latest_trial_status": "BLOCKED",
   "next_reserved_trial": "NONE_PENDING_NEW_PREREGISTRATION",
-  "next_research_focus": "Adversarial failure diagnosis of T040 and prior salvageable observations; no Network Momentum tuning",
+  "next_research_focus": "Live/updated-data discovery via fixed diagnostics; no T040 tuning",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -56,7 +56,9 @@
     "next_trial_candidate_selection": "coverage_only_fixed_pool",
     "t040_formal_completed": true,
     "t040_negative_evidence_archived": true,
-    "current_queue_task": "Q-002-ADVERSARIAL-FAILURE-DIAGNOSIS",
-    "automatic_formal_execution_requires_preregistration": true
+    "current_queue_task": "Q-003-LIVE-DISCOVERY",
+    "automatic_formal_execution_requires_preregistration": true,
+    "last_completed_queue_task": "Q-002-ADVERSARIAL-FAILURE-DIAGNOSIS",
+    "last_completed_diagnosis_fingerprint": "92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea"
   }
 }

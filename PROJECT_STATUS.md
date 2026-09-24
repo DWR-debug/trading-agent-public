@@ -51,11 +51,19 @@ T040 wurde am 24.09.2026 nach bestandenem Coverage-Gate formal ausgewertet und a
 Die Network-Momentum-Variante wird deshalb **nicht nachoptimiert**. Die Evidenz wird als
 negativer Befund für genau diesen präregistrierten Mechanismus archiviert.
 
+### Abgeschlossener Diagnoseschritt
+
+Die **Adversarial Failure-Diagnose** von T040 ist abgeschlossen und als rein ableitende Evidenz
+archiviert. Sie verwendet ausschließlich den unveränderlichen T040-Evidence-Record und nimmt
+keine Parameter-, Asset- oder Holdout-Auswahl vor. Diagnose-Fingerprint:
+`92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea`.
+
 ### Nächster Forschungsschritt
 
-**Adversarial Failure-Diagnose**: rein ableitende Untersuchung der T040-Versagenssignatur und
-relevanter früherer salvageable Beobachtungen. Ziel ist Ursachenstrukturierung vor einer neuen
-Performancehypothese, ohne Parameter-/Asset-/Holdout-Auswahl.
+**Live-/Updated-Data Discovery**: feste Markt- und Lead-Lag-Diagnostiken auf aktuellen bzw.
+aktualisierten Daten, ausschließlich als Discovery-Artefakte. Eine Beobachtung ist kein
+Profitabilitätsnachweis; ein daraus abgeleiteter Kandidat benötigt vor jeder Performance-
+auswertung eine neue Präregistrierung und denselben unveränderten Evidence-Vertrag.
 
 ## T039 Engine — technische Umsetzung
 
