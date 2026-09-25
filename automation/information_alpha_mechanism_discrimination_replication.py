@@ -8,6 +8,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 from config import settings
+from data.gdelt_events import GDELTDataUnavailableError
 from automation.information_alpha_discovery import (
     DEFAULT_ASSETS,
     FIXED_FEATURES,
@@ -65,12 +66,56 @@ def collect_q016_chunk(
     _, start, end = _chunk_spec(chunk_id)
     root = Path(output_dir)
     root.mkdir(parents=True, exist_ok=True)
-    events, parse_stats = _load_events(start, end, None)
+    try:
+        events, parse_stats = _load_events(start, end, None)
+    except GDELTDataUnavailableError as exc:
+        payload = {
+            "schema_version": "1.0",
+            "task_id": TASK_ID,
+            "chunk_id": chunk_id,
+            "status": "DATA_INSUFFICIENT",
+            "start": start.isoformat(),
+            "end": end.isoformat(),
+            "assets": list(DEFAULT_ASSETS),
+            "fixed_features": list(FIXED_FEATURES),
+            "daily_event_features": {},
+            "data_quality": {
+                "event_rows_seen": 0,
+                "event_rows_skipped": 0,
+                "missing_export": {
+                    "day": exc.day,
+                    "url": exc.url,
+                    "status_code": exc.status_code,
+                },
+            },
+            "point_in_time_contract": {
+                "event_feature_window": "previous_market_day < event_day < target_market_day",
+                "same_day_return_used": False,
+            },
+            "selection_used": False,
+            "holdout_used": False,
+            "parameter_search_used": False,
+            "feature_selection_used": False,
+            "asset_selection_used": False,
+            "horizon_selection_used": False,
+            "performance_trial_authorized": False,
+            "paper_only": True,
+            "live_trading_enabled": False,
+            "orders_enabled": False,
+            "automatic_promotion": False,
+        }
+        canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+        payload["fingerprint"] = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+        path = root / f"q016_chunk_{chunk_id}.json"
+        path.write_text(json.dumps(payload, indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
+        return payload
+
     daily = _daily_event_features(events)
     payload = {
         "schema_version": "1.0",
         "task_id": TASK_ID,
         "chunk_id": chunk_id,
+        "status": "COMPLETED_DATA_COLLECTION",
         "start": start.isoformat(),
         "end": end.isoformat(),
         "assets": list(DEFAULT_ASSETS),
