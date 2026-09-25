@@ -55,7 +55,7 @@ mkdir -p research/agent_outputs
 stamp="$(date -u +%Y%m%dT%H%M%SZ)"
 out="research/agent_outputs/AGENT-HYPOTHESIS-ROUND-001-${stamp}.md"
 
-prompt='Execute AGENT-HYPOTHESIS-ROUND-001. Use frozen T041/T042/T044/T045 and Q011 evidence. Generate multiple orthogonal hypotheses, competing explanations, mechanism synthesis, falsification criteria, required data, point-in-time rules, confounders, minimal deterministic preflights, expected null results, and conditions for preregistration. Do not modify files, execute shell commands, select on holdout data, change gates, alter existing trials, or trigger performance trials. Return a compact research memo for the primary research agent. Treat all output as ideas, not evidence. Explicitly report uncertainty and missing evidence.'
+prompt='Execute AGENT-HYPOTHESIS-ROUND-001. Read the frozen T041/T042/T044/T045 and Q010/Q011 evidence from the repository using only the available read-only tools. Generate multiple orthogonal hypotheses, competing explanations, mechanism synthesis, falsification criteria, required data, point-in-time rules, confounders, minimal deterministic preflights, expected null results, and conditions for preregistration. Do not modify files, execute shell commands, select on holdout data, change gates, alter existing trials, or trigger performance trials. Return a compact research memo for the primary research agent. Treat all output as ideas, not evidence. Explicitly report uncertainty and missing evidence.'
 
 {
   printf '# AGENT-HYPOTHESIS-ROUND-001\n\n'
@@ -65,9 +65,9 @@ prompt='Execute AGENT-HYPOTHESIS-ROUND-001. Use frozen T041/T042/T044/T045 and Q
   copilot \
     --agent=information-hypothesis-researcher \
     --autopilot \
-    --max-autopilot-continues=5 \
+    --max-autopilot-continues=1 \
     --no-ask-user \
-    --available-tools='read,search' \
+    --available-tools='view,grep,glob' \
     --prompt "$prompt" 2>&1
 } | tee "$out"
 
