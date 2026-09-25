@@ -110,7 +110,7 @@ def _alfred_vintage_dates(series: str) -> tuple[list[str], HttpSnapshot]:
     dates = sorted(
         set(
             re.findall(
-                r"<option[^>]+value=[\"'](20\\d{2}-\\d{2}-\\d{2})[\"']",
+                r"<option[^>]+value=[\"'](20\d{2}-\d{2}-\d{2})[\"']",
                 html,
                 flags=re.IGNORECASE,
             )
