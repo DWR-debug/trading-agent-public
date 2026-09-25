@@ -85,3 +85,5 @@ def test_current_cross_trial_diagnosis_covers_t041_to_t045():
     assert "orthogonal information/alpha mechanism" in result[
         "next_research_question"
     ]
+
+# Q010 CI synchronization marker: schema-coverage assertions are intentionally explicit.
