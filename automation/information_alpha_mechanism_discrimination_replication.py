@@ -52,7 +52,7 @@ def _chunk_spec(chunk_id: str) -> tuple[str, date, date]:
 
 
 def _assert_temporal_disjointness() -> None:
-    if not (DEFAULT_END < REFERENCE_START and REFERENCE_END < DEFAULT_START):
+    if not DEFAULT_END < REFERENCE_START:
         raise AssertionError("Q016 window must be fully disjoint from the Q015 reference window.")
 
 
