@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "updated": "2026-09-25",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "PENDING_T044_FORMAL",
-  "latest_formal_trial": "T-2026-09-25-043",
-  "latest_trial_status": "DATA_INVALID",
-  "next_reserved_trial": "T-2026-09-25-044",
-  "next_research_focus": "T044 coverage preflight using 3520 raw candles to construct the fixed 3500-candle common calendar; hypothesis and gates unchanged.",
+  "master_commit": "PENDING_T045_PREREG",
+  "latest_formal_trial": "T-2026-09-25-044",
+  "latest_trial_status": "BLOCKED",
+  "next_reserved_trial": "T-2026-09-25-045",
+  "next_research_focus": "T045 fixed position-lifecycle exit control: one pre-registered ATR trailing exit, fresh symbol-disjoint universe, no parameter search.",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -42,8 +42,8 @@
     ".github/workflows/research-orchestrator.yml",
     ".github/workflows/paper-30-day-experiment-harness.yml"
   ],
-  "current_preregistered_trial": "T-2026-09-25-044",
-  "current_trial_status": "COVERAGE_PASSED_FORMAL_AUTHORIZED",
+  "current_preregistered_trial": "T-2026-09-25-045",
+  "current_trial_status": "PREREGISTRATION_PENDING",
   "engineering_notes": {
     "t039_preregistered": true,
     "coverage_preflight_active": true,
@@ -56,7 +56,7 @@
     "next_trial_candidate_selection": "coverage_only_fixed_pool",
     "t040_formal_completed": true,
     "t040_negative_evidence_archived": true,
-    "current_queue_task": "Q-008-T044-TSM-SIGNAL-CONSISTENCY-REPAIR",
+    "current_queue_task": "Q-009-T045-POSITION-LIFECYCLE-EXIT-CONTROL",
     "automatic_formal_execution_requires_preregistration": true,
     "last_completed_queue_task": "Q-005-CHAMPION-CHALLENGER",
     "last_completed_diagnosis_fingerprint": "92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea",
@@ -167,7 +167,12 @@
     "t044_formal_retry_authorization_issued": true,
     "t044_formal_retry_authorization_date": "2026-09-25",
     "t044_formal_retry_2_authorization_issued": true,
-    "t044_formal_retry_2_authorization_date": "2026-09-25"
+    "t044_formal_retry_2_authorization_date": "2026-09-25",
+    "t044_scientific_outcome": "NO_PROMOTION_EVIDENCE",
+    "t044_formal_completed": true,
+    "t045_preregistered": true,
+    "t045_coverage_status": "PENDING",
+    "t045_formal_performance_allowed": false
   },
   "agent_usage_efficiency": {
     "policy": "deterministic_actions_for_computation_and_agent_use_for_architecture_review_synthesis",
