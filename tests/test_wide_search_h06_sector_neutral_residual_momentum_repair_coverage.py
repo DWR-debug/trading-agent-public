@@ -36,7 +36,7 @@ def test_h06_research_geometry_is_fixed():
 
 def test_h06_preregistered_governance_is_coverage_only():
     source = __import__(
-        "automation.wide_search_h06_sector_neutral_residual_momentum_coverage",
+        "automation.wide_search_h06_sector_neutral_residual_momentum_repair_coverage",
         fromlist=["run"],
     )
     assert source.UNIVERSE == "validation_2026_09_25_sector_neutral_residual_momentum_repair"
