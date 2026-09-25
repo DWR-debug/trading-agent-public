@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "checkpoint_type": "current_project_snapshot",
+  "generated_at_utc": "2026-09-25T18:25:10Z",
+  "repository": "DWR-debug/trading-agent-public",
+  "master_commit_at_checkpoint_creation": "92fda6c2dcb9778697ad355f1156ffb9c3fb541a",
+  "q016": {
+    "task_id": "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION",
+    "workflow_run_id": 36172112861,
+    "head_sha": "4e553a07fcc64781e0f5417b1ef0b99b040a65b3",
+    "workflow_conclusion": "success",
+    "quality_job": {
+      "tests_passed": 768,
+      "warnings": 2
+    },
+    "aggregate_status": "DATA_INSUFFICIENT",
+    "result_fingerprint": "42250f4c34f3d6ed6a14014fc1c01adf00fadd7427429b783d5fda4de39d48fc",
+    "input_fingerprint": "9cfaeb02ce7113a821f3d75c51feb87b1920edf7521e9749a0fe863e25df00d4",
+    "observations": 0,
+    "event_windows": 0,
+    "performance_trial_authorized": false,
+    "selection_used": false,
+    "artifacts": {
+      "final": {
+        "id": 10881248411,
+        "sha256": "sha256:129958c18cf8e27dbb6ea570f847848456f006cf3bb196ec264a3a244f0b03da"
+      },
+      "chunk_01": 10880998423,
+      "chunk_02": 10880648535,
+      "chunk_03": 10881442858,
+      "chunk_04": 10880947567
+    }
+  },
+  "continuity": {
+    "chat_entrypoint": "docs/TRADING_AGENT_CHAT_ENTRYPOINT.md",
+    "development_orchestration": "docs/DEVELOPMENT_ORCHESTRATION.md",
+    "handoff_rule": "The user-provided 'aktueller Stand aus dem letzten Chat' is handoff context and must be verified against canonical repository/evidence sources before adoption as fact."
+  },
+  "agent_integration": {
+    "copilot_repository_instructions": ".github/copilot-instructions.md",
+    "engineer_agent_profile": ".github/agents/trading-agent-engineer.agent.md",
+    "research_reviewer_agent_profile": ".github/agents/trading-agent-research-reviewer.agent.md",
+    "setup_workflow": ".github/workflows/copilot-setup-steps.yml",
+    "root_agent_contract": "AGENTS.md",
+    "external_enablement_required": true
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
