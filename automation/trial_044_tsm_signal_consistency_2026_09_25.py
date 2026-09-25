@@ -223,7 +223,7 @@ def run_validation(data_dir,manifest_path,output_path):
             "hypothesis":"Replace only the fixed SMA 50/200 long-only trend signal with fixed long-only unanimous TSM 63/126/252 while preserving the CS sleeve, 10% volatility budget, costs and PIT execution.",
             "source":{"universe":UNIVERSE,"trend_symbols":list(TREND_SYMBOLS),"cross_sectional_symbols":list(CS_SYMBOLS),"portfolio_symbols":list(PORTFOLIO_SYMBOLS),
                      "target_candles":TARGET_COUNT,"common_returns":len(challenger_rows),"research_count":RESEARCH_COUNT,"holdout_count":HOLDOUT_COUNT,
-                     "fully_symbol_disjoint":True,"signal_variant_count":1,"repair_successor":True,"parent_trial_id":"T-2026-09-25-043","manifest_fingerprint":manifest["manifest_fingerprint"]},
+                     "fully_symbol_disjoint":True,"signal_variant_count":1,"repair_successor":True,"parent_trial_id":"T-2026-09-25-043","coverage_fingerprint":manifest["coverage_fingerprint"]},
             "methodology":{"baseline":"fixed 50/50 SMA 50/200 trend sleeve + 12-1 CS Top-2 + 10% volatility budget",
                            "intervention":"replace only trend signal with long-only unanimous 63/126/252 session consensus",
                            "trend_rebalance":"month-end only","trend_volatility_weighting_window":TREND_VOL_WINDOW,"trend_asset_weight_cap":MAX_ASSET_WEIGHT,
