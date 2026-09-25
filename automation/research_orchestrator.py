@@ -19,7 +19,7 @@ from automation.network_momentum_lab import run_trial as run_t039_trial
 from automation.coverage_candidate_discovery import run_discovery
 from automation.adversarial_failure_diagnosis import write_report as write_failure_diagnosis
 from automation.cross_trial_failure_diagnosis import (    write_report as write_cross_trial_diagnosis,    write_current_report as write_current_cross_trial_diagnosis,)
-from automation.information_alpha_discovery import run_discovery as run_q011_discovery,
+from automation.information_alpha_discovery import run_discovery as run_q011_discovery
 from automation.portfolio_risk_control_min_variance import run_trial as run_t041_trial
 from automation.volatility_managed_tsm import run_trial as run_t042_trial
 from automation.trial_043_tsm_signal_consistency_2026_09_25 import run_validation as run_t043_trial
