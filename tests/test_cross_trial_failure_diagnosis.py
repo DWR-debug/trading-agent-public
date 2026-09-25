@@ -45,3 +45,13 @@ def test_current_cross_trial_diagnosis_covers_t041_to_t045():
     assert result["next_research_question"].startswith(
         "Before reserving another performance trial"
     )
+
+
+def test_current_cross_trial_diagnosis_preserves_unknown_t044_gate_detail():
+    result = diagnose_current(Path("research/evidence/trial_ledger.json"))
+    t044 = next(
+        item for item in result["trial_summaries"]
+        if item["trial_id"] == "T-2026-09-25-044"
+    )
+    assert t044["failure_modes"] == ["gate_failure_unspecified"]
+    assert "gate_failure_unspecified" in result["cross_trial_patterns_by_id"]
