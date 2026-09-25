@@ -322,7 +322,7 @@ def run_discovery(
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        json.dumps(report, indent=2, ensure_ascii=False, allow_nan=False) + "\\n",
+        json.dumps(report, indent=2, ensure_ascii=False, allow_nan=False) + "\n",
         encoding="utf-8",
     )
     return report
