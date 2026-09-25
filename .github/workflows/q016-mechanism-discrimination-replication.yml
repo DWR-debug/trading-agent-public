@@ -39,7 +39,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$GITHUB_EVENT_NAME" = "push"
-          git merge-base --is-ancestor 9eae6a32e60c97ec964caf6fdf67573ad2d370fb HEAD
+          git merge-base --is-ancestor 385377d61cda9120c2309b0c8253f37c17a42d5e HEAD
           python - <<'PY'
           import json
           from pathlib import Path
