@@ -80,6 +80,26 @@ jobs:
           assert task.task_id == "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC"
           assert task.research_family == "orthogonal_information_alpha_mechanism_discrimination"
 
+          q015 = json.loads(Path(
+              "research/preregistrations/q015_information_alpha_mechanism_discrimination_2026_09_25.json"
+          ).read_text(encoding="utf-8"))
+          assert q015["task_id"] == "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC"
+          assert q015["source_artifacts"]["workflow_run_id"] == 36158184847
+          assert q015["fixed_assets"] == ["SPY", "TLT", "GLD"]
+          assert q015["fixed_features"] == [
+              "event_count", "attention_score", "source_breadth",
+              "article_count", "negative_goldstein", "mean_tone",
+          ]
+          assert q015["fixed_mechanism_groups"] == {
+              "intensity_breadth": ["event_count", "attention_score", "source_breadth", "article_count"],
+              "severity": ["negative_goldstein"],
+              "tone": ["mean_tone"],
+          }
+          assert q015["diagnostic_method"]["group_decomposition"].startswith("Exact three-group Shapley decomposition")
+          assert q015["minimum_data_contract"]["complete_event_observations_per_asset_horizon"] == 40
+          assert q015["performance_trial_authorized"] is False
+          assert all(value is False for value in q015["selection"].values())
+
           expected = set(prereg["symbols"])
           for existing in list_universes():
               if existing.name == prereg["universe"]:
