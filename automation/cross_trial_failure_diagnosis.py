@@ -364,7 +364,12 @@ def _current_failure_modes(trial: dict) -> list[str]:
             "failed_absolute", []
         )
     )
-    failed_non_deterioration = list(evidence.get("failed_non_deterioration", []))
+    failed_non_deterioration = list(
+        evidence.get("failed_non_deterioration", [])
+    )
+    failed_non_deterioration.extend(
+        evidence.get("outcome", {}).get("failed_non_deterioration", [])
+    )
     failed_non_deterioration.extend(
         evidence.get("outcome", {}).get("gate_results", {}).get(
             "failed_non_deterioration", []
