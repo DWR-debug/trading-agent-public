@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "recorded_on": "2026-09-25",
+  "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
+  "current_stage": "Q017_G3_COVERAGE_FIRST",
+  "verified_facts": [
+    "canonical_repository=DWR-debug/trading-agent-public",
+    "AGENT-001 merged with green CI on both runner architectures",
+    "Q016=DATA_INSUFFICIENT; observations=0; event_windows=0; performance_trial_authorized=false",
+    "Q010 reviewed 4 performance-valid trials; no complete evidence-gate pass",
+    "Q017-G3 is coverage-only and has no performance authorization"
+  ],
+  "implications": [
+    "current bottleneck is robust risk/control-relative evidence rather than positive holdout return alone",
+    "coverage and point-in-time provenance must be established before any performance evaluation"
+  ],
+  "unknowns": [
+    "actual Q017-G3 coverage result is pending completion of the authorized runner"
+  ],
+  "next_action": "Verify Q017-G3 coverage/PIT evidence and then update this Decision Basis before any formal candidate selection.",
+  "invariants": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}

@@ -24,7 +24,7 @@ CANDIDATE_POOL = (
     "BSV",
     "DBV",
     "DGL",
-    "FXB",
+    "FAN",
     "JNK",
     "RJI",
     "UDN",
