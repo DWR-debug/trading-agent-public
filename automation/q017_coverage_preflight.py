@@ -36,7 +36,6 @@ CFTC_YEARS = tuple(range(2011, 2026))
 CFTC_TARGETS = {
     "DBO": ("CRUDE OIL",),
     "UNG": ("NATURAL GAS",),
-    "FXB": ("BRITISH POUND",),
     "PPLT": ("PLATINUM",),
 }
 ALFRED_SAMPLE_DATES = ("2011-01-04", "2015-01-05", "2020-01-02", "2025-09-24")

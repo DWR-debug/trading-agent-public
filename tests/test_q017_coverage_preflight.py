@@ -16,7 +16,7 @@ from research.asset_universes import get_universe, list_universes
 
 def test_q017_universe_is_fixed_and_symbol_disjoint():
     universe = get_universe("q017_coverage_first")
-    assert universe.symbols == ("SMH", "SOXX", "IGE", "DBO", "UNG", "FXB", "PPLT", "CIBR")
+    assert universe.symbols == ("SMH", "SOXX", "IGE", "DBO", "UNG", "PPLT", "CIBR", "LIT")
     used_elsewhere = {
         symbol
         for item in list_universes()
@@ -35,11 +35,11 @@ def test_q017_study_window_is_fixed():
 
 def test_q017_alfred_parser_enforces_vintage_column_and_filters_window():
     csv_text = (
-        "observation_date,CPIAUCSL_20200102\\n"
-        "2010-12-01,100.0\\n"
-        "2011-01-01,101.0\\n"
-        "2025-09-01,120.0\\n"
-        "2025-10-01,121.0\\n"
+        "observation_date,CPIAUCSL_20200102\n"
+        "2010-12-01,100.0\n"
+        "2011-01-01,101.0\n"
+        "2025-09-01,120.0\n"
+        "2025-10-01,121.0\n"
     )
     values, header = _parse_alfred_rows(csv_text, "CPIAUCSL")
     assert header == "CPIAUCSL_20200102"
@@ -47,11 +47,10 @@ def test_q017_alfred_parser_enforces_vintage_column_and_filters_window():
 
 
 def test_q017_cftc_market_matching_is_deterministic():
-    market = _canonical_market("GOLD - COMMODITY EXCHANGE INC.")
-    assert "GOLD" in market
+    market = _canonical_market("CRUDE OIL, LIGHT SWEET - NEW YORK MERCANTILE EXCHANGE")
     assert all(token in market for token in CFTC_TARGETS["DBO"])
-    market = _canonical_market("BRITISH POUND STERLING - CHICAGO MERCANTILE EXCHANGE")
-    assert all(token in market for token in CFTC_TARGETS["FXB"])
+    market = _canonical_market("PLATINUM - NEW YORK MERCANTILE EXCHANGE")
+    assert all(token in market for token in CFTC_TARGETS["PPLT"])
 
 
 def test_q017_date_parser_is_strict_to_fixed_window():

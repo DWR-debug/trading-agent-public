@@ -419,7 +419,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
             "Fresh symbol-disjoint fixed universe for Q017 G3 coverage-first preflight; "
             "coverage only, no performance selection."
         ),
-        symbols=("SMH", "SOXX", "IGE", "DBO", "UNG", "FXB", "PPLT", "CIBR"),
+        symbols=("SMH", "SOXX", "IGE", "DBO", "UNG", "PPLT", "CIBR", "LIT"),
         target_count=3520,
     ),
 )
