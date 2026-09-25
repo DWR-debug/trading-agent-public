@@ -15,7 +15,7 @@ def test_decision_basis_is_current_and_separates_fact_from_next_action():
     assert "Was wissen wir?" in md
     assert "Was wissen wir nicht?" in md
     assert "Nächste Aktion" in md
-    assert payload["current_stage"] == "Q017_G3_COVERAGE_FIRST"
+    assert payload["current_stage"] == "WIDE_SEARCH_MODE"
     assert payload["next_action"].startswith("Verify Q017-G3")
     assert payload["invariants"] == {
         "paper_only": True,
