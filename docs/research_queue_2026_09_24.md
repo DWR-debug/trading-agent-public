@@ -120,3 +120,21 @@ Q-011 ist als **PENDING** vorgemerkt. Vor einem weiteren Performance-Trial wird 
 Der nächste Schritt bleibt bewusst außerhalb der bereits mehrfach geprüften Portfolio-Risk-, Volatilitäts-, Trend-Konsistenz- und Lifecycle-Exit-Controls.
 
 Sicherheitszustand bleibt unverändert: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
+
+
+## Queue-Fortsetzung — Q012/Q013 abgeschlossen, Q014 vorbereitet — 2026-09-25
+
+### Q-012 — Information-Alpha Temporal Stability
+
+Q012 wurde als **COMPLETED_DISCOVERY_ONLY** abgeschlossen. Die 180-Tage-Diagnostik über SPY/TLT/GLD ergab 123 gemeinsame Beobachtungen und 25 Event-Fenster. Next-Day-Vorzeichen waren in 12/18 festen Asset/Feature-Paaren zwischen den beiden Hälften konsistent; Five-Day in 9/18. Daraus folgt keine allgemeine stabile GDELT-Beziehung und keine Performancefreigabe.
+
+### Q-013 — Information-Alpha Mechanism Redundancy
+
+Q013 wurde als **COMPLETED_DISCOVERY_ONLY** abgeschlossen. Die vier festen Intensitäts-/Breitenfeatures event_count, attention_score, source_breadth und article_count zeigten im Event-Sample eine mittlere absolute Spearman-Korrelation von 0,9532. Mean Tone war gegenüber diesen Merkmalen deutlich weniger redundant. Die 25 Event-Fenster bleiben klein; die Return-Assoziationen sind kein Trading- oder Kausalnachweis.
+
+### Q-014 — Long-Window Mechanism Redundancy
+
+Q014 ist **PENDING** und präregistriert. Die sechs unveränderten Q011-Features und die festen Mechanismusgruppen werden über 365 Tage diagnostisch erneut ausgewertet, um die Event-Stichprobe zu vergrößern. Mindestvertrag: 80 gemeinsame Beobachtungen und 40 Event-Fenster; bei Nichterfüllung **DATA_INSUFFICIENT**.
+
+Q014 bleibt vollständig diagnostisch. Keine Feature-, Asset-, Horizon-, Parameter- oder Holdout-Selektion und kein Performance-Trial. Jede spätere Trading-Hypothese benötigt eine neue Präregistrierung, frische symbol-disjunkte Coverage und unveränderte Evidence-Gates.
+
