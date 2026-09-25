@@ -39,4 +39,4 @@ Das Startskript prüft vor dem Agentenlauf:
 
 Danach wird `information-hypothesis-researcher` mit begrenztem Autopilot und ausschließlich `read,search` gestartet. Der Agent darf weder Dateien ändern noch Shell-Befehle ausführen noch formale Trials auslösen.
 
-Der Auftrag ist `AGENT-HYPOTHESIS-ROUND-001` auf Basis T041/T042/T044/T045 und Q011. Die erzeugte Notiz bleibt Ideenmaterial und darf keinen Holdout zur Auswahl einer Hypothese verwenden.
+Der Auftrag ist `AGENT-HYPOTHESIS-ROUND-001` als evidenzgebundene Q012-Forschungsdesignrunde. Der Runner fordert den Unteragenten ausdrücklich auf, die eingefrorenen Q011-, Q010-, T041-, T044- und T045-Artefakte sowie Queue, Projektzustand, Kontext und Ledger zu lesen. Die erzeugte Notiz bleibt Ideenmaterial und darf keinen Holdout zur Auswahl einer Hypothese verwenden.
