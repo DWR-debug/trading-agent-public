@@ -6,7 +6,7 @@
   "latest_formal_trial": "T-2026-09-25-045",
   "latest_trial_status": "BLOCKED",
   "next_reserved_trial": null,
-  "next_research_focus": "Orthogonal information/alpha discovery after the recurring T041-T045 failure signature; no further tuning of failed controls.",
+  "next_research_focus": "Q011 preregistered and implementation-checked; final execution authorization pending.",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -212,7 +212,12 @@
     "q010_control_relative_non_deterioration_recurrence": 4,
     "q010_oos_stability_recurrence": 3,
     "q010_holdout_risk_gate_recurrence": 3,
-    "q010_positive_holdout_return_count": 4
+    "q010_positive_holdout_return_count": 4,
+    "q011_status": "PENDING_PREREGISTERED",
+    "q011_preregistered": true,
+    "q011_holdout_selection": false,
+    "q011_parameter_search": false,
+    "q011_asset_selection": false
   },
   "agent_usage_efficiency": {
     "policy": "deterministic_actions_for_computation_and_agent_use_for_architecture_review_synthesis",
