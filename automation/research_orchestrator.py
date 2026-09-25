@@ -20,6 +20,7 @@ from automation.coverage_candidate_discovery import run_discovery
 from automation.adversarial_failure_diagnosis import write_report as write_failure_diagnosis
 from automation.cross_trial_failure_diagnosis import (    write_report as write_cross_trial_diagnosis,    write_current_report as write_current_cross_trial_diagnosis,)
 from automation.information_alpha_discovery import run_discovery as run_q011_discovery
+from automation.information_alpha_temporal_stability import run_stability_diagnostic as run_q012_stability
 from automation.portfolio_risk_control_min_variance import run_trial as run_t041_trial
 from automation.volatility_managed_tsm import run_trial as run_t042_trial
 from automation.trial_043_tsm_signal_consistency_2026_09_25 import run_validation as run_t043_trial
@@ -142,6 +143,16 @@ def run(
             universe=payload["universe"],
             status=payload["status"],
             run_fingerprint=payload["coverage_fingerprint"],
+        )
+    elif mode == "discover_information_alpha_stability":
+        report = run_q012_stability(
+            output_dir=root / "information_alpha_stability" / "q012",
+        )
+        snapshot = _state_snapshot(
+            mode=mode,
+            universe="Q012-INFORMATION-ALPHA-TEMPORAL-STABILITY-DIAGNOSTIC",
+            status=report["status"],
+            run_fingerprint=report["fingerprint"],
         )
     elif mode == "discover_information_alpha":
         report = run_q011_discovery(
@@ -494,7 +505,7 @@ def run(
                 run_fingerprint=report.get("run_manifest", {}).get("run_fingerprint"),
             )
     else:
-        raise ValueError("mode must be observe, preflight, discover_coverage, diagnose_failure, diagnose_history, research, research_t041, or research_t042, or research_t043, or research_t044, or research_t045")
+        raise ValueError("unsupported research mode")
 
     path = root / universe / "orchestrator_state.json"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -507,7 +518,7 @@ def run(
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=("observe", "preflight", "discover_information_alpha", "discover_coverage", "diagnose_failure", "diagnose_history", "diagnose_current", "research", "research_t041", "research_t042", "research_t043", "research_t044", "research_t045"), required=True)
+    parser.add_argument("--mode", choices=("observe", "preflight", "discover_information_alpha", "discover_information_alpha_stability", "discover_coverage", "diagnose_failure", "diagnose_history", "diagnose_current", "research", "research_t041", "research_t042", "research_t043", "research_t044", "research_t045"), required=True)
     parser.add_argument("--universe", default=DEFAULT_UNIVERSE)
     parser.add_argument("--output-root", default="research/runs")
     parser.add_argument("--total", type=int, default=None)

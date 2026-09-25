@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-012-INFORMATION-ALPHA-TEMPORAL-STABILITY-DIAGNOSTIC",
+  "status": "DIAGNOSTIC_ONLY",
+  "registered_at": "2026-09-25",
+  "objective": "Zeitliche Stabilität der in Q011 fixierten GDELT-Informationsfeatures prüfen, bevor irgendeine Performancehypothese aus der Quelle abgeleitet wird.",
+  "window": {
+    "start": "2026-03-29",
+    "end": "2026-09-24",
+    "calendar_days": 180
+  },
+  "assets": [
+    "SPY",
+    "TLT",
+    "GLD"
+  ],
+  "source_task": "Q-011-ORTHOGONAL-INFORMATION-ALPHA-DISCOVERY",
+  "information_source": "GDELT 2.0 Event export",
+  "event_filter": "international event with num_articles >= 3",
+  "fixed_features": [
+    "event_count",
+    "attention_score",
+    "source_breadth",
+    "article_count",
+    "negative_goldstein",
+    "mean_tone"
+  ],
+  "point_in_time_contract": {
+    "event_feature_window": "previous_market_day < event_day < target_market_day",
+    "target_return": "previous_market_close -> target_market_close",
+    "five_day_horizon": "target_market_close -> fifth subsequent market close",
+    "same_day_return_used": false
+  },
+  "stability_design": {
+    "split": "ordered first half vs ordered second half of common market observations",
+    "measures": [
+      "Pearson",
+      "Spearman",
+      "sign consistency",
+      "absolute correlation change"
+    ],
+    "feature_selection": false,
+    "threshold_optimization": false
+  },
+  "selection_used": false,
+  "parameter_search": false,
+  "threshold_search": false,
+  "asset_selection": false,
+  "holdout_selection": false,
+  "performance_trial_authorized": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
