@@ -7,8 +7,9 @@ def test_queue_is_deterministic_and_tracks_current_priority():
     queue = default_research_queue()
     first = queue.next_task()
     assert first is not None
-    assert first.task_id == "Q-007-T043-TSM-SIGNAL-CONSISTENCY"
-    assert queue.all()[1].status == "COMPLETED"
+    assert first.task_id == "Q-008-T044-TSM-SIGNAL-CONSISTENCY-REPAIR"
+    assert queue.all()[0].status == "BLOCKED"
+    assert queue.all()[1].status == "PENDING"
 
 
 def test_queue_rejects_invalid_transition():
