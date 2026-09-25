@@ -17,6 +17,7 @@ ACTIVE_WORKFLOWS = {
     "research-orchestrator.yml",
     "paper-30-day-experiment-harness.yml",
     "q014-resilient.yml",
+    "q015-mechanism-discrimination.yml",
 }
 
 REQUIRED_FILES = (
