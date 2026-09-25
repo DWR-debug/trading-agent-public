@@ -284,6 +284,203 @@ def diagnose(ledger_path: str | Path = LEDGER_PATH) -> dict:
     return result
 
 
+CURRENT_TRIAL_IDS = (
+    "T-2026-09-24-041",
+    "T-2026-09-24-042",
+    "T-2026-09-25-043",
+    "T-2026-09-25-044",
+    "T-2026-09-25-045",
+)
+
+
+def _current_metric(outcome: dict, *names: str):
+    key = outcome.get("key_metrics", {})
+    for name in names:
+        if name in key:
+            return key[name]
+        if name in outcome:
+            return outcome[name]
+    return None
+
+
+def _current_failure_modes(trial: dict) -> list[str]:
+    outcome = trial.get("outcome", {})
+    if trial.get("status") == "data_invalid":
+        return ["data_validity_failure"]
+
+    modes: set[str] = set()
+    failed_absolute = outcome.get("failed_absolute", [])
+    failed_absolute += outcome.get("gate_results", {}).get("failed_absolute", [])
+    failed_non_deterioration = outcome.get("failed_non_deterioration", [])
+    failed_non_deterioration += outcome.get("gate_results", {}).get(
+        "failed_non_deterioration", []
+    )
+
+    research_dd = _current_metric(
+        outcome,
+        "research_drawdown_percent",
+        "base_research_drawdown_percent",
+        "fixed_research_drawdown_percent",
+    )
+    research_pf = _current_metric(
+        outcome,
+        "research_profit_factor",
+        "base_research_profit_factor",
+        "fixed_research_profit_factor",
+    )
+    oos_ratio = _current_metric(
+        outcome,
+        "oos_to_is_return_ratio",
+        "base_oos_to_is_return_ratio",
+        "fixed_oos_to_is_return_ratio",
+    )
+    holdout_dd = _current_metric(
+        outcome,
+        "holdout_drawdown_percent",
+        "base_holdout_drawdown_percent",
+        "fixed_holdout_drawdown_percent",
+    )
+
+    if research_dd is not None and research_dd > THRESHOLDS["research_drawdown_percent"]:
+        modes.add("research_risk_gate")
+    if any("research_drawdown" in str(item) for item in failed_absolute):
+        modes.add("research_risk_gate")
+    if research_pf is not None and research_pf < THRESHOLDS["research_profit_factor"]:
+        modes.add("research_profit_factor_gate")
+    if any("research_profit_factor" in str(item) for item in failed_absolute):
+        modes.add("research_profit_factor_gate")
+    if oos_ratio is not None and oos_ratio < THRESHOLDS["oos_to_is_ratio"]:
+        modes.add("oos_stability_gate")
+    if any("oos_to_is" in str(item) for item in failed_absolute):
+        modes.add("oos_stability_gate")
+    if holdout_dd is not None and holdout_dd > THRESHOLDS["holdout_drawdown_percent"]:
+        modes.add("holdout_risk_gate")
+    if any("holdout_drawdown" in str(item) for item in failed_absolute):
+        modes.add("holdout_risk_gate")
+    if failed_non_deterioration or outcome.get("non_deterioration_gates_passed") is False:
+        modes.add("control_relative_non_deterioration")
+    return sorted(modes)
+
+
+def diagnose_current(ledger_path: str | Path = LEDGER_PATH) -> dict:
+    path = Path(ledger_path)
+    if not path.is_absolute():
+        path = ROOT / path
+
+    ledger = json.loads(path.read_text(encoding="utf-8"))
+    trials_by_id = {trial["trial_id"]: trial for trial in ledger["trials"]}
+    selected = []
+    for trial_id in CURRENT_TRIAL_IDS:
+        if trial_id not in trials_by_id:
+            raise ValueError(f"Required current trial missing from ledger: {trial_id}")
+        trial = trials_by_id[trial_id]
+        if trial.get("status") not in {"archived_rejected", "data_invalid"}:
+            raise ValueError(
+                f"Current diagnosis requires archived/data-invalid trial: {trial_id}"
+            )
+        selected.append(
+            {
+                "trial_id": trial_id,
+                "research_family": trial["research_family"],
+                "status": trial["status"],
+                "failure_modes": _current_failure_modes(trial),
+                "holdout_used_for_selection": trial.get("data_scope", {}).get(
+                    "holdout_used_for_selection"
+                ),
+                "parameter_search": trial.get("search_scope", {}).get("parameter_search"),
+                "variant_search": trial.get("search_scope", {}).get("variant_search"),
+            }
+        )
+
+    def evidence_for(mode: str) -> list[str]:
+        return [
+            item["trial_id"]
+            for item in selected
+            if mode in item["failure_modes"]
+        ]
+
+    patterns = {
+        "risk_gate_recurrence": evidence_for("research_risk_gate")
+        + [
+            trial_id
+            for trial_id in evidence_for("holdout_risk_gate")
+            if trial_id not in evidence_for("research_risk_gate")
+        ],
+        "oos_stability_recurrence": evidence_for("oos_stability_gate"),
+        "control_relative_non_deterioration_recurrence": evidence_for(
+            "control_relative_non_deterioration"
+        ),
+        "data_validity_failure": evidence_for("data_validity_failure"),
+    }
+
+    return {
+        "schema_version": "1.0",
+        "diagnosis_id": "CROSS-TRIAL-FAILURE-DIAGNOSIS-2026-09-25",
+        "recorded_at": datetime.now(timezone.utc).isoformat(),
+        "source": {
+            "ledger": str(path.relative_to(ROOT)),
+            "trial_ids": list(CURRENT_TRIAL_IDS),
+        },
+        "status": "DIAGNOSTIC_ONLY",
+        "trial_summaries": selected,
+        "cross_trial_patterns_by_id": patterns,
+        "interpretation": {
+            "risk_gate_recurrence_count": len(patterns["risk_gate_recurrence"]),
+            "oos_stability_recurrence_count": len(patterns["oos_stability_recurrence"]),
+            "control_relative_non_deterioration_count": len(
+                patterns["control_relative_non_deterioration_recurrence"]
+            ),
+            "data_validity_failure_count": len(patterns["data_validity_failure"]),
+            "key_observation": (
+                "T044 and T045 each show a limited relative risk improvement in one "
+                "rolling/research dimension, while absolute and holdout risk quality "
+                "remain unresolved; recurring OOS/control-relative failures therefore "
+                "remain the dominant diagnostic constraint."
+            ),
+        },
+        "non_actions": [
+            "no_parameter_reselection",
+            "no_asset_reselection",
+            "no_holdout_selection",
+            "no_gate_relaxation",
+            "no_backtest_rerun",
+            "no_production_promotion",
+        ],
+        "next_research_question": (
+            "Before reserving another performance trial, use the fixed failure taxonomy "
+            "to define one orthogonal mechanism aimed at the recurring risk/OOS constraint, "
+            "then preregister it without using these outcomes for parameter or asset selection."
+        ),
+        "safety": {
+            "paper_only": True,
+            "live_trading_enabled": False,
+            "orders_enabled": False,
+            "automatic_promotion": False,
+            "paid_agent_api_budget_usd": 0.0,
+        },
+    }
+
+
+def write_current_report(
+    ledger_path: str | Path = LEDGER_PATH,
+    output_path: str | Path = (
+        "research/evidence/cross_trial_failure_diagnosis_2026_09_25.json"
+    ),
+) -> dict:
+    result = diagnose_current(ledger_path)
+    output = Path(output_path)
+    if not output.is_absolute():
+        output = ROOT / output
+    output.parent.mkdir(parents=True, exist_ok=True)
+    fingerprint_input = dict(result)
+    fingerprint_input.pop("recorded_at", None)
+    result["fingerprint"] = _fingerprint(fingerprint_input)
+    output.write_text(
+        json.dumps(result, indent=2, ensure_ascii=False, allow_nan=False) + "\n",
+        encoding="utf-8",
+    )
+    return result
+
 def write_report(
     ledger_path: str | Path = LEDGER_PATH,
     output_path: str | Path = (
