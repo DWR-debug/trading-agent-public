@@ -77,8 +77,8 @@ jobs:
 
           task = default_research_queue().next_task()
           assert task is not None
-          assert task.task_id == "Q-012-INFORMATION-ALPHA-TEMPORAL-STABILITY-DIAGNOSTIC"
-          assert task.research_family == "orthogonal_information_alpha_temporal_stability"
+          assert task.task_id == "Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW"
+          assert task.research_family == "orthogonal_information_alpha_mechanism_redundancy_long_window"
 
           expected = set(prereg["symbols"])
           for existing in list_universes():
