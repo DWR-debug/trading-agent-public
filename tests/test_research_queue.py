@@ -14,6 +14,9 @@ def test_queue_is_deterministic_and_tracks_current_priority():
     assert task_by_id["Q-009-T045-POSITION-LIFECYCLE-EXIT-CONTROL"].status == "BLOCKED"
     assert task_by_id["Q-010-CROSS-TRIAL-FAILURE-DIAGNOSIS"].status == "COMPLETED"
     assert task_by_id["Q-011-ORTHOGONAL-INFORMATION-ALPHA-DISCOVERY"].status == "COMPLETED"
+    assert task_by_id["Q-012-INFORMATION-ALPHA-TEMPORAL-STABILITY-DIAGNOSTIC"].status == "COMPLETED"
+    assert task_by_id["Q-013-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-DIAGNOSTIC"].status == "COMPLETED"
+    assert task_by_id["Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW"].status == "COMPLETED"
 
 
 def test_queue_rejects_invalid_transition():
