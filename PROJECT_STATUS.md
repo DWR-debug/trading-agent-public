@@ -1,3 +1,34 @@
+# Aktueller Ausführungscheckpoint — Q016 Recovery — 2026-09-25
+
+Q016 ist nach zwei eindeutig technischen Fehlversuchen erneut auf dem autorisierten Diagnose-Branch gestartet.
+
+- Forschungsaufgabe: `Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION`
+- Scope: ausschließlich diagnostische, zeitlich disjunkte Replikation von Q015
+- Q015-Referenzfenster: 2025-09-25 bis 2026-09-24
+- Q016-Fenster: 2024-09-25 bis 2025-09-24
+- Performance-Trial: nicht autorisiert
+- Holdout-/Feature-/Asset-/Horizon-/Parameter-Selektion: ausgeschlossen
+- Sicherheitszustand: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`
+
+### Technische Recovery
+
+Der erste autorisierte Q016-Ausführungsversuch scheiterte an einer logisch falschen symmetrischen Disjointness-Prüfung. Der zweite scheiterte, weil die vier Collect-Jobs `statsmodels` nicht installiert hatten. Beide Läufe erzeugten daher keine wissenschaftlich verwertbare Evidenz.
+
+Die Fehler wurden einzeln korrigiert:
+
+1. Die Disjointness-Prüfung verlangt jetzt korrekt nur `Q016_end < Q015_start`; die bereits explizit fixierten Zeitfenster bleiben unverändert.
+2. Jeder Collect-Job installiert nun `statsmodels==0.15.0`.
+3. Die Ausführungsautorisierung bleibt an den unveränderten autorisierten Commit `9eae6a32e60c97ec964caf6fdf67573ad2d370fb` als Vorfahren gebunden und wird dadurch nicht durch notwendige technische Folge-Commits entwertet.
+4. Der vollständige Testbestand auf der korrigierten Basis umfasst 765 Tests; im gescheiterten Lauf traten dabei 0 Testfehler auf.
+
+Aktueller Recovery-Run: `36171131147` (Q016 #5), zum Zeitpunkt dieses Checkpoints noch laufend. Ein wissenschaftliches Ergebnis wird erst nach vollständigem Collect, Freeze, Analyse, Output-Contract und Artifact-Provenienz übernommen.
+
+### Chat-Kontinuität
+
+Der verbindliche Einstiegspunkt für neue `trading agent`-Chats ist jetzt `docs/TRADING_AGENT_CHAT_ENTRYPOINT.md`.
+
+Wenn der Benutzer „aktuellen Stand aus dem letzten Chat“ einfügt, ist dies als Kopie der letzten Assistant-Mitteilung zu behandeln: als Handoff-Kontext, nicht als automatisch neue Evidenz. Vor einer technischen oder wissenschaftlichen Übernahme erfolgt die Gegenprüfung gegen Repository, Status, Ledger und Workflow-/Artifact-Provenienz.
+
 # Aktueller Forschungscheckpoint — Q015 abgeschlossen / Q016 vorbereitet — 2026-09-25
 
 Q015 wurde als rein diagnostische Mechanismus-Diskriminationsstudie erfolgreich ausgeführt und als **COMPLETED_DIAGNOSTIC_ONLY** dokumentiert.
