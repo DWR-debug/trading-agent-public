@@ -399,7 +399,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         ),
         symbols=("WMT","JNJ","PG","KO","PEP","XOM","CVX","CSCO","MCD","V","ORCL","MRK","PFE"),
         target_count=3520,
-    ),,
+    ),
 
     AssetUniverse(
         name="validation_2026_09_25_position_lifecycle_exit",
