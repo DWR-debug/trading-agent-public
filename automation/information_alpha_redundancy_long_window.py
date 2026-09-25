@@ -46,8 +46,7 @@ def _build_observations(start, end, daily, prices):
 def collect_q014_chunk(chunk_id, *, output_dir="research/runs/information_alpha_redundancy/q014_chunks"):
     _assert_safety(); _, start, end = _chunk_spec(chunk_id); root=Path(output_dir); root.mkdir(parents=True,exist_ok=True)
     events, parse_stats = _load_events(start,end,None); daily=_daily_event_features(events)
-    prices={symbol:_yahoo_daily(symbol,start-timedelta(days=7),end+timedelta(days=10)) for symbol in DEFAULT_ASSETS}
-    payload={"schema_version":"1.0","task_id":"Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW","chunk_id":chunk_id,"start":start.isoformat(),"end":end.isoformat(),"assets":list(DEFAULT_ASSETS),"fixed_features":list(FIXED_FEATURES),"daily_event_features":{day.isoformat():values for day,values in sorted(daily.items())},"prices":{symbol:{day.isoformat():value for day,value in sorted(values.items())} for symbol,values in sorted(prices.items())},"data_quality":{"event_rows_seen":parse_stats["rows_seen"],"event_rows_skipped":parse_stats["rows_skipped"]},"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False,"selection_used":False,"holdout_used":False,"parameter_search_used":False,"feature_selection_used":False,"asset_selection_used":False,"horizon_selection_used":False}
+    payload={"schema_version":"1.0","task_id":"Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW","chunk_id":chunk_id,"start":start.isoformat(),"end":end.isoformat(),"assets":list(DEFAULT_ASSETS),"fixed_features":list(FIXED_FEATURES),"market_data_in_chunk":False,"daily_event_features":{day.isoformat():values for day,values in sorted(daily.items())},"data_quality":{"event_rows_seen":parse_stats["rows_seen"],"event_rows_skipped":parse_stats["rows_skipped"]},"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False,"selection_used":False,"holdout_used":False,"parameter_search_used":False,"feature_selection_used":False,"asset_selection_used":False,"horizon_selection_used":False}
     canonical=json.dumps(payload,sort_keys=True,separators=(",",":"),ensure_ascii=True); payload["fingerprint"]=hashlib.sha256(canonical.encode()).hexdigest()
     (root/f"q014_chunk_{chunk_id}.json").write_text(json.dumps(payload,indent=2,ensure_ascii=False,allow_nan=False)+"\n",encoding="utf-8"); return payload
 
@@ -61,20 +60,22 @@ def _load_chunks(chunk_dir):
     if actual!=expected: raise ValueError("Q014 chunk window contract mismatch.")
     return reports
 
-def aggregate_q014_chunks(*,chunk_dir="research/runs/information_alpha_redundancy/q014_chunks",output_dir="research/runs/information_alpha_redundancy/q014"):
-    _assert_safety(); reports=_load_chunks(chunk_dir); daily={}; prices={symbol:{} for symbol in DEFAULT_ASSETS}; rows_seen=rows_skipped=0
+def aggregate_q014_chunks(*,chunk_dir="research/runs/information_alpha_redundancy/q014_chunks",output_dir="research/runs/information_alpha_redundancy/q014",market_loader=None):
+    _assert_safety(); reports=_load_chunks(chunk_dir); daily={}; rows_seen=rows_skipped=0
     for report in reports:
         rows_seen += report["data_quality"]["event_rows_seen"]; rows_skipped += report["data_quality"]["event_rows_skipped"]
         for day,payload in report["daily_event_features"].items():
             if day in daily and daily[day]!=payload: raise ValueError(f"Conflicting event features for duplicate day {day}.")
             daily[day]=payload
-        for symbol in DEFAULT_ASSETS:
-            for day,value in report["prices"][symbol].items():
-                existing=prices[symbol].get(day)
-                if existing is not None and existing!=value: raise ValueError(f"Conflicting price for {symbol} on {day}.")
-                prices[symbol][day]=value
+    market_loader = market_loader or _yahoo_daily
+    prices = {
+        symbol: {day.isoformat(): value for day, value in market_loader(
+            symbol, DEFAULT_START - timedelta(days=7), DEFAULT_END + timedelta(days=10)
+        ).items()}
+        for symbol in DEFAULT_ASSETS
+    }
     observations=_build_observations(DEFAULT_START,DEFAULT_END,daily,prices)
-    base={"observations":observations,"point_in_time_contract":{"event_feature_window":"previous_market_day < event_day < target_market_day","target_return":"previous_market_close -> target_market_close","five_day_horizon":"target_market_close -> fifth subsequent market_close","same_day_return_used":False},"data_quality":{"event_rows_seen":rows_seen,"event_rows_skipped":rows_skipped,"source":"Q014 resumable four-chunk collection"}}
+    base={"observations":observations,"point_in_time_contract":{"event_feature_window":"previous_market_day < event_day < target_market_day","target_return":"previous_market_close -> target_market_close","five_day_horizon":"target_market_close -> fifth subsequent market_close","same_day_return_used":False},"data_quality":{"event_rows_seen":rows_seen,"event_rows_skipped":rows_skipped,"source":"Q014 resumable four-chunk GDELT collection; market data fetched once during aggregation"}}
     root=Path(output_dir); report=analyze_redundancy_base(base,DEFAULT_START,DEFAULT_END,output_dir=root)
     report.update({"task_id":"Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW","source_task":"Q-013-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-DIAGNOSTIC","status":"COMPLETED_DISCOVERY_ONLY" if report["observations"]["total"]>=MIN_TOTAL_OBSERVATIONS and report["observations"]["event_windows"]>=MIN_EVENT_WINDOWS else "DATA_INSUFFICIENT","window_contract":{"calendar_days":365,"start":DEFAULT_START.isoformat(),"end":DEFAULT_END.isoformat(),"min_total_observations":MIN_TOTAL_OBSERVATIONS,"min_event_windows":MIN_EVENT_WINDOWS,"chunk_count":len(CHUNK_WINDOWS),"chunk_ids":[x[0] for x in CHUNK_WINDOWS]},"performance_trial_authorized":False})
     for key in ("selection_used","holdout_used","parameter_search_used","feature_selection_used","asset_selection_used","horizon_selection_used"): report[key]=False
