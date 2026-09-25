@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-012-INFORMATION-ALPHA-TEMPORAL-STABILITY-DIAGNOSTIC",
+  "status": "COMPLETED_DISCOVERY_ONLY",
+  "recorded_at": "2026-09-25",
+  "source": {
+    "workflow_run_id": 36148187652,
+    "artifact_id": 10870661281,
+    "artifact_sha256": "7af99a87b2bf79e63806e9b5ccb4a782fcc91950bc9541528d518d85ff411912",
+    "q012_result_fingerprint": "d9fcf20826282fa881c6d960e79b759e2f4ac2dac911bde9d33c2839df4edc2c",
+    "q012_result_sha256": "624f4893fa9da7edd575e5d2c38a07c16cfce3b4112c17da10e79d1de21f812a"
+  },
+  "preregistration": "research/preregistrations/q012_information_alpha_temporal_stability_2026_09_25.json",
+  "window": {
+    "start": "2026-03-29",
+    "end": "2026-09-24",
+    "calendar_days": 180
+  },
+  "assets": [
+    "SPY",
+    "TLT",
+    "GLD"
+  ],
+  "fixed_features": [
+    "event_count",
+    "attention_score",
+    "source_breadth",
+    "article_count",
+    "negative_goldstein",
+    "mean_tone"
+  ],
+  "data_quality": {
+    "common_observations": 123,
+    "first_half": 61,
+    "second_half": 62,
+    "event_windows": 25,
+    "first_half_event_windows": 12,
+    "second_half_event_windows": 13,
+    "event_rows_seen": 17636611,
+    "event_rows_skipped": 101
+  },
+  "point_in_time_contract": {
+    "event_feature_window": "previous_market_day < event_day < target_market_day",
+    "target_return": "previous_market_close -> target_market_close",
+    "five_day_horizon": "target_market_close -> fifth subsequent market close",
+    "same_day_return_used": false
+  },
+  "results": {
+    "next_day_sign_consistency": {
+      "consistent_pairs": 12,
+      "total_pairs": 18,
+      "ratio": 0.6666666666666666
+    },
+    "five_day_sign_consistency": {
+      "consistent_pairs": 9,
+      "total_pairs": 18,
+      "ratio": 0.5
+    },
+    "qualitative_summary": "SPY relationships remain near zero; TLT relationships reverse sign between halves for all six fixed features; GLD retains sign across halves but relationships remain modest and feature-redundant.",
+    "interpretation": "Descriptive temporal stability is heterogeneous and insufficient to authorize a performance hypothesis. No feature, asset, threshold or horizon was selected."
+  },
+  "selection": {
+    "holdout_selection": false,
+    "parameter_search": false,
+    "feature_selection": false,
+    "asset_selection": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "artifact_retention": "GitHub Actions artifact retained for 30 days"
+}
