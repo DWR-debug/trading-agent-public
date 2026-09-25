@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "trial_id": "T-2026-09-25-044",
+  "status": "archived_rejected",
+  "scientific_outcome": "NO_PROMOTION_EVIDENCE",
+  "candidate_status": "BLOCKED",
+  "workflow_run_id": 36113366355,
+  "artifact_id": 10853724277,
+  "artifact_sha256": "sha256:cc0f9d0ef4c11d0b53a3654a11ef3ad6f1b6d9db14a8f8d9b3d2a6e2d2a3a9dd",
+  "report_fingerprint": "e64b4f9c65f47cad6f51ce614ec7ebf1c1a7f96c2df206f372aea04d656fd861",
+  "coverage_fingerprint": "e72ec9c6edc259ff60fada9112cda76081c4c9b214859d239858af0836b037bc",
+  "parent_trial_id": "T-2026-09-25-043",
+  "universe": "validation_2026_09_25_tsm_signal_consensus_repair",
+  "data_scope": {
+    "target_candles": 3500,
+    "common_returns": 3498,
+    "research_count": 2798,
+    "holdout_count": 700,
+    "fully_symbol_disjoint_validation_set": true,
+    "holdout_used_for_selection": false
+  },
+  "key_metrics": {
+    "fixed_research_return_percent": 68.08566559274188,
+    "challenger_research_return_percent": 45.97404367872533,
+    "fixed_research_drawdown_percent": 14.561586493625732,
+    "challenger_research_drawdown_percent": 13.383399309999467,
+    "fixed_research_profit_factor": 1.100313110621693,
+    "challenger_research_profit_factor": 1.077815143872532,
+    "fixed_holdout_return_percent": 22.607904644078538,
+    "challenger_holdout_return_percent": 14.431700498080113,
+    "fixed_holdout_drawdown_percent": 14.602523247260635,
+    "challenger_holdout_drawdown_percent": 17.122206113962758,
+    "fixed_holdout_profit_factor": 1.1423234429402984,
+    "challenger_holdout_profit_factor": 1.096024911520226,
+    "fixed_oos_to_is_return_ratio": 0.3320508721954626,
+    "challenger_oos_to_is_return_ratio": 0.3139097487036678,
+    "challenger_rolling_profitable_window_ratio": 0.8,
+    "fixed_rolling_profitable_window_ratio": 0.8,
+    "challenger_rolling_average_drawdown_percent": 11.363374085487004,
+    "fixed_rolling_average_drawdown_percent": 10.836979275331768,
+    "challenger_total_return_holdout_percent": 17.8271709412124,
+    "challenger_total_return_holdout_drawdown_percent": 16.166752709511456,
+    "challenger_total_return_holdout_profit_factor": 1.1156107046512362,
+    "challenger_1_5x_holdout_return_percent": 13.32362660778128,
+    "challenger_2x_holdout_return_percent": 12.22612708700197
+  },
+  "failed_absolute": [
+    "research_drawdown_lte_10pct",
+    "research_profit_factor_gte_1_10",
+    "rolling_profit_factor_gte_1_10",
+    "rolling_average_drawdown_lte_10pct",
+    "holdout_profit_factor_gte_1_10",
+    "holdout_drawdown_lte_10pct"
+  ],
+  "failed_non_deterioration": [
+    "research_return_not_below_fixed",
+    "research_profit_factor_not_below_fixed",
+    "rolling_pf_not_below_fixed",
+    "rolling_average_drawdown_not_worse_vs_fixed",
+    "oos_to_is_not_below_fixed",
+    "holdout_return_not_below_fixed",
+    "holdout_pf_not_below_fixed",
+    "holdout_drawdown_not_worse_vs_fixed"
+  ],
+  "passed_absolute": [
+    "research_return_positive",
+    "rolling_profitable_window_ratio_gte_0_5",
+    "oos_to_is_return_ratio_gte_0_25",
+    "holdout_return_positive",
+    "stress_1_5x_nonnegative",
+    "stress_2x_nonnegative",
+    "total_return_sensitivity_nonnegative"
+  ],
+  "passed_non_deterioration": [
+    "research_drawdown_not_worse_vs_fixed",
+    "rolling_profitable_ratio_not_below_fixed"
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
