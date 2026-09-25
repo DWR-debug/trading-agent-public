@@ -96,3 +96,12 @@ Q-009-T045-POSITION-LIFECYCLE-EXIT-CONTROL ist formal abgeschlossen und **BLOCKE
 ### Q-010 — Cross-Trial Failure-Diagnose
 
 Q-010 ist nach Abschluss von T045 **PENDING**. Die Diagnose bleibt rein ableitend: T041–T045 werden gemeinsam auf wiederkehrende Failure-Modi ausgewertet, ohne Parameter-, Asset-, Holdout- oder Gate-Selektion. Erst danach wird eine neue Performancehypothese präregistriert.
+
+
+## Q010 Abschluss — 2026-09-25
+
+Q010 ist COMPLETED / DIAGNOSTIC_ONLY. Die finale Diagnose bestätigt einen wiederkehrenden Engpass bei robustem Risiko und Control-relative Stabilität. T043 bleibt ausschließlich technische DATA_INVALID-Evidenz.
+
+## Q011 — Orthogonale Information/Alpha-Entwicklung
+
+Q011 ist PENDING. Ziel ist die Definition genau einer neuen, point-in-time prüfbaren Information-/Alpha-Hypothese. Bisher getestete Risiko-, Volatilitäts-, Trendkonsistenz- und Lifecycle-Control-Familien werden nicht als neue Varianten fortgesetzt.

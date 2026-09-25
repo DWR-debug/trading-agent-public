@@ -7,12 +7,12 @@ def test_queue_is_deterministic_and_tracks_current_priority():
     queue = default_research_queue()
     first = queue.next_task()
     assert first is not None
-    assert first.task_id == "Q-010-CROSS-TRIAL-FAILURE-DIAGNOSIS"
+    assert first.task_id == "Q-011-ORTHOGONAL-INFORMATION-ALPHA-DESIGN"
     task_by_id = {task.task_id: task for task in queue.all()}
     assert task_by_id["Q-007-T043-TSM-SIGNAL-CONSISTENCY"].status == "BLOCKED"
     assert task_by_id["Q-008-T044-TSM-SIGNAL-CONSISTENCY-REPAIR"].status == "BLOCKED"
     assert task_by_id["Q-009-T045-POSITION-LIFECYCLE-EXIT-CONTROL"].status == "BLOCKED"
-    assert task_by_id["Q-010-CROSS-TRIAL-FAILURE-DIAGNOSIS"].status == "PENDING"
+    assert task_by_id["Q-010-CROSS-TRIAL-FAILURE-DIAGNOSIS"].status == "COMPLETED"\n    assert task_by_id["Q-011-ORTHOGONAL-INFORMATION-ALPHA-DESIGN"].status == "PENDING"
 
 
 def test_queue_rejects_invalid_transition():

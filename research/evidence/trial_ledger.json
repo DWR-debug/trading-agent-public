@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-25T09:18:23Z",
+  "generated_at": "2026-09-25T09:41:03Z",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -3452,6 +3452,71 @@
           "no_non_deterioration_support",
           "secondary_total_return_sensitivity_has_small_run_to_run_drift"
         ]
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
+    },
+    {
+      "trial_id": "Q-2026-09-25-010",
+      "recorded_at": "2026-09-25T09:41:03Z",
+      "status": "archived_diagnostic",
+      "research_family": "research_governance",
+      "hypothesis": {
+        "text": "Die kumulierte Failure-Signatur aus T041-T045 lässt sich reproduzierbar zusammenfassen, um die nächste orthogonale Performancehypothese ohne nachträgliche Parameter-, Asset- oder Gate-Selektion abzuleiten."
+      },
+      "data_scope": {
+        "performance_valid_trial_count": 4,
+        "data_invalid_trial_count": 1,
+        "source_trial_ids": [
+          "T-2026-09-24-041",
+          "T-2026-09-24-042",
+          "T-2026-09-25-043",
+          "T-2026-09-25-044",
+          "T-2026-09-25-045"
+        ],
+        "holdout_used_for_selection": false
+      },
+      "search_scope": {
+        "parameter_search": false,
+        "variant_search": false,
+        "asset_selection": false,
+        "holdout_selection": false,
+        "backtest_rerun": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "diagnostic synthesis only",
+        "selection_family_id": "cross-trial-diagnosis-2026-09-25"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "status": "DIAGNOSTIC_ONLY",
+        "workflow_run_id": 36119705793,
+        "artifact_id": 10856102739,
+        "artifact_sha256": "sha256:9f10a27ed267870981c8f480e868967e22c4d19a8c3562c37c9690d19dcf01c2",
+        "fingerprint": "c11a4a2340bf4f7a9f132f53835465d57d0b12ab97770a24f3fd98492e7f9549",
+        "patterns": {
+          "research_risk_gate_recurrence": 4,
+          "risk_gate_any_stage_recurrence": 4,
+          "oos_stability_recurrence": 3,
+          "control_relative_non_deterioration_recurrence": 4,
+          "data_validity_failure": 1,
+          "positive_holdout_not_sufficient": 4
+        }
+      },
+      "diagnostics": {
+        "interpretation": "Across the four performance-valid trials, every trial exceeded the 10% research drawdown gate and every trial failed at least one fixed-control non-deterioration condition. Three of four failed the OOS/IS threshold and three of four failed the 10% holdout drawdown gate. T043 is separate data-invalid evidence.",
+        "next_research_question": "Before reserving another performance trial, define one orthogonal information/alpha mechanism rather than another variant of the tested portfolio-risk, volatility-scaling, trend-consistency, or lifecycle-exit controls."
       },
       "safety": {
         "paper_only": true,

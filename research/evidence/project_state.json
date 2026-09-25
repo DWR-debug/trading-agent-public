@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "updated": "2026-09-25",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "PENDING_T045_ARCHIVE",
+  "master_commit": "PENDING_Q010_ARCHIVE",
   "latest_formal_trial": "T-2026-09-25-045",
   "latest_trial_status": "BLOCKED",
   "next_reserved_trial": null,
-  "next_research_focus": "Cross-trial failure diagnosis across T041-T045 before reserving the next mechanism; no further tuning of failed trials.",
+  "next_research_focus": "Q-011: Design einer einzigen orthogonalen Information/Alpha-Hypothese; keine weitere Variante der bisher getesteten Risiko-, Volatilitäts-, Trendkonsistenz- oder Lifecycle-Control-Familien.",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -56,7 +56,7 @@
     "next_trial_candidate_selection": "coverage_only_fixed_pool",
     "t040_formal_completed": true,
     "t040_negative_evidence_archived": true,
-    "current_queue_task": "Q-010-CROSS-TRIAL-FAILURE-DIAGNOSIS",
+    "current_queue_task": "Q-011-ORTHOGONAL-INFORMATION-ALPHA-DESIGN",
     "automatic_formal_execution_requires_preregistration": true,
     "last_completed_queue_task": "Q-005-CHAMPION-CHALLENGER",
     "last_completed_diagnosis_fingerprint": "92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea",
@@ -199,7 +199,25 @@
     ],
     "t045_core_price_only_metrics_reproduced": true,
     "t045_secondary_total_return_sensitivity_has_small_drift": true,
-    "t045_failure_diagnosis": "Research return -19.3877 pp; Research Max-DD +0.3331 pp; Research PF -0.0211; Holdout return -12.7907 pp; Holdout Max-DD +6.1918 pp; Holdout PF -0.0682; rolling profitable ratio 0.8->0.6; rolling average DD 14.02%->13.07%."
+    "t045_failure_diagnosis": "Research return -19.3877 pp; Research Max-DD +0.3331 pp; Research PF -0.0211; Holdout return -12.7907 pp; Holdout Max-DD +6.1918 pp; Holdout PF -0.0682; rolling profitable ratio 0.8->0.6; rolling average DD 14.02%->13.07%.",
+    "q010_diagnostic_workflow_run": 36119705793,
+    "q010_diagnostic_artifact_id": 10856102739,
+    "q010_diagnostic_artifact_sha256": "sha256:9f10a27ed267870981c8f480e868967e22c4d19a8c3562c37c9690d19dcf01c2",
+    "q010_diagnostic_fingerprint": "c11a4a2340bf4f7a9f132f53835465d57d0b12ab97770a24f3fd98492e7f9549",
+    "q010_diagnostic_performance_valid_trial_count": 4,
+    "q010_diagnostic_data_invalid_trial_count": 1,
+    "q010_patterns": {
+      "research_risk_gate_recurrence": 4,
+      "risk_gate_any_stage_recurrence": 4,
+      "oos_stability_recurrence": 3,
+      "control_relative_non_deterioration_recurrence": 4,
+      "data_validity_failure": 1,
+      "positive_holdout_not_sufficient": 4
+    },
+    "q010_conclusion": "Recurring bottleneck is robust risk quality and control-relative stability; next research question is orthogonal information/alpha.",
+    "q011_candidate_sources": [
+      "data/gdelt_events.py"
+    ]
   },
   "agent_usage_efficiency": {
     "policy": "deterministic_actions_for_computation_and_agent_use_for_architecture_review_synthesis",
@@ -209,6 +227,9 @@
     "lessons_recorded": "reuse_frozen_artifacts; batch_independent_evidence_fetches; fail_fast_contract_tests; no_agent_spend_for_deterministic_backtests; do_not_formalize_single_snapshot_weak_discovery",
     "q004_discovery_policy": "one broad cross-asset observation plus benchmark; no performance selection; discovery candidates require fresh preregistration",
     "q006_policy": "mechanism-first preregistration; fresh disjoint coverage; no T041 parameter/weight retuning",
-    "secondary_sensitivity_reproducibility": "Adjusted-close Total-Return-Sensitivität zeigte minimale Laufabweichungen bei zwei identischen Formal-Ausführungen; Price-Only-Kernkennzahlen und Gate-Ergebnisse waren identisch."
+    "secondary_sensitivity_reproducibility": "Adjusted-close Total-Return-Sensitivität zeigte minimale Laufabweichungen bei zwei identischen Formal-Ausführungen; Price-Only-Kernkennzahlen und Gate-Ergebnisse waren identisch.",
+    "q010_parallel_resource": "Superpowers/parallel development branch PR #176 hardened archived-evidence provenance and was merged after CI verification.",
+    "q010_final_execution": "Run 36119705793 on synchronized execution branch; diagnostic-only; no performance rerun.",
+    "q011_policy": "Explore existing non-price information sources for one fixed PIT mechanism; design only before any preregistration."
   }
 }

@@ -3131,3 +3131,18 @@ Sicherheitsstatus:
 T045 wurde formal auf einem vollständig symbol-disjunkten Universum ausgewertet und **NO_SUPPORT / archived_rejected** klassifiziert. Die Coverage lieferte 3.519 gemeinsame Zeitstempel bei 3.500 benötigten Kerzen; verwendet wurden 2.798 Research-Returns und 700 blinde Holdout-Returns. Der feste ATR(20)-Trailing-Exit (3×ATR, Schlusskurs-Trigger, Ausführung am nächsten Open) senkte die Research-Rendite von 60,62 % auf 41,23 %, erhöhte die Research-Max-DD von 19,73 % auf 20,07 %, senkte den PF von 1,090 auf 1,068 und verschlechterte im Holdout die Rendite von 21,13 % auf 8,34 %, die Max-DD von 9,79 % auf 15,98 % und den PF von 1,127 auf 1,059. Die durchschnittliche Rolling-DD verbesserte sich von 14,02 % auf 13,07 %, reichte aber weder für den absoluten Risikogate noch für die Nicht-Verschlechterungsbedingungen. 391 Stop-Ereignisse wurden beobachtet. Keine Promotion, kein Tuning und keine Holdout-Selektion.
 
 Die formale Ausführung wurde zweimal identisch angestoßen; die Kern-Price-Only-Kennzahlen und Gate-Ergebnisse reproduzierten sich. Die sekundäre Total-Return-Sensitivität auf adjusted-close-Daten zeigte nur minimale numerische Laufabweichungen und wird nicht als unabhängiger Versuch gezählt. Der nächste Schritt ist eine Cross-Trial-Failure-Diagnose vor Reservierung des nächsten Mechanismus.
+
+
+## Q010 — aktuelle Cross-Trial-Failure-Diagnose (2026-09-25)
+
+Q010 ist als DIAGNOSTIC_ONLY / COMPLETED abgeschlossen. Die endgültige Diagnose basiert auf T041–T045: vier performance-valide Trials und ein separater DATA_INVALID-Fall T043.
+
+Wiederkehrende Muster: Research-Risiko-Gate 4/4, Fixed-Control-Non-Deterioration 4/4, OOS-Stabilität 3/4. Positive Holdout-Renditen in 4/4 Fällen waren nicht ausreichend. Die Diagnose führt ausdrücklich nicht zu Parameter-, Asset-, Holdout- oder Gate-Selektion.
+
+### Q011 — Orthogonale Information/Alpha-Entwicklung
+
+Die nächste Forschungsstufe ist kein weiteres Risiko-Overlay. Es wird eine einzige, fest definierte Information-/Alpha-Hypothese entworfen.
+
+Im Repository existiert bereits ein GDELT-Event-Parser unter data/gdelt_events.py. Daraus folgt noch keine gültige formale Hypothese; zuerst müssen Point-in-Time-Semantik, Asset-Zuordnung und historische Reproduzierbarkeit geprüft werden.
+
+Q010-Provenienz: Workflow 36119705793, Artefakt 10856102739, SHA256 9f10a27ed267870981c8f480e868967e22c4d19a8c3562c37c9690d19dcf01c2, Fingerprint c11a4a2340bf4f7a9f132f53835465d57d0b12ab97770a24f3fd98492e7f9549.
