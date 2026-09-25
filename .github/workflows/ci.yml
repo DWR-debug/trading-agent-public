@@ -77,8 +77,8 @@ jobs:
 
           task = default_research_queue().next_task()
           assert task is not None
-          assert task.task_id == "Q-011-ORTHOGONAL-INFORMATION-ALPHA-DISCOVERY"
-          assert task.research_family == "orthogonal_information_alpha_discovery"
+          assert task.task_id == "Q-012-INFORMATION-ALPHA-TEMPORAL-STABILITY-DIAGNOSTIC"
+          assert task.research_family == "orthogonal_information_alpha_temporal_stability"
 
           expected = set(prereg["symbols"])
           for existing in list_universes():
@@ -109,8 +109,14 @@ jobs:
           assert state["latest_formal_trial"] == "T-2026-09-25-045"
           assert state["latest_trial_status"] == "BLOCKED"
           assert state["current_trial_status"] == "ARCHIVED_REJECTED"
-          assert state["engineering_notes"]["current_queue_task"] == "Q-011-ORTHOGONAL-INFORMATION-ALPHA-DISCOVERY"
-          assert state["engineering_notes"]["last_completed_queue_task"] == "Q-010-CROSS-TRIAL-FAILURE-DIAGNOSIS"
+          assert state["engineering_notes"]["current_queue_task"] == "Q-012-INFORMATION-ALPHA-TEMPORAL-STABILITY-DIAGNOSTIC"
+          assert state["engineering_notes"]["last_completed_queue_task"] == "Q-011-ORTHOGONAL-INFORMATION-ALPHA-DISCOVERY"
+          assert state["engineering_notes"]["q011_status"] == "COMPLETED_DISCOVERY_ONLY"
+          assert state["engineering_notes"]["q011_workflow_run"] == 36121684164
+          assert state["engineering_notes"]["q011_artifact_id"] == 10857762336
+          assert state["engineering_notes"]["q011_report_fingerprint"] == "08664ed668b61a2e149067cbe10c281f73d27b0b94ed50372877ab1203e97da8"
+          assert state["engineering_notes"]["q011_performance_trial_authorized"] is False
+          assert state["engineering_notes"]["q012_status"] == "PENDING"
           assert state["engineering_notes"]["q010_status"] == "COMPLETED"
           assert state["engineering_notes"]["q010_diagnosis_status"] == "DIAGNOSTIC_ONLY"
           assert state["engineering_notes"]["q010_workflow_run"] == 36119705793
