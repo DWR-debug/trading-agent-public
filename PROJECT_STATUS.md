@@ -3124,3 +3124,44 @@ Sicherheitsstatus:
 - LIVE_TRADING_ENABLED=False
 - orders_enabled=False
 - automatic_promotion=False
+
+
+## Aktueller Gesamtcheckpoint — T045 formal abgeschlossen — T045 formal abgeschlossen — 2026-09-25
+
+T045 wurde nach bestandenem Coverage-Preflight formal ausgeführt und als **BLOCKED / NO_SUPPORT / archived_rejected** abgeschlossen.
+
+Technischer Nachweis:
+- Coverage-Workflow: 36116824638
+- Coverage: 3.519 gemeinsame Zeitstempel bei Ziel 3.500
+- Coverage-Fingerprint: 4c82327c957331851b1184a2a947f77f38e0b73d8e6b54a3fafda424d86296dc
+- Formal-Workflow: 36117548408
+- Formal-Artefakt: 10854674939
+- Formal-Artefakt SHA256: sha256:6981fd12a8f8b1e6b4b28a4eef885af963e1de5922edf9fbe182047872dd0adb
+- Report-Fingerprint: 90bb1b7f84b19a8675bab6ed6505931544e2d320c0cdaf199db4c8666a94595a
+- Vollständige Testsuite im Formal-Run: 743 passed
+- Paper-only Safety: grün
+
+Fachlicher Befund:
+- Research: +41,228 %; Max-DD 20,066 %; PF 1,068
+- Rolling: PF 1,068; profitable Fenster 3/5; Ø DD 13,075 %
+- OOS/IS: 0,202
+- Holdout: +8,340 %; Max-DD 15,984 %; PF 1,059
+- Gegen Fixed 50/50: Research-Return -19,388 Prozentpunkte; Holdout-Return -12,791 Prozentpunkte; Holdout-DD +6,192 Prozentpunkte; Holdout-PF -0,068
+- Ø Rolling-DD verbessert sich um 0,949 Prozentpunkte, reicht aber nicht für die absoluten Gates und steht nicht gegen die übrigen Verschlechterungen.
+
+Lifecycle:
+- 391 Stop-Events
+- 14.524 gestoppte Asset-Tage
+- 13.476 Positions-Asset-Tage
+
+Konsequenz:
+- T045 wird nicht promoted und verändert weder Fixed Candidate noch Parameterraum oder Gates.
+- Keine nachträgliche ATR-/Exit-Suche auf demselben Trial.
+- Nächster methodischer Schritt: rein deskriptive Analyse des eingefrorenen T045-Artefakts zu Stop-Timing, Post-Stop-Verlauf und Asset-/Zeit-Konzentration.
+- Jede neue Performance-Hypothese benötigt eine neue Präregistrierung, Coverage-Preflight und einen frischen symbol-disjunkten Holdout-blinden Datensatz.
+
+Sicherheitsstatus:
+- PAPER_ONLY=True
+- LIVE_TRADING_ENABLED=False
+- orders_enabled=False
+- automatic_promotion=False
