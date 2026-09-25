@@ -68,3 +68,12 @@ Backtests benötigen.
 - Keine API-Schlüssel in Repository-Dateien.
 - Keine Forschungsergebnisse gelten als Profitabilitätsbeweis.
 - Kostenlimits dürfen nicht automatisch erhöht werden.
+
+
+## Kostenfreie Agentenressourcen — Hypothesen zuerst (2026-09-25)
+
+Die gemeinsame Arbeitsabsprache wird dauerhaft als Research-Regel geführt:
+
+**Kostenfreie Agentencredits werden primär für Hypothesenbildung, Gegenhypothesen, Mechanismensynthese und Forschungsdesign verwendet.** Deterministische Berechnung bleibt lokal. Bezahlte Agenten-/API-Nutzung bleibt deaktiviert.
+
+Die bevorzugte Nutzung ist ein gebündelter Agentenlauf mit mehreren unabhängigen Denk-Linsen und kompakten, eingefrorenen Evidence-Summaries. Agentenoutput ist Ideenmaterial und wird erst nach Präregistrierung, Coverage-Preflight und deterministischer Evidenztestung wissenschaftlich relevant.
