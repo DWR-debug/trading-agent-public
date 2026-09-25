@@ -68,13 +68,9 @@ bleiben strikt getrennt.
 
 ## Nächste Aktion
 
-Zuerst wird der wissenschaftliche Output von Round 002 aus der dedizierten Ausführung verifiziert. Erst danach wird entschieden, ob die H08-Diagnose die nächste Coverage-/PIT-Stufe erreicht. Round 002 fokussiert eine ex ante fixierte **volatility-state transition**-Diagnose
-als Brücke zwischen Exploration und dem identifizierten Hauptproblem des Projekts:
-robuste Risiko-/Regime-Evidenz. Bewertet wird ausschließlich der Research-Split.
-Eine positive Exploration wird nicht automatisch zu einem formalem Trial.
+Zuerst wird die H06-Coverage-/PIT-Evidenz verifiziert. Eine positive Coverage führt nicht automatisch zu einem Performance-Trial; dafür bleibt eine getrennte Präregistrierung und der unveränderte Evidenz-Gate-Pfad erforderlich. H08 ist als **PRUNE_NO_RISK_REGIME_SUPPORT** abgeschlossen. Die nächste Forschung richtet sich deshalb wieder auf orthogonalen Informationsgehalt; H06 bleibt strikt coverage-first.
 
-Parallel werden ALFRED/CFTC nicht anhand von Performanceergebnissen weiterverfolgt,
-sondern erst bei verbesserter PIT-/Datenzugänglichkeit wieder freigegeben.
+ALFRED/CFTC werden nicht anhand von Performanceergebnissen weiterverfolgt, sondern erst bei verbesserter PIT-/Datenzugänglichkeit wieder freigegeben.
 
 ### Welche Schutzgrenzen bleiben unverändert?
 
