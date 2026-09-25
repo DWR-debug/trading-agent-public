@@ -418,7 +418,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
             "Fixed disjoint exploratory universe for the wide-search research-only "
             "signal probes; no symbol overlap with prior universes."
         ),
-        symbols=("WIP", "IGOV", "JNK", "PCY", "RJI", "CYB", "USL", "VCLT"),
+        symbols=("DBE", "DBP", "DBV", "EPI", "IYF", "IYH", "IDU", "ACWX"),
         target_count=3520,
     ),
 
