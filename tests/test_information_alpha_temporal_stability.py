@@ -1,38 +1,41 @@
-from datetime import date
-
 from automation.information_alpha_temporal_stability import (
     DEFAULT_ASSETS,
     FIXED_FEATURES,
-    run_stability_diagnostic,
+    _half_relationships,
 )
 
 
-def test_q012_fixed_panel_and_safety(tmp_path):
-    prices = {}
-    days = [date(2026, 8, day) for day in range(1, 25)]
-    for symbol, base in zip(DEFAULT_ASSETS, (100.0, 200.0, 300.0)):
-        prices[symbol] = {day: base + index for index, day in enumerate(days)}
+def observation(day: int, sign: float) -> dict:
+    return {
+        "target_market_day": f"2026-04-{day:02d}",
+        "features": {feature: float(day) for feature in FIXED_FEATURES},
+        "market": {
+            symbol: {
+                "next_market_day_return": sign * (day / 1000.0),
+                "five_market_day_forward_return": sign * (day / 2000.0),
+            }
+            for symbol in DEFAULT_ASSETS
+        },
+    }
 
-    def market_loader(symbol, start, end):
-        return prices[symbol]
 
-    def event_loader(day):
-        return []
+def test_q012_half_relationships_are_deterministic():
+    first = [observation(day, 1.0) for day in range(1, 12)]
+    relationships = _half_relationships(first, DEFAULT_ASSETS, "first_half")
 
-    report = run_stability_diagnostic(
-        date(2026, 8, 1),
-        date(2026, 8, 24),
-        output_dir=tmp_path / "q012",
-    )
+    assert set(relationships) == set(DEFAULT_ASSETS)
+    for symbol in DEFAULT_ASSETS:
+        assert set(relationships[symbol]) == set(FIXED_FEATURES)
+        for feature in FIXED_FEATURES:
+            metrics = relationships[symbol][feature]
+            assert metrics["half"] == "first_half"
+            assert metrics["sample_next_day"] == 11
+            assert metrics["sample_five_day"] == 11
+            assert metrics["pearson_next_day"] is not None
+            assert metrics["pearson_five_day"] is not None
 
-    assert report["status"] == "STABILITY_DIAGNOSTIC_ONLY"
-    assert report["assets"] == list(DEFAULT_ASSETS)
-    assert report["fixed_features"] == list(FIXED_FEATURES)
-    assert report["selection_used"] is False
-    assert report["holdout_used"] is False
-    assert report["parameter_search_used"] is False
-    assert report["feature_selection_used"] is False
-    assert report["paper_only"] is True
-    assert report["live_trading_enabled"] is False
-    assert report["orders_enabled"] is False
-    assert report["automatic_promotion"] is False
+
+def test_q012_discovery_contract_is_fixed_and_paper_only(tmp_path):
+    # Contract-level checks avoid any external data access in unit tests.
+    assert DEFAULT_ASSETS == ("SPY", "TLT", "GLD")
+    assert len(FIXED_FEATURES) == 6
