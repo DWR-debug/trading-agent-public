@@ -3232,3 +3232,34 @@ Kostenfreie Agentenressourcen werden primär für Hypothesenbildung, Gegenhypoth
 Der projektspezifische Copilot-Unteragent ist schreibgeschützt und besitzt keine automatische Delegierung. Siehe docs/AGENT_HYPOTHESIS_RESEARCH.md und docs/COPILOT_SUBAGENT_SETUP.md.
 
 Sicherheitsstatus: PAPER_ONLY=True, LIVE_TRADING_ENABLED=False, orders_enabled=False, automatic_promotion=False.
+
+## Aktueller Forschungscheckpoint — Q014 abgeschlossen — 2026-09-25
+
+Q014 ist **COMPLETED_DISCOVERY_ONLY** und damit die erste erfolgreiche ganzjährige Fortsetzung der Q012/Q013-GDELT-Diagnostik.
+
+### Technischer Nachweis
+- Resilient Workflow: `36158184847` (Run #7)
+- Ausführungscommit: `85acd4e17921a4e2682552bfbe424f17ffaa9322`
+- Final Artifact: `10874472512`
+- Artifact-ZIP-SHA256: `sha256:25db8f4fdde37d1f26faa472e780c093e549dd3db9ec21bd6c5a392673fab0fd`
+- Report-Fingerprint: `ab617984b57cf20ea2ac9e2458ac8a519b139abf8587dab751bd63e1d5d39d6d`
+- Vier feste, nicht überlappende GDELT-Chunks; jeder Chunk separat als Artifact gesichert.
+- Vollständige CI-Suite: **757 Tests**, Paper-only-Safety und Projektintegrität grün.
+
+### Daten und Befund
+- Zeitraum: 2025-09-25 bis 2026-09-24, exakt 365 Kalendertage
+- Assets: SPY, TLT, GLD
+- 250 gemeinsame Marktbeobachtungen
+- 55 Event-Fenster
+- 37.807.341 GDELT-Rohzeilen, 226 übersprungen
+- Mittlere absolute Spearman-Korrelation der vier fixierten Intensitäts-/Breitenfeatures im Event-Sample: **0,94116**
+- Über alle gemeinsamen Beobachtungen: **0,99881**
+- Mean Tone ist im Event-Sample wesentlich weniger redundant als die Intensitäts-/Breitenfamilie.
+
+Die Return-Assoziationen bleiben nach Asset und Horizont heterogen. Q014 liefert deshalb **keinen Nachweis eines handelbaren Edges und keinen Kausalnachweis**. Es wurde kein Performance-Trial autorisiert und keine Feature-/Asset-/Horizon-/Parameter-/Holdout-Selektion vorgenommen.
+
+### Konsequenz
+Q014 verschiebt die offene Frage von der reinen Datenmenge zur **inkrementellen Mechanismus-Diskriminierung**. Der nächste Queue-Eintrag ist daher Q015 als rein diagnostische, separat zu präregistrierende Untersuchung aller sechs bereits fixierten Features. Eine Performancehypothese entsteht daraus nicht automatisch.
+
+Sicherheitsstatus unverändert: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
+

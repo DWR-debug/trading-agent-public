@@ -77,8 +77,8 @@ jobs:
 
           task = default_research_queue().next_task()
           assert task is not None
-          assert task.task_id == "Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW"
-          assert task.research_family == "orthogonal_information_alpha_mechanism_redundancy_long_window"
+          assert task.task_id == "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC"
+          assert task.research_family == "orthogonal_information_alpha_mechanism_discrimination"
 
           expected = set(prereg["symbols"])
           for existing in list_universes():
@@ -109,8 +109,8 @@ jobs:
           assert state["latest_formal_trial"] == "T-2026-09-25-045"
           assert state["latest_trial_status"] == "BLOCKED"
           assert state["current_trial_status"] == "ARCHIVED_REJECTED"
-          assert state["engineering_notes"]["current_queue_task"] == "Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW"
-          assert state["engineering_notes"]["last_completed_queue_task"] == "Q-013-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-DIAGNOSTIC"
+          assert state["engineering_notes"]["current_queue_task"] == "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC"
+          assert state["engineering_notes"]["last_completed_queue_task"] == "Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW"
           assert state["engineering_notes"]["q011_status"] == "COMPLETED_DISCOVERY_ONLY"
           assert state["engineering_notes"]["q011_workflow_run"] == 36121684164
           assert state["engineering_notes"]["q011_artifact_id"] == 10857762336
@@ -119,7 +119,11 @@ jobs:
           assert state["engineering_notes"]["q012_status"] == "COMPLETED_DISCOVERY_ONLY"
           assert state["engineering_notes"]["q013_status"] == "COMPLETED_DISCOVERY_ONLY"
           assert state["engineering_notes"]["q013_performance_trial_authorized"] is False
-          assert state["engineering_notes"]["q014_status"] == "PENDING"
+          assert state["engineering_notes"]["q014_status"] == "COMPLETED_DISCOVERY_ONLY"
+          assert state["engineering_notes"]["q014_workflow_run"] == 36158184847
+          assert state["engineering_notes"]["q014_final_artifact_id"] == 10874472512
+          assert state["engineering_notes"]["q014_result_fingerprint"] == "ab617984b57cf20ea2ac9e2458ac8a519b139abf8587dab751bd63e1d5d39d6d"
+          assert state["engineering_notes"]["q014_performance_trial_authorized"] is False
           assert state["engineering_notes"]["q010_status"] == "COMPLETED"
           assert state["engineering_notes"]["q010_diagnosis_status"] == "DIAGNOSTIC_ONLY"
           assert state["engineering_notes"]["q010_workflow_run"] == 36119705793

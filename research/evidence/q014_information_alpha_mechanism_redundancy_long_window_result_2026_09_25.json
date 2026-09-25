@@ -1,0 +1,169 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW",
+  "status": "COMPLETED_DISCOVERY_ONLY",
+  "research_only": true,
+  "start": "2025-09-25",
+  "end": "2026-09-24",
+  "assets": [
+    "SPY",
+    "TLT",
+    "GLD"
+  ],
+  "fixed_features": [
+    "event_count",
+    "attention_score",
+    "source_breadth",
+    "article_count",
+    "negative_goldstein",
+    "mean_tone"
+  ],
+  "mechanism_groups": {
+    "intensity_breadth": [
+      "event_count",
+      "attention_score",
+      "source_breadth",
+      "article_count"
+    ],
+    "severity": [
+      "negative_goldstein"
+    ],
+    "tone": [
+      "mean_tone"
+    ]
+  },
+  "observations": {
+    "total": 250,
+    "event_windows": 55,
+    "no_event_windows": 195
+  },
+  "data_quality": {
+    "event_rows_seen": 37807341,
+    "event_rows_skipped": 226,
+    "source": "Q014 resumable four-chunk GDELT collection; market data fetched once during aggregation"
+  },
+  "point_in_time_contract": {
+    "event_feature_window": "previous_market_day < event_day < target_market_day",
+    "target_return": "previous_market_close -> target_market_close",
+    "five_day_horizon": "target_market_close -> fifth subsequent market_close",
+    "same_day_return_used": false
+  },
+  "feature_redundancy": {
+    "event_only_intensity_breadth_mean_abs_spearman": 0.9411616161616162,
+    "event_only_pair_count": 6,
+    "all_common_observations_intensity_breadth_mean_abs_spearman": 0.998808049139654,
+    "event_only_selected_pairwise_spearman": {
+      "event_count_attention_score": 0.9672438672438674,
+      "event_count_source_breadth": 0.9136363636363638,
+      "event_count_article_count": 0.9023809523809525,
+      "attention_score_source_breadth": 0.9404761904761906,
+      "attention_score_article_count": 0.9442279942279943,
+      "source_breadth_article_count": 0.9790043290043291,
+      "negative_goldstein_mean_tone": -0.40266955266955273
+    }
+  },
+  "return_associations_event_only_spearman": {
+    "SPY": {
+      "event_count": {
+        "next_day": 0.12532467532467534,
+        "five_day": 0.1696588526777206
+      },
+      "attention_score": {
+        "next_day": 0.15122655122655124,
+        "five_day": 0.1840670859538784
+      },
+      "source_breadth": {
+        "next_day": 0.1598845598845599,
+        "five_day": 0.19687440442157422
+      },
+      "article_count": {
+        "next_day": 0.1355699855699856,
+        "five_day": 0.2044978082713932
+      },
+      "negative_goldstein": {
+        "next_day": 0.09776334776334777,
+        "five_day": 0.15403087478559177
+      },
+      "mean_tone": {
+        "next_day": -0.013275613275613277,
+        "five_day": -0.14206213074137602
+      }
+    },
+    "TLT": {
+      "event_count": {
+        "next_day": 0.21803751803751806,
+        "five_day": -0.012159329140461216
+      },
+      "attention_score": {
+        "next_day": 0.24227994227994232,
+        "five_day": -0.022222222222222223
+      },
+      "source_breadth": {
+        "next_day": 0.2108946608946609,
+        "five_day": 0.05096245473603964
+      },
+      "article_count": {
+        "next_day": 0.19466089466089467,
+        "five_day": 0.006746712407089766
+      },
+      "negative_goldstein": {
+        "next_day": 0.2132756132756133,
+        "five_day": -0.0296169239565466
+      },
+      "mean_tone": {
+        "next_day": -0.05447330447330448,
+        "five_day": 0.013150371640937679
+      }
+    },
+    "GLD": {
+      "event_count": {
+        "next_day": -0.08730158730158731,
+        "five_day": -0.027329902801600914
+      },
+      "attention_score": {
+        "next_day": -0.16673881673881677,
+        "five_day": -0.0024013722126929675
+      },
+      "source_breadth": {
+        "next_day": -0.1941558441558442,
+        "five_day": 0.03380979607394702
+      },
+      "article_count": {
+        "next_day": -0.2168831168831169,
+        "five_day": 0.013074137602439488
+      },
+      "negative_goldstein": {
+        "next_day": -0.10050505050505051,
+        "five_day": 0.046235944349151896
+      },
+      "mean_tone": {
+        "next_day": 0.028860028860028863,
+        "five_day": -0.07444253859348199
+      }
+    }
+  },
+  "execution": {
+    "workflow_run": 36158184847,
+    "run_number": 7,
+    "execution_branch": "research/execute-q014-redundancy-long-window",
+    "execution_commit": "85acd4e17921a4e2682552bfbe424f17ffaa9322",
+    "final_artifact_id": 10874472512,
+    "final_artifact_sha256": "sha256:25db8f4fdde37d1f26faa472e780c093e549dd3db9ec21bd6c5a392673fab0fd",
+    "result_fingerprint": "ab617984b57cf20ea2ac9e2458ac8a519b139abf8587dab751bd63e1d5d39d6d",
+    "chunk_count": 4,
+    "resilient_workflow": "q014-resilient.yml"
+  },
+  "governance": {
+    "holdout_selection": false,
+    "parameter_search": false,
+    "feature_selection": false,
+    "asset_selection": false,
+    "horizon_selection": false,
+    "performance_trial_authorized": false,
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "scientific_conclusion": "Long-window diagnostic confirms strong redundancy inside the fixed intensity/breadth family and materially lower event-sample correlation of tone versus the volume/breadth family. Return associations remain mixed by asset and horizon and are descriptive only; no trading edge or causal inference is established."
+}
