@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 GDELT_EVENT_FIELD_COUNT = 58
@@ -15,6 +16,18 @@ SOURCEURL_INDEX = 57
 
 class GDELTEventError(ValueError):
     """Raised for malformed GDELT event records."""
+
+
+class GDELTDataUnavailableError(RuntimeError):
+    """Raised when a requested historical GDELT daily export is unavailable."""
+
+    def __init__(self, *, day: str, url: str, status_code: int):
+        self.day = day
+        self.url = url
+        self.status_code = status_code
+        super().__init__(
+            f"GDELT daily export unavailable for {day}: HTTP {status_code} ({url})"
+        )
 
 @dataclass(frozen=True)
 class GDELTEvent:
@@ -145,7 +158,17 @@ def daily_export_url(day: datetime) -> str:
 def download_daily_export(day: datetime, destination: str | Path) -> Path:
     destination = Path(destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
-    request = Request(daily_export_url(day), headers={"User-Agent": "trading-agent-research/1.0"})
-    with urlopen(request, timeout=60) as response, destination.open("wb") as target:
-        target.write(response.read())
+    url = daily_export_url(day)
+    request = Request(url, headers={"User-Agent": "trading-agent-research/1.0"})
+    try:
+        with urlopen(request, timeout=60) as response, destination.open("wb") as target:
+            target.write(response.read())
+    except HTTPError as exc:
+        if exc.code == 404:
+            raise GDELTDataUnavailableError(
+                day=day.astimezone(timezone.utc).date().isoformat(),
+                url=url,
+                status_code=exc.code,
+            ) from exc
+        raise
     return destination
