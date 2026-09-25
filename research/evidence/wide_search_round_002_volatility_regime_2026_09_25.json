@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0",
+  "task_id": "WIDE-SEARCH-ROUND-002",
+  "hypothesis_id": "H08",
+  "recorded_on": "2026-09-25",
+  "workflow_run": 36188766298,
+  "head_sha": "0be8b510153308e4a2021f8874aa27ed50be1583",
+  "artifact_id": 10887128923,
+  "artifact_digest": "sha256:9ce4f10f10998d55e144b5dd01b991f4d48815a0a335ba4b96457a8bef307433",
+  "result_fingerprint": "de1af470352d4bc7666b9b11b67829c1252cf46fa11615c675f176a4fb5f5760",
+  "research_candles_used": 2798,
+  "holdout_candles_unused": 702,
+  "classification": "DISCOVERY_SUPPORT_RISK_REGIME",
+  "overall": {
+    "events": 316,
+    "mean_forward_to_baseline_vol_ratio": 1.3252715790248213,
+    "median_forward_to_baseline_vol_ratio": 0.9783674691199964,
+    "share_at_or_above_1_10": 0.41139240506329117
+  },
+  "first_research_half": {
+    "events": 158,
+    "mean_forward_to_baseline_vol_ratio": 1.515897521244505,
+    "median_forward_to_baseline_vol_ratio": 0.9493704517133035,
+    "share_at_or_above_1_10": 0.41139240506329117
+  },
+  "second_research_half": {
+    "events": 158,
+    "mean_forward_to_baseline_vol_ratio": 1.1346456368051379,
+    "median_forward_to_baseline_vol_ratio": 0.9944688573631031,
+    "share_at_or_above_1_10": 0.41139240506329117
+  },
+  "per_symbol": {
+    "DBE": {
+      "event_count": 37,
+      "mean_forward_to_baseline_ratio": 1.039318985968305
+    },
+    "DBP": {
+      "event_count": 42,
+      "mean_forward_to_baseline_ratio": 1.0581627130545659
+    },
+    "OIH": {
+      "event_count": 20,
+      "mean_forward_to_baseline_ratio": 1.2207741829544356
+    },
+    "EPI": {
+      "event_count": 37,
+      "mean_forward_to_baseline_ratio": 0.925021651287675
+    },
+    "IYF": {
+      "event_count": 54,
+      "mean_forward_to_baseline_ratio": 1.5921360880450013
+    },
+    "IYH": {
+      "event_count": 53,
+      "mean_forward_to_baseline_ratio": 1.5756225102797947
+    },
+    "IDU": {
+      "event_count": 28,
+      "mean_forward_to_baseline_ratio": 2.182494373431202
+    },
+    "ACWX": {
+      "event_count": 45,
+      "mean_forward_to_baseline_ratio": 1.0367491895701986
+    }
+  },
+  "interpretation": {
+    "status": "EXPLORATION_SUPPORT_WITH_ROBUSTNESS_CONCERN",
+    "meaning": "The preregistered mean-based risk-regime rule is supported in both research halves, but the pooled median is below 1.0 and the positive mean is concentrated in a subset of symbols. This is insufficient for formal validation by itself.",
+    "not_proven": "No trading alpha, PnL, live readiness, or formal strategy evidence is established."
+  },
+  "governance": {
+    "risk_regime_diagnostic": true,
+    "performance_evaluation": false,
+    "holdout_evaluation": false,
+    "holdout_used_for_selection": false,
+    "selection_used": false,
+    "performance_trial_authorized": false,
+    "automatic_promotion": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
