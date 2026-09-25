@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "checkpoint_type": "research_governance",
+  "task_id": "Q-011-ORTHOGONAL-INFORMATION-ALPHA-DISCOVERY",
+  "status": "COMPLETED",
+  "scientific_status": "DISCOVERY_ONLY",
+  "workflow_run_id": 36121684164,
+  "authorization_commit": "3587fde89ba5a2cc9d4a2c83de3ca84c59c484e8",
+  "artifact_id": 10857762336,
+  "artifact_digest": "sha256:0810dc6f9f9ca0fdd2435c4fccf7845667b0bd2929e45bceecfd923b23dcee1f",
+  "report_fingerprint": "08664ed668b61a2e149067cbe10c281f73d27b0b94ed50372877ab1203e97da8",
+  "corrected_report_sha256": "e2dbe92f2e16bfb3079eceac42b1180b5fd152a47090043935459950693f76d9",
+  "data_scope": {
+    "window_start": "2026-08-24",
+    "window_end": "2026-09-24",
+    "assets": [
+      "SPY",
+      "TLT",
+      "GLD"
+    ],
+    "observations": 22,
+    "event_windows": 4,
+    "no_event_windows": 18,
+    "event_rows_seen": 3208523,
+    "event_rows_skipped": 24
+  },
+  "conclusion": {
+    "performance_trial_authorized": false,
+    "feature_selected": false,
+    "descriptive_result": "asset- and horizon-dependent; no stable cross-asset information effect established",
+    "rationale": "22 observations and only four event windows are insufficient for a stable performance hypothesis; observed correlations differ by asset and horizon."
+  },
+  "serialization": {
+    "raw_json_valid": false,
+    "repair_method": "remove trailing two-character literal escaped newline",
+    "lossless": true,
+    "embedded_fingerprint_preserved": true,
+    "serializer_fix_commit": "d2351beb0e6edc22afc709055cc8beae0cf2923d"
+  },
+  "next_queue_task": "Q-012-INFORMATION-ALPHA-TEMPORAL-STABILITY-DIAGNOSTIC",
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}

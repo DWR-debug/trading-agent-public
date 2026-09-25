@@ -3170,3 +3170,21 @@ Sicherheitsstatus:
 - LIVE_TRADING_ENABLED=False
 - orders_enabled=False
 - automatic_promotion=False
+
+## Q011 Abschluss — 2026-09-25
+
+Q-011-ORTHOGONAL-INFORMATION-ALPHA-DISCOVERY ist **COMPLETED / DISCOVERY_ONLY**.
+
+Nachweis: Workflow 36121684164, Artifact 10857762336, Report-Fingerprint 08664ed668b61a2e149067cbe10c281f73d27b0b94ed50372877ab1203e97da8.
+
+Der Lauf verarbeitete 3.208.523 GDELT-Zeilen und erzeugte 22 gemeinsame Marktbeobachtungen, darunter vier Event-Fenster. Die deskriptiven Beziehungen sind asset- und horizonabhängig; es wurde kein Feature für Trading ausgewählt und kein Performance-Trial autorisiert.
+
+Die im Run-Artefakt enthaltene JSON-Datei hatte einen reinen Serialisierungsfehler: ein zusätzliches Literal `\\n` nach dem JSON-Objekt. Der eingebettete Fingerprint blieb erhalten; die Reparatur ist verlustfrei. Der Serializer-Fix ist in master und durch einen Reload-Regressionstest geschützt.
+
+### Nächster Task
+
+**Q-012-INFORMATION-ALPHA-TEMPORAL-STABILITY-DIAGNOSTIC** — PENDING.
+
+Ziel ist ein längerer, vorab fixierter Zeitraum mit denselben Informationsfeatures, um zeitliche Stabilität vor einer möglichen separaten Performance-Präregistrierung zu prüfen. Keine nachträgliche Feature-Auswahl und kein Holdout-Tuning.
+
+Sicherheitsstatus: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
