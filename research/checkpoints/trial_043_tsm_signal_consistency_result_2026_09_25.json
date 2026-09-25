@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "trial_id": "T-2026-09-25-043",
+  "status": "DATA_INVALID",
+  "scientific_outcome": "NO_SCIENTIFIC_OUTCOME",
+  "workflow_run_id": 36112272492,
+  "artifact_id": 10852968148,
+  "coverage_fingerprint": "c70113976cdac68d8fa44617668e01b91dc7af272c3b3b89026fd90747d0f983",
+  "universe": "validation_2026_09_25_tsm_signal_consensus",
+  "requested_candles": 3500,
+  "target_common_calendar": 3500,
+  "common_calendar_count": 3499,
+  "per_symbol_count": 3500,
+  "research_return_periods": 2798,
+  "holdout_return_periods": 700,
+  "performance_evaluation": false,
+  "holdout_evaluation": false,
+  "selection_used": false,
+  "holdout_used_for_selection": false,
+  "failure_reasons": [
+    "insufficient_common_calendar"
+  ],
+  "interpretation": "All 13 symbols individually met the 3500-candle requirement, but the common calendar contained only 3499 timestamps. No performance, OOS, or holdout evaluation was performed.",
+  "repair_rule": "Do not alter the hypothesis or gates. Create successor trial T044 with the same symbols and request a larger raw coverage window so the fixed 3500-candle common calendar can be formed; this is a coverage repair only.",
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
