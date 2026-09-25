@@ -1,0 +1,85 @@
+name: Q015 Mechanism Discrimination Diagnostic
+
+on:
+  push:
+    branches:
+      - research/execute-q015-mechanism-discrimination
+    paths:
+      - "automation/information_alpha_mechanism_discrimination.py"
+      - "tests/test_information_alpha_mechanism_discrimination.py"
+      - "research/preregistrations/q015_information_alpha_mechanism_discrimination_2026_09_25.json"
+      - "research/authorizations/q015_mechanism_discrimination_2026_09_25.json"
+      - ".github/workflows/q015-mechanism-discrimination.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-q015-mechanism-discrimination
+  cancel-in-progress: false
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest statsmodels==0.15.0
+
+      - name: Full test suite
+        run: python -m pytest -q
+
+      - name: Safety and authorization
+        run: |
+          set -euo pipefail
+          test "$GITHUB_EVENT_NAME" = "push"
+          test "$(git log -1 --pretty=%s)" = "Research authorization: execute Q015 mechanism discrimination diagnostic"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from config import settings
+          p = json.loads(Path("research/preregistrations/q015_information_alpha_mechanism_discrimination_2026_09_25.json").read_text(encoding="utf-8"))
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert p["performance_trial_authorized"] is False
+          assert all(value is False for value in p["selection"].values())
+          assert p["source_artifacts"]["workflow_run_id"] == 36158184847
+          assert p["fixed_window"] == {"start": "2025-09-25", "end": "2026-09-24", "calendar_days": 365}
+          assert p["fixed_assets"] == ["SPY", "TLT", "GLD"]
+          PY
+
+      - name: Download exact Q014 frozen chunks
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          source_root="research/runs/information_alpha_mechanism_discrimination/q014_chunks"
+          mkdir -p "$source_root"
+          for id in 01 02 03 04; do
+            gh run download 36158184847               --repo "$GITHUB_REPOSITORY"               --name "q014-chunk-$id-36158184847"               --dir "$source_root"
+            test -s "$source_root/q014_chunk_$id.json"
+          done
+
+      - name: Execute Q015 diagnostic
+        run: |
+          set -euo pipefail
+          python -m automation.information_alpha_mechanism_discrimination             --mode run             --source-dir research/runs/information_alpha_mechanism_discrimination/q014_chunks             --input-path research/runs/information_alpha_mechanism_discrimination/q015_frozen_input/q015_frozen_input.json             --output-dir research/runs/information_alpha_mechanism_discrimination/q015
+          test -s research/runs/information_alpha_mechanism_discrimination/q015_frozen_input/q015_frozen_input.json
+          test -s research/runs/information_alpha_mechanism_discrimination/q015/q015_mechanism_discrimination.json
+
+      - name: Upload Q015 evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q015-mechanism-discrimination-${{ github.run_id }}
+          path: research/runs/information_alpha_mechanism_discrimination/
+          retention-days: 30

@@ -1,0 +1,129 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC",
+  "research_family": "orthogonal_information_alpha_mechanism_discrimination",
+  "status": "PENDING",
+  "preregistered_on": "2026-09-25",
+  "objective": "Rein diagnostische Untersuchung, ob die bereits fixierten Q011-GDELT-Mechanismusgruppen im eingefrorenen Q014-Datensatz inkrementelle, voneinander unterscheidbare Information über zukünftige Marktbewegungen enthalten. Die Studie entscheidet keine Handelsregel und gibt keine Performancefreigabe.",
+  "source_task": "Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW",
+  "fixed_window": {
+    "start": "2025-09-25",
+    "end": "2026-09-24",
+    "calendar_days": 365
+  },
+  "fixed_assets": [
+    "SPY",
+    "TLT",
+    "GLD"
+  ],
+  "source_artifacts": {
+    "workflow_run_id": 36158184847,
+    "artifact_ids": {
+      "q014_chunk_01": 10874372543,
+      "q014_chunk_02": 10874493137,
+      "q014_chunk_03": 10874886418,
+      "q014_chunk_04": 10874102558
+    },
+    "artifact_digests": {
+      "q014_chunk_01": "sha256:44703ef3ee727b1588b09ac361fd4937af3c40fa3b76f9693ad04583959bcf3c",
+      "q014_chunk_02": "sha256:7342db0e4f07210b89aa6ce9558a9884ea54f53885b98f7794b21bd41fc42a01",
+      "q014_chunk_03": "sha256:e0a2e9cc49c00536788b94f780736741ceb4223a270df71a30bffac6070bc712",
+      "q014_chunk_04": "sha256:8ff771b8efd59c94ce19546785193ac328ab08d46a2babcd0f7efcebfa6405f0"
+    }
+  },
+  "event_contract": {
+    "filter": "international event with num_articles >= 3",
+    "event_feature_window": "previous_market_day < event_day < target_market_day",
+    "same_day_return_used": false,
+    "market_price_source": "Yahoo Finance adjusted daily close, fetched once for the exact fixed window and frozen into the Q015 input artifact"
+  },
+  "fixed_features": [
+    "event_count",
+    "attention_score",
+    "source_breadth",
+    "article_count",
+    "negative_goldstein",
+    "mean_tone"
+  ],
+  "fixed_mechanism_groups": {
+    "intensity_breadth": [
+      "event_count",
+      "attention_score",
+      "source_breadth",
+      "article_count"
+    ],
+    "severity": [
+      "negative_goldstein"
+    ],
+    "tone": [
+      "mean_tone"
+    ]
+  },
+  "competing_explanations": {
+    "H1_intensity_breadth": "Zukünftige Assoziation wird überwiegend durch gemeinsame Event-Intensität/Breite getragen; die vier Volume/Breadth-Features können stark redundant sein.",
+    "H2_severity": "Negative-Goldstein-Severity enthält inkrementelle Information über generische Event-Intensität/Breite hinaus.",
+    "H3_tone": "Mean Tone enthält inkrementelle Information über generische Event-Intensität/Breite hinaus und ist deshalb mechanistisch unterscheidbar.",
+    "H4_shared": "Ein großer Teil der beobachtbaren Erklärungsleistung ist geteilt bzw. nicht gruppenspezifisch; einzelne Gruppen liefern nur geringe einzigartige Beiträge."
+  },
+  "diagnostic_method": {
+    "sample": "event-only observations with complete target return for the tested asset/horizon",
+    "outcomes": [
+      "next_market_day_return",
+      "five_market_day_forward_return"
+    ],
+    "transform": "Midrank transform applied independently to every predictor and outcome within each asset/horizon cell before regression; this is a fixed Spearman-compatible rank encoding.",
+    "model": "Ordinary least squares with intercept on the full fixed feature set of the selected mechanism-group subset.",
+    "group_decomposition": "Exact three-group Shapley decomposition of R-squared across all 6 permutations of the fixed group set; no feature, asset, horizon, subset-order, or parameter selection.",
+    "subset_models": [
+      "empty",
+      "intensity_breadth",
+      "severity",
+      "tone",
+      "intensity_breadth+severity",
+      "intensity_breadth+tone",
+      "severity+tone",
+      "intensity_breadth+severity+tone"
+    ],
+    "reported_quantities": [
+      "sample size per asset/horizon",
+      "R-squared for every fixed subset model",
+      "Shapley R-squared contribution for each mechanism group",
+      "full-model R-squared",
+      "arithmetic conservation check: sum of group Shapley contributions equals full-model R-squared within numerical tolerance"
+    ]
+  },
+  "minimum_data_contract": {
+    "common_observations": 80,
+    "event_windows": 40,
+    "complete_event_observations_per_asset_horizon": 40,
+    "otherwise_status": "DATA_INSUFFICIENT"
+  },
+  "falsification_logic": {
+    "H1_intensity_breadth": "Falsified descriptively if its pre-specified Shapley contribution is non-positive in at least 3 of the 6 fixed asset/horizon cells.",
+    "H2_severity": "Falsified descriptively if its pre-specified Shapley contribution is non-positive in at least 3 of the 6 fixed asset/horizon cells.",
+    "H3_tone": "Falsified descriptively if its pre-specified Shapley contribution is non-positive in at least 3 of the 6 fixed asset/horizon cells.",
+    "H4_shared": "Disfavored descriptively only if the residual/shared explanation is not compatible with the fixed subset R-squared table and at least one mechanism group shows a positive Shapley contribution in at least 5 of the 6 fixed cells. This is not a trading-performance gate."
+  },
+  "interpretation_guardrails": [
+    "No group is selected, ranked, or promoted because it has the largest contribution in a cell.",
+    "No feature is selected within the intensity/breadth group.",
+    "No asset or horizon is selected from observed results.",
+    "The diagnostic does not authorize a trading rule, performance trial, holdout evaluation, gate change, or production use.",
+    "Any later performance hypothesis requires a separate preregistration, a fresh symbol-disjoint validation universe, unchanged evidence gates, and a fixed rule declared before data evaluation.",
+    "All Q015 outputs remain IDEAS/DIAGNOSTIC evidence only; they are not performance evidence."
+  ],
+  "selection": {
+    "holdout": false,
+    "feature": false,
+    "asset": false,
+    "horizon": false,
+    "parameter": false
+  },
+  "performance_trial_authorized": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}

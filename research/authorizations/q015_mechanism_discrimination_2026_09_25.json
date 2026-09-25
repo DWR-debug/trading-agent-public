@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC",
+  "authorized_on": "2026-09-25",
+  "authorization_scope": "diagnostic_only",
+  "execution_authorized": true,
+  "source_q014_workflow_run": 36158184847,
+  "source_q014_artifact_ids": [
+    10874372543,
+    10874493137,
+    10874886418,
+    10874102558
+  ],
+  "fixed_window": {
+    "start": "2025-09-25",
+    "end": "2026-09-24",
+    "calendar_days": 365
+  },
+  "fixed_assets": [
+    "SPY",
+    "TLT",
+    "GLD"
+  ],
+  "fixed_features": [
+    "event_count",
+    "attention_score",
+    "source_breadth",
+    "article_count",
+    "negative_goldstein",
+    "mean_tone"
+  ],
+  "fixed_mechanism_groups": {
+    "intensity_breadth": [
+      "event_count",
+      "attention_score",
+      "source_breadth",
+      "article_count"
+    ],
+    "severity": [
+      "negative_goldstein"
+    ],
+    "tone": [
+      "mean_tone"
+    ]
+  },
+  "method": "Fixed event-only asset/horizon cells; midrank all predictors and returns; OLS R-squared for every subset of the three fixed groups; exact Shapley decomposition over six group permutations.",
+  "selection": {
+    "holdout": false,
+    "feature": false,
+    "asset": false,
+    "horizon": false,
+    "parameter": false
+  },
+  "performance_trial_authorized": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
