@@ -256,5 +256,15 @@ jobs:
           assert state['engineering_notes']['t042_performance_allowed'] is False
           assert state['engineering_notes']['t042_coverage_workflow_run'] == 36066657371
           assert state['engineering_notes']['t042_coverage_fingerprint'] == '67a42d1a4832413e4a0a6dc36e1d47dd5c92a25923ea86c8d1c11a1d29e30d24'
+          assert state['engineering_notes']['t043_coverage_status'] == 'DATA_INVALID'
+          assert state['engineering_notes']['t043_formal_performance_allowed'] is False
+          assert state['engineering_notes']['t043_scientific_outcome'] == 'NO_SCIENTIFIC_OUTCOME'
+          assert state['engineering_notes']['t044_preregistered'] is True
+          assert state['engineering_notes']['t044_parent_trial_id'] == 'T-2026-09-25-043'
+          assert state['engineering_notes']['t044_coverage_status'] == 'PENDING'
+          assert state['engineering_notes']['t044_formal_performance_allowed'] is False
+          assert state['engineering_notes']['t044_requested_candles'] == 3520
+          assert state['engineering_notes']['t044_target_common_calendar'] == 3500
+
           print('PROJECT STATE OK')
           PY
