@@ -74,6 +74,7 @@ def aggregate_q014_chunks(*,chunk_dir="research/runs/information_alpha_redundanc
         ).items()}
         for symbol in DEFAULT_ASSETS
     }
+    daily = {date.fromisoformat(day): payload for day, payload in daily.items()}
     observations=_build_observations(DEFAULT_START,DEFAULT_END,daily,prices)
     base={"observations":observations,"point_in_time_contract":{"event_feature_window":"previous_market_day < event_day < target_market_day","target_return":"previous_market_close -> target_market_close","five_day_horizon":"target_market_close -> fifth subsequent market_close","same_day_return_used":False},"data_quality":{"event_rows_seen":rows_seen,"event_rows_skipped":rows_skipped,"source":"Q014 resumable four-chunk GDELT collection; market data fetched once during aggregation"}}
     root=Path(output_dir); report=analyze_redundancy_base(base,DEFAULT_START,DEFAULT_END,output_dir=root)
