@@ -292,6 +292,50 @@ CURRENT_TRIAL_IDS = (
     "T-2026-09-25-045",
 )
 
+CURRENT_CHECKPOINTS = {
+    "T-2026-09-25-044": ROOT
+    / "research"
+    / "checkpoints"
+    / "trial_044_tsm_signal_consistency_result_2026_09_25.json",
+    "T-2026-09-25-045": ROOT
+    / "research"
+    / "checkpoints"
+    / "trial_045_position_lifecycle_exit_result_2026_09_25.json",
+}
+
+
+def _current_evidence(trial: dict) -> dict:
+    evidence = {
+        "outcome": dict(trial.get("outcome", {})),
+        "data_scope": dict(trial.get("data_scope", {})),
+        "search_scope": dict(trial.get("search_scope", {})),
+    }
+    evidence["key_metrics"] = dict(evidence["outcome"].get("key_metrics", {}))
+
+    checkpoint_path = CURRENT_CHECKPOINTS.get(trial["trial_id"])
+    if checkpoint_path is not None:
+        if not checkpoint_path.exists():
+            raise FileNotFoundError(
+                f"Archived checkpoint is required for {trial['trial_id']}: {checkpoint_path}"
+            )
+        checkpoint = json.loads(checkpoint_path.read_text(encoding="utf-8"))
+        if checkpoint.get("trial_id") != trial["trial_id"]:
+            raise ValueError(
+                f"Checkpoint trial id mismatch for {trial['trial_id']}."
+            )
+        evidence["key_metrics"].update(checkpoint.get("key_metrics", {}))
+        for field in (
+            "failed_absolute",
+            "failed_non_deterioration",
+            "passed_absolute",
+            "passed_non_deterioration",
+        ):
+            if field in checkpoint:
+                evidence[field] = list(checkpoint[field])
+        evidence["checkpoint_sha"] = checkpoint_path.name
+
+    return evidence
+
 
 def _current_metric(outcome: dict, *names: str):
     key = outcome.get("key_metrics", {})
@@ -304,41 +348,48 @@ def _current_metric(outcome: dict, *names: str):
 
 
 def _current_failure_modes(trial: dict) -> list[str]:
-    outcome = trial.get("outcome", {})
+    evidence = _current_evidence(trial)
+    outcome = evidence["outcome"]
     if trial.get("status") == "data_invalid":
         return ["data_validity_failure"]
 
     modes: set[str] = set()
-    failed_absolute = outcome.get("failed_absolute", [])
-    failed_absolute += outcome.get("gate_results", {}).get("failed_absolute", [])
-    failed_non_deterioration = outcome.get("failed_non_deterioration", [])
-    failed_non_deterioration += outcome.get("gate_results", {}).get(
-        "failed_non_deterioration", []
+    failed_absolute = list(evidence.get("failed_absolute", []))
+    failed_absolute.extend(
+        evidence.get("outcome", {}).get("gate_results", {}).get(
+            "failed_absolute", []
+        )
+    )
+    failed_non_deterioration = list(evidence.get("failed_non_deterioration", []))
+    failed_non_deterioration.extend(
+        evidence.get("outcome", {}).get("gate_results", {}).get(
+            "failed_non_deterioration", []
+        )
     )
 
     research_dd = _current_metric(
-        outcome,
+        evidence,
+        "challenger_research_drawdown_percent",
         "research_drawdown_percent",
         "base_research_drawdown_percent",
-        "fixed_research_drawdown_percent",
     )
     research_pf = _current_metric(
-        outcome,
+        evidence,
+        "challenger_research_profit_factor",
         "research_profit_factor",
         "base_research_profit_factor",
-        "fixed_research_profit_factor",
     )
     oos_ratio = _current_metric(
-        outcome,
+        evidence,
+        "challenger_oos_to_is_return_ratio",
         "oos_to_is_return_ratio",
         "base_oos_to_is_return_ratio",
-        "fixed_oos_to_is_return_ratio",
     )
     holdout_dd = _current_metric(
-        outcome,
+        evidence,
+        "challenger_holdout_drawdown_percent",
         "holdout_drawdown_percent",
         "base_holdout_drawdown_percent",
-        "fixed_holdout_drawdown_percent",
     )
 
     if research_dd is not None and research_dd > THRESHOLDS["research_drawdown_percent"]:
@@ -399,19 +450,31 @@ def diagnose_current(ledger_path: str | Path = LEDGER_PATH) -> dict:
             if mode in item["failure_modes"]
         ]
 
-    patterns = {
-        "risk_gate_recurrence": evidence_for("research_risk_gate")
-        + [
-            trial_id
-            for trial_id in evidence_for("holdout_risk_gate")
-            if trial_id not in evidence_for("research_risk_gate")
-        ],
-        "oos_stability_recurrence": evidence_for("oos_stability_gate"),
-        "control_relative_non_deterioration_recurrence": evidence_for(
-            "control_relative_non_deterioration"
-        ),
-        "data_validity_failure": evidence_for("data_validity_failure"),
-    }
+    risk_gate_research = evidence_for("research_risk_gate")
+    risk_gate_any = risk_gate_research + [
+        trial_id
+        for trial_id in evidence_for("holdout_risk_gate")
+        if trial_id not in risk_gate_research
+    ]
+    oos_failures = evidence_for("oos_stability_gate")
+    non_deterioration = evidence_for("control_relative_non_deterioration")
+    data_invalid = evidence_for("data_validity_failure")
+
+    performance_trials = [
+        item for item in selected if item["status"] == "archived_rejected"
+    ]
+    positive_holdout = []
+    for trial_id in (item["trial_id"] for item in performance_trials):
+        trial = trials_by_id[trial_id]
+        evidence = _current_evidence(trial)
+        value = _current_metric(
+            evidence,
+            "challenger_holdout_return_percent",
+            "holdout_return_percent",
+            "base_holdout_return_percent",
+        )
+        if value is not None and value > 0:
+            positive_holdout.append(trial_id)
 
     return {
         "schema_version": "1.0",
@@ -420,22 +483,34 @@ def diagnose_current(ledger_path: str | Path = LEDGER_PATH) -> dict:
         "source": {
             "ledger": str(path.relative_to(ROOT)),
             "trial_ids": list(CURRENT_TRIAL_IDS),
+            "performance_valid_trial_count": len(performance_trials),
+            "data_invalid_trial_count": len(data_invalid),
         },
         "status": "DIAGNOSTIC_ONLY",
         "trial_summaries": selected,
-        "cross_trial_patterns_by_id": patterns,
+        "cross_trial_patterns_by_id": {
+            "research_risk_gate_recurrence": risk_gate_research,
+            "risk_gate_any_stage_recurrence": risk_gate_any,
+            "oos_stability_recurrence": oos_failures,
+            "control_relative_non_deterioration_recurrence": non_deterioration,
+            "data_validity_failure": data_invalid,
+            "positive_holdout_not_sufficient": positive_holdout,
+        },
         "interpretation": {
-            "risk_gate_recurrence_count": len(patterns["risk_gate_recurrence"]),
-            "oos_stability_recurrence_count": len(patterns["oos_stability_recurrence"]),
-            "control_relative_non_deterioration_count": len(
-                patterns["control_relative_non_deterioration_recurrence"]
-            ),
-            "data_validity_failure_count": len(patterns["data_validity_failure"]),
+            "research_risk_gate_recurrence_count": len(risk_gate_research),
+            "risk_gate_any_stage_recurrence_count": len(risk_gate_any),
+            "oos_stability_recurrence_count": len(oos_failures),
+            "control_relative_non_deterioration_count": len(non_deterioration),
+            "data_validity_failure_count": len(data_invalid),
+            "positive_holdout_count": len(positive_holdout),
             "key_observation": (
-                "T044 and T045 each show a limited relative risk improvement in one "
-                "rolling/research dimension, while absolute and holdout risk quality "
-                "remain unresolved; recurring OOS/control-relative failures therefore "
-                "remain the dominant diagnostic constraint."
+                "Across the four performance-valid trials, the recurring bottleneck is "
+                "robust risk quality and control-relative stability: every trial exceeded "
+                "the 10% research drawdown gate and every trial failed at least one "
+                "fixed-control non-deterioration condition. Three of four also failed "
+                "the OOS/IS threshold, and three of four failed the 10% holdout drawdown "
+                "gate. T043 is separate technical data-invalid evidence and carries no "
+                "performance claim."
             ),
         },
         "non_actions": [
@@ -447,9 +522,11 @@ def diagnose_current(ledger_path: str | Path = LEDGER_PATH) -> dict:
             "no_production_promotion",
         ],
         "next_research_question": (
-            "Before reserving another performance trial, use the fixed failure taxonomy "
-            "to define one orthogonal mechanism aimed at the recurring risk/OOS constraint, "
-            "then preregister it without using these outcomes for parameter or asset selection."
+            "Before reserving another performance trial, define one orthogonal "
+            "information/alpha mechanism rather than another variant of the tested "
+            "portfolio-risk, volatility-scaling, trend-consistency, or lifecycle-exit "
+            "controls. The next trial must be fixed-rule, coverage-first, holdout-blind, "
+            "fully symbol-disjoint, and governed by the unchanged evidence contract."
         ),
         "safety": {
             "paper_only": True,
