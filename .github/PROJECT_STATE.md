@@ -340,3 +340,18 @@ Die im Run-Artefakt enthaltene JSON-Datei hatte einen reinen Serialisierungsfehl
 Ziel ist ein längerer, vorab fixierter Zeitraum mit denselben Informationsfeatures, um zeitliche Stabilität vor einer möglichen separaten Performance-Präregistrierung zu prüfen. Keine nachträgliche Feature-Auswahl und kein Holdout-Tuning.
 
 Sicherheitsstatus: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
+
+## Aktueller verifizierter Gesamtcheckpoint — Q014-Rerun / 2026-09-25
+
+- Canonical Repository: `DWR-debug/trading-agent-public`
+- Verifizierter Master-HEAD: `e32c01648d812075d84f4c7b50939e9c28ea4f1c`
+- Q012: COMPLETED / Diagnostic-only
+- Q013: COMPLETED / Diagnostic-only
+- Q014: präregistriert, implementiert und autorisiert; erster Lauf technisch abgebrochen, daher ohne wissenschaftliches Ergebnis
+- Q014 erster Lauf: Workflow `36152094990`, Run attempt 1; Testsuite 755 passed und Paper-only Safety OK; der Runner erhielt um 15:18:35Z ein Shutdown-Signal und brach den Unified-Orchestrator-Schritt ab. Dies ist als Infrastruktur-/Ausführungsunterbrechung und nicht als wissenschaftliches Q014-Ergebnis zu behandeln.
+- Q014 rerun: derselbe autorisierte Commit `74589b03c3d9ec940448a76d1fc10bcfd9fb85f4`, Run attempt 2 gestartet am 2026-09-25T15:23:38Z.
+- Preregistration remains unchanged: 365 calendar days (2025-09-25 through 2026-09-24), SPY/TLT/GLD, fixed six information features, minimum 80 common observations and 40 event windows, otherwise `DATA_INSUFFICIENT`.
+- No holdout selection, parameter search, feature selection, asset selection, horizon selection, performance authorization, or promotion is permitted.
+- Safety remains: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
+
+This section supersedes older checkpoint entries in this file where commit hashes or next-task state differ. The GitHub repository state is authoritative.
