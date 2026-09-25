@@ -315,6 +315,8 @@ def main() -> int:
     if args.mode == "analyze":
         report = analyze_q016(args.input_path, output_dir=args.output_dir)
     else:
+        for chunk_id, _, _ in CHUNK_WINDOWS:
+            collect_q016_chunk(chunk_id, output_dir=args.chunk_dir)
         freeze_q016_input(chunk_dir=args.chunk_dir, output_dir=Path(args.input_path).parent)
         report = analyze_q016(args.input_path, output_dir=args.output_dir)
 
