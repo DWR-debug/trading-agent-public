@@ -3274,6 +3274,62 @@
         "live_trading_enabled": false,
         "orders_enabled": false
       }
+    },
+    {
+      "trial_id": "T-2026-09-25-044",
+      "recorded_at": "2026-09-25T08:35:50Z",
+      "status": "archived_rejected",
+      "research_family": "trend_signal_variability",
+      "hypothesis": {
+        "text": "Eine feste long-only unanimous 63/126/252-Session-TSM-Konsistenz ersetzt nur das Trend-Signal des fixen 50/50-Kandidaten, ohne den Evidence-Vertrag zu verschlechtern."
+      },
+      "data_scope": {
+        "requested_candles": 3520,
+        "target_candles": 3500,
+        "common_return_count": 3498,
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "fully_symbol_disjoint_validation_set": true,
+        "parent_trial_id": "T-2026-09-25-043"
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "variant_search": false,
+        "selection_profile_used": false,
+        "holdout_used_for_selection": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "single pre-registered challenger versus fixed 50/50 control; repair successor of T043"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpe": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "scientific_outcome": "NO_PROMOTION_EVIDENCE",
+        "workflow_run_id": 36113366355,
+        "artifact_id": 10853724277,
+        "artifact_sha256": "sha256:cc0f9d0ef4c11d0b53a3654a11ef3ad6f1b6d9db14a8f8d9b3d2a6e2d2a3a9dd",
+        "report_fingerprint": "e64b4f9c65f47cad6f51ce614ec7ebf1c1a7f96c2df206f372aea04d656fd861",
+        "result_document": "docs/trial_044_tsm_signal_consistency_result_2026_09_25.md",
+        "result_checkpoint": "research/checkpoints/trial_044_tsm_signal_consistency_result_2026_09_25.json",
+        "all_checks_passed": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
     }
   ]
 }
