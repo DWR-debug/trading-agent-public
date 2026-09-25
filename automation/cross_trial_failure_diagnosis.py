@@ -359,6 +359,8 @@ def _current_failure_modes(trial: dict) -> list[str]:
         modes.add("holdout_risk_gate")
     if failed_non_deterioration or outcome.get("non_deterioration_gates_passed") is False:
         modes.add("control_relative_non_deterioration")
+    if not modes and outcome.get("all_checks_passed") is False:
+        modes.add("gate_failure_unspecified")
     return sorted(modes)
 
 
@@ -411,6 +413,7 @@ def diagnose_current(ledger_path: str | Path = LEDGER_PATH) -> dict:
             "control_relative_non_deterioration"
         ),
         "data_validity_failure": evidence_for("data_validity_failure"),
+        "gate_failure_unspecified": evidence_for("gate_failure_unspecified"),
     }
 
     return {
