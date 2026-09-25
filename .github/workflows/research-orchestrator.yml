@@ -19,6 +19,8 @@ on:
           - research
           - research_t041
           - research_t042
+          - research_t043
+          - research_t044
       universe:
         description: Research-Universum
         required: true
@@ -31,6 +33,8 @@ on:
           - benchmark
           - cross_asset_trend
           - validation_2026_09_24_volatility_managed_tsm
+          - validation_2026_09_25_tsm_signal_consensus
+          - validation_2026_09_25_tsm_signal_consensus_repair
           - validation_2026_09_24_network_momentum_t039
           - validation_2026_09_24_network_momentum_t040
           - validation_2026_09_24_portfolio_risk_control_trend
@@ -41,6 +45,10 @@ on:
       - research/execute-t042-coverage
       - research/execute-t042-coverage-repair
       - research/execute-t042-formal
+      - research/execute-t043-coverage
+      - research/execute-t043-formal
+      - research/execute-t044-coverage
+      - research/execute-t044-formal
     paths:
       - "automation/research_orchestrator.py"
       - "automation/live_market_observer.py"
@@ -136,6 +144,46 @@ jobs:
             python -m automation.research_orchestrator \
               --mode research_t042 \
               --universe validation_2026_09_24_volatility_managed_tsm
+          elif [ "$GITHUB_REF" = "refs/heads/research/execute-t043-formal" ]; then
+            test "$GITHUB_EVENT_NAME" = "push"
+            test "$(git log -1 --pretty=%s)" = "Research authorization: execute T043 formal performance"
+            run_id=$(python -c 'import json; from pathlib import Path; print(json.loads(Path("research/evidence/t043_coverage_pass_2026_09_25.json").read_text(encoding="utf-8"))["workflow_run_id"])')
+            test -n "$run_id"
+            gh run download "$run_id" --repo "$GITHUB_REPOSITORY" --name "unified-research-$run_id" --dir /tmp/t043-frozen
+            mkdir -p research/runs
+            cp -R /tmp/t043-frozen/coverage_preflight research/runs/
+            python -m automation.research_orchestrator \
+              --mode research_t043 \
+              --universe validation_2026_09_25_tsm_signal_consensus
+          elif [ "$GITHUB_REF" = "refs/heads/research/execute-t044-formal" ]; then
+            test "$GITHUB_EVENT_NAME" = "push"
+            test "$(git log -1 --pretty=%s)" = "Research authorization: execute T044 formal performance"
+            run_id=$(python -c 'import json; from pathlib import Path; print(json.loads(Path("research/evidence/t044_coverage_pass_2026_09_25.json").read_text(encoding="utf-8"))["workflow_run_id"])')
+            test -n "$run_id"
+            gh run download "$run_id" --repo "$GITHUB_REPOSITORY" --name "unified-research-$run_id" --dir /tmp/t044-frozen
+            mkdir -p research/runs
+            cp -R /tmp/t044-frozen/coverage_preflight research/runs/
+            python -m automation.research_orchestrator \
+              --mode research_t044 \
+              --universe validation_2026_09_25_tsm_signal_consensus_repair
+          elif [ "$GITHUB_REF" = "refs/heads/research/execute-t044-coverage" ]; then
+            test "$GITHUB_EVENT_NAME" = "push"
+            if [ "$(git log -1 --pretty=%s)" = "Research authorization: execute T044 coverage" ]; then
+              python -m automation.research_orchestrator \
+                --mode preflight \
+                --universe validation_2026_09_25_tsm_signal_consensus_repair
+            else
+              echo "T044 coverage branch: no authorization marker on this maintenance commit; research execution skipped."
+            fi
+          elif [ "$GITHUB_REF" = "refs/heads/research/execute-t043-coverage" ]; then
+            test "$GITHUB_EVENT_NAME" = "push"
+            if [ "$(git log -1 --pretty=%s)" = "Research authorization: execute T043 coverage" ]; then
+              python -m automation.research_orchestrator \
+                --mode preflight \
+                --universe validation_2026_09_25_tsm_signal_consensus
+            else
+              echo "T043 coverage branch: no authorization marker on this maintenance commit; research execution skipped."
+            fi
           elif [ "$GITHUB_REF" = "refs/heads/research/execute-t042-coverage" ] || [ "$GITHUB_REF" = "refs/heads/research/execute-t042-coverage-repair" ]; then
             test "$GITHUB_EVENT_NAME" = "push"
             test "$(git log -1 --pretty=%s)" = "Research authorization: execute T042 coverage"

@@ -378,8 +378,29 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("DLS", "DEM", "EES", "EWX", "HDV", "SCHA", "VOOG", "VOOV", "OEF", "IWV"),
         target_count=3500,
     ),
-)
 
+    AssetUniverse(
+        name="validation_2026_09_25_tsm_signal_consensus",
+        priority=56,
+        description=(
+            "Fresh fully symbol-disjoint validation universe for Trial 043; fixed "
+            "long-only unanimous 63/126/252-session TSM trend-signal consistency filter."
+        ),
+        symbols=("WMT","JNJ","PG","KO","PEP","XOM","CVX","CSCO","MCD","V","ORCL","MRK","PFE"),
+        target_count=3500,
+    ),
+
+    AssetUniverse(
+        name="validation_2026_09_25_tsm_signal_consensus_repair",
+        priority=57,
+        description=(
+            "Coverage-repair successor universe for T044; same pre-registered "
+            "symbols with a larger raw history request to form 3500 common candles."
+        ),
+        symbols=("WMT","JNJ","PG","KO","PEP","XOM","CVX","CSCO","MCD","V","ORCL","MRK","PFE"),
+        target_count=3520,
+    ),
+)
 
 
 def get_universe(name: str) -> AssetUniverse:

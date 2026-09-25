@@ -3039,3 +3039,49 @@ Jede Richtung folgt erneut Coverage-Preflight -> Präregistrierung -> Research/O
 - LIVE_TRADING_ENABLED=False
 - keine Research-Orders
 - keine Live-Ausführung
+
+
+## Aktueller Checkpoint — T042 formal abgeschlossen / T043 gestartet — 2026-09-25
+
+### T042 — Volatility-Managed TSM
+T042 wurde formal auf dem eingefrorenen Coverage-Snapshot ausgeführt und als
+**NO_SUPPORT / archived_rejected** geschlossen.
+
+- Research: +1,56 %, Max-DD 19,91 %, PF 1,011
+- Rolling-Min-PF 0,882; OOS/IS -0,773
+- Holdout: +19,82 %, DD 6,45 %, PF 1,212
+- 1,5x-/2x-Kostenstress im Holdout weiterhin positiv
+- keine Promotion, keine Gate-Änderung, keine Orders
+
+### T043 — Trend-Signal-Konsistenz
+T043 ist jetzt präregistriert. Geprüft wird genau eine feste Intervention:
+unanimous 63/126/252-Session-TSM im Trend-Sleeve, sonst unveränderte
+50/50-Architektur.
+
+- neues vollständig symbol-disjunktes Universum mit 13 Assets
+- 3.500 Candles je Asset
+- 2.798 Research / 700 Holdout
+- Coverage-Preflight zwingend vor Performance
+- keine Parameter-/Variantensuche
+- keine Holdout-Selektion
+
+T043-Status: **DATA_INVALID**. Kein Performance-Lauf.
+
+### T044 — reiner Coverage-Repair-Successor
+T044 übernimmt die T043-Hypothese unverändert und erhöht ausschließlich das
+angeforderte Rohdatenfenster von 3.500 auf 3.520 Candles, um 3.500 gemeinsame
+Candles technisch bilden zu können.
+
+- 13 identische Symbole
+- 3.520 angeforderte Candles je Symbol
+- Ziel: 3.500 gemeinsame Candles
+- keine Parameter-/Variantensuche
+- keine Holdout-Selektion
+
+Aktueller Status: **COVERAGE_PENDING**.
+
+Sicherheitszustand:
+- PAPER_ONLY=True
+- LIVE_TRADING_ENABLED=False
+- orders_enabled=False
+- automatic_promotion=False

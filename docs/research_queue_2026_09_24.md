@@ -33,3 +33,29 @@ LIVE_TRADING_ENABLED=False
 orders_enabled=False  
 automatic_promotion=False  
 bezahlte Agenten-/API-Nutzung: 0 USD
+
+
+## Queue-Fortsetzung — 2026-09-25
+
+T042 ist formell abgeschlossen und als **NO_SUPPORT / archived_rejected** dokumentiert.
+Die Volatilitäts-/Risk-Control-Linie wird nicht durch Lookback-, Threshold- oder
+Gewichtssuche fortgesetzt.
+
+### Neuer Schwerpunkt: T043 Trend-Signal-Variabilität
+
+T043 prüft eine einzige, vorab fixierte Signal-Konsistenzhypothese:
+Die bestehende 50/50-Architektur bleibt unverändert; nur das Trend-Signal wird
+von der bisherigen 50/200-SMA-Regel auf eine **unanimous 63/126/252-TSM-
+Konsistenzregel** umgestellt. Ein Asset ist im Trend-Sleeve nur dann long,
+wenn alle drei bereits verfügbaren Point-in-Time-Tenor-Renditen positiv sind;
+bei jeder Uneinigkeit bleibt es flat.
+
+Keine Parameter-, Varianten-, Threshold- oder Holdout-Suche. Vor Performanceauswertung
+steht ein Coverage-Preflight auf einem vollständig symbol-disjunkten Universum.
+
+Ablauf:
+Coverage-Preflight -> eingefrorener Coverage-Snapshot -> formale Research-Auswertung
+-> blinder Holdout -> Kostenstress -> Evidence-Gate -> Archivierung.
+
+Sicherheitszustand bleibt unverändert:
+PAPER_ONLY=True, LIVE_TRADING_ENABLED=False, orders_enabled=False, automatic_promotion=False.

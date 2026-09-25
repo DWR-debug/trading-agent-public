@@ -7,8 +7,10 @@ def test_queue_is_deterministic_and_tracks_current_priority():
     queue = default_research_queue()
     first = queue.next_task()
     assert first is not None
-    assert first.task_id == "Q-006-VOLATILITY-RELATIVE-VALUE"
-    assert queue.all()[1].status == "COMPLETED"
+    assert first.task_id == "Q-008-T044-TSM-SIGNAL-CONSISTENCY-REPAIR"
+    task_by_id = {task.task_id: task for task in queue.all()}
+    assert task_by_id["Q-007-T043-TSM-SIGNAL-CONSISTENCY"].status == "BLOCKED"
+    assert task_by_id["Q-008-T044-TSM-SIGNAL-CONSISTENCY-REPAIR"].status == "PENDING"
 
 
 def test_queue_rejects_invalid_transition():
