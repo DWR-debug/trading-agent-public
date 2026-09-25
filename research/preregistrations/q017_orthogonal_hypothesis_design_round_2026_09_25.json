@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-017-ORTHOGONAL-HYPOTHESIS-DESIGN-ROUND",
+  "research_family": "orthogonal_hypothesis_design",
+  "status": "DESIGN_ONLY",
+  "recorded_on": "2026-09-25",
+  "evidence_inputs": [
+    "Q010 cross_trial_failure_diagnosis_2026_09_25",
+    "Q014_information_alpha_mechanism_redundancy_long_window_result_2026-09-25",
+    "Q015_information_alpha_mechanism_discrimination_2026-09-25",
+    "Q016_INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION"
+  ],
+  "candidates": [
+    {
+      "id": "A",
+      "family": "macro_surprise_state_transition",
+      "source": "ALFRED/FRED vintage macro data",
+      "mechanism": "point-in-time macro information shock changes expected rates/growth/inflation state",
+      "point_in_time": "first public vintage/value available by decision timestamp",
+      "coverage": "complete release/vintage/timestamp coverage; otherwise DATA_INSUFFICIENT",
+      "cost_contract": "free/public historical data; immutable vintage cache; no paid data feed"
+    },
+    {
+      "id": "B",
+      "family": "cftc_positioning_crowding",
+      "source": "CFTC Commitments of Traders public weekly reports",
+      "mechanism": "crowding/de-crowding and flow pressure create forward return asymmetry distinct from price trend",
+      "point_in_time": "report usable only after publication timestamp; no backward revision leakage",
+      "coverage": "complete publication/report/asset mapping coverage; otherwise DATA_INSUFFICIENT",
+      "cost_contract": "free/public reports; immutable raw-report cache; no paid positioning feed"
+    },
+    {
+      "id": "C",
+      "family": "abnormal_turnover_liquidity_shock",
+      "source": "Yahoo Finance daily OHLCV",
+      "mechanism": "abnormal participation/liquidity pressure can predict short-horizon continuation or normalization",
+      "point_in_time": "signal uses only OHLCV through the decision bar and acts on the next allowed bar",
+      "coverage": "complete OHLCV coverage; otherwise DATA_INSUFFICIENT",
+      "cost_contract": "public daily OHLCV; no paid intraday data"
+    }
+  ],
+  "governance": {
+    "no_holdout_selection": true,
+    "no_parameter_search": true,
+    "no_asset_search": true,
+    "no_horizon_search": true,
+    "no_feature_search": true,
+    "fresh_symbol_disjoint_validation": true,
+    "unchanged_evidence_gates": true,
+    "performance_trial_authorized": false,
+    "safety": {
+      "paper_only": true,
+      "live_trading_enabled": false,
+      "orders_enabled": false,
+      "automatic_promotion": false
+    }
+  },
+  "interpretation": "Candidates are not ranked. Q017 produces design material only. A future performance trial requires separate formal preregistration and coverage-first authorization."
+}

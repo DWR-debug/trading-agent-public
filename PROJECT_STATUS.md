@@ -1,3 +1,103 @@
+# Zwingende Projektprämisse — Dringlichkeit / Erfolgsdruck — 2026-09-25
+
+Die familiäre Dringlichkeit und das fehlende verfügbare Kapital werden als **Kausalkette mit direkter Auswirkung auf das Forschungsdesign** behandelt:
+
+**familiäre Dringlichkeit + kein verfügbares Kapital → höherer Erfolgsdruck → höheres Risiko für Zeitdruck, Risikosuche, Overfitting, vorzeitige Auswahl und wissenschaftliche Abkürzungen.**
+
+Daraus folgt als verbindliche Systemreaktion:
+
+**mehr Geschwindigkeit + mehr parallele kostenlose Exploration + mehr Prozessdisziplin + keine Lockerung von Evidence-Gates.**
+
+Finanzieller Druck darf niemals:
+- einen negativen Befund in einen positiven Befund umdeuten,
+- Holdout-/Parameter-/Asset-/Horizon-Auswahl rechtfertigen,
+- Leverage oder Exposure erhöhen,
+- Live-Ausführung oder automatische Promotion auslösen.
+
+Er darf ausschließlich die **Priorisierung und Geschwindigkeit** erhöhen.
+
+Verankert in:
+- `docs/TRADING_AGENT_PROJECT_MEMORY.md`
+- `research/evidence/project_memory_checkpoint.json`
+- `research/evidence/project_state.json`
+- `tests/test_project_memory.py`
+
+Aktuelle Mutstufe bleibt **M2 / 4x**; sie steigt nur durch objektive Gates.
+
+---
+
+# Aktueller Ausführungscheckpoint — 30-Tage-Meilenstein / Q017 — 2026-09-25
+
+## Verbindliches Ziel
+
+**FIRST_PRESENTABLE_RESULT_DEADLINE: 2026-10-25**
+
+Aus den verfügbaren früheren Chats ist eine 30-Tage-Kadenz für das erste vorzeigbare Ergebnis belastbar, aber ein ursprüngliches absolutes Startdatum nicht mehr zweifelsfrei rekonstruierbar. Daher ist 2026-09-25 die neue, eindeutig nachvollziehbare Ausführungsbaseline.
+
+Ein "vorzeigbares Ergebnis" bedeutet ein reproduzierbares Evidence-Pack. Es kann ein bestandener Fixed-Rule-Trial **oder** eine belastbare DATA_INSUFFICIENT/NO_SUPPORT-Diagnose mit klar eingeengter Forschungsfrage sein. Ein positiver Backtest ist ausdrücklich nicht ausreichend.
+
+## Mutkurve
+
+Operativer Mut = Entwicklungsbereitschaft, nicht Renditewahrscheinlichkeit.
+
+**Aktuell M2 / 4x.**
+
+1x → 2x → 4x → 8x → 16x → 32x → 64x, aber nur nach objektiv bestandenem Gate. Die wissenschaftliche Beweislast wird nicht reduziert.
+
+## Q017
+
+Q016 ist technisch abgeschlossen und wissenschaftlich DATA_INSUFFICIENT. Q017 ist DESIGN_ONLY mit drei ungerankten orthogonalen Kandidaten. Nächster Schritt: Coverage-first, Point-in-Time- und Datenverfügbarkeitsprüfung; noch kein Performance-Trial.
+
+## Ressourcen
+
+Paid agent/API budget: **0 USD**. Kostenlose Agent-/Runner-Ressourcen zuerst. Tatsächliche Nutzung wird im Agent-Usage-Ledger erfasst.
+
+---
+
+# Nächster Arbeitsschritt — Q017 Design Round — 2026-09-25
+
+Q017 wurde als **DESIGN_ONLY** operationalisiert. Es existieren drei bewusst ungerankte, mechanistisch unterschiedliche Kandidaten:
+- Macro-surprise state transition (ALFRED/FRED vintages)
+- CFTC positioning/crowding
+- Abnormal turnover/liquidity shock (Yahoo OHLCV)
+
+Q017 erzeugt keine Performance-Evidence und autorisiert keinen Performance-Trial. Vor einer späteren Auswahl gelten Coverage-Preflight, feste Regel, fresh symbol-disjoint universe und unveränderte Evidence-Gates.
+
+Die agentischen Ressourcen werden als Forschungsbudget behandelt. Kostenlose Ressourcen haben Vorrang; tatsächliche kostenpflichtige Nutzung wird im Agent-Usage-Ledger nur anhand real beobachteter Werte erfasst.
+
+---
+
+# Aktueller Ausführungscheckpoint — Q016 abgeschlossen / Freshness Guard — 2026-09-25
+
+## Verifizierter Stand
+
+Q016 wurde technisch vollständig abgeschlossen. Der autorisierte Workflow 36172112861 endete erfolgreich; der wissenschaftliche Status ist **DATA_INSUFFICIENT**. Es wurden 0 Beobachtungen und 0 Event-Fenster gefunden. Daher wurde **kein Performance-Trial autorisiert** und keine Promotion-Entscheidung getroffen.
+
+- Q016 Artifact final: 10881248411
+- Result-Fingerprint: 42250f4c34f3d6ed6a14014fc1c01adf00fadd7427429b783d5fda4de39d48fc
+- Input-Fingerprint: 9cfaeb02ce7113a821f3d75c51feb87b1920edf7521e9749a0fe863e25df00d4
+- Qualitätssuite: 768 Tests, 2 Warnungen
+- Sicherheitsinvarianten unverändert: PAPER_ONLY=True, LIVE_TRADING_ENABLED=False, orders_enabled=False, automatic_promotion=False
+
+## State-Synchronisation
+
+Die bisherige Abweichung zwischen project_state.json und dem Q016-Checkpoint wurde bereinigt. Q016 ist jetzt im Forschungsqueue- und Projektstatus als abgeschlossen dokumentiert.
+
+Zusätzlich wurde AGENT-001 technisch umgesetzt:
+
+- automation/project_state_freshness_check.py
+- tests/test_project_state_freshness.py
+- CI führt den Freshness Guard auf beiden Runnern aus.
+- Bei veraltetem State werden konkrete Quelle, Workflow-Run und Fingerprint gemeldet.
+- Historische Trial-Evidence wird nicht verändert.
+
+Der Guard ist absichtlich fail-closed: Ein inkonsistenter Arbeitsstatus stoppt CI, statt stillschweigend mit veraltetem Projektgedächtnis weiterzuarbeiten.
+
+## Nächster Entwicklungsmodus
+
+Q016 liefert keine Grundlage für einen Performance-Trial. Der nächste Forschungsschritt ist deshalb **keine weitere Variation des bisherigen Q016-Mechanismus**, sondern eine neue, präregistrierte und orthogonale Hypothese aus der bereits eingefrorenen Evidence. Die agentische Designarbeit bleibt von formaler Evidenz getrennt.
+
+---
 # Aktueller Ausführungscheckpoint — Q016 Recovery — 2026-09-25
 
 Q016 ist nach zwei eindeutig technischen Fehlversuchen erneut auf dem autorisierten Diagnose-Branch gestartet.

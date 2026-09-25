@@ -6,7 +6,7 @@
   "latest_formal_trial": "T-2026-09-25-045",
   "latest_trial_status": "BLOCKED",
   "next_reserved_trial": null,
-  "next_research_focus": "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION pending: temporally disjoint replication of fixed Q015 mechanism diagnostic; no performance trial.",
+  "next_research_focus": "Q017 G3 coverage-first preflight across macro-surprise, CFTC positioning/crowding, and abnormal turnover/liquidity-shock candidate families.",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -31,8 +31,8 @@
     "free_credit_only": true,
     "credit_balance_auto_detected": false,
     "policy": "free_agent_credits_for_hypothesis_generation_and_research_design; deterministic_compute_local_only",
-    "current_task": "AGENT-HYPOTHESIS-ROUND-001",
-    "current_task_scope": "orthogonal alpha/information hypotheses from frozen T041/T042/T044/T045 and Q011 evidence",
+    "current_task": "Q-017-G3-COVERAGE-FIRST",
+    "current_task_scope": "Verify point-in-time data availability and complete coverage for the three orthogonal Q017 candidate families; no performance selection.",
     "holdout_selection": false,
     "parameter_search": false,
     "asset_selection": false,
@@ -55,7 +55,8 @@
     ".github/workflows/research-orchestrator.yml",
     ".github/workflows/paper-30-day-experiment-harness.yml",
     ".github/workflows/q014-resilient.yml",
-    ".github/workflows/q015-mechanism-discrimination.yml"
+    ".github/workflows/q015-mechanism-discrimination.yml",
+    ".github/workflows/copilot-setup-steps.yml"
   ],
   "current_preregistered_trial": "T-2026-09-25-045",
   "current_trial_status": "ARCHIVED_REJECTED",
@@ -71,9 +72,9 @@
     "next_trial_candidate_selection": "coverage_only_fixed_pool",
     "t040_formal_completed": true,
     "t040_negative_evidence_archived": true,
-    "current_queue_task": "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION",
+    "current_queue_task": "Q-017-G3-COVERAGE-FIRST",
     "automatic_formal_execution_requires_preregistration": true,
-    "last_completed_queue_task": "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC",
+    "last_completed_queue_task": "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION",
     "last_completed_diagnosis_fingerprint": "92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea",
     "cross_trial_failure_diagnosis_implemented": true,
     "t041_preregistered": true,
@@ -297,12 +298,19 @@
     "q015_performance_trial_authorized": false,
     "q015_selection_used": false,
     "q016_preregistered": true,
-    "q016_execution_status": "RUNNING",
+    "q016_execution_status": "COMPLETED",
     "q016_recovery_run": 36171332115,
     "q016_authorization_commit": "9eae6a32e60c97ec964caf6fdf67573ad2d370fb",
     "q016_window": "2024-09-25/2025-09-24",
     "q016_reference_window": "2025-09-25/2026-09-24",
-    "q016_scientific_status": "NO_RESULT_YET"
+    "q016_scientific_status": "DATA_INSUFFICIENT",
+    "q016_workflow_run": 36172112861,
+    "q016_result_fingerprint": "42250f4c34f3d6ed6a14014fc1c01adf00fadd7427429b783d5fda4de39d48fc",
+    "q016_input_fingerprint": "9cfaeb02ce7113a821f3d75c51feb87b1920edf7521e9749a0fe863e25df00d4",
+    "q016_observations": 0,
+    "q016_event_windows": 0,
+    "q016_performance_trial_authorized": false,
+    "q016_selection_used": false
   },
   "agent_usage_efficiency": {
     "policy": "deterministic_actions_for_computation; free-agent-use-for-hypothesis-generation_research-design_and-architecture-review",
@@ -332,5 +340,50 @@
   "current_queue_task": "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION",
   "last_completed_queue_task": "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC",
   "master_commit_semantics": "last_verified_master_commit_before_this_state_update; this field must not be interpreted as a self-referential current-HEAD field",
-  "state_sync_verified_at": "2026-09-25T18:08:00Z"
+  "state_sync_verified_at": "2026-09-25T18:08:00Z",
+  "project_milestone": {
+    "name": "FIRST_PRESENTABLE_RESULT",
+    "anchored_on": "2026-09-25",
+    "deadline": "2026-10-25",
+    "deadline_type": "new_execution_baseline",
+    "definition_of_done": "reproducible decision-quality evidence pack; positive trading result not required",
+    "issue_number": 211,
+    "pressure_rule": "Urgency changes speed/prioritization, never evidence standards or safety gates."
+  },
+  "courage_curve": {
+    "current_level": "M2",
+    "current_multiplier": 4,
+    "meaning": "operational research/development boldness, not return probability",
+    "progression": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32,
+      64
+    ],
+    "promotion_rule": "double only after objective gate; never due to attractive backtest alone",
+    "pressure_rule": "Financial/family urgency may increase prioritization and execution speed, but never increases courage level by itself."
+  },
+  "urgency_success_pressure_model": {
+    "context": [
+      "family_urgency",
+      "no_available_capital"
+    ],
+    "causal_chain": [
+      "family_urgency + no_available_capital",
+      "higher_perceived_success_pressure",
+      "higher_risk_of_time_pressure_risk_seeking_overfitting_premature_selection_or_scientific_shortcuts"
+    ],
+    "system_response": [
+      "increase_parallel_free_exploration",
+      "increase_reuse_and_error_detection_speed",
+      "tighten_preregistration_coverage_and_provenance",
+      "accept_DATA_INSUFFICIENT_and_NO_SUPPORT_as_valid_progress",
+      "never_relax_gates_or_increase_live_financial_risk_due_to_pressure"
+    ],
+    "principle": "More pressure -> more process discipline, not weaker evidence.",
+    "evidence_status": "design_constraint_not_empirical_causal_proof_of_future_returns"
+  }
 }

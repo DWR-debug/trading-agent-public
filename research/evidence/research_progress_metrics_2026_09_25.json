@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0",
+  "recorded_at": "2026-09-25",
+  "purpose": "Messbarer Fortschritt des Trading-Agent-Projekts ohne Rendite- oder Sicherheitsversprechen.",
+  "current_stage": "ORTHOGONAL_HYPOTHESIS_DESIGN",
+  "metrics": {
+    "performance_valid_trials_reviewed": 4,
+    "performance_valid_trials_positive_holdout_return": 4,
+    "performance_valid_trials_meeting_full_evidence_contract": 0,
+    "research_drawdown_gate_failures": 4,
+    "control_relative_non_deterioration_failures": 4,
+    "oos_is_failures": 3,
+    "holdout_drawdown_gate_failures": 3,
+    "q016_diagnostic_observations": 0,
+    "q016_diagnostic_event_windows": 0,
+    "q016_performance_trial_authorized": false,
+    "q017_orthogonal_design_candidates": 3,
+    "q017_performance_trial_authorized": false,
+    "paid_agent_api_budget_usd": 0,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "measurable_next_gates": [
+    {
+      "gate": "G1_REPRODUCIBILITY",
+      "criterion": "CI green on current governance/engineering branch and state freshness guard active"
+    },
+    {
+      "gate": "G2_DESIGN",
+      "criterion": "At least one formally governed Q017 candidate with fixed rule, point-in-time contract, costs, falsification criterion and no post-observation selection"
+    },
+    {
+      "gate": "G3_COVERAGE",
+      "criterion": "Complete required historical coverage on a fresh symbol-disjoint universe; otherwise DATA_INSUFFICIENT"
+    },
+    {
+      "gate": "G4_FORMAL_VALIDATION",
+      "criterion": "One authorized fixed-rule trial evaluated against unchanged evidence gates and holdout-blind until the defined evaluation stage"
+    },
+    {
+      "gate": "G5_ROBUSTNESS",
+      "criterion": "Evidence survives predefined OOS/rolling/risk/control-relative checks without parameter or asset reselection"
+    },
+    {
+      "gate": "G6_PAPER_OPERATION",
+      "criterion": "Only after prior gates pass: paper-only forward operation with realized P&L, slippage/cost accounting and operational failure monitoring"
+    },
+    {
+      "gate": "G7_REAL_CAPITAL_READINESS",
+      "criterion": "Separate explicit governance decision after stable paper evidence; no automatic promotion and no assumption that historical performance guarantees future returns"
+    }
+  ],
+  "interpretation": {
+    "current_positive_evidence": "Positive holdout returns exist in the reviewed valid trials, but none has met the complete evidence contract.",
+    "current_uncertainty_reduction": "The project has narrowed the active research space by repeatedly observing the same risk/control-relative failure pattern and by showing that the Q016 information-alpha replication was data-insufficient.",
+    "economic_principle": "Use free resources first and spend only when a measurable bottleneck and expected value are demonstrated.",
+    "financial_context": "500 EUR remains the reference starting capital for later simulation/planning; withdrawal amounts are not fixed and depend on realized, distributable surplus.",
+    "non_promise": "These metrics measure research progress and uncertainty reduction; they do not establish future profitability or financial security."
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}

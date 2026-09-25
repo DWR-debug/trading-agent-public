@@ -218,3 +218,24 @@ zu verlieren.
 ## 12. Agentenressourcen: Hypothesen zuerst
 
 Kostenfreie Agentencredits werden primär für Hypothesenbildung und Forschungsdesign eingesetzt. Lokale Rechenleistung bleibt für deterministische Berechnung zuständig; bezahlte API-Nutzung bleibt deaktiviert. Copilot fungiert als nachgeordneter, schreibgeschützter Hypothesen-/Review-Agent ohne Holdout-Auswahl oder rückwirkende Optimierung. Die erste Runde ist AGENT-HYPOTHESIS-ROUND-001.
+
+## 3a. Dringlichkeit, Erfolgsdruck und Forschungsdesign
+
+Die familiäre Dringlichkeit und das aktuell fehlende verfügbare Kapital sind nicht nur Motivation, sondern ein bewusst zu berücksichtigender **Entscheidungsrisikofaktor**.
+
+Die kausale Arbeitsannahme lautet:
+
+**familiäre Dringlichkeit + kein Kapital**
+→ hoher Erfolgsdruck
+→ höheres Risiko für Zeitdruck, Risikosuche, Overfitting, vorzeitige Auswahl oder wissenschaftliche Abkürzungen.
+
+Die richtige Systemreaktion ist nicht, diese Kausalkette zu verdrängen, sondern sie technisch zu kompensieren:
+
+- mehr parallele kostenlose Exploration;
+- schnellere Fehlerdiagnose und Wiederverwendung;
+- härtere Präregistrierung und Coverage-Gates;
+- keine ergebnis-selektive Holdout-/Parameter-/Asset-/Horizon-Auswahl;
+- DATA_INSUFFICIENT und NO_SUPPORT ausdrücklich als gültige Fortschrittsergebnisse;
+- keinerlei Leverage-/Exposure-/Live-Abkürzung aufgrund finanzieller Dringlichkeit.
+
+Der 30-Tage-Meilenstein bis 2026-10-25 ist daher ein **Evidence-Meilenstein und kein Renditeversprechen**. Die Mutkurve darf nur nach objektiv bestandenen Gates steigen.

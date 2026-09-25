@@ -38,6 +38,8 @@ jobs:
         run: python -m pytest -q
       - name: Projektintegrität
         run: python automation/project_integrity_check.py
+      - name: Project-State Freshness Guard
+        run: python automation/project_state_freshness_check.py
       - name: Research-Governance
         run: |
           set -euo pipefail
@@ -77,8 +79,8 @@ jobs:
 
           task = default_research_queue().next_task()
           assert task is not None
-          assert task.task_id == "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION"
-          assert task.research_family == "orthogonal_information_alpha_mechanism_discrimination_replication"
+          assert task.task_id == "Q-017-ORTHOGONAL-HYPOTHESIS-DESIGN-ROUND"
+          assert task.research_family == "orthogonal_hypothesis_design"
 
           q015 = json.loads(Path(
               "research/preregistrations/q015_information_alpha_mechanism_discrimination_2026_09_25.json"
@@ -129,8 +131,8 @@ jobs:
           assert state["latest_formal_trial"] == "T-2026-09-25-045"
           assert state["latest_trial_status"] == "BLOCKED"
           assert state["current_trial_status"] == "ARCHIVED_REJECTED"
-          assert state["engineering_notes"]["current_queue_task"] == "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION"
-          assert state["engineering_notes"]["last_completed_queue_task"] == "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC"
+          assert state["engineering_notes"]["current_queue_task"] == "Q-017-G3-COVERAGE-FIRST"
+          assert state["engineering_notes"]["last_completed_queue_task"] == "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION"
           assert state["engineering_notes"]["q011_status"] == "COMPLETED_DISCOVERY_ONLY"
           assert state["engineering_notes"]["q011_workflow_run"] == 36121684164
           assert state["engineering_notes"]["q011_artifact_id"] == 10857762336
@@ -140,6 +142,13 @@ jobs:
           assert state["engineering_notes"]["q013_status"] == "COMPLETED_DISCOVERY_ONLY"
           assert state["engineering_notes"]["q013_performance_trial_authorized"] is False
           assert state["engineering_notes"]["q014_status"] == "COMPLETED_DISCOVERY_ONLY"
+          assert state["engineering_notes"]["q016_execution_status"] == "COMPLETED"
+          assert state["engineering_notes"]["q016_scientific_status"] == "DATA_INSUFFICIENT"
+          assert state["engineering_notes"]["q016_workflow_run"] == 36172112861
+          assert state["engineering_notes"]["q016_result_fingerprint"] == "42250f4c34f3d6ed6a14014fc1c01adf00fadd7427429b783d5fda4de39d48fc"
+          assert state["engineering_notes"]["q016_observations"] == 0
+          assert state["engineering_notes"]["q016_event_windows"] == 0
+          assert state["engineering_notes"]["q016_performance_trial_authorized"] is False
           assert state["engineering_notes"]["q014_workflow_run"] == 36158184847
           assert state["engineering_notes"]["q014_final_artifact_id"] == 10874472512
           assert state["engineering_notes"]["q014_result_fingerprint"] == "ab617984b57cf20ea2ac9e2458ac8a519b139abf8587dab751bd63e1d5d39d6d"
