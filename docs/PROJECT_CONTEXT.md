@@ -45,6 +45,12 @@ Bei einem Widerspruch wird nicht stillschweigend eine Quelle überschrieben.
 Damit gilt nicht mehr „GitHub ersetzt den Projektkontext“, sondern:
 **GitHub ist technische Referenz; der Projektkontext bleibt eine eigene, dauerhafte Wissensebene.**
 
+## 1b. Verbindliche Decision Basis
+
+Nach jedem signifikanten Research-/Engineering-Ergebnis wird `docs/DECISION_BASIS.md` als aktuelle, chatübergreifende Entscheidungsgrundlage aktualisiert. Sie trennt verifizierte Fakten, Aussagegrenzen, Auswirkungen und nächste prüfbare Schritte. Die maschinenlesbare Fassung liegt unter `research/evidence/decision_basis_latest.json`.
+
+Diese Zusammenfassung ersetzt weder Ledger noch Reports noch technische Wahrheit; sie verdichtet sie für die menschliche Entscheidungsfindung.
+
 ## 1a. Chat-Einstieg und Handoff-Regel
 
 Bei einem neuen Chat mit dem Trigger `trading agent` wird zuerst `docs/TRADING_AGENT_CHAT_ENTRYPOINT.md` gelesen. Wenn der Benutzer anschließend den **„aktuellen Stand aus dem letzten Chat“** einfügt, handelt es sich um eine Kopie der letzten Assistant-Mitteilung und damit zunächst um Handoff-Kontext, nicht um neue Evidenz. Die Aussagen werden vor Übernahme gegen `master`, `PROJECT_STATUS.md`, `research/evidence/project_state.json`, den Evidence-Ledger sowie relevante Workflow-/Artifact-Provenienz geprüft. Diese Regel ist dauerhaft und gilt chatübergreifend.
