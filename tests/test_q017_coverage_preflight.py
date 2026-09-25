@@ -16,7 +16,7 @@ from research.asset_universes import get_universe, list_universes
 
 def test_q017_universe_is_fixed_and_symbol_disjoint():
     universe = get_universe("q017_coverage_first")
-    assert universe.symbols == ("SMH", "SOXX", "IGE", "GDX", "DBO", "UNG", "FXB", "PPLT")
+    assert universe.symbols == ("SMH", "SOXX", "IGE", "DBO", "UNG", "FXB", "PPLT", "CIBR")
     used_elsewhere = {
         symbol
         for item in list_universes()
@@ -49,7 +49,7 @@ def test_q017_alfred_parser_enforces_vintage_column_and_filters_window():
 def test_q017_cftc_market_matching_is_deterministic():
     market = _canonical_market("GOLD - COMMODITY EXCHANGE INC.")
     assert "GOLD" in market
-    assert all(token in market for token in CFTC_TARGETS["GDX"])
+    assert all(token in market for token in CFTC_TARGETS["DBO"])
     market = _canonical_market("BRITISH POUND STERLING - CHICAGO MERCANTILE EXCHANGE")
     assert all(token in market for token in CFTC_TARGETS["FXB"])
 

@@ -14,7 +14,7 @@ Studienfenster: 2011-01-01 bis 2025-09-24.
 
 Frischer Universumsblock:
 
-SMH, SOXX, IGE, GDX, DBO, UNG, FXB, PPLT.
+SMH, SOXX, IGE, DBO, UNG, FXB, PPLT, CIBR.
 
 Für Yahoo werden 3.520 Rohkerzen angefordert und anschließend auf das feste Fenster gefiltert; mindestens 3.500 gemeinsame Tageskerzen sind erforderlich.
 
@@ -22,7 +22,7 @@ Für Yahoo werden 3.520 Rohkerzen angefordert und anschließend auf das feste Fe
 
 **Macro-surprise state transition:** ALFRED, CPIAUCSL und UNRATE. Der Runner untersucht die historischen Vintage-Termine und baut pro Beobachtung den ersten beobachteten Vintage-Termin auf. Für eine spätere tägliche Anwendung gilt eine konservative Next-Bar-Regel.
 
-**CFTC positioning/crowding:** CFTC Disaggregated Futures Only, Jahresarchive 2011–2025. Die fünf festen Mappings sind GDX→GOLD, DBO→CRUDE OIL, UNG→NATURAL GAS, FXB→BRITISH POUND, PPLT→PLATINUM. Die annualisierten Roharchive werden mit SHA-256 im Laufmanifest erfasst.
+**CFTC positioning/crowding:** CFTC Disaggregated Futures Only, Jahresarchive 2011–2025. Die fünf festen Mappings sind DBO→CRUDE OIL, UNG→NATURAL GAS, FXB→BRITISH POUND, PPLT→PLATINUM. Die Jahresarchive werden mit SHA-256 im Laufmanifest erfasst. Da CFTC keine vollständige historische Liste tatsächlicher Veröffentlichungszeitpunkte bereitstellt, bleibt die historische PIT-Zertifizierung bis zu einer separaten Release-Schedule-Rekonstruktion offen.
 
 **Abnormal turnover/liquidity shock:** Yahoo Finance Daily OHLCV für das gesamte feste Q017-Universum.
 

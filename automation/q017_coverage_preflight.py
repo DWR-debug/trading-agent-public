@@ -34,7 +34,6 @@ TARGET_COMMON_CANDLES = 3500
 MACRO_SERIES = ("CPIAUCSL", "UNRATE")
 CFTC_YEARS = tuple(range(2011, 2026))
 CFTC_TARGETS = {
-    "GDX": ("GOLD",),
     "DBO": ("CRUDE OIL",),
     "UNG": ("NATURAL GAS",),
     "FXB": ("BRITISH POUND",),
@@ -184,9 +183,6 @@ def _macro_coverage(output_dir: Path) -> dict:
                     "byte_count": snapshot.byte_count,
                 })
 
-            if total_snapshots_used >= 250:
-                break
-
         status = "COVERAGE_VALIDATED" if len(first_seen) >= 150 else "DATA_INSUFFICIENT"
         if status != "COVERAGE_VALIDATED":
             result["status"] = "DATA_INSUFFICIENT"
@@ -248,7 +244,7 @@ def _cftc_coverage(output_dir: Path) -> dict:
     family = {
         "family": "cftc_positioning_crowding",
         "source": "CFTC Disaggregated Futures Only",
-        "status": "COVERAGE_VALIDATED",
+        "status": "DATA_INSUFFICIENT",
         "point_in_time_ready": False,
         "historical_release_timestamp_policy": {
             "default": "Friday 15:30 America/New_York after Tuesday report data",
@@ -306,6 +302,12 @@ def _cftc_coverage(output_dir: Path) -> dict:
         if len(dates) < expected_min:
             family["status"] = "DATA_INSUFFICIENT"
         meta["expected_min_reports"] = expected_min
+
+    # The public historical archive exposes report dates, but CFTC does not provide
+    # a historical release-date list. Without exact historical publication timestamps,
+    # the point-in-time contract cannot be certified for a backtest.
+    family["point_in_time_ready"] = False
+    family["status"] = "DATA_INSUFFICIENT"
 
     return family
 
@@ -390,6 +392,9 @@ def _yahoo_coverage(universe_name: str, output_dir: Path) -> dict:
         "selection_used": False,
     }
 
+
+# Q017 uses the same fixed fresh universe for turnover coverage; CFTC has its own
+# fixed subset mapping declared in CFTC_TARGETS above.
 
 def _disjointness_check(universe_name: str) -> dict:
     universe = get_universe(universe_name)

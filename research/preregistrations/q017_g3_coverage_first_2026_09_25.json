@@ -12,26 +12,67 @@
   },
   "fresh_universe": {
     "name": "q017_coverage_first",
-    "symbols": ["SMH", "SOXX", "IGE", "GDX", "DBO", "UNG", "FXB", "PPLT"],
+    "symbols": [
+      "SMH",
+      "SOXX",
+      "IGE",
+      "DBO",
+      "UNG",
+      "FXB",
+      "PPLT",
+      "CIBR"
+    ],
     "rationale": "Fixed ex ante, symbol-disjoint across the repository's registered research universes; no return metric is used.",
+    "cftc_validation_symbols": [
+      "DBO",
+      "UNG",
+      "FXB",
+      "PPLT"
+    ],
     "cftc_mappings": {
-      "GDX": ["GOLD"],
-      "DBO": ["CRUDE OIL"],
-      "UNG": ["NATURAL GAS"],
-      "FXB": ["BRITISH POUND"],
-      "PPLT": ["PLATINUM"]
+      "DBO": [
+        "CRUDE OIL"
+      ],
+      "UNG": [
+        "NATURAL GAS"
+      ],
+      "FXB": [
+        "BRITISH POUND"
+      ],
+      "PPLT": [
+        "PLATINUM"
+      ]
     }
   },
   "macro": {
     "source": "ALFRED",
-    "series": ["CPIAUCSL", "UNRATE"],
+    "series": [
+      "CPIAUCSL",
+      "UNRATE"
+    ],
     "point_in_time_rule": "Use values from the first vintage in which an observation is available; later revisions are not eligible.",
     "daily_action_rule": "Any release-derived state may act no earlier than the next eligible trading bar.",
     "coverage_requirement": "Complete observation-date coverage and vintage availability over the fixed study window; otherwise DATA_INSUFFICIENT."
   },
   "cftc": {
     "source": "CFTC Disaggregated Futures Only historical compressed archives",
-    "years": [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+    "years": [
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
     "point_in_time_rule": "Report observations are usable only after their public release. Default publication schedule is Friday 15:30 ET following Tuesday report data; historical exceptions are tracked as a coverage limitation unless explicitly verified.",
     "coverage_requirement": "Complete weekly market/date presence for the fixed mappings over the study window; otherwise DATA_INSUFFICIENT."
   },
