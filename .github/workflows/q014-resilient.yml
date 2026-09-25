@@ -1,0 +1,122 @@
+name: Q014 Resilient Diagnostic
+
+on:
+  push:
+    branches:
+      - research/execute-q014-redundancy-long-window
+    paths:
+      - "automation/information_alpha_discovery.py"
+      - "automation/information_alpha_redundancy.py"
+      - "automation/information_alpha_redundancy_long_window.py"
+      - "tests/test_information_alpha_redundancy.py"
+      - "tests/test_information_alpha_redundancy_long_window.py"
+      - "research/authorizations/q014_redundancy_long_window_2026_09_25.json"
+      - "research/preregistrations/q014_information_alpha_mechanism_redundancy_long_window_2026_09_25.json"
+      - ".github/workflows/q014-resilient.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-q014-resilient
+  cancel-in-progress: false
+
+jobs:
+  quality:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest statsmodels==0.15.0
+      - name: Full test suite
+        run: python -m pytest -q
+      - name: Paper-only safety
+        run: |
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          print("PAPER-ONLY SAFETY OK")
+          PY
+      - name: Authorization
+        run: |
+          set -euo pipefail
+          test "$GITHUB_EVENT_NAME" = "push"
+          test "$(git log -1 --pretty=%s)" = "Research authorization: execute Q014 redundancy long window"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path("research/authorizations/q014_redundancy_long_window_2026_09_25.json").read_text())
+          assert p["safety"] == {"paper_only": True, "live_trading_enabled": False, "orders_enabled": False, "automatic_promotion": False}
+          assert all(v is False for v in p["selection"].values())
+          PY
+
+  collect:
+    needs: quality
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: "01"
+          - id: "02"
+          - id: "03"
+          - id: "04"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Collect fixed Q014 chunk
+        run: |
+          set -euo pipefail
+          mkdir -p research/runs/information_alpha_redundancy/q014_chunks
+          python -m automation.information_alpha_redundancy_long_window --mode collect_chunk --chunk-id "${{ matrix.id }}" --chunk-dir research/runs/information_alpha_redundancy/q014_chunks
+          test -s research/runs/information_alpha_redundancy/q014_chunks/q014_chunk_${{ matrix.id }}.json
+      - name: Upload chunk checkpoint
+        uses: actions/upload-artifact@v6
+        with:
+          name: q014-chunk-${{ matrix.id }}-${{ github.run_id }}
+          path: research/runs/information_alpha_redundancy/q014_chunks/q014_chunk_${{ matrix.id }}.json
+          retention-days: 30
+
+  aggregate:
+    needs: collect
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install statsmodels==0.15.0
+      - name: Download chunk checkpoints
+        uses: actions/download-artifact@v7
+        with:
+          pattern:q014-chunk-* -${{ github.run_id }}
+          path: research/runs/information_alpha_redundancy/q014_chunks
+          merge-multiple: true
+      - name: Aggregate Q014
+        run: |
+          set -euo pipefail
+          python -m automation.information_alpha_redundancy_long_window --mode aggregate --chunk-dir research/runs/information_alpha_redundancy/q014_chunks --output-dir research/runs/information_alpha_redundancy/q014
+          test -s research/runs/information_alpha_redundancy/q014/q014_redundancy_long_window.json
+      - name: Upload final Q014 evidence
+        uses: actions/upload-artifact@v6
+        with:
+          name: q014-final-${{ github.run_id }}
+          path: research/runs/information_alpha_redundancy/q014/
+          retention-days: 30
