@@ -28,7 +28,7 @@ def test_round_002_temporal_split_uses_calendar_midpoint_not_event_count():
         [{"event_index": 10, "forward_to_baseline_ratio": 1.2}] * 55
         + [{"event_index": midpoint + 10, "forward_to_baseline_ratio": 0.9}] * 5
     )
-    assert _classify_temporal_events(events) == "DISCOVERY_SUPPORT_RISK_REGIME"
+    assert _classify_temporal_events(events) == "PRUNE_NO_RISK_REGIME_SUPPORT"
 
     events = (
         [{"event_index": 10, "forward_to_baseline_ratio": 1.2}] * 5
