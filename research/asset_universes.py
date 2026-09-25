@@ -413,27 +413,14 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
     ),
 
     AssetUniverse(
-        name="validation_2026_09_25_sector_neutral_residual_momentum",
-        priority=62,
+        name="q017_coverage_first",
+        priority=60,
         description=(
-            "Fresh fully symbol-disjoint fixed universe for H06 sector-neutral "
-            "residual-momentum coverage; five sectors with three assets each."
+            "Fresh symbol-disjoint fixed universe for Q017 G3 coverage-first preflight; "
+            "coverage only, no performance selection."
         ),
-        symbols=("TXN", "ADI", "AMAT", "MDT", "SYK", "BDX", "ETN", "ITW", "GD",
-                 "CL", "KMB", "GIS", "AEP", "XEL", "DTE"),
-        target_count=3500,
-    ),
-
-    AssetUniverse(
-        name="validation_2026_09_25_sector_neutral_residual_momentum_repair",
-        priority=63,
-        description=(
-            "Coverage-repair successor for H06 sector-neutral "
-            "residual-momentum coverage; five sectors with three assets each."
-        ),
-        symbols=("TXN", "ADI", "AMAT", "MDT", "SYK", "BDX", "ETN", "ITW", "GD",
-                 "CL", "KMB", "GIS", "AEP", "XEL", "DTE"),
-        target_count=4000,
+        symbols=("SMH", "SOXX", "IGE", "DBO", "UNG", "PPLT", "CIBR", "LIT"),
+        target_count=3520,
     ),
 
     AssetUniverse(
@@ -446,6 +433,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("DBE", "DBP", "OIH", "EPI", "IYF", "IYH", "IDU", "ACWX"),
         target_count=3520,
     ),
+
     AssetUniverse(
         name="validation_2026_09_25_sector_neutral_residual_momentum",
         priority=62,
@@ -470,16 +458,6 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=4000,
     ),
 
-    AssetUniverse(
-        name="q017_coverage_first",
-        priority=60,
-        description=(
-            "Fresh symbol-disjoint fixed universe for Q017 G3 coverage-first preflight; "
-            "coverage only, no performance selection."
-        ),
-        symbols=("SMH", "SOXX", "IGE", "DBO", "UNG", "PPLT", "CIBR", "LIT"),
-        target_count=3520,
-    ),
 )
 
 
