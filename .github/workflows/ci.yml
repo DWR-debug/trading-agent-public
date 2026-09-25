@@ -131,8 +131,8 @@ jobs:
           assert state["latest_formal_trial"] == "T-2026-09-25-045"
           assert state["latest_trial_status"] == "BLOCKED"
           assert state["current_trial_status"] == "ARCHIVED_REJECTED"
-          assert state["engineering_notes"]["current_queue_task"] == "WIDE-SEARCH-ROUND-002"
-          assert state["engineering_notes"]["last_completed_queue_task"] == "WIDE-SEARCH-ROUND-001"
+          assert state["engineering_notes"]["current_queue_task"] == "WIDE-SEARCH-H06-SECTOR-NEUTRAL-RESIDUAL-MOMENTUM"
+          assert state["engineering_notes"]["last_completed_queue_task"] == "WIDE-SEARCH-ROUND-002"
           assert state["engineering_notes"]["q017_g3_scientific_status"] == "DATA_INSUFFICIENT"
           assert state["engineering_notes"]["q017_g3_workflow_run"] == 36186285814
           assert state["engineering_notes"]["q017_g3_artifact_id"] == 10887025099
@@ -178,6 +178,10 @@ jobs:
           assert state["engineering_notes"]["t045_universe"] == "validation_2026_09_25_position_lifecycle_exit"
           assert state["engineering_notes"]["t045_requested_candles"] == 3520
           assert state["engineering_notes"]["t045_target_common_calendar"] == 3500
+          assert state["engineering_notes"]["h06_status"] == "COVERAGE_IN_PROGRESS_REPAIR"
+          assert state["engineering_notes"]["h06_performance_trial_authorized"] is False
+          assert state["wide_search_round_002_scientific_result_status"] == "PRUNED"
+          assert state["wide_search_round_002_classification"] == "PRUNE_NO_RISK_REGIME_SUPPORT"
 
           t043 = next(item for item in ledger["trials"] if item["trial_id"] == "T-2026-09-25-043")
           t044 = next(item for item in ledger["trials"] if item["trial_id"] == "T-2026-09-25-044")
