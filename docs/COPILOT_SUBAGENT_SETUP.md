@@ -10,10 +10,9 @@ Aktuell unterstützt GitHub Copilot Free Copilot CLI und benutzerdefinierte Agen
 
 1. GitHub öffnen und `DWR-debug/trading-agent-public` aufrufen.
 2. **Solange PR #186 noch nicht gemerged ist:** `Code -> Codespaces -> ...` und den Branch `research/copilot-hypothesis-subagent` auswählen. **Nach dem Merge:** den aktuellen `master` verwenden.
-3. Im Terminal prüfen: `copilot --version`
-4. Anmeldung: `copilot login`
-5. Der reproduzierbare Start erfolgt über `bash tools/run_information_hypothesis_research.sh`.
-6. Die Ausgabe wird als nicht-evidenzielle Research-Notiz unter `research/agent_outputs/` gespeichert.
+3. Einmalig anmelden: `copilot login`
+4. Danach genügt für die komplette Runde der kurze Start: `bash tools/a`
+5. Die Ausgabe wird als nicht-evidenzielle Research-Notiz unter `research/agent_outputs/` gespeichert.
 
 ## Rollenmodell
 
@@ -23,7 +22,7 @@ Die eigentliche Forschungsentscheidung bleibt beim primären Agenten. Agentenout
 
 ## Kostenkontrolle
 
-Keine bezahlten Agenten-/API-Ausgaben aktivieren. Die CLI wird im Startskript zusätzlich auf die drei read-only Tools begrenzt und erhält ein begrenztes Autopilot-Fenster. Numerische Research-Arbeit bleibt lokal/deterministisch.
+Keine bezahlten Agenten-/API-Ausgaben aktivieren. Die CLI wird im Startskript zusätzlich auf die drei read-only Tools begrenzt und erhält ein begrenztes Autopilot-Fenster. Das Runner-Limit für AI-Credits wird nicht künstlich auf einen ungültigen Kleinwert gesetzt; die Autopilot-Fortsetzungen bleiben fest auf fünf begrenzt. Numerische Research-Arbeit bleibt lokal/deterministisch.
 
 ## Unternehmensumgebung
 
