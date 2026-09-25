@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "recorded_on": "2026-09-25",
+  "task_id": "WIDE-SEARCH-ROUND-002",
+  "hypothesis_id": "H08",
+  "family": "volatility_state_transition",
+  "universe": "wide_search_probe_2026_09_25",
+  "research_split_candles": 2798,
+  "holdout_candles": 702,
+  "signal_rule": {
+    "short_realized_vol_window": 20,
+    "long_realized_vol_window": 60,
+    "shock_ratio_threshold": 1.5,
+    "forward_realized_vol_window": 5
+  },
+  "primary_outcome": {
+    "definition": "forward_5d_annualized_realized_vol / event_long_60d_annualized_realized_vol",
+    "support_threshold": 1.10
+  },
+  "advance_rule": {
+    "minimum_events": 50,
+    "both_research_halves_must_meet_primary_mean_threshold": true,
+    "holdout_used_for_selection": false
+  },
+  "interpretation": {
+    "supported": "A fixed volatility-expansion state is followed by at least 10% higher 5-day realized volatility in both research halves. This only supports a risk-regime diagnostic; it does not authorize a trading strategy.",
+    "pruned": "The fixed volatility-expansion state fails the minimum event count or the 10% forward-volatility persistence threshold in at least one research half."
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
