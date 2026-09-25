@@ -351,6 +351,23 @@ def _current_metric(evidence: dict, *names: str):
     return None
 
 
+
+
+def _collect_gate_failures(value: object, field_name: str) -> list[str]:
+    failures: list[str] = []
+    if isinstance(value, dict):
+        for key, child in value.items():
+            if key == field_name and isinstance(child, list):
+                failures.extend(str(item) for item in child)
+            elif isinstance(child, (dict, list)):
+                failures.extend(_collect_gate_failures(child, field_name))
+    elif isinstance(value, list):
+        for child in value:
+            if isinstance(child, (dict, list)):
+                failures.extend(_collect_gate_failures(child, field_name))
+    return failures
+
+
 def _current_failure_modes(trial: dict) -> list[str]:
     evidence = _current_evidence(trial)
     outcome = evidence["outcome"]
@@ -358,22 +375,9 @@ def _current_failure_modes(trial: dict) -> list[str]:
         return ["data_validity_failure"]
 
     modes: set[str] = set()
-    failed_absolute = list(evidence.get("failed_absolute", []))
-    failed_absolute.extend(
-        evidence.get("outcome", {}).get("gate_results", {}).get(
-            "failed_absolute", []
-        )
-    )
-    failed_non_deterioration = list(
-        evidence.get("failed_non_deterioration", [])
-    )
-    failed_non_deterioration.extend(
-        evidence.get("outcome", {}).get("failed_non_deterioration", [])
-    )
-    failed_non_deterioration.extend(
-        evidence.get("outcome", {}).get("gate_results", {}).get(
-            "failed_non_deterioration", []
-        )
+    failed_absolute = _collect_gate_failures(evidence, "failed_absolute")
+    failed_non_deterioration = _collect_gate_failures(
+        evidence, "failed_non_deterioration"
     )
 
     research_dd = _current_metric(
