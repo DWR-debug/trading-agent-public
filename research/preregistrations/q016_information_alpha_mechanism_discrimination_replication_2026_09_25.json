@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION",
+  "research_family": "orthogonal_information_alpha_mechanism_discrimination_replication",
+  "status": "PENDING",
+  "preregistered_on": "2026-09-25",
+  "objective": "Rein diagnostische, zeitlich disjunkte Replikation der vollständigen Q015-Mechanismusdiagnostik. Die sechs bereits fixierten Q011-GDELT-Features, drei Mechanismusgruppen, Asset-/Horizontzellen, Transformation und Shapley-Regeln werden unverändert übernommen. Die Replikation erzeugt keine Handelsregel und keine Performancefreigabe.",
+  "source_task": "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC",
+  "source_q015": {
+    "workflow_run_id": 36161950582,
+    "artifact_id": 10875399037,
+    "result_fingerprint": "f7be165efe86a223f1e15dc0cfb206e992a95fecc596197a562c6eb65386e2da",
+    "input_fingerprint": "5475911e19dfae4aabbce1c66775962dacd7815b86f7dc4e63fe3ecb4fab4836"
+  },
+  "window": {
+    "start": "2024-09-25",
+    "end": "2025-09-24",
+    "calendar_days": 365,
+    "strictly_temporally_disjoint_from_q015": true
+  },
+  "q015_reference_window": {
+    "start": "2025-09-25",
+    "end": "2026-09-24",
+    "calendar_days": 365
+  },
+  "assets": ["SPY", "TLT", "GLD"],
+  "event_filter": "international event with num_articles >= 3",
+  "fixed_features": ["event_count", "attention_score", "source_breadth", "article_count", "negative_goldstein", "mean_tone"],
+  "fixed_mechanism_groups": {
+    "intensity_breadth": ["event_count", "attention_score", "source_breadth", "article_count"],
+    "severity": ["negative_goldstein"],
+    "tone": ["mean_tone"]
+  },
+  "point_in_time_contract": {
+    "event_feature_window": "previous_market_day < event_day < target_market_day",
+    "target_return": "previous_market_close -> target_market_close",
+    "five_day_horizon": "target_market_close -> fifth subsequent market close",
+    "same_day_return_used": false,
+    "market_price_source": "Yahoo Finance adjusted daily close, fetched once for the exact fixed window and frozen into the Q016 input artifact"
+  },
+  "diagnostic_method": {
+    "sample": "event-only observations with complete target return per fixed asset/horizon cell",
+    "transform": "within-cell midrank transform",
+    "model": "OLS with intercept",
+    "group_decomposition": "exact three-group Shapley decomposition of R-squared across all 6 fixed permutations",
+    "subset_models": ["empty", "intensity_breadth", "severity", "tone", "intensity_breadth+severity", "intensity_breadth+tone", "severity+tone", "intensity_breadth+severity+tone"]
+  },
+  "minimum_data_contract": {
+    "common_observations": 80,
+    "event_windows": 40,
+    "complete_event_observations_per_asset_horizon": 40,
+    "otherwise_status": "DATA_INSUFFICIENT"
+  },
+  "selection": {
+    "holdout": false,
+    "feature": false,
+    "asset": false,
+    "horizon": false,
+    "parameter": false
+  },
+  "performance_trial_authorized": false,
+  "interpretation_guardrails": [
+    "Q016 reproduces the fixed Q015 mechanism groups and rules without modification.",
+    "No feature, asset, horizon, parameter, subset order, threshold, or date block may be selected after observation.",
+    "The two one-year historical windows must remain strictly disjoint.",
+    "Insufficient historical data is reported as DATA_INSUFFICIENT rather than repaired opportunistically.",
+    "Q016 does not authorize a trading rule, performance trial, holdout evaluation, gate change, production use, or promotion.",
+    "Any subsequent performance hypothesis requires a separate preregistration, fresh symbol-disjoint coverage, unchanged evidence gates, and a fixed rule declared before evaluation."
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}

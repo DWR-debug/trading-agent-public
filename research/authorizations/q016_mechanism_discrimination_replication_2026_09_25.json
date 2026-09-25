@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION",
+  "authorized_on": "2026-09-25",
+  "authorization_scope": "diagnostic_only",
+  "execution_authorized": true,
+  "source_q015_workflow_run": 36161950582,
+  "source_q015_artifact_id": 10875399037,
+  "source_q015_result_fingerprint": "f7be165efe86a223f1e15dc0cfb206e992a95fecc596197a562c6eb65386e2da",
+  "fixed_window": {
+    "start": "2024-09-25",
+    "end": "2025-09-24",
+    "calendar_days": 365
+  },
+  "q015_reference_window": {
+    "start": "2025-09-25",
+    "end": "2026-09-24",
+    "calendar_days": 365
+  },
+  "fixed_assets": ["SPY", "TLT", "GLD"],
+  "fixed_features": ["event_count", "attention_score", "source_breadth", "article_count", "negative_goldstein", "mean_tone"],
+  "selection": {
+    "holdout": false,
+    "feature": false,
+    "asset": false,
+    "horizon": false,
+    "parameter": false
+  },
+  "performance_trial_authorized": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
