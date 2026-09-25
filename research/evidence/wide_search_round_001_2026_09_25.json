@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "recorded_on": "2026-09-25",
+  "task_id": "WIDE-SEARCH-ROUND-001",
+  "workflow_run": 36187003417,
+  "workflow_head": "a785358947277accaf5399538ae41416000a705f",
+  "artifact_id": 10887060908,
+  "artifact_sha256": "sha256:d97eb2a06ee5f5222c4817652642d57d5c5dda2bf2a4bd813c3bcb512c34ba7c",
+  "triage_fingerprint": "665bbfdaf5615e29a48ab9fac89b638739aa78468f7bdb1b25c4f3efdbaa7922",
+  "probe_fingerprint": "3c9aa578ca8de7657ebc480b0ec0c4cf26e5285a8d5169daaf940b6e24080f24",
+  "research_candles_used": 2798,
+  "holdout_candles_unused": 702,
+  "results": {
+    "abnormal_turnover_liquidity_shock": "PRUNE_NO_RESEARCH_SUPPORT",
+    "cross_asset_lead_lag": "PRUNE_NO_RESEARCH_SUPPORT",
+    "gap_reversal": "PRUNE_NO_RESEARCH_SUPPORT",
+    "volume_price_imbalance": "PRUNE_NO_RESEARCH_SUPPORT"
+  },
+  "interpretation": "Research-split exploratory diagnostics only; no holdout evaluation, no performance selection, no formal trial authorization.",
+  "governance": {
+    "performance_evaluation": false,
+    "holdout_evaluation": false,
+    "selection_used": false,
+    "performance_trial_authorized": false,
+    "automatic_promotion": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
