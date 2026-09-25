@@ -389,6 +389,17 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("WMT","JNJ","PG","KO","PEP","XOM","CVX","CSCO","MCD","V","ORCL","MRK","PFE"),
         target_count=3500,
     ),
+
+    AssetUniverse(
+        name="validation_2026_09_25_tsm_signal_consensus_repair",
+        priority=57,
+        description=(
+            "Coverage-repair successor universe for T044; same pre-registered "
+            "symbols with a larger raw history request to form 3500 common candles."
+        ),
+        symbols=("WMT","JNJ","PG","KO","PEP","XOM","CVX","CSCO","MCD","V","ORCL","MRK","PFE"),
+        target_count=3520,
+    ),
 )
 
 
