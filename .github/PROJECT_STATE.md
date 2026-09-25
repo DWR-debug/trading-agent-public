@@ -259,3 +259,16 @@ Der Kosten-Governor ist ein Policy-Gate und kein Ersatz für die OpenAI-Abrechnu
 Der lokale Research-Worker erzeugt kompakte, reproduzierbare Ergebnisse unter research/results/. Rohdaten und lokale Arbeitsartefakte bleiben außerhalb des versionierten Ergebnisbereichs.
 
 Ein self-hosted GitHub Actions Runner mit Label trading-agent-research ist für den PC vorgesehen. Die Repository-Vorbereitung ist erfolgt; die physische Einrichtung des Runners kann erst auf dem PC selbst durchgeführt werden.
+
+## Aktueller verifizierter Projektstand — 2026-09-25
+
+- Ausführungs-/Research-Repository: DWR-debug/trading-agent-public
+- letzter verifizierter Master-HEAD vor T043: 540517c5a041b92b63d6e7bf006681e9cc0364b7
+- T042: formal ausgeführt, BLOCKED / NO_SUPPORT, archiviert
+- letzte Master-CI: 724 passed
+- nächste präregistrierte Forschungsfrage: T043 Trend-Signal-Konsistenz
+- Status: Coverage-Preflight ausstehend
+- keine Parameter-/Variantensuche und keine Holdout-Selektion
+
+Der aktuelle technische Stand wird ab jetzt nach jedem formalen Trial mit dem
+Trial-Ledger und dem maschinenlesbaren Project-State abgeglichen.
