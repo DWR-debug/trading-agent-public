@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "updated": "2026-09-25",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "b0f0da7459b1376a38e6b2ed080516eeae8111ef",
+  "master_commit": "56beed34e1bcebd5a8390bb74e90165e3f3b2531",
   "latest_formal_trial": "T-2026-09-25-045",
   "latest_trial_status": "BLOCKED",
   "next_reserved_trial": null,
@@ -42,7 +42,9 @@
     "canonical_context": "docs/PROJECT_CONTEXT.md",
     "canonical_status": "PROJECT_STATUS.md",
     "canonical_ledger": "research/evidence/trial_ledger.json",
-    "canonical_state": "research/evidence/project_state.json"
+    "canonical_state": "research/evidence/project_state.json",
+    "chat_entrypoint": "docs/TRADING_AGENT_CHAT_ENTRYPOINT.md",
+    "chat_handoff_rule": "User-provided 'aktueller Stand aus dem letzten Chat' is a copy of the immediately preceding assistant message; treat it as handoff context, verify against canonical sources before accepting as evidence."
   },
   "active_workflows": [
     ".github/workflows/ci.yml",
@@ -289,7 +291,14 @@
     "q015_common_observations": 250,
     "q015_event_windows": 55,
     "q015_performance_trial_authorized": false,
-    "q015_selection_used": false
+    "q015_selection_used": false,
+    "q016_preregistered": true,
+    "q016_execution_status": "RUNNING",
+    "q016_recovery_run": 36171131147,
+    "q016_authorization_commit": "9eae6a32e60c97ec964caf6fdf67573ad2d370fb",
+    "q016_window": "2024-09-25/2025-09-24",
+    "q016_reference_window": "2025-09-25/2026-09-24",
+    "q016_scientific_status": "NO_RESULT_YET"
   },
   "agent_usage_efficiency": {
     "policy": "deterministic_actions_for_computation; free-agent-use-for-hypothesis-generation_research-design_and-architecture-review",
@@ -319,5 +328,5 @@
   "current_queue_task": "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION",
   "last_completed_queue_task": "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC",
   "master_commit_semantics": "last_verified_master_commit_before_this_state_update; this field must not be interpreted as a self-referential current-HEAD field",
-  "state_sync_verified_at": "2026-09-25T16:50:00Z"
+  "state_sync_verified_at": "2026-09-25T18:06:00Z"
 }
