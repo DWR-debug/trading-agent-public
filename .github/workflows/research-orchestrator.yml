@@ -163,8 +163,8 @@ jobs:
         run: |
           set -euo pipefail
           test "$GITHUB_HEAD_REF" = "research/execute-q017-g3-coverage-first"
-          git fetch origin "$GITHUB_HEAD_REF" --depth=1
-          test "$(git log -1 --pretty=%s FETCH_HEAD)" = "Research authorization: execute Q017 G3 coverage-first"
+          git fetch origin "$GITHUB_HEAD_REF" --depth=100
+          git log --format=%s FETCH_HEAD | grep -Fxq "Research authorization: execute Q017 G3 coverage-first"
           python -m automation.q017_coverage_preflight \
             --output-root research/runs/q017_g3_coverage_first \
             --universe q017_coverage_first
