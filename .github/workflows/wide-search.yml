@@ -211,6 +211,8 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: wide-search-h06-repair-${{ github.run_id }}
-          path: research/runs/wide_search/h06_sector_neutral_residual_momentum_repair_coverage.json
+          path: |
+            research/runs/wide_search/h06_sector_neutral_residual_momentum_repair_coverage.json
+            research/runs/wide_search/h06_repair_datasets/
           if-no-files-found: error
           retention-days: 30
