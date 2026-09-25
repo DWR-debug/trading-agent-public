@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW",
+  "status": "COMPLETED_DISCOVERY_ONLY",
+  "research_only": true,
+  "workflow_run_id": 36158184847,
+  "workflow_run_number": 7,
+  "workflow_run_conclusion": "success",
+  "final_artifact_id": 10874472512,
+  "final_artifact_zip_sha256": "sha256:25db8f4fdde37d1f26faa472e780c093e549dd3db9ec21bd6c5a392673fab0fd",
+  "report_fingerprint": "ab617984b57cf20ea2ac9e2458ac8a519b139abf8587dab751bd63e1d5d39d6d",
+  "window": {
+    "start": "2025-09-25",
+    "end": "2026-09-24",
+    "calendar_days": 365
+  },
+  "assets": [
+    "SPY",
+    "TLT",
+    "GLD"
+  ],
+  "fixed_features": [
+    "event_count",
+    "attention_score",
+    "source_breadth",
+    "article_count",
+    "negative_goldstein",
+    "mean_tone"
+  ],
+  "point_in_time_contract": {
+    "event_feature_window": "previous_market_day < event_day < target_market_day",
+    "target_return": "previous_market_close -> target_market_close",
+    "five_day_horizon": "target_market_close -> fifth subsequent market_close",
+    "same_day_return_used": false
+  },
+  "observations": {
+    "total": 250,
+    "event_windows": 55,
+    "no_event_windows": 195
+  },
+  "data_quality": {
+    "event_rows_seen": 37807341,
+    "event_rows_skipped": 226
+  },
+  "mechanism_diagnostics": {
+    "intensity_breadth_event_only_mean_abs_spearman": 0.9411616161616162,
+    "intensity_breadth_all_observations_mean_abs_spearman": 0.998808049139654,
+    "interpretation": "The four intensity/breadth measures remain highly redundant within event windows; return associations remain asset- and horizon-heterogeneous and are not performance evidence."
+  },
+  "governance": {
+    "selection_used": false,
+    "holdout_used": false,
+    "parameter_search_used": false,
+    "feature_selection_used": false,
+    "asset_selection_used": false,
+    "horizon_selection_used": false,
+    "performance_trial_authorized": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "execution_hardening": {
+    "earlier_runs_1_and_2": "runner shutdown / infrastructure cancellation",
+    "successful_run": "four independent fixed chunks on ubuntu-24.04 x64 plus separate aggregation",
+    "all_four_chunk_checkpoints_successful": true,
+    "aggregate_successful": true
+  }
+}
