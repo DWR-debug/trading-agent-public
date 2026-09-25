@@ -210,3 +210,7 @@ und aus Chats stammende Kontextinformationen festgehalten.
 
 Damit bleibt GitHub die belastbare technische Referenz, ohne unser gemeinsames Projektgedächtnis
 zu verlieren.
+
+## 12. Agentenressourcen: Hypothesen zuerst
+
+Kostenfreie Agentencredits werden primär für Hypothesenbildung und Forschungsdesign eingesetzt. Lokale Rechenleistung bleibt für deterministische Berechnung zuständig; bezahlte API-Nutzung bleibt deaktiviert. Copilot fungiert als nachgeordneter, schreibgeschützter Hypothesen-/Review-Agent ohne Holdout-Auswahl oder rückwirkende Optimierung. Die erste Runde ist AGENT-HYPOTHESIS-ROUND-001.
