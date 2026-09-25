@@ -61,6 +61,7 @@ on:
       - research/execute-q011-discovery
       - research/execute-q012-stability
       - research/execute-q013-redundancy
+      - research/execute-q016-mechanism-discrimination-replication
     paths:
       - "automation/research_orchestrator.py"
       - "automation/live_market_observer.py"
@@ -86,6 +87,10 @@ on:
       - "backtesting/**"
       - "optimization/**"
       - "data/**"
+      - "automation/information_alpha_mechanism_discrimination_replication.py"
+      - "tests/test_information_alpha_mechanism_discrimination_replication.py"
+      - "research/preregistrations/q016_information_alpha_mechanism_discrimination_replication_2026_09_25.json"
+      - "research/authorizations/q016_mechanism_discrimination_replication_2026_09_25.json"
 
 permissions:
   contents: read
@@ -234,6 +239,14 @@ jobs:
             else
               echo "Q013 redundancy branch: no authorization marker on this maintenance commit; research execution skipped."
             fi
+          elif [ "$GITHUB_REF" = "refs/heads/research/execute-q016-mechanism-discrimination-replication" ]; then
+            test "$GITHUB_EVENT_NAME" = "push"
+            test "$(git log -1 --pretty=%s)" = "Research authorization: execute Q016 mechanism discrimination replication"
+            python -m automation.information_alpha_mechanism_discrimination_replication \
+              --mode run \
+              --chunk-dir research/runs/information_alpha_mechanism_discrimination_replication/q016_chunks \
+              --input-path research/runs/information_alpha_mechanism_discrimination_replication/q016_frozen_input/q016_frozen_input.json \
+              --output-dir research/runs/information_alpha_mechanism_discrimination_replication/q016
           elif [ "$GITHUB_REF" = "refs/heads/research/execute-t044-coverage" ]; then
             test "$GITHUB_EVENT_NAME" = "push"
             if [ "$(git log -1 --pretty=%s)" = "Research authorization: execute T044 coverage" ]; then
