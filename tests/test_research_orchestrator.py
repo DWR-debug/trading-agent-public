@@ -69,3 +69,9 @@ def test_discover_coverage_mode_is_safe(monkeypatch, tmp_path):
     )
     assert snapshot["status"] == "CANDIDATES_AVAILABLE"
     assert snapshot["safety"]["orders_enabled"] is False
+
+
+def test_q013_mode_is_exposed():
+    import automation.research_orchestrator as research_orchestrator
+
+    assert "discover_information_alpha_redundancy" in research_orchestrator.main.__code__.co_consts
