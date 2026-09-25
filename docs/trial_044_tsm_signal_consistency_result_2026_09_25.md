@@ -12,11 +12,12 @@ Candles, 2.798 Research-Returns und 700 blinden Holdout-Returns durchgeführt.
 
 - Workflow: `36113366355`
 - Artifact: `10853724277`
+- heruntergeladene Artifact-ZIP SHA256: `d92099b041fa6c7ff0d93ff9e3c77bceaed23cf7c0281cf86571dc844871c0a7`
 - Report-Fingerprint: `e64b4f9c65f47cad6f51ce614ec7ebf1c1a7f96c2df206f372aea04d656fd861`
 - eingefrorener Coverage-Fingerprint: `e72ec9c6edc259ff60fada9112cda76081c4c9b214859d239858af0836b037bc`
 - Parent: T043
 - keine Holdout-Selektion, keine Parameter-/Variantensuche
-- 724+ Tests in der zugrunde liegenden CI-Baseline; formaler Orchestratorlauf erfolgreich
+- CI-/Orchestrator-Prüfungen des formalen Laufs erfolgreich
 - keine Orders, Paper-Only aktiv
 
 ## Hauptbefund
