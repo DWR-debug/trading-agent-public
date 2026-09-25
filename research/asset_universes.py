@@ -378,7 +378,6 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("DLS", "DEM", "EES", "EWX", "HDV", "SCHA", "VOOG", "VOOV", "OEF", "IWV"),
         target_count=3500,
     ),
-)
 
     AssetUniverse(
         name="validation_2026_09_25_tsm_signal_consensus",
@@ -390,6 +389,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("WMT","JNJ","PG","KO","PEP","XOM","CVX","CSCO","MCD","V","ORCL","MRK","PFE"),
         target_count=3500,
     ),
+)
 
 
 def get_universe(name: str) -> AssetUniverse:
