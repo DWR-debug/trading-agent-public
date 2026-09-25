@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "updated": "2026-09-25",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "PENDING_T045_COVERAGE",
-  "latest_formal_trial": "T-2026-09-25-044",
+  "master_commit": "PENDING_T045_ARCHIVE",
+  "latest_formal_trial": "T-2026-09-25-045",
   "latest_trial_status": "BLOCKED",
-  "next_reserved_trial": "T-2026-09-25-045",
-  "next_research_focus": "T045 fixed position-lifecycle exit control: one pre-registered ATR trailing exit, fresh symbol-disjoint universe, no parameter search.",
+  "next_reserved_trial": null,
+  "next_research_focus": "Cross-trial failure diagnosis after T045 before reserving the next mechanism; no further tuning of the failed ATR-exit.",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -43,7 +43,7 @@
     ".github/workflows/paper-30-day-experiment-harness.yml"
   ],
   "current_preregistered_trial": "T-2026-09-25-045",
-  "current_trial_status": "PREREGISTRATION_PENDING",
+  "current_trial_status": "ARCHIVED_REJECTED",
   "engineering_notes": {
     "t039_preregistered": true,
     "coverage_preflight_active": true,
@@ -159,8 +159,8 @@
     "t044_scientific_outcome": "NO_PROMOTION_EVIDENCE",
     "t044_formal_completed": true,
     "t045_preregistered": true,
-    "t045_coverage_status": "PENDING",
-    "t045_formal_performance_allowed": false,
+    "t045_coverage_status": "PASSED",
+    "t045_formal_performance_allowed": true,
     "t045_universe": "validation_2026_09_25_position_lifecycle_exit",
     "t045_symbols": [
       "WFC",
@@ -178,7 +178,28 @@
       "CMCSA"
     ],
     "t045_requested_candles": 3520,
-    "t045_target_common_calendar": 3500
+    "t045_target_common_calendar": 3500,
+    "t045_formal_completed": true,
+    "t045_scientific_outcome": "NO_PROMOTION_EVIDENCE",
+    "t045_formal_workflow_runs": [
+      36117519189,
+      36117548408
+    ],
+    "t045_formal_artifacts": [
+      10855484049,
+      10854674939
+    ],
+    "t045_formal_artifact_sha256s": [
+      "sha256:6c1d35e1543696a29e3ccd576c7228e302ba9e72ad879533b256d53ff6c54744",
+      "sha256:6981fd12a8f8b1e6b4b28a4eef885af963e1de5922edf9fbe182047872dd0adb"
+    ],
+    "t045_report_fingerprints": [
+      "c1bb8b62e46336e470110a7baaf9db74c6f5d23e49587b5f990423ade7a78562",
+      "90bb1b7f84b19a8675bab6ed6505931544e2d320c0cdaf199db4c8666a94595a"
+    ],
+    "t045_core_price_only_metrics_reproduced": true,
+    "t045_secondary_total_return_sensitivity_has_small_drift": true,
+    "t045_failure_diagnosis": "Research return -19.3877 pp; Research Max-DD +0.3331 pp; Research PF -0.0211; Holdout return -12.7907 pp; Holdout Max-DD +6.1918 pp; Holdout PF -0.0682; rolling profitable ratio 0.8->0.6; rolling average DD 14.02%->13.07%."
   },
   "agent_usage_efficiency": {
     "policy": "deterministic_actions_for_computation_and_agent_use_for_architecture_review_synthesis",
@@ -187,6 +208,7 @@
     "free_credit_only": true,
     "lessons_recorded": "reuse_frozen_artifacts; batch_independent_evidence_fetches; fail_fast_contract_tests; no_agent_spend_for_deterministic_backtests; do_not_formalize_single_snapshot_weak_discovery",
     "q004_discovery_policy": "one broad cross-asset observation plus benchmark; no performance selection; discovery candidates require fresh preregistration",
-    "q006_policy": "mechanism-first preregistration; fresh disjoint coverage; no T041 parameter/weight retuning"
+    "q006_policy": "mechanism-first preregistration; fresh disjoint coverage; no T041 parameter/weight retuning",
+    "secondary_sensitivity_reproducibility": "Adjusted-close Total-Return-Sensitivität zeigte minimale Laufabweichungen bei zwei identischen Formal-Ausführungen; Price-Only-Kernkennzahlen und Gate-Ergebnisse waren identisch."
   }
 }
