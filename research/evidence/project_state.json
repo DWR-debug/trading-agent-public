@@ -6,7 +6,7 @@
   "latest_formal_trial": "T-2026-09-25-045",
   "latest_trial_status": "BLOCKED",
   "next_reserved_trial": null,
-  "next_research_focus": "Q017 G3 coverage-first preflight across macro-surprise, CFTC positioning/crowding, and abnormal turnover/liquidity-shock candidate families.",
+  "next_research_focus": "WIDE-SEARCH: wide search -> aggressive pruning -> narrow formal validation; Q017 G3 remains a completed DATA_INSUFFICIENT coverage diagnostic.",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -16,9 +16,10 @@
     "paper_only": true
   },
   "active_research_model": {
-    "discovery": "live_or_updated_market_data_observation",
-    "hypothesis": "new_pre_registered_trial_only",
-    "validation": "preflight_to_holdout_and_evidence_gates"
+    "discovery": "wide_search_on_fixed_ex_ante_hypothesis_catalog",
+    "hypothesis": "fixed_ex_ante_rule_only",
+    "validation": "narrow_formal_validation_only_after_coverage_pit_and_preregistration",
+    "pruning": "aggressive_prune_on_data_contract_pit_orthogonality_or_reproducibility_failure"
   },
   "safety": {
     "paper_only": true,
@@ -31,8 +32,8 @@
     "free_credit_only": true,
     "credit_balance_auto_detected": false,
     "policy": "free_agent_credits_for_hypothesis_generation_and_research_design; deterministic_compute_local_only",
-    "current_task": "Q-017-G3-COVERAGE-FIRST",
-    "current_task_scope": "Verify point-in-time data availability and complete coverage for the three orthogonal Q017 candidate families; no performance selection.",
+    "current_task": "WIDE-SEARCH-ROUND-001",
+    "current_task_scope": "Run fixed discovery/coverage probes across orthogonal families; prune aggressively before any formal performance validation.",
     "holdout_selection": false,
     "parameter_search": false,
     "asset_selection": false,
@@ -72,9 +73,9 @@
     "next_trial_candidate_selection": "coverage_only_fixed_pool",
     "t040_formal_completed": true,
     "t040_negative_evidence_archived": true,
-    "current_queue_task": "Q-017-G3-COVERAGE-FIRST",
+    "current_queue_task": "WIDE-SEARCH-ROUND-001",
     "automatic_formal_execution_requires_preregistration": true,
-    "last_completed_queue_task": "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION",
+    "last_completed_queue_task": "Q-017-G3-COVERAGE-FIRST",
     "last_completed_diagnosis_fingerprint": "92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea",
     "cross_trial_failure_diagnosis_implemented": true,
     "t041_preregistered": true,
@@ -310,7 +311,21 @@
     "q016_observations": 0,
     "q016_event_windows": 0,
     "q016_performance_trial_authorized": false,
-    "q016_selection_used": false
+    "q016_selection_used": false,
+    "q017_preregistered": true,
+    "q017_g3_scientific_status": "DATA_INSUFFICIENT",
+    "q017_g3_workflow_run": 36186285814,
+    "q017_g3_artifact_id": 10887025099,
+    "q017_g3_artifact_sha256": "sha256:a6c6a8a45047bb7b8d368aa7a471d70a22fe21bf6b9010b24f4ae99970fff556",
+    "q017_g3_result_fingerprint": "09e8ceb04b37e55dc3c8cdfe6e0c448b328a2dee0bab7c0b90ab0f8ac02fa850",
+    "q017_g3_macro_status": "DATA_INSUFFICIENT",
+    "q017_g3_cftc_status": "DATA_INSUFFICIENT",
+    "q017_g3_yahoo_status": "DATA_INVALID",
+    "q017_g3_yahoo_common_calendar": 2571,
+    "q017_g3_performance_authorized": false,
+    "q017_g3_selection_used": false,
+    "q017_g3_key_finding": "ALFRED vintage reads timed out; CFTC historical release timestamps are not fully verifiable; Yahoo fixed 3520-request geometry produced 3269 bars for most symbols and 2571 common bars because CIBR begins in 2015.",
+    "wide_search_mode": "wide_search -> aggressive_pruning -> narrow_formal_validation"
   },
   "agent_usage_efficiency": {
     "policy": "deterministic_actions_for_computation; free-agent-use-for-hypothesis-generation_research-design_and-architecture-review",
@@ -385,5 +400,6 @@
     ],
     "principle": "More pressure -> more process discipline, not weaker evidence.",
     "evidence_status": "design_constraint_not_empirical_causal_proof_of_future_returns"
-  }
+  },
+  "last_verified_master_commit_after_q017_merge": "be558399d2a3a7aa7e5ade58d4f9b4fa603495d9"
 }

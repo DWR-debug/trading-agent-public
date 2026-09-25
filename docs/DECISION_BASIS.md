@@ -12,53 +12,82 @@ bleiben strikt getrennt.
 ### Was ist verifiziert?
 
 - Technische Referenz ist ausschließlich der öffentliche `master` von
-  `DWR-debug/trading-agent-public`.
-- AGENT-001 wurde gemergt; CI, Projektintegrität, State-Freshness und
-  Research-Governance waren auf dem letzten geprüften PR-Stand grün.
+  `DWR-debug/trading-agent-public`; Q017 G3 ist in Merge-Commit
+  `be558399d2a3a7aa7e5ade58d4f9b4fa603495d9` enthalten.
 - Q016 ist technisch abgeschlossen und wissenschaftlich `DATA_INSUFFICIENT`
   mit 0 Beobachtungen und 0 Event-Fenstern; kein Performance-Trial wurde daraus
   autorisiert.
-- Die vier performance-validen historischen Trials, die Q010 untersucht hat,
-  zeigen positive Holdout-Renditen, aber keinen vollständigen Evidence-Gate-Pass.
-  Wiederkehrende Fehler liegen insbesondere bei Research-Drawdown,
-  control-relativer Nichtverschlechterung und OOS/IS-Stabilität.
-- Q017 ist als orthogonale Designrunde präregistriert. G3 prüft ausschließlich
-  historische Datenabdeckung und Point-in-Time-Tauglichkeit für Macro Surprise,
-  CFTC Positioning/Crowding und abnormalen Turnover/Liquiditätsschock.
+- Q017-G3 wurde vollständig ausgeführt: Coverage-/PIT-Preflight,
+  Workflow `36186285814`, Artifact `10887025099`, Result-Fingerprint
+  `09e8ceb04b37e55dc3c8cdfe6e0c448b328a2dee0bab7c0b90ab0f8ac02fa850`.
+- Q017-G3 ist wissenschaftlich `DATA_INSUFFICIENT`, nicht `NO_SUPPORT`:
+  die Resultate enthalten keine Renditeauswertung und keine Holdout-Selektion.
+- Macro/ALFRED war wegen Read-Timeout nicht PIT-ready.
+- CFTC zeigte umfangreiche historische Report-Daten, aber die tatsächlichen
+  historischen Release-Timestamps und Ausnahmen sind mit dem verfügbaren
+  Datenvertrag nicht vollständig verifizierbar; daher bleibt die Familie
+  PIT-unverifiziert.
+- Der Yahoo-Preflight erreichte nur 2.571 gemeinsame Tagesbars; für die meisten
+  Symbole lagen innerhalb des fixierten Fensters nur 3.269 Bars vor, während
+  CIBR erst 2015 beginnt. Deshalb ist die 3.500-Candle-Geometrie auf diesem
+  Universum nicht erfüllbar.
+- Die vier performance-validen historischen Trials aus Q010 zeigen positive
+  Holdout-Renditen, aber keinen vollständigen Evidence-Gate-Pass; die wiederkehrenden
+  Engpässe liegen bei Research-Drawdown, control-relativer Nichtverschlechterung,
+  OOS/IS-Stabilität und teilweise Holdout-Risiko.
+- Für die breite Suchphase sind 12 Hypothesen ex ante festgelegt. Der Triage-Lauf
+  klassifizierte 7 für Coverage, 1 als Control-Replikation, 1 als Coverage-Diagnose,
+  2 wegen Data-Contract und 1 wegen Family-Duplikation zum Pruning.
 
-### Was bedeutet das?
+### Was ist unbekannt?
 
-Die aktuelle Forschungsengstelle ist nicht das Auffinden irgendeines positiven
-Backtests. Die zentrale offene Frage ist, ob ein mechanistisch neuer Signaltyp
-auf frischen Daten mit belastbarer Provenienz überhaupt ausreichend beobachtbar
-und anschließend unter den unveränderten Robustheits-/Risikogates testbar ist.
+- Ob ALFRED mit einem robusteren, key-freien Vintage-Zugriff reproduzierbar
+  verfügbar gemacht werden kann.
+- Ob eine belastbare historische CFTC-Release-Timeline rekonstruiert werden kann,
+  ohne ex post Terminwissen zu verwenden.
+- Welche der sieben für Coverage vorgesehenen orthogonalen Familien einen
+  reproduzierbaren, ausreichend informativen Datenvertrag besitzen.
+- Ob irgendeine Explorationshypothese nach dem Pruning die unveränderten formalen
+  Robustheits-/Risikogates bestehen kann.
 
-### Was bedeutet es ausdrücklich nicht?
+### Was hat sich geändert?
 
-- Positive Holdout-Renditen früherer Trials sind kein Promotionsnachweis.
-- Q016 liefert keinen Performance-Effekt.
-- Q017-G3 liefert keine Rendite-Evidence.
-- Eine Coverage-Lücke ist kein negatives Alpha-Ergebnis.
-- Keine Aussage erlaubt eine Prognose künftiger Rendite oder finanzieller Sicherheit.
+- Q017-G3 wechselte von `COVERAGE_PENDING` zu abgeschlossenem
+  `DATA_INSUFFICIENT`.
+- Die Forschungssteuerung wurde auf `wide search -> aggressive pruning ->
+  narrow formal validation` umgestellt.
+- Kostenlose Compute-Ressourcen werden primär für breite, günstige Discovery- und
+  Coverage-Probes verwendet; formale Performanceauswertungen bleiben auf wenige
+  überlebende Kandidaten beschränkt.
+- Q017s Yahoo-Geometrieproblem wird nicht rückwirkend „repariert“ und nicht als
+  negatives Alpha-Ergebnis interpretiert. Ein geänderter Datenvertrag würde eine
+  separate technische/experimentelle Runde erfordern.
+- Wiederkehrende risk-adjusted/risk-control Controls werden nicht weiter blind
+  innerhalb derselben Family optimiert.
 
-## Aktuelle Aktion
+## Nächste Aktion
 
-Q017-G3 wird coverage-first ausgeführt. Erst nach vollständiger Prüfung wird
-zwischen weiterführbarer und technisch blockierter Forschung unterschieden.
-Es erfolgt keine Performanceauswahl aus Q017-G3.
+Die Wide-Search-Lane führt einen festen, holdout-blinden Research-Probe auf einem
+eigenständigen historischen Universum durch. Das Rohdatenfenster wurde auf 4.200
+Bars erhöht, damit die feste 3.500-Candle-Geometrie nicht an einem unnötig kleinen
+Request-Puffer scheitert.
 
-## Entscheidungsregeln
+Die breite Phase darf Hypothesen anhand ex ante definierter Coverage-/Plausibilitäts-
+und Research-Split-Regeln aggressiv verwerfen. Erst ein verbleibender Kandidat mit
+belastbarem Datenvertrag erhält eine eigene Präregistrierung und den vollständigen
+formalen Validierungspfad.
 
-1. Technische oder Datenfehler werden vor wissenschaftlicher Interpretation behoben
-   oder als `DATA_INVALID` dokumentiert.
-2. `DATA_INSUFFICIENT` ist ein gültiger Fortschritt, wenn eine Forschungsrichtung
-   belastbar ausgeschlossen oder ihre Unsicherheit reduziert wird.
-3. Keine Holdout-, Parameter-, Asset-, Feature-, Horizon- oder Threshold-Selektion
-   nach Ergebnisbeobachtung.
-4. PAPER_ONLY=True, LIVE_TRADING_ENABLED=False, orders_enabled=False und
-   automatic_promotion=False bleiben invariant.
-5. Zeit-/Erfolgsdruck erhöht Priorisierung und kostenlose Parallelisierung, niemals
-   Beweisnachlass oder finanzielles Risiko.
+### Welche Schutzgrenzen bleiben unverändert?
+
+- `PAPER_ONLY=True`
+- `LIVE_TRADING_ENABLED=False`
+- `orders_enabled=False`
+- `automatic_promotion=False`
+- Kein Holdout wird zur Exploration oder Auswahl verwendet.
+- Keine Parameter-, Asset-, Feature-, Horizon- oder Threshold-Selektion nach
+  Beobachtung eines Ergebnisses.
+- Zeit-/Erfolgsdruck erhöht nur Priorisierung und Parallelisierung, niemals
+  Evidenzstandard oder finanzielles Risiko.
 
 ## Update-Regel
 
