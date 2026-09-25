@@ -7,6 +7,7 @@ The preflight verifies the fixed sector map, common calendar, and signal-history
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 import math
@@ -16,6 +17,7 @@ from pathlib import Path
 
 from config import settings
 from data.yahoo_loader import load_yahoo_history
+from research.protocol import dataset_fingerprint
 from research.asset_universes import get_universe
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -119,6 +121,36 @@ def run(
     assets = _load_common_calendar()
     closes = {symbol: [bar.close for bar in bars] for symbol, bars in assets.items()}
 
+    output = Path(output_path)
+    if not output.is_absolute():
+        output = ROOT / output
+    snapshot_dir = output.parent / "h06_repair_datasets"
+    snapshot_dir.mkdir(parents=True, exist_ok=True)
+    snapshot_datasets = []
+    for symbol in universe.symbols:
+        bars = tuple(assets[symbol])
+        csv_path = snapshot_dir / symbol / "1d.csv"
+        csv_path.parent.mkdir(parents=True, exist_ok=True)
+        with csv_path.open("w", encoding="utf-8", newline="") as handle:
+            writer = csv.writer(handle)
+            writer.writerow(("timestamp", "open", "high", "low", "close", "volume"))
+            for bar in bars:
+                writer.writerow((
+                    bar.timestamp.isoformat(),
+                    bar.open,
+                    bar.high,
+                    bar.low,
+                    bar.close,
+                    bar.volume,
+                ))
+        snapshot_datasets.append({
+            "symbol": symbol,
+            "interval": "1d",
+            "path": str(csv_path.relative_to(ROOT)),
+            "candle_count": len(bars),
+            "fingerprint": dataset_fingerprint(bars),
+        })
+
     decision_dates = RESEARCH_CANDLES - LOOKBACK
     complete_dates = 0
     nondegenerate_dates = 0
@@ -167,6 +199,11 @@ def run(
         "sector_map": {key: list(value) for key, value in SECTOR_MAP.items()},
         "research_candles_used": RESEARCH_CANDLES,
         "holdout_candles_unused": TARGET_COMMON_CANDLES - RESEARCH_CANDLES,
+        "data_snapshot": {
+            "format": "csv_ohlcv_common_calendar",
+            "selection_rule": "last_3500_timestamps_from_full_fixed_study_window_intersection",
+            "datasets": snapshot_datasets,
+        },
         "fixed_signal": {
             "formation_lookback_sessions": LOOKBACK,
             "skip_sessions": SKIP,
@@ -224,11 +261,9 @@ def run(
     }
     result["fingerprint"] = _fingerprint(result)
 
-    path = Path(output_path)
-    if not path.is_absolute():
-        path = ROOT / path
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
+    output = Path(output_path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(
         json.dumps(result, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
