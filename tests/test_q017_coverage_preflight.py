@@ -58,3 +58,10 @@ def test_q017_date_parser_is_strict_to_fixed_window():
     assert _date_in_window("09/23/2025") == date(2025, 9, 23)
     assert _date_in_window("2010-12-31") is None
     assert _date_in_window("2025-09-25") is None
+
+def test_q017_alfred_vintage_date_regex_accepts_iso_dates():
+    import re
+
+    html = '<option value="2025-09-24">2025-09-24</option><option value="2011-01-04">2011-01-04</option>'
+    dates = sorted(set(re.findall(r'<option[^>]+value=[\"\'](20\\d{2}-\\d{2}-\\d{2})[\"\']', html)))
+    assert dates == ["2011-01-04", "2025-09-24"]
