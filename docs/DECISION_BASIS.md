@@ -12,8 +12,8 @@ bleiben strikt getrennt.
 ### Was ist verifiziert?
 
 - Technische Referenz ist ausschließlich der öffentliche `master` von
-  `DWR-debug/trading-agent-public`; die Wide-Search-Lane ist in
-  `bcefcf21156155327de78db5be19dfe379798915` integriert.
+  `DWR-debug/trading-agent-public`; Wide-Search Round 002 ist in
+  `6b6124883f4af03037c4c720f70b6e4a3a4976d2` integriert.
 - Q016 bleibt `DATA_INSUFFICIENT`; daraus wurde kein Performance-Trial autorisiert.
 - Q017-G3 bleibt `DATA_INSUFFICIENT`: Workflow `36186285814`, Artifact
   `10887025099`, Result-Fingerprint
@@ -42,6 +42,7 @@ bleiben strikt getrennt.
   daher Pruning.
 - Die vier Pruning-Ergebnisse sind Explorationsbefunde, kein allgemeiner Beweis,
   dass diese Signalideen niemals funktionieren.
+- Wide-Search Round 002 (H08 volatility-state transition) ist technisch integriert und per vollständiger CI geprüft; der wissenschaftliche Round-002-Output ist zum Synchronisationszeitpunkt noch nicht verifiziert.
 
 ### Was ist unbekannt?
 
@@ -67,7 +68,7 @@ bleiben strikt getrennt.
 
 ## Nächste Aktion
 
-Round 002 fokussiert eine ex ante fixierte **volatility-state transition**-Diagnose
+Zuerst wird der wissenschaftliche Output von Round 002 aus der dedizierten Ausführung verifiziert. Erst danach wird entschieden, ob die H08-Diagnose die nächste Coverage-/PIT-Stufe erreicht. Round 002 fokussiert eine ex ante fixierte **volatility-state transition**-Diagnose
 als Brücke zwischen Exploration und dem identifizierten Hauptproblem des Projekts:
 robuste Risiko-/Regime-Evidenz. Bewertet wird ausschließlich der Research-Split.
 Eine positive Exploration wird nicht automatisch zu einem formalem Trial.
