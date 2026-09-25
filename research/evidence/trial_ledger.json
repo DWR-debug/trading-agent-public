@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-24T22:27:05Z",
+  "generated_at": "2026-09-25T09:18:23Z",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -3323,6 +3323,135 @@
         "result_document": "docs/trial_044_tsm_signal_consistency_result_2026_09_25.md",
         "result_checkpoint": "research/checkpoints/trial_044_tsm_signal_consistency_result_2026_09_25.json",
         "all_checks_passed": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-25-045",
+      "recorded_at": "2026-09-25T09:18:23Z",
+      "status": "archived_rejected",
+      "research_family": "position_lifecycle_exit",
+      "hypothesis": {
+        "text": "Eine einzige feste ATR-basierte Trailing-Exit-Regel als Lifecycle-Layer kann die robuste Risikoqualität des festen 50/50-Kandidaten verbessern, ohne Rendite- oder Evidence-Gates zu verschlechtern."
+      },
+      "data_scope": {
+        "requested_candles": 3520,
+        "target_candles": 3500,
+        "common_return_count": 3498,
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "fully_symbol_disjoint_validation_set": true,
+        "coverage_workflow_run_id": 36116824638,
+        "coverage_artifact_id": 10855053438,
+        "coverage_artifact_sha256": "sha256:21f41f8ba95f303524520302747c7b474c8ae3fbe11a9014f28e1d3abe626ab2",
+        "coverage_fingerprint": "4c82327c957331851b1184a2a947f77f38e0b73d8e6b54a3fafda424d86296dc"
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "variant_search": false,
+        "selection_used": false,
+        "holdout_used_for_selection": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "single pre-registered challenger versus fixed 50/50 control"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpe": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "scientific_outcome": "NO_PROMOTION_EVIDENCE",
+        "workflow_run_id": 36117519189,
+        "artifact_id": 10855484049,
+        "artifact_download_sha256": "sha256:6c1d35e1543696a29e3ccd576c7228e302ba9e72ad879533b256d53ff6c54744",
+        "report_fingerprint": "c1bb8b62e46336e470110a7baaf9db74c6f5d23e49587b5f990423ade7a78562",
+        "duplicate_reproduction_workflow_run_id": 36117548408,
+        "duplicate_reproduction_artifact_id": 10854674939,
+        "duplicate_reproduction_artifact_sha256": "sha256:6981fd12a8f8b1e6b4b28a4eef885af963e1de5922edf9fbe182047872dd0adb",
+        "duplicate_reproduction_report_fingerprint": "90bb1b7f84b19a8675bab6ed6505931544e2d320c0cdaf199db4c8666a94595a",
+        "duplicate_execution_not_counted_as_independent_trial": true,
+        "core_price_only_metrics_reproduced": true,
+        "all_checks_passed": false,
+        "failed_absolute": [
+          "research_drawdown_lte_10pct",
+          "research_profit_factor_gte_1_10",
+          "rolling_profit_factor_gte_1_10",
+          "rolling_average_drawdown_lte_10pct",
+          "oos_to_is_return_ratio_gte_0_25",
+          "holdout_profit_factor_gte_1_10",
+          "holdout_drawdown_lte_10pct"
+        ],
+        "failed_non_deterioration": [
+          "research_return_not_below_fixed",
+          "research_drawdown_not_worse_vs_fixed",
+          "research_profit_factor_not_below_fixed",
+          "rolling_pf_not_below_fixed",
+          "rolling_profitable_ratio_not_below_fixed",
+          "oos_to_is_not_below_fixed",
+          "holdout_return_not_below_fixed",
+          "holdout_pf_not_below_fixed",
+          "holdout_drawdown_not_worse_vs_fixed"
+        ],
+        "passed_absolute": [
+          "research_return_positive",
+          "rolling_profitable_window_ratio_gte_0_5",
+          "holdout_return_positive",
+          "stress_1_5x_nonnegative",
+          "stress_2x_nonnegative",
+          "total_return_sensitivity_nonnegative"
+        ],
+        "passed_non_deterioration": [
+          "rolling_average_drawdown_not_worse_vs_fixed"
+        ],
+        "key_metrics": {
+          "fixed_research_return_percent": 60.61594136100186,
+          "challenger_research_return_percent": 41.22829053304484,
+          "fixed_research_drawdown_percent": 19.733227729676848,
+          "challenger_research_drawdown_percent": 20.06635202578041,
+          "fixed_research_profit_factor": 1.0895251474965635,
+          "challenger_research_profit_factor": 1.0683941393966963,
+          "fixed_holdout_return_percent": 21.130386610038833,
+          "challenger_holdout_return_percent": 8.339725208717708,
+          "fixed_holdout_drawdown_percent": 9.792343212611343,
+          "challenger_holdout_drawdown_percent": 15.984145032637398,
+          "fixed_holdout_profit_factor": 1.1270722631332697,
+          "challenger_holdout_profit_factor": 1.0588285292793311,
+          "fixed_oos_to_is_return_ratio": 0.34859454684033614,
+          "challenger_oos_to_is_return_ratio": 0.20228161538818457,
+          "fixed_rolling_profitable_window_ratio": 0.8,
+          "challenger_rolling_profitable_window_ratio": 0.6,
+          "fixed_rolling_average_drawdown_percent": 14.02427364642278,
+          "challenger_rolling_average_drawdown_percent": 13.074814491699026,
+          "challenger_total_return_holdout_percent": 12.57047512472591,
+          "challenger_stress_1_5x_holdout_return_percent": 6.519937863104763,
+          "challenger_stress_2x_holdout_return_percent": 4.730411530402145
+        }
+      },
+      "diagnostics": {
+        "stop_event_count": 391,
+        "stopped_asset_days": 14524,
+        "position_asset_days": 13476,
+        "diagnosis_classes": [
+          "exit_control_does_not_reduce_core_drawdown",
+          "exit_control_reduces_return_and_holdout_quality",
+          "average_rolling_drawdown_improves_but_absolute_risk_gate_remains_failed",
+          "no_non_deterioration_support",
+          "secondary_total_return_sensitivity_has_small_run_to_run_drift"
+        ]
       },
       "safety": {
         "paper_only": true,

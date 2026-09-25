@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "diagnosis_id": "T045-FAILURE-DIAGNOSIS-2026-09-25",
+  "trial_id": "T-2026-09-25-045",
+  "status": "DIAGNOSTIC_ONLY",
+  "evidence": {
+    "research_return_delta_pp": -19.387650827957025,
+    "research_drawdown_delta_pp": 0.3331242952691519,
+    "research_pf_delta": -0.0211310080998672,
+    "rolling_pf_delta": -0.021131008099868082,
+    "rolling_profitable_ratio_delta": -0.2,
+    "rolling_average_drawdown_delta_pp": -0.9494591547237525,
+    "oos_is_delta": -0.14631293145215157,
+    "holdout_return_delta_pp": -12.790661401321124,
+    "holdout_drawdown_delta_pp": 6.191801820926055,
+    "holdout_pf_delta": -0.0682437338539386
+  },
+  "diagnosis_classes": [
+    "exit_control_does_not_reduce_core_drawdown",
+    "exit_control_reduces_return_and_holdout_quality",
+    "average_rolling_drawdown_improves_but_absolute_risk_gate_remains_failed",
+    "no_non_deterioration_support",
+    "secondary_total_return_sensitivity_has_small_run_to_run_drift"
+  ],
+  "lifecycle": {
+    "stop_event_count": 391,
+    "stopped_asset_days": 14524,
+    "position_asset_days": 13476
+  },
+  "non_actions": [
+    "no_atr_window_search",
+    "no_atr_multiple_search",
+    "no_reentry_rule_search",
+    "no_holdout_selection",
+    "no_gate_relaxation",
+    "no_production_promotion"
+  ],
+  "next_question": "Run cross-trial failure diagnosis across T041-T045 before reserving another mechanism; use the resulting failure taxonomy to select one orthogonal, preregistered mechanism."
+}

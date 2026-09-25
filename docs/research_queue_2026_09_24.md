@@ -86,3 +86,13 @@ T045 verwendet ein neues vollständig symbol-disjunktes Universum mit 13 Assets,
 3.520 angeforderten Roh-Candles und einem Ziel von 3.500 gemeinsamen Candles.
 
 Keine Parameter-/Varianten-/Schwellensuche und keine Holdout-Selektion.
+
+
+## T045 Abschluss — 2026-09-25
+
+Q-009-T045-POSITION-LIFECYCLE-EXIT-CONTROL ist formal abgeschlossen und **BLOCKED**. Die feste ATR-Lifecycle-Hypothese erhielt keine Promotions-/Nicht-Verschlechterungs-Evidenz. Vor einem neuen Trial wird die kumulierte Failure-Signatur über T041–T045 ausgewertet.
+
+
+### Q-010 — Cross-Trial Failure-Diagnose
+
+Q-010 ist nach Abschluss von T045 **PENDING**. Die Diagnose bleibt rein ableitend: T041–T045 werden gemeinsam auf wiederkehrende Failure-Modi ausgewertet, ohne Parameter-, Asset-, Holdout- oder Gate-Selektion. Erst danach wird eine neue Performancehypothese präregistriert.
