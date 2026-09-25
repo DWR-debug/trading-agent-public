@@ -1,3 +1,16 @@
+# Nächster Arbeitsschritt — Q017 Design Round — 2026-09-25
+
+Q017 wurde als **DESIGN_ONLY** operationalisiert. Es existieren drei bewusst ungerankte, mechanistisch unterschiedliche Kandidaten:
+- Macro-surprise state transition (ALFRED/FRED vintages)
+- CFTC positioning/crowding
+- Abnormal turnover/liquidity shock (Yahoo OHLCV)
+
+Q017 erzeugt keine Performance-Evidence und autorisiert keinen Performance-Trial. Vor einer späteren Auswahl gelten Coverage-Preflight, feste Regel, fresh symbol-disjoint universe und unveränderte Evidence-Gates.
+
+Die agentischen Ressourcen werden als Forschungsbudget behandelt. Kostenlose Ressourcen haben Vorrang; tatsächliche kostenpflichtige Nutzung wird im Agent-Usage-Ledger nur anhand real beobachteter Werte erfasst.
+
+---
+
 # Aktueller Ausführungscheckpoint — Q016 abgeschlossen / Freshness Guard — 2026-09-25
 
 ## Verifizierter Stand
