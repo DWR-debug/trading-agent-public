@@ -20,10 +20,33 @@ Das bedeutet:
 - Ihre Aussagen müssen gegen den aktuellen Repository-, Workflow- und Evidence-Stand
   verifiziert werden, bevor sie als technische oder wissenschaftliche Tatsache
   übernommen werden.
+- **Die exakte Formulierung „aktueller Stand aus dem letzten Chat“ ist nicht erforderlich.**
+  Wenn die erste substanzielle Nutzernachricht erkennbar den kopierten Inhalt einer
+  vorherigen Assistant-Antwort enthält — z. B. ausführlichen Projektstatus, Commit-/Run-/Artifact-
+  Referenzen, Zwischenstände, Überschriften oder typische Formulierungen einer vorherigen
+  Statusmitteilung — wird sie konservativ als **möglicher Handoff** behandelt und gegen die
+  kanonischen Quellen geprüft.
+- Auch bei Unsicherheit gilt: lieber als möglichen Handoff prüfen als den eingefügten
+  Zwischenstand ungeprüft als neue technische oder wissenschaftliche Wahrheit übernehmen.
 - Bei Widersprüchen gilt die bestehende Quellenhierarchie:
   technische Wahrheit = öffentlicher `master`;
   Research-Evidenz = Ledger/Checkpoints/Workflow-Artefakte;
   Projektabsicht = `docs/PROJECT_CONTEXT.md`.
+
+## Dauerhafte Ressourcenbeschränkung
+
+Das Projekt verfügt aktuell über **kein verfügbares Kapital** für bezahlte externe Dienste.
+Daher gilt verbindlich:
+
+- kostenpflichtige Copilot-/Coding-Agent-Abos oder sonstige bezahlte Agentenressourcen sind **keine Option**;
+- bezahlte API-Nutzung bleibt bei **0 USD**;
+- Agenten-/Worker-Einsatz muss innerhalb kostenlos verfügbarer Ressourcen bzw. der vorhandenen
+  GitHub-/ChatGPT-Infrastruktur organisiert werden;
+- diese Beschränkung darf nicht als stillschweigend gelockerte Annahme behandelt werden.
+
+Die Ressourcenlage beeinflusst die Architektur: kostenlose Agentencredits werden gezielt für
+hochwertige Hypothesen-/Design-/Review-Arbeit eingesetzt, während deterministische Berechnung
+über vorhandene kostenlose Runner bzw. lokale Ressourcen erfolgt.
 
 ## Verbindlicher Startablauf
 
