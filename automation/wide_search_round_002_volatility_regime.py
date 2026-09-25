@@ -82,6 +82,35 @@ def _classify(events: list[float]) -> str:
     return "PRUNE_NO_RISK_REGIME_SUPPORT"
 
 
+def _temporal_research_halves(events: list[dict]) -> tuple[list[float], list[float]]:
+    """Split pooled events by the fixed research-calendar midpoint, not event count."""
+    midpoint = RESEARCH_CANDLES // 2
+    first = [
+        event["forward_to_baseline_ratio"]
+        for event in events
+        if event["event_index"] < midpoint
+    ]
+    second = [
+        event["forward_to_baseline_ratio"]
+        for event in events
+        if event["event_index"] >= midpoint
+    ]
+    return first, second
+
+
+def _classify_temporal_events(events: list[dict]) -> str:
+    if len(events) < MIN_EVENTS:
+        return "PRUNE_TOO_FEW_EVENTS"
+    first, second = _temporal_research_halves(events)
+    if not first or not second:
+        return "PRUNE_NO_RISK_REGIME_SUPPORT"
+    first_mean = sum(first) / len(first)
+    second_mean = sum(second) / len(second)
+    if first_mean >= SUPPORT_THRESHOLD and second_mean >= SUPPORT_THRESHOLD:
+        return "DISCOVERY_SUPPORT_RISK_REGIME"
+    return "PRUNE_NO_RISK_REGIME_SUPPORT"
+
+
 def _load_common_calendar() -> dict[str, list]:
     universe = get_universe(UNIVERSE)
     bars_by_symbol: dict[str, list] = {}
@@ -180,9 +209,7 @@ def run(
     ratios = [
         event["forward_to_baseline_ratio"] for event in pooled_events
     ]
-    midpoint = len(ratios) // 2
-    first = ratios[:midpoint]
-    second = ratios[midpoint:]
+    first, second = _temporal_research_halves(pooled_events)
 
     result = {
         "schema_version": "1.0",
@@ -201,7 +228,7 @@ def run(
             "minimum_events": MIN_EVENTS,
         },
         "pooled_research_only": {
-            "classification": _classify(ratios),
+            "classification": _classify_temporal_events(pooled_events),
             "overall": _summary(ratios),
             "first_research_half": _summary(first),
             "second_research_half": _summary(second),
