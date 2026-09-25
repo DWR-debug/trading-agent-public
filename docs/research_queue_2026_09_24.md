@@ -138,3 +138,10 @@ Q014 ist **PENDING** und präregistriert. Die sechs unveränderten Q011-Features
 
 Q014 bleibt vollständig diagnostisch. Keine Feature-, Asset-, Horizon-, Parameter- oder Holdout-Selektion und kein Performance-Trial. Jede spätere Trading-Hypothese benötigt eine neue Präregistrierung, frische symbol-disjunkte Coverage und unveränderte Evidence-Gates.
 
+## Q014 abgeschlossen / Q015 vorgemerkt — 2026-09-25
+- Q014: `COMPLETED / DISCOVERY_ONLY`
+- Nachweis: Workflow `36158184847`, Artefakt `10874472512`, Report-Fingerprint `ab617984b57cf20ea2ac9e2458ac8a519b139abf8587dab751bd63e1d5d39d6d`
+- 250 gemeinsame Beobachtungen, 55 Event-Fenster, 37.807.341 GDELT-Zeilen
+- Intensitäts-/Breiten-Redundanz im Event-Sample: mean abs Spearman 0,94116
+- Keine Performance-Autorisierung.
+- Q015: frische zeitlich disjunkte Replikation der vollständigen sechs-Feature-Diagnostik, Status `PENDING`.
