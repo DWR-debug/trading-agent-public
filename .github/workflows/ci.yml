@@ -79,8 +79,8 @@ jobs:
 
           task = default_research_queue().next_task()
           assert task is not None
-          assert task.task_id == "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION"
-          assert task.research_family == "orthogonal_information_alpha_mechanism_discrimination_replication"
+          assert task.task_id == "Q-017-ORTHOGONAL-HYPOTHESIS-DESIGN-ROUND"
+          assert task.research_family == "orthogonal_hypothesis_design"
 
           q015 = json.loads(Path(
               "research/preregistrations/q015_information_alpha_mechanism_discrimination_2026_09_25.json"
