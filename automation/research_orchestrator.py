@@ -505,7 +505,7 @@ def run(
                 run_fingerprint=report.get("run_manifest", {}).get("run_fingerprint"),
             )
     else:
-        raise ValueError("mode must be observe, preflight, discover_coverage, diagnose_failure, diagnose_history, research, research_t041, or research_t042, or research_t043, or research_t044, or research_t045")
+        raise ValueError("unsupported research mode")
 
     path = root / universe / "orchestrator_state.json"
     path.parent.mkdir(parents=True, exist_ok=True)
