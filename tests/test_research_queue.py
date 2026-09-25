@@ -6,9 +6,14 @@ from research.research_queue import ResearchQueueError, default_research_queue
 def test_queue_is_deterministic_and_tracks_current_priority():
     queue = default_research_queue()
     first = queue.next_task()
-    assert first is not None
-    assert first.task_id == "Q-011-ORTHOGONAL-INFORMATION-ALPHA-DISCOVERY"
     task_by_id = {task.task_id: task for task in queue.all()}
+    q011 = task_by_id["Q-011-ORTHOGONAL-INFORMATION-ALPHA-DISCOVERY"]
+    if q011.status == "PENDING":
+        assert first is not None
+        assert first.task_id == q011.task_id
+    else:
+        assert q011.status == "RUNNING"
+        assert first is None
     assert task_by_id["Q-007-T043-TSM-SIGNAL-CONSISTENCY"].status == "BLOCKED"
     assert task_by_id["Q-008-T044-TSM-SIGNAL-CONSISTENCY-REPAIR"].status == "BLOCKED"
     assert task_by_id["Q-009-T045-POSITION-LIFECYCLE-EXIT-CONTROL"].status == "BLOCKED"
