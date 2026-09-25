@@ -70,6 +70,10 @@ Jede bezahlte Agent-/API-Nutzung soll nach Möglichkeit protokollieren:
 
 Damit kann später gemessen werden, ob bezahlte Nutzung gegenüber kostenlosen Alternativen tatsächlich einen Mehrwert erzeugt.
 
+## Ledger
+
+Die tatsächliche Agentennutzung wird ausschließlich mit real beobachteten Werten in `research/evidence/agent_usage_ledger.json` protokolliert; das Schema liegt in `research/evidence/agent_usage_ledger.schema.json`. Ein leerer Ledger bedeutet ausdrücklich: **keine behaupteten Nutzungskosten**.
+
 ## Operative Regel
 
 Solange kostenlose Ressourcen ausreichen, wird **kein bezahlter Agenteneinsatz benötigt**. Ein Upgrade oder Credit-Einsatz wird erst erwogen, wenn:
