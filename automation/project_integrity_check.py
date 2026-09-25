@@ -18,6 +18,7 @@ ACTIVE_WORKFLOWS = {
     "paper-30-day-experiment-harness.yml",
     "q014-resilient.yml",
     "q015-mechanism-discrimination.yml",
+    "copilot-setup-steps.yml",
 }
 
 REQUIRED_FILES = (
