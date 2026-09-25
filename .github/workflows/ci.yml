@@ -78,7 +78,7 @@ jobs:
           task = default_research_queue().next_task()
           assert task is not None
           assert task.task_id == "Q-015-INFORMATION-ALPHA-FRESH-TIME-DISJOINT-REPLICATION"
-          assert task.research_family == "orthogonal_information_alpha_mechanism_redundancy_long_window"
+          assert task.research_family == "orthogonal_information_alpha_time_disjoint_replication"
 
           expected = set(prereg["symbols"])
           for existing in list_universes():
