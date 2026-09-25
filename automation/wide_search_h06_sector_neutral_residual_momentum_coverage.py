@@ -68,7 +68,10 @@ def _load_common_calendar() -> dict[str, list]:
             raise RuntimeError(
                 f"{symbol}: only {len(bars)} bars in fixed study window"
             )
-        bars_by_symbol[symbol] = bars[-TARGET_COMMON_CANDLES:]
+        # Keep the full fixed study-window history until the cross-symbol
+        # timestamp intersection is formed; only then select the last
+        # TARGET_COMMON_CANDLES common timestamps.
+        bars_by_symbol[symbol] = bars
 
     common = set.intersection(
         *[{bar.timestamp for bar in bars} for bars in bars_by_symbol.values()]
