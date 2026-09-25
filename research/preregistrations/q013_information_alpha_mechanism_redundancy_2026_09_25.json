@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-013-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-DIAGNOSTIC",
+  "status": "DIAGNOSTIC_ONLY",
+  "registered_at": "2026-09-25",
+  "objective": "Prüfen, ob die sechs in Q011 fixierten GDELT-Features überwiegend redundante Messungen gemeinsamer Event-Intensität sind oder im längeren Q012-Fenster unterschiedliche Mechanismusinformation tragen.",
+  "window": {
+    "start": "2026-03-29",
+    "end": "2026-09-24",
+    "calendar_days": 180
+  },
+  "assets": [
+    "SPY",
+    "TLT",
+    "GLD"
+  ],
+  "source_task": "Q-012-INFORMATION-ALPHA-TEMPORAL-STABILITY-DIAGNOSTIC",
+  "information_source": "GDELT 2.0 Event export",
+  "event_filter": "international event with num_articles >= 3",
+  "fixed_features": [
+    "event_count",
+    "attention_score",
+    "source_breadth",
+    "article_count",
+    "negative_goldstein",
+    "mean_tone"
+  ],
+  "fixed_mechanism_groups": {
+    "intensity_breadth": [
+      "event_count",
+      "attention_score",
+      "source_breadth",
+      "article_count"
+    ],
+    "severity": [
+      "negative_goldstein"
+    ],
+    "tone": [
+      "mean_tone"
+    ]
+  },
+  "point_in_time_contract": {
+    "event_feature_window": "previous_market_day < event_day < target_market_day",
+    "target_return": "previous_market_close -> target_market_close",
+    "five_day_horizon": "target_market_close -> fifth subsequent market close",
+    "same_day_return_used": false
+  },
+  "design": {
+    "primary_observation_unit": "common market-day observations from the fixed Q012 window",
+    "diagnostics": [
+      "feature-feature Spearman correlation matrix over all common observations",
+      "feature-feature Spearman correlation matrix restricted to event windows",
+      "asset-feature return association table for next-day and five-day horizons over all observations",
+      "same association table restricted to event windows",
+      "fixed mechanism-group contrast summary without feature selection"
+    ],
+    "no_feature_selection": true,
+    "no_threshold_optimization": true,
+    "no_asset_selection": true,
+    "no_holdout_selection": true,
+    "no_performance_trial": true
+  },
+  "interpretation_guardrails": [
+    "No feature may be chosen because it has the largest observed relationship.",
+    "Collinearity or redundancy is descriptive; it is not evidence that any mechanism is causal.",
+    "Sparse event-only cells must be reported as data insufficiency, not repaired by pooling or dropping blocks.",
+    "Any later performance hypothesis requires a new preregistration, fresh symbol-disjoint coverage and unchanged evidence gates."
+  ],
+  "preregistration_decision_rule": "Q013 does not authorize performance. It only determines whether the fixed Q011 feature set contains sufficiently distinguishable descriptive mechanism signals to justify a separate future hypothesis.",
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
