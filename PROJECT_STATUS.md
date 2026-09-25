@@ -3131,3 +3131,20 @@ Sicherheitsstatus:
 T045 wurde formal auf einem vollständig symbol-disjunkten Universum ausgewertet und **NO_SUPPORT / archived_rejected** klassifiziert. Die Coverage lieferte 3.519 gemeinsame Zeitstempel bei 3.500 benötigten Kerzen; verwendet wurden 2.798 Research-Returns und 700 blinde Holdout-Returns. Der feste ATR(20)-Trailing-Exit (3×ATR, Schlusskurs-Trigger, Ausführung am nächsten Open) senkte die Research-Rendite von 60,62 % auf 41,23 %, erhöhte die Research-Max-DD von 19,73 % auf 20,07 %, senkte den PF von 1,090 auf 1,068 und verschlechterte im Holdout die Rendite von 21,13 % auf 8,34 %, die Max-DD von 9,79 % auf 15,98 % und den PF von 1,127 auf 1,059. Die durchschnittliche Rolling-DD verbesserte sich von 14,02 % auf 13,07 %, reichte aber weder für den absoluten Risikogate noch für die Nicht-Verschlechterungsbedingungen. 391 Stop-Ereignisse wurden beobachtet. Keine Promotion, kein Tuning und keine Holdout-Selektion.
 
 Die formale Ausführung wurde zweimal identisch angestoßen; die Kern-Price-Only-Kennzahlen und Gate-Ergebnisse reproduzierten sich. Die sekundäre Total-Return-Sensitivität auf adjusted-close-Daten zeigte nur minimale numerische Laufabweichungen und wird nicht als unabhängiger Versuch gezählt. Der nächste Schritt ist eine Cross-Trial-Failure-Diagnose vor Reservierung des nächsten Mechanismus.
+
+
+## Agentenstrategie — Hypothesen zuerst
+
+Die gemeinsame Arbeitsabsprache wird ab 2026-09-25 explizit als Projektregel geführt:
+
+**Kostenfreie Agentenressourcen werden primär für Hypothesenbildung, Gegenhypothesen, Mechanismensynthese und Forschungsdesign eingesetzt.** Deterministische Berechnung bleibt lokal. Bezahlte Agenten-/API-Nutzung bleibt deaktiviert.
+
+Der erste vorgesehene Agentenauftrag ist eine gebündelte, orthogonale Hypothesenrunde auf Basis der eingefrorenen Failure-Diagnose T041/T042/T044/T045 und Q011. Die Ausgabe ist Ideenmaterial; keine Holdout-Auswahl, keine rückwirkende Trial-Optimierung und keine automatische Promotion.
+
+Dauerhafte Spezifikation: docs/AGENT_HYPOTHESIS_RESEARCH.md.
+
+Sicherheitsstatus:
+- PAPER_ONLY=True
+- LIVE_TRADING_ENABLED=False
+- orders_enabled=False
+- automatic_promotion=False
