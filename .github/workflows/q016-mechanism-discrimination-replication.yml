@@ -85,6 +85,11 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
+      - name: Dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install statsmodels==0.15.0
       - name: Collect fixed Q016 chunk
         run: |
           set -euo pipefail
