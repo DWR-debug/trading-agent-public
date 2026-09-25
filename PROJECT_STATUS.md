@@ -1,3 +1,34 @@
+# Aktueller Ausführungscheckpoint — Q016 abgeschlossen / Freshness Guard — 2026-09-25
+
+## Verifizierter Stand
+
+Q016 wurde technisch vollständig abgeschlossen. Der autorisierte Workflow 36172112861 endete erfolgreich; der wissenschaftliche Status ist **DATA_INSUFFICIENT**. Es wurden 0 Beobachtungen und 0 Event-Fenster gefunden. Daher wurde **kein Performance-Trial autorisiert** und keine Promotion-Entscheidung getroffen.
+
+- Q016 Artifact final: 10881248411
+- Result-Fingerprint: 42250f4c34f3d6ed6a14014fc1c01adf00fadd7427429b783d5fda4de39d48fc
+- Input-Fingerprint: 9cfaeb02ce7113a821f3d75c51feb87b1920edf7521e9749a0fe863e25df00d4
+- Qualitätssuite: 768 Tests, 2 Warnungen
+- Sicherheitsinvarianten unverändert: PAPER_ONLY=True, LIVE_TRADING_ENABLED=False, orders_enabled=False, automatic_promotion=False
+
+## State-Synchronisation
+
+Die bisherige Abweichung zwischen project_state.json und dem Q016-Checkpoint wurde bereinigt. Q016 ist jetzt im Forschungsqueue- und Projektstatus als abgeschlossen dokumentiert.
+
+Zusätzlich wurde AGENT-001 technisch umgesetzt:
+
+- automation/project_state_freshness_check.py
+- tests/test_project_state_freshness.py
+- CI führt den Freshness Guard auf beiden Runnern aus.
+- Bei veraltetem State werden konkrete Quelle, Workflow-Run und Fingerprint gemeldet.
+- Historische Trial-Evidence wird nicht verändert.
+
+Der Guard ist absichtlich fail-closed: Ein inkonsistenter Arbeitsstatus stoppt CI, statt stillschweigend mit veraltetem Projektgedächtnis weiterzuarbeiten.
+
+## Nächster Entwicklungsmodus
+
+Q016 liefert keine Grundlage für einen Performance-Trial. Der nächste Forschungsschritt ist deshalb **keine weitere Variation des bisherigen Q016-Mechanismus**, sondern eine neue, präregistrierte und orthogonale Hypothese aus der bereits eingefrorenen Evidence. Die agentische Designarbeit bleibt von formaler Evidenz getrennt.
+
+---
 # Aktueller Ausführungscheckpoint — Q016 Recovery — 2026-09-25
 
 Q016 ist nach zwei eindeutig technischen Fehlversuchen erneut auf dem autorisierten Diagnose-Branch gestartet.
