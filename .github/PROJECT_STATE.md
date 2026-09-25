@@ -283,3 +283,42 @@ Ein self-hosted GitHub Actions Runner mit Label trading-agent-research ist für 
 
 Der aktuelle technische Stand wird ab jetzt nach jedem formalen Trial mit dem
 Trial-Ledger und dem maschinenlesbaren Project-State abgeglichen.
+
+
+## Aktueller Gesamtcheckpoint — Q010 abgeschlossen / Q011 vorgemerkt — 2026-09-25
+
+Q-010-CROSS-TRIAL-FAILURE-DIAGNOSIS ist **COMPLETED** und wurde als rein deskriptive Governance-Diagnose ausgeführt.
+
+Technischer Nachweis:
+- Workflow: `36119705793`
+- Artifact-ID: `10856102739`
+- Artifact-ZIP-SHA256: `sha256:9f10a27ed267870981c8f480e868967e22c4d19a8c3562c37c9690d19dcf01c2`
+- Diagnose-Fingerprint: `c11a4a2340bf4f7a9f132f53835465d57d0b12ab97770a24f3fd98492e7f9549`
+- Vollständige Testsuite: **744 passed**
+- Paper-only Safety: **OK**
+
+Wiederkehrende Failure-Signatur der vier performance-validen Trials:
+- Research-Risikogate: 4/4 verletzt
+- Control-relative Non-Deterioration: 4/4 verletzt
+- OOS/IS-Stabilität: 3/4 verletzt
+- Holdout-Drawdown-Gate: 3/4 verletzt
+- Positive Holdout-Rendite: 4/4, aber ohne vollständigen Evidence-Contract
+- T043: DATA_INVALID und daher ohne Performanceaussage
+
+Methodische Konsequenz:
+- T041, T042, T044 und T045 werden nicht nachoptimiert.
+- Kein Parameter-, Asset- oder Holdout-Re-Selection.
+- Keine Gate-Lockerung.
+- Kein Performance-Re-Run.
+- Kein Production-Promotion-Schritt.
+
+Nächster Research-Schwerpunkt:
+`Q-011-ORTHOGONAL-INFORMATION-ALPHA-DISCOVERY`
+
+Q011 bleibt zunächst **Discovery-only**. Eine aus Q011 abgeleitete Performancehypothese benötigt eine neue Präregistrierung, Coverage-Preflight und einen frischen vollständig symbol-disjunkten, holdout-blinden Validierungssatz.
+
+Sicherheitsstatus:
+- PAPER_ONLY=True
+- LIVE_TRADING_ENABLED=False
+- orders_enabled=False
+- automatic_promotion=False
