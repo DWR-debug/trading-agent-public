@@ -337,13 +337,17 @@ def _current_evidence(trial: dict) -> dict:
     return evidence
 
 
-def _current_metric(outcome: dict, *names: str):
-    key = outcome.get("key_metrics", {})
-    for name in names:
-        if name in key:
-            return key[name]
-        if name in outcome:
-            return outcome[name]
+def _current_metric(evidence: dict, *names: str):
+    candidates = [
+        evidence.get("key_metrics", {}),
+        evidence,
+        evidence.get("outcome", {}),
+        evidence.get("outcome", {}).get("key_metrics", {}),
+    ]
+    for container in candidates:
+        for name in names:
+            if name in container:
+                return container[name]
     return None
 
 
