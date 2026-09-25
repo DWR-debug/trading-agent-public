@@ -1,0 +1,207 @@
+{
+  "schema_version": "1.0",
+  "diagnostic_id": "T-2026-09-25-045-FD",
+  "diagnostic_type": "t045_failure_diagnosis",
+  "recorded_at": "2026-09-25T09:22:00Z",
+  "source": {
+    "trial_id": "T-2026-09-25-045",
+    "workflow_run_id": 36117548408,
+    "artifact_id": 10854674939,
+    "artifact_sha256": "sha256:6981fd12a8f8b1e6b4b28a4eef885af963e1de5922edf9fbe182047872dd0adb",
+    "report_fingerprint": "90bb1b7f84b19a8675bab6ed6505931544e2d320c0cdaf199db4c8666a94595a",
+    "coverage_workflow_run_id": 36116824638,
+    "coverage_common_calendar_count": 3519,
+    "coverage_target_common_calendar": 3500,
+    "coverage_fingerprint": "4c82327c957331851b1184a2a947f77f38e0b73d8e6b54a3fafda424d86296dc"
+  },
+  "status": "DIAGNOSTIC_ONLY",
+  "candidate_status": "BLOCKED",
+  "data_contract": {
+    "research_count": 2798,
+    "holdout_count": 700,
+    "common_returns": 3498,
+    "fully_symbol_disjoint": true
+  },
+  "absolute_gate_diagnosis": {
+    "research_return_positive": {
+      "passed": true,
+      "value_percent": 41.22829053304484,
+      "threshold_percent": 0
+    },
+    "research_drawdown": {
+      "passed": false,
+      "value_percent": 20.06635202578041,
+      "threshold_percent": 10,
+      "excess_percentage_points": 10.06635202578041
+    },
+    "research_profit_factor": {
+      "passed": false,
+      "value": 1.0683941393966963,
+      "threshold": 1.1,
+      "shortfall": 0.03160586060330371
+    },
+    "rolling_profit_factor": {
+      "passed": false,
+      "value": 1.0683941393966947,
+      "threshold": 1.1,
+      "shortfall": 0.03160586060330549
+    },
+    "rolling_profitable_window_ratio": {
+      "passed": true,
+      "value": 0.6,
+      "threshold": 0.5
+    },
+    "rolling_average_drawdown": {
+      "passed": false,
+      "value_percent": 13.074814491699026,
+      "threshold_percent": 10,
+      "excess_percentage_points": 3.0748144916990254
+    },
+    "oos_to_is_return_ratio": {
+      "passed": false,
+      "value": 0.20228161538818457,
+      "threshold": 0.25,
+      "shortfall": 0.04771838461181543
+    },
+    "holdout_return_positive": {
+      "passed": true,
+      "value_percent": 8.339725208717708,
+      "threshold_percent": 0
+    },
+    "holdout_profit_factor": {
+      "passed": false,
+      "value": 1.0588285292793311,
+      "threshold": 1.1,
+      "shortfall": 0.04117147072066893
+    },
+    "holdout_drawdown": {
+      "passed": false,
+      "value_percent": 15.984145032637398,
+      "threshold_percent": 10,
+      "excess_percentage_points": 5.984145032637398
+    },
+    "stress_1_5x_nonnegative": {
+      "passed": true,
+      "value_percent": 6.519937863104763
+    },
+    "stress_2x_nonnegative": {
+      "passed": true,
+      "value_percent": 4.730411530402145
+    },
+    "total_return_sensitivity_nonnegative": {
+      "passed": true,
+      "value_percent": 12.570476321165058
+    }
+  },
+  "control_deltas": {
+    "research_return_percentage_points": -19.387650827957017,
+    "research_drawdown_percentage_points": 0.33312429610356276,
+    "research_profit_factor": -0.021131008099867232,
+    "rolling_profit_factor": -0.02113100809986812,
+    "rolling_profitable_window_ratio": -0.2,
+    "rolling_average_drawdown_percentage_points": -0.949459154723753,
+    "oos_to_is_ratio": -0.14631293145215157,
+    "holdout_return_percentage_points": -12.790661401321124,
+    "holdout_drawdown_percentage_points": 6.191801820026056,
+    "holdout_profit_factor": -0.06824373385393856
+  },
+  "lifecycle_diagnostics": {
+    "stop_event_count": 391,
+    "stop_events_by_symbol": {
+      "AXP": 55,
+      "BLK": 53,
+      "COP": 37,
+      "DHR": 49,
+      "DUK": 46,
+      "INTU": 50,
+      "MAR": 53,
+      "WFC": 48
+    },
+    "stopped_asset_days": 14524,
+    "position_asset_days": 13476
+  },
+  "rolling_windows": {
+    "challenger": [
+      {
+        "window": 1,
+        "return_percent": 8.40173399623565,
+        "dd_percent": 8.119035249403927,
+        "pf": 1.1167460213648877
+      },
+      {
+        "window": 2,
+        "return_percent": -0.6691221585788942,
+        "dd_percent": 14.261926912866564,
+        "pf": 1.0038844647516845
+      },
+      {
+        "window": 3,
+        "return_percent": 31.060598327054034,
+        "dd_percent": 8.260242843772602,
+        "pf": 1.254742770454288
+      },
+      {
+        "window": 4,
+        "return_percent": 17.877331169504963,
+        "dd_percent": 15.101981061585178,
+        "pf": 1.1424722961908722
+      },
+      {
+        "window": 5,
+        "return_percent": -15.101746012783268,
+        "dd_percent": 19.630886390866863,
+        "pf": 0.8973023803013007
+      }
+    ],
+    "fixed": [
+      {
+        "window": 1,
+        "return_percent": 14.43114168313211,
+        "dd_percent": 10.050603573907303,
+        "pf": 1.1858882095638488
+      },
+      {
+        "window": 2,
+        "return_percent": 2.6854867509813474,
+        "dd_percent": 13.216803328294969,
+        "pf": 1.0299565764003553
+      },
+      {
+        "window": 3,
+        "return_percent": 31.709103295471696,
+        "dd_percent": 9.528744303869008,
+        "pf": 1.252047808879271
+      },
+      {
+        "window": 4,
+        "return_percent": 19.28031012052578,
+        "dd_percent": 19.733227729676848,
+        "pf": 1.1492116754210524
+      },
+      {
+        "window": 5,
+        "return_percent": -12.99368047941455,
+        "dd_percent": 17.59198929636576,
+        "pf": 0.9138166483179578
+      }
+    ]
+  },
+  "interpretation": [
+    "The intervention reduced average rolling drawdown by 0.949 percentage points, but it did not reduce formal research maximum drawdown or holdout drawdown enough to pass the gates.",
+    "Return retention and quality deteriorated: research return fell by 19.388 percentage points, holdout return by 12.791 percentage points, research/rolling PF by about 0.021, holdout PF by about 0.068, and OOS/IS by about 0.146.",
+    "Window 5 remained negative for both variants and had lower PF for the challenger. This is a descriptive tail-period observation, not a causal attribution.",
+    "391 lifecycle stop events occurred across the eight trend assets. The exit materially changed position lifecycle, but event counts alone do not establish why performance degraded.",
+    "Positive 1.5x and 2x stress-return gates and positive total-return sensitivity do not override failures of the primary price-only gates and control-relative non-deterioration contract."
+  ],
+  "non_actions": [
+    "no_parameter_search",
+    "no_ATR_threshold_search",
+    "no_exit_variant_search",
+    "no_holdout_selection",
+    "no_gate_relaxation",
+    "no_performance_rerun_on_same_trial",
+    "no_production_promotion",
+    "no_live_execution"
+  ],
+  "next_methodological_step": "Use the immutable T045 artifact for a descriptive position-lifecycle/time-regime diagnosis (stop timing, post-stop path behaviour, and asset/time concentration) before defining any new intervention. Any new performance intervention must be separately preregistered and tested on a fresh symbol-disjoint universe."
+}
