@@ -529,7 +529,7 @@ def run(
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=("observe", "preflight", "discover_information_alpha", "discover_information_alpha_stability", "discover_coverage", "diagnose_failure", "diagnose_history", "diagnose_current", "research", "research_t041", "research_t042", "research_t043", "research_t044", "research_t045"), required=True)
+    parser.add_argument("--mode", choices=("observe", "preflight", "discover_information_alpha", "discover_information_alpha_stability", "discover_information_alpha_redundancy", "discover_coverage", "diagnose_failure", "diagnose_history", "diagnose_current", "research", "research_t041", "research_t042", "research_t043", "research_t044", "research_t045"), required=True)
     parser.add_argument("--universe", default=DEFAULT_UNIVERSE)
     parser.add_argument("--output-root", default="research/runs")
     parser.add_argument("--total", type=int, default=None)
