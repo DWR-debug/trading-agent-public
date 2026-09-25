@@ -9,22 +9,26 @@
     "wide_search_round_001_probes=4; survivors=0; holdout_used=false; performance_trial_authorized=false",
     "H03/H07/H09/H10=PRUNED_BY_FIXED_RESEARCH_SPLIT_RULES",
     "Q017_G3=DATA_INSUFFICIENT; workflow=36186285814; performance_trial_authorized=false",
-    "Wide-Search Round 002 implementation is merged in master commit 6b6124883f4af03037c4c720f70b6e4a3a4976d2 after full CI success on PR head; the preregistered H08 diagnostic remains research-only and no scientific result is yet canonically verified."
+    "Wide-Search Round 002 H08 completed successfully: workflow=36189987414; artifact=10886849518; artifact-digest=sha256:e0c355462e3abe868acec125b6dcdefc1aeceaf329dc444799440d3093f7917c; result-fingerprint=106e65e70dc3814b8eeaf90c3ca3b658289b75a7977d5c642c7d49857040de7f",
+    "H08 classification=PRUNE_NO_RISK_REGIME_SUPPORT with 316 research events; holdout unused; no performance trial authorized.",
+    "H06 is now the active coverage-only research focus with a fixed disjoint universe and no performance authorization."
   ],
   "implications": [
     "wide exploration is now functioning as a low-cost pruning stage",
     "no current candidate warrants formal performance validation",
     "next exploration should target risk/regime information because historical bottlenecks are risk/control-relative",
-    "Round 002 implementation is technically integrated, but result verification remains a separate evidence step; no formal performance authorization follows from the merge."
+    "The fixed volatility-state transition diagnostic did not support a stable risk-regime effect under the preregistered research-only rule.",
+    "Further effort should shift toward orthogonal information content rather than additional volatility/exit controls.",
+    "H06 proceeds only through coverage/PIT verification before any performance study."
   ],
   "unknowns": [
-    "H08 volatility_state_transition stability under a fixed ex-ante rule",
+    "H06 sector-neutral residual momentum coverage/PIT completeness",
     "H06 sector-neutral residual momentum data contract",
     "robust ALFRED PIT retrieval",
     "historical CFTC PIT release reconstruction",
     "whether any survivor can pass unchanged formal evidence gates"
   ],
-  "next_action": "Verify the Wide-Search Round 002 H08 diagnostic artifact/result from the dedicated execution; if supported, require a separate coverage/PIT and preregistration gate before any formal performance validation.",
+  "next_action": "Verify H06 coverage artifact. If coverage is ready, review the fixed mechanism and preregister any separate performance validation; otherwise diagnose and prune the data contract.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
