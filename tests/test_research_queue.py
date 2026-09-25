@@ -7,7 +7,7 @@ def test_queue_is_deterministic_and_tracks_current_priority():
     queue = default_research_queue()
     first = queue.next_task()
     assert first is not None
-    assert first.task_id == "Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW"
+    assert first.task_id == "Q-015-INFORMATION-ALPHA-FRESH-TIME-DISJOINT-REPLICATION"
     task_by_id = {task.task_id: task for task in queue.all()}
     assert task_by_id["Q-007-T043-TSM-SIGNAL-CONSISTENCY"].status == "BLOCKED"
     assert task_by_id["Q-008-T044-TSM-SIGNAL-CONSISTENCY-REPAIR"].status == "BLOCKED"
