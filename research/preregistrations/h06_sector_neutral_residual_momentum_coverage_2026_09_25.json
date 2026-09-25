@@ -1,0 +1,100 @@
+{
+  "schema_version": "1.0",
+  "preregistration_id": "H06-COVERAGE-2026-09-25",
+  "recorded_on": "2026-09-25",
+  "task_id": "WIDE-SEARCH-H06-SECTOR-NEUTRAL-RESIDUAL-MOMENTUM",
+  "hypothesis_id": "H06",
+  "family": "sector_neutral_residual_momentum",
+  "question": "Can a fixed sector-demeaned cross-sectional momentum signal be evaluated under a complete, disjoint, point-in-time-safe Yahoo daily data contract?",
+  "universe": "validation_2026_09_25_sector_neutral_residual_momentum",
+  "symbols": [
+    "TXN",
+    "ADI",
+    "AMAT",
+    "MDT",
+    "SYK",
+    "BDX",
+    "ETN",
+    "ITW",
+    "GD",
+    "CL",
+    "KMB",
+    "GIS",
+    "AEP",
+    "XEL",
+    "DTE"
+  ],
+  "sector_map": {
+    "technology": [
+      "TXN",
+      "ADI",
+      "AMAT"
+    ],
+    "healthcare": [
+      "MDT",
+      "SYK",
+      "BDX"
+    ],
+    "industrials": [
+      "ETN",
+      "ITW",
+      "GD"
+    ],
+    "consumer_staples": [
+      "CL",
+      "KMB",
+      "GIS"
+    ],
+    "utilities": [
+      "AEP",
+      "XEL",
+      "DTE"
+    ]
+  },
+  "interval": "1d",
+  "requested_candles": 3520,
+  "target_common_calendar": 3500,
+  "research_candles": 2798,
+  "holdout_candles_unused": 702,
+  "signal_definition": {
+    "formation_lookback_sessions": 252,
+    "skip_sessions": 21,
+    "raw_score": "close[t-skip] / close[t-lookback] - 1",
+    "residual_score": "raw_score - equal_weight_sector_mean(raw_score)",
+    "rebalance_interval_not_evaluated": true
+  },
+  "coverage_contract": {
+    "common_calendar_exact_target": true,
+    "sector_membership_exact_three_per_sector": true,
+    "complete_signal_history_in_research": true,
+    "no_forward_outcome_access": true,
+    "pit_rule": "decision_bar_next_bar",
+    "data_source": "Yahoo_daily_OHLCV"
+  },
+  "coverage_outcome_rule": {
+    "pass": "all structural data-contract conditions above hold",
+    "fail": "any required structural condition fails",
+    "performance_not_evaluated": true
+  },
+  "search_scope": {
+    "threshold_search": false,
+    "parameter_search": false,
+    "asset_selection": false,
+    "sector_map_selection": false,
+    "holdout_selection": false
+  },
+  "governance": {
+    "performance_evaluation": false,
+    "holdout_evaluation": false,
+    "holdout_used_for_selection": false,
+    "selection_used": false,
+    "performance_trial_authorized": false,
+    "automatic_promotion": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
