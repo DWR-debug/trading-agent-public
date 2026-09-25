@@ -131,3 +131,7 @@ Die operative Reihenfolge bleibt:
 
 Kostenpflichtige externe Agenten-, Copilot- oder API-Ressourcen bleiben ausgeschlossen. Kostenfreie Agentenressourcen werden gezielt für Hypothesenbildung, Gegenhypothesen, Forschungsdesign und Review eingesetzt; deterministische Berechnung bleibt reproduzierbar.
 
+## Forschungsmodus — Mutigerer Einsatz
+
+Der Forschungsmodus darf bei ausreichender technischer und methodischer Basis bewusst mutiger agieren: breite orthogonale Hypothesenräume, schnelle Falsifikation, parallele Coverage-Prüfungen und frühzeitiges Aussortieren schwacher Familien. **Mutiger** bedeutet ausdrücklich mehr Suchbreite und schnellere Erkenntnisgewinnung — nicht lockerere Daten-, PIT-, Holdout- oder Sicherheitsstandards und nicht höhere finanzielle Exposition.
+
