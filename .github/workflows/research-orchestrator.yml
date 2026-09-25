@@ -73,7 +73,6 @@ on:
       - research/execute-q012-stability
       - research/execute-q013-redundancy
       - research/execute-q016-mechanism-discrimination-replication
-      - research/execute-q017-g3-coverage-first
     paths:
       - "automation/research_orchestrator.py"
       - "automation/live_market_observer.py"
@@ -265,14 +264,8 @@ jobs:
             else
               echo "Q013 redundancy branch: no authorization marker on this maintenance commit; research execution skipped."
             fi
-          elif [ "$GITHUB_REF" = "refs/heads/research/execute-q017-g3-coverage-first" ]; then
-            test "$GITHUB_EVENT_NAME" = "push"
-            test "$(git log -1 --pretty=%s)" = "Research authorization: execute Q017 G3 coverage-first"
-            python -m automation.q017_coverage_preflight \
-              --output-root research/runs/q017_g3_coverage_first \
-              --universe q017_coverage_first
-          elif [ "$GITHUB_EVENT_NAME" = "pull_request" ] && [ "$(python -c 'import json,os; print(json.load(open(os.environ["GITHUB_EVENT_PATH"], encoding="utf-8"))["pull_request"]["head"]["ref"])')" = "research/execute-q017-g3-coverage-first" ]; then
-            test "$(git log -1 --pretty=%s)" = "Research authorization: execute Q017 G3 coverage-first"
+          elif [ "$ORCHESTRATOR_MODE" = "q017_coverage_first" ]; then
+            test "$GITHUB_EVENT_NAME" = "workflow_dispatch"
             python -m automation.q017_coverage_preflight \
               --output-root research/runs/q017_g3_coverage_first \
               --universe q017_coverage_first
