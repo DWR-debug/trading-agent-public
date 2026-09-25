@@ -61,7 +61,6 @@ on:
       - research/execute-q011-discovery
       - research/execute-q012-stability
       - research/execute-q013-redundancy
-      - research/execute-q014-redundancy-long-window
     paths:
       - "automation/research_orchestrator.py"
       - "automation/live_market_observer.py"
@@ -234,15 +233,6 @@ jobs:
                 --universe benchmark
             else
               echo "Q013 redundancy branch: no authorization marker on this maintenance commit; research execution skipped."
-            fi
-          elif [ "$GITHUB_REF" = "refs/heads/research/execute-q014-redundancy-long-window" ]; then
-            test "$GITHUB_EVENT_NAME" = "push"
-            if [ "$(git log -1 --pretty=%s)" = "Research authorization: execute Q014 redundancy long window" ]; then
-              python -m automation.research_orchestrator \
-                --mode discover_information_alpha_redundancy_long_window \
-                --universe benchmark
-            else
-              echo "Q014 redundancy long-window branch: no authorization marker on this maintenance commit; research execution skipped."
             fi
           elif [ "$GITHUB_REF" = "refs/heads/research/execute-t044-coverage" ]; then
             test "$GITHUB_EVENT_NAME" = "push"
