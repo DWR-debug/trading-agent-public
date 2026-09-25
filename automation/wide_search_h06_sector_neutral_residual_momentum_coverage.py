@@ -73,12 +73,12 @@ def _load_common_calendar() -> dict[str, list]:
     common = set.intersection(
         *[{bar.timestamp for bar in bars} for bars in bars_by_symbol.values()]
     )
-    if len(common) != TARGET_COMMON_CANDLES:
+    if len(common) < TARGET_COMMON_CANDLES:
         raise RuntimeError(
-            f"Common calendar is {len(common)}, expected {TARGET_COMMON_CANDLES}"
+            f"Common calendar is {len(common)}, expected at least {TARGET_COMMON_CANDLES}"
         )
 
-    timestamps = sorted(common)
+    timestamps = sorted(common)[-TARGET_COMMON_CANDLES:]
     aligned = {}
     for symbol, bars in bars_by_symbol.items():
         lookup = {bar.timestamp: bar for bar in bars}
@@ -178,6 +178,27 @@ def run(
                 statistics.median(residual_abs_values)
                 if residual_abs_values
                 else 0.0
+            ),
+            "calendar_selection_rule": "last_3500_timestamps_from_full_fixed_window_intersection",
+            "research_calendar_start": (
+                assets[next(iter(assets))][0].timestamp.date().isoformat()
+                if assets
+                else None
+            ),
+            "research_calendar_end": (
+                assets[next(iter(assets))][RESEARCH_CANDLES - 1].timestamp.date().isoformat()
+                if assets and len(assets[next(iter(assets))]) >= RESEARCH_CANDLES
+                else None
+            ),
+            "holdout_calendar_start": (
+                assets[next(iter(assets))][RESEARCH_CANDLES].timestamp.date().isoformat()
+                if assets and len(assets[next(iter(assets))]) > RESEARCH_CANDLES
+                else None
+            ),
+            "holdout_calendar_end": (
+                assets[next(iter(assets))][-1].timestamp.date().isoformat()
+                if assets
+                else None
             ),
         },
         "governance": {
