@@ -96,3 +96,27 @@ Q-009-T045-POSITION-LIFECYCLE-EXIT-CONTROL ist formal abgeschlossen und **BLOCKE
 ### Q-010 — Cross-Trial Failure-Diagnose
 
 Q-010 ist nach Abschluss von T045 **PENDING**. Die Diagnose bleibt rein ableitend: T041–T045 werden gemeinsam auf wiederkehrende Failure-Modi ausgewertet, ohne Parameter-, Asset-, Holdout- oder Gate-Selektion. Erst danach wird eine neue Performancehypothese präregistriert.
+
+## Q010 Abschluss — 2026-09-25
+
+Q-010-CROSS-TRIAL-FAILURE-DIAGNOSIS ist **COMPLETED**. Die formale Diagnose wurde einmal autorisiert und ausgeführt.
+
+- Workflow: `36119705793`
+- Artifact-ID: `10856102739`
+- Diagnose-Fingerprint: `c11a4a2340bf4f7a9f132f53835465d57d0b12ab97770a24f3fd98492e7f9549`
+- 744 Tests bestanden
+- 4/4 performance-valide Trials scheitern am Research-Risikogate
+- 4/4 scheitern an der Control-Non-Deterioration
+- 3/4 scheitern am OOS/IS-Stabilitätsgate
+- 3/4 scheitern am Holdout-Drawdown-Gate
+- T043 bleibt DATA_INVALID und trägt keine Performanceaussage
+
+Die Diagnose ist rein ableitend. Fixed Candidate, Parameterraum, Gates und Holdout-Regeln wurden nicht verändert. Es gab keinen Re-Backtest und keine Promotion.
+
+### Q-011 — Orthogonal Information/Alpha Discovery
+
+Q-011 ist als **PENDING** vorgemerkt. Vor einem weiteren Performance-Trial wird eine neue, orthogonale Informations-/Alphaquelle untersucht. Die Discovery soll nur eine vorab fixierbare Hypothese liefern; Performanceevidenz entsteht erst nach neuer Präregistrierung, Coverage-Preflight und blindem, vollständig symbol-disjunktem Holdout.
+
+Der nächste Schritt bleibt bewusst außerhalb der bereits mehrfach geprüften Portfolio-Risk-, Volatilitäts-, Trend-Konsistenz- und Lifecycle-Exit-Controls.
+
+Sicherheitszustand bleibt unverändert: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
