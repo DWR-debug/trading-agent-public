@@ -44,32 +44,30 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
-          from research.asset_universes import get_universe
+          from research.asset_universes import get_universe, list_universes
           from research.research_queue import default_research_queue
 
           prereg = json.loads(Path(
-              "research/preregistrations/trial_040_network_momentum_2026_09_24.json"
+              "research/preregistrations/trial_045_position_lifecycle_exit_2026_09_25.json"
           ).read_text(encoding="utf-8"))
+
+          assert prereg["trial_id"] == "T-2026-09-25-045"
+          assert prereg["trial_type"] == "position_lifecycle_exit"
+          assert prereg["universe"] == "validation_2026_09_25_position_lifecycle_exit"
+          assert prereg["symbols"] == [
+              "WFC", "DUK", "AXP", "BLK", "DHR", "INTU", "MAR", "COP",
+              "SO", "NEE", "AMGN", "BSX", "CMCSA",
+          ]
           universe = get_universe(prereg["universe"])
           assert tuple(universe.symbols) == tuple(prereg["symbols"])
           assert universe.interval == prereg["interval"]
-          assert universe.target_count == prereg["requested_candles"]
-
-          task = default_research_queue().next_task()
-          assert task is not None
-          assert task.task_id == "Q-008-T044-TSM-SIGNAL-CONSISTENCY-REPAIR"
-          assert task.research_family == "trend_signal_variability"
-
-          assert prereg["search_scope"]["holdout_used_for_selection"] is False
-          assert prereg["coverage_gate"]["performance_allowed_before_coverage_pass"] is False
+          assert universe.target_count == prereg["requested_candles"] == 3520
           assert prereg["target_candles"] == 3500
-          assert prereg["research_candles"] == 2800
-          assert prereg["holdout_candles"] == 700
-          assert prereg["split"]["research_return_periods"] == 2798
-          assert prereg["split"]["pit_return_periods_total"] == 3498
-          assert prereg["trial_type"] == "repair_successor"
-          assert prereg["parent_trial_id"] == "T-2026-09-24-039"
-          assert prereg["replacement"]["replaced_with"] == "BIV"
+          assert prereg["mechanism"]["atr_window_sessions"] == 20
+          assert prereg["mechanism"]["atr_multiple"] == 3.0
+
+          assert all(value is False for key, value in prereg["search_scope"].items() if key != "asset_selection_by_performance")
+          assert prereg["coverage_gate"]["performance_allowed_before_coverage_pass"] is False
           assert prereg["safety"] == {
               "paper_only": True,
               "live_trading_enabled": False,
@@ -77,161 +75,16 @@ jobs:
               "automatic_promotion": False,
           }
 
-          evidence = json.loads(Path(
-              "research/evidence/trial_040_network_momentum_repair_2026_09_24.json"
-          ).read_text(encoding="utf-8"))
-          assert evidence["status"] == "BLOCKED"
-          assert evidence["scientific_outcome"] == "NO_PROMOTION_EVIDENCE"
+          task = default_research_queue().next_task()
+          assert task is not None
+          assert task.task_id == "Q-009-T045-POSITION-LIFECYCLE-EXIT-CONTROL"
+          assert task.research_family == "position_lifecycle_exit"
 
-          diagnosis = json.loads(Path(
-              "research/evidence/t040_failure_diagnosis_2026_09_24.json"
-          ).read_text(encoding="utf-8"))
-          assert diagnosis["status"] == "DIAGNOSTIC_ONLY"
-          assert diagnosis["diagnosis_class"] == (
-              "broad_negative_with_control_deterioration"
-          )
-          assert "no_holdout_selection" in diagnosis["non_actions"]
-          q004 = json.loads(Path(
-              "research/evidence/q004_discovery_result_36065403704.json"
-          ).read_text(encoding="utf-8"))
-          assert q004["status"] == "COMPLETED"
-          assert q004["selection_used"] is False
-          assert q004["holdout_used"] is False
-          q005 = json.loads(Path(
-              "research/evidence/q005_governance_audit_2026_09_24.json"
-          ).read_text(encoding="utf-8"))
-          assert q005["status"] == "COMPLETED"
-          assert "automatic_selection=false" in q005["verified"]
-          history_diagnosis = json.loads(Path(
-              "research/evidence/cross_trial_failure_diagnosis_2026_09_24.json"
-          ).read_text(encoding="utf-8"))
-          assert history_diagnosis["status"] == "DIAGNOSTIC_ONLY"
-          assert history_diagnosis["salvageable_observations"][
-              "t028_per_sleeve_volatility_budget"
-          ] is True
-          assert history_diagnosis["next_research_question"].startswith(
-              "Before another return-generating strategy family"
-          )
-
-          t043_prereg = json.loads(Path(
-              "research/preregistrations/trial_043_tsm_signal_consistency_2026_09_25.json"
-          ).read_text(encoding="utf-8"))
-          assert t043_prereg["trial_id"] == "T-2026-09-25-043"
-          assert t043_prereg["universe"] == "validation_2026_09_25_tsm_signal_consensus"
-          assert t043_prereg["requested_candles"] == 3500
-          assert t043_prereg["coverage_gate"]["performance_allowed_before_coverage_pass"] is False
-          assert t043_prereg["search_scope"]["holdout_used_for_selection"] is False
-          assert t043_prereg["safety"]["paper_only"] is True
-
-          t043_checkpoint = json.loads(Path(
-              "research/checkpoints/trial_043_tsm_signal_consistency_result_2026_09_25.json"
-          ).read_text(encoding="utf-8"))
-          assert t043_checkpoint["status"] == "DATA_INVALID"
-          assert t043_checkpoint["scientific_outcome"] == "NO_SCIENTIFIC_OUTCOME"
-          assert t043_checkpoint["common_calendar_count"] == 3499
-          assert t043_checkpoint["target_common_calendar"] == 3500
-          assert t043_checkpoint["performance_evaluation"] is False
-
-          t044_prereg = json.loads(Path(
-              "research/preregistrations/trial_044_tsm_signal_consistency_2026_09_25.json"
-          ).read_text(encoding="utf-8"))
-          assert t044_prereg["trial_id"] == "T-2026-09-25-044"
-          assert t044_prereg["trial_type"] == "repair_successor"
-          assert t044_prereg["parent_trial_id"] == "T-2026-09-25-043"
-          assert t044_prereg["universe"] == "validation_2026_09_25_tsm_signal_consensus_repair"
-          assert t044_prereg["requested_candles"] == 3520
-          assert t044_prereg["target_candles"] == 3500
-          assert t044_prereg["coverage_gate"]["performance_allowed_before_coverage_pass"] is False
-          assert t044_prereg["search_scope"]["parameter_search"] is False
-          assert t044_prereg["search_scope"]["variant_search"] is False
-          assert t044_prereg["search_scope"]["holdout_used_for_selection"] is False
-          assert t044_prereg["disjointness"]["allowed_overlap_universes"] == [
-              "validation_2026_09_25_tsm_signal_consensus"
-          ]
-          assert t044_prereg["safety"] == {
-              "paper_only": True,
-              "live_trading_enabled": False,
-              "orders_enabled": False,
-              "automatic_promotion": False,
-          }
-
-
-          assert t043_prereg["trial_id"] == "T-2026-09-25-043"
-          assert t043_prereg["universe"] == "validation_2026_09_25_tsm_signal_consensus"
-          assert tuple(t043_prereg["symbols"]) == (
-              "WMT", "JNJ", "PG", "KO", "PEP", "XOM", "CVX", "CSCO",
-              "MCD", "V", "ORCL", "MRK", "PFE"
-          )
-          assert t043_prereg["requested_candles"] == 3500
-          assert t043_prereg["coverage_gate"]["performance_allowed_before_coverage_pass"] is False
-          assert t043_prereg["search_scope"]["parameter_search"] is False
-          assert t043_prereg["search_scope"]["variant_search"] is False
-          assert t043_prereg["search_scope"]["holdout_used_for_selection"] is False
-          assert t043_prereg["safety"]["paper_only"] is True
-          assert t043_prereg["safety"]["live_trading_enabled"] is False
-
-          t042_prereg = json.loads(Path(
-              "research/preregistrations/trial_042_volatility_managed_tsm_2026_09_24.json"
-          ).read_text(encoding="utf-8"))
-          assert t042_prereg["trial_id"] == "T-2026-09-24-042"
-          assert t042_prereg["universe"] == "validation_2026_09_24_volatility_managed_tsm"
-          assert tuple(t042_prereg["symbols"]) == (
-              "DLS", "DEM", "EES", "EWX", "HDV",
-              "SCHA", "VOOG", "VOOV", "OEF", "IWV"
-          )
-          assert t042_prereg["requested_candles"] == 3500
-          assert t042_prereg["coverage_gate"]["performance_allowed_before_coverage_pass"] is False
-          assert t042_prereg["search_scope"]["parameter_search"] is False
-          assert t042_prereg["search_scope"]["holdout_used_for_selection"] is False
-          assert t042_prereg["safety"]["paper_only"] is True
-          assert t042_prereg["safety"]["live_trading_enabled"] is False
-
-          for prereg_path, expected_universe, expected_symbols in (
-              (
-                  "research/preregistrations/trial_041_portfolio_risk_control_trend_2026_09_24.json",
-                  "validation_2026_09_24_portfolio_risk_control_trend",
-                  ("VONE", "VONG", "VONV", "VOE", "VOT", "IWB", "IUSG", "IUSV"),
-              ),
-              (
-                  "research/preregistrations/trial_041_portfolio_risk_control_cs_2026_09_24.json",
-                  "validation_2026_09_24_portfolio_risk_control_cs",
-                  ("IWS", "IWP", "IJS", "IJJ", "IJK"),
-              ),
-          ):
-              t041 = json.loads(Path(prereg_path).read_text(encoding="utf-8"))
-              assert t041["trial_id"] == "T-2026-09-24-041"
-              assert t041["universe"] == expected_universe
-              assert tuple(t041["symbols"]) == expected_symbols
-              assert t041["requested_candles"] == 3500
-              assert t041["target_candles"] == 3500
-              assert t041["coverage_gate"]["performance_allowed_before_coverage_pass"] is False
-              assert t041["coverage_gate"]["holdout_used_for_selection"] is False
-              assert t041["search_scope"] == {
-                  "parameter_search": False,
-                  "threshold_search": False,
-                  "asset_selection_by_performance": False,
-                  "variant_search": False,
-                  "holdout_used_for_selection": False,
-              }
-              assert t041["safety"] == {
-                  "paper_only": True,
-                  "live_trading_enabled": False,
-                  "orders_enabled": False,
-                  "automatic_promotion": False,
-              }
-
-          all_t041_symbols = (
-              "VONE", "VONG", "VONV", "VOE", "VOT", "IWB", "IUSG", "IUSV",
-              "IWS", "IWP", "IJS", "IJJ", "IJK",
-          )
-          assert len(all_t041_symbols) == len(set(all_t041_symbols))
-          assert not set(all_t041_symbols).intersection(
-              set().union(*(
-                  set(u.symbols)
-                  for u in __import__("research.asset_universes", fromlist=["list_universes"]).list_universes()
-                  if not u.name.startswith("validation_2026_09_24_portfolio_risk_control_")
-              ))
-          )
+          expected = set(prereg["symbols"])
+          for existing in list_universes():
+              if existing.name == prereg["universe"]:
+                  continue
+              assert not expected.intersection(existing.symbols), existing.name
 
           print("RESEARCH GOVERNANCE OK")
           PY
@@ -240,31 +93,44 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
-          state = json.loads(Path('research/evidence/project_state.json').read_text(encoding='utf-8'))
-          assert state['repository'] == 'DWR-debug/trading-agent-public'
-          assert state['safety'] == {'paper_only': True, 'live_trading_enabled': False, 'orders_enabled': False}
-          assert state['agent_usage']['paid_api_budget_usd'] == 0.0
-          assert state['agent_usage']['auto_paid_api_calls'] is False
-          assert state['agent_usage']['free_credit_only'] is True
-          assert state['current_preregistered_trial'] == 'T-2026-09-25-044'
-          assert state['latest_formal_trial'] == 'T-2026-09-25-043'
-          assert state['latest_trial_status'] == 'DATA_INVALID'
-          assert state['current_trial_status'] == 'COVERAGE_PENDING'
-          assert state['engineering_notes']['current_queue_task'] == 'Q-008-T044-TSM-SIGNAL-CONSISTENCY-REPAIR'
-          assert state['engineering_notes']['t042_preregistered'] is True
-          assert state['engineering_notes']['t042_coverage_status'] == 'PASSED'
-          assert state['engineering_notes']['t042_performance_allowed'] is False
-          assert state['engineering_notes']['t042_coverage_workflow_run'] == 36066657371
-          assert state['engineering_notes']['t042_coverage_fingerprint'] == '67a42d1a4832413e4a0a6dc36e1d47dd5c92a25923ea86c8d1c11a1d29e30d24'
-          assert state['engineering_notes']['t043_coverage_status'] == 'DATA_INVALID'
-          assert state['engineering_notes']['t043_formal_performance_allowed'] is False
-          assert state['engineering_notes']['t043_scientific_outcome'] == 'NO_SCIENTIFIC_OUTCOME'
-          assert state['engineering_notes']['t044_preregistered'] is True
-          assert state['engineering_notes']['t044_parent_trial_id'] == 'T-2026-09-25-043'
-          assert state['engineering_notes']['t044_coverage_status'] == 'PENDING'
-          assert state['engineering_notes']['t044_formal_performance_allowed'] is False
-          assert state['engineering_notes']['t044_requested_candles'] == 3520
-          assert state['engineering_notes']['t044_target_common_calendar'] == 3500
 
-          print('PROJECT STATE OK')
+          state = json.loads(Path("research/evidence/project_state.json").read_text(encoding="utf-8"))
+          ledger = json.loads(Path("research/evidence/trial_ledger.json").read_text(encoding="utf-8"))
+
+          assert state["repository"] == "DWR-debug/trading-agent-public"
+          assert state["safety"] == {
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+          }
+          assert state["agent_usage"]["paid_api_budget_usd"] == 0.0
+          assert state["agent_usage"]["auto_paid_api_calls"] is False
+          assert state["current_preregistered_trial"] == "T-2026-09-25-045"
+          assert state["latest_formal_trial"] == "T-2026-09-25-044"
+          assert state["latest_trial_status"] == "BLOCKED"
+          assert state["current_trial_status"] == "PREREGISTRATION_PENDING"
+          assert state["engineering_notes"]["current_queue_task"] == "Q-009-T045-POSITION-LIFECYCLE-EXIT-CONTROL"
+          assert state["engineering_notes"]["t043_coverage_status"] == "DATA_INVALID"
+          assert state["engineering_notes"]["t043_formal_performance_allowed"] is False
+          assert state["engineering_notes"]["t043_scientific_outcome"] == "NO_SCIENTIFIC_OUTCOME"
+          assert state["engineering_notes"]["t044_preregistered"] is True
+          assert state["engineering_notes"]["t044_coverage_status"] == "PASSED"
+          assert state["engineering_notes"]["t044_formal_performance_allowed"] is True
+          assert state["engineering_notes"]["t044_formal_completed"] is True
+          assert state["engineering_notes"]["t044_scientific_outcome"] == "NO_PROMOTION_EVIDENCE"
+          assert state["engineering_notes"]["t045_preregistered"] is True
+          assert state["engineering_notes"]["t045_coverage_status"] == "PENDING"
+          assert state["engineering_notes"]["t045_formal_performance_allowed"] is False
+          assert state["engineering_notes"]["t045_universe"] == "validation_2026_09_25_position_lifecycle_exit"
+          assert state["engineering_notes"]["t045_requested_candles"] == 3520
+          assert state["engineering_notes"]["t045_target_common_calendar"] == 3500
+
+          t043 = next(item for item in ledger["trials"] if item["trial_id"] == "T-2026-09-25-043")
+          t044 = next(item for item in ledger["trials"] if item["trial_id"] == "T-2026-09-25-044")
+          assert t043["status"] == "data_invalid"
+          assert t043["outcome"]["scientific_outcome"] == "NO_SCIENTIFIC_OUTCOME"
+          assert t044["status"] == "archived_rejected"
+          assert t044["outcome"]["scientific_outcome"] == "NO_PROMOTION_EVIDENCE"
+
+          print("PROJECT STATE OK")
           PY

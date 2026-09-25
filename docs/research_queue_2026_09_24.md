@@ -59,3 +59,30 @@ Coverage-Preflight -> eingefrorener Coverage-Snapshot -> formale Research-Auswer
 
 Sicherheitszustand bleibt unverändert:
 PAPER_ONLY=True, LIVE_TRADING_ENABLED=False, orders_enabled=False, automatic_promotion=False.
+
+
+## Queue-Fortsetzung — T044 abgeschlossen / T045 vorbereitet — 2026-09-25
+
+T044 ist als **NO_SUPPORT / archived_rejected** abgeschlossen. Die getestete
+63/126/252-TSM-Konsistenzfilterung wird nicht weiter verfeinert.
+
+### Q-009 / T045 — Position-Lifecycle / Exit-Control
+
+Die nächste orthogonale Forschungsfrage betrifft die bisher nicht separat
+evaluierte Position-Lifecycle-Schicht. T045 testet genau einen festen
+ATR-Trailing-Exit als Challenger gegen den unveränderten 50/50-Control:
+
+**höchster Schlusskurs seit Einstieg − 3 × ATR(20)**.
+
+Der Exit gilt nur für die Trend-Sleeve. Das bestehende SMA-50/200-Signal, die
+Cross-Sectional-Sleeve, das 10%-Portfolio-Volatilitätsbudget, Kosten, PIT-Vertrag
+und Gates bleiben unverändert.
+
+Nach einem Stop bleibt das Asset bis zum nächsten monatlichen Baseline-Rebalance
+flat. Bei weiterhin positiver Baseline-Allokation erfolgt die Re-Entry mit neuem
+Trailing-High. Die übrigen Trendgewichte werden nicht renormalisiert.
+
+T045 verwendet ein neues vollständig symbol-disjunktes Universum mit 13 Assets,
+3.520 angeforderten Roh-Candles und einem Ziel von 3.500 gemeinsamen Candles.
+
+Keine Parameter-/Varianten-/Schwellensuche und keine Holdout-Selektion.

@@ -3085,3 +3085,42 @@ Sicherheitszustand:
 - LIVE_TRADING_ENABLED=False
 - orders_enabled=False
 - automatic_promotion=False
+
+
+## Aktueller Gesamtcheckpoint — T044 abgeschlossen / T045 vorbereitet — 2026-09-25
+
+### T044 — Unanimous TSM Signal Consistency
+**NO_SUPPORT / archived_rejected**
+
+- Research Return: +45,97 % vs. +68,09 % Fixed-Control
+- Research Max-DD: 13,38 % vs. 14,56 %
+- Research PF: 1,078 vs. 1,100
+- Holdout Return: +14,43 % vs. +22,61 %
+- Holdout Max-DD: 17,12 % vs. 14,60 %
+- Holdout PF: 1,096 vs. 1,142
+- 4/5 profitable Research-Rolling-Fenster bei beiden Varianten
+- 1,5x-/2x-Kostenstress-Holdouts positiv
+- keine Promotion, keine Parameter-/Konsenssuche, keine Orders
+
+Die Hypothese wird geschlossen; der kleine Research-DD-Vorteil rechtfertigt
+keine weitere Filter-/Lookback-Suche.
+
+### T045 — Position-Lifecycle / Exit-Control
+T045 ist präregistriert und bereit für den Coverage-Preflight.
+
+- Trend: WFC, DUK, AXP, BLK, DHR, INTU, MAR, COP
+- Cross-Sectional: SO, NEE, AMGN, BSX, CMCSA
+- 3.520 angeforderte Candles je Asset
+- Ziel: 3.500 gemeinsame Candles
+- feste ATR(20)-Trailing-Exit bei 3×ATR
+- ausschließlich Trend-Sleeve
+- keine Parameter-/Variantensuche
+- keine Holdout-Selektion
+
+Aktueller Status: **COVERAGE_PENDING**.
+
+Sicherheitsstatus:
+- PAPER_ONLY=True
+- LIVE_TRADING_ENABLED=False
+- orders_enabled=False
+- automatic_promotion=False
