@@ -1,3 +1,25 @@
+# Aktueller Forschungscheckpoint — Q015 abgeschlossen / Q016 vorbereitet — 2026-09-25
+
+Q015 wurde als rein diagnostische Mechanismus-Diskriminationsstudie erfolgreich ausgeführt und als **COMPLETED_DIAGNOSTIC_ONLY** dokumentiert.
+
+- Workflow: `36161950582`
+- Artifact: `10875399037`
+- Artifact-ZIP-SHA256: `sha256:71f007c2b0ecef064c04b0107d1313e25ee365e146f5a2f1390143a22f093ff3`
+- Ergebnis-Fingerprint: `f7be165efe86a223f1e15dc0cfb206e992a95fecc596197a562c6eb65386e2da`
+- Gefrorener Input-Fingerprint: `5475911e19dfae4aabbce1c66775962dacd7815b86f7dc4e63fe3ecb4fab4836`
+- 250 gemeinsame Beobachtungen, 55 Event-Fenster
+- 762 Tests bestanden; Sicherheits- und Autorisierungsprüfung bestanden
+- Methodik: feste Q011-Features und Mechanismusgruppen, Midrank-Transformation, OLS-R² und exakte symmetrische Drei-Gruppen-Shapley-Zerlegung
+- Keine Holdout-, Feature-, Asset-, Horizon- oder Parametersuche; kein Performance-Trial und keine Promotion
+
+Die Q015-Ausführung verwendete ausschließlich die vier eingefrorenen Q014-Chunk-Artefakte aus Workflow `36158184847`. Die früheren fehlgeschlagenen Q015-Workflowversuche waren reine Infrastruktur-/Triggerfehler und wurden nicht als wissenschaftliche Ergebnisse gewertet.
+
+### Nächster Forschungsfokus — Q016
+
+**Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION** ist als neutraler nächster Diagnoseschritt vorgemerkt. Vorgesehen ist die zeitlich disjunkte Replikation der vollständigen Q015-Mechanismusdiagnostik mit unveränderten Gruppen und Regeln. Noch keine Performancefreigabe.
+
+Sicherheit bleibt unverändert: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
+
 ## Aktueller Forschungscheckpoint — Q012/Q013 abgeschlossen, Q014 vorbereitet — 2026-09-25
 
 Q012 und Q013 wurden als reine Discovery-/Diagnostikläufe erfolgreich ausgeführt. Beide liefern keine Performancefreigabe und keine Auswahlentscheidung.

@@ -77,8 +77,8 @@ jobs:
 
           task = default_research_queue().next_task()
           assert task is not None
-          assert task.task_id == "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC"
-          assert task.research_family == "orthogonal_information_alpha_mechanism_discrimination"
+          assert task.task_id == "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION"
+          assert task.research_family == "orthogonal_information_alpha_mechanism_discrimination_replication"
 
           q015 = json.loads(Path(
               "research/preregistrations/q015_information_alpha_mechanism_discrimination_2026_09_25.json"
@@ -129,8 +129,8 @@ jobs:
           assert state["latest_formal_trial"] == "T-2026-09-25-045"
           assert state["latest_trial_status"] == "BLOCKED"
           assert state["current_trial_status"] == "ARCHIVED_REJECTED"
-          assert state["engineering_notes"]["current_queue_task"] == "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC"
-          assert state["engineering_notes"]["last_completed_queue_task"] == "Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW"
+          assert state["engineering_notes"]["current_queue_task"] == "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION"
+          assert state["engineering_notes"]["last_completed_queue_task"] == "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC"
           assert state["engineering_notes"]["q011_status"] == "COMPLETED_DISCOVERY_ONLY"
           assert state["engineering_notes"]["q011_workflow_run"] == 36121684164
           assert state["engineering_notes"]["q011_artifact_id"] == 10857762336

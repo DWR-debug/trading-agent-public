@@ -1,3 +1,16 @@
+## Aktueller verifizierter Projektstand — Q015 abgeschlossen — 2026-09-25
+
+- Ausführungs-/Research-Repository: DWR-debug/trading-agent-public
+- Master-Basis für diesen Checkpoint: `3617ded7ad7f2b9a396e7301d8a3fbc684004a15`
+- Q012/Q013/Q014: abgeschlossen, diagnostisch-only
+- Q015: `COMPLETED_DIAGNOSTIC_ONLY`, Workflow `36161950582`, Artifact `10875399037`
+- Ergebnis-Fingerprint: `f7be165efe86a223f1e15dc0cfb206e992a95fecc596197a562c6eb65386e2da`
+- Nächster Queue-Task: Q016 zeitlich disjunkte Replikation
+- Paper-only unverändert: PAPER_ONLY=True, LIVE_TRADING_ENABLED=False, orders_enabled=False
+- Keine Holdout-Selektion, kein Parameter-/Variantentuning, keine automatische Promotion
+
+Dieser Abschnitt supersediert ältere Checkpoints dieses Dokuments.
+
 ## Aktueller verifizierter Projektstand — 2026-09-25
 
 - Ausführungs-/Research-Repository: DWR-debug/trading-agent-public
