@@ -21,7 +21,7 @@ from automation.adversarial_failure_diagnosis import write_report as write_failu
 from automation.cross_trial_failure_diagnosis import write_report as write_cross_trial_diagnosis
 from automation.portfolio_risk_control_min_variance import run_trial as run_t041_trial
 from automation.volatility_managed_tsm import run_trial as run_t042_trial
-from automation.trial_043_tsm_signal_consistency import run_validation as run_t043_trial
+from automation.trial_043_tsm_signal_consistency_2026_09_25 import run_validation as run_t043_trial
 from automation.one_command_research import run_universe
 
 
