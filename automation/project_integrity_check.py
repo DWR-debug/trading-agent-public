@@ -16,6 +16,7 @@ ACTIVE_WORKFLOWS = {
     "ci.yml",
     "research-orchestrator.yml",
     "paper-30-day-experiment-harness.yml",
+    "q014-resilient.yml",
 }
 
 REQUIRED_FILES = (
