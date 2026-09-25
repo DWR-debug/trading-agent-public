@@ -1,3 +1,31 @@
+# Zwingende Projektprämisse — Dringlichkeit / Erfolgsdruck — 2026-09-25
+
+Die familiäre Dringlichkeit und das fehlende verfügbare Kapital werden als **Kausalkette mit direkter Auswirkung auf das Forschungsdesign** behandelt:
+
+**familiäre Dringlichkeit + kein verfügbares Kapital → höherer Erfolgsdruck → höheres Risiko für Zeitdruck, Risikosuche, Overfitting, vorzeitige Auswahl und wissenschaftliche Abkürzungen.**
+
+Daraus folgt als verbindliche Systemreaktion:
+
+**mehr Geschwindigkeit + mehr parallele kostenlose Exploration + mehr Prozessdisziplin + keine Lockerung von Evidence-Gates.**
+
+Finanzieller Druck darf niemals:
+- einen negativen Befund in einen positiven Befund umdeuten,
+- Holdout-/Parameter-/Asset-/Horizon-Auswahl rechtfertigen,
+- Leverage oder Exposure erhöhen,
+- Live-Ausführung oder automatische Promotion auslösen.
+
+Er darf ausschließlich die **Priorisierung und Geschwindigkeit** erhöhen.
+
+Verankert in:
+- `docs/TRADING_AGENT_PROJECT_MEMORY.md`
+- `research/evidence/project_memory_checkpoint.json`
+- `research/evidence/project_state.json`
+- `tests/test_project_memory.py`
+
+Aktuelle Mutstufe bleibt **M2 / 4x**; sie steigt nur durch objektive Gates.
+
+---
+
 # Aktueller Ausführungscheckpoint — 30-Tage-Meilenstein / Q017 — 2026-09-25
 
 ## Verbindliches Ziel
