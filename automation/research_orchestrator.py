@@ -21,6 +21,7 @@ from automation.adversarial_failure_diagnosis import write_report as write_failu
 from automation.cross_trial_failure_diagnosis import (    write_report as write_cross_trial_diagnosis,    write_current_report as write_current_cross_trial_diagnosis,)
 from automation.information_alpha_discovery import run_discovery as run_q011_discovery
 from automation.information_alpha_temporal_stability import run_stability_diagnostic as run_q012_stability
+from automation.information_alpha_redundancy import run_redundancy_diagnostic as run_q013_redundancy
 from automation.portfolio_risk_control_min_variance import run_trial as run_t041_trial
 from automation.volatility_managed_tsm import run_trial as run_t042_trial
 from automation.trial_043_tsm_signal_consistency_2026_09_25 import run_validation as run_t043_trial
@@ -151,6 +152,16 @@ def run(
         snapshot = _state_snapshot(
             mode=mode,
             universe="Q012-INFORMATION-ALPHA-TEMPORAL-STABILITY-DIAGNOSTIC",
+            status=report["status"],
+            run_fingerprint=report["fingerprint"],
+        )
+    elif mode == "discover_information_alpha_redundancy":
+        report = run_q013_redundancy(
+            output_dir=root / "information_alpha_redundancy" / "q013",
+        )
+        snapshot = _state_snapshot(
+            mode=mode,
+            universe="Q013-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-DIAGNOSTIC",
             status=report["status"],
             run_fingerprint=report["fingerprint"],
         )
