@@ -19,6 +19,7 @@ from automation.network_momentum_lab import run_trial as run_t039_trial
 from automation.coverage_candidate_discovery import run_discovery
 from automation.adversarial_failure_diagnosis import write_report as write_failure_diagnosis
 from automation.cross_trial_failure_diagnosis import (    write_report as write_cross_trial_diagnosis,    write_current_report as write_current_cross_trial_diagnosis,)
+from automation.information_alpha_discovery import run_discovery as run_q011_discovery,
 from automation.portfolio_risk_control_min_variance import run_trial as run_t041_trial
 from automation.volatility_managed_tsm import run_trial as run_t042_trial
 from automation.trial_043_tsm_signal_consistency_2026_09_25 import run_validation as run_t043_trial
@@ -141,6 +142,16 @@ def run(
             universe=payload["universe"],
             status=payload["status"],
             run_fingerprint=payload["coverage_fingerprint"],
+        )
+    elif mode == "discover_information_alpha":
+        report = run_q011_discovery(
+            output_path=root / "information_alpha_discovery" / "q011.json",
+        )
+        snapshot = _state_snapshot(
+            mode=mode,
+            universe="Q011-INFORMATION-ALPHA-DISCOVERY",
+            status=report["status"],
+            run_fingerprint=report["fingerprint"],
         )
     elif mode == "discover_coverage":
         report = run_discovery(
@@ -496,7 +507,7 @@ def run(
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=("observe", "preflight", "discover_coverage", "diagnose_failure", "diagnose_history", "diagnose_current", "research", "research_t041", "research_t042", "research_t043", "research_t044", "research_t045"), required=True)
+    parser.add_argument("--mode", choices=("observe", "preflight", "discover_information_alpha", "discover_coverage", "diagnose_failure", "diagnose_history", "diagnose_current", "research", "research_t041", "research_t042", "research_t043", "research_t044", "research_t045"), required=True)
     parser.add_argument("--universe", default=DEFAULT_UNIVERSE)
     parser.add_argument("--output-root", default="research/runs")
     parser.add_argument("--total", type=int, default=None)
