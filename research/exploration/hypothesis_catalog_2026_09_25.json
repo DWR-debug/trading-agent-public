@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "recorded_on": "2026-09-25",
+  "mode": "WIDE_SEARCH",
+  "selection_rule": "Fixed ex-ante triage only; no performance metric and no holdout selection.",
+  "hypotheses": [
+    {"id":"H01","family":"macro_surprise_state_transition","data_source":"ALFRED","novelty":"orthogonal_external_macro_information","fixed_rule":true,"fresh_disjoint_required":true,"pit_path":"vintage_first_seen","coverage_stage":"available","action":"coverage"},
+    {"id":"H02","family":"cftc_positioning_crowding","data_source":"CFTC_Disaggregated_Futures_Only","novelty":"orthogonal_external_positioning_information","fixed_rule":true,"fresh_disjoint_required":true,"pit_path":"partial_release_schedule_only","coverage_stage":"available","action":"coverage_only_diagnostic"},
+    {"id":"H03","family":"abnormal_turnover_liquidity_shock","data_source":"Yahoo_daily_OHLCV","novelty":"microstructure_proxy_from_volume_and_range","fixed_rule":true,"fresh_disjoint_required":true,"pit_path":"decision_bar_next_bar","coverage_stage":"available","action":"coverage"},
+    {"id":"H04","family":"trend_acceleration","data_source":"Yahoo_daily_OHLCV","novelty":"price_trend_family","fixed_rule":true,"fresh_disjoint_required":true,"pit_path":"decision_bar_next_bar","coverage_stage":"available","action":"prune_duplicate_family"},
+    {"id":"H05","family":"cross_sectional_12_1_momentum","data_source":"Yahoo_daily_OHLCV","novelty":"known_replicated_family","fixed_rule":true,"fresh_disjoint_required":true,"pit_path":"decision_bar_next_bar","coverage_stage":"available","action":"control_replication_not_new_alpha"},
+    {"id":"H06","family":"sector_neutral_residual_momentum","data_source":"Yahoo_daily_OHLCV_plus_fixed_sector_map","novelty":"residualized_cross_sectional_signal","fixed_rule":true,"fresh_disjoint_required":true,"pit_path":"decision_bar_next_bar","coverage_stage":"available","action":"coverage"},
+    {"id":"H07","family":"cross_asset_lead_lag","data_source":"Yahoo_daily_OHLCV","novelty":"cross_asset_information_transfer","fixed_rule":true,"fresh_disjoint_required":true,"pit_path":"decision_bar_next_bar","coverage_stage":"available","action":"coverage"},
+    {"id":"H08","family":"volatility_state_transition","data_source":"Yahoo_daily_OHLCV","novelty":"risk_state_classifier","fixed_rule":true,"fresh_disjoint_required":true,"pit_path":"decision_bar_next_bar","coverage_stage":"available","action":"coverage"},
+    {"id":"H09","family":"gap_reversal","data_source":"Yahoo_daily_OHLCV","novelty":"open_to_close_microstructure_proxy","fixed_rule":true,"fresh_disjoint_required":true,"pit_path":"decision_bar_next_bar","coverage_stage":"available","action":"coverage"},
+    {"id":"H10","family":"volume_price_imbalance","data_source":"Yahoo_daily_OHLCV","novelty":"volume_range_price_interaction","fixed_rule":true,"fresh_disjoint_required":true,"pit_path":"decision_bar_next_bar","coverage_stage":"available","action":"coverage"},
+    {"id":"H11","family":"breadth_dispersion","data_source":"constituent_or_holdings_source_required","novelty":"cross_asset_breadth_and_dispersion","fixed_rule":true,"fresh_disjoint_required":true,"pit_path":"missing","coverage_stage":"unavailable","action":"prune_data_contract"},
+    {"id":"H12","family":"carry_term_structure","data_source":"futures_term_structure_source_required","novelty":"external_carry_information","fixed_rule":true,"fresh_disjoint_required":true,"pit_path":"missing","coverage_stage":"unavailable","action":"prune_data_contract"}
+  ],
+  "safety":{"paper_only":true,"live_trading_enabled":false,"orders_enabled":false,"automatic_promotion":false}
+}
