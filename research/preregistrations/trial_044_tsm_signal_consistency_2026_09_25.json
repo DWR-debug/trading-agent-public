@@ -1,0 +1,105 @@
+{
+  "schema_version": "1.0",
+  "trial_id": "T-2026-09-25-044",
+  "trial_type": "repair_successor",
+  "parent_trial_id": "T-2026-09-25-043",
+  "research_family": "trend_signal_variability",
+  "hypothesis": "Dieselbe vollständig feste T043-Signalhypothese wird nach rein technischer Coverage-Reparatur auf demselben 13-Symbol-Universum geprüft: unanimous positive 63/126/252-Session-TSM ersetzt nur das Trend-Signal des 50/50-Kandidaten.",
+  "universe": "validation_2026_09_25_tsm_signal_consensus_repair",
+  "symbols": [
+    "WMT",
+    "JNJ",
+    "PG",
+    "KO",
+    "PEP",
+    "XOM",
+    "CVX",
+    "CSCO",
+    "MCD",
+    "V",
+    "ORCL",
+    "MRK",
+    "PFE"
+  ],
+  "interval": "1d",
+  "requested_candles": 3520,
+  "target_candles": 3500,
+  "repair": {
+    "parent_trial_id": "T-2026-09-25-043",
+    "reason": "T043 had 3500 valid candles per symbol but only 3499 common timestamps.",
+    "raw_window_change_only": true,
+    "hypothesis_unchanged": true,
+    "gates_unchanged": true
+  },
+  "mechanism": {
+    "baseline": "fixed 50/50 SMA 50/200 inverse-volatility trend sleeve + 12-1 cross-sectional Top-2 + 10% portfolio volatility budget",
+    "intervention": "replace only trend signal with long-only unanimous consensus across fixed 63/126/252-session TSM returns",
+    "lookbacks": [
+      63,
+      126,
+      252
+    ],
+    "trend_rebalance": "first trading session of each calendar month using information through prior session close",
+    "trend_volatility_weighting_window": 60,
+    "max_asset_weight": 0.25,
+    "portfolio_risk_budget_window": 63,
+    "target_annualized_volatility": 0.1,
+    "shorting": false,
+    "leverage": 1
+  },
+  "cost_model": {
+    "base_fee_bps": 10,
+    "base_slippage_bps": 5,
+    "scenarios": [
+      "base",
+      "1.5x",
+      "2x"
+    ]
+  },
+  "data_contract": {
+    "requested_raw_candles_per_symbol": 3520,
+    "target_common_calendar": 3500,
+    "research_return_periods": 2798,
+    "holdout_return_periods": 700,
+    "point_in_time": true
+  },
+  "search_scope": {
+    "parameter_search": false,
+    "threshold_search": false,
+    "variant_search": false,
+    "asset_selection_by_performance": false,
+    "holdout_used_for_selection": false
+  },
+  "disjointness": {
+    "fully_symbol_disjoint_from_existing_universes": false,
+    "allowed_overlap_universes": [
+      "validation_2026_09_25_tsm_signal_consensus"
+    ]
+  },
+  "coverage_gate": {
+    "performance_allowed_before_coverage_pass": false,
+    "holdout_used_for_selection": false
+  },
+  "gates": {
+    "research_return_positive": true,
+    "research_max_drawdown_lte_percent": 10,
+    "research_profit_factor_gte": 1.1,
+    "rolling_min_profit_factor_gte": 1.1,
+    "rolling_profitable_window_ratio_gte": 0.5,
+    "rolling_average_drawdown_lte_percent": 10,
+    "oos_to_is_return_ratio_gte": 0.25,
+    "holdout_return_positive": true,
+    "holdout_profit_factor_gte": 1.1,
+    "holdout_max_drawdown_lte_percent": 10,
+    "stress_holdout_return_nonnegative_at_1_5x": true,
+    "stress_holdout_return_nonnegative_at_2x": true,
+    "total_return_sensitivity_nonnegative": true,
+    "non_deterioration_vs_fixed_control": true
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
