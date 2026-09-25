@@ -106,7 +106,7 @@ jobs:
       - name: Download chunk checkpoints
         uses: actions/download-artifact@v7
         with:
-          pattern:q014-chunk-* -${{ github.run_id }}
+          pattern: q014-chunk-*-${{ github.run_id }}
           path: research/runs/information_alpha_redundancy/q014_chunks
           merge-multiple: true
       - name: Aggregate Q014
