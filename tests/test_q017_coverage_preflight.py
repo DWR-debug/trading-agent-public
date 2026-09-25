@@ -63,5 +63,5 @@ def test_q017_alfred_vintage_date_regex_accepts_iso_dates():
     import re
 
     html = '<option value="2025-09-24">2025-09-24</option><option value="2011-01-04">2011-01-04</option>'
-    dates = sorted(set(re.findall(r'<option[^>]+value=[\"\'](20\\d{2}-\\d{2}-\\d{2})[\"\']', html)))
+    dates = sorted(set(re.findall(r'<option[^>]+value=[\"\'](20\d{2}-\d{2}-\d{2})[\"\']', html)))
     assert dates == ["2011-01-04", "2025-09-24"]
