@@ -2,6 +2,9 @@ name: Wide Search Research Lane
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - research/wide-search-lane
   schedule:
     - cron: "15 */6 * * *"
 
