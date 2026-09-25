@@ -3131,3 +3131,42 @@ Sicherheitsstatus:
 T045 wurde formal auf einem vollständig symbol-disjunkten Universum ausgewertet und **NO_SUPPORT / archived_rejected** klassifiziert. Die Coverage lieferte 3.519 gemeinsame Zeitstempel bei 3.500 benötigten Kerzen; verwendet wurden 2.798 Research-Returns und 700 blinde Holdout-Returns. Der feste ATR(20)-Trailing-Exit (3×ATR, Schlusskurs-Trigger, Ausführung am nächsten Open) senkte die Research-Rendite von 60,62 % auf 41,23 %, erhöhte die Research-Max-DD von 19,73 % auf 20,07 %, senkte den PF von 1,090 auf 1,068 und verschlechterte im Holdout die Rendite von 21,13 % auf 8,34 %, die Max-DD von 9,79 % auf 15,98 % und den PF von 1,127 auf 1,059. Die durchschnittliche Rolling-DD verbesserte sich von 14,02 % auf 13,07 %, reichte aber weder für den absoluten Risikogate noch für die Nicht-Verschlechterungsbedingungen. 391 Stop-Ereignisse wurden beobachtet. Keine Promotion, kein Tuning und keine Holdout-Selektion.
 
 Die formale Ausführung wurde zweimal identisch angestoßen; die Kern-Price-Only-Kennzahlen und Gate-Ergebnisse reproduzierten sich. Die sekundäre Total-Return-Sensitivität auf adjusted-close-Daten zeigte nur minimale numerische Laufabweichungen und wird nicht als unabhängiger Versuch gezählt. Der nächste Schritt ist eine Cross-Trial-Failure-Diagnose vor Reservierung des nächsten Mechanismus.
+
+
+## Aktueller Gesamtcheckpoint — Q010 abgeschlossen / Q011 vorgemerkt — 2026-09-25
+
+Q-010-CROSS-TRIAL-FAILURE-DIAGNOSIS ist **COMPLETED** und wurde als rein deskriptive Governance-Diagnose ausgeführt.
+
+Technischer Nachweis:
+- Workflow: `36119705793`
+- Artifact-ID: `10856102739`
+- Artifact-ZIP-SHA256: `sha256:9f10a27ed267870981c8f480e868967e22c4d19a8c3562c37c9690d19dcf01c2`
+- Diagnose-Fingerprint: `c11a4a2340bf4f7a9f132f53835465d57d0b12ab97770a24f3fd98492e7f9549`
+- Vollständige Testsuite: **744 passed**
+- Paper-only Safety: **OK**
+
+Wiederkehrende Failure-Signatur der vier performance-validen Trials:
+- Research-Risikogate: 4/4 verletzt
+- Control-relative Non-Deterioration: 4/4 verletzt
+- OOS/IS-Stabilität: 3/4 verletzt
+- Holdout-Drawdown-Gate: 3/4 verletzt
+- Positive Holdout-Rendite: 4/4, aber ohne vollständigen Evidence-Contract
+- T043: DATA_INVALID und daher ohne Performanceaussage
+
+Methodische Konsequenz:
+- T041, T042, T044 und T045 werden nicht nachoptimiert.
+- Kein Parameter-, Asset- oder Holdout-Re-Selection.
+- Keine Gate-Lockerung.
+- Kein Performance-Re-Run.
+- Kein Production-Promotion-Schritt.
+
+Nächster Research-Schwerpunkt:
+`Q-011-ORTHOGONAL-INFORMATION-ALPHA-DISCOVERY`
+
+Q011 bleibt zunächst **Discovery-only**. Eine aus Q011 abgeleitete Performancehypothese benötigt eine neue Präregistrierung, Coverage-Preflight und einen frischen vollständig symbol-disjunkten, holdout-blinden Validierungssatz.
+
+Sicherheitsstatus:
+- PAPER_ONLY=True
+- LIVE_TRADING_ENABLED=False
+- orders_enabled=False
+- automatic_promotion=False

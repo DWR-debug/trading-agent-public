@@ -1,0 +1,153 @@
+{
+  "schema_version": "1.0",
+  "diagnosis_id": "CROSS-TRIAL-FAILURE-DIAGNOSIS-2026-09-25",
+  "recorded_at": "2026-09-25T09:41:03.838139+00:00",
+  "source": {
+    "ledger": "research/evidence/trial_ledger.json",
+    "trial_ids": [
+      "T-2026-09-24-041",
+      "T-2026-09-24-042",
+      "T-2026-09-25-043",
+      "T-2026-09-25-044",
+      "T-2026-09-25-045"
+    ],
+    "performance_valid_trial_count": 4,
+    "data_invalid_trial_count": 1,
+    "workflow_run_id": 36119705793,
+    "authorization_commit": "7000b6c47c488c28aa5f1700aceac7fc4b64675b",
+    "artifact_id": 10856102739,
+    "artifact_zip_sha256": "sha256:9f10a27ed267870981c8f480e868967e22c4d19a8c3562c37c9690d19dcf01c2",
+    "diagnosis_fingerprint": "c11a4a2340bf4f7a9f132f53835465d57d0b12ab97770a24f3fd98492e7f9549"
+  },
+  "status": "DIAGNOSTIC_ONLY",
+  "trial_summaries": [
+    {
+      "trial_id": "T-2026-09-24-041",
+      "research_family": "portfolio_risk_control",
+      "status": "archived_rejected",
+      "failure_modes": [
+        "control_relative_non_deterioration",
+        "holdout_risk_gate",
+        "oos_stability_gate",
+        "research_risk_gate"
+      ],
+      "holdout_used_for_selection": false,
+      "parameter_search": false,
+      "variant_search": false
+    },
+    {
+      "trial_id": "T-2026-09-24-042",
+      "research_family": "volatility_managed_time_series_momentum",
+      "status": "archived_rejected",
+      "failure_modes": [
+        "control_relative_non_deterioration",
+        "oos_stability_gate",
+        "research_profit_factor_gate",
+        "research_risk_gate"
+      ],
+      "holdout_used_for_selection": false,
+      "parameter_search": false,
+      "variant_search": false
+    },
+    {
+      "trial_id": "T-2026-09-25-043",
+      "research_family": "trend_signal_variability",
+      "status": "data_invalid",
+      "failure_modes": [
+        "data_validity_failure"
+      ],
+      "holdout_used_for_selection": null,
+      "parameter_search": false,
+      "variant_search": false
+    },
+    {
+      "trial_id": "T-2026-09-25-044",
+      "research_family": "trend_signal_variability",
+      "status": "archived_rejected",
+      "failure_modes": [
+        "control_relative_non_deterioration",
+        "holdout_risk_gate",
+        "research_profit_factor_gate",
+        "research_risk_gate"
+      ],
+      "holdout_used_for_selection": false,
+      "parameter_search": false,
+      "variant_search": false
+    },
+    {
+      "trial_id": "T-2026-09-25-045",
+      "research_family": "position_lifecycle_exit",
+      "status": "archived_rejected",
+      "failure_modes": [
+        "control_relative_non_deterioration",
+        "holdout_risk_gate",
+        "oos_stability_gate",
+        "research_profit_factor_gate",
+        "research_risk_gate"
+      ],
+      "holdout_used_for_selection": false,
+      "parameter_search": false,
+      "variant_search": false
+    }
+  ],
+  "cross_trial_patterns_by_id": {
+    "research_risk_gate_recurrence": [
+      "T-2026-09-24-041",
+      "T-2026-09-24-042",
+      "T-2026-09-25-044",
+      "T-2026-09-25-045"
+    ],
+    "risk_gate_any_stage_recurrence": [
+      "T-2026-09-24-041",
+      "T-2026-09-24-042",
+      "T-2026-09-25-044",
+      "T-2026-09-25-045"
+    ],
+    "oos_stability_recurrence": [
+      "T-2026-09-24-041",
+      "T-2026-09-24-042",
+      "T-2026-09-25-045"
+    ],
+    "control_relative_non_deterioration_recurrence": [
+      "T-2026-09-24-041",
+      "T-2026-09-24-042",
+      "T-2026-09-25-044",
+      "T-2026-09-25-045"
+    ],
+    "data_validity_failure": [
+      "T-2026-09-25-043"
+    ],
+    "positive_holdout_not_sufficient": [
+      "T-2026-09-24-041",
+      "T-2026-09-24-042",
+      "T-2026-09-25-044",
+      "T-2026-09-25-045"
+    ]
+  },
+  "interpretation": {
+    "research_risk_gate_recurrence_count": 4,
+    "risk_gate_any_stage_recurrence_count": 4,
+    "oos_stability_recurrence_count": 3,
+    "control_relative_non_deterioration_count": 4,
+    "data_validity_failure_count": 1,
+    "positive_holdout_count": 4,
+    "key_observation": "Across the four performance-valid trials, the recurring bottleneck is robust risk quality and control-relative stability: every trial exceeded the 10% research drawdown gate and every trial failed at least one fixed-control non-deterioration condition. Three of four also failed the OOS/IS threshold, and three of four failed the 10% holdout drawdown gate. T043 is separate technical data-invalid evidence and carries no performance claim."
+  },
+  "non_actions": [
+    "no_parameter_reselection",
+    "no_asset_reselection",
+    "no_holdout_selection",
+    "no_gate_relaxation",
+    "no_backtest_rerun",
+    "no_production_promotion",
+    "no_live_execution"
+  ],
+  "next_research_question": "Before reserving another performance trial, define one orthogonal information/alpha mechanism rather than another variant of the tested portfolio-risk, volatility-scaling, trend-consistency, or lifecycle-exit controls. The next trial must be fixed-rule, coverage-first, holdout-blind, fully symbol-disjoint, and governed by the unchanged evidence contract.",
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false,
+    "paid_agent_api_budget_usd": 0.0
+  }
+}

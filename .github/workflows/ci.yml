@@ -77,8 +77,8 @@ jobs:
 
           task = default_research_queue().next_task()
           assert task is not None
-          assert task.task_id == "Q-010-CROSS-TRIAL-FAILURE-DIAGNOSIS"
-          assert task.research_family == "research_governance"
+          assert task.task_id == "Q-011-ORTHOGONAL-INFORMATION-ALPHA-DISCOVERY"
+          assert task.research_family == "orthogonal_information_alpha_discovery"
 
           expected = set(prereg["symbols"])
           for existing in list_universes():
@@ -109,7 +109,13 @@ jobs:
           assert state["latest_formal_trial"] == "T-2026-09-25-045"
           assert state["latest_trial_status"] == "BLOCKED"
           assert state["current_trial_status"] == "ARCHIVED_REJECTED"
-          assert state["engineering_notes"]["current_queue_task"] == "Q-010-CROSS-TRIAL-FAILURE-DIAGNOSIS"
+          assert state["engineering_notes"]["current_queue_task"] == "Q-011-ORTHOGONAL-INFORMATION-ALPHA-DISCOVERY"
+          assert state["engineering_notes"]["last_completed_queue_task"] == "Q-010-CROSS-TRIAL-FAILURE-DIAGNOSIS"
+          assert state["engineering_notes"]["q010_status"] == "COMPLETED"
+          assert state["engineering_notes"]["q010_diagnosis_status"] == "DIAGNOSTIC_ONLY"
+          assert state["engineering_notes"]["q010_workflow_run"] == 36119705793
+          assert state["engineering_notes"]["q010_artifact_id"] == 10856102739
+          assert state["engineering_notes"]["q010_diagnosis_fingerprint"] == "c11a4a2340bf4f7a9f132f53835465d57d0b12ab97770a24f3fd98492e7f9549"
           assert state["engineering_notes"]["t043_coverage_status"] == "DATA_INVALID"
           assert state["engineering_notes"]["t043_formal_performance_allowed"] is False
           assert state["engineering_notes"]["t043_scientific_outcome"] == "NO_SCIENTIFIC_OUTCOME"
