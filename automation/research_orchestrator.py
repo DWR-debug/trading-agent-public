@@ -356,7 +356,8 @@ def run(
         if coverage_payload.get("coverage_fingerprint") != expected_fingerprint:
             raise ValueError("T044 frozen coverage fingerprint mismatch.")
         output = root / "validation_2026_09_25_tsm_signal_consensus_repair" / "formal" / "t044.json"
-        report = run_t044_trial(coverage_path, preregistration, output)
+        data_dir = coverage_path.parent / "datasets"
+        report = run_t044_trial(data_dir, coverage_path, output)
         snapshot = _state_snapshot(
             mode=mode,
             universe=universe,
