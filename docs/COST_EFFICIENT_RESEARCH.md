@@ -2,11 +2,9 @@
 
 ## Ziel
 
-Das Projekt nutzt möglichst viel lokale Rechenleistung und möglichst wenig
-kostenpflichtige API-Intelligenz.
+Das Projekt nutzt möglichst viel lokale Rechenleistung und möglichst wenig kostenpflichtige API-Intelligenz.
 
 ### Lokal / ohne API
-
 - Datenimport und UTC-Normalisierung
 - Datenqualität
 - Backtests
@@ -20,51 +18,46 @@ kostenpflichtige API-Intelligenz.
 - Checkpoints und Reports
 - pytest / CI
 
-### API / Codex nur gezielt
+### Kostenfreie Agentenressourcen / gezielt
 
-- Forschungsfrage aus bereits berechneten Ergebnissen ableiten
-- Ergebnisse interpretieren
-- Codeänderungen planen oder reviewen
-- nächste Forschungsrunde bestimmen
-- ungewöhnliche Ergebnisse untersuchen
+Kostenfreie Agentenressourcen werden bewusst **für Hypothesenbildung und Forschungsdesign** reserviert, nicht für deterministische Berechnung.
 
-Die API erhält bevorzugt kompakte Ergebnis-Summaries statt Rohdaten,
-Trade-Listen oder vollständiger Backtest-Ausgaben.
+Geeignete Aufgaben:
+- neue, orthogonale Hypothesen aus eingefrorener Evidenz ableiten;
+- Gegenhypothesen und Falsifikationsbedingungen formulieren;
+- Mechanismen und Literatur-/Domänenwissen synthetisieren;
+- ungewöhnliche Ergebnisse interpretieren;
+- Forschungsdesign und Präregistrierung kritisch reviewen.
+
+Die bevorzugte Arbeitsweise ist: kompakte Evidence-Summaries an Agenten geben, mehrere unabhängige Hypothesen in einem gebündelten Lauf erzeugen und die gesamte numerische Prüfung anschließend lokal deterministisch ausführen.
+
+### Bezahlte API
+
+Projektseitig bleibt bezahlte Agenten-/API-Nutzung deaktiviert.
+
+- paid_api_budget_usd = 0
+- keine automatische bezahlte API-Nutzung
+- kein automatisches Nachladen von Credits
+
+Agentennutzung soll nur auf tatsächlich kostenfrei verfügbarem Kontingent erfolgen.
 
 ## Kosten-Governor
 
-Die erste freigegebene API-Reserve beträgt **1,00 USD**.
+Kostenfreie Agentenläufe sind konzeptionell vom bezahlten Kosten-Governor getrennt. Ein kostenfreier Lauf darf nicht dazu führen, dass später automatisch kostenpflichtige Nutzung aktiviert wird.
 
-Standardgrenzen:
+Der bestehende bezahlte Governor bleibt unverändert und ist kein Ersatz für die Abrechnung des API-Anbieters.
 
-- maximal 0,25 USD geschätzte API-Kosten pro Forschungsrunde
-- maximal 4 kostenpflichtige Forschungsrunden innerhalb der Reserve
-- keine automatische Nutzung des restlichen 9-USD-Guthabens
+## Effizienzprinzip
 
-Der Governor ist ein Sicherheits-/Planungsgate und kein Ersatz für die
-Abrechnung des API-Anbieters. Tatsächliche Kosten werden ausschließlich
-über die OpenAI-Abrechnung verifiziert.
+Nicht jede Forschungsaufgabe benötigt einen Agenten. Deterministische Rechenarbeit bleibt lokal.
 
-Der Governor zählt genehmigte Forschungsrunden zustandsbehaftet. Nach vier
-genehmigten Runden werden weitere Runden abgelehnt, auch wenn ein Aufrufer
-versehentlich einen zu niedrigen bisherigen Kostenstand übergibt. Ablehnungen
-verbrauchen keine Runde. Nicht-endliche oder negative Kostenwerte werden
-abgelehnt.
-
-## Hardware
-
-Ein lokaler Research-Worker soll bevorzugt auf einem verfügbaren PC laufen.
-Ein Android/Termux-Gerät kann für kleinere Jobs, Tests, Datenaufbereitung
-und als Kontroll-/Git-Client genutzt werden.
-
-Die lokale Maschine soll keine API-Schlüssel für deterministische
-Backtests benötigen.
+Agenten werden dort eingesetzt, wo zusätzliche unabhängige Synthese, Gegenprüfung und Hypothesengenerierung einen Informationsgewinn erzeugt. Wiederholte Agentenaufrufe ohne neue Evidenz werden vermieden.
 
 ## Sicherheitsregeln
-
 - PAPER_ONLY bleibt True.
 - LIVE_TRADING_ENABLED bleibt False.
 - Keine echten Trades.
 - Keine API-Schlüssel in Repository-Dateien.
 - Keine Forschungsergebnisse gelten als Profitabilitätsbeweis.
 - Kostenlimits dürfen nicht automatisch erhöht werden.
+- Agentenantworten sind Ideenmaterial und werden erst durch Präregistrierung und deterministische Evidenztestung wissenschaftlich relevant.
