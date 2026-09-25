@@ -16,6 +16,13 @@ on:
       - research/wide-search-lane
       - research/wide-search-round-002-volatility-regime-v2
       - research/wide-search-h06-residual-momentum-v1
+  pull_request:
+    branches:
+      - master
+    types:
+      - opened
+      - synchronize
+      - reopened
   schedule:
     - cron: "15 */6 * * *"
 
@@ -114,7 +121,7 @@ jobs:
           retention-days: 30
 
   h06_sector_neutral:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/research/wide-search-h06-residual-momentum-v1' }}
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/research/wide-search-h06-residual-momentum-v1') || (github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'research/wide-search-h06-residual-momentum-v1') }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 25
     steps:
