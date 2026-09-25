@@ -19,7 +19,7 @@ from data.yahoo_loader import load_yahoo_history
 from research.asset_universes import get_universe
 
 ROOT = Path(__file__).resolve().parents[1]
-UNIVERSE = "q017_coverage_first"
+UNIVERSE = "wide_search_probe_2026_09_25"
 STUDY_START = date(2011, 1, 1)
 STUDY_END = date(2025, 9, 24)
 TARGET_COMMON_CANDLES = 3500
