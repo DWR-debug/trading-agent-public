@@ -355,3 +355,21 @@ Sicherheitsstatus: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enab
 - Safety remains: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
 
 This section supersedes older checkpoint entries in this file where commit hashes or next-task state differ. The GitHub repository state is authoritative.
+
+## Verifizierter Gesamtcheckpoint — Q014 abgeschlossen — 2026-09-25
+
+- Q012: COMPLETED / discovery-only
+- Q013: COMPLETED / discovery-only
+- Q014: COMPLETED_DISCOVERY_ONLY
+- Q014 Workflow: `36158184847` (Run #7)
+- Q014 Artifact: `10874472512`
+- Q014 Report-Fingerprint: `ab617984b57cf20ea2ac9e2458ac8a519b139abf8587dab751bd63e1d5d39d6d`
+- Q014 Daten: 250 gemeinsame Beobachtungen, 55 Event-Fenster, 37.807.341 GDELT-Rohzeilen, 226 übersprungen.
+- Event-only Intensitäts-/Breiten-Redundanz: mean abs Spearman `0.9411616161616162`.
+- Kein Performance-Trial; keine Feature-, Asset-, Horizon-, Parameter- oder Holdout-Selektion.
+- Nächster Forschungsschwerpunkt: `Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC` — separat zu präregistrieren, diagnostisch-only.
+- Aktive Workflows umfassen zusätzlich `.github/workflows/q014-resilient.yml`.
+- Safety unverändert: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
+
+Dieser Abschnitt supersediert ältere Q014-Warte-/Rerun-Checkpoint-Texte in diesem Dokument.
+
