@@ -399,6 +399,17 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         ),
         symbols=("WMT","JNJ","PG","KO","PEP","XOM","CVX","CSCO","MCD","V","ORCL","MRK","PFE"),
         target_count=3520,
+    ),,
+
+    AssetUniverse(
+        name="validation_2026_09_25_position_lifecycle_exit",
+        priority=58,
+        description=(
+            "Fresh fully symbol-disjoint validation universe for Trial 045; "
+            "fixed ATR position-lifecycle exit on the existing 50/50 architecture."
+        ),
+        symbols=("WFC","DUK","AXP","BLK","DHR","INTU","MAR","COP","SO","NEE","AMGN","BSX","CMCSA"),
+        target_count=3520,
     ),
 )
 
