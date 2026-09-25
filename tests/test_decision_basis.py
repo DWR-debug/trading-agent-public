@@ -16,7 +16,7 @@ def test_decision_basis_is_current_and_separates_fact_from_next_action():
     assert "Was wissen wir nicht?" in md
     assert "Nächste Aktion" in md
     assert payload["current_stage"] == "WIDE_SEARCH_MODE"
-    assert payload["next_action"].startswith("Execute WIDE-SEARCH-ROUND-002")
+    assert payload["next_action"].startswith("Verify the Wide-Search Round 002")
     assert payload["invariants"] == {
         "paper_only": True,
         "live_trading_enabled": False,
