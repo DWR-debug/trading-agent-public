@@ -2,6 +2,15 @@ name: Wide Search Research Lane
 
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "Ausführungsmodus"
+        required: true
+        default: triage
+        type: choice
+        options:
+          - triage
+          - round_002
   push:
     branches:
       - research/wide-search-lane
@@ -18,7 +27,7 @@ concurrency:
 
 jobs:
   triage:
-    if: ${{ github.event_name != 'push' || github.ref == 'refs/heads/research/wide-search-lane' }}
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/research/wide-search-lane') || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'triage') }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 15
     steps:
@@ -63,7 +72,7 @@ jobs:
           retention-days: 30
 
   round_002:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/research/wide-search-round-002-volatility-regime-v2' }}
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/research/wide-search-round-002-volatility-regime-v2') || (github.event_name == 'workflow_dispatch' && inputs.mode == 'round_002') }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 20
     steps:
@@ -98,7 +107,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: wide-search-round-002-\${{ github.run_id }}
+          name: wide-search-round-002-${{ github.run_id }}
           path: research/runs/wide_search/
           if-no-files-found: warn
           retention-days: 30
