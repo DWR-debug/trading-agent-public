@@ -1,4 +1,5 @@
 from datetime import date, datetime, timezone
+import json
 
 from config import settings
 from data.gdelt_events import GDELTEvent
@@ -108,6 +109,8 @@ def test_q011_discovery_is_holdout_free_and_paper_only(tmp_path):
     assert report["paper_only"] is True
     assert report["live_trading_enabled"] is False
     assert report["orders_enabled"] is False
+    persisted = json.loads((tmp_path / "q011.json").read_text(encoding="utf-8"))
+    assert persisted["fingerprint"] == report["fingerprint"]
     assert len(report["observations"]) == 11
     assert report["observations"][1]["event_window_start_exclusive"] == "2026-08-25"
     assert report["observations"][1]["event_window_end_exclusive"] == "2026-08-26"
