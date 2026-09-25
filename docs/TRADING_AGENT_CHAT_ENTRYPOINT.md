@@ -89,3 +89,13 @@ nicht gelockert werden.
 Der Einstiegspunkt soll verhindern, dass ein neuer Chat durch eine von Benutzer
 eingefügte Kopie der letzten Assistant-Antwort versehentlich einen Zwischenstand als
 neue Wahrheit behandelt oder bereits bekannte Prüfungen überspringt.
+
+## Verbindlicher Kontext zum Erfolgsdruck
+
+Vor jeder neuen trading agent-Arbeit ist zusätzlich docs/TRADING_AGENT_PROJECT_MEMORY.md zu berücksichtigen.
+
+Die familiäre Dringlichkeit und das fehlende verfügbare Kapital werden als **Motivationsfaktor und methodisches Entscheidungsrisiko** behandelt. Sie dürfen Geschwindigkeit und Priorisierung erhöhen, aber niemals wissenschaftliche Gates lockern oder finanzielles Risiko erhöhen.
+
+Die operative Leitregel lautet:
+
+**mehr Druck → mehr Prozessdisziplin, nicht mehr Beweisnachlass.**
