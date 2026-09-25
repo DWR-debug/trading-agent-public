@@ -39,7 +39,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$GITHUB_EVENT_NAME" = "push"
-          test "$(git log -1 --pretty=%s)" = "Research authorization: execute Q016 mechanism discrimination replication"
+          git merge-base --is-ancestor 9eae6a32e60c97ec964caf6fdf67573ad2d370fb HEAD
           python - <<'PY'
           import json
           from pathlib import Path
