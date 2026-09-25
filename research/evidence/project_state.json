@@ -29,7 +29,14 @@
     "paid_api_budget_usd": 0,
     "auto_paid_api_calls": false,
     "free_credit_only": true,
-    "credit_balance_auto_detected": false
+    "credit_balance_auto_detected": false,
+    "policy": "free_agent_credits_for_hypothesis_generation_and_research_design; deterministic_compute_local_only",
+    "current_task": "AGENT-HYPOTHESIS-ROUND-001",
+    "current_task_scope": "orthogonal alpha/information hypotheses from frozen T041/T042/T044/T045 and Q011 evidence",
+    "holdout_selection": false,
+    "parameter_search": false,
+    "asset_selection": false,
+    "agent_output_is_evidence": false
   },
   "continuity": {
     "canonical_context": "docs/PROJECT_CONTEXT.md",
@@ -231,13 +238,14 @@
     "q012_status": "PENDING"
   },
   "agent_usage_efficiency": {
-    "policy": "deterministic_actions_for_computation_and_agent_use_for_architecture_review_synthesis",
+    "policy": "deterministic_actions_for_computation; free-agent-use-for-hypothesis-generation_research-design_and-architecture-review",
     "paid_api_budget_usd": 0,
     "auto_paid_api_calls": false,
     "free_credit_only": true,
     "lessons_recorded": "reuse_frozen_artifacts; batch_independent_evidence_fetches; fail_fast_contract_tests; no_agent_spend_for_deterministic_backtests; do_not_formalize_single_snapshot_weak_discovery",
     "q004_discovery_policy": "one broad cross-asset observation plus benchmark; no performance selection; discovery candidates require fresh preregistration",
     "q006_policy": "mechanism-first preregistration; fresh disjoint coverage; no T041 parameter/weight retuning",
-    "secondary_sensitivity_reproducibility": "Adjusted-close Total-Return-Sensitivität zeigte minimale Laufabweichungen bei zwei identischen Formal-Ausführungen; Price-Only-Kernkennzahlen und Gate-Ergebnisse waren identisch."
+    "secondary_sensitivity_reproducibility": "Adjusted-close Total-Return-Sensitivität zeigte minimale Laufabweichungen bei zwei identischen Formal-Ausführungen; Price-Only-Kernkennzahlen und Gate-Ergebnisse waren identisch.",
+    "current_agent_task": "AGENT-HYPOTHESIS-ROUND-001"
   }
 }

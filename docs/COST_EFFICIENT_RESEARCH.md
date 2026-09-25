@@ -68,3 +68,7 @@ Backtests benötigen.
 - Keine API-Schlüssel in Repository-Dateien.
 - Keine Forschungsergebnisse gelten als Profitabilitätsbeweis.
 - Kostenlimits dürfen nicht automatisch erhöht werden.
+
+## Kostenfreie Agentenressourcen — Hypothesen zuerst (2026-09-25)
+
+Kostenfreie Agentenressourcen werden für Hypothesenbildung, Gegenhypothesen, Mechanismensynthese und Forschungsdesign reserviert. Bezahlte API-Nutzung bleibt deaktiviert. Gebündelte Hypothesenrunden mit kompakten eingefrorenen Evidence-Summaries werden bevorzugt.
