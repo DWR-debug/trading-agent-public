@@ -131,12 +131,16 @@ jobs:
           assert state["latest_formal_trial"] == "T-2026-09-25-045"
           assert state["latest_trial_status"] == "BLOCKED"
           assert state["current_trial_status"] == "ARCHIVED_REJECTED"
-          assert state["engineering_notes"]["current_queue_task"] == "WIDE-SEARCH-ROUND-002"
-          assert state["engineering_notes"]["last_completed_queue_task"] == "WIDE-SEARCH-ROUND-001"
+          assert state["engineering_notes"]["current_queue_task"] == "WIDE-SEARCH-ROUND-003"
+          assert state["engineering_notes"]["last_completed_queue_task"] == "WIDE-SEARCH-ROUND-002"
           assert state["engineering_notes"]["q017_g3_scientific_status"] == "DATA_INSUFFICIENT"
           assert state["engineering_notes"]["q017_g3_workflow_run"] == 36186285814
           assert state["engineering_notes"]["q017_g3_artifact_id"] == 10887025099
           assert state["engineering_notes"]["q017_g3_performance_authorized"] is False
+          assert state["engineering_notes"]["wide_search_round_002_workflow_run"] == 36188766298
+          assert state["engineering_notes"]["wide_search_round_002_artifact_id"] == 10887128923
+          assert state["engineering_notes"]["wide_search_round_002_holdout_used"] is False
+          assert state["engineering_notes"]["wide_search_round_002_performance_trial_authorized"] is False
           assert state["engineering_notes"]["q011_status"] == "COMPLETED_DISCOVERY_ONLY"
           assert state["engineering_notes"]["q011_workflow_run"] == 36121684164
           assert state["engineering_notes"]["q011_artifact_id"] == 10857762336
