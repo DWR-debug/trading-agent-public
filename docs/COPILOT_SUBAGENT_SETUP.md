@@ -28,3 +28,11 @@ Keine bezahlten Budgets aktivieren. Numerische Research-Arbeit bleibt lokal/dete
 ## Hinweis
 
 Die Nutzung von GitHub/Copilot in einer Unternehmensumgebung muss mit den geltenden Firmenrichtlinien vereinbar sein.
+
+## Empfohlener erster autonomer Lauf
+
+Nach der Anmeldung im Codespace kann die erste Runde direkt mit begrenztem Autopilot gestartet werden:
+
+    copilot --agent information-hypothesis-researcher --autopilot --max-autopilot-continues 5 -p "Execute AGENT-HYPOTHESIS-ROUND-001. Use frozen T041/T042/T044/T045 and Q011 evidence. Generate multiple orthogonal hypotheses, competing explanations, falsification criteria, required data, point-in-time rules, confounders, and minimal deterministic preflights. Do not modify files, execute commands, select on holdout data, change gates, or trigger performance trials. Return a compact research memo for the primary research agent."
+
+Der Agent kann dadurch mehrere Denkschritte autonom abarbeiten, ohne dass wir ihm Schreib- oder Shell-Rechte geben. Die Begrenzung auf fünf Fortsetzungen verhindert unnötig lange Läufe.
