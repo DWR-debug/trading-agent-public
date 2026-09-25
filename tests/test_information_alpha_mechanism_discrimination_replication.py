@@ -46,3 +46,46 @@ def test_q016_gdelt_404_is_recorded_as_data_insufficient(monkeypatch, tmp_path):
     assert report["data_quality"]["missing_export"]["day"] == "2025-06-26"
     assert report["data_quality"]["missing_export"]["status_code"] == 404
     assert report["performance_trial_authorized"] is False
+
+
+def test_q016_freeze_propagates_incomplete_chunk_without_partial_observations(tmp_path):
+    import json
+    import automation.information_alpha_mechanism_discrimination_replication as q016
+
+    for chunk_id, start, end in q016.CHUNK_WINDOWS:
+        payload = {
+            "chunk_id": chunk_id,
+            "start": start.isoformat(),
+            "end": end.isoformat(),
+            "fingerprint": f"fingerprint-{chunk_id}",
+            "data_quality": {},
+        }
+        if chunk_id == "04":
+            payload["status"] = "DATA_INSUFFICIENT"
+            payload["data_quality"] = {
+                "missing_export": {
+                    "day": "2025-06-26",
+                    "url": "https://data.gdeltproject.org/events/20250626.export.CSV.zip",
+                    "status_code": 404,
+                }
+            }
+        else:
+            payload["status"] = "COMPLETED_DATA_COLLECTION"
+            payload["data_quality"] = {
+                "event_rows_seen": 1,
+                "event_rows_skipped": 0,
+            }
+        (tmp_path / f"q016_chunk_{chunk_id}.json").write_text(
+            json.dumps(payload),
+            encoding="utf-8",
+        )
+
+    frozen = q016.freeze_q016_input(
+        chunk_dir=tmp_path,
+        output_dir=tmp_path / "frozen",
+    )
+
+    assert frozen["status"] == "DATA_INSUFFICIENT"
+    assert frozen["observations"] == []
+    assert frozen["common_observations"] == 0
+    assert frozen["incomplete_chunks"][0]["missing_export"]["day"] == "2025-06-26"
