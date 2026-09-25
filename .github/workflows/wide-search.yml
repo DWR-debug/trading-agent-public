@@ -42,8 +42,12 @@ jobs:
         run: |
           set -euo pipefail
           python -m automation.wide_search_triage
-      - name: Triage-Tests
-        run: python -m pytest -q tests/test_wide_search_triage.py
+      - name: Wide-search Probe
+        run: |
+          set -euo pipefail
+          python -m automation.wide_search_probe
+      - name: Triage- und Probe-Tests
+        run: python -m pytest -q tests/test_wide_search_triage.py tests/test_wide_search_probe.py
       - name: Evidence
         if: always()
         uses: actions/upload-artifact@v6
