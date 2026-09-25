@@ -118,3 +118,16 @@ PAPER_ONLY=True
 LIVE_TRADING_ENABLED=False
 orders_enabled=False
 automatic_promotion=False
+
+## Arbeitsweise und Darstellung — dauerhaft
+
+Die technische Umsetzung darf innerhalb der erteilten Projektfreigaben möglichst autonom erfolgen. Unabhängige, sicher ausführbare Arbeit wird nicht künstlich auf spätere Chats verschoben; deterministische Berechnung und formale Prüfungen bleiben nachvollziehbar über Repository, Actions und Evidence-Artefakte.
+
+Die Kommunikation des Entwicklungsstands erfolgt auf **Forschungs- und Systemebene** und bewusst weniger granular als die technische Evidence-Schicht. Im Vordergrund stehen Forschungsstand, offene wissenschaftliche Frage, Entscheidungsstand und der nächste große Forschungsschritt. Commit-, Test-, Workflow- und Implementierungsdetails bleiben in den kanonischen Quellen und werden im Chat nur dann hervorgehoben, wenn sie wissenschaftlich, sicherheitsbezogen oder strategisch relevant sind.
+
+Die operative Reihenfolge bleibt:
+
+**Beobachten → Hypothesen bilden → billig falsifizieren → Evidenz verdichten → unabhängig prüfen → erst dann formalisieren → wiederholen.**
+
+Kostenpflichtige externe Agenten-, Copilot- oder API-Ressourcen bleiben ausgeschlossen. Kostenfreie Agentenressourcen werden gezielt für Hypothesenbildung, Gegenhypothesen, Forschungsdesign und Review eingesetzt; deterministische Berechnung bleibt reproduzierbar.
+
