@@ -173,6 +173,65 @@ def freeze_q016_input(
     _assert_safety()
     _assert_temporal_disjointness()
     reports = _load_chunks(chunk_dir)
+    incomplete = [report for report in reports if report.get("status") == "DATA_INSUFFICIENT"]
+    if incomplete:
+        payload = {
+            "schema_version": "1.0",
+            "task_id": TASK_ID,
+            "source_task": "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC",
+            "source_q015_workflow_run": 36161950582,
+            "source_q015_artifact_id": 10875399037,
+            "source_q015_result_fingerprint": "f7be165efe86a223f1e15dc0cfb206e992a95fecc596197a562c6eb65386e2da",
+            "source_q015_input_fingerprint": "5475911e19dfae4aabbce1c66775962dacd7815b86f7dc4e63fe3ecb4fab4836",
+            "source_q015_window": {"start": REFERENCE_START.isoformat(), "end": REFERENCE_END.isoformat(), "calendar_days": 365},
+            "window": {"start": DEFAULT_START.isoformat(), "end": DEFAULT_END.isoformat(), "calendar_days": 365, "strictly_temporally_disjoint_from_q015": True},
+            "assets": list(DEFAULT_ASSETS),
+            "fixed_features": list(FIXED_FEATURES),
+            "mechanism_groups": {
+                "intensity_breadth": ["event_count", "attention_score", "source_breadth", "article_count"],
+                "severity": ["negative_goldstein"],
+                "tone": ["mean_tone"],
+            },
+            "status": "DATA_INSUFFICIENT",
+            "observations": [],
+            "event_windows": 0,
+            "common_observations": 0,
+            "chunk_fingerprints": {report["chunk_id"]: report["fingerprint"] for report in reports},
+            "incomplete_chunks": [
+                {
+                    "chunk_id": report["chunk_id"],
+                    "start": report["start"],
+                    "end": report["end"],
+                    "missing_export": report["data_quality"].get("missing_export"),
+                }
+                for report in incomplete
+            ],
+            "data_quality": {
+                "source": "GDELT daily event exports",
+                "status": "DATA_INSUFFICIENT",
+            },
+            "selection_used": False,
+            "holdout_used": False,
+            "parameter_search_used": False,
+            "feature_selection_used": False,
+            "asset_selection_used": False,
+            "horizon_selection_used": False,
+            "performance_trial_authorized": False,
+            "paper_only": True,
+            "live_trading_enabled": False,
+            "orders_enabled": False,
+            "automatic_promotion": False,
+        }
+        canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+        payload["fingerprint"] = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+        root = Path(output_dir)
+        root.mkdir(parents=True, exist_ok=True)
+        (root / "q016_frozen_input.json").write_text(
+            json.dumps(payload, indent=2, ensure_ascii=False, allow_nan=False) + "\n",
+            encoding="utf-8",
+        )
+        return payload
+
     daily: dict[str, dict[str, float]] = {}
     rows_seen = 0
     rows_skipped = 0
@@ -267,21 +326,26 @@ def analyze_q016(
     if not payload["window"]["strictly_temporally_disjoint_from_q015"]:
         raise ValueError("Q016 temporal-disjointness contract is not asserted.")
 
-    observations = payload["observations"]
-    event_windows = [row for row in observations if row["has_information_event"]]
-    if len(observations) < MIN_TOTAL_OBSERVATIONS or len(event_windows) < MIN_EVENT_WINDOWS:
+    if payload.get("status") == "DATA_INSUFFICIENT":
         status = "DATA_INSUFFICIENT"
         cells = []
+        subset_keys = []
     else:
-        cells = [
-            _cell(observations, symbol, horizon)
-            for symbol in DEFAULT_ASSETS
-            for horizon in ("next_market_day_return", "five_market_day_forward_return")
-        ]
-        status = "COMPLETED_DIAGNOSTIC_ONLY" if all(cell["status"] == "COMPLETED" for cell in cells) else "DATA_INSUFFICIENT"
+        observations = payload["observations"]
+        event_windows = [row for row in observations if row["has_information_event"]]
+        if len(observations) < MIN_TOTAL_OBSERVATIONS or len(event_windows) < MIN_EVENT_WINDOWS:
+            status = "DATA_INSUFFICIENT"
+            cells = []
+        else:
+            cells = [
+                _cell(observations, symbol, horizon)
+                for symbol in DEFAULT_ASSETS
+                for horizon in ("next_market_day_return", "five_market_day_forward_return")
+            ]
+            status = "COMPLETED_DIAGNOSTIC_ONLY" if all(cell["status"] == "COMPLETED" for cell in cells) else "DATA_INSUFFICIENT"
 
-    event_sample = [row for row in observations if row["has_information_event"]]
-    subset_keys = sorted(_all_subset_r2(event_sample, DEFAULT_ASSETS[0], "next_market_day_return").keys()) if event_sample else []
+        event_sample = [row for row in observations if row["has_information_event"]]
+        subset_keys = sorted(_all_subset_r2(event_sample, DEFAULT_ASSETS[0], "next_market_day_return").keys()) if event_sample else []
     result = {
         "schema_version": "1.0",
         "task_id": TASK_ID,
