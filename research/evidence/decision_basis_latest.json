@@ -2,22 +2,27 @@
   "schema_version": "1.0",
   "recorded_on": "2026-09-25",
   "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
-  "current_stage": "Q017_G3_COVERAGE_FIRST",
+  "current_stage": "WIDE_SEARCH_MODE",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
-    "AGENT-001 merged with green CI on both runner architectures",
-    "Q016=DATA_INSUFFICIENT; observations=0; event_windows=0; performance_trial_authorized=false",
-    "Q010 reviewed 4 performance-valid trials; no complete evidence-gate pass",
-    "Q017-G3 is coverage-only and has no performance authorization"
+    "Q017_G3=DATA_INSUFFICIENT; workflow=36186285814; artifact=10887025099; performance_trial_authorized=false",
+    "Q017_G3_ALFRED=DATA_INSUFFICIENT_due_read_timeout",
+    "Q017_G3_CFTC=DATA_INSUFFICIENT_due_unverified_historical_release_timestamps",
+    "Q017_G3_YAHOO=DATA_INVALID; common_calendar=2571; fixed_target=3500",
+    "WIDE_SEARCH_TRIAGE=7_advance_to_coverage;1_control_replication;1_coverage_diagnostic;2_data_contract_prune;1_duplicate_family_prune"
   ],
   "implications": [
-    "current bottleneck is robust risk/control-relative evidence rather than positive holdout return alone",
-    "coverage and point-in-time provenance must be established before any performance evaluation"
+    "data-contract and PIT provenance are major gating constraints before performance research",
+    "broad exploration should maximize information per free compute while avoiding holdout selection",
+    "formal validation remains reserved for only a small set of coverage/PIT-valid candidates"
   ],
   "unknowns": [
-    "actual Q017-G3 coverage result is pending completion of the authorized runner"
+    "robust key-free ALFRED historical vintage retrieval",
+    "reconstructable historical CFTC release timeline with PIT fidelity",
+    "which coverage-valid orthogonal families survive research-only pruning",
+    "whether any survivor can pass the unchanged formal evidence gates"
   ],
-  "next_action": "Verify Q017-G3 coverage/PIT evidence and then update this Decision Basis before any formal candidate selection.",
+  "next_action": "Execute the repaired Wide-Search probe on the dedicated disjoint long-history universe; use only research-split diagnostics for pruning; then formalize at most the strongest coverage/PIT-valid survivors.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
