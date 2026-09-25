@@ -6,7 +6,7 @@
   "latest_formal_trial": "T-2026-09-25-045",
   "latest_trial_status": "BLOCKED",
   "next_reserved_trial": null,
-  "next_research_focus": "Q017 coverage-first preparation: verify point-in-time data availability for the three fixed orthogonal candidate families before selecting any performance trial.",
+  "next_research_focus": "Q017 G3 coverage-first preflight across macro-surprise, CFTC positioning/crowding, and abnormal turnover/liquidity-shock candidate families.",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -31,8 +31,8 @@
     "free_credit_only": true,
     "credit_balance_auto_detected": false,
     "policy": "free_agent_credits_for_hypothesis_generation_and_research_design; deterministic_compute_local_only",
-    "current_task": "Q-017-ORTHOGONAL-HYPOTHESIS-DESIGN-ROUND",
-    "current_task_scope": "Design and coverage-first preparation of three orthogonal mechanism families; no performance execution yet.",
+    "current_task": "Q-017-G3-COVERAGE-FIRST",
+    "current_task_scope": "Verify point-in-time data availability and complete coverage for the three orthogonal Q017 candidate families; no performance selection.",
     "holdout_selection": false,
     "parameter_search": false,
     "asset_selection": false,
@@ -72,7 +72,7 @@
     "next_trial_candidate_selection": "coverage_only_fixed_pool",
     "t040_formal_completed": true,
     "t040_negative_evidence_archived": true,
-    "current_queue_task": "Q-017-ORTHOGONAL-HYPOTHESIS-DESIGN-ROUND",
+    "current_queue_task": "Q-017-G3-COVERAGE-FIRST",
     "automatic_formal_execution_requires_preregistration": true,
     "last_completed_queue_task": "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION",
     "last_completed_diagnosis_fingerprint": "92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea",
@@ -347,7 +347,8 @@
     "deadline": "2026-10-25",
     "deadline_type": "new_execution_baseline",
     "definition_of_done": "reproducible decision-quality evidence pack; positive trading result not required",
-    "issue_number": 211
+    "issue_number": 211,
+    "pressure_rule": "Urgency changes speed/prioritization, never evidence standards or safety gates."
   },
   "courage_curve": {
     "current_level": "M2",
@@ -362,6 +363,27 @@
       32,
       64
     ],
-    "promotion_rule": "double only after objective gate; never due to attractive backtest alone"
+    "promotion_rule": "double only after objective gate; never due to attractive backtest alone",
+    "pressure_rule": "Financial/family urgency may increase prioritization and execution speed, but never increases courage level by itself."
+  },
+  "urgency_success_pressure_model": {
+    "context": [
+      "family_urgency",
+      "no_available_capital"
+    ],
+    "causal_chain": [
+      "family_urgency + no_available_capital",
+      "higher_perceived_success_pressure",
+      "higher_risk_of_time_pressure_risk_seeking_overfitting_premature_selection_or_scientific_shortcuts"
+    ],
+    "system_response": [
+      "increase_parallel_free_exploration",
+      "increase_reuse_and_error_detection_speed",
+      "tighten_preregistration_coverage_and_provenance",
+      "accept_DATA_INSUFFICIENT_and_NO_SUPPORT_as_valid_progress",
+      "never_relax_gates_or_increase_live_financial_risk_due_to_pressure"
+    ],
+    "principle": "More pressure -> more process discipline, not weaker evidence.",
+    "evidence_status": "design_constraint_not_empirical_causal_proof_of_future_returns"
   }
 }
