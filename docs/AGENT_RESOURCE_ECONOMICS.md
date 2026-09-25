@@ -14,15 +14,18 @@ Agentische Ressourcen werden als begrenztes Forschungsbudget behandelt. Bezahlt 
 4. **Optional bezahlt:** ChatGPT Plus/Pro nur für deutlich höheren Agent-Durchsatz.
 5. **Optional bezahlt:** API-/Credits-Nutzung nur für klar abgegrenzte, messbare Aufgaben.
 
-## Bekannte Tarifpreise
+## Aktuell verifizierte Tarifpreise
 
-Die offiziellen OpenAI-Preise nennen aktuell:
-- Free: 0 USD/Monat.
-- Plus: 20 USD/Monat.
-- Pro: ab 100 USD/Monat.
-- API-/nutzungsbasierte Nutzung wird separat nach Modell und Tokenverbrauch berechnet.
+Stand 2026-09-25:
+- **Free:** 0 USD/Monat; eingeschränkter Codex-Zugriff.
+- **Go:** 8 USD/Monat.
+- **Plus:** 20 USD/Monat; erweiterte Codex-Nutzung.
+- **Pro:** ab 100 USD/Monat; deutlich höhere Codex-Nutzung.
+- **Pro 200 USD:** neue Anmeldungen/Upgrades sind laut OpenAI seit 10. September 2026 vorübergehend ausgesetzt.
+- **Credits:** können bei unterstützten Funktionen nach Ausschöpfung des enthaltenen Kontingents verbrauchsabhängig eingesetzt werden; tatsächliche Verfügbarkeit und Preise sind kontospezifisch zu prüfen.
+- **GitHub Actions:** Standard-Runner in öffentlichen Repositories sind kostenlos und unbegrenzt; größere Runner sind kostenpflichtig.
 
-Diese Preise sind keine Renditeversprechen. Sie beschreiben ausschließlich den Ressourceneinsatz.
+OpenAI- und GitHub-Angaben ändern sich. Dieses Dokument hält deshalb nur einen verifizierten Snapshot fest und ersetzt keine Live-Abrechnung.
 
 ## Bezugsgröße 500 EUR
 
@@ -38,17 +41,19 @@ Die EUR-Werte sind nur Sensitivitätsrechnungen; tatsächlicher Wechselkurs und 
 
 ## Break-even-Denken
 
-Für einen bezahlten Dienst ist der relevante Mindestnutzen zunächst nicht eine erwartete Trading-Rendite, sondern vermiedene Arbeitszeit, zusätzliche reproduzierbare Forschung, schnellere Fehlererkennung oder zusätzliche belastbare Evidence.
+Bei 500 EUR Referenzkapital entsprechen die oben genannten Monatskosten:
 
-Bei einem Monatsbudget von C EUR muss der Dienst mindestens C EUR an wirtschaftlich verwertbarem Nutzen erzeugen, damit der Einsatz nominal kostendeckend ist.
+| Monatskosten | Anteil von 500 EUR | notwendiges zusätzliches Nettoergebnis/Monat nur zum Kostenausgleich |
+|---:|---:|---:|
+| 0 EUR | 0,0 % | 0 EUR |
+| 6,96 EUR | 1,4 % | 6,96 EUR |
+| 17,41 EUR | 3,5 % | 17,41 EUR |
+| 87,03 EUR | 17,4 % | 87,03 EUR |
+| 174,06 EUR | 34,8 % | 174,06 EUR |
 
-Wenn man stattdessen nur betrachtet, wie viel zusätzliches realisiertes Nettoergebnis auf 500 EUR Kapital erforderlich wäre, um die Gebühr zu decken:
+Für ein Jahresabonnement verändert sich die Perspektive deutlich: Plus entspräche bei diesem illustrativen Kurs rund 209 EUR/Jahr, also rund 41,8 % des Referenzkapitals; Pro rund 1.044 EUR/Jahr bzw. rund 208,9 %.
 
-- 20 EUR Kosten -> 4,0 % des Referenzkapitals pro Monat.
-- 50 EUR Kosten -> 10,0 %.
-- 100 EUR Kosten -> 20,0 %.
-
-Das ist **keine** Aussage darüber, dass solche Renditen erreichbar oder wahrscheinlich sind. Es ist lediglich die mathematische Kostenschwelle.
+Das sind reine Kostenschwellen. Sie sind **keine Renditeprognosen** und sagen nicht, dass die erforderlichen Ergebnisse erreichbar sind.
 
 ## Forschungs-ROI
 
