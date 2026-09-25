@@ -54,7 +54,10 @@ def _manifest(path):
 
 def _assets(data_dir,manifest):
     out={}
-    for item in manifest["datasets"]:
+    snapshots = manifest.get("data_snapshot", {}).get("datasets", [])
+    if len(snapshots) != len(PORTFOLIO_SYMBOLS):
+        raise ValueError("T044 frozen data snapshot is incomplete.")
+    for item in snapshots:
         s=item["symbol"]
         bars=load_bars(data_dir/s/"1d.csv",expected_count=int(item["candle_count"]))
         if len(bars)!=REQUESTED_COUNT or dataset_fingerprint(bars)!=item["fingerprint"]:
