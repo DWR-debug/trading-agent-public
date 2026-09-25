@@ -4,8 +4,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
+from urllib.error import HTTPError
 
 from config import settings
 from automation.information_alpha_discovery import (
@@ -25,6 +26,7 @@ from automation.information_alpha_mechanism_discrimination import (
     _cell,
 )
 from automation.information_alpha_redundancy_long_window import _build_observations
+from data.gdelt_events import download_daily_export, parse_event_zip
 
 DEFAULT_START = date(2024, 9, 25)
 DEFAULT_END = date(2025, 9, 24)
@@ -56,6 +58,32 @@ def _assert_temporal_disjointness() -> None:
         raise AssertionError("Q016 window must be fully disjoint from the Q015 reference window.")
 
 
+def _collect_events_window(start: date, end: date) -> tuple[list, dict[str, int], list[str]]:
+    raw_dir = Path("research/q011_information_alpha/raw")
+    events = []
+    stats = {"rows_seen": 0, "rows_skipped": 0}
+    missing_daily_exports: list[str] = []
+    day = start
+    while day <= end:
+        path = raw_dir / f"{day.isoformat()}.zip"
+        try:
+            if not path.exists():
+                download_daily_export(
+                    datetime.combine(day, datetime.min.time(), tzinfo=timezone.utc),
+                    path,
+                )
+            day_stats = {"rows_seen": 0, "rows_skipped": 0}
+            events.extend(parse_event_zip(path, strict=False, stats=day_stats))
+            stats["rows_seen"] += day_stats["rows_seen"]
+            stats["rows_skipped"] += day_stats["rows_skipped"]
+        except HTTPError as exc:
+            if exc.code != 404:
+                raise
+            missing_daily_exports.append(day.isoformat())
+        day += timedelta(days=1)
+    return events, stats, missing_daily_exports
+
+
 def collect_q016_chunk(
     chunk_id: str,
     *,
@@ -65,7 +93,7 @@ def collect_q016_chunk(
     _, start, end = _chunk_spec(chunk_id)
     root = Path(output_dir)
     root.mkdir(parents=True, exist_ok=True)
-    events, parse_stats = _load_events(start, end, None)
+    events, parse_stats, missing_daily_exports = _collect_events_window(start, end)
     daily = _daily_event_features(events)
     payload = {
         "schema_version": "1.0",
@@ -81,6 +109,8 @@ def collect_q016_chunk(
         "data_quality": {
             "event_rows_seen": parse_stats["rows_seen"],
             "event_rows_skipped": parse_stats["rows_skipped"],
+            "historical_data_complete": not missing_daily_exports,
+            "missing_daily_exports": missing_daily_exports,
         },
         "point_in_time_contract": {
             "event_feature_window": "previous_market_day < event_day < target_market_day",
@@ -141,19 +171,27 @@ def freeze_q016_input(
                 raise ValueError(f"Conflicting event features for duplicate day {day}.")
             daily[day] = payload
 
-    prices = {
-        symbol: {
-            day.isoformat(): value
-            for day, value in _yahoo_daily(
-                symbol,
-                DEFAULT_START - timedelta(days=7),
-                DEFAULT_END + timedelta(days=10),
-            ).items()
+    missing_daily_exports = sorted({
+        day
+        for report in reports
+        for day in report["data_quality"].get("missing_daily_exports", [])
+    })
+
+    observations = []
+    if not missing_daily_exports:
+        prices = {
+            symbol: {
+                day.isoformat(): value
+                for day, value in _yahoo_daily(
+                    symbol,
+                    DEFAULT_START - timedelta(days=7),
+                    DEFAULT_END + timedelta(days=10),
+                ).items()
+            }
+            for symbol in DEFAULT_ASSETS
         }
-        for symbol in DEFAULT_ASSETS
-    }
-    typed_daily = {date.fromisoformat(day): payload for day, payload in daily.items()}
-    observations = _build_observations(DEFAULT_START, DEFAULT_END, typed_daily, prices)
+        typed_daily = {date.fromisoformat(day): payload for day, payload in daily.items()}
+        observations = _build_observations(DEFAULT_START, DEFAULT_END, typed_daily, prices)
     payload = {
         "schema_version": "1.0",
         "task_id": TASK_ID,
@@ -175,10 +213,13 @@ def freeze_q016_input(
         "observations": observations,
         "event_windows": sum(1 for row in observations if row["has_information_event"]),
         "common_observations": len(observations),
+        "status": "DATA_INSUFFICIENT" if missing_daily_exports else "FROZEN_INPUT_READY",
         "data_quality": {
             "event_rows_seen": rows_seen,
             "event_rows_skipped": rows_skipped,
-            "market_price_source": "Yahoo Finance adjusted daily close",
+            "historical_data_complete": not missing_daily_exports,
+            "missing_daily_exports": missing_daily_exports,
+            "market_price_source": "Yahoo Finance adjusted daily close" if not missing_daily_exports else "not fetched because fixed-window GDELT coverage is incomplete",
         },
         "point_in_time_contract": {
             "event_feature_window": "previous_market_day < event_day < target_market_day",
@@ -223,8 +264,12 @@ def analyze_q016(
         raise ValueError("Q016 temporal-disjointness contract is not asserted.")
 
     observations = payload["observations"]
+    missing_daily_exports = payload.get("data_quality", {}).get("missing_daily_exports", [])
     event_windows = [row for row in observations if row["has_information_event"]]
-    if len(observations) < MIN_TOTAL_OBSERVATIONS or len(event_windows) < MIN_EVENT_WINDOWS:
+    if missing_daily_exports:
+        status = "DATA_INSUFFICIENT"
+        cells = []
+    elif len(observations) < MIN_TOTAL_OBSERVATIONS or len(event_windows) < MIN_EVENT_WINDOWS:
         status = "DATA_INSUFFICIENT"
         cells = []
     else:
@@ -265,6 +310,8 @@ def analyze_q016(
             "event_windows": MIN_EVENT_WINDOWS,
             "complete_event_observations_per_asset_horizon": MIN_CELL_OBSERVATIONS,
         },
+        "missing_daily_exports": missing_daily_exports,
+        "scientific_outcome": "NO_SCIENTIFIC_OUTCOME" if status == "DATA_INSUFFICIENT" else "DIAGNOSTIC_ONLY",
         "cells": cells,
         "aggregate": _aggregate_cells(cells),
         "selection_used": False,
