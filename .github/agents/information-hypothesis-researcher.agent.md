@@ -2,7 +2,7 @@
 name: information-hypothesis-researcher
 description: Develops independent, falsifiable trading research hypotheses from frozen evidence; no holdout selection and no governance changes.
 target: github-copilot
-tools: ["read", "search", "web"]
+tools: ["read", "search"]
 disable-model-invocation: true
 user-invocable: true
 include-custom-instructions: true
@@ -48,4 +48,4 @@ Generate multiple competing hypotheses instead of one preferred answer.
 - Treat all output as ideas requiring independent deterministic validation and new preregistration.
 - Explicitly report uncertainty and missing evidence.
 
-Use web research only for current/domain-specific mechanism knowledge and clearly distinguish sourced facts from hypothesis generation.
+Verwende keine externen MCP-Server oder Webtools. Nutze nur Repository-Inhalte und eingebaute Such-/Lese-Werkzeuge. Aktuelles Domänenwissen kann später vom primären Forschungsagenten separat ergänzt und verifiziert werden.

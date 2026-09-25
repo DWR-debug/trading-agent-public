@@ -22,7 +22,7 @@ Die eigentliche Forschungsentscheidung bleibt beim primären Agenten. Agentenout
 
 ## Kostenkontrolle
 
-Keine bezahlten Agenten-/API-Ausgaben aktivieren. Die CLI wird im Startskript zusätzlich auf die drei read-only Tools begrenzt und erhält ein begrenztes Autopilot-Fenster. Das Runner-Limit für AI-Credits wird nicht künstlich auf einen ungültigen Kleinwert gesetzt; die Autopilot-Fortsetzungen bleiben fest auf fünf begrenzt. Numerische Research-Arbeit bleibt lokal/deterministisch.
+Keine bezahlten Agenten-/API-Ausgaben aktivieren. Die CLI wird im Startskript zusätzlich auf die eingebauten read-only Read/Search-Tools begrenzt und erhält ein begrenztes Autopilot-Fenster. Das Runner-Limit für AI-Credits wird nicht künstlich auf einen ungültigen Kleinwert gesetzt; die Autopilot-Fortsetzungen bleiben fest auf fünf begrenzt. Numerische Research-Arbeit bleibt lokal/deterministisch.
 
 ## Unternehmensumgebung
 
@@ -37,6 +37,6 @@ Das Startskript prüft vor dem Agentenlauf:
 - `LIVE_TRADING_ENABLED=False`;
 - vorhandene Copilot-CLI-Anmeldung bzw. ausführbare CLI.
 
-Danach wird `information-hypothesis-researcher` mit begrenztem Autopilot und ausschließlich `read,search,web` gestartet. Der Agent darf weder Dateien ändern noch Shell-Befehle ausführen noch formale Trials auslösen.
+Danach wird `information-hypothesis-researcher` mit begrenztem Autopilot und ausschließlich `read,search` gestartet. Der Agent darf weder Dateien ändern noch Shell-Befehle ausführen noch formale Trials auslösen.
 
 Der Auftrag ist `AGENT-HYPOTHESIS-ROUND-001` auf Basis T041/T042/T044/T045 und Q011. Die erzeugte Notiz bleibt Ideenmaterial und darf keinen Holdout zur Auswahl einer Hypothese verwenden.

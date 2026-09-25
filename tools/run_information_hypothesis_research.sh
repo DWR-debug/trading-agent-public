@@ -67,7 +67,7 @@ prompt='Execute AGENT-HYPOTHESIS-ROUND-001. Use frozen T041/T042/T044/T045 and Q
     --autopilot \
     --max-autopilot-continues=5 \
     --no-ask-user \
-    --available-tools='read,search,web' \
+    --available-tools='read,search' \
     --prompt "$prompt" 2>&1
 } | tee "$out"
 
