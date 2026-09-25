@@ -210,3 +210,10 @@ und aus Chats stammende Kontextinformationen festgehalten.
 
 Damit bleibt GitHub die belastbare technische Referenz, ohne unser gemeinsames Projektgedächtnis
 zu verlieren.
+
+
+## 12. Agentenressourcen: Hypothesen zuerst
+
+Eine dauerhafte gemeinsame Arbeitsentscheidung ist, vorhandene **kostenfreie Agentencredits primär für Hypothesenbildung und Forschungsdesign** zu verwenden. Lokale deterministische Rechenleistung bleibt für Berechnung und Reproduzierbarkeit zuständig; bezahlte API-Nutzung bleibt deaktiviert.
+
+Agentenoutput ist Ideenmaterial, keine Evidenz. Holdout-Daten dürfen nicht zur Agenten-Auswahl oder rückwirkenden Optimierung verwendet werden. Die erste konkrete Runde ist AGENT-HYPOTHESIS-ROUND-001 auf Basis von T041/T042/T044/T045 und Q011. Die Spezifikation liegt in docs/AGENT_HYPOTHESIS_RESEARCH.md.
