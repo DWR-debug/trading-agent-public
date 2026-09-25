@@ -3188,3 +3188,13 @@ Die im Run-Artefakt enthaltene JSON-Datei hatte einen reinen Serialisierungsfehl
 Ziel ist ein längerer, vorab fixierter Zeitraum mit denselben Informationsfeatures, um zeitliche Stabilität vor einer möglichen separaten Performance-Präregistrierung zu prüfen. Keine nachträgliche Feature-Auswahl und kein Holdout-Tuning.
 
 Sicherheitsstatus: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
+
+## Agentenstrategie — Hypothesen zuerst (2026-09-25)
+
+Kostenfreie Agentenressourcen werden primär für Hypothesenbildung, Gegenhypothesen, Mechanismensynthese und Forschungsdesign reserviert. Lokale deterministische Rechenleistung übernimmt Backtests, Preflights, Walk-Forward, Metriken und Tests. Bezahlte API-/Agentennutzung bleibt deaktiviert.
+
+Der erste konkrete Auftrag ist AGENT-HYPOTHESIS-ROUND-001 auf Basis der eingefrorenen Failure-Diagnose T041/T042/T044/T045 und Q011. Die vollständige Spezifikation steht in docs/AGENT_HYPOTHESIS_RESEARCH.md.
+
+Kein Holdout wird zur Auswahl verwendet; keine bestehende Trial-Hypothese wird rückwirkend optimiert.
+
+Sicherheitsstatus: PAPER_ONLY=True, LIVE_TRADING_ENABLED=False, orders_enabled=False, automatic_promotion=False.
