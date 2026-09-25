@@ -1,6 +1,16 @@
 name: Unified Research Orchestrator
 
 on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "automation/q017_coverage_preflight.py"
+      - "tests/test_q017_coverage_preflight.py"
+      - "research/preregistrations/q017_g3_coverage_first_2026_09_25.json"
+      - "docs/q017_g3_coverage_preflight_2026_09_25.md"
+      - "research/asset_universes.py"
+      - ".github/workflows/research-orchestrator.yml"
   schedule:
     - cron: "30 3 * * *"
   workflow_dispatch:
@@ -247,6 +257,11 @@ jobs:
             fi
           elif [ "$GITHUB_REF" = "refs/heads/research/execute-q017-g3-coverage-first" ]; then
             test "$GITHUB_EVENT_NAME" = "push"
+            test "$(git log -1 --pretty=%s)" = "Research authorization: execute Q017 G3 coverage-first"
+            python -m automation.q017_coverage_preflight \
+              --output-root research/runs/q017_g3_coverage_first \
+              --universe q017_coverage_first
+          elif [ "$GITHUB_EVENT_NAME" = "pull_request" ] && [ "$GITHUB_HEAD_REF" = "research/execute-q017-g3-coverage-first" ]; then
             test "$(git log -1 --pretty=%s)" = "Research authorization: execute Q017 G3 coverage-first"
             python -m automation.q017_coverage_preflight \
               --output-root research/runs/q017_g3_coverage_first \
