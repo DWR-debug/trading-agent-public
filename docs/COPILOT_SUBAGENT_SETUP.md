@@ -12,11 +12,11 @@ Aktuell unterstützt GitHub Copilot Free Copilot CLI und benutzerdefinierte Agen
 2. **Solange PR #186 noch nicht gemerged ist:** `Code -> Codespaces -> ...` und den Branch `research/copilot-hypothesis-subagent` auswählen. **Nach dem Merge:** den aktuellen `master` verwenden.
 3. Einmalig anmelden: `copilot login`
 4. Danach genügt für die komplette Runde der kurze Start: `bash tools/a`
-5. Die Ausgabe wird als nicht-evidenzielle Research-Notiz unter `research/agent_outputs/` gespeichert.
+5. Die Ausgabe wird als nicht-evidenzielle Research-Notiz unter `research/agent_outputs/` gespeichert und ist absichtlich nicht versioniert.
 
 ## Rollenmodell
 
-Der Custom Agent ist ausdrücklich nachgeordnet. `disable-model-invocation: true` verhindert automatische Delegierung; `user-invocable: true` erlaubt einen expliziten Aufruf. Seine Tools sind auf `read`, `search` und `web` begrenzt; `edit` und `execute` sind nicht freigegeben.
+Der Custom Agent ist ausdrücklich nachgeordnet. `disable-model-invocation: true` verhindert automatische Delegierung; `user-invocable: true` erlaubt einen expliziten Aufruf. Seine Tools sind auf die eingebauten `read`- und `search`-Werkzeuge begrenzt; `edit`, `execute` und externe MCP/Webtools sind nicht freigegeben.
 
 Die eigentliche Forschungsentscheidung bleibt beim primären Agenten. Agentenoutput ist keine Evidenz.
 
