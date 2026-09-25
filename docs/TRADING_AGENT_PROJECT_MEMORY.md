@@ -77,3 +77,44 @@ orders_enabled=False
 automatic_promotion=False
 
 500 EUR bleibt das Referenz-/Startkapital für spätere Planung; daraus wird keine Prognose über spätere Rendite oder finanzielle Versorgung abgeleitet.
+
+## Kausales Dringlichkeits- und Erfolgsdruckmodell
+
+Die familiäre Dringlichkeit und das aktuell fehlende verfügbare Kapital sind ein **relevanter Projektmotivator und zugleich ein methodischer Risikofaktor**.
+
+Die dauerhaft festgehaltene Kausalkette lautet:
+
+**familiäre Dringlichkeit + kein verfügbares Kapital**
+→ **hoher wahrgenommener Erfolgsdruck**
+→ erhöhte Gefahr von **Zeitdruck, Risikosuche, Overfitting, vorzeitiger Auswahl und Lockerung wissenschaftlicher Grenzen**
+→ deshalb muss das Projekt **schneller und mutiger explorieren, aber wissenschaftlich noch strenger entscheiden**.
+
+Diese Kausalkette ist eine Designannahme über menschlichen Entscheidungsdruck, kein Beweis für eine zukünftige Trading-Rendite und keine Rechtfertigung für höhere finanzielle Risiken.
+
+### Zwingende Gegenmaßnahmen
+
+1. Geschwindigkeit erhöhen: kostenlose Agenten-/Runner-Ressourcen parallel nutzen, Wiederverwendung von Artefakten erzwingen, unnötige manuelle Arbeit vermeiden.
+2. Entscheidungen objektivieren: Meilensteine, Gates, Fingerprints und maschinenlesbare Zustände verwenden.
+3. Auswahl begrenzen: keine Holdout-, Parameter-, Asset-, Feature-, Horizon- oder Threshold-Selektion nach Beobachtung.
+4. Erfolgsdruck neutralisieren: DATA_INSUFFICIENT oder NO_SUPPORT zählt als gültiger Fortschritt, wenn die Forschungsunsicherheit belastbar reduziert wird.
+5. Keine riskante Abkürzung: Leverage, größere Exposure, Gate-Lockerung oder Live-Promotion dürfen niemals als Reaktion auf finanziellen Druck eingesetzt werden.
+6. Messbarer Output: Jede Entwicklungsphase muss einen überprüfbaren Evidenz- oder Engineering-Gewinn liefern.
+
+### Verbindung zum 30-Tage-Ziel
+
+Der 30-Tage-Meilenstein bis **2026-10-25** ist bewusst ein **Evidence-Meilenstein**, kein Renditeziel.
+
+Der Projektentscheid lautet:
+
+> Wir reagieren auf hohen äußeren Erfolgsdruck mit mehr Forschungsgeschwindigkeit und mehr methodischer Präzision, nicht mit schlechterer Beweisführung.
+
+Die Mutkurve darf exponentiell steigen, aber nur nach objektiv bestandenem Gate. Der Erfolgsdruck darf die Mutkurve niemals selbst erhöhen.
+
+### Operative Konsequenz
+
+Aktuell bleibt die operative Mutstufe **M2 / 4x**. Die nächste Steigerung auf M3 erfolgt ausschließlich nach reproduzierbarer, disjunkter Mechanismusevidence.
+
+PAPER_ONLY=True
+LIVE_TRADING_ENABLED=False
+orders_enabled=False
+automatic_promotion=False
