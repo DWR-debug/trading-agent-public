@@ -1,0 +1,194 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-011-ORTHOGONAL-INFORMATION-ALPHA-DISCOVERY",
+  "status": "DISCOVERY_ONLY_COMPLETED",
+  "recorded_at": "2026-09-25T10:03:04Z",
+  "source": {
+    "workflow_run_id": 36121684164,
+    "authorization_commit": "3587fde89ba5a2cc9d4a2c83de3ca84c59c484e8",
+    "artifact_id": 10857762336,
+    "artifact_digest": "sha256:0810dc6f9f9ca0fdd2435c4fccf7845667b0bd2929e45bceecfd923b23dcee1f",
+    "original_report_fingerprint": "08664ed668b61a2e149067cbe10c281f73d27b0b94ed50372877ab1203e97da8",
+    "corrected_report_sha256": "e2dbe92f2e16bfb3079eceac42b1180b5fd152a47090043935459950693f76d9"
+  },
+  "contract": {
+    "window": [
+      "2026-08-24",
+      "2026-09-24"
+    ],
+    "assets": [
+      "SPY",
+      "TLT",
+      "GLD"
+    ],
+    "information_source": "GDELT 2.0 Event export",
+    "event_filter": "international event with num_articles >= 3",
+    "features": [
+      "event_count",
+      "attention_score",
+      "source_breadth",
+      "article_count",
+      "negative_goldstein",
+      "mean_tone"
+    ],
+    "point_in_time": "previous_market_day < event_day < target_market_day",
+    "same_day_return_used": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "asset_selection": false,
+    "holdout_selection": false,
+    "performance_promotion": false
+  },
+  "data_quality": {
+    "observations": 22,
+    "event_windows": 4,
+    "no_event_windows": 18,
+    "event_rows_seen": 3208523,
+    "event_rows_skipped": 24
+  },
+  "event_presence_summary": {
+    "event_window_next_day_mean": {
+      "SPY": 0.0006404029416219315,
+      "TLT": 0.0007614639502576681,
+      "GLD": -0.010076619162802808
+    },
+    "no_event_window_next_day_mean": {
+      "SPY": 0.00028975366544437,
+      "TLT": -0.0020833114298656565,
+      "GLD": -0.0023891876050733517
+    }
+  },
+  "feature_relationships": {
+    "SPY": {
+      "event_count": {
+        "pearson_next_day": -0.039292886258606774,
+        "spearman_next_day": -0.08306895169985447,
+        "pearson_five_day": -0.013290563193244771,
+        "spearman_five_day": -0.07738389938049528
+      },
+      "attention_score": {
+        "pearson_next_day": -0.03381774087358116,
+        "spearman_next_day": -0.08306895169985447,
+        "pearson_five_day": -0.010022080738014411,
+        "spearman_five_day": -0.07738389938049528
+      },
+      "source_breadth": {
+        "pearson_next_day": -0.050991945147785066,
+        "spearman_next_day": -0.08306895169985447,
+        "pearson_five_day": 0.017498417923278154,
+        "spearman_five_day": -0.07738389938049528
+      },
+      "article_count": {
+        "pearson_next_day": -0.0590032616203647,
+        "spearman_next_day": -0.08306895169985447,
+        "pearson_five_day": 0.002851479170015087,
+        "spearman_five_day": -0.07738389938049528
+      },
+      "negative_goldstein": {
+        "pearson_next_day": -0.02855056822134934,
+        "spearman_next_day": -0.08306895169985447,
+        "pearson_five_day": 0.0007197940181346575,
+        "spearman_five_day": -0.07738389938049528
+      },
+      "mean_tone": {
+        "pearson_next_day": -0.006138079490547984,
+        "spearman_next_day": 0.06293102401504126,
+        "pearson_five_day": 0.024384865411099375,
+        "spearman_five_day": 0.09212368973868486
+      }
+    },
+    "TLT": {
+      "event_count": {
+        "pearson_next_day": 0.16336732839800927,
+        "spearman_next_day": 0.141804574113893,
+        "pearson_five_day": 0.07373489124051576,
+        "spearman_five_day": 0.05343174004843722
+      },
+      "attention_score": {
+        "pearson_next_day": 0.16528178941396557,
+        "spearman_next_day": 0.141804574113893,
+        "pearson_five_day": 0.07781858893882385,
+        "spearman_five_day": 0.05343174004843722
+      },
+      "source_breadth": {
+        "pearson_next_day": 0.16604132061049554,
+        "spearman_next_day": 0.141804574113893,
+        "pearson_five_day": 0.09297741221373314,
+        "spearman_five_day": 0.05343174004843722
+      },
+      "article_count": {
+        "pearson_next_day": 0.15557844362745382,
+        "spearman_next_day": 0.141804574113893,
+        "pearson_five_day": 0.09037281310911664,
+        "spearman_five_day": 0.05343174004843722
+      },
+      "negative_goldstein": {
+        "pearson_next_day": 0.16775955534811499,
+        "spearman_next_day": 0.141804574113893,
+        "pearson_five_day": 0.08868297307005829,
+        "spearman_five_day": 0.05343174004843722
+      },
+      "mean_tone": {
+        "pearson_next_day": -0.14315642243558527,
+        "spearman_next_day": -0.10320687938466767,
+        "pearson_five_day": -0.11338147497021375,
+        "spearman_five_day": -0.08659626835436376
+      }
+    },
+    "GLD": {
+      "event_count": {
+        "pearson_next_day": -0.24976582923756013,
+        "spearman_next_day": -0.2802528269469838,
+        "pearson_five_day": 0.15021423550944876,
+        "spearman_five_day": 0.16766511532440645
+      },
+      "attention_score": {
+        "pearson_next_day": -0.24866641990824265,
+        "spearman_next_day": -0.2802528269469838,
+        "pearson_five_day": 0.15125107817641392,
+        "spearman_five_day": 0.16766511532440645
+      },
+      "source_breadth": {
+        "pearson_next_day": -0.25816514259020734,
+        "spearman_next_day": -0.2802528269469838,
+        "pearson_five_day": 0.171115172272254,
+        "spearman_five_day": 0.16766511532440645
+      },
+      "article_count": {
+        "pearson_next_day": -0.2505826877979669,
+        "spearman_next_day": -0.2802528269469838,
+        "pearson_five_day": 0.1573951365476992,
+        "spearman_five_day": 0.16766511532440645
+      },
+      "negative_goldstein": {
+        "pearson_next_day": -0.24790018070291223,
+        "spearman_next_day": -0.2802528269469838,
+        "pearson_five_day": 0.15614579700578737,
+        "spearman_five_day": 0.16766511532440645
+      },
+      "mean_tone": {
+        "pearson_next_day": 0.19605722798831465,
+        "spearman_next_day": 0.25004593541976394,
+        "pearson_five_day": -0.10347039236411704,
+        "spearman_five_day": -0.1271306918393851
+      }
+    }
+  },
+  "interpretation": {
+    "evidence_scope": "descriptive only; 22 observations and four event windows",
+    "finding": "Relationships differ materially by asset and horizon. SPY is near zero; TLT shows modest positive next-day association for event-intensity features; GLD shows modest negative next-day association but positive five-day association. No single feature has a pre-registered cross-asset performance criterion, and no feature was selected for trading use.",
+    "actionability": "not sufficient to authorize a performance trial; any future performance hypothesis must be newly preregistered and separately evaluated."
+  },
+  "serialization_note": {
+    "issue": "run artifact q011.json ended with a literal escaped newline after the JSON object, so the raw persisted file was not valid JSON.",
+    "repair": "lossless removal of the trailing two-character literal was applied locally; the embedded report fingerprint remained exactly 08664ed668b61a2e149067cbe10c281f73d27b0b94ed50372877ab1203e97da8.",
+    "corrected_sha256": "e2dbe92f2e16bfb3079eceac42b1180b5fd152a47090043935459950693f76d9",
+    "code_fix_merged": "d2351beb0e6edc22afc709055cc8beae0cf2923d"
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
