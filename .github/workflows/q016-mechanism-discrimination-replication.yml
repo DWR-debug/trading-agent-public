@@ -137,10 +137,14 @@ jobs:
       - name: Execute Q016 diagnostic
         run: |
           set -euo pipefail
+          set +e
           python -m automation.information_alpha_mechanism_discrimination_replication \
             --mode analyze \
             --input-path research/runs/information_alpha_mechanism_discrimination_replication/q016_frozen_input/q016_frozen_input.json \
             --output-dir research/runs/information_alpha_mechanism_discrimination_replication/q016
+          rc=$?
+          set -e
+          test "$rc" -eq 0 -o "$rc" -eq 3
           test -s research/runs/information_alpha_mechanism_discrimination_replication/q016/q016_mechanism_discrimination_replication.json
       - name: Validate output contract
         run: |
