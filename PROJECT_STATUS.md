@@ -3065,6 +3065,19 @@ unanimous 63/126/252-Session-TSM im Trend-Sleeve, sonst unveränderte
 - keine Parameter-/Variantensuche
 - keine Holdout-Selektion
 
+T043-Status: **DATA_INVALID**. Kein Performance-Lauf.
+
+### T044 — reiner Coverage-Repair-Successor
+T044 übernimmt die T043-Hypothese unverändert und erhöht ausschließlich das
+angeforderte Rohdatenfenster von 3.500 auf 3.520 Candles, um 3.500 gemeinsame
+Candles technisch bilden zu können.
+
+- 13 identische Symbole
+- 3.520 angeforderte Candles je Symbol
+- Ziel: 3.500 gemeinsame Candles
+- keine Parameter-/Variantensuche
+- keine Holdout-Selektion
+
 Aktueller Status: **COVERAGE_PENDING**.
 
 Sicherheitszustand:
