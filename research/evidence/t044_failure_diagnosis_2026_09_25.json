@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "diagnosis_id": "T044-FAILURE-DIAGNOSIS-2026-09-25",
+  "trial_id": "T-2026-09-25-044",
+  "status": "DIAGNOSTIC_ONLY",
+  "evidence": {
+    "research_return_delta_pp": -22.111621914016546,
+    "research_drawdown_delta_pp": -1.1781871836262656,
+    "research_pf_delta": -0.022497966749161158,
+    "oos_is_delta": -0.01814112349179481,
+    "holdout_return_delta_pp": -8.176204145998422,
+    "holdout_drawdown_delta_pp": 2.519682866702123,
+    "holdout_pf_delta": -0.04629853142007234,
+    "rolling_profitable_ratio_delta": 0,
+    "rolling_average_drawdown_delta_pp": 0.526394810155236
+  },
+  "diagnosis_classes": [
+    "selectivity_lowers_participation_without_stable_oos_benefit",
+    "research_drawdown_improvement_insufficient_for_risk_gate",
+    "holdout_risk_deterioration",
+    "no_non_deterioration_support"
+  ],
+  "non_actions": [
+    "no_lookback_tuning",
+    "no_consensus_threshold_search",
+    "no_holdout_selection",
+    "no_gate_relaxation",
+    "no_production_promotion"
+  ],
+  "next_question": "Test the unimplemented position-lifecycle/exit layer independently from signal selection: one fixed ATR-based trailing exit, no parameter search, on a fresh symbol-disjoint universe."
+}
