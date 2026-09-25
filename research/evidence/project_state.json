@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "updated": "2026-09-25",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "39c21708bc44fac1a750fcdde63665bdc12abf43",
+  "master_commit": "1612d0ff384dbd88ca52a2ab407b43e8cfe63723",
   "latest_formal_trial": "T-2026-09-25-045",
   "latest_trial_status": "BLOCKED",
   "next_reserved_trial": null,
-  "next_research_focus": "WIDE-SEARCH-ROUND-002: fixed volatility-state/regime diagnostics; keep ALFRED/CFTC families diagnostic-only until PIT/data contracts are repaired.",
+  "next_research_focus": "WIDE-SEARCH-H06: fixed sector-neutral residual momentum coverage; no performance evaluation before coverage/PIT pass.",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -341,9 +341,17 @@
     "wide_search_round_002_implementation_status": "MERGED",
     "wide_search_round_002_merge_commit": "6b6124883f4af03037c4c720f70b6e4a3a4976d2",
     "wide_search_round_002_preregistration": "research/preregistrations/wide_search_round_002_volatility_regime_2026_09_25.json",
-    "wide_search_round_002_scientific_result_status": "UNVERIFIED",
+    "wide_search_round_002_scientific_result_status": "PRUNED",
     "wide_search_round_002_performance_trial_authorized": false,
-    "wide_search_round_002_holdout_used": false
+    "wide_search_round_002_holdout_used": false,
+    "wide_search_round_002_workflow_run": 36189987414,
+    "wide_search_round_002_artifact_id": 10886849518,
+    "wide_search_round_002_artifact_digest": "sha256:e0c355462e3abe868acec125b6dcdefc1aeceaf329dc444799440d3093f7917c",
+    "wide_search_round_002_result_fingerprint": "106e65e70dc3814b8eeaf90c3ca3b658289b75a7977d5c642c7d49857040de7f",
+    "wide_search_round_002_classification": "PRUNE_NO_RISK_REGIME_SUPPORT",
+    "wide_search_round_002_events": 316,
+    "h06_status": "COVERAGE_IN_PROGRESS",
+    "h06_performance_trial_authorized": false
   },
   "agent_usage_efficiency": {
     "policy": "deterministic_actions_for_computation; free-agent-use-for-hypothesis-generation_research-design_and-architecture-review",
@@ -370,7 +378,7 @@
     "final_execution_commit": "85acd4e17921a4e2682552bfbe424f17ffaa9322",
     "final_status": "COMPLETED_DISCOVERY_ONLY"
   },
-  "current_queue_task": "WIDE-SEARCH-ROUND-002",
+  "current_queue_task": "WIDE-SEARCH-H06-SECTOR-NEUTRAL-RESIDUAL-MOMENTUM",
   "last_completed_queue_task": "WIDE-SEARCH-ROUND-001",
   "master_commit_semantics": "last_verified_master_commit_before_this_state_update; this field must not be interpreted as a self-referential current-HEAD field",
   "state_sync_verified_at": "2026-09-25T20:56:51.053Z",
