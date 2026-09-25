@@ -66,6 +66,7 @@ def test_missing_gdelt_export_forces_data_insufficient(tmp_path):
         },
         "observations": [],
     }
+    payload["fingerprint"] = "test-frozen-input-fingerprint"
     path = tmp_path / "q016.json"
     path.write_text(json.dumps(payload), encoding="utf-8")
     result = analyze_q016(path, output_dir=tmp_path / "out")
