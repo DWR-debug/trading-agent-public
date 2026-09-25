@@ -5,26 +5,27 @@
   "current_stage": "WIDE_SEARCH_MODE",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
+    "current_verified_master_head=39c21708bc44fac1a750fcdde63665bdc12abf43",
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
-    "wide_search_round_001_probes=4; survivors=0; holdout_used=false; performance_trial_authorized=false",
-    "H03/H07/H09/H10=PRUNED_BY_FIXED_RESEARCH_SPLIT_RULES",
-    "Q017_G3=DATA_INSUFFICIENT; workflow=36186285814; performance_trial_authorized=false",
-    "Wide-Search Round 002 implementation is merged in master commit 6b6124883f4af03037c4c720f70b6e4a3a4976d2 after full CI success on PR head; the preregistered H08 diagnostic remains research-only and no scientific result is yet canonically verified."
+    "wide_search_round_002=EXPLORATION_SUPPORT_WITH_ROBUSTNESS_CONCERN; workflow=36188766298; artifact=10887128923",
+    "H08=316_events; overall_mean_forward_to_baseline=1.32527; first_half=1.51590; second_half=1.13465; pooled_median=0.97837",
+    "wide_search_round_002_holdout_used=false",
+    "wide_search_round_002_performance_trial_authorized=false"
   ],
   "implications": [
-    "wide exploration is now functioning as a low-cost pruning stage",
-    "no current candidate warrants formal performance validation",
-    "next exploration should target risk/regime information because historical bottlenecks are risk/control-relative",
-    "Round 002 implementation is technically integrated, but result verification remains a separate evidence step; no formal performance authorization follows from the merge."
+    "wide exploration is producing useful low-cost pruning and risk-regime information",
+    "H08 is promising enough for a dedicated robustness screen but not for formal validation yet",
+    "the mean/median and cross-symbol concentration issue is now the primary H08 uncertainty",
+    "formal validation remains reserved for robust coverage/PIT-valid survivors"
   ],
   "unknowns": [
-    "H08 volatility_state_transition stability under a fixed ex-ante rule",
-    "H06 sector-neutral residual momentum data contract",
-    "robust ALFRED PIT retrieval",
-    "historical CFTC PIT release reconstruction",
-    "whether any survivor can pass unchanged formal evidence gates"
+    "H08 cross-symbol breadth",
+    "H08 robustness under median/outlier-resistant aggregation",
+    "whether a fixed H08 overlay can improve existing risk/control gates",
+    "whether any later formal candidate can pass unchanged evidence gates",
+    "ALFRED and CFTC PIT data-contract repair"
   ],
-  "next_action": "Verify the Wide-Search Round 002 H08 diagnostic artifact/result from the dedicated execution; if supported, require a separate coverage/PIT and preregistration gate before any formal performance validation.",
+  "next_action": "Execute WIDE-SEARCH-ROUND-003: fixed H08 robustness screen for symbol breadth and median/outlier sensitivity on research-only data.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
