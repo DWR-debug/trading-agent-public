@@ -66,7 +66,6 @@ prompt='Execute AGENT-HYPOTHESIS-ROUND-001. Use frozen T041/T042/T044/T045 and Q
     --agent=information-hypothesis-researcher \
     --autopilot \
     --max-autopilot-continues=5 \
-    --max-ai-credits=2 \
     --no-ask-user \
     --available-tools='read,search,web' \
     --prompt "$prompt" 2>&1
