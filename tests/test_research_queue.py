@@ -12,7 +12,7 @@ def test_queue_is_deterministic_and_tracks_current_priority():
     assert task_by_id["Q-007-T043-TSM-SIGNAL-CONSISTENCY"].status == "BLOCKED"
     assert task_by_id["Q-008-T044-TSM-SIGNAL-CONSISTENCY-REPAIR"].status == "BLOCKED"
     assert task_by_id["Q-009-T045-POSITION-LIFECYCLE-EXIT-CONTROL"].status == "BLOCKED"
-    assert task_by_id["Q-010-CROSS-TRIAL-FAILURE-DIAGNOSIS"].status == "PENDING"
+    assert task_by_id["Q-010-CROSS-TRIAL-FAILURE-DIAGNOSIS"].status == "COMPLETED"
 
 
 def test_queue_rejects_invalid_transition():
