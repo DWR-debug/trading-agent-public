@@ -344,7 +344,7 @@ Sicherheitsstatus: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enab
 ## Aktueller verifizierter Gesamtcheckpoint — Q014-Rerun / 2026-09-25
 
 - Canonical Repository: `DWR-debug/trading-agent-public`
-- Verifizierter Master-HEAD: `e32c01648d812075d84f4c7b50939e9c28ea4f1c`
+- Verifizierter Master-HEAD: `b686981d3608f24e07341607a1bc4ab3ece88bb6`
 - Q012: COMPLETED / Diagnostic-only
 - Q013: COMPLETED / Diagnostic-only
 - Q014: präregistriert, implementiert und autorisiert; erster Lauf technisch abgebrochen, daher ohne wissenschaftliches Ergebnis
