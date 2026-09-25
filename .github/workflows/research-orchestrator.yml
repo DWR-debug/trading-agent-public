@@ -26,6 +26,7 @@ on:
           - research_t043
           - research_t044
           - research_t045
+          - q017_coverage_first
       universe:
         description: Research-Universum
         required: true
@@ -62,6 +63,7 @@ on:
       - research/execute-q012-stability
       - research/execute-q013-redundancy
       - research/execute-q016-mechanism-discrimination-replication
+      - research/execute-q017-g3-coverage-first
     paths:
       - "automation/research_orchestrator.py"
       - "automation/live_market_observer.py"
@@ -90,6 +92,10 @@ on:
       - "automation/information_alpha_mechanism_discrimination_replication.py"
       - "tests/test_information_alpha_mechanism_discrimination_replication.py"
       - "research/preregistrations/q016_information_alpha_mechanism_discrimination_replication_2026_09_25.json"
+      - "automation/q017_coverage_preflight.py"
+      - "tests/test_q017_coverage_preflight.py"
+      - "research/preregistrations/q017_g3_coverage_first_2026_09_25.json"
+      - "docs/q017_g3_coverage_preflight_2026_09_25.md"
       - "research/authorizations/q016_mechanism_discrimination_replication_2026_09_25.json"
 
 permissions:
@@ -239,6 +245,12 @@ jobs:
             else
               echo "Q013 redundancy branch: no authorization marker on this maintenance commit; research execution skipped."
             fi
+          elif [ "$GITHUB_REF" = "refs/heads/research/execute-q017-g3-coverage-first" ]; then
+            test "$GITHUB_EVENT_NAME" = "push"
+            test "$(git log -1 --pretty=%s)" = "Research authorization: execute Q017 G3 coverage-first"
+            python -m automation.q017_coverage_preflight \
+              --output-root research/runs/q017_g3_coverage_first \
+              --universe q017_coverage_first
           elif [ "$GITHUB_REF" = "refs/heads/research/execute-q016-mechanism-discrimination-replication" ]; then
             test "$GITHUB_EVENT_NAME" = "push"
             test "$(git log -1 --pretty=%s)" = "Research authorization: execute Q016 mechanism discrimination replication"
