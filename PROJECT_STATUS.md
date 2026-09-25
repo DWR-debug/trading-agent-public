@@ -1,3 +1,40 @@
+## Aktueller Forschungscheckpoint — Q012/Q013 abgeschlossen, Q014 vorbereitet — 2026-09-25
+
+Q012 und Q013 wurden als reine Discovery-/Diagnostikläufe erfolgreich ausgeführt. Beide liefern keine Performancefreigabe und keine Auswahlentscheidung.
+
+### Q012 — Temporal Stability
+
+- Workflow: 36148187652
+- Artifact: 10870661281
+- 123 gemeinsame Beobachtungen, 25 Event-Fenster
+- 17.636.611 GDELT-Rohzeilen, 101 übersprungen
+- Next-Day-Sign-Konsistenz: 12/18
+- Five-Day-Sign-Konsistenz: 9/18
+- Befund: heterogene zeitliche Stabilität; keine allgemeine stabile GDELT-Beziehung nachgewiesen.
+
+### Q013 — Mechanism Redundancy
+
+- Workflow: 36150409947
+- Artifact: 10871043546
+- 123 gemeinsame Beobachtungen, 25 Event-Fenster
+- Die vier Intensitäts-/Breitenfeatures sind im Event-Sample stark redundant; mittlere absolute Spearman-Korrelation: 0,9532.
+- Mean Tone ist gegenüber den Intensitäts-/Breitenmerkmalen deutlich weniger redundant.
+- Die Event-only-Stichprobe bleibt klein; Return-Assoziationen sind kein Edge- oder Kausalnachweis.
+
+### Nächster Schritt — Q014
+
+Q014 ist als 365-Tage-Fortsetzung der gleichen fixierten Mechanismus-/Redundanzdiagnostik präregistriert. Ziel ist ausschließlich die Vergrößerung der historischen Event-Stichprobe und die Prüfung, ob die in Q012/Q013 beobachtete Struktur zeitlich reproduzierbar ist.
+
+Keine Feature-, Asset-, Horizon-, Parameter- oder Holdout-Selektion; kein Performance-Trial; keine Gateänderung.
+
+Sicherheit bleibt unverändert:
+PAPER_ONLY=True  
+LIVE_TRADING_ENABLED=False  
+orders_enabled=False  
+automatic_promotion=False
+
+---
+
 # Aktueller Gesamtstatus — 2026-09-24
 
 ## Repository-Recovery — 2026-09-24

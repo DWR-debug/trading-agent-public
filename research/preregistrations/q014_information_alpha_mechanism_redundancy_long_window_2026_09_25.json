@@ -1,0 +1,81 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW",
+  "research_family": "orthogonal_information_alpha_mechanism_redundancy_long_window",
+  "status": "PENDING",
+  "preregistered_on": "2026-09-25",
+  "objective": "Erweitert Q013 rein diagnostisch auf ein ganzes historisches Jahr, um die kleine Event-Stichprobe zu vergrößern und die beobachtete Trennung von gemeinsamer Event-Intensität/Breite gegenüber Tone/Severity zeitlich robuster zu prüfen.",
+  "source_task": "Q-013-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-DIAGNOSTIC",
+  "window": {
+    "start": "2025-09-25",
+    "end": "2026-09-24",
+    "calendar_days": 365
+  },
+  "assets": [
+    "SPY",
+    "TLT",
+    "GLD"
+  ],
+  "event_filter": "international event with num_articles >= 3",
+  "fixed_features": [
+    "event_count",
+    "attention_score",
+    "source_breadth",
+    "article_count",
+    "negative_goldstein",
+    "mean_tone"
+  ],
+  "fixed_mechanism_groups": {
+    "intensity_breadth": [
+      "event_count",
+      "attention_score",
+      "source_breadth",
+      "article_count"
+    ],
+    "severity": [
+      "negative_goldstein"
+    ],
+    "tone": [
+      "mean_tone"
+    ]
+  },
+  "point_in_time_contract": {
+    "event_feature_window": "previous_market_day < event_day < target_market_day",
+    "target_return": "previous_market_close -> target_market_close",
+    "five_day_horizon": "target_market_close -> fifth subsequent market close",
+    "same_day_return_used": false
+  },
+  "minimum_data_contract": {
+    "total_common_observations": 80,
+    "event_windows": 40,
+    "otherwise_status": "DATA_INSUFFICIENT"
+  },
+  "diagnostics": [
+    "feature-feature Spearman matrix over all common market-day observations",
+    "event-only feature-feature Spearman matrix",
+    "fixed mechanism-group redundancy summaries",
+    "complete asset-feature next-day and five-day association tables",
+    "event-only association tables",
+    "coverage, skipped-row and PIT audit"
+  ],
+  "selection": {
+    "holdout": false,
+    "feature": false,
+    "asset": false,
+    "horizon": false,
+    "parameter": false
+  },
+  "performance_trial_authorized": false,
+  "interpretation_guardrails": [
+    "No feature may be selected because it has the largest observed association.",
+    "No asset or horizon may be selected from observed results.",
+    "Insufficient event cells are reported as data insufficiency and never repaired opportunistically.",
+    "Any later performance study requires a new preregistration, fresh symbol-disjoint coverage and unchanged evidence gates."
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}

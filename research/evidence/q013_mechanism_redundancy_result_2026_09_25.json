@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-013-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-DIAGNOSTIC",
+  "status": "COMPLETED_DISCOVERY_ONLY",
+  "recorded_on": "2026-09-25",
+  "workflow_run": 36150409947,
+  "artifact_id": 10871043546,
+  "artifact_sha256": "sha256:5b23a3cffaadb6ef3d08962c39bfb19848d946d2515e1e46ef3e04136d16f021",
+  "result_file_sha256": "sha256:5b35bc1b323a794f4323d17d03cb3b16c2d52d0e4eb974d8c475354a00e92b97",
+  "result_fingerprint": "9568b50b62e26a68bdaeec3cee8acc24fe77cf0c8cea41d51094888cd0170ec8",
+  "window": {
+    "start": "2026-03-29",
+    "end": "2026-09-24",
+    "calendar_days": 180
+  },
+  "assets": [
+    "SPY",
+    "TLT",
+    "GLD"
+  ],
+  "observations": {
+    "total": 123,
+    "event_windows": 25,
+    "no_event_windows": 98
+  },
+  "data_quality": {
+    "event_rows_seen": 17636611,
+    "event_rows_skipped": 101
+  },
+  "fixed_features": [
+    "event_count",
+    "attention_score",
+    "source_breadth",
+    "article_count",
+    "negative_goldstein",
+    "mean_tone"
+  ],
+  "fixed_mechanism_groups": {
+    "intensity_breadth": [
+      "event_count",
+      "attention_score",
+      "source_breadth",
+      "article_count"
+    ],
+    "severity": [
+      "negative_goldstein"
+    ],
+    "tone": [
+      "mean_tone"
+    ]
+  },
+  "point_in_time_contract": {
+    "event_feature_window": "previous_market_day < event_day < target_market_day",
+    "target_return": "previous_market_close -> target_market_close",
+    "five_day_horizon": "target_market_close -> fifth subsequent market close",
+    "same_day_return_used": false
+  },
+  "event_only_feature_redundancy": {
+    "event_count_attention_score": 0.9738461538461538,
+    "event_count_source_breadth": 0.9392307692307692,
+    "event_count_article_count": 0.936923076923077,
+    "attention_score_source_breadth": 0.9484615384615385,
+    "attention_score_article_count": 0.9392307692307692,
+    "source_breadth_article_count": 0.9815384615384616,
+    "intensity_breadth_mean_abs_spearman": 0.9532051282051283
+  },
+  "descriptive_interpretation": [
+    "Die vier Intensitäts-/Breitenfeatures sind im Event-Sample stark redundant.",
+    "Mean Tone bildet gegenüber den Intensitäts-/Breitenfeatures eine deutlich eigenständigere deskriptive Dimension.",
+    "Die Event-only-Stichprobe umfasst nur 25 Fenster; Return-Assoziationen sind deshalb kein Trading- oder Kausalnachweis."
+  ],
+  "selection": {
+    "holdout_selection": false,
+    "feature_selection": false,
+    "asset_selection": false,
+    "horizon_selection": false,
+    "parameter_search": false
+  },
+  "performance_trial_authorized": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "artifact_retention": "30 days"
+}
