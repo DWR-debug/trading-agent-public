@@ -6,7 +6,7 @@
   "latest_formal_trial": "T-2026-09-25-045",
   "latest_trial_status": "BLOCKED",
   "next_reserved_trial": null,
-  "next_research_focus": "Q016 completed as diagnostic-only with DATA_INSUFFICIENT; no performance trial authorized. Next work must be a newly pre-registered, orthogonal hypothesis generated from frozen evidence.",
+  "next_research_focus": "Q017 coverage-first preparation: verify point-in-time data availability for the three fixed orthogonal candidate families before selecting any performance trial.",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -31,8 +31,8 @@
     "free_credit_only": true,
     "credit_balance_auto_detected": false,
     "policy": "free_agent_credits_for_hypothesis_generation_and_research_design; deterministic_compute_local_only",
-    "current_task": "AGENT-HYPOTHESIS-ROUND-001",
-    "current_task_scope": "orthogonal alpha/information hypotheses from frozen T041/T042/T044/T045 and Q011 evidence",
+    "current_task": "Q-017-ORTHOGONAL-HYPOTHESIS-DESIGN-ROUND",
+    "current_task_scope": "Design and coverage-first preparation of three orthogonal mechanism families; no performance execution yet.",
     "holdout_selection": false,
     "parameter_search": false,
     "asset_selection": false,
@@ -71,7 +71,7 @@
     "next_trial_candidate_selection": "coverage_only_fixed_pool",
     "t040_formal_completed": true,
     "t040_negative_evidence_archived": true,
-    "current_queue_task": null,
+    "current_queue_task": "Q-017-ORTHOGONAL-HYPOTHESIS-DESIGN-ROUND",
     "automatic_formal_execution_requires_preregistration": true,
     "last_completed_queue_task": "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION",
     "last_completed_diagnosis_fingerprint": "92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea",
@@ -339,5 +339,28 @@
   "current_queue_task": "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION",
   "last_completed_queue_task": "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC",
   "master_commit_semantics": "last_verified_master_commit_before_this_state_update; this field must not be interpreted as a self-referential current-HEAD field",
-  "state_sync_verified_at": "2026-09-25T18:08:00Z"
+  "state_sync_verified_at": "2026-09-25T18:08:00Z",
+  "project_milestone": {
+    "name": "FIRST_PRESENTABLE_RESULT",
+    "anchored_on": "2026-09-25",
+    "deadline": "2026-10-25",
+    "deadline_type": "new_execution_baseline",
+    "definition_of_done": "reproducible decision-quality evidence pack; positive trading result not required",
+    "issue_number": 211
+  },
+  "courage_curve": {
+    "current_level": "M2",
+    "current_multiplier": 4,
+    "meaning": "operational research/development boldness, not return probability",
+    "progression": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32,
+      64
+    ],
+    "promotion_rule": "double only after objective gate; never due to attractive backtest alone"
+  }
 }
