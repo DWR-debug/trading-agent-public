@@ -425,6 +425,18 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
     ),
 
     AssetUniverse(
+        name="validation_2026_09_25_sector_neutral_residual_momentum_repair",
+        priority=63,
+        description=(
+            "Coverage-repair successor for H06 sector-neutral "
+            "residual-momentum coverage; five sectors with three assets each."
+        ),
+        symbols=("TXN", "ADI", "AMAT", "MDT", "SYK", "BDX", "ETN", "ITW", "GD",
+                 "CL", "KMB", "GIS", "AEP", "XEL", "DTE"),
+        target_count=4000,
+    ),
+
+    AssetUniverse(
         name="q017_coverage_first",
         priority=60,
         description=(
