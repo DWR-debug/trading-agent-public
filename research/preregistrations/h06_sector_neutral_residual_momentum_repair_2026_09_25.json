@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "preregistration_id": "H06-COVERAGE-2026-09-25",
+  "preregistration_id": "H06-REPAIR-COVERAGE-2026-09-25",
   "recorded_on": "2026-09-25",
   "task_id": "WIDE-SEARCH-H06-SECTOR-NEUTRAL-RESIDUAL-MOMENTUM-REPAIR",
   "hypothesis_id": "H06",
@@ -72,7 +72,10 @@
     "pit_rule": "decision_bar_next_bar",
     "data_source": "Yahoo_daily_OHLCV",
     "common_calendar_target": 3500,
-    "requested_raw_candles_per_symbol": 4000
+    "requested_raw_candles_per_symbol": 4000,
+    "frozen_common_calendar_snapshot": true,
+    "snapshot_format": "csv_ohlcv_common_calendar",
+    "snapshot_required_before_formal_performance": true
   },
   "coverage_outcome_rule": {
     "pass": "all structural data-contract conditions above hold",
