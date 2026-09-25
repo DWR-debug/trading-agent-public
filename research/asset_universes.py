@@ -424,7 +424,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
     ),
     AssetUniverse(
         name="wide_search_probe_2026_09_25",
-        priority=60,
+        priority=61,
         description=(
             "Fixed disjoint exploratory universe for the wide-search research-only "
             "signal probes; no symbol overlap with prior universes."
