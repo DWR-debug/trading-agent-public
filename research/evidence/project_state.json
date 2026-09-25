@@ -6,7 +6,7 @@
   "latest_formal_trial": "T-2026-09-25-045",
   "latest_trial_status": "BLOCKED",
   "next_reserved_trial": null,
-  "next_research_focus": "Q014 pending: 365-day GDELT mechanism/redundancy diagnostic; no performance trial.",
+  "next_research_focus": "Q015 candidate: fresh time-disjoint replication of the complete frozen six-feature GDELT diagnostic; no performance trial and no post-hoc feature selection.",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -63,9 +63,9 @@
     "next_trial_candidate_selection": "coverage_only_fixed_pool",
     "t040_formal_completed": true,
     "t040_negative_evidence_archived": true,
-    "current_queue_task": "Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW",
+    "current_queue_task": "Q-015-INFORMATION-ALPHA-FRESH-TIME-DISJOINT-REPLICATION",
     "automatic_formal_execution_requires_preregistration": true,
-    "last_completed_queue_task": "Q-013-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-DIAGNOSTIC",
+    "last_completed_queue_task": "Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW",
     "last_completed_diagnosis_fingerprint": "92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea",
     "cross_trial_failure_diagnosis_implemented": true,
     "t041_preregistered": true,
@@ -258,14 +258,24 @@
     "q013_event_rows_seen": 17636611,
     "q013_intensity_breadth_mean_abs_spearman_event_only": 0.9532051282051283,
     "q013_performance_trial_authorized": false,
-    "q014_status": "PENDING",
+    "q014_status": "COMPLETED_DISCOVERY_ONLY",
     "q014_preregistered": true,
     "q014_coverage_required": false,
-    "q014_execution_status": "RERUN_IN_PROGRESS",
+    "q014_execution_status": "COMPLETED",
     "q014_first_execution_workflow_run": 36152094990,
     "q014_first_execution_run_attempt": 1,
     "q014_first_execution_interruption": "runner shutdown signal",
-    "q014_rerun_attempt": 2
+    "q014_rerun_attempt": 2,
+    "q014_workflow_run": 36158184847,
+    "q014_artifact_id": 10874472512,
+    "q014_artifact_sha256": "sha256:25db8f4fdde37d1f26faa472e780c093e549dd3db9ec21bd6c5a392673fab0fd",
+    "q014_result_fingerprint": "ab617984b57cf20ea2ac9e2458ac8a519b139abf8587dab751bd63e1d5d39d6d",
+    "q014_common_observations": 250,
+    "q014_event_windows": 55,
+    "q014_event_rows_seen": 37807341,
+    "q014_event_rows_skipped": 226,
+    "q014_intensity_breadth_mean_abs_spearman_event_only": 0.9411616161616162,
+    "q014_performance_trial_authorized": false
   },
   "agent_usage_efficiency": {
     "policy": "deterministic_actions_for_computation; free-agent-use-for-hypothesis-generation_research-design_and-architecture-review",
@@ -278,14 +288,12 @@
     "secondary_sensitivity_reproducibility": "Adjusted-close Total-Return-Sensitivität zeigte minimale Laufabweichungen bei zwei identischen Formal-Ausführungen; Price-Only-Kernkennzahlen und Gate-Ergebnisse waren identisch.",
     "current_agent_task": "AGENT-HYPOTHESIS-ROUND-001"
   },
-  "q014_status": "PENDING",
+  "q014_status": "COMPLETED_DISCOVERY_ONLY",
   "q014_execution": {
     "first_workflow_run": 36152094990,
-    "first_run_attempt": 1,
-    "first_run_conclusion": "cancelled",
-    "first_run_interruption": "runner shutdown signal; no scientific result produced",
-    "rerun_attempt": 2,
-    "rerun_status": "IN_PROGRESS",
-    "rerun_head_sha": "74589b03c3d9ec940448a76d1fc10bcfd9fb85f4"
+    "successful_workflow_run": 36158184847,
+    "successful_attempt": 1,
+    "successful_head_sha": "85acd4e17921a4e2682552bfbe424f17ffaa9322",
+    "result_fingerprint": "ab617984b57cf20ea2ac9e2458ac8a519b139abf8587dab751bd63e1d5d39d6d"
   }
 }
