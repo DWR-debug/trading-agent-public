@@ -57,3 +57,6 @@ Der nächste methodische Schritt ist die Cross-Trial-Failure-Diagnose über T041
 `LIVE_TRADING_ENABLED=False`  
 `orders_enabled=False`  
 `automatic_promotion=False`
+
+
+_Archive synchronization marker: no research-methodology change._
