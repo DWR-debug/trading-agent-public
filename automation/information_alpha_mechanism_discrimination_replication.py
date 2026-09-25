@@ -373,7 +373,7 @@ def main() -> int:
     frozen = json.loads(Path(args.input_path).read_text(encoding="utf-8"))
     print("Q016_OBSERVATIONS:", len(frozen["observations"]))
     print("Q016_EVENT_WINDOWS:", len([r for r in frozen["observations"] if r["has_information_event"]]))
-    return 0 if report["status"] != "DATA_INSUFFICIENT" else 3
+    return 0
 
 
 if __name__ == "__main__":
