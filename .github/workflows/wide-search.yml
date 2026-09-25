@@ -1,0 +1,61 @@
+name: Wide Search Research Lane
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - research/wide-search-lane
+  schedule:
+    - cron: "15 */6 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-wide-search
+  cancel-in-progress: false
+
+jobs:
+  triage:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 15
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest statsmodels==0.15.0
+      - name: Safety
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          print("WIDE SEARCH SAFETY OK")
+          PY
+      - name: Wide-search Triage
+        run: |
+          set -euo pipefail
+          python -m automation.wide_search_triage
+      - name: Wide-search Probe
+        run: |
+          set -euo pipefail
+          python -m automation.wide_search_probe
+      - name: Triage- und Probe-Tests
+        run: python -m pytest -q tests/test_wide_search_triage.py tests/test_wide_search_probe.py
+      - name: Evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: wide-search-${{ github.run_id }}
+          path: research/runs/wide_search/
+          if-no-files-found: warn
+          retention-days: 30
