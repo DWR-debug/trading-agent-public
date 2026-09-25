@@ -16,6 +16,7 @@ on:
           - discover_coverage
           - diagnose_failure
           - diagnose_history
+          - diagnose_current
           - research
           - research_t041
           - research_t042
@@ -53,6 +54,7 @@ on:
       - research/execute-t044-formal
       - research/execute-t045-coverage
       - research/execute-t045-formal
+      - research/execute-q010-diagnosis
     paths:
       - "automation/research_orchestrator.py"
       - "automation/live_market_observer.py"
@@ -189,6 +191,15 @@ jobs:
                 --universe validation_2026_09_25_position_lifecycle_exit
             else
               echo "T045 coverage branch: no authorization marker on this maintenance commit; research execution skipped."
+            fi
+          elif [ "$GITHUB_REF" = "refs/heads/research/execute-q010-diagnosis" ]; then
+            test "$GITHUB_EVENT_NAME" = "push"
+            if [ "$(git log -1 --pretty=%s)" = "Research authorization: execute Q010 diagnosis" ]; then
+              python -m automation.research_orchestrator \
+                --mode diagnose_current \
+                --universe benchmark
+            else
+              echo "Q010 diagnosis branch: no authorization marker on this maintenance commit; research execution skipped."
             fi
           elif [ "$GITHUB_REF" = "refs/heads/research/execute-t044-coverage" ]; then
             test "$GITHUB_EVENT_NAME" = "push"

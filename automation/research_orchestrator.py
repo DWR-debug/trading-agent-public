@@ -18,7 +18,7 @@ from automation.live_market_observer import observe_universe
 from automation.network_momentum_lab import run_trial as run_t039_trial
 from automation.coverage_candidate_discovery import run_discovery
 from automation.adversarial_failure_diagnosis import write_report as write_failure_diagnosis
-from automation.cross_trial_failure_diagnosis import write_report as write_cross_trial_diagnosis
+from automation.cross_trial_failure_diagnosis import (    write_report as write_cross_trial_diagnosis,    write_current_report as write_current_cross_trial_diagnosis,)
 from automation.portfolio_risk_control_min_variance import run_trial as run_t041_trial
 from automation.volatility_managed_tsm import run_trial as run_t042_trial
 from automation.trial_043_tsm_signal_consistency_2026_09_25 import run_validation as run_t043_trial
@@ -180,7 +180,21 @@ def run(
         )
         snapshot = _state_snapshot(
             mode=mode,
-            universe="CROSS-TRIAL-FAILURE-DIAGNOSIS",
+            universe="CROSS-TRIAL-FAILURE-DIAGNOSIS-HISTORICAL",
+            status=report["status"],
+            run_fingerprint=report["fingerprint"],
+        )
+    elif mode == "diagnose_current":
+        report = write_current_cross_trial_diagnosis(
+            output_path=(
+                root
+                / "diagnostics"
+                / "cross_trial_failure_diagnosis_2026_09_25.json"
+            ),
+        )
+        snapshot = _state_snapshot(
+            mode=mode,
+            universe="CROSS-TRIAL-FAILURE-DIAGNOSIS-CURRENT",
             status=report["status"],
             run_fingerprint=report["fingerprint"],
         )
@@ -482,7 +496,7 @@ def run(
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=("observe", "preflight", "discover_coverage", "diagnose_failure", "diagnose_history", "research", "research_t041", "research_t042", "research_t043", "research_t044", "research_t045"), required=True)
+    parser.add_argument("--mode", choices=("observe", "preflight", "discover_coverage", "diagnose_failure", "diagnose_history", "diagnose_current", "research", "research_t041", "research_t042", "research_t043", "research_t044", "research_t045"), required=True)
     parser.add_argument("--universe", default=DEFAULT_UNIVERSE)
     parser.add_argument("--output-root", default="research/runs")
     parser.add_argument("--total", type=int, default=None)
