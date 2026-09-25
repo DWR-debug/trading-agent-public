@@ -34,7 +34,7 @@
   "continuity": {
     "chat_entrypoint": "docs/TRADING_AGENT_CHAT_ENTRYPOINT.md",
     "development_orchestration": "docs/DEVELOPMENT_ORCHESTRATION.md",
-    "handoff_rule": "The user-provided 'aktueller Stand aus dem letzten Chat' is handoff context and must be verified against canonical repository/evidence sources before adoption as fact."
+    "handoff_rule": "A pasted prior-chat Assistant message is treated as handoff context even when the exact phrase 'aktueller Stand aus dem letzten Chat' is absent; long status-like first messages with project/commit/run/artifact references are conservatively verified against canonical sources."
   },
   "agent_integration": {
     "copilot_repository_instructions": ".github/copilot-instructions.md",
@@ -49,5 +49,21 @@
     "live_trading_enabled": false,
     "orders_enabled": false,
     "automatic_promotion": false
-  }
+  },
+  "resource_constraints": {
+    "capital_available": false,
+    "paid_copilot_or_paid_coding_agent": false,
+    "paid_api_budget_usd": 0,
+    "policy": "No capital is available for paid external services. Free resources only."
+  },
+  "entrypoint_start_sequence": [
+    "docs/TRADING_AGENT_CHAT_ENTRYPOINT.md",
+    "docs/PROJECT_CONTEXT.md",
+    "docs/DEVELOPMENT_ORCHESTRATION.md",
+    "PROJECT_STATUS.md",
+    "research/evidence/project_state.json",
+    "research/evidence/current_project_checkpoint.json",
+    "research/evidence/trial_ledger.json",
+    "current master, relevant branches/PRs and workflows"
+  ]
 }

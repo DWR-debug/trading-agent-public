@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "updated": "2026-09-25",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "be72367164e0d31787f9bba5e81be178a9c81215",
+  "master_commit": "PENDING_CURRENT_MASTER_SYNC",
   "latest_formal_trial": "T-2026-09-25-045",
   "latest_trial_status": "BLOCKED",
   "next_reserved_trial": null,
@@ -36,7 +36,10 @@
     "holdout_selection": false,
     "parameter_search": false,
     "asset_selection": false,
-    "agent_output_is_evidence": false
+    "agent_output_is_evidence": false,
+    "capital_available": false,
+    "paid_copilot_or_paid_coding_agent": false,
+    "resource_policy": "No capital is available for paid external services. Free resources only."
   },
   "continuity": {
     "canonical_context": "docs/PROJECT_CONTEXT.md",
@@ -44,7 +47,8 @@
     "canonical_ledger": "research/evidence/trial_ledger.json",
     "canonical_state": "research/evidence/project_state.json",
     "chat_entrypoint": "docs/TRADING_AGENT_CHAT_ENTRYPOINT.md",
-    "chat_handoff_rule": "User-provided 'aktueller Stand aus dem letzten Chat' is a copy of the immediately preceding assistant message; treat it as handoff context, verify against canonical sources before accepting as evidence."
+    "chat_handoff_rule": "A pasted prior-chat Assistant message is handoff context even when the exact phrase 'aktueller Stand aus dem letzten Chat' is absent. Long status-like first messages containing project, commit, run, artifact or assistant-style status structure are conservatively treated as a possible handoff and verified against canonical sources.",
+    "current_project_checkpoint": "research/evidence/current_project_checkpoint.json"
   },
   "active_workflows": [
     ".github/workflows/ci.yml",
