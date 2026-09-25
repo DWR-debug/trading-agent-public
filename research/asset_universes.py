@@ -411,6 +411,17 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("WFC","DUK","AXP","BLK","DHR","INTU","MAR","COP","SO","NEE","AMGN","BSX","CMCSA"),
         target_count=3520,
     ),
+    AssetUniverse(
+        name="wide_search_probe_2026_09_25",
+        priority=60,
+        description=(
+            "Fixed disjoint exploratory universe for the wide-search research-only "
+            "signal probes; no symbol overlap with prior universes."
+        ),
+        symbols=("SCHM", "SCHR", "SPTI", "SPTS", "SPSB", "SPSM", "SCHG", "SCHV"),
+        target_count=3520,
+    ),
+
 )
 
 
