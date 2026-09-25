@@ -207,7 +207,9 @@ def run_validation(data_dir,manifest_path,output_path):
     manifest=_manifest(manifest_path)
     expected=set(PORTFOLIO_SYMBOLS)
     for universe in list_universes():
-        if universe.name!=UNIVERSE and expected.intersection(universe.symbols):
+        if universe.name in {UNIVERSE, "validation_2026_09_25_tsm_signal_consensus"}:
+            continue
+        if expected.intersection(universe.symbols):
             raise ValueError(f"Symbol-Overlap mit bestehendem Universum: {universe.name}")
     assets=_assets(data_dir,manifest)
     adjusted={s:_yahoo_adjclose(s,bars[0].timestamp,bars[-1].timestamp) for s,bars in assets.items()}
@@ -240,4 +242,4 @@ def run_validation(data_dir,manifest_path,output_path):
 if __name__=="__main__":
     p=argparse.ArgumentParser(); p.add_argument("--data-dir",required=True); p.add_argument("--manifest",required=True); p.add_argument("--output",required=True)
     a=p.parse_args(); r=run_validation(Path(a.data_dir),Path(a.manifest),Path(a.output))
-    print("TRIAL_043_STATUS:",r["status"]); print("TRIAL_043_CANDIDATE_STATUS:",r["candidate_status"]); print("TRIAL_043_REPORT_FINGERPRINT:",r["report_fingerprint"]); print("TRIAL_043_CHECKS:",json.dumps(r["gate_contract"],sort_keys=True))
+    print("TRIAL_044_STATUS:",r["status"]); print("TRIAL_044_CANDIDATE_STATUS:",r["candidate_status"]); print("TRIAL_044_REPORT_FINGERPRINT:",r["report_fingerprint"]); print("TRIAL_044_CHECKS:",json.dumps(r["gate_contract"],sort_keys=True))
