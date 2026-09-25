@@ -210,3 +210,19 @@ und aus Chats stammende Kontextinformationen festgehalten.
 
 Damit bleibt GitHub die belastbare technische Referenz, ohne unser gemeinsames Projektgedächtnis
 zu verlieren.
+
+
+## 12. Agentenressourcen: Hypothesen zuerst
+
+Eine dauerhafte gemeinsame Arbeitsentscheidung ist, vorhandene **kostenfreie Agentencredits primär für Hypothesenbildung und Forschungsdesign** zu verwenden.
+
+Die Trennung lautet:
+- lokale deterministische Rechenleistung: Daten, Backtests, Preflights, Walk-Forward, Metriken, Tests und Archivierung;
+- kostenfreie Agentenressourcen: orthogonale Hypothesen, Gegenhypothesen, Mechanismensynthese, Falsifikationslogik und Review des Forschungsdesigns;
+- bezahlte API-Nutzung: deaktiviert.
+
+Agentenoutput gilt nicht als Evidenz. Eine Hypothese wird erst durch Präregistrierung, Coverage-Preflight und die unveränderte Evidence-Kette testbar.
+
+Das bevorzugte effiziente Muster ist ein gebündelter Agentenlauf mit mehreren klar getrennten Denk-Linsen und kompakter eingefrorener Eingangsevidenz. Holdout-Daten dürfen nicht zur Agenten-Auswahl oder rückwirkenden Optimierung verwendet werden.
+
+Die erste konkrete Agentenrunde soll T041/T042/T044/T045 und Q011 als Ausgangspunkt nehmen und mehrere orthogonale Informations-/Alpha-Hypothesen mit Mechanismus, messbarer Vorhersage, Confoundern, Falsifikation und minimalem deterministischem Preflight erzeugen. Die dauerhafte Spezifikation liegt in docs/AGENT_HYPOTHESIS_RESEARCH.md.
