@@ -6,7 +6,7 @@
   "latest_formal_trial": "T-2026-09-25-045",
   "latest_trial_status": "BLOCKED",
   "next_reserved_trial": null,
-  "next_research_focus": "WIDE-SEARCH: wide search -> aggressive pruning -> narrow formal validation; Q017 G3 remains a completed DATA_INSUFFICIENT coverage diagnostic.",
+  "next_research_focus": "WIDE-SEARCH-ROUND-002: fixed volatility-state/regime diagnostics; keep ALFRED/CFTC families diagnostic-only until PIT/data contracts are repaired.",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -32,8 +32,8 @@
     "free_credit_only": true,
     "credit_balance_auto_detected": false,
     "policy": "free_agent_credits_for_hypothesis_generation_and_research_design; deterministic_compute_local_only",
-    "current_task": "WIDE-SEARCH-ROUND-001",
-    "current_task_scope": "Run fixed discovery/coverage probes across orthogonal families; prune aggressively before any formal performance validation.",
+    "current_task": "WIDE-SEARCH-ROUND-002",
+    "current_task_scope": "Explore fixed volatility/regime-state diagnostics on research-only data; prune before any formal performance work.",
     "holdout_selection": false,
     "parameter_search": false,
     "asset_selection": false,
@@ -73,9 +73,9 @@
     "next_trial_candidate_selection": "coverage_only_fixed_pool",
     "t040_formal_completed": true,
     "t040_negative_evidence_archived": true,
-    "current_queue_task": "WIDE-SEARCH-ROUND-001",
+    "current_queue_task": "WIDE-SEARCH-ROUND-002",
     "automatic_formal_execution_requires_preregistration": true,
-    "last_completed_queue_task": "Q-017-G3-COVERAGE-FIRST",
+    "last_completed_queue_task": "WIDE-SEARCH-ROUND-001",
     "last_completed_diagnosis_fingerprint": "92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea",
     "cross_trial_failure_diagnosis_implemented": true,
     "t041_preregistered": true,
@@ -325,7 +325,19 @@
     "q017_g3_performance_authorized": false,
     "q017_g3_selection_used": false,
     "q017_g3_key_finding": "ALFRED vintage reads timed out; CFTC historical release timestamps are not fully verifiable; Yahoo fixed 3520-request geometry produced 3269 bars for most symbols and 2571 common bars because CIBR begins in 2015.",
-    "wide_search_mode": "wide_search -> aggressive_pruning -> narrow_formal_validation"
+    "wide_search_mode": "wide_search -> aggressive_pruning -> narrow_formal_validation",
+    "wide_search_round_001_status": "COMPLETED_EXPLORATORY_PRUNING",
+    "wide_search_round_001_workflow_run": 36187003417,
+    "wide_search_round_001_artifact_id": 10887060908,
+    "wide_search_round_001_artifact_sha256": "sha256:d97eb2a06ee5f5222c4817652642d57d5c5dda2bf2a4bd813c3bcb512c34ba7c",
+    "wide_search_round_001_triage_fingerprint": "665bbfdaf5615e29a48ab9fac89b638739aa78468f7bdb1b25c4f3efdbaa7922",
+    "wide_search_round_001_probe_fingerprint": "3c9aa578ca8de7657ebc480b0ec0c4cf26e5285a8d5169daaf940b6e24080f24",
+    "wide_search_round_001_pruned_probe_count": 4,
+    "wide_search_round_001_survivor_count": 0,
+    "wide_search_round_001_holdout_used": false,
+    "wide_search_round_001_performance_trial_authorized": false,
+    "wide_search_round_001_key_finding": "H03/H07/H09/H10 were all pruned by fixed research-split rules: H03 and H09 changed sign between research halves; H07 remained below the fixed 0.1% half-mean threshold in the first half; H10 was below threshold and changed sign.",
+    "wide_search_round_002_design_focus": "volatility_state_transition"
   },
   "agent_usage_efficiency": {
     "policy": "deterministic_actions_for_computation; free-agent-use-for-hypothesis-generation_research-design_and-architecture-review",
@@ -352,8 +364,8 @@
     "final_execution_commit": "85acd4e17921a4e2682552bfbe424f17ffaa9322",
     "final_status": "COMPLETED_DISCOVERY_ONLY"
   },
-  "current_queue_task": "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION",
-  "last_completed_queue_task": "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC",
+  "current_queue_task": "WIDE-SEARCH-ROUND-002",
+  "last_completed_queue_task": "WIDE-SEARCH-ROUND-001",
   "master_commit_semantics": "last_verified_master_commit_before_this_state_update; this field must not be interpreted as a self-referential current-HEAD field",
   "state_sync_verified_at": "2026-09-25T18:08:00Z",
   "project_milestone": {
@@ -401,5 +413,6 @@
     "principle": "More pressure -> more process discipline, not weaker evidence.",
     "evidence_status": "design_constraint_not_empirical_causal_proof_of_future_returns"
   },
-  "last_verified_master_commit_after_q017_merge": "be558399d2a3a7aa7e5ade58d4f9b4fa603495d9"
+  "last_verified_master_commit_after_q017_merge": "be558399d2a3a7aa7e5ade58d4f9b4fa603495d9",
+  "last_verified_master_commit_after_wide_search_merge": "bcefcf21156155327de78db5be19dfe379798915"
 }
