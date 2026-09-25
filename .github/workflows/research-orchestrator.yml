@@ -13,6 +13,7 @@ on:
         options:
           - observe
           - preflight
+          - discover_information_alpha
           - discover_coverage
           - diagnose_failure
           - diagnose_history
@@ -55,6 +56,7 @@ on:
       - research/execute-t045-coverage
       - research/execute-t045-formal
       - research/execute-q010-diagnosis
+      - research/execute-q011-discovery
     paths:
       - "automation/research_orchestrator.py"
       - "automation/live_market_observer.py"
@@ -200,6 +202,15 @@ jobs:
                 --universe benchmark
             else
               echo "Q010 diagnosis branch: no authorization marker on this maintenance commit; research execution skipped."
+            fi
+          elif [ "$GITHUB_REF" = "refs/heads/research/execute-q011-discovery" ]; then
+            test "$GITHUB_EVENT_NAME" = "push"
+            if [ "$(git log -1 --pretty=%s)" = "Research authorization: execute Q011 discovery" ]; then
+              python -m automation.research_orchestrator \
+                --mode discover_information_alpha \
+                --universe benchmark
+            else
+              echo "Q011 discovery branch: no authorization marker on this maintenance commit; research execution skipped."
             fi
           elif [ "$GITHUB_REF" = "refs/heads/research/execute-t044-coverage" ]; then
             test "$GITHUB_EVENT_NAME" = "push"
