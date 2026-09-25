@@ -44,3 +44,26 @@ def test_non_strict_parser_counts_skipped_rows():
     assert tuple(parse_event_tsv(bad, strict=False, stats=stats)) == ()
     assert stats["rows_seen"] == 1
     assert stats["rows_skipped"] == 1
+
+
+
+def test_download_daily_export_reports_unavailable_date(monkeypatch, tmp_path):
+    from urllib.error import HTTPError
+    from datetime import datetime, timezone
+    from data.gdelt_events import GDELTDataUnavailableError, download_daily_export
+
+    def fail(*args, **kwargs):
+        raise HTTPError("https://data.gdeltproject.org/events/20250626.export.CSV.zip", 404, "Not Found", {}, None)
+
+    monkeypatch.setattr("data.gdelt_events.urlopen", fail)
+
+    try:
+        download_daily_export(
+            datetime(2025, 6, 26, tzinfo=timezone.utc),
+            tmp_path / "20250626.export.CSV.zip",
+        )
+    except GDELTDataUnavailableError as exc:
+        assert exc.day == "2025-06-26"
+        assert "20250626.export.CSV.zip" in str(exc)
+    else:
+        raise AssertionError("Expected GDELTDataUnavailableError for HTTP 404")
