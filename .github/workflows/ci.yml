@@ -77,7 +77,7 @@ jobs:
 
           task = default_research_queue().next_task()
           assert task is not None
-          assert task.task_id == "Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW"
+          assert task.task_id == "Q-015-INFORMATION-ALPHA-FRESH-TIME-DISJOINT-REPLICATION"
           assert task.research_family == "orthogonal_information_alpha_mechanism_redundancy_long_window"
 
           expected = set(prereg["symbols"])
@@ -109,7 +109,7 @@ jobs:
           assert state["latest_formal_trial"] == "T-2026-09-25-045"
           assert state["latest_trial_status"] == "BLOCKED"
           assert state["current_trial_status"] == "ARCHIVED_REJECTED"
-          assert state["engineering_notes"]["current_queue_task"] == "Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW"
+          assert state["engineering_notes"]["current_queue_task"] == "Q-015-INFORMATION-ALPHA-FRESH-TIME-DISJOINT-REPLICATION"
           assert state["engineering_notes"]["last_completed_queue_task"] == "Q-013-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-DIAGNOSTIC"
           assert state["engineering_notes"]["q011_status"] == "COMPLETED_DISCOVERY_ONLY"
           assert state["engineering_notes"]["q011_workflow_run"] == 36121684164
