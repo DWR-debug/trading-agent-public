@@ -23,6 +23,7 @@ from automation.portfolio_risk_control_min_variance import run_trial as run_t041
 from automation.volatility_managed_tsm import run_trial as run_t042_trial
 from automation.trial_043_tsm_signal_consistency_2026_09_25 import run_validation as run_t043_trial
 from automation.trial_044_tsm_signal_consistency_2026_09_25 import run_validation as run_t044_trial
+from automation.trial_045_position_lifecycle_exit_2026_09_25 import run_validation as run_t045_trial
 from automation.one_command_research import run_universe
 
 
@@ -61,6 +62,10 @@ COVERAGE_PREREGISTRATIONS = {
     "validation_2026_09_25_tsm_signal_consensus_repair": (
         Path("research/preregistrations")
         / "trial_044_tsm_signal_consistency_2026_09_25.json"
+    ),
+    "validation_2026_09_25_position_lifecycle_exit": (
+        Path("research/preregistrations")
+        / "trial_045_position_lifecycle_exit_2026_09_25.json"
     ),}
 
 
@@ -356,7 +361,58 @@ def run(
         if coverage_payload.get("coverage_fingerprint") != expected_fingerprint:
             raise ValueError("T044 frozen coverage fingerprint mismatch.")
         output = root / "validation_2026_09_25_tsm_signal_consensus_repair" / "formal" / "t044.json"
-        report = run_t044_trial(coverage_path, preregistration, output)
+        data_dir = coverage_path.parent / "datasets"
+        report = run_t044_trial(data_dir, coverage_path, output)
+        snapshot = _state_snapshot(
+            mode=mode,
+            universe=universe,
+            status=report["status"],
+            run_fingerprint=report["report_fingerprint"],
+        )
+    elif mode == "research_t045":
+        preregistration = (
+            Path("research/preregistrations")
+            / "trial_045_position_lifecycle_exit_2026_09_25.json"
+        )
+        frozen_evidence_path = Path(
+            "research/evidence/t045_coverage_pass_2026_09_25.json"
+        )
+        if not frozen_evidence_path.exists():
+            raise FileNotFoundError(
+                "T045 frozen coverage evidence is required before formal performance."
+            )
+        frozen = json.loads(frozen_evidence_path.read_text(encoding="utf-8"))
+        if frozen.get("trial_id") != "T-2026-09-25-045":
+            raise ValueError("Frozen T045 coverage evidence has the wrong trial id.")
+        if frozen.get("status") != "COVERAGE_PASSED_PERFORMANCE_PENDING":
+            raise ValueError("Frozen T045 coverage is not performance-approved.")
+        expected_fingerprint = frozen.get("coverage_fingerprint")
+        coverage_dir = (
+            Path("research/runs")
+            / "coverage_preflight"
+            / "T-2026-09-25-045"
+        )
+        candidates = sorted(coverage_dir.glob("coverage_preflight_*.json"))
+        if len(candidates) != 1:
+            raise ValueError(
+                f"T045 requires exactly one frozen coverage JSON, found {len(candidates)}."
+            )
+        coverage_path = candidates[0]
+        coverage_payload = json.loads(coverage_path.read_text(encoding="utf-8"))
+        if coverage_payload.get("trial_id") != "T-2026-09-25-045":
+            raise ValueError("Frozen T045 coverage has the wrong trial id.")
+        if coverage_payload.get("status") != "coverage_passed":
+            raise ValueError("Frozen T045 coverage is not a passed preflight.")
+        if coverage_payload.get("coverage_fingerprint") != expected_fingerprint:
+            raise ValueError("T045 frozen coverage fingerprint mismatch.")
+        output = (
+            root
+            / "validation_2026_09_25_position_lifecycle_exit"
+            / "formal"
+            / "t045.json"
+        )
+        data_dir = coverage_path.parent / "datasets"
+        report = run_t045_trial(data_dir, coverage_path, output)
         snapshot = _state_snapshot(
             mode=mode,
             universe=universe,
@@ -413,7 +469,7 @@ def run(
                 run_fingerprint=report.get("run_manifest", {}).get("run_fingerprint"),
             )
     else:
-        raise ValueError("mode must be observe, preflight, discover_coverage, diagnose_failure, diagnose_history, research, research_t041, or research_t042, or research_t043, or research_t044")
+        raise ValueError("mode must be observe, preflight, discover_coverage, diagnose_failure, diagnose_history, research, research_t041, or research_t042, or research_t043, or research_t044, or research_t045")
 
     path = root / universe / "orchestrator_state.json"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -426,7 +482,7 @@ def run(
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=("observe", "preflight", "discover_coverage", "diagnose_failure", "diagnose_history", "research", "research_t041", "research_t042", "research_t043", "research_t044"), required=True)
+    parser.add_argument("--mode", choices=("observe", "preflight", "discover_coverage", "diagnose_failure", "diagnose_history", "research", "research_t041", "research_t042", "research_t043", "research_t044", "research_t045"), required=True)
     parser.add_argument("--universe", default=DEFAULT_UNIVERSE)
     parser.add_argument("--output-root", default="research/runs")
     parser.add_argument("--total", type=int, default=None)
