@@ -94,11 +94,17 @@ jobs:
         run: |
           set -euo pipefail
           python -m automation.wide_search_round_002_volatility_regime
+      - name: Evidence-Datei prüfen
+        if: always()
+        run: |
+          set -euo pipefail
+          test -s research/runs/wide_search/wide_search_round_002_volatility_regime.json
+          sha256sum research/runs/wide_search/wide_search_round_002_volatility_regime.json
       - name: Evidence
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: wide-search-round-002-\${{ github.run_id }}
-          path: research/runs/wide_search/
-          if-no-files-found: warn
+          name: wide-search-round-002-${{ github.run_id }}
+          path: research/runs/wide_search/wide_search_round_002_volatility_regime.json
+          if-no-files-found: error
           retention-days: 30
