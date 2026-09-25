@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Trading Agent Agent Usage Ledger",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "updated",
+    "currency",
+    "entries"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "updated": {
+      "type": "string"
+    },
+    "currency": {
+      "const": "USD"
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "entry_id",
+          "date",
+          "resource",
+          "task",
+          "cost_usd",
+          "result_class"
+        ],
+        "properties": {
+          "entry_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "date": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string",
+            "minLength": 1
+          },
+          "task": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cost_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "runtime_minutes": {
+            "type": "number",
+            "minimum": 0
+          },
+          "result_class": {
+            "enum": [
+              "DESIGN",
+              "CODE",
+              "REVIEW",
+              "EVIDENCE",
+              "NO_VALUE",
+              "OTHER"
+            ]
+          },
+          "accepted_change": {
+            "type": "boolean"
+          },
+          "material_finding": {
+            "type": "boolean"
+          },
+          "runner_time_saved_minutes": {
+            "type": "number",
+            "minimum": 0
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
