@@ -1,3 +1,31 @@
+# Aktueller Ausführungscheckpoint — 30-Tage-Meilenstein / Q017 — 2026-09-25
+
+## Verbindliches Ziel
+
+**FIRST_PRESENTABLE_RESULT_DEADLINE: 2026-10-25**
+
+Aus den verfügbaren früheren Chats ist eine 30-Tage-Kadenz für das erste vorzeigbare Ergebnis belastbar, aber ein ursprüngliches absolutes Startdatum nicht mehr zweifelsfrei rekonstruierbar. Daher ist 2026-09-25 die neue, eindeutig nachvollziehbare Ausführungsbaseline.
+
+Ein "vorzeigbares Ergebnis" bedeutet ein reproduzierbares Evidence-Pack. Es kann ein bestandener Fixed-Rule-Trial **oder** eine belastbare DATA_INSUFFICIENT/NO_SUPPORT-Diagnose mit klar eingeengter Forschungsfrage sein. Ein positiver Backtest ist ausdrücklich nicht ausreichend.
+
+## Mutkurve
+
+Operativer Mut = Entwicklungsbereitschaft, nicht Renditewahrscheinlichkeit.
+
+**Aktuell M2 / 4x.**
+
+1x → 2x → 4x → 8x → 16x → 32x → 64x, aber nur nach objektiv bestandenem Gate. Die wissenschaftliche Beweislast wird nicht reduziert.
+
+## Q017
+
+Q016 ist technisch abgeschlossen und wissenschaftlich DATA_INSUFFICIENT. Q017 ist DESIGN_ONLY mit drei ungerankten orthogonalen Kandidaten. Nächster Schritt: Coverage-first, Point-in-Time- und Datenverfügbarkeitsprüfung; noch kein Performance-Trial.
+
+## Ressourcen
+
+Paid agent/API budget: **0 USD**. Kostenlose Agent-/Runner-Ressourcen zuerst. Tatsächliche Nutzung wird im Agent-Usage-Ledger erfasst.
+
+---
+
 # Nächster Arbeitsschritt — Q017 Design Round — 2026-09-25
 
 Q017 wurde als **DESIGN_ONLY** operationalisiert. Es existieren drei bewusst ungerankte, mechanistisch unterschiedliche Kandidaten:
