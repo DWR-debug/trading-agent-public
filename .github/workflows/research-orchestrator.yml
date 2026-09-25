@@ -159,7 +159,17 @@ jobs:
           run_id=$(python -c 'import json; from pathlib import Path; print(json.loads(Path("research/evidence/t041_coverage_pass_2026_09_24.json").read_text(encoding="utf-8"))["workflow"]["run_id"])')
           test -n "$run_id"
           echo "T041_COVERAGE_RUN_ID=$run_id" >> "$GITHUB_ENV"
+      - name: Q017 G3 Coverage-First
+        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'research/execute-q017-g3-coverage-first' }}
+        run: |
+          set -euo pipefail
+          test "$(git log -1 --pretty=%s)" = "Research authorization: execute Q017 G3 coverage-first"
+          python -m automation.q017_coverage_preflight \
+            --output-root research/runs/q017_g3_coverage_first \
+            --universe q017_coverage_first
+
       - name: Unified Orchestrator
+        if: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'research/execute-q017-g3-coverage-first') }}
         env:
           ORCHESTRATOR_MODE: ${{ inputs.mode || 'observe' }}
           ORCHESTRATOR_UNIVERSE: ${{ inputs.universe || 'benchmark' }}
