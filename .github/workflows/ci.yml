@@ -233,6 +233,19 @@ jobs:
               ))
           )
 
+          all_t045_symbols = (
+              "WFC", "DUK", "AXP", "BLK", "DHR", "INTU", "MAR", "COP",
+              "SO", "NEE", "AMGN", "BSX", "CMCSA",
+          )
+          assert len(all_t045_symbols) == len(set(all_t045_symbols))
+          assert not set(all_t045_symbols).intersection(
+              set().union(*(
+                  set(u.symbols)
+                  for u in __import__("research.asset_universes", fromlist=["list_universes"]).list_universes()
+                  if u.name != "validation_2026_09_25_position_lifecycle_exit"
+              ))
+          )
+
           print("RESEARCH GOVERNANCE OK")
           PY
       - name: Project-State validieren
@@ -246,11 +259,11 @@ jobs:
           assert state['agent_usage']['paid_api_budget_usd'] == 0.0
           assert state['agent_usage']['auto_paid_api_calls'] is False
           assert state['agent_usage']['free_credit_only'] is True
-          assert state['current_preregistered_trial'] == 'T-2026-09-25-044'
-          assert state['latest_formal_trial'] == 'T-2026-09-25-043'
+          assert state['current_preregistered_trial'] == 'T-2026-09-25-045'
+          assert state['latest_formal_trial'] == 'T-2026-09-25-044'
           assert state['latest_trial_status'] == 'DATA_INVALID'
-          assert state['current_trial_status'] == 'COVERAGE_PENDING'
-          assert state['engineering_notes']['current_queue_task'] == 'Q-008-T044-TSM-SIGNAL-CONSISTENCY-REPAIR'
+          assert state['current_trial_status'] == 'PREREGISTRATION_PENDING'
+          assert state['engineering_notes']['current_queue_task'] == 'Q-009-T045-POSITION-LIFECYCLE-EXIT-CONTROL'
           assert state['engineering_notes']['t042_preregistered'] is True
           assert state['engineering_notes']['t042_coverage_status'] == 'PASSED'
           assert state['engineering_notes']['t042_performance_allowed'] is False
@@ -261,10 +274,32 @@ jobs:
           assert state['engineering_notes']['t043_scientific_outcome'] == 'NO_SCIENTIFIC_OUTCOME'
           assert state['engineering_notes']['t044_preregistered'] is True
           assert state['engineering_notes']['t044_parent_trial_id'] == 'T-2026-09-25-043'
-          assert state['engineering_notes']['t044_coverage_status'] == 'PENDING'
-          assert state['engineering_notes']['t044_formal_performance_allowed'] is False
+          assert state['engineering_notes']['t044_coverage_status'] == 'PASSED'
+          assert state['engineering_notes']['t044_formal_performance_allowed'] is True
           assert state['engineering_notes']['t044_requested_candles'] == 3520
           assert state['engineering_notes']['t044_target_common_calendar'] == 3500
+          assert state['engineering_notes']['t044_formal_completed'] is True
+          assert state['engineering_notes']['t044_scientific_outcome'] == 'NO_PROMOTION_EVIDENCE'
+          assert state['engineering_notes']['t045_preregistered'] is True
+          assert state['engineering_notes']['t045_coverage_status'] == 'PENDING'
+          assert state['engineering_notes']['t045_formal_performance_allowed'] is False
+          assert state['engineering_notes']['t045_universe'] == 'validation_2026_09_25_position_lifecycle_exit'
+          assert state['engineering_notes']['t045_symbols'] == ['WFC','DUK','AXP','BLK','DHR','INTU','MAR','COP','SO','NEE','AMGN','BSX','CMCSA']
+          assert state['engineering_notes']['t045_requested_candles'] == 3520
+          assert state['engineering_notes']['t045_target_common_calendar'] == 3500
+
+          t045_prereg = json.loads(Path(
+              "research/preregistrations/trial_045_position_lifecycle_exit_2026_09_25.json"
+          ).read_text(encoding='utf-8'))
+          assert t045_prereg['trial_id'] == 'T-2026-09-25-045'
+          assert t045_prereg['trial_type'] == 'position_lifecycle_exit'
+          assert t045_prereg['mechanism']['atr_window_sessions'] == 20
+          assert t045_prereg['mechanism']['atr_multiple'] == 3.0
+          assert t045_prereg['search_scope']['parameter_search'] is False
+          assert t045_prereg['search_scope']['variant_search'] is False
+          assert t045_prereg['search_scope']['holdout_used_for_selection'] is False
+          assert t045_prereg['safety']['paper_only'] is True
+          assert t045_prereg['safety']['live_trading_enabled'] is False
 
           print('PROJECT STATE OK')
           PY
