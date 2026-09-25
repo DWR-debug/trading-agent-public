@@ -8,12 +8,14 @@
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
     "wide_search_round_001_probes=4; survivors=0; holdout_used=false; performance_trial_authorized=false",
     "H03/H07/H09/H10=PRUNED_BY_FIXED_RESEARCH_SPLIT_RULES",
-    "Q017_G3=DATA_INSUFFICIENT; workflow=36186285814; performance_trial_authorized=false"
+    "Q017_G3=DATA_INSUFFICIENT; workflow=36186285814; performance_trial_authorized=false",
+    "Wide-Search Round 002 implementation is merged in master commit 6b6124883f4af03037c4c720f70b6e4a3a4976d2 after full CI success on PR head; the preregistered H08 diagnostic remains research-only and no scientific result is yet canonically verified."
   ],
   "implications": [
     "wide exploration is now functioning as a low-cost pruning stage",
     "no current candidate warrants formal performance validation",
-    "next exploration should target risk/regime information because historical bottlenecks are risk/control-relative"
+    "next exploration should target risk/regime information because historical bottlenecks are risk/control-relative",
+    "Round 002 implementation is technically integrated, but result verification remains a separate evidence step; no formal performance authorization follows from the merge."
   ],
   "unknowns": [
     "H08 volatility_state_transition stability under a fixed ex-ante rule",
@@ -22,7 +24,7 @@
     "historical CFTC PIT release reconstruction",
     "whether any survivor can pass unchanged formal evidence gates"
   ],
-  "next_action": "Execute WIDE-SEARCH-ROUND-002 with a fixed volatility-state transition diagnostic on research-only data; retain ALFRED/CFTC as diagnostic-only until PIT contracts improve.",
+  "next_action": "Verify the Wide-Search Round 002 H08 diagnostic artifact/result from the dedicated execution; if supported, require a separate coverage/PIT and preregistration gate before any formal performance validation.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
