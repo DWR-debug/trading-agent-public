@@ -153,10 +153,13 @@ jobs:
               --universe validation_2026_09_25_tsm_signal_consensus
           elif [ "$GITHUB_REF" = "refs/heads/research/execute-t043-coverage" ]; then
             test "$GITHUB_EVENT_NAME" = "push"
-            test "$(git log -1 --pretty=%s)" = "Research authorization: execute T043 coverage"
-            python -m automation.research_orchestrator \
-              --mode preflight \
-              --universe validation_2026_09_25_tsm_signal_consensus
+            if [ "$(git log -1 --pretty=%s)" = "Research authorization: execute T043 coverage" ]; then
+              python -m automation.research_orchestrator \
+                --mode preflight \
+                --universe validation_2026_09_25_tsm_signal_consensus
+            else
+              echo "T043 coverage branch: no authorization marker on this maintenance commit; research execution skipped."
+            fi
           elif [ "$GITHUB_REF" = "refs/heads/research/execute-t042-coverage" ] || [ "$GITHUB_REF" = "refs/heads/research/execute-t042-coverage-repair" ]; then
             test "$GITHUB_EVENT_NAME" = "push"
             test "$(git log -1 --pretty=%s)" = "Research authorization: execute T042 coverage"
