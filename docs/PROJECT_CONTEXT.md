@@ -33,6 +33,13 @@ Das Projekt arbeitet künftig mit vier getrennten Wahrheitsebenen:
    - `PROJECT_STATUS.md` und `docs/research_queue_*.md`;
    - sie leiten aus Technik, Evidenz und Kontext den nächsten sinnvollen Arbeitsschritt ab.
 
+### Dauerhafte Ressourcenbeschränkung
+
+Das Projekt verfügt aktuell über **kein verfügbares Kapital** für bezahlte externe Dienste.
+Kostenpflichtige Copilot-/Coding-Agent-Abos, bezahlte API-Aufrufe oder andere externe Paid-Agent-
+Ressourcen sind daher keine Option. Das Projektbudget für bezahlte API-Nutzung bleibt bei **0 USD**.
+Diese Information ist bei jedem neuen `trading agent`-Chat als verbindliche Projektbedingung zu behandeln.
+
 ### Konfliktregel
 
 Bei einem Widerspruch wird nicht stillschweigend eine Quelle überschrieben.
@@ -47,7 +54,7 @@ Damit gilt nicht mehr „GitHub ersetzt den Projektkontext“, sondern:
 
 ## 1a. Chat-Einstieg und Handoff-Regel
 
-Bei einem neuen Chat mit dem Trigger `trading agent` wird zuerst `docs/TRADING_AGENT_CHAT_ENTRYPOINT.md` gelesen. Wenn der Benutzer anschließend den **„aktuellen Stand aus dem letzten Chat“** einfügt, handelt es sich um eine Kopie der letzten Assistant-Mitteilung und damit zunächst um Handoff-Kontext, nicht um neue Evidenz. Die Aussagen werden vor Übernahme gegen `master`, `PROJECT_STATUS.md`, `research/evidence/project_state.json`, den Evidence-Ledger sowie relevante Workflow-/Artifact-Provenienz geprüft. Diese Regel ist dauerhaft und gilt chatübergreifend.
+Bei einem neuen Chat mit dem Trigger `trading agent` wird zuerst `docs/TRADING_AGENT_CHAT_ENTRYPOINT.md` gelesen. Wenn die erste substanzielle Nutzernachricht erkennbar eine Kopie einer vorherigen Assistant-Mitteilung enthält, wird sie als **möglicher Handoff** behandelt — auch dann, wenn die exakte Formulierung **„aktueller Stand aus dem letzten Chat“** fehlt. Typische Indikatoren sind ausführliche Projektstatus-Strukturen, Commit-/Run-/Artifact-IDs, bereits abgeschlossene Arbeitsschritte, Zwischenstände oder typische Assistant-Formulierungen. Solcher Text ist zunächst Kontext, nicht automatisch neue Evidenz. Die Aussagen werden vor Übernahme gegen `master`, `PROJECT_STATUS.md`, `research/evidence/project_state.json`, den Evidence-Ledger sowie relevante Workflow-/Artifact-Provenienz geprüft. Diese Regel ist dauerhaft und gilt chatübergreifend.
 
 ## 2. Sicherheitsvertrag
 
