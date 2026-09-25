@@ -3232,3 +3232,27 @@ Kostenfreie Agentenressourcen werden primär für Hypothesenbildung, Gegenhypoth
 Der projektspezifische Copilot-Unteragent ist schreibgeschützt und besitzt keine automatische Delegierung. Siehe docs/AGENT_HYPOTHESIS_RESEARCH.md und docs/COPILOT_SUBAGENT_SETUP.md.
 
 Sicherheitsstatus: PAPER_ONLY=True, LIVE_TRADING_ENABLED=False, orders_enabled=False, automatic_promotion=False.
+
+## Q014 Abschluss — 2026-09-25
+
+**Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW** ist **COMPLETED / DISCOVERY_ONLY**.
+
+Technischer Nachweis:
+- Workflow Run: `36158184847` (Run #7), Conclusion: `success`
+- Finales Artefakt: `10874472512`
+- Artefakt-ZIP-SHA256: `sha256:25db8f4fdde37d1f26faa472e780c093e549dd3db9ec21bd6c5a392673fab0fd`
+- Report-Fingerprint: `ab617984b57cf20ea2ac9e2458ac8a519b139abf8587dab751bd63e1d5d39d6d`
+- Fenster: 2025-09-25 bis 2026-09-24, exakt 365 Kalendertage
+- Assets: SPY / TLT / GLD
+- Gemeinsame Marktbeobachtungen: **250**
+- Event-Fenster: **55**
+- GDELT-Zeilen gesehen: **37.807.341**, übersprungen: **226**
+
+Wissenschaftlicher Befund:
+- Die vier Intensitäts-/Breitenfeatures bleiben innerhalb der 55 Event-Fenster stark redundant; mittlere absolute Spearman-Korrelation **0,94116**.
+- Die beobachteten Return-Assoziationen sind asset- und horizonabhängig und liefern damit **keine Performance-Evidenz**.
+- Q014 war ausschließlich diagnostisch; es gab keine Holdout-Selektion, Parameter-, Feature-, Asset- oder Horizon-Suche und keine Performance-Autorisierung.
+
+Die wiederholten Runner-Abbrüche wurden technisch umgangen: vier voneinander unabhängige, checkpoint-fähige GDELT-Teilfenster plus ein separater Aggregator auf `ubuntu-24.04` x64. Alle vier Teilfenster und die finale Aggregation waren erfolgreich.
+
+Nächster Research-Kandidat: **Q015** — frische, zeitlich disjunkte Replikation der vollständigen sechs-Feature-Diagnostik, weiterhin ohne nachträgliche Feature-Auswahl und ohne Performance-Trial.
