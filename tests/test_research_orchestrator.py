@@ -74,4 +74,7 @@ def test_discover_coverage_mode_is_safe(monkeypatch, tmp_path):
 def test_q013_mode_is_exposed():
     import automation.research_orchestrator as research_orchestrator
 
-    assert "discover_information_alpha_redundancy" in research_orchestrator.main.__code__.co_consts
+    assert any(
+        isinstance(value, tuple) and "discover_information_alpha_redundancy" in value
+        for value in research_orchestrator.main.__code__.co_consts
+    )
