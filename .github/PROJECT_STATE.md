@@ -1,3 +1,12 @@
+## Aktueller verifizierter Projektstand — 2026-09-25
+
+- Ausführungs-/Research-Repository: DWR-debug/trading-agent-public
+- T043 Coverage: DATA_INVALID, 3499 statt 3500 gemeinsamer Candles
+- T043: keine wissenschaftliche Performanceauswertung
+- T044: präregistrierter reiner Coverage-Repair-Successor
+- Paper-only unverändert: PAPER_ONLY=True, LIVE_TRADING_ENABLED=False, orders_enabled=False
+- nächste Ausführung: T044 Coverage-Preflight
+
 ## Verifizierter Projektstand — 2026-09-24
 
 Master: `3409d52f2f70d8864fa43984d2785db698af69c7`
