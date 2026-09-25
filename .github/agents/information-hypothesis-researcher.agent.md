@@ -1,8 +1,10 @@
 ---
 name: information-hypothesis-researcher
 description: Develops independent, falsifiable trading research hypotheses from frozen evidence; no holdout selection and no governance changes.
+target: github-copilot
 tools: ["read", "search", "web"]
-infer: false
+disable-model-invocation: true
+user-invocable: true
 include-custom-instructions: true
 ---
 
