@@ -77,6 +77,11 @@ def test_q011_discovery_is_holdout_free_and_paper_only(tmp_path):
             date(2026, 8, 28): 103.0,
             date(2026, 8, 31): 104.0,
             date(2026, 9, 1): 105.0,
+            date(2026, 9, 2): 106.0,
+            date(2026, 9, 3): 105.0,
+            date(2026, 9, 4): 107.0,
+            date(2026, 9, 7): 108.0,
+            date(2026, 9, 8): 109.0,
         }
     }
 
@@ -90,7 +95,7 @@ def test_q011_discovery_is_holdout_free_and_paper_only(tmp_path):
 
     report = run_discovery(
         date(2026, 8, 24),
-        date(2026, 8, 28),
+        date(2026, 9, 8),
         event_loader=event_loader,
         market_loader=market_loader,
         assets=assets,
@@ -103,7 +108,7 @@ def test_q011_discovery_is_holdout_free_and_paper_only(tmp_path):
     assert report["paper_only"] is True
     assert report["live_trading_enabled"] is False
     assert report["orders_enabled"] is False
-    assert len(report["observations"]) == 4
+    assert len(report["observations"]) == 11
     assert report["observations"][1]["event_window_start_exclusive"] == "2026-08-25"
     assert report["observations"][1]["event_window_end_exclusive"] == "2026-08-26"
     assert settings.PAPER_ONLY is True
