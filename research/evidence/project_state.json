@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "updated": "2026-09-25",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "f3b0bde146755182df4016a0ac88b2eb3d85fcaf",
+  "master_commit": "3617ded7ad7f2b9a396e7301d8a3fbc684004a15",
   "latest_formal_trial": "T-2026-09-25-045",
   "latest_trial_status": "BLOCKED",
   "next_reserved_trial": null,
-  "next_research_focus": "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC pending: incremental mechanism discrimination diagnostic; no performance trial.",
+  "next_research_focus": "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION pending: temporally disjoint replication of fixed Q015 mechanism diagnostic; no performance trial.",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -48,7 +48,8 @@
     ".github/workflows/ci.yml",
     ".github/workflows/research-orchestrator.yml",
     ".github/workflows/paper-30-day-experiment-harness.yml",
-    ".github/workflows/q014-resilient.yml"
+    ".github/workflows/q014-resilient.yml",
+    ".github/workflows/q015-mechanism-discrimination.yml"
   ],
   "current_preregistered_trial": "T-2026-09-25-045",
   "current_trial_status": "ARCHIVED_REJECTED",
@@ -64,9 +65,9 @@
     "next_trial_candidate_selection": "coverage_only_fixed_pool",
     "t040_formal_completed": true,
     "t040_negative_evidence_archived": true,
-    "current_queue_task": "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC",
+    "current_queue_task": "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION",
     "automatic_formal_execution_requires_preregistration": true,
-    "last_completed_queue_task": "Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW",
+    "last_completed_queue_task": "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC",
     "last_completed_diagnosis_fingerprint": "92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea",
     "cross_trial_failure_diagnosis_implemented": true,
     "t041_preregistered": true,
@@ -277,7 +278,18 @@
     "q014_event_rows_skipped": 226,
     "q014_intensity_breadth_mean_abs_spearman_event_only": 0.9411616161616162,
     "q014_performance_trial_authorized": false,
-    "q014_selection_used": false
+    "q014_selection_used": false,
+    "q015_status": "COMPLETED_DIAGNOSTIC_ONLY",
+    "q015_preregistered": true,
+    "q015_workflow_run": 36161950582,
+    "q015_artifact_id": 10875399037,
+    "q015_artifact_sha256": "sha256:71f007c2b0ecef064c04b0107d1313e25ee365e146f5a2f1390143a22f093ff3",
+    "q015_result_fingerprint": "f7be165efe86a223f1e15dc0cfb206e992a95fecc596197a562c6eb65386e2da",
+    "q015_input_fingerprint": "5475911e19dfae4aabbce1c66775962dacd7815b86f7dc4e63fe3ecb4fab4836",
+    "q015_common_observations": 250,
+    "q015_event_windows": 55,
+    "q015_performance_trial_authorized": false,
+    "q015_selection_used": false
   },
   "agent_usage_efficiency": {
     "policy": "deterministic_actions_for_computation; free-agent-use-for-hypothesis-generation_research-design_and-architecture-review",
@@ -303,5 +315,7 @@
     "final_run_number": 7,
     "final_execution_commit": "85acd4e17921a4e2682552bfbe424f17ffaa9322",
     "final_status": "COMPLETED_DISCOVERY_ONLY"
-  }
+  },
+  "current_queue_task": "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION",
+  "last_completed_queue_task": "Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC"
 }
