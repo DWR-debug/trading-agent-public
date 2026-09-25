@@ -1,3 +1,17 @@
+# Aktueller Ausführungscheckpoint — Wide-Search Round 002 — 2026-09-25
+
+Die präregistrierte H08-Volatility-State-Transition-Diagnose ist technisch in `master` integriert.
+
+- Merge-Commit: `6b6124883f4af03037c4c720f70b6e4a3a4976d2`
+- PR: #219
+- CI vor Merge: Workflow `36188497072`, beide Testplattformen erfolgreich; vollständige Testsuite sowie Projektintegrität, Freshness-Guard und Research-Governance grün.
+- Präregistrierung: `research/preregistrations/wide_search_round_002_volatility_regime_2026_09_25.json`
+- Wissenschaftlicher Status: **UNVERIFIED**. Das Ergebnis wird nicht aus dem Code-Merge abgeleitet.
+- Performance-Trial: **nicht autorisiert**; Holdout bleibt unberührt.
+
+Sicherheitszustand bleibt unverändert: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
+
+---
 # Zwingende Projektprämisse — Dringlichkeit / Erfolgsdruck — 2026-09-25
 
 Die familiäre Dringlichkeit und das fehlende verfügbare Kapital werden als **Kausalkette mit direkter Auswirkung auf das Forschungsdesign** behandelt:
