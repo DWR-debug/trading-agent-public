@@ -2,37 +2,42 @@
 
 ## Ziel
 
-Der Repository-Setup stellt einen kostenfreien, schreibgeschützten Copilot-Unteragenten für Hypothesenforschung bereit.
+Der Repository-Setup stellt einen schreibgeschützten Copilot-Unteragenten für Hypothesenforschung bereit.
 
-Aktuell enthalten persönliche GitHub-Free-Konten 120 kostenlose Codespaces-Stunden pro Monat. Copilot Free enthält Copilot CLI und 50 Chat-/Premium-Anfragen pro Monat.
+Aktuell unterstützt GitHub Copilot Free Copilot CLI und benutzerdefinierte Agents; die kostenlose Stufe hat jedoch nur begrenzte Agent-/Chat-Nutzung. GitHub Free enthält außerdem 120 Codespaces-Kernstunden und 15 GB Speicher pro Monat für persönliche Konten.
 
 ## Start im Browser
 
-1. GitHub öffnen und DWR-debug/trading-agent-public aufrufen.
-2. Code -> Codespaces -> neuen Codespace auf dem aktuellen master öffnen.
-3. Im Terminal prüfen: copilot --version
-4. Anmeldung: copilot login
-5. Im Copilot-CLI-Dialog /agent verwenden und information-hypothesis-researcher auswählen.
-6. AGENT-HYPOTHESIS-ROUND-001 aus docs/AGENT_HYPOTHESIS_RESEARCH.md ausführen.
+1. GitHub öffnen und `DWR-debug/trading-agent-public` aufrufen.
+2. **Solange PR #186 noch nicht gemerged ist:** `Code -> Codespaces -> ...` und den Branch `research/copilot-hypothesis-subagent` auswählen. **Nach dem Merge:** den aktuellen `master` verwenden.
+3. Im Terminal prüfen: `copilot --version`
+4. Anmeldung: `copilot login`
+5. Der reproduzierbare Start erfolgt über `bash tools/run_information_hypothesis_research.sh`.
+6. Die Ausgabe wird als nicht-evidenzielle Research-Notiz unter `research/agent_outputs/` gespeichert.
 
 ## Rollenmodell
 
-Der Custom Agent ist ausdrücklich nachgeordnet. infer: false verhindert automatische Delegierung an ihn. Seine Tools sind auf read, search und web begrenzt; edit und execute sind nicht freigegeben.
+Der Custom Agent ist ausdrücklich nachgeordnet. `disable-model-invocation: true` verhindert automatische Delegierung; `user-invocable: true` erlaubt einen expliziten Aufruf. Seine Tools sind auf `read`, `search` und `web` begrenzt; `edit` und `execute` sind nicht freigegeben.
 
 Die eigentliche Forschungsentscheidung bleibt beim primären Agenten. Agentenoutput ist keine Evidenz.
 
 ## Kostenkontrolle
 
-Keine bezahlten Budgets aktivieren. Numerische Research-Arbeit bleibt lokal/deterministisch.
+Keine bezahlten Agenten-/API-Ausgaben aktivieren. Die CLI wird im Startskript zusätzlich auf die drei read-only Tools begrenzt und erhält ein begrenztes Autopilot-Fenster. Numerische Research-Arbeit bleibt lokal/deterministisch.
 
-## Hinweis
+## Unternehmensumgebung
 
-Die Nutzung von GitHub/Copilot in einer Unternehmensumgebung muss mit den geltenden Firmenrichtlinien vereinbar sein.
+Die Nutzung von GitHub/Copilot/Codespaces muss mit den geltenden Firmenrichtlinien vereinbar sein.
 
 ## Empfohlener erster autonomer Lauf
 
-Nach der Anmeldung im Codespace kann die erste Runde direkt mit begrenztem Autopilot gestartet werden:
+Das Startskript prüft vor dem Agentenlauf:
+- korrektes Repository `DWR-debug/trading-agent-public`;
+- zulässigen Branch;
+- `PAPER_ONLY=True`;
+- `LIVE_TRADING_ENABLED=False`;
+- vorhandene Copilot-CLI-Anmeldung bzw. ausführbare CLI.
 
-    copilot --agent information-hypothesis-researcher --autopilot --max-autopilot-continues 5 -p "Execute AGENT-HYPOTHESIS-ROUND-001. Use frozen T041/T042/T044/T045 and Q011 evidence. Generate multiple orthogonal hypotheses, competing explanations, falsification criteria, required data, point-in-time rules, confounders, and minimal deterministic preflights. Do not modify files, execute commands, select on holdout data, change gates, or trigger performance trials. Return a compact research memo for the primary research agent."
+Danach wird `information-hypothesis-researcher` mit begrenztem Autopilot und ausschließlich `read,search,web` gestartet. Der Agent darf weder Dateien ändern noch Shell-Befehle ausführen noch formale Trials auslösen.
 
-Der Agent kann dadurch mehrere Denkschritte autonom abarbeiten, ohne dass wir ihm Schreib- oder Shell-Rechte geben. Die Begrenzung auf fünf Fortsetzungen verhindert unnötig lange Läufe.
+Der Auftrag ist `AGENT-HYPOTHESIS-ROUND-001` auf Basis T041/T042/T044/T045 und Q011. Die erzeugte Notiz bleibt Ideenmaterial und darf keinen Holdout zur Auswahl einer Hypothese verwenden.
