@@ -38,10 +38,52 @@ def test_current_cross_trial_diagnosis_covers_t041_to_t045():
         "T-2026-09-25-044",
         "T-2026-09-25-045",
     ]
-    assert result["trial_summaries"][-1]["trial_id"] == "T-2026-09-25-045"
-    assert "data_validity_failure" in result["cross_trial_patterns_by_id"]
-    assert "risk_gate_recurrence" in result["cross_trial_patterns_by_id"]
-    assert "oos_stability_recurrence" in result["cross_trial_patterns_by_id"]
-    assert result["next_research_question"].startswith(
-        "Before reserving another performance trial"
-    )
+    assert result["source"]["performance_valid_trial_count"] == 4
+    assert result["source"]["data_invalid_trial_count"] == 1
+
+    summaries = {item["trial_id"]: item for item in result["trial_summaries"]}
+    assert "research_risk_gate" in summaries["T-2026-09-25-044"]["failure_modes"]
+    assert summaries["T-2026-09-25-043"]["failure_modes"] == [
+        "data_validity_failure"
+    ]
+
+    patterns = result["cross_trial_patterns_by_id"]
+    assert patterns["research_risk_gate_recurrence"] == [
+        "T-2026-09-24-041",
+        "T-2026-09-24-042",
+        "T-2026-09-25-044",
+        "T-2026-09-25-045",
+    ]
+    assert patterns["risk_gate_any_stage_recurrence"] == patterns[
+        "research_risk_gate_recurrence"
+    ]
+    assert patterns["oos_stability_recurrence"] == [
+        "T-2026-09-24-041",
+        "T-2026-09-24-042",
+        "T-2026-09-25-045",
+    ]
+    assert patterns["control_relative_non_deterioration_recurrence"] == [
+        "T-2026-09-24-041",
+        "T-2026-09-24-042",
+        "T-2026-09-25-044",
+        "T-2026-09-25-045",
+    ]
+    assert patterns["data_validity_failure"] == ["T-2026-09-25-043"]
+    assert patterns["positive_holdout_not_sufficient"] == [
+        "T-2026-09-24-041",
+        "T-2026-09-24-042",
+        "T-2026-09-25-044",
+        "T-2026-09-25-045",
+    ]
+
+    assert result["interpretation"]["research_risk_gate_recurrence_count"] == 4
+    assert result["interpretation"]["oos_stability_recurrence_count"] == 3
+    assert result["interpretation"][
+        "control_relative_non_deterioration_count"
+    ] == 4
+    assert result["interpretation"]["positive_holdout_count"] == 4
+    assert "orthogonal information/alpha mechanism" in result[
+        "next_research_question"
+    ]
+
+# Q010 CI synchronization marker: schema-coverage assertions are intentionally explicit.
