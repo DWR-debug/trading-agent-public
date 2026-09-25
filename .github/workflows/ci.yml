@@ -247,8 +247,8 @@ jobs:
           assert state['agent_usage']['auto_paid_api_calls'] is False
           assert state['agent_usage']['free_credit_only'] is True
           assert state['current_preregistered_trial'] == 'T-2026-09-25-044'
-          assert state['latest_formal_trial'] == 'T-2026-09-24-042'
-          assert state['latest_trial_status'] == 'BLOCKED'
+          assert state['latest_formal_trial'] == 'T-2026-09-25-043'
+          assert state['latest_trial_status'] == 'DATA_INVALID'
           assert state['current_trial_status'] == 'COVERAGE_PENDING'
           assert state['engineering_notes']['current_queue_task'] == 'Q-008-T044-TSM-SIGNAL-CONSISTENCY-REPAIR'
           assert state['engineering_notes']['t042_preregistered'] is True
