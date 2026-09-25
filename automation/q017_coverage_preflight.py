@@ -224,8 +224,11 @@ def _cftc_parse_zip(raw: bytes) -> tuple[list[dict[str, str]], str]:
     field_map = {_canonical_market(field): field for field in reader.fieldnames if field}
     market_field = field_map.get(_canonical_market("Market_and_Exchange_Names"))
     date_field = (
-        field_map.get(_canonical_market("As_of_Date_Form_YYYY-MM-DD"))
+        field_map.get(_canonical_market("As_of_Date_In_Form_YYYY-MM-DD"))
+        or field_map.get(_canonical_market("As of Date in Form YYYY-MM-DD"))
         or field_map.get(_canonical_market("As_of_Date_In_Form_MM/DD/YYYY"))
+        or field_map.get(_canonical_market("As of Date in Form MM/DD/YYYY"))
+        or field_map.get(_canonical_market("Report_Date_as_YYYY-MM-DD"))
     )
     if not market_field or not date_field:
         raise ValueError("CFTC disaggregated header missing market/date fields")
