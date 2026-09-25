@@ -111,3 +111,50 @@ jobs:
           path: research/runs/wide_search/
           if-no-files-found: warn
           retention-days: 30
+
+  h06_sector_neutral:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/research/wide-search-h06-residual-momentum-v1' }}
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 25
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest statsmodels==0.15.0
+      - name: Safety
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          print("H06 SAFETY OK")
+          PY
+      - name: Unit Tests
+        run: python -m pytest -q tests/test_wide_search_h06_sector_neutral_residual_momentum_coverage.py
+      - name: H06 Coverage Preflight
+        run: |
+          set -euo pipefail
+          python -m automation.wide_search_h06_sector_neutral_residual_momentum_coverage
+      - name: Evidence-Datei prüfen
+        if: always()
+        run: |
+          set -euo pipefail
+          test -s research/runs/wide_search/h06_sector_neutral_residual_momentum_coverage.json
+          sha256sum research/runs/wide_search/h06_sector_neutral_residual_momentum_coverage.json
+      - name: Evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: wide-search-h06-${{ github.run_id }}
+          path: research/runs/wide_search/h06_sector_neutral_residual_momentum_coverage.json
+          if-no-files-found: error
+          retention-days: 30
