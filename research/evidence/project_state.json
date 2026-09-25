@@ -6,7 +6,7 @@
   "latest_formal_trial": "T-2026-09-25-045",
   "latest_trial_status": "BLOCKED",
   "next_reserved_trial": null,
-  "next_research_focus": "WIDE-SEARCH-ROUND-002: fixed volatility-state/regime diagnostics; keep ALFRED/CFTC families diagnostic-only until PIT/data contracts are repaired.",
+  "next_research_focus": "WIDE-SEARCH-ROUND-003: robust cross-symbol and median-based validation of H08 volatility-state transition.",
   "cleanup_status": "completed_workflow_unification",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -32,8 +32,8 @@
     "free_credit_only": true,
     "credit_balance_auto_detected": false,
     "policy": "free_agent_credits_for_hypothesis_generation_and_research_design; deterministic_compute_local_only",
-    "current_task": "WIDE-SEARCH-ROUND-002",
-    "current_task_scope": "Explore fixed volatility/regime-state diagnostics on research-only data; prune before any formal performance work.",
+    "current_task": "WIDE-SEARCH-ROUND-003",
+    "current_task_scope": "Test whether the H08 risk-regime effect survives symbol breadth and outlier-robust statistics on research-only data.",
     "holdout_selection": false,
     "parameter_search": false,
     "asset_selection": false,
@@ -73,9 +73,9 @@
     "next_trial_candidate_selection": "coverage_only_fixed_pool",
     "t040_formal_completed": true,
     "t040_negative_evidence_archived": true,
-    "current_queue_task": "WIDE-SEARCH-ROUND-002",
+    "current_queue_task": "WIDE-SEARCH-ROUND-003",
     "automatic_formal_execution_requires_preregistration": true,
-    "last_completed_queue_task": "WIDE-SEARCH-ROUND-001",
+    "last_completed_queue_task": "WIDE-SEARCH-ROUND-002",
     "last_completed_diagnosis_fingerprint": "92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea",
     "cross_trial_failure_diagnosis_implemented": true,
     "t041_preregistered": true,
@@ -343,7 +343,21 @@
     "wide_search_round_002_preregistration": "research/preregistrations/wide_search_round_002_volatility_regime_2026_09_25.json",
     "wide_search_round_002_scientific_result_status": "UNVERIFIED",
     "wide_search_round_002_performance_trial_authorized": false,
-    "wide_search_round_002_holdout_used": false
+    "wide_search_round_002_holdout_used": false,
+    "wide_search_round_002_status": "COMPLETED_EXPLORATION_SUPPORT_WITH_ROBUSTNESS_CONCERN",
+    "wide_search_round_002_workflow_run": 36188766298,
+    "wide_search_round_002_artifact_id": 10887128923,
+    "wide_search_round_002_artifact_digest": "sha256:9ce4f10f10998d55e144b5dd01b991f4d48815a0a335ba4b96457a8bef307433",
+    "wide_search_round_002_result_fingerprint": "de1af470352d4bc7666b9b11b67829c1252cf46fa11615c675f176a4fb5f5760",
+    "wide_search_round_002_classification": "DISCOVERY_SUPPORT_RISK_REGIME",
+    "wide_search_round_002_events": 316,
+    "wide_search_round_002_overall_mean_ratio": 1.3252715790248213,
+    "wide_search_round_002_overall_median_ratio": 0.9783674691199964,
+    "wide_search_round_002_first_half_mean_ratio": 1.515897521244505,
+    "wide_search_round_002_second_half_mean_ratio": 1.1346456368051379,
+    "wide_search_round_002_share_at_or_above_1_10": 0.41139240506329117,
+    "wide_search_round_002_robustness_concern": "Pooled median below 1.0 and positive mean concentrated in OIH/IYF/IYH/IDU; symbol breadth not yet demonstrated.",
+    "wide_search_round_003_design_focus": "robust cross-symbol and median-based validation of H08"
   },
   "agent_usage_efficiency": {
     "policy": "deterministic_actions_for_computation; free-agent-use-for-hypothesis-generation_research-design_and-architecture-review",
@@ -420,5 +434,7 @@
     "evidence_status": "design_constraint_not_empirical_causal_proof_of_future_returns"
   },
   "last_verified_master_commit_after_q017_merge": "be558399d2a3a7aa7e5ade58d4f9b4fa603495d9",
-  "last_verified_master_commit_after_wide_search_merge": "bcefcf21156155327de78db5be19dfe379798915"
+  "last_verified_master_commit_after_wide_search_merge": "bcefcf21156155327de78db5be19dfe379798915",
+  "last_verified_master_commit_after_round_002_merge": "6b6124883f4af03037c4c720f70b6e4a3a4976d2",
+  "last_verified_current_master_head": "39c21708bc44fac1a750fcdde63665bdc12abf43"
 }
