@@ -1,0 +1,66 @@
+# Trading Agent — Chat-Einstiegspunkt
+
+Stand: 2026-09-25
+
+Dieses Dokument ist der **verbindliche Einstiegspunkt für neue Chats**, die mit
+`trading agent` beginnen.
+
+## Regel für den Chat-Übergang
+
+Wenn der Benutzer in einem neuen Chat `trading agent` schreibt, ist die unmittelbar
+danach bzw. anschließend vom Benutzer eingefügte Nachricht mit der Bezeichnung
+**„aktueller Stand aus dem letzten Chat“** als **Handoff-Kopie der letzten
+Assistant-Mitteilung** zu verstehen.
+
+Das bedeutet:
+
+- Die eingefügte Nachricht ist zunächst Kontext/Handoff, nicht automatisch neue
+  wissenschaftliche Evidenz.
+- Sie darf als Ausgangspunkt für die Kontinuitätsprüfung verwendet werden.
+- Ihre Aussagen müssen gegen den aktuellen Repository-, Workflow- und Evidence-Stand
+  verifiziert werden, bevor sie als technische oder wissenschaftliche Tatsache
+  übernommen werden.
+- Bei Widersprüchen gilt die bestehende Quellenhierarchie:
+  technische Wahrheit = öffentlicher `master`;
+  Research-Evidenz = Ledger/Checkpoints/Workflow-Artefakte;
+  Projektabsicht = `docs/PROJECT_CONTEXT.md`.
+
+## Verbindlicher Startablauf
+
+Bei jedem neuen `trading agent`-Chat:
+
+1. Dieses Dokument lesen.
+2. `docs/PROJECT_CONTEXT.md` lesen.
+3. `PROJECT_STATUS.md` lesen.
+4. `research/evidence/project_state.json` lesen.
+5. `research/evidence/trial_ledger.json` bzw. die für den aktuellen Task
+   relevanten Evidence-Dateien prüfen.
+6. Aktuellen `master`, relevante Branches/PRs und laufende/letzte Workflows prüfen.
+7. Erst danach Änderungen, Research oder neue Hypothesen vornehmen.
+
+## Autonomie-Regel
+
+Der Assistent soll innerhalb der ausdrücklich erteilten Projektfreigaben die nächsten
+sinnvollen Entwicklungsschritte selbstständig durchführen. Insbesondere sollen
+technische Fehler, Testfehler, Workflowfehler und Provenienzprobleme zuerst direkt
+diagnostiziert und, sofern sicher behebbar, behoben werden.
+
+Wissenschaftliche Ergebnisse werden nie durch Plausibilität ersetzt. Ein fehlerhafter
+oder unvollständiger Lauf bleibt fehlerhaft bzw. unvollständig, bis seine Provenienz
+und sein Ergebnis verifiziert sind.
+
+## Sicherheitsinvariante
+
+`PAPER_ONLY=True`
+`LIVE_TRADING_ENABLED=False`
+`orders_enabled=False`
+`automatic_promotion=False`
+
+Diese Invarianten dürfen durch die Chat-Kontinuitätslogik oder autonome Entwicklung
+nicht gelockert werden.
+
+## Zweck
+
+Der Einstiegspunkt soll verhindern, dass ein neuer Chat durch eine von Benutzer
+eingefügte Kopie der letzten Assistant-Antwort versehentlich einen Zwischenstand als
+neue Wahrheit behandelt oder bereits bekannte Prüfungen überspringt.
