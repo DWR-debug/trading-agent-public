@@ -9,72 +9,69 @@ bleiben strikt getrennt.
 
 ## Aktueller Stand
 
-### Was ist verifiziert?
+### Was wissen wir?
 
-- Technische Referenz ist ausschließlich der öffentliche `master` von
-  `DWR-debug/trading-agent-public`; Wide-Search Round 002 ist in
-  `6b6124883f4af03037c4c720f70b6e4a3a4976d2` integriert.
-- Q016 bleibt `DATA_INSUFFICIENT`; daraus wurde kein Performance-Trial autorisiert.
-- Q017-G3 bleibt `DATA_INSUFFICIENT`: Workflow `36186285814`, Artifact
-  `10887025099`, Result-Fingerprint
-  `09e8ceb04b37e55dc3c8cdfe6e0c448b328a2dee0bab7c0b90ab0f8ac02fa850`.
-- Wide-Search Round 001 wurde vollständig ausgeführt: Workflow `36187003417`,
-  Artifact `10887060908`, Artifact-Digest
-  `sha256:d97eb2a06ee5f5222c4817652642d57d5c5dda2bf2a4bd813c3bcb512c34ba7c`,
-  Probe-Fingerprint
-  `3c9aa578ca8de7657ebc480b0ec0c4cf26e5285a8d5169daaf940b6e24080f24`.
-- Die Triage Round 001 klassifizierte 7 Familien als Coverage-Kandidaten, 1 als
-  Control-Replikation, 1 als Coverage-Diagnose, 2 wegen Data-Contract und 1 wegen
-  Family-Duplikation zum Pruning.
-- Vier konkrete Yahoo-Probes wurden im Research-Split tatsächlich geprüft und
-  alle vier aggressiv verworfen. Es wurde weder Holdout verwendet noch ein
+- Die technische Referenz bleibt ausschließlich `DWR-debug/trading-agent-public`.
+  Der aktuell verifizierte Master-Head ist `39c21708bc44fac1a750fcdde63665bdc12abf43`.
+- Der Forschungsmodus ist operativ `wide search -> aggressive pruning -> narrow formal validation`.
+- Round 001 hat vier günstige Yahoo-Signalprobes auf dem Research-Split verworfen:
+  H03, H07, H09 und H10. Kein Holdout wurde zur Auswahl benutzt.
+- Q017-G3 bleibt ein reiner Daten-/PIT-Befund mit `DATA_INSUFFICIENT`; daraus ist kein
   Performance-Trial autorisiert.
-- H03 abnormal turnover/liquidity shock: 799 Beobachtungen; Mittelwert insgesamt
-  etwa -0,107 %, erste Research-Hälfte etwa +0,034 %, zweite etwa -0,248 %.
-  Die Vorzeichen wechselten, daher Pruning.
-- H07 cross-asset lead/lag: 14.986 Beobachtungen; Gesamtmittel etwa +0,072 %.
-  Beide Research-Hälften waren positiv, aber die erste Hälfte blieb unter dem
-  ex ante fixierten Mindestmittel von 0,1 %, daher Pruning.
-- H09 gap reversal: 969 Beobachtungen; erste Hälfte etwa +0,517 %, zweite etwa
-  -0,357 %. Vorzeichenwechsel, daher Pruning.
-- H10 volume-price imbalance: 2.579 Beobachtungen; erste Hälfte etwa +0,019 %,
-  zweite etwa -0,077 %. Vorzeichenwechsel und Unterschreitung des Mindestmittels,
-  daher Pruning.
-- Die vier Pruning-Ergebnisse sind Explorationsbefunde, kein allgemeiner Beweis,
-  dass diese Signalideen niemals funktionieren.
-- Wide-Search Round 002 (H08 volatility-state transition) ist technisch integriert und per vollständiger CI geprüft; der wissenschaftliche Round-002-Output ist zum Synchronisationszeitpunkt noch nicht verifiziert.
+- Round 002 / H08 wurde vollständig ausgeführt: Workflow `36188766298`,
+  Artifact `10887128923`, Digest
+  `sha256:9ce4f10f10998d55e144b5dd01b991f4d48815a0a335ba4b96457a8bef307433`,
+  Result-Fingerprint
+  `de1af470352d4bc7666b9b11b67829c1252cf46fa11615c675f176a4fb5f5760`.
+- H08 verwendet ausschließlich einen vorab fixierten Research-Test:
+  20-Tage-/60-Tage-Volatilitätsverhältnis >= 1,5; anschließend 5-Tage-realized-volatility
+  relativ zur Ereignis-Basisvolatilität.
+- Es gab 316 Expansionsevents. Der Gesamtmittelwert des Forward-/Baseline-Volatilitäts-
+  verhältnisses beträgt 1,325. Beide Research-Hälften überschreiten die präregistrierte
+  Support-Grenze von 1,10: 1,516 bzw. 1,135.
+- Der robuste Gegenbefund ist wichtig: Der gepoolte Median liegt nur bei 0,978.
+  Außerdem ist der Mittelwerteffekt über Symbole ungleich verteilt; besonders hoch sind
+  IYF (1,592), IYH (1,576), IDU (2,182) und OIH (1,221), während mehrere andere Symbole
+  nahe 1,0 liegen oder darunter.
+- Round 002 ist deshalb als `EXPLORATION_SUPPORT_WITH_ROBUSTNESS_CONCERN` archiviert:
+  ein explorativer Risikoregime-Hinweis, aber noch kein formaler Validierungskandidat.
+- Governance blieb vollständig research-only: 2.798 Research-Candles, 702 Holdout-Candles
+  ungenutzt, keine Performanceauswertung, keine Holdout-Auswahl, keine Trial-Autorisierung,
+  keine automatische Promotion.
 
-### Was ist unbekannt?
+### Was wissen wir nicht?
 
-- Ob H06 sector-neutral residual momentum einen belastbaren Datenvertrag ohne
-  versteckte Nachschau-Selektion erhält.
-- Ob H08 volatility-state transition einen stabilen Research-Split-Effekt zeigt,
-  nachdem die Regel ex ante fixiert wurde.
-- Ob ALFRED-Vintage-Daten mit reproduzierbarem, robustem Zugriff verfügbar gemacht
-  werden können.
-- Ob eine historische CFTC-Release-Timeline PIT-sicher rekonstruiert werden kann.
-- Ob irgendein Überlebender die unveränderten formalen Risiko-/Robustheitsgates
-  bestehen kann.
+- Ob H08 robust über einen größeren Anteil der acht Symbole wirkt.
+- Ob die Beobachtung nach median-/outlier-robuster Betrachtung bestehen bleibt.
+- Ob ein H08-basiertes Risikoverlay gegenüber bestehenden Kontroll-/Baseline-Sleeves
+  tatsächlich die historischen Risikogates verbessert.
+- Ob ein späterer formaler H08-Versuch die unveränderten OOS-/Holdout-/Drawdown-/
+  Nichtverschlechterungs-Gates bestehen würde.
+- ALFRED und CFTC bleiben wegen offener PIT-/Datenvertragsprobleme nicht für formale
+  Auswahl freigegeben.
 
-### Was hat sich geändert?
+### Was ändert sich?
 
-- Der Forschungsmodus ist jetzt operativ `wide search -> aggressive pruning ->
-  narrow formal validation`.
-- Round 001 hat vier günstige Yahoo-basierte Mechanismen entfernt, bevor teure
-  formale Performanceanalyse begonnen wurde.
-- Kein Round-001-Kandidat rechtfertigt derzeit eine formale Validierung.
-- Kostenlose Compute-Ressourcen werden für die verbleibenden orthogonalen Familien
-  priorisiert; bekannte Datenvertragsprobleme bleiben diagnostic-only.
+- Round 002 liefert erstmals in der neuen Wide-Search-Lane einen positiven,
+  risikoorientierten Explorationshinweis.
+- Wir überspringen wegen dieses Hinweises nicht den nächsten Filter. Im Gegenteil:
+  der Median-vs.-Mean-Konflikt macht robuste Symbolabdeckung zum nächsten Engpass.
+- Round 003 wird daher keine neue Schwelle suchen, sondern dieselbe H08-Regel
+  auf Symbolbreite und robuste Aggregation prüfen.
+- Erst wenn dieser Filter belastbar ist, kommt eine separate Preregistration für einen
+  möglichen formalen Risikoverlay in Betracht.
 
 ## Nächste Aktion
 
-Zuerst wird der wissenschaftliche Output von Round 002 aus der dedizierten Ausführung verifiziert. Erst danach wird entschieden, ob die H08-Diagnose die nächste Coverage-/PIT-Stufe erreicht. Round 002 fokussiert eine ex ante fixierte **volatility-state transition**-Diagnose
-als Brücke zwischen Exploration und dem identifizierten Hauptproblem des Projekts:
-robuste Risiko-/Regime-Evidenz. Bewertet wird ausschließlich der Research-Split.
-Eine positive Exploration wird nicht automatisch zu einem formalem Trial.
+`WIDE-SEARCH-ROUND-003`: feste H08-Regel erneut auf dem identischen Research-Universum
+prüfen, diesmal mit zwei vorab festgelegten Robustheitsfragen:
 
-Parallel werden ALFRED/CFTC nicht anhand von Performanceergebnissen weiterverfolgt,
-sondern erst bei verbesserter PIT-/Datenzugänglichkeit wieder freigegeben.
+1. Wie viele Symbole zeigen einen nicht-trivialen H08-Effekt?
+2. Bleibt der gepoolte Effekt unter einer median-/trimmed-robusten Zusammenfassung erhalten?
+
+Diese Runde bleibt vollständig auf dem Research-Split. Ein positives Round-003-Ergebnis
+würde noch keine Live- oder formale Freigabe erteilen; es würde nur die Kandidatenklasse
+für den nächsten engen Validierungsschritt verbessern.
 
 ### Welche Schutzgrenzen bleiben unverändert?
 
@@ -83,10 +80,9 @@ sondern erst bei verbesserter PIT-/Datenzugänglichkeit wieder freigegeben.
 - `ORDERS_ENABLED=False`
 - `automatic_promotion=False`
 - Kein Holdout wird zur Exploration oder Auswahl verwendet.
-- Keine Parameter-, Asset-, Feature-, Horizon- oder Threshold-Selektion nach
-  Beobachtung eines Ergebnisses.
-- Zeit-/Erfolgsdruck verändert nur Priorisierung und Parallelisierung, niemals
-  Evidenzstandard oder finanzielles Risiko.
+- Keine nachträgliche Parameter-, Asset-, Feature-, Horizon- oder Threshold-Optimierung.
+- Zeit-/Erfolgsdruck erhöht nur Priorisierung und Parallelisierung, niemals Evidenzstandard
+  oder finanzielles Risiko.
 
 ## Update-Regel
 
