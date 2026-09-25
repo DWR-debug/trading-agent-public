@@ -244,8 +244,9 @@ def _cftc_coverage(output_dir: Path) -> dict:
     family = {
         "family": "cftc_positioning_crowding",
         "source": "CFTC Disaggregated Futures Only",
-        "status": "DATA_INSUFFICIENT",
+        "status": "COVERAGE_VALIDATED",
         "point_in_time_ready": False,
+        "pit_status": "UNVERIFIED_HISTORICAL_RELEASE_TIMESTAMPS",
         "historical_release_timestamp_policy": {
             "default": "Friday 15:30 America/New_York after Tuesday report data",
             "exception_policy": "Historical exceptions are not represented in annual compressed archives and remain an explicit preflight limitation.",
@@ -307,6 +308,8 @@ def _cftc_coverage(output_dir: Path) -> dict:
     # a historical release-date list. Without exact historical publication timestamps,
     # the point-in-time contract cannot be certified for a backtest.
     family["point_in_time_ready"] = False
+    family["pit_status"] = "UNVERIFIED_HISTORICAL_RELEASE_TIMESTAMPS"
+    family["eligibility"] = "DATA_INSUFFICIENT"
     family["status"] = "DATA_INSUFFICIENT"
 
     return family
