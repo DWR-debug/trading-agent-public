@@ -138,3 +138,21 @@ Q014 ist **PENDING** und präregistriert. Die sechs unveränderten Q011-Features
 
 Q014 bleibt vollständig diagnostisch. Keine Feature-, Asset-, Horizon-, Parameter- oder Holdout-Selektion und kein Performance-Trial. Jede spätere Trading-Hypothese benötigt eine neue Präregistrierung, frische symbol-disjunkte Coverage und unveränderte Evidence-Gates.
 
+## Q014 Abschluss — 2026-09-25
+
+Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW ist **COMPLETED / DISCOVERY_ONLY**.
+
+Die 365-Tage-Diagnostik über SPY/TLT/GLD erzeugte 250 gemeinsame Beobachtungen und 55 Event-Fenster. Die vier festen Intensitäts-/Breitenfeatures blieben stark redundant (mean abs Spearman **0,94116** im Event-Sample), während Mean Tone deutlich orthogonaler zu dieser Volumen-/Breitenfamilie blieb. Die Return-Assoziationen sind heterogen und rein deskriptiv.
+
+Technischer Nachweis: Workflow `36158184847`, Artifact `10874472512`, Report-Fingerprint `ab617984b57cf20ea2ac9e2458ac8a519b139abf8587dab751bd63e1d5d39d6d`. Die gesamte vierteilige, checkpointfähige Ausführung war erfolgreich.
+
+Q014 ändert weder Strategieparameter noch Gates und autorisiert kein Performance-Trial.
+
+### Nächster Queue-Eintrag — Q015
+
+**Q-015-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-DIAGNOSTIC** — **PENDING**.
+
+Ziel: inkrementelle Information der bereits fixierten sechs Q011-Features innerhalb der vorab definierten Mechanismusgruppen rein diagnostisch untersuchen. Keine Feature-, Asset-, Horizon-, Parameter- oder Holdout-Selektion; keine Performancefreigabe. Vor Ausführung ist eine eigene Präregistrierung erforderlich.
+
+Sicherheitszustand bleibt unverändert: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
+
