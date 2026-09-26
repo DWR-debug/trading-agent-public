@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "recorded_on": "2026-09-26",
   "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
-  "current_stage": "ORTHOGONAL_HYPOTHESIS_DESIGN",
+  "current_stage": "SOURCE_FEASIBILITY_GATE",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
@@ -17,20 +17,24 @@
     "H06 mechanism replication completed on current clean branch: workflow=36236202675; artifact=10903879100; result-fingerprint=45546b7a2b69c39f961cab85f9ab091d165f5e9a711777fb23dd717f82fc9fbd.",
     "H06 replication was migrated to data/canonical_snapshot.py and PR #230 merged as c8b19db5ed1fa22da67abdba2f070914c0d1a70a.",
     "Q017 G3 remains DATA_INSUFFICIENT; no performance evaluation occurred; its Yahoo coverage path is now routed through data/canonical_snapshot.py via PR #234 merged as cfdb0ac7031cfdadcbfe16da50cbedeb4b285dd3.",
-    "Q018 official-event source design is preregistered as DESIGN_ONLY with three intentionally unranked candidates and no performance authorization."
+    "Q018 source-feasibility preflight completed: workflow=36237329691; artifact=10904273903; artifact-digest=sha256:f8bfe4e1065d3d8a8b82b08fe4f78f6bd3c006bedf71c8cadc4f512d8d308989; fingerprint=82b07265b29a93547f2b1547227722005cf9d883baf3ee8b6dc50e029742152d.",
+    "Q018 candidate A SEC Form 4 source was DATA_INSUFFICIENT because all fixed data.sec.gov issuer-submission endpoints returned HTTP 403 from GitHub Actions.",
+    "Q018 candidate B FOMC source was DATA_INSUFFICIENT because all fixed Federal Reserve historical/calendar retrievals returned HTTP 403 from GitHub Actions.",
+    "Q018 candidate C Treasury 10-Year auction source was COVERAGE_VALIDATED under the fixed source contract.",
+    "Q018 performed no performance evaluation, no holdout use, no candidate ranking, no tuning, and no promotion."
   ],
   "implications": [
-    "wide exploration remains a low-cost pruning stage; formal performance validation requires source-feasible coverage first",
-    "H06 mechanism evidence is reproducible but remains mechanism-only and does not establish profitability",
-    "Q017-G3 source feasibility is insufficient and is not rescued by changing its fixed assets or rules",
-    "next exploration targets orthogonal official information events with explicit point-in-time provenance"
+    "Q018 overall source feasibility is insufficient, but the three candidates were not ranked by preference.",
+    "The next objective gate is deeper PIT/signal-contract validation of candidate C, because it alone passed the preregistered source-coverage gate.",
+    "SEC/Fed are closed for this execution environment unless a separate compliant free-access architecture can reproduce the source contract.",
+    "H06 mechanism evidence remains reproducible mechanism-only evidence and is not a profitability result."
   ],
   "unknowns": [
-    "whether any Q018 official event-source candidate can pass deterministic coverage and PIT provenance",
-    "whether fixed official event mechanisms can later satisfy unchanged performance gates on a fresh disjoint universe",
-    "reliable implementation of SEC Form 4, FOMC, and Treasury auction historical source contracts"
+    "whether the Treasury bid-to-cover event series has complete deterministic auction-to-next-trading-bar mapping over the fixed study window",
+    "whether the fixed Treasury signal can be represented without parsing ambiguity or look-ahead",
+    "whether any later formal performance evaluation of the fixed Treasury mechanism can pass the unchanged Evidence Gates"
   ],
-  "next_action": "Execute deterministic Q018 source-feasibility preflight for the three fixed official event-source candidates. Record only coverage/PIT/provenance status; no performance evaluation, no candidate ranking, no holdout use.",
+  "next_action": "Execute Q019 Treasury auction signal/PIT contract validation. No performance evaluation, holdout use, candidate ranking, or parameter search.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
