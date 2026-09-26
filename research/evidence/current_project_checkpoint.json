@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "checkpoint_type": "current_project_snapshot",
-  "generated_at_utc": "2026-09-26T08:59:00Z",
+  "generated_at_utc": "2026-09-26T11:28:00Z",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit_at_checkpoint_creation": "d286ec54874d457a8cae03fd947fb4fad265cc84",
+  "master_commit_at_checkpoint_creation": "e6918bf45c371a3e7edb0971dd6787a5f47019ec",
   "canonical_data_layer": {
     "status": "MERGED",
     "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
@@ -80,7 +80,7 @@
     "research/evidence/trial_ledger.json",
     "current master, relevant branches/PRs and workflows"
   ],
-  "active_research_task": "Q-019-TREASURY-AUCTION-SIGNAL-CONTRACT",
+  "active_research_task": "Q-020-TREASURY-AUCTION-PERFORMANCE-DESIGN",
   "wide_search_round_002": {
     "hypothesis_id": "H08",
     "family": "volatility_state_transition",
@@ -127,7 +127,7 @@
     "canonical_yahoo_hardening_pr": 234,
     "canonical_yahoo_hardening_merge_commit": "cfdb0ac7031cfdadcbfe16da50cbedeb4b285dd3"
   },
-  "next_action": "Run preregistered Q019 Treasury auction signal/PIT contract validation on the fixed Q018 universe; no performance evaluation.",
+  "next_action": "Execute fresh OHLCV coverage preflight for fixed Q020 universe; only after coverage pass may the fixed-rule performance execution be separately authorized.",
   "q018": {
     "task_id": "Q-018-SOURCE-FEASIBILITY-PREFLIGHT",
     "status": "DATA_INSUFFICIENT",
@@ -140,5 +140,42 @@
     "candidate_c": "COVERAGE_VALIDATED",
     "performance_trial_authorized": false,
     "holdout_used": false
+  },
+  "q019": {
+    "task_id": "Q-019-TREASURY-AUCTION-SIGNAL-CONTRACT",
+    "status": "COVERAGE_VALIDATED",
+    "merge_pr": 238,
+    "merge_commit": "52312dcae5da210df940adcd19a5457cd6ed6acf",
+    "workflow_run_id": 36238205065,
+    "artifact_id": 10905325799,
+    "artifact_sha256": "sha256:0e2ec08566b3300b577bb23a1f238b577e3083d0e8985c7466e748310b456325",
+    "result_fingerprint": "13072dbed7d60684f4a4fb8a3de69555cae83c66f3cfdfb603b9ed2a4b1c225b",
+    "valid_rows": 89,
+    "mapped_events": 89,
+    "terminal_events": 0,
+    "error_count": 0,
+    "performance_trial_authorized": false
+  },
+  "q020": {
+    "task_id": "Q-020-TREASURY-AUCTION-PERFORMANCE-DESIGN",
+    "status": "PREREGISTERED_DESIGN_ONLY",
+    "universe": "validation_2026_09_26_treasury_auction_performance",
+    "symbols": [
+      "ACN",
+      "AMT",
+      "APD",
+      "BK",
+      "CME",
+      "CTAS",
+      "GPC",
+      "LLY",
+      "MCO",
+      "NOC",
+      "ROST",
+      "SHW"
+    ],
+    "requested_candles": 3520,
+    "target_common_calendar": 3500,
+    "performance_trial_authorized": false
   }
 }
