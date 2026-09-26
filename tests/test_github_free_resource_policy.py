@@ -9,6 +9,9 @@ def test_github_free_resource_policy_is_structurally_valid():
     policy = (ROOT / "docs" / "GITHUB_FREE_RESOURCE_OPERATING_MODEL.md").read_text(
         encoding="utf-8"
     )
+    supervision = (ROOT / "docs" / "TRADING_AGENT_SUPERVISION_PROTOCOL.md").read_text(
+        encoding="utf-8"
+    )
     memory = json.loads(
         (ROOT / "research" / "evidence" / "project_memory_checkpoint.json").read_text(
             encoding="utf-8"
@@ -25,6 +28,10 @@ def test_github_free_resource_policy_is_structurally_valid():
     assert "Nicht delegieren:" in policy
     assert "finale Forschungsentscheidung" in policy
     assert "Holdout-/Promotion-Entscheidungen" in policy
+    assert "Steuer-/Research-Agent" in supervision
+    assert "Worker dürfen niemals" in supervision
+    assert "Technical-QA-Gate" in supervision
+    assert "Scientific-Evidence-Gate" in supervision
 
     resource = memory["github_free_resources"]
     assert resource["actions_included_minutes"] == 2000
@@ -50,6 +57,9 @@ def test_github_free_resource_policy_is_structurally_valid():
     assert policy_cfg["cloud_agent_max_concurrency"] == 2
     assert sum(policy_cfg["ai_credit_soft_allocation_percent"].values()) == 100
     assert policy_cfg["logging_rule"].startswith("Do not claim agent usage")
+
+    assert memory["supervision_protocol"]["path"] == "docs/TRADING_AGENT_SUPERVISION_PROTOCOL.md"
+    assert memory["supervision_protocol"]["immutable_rule"].startswith("worker output is never evidence")
 
     assert memory["safety"] == {
         "paper_only": True,
