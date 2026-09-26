@@ -106,3 +106,93 @@ def test_t040_repair_overlap_is_allowed_only_when_explicit(monkeypatch, tmp_path
     assert result["status"] == "coverage_passed"
     assert result["performance_evaluation"] is False
     assert result["holdout_evaluation"] is False
+
+
+def test_coverage_preflight_reports_incomplete_symbol_metadata_without_crashing(monkeypatch, tmp_path):
+    spec_path = Path("research/preregistrations/trial_039_network_momentum_2026_09_24.json")
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    symbols = tuple(spec["symbols"])
+
+    def fake_snapshot(*args, **kwargs):
+        per_symbol = {
+            symbols[0]: {"status": "COVERAGE_INVALID", "in_window_count": 0},
+            **{
+                symbol: {
+                    "status": "COVERAGE_VALID",
+                    "in_window_count": 3520,
+                    "start": "2010-01-01",
+                    "end": "2023-12-31",
+                    "quality": {},
+                }
+                for symbol in symbols[1:]
+            },
+        }
+        return {
+            "status": "DATA_INVALID",
+            "coverage": {
+                "per_symbol": per_symbol,
+                "common_calendar_count": 0,
+                "errors": [{"symbol": symbols[0], "reason": "missing_history"}],
+                "failure_reason": "symbol history incomplete",
+            },
+            "safety": {
+                "paper_only": True,
+                "live_trading_enabled": False,
+                "orders_enabled": False,
+                "automatic_promotion": False,
+            },
+        }
+
+    monkeypatch.setattr(
+        "automation.coverage_preflight.build_frozen_snapshot",
+        fake_snapshot,
+    )
+    result = run_preflight(spec_path, output_root=tmp_path)
+
+    assert result["status"] == "DATA_INVALID"
+    assert result["missing_symbols"] == [symbols[0]]
+    assert result["datasets"][0]["count"] == 0
+    assert result["datasets"][0]["start"] is None
+    assert result["datasets"][0]["end"] is None
+    assert result["scientific_outcome"] == "NO_SCIENTIFIC_OUTCOME"
+
+
+def test_coverage_preflight_accepts_acquisition_headroom_above_window_minimum(
+    monkeypatch, tmp_path
+):
+    spec_path = Path(
+        "research/preregistrations/q020_treasury_auction_coverage_repair_2026_09_26.json"
+    )
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    symbols = tuple(spec["symbols"])
+
+    from datetime import datetime, timedelta, timezone
+
+    base = datetime(2011, 1, 1, tzinfo=timezone.utc)
+
+    class Bar:
+        def __init__(self, ts, value):
+            self.timestamp = ts
+            self.open = value
+            self.high = value + 1.0
+            self.low = value - 1.0
+            self.close = value + 0.25
+            self.volume = value
+
+    bars = [Bar(base + timedelta(days=i), 100.0 + i) for i in range(3500)]
+
+    def fake_loader(symbol, interval, total, **kwargs):
+        assert symbol in symbols
+        assert interval == "1d"
+        assert total == 4000
+        return list(bars)
+
+    monkeypatch.setattr("automation.coverage_preflight.load_yahoo_history", fake_loader)
+    result = run_preflight(spec_path, output_root=tmp_path)
+
+    assert result["status"] == "coverage_passed"
+    assert result["requested_candles"] == 4000
+    assert result["minimum_in_window_candles"] == 3500
+    assert result["target_common_calendar"] == 3500
+    assert result["common_calendar_count"] == 3500
+    assert result["performance_evaluation"] is False
