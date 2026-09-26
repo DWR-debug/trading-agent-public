@@ -1,3 +1,5 @@
+from datetime import date
+
 from automation.q022_h1_directional_inversion_performance import _positions
 
 
@@ -9,8 +11,8 @@ def test_q022_h1_inverts_only_nonzero_source_direction() -> None:
         {"signal": None, "next_eligible_common_trading_date": "2025-01-05"},
     ]
     assert _positions(events) == {
-        __import__("datetime").date(2025, 1, 2): -1,
-        __import__("datetime").date(2025, 1, 3): 1,
+        date(2025, 1, 2): -1,
+        date(2025, 1, 3): 1,
     }
 
 
@@ -21,6 +23,6 @@ def test_q022_h1_overlapping_events_aggregate_before_inversion() -> None:
         {"signal": -1, "next_eligible_common_trading_date": "2025-01-03"},
     ]
     assert _positions(events) == {
-        __import__("datetime").date(2025, 1, 2): -1,
-        __import__("datetime").date(2025, 1, 3): 1,
+        date(2025, 1, 2): -1,
+        date(2025, 1, 3): 1,
     }
