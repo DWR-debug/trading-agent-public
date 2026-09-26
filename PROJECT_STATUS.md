@@ -1,26 +1,30 @@
-# AKTUELLER AGENTEN- UND RESEARCH-BETRIEBS-CHECKPOINT — 2026-09-26
+# AKTUELLER AUSFÜHRUNGS-CHECKPOINT — Q020 Performance abgeschlossen / neue Betriebsweise aktiv — 2026-09-26
 
-Die neue agentische Betriebsweise ist technisch in master integriert. PR #244 wurde gemergt; die Q020-Coverage-/Repair-Kette ist ebenfalls auf den aktuellen master synchronisiert.
+Die neue agentische Betriebsweise ist technisch in master integriert und die erste formale Q020-Forschungsschleife wurde vollständig ausgeführt.
 
 - Agent-Control-Plane: PR #244, Merge-Commit `77c328e8f84d6c67ac1ab483a4ad72aac238f983`
-- Q020-Coverage-Sync: PR #246, Merge-Commit `24d217af0cf0e01afe90171b822c85f961cad365`
-- Dispatch-Workflow: `.github/workflows/agent-dispatch.yml`
-- Erstmaliger kontrollierter Dispatch-Test: Issue #242 / Workflow `36242039182`
-- Dispatch-Manifest-Artefakt: `10905892708`
-- Manifest- und vorgelagerte Governance-/Safety-Prüfungen: erfolgreich
-- Copilot-Zuweisung: DISPATCH_FAILED / HTTP 403 Forbidden
-- Tatsächliche externe Agentensession: nicht gestartet
-- Agent-Usage: keine AI-Credits/keine Kosten verbucht; der Fehlversuch ist im Usage-Ledger dokumentiert
-- Q020 Repair Coverage: `COVERAGE_VALIDATED`, Workflow `36240853419`, Artifact `10905489440`
-- Q020 Repair Snapshot: 12/12 Symbole, 3.704 gemeinsame Handelstage, 3.500 eingefrorene Candles
-- Q020 Performance: weiterhin **nicht autorisiert**
-- Sicherheitsinvarianten unverändert: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`
+- Q020 Coverage-Sync: PR #246, Merge-Commit `24d217af0cf0e01afe90171b822c85f961cad365`
+- Q020 Performance Runner: PR #247, Merge auf `master`
+- Einmal-Autorisierung: Workflow-Branch `research/execute-q020-performance`, Commit mit `Research authorization: execute Q020 performance`
+- Formale Q020-Ausführung: Workflow `36243099900`, Artifact `10905988662`, Result-Fingerprint `0ee05b7933572b6f5e9307436e87844ff6ca92180d00e4139da0814e231b9952`
+- Ergebnis: **NO_PROMOTION_EVIDENCE**
+- Coverage-Basis: Artifact `10905489440`, Snapshot-Fingerprint `70cff5df1b92f4f7db2ea09bdc9999abff93dd4230ad4ea5df6e5da204076ef8`
+- Q019-Provenienz: Contract-Fingerprint `13072dbed7d60684f4a4fb8a3de69555cae83c66f3cfdfb603b9ed2a4b1c225b`, Signal-Fingerprint `8af45e4eb7267266da10eb28cf5287eea1ff3572f38736382f1b004abf86c208`
+- Keine Parameter-, Asset-, Threshold-, Horizon- oder Variantensuche; Holdout nicht für Auswahl verwendet
+- Keine Promotion und keine Live-Ausführung
 
-Der 403-Befund ist ein technischer Verfügbarkeits-/Berechtigungsbefund. Es wird daraus weder eine Copilot-Session noch Ressourcenverbrauch oder wissenschaftliche Evidenz abgeleitet.
+## Agentenstatus
 
-Die deterministische Research-Maschine ist davon unabhängig. Der nächste zulässige wissenschaftliche Schritt ist eine separate, unveränderliche Q020-Performance-Autorisierung, die exakt an den validierten Repair-Snapshot gebunden wird.
+- Bounded Dispatch ist implementiert und CI-geprüft.
+- Der kontrollierte externe Copilot-Dispatch-Test endete mit HTTP 403; daher **keine verifizierte externe Agentensession und keine verbuchten AI-Credits**.
+- Der 403-Befund bleibt als technischer Verfügbarkeitsbefund archiviert.
 
----
+## Nächster Forschungsmodus
+
+Q020 wird nicht nachoptimiert. Der nächste zulässige Schritt ist eine neue, präregistrierte Failure-/Mechanismus-Diagnose des festen Signals auf Basis der abgeschlossenen Evidence.
+
+Safety: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
+
 # AKTUELLER AUSFÜHRUNGS-CHECKPOINT — Q019 abgeschlossen / Q020 vorbereitet — 2026-09-26
 
 PR #238 ist in `DWR-debug/trading-agent-public` auf `master` gemergt. Merge-Commit: `52312dcae5da210df940adcd19a5457cd6ed6acf`.
