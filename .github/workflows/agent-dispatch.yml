@@ -89,18 +89,18 @@ jobs:
       - name: Check Copilot user-token configuration
         shell: bash
         env:
-          COPILOT_AGENT_TOKEN: ${{ secrets.COPILOT_AGENT_TOKEN }}
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          test -n "$COPILOT_AGENT_TOKEN" || {
-            echo "::error::COPILOT_AGENT_TOKEN is not configured. The Copilot assignment API requires a user-to-server token with metadata read plus Actions, Contents, Issues and Pull requests write access, and Copilot cloud agent must be enabled for this repository/account."
+          test -n "$COPILOT_GITHUB_TOKEN" || {
+            echo "::error::COPILOT_GITHUB_TOKEN is not configured. The Copilot assignment API requires a user-to-server token with metadata read plus Actions, Contents, Issues and Pull requests write access, and Copilot cloud agent must be enabled for this repository/account."
             exit 1
           }
 
       - name: Verify Copilot is assignable
         shell: bash
         env:
-          GH_TOKEN: ${{ secrets.COPILOT_AGENT_TOKEN }}
+          GH_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           gh api graphql \
@@ -117,7 +117,7 @@ jobs:
         id: assign
         shell: bash
         env:
-          GH_TOKEN: ${{ secrets.COPILOT_AGENT_TOKEN }}
+          GH_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           manifest="$(cat "$RUNNER_TEMP/agent_task_manifest.json")"
