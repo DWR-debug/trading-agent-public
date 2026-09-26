@@ -48,10 +48,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          files="$(git diff --name-only "${GITHUB_EVENT_BEFORE}" "${GITHUB_SHA}" -- 'agent_requests/**' | grep -E '^agent_requests/lane${{ matrix.lane }}/[^/]+\.request$' || true)"
+          before="${{ github.event.before }}"
+          files="$(git diff --name-only "$before" "$GITHUB_SHA" -- 'agent_requests/**' | grep -E '^agent_requests/lane${{ matrix.lane }}/[^/]+\.request$' || true)"
           count="$(printf '%s\n' "$files" | sed '/^$/d' | wc -l | tr -d ' ')"
           if [ "$count" = "0" ]; then
-            echo "No new request for lane ${{ matrix.lane }} in this push; lane idle."
             echo "run=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -61,8 +61,6 @@ jobs:
           fi
           request_file="$files"
           issue_number="$(python -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["issue_number"])' "$request_file")"
-          test -n "$issue_number"
-          cp "$request_file" "$RUNNER_TEMP/request.json"
           gh api "/repos/${GITHUB_REPOSITORY}/issues/${issue_number}" > "$RUNNER_TEMP/issue.json"
           python - <<'PY'
           import json, os
@@ -74,6 +72,7 @@ jobs:
           PY
           python -m automation.agent_dispatch --event-json "$RUNNER_TEMP/event.json" --master-sha "$GITHUB_SHA" --active-agent-count 0 --output "$RUNNER_TEMP/agent_task_manifest.json"
           echo "issue_number=$issue_number" >> "$GITHUB_OUTPUT"
+          echo "request_file=$request_file" >> "$GITHUB_OUTPUT"
           echo "run=true" >> "$GITHUB_OUTPUT"
 
       - name: Stop idle lane
@@ -81,7 +80,7 @@ jobs:
         run: echo "Lane idle; no agent session consumed."
 
       - name: Prepare isolated branch
-        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true'
+        if: steps.request.outputs.run == 'true'
         id: branch
         shell: bash
         env:
@@ -98,6 +97,7 @@ jobs:
           fi
           git switch -c "${branch}"
           echo "branch=${branch}" >> "$GITHUB_OUTPUT"
+          echo "skip=false" >> "$GITHUB_OUTPUT"
 
       - name: Run bounded Copilot CLI
         if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true'
@@ -159,6 +159,7 @@ jobs:
           assert settings.PAPER_ONLY is True
           assert settings.LIVE_TRADING_ENABLED is False
           assert settings.ORDERS_ENABLED is False
+          assert settings.AUTOMATIC_PROMOTION is False
           print("SAFETY INVARIANTS OK")
           PY
 
