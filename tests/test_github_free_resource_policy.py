@@ -22,7 +22,9 @@ def test_github_free_resource_policy_is_structurally_valid():
 
     assert "Paid agent/API budget bleibt 0 USD" in policy
     assert "Keine automatische Aktivierung kostenpflichtiger Nutzung" in policy
-    assert "Keine Holdout-/Promotion-Entscheidung" not in policy or True
+    assert "Nicht delegieren:" in policy
+    assert "finale Forschungsentscheidung" in policy
+    assert "Holdout-/Promotion-Entscheidungen" in policy
 
     resource = memory["github_free_resources"]
     assert resource["actions_included_minutes"] == 2000
