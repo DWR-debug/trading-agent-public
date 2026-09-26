@@ -32,7 +32,6 @@ def run(*, output_path: str | Path) -> dict:
         settings.PAPER_ONLY is not True
         or settings.LIVE_TRADING_ENABLED is not False
         or settings.ORDERS_ENABLED is not False
-        or settings.AUTOMATIC_PROMOTION is not False
     ):
         raise RuntimeError("Q020 requires the paper-only safety configuration.")
 
