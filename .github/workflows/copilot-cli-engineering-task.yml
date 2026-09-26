@@ -11,7 +11,9 @@ permissions:
   copilot-requests: write
 
 concurrency:
-  group: trading-agent-copilot-cli-${{ github.event.issue.number }}
+  # Two deterministic execution lanes enforce the project-wide maximum of
+  # two concurrent agent sessions. Additional tasks queue behind these lanes.
+  group: trading-agent-copilot-cli-lane-${{ github.event.issue.number % 2 }}
   cancel-in-progress: false
 
 jobs:
@@ -122,7 +124,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          branch="agent/issue-${{ github.event.issue.number }}-copilot-cli"
+          task_id="$(python -c 'import json,os; body=json.load(open(os.path.join(os.environ["RUNNER_TEMP"], "issue.json"), encoding="utf-8"))["body"]; start=body.find("<!-- TRADING_AGENT_TASK_V1"); end=body.find("-->", start); print(json.loads(body[start + len("<!-- TRADING_AGENT_TASK_V1"):end].strip())["task_id"])' )"
+          branch="agent/${task_id}-copilot-cli"
+
+          if git ls-remote --exit-code --heads "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "${branch}" >/dev/null 2>&1; then
+            gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${{ github.event.issue.number }}/comments" \
+              -f body="Agent dispatch skipped: task branch ${branch} already exists. Duplicate execution is fail-closed."
+            exit 0
+          fi
+
           git switch -c "${branch}"
           echo "branch=${branch}" >> "${GITHUB_OUTPUT}"
 
