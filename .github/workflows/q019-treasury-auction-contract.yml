@@ -1,0 +1,75 @@
+name: Q019 Treasury Auction Signal Contract
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "automation/q019_treasury_auction_signal_contract.py"
+      - "tests/test_q019_treasury_auction_signal_contract.py"
+      - "research/preregistrations/q019_treasury_auction_signal_contract_2026_09_26.json"
+      - ".github/workflows/q019-treasury-auction-contract.yml"
+  push:
+    branches:
+      - research/q019-treasury-contract-2026-09-26
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-q019-treasury-contract
+  cancel-in-progress: false
+
+jobs:
+  contract:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 35
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Tests
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+          python -m pytest -q tests/test_q019_treasury_auction_signal_contract.py
+      - name: Treasury Signal Contract
+        run: |
+          set -euo pipefail
+          python -m automation.q019_treasury_auction_signal_contract
+      - name: Evidence und Governance
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          p = Path("research/runs/source_feasibility/q019_treasury_signal_contract.json")
+          d = json.loads(p.read_text(encoding="utf-8"))
+          assert d["governance"]["performance_evaluation"] is False
+          assert d["governance"]["holdout_used"] is False
+          assert d["governance"]["performance_trial_authorized"] is False
+          assert d["safety"]["paper_only"] is True
+          assert d["safety"]["live_trading_enabled"] is False
+          assert d["safety"]["orders_enabled"] is False
+          assert d["safety"]["automatic_promotion"] is False
+          print(json.dumps({
+              "status": d["status"],
+              "contract": d["contract"]["status"],
+              "mapped_events": d["contract"]["mapped_event_count"],
+              "terminal_events": d["contract"]["terminal_event_count"],
+              "fingerprint": d["fingerprint"],
+          }, sort_keys=True))
+          PY
+      - name: Evidence sichern
+        uses: actions/upload-artifact@v6
+        with:
+          name: q019-treasury-contract
+          path: research/runs/source_feasibility/q019_treasury_signal_contract.json
+          if-no-files-found: error
+          retention-days: 30
