@@ -11,6 +11,8 @@ def test_copilot_cli_repair_is_fork_safe_and_owner_gated():
     assert "github.event.workflow_run.head_repository.full_name == github.repository" in text
     assert "github.event.workflow_run.actor.login == github.repository_owner" in text
     assert "github.event.workflow_run.event == 'pull_request'" in text
+    assert "p[\"state\"] != \"open\"" in text
+    assert "p[\"base\"][\"ref\"] != \"master\"" in text
     assert "pull_request_target" not in text
 
 
