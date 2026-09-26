@@ -26,8 +26,10 @@ def test_self_hosted_worker_v3_uses_proven_master_push_shape():
     assert "branches:" in text
     assert "- master" in text
     assert "workflow_dispatch:" not in text
+    assert "research/run_requests/self_hosted_repo_qa.trigger" in text
     assert "RUN_SELF_HOSTED_REPO_QA:" in text
-    assert "github.actor == github.repository_owner" in text
+    assert "github.actor == github.repository_owner" not in text
+    assert "GITHUB_ACTOR" in text
     assert "runs-on: [self-hosted, trading-agent-research]" in text
     assert "Registration probe" in text
     assert "actions/checkout@v5" in text

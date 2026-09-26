@@ -61,9 +61,9 @@ Auf dem Firmenrechner ist keine systemweite Python-Installation erforderlich: De
 bootstrappt eine fest gepinnte Python-3.13.15-NuGet-Laufzeit temporär. Damit sind weder
 Administratorrechte noch `actions/setup-python` erforderlich.
 
-Ein einzelner QA-Lauf wird durch einen Commit auf `master` mit dem Commit-Marker
-`RUN_SELF_HOSTED_REPO_QA:` ausgelöst. Der Runner führt dann genau die freigegebene
-`repo_qa`-Lane aus.
+Ein einzelner QA-Lauf wird durch eine Änderung an der dedizierten Trigger-Datei
+`research/run_requests/self_hosted_repo_qa.trigger` auf `master` ausgelöst. Der Runner prüft
+zusätzlich den Repository-Owner und führt dann genau die freigegebene `repo_qa`-Lane aus.
 
 ## Betriebsregel
 
