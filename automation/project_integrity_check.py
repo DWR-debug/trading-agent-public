@@ -25,6 +25,7 @@ ACTIVE_WORKFLOWS = {
     "h06-mechanism-replication-run.yml",
     "q018-source-feasibility.yml",
     "q019-treasury-auction-contract.yml",
+    "q020-treasury-coverage-repair.yml",
 }
 
 REQUIRED_FILES = (
