@@ -28,7 +28,7 @@ class AgentUsageLedgerError(ValueError):
 
 
 def validate_ledger(payload: dict[str, Any]) -> None:
-    if payload.get("schema_version") not in {1.1, 1.2}:
+    if payload.get("schema_version") not in {"1.1", "1.2", 1.1, 1.2}:
         raise AgentUsageLedgerError("Unsupported ledger schema_version.")
     policy = payload.get("policy")
     if not isinstance(policy, dict):
