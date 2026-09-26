@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "trial_id": "T-2026-09-26-046R1",
+  "preregistration_id": "Q-020-TREASURY-AUCTION-COVERAGE-REPAIR-2026-09-26",
+  "parent_trial_id": "T-2026-09-26-046",
+  "trial_type": "repair_successor",
+  "research_family": "official_event_alpha_performance",
+  "status": "PREREGISTERED_COVERAGE_ONLY",
+  "purpose": "Repair Q020 market-data coverage after the initial fixed-universe coverage attempt returned insufficient in-window bars and one technically unloadable Yahoo symbol. No performance evaluation is authorized.",
+  "start": "2011-01-01",
+  "end": "2025-09-24",
+  "universe": "validation_2026_09_26_treasury_auction_performance_repair",
+  "symbols": [
+    "ACN",
+    "AMT",
+    "APD",
+    "TGT",
+    "CME",
+    "CTAS",
+    "GPC",
+    "LLY",
+    "MCO",
+    "NOC",
+    "ROST",
+    "SHW"
+  ],
+  "interval": "1d",
+  "requested_candles": 4000,
+  "target_candles": 3500,
+  "research_family_id": "treasury-auction-q020-2026-09-26",
+  "disjointness": {
+    "allowed_overlap_universes": [
+      "validation_2026_09_26_treasury_auction_performance"
+    ],
+    "reason": "explicit coverage-only repair of parent trial; no performance-based asset substitution"
+  },
+  "repair_change": {
+    "replaced_symbol": "BK",
+    "replacement_symbol": "TGT",
+    "replacement_basis": "technical Yahoo coverage availability only; no return or performance criterion",
+    "raw_acquisition_headroom_changed_from": 3520,
+    "raw_acquisition_headroom_changed_to": 4000
+  },
+  "parent_coverage_evidence": {
+    "status": "DATA_INVALID",
+    "workflow_run": 36239069423,
+    "artifact_id": 10905017272,
+    "coverage_fingerprint": "50e054a03ddc899abd8bf67133f3adb084e239b9ac3e896c3833ee015c6e739f",
+    "failure_summary": "11/12 symbols returned 3269 in-window candles against 3520 requested; BK returned HTTP 404."
+  },
+  "governance": {
+    "coverage_only": true,
+    "performance_evaluation": false,
+    "oos_evaluation": false,
+    "holdout_evaluation": false,
+    "holdout_used_for_selection": false,
+    "parameter_search": false,
+    "asset_search": false,
+    "signal_variant_search": false,
+    "horizon_search": false,
+    "performance_trial_authorized": false,
+    "automatic_promotion": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
