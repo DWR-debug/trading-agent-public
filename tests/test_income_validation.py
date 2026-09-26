@@ -1,3 +1,5 @@
+import pytest
+
 from portfolio.income_validation import (
     IncomeValidationError,
     IncomeValidationPolicy,
