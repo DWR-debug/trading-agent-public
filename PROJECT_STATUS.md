@@ -3474,3 +3474,60 @@ Sicherheitsstatus unverändert: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`,
 
 H08 wurde am 2026-09-25 vollständig als Research-Only-Diagnose ausgeführt: 316 Ereignisse, Klassifikation **PRUNE_NO_RISK_REGIME_SUPPORT**, Holdout unberührt, kein Performance-Trial autorisiert. Die nächste aktive Stufe ist H06 sector-neutral residual momentum als orthogonale Coverage-/PIT-Prüfung.
 
+
+
+# Aktueller Forschungs- und Entwicklungscheckpoint — 2026-09-26
+
+## H06 abgeschlossen
+
+Die unabhängige H06-Mechanismus-Replikation wurde nach Migration auf den
+kanonischen Datenlayer end-to-end auf dem aktuellen Clean-Branch ausgeführt.
+
+- Mechanismus-Workflow: `36236202675`
+- Artifact: `10903879100`
+- Artifact-Digest: `sha256:d0535029eebe53d23a203762f5af9db8ca082315f07951412b379d576f8beba8`
+- Ergebnis-Fingerprint: `45546b7a2b69c39f961cab85f9ab091d165f5e9a711777fb23dd717f82fc9fbd`
+- Decision Dates: 2546
+- Keine P&L-/Forward-Return-Berechnung, keine Holdout-Selektion, keine Promotion.
+
+PR #230 ist als `c8b19db5ed1fa22da67abdba2f070914c0d1a70a` gemergt.
+
+## Q017 als Source-Feasibility-Fall abgeschlossen
+
+Q017 bleibt `DATA_INSUFFICIENT`. Die drei vorab definierten Familien wurden
+nicht nachträglich verändert. Die Yahoo-Coverage wurde als technische
+Hardening-Maßnahme auf `data/canonical_snapshot.py` vereinheitlicht;
+PR #234 wurde als `cfdb0ac7031cfdadcbfe16da50cbedeb4b285dd3` gemergt.
+
+Es gibt daraus keine Performanceaussage und keine Performance-Autorisierung.
+
+## Q018 — aktueller Forschungsfokus
+
+Q018 ist als `DESIGN_ONLY` preregistriert. Drei bewusst ungerankte offizielle,
+kostenlose Event-Informationsquellen werden zuerst ausschließlich auf
+historische Coverage, Point-in-Time-Verfügbarkeit, Parsing und Provenienz
+geprüft:
+
+1. SEC Form 4 Insider-Flow Events.
+2. Federal Reserve FOMC Policy-Decision Events.
+3. U.S. Treasury 10-Year Auction-Demand Events.
+
+Der nächste Schritt ist ein deterministischer Source-Feasibility-Preflight.
+Ein Scheitern wird als `DATA_INSUFFICIENT` dokumentiert und nicht durch
+Änderung von Assets, Parametern oder Regeln „gerettet“.
+
+## Agenten- und Ressourcenstrategie
+
+Kostenpflichtige Agenten-/API-Nutzung bleibt bei 0 USD. Kostenfreie Agentenressourcen
+werden nur für Hypothesenbildung, Research-Design und Architektur-Review eingesetzt;
+deterministische Berechnung bleibt auf reproduzierbaren Runnern. Agentenausgaben sind
+keine wissenschaftliche Evidence.
+
+## Sicherheitsstatus
+
+- `PAPER_ONLY=True`
+- `LIVE_TRADING_ENABLED=False`
+- `orders_enabled=False`
+- `automatic_promotion=False`
+- kein Live-Trading
+- kein Echtgeldrisiko
