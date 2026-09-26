@@ -206,3 +206,10 @@ die bereits source-feasible Q018-C-Familie:
 - keine Rendite-/P&L-Berechnung
 - kein Holdout
 - keine Parameter-, Asset-, Feature-, Horizon-, Threshold- oder Varianten-Suche
+
+
+## Q019 abgeschlossen / Q020 gestartet — 2026-09-26
+
+Q019 Treasury Auction Signal/PIT Contract ist **COMPLETED / COVERAGE_VALIDATED**. Der verifizierte Lauf `36238205065` lieferte 89 gemappte Ereignisse und 0 terminale Ereignisse; keine Performanceauswertung und keine Holdout-Nutzung.
+
+Q020 ist **PREREGISTERED_COVERAGE_ONLY** und prüft nun die kanonische OHLCV-Coverage des bereits fixierten Q018-Universums. Bei Nichterfüllung von 3500 gemeinsamen Candles gilt `DATA_INSUFFICIENT`; Assets oder Sample-Geometrie dürfen nicht nachträglich geändert werden.
