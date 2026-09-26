@@ -538,7 +538,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         ),
         target_count=3520,
     ),
-
+)
 
 
 def get_universe(name: str) -> AssetUniverse:
