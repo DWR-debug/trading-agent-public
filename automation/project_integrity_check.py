@@ -23,6 +23,7 @@ ACTIVE_WORKFLOWS = {
     "h06-mechanism.yml",
     "h06-mechanism-replication.yml",
     "h06-mechanism-replication-run.yml",
+    "q018-source-feasibility.yml",
 }
 
 REQUIRED_FILES = (
