@@ -1,6 +1,8 @@
 name: Self-hosted Research Dispatch Probe
 
 on:
+  push:
+    branches: [master]
   workflow_dispatch:
 
 permissions:
