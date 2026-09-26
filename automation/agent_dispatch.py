@@ -18,8 +18,6 @@ SCHEMA_VERSION = 1
 MAX_CONCURRENT_AGENT_TASKS = 2
 ALLOWED_WORKERS = {
     "engineering": "trading-agent-engineer",
-    "qa": "trading-agent-research-reviewer",
-    "research_design": "trading-agent-hypothesis-lab",
 }
 MARKER_START = "<!-- TRADING_AGENT_TASK_V1"
 MARKER_END = "-->"
@@ -102,6 +100,8 @@ def validate_task(
     scope = task.get("scope")
     if not isinstance(task_id, str) or not task_id.strip():
         raise AgentDispatchError("task_id is required.")
+    if not task_id.startswith("AGENT-"):
+        raise AgentDispatchError("task_id must use the AGENT-* namespace.")
     if not isinstance(worker_class, str) or worker_class not in ALLOWED_WORKERS:
         raise AgentDispatchError("worker_class is not allowed.")
     if base_branch != "master":
@@ -150,6 +150,7 @@ def validate_task(
         "manual_handoff_required": False,
         "max_concurrent_agent_tasks": MAX_CONCURRENT_AGENT_TASKS,
         "active_agent_count_before_dispatch": active_agent_count,
+        "issue_body_sha256": task.get("_issue_body_sha256"),
     }
     canonical = _canonical_json(normalized)
     fingerprint = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
@@ -184,6 +185,7 @@ def main() -> int:
 
     issue_number, labels, body, assignees = load_event(args.event_json)
     task = extract_task_metadata(body)
+    task["_issue_body_sha256"] = hashlib.sha256(body.encode("utf-8")).hexdigest()
     manifest = validate_task(
         task,
         issue_number=issue_number,
