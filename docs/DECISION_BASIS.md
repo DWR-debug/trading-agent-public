@@ -122,3 +122,30 @@ Die Trading-Regel ist vorab fixiert: erster XNYS-Tag nach `record_date`, Signal 
 
 Sicherheitszustand bleibt unverändert:
 `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
+
+
+## Q020 Coverage Repair bestanden — 2026-09-26
+
+Der Coverage-only Repair-Successor `T-2026-09-26-046R1` hat den Datenvertrag erfolgreich bestanden.
+
+- Workflow: `36240853419`
+- Artifact: `10905489440`
+- Artifact-Digest: `sha256:f0c5066b879cdc391263e57535ec1e72badbbddfc9c46f27ced51d491c3240a0`
+- 12/12 Symbole verfügbar: `ACN, AMT, APD, TGT, CME, CTAS, GPC, LLY, MCO, NOC, ROST, SHW`
+- 3.704 gemeinsame Handelstage
+- eingefrorenes gemeinsames Fenster: 3.500 Candles
+- Snapshot-Fingerprint: `70cff5df1b92f4f7db2ea09bdc9999abff93dd4230ad4ea5df6e5da204076ef8`
+- Coverage-Fingerprint: `703f9fb9d1cd21618d0acdcbe8dff3267c99b91afb6841d7110eb09a93f04600`
+- Performance: nicht ausgeführt
+- Holdout: nicht verwendet
+- Selection: nicht verwendet
+- Promotion: nicht erfolgt
+
+Die technische Reparatur blieb auf Coverage beschränkt. `BK` wurde durch `TGT` ersetzt, weil `BK` im initialen Yahoo-Lauf technisch nicht ladbar war; die Ersetzung wurde nicht anhand von Performance ausgewählt. Die erhöhte Roh-Anforderungszahl von 4.000 ist nun ausdrücklich als Acquisition Headroom von der Mindestabdeckung von 3.500 getrennt.
+
+### Nächste Aktion
+
+Separate, unveränderliche Q020-Performance-Autorisierung erstellen, die exakt an diesen eingefrorenen Snapshot gebunden ist. Erst danach darf die bereits präregistrierte Fixed-Rule-Performance-Ausführung starten.
+
+Sicherheitszustand bleibt unverändert:
+`PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
