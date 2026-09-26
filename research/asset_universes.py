@@ -503,6 +503,17 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
     ),
 
 
+    AssetUniverse(
+        name="validation_2026_09_26_treasury_auction_performance",
+        priority=66,
+        description=(
+            "Fresh fully symbol-disjoint U.S. equity universe for Q020 Treasury "
+            "auction-event performance validation; fixed ex ante before evaluation."
+        ),
+        symbols=("ACN", "AMT", "APD", "BK", "CME", "CTAS", "GPC", "LLY", "MCO", "NOC", "ROST", "SHW"),
+        target_count=3520,
+    ),
+
 )
 
 
