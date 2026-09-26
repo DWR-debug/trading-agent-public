@@ -177,9 +177,9 @@ def run_preflight(
         "datasets": [
             {
                 "symbol": symbol,
-                "count": per_symbol[symbol]["in_window_count"],
-                "start": per_symbol[symbol]["start"],
-                "end": per_symbol[symbol]["end"],
+                "count": per_symbol[symbol].get("in_window_count", 0),
+                "start": per_symbol[symbol].get("start"),
+                "end": per_symbol[symbol].get("end"),
             }
             for symbol in symbols
             if symbol in per_symbol
