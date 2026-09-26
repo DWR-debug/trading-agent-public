@@ -32,11 +32,11 @@ LOOKBACK = 252
 SKIP = 21
 
 SECTOR_MAP = {
-    "technology": ("MU", "ADBE", "CRM"),
-    "healthcare": ("ABT", "BMY", "BAX"),
-    "industrials": ("PH", "ROK", "DOV"),
-    "consumer_staples": ("CPB", "SJM", "CAG"),
-    "utilities": ("EXC", "SRE", "CMS"),
+    "technology": ("LRCX", "KLAC", "SNPS"),
+    "healthcare": ("GILD", "REGN", "VRTX"),
+    "industrials": ("UPS", "FDX", "CMI"),
+    "consumer_staples": ("K", "MDLZ", "TGT"),
+    "utilities": ("AEE", "ED", "PEG"),
 }
 
 
@@ -200,7 +200,7 @@ def run(
 
     result = {
         "schema_version": "1.0",
-        "task_id": "WIDE-SEARCH-H06-MECHANISM-REPLICATION-COVERAGE",
+        "task_id": "H06-FORMAL-PERFORMANCE-COVERAGE",
         "workflow_run_id": int(os.environ["GITHUB_RUN_ID"]) if os.environ.get("GITHUB_RUN_ID") else None,
         "hypothesis_id": "H06",
         "recorded_at": date.today().isoformat(),
@@ -236,7 +236,7 @@ def run(
                 else 0.0
             ),
             "calendar_selection_rule": "last_3500_timestamps_from_full_fixed_window_intersection",
-            "replication_reason": "Independent mechanism replication: same acquisition headroom and fixed study geometry on a fresh disjoint universe.",
+            "performance_stage": "third fresh disjoint economic confirmation",
             "research_calendar_start": (
                 assets[next(iter(assets))][0].timestamp.date().isoformat()
                 if assets
@@ -301,7 +301,7 @@ def main() -> None:
     parser.add_argument(
         "--output",
         default="research/runs/wide_search/"
-        "h06_mechanism_replication_coverage.json",
+        "h06_formal_performance_coverage.json",
     )
     args = parser.parse_args()
     run(output_path=args.output)
