@@ -142,3 +142,34 @@ def test_snapshot_from_preregistration_uses_data_contract(tmp_path):
     assert result["status"] == "COVERAGE_PASSED"
     assert result["target_common_candles"] == 8
     assert result["data_snapshot"]["format"] == "csv_ohlcv_common_calendar"
+
+
+def test_canonical_snapshot_direct_layout_can_be_reloaded_and_verified(tmp_path):
+    from data.canonical_snapshot import load_frozen_snapshot
+
+    base = datetime(2020, 1, 1, tzinfo=timezone.utc)
+
+    def fake_loader(symbol, interval, total, **kwargs):
+        return [Bar(base + timedelta(days=i), 100.0 + i) for i in range(8)]
+
+    result = build_frozen_snapshot(
+        SnapshotSpec(
+            universe="test",
+            symbols=("AAA", "BBB"),
+            interval="1d",
+            requested_candles=8,
+            target_common_candles=8,
+            output_dir=tmp_path / "h06_repair_datasets",
+            dataset_subdir=".",
+        ),
+        loader=fake_loader,
+    )
+
+    manifest = tmp_path / "h06_repair_datasets" / "snapshot_manifest.json"
+    loaded = load_frozen_snapshot(manifest)
+
+    assert result["status"] == "COVERAGE_PASSED"
+    assert set(loaded) == {"AAA", "BBB"}
+    assert all(len(candles) == 8 for candles in loaded.values())
+    assert loaded["AAA"][0].timestamp == base
+    assert loaded["AAA"][-1].timestamp == base + timedelta(days=7)

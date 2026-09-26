@@ -41,6 +41,7 @@ class SnapshotSpec:
     study_end: date | None = None
     source: str = "yahoo_chart"
     minimum_in_window_candles: int | None = None
+    dataset_subdir: str = "datasets"
 
     def __post_init__(self) -> None:
         if not self.universe:
@@ -58,6 +59,11 @@ class SnapshotSpec:
         minimum = self.target_common_candles if self.minimum_in_window_candles is None else self.minimum_in_window_candles
         if minimum < self.target_common_candles or minimum > self.requested_candles:
             raise ValueError("minimum_in_window_candles must be between target and requested candles")
+        dataset_path = Path(self.dataset_subdir)
+        if dataset_path.is_absolute() or ".." in dataset_path.parts or (
+            self.dataset_subdir != "." and len(dataset_path.parts) != 1
+        ):
+            raise ValueError("dataset_subdir must be a single relative path component or '.'")
         if self.study_start and self.study_end and self.study_start > self.study_end:
             raise ValueError("study_start cannot be after study_end")
 
@@ -217,7 +223,7 @@ def build_frozen_snapshot(
             if tuple(bar.timestamp for bar in aligned) != tuple(selected_timestamps):
                 raise RuntimeError(f"{symbol}: aligned timestamps mismatch")
 
-            csv_path = output_dir / "datasets" / symbol / f"{spec.interval}.csv"
+            csv_path = output_dir / spec.dataset_subdir / symbol / f"{spec.interval}.csv"
             _write_csv(csv_path, aligned)
             snapshot_datasets.append(
                 {
@@ -244,6 +250,7 @@ def build_frozen_snapshot(
         "study_end": spec.study_end.isoformat() if spec.study_end else None,
         "selected_common_calendar_start": selected_start,
         "selected_common_calendar_end": selected_end,
+        "dataset_subdir": spec.dataset_subdir,
         "selection_rule": "last_target_common_timestamps_from_full_fixed_window_intersection",
         "datasets": snapshot_datasets,
     }
@@ -331,3 +338,70 @@ def snapshot_from_preregistration(
         ),
         loader=loader,
     )
+
+
+def load_frozen_snapshot(manifest_path: str | Path) -> dict[str, tuple[Candle, ...]]:
+    """Load and validate aligned candles from a previously frozen manifest.
+
+    This function performs no network access and does not alter the snapshot.
+    It verifies the manifest's declared dataset files, candle counts and
+    timestamps before returning immutable in-memory tuples.
+    """
+
+    manifest_file = Path(manifest_path)
+    if not manifest_file.is_absolute():
+        manifest_file = ROOT / manifest_file
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    if manifest.get("status") != "COVERAGE_PASSED":
+        raise ValueError("Frozen snapshot manifest is not a successful coverage snapshot")
+
+    data_snapshot = manifest.get("data_snapshot")
+    if not isinstance(data_snapshot, dict):
+        raise ValueError("Frozen snapshot manifest is missing data_snapshot")
+    datasets = data_snapshot.get("datasets", [])
+    if not datasets:
+        raise ValueError("Frozen snapshot manifest contains no datasets")
+
+    result: dict[str, tuple[Candle, ...]] = {}
+    reference_timestamps: tuple[datetime, ...] | None = None
+
+    for item in datasets:
+        symbol = str(item["symbol"])
+        relative_path = Path(str(item["path"]))
+        path = relative_path if relative_path.is_absolute() else ROOT / relative_path
+        with path.open("r", encoding="utf-8", newline="") as handle:
+            reader = csv.DictReader(handle)
+            if tuple(reader.fieldnames or ()) != CSV_HEADER:
+                raise ValueError(f"{symbol}: unexpected frozen snapshot header")
+            rows = list(reader)
+
+        expected_count = int(item["candle_count"])
+        if len(rows) != expected_count:
+            raise ValueError(
+                f"{symbol}: manifest expects {expected_count} candles, got {len(rows)}"
+            )
+
+        candles = tuple(
+            Candle(
+                timestamp=datetime.fromisoformat(row["timestamp"]),
+                open=float(row["open"]),
+                high=float(row["high"]),
+                low=float(row["low"]),
+                close=float(row["close"]),
+                volume=float(row["volume"]),
+            )
+            for row in rows
+        )
+        fingerprint = dataset_fingerprint(candles)
+        if fingerprint != item.get("fingerprint"):
+            raise ValueError(f"{symbol}: frozen dataset fingerprint mismatch")
+
+        timestamps = tuple(c.timestamp for c in candles)
+        if reference_timestamps is None:
+            reference_timestamps = timestamps
+        elif timestamps != reference_timestamps:
+            raise ValueError(f"{symbol}: frozen snapshot timestamps are not aligned")
+
+        result[symbol] = candles
+
+    return result
