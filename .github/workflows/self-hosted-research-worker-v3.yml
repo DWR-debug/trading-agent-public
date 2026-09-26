@@ -4,17 +4,14 @@ on:
   push:
     branches:
       - master
+    paths:
+      - "research/run_requests/self_hosted_repo_qa.trigger"
 
 permissions:
   contents: read
 
 jobs:
   worker:
-    if: >-
-      ${{
-        github.actor == github.repository_owner &&
-        startsWith(github.event.head_commit.message, 'RUN_SELF_HOSTED_REPO_QA:')
-      }}
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 120
     steps:
@@ -64,10 +61,11 @@ jobs:
           if not exist "%SITE%" mkdir "%SITE%"
           "%PYTHON_EXE%" -m pip install --disable-pip-version-check --target "%SITE%" pytest pandas exchange-calendars statsmodels==0.15.0
 
-      - name: Safety guard
+      - name: Authorization and safety guard
         shell: cmd
         run: |
           @echo off
+          if /I not "%GITHUB_ACTOR%"=="DWR-debug" exit /b 1
           if /I not "%GITHUB_REF%"=="refs/heads/master" exit /b 1
           set "PYTHONPATH=%RUNNER_TEMP%\\python-site"
           "%PYTHON_EXE%" -c "from config import settings; assert settings.PAPER_ONLY is True; assert settings.LIVE_TRADING_ENABLED is False; assert settings.ORDERS_ENABLED is False; print('SAFETY INVARIANTS OK')"
