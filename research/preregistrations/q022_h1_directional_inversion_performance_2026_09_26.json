@@ -1,0 +1,115 @@
+{
+  "schema_version": "1.0",
+  "preregistration_id": "Q-022-H1-DIRECTIONAL-INVERSION-PERFORMANCE-2026-09-26",
+  "parent_design": "Q-022-TREASURY-FAILURE-FOLLOWUP-2026-09-26",
+  "parent_diagnosis": "Q-021-TREASURY-AUCTION-FAILURE-MECHANISM-DIAGNOSIS",
+  "source_trial": "T-2026-09-26-046R1-PERFORMANCE",
+  "trial_id": "T-2026-09-26-047",
+  "research_family": "official_event_alpha_directional_inversion",
+  "status": "PREREGISTERED_DESIGN_ONLY",
+  "purpose": "Test the single pre-specified Q022-H1 mechanism: whether the Q020 Treasury-auction signal direction is exactly inverted. No other trading-rule component changes.",
+  "selection": {
+    "q022_internal_ranking": false,
+    "candidate_selected_by_performance": false,
+    "holdout_used_for_selection": false,
+    "parameter_search": false,
+    "asset_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "variant_search": false
+  },
+  "study_window": {
+    "start": "2011-01-01",
+    "end": "2025-09-24"
+  },
+  "universe": "validation_2026_09_26_treasury_auction_directional_inversion",
+  "symbols": [
+    "MO",
+    "PM",
+    "GILD",
+    "VRTX",
+    "ISRG",
+    "ZBH",
+    "ELV",
+    "CI",
+    "JCI",
+    "FAST",
+    "PAYX",
+    "CTSH"
+  ],
+  "interval": "1d",
+  "data_contract": {
+    "requested_raw_candles_per_symbol": 3520,
+    "target_common_calendar": 3500,
+    "research_periods": 2798,
+    "holdout_periods": 700,
+    "coverage_preflight_required": true,
+    "frozen_snapshot_required": true,
+    "point_in_time_required": true
+  },
+  "event_source": {
+    "provider": "U.S. Treasury Fiscal Data",
+    "dataset": "Treasury Securities Auctions Data",
+    "security_type": "Note",
+    "security_term": "10-Year",
+    "source_contract_fingerprint": "13072dbed7d60684f4a4fb8a3de69555cae83c66f3cfdfb603b9ed2a4b1c225b",
+    "point_in_time": "Use the validated Q019 record_date mapping and act no earlier than the first XNYS session strictly after record_date."
+  },
+  "trading_rule": {
+    "base_rule": "Identical to the fixed Q020 Treasury-auction performance rule.",
+    "intervention": "Invert only the final event trading direction: original +1 becomes -1, original -1 becomes +1, and 0 remains 0.",
+    "exposure": "On the first eligible XNYS session strictly after each event record_date, hold the inverted signal for that session only; outside event sessions exposure is zero.",
+    "mapping": "-1 = equal-weight long across all 12 fixed assets; +1 = equal-weight short across all 12 fixed assets; 0 = flat after inversion.",
+    "sizing": "Each active asset receives 1/12 of gross portfolio exposure with total gross exposure fixed at 1.0; no leverage.",
+    "overlap": "If multiple mapped events fall on the same session, aggregate the original fixed signals by arithmetic sum, take sign(sum), then invert that sign. Zero remains flat.",
+    "execution_model": "open_to_close_same_session",
+    "no_other_changes": true
+  },
+  "costs": {
+    "base_fee_bps": 10,
+    "base_slippage_bps": 5,
+    "scenarios": [
+      "base",
+      "1.5x",
+      "2x"
+    ]
+  },
+  "evaluation": {
+    "performance_trial_after_coverage_only": true,
+    "fresh_symbol_disjoint_validation": true,
+    "holdout_blind": true,
+    "rolling_windows": 5,
+    "no_selection_on_holdout": true
+  },
+  "gates": {
+    "research_return_positive": true,
+    "research_max_drawdown_lte_percent": 10,
+    "research_profit_factor_gte": 1.1,
+    "rolling_min_profit_factor_gte": 1.1,
+    "rolling_profitable_window_ratio_gte": 0.5,
+    "rolling_average_drawdown_lte_percent": 10,
+    "oos_to_is_return_ratio_gte": 0.25,
+    "holdout_return_positive": true,
+    "holdout_profit_factor_gte": 1.1,
+    "holdout_max_drawdown_lte_percent": 10,
+    "stress_holdout_return_nonnegative_at_1_5x": true,
+    "stress_holdout_return_nonnegative_at_2x": true,
+    "total_return_sensitivity_nonnegative": true
+  },
+  "authorization": {
+    "current_status": "DESIGN_ONLY",
+    "performance_trial_authorized": false,
+    "authorization_condition": "Authorize only after successful fresh OHLCV coverage on the fixed universe and a frozen snapshot fingerprint. The execution authorization must bind the exact preregistration, snapshot and source-contract fingerprints before performance computation."
+  },
+  "interpretation": {
+    "primary_question": "Does the fixed inverted direction satisfy the unchanged evidence contract on a fresh symbol-disjoint universe?",
+    "falsification": "No promotion evidence if the inverted mechanism fails the pre-specified evidence gates or does not provide an ex ante defined mechanism-level clarification.",
+    "selection_rule": "The original and inverted directions may not be chosen after observing this trial's results."
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}

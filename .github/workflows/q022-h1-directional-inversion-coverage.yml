@@ -1,0 +1,80 @@
+name: Q022 H1 Directional Inversion Coverage
+
+on:
+  push:
+    branches:
+      - research/execute-q022-h1-coverage
+    paths:
+      - research/preregistrations/q022_h1_directional_inversion_performance_2026_09_26.json
+      - research/authorizations/q022_h1_directional_inversion_coverage_2026_09_26.json
+      - research/asset_universes.py
+      - automation/coverage_preflight.py
+      - data/canonical_snapshot.py
+      - tests/test_q022_h1_directional_inversion_design.py
+      - tests/test_coverage_preflight.py
+      - .github/workflows/q022-h1-directional-inversion-coverage.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: q022-h1-directional-inversion-coverage
+  cancel-in-progress: false
+
+jobs:
+  coverage:
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 120
+    steps:
+      - name: Checkout exact snapshot
+        shell: cmd
+        run: |
+          @echo off
+          setlocal EnableExtensions
+          if not defined GITHUB_SHA exit /b 1
+          if /I not "%GITHUB_REPOSITORY%"=="DWR-debug/trading-agent-public" exit /b 1
+          set "RUN_KEY=%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          set "WORK=%RUNNER_TEMP%\q022-h1-%RUN_KEY%"
+          set "ARCHIVE=%RUNNER_TEMP%\q022-h1-%RUN_KEY%.tar.gz"
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-%RUN_KEY%"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-%RUN_KEY%.nupkg"
+          set "SITE=%RUNNER_TEMP%\python-site-q022-h1-%RUN_KEY%"
+          set "OUT=%GITHUB_WORKSPACE%\research\runs\q022_h1_coverage"
+          if exist "%WORK%" rmdir /s /q "%WORK%"
+          mkdir "%WORK%" || exit /b 1
+          curl.exe -L --fail --silent --show-error -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%" || exit /b 1
+          tar.exe -xzf "%ARCHIVE%" -C "%WORK%" || exit /b 1
+          set "REPO_SRC="
+          for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
+          if not defined REPO_SRC exit /b 1
+          cd /d "%REPO_SRC%" || exit /b 1
+
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            mkdir "%PY_ROOT%" 2>nul
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          "%PY_EXE%" -m pip --version >nul 2>&1
+          if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
+          if exist "%SITE%" rmdir /s /q "%SITE%"
+          mkdir "%SITE%" || exit /b 1
+          "%PY_EXE%" -m pip install --disable-pip-version-check --target "%SITE%" pytest pandas exchange-calendars statsmodels==0.15.0 || exit /b 1
+          set "PYTHONPATH=%SITE%;%REPO_SRC%"
+
+          "%PY_EXE%" -c "from config import settings; assert settings.PAPER_ONLY is True; assert settings.LIVE_TRADING_ENABLED is False; assert settings.ORDERS_ENABLED is False; assert settings.AUTOMATIC_PROMOTION is False; print('SAFETY OK')" || exit /b 1
+          "%PY_EXE%" -m pytest -q tests/test_q022_h1_directional_inversion_design.py tests/test_coverage_preflight.py || exit /b 1
+          "%PY_EXE%" -m automation.coverage_preflight --preregistration research/preregistrations/q022_h1_directional_inversion_performance_2026_09_26.json --output-root "%OUT%" || exit /b 1
+          echo Q022_H1_COVERAGE_COMPLETE
+          endlocal
+
+      - name: Publish coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q022-h1-directional-inversion-coverage-${{ github.run_id }}
+          path: research/runs/q022_h1_coverage/
+          if-no-files-found: warn
+          retention-days: 30
