@@ -29,3 +29,7 @@ def test_self_hosted_workflow_is_manual_and_owner_gated():
     assert "ORDERS_ENABLED" in text
     assert "shell: cmd" in text
     assert "shell: powershell" not in text
+    assert "python.3.13.15.nupkg" in text
+    assert "v3-flatcontainer/python/3.13.15" in text
+    assert "python-3.13.15-nuget" in text
+    assert "python.exe" in text
