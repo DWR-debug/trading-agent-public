@@ -1,0 +1,80 @@
+name: Self-hosted Research Worker v4
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "research/run_requests/self_hosted_repo_qa.trigger"
+
+permissions:
+  contents: read
+
+jobs:
+  worker:
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 120
+    steps:
+      - name: Self-hosted repo_qa single-step worker
+        shell: cmd
+        run: |
+          @echo off
+          setlocal EnableExtensions
+          if /I not "%GITHUB_ACTOR%"=="DWR-debug" exit /b 1
+          if /I not "%GITHUB_REF%"=="refs/heads/master" exit /b 1
+          if not defined GITHUB_SHA exit /b 1
+
+          set "WORK=%RUNNER_TEMP%\trading-agent-%GITHUB_SHA%"
+          set "ARCHIVE=%RUNNER_TEMP%\trading-agent-%GITHUB_SHA%.tar.gz"
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15.nupkg"
+          set "SITE=%RUNNER_TEMP%\python-site"
+
+          if exist "%WORK%" rmdir /s /q "%WORK%"
+          mkdir "%WORK%" || exit /b 1
+
+          echo [1/6] Downloading exact repository snapshot
+          curl.exe -L --fail --silent --show-error -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%"
+          if errorlevel 1 exit /b 1
+          tar.exe -xzf "%ARCHIVE%" -C "%WORK%"
+          if errorlevel 1 exit /b 1
+
+          set "REPO_SRC="
+          for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
+          if not defined REPO_SRC exit /b 1
+          cd /d "%REPO_SRC%" || exit /b 1
+
+          echo [2/6] Bootstrapping pinned Python 3.13.15
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg"
+            if errorlevel 1 exit /b 1
+            mkdir "%PY_ROOT%" 2>nul
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%"
+            if errorlevel 1 exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          "%PY_EXE%" -m pip --version >nul 2>&1
+          if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
+          "%PY_EXE%" -m pip --version || exit /b 1
+
+          echo [3/6] Installing minimal research dependencies
+          if exist "%SITE%" rmdir /s /q "%SITE%"
+          mkdir "%SITE%" || exit /b 1
+          "%PY_EXE%" -m pip install --disable-pip-version-check --target "%SITE%" pytest pandas exchange-calendars statsmodels==0.15.0
+          if errorlevel 1 exit /b 1
+          set "PYTHONPATH=%SITE%;%REPO_SRC%"
+
+          echo [4/6] Checking paper-only safety
+          "%PY_EXE%" -c "from config import settings; assert settings.PAPER_ONLY is True; assert settings.LIVE_TRADING_ENABLED is False; assert settings.ORDERS_ENABLED is False; print('SAFETY INVARIANTS OK')"
+          if errorlevel 1 exit /b 1
+
+          echo [5/6] Running bounded repo_qa
+          "%PY_EXE%" -m automation.self_hosted_research_worker --lane repo_qa --output-dir "research/runs/self_hosted/single_step_%GITHUB_RUN_ID%"
+          if errorlevel 1 exit /b 1
+
+          echo [6/6] QA complete
+          echo RUN_ID=%GITHUB_RUN_ID%
+          echo SHA=%GITHUB_SHA%
+          echo REPO_QA=SUCCESS
+          endlocal
