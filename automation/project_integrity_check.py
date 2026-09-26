@@ -20,6 +20,7 @@ ACTIVE_WORKFLOWS = {
     "q015-mechanism-discrimination.yml",
     "copilot-setup-steps.yml",
     "wide-search.yml",
+    "h06-mechanism.yml",
 }
 
 REQUIRED_FILES = (
