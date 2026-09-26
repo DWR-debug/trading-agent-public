@@ -27,6 +27,7 @@ ACTIVE_WORKFLOWS = {
     "q019-treasury-auction-contract.yml",
     "q020-treasury-coverage-repair.yml",
     "agent-dispatch.yml",
+    "q020-treasury-auction-performance.yml",
 }
 
 REQUIRED_FILES = (
