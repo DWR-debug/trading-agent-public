@@ -1,0 +1,100 @@
+name: H06 Mechanism Replication
+
+on:
+  push:
+    branches:
+      - research/h06-mechanism-replication-v1
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-h06-mechanism-replication
+  cancel-in-progress: false
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 25
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+      - name: Safety
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          print("H06 MECHANISM REPLICATION SAFETY OK")
+          PY
+      - name: Unit Tests
+        run: python -m pytest -q tests/test_h06_mechanism_replication.py
+      - name: Frozen replication snapshot laden
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/h06-replication
+          gh run download 36230165868 \
+            --repo "$GITHUB_REPOSITORY" \
+            --name "wide-search-h06-mechanism-replication-36230165868" \
+            --dir /tmp/h06-replication
+          test -s /tmp/h06-replication/h06_mechanism_replication_coverage.json
+          test -d /tmp/h06-replication/h06_replication_datasets
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("/tmp/h06-replication/h06_mechanism_replication_coverage.json")
+          data = json.loads(path.read_text(encoding="utf-8"))
+          data["artifact_id"] = 10901872543
+          data["artifact_digest"] = "sha256:c08212e6a247e8cb9c8dd891c6549d35191155ed3ac04db8ae15e480bf049ce6"
+          path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+          print("H06 source artifact provenance attached")
+          PY
+      - name: Replikationsdiagnose
+        run: |
+          set -euo pipefail
+          python -m automation.h06_mechanism_replication \
+            --data-root /tmp/h06-replication/h06_replication_datasets \
+            --source-manifest /tmp/h06-replication/h06_mechanism_replication_coverage.json \
+            --output research/runs/wide_search/h06_mechanism_replication_2026_09_26.json
+      - name: Ergebnis prüfen
+        run: |
+          set -euo pipefail
+          test -s research/runs/wide_search/h06_mechanism_replication_2026_09_26.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          data = json.loads(
+              Path('research/runs/wide_search/h06_mechanism_replication_2026_09_26.json')
+              .read_text(encoding='utf-8')
+          )
+          assert data['findings']['aggregate']['decision_count'] == 2546
+          assert data['governance']['forward_returns_used'] is False
+          assert data['governance']['pnl_used'] is False
+          assert data['governance']['holdout_used'] is False
+          assert data['governance']['performance_trial_authorized'] is False
+          print(json.dumps(data['findings']['aggregate'], sort_keys=True))
+          PY
+      - name: Evidence
+        uses: actions/upload-artifact@v6
+        with:
+          name: h06-mechanism-replication-${{ github.run_id }}
+          path: research/runs/wide_search/h06_mechanism_replication_2026_09_26.json
+          if-no-files-found: error
+          retention-days: 30
