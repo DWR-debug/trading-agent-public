@@ -48,7 +48,148 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          files="$(git diff --name-only "${GITHUB_EVENT_BEFORE}" "${GITHUB_SHA}" -- 'agent_requests/**' | grep -E '^agent_requests/lane${{ matrix.lane }}/[^/]+\.request$' || true)"
+          before="${{ github.event.before }}"
+          files="$(git diff --name-only "$before" "${GITHUB_SHA}" -- 'agent_requests/**' | grep -E '^agent_requests/lane${{ matrix.lane }}/[^/]+\.request
+          count="$(printf '%s\n' "$files" | sed '/^$/d' | wc -l | tr -d ' ')"
+          if [ "$count" = "0" ]; then
+            echo "No new request for lane ${{ matrix.lane }} in this push; lane idle."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "$count" != "1" ]; then
+            echo "::error::Expected exactly one request file for lane ${{ matrix.lane }}; got $count"
+            exit 1
+          fi
+          request_file="$files"
+          issue_number="$(python -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["issue_number"])' "$request_file")"
+          test -n "$issue_number"
+          cp "$request_file" "$RUNNER_TEMP/request.json"
+          gh api "/repos/${GITHUB_REPOSITORY}/issues/${issue_number}" > "$RUNNER_TEMP/issue.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          issue=json.loads(Path(os.environ["RUNNER_TEMP"],"issue.json").read_text(encoding="utf-8"))
+          assert issue["user"]["login"] == os.environ["GITHUB_REPOSITORY_OWNER"]
+          assert any(label["name"] == "agent-cli-ready" for label in issue.get("labels", []))
+          Path(os.environ["RUNNER_TEMP"],"event.json").write_text(json.dumps({"issue":issue}),encoding="utf-8")
+          PY
+          python -m automation.agent_dispatch --event-json "$RUNNER_TEMP/event.json" --master-sha "$GITHUB_SHA" --active-agent-count 0 --output "$RUNNER_TEMP/agent_task_manifest.json"
+          echo "issue_number=$issue_number" >> "$GITHUB_OUTPUT"
+          echo "run=true" >> "$GITHUB_OUTPUT"
+
+      - name: Stop idle lane
+        if: steps.request.outputs.run != 'true'
+        run: echo "Lane idle; no agent session consumed."
+
+      - name: Prepare isolated branch
+        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true'
+        id: branch
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          task_id="$(python -c 'import json,os; body=json.load(open(os.path.join(os.environ["RUNNER_TEMP"], "issue.json"), encoding="utf-8"))["body"]; start=body.find("<!-- TRADING_AGENT_TASK_V1"); end=body.find("-->", start); print(json.loads(body[start + len("<!-- TRADING_AGENT_TASK_V1"):end].strip())["task_id"])')"
+          branch="agent/${task_id}-copilot-cli"
+          if git ls-remote --exit-code --heads "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "${branch}" >/dev/null 2>&1; then
+            gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.request.outputs.issue_number }}/comments" \
+              -f body="Agent queue skipped: task branch ${branch} already exists. Duplicate execution is fail-closed."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git switch -c "${branch}"
+          echo "branch=${branch}" >> "$GITHUB_OUTPUT"
+
+      - name: Run bounded Copilot CLI
+        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true'
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ steps.request.outputs.issue_number }}
+        run: |
+          set -euo pipefail
+          npm install -g @github/copilot
+          task_body="$(python -c 'import json,os; print(json.load(open(os.path.join(os.environ["RUNNER_TEMP"], "issue.json"), encoding="utf-8"))["body"])')"
+          prompt="$(cat <<EOF
+          You are the bounded engineering worker for trading-agent-public.
+          Work ONLY on issue #${ISSUE_NUMBER} and its TRADING_AGENT_TASK_V1 contract.
+          Use the repository custom agent trading-agent-engineer.
+          Read AGENTS.md, docs/TRADING_AGENT_CHAT_ENTRYPOINT.md, docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md, and relevant files first.
+          Hard constraints: PAPER_ONLY=True; LIVE_TRADING_ENABLED=False; orders_enabled=False; automatic_promotion=False.
+          Do not change research/evidence historical records, authorizations, gates, holdout logic, strategy parameters, asset universes, promotion rules, or live execution.
+          Do not perform deterministic research computation or scientific selection.
+          Stay within the task's explicit allowed_paths.
+          Do not push yourself and do not create a pull request.
+          Add focused regression tests when code changes are requested.
+          Finish with a concise engineering handoff.
+
+          Exact issue body:
+          ${task_body}
+          EOF
+          )"
+          copilot --agent=trading-agent-engineer --autopilot --no-ask-user --max-ai-credits=45 --max-autopilot-continues=1 -p "${prompt}" --allow-tool='read' --allow-tool='search' --allow-tool='write' --allow-tool='shell(git:*)' --allow-tool='shell(python:*)' --allow-tool='shell(pytest:*)'
+
+      - name: Enforce task-scoped file scope
+        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, subprocess
+          contract=json.load(open(os.path.join(os.environ["RUNNER_TEMP"],"task_contract.json"),encoding="utf-8"))
+          allowed=contract["allowed_paths"]
+          protected=(".github/","research/evidence/","research/authorizations/","gates/")
+          def matches(path,pattern):
+              return path.startswith(pattern[:-3]) if pattern.endswith("/**") else path == pattern
+          changed=[x for x in subprocess.check_output(["git","diff","--name-only"],text=True).splitlines() if x]
+          for path in changed:
+              if path.startswith(protected) or not any(matches(path,p) for p in allowed):
+                  raise SystemExit("Copilot CLI changed file outside task scope: " + path)
+          print("FILE_SCOPE_OK files=" + str(len(changed)))
+          PY
+
+      - name: Final bounded regression gate
+        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          python -m pytest -q tests/test_agent_dispatch.py tests/test_self_hosted_research_worker.py
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          print("SAFETY INVARIANTS OK")
+          PY
+
+      - name: Commit and publish
+        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ steps.branch.outputs.branch }}
+          ISSUE_NUMBER: ${{ steps.request.outputs.issue_number }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}/comments" -f body="Agent completed without repository changes; no PR was created."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "AGENT: issue #${ISSUE_NUMBER} bounded engineering"
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:${BRANCH}"
+          if pr_url="$(gh pr create --base master --head "${BRANCH}" --title "AGENT: Issue #${ISSUE_NUMBER} bounded engineering task" --body "Bounded agent task completed and regression-tested." 2>/dev/null)"; then
+            gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}/comments" -f body="Agent task completed and published as ${pr_url}."
+            echo "PR_URL=${pr_url}"
+          else
+            branch_url="https://github.com/${GITHUB_REPOSITORY}/tree/${BRANCH}"
+            gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}/comments" -f body="Agent task completed, tests/safety passed, and changes were pushed to ${branch_url}. Automatic PR creation is unavailable; the top-level orchestrator must create the PR."
+            echo "PR_CREATE_UNAVAILABLE branch=${branch_url}"
+          fi
+ || true)"
           count="$(printf '%s\n' "$files" | sed '/^$/d' | wc -l | tr -d ' ')"
           if [ "$count" = "0" ]; then
             echo "No new request for lane ${{ matrix.lane }} in this push; lane idle."
