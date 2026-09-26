@@ -524,9 +524,10 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("ACN", "AMT", "APD", "TGT", "CME", "CTAS", "GPC", "LLY", "MCO", "NOC", "ROST", "SHW"),
         target_count=4000,
     ),
-);
+)
 
-(name: str) -> AssetUniverse:
+
+def get_universe(name: str) -> AssetUniverse:
     for universe in UNIVERSES:
         if universe.name == name:
             return universe
