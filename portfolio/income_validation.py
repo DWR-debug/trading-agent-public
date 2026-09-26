@@ -245,7 +245,20 @@ def _replay(
                 minimum_post_payout_equity,
                 equity,
             )
+            minimum_equity = min(minimum_equity, equity)
+            post_payout_floor_headroom = equity - policy.capital_floor_eur
+            minimum_floor_headroom = min(
+                minimum_floor_headroom,
+                post_payout_floor_headroom,
+            )
+            if equity < policy.capital_floor_eur - 1e-12:
+                floor_violations += 1
             high_water_mark = max(high_water_mark, equity + payout)
+            if peak_equity > 0.0:
+                maximum_drawdown = max(
+                    maximum_drawdown,
+                    1.0 - equity / peak_equity,
+                )
             observations.append(
                 PayoutObservation(
                     period_index=period_index,
