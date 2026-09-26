@@ -9,24 +9,7 @@
     "start": "2011-01-01",
     "end": "2025-09-24"
   },
-  "universe": {
-    "name": "validation_2026_09_26_treasury_auction_performance",
-    "symbols": [
-      "ACN",
-      "AMT",
-      "APD",
-      "BK",
-      "CME",
-      "CTAS",
-      "GPC",
-      "LLY",
-      "MCO",
-      "NOC",
-      "ROST",
-      "SHW"
-    ],
-    "interval": "1d"
-  },
+  "universe": "validation_2026_09_26_treasury_auction_performance",
   "event_source": {
     "provider": "U.S. Treasury Fiscal Data",
     "dataset": "Treasury Securities Auctions Data",
@@ -104,5 +87,23 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "interpretation": "Q020 is a fixed-rule performance design only. Passing Q019 source/PIT coverage does not imply predictive value or profitability."
+  "interpretation": "Q020 is a fixed-rule performance design only. Passing Q019 source/PIT coverage does not imply predictive value or profitability.",
+  "trial_id": "T-2026-09-26-046",
+  "symbols": [
+    "ACN",
+    "AMT",
+    "APD",
+    "BK",
+    "CME",
+    "CTAS",
+    "GPC",
+    "LLY",
+    "MCO",
+    "NOC",
+    "ROST",
+    "SHW"
+  ],
+  "interval": "1d",
+  "requested_candles": 3520,
+  "target_candles": 3500
 }
