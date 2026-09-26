@@ -524,7 +524,6 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("ACN", "AMT", "APD", "TGT", "CME", "CTAS", "GPC", "LLY", "MCO", "NOC", "ROST", "SHW"),
         target_count=4000,
     ),
-)
 
     AssetUniverse(
         name="validation_2026_09_26_treasury_auction_directional_inversion",
@@ -537,10 +536,9 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
             "MO", "PM", "GILD", "VRTX", "ISRG", "ZBH",
             "ELV", "CI", "JCI", "FAST", "PAYX", "CTSH",
         ),
-        target_count=3520,
+        target_count=4000,
     ),
-
-
+)
 
 def get_universe(name: str) -> AssetUniverse:
     for universe in UNIVERSES:
