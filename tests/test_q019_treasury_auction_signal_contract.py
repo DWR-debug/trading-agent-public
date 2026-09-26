@@ -85,8 +85,8 @@ def test_pit_calendar_contract_is_independent_of_asset_ohlcv():
 
     calendar = xcals.get_calendar("XNYS")
     sessions = calendar.sessions_in_range(
-        pd.Timestamp(module.STUDY_START.isoformat(), tz="UTC"),
-        pd.Timestamp(module.STUDY_END.isoformat(), tz="UTC"),
+        pd.Timestamp(module.STUDY_START.isoformat()),
+        pd.Timestamp(module.STUDY_END.isoformat()),
     )
     assert len(sessions) > 0
     assert sessions[0].date() >= module.STUDY_START
