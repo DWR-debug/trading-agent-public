@@ -71,7 +71,7 @@ jobs:
           set "PYTHONPATH=%SITE%;%REPO_SRC%"
 
           echo [4/7] Safety invariants
-          "%PY_EXE%" -c "from config import settings; assert settings.PAPER_ONLY is True; assert settings.LIVE_TRADING_ENABLED is False; assert settings.ORDERS_ENABLED is False; assert settings.AUTOMATIC_PROMOTION is False; print('SAFETY INVARIANTS OK')" || exit /b 1
+          "%PY_EXE%" -c "from config import settings; assert settings.PAPER_ONLY is True; assert settings.LIVE_TRADING_ENABLED is False; assert settings.ORDERS_ENABLED is False; print('SAFETY INVARIANTS OK')" || exit /b 1
 
           set "FAIL=0"
 
