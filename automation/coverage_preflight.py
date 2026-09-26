@@ -1,24 +1,22 @@
-"""Fail-closed coverage preflight for a preregistered research trial.
+"""Fail-closed Yahoo OHLCV coverage preflight.
 
-This module only acquires and validates historical data coverage. It never evaluates
-strategy performance, never selects parameters, never reads a holdout for selection,
-and never places orders.
+All market-data snapshot geometry is delegated to the canonical data layer.
+This runner retains trial-specific preregistration and symbol-disjointness
+governance, but does not implement a second calendar/snapshot algorithm.
 """
 
 from __future__ import annotations
 
 import argparse
-import csv
 import hashlib
 import json
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 from config import settings
+from data.canonical_snapshot import SnapshotSpec, build_frozen_snapshot
 from data.yahoo_loader import load_yahoo_history
 from research.asset_universes import get_universe, list_universes
-from research.protocol import dataset_fingerprint
-
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -37,6 +35,52 @@ def _fingerprint(payload: dict) -> str:
     return hashlib.sha256(_canonical(payload).encode("utf-8")).hexdigest()
 
 
+def _parse_optional_date(spec: dict, key: str) -> date | None:
+    value = spec.get(key)
+    if value is None:
+        value = spec.get("study_window", {}).get(key)
+    if value is None:
+        value = spec.get("data_contract", {}).get(key)
+    return date.fromisoformat(value) if value else None
+
+
+def _validate_disjointness(spec: dict, universe_name: str, symbols: tuple[str, ...], trial_id: str) -> None:
+    target_set = set(symbols)
+    allowed_overlap = set(spec.get("disjointness", {}).get("allowed_overlap_universes", []))
+    if allowed_overlap:
+        if spec.get("trial_type") != "repair_successor":
+            raise RuntimeError(
+                "Symbol overlap is only permitted for an explicit repair successor."
+            )
+        if not spec.get("parent_trial_id"):
+            raise RuntimeError(
+                "Repair successor with symbol overlap requires parent_trial_id."
+            )
+
+    repair_successors = set()
+    preregistration_dir = ROOT / "research" / "preregistrations"
+    for candidate in preregistration_dir.glob("trial_*.json"):
+        try:
+            successor = json.loads(candidate.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if (
+            successor.get("trial_type") == "repair_successor"
+            and successor.get("parent_trial_id") == trial_id
+            and successor.get("disjointness", {}).get("allowed_overlap_universes", []) == [universe_name]
+        ):
+            repair_successors.add(successor.get("universe"))
+
+    for other in list_universes():
+        if other.name == universe_name or other.name in allowed_overlap or other.name in repair_successors:
+            continue
+        overlap = sorted(target_set.intersection(other.symbols))
+        if overlap:
+            raise RuntimeError(
+                f"Universe is not symbol-disjoint from {other.name}: {overlap}"
+            )
+
+
 def run_preflight(
     preregistration: str | Path,
     *,
@@ -47,10 +91,10 @@ def run_preflight(
         prereg_path = ROOT / prereg_path
 
     spec = json.loads(prereg_path.read_text(encoding="utf-8"))
-    trial_id = spec["trial_id"]
-    universe_name = spec["universe"]
+    trial_id = str(spec["trial_id"])
+    universe_name = str(spec["universe"])
     symbols = tuple(spec["symbols"])
-    interval = spec["interval"]
+    interval = str(spec["interval"])
     requested = int(spec["requested_candles"])
     target = int(spec["target_candles"])
 
@@ -58,6 +102,8 @@ def run_preflight(
         raise RuntimeError("Coverage preflight requires PAPER_ONLY=True.")
     if settings.LIVE_TRADING_ENABLED is not False:
         raise RuntimeError("Coverage preflight requires LIVE_TRADING_ENABLED=False.")
+    if settings.ORDERS_ENABLED is not False:
+        raise RuntimeError("Coverage preflight requires ORDERS_ENABLED=False.")
     if len(symbols) != len(set(symbols)):
         raise RuntimeError("Preregistration contains duplicate symbols.")
 
@@ -71,115 +117,50 @@ def run_preflight(
     if universe.target_count != requested:
         raise RuntimeError("Universe target_count does not match requested coverage.")
 
-    target_set = set(symbols)
-    allowed_overlap = set(
-        spec.get("disjointness", {}).get(
-            "allowed_overlap_universes", []
-        )
-    )
-    if allowed_overlap:
-        if spec.get("trial_type") != "repair_successor":
-            raise RuntimeError(
-                "Symbol overlap is only permitted for an explicit repair successor."
-            )
-        if not spec.get("parent_trial_id"):
-            raise RuntimeError(
-                "Repair successor with symbol overlap requires parent_trial_id."
-            )
-    repair_successors = set()
-    preregistration_dir = ROOT / "research" / "preregistrations"
-    for candidate in preregistration_dir.glob("trial_*.json"):
-        try:
-            successor = json.loads(
-                candidate.read_text(encoding="utf-8")
-            )
-        except (OSError, json.JSONDecodeError):
-            continue
-        if (
-            successor.get("trial_type") == "repair_successor"
-            and successor.get("parent_trial_id") == trial_id
-            and successor.get("disjointness", {}).get(
-                "allowed_overlap_universes", []
-            ) == [universe_name]
-        ):
-            repair_successors.add(successor.get("universe"))
+    _validate_disjointness(spec, universe_name, symbols, trial_id)
 
-    for other in list_universes():
-        if (
-            other.name == universe_name
-            or other.name in allowed_overlap
-            or other.name in repair_successors
-        ):
-            continue
-        overlap = sorted(target_set.intersection(other.symbols))
-        if overlap:
-            raise RuntimeError(
-                f"Universe is not symbol-disjoint from {other.name}: {overlap}"
-            )
+    study_start = _parse_optional_date(spec, "start")
+    study_end = _parse_optional_date(spec, "end")
+    output_dir = Path(output_root) / trial_id
 
-    counts: dict[str, int] = {}
-    quality: dict[str, dict[str, int]] = {}
-    errors: dict[str, str] = {}
-    histories = {}
-    bars_by_symbol = {}
-    datasets = []
-
-    for symbol in symbols:
-        report: dict[str, int] = {}
-        try:
-            bars = load_yahoo_history(
-                symbol,
-                interval,
-                requested,
-                allow_partial=True,
-                skip_invalid_ohlc=True,
-                quality_report=report,
-            )
-        except ValueError as exc:
-            errors[symbol] = str(exc)
-            quality[symbol] = report
-            continue
-
-        counts[symbol] = len(bars)
-        quality[symbol] = report
-        histories[symbol] = {bar.timestamp for bar in bars}
-        bars_by_symbol[symbol] = tuple(bars)
-        datasets.append(
-            {
-                "symbol": symbol,
-                "count": len(bars),
-                "start": bars[0].timestamp.isoformat() if bars else None,
-                "end": bars[-1].timestamp.isoformat() if bars else None,
-            }
-        )
-
-    common_count = (
-        len(set.intersection(*histories.values()))
-        if histories and len(histories) == len(symbols)
-        else 0
+    canonical = build_frozen_snapshot(
+        SnapshotSpec(
+            universe=universe_name,
+            symbols=symbols,
+            interval=interval,
+            requested_candles=requested,
+            target_common_candles=target,
+            output_dir=output_dir,
+            study_start=study_start,
+            study_end=study_end,
+        ),
+        loader=load_yahoo_history,
     )
 
+    status = "coverage_passed" if canonical["status"] == "COVERAGE_PASSED" else "DATA_INVALID"
+    per_symbol = canonical["coverage"]["per_symbol"]
+    counts = {
+        symbol: meta["in_window_count"]
+        for symbol, meta in per_symbol.items()
+    }
     insufficient = {
         symbol: count
         for symbol, count in counts.items()
         if count < requested
     }
-    missing = [symbol for symbol in symbols if symbol not in histories]
+    missing = [
+        symbol
+        for symbol in symbols
+        if per_symbol.get(symbol, {}).get("status") != "COVERAGE_VALID"
+    ]
 
-    status = "coverage_passed"
-    reasons: list[str] = []
-    if missing:
-        status = "DATA_INVALID"
-        reasons.append("missing_or_unloadable_symbols")
-    if insufficient:
-        status = "DATA_INVALID"
-        reasons.append("insufficient_per_symbol_history")
-    if common_count < target:
-        status = "DATA_INVALID"
-        reasons.append("insufficient_common_calendar")
+    reasons = []
+    failure_reason = canonical["coverage"].get("failure_reason")
+    if failure_reason:
+        reasons.append(failure_reason)
 
     payload = {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "trial_id": trial_id,
         "research_family": spec["research_family"],
         "universe": universe_name,
@@ -190,13 +171,25 @@ def run_preflight(
         "requested_candles": requested,
         "target_common_calendar": target,
         "symbols": list(symbols),
-        "datasets": datasets,
+        "datasets": [
+            {
+                "symbol": symbol,
+                "count": per_symbol[symbol]["in_window_count"],
+                "start": per_symbol[symbol]["start"],
+                "end": per_symbol[symbol]["end"],
+            }
+            for symbol in symbols
+            if symbol in per_symbol
+        ],
         "per_symbol_counts": counts,
         "insufficient_symbols": insufficient,
         "missing_symbols": missing,
-        "common_calendar_count": common_count,
-        "quality": quality,
-        "errors": errors,
+        "common_calendar_count": canonical["coverage"]["common_calendar_count"],
+        "quality": {
+            symbol: per_symbol[symbol].get("quality", {})
+            for symbol in per_symbol
+        },
+        "errors": canonical["coverage"]["errors"],
         "performance_evaluation": False,
         "oos_evaluation": False,
         "holdout_evaluation": False,
@@ -208,64 +201,22 @@ def run_preflight(
             else "NO_SCIENTIFIC_OUTCOME"
         ),
         "failure_reasons": reasons,
-        "data_snapshot": None,
-        "safety": {
-            "paper_only": True,
-            "live_trading_enabled": False,
-            "orders_enabled": False,
-            "automatic_promotion": False,
-        },
+        "data_snapshot": canonical.get("data_snapshot"),
+        "snapshot_fingerprint": canonical.get("snapshot_fingerprint"),
+        "canonical_data_layer": "data/canonical_snapshot.py",
+        "safety": canonical["safety"],
     }
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    out_dir = Path(output_root)
-    if not out_dir.is_absolute():
-        out_dir = ROOT / out_dir
-    out_dir = out_dir / trial_id
-    out_dir.mkdir(parents=True, exist_ok=True)
-
-    if status == "coverage_passed":
-        snapshot_dir = out_dir / "datasets"
-        snapshot_dir.mkdir(parents=True, exist_ok=True)
-        snapshot_datasets = []
-        for symbol in symbols:
-            bars = bars_by_symbol[symbol]
-            csv_path = snapshot_dir / symbol / f"{interval}.csv"
-            csv_path.parent.mkdir(parents=True, exist_ok=True)
-            with csv_path.open("w", encoding="utf-8", newline="") as handle:
-                writer = csv.writer(handle)
-                writer.writerow(("timestamp", "open", "high", "low", "close", "volume"))
-                for bar in bars:
-                    writer.writerow((
-                        bar.timestamp.isoformat(),
-                        bar.open,
-                        bar.high,
-                        bar.low,
-                        bar.close,
-                        bar.volume,
-                    ))
-            snapshot_datasets.append({
-                "symbol": symbol,
-                "interval": interval,
-                "path": (str(csv_path.relative_to(ROOT)) if csv_path.is_relative_to(ROOT) else str(csv_path)),
-                "candle_count": len(bars),
-                "fingerprint": dataset_fingerprint(bars),
-            })
-        payload["data_snapshot"] = {
-            "format": "csv_ohlcv",
-            "datasets": snapshot_datasets,
-        }
 
     payload["coverage_fingerprint"] = _fingerprint(payload)
 
-    output = out_dir / f"coverage_preflight_{timestamp}.json"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    output = output_dir / f"coverage_preflight_{timestamp}.json"
     output.write_text(
         json.dumps(payload, indent=2, ensure_ascii=False, allow_nan=False) + "\n",
         encoding="utf-8",
     )
-    try:
-        payload["output"] = str(output.relative_to(ROOT))
-    except ValueError:
-        payload["output"] = str(output)
+    payload["output"] = str(output.relative_to(ROOT)) if output.is_relative_to(ROOT) else str(output)
 
     print(json.dumps(payload, indent=2, ensure_ascii=False))
     return payload
@@ -274,10 +225,7 @@ def run_preflight(
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--preregistration", required=True)
-    parser.add_argument(
-        "--output-root",
-        default="research/runs/coverage_preflight",
-    )
+    parser.add_argument("--output-root", default="research/runs/coverage_preflight")
     args = parser.parse_args()
     result = run_preflight(args.preregistration, output_root=args.output_root)
     print(f"COVERAGE_STATUS: {result['status']}")
