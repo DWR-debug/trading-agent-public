@@ -17,8 +17,6 @@ from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 
 from config import settings
-import exchange_calendars as xcals
-import pandas as pd
 from research.asset_universes import get_universe
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -189,6 +187,9 @@ def run(*, output_path: str | Path) -> dict:
 
     universe = get_universe(UNIVERSE)
     output = ROOT / Path(output_path)
+
+    import exchange_calendars as xcals
+    import pandas as pd
 
     calendar = xcals.get_calendar("XNYS")
     sessions = calendar.sessions_in_range(
