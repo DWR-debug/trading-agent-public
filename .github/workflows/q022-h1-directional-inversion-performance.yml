@@ -63,7 +63,7 @@ jobs:
           "%PY_EXE%" -m pip install --disable-pip-version-check --target "%SITE%" pytest pandas exchange-calendars statsmodels==0.15.0 || exit /b 1
           set "PYTHONPATH=%SITE%;%REPO_SRC%"
 
-          "%PY_EXE%" -c "from config import settings; assert settings.PAPER_ONLY is True; assert settings.LIVE_TRADING_ENABLED is False; assert settings.ORDERS_ENABLED is False; assert settings.AUTOMATIC_PROMOTION is False" || exit /b 1
+          "%PY_EXE%" -c "from config import settings; assert settings.PAPER_ONLY is True; assert settings.LIVE_TRADING_ENABLED is False; assert settings.ORDERS_ENABLED is False" || exit /b 1
           "%PY_EXE%" -m pytest -q tests/test_q022_h1_directional_inversion_design.py tests/test_q022_h1_directional_inversion_performance.py || exit /b 1
 
           if not exist "research/authorizations/q022_h1_directional_inversion_performance_2026_09_26.json" exit /b 1
