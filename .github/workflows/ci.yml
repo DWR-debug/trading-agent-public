@@ -80,7 +80,7 @@ jobs:
           task = default_research_queue().next_task()
           assert task is not None
           assert task.task_id == "Q-020-TREASURY-AUCTION-PERFORMANCE-DESIGN"
-          assert task.research_family == "official_event_signal_contract"
+          assert task.research_family == "official_event_alpha_performance"
 
           q015 = json.loads(Path(
               "research/preregistrations/q015_information_alpha_mechanism_discrimination_2026_09_25.json"
