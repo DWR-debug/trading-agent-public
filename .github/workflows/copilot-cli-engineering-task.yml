@@ -1,0 +1,201 @@
+name: Bounded Copilot CLI Engineering Task
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  copilot-requests: write
+
+concurrency:
+  group: trading-agent-copilot-cli-\${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  task:
+    if: >-
+      \${{
+        github.event.label.name == 'agent-cli-ready' &&
+        github.event.issue.user.login == github.repository_owner
+      }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 2
+
+      - name: Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install bounded test dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pytest statsmodels==0.15.0
+
+      - name: Resolve task contract
+        id: task
+        shell: bash
+        env:
+          GH_TOKEN: \${{ github.token }}
+          ISSUE_NUMBER: \${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          gh api "/repos/\${GITHUB_REPOSITORY}/issues/\${ISSUE_NUMBER}" > "\${RUNNER_TEMP}/issue.json"
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          issue = json.loads(Path(os.environ["RUNNER_TEMP"], "issue.json").read_text(encoding="utf-8"))
+          if issue["user"]["login"] != os.environ["GITHUB_REPOSITORY_OWNER"]:
+              raise SystemExit("owner gate failed")
+          if "agent-cli-ready" not in [item["name"] for item in issue.get("labels", [])]:
+              raise SystemExit("label gate failed")
+
+          body = issue.get("body") or ""
+          start = body.find("<!-- TRADING_AGENT_TASK_V1")
+          end = body.find("-->", start)
+          if start < 0 or end < 0:
+              raise SystemExit("missing task contract")
+          task = json.loads(body[start + len("<!-- TRADING_AGENT_TASK_V1"):end].strip())
+
+          if task.get("schema_version") != 1:
+              raise SystemExit("unsupported task schema")
+          if task.get("worker_class") != "engineering":
+              raise SystemExit("worker class not permitted")
+          if task.get("base_branch") != "master":
+              raise SystemExit("task must target master")
+          if task.get("custom_agent") != "trading-agent-engineer":
+              raise SystemExit("custom agent not permitted")
+          if not isinstance(task.get("scope"), str) or not task["scope"].strip():
+              raise SystemExit("scope missing")
+          for key in (
+              "deterministic_compute", "holdout_selection", "parameter_selection",
+              "asset_selection", "threshold_selection", "horizon_selection",
+              "research_gate_changes", "promotion_decision", "live_execution",
+              "paid_usage", "research_decision", "manual_handoff_required",
+          ):
+              if task.get(key) is not False:
+                  raise SystemExit(f"unsafe contract flag: {key}")
+
+          Path(os.environ["RUNNER_TEMP"], "task_contract.json").write_text(
+              json.dumps(task, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          print(f"TASK_ID={task['task_id']}")
+          print(f"TASK_BODY_SHA256={hashlib.sha256(body.encode('utf-8')).hexdigest()}")
+          PY
+
+      - name: Prepare isolated branch
+        id: branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          branch="agent/issue-\${{ github.event.issue.number }}-copilot-cli"
+          git switch -c "\${branch}"
+          echo "branch=\${branch}" >> "\${GITHUB_OUTPUT}"
+
+      - name: Run bounded Copilot CLI
+        shell: bash
+        env:
+          GITHUB_TOKEN: \${{ github.token }}
+          ISSUE_NUMBER: \${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          npm install -g @github/copilot
+          task_body="$(python -c 'import json,os; print(json.load(open(os.path.join(os.environ["RUNNER_TEMP"], "issue.json"), encoding="utf-8"))["body"])')"
+
+          prompt="$(cat <<EOF
+          You are the bounded engineering worker for trading-agent-public.
+          Work ONLY on issue #\${ISSUE_NUMBER} and its TRADING_AGENT_TASK_V1 contract.
+          Use the repository custom agent trading-agent-engineer.
+          Read AGENTS.md, docs/TRADING_AGENT_CHAT_ENTRYPOINT.md,
+          docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md, and relevant files first.
+
+          Hard constraints:
+          - PAPER_ONLY=True
+          - LIVE_TRADING_ENABLED=False
+          - orders_enabled=False
+          - automatic_promotion=False
+          - Do not change research/evidence historical records, preregistrations,
+            authorizations, research gates, holdout logic, strategy parameters,
+            asset universes, promotion rules, or live execution.
+          - Do not perform deterministic research computation or scientific selection.
+          - Do not push and do not create a pull request.
+          - Reproduce engineering failures when relevant.
+          - Add focused regression tests.
+          - Finish with a concise engineering handoff.
+
+          Exact issue body:
+          \${task_body}
+          EOF
+          )"
+
+          copilot \
+            --agent=trading-agent-engineer \
+            --autopilot \
+            --no-ask-user \
+            --max-ai-credits=45 \
+            --max-autopilot-continues=1 \
+            -p "\${prompt}" \
+            --allow-tool='read' \
+            --allow-tool='search' \
+            --allow-tool='write' \
+            --allow-tool='shell(git:*)' \
+            --allow-tool='shell(python:*)' \
+            --allow-tool='shell(pytest:*)'
+
+      - name: Final bounded regression gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          python -m pytest -q tests/test_self_hosted_research_worker.py
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          print("SAFETY INVARIANTS OK")
+          PY
+
+      - name: Commit and publish PR
+        shell: bash
+        env:
+          GH_TOKEN: \${{ github.token }}
+          BRANCH: \${{ steps.branch.outputs.branch }}
+          ISSUE_NUMBER: \${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            gh api --method POST "/repos/\${GITHUB_REPOSITORY}/issues/\${ISSUE_NUMBER}/comments" \
+              -f body="Copilot CLI completed without repository changes; no PR was created."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "AGENT: issue #\${ISSUE_NUMBER} bounded engineering"
+          git push "https://x-access-token:\${GH_TOKEN}@github.com/\${GITHUB_REPOSITORY}.git" "HEAD:\${BRANCH}"
+
+          pr_url="$(gh pr create \
+            --base master \
+            --head "\${BRANCH}" \
+            --title "AGENT: Issue #\${ISSUE_NUMBER} bounded engineering task" \
+            --body "Bounded Copilot CLI engineering task for issue #\${ISSUE_NUMBER}. Owner-gated, safety-gated, and regression-tested before publication.")"
+
+          gh api --method POST "/repos/\${GITHUB_REPOSITORY}/issues/\${ISSUE_NUMBER}/comments" \
+            -f body="Copilot CLI engineering task completed and published as \${pr_url}. Normal repository review remains required."
+          echo "PR_URL=\${pr_url}"
