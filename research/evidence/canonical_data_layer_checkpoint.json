@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "checkpoint_type": "canonical_data_layer",
-  "generated_at_utc": "2026-09-26T08:55:00Z",
+  "generated_at_utc": "2026-09-26T08:59:00Z",
   "repository": "DWR-debug/trading-agent-public",
-  "status": "PR_OPEN",
+  "status": "MERGED",
   "branch": "infra/canonical-data-layer-2026-09-26",
   "pull_request": 232,
-  "feature_head_commit": "b3442ad6911f3b89120cb7d2df0104bec044bbd9",
+  "feature_head_commit": "3469b0ccaa15f202aa0f46978c795c450e014f19",
   "base_master_commit": "36a2084907d6ccec41a0b25f861018ebcaf07bc7",
   "components": {
     "canonical_builder": "data/canonical_snapshot.py",
@@ -42,7 +42,8 @@
   },
   "migration": {
     "completed": [
-      "generic automation/coverage_preflight.py"
+      "generic automation/coverage_preflight.py",
+      "canonical OHLCV data layer merged"
     ],
     "next": [
       "migrate remaining Yahoo-specific research lanes, beginning with H06 replication coverage, after this layer is merged",
@@ -54,8 +55,15 @@
     "verify current master before using this checkpoint as fact",
     "read docs/CANONICAL_DATA_LAYER.md",
     "read data/canonical_snapshot.py",
-    "inspect PR #232 and review issue #231",
-    "verify CI for the current feature head",
-    "after merge, synchronize project_state.json and PROJECT_STATUS.md to the resulting master commit"
-  ]
+    "read research/evidence/canonical_data_layer_checkpoint.json",
+    "inspect H06 replication coverage for migration to the canonical builder",
+    "verify current CI and open infrastructure/research PRs",
+    "update project_state.json and PROJECT_STATUS.md only from verified master/evidence"
+  ],
+  "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
+  "ci": {
+    "workflow_run_id": 36231341492,
+    "x64_check": "success",
+    "arm_check": "success"
+  }
 }
