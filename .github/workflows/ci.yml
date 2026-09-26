@@ -131,12 +131,19 @@ jobs:
           assert state["latest_formal_trial"] == "T-2026-09-25-045"
           assert state["latest_trial_status"] == "BLOCKED"
           assert state["current_trial_status"] == "ARCHIVED_REJECTED"
-          assert state["engineering_notes"]["current_queue_task"] == "H06-MECHANISM-DIAGNOSTIC"
-          assert state["engineering_notes"]["last_completed_queue_task"] == "WIDE-SEARCH-H06-COVERAGE"
+          assert state["engineering_notes"]["current_queue_task"] == "Q-018-ORTHOGONAL-OFFICIAL-EVENT-SOURCE-DESIGN"
+          assert state["engineering_notes"]["last_completed_queue_task"] == "H06-MECHANISM-REPLICATION"
           assert state["engineering_notes"]["q017_g3_scientific_status"] == "DATA_INSUFFICIENT"
           assert state["engineering_notes"]["q017_g3_workflow_run"] == 36186285814
           assert state["engineering_notes"]["q017_g3_artifact_id"] == 10887025099
           assert state["engineering_notes"]["q017_g3_performance_authorized"] is False
+          assert state["engineering_notes"]["h06_status"] == "MECHANISM_REPLICATED"
+          assert state["engineering_notes"]["h06_mechanism_workflow_run"] == 36236202675
+          assert state["engineering_notes"]["h06_mechanism_artifact_id"] == 10903879100
+          assert state["engineering_notes"]["h06_mechanism_result_fingerprint"] == "45546b7a2b69c39f961cab85f9ab091d165f5e9a711777fb23dd717f82fc9fbd"
+          assert state["engineering_notes"]["q018_preregistered"] is True
+          assert state["engineering_notes"]["q018_status"] == "DESIGN_ONLY"
+          assert state["engineering_notes"]["q018_performance_trial_authorized"] is False
           assert state["engineering_notes"]["q011_status"] == "COMPLETED_DISCOVERY_ONLY"
           assert state["engineering_notes"]["q011_workflow_run"] == 36121684164
           assert state["engineering_notes"]["q011_artifact_id"] == 10857762336
