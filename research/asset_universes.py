@@ -28,30 +28,35 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         description="Exploratory listed small/high-volatility growth names.",
         symbols=("SOUN", "RKLB", "IONQ", "ASTS", "HIMS"),
     ),
+
     AssetUniverse(
         name="liquid_high_volatility",
         priority=2,
         description="Liquid US equities with substantial historical movement.",
         symbols=("NVDA", "AMD", "TSLA", "COIN", "PLTR"),
     ),
+
     AssetUniverse(
         name="penny_stock",
         priority=3,
         description="Low-priced listed equities; price/liquidity filters remain mandatory.",
         symbols=("SNDL", "BNGO", "TLRY"),
     ),
+
     AssetUniverse(
         name="european_volatile",
         priority=4,
         description="European listed equities for cross-market robustness checks.",
         symbols=("RHM.DE", "TUI1.DE", "NEL.OL", "VOW3.DE"),
     ),
+
     AssetUniverse(
         name="benchmark",
         priority=5,
         description="Liquid benchmarks used as robustness/control datasets.",
         symbols=("SPY", "QQQ", "IWM"),
     ),
+
     AssetUniverse(
         name="cross_asset_trend",
         priority=6,
@@ -62,6 +67,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("SPY", "EFA", "TLT", "GLD", "DBC", "UUP", "QQQ", "IWM"),
         target_count=3500,
     ),
+
     AssetUniverse(
         name="validation_trend",
         priority=7,
@@ -72,6 +78,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("DIA", "EEM", "LQD", "IEF", "VNQ", "USO", "FXE", "TIP"),
         target_count=3500,
     ),
+
     AssetUniverse(
         name="validation_cs",
         priority=8,
@@ -82,6 +89,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("XLK", "XLF", "XLE", "XLV", "XLI"),
         target_count=3500,
     ),
+
     AssetUniverse(
         name="validation_2026_09_23_trend",
         priority=9,
@@ -105,6 +113,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("XBI", "KRE", "XME", "XOP", "XRT"),
         target_count=3500,
     ),
+
     AssetUniverse(
         name="validation_2026_09_23_third_trend",
         priority=11,
@@ -116,6 +125,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("MDY", "IJH", "EWA", "EWJ", "EWG", "BND", "SHY", "HYG"),
         target_count=3500,
     ),
+
     AssetUniverse(
         name="validation_2026_09_23_third_cs",
         priority=12,
@@ -139,6 +149,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("SCHB", "VO", "VB", "VXF", "VXUS", "VGK", "IAU", "AGG"),
         target_count=3500,
     ),
+
     AssetUniverse(
         name="validation_2026_09_23_fourth_cs",
         priority=14,
@@ -151,7 +162,6 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=3500,
     ),
 
-
     AssetUniverse(
         name="validation_2026_09_24_fourteenth_leverage",
         priority=18,
@@ -162,6 +172,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("VOO", "VT", "VWO", "VEU", "IWD", "IWF", "IWN", "IWO"),
         target_count=3500,
     ),
+
     AssetUniverse(
         name="validation_2026_09_24_fifteenth_mean_reversion",
         priority=19,
@@ -172,6 +183,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("EWC", "EWH", "EWI", "EWK", "EWN", "EWP", "EWY", "EWT"),
         target_count=3500,
     ),
+
     AssetUniverse(
         name="validation_2026_09_24_sixteenth_cross_asset_cs",
         priority=20,
@@ -182,6 +194,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("DBA", "DBB", "FXA", "FXY", "MUB", "SHV", "EMB", "BWX"),
         target_count=3500,
     ),
+
     AssetUniverse(
         name="validation_2026_09_24_seventh_trend",
         priority=21,
@@ -192,6 +205,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("SLV", "RSP", "VYM", "VIG", "DVY", "EPP", "EWU", "EWZ"),
         target_count=3500,
     ),
+
     AssetUniverse(
         name="validation_2026_09_24_seventh_cs",
         priority=22,
@@ -202,6 +216,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("AAPL", "MSFT", "AMZN", "META", "GOOGL"),
         target_count=3500,
     ),
+
     AssetUniverse(
         name="validation_2026_09_24_portfolio_risk_parity_trend",
         priority=30,
@@ -212,6 +227,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("IBM", "GE", "CAT", "MMM", "HD", "LOW", "UNP", "NKE"),
         target_count=3500,
     ),
+
     AssetUniverse(
         name="validation_2026_09_24_portfolio_risk_parity_cs",
         priority=31,
@@ -222,6 +238,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("BAC", "JPM", "GS", "MS", "C"),
         target_count=3500,
     ),
+
     AssetUniverse(
         name="validation_2026_09_24_low_volatility_us_stocks",
         priority=33,
@@ -232,6 +249,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("INTC", "QCOM", "AVGO", "HON", "LMT", "RTX", "CSX", "NSC"),
         target_count=3500,
     ),
+
     AssetUniverse(
         name="validation_2026_09_24_idio_volatility_us_stocks",
         priority=34,
@@ -242,6 +260,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("COST", "TMO", "LIN", "DE", "EMR", "SBUX", "VZ", "MA"),
         target_count=3500,
     ),
+
     AssetUniverse(
         name="validation_2026_09_24_common_market_momentum_gate",
         priority=35,
@@ -263,7 +282,6 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("IVV","ITOT","SCHX","SCHF","SPAB","IEI","MBB","VCSH","IYJ","IYC","IYM","IYK","IYW"),
         target_count=3500,
     ),
-
 
     AssetUniverse(
         name="validation_2026_09_24_per_sleeve_vol_budget",
@@ -319,6 +337,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("SPTM","IWR","RWR","SCHZ","VGSH","VGLT","DJP","MOO","GCC","REM"),
         target_count=3500,
     ),
+
     AssetUniverse(
         name="validation_2026_09_24_network_momentum_t039",
         priority=51,
@@ -357,6 +376,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("VONE", "VONG", "VONV", "VOE", "VOT", "IWB", "IUSG", "IUSV"),
         target_count=3500,
     ),
+
     AssetUniverse(
         name="validation_2026_09_24_portfolio_risk_control_cs",
         priority=54,
@@ -413,6 +433,28 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
     ),
 
     AssetUniverse(
+        name="q017_coverage_first",
+        priority=60,
+        description=(
+            "Fresh symbol-disjoint fixed universe for Q017 G3 coverage-first preflight; "
+            "coverage only, no performance selection."
+        ),
+        symbols=("SMH", "SOXX", "IGE", "DBO", "UNG", "PPLT", "CIBR", "LIT"),
+        target_count=3520,
+    ),
+
+    AssetUniverse(
+        name="wide_search_probe_2026_09_25",
+        priority=61,
+        description=(
+            "Fixed disjoint exploratory universe for the wide-search research-only "
+            "signal probes; no symbol overlap with prior universes."
+        ),
+        symbols=("DBE", "DBP", "OIH", "EPI", "IYF", "IYH", "IDU", "ACWX"),
+        target_count=3520,
+    ),
+
+    AssetUniverse(
         name="validation_2026_09_25_sector_neutral_residual_momentum",
         priority=62,
         description=(
@@ -435,34 +477,6 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
                  "CL", "KMB", "GIS", "AEP", "XEL", "DTE"),
         target_count=4000,
     ),
-
-    AssetUniverse(
-        name="q017_coverage_first",
-        priority=60,
-        description=(
-            "Fresh symbol-disjoint fixed universe for Q017 G3 coverage-first preflight; "
-            "coverage only, no performance selection."
-        ),
-        symbols=("SMH", "SOXX", "IGE", "DBO", "UNG", "PPLT", "CIBR", "LIT"),
-        target_count=3520,
-    ),
-
-    AssetUniverse(
-        name="wide_search_probe_2026_09_25",
-        priority=61,
-        description=(
-            "Fixed disjoint exploratory universe for the wide-search research-only "
-            "signal probes; no symbol overlap with prior universes."
-        ),
-        symbols=("DBE", "DBP", "OIH", "EPI", "IYF", "IYH", "IDU", "ACWX"),
-        target_count=3520,
-    ),
-
-
-
-
-
-
 
 
 )
