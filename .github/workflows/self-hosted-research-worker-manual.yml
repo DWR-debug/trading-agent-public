@@ -1,0 +1,98 @@
+name: Self-hosted Research Worker
+
+on:
+  workflow_dispatch:
+    inputs:
+      lane:
+        description: "Bounded worker lane"
+        required: true
+        type: choice
+        options:
+          - repo_qa
+          - data_qa
+          - local_reproduction
+      ref:
+        description: "Trusted branch/ref to execute"
+        required: true
+        default: "master"
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-self-hosted-research-worker
+  cancel-in-progress: false
+
+jobs:
+  worker:
+    if: ${{ github.actor == github.repository_owner }}
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 120
+    steps:
+      - name: Checkout trusted ref
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 1
+
+      - name: Bootstrap CI Python
+        id: python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\\python-3.13.15-nuget"
+          set "PY_EXE=%PY_ROOT%\\tools\\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\\python.3.13.15.nupkg"
+          if exist "%PY_EXE%" goto python_ready
+          echo Downloading pinned Python NuGet package 3.13.15
+          curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg"
+          if errorlevel 1 exit /b 1
+          mkdir "%PY_ROOT%" 2>nul
+          tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%"
+          if not exist "%PY_EXE%" exit /b 1
+        :python_ready
+          "%PY_EXE%" --version
+          "%PY_EXE%" -m pip --version >nul 2>&1
+          if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
+          "%PY_EXE%" -m pip --version
+          echo PYTHON_EXE=%PY_EXE%>>"%GITHUB_ENV%"
+          endlocal & set "PYTHON_EXE=%PY_EXE%"
+          echo PYTHON_EXE=%PY_EXE%>>"%GITHUB_ENV%"
+
+      - name: Install minimal research dependencies
+        shell: cmd
+        run: |
+          @echo off
+          set "SITE=%RUNNER_TEMP%\\python-site"
+          if not exist "%SITE%" mkdir "%SITE%"
+          "%PYTHON_EXE%" -m pip install --disable-pip-version-check --target "%SITE%" pytest pandas exchange-calendars statsmodels==0.15.0
+
+      - name: Safety and provenance guard
+        shell: cmd
+        env:
+          REQUESTED_REF: ${{ inputs.ref }}
+        run: |
+          @echo off
+          if /I not "%REQUESTED_REF%"=="master" if /I not "%REQUESTED_REF:~0,9%"=="research/" exit /b 1
+          set "PYTHONPATH=%RUNNER_TEMP%\\python-site"
+          "%PYTHON_EXE%" -c "from config import settings; assert settings.PAPER_ONLY is True; assert settings.LIVE_TRADING_ENABLED is False; assert settings.ORDERS_ENABLED is False; print('SAFETY INVARIANTS OK')"
+
+      - name: Execute bounded worker lane
+        shell: cmd
+        env:
+          LANE: ${{ inputs.lane }}
+        run: |
+          @echo off
+          set "PYTHONPATH=%RUNNER_TEMP%\\python-site"
+          "%PYTHON_EXE%" -m automation.self_hosted_research_worker --lane "%LANE%" --output-dir "research/runs/self_hosted/%GITHUB_RUN_ID%"
+
+      - name: Publish worker evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: self-hosted-research-${{ inputs.lane }}-${{ github.run_id }}
+          path: research/runs/self_hosted/${{ github.run_id }}/
+          if-no-files-found: warn
+          retention-days: 14
