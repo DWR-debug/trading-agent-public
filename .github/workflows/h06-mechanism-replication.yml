@@ -69,14 +69,6 @@ jobs:
           assert data['governance']['holdout_used_for_selection'] is False
           assert data['governance']['performance_trial_authorized'] is False
           PY
-          python - <<'PY'
-          import hashlib
-          from pathlib import Path
-
-          path = Path("research/runs/wide_search/h06_mechanism_replication_coverage.json")
-          digest = hashlib.sha256(path.read_bytes()).hexdigest()
-          print("H06_REPLICATION_COVERAGE_SHA256=" + digest)
-          PY
       - name: Evidence Snapshot sichern
         uses: actions/upload-artifact@v6
         with:
