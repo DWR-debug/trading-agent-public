@@ -78,6 +78,15 @@ jobs:
           python -m automation.agent_dispatch --event-json "$RUNNER_TEMP/event.json" --master-sha "$GITHUB_SHA" --active-agent-count "${{ steps.active.outputs.count }}" --output "$RUNNER_TEMP/agent_task_manifest.json"
           cat "$RUNNER_TEMP/agent_task_manifest.json"
 
+      - name: Publish dispatch manifest
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: agent-dispatch-${{ steps.issue.outputs.number }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/agent_task_manifest.json
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Assign issue to Copilot
         id: assign
         shell: bash
