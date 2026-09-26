@@ -15,6 +15,7 @@ on:
     branches:
       - research/wide-search-lane
       - research/wide-search-round-002-volatility-regime-v2
+      - research/h06-residual-momentum-clean-v1
   schedule:
     - cron: "15 */6 * * *"
 
@@ -110,4 +111,53 @@ jobs:
           name: wide-search-round-002-${{ github.run_id }}
           path: research/runs/wide_search/
           if-no-files-found: warn
+          retention-days: 30
+
+  h06_sector_neutral_repair:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/research/h06-residual-momentum-clean-v1' }}
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 25
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest statsmodels==0.15.0
+      - name: Safety
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          print("H06 REPAIR SAFETY OK")
+          PY
+      - name: Unit Tests
+        run: python -m pytest -q tests/test_wide_search_h06_sector_neutral_residual_momentum_repair_coverage.py
+      - name: H06 Coverage Repair Preflight
+        run: |
+          set -euo pipefail
+          python -m automation.wide_search_h06_sector_neutral_residual_momentum_repair_coverage
+      - name: Evidence-Datei prüfen
+        if: always()
+        run: |
+          set -euo pipefail
+          test -s research/runs/wide_search/h06_sector_neutral_residual_momentum_repair_coverage.json
+          sha256sum research/runs/wide_search/h06_sector_neutral_residual_momentum_repair_coverage.json
+      - name: Evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: wide-search-h06-clean-repair-${{ github.run_id }}
+          path: |
+            research/runs/wide_search/h06_sector_neutral_residual_momentum_repair_coverage.json
+            research/runs/wide_search/h06_repair_datasets/
+          if-no-files-found: error
           retention-days: 30
