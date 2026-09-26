@@ -75,12 +75,15 @@ def validate_task(
     current_master_sha: str,
     active_agent_count: int,
     labels: list[str],
+    assignees: list[str],
 ) -> dict[str, Any]:
     """Validate task metadata and return a normalized dispatch manifest."""
     if task.get("schema_version") != SCHEMA_VERSION:
         raise AgentDispatchError("Unsupported task schema_version.")
     if "agent-ready" not in labels:
         raise AgentDispatchError("Task is not labeled agent-ready.")
+    if "copilot-swe-agent[bot]" in assignees:
+        raise AgentDispatchError("Task is already assigned to Copilot; duplicate dispatch is forbidden.")
     if not isinstance(issue_number, int) or issue_number <= 0:
         raise AgentDispatchError("issue_number must be a positive integer.")
     if not current_master_sha or not re.fullmatch(r"[0-9a-f]{40}", current_master_sha):
@@ -153,7 +156,7 @@ def validate_task(
     return {**normalized, "manifest_fingerprint": fingerprint}
 
 
-def load_event(event_path: Path) -> tuple[int, list[str], str]:
+def load_event(event_path: Path) -> tuple[int, list[str], str, list[str]]:
     payload = json.loads(event_path.read_text(encoding="utf-8"))
     issue = payload.get("issue") or {}
     issue_number = issue.get("number")
@@ -163,7 +166,12 @@ def load_event(event_path: Path) -> tuple[int, list[str], str]:
         for item in (issue.get("labels") or [])
         if isinstance(item, dict) and item.get("name")
     ]
-    return issue_number, labels, body
+    assignees = [
+        item.get("login")
+        for item in (issue.get("assignees") or [])
+        if isinstance(item, dict) and item.get("login")
+    ]
+    return issue_number, labels, body, assignees
 
 
 def main() -> int:
@@ -174,7 +182,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
 
-    issue_number, labels, body = load_event(args.event_json)
+    issue_number, labels, body, assignees = load_event(args.event_json)
     task = extract_task_metadata(body)
     manifest = validate_task(
         task,
