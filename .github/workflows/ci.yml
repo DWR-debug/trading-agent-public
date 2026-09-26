@@ -40,6 +40,8 @@ jobs:
         run: python automation/project_integrity_check.py
       - name: Project-State Freshness Guard
         run: python automation/project_state_freshness_check.py
+      - name: Agent-Usage Ledger
+        run: python automation/agent_usage.py research/evidence/agent_usage_ledger.json
       - name: Research-Governance
         run: |
           set -euo pipefail
