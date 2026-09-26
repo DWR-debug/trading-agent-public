@@ -1,24 +1,28 @@
-name: Self-hosted Research Worker v2
+name: Self-hosted Research Worker v3
 
 on:
   push:
     branches:
-      - research/run-self-hosted/repo_qa
+      - master
 
 permissions:
   contents: read
 
 jobs:
   worker:
-    if: ${{ github.actor == github.repository_owner }}
+    if: >-
+      ${{
+        github.actor == github.repository_owner &&
+        startsWith(github.event.head_commit.message, 'RUN_SELF_HOSTED_REPO_QA:')
+      }}
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 120
     steps:
-      - name: Dispatch registration probe
+      - name: Registration probe
         shell: cmd
         run: |
           @echo off
-          echo SELF-HOSTED WORKER V2
+          echo SELF-HOSTED WORKER V3
           echo event=%GITHUB_EVENT_NAME%
           echo ref=%GITHUB_REF%
           echo sha=%GITHUB_SHA%
@@ -64,7 +68,7 @@ jobs:
         shell: cmd
         run: |
           @echo off
-          if /I not "%GITHUB_REF%"=="refs/heads/research/run-self-hosted/repo_qa" exit /b 1
+          if /I not "%GITHUB_REF%"=="refs/heads/master" exit /b 1
           set "PYTHONPATH=%RUNNER_TEMP%\\python-site"
           "%PYTHON_EXE%" -c "from config import settings; assert settings.PAPER_ONLY is True; assert settings.LIVE_TRADING_ENABLED is False; assert settings.ORDERS_ENABLED is False; print('SAFETY INVARIANTS OK')"
 
@@ -79,7 +83,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: self-hosted-research-v2-${{ github.run_id }}
+          name: self-hosted-research-v3-${{ github.run_id }}
           path: research/runs/self_hosted/${{ github.run_id }}/
           if-no-files-found: warn
           retention-days: 14
