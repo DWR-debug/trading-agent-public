@@ -5,7 +5,7 @@
 - Self-hosted Continuous QA is now four-lane: `repo_qa`, `data_qa`, `design_qa`, `local_reproduction`; the new Q022 design guard is non-executing and fail-closed on governance drift.
 - Self-hosted QA runtime directories are isolated per `GITHUB_RUN_ID/GITHUB_RUN_ATTEMPT`; this removes the previously observed concurrent pycache/runtime collision class.
 - Agent Request Queue remains two-lane with a **workflow-level global concurrency guard**; maximum concurrent agent sessions remains 2.
-- Latest verified self-hosted repo QA baseline: workflow `36256200896`, **877 passed, 2 warnings**. A fresh QA run is pending for the current master after the latest infrastructure changes.
+- Latest verified self-hosted repo QA baseline: workflow `36258261964`, **880 passed, 2 warnings**, including Q022 design guard PASS and local reproduction 13/13. Current master provenance-publication verification is running in workflow `36259124979`.
 - Hosted CI/orchestrator startup failures remain tracked separately as an operational issue; they are not treated as scientific evidence.
 - Copilot remains paused until `COPILOT_GITHUB_TOKEN` with the required Copilot Requests permission is actually configured; no paid usage is enabled.
 - Safety: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
