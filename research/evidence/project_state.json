@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "updated": "2026-09-26",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "24d217af0cf0e01afe90171b822c85f961cad365",
-  "latest_formal_trial": "T-2026-09-25-045",
-  "latest_trial_status": "BLOCKED",
+  "master_commit": "30b54d2a87f3ba3e9475d9aa76fe7233eff504b7",
+  "latest_formal_trial": "T-2026-09-26-046R1-PERFORMANCE",
+  "latest_trial_status": "NO_PROMOTION_EVIDENCE",
   "next_reserved_trial": null,
-  "next_research_focus": "Q020 fixed-rule performance execution on the validated frozen repair snapshot, after separate immutable authorization.",
+  "next_research_focus": "Q020 failure/mechanism diagnosis on the completed fixed-rule evidence; no Q020 retuning or holdout selection.",
   "cleanup_status": "completed_h06_and_q017_coverage_hardening",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -537,5 +537,21 @@
   "wide_search_round_002_scientific_result_status": "PRUNED",
   "wide_search_round_002_classification": "PRUNE_NO_RISK_REGIME_SUPPORT",
   "q017_g3_performance_authorized": false,
-  "h06_performance_trial_authorized": false
+  "h06_performance_trial_authorized": false,
+  "q020_performance": {
+    "trial_id": "T-2026-09-26-046R1-PERFORMANCE",
+    "status": "NO_PROMOTION_EVIDENCE",
+    "workflow_run_id": 36243099900,
+    "artifact_id": 10905988662,
+    "result_fingerprint": "0ee05b7933572b6f5e9307436e87844ff6ca92180d00e4139da0814e231b9952",
+    "checkpoint": "research/checkpoints/t046r1_treasury_auction_performance_2026_09_26.json",
+    "performance_execution_authorized": true,
+    "promotion": false,
+    "holdout_used_for_selection": false,
+    "parameter_search": false,
+    "asset_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "variant_search": false
+  }
 }
