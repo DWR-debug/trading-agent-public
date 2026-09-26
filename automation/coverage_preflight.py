@@ -41,6 +41,8 @@ def _parse_optional_date(spec: dict, key: str) -> date | None:
         value = spec.get("study_window", {}).get(key)
     if value is None:
         value = spec.get("data_contract", {}).get(key)
+    if value is None and not key.startswith("study_"):
+        value = spec.get("data_contract", {}).get(f"study_{key}")
     return date.fromisoformat(value) if value else None
 
 
@@ -204,6 +206,8 @@ def run_preflight(
         "failure_reasons": reasons,
         "data_snapshot": canonical.get("data_snapshot"),
         "snapshot_fingerprint": canonical.get("snapshot_fingerprint"),
+        "selected_common_calendar_start": canonical.get("selected_common_calendar_start"),
+        "selected_common_calendar_end": canonical.get("selected_common_calendar_end"),
         "canonical_data_layer": "data/canonical_snapshot.py",
         "safety": canonical["safety"],
     }
