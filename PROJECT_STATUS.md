@@ -1,3 +1,15 @@
+# CURRENT EXECUTION CHECKPOINT — Q021 completed / Q022 queued / Copilot path hardened — 2026-09-26
+
+- Current scientific step: **Q021 Treasury failure/mechanism diagnosis completed, DIAGNOSTIC_ONLY**.
+- Q021 document: `docs/research_design/AGENT-010-q020-failure-mechanism-diagnosis-2026-09-26.md`
+- Q020 remains immutable: `T-2026-09-26-046R1-PERFORMANCE` = **NO_PROMOTION_EVIDENCE**; no retuning or holdout selection.
+- Next queue task: **Q022-TREASURY-FAILURE-FOLLOWUP-DESIGN**, design-only and unranked.
+- Agent operations: persistent two-lane queue, task-scoped `allowed_paths`, duplicate protection and fail-closed safety gates are active.
+- Copilot on this personal repository is now routed through `COPILOT_GITHUB_TOKEN`; without that secret the queue explicitly pauses and claims no agent usage.
+- Latest verified self-hosted repo QA run: workflow `36254626385`, **873 passed, 2 warnings**, AST syntax and paper-only safety checks green.
+- Safety: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
+- Paid agent/API budget: **0 USD**.
+
 # AKTUELLER AUSFÜHRUNGS-CHECKPOINT — Q020 Performance abgeschlossen / neue Betriebsweise aktiv — 2026-09-26
 
 Die neue agentische Betriebsweise ist technisch in master integriert und die erste formale Q020-Forschungsschleife wurde vollständig ausgeführt.
