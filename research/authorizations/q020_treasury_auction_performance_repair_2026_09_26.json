@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "authorization_id": "AUTH-Q020-TREASURY-2026-09-26-046R1",
+  "trial_id": "T-2026-09-26-046R1-PERFORMANCE",
+  "authorized": true,
+  "performance_execution_authorized": true,
+  "execution_scope": "PERFORMANCE",
+  "created_from_master_commit": "30b54d2a87f3ba3e9475d9aa76fe7233eff504b7",
+  "coverage_artifact_id": 10905489440,
+  "coverage_workflow_run_id": 36240853419,
+  "snapshot_fingerprint": "70cff5df1b92f4f7db2ea09bdc9999abff93dd4230ad4ea5df6e5da204076ef8",
+  "coverage_fingerprint": "703f9fb9d1cd21618d0acdcbe8dff3267c99b91afb6841d7110eb09a93f04600",
+  "source_contract_artifact_id": 10905325799,
+  "source_contract_workflow_run_id": 36238205065,
+  "source_contract_fingerprint": "13072dbed7d60684f4a4fb8a3de69555cae83c66f3cfdfb603b9ed2a4b1c225b",
+  "signal_events_fingerprint": "8af45e4eb7267266da10eb28cf5287eea1ff3572f38736382f1b004abf86c208",
+  "execution_model": "open_to_close_same_session",
+  "selection": {
+    "parameter_search": false,
+    "threshold_search": false,
+    "asset_search": false,
+    "horizon_search": false,
+    "variant_search": false,
+    "holdout_used_for_selection": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false,
+    "paid_usage": false
+  },
+  "one_shot": true,
+  "rationale": "Coverage-only repair succeeded without performance selection. This immutable authorization activates only the pre-registered fixed-rule Q020 performance computation."
+}
