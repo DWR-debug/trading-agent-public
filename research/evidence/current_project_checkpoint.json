@@ -3,7 +3,7 @@
   "checkpoint_type": "current_project_snapshot",
   "generated_at_utc": "2026-09-26T08:59:00Z",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit_at_checkpoint_creation": "d81c4399260145e21156064ab76fad77a9969222",
+  "master_commit_at_checkpoint_creation": "cfdb0ac7031cfdadcbfe16da50cbedeb4b285dd3",
   "canonical_data_layer": {
     "status": "MERGED",
     "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
@@ -14,7 +14,7 @@
     "builder": "data/canonical_snapshot.py",
     "generic_coverage_runner": "automation/coverage_preflight.py",
     "checkpoint": "research/evidence/canonical_data_layer_checkpoint.json",
-    "next_migration": "H06 replication coverage",
+    "next_migration": "completed",
     "agent_review_issue": 231,
     "external_agent_execution_verified": false
   },
@@ -80,7 +80,7 @@
     "research/evidence/trial_ledger.json",
     "current master, relevant branches/PRs and workflows"
   ],
-  "active_research_task": "H06-MECHANISM-DIAGNOSTIC",
+  "active_research_task": "Q-018-ORTHOGONAL-OFFICIAL-EVENT-SOURCE-DESIGN",
   "wide_search_round_002": {
     "hypothesis_id": "H08",
     "family": "volatility_state_transition",
@@ -109,11 +109,23 @@
   },
   "h06_mechanism_diagnostic": {
     "preregistration": "research/preregistrations/h06_mechanism_diagnostic_2026_09_26.json",
-    "status": "PREREGISTERED_EXECUTION",
+    "status": "MECHANISM_REPLICATED",
+    "workflow_run_id": 36236202675,
+    "artifact_id": 10903879100,
+    "artifact_digest": "sha256:d0535029eebe53d23a203762f5af9db8ca082315f07951412b379d576f8beba8",
+    "result_fingerprint": "45546b7a2b69c39f961cab85f9ab091d165f5e9a711777fb23dd717f82fc9fbd",
     "source_coverage_workflow_run_id": 36229318877,
     "source_coverage_artifact_id": 10902436135,
-    "source_coverage_artifact_digest": "sha256:8bebfb1198a511809d7a578321b75a8695ef823e9d03146f1be00c65fa26126e",
     "holdout_used": false,
     "performance_trial_authorized": false
-  }
+  },
+  "q017_g3": {
+    "task_id": "Q-017-G3-COVERAGE-FIRST",
+    "scientific_status": "DATA_INSUFFICIENT",
+    "performance_trial_authorized": false,
+    "selection_used": false,
+    "canonical_yahoo_hardening_pr": 234,
+    "canonical_yahoo_hardening_merge_commit": "cfdb0ac7031cfdadcbfe16da50cbedeb4b285dd3"
+  },
+  "next_action": "Execute deterministic Q018 source-feasibility preflight for the three fixed official event-source candidates; no performance evaluation or candidate ranking."
 }
