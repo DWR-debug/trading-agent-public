@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "record_id": "Q-019-TREASURY-AUCTION-SIGNAL-CONTRACT-2026-09-26",
+  "status": "COVERAGE_VALIDATED",
+  "workflow_run_id": 36238205065,
+  "artifact_id": 10905325799,
+  "artifact_digest": "sha256:0e2ec08566b3300b577bb23a1f238b577e3083d0e8985c7466e748310b456325",
+  "result_fingerprint": "13072dbed7d60684f4a4fb8a3de69555cae83c66f3cfdfb603b9ed2a4b1c225b",
+  "fixed_universe": {
+    "name": "q018_official_event_source_validation",
+    "symbols": [
+      "UNH",
+      "UPS",
+      "FDX",
+      "DIS",
+      "ADP",
+      "BKNG",
+      "ORLY",
+      "AZO",
+      "TJX",
+      "RSG",
+      "WM",
+      "EOG"
+    ],
+    "study_window": {
+      "start": "2011-01-01",
+      "end": "2025-09-24"
+    }
+  },
+  "source": {
+    "provider": "U.S. Treasury Fiscal Data",
+    "dataset": "Treasury Securities Auctions Data",
+    "security_type": "Note",
+    "security_term": "10-Year"
+  },
+  "contract": {
+    "status": "COVERAGE_VALIDATED",
+    "mapped_events": 89,
+    "terminal_events": 0,
+    "signal_rule": "sign of change in bid_to_cover_ratio versus immediately preceding 10-Year Note auction",
+    "pit_rule": "record_date -> first XNYS session strictly after record_date",
+    "deterministic_ordering": "auction_date,cusip"
+  },
+  "governance": {
+    "coverage_only": true,
+    "performance_evaluation": false,
+    "holdout_used": false,
+    "candidate_ranking": false,
+    "parameter_search": false,
+    "asset_search": false,
+    "feature_search": false,
+    "horizon_search": false,
+    "performance_trial_authorized": false,
+    "automatic_promotion": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "next_gate": "Q-020-TREASURY-MARKET-COVERAGE"
+}
