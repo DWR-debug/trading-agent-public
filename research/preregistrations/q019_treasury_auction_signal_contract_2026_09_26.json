@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "preregistration_id": "Q-019-TREASURY-AUCTION-SIGNAL-CONTRACT-2026-09-26",
+  "hypothesis_id": "Q018-C",
+  "status": "PREREGISTERED_COVERAGE_ONLY",
+  "purpose": "Validate the fixed Treasury 10-Year auction-demand signal and point-in-time mapping before any performance study.",
+  "fixed_universe": {
+    "name": "q018_official_event_source_validation",
+    "symbols": [
+      "UNH",
+      "UPS",
+      "FDX",
+      "DIS",
+      "ADP",
+      "BKNG",
+      "ORLY",
+      "AZO",
+      "TJX",
+      "RSG",
+      "WM",
+      "EOG"
+    ]
+  },
+  "fixed_study_window": {
+    "start": "2011-01-01",
+    "end": "2025-09-24"
+  },
+  "source": {
+    "provider": "U.S. Treasury Fiscal Data",
+    "dataset": "Treasury Securities Auctions Data",
+    "query_security_type": "Note",
+    "query_security_term": "10-Year",
+    "required_fields": [
+      "record_date",
+      "auction_date",
+      "cusip",
+      "bid_to_cover_ratio"
+    ]
+  },
+  "fixed_signal": {
+    "definition": "For each auction after the first chronologically, compare bid_to_cover_ratio with the immediately preceding 10-Year Note auction. Positive change=+1, negative change=-1, unchanged=0.",
+    "no_threshold_search": true,
+    "no_weight_search": true,
+    "no_variant_search": true
+  },
+  "pit_contract": {
+    "information_timestamp": "record_date, the official dataset publication date",
+    "action_rule": "Map each event to the first eligible common trading date strictly after record_date.",
+    "terminal_event_rule": "Events with no next trading date inside the fixed study window are recorded as terminal and are not silently dropped."
+  },
+  "coverage_contract": {
+    "complete_required_fields": true,
+    "deterministic_sorting": "auction_date,cusip",
+    "duplicate_key": "auction_date,cusip",
+    "numeric_bid_to_cover_required": true,
+    "record_date_not_before_auction_date": true,
+    "fixed_common_market_calendar_required": true
+  },
+  "governance": {
+    "coverage_only": true,
+    "performance_evaluation": false,
+    "holdout_used": false,
+    "candidate_ranking": false,
+    "parameter_search": false,
+    "asset_search": false,
+    "feature_search": false,
+    "horizon_search": false,
+    "performance_trial_authorized": false,
+    "automatic_promotion": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "decision_rule": "If the fixed source/signal/PIT contract passes, a separate performance preregistration may be considered. No performance evidence is created by Q019 itself."
+}
