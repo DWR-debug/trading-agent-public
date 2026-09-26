@@ -29,7 +29,6 @@ SEC_SUBMISSIONS = "https://data.sec.gov/submissions/CIK{cik:010d}.json"
 SEC_ARCHIVE = "https://data.sec.gov/submissions/{name}"
 SEC_HEADERS = {
     "User-Agent": "trading-agent-public research https://github.com/DWR-debug/trading-agent-public",
-    "Accept-Encoding": "gzip, deflate",
 }
 FED_HISTORICAL = "https://www.federalreserve.gov/monetarypolicy/fomchistorical{year}.htm"
 FED_CALENDAR = "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
