@@ -39,3 +39,19 @@ def test_q020_universe_is_fresh_and_exact():
         if existing.name == "validation_2026_09_26_treasury_auction_performance_repair":
             continue
         assert not expected.intersection(existing.symbols), existing.name
+
+
+def test_q020_repair_declares_acquisition_headroom_and_window_minimum_separately():
+    spec = json.loads(
+        (
+            ROOT
+            / "research"
+            / "preregistrations"
+            / "q020_treasury_auction_coverage_repair_2026_09_26.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert spec["requested_candles"] == 4000
+    assert spec["minimum_in_window_candles"] == 3500
+    assert spec["target_candles"] == 3500
+    assert spec["repair_change"]["minimum_required_in_window_candles"] == 3500
+    assert spec["governance"]["performance_execution"] is False
