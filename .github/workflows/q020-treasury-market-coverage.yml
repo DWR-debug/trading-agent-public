@@ -1,0 +1,72 @@
+name: Q020 Treasury Market Coverage
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "automation/q020_treasury_market_coverage.py"
+      - "tests/test_q020_treasury_market_coverage.py"
+      - "research/preregistrations/q020_treasury_market_coverage_2026_09_26.json"
+      - ".github/workflows/q020-treasury-market-coverage.yml"
+  push:
+    branches:
+      - governance/q020-complete-q021-focus-2026-09-26
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-q020-market-coverage
+  cancel-in-progress: false
+
+jobs:
+  coverage:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 35
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Tests
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+          python -m pytest -q tests/test_q020_treasury_market_coverage.py
+      - name: Canonical Market Coverage
+        run: |
+          set -euo pipefail
+          python -m automation.q020_treasury_market_coverage
+      - name: Evidence und Governance
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path("research/runs/source_feasibility/q020_treasury_market_coverage.json").read_text(encoding="utf-8"))
+          assert data["governance"]["coverage_only"] is True
+          assert data["governance"]["performance_evaluation"] is False
+          assert data["governance"]["holdout_used"] is False
+          assert data["governance"]["performance_trial_authorized"] is False
+          assert data["safety"]["paper_only"] is True
+          assert data["safety"]["live_trading_enabled"] is False
+          assert data["safety"]["orders_enabled"] is False
+          print(json.dumps({
+              "status": data["status"],
+              "canonical_status": data["canonical_status"],
+              "common_calendar_count": data["coverage"].get("common_calendar_count"),
+              "fingerprint": data["fingerprint"],
+          }, sort_keys=True))
+          PY
+      - name: Evidence sichern
+        uses: actions/upload-artifact@v6
+        with:
+          name: q020-treasury-market-coverage
+          path: research/runs/source_feasibility/q020_treasury_market_coverage.json
+          if-no-files-found: error
+          retention-days: 30
