@@ -51,6 +51,13 @@ def test_validate_task_produces_deterministic_fingerprint():
     )
     assert manifest["max_concurrent_agent_tasks"] == MAX_CONCURRENT_AGENT_TASKS
     assert manifest["source_master_sha"] == "a" * 40
+    assert manifest["allowed_paths"] == [
+        "automation/self_hosted_research_worker.py",
+        "docs/DEVELOPMENT_ORCHESTRATION.md",
+        "docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md",
+        "docs/SELF_HOSTED_RESEARCH_RUNNER.md",
+        "tests/test_self_hosted_research_worker.py",
+    ]
     assert len(manifest["manifest_fingerprint"]) == 64
 
     again = validate_task(
@@ -136,6 +143,19 @@ def test_validate_task_rejects_non_master_base():
             current_master_sha="a" * 40,
             active_agent_count=0,
             labels=["agent-ready"],
+        )
+
+
+def test_validate_task_rejects_protected_allowed_path():
+    task = valid_task()
+    task["allowed_paths"] = [".github/workflows/**"]
+    with pytest.raises(AgentDispatchError, match="protected path"):
+        validate_task(
+            task,
+            issue_number=999,
+            current_master_sha="a" * 40,
+            active_agent_count=0,
+            labels=["agent-cli-ready"],
         )
 
 
