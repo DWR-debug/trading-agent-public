@@ -150,6 +150,21 @@ def test_validate_task_accepts_copilot_cli_ready_label():
     assert manifest["task_id"] == "AGENT-TEST-001"
 
 
+def test_autonomous_agent_request_queue_uses_two_lanes_and_is_fail_closed():
+    root = Path(__file__).parents[1]
+    text = (root / ".github" / "workflows" / "agent-request-queue.yml").read_text(encoding="utf-8")
+    assert 'paths:' in text
+    assert 'agent_requests/**' in text
+    assert 'lane: [0, 1]' in text
+    assert 'trading-agent-agent-cli-queue-lane-${{ matrix.lane }}' in text
+    assert 'PAPER_ONLY=True' in text
+    assert 'LIVE_TRADING_ENABLED=False' in text
+    assert 'orders_enabled=False' in text
+    assert 'automatic_promotion=False' in text
+    assert 'Automatic PR creation is unavailable' in text
+    assert 'Duplicate execution is fail-closed' in text
+    assert 'python -m automation.agent_dispatch' in text
+
 def test_bounded_copilot_cli_workflow_uses_builtin_token_and_credit_gate():
     root = Path(__file__).parents[1]
     text = (
