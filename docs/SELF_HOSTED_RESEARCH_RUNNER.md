@@ -69,6 +69,8 @@ werden.
 Nach der Registrierung muss der Runner erreichbar sein. Der Workflow startet erst bei
 manuellem \`workflow_dispatch\`.
 
+Der Worker benötigt auf dem Firmenrechner keine systemweite Python-Installation. Der Workflow bootstrappt dafür eine fest gepinnte Python-3.13.15-NuGet-Laufzeit im temporären Runner-Verzeichnis. Damit sind weder Administratorrechte noch `actions/setup-python` erforderlich; letzteres kann auf restriktiven Unternehmensrechnern an der PowerShell-Execution-Policy scheitern.
+
 ## Betriebsregel
 
 Self-hosted Ergebnisse sind Arbeitsmaterial. Für wissenschaftliche Entscheidungen gilt:
