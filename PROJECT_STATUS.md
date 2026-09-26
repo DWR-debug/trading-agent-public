@@ -1,3 +1,20 @@
+# AKTUELLER AUSFÜHRUNGS-CHECKPOINT — Q019 abgeschlossen / Q020 vorbereitet — 2026-09-26
+
+PR #238 ist in `DWR-debug/trading-agent-public` auf `master` gemergt. Merge-Commit: `52312dcae5da210df940adcd19a5457cd6ed6acf`.
+
+Q019 wurde im zugehörigen Actions-Run `36238205065` erfolgreich ausgeführt. Ergebnis: **COVERAGE_VALIDATED**. 89/89 Treasury-10Y-Auktionszeilen waren valide, 89 Events wurden auf den ersten folgenden XNYS-Trading-Tag gemappt, 0 Events waren terminal und 0 Fehler wurden gemeldet. Q019 erzeugt bewusst keine Performance-Evidenz.
+
+Die bisherige fehlende Performance-Evidenz ist präzise zu unterscheiden:
+- T041/T044/T045 erzeugten echte Performance-Messungen, scheiterten aber ihren unveränderten Evidence-Gates und wurden deshalb als `NO_PROMOTION_EVIDENCE` archiviert.
+- Q016–Q019 waren Diagnose-, Source-Feasibility- bzw. Contract-Schritte und waren nie als Performance-Trials autorisiert.
+- Für Q019 bedeutet das jetzt: **Datenvertrag bestanden, wirtschaftliche Wirksamkeit weiterhin unbekannt.**
+
+Q020 ist als **PREREGISTERED_DESIGN_ONLY** angelegt. Nächste Stufe ist Coverage-first mit dem vollständig symbol-disjunkten Universum `ACN, AMT, APD, BK, CME, CTAS, GPC, LLY, MCO, NOC, ROST, SHW`. Erst nach einem erfolgreichen Coverage-Pass darf die formale Performanceausführung auf dem eingefrorenen Snapshot erfolgen.
+
+Sicherheit bleibt unverändert: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
+
+---
+
 # AKTUELLER AUSFÜHRUNGS-CHECKPOINT — Canonical Data Layer — 2026-09-26
 
 Die Konsolidierung der Yahoo-OHLCV-Datenebene ist abgeschlossen und in master verankert.
