@@ -30,7 +30,7 @@ def test_treasury_filter_contract(monkeypatch):
 
 
 def test_fed_source_status_is_deterministic(monkeypatch):
-    html = "<html><body>Statement target range for the federal funds rate</body></html>"
+    html = "<html><body>" + ("Statement " * 8) + "target range for the federal funds rate</body></html>"
     monkeypatch.setattr(module, "_fetch_text", lambda url, **kwargs: html)
     result = module._fed_coverage()
     assert result["status"] == "COVERAGE_VALIDATED"
