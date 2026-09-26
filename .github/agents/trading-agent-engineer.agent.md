@@ -25,3 +25,10 @@ Arbeitsweise:
 
 Wichtig:
 Agentenoutput ist keine wissenschaftliche Evidenz. Bei einem Research-Task implementierst du die autorisierte Methode; du entscheidest nicht selbst über Promotion oder Hypothesensieg.
+
+
+## Ressourcenbetrieb
+
+Prüfe docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md. Verwende Cloud Agent nur für klar abgegrenzte PR-Aufgaben, idealerweise 15–45 Minuten. Große deterministische Berechnungen gehören in Actions oder lokale Runner.
+
+Bei einem fehlgeschlagenen Actions-Lauf darfst du den technischen Fehler analysieren und beheben. Der wissenschaftliche Befund des Laufs darf nicht verändert oder umgedeutet werden.

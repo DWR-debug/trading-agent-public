@@ -54,14 +54,16 @@ Bei jedem neuen `trading agent`-Chat:
 
 1. Dieses Dokument lesen.
 2. `docs/PROJECT_CONTEXT.md` lesen.
-3. `docs/DEVELOPMENT_ORCHESTRATION.md` lesen, insbesondere das Nicht-Warten-/Parallelisierungsmodell.
-4. `PROJECT_STATUS.md` lesen.
-5. `research/evidence/project_state.json` lesen.
-6. `research/evidence/current_project_checkpoint.json` lesen.
-7. `research/evidence/trial_ledger.json` bzw. die für den aktuellen Task
+3. `docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md` lesen und Ressourcenrouting prüfen.
+4. `docs/TRADING_AGENT_SUPERVISION_PROTOCOL.md` lesen und Rollen-/Kontrollkette prüfen.
+5. `docs/DEVELOPMENT_ORCHESTRATION.md` lesen, insbesondere das Nicht-Warten-/Parallelisierungsmodell.
+6. `PROJECT_STATUS.md` lesen.
+7. `research/evidence/project_state.json` lesen.
+8. `research/evidence/current_project_checkpoint.json` lesen.
+9. `research/evidence/trial_ledger.json` bzw. die für den aktuellen Task
    relevanten Evidence-Dateien prüfen.
-8. Aktuellen `master`, relevante Branches/PRs und laufende/letzte Workflows prüfen.
-10. Erst danach Änderungen, Research oder neue Hypothesen vornehmen.
+10. Aktuellen `master`, relevante Branches/PRs und laufende/letzte Workflows prüfen.
+11. Erst danach Änderungen, Research oder neue Hypothesen vornehmen.
 
 ## Autonomie-Regel
 

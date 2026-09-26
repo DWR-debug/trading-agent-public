@@ -131,3 +131,18 @@ Die operative Reihenfolge bleibt:
 
 Kostenpflichtige externe Agenten-, Copilot- oder API-Ressourcen bleiben ausgeschlossen. Kostenfreie Agentenressourcen werden gezielt für Hypothesenbildung, Gegenhypothesen, Forschungsdesign und Review eingesetzt; deterministische Berechnung bleibt reproduzierbar.
 
+
+## Dauerhaftes Ressourcenmodell — 2026-09-26
+
+Das monatlich erneuerbare GitHub-Free-Kontingent wird als strategische Infrastrukturreserve behandelt.
+
+Kanonische Policy: docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md.
+
+Arbeitsmuster:
+Steuer-Agent entscheidet → Cloud/Coding-Worker implementiert → Actions reproduzieren → Reviewer prüft → Evidence entscheidet.
+
+Copilot Cloud Agent ist fachlich besonders geeignet für CI-/Testfehler, Regressionstests, abgegrenzte Refactorings, Dokumentation, technische Schuld und technische PR-Arbeit. Er bleibt nachgeordnet. Holdout-Auswahl, Promotionsentscheidungen, Gate-Änderungen und wissenschaftliche Interpretation bleiben außerhalb des Cloud Agents.
+
+Aktueller GitHub-Planstand: Cloud Agent ist nicht im Copilot Free enthalten. Paid agent budget bleibt deshalb 0 USD. Eine bereits ohne Zusatzkosten vorhandene Berechtigung darf genutzt werden.
+
+Bei jedem neuen Chat mit "trading agent" wird das Ressourcenmodell vor der Auswahl des nächsten Arbeitsschritts eingelesen.
