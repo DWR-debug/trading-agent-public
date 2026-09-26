@@ -1,3 +1,5 @@
+import json
+import platform
 from pathlib import Path
 
 from automation import self_hosted_research_worker as worker
@@ -20,6 +22,80 @@ def test_self_hosted_worker_has_only_bounded_lanes():
     assert "ast.parse" in worker.LANES["repo_qa"][0][2]
     assert worker.LANES["repo_qa"][1][0:3] == [worker.PYTHON, "-m", "pytest"]
 
+
+def test_every_lane_writes_non_formal_run_manifest(monkeypatch, tmp_path):
+    monkeypatch.setenv("GITHUB_SHA", "abc123")
+    monkeypatch.setenv("RUNNER_NAME", "self-hosted-test")
+
+    for lane, commands in worker.LANES.items():
+        output_dir = tmp_path / lane
+        attempted = []
+
+        def fake_run(command, out_dir, index):
+            attempted.append(index)
+            return {"index": index, "returncode": 0 if index == 1 else 7}
+
+        monkeypatch.setattr(worker, "run", fake_run)
+        monkeypatch.setattr(
+            "sys.argv",
+            [
+                "self_hosted_research_worker",
+                "--lane",
+                lane,
+                "--output-dir",
+                str(output_dir),
+            ],
+        )
+
+        expected_codes = [0] if len(commands) == 1 else [0, 7]
+        assert worker.main() == (0 if len(commands) == 1 else 7)
+        assert attempted == list(range(1, len(expected_codes) + 1))
+
+        manifest = json.loads(
+            (output_dir / "run_manifest.json").read_text(encoding="utf-8")
+        )
+        assert manifest == {
+            "schema_version": 1,
+            "lane": lane,
+            "python_executable": worker.sys.executable,
+            "python_version": platform.python_version(),
+            "source_commit": "abc123",
+            "runner_name": "self-hosted-test",
+            "paper_only": True,
+            "live_trading_enabled": False,
+            "orders_enabled": False,
+            "automatic_promotion": False,
+            "formal_research_evidence": False,
+            "step_count": len(expected_codes),
+            "step_return_codes": expected_codes,
+        }
+
+
+def test_run_manifest_allows_local_execution_without_github_metadata(monkeypatch, tmp_path):
+    monkeypatch.delenv("GITHUB_SHA", raising=False)
+    monkeypatch.delenv("RUNNER_NAME", raising=False)
+    monkeypatch.setattr(worker, "run", lambda command, out_dir, index: {
+        "index": index,
+        "returncode": 0,
+    })
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "self_hosted_research_worker",
+            "--lane",
+            "data_qa",
+            "--output-dir",
+            str(tmp_path),
+        ],
+    )
+
+    assert worker.main() == 0
+    manifest = json.loads(
+        (tmp_path / "run_manifest.json").read_text(encoding="utf-8")
+    )
+    assert manifest["source_commit"] is None
+    assert manifest["runner_name"] is None
+    assert manifest["formal_research_evidence"] is False
 
 
 def test_self_hosted_worker_v4_is_minimal_single_step_gateway():

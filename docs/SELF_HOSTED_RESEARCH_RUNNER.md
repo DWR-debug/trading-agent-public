@@ -65,6 +65,18 @@ Ein einzelner QA-Lauf wird durch eine Änderung an der dedizierten Trigger-Datei
 `research/run_requests/self_hosted_repo_qa.trigger` auf `master` ausgelöst. Der Runner prüft
 zusätzlich den Repository-Owner und führt dann genau die freigegebene `repo_qa`-Lane aus.
 
+## Laufmanifest
+
+Jede begrenzte Lane schreibt neben `summary.json` ein `run_manifest.json` mit Lane,
+Python-Executable und -Version, Quell-Commit (`GITHUB_SHA`, sofern gesetzt), Runnername
+(`RUNNER_NAME`, sofern gesetzt), den Paper-only-Sicherheitsflags sowie Schrittanzahl und
+Schritt-Rückgabecodes. Bei lokalen Läufen ohne GitHub-Metadaten sind Commit und Runnername
+`null`. Das Manifest kennzeichnet ausdrücklich, dass es keine formale Research-Evidence ist.
+
+Das Manifest ist nicht-kanonische Arbeitsprovenienz und allein kein Research-Befund. Vor
+jeder wissenschaftlichen Verwendung müssen Quelle und Laufumfang geprüft sowie Ergebnisse
+auf dem kanonischen Pfad reproduziert werden; unveränderte Evidence-Gates bleiben maßgeblich.
+
 ## Betriebsregel
 
 Self-hosted Ergebnisse sind Arbeitsmaterial. Für wissenschaftliche Entscheidungen gilt:

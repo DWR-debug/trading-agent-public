@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import platform
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -104,6 +106,25 @@ def main() -> int:
     }
     (args.output_dir / "summary.json").write_text(
         json.dumps(summary, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    run_manifest = {
+        "schema_version": 1,
+        "lane": args.lane,
+        "python_executable": sys.executable,
+        "python_version": platform.python_version(),
+        "source_commit": os.environ.get("GITHUB_SHA"),
+        "runner_name": os.environ.get("RUNNER_NAME"),
+        "paper_only": True,
+        "live_trading_enabled": False,
+        "orders_enabled": False,
+        "automatic_promotion": False,
+        "formal_research_evidence": False,
+        "step_count": len(results),
+        "step_return_codes": [result["returncode"] for result in results],
+    }
+    (args.output_dir / "run_manifest.json").write_text(
+        json.dumps(run_manifest, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
     return exit_code
