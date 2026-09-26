@@ -245,3 +245,19 @@ Die richtige Systemreaktion ist nicht, diese Kausalkette zu verdrängen, sondern
 - keinerlei Leverage-/Exposure-/Live-Abkürzung aufgrund finanzieller Dringlichkeit.
 
 Der 30-Tage-Meilenstein bis 2026-10-25 ist daher ein **Evidence-Meilenstein und kein Renditeversprechen**. Die Mutkurve darf nur nach objektiv bestandenen Gates steigen.
+
+## 12. GitHub-Free-Ressourcen und Cloud-Agent-Betriebsmodell
+
+Die verbindliche Ressourcenstrategie liegt unter docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md und ist bei jedem neuen "trading agent"-Chat zu berücksichtigen.
+
+Verbindlich:
+- Paid agent/API budget = 0 USD.
+- Public-Repository-Standardrunner sind der bevorzugte Pfad für deterministische CI, Coverage und Research-Berechnung.
+- Die inkludierten 2.000 Actions-Minuten werden nicht künstlich verbraucht; Standardrunner in öffentlichen Repositories sind grundsätzlich kostenlos.
+- 120 Codespace-Core-hours werden primär für interaktives Debugging, Daten-/Provenance-QA und lokale Reproduktion reserviert.
+- Copilot Cloud Agent ist ein nachgeordneter Worker für begrenzte Engineering-, Test-, Dokumentations- und technische Reviewaufgaben.
+- Copilot Cloud Agent darf nur eingesetzt werden, wenn er im Account bereits ohne Zusatzkosten verfügbar ist.
+- Cloud-Agent-Output ist keine wissenschaftliche Evidenz und darf keine Holdout-/Parameter-/Asset-/Horizon-Auswahl oder Promotion entscheiden.
+- Ziel ist maximaler Forschungs-/Engineering-Fortschritt pro kostenloser Ressource, nicht maximaler Ressourcenverbrauch.
+
+Das Ressourcenmodell ist Bestandteil des dauerhaften Projektgedächtnisses.
