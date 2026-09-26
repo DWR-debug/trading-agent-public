@@ -137,3 +137,31 @@ def test_validate_task_rejects_non_master_base():
             active_agent_count=0,
             labels=["agent-ready"],
         )
+
+
+def test_validate_task_accepts_copilot_cli_ready_label():
+    manifest = validate_task(
+        valid_task(),
+        issue_number=999,
+        current_master_sha="b" * 40,
+        active_agent_count=0,
+        labels=["agent-cli-ready"],
+    )
+    assert manifest["task_id"] == "AGENT-TEST-001"
+
+
+def test_bounded_copilot_cli_workflow_uses_builtin_token_and_credit_gate():
+    root = Path(__file__).parents[1]
+    text = (
+        root / ".github" / "workflows" / "copilot-cli-engineering-task.yml"
+    ).read_text(encoding="utf-8")
+    assert "copilot-requests: write" in text
+    assert "GITHUB_TOKEN: ${{ github.token }}" in text
+    assert "COPILOT_GITHUB_TOKEN" not in text
+    assert "--max-ai-credits=45" in text
+    assert "--agent=trading-agent-engineer" in text
+    assert "github.event.issue.user.login == github.repository_owner" in text
+    assert "PAPER_ONLY=True" in text
+    assert "LIVE_TRADING_ENABLED=False" in text
+    assert "orders_enabled=False" in text
+    assert "automatic_promotion=False" in text

@@ -78,7 +78,7 @@ def validate_task(
     """Validate task metadata and return a normalized dispatch manifest."""
     if task.get("schema_version") != SCHEMA_VERSION:
         raise AgentDispatchError("Unsupported task schema_version.")
-    if not ({"agent", "agent-ready"} & set(labels)):
+    if not ({"agent", "agent-ready", "agent-cli-ready"} & set(labels)):
         raise AgentDispatchError("Task is not labeled agent or agent-ready.")
     if "copilot-swe-agent[bot]" in (assignees or []):
         raise AgentDispatchError("Task is already assigned to Copilot; duplicate dispatch is forbidden.")
