@@ -191,3 +191,10 @@ def test_q022_design_guard_is_bounded_and_non_executing():
     assert payload["ranked"] is False
     assert payload["performance_trial_authorized"] is False
     assert payload["holdout_used_for_selection"] is False
+
+
+def test_local_reproduction_targets_existing_governance_test():
+    commands = worker.LANES["local_reproduction"]
+    assert commands[1][0:4] == [worker.PYTHON, "-m", "pytest", "-q"]
+    assert commands[1][4] == "tests/test_research_gates.py"
+    assert (ROOT / commands[1][4]).is_file()

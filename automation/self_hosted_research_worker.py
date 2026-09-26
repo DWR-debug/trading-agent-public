@@ -48,7 +48,7 @@ LANES: dict[str, list[list[str]]] = {
     "design_qa": [[PYTHON, "-m", "automation.q022_design_guard"]],
     "local_reproduction": [
         [PYTHON, "-c", "import ast, pathlib; files=sorted(p for root in (\"automation\", \"data\", \"research\") for p in pathlib.Path(root).rglob(\"*.py\")); [ast.parse(p.read_text(encoding=\"utf-8\"), filename=str(p)) for p in files]; print(f\"AST_LOCAL_REPRODUCTION_OK files={len(files)}\")"],
-        [PYTHON, "-m", "pytest", "-q", "tests/test_research_governance.py"],
+        [PYTHON, "-m", "pytest", "-q", "tests/test_research_gates.py"],
     ],
 }
 
