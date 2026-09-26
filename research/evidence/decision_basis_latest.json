@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "recorded_on": "2026-09-26",
   "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
-  "current_stage": "Q020_COVERAGE_VALIDATED",
+  "current_stage": "Q020_PERFORMANCE_COMPLETED",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
@@ -34,7 +34,11 @@
     "Q020 repair produced 3704 common-calendar candles across all 12 symbols and froze the last 3500 timestamps as the aligned snapshot.",
     "Q020 repair snapshot-fingerprint=70cff5df1b92f4f7db2ea09bdc9999abff93dd4230ad4ea5df6e5da204076ef8; coverage-fingerprint=703f9fb9d1cd21618d0acdcbe8dff3267c99b91afb6841d7110eb09a93f04600.",
     "Q020 repair changed BK to TGT and increased raw acquisition headroom to 4000 strictly for technical coverage repair; no performance criterion was used.",
-    "Q020 repair performed no performance evaluation, no holdout evaluation, no selection and no promotion."
+    "Q020 repair performed no performance evaluation, no holdout evaluation, no selection and no promotion.",
+    "Q020 T046R1 formal performance workflow=36243099900 completed with result fingerprint=0ee05b7933572b6f5e9307436e87844ff6ca92180d00e4139da0814e231b9952.",
+    "Q020 used the validated frozen repair snapshot fingerprint=70cff5df1b92f4f7db2ea09bdc9999abff93dd4230ad4ea5df6e5da204076ef8 and fixed Q019 signal contract.",
+    "Q020 evaluation remained fixed-rule, holdout-blind and without parameter/asset/threshold/horizon/variant selection.",
+    "Q020 outcome=NO_PROMOTION_EVIDENCE; no promotion or live execution followed."
   ],
   "implications": [
     "Q019 source/PIT uncertainty is resolved for the fixed Treasury auction series.",
@@ -42,14 +46,17 @@
     "Q020 is the first step that can create Treasury-specific performance evidence, but only after a new symbol-disjoint market-data coverage pass.",
     "The Q020 design deliberately isolates the event signal as a standalone fixed-rule test before any allocator/integration research.",
     "The Q020 event signal now has a validated, frozen, symbol-disjoint market-data snapshot suitable for a separately authorized performance execution.",
-    "Coverage validation does not imply predictive value or profitability."
+    "Coverage validation does not imply predictive value or profitability.",
+    "The fixed Treasury auction signal did not satisfy the unchanged evidence contract on the fresh symbol-disjoint validation universe.",
+    "Q020 should not be retuned on the same evidence; the next informative step is mechanism/failure diagnosis.",
+    "The negative result is valid research progress because it narrows the mechanism space without consuming the holdout for selection."
   ],
   "unknowns": [
-    "whether the fixed Treasury auction signal produces positive and robust returns on the fresh universe",
-    "whether event-window behavior survives realistic costs, rolling tests, and the untouched holdout",
-    "whether the signal adds information beyond existing sleeves; integration is deferred until standalone evidence exists"
+    "which measurable mechanism explains the observed loss pattern of the fixed Treasury signal",
+    "whether the source relation is unstable by regime, direction or event subtype",
+    "whether any future hypothesis can be tested on a new independent universe without reopening Q020 tuning"
   ],
-  "next_action": "Create a separate immutable Q020 performance authorization bound to the validated repair snapshot; only then execute the fixed-rule performance workflow.",
+  "next_action": "Execute a new preregistered Q020 failure/mechanism diagnosis; do not modify the Q020 rule and do not use the holdout for selection.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
