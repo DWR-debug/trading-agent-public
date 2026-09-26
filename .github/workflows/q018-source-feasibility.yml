@@ -59,18 +59,32 @@ jobs:
           assert data["safety"]["live_trading_enabled"] is False
           assert data["safety"]["orders_enabled"] is False
           assert data["safety"]["automatic_promotion"] is False
-          print(json.dumps({
+          summary = {
               "overall_status": data["overall_status"],
               "sec": data["sec"]["status"],
               "fed": data["fed"]["status"],
               "treasury": data["treasury"]["status"],
               "fingerprint": data["fingerprint"],
-          }, sort_keys=True))
+          }
+          if data["sec"]["status"] != "COVERAGE_VALIDATED":
+              summary["sec_error"] = data["sec"].get("error")
+              summary["sec_symbol_errors"] = {
+                  key: value.get("error") for key, value in data["sec"].get("symbols", {}).items()
+                  if value.get("error")
+              }
+          if data["fed"]["status"] != "COVERAGE_VALIDATED":
+              summary["fed_failed_years"] = {
+                  key: value for key, value in data["fed"].get("years", {}).items()
+                  if value.get("status") != "COVERAGE_VALIDATED"
+              }
+          if data["treasury"]["status"] != "COVERAGE_VALIDATED":
+              summary["treasury_error"] = data["treasury"].get("error")
+          print(json.dumps(summary, sort_keys=True))
           PY
       - name: Evidence sichern
         uses: actions/upload-artifact@v6
         with:
-          name: q018-source-feasibility-\${{ github.run_id }}
+          name: q018-source-feasibility-${{ github.run_id }}
           path: research/runs/source_feasibility/q018_source_feasibility.json
           if-no-files-found: error
           retention-days: 30
