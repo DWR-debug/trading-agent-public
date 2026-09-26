@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0",
+  "trial_id": "T-2026-09-26-046",
+  "status": "DATA_INVALID",
+  "workflow_run_id": 36239069423,
+  "artifact_id": 10905017272,
+  "artifact_digest_sha256": "sha256:d2829980709e834e59ae1d6c830022f22393717c52b624aa47f038ac6c30e293",
+  "coverage_fingerprint": "50e054a03ddc899abd8bf67133f3adb084e239b9ac3e896c3833ee015c6e739f",
+  "requested_candles": 3520,
+  "target_common_calendar": 3500,
+  "symbols": [
+    "ACN",
+    "AMT",
+    "APD",
+    "BK",
+    "CME",
+    "CTAS",
+    "GPC",
+    "LLY",
+    "MCO",
+    "NOC",
+    "ROST",
+    "SHW"
+  ],
+  "per_symbol_in_window_candles": {
+    "ACN": 3269,
+    "AMT": 3269,
+    "APD": 3269,
+    "BK": 0,
+    "CME": 3269,
+    "CTAS": 3269,
+    "GPC": 3269,
+    "LLY": 3269,
+    "MCO": 3269,
+    "NOC": 3269,
+    "ROST": 3269,
+    "SHW": 3269
+  },
+  "common_calendar_count": 0,
+  "technical_errors": [
+    "11 symbols returned 3269 in-window candles versus 3520 requested; insufficient for the fixed 3500 common target.",
+    "BK could not be loaded from Yahoo; HTTP 404."
+  ],
+  "scientific_outcome": "NO_SCIENTIFIC_OUTCOME",
+  "performance_evaluation": false,
+  "holdout_evaluation": false,
+  "selection_used": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}

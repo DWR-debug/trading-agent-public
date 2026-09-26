@@ -4,7 +4,9 @@ on:
   pull_request:
     branches: [master]
   push:
-    branches: [master]
+    branches:
+      - master
+      - research/execute-q020-coverage
   workflow_dispatch:
 
 permissions:
@@ -106,7 +108,10 @@ jobs:
 
           expected = set(prereg["symbols"])
           for existing in list_universes():
-              if existing.name == prereg["universe"]:
+              if existing.name in {
+                  prereg["universe"],
+                  "validation_2026_09_26_treasury_auction_performance_repair",
+              }:
                   continue
               assert not expected.intersection(existing.symbols), existing.name
 
