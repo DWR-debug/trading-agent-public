@@ -12,6 +12,7 @@ import hashlib
 import json
 import math
 import statistics
+import os
 from datetime import date
 from pathlib import Path
 
@@ -200,6 +201,7 @@ def run(
     result = {
         "schema_version": "1.0",
         "task_id": "WIDE-SEARCH-H06-MECHANISM-REPLICATION-COVERAGE",
+        "workflow_run_id": int(os.environ["GITHUB_RUN_ID"]) if os.environ.get("GITHUB_RUN_ID") else None,
         "hypothesis_id": "H06",
         "recorded_at": date.today().isoformat(),
         "universe": UNIVERSE,
