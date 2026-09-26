@@ -61,3 +61,23 @@ def test_q022_h1_coverage_authorization_is_not_performance_authorization() -> No
     assert auth["coverage_execution_authorized"] is True
     assert auth["performance_execution_authorized"] is False
     assert auth["execution_scope"] == "COVERAGE_ONLY"
+
+
+def test_q022_h1_repair_successor_changes_only_acquisition_headroom() -> None:
+    prereg = json.loads(
+        (
+            ROOT
+            / "research"
+            / "preregistrations"
+            / "q022_h1_directional_inversion_coverage_repair_2026_09_26.json"
+        ).read_text(encoding="utf-8")
+    )
+    universe = get_universe(prereg["universe"])
+    assert prereg["trial_id"] == "T-2026-09-26-047R1"
+    assert prereg["parent_trial_id"] == "T-2026-09-26-047"
+    assert tuple(universe.symbols) == tuple(prereg["symbols"])
+    assert prereg["requested_candles"] == 4000
+    assert prereg["minimum_in_window_candles"] == 3500
+    assert prereg["target_candles"] == 3500
+    assert universe.target_count == 4000
+    assert prereg["authorization"]["performance_trial_authorized"] is False
