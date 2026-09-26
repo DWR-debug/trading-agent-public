@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "record_id": "Q-018-SOURCE-FEASIBILITY-PREFLIGHT-2026-09-26",
+  "status": "DATA_INSUFFICIENT",
+  "workflow_run_id": 36237329691,
+  "artifact_id": 10904273903,
+  "artifact_digest": "sha256:f8bfe4e1065d3d8a8b82b08fe4f78f6bd3c006bedf71c8cadc4f512d8d308989",
+  "result_fingerprint": "82b07265b29a93547f2b1547227722005cf9d883baf3ee8b6dc50e029742152d",
+  "fixed_universe": {
+    "name": "q018_official_event_source_validation",
+    "symbols": [
+      "UNH",
+      "UPS",
+      "FDX",
+      "DIS",
+      "ADP",
+      "BKNG",
+      "ORLY",
+      "AZO",
+      "TJX",
+      "RSG",
+      "WM",
+      "EOG"
+    ],
+    "study_window": {
+      "start": "2011-01-01",
+      "end": "2025-09-24"
+    }
+  },
+  "candidate_status": {
+    "A": {
+      "family": "sec_insider_flow_event",
+      "status": "DATA_INSUFFICIENT",
+      "reason": "All 12 fixed SEC data.sec.gov issuer-submission endpoints returned HTTP 403 from the GitHub Actions runner."
+    },
+    "B": {
+      "family": "fomc_policy_decision_event",
+      "status": "DATA_INSUFFICIENT",
+      "reason": "Federal Reserve historical/calendar retrieval returned HTTP 403 across 2011-2025 from the GitHub Actions runner."
+    },
+    "C": {
+      "family": "treasury_auction_demand_event",
+      "status": "COVERAGE_VALIDATED",
+      "source": "U.S. Treasury Fiscal Data Treasury Securities Auctions Data"
+    }
+  },
+  "governance": {
+    "coverage_only": true,
+    "performance_evaluation": false,
+    "holdout_used": false,
+    "candidate_ranking": false,
+    "parameter_search": false,
+    "asset_search": false,
+    "feature_search": false,
+    "horizon_search": false,
+    "performance_trial_authorized": false,
+    "automatic_promotion": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "next_gate": "Q-019-TREASURY-AUCTION-SIGNAL-CONTRACT"
+}
