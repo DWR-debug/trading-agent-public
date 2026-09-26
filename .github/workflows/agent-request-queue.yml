@@ -127,6 +127,7 @@ jobs:
           echo "configured=true" >> "$GITHUB_OUTPUT"
 
       - name: Run bounded Copilot CLI
+        id: copilot_cli
         if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true'
         shell: bash
         env:
@@ -153,10 +154,25 @@ jobs:
           ${task_body}
           EOF
           )"
-          copilot --agent=trading-agent-engineer --autopilot --no-ask-user --max-ai-credits=45 --max-autopilot-continues=1 -p "${prompt}" --allow-tool='read' --allow-tool='search' --allow-tool='write' --allow-tool='shell(git:*)' --allow-tool='shell(python:*)' --allow-tool='shell(pytest:*)'
+          set +e
+          copilot --agent=trading-agent-engineer --autopilot --no-ask-user --max-ai-credits=45 --max-autopilot-continues=1 -p "${prompt}" --allow-tool='read' --allow-tool='search' --allow-tool='write' --allow-tool='shell(git:*)' --allow-tool='shell(python:*)' --allow-tool='shell(pytest:*)' 2>&1 | tee "$RUNNER_TEMP/copilot_cli.log"
+          rc=${PIPESTATUS[0]}
+          set -e
+          if [ "$rc" -eq 0 ]; then
+            echo "status=success" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if grep -Eqi "Authentication failed|token may be invalid|lacking the required permissions|Copilot Requests" "$RUNNER_TEMP/copilot_cli.log"; then
+            gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.request.outputs.issue_number }}/comments" \
+              -f body="Agent queue paused: Copilot authentication is not currently usable. No engineering task was executed or published; the queue will retry automatically after the Copilot token/integration is corrected."
+            echo "status=auth_paused" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "status=failed" >> "$GITHUB_OUTPUT"
+          exit "$rc"
 
       - name: Enforce task-scoped file scope
-        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true'
+        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true' && steps.copilot_cli.outputs.status == 'success'
         shell: bash
         run: |
           set -euo pipefail
@@ -175,7 +191,7 @@ jobs:
           PY
 
       - name: Final bounded regression gate
-        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true'
+        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true' && steps.copilot_cli.outputs.status == 'success'
         shell: bash
         run: |
           set -euo pipefail
@@ -191,7 +207,7 @@ jobs:
           PY
 
       - name: Commit and publish
-        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true'
+        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true' && steps.copilot_cli.outputs.status == 'success'
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
