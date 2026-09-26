@@ -209,3 +209,11 @@ def test_continuous_qa_provenance_is_published_from_workspace():
     assert '"%PROV_ROOT%\\\\continuous_design_qa_%RUN_KEY%"' in text
     assert '"%PROV_ROOT%\\\\continuous_local_reproduction_%RUN_KEY%"' in text
     assert '${{ github.run_attempt }}' in text
+
+def test_continuous_qa_fails_closed_on_missing_provenance_files():
+    text = (
+        ROOT / ".github" / "workflows" / "self-hosted-continuous-qa.yml"
+    ).read_text(encoding="utf-8")
+    assert "[9/10] Validate QA provenance" in text
+    assert "PROVENANCE_FILES_OK" in text
+    assert "if-no-files-found: error" in text

@@ -95,6 +95,13 @@ jobs:
           "%PY_EXE%" -m automation.self_hosted_research_worker --lane local_reproduction --output-dir "%PROV_ROOT%\\continuous_local_reproduction_%RUN_KEY%"
           if errorlevel 1 set "FAIL=1"
 
+          echo [9/10] Validate QA provenance
+          for %%L in (repo_qa data_qa design_qa local_reproduction) do (
+            if not exist "%PROV_ROOT%\continuous_%%L_%RUN_KEY%\summary.json" exit /b 1
+            if not exist "%PROV_ROOT%\continuous_%%L_%RUN_KEY%\run_manifest.json" exit /b 1
+          )
+          echo PROVENANCE_FILES_OK
+
           echo [10/10] Continuous QA complete
           echo RUN_ID=%GITHUB_RUN_ID%
           echo SHA=%GITHUB_SHA%
@@ -117,5 +124,5 @@ jobs:
             research/runs/self_hosted/continuous_data_qa_${{ github.run_id }}-${{ github.run_attempt }}/
             research/runs/self_hosted/continuous_design_qa_${{ github.run_id }}-${{ github.run_attempt }}/
             research/runs/self_hosted/continuous_local_reproduction_${{ github.run_id }}-${{ github.run_attempt }}/
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 14
