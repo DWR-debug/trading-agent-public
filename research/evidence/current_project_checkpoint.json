@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "checkpoint_type": "current_project_snapshot",
-  "generated_at_utc": "2026-09-26T08:15:00Z",
+  "generated_at_utc": "2026-09-26T08:25:00Z",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit_at_checkpoint_creation": "1d1cf8de7cc91a6a516b9d518bdd5064ce4c09d1",
+  "master_commit_at_checkpoint_creation": "ffbfcfcbd6a9717296f8600e34caf49c013f2dac",
   "q016": {
     "task_id": "Q-016-INFORMATION-ALPHA-MECHANISM-DISCRIMINATION-REPLICATION",
     "workflow_run_id": 36172112861,
@@ -66,7 +66,7 @@
     "research/evidence/trial_ledger.json",
     "current master, relevant branches/PRs and workflows"
   ],
-  "active_research_task": "WIDE-SEARCH-H06",
+  "active_research_task": "H06-MECHANISM-DIAGNOSTIC",
   "wide_search_round_002": {
     "hypothesis_id": "H08",
     "family": "volatility_state_transition",
@@ -80,9 +80,26 @@
     "hypothesis_id": "H06",
     "repair_preregistration": "research/preregistrations/h06_sector_neutral_residual_momentum_repair_2026_09_25.json",
     "parent_attempt_status": "DATA_INSUFFICIENT_NO_SCIENTIFIC_OUTCOME",
-    "repair_status": "COVERAGE_IN_PROGRESS",
+    "repair_status": "COVERAGE_READY",
     "performance_trial_authorized": false,
     "holdout_used": false,
-    "fixed_research_only": true
+    "fixed_research_only": true,
+    "coverage_workflow_run_id": 36229318877,
+    "coverage_artifact_id": 10902436135,
+    "coverage_artifact_digest": "sha256:8bebfb1198a511809d7a578321b75a8695ef823e9d03146f1be00c65fa26126e",
+    "coverage_fingerprint": "db378f9ebf95ad5b9ce9d90367feb9c1b5c43716fb9e8945984fda6af8712186",
+    "common_calendar_candles": 3500,
+    "research_candles": 2798,
+    "holdout_candles_unused": 702,
+    "complete_decision_dates": 2546
+  },
+  "h06_mechanism_diagnostic": {
+    "preregistration": "research/preregistrations/h06_mechanism_diagnostic_2026_09_26.json",
+    "status": "PREREGISTERED_EXECUTION",
+    "source_coverage_workflow_run_id": 36229318877,
+    "source_coverage_artifact_id": 10902436135,
+    "source_coverage_artifact_digest": "sha256:8bebfb1198a511809d7a578321b75a8695ef823e9d03146f1be00c65fa26126e",
+    "holdout_used": false,
+    "performance_trial_authorized": false
   }
 }
