@@ -122,6 +122,8 @@ jobs:
       - name: Prepare isolated branch
         id: branch
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           task_id="$(python -c 'import json,os; body=json.load(open(os.path.join(os.environ["RUNNER_TEMP"], "issue.json"), encoding="utf-8"))["body"]; start=body.find("<!-- TRADING_AGENT_TASK_V1"); end=body.find("-->", start); print(json.loads(body[start + len("<!-- TRADING_AGENT_TASK_V1"):end].strip())["task_id"])' )"
