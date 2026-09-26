@@ -23,6 +23,7 @@ def test_payout_requires_new_high_water_mark_and_never_consumes_floor() -> None:
     assert result.minimum_post_payout_equity_eur >= 500.0
     assert result.floor_violation_count == 0
     assert result.minimum_floor_headroom_eur >= 0.0
+    assert result.maximum_drawdown_percent_after_withdrawals == pytest.approx(100.0 * (1.0 - 577.5 / 605.0))
 
 
 def test_losses_create_floor_violations_but_never_trigger_withdrawals() -> None:
@@ -32,12 +33,12 @@ def test_losses_create_floor_violations_but_never_trigger_withdrawals() -> None:
         sequence_window_periods=None,
     )
 
-    result = evaluate_income_viability((0.01, -0.05, -0.10), policy)
+    result = evaluate_income_viability((-0.05, -0.10, 0.0), policy)
 
     assert result.total_payout_eur == 0.0
     assert result.payout_count == 0
     assert result.zero_payout_periods == 3
-    assert result.floor_violation_count == 2
+    assert result.floor_violation_count == 3
     assert result.minimum_equity_eur < 500.0
     assert result.minimum_post_payout_equity_eur < 500.0
 
