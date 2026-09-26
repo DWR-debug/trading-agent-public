@@ -17,16 +17,17 @@ def test_self_hosted_worker_has_only_bounded_lanes():
             assert "promotion" not in " ".join(command).lower()
 
 
-def test_self_hosted_workflow_is_manual_and_owner_gated():
+def test_self_hosted_dispatch_uses_registered_orchestrator_gateway():
     text = (
-        ROOT / ".github" / "workflows" / "self-hosted-research-worker-manual.yml"
+        ROOT / ".github" / "workflows" / "research-orchestrator.yml"
     ).read_text(encoding="utf-8")
     assert "workflow_dispatch:" in text
+    assert "- self_hosted_worker" in text
+    assert "self_hosted_lane:" in text
+    assert "self_hosted_ref:" in text
+    assert "github.event_name == 'workflow_dispatch'" in text
+    assert "inputs.mode == 'self_hosted_worker'" in text
     assert "runs-on: [self-hosted, trading-agent-research]" in text
-    assert "github.actor == github.repository_owner" in text
-    assert "pull_request:" not in text
-    assert "push:" not in text
-    assert "schedule:" not in text
     assert "PAPER_ONLY" in text
     assert "ORDERS_ENABLED" in text
     assert "shell: cmd" in text
