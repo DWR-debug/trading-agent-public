@@ -26,7 +26,7 @@ allein keine formale Promotion-Evidence.
 ## Sicherheitsmodell
 
 Der öffentliche Repository-Kontext verwendet den Runner ausschließlich über den manuellen
-Workflow \`.github/workflows/self-hosted-research-worker.yml\`.
+Workflow \`.github/workflows/self-hosted-research-worker-manual.yml\`.
 
 Der Workflow akzeptiert nur den Repository-Owner als Actor und nur \`master\` oder
 vertrauenswürdige \`research/*\`-Refs. Pull Requests und Fork-Code werden nicht automatisch
