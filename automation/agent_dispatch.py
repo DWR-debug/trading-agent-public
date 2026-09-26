@@ -19,13 +19,13 @@ MAX_CONCURRENT_AGENT_TASKS = 2
 ALLOWED_WORKERS = {
     "engineering": "trading-agent-engineer",
 }
-DEFAULT_ALLOWED_PATHS = (
+DEFAULT_ALLOWED_PATHS = [
     "automation/self_hosted_research_worker.py",
     "tests/test_self_hosted_research_worker.py",
     "docs/SELF_HOSTED_RESEARCH_RUNNER.md",
     "docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md",
     "docs/DEVELOPMENT_ORCHESTRATION.md",
-)
+]
 FORBIDDEN_PATH_PREFIXES = (
     ".github/",
     "research/evidence/",
