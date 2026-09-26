@@ -181,7 +181,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          if [ "$GITHUB_REF" = "refs/heads/research/execute-t042-formal" ]; then
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ] && [ "$GITHUB_HEAD_REF" = "research/execute-q020-coverage" ]; then
+            test "$(git log -1 --pretty=%s)" = "FIX: align decision-basis assertion with Q020" || test "$(git log -1 --pretty=%s)" = "Research authorization: execute Q020 coverage"
+            python -m automation.coverage_preflight \
+              --preregistration research/preregistrations/q020_treasury_auction_performance_2026_09_26.json \
+              --output-root research/runs/q020_treasury_auction_performance
+          elif [ "$GITHUB_REF" = "refs/heads/research/execute-t042-formal" ]; then
             test "$GITHUB_EVENT_NAME" = "push"
             test "$(git log -1 --pretty=%s)" = "Research authorization: execute T042 formal performance"
             test -n "$T042_COVERAGE_RUN_ID"
