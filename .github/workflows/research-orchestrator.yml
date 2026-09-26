@@ -118,6 +118,7 @@ concurrency:
 
 jobs:
   run:
+    if: ${{ github.ref != 'refs/heads/research/execute-q020-coverage' }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 120
     steps:
