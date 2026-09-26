@@ -17,7 +17,8 @@ from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 
 from config import settings
-from data.canonical_snapshot import SnapshotSpec, build_frozen_snapshot, load_frozen_snapshot
+import exchange_calendars as xcals
+import pandas as pd
 from research.asset_universes import get_universe
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -188,37 +189,17 @@ def run(*, output_path: str | Path) -> dict:
 
     universe = get_universe(UNIVERSE)
     output = ROOT / Path(output_path)
-    snapshot_dir = output.parent / "q019_market_snapshot"
 
-    canonical = build_frozen_snapshot(
-        SnapshotSpec(
-            universe=UNIVERSE,
-            symbols=tuple(universe.symbols),
-            interval="1d",
-            requested_candles=REQUESTED_CANDLES,
-            target_common_candles=TARGET_COMMON_CANDLES,
-            minimum_in_window_candles=TARGET_COMMON_CANDLES,
-            output_dir=snapshot_dir,
-            dataset_subdir=".",
-            study_start=STUDY_START,
-            study_end=STUDY_END,
-        )
+    calendar = xcals.get_calendar("XNYS")
+    sessions = calendar.sessions_in_range(
+        pd.Timestamp(STUDY_START.isoformat(), tz="UTC"),
+        pd.Timestamp(STUDY_END.isoformat(), tz="UTC"),
     )
-    if canonical["status"] != "COVERAGE_PASSED":
-        raise RuntimeError(
-            "Q019 canonical market-calendar coverage failed: "
-            + json.dumps(canonical.get("coverage", {}), sort_keys=True)
-        )
-
-    assets = load_frozen_snapshot(snapshot_dir / "snapshot_manifest.json")
-    reference = universe.symbols[0]
-    common_dates = sorted(
-        {bar.timestamp.date() for bar in assets[reference][:TARGET_COMMON_CANDLES]}
-    )
-    if len(common_dates) != TARGET_COMMON_CANDLES:
-        raise RuntimeError(
-            f"Q019 common trading calendar mismatch: {len(common_dates)}"
-        )
+    common_dates = [stamp.date() for stamp in sessions]
+    if not common_dates:
+        raise RuntimeError("Q019 XNYS session calendar is empty")
+    if common_dates[0] < STUDY_START or common_dates[-1] > STUDY_END:
+        raise RuntimeError("Q019 XNYS session calendar escaped fixed study window")
 
     rows = _treasury_rows()
     contract = _validate_treasury_contract(rows, common_dates)
@@ -236,9 +217,11 @@ def run(*, output_path: str | Path) -> dict:
             "dataset": "Treasury Securities Auctions Data",
             "endpoint": TREASURY_API,
         },
-        "canonical_snapshot": {
-            "fingerprint": canonical["snapshot_fingerprint"],
-            "common_calendar_count": canonical["coverage"]["common_calendar_count"],
+        "pit_calendar": {
+            "source": "exchange_calendars",
+            "calendar": "XNYS",
+            "session_count": len(common_dates),
+            "rule": "first XNYS session strictly after record_date",
         },
         "contract": contract,
         "governance": {
