@@ -32,14 +32,17 @@ jobs:
           @echo off
           setlocal EnableExtensions
           if not defined GITHUB_SHA exit /b 1
+          if not defined GITHUB_RUN_ID exit /b 1
+          if not defined GITHUB_RUN_ATTEMPT exit /b 1
           if /I not "%GITHUB_REPOSITORY%"=="DWR-debug/trading-agent-public" exit /b 1
 
-          set "WORK=%RUNNER_TEMP%\\trading-agent-continuous-%GITHUB_SHA%"
-          set "ARCHIVE=%RUNNER_TEMP%\\trading-agent-continuous-%GITHUB_SHA%.tar.gz"
-          set "PY_ROOT=%RUNNER_TEMP%\\python-3.13.15-nuget"
+          set "RUN_KEY=%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          set "WORK=%RUNNER_TEMP%\\trading-agent-continuous-%RUN_KEY%"
+          set "ARCHIVE=%RUNNER_TEMP%\\trading-agent-continuous-%RUN_KEY%.tar.gz"
+          set "PY_ROOT=%RUNNER_TEMP%\\python-3.13.15-nuget-%RUN_KEY%"
           set "PY_EXE=%PY_ROOT%\\tools\\python.exe"
-          set "PY_PKG=%RUNNER_TEMP%\\python.3.13.15.nupkg"
-          set "SITE=%RUNNER_TEMP%\\python-site-continuous"
+          set "PY_PKG=%RUNNER_TEMP%\\python.3.13.15-%RUN_KEY%.nupkg"
+          set "SITE=%RUNNER_TEMP%\\python-site-continuous-%RUN_KEY%"
 
           if exist "%WORK%" rmdir /s /q "%WORK%"
           mkdir "%WORK%" || exit /b 1
