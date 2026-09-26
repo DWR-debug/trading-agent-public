@@ -59,3 +59,26 @@ def test_ci_has_dedicated_self_hosted_gateway():
     assert "v3-flatcontainer/python/3.13.15" in text
     assert "python-3.13.15-nuget" in text
     assert "python.exe" in text
+
+def test_self_hosted_worker_v2_copies_proven_probe_shape():
+    text = (
+        ROOT / ".github" / "workflows" / "self-hosted-research-worker-v2.yml"
+    ).read_text(encoding="utf-8")
+    assert "name: Self-hosted Research Worker v2" in text
+    assert "workflow_dispatch:" not in text
+    assert "research/run-self-hosted/repo_qa" in text
+    assert "github.actor == github.repository_owner" in text
+    assert "runs-on: [self-hosted, trading-agent-research]" in text
+    assert "Dispatch registration probe" in text
+    assert "actions/checkout@v5" in text
+    assert "ref: ${{ github.sha }}" in text
+    assert "shell: cmd" in text
+    assert "shell: powershell" not in text
+    assert "python.3.13.15.nupkg" in text
+    assert "v3-flatcontainer/python/3.13.15" in text
+    assert "python-3.13.15-nuget" in text
+    assert "python.exe" in text
+    assert "--lane repo_qa" in text
+    assert "PAPER_ONLY" in text
+    assert "LIVE_TRADING_ENABLED" in text
+    assert "ORDERS_ENABLED" in text
