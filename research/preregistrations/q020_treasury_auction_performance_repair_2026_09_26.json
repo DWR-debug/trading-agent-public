@@ -1,0 +1,91 @@
+{
+  "schema_version": "1.0",
+  "preregistration_id": "Q-020-TREASURY-AUCTION-PERFORMANCE-REPAIR-2026-09-26",
+  "parent_preregistration": "research/preregistrations/q020_treasury_auction_performance_2026_09_26.json",
+  "trial_id": "T-2026-09-26-046R1-PERFORMANCE",
+  "research_family": "official_event_alpha_performance",
+  "status": "PREREGISTERED_DESIGN_ONLY",
+  "purpose": "Execute the already fixed Q020 Treasury 10-Year auction-demand signal on the validated TGT-repair frozen snapshot. The repair changes only technical coverage availability; it is not performance-selected.",
+  "coverage_basis": {
+    "coverage_workflow_run_id": 36240853419,
+    "coverage_artifact_id": 10905489440,
+    "snapshot_fingerprint": "70cff5df1b92f4f7db2ea09bdc9999abff93dd4230ad4ea5df6e5da204076ef8",
+    "coverage_fingerprint": "703f9fb9d1cd21618d0acdcbe8dff3267c99b91afb6841d7110eb09a93f04600",
+    "universe": "validation_2026_09_26_treasury_auction_performance_repair",
+    "symbols": ["ACN","AMT","APD","TGT","CME","CTAS","GPC","LLY","MCO","NOC","ROST","SHW"],
+    "requested_candles": 4000,
+    "target_common_calendar": 3500,
+    "minimum_in_window_candles": 3500
+  },
+  "signal_contract": {
+    "q019_artifact_id": 10905325799,
+    "q019_workflow_run_id": 36238205065,
+    "signals_fingerprint": "8af45e4eb7267266da10eb28cf5287eea1ff3572f38736382f1b004abf86c208",
+    "rule": "Signed change in 10-Year Note bid-to-cover ratio versus the immediately preceding 10-Year Note auction: positive=+1, negative=-1, unchanged=0.",
+    "point_in_time_rule": "Act no earlier than the first XNYS session strictly after the official record_date."
+  },
+  "execution_model": {
+    "entry": "market open of the first eligible XNYS session after record_date",
+    "exit": "same-session market close",
+    "holding_period_sessions": 1,
+    "gross_exposure": 1.0,
+    "long_weight_per_asset": "1/12",
+    "short_weight_per_asset": "-1/12",
+    "zero_signal": "flat",
+    "multiple_events_same_session": "sum fixed event signals and use sign(sum); zero=flat",
+    "roundtrip_turnover": 2.0,
+    "no_leverage": true
+  },
+  "evaluation_geometry": {
+    "frozen_candles": 3500,
+    "evaluation_return_periods": 3498,
+    "excluded_initial_return_periods": 1,
+    "research_periods": 2798,
+    "holdout_periods": 700,
+    "rolling_research_windows": 5,
+    "rolling_method": "five contiguous research windows; final window absorbs remainder"
+  },
+  "costs": {
+    "fee_bps_per_side": 10,
+    "slippage_bps_per_side": 5,
+    "scenarios": ["base", "stress_1_5x", "stress_2x"]
+  },
+  "adjusted_close_sensitivity": {
+    "enabled": true,
+    "purpose": "secondary sensitivity only; never used for signal, selection or parameter decisions",
+    "method": "add the adjusted-close close-to-close correction to the fixed open-to-close core return on active sessions"
+  },
+  "gates": {
+    "research_return_positive": true,
+    "research_max_drawdown_lte_percent": 10,
+    "research_profit_factor_gte": 1.1,
+    "rolling_profit_factor_gte": 1.1,
+    "rolling_profitable_window_ratio_gte": 0.5,
+    "rolling_average_drawdown_lte_percent": 10,
+    "oos_to_is_return_ratio_gte": 0.25,
+    "holdout_return_positive": true,
+    "holdout_profit_factor_gte": 1.1,
+    "holdout_max_drawdown_lte_percent": 10,
+    "stress_holdout_return_nonnegative_at_1_5x": true,
+    "stress_holdout_return_nonnegative_at_2x": true,
+    "total_return_sensitivity_nonnegative": true
+  },
+  "selection": {
+    "parameter_search": false,
+    "threshold_search": false,
+    "asset_search": false,
+    "horizon_search": false,
+    "variant_search": false,
+    "holdout_used_for_selection": false
+  },
+  "authorization": {
+    "performance_execution_authorized": false,
+    "requires_separate_immutable_authorization": true
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
