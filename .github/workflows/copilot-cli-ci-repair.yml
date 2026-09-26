@@ -59,6 +59,10 @@ jobs:
           p = json.loads(Path(os.environ["RUNNER_TEMP"], "pr.json").read_text(encoding="utf-8"))
           repo = os.environ["GITHUB_REPOSITORY"]
           owner = os.environ["GITHUB_REPOSITORY_OWNER"]
+          if p["state"] != "open":
+              raise SystemExit("CI repair requires an open PR")
+          if p["base"]["ref"] != "master":
+              raise SystemExit("CI repair requires a PR targeting master")
           if p["head"]["repo"]["full_name"] != repo:
               raise SystemExit("CI repair refuses fork PRs")
           if p["head"]["user"]["login"] != owner:
