@@ -37,15 +37,16 @@ def test_self_hosted_dispatch_uses_registered_orchestrator_gateway():
     assert "python-3.13.15-nuget" in text
     assert "python.exe" in text
 
-def test_dedicated_push_worker_has_exact_trigger_branches():
+def test_ci_has_dedicated_self_hosted_gateway():
     text = (
-        ROOT / ".github" / "workflows" / "self-hosted-research-worker-push.yml"
+        ROOT / ".github" / "workflows" / "ci.yml"
     ).read_text(encoding="utf-8")
-    assert "on:" in text
-    assert "workflow_dispatch:" not in text
     assert "research/run-self-hosted/repo_qa" in text
     assert "research/run-self-hosted/data_qa" in text
     assert "research/run-self-hosted/local_reproduction" in text
+    assert "self_hosted_worker:" in text
+    assert "needs: test" in text
+    assert "github.event_name == 'push'" in text
     assert "github.actor == github.repository_owner" in text
     assert "runs-on: [self-hosted, trading-agent-research]" in text
     assert "ref: ${{ github.sha }}" in text
