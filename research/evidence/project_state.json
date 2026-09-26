@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "updated": "2026-09-26",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "e6918bf45c371a3e7edb0971dd6787a5f47019ec",
+  "master_commit": "24d217af0cf0e01afe90171b822c85f961cad365",
   "latest_formal_trial": "T-2026-09-25-045",
   "latest_trial_status": "BLOCKED",
   "next_reserved_trial": null,
-  "next_research_focus": "Q020 Treasury-auction performance execution on the frozen repair snapshot; no execution until separate immutable performance authorization.",
+  "next_research_focus": "Q020 fixed-rule performance execution on the validated frozen repair snapshot, after separate immutable authorization.",
   "cleanup_status": "completed_h06_and_q017_coverage_hardening",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -67,7 +67,8 @@
     ".github/workflows/q018-source-feasibility.yml",
     ".github/workflows/q019-treasury-auction-contract.yml",
     ".github/workflows/agent-dispatch.yml",
-    ".github/workflows/q020-treasury-coverage-repair.yml"
+    ".github/workflows/q020-treasury-coverage-repair.yml",
+    ".github/workflows/q020-treasury-auction-performance.yml"
   ],
   "current_preregistered_trial": "T-2026-09-25-045",
   "current_trial_status": "ARCHIVED_REJECTED",
