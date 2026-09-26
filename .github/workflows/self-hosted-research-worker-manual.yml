@@ -1,11 +1,13 @@
 name: Self-hosted Research Worker
 
 "on":
+  push:
   workflow_dispatch:
     inputs:
       lane:
         description: "Bounded worker lane"
-        required: true
+        required: false
+        default: repo_qa
         type: choice
         options:
           - repo_qa
@@ -13,7 +15,7 @@ name: Self-hosted Research Worker
           - local_reproduction
       ref:
         description: "Trusted branch/ref to execute"
-        required: true
+        required: false
         default: "master"
         type: string
 
@@ -26,7 +28,7 @@ concurrency:
 
 jobs:
   worker:
-    if: ${{ github.actor == github.repository_owner }}
+    if: ${{ github.event_name == 'workflow_dispatch' && github.actor == github.repository_owner }}
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 120
     steps:
