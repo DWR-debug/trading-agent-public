@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "recorded_on": "2026-09-26",
   "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
-  "current_stage": "POST_Q019_COVERAGE_VALIDATED",
+  "current_stage": "Q020_PREREGISTERED_DESIGN",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
@@ -25,20 +25,23 @@
     "PR #238 Q019 merged to master at merge-commit=52312dcae5da210df940adcd19a5457cd6ed6acf.",
     "Q019 workflow=36238205065 completed successfully on preregistered branch; artifact=10905325799; artifact-digest=sha256:0e2ec08566b3300b577bb23a1f238b577e3083d0e8985c7466e748310b456325.",
     "Q019 Treasury 10-Year contract=Coverage Validated: 89 raw rows, 89 valid rows, 89 mapped events, 0 terminal events, 0 errors; signal events=88; signal-fingerprint=8af45e4eb7267266da10eb28cf5287eea1ff3572f38736382f1b004abf86c208.",
-    "Q019 explicitly forbids performance evaluation, holdout use, ranking, parameter/asset/feature/horizon search, and promotion."
+    "Q019 explicitly forbids performance evaluation, holdout use, ranking, parameter/asset/feature/horizon search, and promotion.",
+    "Q019 is completed and queued Q020 is now the next deterministic research task.",
+    "Q020 preregistration fixes a fresh 12-symbol U.S. equity universe, 3520 requested candles, 3500 common candles, one-session event holding rule, equal 1/12 exposure per asset, 1.0 gross exposure, no leverage, and unchanged core risk gates.",
+    "Q020 performance execution is explicitly unauthorized until fresh OHLCV coverage passes and the snapshot is frozen with an immutable authorization."
   ],
   "implications": [
-    "Q019 removes the Treasury source/PIT-contract uncertainty for the fixed 2011-2025 study window.",
-    "Q019 does not establish predictive value, profitability, robustness, or tradability; those questions remain open.",
-    "The next scientifically distinct step is a separate preregistered performance study using the fixed Q019 signal and a fresh symbol-disjoint asset universe, after deterministic OHLCV coverage passes.",
-    "The Q018 SEC/Fed failures remain execution-environment DATA_INSUFFICIENT; the Treasury lane is now the only source-feasible candidate in that round."
+    "Q019 source/PIT uncertainty is resolved for the fixed Treasury auction series.",
+    "Performance evidence still does not exist for this Treasury mechanism because Q019 intentionally stopped before returns/P&L, and earlier formal trials T041/T044/T045 were NO_PROMOTION_EVIDENCE.",
+    "Q020 is the first step that can create Treasury-specific performance evidence, but only after a new symbol-disjoint market-data coverage pass.",
+    "The Q020 design deliberately isolates the event signal as a standalone fixed-rule test before any allocator/integration research."
   ],
   "unknowns": [
-    "whether the fixed Treasury auction signal has economically useful association with subsequent asset returns",
-    "whether any such association survives costs, rolling/walk-forward tests, risk gates, and an untouched holdout on a fresh symbol-disjoint asset universe",
-    "whether the Treasury signal is robust enough to contribute as an orthogonal alpha component rather than being redundant with existing trend/cross-sectional sleeves"
+    "whether the fixed Treasury auction signal produces positive and robust returns on the fresh universe",
+    "whether event-window behavior survives realistic costs, rolling tests, and the untouched holdout",
+    "whether the signal adds information beyond existing sleeves; integration is deferred until standalone evidence exists"
   ],
-  "next_action": "Design and preregister Q020 performance evaluation of the fixed Treasury auction signal; first perform fresh symbol-disjoint OHLCV coverage, then execute performance only after coverage pass. No parameter/threshold/asset/horizon search.",
+  "next_action": "Execute Q020 fresh OHLCV coverage preflight on the fixed universe; if and only if coverage passes, freeze the snapshot and run the separately authorized fixed-rule performance evaluation.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
