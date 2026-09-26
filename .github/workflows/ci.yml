@@ -79,8 +79,8 @@ jobs:
 
           task = default_research_queue().next_task()
           assert task is not None
-          assert task.task_id == "Q-018-ORTHOGONAL-OFFICIAL-EVENT-SOURCE-DESIGN"
-          assert task.research_family == "orthogonal_official_event_information"
+          assert task.task_id == "Q-019-TREASURY-AUCTION-SIGNAL-CONTRACT"
+          assert task.research_family == "official_event_signal_contract"
 
           q015 = json.loads(Path(
               "research/preregistrations/q015_information_alpha_mechanism_discrimination_2026_09_25.json"
@@ -131,8 +131,8 @@ jobs:
           assert state["latest_formal_trial"] == "T-2026-09-25-045"
           assert state["latest_trial_status"] == "BLOCKED"
           assert state["current_trial_status"] == "ARCHIVED_REJECTED"
-          assert state["engineering_notes"]["current_queue_task"] == "Q-018-ORTHOGONAL-OFFICIAL-EVENT-SOURCE-DESIGN"
-          assert state["engineering_notes"]["last_completed_queue_task"] == "H06-MECHANISM-REPLICATION"
+          assert state["engineering_notes"]["current_queue_task"] == "Q-019-TREASURY-AUCTION-SIGNAL-CONTRACT"
+          assert state["engineering_notes"]["last_completed_queue_task"] == "Q-018-SOURCE-FEASIBILITY-PREFLIGHT"
           assert state["engineering_notes"]["q017_g3_scientific_status"] == "DATA_INSUFFICIENT"
           assert state["engineering_notes"]["q017_g3_workflow_run"] == 36186285814
           assert state["engineering_notes"]["q017_g3_artifact_id"] == 10887025099
@@ -142,7 +142,10 @@ jobs:
           assert state["engineering_notes"]["h06_mechanism_artifact_id"] == 10903879100
           assert state["engineering_notes"]["h06_mechanism_result_fingerprint"] == "45546b7a2b69c39f961cab85f9ab091d165f5e9a711777fb23dd717f82fc9fbd"
           assert state["engineering_notes"]["q018_preregistered"] is True
-          assert state["engineering_notes"]["q018_status"] == "DESIGN_ONLY"
+          assert state["engineering_notes"]["q018_status"] == "SOURCE_FEASIBILITY_COMPLETE"
+          assert state["engineering_notes"]["q018_overall_status"] == "DATA_INSUFFICIENT"
+          assert state["engineering_notes"]["q018_candidate_c_status"] == "COVERAGE_VALIDATED"
+          assert state["engineering_notes"]["q018_performance_trial_authorized"] is False
           assert state["engineering_notes"]["q018_performance_trial_authorized"] is False
           assert state["engineering_notes"]["q011_status"] == "COMPLETED_DISCOVERY_ONLY"
           assert state["engineering_notes"]["q011_workflow_run"] == 36121684164

@@ -3531,3 +3531,35 @@ keine wissenschaftliche Evidence.
 - `automatic_promotion=False`
 - kein Live-Trading
 - kein Echtgeldrisiko
+
+
+# Aktueller Forschungscheckpoint — Q018 abgeschlossen / Q019 gestartet — 2026-09-26
+
+## Q018 Source-Feasibility
+
+Der fixierte Q018-Preflight wurde vollständig ausgeführt.
+
+- Workflow: `36237329691`
+- Artifact: `10904273903`
+- Artifact-Digest: `sha256:f8bfe4e1065d3d8a8b82b08fe4f78f6bd3c006bedf71c8cadc4f512d8d308989`
+- Fingerprint: `82b07265b29a93547f2b1547227722005cf9d883baf3ee8b6dc50e029742152d`
+- Gesamtstatus: `DATA_INSUFFICIENT`
+- SEC: `DATA_INSUFFICIENT`
+- Federal Reserve: `DATA_INSUFFICIENT`
+- Treasury 10-Year Auction Data: `COVERAGE_VALIDATED`
+
+Die SEC-/Fed-Probleme sind reproduzierbare HTTP-403-Zugriffsrestriktionen aus dem freien
+GitHub-Actions-Umfeld. Daraus wird keine Performanceaussage abgeleitet.
+
+## Q019
+
+Q019 ist als `PREREGISTERED_COVERAGE_ONLY` angelegt. Der nächste Schritt ist die
+deterministische Prüfung des Treasury-Auktionssignals und seines Point-in-Time-Mappings.
+
+## Sicherheits- und Ressourcenstatus
+
+`PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`,
+`automatic_promotion=False`.
+
+Kostenpflichtige Agenten-/API-Nutzung bleibt bei 0 USD. Kostenfreie Agentenressourcen
+bleiben für Hypothesenbildung, Research-Design und Architektur-Review reserviert.

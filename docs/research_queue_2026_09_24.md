@@ -183,3 +183,26 @@ Performancefreigabe durch die Designrunde.
 
 Sicherheitszustand:
 PAPER_ONLY=True, LIVE_TRADING_ENABLED=False, orders_enabled=False, automatic_promotion=False.
+
+
+## Q018 Abschluss / Q019 Start — 2026-09-26
+
+Q018 Source-Feasibility ist **COMPLETED**. Das gemeinsame Gate ist `DATA_INSUFFICIENT`;
+A und B scheiterten an reproduzierbarem HTTP-403-Zugriff aus GitHub Actions, C bestand die
+vorab definierte Treasury-Source-Coverage.
+
+Die Kandidaten wurden nicht gerankt. Der nächste objektive Gate-Schritt ist ausschließlich
+die bereits source-feasible Q018-C-Familie:
+
+### Q019 — Treasury Auction Signal Contract
+
+**PREREGISTERED_COVERAGE_ONLY**
+
+- feste Q018-Validierungsuniversum
+- Treasury 10-Year Note
+- Signal: Vorzeichen der Veränderung des Bid-to-Cover-Verhältnisses gegenüber der unmittelbar vorherigen Auktion
+- PIT: `record_date`, Aktion erst am nächsten verfügbaren gemeinsamen Trading-Tag
+- Prüfung: Vollständigkeit, Duplikate, numerische Werte, deterministisches Parsing, PIT-Mapping
+- keine Rendite-/P&L-Berechnung
+- kein Holdout
+- keine Parameter-, Asset-, Feature-, Horizon-, Threshold- oder Varianten-Suche
