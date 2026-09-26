@@ -1,0 +1,102 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-018-ORTHOGONAL-OFFICIAL-EVENT-SOURCE-DESIGN",
+  "research_family": "orthogonal_official_event_information",
+  "status": "DESIGN_ONLY",
+  "recorded_on": "2026-09-26",
+  "purpose": "Source-first design round after Q017-G3 failed its data/PIT contract. Identify three free, public, independently timestampable information mechanisms without any performance evaluation.",
+  "evidence_basis": [
+    "Q010 cross-trial failure diagnosis",
+    "Q014 information-alpha mechanism redundancy long-window",
+    "Q015 information-alpha mechanism discrimination",
+    "Q016 information-alpha mechanism discrimination replication",
+    "Q017 orthogonal hypothesis design",
+    "Q017-G3 coverage-first DATA_INSUFFICIENT"
+  ],
+  "fixed_study_window": {
+    "start": "2011-01-01",
+    "end": "2025-09-24"
+  },
+  "fixed_validation_universe": {
+    "name": "q018_official_event_source_validation",
+    "symbols": [
+      "UNH",
+      "UPS",
+      "FDX",
+      "DIS",
+      "ADP",
+      "BKNG",
+      "ORLY",
+      "AZO",
+      "TJX",
+      "RSG",
+      "WM",
+      "EOG"
+    ],
+    "selection_rule": "Fixed ex-ante design universe; no selection by return, holdout, or coverage outcome."
+  },
+  "candidates": [
+    {
+      "id": "A",
+      "family": "sec_insider_flow_event",
+      "source": "SEC EDGAR Forms 4",
+      "mechanism": "Publicly disclosed insider purchase/sale activity can carry issuer-specific information distinct from price trend and portfolio risk controls.",
+      "fixed_signal_rule": "For each issuer-day, signed transaction-count imbalance in Form 4 Table I: P=+1 per row, S=-1 per row; all other transaction codes excluded. No weighting or threshold search.",
+      "point_in_time": "Use EDGAR ACCEPTANCE-DATETIME of the filing as the information-availability timestamp; act no earlier than the next eligible trading bar.",
+      "coverage_contract": "Complete issuer-to-CIK mapping and Form 4 filing coverage for the fixed universe and study window; amendment and duplicate handling must be deterministic before formalization.",
+      "cost_contract": "SEC public EDGAR only; no paid insider-data vendor."
+    },
+    {
+      "id": "B",
+      "family": "fomc_policy_decision_event",
+      "source": "Federal Reserve official FOMC statements and meeting records",
+      "mechanism": "Changes in the target federal-funds-rate decision are a distinct monetary-policy information event rather than a price-derived signal.",
+      "fixed_signal_rule": "Per scheduled FOMC decision, signal is +1 for an increase in the target-rate range midpoint, -1 for a decrease, 0 for unchanged. No NLP, threshold, or parameter search.",
+      "point_in_time": "Use the official statement/release date as the public-information date and act no earlier than the next eligible trading bar.",
+      "coverage_contract": "Complete fixed-window FOMC decision/event coverage with deterministic release-date mapping; historical gaps cause DATA_INSUFFICIENT.",
+      "cost_contract": "Federal Reserve public website only; no paid macro feed."
+    },
+    {
+      "id": "C",
+      "family": "treasury_auction_demand_event",
+      "source": "U.S. Treasury / TreasuryDirect official auction-result releases",
+      "mechanism": "Auction demand conditions can reveal changes in marginal sovereign-duration demand distinct from equity price trend and portfolio-volatility controls.",
+      "fixed_signal_rule": "For each fixed 10-year Treasury note auction, use the signed change in bid-to-cover ratio versus the immediately preceding 10-year auction: positive=+1, negative=-1, unchanged=0. No threshold search.",
+      "point_in_time": "Use the official auction-result publication date and act no earlier than the next eligible trading bar, avoiding dependence on an uncertain intraday publication timestamp.",
+      "coverage_contract": "Complete 10-year note auction-result coverage, including bid-to-cover and publication date, over the fixed study window; missing dates or unverifiable metadata cause DATA_INSUFFICIENT.",
+      "cost_contract": "TreasuryDirect / U.S. Treasury public releases only; no paid rates/auction feed."
+    }
+  ],
+  "governance": {
+    "candidates_unranked": true,
+    "no_holdout_selection": true,
+    "no_parameter_search": true,
+    "no_asset_search": true,
+    "no_horizon_search": true,
+    "no_feature_search": true,
+    "coverage_first": true,
+    "fresh_symbol_disjoint_validation": true,
+    "performance_evaluation": false,
+    "performance_trial_authorized": false,
+    "automatic_promotion": false
+  },
+  "source_feasibility_rules": {
+    "minimum_evidence_before_formalization": "A candidate must first pass deterministic source coverage, point-in-time availability, reproducible parsing, and provenance checks.",
+    "failure_action": "DATA_INSUFFICIENT; do not modify the fixed candidate to rescue coverage.",
+    "formalization_rule": "Only a fixed candidate whose source contract passes may receive a separate performance preregistration. Source feasibility success does not imply performance support."
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "official_sources": {
+    "sec": "https://www.sec.gov/about/webmaster-frequently-asked-questions",
+    "sec_form4": "https://www.sec.gov/files/form4data.pdf",
+    "federal_reserve_fomc": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    "federal_reserve_history": "https://www.federalreserve.gov/monetarypolicy/fomc_historical_year.htm",
+    "treasury_auction_results": "https://www.treasurydirect.gov/instit/annceresult/press/preanre/"
+  },
+  "interpretation": "Design material only. Candidates are intentionally unranked and no performance conclusion is implied."
+}
