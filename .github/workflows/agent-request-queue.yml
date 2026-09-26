@@ -71,6 +71,7 @@ jobs:
           Path(os.environ["RUNNER_TEMP"],"event.json").write_text(json.dumps({"issue":issue}),encoding="utf-8")
           PY
           python -m automation.agent_dispatch --event-json "$RUNNER_TEMP/event.json" --master-sha "$GITHUB_SHA" --active-agent-count 0 --output "$RUNNER_TEMP/agent_task_manifest.json"
+          cp "$RUNNER_TEMP/agent_task_manifest.json" "$RUNNER_TEMP/task_contract.json"
           echo "issue_number=$issue_number" >> "$GITHUB_OUTPUT"
           echo "request_file=$request_file" >> "$GITHUB_OUTPUT"
           echo "run=true" >> "$GITHUB_OUTPUT"
