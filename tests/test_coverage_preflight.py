@@ -106,3 +106,46 @@ def test_t040_repair_overlap_is_allowed_only_when_explicit(monkeypatch, tmp_path
     assert result["status"] == "coverage_passed"
     assert result["performance_evaluation"] is False
     assert result["holdout_evaluation"] is False
+
+
+def test_coverage_preflight_reports_incomplete_symbol_metadata_without_crashing(monkeypatch, tmp_path):
+    spec_path = Path("research/preregistrations/trial_039_network_momentum_2026_09_24.json")
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    symbols = tuple(spec["symbols"])
+
+    def fake_snapshot(*args, **kwargs):
+        per_symbol = {
+            symbols[0]: {"status": "COVERAGE_INVALID", "in_window_count": 0},
+            **{
+                symbol: {
+                    "status": "COVERAGE_VALID",
+                    "in_window_count": 3520,
+                    "start": "2010-01-01",
+                    "end": "2023-12-31",
+                    "quality": {},
+                }
+                for symbol in symbols[1:]
+            },
+        }
+        return {
+            "status": "DATA_INVALID",
+            "coverage": {
+                "per_symbol": per_symbol,
+                "common_calendar_count": 0,
+                "errors": [{"symbol": symbols[0], "reason": "missing_history"}],
+                "failure_reason": "symbol history incomplete",
+            },
+        }
+
+    monkeypatch.setattr(
+        "automation.coverage_preflight.build_frozen_snapshot",
+        fake_snapshot,
+    )
+    result = run_preflight(spec_path, output_root=tmp_path)
+
+    assert result["status"] == "DATA_INVALID"
+    assert result["missing_symbols"] == [symbols[0]]
+    assert result["datasets"][0]["count"] == 0
+    assert result["datasets"][0]["start"] is None
+    assert result["datasets"][0]["end"] is None
+    assert result["scientific_outcome"] == "NO_SCIENTIFIC_OUTCOME"
