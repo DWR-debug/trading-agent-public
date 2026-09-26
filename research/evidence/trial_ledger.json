@@ -3497,7 +3497,7 @@
     {
       "trial_id": "T-2026-09-26-047",
       "recorded_at": "2026-09-26T18:23:00+02:00",
-      "status": "preregistered_design_only",
+      "status": "data_invalid",
       "research_family": "official_event_alpha_directional_inversion",
       "hypothesis": {
         "text": "Eine ex ante festgelegte Invertierung ausschließlich der finalen Q020-Treasury-Auktionsrichtung klärt die beobachtete Richtungs-Failure-Frage auf einem frischen, vollständig symbol-disjunkten Universum."
@@ -3541,12 +3541,20 @@
         "selection_method": "single pre-registered Q022-H1 mechanism; coverage only until snapshot passes"
       },
       "outcome": {
-        "validation_status": "DESIGN_ONLY",
+        "validation_status": "DATA_INVALID",
         "scientific_outcome": "NO_SCIENTIFIC_OUTCOME",
-        "coverage_execution_workflow_id": 36262317985,
-        "performance_authorized": false,
-        "no_performance_claim": true,
-        "result_document": "research/preregistrations/q022_h1_directional_inversion_performance_2026_09_26.json"
+        "coverage_workflow_run_id": 36262411198,
+        "coverage_artifact_id": 10913076735,
+        "coverage_artifact_sha256": "sha256:6139af26be8d408735c5b57b1cb69c16e6df83272121eaef56f63f99c042e03d",
+        "coverage_fingerprint": "f1d7d456a464f8430a13f760f4d43ba12e3d4cd74a819148784fea08302da8b1",
+        "snapshot_fingerprint": "3e2978d0a0eafba7fb45b5660e518c066709e260940a177da61e4c3fd73fee5a",
+        "common_calendar_count": 3268,
+        "required_common_calendar_count": 3500,
+        "error": "All 12 symbols returned 3268 candles in the fixed study window; 3520 raw candles were insufficient to form the required 3500-candle common snapshot.",
+        "performance_evaluation": false,
+        "holdout_evaluation": false,
+        "selection_used": false,
+        "no_performance_claim": true
       },
       "safety": {
         "paper_only": true,
