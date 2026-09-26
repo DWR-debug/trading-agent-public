@@ -1,0 +1,123 @@
+{
+  "schema_version": "1.0",
+  "trial_id": "T-2026-09-26-046",
+  "trial_type": "residual_momentum_performance_challenger",
+  "research_family": "sector_neutral_residual_momentum",
+  "hypothesis": "Eine feste 252/21-session sektorbereinigte Cross-Sectional-Momentum-Regel erzeugt auf einem dritten, vollständig disjunkten Universum robuste, kostenadjustierte Performance und erfüllt die bestehenden Research-/Rolling-/OOS-/Holdout-Gates gegenüber dem unveränderten 12-1 Top-2 Kontrollsignal.",
+  "universe": "validation_2026_09_26_h06_formal_performance",
+  "symbols": [
+    "LRCX",
+    "KLAC",
+    "SNPS",
+    "GILD",
+    "REGN",
+    "VRTX",
+    "UPS",
+    "FDX",
+    "CMI",
+    "K",
+    "MDLZ",
+    "TGT",
+    "AEE",
+    "ED",
+    "PEG"
+  ],
+  "interval": "1d",
+  "requested_candles": 4000,
+  "target_candles": 3500,
+  "research_candles": 2798,
+  "holdout_candles": 700,
+  "warmup_candles": 2,
+  "mechanism": {
+    "baseline_control": "raw 252-session return with 21-session skip, rebalanced every 21 sessions, Top-2 equally weighted",
+    "challenger": "252-session return with 21-session skip minus equal-weight sector mean, rebalanced every 21 sessions, Top-2 equally weighted",
+    "formation_lookback_sessions": 252,
+    "skip_sessions": 21,
+    "rebalance_sessions": 21,
+    "top_n": 2,
+    "weight_policy": "0.5 per selected asset, 0 otherwise",
+    "long_only": true,
+    "shorting": false,
+    "leverage": 1,
+    "sector_demeaning": "equal_weight_sector_mean",
+    "risk_budget_window": 63,
+    "target_annualized_volatility": 0.1
+  },
+  "cost_model": {
+    "base_fee_bps": 10,
+    "base_slippage_bps": 5,
+    "scenarios": [
+      "base",
+      "1.5x",
+      "2x"
+    ]
+  },
+  "data_contract": {
+    "coverage_preregistration": "research/preregistrations/h06_formal_performance_coverage_2026_09_26.json",
+    "frozen_common_calendar_required": true,
+    "frozen_snapshot_required_before_performance": true,
+    "point_in_time_execution": true
+  },
+  "evaluation": {
+    "primary_variant": "challenger_vol_budget_10pct",
+    "fixed_control_variant": "control_raw_momentum_vol_budget_10pct",
+    "research_metrics": [
+      "period_return",
+      "max_drawdown_percent",
+      "profit_factor"
+    ],
+    "rolling_windows": 5,
+    "rolling_metrics": [
+      "profit_factor",
+      "profitable_window_ratio",
+      "average_drawdown_percent"
+    ],
+    "oos_to_is_return_ratio": true,
+    "holdout_metrics": [
+      "period_return",
+      "max_drawdown_percent",
+      "profit_factor"
+    ],
+    "stress_metrics": [
+      "holdout_return_nonnegative_at_1_5x",
+      "holdout_return_nonnegative_at_2x"
+    ],
+    "total_return_sensitivity": true,
+    "non_deterioration_vs_control": true
+  },
+  "gates": {
+    "research_return_positive": true,
+    "research_max_drawdown_lte_percent": 10,
+    "research_profit_factor_gte": 1.1,
+    "rolling_min_profit_factor_gte": 1.1,
+    "rolling_profitable_window_ratio_gte": 0.5,
+    "rolling_average_drawdown_lte_percent": 10,
+    "oos_to_is_return_ratio_gte": 0.25,
+    "holdout_return_positive": true,
+    "holdout_profit_factor_gte": 1.1,
+    "holdout_max_drawdown_lte_percent": 10,
+    "stress_holdout_return_nonnegative_at_1_5x": true,
+    "stress_holdout_return_nonnegative_at_2x": true,
+    "total_return_sensitivity_nonnegative": true,
+    "non_deterioration_vs_fixed_control": true
+  },
+  "search_scope": {
+    "parameter_search": false,
+    "threshold_search": false,
+    "variant_search": false,
+    "asset_selection_by_performance": false,
+    "control_selection_by_performance": false,
+    "holdout_used_for_selection": false
+  },
+  "disjointness": {
+    "fully_symbol_disjoint_from_existing_universes": true,
+    "allowed_overlap_universes": []
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "decision_rule": "One fixed challenger only. A failed gate is recorded as NO_SUPPORT/NO_PROMOTION_EVIDENCE; no parameter or asset changes are permitted in response."
+}
