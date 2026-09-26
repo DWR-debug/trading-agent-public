@@ -59,6 +59,11 @@ def run(command: list[str], out_dir: Path, index: int) -> dict[str, object]:
         json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+    print(f"[repo_qa step {index}] returncode={completed.returncode}", flush=True)
+    if completed.stdout:
+        print(completed.stdout, end="" if completed.stdout.endswith("\n") else "\n", flush=True)
+    if completed.stderr:
+        print(completed.stderr, end="" if completed.stderr.endswith("\n") else "\n", flush=True)
     return payload
 
 
