@@ -1,0 +1,100 @@
+name: Q022 H1 Directional Inversion Performance
+
+on:
+  push:
+    branches:
+      - research/execute-q022-h1-performance
+    paths:
+      - automation/q022_h1_directional_inversion_performance.py
+      - research/preregistrations/q022_h1_directional_inversion_performance_2026_09_26.json
+      - research/authorizations/q022_h1_directional_inversion_performance_2026_09_26.json
+      - tests/test_q022_h1_directional_inversion_performance.py
+      - .github/workflows/q022-h1-directional-inversion-performance.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: q022-h1-directional-inversion-performance
+  cancel-in-progress: false
+
+jobs:
+  performance:
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 150
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout and bootstrap
+        shell: cmd
+        run: |
+          @echo off
+          setlocal EnableExtensions
+          if not defined GITHUB_SHA exit /b 1
+          if /I not "%GITHUB_REPOSITORY%"=="DWR-debug/trading-agent-public" exit /b 1
+          set "RUN_KEY=%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          set "WORK=%RUNNER_TEMP%\q022-h1-perf-%RUN_KEY%"
+          set "ARCHIVE=%RUNNER_TEMP%\q022-h1-perf-%RUN_KEY%.tar.gz"
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-%RUN_KEY%"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-%RUN_KEY%.nupkg"
+          set "SITE=%RUNNER_TEMP%\python-site-q022-h1-perf-%RUN_KEY%"
+          set "OUT=%GITHUB_WORKSPACE%\research\runs\q022_h1_directional_inversion"
+          if exist "%WORK%" rmdir /s /q "%WORK%"
+          mkdir "%WORK%" || exit /b 1
+          curl.exe -L --fail --silent --show-error -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%" || exit /b 1
+          tar.exe -xzf "%ARCHIVE%" -C "%WORK%" || exit /b 1
+          set "REPO_SRC="
+          for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
+          if not defined REPO_SRC exit /b 1
+          cd /d "%REPO_SRC%" || exit /b 1
+
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            mkdir "%PY_ROOT%" 2>nul
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" -m pip --version >nul 2>&1
+          if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
+          if exist "%SITE%" rmdir /s /q "%SITE%"
+          mkdir "%SITE%" || exit /b 1
+          "%PY_EXE%" -m pip install --disable-pip-version-check --target "%SITE%" pytest pandas exchange-calendars statsmodels==0.15.0 || exit /b 1
+          set "PYTHONPATH=%SITE%;%REPO_SRC%"
+
+          "%PY_EXE%" -c "from config import settings; assert settings.PAPER_ONLY is True; assert settings.LIVE_TRADING_ENABLED is False; assert settings.ORDERS_ENABLED is False; assert settings.AUTOMATIC_PROMOTION is False" || exit /b 1
+          "%PY_EXE%" -m pytest -q tests/test_q022_h1_directional_inversion_design.py tests/test_q022_h1_directional_inversion_performance.py || exit /b 1
+
+          if not exist "research/authorizations/q022_h1_directional_inversion_performance_2026_09_26.json" exit /b 1
+          "%PY_EXE%" -c "import json; from pathlib import Path; a=json.loads(Path('research/authorizations/q022_h1_directional_inversion_performance_2026_09_26.json').read_text()); assert a['authorized'] is True and a['performance_execution_authorized'] is True and a['execution_scope']=='PERFORMANCE'; assert a['coverage_workflow_run_id'] and a['coverage_artifact_id']; assert a['snapshot_fingerprint']; assert a['signal_events_fingerprint']" || exit /b 1
+
+          rmdir /s /q "%RUNNER_TEMP%\q022-h1-perf-download-%RUN_KEY%" 2>nul
+          mkdir "%RUNNER_TEMP%\q022-h1-perf-download-%RUN_KEY%" || exit /b 1
+          set "DL=%RUNNER_TEMP%\q022-h1-perf-download-%RUN_KEY%"
+          set "COVERAGE_RUN="
+          for /f "delims=" %%R in ('"%PY_EXE%" -c "import json; print(json.load(open('research/authorizations/q022_h1_directional_inversion_performance_2026_09_26.json'))['coverage_workflow_run_id'])"') do set "COVERAGE_RUN=%%R"
+          if not defined COVERAGE_RUN exit /b 1
+          gh run download "%COVERAGE_RUN%" --repo "%GITHUB_REPOSITORY%" --dir "%DL%\q022" || exit /b 1
+          gh run download 36238205065 --repo "%GITHUB_REPOSITORY%" --name q019-treasury-contract --dir "%DL%\q019" || exit /b 1
+          set "MANIFEST="
+          for /r "%DL%\q022" %%F in (coverage_preflight_*.json) do if not defined MANIFEST set "MANIFEST=%%F"
+          if not defined MANIFEST exit /b 1
+          set "DATA_DIR="
+          for /d %%D in ("%DL%\q022\*\datasets" "%DL%\q022\datasets") do if exist "%%D" set "DATA_DIR=%%~fD"
+          if not defined DATA_DIR (
+            for /r "%DL%\q022" %%D in (*) do if exist "%%~dpDdatasets" set "DATA_DIR=%%~dpDdatasets"
+          )
+          if not defined DATA_DIR exit /b 1
+          "%PY_EXE%" -m automation.q022_h1_directional_inversion_performance --manifest "%MANIFEST%" --data-dir "%DATA_DIR%" --signal-contract "%DL%\q019\q019_treasury_signal_contract.json" --authorization "%REPO_SRC%\research\authorizations\q022_h1_directional_inversion_performance_2026_09_26.json" --output "%OUT%\T-2026-09-26-047-PERFORMANCE\result.json" || exit /b 1
+          echo Q022_H1_PERFORMANCE_COMPLETE
+          endlocal
+
+      - name: Publish performance artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q022-h1-directional-inversion-performance-${{ github.run_id }}
+          path: research/runs/q022_h1_directional_inversion/
+          if-no-files-found: warn
+          retention-days: 30
