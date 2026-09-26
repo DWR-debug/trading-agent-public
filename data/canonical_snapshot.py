@@ -159,12 +159,7 @@ def build_frozen_snapshot(
             "in_window_count": len(bars_tuple),
             "start": bars_tuple[0].timestamp.isoformat() if bars_tuple else None,
             "end": bars_tuple[-1].timestamp.isoformat() if bars_tuple else None,
-            "fingerprint": (
-                dataset_fingerprint(bars_tuple)
-                if len(bars_tuple) >= (spec.minimum_in_window_candles or spec.target_common_candles)
-                and bars_tuple
-                else None
-            ),
+            "fingerprint": None,
             "quality": quality,
         }
         if len(bars_tuple) < (spec.minimum_in_window_candles or spec.target_common_candles):
