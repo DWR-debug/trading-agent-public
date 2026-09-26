@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "recorded_on": "2026-09-26",
   "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
-  "current_stage": "SOURCE_FEASIBILITY_GATE",
+  "current_stage": "PERFORMANCE_COVERAGE_GATE",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
@@ -21,20 +21,22 @@
     "Q018 candidate A SEC Form 4 source was DATA_INSUFFICIENT because all fixed data.sec.gov issuer-submission endpoints returned HTTP 403 from GitHub Actions.",
     "Q018 candidate B FOMC source was DATA_INSUFFICIENT because all fixed Federal Reserve historical/calendar retrievals returned HTTP 403 from GitHub Actions.",
     "Q018 candidate C Treasury 10-Year auction source was COVERAGE_VALIDATED under the fixed source contract.",
-    "Q018 performed no performance evaluation, no holdout use, no candidate ranking, no tuning, and no promotion."
+    "Q018 performed no performance evaluation, no holdout use, no candidate ranking, no tuning, and no promotion.",
+    "Q019 Treasury signal/PIT contract passed on the fixed Q018 universe: workflow=36238205065; artifact=10905325799; fingerprint=13072dbed7d60684f4a4fb8a3de69555cae83c66f3cfdfb603b9ed2a4b1c225b; 89 events mapped; 0 terminal events.",
+    "Q019 remains coverage-only and did not compute performance or use a holdout.",
+    "The next gate, Q020, is a separate canonical OHLCV coverage check on the same fixed Q018 universe; changing assets or study geometry to rescue coverage is prohibited."
   ],
   "implications": [
-    "Q018 overall source feasibility is insufficient, but the three candidates were not ranked by preference.",
-    "The next objective gate is deeper PIT/signal-contract validation of candidate C, because it alone passed the preregistered source-coverage gate.",
-    "SEC/Fed are closed for this execution environment unless a separate compliant free-access architecture can reproduce the source contract.",
-    "H06 mechanism evidence remains reproducible mechanism-only evidence and is not a profitability result."
+    "The Treasury event source and PIT semantics are technically reproducible under the fixed contract.",
+    "Q019 source validation does not establish trading profitability.",
+    "A formal performance study remains contingent on separate market-data coverage; any coverage failure is a valid DATA_INSUFFICIENT result.",
+    "The fixed Q018 universe must not be replaced after observing its coverage."
   ],
   "unknowns": [
-    "whether the Treasury bid-to-cover event series has complete deterministic auction-to-next-trading-bar mapping over the fixed study window",
-    "whether the fixed Treasury signal can be represented without parsing ambiguity or look-ahead",
-    "whether any later formal performance evaluation of the fixed Treasury mechanism can pass the unchanged Evidence Gates"
+    "whether the fixed Q018 universe reaches the required 3500 common canonical OHLCV candles",
+    "whether a formal Treasury performance trial can be run under the unchanged Evidence Gates on a pre-fixed eligible universe"
   ],
-  "next_action": "Execute Q019 Treasury auction signal/PIT contract validation. No performance evaluation, holdout use, candidate ranking, or parameter search.",
+  "next_action": "Execute Q020 canonical market-coverage gate for the fixed Q018 universe. No asset replacement, performance evaluation, holdout use, or tuning.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
