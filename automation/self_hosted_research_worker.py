@@ -10,18 +10,21 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
 
+PYTHON = sys.executable
+
 LANES: dict[str, list[list[str]]] = {
     "repo_qa": [
-        ["python", "-m", "pytest", "-q"],
-        ["git", "diff", "--check"],
+        [PYTHON, "-m", "pytest", "-q"],
+        [PYTHON, "-m", "compileall", "-q", "automation", "data", "research"],
     ],
     "data_qa": [
         [
-            "python",
+            PYTHON,
             "-m",
             "pytest",
             "-q",
@@ -30,8 +33,8 @@ LANES: dict[str, list[list[str]]] = {
         ],
     ],
     "local_reproduction": [
-        ["python", "-m", "compileall", "-q", "automation", "data", "research"],
-        ["python", "-m", "pytest", "-q", "tests/test_research_governance.py"],
+        [PYTHON, "-m", "compileall", "-q", "automation", "data", "research"],
+        [PYTHON, "-m", "pytest", "-q", "tests/test_research_governance.py"],
     ],
 }
 

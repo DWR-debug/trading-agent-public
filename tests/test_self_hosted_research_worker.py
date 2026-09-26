@@ -12,7 +12,7 @@ def test_self_hosted_worker_has_only_bounded_lanes():
         assert commands
         for command in commands:
             assert command
-            assert command[0] in {"python", "git"}
+            assert command[0] == worker.PYTHON
             assert "live" not in " ".join(command).lower()
             assert "promotion" not in " ".join(command).lower()
 
