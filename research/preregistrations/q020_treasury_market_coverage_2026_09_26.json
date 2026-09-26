@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "preregistration_id": "Q-020-TREASURY-MARKET-COVERAGE-2026-09-26",
+  "hypothesis_id": "Q018-C",
+  "status": "PREREGISTERED_COVERAGE_ONLY",
+  "purpose": "Determine whether the already fixed Q018 validation universe has sufficient canonical OHLCV common-calendar coverage for a later formal performance study. No asset replacement or rule modification is allowed.",
+  "fixed_universe": {
+    "name": "q018_official_event_source_validation",
+    "symbols": [
+      "UNH",
+      "UPS",
+      "FDX",
+      "DIS",
+      "ADP",
+      "BKNG",
+      "ORLY",
+      "AZO",
+      "TJX",
+      "RSG",
+      "WM",
+      "EOG"
+    ]
+  },
+  "fixed_sample": {
+    "requested_candles": 3520,
+    "target_common_candles": 3500,
+    "study_start": "2011-01-01",
+    "study_end": "2025-09-24"
+  },
+  "gate": {
+    "pass_rule": "canonical common-calendar count >= 3500 with complete frozen snapshot and all fixed symbols present",
+    "failure_rule": "DATA_INSUFFICIENT; do not replace symbols, shorten geometry, or alter the signal to rescue coverage"
+  },
+  "governance": {
+    "coverage_only": true,
+    "performance_evaluation": false,
+    "holdout_used": false,
+    "selection_used": false,
+    "parameter_search": false,
+    "asset_search": false,
+    "feature_search": false,
+    "horizon_search": false,
+    "performance_trial_authorized": false,
+    "automatic_promotion": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
