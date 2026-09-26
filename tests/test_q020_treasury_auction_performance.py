@@ -75,6 +75,12 @@ def test_preregistration_is_fixed_and_not_authorized():
     assert spec["coverage_basis"]["snapshot_fingerprint"] == (
         "70cff5df1b92f4f7db2ea09bdc9999abff93dd4230ad4ea5df6e5da204076ef8"
     )
+    assert spec["signal_contract"]["source_contract_fingerprint"] == (
+        "13072dbed7d60684f4a4fb8a3de69555cae83c66f3cfdfb603b9ed2a4b1c225b"
+    )
+    assert spec["signal_contract"]["signals_fingerprint"] == (
+        "8af45e4eb7267266da10eb28cf5287eea1ff3572f38736382f1b004abf86c208"
+    )
     assert spec["execution_model"]["entry"].startswith("market open")
     assert spec["execution_model"]["exit"].startswith("same-session market close")
     assert spec["evaluation_geometry"] == {
