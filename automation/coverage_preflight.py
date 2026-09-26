@@ -99,6 +99,11 @@ def run_preflight(
     interval = str(spec["interval"])
     requested = int(spec["requested_candles"])
     target = int(spec["target_candles"])
+    minimum = int(spec.get("minimum_in_window_candles", target))
+    if minimum < target or minimum > requested:
+        raise RuntimeError(
+            "minimum_in_window_candles must be between target_candles and requested_candles."
+        )
 
     if settings.PAPER_ONLY is not True:
         raise RuntimeError("Coverage preflight requires PAPER_ONLY=True.")
@@ -132,7 +137,7 @@ def run_preflight(
             interval=interval,
             requested_candles=requested,
             target_common_candles=target,
-            minimum_in_window_candles=requested,
+            minimum_in_window_candles=minimum,
             output_dir=output_dir,
             study_start=study_start,
             study_end=study_end,
@@ -149,7 +154,7 @@ def run_preflight(
     insufficient = {
         symbol: count
         for symbol, count in counts.items()
-        if count < requested
+        if count < minimum
     }
     missing = [
         symbol
@@ -172,6 +177,7 @@ def run_preflight(
         "status": status,
         "interval": interval,
         "requested_candles": requested,
+        "minimum_in_window_candles": minimum,
         "target_common_calendar": target,
         "symbols": list(symbols),
         "datasets": [
