@@ -146,8 +146,11 @@ jobs:
           if scientific_outcome is not None:
               assert state["latest_trial_status"] == scientific_outcome
           assert state["current_trial_status"] in {"ARCHIVED_REJECTED", "ACTIVE", "COMPLETED"}
-          assert state["engineering_notes"]["current_queue_task"] == "Q-020-TREASURY-AUCTION-PERFORMANCE-DESIGN"
-          assert state["engineering_notes"]["last_completed_queue_task"] == "Q-019-TREASURY-AUCTION-SIGNAL-CONTRACT"
+          assert state["engineering_notes"]["current_queue_task"] == "Q-021-TREASURY-AUCTION-FAILURE-MECHANISM-DIAGNOSIS"
+          assert state["engineering_notes"]["last_completed_queue_task"] == "Q-020-TREASURY-AUCTION-PERFORMANCE-DESIGN"
+          q020 = next(item for item in trial_entries if item["trial_id"] == "T-2026-09-26-046R1-PERFORMANCE")
+          assert q020["outcome"]["scientific_outcome"] == "NO_PROMOTION_EVIDENCE"
+          assert any(item["task_id"] == "Q-021-TREASURY-AUCTION-FAILURE-MECHANISM-DIAGNOSIS" and item["status"] == "PENDING" for item in json.loads(Path("research/research_queue.json").read_text(encoding="utf-8"))["tasks"])
           assert state["engineering_notes"]["q017_g3_scientific_status"] == "DATA_INSUFFICIENT"
           assert state["engineering_notes"]["q017_g3_workflow_run"] == 36186285814
           assert state["engineering_notes"]["q017_g3_artifact_id"] == 10887025099
