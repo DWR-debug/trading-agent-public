@@ -263,8 +263,10 @@ def run(manifest_path: Path, data_dir: Path, signal_contract_path: Path, authori
         raise RuntimeError("Authorization is not bound to the validated repair artifact")
     if auth.get("snapshot_fingerprint") != manifest.get("snapshot_fingerprint"):
         raise RuntimeError("Snapshot fingerprint mismatch")
-    if auth.get("source_contract_fingerprint") != signal_contract["contract"]["signals_fingerprint"]:
+    if auth.get("source_contract_fingerprint") != signal_contract.get("fingerprint"):
         raise RuntimeError("Source contract fingerprint mismatch")
+    if auth.get("signal_events_fingerprint") != signal_contract["contract"]["signals_fingerprint"]:
+        raise RuntimeError("Signal events fingerprint mismatch")
     if auth.get("execution_model") != "open_to_close_same_session":
         raise RuntimeError("Execution model mismatch")
 
