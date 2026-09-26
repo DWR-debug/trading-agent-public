@@ -9,7 +9,7 @@ ROOT = Path(__file__).parents[1]
 
 
 def test_self_hosted_worker_has_only_bounded_lanes():
-    assert set(worker.LANES) == {"repo_qa", "data_qa", "local_reproduction"}
+    assert set(worker.LANES) == {"repo_qa", "data_qa", "design_qa", "local_reproduction"}
     for commands in worker.LANES.values():
         assert commands
         for command in commands:
@@ -130,6 +130,7 @@ def test_self_hosted_continuous_qa_is_scheduled_and_non_formal():
     assert "trading-agent-self-hosted-continuous-qa" in text
     assert "--lane repo_qa" in text
     assert "--lane data_qa" in text
+    assert "--lane design_qa" in text
     assert "--lane local_reproduction" in text
     assert "compileall" not in worker.LANES["local_reproduction"][0]
     assert "PAPER_ONLY" in text
@@ -175,3 +176,18 @@ def test_self_hosted_worker_v4_is_minimal_single_step_gateway():
     assert "PAPER_ONLY" in text
     assert "LIVE_TRADING_ENABLED" in text
     assert "ORDERS_ENABLED" in text
+
+
+def test_q022_design_guard_is_bounded_and_non_executing():
+    from automation import q022_design_guard
+
+    payload = json.loads(
+        (ROOT / "research" / "preregistrations" / "q022_treasury_failure_followup_design_2026_09_26.json").read_text(encoding="utf-8")
+    )
+    queue = json.loads((ROOT / "research" / "research_queue.json").read_text(encoding="utf-8"))
+    ledger = json.loads((ROOT / "research" / "evidence" / "trial_ledger.json").read_text(encoding="utf-8"))
+    fingerprint = q022_design_guard.validate_q022_design(payload, queue, ledger)
+    assert len(fingerprint) == 64
+    assert payload["ranked"] is False
+    assert payload["performance_trial_authorized"] is False
+    assert payload["holdout_used_for_selection"] is False

@@ -86,11 +86,15 @@ jobs:
           "%PY_EXE%" -m automation.self_hosted_research_worker --lane data_qa --output-dir "research/runs/self_hosted/continuous_data_qa_%GITHUB_RUN_ID%"
           if errorlevel 1 set "FAIL=1"
 
-          echo [7/9] local_reproduction
+          echo [7/10] design_qa
+          "%PY_EXE%" -m automation.self_hosted_research_worker --lane design_qa --output-dir "research/runs/self_hosted/continuous_design_qa_%GITHUB_RUN_ID%"
+          if errorlevel 1 set "FAIL=1"
+
+          echo [8/10] local_reproduction
           "%PY_EXE%" -m automation.self_hosted_research_worker --lane local_reproduction --output-dir "research/runs/self_hosted/continuous_local_reproduction_%GITHUB_RUN_ID%"
           if errorlevel 1 set "FAIL=1"
 
-          echo [9/9] Continuous QA complete
+          echo [10/10] Continuous QA complete
           echo RUN_ID=%GITHUB_RUN_ID%
           echo SHA=%GITHUB_SHA%
           if "%FAIL%"=="0" (
@@ -111,5 +115,6 @@ jobs:
             research/runs/self_hosted/continuous_repo_qa_${{ github.run_id }}/
             research/runs/self_hosted/continuous_data_qa_${{ github.run_id }}/
             research/runs/self_hosted/continuous_local_reproduction_${{ github.run_id }}/
+            research/runs/self_hosted/continuous_design_qa_${{ github.run_id }}/
           if-no-files-found: warn
           retention-days: 14
