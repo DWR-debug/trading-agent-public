@@ -161,3 +161,22 @@ https://docs.github.com/en/copilot/get-started/plans
 https://docs.github.com/en/copilot/concepts/billing-and-usage/individuals/billing
 https://docs.github.com/en/billing/concepts/product-billing/github-actions
 https://docs.github.com/en/billing/concepts/product-billing/github-codespaces
+
+## Bounded Copilot CLI CI Repair
+
+Für owner-eigene PRs gibt es einen separaten Copilot-CLI-Worker, der einen fehlgeschlagenen
+CI-Lauf einmalig technisch reparieren kann. GitHub dokumentiert Copilot CLI für GitHub
+Actions; für persönliche Repositorys kann die CLI über ein Repository-Secret
+\`COPILOT_GITHUB_TOKEN\` mit einem Benutzer-Token authentifiziert werden.
+
+Der Worker ist bewusst enger begrenzt als ein allgemeiner Coding-Agent: keine Fork-PRs,
+keine Network-/URL-Tools, kein \`git push\` durch Copilot selbst und maximal 60 AI-Credits
+sowie zwei Autopilot-Fortsetzungen. Der Workflow führt nach der Agentensitzung
+\`git diff --check\` und die vollständige Testsuite aus und pusht nur bei grünem Test-Gate.
+
+Ein automatisch erzeugter Commit \`FIX: autonomous CI repair\` verhindert einen
+Reparatur-Endloszyklus. Ein zweiter Fehler wird an die übergeordnete Steuer-/Research-Ebene
+eskaliert.
+
+Die Reparatur darf keine Research-Evidence, Präregistrierungen, Authorisierungen, Gates,
+Holdout-Logik, Strategieparameter, Promotion oder Live-Trading verändern.
