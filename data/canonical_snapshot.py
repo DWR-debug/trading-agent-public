@@ -55,7 +55,7 @@ class SnapshotSpec:
             raise ValueError("target_common_candles must be positive")
         if self.target_common_candles > self.requested_candles:
             raise ValueError("target_common_candles cannot exceed requested_candles")
-        minimum = self.requested_candles if self.minimum_in_window_candles is None else self.minimum_in_window_candles
+        minimum = self.target_common_candles if self.minimum_in_window_candles is None else self.minimum_in_window_candles
         if minimum < self.target_common_candles or minimum > self.requested_candles:
             raise ValueError("minimum_in_window_candles must be between target and requested candles")
         if self.study_start and self.study_end and self.study_start > self.study_end:
@@ -153,7 +153,7 @@ def build_frozen_snapshot(
         bars_by_symbol[symbol] = bars_tuple
         per_symbol[symbol] = {
             "status": "COVERAGE_VALID"
-            if len(bars_tuple) >= (spec.minimum_in_window_candles or spec.requested_candles)
+            if len(bars_tuple) >= (spec.minimum_in_window_candles or spec.target_common_candles)
             else "DATA_INVALID",
             "acquired_count": len(raw),
             "in_window_count": len(bars_tuple),
@@ -162,10 +162,10 @@ def build_frozen_snapshot(
             "fingerprint": dataset_fingerprint(bars_tuple) if bars_tuple else None,
             "quality": quality,
         }
-        if len(bars_tuple) < (spec.minimum_in_window_candles or spec.requested_candles):
+        if len(bars_tuple) < (spec.minimum_in_window_candles or spec.target_common_candles):
             errors[symbol] = (
                 f"{symbol}: {len(bars_tuple)} candles in fixed study window; "
-                f"need at least {spec.target_common_candles}"
+                f"need at least {(spec.minimum_in_window_candles or spec.target_common_candles)}"
             )
 
     if len(bars_by_symbol) != len(spec.symbols):
@@ -239,7 +239,7 @@ def build_frozen_snapshot(
         "symbols": list(spec.symbols),
         "requested_candles": spec.requested_candles,
         "target_common_candles": spec.target_common_candles,
-        "minimum_in_window_candles": spec.minimum_in_window_candles or spec.requested_candles,
+        "minimum_in_window_candles": spec.minimum_in_window_candles or spec.target_common_candles,
         "study_start": spec.study_start.isoformat() if spec.study_start else None,
         "study_end": spec.study_end.isoformat() if spec.study_end else None,
         "selected_common_calendar_start": selected_start,
