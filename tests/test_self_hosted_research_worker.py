@@ -10,6 +10,9 @@ def test_self_hosted_worker_has_only_bounded_lanes():
     assert set(worker.LANES) == {"repo_qa", "data_qa", "local_reproduction"}
     for commands in worker.LANES.values():
         assert commands
+
+    assert worker.LANES["repo_qa"][0][0:3] == [worker.PYTHON, "-m", "compileall"]
+    assert worker.LANES["repo_qa"][1][0:3] == [worker.PYTHON, "-m", "pytest"]
         for command in commands:
             assert command
             assert command[0] == worker.PYTHON
