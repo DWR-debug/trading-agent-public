@@ -11,7 +11,7 @@ on:
       - "data/**"
       - "research/**"
   schedule:
-    - cron: "0 */2 * * *"
+    - cron: "*/30 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -75,15 +75,19 @@ jobs:
 
           set "FAIL=0"
 
-          echo [5/7] repo_qa
+          echo [5/9] repo_qa
           "%PY_EXE%" -m automation.self_hosted_research_worker --lane repo_qa --output-dir "research/runs/self_hosted/continuous_repo_qa_%GITHUB_RUN_ID%"
           if errorlevel 1 set "FAIL=1"
 
-          echo [6/7] data_qa
+          echo [6/9] data_qa
           "%PY_EXE%" -m automation.self_hosted_research_worker --lane data_qa --output-dir "research/runs/self_hosted/continuous_data_qa_%GITHUB_RUN_ID%"
           if errorlevel 1 set "FAIL=1"
 
-          echo [7/7] Continuous QA complete
+          echo [7/9] local_reproduction
+          "%PY_EXE%" -m automation.self_hosted_research_worker --lane local_reproduction --output-dir "research/runs/self_hosted/continuous_local_reproduction_%GITHUB_RUN_ID%"
+          if errorlevel 1 set "FAIL=1"
+
+          echo [9/9] Continuous QA complete
           echo RUN_ID=%GITHUB_RUN_ID%
           echo SHA=%GITHUB_SHA%
           if "%FAIL%"=="0" (
@@ -103,5 +107,6 @@ jobs:
           path: |
             research/runs/self_hosted/continuous_repo_qa_${{ github.run_id }}/
             research/runs/self_hosted/continuous_data_qa_${{ github.run_id }}/
+            research/runs/self_hosted/continuous_local_reproduction_${{ github.run_id }}/
           if-no-files-found: warn
           retention-days: 14
