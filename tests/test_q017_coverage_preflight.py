@@ -65,3 +65,44 @@ def test_q017_alfred_vintage_date_regex_accepts_iso_dates():
     html = '<option value="2025-09-24">2025-09-24</option><option value="2011-01-04">2011-01-04</option>'
     dates = sorted(set(re.findall(r'<option[^>]+value=[\"\'](20\d{2}-\d{2}-\d{2})[\"\']', html)))
     assert dates == ["2011-01-04", "2025-09-24"]
+
+
+def test_q017_yahoo_coverage_delegates_to_canonical_snapshot(tmp_path, monkeypatch):
+    import automation.q017_coverage_preflight as coverage
+    from data.canonical_snapshot import SnapshotSpec
+
+    calls = {}
+
+    def build_snapshot(spec: SnapshotSpec):
+        calls["spec"] = spec
+        return {
+            "status": "DATA_INVALID",
+            "coverage": {
+                "common_calendar_count": 2571,
+                "per_symbol": {
+                    symbol: {"status": "COVERAGE_VALID", "in_window_count": 3520}
+                    for symbol in get_universe("q017_coverage_first").symbols
+                },
+            },
+            "snapshot_fingerprint": "canonical-q017-fingerprint",
+        }
+
+    monkeypatch.setattr(coverage, "build_frozen_snapshot", build_snapshot)
+    result = coverage._yahoo_coverage("q017_coverage_first", tmp_path)
+
+    spec = calls["spec"]
+    assert spec.universe == "q017_coverage_first"
+    assert spec.symbols == get_universe("q017_coverage_first").symbols
+    assert spec.interval == "1d"
+    assert spec.requested_candles == 3520
+    assert spec.target_common_candles == 3500
+    assert spec.minimum_in_window_candles == 3500
+    assert spec.study_start == STUDY_START
+    assert spec.study_end == STUDY_END
+    assert spec.dataset_subdir == "."
+    assert result["status"] == "DATA_INVALID"
+    assert result["common_calendar_count"] == 2571
+    assert result["canonical_data_layer"] == "data/canonical_snapshot.py"
+    assert result["snapshot_fingerprint"] == "canonical-q017-fingerprint"
+    assert result["performance_evaluation"] is False
+    assert result["selection_used"] is False
