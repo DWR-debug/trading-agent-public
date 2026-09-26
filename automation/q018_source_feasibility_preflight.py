@@ -26,6 +26,20 @@ SYMBOLS = ("UNH", "UPS", "FDX", "DIS", "ADP", "BKNG", "ORLY", "AZO", "TJX", "RSG
 
 SEC_TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
 SEC_SUBMISSIONS = "https://data.sec.gov/submissions/CIK{cik:010d}.json"
+SEC_CIK_MAP = {
+    "UNH": 731766,
+    "UPS": 1090727,
+    "FDX": 1048911,
+    "DIS": 1744489,
+    "ADP": 8670,
+    "BKNG": 1075531,
+    "ORLY": 898173,
+    "AZO": 866787,
+    "TJX": 109198,
+    "RSG": 1060391,
+    "WM": 823768,
+    "EOG": 821189,
+}
 SEC_ARCHIVE = "https://data.sec.gov/submissions/{name}"
 SEC_HEADERS = {
     "User-Agent": "trading-agent-public research https://github.com/DWR-debug/trading-agent-public",
@@ -97,13 +111,8 @@ def _sec_records(payload: dict[str, Any]) -> list[dict[str, Any]]:
     return [{key: recent[key][i] for key in keys} for i in range(size)]
 
 def _sec_symbol_to_cik() -> dict[str, int]:
-    payload = _fetch_json(SEC_TICKERS_URL, headers=SEC_HEADERS)
-    mapping: dict[str, int] = {}
-    for item in payload.values():
-        ticker = str(item.get("ticker", "")).upper()
-        if ticker in SYMBOLS:
-            mapping[ticker] = int(item["cik_str"])
-    return mapping
+    # Fixed ex-ante mapping avoids a second dynamic universe-selection step.
+    return dict(SEC_CIK_MAP)
 
 def _sec_form4_coverage(cik_map: dict[str, int]) -> dict[str, Any]:
     results: dict[str, Any] = {}
@@ -214,33 +223,50 @@ def _sec_form4_coverage(cik_map: dict[str, int]) -> dict[str, Any]:
         "performance_evaluation": False,
     }
 
+def _fed_source(year: int) -> tuple[str, str]:
+    historical_url = FED_HISTORICAL.format(year=year)
+    try:
+        return historical_url, _fetch_text(historical_url)
+    except FetchError:
+        calendar = _fetch_text(FED_CALENDAR)
+        match = re.search(
+            rf"(?is){year}\s+FOMC Meetings(.*?)(?:{year-1}\s+FOMC Meetings|$)",
+            calendar,
+        )
+        if not match:
+            raise FetchError(f"{FED_CALENDAR}: no {year} section found")
+        return FED_CALENDAR, match.group(0)
+
+
 def _fed_coverage() -> dict[str, Any]:
     years: dict[str, Any] = {}
     all_ok = True
     for year in range(STUDY_START.year, STUDY_END.year + 1):
         try:
-            html = _fetch_text(FED_HISTORICAL.format(year=year))
+            source_url, html = _fed_source(year)
             text = re.sub(r"<[^>]+>", " ", html)
             text = re.sub(r"\s+", " ", text)
             statement_count = len(re.findall(r"\bStatement\b", text, re.I))
             rate_language = bool(re.search(r"target range.*federal funds rate|federal funds rate.*target range", text, re.I))
-            status = "COVERAGE_VALIDATED" if statement_count >= 1 and rate_language else "DATA_INSUFFICIENT"
+            minimum_statements = 6 if year == STUDY_END.year else 8
+            status = "COVERAGE_VALIDATED" if statement_count >= minimum_statements and rate_language else "DATA_INSUFFICIENT"
             if status != "COVERAGE_VALIDATED":
                 all_ok = False
             years[str(year)] = {
-                "source_url": FED_HISTORICAL.format(year=year),
+                "source_url": source_url,
                 "statement_occurrences": statement_count,
+                "minimum_statements_expected": minimum_statements,
                 "target_rate_language_probe": rate_language,
                 "status": status,
                 "pit_anchor": "official FOMC statement/release date; next eligible trading bar",
             }
         except FetchError as exc:
             all_ok = False
-            years[str(year)] = {"source_url": FED_HISTORICAL.format(year=year), "status": "DATA_INSUFFICIENT", "error": str(exc)}
+            years[str(year)] = {"status": "DATA_INSUFFICIENT", "error": str(exc)}
     return {
         "candidate": "B",
         "family": "fomc_policy_decision_event",
-        "source": "Federal Reserve official FOMC historical pages",
+        "source": "Federal Reserve official FOMC historical/calendar pages",
         "status": "COVERAGE_VALIDATED" if all_ok else "DATA_INSUFFICIENT",
         "years": years,
         "selection_used": False,
@@ -327,9 +353,31 @@ def run(*, output_path: str | Path) -> dict[str, Any]:
             "treasury_api": TREASURY_API,
         },
     }
-    cik_map = _sec_symbol_to_cik()
-    result["sec"] = _sec_form4_coverage(cik_map)
-    result["fed"] = _fed_coverage()
+    try:
+        cik_map = _sec_symbol_to_cik()
+        result["sec"] = _sec_form4_coverage(cik_map)
+    except FetchError as exc:
+        result["sec"] = {
+            "candidate": "A",
+            "family": "sec_insider_flow_event",
+            "source": "SEC EDGAR Form 4",
+            "status": "DATA_INSUFFICIENT",
+            "error": str(exc),
+            "selection_used": False,
+            "performance_evaluation": False,
+        }
+    try:
+        result["fed"] = _fed_coverage()
+    except FetchError as exc:
+        result["fed"] = {
+            "candidate": "B",
+            "family": "fomc_policy_decision_event",
+            "source": "Federal Reserve official FOMC historical/calendar pages",
+            "status": "DATA_INSUFFICIENT",
+            "error": str(exc),
+            "selection_used": False,
+            "performance_evaluation": False,
+        }
     result["treasury"] = _treasury_coverage()
     statuses = [result[k]["status"] for k in ("sec", "fed", "treasury")]
     result["overall_status"] = "COVERAGE_READY" if all(s == "COVERAGE_VALIDATED" for s in statuses) else "DATA_INSUFFICIENT"
@@ -348,7 +396,7 @@ def main() -> int:
     args = parser.parse_args()
     try:
         run(output_path=args.output)
-    except FetchError as exc:
+    except (FetchError, ValueError) as exc:
         print(json.dumps({"status": "DATA_INSUFFICIENT", "error": str(exc)}))
         return 2
     return 0
