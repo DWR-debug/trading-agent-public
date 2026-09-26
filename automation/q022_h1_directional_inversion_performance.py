@@ -127,10 +127,10 @@ def _load_assets(data_dir: Path, manifest: dict) -> dict[str, tuple]:
     if tuple(manifest["symbols"]) != SYMBOLS or tuple(universe.symbols) != SYMBOLS:
         raise ValueError("Frozen Q022-H1 universe mismatch")
     if manifest["status"].lower() != "coverage_passed":
-        raise ValueError("Frozen Q020 coverage is not passed")
+        raise ValueError("Frozen Q022-H1 coverage is not passed")
     expected = {item["symbol"]: item for item in manifest["data_snapshot"]["datasets"]}
     if set(expected) != set(SYMBOLS):
-        raise ValueError("Frozen Q020 snapshot is incomplete")
+        raise ValueError("Frozen Q022-H1 snapshot is incomplete")
     assets = {}
     for symbol in SYMBOLS:
         item = expected[symbol]
