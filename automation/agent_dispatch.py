@@ -19,6 +19,19 @@ MAX_CONCURRENT_AGENT_TASKS = 2
 ALLOWED_WORKERS = {
     "engineering": "trading-agent-engineer",
 }
+DEFAULT_ALLOWED_PATHS = (
+    "automation/self_hosted_research_worker.py",
+    "tests/test_self_hosted_research_worker.py",
+    "docs/SELF_HOSTED_RESEARCH_RUNNER.md",
+    "docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md",
+    "docs/DEVELOPMENT_ORCHESTRATION.md",
+)
+FORBIDDEN_PATH_PREFIXES = (
+    ".github/",
+    "research/evidence/",
+    "research/authorizations/",
+    "gates/",
+)
 MARKER_START = "<!-- TRADING_AGENT_TASK_V1"
 MARKER_END = "-->"
 
@@ -66,6 +79,24 @@ def extract_task_metadata(issue_body: str) -> dict[str, Any]:
     return payload
 
 
+def normalize_allowed_paths(task: dict[str, Any]) -> list[str]:
+    """Normalize explicit repository-relative task scope and reject protected paths."""
+    raw = task.get("allowed_paths", DEFAULT_ALLOWED_PATHS)
+    if not isinstance(raw, list) or not raw or any(not isinstance(item, str) or not item.strip() for item in raw):
+        raise AgentDispatchError("allowed_paths must be a non-empty list of strings.")
+    normalized: list[str] = []
+    for item in raw:
+        pattern = item.strip().replace("\\", "/")
+        if pattern.startswith("/") or ".." in pattern.split("/"):
+            raise AgentDispatchError("allowed_paths must be repository-relative and cannot contain ..")
+        if pattern.startswith(FORBIDDEN_PATH_PREFIXES):
+            raise AgentDispatchError(f"allowed_paths includes protected path: {pattern}")
+        if "*" in pattern and not pattern.endswith("/**"):
+            raise AgentDispatchError("allowed_paths supports only trailing /** wildcards.")
+        normalized.append(pattern)
+    return sorted(set(normalized))
+
+
 def validate_task(
     task: dict[str, Any],
     *,
@@ -108,6 +139,7 @@ def validate_task(
         raise AgentDispatchError("Agent tasks must branch from master.")
     if not isinstance(scope, str) or not scope.strip():
         raise AgentDispatchError("scope is required.")
+    allowed_paths = normalize_allowed_paths(task)
 
     custom_agent = task.get("custom_agent", ALLOWED_WORKERS[worker_class])
     if custom_agent != ALLOWED_WORKERS[worker_class]:
@@ -135,6 +167,7 @@ def validate_task(
         "base_branch": base_branch,
         "source_master_sha": current_master_sha,
         "scope": scope.strip(),
+        "allowed_paths": allowed_paths,
         "max_session_minutes": max_minutes,
         "deterministic_compute": False,
         "holdout_selection": False,
