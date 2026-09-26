@@ -229,9 +229,11 @@ def _fed_source(year: int) -> tuple[str, str]:
         return historical_url, _fetch_text(historical_url)
     except FetchError:
         calendar = _fetch_text(FED_CALENDAR)
+        plain = re.sub(r"<[^>]+>", " ", calendar)
+        plain = re.sub(r"\s+", " ", plain)
         match = re.search(
-            rf"(?is){year}\s+FOMC Meetings(.*?)(?:{year-1}\s+FOMC Meetings|$)",
-            calendar,
+            rf"(?is)\b{year}\b\s+FOMC Meetings(.*?)(?:\b{year-1}\b\s+FOMC Meetings|\Z)",
+            plain,
         )
         if not match:
             raise FetchError(f"{FED_CALENDAR}: no {year} section found")
