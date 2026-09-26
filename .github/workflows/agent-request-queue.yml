@@ -5,6 +5,9 @@ on:
     branches: [master]
     paths:
       - "agent_requests/**"
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -41,26 +44,37 @@ jobs:
           set -euo pipefail
           python -m pip install --disable-pip-version-check pytest statsmodels==0.15.0
 
-      - name: Resolve request
+      - name: Resolve next queued request
         id: request
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          before="${{ github.event.before }}"
-          files="$(git diff --name-only "$before" "$GITHUB_SHA" -- 'agent_requests/**' | grep -E '^agent_requests/lane${{ matrix.lane }}/[^/]+\.request$' || true)"
-          count="$(printf '%s\n' "$files" | sed '/^$/d' | wc -l | tr -d ' ')"
-          if [ "$count" = "0" ]; then
+          mkdir -p "${RUNNER_TEMP}/queue_requests"
+          shopt -s nullglob
+          files=(agent_requests/lane${{ matrix.lane }}/*.request)
+          selected=""
+          for request_file in "${files[@]}"; do
+            issue_number="$(python -c 'import json,sys; print(json.load(open(sys.argv[1],encoding="utf-8"))["issue_number"])' "$request_file")"
+            task_id="$(python -c 'import json,sys; print(json.load(open(sys.argv[1],encoding="utf-8"))["task_id"])' "$request_file")"
+            branch="agent/${task_id}-copilot-cli"
+            if git ls-remote --exit-code --heads "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "${branch}" >/dev/null 2>&1; then
+              continue
+            fi
+            selected="$request_file"
+            echo "issue_number=$issue_number" >> "$GITHUB_OUTPUT"
+            echo "request_file=$request_file" >> "$GITHUB_OUTPUT"
+            echo "task_id=$task_id" >> "$GITHUB_OUTPUT"
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            break
+          done
+          if [ -z "$selected" ]; then
+            echo "No unclaimed queued request for lane ${{ matrix.lane }}."
             echo "run=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          if [ "$count" != "1" ]; then
-            echo "::error::Expected exactly one request file for lane ${{ matrix.lane }}; got $count"
-            exit 1
-          fi
-          request_file="$files"
-          issue_number="$(python -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["issue_number"])' "$request_file")"
+
           gh api "/repos/${GITHUB_REPOSITORY}/issues/${issue_number}" > "$RUNNER_TEMP/issue.json"
           python - <<'PY'
           import json, os
@@ -72,9 +86,6 @@ jobs:
           PY
           python -m automation.agent_dispatch --event-json "$RUNNER_TEMP/event.json" --master-sha "$GITHUB_SHA" --active-agent-count 0 --output "$RUNNER_TEMP/agent_task_manifest.json"
           cp "$RUNNER_TEMP/agent_task_manifest.json" "$RUNNER_TEMP/task_contract.json"
-          echo "issue_number=$issue_number" >> "$GITHUB_OUTPUT"
-          echo "request_file=$request_file" >> "$GITHUB_OUTPUT"
-          echo "run=true" >> "$GITHUB_OUTPUT"
 
       - name: Stop idle lane
         if: steps.request.outputs.run != 'true'

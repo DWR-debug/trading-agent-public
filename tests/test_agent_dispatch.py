@@ -155,6 +155,9 @@ def test_autonomous_agent_request_queue_uses_two_lanes_and_is_fail_closed():
     text = (root / ".github" / "workflows" / "agent-request-queue.yml").read_text(encoding="utf-8")
     assert 'paths:' in text
     assert 'agent_requests/**' in text
+    assert 'schedule:' in text
+    assert 'cron: "*/10 * * * *"' in text
+    assert 'workflow_dispatch:' in text
     assert 'lane: [0, 1]' in text
     assert 'trading-agent-agent-cli-queue-lane-${{ matrix.lane }}' in text
     assert 'PAPER_ONLY=True' in text
