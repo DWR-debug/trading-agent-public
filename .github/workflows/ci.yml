@@ -38,6 +38,17 @@ jobs:
           python -m pip install pytest statsmodels==0.15.0
       - name: Vollständige Testsuite
         run: python -m pytest -q
+      - name: Copilot token readiness (non-blocking)
+        if: always()
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          if [ -n "$COPILOT_GITHUB_TOKEN" ]; then
+            echo "COPILOT_GITHUB_TOKEN configured=yes"
+          else
+            echo "::warning::COPILOT_GITHUB_TOKEN configured=no"
+          fi
       - name: Projektintegrität
         run: python automation/project_integrity_check.py
       - name: Project-State Freshness Guard
