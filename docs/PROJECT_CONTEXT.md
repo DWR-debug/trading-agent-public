@@ -261,3 +261,14 @@ Verbindlich:
 - Ziel ist maximaler Forschungs-/Engineering-Fortschritt pro kostenloser Ressource, nicht maximaler Ressourcenverbrauch.
 
 Das Ressourcenmodell ist Bestandteil des dauerhaften Projektgedächtnisses.
+
+## 13. Fachliche und administrative Aufsicht
+
+Die Rollen- und Kontrollkette ist verbindlich in docs/TRADING_AGENT_SUPERVISION_PROTOCOL.md festgelegt.
+Der übergeordnete Steuer-/Research-Agent führt fachlich und administrativ; nachgeordnete Worker
+liefern begrenzte Implementierung, QA oder Forschungsdesign-Unterstützung. CI und unabhängige
+Review prüfen die Arbeit, bevor neue Evidence- oder Statusentscheidungen übernommen werden.
+
+Diese Struktur gilt insbesondere für autonome Arbeit innerhalb der vom Benutzer erteilten
+Freigaben. Autonomie erweitert die Ausführungsgeschwindigkeit, nicht die wissenschaftliche
+Entscheidungshoheit eines Workers und nicht die Sicherheitsgrenzen des Projekts.
