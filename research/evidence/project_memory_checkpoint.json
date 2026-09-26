@@ -101,5 +101,27 @@
     },
     "output_role": "subordinate engineering/QA/research-design worker; never final evidence or promotion decision maker"
   },
-  "chat_trigger_policy": "A new chat beginning with 'trading agent' must load TRADING_AGENT_CHAT_ENTRYPOINT.md and then GITHUB_FREE_RESOURCE_OPERATING_MODEL.md before routing the next task."
+  "chat_trigger_policy": "A new chat beginning with 'trading agent' must load TRADING_AGENT_CHAT_ENTRYPOINT.md and then GITHUB_FREE_RESOURCE_OPERATING_MODEL.md before routing the next task.",
+  "supervision_protocol": {
+    "path": "docs/TRADING_AGENT_SUPERVISION_PROTOCOL.md",
+    "leadership": "The steering/research agent provides overarching scientific and administrative coordination.",
+    "human_authority": [
+      "project goals",
+      "organizational constraints",
+      "real financial decisions"
+    ],
+    "worker_role": "bounded implementation, QA, documentation, research-design support",
+    "independent_qa": "CI plus independent review before technical/scientific conclusions are accepted",
+    "control_chain": [
+      "verify source",
+      "classify task",
+      "choose smallest suitable worker",
+      "isolated change",
+      "tests/CI",
+      "independent QA",
+      "update evidence/status",
+      "continue"
+    ],
+    "immutable_rule": "worker output is never evidence and never decides holdout, gates, promotion, or live execution"
+  }
 }
