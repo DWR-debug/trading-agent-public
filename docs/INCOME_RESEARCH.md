@@ -62,3 +62,22 @@ angepasst.
 
 Die Simulation ist rein offline und kann weder Broker-Orders noch Live-Trading
 auslösen.
+
+## Deterministischer Viability-Evaluator
+
+Die Engineering-Komponente `portfolio/income_validation.py` ist ein nachgelagerter
+Accounting-Baustein für eine **bereits feststehende** Renditeserie. Sie entscheidet
+nicht, welche Strategie oder Renditeserie untersucht werden soll.
+
+Der Evaluator prüft unter fixen Eingaben insbesondere:
+
+- geschütztes Startkapital von 500 EUR plus optionalen Reserveboden,
+- Ausschüttungen nur aus realisiertem Überschuss oberhalb des bisherigen High-Water-Mark,
+- explizite Fee- und Slippage-Annahmen,
+- Ausschüttungsfrequenz, Null-Ausschüttungsperioden, Median und unteres Quantil,
+- Kapitalbodenverletzungen und Drawdown nach Ausschüttungen,
+- gleichlange historische Startpunkte zur Diagnose von Sequence Risk.
+
+Sequence-Szenarien werden gleichartig behandelt und nicht zur Auswahl einer Strategie
+verwendet. Der Baustein erzeugt Accounting-Metriken; er erzeugt weder Research-Evidence
+noch Promotion-Entscheidungen.
