@@ -131,6 +131,7 @@ def test_self_hosted_continuous_qa_is_scheduled_and_non_formal():
     assert "--lane repo_qa" in text
     assert "--lane data_qa" in text
     assert "--lane local_reproduction" in text
+    assert "compileall" not in worker.LANES["local_reproduction"][0]
     assert "PAPER_ONLY" in text
     assert "LIVE_TRADING_ENABLED" in text
     assert "ORDERS_ENABLED" in text
