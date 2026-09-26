@@ -1,0 +1,90 @@
+name: Q020 Treasury Auction Coverage
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - "research/preregistrations/q020_treasury_auction_performance_2026_09_26.json"
+      - "research/authorizations/q020_treasury_auction_coverage_2026_09_26.json"
+      - "research/asset_universes.py"
+      - "automation/coverage_preflight.py"
+      - "data/canonical_snapshot.py"
+      - "tests/test_q020_treasury_auction_design.py"
+      - ".github/workflows/q020-treasury-coverage.yml"
+  push:
+    branches:
+      - research/execute-q020-coverage
+    paths:
+      - "research/preregistrations/q020_treasury_auction_performance_2026_09_26.json"
+      - "research/authorizations/q020_treasury_auction_coverage_2026_09_26.json"
+      - "research/asset_universes.py"
+      - "automation/coverage_preflight.py"
+      - "data/canonical_snapshot.py"
+      - "tests/test_q020_treasury_auction_design.py"
+      - ".github/workflows/q020-treasury-coverage.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: q020-treasury-coverage
+  cancel-in-progress: false
+
+jobs:
+  coverage:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 120
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest statsmodels==0.15.0
+
+      - name: Sicherheits- und Autorisierungskontrakt
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from config import settings
+
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+
+          auth = json.loads(Path(
+              "research/authorizations/q020_treasury_auction_coverage_2026_09_26.json"
+          ).read_text(encoding="utf-8"))
+          assert auth["authorized"] is True
+          assert auth["performance_execution_authorized"] is False
+          assert auth["execution_scope"] == "COVERAGE_ONLY"
+          print("Q020 COVERAGE AUTHORIZATION OK")
+          PY
+
+      - name: Zieltests
+        run: python -m pytest -q tests/test_q020_treasury_auction_design.py
+
+      - name: Coverage ausführen
+        run: |
+          set -euo pipefail
+          python -m automation.coverage_preflight             --preregistration research/preregistrations/q020_treasury_auction_performance_2026_09_26.json             --output-root research/runs/q020_treasury_auction_performance
+
+      - name: Evidence sichern
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q020-treasury-coverage-${{ github.run_id }}
+          path: research/runs/q020_treasury_auction_performance/
+          if-no-files-found: warn
+          retention-days: 30
