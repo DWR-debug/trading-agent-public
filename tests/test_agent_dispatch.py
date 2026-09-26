@@ -197,7 +197,8 @@ def test_bounded_copilot_cli_workflow_uses_builtin_token_and_credit_gate():
     text = (
         root / ".github" / "workflows" / "copilot-cli-engineering-task.yml"
     ).read_text(encoding="utf-8")
-    assert "copilot-requests: write" in text
+    assert "COPILOT_GITHUB_TOKEN" in text
+    assert "secrets.COPILOT_GITHUB_TOKEN" in text
     assert "GITHUB_TOKEN: ${{ github.token }}" in text
     assert "COPILOT_GITHUB_TOKEN" not in text
     assert "--max-ai-credits=45" in text
