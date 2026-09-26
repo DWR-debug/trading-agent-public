@@ -1,23 +1,24 @@
-# AKTUELLER AGENTEN-BETRIEBS-CHECKPOINT — 2026-09-26
+# AKTUELLER AGENTEN- UND RESEARCH-BETRIEBS-CHECKPOINT — 2026-09-26
 
-Die neue agentische Betriebsweise ist technisch in master integriert.
+Die neue agentische Betriebsweise ist technisch in master integriert. PR #244 wurde gemergt; die Q020-Coverage-/Repair-Kette ist ebenfalls auf den aktuellen master synchronisiert.
 
-- Implementierung: PR #244 gemergt
-- Merge-Commit: `77c328e8f84d6c67ac1ab483a4ad72aac238f983`
+- Agent-Control-Plane: PR #244, Merge-Commit `77c328e8f84d6c67ac1ab483a4ad72aac238f983`
+- Q020-Coverage-Sync: PR #246, Merge-Commit `24d217af0cf0e01afe90171b822c85f961cad365`
 - Dispatch-Workflow: `.github/workflows/agent-dispatch.yml`
-- Erstmaliger kontrollierter Dispatch-Test: Issue #242
-- Workflow-Run: `36242039182`
+- Erstmaliger kontrollierter Dispatch-Test: Issue #242 / Workflow `36242039182`
 - Dispatch-Manifest-Artefakt: `10905892708`
-- Manifest-Erzeugung und alle vorgelagerten Governance-/Safety-Prüfungen: erfolgreich
+- Manifest- und vorgelagerte Governance-/Safety-Prüfungen: erfolgreich
 - Copilot-Zuweisung: DISPATCH_FAILED / HTTP 403 Forbidden
 - Tatsächliche externe Agentensession: nicht gestartet
-- Agent-Usage: keine AI-Credits/keine Kosten verbucht
-- Wissenschaftliche Evidenz: keine
+- Agent-Usage: keine AI-Credits/keine Kosten verbucht; der Fehlversuch ist im Usage-Ledger dokumentiert
+- Q020 Repair Coverage: `COVERAGE_VALIDATED`, Workflow `36240853419`, Artifact `10905489440`
+- Q020 Repair Snapshot: 12/12 Symbole, 3.704 gemeinsame Handelstage, 3.500 eingefrorene Candles
+- Q020 Performance: weiterhin **nicht autorisiert**
 - Sicherheitsinvarianten unverändert: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`
 
-Der 403-Befund ist als technischer Verfügbarkeits-/Berechtigungsbefund dokumentiert. Es wird daraus weder eine Copilot-Session noch Ressourcenverbrauch abgeleitet. Der automatische Pfad bleibt fail-closed.
+Der 403-Befund ist ein technischer Verfügbarkeits-/Berechtigungsbefund. Es wird daraus weder eine Copilot-Session noch Ressourcenverbrauch oder wissenschaftliche Evidenz abgeleitet.
 
-Die deterministische Research-Maschine ist davon nicht abhängig. Der nächste wissenschaftliche Schritt bleibt Q020: frische OHLCV-Coverage auf dem präregistrierten symbol-disjunkten Universum; Performance erst nach bestandenem Coverage-Freeze.
+Die deterministische Research-Maschine ist davon unabhängig. Der nächste zulässige wissenschaftliche Schritt ist eine separate, unveränderliche Q020-Performance-Autorisierung, die exakt an den validierten Repair-Snapshot gebunden wird.
 
 ---
 # AKTUELLER AUSFÜHRUNGS-CHECKPOINT — Q019 abgeschlossen / Q020 vorbereitet — 2026-09-26
