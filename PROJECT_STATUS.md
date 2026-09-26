@@ -6,7 +6,8 @@
 - Next queue task: **Q022-TREASURY-FAILURE-FOLLOWUP-DESIGN**, design-only and unranked.
 - Agent operations: persistent two-lane queue, task-scoped `allowed_paths`, duplicate protection and fail-closed safety gates are active.
 - Copilot on this personal repository is now routed through `COPILOT_GITHUB_TOKEN`; without that secret the queue explicitly pauses and claims no agent usage.
-- Latest verified self-hosted repo QA run: workflow `36254626385`, **873 passed, 2 warnings**, AST syntax and paper-only safety checks green.
+- Latest verified self-hosted repo QA run: workflow `36256200896`, **877 passed, 2 warnings**, AST syntax and paper-only safety checks green.
+- Continuous runner mode: scheduled self-hosted repo/data QA remains enabled; every trusted master maintenance push may trigger fresh deterministic QA.
 - Safety: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
 - Paid agent/API budget: **0 USD**.
 

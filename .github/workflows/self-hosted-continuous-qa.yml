@@ -1,8 +1,17 @@
 name: Self-hosted Continuous QA
 
 on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/self_hosted_continuous_qa.trigger"
+      - "automation/self_hosted_research_worker.py"
+      - "tests/**"
+      - "automation/**"
+      - "data/**"
+      - "research/**"
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: "0 */2 * * *"
   workflow_dispatch:
 
 permissions:
