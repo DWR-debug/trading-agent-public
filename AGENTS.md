@@ -39,3 +39,12 @@ Diese Werte dürfen durch Agentenarbeit nicht gelockert werden.
 - Workflow-/Artifact-Provenienz erhalten.
 - Technische Fehler zuerst deterministisch reproduzieren, dann beheben.
 - Bei Unsicherheit nicht raten; den Konflikt dokumentieren und gegen die kanonische Quelle auflösen.
+
+
+## Kostenfreie Ressourcen
+
+Lies vor agentischer Arbeit docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md.
+
+Cloud Agent nur für begrenzte, PR-fähige Engineering-, QA- und Dokumentationsaufgaben einsetzen, wenn die Funktion im Benutzerkonto bereits ohne Zusatzkosten verfügbar ist. Keine bezahlten Upgrades, keine Overages.
+
+Deterministische Research-Berechnung bleibt auf reproduzierbaren Actions-/lokalen Workern. Holdout- und Promotionsentscheidungen bleiben außerhalb nachgeordneter Agenten.
