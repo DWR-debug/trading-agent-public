@@ -198,3 +198,13 @@ def test_local_reproduction_targets_existing_governance_test():
     assert commands[1][0:4] == [worker.PYTHON, "-m", "pytest", "-q"]
     assert commands[1][4] == "tests/test_research_gates.py"
     assert (ROOT / commands[1][4]).is_file()
+
+
+def test_continuous_qa_writes_provenance_into_github_workspace():
+    text = (
+        ROOT / ".github" / "workflows" / "self-hosted-continuous-qa.yml"
+    ).read_text(encoding="utf-8")
+    assert '%GITHUB_WORKSPACE%\\\\research\\\\runs\\\\self_hosted\\\\continuous_repo_qa_%GITHUB_RUN_ID%' in text
+    assert '%GITHUB_WORKSPACE%\\\\research\\\\runs\\\\self_hosted\\\\continuous_data_qa_%GITHUB_RUN_ID%' in text
+    assert '%GITHUB_WORKSPACE%\\\\research\\\\runs\\\\self_hosted\\\\continuous_design_qa_%GITHUB_RUN_ID%' in text
+    assert '%GITHUB_WORKSPACE%\\\\research\\\\runs\\\\self_hosted\\\\continuous_local_reproduction_%GITHUB_RUN_ID%' in text
