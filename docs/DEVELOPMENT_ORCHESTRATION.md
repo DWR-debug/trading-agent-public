@@ -1,6 +1,6 @@
 # Entwicklungsorchestrierung
 
-Stand: 2026-09-25
+Stand: 2026-09-26
 
 Dieses Dokument definiert die technische Umsetzung des Prinzips:
 
@@ -8,12 +8,17 @@ Dieses Dokument definiert die technische Umsetzung des Prinzips:
 
 ## Zielarchitektur
 
-```
+\`\`\`
 Steuer-/Research-Agent
         |
         +--> Coding-Agenten (asynchron, PR-basiert)
         |       +--> Engineering
         |       +--> Tests / Review
+        |
+        +--> Self-hosted Research Worker
+        |       +--> QA
+        |       +--> Reproduktion
+        |       +--> vorbereitende Rechenlast
         |
         +--> Deterministische Worker (GitHub Actions)
         |       +--> Daten-Collect
@@ -25,63 +30,67 @@ Steuer-/Research-Agent
                 +--> project_state.json
                 +--> trial_ledger.json
                 +--> Workflow-Artefakte
-```
+\`\`\`
 
-## Canonical Data Layer
+## Rollen
 
-Yahoo-OHLCV-Coverage verwendet die zentrale Schicht `data/canonical_snapshot.py`. Sie bildet Study-Window, Cross-Symbol-Intersection und exakt die gemeinsame Snapshot-Geometrie an einer Stelle. Coverage-Runner dürfen keine parallele Kalender-/Snapshot-Implementierung mehr einführen.
+Der Steuer-/Research-Agent führt fachlich und administrativ.
 
-Die Datenebene ist ein serialer Kontrollpunkt innerhalb eines Research-Laufs:
+Der Coding-Agent übernimmt klar abgegrenzte PR-fähige Engineering-, Test- und
+Dokumentationsarbeit.
 
-`acquisition -> coverage -> freeze -> deterministic analysis`
+Der Self-hosted Research Worker stellt zusätzliche lokale Rechenzeit für QA, Reproduktion
+und vorbereitende nicht-kanonische Berechnungen bereit. Er wird nicht als allgemeiner
+PR-Runner verwendet.
 
-Unabhängige Symbole/Quellen werden innerhalb der Akquisition parallelisiert; das eingefrorene Ergebnis ist anschließend die gemeinsame Eingabe für Diagnose und formale Berechnung.
-
-## Was bereits funktioniert
-
-Q016 demonstriert den Worker-Pool bereits praktisch: vier unabhängige Collect-Jobs laufen parallel; danach aggregiert ein eigener Job die Checkpoints, friert den Input ein und führt die Diagnose aus. Dadurch wartet der Aggregationspfad nicht seriell auf jeden Download.
-
-## Was der Coding-Agent ergänzt
-
-GitHub Copilot Cloud Agent ist der asynchrone Implementierungs-Worker. Eine Aufgabe wird als GitHub Issue formuliert und Copilot zugewiesen; der Agent arbeitet autonom, erstellt einen Pull Request und fordert anschließend Review an. Das ist getrennt von deterministischen Actions und erzeugt eine überprüfbare Code-Provenienz.
-
-Repositoryseitig vorbereitet sind:
-- `.github/copilot-instructions.md`
-- `AGENTS.md`
-- `.github/agents/trading-agent-engineer.agent.md`
-- `.github/agents/trading-agent-research-reviewer.agent.md`
-- `.github/workflows/copilot-setup-steps.yml`
+GitHub-hosted Actions bleiben der kanonische Pfad für CI sowie formale, reproduzierbare
+Research-Ausführung.
 
 ## Betriebsmodell
 
-1. Der Steuer-Agent erzeugt eine klar abgegrenzte Engineering-Aufgabe.
-2. Die Aufgabe wird einem Copilot-Coding-Agenten zugewiesen.
-3. Der Agent arbeitet auf eigenem Branch und liefert einen PR.
-4. CI führt Tests und Governance-Prüfungen aus.
-5. Der Steuer-Agent prüft Diff, Testresultate und Provenienz.
-6. Erst danach wird gemergt.
-7. Unabhängige Rechen-/Research-Jobs werden parallel als Actions-Matrix oder getrennte Workflows gestartet.
-8. Status- und Evidence-Dateien werden nach jedem belastbaren Meilenstein synchronisiert.
+1. Der Steuer-Agent klassifiziert die Aufgabe.
+2. Bounded Engineering geht an den Coding-Agenten.
+3. QA/Reproduktion/vorbereitende Rechenlast kann an den Self-hosted Worker delegiert werden.
+4. Kanonische Berechnung läuft auf reproduzierbaren GitHub-hosted Pfaden.
+5. CI und unabhängige QA prüfen Diff, Testresultate und Provenienz.
+6. Evidence- und Statusdateien werden erst nach belastbaren Meilensteinen synchronisiert.
 
 ## Keine künstliche Serialisierung
 
-Nicht nacheinander ausführen, wenn die Abhängigkeit fehlt:
-- unabhängige Test-/Lint-/Review-Jobs
-- unabhängige Daten-Chunks
-- unabhängige diagnostische Analysen
-- getrennte Coverage-Preflights
-- mehrere klar isolierte Engineering-Aufgaben
+Parallelisieren, sofern keine Abhängigkeit fehlt:
+
+- unabhängige Test-/Lint-/Review-Jobs;
+- unabhängige Daten-Chunks;
+- unabhängige diagnostische Analysen;
+- getrennte Coverage-Preflights;
+- mehrere klar isolierte Engineering-Aufgaben;
+- Self-hosted QA-/Reproduktionsläufe.
 
 Seriell bleiben:
-- Freeze -> Analyse desselben Frozen Inputs
-- formale Freigabe -> formaler Trial
-- Ergebnis -> Evidence-Gate
-- PR-Review -> Merge
+
+- Freeze -> Analyse desselben Frozen Inputs;
+- formale Freigabe -> formaler Trial;
+- Ergebnis -> Evidence-Gate;
+- PR-Review -> Merge.
+
+## Sicherheitsgrenze
+
+Der öffentliche Repository-Kontext darf keinen untrusted Fork-/PR-Code automatisch auf
+einem Self-hosted Runner ausführen. Der vorgesehene Workflow akzeptiert deshalb nur manuelle,
+owner-gesteuerte Ausführung und vertrauenswürdige Refs.
+
+Der Runner erhält keine Trading-Secrets und keine Live-Ausführungsrechte.
 
 ## Agenten- und Sicherheitsgrenzen
 
-Agenten dürfen keine Live-Ausführung herstellen, keine automatische Promotion aktivieren und keine Research-Gates umgehen. Agentenoutput ist Hypothese/Implementierung/Review-Material, nicht selbst Evidenz.
+Agenten dürfen keine Live-Ausführung herstellen, keine automatische Promotion aktivieren
+und keine Research-Gates umgehen. Agentenoutput ist Hypothese/Implementierung/Review-
+Material, nicht selbst Evidenz.
+
+\`Self-hosted Worker -> Artefakt -> kanonische Reproduktion -> Evidence-Gate\` bleibt die
+Regel für wissenschaftlich relevante Ergebnisse.
 
 ## Kontinuität über Chats
 
-Der Einstiegspunkt bleibt `docs/TRADING_AGENT_CHAT_ENTRYPOINT.md`. Bei einem neuen Chat wird der dort definierte Verifikationsablauf ausgeführt. Handoff-Text aus dem letzten Chat wird gegen kanonische Quellen geprüft; er ersetzt diese nicht.
+Der Einstiegspunkt bleibt \`docs/TRADING_AGENT_CHAT_ENTRYPOINT.md\`. Handoff-Text aus dem
+letzten Chat wird gegen kanonische Quellen geprüft; er ersetzt diese nicht.

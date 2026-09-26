@@ -1,0 +1,94 @@
+"""Bounded dispatch map for the self-hosted research worker.
+
+The self-hosted runner is intentionally not an arbitrary shell executor.
+Only predefined, non-production lanes can be selected. Formal evidence
+production remains on the canonical GitHub-hosted research paths.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import subprocess
+from datetime import datetime, timezone
+from pathlib import Path
+
+
+LANES: dict[str, list[list[str]]] = {
+    "repo_qa": [
+        ["python", "-m", "pytest", "-q"],
+        ["git", "diff", "--check"],
+    ],
+    "data_qa": [
+        [
+            "python",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_canonical_snapshot.py",
+            "tests/test_github_free_resource_policy.py",
+        ],
+    ],
+    "local_reproduction": [
+        ["python", "-m", "compileall", "-q", "automation", "data", "research"],
+        ["python", "-m", "pytest", "-q", "tests/test_research_governance.py"],
+    ],
+}
+
+
+def run(command: list[str], out_dir: Path, index: int) -> dict[str, object]:
+    started = datetime.now(timezone.utc).isoformat()
+    completed = subprocess.run(
+        command,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    payload = {
+        "index": index,
+        "command": command,
+        "returncode": completed.returncode,
+        "started_at": started,
+        "stdout": completed.stdout,
+        "stderr": completed.stderr,
+    }
+    (out_dir / f"step-{index:02d}.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return payload
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--lane", choices=sorted(LANES), required=True)
+    parser.add_argument("--output-dir", type=Path, required=True)
+    args = parser.parse_args()
+
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+    results = []
+    exit_code = 0
+    for index, command in enumerate(LANES[args.lane], start=1):
+        result = run(command, args.output_dir, index)
+        results.append(result)
+        if result["returncode"] != 0:
+            exit_code = int(result["returncode"])
+            break
+
+    summary = {
+        "schema_version": "1.0",
+        "lane": args.lane,
+        "completed_at": datetime.now(timezone.utc).isoformat(),
+        "results": results,
+        "formal_evidence_allowed": False,
+        "paper_only": True,
+    }
+    (args.output_dir / "summary.json").write_text(
+        json.dumps(summary, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return exit_code
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
