@@ -15,7 +15,7 @@ def test_decision_basis_is_current_and_separates_fact_from_next_action():
     assert "Was wissen wir?" in md
     assert "Was wissen wir nicht?" in md
     assert "Nächste Aktion" in md
-    assert payload["current_stage"] == "SOURCE_FEASIBILITY_GATE"
+    assert payload["current_stage"] == "Q020_PREREGISTERED_DESIGN"
     assert payload["next_action"].startswith("Execute Q019 Treasury auction signal/PIT contract validation")
     assert payload["invariants"] == {
         "paper_only": True,
