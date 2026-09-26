@@ -90,3 +90,35 @@ Die SEC/Fed-Befunde sind Ausführungs-/Zugriffsprobleme des aktuellen kostenlose
 ### Nächste Aktion
 
 Q019 — Treasury Auction Signal Contract. Die einzige source-feasible Q018-Familie wird jetzt objektiv auf Signal-Parsing, Point-in-Time-Mapping und deterministische Ereignisabdeckung geprüft. Das ist kein Performance-Trial und keine nachträgliche Optimierung.
+
+## Q019 abgeschlossen / Q020 präregistriert — 2026-09-26
+
+Q019 hat den präregistrierten Treasury-10Y-Signal-/PIT-Vertrag erfolgreich bestanden.
+
+- Workflow: `36238205065`
+- Artifact: `10905325799`
+- Artifact-Digest: `sha256:0e2ec08566b3300b577bb23a1f238b577e3083d0e8985c7466e748310b456325`
+- Result-Fingerprint: `13072dbed7d60684f4a4fb8a3de69555cae83c66f3cfdfb603b9ed2a4b1c225b`
+- 89/89 Rohzeilen validiert
+- 89/89 Events auf den ersten folgenden XNYS-Handelstag gemappt
+- 0 terminal events, 0 Fehler
+- 88 abgeleitete Signale
+- keine Performanceauswertung, kein Holdout, kein Tuning, keine Promotion
+
+### Was bedeutet das für Performance-Evidenz?
+
+Wir haben aus T041/T044/T045 reale Performance-Messungen, aber deren präregistrierte Evidence-Gates wurden nicht bestanden. Das ist etwas anderes als „keine Daten“. Q019 selbst durfte aufgrund seiner Präregistrierung überhaupt keine Performance berechnen.
+
+Damit existiert für den Treasury-Mechanismus bisher weder ein positiver noch ein negativer Performance-Nachweis. Es existiert jetzt jedoch ein sauberer Daten-/Signal-/PIT-Vertrag, auf dessen Basis eine eigenständige Performanceprüfung zulässig ist.
+
+### Q020 — Treasury Auction Performance Design
+
+Q020 ist jetzt `PREREGISTERED_DESIGN_ONLY` und verwendet ein neues vollständig symbol-disjunktes Universum:
+`ACN, AMT, APD, BK, CME, CTAS, GPC, LLY, MCO, NOC, ROST, SHW`.
+
+Die Trading-Regel ist vorab fixiert: erster XNYS-Tag nach `record_date`, Signal +1 = gleichgewichtete Long-Position, −1 = gleichgewichtete Short-Position, 0 = flat; ein Event-Tag lang; 1,0x Gross Exposure; kein Leverage. Alle zentralen Risiko-, Kosten-, Rolling-, OOS- und Holdout-Gates bleiben unverändert.
+
+**Nächste Aktion:** zuerst frische OHLCV-Coverage auf diesem Universum. Erst bei Coverage-Pass wird der Snapshot eingefroren und eine formale Performance-Ausführung autorisiert.
+
+Sicherheitszustand bleibt unverändert:
+`PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
