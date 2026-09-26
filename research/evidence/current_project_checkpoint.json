@@ -3,7 +3,7 @@
   "checkpoint_type": "current_project_snapshot",
   "generated_at_utc": "2026-09-26T08:59:00Z",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit_at_checkpoint_creation": "cfdb0ac7031cfdadcbfe16da50cbedeb4b285dd3",
+  "master_commit_at_checkpoint_creation": "d286ec54874d457a8cae03fd947fb4fad265cc84",
   "canonical_data_layer": {
     "status": "MERGED",
     "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
@@ -80,7 +80,7 @@
     "research/evidence/trial_ledger.json",
     "current master, relevant branches/PRs and workflows"
   ],
-  "active_research_task": "Q-018-ORTHOGONAL-OFFICIAL-EVENT-SOURCE-DESIGN",
+  "active_research_task": "Q-019-TREASURY-AUCTION-SIGNAL-CONTRACT",
   "wide_search_round_002": {
     "hypothesis_id": "H08",
     "family": "volatility_state_transition",
@@ -127,5 +127,18 @@
     "canonical_yahoo_hardening_pr": 234,
     "canonical_yahoo_hardening_merge_commit": "cfdb0ac7031cfdadcbfe16da50cbedeb4b285dd3"
   },
-  "next_action": "Execute deterministic Q018 source-feasibility preflight for the three fixed official event-source candidates; no performance evaluation or candidate ranking."
+  "next_action": "Run preregistered Q019 Treasury auction signal/PIT contract validation on the fixed Q018 universe; no performance evaluation.",
+  "q018": {
+    "task_id": "Q-018-SOURCE-FEASIBILITY-PREFLIGHT",
+    "status": "DATA_INSUFFICIENT",
+    "workflow_run_id": 36237329691,
+    "artifact_id": 10904273903,
+    "artifact_digest": "sha256:f8bfe4e1065d3d8a8b82b08fe4f78f6bd3c006bedf71c8cadc4f512d8d308989",
+    "result_fingerprint": "82b07265b29a93547f2b1547227722005cf9d883baf3ee8b6dc50e029742152d",
+    "candidate_a": "DATA_INSUFFICIENT",
+    "candidate_b": "DATA_INSUFFICIENT",
+    "candidate_c": "COVERAGE_VALIDATED",
+    "performance_trial_authorized": false,
+    "holdout_used": false
+  }
 }
