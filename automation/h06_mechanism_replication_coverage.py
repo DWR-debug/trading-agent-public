@@ -299,7 +299,7 @@ def main() -> None:
     parser.add_argument(
         "--output",
         default="research/runs/wide_search/"
-        "h06_sector_neutral_residual_momentum_repair_coverage.json",
+        "h06_mechanism_replication_coverage.json",
     )
     args = parser.parse_args()
     run(output_path=args.output)
