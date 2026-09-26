@@ -11,6 +11,9 @@ on:
         options:
           - triage
           - round_002
+  pull_request:
+    branches:
+      - master
   push:
     branches:
       - research/wide-search-lane
@@ -114,7 +117,7 @@ jobs:
           retention-days: 30
 
   h06_sector_neutral_repair:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/research/h06-residual-momentum-clean-v1' }}
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/research/h06-residual-momentum-clean-v1') || (github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'research/h06-residual-momentum-clean-v1') }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 25
     steps:
