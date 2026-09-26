@@ -1,0 +1,76 @@
+name: Q018 Official Event Source Feasibility
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "automation/q018_source_feasibility_preflight.py"
+      - "tests/test_q018_source_feasibility_preflight.py"
+      - "research/preregistrations/q018_official_event_source_design_round_2026_09_26.json"
+      - ".github/workflows/q018-source-feasibility.yml"
+  push:
+    branches:
+      - research/q018-source-feasibility-2026-09-26
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-q018-source-feasibility
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 35
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Tests
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+          python -m pytest -q tests/test_q018_source_feasibility_preflight.py
+      - name: Source-Feasibility Preflight
+        run: |
+          set -euo pipefail
+          python -m automation.q018_source_feasibility_preflight \
+            --output research/runs/source_feasibility/q018_source_feasibility.json
+      - name: Governance und Safety prüfen
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          data = json.loads(Path("research/runs/source_feasibility/q018_source_feasibility.json").read_text(encoding="utf-8"))
+          assert data["governance"]["coverage_only"] is True
+          assert data["governance"]["performance_evaluation"] is False
+          assert data["governance"]["holdout_used"] is False
+          assert data["governance"]["performance_trial_authorized"] is False
+          assert data["safety"]["paper_only"] is True
+          assert data["safety"]["live_trading_enabled"] is False
+          assert data["safety"]["orders_enabled"] is False
+          assert data["safety"]["automatic_promotion"] is False
+          print(json.dumps({
+              "overall_status": data["overall_status"],
+              "sec": data["sec"]["status"],
+              "fed": data["fed"]["status"],
+              "treasury": data["treasury"]["status"],
+              "fingerprint": data["fingerprint"],
+          }, sort_keys=True))
+          PY
+      - name: Evidence sichern
+        uses: actions/upload-artifact@v6
+        with:
+          name: q018-source-feasibility-\${{ github.run_id }}
+          path: research/runs/source_feasibility/q018_source_feasibility.json
+          if-no-files-found: error
+          retention-days: 30
