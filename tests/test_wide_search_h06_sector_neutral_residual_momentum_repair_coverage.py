@@ -62,8 +62,13 @@ def test_h06_repair_run_delegates_snapshot_creation_to_canonical_layer(monkeypat
     base = datetime(2011, 1, 1, tzinfo=timezone.utc)
     timestamps = [base + timedelta(days=i) for i in range(3500)]
     assets = {
-        symbol: tuple(Bar(ts, 100.0 + i) for i, ts in enumerate(timestamps))
-        for symbol in module.get_universe(module.UNIVERSE).symbols
+        symbol: tuple(
+            Bar(ts, 100.0 + i + symbol_index * 0.1)
+            for i, ts in enumerate(timestamps)
+        )
+        for symbol_index, symbol in enumerate(
+            module.get_universe(module.UNIVERSE).symbols
+        )
     }
 
     called = {}
