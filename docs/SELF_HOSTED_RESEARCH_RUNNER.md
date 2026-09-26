@@ -26,7 +26,7 @@ allein keine formale Promotion-Evidence.
 ## Sicherheitsmodell
 
 Der öffentliche Repository-Kontext verwendet den Runner über den neuen
-`Self-hosted Research Worker v3`. Der Workflow nutzt den nachweislich funktionierenden
+`Self-hosted Research Worker v4`. Der Workflow nutzt den nachweislich funktionierenden
 `push`-Mechanismus auf `master`, ist aber zusätzlich durch einen eindeutigen Commit-Marker
 `RUN_SELF_HOSTED_REPO_QA:` gegen unbeabsichtigte Ausführung geschützt.
 
