@@ -1,6 +1,10 @@
 from datetime import date
+import json
+from pathlib import Path
 
 import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
 
 from automation.q020_treasury_auction_performance import (
     _fp,
@@ -54,3 +58,35 @@ def test_gate_bundle_rejects_when_research_return_is_negative():
     gates = _gates(scenarios)
     assert gates["all_absolute_passed"] is False
     assert gates["absolute"]["research_return_positive"] is False
+
+
+def test_preregistration_is_fixed_and_not_authorized():
+    spec = json.loads(
+        (
+            ROOT
+            / "research"
+            / "preregistrations"
+            / "q020_treasury_auction_performance_repair_2026_09_26.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert spec["trial_id"] == TRIAL_ID
+    assert spec["status"] == "PREREGISTERED_DESIGN_ONLY"
+    assert spec["coverage_basis"]["snapshot_fingerprint"] == (
+        "70cff5df1b92f4f7db2ea09bdc9999abff93dd4230ad4ea5df6e5da204076ef8"
+    )
+    assert spec["execution_model"]["entry"].startswith("market open")
+    assert spec["execution_model"]["exit"].startswith("same-session market close")
+    assert spec["evaluation_geometry"] == {
+        "frozen_candles": 3500,
+        "evaluation_return_periods": 3498,
+        "excluded_initial_return_periods": 1,
+        "research_periods": 2798,
+        "holdout_periods": 700,
+        "rolling_research_windows": 5,
+        "rolling_method": "five contiguous research windows; final window absorbs remainder",
+    }
+    assert spec["authorization"]["performance_execution_authorized"] is False
+    assert spec["safety"]["paper_only"] is True
+    assert spec["safety"]["live_trading_enabled"] is False
+    assert spec["safety"]["orders_enabled"] is False
+    assert spec["safety"]["automatic_promotion"] is False
