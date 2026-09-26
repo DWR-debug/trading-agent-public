@@ -139,6 +139,18 @@ def test_self_hosted_continuous_qa_is_scheduled_and_non_formal():
     assert "research/evidence" not in text
 
 
+def test_self_hosted_continuous_qa_is_run_isolated():
+    text = (
+        ROOT / ".github" / "workflows" / "self-hosted-continuous-qa.yml"
+    ).read_text(encoding="utf-8")
+    assert 'set "RUN_KEY=%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"' in text
+    assert 'set "WORK=%RUNNER_TEMP%\\\\trading-agent-continuous-%RUN_KEY%"' in text
+    assert 'set "ARCHIVE=%RUNNER_TEMP%\\\\trading-agent-continuous-%RUN_KEY%.tar.gz"' in text
+    assert 'set "PY_ROOT=%RUNNER_TEMP%\\\\python-3.13.15-nuget-%RUN_KEY%"' in text
+    assert 'set "PY_PKG=%RUNNER_TEMP%\\\\python.3.13.15-%RUN_KEY%.nupkg"' in text
+    assert 'set "SITE=%RUNNER_TEMP%\\\\python-site-continuous-%RUN_KEY%"' in text
+
+
 def test_self_hosted_worker_v4_is_minimal_single_step_gateway():
     text = (
         ROOT / ".github" / "workflows" / "self-hosted-research-worker-v4.yml"
