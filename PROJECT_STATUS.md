@@ -1,3 +1,43 @@
+# AKTUELLER AUSFÜHRUNGS-CHECKPOINT — Canonical Data Layer — 2026-09-26
+
+Die Konsolidierung der Yahoo-OHLCV-Datenebene ist abgeschlossen und in master verankert.
+
+- Merge-Commit: d81c4399260145e21156064ab76fad77a9969222
+- PR: #232 — Canonical OHLCV Data Layer
+- CI: Workflow 36231341492; x64 und ARM vollständig grün
+- Builder: data/canonical_snapshot.py
+- generischer Coverage-Runner: automation/coverage_preflight.py
+- Regressionen: tests/test_canonical_snapshot.py
+- technische Spezifikation: docs/CANONICAL_DATA_LAYER.md
+- reproduzierbarer Checkpoint: research/evidence/canonical_data_layer_checkpoint.json
+
+## Kanonischer Datenvertrag
+
+acquisition -> Study-Window -> vollständige Cross-Symbol-Intersection -> exakte gemeinsame Zielgeometrie -> Frozen Snapshot -> Dataset-Fingerprints -> deterministische Research-Analyse
+
+Die gemeinsame Kalender- und Snapshot-Geometrie wird damit nicht mehr von jeder Research-Lane separat implementiert. Coverage-Fehler bleiben fail-closed; bei Fehlern werden keine verwendbaren partiellen Snapshot-Artefakte erzeugt.
+
+Die Datenebene berechnet weder P&L noch Performance-Metriken und trifft keine Holdout-, Parameter-, Asset-, Threshold- oder Promotion-Entscheidungen. Die Sicherheitsinvarianten bleiben:
+
+- PAPER_ONLY=True
+- LIVE_TRADING_ENABLED=False
+- orders_enabled=False
+- automatic_promotion=False
+
+## Agentenstatus
+
+Der hierarchische Engineering-Agent und der unabhängige Research-Reviewer sind im Repository als nachgeordnete Rollen definiert. Für die Konsolidierung wurde mit Issue #231 ein reproduzierbarer unabhängiger Reviewauftrag vorbereitet.
+
+Eine externe Agentenausführung ist aktuell nicht verifiziert; deshalb wird im Agent-Usage-Ledger keine Nutzung behauptet. Die CI-Prüfungen sind belastbare technische Evidenz, aber kein Ersatz für einen nicht ausgeführten externen Agentenreview.
+
+## Nächster Forschungs-/Infrastrukturschritt
+
+Vor neuen größeren Yahoo-basierten Performance-Läufen werden verbleibende spezialisierte Coverage-Lanes auf den Canonical Builder migriert, beginnend mit der H06-Mechanismus-Replikation.
+
+Die wissenschaftliche H06-Evidence bleibt davon getrennt: Der Data-Layer-Merge erzeugt keine neue Performance-Evidence.
+
+---
+
 # Aktueller Ausführungscheckpoint — Wide-Search Round 002 — 2026-09-25
 
 Die präregistrierte H08-Volatility-State-Transition-Diagnose ist technisch in `master` integriert.
