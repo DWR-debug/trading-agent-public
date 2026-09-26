@@ -89,6 +89,26 @@ jobs:
               if task.get(key) is not False:
                   raise SystemExit(f"unsafe contract flag: {key}")
 
+          allowed = task.get("allowed_paths")
+          if allowed is None:
+              allowed = [
+                  "automation/self_hosted_research_worker.py",
+                  "tests/test_self_hosted_research_worker.py",
+                  "docs/SELF_HOSTED_RESEARCH_RUNNER.md",
+                  "docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md",
+                  "docs/DEVELOPMENT_ORCHESTRATION.md",
+              ]
+          if not isinstance(allowed, list) or not allowed or any(not isinstance(item, str) or not item.strip() for item in allowed):
+              raise SystemExit("allowed_paths must be a non-empty list of strings")
+          protected = (".github/", "research/evidence/", "research/authorizations/", "gates/")
+          for raw in allowed:
+              pattern = raw.strip().replace("\\", "/")
+              if pattern.startswith(protected) or pattern.startswith("/") or ".." in pattern.split("/"):
+                  raise SystemExit("protected or invalid allowed_paths entry: " + pattern)
+              if "*" in pattern and not pattern.endswith("/**"):
+                  raise SystemExit("unsupported allowed_paths wildcard: " + pattern)
+          task["allowed_paths"] = sorted(set(item.strip().replace("\\", "/") for item in allowed))
+
           Path(os.environ["RUNNER_TEMP"], "task_contract.json").write_text(
               json.dumps(task, ensure_ascii=False, indent=2) + "\n",
               encoding="utf-8",
@@ -156,28 +176,31 @@ jobs:
             --allow-tool='shell(python:*)' \
             --allow-tool='shell(pytest:*)'
 
-      - name: Enforce bounded file scope
+      - name: Enforce task-scoped file scope
         shell: bash
         run: |
           set -euo pipefail
-          allowed=(
-            "automation/self_hosted_research_worker.py"
-            "tests/test_self_hosted_research_worker.py"
-            "docs/SELF_HOSTED_RESEARCH_RUNNER.md"
-            "docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md"
-            "docs/DEVELOPMENT_ORCHESTRATION.md"
-          )
-          while IFS= read -r path; do
-            test -n "$path" || continue
-            case " ${allowed[*]} " in
-              *" $path "*) ;;
-              *)
-                echo "::error::Copilot CLI changed file outside bounded engineering scope: $path"
-                exit 1
-                ;;
-            esac
-          done < <(git diff --name-only)
-          echo "FILE_SCOPE_OK"
+          python - <<'PY'
+          import json
+          import os
+          import subprocess
+
+          contract = json.load(open(os.path.join(os.environ["RUNNER_TEMP"], "task_contract.json"), encoding="utf-8"))
+          allowed = contract["allowed_paths"]
+          protected = (".github/", "research/evidence/", "research/authorizations/", "gates/")
+
+          def matches(path, pattern):
+              if pattern.endswith("/**"):
+                  return path.startswith(pattern[:-3])
+              return path == pattern
+
+          changed = [line for line in subprocess.check_output(["git", "diff", "--name-only"], text=True).splitlines() if line]
+          for path in changed:
+              if path.startswith(protected) or not any(matches(path, pattern) for pattern in allowed):
+                  print("::error::Copilot CLI changed file outside task-scoped engineering scope: " + path)
+                  raise SystemExit(1)
+          print("FILE_SCOPE_OK files=" + str(len(changed)) + " patterns=" + str(len(allowed)))
+          PY
 
       - name: Final bounded regression gate
         shell: bash
