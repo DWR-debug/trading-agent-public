@@ -166,7 +166,9 @@ def test_autonomous_agent_request_queue_uses_two_lanes_and_is_fail_closed():
     assert 'automatic_promotion=False' in text
     assert 'Automatic PR creation is unavailable' in text
     assert 'Duplicate execution is fail-closed' in text
-    assert 'before="${{ github.event.before }}"' in text
+    assert "Resolve next queued request" in text
+    assert 'agent_requests/lane${{ matrix.lane }}/*.request' in text
+    assert "GITHUB_EVENT_BEFORE" not in text
     assert 'cp "$RUNNER_TEMP/agent_task_manifest.json" "$RUNNER_TEMP/task_contract.json"' in text
     assert 'python -m automation.agent_dispatch' in text
 
