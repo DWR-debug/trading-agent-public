@@ -6,7 +6,7 @@ Dieses Modul schließt die bisher offene technische Lücke zwischen unserem
 vorbereiteten Agenten-Rollenmodell und der tatsächlichen PR-basierten Delegation.
 
 Der Dispatch-Pfad ist **fail-closed**. Ein Issue muss einen expliziten
-maschinenlesbaren Task-Vertrag tragen und das Label `agent-ready` besitzen.
+maschinenlesbaren Task-Vertrag tragen und das Label `agent` oder `agent-ready` besitzen.
 Erst dann darf GitHub versuchen, den nachgeordneten Copilot-Worker zuzuweisen.
 
 ## Kontrollkette
