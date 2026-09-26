@@ -130,6 +130,7 @@ def run_preflight(
             interval=interval,
             requested_candles=requested,
             target_common_candles=target,
+            minimum_in_window_candles=requested,
             output_dir=output_dir,
             study_start=study_start,
             study_end=study_end,
