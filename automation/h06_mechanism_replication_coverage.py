@@ -18,7 +18,7 @@ from pathlib import Path
 from config import settings
 from data.yahoo_loader import load_yahoo_history
 from research.protocol import dataset_fingerprint
-from research.asset_universes import get_universe
+from research.asset_universes import get_universe, list_universes
 
 ROOT = Path(__file__).resolve().parents[1]
 UNIVERSE = "validation_2026_09_26_h06_mechanism_replication"
@@ -110,6 +110,15 @@ def run(
         raise RuntimeError("H06 coverage requires the paper-only safety configuration.")
 
     universe = get_universe(UNIVERSE)
+    expected_set = set(universe.symbols)
+    for existing in list_universes():
+        if existing.name == UNIVERSE:
+            continue
+        overlap = expected_set.intersection(existing.symbols)
+        if overlap:
+            raise RuntimeError(
+                f"Replication universe overlaps existing universe {existing.name}: {sorted(overlap)}"
+            )
     expected_symbols = tuple(
         symbol for members in SECTOR_MAP.values() for symbol in members
     )
