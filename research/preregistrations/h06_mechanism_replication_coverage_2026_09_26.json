@@ -1,0 +1,98 @@
+{
+  "schema_version": "1.0",
+  "preregistration_id": "H06-MECHANISM-REPLICATION-COVERAGE-2026-09-26",
+  "hypothesis_id": "H06",
+  "purpose": "Independent replication of the H06 mechanism-only finding on a fresh, fully symbol-disjoint equity universe before any profitability study.",
+  "fixed_universe": {
+    "name": "validation_2026_09_26_h06_mechanism_replication",
+    "symbols": [
+      "MU",
+      "ADBE",
+      "CRM",
+      "ABT",
+      "BMY",
+      "BAX",
+      "PH",
+      "ROK",
+      "DOV",
+      "CPB",
+      "SJM",
+      "CAG",
+      "EXC",
+      "SRE",
+      "CMS"
+    ],
+    "sectors": {
+      "technology": [
+        "MU",
+        "ADBE",
+        "CRM"
+      ],
+      "healthcare": [
+        "ABT",
+        "BMY",
+        "BAX"
+      ],
+      "industrials": [
+        "PH",
+        "ROK",
+        "DOV"
+      ],
+      "consumer_staples": [
+        "CPB",
+        "SJM",
+        "CAG"
+      ],
+      "utilities": [
+        "EXC",
+        "SRE",
+        "CMS"
+      ]
+    }
+  },
+  "fixed_signal": {
+    "formation_lookback_sessions": 252,
+    "skip_sessions": 21,
+    "raw_signal": "252-session return with 21-session skip",
+    "residual_signal": "raw signal minus equal-weight sector mean"
+  },
+  "fixed_sample": {
+    "study_start": "2011-01-01",
+    "study_end": "2025-09-24",
+    "requested_raw_candles_per_symbol": 4000,
+    "common_calendar_target": 3500,
+    "research_candles": 2798,
+    "holdout_candles_unused": 702
+  },
+  "fixed_diagnostics": [
+    "mean/median Pearson correlation between raw and residual cross-sections",
+    "mean/median Spearman correlation",
+    "top-2 selection overlap",
+    "top-2 same-sector frequency before and after residualization",
+    "mean number of sectors represented in top-2",
+    "mean absolute full-universe rank displacement",
+    "cross-sectional residual/raw variance ratio",
+    "within-sector rank preservation",
+    "same metrics across five chronological research windows"
+  ],
+  "coverage_gate": {
+    "performance_evaluation": false,
+    "holdout_evaluation": false,
+    "holdout_used_for_selection": false,
+    "performance_trial_authorized": false,
+    "automatic_promotion": false
+  },
+  "independence_contract": {
+    "fully_symbol_disjoint_from_all_existing_universes": true,
+    "asset_selection_by_performance": false,
+    "parameter_search": false,
+    "threshold_search": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "decision_rule": "If coverage fails, diagnose data contract and stop. If coverage passes, run the preregistered mechanism diagnostic on the frozen snapshot. Only repeated descriptive mechanism evidence can justify later consideration of a formal performance trial."
+}
