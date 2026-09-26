@@ -478,6 +478,18 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=4000,
     ),
 
+    AssetUniverse(
+        name="validation_2026_09_26_h06_mechanism_replication",
+        priority=64,
+        description=(
+            "Independent fully symbol-disjoint H06 mechanism replication universe; "
+            "five sectors with three long-history assets each."
+        ),
+        symbols=("MU", "ADBE", "CRM", "ABT", "BMY", "BAX", "PH", "ROK", "DOV",
+                 "CPB", "SJM", "CAG", "EXC", "SRE", "CMS"),
+        target_count=4000,
+    ),
+
 
 )
 
