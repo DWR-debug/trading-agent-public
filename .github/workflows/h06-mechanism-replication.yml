@@ -7,7 +7,6 @@ on:
     paths:
       - "automation/h06_mechanism_replication_coverage.py"
       - "tests/test_h06_mechanism_replication_coverage.py"
-      - "research/asset_universes.py"
       - "research/preregistrations/h06_mechanism_replication_coverage_2026_09_26.json"
       - ".github/workflows/h06-mechanism-replication.yml"
   push:
@@ -24,6 +23,7 @@ concurrency:
 
 jobs:
   coverage:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.head_ref == 'research/h06-mechanism-replication-v1' }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 30
     steps:
