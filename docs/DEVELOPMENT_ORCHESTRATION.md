@@ -27,6 +27,16 @@ Steuer-/Research-Agent
                 +--> Workflow-Artefakte
 ```
 
+## Canonical Data Layer
+
+Yahoo-OHLCV-Coverage verwendet die zentrale Schicht `data/canonical_snapshot.py`. Sie bildet Study-Window, Cross-Symbol-Intersection und exakt die gemeinsame Snapshot-Geometrie an einer Stelle. Coverage-Runner dürfen keine parallele Kalender-/Snapshot-Implementierung mehr einführen.
+
+Die Datenebene ist ein serialer Kontrollpunkt innerhalb eines Research-Laufs:
+
+`acquisition -> coverage -> freeze -> deterministic analysis`
+
+Unabhängige Symbole/Quellen werden innerhalb der Akquisition parallelisiert; das eingefrorene Ergebnis ist anschließend die gemeinsame Eingabe für Diagnose und formale Berechnung.
+
 ## Was bereits funktioniert
 
 Q016 demonstriert den Worker-Pool bereits praktisch: vier unabhängige Collect-Jobs laufen parallel; danach aggregiert ein eigener Job die Checkpoints, friert den Input ein und führt die Diagnose aus. Dadurch wartet der Aggregationspfad nicht seriell auf jeden Download.

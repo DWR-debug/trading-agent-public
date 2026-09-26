@@ -61,7 +61,7 @@ Bei jedem neuen `trading agent`-Chat:
 7. `research/evidence/trial_ledger.json` bzw. die für den aktuellen Task
    relevanten Evidence-Dateien prüfen.
 8. Aktuellen `master`, relevante Branches/PRs und laufende/letzte Workflows prüfen.
-9. Erst danach Änderungen, Research oder neue Hypothesen vornehmen.
+10. Erst danach Änderungen, Research oder neue Hypothesen vornehmen.
 
 ## Autonomie-Regel
 
