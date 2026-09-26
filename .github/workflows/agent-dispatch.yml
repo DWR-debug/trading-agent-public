@@ -1,0 +1,134 @@
+name: Bounded Agent Dispatch
+
+on:
+  issues:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: "Issue number carrying a valid TRADING_AGENT_TASK_V1 contract"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: trading-agent-agent-dispatch
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    if: >-
+      ${{
+        (github.event_name == 'workflow_dispatch') ||
+        (github.event.label.name == 'agent-ready') ||
+        (github.event.label.name == 'agent')
+      }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Resolve issue
+        id: issue
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "number=${{ inputs.issue_number }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "number=${{ github.event.issue.number }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Count active Copilot tasks
+        id: active
+        shell: bash
+        run: |
+          set -euo pipefail
+          count="$(gh api "/repos/${GITHUB_REPOSITORY}/issues?state=open&assignee=copilot-swe-agent%5Bbot%5D&per_page=100" --jq 'length')"
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          echo "Active Copilot issues: $count"
+
+      - name: Build and validate immutable manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.issue.outputs.number }}" > "$RUNNER_TEMP/issue.json"
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          runner_temp = Path(os.environ["RUNNER_TEMP"])
+          issue = json.loads((runner_temp / "issue.json").read_text(encoding="utf-8"))
+          (runner_temp / "event.json").write_text(
+              json.dumps({"issue": issue}), encoding="utf-8"
+          )
+          PY
+          python -m automation.agent_dispatch --event-json "$RUNNER_TEMP/event.json" --master-sha "$GITHUB_SHA" --active-agent-count "${{ steps.active.outputs.count }}" --output "$RUNNER_TEMP/agent_task_manifest.json"
+          cat "$RUNNER_TEMP/agent_task_manifest.json"
+
+      - name: Publish dispatch manifest
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: agent-dispatch-${{ steps.issue.outputs.number }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/agent_task_manifest.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Assign issue to Copilot
+        id: assign
+        shell: bash
+        run: |
+          set -euo pipefail
+          manifest="$(cat "$RUNNER_TEMP/agent_task_manifest.json")"
+          task_id="$(python -c 'import json,sys; print(json.load(sys.stdin)["task_id"])' <<< "$manifest")"
+          fingerprint="$(python -c 'import json,sys; print(json.load(sys.stdin)["manifest_fingerprint"])' <<< "$manifest")"
+          payload="$(python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          m = json.loads(
+              (Path(os.environ["RUNNER_TEMP"]) / "agent_task_manifest.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          print(json.dumps({
+              "assignees": ["copilot-swe-agent[bot]"],
+              "agent_assignment": {
+                  "target_repo": os.environ["GITHUB_REPOSITORY"],
+                  "base_branch": m["base_branch"],
+                  "custom_instructions": (
+                      "Execute only the issue scope. Read AGENTS.md, the supervision protocol, "
+                      "free-resource operating model and the exact task contract. Preserve all safety "
+                      "invariants. Do not perform scientific selection, gate changes, promotion, live "
+                      "execution or deterministic batch computation. Return a normal PR with tests."
+                  ),
+                  "custom_agent": m["custom_agent"],
+                  "model": ""
+              }
+          }))
+          PY
+          )"
+          gh api --method POST -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -H "GraphQL-Features: issues_copilot_assignment_api_support,coding_agent_model_selection" "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.issue.outputs.number }}/assignees" --input - <<< "$payload"
+          gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.issue.outputs.number }}/comments" -f body="Dispatched \`$task_id\` to the configured Copilot worker. Manifest fingerprint: \`$fingerprint\`. Dispatch alone is not evidence; actual agent usage enters the ledger only after a verifiable PR/session."
+
+      - name: Dispatch failure is explicit
+        if: failure()
+        shell: bash
+        run: |
+          set +e
+          gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.issue.outputs.number }}/comments" -f body="Agent dispatch did not complete. No scientific result or agent-usage entry is inferred from this failure. Check repository Copilot availability/permissions and rerun after correction."
+          exit 1
