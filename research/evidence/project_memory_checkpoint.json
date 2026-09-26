@@ -73,5 +73,33 @@
   "q018_candidate_b_status": "DATA_INSUFFICIENT",
   "q018_candidate_c_status": "COVERAGE_VALIDATED",
   "q019_status": "PREREGISTERED_COVERAGE_ONLY",
-  "q019_performance_trial_authorized": false
+  "q019_performance_trial_authorized": false,
+  "resource_policy": "docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md",
+  "github_free_resources": {
+    "actions_included_minutes": 2000,
+    "actions_public_standard_runners_strategy": "Use public standard runners; do not artificially consume included minutes.",
+    "actions_storage_gb": 0.5,
+    "codespaces_core_hours": 120,
+    "codespaces_storage_gb_month": 15,
+    "git_lfs_storage_gb": 10,
+    "git_lfs_bandwidth_gb": 10,
+    "packages_transfer_gb": 1,
+    "packages_storage_gb": 0.5,
+    "quota_snapshot_date": "2026-09-26",
+    "monthly_reset_principle": true
+  },
+  "cloud_agent_policy": {
+    "eligibility_rule": "Cloud Agent only if the user's account already includes access at no extra cost; never purchase or incur overage for this project.",
+    "target_session_minutes": "15-45",
+    "hard_session_limit_minutes": 59,
+    "default_max_parallel_sessions": 2,
+    "monthly_ai_credit_soft_allocation_percent": {
+      "engineering": 50,
+      "qa_governance": 25,
+      "research_design": 15,
+      "reserve": 10
+    },
+    "output_role": "subordinate engineering/QA/research-design worker; never final evidence or promotion decision maker"
+  },
+  "chat_trigger_policy": "A new chat beginning with 'trading agent' must load TRADING_AGENT_CHAT_ENTRYPOINT.md and then GITHUB_FREE_RESOURCE_OPERATING_MODEL.md before routing the next task."
 }
