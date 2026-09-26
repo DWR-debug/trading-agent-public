@@ -79,15 +79,16 @@ def test_governance_surface_does_not_authorize_performance():
     assert module.run.__name__ == "run"
 
 
-def test_pit_calendar_contract_is_independent_of_asset_ohlcv():
-    import exchange_calendars as xcals
-    import pandas as pd
-
-    calendar = xcals.get_calendar("XNYS")
-    sessions = calendar.sessions_in_range(
-        pd.Timestamp(module.STUDY_START.isoformat()),
-        pd.Timestamp(module.STUDY_END.isoformat()),
+def test_pit_contract_uses_fixed_date_ordering():
+    rows = [
+        {"record_date": "2025-01-03", "security_type": "Note", "security_term": "10-Year",
+         "auction_date": "2025-01-02", "cusip": "A", "bid_to_cover_ratio": "2.50"},
+        {"record_date": "2025-01-10", "security_type": "Note", "security_term": "10-Year",
+         "auction_date": "2025-01-09", "cusip": "B", "bid_to_cover_ratio": "2.70"},
+    ]
+    result = module._validate_treasury_contract(
+        rows, [date(2025, 1, 6), date(2025, 1, 13)]
     )
-    assert len(sessions) > 0
-    assert sessions[0].date() >= module.STUDY_START
-    assert sessions[-1].date() <= module.STUDY_END
+    assert result["status"] == "COVERAGE_VALIDATED"
+    assert result["first_event"]["next_eligible_common_trading_date"] == "2025-01-06"
+    assert result["last_event"]["next_eligible_common_trading_date"] == "2025-01-13"
