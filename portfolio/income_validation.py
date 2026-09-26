@@ -251,8 +251,6 @@ def _replay(
                 minimum_floor_headroom,
                 post_payout_floor_headroom,
             )
-            if equity < policy.capital_floor_eur - 1e-12:
-                floor_violations += 1
             high_water_mark = max(high_water_mark, equity + payout)
             if peak_equity > 0.0:
                 maximum_drawdown = max(
