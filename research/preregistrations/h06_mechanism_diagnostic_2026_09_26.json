@@ -1,0 +1,93 @@
+{
+  "schema_version": "1.0",
+  "preregistration_id": "H06-MECHANISM-DIAGNOSTIC-2026-09-26",
+  "hypothesis_id": "H06",
+  "purpose": "Determine whether sector residualization materially changes the cross-sectional geometry of the fixed 252-session/21-session momentum signal before any profitability study.",
+  "source_artifact": {
+    "workflow_run_id": 36229318877,
+    "artifact_id": 10902436135,
+    "artifact_digest": "sha256:8bebfb1198a511809d7a578321b75a8695ef823e9d03146f1be00c65fa26126e",
+    "coverage_fingerprint": "db378f9ebf95ad5b9ce9d90367feb9c1b5c43716fb9e8945984fda6af8712186"
+  },
+  "fixed_universe": {
+    "symbols": [
+      "TXN",
+      "ADI",
+      "AMAT",
+      "MDT",
+      "SYK",
+      "BDX",
+      "ETN",
+      "ITW",
+      "GD",
+      "CL",
+      "KMB",
+      "GIS",
+      "AEP",
+      "XEL",
+      "DTE"
+    ],
+    "sectors": {
+      "technology": [
+        "TXN",
+        "ADI",
+        "AMAT"
+      ],
+      "healthcare": [
+        "MDT",
+        "SYK",
+        "BDX"
+      ],
+      "industrials": [
+        "ETN",
+        "ITW",
+        "GD"
+      ],
+      "consumer_staples": [
+        "CL",
+        "KMB",
+        "GIS"
+      ],
+      "utilities": [
+        "AEP",
+        "XEL",
+        "DTE"
+      ]
+    }
+  },
+  "fixed_signal": {
+    "formation_lookback_sessions": 252,
+    "skip_sessions": 21,
+    "raw_signal": "252-session return with 21-session skip",
+    "residual_signal": "raw signal minus equal-weight sector mean"
+  },
+  "fixed_sample": {
+    "common_calendar_candles": 3500,
+    "research_candles_used": 2798,
+    "holdout_candles_used": 0,
+    "study_start": "2011-10-24",
+    "research_end": "2022-12-05"
+  },
+  "fixed_diagnostics": [
+    "mean/median Pearson correlation between raw and residual cross-sections",
+    "mean/median Spearman correlation between raw and residual cross-sections",
+    "top-2 selection overlap",
+    "top-2 same-sector frequency before and after residualization",
+    "mean number of sectors represented in top-2",
+    "mean absolute full-universe rank displacement",
+    "cross-sectional residual/raw variance ratio",
+    "within-sector rank preservation",
+    "same metrics across five chronological Research windows"
+  ],
+  "prohibited_actions": {
+    "forward_returns": false,
+    "pnl": false,
+    "holdout_access": false,
+    "parameter_search": false,
+    "asset_selection": false,
+    "threshold_selection": false,
+    "performance_authorization": false,
+    "automatic_promotion": false
+  },
+  "decision_rule": "Descriptive mechanism evidence only. No profitability or promotion conclusion may be drawn from this diagnostic."
+}

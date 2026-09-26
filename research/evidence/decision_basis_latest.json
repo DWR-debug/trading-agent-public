@@ -12,7 +12,8 @@
     "Wide-Search Round 002 H08 completed successfully: workflow=36189987414; artifact=10886849518; artifact-digest=sha256:e0c355462e3abe868acec125b6dcdefc1aeceaf329dc444799440d3093f7917c; result-fingerprint=106e65e70dc3814b8eeaf90c3ca3b658289b75a7977d5c642c7d49857040de7f",
     "H08 classification=PRUNE_NO_RISK_REGIME_SUPPORT with 316 research events; holdout unused; no performance trial authorized.",
     "H06 is now the active coverage-only research focus with a fixed disjoint universe and no performance authorization.",
-    "H08 classification=PRUNE_NO_RISK_REGIME_SUPPORT; H06 parent attempt was DATA_INSUFFICIENT due acquisition geometry, not a scientific negative."
+    "H08 classification=PRUNE_NO_RISK_REGIME_SUPPORT; H06 parent attempt was DATA_INSUFFICIENT due acquisition geometry, not a scientific negative.",
+    "H06 coverage passed: workflow=36229318877; artifact=10902436135; artifact-digest=sha256:8bebfb1198a511809d7a578321b75a8695ef823e9d03146f1be00c65fa26126e; coverage-fingerprint=db378f9ebf95ad5b9ce9d90367feb9c1b5c43716fb9e8945984fda6af8712186; complete decision dates=2546/2546; common calendar=3500."
   ],
   "implications": [
     "wide exploration is now functioning as a low-cost pruning stage",
@@ -23,13 +24,13 @@
     "H06 proceeds only through coverage/PIT verification before any performance study."
   ],
   "unknowns": [
-    "H06 clean coverage/PIT completeness and frozen common-calendar snapshot",
+    "Whether H06 residualization changes the signal geometry enough to justify a performance trial",
     "H06 sector-neutral residual momentum data contract",
     "robust ALFRED PIT retrieval",
     "historical CFTC PIT release reconstruction",
     "whether any survivor can pass unchanged formal evidence gates"
   ],
-  "next_action": "Execute the clean H06 coverage-repair run. If coverage and PIT are valid, freeze the common-calendar snapshot and conduct mechanism discrimination versus the fixed 12-1 control before any formal performance authorization; otherwise diagnose and prune the data contract.",
+  "next_action": "Execute H06 mechanism diagnostic on the frozen coverage snapshot. Record descriptive cross-sectional geometry only; if the signal is not sufficiently distinct, prune H06 and move to the next orthogonal family. No profitability or promotion conclusion.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,

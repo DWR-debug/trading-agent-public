@@ -1,0 +1,98 @@
+name: H06 Mechanism Diagnostic
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "automation/h06_mechanism_diagnostic.py"
+      - "tests/test_h06_mechanism_diagnostic.py"
+      - "research/preregistrations/h06_mechanism_diagnostic_2026_09_26.json"
+      - ".github/workflows/h06-mechanism.yml"
+  push:
+    branches:
+      - research/h06-mechanism-diagnostic-v1
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-h06-mechanism
+  cancel-in-progress: false
+
+jobs:
+  diagnostic:
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.ref == 'research/h06-mechanism-diagnostic-v1' }}
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+      - name: Paper-only-Safety
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          print("H06 MECHANISM SAFETY OK")
+          PY
+      - name: Unit Tests
+        run: python -m pytest -q tests/test_h06_mechanism_diagnostic.py
+      - name: Frozen H06 Snapshot laden
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/h06-frozen
+          gh run download 36229318877 \
+            --repo "$GITHUB_REPOSITORY" \
+            --name "wide-search-h06-clean-repair-36229318877" \
+            --dir /tmp/h06-frozen
+          test -s /tmp/h06-frozen/h06_sector_neutral_residual_momentum_repair_coverage.json
+          test -d /tmp/h06-frozen/h06_repair_datasets
+      - name: Mechanismus-Diagnostik
+        run: |
+          set -euo pipefail
+          python -m automation.h06_mechanism_diagnostic \
+            --data-root /tmp/h06-frozen/h06_repair_datasets \
+            --source-manifest /tmp/h06-frozen/h06_sector_neutral_residual_momentum_repair_coverage.json \
+            --output research/runs/wide_search/h06_mechanism_diagnostic_2026_09_26.json
+      - name: Ergebnis prüfen
+        run: |
+          set -euo pipefail
+          test -s research/runs/wide_search/h06_mechanism_diagnostic_2026_09_26.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          data = json.loads(
+              Path("research/runs/wide_search/h06_mechanism_diagnostic_2026_09_26.json")
+              .read_text(encoding='utf-8')
+          )
+          assert data['governance']['forward_returns_used'] is False
+          assert data['governance']['pnl_used'] is False
+          assert data['governance']['holdout_used'] is False
+          assert data['findings']['aggregate']['decision_count'] == 2546
+          print("H06 MECHANISM RESULT OK")
+          PY
+          sha256sum research/runs/wide_search/h06_mechanism_diagnostic_2026_09_26.json
+      - name: Evidence
+        uses: actions/upload-artifact@v6
+        with:
+          name: h06-mechanism-diagnostic-${{ github.run_id }}
+          path: research/runs/wide_search/h06_mechanism_diagnostic_2026_09_26.json
+          if-no-files-found: error
+          retention-days: 30

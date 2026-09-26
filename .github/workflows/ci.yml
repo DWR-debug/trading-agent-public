@@ -131,8 +131,8 @@ jobs:
           assert state["latest_formal_trial"] == "T-2026-09-25-045"
           assert state["latest_trial_status"] == "BLOCKED"
           assert state["current_trial_status"] == "ARCHIVED_REJECTED"
-          assert state["engineering_notes"]["current_queue_task"] == "WIDE-SEARCH-H06"
-          assert state["engineering_notes"]["last_completed_queue_task"] == "WIDE-SEARCH-ROUND-002"
+          assert state["engineering_notes"]["current_queue_task"] == "H06-MECHANISM-DIAGNOSTIC"
+          assert state["engineering_notes"]["last_completed_queue_task"] == "WIDE-SEARCH-H06-COVERAGE"
           assert state["engineering_notes"]["q017_g3_scientific_status"] == "DATA_INSUFFICIENT"
           assert state["engineering_notes"]["q017_g3_workflow_run"] == 36186285814
           assert state["engineering_notes"]["q017_g3_artifact_id"] == 10887025099
