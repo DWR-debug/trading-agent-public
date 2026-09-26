@@ -11,13 +11,13 @@ permissions:
   copilot-requests: write
 
 concurrency:
-  group: trading-agent-copilot-cli-\${{ github.event.issue.number }}
+  group: trading-agent-copilot-cli-${{ github.event.issue.number }}
   cancel-in-progress: false
 
 jobs:
   task:
     if: >-
-      \${{
+      ${{
         github.event.label.name == 'agent-cli-ready' &&
         github.event.issue.user.login == github.repository_owner
       }}
@@ -46,11 +46,11 @@ jobs:
         id: task
         shell: bash
         env:
-          GH_TOKEN: \${{ github.token }}
-          ISSUE_NUMBER: \${{ github.event.issue.number }}
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           set -euo pipefail
-          gh api "/repos/\${GITHUB_REPOSITORY}/issues/\${ISSUE_NUMBER}" > "\${RUNNER_TEMP}/issue.json"
+          gh api "/repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}" > "${RUNNER_TEMP}/issue.json"
           python - <<'PY'
           import hashlib
           import json
@@ -102,15 +102,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          branch="agent/issue-\${{ github.event.issue.number }}-copilot-cli"
-          git switch -c "\${branch}"
-          echo "branch=\${branch}" >> "\${GITHUB_OUTPUT}"
+          branch="agent/issue-${{ github.event.issue.number }}-copilot-cli"
+          git switch -c "${branch}"
+          echo "branch=${branch}" >> "${GITHUB_OUTPUT}"
 
       - name: Run bounded Copilot CLI
         shell: bash
         env:
-          GITHUB_TOKEN: \${{ github.token }}
-          ISSUE_NUMBER: \${{ github.event.issue.number }}
+          GITHUB_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           set -euo pipefail
           npm install -g @github/copilot
@@ -118,7 +118,7 @@ jobs:
 
           prompt="$(cat <<EOF
           You are the bounded engineering worker for trading-agent-public.
-          Work ONLY on issue #\${ISSUE_NUMBER} and its TRADING_AGENT_TASK_V1 contract.
+          Work ONLY on issue #${ISSUE_NUMBER} and its TRADING_AGENT_TASK_V1 contract.
           Use the repository custom agent trading-agent-engineer.
           Read AGENTS.md, docs/TRADING_AGENT_CHAT_ENTRYPOINT.md,
           docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md, and relevant files first.
@@ -138,7 +138,7 @@ jobs:
           - Finish with a concise engineering handoff.
 
           Exact issue body:
-          \${task_body}
+          ${task_body}
           EOF
           )"
 
@@ -148,7 +148,7 @@ jobs:
             --no-ask-user \
             --max-ai-credits=45 \
             --max-autopilot-continues=1 \
-            -p "\${prompt}" \
+            -p "${prompt}" \
             --allow-tool='read' \
             --allow-tool='search' \
             --allow-tool='write' \
@@ -173,13 +173,13 @@ jobs:
       - name: Commit and publish PR
         shell: bash
         env:
-          GH_TOKEN: \${{ github.token }}
-          BRANCH: \${{ steps.branch.outputs.branch }}
-          ISSUE_NUMBER: \${{ github.event.issue.number }}
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ steps.branch.outputs.branch }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           set -euo pipefail
           if git diff --quiet; then
-            gh api --method POST "/repos/\${GITHUB_REPOSITORY}/issues/\${ISSUE_NUMBER}/comments" \
+            gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}/comments" \
               -f body="Copilot CLI completed without repository changes; no PR was created."
             exit 0
           fi
@@ -187,15 +187,15 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "AGENT: issue #\${ISSUE_NUMBER} bounded engineering"
-          git push "https://x-access-token:\${GH_TOKEN}@github.com/\${GITHUB_REPOSITORY}.git" "HEAD:\${BRANCH}"
+          git commit -m "AGENT: issue #${ISSUE_NUMBER} bounded engineering"
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:${BRANCH}"
 
           pr_url="$(gh pr create \
             --base master \
-            --head "\${BRANCH}" \
-            --title "AGENT: Issue #\${ISSUE_NUMBER} bounded engineering task" \
-            --body "Bounded Copilot CLI engineering task for issue #\${ISSUE_NUMBER}. Owner-gated, safety-gated, and regression-tested before publication.")"
+            --head "${BRANCH}" \
+            --title "AGENT: Issue #${ISSUE_NUMBER} bounded engineering task" \
+            --body "Bounded Copilot CLI engineering task for issue #${ISSUE_NUMBER}. Owner-gated, safety-gated, and regression-tested before publication.")"
 
-          gh api --method POST "/repos/\${GITHUB_REPOSITORY}/issues/\${ISSUE_NUMBER}/comments" \
-            -f body="Copilot CLI engineering task completed and published as \${pr_url}. Normal repository review remains required."
-          echo "PR_URL=\${pr_url}"
+          gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}/comments" \
+            -f body="Copilot CLI engineering task completed and published as ${pr_url}. Normal repository review remains required."
+          echo "PR_URL=${pr_url}"
