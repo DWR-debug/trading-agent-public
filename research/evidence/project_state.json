@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "updated": "2026-09-26",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "de5a6d0453b3c132c773463649d94059fc6e03a8",
+  "master_commit": "b33c77037440849c344a09602b1358dcde71ec4d",
   "latest_formal_trial": "T-2026-09-26-046R1-PERFORMANCE",
   "latest_trial_status": "NO_PROMOTION_EVIDENCE",
   "next_reserved_trial": null,
@@ -13,7 +13,18 @@
     "project_integrity": true,
     "immutable_trial_ledger": true,
     "holdout_blind": true,
-    "paper_only": true
+    "paper_only": true,
+    "last_verified_self_hosted_qa": {
+      "workflow_run_id": 36254626385,
+      "head_sha": "9034e6e5e2e369a5a7879dd25b4c326e1832932c",
+      "conclusion": "success",
+      "tests_passed": 873,
+      "warnings": 2,
+      "ast_syntax": "success",
+      "safety_invariants": "success"
+    },
+    "current_master_qa_run_id": 36254919993,
+    "current_master_qa_run_status": "in_progress_at_last_observation"
   },
   "active_research_model": {
     "discovery": "wide_search_on_fixed_ex_ante_hypothesis_catalog",
@@ -490,7 +501,7 @@
   "current_queue_task": "Q-022-TREASURY-FAILURE-FOLLOWUP-DESIGN",
   "last_completed_queue_task": "Q-021-TREASURY-AUCTION-FAILURE-MECHANISM-DIAGNOSIS",
   "master_commit_semantics": "last_verified_master_commit_before_this_state_update; this field must not be interpreted as a self-referential current-HEAD field",
-  "state_sync_verified_at": "2026-09-26T16:16:50.972Z",
+  "state_sync_verified_at": "2026-09-26T16:18:18.678Z",
   "project_milestone": {
     "name": "FIRST_PRESENTABLE_RESULT",
     "anchored_on": "2026-09-25",
