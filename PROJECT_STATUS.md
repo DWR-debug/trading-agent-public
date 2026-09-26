@@ -1,3 +1,16 @@
+# CURRENT EXECUTION CHECKPOINT — Q022 design-only / continuous governance QA hardened — 2026-09-26
+
+- Current scientific step: **Q022 Treasury failure follow-up design**, still **DESIGN_ONLY** and unranked; no performance execution is authorized.
+- Q020 remains immutable: `T-2026-09-26-046R1-PERFORMANCE` = **NO_PROMOTION_EVIDENCE**; no retuning or holdout selection.
+- Self-hosted Continuous QA is now four-lane: `repo_qa`, `data_qa`, `design_qa`, `local_reproduction`; the new Q022 design guard is non-executing and fail-closed on governance drift.
+- Self-hosted QA runtime directories are isolated per `GITHUB_RUN_ID/GITHUB_RUN_ATTEMPT`; this removes the previously observed concurrent pycache/runtime collision class.
+- Agent Request Queue remains two-lane with a **workflow-level global concurrency guard**; maximum concurrent agent sessions remains 2.
+- Latest verified self-hosted repo QA baseline: workflow `36256200896`, **877 passed, 2 warnings**. A fresh QA run is pending for the current master after the latest infrastructure changes.
+- Hosted CI/orchestrator startup failures remain tracked separately as an operational issue; they are not treated as scientific evidence.
+- Copilot remains paused until `COPILOT_GITHUB_TOKEN` with the required Copilot Requests permission is actually configured; no paid usage is enabled.
+- Safety: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
+- Paid agent/API budget: **0 USD**.
+
 # CURRENT EXECUTION CHECKPOINT — Q021 completed / Q022 queued / Copilot path hardened — 2026-09-26
 
 - Current scientific step: **Q021 Treasury failure/mechanism diagnosis completed, DIAGNOSTIC_ONLY**.
