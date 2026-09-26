@@ -75,7 +75,6 @@ jobs:
             exit 0
           fi
 
-          issue_number="$(cat "$GITHUB_OUTPUT" | sed -n 's/^issue_number=//p' | tail -1)"
           gh api "/repos/${GITHUB_REPOSITORY}/issues/${issue_number}" > "$RUNNER_TEMP/issue.json"
           python - <<'PY'
           import json, os
