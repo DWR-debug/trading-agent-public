@@ -488,7 +488,19 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("MU", "ADBE", "CRM", "ABT", "BMY", "BAX", "PH", "ROK", "DOV",
                  "CPB", "SJM", "CAG", "EXC", "SRE", "CMS"),
         target_count=4000,
-    ),
+    )
+    
+    AssetUniverse(
+        name="validation_2026_09_26_h06_formal_performance",
+        priority=65,
+        description=(
+            "Fresh fully symbol-disjoint H06 formal performance universe; "
+            "third-stage economic confirmation after mechanism replication."
+        ),
+        symbols=("LRCX", "KLAC", "SNPS", "GILD", "REGN", "VRTX", "UPS", "FDX",
+                 "CMI", "K", "MDLZ", "TGT", "AEE", "ED", "PEG"),
+        target_count=4000,
+    ),,
 
 
 )
