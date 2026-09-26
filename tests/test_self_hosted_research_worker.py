@@ -98,6 +98,27 @@ def test_run_manifest_allows_local_execution_without_github_metadata(monkeypatch
     assert manifest["formal_research_evidence"] is False
 
 
+def test_copilot_cli_publication_has_nonfatal_pr_creation_fallback():
+    text = (
+        ROOT / ".github" / "workflows" / "copilot-cli-engineering-task.yml"
+    ).read_text(encoding="utf-8")
+    assert "PR_CREATE_UNAVAILABLE" in text
+    assert "Automatic PR creation is unavailable" in text
+    assert "tests/safety passed" in text
+
+
+
+def test_continuous_qa_preserves_artifacts_and_runs_both_lanes():
+    text = (
+        ROOT / ".github" / "workflows" / "self-hosted-continuous-qa.yml"
+    ).read_text(encoding="utf-8")
+    assert "set \"FAIL=0\"" in text
+    assert 'if errorlevel 1 set "FAIL=1"' in text
+    assert "Publish continuous QA provenance" in text
+    assert "actions/upload-artifact@v6" in text
+    assert "continuous_repo_qa_${{ github.run_id }}" in text
+    assert "continuous_data_qa_${{ github.run_id }}" in text
+
 def test_self_hosted_continuous_qa_is_scheduled_and_non_formal():
     text = (
         ROOT / ".github" / "workflows" / "self-hosted-continuous-qa.yml"

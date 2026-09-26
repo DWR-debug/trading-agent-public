@@ -248,12 +248,17 @@ jobs:
           git commit -m "AGENT: issue #${ISSUE_NUMBER} bounded engineering"
           git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:${BRANCH}"
 
-          pr_url="$(gh pr create \
+          if pr_url="$(gh pr create \
             --base master \
             --head "${BRANCH}" \
             --title "AGENT: Issue #${ISSUE_NUMBER} bounded engineering task" \
-            --body "Bounded Copilot CLI engineering task for issue #${ISSUE_NUMBER}. Owner-gated, safety-gated, and regression-tested before publication.")"
-
-          gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}/comments" \
-            -f body="Copilot CLI engineering task completed and published as ${pr_url}. Normal repository review remains required."
-          echo "PR_URL=${pr_url}"
+            --body "Bounded Copilot CLI engineering task for issue #${ISSUE_NUMBER}. Owner-gated, safety-gated, and regression-tested before publication." 2>/dev/null)"; then
+            gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}/comments" \
+              -f body="Copilot CLI engineering task completed and published as ${pr_url}. Normal repository review remains required."
+            echo "PR_URL=${pr_url}"
+          else
+            branch_url="https://github.com/${GITHUB_REPOSITORY}/tree/${BRANCH}"
+            gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}/comments" \
+              -f body="Copilot CLI engineering task completed, tests/safety passed, and changes were pushed to ${branch_url}. Automatic PR creation is unavailable for this repository's Actions token permissions; the top-level orchestrator must create the PR from this branch."
+            echo "PR_CREATE_UNAVAILABLE branch=${branch_url}"
+          fi
