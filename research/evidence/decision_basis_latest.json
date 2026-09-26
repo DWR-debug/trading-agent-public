@@ -11,24 +11,25 @@
     "Q017_G3=DATA_INSUFFICIENT; workflow=36186285814; performance_trial_authorized=false",
     "Wide-Search Round 002 H08 completed successfully: workflow=36189987414; artifact=10886849518; artifact-digest=sha256:e0c355462e3abe868acec125b6dcdefc1aeceaf329dc444799440d3093f7917c; result-fingerprint=106e65e70dc3814b8eeaf90c3ca3b658289b75a7977d5c642c7d49857040de7f",
     "H08 classification=PRUNE_NO_RISK_REGIME_SUPPORT with 316 research events; holdout unused; no performance trial authorized.",
-    "H06 is now the active coverage-only research focus with a fixed disjoint universe and no performance authorization."
+    "H06 is now the active coverage-only research focus with a fixed disjoint universe and no performance authorization.",
+    "H08 classification=PRUNE_NO_RISK_REGIME_SUPPORT; H06 parent attempt was DATA_INSUFFICIENT due acquisition geometry, not a scientific negative."
   ],
   "implications": [
     "wide exploration is now functioning as a low-cost pruning stage",
     "no current candidate warrants formal performance validation",
-    "next exploration should target risk/regime information because historical bottlenecks are risk/control-relative",
+    "next exploration should target orthogonal information content after H08 was pruned",
     "The fixed volatility-state transition diagnostic did not support a stable risk-regime effect under the preregistered research-only rule.",
     "Further effort should shift toward orthogonal information content rather than additional volatility/exit controls.",
     "H06 proceeds only through coverage/PIT verification before any performance study."
   ],
   "unknowns": [
-    "H06 sector-neutral residual momentum coverage/PIT completeness",
+    "H06 clean coverage/PIT completeness and frozen common-calendar snapshot",
     "H06 sector-neutral residual momentum data contract",
     "robust ALFRED PIT retrieval",
     "historical CFTC PIT release reconstruction",
     "whether any survivor can pass unchanged formal evidence gates"
   ],
-  "next_action": "Verify H06 coverage artifact. If coverage is ready, review the fixed mechanism and preregister any separate performance validation; otherwise diagnose and prune the data contract.",
+  "next_action": "Execute the clean H06 coverage-repair run. If coverage and PIT are valid, freeze the common-calendar snapshot and conduct mechanism discrimination versus the fixed 12-1 control before any formal performance authorization; otherwise diagnose and prune the data contract.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
