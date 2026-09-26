@@ -192,8 +192,8 @@ def run(*, output_path: str | Path) -> dict:
 
     calendar = xcals.get_calendar("XNYS")
     sessions = calendar.sessions_in_range(
-        pd.Timestamp(STUDY_START.isoformat(), tz="UTC"),
-        pd.Timestamp(STUDY_END.isoformat(), tz="UTC"),
+        pd.Timestamp(STUDY_START.isoformat()),
+        pd.Timestamp(STUDY_END.isoformat()),
     )
     common_dates = [stamp.date() for stamp in sessions]
     if not common_dates:
