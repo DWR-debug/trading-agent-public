@@ -28,7 +28,7 @@ ACTIVE_WORKFLOWS = {
     "q020-treasury-coverage-repair.yml",
     "agent-dispatch.yml",
     "q020-treasury-auction-performance.yml",
-    "self-hosted-research-worker.yml",
+    "self-hosted-research-worker-manual.yml",
     "copilot-cli-ci-repair.yml",
 }
 
