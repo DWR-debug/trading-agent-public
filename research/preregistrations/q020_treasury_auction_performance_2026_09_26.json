@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0",
+  "preregistration_id": "Q-020-TREASURY-AUCTION-PERFORMANCE-2026-09-26",
+  "parent_contract": "Q-019-TREASURY-AUCTION-SIGNAL-CONTRACT",
+  "research_family": "official_event_alpha_performance",
+  "status": "PREREGISTERED_DESIGN_ONLY",
+  "purpose": "Evaluate the fixed Treasury 10-Year auction-demand signal after Q019 contract validation, using a fresh symbol-disjoint asset universe and unchanged evidence standards.",
+  "study_window": {
+    "start": "2011-01-01",
+    "end": "2025-09-24"
+  },
+  "universe": {
+    "name": "validation_2026_09_26_treasury_auction_performance",
+    "symbols": [
+      "ACN",
+      "AMT",
+      "APD",
+      "BK",
+      "CME",
+      "CTAS",
+      "GPC",
+      "LLY",
+      "MCO",
+      "NOC",
+      "ROST",
+      "SHW"
+    ],
+    "interval": "1d"
+  },
+  "event_source": {
+    "provider": "U.S. Treasury Fiscal Data",
+    "dataset": "Treasury Securities Auctions Data",
+    "security_type": "Note",
+    "security_term": "10-Year",
+    "fixed_signal": "Signed change in bid-to-cover ratio versus immediately preceding 10-Year Note auction: positive=+1, negative=-1, unchanged=0.",
+    "point_in_time": "Use the official record_date/publication date and act no earlier than the first XNYS session strictly after record_date.",
+    "source_contract_fingerprint": "13072dbed7d60684f4a4fb8a3de69555cae83c66f3cfdfb603b9ed2a4b1c225b"
+  },
+  "trading_rule": {
+    "exposure": "On the first eligible XNYS session strictly after each event record_date, hold the event signal for that session only; outside event sessions exposure is zero.",
+    "mapping": "+1 = equal-weight long across all 12 fixed assets; -1 = equal-weight short across all 12 fixed assets; 0 = flat.",
+    "sizing": "Each active asset receives 1/12 of gross portfolio exposure with total gross exposure fixed at 1.0; no leverage.",
+    "overlap": "Event sessions are distinct by calendar construction; if multiple mapped events fall on the same session, aggregate their fixed signals by arithmetic sum and use sign(sum), with zero producing flat exposure.",
+    "no_tuning": "No threshold, holding period, asset, weighting, signal variant, horizon, leverage or parameter search."
+  },
+  "data_contract": {
+    "requested_raw_candles_per_symbol": 3520,
+    "target_common_calendar": 3500,
+    "research_periods": 2798,
+    "holdout_periods": 700,
+    "frozen_snapshot_required": true,
+    "point_in_time": true
+  },
+  "costs": {
+    "base_fee_bps": 10,
+    "base_slippage_bps": 5,
+    "scenarios": [
+      "base",
+      "1.5x",
+      "2x"
+    ]
+  },
+  "evaluation": {
+    "performance_trial_after_coverage_only": true,
+    "fresh_symbol_disjoint_validation": true,
+    "holdout_blind": true,
+    "rolling_windows": 5,
+    "no_selection_on_holdout": true,
+    "no_parameter_search": true,
+    "no_asset_search": true,
+    "no_variant_search": true
+  },
+  "gates": {
+    "research_return_positive": true,
+    "research_max_drawdown_lte_percent": 10,
+    "research_profit_factor_gte": 1.1,
+    "rolling_min_profit_factor_gte": 1.1,
+    "rolling_profitable_window_ratio_gte": 0.5,
+    "rolling_average_drawdown_lte_percent": 10,
+    "oos_to_is_return_ratio_gte": 0.25,
+    "holdout_return_positive": true,
+    "holdout_profit_factor_gte": 1.1,
+    "holdout_max_drawdown_lte_percent": 10,
+    "stress_holdout_return_nonnegative_at_1_5x": true,
+    "stress_holdout_return_nonnegative_at_2x": true,
+    "total_return_sensitivity_nonnegative": true
+  },
+  "selection": {
+    "candidates_selected": false,
+    "holdout_used_for_selection": false,
+    "parameter_search": false,
+    "asset_search": false,
+    "signal_variant_search": false,
+    "horizon_search": false
+  },
+  "authorization": {
+    "current_status": "DESIGN_ONLY",
+    "performance_trial_authorized": false,
+    "authorization_condition": "A formal performance execution requires successful fresh OHLCV coverage on the fixed universe, a frozen snapshot fingerprint, and an explicit immutable execution authorization recorded before performance computation."
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "interpretation": "Q020 is a fixed-rule performance design only. Passing Q019 source/PIT coverage does not imply predictive value or profitability."
+}
