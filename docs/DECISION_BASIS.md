@@ -1,6 +1,7 @@
 ## Aktueller Stand
 
-### Was ist verifiziert?
+### Was wissen wir?
+
 
 - Die technische Referenz ist ausschließlich der öffentliche `master` von `DWR-debug/trading-agent-public`.
 - Q020 / `T-2026-09-26-046R1-PERFORMANCE` wurde auf dem eingefrorenen, symbol-disjunkten Snapshot formal ausgeführt und als `NO_PROMOTION_EVIDENCE` abgeschlossen. Das Ergebnis bleibt unverändert; es gab keine Promotion und keine Live-Ausführung.
