@@ -526,6 +526,21 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
     ),
 )
 
+    AssetUniverse(
+        name="validation_2026_09_26_treasury_auction_directional_inversion",
+        priority=68,
+        description=(
+            "Fresh fully symbol-disjoint U.S. equity universe for the Q022-H1 "
+            "fixed directional-inversion replication of the Treasury auction signal."
+        ),
+        symbols=(
+            "MO", "PM", "GILD", "VRTX", "ISRG", "ZBH",
+            "ELV", "CI", "JCI", "FAST", "PAYX", "CTSH",
+        ),
+        target_count=3520,
+    ),
+
+
 
 def get_universe(name: str) -> AssetUniverse:
     for universe in UNIVERSES:
