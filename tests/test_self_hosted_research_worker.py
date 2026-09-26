@@ -17,25 +17,23 @@ def test_self_hosted_worker_has_only_bounded_lanes():
             assert "promotion" not in " ".join(command).lower()
 
 
-def test_self_hosted_worker_v3_uses_proven_master_push_shape():
+
+def test_self_hosted_worker_v4_is_minimal_single_step_gateway():
     text = (
-        ROOT / ".github" / "workflows" / "self-hosted-research-worker-v3.yml"
+        ROOT / ".github" / "workflows" / "self-hosted-research-worker-v4.yml"
     ).read_text(encoding="utf-8")
-    assert "name: Self-hosted Research Worker v3" in text
-    assert "on:" in text
-    assert "branches:" in text
-    assert "- master" in text
+    assert "name: Self-hosted Research Worker v4" in text
     assert "workflow_dispatch:" not in text
-    assert "research/run_requests/self_hosted_repo_qa.trigger" in text
-    assert "RUN_SELF_HOSTED_REPO_QA:" in text
-    assert "github.actor == github.repository_owner" not in text
-    assert "GITHUB_ACTOR" in text
+    assert '  push:' in text
+    assert "- master" in text
+    assert 'research/run_requests/self_hosted_repo_qa.trigger' in text
     assert "runs-on: [self-hosted, trading-agent-research]" in text
-    assert "Registration probe" in text
-    assert "actions/checkout@v5" in text
-    assert "ref: ${{ github.sha }}" in text
+    assert "steps:" in text
+    assert "Self-hosted repo_qa single-step worker" in text
+    assert "uses:" not in text
     assert "shell: cmd" in text
     assert "shell: powershell" not in text
+    assert "codeload.github.com/DWR-debug/trading-agent-public/tar.gz/" in text
     assert "python.3.13.15.nupkg" in text
     assert "v3-flatcontainer/python/3.13.15" in text
     assert "python-3.13.15-nuget" in text
