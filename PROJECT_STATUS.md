@@ -3580,3 +3580,20 @@ deterministische Prüfung des Treasury-Auktionssignals und seines Point-in-Time-
 
 Kostenpflichtige Agenten-/API-Nutzung bleibt bei 0 USD. Kostenfreie Agentenressourcen
 bleiben für Hypothesenbildung, Research-Design und Architektur-Review reserviert.
+
+
+## Q020 Coverage Repair — 2026-09-26
+
+Der Coverage-only Repair-Successor `T-2026-09-26-046R1` ist verifiziert erfolgreich.
+
+- Workflow: `36240853419`
+- Artifact: `10905489440`
+- Artifact-Digest: `sha256:f0c5066b879cdc391263e57535ec1e72badbbddfc9c46f27ced51d491c3240a0`
+- 12/12 Reparatursymbole vollständig verfügbar
+- 3.704 gemeinsame Handelstage; 3.500 davon als exakter gemeinsamer Snapshot eingefroren
+- Snapshot-Fingerprint: `70cff5df1b92f4f7db2ea09bdc9999abff93dd4230ad4ea5df6e5da204076ef8`
+- Keine Performance-, Holdout- oder Selektionsauswertung
+
+Der technische Fehler im Coverage-Runner wurde behoben: Acquisition Headroom (`requested_candles=4000`) und Mindestabdeckung (`minimum_in_window_candles=3500`) sind jetzt getrennt. Die technische Symbolreparatur `BK → TGT` wurde nicht anhand von Performance vorgenommen.
+
+**Nächster Schritt:** separate immutable Performance-Autorisierung auf den eingefrorenen Repair-Snapshot; erst danach Performance-Ausführung.
