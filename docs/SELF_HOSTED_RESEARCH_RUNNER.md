@@ -10,7 +10,7 @@ und vom interaktiven Hauptrechner.
 
 Rollen:
 
-\`\`\`
+```
 Steuer-/Research-Agent
         |
         +--> Coding Worker -> PR
@@ -18,22 +18,20 @@ Steuer-/Research-Agent
         +--> GitHub-hosted Actions -> kanonische CI / formale Evidence
         |
         +--> Self-hosted Research Worker -> QA / Reproduktion / vorbereitende Rechenarbeit
-\`\`\`
+```
 
 Der Self-hosted Runner entscheidet weder über Hypothesen noch über Promotion und erzeugt
 allein keine formale Promotion-Evidence.
 
 ## Sicherheitsmodell
 
-Der öffentliche Repository-Kontext verwendet den Runner ausschließlich über den manuellen
-Workflow \`.github/workflows/self-hosted-research-worker-manual.yml\`.
+Der öffentliche Repository-Kontext verwendet den Runner über den neuen
+`Self-hosted Research Worker v3`. Der Workflow nutzt den nachweislich funktionierenden
+`push`-Mechanismus auf `master`, ist aber zusätzlich durch einen eindeutigen Commit-Marker
+`RUN_SELF_HOSTED_REPO_QA:` gegen unbeabsichtigte Ausführung geschützt.
 
-Der Workflow akzeptiert nur den Repository-Owner als Actor und nur \`master\` oder
-vertrauenswürdige \`research/*\`-Refs. Pull Requests und Fork-Code werden nicht automatisch
-auf dem Self-hosted Runner ausgeführt.
-
-Der Worker ist kein beliebiger Shell-Executor. Die Auswahl besteht aus einer festen Lane-
-Liste in \`automation/self_hosted_research_worker.py\`.
+Der Workflow akzeptiert nur den Repository-Owner als Actor. Der Worker ist kein beliebiger
+Shell-Executor und führt ausschließlich die fest definierte `repo_qa`-Lane aus.
 
 Keine Trading-Secrets, API-Schlüssel oder produktiven Zugangsdaten auf dem Runner hinterlegen.
 
@@ -58,23 +56,19 @@ Nicht auf den Self-hosted Runner verlagern:
 
 ## Einmalige Einrichtung des PCs
 
-Auf dem Linux-/WSL-Arbeitsrechner im Repository unter
-Settings -> Actions -> Runners einen neuen self-hosted runner für dieses Repository
-anlegen und als zusätzliches Label exakt \`trading-agent-research\` verwenden.
+Der registrierte Runner muss das Label `trading-agent-research` tragen und erreichbar sein.
+Auf dem Firmenrechner ist keine systemweite Python-Installation erforderlich: Der Workflow
+bootstrappt eine fest gepinnte Python-3.13.15-NuGet-Laufzeit temporär. Damit sind weder
+Administratorrechte noch `actions/setup-python` erforderlich.
 
-GitHub zeigt dort die zur Plattform passende Runner-Software und den einmaligen
-Registrierungs-Token an. Der Token darf nicht in Git committed oder in Issues/PRs gepostet
-werden.
-
-Nach der Registrierung muss der Runner erreichbar sein. Der Workflow startet erst bei
-manuellem \`workflow_dispatch\`.
-
-Der Worker benötigt auf dem Firmenrechner keine systemweite Python-Installation. Der Workflow bootstrappt dafür eine fest gepinnte Python-3.13.15-NuGet-Laufzeit im temporären Runner-Verzeichnis. Damit sind weder Administratorrechte noch `actions/setup-python` erforderlich; letzteres kann auf restriktiven Unternehmensrechnern an der PowerShell-Execution-Policy scheitern.
+Ein einzelner QA-Lauf wird durch einen Commit auf `master` mit dem Commit-Marker
+`RUN_SELF_HOSTED_REPO_QA:` ausgelöst. Der Runner führt dann genau die freigegebene
+`repo_qa`-Lane aus.
 
 ## Betriebsregel
 
 Self-hosted Ergebnisse sind Arbeitsmaterial. Für wissenschaftliche Entscheidungen gilt:
 
-\`Quelle -> Scope-Gate -> Worker -> Tests -> Provenienz -> kanonische Reproduktion -> Evidence-Gate\`
+`Quelle -> Scope-Gate -> Worker -> Tests -> Provenienz -> kanonische Reproduktion -> Evidence-Gate`
 
 Damit gewinnen wir zusätzliche Rechenkapazität, ohne die Beweis- und Sicherheitskette zu lockern.
