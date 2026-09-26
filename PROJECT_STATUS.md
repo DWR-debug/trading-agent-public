@@ -1,3 +1,25 @@
+# AKTUELLER AGENTEN-BETRIEBS-CHECKPOINT — 2026-09-26
+
+Die neue agentische Betriebsweise ist technisch in master integriert.
+
+- Implementierung: PR #244 gemergt
+- Merge-Commit: `77c328e8f84d6c67ac1ab483a4ad72aac238f983`
+- Dispatch-Workflow: `.github/workflows/agent-dispatch.yml`
+- Erstmaliger kontrollierter Dispatch-Test: Issue #242
+- Workflow-Run: `36242039182`
+- Dispatch-Manifest-Artefakt: `10905892708`
+- Manifest-Erzeugung und alle vorgelagerten Governance-/Safety-Prüfungen: erfolgreich
+- Copilot-Zuweisung: DISPATCH_FAILED / HTTP 403 Forbidden
+- Tatsächliche externe Agentensession: nicht gestartet
+- Agent-Usage: keine AI-Credits/keine Kosten verbucht
+- Wissenschaftliche Evidenz: keine
+- Sicherheitsinvarianten unverändert: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`
+
+Der 403-Befund ist als technischer Verfügbarkeits-/Berechtigungsbefund dokumentiert. Es wird daraus weder eine Copilot-Session noch Ressourcenverbrauch abgeleitet. Der automatische Pfad bleibt fail-closed.
+
+Die deterministische Research-Maschine ist davon nicht abhängig. Der nächste wissenschaftliche Schritt bleibt Q020: frische OHLCV-Coverage auf dem präregistrierten symbol-disjunkten Universum; Performance erst nach bestandenem Coverage-Freeze.
+
+---
 # AKTUELLER AUSFÜHRUNGS-CHECKPOINT — Q019 abgeschlossen / Q020 vorbereitet — 2026-09-26
 
 PR #238 ist in `DWR-debug/trading-agent-public` auf `master` gemergt. Merge-Commit: `52312dcae5da210df940adcd19a5457cd6ed6acf`.
