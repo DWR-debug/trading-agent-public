@@ -98,6 +98,24 @@ def test_run_manifest_allows_local_execution_without_github_metadata(monkeypatch
     assert manifest["formal_research_evidence"] is False
 
 
+def test_self_hosted_continuous_qa_is_scheduled_and_non_formal():
+    text = (
+        ROOT / ".github" / "workflows" / "self-hosted-continuous-qa.yml"
+    ).read_text(encoding="utf-8")
+    assert 'cron: "0 */6 * * *"' in text
+    assert "workflow_dispatch:" in text
+    assert "runs-on: [self-hosted, trading-agent-research]" in text
+    assert "concurrency:" in text
+    assert "trading-agent-self-hosted-continuous-qa" in text
+    assert "--lane repo_qa" in text
+    assert "--lane data_qa" in text
+    assert "PAPER_ONLY" in text
+    assert "LIVE_TRADING_ENABLED" in text
+    assert "ORDERS_ENABLED" in text
+    assert "AUTOMATIC_PROMOTION" in text
+    assert "research/evidence" not in text
+
+
 def test_self_hosted_worker_v4_is_minimal_single_step_gateway():
     text = (
         ROOT / ".github" / "workflows" / "self-hosted-research-worker-v4.yml"
