@@ -536,7 +536,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
             "MO", "PM", "GILD", "VRTX", "ISRG", "ZBH",
             "ELV", "CI", "JCI", "FAST", "PAYX", "CTSH",
         ),
-        target_count=3520,
+        target_count=4000,
     ),
 )
 
