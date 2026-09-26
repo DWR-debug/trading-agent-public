@@ -1,0 +1,106 @@
+name: Q020 Treasury Auction Performance
+
+on:
+  push:
+    branches:
+      - research/execute-q020-performance
+    paths:
+      - research/authorizations/q020_treasury_auction_performance_repair_2026_09_26.json
+      - research/preregistrations/q020_treasury_auction_performance_repair_2026_09_26.json
+      - automation/q020_treasury_auction_performance.py
+      - tests/test_q020_treasury_auction_performance.py
+      - .github/workflows/q020-treasury-auction-performance.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: q020-treasury-auction-performance
+  cancel-in-progress: false
+
+jobs:
+  performance:
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch' ||
+          github.ref == 'refs/heads/research/execute-q020-performance' }}
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 120
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+
+      - name: Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest statsmodels==0.15.0 pandas exchange-calendars
+
+      - name: Authorization and safety
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = "refs/heads/research/execute-q020-performance"
+          test "$(git log -1 --pretty=%s)" = "Research authorization: execute Q020 performance"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from config import settings
+
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          auth = json.loads(Path(
+              "research/authorizations/q020_treasury_auction_performance_repair_2026_09_26.json"
+          ).read_text(encoding="utf-8"))
+          assert auth["authorized"] is True
+          assert auth["performance_execution_authorized"] is True
+          assert auth["execution_scope"] == "PERFORMANCE"
+          assert auth["trial_id"] == "T-2026-09-26-046R1-PERFORMANCE"
+          assert auth["snapshot_fingerprint"] == "70cff5df1b92f4f7db2ea09bdc9999abff93dd4230ad4ea5df6e5da204076ef8"
+          print("Q020 PERFORMANCE AUTHORIZATION OK")
+          PY
+
+      - name: Full regression suite
+        run: python -m pytest -q
+
+      - name: Download frozen Q020 market snapshot
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/q020 /tmp/q019
+          mkdir -p /tmp/q020 /tmp/q019
+          gh run download 36240853419 --repo "$GITHUB_REPOSITORY" --name q020-treasury-coverage-repair-36240853419 --dir /tmp/q020
+          gh run download 36238205065 --repo "$GITHUB_REPOSITORY" --name q019-treasury-contract --dir /tmp/q019
+          test -f /tmp/q019/q019_treasury_signal_contract.json
+          test -n "$(find /tmp/q020 -name 'coverage_preflight_*.json' -print -quit)"
+
+      - name: Execute fixed Q020 performance
+        run: |
+          set -euo pipefail
+          manifest="$(find /tmp/q020 -name 'coverage_preflight_*.json' -print -quit)"
+          test -n "$manifest"
+          data_dir="$(dirname "$manifest")/datasets"
+          python -m automation.q020_treasury_auction_performance \
+            --manifest "$manifest" \
+            --data-dir "$data_dir" \
+            --signal-contract /tmp/q019/q019_treasury_signal_contract.json \
+            --authorization research/authorizations/q020_treasury_auction_performance_repair_2026_09_26.json \
+            --output research/runs/q020_treasury_auction_performance/T-2026-09-26-046R1-PERFORMANCE/result.json
+
+      - name: Evidence archive
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q020-treasury-auction-performance-${{ github.run_id }}
+          path: research/runs/q020_treasury_auction_performance/
+          if-no-files-found: warn
+          retention-days: 30
