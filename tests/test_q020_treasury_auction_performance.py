@@ -7,11 +7,12 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 
 from automation.q020_treasury_auction_performance import (
+    TRIAL_ID,
     _fp,
     _gates,
     _positions,
     _signal_events,
-    period_metrics,
+    _stats,
 )
 
 
@@ -38,7 +39,7 @@ def test_positions_aggregate_multiple_events_per_session():
 
 def test_period_metrics_compounds_and_calculates_drawdown():
     rows = [{"net_return": 0.10, "scale": 1.0}, {"net_return": -0.05, "scale": 1.0}]
-    result = period_metrics(rows, trade_count=2)
+    result = _stats(rows, 0, len(rows))
     assert result["period_return"] == pytest.approx(0.045)
     assert result["max_drawdown_percent"] == pytest.approx(5.0)
 
