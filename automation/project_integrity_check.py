@@ -29,6 +29,7 @@ ACTIVE_WORKFLOWS = {
     "agent-dispatch.yml",
     "q020-treasury-auction-performance.yml",
     "copilot-cli-ci-repair.yml",
+    "self-hosted-research-worker-v2.yml",
 }
 
 REQUIRED_FILES = (
