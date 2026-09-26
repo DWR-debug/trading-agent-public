@@ -111,6 +111,7 @@ jobs:
           echo "skip=false" >> "$GITHUB_OUTPUT"
 
       - name: Check personal-repository Copilot token
+        id: copilot_token
         if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true'
         shell: bash
         env:
@@ -120,11 +121,13 @@ jobs:
           if [ -z "${COPILOT_GITHUB_TOKEN}" ]; then
             gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.request.outputs.issue_number }}/comments" \
               -f body="Agent queue paused: personal-repository Copilot requires COPILOT_GITHUB_TOKEN with Copilot Requests permission. No Copilot session or paid usage is claimed; the queue will retry after the secret is configured."
-            exit 1
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
+          echo "configured=true" >> "$GITHUB_OUTPUT"
 
       - name: Run bounded Copilot CLI
-        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true'
+        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true'
         shell: bash
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -153,7 +156,7 @@ jobs:
           copilot --agent=trading-agent-engineer --autopilot --no-ask-user --max-ai-credits=45 --max-autopilot-continues=1 -p "${prompt}" --allow-tool='read' --allow-tool='search' --allow-tool='write' --allow-tool='shell(git:*)' --allow-tool='shell(python:*)' --allow-tool='shell(pytest:*)'
 
       - name: Enforce task-scoped file scope
-        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true'
+        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -172,7 +175,7 @@ jobs:
           PY
 
       - name: Final bounded regression gate
-        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true'
+        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -188,7 +191,7 @@ jobs:
           PY
 
       - name: Commit and publish
-        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true'
+        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true'
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
