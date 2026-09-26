@@ -16,7 +16,7 @@ def test_decision_basis_is_current_and_separates_fact_from_next_action():
     assert "Was wissen wir nicht?" in md
     assert "Nächste Aktion" in md
     assert payload["current_stage"] == "WIDE_SEARCH_MODE"
-    assert payload["next_action"].startswith("Execute H06 mechanism diagnostic on the frozen coverage snapshot")
+    assert payload["next_action"].startswith("Prepare and preregister one H06 formal performance challenger on a third fresh, fully symbol-disjoint universe")
     assert payload["invariants"] == {
         "paper_only": True,
         "live_trading_enabled": False,
