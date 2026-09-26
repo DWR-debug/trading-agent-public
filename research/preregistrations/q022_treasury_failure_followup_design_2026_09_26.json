@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0",
+  "design_id": "Q-022-TREASURY-FAILURE-FOLLOWUP-2026-09-26",
+  "task_id": "Q-022-TREASURY-FAILURE-FOLLOWUP-DESIGN",
+  "status": "DESIGN_ONLY",
+  "parent_diagnosis": "Q-021-TREASURY-AUCTION-FAILURE-MECHANISM-DIAGNOSIS",
+  "source_trial": "T-2026-09-26-046R1-PERFORMANCE",
+  "ranked": false,
+  "selection_used": false,
+  "performance_trial_authorized": false,
+  "holdout_used_for_selection": false,
+  "q020_retuning": false,
+  "gate_changes": false,
+  "live_execution": false,
+  "candidates": [
+    {
+      "id": "H1",
+      "name": "directional_inversion",
+      "study_type": "fixed_rule_replication",
+      "status": "UNRANKED",
+      "requires_new_symbol_disjoint_universe": true
+    },
+    {
+      "id": "H2",
+      "name": "release_timing_mismatch",
+      "study_type": "point_in_time_diagnostic_or_fixed_rule_replication",
+      "status": "UNRANKED",
+      "requires_official_reproducible_timestamps": true
+    },
+    {
+      "id": "H3",
+      "name": "event_concentration_aggregation",
+      "study_type": "event_level_diagnostic",
+      "status": "UNRANKED",
+      "requires_event_level_provenance": true
+    },
+    {
+      "id": "H4",
+      "name": "temporal_regime_dependence",
+      "study_type": "regime_diagnostic",
+      "status": "UNRANKED",
+      "requires_external_pit_compatible_regime_source": true
+    },
+    {
+      "id": "H5",
+      "name": "cost_fragility",
+      "study_type": "fixed_cost_sensitivity",
+      "status": "UNRANKED",
+      "requires_existing_cost_grid": [
+        "base",
+        "1.5x",
+        "2x"
+      ]
+    },
+    {
+      "id": "H6",
+      "name": "sparse_signal_identifiability",
+      "study_type": "coverage_diagnostic_or_fixed_rule_replication",
+      "status": "UNRANKED",
+      "requires_new_independent_event_sample": true
+    }
+  ],
+  "common_protocol": {
+    "fresh_symbol_disjoint_validation": true,
+    "preregistration_required": true,
+    "coverage_first": true,
+    "point_in_time_required": true,
+    "holdout_blind": true,
+    "parameter_search": false,
+    "asset_search": false,
+    "threshold_search": false,
+    "variant_search": false,
+    "horizon_search": false,
+    "q020_retuning": false,
+    "gate_changes": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}

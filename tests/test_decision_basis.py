@@ -15,8 +15,8 @@ def test_decision_basis_is_current_and_separates_fact_from_next_action():
     assert "Was wissen wir?" in md
     assert "Was wissen wir nicht?" in md
     assert "Nächste Aktion" in md
-    assert payload["current_stage"] == "Q020_PERFORMANCE_COMPLETED"
-    assert payload["next_action"].startswith("Execute a new preregistered Q020 failure/mechanism diagnosis")
+    assert payload["current_stage"] == "Q021_DIAGNOSTIC_COMPLETED"
+    assert payload["next_action"].startswith("Execute Q022 as a design-only follow-up derived from Q021")
     assert payload["invariants"] == {
         "paper_only": True,
         "live_trading_enabled": False,

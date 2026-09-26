@@ -8,8 +8,10 @@ def test_queue_is_deterministic_and_tracks_current_priority():
     first = queue.next_task()
     assert first is not None
     task_by_id = {task.task_id: task for task in queue.all()}
-    assert first.task_id == "Q-021-TREASURY-AUCTION-FAILURE-MECHANISM-DIAGNOSIS"
+    assert first.task_id == "Q-022-TREASURY-FAILURE-FOLLOWUP-DESIGN"
     assert task_by_id["Q-019-TREASURY-AUCTION-SIGNAL-CONTRACT"].status == "COMPLETED"
+    assert task_by_id["Q-021-TREASURY-AUCTION-FAILURE-MECHANISM-DIAGNOSIS"].status == "COMPLETED"
+    assert task_by_id["Q-022-TREASURY-FAILURE-FOLLOWUP-DESIGN"].status == "PENDING"
     assert task_by_id["Q-020-TREASURY-AUCTION-PERFORMANCE-DESIGN"].status == "COMPLETED"
     assert task_by_id["Q-014-INFORMATION-ALPHA-MECHANISM-REDUNDANCY-LONG-WINDOW"].status == "COMPLETED"
     assert task_by_id["Q-007-T043-TSM-SIGNAL-CONSISTENCY"].status == "BLOCKED"
