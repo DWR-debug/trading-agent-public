@@ -23,7 +23,8 @@ jobs:
     if: >-
       ${{
         (github.event_name == 'workflow_dispatch') ||
-        (github.event.label.name == 'agent-ready')
+        (github.event.label.name == 'agent-ready') ||
+        (github.event.label.name == 'agent')
       }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
