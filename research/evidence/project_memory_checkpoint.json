@@ -64,7 +64,7 @@
   "q018_status": "SOURCE_FEASIBILITY_COMPLETE_DATA_INSUFFICIENT",
   "q018_preregistered": true,
   "q018_performance_trial_authorized": false,
-  "agent_policy": "Free agent use is reserved for hypothesis generation, research design, and architecture review; deterministic computation stays on free/local runners.",
+  "agent_policy": "Free agent use is reserved for hypothesis generation, research design, architecture review and bounded engineering/QA. Every new 'trading agent' chat performs an automatic resource preflight and routes suitable work to available self-hosted runners, Copilot CLI repair, Cloud Agent when entitled at no extra cost, GitHub Actions, or Codespaces. Deterministic computation stays on free/local runners.",
   "q018_workflow_run": 36237329691,
   "q018_artifact_id": 10904273903,
   "q018_artifact_digest": "sha256:f8bfe4e1065d3d8a8b82b08fe4f78f6bd3c006bedf71c8cadc4f512d8d308989",
@@ -132,5 +132,18 @@
   "q020_performance_trial_authorized": false,
   "agent_dispatch_status": "IMPLEMENTED_BUT_EXTERNAL_COPILOT_ASSIGNMENT_BLOCKED_403",
   "agent_dispatch_workflow": ".github/workflows/agent-dispatch.yml",
-  "agent_usage_ledger": "research/evidence/agent_usage_ledger.json"
+  "agent_usage_ledger": "research/evidence/agent_usage_ledger.json",
+  "automation_preflight": {
+    "required_on_new_trading_agent_chat": true,
+    "checks": [
+      "self_hosted_runner_status",
+      "cloud_agent_dispatch_availability_and_assignability",
+      "copilot_cli_repair_worker",
+      "github_hosted_actions_capacity_and_recent_runs",
+      "codespaces_or_local_compute_availability"
+    ],
+    "routing_principle": "parallelize independent bounded work; never duplicate active work; preserve evidence gates",
+    "strategic_control": "steering/research agent",
+    "worker_control": "bounded implementation/QA only"
+  }
 }
