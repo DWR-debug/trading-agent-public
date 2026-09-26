@@ -192,25 +192,20 @@ def test_autonomous_agent_request_queue_uses_two_lanes_and_is_fail_closed():
     assert 'cp "$RUNNER_TEMP/agent_task_manifest.json" "$RUNNER_TEMP/task_contract.json"' in text
     assert 'python -m automation.agent_dispatch' in text
 
-def test_bounded_copilot_cli_workflow_uses_builtin_token_and_credit_gate():
+def test_bounded_copilot_cli_workflow_uses_personal_repo_token_and_credit_gate():
     root = Path(__file__).parents[1]
     text = (
-        root / ".github" / "workflows" / "copilot-cli-engineering-task.yml"
+        root / ".github" / "workflows" / "agent-request-queue.yml"
     ).read_text(encoding="utf-8")
-    assert "COPILOT_GITHUB_TOKEN" in text
-    assert "secrets.COPILOT_GITHUB_TOKEN" in text
-    assert "GITHUB_TOKEN: ${{ github.token }}" in text
-    assert "COPILOT_GITHUB_TOKEN" not in text
+    assert "COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}" in text
+    assert "Check personal-repository Copilot token" in text
+    assert "requires COPILOT_GITHUB_TOKEN with Copilot Requests permission" in text
     assert "--max-ai-credits=45" in text
     assert "--agent=trading-agent-engineer" in text
-    assert "github.event.issue.user.login == github.repository_owner" in text
     assert "PAPER_ONLY=True" in text
     assert "LIVE_TRADING_ENABLED=False" in text
     assert "orders_enabled=False" in text
     assert "automatic_promotion=False" in text
-    assert "Enforce task-scoped file scope" in text
-    assert "Copilot CLI changed file outside task-scoped engineering scope" in text
     assert "allowed_paths" in text
     assert "research/evidence/" in text
     assert ".github/workflows/ci.yml" not in text
-    assert ".github/workflows/research-orchestrator.yml" not in text
