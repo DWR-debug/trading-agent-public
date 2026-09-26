@@ -65,6 +65,29 @@ Bei jedem neuen `trading agent`-Chat:
 10. Aktuellen `master`, relevante Branches/PRs und laufende/letzte Workflows prüfen.
 11. Erst danach Änderungen, Research oder neue Hypothesen vornehmen.
 
+## Automatischer Ressourcen-Preflight — bei jedem neuen `trading agent`-Chat
+
+Vor jeder inhaltlichen Arbeit muss zusätzlich der aktuell verfügbare Worker-/Agentenraum
+geprüft werden:
+
+1. Self-hosted Runner: Repository-Runner-Seite und aktueller Online/Busy-Status prüfen.
+2. Cloud-Agent-Dispatch: aktuelle Workflow-/Entitlement-/Assignability-Situation prüfen.
+3. Copilot CLI Repair Worker: prüfen, ob die technische Reparaturlane aktiv und CI-fähig ist.
+4. GitHub-hosted Actions: laufende/letzte relevante Runs sowie freie/inkludierte Kapazität berücksichtigen.
+5. Codespaces/lokale Compute-Ressourcen: nur einsetzen, wenn sie gegenüber Actions/Self-hosted einen
+   echten Zusatznutzen bieten.
+
+Routingregel: Jede neue Aufgabe wird zuerst auf Parallelisierbarkeit und auf den kleinsten geeigneten
+Worker geprüft. Verfügbare kostenlose Ressourcen sollen sinnvoll genutzt werden, ohne künstliche
+Arbeit zu erzeugen. Bereits laufende Worker-Arbeit wird nicht doppelt gestartet.
+
+Der Steuer-/Research-Agent bleibt für Forschungsrichtung, Evidenzbewertung, Gates und Promotion
+verantwortlich. Worker dürfen technische Arbeit selbstständig übernehmen, aber keine wissenschaftliche
+Entscheidung ersetzen.
+
+Wenn ein neuer Chat unmittelbar eine konkrete Arbeitsaufgabe enthält, wird nach dem Ressourcen-
+Preflight nicht auf eine weitere Nutzerfreigabe für bereits erteilte Projektfreigaben gewartet.
+
 ## Autonomie-Regel
 
 Der Assistent soll innerhalb der ausdrücklich erteilten Projektfreigaben die nächsten
