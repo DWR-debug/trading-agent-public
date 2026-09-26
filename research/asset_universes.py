@@ -514,10 +514,19 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=3520,
     ),
 
-)
+    AssetUniverse(
+        name="validation_2026_09_26_treasury_auction_performance_repair",
+        priority=67,
+        description=(
+            "Coverage-repair successor for Q020; same fixed Treasury auction mechanism "
+            "with one data-unavailable symbol replacement and larger raw acquisition headroom."
+        ),
+        symbols=("ACN", "AMT", "APD", "TGT", "CME", "CTAS", "GPC", "LLY", "MCO", "NOC", "ROST", "SHW"),
+        target_count=4000,
+    ),
+);
 
-
-def get_universe(name: str) -> AssetUniverse:
+(name: str) -> AssetUniverse:
     for universe in UNIVERSES:
         if universe.name == name:
             return universe
@@ -535,13 +544,3 @@ def datasets_for(name: str) -> tuple[tuple[str, str, int], ...]:
         (symbol, universe.interval, universe.target_count)
         for symbol in universe.symbols
     )
-    AssetUniverse(
-        name="validation_2026_09_26_treasury_auction_performance_repair",
-        priority=67,
-        description=(
-            "Coverage-repair successor for Q020; same fixed Treasury auction mechanism "
-            "with one data-unavailable symbol replacement and larger raw acquisition headroom."
-        ),
-        symbols=("ACN", "AMT", "APD", "TGT", "CME", "CTAS", "GPC", "LLY", "MCO", "NOC", "ROST", "SHW"),
-        target_count=4000,
-    ),
