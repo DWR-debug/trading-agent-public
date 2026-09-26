@@ -3562,6 +3562,68 @@
         "orders_enabled": false,
         "automatic_promotion": false
       }
+    },
+    {
+      "trial_id": "T-2026-09-26-047R1-PERFORMANCE",
+      "recorded_at": "2026-09-26T18:38:23Z",
+      "status": "no_promotion_evidence",
+      "research_family": "official_event_alpha_directional_inversion",
+      "parent_trial_id": "T-2026-09-26-047",
+      "coverage_repair_id": "T-2026-09-26-047R1",
+      "intervention": "exact_final_direction_inversion",
+      "provenance": {
+        "workflow_run_id": 36263212309,
+        "artifact_id": 10912654951,
+        "artifact_sha256": "sha256:c3c545d14b1f103206eaba58f888014c66073ba4a3c93cbef4d5a6675536401a",
+        "result_fingerprint": "2ad3b13c7cfc6cce5cf5a3411179f59f49c608c6e3b842587c40355d6aa06c86",
+        "snapshot_fingerprint": "1e158aa8807ee48a08686191cf23abff258f8313b8df67c78bb0aeefbb09b315",
+        "signal_source_fingerprint": "8af45e4eb7267266da10eb28cf5287eea1ff3572f38736382f1b004abf86c208"
+      },
+      "geometry": {
+        "frozen_candles": 3500,
+        "research_periods": 2798,
+        "holdout_periods": 700,
+        "signal_event_count": 87
+      },
+      "metrics": {
+        "research_return_percent": -19.293862599473233,
+        "research_max_drawdown_percent": 19.293862599473233,
+        "research_profit_factor": 0.25884308877950113,
+        "holdout_return_percent": -7.519793453492529,
+        "holdout_max_drawdown_percent": 7.519793453492529,
+        "holdout_profit_factor": 0.16744038131748834,
+        "rolling_profitable_window_ratio": 0,
+        "rolling_average_drawdown_percent": 5.020662157753297,
+        "oos_to_is_return_ratio": 0,
+        "stress_1_5x_holdout_return_percent": -9.725207540852866,
+        "stress_2x_holdout_return_percent": -11.881241699204825,
+        "total_return_sensitivity_holdout_percent": -7.4787276073801205
+      },
+      "gates": {
+        "all_absolute_passed": false,
+        "research_return_positive": false,
+        "research_max_drawdown_lte_10pct": false,
+        "research_profit_factor_gte_1_1": false,
+        "rolling_profit_factor_gte_1_1": false,
+        "rolling_profitable_window_ratio_gte_0_5": false,
+        "rolling_average_drawdown_lte_10pct": true,
+        "oos_to_is_return_ratio_gte_0_25": false,
+        "holdout_return_positive": false,
+        "holdout_profit_factor_gte_1_1": false,
+        "holdout_max_drawdown_lte_10pct": true,
+        "stress_1_5x_holdout_nonnegative": false,
+        "stress_2x_holdout_nonnegative": false,
+        "total_return_sensitivity_holdout_nonnegative": false
+      },
+      "selection": {
+        "parameter_search": false,
+        "asset_search": false,
+        "threshold_search": false,
+        "horizon_search": false,
+        "variant_search": false,
+        "holdout_used_for_selection": false
+      },
+      "scientific_conclusion": "The fixed directional inversion does not satisfy the unchanged evidence contract on the fresh symbol-disjoint validation set. No performance promotion evidence. Do not tune the inversion or reopen Q020."
     }
   ]
 }
