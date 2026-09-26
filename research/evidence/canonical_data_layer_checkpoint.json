@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "checkpoint_type": "canonical_data_layer",
+  "generated_at_utc": "2026-09-26T08:55:00Z",
+  "repository": "DWR-debug/trading-agent-public",
+  "status": "PR_OPEN",
+  "branch": "infra/canonical-data-layer-2026-09-26",
+  "pull_request": 232,
+  "feature_head_commit": "b3442ad6911f3b89120cb7d2df0104bec044bbd9",
+  "base_master_commit": "36a2084907d6ccec41a0b25f861018ebcaf07bc7",
+  "components": {
+    "canonical_builder": "data/canonical_snapshot.py",
+    "generic_coverage_runner": "automation/coverage_preflight.py",
+    "regression_tests": "tests/test_canonical_snapshot.py",
+    "architecture_document": "docs/CANONICAL_DATA_LAYER.md",
+    "chat_entrypoint": "docs/TRADING_AGENT_CHAT_ENTRYPOINT.md",
+    "orchestration_document": "docs/DEVELOPMENT_ORCHESTRATION.md"
+  },
+  "contract": {
+    "study_window_before_intersection": true,
+    "intersection_before_exact_target_selection": true,
+    "aligned_common_calendar_output": true,
+    "minimum_in_window_history_enforced_by_generic_preflight": true,
+    "fail_closed_on_coverage_failure": true,
+    "deterministic_dataset_fingerprints": true,
+    "snapshot_fingerprint_excludes_run_timestamp": true,
+    "performance_metrics_in_data_layer": false,
+    "holdout_selection_in_data_layer": false,
+    "automatic_promotion": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "agent_review": {
+    "review_issue": 231,
+    "reviewer_profile": ".github/agents/trading-agent-research-reviewer.agent.md",
+    "external_agent_execution_verified": false,
+    "paid_agent_budget_usd": 0
+  },
+  "migration": {
+    "completed": [
+      "generic automation/coverage_preflight.py"
+    ],
+    "next": [
+      "migrate remaining Yahoo-specific research lanes, beginning with H06 replication coverage, after this layer is merged",
+      "keep source-specific PIT logic (ALFRED/CFTC) separate while reusing common snapshot contracts where applicable",
+      "do not authorize new formal performance work on custom Yahoo coverage implementations after migration point"
+    ]
+  },
+  "new_chat_resume": [
+    "verify current master before using this checkpoint as fact",
+    "read docs/CANONICAL_DATA_LAYER.md",
+    "read data/canonical_snapshot.py",
+    "inspect PR #232 and review issue #231",
+    "verify CI for the current feature head",
+    "after merge, synchronize project_state.json and PROJECT_STATUS.md to the resulting master commit"
+  ]
+}
