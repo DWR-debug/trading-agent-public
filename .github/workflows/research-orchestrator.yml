@@ -106,6 +106,9 @@ on:
       - "research/preregistrations/q017_g3_coverage_first_2026_09_25.json"
       - "docs/q017_g3_coverage_preflight_2026_09_25.md"
       - "research/authorizations/q016_mechanism_discrimination_replication_2026_09_25.json"
+      - "research/authorizations/q020_treasury_auction_coverage_2026_09_26.json"
+      - "tests/test_q020_treasury_auction_design.py"
+      - "research/preregistrations/q020_treasury_auction_performance_2026_09_26.json"
 
 permissions:
   contents: read
@@ -272,6 +275,12 @@ jobs:
             python -m automation.q017_coverage_preflight \
               --output-root research/runs/q017_g3_coverage_first \
               --universe q017_coverage_first
+          elif [ "$GITHUB_REF" = "refs/heads/research/execute-q020-coverage" ]; then
+            test "$GITHUB_EVENT_NAME" = "push"
+            test "$(git log -1 --pretty=%s)" = "Research authorization: execute Q020 coverage"
+            python -m automation.coverage_preflight \
+              --preregistration research/preregistrations/q020_treasury_auction_performance_2026_09_26.json \
+              --output-root research/runs/q020_treasury_auction_performance
           elif [ "$GITHUB_REF" = "refs/heads/research/execute-q016-mechanism-discrimination-replication" ]; then
             test "$GITHUB_EVENT_NAME" = "push"
             test "$(git log -1 --pretty=%s)" = "Research authorization: execute Q016 mechanism discrimination replication"
