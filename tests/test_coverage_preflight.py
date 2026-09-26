@@ -135,6 +135,12 @@ def test_coverage_preflight_reports_incomplete_symbol_metadata_without_crashing(
                 "errors": [{"symbol": symbols[0], "reason": "missing_history"}],
                 "failure_reason": "symbol history incomplete",
             },
+            "safety": {
+                "paper_only": True,
+                "live_trading_enabled": False,
+                "orders_enabled": False,
+                "automatic_promotion": False,
+            },
         }
 
     monkeypatch.setattr(
