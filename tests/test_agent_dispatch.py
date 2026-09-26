@@ -165,7 +165,9 @@ def test_bounded_copilot_cli_workflow_uses_builtin_token_and_credit_gate():
     assert "LIVE_TRADING_ENABLED=False" in text
     assert "orders_enabled=False" in text
     assert "automatic_promotion=False" in text
-    assert "Enforce bounded file scope" in text
-    assert "Copilot CLI changed file outside bounded engineering scope" in text
+    assert "Enforce task-scoped file scope" in text
+    assert "Copilot CLI changed file outside task-scoped engineering scope" in text
+    assert "allowed_paths" in text
+    assert "research/evidence/" in text
     assert ".github/workflows/ci.yml" not in text
     assert ".github/workflows/research-orchestrator.yml" not in text
