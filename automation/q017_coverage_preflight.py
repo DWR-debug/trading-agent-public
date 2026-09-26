@@ -22,9 +22,8 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 from config import settings
-from data.yahoo_loader import load_yahoo_history
+from data.canonical_snapshot import SnapshotSpec, build_frozen_snapshot
 from research.asset_universes import get_universe, list_universes
-from research.protocol import dataset_fingerprint
 
 ROOT = Path(__file__).resolve().parents[1]
 STUDY_START = date(2011, 1, 1)
@@ -319,68 +318,38 @@ def _cftc_coverage(output_dir: Path) -> dict:
 
 def _yahoo_coverage(universe_name: str, output_dir: Path) -> dict:
     universe = get_universe(universe_name)
-    common = None
-    per_symbol = {}
     snapshot_dir = output_dir / "source_cache" / "yahoo"
-    snapshot_dir.mkdir(parents=True, exist_ok=True)
-
+    canonical = build_frozen_snapshot(
+        SnapshotSpec(
+            universe=universe.name,
+            symbols=tuple(universe.symbols),
+            interval="1d",
+            requested_candles=REQUESTED_YAHOO_CANDLES,
+            target_common_candles=TARGET_COMMON_CANDLES,
+            minimum_in_window_candles=TARGET_COMMON_CANDLES,
+            output_dir=snapshot_dir,
+            dataset_subdir=".",
+            study_start=STUDY_START,
+            study_end=STUDY_END,
+        )
+    )
+    coverage = canonical["coverage"]
+    per_symbol = {}
     for symbol in universe.symbols:
-        quality: dict[str, int] = {}
-        try:
-            bars = load_yahoo_history(
-                symbol,
-                "1d",
-                REQUESTED_YAHOO_CANDLES,
-                allow_partial=True,
-                skip_invalid_ohlc=True,
-                quality_report=quality,
-            )
-        except ValueError as exc:
-            per_symbol[symbol] = {
-                "status": "DATA_INVALID",
-                "count_in_window": 0,
-                "error": str(exc),
-                "quality": quality,
-            }
-            continue
-
-        filtered = [
-            bar for bar in bars
-            if STUDY_START <= bar.timestamp.date() <= STUDY_END
-        ]
-        timestamps = {bar.timestamp for bar in filtered}
-        common = timestamps if common is None else common.intersection(timestamps)
-
-        path = snapshot_dir / f"{symbol}_1d.csv"
-        with path.open("w", encoding="utf-8", newline="") as handle:
-            writer = csv.writer(handle)
-            writer.writerow(("timestamp", "open", "high", "low", "close", "volume"))
-            for bar in filtered:
-                writer.writerow((
-                    bar.timestamp.isoformat(),
-                    bar.open,
-                    bar.high,
-                    bar.low,
-                    bar.close,
-                    bar.volume,
-                ))
-
+        item = coverage["per_symbol"].get(symbol, {})
         per_symbol[symbol] = {
-            "status": "COVERAGE_VALID" if len(filtered) >= TARGET_COMMON_CANDLES else "DATA_INVALID",
-            "count_in_window": len(filtered),
-            "start": filtered[0].timestamp.isoformat() if filtered else None,
-            "end": filtered[-1].timestamp.isoformat() if filtered else None,
-            "fingerprint": dataset_fingerprint(filtered) if filtered else None,
-            "quality": quality,
-            "normalized_cache": str(path.relative_to(ROOT)),
+            "status": "COVERAGE_VALID" if item.get("status") == "COVERAGE_VALID" else "DATA_INVALID",
+            "count_in_window": item.get("in_window_count", 0),
+            "start": item.get("start"),
+            "end": item.get("end"),
+            "fingerprint": item.get("fingerprint"),
+            "quality": item.get("quality", {}),
+            "error": item.get("error"),
         }
 
-    common_count = len(common or set())
     status = (
         "COVERAGE_VALIDATED"
-        if len(per_symbol) == len(universe.symbols)
-        and all(item.get("status") == "COVERAGE_VALID" for item in per_symbol.values())
-        and common_count >= TARGET_COMMON_CANDLES
+        if canonical["status"] == "COVERAGE_PASSED"
         else "DATA_INVALID"
     )
     return {
@@ -391,8 +360,10 @@ def _yahoo_coverage(universe_name: str, output_dir: Path) -> dict:
         "requested_candles": REQUESTED_YAHOO_CANDLES,
         "target_common_candles": TARGET_COMMON_CANDLES,
         "status": status,
-        "common_calendar_count": common_count,
+        "common_calendar_count": coverage["common_calendar_count"],
         "per_symbol": per_symbol,
+        "snapshot_fingerprint": canonical["snapshot_fingerprint"],
+        "canonical_data_layer": "data/canonical_snapshot.py",
         "performance_evaluation": False,
         "selection_used": False,
     }
