@@ -1,6 +1,6 @@
 # Decision Basis — Trading Agent
 
-Stand: 2026-09-25
+Stand: 2026-09-26
 
 Diese Datei ist die laufende, chatübergreifende Entscheidungsgrundlage. Nach jedem
 abgeschlossenen Research- oder Engineering-Schritt wird sie mit dem verifizierten
@@ -12,21 +12,47 @@ bleiben strikt getrennt.
 ### Was ist verifiziert?
 
 - Technische Referenz ist ausschließlich der öffentliche `master` von
-  `DWR-debug/trading-agent-public`; Wide-Search Round 002 (H08 volatility-state transition) wurde inzwischen vollständig ausgeführt. Der feste Research-Only-Lauf hatte 316 Ereignisse und wurde mit **PRUNE_NO_RISK_REGIME_SUPPORT** klassifiziert. Der Holdout blieb unberührt; daraus folgt keine Performance-Autorisierung.
+  `DWR-debug/trading-agent-public`.
+- H08 wurde in Wide-Search Round 002 als Research-Only-Diagnose mit 316 Ereignissen
+  ausgeführt und nach der festen Regel als `PRUNE_NO_RISK_REGIME_SUPPORT` klassifiziert.
+- H06 sector-neutral residual momentum wurde auf einem vollständig disjunkten
+  Universum als Mechanismus repliziert. Der aktuelle kanonische End-to-End-Lauf
+  `36236202675` reproduzierte den bestehenden Ergebnis-Fingerprint
+  `45546b7a2b69c39f961cab85f9ab091d165f5e9a711777fb23dd717f82fc9fbd`.
+  H06 ist damit Mechanismus-Evidence, aber ausdrücklich keine Profitabilitäts-Evidence.
+- PR #230 integrierte die H06-Replikation in den kanonischen Datenpfad und wurde als
+  `c8b19db5ed1fa22da67abdba2f070914c0d1a70a` gemergt.
+- Q017-G3 ist `DATA_INSUFFICIENT`. Es gab keine Performanceauswertung.
+  Der Yahoo-Coverage-Pfad wurde inzwischen auf `data/canonical_snapshot.py`
+  vereinheitlicht; PR #234 ist als `cfdb0ac7031cfdadcbfe16da50cbedeb4b285dd3` gemergt.
+- Q018 ist als `DESIGN_ONLY` preregistriert und enthält drei bewusst ungerankte,
+  mechanistisch unterschiedliche offizielle Event-Informationsquellen.
 
-H06 sector-neutral residual momentum ist jetzt die aktive orthogonale Coverage-Stufe.
+## Was wissen wir nicht?
+
+- Ob einer der Q018-Kandidaten einen vollständigen, reproduzierbaren
+  historischen Daten-/PIT-Vertrag erfüllt.
+- Ob ein source-feasibility-passender Kandidat später die unveränderten
+  Performance-Gates auf einem neuen disjunkten Universum erfüllen kann.
+- Ob die historische Abdeckung und deterministische Parsbarkeit von SEC Form 4,
+  FOMC-Entscheidungen und Treasury-10Y-Auktionsergebnissen aus kostenlosen
+  offiziellen Quellen vollständig reproduzierbar ist.
+
+## Was ändert sich?
+
+Die Forschungsmaschine wechselt nach dem Abschluss von H06 von der Mechanismus-Replikation
+zur **source-first feasibility** für orthogonale offizielle Eventdaten. Q017 wird nicht
+durch Asset-, Parameter- oder Regeländerungen gerettet. Ein DATA_INSUFFICIENT-Ergebnis
+bleibt ein gültiger Datenvertragsbefund.
 
 ## Nächste Aktion
 
-Zuerst wird die H06-Coverage-/PIT-Evidenz verifiziert. Eine positive Coverage führt nicht automatisch zu einem Performance-Trial; dafür bleibt eine getrennte Präregistrierung und der unveränderte Evidenz-Gate-Pfad erforderlich. Round 002 fokussiert eine ex ante fixierte **volatility-state transition**-Diagnose
-als Brücke zwischen Exploration und dem identifizierten Hauptproblem des Projekts:
-robuste Risiko-/Regime-Evidenz. Bewertet wird ausschließlich der Research-Split.
-Eine positive Exploration wird nicht automatisch zu einem formalem Trial.
+Deterministischen Q018-Source-Feasibility-Preflight für alle drei fixierten Kandidaten
+ausführen. Erfasst werden nur Coverage, Point-in-Time-Verfügbarkeit, Parsing,
+Provenienz und Datenvollständigkeit. Kein Performance-Trial, keine Kandidatenrangfolge,
+keine Holdout-Nutzung.
 
-Parallel werden ALFRED/CFTC nicht anhand von Performanceergebnissen weiterverfolgt,
-sondern erst bei verbesserter PIT-/Datenzugänglichkeit wieder freigegeben.
-
-### Welche Schutzgrenzen bleiben unverändert?
+## Welche Schutzgrenzen bleiben unverändert?
 
 - `PAPER_ONLY=True`
 - `LIVE_TRADING_ENABLED=False`
