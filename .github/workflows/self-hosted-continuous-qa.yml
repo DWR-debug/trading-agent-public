@@ -1,0 +1,77 @@
+name: Self-hosted Continuous QA
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-self-hosted-continuous-qa
+  cancel-in-progress: false
+
+jobs:
+  qa:
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 75
+    steps:
+      - name: Continuous self-hosted QA
+        shell: cmd
+        run: |
+          @echo off
+          setlocal EnableExtensions
+          if not defined GITHUB_SHA exit /b 1
+          if /I not "%GITHUB_REPOSITORY%"=="DWR-debug/trading-agent-public" exit /b 1
+
+          set "WORK=%RUNNER_TEMP%\\trading-agent-continuous-%GITHUB_SHA%"
+          set "ARCHIVE=%RUNNER_TEMP%\\trading-agent-continuous-%GITHUB_SHA%.tar.gz"
+          set "PY_ROOT=%RUNNER_TEMP%\\python-3.13.15-nuget"
+          set "PY_EXE=%PY_ROOT%\\tools\\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\\python.3.13.15.nupkg"
+          set "SITE=%RUNNER_TEMP%\\python-site-continuous"
+
+          if exist "%WORK%" rmdir /s /q "%WORK%"
+          mkdir "%WORK%" || exit /b 1
+
+          echo [1/7] Downloading exact master snapshot
+          curl.exe -L --fail --silent --show-error -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%"
+          if errorlevel 1 exit /b 1
+          tar.exe -xzf "%ARCHIVE%" -C "%WORK%" || exit /b 1
+          set "REPO_SRC="
+          for /d %%D in ("%WORK%\\trading-agent-public-*") do set "REPO_SRC=%%~fD"
+          if not defined REPO_SRC exit /b 1
+          cd /d "%REPO_SRC%" || exit /b 1
+
+          echo [2/7] Bootstrapping pinned Python 3.13.15
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            mkdir "%PY_ROOT%" 2>nul
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          "%PY_EXE%" -m pip --version >nul 2>&1
+          if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
+          "%PY_EXE%" -m pip --version || exit /b 1
+
+          echo [3/7] Installing minimal QA dependencies
+          if exist "%SITE%" rmdir /s /q "%SITE%"
+          mkdir "%SITE%" || exit /b 1
+          "%PY_EXE%" -m pip install --disable-pip-version-check --target "%SITE%" pytest pandas exchange-calendars statsmodels==0.15.0 || exit /b 1
+          set "PYTHONPATH=%SITE%;%REPO_SRC%"
+
+          echo [4/7] Safety invariants
+          "%PY_EXE%" -c "from config import settings; assert settings.PAPER_ONLY is True; assert settings.LIVE_TRADING_ENABLED is False; assert settings.ORDERS_ENABLED is False; assert settings.AUTOMATIC_PROMOTION is False; print('SAFETY INVARIANTS OK')" || exit /b 1
+
+          echo [5/7] repo_qa
+          "%PY_EXE%" -m automation.self_hosted_research_worker --lane repo_qa --output-dir "research/runs/self_hosted/continuous_repo_qa_%GITHUB_RUN_ID%" || exit /b 1
+
+          echo [6/7] data_qa
+          "%PY_EXE%" -m automation.self_hosted_research_worker --lane data_qa --output-dir "research/runs/self_hosted/continuous_data_qa_%GITHUB_RUN_ID%" || exit /b 1
+
+          echo [7/7] Continuous QA complete
+          echo RUN_ID=%GITHUB_RUN_ID%
+          echo SHA=%GITHUB_SHA%
+          echo CONTINUOUS_QA=SUCCESS
+          endlocal
