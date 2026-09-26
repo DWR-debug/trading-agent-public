@@ -80,7 +80,7 @@
     "research/evidence/trial_ledger.json",
     "current master, relevant branches/PRs and workflows"
   ],
-  "active_research_task": "Q-020-TREASURY-MARKET-COVERAGE",
+  "active_research_task": "Q-021-ORTHOGONAL-OFFICIAL-EVENT-DESIGN",
   "wide_search_round_002": {
     "hypothesis_id": "H08",
     "family": "volatility_state_transition",
@@ -127,7 +127,7 @@
     "canonical_yahoo_hardening_pr": 234,
     "canonical_yahoo_hardening_merge_commit": "cfdb0ac7031cfdadcbfe16da50cbedeb4b285dd3"
   },
-  "next_action": "Run Q020 canonical market-coverage gate on the fixed Q018 universe; no performance evaluation and no asset rescue.",
+  "next_action": "Design and source-feasibility test the next orthogonal official information mechanisms; no performance evaluation.",
   "q018": {
     "task_id": "Q-018-SOURCE-FEASIBILITY-PREFLIGHT",
     "status": "DATA_INSUFFICIENT",
@@ -154,7 +154,13 @@
   },
   "q020": {
     "task_id": "Q-020-TREASURY-MARKET-COVERAGE",
-    "status": "PREREGISTERED_COVERAGE_ONLY",
+    "status": "DATA_INSUFFICIENT",
+    "workflow_run_id": 36238446929,
+    "artifact_id": 10904537282,
+    "artifact_digest": "sha256:4f87bcdb8cd83d4f846bffdc230e35c1b32871fedfd104c1f47bd4cbac154a1f",
+    "result_fingerprint": "cf6e9bd193c84557426ead03b6fefa98f15ebaf64903036f47487c8725cab168",
+    "required_common_candles": 3500,
+    "observed_common_candles": 3269,
     "performance_trial_authorized": false
   }
 }
