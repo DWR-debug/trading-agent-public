@@ -13,7 +13,6 @@ permissions:
   contents: write
   issues: write
   pull-requests: write
-  copilot-requests: write
 
 jobs:
   worker:
@@ -110,6 +109,19 @@ jobs:
           git switch -c "${branch}"
           echo "branch=${branch}" >> "$GITHUB_OUTPUT"
           echo "skip=false" >> "$GITHUB_OUTPUT"
+
+      - name: Check personal-repository Copilot token
+        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true'
+        shell: bash
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${COPILOT_GITHUB_TOKEN}" ]; then
+            gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.request.outputs.issue_number }}/comments" \
+              -f body="Agent queue paused: personal-repository Copilot requires COPILOT_GITHUB_TOKEN with Copilot Requests permission. No Copilot session or paid usage is claimed; the queue will retry after the secret is configured."
+            exit 1
+          fi
 
       - name: Run bounded Copilot CLI
         if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true'
