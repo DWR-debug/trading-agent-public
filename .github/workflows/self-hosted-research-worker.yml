@@ -57,9 +57,9 @@ jobs:
         shell: powershell
         run: |
           $ErrorActionPreference = "Stop"
-          $cmd = [scriptblock]::Create("& $env:PYTHON_CMD -m pip install --upgrade pip")
+          $cmd = [scriptblock]::Create("& $env:PYTHON_CMD -m pip install --user --upgrade pip")
           & $cmd
-          $cmd = [scriptblock]::Create("& $env:PYTHON_CMD -m pip install pytest pandas exchange-calendars")
+          $cmd = [scriptblock]::Create("& $env:PYTHON_CMD -m pip install --user pytest pandas exchange-calendars")
           & $cmd
 
       - name: Safety and provenance guard
