@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "recorded_on": "2026-09-26",
   "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
-  "current_stage": "SOURCE_FEASIBILITY_GATE",
+  "current_stage": "POST_Q019_COVERAGE_VALIDATED",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
@@ -21,20 +21,24 @@
     "Q018 candidate A SEC Form 4 source was DATA_INSUFFICIENT because all fixed data.sec.gov issuer-submission endpoints returned HTTP 403 from GitHub Actions.",
     "Q018 candidate B FOMC source was DATA_INSUFFICIENT because all fixed Federal Reserve historical/calendar retrievals returned HTTP 403 from GitHub Actions.",
     "Q018 candidate C Treasury 10-Year auction source was COVERAGE_VALIDATED under the fixed source contract.",
-    "Q018 performed no performance evaluation, no holdout use, no candidate ranking, no tuning, and no promotion."
+    "Q018 performed no performance evaluation, no holdout use, no candidate ranking, no tuning, and no promotion.",
+    "PR #238 Q019 merged to master at merge-commit=52312dcae5da210df940adcd19a5457cd6ed6acf.",
+    "Q019 workflow=36238205065 completed successfully on preregistered branch; artifact=10905325799; artifact-digest=sha256:0e2ec08566b3300b577bb23a1f238b577e3083d0e8985c7466e748310b456325.",
+    "Q019 Treasury 10-Year contract=Coverage Validated: 89 raw rows, 89 valid rows, 89 mapped events, 0 terminal events, 0 errors; signal events=88; signal-fingerprint=8af45e4eb7267266da10eb28cf5287eea1ff3572f38736382f1b004abf86c208.",
+    "Q019 explicitly forbids performance evaluation, holdout use, ranking, parameter/asset/feature/horizon search, and promotion."
   ],
   "implications": [
-    "Q018 overall source feasibility is insufficient, but the three candidates were not ranked by preference.",
-    "The next objective gate is deeper PIT/signal-contract validation of candidate C, because it alone passed the preregistered source-coverage gate.",
-    "SEC/Fed are closed for this execution environment unless a separate compliant free-access architecture can reproduce the source contract.",
-    "H06 mechanism evidence remains reproducible mechanism-only evidence and is not a profitability result."
+    "Q019 removes the Treasury source/PIT-contract uncertainty for the fixed 2011-2025 study window.",
+    "Q019 does not establish predictive value, profitability, robustness, or tradability; those questions remain open.",
+    "The next scientifically distinct step is a separate preregistered performance study using the fixed Q019 signal and a fresh symbol-disjoint asset universe, after deterministic OHLCV coverage passes.",
+    "The Q018 SEC/Fed failures remain execution-environment DATA_INSUFFICIENT; the Treasury lane is now the only source-feasible candidate in that round."
   ],
   "unknowns": [
-    "whether the Treasury bid-to-cover event series has complete deterministic auction-to-next-trading-bar mapping over the fixed study window",
-    "whether the fixed Treasury signal can be represented without parsing ambiguity or look-ahead",
-    "whether any later formal performance evaluation of the fixed Treasury mechanism can pass the unchanged Evidence Gates"
+    "whether the fixed Treasury auction signal has economically useful association with subsequent asset returns",
+    "whether any such association survives costs, rolling/walk-forward tests, risk gates, and an untouched holdout on a fresh symbol-disjoint asset universe",
+    "whether the Treasury signal is robust enough to contribute as an orthogonal alpha component rather than being redundant with existing trend/cross-sectional sleeves"
   ],
-  "next_action": "Execute Q019 Treasury auction signal/PIT contract validation. No performance evaluation, holdout use, candidate ranking, or parameter search.",
+  "next_action": "Design and preregister Q020 performance evaluation of the fixed Treasury auction signal; first perform fresh symbol-disjoint OHLCV coverage, then execute performance only after coverage pass. No parameter/threshold/asset/horizon search.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
