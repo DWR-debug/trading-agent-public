@@ -156,3 +156,30 @@ Ziel: inkrementelle Information der bereits fixierten sechs Q011-Features innerh
 
 Sicherheitszustand bleibt unverändert: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
 
+
+
+## Q017 Abschluss / Q018 Start — 2026-09-26
+
+Q017-ORTHOGONAL-HYPOTHESIS-DESIGN-ROUND ist als **COMPLETED / DESIGN_ONLY** abgeschlossen.
+Der daraus abgeleitete Q017-G3-Source-Feasibility-Lauf blieb **DATA_INSUFFICIENT**;
+keine Performanceauswertung und keine Auswahl-/Tuningaktion erfolgte.
+
+### Q018 — Orthogonal Official Event-Source Design
+
+Q018 ist als **PENDING / DESIGN_ONLY** vorgemerkt. Drei bewusst ungerankte,
+point-in-time-fähige, kostenlose offizielle Informationsquellen werden zuerst nur
+auf Source-Feasibility geprüft:
+
+1. SEC Form 4 Insider-Flow Events.
+2. Federal Reserve FOMC Policy-Decision Events.
+3. U.S. Treasury 10-Year Auction-Demand Events.
+
+Ablauf:
+Source-Coverage -> PIT-Provenienz -> deterministisches Parsing -> nur bei bestandenem
+Datenvertrag separate Performance-Präregistrierung.
+
+Kein Holdout, keine Parameter-/Asset-/Feature-/Horizon-/Threshold-Suche und keine
+Performancefreigabe durch die Designrunde.
+
+Sicherheitszustand:
+PAPER_ONLY=True, LIVE_TRADING_ENABLED=False, orders_enabled=False, automatic_promotion=False.

@@ -490,6 +490,18 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=4000,
     ),
 
+    AssetUniverse(
+        name="q018_official_event_source_validation",
+        priority=65,
+        description=(
+            "Fresh fixed ex-ante universe for Q018 official event-source design "
+            "and source-feasibility work; no performance selection."
+        ),
+        symbols=("UNH", "UPS", "FDX", "DIS", "ADP", "BKNG", "ORLY", "AZO",
+                 "TJX", "RSG", "WM", "EOG"),
+        target_count=3520,
+    ),
+
 
 )
 
