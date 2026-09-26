@@ -29,7 +29,7 @@ ACTIVE_WORKFLOWS = {
     "agent-dispatch.yml",
     "q020-treasury-auction-performance.yml",
     "copilot-cli-ci-repair.yml",
-    "self-hosted-research-worker-v2.yml",
+    "self-hosted-research-worker-v3.yml",
 }
 
 REQUIRED_FILES = (
@@ -131,8 +131,6 @@ def main() -> None:
         path.name
         for path in (ROOT / "docs").glob("trial*.md")
     }
-    # Only check the recent formally documented trial IDs to avoid imposing
-    # a filename convention on legacy artifacts.
     for trial_id in ("T-2026-09-24-029", "T-2026-09-24-030",
                      "T-2026-09-24-031", "T-2026-09-24-032",
                      "T-2026-09-24-033"):
