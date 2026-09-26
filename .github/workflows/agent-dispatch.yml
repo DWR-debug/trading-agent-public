@@ -65,16 +65,16 @@ jobs:
           gh api "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.issue.outputs.number }}" > "$RUNNER_TEMP/issue.json"
           python - <<'PY'
           import json
+          import os
           from pathlib import Path
 
-          event = {
-              "issue": json.loads(Path("$RUNNER_TEMP/issue.json").read_text(encoding="utf-8"))
-          }
-          Path("$RUNNER_TEMP/event.json").write_text(
-              json.dumps(event), encoding="utf-8"
+          runner_temp = Path(os.environ["RUNNER_TEMP"])
+          issue = json.loads((runner_temp / "issue.json").read_text(encoding="utf-8"))
+          (runner_temp / "event.json").write_text(
+              json.dumps({"issue": issue}), encoding="utf-8"
           )
           PY
-          python -m automation.agent_dispatch             --event-json "$RUNNER_TEMP/event.json"             --master-sha "$GITHUB_SHA"             --active-agent-count "${{ steps.active.outputs.count }}"             --output "$RUNNER_TEMP/agent_task_manifest.json"
+          python -m automation.agent_dispatch --event-json "$RUNNER_TEMP/event.json" --master-sha "$GITHUB_SHA" --active-agent-count "${{ steps.active.outputs.count }}" --output "$RUNNER_TEMP/agent_task_manifest.json"
           cat "$RUNNER_TEMP/agent_task_manifest.json"
 
       - name: Assign issue to Copilot
@@ -83,15 +83,18 @@ jobs:
         run: |
           set -euo pipefail
           manifest="$(cat "$RUNNER_TEMP/agent_task_manifest.json")"
-          custom_agent="$(python -c 'import json,sys; print(json.load(sys.stdin)["custom_agent"])' <<< "$manifest")"
-          base_branch="$(python -c 'import json,sys; print(json.load(sys.stdin)["base_branch"])' <<< "$manifest")"
           task_id="$(python -c 'import json,sys; print(json.load(sys.stdin)["task_id"])' <<< "$manifest")"
           fingerprint="$(python -c 'import json,sys; print(json.load(sys.stdin)["manifest_fingerprint"])' <<< "$manifest")"
-
           payload="$(python - <<'PY'
-          import json, os
+          import json
+          import os
           from pathlib import Path
-          m=json.loads(Path(os.environ["RUNNER_TEMP"] + "/agent_task_manifest.json").read_text())
+
+          m = json.loads(
+              (Path(os.environ["RUNNER_TEMP"]) / "agent_task_manifest.json").read_text(
+                  encoding="utf-8"
+              )
+          )
           print(json.dumps({
               "assignees": ["copilot-swe-agent[bot]"],
               "agent_assignment": {
@@ -109,14 +112,13 @@ jobs:
           }))
           PY
           )"
-          gh api --method POST             -H "Accept: application/vnd.github+json"             -H "GraphQL-Features: issues_copilot_assignment_api_support,coding_agent_model_selection"             "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.issue.outputs.number }}/assignees"             --input - <<< "$payload"
-
-          gh api --method POST             "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.issue.outputs.number }}/comments"             -f body="Dispatched `$task_id` to the configured Copilot worker. Manifest fingerprint: `$fingerprint`. This comment records dispatch only; actual agent usage enters the ledger only after a verifiable PR/session."
+          gh api --method POST -H "Accept: application/vnd.github+json" -H "GraphQL-Features: issues_copilot_assignment_api_support,coding_agent_model_selection" "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.issue.outputs.number }}/assignees" --input - <<< "$payload"
+          gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.issue.outputs.number }}/comments" -f body="Dispatched \`$task_id\` to the configured Copilot worker. Manifest fingerprint: \`$fingerprint\`. Dispatch alone is not evidence; actual agent usage enters the ledger only after a verifiable PR/session."
 
       - name: Dispatch failure is explicit
         if: failure()
         shell: bash
         run: |
           set +e
-          gh api --method POST             "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.issue.outputs.number }}/comments"             -f body="Agent dispatch did not complete. No scientific result or agent-usage entry is inferred from this failure. Check repository Copilot availability/permissions and rerun after correction."
+          gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.issue.outputs.number }}/comments" -f body="Agent dispatch did not complete. No scientific result or agent-usage entry is inferred from this failure. Check repository Copilot availability/permissions and rerun after correction."
           exit 1
