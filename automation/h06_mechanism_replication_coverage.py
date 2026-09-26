@@ -31,11 +31,11 @@ LOOKBACK = 252
 SKIP = 21
 
 SECTOR_MAP = {
-    "technology": ("TXN", "ADI", "AMAT"),
-    "healthcare": ("MDT", "SYK", "BDX"),
-    "industrials": ("ETN", "ITW", "GD"),
-    "consumer_staples": ("CL", "KMB", "GIS"),
-    "utilities": ("AEP", "XEL", "DTE"),
+    "technology": ("MU", "ADBE", "CRM"),
+    "healthcare": ("ABT", "BMY", "BAX"),
+    "industrials": ("PH", "ROK", "DOV"),
+    "consumer_staples": ("CPB", "SJM", "CAG"),
+    "utilities": ("EXC", "SRE", "CMS"),
 }
 
 
@@ -191,12 +191,14 @@ def run(
     result = {
         "schema_version": "1.0",
         "task_id": "WIDE-SEARCH-H06-MECHANISM-REPLICATION-COVERAGE",
-        "hypothesis_id": "H06-REPAIR",
+        "hypothesis_id": "H06",
         "recorded_at": date.today().isoformat(),
         "universe": UNIVERSE,
-        "repair_of": "WIDE-SEARCH-H06-SECTOR-NEUTRAL-RESIDUAL-MOMENTUM",
+        "replication_of": "H06-SECTOR-NEUTRAL-RESIDUAL-MOMENTUM",
         "symbols": list(universe.symbols),
         "sector_map": {key: list(value) for key, value in SECTOR_MAP.items()},
+        "requested_candles": REQUESTED_CANDLES,
+        "target_common_calendar": TARGET_COMMON_CANDLES,
         "research_candles_used": RESEARCH_CANDLES,
         "holdout_candles_unused": TARGET_COMMON_CANDLES - RESEARCH_CANDLES,
         "data_snapshot": {
@@ -210,6 +212,8 @@ def run(
             "residualization": "equal_weight_sector_demean",
         },
         "coverage": {
+            "study_start": STUDY_START.isoformat(),
+            "study_end": STUDY_END.isoformat(),
             "status": "COVERAGE_READY" if coverage_ready else "DATA_INSUFFICIENT",
             "decision_dates_expected": decision_dates,
             "complete_decision_dates": complete_dates,
