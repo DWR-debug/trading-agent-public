@@ -155,3 +155,44 @@ def test_coverage_preflight_reports_incomplete_symbol_metadata_without_crashing(
     assert result["datasets"][0]["start"] is None
     assert result["datasets"][0]["end"] is None
     assert result["scientific_outcome"] == "NO_SCIENTIFIC_OUTCOME"
+
+
+def test_coverage_preflight_accepts_acquisition_headroom_above_window_minimum(
+    monkeypatch, tmp_path
+):
+    spec_path = Path(
+        "research/preregistrations/q020_treasury_auction_coverage_repair_2026_09_26.json"
+    )
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    symbols = tuple(spec["symbols"])
+
+    from datetime import datetime, timedelta, timezone
+
+    base = datetime(2011, 1, 1, tzinfo=timezone.utc)
+
+    class Bar:
+        def __init__(self, ts, value):
+            self.timestamp = ts
+            self.open = value
+            self.high = value + 1.0
+            self.low = value - 1.0
+            self.close = value + 0.25
+            self.volume = value
+
+    bars = [Bar(base + timedelta(days=i), 100.0 + i) for i in range(3500)]
+
+    def fake_loader(symbol, interval, total, **kwargs):
+        assert symbol in symbols
+        assert interval == "1d"
+        assert total == 4000
+        return list(bars)
+
+    monkeypatch.setattr("automation.coverage_preflight.load_yahoo_history", fake_loader)
+    result = run_preflight(spec_path, output_root=tmp_path)
+
+    assert result["status"] == "coverage_passed"
+    assert result["requested_candles"] == 4000
+    assert result["minimum_in_window_candles"] == 3500
+    assert result["target_common_calendar"] == 3500
+    assert result["common_calendar_count"] == 3500
+    assert result["performance_evaluation"] is False
