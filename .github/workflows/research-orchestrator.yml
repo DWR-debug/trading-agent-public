@@ -117,7 +117,16 @@ concurrency:
 
 jobs:
   run:
-    if: ${{ github.ref != 'refs/heads/research/execute-q020-coverage' }}
+    if: >-
+      ${{
+        github.event_name == 'schedule' ||
+        github.event_name == 'workflow_dispatch' ||
+        (github.event_name == 'push' &&
+          (github.ref == 'refs/heads/master' ||
+           startsWith(github.ref, 'refs/heads/research/execute-'))) ||
+        (github.event_name == 'pull_request' &&
+          startsWith(github.event.pull_request.head.ref, 'research/execute-'))
+      }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 120
     steps:
