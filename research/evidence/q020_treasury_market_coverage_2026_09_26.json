@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "record_id": "Q-020-TREASURY-MARKET-COVERAGE-2026-09-26",
+  "status": "DATA_INSUFFICIENT",
+  "workflow_run_id": 36238446929,
+  "artifact_id": 10904537282,
+  "artifact_digest": "sha256:4f87bcdb8cd83d4f846bffdc230e35c1b32871fedfd104c1f47bd4cbac154a1f",
+  "result_fingerprint": "cf6e9bd193c84557426ead03b6fefa98f15ebaf64903036f47487c8725cab168",
+  "fixed_universe": {
+    "name": "q018_official_event_source_validation",
+    "symbols": [
+      "UNH",
+      "UPS",
+      "FDX",
+      "DIS",
+      "ADP",
+      "BKNG",
+      "ORLY",
+      "AZO",
+      "TJX",
+      "RSG",
+      "WM",
+      "EOG"
+    ],
+    "study_window": {
+      "start": "2011-01-01",
+      "end": "2025-09-24"
+    }
+  },
+  "geometry": {
+    "requested_candles": 3520,
+    "required_common_calendar": 3500,
+    "observed_common_calendar": 3269,
+    "canonical_status": "DATA_INVALID"
+  },
+  "governance": {
+    "coverage_only": true,
+    "performance_evaluation": false,
+    "holdout_used": false,
+    "selection_used": false,
+    "parameter_search": false,
+    "asset_search": false,
+    "feature_search": false,
+    "horizon_search": false,
+    "performance_trial_authorized": false,
+    "automatic_promotion": false
+  },
+  "interpretation": "The fixed Q018 universe cannot satisfy the pre-registered 3500-common-candle market-data geometry. This blocks a formal performance study on this fixed universe. No assets or sample geometry were changed to rescue the hypothesis."
+}
