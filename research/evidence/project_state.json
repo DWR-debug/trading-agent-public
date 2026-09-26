@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
-  "updated": "2026-09-25",
+  "updated": "2026-09-26",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "ffbfcfcbd6a9717296f8600e34caf49c013f2dac",
+  "master_commit": "d81c4399260145e21156064ab76fad77a9969222",
   "latest_formal_trial": "T-2026-09-25-045",
   "latest_trial_status": "BLOCKED",
   "next_reserved_trial": null,
@@ -40,7 +40,9 @@
     "agent_output_is_evidence": false,
     "capital_available": false,
     "paid_copilot_or_paid_coding_agent": false,
-    "resource_policy": "No capital is available for paid external services. Free resources only."
+    "resource_policy": "No capital is available for paid external services. Free resources only.",
+    "external_agent_review_issue": 231,
+    "external_agent_execution_verified": false
   },
   "continuity": {
     "canonical_context": "docs/PROJECT_CONTEXT.md",
@@ -363,7 +365,16 @@
     "h06_holdout_candles_unused": 702,
     "h06_complete_decision_dates": 2546,
     "h06_mechanism_preregistration": "research/preregistrations/h06_mechanism_diagnostic_2026_09_26.json",
-    "h06_mechanism_status": "PREREGISTERED_EXECUTION"
+    "h06_mechanism_status": "PREREGISTERED_EXECUTION",
+    "canonical_data_layer_status": "MERGED",
+    "canonical_data_layer_pr": 232,
+    "canonical_data_layer_merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
+    "canonical_data_layer_ci_workflow_run": 36231341492,
+    "canonical_data_layer_ci_x64": "success",
+    "canonical_data_layer_ci_arm": "success",
+    "canonical_data_layer_builder": "data/canonical_snapshot.py",
+    "canonical_coverage_runner": "automation/coverage_preflight.py",
+    "canonical_data_layer_next_migration": "H06 replication coverage"
   },
   "agent_usage_efficiency": {
     "policy": "deterministic_actions_for_computation; free-agent-use-for-hypothesis-generation_research-design_and-architecture-review",
