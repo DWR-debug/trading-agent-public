@@ -179,7 +179,9 @@ def test_autonomous_agent_request_queue_uses_two_lanes_and_is_fail_closed():
     assert 'cron: "*/10 * * * *"' in text
     assert 'workflow_dispatch:' in text
     assert 'lane: [0, 1]' in text
+    assert 'trading-agent-agent-cli-queue' in text
     assert 'trading-agent-agent-cli-queue-lane-${{ matrix.lane }}' in text
+    assert 'cancel-in-progress: false' in text
     assert 'PAPER_ONLY=True' in text
     assert 'LIVE_TRADING_ENABLED=False' in text
     assert 'orders_enabled=False' in text
