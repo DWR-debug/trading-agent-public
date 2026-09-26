@@ -42,6 +42,14 @@ Monatliche Soft-Allokation:
 - 10 Core-hours Agent-/Workflow-Integration
 - 10 Core-hours Notfallreserve
 
+## Self-hosted Research Worker
+
+Der Self-hosted Worker mit dem Label `trading-agent-research` ergänzt die kostenlosen GitHub-hosted Runner. Er übernimmt ausschließlich owner-gesteuerte QA-, Reproduktions- und vorbereitende Rechenlast. Er führt keinen untrusted Fork-/PR-Code aus, besitzt keine Trading-Secrets und darf keine Promotion oder Live-Ausführung auslösen.
+
+Formale Research-Evidence bleibt auf den kanonischen, reproduzierbaren GitHub-hosted Pfaden. Der Self-hosted Worker liefert Arbeitsartefakte, die bei wissenschaftlicher Verwendung anschließend kanonisch reproduziert werden.
+
+Einrichtungsdokument: `docs/SELF_HOSTED_RESEARCH_RUNNER.md`.
+
 ## Copilot Cloud Agent — konkrete Eignung
 
 Der Cloud Agent kann Repository-Recherche, Implementierungspläne, Bugfixes, inkrementelle Features, Testverbesserungen, Dokumentation, Technical-Debt-Arbeit und Merge-Conflict-Auflösung übernehmen. Er arbeitet in einer eigenen GitHub-Actions-basierten Umgebung und kann Änderungen auf einem Branch sowie Pull Requests erzeugen.
