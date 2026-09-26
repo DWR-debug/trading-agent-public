@@ -127,7 +127,7 @@
     "canonical_yahoo_hardening_pr": 234,
     "canonical_yahoo_hardening_merge_commit": "cfdb0ac7031cfdadcbfe16da50cbedeb4b285dd3"
   },
-  "next_action": "Execute fresh OHLCV coverage preflight for fixed Q020 universe; only after coverage pass may the fixed-rule performance execution be separately authorized.",
+  "next_action": "Create a separate immutable Q020 performance authorization bound to the validated repair snapshot; only then execute the fixed-rule performance workflow.",
   "q018": {
     "task_id": "Q-018-SOURCE-FEASIBILITY-PREFLIGHT",
     "status": "DATA_INSUFFICIENT",
@@ -177,5 +177,31 @@
     "requested_candles": 3520,
     "target_common_calendar": 3500,
     "performance_trial_authorized": false
+  },
+  "q020_repair": {
+    "task_id": "T-2026-09-26-046R1",
+    "parent_trial_id": "T-2026-09-26-046",
+    "workflow_run_id": 36240853419,
+    "workflow_conclusion": "success",
+    "artifact_id": 10905489440,
+    "artifact_sha256": "sha256:f0c5066b879cdc391263e57535ec1e72badbbddfc9c46f27ced51d491c3240a0",
+    "aggregate_status": "COVERAGE_VALIDATED",
+    "requested_candles": 4000,
+    "minimum_in_window_candles": 3500,
+    "target_common_calendar": 3500,
+    "common_calendar_count": 3704,
+    "snapshot_fingerprint": "70cff5df1b92f4f7db2ea09bdc9999abff93dd4230ad4ea5df6e5da204076ef8",
+    "coverage_fingerprint": "703f9fb9d1cd21618d0acdcbe8dff3267c99b91afb6841d7110eb09a93f04600",
+    "selected_common_calendar_start": "2011-10-24T13:30:00+00:00",
+    "selected_common_calendar_end": "2025-09-24T13:30:00+00:00",
+    "performance_trial_authorized": false,
+    "holdout_used": false,
+    "selection_used": false,
+    "safety": {
+      "paper_only": true,
+      "live_trading_enabled": false,
+      "orders_enabled": false,
+      "automatic_promotion": false
+    }
   }
 }
