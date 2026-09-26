@@ -94,3 +94,15 @@ Regel für wissenschaftlich relevante Ergebnisse.
 
 Der Einstiegspunkt bleibt \`docs/TRADING_AGENT_CHAT_ENTRYPOINT.md\`. Handoff-Text aus dem
 letzten Chat wird gegen kanonische Quellen geprüft; er ersetzt diese nicht.
+
+## Project-State-Freshness
+
+\`automation/project_state_freshness_check.py\` vergleicht den unveränderten
+\`project_state.json\` mit \`current_project_checkpoint.json\` und der verifizierten
+Master-Revision. In Pull-Request-Actions stammt die Revision aus
+\`pull_request.base.sha\`, auf einem Master-Push aus \`GITHUB_SHA\`, lokal aus
+\`refs/heads/master\` beziehungsweise ersatzweise aus \`origin/refs/heads/master\`.
+Abweichende Workflow-Run-, Artifact- oder Fingerprint-Referenzen
+werden mit den betroffenen Quellen ausgegeben. Der Check schreibt keine Evidence;
+eine veraltete Meldung wird nicht durch eine automatische Änderung historischer
+Evidence-Dateien behoben.
