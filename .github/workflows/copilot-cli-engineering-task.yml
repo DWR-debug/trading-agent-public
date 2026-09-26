@@ -156,6 +156,29 @@ jobs:
             --allow-tool='shell(python:*)' \
             --allow-tool='shell(pytest:*)'
 
+      - name: Enforce bounded file scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          allowed=(
+            "automation/self_hosted_research_worker.py"
+            "tests/test_self_hosted_research_worker.py"
+            "docs/SELF_HOSTED_RESEARCH_RUNNER.md"
+            "docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md"
+            "docs/DEVELOPMENT_ORCHESTRATION.md"
+          )
+          while IFS= read -r path; do
+            test -n "$path" || continue
+            case " ${allowed[*]} " in
+              *" $path "*) ;;
+              *)
+                echo "::error::Copilot CLI changed file outside bounded engineering scope: $path"
+                exit 1
+                ;;
+            esac
+          done < <(git diff --name-only)
+          echo "FILE_SCOPE_OK"
+
       - name: Final bounded regression gate
         shell: bash
         run: |
