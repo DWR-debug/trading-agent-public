@@ -1,0 +1,107 @@
+name: Q022 H1R1 Directional Inversion Performance
+
+on:
+  push:
+    branches:
+      - research/q022-h1r1-performance
+    paths:
+      - automation/q022_h1r1_directional_inversion_performance.py
+      - research/preregistrations/q022_h1r1_directional_inversion_performance_2026_09_26.json
+      - research/authorizations/q022_h1r1_directional_inversion_performance_2026_09_26.json
+      - tests/test_q022_h1r1_directional_inversion_performance.py
+      - .github/workflows/q022-h1r1-directional-inversion-performance.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: q022-h1r1-directional-inversion-performance
+  cancel-in-progress: false
+
+jobs:
+  performance:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 150
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout exact authorization commit
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pytest pandas exchange-calendars statsmodels==0.15.0
+
+      - name: Authorization and safety
+        run: |
+          set -euo pipefail
+          test "$(git log -1 --pretty=%s)" = "Research authorization: execute T047R1 performance"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from config import settings
+          a=json.loads(Path("research/authorizations/q022_h1r1_directional_inversion_performance_2026_09_26.json").read_text())
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          assert a["authorized"] is True
+          assert a["performance_execution_authorized"] is True
+          assert a["execution_scope"] == "PERFORMANCE"
+          assert a["trial_id"] == "T-2026-09-26-047R1-PERFORMANCE"
+          assert a["coverage_workflow_run_id"] == 36262630438
+          assert a["coverage_artifact_id"] == 10912259838
+          assert a["coverage_artifact_sha256"] == "sha256:7044a136c0dfbeddfcf0a847636b8fa750bf946350922e8920521ef5eefd17f9"
+          assert a["snapshot_fingerprint"] == "1e158aa8807ee48a08686191cf23abff258f8313b8df67c78bb0aeefbb09b315"
+          assert a["source_contract_fingerprint"] == "13072dbed7d60684f4a4fb8a3de69555cae83c66f3cfdfb603b9ed2a4b1c225b"
+          assert a["signal_events_fingerprint"] == "8af45e4eb7267266da10eb28cf5287eea1ff3572f38736382f1b004abf86c208"
+          print("T047R1 PERFORMANCE AUTHORIZATION OK")
+          PY
+
+      - name: Focused regression tests
+        run: |
+          set -euo pipefail
+          python -m pytest -q tests/test_q022_h1r1_directional_inversion_performance.py tests/test_q022_h1_directional_inversion_design.py tests/test_coverage_preflight.py
+
+      - name: Download frozen coverage and Q019 contract
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/t047r1-coverage /tmp/q019
+          mkdir -p /tmp/t047r1-coverage /tmp/q019
+          gh run download 36262630438 --repo "$GITHUB_REPOSITORY" --name q022-h1-directional-inversion-coverage-repair-36262630438 --dir /tmp/t047r1-coverage
+          gh run download 36238205065 --repo "$GITHUB_REPOSITORY" --name q019-treasury-contract --dir /tmp/q019
+          test -f /tmp/q019/q019_treasury_signal_contract.json
+          manifest="$(find /tmp/t047r1-coverage -name 'coverage_preflight_*.json' -print -quit)"
+          test -n "$manifest"
+          test -f /tmp/t047r1-coverage/T-2026-09-26-047R1/snapshot_manifest.json
+          echo "MANIFEST=$manifest"
+
+      - name: Full regression suite
+        run: python -m pytest -q
+
+      - name: Execute T047R1 performance
+        run: |
+          set -euo pipefail
+          manifest="$(find /tmp/t047r1-coverage -name 'coverage_preflight_*.json' -print -quit)"
+          data_dir="$(dirname "$manifest")/datasets"
+          mkdir -p research/runs/q022_h1r1_directional_inversion/T-2026-09-26-047R1-PERFORMANCE
+          python -m automation.q022_h1r1_directional_inversion_performance             --manifest "$manifest"             --data-dir "$data_dir"             --signal-contract /tmp/q019/q019_treasury_signal_contract.json             --authorization research/authorizations/q022_h1r1_directional_inversion_performance_2026_09_26.json             --output research/runs/q022_h1r1_directional_inversion/T-2026-09-26-047R1-PERFORMANCE/result.json
+
+      - name: Publish performance artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q022-h1r1-directional-inversion-performance-${{ github.run_id }}
+          path: research/runs/q022_h1r1_directional_inversion/
+          if-no-files-found: warn
+          retention-days: 30
