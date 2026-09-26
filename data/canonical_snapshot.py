@@ -60,8 +60,10 @@ class SnapshotSpec:
         if minimum < self.target_common_candles or minimum > self.requested_candles:
             raise ValueError("minimum_in_window_candles must be between target and requested candles")
         dataset_path = Path(self.dataset_subdir)
-        if dataset_path.is_absolute() or len(dataset_path.parts) != 1 or dataset_path.parts[0] in {"", ".", ".."}:
-            raise ValueError("dataset_subdir must be a single relative path component")
+        if dataset_path.is_absolute() or ".." in dataset_path.parts or (
+            self.dataset_subdir != "." and len(dataset_path.parts) != 1
+        ):
+            raise ValueError("dataset_subdir must be a single relative path component or '.'")
         if self.study_start and self.study_end and self.study_start > self.study_end:
             raise ValueError("study_start cannot be after study_end")
 
