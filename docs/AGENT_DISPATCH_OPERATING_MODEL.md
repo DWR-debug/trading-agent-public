@@ -13,7 +13,7 @@ Erst dann darf GitHub versuchen, den nachgeordneten Copilot-Worker zuzuweisen.
 
 `Issue vorbereiten → Vertragsprüfung → Konfidenz-/Concurrency-Prüfung → Copilot-Zuweisung → PR → CI → Review → Merge`
 
-Der Agent erhält nur eine klar begrenzte Aufgabe. Der Dispatch-Vertrag verbietet
+Der automatische Coding-Dispatch nutzt derzeit ausschließlich den PR-fähigen `trading-agent-engineer`-Worker. Reviewer und Hypothesen-Worker bleiben getrennte, nachgeordnete Review-/Designpfade. Der Agent erhält nur eine klar begrenzte Aufgabe. Der Dispatch-Vertrag verbietet
 explizit deterministische Backtests, Holdout-/Parameter-/Asset-/Threshold-/Horizon-
 Selektion, Gate-Änderungen, Promotion und Live-Ausführung.
 
@@ -42,5 +42,5 @@ Beispiel:
 {"schema_version":1,"task_id":"AGENT-EXAMPLE-001","worker_class":"engineering","custom_agent":"trading-agent-engineer","base_branch":"master","scope":"bounded technical task","max_session_minutes":30,"deterministic_compute":false,"holdout_selection":false,"parameter_selection":false,"asset_selection":false,"threshold_selection":false,"horizon_selection":false,"research_gate_changes":false,"promotion_decision":false,"live_execution":false,"paid_usage":false,"research_decision":false,"manual_handoff_required":false}
 -->
 
-Die JSON-Struktur ist absichtlich explizit. Ein prose-only Issue kann nicht
+Der Manifest-Fingerprint bindet zusätzlich den vollständigen Issue-Inhalt. Die JSON-Struktur ist absichtlich explizit. Ein prose-only Issue kann nicht
 versehentlich als agentische Ausführungsfreigabe interpretiert werden.
