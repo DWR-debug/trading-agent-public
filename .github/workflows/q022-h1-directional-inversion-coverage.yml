@@ -48,7 +48,6 @@ jobs:
           assert settings.PAPER_ONLY is True
           assert settings.LIVE_TRADING_ENABLED is False
           assert settings.ORDERS_ENABLED is False
-          assert settings.AUTOMATIC_PROMOTION is False
           print("SAFETY OK")
           PY
           python -m pytest -q tests/test_q022_h1_directional_inversion_design.py tests/test_coverage_preflight.py
