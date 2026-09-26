@@ -46,7 +46,9 @@
   "pit_contract": {
     "information_timestamp": "record_date, the official dataset publication date",
     "action_rule": "Map each event to the first eligible common trading date strictly after record_date.",
-    "terminal_event_rule": "Events with no next trading date inside the fixed study window are recorded as terminal and are not silently dropped."
+    "terminal_event_rule": "Events with no next trading date inside the fixed study window are recorded as terminal and are not silently dropped.",
+    "calendar_source": "XNYS exchange session calendar via exchange_calendars; date-level session eligibility only",
+    "calendar_rule": "first XNYS session strictly after record_date"
   },
   "coverage_contract": {
     "complete_required_fields": true,
@@ -54,7 +56,9 @@
     "duplicate_key": "auction_date,cusip",
     "numeric_bid_to_cover_required": true,
     "record_date_not_before_auction_date": true,
-    "fixed_common_market_calendar_required": true
+    "fixed_common_market_calendar_required": true,
+    "fixed_universe_market_data_not_required": true,
+    "note": "Asset OHLCV coverage is a separate later gate; Q019 validates event-source and PIT semantics only."
   },
   "governance": {
     "coverage_only": true,
