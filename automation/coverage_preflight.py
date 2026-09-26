@@ -99,7 +99,7 @@ def run_preflight(
     interval = str(spec["interval"])
     requested = int(spec["requested_candles"])
     target = int(spec["target_candles"])
-    minimum = int(spec.get("minimum_in_window_candles", target))
+    minimum = int(spec.get("minimum_in_window_candles", requested))
     if minimum < target or minimum > requested:
         raise RuntimeError(
             "minimum_in_window_candles must be between target_candles and requested_candles."
