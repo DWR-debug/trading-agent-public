@@ -206,3 +206,25 @@ die bereits source-feasible Q018-C-Familie:
 - keine Rendite-/P&L-Berechnung
 - kein Holdout
 - keine Parameter-, Asset-, Feature-, Horizon-, Threshold- oder Varianten-Suche
+
+
+## Q019 Abschluss / Q020 Performance-Design — 2026-09-26
+
+Q019 ist **COMPLETED / COVERAGE_VALIDATED**.
+
+- Workflow `36238205065`, Artifact `10905325799`
+- 89/89 Treasury-10Y-Auktionszeilen valide
+- 89 PIT-Mappings, 0 terminal events, 0 Fehler
+- Signal-Fingerprint `8af45e4eb7267266da10eb28cf5287eea1ff3572f38736382f1b004abf86c208`
+- keine Performanceevaluation
+
+### Q020 — Treasury Auction Performance Design
+
+Q020 ist **PENDING / PREREGISTERED_DESIGN_ONLY**. Das Eventsignal bleibt exakt das in Q019 validierte Signal. Für die Performanceprüfung wird ein neues symbol-disjunktes Universum verwendet:
+
+`ACN, AMT, APD, BK, CME, CTAS, GPC, LLY, MCO, NOC, ROST, SHW`.
+
+Ablauf:
+**fresh OHLCV coverage -> frozen snapshot -> explizite Execution Authorization -> fixed-rule performance -> rolling/OOS -> blind holdout -> cost stress -> Evidence-Gates -> Archivierung.**
+
+Keine Parameter-, Asset-, Varianten-, Horizon- oder Holdout-Selektion.
