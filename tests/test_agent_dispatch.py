@@ -163,6 +163,7 @@ def test_autonomous_agent_request_queue_uses_two_lanes_and_is_fail_closed():
     assert 'automatic_promotion=False' in text
     assert 'Automatic PR creation is unavailable' in text
     assert 'Duplicate execution is fail-closed' in text
+    assert 'before="${{ github.event.before }}"' in text
     assert 'python -m automation.agent_dispatch' in text
 
 def test_bounded_copilot_cli_workflow_uses_builtin_token_and_credit_gate():
