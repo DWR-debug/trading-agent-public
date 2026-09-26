@@ -13,7 +13,7 @@ def test_payout_requires_new_high_water_mark_and_never_consumes_floor() -> None:
         sequence_window_periods=None,
     )
 
-    result = evaluate_income_viability((0.10, 0.0, 0.10, 0.0), policy)
+    result = evaluate_income_viability((0.10, 0.0, 0.0, 0.10), policy)
 
     assert result.total_payout_eur == 27.5
     assert result.payout_count == 1
