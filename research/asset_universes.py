@@ -524,7 +524,6 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         symbols=("ACN", "AMT", "APD", "TGT", "CME", "CTAS", "GPC", "LLY", "MCO", "NOC", "ROST", "SHW"),
         target_count=4000,
     ),
-)
 
     AssetUniverse(
         name="validation_2026_09_26_treasury_auction_directional_inversion",
