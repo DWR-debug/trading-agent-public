@@ -21,6 +21,8 @@ ACTIVE_WORKFLOWS = {
     "copilot-setup-steps.yml",
     "wide-search.yml",
     "h06-mechanism.yml",
+    "h06-mechanism-replication.yml",
+    "h06-mechanism-replication-run.yml",
 }
 
 REQUIRED_FILES = (
