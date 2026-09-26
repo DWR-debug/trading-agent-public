@@ -27,3 +27,5 @@ def test_self_hosted_workflow_is_manual_and_owner_gated():
     assert "pull_request:" not in text
     assert "PAPER_ONLY" in text
     assert "ORDERS_ENABLED" in text
+    assert "shell: cmd" in text
+    assert "shell: powershell" not in text
