@@ -1,6 +1,46 @@
 {
-  "schema_version": "1.0",
-  "updated": "2026-09-25",
+  "schema_version": "1.1",
+  "updated": "2026-09-26",
   "currency": "USD",
-  "entries": []
+  "entries": [],
+  "policy": {
+    "paid_agent_budget_usd": 0,
+    "cloud_agent_allowed_only_if_already_included_at_no_extra_cost": true,
+    "no_overage": true,
+    "monthly_resource_policy": "docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md",
+    "resource_routing": {
+      "cloud_agent": [
+        "bounded_engineering",
+        "tests",
+        "docs",
+        "technical_review",
+        "research_design_support"
+      ],
+      "github_actions": [
+        "deterministic_ci",
+        "coverage",
+        "preflight",
+        "backtests",
+        "validation"
+      ],
+      "codespaces": [
+        "interactive_debugging",
+        "data_qa",
+        "local_reproduction"
+      ],
+      "git_lfs": [
+        "large_versioned_reused_datasets_only"
+      ]
+    },
+    "cloud_agent_session_target_minutes": "15-45",
+    "cloud_agent_hard_limit_minutes": 59,
+    "cloud_agent_max_concurrency": 2,
+    "ai_credit_soft_allocation_percent": {
+      "engineering": 50,
+      "qa_governance": 25,
+      "research_design": 15,
+      "reserve": 10
+    },
+    "logging_rule": "Do not claim agent usage unless an actual agent session or PR can be verified."
+  }
 }
