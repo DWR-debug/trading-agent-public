@@ -69,3 +69,24 @@ keine Holdout-Nutzung.
 Nach jedem neuen signifikanten Ergebnis werden mindestens diese Felder ersetzt:
 **Was wissen wir? — Was wissen wir nicht? — Was ändert sich? — Nächste Aktion —
 Welche Schutzgrenzen bleiben unverändert?**
+
+
+## Q018 Source-Feasibility abgeschlossen — 2026-09-26
+
+Q018 ist als Source-Feasibility-Gate abgeschlossen.
+
+- Workflow: `36237329691`
+- Artifact: `10904273903`
+- Artifact-Digest: `sha256:f8bfe4e1065d3d8a8b82b08fe4f78f6bd3c006bedf71c8cadc4f512d8d308989`
+- Result-Fingerprint: `82b07265b29a93547f2b1547227722005cf9d883baf3ee8b6dc50e029742152d`
+- Gesamtstatus: `DATA_INSUFFICIENT`
+- SEC Form 4: `DATA_INSUFFICIENT` — HTTP 403 aus GitHub Actions.
+- FOMC: `DATA_INSUFFICIENT` — HTTP 403 aus GitHub Actions.
+- Treasury 10-Year Auction Data: `COVERAGE_VALIDATED`.
+- Keine Performanceauswertung, kein Holdout, keine Kandidatenrangfolge, kein Tuning.
+
+Die SEC/Fed-Befunde sind Ausführungs-/Zugriffsprobleme des aktuellen kostenlosen Runners; sie sind keine Behauptung, dass die offiziellen Quellen selbst nicht existieren.
+
+### Nächste Aktion
+
+Q019 — Treasury Auction Signal Contract. Die einzige source-feasible Q018-Familie wird jetzt objektiv auf Signal-Parsing, Point-in-Time-Mapping und deterministische Ereignisabdeckung geprüft. Das ist kein Performance-Trial und keine nachträgliche Optimierung.
