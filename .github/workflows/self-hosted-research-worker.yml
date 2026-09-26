@@ -36,40 +36,53 @@ jobs:
           ref: ${{ inputs.ref }}
           fetch-depth: 1
 
-      - name: Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.13"
+      - name: Detect existing Python
+        id: python
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+          $py = Get-Command py -ErrorAction SilentlyContinue
+          $python = Get-Command python -ErrorAction SilentlyContinue
+          if ($py) {
+            & py -3 --version
+            "PYTHON_CMD=py -3" >> $env:GITHUB_ENV
+          } elseif ($python) {
+            & python --version
+            "PYTHON_CMD=python" >> $env:GITHUB_ENV
+          } else {
+            throw "No usable Python launcher is available on the self-hosted Windows runner."
+          }
 
       - name: Install minimal research dependencies
-        shell: bash
+        shell: powershell
         run: |
-          set -euo pipefail
-          python -m pip install --upgrade pip
-          python -m pip install pytest pandas exchange-calendars
+          $ErrorActionPreference = "Stop"
+          $cmd = [scriptblock]::Create("& $env:PYTHON_CMD -m pip install --upgrade pip")
+          & $cmd
+          $cmd = [scriptblock]::Create("& $env:PYTHON_CMD -m pip install pytest pandas exchange-calendars")
+          & $cmd
 
       - name: Safety and provenance guard
-        shell: bash
+        shell: powershell
         env:
           REQUESTED_REF: ${{ inputs.ref }}
         run: |
-          set -euo pipefail
-          test "$REQUESTED_REF" = "master" || [[ "$REQUESTED_REF" == research/* ]]
-          python - <<'PY'
-          from config import settings
-          assert settings.PAPER_ONLY is True
-          assert settings.LIVE_TRADING_ENABLED is False
-          assert settings.ORDERS_ENABLED is False
-          print("SAFETY INVARIANTS OK")
-          PY
+          $ErrorActionPreference = "Stop"
+          if (($env:REQUESTED_REF -ne "master") -and ($env:REQUESTED_REF -notlike "research/*")) {
+            throw "Untrusted ref requested: $env:REQUESTED_REF"
+          }
+          $cmd = [scriptblock]::Create("& $env:PYTHON_CMD -c ""from config import settings; assert settings.PAPER_ONLY is True; assert settings.LIVE_TRADING_ENABLED is False; assert settings.ORDERS_ENABLED is False; print('SAFETY INVARIANTS OK')""")
+          & $cmd
 
       - name: Execute bounded worker lane
-        shell: bash
+        shell: powershell
         env:
           LANE: ${{ inputs.lane }}
         run: |
-          set -euo pipefail
-          python -m automation.self_hosted_research_worker --lane "$LANE" --output-dir research/runs/self_hosted/${GITHUB_RUN_ID}
+          $ErrorActionPreference = "Stop"
+          $output = "research/runs/self_hosted/$env:GITHUB_RUN_ID"
+          $cmd = [scriptblock]::Create("& $env:PYTHON_CMD -m automation.self_hosted_research_worker --lane $env:LANE --output-dir $output")
+          & $cmd
 
       - name: Publish worker evidence
         if: always()
