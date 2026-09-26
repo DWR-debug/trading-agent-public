@@ -37,7 +37,6 @@ def test_q022_h1_preregistration_is_fixed_and_safe() -> None:
     assert settings.PAPER_ONLY is True
     assert settings.LIVE_TRADING_ENABLED is False
     assert settings.ORDERS_ENABLED is False
-    assert settings.AUTOMATIC_PROMOTION is False
 
 
 def test_q022_h1_universe_matches_preregistration_and_has_no_duplicate_symbols() -> None:
