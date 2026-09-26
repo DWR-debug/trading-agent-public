@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "recorded_on": "2026-09-26",
   "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
-  "current_stage": "PERFORMANCE_COVERAGE_GATE",
+  "current_stage": "ORTHOGONAL_SOURCE_DESIGN",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
@@ -24,19 +24,21 @@
     "Q018 performed no performance evaluation, no holdout use, no candidate ranking, no tuning, and no promotion.",
     "Q019 Treasury signal/PIT contract passed on the fixed Q018 universe: workflow=36238205065; artifact=10905325799; fingerprint=13072dbed7d60684f4a4fb8a3de69555cae83c66f3cfdfb603b9ed2a4b1c225b; 89 events mapped; 0 terminal events.",
     "Q019 remains coverage-only and did not compute performance or use a holdout.",
-    "The next gate, Q020, is a separate canonical OHLCV coverage check on the same fixed Q018 universe; changing assets or study geometry to rescue coverage is prohibited."
+    "The next gate, Q020, is a separate canonical OHLCV coverage check on the same fixed Q018 universe; changing assets or study geometry to rescue coverage is prohibited.",
+    "Q020 fixed-universe market coverage gate completed: workflow=36238446929; artifact=10904537282; result fingerprint=cf6e9bd193c84557426ead03b6fefa98f15ebaf64903036f47487c8725cab168; observed 3269 common candles versus required 3500.",
+    "Q020 was coverage-only and did not use the holdout, modify assets, modify geometry, or evaluate performance.",
+    "The fixed Q018 Treasury universe is therefore not eligible for a formal 3500-common-candle performance study; no post-result asset replacement was performed."
   ],
   "implications": [
-    "The Treasury event source and PIT semantics are technically reproducible under the fixed contract.",
-    "Q019 source validation does not establish trading profitability.",
-    "A formal performance study remains contingent on separate market-data coverage; any coverage failure is a valid DATA_INSUFFICIENT result.",
-    "The fixed Q018 universe must not be replaced after observing its coverage."
+    "Q019 establishes a reproducible Treasury event signal/PIT contract, but Q020 blocks that fixed universe at the market-data coverage gate.",
+    "The Treasury mechanism is not scientifically validated for profitability.",
+    "The correct next move is a new orthogonal source-first design round, not rescue tuning of the blocked universe."
   ],
   "unknowns": [
-    "whether the fixed Q018 universe reaches the required 3500 common canonical OHLCV candles",
-    "whether a formal Treasury performance trial can be run under the unchanged Evidence Gates on a pre-fixed eligible universe"
+    "whether new official information-source families can pass a fully reproducible source/PIT contract on a fresh fixed universe",
+    "whether any such future candidate can later satisfy market coverage and unchanged performance gates"
   ],
-  "next_action": "Execute Q020 canonical market-coverage gate for the fixed Q018 universe. No asset replacement, performance evaluation, holdout use, or tuning.",
+  "next_action": "Q021 orthogonal official event-source design and coverage-first feasibility. No performance evaluation or post-result asset rescue.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
