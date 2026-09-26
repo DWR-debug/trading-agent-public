@@ -20,3 +20,10 @@ Prüfe:
 - Einhaltung von PAPER-ONLY und fehlender automatischer Promotion
 
 Arbeite rein prüfend und ändere keine Dateien. Liefere konkrete, überprüfbare Findings mit Pfad/Abschnitt sowie eine klare Aussage, welche Fragen vor dem nächsten Research-Gate noch offen sind.
+
+
+## Ressourcen-/Agentenprüfung
+
+Prüfe zusätzlich, ob ein Agententask unnötig Compute oder AI Credits verbraucht. Empfehle bei langen deterministischen Aufgaben GitHub Actions oder lokale Runner statt Cloud Agent.
+
+Ein Cloud-Agent-Ergebnis ist Reviewmaterial, niemals wissenschaftliche Evidenz.
