@@ -7,7 +7,6 @@ The preflight verifies the fixed sector map, common calendar, and signal-history
 from __future__ import annotations
 
 import argparse
-import csv
 import hashlib
 import json
 import math
@@ -17,8 +16,11 @@ from datetime import date
 from pathlib import Path
 
 from config import settings
-from data.yahoo_loader import load_yahoo_history
-from research.protocol import dataset_fingerprint
+from data.canonical_snapshot import (
+    SnapshotSpec,
+    build_frozen_snapshot,
+    load_frozen_snapshot,
+)
 from research.asset_universes import get_universe, list_universes
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -49,47 +51,6 @@ def _fingerprint(payload: object) -> str:
         allow_nan=False,
     )
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
-
-
-def _load_common_calendar() -> dict[str, list]:
-    universe = get_universe(UNIVERSE)
-    bars_by_symbol: dict[str, list] = {}
-    for symbol in universe.symbols:
-        bars = load_yahoo_history(
-            symbol,
-            "1d",
-            REQUESTED_CANDLES,
-            allow_partial=True,
-            skip_invalid_ohlc=True,
-        )
-        bars = [
-            bar
-            for bar in bars
-            if STUDY_START <= bar.timestamp.date() <= STUDY_END
-        ]
-        if len(bars) < TARGET_COMMON_CANDLES:
-            raise RuntimeError(
-                f"{symbol}: only {len(bars)} bars in fixed study window"
-            )
-        # Keep the full fixed study-window history until the cross-symbol
-        # timestamp intersection is formed; only then select the last
-        # TARGET_COMMON_CANDLES common timestamps.
-        bars_by_symbol[symbol] = bars
-
-    common = set.intersection(
-        *[{bar.timestamp for bar in bars} for bars in bars_by_symbol.values()]
-    )
-    if len(common) < TARGET_COMMON_CANDLES:
-        raise RuntimeError(
-            f"Common calendar is {len(common)}, expected at least {TARGET_COMMON_CANDLES}"
-        )
-
-    timestamps = sorted(common)[-TARGET_COMMON_CANDLES:]
-    aligned = {}
-    for symbol, bars in bars_by_symbol.items():
-        lookup = {bar.timestamp: bar for bar in bars}
-        aligned[symbol] = [lookup[timestamp] for timestamp in timestamps]
-    return aligned
 
 
 def _raw_score(closes: list[float], index: int) -> float:
@@ -128,38 +89,35 @@ def run(
     if any(len(members) != 3 for members in SECTOR_MAP.values()):
         raise RuntimeError("Each preregistered H06 sector must contain exactly three assets.")
 
-    assets = _load_common_calendar()
-    closes = {symbol: [bar.close for bar in bars] for symbol, bars in assets.items()}
-
     output = Path(output_path)
     if not output.is_absolute():
         output = ROOT / output
     snapshot_dir = output.parent / "h06_replication_datasets"
-    snapshot_dir.mkdir(parents=True, exist_ok=True)
-    snapshot_datasets = []
-    for symbol in universe.symbols:
-        bars = tuple(assets[symbol])
-        csv_path = snapshot_dir / symbol / "1d.csv"
-        csv_path.parent.mkdir(parents=True, exist_ok=True)
-        with csv_path.open("w", encoding="utf-8", newline="") as handle:
-            writer = csv.writer(handle)
-            writer.writerow(("timestamp", "open", "high", "low", "close", "volume"))
-            for bar in bars:
-                writer.writerow((
-                    bar.timestamp.isoformat(),
-                    bar.open,
-                    bar.high,
-                    bar.low,
-                    bar.close,
-                    bar.volume,
-                ))
-        snapshot_datasets.append({
-            "symbol": symbol,
-            "interval": "1d",
-            "path": str(csv_path.relative_to(ROOT)),
-            "candle_count": len(bars),
-            "fingerprint": dataset_fingerprint(bars),
-        })
+    canonical = build_frozen_snapshot(
+        SnapshotSpec(
+            universe=UNIVERSE,
+            symbols=tuple(universe.symbols),
+            interval="1d",
+            requested_candles=REQUESTED_CANDLES,
+            target_common_candles=TARGET_COMMON_CANDLES,
+            minimum_in_window_candles=TARGET_COMMON_CANDLES,
+            output_dir=snapshot_dir,
+            dataset_subdir=".",
+            study_start=STUDY_START,
+            study_end=STUDY_END,
+        )
+    )
+    if canonical["status"] != "COVERAGE_PASSED":
+        raise RuntimeError(
+            "H06 canonical coverage failed: "
+            + json.dumps(canonical["coverage"], sort_keys=True)
+        )
+
+    assets = load_frozen_snapshot(snapshot_dir / "snapshot_manifest.json")
+    closes = {
+        symbol: [bar.close for bar in assets[symbol][:RESEARCH_CANDLES]]
+        for symbol in universe.symbols
+    }
 
     decision_dates = RESEARCH_CANDLES - LOOKBACK
     complete_dates = 0
@@ -212,11 +170,8 @@ def run(
         "target_common_calendar": TARGET_COMMON_CANDLES,
         "research_candles_used": RESEARCH_CANDLES,
         "holdout_candles_unused": TARGET_COMMON_CANDLES - RESEARCH_CANDLES,
-        "data_snapshot": {
-            "format": "csv_ohlcv_common_calendar",
-            "selection_rule": "last_3500_timestamps_from_full_fixed_study_window_intersection",
-            "datasets": snapshot_datasets,
-        },
+        "data_snapshot": canonical["data_snapshot"],
+        "snapshot_fingerprint": canonical["snapshot_fingerprint"],
         "fixed_signal": {
             "formation_lookback_sessions": LOOKBACK,
             "skip_sessions": SKIP,
@@ -235,28 +190,17 @@ def run(
                 if residual_abs_values
                 else 0.0
             ),
-            "calendar_selection_rule": "last_3500_timestamps_from_full_fixed_window_intersection",
+            "calendar_selection_rule": (
+                "canonical:last_3500_timestamps_from_full_fixed_window_intersection"
+            ),
             "replication_reason": "Independent mechanism replication: same acquisition headroom and fixed study geometry on a fresh disjoint universe.",
-            "research_calendar_start": (
-                assets[next(iter(assets))][0].timestamp.date().isoformat()
-                if assets
-                else None
-            ),
+            "research_calendar_start": canonical["selected_common_calendar_start"],
             "research_calendar_end": (
-                assets[next(iter(assets))][RESEARCH_CANDLES - 1].timestamp.date().isoformat()
-                if assets and len(assets[next(iter(assets))]) >= RESEARCH_CANDLES
-                else None
+                assets[universe.symbols[0]][RESEARCH_CANDLES - 1]
+                .timestamp.date()
+                .isoformat()
             ),
-            "holdout_calendar_start": (
-                assets[next(iter(assets))][RESEARCH_CANDLES].timestamp.date().isoformat()
-                if assets and len(assets[next(iter(assets))]) > RESEARCH_CANDLES
-                else None
-            ),
-            "holdout_calendar_end": (
-                assets[next(iter(assets))][-1].timestamp.date().isoformat()
-                if assets
-                else None
-            ),
+            "common_calendar_count": canonical["coverage"]["common_calendar_count"],
         },
         "governance": {
             "coverage_only": True,
@@ -267,12 +211,8 @@ def run(
             "performance_trial_authorized": False,
             "automatic_promotion": False,
         },
-        "safety": {
-            "paper_only": True,
-            "live_trading_enabled": False,
-            "orders_enabled": False,
-            "automatic_promotion": False,
-        },
+        "safety": canonical["safety"],
+        "canonical_data_layer": "data/canonical_snapshot.py",
     }
     result["fingerprint"] = _fingerprint(result)
 
