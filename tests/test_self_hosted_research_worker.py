@@ -36,3 +36,25 @@ def test_self_hosted_dispatch_uses_registered_orchestrator_gateway():
     assert "v3-flatcontainer/python/3.13.15" in text
     assert "python-3.13.15-nuget" in text
     assert "python.exe" in text
+
+def test_dedicated_push_worker_has_exact_trigger_branches():
+    text = (
+        ROOT / ".github" / "workflows" / "self-hosted-research-worker-push.yml"
+    ).read_text(encoding="utf-8")
+    assert "on:" in text
+    assert "workflow_dispatch:" not in text
+    assert "research/run-self-hosted/repo_qa" in text
+    assert "research/run-self-hosted/data_qa" in text
+    assert "research/run-self-hosted/local_reproduction" in text
+    assert "github.actor == github.repository_owner" in text
+    assert "runs-on: [self-hosted, trading-agent-research]" in text
+    assert "ref: ${{ github.sha }}" in text
+    assert "PAPER_ONLY" in text
+    assert "LIVE_TRADING_ENABLED" in text
+    assert "ORDERS_ENABLED" in text
+    assert "shell: cmd" in text
+    assert "shell: powershell" not in text
+    assert "python.3.13.15.nupkg" in text
+    assert "v3-flatcontainer/python/3.13.15" in text
+    assert "python-3.13.15-nuget" in text
+    assert "python.exe" in text
