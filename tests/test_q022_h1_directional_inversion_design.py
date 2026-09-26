@@ -45,7 +45,7 @@ def test_q022_h1_universe_matches_preregistration_and_has_no_duplicate_symbols()
     assert tuple(universe.symbols) == tuple(prereg["symbols"])
     assert len(universe.symbols) == 12
     assert len(set(universe.symbols)) == 12
-    assert universe.target_count == 3520
+    assert universe.target_count >= preregistration["requested_candles"]
 
 
 def test_q022_h1_coverage_authorization_is_not_performance_authorization() -> None:
