@@ -2,6 +2,20 @@
 
 - Current scientific step: **Q022 Treasury failure follow-up design**, still **DESIGN_ONLY** and unranked; no performance execution is authorized.
 - Q020 remains immutable: `T-2026-09-26-046R1-PERFORMANCE` = **NO_PROMOTION_EVIDENCE**; no retuning or holdout selection.
+- Self-hosted Continuous QA is four-lane: `repo_qa`, `data_qa`, `design_qa`, `local_reproduction`.
+- Verified completed self-hosted run `36258261964` on `4ff426b9`: **880 passed, 2 warnings**, AST/safety green, Q022 design guard PASS, local reproduction 13/13.
+- A fresh self-hosted run `36259124979` is currently processing the equivalent provenance-publication fix on `master` `5ef8730b`.
+- Self-hosted QA runtime directories are isolated per `GITHUB_RUN_ID/GITHUB_RUN_ATTEMPT`; provenance is published from `GITHUB_WORKSPACE`.
+- Agent Request Queue remains two-lane with a workflow-level global concurrency guard; maximum concurrent agent sessions remains 2.
+- Hosted CI/orchestrator/Copilot runs continue to fail before job creation and are tracked separately as operational issues; they are not treated as scientific evidence.
+- Copilot remains paused until `COPILOT_GITHUB_TOKEN` with the required Copilot Requests permission is configured; no paid usage is enabled.
+- Safety: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
+- Paid agent/API budget: **0 USD**.
+
+# CURRENT EXECUTION CHECKPOINT — Q022 design-only / continuous governance QA hardened — 2026-09-26
+
+- Current scientific step: **Q022 Treasury failure follow-up design**, still **DESIGN_ONLY** and unranked; no performance execution is authorized.
+- Q020 remains immutable: `T-2026-09-26-046R1-PERFORMANCE` = **NO_PROMOTION_EVIDENCE**; no retuning or holdout selection.
 - Self-hosted Continuous QA is now four-lane: `repo_qa`, `data_qa`, `design_qa`, `local_reproduction`; the new Q022 design guard is non-executing and fail-closed on governance drift.
 - Self-hosted QA runtime directories are isolated per `GITHUB_RUN_ID/GITHUB_RUN_ATTEMPT`; this removes the previously observed concurrent pycache/runtime collision class.
 - Agent Request Queue remains two-lane with a **workflow-level global concurrency guard**; maximum concurrent agent sessions remains 2.
@@ -557,7 +571,6 @@ aus sauber dokumentierten, unabhängigen Beobachtungen ableiten.
 
 ## Übergeordnetes Ziel: sehr kurze Zeit bis zu hohem Kapitalaufbau — 2026-09-24
 
-
 Die operative Forschung verfolgt neben den technischen Qualitätszielen ein übergeordnetes,
 vom Projektauftrag vorgegebenes Ziel: Wegen der beschriebenen finanziellen Ausgangslage
 soll — soweit dies mit belastbarer Evidenz vereinbar ist — eine Strategie identifiziert
@@ -601,7 +614,6 @@ Dabei ist zwischen drei Ebenen strikt zu unterscheiden:
 Dieses übergeordnete Ziel ändert den Sicherheitsvertrag nicht:
 `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, keine Live-Orders und keine
 automatische Echtgeldpromotion.
-
 
 ## Zielbild: autonomes 30-Tage-Trading-Experiment mit optionalem Echtgeldpfad
 
@@ -733,7 +745,6 @@ Der nächste fachliche Schritt bleibt eine **separat vorregistrierte und
 methodisch unabhängige Kontrollfrage**. Bis dahin bleiben Strategie,
 Parameterraum, Gewichte, Gates und Produktionsstatus unverändert.
 
-
 # Trading Agent — aktueller Gesamtcheckpoint
 
 Stand: 2026-09-24
@@ -785,7 +796,6 @@ Vor einer späteren Echtgeldfreigabe sind noch mindestens:
 - eine separat dokumentierte Echtgeldfreigabe
 
 erforderlich.
-
 
 ## Gesamtstatus
 
@@ -2034,7 +2044,6 @@ Die Gates, Schwellenwerte und Selection-Profile wurden für diesen Kontrolllauf 
 
 Die Rohreports und Checkpoints liegen im GitHub-Artifact des Runs und werden nicht in den Quellbranch geschrieben.
 
-
 ## Systematische Gate- und Kandidaten-Diagnose 2026-09-22
 
 Nach der dritten kontrollierten Cross-Universe-Replikation wurde die fachliche
@@ -2099,7 +2108,6 @@ auseinandergelegt. Insbesondere werden Rolling-WF-Fenster, WFO-OOS-Metriken,
 Holdout-Metriken und Robustness-Befunde auf wiederkehrende Muster je Asset und
 Kandidatenstruktur geprüft. Ziel ist eine belastbare Ursachenbeschreibung,
 nicht die Anpassung bestehender Gates.
-
 
 ## Zeit- und Kandidaten-Diagnose 2026-09-22
 
@@ -2686,7 +2694,6 @@ Insbesondere:
 - dauerhafte Archivierung jenseits der 30-Tage-GitHub-Artefakte härten
 - Provenienz und Restore-Kette weiter gegen Unterbrechung und Zustandsabweichungen testen
 
-
 # Aktueller Research-Checkpoint: Strategieneuausrichtung und Mechanismen 2026-09-22
 
 ## Ausgangslage
@@ -2846,7 +2853,6 @@ Dabei wird weiterhin keine Parameteroptimierung als Abkürzung verwendet.
 - keine automatische Live-Ausführung
 - keine Gate-Lockerung
 - keine globale Produktionsstrategie geändert
-
 
 ## Aktueller Checkpoint nach Kandidatenvalidierung — 2026-09-22
 
@@ -3034,7 +3040,6 @@ Dauerhafte Ablage:
 - keine Research-Orders
 - keine Live-Ausführung
 
-
 ## Aktueller Checkpoint — Trial 027 Fixed TSM Ensemble Trend Sleeve — 2026-09-24
 
 Trial T-2026-09-24-027 wurde vollständig auf `DWR-debug/trading-agent-public`
@@ -3097,7 +3102,6 @@ Dauerhafte Ablage:
 - keine Research-Orders
 - keine Live-Ausführung
 
-
 ## Aktueller Checkpoint — Trial 028 Per-Sleeve Volatility Budget — 2026-09-24
 
 Trial T-2026-09-24-028 wurde vollständig und reproduzierbar ausgeführt und als **NO_SUPPORT / archived_rejected** abgeschlossen.
@@ -3149,7 +3153,6 @@ Dauerhafte Ablage:
 - keine Research-Orders
 - keine Live-Ausführung
 
-
 ## Aktueller Checkpoint — Trial 029 DATA_INVALID — 2026-09-24
 
 Trial T-2026-09-24-029 wurde vor jeder Performanceauswertung als **DATA_INVALID** abgeschlossen.
@@ -3180,7 +3183,6 @@ Coverage-Preflight wird als neuer, vollständig disjunkter Trial präregistriert
 - LIVE_TRADING_ENABLED=False
 - keine Research-Orders
 - keine Live-Ausführung
-
 
 ## Aktueller Checkpoint — Trial 030 Sleeve Volatility Parity Confirmation — 2026-09-24
 
@@ -3213,7 +3215,6 @@ Keine weitere Risk-Parity-/Volatility-Parity-Suche und kein Tuning dieses Contro
 - LIVE_TRADING_ENABLED=False
 - keine Research-Orders
 - keine Live-Ausführung
-
 
 ## Aktueller Gesamtcheckpoint — Trial 031 abgeschlossen — 2026-09-24
 
@@ -3270,7 +3271,6 @@ Der Master enthält Trial 031 und dessen vollständige Archivierung; der exakte 
 `research/evidence/trial_ledger.json`, in einem dauerhaften Result-Checkpoint
 und in der Projektdokumentation archiviert.
 
-
 ## Aktueller Checkpoint — Trial 032 Relative-Value Coverage DATA_INVALID — 2026-09-24
 
 Trial T-2026-09-24-032 wurde vor jeder Performanceauswertung als **DATA_INVALID** beendet.
@@ -3288,7 +3288,6 @@ unverändert.
 - PAPER_ONLY=True
 - LIVE_TRADING_ENABLED=False
 - keine Orders
-
 
 ## Korrektur des Forschungs-Checkpoints — 2026-09-24
 
@@ -3308,7 +3307,6 @@ Konsequenz: 033 wird nicht als Performanceergebnis gewertet. Für 034 wird IEMG 
 - PAPER_ONLY=True
 - LIVE_TRADING_ENABLED=False
 - keine Orders
-
 
 ## Aktueller Checkpoint — Trial 034 Fixed ETF Relative-Value Pairs — 2026-09-24
 
@@ -3353,7 +3351,6 @@ Jede Richtung folgt erneut Coverage-Preflight -> Präregistrierung -> Research/O
 - LIVE_TRADING_ENABLED=False
 - keine Research-Orders
 - keine Live-Ausführung
-
 
 ## Aktueller Checkpoint — T042 formal abgeschlossen / T043 gestartet — 2026-09-25
 
@@ -3400,7 +3397,6 @@ Sicherheitszustand:
 - orders_enabled=False
 - automatic_promotion=False
 
-
 ## Aktueller Gesamtcheckpoint — T044 abgeschlossen / T045 vorbereitet — 2026-09-25
 
 ### T044 — Unanimous TSM Signal Consistency
@@ -3439,13 +3435,11 @@ Sicherheitsstatus:
 - orders_enabled=False
 - automatic_promotion=False
 
-
 ## T045 — Position-Lifecycle / ATR-Exit (2026-09-25)
 
 T045 wurde formal auf einem vollständig symbol-disjunkten Universum ausgewertet und **NO_SUPPORT / archived_rejected** klassifiziert. Die Coverage lieferte 3.519 gemeinsame Zeitstempel bei 3.500 benötigten Kerzen; verwendet wurden 2.798 Research-Returns und 700 blinde Holdout-Returns. Der feste ATR(20)-Trailing-Exit (3×ATR, Schlusskurs-Trigger, Ausführung am nächsten Open) senkte die Research-Rendite von 60,62 % auf 41,23 %, erhöhte die Research-Max-DD von 19,73 % auf 20,07 %, senkte den PF von 1,090 auf 1,068 und verschlechterte im Holdout die Rendite von 21,13 % auf 8,34 %, die Max-DD von 9,79 % auf 15,98 % und den PF von 1,127 auf 1,059. Die durchschnittliche Rolling-DD verbesserte sich von 14,02 % auf 13,07 %, reichte aber weder für den absoluten Risikogate noch für die Nicht-Verschlechterungsbedingungen. 391 Stop-Ereignisse wurden beobachtet. Keine Promotion, kein Tuning und keine Holdout-Selektion.
 
 Die formale Ausführung wurde zweimal identisch angestoßen; die Kern-Price-Only-Kennzahlen und Gate-Ergebnisse reproduzierten sich. Die sekundäre Total-Return-Sensitivität auf adjusted-close-Daten zeigte nur minimale numerische Laufabweichungen und wird nicht als unabhängiger Versuch gezählt. Der nächste Schritt ist eine Cross-Trial-Failure-Diagnose vor Reservierung des nächsten Mechanismus.
-
 
 ## Aktueller Gesamtcheckpoint — Q010 abgeschlossen / Q011 vorgemerkt — 2026-09-25
 
@@ -3544,8 +3538,6 @@ Sicherheitsstatus unverändert: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`,
 
 H08 wurde am 2026-09-25 vollständig als Research-Only-Diagnose ausgeführt: 316 Ereignisse, Klassifikation **PRUNE_NO_RISK_REGIME_SUPPORT**, Holdout unberührt, kein Performance-Trial autorisiert. Die nächste aktive Stufe ist H06 sector-neutral residual momentum als orthogonale Coverage-/PIT-Prüfung.
 
-
-
 # Aktueller Forschungs- und Entwicklungscheckpoint — 2026-09-26
 
 ## H06 abgeschlossen
@@ -3601,7 +3593,6 @@ keine wissenschaftliche Evidence.
 - `automatic_promotion=False`
 - kein Live-Trading
 - kein Echtgeldrisiko
-
 
 # Aktueller Forschungscheckpoint — Q018 abgeschlossen / Q019 gestartet — 2026-09-26
 
