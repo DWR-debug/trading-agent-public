@@ -1,0 +1,81 @@
+name: Self-hosted Research Worker
+
+on:
+  workflow_dispatch:
+    inputs:
+      lane:
+        description: "Bounded worker lane"
+        required: true
+        type: choice
+        options:
+          - repo_qa
+          - data_qa
+          - local_reproduction
+      ref:
+        description: "Trusted branch/ref to execute"
+        required: true
+        default: "master"
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-self-hosted-research-worker
+  cancel-in-progress: false
+
+jobs:
+  worker:
+    if: ${{ github.actor == github.repository_owner }}
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 120
+    steps:
+      - name: Checkout trusted ref
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 1
+
+      - name: Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install minimal research dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest pandas exchange-calendars
+
+      - name: Safety and provenance guard
+        shell: bash
+        env:
+          REQUESTED_REF: ${{ inputs.ref }}
+        run: |
+          set -euo pipefail
+          test "$REQUESTED_REF" = "master" || [[ "$REQUESTED_REF" == research/* ]]
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          print("SAFETY INVARIANTS OK")
+          PY
+
+      - name: Execute bounded worker lane
+        shell: bash
+        env:
+          LANE: ${{ inputs.lane }}
+        run: |
+          set -euo pipefail
+          python -m automation.self_hosted_research_worker --lane "$LANE" --output-dir research/runs/self_hosted/${GITHUB_RUN_ID}
+
+      - name: Publish worker evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: self-hosted-research-${{ inputs.lane }}-${{ github.run_id }}
+          path: research/runs/self_hosted/${{ github.run_id }}/
+          if-no-files-found: warn
+          retention-days: 14
