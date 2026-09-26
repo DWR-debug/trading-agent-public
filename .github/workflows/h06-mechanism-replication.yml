@@ -1,0 +1,80 @@
+name: H06 Mechanism Replication Coverage
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "automation/h06_mechanism_replication_coverage.py"
+      - "tests/test_h06_mechanism_replication_coverage.py"
+      - "research/asset_universes.py"
+      - "research/preregistrations/h06_mechanism_replication_coverage_2026_09_26.json"
+      - ".github/workflows/h06-mechanism-replication.yml"
+  push:
+    branches:
+      - research/h06-mechanism-replication-v1
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-h06-mechanism-replication-coverage
+  cancel-in-progress: false
+
+jobs:
+  coverage:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten installieren
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+      - name: Safety
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          print("H06 REPLICATION SAFETY OK")
+          PY
+      - name: Unit Tests
+        run: python -m pytest -q tests/test_h06_mechanism_replication_coverage.py
+      - name: Coverage Preflight
+        run: |
+          set -euo pipefail
+          python -m automation.h06_mechanism_replication_coverage
+      - name: Evidence-Datei prüfen
+        run: |
+          set -euo pipefail
+          test -s research/runs/wide_search/h06_mechanism_replication_coverage.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          data = json.loads(Path('research/runs/wide_search/h06_mechanism_replication_coverage.json').read_text(encoding='utf-8'))
+          assert data['coverage']['status'] in {'COVERAGE_READY', 'DATA_INSUFFICIENT'}
+          assert data['governance']['performance_evaluation'] is False
+          assert data['governance']['holdout_evaluation'] is False
+          assert data['governance']['holdout_used_for_selection'] is False
+          assert data['governance']['performance_trial_authorized'] is False
+          PY
+          sha256sum research/runs/wide_search/h06_mechanism_replication_coverage.json
+      - name: Evidence Snapshot sichern
+        uses: actions/upload-artifact@v6
+        with:
+          name: wide-search-h06-mechanism-replication-${{ github.run_id }}
+          path: |
+            research/runs/wide_search/h06_mechanism_replication_coverage.json
+            research/runs/wide_search/h06_replication_datasets/
+          if-no-files-found: error
+          retention-days: 30
