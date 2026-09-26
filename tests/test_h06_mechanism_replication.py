@@ -7,8 +7,8 @@ from automation.h06_mechanism_replication import _run
 
 
 SYMBOLS = (
-    "TXN", "ADI", "AMAT", "MDT", "SYK", "BDX",
-    "ETN", "ITW", "GD", "CL", "KMB", "GIS", "AEP", "XEL", "DTE",
+    "MU", "ADBE", "CRM", "ABT", "BMY", "BAX",
+    "PH", "ROK", "DOV", "CPB", "SJM", "CAG", "EXC", "SRE", "CMS",
 )
 
 
@@ -62,7 +62,7 @@ def test_h06_temporal_windows_are_five_and_complete():
     with TemporaryDirectory() as tmp:
         root = Path(tmp)
         _write_snapshot(root)
-        result = _run(root)
+        result = _run(root, root / "manifest.json")
 
     windows = result["findings"]["temporal_windows"]
     assert len(windows) == 5
