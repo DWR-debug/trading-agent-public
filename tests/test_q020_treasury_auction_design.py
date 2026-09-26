@@ -54,4 +54,4 @@ def test_q020_repair_declares_acquisition_headroom_and_window_minimum_separately
     assert spec["minimum_in_window_candles"] == 3500
     assert spec["target_candles"] == 3500
     assert spec["repair_change"]["minimum_required_in_window_candles"] == 3500
-    assert spec["governance"]["performance_execution"] is False
+    assert spec["governance"]["performance_execution_authorized"] is False
