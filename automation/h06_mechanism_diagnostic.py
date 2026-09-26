@@ -105,7 +105,18 @@ def _sector_count(selected: tuple[str, ...]) -> int:
     )
 
 
-def _run(data_root: Path) -> dict:
+def _run(data_root: Path, source_manifest: Path | None = None) -> dict:
+    if source_manifest is not None:
+        manifest = json.loads(source_manifest.read_text(encoding="utf-8"))
+        if manifest.get("fingerprint") != SOURCE_COVERAGE_FINGERPRINT:
+            raise ValueError("Source coverage fingerprint mismatch")
+        if manifest.get("research_candles_used") != RESEARCH_CANDLES:
+            raise ValueError("Source research geometry mismatch")
+        if manifest.get("holdout_candles_unused") != 702:
+            raise ValueError("Unexpected source holdout geometry")
+        if manifest.get("governance", {}).get("holdout_used_for_selection") is not False:
+            raise ValueError("Source manifest indicates holdout selection")
+
     timestamps_by_symbol: dict[str, list[str]] = {}
     closes: dict[str, list[float]] = {}
     for symbol in SYMBOLS:
@@ -313,12 +324,13 @@ def _run(data_root: Path) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--data-root", required=True)
+    parser.add_argument("--source-manifest", required=True)
     parser.add_argument(
         "--output",
         default="research/runs/wide_search/h06_mechanism_diagnostic_2026_09_26.json",
     )
     args = parser.parse_args()
-    result = _run(Path(args.data_root))
+    result = _run(Path(args.data_root), Path(args.source_manifest))
     output = Path(args.output)
     if not output.is_absolute():
         output = ROOT / output
