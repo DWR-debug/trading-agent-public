@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T20:18:19.014963+00:00",
+  "generated_at_utc": "2026-09-27T20:18:49.621071+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -102,6 +102,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "STATE: advance project to Q045 replication design",
+        "sha": "128bebde15d237b21e670bf86f63c39eabc8e0be",
+        "timestamp": "2026-09-27T22:18:42+02:00"
+      },
+      {
+        "message": "EVIDENCE: record Q044 fresh alpha PIT",
+        "sha": "4359e8c398295e550522657e4ca9cc4ab926c51d",
+        "timestamp": "2026-09-27T22:18:33+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c54b2476d2398529e4d485605e5bb15cf0704dd7",
+        "timestamp": "2026-09-27T20:18:19Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "a191511e703ed4d040241f711854742235d5ea30",
         "timestamp": "2026-09-27T20:18:07Z"
@@ -125,21 +140,6 @@
         "message": "EVIDENCE: record Q043 fresh replication coverage",
         "sha": "b510e6d6072a17bd88ec32cc418d539e6465f28a",
         "timestamp": "2026-09-27T22:17:30+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q044 fresh alpha PIT gate (#505)",
-        "sha": "f6878550323b524ebb38123aaa8bc3fb1f6344fe",
-        "timestamp": "2026-09-27T22:16:53+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ce573d50649e82b63ec034b7699f6a084ca3677c",
-        "timestamp": "2026-09-27T20:15:37Z"
-      },
-      {
-        "message": "EVIDENCE: record Q040 source feasibility",
-        "sha": "07e666449acb571ee7d76909ccdb3bf9e9c84e58",
-        "timestamp": "2026-09-27T22:15:24+02:00"
       }
     ]
   },
@@ -163,7 +163,7 @@
     "decision_basis_stage": "Q044_FRESH_ALPHA_PIT",
     "latest_formal_status": "NO_ARM_PASSED_ALL_T052_GATES",
     "latest_formal_trial": "T-2026-09-27-056",
-    "next_research_focus_recorded": "Q044 fresh alpha PIT on Q043 universe; if PIT passes, prepare a fresh fixed-rule seven-arm replication performance trial without holdout-driven pruning. Q040 event source feasibility remains archived as a source/PIT feasibility branch.",
+    "next_research_focus_recorded": "Q045 fixed replication performance on the fresh Q043 universe, carrying every PIT-safe price-only arm plus pre-registered equal-weight ensembles; no holdout-driven pruning or parameter tuning.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -201,12 +201,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a191511e703ed4d040241f711854742235d5ea30",
+  "source_master_sha": "128bebde15d237b21e670bf86f63c39eabc8e0be",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36347518435"
+    "run_id": "36347553923"
   }
 }
