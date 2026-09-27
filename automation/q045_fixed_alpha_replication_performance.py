@@ -29,6 +29,32 @@ def _manifest(root):
     if not paths: raise FileNotFoundError("coverage manifest missing")
     return paths[-1]
 
+def _localize_manifest(manifest_path, coverage_root):
+    source=json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+    localized=json.loads(json.dumps(source))
+    datasets=localized.get("data_snapshot",{}).get("datasets",[])
+    for item in datasets:
+        raw=Path(item["path"])
+        if raw.is_absolute() and raw.exists():
+            continue
+        parts=raw.parts
+        if "datasets" not in parts:
+            raise ValueError(f"unsupported dataset path in immutable artifact: {raw}")
+        idx=parts.index("datasets")
+        if idx==0:
+            raise ValueError(f"dataset path lacks trial directory: {raw}")
+        local=Path(coverage_root)/Path(*parts[idx-1:])
+        if not local.exists():
+            raise FileNotFoundError(f"localized dataset path missing: {local}")
+        item["path"]=str(local)
+    target=Path(coverage_root)/"_localized_q043_coverage_manifest.json"
+    target.write_text(
+        json.dumps(localized,indent=2,ensure_ascii=False,allow_nan=False)+"\n",
+        encoding="utf-8",
+    )
+    return target
+
+
 def _load(root):
     mp=_manifest(root)
     m=json.loads(mp.read_text(encoding="utf-8"))
@@ -36,7 +62,8 @@ def _load(root):
     if m.get("universe")!=UNIVERSE: raise ValueError("universe mismatch")
     if tuple(m.get("symbols",()))!=SYMBOLS: raise ValueError("symbols mismatch")
     if int(m.get("target_common_calendar",-1))!=N: raise ValueError("calendar target mismatch")
-    assets=load_frozen_snapshot(mp)
+    localized=_localize_manifest(mp,root)
+    assets=load_frozen_snapshot(localized)
     if tuple(assets)!=SYMBOLS or any(len(v)!=N for v in assets.values()): raise ValueError("snapshot geometry mismatch")
     safety={"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False}
     if m.get("safety")!=safety: raise RuntimeError("coverage safety mismatch")
