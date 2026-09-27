@@ -7,9 +7,10 @@ import json
 import math
 import os
 import tempfile
+from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any, Iterator, Sequence
 
 from risk.risk_engine import calculate_position
 from backtesting.models import Candle
@@ -251,6 +252,93 @@ def _atomic_write(path: Path, payload: dict[str, Any]) -> None:
         except FileNotFoundError:
             pass
         raise
+
+
+@contextmanager
+def process_lock(
+    state_path: str | Path, receipt_path: str | Path | None = None
+) -> Iterator[None]:
+    targets = [state_path]
+    if receipt_path is not None:
+        targets.append(receipt_path)
+    paths = {
+        os.path.normcase(str(path)): path
+        for path in (Path(target).resolve() for target in targets)
+    }
+    lock_paths = sorted(
+        (path.with_name(path.name + ".lock") for path in paths.values()),
+        key=lambda path: os.path.normcase(str(path)),
+    )
+    open_files = []
+    locked_files = []
+    try:
+        for lock_path in lock_paths:
+            lock_path.parent.mkdir(parents=True, exist_ok=True)
+            stream = lock_path.open("a+b")
+            open_files.append(stream)
+            stream.seek(0, os.SEEK_END)
+            if stream.tell() == 0:
+                stream.write(b"\0")
+                stream.flush()
+            stream.seek(0)
+            try:
+                if os.name == "nt":
+                    import msvcrt
+
+                    msvcrt.locking(stream.fileno(), msvcrt.LK_NBLCK, 1)
+                else:
+                    import fcntl
+
+                    fcntl.flock(stream.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except OSError as exc:
+                raise PaperForwardShadowError(
+                    "Cannot acquire paper-forward state or receipt lock "
+                    f"(another process may hold it): {lock_path}."
+                ) from exc
+            locked_files.append(stream)
+        yield
+    finally:
+        try:
+            for stream in reversed(locked_files):
+                if os.name == "nt":
+                    import msvcrt
+
+                    stream.seek(0)
+                    msvcrt.locking(stream.fileno(), msvcrt.LK_UNLCK, 1)
+                else:
+                    import fcntl
+                    fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
+                    fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
+        finally:
+            for stream in reversed(open_files):
+                stream.close()
+
+
+def _initialization_marker_path(state_path: str | Path) -> Path:
+    path = Path(state_path)
+    return path.with_name(path.name + ".initialized.json")
+
+
+def _mark_initialized(state_path: str | Path, state: dict[str, Any]) -> None:
+    marker = _initialization_marker_path(state_path)
+    payload = {
+        "schema_version": 1,
+        "run_id": state["run_id"],
+        "candidate_fingerprint": state["candidate_fingerprint"],
+    }
+    if marker.exists():
+        try:
+            persisted = json.loads(marker.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise PaperForwardShadowError(
+                f"Cannot read paper-forward initialization marker: {exc}"
+            ) from exc
+        if persisted != payload:
+            raise PaperForwardShadowError(
+                "Paper-forward initialization marker does not match the session state."
+            )
+        return
+    _atomic_write(marker, payload)
 
 
 def _signal_stream(
@@ -716,13 +804,17 @@ def _main() -> None:
     stop = commands.add_parser("stop")
     stop.add_argument("--state", required=True)
     args = parser.parse_args()
-    if args.command == "start":
-        candidate = json.loads(Path(args.candidate).read_text(encoding="utf-8"))
-        result = start_session(candidate, load_candles(args.candles), args.state)
-    elif args.command == "update":
-        result = update_session(args.state, load_candles(args.candles))
-    else:
-        result = stop_session(args.state)
+    with process_lock(args.state):
+        if args.command == "start":
+            candidate = json.loads(Path(args.candidate).read_text(encoding="utf-8"))
+            result = start_session(candidate, load_candles(args.candles), args.state)
+            _mark_initialized(args.state, result)
+        elif args.command == "update":
+            result = update_session(args.state, load_candles(args.candles))
+            _mark_initialized(args.state, result)
+        else:
+            result = stop_session(args.state)
+            _mark_initialized(args.state, result)
     print(json.dumps(result, sort_keys=True, indent=2, allow_nan=False))
 
 

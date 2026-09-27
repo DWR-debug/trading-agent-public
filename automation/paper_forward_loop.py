@@ -3,9 +3,21 @@ from __future__ import annotations
 
 import argparse
 import time
+from typing import Any
 
-from automation.paper_forward_market_feed import load_candidate, start_from_binance, update_from_binance
-from automation.paper_forward_shadow import PaperForwardShadowError, _assert_safety
+from automation.paper_forward_market_feed import (
+    load_candidate,
+    start_from_binance,
+    update_from_binance,
+)
+from automation.paper_forward_shadow import (
+    PaperForwardShadowError,
+    _assert_safety,
+    _initialization_marker_path,
+    _mark_initialized,
+    _read_session,
+    process_lock,
+)
 
 
 _INTERVAL_SECONDS = {
@@ -36,12 +48,59 @@ def run_once(
     receipt_path: str | None = None,
 ) -> dict:
     _assert_safety()
+    with process_lock(state_path, receipt_path):
+        return _run_once_locked(
+            candidate_path,
+            state_path,
+            warmup_candles=warmup_candles,
+            fetch_limit=fetch_limit,
+            receipt_path=receipt_path,
+        )
+
+
+def _run_once_locked(
+    candidate_path: str,
+    state_path: str,
+    *,
+    warmup_candles: int,
+    fetch_limit: int,
+    receipt_path: str | None,
+) -> dict:
     from pathlib import Path
+
     state = Path(state_path)
     if not state.exists():
+        if _initialization_marker_path(state).exists():
+            raise PaperForwardShadowError(
+                "Initialized paper-forward state is missing; restore it or choose a new state path."
+            )
         candidate = load_candidate(candidate_path)
-        return start_from_binance(candidate, state, warmup_candles=warmup_candles)
-    return update_from_binance(state, fetch_limit=fetch_limit, receipt_path=receipt_path)
+        started = start_from_binance(candidate, state, warmup_candles=warmup_candles)
+        _mark_initialized(state, started)
+        return started
+
+    persisted, _, _, _ = _read_session(state)
+    _mark_initialized(state, persisted)
+    updated = update_from_binance(
+        state, fetch_limit=fetch_limit, receipt_path=receipt_path
+    )
+    _mark_initialized(state, updated)
+    return updated
+
+
+def _candidate_for_polling(candidate_path: str, state_path: str) -> dict[str, Any]:
+    from pathlib import Path
+
+    state_path = Path(state_path)
+    if state_path.exists():
+        persisted, candidate, _, _ = _read_session(state_path)
+        _mark_initialized(state_path, persisted)
+        return candidate
+    if _initialization_marker_path(state_path).exists():
+        raise PaperForwardShadowError(
+            "Initialized paper-forward state is missing; restore it or choose a new state path."
+        )
+    return load_candidate(candidate_path)
 
 
 def run_loop(
@@ -55,26 +114,31 @@ def run_loop(
     max_iterations: int | None = None,
 ) -> None:
     _assert_safety()
-    candidate = load_candidate(candidate_path)
-    delay = poll_seconds if poll_seconds is not None else default_poll_seconds(candidate["interval"])
-    if delay < 5:
-        raise PaperForwardShadowError("poll_seconds must be at least 5.")
-    if max_iterations is not None and max_iterations < 1:
-        raise PaperForwardShadowError("max_iterations must be positive when supplied.")
-
-    iterations = 0
-    while True:
-        run_once(
-            candidate_path,
-            state_path,
-            warmup_candles=warmup_candles,
-            fetch_limit=fetch_limit,
-            receipt_path=receipt_path,
+    with process_lock(state_path, receipt_path):
+        candidate = _candidate_for_polling(candidate_path, state_path)
+        delay = (
+            poll_seconds
+            if poll_seconds is not None
+            else default_poll_seconds(candidate["interval"])
         )
-        iterations += 1
-        if max_iterations is not None and iterations >= max_iterations:
-            return
-        time.sleep(delay)
+        if delay < 5:
+            raise PaperForwardShadowError("poll_seconds must be at least 5.")
+        if max_iterations is not None and max_iterations < 1:
+            raise PaperForwardShadowError("max_iterations must be positive when supplied.")
+
+        iterations = 0
+        while True:
+            _run_once_locked(
+                candidate_path,
+                state_path,
+                warmup_candles=warmup_candles,
+                fetch_limit=fetch_limit,
+                receipt_path=receipt_path,
+            )
+            iterations += 1
+            if max_iterations is not None and iterations >= max_iterations:
+                return
+            time.sleep(delay)
 
 
 def _main() -> None:

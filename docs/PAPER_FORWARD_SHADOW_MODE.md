@@ -77,7 +77,17 @@ python -m automation.paper_forward_loop ^
 
 The default polling interval is derived from the candidate candle interval and
 capped at 15 minutes. The process can be stopped with Ctrl+C; the last successful
-state remains intact. A later process restart resumes from the state file.
+state remains intact. A later process restart validates the saved state and
+resumes using the candidate interval stored there; the original candidate file
+is not required for resume. If the state is missing after initialization, the
+loop fails closed rather than silently starting another session. Restore the
+matching state or select a new state path for an intentional independent run.
+
+The loop holds exclusive locks for its state and optional receipt paths for
+its entire lifetime, including polling waits. A conflicting process exits
+without modifying either file. The adjacent `.lock` targets must not be
+deleted while a process may be running, and the `.initialized.json` marker
+must be preserved to detect accidental state loss.
 
 This loop is an operational shadow simulator, not a research-evidence producer.
 Its output must remain outside research/evidence and cannot alter gates or
