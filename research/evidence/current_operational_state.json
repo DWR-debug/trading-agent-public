@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T18:43:37.198276+00:00",
+  "generated_at_utc": "2026-09-27T18:44:41.603547+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "EVIDENCE: record Q034 mechanism PIT and advance to Q035",
+        "sha": "354478e89864116513ba75026ee281ef2f05ae40",
+        "timestamp": "2026-09-27T20:44:26+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6286c58b19050afe0ab8b89a2569378be2ece849",
+        "timestamp": "2026-09-27T18:43:37Z"
+      },
       {
         "message": "TEST: lock Q034 frozen-Bar mutation regression",
         "sha": "1c3ac58368f2b7a7fa2900e5122aa2ff15cfa3d6",
@@ -112,16 +122,6 @@
         "message": "RESEARCH: Q034 mechanism PIT validation",
         "sha": "ee0d2809b4e00299fa9729a40d5723c855d8af7b",
         "timestamp": "2026-09-27T20:40:54+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4046d9957de424dffa209c12f3fe6d3055a31aff",
-        "timestamp": "2026-09-27T18:39:23Z"
-      },
-      {
-        "message": "RESEARCH: Q033 freeze Q030 mechanism parameters",
-        "sha": "9a3c37b7e1db7cd857a303ed61e703fe78846020",
-        "timestamp": "2026-09-27T20:39:10+02:00"
       }
     ]
   },
@@ -142,10 +142,10 @@
   },
   "schema_version": "1.0",
   "scientific_state_recorded": {
-    "decision_basis_stage": "Q033_MECHANISM_PARAMETER_FREEZE",
+    "decision_basis_stage": "Q035_RISK_STABILITY_PERFORMANCE_PREREGISTERED",
     "latest_formal_status": "EVIDENCE_RECORDED_NO_AUTOMATIC_PROMOTION",
     "latest_formal_trial": "T-2026-09-27-052",
-    "next_research_focus_recorded": "Q033 parameter/implementation freeze for RISK-A/B/C/D; no performance execution until fixed parameters and execution assumptions are preregistered.",
+    "next_research_focus_recorded": "Q035 fixed multi-arm performance evaluation on Q031/Q032-validated universe; no ranking or selection.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1c3ac58368f2b7a7fa2900e5122aa2ff15cfa3d6",
+  "source_master_sha": "354478e89864116513ba75026ee281ef2f05ae40",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36341701223"
+    "run_id": "36341765662"
   }
 }
