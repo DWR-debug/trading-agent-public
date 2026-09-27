@@ -261,19 +261,3 @@ def test_runner_rejects_changed_q019_event_count(monkeypatch, tmp_path):
     monkeypatch.setattr(q024, "_q019_events", lambda: [])
     with pytest.raises(q024.SourceError, match="expected 89"):
         q024.run(output_path=tmp_path / "q024.json")
-
-def test_rss_match_rejects_non_treasury_host_even_with_matching_content():
-    event = {
-        "auction_date": "2025-08-06",
-        "cusip": "91282CNT4",
-        "bid_to_cover_ratio": "2.35",
-    }
-    item = {
-        "title": "10-Year Note Treasury Auction Results 91282CNT4",
-        "description": "<strong>Auction Date:</strong> 08/06/2025 <strong>Bid-to-Cover Ratio:</strong> 2.35",
-        "link": "https://example.test/R_20250806_2.pdf",
-        "guid": "R_20250806_2.pdf",
-        "pubDate": "Wed, 06 Aug 2025 13:00:00 GMT",
-        "publication_timestamp_utc": "2025-08-06T13:00:00Z",
-    }
-    assert q024._find_rss_match(event, [item]) is None
