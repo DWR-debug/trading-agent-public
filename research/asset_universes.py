@@ -586,7 +586,17 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         ),
         symbols=("IVE", "IWL", "DLN", "DHS", "DON", "DES", "USRT", "ITB"),
         target_count=4000,
+    ),    AssetUniverse(
+        name="validation_2026_09_27_q043_fresh_alpha_replication",
+        priority=72,
+        description=(
+            "Fresh fully symbol-disjoint eight-symbol U.S. equity universe for "
+            "replication of the PIT-safe price-only alpha set; coverage first."
+        ),
+        symbols=("AON", "CVS", "ADSK", "BA", "T", "F", "LUV", "NFLX"),
+        target_count=4000,
     ),
+
 
 )
 
