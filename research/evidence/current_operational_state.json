@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T15:18:31.127359+00:00",
+  "generated_at_utc": "2026-09-27T15:19:42.845295+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -102,6 +102,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "AGENT: publish verified AGENT-025 T052 implementation",
+        "sha": "7c731971ee72125babbfb8cfa66c9aedcf074bf4",
+        "timestamp": "2026-09-27T17:19:30+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "3a73a702842953ac8a8d6c8f586d21ed5f11c06a",
+        "timestamp": "2026-09-27T15:18:35Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a82adb0bbed4e996cd5fc559014ee40c34e74343",
+        "timestamp": "2026-09-27T15:18:31Z"
+      },
+      {
         "message": "FIX: resume paper-forward from oversized fetch window",
         "sha": "2290ee2713c7c0ac6df7ef38cc441cfd219b36f4",
         "timestamp": "2026-09-27T17:18:20+02:00"
@@ -125,21 +140,6 @@
         "message": "OPS: remove transient paper-forward lock file",
         "sha": "440ce4ba723a66ce1c751ccc930e8e177bcbb97a",
         "timestamp": "2026-09-27T17:13:40+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "7bd87cf0fb59809de12d2806bb27c1f13e633e85",
-        "timestamp": "2026-09-27T15:13:07Z"
-      },
-      {
-        "message": "FIX: persist initial MTM state without requiring feed receipt",
-        "sha": "fb897f7ce77f75f2bb3bf73a25ff2500257b04e9",
-        "timestamp": "2026-09-27T17:12:59+02:00"
-      },
-      {
-        "message": "FIX: persist initial MTM state without requiring feed receipt",
-        "sha": "fb60e28bd90bce69a7088393b72d953815f138b3",
-        "timestamp": "2026-09-27T17:12:54+02:00"
       }
     ]
   },
@@ -200,12 +200,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2290ee2713c7c0ac6df7ef38cc441cfd219b36f4",
+  "source_master_sha": "7c731971ee72125babbfb8cfa66c9aedcf074bf4",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36329062710"
+    "run_id": "36329132717"
   }
 }
