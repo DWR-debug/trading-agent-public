@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T14:19:46.293366+00:00",
+  "generated_at_utc": "2026-09-27T14:20:17.367591+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [],
@@ -69,19 +69,11 @@
       {
         "number": 353,
         "title": "AGENT-019: audit paper-forward market feed and MTM ledger",
-        "updatedAt": "2026-09-27T14:12:43Z",
+        "updatedAt": "2026-09-27T14:20:13Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/353"
       }
     ],
     "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "agent/publish-AGENT-020-review-2026-09-27-r2",
-        "number": 390,
-        "title": "AGENT: publish verified AGENT-020 paper-forward loop audit",
-        "updatedAt": "2026-09-27T14:19:21Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/390"
-      },
       {
         "baseRefName": "master",
         "headRefName": "fix/qa-capacity-provenance-validation-2026-09-27",
@@ -92,6 +84,16 @@
       }
     ],
     "recent_commits": [
+      {
+        "message": "AGENT: publish verified AGENT-020 paper-forward loop audit",
+        "sha": "d0900488a1cda535dc2a084a3ee5c2df14e3bcba",
+        "timestamp": "2026-09-27T16:20:05+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a4984c8db1b4d1345baeb3fb2b1ad0b92a076b22",
+        "timestamp": "2026-09-27T14:19:46Z"
+      },
       {
         "message": "AGENT: publish verified AGENT-019 paper-forward feed/MTM audit",
         "sha": "aa6d652da0253148c7621f136c69dfe53fd42dac",
@@ -121,16 +123,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "482a4c2027c59b7327b2d9506bca1d228a87256e",
         "timestamp": "2026-09-27T14:15:53Z"
-      },
-      {
-        "message": "AGENT: publish verified AGENT-018 QA matrix audit",
-        "sha": "487397af4e0083408c3383aaa7528e2514fec243",
-        "timestamp": "2026-09-27T16:15:42+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d4e067b29f9b1e2ea10df6579f0c31f0f4a82f55",
-        "timestamp": "2026-09-27T14:15:18Z"
       }
     ]
   },
@@ -191,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "aa6d652da0253148c7621f136c69dfe53fd42dac",
+  "source_master_sha": "d0900488a1cda535dc2a084a3ee5c2df14e3bcba",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36325502487"
+    "run_id": "36325535452"
   }
 }
