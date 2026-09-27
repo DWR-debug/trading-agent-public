@@ -1,6 +1,6 @@
 # Trading Agent — Current Operational Status
 
-**Initial synchronized baseline:** 94c1d7f3b0c30df5c0364f8252926b2f6ca45645  
+**Initial synchronized baseline:** ae35ab81934594f28f38af4dde0774f80410beb2  
 **Repository:** DWR-debug/trading-agent-public  
 **Date:** 2026-09-27
 
@@ -13,10 +13,10 @@ This file is the canonical human-readable current operational status. It is inte
 - Bounded agent routing uses two queue lanes with fail-closed task contracts.
 - Self-hosted Continuous QA is scheduled every 15 minutes on trading-agent-research.
 - Current architecture claims one self-hosted runner process; a second process is a prepared scale path, not an online capacity claim.
-- Coverage-only fixed-study-window candidate discovery is implemented.
+- Coverage-only fixed-study-window candidate discovery is implemented and now has an immediate versioned repository trigger.
 - Turnover-shock continuation is implemented as a fixed coverage/PIT-only candidate; Yahoo source-vintage provenance currently prevents a formal PIT validation result.
 - No current candidate has promotion evidence.
-- Last recorded deterministic self-hosted QA baseline: workflow 36259124979, 881 tests passed, 2 warnings, AST and safety checks successful. This baseline predates the current master and therefore must not be presented as current verification.
+- Last recorded deterministic self-hosted QA baseline: workflow 36259124979, 881 tests passed, 2 warnings, AST and safety checks successful. This baseline predates the current master and therefore must not be presented as current verification. A fresh QA run has been explicitly requested on the current master through the versioned self-hosted trigger.
 
 ## Scientific checkpoint
 
