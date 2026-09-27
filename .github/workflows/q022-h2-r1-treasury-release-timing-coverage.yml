@@ -1,0 +1,89 @@
+name: Q022 H2 R1 Treasury Release Timing Coverage
+
+on:
+  push:
+    branches:
+      - research/q022-h2-release-timing-r1
+    paths:
+      - research/preregistrations/q022_h2_r1_treasury_release_timing_2026_09_27.json
+      - research/authorizations/q022_h2_r1_treasury_release_timing_performance_2026_09_27.json
+      - research/asset_universes.py
+      - automation/coverage_preflight.py
+      - tests/test_q022_h2_r1_release_timing_design.py
+      - tests/test_q022_h2_r1_release_timing_performance.py
+      - .github/workflows/q022-h2-r1-treasury-release-timing-coverage.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: q022-h2-r1-treasury-release-timing-coverage
+  cancel-in-progress: false
+
+jobs:
+  coverage:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 120
+    steps:
+      - name: Checkout exact snapshot
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Hosted Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Coverage preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pytest pandas exchange-calendars statsmodels==0.15.0
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          assert settings.AUTOMATIC_PROMOTION is False
+          print("SAFETY OK")
+          PY
+          python -m pytest -q tests/test_q022_h2_r1_release_timing_design.py tests/test_q022_h2_r1_release_timing_performance.py
+          python -m automation.coverage_preflight \
+            --preregistration research/preregistrations/q022_h2_r1_treasury_release_timing_2026_09_27.json \
+            --output-root research/runs/q022_h2_r1_coverage
+
+      - name: Validate coverage contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=list(Path("research/runs/q022_h2_r1_coverage/T-2026-09-27-048R1").glob("coverage_preflight_*.json"))
+          assert p, "coverage artifact missing"
+          d=json.loads(p[-1].read_text(encoding="utf-8"))
+          assert d["status"] == "coverage_passed"
+          assert d["performance_evaluation"] is False
+          assert d["holdout_evaluation"] is False
+          assert d["selection_used"] is False
+          assert d["safety"]["paper_only"] is True
+          assert d["safety"]["live_trading_enabled"] is False
+          assert d["safety"]["orders_enabled"] is False
+          assert d["safety"]["automatic_promotion"] is False
+          print("Q022_H2_R1_COVERAGE_CONTRACT_OK")
+          print("SNAPSHOT_FINGERPRINT:", d["snapshot_fingerprint"])
+          print("COVERAGE_FINGERPRINT:", d["coverage_fingerprint"])
+          print("COMMON_CANDLES:", d["target_common_calendar"])
+          PY
+
+      - name: Publish coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q022-h2-r1-treasury-release-timing-coverage-${{ github.run_id }}
+          path: research/runs/q022_h2_r1_coverage/
+          if-no-files-found: warn
+          retention-days: 30
