@@ -31,7 +31,7 @@ cd $HOME\actions-runner
 
 ## Paper-forward process
 
-The paper-forward loop is independent of GitHub Actions. It reads one frozen
+The paper-forward loop is independent of the Windows self-hosted runner. Python-based validation/execution is hosted on GitHub-hosted Windows runners. It reads one frozen
 candidate, fetches only completed public Binance candles, updates the persistent
 schema-v2 shadow state and repeats.
 
