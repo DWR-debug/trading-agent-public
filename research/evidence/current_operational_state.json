@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T17:14:22.618273+00:00",
+  "generated_at_utc": "2026-09-27T17:18:19.480189+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -77,12 +77,22 @@
       {
         "number": 335,
         "title": "RESEARCH: Q024 auction-result publication timestamp PIT feasibility",
-        "updatedAt": "2026-09-27T17:07:20Z",
+        "updatedAt": "2026-09-27T17:15:27Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/335"
       }
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "RESEARCH: use official Treasury XML ReleaseTime for Q024",
+        "sha": "c9278bc5e06ebbc40a70c00f053db4ec39f2b3e4",
+        "timestamp": "2026-09-27T19:18:07+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "fd9859d252ca06efd06e8a643a75a5b714c323e2",
+        "timestamp": "2026-09-27T17:14:22Z"
+      },
       {
         "message": "FIX: install exchange_calendars for Q024 PIT check",
         "sha": "55b86df147365297094ca79288bd62d85ed81f71",
@@ -112,16 +122,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "50d86739b58e0bc76d7a0050f80e48ba7622dd66",
         "timestamp": "2026-09-27T17:07:36Z"
-      },
-      {
-        "message": "OPS: queue Q024 historical XML feasibility",
-        "sha": "84f81d7fa8615af1edbad8317ba240a00d23697b",
-        "timestamp": "2026-09-27T19:07:25+02:00"
-      },
-      {
-        "message": "OPS: retire Q024 RSS-only agent request",
-        "sha": "16467cca0cf59af6a6ad18af7e7babb7efc6b56b",
-        "timestamp": "2026-09-27T19:07:23+02:00"
       }
     ]
   },
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "55b86df147365297094ca79288bd62d85ed81f71",
+  "source_master_sha": "c9278bc5e06ebbc40a70c00f053db4ec39f2b3e4",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36336179538"
+    "run_id": "36336430548"
   }
 }
