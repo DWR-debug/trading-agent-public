@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-27T18:51:30Z",
+  "generated_at": "2026-09-27T19:58:30Z",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -4799,6 +4799,171 @@
         "live_trading_enabled": false,
         "orders_enabled": false
       }
+    },
+    {
+      "trial_id": "T-2026-09-27-058",
+      "recorded_at": "2026-09-27T19:58:30Z",
+      "status": "coverage_validated",
+      "research_family": "q038_fresh_disjoint_coverage",
+      "hypothesis": {
+        "text": "Verify a fresh fully symbol-disjoint eight-symbol universe for the Q037 alpha architecture using fixed source-order coverage only."
+      },
+      "data_scope": {
+        "requested_candles": 4000,
+        "target_common_candles": 3500,
+        "common_calendar_count": 4000,
+        "selected_snapshot_count": 3500,
+        "symbols": [
+          "IVE",
+          "IWL",
+          "DLN",
+          "DHS",
+          "DON",
+          "DES",
+          "USRT",
+          "ITB"
+        ],
+        "fully_symbol_disjoint_validation_set": true,
+        "workflow_run_id": 36344634727,
+        "artifact_ids": [
+          10939932547
+        ],
+        "artifact_digest": "sha256:53be6d42654578844344847bc3a5cb59a8167ba2210a8fffb4c64a4b94e5318e",
+        "coverage_fingerprint": "968eb89ce426ee900cda06ca4d817f42dad7bc129f64088ba0180ab6b01cbd7f",
+        "performance_evaluation": false,
+        "oos_evaluation": false,
+        "holdout_evaluation": false
+      },
+      "search_scope": {
+        "raw_trial_count": 0,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "asset_search": false,
+        "horizon_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "none; preregistered gate only",
+        "selection_metric": null
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "COVERAGE_PASSED",
+        "scientific_outcome": "COVERAGE_VALIDATED_NO_PERFORMANCE_EVIDENCE",
+        "workflow_run_id": 36344634727,
+        "workflow_conclusion": "success",
+        "artifact_id": 10939932547,
+        "artifact_digest": "sha256:53be6d42654578844344847bc3a5cb59a8167ba2210a8fffb4c64a4b94e5318e",
+        "coverage_fingerprint": "968eb89ce426ee900cda06ca4d817f42dad7bc129f64088ba0180ab6b01cbd7f",
+        "performance_evaluation": false,
+        "oos_evaluation": false,
+        "holdout_evaluation": false,
+        "selection_used": false,
+        "holdout_used_for_selection": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-27-059",
+      "recorded_at": "2026-09-27T19:58:30Z",
+      "status": "pit_validated",
+      "research_family": "q039_price_only_alpha_pit",
+      "hypothesis": {
+        "text": "Verify point-in-time safety of fixed price/OHLCV alpha mechanisms on the fresh Q038 universe before any performance computation."
+      },
+      "data_scope": {
+        "requested_candles": 4000,
+        "target_common_candles": 3500,
+        "common_calendar_count": 4000,
+        "selected_snapshot_count": 3500,
+        "symbols": [
+          "IVE",
+          "IWL",
+          "DLN",
+          "DHS",
+          "DON",
+          "DES",
+          "USRT",
+          "ITB"
+        ],
+        "fully_symbol_disjoint_validation_set": true,
+        "source_trial_id": "T-2026-09-27-058",
+        "coverage_workflow_run_id": 36344634727,
+        "coverage_artifact_id": 10939932547,
+        "coverage_artifact_digest": "sha256:53be6d42654578844344847bc3a5cb59a8167ba2210a8fffb4c64a4b94e5318e",
+        "coverage_fingerprint": "9809daeee7cd8f05ccf844376e5027b71f81a80af1fbcf2b10d97c574689abbd",
+        "snapshot_fingerprint": "58edf160906056b99581c8bf97490a5b5152395f64d518e571ba4203d41a2c97",
+        "performance_evaluation": false,
+        "oos_evaluation": false,
+        "holdout_evaluation": false
+      },
+      "search_scope": {
+        "raw_trial_count": 0,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "asset_search": false,
+        "horizon_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "none; preregistered gate only",
+        "selection_metric": null
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "PIT_PASSED",
+        "scientific_outcome": "PIT_PASSED_NO_PERFORMANCE_EVIDENCE",
+        "workflow_run_id": 36346231540,
+        "workflow_conclusion": "success",
+        "artifact_id": 10941305268,
+        "artifact_digest": "sha256:cf85b6d21f290d318733eb313c2c09d6cfdf3c3b5a8be57ac55d41df64a31855",
+        "workflow_head_sha": "2ceaf5624a63653fa135d5c9dc2a21a3d28e4003",
+        "checks_fingerprint": "973a99f4b636b4208e34b292d5d308903886e0d4d5fce27b2526e2c1a8e23e0b",
+        "report_fingerprint": "cf38e3030f08fe6e6c2881c5c48d2e52c55f96db1af06b112593856d92c247e0",
+        "checked_decision_points": 29,
+        "future_mutation_checks_passed": true,
+        "next_session_mutation_checks_passed": true,
+        "performance_evaluation": false,
+        "oos_evaluation": false,
+        "holdout_evaluation": false,
+        "selection_used": false,
+        "holdout_used_for_selection": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      },
+      "mechanisms": [
+        "A1_TSM_CONSENSUS",
+        "A2_CS_MOMENTUM_TOP2",
+        "A3_RESIDUAL_MOMENTUM_TOP2",
+        "A5_LOW_BETA_TOP2"
+      ]
     }
   ]
 }
