@@ -7,9 +7,9 @@ from portfolio.income_simulation import (
 )
 
 
-def test_default_policy_protects_500_eur():
+def test_default_policy_protects_2000_eur():
     result = simulate_income((0.10,))
-    assert result.final_equity_eur == pytest.approx(550.0)
+    assert result.final_equity_eur == pytest.approx(2200.0)
     assert result.total_payout_eur == pytest.approx(0.0)
 
 
@@ -18,7 +18,7 @@ def test_profit_is_paid_only_at_payout_interval_and_new_high():
 
     result = simulate_income((0.10, 0.0, 0.0, 0.10), policy)
 
-    assert result.total_payout_eur == pytest.approx(55.0)
+    assert result.total_payout_eur == pytest.approx(220.0)
     assert result.payout_count == 1
     assert result.final_equity_eur == pytest.approx(550.0)
 
@@ -29,7 +29,7 @@ def test_temporary_gain_cannot_be_paid_after_drawdown():
     result = simulate_income((0.10, -0.10), policy)
 
     assert result.total_payout_eur == pytest.approx(0.0)
-    assert result.final_equity_eur == pytest.approx(495.0)
+    assert result.final_equity_eur == pytest.approx(1980.0)
 
 
 def test_partial_payout_retains_profit_in_working_capital():
@@ -40,8 +40,8 @@ def test_partial_payout_retains_profit_in_working_capital():
 
     result = simulate_income((0.10,), policy)
 
-    assert result.total_payout_eur == pytest.approx(25.0)
-    assert result.final_equity_eur == pytest.approx(525.0)
+    assert result.total_payout_eur == pytest.approx(100.0)
+    assert result.final_equity_eur == pytest.approx(2100.0)
 
 
 def test_reserve_reduces_payoutable_surplus():
