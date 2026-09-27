@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "checkpoint_type": "current_project_snapshot",
-  "generated_at_utc": "2026-09-27T10:10:20Z",
+  "generated_at_utc": "2026-09-27T10:55:00Z",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit_at_checkpoint_creation": "2f04c447b99f9ba97a7f6e99c4fa7fce6406d769",
+  "master_commit_at_checkpoint_creation": "d50aac970bccd0b3a0ce7c9e70c0304a55580fe3",
   "canonical_data_layer": {
     "status": "MERGED",
     "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
@@ -56,9 +56,9 @@
     "research_reviewer_agent_profile": ".github/agents/trading-agent-research-reviewer.agent.md",
     "setup_workflow": ".github/workflows/copilot-setup-steps.yml",
     "root_agent_contract": "AGENTS.md",
-    "external_enablement_required": true,
+    "external_enablement_required": false,
     "external_agent_execution_verified": true,
-    "external_agent_execution_note": "Historical Copilot CLI execution was verified in queue run 107. Current 2026-09-27 queue run 118 reached the Copilot CLI after repository-access and supported-token-class preflight, but Copilot rejected authentication; no agent session/PR was produced and the queue request was paused."
+    "external_agent_execution_note": "Copilot CLI authentication and bounded execution were verified on 2026-09-27. Queue run 125 executed AGENT-008 successfully through scope and regression gates; publication was initially blocked by an untracked-file bug in the queue and that bug is now fixed on master. AGENT-012 is queued on lane 1."
   },
   "safety": {
     "paper_only": true,
@@ -82,7 +82,7 @@
     "research/evidence/trial_ledger.json",
     "current master, relevant branches/PRs and workflows"
   ],
-  "active_research_task": "Q026-H2-TREASURY-AUCTION-DATE-SHIFT-COVERAGE",
+  "active_research_task": "PARALLEL-AGENT-008-AGENT-012",
   "wide_search_round_002": {
     "hypothesis_id": "H08",
     "family": "volatility_state_transition",
@@ -129,7 +129,7 @@
     "canonical_yahoo_hardening_pr": 234,
     "canonical_yahoo_hardening_merge_commit": "cfdb0ac7031cfdadcbfe16da50cbedeb4b285dd3"
   },
-  "next_action": "Do not run Q026 performance. Preserve Q026 coverage DATA_INVALID as scientific NO_SCIENTIFIC_OUTCOME; prepare a new preregistered data-geometry repair before any retry. Copilot queue is paused after a verified authentication rejection; no agent PR was produced.",
+  "next_action": "Run AGENT-008 and AGENT-012 in parallel; keep Q026 as DATA_INVALID, do not run Q026 performance, then prepare one new ex-ante preregistered fresh symbol-disjoint candidate for coverage-first validation.",
   "q018": {
     "task_id": "Q-018-SOURCE-FEASIBILITY-PREFLIGHT",
     "status": "DATA_INSUFFICIENT",
@@ -230,16 +230,16 @@
     "scientific_evidence_changed": false
   },
   "current_qa": {
-    "workflow_run_id": 36256200896,
-    "head_sha": "d8d72c58abde562a6336ea4cd09a63a24526d23a",
-    "conclusion": "success",
-    "tests_passed": 877,
-    "warnings": 2,
-    "ast_syntax": "success",
-    "safety_invariants": "success"
+    "workflow_run_id": null,
+    "head_sha": "d50aac970bccd0b3a0ce7c9e70c0304a55580fe3",
+    "conclusion": "pending_after_governance_changes",
+    "tests_passed": null,
+    "warnings": null,
+    "ast_syntax": "pending",
+    "safety_invariants": "pending"
   },
   "maintenance_note": "Synchronized to the last verified self-hosted repo_qa baseline; historical trial evidence unchanged.",
-  "next_scientific_step": "H2 performance preregistration on a new symbol-disjoint universe, only after separate coverage/PIT preflight; no Q020 retuning or holdout reuse.",
+  "next_scientific_step": "New fixed-rule candidate selection only after design/coverage/PIT; paper-only shadow infrastructure is developed in parallel.",
   "q023": {
     "status": "COVERAGE_VALIDATED",
     "workflow_run_id": 36309960872,
