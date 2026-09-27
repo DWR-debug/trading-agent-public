@@ -37,7 +37,7 @@ jobs:
         with:
           python-version: "3.13"
       - name: Install bounded feasibility dependencies
-        run: python -m pip install --disable-pip-version-check pypdf
+        run: python -m pip install --disable-pip-version-check pytest pypdf
       - name: Safety guard
         run: python -c "from config import settings; assert settings.PAPER_ONLY is True; assert settings.LIVE_TRADING_ENABLED is False; assert settings.ORDERS_ENABLED is False; assert settings.AUTOMATIC_PROMOTION is False; print('Q024 SAFETY OK')"
       - name: Focused Q024 regression tests
