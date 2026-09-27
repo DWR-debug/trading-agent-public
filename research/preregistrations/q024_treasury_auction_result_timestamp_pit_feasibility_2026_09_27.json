@@ -12,10 +12,10 @@
     "Official Treasury Auction Results XML/result files when historically reproducible",
     "Official Treasury Auction Results PDFs for event identity/content confirmation"
   ],
-  "matching_rule": "CUSIP + auction_date must match Q019 and the source must contain the bid_to_cover_ratio or its complete components.",
+  "matching_rule": "CUSIP + auction_date must match Q019 and the same official result source must contain the Q019 bid_to_cover_ratio or its complete components; a PDF link alone is insufficient.",
   "timestamp_rule": "Accept only an explicit or deterministically documented official result-publication timestamp. A PDF release date without an intraday timestamp is insufficient.",
   "historical_release_semantics": "Treasury auction timeline states that from January 2003 the official release time was the recorded time the results XML was delivered to the FRIT server.",
-  "coverage_pass_rule": "89/89 events must have RESULT_TIMESTAMP_VALIDATED; otherwise overall status is DATA_INSUFFICIENT.",
+  "coverage_pass_rule": "89/89 events must have RESULT_TIMESTAMP_VALIDATED and pass the recorded PIT check; otherwise overall status is DATA_INSUFFICIENT. Historical XML result-file identity may be recorded as supporting provenance, but archive Last-Modified metadata is not itself a publication timestamp.",
   "pit_rule": "Determine whether the result timestamp precedes the first actually usable QXNYS session/action point. No forward return or P&L calculation is allowed.",
   "governance": {
     "source_feasibility_only": true,
