@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T17:25:10.338535+00:00",
+  "generated_at_utc": "2026-09-27T17:25:20.618877+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,11 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "232af6ace2f9b4e9986434f7dd998ed458a466e7",
+        "timestamp": "2026-09-27T17:25:10Z"
+      },
       {
         "message": "OPS: queue Q024 historical 2011-2017 gap diagnosis",
         "sha": "a61a7111913ee72d97aad212c559539f64be1087",
@@ -117,11 +122,6 @@
         "message": "OPS: record Q024 feasibility outcome in project state",
         "sha": "90d92a0ec5f591ba414628c0fb95b522651c69ec",
         "timestamp": "2026-09-27T19:23:21+02:00"
-      },
-      {
-        "message": "EVIDENCE: record Q024 timestamp feasibility receipt",
-        "sha": "0fa724c2d8d99ec05ee3d8150733a476a77a1b91",
-        "timestamp": "2026-09-27T19:23:11+02:00"
       }
     ]
   },
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a61a7111913ee72d97aad212c559539f64be1087",
+  "source_master_sha": "232af6ace2f9b4e9986434f7dd998ed458a466e7",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36336851877"
+    "run_id": "36336853958"
   }
 }
