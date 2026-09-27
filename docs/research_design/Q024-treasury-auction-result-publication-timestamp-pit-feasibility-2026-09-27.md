@@ -55,7 +55,8 @@ reproduzierbaren Ereigniszeit geprüft werden.
 Eine Quelle darf einem Q019-Event nur zugeordnet werden, wenn mindestens
 `cusip` und `auction_date` eindeutig mit dem Q019-Datensatz übereinstimmen und
 die Quelle tatsächlich das Q019-`bid_to_cover_ratio` oder dessen vollständige
-Bestandteile enthält.
+Bestandteile enthält. Ein RSS-Link auf ein passendes PDF ersetzt diese
+zweifache Event- und Signalidentifikation nicht.
 
 ## Timestamp-Regel
 
@@ -77,6 +78,11 @@ muss eindeutig bestimmbar sein.
 
 Es wird nur die Verfügbarkeit der Information geprüft. Keine Forward Returns,
 kein P&L, kein Backtest.
+
+Der Runner schreibt je Event außerdem den ersten folgenden XNYS-Handelstag und
+akzeptiert die PIT-Prüfung nur, wenn der explizite Result-Timestamp vor diesem
+Tag liegt. Ein Timestamp ohne nachweisbaren Signalinhalt oder ohne bestandene
+PIT-Prüfung zählt nicht als Q024-Pass.
 
 ## Falsifikation / DATA_INSUFFICIENT
 

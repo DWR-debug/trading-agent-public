@@ -20,11 +20,13 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
+import exchange_calendars as xcals
 from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[1]
 STUDY_START = date(2011, 1, 1)
 STUDY_END = date(2025, 9, 24)
+EXPECTED_Q019_EVENTS = 89
 TREASURY_API = (
     "https://api.fiscaldata.treasury.gov/services/api/"
     "fiscal_service/v1/accounting/od/auctions_query"
@@ -115,7 +117,7 @@ def _pdf_matches(text: str, event: dict) -> bool:
     return (
         cusip in normalized
         and re.search(r"\bTREASURY AUCTION RESULTS\b", normalized, re.I)
-        and re.search(r"\b10-Year(?:\s+TIPS|\s+Note)?\b", normalized, re.I)
+        and re.search(r"\b10-Year\s+Note\b", normalized, re.I)
         and re.search(r"Bid-to-Cover Ratio\s*:", normalized, re.I)
     )
 
@@ -177,21 +179,30 @@ def _parse_rss(body: bytes) -> list[dict]:
     return items
 
 
-def _find_rss_match(event: dict, result_pdf: dict, rss_items: list[dict]) -> dict | None:
+def _find_rss_match(event: dict, rss_items: list[dict]) -> dict | None:
     cusip = str(event["cusip"]).strip()
     auction_token = datetime.strptime(
         event["auction_date"], "%Y-%m-%d"
     ).strftime("%Y%m%d")
-    pdf_name = Path(result_pdf["source_url"]).name if result_pdf.get("source_url") else ""
     matches: list[dict] = []
     for item in rss_items:
         combined = " ".join(
             [item.get("title", ""), item.get("description", ""),
              item.get("link", ""), item.get("guid", "")]
         )
-        identity_by_cusip = cusip in combined and auction_token in combined
-        identity_by_result_pdf = bool(pdf_name) and pdf_name in combined
-        if not (identity_by_cusip or identity_by_result_pdf):
+        # A PDF link alone identifies a document, not the Q019 event.  The
+        # result timestamp must be tied to both fixed event identifiers and
+        # the value used by Q019.
+        if cusip not in combined or auction_token not in combined:
+            continue
+        ratio = str(event.get("bid_to_cover_ratio", "")).strip()
+        ratio_present = ratio and re.search(
+            rf"\b{re.escape(ratio)}\b", combined
+        )
+        label_present = re.search(
+            r"bid[\s-]*to[\s-]*cover(?:\s+ratio)?", combined, re.I
+        )
+        if not (ratio_present and label_present):
             continue
         matches.append(item)
     if not matches:
@@ -204,6 +215,15 @@ def run(*, output_path: str | Path) -> dict:
     events = _q019_events()
     if not events:
         raise SourceError("Q019 event population is empty")
+    if len(events) != EXPECTED_Q019_EVENTS:
+        raise SourceError(
+            f"Q019 fixed population changed: expected {EXPECTED_Q019_EVENTS}, "
+            f"received {len(events)}"
+        )
+    if len({
+        (event.get("cusip"), event.get("auction_date")) for event in events
+    }) != len(events):
+        raise SourceError("Q019 fixed population contains duplicate CUSIP/auction_date keys")
 
     try:
         rss_items = _parse_rss(_fetch_bytes(RESULT_RSS_URL, headers={"Accept": "application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.1", "User-Agent": "Mozilla/5.0 (compatible; trading-agent-public Q024 research)" }))
@@ -213,10 +233,30 @@ def run(*, output_path: str | Path) -> dict:
         rss_source_status = "RSS_INSUFFICIENT"
         rss_error = str(exc)
 
+    calendar = xcals.get_calendar("XNYS")
+    sessions = [
+        stamp.date()
+        for stamp in calendar.sessions_in_range(
+            STUDY_START.isoformat(), STUDY_END.isoformat()
+        )
+    ]
     rows: list[dict] = []
     for event in events:
         result_pdf = _resolve_result_pdf(event)
-        rss_match = _find_rss_match(event, result_pdf, rss_items) if rss_items else None
+        rss_match = _find_rss_match(event, rss_items) if rss_items else None
+        publication_timestamp = (
+            rss_match["publication_timestamp_utc"] if rss_match else None
+        )
+        record_date = date.fromisoformat(event["record_date"])
+        following_sessions = [session for session in sessions if session > record_date]
+        next_session = following_sessions[0] if following_sessions else None
+        pit_valid = bool(
+            publication_timestamp
+            and next_session
+            and datetime.fromisoformat(
+                publication_timestamp.replace("Z", "+00:00")
+            ).date() < next_session
+        )
         rows.append({
             "q019": {
                 "record_date": event["record_date"],
@@ -237,15 +277,29 @@ def run(*, output_path: str | Path) -> dict:
                     "source_url": RESULT_RSS_URL,
                 }
             ),
+            "pit": {
+                "first_following_xnys_session": (
+                    next_session.isoformat() if next_session else None
+                ),
+                "information_timestamp_before_following_session": pit_valid,
+            },
         })
 
-    validated = sum(
+    timestamp_validated = sum(
         row["rss_result_publication"]["status"] == "RESULT_TIMESTAMP_VALIDATED"
         for row in rows
     )
+    pit_validated = sum(
+        row["pit"]["information_timestamp_before_following_session"]
+        for row in rows
+    )
     total = len(rows)
-    ratio = validated / total
-    status = "COVERAGE_VALIDATED" if ratio >= MIN_TIMESTAMP_COVERAGE else "DATA_INSUFFICIENT"
+    ratio = timestamp_validated / total
+    status = (
+        "COVERAGE_VALIDATED"
+        if ratio >= MIN_TIMESTAMP_COVERAGE and pit_validated == total
+        else "DATA_INSUFFICIENT"
+    )
 
     result = {
         "schema_version": "1.0",
@@ -258,6 +312,7 @@ def run(*, output_path: str | Path) -> dict:
         "fixed_population": {
             "source": "Q019 fixed Treasury 10-Year result events",
             "total_events": total,
+            "expected_events": EXPECTED_Q019_EVENTS,
         },
         "sources": {
             "treasury_auction_api": TREASURY_API,
@@ -277,9 +332,11 @@ def run(*, output_path: str | Path) -> dict:
             for item in rss_items
         ],
         "coverage": {
-            "timestamp_validated_events": validated,
+            "timestamp_validated_events": timestamp_validated,
             "timestamp_coverage_ratio": ratio,
             "minimum_required_ratio": MIN_TIMESTAMP_COVERAGE,
+            "pit_validated_events": pit_validated,
+            "pit_coverage_ratio": pit_validated / total,
         },
         "governance": {
             "source_feasibility_only": True,
@@ -317,7 +374,7 @@ def run(*, output_path: str | Path) -> dict:
         "status": result["status"],
         "events": total,
         "rss_items": len(rss_items),
-        "timestamp_validated_events": validated,
+        "timestamp_validated_events": timestamp_validated,
         "coverage_ratio": ratio,
         "fingerprint": result["fingerprint"],
     }, sort_keys=True))
