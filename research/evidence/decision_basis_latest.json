@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "recorded_on": "2026-09-27",
   "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
-  "current_stage": "Q036_T056_DIAGNOSTIC",
+  "current_stage": "Q037_ALPHA_ARCHITECTURE_DESIGN",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
@@ -79,7 +79,11 @@
     "T056 evaluated CONTROL plus RISK-A/B/C/D on 2798 research and 700 holdout periods; no arm passed all 13 unchanged T052 gates.",
     "RISK-B passed 2/13 gates and had materially lower research/holdout drawdown than CONTROL, but remained negative on research and holdout return and failed return/profit-factor/OOS/stress conditions.",
     "RISK-A/C/D passed 0/13 gates; descriptive control-comparison checks were false for all four risk arms.",
-    "T056 did not rank or select any family and did not use holdout selection."
+    "T056 did not rank or select any family and did not use holdout selection.",
+    "Q036/T057 completed successfully on workflow 36343645414; artifact=10939552467; artifact-digest=sha256:f6a54ebc1cb5bf8456f2f0b52f52887c6fa231c0a284f9fde006dbba343d5474; diagnostic-fingerprint=dd596966b862e0a2baffa067f810ce2dc78d3fd1eb834413f24c55f7c5c020cd.",
+    "Q036/T057 used only the immutable T056 artifact and exact frozen mechanism source; performance evaluation, OOS evaluation, holdout evaluation and family selection were disabled.",
+    "Q036/T057 found mean gross exposure of RISK-B=0.307696 and 74.09% of all evaluated periods at the 0.25x state; its holdout drawdown was 10.984 percentage points lower than CONTROL while holdout profit factor remained 0.861.",
+    "Q036/T057 found no arm passed all 13 fixed T052 gates; the diagnostic therefore provides mechanism evidence about exposure/risk control, not promotion evidence."
   ],
   "implications": [
     "T047R1 did not satisfy the unchanged evidence contract; Q020 is not reopened.",
@@ -95,7 +99,9 @@
     "The remaining pre-performance task is to freeze implementable parameters and execution conventions for RISK-A through RISK-D ex ante; performance data cannot be used to choose them.",
     "Q031 coverage, Q032 fixed-core PIT, Q033 ex-ante parameter freeze and Q034 mechanism PIT now provide the prerequisites for Q035 fixed multi-arm performance evaluation.",
     "The four fixed Q033 overlays do not establish a performance-supported candidate on this universe under the unchanged T052 contract.",
-    "A deterministic diagnostic is warranted before any new parameterization or follow-up performance study; the next step is to decompose exposure duty cycle, turnover, lifecycle stops and risk-state activation without changing the frozen mechanisms."
+    "A deterministic diagnostic is warranted before any new parameterization or follow-up performance study; the next step is to decompose exposure duty cycle, turnover, lifecycle stops and risk-state activation without changing the frozen mechanisms.",
+    "Q036 indicates that the tested risk overlays mainly alter exposure and drawdown; they do not supply evidence that the underlying return/alpha deficiency has been repaired.",
+    "The next research stage should therefore move to the alpha side: ex-ante definition of orthogonal alpha mechanisms, followed by fresh symbol-disjoint coverage/PIT and only then a fixed-rule performance trial."
   ],
   "unknowns": [
     "whether any orthogonal income-oriented mechanism survives independent fixed-rule validation",
@@ -108,9 +114,11 @@
     "whether any of the four Q030 risk/stability mechanism families can pass the unchanged performance evidence gates on the Q031 PIT-validated universe",
     "whether any fixed RISK-A/B/C/D arm satisfies the unchanged T052 performance gates on the fresh seven-symbol universe",
     "which mechanism state activations and exposure reductions account for the observed drawdown changes in RISK-A/B/C/D",
-    "whether observed improvements in drawdown are purchased through return erosion, turnover costs, or timing effects"
+    "whether observed improvements in drawdown are purchased through return erosion, turnover costs, or timing effects",
+    "whether an orthogonal alpha family can produce positive, stable fixed-rule evidence on a fresh symbol-disjoint universe while surviving the existing risk/cost/holdout gates",
+    "whether combining genuinely distinct alpha mechanisms improves return robustness without relying on post-hoc allocation or family selection"
   ],
-  "next_action": "Run Q036 descriptive T056 mechanism diagnosis using the fixed T056 dataset and exact frozen mechanism rules; no parameter search, family ranking or selection.",
+  "next_action": "Execute Q037 Alpha-Mechanism-Architecture design-only work: define a small orthogonal family catalogue, data/PIT contracts, disjoint-universe protocol and fixed evaluation gates; no performance execution or selection.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
