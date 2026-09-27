@@ -97,9 +97,25 @@ def run_preflight(
     universe_name = str(spec["universe"])
     symbols = tuple(spec["symbols"])
     interval = str(spec["interval"])
-    requested = int(spec["requested_candles"])
-    target = int(spec["target_candles"])
-    minimum = int(spec.get("minimum_in_window_candles", requested))
+    data_contract = spec.get("data_contract", {})
+    requested = int(
+        spec.get(
+            "requested_candles",
+            data_contract.get("requested_raw_candles_per_symbol", data_contract.get("requested_candles")),
+        )
+    )
+    target = int(
+        spec.get(
+            "target_candles",
+            data_contract.get("target_common_calendar", data_contract.get("target_candles")),
+        )
+    )
+    minimum = int(
+        spec.get(
+            "minimum_in_window_candles",
+            data_contract.get("minimum_in_window_candles", target),
+        )
+    )
     if minimum < target or minimum > requested:
         raise RuntimeError(
             "minimum_in_window_candles must be between target_candles and requested_candles."
