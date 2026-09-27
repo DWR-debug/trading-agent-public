@@ -25,7 +25,7 @@
           "issue_number": "335",
           "lane": "lane1",
           "request_file": "agent_requests/lane1/AGENT-Q024.request",
-          "task_id": "AGENT-Q024-FEASIBILITY"
+          "task_id": "AGENT-Q024-FEASIBILITY-V2"
         }
       ]
     },
@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T16:54:00.563061+00:00",
+  "generated_at_utc": "2026-09-27T16:55:45.292228+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -81,7 +81,7 @@
         "issue_number": "335",
         "lane": "lane1",
         "request_file": "agent_requests/lane1/AGENT-Q024.request",
-        "task_id": "AGENT-Q024-FEASIBILITY"
+        "task_id": "AGENT-Q024-FEASIBILITY-V2"
       }
     ],
     "default_branch": "master",
@@ -95,12 +95,27 @@
       {
         "number": 335,
         "title": "RESEARCH: Q024 auction-result publication timestamp PIT feasibility",
-        "updatedAt": "2026-09-27T16:51:48Z",
+        "updatedAt": "2026-09-27T16:55:28Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/335"
       }
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: align Q024 agent contract with unique branch task id",
+        "sha": "8303d20b6526a3ca43aed18ae38933c92c61c2ca",
+        "timestamp": "2026-09-27T18:55:32+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "78a1112f756bb75904aa84e961ddf8f255a83d9d",
+        "timestamp": "2026-09-27T16:54:35Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "36c5e256bcb9708d3250fdf4706d8cb1a3b7a9e1",
+        "timestamp": "2026-09-27T16:54:00Z"
+      },
       {
         "message": "OPS: synchronize current operational status",
         "sha": "7baba0cf8014e38770afb7b0a64c3abd6429ee15",
@@ -125,21 +140,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "fdcd438b82494ae7b1ef3f4121af8378d068c99b",
         "timestamp": "2026-09-27T16:52:05Z"
-      },
-      {
-        "message": "OPS: requeue Q024 with corrected implementation path",
-        "sha": "56dfca691b51f18a53cdb31205ca6f4452c7b3d7",
-        "timestamp": "2026-09-27T18:51:56+02:00"
-      },
-      {
-        "message": "OPS: requeue EUR 2000 candidate audit with unique task id",
-        "sha": "463baacde55afdc8ef51167cd4ad374945037815",
-        "timestamp": "2026-09-27T18:51:54+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "be86f2599ba97671c21e9ac856324dcad156a35e",
-        "timestamp": "2026-09-27T16:49:26Z"
       }
     ]
   },
@@ -201,12 +201,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7baba0cf8014e38770afb7b0a64c3abd6429ee15",
+  "source_master_sha": "8303d20b6526a3ca43aed18ae38933c92c61c2ca",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36334888892"
+    "run_id": "36335023625"
   }
 }
