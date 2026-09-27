@@ -292,11 +292,10 @@ def test_competing_process_cannot_start_or_update_locked_state_or_receipt(
 
 def test_update_ignores_fetch_window_candles_older_than_retained_state(tmp_path):
     path = tmp_path / "state.json"
-    start_session(make_candidate(), make_candles(5, start=100), path)
+    start_session(make_candidate(), make_candles(105)[100:], path)
     # Simulates a public fetch window that starts well before the retained
     # 500-candle state while also containing one fresh successor candle.
-    incoming = make_candles(106, start=0)
+    incoming = make_candles(106)
     updated = update_session(path, incoming)
     assert updated["candle_count"] == 6
     assert updated["last_market_timestamp_utc"] == make_candles(106)[-1].timestamp.isoformat()
-
