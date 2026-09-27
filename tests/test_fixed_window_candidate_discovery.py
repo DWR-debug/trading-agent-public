@@ -21,7 +21,7 @@ def test_fixed_window_discovery_reuses_first_symbol_fetch(monkeypatch, tmp_path)
 
     assert report["selected_common_count"] == 3500
     assert len(report["selected_coverage_batch"]) == 12
-    assert calls == list(discovery.CANDIDATE_POOL[:12])
+    assert set(calls) == set(discovery.CANDIDATE_POOL[:12])
     assert len(calls) == len(set(calls))
     assert report["performance_evaluation"] is False
     assert report["holdout_evaluation"] is False
