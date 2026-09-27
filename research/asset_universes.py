@@ -540,6 +540,21 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
     ),
 )
 
+    AssetUniverse(
+        name="validation_2026_09_27_fixed_candidate_batch",
+        priority=69,
+        description=(
+            "Fresh fully symbol-disjoint 12-symbol validation universe selected only by "
+            "fixed source-order coverage discovery; no performance-based asset selection."
+        ),
+        symbols=(
+            "TAP", "CLX", "HSY", "KR", "SYY", "STT",
+            "USB", "TROW", "BEN", "NTRS", "PNC", "MET",
+        ),
+        target_count=3520,
+    ),
+
+
 def get_universe(name: str) -> AssetUniverse:
     for universe in UNIVERSES:
         if universe.name == name:
