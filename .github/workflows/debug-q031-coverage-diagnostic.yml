@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - debug/q031-coverage-diagnostic-20260927
+  pull_request:
+    branches:
+      - master
 
 permissions:
   contents: read
