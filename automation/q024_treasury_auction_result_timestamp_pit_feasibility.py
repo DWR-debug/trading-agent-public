@@ -189,9 +189,9 @@ def _find_rss_match(event: dict, result_pdf: dict, rss_items: list[dict]) -> dic
             [item.get("title", ""), item.get("description", ""),
              item.get("link", ""), item.get("guid", "")]
         )
-        if cusip not in combined:
-            continue
-        if auction_token not in combined and pdf_name not in combined:
+        identity_by_cusip = cusip in combined and auction_token in combined
+        identity_by_result_pdf = bool(pdf_name) and pdf_name in combined
+        if not (identity_by_cusip or identity_by_result_pdf):
             continue
         matches.append(item)
     if not matches:
@@ -266,6 +266,16 @@ def run(*, output_path: str | Path) -> dict:
             "rss_source_status": rss_source_status,
         },
         "rss_item_count": len(rss_items),
+        "rss_catalog": [
+            {
+                "title": item.get("title", ""),
+                "link": item.get("link", ""),
+                "guid": item.get("guid", ""),
+                "pubDate": item.get("pubDate", ""),
+                "publication_timestamp_utc": item.get("publication_timestamp_utc", ""),
+            }
+            for item in rss_items
+        ],
         "coverage": {
             "timestamp_validated_events": validated,
             "timestamp_coverage_ratio": ratio,
