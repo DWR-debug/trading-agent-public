@@ -256,7 +256,8 @@ def main() -> None:
     args = parser.parse_args()
     result = run_preflight(args.preregistration, output_root=args.output_root)
     print(f"COVERAGE_STATUS: {result['status']}")
+    return 0 if result["status"] == "coverage_passed" else 2
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
