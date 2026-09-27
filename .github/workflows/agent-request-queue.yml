@@ -191,23 +191,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
-          import json, os, subprocess
-          contract=json.load(open(os.path.join(os.environ["RUNNER_TEMP"],"task_contract.json"),encoding="utf-8"))
-          allowed=contract["allowed_paths"]
-          protected=(".github/","research/evidence/","research/authorizations/","gates/")
-          def matches(path,pattern):
-              return path.startswith(pattern[:-3]) if pattern.endswith("/**") else path == pattern
-          changed=set(subprocess.check_output(["git","diff","--name-only"],text=True).splitlines())
-          changed.update(subprocess.check_output(["git","diff","--cached","--name-only"],text=True).splitlines())
-          changed.update(subprocess.check_output(["git","ls-files","--others","--exclude-standard"],text=True).splitlines())
-          changed=sorted(x for x in changed if x)
-          for path in changed:
-              if path.startswith(protected) or not any(matches(path,p) for p in allowed):
-                  raise SystemExit("Copilot CLI changed file outside task scope: " + path)
-          print("FILE_SCOPE_OK files=" + str(len(changed)))
-          PY
-
+          python -m automation.agent_scope_guard --contract "$RUNNER_TEMP/task_contract.json"
       - name: Final bounded regression gate
         if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true' && steps.copilot_cli.outputs.status == 'success'
         shell: bash
@@ -245,6 +229,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
+          python -m automation.agent_scope_guard --contract "$RUNNER_TEMP/task_contract.json"
+          git diff --cached --name-only --exit-code -- .github/ research/evidence/ research/authorizations/ gates/ 2>/dev/null && {
+            echo "AGENT_SCOPE_PROTECTED_INDEX_VIOLATION"
+            exit 1
+          } || true
+          python -m automation.agent_scope_guard --contract "$RUNNER_TEMP/task_contract.json"
           git commit -m "AGENT: issue #${ISSUE_NUMBER} bounded engineering"
           git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:${BRANCH}"
           if pr_url="$(gh pr create --base master --head "${BRANCH}" --title "AGENT: Issue #${ISSUE_NUMBER} bounded engineering task" --body "Bounded agent task completed and regression-tested." 2>/dev/null)"; then
