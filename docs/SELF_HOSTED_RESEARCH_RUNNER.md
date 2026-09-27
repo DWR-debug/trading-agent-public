@@ -1,6 +1,6 @@
 # Self-hosted Research Runner — Trading Agent
 
-Stand: 2026-09-26
+Stand: 2026-09-27
 
 ## Zweck
 
@@ -61,6 +61,11 @@ Auf dem Firmenrechner ist keine systemweite Python-Installation erforderlich: De
 bootstrappt eine fest gepinnte Python-3.13.15-NuGet-Laufzeit temporär. Damit sind weder
 Administratorrechte noch `actions/setup-python` erforderlich.
 
+Die autonome Continuous-QA-Lane läuft jetzt alle 15 Minuten. Jeder Lauf erfasst zusätzlich
+Runnername, Betriebssystem, Architektur, logische Prozessoren und Arbeitsspeicher als
+nicht-kanonische Kapazitätstelemetrie. So kann die tatsächliche Auslastung des PCs über die
+Zeit beurteilt werden, statt nur nach dem Vorhandensein eines erfolgreichen Jobs zu gehen.
+
 Ein einzelner QA-Lauf wird durch eine Änderung an der dedizierten Trigger-Datei
 `research/run_requests/self_hosted_repo_qa.trigger` auf `master` ausgelöst. Der Runner prüft
 zusätzlich den Repository-Owner und führt dann genau die freigegebene `repo_qa`-Lane aus.
@@ -77,6 +82,21 @@ Das Manifest ist nicht-kanonische Arbeitsprovenienz und allein kein Research-Bef
 jeder wissenschaftlichen Verwendung müssen Quelle und Laufumfang geprüft sowie Ergebnisse
 auf dem kanonischen Pfad reproduziert werden; unveränderte Evidence-Gates bleiben maßgeblich.
 
+## Runner-Pool und Parallelisierung
+
+Alle Self-hosted Research-Jobs verwenden bewusst das gemeinsame Label
+`[self-hosted, trading-agent-research]`. Ein zweiter Runner-Prozess auf demselben PC kann
+daher mit genau demselben Label registriert werden und übernimmt automatisch Jobs, sobald
+der erste Prozess belegt ist. Die Workflow-Dateien benötigen dafür keine Änderung. Das
+ist die bevorzugte Skalierung, bevor wir zusätzliche Maschinen oder kostenpflichtige
+Compute-Ressourcen einsetzen.
+
+Der aktuelle Architekturzustand ist bewusst konservativ: ein Runner-Prozess, serielle
+Continuous-QA und maximal zwei parallele Copilot-CLI-Agenten auf GitHub-hosted Actions.
+Die nächste Kapazitätsstufe ist ein zweiter selbstgehosteter Runner-Prozess auf dem bereits
+ständig verfügbaren PC; wissenschaftliche Gates und Sicherheitsinvarianten bleiben davon
+unabhängig.
+
 ## Betriebsregel
 
 Self-hosted Ergebnisse sind Arbeitsmaterial. Für wissenschaftliche Entscheidungen gilt:
@@ -84,3 +104,7 @@ Self-hosted Ergebnisse sind Arbeitsmaterial. Für wissenschaftliche Entscheidung
 `Quelle -> Scope-Gate -> Worker -> Tests -> Provenienz -> kanonische Reproduktion -> Evidence-Gate`
 
 Damit gewinnen wir zusätzliche Rechenkapazität, ohne die Beweis- und Sicherheitskette zu lockern.
+
+## Kapazitätsprinzip
+
+Mehr Compute wird nur für zulässige, reproduzierbare Arbeit verwendet. Eine zusätzliche Runner-Instanz dient der Parallelisierung unabhängiger Jobs; sie lockert keine Research-Gates und macht Self-hosted-Ausgaben nicht zu formaler Evidence.
