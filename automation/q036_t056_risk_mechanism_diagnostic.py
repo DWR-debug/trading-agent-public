@@ -63,6 +63,14 @@ def localize_manifest(manifest: Path) -> Path:
     return out
 
 
+def write_json_report(path: Path, payload: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False, allow_nan=False) + "\n",
+        encoding="utf-8",
+    )
+
+
 def mean(xs):
     return statistics.fmean(xs) if xs else 0.0
 
@@ -197,8 +205,7 @@ def run(report_path: Path, exact_runner_path: Path, output: Path) -> dict:
         "safety": {"paper_only": True, "live_trading_enabled": False, "orders_enabled": False, "automatic_promotion": False},
     }
     result["diagnostic_fingerprint"] = fp(result)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(result, indent=2, ensure_ascii=False, allow_nan=False) + "\\n", encoding="utf-8")
+    write_json_report(output, result)
     print("Q036_STATUS:", result["status"])
     print("DIAGNOSTIC_FINGERPRINT:", result["diagnostic_fingerprint"])
     return result
