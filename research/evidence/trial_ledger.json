@@ -3624,6 +3624,104 @@
         "holdout_used_for_selection": false
       },
       "scientific_conclusion": "Fixed directional inversion fails the unchanged evidence contract on fresh symbol-disjoint validation. H1 is closed; Q020 is not reopened; no inversion tuning or holdout selection is permitted."
+    },
+    {
+      "trial_id": "T-2026-09-27-048R1-PERFORMANCE",
+      "recorded_at": "2026-09-27T13:04:30Z",
+      "status": "archived_rejected",
+      "research_family": "official_event_alpha_release_timing",
+      "parent_trial_id": "T-2026-09-27-048",
+      "repair_reason": "Original H2 fresh universe failed fixed 2011-2025 coverage; R1 used the first 12 symbols from an ex-ante fixed pool that passed exact fixed-window coverage.",
+      "hypothesis": {
+        "text": "The unchanged Q019 Treasury 10-Year bid-to-cover direction contains information when action is mapped to the first XNYS session strictly after official auction_date rather than record_date."
+      },
+      "data_scope": {
+        "requested_candles": 3520,
+        "raw_fetch_candles": 5000,
+        "target_candles": 3500,
+        "research_count": 2798,
+        "holdout_count": 700,
+        "fully_symbol_disjoint_validation_set": true,
+        "symbols": [
+          "TAP",
+          "CLX",
+          "HSY",
+          "KR",
+          "SYY",
+          "STT",
+          "USB",
+          "TROW",
+          "BEN",
+          "NTRS",
+          "PNC",
+          "MET"
+        ],
+        "coverage_workflow_run_id": 36320869734,
+        "coverage_artifact_id": 10931927822,
+        "coverage_artifact_sha256": "sha256:62ef3dcf9b00994c520854f9cbb51d8ced9858f770889a221649dc8296f1fde1",
+        "coverage_snapshot_fingerprint": "55244087f6a77467eb72ba91a425a6285e354f6de1c98040a441855ebc20b090",
+        "coverage_fingerprint": "4cff5c945de646841bf5a64773cee2dd478d7b6dbb198cbcf49627c40412a9a7",
+        "common_calendar_start": "2011-10-24T13:30:00+00:00",
+        "common_calendar_end": "2025-09-24T13:30:00+00:00",
+        "performance_workflow_run_id": 36321103404,
+        "performance_artifact_id": 10931794906,
+        "performance_artifact_sha256": "sha256:91ff452a80e90bcad0d3b0a2924a99bd5232ccf71dae40c8bfc9ccd9956e90ca",
+        "result_fingerprint": "09d5fc3135aef0c8947e8a0325930fc4684b3f8e81a590d95533f74e502d4225"
+      },
+      "search_scope": {
+        "parameter_search": false,
+        "threshold_search": false,
+        "asset_search": false,
+        "horizon_search": false,
+        "variant_search": false,
+        "holdout_used_for_selection": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "coverage-only fixed study-window candidate pool; no performance consulted"
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "scientific_outcome": "NO_PROMOTION_EVIDENCE",
+        "signal_event_count": 87,
+        "active_signal_sessions": 87,
+        "research_return_percent": -11.112444377428144,
+        "research_max_drawdown_percent": 11.638411780518897,
+        "research_profit_factor": 0.5747934670914555,
+        "holdout_return_percent": -3.170241667803042,
+        "holdout_max_drawdown_percent": 5.641510722935883,
+        "holdout_profit_factor": 0.566360709399975,
+        "rolling_profitable_window_ratio": 0.2,
+        "rolling_average_drawdown_percent": 4.470963706893345,
+        "oos_to_is_return_ratio": 0,
+        "stress_1_5x_holdout_return_percent": -5.472843624540036,
+        "stress_2x_holdout_return_percent": -7.724035802682205,
+        "total_return_sensitivity_holdout_percent": -3.1702445120105116,
+        "failed_absolute": [
+          "research_return_positive",
+          "research_max_drawdown_lte_10pct",
+          "research_profit_factor_gte_1_1",
+          "rolling_profit_factor_gte_1_1",
+          "rolling_profitable_window_ratio_gte_0_5",
+          "oos_to_is_return_ratio_gte_0_25",
+          "holdout_return_positive",
+          "holdout_profit_factor_gte_1_1",
+          "stress_1_5x_holdout_nonnegative",
+          "stress_2x_holdout_nonnegative",
+          "total_return_sensitivity_holdout_nonnegative"
+        ],
+        "passed_absolute": [
+          "rolling_average_drawdown_lte_10pct",
+          "holdout_max_drawdown_lte_10pct"
+        ],
+        "conclusion": "Auction-date timing remapping does not support the unchanged Treasury directional signal on this fresh validation. H2-R1 is closed; no timing tuning or holdout selection is permitted."
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
     }
   ]
 }
