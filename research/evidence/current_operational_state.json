@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T14:54:14.975642+00:00",
+  "generated_at_utc": "2026-09-27T14:56:56.945369+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -102,6 +102,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: persist continuous paper-forward MTM state",
+        "sha": "6c6fc00934daed12dc5cec7ccf91b12484dbd910",
+        "timestamp": "2026-09-27T16:56:43+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "76c5d6ad895aa6fd5000fe2f7ad06f522843617a",
+        "timestamp": "2026-09-27T14:54:15Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "7f304f3d01a5642339c5d5332e7353062a8d81aa",
         "timestamp": "2026-09-27T14:54:04Z"
@@ -130,16 +140,6 @@
         "message": "OPS: autonomous agent queue routing",
         "sha": "4c0ba753b84b0681af061ffe1a0b33c36f758c60",
         "timestamp": "2026-09-27T14:39:03Z"
-      },
-      {
-        "message": "OPS: align research checkpoint with latest code baseline",
-        "sha": "1ee072b14601ec127e518e8a7c823c7bba20acad",
-        "timestamp": "2026-09-27T16:39:02+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "baacf040d341fff5058f48f72bda2c56d8290f0e",
-        "timestamp": "2026-09-27T14:37:32Z"
       }
     ]
   },
@@ -200,12 +200,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7f304f3d01a5642339c5d5332e7353062a8d81aa",
+  "source_master_sha": "6c6fc00934daed12dc5cec7ccf91b12484dbd910",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36327581320"
+    "run_id": "36327745291"
   }
 }
