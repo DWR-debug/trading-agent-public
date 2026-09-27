@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T15:40:46.053394+00:00",
+  "generated_at_utc": "2026-09-27T15:46:45.794752+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [],
@@ -63,7 +63,7 @@
       {
         "number": 408,
         "title": "AGENT-026: harden continuous self-hosted paper-forward MTM operation",
-        "updatedAt": "2026-09-27T15:40:39Z",
+        "updatedAt": "2026-09-27T15:46:42Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/408"
       },
       {
@@ -73,8 +73,42 @@
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/407"
       }
     ],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "research/execute-q017-g3-coverage-first",
+        "number": 416,
+        "title": "RESEARCH: Q017 G3 coverage-first on current master",
+        "updatedAt": "2026-09-27T15:46:04Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/416"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "OPS: add standalone Q017 coverage-first runner",
+        "sha": "4b5165409baf9dbe4df606eab313e77712af2db3",
+        "timestamp": "2026-09-27T17:46:35+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "2cbb76c8167b63f04592f45a64d04b180d14f14e",
+        "timestamp": "2026-09-27T15:44:48Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "e6a1a39391f7b8ed777372590dac8a796515a91b",
+        "timestamp": "2026-09-27T15:43:51Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "94457a1a2fff643249c18940cc6134b6c6e9dc27",
+        "timestamp": "2026-09-27T15:43:33Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "988d93b56bcb43361b0240107d158f3100cffbed",
+        "timestamp": "2026-09-27T15:40:46Z"
+      },
       {
         "message": "OPS: add owner-gated candidate-coverage manual trigger",
         "sha": "9dd4904d100aec3dd729c89a050ecd2cb6c74d4d",
@@ -89,31 +123,6 @@
         "message": "OPS: add coverage-only candidate search runner",
         "sha": "1780152f10cbc02ac4b7860ad012a68792249cde",
         "timestamp": "2026-09-27T17:40:12+02:00"
-      },
-      {
-        "message": "OPS: autonomous agent queue routing",
-        "sha": "0fee110f2fe4da05981c182942547793ab3001a3",
-        "timestamp": "2026-09-27T15:39:15Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "44c91380eeaf338e2bac52f15aff3b26a5896730",
-        "timestamp": "2026-09-27T15:38:27Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "fbc10651f5b208f4b9212e7742dfc3dbd2e7090a",
-        "timestamp": "2026-09-27T15:37:29Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "110ee6ba728bfbdce5158f3ac29af948a555b158",
-        "timestamp": "2026-09-27T15:29:18Z"
-      },
-      {
-        "message": "OPS: autonomous agent queue routing",
-        "sha": "34a81c766a7f29b4e8a22327ae710456a38410c4",
-        "timestamp": "2026-09-27T15:28:31Z"
       }
     ]
   },
@@ -174,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9dd4904d100aec3dd729c89a050ecd2cb6c74d4d",
+  "source_master_sha": "4b5165409baf9dbe4df606eab313e77712af2db3",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36330436400"
+    "run_id": "36330796601"
   }
 }
