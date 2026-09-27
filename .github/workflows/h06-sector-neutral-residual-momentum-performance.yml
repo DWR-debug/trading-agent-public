@@ -87,7 +87,7 @@ jobs:
           set -euo pipefail
           MANIFEST="${RUNNER_TEMP}/h06/coverage/h06_mechanism_replication_coverage.json"
           DATA_DIR="${RUNNER_TEMP}/h06/coverage/h06_replication_datasets"
-          MECH="${RUNNER_TEMP}/h06/mechanism/h06_mechanism_replication_result.json"
+          MECH="${RUNNER_TEMP}/h06/mechanism/h06_mechanism_replication_2026_09_26.json"
           test -f "$MANIFEST"
           test -d "$DATA_DIR"
           test -f "$MECH"
