@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T15:01:37.422027+00:00",
+  "generated_at_utc": "2026-09-27T15:10:51.175148+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -102,6 +102,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: nudge Copilot lane1 AGENT-026",
+        "sha": "e35d157121652a03a4af766a3c9b44206c8ea418",
+        "timestamp": "2026-09-27T17:10:43+02:00"
+      },
+      {
+        "message": "OPS: nudge Copilot lane0 AGENT-025",
+        "sha": "f8f0ebe5eca46747aedbb8c16158a5e2668f4acc",
+        "timestamp": "2026-09-27T17:10:40+02:00"
+      },
+      {
+        "message": "OPS: trigger persistent paper-forward MTM run",
+        "sha": "40b6c47bed5e0e075982375b5c08d0c355cf4221",
+        "timestamp": "2026-09-27T17:10:38+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e4e05b71981429d849d63dabd8238545ee0b3612",
+        "timestamp": "2026-09-27T15:01:37Z"
+      },
+      {
         "message": "FIX: make T052 execution guard fail-closed",
         "sha": "d36df8efebea80d46a9781bff18ec06637be588a",
         "timestamp": "2026-09-27T17:01:27+02:00"
@@ -120,26 +140,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "8af87636fabd50ba4395678f3af0132716fd0160",
         "timestamp": "2026-09-27T14:57:43Z"
-      },
-      {
-        "message": "FIX: make paper-forward state persistence race-safe",
-        "sha": "655f2cd26387df31fea67f73999c8ba1d816adf0",
-        "timestamp": "2026-09-27T16:57:29+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "50430ba39a7273bc029850b3456777bfba2f35e6",
-        "timestamp": "2026-09-27T14:56:57Z"
-      },
-      {
-        "message": "OPS: persist continuous paper-forward MTM state",
-        "sha": "6c6fc00934daed12dc5cec7ccf91b12484dbd910",
-        "timestamp": "2026-09-27T16:56:43+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "76c5d6ad895aa6fd5000fe2f7ad06f522843617a",
-        "timestamp": "2026-09-27T14:54:15Z"
       }
     ]
   },
@@ -200,12 +200,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d36df8efebea80d46a9781bff18ec06637be588a",
+  "source_master_sha": "e35d157121652a03a4af766a3c9b44206c8ea418",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36328024664"
+    "run_id": "36328589862"
   }
 }
