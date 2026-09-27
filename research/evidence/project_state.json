@@ -6,7 +6,7 @@
   "latest_formal_trial": "T-2026-09-27-056",
   "latest_trial_status": "NO_ARM_PASSED_ALL_T052_GATES",
   "next_reserved_trial": null,
-  "next_research_focus": "Q040 official event-source feasibility in parallel with fresh symbol-disjoint replication design for the fixed PIT-safe alpha set; no post-hoc performance selection.",
+  "next_research_focus": "Q044 fresh alpha PIT on Q043 universe; if PIT passes, prepare a fresh fixed-rule seven-arm replication performance trial without holdout-driven pruning. Q040 event source feasibility remains archived as a source/PIT feasibility branch.",
   "cleanup_status": "completed_h06_and_q017_coverage_hardening",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -111,8 +111,8 @@
     ".github/workflows/q031-q030-risk-stability-coverage.yml",
     ".github/workflows/q032-q031-fixed-core-pit.yml"
   ],
-  "current_preregistered_trial": "T-2026-09-27-061",
-  "current_trial_status": "Q041_COMPLETED_NO_ARM_PASSED_ALL_13_GATES; Q042_PIT_PASSED",
+  "current_preregistered_trial": "T-2026-09-27-064",
+  "current_trial_status": "PREREGISTERED_PIT_ONLY",
   "engineering_notes": {
     "t039_preregistered": true,
     "coverage_preflight_active": true,
@@ -536,8 +536,8 @@
     "final_execution_commit": "85acd4e17921a4e2682552bfbe424f17ffaa9322",
     "final_status": "COMPLETED_DISCOVERY_ONLY"
   },
-  "current_queue_task": "Q-2026-09-27-062-Q040-OFFICIAL-EVENT-SOURCE-FEASIBILITY-2026-09-27",
-  "last_completed_queue_task": "Q-2026-09-27-060-Q041-ALPHA-MULTIARM-PERFORMANCE-2026-09-27",
+  "current_queue_task": "Q-2026-09-27-064-Q044-FRESH-ALPHA-PIT-2026-09-27",
+  "last_completed_queue_task": "Q-2026-09-27-063-Q043-FRESH-ALPHA-REPLICATION-COVERAGE-2026-09-27",
   "master_commit_semantics": "last_verified_master_commit_before_this_state_update; this field must not be interpreted as a self-referential current-HEAD field",
   "state_sync_verified_at": "2026-09-27T19:05:30Z",
   "project_milestone": {
@@ -827,13 +827,20 @@
     "holdout_used_for_selection": false
   },
   "q040": {
-    "status": "PREREGISTERED_SOURCE_PIT_FEASIBILITY",
-    "issue": 489,
-    "execution_scope": "SOURCE_PIT_FEASIBILITY_ONLY",
-    "performance_execution_authorized": false,
-    "holdout_used_for_selection": false,
-    "selection_used": false,
-    "agent_queue_task_id": "AGENT-Q040-OFFICIAL-EVENT-SOURCE-FEASIBILITY"
+    "status": "SOURCE_ACCESS_VALIDATED_NO_PIT_PERFORMANCE_EVIDENCE",
+    "trial_id": "T-2026-09-27-062",
+    "workflow_run_id": 36347185905,
+    "artifact_id": 10940503878,
+    "artifact_digest": "sha256:f3426606ad9258b3c5011a870a46fe44ede53c55a39646d282a61c16688e9767",
+    "result_fingerprint": "a4a1ad37a6a0486861fb25b84914a9401b672e40ca25cb3c8d123825513f4f27",
+    "sources_accessible": [
+      "SEC",
+      "BLS",
+      "BEA",
+      "CFTC",
+      "TREASURY"
+    ],
+    "performance_execution_authorized": false
   },
   "q041": {
     "status": "COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
@@ -871,6 +878,47 @@
       "A6_OVERNIGHT_TUGWAR_TOP2"
     ],
     "checked_decision_points": 29,
+    "performance_execution_authorized": false,
+    "selection_used": false,
+    "holdout_used_for_selection": false
+  },
+  "q043": {
+    "status": "COVERAGE_VALIDATED_NO_PERFORMANCE_EVIDENCE",
+    "trial_id": "T-2026-09-27-063",
+    "workflow_run_id": 36347316117,
+    "artifact_id": 10940494021,
+    "artifact_digest": "sha256:f29ca5839913f991236ec3ebd4c8c0b18e90272bb09e061f35da0347d7e8febb",
+    "coverage_fingerprint": "aa9750095c667025663231b406f394403057bea808f0384c2bb665078040bf2b",
+    "snapshot_fingerprint": "c5c121d55f110e8b92c8d9415863b7e4e048d5ec9d3cf27e905a5283ae6b5401",
+    "common_calendar_count": 4000,
+    "selected_snapshot_count": 3500,
+    "symbols": [
+      "AON",
+      "CVS",
+      "ADSK",
+      "BA",
+      "T",
+      "F",
+      "LUV",
+      "NFLX"
+    ],
+    "performance_execution_authorized": false,
+    "selection_used": false,
+    "holdout_used_for_selection": false
+  },
+  "q044": {
+    "status": "RUNNING_PIT_ONLY",
+    "trial_id": "T-2026-09-27-064",
+    "workflow_run_id": 36347449579,
+    "universe": "validation_2026_09_27_q043_fresh_alpha_replication",
+    "mechanisms": [
+      "A1_TSM_CONSENSUS",
+      "A2_CS_MOMENTUM_TOP2",
+      "A3_RESIDUAL_MOMENTUM_TOP2",
+      "A5_LOW_BETA_TOP2",
+      "A1B_52W_HIGH_TOP2",
+      "A6_OVERNIGHT_TUGWAR_TOP2"
+    ],
     "performance_execution_authorized": false,
     "selection_used": false,
     "holdout_used_for_selection": false
