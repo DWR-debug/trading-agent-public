@@ -90,10 +90,12 @@ aber kein Grund für Gate-Lockerung, nachträgliche Auswahl oder Optimierung auf
 
 Für die weitere Entwicklung und für neue Chats gilt dauerhaft:
 
-- HYPOTHETICAL_STARTING_CAPITAL_EUR = 500.00
+- HYPOTHETICAL_STARTING_CAPITAL_EUR = 2000.00
 - Dieses Kapital ist fiktiv und ausschließlich eine Simulations-/Planungsannahme.
-- Es bedeutet nicht, dass tatsächlich 500 EUR verfügbar sind.
+- Es bedeutet nicht, dass tatsächlich 2000 EUR verfügbar sind.
 - capital_available=false bleibt unverändert.
+- Der bisherige 500-EUR-Paper-Forward-Canary bleibt als historisch getrennte Operational-Simulation bestehen und wird nicht rückwirkend auf 2000 EUR umgerechnet.
+- Neue kapitalabhängige Paper-/Shadow-/Income-Simulationen verwenden standardmäßig 2000 EUR und erhalten eigene State-/Provenance-Pfade.
 - Paper-, Shadow-, Backtest- und Forward-Simulationen dürfen dieses Referenzkapital verwenden, wenn der jeweilige Testvertrag dies vorsieht.
 - Aus diesem Referenzkapital dürfen keinerlei Aussagen über reale Zahlungsfähigkeit, Rendite, Entnahmefähigkeit oder künftige Finanzierbarkeit abgeleitet werden.
 

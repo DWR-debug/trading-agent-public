@@ -3,7 +3,7 @@
 Stand: 2026-09-25
 
 ## Kapitalannahme
-- Simulation und ein späteres, nur nach separater formaler Freigabe zulässiges Echtgeldszenario unterstellen **500 EUR Anfangs-/Grundkapital**.
+- Simulation und ein späteres, nur nach separater formaler Freigabe zulässiges Echtgeldszenario unterstellen **2000 EUR Anfangs-/Grundkapital**.
 - Das Grundkapital ist als dauerhaft arbeitendes Kapital gedacht.
 - Spätere Aufstockung oder sinnvolle Anpassung entsprechend validierter Strategien ist möglich, aber eine separate Kapitalentscheidung.
 

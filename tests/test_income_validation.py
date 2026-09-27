@@ -15,17 +15,17 @@ def test_payout_requires_new_high_water_mark_and_never_consumes_floor() -> None:
         sequence_window_periods=None,
     )
 
-    result = evaluate_income_viability((0.10, 0.0, 0.0, 0.0), policy)
+    result = evaluate_income_viability((0.10, 0.10, 0.0, 0.0), policy)
 
-    assert result.total_payout_eur == 25.0
+    assert result.total_payout_eur == 110.0
     assert result.payout_count == 1
     assert result.scheduled_payout_period_count == 2
     assert result.zero_payout_periods == 1
-    assert result.final_equity_eur == 525.0
-    assert result.minimum_post_payout_equity_eur >= 500.0
+    assert result.final_equity_eur == 2310.0
+    assert result.minimum_post_payout_equity_eur >= 2000.0
     assert result.floor_violation_count == 0
     assert result.minimum_floor_headroom_eur >= 0.0
-    assert result.maximum_drawdown_percent_after_withdrawals == pytest.approx(100.0 * (1.0 - 525.0 / 550.0))
+    assert result.maximum_drawdown_percent_after_withdrawals == pytest.approx(100.0 * (1.0 - 2310.0 / 2420.0))
 
 
 def test_losses_create_floor_violations_but_never_trigger_withdrawals() -> None:
@@ -41,8 +41,8 @@ def test_losses_create_floor_violations_but_never_trigger_withdrawals() -> None:
     assert result.payout_count == 0
     assert result.zero_payout_periods == 3
     assert result.floor_violation_count == 3
-    assert result.minimum_equity_eur < 500.0
-    assert result.minimum_post_payout_equity_eur < 500.0
+    assert result.minimum_equity_eur < 2000.0
+    assert result.minimum_post_payout_equity_eur < 2000.0
 
 
 def test_fee_and_slippage_are_explicit_period_costs() -> None:
@@ -55,9 +55,9 @@ def test_fee_and_slippage_are_explicit_period_costs() -> None:
 
     result = evaluate_income_viability((0.10, 0.0), policy)
 
-    assert round(result.total_cost_eur, 8) == 21.78
+    assert round(result.total_cost_eur, 8) == 87.12
     assert result.total_payout_eur == 0.0
-    assert round(result.final_equity_eur, 8) == 528.22
+    assert round(result.final_equity_eur, 8) == 2112.88
 
 
 def test_sequence_risk_uses_equal_length_historical_start_points() -> None:

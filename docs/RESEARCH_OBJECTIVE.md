@@ -61,7 +61,7 @@ Der Agent muss reproduzierbar, überwachbar, ausfallsicher, pausierbar und wiede
 
 ## 3.5 Startkapital und Einkommensmodell
 
-Das initiale Forschungs- und Simulationskapital beträgt **500 EUR**.
+Das aktuelle Forschungs- und Simulations-Referenzkapital beträgt **2000 EUR**.
 
 Dieses Startkapital ist als dauerhaft arbeitendes Grundkapital zu behandeln. Die Forschung optimiert nicht auf einen vollständigen Kapitalverbrauch zugunsten kurzfristiger Entnahmen.
 

@@ -86,6 +86,7 @@ def generate(
     github_state = _load_json(github_state_path, {}) if github_state_path else {}
 
     safety = _safety_state()
+    from config import settings
     queue = _read_queue_files()
     open_prs = github_state.get("open_prs", [])
     agent_ready_issues = github_state.get("agent_ready_issues", [])
@@ -167,7 +168,8 @@ def generate(
             "paid_api_budget_usd": 0,
             "free_resources_only": True,
             "actual_capital_available": False,
-            "hypothetical_reference_capital_eur": 500.0,
+            "hypothetical_reference_capital_eur": float(settings.HYPOTHETICAL_STARTING_CAPITAL_EUR),
+            "legacy_operational_canary_capital_eur": 500.0,
         },
         "safety": safety,
         "workflow": {
@@ -221,7 +223,8 @@ def generate(
 
 - Paid agent/API budget: **0 USD**.
 - Actual available capital: **0 EUR**.
-- Hypothetical reference capital: **500 EUR**, simulation/planning only.
+- Hypothetical reference capital: **{int(settings.HYPOTHETICAL_STARTING_CAPITAL_EUR)} EUR**, simulation/planning only.
+- Legacy 500-EUR operational canary remains separate.
 - Deterministic research stays on reproducible runner paths.
 - Agent output is never scientific evidence by itself.
 
