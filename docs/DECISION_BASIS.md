@@ -6,8 +6,11 @@
 - Q020 / `T-2026-09-26-046R1-PERFORMANCE` wurde auf dem eingefrorenen, symbol-disjunkten Snapshot formal ausgeführt und als `NO_PROMOTION_EVIDENCE` abgeschlossen. Das Ergebnis bleibt unverändert; es gab keine Promotion und keine Live-Ausführung.
 - Q021 wurde als `COMPLETED_DIAGNOSTIC_ONLY` aus der kanonischen Q019/Q020-Evidence durchgeführt und liefert sechs ungerankte Folgehypothesen.
 - Q023 hat die offizielle Treasury-Resultat-Timestamp-Frage für 89/89 Events nicht vollständig historisch lösbar gemacht (Q024 = `DATA_INSUFFICIENT`); Q025 hat dagegen die Date-Level-PIT-Grundlage für 89/89 Events validiert.
+- Q024 hat aktuell 58/89 explizit reproduzierbare offizielle XML-`ReleaseTime`-Timestamps; die verbleibenden 31 historischen Events bleiben `DATA_INSUFFICIENT`.
 - Q026 (`T-2026-09-27-048`) ist `DATA_INVALID / NO_SCIENTIFIC_OUTCOME`: die bereits eingefrorene Anforderung verlangte 4.000 Candles, während das feste Universum 3.704 gemeinsame Sessions lieferte. Es wurde keine Performance berechnet.
 - T047R1 ist geschlossen und bleibt `NO_PROMOTION_EVIDENCE`; die exakte Richtungsinvertierung wurde nicht weiter optimiert.
+- T049/T050 sind coverage-validiert; T051 hat die PIT-Prüfung des unveränderten SMA-50/200- und 12-1-Top-2-Pfads bestanden.
+- T052 ist autorisiert, aber derzeit durch technische Regressionen vor der Performancephase blockiert. Der erste echte x64-T052-Run erreichte den Full-CI-Schritt und ergab 1.005 bestandene und 11 fehlgeschlagene Tests; es wurde keine Performance berechnet.
 
 ### Was wissen wir nicht?
 
@@ -24,7 +27,7 @@ Die Forschung öffnet Q020 und T047R1 nicht erneut. Stattdessen laufen Explorati
 
 ### Nächste Aktion
 
-AGENT-008 und AGENT-012 parallel ausführen; danach einen einzelnen formal präregistrierten Kandidaten auf einem frischen, symbol-disjunkten Universum durch Coverage/PIT und erst anschließend Performance prüfen.
+Die 11 technischen CI-Regressionen reparieren, danach den bereits autorisierten T052-Fixed-Rule-Lauf erneut über Full-CI → Coverage → PIT → Performance führen. Q024 bleibt unabhängig auf die 31 historischen Timestamp-Lücken begrenzt; keine nachträgliche Auswahl oder Retuning.
 
 ### Welche Schutzgrenzen bleiben unverändert?
 
