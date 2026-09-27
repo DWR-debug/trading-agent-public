@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0",
+  "preregistration_id": "Q-026-H2-TREASURY-AUCTION-DATE-SHIFT-PERFORMANCE-2026-09-27",
+  "parent_design": "Q-022-TREASURY-FAILURE-FOLLOWUP",
+  "parent_feasibility": "Q-025-TREASURY-AUCTION-DATE-PIT-FEASIBILITY",
+  "trial_id": "T-2026-09-27-048",
+  "research_family": "official_event_alpha_timing_shift",
+  "status": "PREREGISTERED_DESIGN_ONLY",
+  "purpose": "Evaluate exactly one pre-specified H2 timing intervention: shift Q019 signal availability from record_date to auction_date, then map to the first XNYS session strictly after auction_date.",
+  "study_window": {
+    "start": "2011-01-01",
+    "end": "2025-09-24"
+  },
+  "universe": "validation_2026_09_27_treasury_auction_date_shift_h2",
+  "symbols": [
+    "WEC",
+    "ED",
+    "OKE",
+    "VLO",
+    "EIX",
+    "NDSN",
+    "HST",
+    "AKAM",
+    "IT",
+    "DVN",
+    "HAL",
+    "SLB"
+  ],
+  "interval": "1d",
+  "requested_candles": 4000,
+  "target_candles": 3500,
+  "research_periods": 2798,
+  "holdout_periods": 700,
+  "event_source": {
+    "provider": "U.S. Treasury Fiscal Data",
+    "dataset": "Treasury Securities Auctions Data",
+    "security_type": "Note",
+    "security_term": "10-Year",
+    "source_contract_fingerprint": "13072dbed7d60684f4a4fb8a3de69555cae83c66f3cfdfb603b9ed2a4b1c225b",
+    "signal_definition": "Signed change in bid_to_cover_ratio versus immediately preceding 10-Year event: positive=+1, negative=-1, unchanged=0.",
+    "source_pit": "Q025 validates auction_date as the fixed date-level public-information anchor for the result."
+  },
+  "intervention": {
+    "only_change": "Replace first XNYS session strictly after record_date with first XNYS session strictly after auction_date.",
+    "no_other_changes": true,
+    "no_timing_variant_search": true,
+    "no_intraday_parameter_search": true
+  },
+  "trading_rule": {
+    "exposure": "On the first eligible XNYS session strictly after auction_date, hold the event signal for that session only; outside event sessions exposure is zero.",
+    "mapping": "+1 = equal-weight long across all 12 assets; -1 = equal-weight short across all 12 assets; 0 = flat.",
+    "sizing": "Each active asset receives 1/12 gross exposure; total gross exposure fixed at 1.0; no leverage.",
+    "overlap": "If multiple events map to the same session, aggregate signed event signals arithmetically and use sign(sum).",
+    "execution_model": "open_to_close_same_session"
+  },
+  "costs": {
+    "base_fee_bps": 10,
+    "base_slippage_bps": 5,
+    "scenarios": [
+      "base",
+      "1.5x",
+      "2x"
+    ]
+  },
+  "evaluation": {
+    "fresh_symbol_disjoint_validation": true,
+    "coverage_preflight_required": true,
+    "frozen_snapshot_required": true,
+    "holdout_blind": true,
+    "rolling_windows": 5,
+    "no_selection_on_holdout": true
+  },
+  "gates": {
+    "research_return_positive": true,
+    "research_max_drawdown_lte_percent": 10,
+    "research_profit_factor_gte": 1.1,
+    "rolling_min_profit_factor_gte": 1.1,
+    "rolling_profitable_window_ratio_gte": 0.5,
+    "rolling_average_drawdown_lte_percent": 10,
+    "oos_to_is_return_ratio_gte": 0.25,
+    "holdout_return_positive": true,
+    "holdout_profit_factor_gte": 1.1,
+    "holdout_max_drawdown_lte_percent": 10,
+    "stress_holdout_return_nonnegative_at_1_5x": true,
+    "stress_holdout_return_nonnegative_at_2x": true,
+    "total_return_sensitivity_nonnegative": true
+  },
+  "selection": {
+    "parameter_search": false,
+    "asset_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "variant_search": false,
+    "holdout_used_for_selection": false
+  },
+  "authorization": {
+    "performance_execution_authorized": false,
+    "condition": "Set true only after the fixed universe passes fresh coverage and a frozen snapshot fingerprint is bound to this preregistration and source-contract fingerprint."
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
