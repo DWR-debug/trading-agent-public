@@ -18,3 +18,36 @@ def test_q045_performance_contract_is_top_level():
     assert p["coverage_source"]["workflow_run_id"] == 36347316117
     assert p["coverage_source"]["artifact_id"] == 10940494021
     assert p["coverage_source"]["reuse_policy"] == "immutable_reuse; no reacquisition or symbol re-selection"
+
+def test_q045_manifest_localization_preserves_content_and_maps_dataset_paths(tmp_path):
+    import json
+    from automation.q045_fixed_alpha_replication_performance import _localize_manifest
+
+    coverage_root = tmp_path / "coverage"
+    dataset = coverage_root / "T-2026-09-27-063" / "datasets" / "AON"
+    dataset.mkdir(parents=True)
+    csv_path = dataset / "1d.csv"
+    csv_path.write_text("timestamp,open,high,low,close,volume\n", encoding="utf-8")
+
+    source = tmp_path / "source_manifest.json"
+    source_payload = {
+        "status": "coverage_passed",
+        "data_snapshot": {
+            "datasets": [
+                {
+                    "path": "research/runs/q043_coverage/T-2026-09-27-063/datasets/AON/1d.csv",
+                    "candle_count": 0,
+                    "fingerprint": "fixed",
+                }
+            ]
+        },
+    }
+    source.write_text(json.dumps(source_payload), encoding="utf-8")
+
+    localized = _localize_manifest(source, coverage_root)
+    data = json.loads(localized.read_text(encoding="utf-8"))
+    assert source_payload["data_snapshot"]["datasets"][0]["path"].startswith(
+        "research/runs/q043_coverage/"
+    )
+    assert data["data_snapshot"]["datasets"][0]["path"] == str(csv_path)
+    assert data["data_snapshot"]["datasets"][0]["fingerprint"] == "fixed"
