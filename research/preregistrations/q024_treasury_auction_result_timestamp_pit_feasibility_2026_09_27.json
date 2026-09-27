@@ -12,11 +12,23 @@
     "Official Treasury Auction Results XML/result files when historically reproducible",
     "Official Treasury Auction Results PDFs for event identity/content confirmation"
   ],
+  "xml_result_method": {
+    "archive_base": "https://www.treasurydirect.gov/xml",
+    "result_identity_pattern": "R_YYYYMMDD_N.xml",
+    "sequence_range": "1..8 fixed; same existing deterministic candidate bound as the result-PDF lookup",
+    "identity_rule": "Require exact CUSIP + AuctionDate match, BidToCoverRatio equality with Q019, and ResultsPDFName matching the XML filename.",
+    "publication_time_fields": [
+      "AuctionAnnouncement/AuctionDate",
+      "AuctionResults/ReleaseTime"
+    ],
+    "release_time_zone": "America/New_York",
+    "http_archive_metadata": "Capture Last-Modified, ETag, Content-MD5, and Content-Length as provenance only. Do not use a generic HTTP Last-Modified value as the official release timestamp."
+  },
   "matching_rule": "CUSIP + auction_date must match Q019 and the source must contain the bid_to_cover_ratio or its complete components.",
   "timestamp_rule": "Accept only an explicit or deterministically documented official result-publication timestamp. A PDF release date without an intraday timestamp is insufficient.",
   "historical_release_semantics": "Treasury auction timeline states that from January 2003 the official release time was the recorded time the results XML was delivered to the FRIT server.",
   "coverage_pass_rule": "89/89 events must have RESULT_TIMESTAMP_VALIDATED; otherwise overall status is DATA_INSUFFICIENT.",
-  "pit_rule": "Determine whether the result timestamp precedes the first actually usable QXNYS session/action point. No forward return or P&L calculation is allowed.",
+  "pit_rule": "Determine whether the result timestamp precedes the first actually usable QXNYS session/action point. For the fixed Q019 contract, an XML release on auction_date with auction_date < record_date proves the release preceded the first XNYS session strictly after record_date. Report PIT status separately from the fixed 89/89 timestamp-coverage pass rule. No forward return or P&L calculation is allowed.",
   "governance": {
     "source_feasibility_only": true,
     "performance_evaluation": false,
