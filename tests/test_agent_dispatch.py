@@ -199,9 +199,11 @@ def test_bounded_copilot_cli_workflow_uses_personal_repo_token_and_credit_gate()
     text = (
         root / ".github" / "workflows" / "agent-request-queue.yml"
     ).read_text(encoding="utf-8")
-    assert "COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}" in text
-    assert "Check personal-repository Copilot token" in text
-    assert "requires COPILOT_GITHUB_TOKEN with Copilot Requests permission" in text
+    assert "Check Copilot auth inputs" in text
+    assert "PERSONAL_COPILOT_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}" in text
+    assert "copilot-requests: write" in text
+    assert "auth_mode=github_actions_token" in text
+    assert "auth_mode=personal_pat_fallback" in text
     assert "--max-ai-credits=45" in text
     assert "--agent=trading-agent-engineer" in text
     assert "PAPER_ONLY=True" in text
