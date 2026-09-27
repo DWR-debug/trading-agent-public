@@ -56,5 +56,19 @@ def test_rss_match_requires_cusip_and_auction_identity():
     assert match["publication_timestamp_utc"] == "2025-08-06T13:00:00Z"
 
 
+def test_rss_match_can_use_exact_result_pdf_identity_without_repeating_cusip():
+    event = {"auction_date": "2025-08-06", "cusip": "91282CNT4"}
+    pdf = {"source_url": "https://www.treasurydirect.gov/instit/annceresult/press/preanre/2025/R_20250806_2.pdf"}
+    items = [{
+        "title": "10-Year Note Auction Results",
+        "description": "",
+        "link": pdf["source_url"],
+        "guid": "R_20250806_2.pdf",
+        "pubDate": "Wed, 06 Aug 2025 13:00:00 GMT",
+        "publication_timestamp_utc": "2025-08-06T13:00:00Z",
+    }]
+    assert q024._find_rss_match(event, pdf, items)["publication_timestamp_utc"] == "2025-08-06T13:00:00Z"
+
+
 def test_q024_governance_is_feasibility_only():
     assert q024.MIN_TIMESTAMP_COVERAGE == 1.0
