@@ -5,10 +5,13 @@ on:
     branches: [master]
     paths:
       - "research/run_requests/t052_evidence_reconcile_once.trigger"
+  issues:
+    types: [opened]
 
 permissions:
   contents: write
   actions: read
+  issues: write
 
 concurrency:
   group: trading-agent-t052-evidence-reconcile-once
@@ -16,7 +19,16 @@ concurrency:
 
 jobs:
   reconcile:
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    if: >-
+      github.repository == 'DWR-debug/trading-agent-public' &&
+      (
+        github.event_name == 'push' ||
+        (
+          github.event_name == 'issues' &&
+          github.event.issue.user.login == github.repository_owner &&
+          github.event.issue.title == 'OPS: one-shot T052 evidence reconcile'
+        )
+      )
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -110,8 +122,16 @@ jobs:
           echo "::error::T052 evidence push failed after three race-safe retries."
           exit 1
 
-      - name: Evidence receipt
-        if: always()
+      - name: Close one-shot reconciliation issue
+        if: github.event_name == 'issues' && success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh issue close "${{ github.event.issue.number }}" --repo "${GITHUB_REPOSITORY}" --reason completed --comment "T052 evidence reconciliation completed from immutable workflow 36338219883."
+
+      - name: Evidence receipt        if: always()
         uses: actions/upload-artifact@v6
         with:
           name: t052-evidence-reconcile-${{ github.run_id }}-${{ github.run_attempt }}
