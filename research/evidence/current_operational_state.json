@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T18:59:09.438243+00:00",
+  "generated_at_utc": "2026-09-27T19:00:01.367728+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: localize Q036 artifact dataset paths",
+        "sha": "e726bb601cb6aa13853ff1bb9e92444af876134d",
+        "timestamp": "2026-09-27T20:59:46+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a61db24483fe9ca98cdf09ec59b99f277f1c1c7c",
+        "timestamp": "2026-09-27T18:59:09Z"
+      },
       {
         "message": "FIX: bind Q036 to exact T056 runner content",
         "sha": "1f93a5a1d9f389eaa1ad65c6540ad5efd5181ff4",
@@ -112,16 +122,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "1a75a0ffef8df9763fadcbfa09ac55db5ede08b5",
         "timestamp": "2026-09-27T18:56:22Z"
-      },
-      {
-        "message": "RESEARCH: Q036 T056 fixed-result risk diagnostic",
-        "sha": "c7e4a78582d1755eb6f5b8156d41dfcf2657ce49",
-        "timestamp": "2026-09-27T20:56:08+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "6d202d1284e5e624a8a37fac3f2b3dc08dc88ca2",
-        "timestamp": "2026-09-27T18:55:48Z"
       }
     ]
   },
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1f93a5a1d9f389eaa1ad65c6540ad5efd5181ff4",
+  "source_master_sha": "e726bb601cb6aa13853ff1bb9e92444af876134d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36342650085"
+    "run_id": "36342697663"
   }
 }
