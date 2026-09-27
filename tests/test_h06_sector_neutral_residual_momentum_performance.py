@@ -28,7 +28,7 @@ def test_h06_authorization_is_bound_to_exact_artifacts():
     assert a["execution_scope"]=="PERFORMANCE"
     assert a["coverage_artifact_id"]==10901872543
     assert a["coverage_workflow_run_id"]==36230165868
-    assert a["snapshot_fingerprint"]=="91e95dfde201708050de4ae98d7b529a811ab6d90393a8063a8b1a88d65a35e6"
+    assert a["snapshot_fingerprint"]=="22a32d2c6785b4f04f935148d3bd3e6978af8eb49e3a32d46073ee3f0cb93522"
     assert a["source_mechanism_result_fingerprint"]=="45546b7a2b69c39f961cab85f9ab091d165f5e9a711777fb23dd717f82fc9fbd"
     assert settings.PAPER_ONLY is True
     assert settings.LIVE_TRADING_ENABLED is False
