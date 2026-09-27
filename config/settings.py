@@ -14,6 +14,9 @@ LIVE_TRADING_ENABLED = False
 # Order creation remains disabled even in paper-only research.
 ORDERS_ENABLED = False
 
+# Automatic promotion is permanently disabled in the research platform.
+AUTOMATIC_PROMOTION = False
+
 # Sicherheitslimits
 MAX_DAILY_LOSS_EUR = 15.00
 MAX_DRAWDOWN_PERCENT = 10.0
