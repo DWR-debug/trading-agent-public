@@ -80,3 +80,41 @@ def test_missing_state_after_initialization_does_not_start_a_new_session(
     with pytest.raises(PaperForwardShadowError, match="state is missing"):
         run_once(str(candidate), str(state))
     assert starts == [state]
+from pathlib import Path
+
+def test_self_hosted_once_script_uses_user_profile_and_single_bounded_update():
+    script = (
+        Path(__file__).resolve().parents[1]
+        / "scripts"
+        / "paper_forward_self_hosted_once.ps1"
+    ).read_text(encoding="utf-8")
+
+    assert '$env:LOCALAPPDATA "TradingAgent\\PaperForward"' in script
+    assert "ops\\paper_forward\\operational_candidate.json" in script
+    assert "--fetch-limit 100" in script
+    assert "--max-iterations 1" in script
+    assert "operations.jsonl" in script
+    assert "PAPER_ONLY=True" not in script
+    assert "LIVE_TRADING_ENABLED=True" not in script
+    assert "ORDERS_ENABLED=True" not in script
+    assert "automatic_promotion=True" not in script
+    assert "--state $statePath" in script
+    assert "--receipt $receiptPath" in script
+
+
+def test_operational_canary_contract_is_frozen_and_simulation_only():
+    candidate_path = (
+        Path(__file__).resolve().parents[1]
+        / "ops"
+        / "paper_forward"
+        / "operational_candidate.json"
+    )
+    candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
+
+    assert candidate["frozen"] is True
+    assert candidate["candidate_id"] == "paper-forward-operational-canary-btcusdt-1h-v1"
+    assert candidate["symbol"] == "BTCUSDT"
+    assert candidate["interval"] == "1h"
+    assert candidate["initial_capital_eur"] == 500.0
+    assert candidate["leverage"] == 1.0
+
