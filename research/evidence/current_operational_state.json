@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T15:25:31.400370+00:00",
+  "generated_at_utc": "2026-09-27T15:26:01.956467+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -89,6 +89,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: restore valid exact-master CI gate workflow",
+        "sha": "37fcc0abbb1882f85262a8a77c3493183a726eb2",
+        "timestamp": "2026-09-27T17:25:50+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d869aa26e7b439e2c96e86bc4116ba126fc1ac5c",
+        "timestamp": "2026-09-27T15:25:31Z"
+      },
       {
         "message": "OPS: add owner-gated T052 exact-CI manual trigger",
         "sha": "d34c5f7c79df6835d27d391201aa2b9e010dbe19",
@@ -118,16 +128,6 @@
         "message": "OPS: remove completed Copilot queue request",
         "sha": "eed82ffdc6f42574762463fc777a03b219612d89",
         "timestamp": "2026-09-27T17:24:02+02:00"
-      },
-      {
-        "message": "OPS: remove completed Copilot queue request",
-        "sha": "f34387f80c23b61896a340cba980ef27298e22a0",
-        "timestamp": "2026-09-27T17:23:59+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "fd33856ddcabcb68980bb8b31b81a67b334c88f7",
-        "timestamp": "2026-09-27T15:23:31Z"
       }
     ]
   },
@@ -188,12 +188,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d34c5f7c79df6835d27d391201aa2b9e010dbe19",
+  "source_master_sha": "37fcc0abbb1882f85262a8a77c3493183a726eb2",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36329490599"
+    "run_id": "36329520623"
   }
 }
