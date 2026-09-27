@@ -14,20 +14,7 @@
       "bounded_two_lane_queue": true,
       "control_plane": "automation/autonomous_control_plane.py",
       "copilot_cli_queue": ".github/workflows/agent-request-queue.yml",
-      "current_pending_requests": [
-        {
-          "issue_number": "407",
-          "lane": "lane0",
-          "request_file": "agent_requests/lane0/AGENT-025.request",
-          "task_id": "AGENT-025"
-        },
-        {
-          "issue_number": "408",
-          "lane": "lane1",
-          "request_file": "agent_requests/lane1/AGENT-026.request",
-          "task_id": "AGENT-026"
-        }
-      ]
+      "current_pending_requests": []
     },
     "canonical_data_layer": {
       "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
@@ -67,23 +54,10 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T15:23:31.483015+00:00",
+  "generated_at_utc": "2026-09-27T15:24:10.358085+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
-    "agent_queue_requests": [
-      {
-        "issue_number": "407",
-        "lane": "lane0",
-        "request_file": "agent_requests/lane0/AGENT-025.request",
-        "task_id": "AGENT-025"
-      },
-      {
-        "issue_number": "408",
-        "lane": "lane1",
-        "request_file": "agent_requests/lane1/AGENT-026.request",
-        "task_id": "AGENT-026"
-      }
-    ],
+    "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [
       {
@@ -101,6 +75,21 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: remove completed Copilot queue request",
+        "sha": "eed82ffdc6f42574762463fc777a03b219612d89",
+        "timestamp": "2026-09-27T17:24:02+02:00"
+      },
+      {
+        "message": "OPS: remove completed Copilot queue request",
+        "sha": "f34387f80c23b61896a340cba980ef27298e22a0",
+        "timestamp": "2026-09-27T17:23:59+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "fd33856ddcabcb68980bb8b31b81a67b334c88f7",
+        "timestamp": "2026-09-27T15:23:31Z"
+      },
       {
         "message": "FIX: install pypdf required by full CI suite",
         "sha": "722fba2670e474e069924740ea7cb208075f668b",
@@ -125,21 +114,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "3033b08a669d43fd556979f2377e417ec29a93cc",
         "timestamp": "2026-09-27T15:21:27Z"
-      },
-      {
-        "message": "OPS: gate T052 on exact-master CI workflow",
-        "sha": "c0bfe778ca2be4255e9370b0e6beb93e0fd44dd4",
-        "timestamp": "2026-09-27T17:21:19+02:00"
-      },
-      {
-        "message": "OPS: add exact-master CI gate for T052",
-        "sha": "adb75d0f7a4497a61cc9bdf88b424fdbda184b6d",
-        "timestamp": "2026-09-27T17:21:16+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "04eed4f4e7e4e5fb9678fb14137d148bf4079861",
-        "timestamp": "2026-09-27T15:19:43Z"
       }
     ]
   },
@@ -200,12 +174,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "722fba2670e474e069924740ea7cb208075f668b",
+  "source_master_sha": "eed82ffdc6f42574762463fc777a03b219612d89",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36329366303"
+    "run_id": "36329406930"
   }
 }
