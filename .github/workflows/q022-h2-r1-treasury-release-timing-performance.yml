@@ -112,7 +112,6 @@ jobs:
 
       - name: Publish performance artifact
         if: ${{ steps.authorization_gate.outputs.authorized == 'true' }}
-        if: always()
         uses: actions/upload-artifact@v6
         with:
           name: q022-h2-r1-treasury-release-timing-performance-${{ github.run_id }}
