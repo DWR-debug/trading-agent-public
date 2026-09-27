@@ -62,7 +62,7 @@ bootstrappt eine fest gepinnte Python-3.13.15-NuGet-Laufzeit temporär. Damit si
 Administratorrechte noch `actions/setup-python` erforderlich.
 
 Die autonome Continuous-QA-Lane läuft jetzt alle 15 Minuten. Jeder Lauf erfasst zusätzlich
-Runnername, Betriebssystem, Architektur, logische Prozessoren und Arbeitsspeicher als
+Runnername, Betriebssystem, Architektur, logische Prozessoren und physischen Arbeitsspeicher (in Bytes) als
 nicht-kanonische Kapazitätstelemetrie. So kann die tatsächliche Auslastung des PCs über die
 Zeit beurteilt werden, statt nur nach dem Vorhandensein eines erfolgreichen Jobs zu gehen.
 
