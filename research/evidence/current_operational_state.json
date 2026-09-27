@@ -54,36 +54,24 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T14:20:17.367591+00:00",
+  "generated_at_utc": "2026-09-27T14:21:27.388079+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [],
     "default_branch": "master",
-    "open_agent_ready_issues": [
+    "open_agent_ready_issues": [],
+    "open_pull_requests": [],
+    "recent_commits": [
       {
-        "number": 354,
-        "title": "AGENT-020: audit autonomous paper-forward loop and Windows operation",
-        "updatedAt": "2026-09-27T14:13:58Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/issues/354"
+        "message": "FIX: validate continuous-QA capacity provenance",
+        "sha": "dd53f4837cc02abb7f7cc54cba5ddcaf922f6ea4",
+        "timestamp": "2026-09-27T16:21:14+02:00"
       },
       {
-        "number": 353,
-        "title": "AGENT-019: audit paper-forward market feed and MTM ledger",
-        "updatedAt": "2026-09-27T14:20:13Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/issues/353"
-      }
-    ],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "fix/qa-capacity-provenance-validation-2026-09-27",
-        "number": 388,
-        "title": "FIX: validate continuous-QA capacity provenance",
-        "updatedAt": "2026-09-27T14:18:32Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/388"
-      }
-    ],
-    "recent_commits": [
+        "message": "OPS: synchronize current operational status",
+        "sha": "8606b1dd004f96df02043a605ffa4dad4fb75e28",
+        "timestamp": "2026-09-27T14:20:17Z"
+      },
       {
         "message": "AGENT: publish verified AGENT-020 paper-forward loop audit",
         "sha": "d0900488a1cda535dc2a084a3ee5c2df14e3bcba",
@@ -113,16 +101,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "c74e9a3c07bd3ce9c706dd8881b332165774a417",
         "timestamp": "2026-09-27T14:16:55Z"
-      },
-      {
-        "message": "TEST: correct Windows QA path assertions",
-        "sha": "3a9582f3c6cc76395c018d576b7346156b5ff948",
-        "timestamp": "2026-09-27T16:16:41+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "482a4c2027c59b7327b2d9506bca1d228a87256e",
-        "timestamp": "2026-09-27T14:15:53Z"
       }
     ]
   },
@@ -183,12 +161,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d0900488a1cda535dc2a084a3ee5c2df14e3bcba",
+  "source_master_sha": "dd53f4837cc02abb7f7cc54cba5ddcaf922f6ea4",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36325535452"
+    "run_id": "36325607973"
   }
 }
