@@ -112,14 +112,29 @@ def _signal_events(rows: list[dict], common_dates: list[date]) -> tuple[list[dic
 
 def _validate_signal_source(expected_fingerprint: str, common_dates: list[date]) -> tuple[list[dict], dict]:
     rows = _treasury_rows()
-    contract = _validate_treasury_contract(rows, common_dates)
+    # Validate the immutable Q019 source contract on the full formal XNYS
+    # calendar. Its fingerprint intentionally represents the original
+    # record_date mapping and must remain unchanged for H2.
+    full_calendar = _xnys_dates()
+    contract = _validate_treasury_contract(rows, full_calendar)
     if contract["status"] != "COVERAGE_VALIDATED":
         raise RuntimeError(f"Q019 source contract invalid: {contract['status']}")
-    events, actual = _signal_events(rows, common_dates)
-    if actual != expected_fingerprint or actual != contract["signals_fingerprint"]:
+    if contract["signals_fingerprint"] != expected_fingerprint:
         raise RuntimeError(
-            f"Q019 signal fingerprint mismatch: expected {expected_fingerprint}, actual {actual}, contract {contract['signals_fingerprint']}"
+            "Q019 source signal fingerprint mismatch: "
+            f"expected {expected_fingerprint}, contract {contract['signals_fingerprint']}"
         )
+
+    # Only after source provenance is validated do we remap the same immutable
+    # signal sequence to H2's auction_date timing using the frozen snapshot
+    # calendar. The H2 mapping fingerprint is intentionally different.
+    events, _mapping_fingerprint = _signal_events(rows, common_dates)
+    if len(events) != contract["valid_row_count"]:
+        raise RuntimeError(
+            f"Q019 event population mismatch: expected {contract['valid_row_count']}, got {len(events)}"
+        )
+    if sum(event["signal"] in (-1, 0, 1) for event in events[1:]) != contract["signal_event_count"]:
+        raise RuntimeError("Q019 signal-event count mismatch after H2 remapping")
     return events, contract
 
 
