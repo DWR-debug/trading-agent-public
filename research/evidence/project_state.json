@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "updated": "2026-09-27",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "71b81bba4e5fa48b14baf58c5e5d759f484ef9ee",
+  "master_commit": "ecbc107b0cb6891e93d73faec46071a56f8e619b",
   "latest_formal_trial": "T-2026-09-26-047R1-PERFORMANCE",
   "latest_trial_status": "NO_PROMOTION_EVIDENCE",
   "next_reserved_trial": null,
@@ -26,7 +26,7 @@
       "artifact_sha256": "sha256:b32f2cffdff27091187d7f7f7ac6759c23b2e141081f6d9c9143e1c790d73da9"
     },
     "current_master_qa_run_id": null,
-    "current_master_qa_run_status": "pending_after_self_hosted_capacity_hardening",
+    "current_master_qa_run_status": "pending_after_project_state_synchronization",
     "current_master_qa_failure_run_id": 36254919993,
     "current_master_qa_verified": false,
     "current_master_qa_tests_passed": null,
@@ -51,8 +51,8 @@
     "free_credit_only": true,
     "credit_balance_auto_detected": false,
     "policy": "free_agent_credits_for_hypothesis_generation_and_research_design; deterministic_compute_local_only",
-    "current_task": "SELF-HOSTED-CAPACITY-HARDENING",
-    "current_task_scope": "Increase autonomous self-hosted QA utilization and telemetry; no scientific gate changes, no promotion, no live execution.",
+    "current_task": "RUNNER-UTILIZATION",
+    "current_task_scope": "Continuous self-hosted QA every 15 minutes plus runner-capacity telemetry; no scientific gate changes.",
     "holdout_selection": false,
     "parameter_search": false,
     "asset_selection": false,
@@ -62,7 +62,7 @@
     "resource_policy": "Free resources only; bounded Copilot CLI may be used for engineering/research-design assistance, deterministic research stays on reproducible runners.",
     "external_agent_review_issue": 231,
     "external_agent_execution_verified": true,
-    "current_agent_note": "AGENT-014 completed through Copilot CLI queue run 36314871008; PR #345 merged as squash commit 77664831fedcf60d25f65bbd5b32034dbd91e8fe; issue #344 closed. Queue request retired. Self-hosted Continuous QA is now scheduled every 15 minutes with runner-capacity telemetry; shared label trading-agent-research remains ready for additional runner processes.",
+    "current_agent_note": "AGENT-014 completed and merged as PR #345 (77664831fedcf60d25f65bbd5b32034dbd91e8fe), issue #344 closed and queue request retired. Current master includes runner-capacity hardening and synchronized status/checkpoint. No second runner process is claimed as installed.",
     "capital_reference_note": "HYPOTHETICAL_STARTING_CAPITAL_EUR=500.00; simulation/planning reference only; no actual capital is available."
   },
   "continuity": {
