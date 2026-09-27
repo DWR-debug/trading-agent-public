@@ -123,7 +123,7 @@ def test_self_hosted_continuous_qa_is_scheduled_and_non_formal():
     text = (
         ROOT / ".github" / "workflows" / "self-hosted-continuous-qa.yml"
     ).read_text(encoding="utf-8")
-    assert 'cron: "*/30 * * * *"' in text
+    assert 'cron: "*/15 * * * *"' in text
     assert "workflow_dispatch:" in text
     assert "runs-on: [self-hosted, trading-agent-research]" in text
     assert "concurrency:" in text
@@ -214,6 +214,9 @@ def test_continuous_qa_fails_closed_on_missing_provenance_files():
     text = (
         ROOT / ".github" / "workflows" / "self-hosted-continuous-qa.yml"
     ).read_text(encoding="utf-8")
-    assert "[9/10] Validate QA provenance" in text
-    assert "PROVENANCE_FILES_OK" in text
+    assert "[10/10] Validate QA provenance" in text
+    assert "[11/11] Continuous QA complete" in text
+    assert "RUNNER_CAPACITY_AND_PROVENANCE_OK" in text
+    assert "runner_capacity_%RUN_KEY%.json" in text
+    assert "RUNNER_ARCH" in text
     assert "if-no-files-found: error" in text
