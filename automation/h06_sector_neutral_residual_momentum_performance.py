@@ -184,8 +184,8 @@ def _gates(base, stress15, stress2, total_sens):
       "holdout_return_positive":h["period_return"]>0,
       "holdout_profit_factor_gte_1_1":pf(h["profit_factor"])>=1.1,
       "holdout_max_drawdown_lte_10pct":h["max_drawdown_percent"]<=10,
-      "stress_1_5x_holdout_nonnegative":stress15["period_return"]>=0,
-      "stress_2x_holdout_nonnegative":stress2["period_return"]>=0,
+      "stress_1_5x_holdout_nonnegative":stress15["holdout"]["period_return"]>=0,
+      "stress_2x_holdout_nonnegative":stress2["holdout"]["period_return"]>=0,
       "total_return_sensitivity_holdout_nonnegative":total_sens["period_return"]>=0,
     }
     return {"absolute":checks,"all_absolute_passed":all(checks.values()),"oos_to_is_return_ratio":oos}
