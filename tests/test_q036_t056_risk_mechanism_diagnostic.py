@@ -61,3 +61,21 @@ def test_q036_localizes_relative_dataset_paths(tmp_path) -> None:
         assert data["data_snapshot"]["datasets"][0]["path"] == str((manifest_dir / "datasets" / "BSV" / "1d.csv").resolve())
     finally:
         localized.unlink(missing_ok=True)
+
+
+def test_q036_report_serializer_emits_parseable_json(tmp_path: Path) -> None:
+    from automation.q036_t056_risk_mechanism_diagnostic import write_json_report
+
+    path = tmp_path / "diagnostic_report.json"
+    payload = {
+        "schema_version": "1.0",
+        "status": "DIAGNOSTIC_COMPLETED",
+        "governance": {"performance_evaluation": False},
+    }
+
+    write_json_report(path, payload)
+    raw = path.read_text(encoding="utf-8")
+
+    assert raw.endswith("\n")
+    assert not raw.endswith("\\n")
+    assert json.loads(raw) == payload
