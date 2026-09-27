@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-27T18:34:24Z",
+  "generated_at": "2026-09-27T18:43:00Z",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -4517,6 +4517,80 @@
           "compare_signal_path_through_mutation_point": true
         },
         "note": "Fresh Q031-universe coverage was followed by mutation-based PIT validation of both fixed core signal contracts. No performance, holdout selection, parameter search or promotion occurred."
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-27-055",
+      "recorded_at": "2026-09-27T18:42:54Z",
+      "status": "pit_validated",
+      "research_family": "t052_risk_stability_mechanism_pit",
+      "hypothesis": {
+        "text": "The four fixed Q033 RISK-A/B/C/D mechanism implementations are point-in-time safe on the Q031 fresh validation universe before performance evaluation."
+      },
+      "data_scope": {
+        "requested_candles": 4000,
+        "target_common_candles": 3500,
+        "common_calendar_count": 3704,
+        "symbols": [
+          "BSV",
+          "FAN",
+          "JNK",
+          "UDN",
+          "VCLT",
+          "VGIT",
+          "SCHR"
+        ],
+        "fully_symbol_disjoint_validation_set": true,
+        "workflow_run_id": 36341630334,
+        "artifact_ids": [
+          10939206583
+        ],
+        "artifact_digest": "sha256:b2538d418acba8fdb4c09ff23a34c5ced1d1da286be97d4432f89505261f3f45",
+        "snapshot_fingerprint": "72a5e14969e52451e3129472d5b7940d11d58e9c11a65c4ee9849d4b48be7cdd",
+        "coverage_fingerprint": "2cc74025d20025c07a94e289564f9e12b2e7ba7d7da09eae1516ce1f9b4c1e4b"
+      },
+      "search_scope": {
+        "raw_trial_count": 0,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "asset_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "PIT mutation validation only",
+        "selection_metric": null
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "PIT_PASSED",
+        "scientific_outcome": "MECHANISM_PIT_PASSED_NO_PERFORMANCE_EVIDENCE",
+        "workflow_run_id": 36341630334,
+        "workflow_head_sha": "7d0a1293a847aab40473d5211c038d9a9da8c8d7",
+        "workflow_conclusion": "success",
+        "report_fingerprint": "f8f26d9e4c00eb8567284503a9d34fad9aeda062063ccf3f7e748ce689db7eb1",
+        "checked_decision_points": 36,
+        "performance_evaluation": false,
+        "oos_evaluation": false,
+        "holdout_evaluation": false,
+        "selection_used": false,
+        "holdout_used_for_selection": false,
+        "future_mutation_checks_passed": true,
+        "next_session_mutation_checks_passed": true
       },
       "safety": {
         "paper_only": true,
