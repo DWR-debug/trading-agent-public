@@ -18,6 +18,16 @@ Vor jeder Aufgabe:
 3. `PROJECT_STATUS.md`
 4. `research/evidence/project_state.json`
 5. relevante Trial-/Evidence-Dateien und aktuelle Workflows
+6. **Live-Ressourcen-/Kapazitäts-Preflight:** GitHub-hosted Actions, Self-hosted Research Worker,
+   Copilot-CLI-Queue, Copilot-CLI-CI-Repair, Copilot Cloud Agent/Entitlement und weitere tatsächlich
+   verfügbare kostenlose Compute-Pfade.
+7. Für jede Ressource bewerten: verfügbar, belegt, deaktiviert, nicht zugänglich oder nicht sinnvoll.
+
+Eine im Chat übergebene Kopie des „aktuellen Standes aus dem letzten Chat“ ist nur Handoff-Kontext. Technische und wissenschaftliche Aussagen müssen gegen die kanonischen Repository-/Evidence-Quellen geprüft werden.
+
+Nach dem Preflight gilt für unabhängige, zulässige und sinnvolle Arbeit:
+**verfügbare kostenlose Ressource => aktiv einsetzen; nicht künstlich Arbeit erzeugen; laufende Arbeit nicht duplizieren.**
+Der Preflight wird nach relevanten Meilensteinen wiederholt, sobald Kapazität frei wird.
 
 Eine im Chat übergebene Kopie des „aktuellen Standes aus dem letzten Chat“ ist nur Handoff-Kontext. Technische und wissenschaftliche Aussagen müssen gegen die kanonischen Repository-/Evidence-Quellen geprüft werden.
 
