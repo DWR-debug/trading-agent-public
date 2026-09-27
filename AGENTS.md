@@ -14,14 +14,16 @@ Dieses Repository ist die technische Referenz für den paper-only Trading Agent.
 Vor jeder Aufgabe:
 
 1. `docs/TRADING_AGENT_CHAT_ENTRYPOINT.md`
-2. `docs/PROJECT_CONTEXT.md`
+2. `docs/CURRENT_STATUS.md`
+3. `research/evidence/current_operational_state.json`
+4. `docs/PROJECT_CONTEXT.md`
 3. `PROJECT_STATUS.md`
 4. `research/evidence/project_state.json`
-5. relevante Trial-/Evidence-Dateien und aktuelle Workflows
-6. **Live-Ressourcen-/Kapazitäts-Preflight:** GitHub-hosted Actions, Self-hosted Research Worker,
+7. relevante Trial-/Evidence-Dateien und aktuelle Workflows
+8. **Live-Ressourcen-/Kapazitäts-Preflight:** GitHub-hosted Actions, Self-hosted Research Worker,
    Copilot-CLI-Queue, Copilot-CLI-CI-Repair, Copilot Cloud Agent/Entitlement und weitere tatsächlich
    verfügbare kostenlose Compute-Pfade.
-7. Für jede Ressource bewerten: verfügbar, belegt, deaktiviert, nicht zugänglich oder nicht sinnvoll.
+9. Für jede Ressource bewerten: verfügbar, belegt, deaktiviert, nicht zugänglich oder nicht sinnvoll.
 
 Eine im Chat übergebene Kopie des „aktuellen Standes aus dem letzten Chat“ ist nur Handoff-Kontext. Technische und wissenschaftliche Aussagen müssen gegen die kanonischen Repository-/Evidence-Quellen geprüft werden.
 
