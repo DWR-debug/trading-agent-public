@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "recorded_on": "2026-09-27",
   "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
-  "current_stage": "Q037_ALPHA_ARCHITECTURE_DESIGN",
+  "current_stage": "Q038_FRESH_DISJOINT_COVERAGE",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
@@ -83,7 +83,11 @@
     "Q036/T057 completed successfully on workflow 36343645414; artifact=10939552467; artifact-digest=sha256:f6a54ebc1cb5bf8456f2f0b52f52887c6fa231c0a284f9fde006dbba343d5474; diagnostic-fingerprint=dd596966b862e0a2baffa067f810ce2dc78d3fd1eb834413f24c55f7c5c020cd.",
     "Q036/T057 used only the immutable T056 artifact and exact frozen mechanism source; performance evaluation, OOS evaluation, holdout evaluation and family selection were disabled.",
     "Q036/T057 found mean gross exposure of RISK-B=0.307696 and 74.09% of all evaluated periods at the 0.25x state; its holdout drawdown was 10.984 percentage points lower than CONTROL while holdout profit factor remained 0.861.",
-    "Q036/T057 found no arm passed all 13 fixed T052 gates; the diagnostic therefore provides mechanism evidence about exposure/risk control, not promotion evidence."
+    "Q036/T057 found no arm passed all 13 fixed T052 gates; the diagnostic therefore provides mechanism evidence about exposure/risk control, not promotion evidence.",
+    "Q037 is preregistered design-only with five orthogonal alpha mechanism categories; no performance computation, family ranking or selection was authorized.",
+    "Q038 is now preregistered as coverage-only with a fixed source-order candidate pool (IVE, IWL, DLN, DHS, DON, DES, USRT, ITB), 4000 requested candles, 3500 target common sessions and consumed-symbol exclusion.",
+    "Q038 implementation was merged as PR #486 at merge commit 1c50bdd0ce7f78ccd9c85fa790ae90e6e855a881; the change contains only coverage tooling, documentation, authorization and focused tests.",
+    "Q038 has produced no scientific performance evidence yet. Coverage execution remains a prerequisite for any later PIT or performance work."
   ],
   "implications": [
     "T047R1 did not satisfy the unchanged evidence contract; Q020 is not reopened.",
@@ -101,7 +105,10 @@
     "The four fixed Q033 overlays do not establish a performance-supported candidate on this universe under the unchanged T052 contract.",
     "A deterministic diagnostic is warranted before any new parameterization or follow-up performance study; the next step is to decompose exposure duty cycle, turnover, lifecycle stops and risk-state activation without changing the frozen mechanisms.",
     "Q036 indicates that the tested risk overlays mainly alter exposure and drawdown; they do not supply evidence that the underlying return/alpha deficiency has been repaired.",
-    "The next research stage should therefore move to the alpha side: ex-ante definition of orthogonal alpha mechanisms, followed by fresh symbol-disjoint coverage/PIT and only then a fixed-rule performance trial."
+    "The next research stage should therefore move to the alpha side: ex-ante definition of orthogonal alpha mechanisms, followed by fresh symbol-disjoint coverage/PIT and only then a fixed-rule performance trial.",
+    "The project has moved from risk-overlay diagnosis to an ex-ante alpha-mechanism phase without changing the evidence gates or safety state.",
+    "The immediate scientific gate is Q038 coverage validation. A failed coverage result will be recorded as DATA_INSUFFICIENT and will block later performance; a passing coverage result will still require a separate PIT validation before performance.",
+    "Because the current hosted Actions environment has shown repository-wide zero-job startup failures, the coverage run should be launched only after a real executable job is confirmed; startup failures are infrastructure evidence, not scientific outcomes."
   ],
   "unknowns": [
     "whether any orthogonal income-oriented mechanism survives independent fixed-rule validation",
@@ -116,9 +123,11 @@
     "which mechanism state activations and exposure reductions account for the observed drawdown changes in RISK-A/B/C/D",
     "whether observed improvements in drawdown are purchased through return erosion, turnover costs, or timing effects",
     "whether an orthogonal alpha family can produce positive, stable fixed-rule evidence on a fresh symbol-disjoint universe while surviving the existing risk/cost/holdout gates",
-    "whether combining genuinely distinct alpha mechanisms improves return robustness without relying on post-hoc allocation or family selection"
+    "whether combining genuinely distinct alpha mechanisms improves return robustness without relying on post-hoc allocation or family selection",
+    "whether the fixed Q038 candidate pool yields all eight symbols on a >=3500-session common calendar",
+    "whether the Q038 fresh universe passes subsequent point-in-time mutation validation for the planned alpha mechanisms"
   ],
-  "next_action": "Execute Q037 Alpha-Mechanism-Architecture design-only work: define a small orthogonal family catalogue, data/PIT contracts, disjoint-universe protocol and fixed evaluation gates; no performance execution or selection.",
+  "next_action": "Execute Q038 coverage-only validation on the fixed candidate pool when an independently verified executable runner path is available; no performance evaluation, holdout selection or promotion.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
