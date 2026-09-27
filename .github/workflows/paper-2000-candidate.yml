@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  candidate_500:
+  candidate_2000:
     if: github.repository == 'DWR-debug/trading-agent-public'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
@@ -49,7 +49,7 @@ jobs:
           assert settings.LIVE_TRADING_ENABLED is False
           assert settings.ORDERS_ENABLED is False
           assert settings.AUTOMATIC_PROMOTION is False
-          print("FORMAL 500 PAPER SAFETY OK")
+          print("FORMAL 2000 PAPER SAFETY OK")
           PY
 
       - name: Gate tests
@@ -61,8 +61,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p research/paper_candidates
-          mapfile -t manifests < <(find research/paper_candidates -type f -name '*.json' | sort)
+          mkdir -p research/paper_candidates_2000
+          mapfile -t manifests < <(find research/paper_candidates_2000 -type f -name '*.json' | sort)
           if [ ${#manifests[@]} -eq 0 ]; then
             echo "found=false" >> "$GITHUB_OUTPUT"
             echo "NO_ELIGIBLE_2000_EUR_CANDIDATE_MANIFEST"
@@ -83,7 +83,7 @@ jobs:
           set -euo pipefail
           python -m automation.paper_candidate_2000_gate             --manifest "$CANDIDATE_MANIFEST"             | tee "$RUNNER_TEMP/paper_2000_gate.json"
 
-      - name: Execute isolated 30-day EUR 500 paper experiment
+      - name: Execute isolated 30-day EUR 2000 paper experiment
         if: steps.resolve_candidate.outputs.found == 'true'
         run: |
           set -euo pipefail
