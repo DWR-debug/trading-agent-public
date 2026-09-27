@@ -552,7 +552,22 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         ),
         target_count=3520,
     ),
+
+    AssetUniverse(
+        name="validation_2026_09_27_fixed_candidate_batch_02",
+        priority=70,
+        description=(
+            "Second fresh 12-symbol validation universe selected only by the frozen "
+            "source-order coverage contract after exclusion of the already registered T049 batch."
+        ),
+        symbols=(
+            "PRU", "ALL", "TRV", "AFL", "AIZ", "CB",
+            "HIG", "CINF", "GL", "MKC", "ED", "PEG",
+        ),
+        target_count=3520,
+    ),
 )
+
 
 
 def get_universe(name: str) -> AssetUniverse:
