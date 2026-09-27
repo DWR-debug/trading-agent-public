@@ -14,20 +14,7 @@
       "bounded_two_lane_queue": true,
       "control_plane": "automation/autonomous_control_plane.py",
       "copilot_cli_queue": ".github/workflows/agent-request-queue.yml",
-      "current_pending_requests": [
-        {
-          "issue_number": "407",
-          "lane": "lane0",
-          "request_file": "agent_requests/lane0/AGENT-025.request",
-          "task_id": "AGENT-025"
-        },
-        {
-          "issue_number": "408",
-          "lane": "lane1",
-          "request_file": "agent_requests/lane1/AGENT-026.request",
-          "task_id": "AGENT-026"
-        }
-      ]
+      "current_pending_requests": []
     },
     "canonical_data_layer": {
       "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
@@ -67,23 +54,10 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T16:11:48.355064+00:00",
+  "generated_at_utc": "2026-09-27T16:16:29.313318+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
-    "agent_queue_requests": [
-      {
-        "issue_number": "407",
-        "lane": "lane0",
-        "request_file": "agent_requests/lane0/AGENT-025.request",
-        "task_id": "AGENT-025"
-      },
-      {
-        "issue_number": "408",
-        "lane": "lane1",
-        "request_file": "agent_requests/lane1/AGENT-026.request",
-        "task_id": "AGENT-026"
-      }
-    ],
+    "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [
       {
@@ -95,18 +69,26 @@
       {
         "number": 407,
         "title": "AGENT-025: implement T052 fixed-core sleeve performance validation",
-        "updatedAt": "2026-09-27T15:26:02Z",
+        "updatedAt": "2026-09-27T16:12:33Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/407"
       }
     ],
     "open_pull_requests": [
       {
         "baseRefName": "master",
-        "headRefName": "research/capital-2000-paper-lane",
-        "number": 418,
-        "title": "PAPER: establish EUR 2000 research-capital baseline",
-        "updatedAt": "2026-09-27T16:08:17Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/418"
+        "headRefName": "research/fix-q017-contract-verification",
+        "number": 426,
+        "title": "FIX: accept valid Q017 coverage summary contract",
+        "updatedAt": "2026-09-27T16:16:02Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/426"
+      },
+      {
+        "baseRefName": "master",
+        "headRefName": "capital/align-income-simulation-2000",
+        "number": 424,
+        "title": "RESEARCH: align income simulation with EUR 2,000 reference",
+        "updatedAt": "2026-09-27T16:15:17Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/424"
       },
       {
         "baseRefName": "master",
@@ -118,6 +100,26 @@
       }
     ],
     "recent_commits": [
+      {
+        "message": "RESEARCH: add fixed intraday discovery simulations",
+        "sha": "0fa73774b7b1b445c5bd8a641f660e490a9ae9ef",
+        "timestamp": "2026-09-27T18:16:20+02:00"
+      },
+      {
+        "message": "OPS: harden persistent self-hosted paper-forward operation",
+        "sha": "0608dbae9b7d80946b1fdcf69031eff80547771e",
+        "timestamp": "2026-09-27T18:16:16+02:00"
+      },
+      {
+        "message": "OPS: autonomous agent queue routing",
+        "sha": "cacb3b751568f342087fb7922bc3a437a5fe0b87",
+        "timestamp": "2026-09-27T16:11:57Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "37a547fb4b361b4af6d8a37e50a8fee0c64d4ab6",
+        "timestamp": "2026-09-27T16:11:48Z"
+      },
       {
         "message": "QUEUE: dispatch AGENT-026 paper-forward operations hardening",
         "sha": "4c6d169010425017ed432f9202eecc89187b9fb7",
@@ -137,26 +139,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "3b2e23deb133b89fcb57dd7684cd9369757cb8c0",
         "timestamp": "2026-09-27T16:10:19Z"
-      },
-      {
-        "message": "OPS: harden current status sync against master races (#419)",
-        "sha": "078c076ee122c449b9d2ad42f66465c537f18225",
-        "timestamp": "2026-09-27T18:10:05+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "7b9f91e58f634ca35355c3b40a074a76ee562d00",
-        "timestamp": "2026-09-27T16:08:05Z"
-      },
-      {
-        "message": "RESEARCH: establish EUR 2,000 simulation capital lanes (#417)",
-        "sha": "d6747a1320631031b1b31d05b05dc94329b79136",
-        "timestamp": "2026-09-27T18:07:52+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "e39738bc581a5903dd7fe700e16384927f3d0692",
-        "timestamp": "2026-09-27T15:54:16Z"
       }
     ]
   },
@@ -218,12 +200,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4c6d169010425017ed432f9202eecc89187b9fb7",
+  "source_master_sha": "0fa73774b7b1b445c5bd8a641f660e490a9ae9ef",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36332320007"
+    "run_id": "36332620013"
   }
 }
