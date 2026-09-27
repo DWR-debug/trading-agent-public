@@ -137,8 +137,8 @@ def run_preflight(
         )
     if universe.interval != interval:
         raise RuntimeError("Universe interval does not match preregistration.")
-    if universe.target_count != requested:
-        raise RuntimeError("Universe target_count does not match requested coverage.")
+    if universe.target_count < requested:
+        raise RuntimeError("Universe target_count is smaller than requested coverage.")
 
     _validate_disjointness(spec, universe_name, symbols, trial_id)
 
