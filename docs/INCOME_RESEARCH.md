@@ -6,7 +6,7 @@ Der Agent soll perspektivisch nicht nur eine positive Equity-Kurve erzeugen,
 sondern daraus einen nachhaltigen und kontrollierbaren Auszahlungsstrom
 ermöglichen.
 
-Das initiale geschützte Grundkapital beträgt **500 EUR**.
+Das aktuelle geschützte Simulations-Referenzkapital beträgt **2000 EUR**.
 
 ## Konservatives Simulationsmodell
 
