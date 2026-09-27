@@ -26,9 +26,12 @@ The existing historical Binance loader is reused for the initial warm-up. The
 incremental path fetches a recent window, filters the still-open candle, and
 passes the closed overlap/new candles through the same immutable-input validator.
 
-Each successful feed update can write a separate JSON receipt containing source
-endpoint, fetch timestamp, candidate fingerprint, latest market timestamp and a
-fingerprint of the fetched closed-candle window.
+Each successful feed update can write a separate JSON receipt containing deterministic
+`candle_fingerprint`, `fetch_fingerprint`, and `receipt_fingerprint` values.
+The persisted Shadow-State stores the same receipt, candle, and fetch fingerprints,
+and the receipt records the resulting state `input_fingerprint`, making the feed
+receipt and state provenance explicit. `fetched_at_utc` is volatile retrieval
+metadata and is deliberately excluded from all deterministic hashes.
 
 ## Persistent MTM portfolio ledger
 
@@ -45,6 +48,9 @@ Entry fees reduce cash when a position opens; exit fees and slippage are charged
 when it closes. The simulator uses candle OHLC for the same stop-loss semantics
 as the existing offline backtest model. The MTM mark is the latest completed
 close and does not claim tick-level liquidation or intrabar mark accuracy.
+Forward candidates must use the authorized execution-cost contract: 10 bps fee
+and 5 bps slippage per one-way execution. A mismatch fails closed before a
+session starts; no alternate technical cost simulation is silently accepted.
 
 The full candle history, ledger, trades and fingerprints are atomically replaced
 as one state file. Replaying unchanged candles must reproduce the same portfolio

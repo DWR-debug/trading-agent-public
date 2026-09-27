@@ -104,6 +104,38 @@ def test_rejects_unfrozen_candidate_and_market_data_gaps(tmp_path):
         update_session(path, make_candles(5, start=4))
 
 
+def test_rejects_forward_cost_contract_drift(tmp_path):
+    candidate = make_candidate()
+    candidate["fee_rate"] = 0.0005
+    with pytest.raises(PaperForwardShadowError, match="Execution-cost contract"):
+        start_session(candidate, make_candles(3), tmp_path / "state.json")
+
+
+def test_persists_feed_receipt_fingerprint_with_state_provenance(tmp_path):
+    path = tmp_path / "state.json"
+    start_session(make_candidate(), make_candles(3), path)
+    updated = update_session(
+        path,
+        make_candles(4, start=2),
+        feed_receipt_fingerprint="a" * 64,
+        feed_candle_fingerprint="b" * 64,
+        feed_fetch_fingerprint="c" * 64,
+    )
+
+    assert updated["feed_receipt_fingerprint"] == "a" * 64
+    assert updated["feed_candle_fingerprint"] == "b" * 64
+    assert updated["feed_fetch_fingerprint"] == "c" * 64
+    assert json.loads(path.read_text(encoding="utf-8"))["input_fingerprint"] == updated[
+        "input_fingerprint"
+    ]
+
+    tampered = json.loads(path.read_text(encoding="utf-8"))
+    tampered["feed_receipt_fingerprint"] = "d" * 64
+    path.write_text(json.dumps(tampered), encoding="utf-8")
+    with pytest.raises(PaperForwardShadowError, match="fingerprints"):
+        update_session(path, make_candles(5, start=3))
+
+
 def test_rejects_changes_to_already_observed_candles(tmp_path):
     path = tmp_path / "state.json"
     start_session(make_candidate(), make_candles(5), path)
