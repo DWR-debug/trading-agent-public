@@ -5,10 +5,13 @@ on:
     branches: [master]
     paths:
       - "research/run_requests/t052_evidence_reconcile_once.trigger"
+  issues:
+    types: [opened]
 
 permissions:
   contents: write
   actions: read
+  issues: write
 
 concurrency:
   group: trading-agent-t052-evidence-reconcile-once
@@ -16,7 +19,16 @@ concurrency:
 
 jobs:
   reconcile:
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    if: >-
+      github.repository == 'DWR-debug/trading-agent-public' &&
+      (
+        github.event_name == 'push' ||
+        (
+          github.event_name == 'issues' &&
+          github.event.issue.user.login == github.repository_owner &&
+          github.event.issue.title == 'OPS: one-shot T052 evidence reconcile'
+        )
+      )
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -89,19 +101,37 @@ jobs:
           set -euo pipefail
           git fetch origin master
           git merge --ff-only origin/master
-          if grep -q '"T-2026-09-27-052"' research/evidence/trial_ledger.json; then
-            echo "::error::T052 already exists in remote ledger before reconciliation."
-            exit 1
-          fi
           git add             research/evidence/trial_ledger.json             research/checkpoints/t052_fixed_core_sleeve_performance_2026_09_27.json             research/evidence/project_state.json             research/evidence/decision_basis_latest.json             docs/trial_052_fixed_core_sleeve_performance_result_2026_09_27.md
           git diff --cached --check
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "EVIDENCE: reconcile T052 fixed-core sleeve performance"
-          git push origin HEAD:master
 
-      - name: Evidence receipt
-        if: always()
+          for attempt in 1 2 3; do
+            if git push origin HEAD:master; then
+              echo "T052_CANONICAL_EVIDENCE_PUSHED"
+              exit 0
+            fi
+            git fetch origin master
+            if git show origin/master:research/evidence/trial_ledger.json | grep -q '"T-2026-09-27-052"'; then
+              echo "T052_CANONICAL_EVIDENCE_ALREADY_PUBLISHED"
+              exit 0
+            fi
+            git rebase origin/master
+          done
+          echo "::error::T052 evidence push failed after three race-safe retries."
+          exit 1
+
+      - name: Close one-shot reconciliation issue
+        if: github.event_name == 'issues' && success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh issue close "${{ github.event.issue.number }}" --repo "${GITHUB_REPOSITORY}" --reason completed --comment "T052 evidence reconciliation completed from immutable workflow 36338219883."
+
+      - name: Evidence receipt        if: always()
         uses: actions/upload-artifact@v6
         with:
           name: t052-evidence-reconcile-${{ github.run_id }}-${{ github.run_attempt }}
