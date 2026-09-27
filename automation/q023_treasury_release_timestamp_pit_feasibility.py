@@ -32,6 +32,7 @@ TREASURY_PDF_BASE = (
 )
 MAX_PDF_SEQUENCE = 8
 MAX_ANNOUNCEMENT_LOOKBACK_DAYS = 14
+PRIMARY_ANNOUNCEMENT_OFFSET_DAYS = 7
 MIN_TIMESTAMP_COVERAGE = 1.0
 EASTERN = ZoneInfo("America/New_York")
 
@@ -174,7 +175,13 @@ def _candidate_urls(event: dict) -> list[str]:
         event["auction_date"], "%Y-%m-%d"
     ).date()
     candidates: list[str] = []
-    for delta in range(1, MAX_ANNOUNCEMENT_LOOKBACK_DAYS + 1):
+    offsets = [PRIMARY_ANNOUNCEMENT_OFFSET_DAYS]
+    offsets.extend(
+        delta
+        for delta in range(1, MAX_ANNOUNCEMENT_LOOKBACK_DAYS + 1)
+        if delta != PRIMARY_ANNOUNCEMENT_OFFSET_DAYS
+    )
+    for delta in offsets:
         announcement_date = auction_date - timedelta(days=delta)
         date_part = announcement_date.strftime("%Y%m%d")
         year = announcement_date.year
