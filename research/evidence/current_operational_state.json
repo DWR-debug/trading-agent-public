@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T18:08:39.782057+00:00",
+  "generated_at_utc": "2026-09-27T18:15:04.857034+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -81,17 +81,28 @@
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/335"
       }
     ],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "agent/AGENT-Q024-HISTORICAL-XML-copilot-cli",
-        "number": 450,
-        "title": "RESEARCH: extend Q024 historical XML timestamp gap analysis",
-        "updatedAt": "2026-09-27T18:03:49Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/450"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "RESEARCH: add T052 risk/stability diagnostic",
+        "sha": "3b20161844c43d0dfdfb7ca6bd6cb554daf7e76c",
+        "timestamp": "2026-09-27T20:14:50+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "d06c21646627a92eba5707188733612d1e7da5c8",
+        "timestamp": "2026-09-27T18:11:44Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "a560780106925308c1f9bd645e1b745d5c650bc2",
+        "timestamp": "2026-09-27T18:08:45Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6bbc410610f3154b0b089d362ca7a02be047d33c",
+        "timestamp": "2026-09-27T18:08:39Z"
+      },
       {
         "message": "EVIDENCE: reconcile T052 formal result",
         "sha": "563fac0932289816cf94a7df60b04e50b95d4ffb",
@@ -111,26 +122,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "cc69519d5becebf17cf261527fa363c85fa2e85b",
         "timestamp": "2026-09-27T17:59:31Z"
-      },
-      {
-        "message": "RESEARCH: Q028 T052 cross-universe vs sleeve decomposition",
-        "sha": "99e1ea95b012148444787aba4e6ed9c492c3a670",
-        "timestamp": "2026-09-27T19:59:19+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "686d9be94fe747fbeb244a9e7ca0e36b3718795d",
-        "timestamp": "2026-09-27T17:58:02Z"
-      },
-      {
-        "message": "RESEARCH: Q027 fixed-cell T052 failure attribution",
-        "sha": "d0b69e5c2f481e6468bf5214ca6ee7b94bdda876",
-        "timestamp": "2026-09-27T19:57:50+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5dd1bc85a837c71ba9c5bcd37e870aa5c51b122c",
-        "timestamp": "2026-09-27T17:53:50Z"
       }
     ]
   },
@@ -151,10 +142,10 @@
   },
   "schema_version": "1.0",
   "scientific_state_recorded": {
-    "decision_basis_stage": "T052_FIXED_CORE_EVALUATED",
+    "decision_basis_stage": "Q029_T052_RISK_STABILITY_DIAGNOSTIC_COMPLETED",
     "latest_formal_status": "EVIDENCE_RECORDED_NO_AUTOMATIC_PROMOTION",
     "latest_formal_trial": "T-2026-09-27-052",
-    "next_research_focus_recorded": "Q028 completed: fixed T052 failure pattern is largely shared within each universe; next diagnostic should isolate common risk/stability mechanisms without selecting universes or sleeves.",
+    "next_research_focus_recorded": "Q029 completed: design multiple unranked, preregisterable mechanism hypotheses addressing the common T052 risk/stability and Research-to-Holdout failure pattern; no T052 retuning or holdout selection.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -192,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "563fac0932289816cf94a7df60b04e50b95d4ffb",
+  "source_master_sha": "3b20161844c43d0dfdfb7ca6bd6cb554daf7e76c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36339540817"
+    "run_id": "36339935136"
   }
 }
