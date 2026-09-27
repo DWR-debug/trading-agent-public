@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `a5104ce715e76a53e13739af37592cc60ec954b2`
+**Current operational snapshot:** `078c076ee122c449b9d2ad42f66465c537f18225`
 
-**Generated (UTC):** `2026-09-27T15:52:58.006150+00:00`
+**Generated (UTC):** `2026-09-27T16:10:19.822386+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -31,7 +31,8 @@
 
 - Paid agent/API budget: **0 USD**.
 - Actual available capital: **0 EUR**.
-- Hypothetical reference capital: **500 EUR**, simulation/planning only.
+- Hypothetical reference capital: **2000 EUR**, simulation/planning only.
+- Legacy 500-EUR operational canary remains separate.
 - Deterministic research stays on reproducible runner paths.
 - Agent output is never scientific evidence by itself.
 

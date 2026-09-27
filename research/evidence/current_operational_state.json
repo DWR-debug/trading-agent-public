@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T15:52:58.006150+00:00",
+  "generated_at_utc": "2026-09-27T16:10:19.822386+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [],
@@ -76,6 +76,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "research/capital-2000-paper-lane",
+        "number": 418,
+        "title": "PAPER: establish EUR 2000 research-capital baseline",
+        "updatedAt": "2026-09-27T16:08:17Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/418"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "research/execute-q017-g3-coverage-first",
         "number": 416,
         "title": "RESEARCH: Q017 G3 coverage-first on current master",
@@ -84,6 +92,31 @@
       }
     ],
     "recent_commits": [
+      {
+        "message": "OPS: harden current status sync against master races (#419)",
+        "sha": "078c076ee122c449b9d2ad42f66465c537f18225",
+        "timestamp": "2026-09-27T18:10:05+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "7b9f91e58f634ca35355c3b40a074a76ee562d00",
+        "timestamp": "2026-09-27T16:08:05Z"
+      },
+      {
+        "message": "RESEARCH: establish EUR 2,000 simulation capital lanes (#417)",
+        "sha": "d6747a1320631031b1b31d05b05dc94329b79136",
+        "timestamp": "2026-09-27T18:07:52+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "e39738bc581a5903dd7fe700e16384927f3d0692",
+        "timestamp": "2026-09-27T15:54:16Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8749a76d76a6475709699f12ab0aab674449c07e",
+        "timestamp": "2026-09-27T15:52:58Z"
+      },
       {
         "message": "FIX: make 500 EUR candidate lane idle when no manifest exists",
         "sha": "a5104ce715e76a53e13739af37592cc60ec954b2",
@@ -98,38 +131,14 @@
         "message": "OPS: synchronize current operational status",
         "sha": "63c8b1bb1bad6a6d358c94eeaa6e978b74fe1af0",
         "timestamp": "2026-09-27T15:52:07Z"
-      },
-      {
-        "message": "OPS: fix GitHub run-id expressions in 500 EUR candidate workflow",
-        "sha": "82424fdb9f7446effdb8a88c9e2bca785954d48d",
-        "timestamp": "2026-09-27T17:52:00+02:00"
-      },
-      {
-        "message": "TEST: use valid blocked evidence status in 500 EUR gate test",
-        "sha": "1b46d53a039e08afa6c743a601d8759028f34b34",
-        "timestamp": "2026-09-27T17:51:56+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a0268da0329b35a848ceb9037cf29038ee006bba",
-        "timestamp": "2026-09-27T15:51:50Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "60a37a0985ae24b58c896dee992d7a535e267387",
-        "timestamp": "2026-09-27T15:51:41Z"
-      },
-      {
-        "message": "OPS: make 500 EUR candidate lane idle when no candidate is eligible",
-        "sha": "fb8b52da4e90c497a5ebd09896a4af15484387ff",
-        "timestamp": "2026-09-27T17:51:20+02:00"
       }
     ]
   },
   "resource_policy": {
     "actual_capital_available": false,
     "free_resources_only": true,
-    "hypothetical_reference_capital_eur": 500.0,
+    "hypothetical_reference_capital_eur": 2000.0,
+    "legacy_operational_canary_capital_eur": 500.0,
     "paid_agent_budget_usd": 0,
     "paid_api_budget_usd": 0
   },
@@ -183,12 +192,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a5104ce715e76a53e13739af37592cc60ec954b2",
+  "source_master_sha": "078c076ee122c449b9d2ad42f66465c537f18225",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36331164849"
+    "run_id": "36332227957"
   }
 }
