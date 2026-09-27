@@ -537,7 +537,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
             "ELV", "CI", "JCI", "FAST", "PAYX", "CTSH",
         ),
         target_count=4000,
-    ),,
+    ),
     
     AssetUniverse(
         name="validation_2026_09_27_treasury_auction_date_shift_h2",
