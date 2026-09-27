@@ -35,3 +35,29 @@ def test_q036_preregistration_binds_to_t056_artifact() -> None:
     spec=json.loads(Path("research/preregistrations/q036_t056_risk_mechanism_diagnostic_2026_09_27.json").read_text(encoding="utf-8"))
     assert spec["source_artifact_id"] == 10939680447
     assert spec["source_report_fingerprint"] == "56feed52b6c8321e3b4cfcf7914b87d2d54ad4cf7d1cf66b095a62db0453943f"
+
+def test_q036_localizes_relative_dataset_paths(tmp_path) -> None:
+    import json
+    from automation.q036_t056_risk_mechanism_diagnostic import localize_manifest
+
+    dataset = tmp_path / "datasets" / "BSV"
+    dataset.mkdir(parents=True)
+    (dataset / "1d.csv").write_text("timestamp,open,high,low,close,volume\n", encoding="utf-8")
+
+    manifest_dir = tmp_path / "coverage" / "T053"
+    manifest_dir.mkdir(parents=True)
+    manifest = manifest_dir / "coverage_preflight_test.json"
+    manifest.write_text(json.dumps({
+        "data_snapshot": {
+            "datasets": [
+                {"path": "research/runs/q035_coverage/T-2026-09-27-053-COVERAGE/datasets/BSV/1d.csv"}
+            ]
+        }
+    }), encoding="utf-8")
+
+    localized = localize_manifest(manifest)
+    try:
+        data = json.loads(localized.read_text(encoding="utf-8"))
+        assert data["data_snapshot"]["datasets"][0]["path"] == str((manifest_dir / "datasets" / "BSV" / "1d.csv").resolve())
+    finally:
+        localized.unlink(missing_ok=True)
