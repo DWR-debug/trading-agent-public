@@ -2,25 +2,29 @@
 
 ### Was wissen wir?
 
-
 - Die technische Referenz ist ausschließlich der öffentliche `master` von `DWR-debug/trading-agent-public`.
 - Q020 / `T-2026-09-26-046R1-PERFORMANCE` wurde auf dem eingefrorenen, symbol-disjunkten Snapshot formal ausgeführt und als `NO_PROMOTION_EVIDENCE` abgeschlossen. Das Ergebnis bleibt unverändert; es gab keine Promotion und keine Live-Ausführung.
-- Q021 wurde als `COMPLETED_DIAGNOSTIC_ONLY` aus der kanonischen Q019/Q020-Evidence durchgeführt. Die Diagnose unterscheidet beobachtete Failure-Signaturen von noch ungelösten Mechanismen und führt sechs ungerankte Folgehypothesen H1–H6.
-- Q022 ist jetzt die aktive Queue-Aufgabe und bleibt `DESIGN_ONLY`: keine Q020-Retuning-Schleife, keine Holdout-Auswahl, keine Gateänderung und keine Performancefreigabe.
+- Q021 wurde als `COMPLETED_DIAGNOSTIC_ONLY` aus der kanonischen Q019/Q020-Evidence durchgeführt und liefert sechs ungerankte Folgehypothesen.
+- Q023 hat die offizielle Treasury-Resultat-Timestamp-Frage für 89/89 Events nicht vollständig historisch lösbar gemacht (Q024 = `DATA_INSUFFICIENT`); Q025 hat dagegen die Date-Level-PIT-Grundlage für 89/89 Events validiert.
+- Q026 (`T-2026-09-27-048`) ist `DATA_INVALID / NO_SCIENTIFIC_OUTCOME`: die bereits eingefrorene Anforderung verlangte 4.000 Candles, während das feste Universum 3.704 gemeinsame Sessions lieferte. Es wurde keine Performance berechnet.
+- T047R1 ist geschlossen und bleibt `NO_PROMOTION_EVIDENCE`; die exakte Richtungsinvertierung wurde nicht weiter optimiert.
 
 ### Was wissen wir nicht?
 
-- Ob einer der sechs Q021-Follow-up-Mechanismen auf einem neuen, vollständig unabhängigen Datensatz reproduzierbar Bestand hat.
-- Ob eine alternative Vorzeichenkonvention, eine belastbare Intraday-PIT-Zeitbasis, Event-Konzentration, externe Regimevariablen, Kosten-Sensitivität oder Signal-Sparsität einen belastbaren Erkenntnisgewinn liefert.
-- Ob überhaupt ein Treasury-bezogener Mechanismus die unveränderten Evidence-Gates auf einer zukünftigen unabhängigen Validierung erfüllen kann.
+- Ob eine orthogonale, ex ante fixierte Hypothesenfamilie auf einem neuen, symbol-disjunkten Datensatz die unveränderten Evidence-Gates erfüllt.
+- Ob die Q026-H2-Fragestellung in einer neuen, sauber präregistrierten Geometrie reproduzierbar testbar ist.
+- Ob der bestehende Agent bereits einen vollständigen paper-only Forward-/Shadow-Lifecycle besitzt oder der neue Shadow-Harness ergänzt werden muss.
 
 ### Was ändert sich?
 
-Die Forschung öffnet Q020 nicht erneut. Stattdessen werden die aus Q021 abgeleiteten Mechanismen in einer separaten Designrunde so präzisiert, dass spätere formale Studien jeweils eine einzige, ex ante fixe Frage auf einem neuen unabhängigen Universum prüfen können.
+Die Forschung öffnet Q020 und T047R1 nicht erneut. Stattdessen laufen Exploration, Infrastruktur und Validierung parallel:
+1. unrankter Hypothesenentwurf,
+2. paper-only Shadow/Forward-Infrastruktur,
+3. anschließend ein neuer, ex ante fixierter und coverage-first geprüfter formaler Kandidat.
 
 ### Nächste Aktion
 
-Q022 als Design-only-Follow-up fertigstellen: H1–H6 jeweils mit exakter zukünftiger Datenanforderung, Falsifikationsregel, PIT-/Coverage-Bedingung und Auswahlverbot dokumentieren. Erst eine spätere separate Präregistrierung darf eine einzelne Hypothese für einen formalen Test autorisieren.
+AGENT-008 und AGENT-012 parallel ausführen; danach einen einzelnen formal präregistrierten Kandidaten auf einem frischen, symbol-disjunkten Universum durch Coverage/PIT und erst anschließend Performance prüfen.
 
 ### Welche Schutzgrenzen bleiben unverändert?
 
@@ -28,9 +32,9 @@ Q022 als Design-only-Follow-up fertigstellen: H1–H6 jeweils mit exakter zukün
 - `LIVE_TRADING_ENABLED=False`
 - `orders_enabled=False`
 - `automatic_promotion=False`
-- Holdout bleibt bis zu einer formal autorisierten Prüfung unberührt.
+- Holdout bleibt für Auswahl unberührt.
 - Keine nachträgliche Parameter-, Asset-, Feature-, Horizon-, Threshold- oder Varianten-Selektion.
-- Finanzielle bzw. zeitliche Dringlichkeit verändert nur Priorisierung und Parallelisierung, niemals Evidenzstandard oder finanzielles Risiko.
+- Dringlichkeit erhöht Geschwindigkeit und Parallelisierung, niemals Evidenzstandard oder finanzielles Risiko.
 
 ## Q018 Source-Feasibility abgeschlossen — 2026-09-26
 
