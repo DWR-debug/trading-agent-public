@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T18:35:49.464299+00:00",
+  "generated_at_utc": "2026-09-27T18:37:10.242902+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "EVIDENCE: record Q032 PIT validation and advance to Q033",
+        "sha": "74a6822d37f74a36e80dc3009b7639137b78a60d",
+        "timestamp": "2026-09-27T20:36:55+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "fd8543d3ef3ad17fae21bc4d5dee6b85668cd86c",
+        "timestamp": "2026-09-27T18:35:49Z"
+      },
       {
         "message": "EVIDENCE: record Q031 coverage and advance to Q032",
         "sha": "4017743284db97f82c546a088c940df377370e7f",
@@ -112,16 +122,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "cc56cc9054de5f24afc15a6c0b398c2929f8778e",
         "timestamp": "2026-09-27T18:30:38Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "91c133be20d3bc1eb8c0a40a34c5ec04a7cc21c9",
-        "timestamp": "2026-09-27T18:29:17Z"
-      },
-      {
-        "message": "FIX: align Q031 enforcement with canonical result schema",
-        "sha": "438970b756e70c892f0521e592000a99feb2bdf0",
-        "timestamp": "2026-09-27T20:29:05+02:00"
       }
     ]
   },
@@ -142,10 +142,10 @@
   },
   "schema_version": "1.0",
   "scientific_state_recorded": {
-    "decision_basis_stage": "Q032_PIT_PREREGISTERED",
+    "decision_basis_stage": "Q033_MECHANISM_PARAMETER_FREEZE",
     "latest_formal_status": "EVIDENCE_RECORDED_NO_AUTOMATIC_PROMOTION",
     "latest_formal_trial": "T-2026-09-27-052",
-    "next_research_focus_recorded": "Q032 PIT preflight on Q031 coverage-passed universe; performance evaluation remains blocked until PIT passes and Q030 mechanism parameters are fixed ex ante.",
+    "next_research_focus_recorded": "Q033 parameter/implementation freeze for RISK-A/B/C/D; no performance execution until fixed parameters and execution assumptions are preregistered.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4017743284db97f82c546a088c940df377370e7f",
+  "source_master_sha": "74a6822d37f74a36e80dc3009b7639137b78a60d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36341227092"
+    "run_id": "36341306182"
   }
 }
