@@ -278,7 +278,7 @@ def test_continuous_qa_provenance_is_published_from_workspace():
         ROOT / ".github" / "workflows" / "self-hosted-continuous-qa.yml"
     ).read_text(encoding="utf-8")
     assert r'set "PROV_ROOT=%GITHUB_WORKSPACE%\research\runs\self_hosted"' in text
-    assert r'"%PROV_ROOT%\continuous_%LANE%_%RUN_KEY%"' in text
+    assert r'set "OUT=%PROV_ROOT%\continuous_%LANE%_%RUN_KEY%"' in text
     assert '${{ github.run_attempt }}' in text
 
 def test_continuous_qa_fails_closed_on_missing_provenance_files():
