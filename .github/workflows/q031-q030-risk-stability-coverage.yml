@@ -17,6 +17,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
 
 concurrency:
   group: trading-agent-q031-risk-stability-coverage
@@ -30,7 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: master
+          ref: ${{ github.sha }}
           fetch-depth: 1
       - uses: actions/setup-python@v6
         with:
@@ -77,6 +78,61 @@ jobs:
           print("Q031 COVERAGE-ONLY CONTRACT OK")
           print("STATUS:", d["status"])
           PY
+
+      - name: Publish Q031 run summary
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_SHA: ${{ github.sha }}
+          JOB_STATUS: ${{ job.status }}
+        shell: python
+        run: |
+          import json
+          import os
+          from pathlib import Path
+          import urllib.request
+
+          root = Path('research/runs/q031_q030_risk_stability_coverage')
+          files = sorted(root.rglob('*.json')) if root.exists() else []
+          summary = {
+              'run_id': os.environ['GITHUB_RUN_ID'],
+              'head_sha': os.environ['GITHUB_SHA'],
+              'job_status': os.environ['JOB_STATUS'],
+          }
+          if files:
+              data = json.loads(files[-1].read_text(encoding='utf-8'))
+              summary.update({
+                  'trial_id': data.get('trial_id'),
+                  'status': data.get('status'),
+                  'common_calendar_count': data.get('common_calendar_count'),
+                  'coverage_fingerprint': data.get('coverage_fingerprint'),
+                  'snapshot_fingerprint': data.get('snapshot_fingerprint'),
+                  'performance_evaluation': data.get('performance_evaluation'),
+                  'selection_used': data.get('selection_used'),
+                  'safety': data.get('safety'),
+              })
+          body = 'Q031 run summary\n\n' + '\n'.join(
+              f'- {k}: {v}' for k, v in summary.items()
+          )
+          payload = json.dumps({'body': body}).encode('utf-8')
+          url = 'https://api.github.com/repos/' + os.environ['GITHUB_REPOSITORY'] + '/issues/343/comments'
+          req = urllib.request.Request(
+              url,
+              data=payload,
+              method='POST',
+              headers={
+                  'Authorization': 'Bearer ' + os.environ['GITHUB_TOKEN'],
+                  'Accept': 'application/vnd.github+json',
+                  'X-GitHub-Api-Version': '2022-11-28',
+                  'Content-Type': 'application/json',
+              },
+          )
+          with urllib.request.urlopen(req, timeout=30) as response:
+              response.read()
+          print('Q031 RUN SUMMARY PUBLISHED')
+
       - name: Evidence artifact
         if: always()
         uses: actions/upload-artifact@v6
