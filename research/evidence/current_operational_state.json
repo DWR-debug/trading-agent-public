@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T18:27:19.365339+00:00",
+  "generated_at_utc": "2026-09-27T18:29:17.264152+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -81,17 +81,23 @@
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/335"
       }
     ],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "debug/q031-coverage-diagnostic-20260927",
-        "number": 457,
-        "title": "OPS: temporary Q031 coverage diagnostic",
-        "updatedAt": "2026-09-27T18:25:40Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/457"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: align Q031 enforcement with canonical result schema",
+        "sha": "438970b756e70c892f0521e592000a99feb2bdf0",
+        "timestamp": "2026-09-27T20:29:05+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "1a7c0a8c4de60f1406b458692d9b060334153f08",
+        "timestamp": "2026-09-27T18:27:43Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9788214f7b41355f5db1cb8b4f24310ff9cabd4f",
+        "timestamp": "2026-09-27T18:27:19Z"
+      },
       {
         "message": "FIX: align Q031 acquisition contract",
         "sha": "df3a83983181ac9a7270f68b8a26d6bc237e977e",
@@ -116,21 +122,6 @@
         "message": "RESEARCH: define Q030 T052 risk-stability mechanism families",
         "sha": "ae77b6aeb4482dcc2a8422199f5cc7f62cf60a04",
         "timestamp": "2026-09-27T20:15:50+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "28818068e894d5b8a00eba9345608b60e3a1aa64",
-        "timestamp": "2026-09-27T18:15:04Z"
-      },
-      {
-        "message": "RESEARCH: add T052 risk/stability diagnostic",
-        "sha": "3b20161844c43d0dfdfb7ca6bd6cb554daf7e76c",
-        "timestamp": "2026-09-27T20:14:50+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "d06c21646627a92eba5707188733612d1e7da5c8",
-        "timestamp": "2026-09-27T18:11:44Z"
       }
     ]
   },
@@ -192,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "df3a83983181ac9a7270f68b8a26d6bc237e977e",
+  "source_master_sha": "438970b756e70c892f0521e592000a99feb2bdf0",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36340691478"
+    "run_id": "36340815647"
   }
 }
