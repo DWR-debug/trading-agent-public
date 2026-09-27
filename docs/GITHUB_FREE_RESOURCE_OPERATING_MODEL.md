@@ -141,10 +141,20 @@ Zielgröße: Evidence-/Engineering-Fortschritt pro kostenloser Ressource.
 
 ## Neue-Chat-Regel
 
-Wenn ein neuer Chat mit "trading agent" beginnt, wird dieses Dokument nach dem Chat-Einstiegspunkt gelesen, bevor der nächste Arbeitsschritt gewählt wird.
+Wenn ein neuer Chat mit "trading agent" beginnt, wird dieses Dokument nach dem Chat-Einstiegspunkt gelesen und durch einen **Live-Ressourcen-Preflight** ergänzt, bevor der nächste Arbeitsschritt gewählt wird.
 
 Verbindliche Reihenfolge:
-TRADING_AGENT_CHAT_ENTRYPOINT.md → PROJECT_CONTEXT.md → GITHUB_FREE_RESOURCE_OPERATING_MODEL.md → PROJECT_STATUS.md → project_state.json → current_project_checkpoint.json → Evidence-Ledger → aktueller GitHub-Stand.
+TRADING_AGENT_CHAT_ENTRYPOINT.md → PROJECT_CONTEXT.md → GITHUB_FREE_RESOURCE_OPERATING_MODEL.md → PROJECT_STATUS.md → project_state.json → current_project_checkpoint.json → Evidence-Ledger → aktueller GitHub-Stand → Live-Ressourcen-/Runner-Snapshot.
+
+Der Live-Snapshot prüft mindestens GitHub-hosted Actions, Self-hosted Research Worker, Copilot-CLI-Queue,
+Copilot-CLI-CI-Repair, Copilot Cloud Agent/Entitlement sowie tatsächlich zugängliche kostenlose Compute-
+Pfade. Für jede laufende oder verfügbare Ressource wird geprüft, ob die aktuelle Aufgabe parallelisiert
+werden kann. **Verfügbar + unabhängig + zulässig + sinnvoll wird ohne zusätzliche Nutzerfreigabe eingesetzt.**
+Die Prüfung wird nach dem Abschluss größerer Arbeitsblöcke wiederholt, damit neu frei gewordene kostenlose
+Kapazität nicht ungenutzt bleibt.
+
+Kontingente werden nicht durch künstliche Arbeit verbraucht. Parallelisierung dient ausschließlich dem
+verwertbaren Forschungs- und Engineering-Durchsatz.
 
 ## Sicherheitsinvarianten
 
