@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T17:53:50.331419+00:00",
+  "generated_at_utc": "2026-09-27T17:58:02.574916+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "RESEARCH: Q027 fixed-cell T052 failure attribution",
+        "sha": "d0b69e5c2f481e6468bf5214ca6ee7b94bdda876",
+        "timestamp": "2026-09-27T19:57:50+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5dd1bc85a837c71ba9c5bcd37e870aa5c51b122c",
+        "timestamp": "2026-09-27T17:53:50Z"
+      },
       {
         "message": "FIX: make T052 evidence reconciliation idempotent",
         "sha": "648b06cf31f83d756dc32c4f0cf36e728711d1fa",
@@ -112,16 +122,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "5adc804f7cffa14120cda9ecfe4b14829e97cfc9",
         "timestamp": "2026-09-27T17:47:54Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "695e70d8777ec4c215c31f2854e3d776f854fbcf",
-        "timestamp": "2026-09-27T17:47:07Z"
-      },
-      {
-        "message": "OPS: re-arm authorized T052 after second regression repair",
-        "sha": "40d2c5d36790cab2608730154d330f65fc150d40",
-        "timestamp": "2026-09-27T19:46:59+02:00"
       }
     ]
   },
@@ -142,10 +142,10 @@
   },
   "schema_version": "1.0",
   "scientific_state_recorded": {
-    "decision_basis_stage": "T052_FORMAL_EXECUTION_BLOCKED_BY_CI_REGRESSIONS",
+    "decision_basis_stage": "Q027_T052_FAILURE_ATTRIBUTION_COMPLETED",
     "latest_formal_status": "NO_PROMOTION_EVIDENCE",
     "latest_formal_trial": "T-2026-09-26-047R1-PERFORMANCE",
-    "next_research_focus_recorded": "Q024 historical ReleaseTime gap diagnosis: preserve the 89-event fixed population and investigate only official Treasury timestamp/provenance paths for the remaining 31 events; no performance until the preregistered 89/89 PIT feasibility contract passes.",
+    "next_research_focus_recorded": "Q027 T052 fixed-cell failure attribution: diagnostic-only attribution of shared drawdown, OOS/IS and holdout failures; no T052 retuning.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "648b06cf31f83d756dc32c4f0cf36e728711d1fa",
+  "source_master_sha": "d0b69e5c2f481e6468bf5214ca6ee7b94bdda876",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36338621973"
+    "run_id": "36338872307"
   }
 }
