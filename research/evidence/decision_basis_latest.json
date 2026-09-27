@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "recorded_on": "2026-09-27",
   "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
-  "current_stage": "Q030_T052_MECHANISM_DESIGN_COMPLETED",
+  "current_stage": "Q031_COVERAGE_PREREGISTERED",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
@@ -64,7 +64,8 @@
     "Q028 found five T052 failure gates shared across both fixed universes and both fixed sleeves; within-universe failure patterns were largely shared by the two sleeves. The result is descriptive and non-causal.",
     "T052 evaluated both unchanged fixed-core sleeves across fresh T049/T050 universes under the pre-registered 2798/700 split and unchanged cost/risk gates; no selection or promotion occurred.",
     "Q029 decomposed the immutable T052 result across four fixed cells; research drawdown, rolling average drawdown, OOS/IS return ratio, holdout profit factor and holdout drawdown gates failed in all four cells, with no selection or performance recomputation.",
-    "Q030 defined four unranked, mechanistically distinct follow-up families from Q029: volatility-targeted exposure, drawdown-state throttling, common-mode correlation capping, and position-lifecycle tail control; no family was tested or ranked."
+    "Q030 defined four unranked, mechanistically distinct follow-up families from Q029: volatility-targeted exposure, drawdown-state throttling, common-mode correlation capping, and position-lifecycle tail control; no family was tested or ranked.",
+    "Q031 preregistered a fresh seven-symbol coverage-only universe for the four Q030 risk/stability mechanism families; no performance evaluation or holdout selection is authorized."
   ],
   "implications": [
     "T047R1 did not satisfy the unchanged evidence contract; Q020 is not reopened.",
@@ -82,7 +83,7 @@
     "whether the unchanged SMA 50/200 mechanism satisfies the full Research/Holdout/risk gates on the fresh T049/T050 universes",
     "whether the unchanged 12-1 Top-2 cross-sectional momentum mechanism satisfies the same fixed evidence contract on the fresh T049/T050 universes"
   ],
-  "next_action": "Create separate frozen coverage/preregistration for one or more Q030 families on a fresh validation universe; no T052 retuning, no holdout selection, and no gate changes.",
+  "next_action": "Run Q031 coverage/PIT preflight; if coverage passes, create separate fixed performance preregistrations for the Q030 mechanism families without using T052 holdout information.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
