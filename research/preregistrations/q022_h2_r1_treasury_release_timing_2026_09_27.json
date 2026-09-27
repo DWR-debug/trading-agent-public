@@ -56,7 +56,8 @@
     "holdout_periods": 700,
     "interval": "1d",
     "frozen_snapshot_required": true,
-    "point_in_time_required": true
+    "point_in_time_required": true,
+    "raw_fetch_candles": 5000
   },
   "costs": {
     "base_fee_bps": 10,
@@ -135,5 +136,6 @@
   "interval": "1d",
   "requested_candles": 3520,
   "target_candles": 3500,
-  "minimum_in_window_candles": 3500
+  "minimum_in_window_candles": 3500,
+  "raw_fetch_candles": 5000
 }
