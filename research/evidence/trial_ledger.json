@@ -4725,6 +4725,80 @@
         "automatic_promotion": false
       },
       "note": "No arm passed all 13 preregistered gates. RISK-B reduced drawdown substantially versus the fixed control but remained negative in both research and holdout and failed the return/profit-factor/OOS/stress conditions. This is evidence about the fixed trial only; no arm is promoted or selected."
+    },
+    {
+      "trial_id": "T-2026-09-27-057",
+      "recorded_at": "2026-09-27T19:15:40Z",
+      "status": "archived_diagnostic",
+      "research_family": "t056_risk_mechanism_diagnostic",
+      "hypothesis": {
+        "text": "Decompose the completed T056 fixed risk arms by exposure duty cycle, activation, turnover, lifecycle effects and return/drawdown tradeoffs without new performance evaluation or selection."
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10939552467
+        ],
+        "source_trial_id": "T-2026-09-27-056",
+        "target_common_candles": 3500,
+        "common_calendar_count": 3704,
+        "symbols": [
+          "BSV",
+          "FAN",
+          "JNK",
+          "UDN",
+          "VCLT",
+          "VGIT",
+          "SCHR"
+        ],
+        "performance_evaluation": false,
+        "oos_evaluation": false,
+        "holdout_evaluation": false
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "asset_search": false,
+        "horizon_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "none; fixed-result diagnostic only",
+        "selection_family_id": "q036-t056-diagnostic-2026-09-27",
+        "selection_metric": null
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": null,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "DIAGNOSTIC_COMPLETED",
+        "scientific_outcome": "ARCHIVED_DIAGNOSTIC",
+        "workflow_run_id": 36343645414,
+        "workflow_conclusion": "success",
+        "artifact_id": 10939552467,
+        "artifact_digest": "sha256:f6a54ebc1cb5bf8456f2f0b52f52887c6fa231c0a284f9fde006dbba343d5474",
+        "diagnostic_fingerprint": "dd596966b862e0a2baffa067f810ce2dc78d3fd1eb834413f24c55f7c5c020cd",
+        "source_report_fingerprint": "56feed52b6c8321e3b4cfcf7914b87d2d54ad4cf7d1cf66b095a62db0453943f",
+        "no_arm_passed_all_13_gates": true,
+        "selection_used": false,
+        "holdout_used_for_selection": false,
+        "diagnostic_only": true
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
     }
   ]
 }
