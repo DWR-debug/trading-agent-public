@@ -229,11 +229,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          python -m automation.agent_scope_guard --contract "$RUNNER_TEMP/task_contract.json"
-          git diff --cached --name-only --exit-code -- .github/ research/evidence/ research/authorizations/ gates/ 2>/dev/null && {
-            echo "AGENT_SCOPE_PROTECTED_INDEX_VIOLATION"
+          staged_protected="$(git diff --cached --name-only -- .github/ research/evidence/ research/authorizations/ gates/)"
+          if [ -n "$staged_protected" ]; then
+            echo "::error::AGENT_SCOPE_PROTECTED_INDEX_VIOLATION"
+            printf "%s\n" "$staged_protected"
             exit 1
-          } || true
+          fi
           python -m automation.agent_scope_guard --contract "$RUNNER_TEMP/task_contract.json"
           git commit -m "AGENT: issue #${ISSUE_NUMBER} bounded engineering"
           git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:${BRANCH}"
