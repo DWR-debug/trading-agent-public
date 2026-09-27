@@ -292,5 +292,10 @@ def test_continuous_qa_fails_closed_on_missing_provenance_files():
     assert "[8/8] Lane result" in text
     assert "RUNNER_CAPACITY_AND_PROVENANCE_OK" in text
     assert "runner_capacity_%LANE%_%RUN_KEY%.json" in text
+    assert "utf-8-sig" in text
+    assert "c['lane']==r'%LANE%'" in text
+    assert "c['source_commit']==r'%GITHUB_SHA%'" in text
+    assert "logical_processors" in text
+    assert "physical_memory_bytes" in text
     assert "RUNNER_ARCH" in text
     assert "if-no-files-found: error" in text
