@@ -91,7 +91,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T13:54:22.505091+00:00",
+  "generated_at_utc": "2026-09-27T13:57:33.417120+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -161,18 +161,28 @@
       {
         "number": 279,
         "title": "AGENT-007: Independent audit of agent orchestration and Actions routing",
-        "updatedAt": "2026-09-27T09:18:21Z",
+        "updatedAt": "2026-09-27T13:57:12Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/279"
       },
       {
         "number": 278,
         "title": "AGENT-006: Independent audit of self-hosted QA and provenance",
-        "updatedAt": "2026-09-27T09:18:15Z",
+        "updatedAt": "2026-09-27T13:56:30Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/278"
       }
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "RESEARCH: preregister T050 second fixed candidate batch coverage",
+        "sha": "96e1e62bf8ce9be03713917571fa13d45a426588",
+        "timestamp": "2026-09-27T15:57:22+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4813b4f3b12de08479092f956f36afc41445e3d6",
+        "timestamp": "2026-09-27T13:54:22Z"
+      },
       {
         "message": "FIX: continue fixed-window discovery after consumed batches",
         "sha": "d7b9be2df01728862cef6cd9f2a65d2cc03d0c1f",
@@ -202,16 +212,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "80ecbe2465d0e5248f35bd9d4c25b0d9cb1cd1ca",
         "timestamp": "2026-09-27T13:49:49Z"
-      },
-      {
-        "message": "RESEARCH: preregister T049 fixed candidate batch coverage",
-        "sha": "b75787198aeb3403f7526e936d98a323ad58e61c",
-        "timestamp": "2026-09-27T15:49:38+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1b0473f6745faa39e4204b27a94da3c5982a93a8",
-        "timestamp": "2026-09-27T13:46:29Z"
       }
     ]
   },
@@ -272,12 +272,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d7b9be2df01728862cef6cd9f2a65d2cc03d0c1f",
+  "source_master_sha": "96e1e62bf8ce9be03713917571fa13d45a426588",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36324007421"
+    "run_id": "36324187029"
   }
 }
