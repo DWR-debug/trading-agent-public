@@ -66,13 +66,17 @@ def test_start_and_update_are_reproducible_and_resume_from_saved_portfolio(tmp_p
     assert isinstance(initial["portfolio"]["realized_pnl_eur"], float)
     assert isinstance(initial["portfolio"]["gross_traded_notional_eur"], float)
     assert isinstance(initial["portfolio"]["maximum_realized_drawdown_percent"], float)
-    assert initial["portfolio"]["current_position_exposure_eur"] == 0.0
+    assert initial["schema_version"] == 2
+    assert initial["portfolio"]["current_position_exposure_eur"] >= 0.0
+    assert len(initial["portfolio"]["ledger"]) == initial["candle_count"]
 
     state_path = tmp_path / "one.json"
     appended = update_session(state_path, make_candles(12, start=7))
     assert appended["run_id"] == initial["run_id"]
     assert appended["input_fingerprint"] != initial["input_fingerprint"]
+    assert appended["schema_version"] == 2
     assert appended["candle_count"] == 12
+    assert len(appended["portfolio"]["ledger"]) == appended["candle_count"]
     assert appended["updated_at_utc"] == make_candles(12)[-1].timestamp.isoformat()
 
     duplicate = update_session(state_path, make_candles(8))
