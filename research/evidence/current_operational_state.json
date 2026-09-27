@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T16:57:10.834305+00:00",
+  "generated_at_utc": "2026-09-27T16:58:24.142189+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -102,6 +102,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: install pytest for Q022 design guard",
+        "sha": "456ca636aa3e87c356130b762cbd59c598dcb19d",
+        "timestamp": "2026-09-27T18:58:12+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e20d2e9060dc8d2a97fd128b6bebf8d0a508e566",
+        "timestamp": "2026-09-27T16:57:11Z"
+      },
+      {
         "message": "OPS: add Q022 design-only guard runner",
         "sha": "9412b5ed3b75db25c97da14a9528067ec50611f2",
         "timestamp": "2026-09-27T18:56:57+02:00"
@@ -130,16 +140,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "7baba0cf8014e38770afb7b0a64c3abd6429ee15",
         "timestamp": "2026-09-27T16:53:50Z"
-      },
-      {
-        "message": "OPS: trigger Q024 fixed feasibility run",
-        "sha": "96f30ed52145a34e93604394159689d959216bec",
-        "timestamp": "2026-09-27T18:53:17+02:00"
-      },
-      {
-        "message": "OPS: add Q024 Treasury timestamp feasibility runner",
-        "sha": "cb6c2310e9a3146eb7a19892eef36136ff2a2d8b",
-        "timestamp": "2026-09-27T18:53:02+02:00"
       }
     ]
   },
@@ -201,12 +201,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9412b5ed3b75db25c97da14a9528067ec50611f2",
+  "source_master_sha": "456ca636aa3e87c356130b762cbd59c598dcb19d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36335107522"
+    "run_id": "36335179299"
   }
 }
