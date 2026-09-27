@@ -63,7 +63,47 @@ Bei jedem neuen `trading agent`-Chat:
 9. `research/evidence/trial_ledger.json` bzw. die für den aktuellen Task
    relevanten Evidence-Dateien prüfen.
 10. Aktuellen `master`, relevante Branches/PRs und laufende/letzte Workflows prüfen.
-11. Erst danach Änderungen, Research oder neue Hypothesen vornehmen.
+11. Vor der eigentlichen Arbeit einen **Ressourcen- und Kapazitäts-Snapshot** erstellen: alle
+   im aktuellen Konto/Repo verfügbaren Agentenpfade, Runner und relevanten Actions-Lanes prüfen.
+12. Für die konkrete Aufgabe jede sinnvolle, **kostenfreie und aktuell verfügbare** Ressource
+   aktiv routen; nicht auf eine einzelne Ressource warten, wenn eine unabhängige Aufgabe parallel
+   anders ausgeführt werden kann.
+13. Erst danach Änderungen, Research oder neue Hypothesen vornehmen.
+
+### Pflicht-Ressourcencheck bei jedem neuen Chat
+
+Der Preflight ist eine aktive Kapazitätsprüfung. Mindestens folgende Klassen werden mit einem
+Status **verfügbar / belegt / deaktiviert / nicht zugänglich / nicht sinnvoll** bewertet:
+
+- **GitHub-hosted Actions / Runner:** laufende Runs, relevante Workflow-Lanes und aktuelle Nutzung.
+- **Self-hosted Research Worker:** registrierter Runner, Online-/Idle-/Busy-Status und zulässige Labels.
+- **Copilot CLI Agent Queue:** Request-Queue, Lane-Belegung, Auth-/Token-Preflight und vorhandene Agent-Branches.
+- **Copilot CLI CI-Repair:** aktive Repair-Lane, Fehler-/Retry-Zustand und aktueller Bedarf.
+- **Copilot Cloud Agent:** aktueller Account-/Entitlement-Status. Bei deaktivierter oder nicht verfügbarer
+  Funktion wird sie dokumentiert und ohne Wartezeit übersprungen.
+- **Weitere kostenlose Compute-Pfade** wie Codespaces/lokale reproduzierbare Worker, soweit tatsächlich
+  zugänglich und für die Aufgabe sinnvoll.
+
+### Ressourcen-Ausführungsregel
+
+Nach dem Snapshot gilt:
+
+**verfügbar + unabhängig + zulässig + sinnvoll => ausführen.**
+
+Dabei wird nicht künstlich Arbeit erzeugt, nur um Kontingente zu verbrauchen. Bereits laufende Arbeit
+wird nicht dupliziert. Mehrere unabhängige Aufgaben sollen parallel auf verschiedene verfügbare
+Worker-/Runner-Pfade verteilt werden.
+
+Die Ressourcenprüfung wird nach materialisierenden Meilensteinen wiederholt, wenn Kapazität frei wird
+(z. B. Worker wird idle oder Agent-Session endet), damit neu verfügbare kostenlose Kapazität sinnvoll
+genutzt werden kann.
+
+### Kontinuitätsregel für Ressourcen
+
+Ein neuer Chat darf sich niemals allein auf den Ressourcenstand eines vorherigen Chats verlassen.
+**Runner-, Agenten-, Authentifizierungs- und Workflow-Status sind flüchtig und müssen neu geprüft
+werden.** Repository-/Evidence-Dokumente liefern Konfiguration und Governance; Live-GitHub-/
+Runner-Informationen liefern die aktuelle Verfügbarkeit.
 
 ## Automatischer Ressourcen-Preflight — bei jedem neuen `trading agent`-Chat
 
