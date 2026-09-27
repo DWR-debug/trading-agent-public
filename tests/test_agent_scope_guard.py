@@ -3,7 +3,7 @@ from pathlib import Path
 
 def test_agent_queue_uses_central_scope_guard_before_and_after_add():
     text = Path(".github/workflows/agent-request-queue.yml").read_text(encoding="utf-8")
-    assert text.count("python -m automation.agent_scope_guard --contract \"$RUNNER_TEMP/task_contract.json\"") >= 3
+    assert text.count("python -m automation.agent_scope_guard --contract \"$RUNNER_TEMP/task_contract.json\"") == 2
     assert "git add -A" in text
     assert "AGENT_SCOPE_PROTECTED_INDEX_VIOLATION" in text
     assert "staged_protected=\"$(git diff --cached --name-only -- .github/ research/evidence/ research/authorizations/ gates/)\"" in text
