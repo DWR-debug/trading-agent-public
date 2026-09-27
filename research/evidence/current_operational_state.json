@@ -79,7 +79,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T14:34:34.601882+00:00",
+  "generated_at_utc": "2026-09-27T14:36:38.829856+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -119,7 +119,7 @@
       {
         "number": 395,
         "title": "AGENT-023: harden autonomous control-plane duplicate and stale-state guards",
-        "updatedAt": "2026-09-27T14:21:48Z",
+        "updatedAt": "2026-09-27T14:35:16Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/395"
       },
       {
@@ -137,6 +137,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: synchronize research checkpoint through T051",
+        "sha": "7c91bedc429c24de8e7882fe4cfd0ffbd5dc3de7",
+        "timestamp": "2026-09-27T16:36:27+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "41052ec895c79afda815af9fc9e0c4da6ceb93f8",
+        "timestamp": "2026-09-27T14:34:35Z"
+      },
       {
         "message": "AGENT: publish verified AGENT-024 unattended paper-forward review",
         "sha": "e02d563821c82c838912dbb7dab69396e6c63eac",
@@ -166,16 +176,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "67967e6101817efa17886c7f12d9fb64f2687117",
         "timestamp": "2026-09-27T14:28:53Z"
-      },
-      {
-        "message": "RESEARCH: preregister T051 fixed-core strategy PIT validation",
-        "sha": "8fdf9404069a8ab7e6ae7dd343f8831fac2d2e44",
-        "timestamp": "2026-09-27T16:28:39+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "65acd9c61d2e795f8a8155748ec43d84914595c6",
-        "timestamp": "2026-09-27T14:25:44Z"
       }
     ]
   },
@@ -195,7 +195,7 @@
   },
   "schema_version": "1.0",
   "scientific_state_recorded": {
-    "decision_basis_stage": "Q026_DATA_INVALID_T047R1_CLOSED",
+    "decision_basis_stage": "T051_PIT_PASSED_NO_PERFORMANCE_EVIDENCE",
     "latest_formal_status": "NO_PROMOTION_EVIDENCE",
     "latest_formal_trial": "T-2026-09-26-047R1-PERFORMANCE",
     "next_research_focus_recorded": "AGENT-014 is merged; perform only coverage-first/PIT validation when an acceptable historical-vintage source is available, maintain the paper-only Shadow/Forward harness separately, and use the self-hosted runner for reproducible QA/research-preparation without changing gates.",
@@ -236,12 +236,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e02d563821c82c838912dbb7dab69396e6c63eac",
+  "source_master_sha": "7c91bedc429c24de8e7882fe4cfd0ffbd5dc3de7",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36326401861"
+    "run_id": "36326527222"
   }
 }
