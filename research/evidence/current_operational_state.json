@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T19:14:59.760262+00:00",
+  "generated_at_utc": "2026-09-27T19:23:27.035614+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,21 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "RESEARCH: canonicalize Q036 and preregister Q037 alpha architecture",
+        "sha": "b44c237f397083dbee9fe6ec4e519c75341cb97d",
+        "timestamp": "2026-09-27T21:23:12+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "1b368eb50bbf0a2b1cf5dbdd2da269ccd705c496",
+        "timestamp": "2026-09-27T19:22:41Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a373e31cc5a7c73b27aeaa6424288b18d16c4bd2",
+        "timestamp": "2026-09-27T19:14:59Z"
+      },
       {
         "message": "TEST: fix Q036 manifest localization fixture",
         "sha": "2571a30e428031d76cb7e5369052e75f2116f609",
@@ -107,21 +122,6 @@
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "2c4cb52af499ebaf7ebb005edf4fa3cff76f4174",
         "timestamp": "2026-09-27T19:07:23Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ecaf1bc79f9ca095c4e890a10fb131070542e76c",
-        "timestamp": "2026-09-27T19:04:48Z"
-      },
-      {
-        "message": "STATE: reconcile stored master head",
-        "sha": "e06a4e711022666420cdd7948b22a0e5980918eb",
-        "timestamp": "2026-09-27T21:04:34+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "dace6c56bfd6b821b6899d74783d54f75ce1cf65",
-        "timestamp": "2026-09-27T19:04:06Z"
       }
     ]
   },
@@ -142,10 +142,10 @@
   },
   "schema_version": "1.0",
   "scientific_state_recorded": {
-    "decision_basis_stage": "Q036_T056_DIAGNOSTIC",
+    "decision_basis_stage": "Q037_ALPHA_ARCHITECTURE_DESIGN",
     "latest_formal_status": "NO_ARM_PASSED_ALL_T052_GATES",
     "latest_formal_trial": "T-2026-09-27-056",
-    "next_research_focus_recorded": "Q036 descriptive diagnosis of T056 fixed risk overlays; no tuning or selection. Formal Actions execution is currently blocked by the repository's intermittent push-trigger anomaly, not by a scientific or data gate.",
+    "next_research_focus_recorded": "Q037 ex-ante Alpha-Mechanism-Architecture: define orthogonal alpha families and a fresh disjoint validation protocol; no performance selection until coverage/PIT prerequisites pass.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2571a30e428031d76cb7e5369052e75f2116f609",
+  "source_master_sha": "b44c237f397083dbee9fe6ec4e519c75341cb97d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36343645384"
+    "run_id": "36344160895"
   }
 }
