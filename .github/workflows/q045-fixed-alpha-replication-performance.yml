@@ -1,0 +1,105 @@
+name: Q045 Fixed Alpha Replication Performance
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/preregistrations/q045_fixed_alpha_replication_performance_2026_09_27.json"
+      - "research/authorizations/q045_fixed_alpha_replication_performance_2026_09_27.json"
+      - "automation/q045_fixed_alpha_replication_performance.py"
+      - "tests/test_q045_fixed_alpha_replication_performance.py"
+      - "automation/q039_price_only_alpha_pit.py"
+      - "automation/q042_additional_price_alpha_pit.py"
+      - "automation/coverage_preflight.py"
+      - "automation/candidate_validation_50_50_vol_budget.py"
+      - "automation/cross_asset_trend_replication.py"
+      - "data/canonical_snapshot.py"
+      - "execution/cost_contract.py"
+      - ".github/workflows/q045-fixed-alpha-replication-performance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-q045-performance
+  cancel-in-progress: false
+
+jobs:
+  performance:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check pytest pandas
+      - name: Safety and authorization
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from config import settings
+          p=json.loads(Path("research/preregistrations/q045_fixed_alpha_replication_performance_2026_09_27.json").read_text())
+          a=json.loads(Path("research/authorizations/q045_fixed_alpha_replication_performance_2026_09_27.json").read_text())
+          assert settings.PAPER_ONLY is True and settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False and settings.AUTOMATIC_PROMOTION is False
+          assert a["authorized"] is True and a["execution_scope"]=="FIXED_MULTI_ARM_RESEARCH_PERFORMANCE_ONLY"
+          assert a["performance_execution_authorized"] is True
+          assert p["status"]=="PREREGISTERED_PERFORMANCE" and p["performance_evaluation"] is True
+          assert p["governance"]["selection"] is False and p["governance"]["holdout_used_for_selection"] is False
+          assert p["governance"]["family_ranking"] is False and p["governance"]["parameter_search"] is False
+          print("Q045 SAFETY/AUTH OK")
+          PY
+      - name: Contract tests
+        run: python -m pytest -q tests/test_q045_fixed_alpha_replication_performance.py
+      - name: Fresh Q045 coverage
+        run: python -m automation.coverage_preflight --preregistration research/preregistrations/q045_fixed_alpha_replication_performance_2026_09_27.json --output-root research/runs/q045_coverage
+      - name: PIT prerequisite
+        run: python -m automation.q044_fresh_alpha_pit --universe-root research/runs/q045_coverage/T-2026-09-27-065/datasets --output research/runs/q045_pit/T-2026-09-27-065/pit_report.json
+      - name: PIT hard gate
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("research/runs/q045_pit/T-2026-09-27-065/pit_report.json").read_text())
+          assert d["status"]=="PIT_PASSED"
+          assert d["performance_evaluation"] is False
+          assert d["selection_used"] is False
+          print("Q045 PIT PASS")
+          PY
+      - name: Fixed eight-arm performance
+        run: python -m automation.q045_fixed_alpha_replication_performance --preregistration research/preregistrations/q045_fixed_alpha_replication_performance_2026_09_27.json --coverage-root research/runs/q045_coverage --output research/runs/q045_performance/T-2026-09-27-065/performance_report.json
+      - name: Governance validation
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("research/runs/q045_performance/T-2026-09-27-065/performance_report.json").read_text())
+          assert d["status"]=="COMPLETED" and d["performance_evaluation"] is True
+          assert d["oos_evaluation"] is True and d["holdout_evaluation"] is True
+          assert d["selection_used"] is False and d["holdout_used_for_selection"] is False
+          assert d["governance"]["promotion_decision"] is False and d["governance"]["automatic_promotion"] is False
+          assert set(d["arms"])=={"CONTROL","A1_TSM_CONSENSUS","A2_CS_MOMENTUM_TOP2","A3_RESIDUAL_MOMENTUM_TOP2","A5_LOW_BETA_TOP2","A1B_52W_HIGH_TOP2","A6_OVERNIGHT_TUGWAR_TOP2","ENSEMBLE_ALL6"}
+          assert all(0<=d["arms"][k]["gates_passed"]<=13 for k in d["arms"])
+          print("Q045 GOVERNANCE PASS")
+          for k,v in d["arms"].items(): print(k,f"{v['gates_passed']}/{v['gates_total']}")
+          print("REPORT_FINGERPRINT:",d["report_fingerprint"])
+          PY
+      - name: Publish evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q045-fixed-alpha-replication-${{ github.run_id }}
+          path: |
+            research/runs/q045_coverage/
+            research/runs/q045_pit/
+            research/runs/q045_performance/
+          if-no-files-found: error
+          retention-days: 30
