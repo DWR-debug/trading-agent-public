@@ -55,7 +55,8 @@ reproduzierbaren Ereigniszeit geprüft werden.
 Eine Quelle darf einem Q019-Event nur zugeordnet werden, wenn mindestens
 `cusip` und `auction_date` eindeutig mit dem Q019-Datensatz übereinstimmen und
 die Quelle tatsächlich das Q019-`bid_to_cover_ratio` oder dessen vollständige
-Bestandteile enthält.
+Bestandteile enthält. Ein RSS-Link auf ein passendes PDF ersetzt diese
+zweifache Event- und Signalidentifikation nicht.
 
 ## Timestamp-Regel
 
@@ -77,6 +78,11 @@ muss eindeutig bestimmbar sein.
 
 Es wird nur die Verfügbarkeit der Information geprüft. Keine Forward Returns,
 kein P&L, kein Backtest.
+
+Der Runner schreibt je Event außerdem den ersten folgenden XNYS-Handelstag und
+akzeptiert die PIT-Prüfung nur, wenn der explizite Result-Timestamp vor diesem
+Tag liegt. Ein Timestamp ohne nachweisbaren Signalinhalt oder ohne bestandene
+PIT-Prüfung zählt nicht als Q024-Pass.
 
 ## Falsifikation / DATA_INSUFFICIENT
 
@@ -121,3 +127,8 @@ Treasury dokumentiert die Auction-Results-Timeline und unterscheidet ausdrückli
 zwischen dem Result-Release und späteren Zusatzinformationen. Offizielle
 Auction-Results-PDFs enthalten den `Bid-to-Cover Ratio`-Wert, z.B. die
 10-Year-Note-Ausgabe vom 06.08.2025 für CUSIP 91282CNT4.
+
+
+## Historical XML archive handling
+
+The runner also probes the official TreasuryDirect `/xml/` result archive for deterministic result-file identity. HTTP `Last-Modified` metadata is preserved as provenance only and is explicitly **not** treated as the official auction-release timestamp. Q024 timestamp validation remains dependent on an explicit/deterministically documented publication timestamp tied to the auction result signal.
