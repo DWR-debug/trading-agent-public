@@ -114,7 +114,7 @@ jobs:
           assert all(0 <= d["arms"][arm]["gates_passed"] <= 13 for arm in d["arms"])
           print("Q041 PERFORMANCE GOVERNANCE PASS")
           for arm, report in d["arms"].items():
-              print(arm, f"{report["gates_passed"]}/{report["gates_total"]}", "ALL=", report["all_gates_passed"])
+              print(arm, str(report['gates_passed']) + '/' + str(report['gates_total']), 'ALL=', report['all_gates_passed'])
           print("REPORT_FINGERPRINT:", d["report_fingerprint"])
           PY
 
