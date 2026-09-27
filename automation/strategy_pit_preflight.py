@@ -17,7 +17,7 @@ def _fp(value: object) -> str:
     return hashlib.sha256(raw).hexdigest()
 
 
-def _load_assets(root: Path) -> dict[str, list[SimpleNamespace]]:
+def _load_assets(root: Path, expected_assets: int = 12) -> dict[str, list[SimpleNamespace]]:
     assets = {}
     for csv_path in sorted(root.glob("*/1d.csv")):
         rows = []
@@ -36,8 +36,8 @@ def _load_assets(root: Path) -> dict[str, list[SimpleNamespace]]:
         if any(rows[i].timestamp >= rows[i + 1].timestamp for i in range(len(rows) - 1)):
             raise ValueError(f"{csv_path}: timestamps are not strictly increasing")
         assets[csv_path.parent.name] = rows
-    if len(assets) != 12:
-        raise ValueError(f"Expected 12 assets, got {len(assets)}")
+    if len(assets) != expected_assets:
+        raise ValueError(f"Expected {expected_assets} assets, got {len(assets)}")
     lengths = {len(rows) for rows in assets.values()}
     if lengths != {3500}:
         raise ValueError("Asset lengths are not uniform at 3500")
@@ -97,8 +97,8 @@ def _cs_pit(assets: dict[str, list[SimpleNamespace]]) -> dict[str, object]:
     return {"status":"PIT_PASSED","checked_rebalances":checked,"fingerprint":_fp(checks)}
 
 
-def run(universe_root: Path, output: Path, universe: str, trial_id: str) -> dict:
-    assets = _load_assets(universe_root)
+def run(universe_root: Path, output: Path, universe: str, trial_id: str, expected_assets: int = 12) -> dict:
+    assets = _load_assets(universe_root, expected_assets=expected_assets)
     sma = _sma_pit(assets)
     cs = _cs_pit(assets)
     report = {
@@ -135,8 +135,9 @@ def main() -> int:
     parser.add_argument("--output", required=True)
     parser.add_argument("--universe", required=True)
     parser.add_argument("--trial-id", required=True)
+    parser.add_argument("--expected-assets", type=int, default=12)
     args = parser.parse_args()
-    report = run(Path(args.universe_root), Path(args.output), args.universe, args.trial_id)
+    report = run(Path(args.universe_root), Path(args.output), args.universe, args.trial_id, expected_assets=args.expected_assets)
     print("T051_PIT_STATUS:", report["status"])
     print("REPORT_FINGERPRINT:", report["report_fingerprint"])
     return 0
