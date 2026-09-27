@@ -19,7 +19,7 @@ from decimal import Decimal, InvalidOperation
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode, urlparse
+from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from zoneinfo import ZoneInfo
 
@@ -142,7 +142,7 @@ def _pdf_matches(text: str, event: dict) -> bool:
     return (
         cusip in normalized
         and re.search(r"\bTREASURY AUCTION RESULTS\b", normalized, re.I)
-        and re.search(r"\b10-Year\s+Note\b", normalized, re.I)
+        and re.search(r"\b10-Year(?:\s+TIPS|\s+Note)?\b", normalized, re.I)
         and re.search(r"Bid-to-Cover Ratio\s*:", normalized, re.I)
     )
 
@@ -403,9 +403,6 @@ def _find_rss_match(event: dict, rss_items: list[dict]) -> dict | None:
             [item.get("title", ""), item.get("description", ""),
              item.get("link", ""), item.get("guid", "")]
         )
-        link_host = urlparse(item.get("link", "")).netloc.lower()
-        if link_host not in {"www.treasurydirect.gov", "treasurydirect.gov"}:
-            continue
         description = _normalize(
             re.sub(r"<[^>]*>", " ", html.unescape(item.get("description", "")))
         )
