@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T15:21:27.407071+00:00",
+  "generated_at_utc": "2026-09-27T15:21:40.172123+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -102,6 +102,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3033b08a669d43fd556979f2377e417ec29a93cc",
+        "timestamp": "2026-09-27T15:21:27Z"
+      },
+      {
         "message": "OPS: gate T052 on exact-master CI workflow",
         "sha": "c0bfe778ca2be4255e9370b0e6beb93e0fd44dd4",
         "timestamp": "2026-09-27T17:21:19+02:00"
@@ -135,11 +140,6 @@
         "message": "FIX: resume paper-forward from oversized fetch window",
         "sha": "2290ee2713c7c0ac6df7ef38cc441cfd219b36f4",
         "timestamp": "2026-09-27T17:18:20+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "64f909f62a4432ebf6d4a3db121bbde95db2715d",
-        "timestamp": "2026-09-27T15:14:40Z"
       }
     ]
   },
@@ -200,12 +200,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c0bfe778ca2be4255e9370b0e6beb93e0fd44dd4",
+  "source_master_sha": "3033b08a669d43fd556979f2377e417ec29a93cc",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36329238220"
+    "run_id": "36329242624"
   }
 }
