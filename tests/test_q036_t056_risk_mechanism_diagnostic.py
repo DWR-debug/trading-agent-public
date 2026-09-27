@@ -24,3 +24,8 @@ def test_q036_source_binding_is_immutable() -> None:
 def test_q036_workflow_fetches_history_for_exact_source_commit() -> None:
     workflow=Path(".github/workflows/q036-t056-risk-mechanism-diagnostic.yml").read_text(encoding="utf-8")
     assert "fetch-depth: 0" in workflow
+
+
+def test_q036_source_blob_binding_is_frozen() -> None:
+    spec=json.loads(Path("research/preregistrations/q036_t056_risk_mechanism_diagnostic_2026_09_27.json").read_text(encoding="utf-8"))
+    assert spec["source_file_blob_sha"] == "33be8c29281ed7da2d109baad641d28fb91802e3"

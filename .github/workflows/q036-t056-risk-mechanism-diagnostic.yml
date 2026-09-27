@@ -74,9 +74,10 @@ jobs:
           test -f /tmp/t056_artifact/q035_performance/T-2026-09-27-056/performance_report.json
           test -n "$(find /tmp/t056_artifact/q035_coverage/T-2026-09-27-053-COVERAGE -name 'coverage_preflight_*.json' -print -quit)"
 
-      - name: Materialize exact T056 performance runner
+      - name: Bind exact T056 performance runner source
         run: |
-          git show 23e09d478ef4d7c9f866b8fc123b1842c9953ad8:automation/q035_risk_stability_performance.py > /tmp/q035_exact.py
+          test "$(git hash-object automation/q035_risk_stability_performance.py)" = "33be8c29281ed7da2d109baad641d28fb91802e3"
+          cp automation/q035_risk_stability_performance.py /tmp/q035_exact.py
           test -s /tmp/q035_exact.py
 
       - name: Run Q036 diagnostic
