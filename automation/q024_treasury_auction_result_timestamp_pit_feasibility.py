@@ -49,8 +49,11 @@ def _fp(value: object) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
-def _fetch_bytes(url: str, timeout: int = 30) -> bytes:
-    req = Request(url, headers={"User-Agent": "trading-agent-public Q024 research"})
+def _fetch_bytes(url: str, timeout: int = 30, *, headers: dict[str, str] | None = None) -> bytes:
+    request_headers = {"User-Agent": "trading-agent-public Q024 research"}
+    if headers:
+        request_headers.update(headers)
+    req = Request(url, headers=request_headers)
     try:
         with urlopen(req, timeout=timeout) as response:
             return response.read()
@@ -203,7 +206,7 @@ def run(*, output_path: str | Path) -> dict:
         raise SourceError("Q019 event population is empty")
 
     try:
-        rss_items = _parse_rss(_fetch_bytes(RESULT_RSS_URL))
+        rss_items = _parse_rss(_fetch_bytes(RESULT_RSS_URL, headers={"Accept": "application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.1", "User-Agent": "Mozilla/5.0 (compatible; trading-agent-public Q024 research)" }))
         rss_source_status = "RSS_RETRIEVED"
     except SourceError as exc:
         rss_items = []
