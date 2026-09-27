@@ -38,3 +38,19 @@ def test_risk_d_future_data_isolation() -> None:
     for i in range(21,25):
         mutated[i]=Bar(mutated[i].timestamp,9000,9001,1,9000)
     assert position_lifecycle_exit_trigger(mutated,20,highest_close_since_entry=highest)==baseline
+
+
+def test_q034_future_mutation_uses_replacement_for_frozen_bars() -> None:
+    from dataclasses import FrozenInstanceError
+    from portfolio.q030_risk_mechanisms import Bar
+
+    bar = Bar("0", 100.0, 101.0, 99.0, 100.0)
+    try:
+        bar.close = 101.0
+    except FrozenInstanceError:
+        pass
+    else:
+        raise AssertionError("Q034 regression fixture requires immutable Bar instances")
+
+    replacement = Bar(bar.timestamp, bar.open * 0.2, bar.high * 1.3, bar.low * 0.4, bar.close * 1.7)
+    assert replacement.close == 170.0
