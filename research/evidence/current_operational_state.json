@@ -14,20 +14,7 @@
       "bounded_two_lane_queue": true,
       "control_plane": "automation/autonomous_control_plane.py",
       "copilot_cli_queue": ".github/workflows/agent-request-queue.yml",
-      "current_pending_requests": [
-        {
-          "issue_number": "353",
-          "lane": "lane0",
-          "request_file": "agent_requests/lane0/AGENT-019.request",
-          "task_id": "AGENT-019"
-        },
-        {
-          "issue_number": "354",
-          "lane": "lane1",
-          "request_file": "agent_requests/lane1/AGENT-020.request",
-          "task_id": "AGENT-020"
-        }
-      ]
+      "current_pending_requests": []
     },
     "canonical_data_layer": {
       "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
@@ -67,23 +54,10 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T14:16:54.814131+00:00",
+  "generated_at_utc": "2026-09-27T14:19:46.293366+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
-    "agent_queue_requests": [
-      {
-        "issue_number": "353",
-        "lane": "lane0",
-        "request_file": "agent_requests/lane0/AGENT-019.request",
-        "task_id": "AGENT-019"
-      },
-      {
-        "issue_number": "354",
-        "lane": "lane1",
-        "request_file": "agent_requests/lane1/AGENT-020.request",
-        "task_id": "AGENT-020"
-      }
-    ],
+    "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [
       {
@@ -97,22 +71,47 @@
         "title": "AGENT-019: audit paper-forward market feed and MTM ledger",
         "updatedAt": "2026-09-27T14:12:43Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/353"
-      },
-      {
-        "number": 351,
-        "title": "AGENT-018: Independent audit of self-hosted matrix QA",
-        "updatedAt": "2026-09-27T14:07:43Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/issues/351"
-      },
-      {
-        "number": 350,
-        "title": "AGENT-017: Independent audit of autonomous control plane",
-        "updatedAt": "2026-09-27T14:16:54Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/issues/350"
       }
     ],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "agent/publish-AGENT-020-review-2026-09-27-r2",
+        "number": 390,
+        "title": "AGENT: publish verified AGENT-020 paper-forward loop audit",
+        "updatedAt": "2026-09-27T14:19:21Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/390"
+      },
+      {
+        "baseRefName": "master",
+        "headRefName": "fix/qa-capacity-provenance-validation-2026-09-27",
+        "number": 388,
+        "title": "FIX: validate continuous-QA capacity provenance",
+        "updatedAt": "2026-09-27T14:18:32Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/388"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "AGENT: publish verified AGENT-019 paper-forward feed/MTM audit",
+        "sha": "aa6d652da0253148c7621f136c69dfe53fd42dac",
+        "timestamp": "2026-09-27T16:19:34+02:00"
+      },
+      {
+        "message": "OPS: autonomous agent queue routing",
+        "sha": "715e39f23dc6020b86977667a8b73217c0fce3f1",
+        "timestamp": "2026-09-27T14:17:48Z"
+      },
+      {
+        "message": "OPS: wake next bounded agent queue cycle",
+        "sha": "ffb27f97bf8dfc39fe74711dcf0af3f70c453619",
+        "timestamp": "2026-09-27T16:17:32+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c74e9a3c07bd3ce9c706dd8881b332165774a417",
+        "timestamp": "2026-09-27T14:16:55Z"
+      },
       {
         "message": "TEST: correct Windows QA path assertions",
         "sha": "3a9582f3c6cc76395c018d576b7346156b5ff948",
@@ -132,26 +131,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "d4e067b29f9b1e2ea10df6579f0c31f0f4a82f55",
         "timestamp": "2026-09-27T14:15:18Z"
-      },
-      {
-        "message": "AGENT: publish verified AGENT-017 control-plane audit",
-        "sha": "e61475cba97333052a3a83199faebb47498a8610",
-        "timestamp": "2026-09-27T16:15:07+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "290d74efb4dedc121f71c474d90aa9b244f872ab",
-        "timestamp": "2026-09-27T14:13:46Z"
-      },
-      {
-        "message": "FIX: make current-status sync fail closed on master drift",
-        "sha": "dfaf046188aa068a05c67853fabafb8aa0818dc4",
-        "timestamp": "2026-09-27T16:13:34+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "46fd22b350fbb61657e035a8ac74539c3ad80806",
-        "timestamp": "2026-09-27T14:11:07Z"
       }
     ]
   },
@@ -212,12 +191,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "3a9582f3c6cc76395c018d576b7346156b5ff948",
+  "source_master_sha": "aa6d652da0253148c7621f136c69dfe53fd42dac",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36325330724"
+    "run_id": "36325502487"
   }
 }
