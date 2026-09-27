@@ -25,6 +25,7 @@ def test_pdf_matching_requires_result_identity_and_bid_to_cover():
     Bid-to-Cover Ratio: 2.35
     """
     assert q024._pdf_matches(text, event)
+    assert not q024._pdf_matches(text.replace("10-Year Note", "10-Year TIPS"), event)
     assert not q024._pdf_matches(text.replace("91282CNT4", "91282CXX9"), event)
     assert not q024._pdf_matches(text.replace("Bid-to-Cover Ratio:", "Other Ratio:"), event)
 
@@ -41,22 +42,26 @@ def test_rss_pubdate_is_normalized_to_utc():
 
 
 def test_rss_match_requires_cusip_and_auction_identity():
-    event = {"auction_date": "2025-08-06", "cusip": "91282CNT4"}
+    event = {
+        "auction_date": "2025-08-06",
+        "cusip": "91282CNT4",
+        "bid_to_cover_ratio": "2.35",
+    }
     pdf = {"source_url": "https://www.treasurydirect.gov/instit/annceresult/press/preanre/2025/R_20250806_2.pdf"}
     items = [{
         "title": "10-Year Note 91282CNT4",
-        "description": "",
+        "description": "Bid-to-Cover Ratio: 2.35",
         "link": pdf["source_url"],
         "guid": "R_20250806_2.pdf",
         "pubDate": "Wed, 06 Aug 2025 13:00:00 GMT",
         "publication_timestamp_utc": "2025-08-06T13:00:00Z",
     }]
-    match = q024._find_rss_match(event, pdf, items)
+    match = q024._find_rss_match(event, items)
     assert match is not None
     assert match["publication_timestamp_utc"] == "2025-08-06T13:00:00Z"
 
 
-def test_rss_match_can_use_exact_result_pdf_identity_without_repeating_cusip():
+def test_rss_match_rejects_pdf_identity_without_event_and_signal_identity():
     event = {"auction_date": "2025-08-06", "cusip": "91282CNT4"}
     pdf = {"source_url": "https://www.treasurydirect.gov/instit/annceresult/press/preanre/2025/R_20250806_2.pdf"}
     items = [{
@@ -67,8 +72,59 @@ def test_rss_match_can_use_exact_result_pdf_identity_without_repeating_cusip():
         "pubDate": "Wed, 06 Aug 2025 13:00:00 GMT",
         "publication_timestamp_utc": "2025-08-06T13:00:00Z",
     }]
-    assert q024._find_rss_match(event, pdf, items)["publication_timestamp_utc"] == "2025-08-06T13:00:00Z"
+    assert q024._find_rss_match(event, items) is None
+
+
+def test_rss_match_requires_cusip_auction_date_and_q019_signal():
+    event = {
+        "auction_date": "2025-08-06",
+        "cusip": "91282CNT4",
+        "bid_to_cover_ratio": "2.35",
+    }
+    pdf = {"source_url": "https://example.test/R_20250806_2.pdf"}
+    items = [{
+        "title": "10-Year Note 91282CNT4 Auction Results",
+        "description": "Bid-to-Cover Ratio: 2.35",
+        "link": pdf["source_url"],
+        "guid": "R_20250806_2.pdf",
+        "pubDate": "Wed, 06 Aug 2025 13:00:00 GMT",
+        "publication_timestamp_utc": "2025-08-06T13:00:00Z",
+    }]
+    assert q024._find_rss_match(event, items) is not None
+    items[0]["description"] = "Bid-to-Cover Ratio: 2.36"
+    assert q024._find_rss_match(event, items) is None
 
 
 def test_q024_governance_is_feasibility_only():
     assert q024.MIN_TIMESTAMP_COVERAGE == 1.0
+
+def test_xml_result_candidates_are_official_and_deterministic():
+    urls = q024._candidate_result_xml_urls({
+        "auction_date": "2025-08-06",
+        "cusip": "91282CNT4",
+    })
+    assert len(urls) == q024.MAX_RESULT_SEQUENCE
+    assert urls[0].endswith("/R_20250806_1.xml")
+    assert all(url.startswith(q024.RESULT_XML_ARCHIVE_URL) for url in urls)
+
+
+def test_xml_matching_requires_cusip_term_and_bid_to_cover_ratio():
+    event = {
+        "auction_date": "2025-08-06",
+        "cusip": "91282CNT4",
+        "bid_to_cover_ratio": "2.35",
+    }
+    text = """
+    TREASURY AUCTION RESULTS
+    Term and Type of Security: 10-Year Note
+    CUSIP Number: 91282CNT4
+    Bid-to-Cover Ratio: 2.35
+    """
+    assert q024._xml_matches(text, event)
+    assert not q024._xml_matches(text.replace("10-Year Note", "5-Year Note"), event)
+    assert not q024._xml_matches(text.replace("91282CNT4", "91282CXX9"), event)
+    assert not q024._xml_matches(text.replace("2.35", "2.36"), event)
+
+
+def test_xml_http_last_modified_is_not_accepted_as_publication_timestamp():
+    assert q024.RESULT_XML_ARCHIVE_URL.startswith("https://www.treasurydirect.gov/")
