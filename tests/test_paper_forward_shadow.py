@@ -46,7 +46,7 @@ def make_candles(count, start=0):
             close=100.0 + index,
             volume=1000.0,
         )
-        for index in range(start, count)
+        for index in range(start, start + count)
     )
 
 
