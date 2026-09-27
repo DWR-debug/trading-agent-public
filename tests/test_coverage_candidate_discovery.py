@@ -15,8 +15,11 @@ def test_discovery_selects_first_coverage_valid_candidate(monkeypatch, tmp_path)
         return [
             type("Bar", (), {
                 "timestamp": __import__("datetime").datetime(2010, 1, 1),
-                "open": 100.0, "high": 101.0, "low": 99.0,
-                "close": 100.5, "volume": 1000.0,
+                "open": 100.0,
+                "high": 101.0,
+                "low": 99.0,
+                "close": 100.5,
+                "volume": 1000.0,
             })()
             for _ in range(count)
         ]
@@ -24,6 +27,10 @@ def test_discovery_selects_first_coverage_valid_candidate(monkeypatch, tmp_path)
     monkeypatch.setattr(
         "automation.coverage_candidate_discovery.load_yahoo_history",
         fake_loader,
+    )
+    monkeypatch.setattr(
+        "automation.coverage_candidate_discovery.list_universes",
+        lambda: (),
     )
     report = run_discovery(output=tmp_path / "discovery.json")
 
