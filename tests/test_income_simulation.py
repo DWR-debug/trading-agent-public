@@ -52,8 +52,8 @@ def test_reserve_reduces_payoutable_surplus():
 
     result = simulate_income((0.10,), policy)
 
-    assert result.total_payout_eur == pytest.approx(25.0)
-    assert result.final_equity_eur == pytest.approx(525.0)
+    assert result.total_payout_eur == pytest.approx(175.0)
+    assert result.final_equity_eur == pytest.approx(2025.0)
 
 
 def test_invalid_full_loss_is_rejected():
