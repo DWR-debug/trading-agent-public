@@ -81,7 +81,7 @@ def test_rss_match_requires_cusip_auction_date_and_q019_signal():
         "cusip": "91282CNT4",
         "bid_to_cover_ratio": "2.35",
     }
-    pdf = {"source_url": "https://example.test/R_20250806_2.pdf"}
+    pdf = {"source_url": "https://www.treasurydirect.gov/xml/R_20250806_2.xml"}
     items = [{
         "title": "10-Year Note 91282CNT4 Auction Results",
         "description": "Bid-to-Cover Ratio: 2.35",
@@ -128,3 +128,20 @@ def test_xml_matching_requires_cusip_term_and_bid_to_cover_ratio():
 
 def test_xml_http_last_modified_is_not_accepted_as_publication_timestamp():
     assert q024.RESULT_XML_ARCHIVE_URL.startswith("https://www.treasurydirect.gov/")
+
+
+def test_rss_match_rejects_non_treasury_host_even_with_matching_content():
+    event = {
+        "auction_date": "2025-08-06",
+        "cusip": "91282CNT4",
+        "bid_to_cover_ratio": "2.35",
+    }
+    items = [{
+        "title": "10-Year Note 91282CNT4 Auction Results",
+        "description": "Bid-to-Cover Ratio: 2.35",
+        "link": "https://example.test/R_20250806_2.pdf",
+        "guid": "R_20250806_2.pdf",
+        "pubDate": "Wed, 06 Aug 2025 13:00:00 GMT",
+        "publication_timestamp_utc": "2025-08-06T13:00:00Z",
+    }]
+    assert q024._find_rss_match(event, items) is None
