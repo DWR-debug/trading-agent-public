@@ -538,7 +538,6 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         ),
         target_count=4000,
     ),
-)
 
     AssetUniverse(
         name="validation_2026_09_27_fixed_candidate_batch",
@@ -553,6 +552,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         ),
         target_count=3520,
     ),
+)
 
 
 def get_universe(name: str) -> AssetUniverse:
