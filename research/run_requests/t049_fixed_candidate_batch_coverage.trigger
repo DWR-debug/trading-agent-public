@@ -1,0 +1,5 @@
+RUN_T049_FIXED_CANDIDATE_BATCH_COVERAGE
+preregistration=T-2026-09-27-049
+scope=coverage_only
+performance_authorized=false
+holdout_authorized=false
