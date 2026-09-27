@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T17:20:21.620679+00:00",
+  "generated_at_utc": "2026-09-27T17:23:23.953488+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,21 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: record Q024 feasibility outcome in project state",
+        "sha": "90d92a0ec5f591ba414628c0fb95b522651c69ec",
+        "timestamp": "2026-09-27T19:23:21+02:00"
+      },
+      {
+        "message": "EVIDENCE: record Q024 timestamp feasibility receipt",
+        "sha": "0fa724c2d8d99ec05ee3d8150733a476a77a1b91",
+        "timestamp": "2026-09-27T19:23:11+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e8a69d79757e013dd3fd251689d84d2c994e9554",
+        "timestamp": "2026-09-27T17:20:21Z"
+      },
       {
         "message": "OPS: synchronize mutable project state to EUR2000 reference and Q024",
         "sha": "42cc79f4ebd37d1472ff472eb3a025e980506928",
@@ -107,21 +122,6 @@
         "message": "FIX: install exchange_calendars for Q024 PIT check",
         "sha": "55b86df147365297094ca79288bd62d85ed81f71",
         "timestamp": "2026-09-27T19:14:11+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0d3ad732201103d4f1e18f0e40059d25f94d6a39",
-        "timestamp": "2026-09-27T17:12:36Z"
-      },
-      {
-        "message": "RESEARCH: harden Q024 with historical Treasury XML identity",
-        "sha": "c9c0e857b47a9edfbf8461a0eab96e84311a37c4",
-        "timestamp": "2026-09-27T19:12:24+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "52c1b179664eb5147fb19a7d40cfa6b83bf42a8e",
-        "timestamp": "2026-09-27T17:09:16Z"
       }
     ]
   },
@@ -145,7 +145,7 @@
     "decision_basis_stage": "T051_PIT_PASSED_NO_PERFORMANCE_EVIDENCE",
     "latest_formal_status": "NO_PROMOTION_EVIDENCE",
     "latest_formal_trial": "T-2026-09-26-047R1-PERFORMANCE",
-    "next_research_focus_recorded": "AGENT-014 is merged; perform only coverage-first/PIT validation when an acceptable historical-vintage source is available, maintain the paper-only Shadow/Forward harness separately, and use the self-hosted runner for reproducible QA/research-preparation without changing gates.",
+    "next_research_focus_recorded": "Q024 historical ReleaseTime gap diagnosis: preserve the 89-event fixed population and investigate only official Treasury timestamp/provenance paths for the remaining 31 events; no performance until the preregistered 89/89 PIT feasibility contract passes.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "42cc79f4ebd37d1472ff472eb3a025e980506928",
+  "source_master_sha": "90d92a0ec5f591ba414628c0fb95b522651c69ec",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36336552521"
+    "run_id": "36336742843"
   }
 }
