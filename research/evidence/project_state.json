@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "updated": "2026-09-27",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "9fe38765a46785d8d4f7a8a42c7c24bea96c674c",
+  "master_commit": "c07a0e60f16ea35001d3bd69741612077d925d9c",
   "latest_formal_trial": "T-2026-09-27-052",
   "latest_trial_status": "EVIDENCE_RECORDED_NO_AUTOMATIC_PROMOTION",
   "next_reserved_trial": null,
-  "next_research_focus": "Q031 pending: run coverage/PIT preflight for the fixed Q030 universe; no performance evaluation, no T052 retuning, no holdout selection.",
+  "next_research_focus": "Q032 PIT preflight on Q031 coverage-passed universe; performance evaluation remains blocked until PIT passes and Q030 mechanism parameters are fixed ex ante.",
   "cleanup_status": "completed_h06_and_q017_coverage_hardening",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -91,10 +91,12 @@
     ".github/workflows/q020-treasury-coverage-repair.yml",
     ".github/workflows/q020-treasury-auction-performance.yml",
     ".github/workflows/self-hosted-continuous-qa.yml",
-    ".github/workflows/self-hosted-research-worker-v4.yml"
+    ".github/workflows/self-hosted-research-worker-v4.yml",
+    ".github/workflows/q031-q030-risk-stability-coverage.yml",
+    ".github/workflows/q032-q031-fixed-core-pit.yml"
   ],
-  "current_preregistered_trial": "T-2026-09-27-052",
-  "current_trial_status": "COMPLETED",
+  "current_preregistered_trial": "T-2026-09-27-054",
+  "current_trial_status": "PREREGISTERED_PIT_ONLY",
   "engineering_notes": {
     "t039_preregistered": true,
     "coverage_preflight_active": true,
@@ -518,10 +520,10 @@
     "final_execution_commit": "85acd4e17921a4e2682552bfbe424f17ffaa9322",
     "final_status": "COMPLETED_DISCOVERY_ONLY"
   },
-  "current_queue_task": "Q-031-Q030-RISK-STABILITY-COVERAGE-2026-09-27",
-  "last_completed_queue_task": "Q-030-T052-MECHANISM-DESIGN-ROUND-2026-09-27",
+  "current_queue_task": "Q-032-Q031-FIXED-CORE-PIT-2026-09-27",
+  "last_completed_queue_task": "Q-031-Q030-RISK-STABILITY-COVERAGE-2026-09-27",
   "master_commit_semantics": "last_verified_master_commit_before_this_state_update; this field must not be interpreted as a self-referential current-HEAD field",
-  "state_sync_verified_at": "2026-09-27T17:38:47.233Z",
+  "state_sync_verified_at": "2026-09-27T18:34:30Z",
   "project_milestone": {
     "name": "FIRST_PRESENTABLE_RESULT",
     "anchored_on": "2026-09-25",
@@ -605,7 +607,7 @@
     "holdout_used": false,
     "remaining_events_without_timestamp": 31
   },
-  "latest_master_commit": "9fe38765a46785d8d4f7a8a42c7c24bea96c674c",
+  "latest_master_commit": "c07a0e60f16ea35001d3bd69741612077d925d9c",
   "q027": {
     "status": "COMPLETED_DIAGNOSTIC_ONLY",
     "source_trial": "T-2026-09-27-052",
@@ -666,7 +668,7 @@
     "holdout_used_for_selection": false
   },
   "q031": {
-    "status": "PREREGISTERED_COVERAGE_ONLY",
+    "status": "COVERAGE_VALIDATED",
     "trial_id": "T-2026-09-27-053-COVERAGE",
     "universe": "validation_2026_09_27_q030_risk_stability_coverage",
     "symbols": [
@@ -678,13 +680,24 @@
       "VGIT",
       "SCHR"
     ],
-    "mechanism_families": [
-      "RISK-A",
-      "RISK-B",
-      "RISK-C",
-      "RISK-D"
-    ],
+    "workflow_run_id": 36340958902,
+    "workflow_head_sha": "a067371eddd5e7ba628c5a6087201ca717b94035",
+    "artifact_id": 10939080601,
+    "artifact_digest": "sha256:a057c5240fa382a79ef0aeae45e2b048bf769b2ac0b6aa1fbd8a04644f14ae44",
+    "common_calendar_count": 3704,
+    "target_common_calendar": 3500,
+    "snapshot_fingerprint": "7b40228a7414ea70ea2c6fa19a042f72184e6c8af609abcc33efcbc492c868fb",
+    "coverage_fingerprint": "d0d5dbf9ffbefa130d908efd57323357a00f1700358a99727e0a7cf133c47d72",
     "performance_execution_authorized": false,
     "holdout_used_for_selection": false
+  },
+  "q032": {
+    "status": "PREREGISTERED_PIT_ONLY",
+    "trial_id": "T-2026-09-27-054",
+    "source_coverage_trial": "T-2026-09-27-053-COVERAGE",
+    "universe": "validation_2026_09_27_q030_risk_stability_coverage",
+    "expected_assets": 7,
+    "performance_execution_authorized": false,
+    "automatic_promotion": false
   }
 }
