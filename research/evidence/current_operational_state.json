@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T15:40:24.413320+00:00",
+  "generated_at_utc": "2026-09-27T15:40:46.053394+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [],
@@ -63,7 +63,7 @@
       {
         "number": 408,
         "title": "AGENT-026: harden continuous self-hosted paper-forward MTM operation",
-        "updatedAt": "2026-09-27T15:38:15Z",
+        "updatedAt": "2026-09-27T15:40:39Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/408"
       },
       {
@@ -75,6 +75,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: add owner-gated candidate-coverage manual trigger",
+        "sha": "9dd4904d100aec3dd729c89a050ecd2cb6c74d4d",
+        "timestamp": "2026-09-27T17:40:33+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "aff245b30d7654aed5502d485a2d473368dd4841",
+        "timestamp": "2026-09-27T15:40:24Z"
+      },
       {
         "message": "OPS: add coverage-only candidate search runner",
         "sha": "1780152f10cbc02ac4b7860ad012a68792249cde",
@@ -104,16 +114,6 @@
         "message": "OPS: autonomous agent queue routing",
         "sha": "34a81c766a7f29b4e8a22327ae710456a38410c4",
         "timestamp": "2026-09-27T15:28:31Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6e2c269265542406db49a9ce84f2c41c34c7c6ee",
-        "timestamp": "2026-09-27T15:28:23Z"
-      },
-      {
-        "message": "OPS: remove recovered completed AGENT-026 queue request",
-        "sha": "46ee12abec6b37ac5500f2b1d1199c6dfa4ce14c",
-        "timestamp": "2026-09-27T17:28:12+02:00"
       }
     ]
   },
@@ -174,12 +174,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1780152f10cbc02ac4b7860ad012a68792249cde",
+  "source_master_sha": "9dd4904d100aec3dd729c89a050ecd2cb6c74d4d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36330414219"
+    "run_id": "36330436400"
   }
 }
