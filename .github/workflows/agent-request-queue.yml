@@ -236,6 +236,13 @@ jobs:
             exit 1
           fi
           python -m automation.agent_scope_guard --contract "$RUNNER_TEMP/task_contract.json"
+          staged_protected="$(git diff --cached --name-only -- .github/ research/evidence/ research/authorizations/ gates/)"
+          if [ -n "$staged_protected" ]; then
+            echo "::error::AGENT_SCOPE_PROTECTED_INDEX_VIOLATION"
+            printf "%s\n" "$staged_protected"
+            exit 1
+          fi
+          python -m automation.agent_scope_guard --contract "$RUNNER_TEMP/task_contract.json"
           git commit -m "AGENT: issue #${ISSUE_NUMBER} bounded engineering"
           git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:${BRANCH}"
           if pr_url="$(gh pr create --base master --head "${BRANCH}" --title "AGENT: Issue #${ISSUE_NUMBER} bounded engineering task" --body "Bounded agent task completed and regression-tested." 2>/dev/null)"; then
