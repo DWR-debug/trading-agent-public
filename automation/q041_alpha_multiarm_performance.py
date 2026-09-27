@@ -55,7 +55,7 @@ def _find_manifest(root):
 
 def _load_assets(manifest_path):
     manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
-    if manifest.get("status") != "COVERAGE_PASSED":
+    if manifest.get("status") not in {"coverage_passed", "COVERAGE_PASSED"}:
         raise ValueError("Q041 coverage manifest is not passed")
     if manifest.get("universe") != UNIVERSE:
         raise ValueError("Q041 universe mismatch")
