@@ -31,11 +31,12 @@ def test_candidate_urls_are_limited_to_official_treasurydirect():
         "cusip": "91282CJJ1",
     }
     urls = q023._candidate_urls(event)
-    assert len(urls) == q023.MAX_PDF_SEQUENCE
+    assert len(urls) == q023.MAX_ANNOUNCEMENT_LOOKBACK_DAYS * q023.MAX_PDF_SEQUENCE
     assert urls[0].startswith(
         "https://www.treasurydirect.gov/instit/annceresult/press/preanre/2023/"
     )
     assert all(url.endswith(".pdf") for url in urls)
+    assert "A_20231101_1.pdf" in urls
 
 
 def test_pdf_match_requires_cusip_auction_date_and_ten_year_note():
@@ -45,6 +46,7 @@ def test_pdf_match_requires_cusip_auction_date_and_ten_year_note():
         "cusip": "91282CJJ1",
     }
     assert q023._pdf_matches_event(SAMPLE, event)
+    assert q023._pdf_matches_event(SAMPLE.replace("10-Year Note", "10-Year TIPS"), event)
     assert not q023._pdf_matches_event(
         SAMPLE.replace("91282CJJ1", "91282CXX9"), event
     )
