@@ -85,6 +85,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          echo "STATUS_SYNC_STALE_MASTER_GUARD"
           remote_master_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
           test "$remote_master_sha" = "$STATUS_SOURCE_SHA"
       - name: Generate, verify and commit synchronized status with race retry
