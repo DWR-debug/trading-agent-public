@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "recorded_on": "2026-09-27",
   "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
-  "current_stage": "Q026_DATA_INVALID_T047R1_CLOSED",
+  "current_stage": "T051_PIT_PASSED_NO_PERFORMANCE_EVIDENCE",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
@@ -48,20 +48,33 @@
     "Q023 therefore establishes reproducible official release-timestamp availability and a systematic record_date lag; it does not establish that an H2 performance variant has positive alpha or promotion evidence.",
     "T047R1 directional inversion is closed with NO_PROMOTION_EVIDENCE on fresh symbol-disjoint validation; no tuning or holdout selection was used.",
     "Q026 H2 Treasury auction-date shift coverage is DATA_INVALID because the frozen request required 4000 candles while the fixed universe provided 3704 common sessions; no performance evaluation occurred.",
-    "Current master includes hardened Copilot CLI queue publication logic; current queue path successfully authenticates and executes bounded Copilot CLI."
+    "Current master includes hardened Copilot CLI queue publication logic; current queue path successfully authenticates and executes bounded Copilot CLI.",
+    "T049 fixed candidate batch coverage passed on fresh 12-symbol universe: workflow=36323742825; artifact=10933556647; common_calendar=3704; minimum_in_window=3500; no performance/holdout/selection.",
+    "T050 second fixed candidate batch coverage passed on fresh 12-symbol universe: workflow=36324187062; artifact=10933796731; common_calendar=3704; minimum_in_window=3500; no performance/holdout/selection.",
+    "T051 fixed-core strategy PIT preflight passed on T049 and T050: workflow=36326053758; artifact=10933638357; 1080 SMA decisions and 22 CS rebalances checked per universe; no performance/holdout/selection.",
+    "AGENT-021 paper-forward provenance/cost hardening merged as PR #398 after bounded Copilot CLI execution and focused regression/safety checks.",
+    "AGENT-022 paper-forward locking/resume hardening merged as PR #400 after bounded Copilot CLI execution and focused regression/safety checks.",
+    "AGENT-024 unattended Windows paper-forward review merged as PR #402; remaining F-01/F-05/F-06 are design/engineering work, not a research result.",
+    "Current status synchronizer includes a stale-master fail-closed guard; agent scope gate now rechecks staged state after git add.",
+    "Current hosted Continuous QA remains pending/queued; no current full-suite QA pass is claimed."
   ],
   "implications": [
     "T047R1 did not satisfy the unchanged evidence contract; Q020 is not reopened.",
     "Q026 is a data-geometry failure, not a scientific performance result. Any successor must be newly preregistered with ex-ante geometry and a fresh or objectively defined symbol-disjoint universe.",
     "The project can now use bounded Copilot CLI engineering/research-design assistance without paid usage, while deterministic performance evaluation remains on reproducible research runners.",
-    "A paper-only shadow/forward test infrastructure should be built in parallel so forward simulation can begin immediately once a frozen candidate and data stream are available."
+    "A paper-only shadow/forward test infrastructure should be built in parallel so forward simulation can begin immediately once a frozen candidate and data stream are available.",
+    "T049/T050 provide two fresh disjoint coverage-valid universes, and T051 verifies the fixed core signal implementations are point-in-time safe under future-data mutation tests.",
+    "T051 does not establish profitability, robustness, or promotion eligibility. Performance must remain a separate preregistered step.",
+    "Paper-forward engineering can proceed in parallel, but its output remains operational shadow information and not formal scientific evidence."
   ],
   "unknowns": [
     "whether any orthogonal income-oriented mechanism survives independent fixed-rule validation",
     "whether a new ex-ante geometry-safe H2 design can pass coverage/PIT and produce useful performance evidence",
-    "whether the existing strategy engine already supports a complete non-order paper-forward lifecycle or needs the new shadow harness"
+    "whether the existing strategy engine already supports a complete non-order paper-forward lifecycle or needs the new shadow harness",
+    "whether the unchanged SMA 50/200 mechanism satisfies the full Research/Holdout/risk gates on the fresh T049/T050 universes",
+    "whether the unchanged 12-1 Top-2 cross-sectional momentum mechanism satisfies the same fixed evidence contract on the fresh T049/T050 universes"
   ],
-  "next_action": "Run AGENT-008 and AGENT-012 in parallel; repair current CI/state freshness; then create one clean, ex-ante preregistered fixed-rule validation candidate and execute coverage-first before any performance run.",
+  "next_action": "First refresh the current hosted QA baseline to the current master. Then create a frozen, ex-ante performance preregistration for the unchanged SMA 50/200 and 12-1 Top-2 mechanisms on T049/T050, with fixed 2,798/700 split, rolling windows and cost-stress gates. No result-based selection is permitted.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
