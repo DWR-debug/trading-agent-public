@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T19:58:56.787271+00:00",
+  "generated_at_utc": "2026-09-27T19:59:17.384040+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -108,6 +108,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "STATE: advance decision basis to Q040 event-source feasibility",
+        "sha": "e33006b17b37a27e3379f502585cfc6f94a27da0",
+        "timestamp": "2026-09-27T21:59:09+02:00"
+      },
+      {
+        "message": "STATE: advance research program through Q039 PIT",
+        "sha": "7c4320200b7a2744d77af6a7ca52abea2d33e541",
+        "timestamp": "2026-09-27T21:59:00+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4ff65b92fe3a6265fa0f1c7b6704725ab7c43326",
+        "timestamp": "2026-09-27T19:58:56Z"
+      },
+      {
         "message": "EVIDENCE: record Q038 coverage and Q039 PIT gates",
         "sha": "2b5ee7d0405430abb91e9f76b47b9e5cf2d3f8e4",
         "timestamp": "2026-09-27T21:58:45+02:00"
@@ -131,21 +146,6 @@
         "message": "FIX: align Q039 preregistration with canonical coverage schema (#494)",
         "sha": "2ceaf5624a63653fa135d5c9dc2a21a3d28e4003",
         "timestamp": "2026-09-27T21:57:24+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d2cf1bcb3c4f9ed6eef3587af2aabb5b6bd41547",
-        "timestamp": "2026-09-27T19:57:08Z"
-      },
-      {
-        "message": "OPS: queue Q040 official event-source feasibility agent",
-        "sha": "272a570322eddc181716a43445486a397643a0a3",
-        "timestamp": "2026-09-27T21:56:53+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ccae0346031d81f86efb7fe0da58705ec481f891",
-        "timestamp": "2026-09-27T19:56:36Z"
       }
     ]
   },
@@ -166,10 +166,10 @@
   },
   "schema_version": "1.0",
   "scientific_state_recorded": {
-    "decision_basis_stage": "Q038_FRESH_DISJOINT_COVERAGE",
+    "decision_basis_stage": "Q040_OFFICIAL_EVENT_SOURCE_FEASIBILITY",
     "latest_formal_status": "NO_ARM_PASSED_ALL_T052_GATES",
     "latest_formal_trial": "T-2026-09-27-056",
-    "next_research_focus_recorded": "Q038 fresh disjoint coverage for the Q037 alpha architecture: execute the fixed source-order coverage contract; PIT remains mandatory before any later performance trial.",
+    "next_research_focus_recorded": "Q040 official event-source feasibility sweep after Q038 coverage and Q039 price-only PIT; no performance selection until source/PIT prerequisites pass.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -207,12 +207,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2b5ee7d0405430abb91e9f76b47b9e5cf2d3f8e4",
+  "source_master_sha": "e33006b17b37a27e3379f502585cfc6f94a27da0",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36346306751"
+    "run_id": "36346325016"
   }
 }
