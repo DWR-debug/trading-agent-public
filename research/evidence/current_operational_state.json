@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T18:56:22.509988+00:00",
+  "generated_at_utc": "2026-09-27T18:57:04.469217+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "TEST: lock Q036 source artifact binding",
+        "sha": "b9a30d2d56dab750adf7d3e3cac2ec1bae73bedc",
+        "timestamp": "2026-09-27T20:56:52+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "1a75a0ffef8df9763fadcbfa09ac55db5ede08b5",
+        "timestamp": "2026-09-27T18:56:22Z"
+      },
       {
         "message": "RESEARCH: Q036 T056 fixed-result risk diagnostic",
         "sha": "c7e4a78582d1755eb6f5b8156d41dfcf2657ce49",
@@ -112,16 +122,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "f8443c908ab25b0e3d0321fb6ec0d1adc07f9bf9",
         "timestamp": "2026-09-27T18:50:11Z"
-      },
-      {
-        "message": "FIX: adapt T056 coverage manifest to canonical snapshot loader",
-        "sha": "23e09d478ef4d7c9f866b8fc123b1842c9953ad8",
-        "timestamp": "2026-09-27T20:49:55+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "55ea4329f0011c80291bd00c0372c9d86f1b47b2",
-        "timestamp": "2026-09-27T18:48:36Z"
       }
     ]
   },
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c7e4a78582d1755eb6f5b8156d41dfcf2657ce49",
+  "source_master_sha": "b9a30d2d56dab750adf7d3e3cac2ec1bae73bedc",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36342485923"
+    "run_id": "36342530026"
   }
 }
