@@ -2,6 +2,9 @@
 # Echtgeldhandel ist in dieser Version NICHT implementiert.
 
 INITIAL_CAPITAL_EUR = 500.00
+# Backward-compatible research-engine baseline. New capital-dependent simulations
+# use the explicit project reference below rather than changing historical baselines.
+HYPOTHETICAL_STARTING_CAPITAL_EUR = 2000.00
 RISK_PER_TRADE = 0.01
 MAX_LEVERAGE = 3.0
 
