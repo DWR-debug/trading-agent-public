@@ -20,13 +20,16 @@ def test_h06_performance_prereg_is_fixed_and_safe():
     assert d["authorization"]["performance_trial_authorized"] is False
     assert d["safety"]=={"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False}
 
-def test_h06_authorization_is_non_authorizing_at_creation():
+def test_h06_authorization_is_bound_to_exact_artifacts():
     a=json.loads(AUTH.read_text(encoding="utf-8"))
-    assert a["authorized"] is False
-    assert a["performance_execution_authorized"] is False
-    assert a["execution_scope"]=="NONE"
+    assert a["trial_id"]=="T-2026-09-27-049-PERFORMANCE"
+    assert a["authorized"] is True
+    assert a["performance_execution_authorized"] is True
+    assert a["execution_scope"]=="PERFORMANCE"
     assert a["coverage_artifact_id"]==10901872543
+    assert a["coverage_workflow_run_id"]==36230165868
     assert a["snapshot_fingerprint"]=="91e95dfde201708050de4ae98d7b529a811ab6d90393a8063a8b1a88d65a35e6"
+    assert a["source_mechanism_result_fingerprint"]=="45546b7a2b69c39f961cab85f9ab091d165f5e9a711777fb23dd717f82fc9fbd"
     assert settings.PAPER_ONLY is True
     assert settings.LIVE_TRADING_ENABLED is False
     assert settings.ORDERS_ENABLED is False
