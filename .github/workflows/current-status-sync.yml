@@ -36,8 +36,8 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "${RUNNER_TEMP}/status"
-          gh api --silent "/repos/${GITHUB_REPOSITORY}/pulls?state=open&per_page=100" > "${RUNNER_TEMP}/status/open_prs_raw.json"
-          gh api --silent "/repos/${GITHUB_REPOSITORY}/issues?state=open&labels=agent-cli-ready&per_page=100" > "${RUNNER_TEMP}/status/agent_ready_issues_raw.json"
+          gh api "/repos/${GITHUB_REPOSITORY}/pulls?state=open&per_page=100" > "${RUNNER_TEMP}/status/open_prs_raw.json"
+          gh api "/repos/${GITHUB_REPOSITORY}/issues?state=open&labels=agent-cli-ready&per_page=100" > "${RUNNER_TEMP}/status/agent_ready_issues_raw.json"
           python - <<'PY'
           import json
           import os
@@ -78,9 +78,9 @@ jobs:
         run: |
           set -euo pipefail
           python -m automation.sync_current_operational_status \
-            --source-master-sha "\${GITHUB_SHA}" \
-            --workflow-run-id "\${GITHUB_RUN_ID}" \
-            --github-state "\${RUNNER_TEMP}/status/github_state.json"
+            --source-master-sha "${GITHUB_SHA}" \
+            --workflow-run-id "${GITHUB_RUN_ID}" \
+            --github-state "${RUNNER_TEMP}/status/github_state.json"
           git diff --check
 
       - name: Verify synchronized source
