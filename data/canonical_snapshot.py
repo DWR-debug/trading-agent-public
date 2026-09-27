@@ -13,6 +13,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import shutil
 from dataclasses import dataclass
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -102,6 +103,24 @@ def _write_csv(path: Path, candles: Iterable[Candle]) -> None:
                     candle.volume,
                 )
             )
+
+
+def _clear_snapshot_artifacts(output_dir: Path, dataset_subdir: str) -> None:
+    """Invalidate any prior snapshot before exposing a failed build."""
+
+    manifest_path = output_dir / "snapshot_manifest.json"
+    if manifest_path.exists():
+        manifest_path.unlink()
+
+    dataset_path = output_dir / dataset_subdir
+    if dataset_subdir != ".":
+        if dataset_path.exists():
+            shutil.rmtree(dataset_path)
+        return
+
+    for child in output_dir.iterdir() if output_dir.exists() else ():
+        if child.is_dir():
+            shutil.rmtree(child)
 
 
 def _filter_study_window(
@@ -240,6 +259,8 @@ def build_frozen_snapshot(
                     "fingerprint": dataset_fingerprint(aligned),
                 }
             )
+    else:
+        _clear_snapshot_artifacts(output_dir, spec.dataset_subdir)
 
     immutable_identity = {
         "schema_version": "1.0",
