@@ -30,7 +30,7 @@ def test_run_loop_stops_after_max_iterations(monkeypatch, tmp_path):
     }))
     run_loop(str(candidate), str(tmp_path / "state.json"), max_iterations=2)
     assert len(calls) == 3
-    assert calls[-1] == 900
+    assert calls[1] == 900
 
 
 def test_default_poll_seconds():
