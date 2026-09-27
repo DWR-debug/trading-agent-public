@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "updated": "2026-09-27",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "c07a0e60f16ea35001d3bd69741612077d925d9c",
+  "master_commit": "4017743284db97f82c546a088c940df377370e7f",
   "latest_formal_trial": "T-2026-09-27-052",
   "latest_trial_status": "EVIDENCE_RECORDED_NO_AUTOMATIC_PROMOTION",
   "next_reserved_trial": null,
-  "next_research_focus": "Q032 PIT preflight on Q031 coverage-passed universe; performance evaluation remains blocked until PIT passes and Q030 mechanism parameters are fixed ex ante.",
+  "next_research_focus": "Q033 parameter/implementation freeze for RISK-A/B/C/D; no performance execution until fixed parameters and execution assumptions are preregistered.",
   "cleanup_status": "completed_h06_and_q017_coverage_hardening",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -95,8 +95,8 @@
     ".github/workflows/q031-q030-risk-stability-coverage.yml",
     ".github/workflows/q032-q031-fixed-core-pit.yml"
   ],
-  "current_preregistered_trial": "T-2026-09-27-054",
-  "current_trial_status": "PREREGISTERED_PIT_ONLY",
+  "current_preregistered_trial": "Q-033-T052-RISK-STABILITY-PARAMETER-FREEZE-2026-09-27",
+  "current_trial_status": "DESIGN_ONLY",
   "engineering_notes": {
     "t039_preregistered": true,
     "coverage_preflight_active": true,
@@ -520,10 +520,10 @@
     "final_execution_commit": "85acd4e17921a4e2682552bfbe424f17ffaa9322",
     "final_status": "COMPLETED_DISCOVERY_ONLY"
   },
-  "current_queue_task": "Q-032-Q031-FIXED-CORE-PIT-2026-09-27",
-  "last_completed_queue_task": "Q-031-Q030-RISK-STABILITY-COVERAGE-2026-09-27",
+  "current_queue_task": "Q-033-T052-RISK-STABILITY-PARAMETER-FREEZE-2026-09-27",
+  "last_completed_queue_task": "Q-032-Q031-FIXED-CORE-PIT-2026-09-27",
   "master_commit_semantics": "last_verified_master_commit_before_this_state_update; this field must not be interpreted as a self-referential current-HEAD field",
-  "state_sync_verified_at": "2026-09-27T18:34:30Z",
+  "state_sync_verified_at": "2026-09-27T18:37:00Z",
   "project_milestone": {
     "name": "FIRST_PRESENTABLE_RESULT",
     "anchored_on": "2026-09-25",
@@ -607,7 +607,7 @@
     "holdout_used": false,
     "remaining_events_without_timestamp": 31
   },
-  "latest_master_commit": "c07a0e60f16ea35001d3bd69741612077d925d9c",
+  "latest_master_commit": "4017743284db97f82c546a088c940df377370e7f",
   "q027": {
     "status": "COMPLETED_DIAGNOSTIC_ONLY",
     "source_trial": "T-2026-09-27-052",
@@ -692,12 +692,16 @@
     "holdout_used_for_selection": false
   },
   "q032": {
-    "status": "PREREGISTERED_PIT_ONLY",
+    "status": "PIT_VALIDATED",
     "trial_id": "T-2026-09-27-054",
-    "source_coverage_trial": "T-2026-09-27-053-COVERAGE",
-    "universe": "validation_2026_09_27_q030_risk_stability_coverage",
-    "expected_assets": 7,
+    "workflow_run_id": 36341117495,
+    "workflow_head_sha": "c07a0e60f16ea35001d3bd69741612077d925d9c",
+    "artifact_id": 10939026919,
+    "artifact_digest": "sha256:34350bca393a73c1465907722ca408a66cd7fedd622c00b97f5705f30279aaa0",
+    "report_fingerprint": "a158ea79047604ff875a32ac7cfd6982a6d5831d6250624e507376fab69d0c7a",
+    "coverage_fingerprint": "542fbd1f64287fb0ee25e77e129763c1289e9c130b9f6d722598c09abc5ad236",
+    "snapshot_fingerprint": "4d40f9e886b3d6138244167fd7efe02ab3ad8375c48eb3b07066787443d6d593",
     "performance_execution_authorized": false,
-    "automatic_promotion": false
+    "holdout_used_for_selection": false
   }
 }
