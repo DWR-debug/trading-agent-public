@@ -146,6 +146,10 @@ jobs:
           ISSUE_NUMBER: ${{ steps.request.outputs.issue_number }}
         run: |
           set -euo pipefail
+          case "$PERSONAL_COPILOT_TOKEN" in
+            github_pat_*|gho_*|ghu_*) ;;
+            *) gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.request.outputs.issue_number }}/comments" -f body="Agent queue paused: COPILOT_GITHUB_TOKEN has an unsupported token class; expected github_pat_*, gho_*, or ghu_*. No Copilot request was sent."; exit 0 ;;
+          esac
           npm install -g @github/copilot
           task_body="$(python -c 'import json,os; print(json.load(open(os.path.join(os.environ["RUNNER_TEMP"], "issue.json"), encoding="utf-8"))["body"])')"
           prompt="$(cat <<EOF
