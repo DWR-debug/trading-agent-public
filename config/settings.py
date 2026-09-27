@@ -1,7 +1,7 @@
 # Trading Agent - zentrale Sicherheitskonfiguration
 # Echtgeldhandel ist in dieser Version NICHT implementiert.
 
-INITIAL_CAPITAL_EUR = 500.00
+INITIAL_CAPITAL_EUR = 2000.00
 RISK_PER_TRADE = 0.01
 MAX_LEVERAGE = 3.0
 
