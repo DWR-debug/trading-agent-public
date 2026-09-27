@@ -104,6 +104,37 @@ Sicherheit:
 `orders_enabled=False`
 `automatic_promotion=False`
 
+## Engineering runner
+
+The bounded implementation is `automation/q024_treasury_result_timestamp_pit.py`.
+It fails closed unless the Treasury API returns exactly 89 unique Q019
+`CUSIP + auction_date` events with the pre-registered date window and
+`bid_to_cover_ratio`. Each timestamp must come from an explicit,
+timezone-qualified official feed publication field uniquely linked to the
+official result file. Only a result PDF uniquely named by the feed is fetched.
+The PDF is used only to verify event identity and the reported
+`bid_to_cover_ratio`; its document/release date is never used as an intraday
+timestamp.
+
+Run focused regressions with:
+
+```sh
+python -m pytest -q tests/test_q024_treasury_result_timestamp_pit.py
+```
+
+Run the coverage-only source check with:
+
+```sh
+python -m automation.q024_treasury_result_timestamp_pit \
+  --output research/runs/source_feasibility/q024_treasury_result_timestamp_pit.json
+```
+
+The runner emits `COVERAGE_VALIDATED` only for 89/89 validated publication
+timestamps; every other coverage result is `DATA_INSUFFICIENT`. It does not
+compute returns, P&L, rankings, or any performance statistic. The result
+fingerprint covers the deterministic report, including source URLs, content
+hashes, coverage, governance and safety fields.
+
 ## Ergebnisregel
 
 **Q024 PASS bedeutet nur:** Der tatsächliche Informationszeitpunkt des Q019-
