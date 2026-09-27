@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T20:12:54.320497+00:00",
+  "generated_at_utc": "2026-09-27T20:13:23.924897+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -108,6 +108,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "STATE: update decision basis with Q041/Q042 evidence",
+        "sha": "97dc92137c51b7aec4b475f7214ae38a23e7624e",
+        "timestamp": "2026-09-27T22:13:21+02:00"
+      },
+      {
+        "message": "STATE: record Q041 performance and Q042 PIT outcomes",
+        "sha": "148343fed3abe2025898e2e9405d90040db1c1b5",
+        "timestamp": "2026-09-27T22:13:12+02:00"
+      },
+      {
+        "message": "EVIDENCE: canonicalize Q041 performance and Q042 PIT",
+        "sha": "52db0dc5bcae2c31a58195e0966244115eaec047",
+        "timestamp": "2026-09-27T22:12:58+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "fd2686567ff109925d2c8626233979f734bb6c97",
+        "timestamp": "2026-09-27T20:12:54Z"
+      },
+      {
         "message": "FIX: install pytest for Q040 feasibility workflow (#502)",
         "sha": "13f73896b41e073a78d8cded55120fb99bab0c65",
         "timestamp": "2026-09-27T22:12:39+02:00"
@@ -126,26 +146,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "208ee295cc341f90aa92ea7e146a551f215be9b3",
         "timestamp": "2026-09-27T20:10:04Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ad46ef61ba0254f54361eea109af2cbc790b7bea",
-        "timestamp": "2026-09-27T20:09:39Z"
-      },
-      {
-        "message": "FIX: align snapshot status and Q042 PIT mutation contract (#500)",
-        "sha": "469dd0a224036d1905cbd6e7daf160731d89dce2",
-        "timestamp": "2026-09-27T22:09:27+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "03214e654e77eb5139bfe23900917b29f44fad51",
-        "timestamp": "2026-09-27T20:07:48Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "37d2e1f4585b33ff4a2ed220c243d2a3bb23086b",
-        "timestamp": "2026-09-27T20:07:20Z"
       }
     ]
   },
@@ -169,7 +169,7 @@
     "decision_basis_stage": "Q040_OFFICIAL_EVENT_SOURCE_FEASIBILITY",
     "latest_formal_status": "NO_ARM_PASSED_ALL_T052_GATES",
     "latest_formal_trial": "T-2026-09-27-056",
-    "next_research_focus_recorded": "Q040 official event-source feasibility sweep after Q038 coverage and Q039 price-only PIT; no performance selection until source/PIT prerequisites pass.",
+    "next_research_focus_recorded": "Q040 official event-source feasibility in parallel with fresh symbol-disjoint replication design for the fixed PIT-safe alpha set; no post-hoc performance selection.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -207,12 +207,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "13f73896b41e073a78d8cded55120fb99bab0c65",
+  "source_master_sha": "97dc92137c51b7aec4b475f7214ae38a23e7624e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36347185995"
+    "run_id": "36347220712"
   }
 }
