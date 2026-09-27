@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T18:48:36.304749+00:00",
+  "generated_at_utc": "2026-09-27T18:50:11.225445+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: adapt T056 coverage manifest to canonical snapshot loader",
+        "sha": "23e09d478ef4d7c9f866b8fc123b1842c9953ad8",
+        "timestamp": "2026-09-27T20:49:55+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "55ea4329f0011c80291bd00c0372c9d86f1b47b2",
+        "timestamp": "2026-09-27T18:48:36Z"
+      },
       {
         "message": "FIX: repair T056 report serialization",
         "sha": "6d049036b0b8528a090c1daac65d0f0932fd4e20",
@@ -112,16 +122,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "6286c58b19050afe0ab8b89a2569378be2ece849",
         "timestamp": "2026-09-27T18:43:37Z"
-      },
-      {
-        "message": "TEST: lock Q034 frozen-Bar mutation regression",
-        "sha": "1c3ac58368f2b7a7fa2900e5122aa2ff15cfa3d6",
-        "timestamp": "2026-09-27T20:43:22+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "de0a1afe8b60023ae69ba37c1755f7e6aa1a1bf9",
-        "timestamp": "2026-09-27T18:43:20Z"
       }
     ]
   },
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "6d049036b0b8528a090c1daac65d0f0932fd4e20",
+  "source_master_sha": "23e09d478ef4d7c9f866b8fc123b1842c9953ad8",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36342007356"
+    "run_id": "36342102865"
   }
 }
