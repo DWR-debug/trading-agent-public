@@ -14,7 +14,14 @@
       "bounded_two_lane_queue": true,
       "control_plane": "automation/autonomous_control_plane.py",
       "copilot_cli_queue": ".github/workflows/agent-request-queue.yml",
-      "current_pending_requests": []
+      "current_pending_requests": [
+        {
+          "issue_number": "408",
+          "lane": "lane0",
+          "request_file": "agent_requests/lane0/AGENT-026.request",
+          "task_id": "AGENT-026"
+        }
+      ]
     },
     "canonical_data_layer": {
       "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
@@ -54,10 +61,17 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T15:24:10.358085+00:00",
+  "generated_at_utc": "2026-09-27T15:24:21.658248+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
-    "agent_queue_requests": [],
+    "agent_queue_requests": [
+      {
+        "issue_number": "408",
+        "lane": "lane0",
+        "request_file": "agent_requests/lane0/AGENT-026.request",
+        "task_id": "AGENT-026"
+      }
+    ],
     "default_branch": "master",
     "open_agent_ready_issues": [
       {
@@ -75,6 +89,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: autonomous agent queue routing",
+        "sha": "4bfb5855fc24d4a4b940df58302946bd9b79bcc5",
+        "timestamp": "2026-09-27T15:24:13Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d7141bbf1cf3f6b5806e906b7aa3a30cdd96f29b",
+        "timestamp": "2026-09-27T15:24:10Z"
+      },
       {
         "message": "OPS: remove completed Copilot queue request",
         "sha": "eed82ffdc6f42574762463fc777a03b219612d89",
@@ -104,16 +128,6 @@
         "message": "FIX: allow only documentation-only master sync descendants",
         "sha": "995d893542c2b536c6346861d94880ff3d460c80",
         "timestamp": "2026-09-27T17:22:49+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b2c7991b72cdcd0d137cc0df317b22440d0ae4a6",
-        "timestamp": "2026-09-27T15:21:40Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3033b08a669d43fd556979f2377e417ec29a93cc",
-        "timestamp": "2026-09-27T15:21:27Z"
       }
     ]
   },
@@ -174,12 +188,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "eed82ffdc6f42574762463fc777a03b219612d89",
+  "source_master_sha": "4bfb5855fc24d4a4b940df58302946bd9b79bcc5",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36329406930"
+    "run_id": "36329409459"
   }
 }
