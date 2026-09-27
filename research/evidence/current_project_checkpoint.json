@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "checkpoint_type": "current_project_snapshot",
-  "generated_at_utc": "2026-09-27T14:34:34Z",
+  "generated_at_utc": "2026-09-27T14:37:32Z",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit_at_checkpoint_creation": "41052ec895c79afda815af9fc9e0c4da6ceb93f8",
+  "master_commit_at_checkpoint_creation": "036c04ed0be13a9a113290968b761cfb2eb01dbe",
   "canonical_data_layer": {
     "status": "MERGED",
     "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
@@ -232,16 +232,16 @@
     "scientific_evidence_changed": false
   },
   "current_qa": {
-    "workflow_run_id": null,
-    "head_sha": "41052ec895c79afda815af9fc9e0c4da6ceb93f8",
+    "workflow_run_id": 36326578411,
+    "head_sha": "036c04ed0be13a9a113290968b761cfb2eb01dbe",
     "conclusion": "pending_after_latest_master_changes",
     "tests_passed": null,
     "warnings": null,
     "ast_syntax": "pending",
     "safety_invariants": "pending",
-    "note": "Latest hosted Continuous QA is still queued/pending; no current full-suite pass is claimed."
+    "note": "Latest hosted Continuous QA run is pending on the latest non-status master code baseline; no current full-suite pass is claimed."
   },
-  "maintenance_note": "Refreshed to include T049/T050 coverage receipts, T051 PIT-only receipts, and current agent engineering milestones. Historical Q001-Q048 evidence remains immutable.",
+  "maintenance_note": "Refreshed to the latest verified non-status code baseline 036c04ed. T049/T050 coverage and T051 PIT receipts remain unchanged; historical evidence is immutable.",
   "next_scientific_step": "After T049/T050 coverage validation and T051 PIT validation, create a separate ex-ante preregistered fixed-rule performance evaluation of the unchanged SMA 50/200 and 12-1 Top-2 mechanisms. Do not run performance until the current QA baseline is refreshed and the performance contract is frozen.",
   "q023": {
     "status": "COVERAGE_VALIDATED",
