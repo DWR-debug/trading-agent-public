@@ -10,7 +10,7 @@ import hashlib
 import io
 import json
 import re
-from datetime import date, datetime, time, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
@@ -30,7 +30,8 @@ TREASURY_API = (
 TREASURY_PDF_BASE = (
     "https://www.treasurydirect.gov/instit/annceresult/press/preanre"
 )
-MAX_PDF_SEQUENCE = 12
+MAX_PDF_SEQUENCE = 8
+MAX_ANNOUNCEMENT_LOOKBACK_DAYS = 14
 MIN_TIMESTAMP_COVERAGE = 1.0
 EASTERN = ZoneInfo("America/New_York")
 
@@ -160,19 +161,28 @@ def _pdf_matches_event(text: str, event: dict) -> bool:
             normalized,
             re.IGNORECASE,
         ) is not None
-        and re.search(r"\b(?:10-Year Note|10-Year)\b", normalized, re.IGNORECASE)
-        is not None
+        and re.search(
+            r"\b(?:10-Year Note|10-Year TIPS)\b",
+            normalized,
+            re.IGNORECASE,
+        ) is not None
     )
 
 
 def _candidate_urls(event: dict) -> list[str]:
-    record = datetime.strptime(event["record_date"], "%Y-%m-%d").date()
-    year = record.year
-    date_part = record.strftime("%Y%m%d")
-    return [
-        f"{TREASURY_PDF_BASE}/{year}/A_{date_part}_{n}.pdf"
-        for n in range(1, MAX_PDF_SEQUENCE + 1)
-    ]
+    auction_date = datetime.strptime(
+        event["auction_date"], "%Y-%m-%d"
+    ).date()
+    candidates: list[str] = []
+    for delta in range(1, MAX_ANNOUNCEMENT_LOOKBACK_DAYS + 1):
+        announcement_date = auction_date - timedelta(days=delta)
+        date_part = announcement_date.strftime("%Y%m%d")
+        year = announcement_date.year
+        for sequence in range(1, MAX_PDF_SEQUENCE + 1):
+            candidates.append(
+                f"{TREASURY_PDF_BASE}/{year}/A_{date_part}_{sequence}.pdf"
+            )
+    return candidates
 
 
 def _resolve_announcement(event: dict) -> dict:
@@ -187,13 +197,17 @@ def _resolve_announcement(event: dict) -> dict:
             document_date, embargo_time, release_ts = _parse_embargo_timestamp(text)
             content_fp = hashlib.sha256(pdf).hexdigest()
             parsed_doc = datetime.strptime(document_date, "%B %d, %Y").date()
-
-            if parsed_doc != datetime.strptime(
+            auction_date = datetime.strptime(
+                event["auction_date"], "%Y-%m-%d"
+            ).date()
+            record_date = datetime.strptime(
                 event["record_date"], "%Y-%m-%d"
-            ).date():
+            ).date()
+
+            if parsed_doc >= auction_date:
                 errors.append(
-                    f"document date {parsed_doc.isoformat()} != "
-                    f"Q019 record_date {event['record_date']}"
+                    f"document date {parsed_doc.isoformat()} is not before "
+                    f"auction_date {event['auction_date']}"
                 )
                 continue
 
@@ -206,6 +220,10 @@ def _resolve_announcement(event: dict) -> dict:
                 "release_timestamp_utc": release_ts,
                 "content_sha256": content_fp,
                 "pdf_byte_length": len(pdf),
+                "record_date_minus_document_date_days": (
+                    record_date - parsed_doc
+                ).days,
+                "document_date_before_q019_record_date": parsed_doc < record_date,
             }
         except SourceError as exc:
             errors.append(str(exc))
