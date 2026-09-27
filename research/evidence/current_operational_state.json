@@ -79,7 +79,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T14:25:44.530034+00:00",
+  "generated_at_utc": "2026-09-27T14:28:52.665338+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -125,7 +125,7 @@
       {
         "number": 394,
         "title": "AGENT-022: harden paper-forward loop locking and resume semantics",
-        "updatedAt": "2026-09-27T14:21:45Z",
+        "updatedAt": "2026-09-27T14:26:53Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/394"
       },
       {
@@ -137,6 +137,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "RESEARCH: preregister T051 fixed-core strategy PIT validation",
+        "sha": "8fdf9404069a8ab7e6ae7dd343f8831fac2d2e44",
+        "timestamp": "2026-09-27T16:28:39+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "65acd9c61d2e795f8a8155748ec43d84914595c6",
+        "timestamp": "2026-09-27T14:25:44Z"
+      },
       {
         "message": "AGENT: publish verified AGENT-021 paper-forward provenance hardening",
         "sha": "ee2750781350714951d0ffb69684b0017a91e135",
@@ -166,16 +176,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "8606b1dd004f96df02043a605ffa4dad4fb75e28",
         "timestamp": "2026-09-27T14:20:17Z"
-      },
-      {
-        "message": "AGENT: publish verified AGENT-020 paper-forward loop audit",
-        "sha": "d0900488a1cda535dc2a084a3ee5c2df14e3bcba",
-        "timestamp": "2026-09-27T16:20:05+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a4984c8db1b4d1345baeb3fb2b1ad0b92a076b22",
-        "timestamp": "2026-09-27T14:19:46Z"
       }
     ]
   },
@@ -236,12 +236,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ee2750781350714951d0ffb69684b0017a91e135",
+  "source_master_sha": "8fdf9404069a8ab7e6ae7dd343f8831fac2d2e44",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36325868231"
+    "run_id": "36326053768"
   }
 }
