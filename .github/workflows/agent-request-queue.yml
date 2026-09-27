@@ -143,6 +143,7 @@ jobs:
         shell: bash
         env:
           COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ steps.request.outputs.issue_number }}
         run: |
           set -euo pipefail
