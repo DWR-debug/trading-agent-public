@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "updated": "2026-09-27",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "c9d74536e88c55d7fd41d11d34aed7c9fd843e67",
+  "master_commit": "16af44dd673b9b48d635d76ed70a1d47e68cb78f",
   "latest_formal_trial": "T-2026-09-26-047R1-PERFORMANCE",
   "latest_trial_status": "NO_PROMOTION_EVIDENCE",
   "next_reserved_trial": null,
@@ -51,8 +51,8 @@
     "free_credit_only": true,
     "credit_balance_auto_detected": false,
     "policy": "free_agent_credits_for_hypothesis_generation_and_research_design; deterministic_compute_local_only",
-    "current_task": "RUNNER-UTILIZATION",
-    "current_task_scope": "Continuous self-hosted QA every 15 minutes plus runner-capacity telemetry; no scientific gate changes.",
+    "current_task": "Q024-HISTORICAL-XML-FEASIBILITY",
+    "current_task_scope": "Fixed 89-event Treasury historical XML release-time feasibility; no performance, holdout selection, tuning, promotion or live execution.",
     "holdout_selection": false,
     "parameter_search": false,
     "asset_selection": false,
@@ -63,7 +63,7 @@
     "external_agent_review_issue": 231,
     "external_agent_execution_verified": true,
     "current_agent_note": "AGENT-014 completed and merged as PR #345 (77664831fedcf60d25f65bbd5b32034dbd91e8fe), issue #344 closed and queue request retired. Current master includes runner-capacity hardening and synchronized status/checkpoint. No second runner process is claimed as installed.",
-    "capital_reference_note": "HYPOTHETICAL_STARTING_CAPITAL_EUR=500.00; simulation/planning reference only; no actual capital is available."
+    "capital_reference_note": "HYPOTHETICAL_STARTING_CAPITAL_EUR=2000.00; simulation/planning reference only; no actual capital is available. Legacy 500-EUR operational canary remains separate."
   },
   "continuity": {
     "canonical_context": "docs/PROJECT_CONTEXT.md",
@@ -107,7 +107,7 @@
     "next_trial_candidate_selection": "coverage_only_fixed_pool",
     "t040_formal_completed": true,
     "t040_negative_evidence_archived": true,
-    "current_queue_task": "NONE",
+    "current_queue_task": "Q024-HISTORICAL-XML",
     "automatic_formal_execution_requires_preregistration": true,
     "last_completed_queue_task": "Q-021-TREASURY-AUCTION-FAILURE-MECHANISM-DIAGNOSIS",
     "last_completed_diagnosis_fingerprint": "92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea",
