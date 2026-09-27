@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T15:24:21.658248+00:00",
+  "generated_at_utc": "2026-09-27T15:25:31.400370+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,12 +83,27 @@
       {
         "number": 407,
         "title": "AGENT-025: implement T052 fixed-core sleeve performance validation",
-        "updatedAt": "2026-09-27T15:18:23Z",
+        "updatedAt": "2026-09-27T15:25:23Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/407"
       }
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: add owner-gated T052 exact-CI manual trigger",
+        "sha": "d34c5f7c79df6835d27d391201aa2b9e010dbe19",
+        "timestamp": "2026-09-27T17:25:20+02:00"
+      },
+      {
+        "message": "OPS: trigger fresh T052 exact-master CI gate",
+        "sha": "eb3421bbc78f6b0e834db72a5a74365ed3de2b46",
+        "timestamp": "2026-09-27T17:25:06+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e30cc115c863ba4a98a93fe3261bee6783d55cd4",
+        "timestamp": "2026-09-27T15:24:22Z"
+      },
       {
         "message": "OPS: autonomous agent queue routing",
         "sha": "4bfb5855fc24d4a4b940df58302946bd9b79bcc5",
@@ -113,21 +128,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "fd33856ddcabcb68980bb8b31b81a67b334c88f7",
         "timestamp": "2026-09-27T15:23:31Z"
-      },
-      {
-        "message": "FIX: install pypdf required by full CI suite",
-        "sha": "722fba2670e474e069924740ea7cb208075f668b",
-        "timestamp": "2026-09-27T17:23:20+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "fd14faf6038fe9c031efa80bc863eb1812d3cecc",
-        "timestamp": "2026-09-27T15:23:00Z"
-      },
-      {
-        "message": "FIX: allow only documentation-only master sync descendants",
-        "sha": "995d893542c2b536c6346861d94880ff3d460c80",
-        "timestamp": "2026-09-27T17:22:49+02:00"
       }
     ]
   },
@@ -188,12 +188,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4bfb5855fc24d4a4b940df58302946bd9b79bcc5",
+  "source_master_sha": "d34c5f7c79df6835d27d391201aa2b9e010dbe19",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36329409459"
+    "run_id": "36329490599"
   }
 }
