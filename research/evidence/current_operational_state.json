@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T15:21:40.172123+00:00",
+  "generated_at_utc": "2026-09-27T15:22:59.932083+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -102,6 +102,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: allow only documentation-only master sync descendants",
+        "sha": "995d893542c2b536c6346861d94880ff3d460c80",
+        "timestamp": "2026-09-27T17:22:49+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b2c7991b72cdcd0d137cc0df317b22440d0ae4a6",
+        "timestamp": "2026-09-27T15:21:40Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "3033b08a669d43fd556979f2377e417ec29a93cc",
         "timestamp": "2026-09-27T15:21:27Z"
@@ -130,16 +140,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "3a73a702842953ac8a8d6c8f586d21ed5f11c06a",
         "timestamp": "2026-09-27T15:18:35Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a82adb0bbed4e996cd5fc559014ee40c34e74343",
-        "timestamp": "2026-09-27T15:18:31Z"
-      },
-      {
-        "message": "FIX: resume paper-forward from oversized fetch window",
-        "sha": "2290ee2713c7c0ac6df7ef38cc441cfd219b36f4",
-        "timestamp": "2026-09-27T17:18:20+02:00"
       }
     ]
   },
@@ -200,12 +200,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "3033b08a669d43fd556979f2377e417ec29a93cc",
+  "source_master_sha": "995d893542c2b536c6346861d94880ff3d460c80",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36329242624"
+    "run_id": "36329336797"
   }
 }
