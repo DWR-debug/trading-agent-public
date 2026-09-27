@@ -35,7 +35,8 @@ REBALANCE=21
 TOP_N=2
 FEE_RATE=0.001
 SLIPPAGE_RATE=0.0005
-ROUND_TRIP_COST=2.0*(FEE_RATE+SLIPPAGE_RATE)
+ONE_WAY_COST=FEE_RATE+SLIPPAGE_RATE
+ROUND_TRIP_COST=2.0*ONE_WAY_COST
 
 EXPECTED_COVERAGE_RUN=36230165868
 EXPECTED_COVERAGE_ARTIFACT=10901872543
@@ -113,7 +114,7 @@ def _simulate(assets:dict[str,list[Candle]],cost_multiplier:float):
             gross += w*(bars[i+2].open/bars[i+1].open-1.0)
             turnover += abs(w-previous[s])
             previous[s]=w
-        net=gross-ROUND_TRIP_COST*cost_multiplier*turnover
+        net=gross-ONE_WAY_COST*cost_multiplier*turnover
         rows.append({"timestamp":assets[ASSETS[0]][i+2].timestamp.isoformat(),"net_return":net,"gross_return":gross,"turnover":turnover})
         weight_rows.append(dict(current))
     return rows,weight_rows,{"trade_sessions":sum(r["turnover"]>0 for r in rows),"turnover":sum(r["turnover"] for r in rows)}
