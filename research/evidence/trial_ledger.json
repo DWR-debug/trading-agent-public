@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-27T18:09:00Z",
+  "generated_at": "2026-09-27T18:31:54Z",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -4357,6 +4357,84 @@
         },
         "all_cells_passed": false,
         "publication_note": "Canonical bookkeeping reconstruction from immutable workflow artifact; performance was not recomputed."
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-27-053-COVERAGE",
+      "recorded_at": "2026-09-27T18:31:53Z",
+      "status": "coverage_validated",
+      "research_family": "t052_risk_stability_mechanism_coverage",
+      "hypothesis": {
+        "text": "The fixed Q031 seven-symbol universe provides sufficient canonical daily OHLCV coverage for later separately preregistered Q030 risk/stability mechanism evaluation; no performance evidence is produced here."
+      },
+      "data_scope": {
+        "coverage_only": true,
+        "requested_candles": 4000,
+        "minimum_in_window_candles": 3500,
+        "target_common_candles": 3500,
+        "per_symbol_in_window_candles": 3704,
+        "common_calendar_count": 3704,
+        "selected_common_calendar_start": "2011-10-24T13:30:00+00:00",
+        "selected_common_calendar_end": "2025-09-24T13:30:00+00:00",
+        "symbols": [
+          "BSV",
+          "FAN",
+          "JNK",
+          "UDN",
+          "VCLT",
+          "VGIT",
+          "SCHR"
+        ],
+        "fully_symbol_disjoint_validation_set": true,
+        "disjointness_basis": "Disjoint from the formal registered research universes; symbols had appeared only in an earlier coverage-only candidate search, not in performance selection.",
+        "workflow_run_id": 36340958902,
+        "artifact_ids": [
+          10939080601
+        ],
+        "artifact_digest": "sha256:a057c5240fa382a79ef0aeae45e2b048bf769b2ac0b6aa1fbd8a04644f14ae44",
+        "snapshot_fingerprint": "7b40228a7414ea70ea2c6fa19a042f72184e6c8af609abcc33efcbc492c868fb",
+        "coverage_fingerprint": "d0d5dbf9ffbefa130d908efd57323357a00f1700358a99727e0a7cf133c47d72"
+      },
+      "search_scope": {
+        "raw_trial_count": 0,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "asset_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "coverage contract only; no performance selection",
+        "selection_metric": null
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "COVERAGE_PASSED",
+        "scientific_outcome": "COVERAGE_PASSED_NO_PERFORMANCE_EVIDENCE",
+        "workflow_run_id": 36340958902,
+        "workflow_head_sha": "a067371eddd5e7ba628c5a6087201ca717b94035",
+        "workflow_conclusion": "success",
+        "performance_evaluation": false,
+        "oos_evaluation": false,
+        "holdout_evaluation": false,
+        "selection_used": false,
+        "holdout_used_for_selection": false,
+        "pit_validation_required_before_performance": true,
+        "note": "Canonical coverage preflight and coverage-only enforcement passed on the exact triggering commit. No performance, OOS, holdout, selection or promotion occurred."
       },
       "safety": {
         "paper_only": true,
