@@ -1,6 +1,7 @@
 name: Bounded Agent Dispatch
 
 on:
+  # agent-cli-ready is reserved for the bounded CLI queue; Cloud Agent requires explicit opt-in.
   issues:
     types: [labeled]
   workflow_dispatch:
@@ -23,8 +24,7 @@ jobs:
     if: >-
       ${{
         github.event_name == 'workflow_dispatch' ||
-        github.event.label.name == 'agent-ready' ||
-        github.event.label.name == 'agent'
+        github.event.label.name == 'cloud-agent-ready'
       }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
