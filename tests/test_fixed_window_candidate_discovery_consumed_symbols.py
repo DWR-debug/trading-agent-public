@@ -24,7 +24,7 @@ def test_fixed_window_discovery_skips_symbols_already_claimed_by_universes(monke
         workers=2,
     )
 
-    assert calls == list(discovery.CANDIDATE_POOL[3:6])
+    assert set(calls) == set(discovery.CANDIDATE_POOL[3:6])
     assert report["excluded_existing_universe_symbols"] == list(discovery.CANDIDATE_POOL[:3])
     assert report["eligible_candidate_pool"] == list(discovery.CANDIDATE_POOL[3:6])
     assert report["candidate_pool"] == list(discovery.CANDIDATE_POOL)

@@ -12,8 +12,8 @@ def test_current_research_checkpoint_contains_t049_t050_t051():
 
 def test_decision_basis_current_stage_is_t051_pit_only():
     d=json.loads(Path("research/evidence/decision_basis_latest.json").read_text(encoding="utf-8"))
-    assert d["current_stage"]=="T051_PIT_PASSED_NO_PERFORMANCE_EVIDENCE"
-    assert d["next_action"].startswith("First refresh the current hosted QA baseline")
+    assert d["current_stage"]=="T052_FORMAL_EXECUTION_BLOCKED_BY_CI_REGRESSIONS"
+    assert d["next_action"].startswith("Repair current CI regressions blocking T052; then rerun the already-authorized fixed-rule T052 performance evaluation")
     assert d["invariants"]=={"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False}
 
 
