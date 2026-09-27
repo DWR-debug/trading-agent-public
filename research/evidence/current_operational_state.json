@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T15:10:51.175148+00:00",
+  "generated_at_utc": "2026-09-27T15:11:48.356203+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -89,18 +89,33 @@
       {
         "number": 408,
         "title": "AGENT-026: harden continuous self-hosted paper-forward MTM operation",
-        "updatedAt": "2026-09-27T14:53:20Z",
+        "updatedAt": "2026-09-27T15:11:46Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/408"
       },
       {
         "number": 407,
         "title": "AGENT-025: implement T052 fixed-core sleeve performance validation",
-        "updatedAt": "2026-09-27T14:53:50Z",
+        "updatedAt": "2026-09-27T15:11:44Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/407"
       }
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: add owner-gated Copilot queue manual trigger",
+        "sha": "00e259a2ba1c8c6d83dd857c7e6b9cac63af2245",
+        "timestamp": "2026-09-27T17:11:39+02:00"
+      },
+      {
+        "message": "OPS: add owner-gated paper-forward manual trigger",
+        "sha": "cdb5a9ef2044cf7f0bb7dc3017c80ea87f565150",
+        "timestamp": "2026-09-27T17:11:37+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e98b86319ada61ad214d62bd14fee239e740eda4",
+        "timestamp": "2026-09-27T15:10:51Z"
+      },
       {
         "message": "OPS: nudge Copilot lane1 AGENT-026",
         "sha": "e35d157121652a03a4af766a3c9b44206c8ea418",
@@ -125,21 +140,6 @@
         "message": "FIX: make T052 execution guard fail-closed",
         "sha": "d36df8efebea80d46a9781bff18ec06637be588a",
         "timestamp": "2026-09-27T17:01:27+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "edb8594f3caaa70e9f36c733d335cf5d2f3b3c21",
-        "timestamp": "2026-09-27T15:00:19Z"
-      },
-      {
-        "message": "RESEARCH: preregister T052 fixed-core sleeve performance",
-        "sha": "dc79dc72af1d24404e6c480ba5cef21b3ba79d7b",
-        "timestamp": "2026-09-27T17:00:08+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "8af87636fabd50ba4395678f3af0132716fd0160",
-        "timestamp": "2026-09-27T14:57:43Z"
       }
     ]
   },
@@ -200,12 +200,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e35d157121652a03a4af766a3c9b44206c8ea418",
+  "source_master_sha": "00e259a2ba1c8c6d83dd857c7e6b9cac63af2245",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36328589862"
+    "run_id": "36328650590"
   }
 }
