@@ -1,0 +1,109 @@
+name: H06 Sector-Neutral Residual Momentum Performance
+
+on:
+  push:
+    branches:
+      - research/h06-sector-neutral-residual-momentum-performance
+    paths:
+      - research/preregistrations/h06_sector_neutral_residual_momentum_performance_2026_09_27.json
+      - research/authorizations/h06_sector_neutral_residual_momentum_performance_2026_09_27.json
+      - automation/h06_sector_neutral_residual_momentum_performance.py
+      - tests/test_h06_sector_neutral_residual_momentum_performance.py
+      - tests/test_h06_residual_ranking.py
+      - .github/workflows/h06-sector-neutral-residual-momentum-performance.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: h06-sector-neutral-residual-momentum-performance
+  cancel-in-progress: false
+
+jobs:
+  performance:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 150
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout exact snapshot
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Hosted Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Hosted QA and authorization gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pytest pandas exchange-calendars statsmodels==0.15.0
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          assert settings.AUTOMATIC_PROMOTION is False
+          print("SAFETY OK")
+          PY
+          python -m pytest -q tests/test_h06_sector_neutral_residual_momentum_performance.py tests/test_h06_residual_ranking.py
+
+      - name: Check performance authorization
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          a=json.loads(Path("research/authorizations/h06_sector_neutral_residual_momentum_performance_2026_09_27.json").read_text(encoding="utf-8"))
+          assert a["authorized"] is True, "H06 authorization is not active"
+          assert a["performance_execution_authorized"] is True
+          assert a["execution_scope"] == "PERFORMANCE"
+          assert a["coverage_artifact_id"] == 10901872543
+          assert a["coverage_workflow_run_id"] == 36230165868
+          assert a["coverage_fingerprint"] == "7726c5428f5c3d23e9ec009b488b8de301f65c024e518fc889928f1b99588a7b"
+          print("AUTHORIZATION OK")
+          PY
+
+      - name: Download exact coverage artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf "${RUNNER_TEMP}/h06"
+          mkdir -p "${RUNNER_TEMP}/h06"
+          gh run download 36230165868 --repo "${GITHUB_REPOSITORY}" --name wide-search-h06-mechanism-replication-36230165868 --dir "${RUNNER_TEMP}/h06/coverage"
+          gh run download 36230245352 --repo "${GITHUB_REPOSITORY}" --name h06-mechanism-replication-36230245352 --dir "${RUNNER_TEMP}/h06/mechanism"
+
+      - name: Execute fixed H06 performance
+        shell: bash
+        run: |
+          set -euo pipefail
+          MANIFEST="${RUNNER_TEMP}/h06/coverage/h06_mechanism_replication_coverage.json"
+          DATA_DIR="${RUNNER_TEMP}/h06/coverage/h06_replication_datasets"
+          MECH="${RUNNER_TEMP}/h06/mechanism/h06_mechanism_replication_result.json"
+          test -f "$MANIFEST"
+          test -d "$DATA_DIR"
+          test -f "$MECH"
+          mkdir -p research/runs/h06_sector_neutral_residual_momentum/T-2026-09-27-049-PERFORMANCE
+          python -m automation.h06_sector_neutral_residual_momentum_performance \
+            --manifest "$MANIFEST" \
+            --data-dir "$DATA_DIR" \
+            --authorization research/authorizations/h06_sector_neutral_residual_momentum_performance_2026_09_27.json \
+            --mechanism-result "$MECH" \
+            --output research/runs/h06_sector_neutral_residual_momentum/T-2026-09-27-049-PERFORMANCE/result.json
+
+      - name: Publish H06 result
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: h06-sector-neutral-residual-momentum-performance-${{ github.run_id }}
+          path: research/runs/h06_sector_neutral_residual_momentum/
+          if-no-files-found: warn
+          retention-days: 30
