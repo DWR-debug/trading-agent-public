@@ -59,8 +59,8 @@ def _load_assets(data_dir:Path, coverage:dict)->dict[str,list[Candle]]:
     store=MarketDataStore(data_dir)
     out={}
     expected=tuple(x["symbol"] for x in coverage["data_snapshot"]["datasets"])
-    if expected != ASSETS:
-        raise RuntimeError("Coverage symbol order mismatch.")
+    if set(expected) != set(ASSETS) or len(expected) != len(ASSETS):
+        raise RuntimeError("Coverage symbol set mismatch.")
     for item in coverage["data_snapshot"]["datasets"]:
         symbol=item["symbol"]
         bars=store.load(symbol,"1d")
