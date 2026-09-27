@@ -35,6 +35,38 @@ class FeedReceipt:
     latest_market_timestamp_utc: str
     fetched_at_utc: str
     candle_fingerprint: str
+    fetch_fingerprint: str
+    receipt_fingerprint: str
+    state_input_fingerprint: str
+
+
+def _receipt_fingerprint(
+    *,
+    source: str,
+    endpoint: str,
+    candidate_id: str,
+    candidate_fingerprint: str,
+    symbol: str,
+    interval: str,
+    requested_candles: int,
+    closed_candles_returned: int,
+    latest_market_timestamp_utc: str,
+    candle_fingerprint: str,
+) -> str:
+    return _fingerprint(
+        {
+            "source": source,
+            "endpoint": endpoint,
+            "candidate_id": candidate_id,
+            "candidate_fingerprint": candidate_fingerprint,
+            "symbol": symbol,
+            "interval": interval,
+            "requested_candles": requested_candles,
+            "closed_candles_returned": closed_candles_returned,
+            "latest_market_timestamp_utc": latest_market_timestamp_utc,
+            "candle_fingerprint": candle_fingerprint,
+        }
+    )
 
 
 def load_candidate(path: str | Path) -> dict[str, Any]:
@@ -97,7 +129,29 @@ def update_from_binance(
         raise PaperForwardShadowError(f"Cannot read running shadow state: {exc}") from exc
 
     closed = fetch_closed_candles(normalized["symbol"], normalized["interval"], limit=fetch_limit)
-    updated = update_session(path, closed)
+    candle_fingerprint = _fingerprint([_candle_record(c) for c in closed])
+    fetch_fingerprint = _receipt_fingerprint(
+        source="binance_public_market_data",
+        endpoint=BASE_URL,
+        candidate_id=normalized["candidate_id"],
+        candidate_fingerprint=_fingerprint(normalized),
+        symbol=normalized["symbol"],
+        interval=normalized["interval"],
+        requested_candles=fetch_limit,
+        closed_candles_returned=len(closed),
+        latest_market_timestamp_utc=_candle_record(closed[-1])["timestamp"],
+        candle_fingerprint=candle_fingerprint,
+    )
+    receipt_fingerprint = _fingerprint(
+        {"fetch_fingerprint": fetch_fingerprint, "candle_fingerprint": candle_fingerprint}
+    )
+    updated = update_session(
+        path,
+        closed,
+        feed_receipt_fingerprint=receipt_fingerprint,
+        feed_candle_fingerprint=candle_fingerprint,
+        feed_fetch_fingerprint=fetch_fingerprint,
+    )
     receipt = FeedReceipt(
         schema_version=1,
         source="binance_public_market_data",
@@ -110,7 +164,10 @@ def update_from_binance(
         closed_candles_returned=len(closed),
         latest_market_timestamp_utc=_candle_record(closed[-1])["timestamp"],
         fetched_at_utc=datetime.now(timezone.utc).isoformat(),
-        candle_fingerprint=_fingerprint([_candle_record(c) for c in closed]),
+        candle_fingerprint=candle_fingerprint,
+        fetch_fingerprint=fetch_fingerprint,
+        receipt_fingerprint=receipt_fingerprint,
+        state_input_fingerprint=updated["input_fingerprint"],
     )
     if receipt_path is not None:
         _atomic_write_json(Path(receipt_path), asdict(receipt))

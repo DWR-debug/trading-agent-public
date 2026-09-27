@@ -19,6 +19,10 @@ from config.parameters import (
     MomentumParameters,
     StrategyParameters,
 )
+from execution.cost_contract import (
+    ExecutionCostCompatibilityError,
+    validate_research_cost_compatibility,
+)
 from strategies.signals import SignalType
 from strategies.strategy_engine import StrategyEngine
 
@@ -136,6 +140,15 @@ def _validate_candidate(
         raise PaperForwardShadowError(
             "Capital, risk, leverage, fees, or slippage violate configured limits."
         )
+    try:
+        validate_research_cost_compatibility(
+            fee_rate=float(value["fee_rate"]),
+            slippage_rate=float(value["slippage_rate"]),
+        )
+    except ExecutionCostCompatibilityError as exc:
+        raise PaperForwardShadowError(
+            f"Execution-cost contract is not research-compatible: {exc}"
+        ) from exc
 
     parameter_fields = {"momentum", "mean_reversion"}
     params = _object(value["parameters"], parameter_fields, "parameters")
@@ -274,6 +287,9 @@ def _snapshot(
     started_at: str,
     status: str,
     stopped_at: str | None = None,
+    feed_receipt_fingerprint: str | None = None,
+    feed_candle_fingerprint: str | None = None,
+    feed_fetch_fingerprint: str | None = None,
 ) -> dict[str, Any]:
     signal_values, signal_fingerprint = _signal_stream(candidate, parameters, candles)
     cash = float(candidate["initial_capital_eur"])
@@ -444,7 +460,15 @@ def _snapshot(
         })
 
     records = [_candle_record(candle) for candle in candles]
-    input_fingerprint = _fingerprint({"candidate_fingerprint": candidate_fingerprint, "candles": records})
+    input_fingerprint = _fingerprint(
+        {
+            "candidate_fingerprint": candidate_fingerprint,
+            "candles": records,
+            "feed_receipt_fingerprint": feed_receipt_fingerprint,
+            "feed_candle_fingerprint": feed_candle_fingerprint,
+            "feed_fetch_fingerprint": feed_fetch_fingerprint,
+        }
+    )
     last_timestamp = records[-1]["timestamp"]
     final_equity = ledger[-1]["equity_eur"]
     latest = ledger[-1]
@@ -487,6 +511,9 @@ def _snapshot(
         "candidate_fingerprint": candidate_fingerprint,
         "input_fingerprint": input_fingerprint,
         "signal_fingerprint": signal_fingerprint,
+        "feed_receipt_fingerprint": feed_receipt_fingerprint,
+        "feed_candle_fingerprint": feed_candle_fingerprint,
+        "feed_fetch_fingerprint": feed_fetch_fingerprint,
         "started_at_utc": started_at,
         "updated_at_utc": last_timestamp,
         "stopped_at_utc": stopped_at,
@@ -535,6 +562,9 @@ def _read_session(
         {
             "candidate_fingerprint": candidate_fingerprint,
             "candles": [_candle_record(candle) for candle in candles],
+            "feed_receipt_fingerprint": state.get("feed_receipt_fingerprint"),
+            "feed_candle_fingerprint": state.get("feed_candle_fingerprint"),
+            "feed_fetch_fingerprint": state.get("feed_fetch_fingerprint"),
         }
     )
     expected_snapshot = _snapshot(
@@ -546,6 +576,9 @@ def _read_session(
         started_at.isoformat(),
         state.get("status"),
         state.get("stopped_at_utc"),
+        state.get("feed_receipt_fingerprint"),
+        state.get("feed_candle_fingerprint"),
+        state.get("feed_fetch_fingerprint"),
     )
     latest_timestamp = _candle_record(candles[-1])["timestamp"]
     expected_stopped_at = None if state.get("status") == "RUNNING" else latest_timestamp
@@ -592,7 +625,12 @@ def start_session(
 
 
 def update_session(
-    state_path: str | Path, candles: Sequence[Candle]
+    state_path: str | Path,
+    candles: Sequence[Candle],
+    *,
+    feed_receipt_fingerprint: str | None = None,
+    feed_candle_fingerprint: str | None = None,
+    feed_fetch_fingerprint: str | None = None,
 ) -> dict[str, Any]:
     _assert_safety()
     path = Path(state_path)
@@ -632,6 +670,21 @@ def update_session(
         state["candidate_fingerprint"],
         state["started_at_utc"],
         "RUNNING",
+        feed_receipt_fingerprint=(
+            feed_receipt_fingerprint
+            if feed_receipt_fingerprint is not None
+            else state.get("feed_receipt_fingerprint")
+        ),
+        feed_candle_fingerprint=(
+            feed_candle_fingerprint
+            if feed_candle_fingerprint is not None
+            else state.get("feed_candle_fingerprint")
+        ),
+        feed_fetch_fingerprint=(
+            feed_fetch_fingerprint
+            if feed_fetch_fingerprint is not None
+            else state.get("feed_fetch_fingerprint")
+        ),
     )
     updated["candidate"] = candidate
     _atomic_write(path, updated)
