@@ -14,7 +14,7 @@ def test_h2_maps_after_auction_date_not_record_date() -> None:
             "bid_to_cover_ratio": "2.10",
         },
         {
-            "record_date": "2021-01-15",
+            "record_date": "2021-01-19",
             "auction_date": "2021-01-14",
             "security_type": "Note",
             "security_term": "10-Year",
@@ -28,13 +28,17 @@ def test_h2_maps_after_auction_date_not_record_date() -> None:
         date(2021, 1, 11),
         date(2021, 1, 14),
         date(2021, 1, 15),
+        date(2021, 1, 19),
+        date(2021, 1, 20),
     ]
     events, _ = _signal_events(rows, common_dates)
     assert events[0]["auction_date"] == "2021-01-07"
     assert events[0]["record_date"] == "2021-01-08"
     assert events[0]["next_eligible_common_trading_date"] == "2021-01-08"
+    assert events[1]["record_date"] == "2021-01-19"
     assert events[1]["next_eligible_common_trading_date"] == "2021-01-15"
 
     positions = _positions(events)
-    assert positions[date(2021, 1, 8)] == 1
+    assert date(2021, 1, 8) not in positions
     assert positions[date(2021, 1, 15)] == 1
+    assert date(2021, 1, 20) not in positions
