@@ -8,7 +8,6 @@ permissions:
   contents: write
   issues: write
   pull-requests: write
-  copilot-requests: write
 
 concurrency:
   # Two deterministic execution lanes enforce the project-wide maximum of
@@ -141,10 +140,15 @@ jobs:
       - name: Run bounded Copilot CLI
         shell: bash
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           set -euo pipefail
+          test -n "${COPILOT_GITHUB_TOKEN:-}"
+          case "$COPILOT_GITHUB_TOKEN" in
+            github_pat_*|gho_*|ghu_*) ;;
+            *) echo "Unsupported Copilot token class; expected github_pat_*, gho_*, or ghu_*"; exit 1 ;;
+          esac
           npm install -g @github/copilot
           task_body="$(python -c 'import json,os; print(json.load(open(os.path.join(os.environ["RUNNER_TEMP"], "issue.json"), encoding="utf-8"))["body"])')"
 
