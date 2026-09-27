@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T16:46:38.924435+00:00",
+  "generated_at_utc": "2026-09-27T16:47:22.263800+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -89,18 +89,22 @@
       {
         "number": 335,
         "title": "RESEARCH: Q024 auction-result publication timestamp PIT feasibility",
-        "updatedAt": "2026-09-27T16:40:08Z",
+        "updatedAt": "2026-09-27T16:47:05Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/335"
-      },
-      {
-        "number": 231,
-        "title": "AGENT-003: Independent review of Canonical Data Layer",
-        "updatedAt": "2026-09-27T16:43:04Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/issues/231"
       }
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: requeue Q024 after contract-scope correction",
+        "sha": "be2d5cd32dc3f38646c385ab1615d1ac244dd1a7",
+        "timestamp": "2026-09-27T18:47:08+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b6e624f8c23bb5d783996b7b30d7979623298338",
+        "timestamp": "2026-09-27T16:46:38Z"
+      },
       {
         "message": "OPS: align intraday discovery contract schemas",
         "sha": "d9ee16a9eb69fec6f17521bda2181db7984d1eb0",
@@ -130,16 +134,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "3d3ae793b66048319e3120656e9ed744d2ca3409",
         "timestamp": "2026-09-27T16:40:25Z"
-      },
-      {
-        "message": "QUEUE: dispatch Q024 Treasury timestamp PIT feasibility",
-        "sha": "d827a1ffbbff9a2f94f4cbd5dbf002195d85f575",
-        "timestamp": "2026-09-27T18:40:16+02:00"
-      },
-      {
-        "message": "QUEUE: dispatch AGENT-003 canonical data layer review",
-        "sha": "0fbafffb02ece6110d297733c58d21442192347a",
-        "timestamp": "2026-09-27T18:40:12+02:00"
       }
     ]
   },
@@ -201,12 +195,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d9ee16a9eb69fec6f17521bda2181db7984d1eb0",
+  "source_master_sha": "be2d5cd32dc3f38646c385ab1615d1ac244dd1a7",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36334478138"
+    "run_id": "36334519567"
   }
 }
