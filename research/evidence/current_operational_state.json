@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T18:42:29.703185+00:00",
+  "generated_at_utc": "2026-09-27T18:43:37.198276+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,21 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "TEST: lock Q034 frozen-Bar mutation regression",
+        "sha": "1c3ac58368f2b7a7fa2900e5122aa2ff15cfa3d6",
+        "timestamp": "2026-09-27T20:43:22+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "de0a1afe8b60023ae69ba37c1755f7e6aa1a1bf9",
+        "timestamp": "2026-09-27T18:43:20Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9488e0065851178d3ac6d5b099f18079d66ed995",
+        "timestamp": "2026-09-27T18:42:29Z"
+      },
       {
         "message": "FIX: repair Q034 immutable-bar PIT mutation harness",
         "sha": "7d0a1293a847aab40473d5211c038d9a9da8c8d7",
@@ -107,21 +122,6 @@
         "message": "RESEARCH: Q033 freeze Q030 mechanism parameters",
         "sha": "9a3c37b7e1db7cd857a303ed61e703fe78846020",
         "timestamp": "2026-09-27T20:39:10+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "888a479e6d47cc9fb862d5d2b76780b9f1437acd",
-        "timestamp": "2026-09-27T18:37:10Z"
-      },
-      {
-        "message": "EVIDENCE: record Q032 PIT validation and advance to Q033",
-        "sha": "74a6822d37f74a36e80dc3009b7639137b78a60d",
-        "timestamp": "2026-09-27T20:36:55+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "fd8543d3ef3ad17fae21bc4d5dee6b85668cd86c",
-        "timestamp": "2026-09-27T18:35:49Z"
       }
     ]
   },
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7d0a1293a847aab40473d5211c038d9a9da8c8d7",
+  "source_master_sha": "1c3ac58368f2b7a7fa2900e5122aa2ff15cfa3d6",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36341630313"
+    "run_id": "36341701223"
   }
 }
