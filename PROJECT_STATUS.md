@@ -8,7 +8,7 @@
 Agent/runner status:
 - The first real external Copilot CLI execution was verified in Agent Queue run **107** on 2026-09-27: both lanes reached Copilot successfully and produced report-only work.
 - That run exposed one stale regression assertion; the test was corrected and the subsequent personal-repository auth cleanup was merged.
-- Current queue work is being revalidated with a **PAT-only** path, as GitHub documents PAT authentication for personal repositories. A preflight now checks repository access before consuming a Copilot request. citeturn644053search10turn154929search3
+- Current queue work is being revalidated with a **PAT-only** path, as GitHub documents PAT authentication for personal repositories. A preflight now checks repository access before consuming a Copilot request; this follows GitHub's documented PAT path for personal repositories.
 - The current queue has run **111** pending behind the previous two-lane execution; Q023 follows the older audit requests automatically after successful publication.
 - Self-hosted Continuous QA remains the deterministic QA/research path; current maintenance pushes trigger its scheduled/repository QA lanes.
 - Hosted Actions startup failures remain a separate operational blocker and are not treated as scientific evidence.
