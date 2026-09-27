@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "checkpoint_type": "current_project_snapshot",
-  "generated_at_utc": "2026-09-27",
+  "generated_at_utc": "2026-09-27T14:34:34Z",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit_at_checkpoint_creation": "6ce3aef84bc51f9c8d675d44b1fa62da3a879146",
+  "master_commit_at_checkpoint_creation": "41052ec895c79afda815af9fc9e0c4da6ceb93f8",
   "canonical_data_layer": {
     "status": "MERGED",
     "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
@@ -233,15 +233,16 @@
   },
   "current_qa": {
     "workflow_run_id": null,
-    "head_sha": "d50aac970bccd0b3a0ce7c9e70c0304a55580fe3",
-    "conclusion": "pending_after_governance_changes",
+    "head_sha": "41052ec895c79afda815af9fc9e0c4da6ceb93f8",
+    "conclusion": "pending_after_latest_master_changes",
     "tests_passed": null,
     "warnings": null,
     "ast_syntax": "pending",
-    "safety_invariants": "pending"
+    "safety_invariants": "pending",
+    "note": "Latest hosted Continuous QA is still queued/pending; no current full-suite pass is claimed."
   },
-  "maintenance_note": "Synchronized to the last verified self-hosted repo_qa baseline; historical trial evidence unchanged.",
-  "next_scientific_step": "New fixed-rule candidate selection only after design/coverage/PIT; paper-only shadow infrastructure is developed in parallel.",
+  "maintenance_note": "Refreshed to include T049/T050 coverage receipts, T051 PIT-only receipts, and current agent engineering milestones. Historical Q001-Q048 evidence remains immutable.",
+  "next_scientific_step": "After T049/T050 coverage validation and T051 PIT validation, create a separate ex-ante preregistered fixed-rule performance evaluation of the unchanged SMA 50/200 and 12-1 Top-2 mechanisms. Do not run performance until the current QA baseline is refreshed and the performance contract is frozen.",
   "q023": {
     "status": "COVERAGE_VALIDATED",
     "workflow_run_id": 36309960872,
@@ -290,5 +291,76 @@
     "capacity_telemetry": "runner name, OS, architecture, logical CPU count, physical memory",
     "scale_path": "register a second runner process with the same label to allow GitHub to dispatch independent matching jobs concurrently",
     "formal_evidence_status": "self-hosted output remains non-formal; canonical reproduction and evidence gates remain required"
+  },
+  "t049": {
+    "trial_id": "T-2026-09-27-049",
+    "status": "COVERAGE_VALIDATED",
+    "workflow_run_id": 36323742825,
+    "artifact_id": 10933556647,
+    "artifact_digest": "sha256:eacc9688e356e54f069790e3cfa64f63cd80239797bd87bea16ccfa5a470c867",
+    "result": "coverage_passed",
+    "common_calendar_count": 3704,
+    "minimum_in_window_candles": 3500,
+    "performance_evaluation": false,
+    "holdout_evaluation": false,
+    "selection_used": false,
+    "performance_trial_authorized": false
+  },
+  "t050": {
+    "trial_id": "T-2026-09-27-050",
+    "status": "COVERAGE_VALIDATED",
+    "workflow_run_id": 36324187062,
+    "artifact_id": 10933796731,
+    "artifact_digest": "sha256:b7e6a89385cb94f42f1990c32a608f6cc6218b0e81fdd671ae88d844b073d125",
+    "result": "coverage_passed",
+    "common_calendar_count": 3704,
+    "minimum_in_window_candles": 3500,
+    "performance_evaluation": false,
+    "holdout_evaluation": false,
+    "selection_used": false,
+    "performance_trial_authorized": false
+  },
+  "t051": {
+    "trial_id": "T-2026-09-27-051",
+    "status": "PIT_PASSED_NO_PERFORMANCE_EVIDENCE",
+    "workflow_run_id": 36326053758,
+    "artifact_id": 10933638357,
+    "artifact_digest": "sha256:40417dd35fb0c58510407097a18e7694f1e70a52acdc2b15db45d510cbb827dd",
+    "universes": [
+      {
+        "trial_id": "T-2026-09-27-049",
+        "status": "PIT_PASSED",
+        "checked_sma_decisions": 1080,
+        "checked_cs_rebalances": 22
+      },
+      {
+        "trial_id": "T-2026-09-27-050",
+        "status": "PIT_PASSED",
+        "checked_sma_decisions": 1080,
+        "checked_cs_rebalances": 22
+      }
+    ],
+    "performance_evaluation": false,
+    "holdout_evaluation": false,
+    "selection_used": false,
+    "performance_trial_authorized": false
+  },
+  "agent_integration_latest": {
+    "completed_tasks": [
+      "AGENT-006",
+      "AGENT-007",
+      "AGENT-017",
+      "AGENT-018",
+      "AGENT-019",
+      "AGENT-020",
+      "AGENT-021",
+      "AGENT-022",
+      "AGENT-024"
+    ],
+    "current_active_task": "AGENT-023",
+    "queue_run_id": 36326221936,
+    "active_workers": 1,
+    "report_only_reviews_merged": true,
+    "paper_forward_hardening_merged": true
   }
 }
