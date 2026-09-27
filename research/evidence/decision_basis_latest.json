@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "recorded_on": "2026-09-27",
   "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
-  "current_stage": "Q040_OFFICIAL_EVENT_SOURCE_FEASIBILITY",
+  "current_stage": "Q044_FRESH_ALPHA_PIT",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
@@ -99,7 +99,10 @@
     "Q041 A2/A3/A5 each had positive research and holdout returns and passed both holdout stress-cost gates; A5 holdout PF was 1.2941 with holdout drawdown 17.55%, but the research/holdout drawdown gates still failed.",
     "Q042/T061 completed successfully on workflow 36346986787; artifact=10940538369; artifact-digest=sha256:0f163754d4469e2eb133ab8a72a9c36b03d42413e0ed54716516ab86409b48af; report-fingerprint=78b466dd52cf5340d96f9cd29ac7612d0861b927583684a24439cd1bcc596fe0.",
     "Q042 PIT-tested two additional price-only mechanisms, 52-week-high anchoring and overnight/daytime tug-of-war, across 29 deterministic decision points; future-bar and next-session mutations left signals unchanged.",
-    "The expanded alpha candidate catalogue now separates price-only mechanisms from event/fundamental/options families that require source/PIT feasibility before performance."
+    "The expanded alpha candidate catalogue now separates price-only mechanisms from event/fundamental/options families that require source/PIT feasibility before performance.",
+    "Q040/T062 completed source feasibility successfully on workflow 36347185905; all five fixed official probes returned HTTP 200, but no source was upgraded to performance-ready PIT eligibility solely from endpoint accessibility.",
+    "Q043/T063 completed fresh symbol-disjoint coverage successfully on workflow 36347316117; AON/CVS/ADSK/BA/T/F/LUV/NFLX produced 4000 common sessions and a 3500-session frozen snapshot.",
+    "Q044/T064 is now running a fresh PIT mutation gate for six fixed alpha mechanisms on the Q043 universe; no performance computation is authorized until PIT passes."
   ],
   "implications": [
     "T047R1 did not satisfy the unchanged evidence contract; Q020 is not reopened.",
@@ -128,7 +131,10 @@
     "Q041 shifts the primary bottleneck from alpha discovery alone to risk-normalized robustness: multiple fixed alpha families generated positive return evidence but exceeded the existing drawdown gates.",
     "The next replication should therefore keep rules fixed and use a fresh symbol-disjoint universe rather than tuning the current universe to repair drawdown.",
     "Q042 makes 52-week-high and overnight/daytime candidates eligible for later fixed-rule performance preregistration, subject to a fresh coverage/PIT contract.",
-    "Q040 remains the parallel path for timestamped information alpha; no event family should enter performance until first-public-availability or release-time semantics are reproducible."
+    "Q040 remains the parallel path for timestamped information alpha; no event family should enter performance until first-public-availability or release-time semantics are reproducible.",
+    "The project now has independent coverage/PIT infrastructure for a second universe rather than repeatedly reusing the Q038 holdout.",
+    "Q041 performance evidence shows positive returns for A2/A3/A5 but a persistent drawdown bottleneck; the appropriate next test is replication, not parameter tuning.",
+    "Q040 source feasibility found technically accessible official data sources but confirmed that source access and release-time PIT are separate research gates."
   ],
   "unknowns": [
     "whether any orthogonal income-oriented mechanism survives independent fixed-rule validation",
@@ -154,7 +160,7 @@
     "whether A1b 52-week-high or A6 overnight/daytime adds independent signal information without worsening the existing drawdown gates",
     "whether event-information candidates with reproducible release timestamps can supply return streams orthogonal to price-only momentum"
   ],
-  "next_action": "Execute Q040 source/PIT feasibility while preparing a fresh symbol-disjoint replication universe for the fixed Q041/Q042 PIT-safe alpha set; do not tune Q041 rules or reuse the current Q038 holdout for selection.",
+  "next_action": "Complete Q044 PIT on the fresh Q043 universe. On success, prepare Q045 fixed seven-arm replication performance with unchanged 13 gates; on failure, archive the affected mechanism without tuning. Continue Q040/Q023/Q024 event timestamp work separately.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
