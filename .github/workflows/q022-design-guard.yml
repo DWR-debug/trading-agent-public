@@ -30,6 +30,8 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.13"
+      - name: Install test dependency
+        run: python -m pip install --disable-pip-version-check pytest
       - name: Safety guard
         run: python -c "from config import settings; assert settings.PAPER_ONLY is True; assert settings.LIVE_TRADING_ENABLED is False; assert settings.ORDERS_ENABLED is False; assert settings.AUTOMATIC_PROMOTION is False; print('Q022 SAFETY OK')"
       - name: Guard regression tests
