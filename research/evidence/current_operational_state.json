@@ -91,7 +91,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T13:49:49.164561+00:00",
+  "generated_at_utc": "2026-09-27T13:52:05.900904+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -174,6 +174,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: scope agent queue regression gate to queue contract",
+        "sha": "00bf36466841862b28a4a005b43a1effc773e0b3",
+        "timestamp": "2026-09-27T15:51:51+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "80ecbe2465d0e5248f35bd9d4c25b0d9cb1cd1ca",
+        "timestamp": "2026-09-27T13:49:49Z"
+      },
+      {
         "message": "RESEARCH: preregister T049 fixed candidate batch coverage",
         "sha": "b75787198aeb3403f7526e936d98a323ad58e61c",
         "timestamp": "2026-09-27T15:49:38+02:00"
@@ -202,16 +212,6 @@
         "message": "OPS: queue next independent engineering audits",
         "sha": "b9d2926bdf5f44f07198955508e996043cc70721",
         "timestamp": "2026-09-27T15:41:15+02:00"
-      },
-      {
-        "message": "FIX: keep fixed-window discovery on one data fetch per symbol",
-        "sha": "fad8ba1776e6b3341ec7d61c8d228a2d7ac33441",
-        "timestamp": "2026-09-27T15:40:49+02:00"
-      },
-      {
-        "message": "OPS: align canonical current status with latest master",
-        "sha": "f1ca3c69ca7aa302272cda0d3a60e2494e378bd5",
-        "timestamp": "2026-09-27T15:33:01+02:00"
       }
     ]
   },
@@ -272,12 +272,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b75787198aeb3403f7526e936d98a323ad58e61c",
+  "source_master_sha": "00bf36466841862b28a4a005b43a1effc773e0b3",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36323742802"
+    "run_id": "36323874079"
   }
 }
