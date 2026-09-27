@@ -4964,6 +4964,80 @@
         "A3_RESIDUAL_MOMENTUM_TOP2",
         "A5_LOW_BETA_TOP2"
       ]
+    },
+    {
+      "trial_id": "T-2026-09-27-061",
+      "recorded_at": "2026-09-27T20:15:00Z",
+      "status": "pit_validated",
+      "research_family": "q042_additional_price_alpha_pit",
+      "hypothesis": {
+        "text": "Verify point-in-time safety of fixed 52-week-high anchoring and overnight/daytime tug-of-war mechanisms on the Q039 universe before performance computation."
+      },
+      "data_scope": {
+        "symbols": [
+          "IVE",
+          "IWL",
+          "DLN",
+          "DHS",
+          "DON",
+          "DES",
+          "USRT",
+          "ITB"
+        ],
+        "target_common_candles": 3500,
+        "common_calendar_count": 4000,
+        "checked_decision_points": 29,
+        "coverage_workflow_run_id": 36346986787,
+        "coverage_artifact_id": 10940538369,
+        "coverage_artifact_digest": "sha256:0f163754d4469e2eb133ab8a72a9c36b03d42413e0ed54716516ab86409b48af",
+        "pit_artifact_id": 10940538369
+      },
+      "search_scope": {
+        "raw_trial_count": 2,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "asset_search": false,
+        "horizon_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "none; PIT gate only",
+        "selection_metric": null,
+        "holdout_used_for_selection": false
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "PIT_PASSED",
+        "scientific_outcome": "PIT_PASSED_NO_PERFORMANCE_EVIDENCE",
+        "workflow_run_id": 36346986787,
+        "workflow_conclusion": "success",
+        "artifact_id": 10940538369,
+        "artifact_digest": "sha256:0f163754d4469e2eb133ab8a72a9c36b03d42413e0ed54716516ab86409b48af",
+        "report_fingerprint": "78b466dd52cf5340d96f9cd29ac7612d0861b927583684a24439cd1bcc596fe0",
+        "checks_fingerprint": "5cf0664d64e55c0b658db866f0386cab41a4198ecefca84dc591814de037653e",
+        "checked_decision_points": 29,
+        "future_mutation_checks_passed": true,
+        "next_session_mutation_checks_passed": true,
+        "performance_evaluation": false,
+        "holdout_used_for_selection": false,
+        "selection_used": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
     }
-  ]
+  ],
+  "updated_at": "2026-09-27T20:15:00Z"
 }
