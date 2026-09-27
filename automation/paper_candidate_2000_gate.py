@@ -7,7 +7,11 @@ import json
 from pathlib import Path
 from typing import Any
 
-from automation.paper_30_day_experiment import load_evidence, load_return_stream
+from automation.paper_30_day_experiment import (
+    Paper30DayExperimentError,
+    load_evidence,
+    load_return_stream,
+)
 from research.evidence_contract import evaluate_evidence
 
 REQUIRED_CAPITAL_EUR = 2000.0
@@ -15,6 +19,43 @@ REQUIRED_CAPITAL_EUR = 2000.0
 
 class Paper2000GateError(ValueError):
     """Raised when a formal EUR 2000 candidate contract is violated."""
+
+
+def _resolve_repository_file(
+    value: Any,
+    *,
+    name: str,
+    repository_root: Path,
+    allowed_directory: Path | None = None,
+) -> Path:
+    if not isinstance(value, str) or not value.strip():
+        raise Paper2000GateError(f"{name} must be a repository-relative path.")
+
+    relative_path = Path(value)
+    if relative_path.is_absolute() or ".." in relative_path.parts:
+        raise Paper2000GateError(f"{name} must be a repository-relative path.")
+
+    try:
+        resolved = (repository_root / relative_path).resolve(strict=True)
+    except (OSError, RuntimeError) as exc:
+        raise Paper2000GateError(f"{name} cannot be resolved inside the repository.") from exc
+
+    try:
+        resolved.relative_to(repository_root)
+    except ValueError as exc:
+        raise Paper2000GateError(f"{name} resolves outside the repository.") from exc
+
+    if allowed_directory is not None:
+        try:
+            resolved.relative_to(allowed_directory)
+        except ValueError as exc:
+            raise Paper2000GateError(
+                f"{name} must be inside {allowed_directory.relative_to(repository_root)}."
+            ) from exc
+
+    if not resolved.is_file():
+        raise Paper2000GateError(f"{name} is not a file: {value}")
+    return resolved
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -25,7 +66,14 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 
 def validate_manifest(manifest_path: str | Path) -> dict[str, Any]:
-    path = Path(manifest_path)
+    repository_root = Path.cwd().resolve()
+    candidate_directory = (repository_root / "research/paper_candidates_2000").resolve()
+    path = _resolve_repository_file(
+        str(manifest_path),
+        name="Candidate manifest",
+        repository_root=repository_root,
+        allowed_directory=candidate_directory,
+    )
     manifest = _load_json(path)
 
     if manifest.get("schema_version") != 1:
@@ -37,7 +85,11 @@ def validate_manifest(manifest_path: str | Path) -> dict[str, Any]:
     if not isinstance(candidate_id, str) or not candidate_id.strip():
         raise Paper2000GateError("candidate_id is required.")
 
-    if float(manifest.get("initial_capital_eur", 0.0)) != REQUIRED_CAPITAL_EUR:
+    try:
+        initial_capital = float(manifest.get("initial_capital_eur", 0.0))
+    except (TypeError, ValueError) as exc:
+        raise Paper2000GateError("Formal candidate paper run requires exactly EUR 2000.") from exc
+    if initial_capital != REQUIRED_CAPITAL_EUR:
         raise Paper2000GateError("Formal candidate paper run requires exactly EUR 2000.")
     if manifest.get("auto_select") is not False:
         raise Paper2000GateError("Candidate paper run must not auto-select candidates.")
@@ -46,14 +98,31 @@ def validate_manifest(manifest_path: str | Path) -> dict[str, Any]:
     if manifest.get("orders_enabled") is not False:
         raise Paper2000GateError("orders_enabled must remain False.")
 
-    evidence_path = Path(manifest["evidence_path"])
-    returns_path = Path(manifest["returns_path"])
-    if not evidence_path.exists():
-        raise Paper2000GateError(f"Evidence file does not exist: {evidence_path}")
-    if not returns_path.exists():
-        raise Paper2000GateError(f"Return stream does not exist: {returns_path}")
+    evidence_path = _resolve_repository_file(
+        manifest.get("evidence_path"),
+        name="Evidence path",
+        repository_root=repository_root,
+    )
+    returns_path = _resolve_repository_file(
+        manifest.get("returns_path"),
+        name="Return-stream path",
+        repository_root=repository_root,
+    )
 
-    evidence = load_evidence(evidence_path)
+    try:
+        evidence = load_evidence(evidence_path)
+    except Paper30DayExperimentError as exc:
+        raise Paper2000GateError(f"Evidence violates the project contract: {exc}") from exc
+
+    if evidence.holdout_used_for_selection is not False:
+        raise Paper2000GateError("Holdout must not be used for candidate selection.")
+    if (
+        evidence.paper_only is not True
+        or evidence.live_trading_enabled is not False
+        or evidence.orders_enabled is not False
+    ):
+        raise Paper2000GateError("Evidence violates the paper-only safety contract.")
+
     decision = evaluate_evidence(evidence)
     if not decision.eligible:
         raise Paper2000GateError(
@@ -73,6 +142,7 @@ def validate_manifest(manifest_path: str | Path) -> dict[str, Any]:
         "trial_id": evidence.trial_id,
         "evidence_status": evidence.status,
         "initial_capital_eur": REQUIRED_CAPITAL_EUR,
+        "capital_semantics": "hypothetical_reference_only",
         "holdout_used_for_selection": evidence.holdout_used_for_selection,
         "paper_only": evidence.paper_only,
         "live_trading_enabled": evidence.live_trading_enabled,
