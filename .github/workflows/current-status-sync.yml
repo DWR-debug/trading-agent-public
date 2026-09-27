@@ -74,17 +74,24 @@ jobs:
               encoding="utf-8",
           )
           PY
+      - name: Resolve checked-out master source SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          checked_out_master_sha="$(git rev-parse HEAD)"
+          echo "STATUS_SOURCE_SHA=${checked_out_master_sha}" >> "${GITHUB_ENV}"
+          test -n "$checked_out_master_sha"
       - name: Verify master tip before status generation
         shell: bash
         run: |
           set -euo pipefail
           remote_master_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
-          test "$remote_master_sha" = "$GITHUB_SHA"
+          test "$remote_master_sha" = "$STATUS_SOURCE_SHA"
       - name: Generate canonical current status
         run: |
           set -euo pipefail
           python -m automation.sync_current_operational_status \
-            --source-master-sha "${GITHUB_SHA}" \
+            --source-master-sha "${STATUS_SOURCE_SHA}" \
             --workflow-run-id "${GITHUB_RUN_ID}" \
             --github-state "${RUNNER_TEMP}/status/github_state.json"
           git diff --check
@@ -104,7 +111,7 @@ jobs:
               )
           )
           assert d["repository"] == "DWR-debug/trading-agent-public"
-          assert d["source_master_sha"] == os.environ["GITHUB_SHA"]
+          assert d["source_master_sha"] == os.environ["STATUS_SOURCE_SHA"]
           assert d["safety"]["status"] == "SAFE"
           assert d["status_commit_is_documentation_only"] is True
           print("CURRENT_STATUS_SYNC_OK")
@@ -115,8 +122,8 @@ jobs:
         run: |
           set -euo pipefail
           remote_master_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
-          if [ "$remote_master_sha" != "$GITHUB_SHA" ]; then
-            echo "::error::STATUS_SYNC_STALE_MASTER_GUARD remote=${remote_master_sha} source=${GITHUB_SHA}"
+          if [ "$remote_master_sha" != "$STATUS_SOURCE_SHA" ]; then
+            echo "::error::STATUS_SYNC_STALE_MASTER_GUARD remote=${remote_master_sha} source=${STATUS_SOURCE_SHA}"
             exit 1
           fi
       - name: Commit synchronized status
