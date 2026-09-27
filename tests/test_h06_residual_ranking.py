@@ -14,14 +14,14 @@ def _assets():
     out={}
     symbols=sum((list(v) for v in sectors.values()),[])
     for s in symbols:
-        out[s]=[Bar(100.0),Bar(100.0)]
+        out[s]=[Bar(100.0) for _ in range(274)]
     # MU 20%, ADBE 10%, CRM 0%; residuals +10,0,-10
-    out["MU"]=[Bar(100.0),Bar(120.0)]
-    out["ADBE"]=[Bar(100.0),Bar(110.0)]
-    out["CRM"]=[Bar(100.0),Bar(100.0)]
+    out["MU"][-1]=Bar(120.0)
+    out["ADBE"][-1]=Bar(110.0)
+    out["CRM"][-1]=Bar(100.0)
     # ABT 10%, BMY 5%, BAX 0%; residuals +7.5, +2.5, -2.5
-    out["ABT"]=[Bar(100.0),Bar(110.0)]
-    out["BMY"]=[Bar(100.0),Bar(105.0)]
+    out["ABT"][-1]=Bar(110.0)
+    out["BMY"][-1]=Bar(105.0)
     return out
 
 def test_h06_residual_ranking_is_sector_neutral():
