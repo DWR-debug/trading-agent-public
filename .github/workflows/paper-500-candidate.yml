@@ -60,8 +60,13 @@ jobs:
         run: |
           set -euo pipefail
           mapfile -t manifests < <(find research/paper_candidates -type f -name '*.json' | sort)
+          if [ \${#manifests[@]} -eq 0 ]; then
+            echo "NO_ELIGIBLE_500_EUR_CANDIDATE_MANIFEST"
+            echo "The lane is armed but no candidate has reached VALIDATED_PASS yet."
+            exit 0
+          fi
           test \${#manifests[@]} -eq 1 || {
-            echo "::error::Exactly one frozen 500-EUR candidate manifest is required."
+            echo "::error::Multiple 500-EUR candidate manifests would create ambiguous execution."
             printf '%s\n' "\${manifests[@]}"
             exit 1
           }
