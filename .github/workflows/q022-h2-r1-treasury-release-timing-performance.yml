@@ -23,7 +23,6 @@ concurrency:
 
 jobs:
   performance:
-    if: ${{ contains(github.event.head_commit.message, 'GOV: authorize Q022 H2 R1 performance') || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 150
     env:
@@ -40,7 +39,35 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Check authorization trigger
+        id: authorization_gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          auth=json.loads(Path("research/authorizations/q022_h2_r1_treasury_release_timing_performance_2026_09_27.json").read_text(encoding="utf-8"))
+          msg=os.environ.get("GITHUB_EVENT_HEAD_COMMIT_MESSAGE","")
+          authorized=(
+              os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch"
+              or (
+                  "GOV: authorize Q022 H2 R1 performance" in msg
+                  and auth["authorized"] is True
+                  and auth["performance_execution_authorized"] is True
+              )
+          )
+          with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as h:
+              h.write(f"authorized={'true' if authorized else 'false'}\n")
+          print("PERFORMANCE_TRIGGER_AUTHORIZED:", authorized)
+          PY
+        env:
+          GITHUB_EVENT_HEAD_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+
       - name: Execute authorized performance
+        if: ${{ steps.authorization_gate.outputs.authorized == 'true' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -84,6 +111,7 @@ jobs:
             --output "research/runs/q022_h2_r1_treasury_release_timing/T-2026-09-27-048R1-PERFORMANCE/result.json"
 
       - name: Publish performance artifact
+        if: ${{ steps.authorization_gate.outputs.authorized == 'true' }}
         if: always()
         uses: actions/upload-artifact@v6
         with:
