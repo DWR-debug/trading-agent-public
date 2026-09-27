@@ -288,3 +288,27 @@ def test_competing_process_cannot_start_or_update_locked_state_or_receipt(
         attempted_state_path, tmp_path / attempt_receipt
     ):
         pass
+
+
+def test_update_ignores_fetch_window_candles_older_than_retained_state(tmp_path):
+    path = tmp_path / "state.json"
+    start_session(make_candidate(), make_candles(5, start=100), path)
+    # Simulates a public fetch window that starts well before the retained
+    # 500-candle state while also containing one fresh successor candle.
+    incoming = (*make_candles(8, start=0)[-8:], *make_candles(6, start=5))
+    updated = update_session(path, incoming)
+    assert updated["candle_count"] == 6
+    assert updated["last_market_timestamp_utc"] == make_candles(6)[-1].timestamp.isoformat()
+
+
+def test_update_rejects_missing_candle_inside_retained_state(tmp_path):
+    path = tmp_path / "state.json"
+    start_session(make_candidate(), make_candles(5), path)
+    corrupted = make_candles(5)
+    path_state = json.loads(path.read_text(encoding="utf-8"))
+    path_state["candles"] = [
+        item for index, item in enumerate(path_state["candles"]) if index != 2
+    ]
+    path.write_text(json.dumps(path_state), encoding="utf-8")
+    with pytest.raises(PaperForwardShadowError, match="fingerprints"):
+        update_session(path, corrupted)
