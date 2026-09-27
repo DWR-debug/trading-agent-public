@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "authorization_id": "Q026-H2-COVERAGE-2026-09-27",
+  "trial_id": "T-2026-09-27-048",
+  "authorized": true,
+  "coverage_execution_authorized": true,
+  "performance_execution_authorized": false,
+  "execution_scope": "COVERAGE_ONLY",
+  "universe": "validation_2026_09_27_treasury_auction_date_shift_h2",
+  "symbols": ["WEC","ED","OKE","VLO","EIX","NDSN","HST","AKAM","IT","DVN","HAL","SLB"],
+  "requested_candles": 4000,
+  "target_common_calendar": 3500,
+  "purpose": "Fresh OHLCV coverage only. This authorization cannot execute performance.",
+  "snapshot_fingerprint": null,
+  "coverage_workflow_run_id": null,
+  "coverage_artifact_id": null,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
