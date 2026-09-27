@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T18:57:58.702495+00:00",
+  "generated_at_utc": "2026-09-27T18:59:09.438243+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: bind Q036 to exact T056 runner content",
+        "sha": "1f93a5a1d9f389eaa1ad65c6540ad5efd5181ff4",
+        "timestamp": "2026-09-27T20:58:55+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6b16674de77405d492c526669664ee09d5a7276c",
+        "timestamp": "2026-09-27T18:57:58Z"
+      },
       {
         "message": "FIX: allow Q036 exact historical source checkout",
         "sha": "3cc41a307810d1c7541ba66b147652cfa42befa2",
@@ -112,16 +122,6 @@
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "6d202d1284e5e624a8a37fac3f2b3dc08dc88ca2",
         "timestamp": "2026-09-27T18:55:48Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "b24d8634f445d980fc265b27f31236fc012c7f58",
-        "timestamp": "2026-09-27T18:54:13Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "8df41f019e4a338c584884b56199923d8c5597ba",
-        "timestamp": "2026-09-27T18:53:22Z"
       }
     ]
   },
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "3cc41a307810d1c7541ba66b147652cfa42befa2",
+  "source_master_sha": "1f93a5a1d9f389eaa1ad65c6540ad5efd5181ff4",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36342581164"
+    "run_id": "36342650085"
   }
 }
