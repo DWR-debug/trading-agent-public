@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T16:46:15.039489+00:00",
+  "generated_at_utc": "2026-09-27T16:46:38.924435+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -102,6 +102,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: align intraday discovery contract schemas",
+        "sha": "d9ee16a9eb69fec6f17521bda2181db7984d1eb0",
+        "timestamp": "2026-09-27T18:46:26+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d6a12c821d683347e688577fd88d7aaf33c323a9",
+        "timestamp": "2026-09-27T16:46:15Z"
+      },
+      {
         "message": "OPS: harden canonical snapshot failure invalidation",
         "sha": "60565b5e635382deb0ca1909d3c36e4a8ffa174c",
         "timestamp": "2026-09-27T18:46:01+02:00"
@@ -130,16 +140,6 @@
         "message": "QUEUE: dispatch AGENT-003 canonical data layer review",
         "sha": "0fbafffb02ece6110d297733c58d21442192347a",
         "timestamp": "2026-09-27T18:40:12+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "4a647691408bbd8a32f2d76d3d3980e475744b43",
-        "timestamp": "2026-09-27T16:39:47Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "32cb968bdd8f64ab36a992175dfefcd0ac1796e7",
-        "timestamp": "2026-09-27T16:27:11Z"
       }
     ]
   },
@@ -201,12 +201,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "60565b5e635382deb0ca1909d3c36e4a8ffa174c",
+  "source_master_sha": "d9ee16a9eb69fec6f17521bda2181db7984d1eb0",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36334452047"
+    "run_id": "36334478138"
   }
 }
