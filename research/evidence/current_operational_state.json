@@ -18,8 +18,8 @@
         {
           "issue_number": "335",
           "lane": "lane1",
-          "request_file": "agent_requests/lane1/AGENT-Q024-HISTORICAL-XML.request",
-          "task_id": "AGENT-Q024-HISTORICAL-XML"
+          "request_file": "agent_requests/lane1/AGENT-Q024-GAP-2011-2017.request",
+          "task_id": "AGENT-Q024-GAP-2011-2017"
         }
       ]
     },
@@ -61,15 +61,15 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T17:23:35.300163+00:00",
+  "generated_at_utc": "2026-09-27T17:25:10.338535+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
       {
         "issue_number": "335",
         "lane": "lane1",
-        "request_file": "agent_requests/lane1/AGENT-Q024-HISTORICAL-XML.request",
-        "task_id": "AGENT-Q024-HISTORICAL-XML"
+        "request_file": "agent_requests/lane1/AGENT-Q024-GAP-2011-2017.request",
+        "task_id": "AGENT-Q024-GAP-2011-2017"
       }
     ],
     "default_branch": "master",
@@ -77,12 +77,32 @@
       {
         "number": 335,
         "title": "RESEARCH: Q024 auction-result publication timestamp PIT feasibility",
-        "updatedAt": "2026-09-27T17:15:27Z",
+        "updatedAt": "2026-09-27T17:25:03Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/335"
       }
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: queue Q024 historical 2011-2017 gap diagnosis",
+        "sha": "a61a7111913ee72d97aad212c559539f64be1087",
+        "timestamp": "2026-09-27T19:25:00+02:00"
+      },
+      {
+        "message": "OPS: retire completed Q024 historical XML request",
+        "sha": "51169e147a89dd08794d0991491d464464236187",
+        "timestamp": "2026-09-27T19:24:58+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "0f6331a07de4d82a358d1d2f12f8ca31ee75d5cc",
+        "timestamp": "2026-09-27T17:24:50Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3aebd4ace62ce8e720748656831aa24c7e256696",
+        "timestamp": "2026-09-27T17:23:35Z"
+      },
       {
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "4fd19f41322bd4398aee9f616fcebfe17e69a0b1",
@@ -102,26 +122,6 @@
         "message": "EVIDENCE: record Q024 timestamp feasibility receipt",
         "sha": "0fa724c2d8d99ec05ee3d8150733a476a77a1b91",
         "timestamp": "2026-09-27T19:23:11+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e8a69d79757e013dd3fd251689d84d2c994e9554",
-        "timestamp": "2026-09-27T17:20:21Z"
-      },
-      {
-        "message": "OPS: synchronize mutable project state to EUR2000 reference and Q024",
-        "sha": "42cc79f4ebd37d1472ff472eb3a025e980506928",
-        "timestamp": "2026-09-27T19:20:07+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "16af44dd673b9b48d635d76ed70a1d47e68cb78f",
-        "timestamp": "2026-09-27T17:18:19Z"
-      },
-      {
-        "message": "RESEARCH: use official Treasury XML ReleaseTime for Q024",
-        "sha": "c9278bc5e06ebbc40a70c00f053db4ec39f2b3e4",
-        "timestamp": "2026-09-27T19:18:07+02:00"
       }
     ]
   },
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4fd19f41322bd4398aee9f616fcebfe17e69a0b1",
+  "source_master_sha": "a61a7111913ee72d97aad212c559539f64be1087",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36336752938"
+    "run_id": "36336851877"
   }
 }
