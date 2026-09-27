@@ -91,7 +91,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T14:00:02.689769+00:00",
+  "generated_at_utc": "2026-09-27T14:01:00.944407+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -162,6 +162,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "EVIDENCE: record fresh T049/T050 coverage receipts",
+        "sha": "e5e06810b60b149a4faeafb17ceda717c69c3084",
+        "timestamp": "2026-09-27T16:00:50+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "96d167521143ba5900d53a604e7f8de4c601708f",
+        "timestamp": "2026-09-27T14:00:02Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "ecb61260e88255a06ea6035ae326d0ee42913376",
         "timestamp": "2026-09-27T13:59:52Z"
@@ -190,16 +200,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "4813b4f3b12de08479092f956f36afc41445e3d6",
         "timestamp": "2026-09-27T13:54:22Z"
-      },
-      {
-        "message": "FIX: continue fixed-window discovery after consumed batches",
-        "sha": "d7b9be2df01728862cef6cd9f2a65d2cc03d0c1f",
-        "timestamp": "2026-09-27T15:54:09+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a35e0d932d534231fc9013662dbc19056e8b6ab0",
-        "timestamp": "2026-09-27T13:52:28Z"
       }
     ]
   },
@@ -260,12 +260,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "27f8183e68d6ef1e03c12db263fbf4b704dfbbca",
+  "source_master_sha": "e5e06810b60b149a4faeafb17ceda717c69c3084",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36324302914"
+    "run_id": "36324393777"
   }
 }
