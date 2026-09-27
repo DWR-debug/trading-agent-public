@@ -137,5 +137,21 @@
   "requested_candles": 3520,
   "target_candles": 3500,
   "minimum_in_window_candles": 3500,
-  "raw_fetch_candles": 5000
+  "raw_fetch_candles": 5000,
+  "amendment_history": [
+    {
+      "amendment_id": "A1",
+      "amended_at": "2026-09-27T13:00:00Z",
+      "reason": "Canonical coverage infrastructure was loading only 3520 most-recent candles, which cannot expose the full fixed 2011-01-01 through 2025-09-24 study window. The amendment adds an explicit 5000-candle acquisition buffer without changing the trial universe, signal, timing rule, target common calendar, research/holdout periods, gates, or costs.",
+      "affected_fields": [
+        "raw_fetch_candles"
+      ],
+      "prior_raw_fetch_candles": 3520,
+      "new_raw_fetch_candles": 5000,
+      "prior_run_id": 36320700993,
+      "prior_run_status": "DATA_INVALID_INFRASTRUCTURE",
+      "performance_executed": false,
+      "holdout_evaluated": false
+    }
+  ]
 }
