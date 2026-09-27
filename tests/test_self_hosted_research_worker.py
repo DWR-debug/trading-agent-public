@@ -214,7 +214,7 @@ def test_self_hosted_continuous_qa_is_run_isolated():
     assert 'set "SITE=%RUNNER_TEMP%\\\\python-site-continuous-%RUN_KEY%-' in text
 
 
-def test_continuous_qa_fails_closed_on_missing_provenance_files():
+def test_continuous_qa_publishes_required_provenance_artifacts():
     text = (
         ROOT / ".github" / "workflows" / "self-hosted-continuous-qa.yml"
     ).read_text(encoding="utf-8")
