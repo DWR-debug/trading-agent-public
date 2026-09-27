@@ -97,13 +97,16 @@ def run_discovery(
         for universe in list_universes()
         for symbol in universe.symbols
     }
-    overlap = sorted(symbol for symbol in CANDIDATE_POOL if symbol in used_symbols)
-    if overlap:
+    excluded_existing_universe_symbols = [
+        symbol for symbol in CANDIDATE_POOL if symbol in used_symbols
+    ]
+    candidates = [
+        symbol for symbol in CANDIDATE_POOL if symbol not in used_symbols
+    ][:symbol_limit]
+    if not candidates:
         raise RuntimeError(
-            "Fixed candidate pool overlaps an existing universe: "
-            + ", ".join(overlap)
+            "Fixed candidate pool has no unused symbols available for discovery."
         )
-    candidates = list(CANDIDATE_POOL[:symbol_limit])
 
     results: dict[str, dict] = {}
     # Cache the exact timestamps returned by the first fetch so coverage
@@ -166,13 +169,15 @@ def run_discovery(
             "target_common_count": TARGET_COMMON_COUNT,
             "raw_fetch_count": RAW_FETCH_COUNT,
         },
-        "source_order_rule": "Fixed CANDIDATE_POOL order frozen in source; first symbols satisfying only the fixed 2011-01-01 through 2025-09-24 coverage contract are selected.",
+        "source_order_rule": "Fixed CANDIDATE_POOL order is frozen in source; symbols already claimed by registered universes are excluded, then the first unused symbols satisfying only the fixed 2011-01-01 through 2025-09-24 coverage contract are selected.",
         "performance_evaluation": False,
         "holdout_evaluation": False,
         "selection_used": False,
         "asset_selection_by_performance": False,
         "candidate_pool_limit": symbol_limit,
-        "candidate_pool": candidates,
+        "candidate_pool": list(CANDIDATE_POOL),
+        "eligible_candidate_pool": candidates,
+        "excluded_existing_universe_symbols": excluded_existing_universe_symbols,
         "results": ordered_results,
         "coverage_valid_candidates": [item["symbol"] for item in valid],
         "selected_coverage_batch": selected_symbols,
