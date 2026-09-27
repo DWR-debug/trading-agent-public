@@ -1,3 +1,40 @@
+# CURRENT EXECUTION CHECKPOINT — Q025 complete; Q026 coverage blocked on fixed data geometry; Copilot auth verified as blocker — 2026-09-27
+
+**Master:** `85f919860f6949f4f75779903eb08f6ccdf9cd12`
+
+## Verifizierter aktueller Stand
+
+- **Q023:** `COVERAGE_VALIDATED`, 89/89 Treasury-10Y-Events mit reproduzierbarer PIT-Timestamp-Grundlage.
+- **Q024:** `DATA_INSUFFICIENT`: offizieller Treasury-Results-RSS erreichbar, aber nicht historische 2011–2025-Archivquelle; 0/89 historische Intraday-Timestamps reproduzierbar.
+- **Q025:** `DATE_PIT_VALIDATED`: für alle 89 Events liegt `record_date` nach `auction_date`; damit ist die Date-Level-H2-Trennung methodisch zulässig.
+- **Q026 Coverage:** `DATA_INVALID / NO_SCIENTIFIC_OUTCOME`, Workflow `36311607279`, Artifact `10928579427`. Die 12 fixierten Symbole liefern jeweils 3.704 Sessions im 2011–2025-Fenster, während die Präregistrierung 4.000 angeforderte Candles verlangt. Es wurde **keine Performanceanalyse** ausgeführt.
+- Q026 bleibt unverändert als gescheiterter Coverage-Versuch erhalten. Eine Wiederholung erfordert eine **neue bzw. revidierte Präregistrierung**, nicht eine rückwirkende Änderung des bestehenden Trials.
+
+## Agenten-/Runner-Betrieb
+
+- PR **#339** `OPS: harden bounded Copilot CLI authentication` wurde auf `master` gemergt; darin wurde der persönliche Copilot-Secret-Pfad explizit verdrahtet und die widersprüchliche `copilot-requests`-Permission aus diesem persönlichen Repo-Pfad entfernt.
+- Agent Queue Lauf **118** (`36311491768`) erreichte mit dem aktuellen Secret nach Repository-Access- und Token-Class-Preflight tatsächlich die Copilot CLI. Die CLI lehnte die Authentifizierung weiterhin ab. **Keine Agent-Session und kein PR wurden erzeugt.**
+- Die Queue wurde danach fail-safe pausiert, damit keine weiteren erfolglosen Copilot-Versuche Ressourcen verbrauchen.
+- Der aktuelle Fehler ist daher **kein Runner-/Queue-Verbindungsproblem mehr**, sondern ein Copilot-Credential-/Account-Berechtigungsproblem.
+- GitHub-hosted Research-Runner bleiben der kanonische Pfad für deterministische Coverage/Preflight/Performance-Ausführung.
+- Self-hosted QA bleibt owner-gesteuert; keine Live-Trading-Rechte.
+
+## Sicherheitsinvarianten
+
+- `PAPER_ONLY=True`
+- `LIVE_TRADING_ENABLED=False`
+- `orders_enabled=False`
+- `automatic_promotion=False`
+- Paid agent/API budget: **0 USD**
+
+## Nächster zulässiger Schritt
+
+1. Copilot erst nach erfolgreicher Credential-Korrektur wieder reaktivieren.
+2. Q026-Coverage nicht erneut ausführen, bevor die Datengeometrie in einer **neuen/revidierten Präregistrierung** sauber und ex ante festgelegt ist.
+3. Danach Coverage-first; erst bei erfolgreichem Freeze darf ein formal autorisierter H2-Performance-Lauf starten.
+
+---
+
 # CURRENT EXECUTION CHECKPOINT — T047R1/H1 closed; Q023 H2 PIT-feasibility next — 2026-09-27
 
 - T047R1 directional-inversion performance remains **NO_PROMOTION_EVIDENCE**; H1 is closed, with no inversion tuning and no Q020 reopening.
