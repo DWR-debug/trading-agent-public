@@ -106,6 +106,9 @@ def run_discovery(
     candidates = list(CANDIDATE_POOL[:symbol_limit])
 
     results: dict[str, dict] = {}
+    # Cache the exact timestamps returned by the first fetch so coverage
+    # selection never mixes two different source snapshots for one run.
+    timestamp_cache: dict[str, list[str]] = {}
     with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
         futures = {pool.submit(_window_timestamps, symbol): symbol for symbol in candidates}
         for future in as_completed(futures):
@@ -113,6 +116,7 @@ def run_discovery(
             try:
                 timestamps, quality = future.result()
                 unique = sorted(set(timestamps))
+                timestamp_cache[symbol] = unique
                 count = len(unique)
                 results[symbol] = {
                     "symbol": symbol,
@@ -137,10 +141,7 @@ def run_discovery(
     valid = [item for item in ordered_results if item["status"] == "WINDOW_COVERAGE_VALID"]
 
     selected: list[dict] = []
-    timestamp_sets = {
-        item["symbol"]: set(_window_timestamps(item["symbol"])[0])
-        for item in valid
-    }
+    timestamp_sets = {item["symbol"]: set(timestamp_cache[item["symbol"]]) for item in valid}
     intersection: set[str] | None = None
     for item in valid:
         ts_set = timestamp_sets[item["symbol"]]
