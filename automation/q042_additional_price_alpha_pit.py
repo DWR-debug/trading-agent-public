@@ -81,8 +81,8 @@ def run(root,output):
     checks=[]
     for index in range(MIN_HISTORY,TARGET_COUNT-1,DECISION_STEP):
         original=_signals(assets,index)
-        assert original==_signals(_mutate(assets,index,"future")), index
-        assert original==_signals(_mutate(assets,index,"next")), index
+        assert original==_signals(_mutate(assets,index,"future"), index), index
+        assert original==_signals(_mutate(assets,index,"next"), index), index
         checks.append({"index":index,"signals":original})
     result={
       "schema_version":"1.0","trial_id":"T-2026-09-27-061","status":"PIT_PASSED",
