@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T19:31:11.479407+00:00",
+  "generated_at_utc": "2026-09-27T19:52:50.765023+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -90,6 +90,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: add price-only alpha PIT gate and candidate discovery catalogue (#488)",
+        "sha": "d0e1be6c6ad41cd8082d30db2485cdb9573ade94",
+        "timestamp": "2026-09-27T21:52:37+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "4022713c54d405302366d3a7ce9ffcc3f115aafe",
+        "timestamp": "2026-09-27T19:50:46Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "d51be61e54c46c5cc570528c65058e25846eb52a",
+        "timestamp": "2026-09-27T19:49:19Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "7ab1f022ae7a5c68bbc3ffb404b76595db2ee29c",
+        "timestamp": "2026-09-27T19:37:56Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "59cb9b40157ad3acfe2b009a05d087142ca395f1",
+        "timestamp": "2026-09-27T19:36:22Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d2319a70a92704b6e324f228fcc26af6f1625ec7",
+        "timestamp": "2026-09-27T19:31:11Z"
+      },
+      {
         "message": "OPS: align coverage workflow and repair legacy coverage fixture (#487)",
         "sha": "bddb8a210bbf0bef79f35dc5254b8c5755a0f842",
         "timestamp": "2026-09-27T21:30:59+02:00"
@@ -98,36 +128,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "479881c7546b20d234bb210a9e17ac4c410c94e1",
         "timestamp": "2026-09-27T19:29:01Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1a414875218967282a994820b3cf4d9b180dec83",
-        "timestamp": "2026-09-27T19:28:52Z"
-      },
-      {
-        "message": "STATE: set decision basis to Q038 coverage gate",
-        "sha": "c2acc0130a3bf1a7822c90cd474231affe0a41b8",
-        "timestamp": "2026-09-27T21:28:49+02:00"
-      },
-      {
-        "message": "STATE: advance project to Q038 coverage gate",
-        "sha": "abbe3c3ac0f2cebc43f7c92b0c654c6fab0b9936",
-        "timestamp": "2026-09-27T21:28:40+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4b98043c33725b3727d449799610aeb450bcad98",
-        "timestamp": "2026-09-27T19:28:29Z"
-      },
-      {
-        "message": "OPS: retire duplicate Q038 agent request after direct implementation",
-        "sha": "c97bd7149d32d1bedc180fa8ca4256b5b2d7bd75",
-        "timestamp": "2026-09-27T21:28:24+02:00"
-      },
-      {
-        "message": "RESEARCH: implement Q038 fresh disjoint coverage contract (#486)",
-        "sha": "1c50bdd0ce7f78ccd9c85fa790ae90e6e855a881",
-        "timestamp": "2026-09-27T21:28:16+02:00"
       }
     ]
   },
@@ -189,12 +189,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "bddb8a210bbf0bef79f35dc5254b8c5755a0f842",
+  "source_master_sha": "d0e1be6c6ad41cd8082d30db2485cdb9573ade94",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36344634676"
+    "run_id": "36345956121"
   }
 }
