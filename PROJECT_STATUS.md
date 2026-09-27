@@ -1,3 +1,12 @@
+# CURRENT EXECUTION CHECKPOINT — Agent PRs #341/#342 ready for review; fictional EUR 500 simulation capital recorded — 2026-09-27
+
+- Fiktives Referenzkapital: EUR 500.00 (HYPOTHETICAL_STARTING_CAPITAL_EUR), ausschließlich für Paper-/Shadow-/Planungssimulationen.
+- Tatsächlich verfügbares Kapital: weiterhin 0 / nicht verfügbar; die Annahme ist kein Echtgeldbestand.
+- Agent PR #341: AGENT-008, 8 orthogonale einkommensorientierte Hypothesenfamilien, design-only, unranked.
+- Agent PR #342: AGENT-012, paper-only Shadow/Forward Harness; ausschließlich im vereinbarten Scope.
+- Beide PRs werden erst nach Scope-, CI- und Safety-Prüfung übernommen.
+- Safety unverändert: PAPER_ONLY=True, LIVE_TRADING_ENABLED=False, orders_enabled=False, automatic_promotion=False.
+
 # CURRENT EXECUTION CHECKPOINT — Copilot credential correction required; deterministic research path remains active — 2026-09-27
 
 - Copilot integration is operational up to the real CLI authentication call.
