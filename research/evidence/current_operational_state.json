@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T19:28:29.184586+00:00",
+  "generated_at_utc": "2026-09-27T19:28:52.150336+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -90,6 +90,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "STATE: set decision basis to Q038 coverage gate",
+        "sha": "c2acc0130a3bf1a7822c90cd474231affe0a41b8",
+        "timestamp": "2026-09-27T21:28:49+02:00"
+      },
+      {
+        "message": "STATE: advance project to Q038 coverage gate",
+        "sha": "abbe3c3ac0f2cebc43f7c92b0c654c6fab0b9936",
+        "timestamp": "2026-09-27T21:28:40+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4b98043c33725b3727d449799610aeb450bcad98",
+        "timestamp": "2026-09-27T19:28:29Z"
+      },
+      {
         "message": "OPS: retire duplicate Q038 agent request after direct implementation",
         "sha": "c97bd7149d32d1bedc180fa8ca4256b5b2d7bd75",
         "timestamp": "2026-09-27T21:28:24+02:00"
@@ -113,21 +128,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "e499dcb25688426cc8e69e7f1f1144f91963a8fd",
         "timestamp": "2026-09-27T19:23:55Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "66381e2722b3197ce8a108cd98acfe5345ecc346",
-        "timestamp": "2026-09-27T19:23:27Z"
-      },
-      {
-        "message": "RESEARCH: canonicalize Q036 and preregister Q037 alpha architecture",
-        "sha": "b44c237f397083dbee9fe6ec4e519c75341cb97d",
-        "timestamp": "2026-09-27T21:23:12+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "1b368eb50bbf0a2b1cf5dbdd2da269ccd705c496",
-        "timestamp": "2026-09-27T19:22:41Z"
       }
     ]
   },
@@ -148,10 +148,10 @@
   },
   "schema_version": "1.0",
   "scientific_state_recorded": {
-    "decision_basis_stage": "Q037_ALPHA_ARCHITECTURE_DESIGN",
+    "decision_basis_stage": "Q038_FRESH_DISJOINT_COVERAGE",
     "latest_formal_status": "NO_ARM_PASSED_ALL_T052_GATES",
     "latest_formal_trial": "T-2026-09-27-056",
-    "next_research_focus_recorded": "Q037 ex-ante Alpha-Mechanism-Architecture: define orthogonal alpha families and a fresh disjoint validation protocol; no performance selection until coverage/PIT prerequisites pass.",
+    "next_research_focus_recorded": "Q038 fresh disjoint coverage for the Q037 alpha architecture: execute the fixed source-order coverage contract; PIT remains mandatory before any later performance trial.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -189,12 +189,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c97bd7149d32d1bedc180fa8ca4256b5b2d7bd75",
+  "source_master_sha": "c2acc0130a3bf1a7822c90cd474231affe0a41b8",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36344465445"
+    "run_id": "36344489634"
   }
 }
