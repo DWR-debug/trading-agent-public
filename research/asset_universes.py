@@ -537,7 +537,19 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
             "ELV", "CI", "JCI", "FAST", "PAYX", "CTSH",
         ),
         target_count=4000,
-    ),
+    ),,
+    
+    AssetUniverse(
+        name="validation_2026_09_27_treasury_auction_date_shift_h2",
+        priority=69,
+        description=(
+            "Fresh fully symbol-disjoint U.S. equity universe for Q026 H2; "
+            "fixed Treasury auction bid-to-cover signal mapped from auction_date "
+            "to the first following XNYS session."
+        ),
+        symbols=("WEC","ED","OKE","VLO","EIX","NDSN","HST","AKAM","IT","DVN","HAL","SLB"),
+        target_count=4000,
+    )
 )
 
 def get_universe(name: str) -> AssetUniverse:
