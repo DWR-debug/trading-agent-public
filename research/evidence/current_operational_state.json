@@ -91,7 +91,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T13:57:33.417120+00:00",
+  "generated_at_utc": "2026-09-27T13:59:52.387128+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -161,18 +161,27 @@
       {
         "number": 279,
         "title": "AGENT-007: Independent audit of agent orchestration and Actions routing",
-        "updatedAt": "2026-09-27T13:57:12Z",
+        "updatedAt": "2026-09-27T13:59:52Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/279"
-      },
-      {
-        "number": 278,
-        "title": "AGENT-006: Independent audit of self-hosted QA and provenance",
-        "updatedAt": "2026-09-27T13:56:30Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/issues/278"
       }
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "AGENT: publish verified AGENT-007 orchestration audit",
+        "sha": "27f8183e68d6ef1e03c12db263fbf4b704dfbbca",
+        "timestamp": "2026-09-27T15:59:27+02:00"
+      },
+      {
+        "message": "AGENT: publish verified AGENT-006 self-hosted QA audit",
+        "sha": "d8732f25aa23e93d42900fc4a16376c993c0849f",
+        "timestamp": "2026-09-27T15:59:06+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "90f67d088836c8f1ed99b5ce8054aacbd2830de4",
+        "timestamp": "2026-09-27T13:57:33Z"
+      },
       {
         "message": "RESEARCH: preregister T050 second fixed candidate batch coverage",
         "sha": "96e1e62bf8ce9be03713917571fa13d45a426588",
@@ -197,21 +206,6 @@
         "message": "TEST: align QA regression checks with hosted matrix",
         "sha": "495b47a839dfe9de5ee7daf105195cfed1588b72",
         "timestamp": "2026-09-27T15:52:16+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "7ed5cad18c0d9aead50c7e321ed575ca9d2ce8be",
-        "timestamp": "2026-09-27T13:52:06Z"
-      },
-      {
-        "message": "FIX: scope agent queue regression gate to queue contract",
-        "sha": "00bf36466841862b28a4a005b43a1effc773e0b3",
-        "timestamp": "2026-09-27T15:51:51+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "80ecbe2465d0e5248f35bd9d4c25b0d9cb1cd1ca",
-        "timestamp": "2026-09-27T13:49:49Z"
       }
     ]
   },
@@ -272,12 +266,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "96e1e62bf8ce9be03713917571fa13d45a426588",
+  "source_master_sha": "d8732f25aa23e93d42900fc4a16376c993c0849f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36324187029"
+    "run_id": "36324282494"
   }
 }
