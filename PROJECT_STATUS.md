@@ -1,6 +1,6 @@
 # CURRENT EXECUTION CHECKPOINT — AGENT-014 merged; self-hosted capacity increased — 2026-09-27
 
-- Current canonical code/state checkpoint: `29a7c0f4fc6850fa05069b8fae32f0534099c5ac`.
+- Current canonical master after this status synchronization is the latest commit shown by GitHub; the previous code/state checkpoint was `29a7c0f4fc6850fa05069b8fae32f0534099c5ac`.
 - AGENT-014 / PR #345 is merged; squash commit `77664831fedcf60d25f65bbd5b32034dbd91e8fe`; issue #344 is closed.
 - The merged task added only the fixed turnover-shock coverage/PIT runner, focused tests, preregistration and design documentation. No performance evaluation, holdout selection, research-gate change, promotion or live execution was introduced.
 - Self-hosted Continuous QA now runs every **15 minutes** and records runner name, OS, architecture, logical processor count and physical memory as non-formal capacity telemetry.
