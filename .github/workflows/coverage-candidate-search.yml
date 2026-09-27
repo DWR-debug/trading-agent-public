@@ -1,0 +1,86 @@
+name: Coverage Candidate Search
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-coverage-candidate-search
+  cancel-in-progress: false
+
+jobs:
+  candidate_coverage:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pytest pandas
+
+      - name: Safety guard
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          assert settings.AUTOMATIC_PROMOTION is False
+          print("COVERAGE CANDIDATE SAFETY OK")
+          PY
+
+      - name: Candidate discovery tests
+        run: python -m pytest -q tests/test_coverage_candidate_discovery.py
+
+      - name: Coverage-only candidate search
+        run: |
+          set -euo pipefail
+          mkdir -p research/runs/coverage_discovery
+          python -m automation.coverage_candidate_discovery             --output research/runs/coverage_discovery/t040_candidates.json
+
+      - name: Contract verification
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("research/runs/coverage_discovery/t040_candidates.json")
+          d=json.loads(p.read_text(encoding="utf-8"))
+          assert d["performance_evaluation"] is False
+          assert d["holdout_evaluation"] is False
+          assert d["selection_used"] is False
+          assert d["safety"]["paper_only"] is True
+          assert d["safety"]["live_trading_enabled"] is False
+          assert d["safety"]["orders_enabled"] is False
+          assert d["safety"]["automatic_promotion"] is False
+          print("COVERAGE CANDIDATE CONTRACT OK")
+          print("VALID:", ",".join(d["coverage_valid_candidates"]))
+          print("NEXT:", d["next_deterministic_candidate"])
+          print("FINGERPRINT:", d["fingerprint"])
+          PY
+
+      - name: Evidence artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: coverage-candidates-${{ github.run_id }}
+          path: research/runs/coverage_discovery/t040_candidates.json
+          if-no-files-found: error
+          retention-days: 30
