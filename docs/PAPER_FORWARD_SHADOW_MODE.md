@@ -1,84 +1,90 @@
 # Paper-only shadow/forward simulation
 
-`automation/paper_forward_shadow.py` replays one explicitly frozen candidate on
-successive candle inputs using the existing `StrategyEngine` and
-`BacktestEngine`. It does not select candidates, fetch market data, call a
-broker, submit orders, evaluate research gates, or promote anything.
+The paper-forward harness now forms a complete technical simulation chain:
 
-## Candidate and data contract
+Frozen Candidate -> paper capital -> closed market candles -> simulated positions ->
+fees/slippage -> realized and unrealized P&L -> per-candle MTM ledger ->
+reproducible persistent state.
 
-Start with a JSON candidate containing exactly the following fields:
+The system remains strictly paper-only. It does not call a broker, submit orders,
+select candidates, evaluate research gates, or promote anything.
 
-```json
-{
-  "schema_version": 1,
-  "frozen": true,
-  "candidate_id": "candidate-001",
-  "freeze_ref": "immutable-preregistration-or-commit-reference",
-  "symbol": "TEST",
-  "interval": "1h",
-  "initial_capital_eur": 1000.0,
-  "risk_per_trade": 0.01,
-  "leverage": 1.0,
-  "fee_rate": 0.001,
-  "slippage_rate": 0.0005,
-  "parameters": {
-    "momentum": {"lookback": 5},
-    "mean_reversion": {"window": 5, "threshold": 0.02}
-  }
-}
-```
+## Frozen candidate
 
-`frozen` and a non-empty `freeze_ref` are mandatory declarations by the caller;
-the harness does not decide whether the candidate is scientifically authorized.
-The supplied parameters and costs are fixed for the life of a run. The supported
-intervals are `1m`, `5m`, `15m`, `30m`, `1h`, `4h`, and `1d`. Candle input is a
-non-empty JSON array of `{timestamp, open, high, low, close, volume}` objects
-with timezone-aware ISO timestamps.
+The candidate contract remains version 1. The supplied parameters and costs are
+fixed for the lifetime of a shadow run. A simulated initial capital of 500.00 EUR
+is supported and is not evidence of available real capital.
 
-Candles must be ordered, unique, finite, and exactly contiguous at the declared
-interval. A missing interval, modified previously observed candle, unsupported
-interval, or invalid OHLCV value fails closed; the runner neither fills nor
-silently skips gaps. An update can contain only new candles, an unchanged
-overlap plus new candles, or an unchanged historical window. Replaying
-unchanged inputs leaves the portfolio fingerprint and output unchanged.
+## Automatic market data
 
-## Start, update, and stop
+automation/paper_forward_market_feed.py uses the existing public Binance market
+data endpoint without API keys. Only completed candles are accepted. The feed
+never overwrites an already observed candle; a vendor revision is rejected
+fail-closed by the shadow state.
 
-State is kept in a caller-selected JSON file and atomically replaced at each
-successful update. The state contains the frozen candidate, the complete
-canonical candle history, portfolio summary, and trade record, so every update
-replays from the same initial simulated capital and candidate rather than
-depending on hidden process memory.
+The existing historical Binance loader is reused for the initial warm-up. The
+incremental path fetches a recent window, filters the still-open candle, and
+passes the closed overlap/new candles through the same immutable-input validator.
 
-```sh
-python -m automation.paper_forward_shadow start \
-  --candidate frozen_candidate.json --candles initial_candles.json --state shadow.json
-python -m automation.paper_forward_shadow update \
-  --candles next_candles.json --state shadow.json
-python -m automation.paper_forward_shadow stop --state shadow.json
-```
+Each successful feed update can write a separate JSON receipt containing source
+endpoint, fetch timestamp, candidate fingerprint, latest market timestamp and a
+fingerprint of the fetched closed-candle window.
 
-The run ID is stable for the frozen candidate and first market timestamp.
-Candidate, cumulative input, and signal fingerprints are SHA-256 over canonical
-JSON. `started_at_utc` and `updated_at_utc` are market-data timestamps (first
-and latest candle), not wall-clock execution times. Stop time is the last
-processed candle timestamp, making a replay reproducible. A stopped session
-cannot be resumed or updated; start a separate state file for a new run.
+## Persistent MTM portfolio ledger
 
-Each snapshot records net simulated P&L, trade count, gross traded notional,
-maximum single-trade notional, and maximum drawdown on the realized trade-equity
-curve. The existing backtest engine marks any still-open simulated position to
-the latest close when producing a snapshot, so `current_position_exposure_eur`
-is zero at that boundary. Drawdown is trade-close based and does not claim
-intrabar mark-to-market risk. No metric is interpreted as evidence or used for
-candidate selection or promotion.
+Shadow state schema_version=2 contains a complete ledger row for every accepted
+market candle. Each row records market time, close, signal, cash, realized P&L,
+unrealized P&L, MTM equity, position state, gross exposure, cumulative fees,
+cumulative traded notional, and realized/MTM drawdown.
+
+Open positions remain open at an update boundary. The snapshot does not force an
+artificial closing trade merely to obtain a final equity number. final_equity_eur
+is therefore MTM equity, while realized_pnl_eur excludes unrealized gains/losses.
+
+Entry fees reduce cash when a position opens; exit fees and slippage are charged
+when it closes. The simulator uses candle OHLC for the same stop-loss semantics
+as the existing offline backtest model. The MTM mark is the latest completed
+close and does not claim tick-level liquidation or intrabar mark accuracy.
+
+The full candle history, ledger, trades and fingerprints are atomically replaced
+as one state file. Replaying unchanged candles must reproduce the same portfolio
+and fingerprint.
+
+## Autonomous running loop
+
+automation/paper_forward_loop.py connects the feed and the state machine.
+
+One-shot initialization:
+
+python -m automation.paper_forward_loop ^
+  --candidate frozen_candidate.json ^
+  --state shadow.json ^
+  --receipt shadow-feed-receipt.json ^
+  --max-iterations 1
+
+Continuous paper-forward mode:
+
+python -m automation.paper_forward_loop ^
+  --candidate frozen_candidate.json ^
+  --state shadow.json ^
+  --receipt shadow-feed-receipt.json
+
+The default polling interval is derived from the candidate candle interval and
+capped at 15 minutes. The process can be stopped with Ctrl+C; the last successful
+state remains intact. A later process restart resumes from the state file.
+
+This loop is an operational shadow simulator, not a research-evidence producer.
+Its output must remain outside research/evidence and cannot alter gates or
+promotion state.
 
 ## Safety
 
-Every start/update/stop checks the central configuration and fails unless
-`PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `ORDERS_ENABLED=False`, and
-`AUTOMATIC_PROMOTION=False`. The runner only consumes local JSON/candle objects
-and the offline signal/backtest components; it contains no broker or order API.
-Historical evidence, authorizations, research gates, and holdout logic are not
-inputs or outputs of this mode.
+Every start/update/loop path requires:
+
+PAPER_ONLY=True
+LIVE_TRADING_ENABLED=False
+ORDERS_ENABLED=False
+AUTOMATIC_PROMOTION=False
+
+There is no broker client, order API, exchange account credential, or automatic
+promotion path in the paper-forward implementation.
