@@ -6,6 +6,8 @@ It defines the accounting semantics needed for a future withdrawal/payout layer.
 
 from dataclasses import dataclass
 
+from config import settings
+
 
 class CapitalAccountingError(ValueError):
     """Raised when a capital-accounting operation violates the contract."""
@@ -23,13 +25,15 @@ class CapitalSnapshot:
 class CapitalAccount:
     """Fail-closed accounting model for a permanently working capital base.
 
-    Initial research capital is normally 500 EUR. Contributions can increase
+    The current project simulation reference capital is normally 2000 EUR. A caller may still provide an explicit capital amount for historical/controlled replays. Contributions can increase
     the protected capital base. Withdrawals can only consume distributable
     realized profit; the contributed capital base cannot be withdrawn through
     this interface.
     """
 
-    def __init__(self, initial_capital_eur: float = 500.0) -> None:
+    def __init__(self, initial_capital_eur: float | None = None) -> None:
+        if initial_capital_eur is None:
+            initial_capital_eur = settings.HYPOTHETICAL_STARTING_CAPITAL_EUR
         if initial_capital_eur <= 0:
             raise CapitalAccountingError("Initial capital must be > 0.")
 
