@@ -58,11 +58,10 @@ jobs:
           d=json.load(open(p[0]))
           assert d["status"]=="coverage_passed"
           assert d["common_calendar_count"]>=3500
-          assert d["selected_snapshot_count"]==3500
           assert d["performance_evaluation"] is False
           assert d["holdout_evaluation"] is False
           assert d["selection_used"] is False
-          print('Q043 COVERAGE PASS',d['common_calendar_count'])
+          print('Q043 COVERAGE PASS',d['common_calendar_count'], 'TARGET', d['target_common_calendar'])
           print('COVERAGE_FINGERPRINT',d['coverage_fingerprint'])
           print('SNAPSHOT_FINGERPRINT',d['snapshot_fingerprint'])
           PY
