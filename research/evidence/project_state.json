@@ -6,7 +6,7 @@
   "latest_formal_trial": "T-2026-09-27-056",
   "latest_trial_status": "NO_ARM_PASSED_ALL_T052_GATES",
   "next_reserved_trial": null,
-  "next_research_focus": "Q037 ex-ante Alpha-Mechanism-Architecture: define orthogonal alpha families and a fresh disjoint validation protocol; no performance selection until coverage/PIT prerequisites pass.",
+  "next_research_focus": "Q038 fresh disjoint coverage for the Q037 alpha architecture: execute the fixed source-order coverage contract; PIT remains mandatory before any later performance trial.",
   "cleanup_status": "completed_h06_and_q017_coverage_hardening",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -32,7 +32,14 @@
     "current_master_qa_tests_passed": null,
     "current_master_qa_warnings": null,
     "current_master_qa_ast_syntax": "pending",
-    "current_master_qa_safety_invariants": "pending"
+    "current_master_qa_safety_invariants": "pending",
+    "q038_implementation_review": {
+      "pr": 486,
+      "merge_commit": "1c50bdd0ce7f78ccd9c85fa790ae90e6e855a881",
+      "changed_files": 5,
+      "research_only_paths": true,
+      "performance_execution": false
+    }
   },
   "active_research_model": {
     "discovery": "wide_search_on_fixed_ex_ante_hypothesis_catalog",
@@ -520,7 +527,7 @@
     "final_execution_commit": "85acd4e17921a4e2682552bfbe424f17ffaa9322",
     "final_status": "COMPLETED_DISCOVERY_ONLY"
   },
-  "current_queue_task": "Q-2026-09-27-058-Q037-ALPHA-ARCHITECTURE-DESIGN-2026-09-27",
+  "current_queue_task": "Q-2026-09-27-059-Q038-FRESH-DISJOINT-COVERAGE-2026-09-27",
   "last_completed_queue_task": "Q-036-T056-RISK-MECHANISM-DIAGNOSTIC-2026-09-27",
   "master_commit_semantics": "last_verified_master_commit_before_this_state_update; this field must not be interpreted as a self-referential current-HEAD field",
   "state_sync_verified_at": "2026-09-27T19:05:30Z",
@@ -756,5 +763,30 @@
     "performance_execution_authorized": false,
     "selection_used": false,
     "holdout_used_for_selection": false
+  },
+  "q038": {
+    "status": "PREREGISTERED_COVERAGE_ONLY",
+    "task_id": "Q-2026-09-27-059-Q038-FRESH-DISJOINT-COVERAGE-2026-09-27",
+    "implementation_status": "MERGED",
+    "implementation_pr": "486",
+    "implementation_merge_commit": "1c50bdd0ce7f78ccd9c85fa790ae90e6e855a881",
+    "execution_scope": "COVERAGE_ONLY",
+    "candidate_pool": [
+      "IVE",
+      "IWL",
+      "DLN",
+      "DHS",
+      "DON",
+      "DES",
+      "USRT",
+      "ITB"
+    ],
+    "requested_candles": 4000,
+    "target_common_candles": 3500,
+    "target_universe_size": 8,
+    "coverage_result": null,
+    "performance_execution_authorized": false,
+    "holdout_used_for_selection": false,
+    "selection_used": false
   }
 }
