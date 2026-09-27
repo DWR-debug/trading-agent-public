@@ -68,11 +68,11 @@ jobs:
           candidates=list(root.rglob("*.json"))
           assert candidates
           d=json.loads(candidates[-1].read_text())
-          assert d["governance"]["coverage_only"] is True
-          assert d["governance"]["performance_evaluation"] is False
-          assert d["governance"]["holdout_used_for_selection"] is False
-          assert d["governance"]["asset_search"] is False
-          assert d["governance"]["parameter_search"] is False
+          assert d["performance_evaluation"] is False
+          assert d["oos_evaluation"] is False
+          assert d["holdout_evaluation"] is False
+          assert d["selection_used"] is False
+          assert d["holdout_used_for_selection"] is False
           assert d["safety"] == {"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False}
           print("Q031 COVERAGE-ONLY CONTRACT OK")
           print("STATUS:", d["status"])
