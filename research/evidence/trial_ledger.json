@@ -5115,7 +5115,83 @@
         "orders_enabled": false,
         "automatic_promotion": false
       }
+    },
+    {
+      "trial_id": "T-2026-09-27-063",
+      "recorded_at": "2026-09-27T20:25:00Z",
+      "status": "coverage_validated",
+      "research_family": "q043_fresh_alpha_replication_coverage",
+      "hypothesis": {
+        "text": "Verify a fresh fully symbol-disjoint eight-stock universe for replication of all PIT-safe price-only alpha mechanisms."
+      },
+      "data_scope": {
+        "symbols": [
+          "AON",
+          "CVS",
+          "ADSK",
+          "BA",
+          "T",
+          "F",
+          "LUV",
+          "NFLX"
+        ],
+        "requested_candles": 4000,
+        "target_common_candles": 3500,
+        "common_calendar_count": 4000,
+        "minimum_in_window_candles": 4000,
+        "coverage_workflow_run_id": 36347316117,
+        "artifact_id": 10940494021,
+        "artifact_digest": "sha256:f29ca5839913f991236ec3ebd4c8c0b18e90272bb09e061f35da0347d7e8febb",
+        "coverage_fingerprint": "aa9750095c667025663231b406f394403057bea808f0384c2bb665078040bf2b",
+        "snapshot_fingerprint": "c5c121d55f110e8b92c8d9415863b7e4e048d5ec9d3cf27e905a5283ae6b5401",
+        "selected_snapshot_count": 3500,
+        "performance_evaluation": false,
+        "oos_evaluation": false,
+        "holdout_evaluation": false
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "asset_search": false,
+        "horizon_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "none; fresh coverage gate only",
+        "selection_metric": null,
+        "holdout_used_for_selection": false
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "COVERAGE_PASSED",
+        "scientific_outcome": "COVERAGE_VALIDATED_NO_PERFORMANCE_EVIDENCE",
+        "workflow_run_id": 36347316117,
+        "workflow_conclusion": "success",
+        "artifact_id": 10940494021,
+        "artifact_digest": "sha256:f29ca5839913f991236ec3ebd4c8c0b18e90272bb09e061f35da0347d7e8febb",
+        "coverage_fingerprint": "aa9750095c667025663231b406f394403057bea808f0384c2bb665078040bf2b",
+        "snapshot_fingerprint": "c5c121d55f110e8b92c8d9415863b7e4e048d5ec9d3cf27e905a5283ae6b5401",
+        "performance_evaluation": false,
+        "holdout_used_for_selection": false,
+        "selection_used": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
     }
   ],
-  "updated_at": "2026-09-27T20:20:00Z"
+  "updated_at": "2026-09-27T20:25:00Z"
 }
