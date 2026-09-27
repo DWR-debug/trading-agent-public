@@ -70,6 +70,59 @@ def test_every_lane_writes_non_formal_run_manifest(monkeypatch, tmp_path):
             "step_return_codes": expected_codes,
         }
 
+        summary = json.loads(
+            (output_dir / "summary.json").read_text(encoding="utf-8")
+        )
+        assert summary["lane"] == lane
+        assert summary["formal_evidence_allowed"] is False
+        assert [result["index"] for result in summary["results"]] == list(
+            range(1, len(expected_codes) + 1)
+        )
+        assert [result["returncode"] for result in summary["results"]] == expected_codes
+
+
+def test_each_lane_fails_closed_and_preserves_failure_provenance(
+    monkeypatch, tmp_path
+):
+    monkeypatch.setenv("GITHUB_SHA", "abc123")
+    monkeypatch.setenv("RUNNER_NAME", "self-hosted-test")
+
+    for lane in worker.LANES:
+        output_dir = tmp_path / lane
+        attempted = []
+
+        def fail_first_step(command, out_dir, index):
+            attempted.append(index)
+            return {"index": index, "returncode": 17}
+
+        monkeypatch.setattr(worker, "run", fail_first_step)
+        monkeypatch.setattr(
+            "sys.argv",
+            [
+                "self_hosted_research_worker",
+                "--lane",
+                lane,
+                "--output-dir",
+                str(output_dir),
+            ],
+        )
+
+        assert worker.main() == 17
+        assert attempted == [1]
+
+        summary = json.loads(
+            (output_dir / "summary.json").read_text(encoding="utf-8")
+        )
+        manifest = json.loads(
+            (output_dir / "run_manifest.json").read_text(encoding="utf-8")
+        )
+        assert summary["lane"] == lane
+        assert summary["results"][0]["returncode"] == 17
+        assert summary["formal_evidence_allowed"] is False
+        assert manifest["lane"] == lane
+        assert manifest["source_commit"] == "abc123"
+        assert manifest["step_return_codes"] == [17]
+
 
 def test_run_manifest_allows_local_execution_without_github_metadata(monkeypatch, tmp_path):
     monkeypatch.delenv("GITHUB_SHA", raising=False)
@@ -108,16 +161,22 @@ def test_copilot_cli_publication_has_nonfatal_pr_creation_fallback():
 
 
 
-def test_continuous_qa_preserves_artifacts_and_runs_both_lanes():
+def test_continuous_qa_is_matrix_orchestrated_and_bounded():
     text = (
         ROOT / ".github" / "workflows" / "self-hosted-continuous-qa.yml"
     ).read_text(encoding="utf-8")
-    assert "set \"FAIL=0\"" in text
-    assert 'if errorlevel 1 set "FAIL=1"' in text
-    assert "Publish continuous QA provenance" in text
-    assert "actions/upload-artifact@v6" in text
-    assert "continuous_repo_qa_${{ github.run_id }}" in text
-    assert "continuous_data_qa_${{ github.run_id }}" in text
+    assert "qa_lane:" in text
+    assert "name: QA lane (${{ matrix.lane }})" in text
+    assert "fail-fast: false" in text
+    assert "max-parallel: 2" in text
+    assert "lane: [repo_qa, data_qa, design_qa, local_reproduction]" in text
+    assert "runs-on: [self-hosted, trading-agent-research]" in text
+    assert "Aggregate QA gate" in text
+    assert "needs: qa_lane" in text
+    assert "if: always()" in text
+    assert "MATRIX_RESULT: ${{ needs.qa_lane.result }}" in text
+    assert 'test "$MATRIX_RESULT" = "success"' in text
+
 
 def test_self_hosted_continuous_qa_is_scheduled_and_non_formal():
     text = (
@@ -128,16 +187,19 @@ def test_self_hosted_continuous_qa_is_scheduled_and_non_formal():
     assert "runs-on: [self-hosted, trading-agent-research]" in text
     assert "concurrency:" in text
     assert "trading-agent-self-hosted-continuous-qa" in text
-    assert "--lane repo_qa" in text
-    assert "--lane data_qa" in text
-    assert "--lane design_qa" in text
-    assert "--lane local_reproduction" in text
-    assert "compileall" not in worker.LANES["local_reproduction"][0]
     assert "PAPER_ONLY" in text
     assert "LIVE_TRADING_ENABLED" in text
     assert "ORDERS_ENABLED" in text
-    assert "AUTOMATIC_PROMOTION" not in text
+    assert "AUTOMATIC_PROMOTION" in text
+    assert "formal_research_evidence" in text
     assert "research/evidence" not in text
+    assert "pull_request:" not in text
+    assert "codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%" in text
+    assert "python/3.13.15/python.3.13.15.nupkg" in text
+    assert "if-no-files-found: error" in text
+    assert "continuous_${{ matrix.lane }}" in text
+    assert "runner_capacity_${{ matrix.lane }}" in text
+    assert "self-hosted-continuous-qa-${{ matrix.lane }}-${{ github.run_id }}-${{ github.run_attempt }}" in text
 
 
 def test_self_hosted_continuous_qa_is_run_isolated():
@@ -145,11 +207,23 @@ def test_self_hosted_continuous_qa_is_run_isolated():
         ROOT / ".github" / "workflows" / "self-hosted-continuous-qa.yml"
     ).read_text(encoding="utf-8")
     assert 'set "RUN_KEY=%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"' in text
-    assert 'set "WORK=%RUNNER_TEMP%\\\\trading-agent-continuous-%RUN_KEY%"' in text
-    assert 'set "ARCHIVE=%RUNNER_TEMP%\\\\trading-agent-continuous-%RUN_KEY%.tar.gz"' in text
-    assert 'set "PY_ROOT=%RUNNER_TEMP%\\\\python-3.13.15-nuget-%RUN_KEY%"' in text
-    assert 'set "PY_PKG=%RUNNER_TEMP%\\\\python.3.13.15-%RUN_KEY%.nupkg"' in text
-    assert 'set "SITE=%RUNNER_TEMP%\\\\python-site-continuous-%RUN_KEY%"' in text
+    assert 'set "WORK=%RUNNER_TEMP%\\\\trading-agent-continuous-%RUN_KEY%-' in text
+    assert 'set "ARCHIVE=%RUNNER_TEMP%\\\\trading-agent-continuous-%RUN_KEY%-' in text
+    assert 'set "PY_ROOT=%RUNNER_TEMP%\\\\python-3.13.15-nuget-%RUN_KEY%-' in text
+    assert 'set "PY_PKG=%RUNNER_TEMP%\\\\python.3.13.15-%RUN_KEY%-' in text
+    assert 'set "SITE=%RUNNER_TEMP%\\\\python-site-continuous-%RUN_KEY%-' in text
+
+
+def test_continuous_qa_fails_closed_on_missing_provenance_files():
+    text = (
+        ROOT / ".github" / "workflows" / "self-hosted-continuous-qa.yml"
+    ).read_text(encoding="utf-8")
+    assert "if: always()" in text
+    assert "if-no-files-found: error" in text
+    assert "summary.json" in text
+    assert "run_manifest.json" in text
+    assert "RUNNER_CAPACITY_AND_PROVENANCE_OK" in text
+    assert "exit /b 1" in text
 
 
 def test_self_hosted_worker_v4_is_minimal_single_step_gateway():

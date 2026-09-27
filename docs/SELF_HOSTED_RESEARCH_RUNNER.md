@@ -85,17 +85,32 @@ auf dem kanonischen Pfad reproduziert werden; unveränderte Evidence-Gates bleib
 ## Runner-Pool und Parallelisierung
 
 Alle Self-hosted Research-Jobs verwenden bewusst das gemeinsame Label
-`[self-hosted, trading-agent-research]`. Ein zweiter Runner-Prozess auf demselben PC kann
-daher mit genau demselben Label registriert werden und übernimmt automatisch Jobs, sobald
-der erste Prozess belegt ist. Die Workflow-Dateien benötigen dafür keine Änderung. Das
-ist die bevorzugte Skalierung, bevor wir zusätzliche Maschinen oder kostenpflichtige
-Compute-Ressourcen einsetzen.
+`[self-hosted, trading-agent-research]`. Die Continuous QA ist jetzt in vier statische
+Matrix-Lanes aufgeteilt: `repo_qa`, `data_qa`, `design_qa` und `local_reproduction`.
+`strategy.max-parallel: 2` begrenzt die gleichzeitig gestarteten Lane-Jobs; mit einem
+registrierten Runner werden sie entsprechend der verfügbaren Kapazität nacheinander
+ausgeführt, mit zwei identisch gelabelten Runner-Prozessen können bis zu zwei Lanes
+gleichzeitig laufen. `fail-fast: false` stellt sicher, dass der Ausfall einer Lane die
+anderen erwarteten Prüfungen nicht vorzeitig abbricht.
 
-Der aktuelle Architekturzustand ist bewusst konservativ: ein Runner-Prozess, serielle
-Continuous-QA und maximal zwei parallele Copilot-CLI-Agenten auf GitHub-hosted Actions.
-Die nächste Kapazitätsstufe ist ein zweiter selbstgehosteter Runner-Prozess auf dem bereits
-ständig verfügbaren PC; wissenschaftliche Gates und Sicherheitsinvarianten bleiben davon
-unabhängig.
+Jede Lane arbeitet mit demselben unveränderten `GITHUB_SHA`-Snapshot, einer isolierten
+temporären Python-3.13.15-NuGet-Laufzeit und einem lane-/run-/attempt-spezifischen
+Arbeits- und Provenienzpfad. Die Ausgabedateien `summary.json` und `run_manifest.json`
+enthalten die Lane, den Quell-Commit und die unveränderten Paper-only-Sicherheitsflags;
+`formal_research_evidence: false` bleibt zwingend. Artifact-Namen enthalten Lane,
+Run-ID und Attempt und werden auch bei Fehlern mit `if: always()` veröffentlicht;
+fehlende Provenienzdateien sind ein harter Fehler.
+
+Nach den vier Matrix-Lanes läuft ein separater Aggregate-Gate-Job mit `if: always()`.
+Er ist von der Matrix abhängig und verlangt, dass der gesamte statische Vier-Lane-Satz als
+erfolgreich abgeschlossen gilt. Ein übersprungener, fehlgeschlagener oder fehlender Lane-Job
+führt damit zu einem fehlgeschlagenen Gesamtstatus.
+
+Die globale Concurrency-Gruppe `trading-agent-self-hosted-continuous-qa` und
+`cancel-in-progress: false`, `workflow_dispatch` und der 15-Minuten-Schedule bleiben
+erhalten. Ausgeführt wird ausschließlich der vertrauenswürdige öffentliche
+Repository-Kontext; untrusted Fork-Code wird nicht ausgeführt. Der Self-hosted Runner
+schreibt weiterhin keine Research-Evidence und besitzt keine Live-/Broker-Funktion.
 
 ## Betriebsregel
 
