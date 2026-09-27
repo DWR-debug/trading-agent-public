@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T16:52:17.178392+00:00",
+  "generated_at_utc": "2026-09-27T16:53:50.298697+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -102,6 +102,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: trigger Q024 fixed feasibility run",
+        "sha": "96f30ed52145a34e93604394159689d959216bec",
+        "timestamp": "2026-09-27T18:53:17+02:00"
+      },
+      {
+        "message": "OPS: add Q024 Treasury timestamp feasibility runner",
+        "sha": "cb6c2310e9a3146eb7a19892eef36136ff2a2d8b",
+        "timestamp": "2026-09-27T18:53:02+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ab7bfc5484cb9beec7bace7b588ce6a9837e7c3f",
+        "timestamp": "2026-09-27T16:52:17Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "fdcd438b82494ae7b1ef3f4121af8378d068c99b",
         "timestamp": "2026-09-27T16:52:05Z"
@@ -125,21 +140,6 @@
         "message": "OPS: queue AGENT-007 EUR 2000 candidate audit",
         "sha": "a831711709b14d4310730571438460cf868bbf46",
         "timestamp": "2026-09-27T18:49:14+02:00"
-      },
-      {
-        "message": "OPS: autonomous agent queue routing",
-        "sha": "988ec90df6cf82764ca1c10fe90a4bc645dad6d0",
-        "timestamp": "2026-09-27T16:47:24Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "8d948435a7a0680b020a3460d6059d510c9724d8",
-        "timestamp": "2026-09-27T16:47:22Z"
-      },
-      {
-        "message": "OPS: requeue Q024 after contract-scope correction",
-        "sha": "be2d5cd32dc3f38646c385ab1615d1ac244dd1a7",
-        "timestamp": "2026-09-27T18:47:08+02:00"
       }
     ]
   },
@@ -201,12 +201,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "fdcd438b82494ae7b1ef3f4121af8378d068c99b",
+  "source_master_sha": "96f30ed52145a34e93604394159689d959216bec",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36334810947"
+    "run_id": "36334875428"
   }
 }
