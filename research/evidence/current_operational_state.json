@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T19:54:05.711941+00:00",
+  "generated_at_utc": "2026-09-27T19:55:12.794040+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -89,6 +89,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: retrigger Q039 PIT after workflow repair (#491)",
+        "sha": "033000ad90d5b09813ea1b7eba0e4f00ed2a4760",
+        "timestamp": "2026-09-27T21:54:57+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "7c1c776b63fad4c8037c18e8b429f326f13510bb",
+        "timestamp": "2026-09-27T19:54:05Z"
+      },
       {
         "message": "FIX: repair Q039 GitHub expression escaping (#490)",
         "sha": "d48659b98ac0aab6323691f922cc07187b99df50",
@@ -118,16 +128,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "7ab1f022ae7a5c68bbc3ffb404b76595db2ee29c",
         "timestamp": "2026-09-27T19:37:56Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "59cb9b40157ad3acfe2b009a05d087142ca395f1",
-        "timestamp": "2026-09-27T19:36:22Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d2319a70a92704b6e324f228fcc26af6f1625ec7",
-        "timestamp": "2026-09-27T19:31:11Z"
       }
     ]
   },
@@ -189,12 +189,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d48659b98ac0aab6323691f922cc07187b99df50",
+  "source_master_sha": "033000ad90d5b09813ea1b7eba0e4f00ed2a4760",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36346025817"
+    "run_id": "36346090763"
   }
 }
