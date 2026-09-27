@@ -73,8 +73,10 @@ jobs:
           assert prereg["trial_id"] == "T-2026-09-27-052"
           assert prereg["status"] == "PREREGISTERED"
           assert prereg["governance"]["holdout_used_for_selection"] is False
-          assert prereg["governance"]["selection_between_universes"] is False
-          assert prereg["governance"]["selection_between_sleeves"] is False
+          assert prereg["evaluation"]["selection_between_universes"] is False
+          assert prereg["evaluation"]["selection_between_sleeves"] is False
+          assert prereg["evaluation"]["holdout_selection"] is False
+          assert prereg["evaluation"]["ranking_for_promotion"] is False
           print("T052 AUTHORIZATION AND SAFETY OK")
           PY
 
