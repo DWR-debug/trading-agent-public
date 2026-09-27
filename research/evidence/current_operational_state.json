@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T17:35:12.918457+00:00",
+  "generated_at_utc": "2026-09-27T17:35:46.844898+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: route T052 exact gate and performance lane through stable x64",
+        "sha": "9fe38765a46785d8d4f7a8a42c7c24bea96c674c",
+        "timestamp": "2026-09-27T19:35:34+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a2c09d0f6fc5939a20e59932a508ed2267c2034d",
+        "timestamp": "2026-09-27T17:35:12Z"
+      },
       {
         "message": "OPS: add authorized one-shot T052 exact-CI dispatcher",
         "sha": "02e3ee7964c01eb7cceb20d94f773f4dc4cccfa0",
@@ -112,16 +122,6 @@
         "message": "OPS: queue Q024 historical 2011-2017 gap diagnosis",
         "sha": "a61a7111913ee72d97aad212c559539f64be1087",
         "timestamp": "2026-09-27T19:25:00+02:00"
-      },
-      {
-        "message": "OPS: retire completed Q024 historical XML request",
-        "sha": "51169e147a89dd08794d0991491d464464236187",
-        "timestamp": "2026-09-27T19:24:58+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "0f6331a07de4d82a358d1d2f12f8ca31ee75d5cc",
-        "timestamp": "2026-09-27T17:24:50Z"
       }
     ]
   },
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "02e3ee7964c01eb7cceb20d94f773f4dc4cccfa0",
+  "source_master_sha": "9fe38765a46785d8d4f7a8a42c7c24bea96c674c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36337445625"
+    "run_id": "36337518882"
   }
 }
