@@ -79,7 +79,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T14:36:38.829856+00:00",
+  "generated_at_utc": "2026-09-27T14:37:32.325845+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -138,6 +138,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "AGENT: publish verified AGENT-023 control-plane hardening",
+        "sha": "036c04ed0be13a9a113290968b761cfb2eb01dbe",
+        "timestamp": "2026-09-27T16:37:20+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "de7178e2e6c5fe443d1abb970ccb2855b51968d0",
+        "timestamp": "2026-09-27T14:36:39Z"
+      },
+      {
         "message": "OPS: synchronize research checkpoint through T051",
         "sha": "7c91bedc429c24de8e7882fe4cfd0ffbd5dc3de7",
         "timestamp": "2026-09-27T16:36:27+02:00"
@@ -166,16 +176,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "cb8e023a8fa1c641a0f2bf526acf3049ddde4aa0",
         "timestamp": "2026-09-27T14:30:27Z"
-      },
-      {
-        "message": "AGENT: publish verified AGENT-022 paper-forward loop hardening",
-        "sha": "42f0607e84b0a68103792627d31864032a86dcf3",
-        "timestamp": "2026-09-27T16:30:13+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "67967e6101817efa17886c7f12d9fb64f2687117",
-        "timestamp": "2026-09-27T14:28:53Z"
       }
     ]
   },
@@ -236,12 +236,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7c91bedc429c24de8e7882fe4cfd0ffbd5dc3de7",
+  "source_master_sha": "036c04ed0be13a9a113290968b761cfb2eb01dbe",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36326527222"
+    "run_id": "36326578433"
   }
 }
