@@ -4,6 +4,8 @@ name: Paper Forward Persistent MTM
 on:
   schedule:
     - cron: "*/15 * * * *"
+  issue_comment:
+    types: [created]
   push:
     branches: [master]
     paths:
@@ -23,7 +25,18 @@ concurrency:
 
 jobs:
   shadow:
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    if: >-
+      ${{
+        github.repository == 'DWR-debug/trading-agent-public' &&
+        (
+          github.event_name != 'issue_comment' ||
+          (
+            github.actor == github.repository_owner &&
+            github.event.issue.pull_request == null &&
+            github.event.comment.body == '/trading-agent paper-forward-once'
+          )
+        )
+      }}
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
