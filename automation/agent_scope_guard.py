@@ -3,11 +3,11 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import subprocess
 from pathlib import Path
 
 PROTECTED = (".github/", "research/evidence/", "research/authorizations/", "gates/")
+
 
 
 def _git(*args: str) -> list[str]:
