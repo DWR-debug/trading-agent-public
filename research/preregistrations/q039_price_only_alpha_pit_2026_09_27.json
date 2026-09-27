@@ -13,24 +13,6 @@
     "coverage_fingerprint": "968eb89ce426ee900cda06ca4d817f42dad7bc129f64088ba0180ab6b01cbd7f",
     "common_calendar_count": 4000
   },
-  "universe": {
-    "name": "validation_2026_09_27_q039_price_only_alpha_pit",
-    "symbols": [
-      "IVE",
-      "IWL",
-      "DLN",
-      "DHS",
-      "DON",
-      "DES",
-      "USRT",
-      "ITB"
-    ],
-    "interval": "1d",
-    "requested_candles": 4000,
-    "target_candles": 3500,
-    "target_common_candles": 3500,
-    "expected_assets": 8
-  },
   "mechanisms": [
     {
       "id": "A1_TSM_CONSENSUS",
@@ -78,5 +60,20 @@
     "automatic_promotion": false
   },
   "research_family": "q039_price_only_alpha_pit",
-  "trial_type": "pit_only"
+  "trial_type": "pit_only",
+  "universe": "validation_2026_09_27_q039_price_only_alpha_pit",
+  "symbols": [
+    "IVE",
+    "IWL",
+    "DLN",
+    "DHS",
+    "DON",
+    "DES",
+    "USRT",
+    "ITB"
+  ],
+  "interval": "1d",
+  "requested_candles": 4000,
+  "target_candles": 3500,
+  "minimum_in_window_candles": 3500
 }
