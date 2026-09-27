@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T19:57:37.785871+00:00",
+  "generated_at_utc": "2026-09-27T19:58:07.842248+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -89,7 +89,7 @@
       {
         "number": 489,
         "title": "RESEARCH: Q040 official event-source feasibility sweep",
-        "updatedAt": "2026-09-27T19:56:51Z",
+        "updatedAt": "2026-09-27T19:58:04Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/489"
       },
       {
@@ -107,6 +107,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "AUTH: authorize Q040 official event-source feasibility only",
+        "sha": "460940868a9978340a3b2cf9a98c1f8b54e85cf3",
+        "timestamp": "2026-09-27T21:57:57+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9caef0e6cd21371f5dadc32a195a5df5fb5b7413",
+        "timestamp": "2026-09-27T19:57:37Z"
+      },
       {
         "message": "FIX: align Q039 preregistration with canonical coverage schema (#494)",
         "sha": "2ceaf5624a63653fa135d5c9dc2a21a3d28e4003",
@@ -136,16 +146,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "f55903537ac74a70b37ffa9dbbc4927ca3d555ba",
         "timestamp": "2026-09-27T19:56:06Z"
-      },
-      {
-        "message": "FIX: complete Q039 preregistration and register PIT universe (#492)",
-        "sha": "a5ba0d817f4f4423a06d6a915eaf6723e17625ae",
-        "timestamp": "2026-09-27T21:55:53+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "962483ef6558866ba61624e057d44ca91e22ac24",
-        "timestamp": "2026-09-27T19:55:12Z"
       }
     ]
   },
@@ -207,12 +207,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2ceaf5624a63653fa135d5c9dc2a21a3d28e4003",
+  "source_master_sha": "460940868a9978340a3b2cf9a98c1f8b54e85cf3",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36346231472"
+    "run_id": "36346259970"
   }
 }
