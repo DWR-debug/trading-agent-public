@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T15:13:52.005563+00:00",
+  "generated_at_utc": "2026-09-27T15:14:39.815106+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -89,7 +89,7 @@
       {
         "number": 408,
         "title": "AGENT-026: harden continuous self-hosted paper-forward MTM operation",
-        "updatedAt": "2026-09-27T15:13:17Z",
+        "updatedAt": "2026-09-27T15:13:52Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/408"
       },
       {
@@ -101,6 +101,11 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2f77e91383a50e51bfa56f7f3354a27b9e4b1d4f",
+        "timestamp": "2026-09-27T15:13:52Z"
+      },
       {
         "message": "OPS: remove transient paper-forward lock file",
         "sha": "b3cdd1cf559ddb2de8dd2f6580da8f0c463d2ba9",
@@ -135,11 +140,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "7076c1d83f5a7449314742f57ef801df5a2ed401",
         "timestamp": "2026-09-27T15:11:48Z"
-      },
-      {
-        "message": "OPS: add owner-gated Copilot queue manual trigger",
-        "sha": "00e259a2ba1c8c6d83dd857c7e6b9cac63af2245",
-        "timestamp": "2026-09-27T17:11:39+02:00"
       }
     ]
   },
@@ -200,12 +200,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b3cdd1cf559ddb2de8dd2f6580da8f0c463d2ba9",
+  "source_master_sha": "2f77e91383a50e51bfa56f7f3354a27b9e4b1d4f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36328775258"
+    "run_id": "36328779653"
   }
 }
