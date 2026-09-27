@@ -87,10 +87,17 @@ jobs:
           assert d["safety"]["paper_only"] is True
           assert d["safety"]["live_trading_enabled"] is False
           assert d["safety"]["orders_enabled"] is False
-          limits=d.get("interpretation_limits", {})
-          assert limits.get("not_a_production_candidate") is True
-          assert limits.get("paper_only") is True
-          assert limits.get("no_orders") is True
+          limits=d.get("interpretation_limits")
+          if limits is not None:
+              assert limits.get("not_a_production_candidate") is True
+              assert limits.get("paper_only") is True
+              assert limits.get("no_orders") is True
+          else:
+              limits=d.get("modeling_limits")
+              assert limits is not None
+              assert limits.get("production_candidate") is False
+              assert limits.get("production_integration") is False
+              assert limits.get("orders_enabled") is False
           print("DISCOVERY_ONLY_CONTRACT_OK")
           print("RESULT_FINGERPRINT:", d["result_fingerprint"])
           PY
