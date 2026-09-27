@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T18:50:11.225445+00:00",
+  "generated_at_utc": "2026-09-27T18:53:22.633748+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "EVIDENCE: record T056 and queue Q036 diagnosis",
+        "sha": "43299f889c6390564904bdfbab06d08b71f98c09",
+        "timestamp": "2026-09-27T20:53:05+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f8443c908ab25b0e3d0321fb6ec0d1adc07f9bf9",
+        "timestamp": "2026-09-27T18:50:11Z"
+      },
       {
         "message": "FIX: adapt T056 coverage manifest to canonical snapshot loader",
         "sha": "23e09d478ef4d7c9f866b8fc123b1842c9953ad8",
@@ -112,16 +122,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "6d634a4ea7b109a6c98ff8bac0b211f5d16b0631",
         "timestamp": "2026-09-27T18:44:41Z"
-      },
-      {
-        "message": "EVIDENCE: record Q034 mechanism PIT and advance to Q035",
-        "sha": "354478e89864116513ba75026ee281ef2f05ae40",
-        "timestamp": "2026-09-27T20:44:26+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6286c58b19050afe0ab8b89a2569378be2ece849",
-        "timestamp": "2026-09-27T18:43:37Z"
       }
     ]
   },
@@ -142,10 +142,10 @@
   },
   "schema_version": "1.0",
   "scientific_state_recorded": {
-    "decision_basis_stage": "Q035_RISK_STABILITY_PERFORMANCE_PREREGISTERED",
-    "latest_formal_status": "EVIDENCE_RECORDED_NO_AUTOMATIC_PROMOTION",
-    "latest_formal_trial": "T-2026-09-27-052",
-    "next_research_focus_recorded": "Q035 fixed multi-arm performance evaluation on Q031/Q032-validated universe; no ranking or selection.",
+    "decision_basis_stage": "Q036_T056_DIAGNOSTIC",
+    "latest_formal_status": "NO_ARM_PASSED_ALL_T052_GATES",
+    "latest_formal_trial": "T-2026-09-27-056",
+    "next_research_focus_recorded": "Q036 descriptive diagnosis of T056 risk overlays; no tuning or selection.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "23e09d478ef4d7c9f866b8fc123b1842c9953ad8",
+  "source_master_sha": "43299f889c6390564904bdfbab06d08b71f98c09",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36342102865"
+    "run_id": "36342298080"
   }
 }
