@@ -142,7 +142,7 @@ def _pdf_matches(text: str, event: dict) -> bool:
     return (
         cusip in normalized
         and re.search(r"\bTREASURY AUCTION RESULTS\b", normalized, re.I)
-        and re.search(r"\b10-Year(?:\s+TIPS|\s+Note)?\b", normalized, re.I)
+        and re.search(r"\b10-Year\s+Note\b", normalized, re.I)
         and re.search(r"Bid-to-Cover Ratio\s*:", normalized, re.I)
     )
 
