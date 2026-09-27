@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T15:28:22.718054+00:00",
+  "generated_at_utc": "2026-09-27T15:40:24.413320+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [],
@@ -63,7 +63,7 @@
       {
         "number": 408,
         "title": "AGENT-026: harden continuous self-hosted paper-forward MTM operation",
-        "updatedAt": "2026-09-27T15:23:13Z",
+        "updatedAt": "2026-09-27T15:38:15Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/408"
       },
       {
@@ -76,44 +76,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: add coverage-only candidate search runner",
+        "sha": "1780152f10cbc02ac4b7860ad012a68792249cde",
+        "timestamp": "2026-09-27T17:40:12+02:00"
+      },
+      {
+        "message": "OPS: autonomous agent queue routing",
+        "sha": "0fee110f2fe4da05981c182942547793ab3001a3",
+        "timestamp": "2026-09-27T15:39:15Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "44c91380eeaf338e2bac52f15aff3b26a5896730",
+        "timestamp": "2026-09-27T15:38:27Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "fbc10651f5b208f4b9212e7742dfc3dbd2e7090a",
+        "timestamp": "2026-09-27T15:37:29Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "110ee6ba728bfbdce5158f3ac29af948a555b158",
+        "timestamp": "2026-09-27T15:29:18Z"
+      },
+      {
+        "message": "OPS: autonomous agent queue routing",
+        "sha": "34a81c766a7f29b4e8a22327ae710456a38410c4",
+        "timestamp": "2026-09-27T15:28:31Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6e2c269265542406db49a9ce84f2c41c34c7c6ee",
+        "timestamp": "2026-09-27T15:28:23Z"
+      },
+      {
         "message": "OPS: remove recovered completed AGENT-026 queue request",
         "sha": "46ee12abec6b37ac5500f2b1d1199c6dfa4ce14c",
         "timestamp": "2026-09-27T17:28:12+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9954bbc2d3cc4b0ae3535509fa26a7a063407178",
-        "timestamp": "2026-09-27T15:27:08Z"
-      },
-      {
-        "message": "OPS: trigger T052 exact-master CI",
-        "sha": "7ad163bacaacb209873de568e53209d1798a9be0",
-        "timestamp": "2026-09-27T17:26:54+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "cec52c0dcc89708e5f86788db308d62c561b0ff0",
-        "timestamp": "2026-09-27T15:26:02Z"
-      },
-      {
-        "message": "FIX: restore valid exact-master CI gate workflow",
-        "sha": "37fcc0abbb1882f85262a8a77c3493183a726eb2",
-        "timestamp": "2026-09-27T17:25:50+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d869aa26e7b439e2c96e86bc4116ba126fc1ac5c",
-        "timestamp": "2026-09-27T15:25:31Z"
-      },
-      {
-        "message": "OPS: add owner-gated T052 exact-CI manual trigger",
-        "sha": "d34c5f7c79df6835d27d391201aa2b9e010dbe19",
-        "timestamp": "2026-09-27T17:25:20+02:00"
-      },
-      {
-        "message": "OPS: trigger fresh T052 exact-master CI gate",
-        "sha": "eb3421bbc78f6b0e834db72a5a74365ed3de2b46",
-        "timestamp": "2026-09-27T17:25:06+02:00"
       }
     ]
   },
@@ -174,12 +174,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "46ee12abec6b37ac5500f2b1d1199c6dfa4ce14c",
+  "source_master_sha": "1780152f10cbc02ac4b7860ad012a68792249cde",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36329665845"
+    "run_id": "36330414219"
   }
 }
