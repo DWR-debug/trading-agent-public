@@ -37,6 +37,7 @@ class SnapshotSpec:
     requested_candles: int
     target_common_candles: int
     output_dir: Path
+    raw_fetch_candles: int | None = None
     study_start: date | None = None
     study_end: date | None = None
     source: str = "yahoo_chart"
@@ -56,6 +57,9 @@ class SnapshotSpec:
             raise ValueError("target_common_candles must be positive")
         if self.target_common_candles > self.requested_candles:
             raise ValueError("target_common_candles cannot exceed requested_candles")
+        acquisition = self.requested_candles if self.raw_fetch_candles is None else self.raw_fetch_candles
+        if acquisition < self.requested_candles:
+            raise ValueError("raw_fetch_candles cannot be smaller than requested_candles")
         minimum = self.target_common_candles if self.minimum_in_window_candles is None else self.minimum_in_window_candles
         if minimum < self.target_common_candles or minimum > self.requested_candles:
             raise ValueError("minimum_in_window_candles must be between target and requested candles")
@@ -138,7 +142,7 @@ def build_frozen_snapshot(
             raw = loader(
                 symbol,
                 spec.interval,
-                spec.requested_candles,
+                spec.raw_fetch_candles or spec.requested_candles,
                 allow_partial=True,
                 skip_invalid_ohlc=True,
                 quality_report=quality,
@@ -244,6 +248,7 @@ def build_frozen_snapshot(
         "interval": spec.interval,
         "symbols": list(spec.symbols),
         "requested_candles": spec.requested_candles,
+        "raw_fetch_candles": spec.raw_fetch_candles or spec.requested_candles,
         "target_common_candles": spec.target_common_candles,
         "minimum_in_window_candles": spec.minimum_in_window_candles or spec.target_common_candles,
         "study_start": spec.study_start.isoformat() if spec.study_start else None,
@@ -316,6 +321,9 @@ def snapshot_from_preregistration(
     requested_value = spec.get("requested_candles")
     if requested_value is None:
         requested_value = data_contract.get("requested_raw_candles_per_symbol")
+    raw_fetch_value = spec.get("raw_fetch_candles")
+    if raw_fetch_value is None:
+        raw_fetch_value = data_contract.get("raw_fetch_candles", requested_value)
     target_value = spec.get("target_candles")
     if target_value is None:
         target_value = data_contract.get("target_common_calendar")
@@ -331,6 +339,7 @@ def snapshot_from_preregistration(
             symbols=tuple(spec["symbols"]),
             interval=str(spec["interval"]),
             requested_candles=int(requested_value),
+            raw_fetch_candles=int(raw_fetch_value),
             target_common_candles=int(target_value),
             output_dir=Path(output_root) / str(spec["trial_id"]),
             study_start=date.fromisoformat(study_start) if study_start else None,
