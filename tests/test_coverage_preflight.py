@@ -66,7 +66,7 @@ def test_coverage_preflight_marks_short_history_data_invalid(monkeypatch, tmp_pa
         )()
         for i in range(3520)
     ]
-    short = full[:-10]
+    short = full[:-30]
 
     def fake_loader(symbol, interval, total, **kwargs):
         return short if symbol == symbols[0] else full
