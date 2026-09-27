@@ -4,7 +4,7 @@ on:
   push:
     branches: [master]
     paths:
-      - "research/paper_candidates/**"
+      - "research/paper_candidates_2000/**"
       - "automation/paper_candidate_2000_gate.py"
       - "automation/paper_30_day_experiment.py"
       - "research/evidence_contract.py"
@@ -61,8 +61,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p research/paper_candidates
-          mapfile -t manifests < <(find research/paper_candidates -type f -name '*.json' | sort)
+          mkdir -p research/paper_candidates_2000
+          mapfile -t manifests < <(find research/paper_candidates_2000 -type f -name '*.json' | sort)
           if [ ${#manifests[@]} -eq 0 ]; then
             echo "found=false" >> "$GITHUB_OUTPUT"
             echo "NO_ELIGIBLE_2000_EUR_CANDIDATE_MANIFEST"
