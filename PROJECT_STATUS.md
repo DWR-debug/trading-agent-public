@@ -1,3 +1,16 @@
+# CURRENT EXECUTION CHECKPOINT — AGENT-014 merged; self-hosted capacity increased — 2026-09-27
+
+- Current canonical code/state checkpoint: `29a7c0f4fc6850fa05069b8fae32f0534099c5ac`.
+- AGENT-014 / PR #345 is merged; squash commit `77664831fedcf60d25f65bbd5b32034dbd91e8fe`; issue #344 is closed.
+- The merged task added only the fixed turnover-shock coverage/PIT runner, focused tests, preregistration and design documentation. No performance evaluation, holdout selection, research-gate change, promotion or live execution was introduced.
+- Self-hosted Continuous QA now runs every **15 minutes** and records runner name, OS, architecture, logical processor count and physical memory as non-formal capacity telemetry.
+- The shared label `trading-agent-research` remains the scaling interface. A second runner process on the same always-on PC can accept independent matching jobs when the first process is busy.
+- The current architecture remains conservative: one runner process is assumed; no second process is claimed as installed or online.
+- Scientific status is unchanged: no candidate has satisfied the complete evidence/promotion contract.
+- Fiktives Referenzkapital: **EUR 500.00**, ausschließlich Simulation/Planung; tatsächlich verfügbar: **EUR 0**.
+- Safety: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `ORDERS_ENABLED=False`, `AUTOMATIC_PROMOTION=False`.
+- GitHub Actions zero-job/startup anomaly remains tracked in issue #343 and is not scientific evidence.
+
 # CURRENT EXECUTION CHECKPOINT — Agent PRs #341/#342 ready for review; fictional EUR 500 simulation capital recorded — 2026-09-27
 
 - Fiktives Referenzkapital: EUR 500.00 (HYPOTHETICAL_STARTING_CAPITAL_EUR), ausschließlich für Paper-/Shadow-/Planungssimulationen.
