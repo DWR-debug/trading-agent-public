@@ -1,19 +1,17 @@
-# CURRENT EXECUTION CHECKPOINT — T047R1/H1 closed; Q023 H2 PIT-feasibility next — 2026-09-26
+# CURRENT EXECUTION CHECKPOINT — T047R1/H1 closed; Q023 H2 PIT-feasibility next — 2026-09-27
 
-- T047 original H1 coverage is **DATA_INVALID**: 3,268 common in-window candles vs. 3,500 required; no performance evidence.
-- T047R1 coverage repair is verified: 3,704 common trading days, 3,500 frozen snapshot.
-- T047R1 directional-inversion performance run `36263212309` completed successfully as a scientific run.
-- Result: **NO_PROMOTION_EVIDENCE**.
-- Research: **−19.29 %**, Max-DD **19.29 %**, PF **0.259**.
-- Holdout: **−7.52 %**, Max-DD **7.52 %**, PF **0.167**.
-- Rolling: **0/5 profitable windows**; OOS/IS return ratio **0.00**.
-- Stress holdout: **−9.73 %** at 1.5x costs and **−11.88 %** at 2x costs.
-- Result fingerprint: `2ad3b13c7cfc6cce5cf5a3411179f59f49c608c6e3b842587c40355d6aa06c86`.
-- H1 is **closed**. No inversion tuning, no Q020 reopening, no holdout selection.
-- The deterministic income viability evaluator is now in `master`; its reviewed regression fixture is also corrected.
-- Q023 is now prepared as **DESIGN_ONLY / SOURCE-FEASIBILITY** for H2 (official Treasury release timestamp / PIT timing).
-- Q023 does not calculate performance. A later H2 performance trial will require a new symbol-disjoint universe and a fresh coverage/PIT contract.
-- Official Treasury Offering Announcements expose “Embargoed Until” times that are candidates for the ex ante release-timestamp field; this is a source-feasibility question, not an alpha claim.
+- T047R1 directional-inversion performance remains **NO_PROMOTION_EVIDENCE**; H1 is closed, with no inversion tuning and no Q020 reopening.
+- Q023 remains the next scientific gate: **DESIGN/SOURCE-FEASIBILITY ONLY** for Treasury release timestamp / PIT semantics; no performance or holdout access.
+- Official Treasury Offering Announcements have reproducible “Embargoed Until” timestamps; a complete Q023 result still requires deterministic coverage of the full fixed Q019 event population.
+- Q023 engineering task **#330** is queued under the bounded agent contract; allowed paths exclude historical evidence, authorizations, gates and live-trading controls.
+
+Agent/runner status:
+- The first real external Copilot CLI execution was verified in Agent Queue run **107** on 2026-09-27: both lanes reached Copilot successfully and produced report-only work.
+- That run exposed one stale regression assertion; the test was corrected and the subsequent personal-repository auth cleanup was merged.
+- Current queue work is being revalidated with a **PAT-only** path, as GitHub documents PAT authentication for personal repositories. A preflight now checks repository access before consuming a Copilot request. citeturn644053search10turn154929search3
+- The current queue has run **111** pending behind the previous two-lane execution; Q023 follows the older audit requests automatically after successful publication.
+- Self-hosted Continuous QA remains the deterministic QA/research path; current maintenance pushes trigger its scheduled/repository QA lanes.
+- Hosted Actions startup failures remain a separate operational blocker and are not treated as scientific evidence.
 
 Safety:
 - `PAPER_ONLY=True`
@@ -21,11 +19,9 @@ Safety:
 - `orders_enabled=False`
 - `automatic_promotion=False`
 - no live execution
-- no paid agent/API usage
+- paid agent/API budget: **0 USD**
 
-Agent/runner status:
-- Self-hosted Continuous QA remains the primary deterministic QA/research execution path.
-- Copilot remains paused until the required `COPILOT_GITHUB_TOKEN` is actually usable; no AI-credit use is claimed.
+
 # CURRENT EXECUTION CHECKPOINT — Q022 design-only / continuous governance QA hardened — 2026-09-26
 
 - Current scientific step: **Q022 Treasury failure follow-up design**, still **DESIGN_ONLY** and unranked; no performance execution is authorized.
