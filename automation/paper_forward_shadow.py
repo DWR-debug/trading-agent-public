@@ -11,7 +11,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Sequence
 
-from backtesting.engine import BacktestEngine
+from risk.risk_engine import calculate_position
 from backtesting.models import Candle
 from config import settings
 from config.parameters import (
@@ -276,37 +276,203 @@ def _snapshot(
     stopped_at: str | None = None,
 ) -> dict[str, Any]:
     signal_values, signal_fingerprint = _signal_stream(candidate, parameters, candles)
-    engine = BacktestEngine(
-        initial_capital=float(candidate["initial_capital_eur"]),
-        risk_per_trade=float(candidate["risk_per_trade"]),
-        leverage=float(candidate["leverage"]),
-        fee_rate=float(candidate["fee_rate"]),
-        slippage_rate=float(candidate["slippage_rate"]),
-        parameters=parameters,
-    )
-    result = engine.run(
-        symbol=candidate["symbol"],
-        candles=list(candles),
-        signals=signal_values,
-    )
-    equity = result.initial_capital
-    peak = equity
-    maximum_drawdown = 0.0
-    notionals = []
-    for trade in result.trades:
-        equity += trade.pnl_eur
-        peak = max(peak, equity)
-        drawdown = (1.0 - equity / peak) * 100.0 if peak > 0 else 0.0
-        maximum_drawdown = max(maximum_drawdown, drawdown)
-        notionals.append(trade.entry_price * trade.quantity)
+    cash = float(candidate["initial_capital_eur"])
+    realized_pnl = 0.0
+    cumulative_fees = 0.0
+    gross_traded_notional = 0.0
+    maximum_trade_exposure = 0.0
+    realized_peak = cash
+    mtm_peak = cash
+    maximum_realized_drawdown = 0.0
+    maximum_mtm_drawdown = 0.0
+    open_position: dict[str, Any] | None = None
+    trades: list[dict[str, Any]] = []
+    ledger: list[dict[str, Any]] = []
+
+    for candle, signal in zip(candles, signal_values):
+        action = "HOLD"
+
+        if open_position is None:
+            if signal is not None and signal.signal != SignalType.HOLD:
+                entry_price = candle.close
+                stop_distance = entry_price * 0.02
+                stop_price = (
+                    entry_price - stop_distance
+                    if signal.signal == SignalType.BUY
+                    else entry_price + stop_distance
+                )
+                position = calculate_position(
+                    capital_eur=cash,
+                    entry_price=entry_price,
+                    stop_price=stop_price,
+                    leverage=float(candidate["leverage"]),
+                )
+                risk_scale = float(candidate["risk_per_trade"]) / settings.RISK_PER_TRADE
+                quantity = position["quantity"] * risk_scale
+                execution_entry = (
+                    entry_price * (1.0 + float(candidate["slippage_rate"]))
+                    if signal.signal == SignalType.BUY
+                    else entry_price * (1.0 - float(candidate["slippage_rate"]))
+                )
+                entry_notional = execution_entry * quantity
+                entry_fee = entry_notional * float(candidate["fee_rate"])
+                cash -= entry_fee
+                cumulative_fees += entry_fee
+                gross_traded_notional += entry_notional
+                maximum_trade_exposure = max(maximum_trade_exposure, entry_notional)
+                open_position = {
+                    "side": signal.signal.value,
+                    "entry_price": execution_entry,
+                    "stop_price": stop_price,
+                    "quantity": quantity,
+                    "entry_timestamp_utc": candle.timestamp.astimezone(timezone.utc).isoformat(),
+                    "entry_fee_eur": entry_fee,
+                }
+                action = "OPEN_" + signal.signal.value
+        else:
+            side = open_position["side"]
+            exit_price: float | None = None
+            exit_reason: str | None = None
+            if side == "BUY":
+                if candle.low <= open_position["stop_price"]:
+                    exit_price = open_position["stop_price"]
+                    exit_reason = "STOP_LOSS"
+                elif signal is not None and signal.signal == SignalType.SELL:
+                    exit_price = candle.close
+                    exit_reason = "SIGNAL"
+            else:
+                if candle.high >= open_position["stop_price"]:
+                    exit_price = open_position["stop_price"]
+                    exit_reason = "STOP_LOSS"
+                elif signal is not None and signal.signal == SignalType.BUY:
+                    exit_price = candle.close
+                    exit_reason = "SIGNAL"
+
+            if exit_price is not None:
+                execution_exit = (
+                    exit_price * (1.0 - float(candidate["slippage_rate"]))
+                    if side == "BUY"
+                    else exit_price * (1.0 + float(candidate["slippage_rate"]))
+                )
+                quantity = float(open_position["quantity"])
+                entry_execution = float(open_position["entry_price"])
+                gross_pnl = (
+                    (execution_exit - entry_execution) * quantity
+                    if side == "BUY"
+                    else (entry_execution - execution_exit) * quantity
+                )
+                exit_notional = execution_exit * quantity
+                exit_fee = exit_notional * float(candidate["fee_rate"])
+                net_pnl = gross_pnl - float(open_position["entry_fee_eur"]) - exit_fee
+                cash += gross_pnl - exit_fee
+                realized_pnl += net_pnl
+                cumulative_fees += exit_fee
+                gross_traded_notional += exit_notional
+                maximum_trade_exposure = max(maximum_trade_exposure, entry_execution * quantity)
+                trades.append({
+                    "side": side,
+                    "entry_timestamp_utc": open_position["entry_timestamp_utc"],
+                    "exit_timestamp_utc": candle.timestamp.astimezone(timezone.utc).isoformat(),
+                    "entry_price": entry_execution,
+                    "exit_price": execution_exit,
+                    "quantity": quantity,
+                    "entry_notional_eur": entry_execution * quantity,
+                    "exit_notional_eur": exit_notional,
+                    "pnl_eur": net_pnl,
+                    "gross_pnl_eur": gross_pnl,
+                    "fees_eur": float(open_position["entry_fee_eur"]) + exit_fee,
+                    "exit_reason": exit_reason,
+                })
+                action = "CLOSE_" + side + "_" + str(exit_reason)
+                open_position = None
+
+        if open_position is None:
+            unrealized_pnl = 0.0
+            exposure = 0.0
+            position_side = None
+            position_quantity = 0.0
+            position_entry_price = None
+            position_entry_timestamp = None
+            equity = cash
+        else:
+            quantity = float(open_position["quantity"])
+            entry_execution = float(open_position["entry_price"])
+            side = open_position["side"]
+            unrealized_pnl = (
+                (candle.close - entry_execution) * quantity
+                if side == "BUY"
+                else (entry_execution - candle.close) * quantity
+            )
+            exposure = candle.close * quantity
+            position_side = side
+            position_quantity = quantity
+            position_entry_price = entry_execution
+            position_entry_timestamp = open_position["entry_timestamp_utc"]
+            equity = cash + unrealized_pnl
+
+        realized_equity = float(candidate["initial_capital_eur"]) + realized_pnl
+        realized_peak = max(realized_peak, realized_equity)
+        mtm_peak = max(mtm_peak, equity)
+        realized_dd = (1.0 - realized_equity / realized_peak) * 100.0 if realized_peak > 0 else 0.0
+        mtm_dd = (1.0 - equity / mtm_peak) * 100.0 if mtm_peak > 0 else 0.0
+        maximum_realized_drawdown = max(maximum_realized_drawdown, realized_dd)
+        maximum_mtm_drawdown = max(maximum_mtm_drawdown, mtm_dd)
+
+        signal_record = None if signal is None else {
+            "signal": signal.signal.value,
+            "confidence": signal.confidence,
+            "reason": signal.reason,
+        }
+        ledger.append({
+            "market_timestamp_utc": candle.timestamp.astimezone(timezone.utc).isoformat(),
+            "close_price": candle.close,
+            "signal": signal_record,
+            "action": action,
+            "cash_eur": cash,
+            "realized_pnl_eur": realized_pnl,
+            "unrealized_pnl_eur": unrealized_pnl,
+            "equity_eur": equity,
+            "position_side": position_side,
+            "position_quantity": position_quantity,
+            "position_entry_price": position_entry_price,
+            "position_entry_timestamp_utc": position_entry_timestamp,
+            "position_exposure_eur": exposure,
+            "cumulative_fees_eur": cumulative_fees,
+            "gross_traded_notional_eur": gross_traded_notional,
+            "realized_drawdown_percent": realized_dd,
+            "mtm_drawdown_percent": mtm_dd,
+        })
 
     records = [_candle_record(candle) for candle in candles]
-    input_fingerprint = _fingerprint(
-        {"candidate_fingerprint": candidate_fingerprint, "candles": records}
-    )
+    input_fingerprint = _fingerprint({"candidate_fingerprint": candidate_fingerprint, "candles": records})
     last_timestamp = records[-1]["timestamp"]
+    final_equity = ledger[-1]["equity_eur"]
+    latest = ledger[-1]
+    portfolio = {
+        "initial_capital_eur": float(candidate["initial_capital_eur"]),
+        "cash_eur": cash,
+        "final_equity_eur": final_equity,
+        "realized_pnl_eur": realized_pnl,
+        "unrealized_pnl_eur": latest["unrealized_pnl_eur"],
+        "total_pnl_eur": final_equity - float(candidate["initial_capital_eur"]),
+        "trade_count": len(trades),
+        "gross_traded_notional_eur": gross_traded_notional,
+        "maximum_trade_exposure_eur": maximum_trade_exposure,
+        "maximum_realized_drawdown_percent": maximum_realized_drawdown,
+        "maximum_mtm_drawdown_percent": maximum_mtm_drawdown,
+        "current_position_exposure_eur": latest["position_exposure_eur"],
+        "current_position_unrealized_pnl_eur": latest["unrealized_pnl_eur"],
+        "current_position_side": latest["position_side"],
+        "current_position_quantity": latest["position_quantity"],
+        "current_position_entry_price": latest["position_entry_price"],
+        "current_position_entry_timestamp_utc": latest["position_entry_timestamp_utc"],
+        "fees_paid_eur": cumulative_fees,
+        "trades": trades,
+        "ledger": ledger,
+    }
+
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "mode": "PAPER_FORWARD_SHADOW",
         "status": status,
         "safety": {
@@ -329,33 +495,8 @@ def _snapshot(
         "last_market_timestamp_utc": last_timestamp,
         "candle_count": len(candles),
         "candles": records,
-        "portfolio": {
-            "initial_capital_eur": result.initial_capital,
-            "final_equity_eur": result.final_capital,
-            "realized_pnl_eur": result.realized_pnl,
-            "trade_count": len(result.trades),
-            "gross_traded_notional_eur": math.fsum(notionals),
-            "maximum_trade_exposure_eur": max(notionals, default=0.0),
-            "maximum_realized_drawdown_percent": maximum_drawdown,
-            "current_position_exposure_eur": 0.0,
-            "trades": [
-                {
-                    "side": trade.side,
-                    "entry_timestamp_utc": trade.entry_timestamp.astimezone(timezone.utc).isoformat(),
-                    "exit_timestamp_utc": trade.exit_timestamp.astimezone(timezone.utc).isoformat(),
-                    "entry_price": trade.entry_price,
-                    "exit_price": trade.exit_price,
-                    "quantity": trade.quantity,
-                    "notional_eur": trade.entry_price * trade.quantity,
-                    "pnl_eur": trade.pnl_eur,
-                    "fees_eur": trade.fees_eur,
-                }
-                for trade in result.trades
-            ],
-        },
+        "portfolio": portfolio,
     }
-
-
 def _read_session(
     path: Path,
 ) -> tuple[dict[str, Any], dict[str, Any], StrategyParameters, tuple[Candle, ...]]:
@@ -409,7 +550,7 @@ def _read_session(
     latest_timestamp = _candle_record(candles[-1])["timestamp"]
     expected_stopped_at = None if state.get("status") == "RUNNING" else latest_timestamp
     if (
-        state.get("status") not in {"RUNNING", "STOPPED"}
+        state.get("schema_version") != 2 or state.get("status") not in {"RUNNING", "STOPPED"}
         or state.get("stopped_at_utc") != expected_stopped_at
         or state.get("run_id") != expected_run_id
         or state.get("input_fingerprint") != expected_input_fingerprint
