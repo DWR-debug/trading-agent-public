@@ -75,11 +75,16 @@ jobs:
           matches=list(root.rglob("*.json"))
           assert matches, "No Q017 coverage artifact produced"
           reports=[json.loads(p.read_text(encoding="utf-8")) for p in matches]
-          primary=next((x for x in reports if x.get("trial_id")=="T-2026-09-25-017"), reports[-1])
-          assert primary.get("performance_authorized") is False or primary.get("performance_execution_authorized") is False
+          primary=next(
+              (x for x in reports if x.get("task_id")=="Q-017-G3-COVERAGE-FIRST"),
+              max(reports, key=lambda x: str(x.get("status", "")))
+          )
+          assert primary.get("performance_authorized") is False
+          assert primary.get("status") in {"DATA_INSUFFICIENT", "DATA_INVALID"}
           print("Q017 STATUS:", primary.get("status"))
           print("Q017 POINT_IN_TIME_READY:", primary.get("point_in_time_ready"))
           print("Q017 FINGERPRINT:", primary.get("coverage_fingerprint") or primary.get("fingerprint"))
+          print("Q017 FAMILY_STATUSES:", json.dumps(primary.get("family_statuses", {}), sort_keys=True))
           print("Q017 PRIMARY:", json.dumps(primary, sort_keys=True))
           PY
 
