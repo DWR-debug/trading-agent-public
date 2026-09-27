@@ -39,6 +39,30 @@ def find_manifest(artifact_root: Path) -> Path:
         raise FileNotFoundError("coverage manifest not found")
     return paths[-1]
 
+def localize_manifest(manifest: Path) -> Path:
+    data=json.loads(manifest.read_text(encoding="utf-8"))
+    snapshot=data.get("data_snapshot")
+    if not isinstance(snapshot,dict):
+        raise ValueError("T056 coverage manifest missing data_snapshot")
+    datasets=snapshot.get("datasets")
+    if not isinstance(datasets,list) or not datasets:
+        raise ValueError("T056 coverage manifest has no datasets")
+    localized=json.loads(json.dumps(data))
+    for item in localized["data_snapshot"]["datasets"]:
+        raw=Path(str(item["path"]))
+        parts=raw.parts
+        if "datasets" not in parts:
+            raise ValueError(f"dataset path missing datasets segment: {raw}")
+        idx=parts.index("datasets")
+        candidate=manifest.parent / Path(*parts[idx:])
+        if not candidate.exists():
+            raise FileNotFoundError(f"artifact dataset missing: {candidate}")
+        item["path"]=str(candidate.resolve())
+    out=manifest.with_name("_q036_localized_coverage_manifest.json")
+    out.write_text(json.dumps(localized,sort_keys=True,separators=(",",":")),encoding="utf-8")
+    return out
+
+
 def mean(xs):
     return statistics.fmean(xs) if xs else 0.0
 
@@ -89,7 +113,11 @@ def run(report_path: Path, exact_runner_path: Path, output: Path) -> dict:
     runner = load_module(exact_runner_path)
     artifact_root = report_path.parents[2]
     manifest = find_manifest(artifact_root)
-    assets = runner._load_assets(manifest)
+    localized_manifest = localize_manifest(manifest)
+    try:
+        assets = runner._load_assets(localized_manifest)
+    finally:
+        localized_manifest.unlink(missing_ok=True)
     weights = runner._arm_weights(assets)
     baseline = weights["CONTROL"]
 
