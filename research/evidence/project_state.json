@@ -3,10 +3,10 @@
   "updated": "2026-09-27",
   "repository": "DWR-debug/trading-agent-public",
   "master_commit": "4017743284db97f82c546a088c940df377370e7f",
-  "latest_formal_trial": "T-2026-09-27-052",
-  "latest_trial_status": "EVIDENCE_RECORDED_NO_AUTOMATIC_PROMOTION",
+  "latest_formal_trial": "T-2026-09-27-056",
+  "latest_trial_status": "NO_ARM_PASSED_ALL_T052_GATES",
   "next_reserved_trial": null,
-  "next_research_focus": "Q035 fixed multi-arm performance evaluation on Q031/Q032-validated universe; no ranking or selection.",
+  "next_research_focus": "Q036 descriptive diagnosis of T056 risk overlays; no tuning or selection.",
   "cleanup_status": "completed_h06_and_q017_coverage_hardening",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -95,8 +95,8 @@
     ".github/workflows/q031-q030-risk-stability-coverage.yml",
     ".github/workflows/q032-q031-fixed-core-pit.yml"
   ],
-  "current_preregistered_trial": "T-2026-09-27-056",
-  "current_trial_status": "PREREGISTERED_PERFORMANCE",
+  "current_preregistered_trial": "T-2026-09-27-057",
+  "current_trial_status": "PREREGISTERED_DIAGNOSTIC_ONLY",
   "engineering_notes": {
     "t039_preregistered": true,
     "coverage_preflight_active": true,
@@ -520,10 +520,10 @@
     "final_execution_commit": "85acd4e17921a4e2682552bfbe424f17ffaa9322",
     "final_status": "COMPLETED_DISCOVERY_ONLY"
   },
-  "current_queue_task": "Q-035-T052-RISK-STABILITY-PERFORMANCE-2026-09-27",
-  "last_completed_queue_task": "Q-034-Q033-MECHANISM-PIT-2026-09-27",
+  "current_queue_task": "Q-036-T056-RISK-MECHANISM-DIAGNOSTIC-2026-09-27",
+  "last_completed_queue_task": "Q-035-T052-RISK-STABILITY-PERFORMANCE-2026-09-27",
   "master_commit_semantics": "last_verified_master_commit_before_this_state_update; this field must not be interpreted as a self-referential current-HEAD field",
-  "state_sync_verified_at": "2026-09-27T18:43:00Z",
+  "state_sync_verified_at": "2026-09-27T18:52:00Z",
   "project_milestone": {
     "name": "FIRST_PRESENTABLE_RESULT",
     "anchored_on": "2026-09-25",
@@ -718,5 +718,17 @@
     "checked_decision_points": 36,
     "performance_execution_authorized": false,
     "selection_used": false
+  },
+  "q035": {
+    "status": "COMPLETED",
+    "trial_id": "T-2026-09-27-056",
+    "workflow_run_id": 36342102919,
+    "workflow_head_sha": "23e09d478ef4d7c9f866b8fc123b1842c9953ad8",
+    "artifact_id": 10939680447,
+    "artifact_digest": "sha256:026759ee2833d9a42fd879b6c06c772a1e89a2267b8b66cc8d5726bb218d3df2",
+    "report_fingerprint": "56feed52b6c8321e3b4cfcf7914b87d2d54ad4cf7d1cf66b095a62db0453943f",
+    "no_arm_passed_all_gates": true,
+    "selection_used": false,
+    "holdout_used_for_selection": false
   }
 }
