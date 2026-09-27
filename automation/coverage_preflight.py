@@ -104,6 +104,12 @@ def run_preflight(
             data_contract.get("requested_raw_candles_per_symbol", data_contract.get("requested_candles")),
         )
     )
+    raw_fetch = int(
+        spec.get(
+            "raw_fetch_candles",
+            data_contract.get("raw_fetch_candles", requested),
+        )
+    )
     target = int(
         spec.get(
             "target_candles",
@@ -120,6 +126,8 @@ def run_preflight(
         raise RuntimeError(
             "minimum_in_window_candles must be between target_candles and requested_candles."
         )
+    if raw_fetch < requested:
+        raise RuntimeError("raw_fetch_candles must be >= requested_candles.")
 
     if settings.PAPER_ONLY is not True:
         raise RuntimeError("Coverage preflight requires PAPER_ONLY=True.")
@@ -152,6 +160,7 @@ def run_preflight(
             symbols=symbols,
             interval=interval,
             requested_candles=requested,
+            raw_fetch_candles=raw_fetch,
             target_common_candles=target,
             minimum_in_window_candles=minimum,
             output_dir=output_dir,
