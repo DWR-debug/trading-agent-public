@@ -1,4 +1,4 @@
-name: Self-hosted Continuous QA
+name: Continuous QA (hosted Python)
 
 on:
   push:
@@ -25,7 +25,7 @@ concurrency:
 jobs:
   qa_lane:
     name: QA lane (${{ matrix.lane }})
-    runs-on: [self-hosted, trading-agent-research]
+    runs-on: windows-latest
     timeout-minutes: 75
     strategy:
       fail-fast: false
