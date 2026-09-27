@@ -382,7 +382,7 @@ def load_frozen_snapshot(manifest_path: str | Path) -> dict[str, tuple[Candle, .
     if not manifest_file.is_absolute():
         manifest_file = ROOT / manifest_file
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
-    if manifest.get("status") != "COVERAGE_PASSED":
+    if manifest.get("status") not in {"COVERAGE_PASSED", "coverage_passed"}:
         raise ValueError("Frozen snapshot manifest is not a successful coverage snapshot")
 
     data_snapshot = manifest.get("data_snapshot")
