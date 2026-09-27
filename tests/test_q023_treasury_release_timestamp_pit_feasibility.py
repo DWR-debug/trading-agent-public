@@ -36,7 +36,9 @@ def test_candidate_urls_are_limited_to_official_treasurydirect():
         "https://www.treasurydirect.gov/instit/annceresult/press/preanre/2023/"
     )
     assert all(url.endswith(".pdf") for url in urls)
-    assert "A_20231101_1.pdf" in urls
+    assert "A_20231101_1.pdf" not in urls
+    assert "A_20231107_1.pdf" in urls
+    assert urls[0].endswith("A_20231101_1.pdf") is False
 
 
 def test_pdf_match_requires_cusip_auction_date_and_ten_year_note():
