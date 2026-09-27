@@ -410,8 +410,7 @@ def run(preregistration:Path,coverage_root:Path,output:Path)->dict:
     }
     result["report_fingerprint"]=_fp(result)
     output.parent.mkdir(parents=True,exist_ok=True)
-    output.write_text(json.dumps(result,indent=2,ensure_ascii=False,allow_nan=False)+"
-",encoding="utf-8")
+    output.write_text(json.dumps(result,indent=2,ensure_ascii=False,allow_nan=False)+"\\n",encoding="utf-8")
     print("T056_STATUS: COMPLETED")
     for arm in ("CONTROL","RISK-A","RISK-B","RISK-C","RISK-D"):
         print(arm+"_ALL_GATES:",reports[arm]["all_gates_passed"])
