@@ -566,6 +566,17 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         ),
         target_count=3520,
     ),
+    AssetUniverse(
+        name="validation_2026_09_27_q030_risk_stability_coverage",
+        priority=70,
+        description=(
+            "Fresh symbol-disjoint fixed ETF universe for Q031 coverage-only "
+            "preflight of the Q030 risk/stability mechanism families; no performance selection."
+        ),
+        symbols=("BSV", "FAN", "JNK", "UDN", "VCLT", "VGIT", "SCHR"),
+        target_count=3500,
+    ),
+
 )
 
 
