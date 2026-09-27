@@ -552,8 +552,6 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         ),
         target_count=3520,
     ),
-)
-
 
     AssetUniverse(
         name="validation_2026_09_27_fixed_candidate_batch_02",
@@ -568,6 +566,9 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         ),
         target_count=3520,
     ),
+)
+
+
 
 def get_universe(name: str) -> AssetUniverse:
     for universe in UNIVERSES:
