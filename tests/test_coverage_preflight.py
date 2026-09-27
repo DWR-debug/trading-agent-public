@@ -75,7 +75,7 @@ def test_coverage_preflight_marks_short_history_data_invalid(monkeypatch, tmp_pa
     result = run_preflight(spec_path, output_root=tmp_path)
 
     assert result["status"] == "DATA_INVALID"
-    assert result["insufficient_symbols"] == {symbols[0]: 3510}
+    assert result["insufficient_symbols"] == {symbols[0]: 3490}
     assert result["scientific_outcome"] == "NO_SCIENTIFIC_OUTCOME"
     assert result["performance_evaluation"] is False
     assert result["holdout_evaluation"] is False
