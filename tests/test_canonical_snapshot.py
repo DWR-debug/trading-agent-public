@@ -69,6 +69,38 @@ def test_canonical_snapshot_fails_closed_without_partial_artifacts(tmp_path):
     assert not (tmp_path / "datasets").exists()
 
 
+def test_canonical_snapshot_invalidates_previous_snapshot_on_failure(tmp_path):
+    base = datetime(2020, 1, 1, tzinfo=timezone.utc)
+    valid = True
+
+    def fake_loader(symbol, interval, total, **kwargs):
+        if valid:
+            return [Bar(base + timedelta(days=i), 100.0 + i) for i in range(8)]
+        return [Bar(base + timedelta(days=i), 100.0 + i) for i in range(4)]
+
+    spec = SnapshotSpec(
+        universe="test",
+        symbols=("AAA", "BBB"),
+        interval="1d",
+        requested_candles=8,
+        target_common_candles=8,
+        output_dir=tmp_path,
+    )
+
+    successful = build_frozen_snapshot(spec, loader=fake_loader)
+    assert successful["status"] == "COVERAGE_PASSED"
+    assert (tmp_path / "snapshot_manifest.json").exists()
+    assert (tmp_path / "datasets").exists()
+
+    valid = False
+    failed = build_frozen_snapshot(spec, loader=fake_loader)
+
+    assert failed["status"] == "DATA_INVALID"
+    assert failed["data_snapshot"] is None
+    assert not (tmp_path / "snapshot_manifest.json").exists()
+    assert not (tmp_path / "datasets").exists()
+
+
 def test_canonical_snapshot_filters_fixed_study_window_before_intersection(tmp_path):
     base = datetime(2020, 1, 1, tzinfo=timezone.utc)
 
