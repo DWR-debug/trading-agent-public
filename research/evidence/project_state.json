@@ -6,7 +6,7 @@
   "latest_formal_trial": "T-2026-09-27-056",
   "latest_trial_status": "NO_ARM_PASSED_ALL_T052_GATES",
   "next_reserved_trial": null,
-  "next_research_focus": "Q038 fresh disjoint coverage for the Q037 alpha architecture: execute the fixed source-order coverage contract; PIT remains mandatory before any later performance trial.",
+  "next_research_focus": "Q040 official event-source feasibility sweep after Q038 coverage and Q039 price-only PIT; no performance selection until source/PIT prerequisites pass.",
   "cleanup_status": "completed_h06_and_q017_coverage_hardening",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -39,6 +39,15 @@
       "changed_files": 5,
       "research_only_paths": true,
       "performance_execution": false
+    },
+    "q039_verified": {
+      "workflow_run_id": 36346231540,
+      "conclusion": "success",
+      "artifact_id": 10941305268,
+      "artifact_digest": "sha256:cf85b6d21f290d318733eb313c2c09d6cfdf3c3b5a8be57ac55d41df64a31855",
+      "tests_passed": 2,
+      "pit_gate": "passed",
+      "performance_evaluation": false
     }
   },
   "active_research_model": {
@@ -102,8 +111,8 @@
     ".github/workflows/q031-q030-risk-stability-coverage.yml",
     ".github/workflows/q032-q031-fixed-core-pit.yml"
   ],
-  "current_preregistered_trial": "T-2026-09-27-057",
-  "current_trial_status": "PREREGISTERED_DIAGNOSTIC_ONLY",
+  "current_preregistered_trial": "T-2026-09-27-059",
+  "current_trial_status": "PIT_PASSED_NO_PERFORMANCE_EVIDENCE",
   "engineering_notes": {
     "t039_preregistered": true,
     "coverage_preflight_active": true,
@@ -527,8 +536,8 @@
     "final_execution_commit": "85acd4e17921a4e2682552bfbe424f17ffaa9322",
     "final_status": "COMPLETED_DISCOVERY_ONLY"
   },
-  "current_queue_task": "Q-2026-09-27-059-Q038-FRESH-DISJOINT-COVERAGE-2026-09-27",
-  "last_completed_queue_task": "Q-036-T056-RISK-MECHANISM-DIAGNOSTIC-2026-09-27",
+  "current_queue_task": "Q-2026-09-27-060-Q040-OFFICIAL-EVENT-SOURCE-FEASIBILITY-2026-09-27",
+  "last_completed_queue_task": "Q-2026-09-27-059-Q039-PRICE-ONLY-ALPHA-PIT-2026-09-27",
   "master_commit_semantics": "last_verified_master_commit_before_this_state_update; this field must not be interpreted as a self-referential current-HEAD field",
   "state_sync_verified_at": "2026-09-27T19:05:30Z",
   "project_milestone": {
@@ -765,8 +774,8 @@
     "holdout_used_for_selection": false
   },
   "q038": {
-    "status": "PREREGISTERED_COVERAGE_ONLY",
-    "task_id": "Q-2026-09-27-059-Q038-FRESH-DISJOINT-COVERAGE-2026-09-27",
+    "status": "COVERAGE_VALIDATED",
+    "task_id": "Q-2026-09-27-058-Q038-FRESH-DISJOINT-COVERAGE-2026-09-27",
     "implementation_status": "MERGED",
     "implementation_pr": "486",
     "implementation_merge_commit": "1c50bdd0ce7f78ccd9c85fa790ae90e6e855a881",
@@ -784,9 +793,46 @@
     "requested_candles": 4000,
     "target_common_candles": 3500,
     "target_universe_size": 8,
-    "coverage_result": null,
+    "coverage_result": {
+      "workflow_run_id": 36344634727,
+      "artifact_id": 10939932547,
+      "artifact_digest": "sha256:53be6d42654578844344847bc3a5cb59a8167ba2210a8fffb4c64a4b94e5318e",
+      "coverage_fingerprint": "968eb89ce426ee900cda06ca4d817f42dad7bc129f64088ba0180ab6b01cbd7f",
+      "common_calendar_count": 4000,
+      "selected_snapshot_count": 3500
+    },
     "performance_execution_authorized": false,
     "holdout_used_for_selection": false,
     "selection_used": false
+  },
+  "q039": {
+    "status": "PIT_PASSED_NO_PERFORMANCE_EVIDENCE",
+    "trial_id": "T-2026-09-27-059",
+    "workflow_run_id": 36346231540,
+    "artifact_id": 10941305268,
+    "artifact_digest": "sha256:cf85b6d21f290d318733eb313c2c09d6cfdf3c3b5a8be57ac55d41df64a31855",
+    "report_fingerprint": "cf38e3030f08fe6e6c2881c5c48d2e52c55f96db1af06b112593856d92c247e0",
+    "checks_fingerprint": "973a99f4b636b4208e34b292d5d308903886e0d4d5fce27b2526e2c1a8e23e0b",
+    "checked_decision_points": 29,
+    "mechanisms": [
+      "A1_TSM_CONSENSUS",
+      "A2_CS_MOMENTUM_TOP2",
+      "A3_RESIDUAL_MOMENTUM_TOP2",
+      "A5_LOW_BETA_TOP2"
+    ],
+    "future_mutation_checks_passed": true,
+    "next_session_mutation_checks_passed": true,
+    "performance_execution_authorized": false,
+    "selection_used": false,
+    "holdout_used_for_selection": false
+  },
+  "q040": {
+    "status": "PREREGISTERED_SOURCE_PIT_FEASIBILITY",
+    "issue": 489,
+    "execution_scope": "SOURCE_PIT_FEASIBILITY_ONLY",
+    "performance_execution_authorized": false,
+    "holdout_used_for_selection": false,
+    "selection_used": false,
+    "agent_queue_task_id": "AGENT-Q040-OFFICIAL-EVENT-SOURCE-FEASIBILITY"
   }
 }
