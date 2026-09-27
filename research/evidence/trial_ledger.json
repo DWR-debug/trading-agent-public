@@ -5191,7 +5191,81 @@
         "orders_enabled": false,
         "automatic_promotion": false
       }
+    },
+    {
+      "trial_id": "T-2026-09-27-064",
+      "recorded_at": "2026-09-27T20:28:00Z",
+      "status": "pit_validated",
+      "research_family": "q044_fresh_alpha_pit",
+      "hypothesis": {
+        "text": "Verify point-in-time stability of six fixed price/OHLCV alpha mechanisms on the fresh Q043 symbol-disjoint universe."
+      },
+      "data_scope": {
+        "symbols": [
+          "AON",
+          "CVS",
+          "ADSK",
+          "BA",
+          "T",
+          "F",
+          "LUV",
+          "NFLX"
+        ],
+        "requested_candles": 4000,
+        "target_common_candles": 3500,
+        "common_calendar_count": 4000,
+        "checked_decision_points": 29,
+        "source_coverage_trial": "T-2026-09-27-063",
+        "workflow_run_id": 36347449579,
+        "artifact_id": 10940718513,
+        "artifact_digest": "sha256:25290cde87922ea247feb434ae99103d060a4c0e10a8d34cb43fc00d8e8e9984"
+      },
+      "search_scope": {
+        "raw_trial_count": 6,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "asset_search": false,
+        "horizon_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "none; PIT gate only",
+        "selection_metric": null,
+        "holdout_used_for_selection": false
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "PIT_PASSED",
+        "scientific_outcome": "PIT_PASSED_NO_PERFORMANCE_EVIDENCE",
+        "workflow_run_id": 36347449579,
+        "workflow_conclusion": "success",
+        "artifact_id": 10940718513,
+        "artifact_digest": "sha256:25290cde87922ea247feb434ae99103d060a4c0e10a8d34cb43fc00d8e8e9984",
+        "checks_fingerprint": "dbd4f0547c047512fdd92757cc14adecf99339a37a3d57c0ef821dd9df18c739",
+        "report_fingerprint": "9f847f54614b1fa634788e0d01a0808e277e28481b70a903d8aec9ebaab0c54d",
+        "checked_decision_points": 29,
+        "future_mutation_checks_passed": true,
+        "next_session_mutation_checks_passed": true,
+        "performance_evaluation": false,
+        "holdout_used_for_selection": false,
+        "selection_used": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
     }
   ],
-  "updated_at": "2026-09-27T20:25:00Z"
+  "updated_at": "2026-09-27T20:28:00Z"
 }
