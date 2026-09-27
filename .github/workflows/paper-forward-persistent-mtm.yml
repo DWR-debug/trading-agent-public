@@ -115,7 +115,7 @@ jobs:
           git status --short
           git fetch origin master
           git merge --ff-only origin/master
-          git add ops/paper_forward/state/shadow.json ops/paper_forward/state/feed_receipt.json
+          git add -A ops/paper_forward/state/
           if git diff --cached --quiet; then
             echo "PAPER_FORWARD_NO_STATE_CHANGE"
             exit 0
