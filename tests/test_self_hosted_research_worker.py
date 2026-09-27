@@ -70,6 +70,59 @@ def test_every_lane_writes_non_formal_run_manifest(monkeypatch, tmp_path):
             "step_return_codes": expected_codes,
         }
 
+        summary = json.loads(
+            (output_dir / "summary.json").read_text(encoding="utf-8")
+        )
+        assert summary["lane"] == lane
+        assert summary["formal_evidence_allowed"] is False
+        assert [result["index"] for result in summary["results"]] == list(
+            range(1, len(expected_codes) + 1)
+        )
+        assert [result["returncode"] for result in summary["results"]] == expected_codes
+
+
+def test_each_lane_fails_closed_and_preserves_failure_provenance(
+    monkeypatch, tmp_path
+):
+    monkeypatch.setenv("GITHUB_SHA", "abc123")
+    monkeypatch.setenv("RUNNER_NAME", "self-hosted-test")
+
+    for lane in worker.LANES:
+        output_dir = tmp_path / lane
+        attempted = []
+
+        def fail_first_step(command, out_dir, index):
+            attempted.append(index)
+            return {"index": index, "returncode": 17}
+
+        monkeypatch.setattr(worker, "run", fail_first_step)
+        monkeypatch.setattr(
+            "sys.argv",
+            [
+                "self_hosted_research_worker",
+                "--lane",
+                lane,
+                "--output-dir",
+                str(output_dir),
+            ],
+        )
+
+        assert worker.main() == 17
+        assert attempted == [1]
+
+        summary = json.loads(
+            (output_dir / "summary.json").read_text(encoding="utf-8")
+        )
+        manifest = json.loads(
+            (output_dir / "run_manifest.json").read_text(encoding="utf-8")
+        )
+        assert summary["lane"] == lane
+        assert summary["results"][0]["returncode"] == 17
+        assert summary["formal_evidence_allowed"] is False
+        assert manifest["lane"] == lane
+        assert manifest["source_commit"] == "abc123"
+        assert manifest["step_return_codes"] == [17]
+
 
 def test_run_manifest_allows_local_execution_without_github_metadata(monkeypatch, tmp_path):
     monkeypatch.delenv("GITHUB_SHA", raising=False)
@@ -136,8 +189,13 @@ def test_self_hosted_continuous_qa_is_scheduled_and_non_formal():
     assert "PAPER_ONLY" in text
     assert "LIVE_TRADING_ENABLED" in text
     assert "ORDERS_ENABLED" in text
-    assert "AUTOMATIC_PROMOTION" not in text
+    assert "settings.AUTOMATIC_PROMOTION is False" in text
     assert "research/evidence" not in text
+    assert "pull_request:" not in text
+    assert "workflow_dispatch:" in text
+    assert "codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%" in text
+    assert "python/3.13.15/python.3.13.15.nupkg" in text
+    assert "if-no-files-found: error" in text
 
 
 def test_self_hosted_continuous_qa_is_run_isolated():

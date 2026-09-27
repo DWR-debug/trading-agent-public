@@ -91,11 +91,52 @@ der erste Prozess belegt ist. Die Workflow-Dateien benötigen dafür keine Ände
 ist die bevorzugte Skalierung, bevor wir zusätzliche Maschinen oder kostenpflichtige
 Compute-Ressourcen einsetzen.
 
-Der aktuelle Architekturzustand ist bewusst konservativ: ein Runner-Prozess, serielle
-Continuous-QA und maximal zwei parallele Copilot-CLI-Agenten auf GitHub-hosted Actions.
-Die nächste Kapazitätsstufe ist ein zweiter selbstgehosteter Runner-Prozess auf dem bereits
-ständig verfügbaren PC; wissenschaftliche Gates und Sicherheitsinvarianten bleiben davon
-unabhängig.
+Der aktuelle Workflow verwendet einen Runner-Prozess und führt Continuous QA seriell aus.
+Eine spätere Workflow-Änderung kann die vier QA-Lanes unabhängig dispatchen und mit
+`max-parallel: 2` begrenzen. Das setzt keine zweite Runner-Instanz voraus: Mit nur einem
+registrierten Runner können passende Jobs weiterhin nacheinander laufen. Ein zweiter
+Prozess mit demselben Label kann die tatsächlich verfügbare Parallelität erhöhen, ist aber
+keine Voraussetzung für Korrektheit.
+
+## Vertrag für parallele Continuous-QA-Lanes
+
+Die Umstellung erfolgt separat in der Workflow-Datei; dieser Abschnitt beschreibt den
+Zielvertrag und behauptet nicht, dass der aktuelle serielle Workflow ihn bereits
+implementiert. Die vier erlaubten Lane-Namen bleiben exakt `repo_qa`, `data_qa`,
+`design_qa` und `local_reproduction`; die Worker-CLI akzeptiert keine beliebigen Kommandos.
+
+Der spätere Workflow sollte einen statischen Matrix-Eintrag pro Lane mit
+`strategy.max-parallel: 2` verwenden und `strategy.fail-fast: false` setzen. Damit bleiben
+die vier Lanes unabhängig dispatchbar, eine fehlgeschlagene Lane beendet nicht vorzeitig
+die anderen erwarteten Prüfungen, und höchstens zwei Lane-Jobs werden gleichzeitig an den
+Runner-Pool gegeben. Jeder Job muss trotzdem fail-closed enden: fehlgeschlagene Schritte,
+fehlende Metadaten oder fehlende Provenienz dürfen nicht in einen erfolgreichen Lane-Status
+umgewandelt werden.
+
+Jede Lane benötigt einen isolierten Arbeits-/Ausgabepfad, der mindestens Lane,
+`GITHUB_RUN_ID` und `GITHUB_RUN_ATTEMPT` unterscheidet. Der Job ruft ausschließlich die
+feste Worker-Lane auf, prüft deren Exit-Code und lädt `summary.json` sowie
+`run_manifest.json` auch bei Fehlern mit `if: always()` hoch; fehlende Dateien sind ein
+Fehler (`if-no-files-found: error`). Artifact-Namen müssen ebenfalls Lane, Run-ID und
+Attempt enthalten. Summary und Manifest müssen die konkrete Lane und den unveränderten
+`GITHUB_SHA` erkennen lassen; das Manifest muss die unveränderten Paper-only-Sicherheitsflags
+sowie `formal_research_evidence: false` ausweisen.
+
+Ein abschließender Aggregate-Gate-Job muss mit `if: always()` laufen und von der Matrix
+abhängen. Er darf nicht bloß die vorhandenen Artifacts als hinreichenden Erfolg behandeln:
+Er verlangt exakt die vier erwarteten Lane-Identitäten, prüft für jede Lane Summary und
+Manifest samt Lane-/SHA-Zuordnung und schlägt fehl, wenn eine Lane fehlgeschlagen,
+abgebrochen, übersprungen oder nicht nachgewiesen wurde. So kann ein fehlendes
+Matrix-Ergebnis nicht als Erfolg durchrutschen.
+
+Bei der Workflow-Umsetzung unverändert erhalten: globale `concurrency`-Gruppe und
+`cancel-in-progress: false`, `workflow_dispatch`, der 15-Minuten-Schedule, Ausführung
+ausschließlich aus dem vertrauenswürdigen Repository-Kontext, Download des exakten
+`GITHUB_SHA`-Snapshots und die isolierte Python-3.13.15-NuGet-Bootstrap-Logik. Keine Lane
+darf untrusted Fork-Code ausführen oder in Research-Evidence schreiben. Die Workflow-Datei
+wird erst in einem getrennten Orchestrator-Schritt geändert und geprüft; die
+Worker-Regressionstests sichern bis dahin Lane-Isolation, fail-closed Rückgabecodes und
+eindeutige Lane-Provenienz ab.
 
 ## Betriebsregel
 
