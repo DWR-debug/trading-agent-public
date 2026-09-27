@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-27T18:43:00Z",
+  "generated_at": "2026-09-27T18:51:30Z",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -4598,6 +4598,133 @@
         "orders_enabled": false,
         "automatic_promotion": false
       }
+    },
+    {
+      "trial_id": "T-2026-09-27-056",
+      "recorded_at": "2026-09-27T18:50:41Z",
+      "status": "performance_completed_no_arm_passed_all_gates",
+      "research_family": "t052_risk_stability_mechanism_performance",
+      "hypothesis": {
+        "text": "At least one fixed Q033 RISK-A/B/C/D overlay improves the T052 risk/stability evidence profile on the fresh Q031 validation universe while remaining within the unchanged T052 cost-stress and holdout gates."
+      },
+      "data_scope": {
+        "requested_candles": 4000,
+        "target_common_candles": 3500,
+        "research_periods": 2798,
+        "holdout_periods": 700,
+        "common_calendar_count": 3704,
+        "symbols": [
+          "BSV",
+          "FAN",
+          "JNK",
+          "UDN",
+          "VCLT",
+          "VGIT",
+          "SCHR"
+        ],
+        "fully_symbol_disjoint_validation_set": true,
+        "workflow_run_id": 36342102919,
+        "workflow_head_sha": "23e09d478ef4d7c9f866b8fc123b1842c9953ad8",
+        "artifact_ids": [
+          10939680447
+        ],
+        "artifact_digest": "sha256:026759ee2833d9a42fd879b6c06c772a1e89a2267b8b66cc8d5726bb218d3df2",
+        "snapshot_fingerprint": "e9b237c100bda1524f09951ed1946378bf1510e33ca3d97a18dbfd9a390df15d",
+        "coverage_fingerprint": "b93e2501309ffde0eac9e07f3b2c0f0a090981bd6fcaabe6b4cffa2a2ba51e74"
+      },
+      "search_scope": {
+        "raw_trial_count": 0,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "asset_search": false,
+        "threshold_search_after_observation": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "none; five arms evaluated symmetrically under fixed preregistration",
+        "selection_metric": null
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "COMPLETED",
+        "scientific_outcome": "NO_ARM_PASSED_ALL_T052_GATES",
+        "workflow_run_id": 36342102919,
+        "workflow_conclusion": "success",
+        "report_fingerprint": "56feed52b6c8321e3b4cfcf7914b87d2d54ad4cf7d1cf66b095a62db0453943f",
+        "arms_summary": {
+          "CONTROL": {
+            "gates_passed": 0,
+            "gates_total": 13,
+            "research_return": -0.019982286126002613,
+            "research_drawdown_pct": 25.417497200831317,
+            "holdout_return": -0.11735131980057356,
+            "holdout_drawdown_pct": 14.882583314482666,
+            "holdout_pf": 0.8609596304625091
+          },
+          "RISK-A": {
+            "gates_passed": 0,
+            "gates_total": 13,
+            "research_return": -0.05849887363705997,
+            "research_drawdown_pct": 20.80973778934996,
+            "holdout_return": -0.11721404228303456,
+            "holdout_drawdown_pct": 14.869345082869078,
+            "holdout_pf": 0.8593128045095083
+          },
+          "RISK-B": {
+            "gates_passed": 2,
+            "gates_total": 13,
+            "research_return": -0.007044486119285875,
+            "research_drawdown_pct": 14.537477213010897,
+            "holdout_return": -0.030029286503589825,
+            "holdout_drawdown_pct": 3.898625187640503,
+            "holdout_pf": 0.8609596304625091
+          },
+          "RISK-C": {
+            "gates_passed": 0,
+            "gates_total": 13,
+            "research_return": -0.02528521224336755,
+            "research_drawdown_pct": 25.308361041701342,
+            "holdout_return": -0.0955634524459611,
+            "holdout_drawdown_pct": 12.665665671830784,
+            "holdout_pf": 0.8623693398530136
+          },
+          "RISK-D": {
+            "gates_passed": 0,
+            "gates_total": 13,
+            "research_return": -0.087734400891338,
+            "research_drawdown_pct": 24.767969448152094,
+            "holdout_return": -0.11594864033247054,
+            "holdout_drawdown_pct": 14.44524113906116,
+            "holdout_pf": 0.8454381267770267
+          }
+        },
+        "control_comparison_summary": {
+          "RISK-A": false,
+          "RISK-B": false,
+          "RISK-C": false,
+          "RISK-D": false
+        },
+        "performance_evaluation": true,
+        "oos_evaluation": true,
+        "holdout_evaluation": true,
+        "selection_used": false,
+        "holdout_used_for_selection": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      },
+      "note": "No arm passed all 13 preregistered gates. RISK-B reduced drawdown substantially versus the fixed control but remained negative in both research and holdout and failed the return/profit-factor/OOS/stress conditions. This is evidence about the fixed trial only; no arm is promoted or selected."
     }
   ]
 }
