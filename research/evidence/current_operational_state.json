@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T15:46:45.794752+00:00",
+  "generated_at_utc": "2026-09-27T15:51:40.777031+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [],
@@ -85,6 +85,36 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: make 500 EUR candidate lane idle when no candidate is eligible",
+        "sha": "fb8b52da4e90c497a5ebd09896a4af15484387ff",
+        "timestamp": "2026-09-27T17:51:20+02:00"
+      },
+      {
+        "message": "OPS: add formal 500 EUR candidate runner",
+        "sha": "e635c905ab7e9f5431785179175028e5635ccdf8",
+        "timestamp": "2026-09-27T17:51:04+02:00"
+      },
+      {
+        "message": "DOCS: define formal 500 EUR candidate protocol",
+        "sha": "e9ad9f30a1eb7bb810bf51843cac195d735aabfd",
+        "timestamp": "2026-09-27T17:51:01+02:00"
+      },
+      {
+        "message": "TEST: cover 500 EUR candidate gate",
+        "sha": "d7524596a67abea23a1834debfd19de80229fc7c",
+        "timestamp": "2026-09-27T17:50:57+02:00"
+      },
+      {
+        "message": "OPS: add fail-closed 500 EUR candidate gate",
+        "sha": "8a73ec6cec6cc17fb17765477f4b7c965677f5f4",
+        "timestamp": "2026-09-27T17:50:54+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "79d8e1f427c58db02931ab9c950bc057784f8487",
+        "timestamp": "2026-09-27T15:46:46Z"
+      },
+      {
         "message": "OPS: add standalone Q017 coverage-first runner",
         "sha": "4b5165409baf9dbe4df606eab313e77712af2db3",
         "timestamp": "2026-09-27T17:46:35+02:00"
@@ -93,36 +123,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "2cbb76c8167b63f04592f45a64d04b180d14f14e",
         "timestamp": "2026-09-27T15:44:48Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "e6a1a39391f7b8ed777372590dac8a796515a91b",
-        "timestamp": "2026-09-27T15:43:51Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "94457a1a2fff643249c18940cc6134b6c6e9dc27",
-        "timestamp": "2026-09-27T15:43:33Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "988d93b56bcb43361b0240107d158f3100cffbed",
-        "timestamp": "2026-09-27T15:40:46Z"
-      },
-      {
-        "message": "OPS: add owner-gated candidate-coverage manual trigger",
-        "sha": "9dd4904d100aec3dd729c89a050ecd2cb6c74d4d",
-        "timestamp": "2026-09-27T17:40:33+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "aff245b30d7654aed5502d485a2d473368dd4841",
-        "timestamp": "2026-09-27T15:40:24Z"
-      },
-      {
-        "message": "OPS: add coverage-only candidate search runner",
-        "sha": "1780152f10cbc02ac4b7860ad012a68792249cde",
-        "timestamp": "2026-09-27T17:40:12+02:00"
       }
     ]
   },
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4b5165409baf9dbe4df606eab313e77712af2db3",
+  "source_master_sha": "fb8b52da4e90c497a5ebd09896a4af15484387ff",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36330796601"
+    "run_id": "36331055741"
   }
 }
