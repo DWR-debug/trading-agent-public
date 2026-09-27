@@ -54,34 +54,13 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T16:17:47.077247+00:00",
+  "generated_at_utc": "2026-09-27T16:20:10.357094+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [],
     "default_branch": "master",
-    "open_agent_ready_issues": [
-      {
-        "number": 408,
-        "title": "AGENT-026: harden continuous self-hosted paper-forward MTM operation",
-        "updatedAt": "2026-09-27T15:46:42Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/issues/408"
-      },
-      {
-        "number": 407,
-        "title": "AGENT-025: implement T052 fixed-core sleeve performance validation",
-        "updatedAt": "2026-09-27T16:17:27Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/issues/407"
-      }
-    ],
+    "open_agent_ready_issues": [],
     "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "capital/align-income-simulation-2000-v2",
-        "number": 427,
-        "title": "TEST: focused EUR 2,000 capital accounting QA",
-        "updatedAt": "2026-09-27T16:17:00Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/427"
-      },
       {
         "baseRefName": "master",
         "headRefName": "capital/align-income-simulation-2000",
@@ -100,6 +79,16 @@
       }
     ],
     "recent_commits": [
+      {
+        "message": "TEST: focused EUR 2,000 capital accounting QA (#427)",
+        "sha": "7d2186fd2f4f79aaee678a8fc9b2bacf2ec7137b",
+        "timestamp": "2026-09-27T18:19:56+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "cd0a57ee12d1c28f441d9c3609d197922d534318",
+        "timestamp": "2026-09-27T16:17:47Z"
+      },
       {
         "message": "OPS: synchronize current operational status",
         "sha": "4cfc6ac43e10b458a09927ee9bde58e09b238ea6",
@@ -129,16 +118,6 @@
         "message": "RESEARCH: add fixed intraday discovery simulations",
         "sha": "0fa73774b7b1b445c5bd8a641f660e490a9ae9ef",
         "timestamp": "2026-09-27T18:16:20+02:00"
-      },
-      {
-        "message": "OPS: harden persistent self-hosted paper-forward operation",
-        "sha": "0608dbae9b7d80946b1fdcf69031eff80547771e",
-        "timestamp": "2026-09-27T18:16:16+02:00"
-      },
-      {
-        "message": "OPS: autonomous agent queue routing",
-        "sha": "cacb3b751568f342087fb7922bc3a437a5fe0b87",
-        "timestamp": "2026-09-27T16:11:57Z"
       }
     ]
   },
@@ -200,12 +179,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4cfc6ac43e10b458a09927ee9bde58e09b238ea6",
+  "source_master_sha": "7d2186fd2f4f79aaee678a8fc9b2bacf2ec7137b",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36332697424"
+    "run_id": "36332845727"
   }
 }
