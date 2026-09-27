@@ -16,16 +16,16 @@
       "copilot_cli_queue": ".github/workflows/agent-request-queue.yml",
       "current_pending_requests": [
         {
-          "issue_number": "",
+          "issue_number": "431",
           "lane": "lane0",
           "request_file": "agent_requests/lane0/AGENT-007.request",
-          "task_id": ""
+          "task_id": "AGENT-007-2000-CANDIDATE"
         },
         {
           "issue_number": "335",
           "lane": "lane1",
           "request_file": "agent_requests/lane1/AGENT-Q024.request",
-          "task_id": "AGENT-Q024"
+          "task_id": "AGENT-Q024-FEASIBILITY"
         }
       ]
     },
@@ -67,21 +67,21 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T16:49:26.515720+00:00",
+  "generated_at_utc": "2026-09-27T16:52:05.186004+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
       {
-        "issue_number": "",
+        "issue_number": "431",
         "lane": "lane0",
         "request_file": "agent_requests/lane0/AGENT-007.request",
-        "task_id": ""
+        "task_id": "AGENT-007-2000-CANDIDATE"
       },
       {
         "issue_number": "335",
         "lane": "lane1",
         "request_file": "agent_requests/lane1/AGENT-Q024.request",
-        "task_id": "AGENT-Q024"
+        "task_id": "AGENT-Q024-FEASIBILITY"
       }
     ],
     "default_branch": "master",
@@ -89,18 +89,33 @@
       {
         "number": 431,
         "title": "AGENT-007: independent audit of EUR 2000 candidate path",
-        "updatedAt": "2026-09-27T16:49:13Z",
+        "updatedAt": "2026-09-27T16:51:51Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/431"
       },
       {
         "number": 335,
         "title": "RESEARCH: Q024 auction-result publication timestamp PIT feasibility",
-        "updatedAt": "2026-09-27T16:47:05Z",
+        "updatedAt": "2026-09-27T16:51:48Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/335"
       }
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: requeue Q024 with corrected implementation path",
+        "sha": "56dfca691b51f18a53cdb31205ca6f4452c7b3d7",
+        "timestamp": "2026-09-27T18:51:56+02:00"
+      },
+      {
+        "message": "OPS: requeue EUR 2000 candidate audit with unique task id",
+        "sha": "463baacde55afdc8ef51167cd4ad374945037815",
+        "timestamp": "2026-09-27T18:51:54+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "be86f2599ba97671c21e9ac856324dcad156a35e",
+        "timestamp": "2026-09-27T16:49:26Z"
+      },
       {
         "message": "OPS: queue AGENT-007 EUR 2000 candidate audit",
         "sha": "a831711709b14d4310730571438460cf868bbf46",
@@ -125,21 +140,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "b6e624f8c23bb5d783996b7b30d7979623298338",
         "timestamp": "2026-09-27T16:46:38Z"
-      },
-      {
-        "message": "OPS: align intraday discovery contract schemas",
-        "sha": "d9ee16a9eb69fec6f17521bda2181db7984d1eb0",
-        "timestamp": "2026-09-27T18:46:26+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d6a12c821d683347e688577fd88d7aaf33c323a9",
-        "timestamp": "2026-09-27T16:46:15Z"
-      },
-      {
-        "message": "OPS: harden canonical snapshot failure invalidation",
-        "sha": "60565b5e635382deb0ca1909d3c36e4a8ffa174c",
-        "timestamp": "2026-09-27T18:46:01+02:00"
       }
     ]
   },
@@ -201,12 +201,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a831711709b14d4310730571438460cf868bbf46",
+  "source_master_sha": "56dfca691b51f18a53cdb31205ca6f4452c7b3d7",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36334646469"
+    "run_id": "36334809240"
   }
 }
