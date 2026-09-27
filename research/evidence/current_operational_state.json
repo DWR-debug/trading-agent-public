@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T14:13:45.705942+00:00",
+  "generated_at_utc": "2026-09-27T14:15:17.691660+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -89,7 +89,7 @@
       {
         "number": 354,
         "title": "AGENT-020: audit autonomous paper-forward loop and Windows operation",
-        "updatedAt": "2026-09-27T12:12:32Z",
+        "updatedAt": "2026-09-27T14:13:58Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/354"
       },
       {
@@ -113,6 +113,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "AGENT: publish verified AGENT-017 control-plane audit",
+        "sha": "e61475cba97333052a3a83199faebb47498a8610",
+        "timestamp": "2026-09-27T16:15:07+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "290d74efb4dedc121f71c474d90aa9b244f872ab",
+        "timestamp": "2026-09-27T14:13:46Z"
+      },
       {
         "message": "FIX: make current-status sync fail closed on master drift",
         "sha": "dfaf046188aa068a05c67853fabafb8aa0818dc4",
@@ -142,16 +152,6 @@
         "message": "OPS: autonomous agent queue routing",
         "sha": "4b467d74e5168fbc8b044525a117e32fe4b3dc86",
         "timestamp": "2026-09-27T14:08:49Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "88b0a587b8a2ae08cffb9cc661955cb21d38dbe4",
-        "timestamp": "2026-09-27T14:01:01Z"
-      },
-      {
-        "message": "EVIDENCE: record fresh T049/T050 coverage receipts",
-        "sha": "e5e06810b60b149a4faeafb17ceda717c69c3084",
-        "timestamp": "2026-09-27T16:00:50+02:00"
       }
     ]
   },
@@ -212,12 +212,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "dfaf046188aa068a05c67853fabafb8aa0818dc4",
+  "source_master_sha": "e61475cba97333052a3a83199faebb47498a8610",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36325142929"
+    "run_id": "36325236209"
   }
 }
