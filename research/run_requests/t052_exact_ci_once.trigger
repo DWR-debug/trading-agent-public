@@ -1,3 +1,0 @@
-RUN_T052_EXACT_CI_ONCE
-authorization=research/authorizations/t052_fixed_core_sleeve_performance_2026_09_27.json
-scope=exact_master_ci_only
