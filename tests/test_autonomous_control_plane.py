@@ -1,8 +1,18 @@
-from automation.autonomous_control_plane import eligible_issues, plan, validate_assignment_contracts
+import json
+
+import pytest
+
+from automation.agent_dispatch import AgentDispatchError
+from automation.autonomous_control_plane import (
+    eligible_issues,
+    plan,
+    validate_assignment_contracts,
+    validate_request_snapshot,
+)
 
 
-def issue(number: int, created_at: str, *, labels=None, assignees=None):
-    task_id = f"AGENT-{number}"
+def issue(number: int, created_at: str, *, labels=None, assignees=None, task_id=None):
+    task_id = task_id or f"AGENT-{number}"
     body = (
         "<!-- TRADING_AGENT_TASK_V1\n"
         + "{\"schema_version\":1,\"task_id\":\"" + task_id
@@ -51,6 +61,11 @@ def test_plan_retires_published_branch_and_fills_lane():
         "issue_number": 2,
         "task_id": "AGENT-2",
         "path": "agent_requests/lane0/AGENT-2.request",
+    }, {
+        "lane": "1",
+        "issue_number": 3,
+        "task_id": "AGENT-3",
+        "path": "agent_requests/lane1/AGENT-3.request",
     }]
 
 
@@ -74,6 +89,57 @@ def test_plan_never_exceeds_two_lanes():
     assert len(result["assign"]) == 2
 
 
+def test_plan_assigns_duplicate_task_id_only_once():
+    result = plan(
+        issues=[
+            issue(2, "2026-09-27T11:00:00Z", task_id="AGENT-DUPLICATE"),
+            issue(3, "2026-09-27T11:01:00Z", task_id="AGENT-DUPLICATE"),
+        ],
+        requests=[],
+        existing_branches=set(),
+        owner="DWR-debug",
+    )
+    assert len(result["assign"]) == 1
+    assert result["assign"][0]["task_id"] == "AGENT-DUPLICATE"
+
+
+def test_plan_rejects_duplicate_task_id_already_in_queue():
+    with pytest.raises(AgentDispatchError, match="Duplicate queued task_id"):
+        plan(
+            issues=[],
+            requests=[request("0", "AGENT-DUPLICATE"), request("1", "AGENT-DUPLICATE")],
+            existing_branches=set(),
+            owner="DWR-debug",
+        )
+
+
+def test_queue_snapshot_fails_closed_when_api_omits_checked_out_request(tmp_path):
+    lane = tmp_path / "lane0"
+    lane.mkdir()
+    (lane / "AGENT-5.request").write_text(
+        json.dumps({"issue_number": 5, "task_id": "AGENT-5"}),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(AgentDispatchError, match="does not match"):
+        validate_request_snapshot([], lanes=("0", "1"), request_root=tmp_path)
+
+
+def test_queue_snapshot_accepts_matching_request_inventory(tmp_path):
+    lane = tmp_path / "lane0"
+    lane.mkdir()
+    (lane / "AGENT-5.request").write_text(
+        json.dumps({"issue_number": 5, "task_id": "AGENT-5"}),
+        encoding="utf-8",
+    )
+
+    validate_request_snapshot(
+        [request("0", "AGENT-5")],
+        lanes=("0", "1"),
+        request_root=tmp_path,
+    )
+
+
 def test_unsafe_task_fails_closed():
     bad = issue(9, "2026-09-27T11:00:00Z")
     bad["body"] = bad["body"].replace('\"paid_usage\":false', '\"paid_usage\":true')
@@ -87,3 +153,8 @@ def test_unsafe_task_fails_closed():
         assert "paid_usage" in str(exc)
     else:
         raise AssertionError("unsafe task accepted")
+
+
+def test_master_sha_is_required_even_when_plan_has_no_assignments():
+    with pytest.raises(AgentDispatchError, match="explicitly supplied"):
+        validate_assignment_contracts({}, [], "")

@@ -8,9 +8,68 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from pathlib import Path
 
-from automation.agent_dispatch import AgentDispatchError, extract_task_metadata, validate_task
+from automation.agent_dispatch import (
+    AgentDispatchError,
+    extract_task_metadata,
+    validate_queued_issue,
+    validate_task,
+)
+
+
+def validate_request_snapshot(
+    requests: list[dict],
+    *,
+    lanes: tuple[str, ...],
+    request_root: Path = Path("agent_requests"),
+) -> None:
+    """Ensure the API queue inventory agrees with the checked-out repository."""
+    if not isinstance(requests, list):
+        raise AgentDispatchError("Queue request snapshot must be a list.")
+
+    expected: set[tuple[str, str, str]] = set()
+    for lane in lanes:
+        lane_dir = request_root / f"lane{lane}"
+        if not lane_dir.exists():
+            continue
+        if not lane_dir.is_dir():
+            raise AgentDispatchError(f"Queue lane path is not a directory: {lane_dir}.")
+        for path in lane_dir.glob("*.request"):
+            if not path.is_file():
+                raise AgentDispatchError(f"Queue request is not a file: {path}.")
+            task_id = path.name.removesuffix(".request")
+            try:
+                payload = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as exc:
+                raise AgentDispatchError(f"Cannot read queue request: {path}.") from exc
+            if not isinstance(payload, dict) or payload.get("task_id") != task_id:
+                raise AgentDispatchError(f"Invalid task id in queue request: {path}.")
+            relative_path = Path("agent_requests") / path.relative_to(request_root)
+            expected.add((lane, task_id, relative_path.as_posix()))
+
+    observed: set[tuple[str, str, str]] = set()
+    for request in requests:
+        if not isinstance(request, dict):
+            raise AgentDispatchError("Queue request entries must be objects.")
+        lane = request.get("lane")
+        task_id = request.get("task_id")
+        path = request.get("path")
+        if (
+            not isinstance(lane, str)
+            or lane not in lanes
+            or not isinstance(task_id, str)
+            or not task_id.strip()
+            or not isinstance(path, str)
+        ):
+            raise AgentDispatchError("Queue request entry has invalid lane, task_id, or path.")
+        observed.add((lane, task_id, path))
+
+    if observed != expected:
+        raise AgentDispatchError(
+            "Queue API snapshot does not match the checked-out request inventory."
+        )
 
 
 def _labels(issue: dict) -> set[str]:
@@ -46,12 +105,28 @@ def eligible_issues(issues: list[dict], owner: str) -> list[dict]:
     )
 
 
-def request_index(requests: list[dict]) -> dict[str, dict]:
-    return {
-        x["task_id"]: x
-        for x in requests
-        if isinstance(x.get("task_id"), str) and x["task_id"].strip()
-    }
+def request_index(
+    requests: list[dict],
+    lanes: tuple[str, ...] = ("0", "1"),
+) -> dict[str, dict]:
+    indexed: dict[str, dict] = {}
+    for request in requests:
+        if not isinstance(request, dict):
+            raise AgentDispatchError("Queue request entries must be objects.")
+        task_id = request.get("task_id")
+        lane = str(request.get("lane", ""))
+        path = request.get("path")
+        if not isinstance(task_id, str) or not task_id.strip():
+            raise AgentDispatchError("Queue request task_id must be a non-empty string.")
+        task_id = task_id.strip()
+        if lane not in lanes or not isinstance(path, str) or not path:
+            raise AgentDispatchError(f"Queue request is invalid for task {task_id}.")
+        if path != f"agent_requests/lane{lane}/{task_id}.request":
+            raise AgentDispatchError(f"Queue request path is invalid for task {task_id}.")
+        if task_id in indexed:
+            raise AgentDispatchError(f"Duplicate queued task_id: {task_id}.")
+        indexed[task_id] = request
+    return indexed
 
 
 def plan(
@@ -62,18 +137,14 @@ def plan(
     owner: str,
     lanes: tuple[str, ...] = ("0", "1"),
 ) -> dict:
-    indexed = request_index(requests)
+    indexed = request_index(requests, lanes)
     retire = []
     active = {}
 
     for request in requests:
-        task_id = request.get("task_id")
-        lane = str(request.get("lane", ""))
-        path = request.get("path")
-        if not isinstance(task_id, str) or lane not in lanes:
-            continue
-        if not isinstance(path, str) or not path:
-            continue
+        task_id = request["task_id"].strip()
+        lane = str(request["lane"])
+        path = request["path"]
         branch = f"agent/{task_id}-copilot-cli"
         if branch in existing_branches:
             retire.append(
@@ -90,14 +161,14 @@ def plan(
     occupied = {str(x["lane"]) for x in active.values()}
     free = [lane for lane in lanes if lane not in occupied]
     assign = []
+    planned_task_ids = set(indexed)
 
     for issue in eligible_issues(issues, owner):
         task_id = _task_id(issue)
         branch = f"agent/{task_id}-copilot-cli" if task_id else ""
         if (
             not task_id
-            or task_id in indexed
-            or task_id in active
+            or task_id in planned_task_ids
             or branch in existing_branches
             or not free
         ):
@@ -111,6 +182,7 @@ def plan(
                 "path": f"agent_requests/lane{lane}/{task_id}.request",
             }
         )
+        planned_task_ids.add(task_id)
 
     return {
         "schema_version": 1,
@@ -126,8 +198,14 @@ def validate_assignment_contracts(
     assignments: list[dict],
     master_sha: str,
 ) -> None:
+    _validate_master_sha(master_sha)
     for assignment in assignments:
         issue = issues_by_number[assignment["issue_number"]]
+        validate_queued_issue(
+            issue.get("state"),
+            labels=sorted(_labels(issue)),
+            is_pull_request=bool(issue.get("pull_request")),
+        )
         task = extract_task_metadata(issue.get("body") or "")
         normalized = validate_task(
             task,
@@ -141,6 +219,11 @@ def validate_assignment_contracts(
             raise AgentDispatchError(
                 f"Task id mismatch for issue #{assignment['issue_number']}."
             )
+
+
+def _validate_master_sha(master_sha: str) -> None:
+    if not isinstance(master_sha, str) or not re.fullmatch(r"[0-9a-f]{40}", master_sha):
+        raise AgentDispatchError("master_sha must be an explicitly supplied 40-char commit SHA.")
 
 
 def summarize_runs(payload: object) -> dict:
@@ -183,6 +266,8 @@ def main() -> None:
 
     issues = json.loads(a.issues.read_text(encoding="utf-8"))
     requests = json.loads(a.requests.read_text(encoding="utf-8"))
+    _validate_master_sha(a.master_sha)
+    validate_request_snapshot(requests, lanes=("0", "1"))
     refs = json.loads(a.branches.read_text(encoding="utf-8"))
     runs = json.loads(a.runs.read_text(encoding="utf-8"))
     branches = {

@@ -7,6 +7,9 @@ from automation.agent_dispatch import (
     AgentDispatchError,
     MAX_CONCURRENT_AGENT_TASKS,
     extract_task_metadata,
+    load_event,
+    main,
+    validate_queued_issue,
     validate_task,
 )
 
@@ -168,6 +171,88 @@ def test_validate_task_accepts_copilot_cli_ready_label():
         labels=["agent-cli-ready"],
     )
     assert manifest["task_id"] == "AGENT-TEST-001"
+
+
+@pytest.mark.parametrize(
+    ("state", "labels", "is_pull_request", "message"),
+    [
+        ("closed", ["agent-cli-ready"], False, "no longer open"),
+        ("open", [], False, "no longer labeled"),
+        ("open", ["agent-cli-ready"], True, "pull request"),
+    ],
+)
+def test_queued_issue_is_revalidated_before_dispatch(state, labels, is_pull_request, message):
+    with pytest.raises(AgentDispatchError, match=message):
+        validate_queued_issue(
+            state,
+            labels=labels,
+            is_pull_request=is_pull_request,
+        )
+
+
+def test_load_event_preserves_resolved_issue_state_and_pull_request_flag(tmp_path):
+    event = tmp_path / "event.json"
+    event.write_text(
+        json.dumps(
+            {
+                "issue": {
+                    "number": 999,
+                    "state": "closed",
+                    "pull_request": None,
+                    "body": "task",
+                    "labels": [{"name": "agent-cli-ready"}],
+                    "assignees": [],
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    assert load_event(event) == (
+        999,
+        ["agent-cli-ready"],
+        "task",
+        [],
+        "closed",
+        False,
+    )
+
+
+def test_dispatch_main_rejects_stale_issue_before_parsing_task(tmp_path, monkeypatch):
+    event = tmp_path / "event.json"
+    output = tmp_path / "manifest.json"
+    event.write_text(
+        json.dumps(
+            {
+                "issue": {
+                    "number": 999,
+                    "state": "closed",
+                    "body": "stale issue with no task contract",
+                    "labels": [{"name": "agent-cli-ready"}],
+                    "assignees": [],
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "agent_dispatch",
+            "--event-json",
+            str(event),
+            "--master-sha",
+            "a" * 40,
+            "--active-agent-count",
+            "0",
+            "--output",
+            str(output),
+        ],
+    )
+
+    with pytest.raises(AgentDispatchError, match="no longer open"):
+        main()
+    assert not output.exists()
 
 
 def test_autonomous_agent_request_queue_uses_two_lanes_and_is_fail_closed():
