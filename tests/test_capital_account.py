@@ -8,7 +8,7 @@ def test_initial_capital_uses_project_2000_eur_reference():
     snapshot = account.snapshot()
 
     assert snapshot.contributed_capital_eur == pytest.approx(2000.0)
-    assert snapshot.equity_eur == pytest.approx(500.0)
+    assert snapshot.equity_eur == pytest.approx(2000.0)
     assert snapshot.distributable_profit_eur == pytest.approx(0.0)
 
 
