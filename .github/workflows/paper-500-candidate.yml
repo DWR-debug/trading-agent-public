@@ -82,7 +82,7 @@ jobs:
       - name: Execute isolated 30-day EUR 500 paper experiment
         run: |
           set -euo pipefail
-          candidate_dir="research/runs/paper_500/\${{ github.run_id }}"
+          candidate_dir="research/runs/paper_500/${{ github.run_id }}"
           mkdir -p "$candidate_dir"
           evidence_path="$(python -c 'import json,os; print(json.load(open(os.environ["CANDIDATE_MANIFEST"]))["evidence_path"])')"
           returns_path="$(python -c 'import json,os; print(json.load(open(os.environ["CANDIDATE_MANIFEST"]))["returns_path"])')"
@@ -99,7 +99,7 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
-          root=Path("research/runs/paper_500")/"\${{ github.run_id }}"
+          root=Path("research/runs/paper_500")/"${{ github.run_id }}"
           report=json.loads((root/"report.json").read_text(encoding="utf-8"))
           assert report["status"]=="COMPLETED"
           assert report["initial_capital_eur"]==500.0
@@ -122,7 +122,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: paper-500-\${{ github.run_id }}
-          path: research/runs/paper_500/\${{ github.run_id }}/
+          name: paper-500-${{ github.run_id }}
+          path: research/runs/paper_500/${{ github.run_id }}/
           if-no-files-found: error
           retention-days: 30
