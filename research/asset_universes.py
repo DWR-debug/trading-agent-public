@@ -526,6 +526,17 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
     ),
 
     AssetUniverse(
+        name="validation_2026_09_27_treasury_auction_release_timing_h2",
+        priority=69,
+        description=(
+            "Fresh fully symbol-disjoint universe for Q022-H2 release-timing "
+            "replication using auction_date as the fixed date-level PIT anchor."
+        ),
+        symbols=("BSV", "FAN", "JNK", "UDN", "VCLT", "VGIT"),
+        target_count=3520,
+    ),
+
+    AssetUniverse(
         name="validation_2026_09_26_treasury_auction_directional_inversion",
         priority=68,
         description=(
