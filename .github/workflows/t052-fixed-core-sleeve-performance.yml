@@ -45,45 +45,55 @@ jobs:
           fetch-depth: 2
 
       - name: Verify current master and exact-CI prerequisite
+        id: guard
         shell: bash
         env:
           EXPECTED_SHA: ${{ steps.resolve_sha.outputs.head_sha }}
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          ready=true
           git fetch origin master
           actual="$(git rev-parse origin/master)"
           if [ "$actual" != "$EXPECTED_SHA" ]; then
             echo "T052_STALE_CI_HEAD"
             echo "expected=$EXPECTED_SHA"
             echo "actual=$actual"
-            exit 0
+            ready=false
           fi
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          if [ "$ready" = "true" ] && [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             count="$(gh run list --workflow ci.yml --commit "$EXPECTED_SHA" --limit 20 --json status,conclusion --jq '[.[] | select(.status=="completed" and .conclusion=="success")] | length')"
             if [ "$count" -lt 1 ]; then
               echo "T052_EXACT_CI_NOT_GREEN"
-              exit 0
+              ready=false
             fi
           fi
-          if grep -q '"T-2026-09-27-052"' research/evidence/trial_ledger.json; then
+          if [ "$ready" = "true" ] && grep -q '"T-2026-09-27-052"' research/evidence/trial_ledger.json; then
             echo "T052_ALREADY_RECORDED"
-            exit 0
+            ready=false
           fi
-          echo "T052_EXACT_MASTER_CI_READY"
+          echo "ready=$ready" >> "$GITHUB_OUTPUT"
+          if [ "$ready" = "true" ]; then
+            echo "T052_EXACT_MASTER_CI_READY"
+          else
+            echo "T052_GUARD_NOT_READY"
+          fi
 
       - name: Python 3.13
+        if: steps.guard.outputs.ready == 'true'
         uses: actions/setup-python@v6
         with:
           python-version: "3.13"
 
       - name: Install deterministic dependencies
+        if: steps.guard.outputs.ready == 'true'
         shell: bash
         run: |
           set -euo pipefail
           python -m pip install --disable-pip-version-check pandas exchange-calendars pytest statsmodels==0.15.0
 
       - name: Safety and preregistration guard
+        if: steps.guard.outputs.ready == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -124,6 +134,7 @@ jobs:
           PY
 
       - name: Canonical coverage T049
+        if: steps.guard.outputs.ready == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -139,6 +150,7 @@ jobs:
           PY
 
       - name: Canonical coverage T050
+        if: steps.guard.outputs.ready == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -154,18 +166,21 @@ jobs:
           PY
 
       - name: Strategy PIT T049
+        if: steps.guard.outputs.ready == 'true'
         shell: bash
         run: |
           set -euo pipefail
           python -m automation.strategy_pit_preflight             --universe-root research/runs/t052_coverage/T-2026-09-27-049/datasets             --output research/runs/t052_pit/T-2026-09-27-049/pit_report.json             --universe validation_2026_09_27_fixed_candidate_batch             --trial-id T-2026-09-27-052
 
       - name: Strategy PIT T050
+        if: steps.guard.outputs.ready == 'true'
         shell: bash
         run: |
           set -euo pipefail
           python -m automation.strategy_pit_preflight             --universe-root research/runs/t052_coverage/T-2026-09-27-050/datasets             --output research/runs/t052_pit/T-2026-09-27-050/pit_report.json             --universe validation_2026_09_27_fixed_candidate_batch_02             --trial-id T-2026-09-27-052
 
       - name: Validate PIT prerequisites
+        if: steps.guard.outputs.ready == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -184,15 +199,18 @@ jobs:
           echo "T052_PIT_READY"
 
       - name: Focused T052 tests
+        if: steps.guard.outputs.ready == 'true'
         run: python -m pytest -q tests/test_fixed_core_sleeve_performance.py
 
       - name: Formal T052 performance
+        if: steps.guard.outputs.ready == 'true'
         shell: bash
         run: |
           set -euo pipefail
           python -m automation.fixed_core_sleeve_performance             --preregistration research/preregistrations/trial_052_fixed_core_sleeve_performance_2026_09_27.json             --t049-manifest research/runs/t052_coverage/T-2026-09-27-049/snapshot_manifest.json             --t050-manifest research/runs/t052_coverage/T-2026-09-27-050/snapshot_manifest.json             --output research/runs/t052_performance/t052_result.json
 
       - name: Render formal T052 result document
+        if: steps.guard.outputs.ready == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -240,6 +258,7 @@ jobs:
           PY
 
       - name: Publish immutable T052 evidence
+        if: steps.guard.outputs.ready == 'true'
         shell: bash
         env:
           GITHUB_SHA: ${{ steps.resolve_sha.outputs.head_sha }}
@@ -250,6 +269,7 @@ jobs:
           python -m automation.publish_t052_result             --result research/runs/t052_performance/t052_result.json             --ledger research/evidence/trial_ledger.json             --result-doc research/runs/t052_performance/t052_result.md             --checkpoint research/checkpoints/t052_fixed_core_sleeve_performance_2026_09_27.json             --state research/evidence/project_state.json             --decision research/evidence/decision_basis_latest.json
 
       - name: Commit canonical T052 evidence
+        if: steps.guard.outputs.ready == 'true'
         shell: bash
         run: |
           set -euo pipefail
