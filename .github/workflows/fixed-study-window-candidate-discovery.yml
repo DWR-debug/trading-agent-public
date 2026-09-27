@@ -10,6 +10,7 @@ on:
       - data/yahoo_loader.py
       - data/canonical_snapshot.py
       - .github/workflows/fixed-study-window-candidate-discovery.yml
+      - research/run_requests/fixed_window_candidate_discovery.trigger
   schedule:
     - cron: "47 */6 * * *"
   workflow_dispatch:
