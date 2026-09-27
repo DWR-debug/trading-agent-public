@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T18:15:04.857034+00:00",
+  "generated_at_utc": "2026-09-27T18:16:02.377952+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "RESEARCH: define Q030 T052 risk-stability mechanism families",
+        "sha": "ae77b6aeb4482dcc2a8422199f5cc7f62cf60a04",
+        "timestamp": "2026-09-27T20:15:50+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "28818068e894d5b8a00eba9345608b60e3a1aa64",
+        "timestamp": "2026-09-27T18:15:04Z"
+      },
       {
         "message": "RESEARCH: add T052 risk/stability diagnostic",
         "sha": "3b20161844c43d0dfdfb7ca6bd6cb554daf7e76c",
@@ -112,16 +122,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "4198f0ba23c2b1d12c7559cfea8284477c92487d",
         "timestamp": "2026-09-27T18:07:06Z"
-      },
-      {
-        "message": "OPS: trigger one-shot T052 evidence reconciliation",
-        "sha": "632057a7db2a3bff9e2f0c377df3bf1b7fc47daa",
-        "timestamp": "2026-09-27T20:06:52+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "cc69519d5becebf17cf261527fa363c85fa2e85b",
-        "timestamp": "2026-09-27T17:59:31Z"
       }
     ]
   },
@@ -142,10 +142,10 @@
   },
   "schema_version": "1.0",
   "scientific_state_recorded": {
-    "decision_basis_stage": "Q029_T052_RISK_STABILITY_DIAGNOSTIC_COMPLETED",
+    "decision_basis_stage": "Q030_T052_MECHANISM_DESIGN_COMPLETED",
     "latest_formal_status": "EVIDENCE_RECORDED_NO_AUTOMATIC_PROMOTION",
     "latest_formal_trial": "T-2026-09-27-052",
-    "next_research_focus_recorded": "Q029 completed: design multiple unranked, preregisterable mechanism hypotheses addressing the common T052 risk/stability and Research-to-Holdout failure pattern; no T052 retuning or holdout selection.",
+    "next_research_focus_recorded": "Q030 completed: four unranked risk/stability mechanism families are defined. Next step is a separate frozen coverage/preregistration for a fresh validation universe; no T052 retuning or holdout selection.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "3b20161844c43d0dfdfb7ca6bd6cb554daf7e76c",
+  "source_master_sha": "ae77b6aeb4482dcc2a8422199f5cc7f62cf60a04",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36339935136"
+    "run_id": "36339999563"
   }
 }
