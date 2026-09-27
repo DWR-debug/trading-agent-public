@@ -16,34 +16,10 @@
       "copilot_cli_queue": ".github/workflows/agent-request-queue.yml",
       "current_pending_requests": [
         {
-          "issue_number": "278",
-          "lane": "lane0",
-          "request_file": "agent_requests/lane0/AGENT-006.request",
-          "task_id": "AGENT-006"
-        },
-        {
-          "issue_number": "350",
-          "lane": "lane0",
-          "request_file": "agent_requests/lane0/AGENT-017.request",
-          "task_id": "AGENT-017"
-        },
-        {
           "issue_number": "353",
           "lane": "lane0",
           "request_file": "agent_requests/lane0/AGENT-019.request",
           "task_id": "AGENT-019"
-        },
-        {
-          "issue_number": "279",
-          "lane": "lane1",
-          "request_file": "agent_requests/lane1/AGENT-007.request",
-          "task_id": "AGENT-007"
-        },
-        {
-          "issue_number": "351",
-          "lane": "lane1",
-          "request_file": "agent_requests/lane1/AGENT-018.request",
-          "task_id": "AGENT-018"
         },
         {
           "issue_number": "354",
@@ -91,39 +67,15 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T14:01:00.944407+00:00",
+  "generated_at_utc": "2026-09-27T14:10:30.829061+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
-      {
-        "issue_number": "278",
-        "lane": "lane0",
-        "request_file": "agent_requests/lane0/AGENT-006.request",
-        "task_id": "AGENT-006"
-      },
-      {
-        "issue_number": "350",
-        "lane": "lane0",
-        "request_file": "agent_requests/lane0/AGENT-017.request",
-        "task_id": "AGENT-017"
-      },
       {
         "issue_number": "353",
         "lane": "lane0",
         "request_file": "agent_requests/lane0/AGENT-019.request",
         "task_id": "AGENT-019"
-      },
-      {
-        "issue_number": "279",
-        "lane": "lane1",
-        "request_file": "agent_requests/lane1/AGENT-007.request",
-        "task_id": "AGENT-007"
-      },
-      {
-        "issue_number": "351",
-        "lane": "lane1",
-        "request_file": "agent_requests/lane1/AGENT-018.request",
-        "task_id": "AGENT-018"
       },
       {
         "issue_number": "354",
@@ -149,18 +101,33 @@
       {
         "number": 351,
         "title": "AGENT-018: Independent audit of self-hosted matrix QA",
-        "updatedAt": "2026-09-27T11:57:06Z",
+        "updatedAt": "2026-09-27T14:07:43Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/351"
       },
       {
         "number": 350,
         "title": "AGENT-017: Independent audit of autonomous control plane",
-        "updatedAt": "2026-09-27T11:57:04Z",
+        "updatedAt": "2026-09-27T14:07:41Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/350"
       }
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: enforce agent scope guard after staging",
+        "sha": "bd262214e20578167bfc16ddbbc0ff494c94e119",
+        "timestamp": "2026-09-27T16:10:20+02:00"
+      },
+      {
+        "message": "OPS: autonomous agent queue routing",
+        "sha": "4b467d74e5168fbc8b044525a117e32fe4b3dc86",
+        "timestamp": "2026-09-27T14:08:49Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "88b0a587b8a2ae08cffb9cc661955cb21d38dbe4",
+        "timestamp": "2026-09-27T14:01:01Z"
+      },
       {
         "message": "EVIDENCE: record fresh T049/T050 coverage receipts",
         "sha": "e5e06810b60b149a4faeafb17ceda717c69c3084",
@@ -185,21 +152,6 @@
         "message": "AGENT: publish verified AGENT-006 self-hosted QA audit",
         "sha": "d8732f25aa23e93d42900fc4a16376c993c0849f",
         "timestamp": "2026-09-27T15:59:06+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "90f67d088836c8f1ed99b5ce8054aacbd2830de4",
-        "timestamp": "2026-09-27T13:57:33Z"
-      },
-      {
-        "message": "RESEARCH: preregister T050 second fixed candidate batch coverage",
-        "sha": "96e1e62bf8ce9be03713917571fa13d45a426588",
-        "timestamp": "2026-09-27T15:57:22+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4813b4f3b12de08479092f956f36afc41445e3d6",
-        "timestamp": "2026-09-27T13:54:22Z"
       }
     ]
   },
@@ -260,12 +212,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e5e06810b60b149a4faeafb17ceda717c69c3084",
+  "source_master_sha": "bd262214e20578167bfc16ddbbc0ff494c94e119",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36324393777"
+    "run_id": "36324950915"
   }
 }
