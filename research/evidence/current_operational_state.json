@@ -2,8 +2,8 @@
   "schema_version": "1.0",
   "status_type": "current_operational_project_state",
   "repository": "DWR-debug/trading-agent-public",
-  "generated_at_utc": "2026-09-27T13:26:38Z",
-  "source_master_sha": "a1536a2531ff8341b2ab25a8cdd0012a22e3e3ba",
+  "generated_at_utc": "2026-09-27",
+  "source_master_sha": "94c1d7f3b0c30df5c0364f8252926b2f6ca45645",
   "status_commit_is_documentation_only": true,
   "canonical_sources": {
     "human_current_status": "docs/CURRENT_STATUS.md",
@@ -26,6 +26,18 @@
       "pending_queue_tasks": [
         "AGENT-006",
         "AGENT-007"
+      ],
+      "current_pending_requests": [
+        {
+          "lane": "lane0",
+          "task_id": "AGENT-006",
+          "issue_number": 278
+        },
+        {
+          "lane": "lane1",
+          "task_id": "AGENT-007",
+          "issue_number": 279
+        }
       ]
     },
     "self_hosted_qa": {
@@ -72,7 +84,7 @@
     "paid_api_budget_usd": 0,
     "free_resources_only": true,
     "actual_capital_available": false,
-    "hypothetical_reference_capital_eur": 500.0
+    "hypothetical_reference_capital_eur": 500
   },
   "safety": {
     "PAPER_ONLY": true,
@@ -80,5 +92,24 @@
     "ORDERS_ENABLED": false,
     "AUTOMATIC_PROMOTION": false,
     "status": "SAFE"
+  },
+  "repository_state": {
+    "open_pull_requests": [],
+    "open_agent_ready_issues": [
+      {
+        "number": 278,
+        "title": "AGENT-006: Independent audit of self-hosted QA and provenance",
+        "url": "https://github.com/DWR-debug/trading-agent-public/issues/278"
+      },
+      {
+        "number": 279,
+        "title": "AGENT-007: Independent audit of agent orchestration and Actions routing",
+        "url": "https://github.com/DWR-debug/trading-agent-public/issues/279"
+      }
+    ]
+  },
+  "workflow": {
+    "run_id": null,
+    "source_master_sha": "94c1d7f3b0c30df5c0364f8252926b2f6ca45645"
   }
 }
