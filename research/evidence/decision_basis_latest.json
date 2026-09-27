@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "recorded_on": "2026-09-27",
   "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
-  "current_stage": "Q033_MECHANISM_PARAMETER_FREEZE",
+  "current_stage": "Q035_RISK_STABILITY_PERFORMANCE_PREREGISTERED",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
@@ -72,7 +72,9 @@
     "Q032 is preregistered PIT-only on the Q031 universe; performance, holdout selection, parameter/asset/threshold/horizon/variant search and promotion remain unauthorized.",
     "Q032 PIT-only validation passed on exact trigger commit c07a0e60f16ea35001d3bd69741612077d925d9c: workflow=36341117495; artifact=10939026919; report-fingerprint=a158ea79047604ff875a32ac7cfd6982a6d5831d6250624e507376fab69d0c7a.",
     "Q032 used a fresh Q031-universe coverage acquisition with 3704 common sessions and a 3500-candle aligned snapshot; coverage fingerprint=542fbd1f64287fb0ee25e77e129763c1289e9c130b9f6d722598c09abc5ad236; snapshot fingerprint=4d40f9e886b3d6138244167fd7efe02ab3ad8375c48eb3b07066787443d6d593.",
-    "Q032 passed safety, coverage, PIT and PIT-governance enforcement; performance and selection remained disabled."
+    "Q032 passed safety, coverage, PIT and PIT-governance enforcement; performance and selection remained disabled.",
+    "Q034 mechanism-level PIT passed: workflow=36341630334; artifact=10939206583; 36 fixed decision points; report fingerprint=f8f26d9e4c00eb8567284503a9d34fad9aeda062063ccf3f7e748ce689db7eb1; future/next-session mutation checks passed.",
+    "T055 is now canonically recorded exactly once as mechanism PIT evidence; no performance or selection occurred."
   ],
   "implications": [
     "T047R1 did not satisfy the unchanged evidence contract; Q020 is not reopened.",
@@ -85,7 +87,8 @@
     "Q031 removes the data-coverage blocker for the Q030 risk/stability research path, but PIT validation remains a hard prerequisite before any Q030 performance evaluation.",
     "Q032 generalizes only the PIT loader's expected-universe-size contract so the fixed PIT mutation tests can run on the seven-asset Q031 universe; the signal definitions are unchanged.",
     "Q031 coverage plus Q032 PIT now satisfy the data/PIT prerequisites for a separately preregistered Q030 mechanism performance study on this fixed universe.",
-    "The remaining pre-performance task is to freeze implementable parameters and execution conventions for RISK-A through RISK-D ex ante; performance data cannot be used to choose them."
+    "The remaining pre-performance task is to freeze implementable parameters and execution conventions for RISK-A through RISK-D ex ante; performance data cannot be used to choose them.",
+    "Q031 coverage, Q032 fixed-core PIT, Q033 ex-ante parameter freeze and Q034 mechanism PIT now provide the prerequisites for Q035 fixed multi-arm performance evaluation."
   ],
   "unknowns": [
     "whether any orthogonal income-oriented mechanism survives independent fixed-rule validation",
@@ -95,9 +98,10 @@
     "whether the unchanged 12-1 Top-2 cross-sectional momentum mechanism satisfies the same fixed evidence contract on the fresh T049/T050 universes",
     "whether the unchanged fixed SMA 50/200 and 12-1 Top-2 signal implementations pass mutation-based PIT checks on the Q031 universe",
     "which fixed, ex-ante parameterization can be documented for the four Q030 mechanisms without introducing threshold or parameter search",
-    "whether any of the four Q030 risk/stability mechanism families can pass the unchanged performance evidence gates on the Q031 PIT-validated universe"
+    "whether any of the four Q030 risk/stability mechanism families can pass the unchanged performance evidence gates on the Q031 PIT-validated universe",
+    "whether any fixed RISK-A/B/C/D arm satisfies the unchanged T052 performance gates on the fresh seven-symbol universe"
   ],
-  "next_action": "Freeze ex-ante implementations, parameter values and execution conventions for RISK-A/B/C/D without parameter search; then preregister a fixed multi-arm performance study with fresh coverage/PIT evidence and unchanged gates.",
+  "next_action": "Run Q035 fixed multi-arm performance evaluation with a fixed control and RISK-A/B/C/D, unchanged gates and no ranking, search, or holdout selection.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
