@@ -87,20 +87,23 @@ jobs:
           set -euo pipefail
           remote_master_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
           test "$remote_master_sha" = "$STATUS_SOURCE_SHA"
-      - name: Generate canonical current status
-        run: |
-          set -euo pipefail
-          python -m automation.sync_current_operational_status \
-            --source-master-sha "${STATUS_SOURCE_SHA}" \
-            --workflow-run-id "${GITHUB_RUN_ID}" \
-            --github-state "${RUNNER_TEMP}/status/github_state.json"
-          git diff --check
-
-      - name: Verify synchronized source
+      - name: Generate, verify and commit synchronized status with race retry
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
+          for attempt in 1 2 3 4 5; do
+            echo "STATUS_SYNC_ATTEMPT=${attempt}"
+            git fetch origin master
+            git reset --hard origin/master
+            source_master_sha="$(git rev-parse HEAD)"
+            export STATUS_SOURCE_SHA="${source_master_sha}"
+            python -m automation.sync_current_operational_status \
+              --source-master-sha "${source_master_sha}" \
+              --workflow-run-id "${GITHUB_RUN_ID}" \
+              --github-state "${RUNNER_TEMP}/status/github_state.json"
+            git diff --check
+
+            python - <<'PY'
           import json
           import os
           from pathlib import Path
@@ -117,25 +120,28 @@ jobs:
           print("CURRENT_STATUS_SYNC_OK")
           PY
 
-      - name: Verify master tip before status commit
-        shell: bash
-        run: |
-          set -euo pipefail
-          remote_master_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
-          if [ "$remote_master_sha" != "$STATUS_SOURCE_SHA" ]; then
-            echo "::error::STATUS_SYNC_STALE_MASTER_GUARD remote=${remote_master_sha} source=${STATUS_SOURCE_SHA}"
-            exit 1
-          fi
-      - name: Commit synchronized status
-        shell: bash
-        run: |
-          set -euo pipefail
-          if git diff --quiet -- docs/CURRENT_STATUS.md research/evidence/current_operational_state.json; then
-            echo "Current operational status already synchronized."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/CURRENT_STATUS.md research/evidence/current_operational_state.json
-          git commit -m "OPS: synchronize current operational status"
-          git push origin HEAD:master
+            if git diff --quiet -- docs/CURRENT_STATUS.md research/evidence/current_operational_state.json; then
+              echo "Current operational status already synchronized."
+              exit 0
+            fi
+
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add docs/CURRENT_STATUS.md research/evidence/current_operational_state.json
+            git commit -m "OPS: synchronize current operational status"
+
+            git fetch origin master
+            remote_master_sha="$(git rev-parse origin/master)"
+            if [ "${remote_master_sha}" != "${source_master_sha}" ]; then
+              echo "STATUS_SYNC_REMOTE_MOVED_BEFORE_PUSH remote=${remote_master_sha} source=${source_master_sha}"
+              continue
+            fi
+
+            if git push origin HEAD:master; then
+              echo "CURRENT_STATUS_SYNC_PUSH_OK"
+              exit 0
+            fi
+            echo "STATUS_SYNC_PUSH_RACE"
+          done
+          echo "::error::STATUS_SYNC_RETRY_EXHAUSTED"
+          exit 1
