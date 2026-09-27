@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T20:23:03.237714+00:00",
+  "generated_at_utc": "2026-09-27T20:24:32.485548+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -87,12 +87,6 @@
     "default_branch": "master",
     "open_agent_ready_issues": [
       {
-        "number": 485,
-        "title": "RESEARCH: Q038 fresh disjoint coverage for alpha architecture",
-        "updatedAt": "2026-09-27T19:26:54Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/issues/485"
-      },
-      {
         "number": 335,
         "title": "RESEARCH: Q024 auction-result publication timestamp PIT feasibility",
         "updatedAt": "2026-09-27T17:25:03Z",
@@ -101,6 +95,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: resolve Q045 PIT dataset root from immutable artifact (#509)",
+        "sha": "1cb6119ad4a1a56e913d8cdbfb59329bd543df73",
+        "timestamp": "2026-09-27T22:24:20+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3c9d7a53e25d4685730ecab9f31b77eb694a793e",
+        "timestamp": "2026-09-27T20:23:03Z"
+      },
       {
         "message": "FIX: bind Q045 to immutable Q043 coverage (#508)",
         "sha": "f552740beca94e5da9d33d24bd47d857407c3b64",
@@ -130,16 +134,6 @@
         "message": "STATE: advance project to Q045 replication design",
         "sha": "128bebde15d237b21e670bf86f63c39eabc8e0be",
         "timestamp": "2026-09-27T22:18:42+02:00"
-      },
-      {
-        "message": "EVIDENCE: record Q044 fresh alpha PIT",
-        "sha": "4359e8c398295e550522657e4ca9cc4ab926c51d",
-        "timestamp": "2026-09-27T22:18:33+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c54b2476d2398529e4d485605e5bb15cf0704dd7",
-        "timestamp": "2026-09-27T20:18:19Z"
       }
     ]
   },
@@ -201,12 +195,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f552740beca94e5da9d33d24bd47d857407c3b64",
+  "source_master_sha": "1cb6119ad4a1a56e913d8cdbfb59329bd543df73",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36347816937"
+    "run_id": "36347905417"
   }
 }
