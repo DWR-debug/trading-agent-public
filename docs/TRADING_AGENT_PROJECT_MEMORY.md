@@ -76,7 +76,7 @@ LIVE_TRADING_ENABLED=False
 orders_enabled=False
 automatic_promotion=False
 
-500 EUR bleibt das Referenz-/Startkapital für spätere Planung; daraus wird keine Prognose über spätere Rendite oder finanzielle Versorgung abgeleitet.
+2000 EUR ist ab 2026-09-27 das Referenz-/Startkapital für neue Paper-/Shadow-/Income-Simulationen; daraus wird keine Prognose über spätere Rendite oder finanzielle Versorgung abgeleitet. Der bisherige 500-EUR-Operational-Canary bleibt als historische, getrennte Simulation erhalten.
 
 ## Kausales Dringlichkeits- und Erfolgsdruckmodell
 
