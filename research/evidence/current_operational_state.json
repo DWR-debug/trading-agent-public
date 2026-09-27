@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T18:16:02.377952+00:00",
+  "generated_at_utc": "2026-09-27T18:18:32.167850+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "RESEARCH: preregister Q031 risk-stability coverage preflight",
+        "sha": "25a5e299f7ff9be1c57d98bb2f5ac1683d0c7fb5",
+        "timestamp": "2026-09-27T20:18:19+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8004ba67e477035b66b124b191f17cdbdcf85791",
+        "timestamp": "2026-09-27T18:16:02Z"
+      },
       {
         "message": "RESEARCH: define Q030 T052 risk-stability mechanism families",
         "sha": "ae77b6aeb4482dcc2a8422199f5cc7f62cf60a04",
@@ -112,16 +122,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "6bbc410610f3154b0b089d362ca7a02be047d33c",
         "timestamp": "2026-09-27T18:08:39Z"
-      },
-      {
-        "message": "EVIDENCE: reconcile T052 formal result",
-        "sha": "563fac0932289816cf94a7df60b04e50b95d4ffb",
-        "timestamp": "2026-09-27T20:08:26+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4198f0ba23c2b1d12c7559cfea8284477c92487d",
-        "timestamp": "2026-09-27T18:07:06Z"
       }
     ]
   },
@@ -142,10 +142,10 @@
   },
   "schema_version": "1.0",
   "scientific_state_recorded": {
-    "decision_basis_stage": "Q030_T052_MECHANISM_DESIGN_COMPLETED",
+    "decision_basis_stage": "Q031_COVERAGE_PREREGISTERED",
     "latest_formal_status": "EVIDENCE_RECORDED_NO_AUTOMATIC_PROMOTION",
     "latest_formal_trial": "T-2026-09-27-052",
-    "next_research_focus_recorded": "Q030 completed: four unranked risk/stability mechanism families are defined. Next step is a separate frozen coverage/preregistration for a fresh validation universe; no T052 retuning or holdout selection.",
+    "next_research_focus_recorded": "Q031 pending: run coverage/PIT preflight for the fixed Q030 universe; no performance evaluation, no T052 retuning, no holdout selection.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ae77b6aeb4482dcc2a8422199f5cc7f62cf60a04",
+  "source_master_sha": "25a5e299f7ff9be1c57d98bb2f5ac1683d0c7fb5",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36339999563"
+    "run_id": "36340154690"
   }
 }
