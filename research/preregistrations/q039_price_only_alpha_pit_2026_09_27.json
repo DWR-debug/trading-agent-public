@@ -27,7 +27,9 @@
     ],
     "interval": "1d",
     "requested_candles": 4000,
-    "target_candles": 3500
+    "target_candles": 3500,
+    "target_common_candles": 3500,
+    "expected_assets": 8
   },
   "mechanisms": [
     {
@@ -74,5 +76,7 @@
     "live_trading_enabled": false,
     "orders_enabled": false,
     "automatic_promotion": false
-  }
+  },
+  "research_family": "q039_price_only_alpha_pit",
+  "trial_type": "pit_only"
 }
