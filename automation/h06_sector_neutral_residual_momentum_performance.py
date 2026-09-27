@@ -215,15 +215,9 @@ def run(manifest_path:Path,data_dir:Path,authorization_path:Path,mechanism_resul
         raise RuntimeError("H06 coverage fingerprint mismatch.")
     assets=_load_assets(data_dir,coverage)
 
-    # Deterministic dataset snapshot fingerprint from the frozen coverage record.
-    dataset_manifest={
-      "format":coverage["data_snapshot"]["format"],
-      "datasets":sorted(
-        [{"symbol":x["symbol"],"interval":x["interval"],"candle_count":x["candle_count"],"fingerprint":x["fingerprint"]}
-         for x in coverage["data_snapshot"]["datasets"]],key=lambda x:x["symbol"])
-    }
-    if _fp(dataset_manifest)!=EXPECTED_SNAPSHOT_FINGERPRINT:
-        raise RuntimeError("H06 dataset snapshot fingerprint mismatch.")
+    # Canonical snapshot fingerprint from the immutable coverage record.
+    if _fp(coverage["data_snapshot"]) != EXPECTED_SNAPSHOT_FINGERPRINT:
+        raise RuntimeError("H06 canonical data snapshot fingerprint mismatch.")
 
     scenarios={}
     adjusted={}
