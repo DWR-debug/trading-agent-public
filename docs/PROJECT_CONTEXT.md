@@ -86,6 +86,17 @@ Die Forschungspriorität ist:
 Das langfristige Ziel „hoher bzw. schneller Kapitalaufbau“ ist ein Anforderungsparameter,
 aber kein Grund für Gate-Lockerung, nachträgliche Auswahl oder Optimierung auf gewünschte Ergebnisse.
 
+## 3a. Fiktives Referenzkapital für Paper-/Shadow-Simulation
+
+Für die weitere Entwicklung und für neue Chats gilt dauerhaft:
+
+- HYPOTHETICAL_STARTING_CAPITAL_EUR = 500.00
+- Dieses Kapital ist fiktiv und ausschließlich eine Simulations-/Planungsannahme.
+- Es bedeutet nicht, dass tatsächlich 500 EUR verfügbar sind.
+- capital_available=false bleibt unverändert.
+- Paper-, Shadow-, Backtest- und Forward-Simulationen dürfen dieses Referenzkapital verwenden, wenn der jeweilige Testvertrag dies vorsieht.
+- Aus diesem Referenzkapital dürfen keinerlei Aussagen über reale Zahlungsfähigkeit, Rendite, Entnahmefähigkeit oder künftige Finanzierbarkeit abgeleitet werden.
+
 ## 4. Wissenschaftliche Arbeitsregeln
 
 Kernelemente:
