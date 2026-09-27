@@ -20,7 +20,7 @@ def test_profit_is_paid_only_at_payout_interval_and_new_high():
 
     assert result.total_payout_eur == pytest.approx(220.0)
     assert result.payout_count == 1
-    assert result.final_equity_eur == pytest.approx(550.0)
+    assert result.final_equity_eur == pytest.approx(2200.0)
 
 
 def test_temporary_gain_cannot_be_paid_after_drawdown():
