@@ -577,6 +577,17 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=4000,
     ),
 
+    AssetUniverse(
+        name="validation_2026_09_27_q039_price_only_alpha_pit",
+        priority=71,
+        description=(
+            "Fresh fully symbol-disjoint eight-asset ETF universe for Q039 price-only "
+            "alpha point-in-time validation; no performance selection."
+        ),
+        symbols=("IVE", "IWL", "DLN", "DHS", "DON", "DES", "USRT", "ITB"),
+        target_count=4000,
+    ),
+
 )
 
 
