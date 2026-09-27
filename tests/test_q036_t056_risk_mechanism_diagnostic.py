@@ -19,3 +19,8 @@ def test_q036_source_binding_is_immutable() -> None:
     assert spec["source_workflow_run"] == 36342102919
     assert spec["source_artifact_id"] == 10939680447
     assert spec["source_head_sha"] == "23e09d478ef4d7c9f866b8fc123b1842c9953ad8"
+
+
+def test_q036_workflow_fetches_history_for_exact_source_commit() -> None:
+    workflow=Path(".github/workflows/q036-t056-risk-mechanism-diagnostic.yml").read_text(encoding="utf-8")
+    assert "fetch-depth: 0" in workflow
