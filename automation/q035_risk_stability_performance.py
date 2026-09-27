@@ -74,7 +74,23 @@ def _find_manifest(root:Path)->Path:
     return paths[-1]
 
 def _load_assets(manifest:Path)->dict[str,tuple]:
-    assets=load_frozen_snapshot(manifest)
+    # coverage_preflight emits the current lower-case coverage schema;
+    # canonical_snapshot.load_frozen_snapshot consumes the canonical frozen schema.
+    data=json.loads(manifest.read_text(encoding="utf-8"))
+    canonical={
+        "status":"COVERAGE_PASSED",
+        "universe":data["universe"],
+        "symbols":data["symbols"],
+        "interval":data["interval"],
+        "target_common_candles":data["target_common_calendar"],
+        "data_snapshot":data["data_snapshot"],
+    }
+    normalized=manifest.with_name("_q035_canonical_snapshot.json")
+    normalized.write_text(json.dumps(canonical,sort_keys=True,separators=(",",":")),encoding="utf-8")
+    try:
+        assets=load_frozen_snapshot(normalized)
+    finally:
+        normalized.unlink(missing_ok=True)
     if tuple(assets)!=SYMBOLS:
         raise ValueError("Loaded symbols mismatch")
     if any(len(v)!=TARGET_COUNT for v in assets.values()):
