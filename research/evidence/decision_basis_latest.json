@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "recorded_on": "2026-09-27",
   "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
-  "current_stage": "Q035_RISK_STABILITY_PERFORMANCE_PREREGISTERED",
+  "current_stage": "Q036_T056_DIAGNOSTIC",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
@@ -74,7 +74,12 @@
     "Q032 used a fresh Q031-universe coverage acquisition with 3704 common sessions and a 3500-candle aligned snapshot; coverage fingerprint=542fbd1f64287fb0ee25e77e129763c1289e9c130b9f6d722598c09abc5ad236; snapshot fingerprint=4d40f9e886b3d6138244167fd7efe02ab3ad8375c48eb3b07066787443d6d593.",
     "Q032 passed safety, coverage, PIT and PIT-governance enforcement; performance and selection remained disabled.",
     "Q034 mechanism-level PIT passed: workflow=36341630334; artifact=10939206583; 36 fixed decision points; report fingerprint=f8f26d9e4c00eb8567284503a9d34fad9aeda062063ccf3f7e748ce689db7eb1; future/next-session mutation checks passed.",
-    "T055 is now canonically recorded exactly once as mechanism PIT evidence; no performance or selection occurred."
+    "T055 is now canonically recorded exactly once as mechanism PIT evidence; no performance or selection occurred.",
+    "T056 completed successfully on exact trigger commit 23e09d478ef4d7c9f866b8fc123b1842c9953ad8: workflow=36342102919; artifact=10939680447; report fingerprint=56feed52b6c8321e3b4cfcf7914b87d2d54ad4cf7d1cf66b095a62db0453943f.",
+    "T056 evaluated CONTROL plus RISK-A/B/C/D on 2798 research and 700 holdout periods; no arm passed all 13 unchanged T052 gates.",
+    "RISK-B passed 2/13 gates and had materially lower research/holdout drawdown than CONTROL, but remained negative on research and holdout return and failed return/profit-factor/OOS/stress conditions.",
+    "RISK-A/C/D passed 0/13 gates; descriptive control-comparison checks were false for all four risk arms.",
+    "T056 did not rank or select any family and did not use holdout selection."
   ],
   "implications": [
     "T047R1 did not satisfy the unchanged evidence contract; Q020 is not reopened.",
@@ -88,7 +93,9 @@
     "Q032 generalizes only the PIT loader's expected-universe-size contract so the fixed PIT mutation tests can run on the seven-asset Q031 universe; the signal definitions are unchanged.",
     "Q031 coverage plus Q032 PIT now satisfy the data/PIT prerequisites for a separately preregistered Q030 mechanism performance study on this fixed universe.",
     "The remaining pre-performance task is to freeze implementable parameters and execution conventions for RISK-A through RISK-D ex ante; performance data cannot be used to choose them.",
-    "Q031 coverage, Q032 fixed-core PIT, Q033 ex-ante parameter freeze and Q034 mechanism PIT now provide the prerequisites for Q035 fixed multi-arm performance evaluation."
+    "Q031 coverage, Q032 fixed-core PIT, Q033 ex-ante parameter freeze and Q034 mechanism PIT now provide the prerequisites for Q035 fixed multi-arm performance evaluation.",
+    "The four fixed Q033 overlays do not establish a performance-supported candidate on this universe under the unchanged T052 contract.",
+    "A deterministic diagnostic is warranted before any new parameterization or follow-up performance study; the next step is to decompose exposure duty cycle, turnover, lifecycle stops and risk-state activation without changing the frozen mechanisms."
   ],
   "unknowns": [
     "whether any orthogonal income-oriented mechanism survives independent fixed-rule validation",
@@ -99,9 +106,11 @@
     "whether the unchanged fixed SMA 50/200 and 12-1 Top-2 signal implementations pass mutation-based PIT checks on the Q031 universe",
     "which fixed, ex-ante parameterization can be documented for the four Q030 mechanisms without introducing threshold or parameter search",
     "whether any of the four Q030 risk/stability mechanism families can pass the unchanged performance evidence gates on the Q031 PIT-validated universe",
-    "whether any fixed RISK-A/B/C/D arm satisfies the unchanged T052 performance gates on the fresh seven-symbol universe"
+    "whether any fixed RISK-A/B/C/D arm satisfies the unchanged T052 performance gates on the fresh seven-symbol universe",
+    "which mechanism state activations and exposure reductions account for the observed drawdown changes in RISK-A/B/C/D",
+    "whether observed improvements in drawdown are purchased through return erosion, turnover costs, or timing effects"
   ],
-  "next_action": "Run Q035 fixed multi-arm performance evaluation with a fixed control and RISK-A/B/C/D, unchanged gates and no ranking, search, or holdout selection.",
+  "next_action": "Run Q036 descriptive T056 mechanism diagnosis using the fixed T056 dataset and exact frozen mechanism rules; no parameter search, family ranking or selection.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
