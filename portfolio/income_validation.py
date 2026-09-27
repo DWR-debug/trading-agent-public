@@ -12,6 +12,8 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
+
+from config import settings
 from typing import Sequence
 
 
@@ -23,7 +25,7 @@ class IncomeValidationError(ValueError):
 class IncomeValidationPolicy:
     """Fixed accounting assumptions for an income-viability replay."""
 
-    protected_capital_eur: float = 500.0
+    protected_capital_eur: float = settings.HYPOTHETICAL_STARTING_CAPITAL_EUR
     reserve_eur: float = 0.0
     payout_fraction: float = 0.50
     payout_interval_periods: int = 21
