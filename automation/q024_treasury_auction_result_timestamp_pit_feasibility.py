@@ -17,7 +17,7 @@ from datetime import date, datetime, timezone
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlparse
 from urllib.request import Request, urlopen
 
 import exchange_calendars as xcals
@@ -175,8 +175,8 @@ def _xml_matches(text: str, event: dict) -> bool:
     ratio = str(event.get("bid_to_cover_ratio", "")).strip()
     return (
         cusip in normalized
-        and bool(re.search(r"\\b(?:10-Year|10 Year)\\s+Note\\b", normalized, re.I))
-        and bool(ratio and re.search(rf"\\b{re.escape(ratio)}\\b", normalized))
+        and bool(re.search(r"\b(?:10-Year|10 Year)\s+Note\b", normalized, re.I))
+        and bool(ratio and re.search(rf"\b{re.escape(ratio)}\b", normalized))
         and bool(re.search(r"Bid[ -]?to[ -]?Cover", normalized, re.I))
     )
 
@@ -254,6 +254,9 @@ def _find_rss_match(event: dict, rss_items: list[dict]) -> dict | None:
             [item.get("title", ""), item.get("description", ""),
              item.get("link", ""), item.get("guid", "")]
         )
+        link_host = urlparse(item.get("link", "")).netloc.lower()
+        if link_host not in {"www.treasurydirect.gov", "treasurydirect.gov"}:
+            continue
         # A PDF link alone identifies a document, not the Q019 event.  The
         # result timestamp must be tied to both fixed event identifiers and
         # the value used by Q019.
