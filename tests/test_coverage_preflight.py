@@ -51,7 +51,21 @@ def test_coverage_preflight_marks_short_history_data_invalid(monkeypatch, tmp_pa
     from datetime import datetime, timedelta, timezone
 
     base = datetime(2010, 1, 1, tzinfo=timezone.utc)
-    full = [type("Bar", (), {"timestamp": base + timedelta(days=i)})() for i in range(3520)]
+    full = [
+        type(
+            "Bar",
+            (),
+            {
+                "timestamp": base + timedelta(days=i),
+                "open": 100.0,
+                "high": 101.0,
+                "low": 99.0,
+                "close": 100.5,
+                "volume": 1000.0,
+            },
+        )()
+        for i in range(3520)
+    ]
     short = full[:-10]
 
     def fake_loader(symbol, interval, total, **kwargs):
