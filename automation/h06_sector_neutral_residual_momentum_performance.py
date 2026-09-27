@@ -254,8 +254,7 @@ def run(manifest_path:Path,data_dir:Path,authorization_path:Path,mechanism_resul
     }
     result["result_fingerprint"]=_fp(result)
     output_path.parent.mkdir(parents=True,exist_ok=True)
-    output_path.write_text(json.dumps(result,indent=2,ensure_ascii=False,allow_nan=False)+"
-",encoding="utf-8")
+    output_path.write_text(json.dumps(result,indent=2,ensure_ascii=False,allow_nan=False)+"\\n",encoding="utf-8")
     print("H06_STATUS:",result["status"])
     print("H06_RESEARCH_RETURN:",result["scenarios"]["base"]["research"]["period_return"])
     print("H06_RESEARCH_DD:",result["scenarios"]["base"]["research"]["max_drawdown_percent"])
