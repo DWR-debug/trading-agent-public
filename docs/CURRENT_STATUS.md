@@ -1,65 +1,60 @@
 # Trading Agent — Current Operational Status
 
-**Initial synchronized baseline:** ae35ab81934594f28f38af4dde0774f80410beb2  
-**Repository:** DWR-debug/trading-agent-public  
-**Date:** 2026-09-27
+**Current operational snapshot:** `9463af2e32758c11e6a606bae1a2dfc441c7c59c`
 
-This file is the canonical human-readable current operational status. It is intentionally separate from historical project archaeology and immutable research evidence.
+**Generated (UTC):** `2026-09-27T13:46:28.966399+00:00`
 
-## Current baseline
+**Repository:** `DWR-debug/trading-agent-public`
 
-- master includes PR #352: autonomous paper-forward feed, persistent loop and schema-v2 MTM ledger.
-- PR #355 (stale Q017-G3 execution branch) has been closed because it was 384 commits behind master; its recorded scientific state remains DATA_INSUFFICIENT and it is not a current execution base.
+> This file is the canonical current operational status. `PROJECT_STATUS.md` is historical reconstruction and must not override it for current operational facts. Scientific evidence remains governed by the trial ledger, immutable evidence/checkpoints and workflow artifacts.
+
+## Current state
+
+### Engineering
+
+- Paper/Shadow/Forward infrastructure: **MERGED** via PR #352, merge commit `a1536a2531ff8341b2ab25a8cdd0012a22e3e3ba`.
+- The Forward path contains closed-candle market-data ingestion, a persistent update loop and a schema-v2 per-candle MTM ledger.
+- Canonical data-layer infrastructure is merged.
 - Bounded agent routing uses two queue lanes with fail-closed task contracts.
-- Self-hosted Continuous QA is scheduled every 15 minutes on trading-agent-research.
-- Current architecture claims one self-hosted runner process; a second process is a prepared scale path, not an online capacity claim.
-- Coverage-only fixed-study-window candidate discovery is implemented and now has an immediate versioned repository trigger.
-- Turnover-shock continuation is implemented as a fixed coverage/PIT-only candidate; Yahoo source-vintage provenance currently prevents a formal PIT validation result.
-- No current candidate has promotion evidence.
-- Last recorded deterministic self-hosted QA baseline: workflow 36259124979, 881 tests passed, 2 warnings, AST and safety checks successful. This baseline predates the current master and therefore must not be presented as current verification. A fresh QA run has been explicitly requested on the current master through the versioned self-hosted trigger.
+- Self-hosted Continuous QA is scheduled every 15 minutes under label `trading-agent-research`.
+- The current architecture claims one runner process; a second process is only a prepared scale path, not an online capacity claim.
 
-## Scientific checkpoint
+### Scientific status
 
-- Latest formal outcome recorded: NO_PROMOTION_EVIDENCE.
-- Q026: DATA_INVALID / NO_SCIENTIFIC_OUTCOME; 3,704 common sessions versus 4,000 requested.
-- Q023: COVERAGE_VALIDATED.
-- Q025: DATE_PIT_VALIDATED.
-- No holdout-based selection, promotion or live execution is authorized.
-- Next scientific path: fresh fixed-rule candidate discovery, then coverage/PIT, then narrow formal validation only after a clean frozen input.
+- Latest recorded formal result: **NO_PROMOTION_EVIDENCE** for `T-2026-09-26-047R1-PERFORMANCE`.
+- Q026 is recorded as **DATA_INVALID / NO_SCIENTIFIC_OUTCOME**; it did not produce performance evidence.
+- Q023 is recorded as **COVERAGE_VALIDATED** and Q025 as **DATE_PIT_VALIDATED**; these are data-contract findings, not promotion evidence.
+- No current candidate is authorized for promotion or live execution.
+- Candidate discovery and PIT feasibility remain the required steps before any new formal performance evaluation.
+
+### Resource policy
+
+- Paid agent/API budget: **0 USD**.
+- Actual available capital: **0 EUR**.
+- Hypothetical reference capital: **500 EUR**, simulation/planning only.
+- Deterministic research stays on reproducible runner paths.
+- Agent output is never scientific evidence by itself.
 
 ## Safety
 
-PAPER_ONLY=True  
-LIVE_TRADING_ENABLED=False  
-ORDERS_ENABLED=False  
-AUTOMATIC_PROMOTION=False
+`PAPER_ONLY=True`
 
-## Resource policy
+`LIVE_TRADING_ENABLED=False`
 
-Paid agent/API budget is 0 USD. Actual available capital is 0 EUR. The 500 EUR value is a hypothetical simulation/reference capital only.
+`ORDERS_ENABLED=False`
+
+`AUTOMATIC_PROMOTION=False`
 
 ## Canonical source order
 
-Current operational status:
-- docs/CURRENT_STATUS.md
-- research/evidence/current_operational_state.json
+1. Current operational facts: `docs/CURRENT_STATUS.md` and `research/evidence/current_operational_state.json`
+2. Technical truth: current `master`
+3. Scientific evidence: trial ledger, immutable evidence/checkpoints and workflow artifacts
+4. Project intent: `docs/PROJECT_CONTEXT.md`
+5. Historical reconstruction: `PROJECT_STATUS.md`
 
-Technical truth:
-- current master
+## Continuity protocol
 
-Scientific evidence:
-- research/evidence/trial_ledger.json
-- immutable evidence/checkpoints
-- workflow artifacts
+Every relevant `master` push triggers the status synchronizer. It records the exact source commit being synchronized and updates these two operational-status files in a documentation-only commit. Those files are excluded from the synchronizer trigger, preventing recursive commits.
 
-Project intent:
-- docs/PROJECT_CONTEXT.md
-
-Historical reconstruction:
-- PROJECT_STATUS.md
-
-## Synchronization rule
-
-A dedicated GitHub Actions synchronizer updates the two current-status files after every relevant master push. It records the exact source commit that it summarizes and uses a path-exclusion rule so the documentation-only sync commit does not recursively retrigger itself.
-
-A future trading agent chat must read this file first, then independently verify live GitHub state before changing anything.
+A future `trading agent` chat must read this file first, then verify live GitHub state before acting.

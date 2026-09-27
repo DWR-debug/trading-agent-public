@@ -1,122 +1,283 @@
 {
-  "schema_version": "1.0",
-  "status_type": "current_operational_project_state",
-  "repository": "DWR-debug/trading-agent-public",
-  "generated_at_utc": "2026-09-27",
-  "source_master_sha": "ae35ab81934594f28f38af4dde0774f80410beb2",
-  "status_commit_is_documentation_only": true,
   "canonical_sources": {
+    "historical_status": "PROJECT_STATUS.md",
     "human_current_status": "docs/CURRENT_STATUS.md",
     "machine_current_status": "research/evidence/current_operational_state.json",
     "project_context": "docs/PROJECT_CONTEXT.md",
-    "historical_status": "PROJECT_STATUS.md",
-    "research_state": "research/evidence/project_state.json",
     "research_checkpoint": "research/evidence/current_project_checkpoint.json",
     "research_decision_basis": "research/evidence/decision_basis_latest.json",
+    "research_state": "research/evidence/project_state.json",
     "trial_ledger": "research/evidence/trial_ledger.json"
   },
   "engineering_state": {
-    "paper_forward": {
-      "status": "MERGED",
-      "merge_commit": "a1536a2531ff8341b2ab25a8cdd0012a22e3e3ba",
-      "pr": 352
-    },
     "agent_orchestration": {
       "bounded_two_lane_queue": true,
-      "pending_queue_tasks": [
-        "AGENT-006",
-        "AGENT-007"
-      ],
+      "control_plane": "automation/autonomous_control_plane.py",
+      "copilot_cli_queue": ".github/workflows/agent-request-queue.yml",
       "current_pending_requests": [
         {
+          "issue_number": "278",
           "lane": "lane0",
-          "task_id": "AGENT-006",
-          "issue_number": 278
+          "request_file": "agent_requests/lane0/AGENT-006.request",
+          "task_id": "AGENT-006"
         },
         {
+          "issue_number": "350",
+          "lane": "lane0",
+          "request_file": "agent_requests/lane0/AGENT-017.request",
+          "task_id": "AGENT-017"
+        },
+        {
+          "issue_number": "353",
+          "lane": "lane0",
+          "request_file": "agent_requests/lane0/AGENT-019.request",
+          "task_id": "AGENT-019"
+        },
+        {
+          "issue_number": "279",
           "lane": "lane1",
-          "task_id": "AGENT-007",
-          "issue_number": 279
+          "request_file": "agent_requests/lane1/AGENT-007.request",
+          "task_id": "AGENT-007"
+        },
+        {
+          "issue_number": "351",
+          "lane": "lane1",
+          "request_file": "agent_requests/lane1/AGENT-018.request",
+          "task_id": "AGENT-018"
+        },
+        {
+          "issue_number": "354",
+          "lane": "lane1",
+          "request_file": "agent_requests/lane1/AGENT-020.request",
+          "task_id": "AGENT-020"
         }
       ]
     },
-    "self_hosted_qa": {
-      "cadence": "*/15 * * * *",
-      "label": "trading-agent-research",
-      "last_verified_recorded_baseline": {
-        "workflow_run_id": 36259124979,
-        "head_sha": "5ef8730bbb55f86701fc0a8b9c88e152fe83291c",
-        "conclusion": "success",
-        "tests_passed": 881,
-        "warnings": 2,
-        "ast_syntax": "success",
-        "safety_invariants": "success"
-      },
-      "current_master_verification": "PENDING",
-      "qa_trigger": "status-sync-merge-94c1d7f3b0c30df5c0364f8252926b2f6ca45645"
+    "canonical_data_layer": {
+      "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
+      "pr": 232,
+      "status": "MERGED"
+    },
+    "paper_forward": {
+      "components": [
+        "closed-candle Binance market feed",
+        "persistent autonomous update loop",
+        "schema-v2 per-candle MTM ledger",
+        "paper-only safety guard",
+        "persistent fingerprint integrity checks"
+      ],
+      "merge_commit": "a1536a2531ff8341b2ab25a8cdd0012a22e3e3ba",
+      "pr": 352,
+      "status": "MERGED"
     },
     "scientific_compute": {
       "canonical_path": "GitHub-hosted deterministic workflows",
-      "self_hosted_output_formal_evidence": false,
-      "fixed_window_candidate_discovery_trigger_enabled": true
+      "self_hosted_output_formal_evidence": false
+    },
+    "self_hosted_qa": {
+      "architecture": "single runner process claimed; second process prepared but not claimed online",
+      "cadence": "*/15 * * * *",
+      "label": "trading-agent-research",
+      "last_recorded_verified_baseline": {
+        "artifact_id": 10911971419,
+        "artifact_sha256": "sha256:b32f2cffdff27091187d7f7f7ac6759c23b2e141081f6d9c9143e1c790d73da9",
+        "ast_syntax": "success",
+        "conclusion": "success",
+        "head_sha": "5ef8730bbb55f86701fc0a8b9c88e152fe83291c",
+        "safety_invariants": "success",
+        "tests_passed": 881,
+        "warnings": 2,
+        "workflow_run_id": 36259124979
+      }
     }
   },
-  "scientific_state_recorded": {
-    "latest_formal_trial": "T-2026-09-26-047R1-PERFORMANCE",
-    "latest_formal_status": "NO_PROMOTION_EVIDENCE",
-    "q026": {
-      "trial_id": "T-2026-09-27-048",
-      "status": "DATA_INVALID",
-      "scientific_outcome": "NO_SCIENTIFIC_OUTCOME",
-      "common_calendar_count": 3704,
-      "requested_candles": 4000,
-      "performance_authorized": false
-    },
-    "q023": {
-      "status": "COVERAGE_VALIDATED",
-      "workflow_run_id": 36309960872,
-      "total_events": 89,
-      "timestamp_validated_events": 89
-    },
-    "q025": {
-      "status": "DATE_PIT_VALIDATED",
-      "workflow_run_id": 36310848531,
-      "total_events": 89
-    },
-    "recorded_next_step": "Fresh symbol-disjoint fixed-rule candidate discovery -> coverage/PIT -> narrow formal validation."
-  },
-  "resources": {
-    "paid_agent_budget_usd": 0,
-    "paid_api_budget_usd": 0,
-    "free_resources_only": true,
-    "actual_capital_available": false,
-    "hypothetical_reference_capital_eur": 500
-  },
-  "safety": {
-    "PAPER_ONLY": true,
-    "LIVE_TRADING_ENABLED": false,
-    "ORDERS_ENABLED": false,
-    "AUTOMATIC_PROMOTION": false,
-    "status": "SAFE"
-  },
+  "generated_at_utc": "2026-09-27T13:46:28.966399+00:00",
+  "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
-    "open_pull_requests": [],
+    "agent_queue_requests": [
+      {
+        "issue_number": "278",
+        "lane": "lane0",
+        "request_file": "agent_requests/lane0/AGENT-006.request",
+        "task_id": "AGENT-006"
+      },
+      {
+        "issue_number": "350",
+        "lane": "lane0",
+        "request_file": "agent_requests/lane0/AGENT-017.request",
+        "task_id": "AGENT-017"
+      },
+      {
+        "issue_number": "353",
+        "lane": "lane0",
+        "request_file": "agent_requests/lane0/AGENT-019.request",
+        "task_id": "AGENT-019"
+      },
+      {
+        "issue_number": "279",
+        "lane": "lane1",
+        "request_file": "agent_requests/lane1/AGENT-007.request",
+        "task_id": "AGENT-007"
+      },
+      {
+        "issue_number": "351",
+        "lane": "lane1",
+        "request_file": "agent_requests/lane1/AGENT-018.request",
+        "task_id": "AGENT-018"
+      },
+      {
+        "issue_number": "354",
+        "lane": "lane1",
+        "request_file": "agent_requests/lane1/AGENT-020.request",
+        "task_id": "AGENT-020"
+      }
+    ],
+    "default_branch": "master",
     "open_agent_ready_issues": [
       {
-        "number": 278,
-        "title": "AGENT-006: Independent audit of self-hosted QA and provenance",
-        "url": "https://github.com/DWR-debug/trading-agent-public/issues/278"
+        "number": 354,
+        "title": "AGENT-020: audit autonomous paper-forward loop and Windows operation",
+        "updatedAt": "2026-09-27T12:12:32Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/issues/354"
+      },
+      {
+        "number": 353,
+        "title": "AGENT-019: audit paper-forward market feed and MTM ledger",
+        "updatedAt": "2026-09-27T12:12:29Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/issues/353"
+      },
+      {
+        "number": 351,
+        "title": "AGENT-018: Independent audit of self-hosted matrix QA",
+        "updatedAt": "2026-09-27T11:57:06Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/issues/351"
+      },
+      {
+        "number": 350,
+        "title": "AGENT-017: Independent audit of autonomous control plane",
+        "updatedAt": "2026-09-27T11:57:04Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/issues/350"
       },
       {
         "number": 279,
         "title": "AGENT-007: Independent audit of agent orchestration and Actions routing",
+        "updatedAt": "2026-09-27T09:18:21Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/279"
+      },
+      {
+        "number": 278,
+        "title": "AGENT-006: Independent audit of self-hosted QA and provenance",
+        "updatedAt": "2026-09-27T09:18:15Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/issues/278"
+      }
+    ],
+    "open_pull_requests": [],
+    "recent_commits": [
+      {
+        "message": "FIX: make canonical status generation diff-check clean",
+        "sha": "9463af2e32758c11e6a606bae1a2dfc441c7c59c",
+        "timestamp": "2026-09-27T15:46:15+02:00"
+      },
+      {
+        "message": "FIX: finalize current-status synchronization",
+        "sha": "5a05245c7aa9325db07665193326b2ab2d680509",
+        "timestamp": "2026-09-27T15:45:20+02:00"
+      },
+      {
+        "message": "FIX: make current-status synchronization REST-compatible",
+        "sha": "a9bc9e48803b90a756974df3a4578676336035b0",
+        "timestamp": "2026-09-27T15:42:55+02:00"
+      },
+      {
+        "message": "OPS: queue next independent engineering audits",
+        "sha": "b9d2926bdf5f44f07198955508e996043cc70721",
+        "timestamp": "2026-09-27T15:41:15+02:00"
+      },
+      {
+        "message": "FIX: keep fixed-window discovery on one data fetch per symbol",
+        "sha": "fad8ba1776e6b3341ec7d61c8d228a2d7ac33441",
+        "timestamp": "2026-09-27T15:40:49+02:00"
+      },
+      {
+        "message": "OPS: align canonical current status with latest master",
+        "sha": "f1ca3c69ca7aa302272cda0d3a60e2494e378bd5",
+        "timestamp": "2026-09-27T15:33:01+02:00"
+      },
+      {
+        "message": "OPS: enable immediate fixed-window candidate discovery trigger",
+        "sha": "ae35ab81934594f28f38af4dde0774f80410beb2",
+        "timestamp": "2026-09-27T15:32:19+02:00"
+      },
+      {
+        "message": "OPS: synchronize current status and trigger fresh self-hosted QA",
+        "sha": "f3ff8b6bfc16cd37df1a96a40d19c984aa9e2a05",
+        "timestamp": "2026-09-27T15:31:10+02:00"
       }
     ]
   },
+  "resource_policy": {
+    "actual_capital_available": false,
+    "free_resources_only": true,
+    "hypothetical_reference_capital_eur": 500.0,
+    "paid_agent_budget_usd": 0,
+    "paid_api_budget_usd": 0
+  },
+  "safety": {
+    "AUTOMATIC_PROMOTION": false,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "PAPER_ONLY": true,
+    "status": "SAFE"
+  },
+  "schema_version": "1.0",
+  "scientific_state_recorded": {
+    "decision_basis_stage": "Q026_DATA_INVALID_T047R1_CLOSED",
+    "latest_formal_status": "NO_PROMOTION_EVIDENCE",
+    "latest_formal_trial": "T-2026-09-26-047R1-PERFORMANCE",
+    "next_research_focus_recorded": "AGENT-014 is merged; perform only coverage-first/PIT validation when an acceptable historical-vintage source is available, maintain the paper-only Shadow/Forward harness separately, and use the self-hosted runner for reproducible QA/research-preparation without changing gates.",
+    "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
+    "q023_recorded": {
+      "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
+      "artifact_id": 10929255149,
+      "record_date_minus_document_date_days": {
+        "max": 21,
+        "min": 9
+      },
+      "result_fingerprint": "603cea99d73837d91b638e9d03b3dc515377e434db08c3d6ed571cd33fae7c23",
+      "status": "COVERAGE_VALIDATED",
+      "timestamp_validated_events": 89,
+      "total_events": 89,
+      "workflow_run_id": 36309960872
+    },
+    "q025_recorded": {
+      "artifact_id": 10928822681,
+      "next_step": "Fresh symbol-disjoint H2 performance preregistration after coverage.",
+      "result_fingerprint": "a12e603acdad53216cab92bf0c634d4e22ece77e58b84f2fc240046da0de4107",
+      "status": "DATE_PIT_VALIDATED",
+      "total_events": 89,
+      "workflow_run_id": 36310848531
+    },
+    "q026_recorded": {
+      "cause": "All 12 fixed symbols had 3704 candles in the 2011-2025 study window, below the preregistered 4000-candle request.",
+      "common_calendar_count": 3704,
+      "coverage_artifact_digest": "sha256:e5136c727da9d7debb58f398175ada9c7484cba24ed408bb71b23bdcfe5c7bbd",
+      "coverage_artifact_id": 10928579427,
+      "coverage_workflow_run_id": 36311607279,
+      "performance_authorized": false,
+      "requested_candles": 4000,
+      "scientific_outcome": "NO_SCIENTIFIC_OUTCOME",
+      "status": "DATA_INVALID",
+      "symbols": 12,
+      "target_common_calendar": 3500,
+      "trial_id": "T-2026-09-27-048"
+    }
+  },
+  "source_master_sha": "9463af2e32758c11e6a606bae1a2dfc441c7c59c",
+  "status_commit_is_documentation_only": true,
+  "status_type": "current_operational_project_state",
   "workflow": {
-    "run_id": null,
-    "source_master_sha": "ae35ab81934594f28f38af4dde0774f80410beb2",
-    "status_only_baseline": true
+    "name": "Current Operational Status Synchronizer",
+    "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
+    "run_id": "36323550363"
   }
 }
