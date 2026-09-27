@@ -91,7 +91,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T13:52:28.324096+00:00",
+  "generated_at_utc": "2026-09-27T13:54:22.505091+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -174,6 +174,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: continue fixed-window discovery after consumed batches",
+        "sha": "d7b9be2df01728862cef6cd9f2a65d2cc03d0c1f",
+        "timestamp": "2026-09-27T15:54:09+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a35e0d932d534231fc9013662dbc19056e8b6ab0",
+        "timestamp": "2026-09-27T13:52:28Z"
+      },
+      {
         "message": "TEST: align QA regression checks with hosted matrix",
         "sha": "495b47a839dfe9de5ee7daf105195cfed1588b72",
         "timestamp": "2026-09-27T15:52:16+02:00"
@@ -202,16 +212,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "1b0473f6745faa39e4204b27a94da3c5982a93a8",
         "timestamp": "2026-09-27T13:46:29Z"
-      },
-      {
-        "message": "FIX: make canonical status generation diff-check clean",
-        "sha": "9463af2e32758c11e6a606bae1a2dfc441c7c59c",
-        "timestamp": "2026-09-27T15:46:15+02:00"
-      },
-      {
-        "message": "FIX: finalize current-status synchronization",
-        "sha": "5a05245c7aa9325db07665193326b2ab2d680509",
-        "timestamp": "2026-09-27T15:45:20+02:00"
       }
     ]
   },
@@ -272,12 +272,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "495b47a839dfe9de5ee7daf105195cfed1588b72",
+  "source_master_sha": "d7b9be2df01728862cef6cd9f2a65d2cc03d0c1f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36323898881"
+    "run_id": "36324007421"
   }
 }
