@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "checkpoint_type": "current_project_snapshot",
-  "generated_at_utc": "2026-09-27T09:38:11Z",
+  "generated_at_utc": "2026-09-27T10:10:20Z",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit_at_checkpoint_creation": "96618ab9e06a020eb1c8a570467c5699ce413d86",
+  "master_commit_at_checkpoint_creation": "2f04c447b99f9ba97a7f6e99c4fa7fce6406d769",
   "canonical_data_layer": {
     "status": "MERGED",
     "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
@@ -58,7 +58,7 @@
     "root_agent_contract": "AGENTS.md",
     "external_enablement_required": true,
     "external_agent_execution_verified": true,
-    "external_agent_execution_note": "Copilot CLI execution was verified in queue run 107, but later personal-repository PAT smoke access passed while Copilot rejected the token; Copilot remains optional and the research path proceeds without it."
+    "external_agent_execution_note": "Historical Copilot CLI execution was verified in queue run 107. Current 2026-09-27 queue run 118 reached the Copilot CLI after repository-access and supported-token-class preflight, but Copilot rejected authentication; no agent session/PR was produced and the queue request was paused."
   },
   "safety": {
     "paper_only": true,
@@ -82,7 +82,7 @@
     "research/evidence/trial_ledger.json",
     "current master, relevant branches/PRs and workflows"
   ],
-  "active_research_task": "Q023-TREASURY-RELEASE-TIMESTAMP-PIT-FEASIBILITY",
+  "active_research_task": "Q026-H2-TREASURY-AUCTION-DATE-SHIFT-COVERAGE",
   "wide_search_round_002": {
     "hypothesis_id": "H08",
     "family": "volatility_state_transition",
@@ -129,7 +129,7 @@
     "canonical_yahoo_hardening_pr": 234,
     "canonical_yahoo_hardening_merge_commit": "cfdb0ac7031cfdadcbfe16da50cbedeb4b285dd3"
   },
-  "next_action": "Continue Q022 design-only follow-up; continuously run bounded self-hosted QA/data QA on the trusted public master; use Copilot only after the user-configured integration is available.",
+  "next_action": "Do not run Q026 performance. Preserve Q026 coverage DATA_INVALID as scientific NO_SCIENTIFIC_OUTCOME; prepare a new preregistered data-geometry repair before any retry. Copilot queue is paused after a verified authentication rejection; no agent PR was produced.",
   "q018": {
     "task_id": "Q-018-SOURCE-FEASIBILITY-PREFLIGHT",
     "status": "DATA_INSUFFICIENT",
@@ -252,5 +252,33 @@
       "min": 9,
       "max": 21
     }
+  },
+  "q024": {
+    "status": "DATA_INSUFFICIENT",
+    "workflow_run_id": 36310616941,
+    "artifact_id": 10929460782,
+    "result_fingerprint": "2496b5cea08bcf7f505fc4b20e34426616417aa266d5761eacf9cb11197dd6fa"
+  },
+  "q025": {
+    "status": "DATE_PIT_VALIDATED",
+    "workflow_run_id": 36310848531,
+    "artifact_id": 10928822681,
+    "result_fingerprint": "a12e603acdad53216cab92bf0c634d4e22ece77e58b84f2fc240046da0de4107",
+    "total_events": 89,
+    "next_step": "Fresh symbol-disjoint H2 performance preregistration after coverage."
+  },
+  "q026": {
+    "trial_id": "T-2026-09-27-048",
+    "status": "DATA_INVALID",
+    "coverage_workflow_run_id": 36311607279,
+    "coverage_artifact_id": 10928579427,
+    "coverage_artifact_digest": "sha256:e5136c727da9d7debb58f398175ada9c7484cba24ed408bb71b23bdcfe5c7bbd",
+    "common_calendar_count": 3704,
+    "symbols": 12,
+    "requested_candles": 4000,
+    "target_common_calendar": 3500,
+    "scientific_outcome": "NO_SCIENTIFIC_OUTCOME",
+    "performance_authorized": false,
+    "cause": "All 12 fixed symbols had 3704 candles in the 2011-2025 study window, below the preregistered 4000-candle request."
   }
 }
