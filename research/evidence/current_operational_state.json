@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T19:52:50.765023+00:00",
+  "generated_at_utc": "2026-09-27T19:54:05.711941+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -89,6 +89,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: repair Q039 GitHub expression escaping (#490)",
+        "sha": "d48659b98ac0aab6323691f922cc07187b99df50",
+        "timestamp": "2026-09-27T21:53:51+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "476e00de9b685c30cffe1579603e69a710813e94",
+        "timestamp": "2026-09-27T19:52:50Z"
+      },
       {
         "message": "RESEARCH: add price-only alpha PIT gate and candidate discovery catalogue (#488)",
         "sha": "d0e1be6c6ad41cd8082d30db2485cdb9573ade94",
@@ -118,16 +128,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "d2319a70a92704b6e324f228fcc26af6f1625ec7",
         "timestamp": "2026-09-27T19:31:11Z"
-      },
-      {
-        "message": "OPS: align coverage workflow and repair legacy coverage fixture (#487)",
-        "sha": "bddb8a210bbf0bef79f35dc5254b8c5755a0f842",
-        "timestamp": "2026-09-27T21:30:59+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "479881c7546b20d234bb210a9e17ac4c410c94e1",
-        "timestamp": "2026-09-27T19:29:01Z"
       }
     ]
   },
@@ -189,12 +189,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d0e1be6c6ad41cd8082d30db2485cdb9573ade94",
+  "source_master_sha": "d48659b98ac0aab6323691f922cc07187b99df50",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36345956121"
+    "run_id": "36346025817"
   }
 }
