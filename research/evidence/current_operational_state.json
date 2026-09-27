@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T16:40:38.010443+00:00",
+  "generated_at_utc": "2026-09-27T16:46:15.039489+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -95,12 +95,27 @@
       {
         "number": 231,
         "title": "AGENT-003: Independent review of Canonical Data Layer",
-        "updatedAt": "2026-09-27T16:40:05Z",
+        "updatedAt": "2026-09-27T16:43:04Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/231"
       }
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: harden canonical snapshot failure invalidation",
+        "sha": "60565b5e635382deb0ca1909d3c36e4a8ffa174c",
+        "timestamp": "2026-09-27T18:46:01+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "f9682d312cc8766c0eae6932b8c6f9a4a55f2bd2",
+        "timestamp": "2026-09-27T16:42:19Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2121bf5465a14f07dd23923388dc604ca8796d79",
+        "timestamp": "2026-09-27T16:40:38Z"
+      },
       {
         "message": "OPS: synchronize current operational status",
         "sha": "3d3ae793b66048319e3120656e9ed744d2ca3409",
@@ -125,21 +140,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "32cb968bdd8f64ab36a992175dfefcd0ac1796e7",
         "timestamp": "2026-09-27T16:27:11Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "08f15ba796ac899b779044d54a0b96ad3798aaff",
-        "timestamp": "2026-09-27T16:25:37Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "7b737bb9639d5b58e7d6365dbee312ecf395a975",
-        "timestamp": "2026-09-27T16:20:10Z"
-      },
-      {
-        "message": "TEST: focused EUR 2,000 capital accounting QA (#427)",
-        "sha": "7d2186fd2f4f79aaee678a8fc9b2bacf2ec7137b",
-        "timestamp": "2026-09-27T18:19:56+02:00"
       }
     ]
   },
@@ -201,12 +201,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "3d3ae793b66048319e3120656e9ed744d2ca3409",
+  "source_master_sha": "60565b5e635382deb0ca1909d3c36e4a8ffa174c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36334097130"
+    "run_id": "36334452047"
   }
 }
