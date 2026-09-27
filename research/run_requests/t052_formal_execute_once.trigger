@@ -1,3 +1,3 @@
-RUN_T052_FORMAL_EXECUTE_ONCE_RETRY_2
+RUN_T052_FORMAL_EXECUTE_ONCE_RETRY_3
 trial=T-2026-09-27-052
 authorization=research/authorizations/t052_fixed_core_sleeve_performance_2026_09_27.json
