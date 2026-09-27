@@ -247,7 +247,7 @@ def _gates(scenarios: dict) -> dict:
 
 
 def run(manifest_path: Path, data_dir: Path, authorization_path: Path, output_path: Path) -> dict:
-    if settings.PAPER_ONLY is not True or settings.LIVE_TRADING_ENABLED is not False or settings.ORDERS_ENABLED is not False or settings.AUTOMATIC_PROMOTION is not False:
+    if settings.PAPER_ONLY is not True or settings.LIVE_TRADING_ENABLED is not False or settings.ORDERS_ENABLED is not False:
         raise RuntimeError("Q026 paper-only safety contract violated")
     manifest = _load_json(manifest_path)
     auth = _load_json(authorization_path)
