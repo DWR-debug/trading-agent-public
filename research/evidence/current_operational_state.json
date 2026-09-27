@@ -3,7 +3,7 @@
   "status_type": "current_operational_project_state",
   "repository": "DWR-debug/trading-agent-public",
   "generated_at_utc": "2026-09-27",
-  "source_master_sha": "94c1d7f3b0c30df5c0364f8252926b2f6ca45645",
+  "source_master_sha": "ae35ab81934594f28f38af4dde0774f80410beb2",
   "status_commit_is_documentation_only": true,
   "canonical_sources": {
     "human_current_status": "docs/CURRENT_STATUS.md",
@@ -52,7 +52,13 @@
         "ast_syntax": "success",
         "safety_invariants": "success"
       },
-      "current_master_verification": "PENDING"
+      "current_master_verification": "PENDING",
+      "qa_trigger": "status-sync-merge-94c1d7f3b0c30df5c0364f8252926b2f6ca45645"
+    },
+    "scientific_compute": {
+      "canonical_path": "GitHub-hosted deterministic workflows",
+      "self_hosted_output_formal_evidence": false,
+      "fixed_window_candidate_discovery_trigger_enabled": true
     }
   },
   "scientific_state_recorded": {
@@ -110,6 +116,7 @@
   },
   "workflow": {
     "run_id": null,
-    "source_master_sha": "94c1d7f3b0c30df5c0364f8252926b2f6ca45645"
+    "source_master_sha": "ae35ab81934594f28f38af4dde0774f80410beb2",
+    "status_only_baseline": true
   }
 }
