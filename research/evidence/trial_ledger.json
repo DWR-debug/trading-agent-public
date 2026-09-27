@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-25T09:18:23Z",
+  "generated_at": "2026-09-27T14:34:34Z",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -3624,6 +3624,181 @@
         "holdout_used_for_selection": false
       },
       "scientific_conclusion": "Fixed directional inversion fails the unchanged evidence contract on fresh symbol-disjoint validation. H1 is closed; Q020 is not reopened; no inversion tuning or holdout selection is permitted."
+    },
+    {
+      "trial_id": "T-2026-09-27-049",
+      "recorded_at": "2026-09-27T13:49:42Z",
+      "status": "coverage_validated",
+      "research_family": "fixed_candidate_batch_coverage",
+      "hypothesis": {
+        "text": "Fixed 12-symbol candidate batch passes the preregistered 2011-01-01 through 2025-09-24 coverage contract."
+      },
+      "data_scope": {
+        "requested_candles": 3520,
+        "target_candles": 3500,
+        "common_calendar_count": 3704,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10933556647
+        ]
+      },
+      "search_scope": {
+        "raw_trial_count": 0,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "asset_search": false,
+        "horizon_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "fixed source-order coverage discovery only",
+        "selection_family_id": "fixed-window-coverage-2026-09-27",
+        "selection_metric": null
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": null,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "COVERAGE_VALIDATED",
+        "scientific_outcome": "NO_PERFORMANCE_EVIDENCE",
+        "workflow_run_id": 36323742825,
+        "artifact_id": 10933556647,
+        "artifact_digest": "sha256:eacc9688e356e54f069790e3cfa64f63cd80239797bd87bea16ccfa5a470c867",
+        "performance_evaluation": false,
+        "holdout_evaluation": false,
+        "selection_used": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-27-050",
+      "recorded_at": "2026-09-27T13:57:26Z",
+      "status": "coverage_validated",
+      "research_family": "fixed_candidate_batch_coverage",
+      "hypothesis": {
+        "text": "Second fixed 12-symbol candidate batch passes the same preregistered coverage contract after exclusion of the already registered T049 batch."
+      },
+      "data_scope": {
+        "requested_candles": 3520,
+        "target_candles": 3500,
+        "common_calendar_count": 3704,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10933796731
+        ]
+      },
+      "search_scope": {
+        "raw_trial_count": 0,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "asset_search": false,
+        "horizon_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "fixed source-order coverage discovery only after consumed-symbol exclusion",
+        "selection_family_id": "fixed-window-coverage-2026-09-27",
+        "selection_metric": null
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": null,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "COVERAGE_VALIDATED",
+        "scientific_outcome": "NO_PERFORMANCE_EVIDENCE",
+        "workflow_run_id": 36324187062,
+        "artifact_id": 10933796731,
+        "artifact_digest": "sha256:b7e6a89385cb94f42f1990c32a608f6cc6218b0e81fdd671ae88d844b073d125",
+        "performance_evaluation": false,
+        "holdout_evaluation": false,
+        "selection_used": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-27-051",
+      "recorded_at": "2026-09-27T14:29:26Z",
+      "status": "pit_passed_no_performance_evidence",
+      "research_family": "fixed_core_strategy_pit_validation",
+      "hypothesis": {
+        "text": "The unchanged fixed SMA 50/200 and 12-1 Top-2 signal implementations are point-in-time safe on T049 and T050 under future-data mutation tests."
+      },
+      "data_scope": {
+        "coverage_only": false,
+        "performance_evaluation": false,
+        "oos_evaluation": false,
+        "holdout_evaluation": false,
+        "artifact_ids": [
+          10933638357
+        ],
+        "fully_symbol_disjoint_validation_set": true
+      },
+      "search_scope": {
+        "raw_trial_count": 0,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "asset_search": false,
+        "horizon_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered PIT mutation test only",
+        "selection_family_id": "fixed-core-strategy-pit-2026-09-27",
+        "selection_metric": null
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "PIT_PASSED",
+        "scientific_outcome": "NO_PERFORMANCE_EVIDENCE",
+        "workflow_run_id": 36326053758,
+        "artifact_id": 10933638357,
+        "artifact_digest": "sha256:40417dd35fb0c58510407097a18e7694f1e70a52acdc2b15db45d510cbb827dd",
+        "t049_checked_sma_decisions": 1080,
+        "t049_checked_cs_rebalances": 22,
+        "t050_checked_sma_decisions": 1080,
+        "t050_checked_cs_rebalances": 22,
+        "performance_authorized": false,
+        "holdout_used_for_selection": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
     }
   ]
 }
