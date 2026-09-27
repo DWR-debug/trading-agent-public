@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T17:59:31.877169+00:00",
+  "generated_at_utc": "2026-09-27T18:07:05.973423+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -81,8 +81,27 @@
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/335"
       }
     ],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "agent/AGENT-Q024-HISTORICAL-XML-copilot-cli",
+        "number": 450,
+        "title": "RESEARCH: extend Q024 historical XML timestamp gap analysis",
+        "updatedAt": "2026-09-27T18:03:49Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/450"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "OPS: trigger one-shot T052 evidence reconciliation",
+        "sha": "632057a7db2a3bff9e2f0c377df3bf1b7fc47daa",
+        "timestamp": "2026-09-27T20:06:52+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "cc69519d5becebf17cf261527fa363c85fa2e85b",
+        "timestamp": "2026-09-27T17:59:31Z"
+      },
       {
         "message": "RESEARCH: Q028 T052 cross-universe vs sleeve decomposition",
         "sha": "99e1ea95b012148444787aba4e6ed9c492c3a670",
@@ -112,16 +131,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "a99dc23175e95e7f15df6ed6ef6601d377a338db",
         "timestamp": "2026-09-27T17:51:42Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "fe8920fce9a87d361e495bb63bb0a40ca3042ab2",
-        "timestamp": "2026-09-27T17:51:30Z"
-      },
-      {
-        "message": "FIX: reconcile and harden T052 evidence publication",
-        "sha": "cbbb8cd9d9d5b31ef0659f477b4f4f6ce2cc5057",
-        "timestamp": "2026-09-27T19:51:28+02:00"
       }
     ]
   },
@@ -183,12 +192,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "99e1ea95b012148444787aba4e6ed9c492c3a670",
+  "source_master_sha": "632057a7db2a3bff9e2f0c377df3bf1b7fc47daa",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36338959066"
+    "run_id": "36339441547"
   }
 }
