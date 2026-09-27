@@ -29,6 +29,8 @@ Inverse-Volatilitätsgewichtung mit 25-Prozent-Asset-Cap.
 
 252 Sessions Formation, 21 Sessions Skip, 21 Sessions Rebalance, Top-2
 long-only, gleichgewichtet.
+Der Runner verwendet dieselbe eingefrorene Gewichtsfunktion wie T051:
+`automation.candidate_validation_50_50_vol_budget._cs_weights`.
 
 Beide Regeln verwenden ausschließlich Informationen bis zum Entscheidungszeitpunkt.
 
@@ -60,7 +62,10 @@ Vor Performance muss:
 2. die aktuelle Coverage erneut erfolgreich sein;
 3. die aktuelle Strategie-PIT erneut erfolgreich sein.
 
-Bei einem Coverage-, PIT- oder CI-Fehler endet der Lauf ohne Performance-Evaluation.
+Der Runner validiert den frisch erzeugten Canonical Snapshot fail-closed und
+wiederholt die Signal-Mutationsprüfungen auf genau diesen eingefrorenen Daten,
+bevor eine der vier Zellen ausgewertet wird. Bei einem Coverage-, PIT- oder
+CI-Fehler endet der Lauf ohne Performance-Evaluation.
 
 ## Sicherheit
 

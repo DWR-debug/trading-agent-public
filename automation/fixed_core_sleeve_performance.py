@@ -16,10 +16,23 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from types import SimpleNamespace
 
-from automation.cross_asset_trend_replication import _build_weight_path
+from automation.cross_asset_trend_replication import (
+    MAX_ASSET_WEIGHT as TREND_MAX_ASSET_WEIGHT,
+    VOL_WINDOW as TREND_VOL_WINDOW,
+    _build_weight_path,
+)
+from automation.candidate_validation_50_50_vol_budget import (
+    CS_LOOKBACK as IMPLEMENTED_CS_LOOKBACK,
+    CS_REBALANCE as IMPLEMENTED_CS_REBALANCE,
+    CS_SKIP as IMPLEMENTED_CS_SKIP,
+    CS_TOP_N as IMPLEMENTED_CS_TOP_N,
+    _cs_weights,
+)
 from data.canonical_snapshot import load_frozen_snapshot
 from execution.cost_contract import validate_research_cost_compatibility
+from config import settings
 
 TARGET_COUNT = 3500
 RESEARCH_COUNT = 2798
@@ -34,6 +47,39 @@ COST_MULTIPLIERS = (
     ("base", 1.0),
     ("stress_1_5x_cost", 1.5),
     ("stress_2x_cost", 2.0),
+)
+EXPECTED_UNIVERSES = (
+    {
+        "trial_id": "T-2026-09-27-049",
+        "universe": "validation_2026_09_27_fixed_candidate_batch",
+        "symbols": [
+            "TAP", "CLX", "HSY", "KR", "SYY", "STT",
+            "USB", "TROW", "BEN", "NTRS", "PNC", "MET",
+        ],
+    },
+    {
+        "trial_id": "T-2026-09-27-050",
+        "universe": "validation_2026_09_27_fixed_candidate_batch_02",
+        "symbols": [
+            "PRU", "ALL", "TRV", "AFL", "AIZ", "CB",
+            "HIG", "CINF", "GL", "MKC", "ED", "PEG",
+        ],
+    },
+)
+EXPECTED_GATES = (
+    "research_return_positive",
+    "research_drawdown_lte_10pct",
+    "research_profit_factor_gte_1_10",
+    "rolling_profit_factor_gte_1_10",
+    "rolling_profitable_window_ratio_gte_0_50",
+    "rolling_average_drawdown_lte_10pct",
+    "oos_to_is_return_ratio_gte_0_25",
+    "holdout_return_positive",
+    "holdout_profit_factor_gte_1_10",
+    "holdout_drawdown_lte_10pct",
+    "stress_1_5x_holdout_nonnegative",
+    "stress_2x_holdout_nonnegative",
+    "total_return_sensitivity_holdout_nonnegative",
 )
 YAHOO_BASE_URL = "https://query1.finance.yahoo.com/v8/finance/chart"
 
@@ -50,6 +96,84 @@ def _load_prereg(path: Path) -> dict:
     spec = json.loads(path.read_text(encoding="utf-8"))
     if spec.get("trial_id") != "T-2026-09-27-052" or spec.get("status") != "PREREGISTERED":
         raise ValueError("T052 preregistration mismatch")
+    if (
+        (IMPLEMENTED_CS_LOOKBACK, IMPLEMENTED_CS_SKIP, IMPLEMENTED_CS_REBALANCE, IMPLEMENTED_CS_TOP_N)
+        != (CS_LOOKBACK, CS_SKIP, CS_REBALANCE, CS_TOP_N)
+        or TREND_VOL_WINDOW != 60
+        or TREND_MAX_ASSET_WEIGHT != 0.25
+    ):
+        raise RuntimeError("Existing fixed signal implementation no longer matches T052")
+    if spec.get("universes") != list(EXPECTED_UNIVERSES):
+        raise RuntimeError("T052 universe contract mismatch")
+    if spec.get("data_contract") != {
+        "source": "yahoo_chart",
+        "interval": "1d",
+        "target_common_candles": TARGET_COUNT,
+        "research_periods": RESEARCH_COUNT,
+        "holdout_periods": HOLDOUT_COUNT,
+        "execution": "close(t) decision -> next-session open -> following-open return",
+        "coverage_required_before_performance": True,
+        "strategy_pit_required_before_performance": True,
+        "frozen_snapshot_required": True,
+    }:
+        raise RuntimeError("T052 data contract mismatch")
+    if spec.get("signal_contracts") != {
+        "trend_sma_50_200": {
+            "implementation": "automation.cross_asset_trend_replication._build_weight_path",
+            "rule": "monthly rebalance; SMA 50/200 long/flat; inverse-volatility allocation; existing 25 percent per-asset cap",
+            "warmup_sessions": 199,
+            "volatility_lookback_sessions": 60,
+            "max_asset_weight": 0.25,
+            "future_information_forbidden": True,
+        },
+        "cs_momentum_12_1_top2": {
+            "implementation": "automation.candidate_validation_50_50_vol_budget._cs_weights",
+            "rule": "252-session formation; 21-session skip; 21-session rebalance; top-2 long-only equal weight",
+            "formation_sessions": CS_LOOKBACK,
+            "skip_sessions": CS_SKIP,
+            "rebalance_sessions": CS_REBALANCE,
+            "top_n": CS_TOP_N,
+            "future_information_forbidden": True,
+        },
+    }:
+        raise RuntimeError("T052 signal contract mismatch")
+    if spec.get("cost_contract") != {
+        "fee_rate": FEE_RATE,
+        "slippage_rate": SLIPPAGE_RATE,
+        "stress_multipliers": [1.5, 2],
+        "total_return_sensitivity": "diagnostic only",
+    }:
+        raise RuntimeError("T052 cost contract mismatch")
+    evaluation = spec.get("evaluation", {})
+    if evaluation != {
+        "per_universe": True,
+        "per_sleeve": True,
+        "rolling_windows": 5,
+        "selection_between_universes": False,
+        "selection_between_sleeves": False,
+        "holdout_selection": False,
+        "ranking_for_promotion": False,
+    }:
+        raise RuntimeError("T052 evaluation contract mismatch")
+    if spec.get("gates") != {name: True for name in EXPECTED_GATES}:
+        raise RuntimeError("T052 gate contract mismatch")
+    if spec.get("governance") != {
+        "performance_evaluation": True,
+        "oos_evaluation": True,
+        "holdout_evaluation": True,
+        "parameter_search": False,
+        "asset_search": False,
+        "asset_selection_by_performance": False,
+        "threshold_search": False,
+        "horizon_search": False,
+        "variant_search": False,
+        "holdout_used_for_selection": False,
+        "research_gate_changes": False,
+        "promotion_decision": False,
+        "live_execution": False,
+        "automatic_promotion": False,
+    }:
+        raise RuntimeError("T052 governance contract mismatch")
     if spec.get("safety") != {
         "paper_only": True,
         "live_trading_enabled": False,
@@ -84,10 +208,28 @@ def _load_assets(manifest_path: Path, expected: dict[str, object]) -> dict[str, 
         raise ValueError("Snapshot is not coverage-passed")
     if manifest.get("universe") != expected["universe"]:
         raise ValueError("Snapshot universe mismatch")
+    if manifest.get("source") != "yahoo_chart" or manifest.get("interval") != "1d":
+        raise ValueError("Snapshot source or interval mismatch")
     if tuple(manifest.get("symbols", [])) != tuple(expected["symbols"]):
         raise ValueError("Snapshot symbol set/order mismatch")
-    if int(manifest.get("target_common_calendar", -1)) != TARGET_COUNT:
+    if int(manifest.get("target_common_candles", -1)) != TARGET_COUNT:
         raise ValueError("Snapshot target count mismatch")
+    coverage = manifest.get("coverage", {})
+    if (
+        int(coverage.get("common_calendar_count", -1)) < TARGET_COUNT
+        or coverage.get("errors")
+        or manifest.get("governance", {}).get("performance_evaluation") is not False
+        or manifest.get("governance", {}).get("holdout_evaluation") is not False
+        or manifest.get("governance", {}).get("selection_used") is not False
+    ):
+        raise ValueError("Snapshot lacks a clean, passing coverage preflight")
+    if manifest.get("safety") != {
+        "paper_only": True,
+        "live_trading_enabled": False,
+        "orders_enabled": False,
+        "automatic_promotion": False,
+    }:
+        raise RuntimeError("Snapshot safety contract mismatch")
     assets = load_frozen_snapshot(manifest_path)
     if tuple(assets) != tuple(expected["symbols"]):
         raise ValueError("Loaded snapshot symbols mismatch")
@@ -95,26 +237,37 @@ def _load_assets(manifest_path: Path, expected: dict[str, object]) -> dict[str, 
         raise ValueError("Frozen snapshot geometry mismatch")
     return assets
 
-def _cs_weights(assets: dict[str, tuple]) -> tuple[dict[str, float], ...]:
-    symbols = tuple(assets)
-    n = len(next(iter(assets.values())))
-    current = {s: 0.0 for s in symbols}
-    output = []
-    for i in range(n):
-        if i % CS_REBALANCE == 0:
-            if i < CS_LOOKBACK + CS_SKIP:
-                current = {s: 0.0 for s in symbols}
-            else:
-                anchor = i - CS_SKIP
-                origin = anchor - CS_LOOKBACK
-                scores = {
-                    s: assets[s][anchor].close / assets[s][origin].close - 1.0
-                    for s in symbols
-                }
-                winners = set(sorted(scores, key=scores.get, reverse=True)[:CS_TOP_N])
-                current = {s: (1.0 / CS_TOP_N if s in winners else 0.0) for s in symbols}
-        output.append(dict(current))
-    return tuple(output)
+def _validate_pit(assets: dict[str, tuple]) -> dict:
+    from automation.strategy_pit_preflight import _cs_pit, _sma_pit
+
+    pit_assets = {
+        symbol: [
+            SimpleNamespace(
+                timestamp=bar.timestamp,
+                open=bar.open,
+                high=bar.high,
+                low=bar.low,
+                close=bar.close,
+                volume=bar.volume,
+            )
+            for bar in bars
+        ]
+        for symbol, bars in assets.items()
+    }
+    trend = _sma_pit(pit_assets)
+    momentum = _cs_pit(pit_assets)
+    if (
+        trend.get("status") != "PIT_PASSED"
+        or int(trend.get("checked_decisions", 0)) <= 0
+        or momentum.get("status") != "PIT_PASSED"
+        or int(momentum.get("checked_rebalances", 0)) <= 0
+    ):
+        raise RuntimeError("Fresh T052 strategy PIT validation failed")
+    return {
+        "status": "PIT_PASSED",
+        "trend_sma_50_200": trend,
+        "cs_momentum_12_1_top2": momentum,
+    }
 
 def _return_rows(assets: dict[str, tuple], weights: tuple[dict[str, float], ...]) -> list[dict]:
     symbols = tuple(assets)
@@ -228,11 +381,12 @@ def _total_return_rows(
     return out
 
 def _evaluate(assets: dict[str, tuple], sleeve: str) -> dict:
-    weights = (
-        _build_weight_path(assets, "sma_50_200_inverse_vol")
-        if sleeve == "trend"
-        else _cs_weights(assets)
-    )
+    if sleeve == "trend":
+        weights = _build_weight_path(assets, "sma_50_200_inverse_vol")
+    elif sleeve == "cs":
+        weights = _cs_weights(assets)
+    else:
+        raise ValueError(f"Unknown fixed-core sleeve: {sleeve}")
     rows = _return_rows(assets, weights)
     if len(rows) < RESEARCH_COUNT + HOLDOUT_COUNT:
         raise ValueError("T052 return geometry is too short")
@@ -296,15 +450,26 @@ def _evaluate(assets: dict[str, tuple], sleeve: str) -> dict:
     }
 
 def run(preregistration_path: Path, manifests: dict[str, Path], output_path: Path) -> dict:
+    if (
+        settings.PAPER_ONLY is not True
+        or settings.LIVE_TRADING_ENABLED is not False
+        or settings.ORDERS_ENABLED is not False
+        or settings.AUTOMATIC_PROMOTION is not False
+    ):
+        raise RuntimeError("Paper-only safety contract violated")
     spec = _load_prereg(preregistration_path)
     expected = {u["trial_id"]: u for u in spec["universes"]}
+    if set(manifests) != set(expected):
+        raise ValueError("T052 requires exactly the T049 and T050 snapshots")
     reports = {}
     for trial_id in ("T-2026-09-27-049", "T-2026-09-27-050"):
         assets = _load_assets(manifests[trial_id], expected[trial_id])
+        pit = _validate_pit(assets)
         reports[trial_id] = {
             "universe": expected[trial_id]["universe"],
             "symbols": list(expected[trial_id]["symbols"]),
             "snapshot_fingerprint": json.loads(manifests[trial_id].read_text(encoding="utf-8"))["snapshot_fingerprint"],
+            "pit": pit,
             "trend_sma_50_200": _evaluate(assets, "trend"),
             "cs_momentum_12_1_top2": _evaluate(assets, "cs"),
         }
