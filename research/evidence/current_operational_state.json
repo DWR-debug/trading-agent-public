@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T14:15:53.480163+00:00",
+  "generated_at_utc": "2026-09-27T14:16:54.814131+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -107,12 +107,22 @@
       {
         "number": 350,
         "title": "AGENT-017: Independent audit of autonomous control plane",
-        "updatedAt": "2026-09-27T14:07:41Z",
+        "updatedAt": "2026-09-27T14:16:54Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/350"
       }
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "TEST: correct Windows QA path assertions",
+        "sha": "3a9582f3c6cc76395c018d576b7346156b5ff948",
+        "timestamp": "2026-09-27T16:16:41+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "482a4c2027c59b7327b2d9506bca1d228a87256e",
+        "timestamp": "2026-09-27T14:15:53Z"
+      },
       {
         "message": "AGENT: publish verified AGENT-018 QA matrix audit",
         "sha": "487397af4e0083408c3383aaa7528e2514fec243",
@@ -142,16 +152,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "46fd22b350fbb61657e035a8ac74539c3ad80806",
         "timestamp": "2026-09-27T14:11:07Z"
-      },
-      {
-        "message": "OPS: wake bounded agent queue",
-        "sha": "6d557b58a2d7c1af6a5dc66090ccb2fcb2852221",
-        "timestamp": "2026-09-27T16:10:55+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "99ec8f9066d5e0a379ae63c48a7aa554c4a7f472",
-        "timestamp": "2026-09-27T14:10:30Z"
       }
     ]
   },
@@ -212,12 +212,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "487397af4e0083408c3383aaa7528e2514fec243",
+  "source_master_sha": "3a9582f3c6cc76395c018d576b7346156b5ff948",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36325274153"
+    "run_id": "36325330724"
   }
 }
