@@ -1,5 +1,16 @@
 # Trading Agent — Chat-Einstiegspunkt
 
+## Kanonischer aktueller Betriebsstatus
+
+Vor PROJECT_STATUS.md wird ab jetzt immer gelesen:
+- docs/CURRENT_STATUS.md
+- research/evidence/current_operational_state.json
+
+Diese beiden Dateien beschreiben ausschließlich den aktuellen operativen Zustand und werden über
+.github/workflows/current-status-sync.yml nach relevanten master-Pushes automatisch synchronisiert.
+PROJECT_STATUS.md bleibt für historische Rekonstruktion erhalten und darf aktuelle SHA-, PR-,
+Runner- oder Queue-Angaben nicht überstimmen.
+
 Stand: 2026-09-26
 
 Dieses Dokument ist der **verbindliche Einstiegspunkt für neue Chats**, die mit

@@ -1,0 +1,84 @@
+{
+  "schema_version": "1.0",
+  "status_type": "current_operational_project_state",
+  "repository": "DWR-debug/trading-agent-public",
+  "generated_at_utc": "2026-09-27T13:26:38Z",
+  "source_master_sha": "a1536a2531ff8341b2ab25a8cdd0012a22e3e3ba",
+  "status_commit_is_documentation_only": true,
+  "canonical_sources": {
+    "human_current_status": "docs/CURRENT_STATUS.md",
+    "machine_current_status": "research/evidence/current_operational_state.json",
+    "project_context": "docs/PROJECT_CONTEXT.md",
+    "historical_status": "PROJECT_STATUS.md",
+    "research_state": "research/evidence/project_state.json",
+    "research_checkpoint": "research/evidence/current_project_checkpoint.json",
+    "research_decision_basis": "research/evidence/decision_basis_latest.json",
+    "trial_ledger": "research/evidence/trial_ledger.json"
+  },
+  "engineering_state": {
+    "paper_forward": {
+      "status": "MERGED",
+      "merge_commit": "a1536a2531ff8341b2ab25a8cdd0012a22e3e3ba",
+      "pr": 352
+    },
+    "agent_orchestration": {
+      "bounded_two_lane_queue": true,
+      "pending_queue_tasks": [
+        "AGENT-006",
+        "AGENT-007"
+      ]
+    },
+    "self_hosted_qa": {
+      "cadence": "*/15 * * * *",
+      "label": "trading-agent-research",
+      "last_verified_recorded_baseline": {
+        "workflow_run_id": 36259124979,
+        "head_sha": "5ef8730bbb55f86701fc0a8b9c88e152fe83291c",
+        "conclusion": "success",
+        "tests_passed": 881,
+        "warnings": 2,
+        "ast_syntax": "success",
+        "safety_invariants": "success"
+      },
+      "current_master_verification": "PENDING"
+    }
+  },
+  "scientific_state_recorded": {
+    "latest_formal_trial": "T-2026-09-26-047R1-PERFORMANCE",
+    "latest_formal_status": "NO_PROMOTION_EVIDENCE",
+    "q026": {
+      "trial_id": "T-2026-09-27-048",
+      "status": "DATA_INVALID",
+      "scientific_outcome": "NO_SCIENTIFIC_OUTCOME",
+      "common_calendar_count": 3704,
+      "requested_candles": 4000,
+      "performance_authorized": false
+    },
+    "q023": {
+      "status": "COVERAGE_VALIDATED",
+      "workflow_run_id": 36309960872,
+      "total_events": 89,
+      "timestamp_validated_events": 89
+    },
+    "q025": {
+      "status": "DATE_PIT_VALIDATED",
+      "workflow_run_id": 36310848531,
+      "total_events": 89
+    },
+    "recorded_next_step": "Fresh symbol-disjoint fixed-rule candidate discovery -> coverage/PIT -> narrow formal validation."
+  },
+  "resources": {
+    "paid_agent_budget_usd": 0,
+    "paid_api_budget_usd": 0,
+    "free_resources_only": true,
+    "actual_capital_available": false,
+    "hypothetical_reference_capital_eur": 500.0
+  },
+  "safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false,
+    "status": "SAFE"
+  }
+}
