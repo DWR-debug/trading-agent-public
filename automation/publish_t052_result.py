@@ -40,7 +40,10 @@ def _write(path: Path, value: dict) -> None:
 
 
 def publish(result_path: Path, ledger_path: Path, result_doc_path: Path,
-            checkpoint_path: Path, state_path: Path, decision_path: Path) -> None:
+            checkpoint_path: Path, state_path: Path, decision_path: Path,
+            source_code_sha: str | None = None,
+            workflow_run_id: int | None = None,
+            workflow_run_attempt: int | None = None) -> None:
     if (
         settings.PAPER_ONLY is not True
         or settings.LIVE_TRADING_ENABLED is not False
@@ -93,8 +96,11 @@ def publish(result_path: Path, ledger_path: Path, result_doc_path: Path,
     governance = result.get("governance")
     if governance != EXPECTED_REPORT_GOVERNANCE:
         raise RuntimeError("T052 contains an invalid search/selection/promotion state")
+    source_code_sha = source_code_sha or os.environ.get("GITHUB_SHA")
+    workflow_run_id = workflow_run_id if workflow_run_id is not None else int(os.environ["GITHUB_RUN_ID"])
+    workflow_run_attempt = workflow_run_attempt if workflow_run_attempt is not None else int(os.environ["GITHUB_RUN_ATTEMPT"])
     if (
-        result.get("code_version") != os.environ.get("GITHUB_SHA")
+        result.get("code_version") != source_code_sha
         or not result_doc_path.is_file()
         or fingerprint not in result_doc_path.read_text(encoding="utf-8")
     ):
@@ -112,8 +118,8 @@ def publish(result_path: Path, ledger_path: Path, result_doc_path: Path,
             cells[f"{trial_id}:{sleeve}"] = cell
 
     all_passed = all(bool(cell["all_gates_passed"]) for cell in cells.values())
-    workflow_id = int(os.environ["GITHUB_RUN_ID"])
-    attempt = int(os.environ["GITHUB_RUN_ATTEMPT"])
+    workflow_id = int(workflow_run_id)
+    attempt = int(workflow_run_attempt)
     entry = {
         "trial_id": TRIAL_ID,
         "recorded_at": datetime.now(timezone.utc).isoformat(),
@@ -156,10 +162,10 @@ def publish(result_path: Path, ledger_path: Path, result_doc_path: Path,
             "scientific_outcome": "EVIDENCE_RECORDED_NO_AUTOMATIC_PROMOTION",
             "workflow_run_id": workflow_id,
             "workflow_run_attempt": attempt,
-            "source_master_sha": os.environ["GITHUB_SHA"],
+            "source_master_sha": source_code_sha,
             "result_fingerprint": result["report_fingerprint"],
             "result_document": "docs/trial_052_fixed_core_sleeve_performance_result_2026_09_27.md",
-            "result_checkpoint": "research/checkpoints/trial_052_fixed_core_sleeve_performance_2026_09_27.json",
+            "result_checkpoint": "research/checkpoints/t052_fixed_core_sleeve_performance_2026_09_27.json",
             "cells": cells,
             "all_cells_passed": all_passed,
         },
@@ -211,9 +217,8 @@ def publish(result_path: Path, ledger_path: Path, result_doc_path: Path,
     if fact not in decision["verified_facts"]:
         decision["verified_facts"].append(fact)
     decision["next_action"] = (
-        "Interpret T052 evidence without selection or automatic promotion. "
-        "If another performance study is considered, create a separate ex-ante preregistration "
-        "and preserve all T052 results unchanged."
+        "Run a diagnostic-only failure attribution for T052 using the fixed four cells; "
+        "do not retune T052, select a cell from the holdout, change gates, or reopen Q020."
     )
     _write(decision_path, decision)
 
@@ -226,6 +231,9 @@ def main() -> int:
     parser.add_argument("--checkpoint", required=True)
     parser.add_argument("--state", required=True)
     parser.add_argument("--decision", required=True)
+    parser.add_argument("--source-code-sha", default=None)
+    parser.add_argument("--workflow-run-id", type=int, default=None)
+    parser.add_argument("--workflow-run-attempt", type=int, default=None)
     args = parser.parse_args()
     publish(
         Path(args.result),
@@ -234,6 +242,9 @@ def main() -> int:
         Path(args.checkpoint),
         Path(args.state),
         Path(args.decision),
+        source_code_sha=args.source_code_sha,
+        workflow_run_id=args.workflow_run_id,
+        workflow_run_attempt=args.workflow_run_attempt,
     )
     print("T052 PUBLISH OK")
     return 0
