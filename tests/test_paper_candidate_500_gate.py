@@ -58,7 +58,7 @@ def test_valid_500_manifest(tmp_path):
 
 def test_noneligible_evidence_is_fail_closed(tmp_path):
     with pytest.raises(Paper500GateError):
-        validate_manifest(_write_fixture(tmp_path, status="NO_PROMOTION_EVIDENCE"))
+        validate_manifest(_write_fixture(tmp_path, status="BLOCKED"))
 
 def test_wrong_capital_is_fail_closed(tmp_path):
     with pytest.raises(Paper500GateError):
