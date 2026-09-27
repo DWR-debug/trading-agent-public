@@ -6,7 +6,7 @@
   "latest_formal_trial": "T-2026-09-27-052",
   "latest_trial_status": "EVIDENCE_RECORDED_NO_AUTOMATIC_PROMOTION",
   "next_reserved_trial": null,
-  "next_research_focus": "Q028 completed: fixed T052 failure pattern is largely shared within each universe; next diagnostic should isolate common risk/stability mechanisms without selecting universes or sleeves.",
+  "next_research_focus": "Q029 completed: design multiple unranked, preregisterable mechanism hypotheses addressing the common T052 risk/stability and Research-to-Holdout failure pattern; no T052 retuning or holdout selection.",
   "cleanup_status": "completed_h06_and_q017_coverage_hardening",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -518,8 +518,8 @@
     "final_execution_commit": "85acd4e17921a4e2682552bfbe424f17ffaa9322",
     "final_status": "COMPLETED_DISCOVERY_ONLY"
   },
-  "current_queue_task": "Q-028-T052-CROSS-UNIVERSE-VS-SLEEVE-DECOMPOSITION-2026-09-27",
-  "last_completed_queue_task": "Q-021-TREASURY-AUCTION-FAILURE-MECHANISM-DIAGNOSIS",
+  "current_queue_task": "Q-029-T052-RISK-STABILITY-DIAGNOSTIC-2026-09-27",
+  "last_completed_queue_task": "Q-029-T052-RISK-STABILITY-DIAGNOSTIC-2026-09-27",
   "master_commit_semantics": "last_verified_master_commit_before_this_state_update; this field must not be interpreted as a self-referential current-HEAD field",
   "state_sync_verified_at": "2026-09-27T17:38:47.233Z",
   "project_milestone": {
@@ -638,5 +638,17 @@
       "T-2026-09-27-050:cs_momentum_12_1_top2",
       "T-2026-09-27-050:trend_sma_50_200"
     ]
+  },
+  "q029": {
+    "status": "COMPLETED_DIAGNOSTIC_ONLY",
+    "source_trial": "T-2026-09-27-052",
+    "source_workflow_run_id": 36338219883,
+    "source_artifact_id": 10938097809,
+    "source_result_fingerprint": "a0a1dc33ce281e7addcf9cf924881b6a30797c1a744d4160fbff91d3384b1b09",
+    "result_fingerprint": "f1c318eb8dc06977b70980c40e4f5cfa5169c789e04c8a53da504a891de4676a",
+    "primary_pattern": "COMMON_RISK_STABILITY_FAILURE",
+    "all_four_cells_failed_gates": 5,
+    "selection_used": false,
+    "holdout_used_for_selection": false
   }
 }
