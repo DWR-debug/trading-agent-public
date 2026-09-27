@@ -16,10 +16,10 @@
       "copilot_cli_queue": ".github/workflows/agent-request-queue.yml",
       "current_pending_requests": [
         {
-          "issue_number": "231",
+          "issue_number": "",
           "lane": "lane0",
-          "request_file": "agent_requests/lane0/AGENT-003.request",
-          "task_id": "AGENT-003"
+          "request_file": "agent_requests/lane0/AGENT-007.request",
+          "task_id": ""
         },
         {
           "issue_number": "335",
@@ -67,15 +67,15 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T16:47:22.263800+00:00",
+  "generated_at_utc": "2026-09-27T16:49:26.515720+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
       {
-        "issue_number": "231",
+        "issue_number": "",
         "lane": "lane0",
-        "request_file": "agent_requests/lane0/AGENT-003.request",
-        "task_id": "AGENT-003"
+        "request_file": "agent_requests/lane0/AGENT-007.request",
+        "task_id": ""
       },
       {
         "issue_number": "335",
@@ -87,6 +87,12 @@
     "default_branch": "master",
     "open_agent_ready_issues": [
       {
+        "number": 431,
+        "title": "AGENT-007: independent audit of EUR 2000 candidate path",
+        "updatedAt": "2026-09-27T16:49:13Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/issues/431"
+      },
+      {
         "number": 335,
         "title": "RESEARCH: Q024 auction-result publication timestamp PIT feasibility",
         "updatedAt": "2026-09-27T16:47:05Z",
@@ -95,6 +101,21 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: queue AGENT-007 EUR 2000 candidate audit",
+        "sha": "a831711709b14d4310730571438460cf868bbf46",
+        "timestamp": "2026-09-27T18:49:14+02:00"
+      },
+      {
+        "message": "OPS: autonomous agent queue routing",
+        "sha": "988ec90df6cf82764ca1c10fe90a4bc645dad6d0",
+        "timestamp": "2026-09-27T16:47:24Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8d948435a7a0680b020a3460d6059d510c9724d8",
+        "timestamp": "2026-09-27T16:47:22Z"
+      },
       {
         "message": "OPS: requeue Q024 after contract-scope correction",
         "sha": "be2d5cd32dc3f38646c385ab1615d1ac244dd1a7",
@@ -119,21 +140,6 @@
         "message": "OPS: harden canonical snapshot failure invalidation",
         "sha": "60565b5e635382deb0ca1909d3c36e4a8ffa174c",
         "timestamp": "2026-09-27T18:46:01+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "f9682d312cc8766c0eae6932b8c6f9a4a55f2bd2",
-        "timestamp": "2026-09-27T16:42:19Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2121bf5465a14f07dd23923388dc604ca8796d79",
-        "timestamp": "2026-09-27T16:40:38Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3d3ae793b66048319e3120656e9ed744d2ca3409",
-        "timestamp": "2026-09-27T16:40:25Z"
       }
     ]
   },
@@ -195,12 +201,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "be2d5cd32dc3f38646c385ab1615d1ac244dd1a7",
+  "source_master_sha": "a831711709b14d4310730571438460cf868bbf46",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36334519567"
+    "run_id": "36334646469"
   }
 }
