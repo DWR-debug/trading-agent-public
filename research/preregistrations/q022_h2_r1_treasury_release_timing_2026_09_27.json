@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "preregistration_id": "Q-022-H2-R1-TREASURY-RELEASE-TIMING-2026-09-27",
+  "trial_id": "T-2026-09-27-048R1",
+  "parent_trial_id": "T-2026-09-27-048",
+  "parent_outcome": "DATA_INVALID",
+  "parent_failure_reason": "insufficient_common_calendar",
+  "research_family": "official_event_alpha_release_timing",
+  "status": "PREREGISTERED_DESIGN_ONLY",
+  "purpose": "Repeat the fixed Q022-H2 release-timing question after the original fresh universe failed the pre-declared 3500-session coverage contract. This is a new symbol-disjoint repair universe, not an asset/performance optimization.",
+  "study_window": {
+    "start": "2011-01-01",
+    "end": "2025-09-24"
+  },
+  "universe": "validation_2026_09_27_treasury_auction_release_timing_h2_r1",
+  "symbols": [
+    "TAP",
+    "CLX",
+    "HSY",
+    "KR",
+    "SYY",
+    "STT",
+    "USB",
+    "TROW",
+    "BEN",
+    "NTRS",
+    "PNC",
+    "MET"
+  ],
+  "event_source": {
+    "provider": "U.S. Treasury Fiscal Data",
+    "dataset": "Q019 fixed Treasury 10-Year auction result events",
+    "source_contract_fingerprint": "13072dbed7d60684f4a4fb8a3de69555cae83c66f3cfdfb603b9ed2a4b1c225b",
+    "event_population_size": 89,
+    "timing_basis": {
+      "authoritative_date_source": "Q025 Treasury auction-date PIT feasibility result",
+      "q025_workflow_run_id": 36310848531,
+      "q025_artifact_id": 10928822681,
+      "q025_result_fingerprint": "a12e603acdad53216cab92bf0c634d4e22ece77e58b84f2fc240046da0de4107",
+      "rule": "Treat the official auction_date as the fixed date-level information anchor; act only on the first XNYS session strictly after auction_date."
+    },
+    "fixed_signal": "Signed change in bid-to-cover ratio versus immediately preceding 10-Year Note auction: positive=+1, negative=-1, unchanged=0."
+  },
+  "trading_rule": {
+    "exposure": "On the first eligible XNYS session strictly after auction_date, hold the unchanged Q019 event signal for that session only; outside event sessions exposure is zero.",
+    "mapping": "+1 = equal-weight long across all 12 fixed assets; -1 = equal-weight short; 0 = flat.",
+    "sizing": "Each active asset receives 1/12 of gross exposure with total gross exposure fixed at 1.0; no leverage.",
+    "overlap": "If multiple mapped events fall on the same session, aggregate their fixed signals by arithmetic sum and use sign(sum), with zero producing flat exposure.",
+    "intervention": "Only change versus Q020/Q022 is the event-date mapping from record_date to auction_date; signal sign and all other trading rules remain unchanged.",
+    "no_tuning": "No threshold, holding period, asset, weighting, signal variant, horizon, leverage, or parameter search."
+  },
+  "data_contract": {
+    "requested_raw_candles_per_symbol": 3520,
+    "target_common_calendar": 3500,
+    "research_periods": 2798,
+    "holdout_periods": 700,
+    "interval": "1d",
+    "frozen_snapshot_required": true,
+    "point_in_time_required": true
+  },
+  "costs": {
+    "base_fee_bps": 10,
+    "base_slippage_bps": 5,
+    "scenarios": [
+      "base",
+      "1.5x",
+      "2x"
+    ]
+  },
+  "evaluation": {
+    "performance_trial_after_coverage_only": true,
+    "fresh_symbol_disjoint_validation": true,
+    "holdout_blind": true,
+    "rolling_windows": 5,
+    "no_selection_on_holdout": true,
+    "no_parameter_search": true,
+    "no_asset_search": true,
+    "no_variant_search": true
+  },
+  "gates": {
+    "research_return_positive": true,
+    "research_max_drawdown_lte_percent": 10,
+    "research_profit_factor_gte": 1.1,
+    "rolling_min_profit_factor_gte": 1.1,
+    "rolling_profitable_window_ratio_gte": 0.5,
+    "rolling_average_drawdown_lte_percent": 10,
+    "oos_to_is_return_ratio_gte": 0.25,
+    "holdout_return_positive": true,
+    "holdout_profit_factor_gte": 1.1,
+    "holdout_max_drawdown_lte_percent": 10,
+    "stress_holdout_return_nonnegative_at_1_5x": true,
+    "stress_holdout_return_nonnegative_at_2x": true,
+    "total_return_sensitivity_nonnegative": true
+  },
+  "selection": {
+    "candidates_selected": false,
+    "source_selection": "fixed-study-window coverage only",
+    "coverage_discovery_workflow_run_id": 36320528295,
+    "coverage_discovery_artifact_id": 10932332338,
+    "coverage_discovery_artifact_digest": "sha256:72a3ee48c6ef3db818ad0a147dc4337fc0024e0d8a358c3ec027a5dd5e8e501f",
+    "coverage_discovery_fingerprint": "8c901bc3ac25510a7be3895fa933ff896727a8abb15876f32757ea4860e15903",
+    "carried_forward_symbols": [
+      "TAP",
+      "CLX",
+      "HSY",
+      "KR",
+      "SYY",
+      "STT",
+      "USB",
+      "TROW",
+      "BEN",
+      "NTRS",
+      "PNC",
+      "MET"
+    ],
+    "performance_selection": false,
+    "holdout_used_for_selection": false,
+    "parameter_search": false,
+    "asset_search": false,
+    "signal_variant_search": false,
+    "horizon_search": false
+  },
+  "authorization": {
+    "current_status": "DESIGN_ONLY",
+    "performance_trial_authorized": false,
+    "authorization_condition": "Formal performance requires successful fresh coverage, immutable snapshot fingerprint, source-contract fingerprint match, and an explicit execution authorization created before performance computation."
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "interpretation": "This R1 repair exists solely because the original H2 universe failed data coverage. The new universe was selected before performance using only the fixed-window coverage contract.",
+  "interval": "1d",
+  "requested_candles": 3520,
+  "target_candles": 3500,
+  "minimum_in_window_candles": 3500
+}
