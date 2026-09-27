@@ -30,10 +30,10 @@ def make_rising_candles(count=6):
     return tuple(
         Candle(
             timestamp=origin + timedelta(hours=i),
-            open=100.0 + i,
-            high=100.0 + i,
-            low=100.0 + i,
-            close=100.0 + i,
+            open=100.0 + (i * 0.5),
+            high=100.0 + (i * 0.5),
+            low=100.0 + (i * 0.5),
+            close=100.0 + (i * 0.5),
             volume=1000.0,
         )
         for i in range(count)
