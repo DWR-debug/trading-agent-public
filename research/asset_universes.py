@@ -574,7 +574,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
             "preflight of the Q030 risk/stability mechanism families; no performance selection."
         ),
         symbols=("BSV", "FAN", "JNK", "UDN", "VCLT", "VGIT", "SCHR"),
-        target_count=3500,
+        target_count=4000,
     ),
 
 )
