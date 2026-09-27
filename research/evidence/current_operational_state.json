@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T20:24:32.485548+00:00",
+  "generated_at_utc": "2026-09-27T20:26:18.225251+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -96,6 +96,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: localize immutable Q043 manifest for Q045 compute (#510)",
+        "sha": "58925b737610508c440cf5ee66af1a71ff3addb9",
+        "timestamp": "2026-09-27T22:26:05+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "8533dc0d641ef13240cfbf68728dd1bd8601a21e",
+        "timestamp": "2026-09-27T20:25:54Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "fa03e63fcda4d5c55ada0f2f173114ed76d1a8dc",
+        "timestamp": "2026-09-27T20:24:45Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2d26154dfcac85d2dfdb01e165780c3401509d00",
+        "timestamp": "2026-09-27T20:24:32Z"
+      },
+      {
         "message": "FIX: resolve Q045 PIT dataset root from immutable artifact (#509)",
         "sha": "1cb6119ad4a1a56e913d8cdbfb59329bd543df73",
         "timestamp": "2026-09-27T22:24:20+02:00"
@@ -114,26 +134,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "bd278b0b73d4b4d99e2a75082e0d4d2c7b753e89",
         "timestamp": "2026-09-27T20:21:23Z"
-      },
-      {
-        "message": "RESEARCH: Q045 fixed alpha replication performance (#507)",
-        "sha": "a2c79cfa2f895c5badfd2e5cbdab723ce4a8124a",
-        "timestamp": "2026-09-27T22:21:09+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1a7e7b3f3cbf40d860adeae6c26575de3baff21f",
-        "timestamp": "2026-09-27T20:19:02Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4b604701c345d313c55add2128ae7d6b763cdd19",
-        "timestamp": "2026-09-27T20:18:49Z"
-      },
-      {
-        "message": "STATE: advance project to Q045 replication design",
-        "sha": "128bebde15d237b21e670bf86f63c39eabc8e0be",
-        "timestamp": "2026-09-27T22:18:42+02:00"
       }
     ]
   },
@@ -195,12 +195,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1cb6119ad4a1a56e913d8cdbfb59329bd543df73",
+  "source_master_sha": "58925b737610508c440cf5ee66af1a71ff3addb9",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36347905417"
+    "run_id": "36348015346"
   }
 }
