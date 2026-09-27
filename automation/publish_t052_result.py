@@ -7,7 +7,24 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 
+from automation.fixed_core_sleeve_performance import (
+    EXPECTED_GATES,
+    EXPECTED_UNIVERSES,
+    _fp,
+)
+from config import settings
+
 TRIAL_ID = "T-2026-09-27-052"
+EXPECTED_REPORT_GOVERNANCE = {
+    "selection_used": False,
+    "parameter_search": False,
+    "asset_search": False,
+    "threshold_search": False,
+    "horizon_search": False,
+    "variant_search": False,
+    "holdout_used_for_selection": False,
+    "automatic_promotion": False,
+}
 
 
 def _load(path: Path) -> dict:
@@ -24,10 +41,48 @@ def _write(path: Path, value: dict) -> None:
 
 def publish(result_path: Path, ledger_path: Path, result_doc_path: Path,
             checkpoint_path: Path, state_path: Path, decision_path: Path) -> None:
+    if (
+        settings.PAPER_ONLY is not True
+        or settings.LIVE_TRADING_ENABLED is not False
+        or settings.ORDERS_ENABLED is not False
+        or settings.AUTOMATIC_PROMOTION is not False
+    ):
+        raise RuntimeError("Paper-only safety contract violated")
     result = _load(result_path)
     ledger = _load(ledger_path)
     if result.get("trial_id") != TRIAL_ID or result.get("status") != "COMPLETED":
         raise RuntimeError("T052 result is incomplete or mismatched")
+    fingerprint = result.get("report_fingerprint")
+    content = {key: value for key, value in result.items() if key != "report_fingerprint"}
+    if not isinstance(fingerprint, str) or _fp(content) != fingerprint:
+        raise RuntimeError("T052 result fingerprint mismatch")
+    expected_ids = {universe["trial_id"] for universe in EXPECTED_UNIVERSES}
+    universes = result.get("universes")
+    if not isinstance(universes, dict) or set(universes) != expected_ids:
+        raise RuntimeError("T052 result universe set mismatch")
+    for expected in EXPECTED_UNIVERSES:
+        universe = universes[expected["trial_id"]]
+        if (
+            universe.get("universe") != expected["universe"]
+            or universe.get("symbols") != expected["symbols"]
+            or not isinstance(universe.get("snapshot_fingerprint"), str)
+            or len(universe["snapshot_fingerprint"]) != 64
+            or any(char not in "0123456789abcdef" for char in universe["snapshot_fingerprint"])
+            or universe.get("pit", {}).get("status") != "PIT_PASSED"
+        ):
+            raise RuntimeError("T052 result provenance or PIT mismatch")
+        for sleeve in ("trend_sma_50_200", "cs_momentum_12_1_top2"):
+            cell = universe.get(sleeve)
+            gates = cell.get("gates") if isinstance(cell, dict) else None
+            if (
+                not isinstance(cell, dict)
+                or not isinstance(gates, dict)
+                or set(gates) != set(EXPECTED_GATES)
+                or any(not isinstance(value, bool) for value in gates.values())
+                or not isinstance(cell.get("all_gates_passed"), bool)
+                or cell["all_gates_passed"] != all(gates.values())
+            ):
+                raise RuntimeError("T052 result cell or fixed-gate contract mismatch")
     if result.get("safety") != {
         "paper_only": True,
         "live_trading_enabled": False,
@@ -35,19 +90,15 @@ def publish(result_path: Path, ledger_path: Path, result_doc_path: Path,
         "automatic_promotion": False,
     }:
         raise RuntimeError("Unsafe T052 result")
-    governance = result.get("governance", {})
-    forbidden = (
-        "selection_used",
-        "parameter_search",
-        "asset_search",
-        "threshold_search",
-        "horizon_search",
-        "variant_search",
-        "holdout_used_for_selection",
-        "automatic_promotion",
-    )
-    if any(governance.get(key) is True for key in forbidden):
-        raise RuntimeError("T052 contains forbidden selection or promotion state")
+    governance = result.get("governance")
+    if governance != EXPECTED_REPORT_GOVERNANCE:
+        raise RuntimeError("T052 contains an invalid search/selection/promotion state")
+    if (
+        result.get("code_version") != os.environ.get("GITHUB_SHA")
+        or not result_doc_path.is_file()
+        or fingerprint not in result_doc_path.read_text(encoding="utf-8")
+    ):
+        raise RuntimeError("T052 result document or code provenance mismatch")
     trials = ledger.get("trials")
     if not isinstance(trials, list):
         raise RuntimeError("Unsupported ledger schema")

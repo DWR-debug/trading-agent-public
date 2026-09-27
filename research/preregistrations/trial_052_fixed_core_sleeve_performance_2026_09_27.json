@@ -60,10 +60,17 @@
       "implementation": "automation.cross_asset_trend_replication._build_weight_path",
       "rule": "monthly rebalance; SMA 50/200 long/flat; inverse-volatility allocation; existing 25 percent per-asset cap",
       "warmup_sessions": 199,
+      "volatility_lookback_sessions": 60,
+      "max_asset_weight": 0.25,
       "future_information_forbidden": true
     },
     "cs_momentum_12_1_top2": {
+      "implementation": "automation.candidate_validation_50_50_vol_budget._cs_weights",
       "rule": "252-session formation; 21-session skip; 21-session rebalance; top-2 long-only equal weight",
+      "formation_sessions": 252,
+      "skip_sessions": 21,
+      "rebalance_sessions": 21,
+      "top_n": 2,
       "future_information_forbidden": true
     }
   },
