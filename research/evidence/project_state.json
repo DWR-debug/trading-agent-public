@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "updated": "2026-09-27",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "16af44dd673b9b48d635d76ed70a1d47e68cb78f",
+  "master_commit": "0fa724c2d8d99ec05ee3d8150733a476a77a1b91",
   "latest_formal_trial": "T-2026-09-26-047R1-PERFORMANCE",
   "latest_trial_status": "NO_PROMOTION_EVIDENCE",
   "next_reserved_trial": null,
-  "next_research_focus": "AGENT-014 is merged; perform only coverage-first/PIT validation when an acceptable historical-vintage source is available, maintain the paper-only Shadow/Forward harness separately, and use the self-hosted runner for reproducible QA/research-preparation without changing gates.",
+  "next_research_focus": "Q024 historical ReleaseTime gap diagnosis: preserve the 89-event fixed population and investigate only official Treasury timestamp/provenance paths for the remaining 31 events; no performance until the preregistered 89/89 PIT feasibility contract passes.",
   "cleanup_status": "completed_h06_and_q017_coverage_hardening",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -590,5 +590,19 @@
     "variant_search": false
   },
   "hypothetical_starting_capital_eur": 500,
-  "hypothetical_capital_status": "fictional_reference_only"
+  "hypothetical_capital_status": "fictional_reference_only",
+  "latest_q024_feasibility": {
+    "workflow_run_id": 36336430520,
+    "artifact_id": 10936754274,
+    "artifact_sha256": "sha256:f13a370eac66be8f46302ee3c683956ab273142d69a8e9eff50e1ced5cfdc985",
+    "result_fingerprint": "148c74c9f14589a9f774936411ee86be819a8c99be777c27f670cb9f5cdbd060",
+    "status": "DATA_INSUFFICIENT",
+    "total_events": 89,
+    "xml_identity_validated_events": 58,
+    "timestamp_validated_events": 58,
+    "pit_validated_events": 58,
+    "performance_authorized": false,
+    "holdout_used": false,
+    "remaining_events_without_timestamp": 31
+  }
 }
