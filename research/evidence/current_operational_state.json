@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T18:57:04.469217+00:00",
+  "generated_at_utc": "2026-09-27T18:57:58.702495+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: allow Q036 exact historical source checkout",
+        "sha": "3cc41a307810d1c7541ba66b147652cfa42befa2",
+        "timestamp": "2026-09-27T20:57:46+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ffeabab70a035d4d1d2bb22208cb2ed5432f020d",
+        "timestamp": "2026-09-27T18:57:04Z"
+      },
       {
         "message": "TEST: lock Q036 source artifact binding",
         "sha": "b9a30d2d56dab750adf7d3e3cac2ec1bae73bedc",
@@ -112,16 +122,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "8df41f019e4a338c584884b56199923d8c5597ba",
         "timestamp": "2026-09-27T18:53:22Z"
-      },
-      {
-        "message": "EVIDENCE: record T056 and queue Q036 diagnosis",
-        "sha": "43299f889c6390564904bdfbab06d08b71f98c09",
-        "timestamp": "2026-09-27T20:53:05+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f8443c908ab25b0e3d0321fb6ec0d1adc07f9bf9",
-        "timestamp": "2026-09-27T18:50:11Z"
       }
     ]
   },
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b9a30d2d56dab750adf7d3e3cac2ec1bae73bedc",
+  "source_master_sha": "3cc41a307810d1c7541ba66b147652cfa42befa2",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36342530026"
+    "run_id": "36342581164"
   }
 }
