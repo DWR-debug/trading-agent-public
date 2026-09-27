@@ -1,3 +1,12 @@
+# CURRENT EXECUTION CHECKPOINT — EUR 2,000 research capital baseline — 2026-09-27
+
+- The project's **new hypothetical reference/start capital is EUR 2,000.00** for future Paper/Shadow/Forward simulations.
+- This is **not available cash**: actual available capital remains EUR 0.
+- Historical EUR 500 paper evidence and the existing EUR 500 lane remain preserved and are not rewritten.
+- A separate fail-closed EUR 2,000 candidate gate and formal 30-day paper lane have been added. A candidate can enter this lane only after the existing Evidence Contract is already satisfied; there is no candidate selection, comparison, automatic promotion, or order creation.
+- Safety remains: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `ORDERS_ENABLED=False`, `AUTOMATIC_PROMOTION=False`.
+- Research direction remains coverage/PIT-first. Intraday, Overnight/Short-Swing and orthogonal alpha families are research candidates, not yet validated strategies.
+
 # CURRENT EXECUTION CHECKPOINT — AGENT-014 merged; self-hosted capacity increased — 2026-09-27
 
 - Current canonical master after this status synchronization is the latest commit shown by GitHub; the previous code/state checkpoint was `29a7c0f4fc6850fa05069b8fae32f0534099c5ac`.
