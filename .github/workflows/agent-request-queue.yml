@@ -114,21 +114,21 @@ jobs:
           echo "branch=${branch}" >> "$GITHUB_OUTPUT"
           echo "skip=false" >> "$GITHUB_OUTPUT"
 
-      - name: Check personal-repository Copilot token
+      - name: Check Copilot auth inputs
         id: copilot_token
         if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true'
         shell: bash
         env:
-          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+          PERSONAL_COPILOT_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          if [ -z "${COPILOT_GITHUB_TOKEN}" ]; then
-            gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.request.outputs.issue_number }}/comments" \
-              -f body="Agent queue paused: personal-repository Copilot requires COPILOT_GITHUB_TOKEN with Copilot Requests permission. No Copilot session or paid usage is claimed; the queue will retry after the secret is configured."
+          # GitHub Actions GITHUB_TOKEN is the primary documented CI auth path.
+          # The personal fine-grained PAT is an explicit fallback only.
+          if [ -n "${GITHUB_TOKEN:-}" ] || [ -n "${PERSONAL_COPILOT_TOKEN:-}" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
             echo "configured=false" >> "$GITHUB_OUTPUT"
-            exit 0
           fi
-          echo "configured=true" >> "$GITHUB_OUTPUT"
 
       - name: Run bounded Copilot CLI
         id: copilot_cli
@@ -136,6 +136,7 @@ jobs:
         shell: bash
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          PERSONAL_COPILOT_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ steps.request.outputs.issue_number }}
         run: |
           set -euo pipefail
@@ -158,20 +159,51 @@ jobs:
           ${task_body}
           EOF
           )"
-          set +e
-          copilot --agent=trading-agent-engineer --autopilot --no-ask-user --max-ai-credits=45 --max-autopilot-continues=1 -p "${prompt}" --allow-tool='read' --allow-tool='search' --allow-tool='write' --allow-tool='shell(git:*)' --allow-tool='shell(python:*)' --allow-tool='shell(pytest:*)' 2>&1 | tee "$RUNNER_TEMP/copilot_cli.log"
-          rc=${PIPESTATUS[0]}
-          set -e
+
+          run_copilot() {
+            local log_file="$1"
+            shift
+            set +e
+            "$@" 2>&1 | tee "$log_file"
+            local rc=${PIPESTATUS[0]}
+            set -e
+            return "$rc"
+          }
+
+          rm -f "$RUNNER_TEMP/copilot_cli_primary.log" "$RUNNER_TEMP/copilot_cli.log"
+
+          # Primary: GitHub Actions GITHUB_TOKEN, supported for Copilot CLI in Actions.
+          unset COPILOT_GITHUB_TOKEN\n          run_copilot "$RUNNER_TEMP/copilot_cli_primary.log" copilot --agent=trading-agent-engineer --autopilot --no-ask-user --max-ai-credits=45 --max-autopilot-continues=1 -p "$prompt" --allow-tool='read' --allow-tool='search' --allow-tool='write' --allow-tool='shell(git:*)' --allow-tool='shell(python:*)' --allow-tool='shell(pytest:*)'
+          rc=$?
           if [ "$rc" -eq 0 ]; then
+            cp "$RUNNER_TEMP/copilot_cli_primary.log" "$RUNNER_TEMP/copilot_cli.log"
             echo "status=success" >> "$GITHUB_OUTPUT"
+            echo "auth_mode=github_actions_token" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          if grep -Eqi "Authentication failed|token may be invalid|lacking the required permissions|Copilot Requests" "$RUNNER_TEMP/copilot_cli.log"; then
-            gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.request.outputs.issue_number }}/comments" \
-              -f body="Agent queue paused: Copilot authentication is not currently usable. No engineering task was executed or published; the queue will retry automatically after the Copilot token/integration is corrected."
+
+          if grep -Eqi "Authentication failed|token may be invalid|lacking the required permissions|Copilot Requests" "$RUNNER_TEMP/copilot_cli_primary.log"; then
+            if [ -n "${PERSONAL_COPILOT_TOKEN:-}" ]; then
+              rm -f "$RUNNER_TEMP/copilot_cli.log"
+              run_copilot "$RUNNER_TEMP/copilot_cli.log" env COPILOT_GITHUB_TOKEN="$PERSONAL_COPILOT_TOKEN" copilot --agent=trading-agent-engineer --autopilot --no-ask-user --max-ai-credits=45 --max-autopilot-continues=1 -p "$prompt" --allow-tool='read' --allow-tool='search' --allow-tool='write' --allow-tool='shell(git:*)' --allow-tool='shell(python:*)' --allow-tool='shell(pytest:*)'
+              fallback_rc=$?
+              if [ "$fallback_rc" -eq 0 ]; then
+                echo "status=success" >> "$GITHUB_OUTPUT"
+                echo "auth_mode=personal_pat_fallback" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+              if grep -Eqi "Authentication failed|token may be invalid|lacking the required permissions|Copilot Requests" "$RUNNER_TEMP/copilot_cli.log"; then
+                gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.request.outputs.issue_number }}/comments" -f body="Agent queue paused: both GitHub Actions GITHUB_TOKEN and COPILOT_GITHUB_TOKEN authentication paths were rejected by Copilot. No engineering task was executed or published."
+                echo "status=auth_paused" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+              exit "$fallback_rc"
+            fi
+            gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.request.outputs.issue_number }}/comments" -f body="Agent queue paused: GitHub Actions GITHUB_TOKEN authentication was rejected by Copilot and no personal COPILOT_GITHUB_TOKEN fallback is configured. No engineering task was executed or published."
             echo "status=auth_paused" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+
           echo "status=failed" >> "$GITHUB_OUTPUT"
           exit "$rc"
 
