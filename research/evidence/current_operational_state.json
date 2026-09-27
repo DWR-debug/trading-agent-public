@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T17:12:36.508633+00:00",
+  "generated_at_utc": "2026-09-27T17:14:22.618273+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: install exchange_calendars for Q024 PIT check",
+        "sha": "55b86df147365297094ca79288bd62d85ed81f71",
+        "timestamp": "2026-09-27T19:14:11+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "0d3ad732201103d4f1e18f0e40059d25f94d6a39",
+        "timestamp": "2026-09-27T17:12:36Z"
+      },
       {
         "message": "RESEARCH: harden Q024 with historical Treasury XML identity",
         "sha": "c9c0e857b47a9edfbf8461a0eab96e84311a37c4",
@@ -112,16 +122,6 @@
         "message": "OPS: retire Q024 RSS-only agent request",
         "sha": "16467cca0cf59af6a6ad18af7e7babb7efc6b56b",
         "timestamp": "2026-09-27T19:07:23+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "ac6de754d420530b591e1e51e28ef11d614a4a2b",
-        "timestamp": "2026-09-27T17:06:43Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "478e3c388f501f21147163af1c658487cdf12465",
-        "timestamp": "2026-09-27T17:01:56Z"
       }
     ]
   },
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c9c0e857b47a9edfbf8461a0eab96e84311a37c4",
+  "source_master_sha": "55b86df147365297094ca79288bd62d85ed81f71",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36336070790"
+    "run_id": "36336179538"
   }
 }
