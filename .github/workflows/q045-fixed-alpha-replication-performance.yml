@@ -83,7 +83,16 @@ jobs:
           print("Q045 IMMUTABLE Q043 COVERAGE BIND OK")
           PY
       - name: PIT prerequisite
-        run: python -m automation.q044_fresh_alpha_pit --universe-root research/runs/q045_coverage/T-2026-09-27-065/datasets --output research/runs/q045_pit/T-2026-09-27-065/pit_report.json
+        run: |
+          set -euo pipefail
+          dataset_root="$(find research/runs/q045_coverage -type f -path '*/AON/1d.csv' -print -quit)"
+          if [ -z "$dataset_root" ]; then
+            echo "::error::Q045 could not locate AON/1d.csv inside immutable Q043 artifact"
+            exit 1
+          fi
+          dataset_root="$(dirname "$(dirname "$dataset_root")")"
+          echo "Using immutable artifact dataset root: $dataset_root"
+          python -m automation.q044_fresh_alpha_pit --universe-root "$dataset_root" --output research/runs/q045_pit/T-2026-09-27-065/pit_report.json
       - name: PIT hard gate
         run: |
           python - <<'PY'
