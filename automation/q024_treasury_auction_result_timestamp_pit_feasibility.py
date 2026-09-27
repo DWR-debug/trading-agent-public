@@ -9,24 +9,26 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import html
 import io
 import json
 import re
 import xml.etree.ElementTree as ET
-from datetime import date, datetime, timezone
+from datetime import date, datetime, time, timezone
+from decimal import Decimal, InvalidOperation
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, urlparse
 from urllib.request import Request, urlopen
+from zoneinfo import ZoneInfo
 
-import exchange_calendars as xcals
 from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[1]
 STUDY_START = date(2011, 1, 1)
 STUDY_END = date(2025, 9, 24)
-EXPECTED_Q019_EVENTS = 89
+Q019_EVENT_COUNT = 89
 TREASURY_API = (
     "https://api.fiscaldata.treasury.gov/services/api/"
     "fiscal_service/v1/accounting/od/auctions_query"
@@ -34,14 +36,36 @@ TREASURY_API = (
 RESULT_PDF_BASE = (
     "https://www.treasurydirect.gov/instit/annceresult/press/preanre"
 )
+RESULT_XML_BASE = "https://www.treasurydirect.gov/xml"
 RESULT_RSS_URL = "https://www.treasurydirect.gov/TA_WS/securities/auctioned/rss"
-RESULT_XML_ARCHIVE_URL = "https://www.treasurydirect.gov/xml/"
+RESULT_TIME_ZONE = "America/New_York"
 MAX_RESULT_SEQUENCE = 8
 MIN_TIMESTAMP_COVERAGE = 1.0
 
 
 class SourceError(RuntimeError):
     pass
+
+
+def _fetch_response(
+    url: str,
+    timeout: int = 30,
+    *,
+    headers: dict[str, str] | None = None,
+) -> tuple[bytes, dict[str, str]]:
+    request_headers = {"User-Agent": "trading-agent-public Q024 research"}
+    if headers:
+        request_headers.update(headers)
+    req = Request(url, headers=request_headers)
+    try:
+        with urlopen(req, timeout=timeout) as response:
+            return response.read(), {
+                key: value
+                for key in ("Content-Length", "Content-MD5", "ETag", "Last-Modified")
+                if (value := response.headers.get(key)) is not None
+            }
+    except (HTTPError, URLError, TimeoutError) as exc:
+        raise SourceError(f"{url}: {exc}") from exc
 
 
 def _fp(value: object) -> str:
@@ -52,21 +76,8 @@ def _fp(value: object) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
-def _fetch_response(url: str, timeout: int = 30, *, headers: dict[str, str] | None = None):
-    request_headers = {"User-Agent": "trading-agent-public Q024 research"}
-    if headers:
-        request_headers.update(headers)
-    req = Request(url, headers=request_headers)
-    try:
-        with urlopen(req, timeout=timeout) as response:
-            return response.read(), response.headers
-    except (HTTPError, URLError, TimeoutError) as exc:
-        raise SourceError(f"{url}: {exc}") from exc
-
-
 def _fetch_bytes(url: str, timeout: int = 30, *, headers: dict[str, str] | None = None) -> bytes:
-    body, _ = _fetch_response(url, timeout=timeout, headers=headers)
-    return body
+    return _fetch_response(url, timeout, headers=headers)[0]
 
 
 def _fetch_json(url: str) -> dict:
@@ -117,6 +128,14 @@ def _candidate_result_urls(event: dict) -> list[str]:
     ]
 
 
+def _candidate_result_xml_urls(event: dict) -> list[str]:
+    auction = datetime.strptime(event["auction_date"], "%Y-%m-%d").date()
+    return [
+        f"{RESULT_XML_BASE}/R_{auction:%Y%m%d}_{sequence}.xml"
+        for sequence in range(1, MAX_RESULT_SEQUENCE + 1)
+    ]
+
+
 def _pdf_matches(text: str, event: dict) -> bool:
     normalized = _normalize(text)
     cusip = str(event["cusip"]).strip()
@@ -128,9 +147,19 @@ def _pdf_matches(text: str, event: dict) -> bool:
     )
 
 
-def _resolve_result_pdf(event: dict) -> dict:
+def _resolve_result_pdf(event: dict, result_xml: dict | None = None) -> dict:
     errors: list[str] = []
-    for url in _candidate_result_urls(event):
+    pdf_name = (
+        result_xml.get("identity", {}).get("results_pdf_name")
+        if result_xml
+        else None
+    )
+    urls = (
+        [f"{RESULT_PDF_BASE}/{date.fromisoformat(event['auction_date']).year}/{pdf_name}"]
+        if pdf_name
+        else _candidate_result_urls(event)
+    )
+    for url in urls:
         try:
             body = _fetch_bytes(url)
             text = _pdf_text(body)
@@ -153,60 +182,182 @@ def _resolve_result_pdf(event: dict) -> dict:
     }
 
 
-def _xml_text(body: bytes) -> str:
+def _xml_values(body: bytes) -> dict[str, list[str]]:
     try:
         root = ET.fromstring(body)
     except ET.ParseError as exc:
         raise SourceError(f"result XML parse failed: {exc}") from exc
-    return _normalize(" ".join(root.itertext()))
+    values: dict[str, list[str]] = {}
+    for element in root.iter():
+        tag = element.tag.rsplit("}", 1)[-1]
+        text = (element.text or "").strip()
+        if text:
+            values.setdefault(tag, []).append(text)
+    return values
 
 
-def _candidate_result_xml_urls(event: dict) -> list[str]:
-    auction = datetime.strptime(event["auction_date"], "%Y-%m-%d").date()
-    return [
-        f"{RESULT_XML_ARCHIVE_URL}R_{auction:%Y%m%d}_{sequence}.xml"
-        for sequence in range(1, MAX_RESULT_SEQUENCE + 1)
-    ]
+def _one_xml_value(values: dict[str, list[str]], tag: str) -> str | None:
+    found = values.get(tag, [])
+    return found[0] if len(found) == 1 else None
 
 
-def _xml_matches(text: str, event: dict) -> bool:
-    normalized = _normalize(text)
-    cusip = str(event["cusip"]).strip()
-    ratio = str(event.get("bid_to_cover_ratio", "")).strip()
+def _parse_result_xml(body: bytes) -> dict:
+    values = _xml_values(body)
+    return {
+        "cusip": _one_xml_value(values, "CUSIP"),
+        "auction_date": _one_xml_value(values, "AuctionDate"),
+        "bid_to_cover_ratio": _one_xml_value(values, "BidToCoverRatio"),
+        "release_time": _one_xml_value(values, "ReleaseTime"),
+        "results_pdf_name": _one_xml_value(values, "ResultsPDFName"),
+    }
+
+
+def _same_ratio(source_value: object, event_value: object) -> bool:
+    try:
+        source_ratio = Decimal(str(source_value))
+        event_ratio = Decimal(str(event_value))
+    except (InvalidOperation, TypeError, ValueError):
+        return False
     return (
-        cusip in normalized
-        and bool(re.search(r"\b(?:10-Year|10 Year)\s+Note\b", normalized, re.I))
-        and bool(ratio and re.search(rf"\b{re.escape(ratio)}\b", normalized))
-        and bool(re.search(r"Bid[ -]?to[ -]?Cover", normalized, re.I))
+        source_ratio.is_finite()
+        and event_ratio.is_finite()
+        and source_ratio == event_ratio
     )
 
 
+def _xml_identity_matches(parsed: dict, event: dict, source_url: str) -> bool:
+    expected_date = date.fromisoformat(event["auction_date"]).isoformat()
+    expected_result_pdf = Path(source_url).stem + ".pdf"
+    return (
+        parsed.get("cusip") == str(event["cusip"]).strip()
+        and parsed.get("auction_date") == expected_date
+        and _same_ratio(parsed.get("bid_to_cover_ratio"), event.get("bid_to_cover_ratio"))
+        and parsed.get("results_pdf_name") == expected_result_pdf
+    )
+
+
+def _publication_timestamp(event: dict, release_time: str | None) -> dict | None:
+    if not release_time or not re.fullmatch(r"\d{2}:\d{2}", release_time):
+        return None
+    try:
+        auction = date.fromisoformat(event["auction_date"])
+        wall_time = time.fromisoformat(release_time)
+        local_timestamp = datetime.combine(
+            auction, wall_time, tzinfo=ZoneInfo(RESULT_TIME_ZONE)
+        )
+    except (TypeError, ValueError):
+        return None
+    return {
+        "source_field": "AuctionResults/ReleaseTime",
+        "source_date_field": "AuctionAnnouncement/AuctionDate",
+        "source_local_time": release_time,
+        "time_zone": RESULT_TIME_ZONE,
+        "time_zone_interpretation": (
+            "Treasury auction local clock; the XML field has no explicit UTC offset"
+        ),
+        "publication_timestamp_local": local_timestamp.isoformat(),
+        "publication_timestamp_utc": (
+            local_timestamp.astimezone(timezone.utc)
+            .isoformat()
+            .replace("+00:00", "Z")
+        ),
+    }
+
+
+def _fetch_xml_response(url: str) -> tuple[bytes, dict[str, str]] | None:
+    request = Request(
+        url,
+        headers={
+            "User-Agent": "trading-agent-public Q024 research",
+            "Accept": "application/xml, text/xml;q=0.9, */*;q=0.1",
+        },
+    )
+    try:
+        with urlopen(request, timeout=30) as response:
+            return response.read(), {
+                key: value
+                for key in ("Content-Length", "Content-MD5", "ETag", "Last-Modified")
+                if (value := response.headers.get(key)) is not None
+            }
+    except HTTPError as exc:
+        if exc.code == 404:
+            return None
+        raise SourceError(f"{url}: {exc}") from exc
+    except (URLError, TimeoutError) as exc:
+        raise SourceError(f"{url}: {exc}") from exc
+
+
 def _resolve_result_xml(event: dict) -> dict:
+    matches: list[dict] = []
+    attempts: list[dict] = []
     errors: list[str] = []
     for url in _candidate_result_xml_urls(event):
         try:
-            body, headers = _fetch_response(url, timeout=20, headers={"Accept": "application/xml, text/xml;q=0.9, */*;q=0.1"})
-            text = _xml_text(body)
-            if not _xml_matches(text, event):
+            response = _fetch_xml_response(url)
+            if response is None:
+                attempts.append({"source_url": url, "status": "HTTP_404"})
                 continue
-            last_modified = headers.get("Last-Modified")
-            return {
-                "status": "RESULT_XML_IDENTITY_VALIDATED",
+            body, http_metadata = response
+            parsed = _parse_result_xml(body)
+            attempt = {
                 "source_url": url,
+                "status": (
+                    "XML_IDENTITY_MATCH"
+                    if _xml_identity_matches(parsed, event, url)
+                    else "XML_IDENTITY_MISMATCH"
+                ),
                 "content_sha256": hashlib.sha256(body).hexdigest(),
-                "xml_byte_length": len(body),
-                "http_last_modified": last_modified,
-                "http_last_modified_is_publication_timestamp": False,
+                "http_metadata": http_metadata,
+                "identity": {
+                    "cusip": parsed.get("cusip"),
+                    "auction_date": parsed.get("auction_date"),
+                    "bid_to_cover_ratio": parsed.get("bid_to_cover_ratio"),
+                    "results_pdf_name": parsed.get("results_pdf_name"),
+                },
             }
+            attempts.append(attempt)
+            if attempt["status"] != "XML_IDENTITY_MATCH":
+                continue
+            matches.append({
+                **attempt,
+                "xml_byte_length": len(body),
+                "release_time": parsed.get("release_time"),
+            })
         except SourceError as exc:
             errors.append(str(exc))
+            attempts.append({
+                "source_url": url,
+                "status": "SOURCE_ERROR",
+                "error": str(exc),
+            })
+
+    if len(matches) != 1:
+        return {
+            "status": "RESULT_XML_IDENTITY_INSUFFICIENT",
+            "source_url": None,
+            "content_sha256": None,
+            "http_metadata": {},
+            "matching_xml_count": len(matches),
+            "attempts": attempts,
+            "errors": errors[-5:],
+        }
+
+    match = matches[0]
+    timestamp = _publication_timestamp(event, match["release_time"])
     return {
-        "status": "RESULT_XML_IDENTITY_INSUFFICIENT",
-        "source_url": None,
-        "content_sha256": None,
-        "xml_byte_length": None,
-        "http_last_modified": None,
-        "http_last_modified_is_publication_timestamp": False,
+        "status": (
+            "RESULT_TIMESTAMP_VALIDATED"
+            if timestamp is not None
+            else "RESULT_TIMESTAMP_INSUFFICIENT"
+        ),
+        "source_url": match["source_url"],
+        "content_sha256": match["content_sha256"],
+        "xml_byte_length": match["xml_byte_length"],
+        "http_metadata": match["http_metadata"],
+        "matching_xml_count": 1,
+        "identity": match["identity"],
+        "attempts": attempts,
+        "publication_timestamp": timestamp,
         "errors": errors[-5:],
     }
 
@@ -245,9 +396,7 @@ def _parse_rss(body: bytes) -> list[dict]:
 
 def _find_rss_match(event: dict, rss_items: list[dict]) -> dict | None:
     cusip = str(event["cusip"]).strip()
-    auction_token = datetime.strptime(
-        event["auction_date"], "%Y-%m-%d"
-    ).strftime("%Y%m%d")
+    auction_date = date.fromisoformat(event["auction_date"])
     matches: list[dict] = []
     for item in rss_items:
         combined = " ".join(
@@ -257,40 +406,77 @@ def _find_rss_match(event: dict, rss_items: list[dict]) -> dict | None:
         link_host = urlparse(item.get("link", "")).netloc.lower()
         if link_host not in {"www.treasurydirect.gov", "treasurydirect.gov"}:
             continue
-        # A PDF link alone identifies a document, not the Q019 event.  The
-        # result timestamp must be tied to both fixed event identifiers and
-        # the value used by Q019.
-        if cusip not in combined or auction_token not in combined:
+        description = _normalize(
+            re.sub(r"<[^>]*>", " ", html.unescape(item.get("description", "")))
+        )
+        date_field = re.search(
+            r"\bAuction Date\b\s*:?\s*(\d{1,2}/\d{1,2}/\d{4}|\d{4}-\d{2}-\d{2})",
+            description,
+            re.IGNORECASE,
+        )
+        if cusip not in combined or not date_field:
             continue
-        ratio = str(event.get("bid_to_cover_ratio", "")).strip()
-        ratio_present = ratio and re.search(
-            rf"\b{re.escape(ratio)}\b", combined
+        try:
+            item_auction_date = date.fromisoformat(date_field.group(1))
+        except ValueError:
+            try:
+                item_auction_date = datetime.strptime(
+                    date_field.group(1), "%m/%d/%Y"
+                ).date()
+            except ValueError:
+                continue
+        if item_auction_date != auction_date:
+            continue
+        ratio_match = re.search(
+            r"Bid[- ]to[- ]Cover Ratio\b[^0-9]*([0-9]+(?:\.[0-9]+)?)",
+            description,
+            re.IGNORECASE,
         )
-        label_present = re.search(
-            r"bid[\s-]*to[\s-]*cover(?:\s+ratio)?", combined, re.I
-        )
-        if not (ratio_present and label_present):
+        if not ratio_match or not _same_ratio(
+            ratio_match.group(1), event.get("bid_to_cover_ratio")
+        ):
             continue
         matches.append(item)
-    if not matches:
+    if len(matches) != 1:
         return None
-    matches.sort(key=lambda item: item["publication_timestamp_utc"])
     return matches[0]
+
+
+def _event_pit_status(event: dict, publication_timestamp: dict | None) -> str:
+    if publication_timestamp is None:
+        return "PIT_INSUFFICIENT"
+    auction = date.fromisoformat(event["auction_date"])
+    record = date.fromisoformat(event["record_date"])
+    local_timestamp = publication_timestamp.get("publication_timestamp_local")
+    if local_timestamp:
+        published = datetime.fromisoformat(local_timestamp).date()
+    else:
+        utc_timestamp = datetime.fromisoformat(
+            publication_timestamp["publication_timestamp_utc"].replace("Z", "+00:00")
+        )
+        published = utc_timestamp.astimezone(ZoneInfo(RESULT_TIME_ZONE)).date()
+    return (
+        "PIT_VALIDATED"
+        if published == auction and auction < record
+        else "PIT_INSUFFICIENT"
+    )
 
 
 def run(*, output_path: str | Path) -> dict:
     events = _q019_events()
-    if not events:
-        raise SourceError("Q019 event population is empty")
-    if len(events) != EXPECTED_Q019_EVENTS:
+    if len(events) != Q019_EVENT_COUNT:
         raise SourceError(
-            f"Q019 fixed population changed: expected {EXPECTED_Q019_EVENTS}, "
-            f"received {len(events)}"
+            f"fixed Q019 population has {len(events)} events; "
+            f"expected {Q019_EVENT_COUNT}"
         )
-    if len({
-        (event.get("cusip"), event.get("auction_date")) for event in events
-    }) != len(events):
-        raise SourceError("Q019 fixed population contains duplicate CUSIP/auction_date keys")
+    event_keys = [
+        (event.get("cusip"), event.get("auction_date"))
+        for event in events
+    ]
+    if any(not cusip or not auction_date for cusip, auction_date in event_keys):
+        raise SourceError("fixed Q019 population has an event without CUSIP/auction_date")
+    if len(set(event_keys)) != Q019_EVENT_COUNT:
+        raise SourceError("fixed Q019 population has duplicate CUSIP/auction_date keys")
 
     try:
         rss_items = _parse_rss(_fetch_bytes(RESULT_RSS_URL, headers={"Accept": "application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.1", "User-Agent": "Mozilla/5.0 (compatible; trading-agent-public Q024 research)" }))
@@ -300,30 +486,36 @@ def run(*, output_path: str | Path) -> dict:
         rss_source_status = "RSS_INSUFFICIENT"
         rss_error = str(exc)
 
-    calendar = xcals.get_calendar("XNYS")
-    sessions = [
-        stamp.date()
-        for stamp in calendar.sessions_in_range(
-            STUDY_START.isoformat(), STUDY_END.isoformat()
-        )
-    ]
     rows: list[dict] = []
     for event in events:
-        result_pdf = _resolve_result_pdf(event)
         result_xml = _resolve_result_xml(event)
+        xml_publication = result_xml.get("publication_timestamp")
+        result_pdf = _resolve_result_pdf(event, result_xml)
         rss_match = _find_rss_match(event, rss_items) if rss_items else None
-        publication_timestamp = (
-            rss_match["publication_timestamp_utc"] if rss_match else None
+        rss_publication = (
+            {
+                "status": "RESULT_TIMESTAMP_VALIDATED",
+                **rss_match,
+            }
+            if rss_match
+            else {
+                "status": "RESULT_TIMESTAMP_INSUFFICIENT",
+                "source_url": RESULT_RSS_URL,
+            }
         )
-        record_date = date.fromisoformat(event["record_date"])
-        following_sessions = [session for session in sessions if session > record_date]
-        next_session = following_sessions[0] if following_sessions else None
-        pit_valid = bool(
-            publication_timestamp
-            and next_session
-            and datetime.fromisoformat(
-                publication_timestamp.replace("Z", "+00:00")
-            ).date() < next_session
+        publication = xml_publication
+        publication_source = "official_result_xml"
+        if publication is None and rss_match:
+            publication = {
+                "source_field": "RSS/pubDate",
+                "time_zone": "UTC",
+                "publication_timestamp_utc": rss_match["publication_timestamp_utc"],
+            }
+            publication_source = "official_result_rss"
+        timestamp_status = (
+            "RESULT_TIMESTAMP_VALIDATED"
+            if publication is not None
+            else "RESULT_TIMESTAMP_INSUFFICIENT"
         )
         rows.append({
             "q019": {
@@ -335,44 +527,23 @@ def run(*, output_path: str | Path) -> dict:
             },
             "result_pdf": result_pdf,
             "result_xml": result_xml,
-            "rss_result_publication": (
-                {
-                    "status": "RESULT_TIMESTAMP_VALIDATED",
-                    **rss_match,
-                }
-                if rss_match
-                else {
-                    "status": "RESULT_TIMESTAMP_INSUFFICIENT",
-                    "source_url": RESULT_RSS_URL,
-                }
-            ),
-            "pit": {
-                "first_following_xnys_session": (
-                    next_session.isoformat() if next_session else None
-                ),
-                "information_timestamp_before_following_session": pit_valid,
+            "rss_result_publication": rss_publication,
+            "result_publication": {
+                "status": timestamp_status,
+                "source": publication_source if publication is not None else None,
+                "timestamp": publication,
             },
+            "pit_status": _event_pit_status(event, publication),
         })
 
-    xml_identity_validated = sum(
-        row["result_xml"]["status"] == "RESULT_XML_IDENTITY_VALIDATED"
-        for row in rows
-    )
-    timestamp_validated = sum(
-        row["rss_result_publication"]["status"] == "RESULT_TIMESTAMP_VALIDATED"
-        for row in rows
-    )
-    pit_validated = sum(
-        row["pit"]["information_timestamp_before_following_session"]
+    validated = sum(
+        row["result_publication"]["status"] == "RESULT_TIMESTAMP_VALIDATED"
         for row in rows
     )
     total = len(rows)
-    ratio = timestamp_validated / total
-    status = (
-        "COVERAGE_VALIDATED"
-        if ratio >= MIN_TIMESTAMP_COVERAGE and pit_validated == total
-        else "DATA_INSUFFICIENT"
-    )
+    ratio = validated / total
+    pit_validated = sum(row["pit_status"] == "PIT_VALIDATED" for row in rows)
+    status = "COVERAGE_VALIDATED" if ratio >= MIN_TIMESTAMP_COVERAGE else "DATA_INSUFFICIENT"
 
     result = {
         "schema_version": "1.0",
@@ -385,15 +556,20 @@ def run(*, output_path: str | Path) -> dict:
         "fixed_population": {
             "source": "Q019 fixed Treasury 10-Year result events",
             "total_events": total,
-            "expected_events": EXPECTED_Q019_EVENTS,
         },
         "sources": {
             "treasury_auction_api": TREASURY_API,
             "official_result_pdf_base": RESULT_PDF_BASE,
+            "official_result_xml_base": RESULT_XML_BASE,
             "official_result_rss": RESULT_RSS_URL,
             "rss_source_status": rss_source_status,
-            "xml_identity_validated_events": xml_identity_validated,
-            "xml_identity_uses_publication_timestamp": False,
+        },
+        "timestamp_convention": {
+            "xml_date_field": "AuctionAnnouncement/AuctionDate",
+            "xml_release_time_field": "AuctionResults/ReleaseTime",
+            "xml_time_zone": RESULT_TIME_ZONE,
+            "xml_field_has_explicit_offset": False,
+            "http_last_modified_used_as_publication_time": False,
         },
         "rss_item_count": len(rss_items),
         "rss_catalog": [
@@ -407,7 +583,7 @@ def run(*, output_path: str | Path) -> dict:
             for item in rss_items
         ],
         "coverage": {
-            "timestamp_validated_events": timestamp_validated,
+            "timestamp_validated_events": validated,
             "timestamp_coverage_ratio": ratio,
             "minimum_required_ratio": MIN_TIMESTAMP_COVERAGE,
             "pit_validated_events": pit_validated,
@@ -449,7 +625,8 @@ def run(*, output_path: str | Path) -> dict:
         "status": result["status"],
         "events": total,
         "rss_items": len(rss_items),
-        "timestamp_validated_events": timestamp_validated,
+        "timestamp_validated_events": validated,
+        "pit_validated_events": pit_validated,
         "coverage_ratio": ratio,
         "fingerprint": result["fingerprint"],
     }, sort_keys=True))
