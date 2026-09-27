@@ -91,7 +91,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T13:46:28.966399+00:00",
+  "generated_at_utc": "2026-09-27T13:49:49.164561+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -174,6 +174,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: preregister T049 fixed candidate batch coverage",
+        "sha": "b75787198aeb3403f7526e936d98a323ad58e61c",
+        "timestamp": "2026-09-27T15:49:38+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "1b0473f6745faa39e4204b27a94da3c5982a93a8",
+        "timestamp": "2026-09-27T13:46:29Z"
+      },
+      {
         "message": "FIX: make canonical status generation diff-check clean",
         "sha": "9463af2e32758c11e6a606bae1a2dfc441c7c59c",
         "timestamp": "2026-09-27T15:46:15+02:00"
@@ -202,16 +212,6 @@
         "message": "OPS: align canonical current status with latest master",
         "sha": "f1ca3c69ca7aa302272cda0d3a60e2494e378bd5",
         "timestamp": "2026-09-27T15:33:01+02:00"
-      },
-      {
-        "message": "OPS: enable immediate fixed-window candidate discovery trigger",
-        "sha": "ae35ab81934594f28f38af4dde0774f80410beb2",
-        "timestamp": "2026-09-27T15:32:19+02:00"
-      },
-      {
-        "message": "OPS: synchronize current status and trigger fresh self-hosted QA",
-        "sha": "f3ff8b6bfc16cd37df1a96a40d19c984aa9e2a05",
-        "timestamp": "2026-09-27T15:31:10+02:00"
       }
     ]
   },
@@ -272,12 +272,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9463af2e32758c11e6a606bae1a2dfc441c7c59c",
+  "source_master_sha": "b75787198aeb3403f7526e936d98a323ad58e61c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36323550363"
+    "run_id": "36323742802"
   }
 }
