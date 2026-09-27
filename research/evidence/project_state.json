@@ -6,7 +6,7 @@
   "latest_formal_trial": "T-2026-09-26-047R1-PERFORMANCE",
   "latest_trial_status": "NO_PROMOTION_EVIDENCE",
   "next_reserved_trial": null,
-  "next_research_focus": "Q024 historical ReleaseTime gap diagnosis: preserve the 89-event fixed population and investigate only official Treasury timestamp/provenance paths for the remaining 31 events; no performance until the preregistered 89/89 PIT feasibility contract passes.",
+  "next_research_focus": "Q027 T052 fixed-cell failure attribution: diagnostic-only attribution of shared drawdown, OOS/IS and holdout failures; no T052 retuning.",
   "cleanup_status": "completed_h06_and_q017_coverage_hardening",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -518,7 +518,7 @@
     "final_execution_commit": "85acd4e17921a4e2682552bfbe424f17ffaa9322",
     "final_status": "COMPLETED_DISCOVERY_ONLY"
   },
-  "current_queue_task": "AGENT-008",
+  "current_queue_task": "Q-027-T052-FAILURE-ATTRIBUTION-2026-09-27",
   "last_completed_queue_task": "Q-021-TREASURY-AUCTION-FAILURE-MECHANISM-DIAGNOSIS",
   "master_commit_semantics": "last_verified_master_commit_before_this_state_update; this field must not be interpreted as a self-referential current-HEAD field",
   "state_sync_verified_at": "2026-09-27T17:38:47.233Z",
@@ -605,5 +605,15 @@
     "holdout_used": false,
     "remaining_events_without_timestamp": 31
   },
-  "latest_master_commit": "9fe38765a46785d8d4f7a8a42c7c24bea96c674c"
+  "latest_master_commit": "9fe38765a46785d8d4f7a8a42c7c24bea96c674c",
+  "q027": {
+    "status": "COMPLETED_DIAGNOSTIC_ONLY",
+    "source_trial": "T-2026-09-27-052",
+    "source_workflow_run_id": 36338219883,
+    "source_artifact_id": 10938097809,
+    "source_result_fingerprint": "a0a1dc33ce281e7addcf9cf924881b6a30797c1a744d4160fbff91d3384b1b09",
+    "shared_failure_count": 5,
+    "selection_used": false,
+    "holdout_used_for_selection": false
+  }
 }
