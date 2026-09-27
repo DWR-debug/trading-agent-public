@@ -40,12 +40,12 @@ def test_q036_localizes_relative_dataset_paths(tmp_path) -> None:
     import json
     from automation.q036_t056_risk_mechanism_diagnostic import localize_manifest
 
-    dataset = tmp_path / "datasets" / "BSV"
-    dataset.mkdir(parents=True)
-    (dataset / "1d.csv").write_text("timestamp,open,high,low,close,volume\n", encoding="utf-8")
-
     manifest_dir = tmp_path / "coverage" / "T053"
     manifest_dir.mkdir(parents=True)
+
+    dataset = manifest_dir / "datasets" / "BSV"
+    dataset.mkdir(parents=True)
+    (dataset / "1d.csv").write_text("timestamp,open,high,low,close,volume\n", encoding="utf-8")
     manifest = manifest_dir / "coverage_preflight_test.json"
     manifest.write_text(json.dumps({
         "data_snapshot": {
