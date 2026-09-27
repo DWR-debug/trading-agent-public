@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T18:46:41.976699+00:00",
+  "generated_at_utc": "2026-09-27T18:48:36.304749+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: repair T056 report serialization",
+        "sha": "6d049036b0b8528a090c1daac65d0f0932fd4e20",
+        "timestamp": "2026-09-27T20:48:20+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "972269d67c6535fda31d62cd11d681a2032c114e",
+        "timestamp": "2026-09-27T18:46:42Z"
+      },
       {
         "message": "RESEARCH: T056 fixed multi-arm risk/stability performance",
         "sha": "73ebeb3f31e2a1655e03446e31d0e0e0c92a82fc",
@@ -112,16 +122,6 @@
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "de0a1afe8b60023ae69ba37c1755f7e6aa1a1bf9",
         "timestamp": "2026-09-27T18:43:20Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9488e0065851178d3ac6d5b099f18079d66ed995",
-        "timestamp": "2026-09-27T18:42:29Z"
-      },
-      {
-        "message": "FIX: repair Q034 immutable-bar PIT mutation harness",
-        "sha": "7d0a1293a847aab40473d5211c038d9a9da8c8d7",
-        "timestamp": "2026-09-27T20:42:14+02:00"
       }
     ]
   },
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "73ebeb3f31e2a1655e03446e31d0e0e0c92a82fc",
+  "source_master_sha": "6d049036b0b8528a090c1daac65d0f0932fd4e20",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36341895250"
+    "run_id": "36342007356"
   }
 }
