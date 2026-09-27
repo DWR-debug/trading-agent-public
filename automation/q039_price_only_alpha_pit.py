@@ -1,4 +1,5 @@
 """Q039 fixed price-only alpha PIT mutation harness."""
+# Trigger-only maintenance change; research contract is unchanged.
 from __future__ import annotations
 
 import argparse
