@@ -103,7 +103,9 @@ jobs:
 
       - name: Stop idle lane
         if: steps.request.outputs.run != 'true'
-        run: echo "Lane idle; no agent session consumed."
+        run: |
+          echo "Lane idle; no agent session consumed."
+          echo "No Copilot session or paid usage is claimed."
 
       - name: Prepare isolated branch
         if: steps.request.outputs.run == 'true'

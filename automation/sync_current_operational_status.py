@@ -31,12 +31,27 @@ def _git(*args: str) -> str:
 
 
 def _recent_commits(limit: int = 8) -> list[dict[str, str]]:
-    output = _git("log", f"-{limit}", "--format=%H%x09%aI%x09%s", "master")
-    rows = []
-    for line in output.splitlines():
-        sha, timestamp, message = line.split("\t", 2)
-        rows.append({"sha": sha, "timestamp": timestamp, "message": message})
-    return rows
+    last_error: subprocess.CalledProcessError | None = None
+    for ref in ("master", "origin/master", "HEAD"):
+        try:
+            output = _git(
+                "log",
+                f"-{limit}",
+                "--format=%H%x09%aI%x09%s",
+                ref,
+            )
+        except subprocess.CalledProcessError as exc:
+            last_error = exc
+            continue
+        rows = []
+        for line in output.splitlines():
+            sha, timestamp, message = line.split("\t", 2)
+            rows.append(
+                {"sha": sha, "timestamp": timestamp, "message": message}
+            )
+        return rows
+    assert last_error is not None
+    raise last_error
 
 
 def _read_queue_files() -> list[dict[str, str]]:

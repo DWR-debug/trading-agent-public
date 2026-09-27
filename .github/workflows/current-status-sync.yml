@@ -131,7 +131,7 @@ jobs:
             git commit -m "OPS: synchronize current operational status"
 
             git fetch origin master
-            remote_master_sha="$(git rev-parse origin/master)"
+            remote_master_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
             if [ "${remote_master_sha}" != "${source_master_sha}" ]; then
               echo "STATUS_SYNC_REMOTE_MOVED_BEFORE_PUSH remote=${remote_master_sha} source=${source_master_sha}"
               continue

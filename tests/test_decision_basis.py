@@ -15,8 +15,8 @@ def test_decision_basis_is_current_and_separates_fact_from_next_action():
     assert "Was wissen wir?" in md
     assert "Was wissen wir nicht?" in md
     assert "Nächste Aktion" in md
-    assert payload["current_stage"] == "Q026_DATA_INVALID_T047R1_CLOSED"
-    assert payload["next_action"].startswith("Run AGENT-008 and AGENT-012 in parallel; repair current CI/state freshness")
+    assert payload["current_stage"] == "T052_FORMAL_EXECUTION_BLOCKED_BY_CI_REGRESSIONS"
+    assert payload["next_action"].startswith("Repair current CI regressions blocking T052; then rerun the already-authorized fixed-rule T052 performance evaluation")
     assert payload["invariants"] == {
         "paper_only": True,
         "live_trading_enabled": False,

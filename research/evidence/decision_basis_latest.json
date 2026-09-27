@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "recorded_on": "2026-09-27",
   "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
-  "current_stage": "T051_PIT_PASSED_NO_PERFORMANCE_EVIDENCE",
+  "current_stage": "T052_FORMAL_EXECUTION_BLOCKED_BY_CI_REGRESSIONS",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
@@ -56,7 +56,10 @@
     "AGENT-022 paper-forward locking/resume hardening merged as PR #400 after bounded Copilot CLI execution and focused regression/safety checks.",
     "AGENT-024 unattended Windows paper-forward review merged as PR #402; remaining F-01/F-05/F-06 are design/engineering work, not a research result.",
     "Current status synchronizer includes a stale-master fail-closed guard; agent scope gate now rechecks staged state after git add.",
-    "Current hosted Continuous QA remains pending/queued; no current full-suite QA pass is claimed."
+    "Current hosted Continuous QA remains pending/queued; no current full-suite QA pass is claimed.",
+    "T052 formal authorization was created for the unchanged SMA 50/200 and 12-1 Top-2 fixed-rule study on T049/T050; no holdout selection or promotion is permitted.",
+    "T052 one-shot workflow run=36337772377 reached a real hosted x64 job, passed authorization/safety/provenance/dependency setup, then stopped at the full CI suite with 1005 passed and 11 technical regression failures; no T052 performance computation occurred.",
+    "Coverage Candidate Search workflow=36337742416 completed successfully; its coverage-only artifact=10938310438 recorded BIV, BSV, FAN, JNK, UDN, VCLT and VGIT as coverage-valid candidates in the fixed source-order pool. No performance selection occurred."
   ],
   "implications": [
     "T047R1 did not satisfy the unchanged evidence contract; Q020 is not reopened.",
@@ -74,7 +77,7 @@
     "whether the unchanged SMA 50/200 mechanism satisfies the full Research/Holdout/risk gates on the fresh T049/T050 universes",
     "whether the unchanged 12-1 Top-2 cross-sectional momentum mechanism satisfies the same fixed evidence contract on the fresh T049/T050 universes"
   ],
-  "next_action": "First refresh the current hosted QA baseline to the current master. Then create a frozen, ex-ante performance preregistration for the unchanged SMA 50/200 and 12-1 Top-2 mechanisms on T049/T050, with fixed 2,798/700 split, rolling windows and cost-stress gates. No result-based selection is permitted.",
+  "next_action": "Repair the current CI regressions blocking T052; then rerun the already-authorized fixed-rule T052 performance evaluation. In parallel, keep Q024 restricted to the fixed 31-event historical timestamp gap and continue paper-forward technical QA.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,

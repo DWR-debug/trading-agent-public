@@ -1,3 +1,5 @@
+from automation import fixed_window_candidate_discovery as discovery
+
 
 def test_fixed_window_discovery_skips_symbols_already_claimed_by_universes(monkeypatch, tmp_path):
     timestamps = [f"{year:04d}-01-01T13:30:00+00:00" for year in range(1900, 5400)]
