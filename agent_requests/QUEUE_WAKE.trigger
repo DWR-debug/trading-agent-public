@@ -1,0 +1,7 @@
+QUEUE_WAKE_2026-09-27
+source_master_sha=99ec8f9066d5e0a379ae63c48a7aa554c4a7f472
+purpose=dispatch-next-ready-agent-lanes
+research_computation=false
+performance_selection=false
+promotion=false
+live_execution=false
