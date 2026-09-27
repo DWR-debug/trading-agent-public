@@ -61,7 +61,7 @@ jobs:
           echo [3/6] Installing minimal research dependencies
           if exist "%SITE%" rmdir /s /q "%SITE%"
           mkdir "%SITE%" || exit /b 1
-          "%PY_EXE%" -m pip install --disable-pip-version-check --target "%SITE%" pytest pandas exchange-calendars statsmodels==0.15.0
+          "%PY_EXE%" -m pip install --disable-pip-version-check --target "%SITE%" pytest pandas exchange-calendars statsmodels==0.15.0 pypdf
           if errorlevel 1 exit /b 1
           set "PYTHONPATH=%SITE%;%REPO_SRC%"
 
