@@ -7,6 +7,8 @@ while preserving a protected capital base.
 
 from dataclasses import dataclass
 
+from config import settings
+
 
 class IncomeSimulationError(ValueError):
     """Raised when an income-simulation contract is invalid."""
@@ -14,7 +16,7 @@ class IncomeSimulationError(ValueError):
 
 @dataclass(frozen=True)
 class IncomePolicy:
-    protected_capital_eur: float = 500.0
+    protected_capital_eur: float = settings.HYPOTHETICAL_STARTING_CAPITAL_EUR
     payout_fraction: float = 1.0
     reserve_eur: float = 0.0
     payout_interval_periods: int = 21
