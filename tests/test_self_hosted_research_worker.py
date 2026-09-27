@@ -207,11 +207,11 @@ def test_self_hosted_continuous_qa_is_run_isolated():
         ROOT / ".github" / "workflows" / "self-hosted-continuous-qa.yml"
     ).read_text(encoding="utf-8")
     assert 'set "RUN_KEY=%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"' in text
-    assert 'set "WORK=%RUNNER_TEMP%\\\\trading-agent-continuous-%RUN_KEY%-%LANE%"' in text
-    assert 'set "ARCHIVE=%RUNNER_TEMP%\\\\trading-agent-continuous-%RUN_KEY%-' in text
-    assert 'set "PY_ROOT=%RUNNER_TEMP%\\\\python-3.13.15-nuget-%RUN_KEY%-' in text
-    assert 'set "PY_PKG=%RUNNER_TEMP%\\\\python.3.13.15-%RUN_KEY%-' in text
-    assert 'set "SITE=%RUNNER_TEMP%\\\\python-site-continuous-%RUN_KEY%-' in text
+    assert r'set "WORK=%RUNNER_TEMP%\trading-agent-continuous-%RUN_KEY%-%LANE%"' in text
+    assert r'set "ARCHIVE=%RUNNER_TEMP%\trading-agent-continuous-%RUN_KEY%-' in text
+    assert r'set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-%RUN_KEY%-' in text
+    assert r'set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-%RUN_KEY%-' in text
+    assert r'set "SITE=%RUNNER_TEMP%\python-site-continuous-%RUN_KEY%-' in text
 
 
 def test_continuous_qa_publishes_required_provenance_artifacts():
@@ -277,11 +277,11 @@ def test_continuous_qa_provenance_is_published_from_workspace():
     text = (
         ROOT / ".github" / "workflows" / "self-hosted-continuous-qa.yml"
     ).read_text(encoding="utf-8")
-    assert 'set "PROV_ROOT=%GITHUB_WORKSPACE%\\\\research\\\\runs\\\\self_hosted"' in text
-    assert '"%PROV_ROOT%\\\\continuous_repo_qa_%RUN_KEY%"' in text
-    assert '"%PROV_ROOT%\\\\continuous_data_qa_%RUN_KEY%"' in text
-    assert '"%PROV_ROOT%\\\\continuous_design_qa_%RUN_KEY%"' in text
-    assert '"%PROV_ROOT%\\\\continuous_local_reproduction_%RUN_KEY%"' in text
+    assert r'set "PROV_ROOT=%GITHUB_WORKSPACE%\research\runs\self_hosted"' in text
+    assert r'"%PROV_ROOT%\continuous_repo_qa_%RUN_KEY%"' in text
+    assert r'"%PROV_ROOT%\continuous_data_qa_%RUN_KEY%"' in text
+    assert r'"%PROV_ROOT%\continuous_design_qa_%RUN_KEY%"' in text
+    assert r'"%PROV_ROOT%\continuous_local_reproduction_%RUN_KEY%"' in text
     assert '${{ github.run_attempt }}' in text
 
 def test_continuous_qa_fails_closed_on_missing_provenance_files():
