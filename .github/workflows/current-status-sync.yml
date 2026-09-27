@@ -74,6 +74,12 @@ jobs:
               encoding="utf-8",
           )
           PY
+      - name: Verify master tip before status generation
+        shell: bash
+        run: |
+          set -euo pipefail
+          remote_master_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
+          test "$remote_master_sha" = "$GITHUB_SHA"
       - name: Generate canonical current status
         run: |
           set -euo pipefail
@@ -104,6 +110,15 @@ jobs:
           print("CURRENT_STATUS_SYNC_OK")
           PY
 
+      - name: Verify master tip before status commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          remote_master_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
+          if [ "$remote_master_sha" != "$GITHUB_SHA" ]; then
+            echo "::error::STATUS_SYNC_STALE_MASTER_GUARD remote=${remote_master_sha} source=${GITHUB_SHA}"
+            exit 1
+          fi
       - name: Commit synchronized status
         shell: bash
         run: |
@@ -116,5 +131,4 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/CURRENT_STATUS.md research/evidence/current_operational_state.json
           git commit -m "OPS: synchronize current operational status"
-          git pull --rebase origin master
           git push origin HEAD:master
