@@ -15,7 +15,7 @@
   ],
   "timestamp_rule": "Use the official Offering Announcement document date plus the explicit 'Embargoed Until' time, interpreted in America/New_York and normalized to UTC.",
   "event_matching_rule": "A PDF is accepted only when its official document contains the fixed Q019 CUSIP, exact auction date, and 10-Year Note designation.",
-  "resolution_rule": "For each Q019 event, probe deterministic official TreasuryDirect PDF candidates for each of the preceding 14 calendar dates relative to auction_date, using bounded sequence suffixes 1..8; accept only a PDF matching the fixed Q019 CUSIP and exact auction date.",
+  "resolution_rule": "For each Q019 event, probe deterministic official TreasuryDirect PDF candidates beginning at auction_date minus 7 calendar days, then the remaining preceding dates through 14 days before auction, using bounded sequence suffixes 1..8; accept only a PDF matching the fixed Q019 CUSIP and exact auction date. The order is fixed and not outcome-selected.",
   "missing_source_rule": "Missing or ambiguous official timestamp is TIMESTAMP_INSUFFICIENT; no alternative source may be used to rescue the event.",
   "coverage_rule": {
     "minimum_timestamp_coverage": 1.0,
