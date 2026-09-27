@@ -14,7 +14,20 @@
       "bounded_two_lane_queue": true,
       "control_plane": "automation/autonomous_control_plane.py",
       "copilot_cli_queue": ".github/workflows/agent-request-queue.yml",
-      "current_pending_requests": []
+      "current_pending_requests": [
+        {
+          "issue_number": "407",
+          "lane": "lane0",
+          "request_file": "agent_requests/lane0/AGENT-025.request",
+          "task_id": "AGENT-025"
+        },
+        {
+          "issue_number": "408",
+          "lane": "lane1",
+          "request_file": "agent_requests/lane1/AGENT-026.request",
+          "task_id": "AGENT-026"
+        }
+      ]
     },
     "canonical_data_layer": {
       "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
@@ -54,14 +67,55 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T14:40:59.174528+00:00",
+  "generated_at_utc": "2026-09-27T14:54:04.495493+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
-    "agent_queue_requests": [],
+    "agent_queue_requests": [
+      {
+        "issue_number": "407",
+        "lane": "lane0",
+        "request_file": "agent_requests/lane0/AGENT-025.request",
+        "task_id": "AGENT-025"
+      },
+      {
+        "issue_number": "408",
+        "lane": "lane1",
+        "request_file": "agent_requests/lane1/AGENT-026.request",
+        "task_id": "AGENT-026"
+      }
+    ],
     "default_branch": "master",
-    "open_agent_ready_issues": [],
+    "open_agent_ready_issues": [
+      {
+        "number": 408,
+        "title": "AGENT-026: harden continuous self-hosted paper-forward MTM operation",
+        "updatedAt": "2026-09-27T14:53:20Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/issues/408"
+      },
+      {
+        "number": 407,
+        "title": "AGENT-025: implement T052 fixed-core sleeve performance validation",
+        "updatedAt": "2026-09-27T14:53:50Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/issues/407"
+      }
+    ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: queue AGENT-026 paper-forward MTM operation",
+        "sha": "8022b3fcf6d40af7dd02763d458ced0314c17eba",
+        "timestamp": "2026-09-27T16:53:57+02:00"
+      },
+      {
+        "message": "OPS: queue AGENT-025 T052 fixed-core validation",
+        "sha": "d3895d31bf24695629bc77e1bc485ed39fe2a9a2",
+        "timestamp": "2026-09-27T16:53:53+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f6a8b5bdfd07996704e4839d978f846db3ebcc6f",
+        "timestamp": "2026-09-27T14:40:59Z"
+      },
       {
         "message": "FIX: make current-status sync resilient to status-commit races",
         "sha": "7455ec765a60d5e6b714b0d4f498b7ba2593cc0e",
@@ -86,21 +140,6 @@
         "message": "AGENT: publish verified AGENT-023 control-plane hardening",
         "sha": "036c04ed0be13a9a113290968b761cfb2eb01dbe",
         "timestamp": "2026-09-27T16:37:20+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "de7178e2e6c5fe443d1abb970ccb2855b51968d0",
-        "timestamp": "2026-09-27T14:36:39Z"
-      },
-      {
-        "message": "OPS: synchronize research checkpoint through T051",
-        "sha": "7c91bedc429c24de8e7882fe4cfd0ffbd5dc3de7",
-        "timestamp": "2026-09-27T16:36:27+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "41052ec895c79afda815af9fc9e0c4da6ceb93f8",
-        "timestamp": "2026-09-27T14:34:35Z"
       }
     ]
   },
@@ -161,12 +200,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7455ec765a60d5e6b714b0d4f498b7ba2593cc0e",
+  "source_master_sha": "8022b3fcf6d40af7dd02763d458ced0314c17eba",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36326791773"
+    "run_id": "36327578720"
   }
 }
