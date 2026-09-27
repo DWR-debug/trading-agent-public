@@ -14,7 +14,20 @@
       "bounded_two_lane_queue": true,
       "control_plane": "automation/autonomous_control_plane.py",
       "copilot_cli_queue": ".github/workflows/agent-request-queue.yml",
-      "current_pending_requests": []
+      "current_pending_requests": [
+        {
+          "issue_number": "231",
+          "lane": "lane0",
+          "request_file": "agent_requests/lane0/AGENT-003.request",
+          "task_id": "AGENT-003"
+        },
+        {
+          "issue_number": "335",
+          "lane": "lane1",
+          "request_file": "agent_requests/lane1/AGENT-Q024.request",
+          "task_id": "AGENT-Q024"
+        }
+      ]
     },
     "canonical_data_layer": {
       "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
@@ -54,31 +67,70 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T16:20:10.357094+00:00",
+  "generated_at_utc": "2026-09-27T16:40:25.143832+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
-    "agent_queue_requests": [],
-    "default_branch": "master",
-    "open_agent_ready_issues": [],
-    "open_pull_requests": [
+    "agent_queue_requests": [
       {
-        "baseRefName": "master",
-        "headRefName": "capital/align-income-simulation-2000",
-        "number": 424,
-        "title": "RESEARCH: align income simulation with EUR 2,000 reference",
-        "updatedAt": "2026-09-27T16:15:17Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/424"
+        "issue_number": "231",
+        "lane": "lane0",
+        "request_file": "agent_requests/lane0/AGENT-003.request",
+        "task_id": "AGENT-003"
       },
       {
-        "baseRefName": "master",
-        "headRefName": "research/execute-q017-g3-coverage-first",
-        "number": 416,
-        "title": "RESEARCH: Q017 G3 coverage-first on current master",
-        "updatedAt": "2026-09-27T15:46:04Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/416"
+        "issue_number": "335",
+        "lane": "lane1",
+        "request_file": "agent_requests/lane1/AGENT-Q024.request",
+        "task_id": "AGENT-Q024"
       }
     ],
+    "default_branch": "master",
+    "open_agent_ready_issues": [
+      {
+        "number": 335,
+        "title": "RESEARCH: Q024 auction-result publication timestamp PIT feasibility",
+        "updatedAt": "2026-09-27T16:40:08Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/issues/335"
+      },
+      {
+        "number": 231,
+        "title": "AGENT-003: Independent review of Canonical Data Layer",
+        "updatedAt": "2026-09-27T16:40:05Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/issues/231"
+      }
+    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "QUEUE: dispatch Q024 Treasury timestamp PIT feasibility",
+        "sha": "d827a1ffbbff9a2f94f4cbd5dbf002195d85f575",
+        "timestamp": "2026-09-27T18:40:16+02:00"
+      },
+      {
+        "message": "QUEUE: dispatch AGENT-003 canonical data layer review",
+        "sha": "0fbafffb02ece6110d297733c58d21442192347a",
+        "timestamp": "2026-09-27T18:40:12+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "4a647691408bbd8a32f2d76d3d3980e475744b43",
+        "timestamp": "2026-09-27T16:39:47Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "32cb968bdd8f64ab36a992175dfefcd0ac1796e7",
+        "timestamp": "2026-09-27T16:27:11Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "08f15ba796ac899b779044d54a0b96ad3798aaff",
+        "timestamp": "2026-09-27T16:25:37Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "7b737bb9639d5b58e7d6365dbee312ecf395a975",
+        "timestamp": "2026-09-27T16:20:10Z"
+      },
       {
         "message": "TEST: focused EUR 2,000 capital accounting QA (#427)",
         "sha": "7d2186fd2f4f79aaee678a8fc9b2bacf2ec7137b",
@@ -88,36 +140,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "cd0a57ee12d1c28f441d9c3609d197922d534318",
         "timestamp": "2026-09-27T16:17:47Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4cfc6ac43e10b458a09927ee9bde58e09b238ea6",
-        "timestamp": "2026-09-27T16:17:35Z"
-      },
-      {
-        "message": "RESEARCH: add fixed 15m directional discovery simulation",
-        "sha": "864051309cf369cde812453e834e4f9a6dd3e781",
-        "timestamp": "2026-09-27T18:17:30+02:00"
-      },
-      {
-        "message": "FIX: accept valid Q017 coverage summary contract (#426)",
-        "sha": "b0a4b87279e13f95395cf8553f7d3ffd13c8ad39",
-        "timestamp": "2026-09-27T18:17:21+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1c1a7f307e4106f11fee944fdf4cadd178217aef",
-        "timestamp": "2026-09-27T16:16:41Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "044a31c111d026b069dbfe05ea5ff69d1e08ce84",
-        "timestamp": "2026-09-27T16:16:29Z"
-      },
-      {
-        "message": "RESEARCH: add fixed intraday discovery simulations",
-        "sha": "0fa73774b7b1b445c5bd8a641f660e490a9ae9ef",
-        "timestamp": "2026-09-27T18:16:20+02:00"
       }
     ]
   },
@@ -179,12 +201,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7d2186fd2f4f79aaee678a8fc9b2bacf2ec7137b",
+  "source_master_sha": "d827a1ffbbff9a2f94f4cbd5dbf002195d85f575",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36332845727"
+    "run_id": "36334092714"
   }
 }
