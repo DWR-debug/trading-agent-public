@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T18:07:05.973423+00:00",
+  "generated_at_utc": "2026-09-27T18:08:39.782057+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -93,6 +93,16 @@
     ],
     "recent_commits": [
       {
+        "message": "EVIDENCE: reconcile T052 formal result",
+        "sha": "563fac0932289816cf94a7df60b04e50b95d4ffb",
+        "timestamp": "2026-09-27T20:08:26+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4198f0ba23c2b1d12c7559cfea8284477c92487d",
+        "timestamp": "2026-09-27T18:07:06Z"
+      },
+      {
         "message": "OPS: trigger one-shot T052 evidence reconciliation",
         "sha": "632057a7db2a3bff9e2f0c377df3bf1b7fc47daa",
         "timestamp": "2026-09-27T20:06:52+02:00"
@@ -121,16 +131,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "5dd1bc85a837c71ba9c5bcd37e870aa5c51b122c",
         "timestamp": "2026-09-27T17:53:50Z"
-      },
-      {
-        "message": "FIX: make T052 evidence reconciliation idempotent",
-        "sha": "648b06cf31f83d756dc32c4f0cf36e728711d1fa",
-        "timestamp": "2026-09-27T19:53:33+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a99dc23175e95e7f15df6ed6ef6601d377a338db",
-        "timestamp": "2026-09-27T17:51:42Z"
       }
     ]
   },
@@ -151,9 +151,9 @@
   },
   "schema_version": "1.0",
   "scientific_state_recorded": {
-    "decision_basis_stage": "Q028_T052_CROSS_UNIVERSE_DECOMPOSITION_COMPLETED",
-    "latest_formal_status": "NO_PROMOTION_EVIDENCE",
-    "latest_formal_trial": "T-2026-09-26-047R1-PERFORMANCE",
+    "decision_basis_stage": "T052_FIXED_CORE_EVALUATED",
+    "latest_formal_status": "EVIDENCE_RECORDED_NO_AUTOMATIC_PROMOTION",
+    "latest_formal_trial": "T-2026-09-27-052",
     "next_research_focus_recorded": "Q028 completed: fixed T052 failure pattern is largely shared within each universe; next diagnostic should isolate common risk/stability mechanisms without selecting universes or sleeves.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
@@ -192,12 +192,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "632057a7db2a3bff9e2f0c377df3bf1b7fc47daa",
+  "source_master_sha": "563fac0932289816cf94a7df60b04e50b95d4ffb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36339441547"
+    "run_id": "36339540817"
   }
 }
