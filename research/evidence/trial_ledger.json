@@ -5037,7 +5037,85 @@
         "orders_enabled": false,
         "automatic_promotion": false
       }
+    },
+    {
+      "trial_id": "T-2026-09-27-062",
+      "recorded_at": "2026-09-27T20:20:00Z",
+      "status": "source_feasibility_completed",
+      "research_family": "q040_official_event_source_feasibility",
+      "hypothesis": {
+        "text": "Assess fixed official event-source accessibility and timestamp semantics before any performance use."
+      },
+      "data_scope": {
+        "fixed_probe_count_per_source": 1,
+        "workflow_run_id": 36347185905,
+        "artifact_id": 10940503878,
+        "artifact_digest": "sha256:f3426606ad9258b3c5011a870a46fe44ede53c55a39646d282a61c16688e9767",
+        "sources": [
+          "SEC",
+          "BLS",
+          "BEA",
+          "CFTC",
+          "TREASURY"
+        ],
+        "performance_evaluation": false,
+        "holdout_evaluation": false
+      },
+      "search_scope": {
+        "raw_trial_count": 5,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "asset_search": false,
+        "horizon_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "none; source/PIT feasibility only",
+        "selection_metric": null,
+        "holdout_used_for_selection": false
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "COMPLETED_SOURCE_FEASIBILITY",
+        "scientific_outcome": "SOURCE_ACCESS_VALIDATED_NO_PIT_PERFORMANCE_EVIDENCE",
+        "workflow_run_id": 36347185905,
+        "workflow_conclusion": "success",
+        "artifact_id": 10940503878,
+        "artifact_digest": "sha256:f3426606ad9258b3c5011a870a46fe44ede53c55a39646d282a61c16688e9767",
+        "result_fingerprint": "a4a1ad37a6a0486861fb25b84914a9401b672e40ca25cb3c8d123825513f4f27",
+        "source_access": {
+          "SEC": "ACCESSIBLE_HTTP_200",
+          "BLS": "ACCESSIBLE_HTTP_200",
+          "BEA": "ACCESSIBLE_HTTP_200",
+          "CFTC": "ACCESSIBLE_HTTP_200",
+          "TREASURY": "ACCESSIBLE_HTTP_200"
+        },
+        "pit_classes": {
+          "SEC": "ACCEPTANCE_BOUND_PENDING_PUBLIC_AVAILABILITY_GAP",
+          "BLS": "SCHEDULE_ONLY",
+          "BEA": "SCHEDULE_ONLY",
+          "CFTC": "SCHEDULE_ONLY_UNLESS_HISTORICAL_RELEASE_TIME_REPRODUCED",
+          "TREASURY": "SOURCE_ACCESSIBLE_TIMESTAMP_FEASIBILITY_REQUIRES_Q023_Q024_CHAIN"
+        },
+        "selection_used": false,
+        "holdout_used_for_selection": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
     }
   ],
-  "updated_at": "2026-09-27T20:15:00Z"
+  "updated_at": "2026-09-27T20:20:00Z"
 }
