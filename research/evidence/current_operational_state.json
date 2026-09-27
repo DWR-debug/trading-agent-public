@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T14:10:30.829061+00:00",
+  "generated_at_utc": "2026-09-27T14:11:07.108074+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -114,6 +114,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: wake bounded agent queue",
+        "sha": "6d557b58a2d7c1af6a5dc66090ccb2fcb2852221",
+        "timestamp": "2026-09-27T16:10:55+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "99ec8f9066d5e0a379ae63c48a7aa554c4a7f472",
+        "timestamp": "2026-09-27T14:10:30Z"
+      },
+      {
         "message": "FIX: enforce agent scope guard after staging",
         "sha": "bd262214e20578167bfc16ddbbc0ff494c94e119",
         "timestamp": "2026-09-27T16:10:20+02:00"
@@ -142,16 +152,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "ecb61260e88255a06ea6035ae326d0ee42913376",
         "timestamp": "2026-09-27T13:59:52Z"
-      },
-      {
-        "message": "AGENT: publish verified AGENT-007 orchestration audit",
-        "sha": "27f8183e68d6ef1e03c12db263fbf4b704dfbbca",
-        "timestamp": "2026-09-27T15:59:27+02:00"
-      },
-      {
-        "message": "AGENT: publish verified AGENT-006 self-hosted QA audit",
-        "sha": "d8732f25aa23e93d42900fc4a16376c993c0849f",
-        "timestamp": "2026-09-27T15:59:06+02:00"
       }
     ]
   },
@@ -212,12 +212,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "bd262214e20578167bfc16ddbbc0ff494c94e119",
+  "source_master_sha": "6d557b58a2d7c1af6a5dc66090ccb2fcb2852221",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36324950915"
+    "run_id": "36324985814"
   }
 }
