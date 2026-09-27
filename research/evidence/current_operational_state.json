@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T16:16:29.313318+00:00",
+  "generated_at_utc": "2026-09-27T16:16:41.782422+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [],
@@ -101,6 +101,11 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "044a31c111d026b069dbfe05ea5ff69d1e08ce84",
+        "timestamp": "2026-09-27T16:16:29Z"
+      },
+      {
         "message": "RESEARCH: add fixed intraday discovery simulations",
         "sha": "0fa73774b7b1b445c5bd8a641f660e490a9ae9ef",
         "timestamp": "2026-09-27T18:16:20+02:00"
@@ -134,11 +139,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "5df44624d2816491b2365e2e9d3786df5f2b7b03",
         "timestamp": "2026-09-27T16:10:30Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3b2e23deb133b89fcb57dd7684cd9369757cb8c0",
-        "timestamp": "2026-09-27T16:10:19Z"
       }
     ]
   },
@@ -200,12 +200,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0fa73774b7b1b445c5bd8a641f660e490a9ae9ef",
+  "source_master_sha": "044a31c111d026b069dbfe05ea5ff69d1e08ce84",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36332620013"
+    "run_id": "36332624686"
   }
 }
