@@ -16,12 +16,12 @@ def _assets():
     for s in symbols:
         out[s]=[Bar(100.0) for _ in range(274)]
     # MU 20%, ADBE 10%, CRM 0%; residuals +10,0,-10
-    out["MU"][-1]=Bar(120.0)
-    out["ADBE"][-1]=Bar(110.0)
-    out["CRM"][-1]=Bar(100.0)
-    # ABT 10%, BMY 5%, BAX 0%; residuals +7.5, +2.5, -2.5
-    out["ABT"][-1]=Bar(110.0)
-    out["BMY"][-1]=Bar(105.0)
+    out["MU"][252]=Bar(120.0)
+    out["ADBE"][252]=Bar(110.0)
+    out["CRM"][252]=Bar(100.0)
+    # ABT 10%, BMY 5%, BAX 0%; residuals +5, 0, -5
+    out["ABT"][252]=Bar(110.0)
+    out["BMY"][252]=Bar(105.0)
     return out
 
 def test_h06_residual_ranking_is_sector_neutral():
