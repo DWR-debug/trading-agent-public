@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T15:26:01.956467+00:00",
+  "generated_at_utc": "2026-09-27T15:27:08.410821+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,12 +83,22 @@
       {
         "number": 407,
         "title": "AGENT-025: implement T052 fixed-core sleeve performance validation",
-        "updatedAt": "2026-09-27T15:25:23Z",
+        "updatedAt": "2026-09-27T15:26:02Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/407"
       }
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: trigger T052 exact-master CI",
+        "sha": "7ad163bacaacb209873de568e53209d1798a9be0",
+        "timestamp": "2026-09-27T17:26:54+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "cec52c0dcc89708e5f86788db308d62c561b0ff0",
+        "timestamp": "2026-09-27T15:26:02Z"
+      },
       {
         "message": "FIX: restore valid exact-master CI gate workflow",
         "sha": "37fcc0abbb1882f85262a8a77c3493183a726eb2",
@@ -118,16 +128,6 @@
         "message": "OPS: autonomous agent queue routing",
         "sha": "4bfb5855fc24d4a4b940df58302946bd9b79bcc5",
         "timestamp": "2026-09-27T15:24:13Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d7141bbf1cf3f6b5806e906b7aa3a30cdd96f29b",
-        "timestamp": "2026-09-27T15:24:10Z"
-      },
-      {
-        "message": "OPS: remove completed Copilot queue request",
-        "sha": "eed82ffdc6f42574762463fc777a03b219612d89",
-        "timestamp": "2026-09-27T17:24:02+02:00"
       }
     ]
   },
@@ -188,12 +188,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "37fcc0abbb1882f85262a8a77c3493183a726eb2",
+  "source_master_sha": "7ad163bacaacb209873de568e53209d1798a9be0",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36329520623"
+    "run_id": "36329587492"
   }
 }
