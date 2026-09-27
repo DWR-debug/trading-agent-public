@@ -1,6 +1,13 @@
 name: Autonomous Resource Control Plane
 
 on:
+  push:
+    branches:
+      - master
+    paths:
+      - "agent_requests/**"
+      - ".github/workflows/agent-request-queue.yml"
+      - ".github/workflows/autonomous-control-plane.yml"
   schedule:
     - cron: "*/10 * * * *"
   workflow_dispatch:
