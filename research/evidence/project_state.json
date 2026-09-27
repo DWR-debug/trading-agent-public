@@ -1,12 +1,12 @@
 {
   "schema_version": "1.0",
-  "updated": "2026-09-26",
+  "updated": "2026-09-27",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "5ef8730bbb55f86701fc0a8b9c88e152fe83291c",
-  "latest_formal_trial": "T-2026-09-26-046R1-PERFORMANCE",
+  "master_commit": "d50aac970bccd0b3a0ce7c9e70c0304a55580fe3",
+  "latest_formal_trial": "T-2026-09-26-047R1-PERFORMANCE",
   "latest_trial_status": "NO_PROMOTION_EVIDENCE",
   "next_reserved_trial": null,
-  "next_research_focus": "Q022 failure-followup design round derived from Q021; unranked candidate mechanisms only, no Q020 retuning or holdout selection.",
+  "next_research_focus": "Parallel: AGENT-008 orthogonal income-oriented hypothesis design plus a new paper-only shadow/forward execution path; then formalize one fresh, symbol-disjoint fixed-rule validation candidate only after coverage/PIT/preregistration.",
   "cleanup_status": "completed_h06_and_q017_coverage_hardening",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -25,14 +25,14 @@
       "artifact_id": 10911971419,
       "artifact_sha256": "sha256:b32f2cffdff27091187d7f7f7ac6759c23b2e141081f6d9c9143e1c790d73da9"
     },
-    "current_master_qa_run_id": 36259124979,
-    "current_master_qa_run_status": "success",
+    "current_master_qa_run_id": null,
+    "current_master_qa_run_status": "pending_after_governance_changes",
     "current_master_qa_failure_run_id": 36254919993,
-    "current_master_qa_verified": true,
-    "current_master_qa_tests_passed": 881,
-    "current_master_qa_warnings": 2,
-    "current_master_qa_ast_syntax": "success",
-    "current_master_qa_safety_invariants": "success"
+    "current_master_qa_verified": false,
+    "current_master_qa_tests_passed": null,
+    "current_master_qa_warnings": null,
+    "current_master_qa_ast_syntax": "pending",
+    "current_master_qa_safety_invariants": "pending"
   },
   "active_research_model": {
     "discovery": "wide_search_on_fixed_ex_ante_hypothesis_catalog",
@@ -51,7 +51,7 @@
     "free_credit_only": true,
     "credit_balance_auto_detected": false,
     "policy": "free_agent_credits_for_hypothesis_generation_and_research_design; deterministic_compute_local_only",
-    "current_task": "Q-022-TREASURY-FAILURE-FOLLOWUP-DESIGN",
+    "current_task": "AGENT-008",
     "current_task_scope": "Design-only follow-up from Q021; no performance execution, no holdout selection, no Q020 retuning, no gate changes.",
     "holdout_selection": false,
     "parameter_search": false,
@@ -59,9 +59,10 @@
     "agent_output_is_evidence": false,
     "capital_available": false,
     "paid_copilot_or_paid_coding_agent": false,
-    "resource_policy": "No capital is available for paid external services. Free resources only.",
+    "resource_policy": "Free resources only; bounded Copilot CLI may be used for engineering/research-design assistance, deterministic research stays on reproducible runners.",
     "external_agent_review_issue": 231,
-    "external_agent_execution_verified": false
+    "external_agent_execution_verified": true,
+    "current_agent_note": "Copilot CLI authentication and bounded execution were verified in queue run 125; agent output was initially lost by an untracked-file publication bug, which has been fixed in master. AGENT-008 remains queued for a clean publication run."
   },
   "continuity": {
     "canonical_context": "docs/PROJECT_CONTEXT.md",
@@ -479,7 +480,11 @@
     "q021_status": "COMPLETED",
     "q021_diagnosis_status": "DIAGNOSTIC_ONLY",
     "q021_document": "docs/research_design/AGENT-010-q020-failure-mechanism-diagnosis-2026-09-26.md",
-    "q021_result_fingerprint": "0ee05b7933572b6f5e9307436e87844ff6ca92180d00e4139da0814e231b9952"
+    "q021_result_fingerprint": "0ee05b7933572b6f5e9307436e87844ff6ca92180d00e4139da0814e231b9952",
+    "latest_master_commit": "d50aac970bccd0b3a0ce7c9e70c0304a55580fe3",
+    "agent_queue_hardened_untracked_publication": true,
+    "legacy_copilot_workflow_is_redundant": true,
+    "current_ci_requires_state_refresh": true
   },
   "agent_usage_efficiency": {
     "policy": "deterministic_actions_for_computation; free-agent-use-for-hypothesis-generation_research-design_and-architecture-review",
@@ -506,10 +511,10 @@
     "final_execution_commit": "85acd4e17921a4e2682552bfbe424f17ffaa9322",
     "final_status": "COMPLETED_DISCOVERY_ONLY"
   },
-  "current_queue_task": "Q-022-TREASURY-FAILURE-FOLLOWUP-DESIGN",
+  "current_queue_task": "AGENT-008",
   "last_completed_queue_task": "Q-021-TREASURY-AUCTION-FAILURE-MECHANISM-DIAGNOSIS",
   "master_commit_semantics": "last_verified_master_commit_before_this_state_update; this field must not be interpreted as a self-referential current-HEAD field",
-  "state_sync_verified_at": "2026-09-26T17:30:21Z",
+  "state_sync_verified_at": "2026-09-27T10:53:29.125Z",
   "project_milestone": {
     "name": "FIRST_PRESENTABLE_RESULT",
     "anchored_on": "2026-09-25",
