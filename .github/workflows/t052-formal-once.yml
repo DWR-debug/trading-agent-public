@@ -245,10 +245,6 @@ jobs:
           set -euo pipefail
           git fetch origin master
           git merge --ff-only origin/master
-          if grep -q '"T-2026-09-27-052"' research/evidence/trial_ledger.json; then
-            echo "T052_ALREADY_PUBLISHED"
-            exit 0
-          fi
           cp research/runs/t052_performance/t052_result.md docs/trial_052_fixed_core_sleeve_performance_result_2026_09_27.md
           git add             research/evidence/trial_ledger.json             research/checkpoints/t052_fixed_core_sleeve_performance_2026_09_27.json             research/evidence/project_state.json             research/evidence/decision_basis_latest.json             docs/trial_052_fixed_core_sleeve_performance_result_2026_09_27.md
           git diff --cached --check
