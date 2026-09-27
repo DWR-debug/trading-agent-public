@@ -40,6 +40,20 @@ class AgentDispatchError(ValueError):
     """Raised when an agent-dispatch contract is invalid."""
 
 
+def validate_queued_issue(
+    issue_state: object,
+    *,
+    labels: list[str],
+    is_pull_request: bool,
+) -> None:
+    if issue_state != "open":
+        raise AgentDispatchError("Queued issue is no longer open.")
+    if is_pull_request:
+        raise AgentDispatchError("Queued item is a pull request, not an issue.")
+    if "agent-cli-ready" not in labels:
+        raise AgentDispatchError("Queued issue is no longer labeled agent-cli-ready.")
+
+
 REQUIRED_FALSE_FLAGS = (
     "deterministic_compute",
     "holdout_selection",
@@ -190,7 +204,7 @@ def validate_task(
     return {**normalized, "manifest_fingerprint": fingerprint}
 
 
-def load_event(event_path: Path) -> tuple[int, list[str], str, list[str]]:
+def load_event(event_path: Path) -> tuple[int, list[str], str, list[str], object, bool]:
     payload = json.loads(event_path.read_text(encoding="utf-8"))
     issue = payload.get("issue") or {}
     issue_number = issue.get("number")
@@ -205,7 +219,14 @@ def load_event(event_path: Path) -> tuple[int, list[str], str, list[str]]:
         for item in (issue.get("assignees") or [])
         if isinstance(item, dict) and item.get("login")
     ]
-    return issue_number, labels, body, assignees
+    return (
+        issue_number,
+        labels,
+        body,
+        assignees,
+        issue.get("state"),
+        bool(issue.get("pull_request")),
+    )
 
 
 def main() -> int:
@@ -216,7 +237,13 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
 
-    issue_number, labels, body, assignees = load_event(args.event_json)
+    issue_number, labels, body, assignees, issue_state, is_pull_request = load_event(args.event_json)
+    validate_queued_issue(
+        issue_state,
+        labels=labels,
+        is_pull_request=is_pull_request,
+    )
+
     task = extract_task_metadata(body)
     task["_issue_body_sha256"] = hashlib.sha256(body.encode("utf-8")).hexdigest()
     manifest = validate_task(
