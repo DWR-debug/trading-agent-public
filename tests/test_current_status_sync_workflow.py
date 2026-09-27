@@ -15,3 +15,11 @@ def test_current_status_sync_uses_rest_api_and_real_shell_expansion():
     assert "gh api --silent" not in text
     assert "\\${GITHUB_SHA}" not in text
     assert "\\${RUNNER_TEMP}" not in text
+
+def test_status_sync_uses_checked_out_master_sha_not_push_event_sha():
+    text = Path(".github/workflows/current-status-sync.yml").read_text(encoding="utf-8")
+    assert "git rev-parse HEAD" in text
+    assert 'echo "STATUS_SOURCE_SHA=${checked_out_master_sha}" >> "${GITHUB_ENV}"' in text
+    assert '--source-master-sha "${STATUS_SOURCE_SHA}"' in text
+    assert 'assert d["source_master_sha"] == os.environ["STATUS_SOURCE_SHA"]' in text
+    assert 'test "$remote_master_sha" = "$STATUS_SOURCE_SHA"' in text
