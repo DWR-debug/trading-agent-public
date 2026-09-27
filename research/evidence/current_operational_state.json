@@ -79,7 +79,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T14:31:28.362864+00:00",
+  "generated_at_utc": "2026-09-27T14:34:34.601882+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -113,7 +113,7 @@
       {
         "number": 396,
         "title": "AGENT-024: independent design audit for unattended Windows paper-forward operation",
-        "updatedAt": "2026-09-27T14:21:52Z",
+        "updatedAt": "2026-09-27T14:32:44Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/396"
       },
       {
@@ -137,6 +137,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "AGENT: publish verified AGENT-024 unattended paper-forward review",
+        "sha": "e02d563821c82c838912dbb7dab69396e6c63eac",
+        "timestamp": "2026-09-27T16:34:21+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9aa68657b23034ed65513325378938641665d884",
+        "timestamp": "2026-09-27T14:31:29Z"
+      },
       {
         "message": "EVIDENCE: record T051 fixed-core strategy PIT receipts",
         "sha": "8778dcf7370769a2afd8ceeec7bee68139c41b6a",
@@ -166,16 +176,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "65acd9c61d2e795f8a8155748ec43d84914595c6",
         "timestamp": "2026-09-27T14:25:44Z"
-      },
-      {
-        "message": "AGENT: publish verified AGENT-021 paper-forward provenance hardening",
-        "sha": "ee2750781350714951d0ffb69684b0017a91e135",
-        "timestamp": "2026-09-27T16:25:31+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5c0ac7634bf5eea1c28e4d2b51e6b47ca31f4202",
-        "timestamp": "2026-09-27T14:23:37Z"
       }
     ]
   },
@@ -236,12 +236,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8778dcf7370769a2afd8ceeec7bee68139c41b6a",
+  "source_master_sha": "e02d563821c82c838912dbb7dab69396e6c63eac",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36326216388"
+    "run_id": "36326401861"
   }
 }
