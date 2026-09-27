@@ -6,7 +6,7 @@
   "latest_formal_trial": "T-2026-09-27-056",
   "latest_trial_status": "NO_ARM_PASSED_ALL_T052_GATES",
   "next_reserved_trial": null,
-  "next_research_focus": "Q036 descriptive diagnosis of T056 risk overlays; no tuning or selection.",
+  "next_research_focus": "Q036 descriptive diagnosis of T056 fixed risk overlays; no tuning or selection. Formal Actions execution is currently blocked by the repository's intermittent push-trigger anomaly, not by a scientific or data gate.",
   "cleanup_status": "completed_h06_and_q017_coverage_hardening",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -523,7 +523,7 @@
   "current_queue_task": "Q-036-T056-RISK-MECHANISM-DIAGNOSTIC-2026-09-27",
   "last_completed_queue_task": "Q-035-T052-RISK-STABILITY-PERFORMANCE-2026-09-27",
   "master_commit_semantics": "last_verified_master_commit_before_this_state_update; this field must not be interpreted as a self-referential current-HEAD field",
-  "state_sync_verified_at": "2026-09-27T18:52:00Z",
+  "state_sync_verified_at": "2026-09-27T19:04:00Z",
   "project_milestone": {
     "name": "FIRST_PRESENTABLE_RESULT",
     "anchored_on": "2026-09-25",
@@ -607,7 +607,7 @@
     "holdout_used": false,
     "remaining_events_without_timestamp": 31
   },
-  "latest_master_commit": "9a3c37b7e1db7cd857a303ed61e703fe78846020",
+  "latest_master_commit": "1ad019fb9680c6cf813be50f77ea5dc59309be49",
   "q027": {
     "status": "COMPLETED_DIAGNOSTIC_ONLY",
     "source_trial": "T-2026-09-27-052",
@@ -730,5 +730,18 @@
     "no_arm_passed_all_gates": true,
     "selection_used": false,
     "holdout_used_for_selection": false
+  },
+  "q036": {
+    "status": "PREREGISTERED_DIAGNOSTIC_ONLY",
+    "trial_id": "T-2026-09-27-057",
+    "source_trial_id": "T-2026-09-27-056",
+    "source_workflow_run_id": 36342102919,
+    "source_artifact_id": 10939680447,
+    "source_head_sha": "23e09d478ef4d7c9f866b8fc123b1842c9953ad8",
+    "source_file_blob_sha": "33be8c29281ed7da2d109baad641d28fb91802e3",
+    "performance_execution_authorized": false,
+    "selection_used": false,
+    "holdout_used_for_selection": false,
+    "formal_run_status": "pending_due_actions_trigger_anomaly"
   }
 }
