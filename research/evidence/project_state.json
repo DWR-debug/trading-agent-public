@@ -6,7 +6,7 @@
   "latest_formal_trial": "T-2026-09-27-056",
   "latest_trial_status": "NO_ARM_PASSED_ALL_T052_GATES",
   "next_reserved_trial": null,
-  "next_research_focus": "Q036 descriptive diagnosis of T056 fixed risk overlays; no tuning or selection. Formal Actions execution is currently blocked by the repository's intermittent push-trigger anomaly, not by a scientific or data gate.",
+  "next_research_focus": "Q037 ex-ante Alpha-Mechanism-Architecture: define orthogonal alpha families and a fresh disjoint validation protocol; no performance selection until coverage/PIT prerequisites pass.",
   "cleanup_status": "completed_h06_and_q017_coverage_hardening",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -520,8 +520,8 @@
     "final_execution_commit": "85acd4e17921a4e2682552bfbe424f17ffaa9322",
     "final_status": "COMPLETED_DISCOVERY_ONLY"
   },
-  "current_queue_task": "Q-036-T056-RISK-MECHANISM-DIAGNOSTIC-2026-09-27",
-  "last_completed_queue_task": "Q-035-T052-RISK-STABILITY-PERFORMANCE-2026-09-27",
+  "current_queue_task": "Q-2026-09-27-058-Q037-ALPHA-ARCHITECTURE-DESIGN-2026-09-27",
+  "last_completed_queue_task": "Q-036-T056-RISK-MECHANISM-DIAGNOSTIC-2026-09-27",
   "master_commit_semantics": "last_verified_master_commit_before_this_state_update; this field must not be interpreted as a self-referential current-HEAD field",
   "state_sync_verified_at": "2026-09-27T19:05:30Z",
   "project_milestone": {
@@ -732,7 +732,7 @@
     "holdout_used_for_selection": false
   },
   "q036": {
-    "status": "PREREGISTERED_DIAGNOSTIC_ONLY",
+    "status": "COMPLETED_DIAGNOSTIC_ONLY",
     "trial_id": "T-2026-09-27-057",
     "source_trial_id": "T-2026-09-27-056",
     "source_workflow_run_id": 36342102919,
@@ -742,6 +742,19 @@
     "performance_execution_authorized": false,
     "selection_used": false,
     "holdout_used_for_selection": false,
-    "formal_run_status": "pending_due_actions_trigger_anomaly"
+    "formal_run_status": "success",
+    "workflow_run_id": 36343645414,
+    "workflow_conclusion": "success",
+    "artifact_id": 10939552467,
+    "artifact_digest": "sha256:f6a54ebc1cb5bf8456f2f0b52f52887c6fa231c0a284f9fde006dbba343d5474",
+    "diagnostic_fingerprint": "dd596966b862e0a2baffa067f810ce2dc78d3fd1eb834413f24c55f7c5c020cd"
+  },
+  "q037": {
+    "status": "PREREGISTERED_DESIGN_ONLY",
+    "task_id": "Q-2026-09-27-058-Q037-ALPHA-ARCHITECTURE-DESIGN-2026-09-27",
+    "execution_scope": "DESIGN_ONLY",
+    "performance_execution_authorized": false,
+    "selection_used": false,
+    "holdout_used_for_selection": false
   }
 }
