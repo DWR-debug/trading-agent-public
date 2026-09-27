@@ -3,8 +3,8 @@
   "updated": "2026-09-27",
   "repository": "DWR-debug/trading-agent-public",
   "master_commit": "9fe38765a46785d8d4f7a8a42c7c24bea96c674c",
-  "latest_formal_trial": "T-2026-09-26-047R1-PERFORMANCE",
-  "latest_trial_status": "NO_PROMOTION_EVIDENCE",
+  "latest_formal_trial": "T-2026-09-27-052",
+  "latest_trial_status": "EVIDENCE_RECORDED_NO_AUTOMATIC_PROMOTION",
   "next_reserved_trial": null,
   "next_research_focus": "Q028 completed: fixed T052 failure pattern is largely shared within each universe; next diagnostic should isolate common risk/stability mechanisms without selecting universes or sleeves.",
   "cleanup_status": "completed_h06_and_q017_coverage_hardening",
@@ -93,8 +93,8 @@
     ".github/workflows/self-hosted-continuous-qa.yml",
     ".github/workflows/self-hosted-research-worker-v4.yml"
   ],
-  "current_preregistered_trial": "T-2026-09-25-045",
-  "current_trial_status": "ARCHIVED_REJECTED",
+  "current_preregistered_trial": "T-2026-09-27-052",
+  "current_trial_status": "COMPLETED",
   "engineering_notes": {
     "t039_preregistered": true,
     "coverage_preflight_active": true,
@@ -625,5 +625,18 @@
     "cross_universe_shared_failure_count": 5,
     "selection_used": false,
     "holdout_used_for_selection": false
+  },
+  "t052": {
+    "status": "EVIDENCE_RECORDED_NO_AUTOMATIC_PROMOTION",
+    "workflow_run_id": 36338219883,
+    "source_artifact_id": 10938097809,
+    "result_fingerprint": "a0a1dc33ce281e7addcf9cf924881b6a30797c1a744d4160fbff91d3384b1b09",
+    "all_cells_passed": false,
+    "cells_reported": [
+      "T-2026-09-27-049:cs_momentum_12_1_top2",
+      "T-2026-09-27-049:trend_sma_50_200",
+      "T-2026-09-27-050:cs_momentum_12_1_top2",
+      "T-2026-09-27-050:trend_sma_50_200"
+    ]
   }
 }
