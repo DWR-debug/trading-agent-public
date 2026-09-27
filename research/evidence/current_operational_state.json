@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T17:44:46.238966+00:00",
+  "generated_at_utc": "2026-09-27T17:44:56.433727+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,11 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9d56df3776d95bda796d135a459d23811b5f9afe",
+        "timestamp": "2026-09-27T17:44:46Z"
+      },
       {
         "message": "OPS: re-arm authorized T052 after CI regression repair",
         "sha": "d5cb63196bdad615f7cc4e73f3b9981ad4859dd0",
@@ -117,11 +122,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "c72a9170e548b7900e9b03987a1b1dc7fc2aeecd",
         "timestamp": "2026-09-27T17:39:28Z"
-      },
-      {
-        "message": "OPS: unblock authorized T052 formal execution path",
-        "sha": "5e78fc27b43cd6965fb90595474cf1d91e1814b7",
-        "timestamp": "2026-09-27T19:39:15+02:00"
       }
     ]
   },
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d5cb63196bdad615f7cc4e73f3b9981ad4859dd0",
+  "source_master_sha": "9d56df3776d95bda796d135a459d23811b5f9afe",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36338066150"
+    "run_id": "36338071905"
   }
 }
