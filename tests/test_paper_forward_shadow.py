@@ -1,10 +1,13 @@
 from datetime import datetime, timedelta, timezone
 import json
+import multiprocessing
 
 import pytest
 
+from automation.paper_forward_loop import run_loop, run_once
 from automation.paper_forward_shadow import (
     PaperForwardShadowError,
+    process_lock,
     start_session,
     stop_session,
     update_session,
@@ -45,6 +48,12 @@ def make_candles(count, start=0):
         )
         for index in range(start, count)
     )
+
+
+def _hold_process_lock(state_path, receipt_path, acquired, release):
+    with process_lock(state_path, receipt_path):
+        acquired.set()
+        release.wait(timeout=15)
 
 
 def test_start_and_update_are_reproducible_and_resume_from_saved_portfolio(tmp_path):
@@ -159,3 +168,91 @@ def test_update_rejects_tampered_persisted_fingerprints(tmp_path):
 
         with pytest.raises(PaperForwardShadowError, match="fingerprints"):
             update_session(path, make_candles(6, start=5))
+
+
+def test_resume_polling_uses_validated_state_without_candidate_file(monkeypatch, tmp_path):
+    state_path = tmp_path / "state.json"
+    state = start_session(make_candidate(), make_candles(3), state_path)
+    sleeps = []
+    monkeypatch.setattr(
+        "automation.paper_forward_loop.update_from_binance",
+        lambda *args, **kwargs: state,
+    )
+    monkeypatch.setattr(
+        "automation.paper_forward_loop.time.sleep",
+        lambda seconds: sleeps.append(seconds),
+    )
+
+    run_loop(
+        str(tmp_path / "missing-candidate.json"),
+        str(state_path),
+        max_iterations=2,
+    )
+
+    assert sleeps == [900]
+
+
+@pytest.mark.parametrize(
+    (
+        "locked_state",
+        "locked_receipt",
+        "attempt_state",
+        "attempt_receipt",
+        "has_existing_state",
+    ),
+    [
+        ("same-state.json", "receipt.json", "same-state.json", "receipt.json", False),
+        (
+            "other-state.json",
+            "shared-receipt.json",
+            "second-state.json",
+            "shared-receipt.json",
+            True,
+        ),
+    ],
+)
+def test_competing_process_cannot_start_or_update_locked_state_or_receipt(
+    tmp_path,
+    locked_state,
+    locked_receipt,
+    attempt_state,
+    attempt_receipt,
+    has_existing_state,
+):
+    attempted_state_path = tmp_path / attempt_state
+    if has_existing_state:
+        start_session(make_candidate(), make_candles(3), attempted_state_path)
+
+    context = multiprocessing.get_context("spawn")
+    acquired = context.Event()
+    release = context.Event()
+    process = context.Process(
+        target=_hold_process_lock,
+        args=(
+            str(tmp_path / locked_state),
+            str(tmp_path / locked_receipt),
+            acquired,
+            release,
+        ),
+    )
+    process.start()
+    try:
+        assert acquired.wait(timeout=10)
+        with pytest.raises(PaperForwardShadowError, match="Cannot acquire.*lock"):
+            run_once(
+                str(tmp_path / "candidate-does-not-need-to-exist.json"),
+                str(attempted_state_path),
+                receipt_path=str(tmp_path / attempt_receipt),
+            )
+    finally:
+        release.set()
+        process.join(timeout=10)
+        if process.is_alive():
+            process.terminate()
+            process.join(timeout=5)
+
+    assert process.exitcode == 0
+    with process_lock(
+        attempted_state_path, tmp_path / attempt_receipt
+    ):
+        pass

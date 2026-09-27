@@ -55,8 +55,20 @@ python -m automation.paper_forward_loop `
 ```
 
 The state file is the durable operational record. A process restart resumes
-from the existing state. The loop contains no broker, account credential,
-order, promotion or research-evidence path.
+from the existing state. On resume, the saved, fully validated candidate
+provides the polling interval; the original candidate file is not needed.
+After initialization, a missing state fails closed instead of starting a new
+session. Restore the matching state backup to recover, or deliberately use a
+new state and receipt path to start an independent session.
+
+The process takes exclusive state and receipt locks and exits clearly if
+another process holds either lock. Adjacent `.lock` files are persistent lock
+targets and must not be removed while a paper-forward process may be running.
+An adjacent `.initialized.json` marker preserves the session identity so that
+deleting or moving only the state cannot silently reset the session.
+
+The loop contains no broker, account credential, order, promotion or
+research-evidence path.
 
 ## Safety
 
