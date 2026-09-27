@@ -27,7 +27,7 @@ jobs:
       - name: Checkout exact trigger commit
         uses: actions/checkout@v5
         with:
-          ref: \${{ github.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 1
 
       - uses: actions/setup-python@v6
@@ -94,7 +94,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q039-price-only-alpha-pit-\${{ github.run_id }}
+          name: q039-price-only-alpha-pit-${{ github.run_id }}
           path: |
             research/runs/q039_coverage/
             research/runs/q039_pit/
