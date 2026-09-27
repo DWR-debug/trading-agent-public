@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
-  "recorded_on": "2026-09-26",
+  "recorded_on": "2026-09-27",
   "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
-  "current_stage": "Q021_DIAGNOSTIC_COMPLETED",
+  "current_stage": "Q023_FEASIBILITY_VALIDATED",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
@@ -40,7 +40,12 @@
     "Q020 evaluation remained fixed-rule, holdout-blind and without parameter/asset/threshold/horizon/variant selection.",
     "Q020 outcome=NO_PROMOTION_EVIDENCE; no promotion or live execution followed.",
     "Q021 failure/mechanism diagnosis completed as DIAGNOSTIC_ONLY at docs/research_design/AGENT-010-q020-failure-mechanism-diagnosis-2026-09-26.md using only canonical Q019/Q020 evidence.",
-    "Q021 preserved Q020's NO_PROMOTION_EVIDENCE result and did not perform new P&L, retuning, holdout selection, gate change, promotion or live execution."
+    "Q021 preserved Q020's NO_PROMOTION_EVIDENCE result and did not perform new P&L, retuning, holdout selection, gate change, promotion or live execution.",
+    "Q023 source/PIT feasibility completed successfully: workflow=36309960872; artifact=10929255149; artifact-digest=sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604; result-fingerprint=603cea99d73837d91b638e9d03b3dc515377e434db08c3d6ed571cd33fae7c23.",
+    "Q023 validated official TreasuryDirect release timestamps for all 89 events in the fixed Q019 10-Year population; timestamp coverage=89/89=1.0.",
+    "Q023 found the official document date precedes Q019 record_date for all 89 events, with record_date minus document_date between 9 and 21 calendar days.",
+    "Q023 is feasibility evidence only: no performance, P&L, holdout selection, parameter/asset/threshold/horizon/variant search, gate change, promotion, or live execution occurred.",
+    "Q023 therefore establishes reproducible official release-timestamp availability and a systematic record_date lag; it does not establish that an H2 performance variant has positive alpha or promotion evidence."
   ],
   "implications": [
     "Q019 source/PIT uncertainty is resolved for the fixed Treasury auction series.",
