@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "recorded_on": "2026-09-27",
   "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
-  "current_stage": "Q028_T052_CROSS_UNIVERSE_DECOMPOSITION_COMPLETED",
+  "current_stage": "T052_FIXED_CORE_EVALUATED",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
@@ -61,7 +61,8 @@
     "T052 one-shot workflow run=36337772377 reached a real hosted x64 job, passed authorization/safety/provenance/dependency setup, then stopped at the full CI suite with 1005 passed and 11 technical regression failures; no T052 performance computation occurred.",
     "Coverage Candidate Search workflow=36337742416 completed successfully; its coverage-only artifact=10938310438 recorded BIV, BSV, FAN, JNK, UDN, VCLT and VGIT as coverage-valid candidates in the fixed source-order pool. No performance selection occurred.",
     "Q027 reproduced the fixed T052 gate failure signature across all four pre-specified cells; five gate failures occurred in all four cells, with no ranking, selection, retuning, or holdout selection.",
-    "Q028 found five T052 failure gates shared across both fixed universes and both fixed sleeves; within-universe failure patterns were largely shared by the two sleeves. The result is descriptive and non-causal."
+    "Q028 found five T052 failure gates shared across both fixed universes and both fixed sleeves; within-universe failure patterns were largely shared by the two sleeves. The result is descriptive and non-causal.",
+    "T052 evaluated both unchanged fixed-core sleeves across fresh T049/T050 universes under the pre-registered 2798/700 split and unchanged cost/risk gates; no selection or promotion occurred."
   ],
   "implications": [
     "T047R1 did not satisfy the unchanged evidence contract; Q020 is not reopened.",
@@ -79,7 +80,7 @@
     "whether the unchanged SMA 50/200 mechanism satisfies the full Research/Holdout/risk gates on the fresh T049/T050 universes",
     "whether the unchanged 12-1 Top-2 cross-sectional momentum mechanism satisfies the same fixed evidence contract on the fresh T049/T050 universes"
   ],
-  "next_action": "Design the next diagnostic around common T052 risk/stability mechanisms and Research-to-Holdout shifts; no T052 retuning or selection.",
+  "next_action": "Run a diagnostic-only failure attribution for T052 using the fixed four cells; do not retune T052, select a cell from the holdout, change gates, or reopen Q020.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
