@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "ledger_name": "research_trial_ledger",
-  "generated_at": "2026-09-27T14:34:34Z",
+  "generated_at": "2026-09-27T17:21:00Z",
   "policy": {
     "immutable_history": true,
     "unknown_values_are_null": true,
@@ -3792,6 +3792,85 @@
         "t050_checked_cs_rebalances": 22,
         "performance_authorized": false,
         "holdout_used_for_selection": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
+    },
+    {
+      "trial_id": "Q-2026-09-27-024",
+      "recorded_at": "2026-09-27T17:20:57Z",
+      "status": "data_insufficient",
+      "research_family": "source_feasibility_pit",
+      "hypothesis": {
+        "text": "Historische Q019-Treasury-Auktionsergebnisse liefern reproduzierbare offizielle Ergebnis-Veröffentlichungszeitstempel für die vollständige feste 89-Event-Population."
+      },
+      "data_scope": {
+        "requested_candles": null,
+        "target_candles": null,
+        "research_count": null,
+        "holdout_count": null,
+        "total_events": 89,
+        "timestamp_validated_events": 58,
+        "pit_validated_events": 58,
+        "timestamp_coverage_ratio": 0.651685393258427,
+        "minimum_required_ratio": 1,
+        "fully_symbol_disjoint_validation_set": null,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10936754274
+        ],
+        "workflow_run_id": 36336430520,
+        "artifact_sha256": "sha256:f13a370eac66be8f46302ee3c683956ab273142d69a8e9eff50e1ced5cfdc985",
+        "result_fingerprint": "148c74c9f14589a9f774936411ee86be819a8c99be777c27f670cb9f5cdbd060"
+      },
+      "search_scope": {
+        "raw_trial_count": 0,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "asset_search": false,
+        "horizon_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "none",
+        "selection_family_id": "q024-historical-result-timestamp-feasibility",
+        "selection_metric": null
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": null,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "DATA_INSUFFICIENT",
+        "scientific_outcome": "NO_SCIENTIFIC_OUTCOME",
+        "performance_evaluation": false,
+        "performance_authorized": false,
+        "timestamp_validated_events": 58,
+        "pit_validated_events": 58,
+        "xml_identity_validated_events": 58,
+        "xml_identity_uses_publication_timestamp": true,
+        "remaining_events_without_timestamp": 31,
+        "note": "All 58 timestamp-validated events passed the fixed PIT check. The preregistered 89/89 coverage requirement was not met; no performance evaluation was authorized."
+      },
+      "diagnostics": {
+        "official_source": "https://www.treasurydirect.gov/xml/",
+        "result_timestamp_field": "AuctionResults/ReleaseTime",
+        "release_time_zone": "America/New_York",
+        "http_archive_last_modified_used_as_publication_timestamp": false,
+        "missing_timestamp_range": {
+          "first": "2011-01-20",
+          "last": "2017-02-08"
+        }
       },
       "safety": {
         "paper_only": true,
