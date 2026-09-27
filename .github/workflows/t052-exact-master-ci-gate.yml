@@ -1,0 +1,80 @@
+name: T052 Exact Master CI Gate
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: t052-exact-master-ci-gate
+  cancel-in-progress: false
+
+jobs:
+  gate:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact master
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+
+      - name: Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install full CI dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pandas exchange-calendars pytest statsmodels==0.15.0
+
+      - name: Safety invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          assert settings.AUTOMATIC_PROMOTION is False
+          print("SAFETY INVARIANTS OK")
+          PY
+
+      - name: Full test suite
+        run: python -m pytest -q
+
+      - name: Project integrity
+        run: python automation/project_integrity_check.py
+
+      - name: Project-state freshness
+        run: python automation/project_state_freshness_check.py
+
+      - name: Agent usage ledger
+        run: python automation/agent_usage.py research/evidence/agent_usage_ledger.json
+
+      - name: Canonical master provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin master
+          actual="$(git rev-parse origin/master)"
+          if [ "$actual" != "${GITHUB_SHA}" ]; then
+            echo "MASTER_MOVED_DURING_CI"
+            echo "expected=${GITHUB_SHA}"
+            echo "actual=$actual"
+            exit 1
+          fi
+          echo "EXACT_MASTER_SHA=${GITHUB_SHA}"
+
+      - name: Report exact gate
+        shell: bash
+        run: |
+          echo "T052_EXACT_MASTER_CI_GATE=PASS"
+          echo "SOURCE_SHA=${GITHUB_SHA}"
