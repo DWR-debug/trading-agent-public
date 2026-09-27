@@ -13,7 +13,7 @@ on:
       - automation/paper_forward_shadow.py
       - automation/paper_forward_market_feed.py
       - automation/paper_forward_loop.py
-      - .github/workflows/paper-forward-persistent-mtm.yml
+      - .github/workflows/paper-forward-persistent-mtm-2000.yml
   workflow_dispatch:
 
 permissions:
@@ -61,7 +61,7 @@ jobs:
           assert settings.LIVE_TRADING_ENABLED is False
           assert settings.ORDERS_ENABLED is False
           assert settings.AUTOMATIC_PROMOTION is False
-          print("PAPER FORWARD SAFETY OK")
+          print("PAPER FORWARD 2000 SAFETY OK")
           PY
 
       - name: Run one bounded paper-forward MTM update
@@ -80,7 +80,7 @@ jobs:
           from pathlib import Path
           p = Path("ops/paper_forward_2000/state/shadow.json")
           if not p.exists():
-              raise SystemExit("PAPER_FORWARD_STATE_MISSING")
+              raise SystemExit("PAPER_FORWARD_2000_STATE_MISSING")
           d = json.loads(p.read_text(encoding="utf-8"))
           assert d["schema_version"] == 2
           assert d["mode"] == "PAPER_FORWARD_SHADOW"
@@ -117,7 +117,7 @@ jobs:
           git merge --ff-only origin/master
           git add -A ops/paper_forward_2000/state/
           if git diff --cached --quiet; then
-            echo "PAPER_FORWARD_NO_STATE_CHANGE"
+            echo "PAPER_FORWARD_2000_NO_STATE_CHANGE"
             exit 0
           fi
           git diff --cached --check
