@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T15:12:00.776376+00:00",
+  "generated_at_utc": "2026-09-27T15:13:52.005563+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -89,18 +89,48 @@
       {
         "number": 408,
         "title": "AGENT-026: harden continuous self-hosted paper-forward MTM operation",
-        "updatedAt": "2026-09-27T15:11:46Z",
+        "updatedAt": "2026-09-27T15:13:17Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/408"
       },
       {
         "number": 407,
         "title": "AGENT-025: implement T052 fixed-core sleeve performance validation",
-        "updatedAt": "2026-09-27T15:11:44Z",
+        "updatedAt": "2026-09-27T15:13:15Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/407"
       }
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: remove transient paper-forward lock file",
+        "sha": "b3cdd1cf559ddb2de8dd2f6580da8f0c463d2ba9",
+        "timestamp": "2026-09-27T17:13:44+02:00"
+      },
+      {
+        "message": "OPS: remove transient paper-forward lock file",
+        "sha": "440ce4ba723a66ce1c751ccc930e8e177bcbb97a",
+        "timestamp": "2026-09-27T17:13:40+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "7bd87cf0fb59809de12d2806bb27c1f13e633e85",
+        "timestamp": "2026-09-27T15:13:07Z"
+      },
+      {
+        "message": "FIX: persist initial MTM state without requiring feed receipt",
+        "sha": "fb897f7ce77f75f2bb3bf73a25ff2500257b04e9",
+        "timestamp": "2026-09-27T17:12:59+02:00"
+      },
+      {
+        "message": "FIX: persist initial MTM state without requiring feed receipt",
+        "sha": "fb60e28bd90bce69a7088393b72d953815f138b3",
+        "timestamp": "2026-09-27T17:12:54+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "1d776c5921eb5c6c767862bae1e9dc3f2cf03c00",
+        "timestamp": "2026-09-27T15:12:01Z"
+      },
       {
         "message": "OPS: synchronize current operational status",
         "sha": "7076c1d83f5a7449314742f57ef801df5a2ed401",
@@ -110,36 +140,6 @@
         "message": "OPS: add owner-gated Copilot queue manual trigger",
         "sha": "00e259a2ba1c8c6d83dd857c7e6b9cac63af2245",
         "timestamp": "2026-09-27T17:11:39+02:00"
-      },
-      {
-        "message": "OPS: add owner-gated paper-forward manual trigger",
-        "sha": "cdb5a9ef2044cf7f0bb7dc3017c80ea87f565150",
-        "timestamp": "2026-09-27T17:11:37+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e98b86319ada61ad214d62bd14fee239e740eda4",
-        "timestamp": "2026-09-27T15:10:51Z"
-      },
-      {
-        "message": "OPS: nudge Copilot lane1 AGENT-026",
-        "sha": "e35d157121652a03a4af766a3c9b44206c8ea418",
-        "timestamp": "2026-09-27T17:10:43+02:00"
-      },
-      {
-        "message": "OPS: nudge Copilot lane0 AGENT-025",
-        "sha": "f8f0ebe5eca46747aedbb8c16158a5e2668f4acc",
-        "timestamp": "2026-09-27T17:10:40+02:00"
-      },
-      {
-        "message": "OPS: trigger persistent paper-forward MTM run",
-        "sha": "40b6c47bed5e0e075982375b5c08d0c355cf4221",
-        "timestamp": "2026-09-27T17:10:38+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e4e05b71981429d849d63dabd8238545ee0b3612",
-        "timestamp": "2026-09-27T15:01:37Z"
       }
     ]
   },
@@ -200,12 +200,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7076c1d83f5a7449314742f57ef801df5a2ed401",
+  "source_master_sha": "b3cdd1cf559ddb2de8dd2f6580da8f0c463d2ba9",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36328653523"
+    "run_id": "36328775258"
   }
 }
