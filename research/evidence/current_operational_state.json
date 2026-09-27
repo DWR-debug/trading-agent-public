@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T19:02:49.208356+00:00",
+  "generated_at_utc": "2026-09-27T19:04:05.965705+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "STATE: synchronize Q036 project status",
+        "sha": "2c165171c1c102117c071c35245d0249274c5e11",
+        "timestamp": "2026-09-27T21:03:53+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "1414793a7344a5af9f83e289fe1d87bc4f5d9810",
+        "timestamp": "2026-09-27T19:02:49Z"
+      },
       {
         "message": "OPS: refresh Q036 workflow trigger identity",
         "sha": "1ad019fb9680c6cf813be50f77ea5dc59309be49",
@@ -112,16 +122,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "a61db24483fe9ca98cdf09ec59b99f277f1c1c7c",
         "timestamp": "2026-09-27T18:59:09Z"
-      },
-      {
-        "message": "FIX: bind Q036 to exact T056 runner content",
-        "sha": "1f93a5a1d9f389eaa1ad65c6540ad5efd5181ff4",
-        "timestamp": "2026-09-27T20:58:55+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6b16674de77405d492c526669664ee09d5a7276c",
-        "timestamp": "2026-09-27T18:57:58Z"
       }
     ]
   },
@@ -145,7 +145,7 @@
     "decision_basis_stage": "Q036_T056_DIAGNOSTIC",
     "latest_formal_status": "NO_ARM_PASSED_ALL_T052_GATES",
     "latest_formal_trial": "T-2026-09-27-056",
-    "next_research_focus_recorded": "Q036 descriptive diagnosis of T056 risk overlays; no tuning or selection.",
+    "next_research_focus_recorded": "Q036 descriptive diagnosis of T056 fixed risk overlays; no tuning or selection. Formal Actions execution is currently blocked by the repository's intermittent push-trigger anomaly, not by a scientific or data gate.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1ad019fb9680c6cf813be50f77ea5dc59309be49",
+  "source_master_sha": "2c165171c1c102117c071c35245d0249274c5e11",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36342882364"
+    "run_id": "36342970975"
   }
 }
