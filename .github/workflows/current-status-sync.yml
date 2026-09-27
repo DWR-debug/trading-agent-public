@@ -31,31 +31,49 @@ jobs:
 
       - name: Collect live GitHub state
         env:
-          GH_TOKEN: \${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p "\${RUNNER_TEMP}/status"
-          gh pr list --state open --json number,title,url,headRefName,baseRefName,updatedAt > "\${RUNNER_TEMP}/status/open_prs.json"
-          gh issue list --state open --label agent-cli-ready --json number,title,url,updatedAt > "\${RUNNER_TEMP}/status/agent_ready_issues.json"
+          mkdir -p "${RUNNER_TEMP}/status"
+          gh api --silent "/repos/${GITHUB_REPOSITORY}/pulls?state=open&per_page=100" > "${RUNNER_TEMP}/status/open_prs_raw.json"
+          gh api --silent "/repos/${GITHUB_REPOSITORY}/issues?state=open&labels=agent-cli-ready&per_page=100" > "${RUNNER_TEMP}/status/agent_ready_issues_raw.json"
           python - <<'PY'
           import json
           import os
           from pathlib import Path
 
           root = Path(os.environ["RUNNER_TEMP"], "status")
+          prs = json.loads((root / "open_prs_raw.json").read_text(encoding="utf-8"))
+          issues = json.loads((root / "agent_ready_issues_raw.json").read_text(encoding="utf-8"))
           payload = {
-              "open_prs": json.loads((root / "open_prs.json").read_text(encoding="utf-8")),
-              "agent_ready_issues": json.loads(
-                  (root / "agent_ready_issues.json").read_text(encoding="utf-8")
-              ),
+              "open_prs": [
+                  {
+                      "number": item["number"],
+                      "title": item["title"],
+                      "url": item.get("html_url"),
+                      "headRefName": item["head"]["ref"],
+                      "baseRefName": item["base"]["ref"],
+                      "updatedAt": item["updated_at"],
+                  }
+                  for item in prs
+              ],
+              "agent_ready_issues": [
+                  {
+                      "number": item["number"],
+                      "title": item["title"],
+                      "url": item.get("html_url"),
+                      "updatedAt": item["updated_at"],
+                  }
+                  for item in issues
+                  if "pull_request" not in item
+              ],
           }
           (root / "github_state.json").write_text(
               json.dumps(payload, ensure_ascii=False),
               encoding="utf-8",
           )
           PY
-
       - name: Generate canonical current status
         run: |
           set -euo pipefail
