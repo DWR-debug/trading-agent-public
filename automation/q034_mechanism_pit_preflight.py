@@ -75,12 +75,16 @@ def run(root: Path, output: Path) -> dict:
 
         # Mutate only observations after the decision point.
         mutated={s:[Bar(**vars(x)) for x in bars] for s,bars in assets.items()}
-        for series in mutated.values():
+        for symbol, series in mutated.items():
             for future in range(index+1,len(series)):
-                series[future].close*=1.7
-                series[future].open*=0.2
-                series[future].high*=1.3
-                series[future].low*=0.4
+                bar = series[future]
+                series[future] = Bar(
+                    timestamp=bar.timestamp,
+                    open=bar.open*0.2,
+                    high=bar.high*1.3,
+                    low=bar.low*0.4,
+                    close=bar.close*1.7,
+                )
 
         returns_mut={s:_returns(mutated[s]) for s in SYMBOLS}
         portfolio_mut=[
@@ -99,13 +103,14 @@ def run(root: Path, output: Path) -> dict:
         # Explicit next-session OHLC mutation must not affect the decision at index.
         next_mut={s:[Bar(**vars(x)) for x in bars] for s,bars in assets.items()}
         if index+1 < len(next_mut["BSV"]):
-            for series in next_mut.values():
-                series[index+1]=Bar(
-                    timestamp=series[index+1].timestamp,
-                    open=series[index+1].open*9.0,
-                    high=series[index+1].high*9.0,
-                    low=series[index+1].low*0.1,
-                    close=series[index+1].close*0.1,
+            for symbol, series in next_mut.items():
+                bar = series[index+1]
+                series[index+1] = Bar(
+                    timestamp=bar.timestamp,
+                    open=bar.open*9.0,
+                    high=bar.high*9.0,
+                    low=bar.low*0.1,
+                    close=bar.close*0.1,
                 )
         d3=position_lifecycle_exit_trigger(
             next_mut["BSV"],index,highest_close_since_entry=highest
