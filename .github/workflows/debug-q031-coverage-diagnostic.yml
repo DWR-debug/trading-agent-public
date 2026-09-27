@@ -1,0 +1,79 @@
+name: Q031 coverage diagnostic (temporary)
+
+on:
+  push:
+    branches:
+      - debug/q031-coverage-diagnostic-20260927
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  diagnostic:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check pytest statsmodels==0.15.0
+
+      - name: Run Q031 preflight and capture exact failure
+        id: run
+        shell: bash
+        run: |
+          set +e
+          python -m automation.coverage_preflight \
+            --preregistration research/preregistrations/q031_q030_risk_stability_coverage_2026_09_27.json \
+            --output-root research/runs/q031_q030_risk_stability_coverage \
+            > /tmp/q031.log 2>&1
+          status=$?
+          echo "exit_status=$status" >> "$GITHUB_OUTPUT"
+          echo "Q031_PRELIGHT_EXIT=$status"
+          tail -n 400 /tmp/q031.log
+          exit 0
+
+      - name: Publish diagnostic to issue
+        env:
+          GITHUB_TOKEN: ${ secrets.GITHUB_TOKEN $}
+          EXIT_STATUS: ${ steps.run.outputs.exit_status $}
+        shell: python
+        run: |
+          import json
+          import os
+          import urllib.request
+
+          log = open("/tmp/q031.log", encoding="utf-8", errors="replace").read()
+          tail = log[-24000:]
+          body = (
+              "Q031 temporary coverage diagnostic (2026-09-27)\n\n"
+              f"Exit status: {os.environ.get('EXIT_STATUS')}\n\n"
+              "Exact runner output (tail):\n\n"
+              "```text\n"
+              + tail
+              + "\n```"
+          )
+          payload = json.dumps({"body": body}).encode("utf-8")
+          req = urllib.request.Request(
+              "https://api.github.com/repos/DWR-debug/trading-agent-public/issues/343/comments",
+              data=payload,
+              method="POST",
+              headers={
+                  "Authorization": "Bearer " + os.environ["GITHUB_TOKEN"],
+                  "Accept": "application/vnd.github+json",
+                  "X-GitHub-Api-Version": "2022-11-28",
+                  "Content-Type": "application/json",
+              },
+          )
+          with urllib.request.urlopen(req, timeout=30) as response:
+              response.read()
+          print("DIAGNOSTIC_PUBLISHED_TO_ISSUE_343")
