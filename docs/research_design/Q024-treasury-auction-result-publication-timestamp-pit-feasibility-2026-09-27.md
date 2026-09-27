@@ -166,8 +166,3 @@ Treasury dokumentiert die Auction-Results-Timeline und unterscheidet ausdrückli
 zwischen dem Result-Release und späteren Zusatzinformationen. Offizielle
 Auction-Results-PDFs enthalten den `Bid-to-Cover Ratio`-Wert, z.B. die
 10-Year-Note-Ausgabe vom 06.08.2025 für CUSIP 91282CNT4.
-
-
-## Provenance rule
-
-Historische XML-Datei-Header wie `Last-Modified`, `ETag` und `Content-MD5` werden nur als Provenienz gespeichert. `Last-Modified` wird nicht als Veröffentlichungszeitpunkt verwendet. Q024 nutzt für den expliziten Timestamp ausschließlich `AuctionResults/ReleaseTime` plus das zugehörige `AuctionAnnouncement/AuctionDate`.
