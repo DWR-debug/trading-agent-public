@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T17:40:03.686490+00:00",
+  "generated_at_utc": "2026-09-27T17:44:46.238966+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,21 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: re-arm authorized T052 after CI regression repair",
+        "sha": "d5cb63196bdad615f7cc4e73f3b9981ad4859dd0",
+        "timestamp": "2026-09-27T19:44:39+02:00"
+      },
+      {
+        "message": "FIX: repair 11 CI regressions blocking T052",
+        "sha": "7639016d0f348b37b301626351e8b3408293ea53",
+        "timestamp": "2026-09-27T19:44:33+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "0d6e8570e0a6fa9b89c99d8b15824592173f75f3",
+        "timestamp": "2026-09-27T17:40:03Z"
+      },
       {
         "message": "OPS: synchronize current operational status",
         "sha": "7bd4ba5729717360d3357236a45f82ca7ff9bdca",
@@ -107,21 +122,6 @@
         "message": "OPS: unblock authorized T052 formal execution path",
         "sha": "5e78fc27b43cd6965fb90595474cf1d91e1814b7",
         "timestamp": "2026-09-27T19:39:15+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "8320b22b2f2805ecec93bdd86447c77fb6f219e3",
-        "timestamp": "2026-09-27T17:39:00Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "6625d2145077d5ffdd0750406b2d3757bc9fcb02",
-        "timestamp": "2026-09-27T17:37:22Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "939dfe5f78bba22bb7e436bb085698b55b5a6d98",
-        "timestamp": "2026-09-27T17:35:46Z"
       }
     ]
   },
@@ -142,7 +142,7 @@
   },
   "schema_version": "1.0",
   "scientific_state_recorded": {
-    "decision_basis_stage": "T051_PIT_PASSED_NO_PERFORMANCE_EVIDENCE",
+    "decision_basis_stage": "T052_FORMAL_EXECUTION_BLOCKED_BY_CI_REGRESSIONS",
     "latest_formal_status": "NO_PROMOTION_EVIDENCE",
     "latest_formal_trial": "T-2026-09-26-047R1-PERFORMANCE",
     "next_research_focus_recorded": "Q024 historical ReleaseTime gap diagnosis: preserve the 89-event fixed population and investigate only official Treasury timestamp/provenance paths for the remaining 31 events; no performance until the preregistered 89/89 PIT feasibility contract passes.",
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7bd4ba5729717360d3357236a45f82ca7ff9bdca",
+  "source_master_sha": "d5cb63196bdad615f7cc4e73f3b9981ad4859dd0",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36337772197"
+    "run_id": "36338066150"
   }
 }
