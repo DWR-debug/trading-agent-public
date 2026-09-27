@@ -83,7 +83,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q026-h2-auction-date-shift-coverage-\${{ github.run_id }}
+          name: q026-h2-auction-date-shift-coverage-${{ github.run_id }}
           path: research/runs/q026_h2_coverage/
           if-no-files-found: warn
           retention-days: 30
