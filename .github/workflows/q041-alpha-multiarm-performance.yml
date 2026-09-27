@@ -1,0 +1,131 @@
+name: Q041 Alpha Multi-Arm Performance
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/preregistrations/q041_alpha_multiarm_performance_2026_09_27.json"
+      - "research/authorizations/q041_alpha_multiarm_performance_2026_09_27.json"
+      - "automation/q041_alpha_multiarm_performance.py"
+      - "tests/test_q041_alpha_multiarm_performance.py"
+      - "automation/q039_price_only_alpha_pit.py"
+      - "automation/coverage_preflight.py"
+      - "automation/candidate_validation_50_50_vol_budget.py"
+      - "automation/cross_asset_trend_replication.py"
+      - "data/canonical_snapshot.py"
+      - "execution/cost_contract.py"
+      - ".github/workflows/q041-alpha-multiarm-performance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-q041-alpha-performance
+  cancel-in-progress: false
+
+jobs:
+  performance:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - name: Checkout exact trigger commit
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check pandas pytest
+
+      - name: Safety and authorization guard
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from config import settings
+          spec=json.loads(Path("research/preregistrations/q041_alpha_multiarm_performance_2026_09_27.json").read_text(encoding="utf-8"))
+          auth=json.loads(Path("research/authorizations/q041_alpha_multiarm_performance_2026_09_27.json").read_text(encoding="utf-8"))
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          assert settings.AUTOMATIC_PROMOTION is False
+          assert auth["authorized"] is True
+          assert auth["execution_scope"] == "FIXED_MULTI_ARM_RESEARCH_PERFORMANCE_ONLY"
+          assert auth["performance_execution_authorized"] is True
+          assert spec["status"] == "PREREGISTERED_PERFORMANCE"
+          assert spec["performance_evaluation"] is True
+          assert spec["governance"]["holdout_used_for_selection"] is False
+          assert spec["governance"]["parameter_search"] is False
+          assert spec["governance"]["asset_search"] is False
+          assert spec["governance"]["family_ranking"] is False
+          print("Q041 SAFETY/AUTH OK")
+          PY
+
+      - name: Q041 contract tests
+        run: python -m pytest -q tests/test_q041_alpha_multiarm_performance.py
+
+      - name: Fresh Q041 coverage
+        run: python -m automation.coverage_preflight --preregistration research/preregistrations/q041_alpha_multiarm_performance_2026_09_27.json --output-root research/runs/q041_coverage
+
+      - name: Q041 PIT gate
+        run: python -m automation.q039_price_only_alpha_pit --universe-root research/runs/q041_coverage/T-2026-09-27-060/datasets --output research/runs/q041_pit/T-2026-09-27-060/pit_report.json
+
+      - name: PIT hard gate
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("research/runs/q041_pit/T-2026-09-27-060/pit_report.json").read_text(encoding="utf-8"))
+          assert d["status"] == "PIT_PASSED"
+          assert d["future_mutation_checks_passed"] is True
+          assert d["next_session_mutation_checks_passed"] is True
+          assert d["performance_evaluation"] is False
+          assert d["selection_used"] is False
+          print("Q041 PIT PASS")
+          PY
+
+      - name: Execute fixed multi-arm performance
+        run: python -m automation.q041_alpha_multiarm_performance --preregistration research/preregistrations/q041_alpha_multiarm_performance_2026_09_27.json --coverage-root research/runs/q041_coverage --output research/runs/q041_performance/T-2026-09-27-060/performance_report.json
+
+      - name: Validate performance governance
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("research/runs/q041_performance/T-2026-09-27-060/performance_report.json").read_text(encoding="utf-8"))
+          assert d["status"] == "COMPLETED"
+          assert d["performance_evaluation"] is True
+          assert d["oos_evaluation"] is True
+          assert d["holdout_evaluation"] is True
+          assert d["selection_used"] is False
+          assert d["holdout_used_for_selection"] is False
+          assert d["family_ranking"] is False
+          assert d["governance"]["promotion_decision"] is False
+          assert d["governance"]["automatic_promotion"] is False
+          assert set(d["arms"]) == {"CONTROL","A1_TSM_CONSENSUS","A2_CS_MOMENTUM_TOP2","A3_RESIDUAL_MOMENTUM_TOP2","A5_LOW_BETA_TOP2"}
+          assert d["safety"] == {"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False}
+          assert all(0 <= d["arms"][arm]["gates_passed"] <= 13 for arm in d["arms"])
+          print("Q041 PERFORMANCE GOVERNANCE PASS")
+          for arm, report in d["arms"].items():
+              print(arm, str(report['gates_passed']) + '/' + str(report['gates_total']), 'ALL=', report['all_gates_passed'])
+          print("REPORT_FINGERPRINT:", d["report_fingerprint"])
+          PY
+
+      - name: Publish Q041 evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q041-alpha-multiarm-performance-${{ github.run_id }}
+          path: |
+            research/runs/q041_coverage/
+            research/runs/q041_pit/
+            research/runs/q041_performance/
+          if-no-files-found: error
+          retention-days: 30
