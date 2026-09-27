@@ -9,7 +9,7 @@ def test_q031_universe_is_fixed() -> None:
     universe = get_universe("validation_2026_09_27_q030_risk_stability_coverage")
     assert universe.symbols == ("BSV", "FAN", "JNK", "UDN", "VCLT", "VGIT", "SCHR")
     assert universe.interval == "1d"
-    assert universe.target_count == 3500
+    assert universe.target_count == 4000
 
 
 def test_q031_preregistration_is_coverage_only() -> None:
