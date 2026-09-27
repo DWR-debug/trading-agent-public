@@ -101,7 +101,7 @@ jobs:
                   encoding="utf-8",
               )
           PY
-          if git diff --quiet -- agent_requests; then
+          if git diff --quiet -- agent_requests && git diff --cached --quiet -- agent_requests && [ -z "$(git ls-files --others --exclude-standard -- agent_requests)" ]; then
             echo "No queue mutation required."
             exit 0
           fi
