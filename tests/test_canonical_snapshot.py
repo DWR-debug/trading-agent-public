@@ -205,3 +205,44 @@ def test_canonical_snapshot_direct_layout_can_be_reloaded_and_verified(tmp_path)
     assert all(len(candles) == 8 for candles in loaded.values())
     assert loaded["AAA"][0].timestamp == base
     assert loaded["AAA"][-1].timestamp == base + timedelta(days=7)
+
+
+def test_load_frozen_snapshot_accepts_lowercase_coverage_status(tmp_path):
+    from data.canonical_snapshot import load_frozen_snapshot
+
+    base = datetime(2020, 1, 1, tzinfo=timezone.utc)
+    root = tmp_path / "lowercase_status"
+    dataset = root / "datasets"
+    dataset.mkdir(parents=True)
+    bars = [Bar(base + timedelta(days=i), 100.0 + i) for i in range(8)]
+
+    import csv
+    for symbol in ("AAA", "BBB"):
+        path = dataset / f"{symbol}.csv"
+        with path.open("w", newline="", encoding="utf-8") as handle:
+            writer = csv.writer(handle)
+            writer.writerow(["timestamp","open","high","low","close","volume"])
+            for bar in bars:
+                writer.writerow([bar.timestamp.isoformat(),bar.open,bar.high,bar.low,bar.close,bar.volume])
+
+    from data.canonical_snapshot import dataset_fingerprint
+    fp = dataset_fingerprint(tuple(
+        type("Candle", (), {
+            "timestamp": b.timestamp, "open": b.open, "high": b.high,
+            "low": b.low, "close": b.close, "volume": b.volume
+        })() for b in bars
+    ))
+    manifest = root / "snapshot_manifest.json"
+    payload = {
+        "status": "coverage_passed",
+        "data_snapshot": {
+            "datasets": [
+                {"symbol":"AAA","path":str(dataset / "AAA.csv"),"candle_count":8,"fingerprint":fp},
+                {"symbol":"BBB","path":str(dataset / "BBB.csv"),"candle_count":8,"fingerprint":fp},
+            ]
+        }
+    }
+    manifest.write_text(__import__("json").dumps(payload), encoding="utf-8")
+    loaded = load_frozen_snapshot(manifest)
+    assert set(loaded) == {"AAA","BBB"}
+    assert len(loaded["AAA"]) == 8
