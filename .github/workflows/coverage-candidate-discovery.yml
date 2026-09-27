@@ -1,0 +1,82 @@
+name: Coverage Candidate Discovery (hosted Python)
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "automation/coverage_candidate_discovery.py"
+      - "research/asset_universes.py"
+      - "data/yahoo_loader.py"
+      - "data/**"
+      - "config/**"
+      - ".github/workflows/coverage-candidate-discovery.yml"
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-coverage-candidate-discovery
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact snapshot
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Hosted Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Safety and coverage discovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          assert settings.AUTOMATIC_PROMOTION is False
+          print("SAFETY INVARIANTS OK")
+          PY
+          python -m automation.coverage_candidate_discovery             --output research/runs/coverage_discovery/t040_candidates.json
+
+      - name: Validate discovery contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path("research/runs/coverage_discovery/t040_candidates.json")
+          d = json.loads(p.read_text(encoding="utf-8"))
+          assert d["performance_evaluation"] is False
+          assert d["holdout_evaluation"] is False
+          assert d["selection_used"] is False
+          assert d["safety"]["paper_only"] is True
+          assert d["safety"]["live_trading_enabled"] is False
+          assert d["safety"]["orders_enabled"] is False
+          assert d["safety"]["automatic_promotion"] is False
+          print("DISCOVERY_CONTRACT_OK")
+          print("COVERAGE_VALID:", d["coverage_valid_candidates"])
+          print("NEXT_DETERMINISTIC_CANDIDATE:", d["next_deterministic_candidate"])
+          print("FINGERPRINT:", d["fingerprint"])
+          PY
+
+      - name: Publish discovery artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: coverage-candidate-discovery-${{ github.run_id }}
+          path: research/runs/coverage_discovery/t040_candidates.json
+          if-no-files-found: error
+          retention-days: 30
