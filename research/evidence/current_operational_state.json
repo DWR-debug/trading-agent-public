@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T17:32:19.080789+00:00",
+  "generated_at_utc": "2026-09-27T17:35:12.918457+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -83,6 +83,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: add authorized one-shot T052 exact-CI dispatcher",
+        "sha": "02e3ee7964c01eb7cceb20d94f773f4dc4cccfa0",
+        "timestamp": "2026-09-27T19:34:23+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "61de2a376bb550b6285b5d4dc845fce8578e4d7c",
+        "timestamp": "2026-09-27T17:32:19Z"
+      },
       {
         "message": "Research authorization: execute T052 formal fixed-core performance",
         "sha": "82b2f9faeee55f6db54a0a13263303213c72224d",
@@ -112,16 +122,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "0f6331a07de4d82a358d1d2f12f8ca31ee75d5cc",
         "timestamp": "2026-09-27T17:24:50Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3aebd4ace62ce8e720748656831aa24c7e256696",
-        "timestamp": "2026-09-27T17:23:35Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "4fd19f41322bd4398aee9f616fcebfe17e69a0b1",
-        "timestamp": "2026-09-27T17:23:27Z"
       }
     ]
   },
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "82b2f9faeee55f6db54a0a13263303213c72224d",
+  "source_master_sha": "02e3ee7964c01eb7cceb20d94f773f4dc4cccfa0",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36337304387"
+    "run_id": "36337445625"
   }
 }
