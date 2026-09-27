@@ -32,7 +32,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m pip install --disable-pip-version-check pandas exchange-calendars pytest statsmodels==0.15.0
+          python -m pip install --disable-pip-version-check pandas exchange-calendars pytest statsmodels==0.15.0 pypdf
 
       - name: Safety invariants
         shell: bash
