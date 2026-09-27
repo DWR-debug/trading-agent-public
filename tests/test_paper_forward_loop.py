@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import pytest
 
@@ -81,7 +82,6 @@ def test_missing_state_after_initialization_does_not_start_a_new_session(
         run_once(str(candidate), str(state))
     assert starts == [state]
 
-from pathlib import Path
 
 def test_self_hosted_once_script_uses_user_profile_and_single_bounded_update():
     script = (
