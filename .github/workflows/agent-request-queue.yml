@@ -173,7 +173,7 @@ jobs:
           rm -f "$RUNNER_TEMP/copilot_cli_primary.log" "$RUNNER_TEMP/copilot_cli.log"
 
           # Primary: GitHub Actions GITHUB_TOKEN, supported for Copilot CLI in Actions.
-          env -u COPILOT_GITHUB_TOKEN run_copilot "$RUNNER_TEMP/copilot_cli_primary.log" copilot --agent=trading-agent-engineer --autopilot --no-ask-user --max-ai-credits=45 --max-autopilot-continues=1 -p "$prompt" --allow-tool='read' --allow-tool='search' --allow-tool='write' --allow-tool='shell(git:*)' --allow-tool='shell(python:*)' --allow-tool='shell(pytest:*)'
+          unset COPILOT_GITHUB_TOKEN\n          run_copilot "$RUNNER_TEMP/copilot_cli_primary.log" copilot --agent=trading-agent-engineer --autopilot --no-ask-user --max-ai-credits=45 --max-autopilot-continues=1 -p "$prompt" --allow-tool='read' --allow-tool='search' --allow-tool='write' --allow-tool='shell(git:*)' --allow-tool='shell(python:*)' --allow-tool='shell(pytest:*)'
           rc=$?
           if [ "$rc" -eq 0 ]; then
             cp "$RUNNER_TEMP/copilot_cli_primary.log" "$RUNNER_TEMP/copilot_cli.log"
