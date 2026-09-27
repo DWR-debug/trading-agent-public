@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T19:04:47.999973+00:00",
+  "generated_at_utc": "2026-09-27T19:13:40.290219+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -84,6 +84,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: repair Q036 diagnostic JSON serialization",
+        "sha": "95e7acf45396577c5d548b2223943d8b12103b8f",
+        "timestamp": "2026-09-27T21:13:28+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "b54a21c0bbb8b994991072bd2a45e4ae5dfe7dec",
+        "timestamp": "2026-09-27T19:08:37Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "2c4cb52af499ebaf7ebb005edf4fa3cff76f4174",
+        "timestamp": "2026-09-27T19:07:23Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ecaf1bc79f9ca095c4e890a10fb131070542e76c",
+        "timestamp": "2026-09-27T19:04:48Z"
+      },
+      {
         "message": "STATE: reconcile stored master head",
         "sha": "e06a4e711022666420cdd7948b22a0e5980918eb",
         "timestamp": "2026-09-27T21:04:34+02:00"
@@ -102,26 +122,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "1414793a7344a5af9f83e289fe1d87bc4f5d9810",
         "timestamp": "2026-09-27T19:02:49Z"
-      },
-      {
-        "message": "OPS: refresh Q036 workflow trigger identity",
-        "sha": "1ad019fb9680c6cf813be50f77ea5dc59309be49",
-        "timestamp": "2026-09-27T21:02:34+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "37ccca902b6acf9585d5b1d46574fe508ad5a288",
-        "timestamp": "2026-09-27T19:01:51Z"
-      },
-      {
-        "message": "TEST: cover Q036 artifact path localization",
-        "sha": "70bf6c05ae5776b295f626d72628714511e3eddc",
-        "timestamp": "2026-09-27T21:01:37+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4f5dcac187f50ab1f778ccccf447efbd4667563e",
-        "timestamp": "2026-09-27T19:00:01Z"
       }
     ]
   },
@@ -183,12 +183,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e06a4e711022666420cdd7948b22a0e5980918eb",
+  "source_master_sha": "95e7acf45396577c5d548b2223943d8b12103b8f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36343013245"
+    "run_id": "36343566514"
   }
 }
