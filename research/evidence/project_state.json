@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "updated": "2026-09-27",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "d50aac970bccd0b3a0ce7c9e70c0304a55580fe3",
+  "master_commit": "71b81bba4e5fa48b14baf58c5e5d759f484ef9ee",
   "latest_formal_trial": "T-2026-09-26-047R1-PERFORMANCE",
   "latest_trial_status": "NO_PROMOTION_EVIDENCE",
   "next_reserved_trial": null,
-  "next_research_focus": "Parallel: AGENT-008 orthogonal income-oriented hypothesis design plus a new paper-only shadow/forward execution path; then formalize one fresh, symbol-disjoint fixed-rule validation candidate only after coverage/PIT/preregistration.",
+  "next_research_focus": "AGENT-014 is merged; perform only coverage-first/PIT validation when an acceptable historical-vintage source is available, maintain the paper-only Shadow/Forward harness separately, and use the self-hosted runner for reproducible QA/research-preparation without changing gates.",
   "cleanup_status": "completed_h06_and_q017_coverage_hardening",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -26,7 +26,7 @@
       "artifact_sha256": "sha256:b32f2cffdff27091187d7f7f7ac6759c23b2e141081f6d9c9143e1c790d73da9"
     },
     "current_master_qa_run_id": null,
-    "current_master_qa_run_status": "pending_after_governance_changes",
+    "current_master_qa_run_status": "pending_after_self_hosted_capacity_hardening",
     "current_master_qa_failure_run_id": 36254919993,
     "current_master_qa_verified": false,
     "current_master_qa_tests_passed": null,
@@ -51,8 +51,8 @@
     "free_credit_only": true,
     "credit_balance_auto_detected": false,
     "policy": "free_agent_credits_for_hypothesis_generation_and_research_design; deterministic_compute_local_only",
-    "current_task": "AGENT-008",
-    "current_task_scope": "Design-only follow-up from Q021; no performance execution, no holdout selection, no Q020 retuning, no gate changes.",
+    "current_task": "SELF-HOSTED-CAPACITY-HARDENING",
+    "current_task_scope": "Increase autonomous self-hosted QA utilization and telemetry; no scientific gate changes, no promotion, no live execution.",
     "holdout_selection": false,
     "parameter_search": false,
     "asset_selection": false,
@@ -62,7 +62,7 @@
     "resource_policy": "Free resources only; bounded Copilot CLI may be used for engineering/research-design assistance, deterministic research stays on reproducible runners.",
     "external_agent_review_issue": 231,
     "external_agent_execution_verified": true,
-    "current_agent_note": "Copilot CLI authentication and bounded execution were verified in queue run 125; agent output was initially lost by an untracked-file publication bug, which has been fixed in master. AGENT-008 remains queued for a clean publication run.",
+    "current_agent_note": "AGENT-014 completed through Copilot CLI queue run 36314871008; PR #345 merged as squash commit 77664831fedcf60d25f65bbd5b32034dbd91e8fe; issue #344 closed. Queue request retired. Self-hosted Continuous QA is now scheduled every 15 minutes with runner-capacity telemetry; shared label trading-agent-research remains ready for additional runner processes.",
     "capital_reference_note": "HYPOTHETICAL_STARTING_CAPITAL_EUR=500.00; simulation/planning reference only; no actual capital is available."
   },
   "continuity": {
@@ -89,7 +89,9 @@
     ".github/workflows/q019-treasury-auction-contract.yml",
     ".github/workflows/agent-dispatch.yml",
     ".github/workflows/q020-treasury-coverage-repair.yml",
-    ".github/workflows/q020-treasury-auction-performance.yml"
+    ".github/workflows/q020-treasury-auction-performance.yml",
+    ".github/workflows/self-hosted-continuous-qa.yml",
+    ".github/workflows/self-hosted-research-worker-v4.yml"
   ],
   "current_preregistered_trial": "T-2026-09-25-045",
   "current_trial_status": "ARCHIVED_REJECTED",
@@ -105,7 +107,7 @@
     "next_trial_candidate_selection": "coverage_only_fixed_pool",
     "t040_formal_completed": true,
     "t040_negative_evidence_archived": true,
-    "current_queue_task": "Q-022-TREASURY-FAILURE-FOLLOWUP-DESIGN",
+    "current_queue_task": "NONE",
     "automatic_formal_execution_requires_preregistration": true,
     "last_completed_queue_task": "Q-021-TREASURY-AUCTION-FAILURE-MECHANISM-DIAGNOSIS",
     "last_completed_diagnosis_fingerprint": "92c981efe0a45c2c3e65d75d46b789ea74e8ca0a439ada9217f190fac84a02ea",
@@ -485,7 +487,11 @@
     "latest_master_commit": "d50aac970bccd0b3a0ce7c9e70c0304a55580fe3",
     "agent_queue_hardened_untracked_publication": true,
     "legacy_copilot_workflow_is_redundant": true,
-    "current_ci_requires_state_refresh": true
+    "current_ci_requires_state_refresh": true,
+    "last_completed_agent_task": "AGENT-014",
+    "last_completed_agent_pr": 345,
+    "last_completed_agent_merge_commit": "77664831fedcf60d25f65bbd5b32034dbd91e8fe",
+    "self_hosted_capacity_mode": "single-process baseline; 15-minute continuous QA; same-label multi-runner scaling supported"
   },
   "agent_usage_efficiency": {
     "policy": "deterministic_actions_for_computation; free-agent-use-for-hypothesis-generation_research-design_and-architecture-review",
