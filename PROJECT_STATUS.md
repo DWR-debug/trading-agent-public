@@ -1,3 +1,21 @@
+# CURRENT EXECUTION CHECKPOINT — Copilot credential correction required; deterministic research path remains active — 2026-09-27
+
+- Copilot integration is operational up to the real CLI authentication call.
+- Verified queue run `36311491768` reached the Copilot CLI with `COPILOT_GITHUB_TOKEN` present and repository access valid, but Copilot returned `Authentication failed`.
+- GitHub's current documentation requires a **user-owned fine-grained PAT** with the **Account → Copilot Requests** permission for PAT-based Copilot CLI authentication; classic PATs are unsupported. citeturn970499search0turn970499search3
+- The queue is fail-safe paused and AGENT-008 is not queued for another automatic attempt. No agent PR or scientific output was produced by the failed authentication attempt.
+- Repository-side fixes are already on master, including explicit secret wiring, token-class preflight, and preserved GH API reporting on auth failure.
+- Q026 remains `DATA_INVALID / NO_SCIENTIFIC_OUTCOME`; its 3,704-session data geometry does not satisfy the already-frozen 4,000-candle request. No performance evaluation occurred.
+- No paid usage is enabled.
+
+## One external action required before Copilot reactivation
+
+Create a new user-owned fine-grained PAT with **Copilot Requests** under **Account** permissions, then replace the repository secret `COPILOT_GITHUB_TOKEN` with that token. Use repository access limited to the public repository where appropriate. Do not use a classic `ghp_` PAT. citeturn970499search0turn970499search2
+
+Safety remains: `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
+
+---
+
 # CURRENT EXECUTION CHECKPOINT — Q025 complete; Q026 coverage blocked on fixed data geometry; Copilot auth verified as blocker — 2026-09-27
 
 **Master:** `85f919860f6949f4f75779903eb08f6ccdf9cd12`
