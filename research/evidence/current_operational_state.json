@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T11:37:11.434026+00:00",
+  "generated_at_utc": "2026-09-28T12:52:25.097558+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,44 +157,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3b6f64e1b40e4c4e048a3adfbcfa77c98d7904ea",
-        "timestamp": "2026-09-28T11:36:52Z"
+        "message": "OPS: retrigger Q070 self-hosted advance after snapshot recovery hardening",
+        "sha": "7b3b347e5b886b1112a21f063ba66edb9e1bfe9d",
+        "timestamp": "2026-09-28T14:51:45+02:00"
       },
       {
-        "message": "TEST: lock Q070 snapshot reconstruction defaults",
-        "sha": "14d5d2233e0fe3b756c1f0e0f11700459ac86b4e",
-        "timestamp": "2026-09-28T13:36:39+02:00"
+        "message": "FIX: self-hosted Q070 auto-advance recovers and persists frozen snapshot",
+        "sha": "2b38d7b6ac1c686cb5a2954f2ba273e5c77ccb42",
+        "timestamp": "2026-09-28T14:51:37+02:00"
       },
       {
-        "message": "FIX: complete Q070 frozen snapshot reconstruction spec",
-        "sha": "3bc3d96f25ad681c56f814de90114530fd57e901",
-        "timestamp": "2026-09-28T13:36:37+02:00"
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "9fefdaf61826ed8a865044350313e984c0987a34",
+        "timestamp": "2026-09-28T12:39:22Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f0594fdff71dde88f4251fe83ea24a3750b07b59",
-        "timestamp": "2026-09-28T11:35:06Z"
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "08fad1c9493ce6e8b4971bbfe93c7192367142ee",
+        "timestamp": "2026-09-28T12:39:17Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "022a788c533a797d9665f6254a2745f70a312e23",
-        "timestamp": "2026-09-28T11:34:52Z"
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "08247b780015ed100d9b1da40bb6501851118e0e",
+        "timestamp": "2026-09-28T12:14:58Z"
       },
       {
-        "message": "CLEANUP: remove temporary Actions diagnostics (research/run_requests/ci_registry_smoke.trigger)",
-        "sha": "732668715e7526e3088172ecec2be75c80b4f4ed",
-        "timestamp": "2026-09-28T13:34:43+02:00"
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "3e2c773f9c1af86f8b2449a721bc0f3a16069edb",
+        "timestamp": "2026-09-28T12:13:53Z"
       },
       {
-        "message": "CLEANUP: remove temporary Actions diagnostics (.github/workflows/actions-registry-smoke.yml)",
-        "sha": "ee89b59d9792510f648737f6ba69b59dcb3b5e14",
-        "timestamp": "2026-09-28T13:34:40+02:00"
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "3e191d986681b852b8121734eeb27fa8da9992e8",
+        "timestamp": "2026-09-28T11:56:52Z"
       },
       {
-        "message": "CLEANUP: remove temporary Actions diagnostics (.github/workflows/ci-recovered.yml)",
-        "sha": "e3a0c41d279b2b35f0ae0f2d56d7283c27d178f1",
-        "timestamp": "2026-09-28T13:34:37+02:00"
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "2915b45a92ac681ffc7958c71b4489681fb5858c",
+        "timestamp": "2026-09-28T11:55:15Z"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "3b6f64e1b40e4c4e048a3adfbcfa77c98d7904ea",
+  "source_master_sha": "7b3b347e5b886b1112a21f063ba66edb9e1bfe9d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36416683397"
+    "run_id": "36424561404"
   }
 }
