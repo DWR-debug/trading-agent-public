@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T22:02:29.727626+00:00",
+  "generated_at_utc": "2026-09-28T22:08:51.160142+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,6 +325,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: normalize Antigravity settings before headless AI runs",
+        "sha": "0b955aa0f7b2d35de067d0d8dc86df123428ce20",
+        "timestamp": "2026-09-29T00:08:38+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "9b06a8d322df6a670a688c38bd794dd44c6ab2ba",
+        "timestamp": "2026-09-28T22:07:43Z"
+      },
+      {
+        "message": "OPS: record local AI worker state",
+        "sha": "c249114d0ef4c81d9929baec1082e59a4782a4ed",
+        "timestamp": "2026-09-28T22:06:34Z"
+      },
+      {
+        "message": "OPS: record local AI worker state",
+        "sha": "1de31753802f6c7077dd2ce5d38eb3b41537cdf0",
+        "timestamp": "2026-09-28T22:06:27Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "b76d07e31aefa81d9190018f4e2c2c46f155e996",
+        "timestamp": "2026-09-28T22:02:42Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ab387e2b410fca66b964fa04b929da5fcd74a227",
+        "timestamp": "2026-09-28T22:02:29Z"
+      },
+      {
         "message": "OPS: record AI worker state",
         "sha": "37a4b243d1e56fc5872ce443b912fdc69513ae61",
         "timestamp": "2026-09-28T22:02:17Z"
@@ -333,36 +363,6 @@
         "message": "OPS: trigger permanent loop on AI worker changes",
         "sha": "1d356dff6c29dfe9974199e09d646c37bb3817e8",
         "timestamp": "2026-09-29T00:02:16+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "1eb24c34916b193da6014e1fedd760765027b46a",
-        "timestamp": "2026-09-28T22:02:15Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "c9f34f68295883190177f291ec704c3a95b3f12f",
-        "timestamp": "2026-09-28T22:02:10Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "93fab9e181e42224661363ad5e639a1f5fe449c8",
-        "timestamp": "2026-09-28T22:02:06Z"
-      },
-      {
-        "message": "FIX: run headless Antigravity worker in terminal sandbox",
-        "sha": "f9fa458facd9f95b785712f9057ecabc7386b979",
-        "timestamp": "2026-09-29T00:01:53+02:00"
-      },
-      {
-        "message": "OPS: record local AI worker state",
-        "sha": "535057fcbf26de6d4b4ec3893fedd586bb89ab84",
-        "timestamp": "2026-09-28T22:00:48Z"
-      },
-      {
-        "message": "OPS: record local AI worker state",
-        "sha": "72bf5bd414a33ea7828491492f42deb620819191",
-        "timestamp": "2026-09-28T22:00:45Z"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "37a4b243d1e56fc5872ce443b912fdc69513ae61",
+  "source_master_sha": "0b955aa0f7b2d35de067d0d8dc86df123428ce20",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36489949428"
+    "run_id": "36490605981"
   }
 }
