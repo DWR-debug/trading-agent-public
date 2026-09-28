@@ -4,25 +4,25 @@
   "research_family": "q089_clean_fresh_q069_validation",
   "status": "COVERAGE_PASSED",
   "symbols": [
-    "CNP",
-    "CPT",
-    "CUBE",
-    "DHI",
-    "DPZ",
-    "DRI",
-    "DXC",
-    "ECL"
+    "AEE",
+    "AES",
+    "ATO",
+    "AVY",
+    "BKH",
+    "CAH",
+    "CHD",
+    "CHRW"
   ],
   "universe": "validation_2026_09_28_q089_clean_q069",
   "common_calendar_count": 3704,
-  "snapshot_fingerprint": "01c285cfed64e6f87288f8b0de5d4313295683727ed6e3fb8c76fa119054d087",
+  "snapshot_fingerprint": "bb82aeaed86411a8675be7f8ecb1c99e9c144f017466a836b8cafeb9d3b55e1d",
   "selection_used": false,
   "performance_evaluation": false,
   "holdout_evaluation": false,
   "source_discovery": {
     "schema_version": "1.0",
     "discovery_id": "FIXED-WINDOW-COVERAGE-DISCOVERY-2026-09-27",
-    "recorded_at": "2026-09-28T19:38:29.489600+00:00",
+    "recorded_at": "2026-09-28T21:27:02.429772+00:00",
     "study_window": {
       "start": "2011-01-01",
       "end": "2025-09-24",
@@ -194,16 +194,16 @@
       "XEL"
     ],
     "eligible_candidate_pool": [
+      "AEE",
+      "AES",
+      "ATO",
+      "AVY",
+      "BKH",
+      "CAH",
+      "CHD",
+      "CHRW",
       "CMA",
-      "CNP",
-      "CPT",
       "CTRA",
-      "CUBE",
-      "DHI",
-      "DPZ",
-      "DRI",
-      "DXC",
-      "ECL",
       "EFX",
       "EL",
       "EMN",
@@ -280,32 +280,32 @@
       "WST"
     ],
     "excluded_existing_universe_symbols": [
-      "AEE",
       "AEP",
-      "AES",
       "AFL",
       "AIZ",
-      "ATO",
-      "AVY",
       "BBY",
       "BDX",
       "BEN",
       "BK",
-      "BKH",
       "BMY",
       "CAG",
-      "CAH",
-      "CHD",
-      "CHRW",
       "CINF",
       "CMS",
+      "CNP",
       "COF",
       "CPB",
+      "CPT",
       "CTSH",
+      "CUBE",
       "D",
+      "DHI",
       "DOV",
+      "DPZ",
+      "DRI",
       "DTE",
       "DUK",
+      "DXC",
+      "ECL",
       "ED",
       "EIX",
       "EMR",
@@ -355,22 +355,13 @@
     ],
     "results": [
       {
-        "symbol": "CMA",
-        "status": "DATA_INVALID",
-        "window_count": 0,
-        "window_start": null,
-        "window_end": null,
-        "quality": {},
-        "error": "Yahoo-Daten konnten nicht geladen werden für CMA: HTTP Error 404: Not Found"
-      },
-      {
-        "symbol": "CNP",
+        "symbol": "AEE",
         "status": "WINDOW_COVERAGE_VALID",
         "window_count": 3704,
         "window_start": "2011-01-03T14:30:00+00:00",
         "window_end": "2025-09-24T13:30:00+00:00",
         "quality": {
-          "rows_seen": 13804,
+          "rows_seen": 7228,
           "rows_skipped_none": 0,
           "rows_skipped_unclosed": 1,
           "rows_skipped_invalid_ohlc": 0,
@@ -378,13 +369,13 @@
         }
       },
       {
-        "symbol": "CPT",
+        "symbol": "AES",
         "status": "WINDOW_COVERAGE_VALID",
         "window_count": 3704,
         "window_start": "2011-01-03T14:30:00+00:00",
         "window_end": "2025-09-24T13:30:00+00:00",
         "quality": {
-          "rows_seen": 8353,
+          "rows_seen": 8877,
           "rows_skipped_none": 0,
           "rows_skipped_unclosed": 1,
           "rows_skipped_invalid_ohlc": 0,
@@ -392,22 +383,13 @@
         }
       },
       {
-        "symbol": "CTRA",
-        "status": "DATA_INVALID",
-        "window_count": 0,
-        "window_start": null,
-        "window_end": null,
-        "quality": {},
-        "error": "Yahoo-Daten konnten nicht geladen werden für CTRA: HTTP Error 404: Not Found"
-      },
-      {
-        "symbol": "CUBE",
+        "symbol": "ATO",
         "status": "WINDOW_COVERAGE_VALID",
         "window_count": 3704,
         "window_start": "2011-01-03T14:30:00+00:00",
         "window_end": "2025-09-24T13:30:00+00:00",
         "quality": {
-          "rows_seen": 5517,
+          "rows_seen": 10771,
           "rows_skipped_none": 0,
           "rows_skipped_unclosed": 1,
           "rows_skipped_invalid_ohlc": 0,
@@ -415,63 +397,7 @@
         }
       },
       {
-        "symbol": "DHI",
-        "status": "WINDOW_COVERAGE_VALID",
-        "window_count": 3704,
-        "window_start": "2011-01-03T14:30:00+00:00",
-        "window_end": "2025-09-24T13:30:00+00:00",
-        "quality": {
-          "rows_seen": 8638,
-          "rows_skipped_none": 0,
-          "rows_skipped_unclosed": 1,
-          "rows_skipped_invalid_ohlc": 0,
-          "rows_returned": 5000
-        }
-      },
-      {
-        "symbol": "DPZ",
-        "status": "WINDOW_COVERAGE_VALID",
-        "window_count": 3704,
-        "window_start": "2011-01-03T14:30:00+00:00",
-        "window_end": "2025-09-24T13:30:00+00:00",
-        "quality": {
-          "rows_seen": 5589,
-          "rows_skipped_none": 0,
-          "rows_skipped_unclosed": 1,
-          "rows_skipped_invalid_ohlc": 0,
-          "rows_returned": 5000
-        }
-      },
-      {
-        "symbol": "DRI",
-        "status": "WINDOW_COVERAGE_VALID",
-        "window_count": 3704,
-        "window_start": "2011-01-03T14:30:00+00:00",
-        "window_end": "2025-09-24T13:30:00+00:00",
-        "quality": {
-          "rows_seen": 7899,
-          "rows_skipped_none": 0,
-          "rows_skipped_unclosed": 1,
-          "rows_skipped_invalid_ohlc": 0,
-          "rows_returned": 5000
-        }
-      },
-      {
-        "symbol": "DXC",
-        "status": "WINDOW_COVERAGE_VALID",
-        "window_count": 3704,
-        "window_start": "2011-01-03T14:30:00+00:00",
-        "window_end": "2025-09-24T13:30:00+00:00",
-        "quality": {
-          "rows_seen": 11275,
-          "rows_skipped_none": 0,
-          "rows_skipped_unclosed": 1,
-          "rows_skipped_invalid_ohlc": 0,
-          "rows_returned": 5000
-        }
-      },
-      {
-        "symbol": "ECL",
+        "symbol": "AVY",
         "status": "WINDOW_COVERAGE_VALID",
         "window_count": 3704,
         "window_start": "2011-01-03T14:30:00+00:00",
@@ -483,6 +409,80 @@
           "rows_skipped_invalid_ohlc": 0,
           "rows_returned": 5000
         }
+      },
+      {
+        "symbol": "BKH",
+        "status": "WINDOW_COVERAGE_VALID",
+        "window_count": 3704,
+        "window_start": "2011-01-03T14:30:00+00:00",
+        "window_end": "2025-09-24T13:30:00+00:00",
+        "quality": {
+          "rows_seen": 13513,
+          "rows_skipped_none": 0,
+          "rows_skipped_unclosed": 1,
+          "rows_skipped_invalid_ohlc": 0,
+          "rows_returned": 5000
+        }
+      },
+      {
+        "symbol": "CAH",
+        "status": "WINDOW_COVERAGE_VALID",
+        "window_count": 3704,
+        "window_start": "2011-01-03T14:30:00+00:00",
+        "window_end": "2025-09-24T13:30:00+00:00",
+        "quality": {
+          "rows_seen": 10872,
+          "rows_skipped_none": 0,
+          "rows_skipped_unclosed": 1,
+          "rows_skipped_invalid_ohlc": 0,
+          "rows_returned": 5000
+        }
+      },
+      {
+        "symbol": "CHD",
+        "status": "WINDOW_COVERAGE_VALID",
+        "window_count": 3704,
+        "window_start": "2011-01-03T14:30:00+00:00",
+        "window_end": "2025-09-24T13:30:00+00:00",
+        "quality": {
+          "rows_seen": 11728,
+          "rows_skipped_none": 0,
+          "rows_skipped_unclosed": 1,
+          "rows_skipped_invalid_ohlc": 0,
+          "rows_returned": 5000
+        }
+      },
+      {
+        "symbol": "CHRW",
+        "status": "WINDOW_COVERAGE_VALID",
+        "window_count": 3704,
+        "window_start": "2011-01-03T14:30:00+00:00",
+        "window_end": "2025-09-24T13:30:00+00:00",
+        "quality": {
+          "rows_seen": 7281,
+          "rows_skipped_none": 0,
+          "rows_skipped_unclosed": 1,
+          "rows_skipped_invalid_ohlc": 0,
+          "rows_returned": 5000
+        }
+      },
+      {
+        "symbol": "CMA",
+        "status": "DATA_INVALID",
+        "window_count": 0,
+        "window_start": null,
+        "window_end": null,
+        "quality": {},
+        "error": "Yahoo-Daten konnten nicht geladen werden für CMA: HTTP Error 404: Not Found"
+      },
+      {
+        "symbol": "CTRA",
+        "status": "DATA_INVALID",
+        "window_count": 0,
+        "window_start": null,
+        "window_end": null,
+        "quality": {},
+        "error": "Yahoo-Daten konnten nicht geladen werden für CTRA: HTTP Error 404: Not Found"
       },
       {
         "symbol": "EFX",
@@ -1502,14 +1502,14 @@
       }
     ],
     "coverage_valid_candidates": [
-      "CNP",
-      "CPT",
-      "CUBE",
-      "DHI",
-      "DPZ",
-      "DRI",
-      "DXC",
-      "ECL",
+      "AEE",
+      "AES",
+      "ATO",
+      "AVY",
+      "BKH",
+      "CAH",
+      "CHD",
+      "CHRW",
       "EFX",
       "EL",
       "EMN",
@@ -1578,14 +1578,14 @@
       "WST"
     ],
     "selected_coverage_batch": [
-      "CNP",
-      "CPT",
-      "CUBE",
-      "DHI",
-      "DPZ",
-      "DRI",
-      "DXC",
-      "ECL",
+      "AEE",
+      "AES",
+      "ATO",
+      "AVY",
+      "BKH",
+      "CAH",
+      "CHD",
+      "CHRW",
       "EFX",
       "EL",
       "EMN",
@@ -1600,7 +1600,7 @@
       "orders_enabled": false,
       "automatic_promotion": false
     },
-    "fingerprint": "2b7949203fb9c0f80fa274b60a9205d64381c7ea34479d42643e4c6e3eb4e0ae"
+    "fingerprint": "7d197167fd5fcfec46bccb5dfbdd590676a683ad1ebcb1ea4dc06225d8ff0a39"
   },
   "safety": {
     "paper_only": true,
@@ -1608,5 +1608,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "result_fingerprint": "04c77784929ad3366b3a92ba615b15b2336bcf3589d90737b81ea671a146d9ae"
+  "result_fingerprint": "56898b50fc0f8af31dead7dcd65001cced41cf7b44093676eead1ccc4d6fe4cb"
 }
