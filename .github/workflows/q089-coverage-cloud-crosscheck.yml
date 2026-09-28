@@ -38,3 +38,16 @@ jobs:
         run: python -m pytest -q tests/test_q089_validation.py tests/test_q089_input_freeze.py tests/test_q089_performance_envelope.py
       - name: Coverage-only cross-check
         run: python -m automation.q089_coverage_pit coverage
+
+      - name: Upload Q089 cloud coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q089-cloud-coverage-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            research/runs/q089_coverage/
+            research/runs/q089_discovery/
+            research/evidence/q089_coverage_result.json
+            research/evidence/q089_asset_freeze.json
+          if-no-files-found: warn
+          retention-days: 30
