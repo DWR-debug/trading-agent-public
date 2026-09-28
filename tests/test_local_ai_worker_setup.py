@@ -10,5 +10,6 @@ def test_local_ai_setup_disables_credit_fallback():
 def test_local_ai_settings_are_written_without_utf8_bom():
     text = Path("scripts/enable_local_ai_worker.ps1").read_text(encoding="utf-8")
     assert "UTF8Encoding($false)" in text
-    assert "[System.IO.File]::WriteAllText($settingsPath, $settingsText, $utf8NoBom)" in text
-    assert "Set-Content -Encoding UTF8 $settingsPath" not in text
+    assert "[System.Text.Encoding]::UTF8.GetBytes($settingsText)" in text
+    assert "Set-Content -Encoding Byte $settingsPath -Value $settingsBytes" in text
+    assert "New-Object System.Text.UTF8Encoding" not in text
