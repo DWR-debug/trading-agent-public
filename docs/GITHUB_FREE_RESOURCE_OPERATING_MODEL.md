@@ -190,3 +190,66 @@ eskaliert.
 
 Die Reparatur darf keine Research-Evidence, Präregistrierungen, Authorisierungen, Gates,
 Holdout-Logik, Strategieparameter, Promotion oder Live-Trading verändern.
+
+
+## Multi-Model AI Worker Fabric — 2026-09-28
+
+Zusätzlich zu PC, GitHub Actions, bounded Agents und Python wird ein separater
+kostenfreier AI-Worker-Pool betrieben.
+
+### Grundsatz
+
+Die Ressourcenklassen werden parallelisiert, nicht unnötig serialisiert:
+
+- Self-hosted PC: lokale QA, Reproduktion und freigegebene Research-Ausführung.
+- GitHub-hosted Runner: CI, deterministische Research-Läufe und bounded Agent Queue.
+- Python: kanonische numerische/statistische Berechnung und Evidence-Erzeugung.
+- Externe AI-Worker: Hypothesen, Gegenhypothesen, Research-Design, Review und
+  technische Analyse.
+
+### Gemini
+
+Gemini CLI ist als primärer externer Worker vorgesehen. Der offizielle CLI-Modus
+unterstützt headless Prompt-Ausführung und JSON-Ausgabe; die Gemini Developer API
+bietet eine Free Tier für ausgewählte Modelle.
+
+Die Nutzung bleibt an den projektspezifischen Free-only-Preflight gebunden. Ein
+vorhandener Schlüssel allein aktiviert keinen externen Worker.
+
+### Claude
+
+Claude CLI ist als sekundärer, opportunistischer Worker integriert. Es wird
+ausschließlich bereits vorhandener, ausdrücklich kostenfrei bestätigter Zugriff
+akzeptiert. Anthropic API-Nutzung wird nicht aus dem Paid-Zero-Budget automatisch
+aktiviert.
+
+### Router und Nachweis
+
+Die Implementierung befindet sich in:
+- automation/ai_worker_fabric.py
+- .github/workflows/ai-worker-fabric.yml
+- tests/test_ai_worker_fabric.py
+- docs/AI_WORKER_FABRIC.md
+
+Jeder Lauf schreibt einen strukturierten Worker-Receipt. Die Datei enthält
+Provider, Task-Fingerprint, Preflight, Status und den unveränderlichen Hinweis,
+dass Worker-Output keine wissenschaftliche Evidenz ist.
+
+### Ressourcenverteilung
+
+Die bestehende Copilot-/Agent-Queue bleibt unabhängig. Die AI-Worker-Lanes laufen
+auf GitHub-hosted Runnern und blockieren den Self-hosted PC nicht.
+
+Die bevorzugte Reihenfolge bei freier Kapazität lautet:
+
+deterministische Arbeit zuerst, dann unabhängige QA/Review, dann freie externe AI-Exploration.
+
+Bei Nichtverfügbarkeit eines Providers wird ohne Kosten-Fallback weitergearbeitet.
+
+### Verbindliche Kostenregel
+
+Paid agent/API budget = 0 USD.
+
+Kein Workflow darf automatisch eine kostenpflichtige API, ein Upgrade, Overages oder
+einen bezahlten Agenten aktivieren. Jeder externe Provider besitzt einen separaten
+Free-Mode-Gate und fail-closed Verhalten.
