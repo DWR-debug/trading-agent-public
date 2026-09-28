@@ -36,10 +36,44 @@ def _result():
     }
 
 
+def _preflight_records():
+    coverage = {
+        "trial_id": "T-2026-09-28-068-COVERAGE",
+        "status": "COVERAGE_PASSED",
+        "result_fingerprint": "c",
+    }
+    pit = {
+        "trial_id": "T-2026-09-28-068-PIT",
+        "status": "PIT_PASSED",
+        "result_fingerprint": "p",
+    }
+    authorization = {
+        "authorized": True,
+        "performance_execution_authorized": True,
+        "execution_scope": "Q068_FIXED_RULE_PERFORMANCE_ONLY",
+        "source_receipts": {
+            "coverage_result_fingerprint": "c",
+            "pit_result_fingerprint": "p",
+        },
+    }
+    return coverage, pit, authorization
+
+
 def test_reconcile_appends_exactly_one_non_promoting_entry(tmp_path):
     (tmp_path / "research" / "evidence").mkdir(parents=True)
     (tmp_path / "research" / "evidence" / "q068_performance_result.json").write_text(
         json.dumps(_result()), encoding="utf-8"
+    )
+    coverage, pit, authorization = _preflight_records()
+    (tmp_path / "research" / "evidence" / "q068_coverage_result.json").write_text(
+        json.dumps(coverage), encoding="utf-8"
+    )
+    (tmp_path / "research" / "evidence" / "q068_pit_result.json").write_text(
+        json.dumps(pit), encoding="utf-8"
+    )
+    (tmp_path / "research" / "authorizations").mkdir(parents=True)
+    (tmp_path / "research" / "authorizations" / "q068_performance_2026_09_28.json").write_text(
+        json.dumps(authorization), encoding="utf-8"
     )
     ledger = {"generated_at": "old", "trials": []}
     ledger_path = tmp_path / "research" / "evidence" / "trial_ledger.json"
