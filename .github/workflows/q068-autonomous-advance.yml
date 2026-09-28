@@ -57,4 +57,4 @@ jobs:
           "%PY_EXE%" -c "import json,os,urllib.request; u='https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/ref/heads/master'; r=urllib.request.Request(u,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'}); print(json.load(urllib.request.urlopen(r))['object']['sha'])" > "%RUNNER_TEMP%\\q068_base_sha.txt" || exit /b 1
           set /p BASE_SHA=<"%RUNNER_TEMP%\\q068_base_sha.txt"
           if not defined BASE_SHA exit /b 1
-          "%PY_EXE%" "%GITHUB_WORKSPACE%\automation\github_contents_publish.py --repository "%GITHUB_REPOSITORY%" --branch master --base-sha "%BASE_SHA%" --file research/authorizations/q068_performance_2026_09_28.json=research\authorizations\q068_performance_2026_09_28.json
+          "%PY_EXE%" "%GITHUB_WORKSPACE%\automation\github_contents_publish.py" --repository "%GITHUB_REPOSITORY%" --branch master --base-sha "%BASE_SHA%" --file research/authorizations/q068_performance_2026_09_28.json=research\authorizations\q068_performance_2026_09_28.json
