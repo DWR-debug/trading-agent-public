@@ -1,10 +1,12 @@
+import pytest
+
 from automation.rccsm_transition_diagnostics import _fp, state_velocity
 
 
 def test_state_velocity_is_mean_absolute_movement():
     previous={"trend_coherence":0.5,"breadth":0.5,"dispersion_percentile":0.2,"shock_density":0.0}
     current={"trend_coherence":0.7,"breadth":0.4,"dispersion_percentile":0.6,"shock_density":0.1}
-    assert state_velocity(previous,current)==0.2
+    assert state_velocity(previous,current)==pytest.approx(0.2)
 
 
 def test_state_velocity_is_deterministic():
