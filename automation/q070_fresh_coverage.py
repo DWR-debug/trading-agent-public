@@ -26,6 +26,13 @@ RAW = 5000
 SELECT_COUNT = 8
 SAFETY = {"paper_only": True, "live_trading_enabled": False, "orders_enabled": False, "automatic_promotion": False}
 
+def _coverage_snapshot_spec(prereg: dict) -> dict:
+    """Route the frozen snapshot under the coverage trial identity."""
+    scoped = dict(prereg)
+    scoped["trial_id"] = COVERAGE_ID
+    return scoped
+
+
 def _fp(value: object) -> str:
     return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("utf-8")).hexdigest()
 
