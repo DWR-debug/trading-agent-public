@@ -1,6 +1,8 @@
-name: CI
+name: CI Recovered
 
 on:
+  issues:
+    types: [opened]
   pull_request:
     branches: [master]
   push:
@@ -12,6 +14,7 @@ on:
       - research/run-self-hosted/local_reproduction
   workflow_dispatch:
 
+
 permissions:
   contents: read
 
@@ -21,6 +24,17 @@ concurrency:
 
 jobs:
   test:
+    if: >-
+      ${{
+        github.repository == 'DWR-debug/trading-agent-public' &&
+        (
+          github.event_name != 'issues' ||
+          (
+            github.event.issue.user.login == github.repository_owner &&
+            github.event.issue.title == 'OPS: CI recovered smoke'
+          )
+        )
+      }}
     strategy:
       fail-fast: false
       matrix:
