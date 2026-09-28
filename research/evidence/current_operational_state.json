@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:11:32.998283+00:00",
+  "generated_at_utc": "2026-09-28T15:11:46.033040+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: lock Q086 extended source-order candidate pool",
+        "sha": "350add3efa9afcf8c709ed704ca504da118272a1",
+        "timestamp": "2026-09-28T17:11:36+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9ed949593b4ee01fa02395b4ee4691e04cf4a468",
+        "timestamp": "2026-09-28T15:11:33Z"
+      },
+      {
         "message": "FIX: extend Q086 fixed ex-ante candidate pool",
         "sha": "d6151491f080761360bfb129499330d6874ff297",
         "timestamp": "2026-09-28T17:11:28+02:00"
@@ -185,16 +195,6 @@
         "message": "OPS: dispatch Q081 via verified self-hosted bridge",
         "sha": "156deb1713e284d8bc1581f52af10df542e027a6",
         "timestamp": "2026-09-28T17:10:09+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "45b29a752ca759aacb69299c74dc170049636d78",
-        "timestamp": "2026-09-28T15:09:56Z"
-      },
-      {
-        "message": "OPS: issue one-shot Q081 performance authorization after preflight",
-        "sha": "8fb3d95eef1f647c8a743c2366bdb79a8f9d15db",
-        "timestamp": "2026-09-28T17:09:54+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d6151491f080761360bfb129499330d6874ff297",
+  "source_master_sha": "350add3efa9afcf8c709ed704ca504da118272a1",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36441681363"
+    "run_id": "36441704684"
   }
 }
