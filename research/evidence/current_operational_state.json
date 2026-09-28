@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:44:54.271444+00:00",
+  "generated_at_utc": "2026-09-28T10:45:37.138665+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,21 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "21c3a43079028e3bba29be7301c80f9f09cbb80f",
+        "timestamp": "2026-09-28T10:45:25Z"
+      },
+      {
+        "message": "EVIDENCE: persist Q075 information channel contract",
+        "sha": "e449d9fa6d4953dcd21b95cd404d277cae299d35",
+        "timestamp": "2026-09-28T12:45:20+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4d549ce1538699353ed6f42022b443e47e3462eb",
+        "timestamp": "2026-09-28T10:44:54Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "1cc871ea546e54d095eaaad78a2e705a9e834e60",
         "timestamp": "2026-09-28T10:44:41Z"
@@ -189,21 +204,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "1a26c9a77e0b73ebff2ee6a8872694006b986fea",
         "timestamp": "2026-09-28T10:43:55Z"
-      },
-      {
-        "message": "OPS: trigger Q075 information channel feasibility",
-        "sha": "208a370d0c6d42ed072f08868584b581ed1a9b3c",
-        "timestamp": "2026-09-28T12:43:39+02:00"
-      },
-      {
-        "message": "RESEARCH: freeze Q075 information channel contract",
-        "sha": "eb3742e4c041b0d20f9ad134fabb8c5824c2dc88",
-        "timestamp": "2026-09-28T12:43:34+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q075 information channel feasibility workflow",
-        "sha": "872ebf135da52fe606298444f726405389478393",
-        "timestamp": "2026-09-28T12:43:30+02:00"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1cc871ea546e54d095eaaad78a2e705a9e834e60",
+  "source_master_sha": "21c3a43079028e3bba29be7301c80f9f09cbb80f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36411506143"
+    "run_id": "36411583612"
   }
 }
