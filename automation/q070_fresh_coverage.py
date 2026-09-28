@@ -30,6 +30,9 @@ def _coverage_snapshot_spec(prereg: dict) -> dict:
     """Route the frozen snapshot under the coverage trial identity."""
     scoped = dict(prereg)
     scoped["trial_id"] = COVERAGE_ID
+    scoped.setdefault("interval", "1d")
+    scoped.setdefault("raw_fetch_candles", RAW)
+    scoped.setdefault("target_common_count", TARGET)
     return scoped
 
 
