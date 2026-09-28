@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "checkpoint_type": "current_project_snapshot",
-  "generated_at_utc": "2026-09-27T17:38:47.233Z",
+  "generated_at_utc": "2026-09-28T05:06:00Z",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit_at_checkpoint_creation": "9fe38765a46785d8d4f7a8a42c7c24bea96c674c",
+  "master_commit_at_checkpoint_creation": "5b91675d78a24d709aeb5337848ca9f6876f026d",
   "canonical_data_layer": {
     "status": "MERGED",
     "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
@@ -84,7 +84,7 @@
     "research/evidence/trial_ledger.json",
     "current master, relevant branches/PRs and workflows"
   ],
-  "active_research_task": "AGENT-014-MERGED / SELF-HOSTED-CAPACITY-HARDENING",
+  "active_research_task": "Q067 design-only — alpha common-mode diversification and turnover hysteresis",
   "wide_search_round_002": {
     "hypothesis_id": "H08",
     "family": "volatility_state_transition",
@@ -131,7 +131,7 @@
     "canonical_yahoo_hardening_pr": 234,
     "canonical_yahoo_hardening_merge_commit": "cfdb0ac7031cfdadcbfe16da50cbedeb4b285dd3"
   },
-  "next_action": "Run the AGENT-014 coverage-first check only when a PIT-capable historical source contract is available; otherwise record DATA_INSUFFICIENT without performance. Keep Shadow/Forward technical QA separate and continue deterministic self-hosted QA.",
+  "next_action": "Freeze Q067 mechanism parameters ex ante; then execute fresh symbol-disjoint coverage and PIT. No performance or holdout selection before those gates.",
   "q018": {
     "task_id": "Q-018-SOURCE-FEASIBILITY-PREFLIGHT",
     "status": "DATA_INSUFFICIENT",
@@ -363,5 +363,20 @@
     "active_workers": 1,
     "report_only_reviews_merged": true,
     "paper_forward_hardening_merged": true
+  },
+  "q066": {
+    "trial_id": "T-2026-09-28-066",
+    "status": "COMPLETED_DIAGNOSTIC_ONLY",
+    "workflow_run_id": 36379909584,
+    "evidence_commit": "510ff9e93df9346a647676229173901c4c64b484",
+    "diagnostic_fingerprint": "d4d0893ce245c04d9d6ba017458331a1dbad66d702163243e8d001dfa15c40c8",
+    "q041_reconstruction_exact": true,
+    "q045_reconstruction_exact": true
+  },
+  "q067": {
+    "status": "DESIGN_ONLY_UNRANKED",
+    "preregistration": "research/preregistrations/q067_alpha_common_mode_and_turnover_design_2026_09_28.json",
+    "performance_authorized": false,
+    "holdout_used_for_selection": false
   }
 }
