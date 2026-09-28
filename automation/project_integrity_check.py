@@ -49,6 +49,7 @@ ACTIVE_WORKFLOWS = {
     "q024-treasury-auction-result-timestamp-pit-feasibility.yml",
     "q024-treasury-result-timestamp-pit.yml",
     "q025-treasury-auction-date-pit-feasibility.yml",
+    "q067-coverage-pit.yml",
     "research-orchestrator.yml",
     "self-hosted-continuous-qa.yml",
     "self-hosted-research-worker-v4.yml",
