@@ -94,3 +94,66 @@ Regel für wissenschaftlich relevante Ergebnisse.
 
 Der Einstiegspunkt bleibt \`docs/TRADING_AGENT_CHAT_ENTRYPOINT.md\`. Handoff-Text aus dem
 letzten Chat wird gegen kanonische Quellen geprüft; er ersetzt diese nicht.
+
+
+## Multi-Model Worker Fabric — 2026-09-28
+
+Die Orchestrierung wurde erweitert, damit die derzeit verfügbaren Ressourcen
+gleichzeitig Fortschritt erzeugen können.
+
+### Parallele Ebenen
+
+Ebene A — Deterministische Rechenlast
+- Python
+- GitHub-hosted Research Runner
+- Self-hosted PC Research Runner
+
+Ebene B — Engineering/QA
+- bounded GitHub Agent Queue
+- Self-hosted QA
+- Cloud-/Coding-Worker, sofern ohne Zusatzkosten verfügbar
+
+Ebene C — Externe KI-Worker
+- Gemini CLI als primärer opportunistischer Worker
+- Claude CLI als optionaler Worker bei ausdrücklich kostenfreiem Zugriff
+
+Diese Ebenen blockieren einander nicht.
+
+### Aufgaben für externe KI-Worker
+
+Zulässig sind ausschließlich bounded Research-Support-Aufgaben:
+Hypothesengenerierung, adversarial review, Research-Design, Architektur-Review,
+Testentwürfe und technische Dokumentation.
+
+Keine externe KI darf:
+- formale Performanceberechnung durchführen oder als Evidenz ausgeben;
+- Holdout-/Parameter-/Asset-/Horizon-Selektion entscheiden;
+- Gates, Authorizations oder Promotion verändern;
+- Live-Ausführung ermöglichen.
+
+### Betriebsprinzip
+
+1. Steueragent zerlegt die Aufgabe in unabhängige, bounded Work Units.
+2. Deterministische Jobs werden sofort an freie Rechenpfade gegeben.
+3. Agent-Engineering läuft parallel in seiner eigenen Queue.
+4. Externe AI-Worker erhalten unabhängige Denk-/Review-Aufträge.
+5. Worker-Outputs werden als nicht-wissenschaftliches Material protokolliert.
+6. Jede fachlich relevante Aussage muss anschließend durch Repository, Tests,
+   deterministische Reproduktion und Evidence-Governance bestätigt werden.
+
+### Auslastungsregel
+
+Die Architektur soll verfügbare freie Kapazität ausnutzen, aber keine künstlichen
+Jobs erzeugen. Parallelität bedeutet mehr unabhängigen verwertbaren Fortschritt,
+nicht mehr sinnlose CPU- oder Token-Nutzung.
+
+### Fail-closed
+
+Die AI-Worker-Fabric verweigert einen Provider-Lauf, wenn Free-only-Zugriff,
+Authentifizierung oder Task-Sicherheitsvertrag fehlen. Es gibt keinen automatischen
+paid fallback.
+
+PAPER_ONLY=True
+LIVE_TRADING_ENABLED=False
+orders_enabled=False
+automatic_promotion=False
