@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:19:47.589903+00:00",
+  "generated_at_utc": "2026-09-28T15:24:04.443496+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: refresh Q081-R1 source contract blob hash",
+        "sha": "db75cdfdb94cd8b46d703a3aa9b3f9d67c1ba742",
+        "timestamp": "2026-09-28T17:23:47+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "96a0813088ed98b4a5fe0f0f7c74ed29524d4743",
+        "timestamp": "2026-09-28T15:23:29Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "d18d8250870592a05f0c5f8999e4cd43cda8fcf9",
+        "timestamp": "2026-09-28T15:23:24Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "489a9e540a905752ef42218a6bc00c3cf3343b78",
+        "timestamp": "2026-09-28T15:19:47Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "e4c09782d4619053e5412f670a05b2c1b5705d6e",
         "timestamp": "2026-09-28T15:19:30Z"
@@ -175,26 +195,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "55ac3996c418ffe20be53cfdc50c38961592c484",
         "timestamp": "2026-09-28T15:18:30Z"
-      },
-      {
-        "message": "OPS: remove obsolete Q081 bridge from Q084 feasibility",
-        "sha": "a11309713b9f5222d1c3e544f95fe4347cc5f524",
-        "timestamp": "2026-09-28T17:18:13+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5e99494856cfcc3fbddde2320f027d832bd19c9b",
-        "timestamp": "2026-09-28T15:16:38Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d6efff88f1eca467a41e949221fac516c4f61804",
-        "timestamp": "2026-09-28T15:16:21Z"
-      },
-      {
-        "message": "RESEARCH: retry Q086 after discovery executor fix",
-        "sha": "ee18f1cdea21bf9eddff465bd6867a30eaf980a7",
-        "timestamp": "2026-09-28T17:16:10+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e4c09782d4619053e5412f670a05b2c1b5705d6e",
+  "source_master_sha": "db75cdfdb94cd8b46d703a3aa9b3f9d67c1ba742",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36442690706"
+    "run_id": "36443263166"
   }
 }
