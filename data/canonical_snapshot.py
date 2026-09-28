@@ -347,6 +347,8 @@ def snapshot_from_preregistration(
         raw_fetch_value = data_contract.get("raw_fetch_candles", requested_value)
     target_value = spec.get("target_candles")
     if target_value is None:
+        target_value = spec.get("target_common_candles")
+    if target_value is None:
         target_value = data_contract.get("target_common_calendar")
     if requested_value is None or target_value is None:
         raise ValueError("Preregistration lacks requested/target coverage geometry")
