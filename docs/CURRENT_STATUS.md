@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `f04640b26e3ce1d7ac2e737ee2bcfe3332bec644`
+**Current operational snapshot:** `b102a186e60fefd6c4bb0c442cf539f5eb46073c`
 
-**Generated (UTC):** `2026-09-28T09:51:31.519333+00:00`
+**Generated (UTC):** `2026-09-28T09:59:51.781138+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -41,13 +41,13 @@ This is an operational pipeline summary only; it does not create scientific evid
 
 ### Q068 execution pipeline
 
-- Operational state: **PREFLIGHT_BLOCKED**.
-- Coverage receipt: **MISSING**.
-- PIT receipt: **MISSING**.
+- Operational state: **PREFLIGHT_PASSED_WAITING_FOR_AUTO_AUTH**.
+- Coverage receipt: **COVERAGE_PASSED**.
+- PIT receipt: **PIT_PASSED**.
 - Performance authorization: **None**.
 - Performance evidence: **MISSING**.
 - Ledger reconciled: **False**.
-- Blocking reasons: **coverage receipt missing; pit receipt missing**.
+- Blocking reasons: **none**.
 
 Q068 is a fresh symbol-disjoint validation of the unchanged Q067 E1/E2 mechanisms. This operational summary does not create scientific evidence or select an arm.
 

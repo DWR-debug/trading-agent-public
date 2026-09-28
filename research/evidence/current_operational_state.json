@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T09:51:31.519333+00:00",
+  "generated_at_utc": "2026-09-28T09:59:51.781138+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -87,14 +87,11 @@
     "state": "PREFLIGHT_BLOCKED"
   },
   "q068_execution_pipeline": {
-    "blocking_reasons": [
-      "coverage receipt missing",
-      "pit receipt missing"
-    ],
+    "blocking_reasons": [],
     "coverage_receipt": {
-      "present": false,
-      "status": null,
-      "trial_id": null
+      "present": true,
+      "status": "COVERAGE_PASSED",
+      "trial_id": "T-2026-09-28-068-COVERAGE"
     },
     "family": "Q068",
     "ledger_reconciled": false,
@@ -111,11 +108,11 @@
       "trial_id": null
     },
     "pit_receipt": {
-      "present": false,
-      "status": null,
-      "trial_id": null
+      "present": true,
+      "status": "PIT_PASSED",
+      "trial_id": "T-2026-09-28-068-PIT"
     },
-    "state": "PREFLIGHT_BLOCKED"
+    "state": "PREFLIGHT_PASSED_WAITING_FOR_AUTO_AUTH"
   },
   "q070_execution_pipeline": {
     "blocking_reasons": [
@@ -162,6 +159,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: make Q068/Q070 evidence pipelines autonomously chainable (#552)",
+        "sha": "b102a186e60fefd6c4bb0c442cf539f5eb46073c",
+        "timestamp": "2026-09-28T11:59:37+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "11ab5546ec62372bc151d29473d9b73d8c8500b5",
+        "timestamp": "2026-09-28T09:58:00Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "03ee34ffcfdbbfa71a19c7bdba10304ed88ceec9",
+        "timestamp": "2026-09-28T09:54:59Z"
+      },
+      {
+        "message": "EVIDENCE: record Q068 coverage and PIT preflight",
+        "sha": "86ea92484ff1da96e2808e81c2906803baab9607",
+        "timestamp": "2026-09-28T09:53:51Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d269699a709eaa2db7843b380955858a388f4bfd",
+        "timestamp": "2026-09-28T09:51:31Z"
+      },
+      {
         "message": "OPS: retrigger Q068 after publisher SHA fix (#551)",
         "sha": "f04640b26e3ce1d7ac2e737ee2bcfe3332bec644",
         "timestamp": "2026-09-28T11:51:15+02:00"
@@ -175,31 +197,6 @@
         "message": "FIX: harden Q070 Windows evidence publishing (#550)",
         "sha": "58eb2d43aec2c6b236692341b700acbf50284c2d",
         "timestamp": "2026-09-28T11:50:31+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1243097e0020551ef83f4fdd4cdedf70f231a4db",
-        "timestamp": "2026-09-28T09:49:18Z"
-      },
-      {
-        "message": "FIX: make Q068 Windows evidence publishing SHA capture robust (#549)",
-        "sha": "26cfbe9b9e2a61f2387f69d4d8d1631647075980",
-        "timestamp": "2026-09-28T11:49:04+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "efb209952d9445b1e98febcd4e52b1b2b220f0d2",
-        "timestamp": "2026-09-28T09:42:51Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6bc2404ff7d65abbb68665417772804d890ae40d",
-        "timestamp": "2026-09-28T09:32:24Z"
-      },
-      {
-        "message": "FIX: make Q068 evidence publishing runner-path deterministic (#548)",
-        "sha": "a1b505b90f10178f33d2ea827a7129920cec768c",
-        "timestamp": "2026-09-28T11:32:09+02:00"
       }
     ]
   },
@@ -261,12 +258,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f04640b26e3ce1d7ac2e737ee2bcfe3332bec644",
+  "source_master_sha": "b102a186e60fefd6c4bb0c442cf539f5eb46073c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36406118990"
+    "run_id": "36406965538"
   }
 }
