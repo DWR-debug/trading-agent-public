@@ -60,7 +60,7 @@ Auf dem Firmenrechner ist keine systemweite Python-Installation erforderlich: De
 bootstrappt eine fest gepinnte Python-3.13.15-NuGet-Laufzeit temporär. Damit sind weder
 Administratorrechte noch `actions/setup-python` erforderlich.
 
-Die autonome Continuous-QA-Lane läuft jetzt alle 15 Minuten tatsächlich auf dem registrierten Self-hosted-Runner. Jeder Lauf erfasst zusätzlich
+Die autonome Continuous-QA-Lane läuft jetzt stündlich auf dem registrierten Self-hosted-Runner. Jeder Lauf erfasst zusätzlich
 Runnername, Betriebssystem, Architektur, logische Prozessoren und physischen Arbeitsspeicher (in Bytes) als
 nicht-kanonische Kapazitätstelemetrie. So kann die tatsächliche Auslastung des PCs über die
 Zeit beurteilt werden, statt nur nach dem Vorhandensein eines erfolgreichen Jobs zu gehen.
@@ -80,7 +80,7 @@ Schritt-Rückgabecodes. Bei lokalen Läufen ohne GitHub-Metadaten sind Commit un
 ## Runner-Pool und Parallelisierung
 
 Alle Self-hosted Research-Jobs verwenden bewusst das gemeinsame Label
-`[self-hosted, trading-agent-research]`. Die Continuous QA ist jetzt in vier statische
+`[self-hosted, trading-agent-research]`. Die Continuous QA ist in vier statische
 Matrix-Lanes aufgeteilt: `repo_qa`, `data_qa`, `design_qa` und `local_reproduction`.
 `strategy.max-parallel: 2` begrenzt die gleichzeitig gestarteten Lane-Jobs; mit einem
 registrierten Runner werden sie entsprechend der verfügbaren Kapazität nacheinander
@@ -102,7 +102,7 @@ erfolgreich abgeschlossen gilt. Ein übersprungener, fehlgeschlagener oder fehle
 führt damit zu einem fehlgeschlagenen Gesamtstatus.
 
 Die globale Concurrency-Gruppe `trading-agent-self-hosted-continuous-qa` und
-`cancel-in-progress: false`, `workflow_dispatch` und der 15-Minuten-Schedule bleiben
+`cancel-in-progress: false`, `workflow_dispatch` und der stündliche Schedule bleiben
 erhalten. Ausgeführt wird ausschließlich der vertrauenswürdige öffentliche
 Repository-Kontext; untrusted Fork-Code wird nicht ausgeführt. Der Self-hosted Runner
 schreibt weiterhin keine Research-Evidence und besitzt keine Live-/Broker-Funktion.
