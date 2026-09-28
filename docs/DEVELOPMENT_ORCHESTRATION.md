@@ -141,11 +141,24 @@ Keine externe KI darf:
 6. Jede fachlich relevante Aussage muss anschließend durch Repository, Tests,
    deterministische Reproduktion und Evidence-Governance bestätigt werden.
 
-### Auslastungsregel
+### Permanente Ressourcenorchestrierung
 
-Die Architektur soll verfügbare freie Kapazität ausnutzen, aber keine künstlichen
-Jobs erzeugen. Parallelität bedeutet mehr unabhängigen verwertbaren Fortschritt,
-nicht mehr sinnlose CPU- oder Token-Nutzung.
+Die aktuelle Priorität der Ausführung ist:
+
+1. **Deterministische Forschung/QA** auf GitHub-hosted Workflows.
+2. **Beide self-hosted Windows-Runner parallel** für die zwei unabhängigen
+   `trading-agent-research`-Lanes.
+3. **Lokale AI-Diagnostik** auf dem PC erst nach Abschluss der beiden
+   Forschungs-Lanes, damit sie keinen Forschungs-Slot verdrängt.
+4. **Copilot** ab **2026-10-01T00:00:00Z** als geschützte, einzelne
+   Engineering-Session-Lane; maximal 12 AI-Credits pro reservierter Session,
+   vier Reservierungen pro Monat und keinerlei Overages.
+5. **Gemini/Claude** opportunistisch, wenn die kostenlose Authentifizierung
+   tatsächlich verfügbar ist.
+
+Jede Ressource bleibt optional und fail-closed: fehlt eine Voraussetzung, wird
+nicht kostenpflichtig ausgewichen. Neue Arbeit wird nur erzeugt, wenn sie einen
+unabhängigen verwertbaren Fortschritt erwarten lässt.
 
 ### Fail-closed
 
