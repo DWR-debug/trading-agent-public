@@ -177,6 +177,7 @@ jobs:
           set "PYTHONPATH=%REPO_SRC%"
           "%PY_EXE%" -m automation.local_ai_smoke > "%RUNNER_TEMP%\local-ai-smoke.json"
           type "%RUNNER_TEMP%\local-ai-smoke.json"
+          if errorlevel 1 exit /b 1
 
       - name: Upload local AI receipt
         if: always()

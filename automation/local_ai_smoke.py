@@ -136,17 +136,33 @@ def main() -> int:
         result["status"] = "TIMEOUT"
         result["duration_seconds"] = round(time.monotonic() - started, 3)
         print(json.dumps(result, sort_keys=True))
-        return 0
+        return 1
 
     result["duration_seconds"] = round(time.monotonic() - started, 3)
     result["returncode"] = proc.returncode
     stdout = (proc.stdout or "").strip()
     stderr = (proc.stderr or "").strip()
+    envelope = {}
+    if stdout:
+        try:
+            parsed = json.loads(stdout)
+            if isinstance(parsed, dict):
+                envelope = parsed
+        except json.JSONDecodeError:
+            envelope = {}
+    agy_status = envelope.get("status")
+    agy_error = envelope.get("error")
+    if isinstance(agy_status, str):
+        result["agy_status"] = agy_status
+    if isinstance(agy_error, str) and agy_error.strip():
+        result["agy_error"] = agy_error.strip()[:2000]
     result["response_marker_present"] = "LOCAL_AI_READY" in stdout
     result["error_marker_present"] = "AGY_ERROR" in stdout or "AGY_ERROR" in stderr
 
     if proc.returncode == 0 and result["response_marker_present"]:
         result["status"] = "SUCCESS"
+    elif isinstance(agy_status, str) and agy_status != "SUCCESS":
+        result["status"] = "FAILED_PROVIDER"
     elif result["error_marker_present"]:
         result["status"] = "FAILED_PROVIDER"
     else:
