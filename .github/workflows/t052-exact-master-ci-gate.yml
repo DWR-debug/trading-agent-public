@@ -83,8 +83,22 @@ jobs:
           if [ "$actual" != "${GITHUB_SHA}" ]; then
             echo "MASTER_MOVED_AFTER_TRIGGER=$actual"
             changed="$(git diff --name-only "${GITHUB_SHA}" "$actual")"
-            bad="$(printf '%s
-' "$changed" | grep -Ev '^(docs/CURRENT_STATUS\.md|research/evidence/current_operational_state\.json)$' || true)"
+            bad="$(printf '%s\n' "$changed" | grep -Ev '^(docs/CURRENT_STATUS\.md|research/evidence/current_operational_state\.json)
+            if [ -n "$bad" ]; then
+              echo "MASTER_MOVED_WITH_CODE_CHANGES"
+              printf '%s\n' "$changed"
+              exit 1
+            fi
+            echo "ONLY_STATUS_SYNC_DESCENDANT_ALLOWED"
+          fi
+          echo "EXACT_MASTER_CODE_SHA=${GITHUB_SHA}"
+
+      - name: Report exact gate
+        shell: bash
+        run: |
+          echo "T052_EXACT_MASTER_CI_GATE=PASS"
+          echo "SOURCE_SHA=${GITHUB_SHA}"
+ || true)"
             if [ -n "$bad" ]; then
               echo "MASTER_MOVED_WITH_CODE_CHANGES"
               printf '%s
