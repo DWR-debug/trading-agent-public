@@ -15,6 +15,18 @@ COVERAGE_ID = "T-2026-09-28-085-COVERAGE"
 PERFORMANCE_ID = "T-2026-09-28-085-PERFORMANCE"
 UNIVERSE = "validation_2026_09_28_q086_fresh_q069"
 TARGET, REQUESTED, RAW = 3500, 4000, 5000
+
+Q086_CANDIDATE_POOL = (
+    "AAPL","MSFT","IBM","ORCL","CSCO","QCOM","TXN","ADI","AMAT","INTC","MU","AVGO",
+    "HON","CAT","DE","MMM","UPS","UNP","NSC","CSX","LMT","RTX","GD","NOC","GE",
+    "JNJ","PFE","MRK","BMY","ABBV","ABT","TMO","DHR","MDT","AMGN","GILD","UNH","CI",
+    "KO","PEP","WMT","COST","HD","LOW","MCD","SBUX","YUM","TGT","TJX","NKE","ORLY","AZO",
+    "ROST","DG","DLTR","BBY","EBAY","HPQ","HPE","STX","WDC","FAST","PHM","LEN","DHI","NUE",
+    "SWK","ITW","EMR","ETN","GEV","AMP","AFL","AIZ","CB","HIG","CINF","TRV","PRU","ALL",
+    "SCHW","ICE","NDAQ","SPGI","AMP","GS","MS","C","BLK","AXP","V","MA","XOM","CVX","COP",
+    "SLB","EOG","PSX","VLO","MPC","KMI","WMB","DUK","SO","AEP","DTE","EXC","XEL","NEE",
+    "ADP","PAYX","CTSH","ACN","INTU","FIS","FISV","LHX","GM","HAL","COF","OXY","LRCX"
+)
 SAFETY = {"paper_only": True, "live_trading_enabled": False, "orders_enabled": False, "automatic_promotion": False}
 
 
@@ -31,8 +43,9 @@ def _load_manifest():
 def coverage():
     discovery = run_discovery(
         output=ROOT / "research" / "runs" / "q086_discovery" / "discovery.json",
-        symbol_limit=48,
+        symbol_limit=96,
         workers=8,
+        candidate_pool=Q086_CANDIDATE_POOL,
     )
     selected = tuple(discovery["selected_coverage_batch"][:8])
     if len(selected) != 8:
