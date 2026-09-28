@@ -1,0 +1,57 @@
+from __future__ import annotations
+
+import importlib
+from pathlib import Path
+
+
+def test_publish_retries_concurrent_fast_forward(monkeypatch, tmp_path) -> None:
+    module = importlib.import_module("automation.github_contents_publish")
+    payload = tmp_path / "evidence.json"
+    payload.write_text('{"status":"ok"}
+', encoding="utf-8")
+
+    base1 = "1" * 40
+    base2 = "2" * 40
+    commit1 = "c" * 40
+    commit2 = "d" * 40
+    tree1 = "e" * 40
+    tree2 = "f" * 40
+    blob1 = "a" * 40
+    blob2 = "b" * 40
+
+    patch_attempts = {"count": 0}
+    ref_reads = {"count": 0}
+
+    def fake_api(method, url, request=None):
+        if method == "GET" and url.endswith("/git/ref/heads/master"):
+            ref_reads["count"] += 1
+            return {"object": {"sha": base1 if ref_reads["count"] == 1 else base2}}
+        if method == "GET" and f"/git/commits/{base1}" in url:
+            return {"tree": {"sha": tree1}}
+        if method == "GET" and f"/git/commits/{base2}" in url:
+            return {"tree": {"sha": tree2}}
+        if method == "POST" and url.endswith("/git/blobs"):
+            return {"sha": blob1 if patch_attempts["count"] == 0 else blob2}
+        if method == "POST" and url.endswith("/git/trees"):
+            return {"sha": tree1 if patch_attempts["count"] == 0 else tree2}
+        if method == "POST" and url.endswith("/git/commits"):
+            return {"sha": commit1 if patch_attempts["count"] == 0 else commit2}
+        if method == "PATCH" and url.endswith("/git/refs/heads/master"):
+            patch_attempts["count"] += 1
+            if patch_attempts["count"] == 1:
+                raise RuntimeError("GitHub API PATCH failed: 422: Update is not a fast forward")
+            return {"ok": True}
+        raise AssertionError(f"Unexpected API call: {method} {url}")
+
+    monkeypatch.setattr(module, "api", fake_api)
+
+    result = module.publish(
+        "DWR-debug/trading-agent-public",
+        "master",
+        base1,
+        [("research/evidence/test.json", str(payload))],
+    )
+
+    assert result == commit2
+    assert patch_attempts["count"] == 2
+    assert ref_reads["count"] == 2
