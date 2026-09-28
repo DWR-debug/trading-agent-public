@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:15:30.076003+00:00",
+  "generated_at_utc": "2026-09-28T15:15:57.028624+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: retry Q081-R1 preflight after sync cancellation",
+        "sha": "7f40f2dd977ad857b46050699a5d6ba83f9e54bf",
+        "timestamp": "2026-09-28T17:15:38+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3e04825fcf1797d06ff9db3c7244432e4173e588",
+        "timestamp": "2026-09-28T15:15:30Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "1d852cf8598e7f1dfec4c72696d7b9271e649cf9",
         "timestamp": "2026-09-28T15:15:16Z"
@@ -185,16 +195,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "35d74c4e875a79963e2c10667563a538f272317b",
         "timestamp": "2026-09-28T15:14:40Z"
-      },
-      {
-        "message": "RESEARCH: trigger Q081-R1 preflight",
-        "sha": "bd8acb08461d029eb0a1e66610215d21217d4771",
-        "timestamp": "2026-09-28T17:14:38+02:00"
-      },
-      {
-        "message": "OPS: bridge Q081-R1 preflight through status synchronizer",
-        "sha": "8f236d578e47a803247d78b027802f237ffb72d9",
-        "timestamp": "2026-09-28T17:14:33+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1d852cf8598e7f1dfec4c72696d7b9271e649cf9",
+  "source_master_sha": "7f40f2dd977ad857b46050699a5d6ba83f9e54bf",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36442164493"
+    "run_id": "36442229031"
   }
 }
