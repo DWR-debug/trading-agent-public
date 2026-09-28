@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:10:37.553409+00:00",
+  "generated_at_utc": "2026-09-28T17:11:30.611727+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -237,6 +237,16 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: make self-hosted research artifacts upload reliably (#612)",
+        "sha": "c1be426b9dd08427db7401621ca34a7b703a9e27",
+        "timestamp": "2026-09-28T19:11:15+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "88b19789b1c6c19d8970705a9af173d01527bfe1",
+        "timestamp": "2026-09-28T17:10:37Z"
+      },
+      {
         "message": "DOCS: make project memory the canonical new-chat start source",
         "sha": "353d5a2c6bdaf0e357c34378df141d83d64845e3",
         "timestamp": "2026-09-28T19:10:23+02:00"
@@ -265,16 +275,6 @@
         "message": "OPS: keep self-hosted PC continuously supplied with bounded research (#611)",
         "sha": "25a8136ae69da17b57641d261fdae4acef0f23f7",
         "timestamp": "2026-09-28T19:06:53+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d70dbcdae9000410b38fe989b7227b8993139278",
-        "timestamp": "2026-09-28T17:05:43Z"
-      },
-      {
-        "message": "OPS: run RCCSM feasibility in parallel on PC and cloud (#610)",
-        "sha": "7b2c8ff093698e76143429678535ec1ea2acafa5",
-        "timestamp": "2026-09-28T19:05:28+02:00"
       }
     ]
   },
@@ -336,12 +336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "353d5a2c6bdaf0e357c34378df141d83d64845e3",
+  "source_master_sha": "c1be426b9dd08427db7401621ca34a7b703a9e27",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36456260794"
+    "run_id": "36456360099"
   }
 }
