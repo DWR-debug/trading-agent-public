@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `fb625604bf0c9948b71caef3169d5478f796a69a`
+**Current operational snapshot:** `f52cb72ba22346727c212be76bd66811796e2797`
 
-**Generated (UTC):** `2026-09-28T07:25:23.269756+00:00`
+**Generated (UTC):** `2026-09-28T07:28:35.588703+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -38,6 +38,18 @@
 - Blocking reasons: **coverage receipt missing; pit receipt missing**.
 
 This is an operational pipeline summary only; it does not create scientific evidence or select a candidate.
+
+### Q068 execution pipeline
+
+- Operational state: **PREFLIGHT_BLOCKED**.
+- Coverage receipt: **MISSING**.
+- PIT receipt: **MISSING**.
+- Performance authorization: **None**.
+- Performance evidence: **MISSING**.
+- Ledger reconciled: **False**.
+- Blocking reasons: **coverage receipt missing; pit receipt missing**.
+
+Q068 is a fresh symbol-disjoint validation of the unchanged Q067 E1/E2 mechanisms. This operational summary does not create scientific evidence or select an arm.
 
 ### Resource policy
 

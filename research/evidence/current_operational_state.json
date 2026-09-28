@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T07:25:23.269756+00:00",
+  "generated_at_utc": "2026-09-28T07:28:35.588703+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -79,6 +79,37 @@
       "trial_id": null
     },
     "family": "Q067",
+    "ledger_reconciled": false,
+    "no_selection_or_promotion": true,
+    "paper_only": true,
+    "performance_authorization": {
+      "authorized": null,
+      "execution_scope": null,
+      "present": false
+    },
+    "performance_result": {
+      "present": false,
+      "status": null,
+      "trial_id": null
+    },
+    "pit_receipt": {
+      "present": false,
+      "status": null,
+      "trial_id": null
+    },
+    "state": "PREFLIGHT_BLOCKED"
+  },
+  "q068_execution_pipeline": {
+    "blocking_reasons": [
+      "coverage receipt missing",
+      "pit receipt missing"
+    ],
+    "coverage_receipt": {
+      "present": false,
+      "status": null,
+      "trial_id": null
+    },
+    "family": "Q068",
     "ledger_reconciled": false,
     "no_selection_or_promotion": true,
     "paper_only": true,
@@ -127,6 +158,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: integrate Q068 into canonical pipeline status",
+        "sha": "f52cb72ba22346727c212be76bd66811796e2797",
+        "timestamp": "2026-09-28T09:28:21+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "644fd370f41b5f8fad755555fd6dd43b6fa517fb",
+        "timestamp": "2026-09-28T07:25:23Z"
+      },
+      {
         "message": "RESEARCH: Q068 fresh E1/E2 validation pipeline",
         "sha": "fb625604bf0c9948b71caef3169d5478f796a69a",
         "timestamp": "2026-09-28T09:25:10+02:00"
@@ -155,16 +196,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "ddf62eb57d2e644c0ccc0948df20290b6cb2c631",
         "timestamp": "2026-09-28T06:59:32Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "a879cc2ae346459f0d6301e4edc8fe5d407c0260",
-        "timestamp": "2026-09-28T06:58:25Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "df494e3d1158129ce41488be7d37c610cb14f718",
-        "timestamp": "2026-09-28T06:41:52Z"
       }
     ]
   },
@@ -226,12 +257,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "fb625604bf0c9948b71caef3169d5478f796a69a",
+  "source_master_sha": "f52cb72ba22346727c212be76bd66811796e2797",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36391552978"
+    "run_id": "36391830413"
   }
 }
