@@ -140,8 +140,8 @@
   "resource_policy": {
     "actual_capital_available": false,
     "free_resources_only": true,
-    "hypothetical_reference_capital_eur": 2000.0,
-    "legacy_operational_canary_capital_eur": 500.0,
+    "hypothetical_reference_capital_eur": 2000,
+    "legacy_operational_canary_capital_eur": 500,
     "paid_agent_budget_usd": 0,
     "paid_api_budget_usd": 0
   },
@@ -154,10 +154,10 @@
   },
   "schema_version": "1.0",
   "scientific_state_recorded": {
-    "decision_basis_stage": "Q066_ALPHA_FAILURE_MECHANISM_DIAGNOSIS",
-    "latest_formal_status": "NO_ARM_PASSED_ALL_T052_GATES",
-    "latest_formal_trial": "T-2026-09-27-056",
-    "next_research_focus_recorded": "Q066 failure-mechanism diagnosis and exposure decomposition on Q041/Q045 fixed-alpha evidence; identify whether drawdown bottleneck is asset concentration, regime concentration, correlation, turnover or signal overlap before any tuning.",
+    "decision_basis_stage": "Q066_COMPLETED_DIAGNOSTIC_ONLY",
+    "latest_formal_status": "NO_ARM_PASSED_ALL_13_GATES",
+    "latest_formal_trial": "T-2026-09-27-065",
+    "next_research_focus_recorded": "Q067 design-only: two unranked follow-up mechanisms derived from Q066 — alpha-level common-mode exposure control and turnover hysteresis; no performance evaluation until parameter freeze, fresh coverage and PIT.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -193,14 +193,26 @@
       "symbols": 12,
       "target_common_calendar": 3500,
       "trial_id": "T-2026-09-27-048"
+    },
+    "q066": {
+      "trial_id": "T-2026-09-28-066",
+      "status": "COMPLETED_DIAGNOSTIC_ONLY",
+      "workflow_run_id": 36379909584,
+      "evidence_commit": "510ff9e93df9346a647676229173901c4c64b484",
+      "diagnostic_fingerprint": "d4d0893ce245c04d9d6ba017458331a1dbad66d702163243e8d001dfa15c40c8"
+    },
+    "q067": {
+      "status": "DESIGN_ONLY_UNRANKED",
+      "design": "research/preregistrations/q067_alpha_common_mode_and_turnover_design_2026_09_28.json",
+      "performance_authorized": false
     }
   },
-  "source_master_sha": "120ad3504b514268d56032f68ebf375ef1d0712a",
+  "source_master_sha": "5b91675d78a24d709aeb5337848ca9f6876f026d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
-    "name": "Current Operational Status Synchronizer",
-    "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36380296903"
+    "name": "Manual scientific-state canonicalization after Q066",
+    "purpose": "Synchronize current operational scientific state after the Q066 merge; no scientific evidence mutation.",
+    "run_id": null
   }
 }
