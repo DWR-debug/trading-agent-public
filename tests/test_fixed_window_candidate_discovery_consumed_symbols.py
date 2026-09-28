@@ -11,6 +11,7 @@ def test_fixed_window_discovery_skips_symbols_already_claimed_by_universes(monke
 
     used = Universe(discovery.CANDIDATE_POOL[:3])
     monkeypatch.setattr(discovery, "list_universes", lambda: (used,))
+    monkeypatch.setattr(discovery, "_prior_research_symbols", lambda: set())
     calls = []
     monkeypatch.setattr(
         discovery,
