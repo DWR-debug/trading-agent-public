@@ -106,10 +106,12 @@ jobs:
               continue
             fi
             selected="$request_file"
-            echo "issue_number=$issue_number" >> "$GITHUB_OUTPUT"
-            echo "request_file=$request_file" >> "$GITHUB_OUTPUT"
-            echo "task_id=$task_id" >> "$GITHUB_OUTPUT"
-            echo "run=true" >> "$GITHUB_OUTPUT"
+            {
+              echo "issue_number=$issue_number"
+              echo "request_file=$request_file"
+              echo "task_id=$task_id"
+              echo "run=true"
+            } >> "$GITHUB_OUTPUT"
             break
           done
           if [ -z "$selected" ]; then
