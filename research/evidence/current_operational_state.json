@@ -106,7 +106,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:53:00.134949+00:00",
+  "generated_at_utc": "2026-09-28T15:53:13.724537+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -221,6 +221,11 @@
     "recent_commits": [
       {
         "message": "OPS: synchronize current operational status",
+        "sha": "49679e7d77fdeaeb162b8f5c39538e8cf69eb8c3",
+        "timestamp": "2026-09-28T15:53:00Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
         "sha": "1d13da743c77658b0e12ef3e619b927e4525e235",
         "timestamp": "2026-09-28T15:52:43Z"
       },
@@ -253,11 +258,6 @@
         "message": "FIX: compare prereg filename against trial family code",
         "sha": "8169084a79cc89e81b218821ef39163d3d89e243",
         "timestamp": "2026-09-28T17:51:22+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "65bc2ea5c8b138e46cc38a55a13832b37e9c2f9e",
-        "timestamp": "2026-09-28T15:51:18Z"
       }
     ]
   },
@@ -319,12 +319,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1d13da743c77658b0e12ef3e619b927e4525e235",
+  "source_master_sha": "49679e7d77fdeaeb162b8f5c39538e8cf69eb8c3",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36446901684"
+    "run_id": "36446952473"
   }
 }
