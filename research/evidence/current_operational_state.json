@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T16:14:03.649612+00:00",
+  "generated_at_utc": "2026-09-28T16:15:32.597363+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -228,6 +228,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: harden M5 scheduled rebalance event feasibility",
+        "sha": "373380ba45483f1b84d68403a4db442dfeee9742",
+        "timestamp": "2026-09-28T18:15:15+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "fb9fa3dc71ab0d43567fc33f57c69c6aafa8a83c",
+        "timestamp": "2026-09-28T16:14:31Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "af80769f1d1e4a260c1c121679dc94eb59ad0346",
+        "timestamp": "2026-09-28T16:14:03Z"
+      },
+      {
         "message": "RESEARCH: stage Q089 clean fresh Q069 validation",
         "sha": "6a5e3ca38366d90db9e0076d5bc5412ec17caaf6",
         "timestamp": "2026-09-28T18:13:46+02:00"
@@ -251,21 +266,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "625f975f77d174f9e5e87ba46c4b2e01b75c88fc",
         "timestamp": "2026-09-28T16:08:15Z"
-      },
-      {
-        "message": "RESEARCH: add C30 risk-text PIT feasibility layer",
-        "sha": "8aaf4248904c6883fd01964595b1fb707495b1fa",
-        "timestamp": "2026-09-28T18:07:56+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "21970ece98ffa2d7cc42649da5bcd9fd29221a14",
-        "timestamp": "2026-09-28T16:06:32Z"
-      },
-      {
-        "message": "RESEARCH: harden unusual alpha frontier feasibility layer",
-        "sha": "a1dc0761a6156466d92e086e4559462b7eaefb66",
-        "timestamp": "2026-09-28T18:06:14+02:00"
       }
     ]
   },
@@ -327,12 +327,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "6a5e3ca38366d90db9e0076d5bc5412ec17caaf6",
+  "source_master_sha": "373380ba45483f1b84d68403a4db442dfeee9742",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36449515470"
+    "run_id": "36449707072"
   }
 }
