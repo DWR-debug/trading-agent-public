@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:16:38.281745+00:00",
+  "generated_at_utc": "2026-09-28T10:18:54.768644+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -159,6 +159,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: harden hosted fallback shell parsing and stale Q070 tests (#559)",
+        "sha": "e4a98be10a2aae523f4a060c737577da84943cf9",
+        "timestamp": "2026-09-28T12:18:39+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "1e982bdb539ee9c66d6ad58403d37852da108a8e",
+        "timestamp": "2026-09-28T10:18:04Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "40a8613c52523f74a7a1c9838790b184b49e96b5",
+        "timestamp": "2026-09-28T10:16:38Z"
+      },
+      {
         "message": "OPS: enable fail-closed hosted fallbacks for Q068/Q070 (#558)",
         "sha": "1df40794bb52b2c835024c82aa2538cbfec9f1ef",
         "timestamp": "2026-09-28T12:16:24+02:00"
@@ -182,21 +197,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "ea8890eb566df453f92b0b2de6b4238bd2dce7f5",
         "timestamp": "2026-09-28T10:09:10Z"
-      },
-      {
-        "message": "OPS: retrigger Q068 source-locked autonomous advance (#556)",
-        "sha": "b8523a6388af0145407b78000ee39a6735872a13",
-        "timestamp": "2026-09-28T12:08:55+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "26e60d3158297c3b58b2ccfa684b963f9f7d48e6",
-        "timestamp": "2026-09-28T10:08:50Z"
-      },
-      {
-        "message": "OPS: cancel stale Q068 advance runs in favor of latest request (#555)",
-        "sha": "a871fada722dcc8ed9fb22b813854b07ba43faef",
-        "timestamp": "2026-09-28T12:08:36+02:00"
       }
     ]
   },
@@ -258,12 +258,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1df40794bb52b2c835024c82aa2538cbfec9f1ef",
+  "source_master_sha": "e4a98be10a2aae523f4a060c737577da84943cf9",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36408734169"
+    "run_id": "36408956866"
   }
 }
