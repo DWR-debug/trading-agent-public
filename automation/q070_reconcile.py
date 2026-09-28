@@ -27,9 +27,10 @@ def reconcile(root: Path="."):
     assert pit["trial_id"]=="T-2026-09-28-070-PIT" and pit["status"]=="PIT_PASSED"
     assert auth["authorized"] is True and auth["performance_execution_authorized"] is True
     assert auth["execution_scope"]=="Q070_FIXED_CANDIDATE_PERFORMANCE_ONLY"
-    assert auth["source_receipts"]["coverage_result_fingerprint"]==coverage["result_fingerprint"]
+    assert auth["source_receipts"]["coverage_fingerprint"]==prereg["asset_freeze_fingerprint"]
     assert auth["source_receipts"]["pit_result_fingerprint"]==pit["result_fingerprint"]
-    assert result["coverage_prerequisite"]["result_fingerprint"]==coverage["result_fingerprint"]
+    assert result["coverage_prerequisite"]["coverage_fingerprint"]==prereg["asset_freeze_fingerprint"]
+    assert result["coverage_prerequisite"]["snapshot_fingerprint"]==coverage["snapshot_fingerprint"]
     assert result["pit_prerequisite"]["result_fingerprint"]==pit["result_fingerprint"]
     assert result.get("asset_freeze_fingerprint")==_fp(freeze)
     assert prereg["asset_freeze_fingerprint"]==_fp(freeze)
