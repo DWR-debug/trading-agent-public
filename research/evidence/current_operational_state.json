@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:54:42.567074+00:00",
+  "generated_at_utc": "2026-09-28T16:04:04.290944+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -228,6 +228,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: retrigger Q081-R1 final preflight for autonomous advance",
+        "sha": "ab58769ccabff9d092b9ba3eae8c101c7e2db761",
+        "timestamp": "2026-09-28T18:03:49+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "8fac80fd757e113f845a35b1c3aca22e578bf796",
+        "timestamp": "2026-09-28T15:56:45Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "3881d9a1e1f44a20649e09564f01232e7f7fd177",
+        "timestamp": "2026-09-28T15:55:13Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "7435892cb1479631607d12a2d458b0cc92124604",
+        "timestamp": "2026-09-28T15:54:42Z"
+      },
+      {
         "message": "RESEARCH: register unusual alpha frontier in active registry",
         "sha": "37beb4a523cde1e46a3a161f6a147c9bc08acb5f",
         "timestamp": "2026-09-28T17:54:28+02:00"
@@ -246,26 +266,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "1d13da743c77658b0e12ef3e619b927e4525e235",
         "timestamp": "2026-09-28T15:52:43Z"
-      },
-      {
-        "message": "OPS: trigger Q081-R1 final preflight through control plane",
-        "sha": "4ff8713d7deb826a47a864adeb739dbbf928521f",
-        "timestamp": "2026-09-28T17:52:34+02:00"
-      },
-      {
-        "message": "OPS: include final Q081-R1 trigger in control-plane dispatch",
-        "sha": "242d470b2745211ed583be5714be7ce94ecefe45",
-        "timestamp": "2026-09-28T17:52:26+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "77d6069bcca01c6240c8dc5cff08f47df4d07b3b",
-        "timestamp": "2026-09-28T15:51:55Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2dff236634d726093bc3c658763ef893c57cfd10",
-        "timestamp": "2026-09-28T15:51:38Z"
       }
     ]
   },
@@ -327,12 +327,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "37beb4a523cde1e46a3a161f6a147c9bc08acb5f",
+  "source_master_sha": "ab58769ccabff9d092b9ba3eae8c101c7e2db761",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36447140891"
+    "run_id": "36448293453"
   }
 }
