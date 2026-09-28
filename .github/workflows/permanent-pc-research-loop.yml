@@ -119,6 +119,24 @@ jobs:
           ref: master
           fetch-depth: 1
 
+      - name: Ensure Antigravity CLI
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          if not exist "%LOCALAPPDATA%\agy\bin\agy.exe" (
+            echo Antigravity CLI missing; installing for current Windows user...
+            powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "irm https://antigravity.google/cli/install.ps1 | iex"
+            if errorlevel 1 exit /b 1
+          )
+          if not exist "%LOCALAPPDATA%\agy\bin\agy.exe" (
+            echo ::error::Antigravity CLI installation did not produce %LOCALAPPDATA%\agy\bin\agy.exe
+            exit /b 1
+          )
+          echo %LOCALAPPDATA%\agy\bin>>"%GITHUB_PATH%"
+          "%LOCALAPPDATA%\agy\bin\agy.exe" --version
+          endlocal
+
       - name: Bootstrap local AI policy
         shell: cmd
         run: |
