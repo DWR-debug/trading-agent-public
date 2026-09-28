@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T16:10:23.904620+00:00",
+  "generated_at_utc": "2026-09-28T16:14:03.649612+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -228,6 +228,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: stage Q089 clean fresh Q069 validation",
+        "sha": "6a5e3ca38366d90db9e0076d5bc5412ec17caaf6",
+        "timestamp": "2026-09-28T18:13:46+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "19965b5a77e7b116fc99eb8803b960afe4f23b72",
+        "timestamp": "2026-09-28T16:10:23Z"
+      },
+      {
         "message": "RESEARCH: open public C31 news persistence path",
         "sha": "7ec045687c8e433cd805b2d69741f541dd304129",
         "timestamp": "2026-09-28T18:10:08+02:00"
@@ -256,16 +266,6 @@
         "message": "RESEARCH: harden unusual alpha frontier feasibility layer",
         "sha": "a1dc0761a6156466d92e086e4559462b7eaefb66",
         "timestamp": "2026-09-28T18:06:14+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "bf017215d05abca0c7139e9255a25983c85b5d2c",
-        "timestamp": "2026-09-28T16:04:04Z"
-      },
-      {
-        "message": "OPS: retrigger Q081-R1 final preflight for autonomous advance",
-        "sha": "ab58769ccabff9d092b9ba3eae8c101c7e2db761",
-        "timestamp": "2026-09-28T18:03:49+02:00"
       }
     ]
   },
@@ -327,12 +327,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7ec045687c8e433cd805b2d69741f541dd304129",
+  "source_master_sha": "6a5e3ca38366d90db9e0076d5bc5412ec17caaf6",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36449076004"
+    "run_id": "36449515470"
   }
 }
