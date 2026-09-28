@@ -72,9 +72,21 @@ jobs:
           assert settings.LIVE_TRADING_ENABLED is False
           assert settings.ORDERS_ENABLED is False
           assert settings.AUTOMATIC_PROMOTION is False
-          assert not Path("research/evidence/q068_performance_result.json").exists()
-          assert not Path("research/authorizations/q068_performance_2026_09_28.json").exists()
-          print("Q068 HOSTED FALLBACK PREREQUISITES OK")
+          result_path=Path("research/evidence/q068_performance_result.json")
+          auth_path=Path("research/authorizations/q068_performance_2026_09_28.json")
+          assert not result_path.exists()
+          if auth_path.exists():
+              auth=json.loads(auth_path.read_text())
+              assert auth["authorized"] is True
+              assert auth["performance_execution_authorized"] is True
+              assert auth["execution_scope"]=="Q068_FIXED_RULE_PERFORMANCE_ONLY"
+              assert auth["source_receipts"]["coverage_result_fingerprint"]==coverage["result_fingerprint"]
+              assert auth["source_receipts"]["pit_result_fingerprint"]==pit["result_fingerprint"]
+              assert auth["safety"]=={"PAPER_ONLY":True,"LIVE_TRADING_ENABLED":False,"ORDERS_ENABLED":False,"AUTOMATIC_PROMOTION":False}
+              assert auth["source_contract"]==expected
+              print("Q068 EXISTING AUTHORIZATION VALID; FALLBACK WILL RESUME")
+          else:
+              print("Q068 NO PRIOR AUTHORIZATION; FALLBACK WILL CREATE IT")
           PY
 
       - name: Publish Q068 performance evidence
@@ -116,11 +128,34 @@ jobs:
           export PUBLISH_MESSAGE
           python automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$BASE_SHA"             --file research/evidence/trial_ledger.json=research/evidence/trial_ledger.json
 
-      - name: Build and publish one-shot authorization
+      - name: Build and publish one-shot authorization when missing
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          if [ -f research/authorizations/q068_performance_2026_09_28.json ]; then
+            echo "Q068 authorization already exists; validating and reusing it"
+            python - <<'PY'
+            import json
+            from pathlib import Path
+            c=json.loads(Path("research/evidence/q068_coverage_result.json").read_text())
+            p=json.loads(Path("research/evidence/q068_pit_result.json").read_text())
+            a=json.loads(Path("research/authorizations/q068_performance_2026_09_28.json").read_text())
+            assert a["authorized"] is True and a["performance_execution_authorized"] is True
+            assert a["execution_scope"]=="Q068_FIXED_RULE_PERFORMANCE_ONLY"
+            assert a["source_receipts"]["coverage_result_fingerprint"]==c["result_fingerprint"]
+            assert a["source_receipts"]["pit_result_fingerprint"]==p["result_fingerprint"]
+            assert a["source_contract"]=={
+              "automation/q067_alpha_mechanisms.py":"344343f9910f1ea5eaa9a2d2c295a6f87a520bdc",
+              "automation/q068_performance.py":"d85e17885ff56353ca677a3aa47d8a5e7b6ec056",
+              "data/canonical_snapshot.py":"18c7c051b1b4d3f7f67bc395baf5ef3787e1b028",
+              "execution/cost_contract.py":"21b54b45dbe708f3102851fd368ad1b64226b0ad",
+              "config/settings.py":"9c7b5199ed09d11ca17eb72493aebf7a7666fd28",
+            }
+            print("Q068 AUTHORIZATION REUSE OK")
+            PY
+            exit 0
+          fi
           python - <<'PY'
           import json, os
           from pathlib import Path
