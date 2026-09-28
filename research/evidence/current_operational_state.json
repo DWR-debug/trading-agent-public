@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:39:38.960596+00:00",
+  "generated_at_utc": "2026-09-28T10:40:44.642335+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,31 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: trigger Q074 source feasibility",
+        "sha": "1287dce06e586d8e46878871836a759c260f62c7",
+        "timestamp": "2026-09-28T12:40:33+02:00"
+      },
+      {
+        "message": "RESEARCH: freeze Q074 source feasibility preregistration",
+        "sha": "c02f6908a2fed7d638d0e51fe125bcad7b9ce07b",
+        "timestamp": "2026-09-28T12:40:31+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q074 hosted feasibility workflow",
+        "sha": "acaaf74e76836aaab61e55e32c7f0f66c3e98822",
+        "timestamp": "2026-09-28T12:40:29+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q074 SEC/Cboe feasibility runner",
+        "sha": "0f101830f55b79023772453234f0bae9c14f1709",
+        "timestamp": "2026-09-28T12:40:26+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9e6876e6d9b6895d97ed37a1b508767129c78088",
+        "timestamp": "2026-09-28T10:39:39Z"
+      },
+      {
         "message": "EVIDENCE: persist Q071 source feasibility result",
         "sha": "0e1a3b3800d1d1b6e844eb435db4bb450404b0d2",
         "timestamp": "2026-09-28T12:39:25+02:00"
@@ -179,31 +204,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "c41e5ccd9f51cbc05a9cbb00222cd2fc4edbf4bf",
         "timestamp": "2026-09-28T10:38:17Z"
-      },
-      {
-        "message": "RESEARCH: freeze Q073 unranked candidate catalog",
-        "sha": "0c3c346a9eda27379c413f5e7438b53a68bbed7b",
-        "timestamp": "2026-09-28T12:38:06+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q073 expanded orthogonal candidate search",
-        "sha": "deab7277629db3494f1d903a7bac9920b3cd107a",
-        "timestamp": "2026-09-28T12:38:03+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e7a669bba2932b387097f17651cb6c54eb1fc440",
-        "timestamp": "2026-09-28T10:37:27Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b310e59a264c6db596fed9e0a9cd51820ff16104",
-        "timestamp": "2026-09-28T10:37:15Z"
-      },
-      {
-        "message": "OPS: rerun Q068 after source-contract verifier fix",
-        "sha": "a2c6c99a5c216bd3df02f82ad5620100922e0ddf",
-        "timestamp": "2026-09-28T12:37:08+02:00"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0e1a3b3800d1d1b6e844eb435db4bb450404b0d2",
+  "source_master_sha": "1287dce06e586d8e46878871836a759c260f62c7",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36411005870"
+    "run_id": "36411105356"
   }
 }
