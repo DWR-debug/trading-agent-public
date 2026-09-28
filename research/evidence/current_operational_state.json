@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T13:36:47.033737+00:00",
+  "generated_at_utc": "2026-09-28T13:37:28.010788+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: reduce push-triggered QA fanout; retain hourly full QA",
+        "sha": "730184b8ec7ba571b4c38b7a36228afdc80bdf49",
+        "timestamp": "2026-09-28T15:37:08+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3f2518fcc89db6106d63213c1750a46391c04038",
+        "timestamp": "2026-09-28T13:36:47Z"
+      },
+      {
         "message": "OPS: schedule one-shot Q081 preflight fallback",
         "sha": "7008754e0c153f8569edf075fd441f240e532e8a",
         "timestamp": "2026-09-28T15:36:31+02:00"
@@ -185,16 +195,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "82350038ba6a811b77396c453bc025c340790f7b",
         "timestamp": "2026-09-28T13:33:29Z"
-      },
-      {
-        "message": "OPS: add gated Q081 formal hosted evidence path",
-        "sha": "a0fca2333e5a93a83d6c7e3b00a010e424985b3d",
-        "timestamp": "2026-09-28T15:33:13+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a5ebd361cc54ca35f944c32f214bbcc58a560dc6",
-        "timestamp": "2026-09-28T13:32:04Z"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7008754e0c153f8569edf075fd441f240e532e8a",
+  "source_master_sha": "730184b8ec7ba571b4c38b7a36228afdc80bdf49",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36429821506"
+    "run_id": "36429899410"
   }
 }
