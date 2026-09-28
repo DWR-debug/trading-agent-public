@@ -22,7 +22,7 @@ def test_copilot_cli_repair_is_bounded():
     ).read_text(encoding="utf-8")
     assert "--max-ai-credits=12" in text
     assert "--max-autopilot-continues=2" in text
-    assert "--available-tools='read,write,shell(git:*),shell(pytest:*)'" in text
+    assert "--available-tools='read,write,shell(git:*),shell(pytest)'" in text
     assert "--deny-tool='shell(git push)'" in text
     assert 'git commit -m "FIX: autonomous CI repair"' in text
     assert "python -m pytest -q" in text
