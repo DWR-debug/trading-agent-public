@@ -43,7 +43,7 @@ def run(coverage_root: Path,result_path: Path):
                 weights=original[name]
                 assert all(value>=0.0 for value in weights.values())
                 assert sum(weights.values())<=1.0+1e-12
-                assert set(s for s,w in weights.items() if w)>={s for s,w in weights.items() if w}
+                assert set(s for s,w in weights.items() if w) <= set(symbols)
             checks.append({"index":index,"mode":mode,"candidate_count":len(CANDIDATES)})
     result={
         "schema_version":"1.0","trial_id":PIT_ID,"status":"PIT_PASSED",
