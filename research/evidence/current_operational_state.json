@@ -156,7 +156,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:11:20.232982+00:00",
+  "generated_at_utc": "2026-09-28T19:11:56.430434+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -270,6 +270,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: run two bounded self-hosted research lanes in parallel",
+        "sha": "5a3465fc73cbc948ef59874cdb81f578fbfdca2f",
+        "timestamp": "2026-09-28T21:11:39+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b92d52011d8282e48815896a18d395694c334bed",
+        "timestamp": "2026-09-28T19:11:20Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "5e07728ef3efeb1b606d9523ee9974f8f624370c",
         "timestamp": "2026-09-28T19:11:04Z"
@@ -298,16 +308,6 @@
         "message": "OPS: collect live self-hosted runner capacity in status sync",
         "sha": "b46b7f1b1585ab4a183803cfd98c5ab29450a1b4",
         "timestamp": "2026-09-28T21:10:14+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "7e5f8aa976a5cb0f7f456cfc252e2e7ca94c4821",
-        "timestamp": "2026-09-28T19:09:36Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "557fbcc9152a8c354c300ac4c780f5e9d697b317",
-        "timestamp": "2026-09-28T19:09:15Z"
       }
     ]
   },
@@ -369,12 +369,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5e07728ef3efeb1b606d9523ee9974f8f624370c",
+  "source_master_sha": "5a3465fc73cbc948ef59874cdb81f578fbfdca2f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36470452015"
+    "run_id": "36470528521"
   }
 }
