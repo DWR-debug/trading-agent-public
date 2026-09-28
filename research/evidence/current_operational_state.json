@@ -106,7 +106,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:52:43.722049+00:00",
+  "generated_at_utc": "2026-09-28T15:53:00.134949+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -220,6 +220,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "1d13da743c77658b0e12ef3e619b927e4525e235",
+        "timestamp": "2026-09-28T15:52:43Z"
+      },
+      {
         "message": "OPS: trigger Q081-R1 final preflight through control plane",
         "sha": "4ff8713d7deb826a47a864adeb739dbbf928521f",
         "timestamp": "2026-09-28T17:52:34+02:00"
@@ -253,11 +258,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "65bc2ea5c8b138e46cc38a55a13832b37e9c2f9e",
         "timestamp": "2026-09-28T15:51:18Z"
-      },
-      {
-        "message": "OPS: rerun Q081-R1 after governance family-ID fix",
-        "sha": "eb0ff7c266d2d119bbaaa3d5c2bf4d8bc7d15d41",
-        "timestamp": "2026-09-28T17:51:06+02:00"
       }
     ]
   },
@@ -319,12 +319,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4ff8713d7deb826a47a864adeb739dbbf928521f",
+  "source_master_sha": "1d13da743c77658b0e12ef3e619b927e4525e235",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36446886469"
+    "run_id": "36446901684"
   }
 }
