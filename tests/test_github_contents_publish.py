@@ -79,5 +79,6 @@ def test_api_retries_transient_502(monkeypatch):
 
     monkeypatch.setattr(module.urllib.request, "urlopen", fake_urlopen)
     monkeypatch.setattr(module.time, "sleep", lambda _: None)
+    monkeypatch.setenv("GH_TOKEN", "test-token")
     assert module.api("GET", "https://api.github.com/test") == {"ok": True}
     assert calls["count"] == 3
