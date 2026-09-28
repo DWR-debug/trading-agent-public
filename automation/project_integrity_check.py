@@ -82,6 +82,67 @@ def fail(message: str) -> None:
     raise SystemExit(f"PROJECT INTEGRITY FAIL: {message}")
 
 
+
+
+def _validate_q067_evidence_chain() -> None:
+    """Reject impossible Q067 evidence/authorization states before publishing CI truth."""
+    root = ROOT
+    evidence = root / "research" / "evidence"
+    authorizations = root / "research" / "authorizations"
+    auth_path = authorizations / "q067_performance_2026_09_28.json"
+    perf_result = evidence / "q067_performance_result.json"
+    coverage_result = evidence / "q067_coverage_result.json"
+    pit_result = evidence / "q067_pit_result.json"
+    if not auth_path.exists():
+        if perf_result.exists():
+            fail("Q067 performance evidence exists without performance authorization")
+        return
+
+    try:
+        auth = json.loads(auth_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        fail(f"Q067 performance authorization is unreadable: {exc}")
+    for name, expected in (
+        ("authorized", True),
+        ("performance_execution_authorized", True),
+        ("execution_scope", "Q067_FIXED_RULE_PERFORMANCE_ONLY"),
+    ):
+        if auth.get(name) != expected:
+            fail(f"Q067 performance authorization contract invalid: {name}")
+    if auth.get("safety") != {
+        "PAPER_ONLY": True,
+        "LIVE_TRADING_ENABLED": False,
+        "ORDERS_ENABLED": False,
+        "AUTOMATIC_PROMOTION": False,
+    }:
+        fail("Q067 performance authorization safety contract invalid")
+
+    for path, trial_id, status in (
+        (coverage_result, "T-2026-09-28-067-COVERAGE", "COVERAGE_PASSED"),
+        (pit_result, "T-2026-09-28-067-PIT", "PIT_PASSED"),
+    ):
+        if not path.exists():
+            fail(f"Q067 performance authorization exists without prerequisite: {path.relative_to(root)}")
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if payload.get("trial_id") != trial_id or payload.get("status") != status:
+            fail(f"Q067 prerequisite invalid: {path.relative_to(root)}")
+        if payload.get("performance_trial_authorized") is not False:
+            fail(f"Q067 prerequisite unexpectedly authorizes performance: {path.relative_to(root)}")
+        if payload.get("selection_used") is not False:
+            fail(f"Q067 prerequisite records selection: {path.relative_to(root)}")
+
+    if perf_result.exists():
+        payload = json.loads(perf_result.read_text(encoding="utf-8"))
+        if payload.get("trial_id") != "T-2026-09-28-067-PERFORMANCE":
+            fail("Q067 performance evidence trial identity mismatch")
+        if payload.get("status") != "COMPLETED":
+            fail("Q067 performance evidence is not completed")
+        if payload.get("selection_used") is not False:
+            fail("Q067 performance evidence records selection")
+        if payload.get("holdout_used_for_selection") is not False:
+            fail("Q067 performance evidence records holdout selection")
+
+
 def main() -> None:
     workflow_dir = ROOT / ".github" / "workflows"
     active_workflows = {path.name for path in workflow_dir.glob("*.yml")}
@@ -90,6 +151,8 @@ def main() -> None:
             "unexpected active workflows: "
             + ", ".join(sorted(active_workflows - ACTIVE_WORKFLOWS))
         )
+    _validate_q067_evidence_chain()
+
     for path in REQUIRED_FILES:
         if not path.exists():
             fail(f"missing required file: {path.relative_to(ROOT)}")

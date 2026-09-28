@@ -9,6 +9,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from automation.q067_pipeline_state import summarize as summarize_q067_pipeline
+
 ROOT = Path(__file__).resolve().parents[1]
 STATUS_DOC = ROOT / "docs" / "CURRENT_STATUS.md"
 STATUS_JSON = ROOT / "research" / "evidence" / "current_operational_state.json"
@@ -105,6 +107,7 @@ def generate(
     queue = _read_queue_files()
     open_prs = github_state.get("open_prs", [])
     agent_ready_issues = github_state.get("agent_ready_issues", [])
+    q067_pipeline = summarize_q067_pipeline(ROOT)
     recorded_qa = project_state.get("quality_assurance", {}).get(
         "last_verified_self_hosted_qa", {}
     )
@@ -168,6 +171,7 @@ def generate(
                 "self_hosted_output_formal_evidence": False,
             },
         },
+        "q067_execution_pipeline": q067_pipeline,
         "scientific_state_recorded": {
             "latest_formal_trial": project_state.get("latest_formal_trial"),
             "latest_formal_status": project_state.get("latest_trial_status"),
@@ -233,6 +237,18 @@ def generate(
 - Q023 is recorded as **COVERAGE_VALIDATED** and Q025 as **DATE_PIT_VALIDATED**; these are data-contract findings, not promotion evidence.
 - No current candidate is authorized for promotion or live execution.
 - Candidate discovery and PIT feasibility remain the required steps before any new formal performance evaluation.
+
+### Q067 execution pipeline
+
+- Operational state: **{q067_pipeline["state"]}**.
+- Coverage receipt: **{q067_pipeline["coverage_receipt"]["status"] or "MISSING"}**.
+- PIT receipt: **{q067_pipeline["pit_receipt"]["status"] or "MISSING"}**.
+- Performance authorization: **{q067_pipeline["performance_authorization"]["authorized"]}**.
+- Performance evidence: **{q067_pipeline["performance_result"]["status"] or "MISSING"}**.
+- Ledger reconciled: **{q067_pipeline["ledger_reconciled"]}**.
+- Blocking reasons: **{"; ".join(q067_pipeline["blocking_reasons"]) or "none"}**.
+
+This is an operational pipeline summary only; it does not create scientific evidence or select a candidate.
 
 ### Resource policy
 
