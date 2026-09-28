@@ -15,6 +15,8 @@ CANDIDATES = (
     "C11_VOLUME_CONFIRMED_TREND_126",
 )
 
+MIN_HISTORY_INDEX = {"C7_LOW_MAX_21": 21, "C8_LOW_IDIO_VOL_273": 273, "C9_LONG_TERM_REVERSAL_756": 756, "C10_TREND_EFFICIENCY_63": 63, "C11_VOLUME_CONFIRMED_TREND_126": 146}
+
 GOVERNANCE = {
     "performance_evaluation": False, "selection_used": False,
     "holdout_used_for_selection": False, "parameter_search": False,
@@ -22,7 +24,7 @@ GOVERNANCE = {
     "variant_search": False, "family_ranking": False,
     "promotion_decision": False, "automatic_promotion": False,
 }
-Safety = {"paper_only": True, "live_trading_enabled": False, "orders_enabled": False, "automatic_promotion": False}
+SAFETY = {"paper_only": True, "live_trading_enabled": False, "orders_enabled": False, "automatic_promotion": False}
 
 def _validate_assets(assets: Mapping[str, Sequence[object]], symbols: Sequence[str]) -> None:
     if not symbols: raise ValueError("symbols must be non-empty")
@@ -91,13 +93,17 @@ def candidate_scores_at(assets, index: int, *, symbols: Sequence[str]) -> dict[s
 
 def candidate_targets_at(assets, index: int, *, symbols: Sequence[str]) -> dict[str, dict[str, float]]:
     scores = candidate_scores_at(assets, index, symbols=symbols)
-    return {
-        "C7_LOW_MAX_21": _top2(scores["C7_LOW_MAX_21"], symbols, False),
-        "C8_LOW_IDIO_VOL_273": _top2(scores["C8_LOW_IDIO_VOL_273"], symbols, False),
-        "C9_LONG_TERM_REVERSAL_756": _top2(scores["C9_LONG_TERM_REVERSAL_756"], symbols, False),
-        "C10_TREND_EFFICIENCY_63": _top2(scores["C10_TREND_EFFICIENCY_63"], symbols, True),
-        "C11_VOLUME_CONFIRMED_TREND_126": _top2(scores["C11_VOLUME_CONFIRMED_TREND_126"], symbols, True),
-    }
+    output = {}
+    for name in CANDIDATES:
+        if index < MIN_HISTORY_INDEX[name]:
+            output[name] = _zero(symbols)
+        else:
+            output[name] = _top2(
+                scores[name],
+                symbols,
+                name in {"C10_TREND_EFFICIENCY_63", "C11_VOLUME_CONFIRMED_TREND_126"},
+            )
+    return output
 
 def build_candidate_bank(assets, *, symbols: Sequence[str]):
     _validate_assets(assets, symbols)
