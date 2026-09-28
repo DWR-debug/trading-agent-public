@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:40:34.958822+00:00",
+  "generated_at_utc": "2026-09-28T17:42:03.893540+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -237,6 +237,16 @@
     ],
     "recent_commits": [
       {
+        "message": "DOCS: persist F2 SEC cloud source feasibility finding (#628)",
+        "sha": "a85c083677c24cdcecde3a2a3b8b75a5eed692d6",
+        "timestamp": "2026-09-28T19:41:49+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "141670392e8bc97a845214a2d7aef6d28f2030f6",
+        "timestamp": "2026-09-28T17:40:35Z"
+      },
+      {
         "message": "FIX: invoke Q089 coverage through Python module entrypoint (#627)",
         "sha": "885a01863bf4556ba4fa433bec61716ee681d610",
         "timestamp": "2026-09-28T19:40:18+02:00"
@@ -265,16 +275,6 @@
         "message": "OPS: retrigger Q089 on current hardened master",
         "sha": "3aeb7c02474ab2781e63e8af7cb57c4de0200d21",
         "timestamp": "2026-09-28T19:38:34+02:00"
-      },
-      {
-        "message": "TEST: accept Q089 snapshot loader fixture parameter (#625)",
-        "sha": "778115214a387cf41db0f796a1120039a7c19657",
-        "timestamp": "2026-09-28T19:38:23+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "45b3c35aae4beccb18ac54c569a7e2cd2c507de2",
-        "timestamp": "2026-09-28T17:37:53Z"
       }
     ]
   },
@@ -336,12 +336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "885a01863bf4556ba4fa433bec61716ee681d610",
+  "source_master_sha": "a85c083677c24cdcecde3a2a3b8b75a5eed692d6",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36459785857"
+    "run_id": "36459958313"
   }
 }
