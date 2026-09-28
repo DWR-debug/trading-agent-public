@@ -156,7 +156,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:28:22.364399+00:00",
+  "generated_at_utc": "2026-09-28T19:28:38.631877+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -279,6 +279,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "dc4cd07b11269f9091580c814b3b0a2c5b7f87aa",
+        "timestamp": "2026-09-28T19:28:22Z"
+      },
+      {
         "message": "FIX: harden Copilot queue release gate YAML",
         "sha": "2584145916a01104ea009753b815a9fa96e5dfdb",
         "timestamp": "2026-09-28T21:28:19+02:00"
@@ -312,11 +317,6 @@
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "69935c1d284c35644ea489c3a014ec67fd12f524",
         "timestamp": "2026-09-28T19:26:19Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "8c114ca568f6d53d3c41a726978e6f6eb2d08476",
-        "timestamp": "2026-09-28T19:20:54Z"
       }
     ]
   },
@@ -378,12 +378,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2584145916a01104ea009753b815a9fa96e5dfdb",
+  "source_master_sha": "dc4cd07b11269f9091580c814b3b0a2c5b7f87aa",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36472439376"
+    "run_id": "36472480146"
   }
 }
