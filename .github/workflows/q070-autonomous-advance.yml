@@ -7,6 +7,8 @@ on:
       - "research/evidence/q070_coverage_result.json"
       - "research/evidence/q070_pit_result.json"
 
+  workflow_dispatch:
+
 permissions:
   contents: write
 
@@ -72,5 +74,14 @@ jobs:
         shell: cmd
         run: |
           @echo off
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-dispatch"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-nuget-dispatch.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            mkdir "%PY_ROOT%" 2>nul
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
           set "DISPATCH_URL=https://api.github.com/repos/%GITHUB_REPOSITORY%/actions/workflows/q070-fixed-candidate-performance.yml/dispatches"
           "%PY_EXE%" -c "import json,os,urllib.request; u=os.environ['DISPATCH_URL']; req=urllib.request.Request(u,data=json.dumps({'ref':'master'}).encode('utf-8'),method='POST',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json'}); urllib.request.urlopen(req,timeout=30).read(); print('Q070_DISPATCH_PERFORMANCE OK')" || exit /b 1
