@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T16:41:03.454138+00:00",
+  "generated_at_utc": "2026-09-28T16:42:24.506857+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -228,6 +228,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: retrigger Q089 coverage/PIT after publisher race fix",
+        "sha": "c6ed04af629438974b87e82e9e27a8dbe801892d",
+        "timestamp": "2026-09-28T18:42:21+02:00"
+      },
+      {
+        "message": "FIX: make evidence publisher race-safe",
+        "sha": "e1bbafe60fd6013994af5dc65732489617aab4db",
+        "timestamp": "2026-09-28T18:42:08+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6b51f83572dd784f3e8ed336cb920e46494521bd",
+        "timestamp": "2026-09-28T16:41:03Z"
+      },
+      {
         "message": "RESEARCH: stage fundamental profitability PIT-feasibility design",
         "sha": "e09932f0bc346972b5fd71f9a3f658cc7274ae89",
         "timestamp": "2026-09-28T18:40:46+02:00"
@@ -251,21 +266,6 @@
         "message": "TEST: fix Q089 input-freeze temporary fixture",
         "sha": "7b3c4b61b86097c268b869223c4301b940b4e9a8",
         "timestamp": "2026-09-28T18:38:37+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "df199e20a0cfd9e25f4b07354b84910b6cb2eac8",
-        "timestamp": "2026-09-28T16:35:15Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9b1db073100882cde1ddfb895cbae8ecdee1873c",
-        "timestamp": "2026-09-28T16:34:57Z"
-      },
-      {
-        "message": "OPS: retrigger Q089 coverage/PIT after harness fix",
-        "sha": "e613ce6858df556c593c1065ed7760bc338c4f56",
-        "timestamp": "2026-09-28T18:34:52+02:00"
       }
     ]
   },
@@ -327,12 +327,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e09932f0bc346972b5fd71f9a3f658cc7274ae89",
+  "source_master_sha": "c6ed04af629438974b87e82e9e27a8dbe801892d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36452783351"
+    "run_id": "36452947855"
   }
 }
