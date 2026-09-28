@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T09:01:13.947509+00:00",
+  "generated_at_utc": "2026-09-28T09:02:00.212115+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -125,6 +125,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "Merge pull request #544 from DWR-debug/fix/q068-publisher-dependency-trigger-20260928",
+        "sha": "d70dd76bd4fb5644d89dfb2b0e528a11d0a486f3",
+        "timestamp": "2026-09-28T11:01:45+02:00"
+      },
+      {
+        "message": "OPS: trigger Q068 when its evidence publisher changes",
+        "sha": "0f6c9d1cee01ecedb8130fe20d8dbee2951d9c09",
+        "timestamp": "2026-09-28T11:01:26+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4b18f84612971f33cfaf647ec277b7f998609327",
+        "timestamp": "2026-09-28T09:01:14Z"
+      },
+      {
         "message": "Merge pull request #543 from DWR-debug/fix/github-contents-publisher-master-20260928",
         "sha": "04ce5fc65d5ab906d582cd978ef8834139bea3ed",
         "timestamp": "2026-09-28T11:00:58+02:00"
@@ -148,21 +163,6 @@
         "message": "Merge pull request #542 from DWR-debug/fix/q069-candidate-pit-off-by-one-20260928",
         "sha": "8b2c89aa8f49549d71cc4e7aac391829e9b23462",
         "timestamp": "2026-09-28T10:57:23+02:00"
-      },
-      {
-        "message": "RESEARCH: record Q069 PIT indexing integrity revision",
-        "sha": "5f377077242576ff25e2d1b3745fe872a034063d",
-        "timestamp": "2026-09-28T10:56:01+02:00"
-      },
-      {
-        "message": "DOCS: record Q069 decision-time indexing correction",
-        "sha": "4fb734c8056b7658fc6568940d568b01c9fcb2c5",
-        "timestamp": "2026-09-28T10:55:58+02:00"
-      },
-      {
-        "message": "FIX: remove next-bar leakage from Q069 candidate windows",
-        "sha": "e07ad332bb0c1177490a713058904d21693286a9",
-        "timestamp": "2026-09-28T10:55:29+02:00"
       }
     ]
   },
@@ -224,12 +224,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "04ce5fc65d5ab906d582cd978ef8834139bea3ed",
+  "source_master_sha": "d70dd76bd4fb5644d89dfb2b0e528a11d0a486f3",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36400850931"
+    "run_id": "36400928885"
   }
 }
