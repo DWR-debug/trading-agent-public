@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:54:34.705286+00:00",
+  "generated_at_utc": "2026-09-28T19:58:30.033318+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,6 +325,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: make local AI smoke fail-closed on G1 fallback",
+        "sha": "331a79ea0c8337a7a3dfd88b80a34105ee762294",
+        "timestamp": "2026-09-28T21:58:15+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5d4f5046906b2fac47e543f4147e3050e4c5fc6b",
+        "timestamp": "2026-09-28T19:54:34Z"
+      },
+      {
         "message": "FIX: make local AI bootstrap Constrained-Language safe",
         "sha": "76392b040f966c188efc8da0c46588e4fd54913b",
         "timestamp": "2026-09-28T21:54:19+02:00"
@@ -353,16 +363,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "af42bd783b05b0bc58c02d7e7ae1c837b51986cf",
         "timestamp": "2026-09-28T19:53:29Z"
-      },
-      {
-        "message": "EVIDENCE: replace Q077-R1 discovery placeholder with receipt summary",
-        "sha": "b5a4235c244ccbd73024091e53039d1bacaab697",
-        "timestamp": "2026-09-28T21:53:13+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "363ce2c5cf4cdc9571029d55115514665456af08",
-        "timestamp": "2026-09-28T19:52:57Z"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "76392b040f966c188efc8da0c46588e4fd54913b",
+  "source_master_sha": "331a79ea0c8337a7a3dfd88b80a34105ee762294",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36475455998"
+    "run_id": "36475902346"
   }
 }
