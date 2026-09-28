@@ -86,8 +86,13 @@ jobs:
           for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
           cd /d "%REPO_SRC%" || exit /b 1
           powershell.exe -NoProfile -NonInteractive -Command "$p='research/runs/q083_feasibility'; New-Item -ItemType Directory -Force -Path $p | Out-Null; [ordered]@{schema_version=1;task_id='Q-2026-09-28-083-FEASIBILITY';run_id=$env:GITHUB_RUN_ID;run_attempt=$env:GITHUB_RUN_ATTEMPT;source_commit=$env:GITHUB_SHA;runner_name=$env:RUNNER_NAME;runner_os=$env:RUNNER_OS;runner_arch=$env:RUNNER_ARCH;paper_only=$true;live_trading_enabled=$false;orders_enabled=$false;automatic_promotion=$false;formal_scientific_evidence=$false} | ConvertTo-Json | Set-Content -Encoding UTF8 ($p + '/runner_manifest.json')"
-          if not exist "research\runs\q083_feasibility\result.json" exit /b 1
-          if not exist "research\runs\q083_feasibility\runner_manifest.json" exit /b 1
+          set "PUBLISH=%GITHUB_WORKSPACE%\research\runs\q083_feasibility"
+          if exist "%PUBLISH%" rmdir /s /q "%PUBLISH%"
+          mkdir "%PUBLISH%" || exit /b 1
+          copy /Y "%REPO_SRC%\research\runs\q083_feasibility\result.json" "%PUBLISH%\result.json" || exit /b 1
+          copy /Y "%REPO_SRC%\research\runs\q083_feasibility\runner_manifest.json" "%PUBLISH%\runner_manifest.json" || exit /b 1
+          if not exist "%PUBLISH%\result.json" exit /b 1
+          if not exist "%PUBLISH%\runner_manifest.json" exit /b 1
           endlocal
 
       - name: Upload feasibility artifact
