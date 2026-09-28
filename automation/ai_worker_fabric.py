@@ -58,8 +58,8 @@ CONTEXT_FILES = {
         "research/governance/active_research_registry.json",
     ),
 }
-CONTEXT_FILE_LIMIT = 8000
-CONTEXT_TOTAL_LIMIT = 50000
+CONTEXT_FILE_LIMIT = 3000
+CONTEXT_TOTAL_LIMIT = 18000
 
 FORBIDDEN_TASK_FLAGS = (
     "deterministic_compute", "holdout_selection", "parameter_selection",
@@ -241,9 +241,17 @@ def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, s
         return result
     command = command_for(provider, build_prompt(task), check.get("binary"))
     started = time.monotonic()
-    proc = subprocess.run(command, cwd=Path.cwd(), text=True, capture_output=True,
-                          timeout=task.get("max_runtime_minutes", 15) * 60, check=False,
-                          env=env or os.environ.copy())
+    try:
+        proc = subprocess.run(command, cwd=Path.cwd(), text=True, capture_output=True,
+                              timeout=task.get("max_runtime_minutes", 15) * 60, check=False,
+                              env=env or os.environ.copy())
+    except OSError as exc:
+        result = {**base, "status": "FAILED_PROCESS", "returncode": None,
+                  "duration_seconds": round(time.monotonic() - started, 3),
+                  "stdout": "", "stderr": f"{type(exc).__name__}: {exc}",
+                  "command_binary": command[0]}
+        output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+        return result
     result = {**base, "status": "SUCCESS" if proc.returncode == 0 else "FAILED",
               "returncode": proc.returncode, "duration_seconds": round(time.monotonic() - started, 3),
               "stdout": proc.stdout[-20000:], "stderr": proc.stderr[-12000:], "command_binary": command[0]}
