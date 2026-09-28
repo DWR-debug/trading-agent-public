@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T16:19:12.247760+00:00",
+  "generated_at_utc": "2026-09-28T16:20:34.854761+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -228,6 +228,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: add authorization-gated Q089 performance runner",
+        "sha": "27557522260e3419e023c1ba14daa74337ac16f2",
+        "timestamp": "2026-09-28T18:20:17+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "afee47ee93a6ac42e5db39bc5a21d8f32d87a0c3",
+        "timestamp": "2026-09-28T16:19:12Z"
+      },
+      {
         "message": "RESEARCH: harden Q089 immutable input bundle",
         "sha": "aee5460e91a7c4145ee3a42b09c140f9d1e8dc85",
         "timestamp": "2026-09-28T18:18:54+02:00"
@@ -256,16 +266,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "fb9fa3dc71ab0d43567fc33f57c69c6aafa8a83c",
         "timestamp": "2026-09-28T16:14:31Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "af80769f1d1e4a260c1c121679dc94eb59ad0346",
-        "timestamp": "2026-09-28T16:14:03Z"
-      },
-      {
-        "message": "RESEARCH: stage Q089 clean fresh Q069 validation",
-        "sha": "6a5e3ca38366d90db9e0076d5bc5412ec17caaf6",
-        "timestamp": "2026-09-28T18:13:46+02:00"
       }
     ]
   },
@@ -327,12 +327,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "aee5460e91a7c4145ee3a42b09c140f9d1e8dc85",
+  "source_master_sha": "27557522260e3419e023c1ba14daa74337ac16f2",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36450136924"
+    "run_id": "36450299580"
   }
 }
