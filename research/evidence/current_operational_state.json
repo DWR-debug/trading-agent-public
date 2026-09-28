@@ -197,7 +197,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:48:57.199265+00:00",
+  "generated_at_utc": "2026-09-28T19:49:49.089583+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -320,6 +320,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: trigger Q077-R1 PIT validation",
+        "sha": "07d38d23d9bc4de04e67835832a30defbc8dd7b8",
+        "timestamp": "2026-09-28T21:49:39+02:00"
+      },
+      {
+        "message": "OPS: add Q077-R1 PIT workflow",
+        "sha": "139af37b117250b199890e7274fa9b127dbd92fa",
+        "timestamp": "2026-09-28T21:49:36+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q077-R1 PIT validator",
+        "sha": "3a1aec1a7b097463aaf0b5e9d00300b86fb83cad",
+        "timestamp": "2026-09-28T21:49:34+02:00"
+      },
+      {
+        "message": "RESEARCH: preregister Q077-R1 PIT validation",
+        "sha": "0ef4df9a079a5dbb4b255b807d6d6e4eca41bc9d",
+        "timestamp": "2026-09-28T21:49:31+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "73bef359de43ecf9e46cabd366f41972f83f00b5",
+        "timestamp": "2026-09-28T19:48:57Z"
+      },
+      {
         "message": "GOV: record Q077-R1 coverage validation",
         "sha": "8db95d00900b3d2543e716037a99b1bfd28be9d5",
         "timestamp": "2026-09-28T21:48:39+02:00"
@@ -333,31 +358,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "800f46af5dfa0a45f8aafadc84d2f82f6d0a2f47",
         "timestamp": "2026-09-28T19:47:26Z"
-      },
-      {
-        "message": "DOCS: synchronize current research registry states",
-        "sha": "a93537f1589cb2c10b1bb3987bc0dda742a51c6e",
-        "timestamp": "2026-09-28T21:47:13+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ac19135049a4019218d920ec5004bf5ba8839f96",
-        "timestamp": "2026-09-28T19:47:10Z"
-      },
-      {
-        "message": "GOV: record Q089 preflight completion state",
-        "sha": "b88784ee3581ed11d845988598e1529b2a80c5a7",
-        "timestamp": "2026-09-28T21:47:04+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9ae1a95287594b8c4f35261ee4b6fa2fcbf25eda",
-        "timestamp": "2026-09-28T19:46:54Z"
-      },
-      {
-        "message": "GOV: register Q077-R1 coverage repair",
-        "sha": "457c550932f3db2da6d3f9f1e9ebd592395f521c",
-        "timestamp": "2026-09-28T21:46:50+02:00"
       }
     ]
   },
@@ -427,12 +427,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8db95d00900b3d2543e716037a99b1bfd28be9d5",
+  "source_master_sha": "07d38d23d9bc4de04e67835832a30defbc8dd7b8",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36474811682"
+    "run_id": "36474911851"
   }
 }
