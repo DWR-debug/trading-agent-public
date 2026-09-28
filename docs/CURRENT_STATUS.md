@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `50b20f2569f5eeafba06c5974a1e1db196da3801`
+**Current operational snapshot:** `5c18f37ccf864c647e81b3bcef330ba88439b66d`
 
-**Generated (UTC):** `2026-09-28T19:09:15.307807+00:00`
+**Generated (UTC):** `2026-09-28T19:11:04.336516+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -17,7 +17,7 @@
 - Canonical data-layer infrastructure is merged.
 - Bounded agent routing uses two queue lanes with fail-closed task contracts.
 - Self-hosted Continuous QA is scheduled hourly at minute 15 under label `trading-agent-research`.
-- The current architecture claims one runner process; a second process is only a prepared scale path, not an online capacity claim.
+- Latest self-hosted capacity verification: two distinct Windows/X64 runner slots accepted concurrent jobs; see the timestamped capacity receipt.
 
 ### Scientific status
 
