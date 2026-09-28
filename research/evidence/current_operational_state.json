@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:25:35.659763+00:00",
+  "generated_at_utc": "2026-09-28T15:39:34.526388+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "HARDEN: research identity, authorization boundary and stale pipeline cleanup (#590)",
+        "sha": "96f52b360f3c557408db99d5fb8731c95ca31afc",
+        "timestamp": "2026-09-28T17:39:20+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "e6fd14867ad2d9e6cd051dd1db1c398fe9c7948f",
+        "timestamp": "2026-09-28T15:34:01Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "347ea968cd416c5c8623231b8a731f18bc788e65",
+        "timestamp": "2026-09-28T15:31:01Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "48e9b9ead569d4847d6b227bccbef7cfbb13ca77",
+        "timestamp": "2026-09-28T15:25:35Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "a2629d0351cc0d5bea21cbe95d0a40a944474391",
         "timestamp": "2026-09-28T15:25:16Z"
@@ -175,26 +195,6 @@
         "message": "EVIDENCE: quarantine Q086 identity-invalid feasibility run",
         "sha": "86f983d8d5335882957e4fdfbaa882d08d5bcadc",
         "timestamp": "2026-09-28T17:24:46+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3f529adbbfd8262ac3c9291e8a95d7dec5816bdf",
-        "timestamp": "2026-09-28T15:24:04Z"
-      },
-      {
-        "message": "FIX: refresh Q081-R1 source contract blob hash",
-        "sha": "db75cdfdb94cd8b46d703a3aa9b3f9d67c1ba742",
-        "timestamp": "2026-09-28T17:23:47+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "96a0813088ed98b4a5fe0f0f7c74ed29524d4743",
-        "timestamp": "2026-09-28T15:23:29Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "d18d8250870592a05f0c5f8999e4cd43cda8fcf9",
-        "timestamp": "2026-09-28T15:23:24Z"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a2629d0351cc0d5bea21cbe95d0a40a944474391",
+  "source_master_sha": "96f52b360f3c557408db99d5fb8731c95ca31afc",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36443450629"
+    "run_id": "36445243177"
   }
 }
