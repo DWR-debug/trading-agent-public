@@ -182,3 +182,38 @@ jobs:
           else
             echo "No explicit Q077 discovery trigger in this push."
           fi
+
+      - name: Dispatch explicit Q081 self-hosted reproduction
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff-tree --no-commit-id --name-only -r "${GITHUB_SHA}" | grep -Fxq "research/run_requests/q081_selfhosted_reproduction.trigger"; then
+            python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          url = (
+              "https://api.github.com/repos/"
+              + os.environ["GITHUB_REPOSITORY"]
+              + "/actions/workflows/q081-selfhosted-reproduction.yml/dispatches"
+          )
+          req = urllib.request.Request(
+              url,
+              data=json.dumps({"ref": "master"}).encode("utf-8"),
+              method="POST",
+              headers={
+                  "Authorization": "Bearer " + os.environ["GH_TOKEN"],
+                  "Accept": "application/vnd.github+json",
+                  "Content-Type": "application/json",
+              },
+          )
+          urllib.request.urlopen(req, timeout=30).read()
+          print("Q081_SELF_HOSTED_REPRODUCTION_DISPATCHED")
+          PY
+          else
+            echo "No explicit Q081 self-hosted reproduction trigger in this push."
+          fi
