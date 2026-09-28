@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T13:05:30.797815+00:00",
+  "generated_at_utc": "2026-09-28T13:06:14.720786+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "DOCS: add primary Q080 research references",
+        "sha": "a1511a5199b9ba126762fae89d7963731e6b0c29",
+        "timestamp": "2026-09-28T15:06:00+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ec93ae628aa8d511e476b39ca88bb4329d2f3fc0",
+        "timestamp": "2026-09-28T13:05:30Z"
+      },
+      {
         "message": "FIX: synchronize hourly self-hosted QA cadence",
         "sha": "97b577efdbc522d0c328935e164494d452b38c7a",
         "timestamp": "2026-09-28T15:05:17+02:00"
@@ -185,16 +195,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "62c8d92377db3af0ed3fe286d29710ca93c1247e",
         "timestamp": "2026-09-28T13:04:21Z"
-      },
-      {
-        "message": "OPS: trigger Q079 self-hosted reproduction",
-        "sha": "1b8883f45e44bf683c2078069175bb3880b9e9ee",
-        "timestamp": "2026-09-28T15:04:13+02:00"
-      },
-      {
-        "message": "OPS: add self-hosted Q079 reproduction path",
-        "sha": "0cf3bb393b29bde39061738dc281d1724a2c24ad",
-        "timestamp": "2026-09-28T15:04:09+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "97b577efdbc522d0c328935e164494d452b38c7a",
+  "source_master_sha": "a1511a5199b9ba126762fae89d7963731e6b0c29",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36426124261"
+    "run_id": "36426206090"
   }
 }
