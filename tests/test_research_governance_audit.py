@@ -171,7 +171,7 @@ def test_retired_authorizations_are_not_active(tmp_path):
     from pathlib import Path
     import json
 
-    _registry(tmp_path)
+    _prereg(tmp_path)
     _write(tmp_path, "research/authorizations/legacy.json", {
         "trial_id": "T-2026-09-27-052",
         "authorized": True,
