@@ -597,6 +597,17 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=4000,
     ),
 
+    AssetUniverse(
+        name="validation_2026_09_28_q068_fresh_e1_e2",
+        priority=73,
+        description=(
+            "Frozen fresh symbol-disjoint validation universe for Q068 E1/E2; "
+            "selected only by fixed source-order coverage discovery."
+        ),
+        symbols=("ETR", "PPL", "WEC", "FE", "D", "EXR", "PSA", "O"),
+        target_count=3500,
+    ),
+
 
 )
 
