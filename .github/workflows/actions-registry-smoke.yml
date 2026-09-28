@@ -22,17 +22,6 @@ concurrency:
 
 jobs:
   test:
-    if: >-
-      ${{
-        github.repository == 'DWR-debug/trading-agent-public' &&
-        (
-          github.event_name != 'issues' ||
-          (
-            github.event.issue.user.login == github.repository_owner &&
-            github.event.issue.title == 'OPS: CI recovered smoke'
-          )
-        )
-      }}
     strategy:
       fail-fast: false
       matrix:
