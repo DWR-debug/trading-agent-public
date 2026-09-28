@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T07:43:47.554072+00:00",
+  "generated_at_utc": "2026-09-28T07:45:09.211533+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -139,44 +139,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "Merge pull request #534 from DWR-debug/fix/q068-coverage-snapshot-path-20260928",
-        "sha": "b7225a25f5d5fdd296fd5d2e312acdef642bc6ae",
-        "timestamp": "2026-09-28T09:43:34+02:00"
+        "message": "Merge pull request #535 from DWR-debug/fix/q068-source-sha-pinning-20260928",
+        "sha": "12fbf523329a60325b7169bd133ff4319b663dda",
+        "timestamp": "2026-09-28T09:44:54+02:00"
       },
       {
-        "message": "TEST: lock Q068 coverage snapshot identity path",
-        "sha": "cb55cede1d779b24b6bad57ad4b7d57b78f21476",
-        "timestamp": "2026-09-28T09:43:15+02:00"
+        "message": "TEST: require Q068 exact source provenance",
+        "sha": "240d18076fc99a848e38e6f4ed91da7459c4c134",
+        "timestamp": "2026-09-28T09:44:36+02:00"
       },
       {
-        "message": "FIX: route Q068 snapshot under coverage trial identity",
-        "sha": "9a0a10de8c655717ec6be348f0d568bca132507a",
-        "timestamp": "2026-09-28T09:43:10+02:00"
+        "message": "OPS: pin Q068 workflow checkout to github SHA",
+        "sha": "a837acd32d6fb2873497c9ff73dd0b9043c59d14",
+        "timestamp": "2026-09-28T09:44:32+02:00"
       },
       {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "20e25fcb06c87e888608421c0516b8504109709a",
-        "timestamp": "2026-09-28T07:43:07Z"
+        "message": "OPS: pin Q068 workflow checkout to github SHA",
+        "sha": "66e2e5e0da35b2f18d8dfc9b11cf93cade73c0a0",
+        "timestamp": "2026-09-28T09:44:29+02:00"
+      },
+      {
+        "message": "OPS: pin Q068 workflow checkout to github SHA",
+        "sha": "47ed19d1212a50dde5b537e9553e99161de20e84",
+        "timestamp": "2026-09-28T09:44:25+02:00"
+      },
+      {
+        "message": "OPS: pin Q068 workflow checkout to github SHA",
+        "sha": "6cdd403a28809c2a67d87336c177460d044561d6",
+        "timestamp": "2026-09-28T09:44:21+02:00"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "081b74b770f8353938f463e148e3e44fd30629df",
-        "timestamp": "2026-09-28T07:42:28Z"
+        "sha": "6cf2f997b588f5a7c21adddf49e2d16ddc15bd20",
+        "timestamp": "2026-09-28T07:43:47Z"
       },
       {
-        "message": "Merge pull request #533 from DWR-debug/fix/q068-governance-schema-current-20260928",
-        "sha": "75381ad34532ea61fd1e730d4926179c4cfc7fd0",
-        "timestamp": "2026-09-28T09:42:11+02:00"
-      },
-      {
-        "message": "TEST: lock Q068 governance schema",
-        "sha": "b75f08262454fd5c5838ff726a7673f913f7b2a9",
-        "timestamp": "2026-09-28T09:41:49+02:00"
-      },
-      {
-        "message": "FIX: align Q068 governance check with frozen preregistration",
-        "sha": "8861d994a7749652e45a0b42152eadb001eb27d0",
-        "timestamp": "2026-09-28T09:41:45+02:00"
+        "message": "Merge pull request #534 from DWR-debug/fix/q068-coverage-snapshot-path-20260928",
+        "sha": "b7225a25f5d5fdd296fd5d2e312acdef642bc6ae",
+        "timestamp": "2026-09-28T09:43:34+02:00"
       }
     ]
   },
@@ -238,12 +238,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b7225a25f5d5fdd296fd5d2e312acdef642bc6ae",
+  "source_master_sha": "12fbf523329a60325b7169bd133ff4319b663dda",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36393227310"
+    "run_id": "36393352246"
   }
 }
