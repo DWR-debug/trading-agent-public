@@ -50,8 +50,8 @@ def validate_queued_issue(
         raise AgentDispatchError("Queued issue is no longer open.")
     if is_pull_request:
         raise AgentDispatchError("Queued item is a pull request, not an issue.")
-    if "agent-cli-ready" not in labels:
-        raise AgentDispatchError("Queued issue is no longer labeled agent-cli-ready.")
+    if not ({"agent", "agent-ready", "agent-cli-ready"} & set(labels)):
+        raise AgentDispatchError("Queued issue is no longer labeled agent/agent-ready/agent-cli-ready.")
 
 
 REQUIRED_FALSE_FLAGS = (
