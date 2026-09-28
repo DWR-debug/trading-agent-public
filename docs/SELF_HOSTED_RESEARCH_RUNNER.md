@@ -118,3 +118,29 @@ Damit gewinnen wir zusätzliche Rechenkapazität, ohne die Beweis- und Sicherhei
 ## Kapazitätsprinzip
 
 Mehr Compute wird nur für zulässige, reproduzierbare Arbeit verwendet. Eine zusätzliche Runner-Instanz dient der Parallelisierung unabhängiger Jobs; sie lockert keine Research-Gates und macht Self-hosted-Ausgaben nicht zu formaler Evidence.
+
+
+## Wiederherstellung des vorhandenen Windows-Runners
+
+Der bereits eingerichtete Runner unter `C:\Users\u419680\actions-runner` muss nicht neu registriert werden, solange seine bestehende GitHub-Runner-Konfiguration noch vorhanden ist.
+
+Minimaler Wiederanlauf auf dem bekannten Rechner:
+
+```powershell
+Set-Location C:\Users\u419680\actions-runner
+$svc = Get-Service | Where-Object { $_.Name -like "actions.runner*" }
+if ($svc) {
+  $svc | ForEach-Object {
+    if ($_.Status -ne "Running") { try { Start-Service -Name $_.Name -ErrorAction Stop } catch {} }
+  }
+}
+if (-not (Get-Process Runner.Listener -ErrorAction SilentlyContinue)) {
+  .\run.cmd
+}
+```
+
+Die frühere Prüfung zeigte genau diesen Pfad; bei der letzten Kontrolle war `Runner.Listener` nicht aktiv. Deshalb ist ein erneuter Download oder eine neue Runner-Registrierung nicht der erste Schritt.
+
+Nach dem Start sollte der Prozess `Runner.Listener` sichtbar sein. Die Repo-Seite wartet bereits mit dem Label `trading-agent-research` auf den Runner; Q067 Coverage/PIT und der Runner-Probe sind entsprechend konfiguriert.
+
+Falls `run.cmd` wegen Firmenrichtlinien nicht dauerhaft laufen darf, ist die alternative Wiederherstellung der bereits installierten Windows-Service-Variante über `svc.cmd start`. Eine neue Runner-Registrierung ist nur erforderlich, wenn die lokale Konfiguration verloren gegangen oder ungültig ist.
