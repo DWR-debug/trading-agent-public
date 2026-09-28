@@ -50,3 +50,17 @@ def test_q089_coverage_entrypoint_does_not_require_undefined_input_bundle(tmp_pa
     result = q089.coverage()
     assert result["selected"] == q089.CANDIDATE_POOL[:8]
     assert (tmp_path / "research" / "evidence" / "q089_coverage_result.json").exists()
+
+
+def test_q089_preregistration_coverage_receipt_uses_result_fingerprint():
+    import json
+    from pathlib import Path
+    prereg = json.loads(Path(
+        "research/preregistrations/q089_performance_2026_09_28.json"
+    ).read_text(encoding="utf-8"))
+    coverage_receipt = next(
+        item for item in prereg["identity_contract"]["required_receipts"]
+        if item["role"] == "coverage"
+    )
+    assert coverage_receipt["fingerprint_key"] == "result_fingerprint"
+    assert coverage_receipt["expected_data_contract_key"] == "coverage_result_fingerprint"
