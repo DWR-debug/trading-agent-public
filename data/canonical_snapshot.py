@@ -399,7 +399,9 @@ def load_frozen_snapshot(manifest_path: str | Path) -> dict[str, tuple[Candle, .
 
     for item in datasets:
         symbol = str(item["symbol"])
-        relative_path = Path(str(item["path"]))
+        # Snapshot manifests may have been generated on Windows. Normalize
+        # separators before resolving the same immutable dataset on POSIX.
+        relative_path = Path(str(item["path"]).replace("\\", "/"))
         path = relative_path if relative_path.is_absolute() else ROOT / relative_path
         with path.open("r", encoding="utf-8", newline="") as handle:
             reader = csv.DictReader(handle)
