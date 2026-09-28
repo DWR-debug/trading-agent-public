@@ -48,6 +48,11 @@ def test_eligible_filters_owner_label_assignment_and_pr():
     assert [x["number"] for x in eligible_issues([assigned, good], "DWR-debug")] == [1]
 
 
+def test_eligible_accepts_agent_ready_before_cli_activation():
+    candidate = issue(11, "2026-09-27T10:59:00Z", labels=["agent-ready"])
+    assert [x["number"] for x in eligible_issues([candidate], "DWR-debug")] == [11]
+
+
 def test_plan_retires_published_branch_and_fills_lane():
     result = plan(
         issues=[issue(2, "2026-09-27T11:00:00Z"), issue(3, "2026-09-27T11:01:00Z")],
