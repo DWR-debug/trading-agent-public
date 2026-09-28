@@ -23,7 +23,7 @@ jobs:
       - name: Checkout authorized master
         uses: actions/checkout@v5
         with:
-          ref: master
+          ref: ${{ github.sha }}
           fetch-depth: 1
 
       - name: Bootstrap pinned Python 3.13.15
