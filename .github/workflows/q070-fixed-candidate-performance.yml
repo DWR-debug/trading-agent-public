@@ -60,7 +60,15 @@ jobs:
           set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q070\tools\python.exe"
           if not exist research\evidence\q070_coverage_result.json exit /b 1
           if not exist research\evidence\q070_pit_result.json exit /b 1
-          "%PY_EXE%" -c "import json; from pathlib import Path; c=json.loads(Path('research/evidence/q070_coverage_result.json').read_text()); p=json.loads(Path('research/evidence/q070_pit_result.json').read_text()); a=json.loads(Path('research/authorizations/q070_performance_2026_09_28.json').read_text()); assert c['status']=='COVERAGE_PASSED' and p['status']=='PIT_PASSED'; assert a['source_receipts']['coverage_result_fingerprint']==c['result_fingerprint']; assert a['source_receipts']['pit_result_fingerprint']==p['result_fingerprint']; print('Q070 PREREQUISITES OK')"
+          "%PY_EXE%" -c "import json; from pathlib import Path; c=json.loads(Path('research/evidence/q070_coverage_result.json').read_text()); p=json.loads(Path('research/evidence/q070_pit_result.json').read_text()); a=json.loads(Path('research/authorizations/q070_performance_2026_09_28.json').read_text()); assert c['status']=='COVERAGE_PASSED' and p['status']=='PIT_PASSED'; assert a['source_receipts']['coverage_fingerprint']==json.loads(Path('research/preregistrations/q070_performance_2026_09_28.json').read_text())['asset_freeze_fingerprint']; assert a['source_receipts']['pit_result_fingerprint']==p['result_fingerprint']; print('Q070 PREREQUISITES OK')"
+
+      - name: Verify frozen Q070 snapshot
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q070\tools\python.exe"
+          if not exist research\runs\q070_coverage\T-2026-09-28-070-COVERAGE\snapshot_manifest.json exit /b 1
+          "%PY_EXE%" -c "import json; from pathlib import Path; c=json.loads(Path('research/evidence/q070_coverage_result.json').read_text()); m=json.loads(Path('research/runs/q070_coverage/T-2026-09-28-070-COVERAGE/snapshot_manifest.json').read_text()); assert m['snapshot_fingerprint']==c['snapshot_fingerprint']; assert len(m['datasets'])==8; print('Q070 SNAPSHOT GATE PASS')"
 
       - name: Fixed-rule performance
         shell: cmd
