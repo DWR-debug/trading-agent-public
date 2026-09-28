@@ -15,6 +15,18 @@ Every item below must pass the same sequence before performance use:
 
 No parameter sweep, threshold search, asset search, horizon search, family ranking, holdout selection, automatic promotion or live execution is permitted in the frontier stage.
 
+## Current machine-feasibility status — 2026-09-28
+
+The frontier has now crossed its first machine-testable integrity boundary:
+
+- C29 has a deterministic price-path construction with synthetic future/t+1 mutation tests.
+- C30 has a deterministic PIT-bounded SEC risk-text peer state with synthetic leakage tests.
+- C31 has a deterministic public-news persistence state using a conservative observed-time boundary and synthetic leakage tests.
+- M4 has a deterministic industry-relative residual construction with synthetic future/t+1 mutation tests; historical PIT industry mapping remains a required data gate.
+- M5 has a deterministic public-rebalance event state with publication/effective-time validation and revision conflict protection.
+
+These implementations are **feasibility evidence only**. None is performance-authorized, ranked, promoted or considered a project result. Before any performance use, each mechanism still requires its actual historical public-data archive audit, immutable input preservation and the same one-shot authorization plus 13-gate evaluation used elsewhere in the project.
+
 ## Candidate frontier
 
 ### C29 — ILLUSION_MOMENTUM_GAP
