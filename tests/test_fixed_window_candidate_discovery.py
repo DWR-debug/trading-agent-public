@@ -27,3 +27,15 @@ def test_fixed_window_discovery_reuses_first_symbol_fetch(monkeypatch, tmp_path)
     assert report["holdout_evaluation"] is False
     assert report["selection_used"] is False
     assert Path(tmp_path / "discovery.json").exists()
+
+
+
+def test_prior_research_symbols_include_closed_q070_universe():
+    used = discovery._prior_research_symbols()
+    assert {"SPG", "CCI", "EQIX", "ESS", "ARE", "WY", "PLD", "KIM"} <= used
+
+
+def test_candidate_pool_excludes_q070_symbols():
+    used = discovery._prior_research_symbols()
+    remaining = [s for s in discovery.CANDIDATE_POOL if s not in used]
+    assert all(s not in {"SPG", "CCI", "EQIX", "ESS", "ARE", "WY", "PLD", "KIM"} for s in remaining)
