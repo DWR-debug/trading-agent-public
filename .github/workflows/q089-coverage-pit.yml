@@ -92,7 +92,7 @@ jobs:
           set "BASE_SHA_FILE=%RUNNER_TEMP%\q089_base_sha.txt"
           "%PY_EXE%" -c "import json,os,urllib.request; u='https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/ref/heads/master'; r=urllib.request.Request(u,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'}); print(json.load(urllib.request.urlopen(r,timeout=30))['object']['sha'])" > "%BASE_SHA_FILE%" || exit /b 1
           set /p BASE_SHA=<"%BASE_SHA_FILE%"
-          "%PY_EXE%" -c "import json,subprocess,sys,os; freeze=json.load(open('research/evidence/q089_asset_freeze.json',encoding='utf-8')); root='research/runs/q089_coverage/T-2026-09-28-089-COVERAGE'; files=['research/runs/q089_discovery/discovery.json','research/evidence/q089_coverage_result.json','research/evidence/q089_asset_freeze.json','research/evidence/q089_input_freeze_result.json',f'{root}/snapshot_manifest.json']+[f'{root}/datasets/{s}/1d.csv' for s in freeze['symbols']]; cmd=[sys.executable,'automation/github_contents_publish.py','--repository',os.environ['GITHUB_REPOSITORY'],'--branch','master','--base-sha','%BASE_SHA%']; [cmd.extend(['--file',f+'='+f]) for f in files]; subprocess.check_call(cmd)"
+          "%PY_EXE%" -c "import json,subprocess,sys,os; freeze=json.load(open('research/evidence/q089_asset_freeze.json',encoding='utf-8')); root='research/runs/q089_coverage/T-2026-09-28-089-COVERAGE'; files=['research/runs/q089_discovery/discovery.json','research/evidence/q089_coverage_result.json','research/evidence/q089_asset_freeze.json',f'{root}/snapshot_manifest.json']+[f'{root}/datasets/{s}/1d.csv' for s in freeze['symbols']]; cmd=[sys.executable,'automation/github_contents_publish.py','--repository',os.environ['GITHUB_REPOSITORY'],'--branch','master','--base-sha','%BASE_SHA%']; [cmd.extend(['--file',f+'='+f]) for f in files]; subprocess.check_call(cmd)"
           endlocal
 
       - name: Download newly persisted master for PIT
@@ -113,7 +113,8 @@ jobs:
           tar.exe -xzf "%PIT_ARCHIVE%" -C "%PIT_WORK%" || exit /b 1
           endlocal
 
-      - name: Run PIT and generate final preregistration
+      - name: Freeze adjusted-close input bundle, run PIT and generate final preregistration
+          "%PY_EXE%" automation/q089_input_freeze.py --coverage-root "research/runs/q089_coverage/T-2026-09-28-089-COVERAGE" --output-root "research/runs/q089_input_bundle/T-2026-09-28-089-INPUT-FREEZE" --result "research/evidence/q089_input_freeze_result.json" || exit /b 1
         shell: cmd
         run: |
           @echo off
@@ -126,6 +127,20 @@ jobs:
           "%PY_EXE%" automation/q089_coverage_pit.py preregister || exit /b 1
           "%PY_EXE%" automation/research_governance_audit.py || exit /b 1
           endlocal
+
+      - name: Persist Q089 immutable input bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          for /d %%D in ("%RUNNER_TEMP%\trading-agent-q089-pit-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q089\tools\python.exe"
+          cd /d "%REPO_SRC%" || exit /b 1
+          set "PYTHONPATH=%REPO_SRC%"
+          "%PY_EXE%" automation/publish_q089_input_bundle.py --bundle-root "research/runs/q089_input_bundle/T-2026-09-28-089-INPUT-FREEZE" --result "research/evidence/q089_input_freeze_result.json" --repository "%GITHUB_REPOSITORY%" || exit /b 1
+
 
       - name: Persist Q089 PIT, preregistration and registry
         env:
