@@ -168,6 +168,7 @@ def generate(
             "trial_ledger": "research/evidence/trial_ledger.json",
             "active_research_registry": "research/governance/active_research_registry.json",
         },
+        "active_research_registry": active_registry,
         "repository_state": {
             "default_branch": "master",
             "recent_commits": _recent_commits(),
@@ -278,6 +279,13 @@ def generate(
 - Q023 is recorded as **COVERAGE_VALIDATED** and Q025 as **DATE_PIT_VALIDATED**; these are data-contract findings, not promotion evidence.
 - No current candidate is authorized for promotion or live execution.
 - Candidate discovery and PIT feasibility remain the required steps before any new formal performance evaluation.
+
+### Active research registry
+
+- Q081-R1: **PREREGISTERED_WAITING_PREFLIGHT**; corrective reproduction only, no performance authorization.
+- Q089: **PLANNED**; clean fresh validation successor to quarantined Q086, not yet performance-authorized.
+- Q084, Q088 and Q082 remain **design/feasibility tracks** for unusual market-state, textual-network, rebalance-demand and SEC information channels.
+- The unusual-strategy frontier is maintained in `docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md` and is design-only until feasibility and provenance are established.
 
 ### Q067 execution pipeline
 
