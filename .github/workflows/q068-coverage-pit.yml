@@ -23,8 +23,16 @@ jobs:
       - name: Checkout frozen Q068 master
         uses: actions/checkout@v5
         with:
-          ref: master
+          ref: ${{ github.sha }}
           fetch-depth: 2
+
+      - name: Verify exact source checkout
+        shell: cmd
+        run: |
+          @echo off
+          for /f %%H in ('git rev-parse HEAD') do set "CHECKED_OUT_SHA=%%H"
+          if /I not "%CHECKED_OUT_SHA%"=="%GITHUB_SHA%" exit /b 1
+          echo Q068_EXACT_SOURCE_SHA=%CHECKED_OUT_SHA%
 
       - name: Bootstrap pinned Python 3.13.15
         shell: cmd
