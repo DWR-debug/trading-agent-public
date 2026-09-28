@@ -36,6 +36,17 @@ def test_q089_input_freeze_persists_adjusted_close(monkeypatch, tmp_path) -> Non
     output = tmp_path / "bundle"
     result = tmp_path / "result.json"
     _write_snapshot(coverage, ("AAA", "BBB"))
+    monkeypatch.setattr(module, "ROOT", tmp_path)
+    evidence = tmp_path / "research" / "evidence"
+    evidence.mkdir(parents=True)
+    (evidence / "q089_coverage_result.json").write_text(
+        json.dumps({
+            "trial_id": "T-2026-09-28-089-COVERAGE",
+            "status": "COVERAGE_PASSED",
+            "snapshot_fingerprint": "snapshot-test-fp",
+        }),
+        encoding="utf-8",
+    )
 
     receipt = freeze(coverage, output, result)
 
