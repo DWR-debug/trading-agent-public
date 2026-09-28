@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:02:52.848671+00:00",
+  "generated_at_utc": "2026-09-28T17:04:18.706684+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -225,8 +225,27 @@
     "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "research/rccsm-feasibility-workflow-2026-09-28",
+        "number": 609,
+        "title": "OPS: run RCCSM feasibility on permanent self-hosted PC",
+        "updatedAt": "2026-09-28T17:03:35Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/609"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "DOCS: define parallel PC and cloud research paths",
+        "sha": "c7eef32e76b3ba1ac8601373f4bfe438c7f98677",
+        "timestamp": "2026-09-28T19:04:01+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ffba4ce5426414aff84147816e70c33d4fbb3f2c",
+        "timestamp": "2026-09-28T17:02:52Z"
+      },
       {
         "message": "DOCS: make permanent work-PC priority explicit",
         "sha": "a9a41ddfb4c2c906f736805968772b0618f1a171",
@@ -256,16 +275,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "d7ae0b1ff7c2bedd265ed45323141dc4eb2eede3",
         "timestamp": "2026-09-28T16:56:00Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "13084ea75be65818b6eed21838c997cf78fe91ab",
-        "timestamp": "2026-09-28T16:51:52Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a347e7503058196c97ab2da82b31bdd57672c607",
-        "timestamp": "2026-09-28T16:50:25Z"
       }
     ]
   },
@@ -327,12 +336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a9a41ddfb4c2c906f736805968772b0618f1a171",
+  "source_master_sha": "c7eef32e76b3ba1ac8601373f4bfe438c7f98677",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36455350321"
+    "run_id": "36455509889"
   }
 }
