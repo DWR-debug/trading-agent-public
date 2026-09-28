@@ -17,13 +17,30 @@ if (-not $claude) { Write-Warning "Claude CLI is not installed; Claude lane will
 # Never allow Antigravity personal G1 credit fallback for project work.
 $settingsPath = Join-Path $HOME ".gemini\antigravity-cli\settings.json"
 New-Item -ItemType Directory -Force -Path (Split-Path $settingsPath) | Out-Null
-$settings = @{}
+$settings = $null
 if (Test-Path $settingsPath) {
-    try { $settings = Get-Content $settingsPath -Raw | ConvertFrom-Json -AsHashtable }
-    catch { if (-not $Force) { throw "Cannot parse $settingsPath. Use -Force only after verifying the file." } }
+    try { $settings = Get-Content $settingsPath -Raw | ConvertFrom-Json }
+    catch {
+        if (-not $Force) { throw "Cannot parse $settingsPath. Use -Force only after verifying the file." }
+        $settings = [pscustomobject]@{}
+    }
+} else {
+    $settings = [pscustomobject]@{}
 }
-$settings["useG1Credits"] = $false
-$settings["tradingAgentFreeOnly"] = $true
+
+$useG1 = $settings.PSObject.Properties["UseG1Credits"]
+if ($null -eq $useG1) { $useG1 = $settings.PSObject.Properties["useG1Credits"] }
+if ($null -ne $useG1) {
+    $useG1.Value = $false
+} else {
+    $settings | Add-Member -NotePropertyName "UseG1Credits" -NotePropertyValue $false
+}
+$tradingOnly = $settings.PSObject.Properties["tradingAgentFreeOnly"]
+if ($null -ne $tradingOnly) {
+    $tradingOnly.Value = $true
+} else {
+    $settings | Add-Member -NotePropertyName "tradingAgentFreeOnly" -NotePropertyValue $true
+}
 $settings | ConvertTo-Json -Depth 20 | Set-Content -Encoding UTF8 $settingsPath
 
 $providers = @()
@@ -44,3 +61,4 @@ Write-Output "LOCAL_AI_WORKER_ATTESTATION=$attestationPath"
 Write-Output "ANTIGRAVITY_OR_GEMINI_PRESENT=$([bool]($agy -or $gemini))"
 Write-Output "CLAUDE_PRESENT=$([bool]$claude)"
 Write-Output "PERSONAL_G1_CREDITS_DISABLED=$true"
+Write-Output "POWERSHELL_COMPATIBLE=WindowsPowerShell_5.1+"
