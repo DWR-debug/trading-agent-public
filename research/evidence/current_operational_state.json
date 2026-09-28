@@ -124,7 +124,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T18:00:37.362566+00:00",
+  "generated_at_utc": "2026-09-28T18:01:07.799205+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -247,6 +247,16 @@
     ],
     "recent_commits": [
       {
+        "message": "TEST: use isolated Q089 preregistration fixture (#636)",
+        "sha": "774f8af082d6ac99f74502bedc4bfb224473503b",
+        "timestamp": "2026-09-28T20:00:49+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9fbdc80ee95002e127fb46a2fd28ffebad0d8319",
+        "timestamp": "2026-09-28T18:00:37Z"
+      },
+      {
         "message": "FIX: pin Node runtime for Gemini worker",
         "sha": "aca0728c659ccd7e605de6211831312f1291755a",
         "timestamp": "2026-09-28T20:00:21+02:00"
@@ -275,16 +285,6 @@
         "message": "DOCS: anchor parallel multi-model AI worker policy",
         "sha": "191dc002178e94dbbe3f98c7da9ea07b219dceec",
         "timestamp": "2026-09-28T19:59:26+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d21f975507d3dacc04e9ca139b04b2998f1dd52f",
-        "timestamp": "2026-09-28T17:59:12Z"
-      },
-      {
-        "message": "OPS: explicitly retrigger Q089 after governance key fix",
-        "sha": "baf9bd3743222f21bbca8961e4cb49e5f3ee1e1e",
-        "timestamp": "2026-09-28T19:59:01+02:00"
       }
     ]
   },
@@ -346,12 +346,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "aca0728c659ccd7e605de6211831312f1291755a",
+  "source_master_sha": "774f8af082d6ac99f74502bedc4bfb224473503b",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36462145954"
+    "run_id": "36462203756"
   }
 }
