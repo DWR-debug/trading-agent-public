@@ -1,1 +1,1 @@
-Activate hosted Q070 fallback after the focused test contract repair (2026-09-28).
+Activate hosted Q070 fallback after final publisher-contract test normalization (2026-09-28T10:24Z).
