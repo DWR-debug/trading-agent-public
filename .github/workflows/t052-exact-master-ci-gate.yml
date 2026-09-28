@@ -92,21 +92,6 @@ jobs:
             echo "ONLY_STATUS_SYNC_DESCENDANT_ALLOWED"
           fi
           echo "EXACT_MASTER_CODE_SHA=${GITHUB_SHA}"
-      - name: Report exact gate
-        shell: bash
-        run: |
-          echo "T052_EXACT_MASTER_CI_GATE=PASS"
-          echo "SOURCE_SHA=${GITHUB_SHA}"
- || true)"
-            if [ -n "$bad" ]; then
-              echo "MASTER_MOVED_WITH_CODE_CHANGES"
-              printf '%s
-' "$changed"
-              exit 1
-            fi
-            echo "ONLY_STATUS_SYNC_DESCENDANT_ALLOWED"
-          fi
-          echo "EXACT_MASTER_CODE_SHA=${GITHUB_SHA}"
 
       - name: Report exact gate
         shell: bash
