@@ -102,6 +102,7 @@ def test_q068_preregistration_freezes_exact_discovery_batch_and_governance():
     assert prereg["governance"]["performance_trial_authorized"] is False
     assert prereg["governance"]["holdout_used_for_selection"] is False
     assert prereg["governance"]["family_ranking"] is False
+    assert "family_search" not in prereg["governance"]
     assert prereg["safety"] == {
         "paper_only": True,
         "live_trading_enabled": False,
