@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T05:32:24.316207+00:00",
+  "generated_at_utc": "2026-09-28T05:33:28.484999+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -95,6 +95,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: bind Q067 coverage preregistration to explicit universe identity",
+        "sha": "6aa14a193a72ecf70fd9f3589ed009bcf5d12cf1",
+        "timestamp": "2026-09-28T07:33:15+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6795b311f883d099d7b1e803c16a17e17c988fcf",
+        "timestamp": "2026-09-28T05:32:24Z"
+      },
       {
         "message": "RESEARCH: prepare Q067 fixed-rule performance evaluation",
         "sha": "539dd1b2ddc7395a5b8641133e41eadeb134070d",
@@ -124,16 +134,6 @@
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "ad56f6343b7918eabf6d918256b9fae8a94cbc7f",
         "timestamp": "2026-09-28T05:27:07Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "6eaf1a85b609fe258ea23eb3a66ac7d223bd25ed",
-        "timestamp": "2026-09-28T05:16:30Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6e1124d38d2842c86babe97cb58054b56aaa8788",
-        "timestamp": "2026-09-28T05:07:54Z"
       }
     ]
   },
@@ -195,12 +195,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "539dd1b2ddc7395a5b8641133e41eadeb134070d",
+  "source_master_sha": "6aa14a193a72ecf70fd9f3589ed009bcf5d12cf1",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36382337107"
+    "run_id": "36382414877"
   }
 }
