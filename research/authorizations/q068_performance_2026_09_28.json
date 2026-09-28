@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
   "authorization_id": "Q068-PERFORMANCE-HOSTED-FALLBACK-2026-09-28",
-  "authorized": true,
-  "performance_execution_authorized": true,
+  "authorized": false,
+  "performance_execution_authorized": false,
   "execution_scope": "Q068_FIXED_RULE_PERFORMANCE_ONLY",
   "authorization_basis": "Existing immutable Q068 coverage and PIT receipts passed; self-hosted auto-advance is capacity-blocked, so the same frozen deterministic execution is run on the public GitHub-hosted runner.",
   "required_prerequisites": [
@@ -35,5 +35,10 @@
     "LIVE_TRADING_ENABLED": false,
     "ORDERS_ENABLED": false,
     "AUTOMATIC_PROMOTION": false
-  }
+  },
+  "revoked": true,
+  "revoked_at": "2026-09-28T10:35:00Z",
+  "revocation_reason": "Frozen Q068 snapshot is not persistently available and current deterministic reconstruction does not reproduce authoritative snapshot_fingerprint 71213a51c2885f15d545e53fab6b1ddfe84e7be3a4583385923e6e51ad347cbd.",
+  "scientific_status": "NO_SCIENTIFIC_OUTCOME",
+  "note": "Coverage and PIT receipts remain valid standalone preflight evidence; no Q068 performance evaluation is authorized because data provenance for the frozen snapshot was lost."
 }

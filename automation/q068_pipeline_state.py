@@ -21,6 +21,9 @@ PIT_RESULT = ROOT / "research/evidence/q068_pit_result.json"
 PERFORMANCE_RESULT = ROOT / "research/evidence/q068_performance_result.json"
 LEDGER = ROOT / "research/evidence/trial_ledger.json"
 PREREG = ROOT / "research/preregistrations/q068_performance_2026_09_28.json"
+SNAPSHOT_ROOT = ROOT / "research/runs/q068_coverage/T-2026-09-28-068-COVERAGE"
+SNAPSHOT_MANIFEST = SNAPSHOT_ROOT / "snapshot_manifest.json"
+SNAPSHOT_SYMBOLS = ("ETR", "PPL", "WEC", "FE", "D", "EXR", "PSA", "O")
 
 SAFETY = {
     "paper_only": True,
@@ -60,6 +63,22 @@ def summarize(repo_root: Path = ROOT) -> dict[str, Any]:
 
     blockers: list[str] = []
     state = "DESIGN_FROZEN"
+
+    snapshot_manifest = repo_root / SNAPSHOT_MANIFEST.relative_to(ROOT)
+    snapshot_ready = False
+    if snapshot_manifest.exists():
+        manifest = _load(snapshot_manifest)
+        dataset_ready = all(
+            (repo_root / SNAPSHOT_ROOT.relative_to(ROOT) / "datasets" / symbol / "1d.csv").exists()
+            for symbol in SNAPSHOT_SYMBOLS
+        )
+        snapshot_ready = (
+            manifest is not None
+            and dataset_ready
+            and manifest.get("snapshot_fingerprint") == (coverage or {}).get("snapshot_fingerprint")
+        )
+    if not snapshot_ready:
+        blockers.append("Q068 frozen snapshot not persistently available with authoritative fingerprint")
 
     if prereg is None:
         blockers.append("Q068 performance preregistration missing")
@@ -115,7 +134,9 @@ def summarize(repo_root: Path = ROOT) -> dict[str, Any]:
         and pit.get("selection_used") is False
     )
 
-    if preflight_pass:
+    if preflight_pass and not snapshot_ready:
+        state = "PREFLIGHT_BLOCKED"
+    elif preflight_pass:
         if auth is None:
             state = "PREFLIGHT_PASSED_WAITING_FOR_AUTO_AUTH"
         elif (

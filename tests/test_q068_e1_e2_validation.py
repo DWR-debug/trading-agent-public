@@ -190,3 +190,23 @@ def test_q068_frozen_source_contract_is_explicitly_locked():
         for value in expected.values():
             assert value in text
         assert "Q068 SOURCE CONTRACT OK" in text or "Q068 AUTH SOURCE CONTRACT OK" in text
+
+
+def test_q068_pipeline_state_requires_persistent_frozen_snapshot():
+    text=Path("automation/q068_pipeline_state.py").read_text(encoding="utf-8")
+    assert "Q068 frozen snapshot not persistently available with authoritative fingerprint" in text
+    assert "snapshot_manifest" in text
+
+
+def test_q068_authorization_contract_is_fail_closed_when_revoked():
+    p=json.loads(Path("research/authorizations/q068_performance_2026_09_28.json").read_text(encoding="utf-8"))
+    assert p["authorized"] is False
+    assert p["performance_execution_authorized"] is False
+    assert p["revoked"] is True
+    assert p["scientific_status"] == "NO_SCIENTIFIC_OUTCOME"
+
+
+def test_q068_performance_requires_explicit_dispatch_only():
+    text=Path(".github/workflows/q068-fixed-mechanism-performance.yml").read_text(encoding="utf-8")
+    assert "workflow_dispatch:" in text
+    assert "research/authorizations/q068_performance_2026_09_28.json" not in text.split("permissions:", 1)[0]
