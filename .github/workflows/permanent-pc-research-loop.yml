@@ -22,7 +22,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: trading-agent-permanent-pc-loop
@@ -174,5 +174,80 @@ jobs:
         with:
           name: local-ai-smoke-${{ github.run_id }}
           path: ${{ runner.temp }}\local-ai-smoke.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  local_ai_worker:
+    needs: [autonomous_pc, local_ai_smoke]
+    if: ${{ always() && needs.local_ai_smoke.result == 'success' && github.repository == 'DWR-debug/trading-agent-public' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        task:
+          - AI-2026-09-28-Q089-ADVERSARIAL
+          - AI-2026-09-28-UNUSUAL-FRONTIER
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 20
+    steps:
+      - name: Checkout current master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Bootstrap local AI policy
+        shell: cmd
+        run: |
+          @echo off
+          powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File ".\scripts\enable_local_ai_worker.ps1"
+          if errorlevel 1 exit /b 1
+
+      - name: Bootstrap pinned Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-ai-worker"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-ai-worker.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          endlocal
+
+      - name: Run bounded Gemini worker
+        shell: cmd
+        env:
+          AI_EXTERNAL_PROVIDER_ALLOWLIST: "true"
+          TRADING_AGENT_LOCAL_AI_MODE: "true"
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-ai-worker\tools\python.exe"
+          "%PY_EXE%" -m automation.ai_worker_fabric --run --provider "gemini_cli" --task "ai_requests\${{ matrix.task }}.json" --output "%RUNNER_TEMP%\ai-${{ matrix.task }}-gemini_cli.json"
+          type "%RUNNER_TEMP%\ai-${{ matrix.task }}-gemini_cli.json"
+
+      - name: Publish Gemini worker state
+        if: always()
+        shell: cmd
+        env:
+          AI_WORKER_TASK_ID: "${{ matrix.task }}"
+          AI_WORKER_PROVIDER: "gemini_cli"
+          AI_WORKER_STATE_PATH: "ops/ai_worker_state/${{ matrix.task }}__gemini_cli.json"
+          AI_WORKER_OUTPUT_PATH: "%RUNNER_TEMP%\ai-${{ matrix.task }}-gemini_cli.json"
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-ai-worker\tools\python.exe"
+          "%PY_EXE%" -m automation.publish_ai_worker_state
+
+      - name: Upload bounded AI receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: local-ai-worker-${{ matrix.task }}-gemini-${{ github.run_id }}
+          path: ${{ runner.temp }}\ai-${{ matrix.task }}-gemini_cli.json
           if-no-files-found: warn
           retention-days: 14
