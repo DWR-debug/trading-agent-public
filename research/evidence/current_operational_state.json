@@ -93,7 +93,14 @@
         "paid_fallback_allowed": false,
         "starts_utc": "2026-10-01T00:00:00Z"
       },
-      "current_pending_requests": [],
+      "current_pending_requests": [
+        {
+          "issue_number": "641",
+          "lane": "lane0",
+          "request_file": "agent_requests/lane0/AGENT-025.request",
+          "task_id": "AGENT-025"
+        }
+      ],
       "local_ai_smoke_after_research_lanes": true,
       "self_hosted_parallel_slots": 2
     },
@@ -167,7 +174,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:31:41.002235+00:00",
+  "generated_at_utc": "2026-09-28T19:35:00.815505+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -284,11 +291,33 @@
   },
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
-    "agent_queue_requests": [],
+    "agent_queue_requests": [
+      {
+        "issue_number": "641",
+        "lane": "lane0",
+        "request_file": "agent_requests/lane0/AGENT-025.request",
+        "task_id": "AGENT-025"
+      }
+    ],
     "default_branch": "master",
     "open_agent_ready_issues": [],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: stage AGENT-025 for protected Copilot queue",
+        "sha": "1dc6f9bd43410bd61e76b6f95774a1e51d95b6d8",
+        "timestamp": "2026-09-28T21:34:59+02:00"
+      },
+      {
+        "message": "OPS: bootstrap Antigravity CLI on persistent research PC",
+        "sha": "5db761d4a24f4a6cb4b977d2cbdfa0085c32cb6e",
+        "timestamp": "2026-09-28T21:34:45+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e7d593448057ea013f3e59eb77da72934dc4b7cb",
+        "timestamp": "2026-09-28T19:31:41Z"
+      },
       {
         "message": "FIX: validate Copilot queue YAML release gate",
         "sha": "6e8191258a8413e39a973fbfdec5f2729b471494",
@@ -313,21 +342,6 @@
         "message": "TEST: verify protected Copilot reserve documentation",
         "sha": "7e6b851d6155a0957930936755b2d8df36f9052b",
         "timestamp": "2026-09-28T21:29:14+02:00"
-      },
-      {
-        "message": "DOCS: expose permanent Copilot and runner orchestration in canonical status",
-        "sha": "a4c7af1e474271cd690abdca21a11f002f5f8d6d",
-        "timestamp": "2026-09-28T21:29:10+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "074f30fcc6570887eef10bc016231da91d04bdef",
-        "timestamp": "2026-09-28T19:29:06Z"
-      },
-      {
-        "message": "DOCS: anchor Copilot reserve to 2026-10-01",
-        "sha": "d722480d246191b37ed37b1ca313f99fd4de6bd3",
-        "timestamp": "2026-09-28T21:28:58+02:00"
       }
     ]
   },
@@ -397,12 +411,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "6e8191258a8413e39a973fbfdec5f2729b471494",
+  "source_master_sha": "1dc6f9bd43410bd61e76b6f95774a1e51d95b6d8",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36472830291"
+    "run_id": "36473215431"
   }
 }
