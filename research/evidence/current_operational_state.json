@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:08:26.355033+00:00",
+  "generated_at_utc": "2026-09-28T15:08:39.935148+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "bfa910c3c2233a6d1cf4ba38285fbdb410c3a1eb",
+        "timestamp": "2026-09-28T15:08:26Z"
+      },
+      {
         "message": "RESEARCH: trigger Q086 fresh disjoint coverage and PIT",
         "sha": "8d81ac63b1efdfcd2ef237aac914d7887c1f33ff",
         "timestamp": "2026-09-28T17:08:24+02:00"
@@ -190,11 +195,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "09b3baa487b1d2c93390f18293d35bc7ea4dfcf9",
         "timestamp": "2026-09-28T15:07:35Z"
-      },
-      {
-        "message": "TEST: enforce prior-research universe exclusion globally",
-        "sha": "0f1f431331ef2ae7b3507ecddb3b99ab1225152b",
-        "timestamp": "2026-09-28T17:07:34+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8d81ac63b1efdfcd2ef237aac914d7887c1f33ff",
+  "source_master_sha": "bfa910c3c2233a6d1cf4ba38285fbdb410c3a1eb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36441213789"
+    "run_id": "36441311600"
   }
 }
