@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T11:31:54.446374+00:00",
+  "generated_at_utc": "2026-09-28T11:32:08.485386+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,11 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d246c0ede6245c15ffee729c475b093eecc56ed1",
+        "timestamp": "2026-09-28T11:31:54Z"
+      },
+      {
         "message": "INFRA: add owner-gated CI recovered smoke trigger",
         "sha": "12f5b712b991ca1c05bf0c2f834b8008ed449fd8",
         "timestamp": "2026-09-28T13:31:51+02:00"
@@ -199,11 +204,6 @@
         "message": "OPS: request Q070 self-hosted performance advance",
         "sha": "fd91d9064aaebf166ba672e5d462b74f08c9e86b",
         "timestamp": "2026-09-28T13:30:01+02:00"
-      },
-      {
-        "message": "OPS: add explicit Q070 self-hosted advance trigger",
-        "sha": "ebf3911422a84cb6e3883beafa34274983c9998b",
-        "timestamp": "2026-09-28T13:29:56+02:00"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "12f5b712b991ca1c05bf0c2f834b8008ed449fd8",
+  "source_master_sha": "d246c0ede6245c15ffee729c475b093eecc56ed1",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36416162574"
+    "run_id": "36416190787"
   }
 }
