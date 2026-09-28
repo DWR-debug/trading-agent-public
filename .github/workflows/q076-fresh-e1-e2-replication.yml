@@ -1,0 +1,111 @@
+name: Q076 Fresh E1 E2 Replication
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q076_replication.trigger"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: trading-agent-q076
+  cancel-in-progress: true
+
+jobs:
+  freeze:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - name: Checkout exact master
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check pandas pytest
+      - name: Verify frozen design
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from config import settings
+          p=json.loads(Path("research/preregistrations/q076_fresh_e1_e2_replication_2026_09_28.json").read_text())
+          assert p["status"]=="PREREGISTERED_PERFORMANCE"
+          assert p["symbols"]==["SPG","CCI","EQIX","ESS","ARE","WY","PLD","KIM"]
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          assert settings.AUTOMATIC_PROMOTION is False
+          print("Q076 DESIGN/SAFETY OK")
+          PY
+      - name: Q076 coverage and PIT
+        run: |
+          python automation/q076_coverage_pit.py             --preregistration research/preregistrations/q076_fresh_e1_e2_replication_2026_09_28.json             --output-root research/runs/q076_coverage             --coverage-result research/evidence/q076_coverage_result.json             --pit-result research/evidence/q076_pit_result.json
+      - name: Freeze complete performance input bundle
+        run: |
+          python automation/q076_input_freeze.py             --coverage-root research/runs/q076_coverage/T-2026-09-28-076-COVERAGE             --output-root research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE             --result research/evidence/q076_input_freeze_result.json
+      - name: Validate frozen bundle
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path("research/evidence/q076_coverage_result.json").read_text())
+          p=json.loads(Path("research/evidence/q076_pit_result.json").read_text())
+          b=json.loads(Path("research/evidence/q076_input_freeze_result.json").read_text())
+          assert c["status"]=="COVERAGE_PASSED" and c["performance_trial_authorized"] is False
+          assert p["status"]=="PIT_PASSED" and p["performance_trial_authorized"] is False
+          assert b["status"]=="INPUT_BUNDLE_FROZEN"
+          print("Q076 PREFLIGHT/FREEZE OK")
+          print("BUNDLE",b["bundle_fingerprint"])
+          PY
+      - name: Publish immutable Q076 snapshot and inputs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          BASE_SHA="$(python -c 'import json,os,urllib.request; u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/git/ref/heads/master"; r=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"}); print(json.load(urllib.request.urlopen(r,timeout=30))["object"]["sha"])')"
+          export PUBLISH_MESSAGE="EVIDENCE: persist Q076 immutable input bundle"
+          python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$BASE_SHA"             --file research/evidence/q076_coverage_result.json=research/evidence/q076_coverage_result.json             --file research/evidence/q076_pit_result.json=research/evidence/q076_pit_result.json             --file research/evidence/q076_input_freeze_result.json=research/evidence/q076_input_freeze_result.json             --file research/runs/q076_coverage/T-2026-09-28-076-COVERAGE/snapshot_manifest.json=research/runs/q076_coverage/T-2026-09-28-076-COVERAGE/snapshot_manifest.json             --file research/runs/q076_coverage/T-2026-09-28-076-COVERAGE/datasets/SPG/1d.csv=research/runs/q076_coverage/T-2026-09-28-076-COVERAGE/datasets/SPG/1d.csv             --file research/runs/q076_coverage/T-2026-09-28-076-COVERAGE/datasets/CCI/1d.csv=research/runs/q076_coverage/T-2026-09-28-076-COVERAGE/datasets/CCI/1d.csv             --file research/runs/q076_coverage/T-2026-09-28-076-COVERAGE/datasets/EQIX/1d.csv=research/runs/q076_coverage/T-2026-09-28-076-COVERAGE/datasets/EQIX/1d.csv             --file research/runs/q076_coverage/T-2026-09-28-076-COVERAGE/datasets/ESS/1d.csv=research/runs/q076_coverage/T-2026-09-28-076-COVERAGE/datasets/ESS/1d.csv             --file research/runs/q076_coverage/T-2026-09-28-076-COVERAGE/datasets/ARE/1d.csv=research/runs/q076_coverage/T-2026-09-28-076-COVERAGE/datasets/ARE/1d.csv             --file research/runs/q076_coverage/T-2026-09-28-076-COVERAGE/datasets/WY/1d.csv=research/runs/q076_coverage/T-2026-09-28-076-COVERAGE/datasets/WY/1d.csv             --file research/runs/q076_coverage/T-2026-09-28-076-COVERAGE/datasets/PLD/1d.csv=research/runs/q076_coverage/T-2026-09-28-076-COVERAGE/datasets/PLD/1d.csv             --file research/runs/q076_coverage/T-2026-09-28-076-COVERAGE/datasets/KIM/1d.csv=research/runs/q076_coverage/T-2026-09-28-076-COVERAGE/datasets/KIM/1d.csv             --file research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE/input_bundle_manifest.json=research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE/input_bundle_manifest.json             --file research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE/SPG/adjusted_close.csv=research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE/SPG/adjusted_close.csv             --file research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE/CCI/adjusted_close.csv=research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE/CCI/adjusted_close.csv             --file research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE/EQIX/adjusted_close.csv=research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE/EQIX/adjusted_close.csv             --file research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE/ESS/adjusted_close.csv=research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE/ESS/adjusted_close.csv             --file research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE/ARE/adjusted_close.csv=research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE/ARE/adjusted_close.csv             --file research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE/WY/adjusted_close.csv=research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE/WY/adjusted_close.csv             --file research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE/PLD/adjusted_close.csv=research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE/PLD/adjusted_close.csv             --file research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE/KIM/adjusted_close.csv=research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE/KIM/adjusted_close.csv
+      - name: Prepare and publish Q076 authorization
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, subprocess
+          from pathlib import Path
+          prereg=json.loads(Path("research/preregistrations/q076_fresh_e1_e2_replication_2026_09_28.json").read_text())
+          coverage=json.loads(Path("research/evidence/q076_coverage_result.json").read_text())
+          pit=json.loads(Path("research/evidence/q076_pit_result.json").read_text())
+          bundle=json.loads(Path("research/evidence/q076_input_freeze_result.json").read_text())
+          files=["automation/q067_alpha_mechanisms.py","automation/q076_e1_e2_performance.py","data/canonical_snapshot.py","execution/cost_contract.py","config/settings.py"]
+          source_contract={p:subprocess.check_output(["git","rev-parse","HEAD:"+p],text=True).strip() for p in files}
+          auth={"schema_version":"1.0","authorization_id":"Q076-PERFORMANCE-AUTO-ONE-SHOT-2026-09-28","authorized":True,"performance_execution_authorized":True,"execution_scope":"Q076_FIXED_RULE_PERFORMANCE_ONLY","authorization_basis":"Coverage, PIT and complete performance input bundle all passed fixed prerequisites.","required_prerequisites":["T-2026-09-28-076-COVERAGE status=COVERAGE_PASSED","T-2026-09-28-076-PIT status=PIT_PASSED","T-2026-09-28-076-INPUT-FREEZE status=INPUT_BUNDLE_FROZEN"],"source_contract":source_contract,"source_receipts":{"coverage_result_fingerprint":coverage["result_fingerprint"],"pit_result_fingerprint":pit["result_fingerprint"],"input_bundle_fingerprint":bundle["bundle_fingerprint"]},"prohibited":["parameter selection","threshold selection","asset selection","family ranking","holdout selection","promotion","live execution"],"safety":{"PAPER_ONLY":True,"LIVE_TRADING_ENABLED":False,"ORDERS_ENABLED":False,"AUTOMATIC_PROMOTION":False}}
+          Path("research/authorizations").mkdir(parents=True,exist_ok=True)
+          Path("research/authorizations/q076_performance_2026_09_28.json").write_text(json.dumps(auth,indent=2)+"\n")
+          PY
+          BASE_SHA="$(python -c 'import json,os,urllib.request; u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/git/ref/heads/master"; r=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"}); print(json.load(urllib.request.urlopen(r,timeout=30))["object"]["sha"])')"
+          export PUBLISH_MESSAGE="OPS: authorize Q076 fixed-rule performance"
+          python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$BASE_SHA" --file research/authorizations/q076_performance_2026_09_28.json=research/authorizations/q076_performance_2026_09_28.json
+      - name: Upload immutable bundle
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q076-immutable-input-bundle
+          path: |
+            research/evidence/q076_coverage_result.json
+            research/evidence/q076_pit_result.json
+            research/evidence/q076_input_freeze_result.json
+            research/runs/q076_coverage/T-2026-09-28-076-COVERAGE
+            research/runs/q076_input_bundle/T-2026-09-28-076-INPUT-FREEZE
+          retention-days: 30
+
