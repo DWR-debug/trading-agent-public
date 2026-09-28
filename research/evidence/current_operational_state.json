@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:23:12.415576+00:00",
+  "generated_at_utc": "2026-09-28T17:23:42.533296+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -237,6 +237,21 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: retrigger q089_coverage_pit.trigger on current repaired master",
+        "sha": "c5eaee0902e0b69f205656549667a303969979c2",
+        "timestamp": "2026-09-28T19:23:31+02:00"
+      },
+      {
+        "message": "OPS: retrigger q081r1_preflight_final.trigger on current repaired master",
+        "sha": "80bff059c93dd41d313d616bc7ee37b1aa8c8703",
+        "timestamp": "2026-09-28T19:23:28+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "464c4d7094c1fab8a76efbd668b93c978df78bbf",
+        "timestamp": "2026-09-28T17:23:12Z"
+      },
+      {
         "message": "RESEARCH: add lagged RCCSM state topology and mechanism disagreement (#615)",
         "sha": "08eccdfb409373e809a3428f081fd21992797c0d",
         "timestamp": "2026-09-28T19:22:53+02:00"
@@ -260,21 +275,6 @@
         "message": "OPS: retrigger q089_coverage_pit.trigger after governance and identity fixes",
         "sha": "c30ed8c007b17bc49e196c58766ec0ee81e626e9",
         "timestamp": "2026-09-28T19:15:42+02:00"
-      },
-      {
-        "message": "OPS: retrigger q081r1_preflight_final.trigger after governance and identity fixes",
-        "sha": "af47a838b7cc7c868456a2ff60cca8776532bc4c",
-        "timestamp": "2026-09-28T19:15:39+02:00"
-      },
-      {
-        "message": "FIX: repair Q089 identity binding and retire legacy authorizations (#614)",
-        "sha": "8d986b07fc277edf6d5a2131ae32a6ea301d736f",
-        "timestamp": "2026-09-28T19:15:27+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d910e0f020d466824f561970488cc245e3186c9d",
-        "timestamp": "2026-09-28T17:12:46Z"
       }
     ]
   },
@@ -336,12 +336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "08eccdfb409373e809a3428f081fd21992797c0d",
+  "source_master_sha": "c5eaee0902e0b69f205656549667a303969979c2",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36457726217"
+    "run_id": "36457787873"
   }
 }
