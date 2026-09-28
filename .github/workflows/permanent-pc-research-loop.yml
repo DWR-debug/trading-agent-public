@@ -16,6 +16,8 @@ on:
       - "tests/test_q089_input_freeze.py"
       - "tests/test_q089_performance_envelope.py"
       - "tests/test_research_governance_audit.py"
+      - "automation/local_ai_smoke.py"
+      - "scripts/enable_local_ai_worker.ps1"
   workflow_dispatch:
 
 permissions:
@@ -101,5 +103,56 @@ jobs:
           name: permanent-pc-loop-${{ matrix.lane }}-${{ github.run_id }}
           path: |
             research/runs/self_hosted/autonomous/${{ github.run_id }}/${{ matrix.lane }}/
+          if-no-files-found: warn
+          retention-days: 14
+
+  local_ai_smoke:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 8
+    steps:
+      - name: Checkout current master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Bootstrap local AI policy
+        shell: cmd
+        run: |
+          @echo off
+          powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File ".\scripts\enable_local_ai_worker.ps1"
+          if errorlevel 1 exit /b 1
+
+      - name: Bootstrap pinned Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-ai-smoke"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-ai-smoke.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          endlocal
+
+      - name: Run local Gemini smoke test
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-ai-smoke\tools\python.exe"
+          "%PY_EXE%" -m automation.local_ai_smoke > "%RUNNER_TEMP%\local-ai-smoke.json"
+          type "%RUNNER_TEMP%\local-ai-smoke.json"
+
+      - name: Upload local AI receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: local-ai-smoke-${{ github.run_id }}
+          path: ${{ runner.temp }}\local-ai-smoke.json
           if-no-files-found: warn
           retention-days: 14
