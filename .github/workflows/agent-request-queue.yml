@@ -34,10 +34,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Copilot Free is scarce; deterministic and external-AI resources run independently.
-        lane: [0]
+        # Keep both queue lanes; the scarce Copilot Free pool serializes actual sessions below.
+        lane: [0, 1]
     concurrency:
-      group: trading-agent-agent-cli-queue-lane-${{ matrix.lane }}
+      group: trading-agent-copilot-free-scarce-pool
       cancel-in-progress: false
     runs-on: ubuntu-24.04
     timeout-minutes: 50
