@@ -38,6 +38,7 @@ jobs:
           mkdir -p "${RUNNER_TEMP}/status"
           gh api "/repos/${GITHUB_REPOSITORY}/pulls?state=open&per_page=100" > "${RUNNER_TEMP}/status/open_prs_raw.json"
           gh api "/repos/${GITHUB_REPOSITORY}/issues?state=open&labels=agent-cli-ready&per_page=100" > "${RUNNER_TEMP}/status/agent_ready_issues_raw.json"
+          gh api "/repos/${GITHUB_REPOSITORY}/actions/runners?per_page=100" > "${RUNNER_TEMP}/status/runners_raw.json"
           python - <<'PY'
           import json
           import os
@@ -46,6 +47,8 @@ jobs:
           root = Path(os.environ["RUNNER_TEMP"], "status")
           prs = json.loads((root / "open_prs_raw.json").read_text(encoding="utf-8"))
           issues = json.loads((root / "agent_ready_issues_raw.json").read_text(encoding="utf-8"))
+          runners = json.loads((root / "runners_raw.json").read_text(encoding="utf-8"))
+          runner_items = runners.get("runners", []) if isinstance(runners, dict) else []
           payload = {
               "open_prs": [
                   {
@@ -68,6 +71,18 @@ jobs:
                   for item in issues
                   if "pull_request" not in item
               ],
+              "self_hosted_runners": {
+                  "total": len(runner_items),
+                  "online": sum(1 for item in runner_items if item.get("status") == "online"),
+                  "busy": sum(1 for item in runner_items if item.get("busy") is True),
+                  "online_names": sorted(item.get("name", "") for item in runner_items if item.get("status") == "online"),
+                  "online_labels": sorted({
+                      label.get("name", "")
+                      for item in runner_items if item.get("status") == "online"
+                      for label in item.get("labels", [])
+                      if label.get("name")
+                  }),
+              },
           }
           (root / "github_state.json").write_text(
               json.dumps(payload, ensure_ascii=False),
