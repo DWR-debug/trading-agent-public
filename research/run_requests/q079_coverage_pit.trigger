@@ -1,1 +1,1 @@
-Q079 coverage + PIT trigger — explicit status-sync dispatch bridge 2026-09-28T11:12Z.
+Q079 coverage + PIT trigger — corrected daily interval contract 2026-09-28T11:18Z.
