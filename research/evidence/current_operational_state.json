@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T05:30:05.540182+00:00",
+  "generated_at_utc": "2026-09-28T05:32:24.316207+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -95,6 +95,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "RESEARCH: prepare Q067 fixed-rule performance evaluation",
+        "sha": "539dd1b2ddc7395a5b8641133e41eadeb134070d",
+        "timestamp": "2026-09-28T07:32:11+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "0b7e4eef673c3740beb5c107508ea1544615cee1",
+        "timestamp": "2026-09-28T05:30:05Z"
+      },
       {
         "message": "OPS: reissue Q067 coverage/PIT authorization",
         "sha": "7efb0b08201b08e173e05b564af7bb7881ecc2d5",
@@ -124,16 +134,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "6e1124d38d2842c86babe97cb58054b56aaa8788",
         "timestamp": "2026-09-28T05:07:54Z"
-      },
-      {
-        "message": "STATE/RESEARCH: finalize Q066 and register Q067 design",
-        "sha": "e32c548e80990a008264cd31d14baaf2efe08b42",
-        "timestamp": "2026-09-28T07:07:41+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "25a1313f6672f782f9f289dc6f50b4168562c720",
-        "timestamp": "2026-09-28T05:07:34Z"
       }
     ]
   },
@@ -195,12 +195,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7efb0b08201b08e173e05b564af7bb7881ecc2d5",
+  "source_master_sha": "539dd1b2ddc7395a5b8641133e41eadeb134070d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36382162946"
+    "run_id": "36382337107"
   }
 }
