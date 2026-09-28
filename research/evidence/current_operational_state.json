@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T14:55:01.421276+00:00",
+  "generated_at_utc": "2026-09-28T14:55:14.829314+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d79e620115ea38b96f106f11048d960e683a94e1",
+        "timestamp": "2026-09-28T14:55:01Z"
+      },
+      {
         "message": "RESEARCH: rerun Q081 preflight on local runner",
         "sha": "39999def06f1743f81737dba4c8753509484ada8",
         "timestamp": "2026-09-28T16:54:51+02:00"
@@ -190,11 +195,6 @@
         "message": "OPS: expose Q083 source probe detail",
         "sha": "0e668a7c75db35b209255353847670aecc519812",
         "timestamp": "2026-09-28T16:27:25+02:00"
-      },
-      {
-        "message": "FIX: correct Q083 artifact name expression",
-        "sha": "96ac0f0f2ebd909b206b3fed66efe414712d25c0",
-        "timestamp": "2026-09-28T16:27:19+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "39999def06f1743f81737dba4c8753509484ada8",
+  "source_master_sha": "d79e620115ea38b96f106f11048d960e683a94e1",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36439560734"
+    "run_id": "36439581701"
   }
 }
