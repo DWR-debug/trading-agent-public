@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `e4a98be10a2aae523f4a060c737577da84943cf9`
+**Current operational snapshot:** `172c8edbe49bea7e4aa233eb8b65cce8de72a9a5`
 
-**Generated (UTC):** `2026-09-28T10:18:54.768644+00:00`
+**Generated (UTC):** `2026-09-28T10:19:31.690225+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -41,10 +41,10 @@ This is an operational pipeline summary only; it does not create scientific evid
 
 ### Q068 execution pipeline
 
-- Operational state: **PREFLIGHT_PASSED_WAITING_FOR_AUTO_AUTH**.
+- Operational state: **PERFORMANCE_AUTHORIZED**.
 - Coverage receipt: **COVERAGE_PASSED**.
 - PIT receipt: **PIT_PASSED**.
-- Performance authorization: **None**.
+- Performance authorization: **True**.
 - Performance evidence: **MISSING**.
 - Ledger reconciled: **False**.
 - Blocking reasons: **none**.

@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:18:54.768644+00:00",
+  "generated_at_utc": "2026-09-28T10:19:31.690225+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -98,9 +98,9 @@
     "no_selection_or_promotion": true,
     "paper_only": true,
     "performance_authorization": {
-      "authorized": null,
-      "execution_scope": null,
-      "present": false
+      "authorized": true,
+      "execution_scope": "Q068_FIXED_RULE_PERFORMANCE_ONLY",
+      "present": true
     },
     "performance_result": {
       "present": false,
@@ -112,7 +112,7 @@
       "status": "PIT_PASSED",
       "trial_id": "T-2026-09-28-068-PIT"
     },
-    "state": "PREFLIGHT_PASSED_WAITING_FOR_AUTO_AUTH"
+    "state": "PERFORMANCE_AUTHORIZED"
   },
   "q070_execution_pipeline": {
     "blocking_reasons": [
@@ -159,6 +159,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: retrigger Q070 hosted deterministic fallback (#560)",
+        "sha": "172c8edbe49bea7e4aa233eb8b65cce8de72a9a5",
+        "timestamp": "2026-09-28T12:19:17+02:00"
+      },
+      {
+        "message": "OPS: authorize Q068 hosted deterministic fallback",
+        "sha": "dd834bc70689089d52e29d5adb99a98c6f56f95f",
+        "timestamp": "2026-09-28T10:19:05Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "1258897109c793aa737fa742bf594225f0f15233",
+        "timestamp": "2026-09-28T10:18:54Z"
+      },
+      {
         "message": "FIX: harden hosted fallback shell parsing and stale Q070 tests (#559)",
         "sha": "e4a98be10a2aae523f4a060c737577da84943cf9",
         "timestamp": "2026-09-28T12:18:39+02:00"
@@ -182,21 +197,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "35b5e366a635e4780b9f6cba1ec7a614371ad663",
         "timestamp": "2026-09-28T10:11:44Z"
-      },
-      {
-        "message": "RESEARCH: Q072 information-source candidate bank (#557)",
-        "sha": "8644fef052307f7a13bbbe6c7e7b5629e7409178",
-        "timestamp": "2026-09-28T12:11:29+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "3468f64504a12da185bf0ed88032840b4e6b7f16",
-        "timestamp": "2026-09-28T10:09:14Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ea8890eb566df453f92b0b2de6b4238bd2dce7f5",
-        "timestamp": "2026-09-28T10:09:10Z"
       }
     ]
   },
@@ -258,12 +258,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e4a98be10a2aae523f4a060c737577da84943cf9",
+  "source_master_sha": "172c8edbe49bea7e4aa233eb8b65cce8de72a9a5",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36408956866"
+    "run_id": "36409018329"
   }
 }
