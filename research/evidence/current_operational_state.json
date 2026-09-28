@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T14:27:36.641364+00:00",
+  "generated_at_utc": "2026-09-28T14:27:50.232067+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a4117a62a2647df2ea4ada6297911888fecdd570",
+        "timestamp": "2026-09-28T14:27:36Z"
+      },
+      {
         "message": "OPS: expose Q083 source probe detail",
         "sha": "0e668a7c75db35b209255353847670aecc519812",
         "timestamp": "2026-09-28T16:27:25+02:00"
@@ -190,11 +195,6 @@
         "message": "SAFETY: fail-closed superseded Q079 execution path",
         "sha": "30f60369f8b5571177472730d43863dfbbe61e2a",
         "timestamp": "2026-09-28T16:25:56+02:00"
-      },
-      {
-        "message": "SAFETY: fail-closed superseded Q079 execution path",
-        "sha": "6bc4dd046276966b390c995bbad87407ac240d2c",
-        "timestamp": "2026-09-28T16:25:52+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0e668a7c75db35b209255353847670aecc519812",
+  "source_master_sha": "a4117a62a2647df2ea4ada6297911888fecdd570",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36436110963"
+    "run_id": "36436123565"
   }
 }
