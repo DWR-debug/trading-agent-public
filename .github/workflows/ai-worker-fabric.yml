@@ -42,6 +42,11 @@ jobs:
         with:
           python-version: '3.13'
 
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
       - name: Install Gemini CLI
         if: matrix.provider == 'gemini_cli'
         shell: bash
