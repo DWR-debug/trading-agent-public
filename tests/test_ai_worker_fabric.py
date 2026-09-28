@@ -1,6 +1,6 @@
 import json
 import pytest
-from automation.ai_worker_fabric import AIWorkerError, build_prompt, load_task, preflight, run_task
+from automation.ai_worker_fabric import AIWorkerError, _local_attestation, build_prompt, load_task, preflight, run_task
 
 def task(provider="gemini_cli"):
     return {
@@ -52,8 +52,9 @@ def test_bom_prefixed_local_attestation_is_accepted(tmp_path):
         "TRADING_AGENT_LOCAL_AI_MODE": "true",
         "TRADING_AGENT_AI_ATTESTATION": str(attestation),
     }
-    result = preflight("gemini_cli", env=env)
-    assert result["local_attestation"]["present"] is False or result["available"] is False
+    result = _local_attestation("gemini_cli", env)
+    assert result["present"] is True
+    assert result["path"] == str(attestation)
 
 def test_build_prompt_contains_safety_invariants():
     prompt = build_prompt(task())
