@@ -44,7 +44,8 @@ jobs:
         shell: cmd
         run: |
           @echo off
-          "%PY_ROOT%\tools\python.exe" -c "import json; from pathlib import Path; from config import settings; c=json.loads(Path('research/evidence/q070_coverage_result.json').read_text(encoding='utf-8')); p=json.loads(Path('research/evidence/q070_pit_result.json').read_text(encoding='utf-8')); assert c['trial_id']=='T-2026-09-28-070-COVERAGE' and c['status']=='COVERAGE_PASSED'; assert p['trial_id']=='T-2026-09-28-070-PIT' and p['status']=='PIT_PASSED'; assert c['performance_trial_authorized'] is False and p['performance_trial_authorized'] is False; assert c['selection_used'] is False and p['selection_used'] is False; assert settings.PAPER_ONLY is True and settings.LIVE_TRADING_ENABLED is False and settings.ORDERS_ENABLED is False and settings.AUTOMATIC_PROMOTION is False; print('Q070 PREFLIGHT PASS')"
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q070-advance\tools\python.exe"
+          "%PY_EXE%" -c "import json; from pathlib import Path; from config import settings; c=json.loads(Path('research/evidence/q070_coverage_result.json').read_text(encoding='utf-8')); p=json.loads(Path('research/evidence/q070_pit_result.json').read_text(encoding='utf-8')); assert c['trial_id']=='T-2026-09-28-070-COVERAGE' and c['status']=='COVERAGE_PASSED'; assert p['trial_id']=='T-2026-09-28-070-PIT' and p['status']=='PIT_PASSED'; assert c['performance_trial_authorized'] is False and p['performance_trial_authorized'] is False; assert c['selection_used'] is False and p['selection_used'] is False; assert settings.PAPER_ONLY is True and settings.LIVE_TRADING_ENABLED is False and settings.ORDERS_ENABLED is False and settings.AUTOMATIC_PROMOTION is False; print('Q070 PREFLIGHT PASS')"
 
       - name: Create one-shot authorization
         env:
