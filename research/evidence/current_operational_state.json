@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T12:56:11.357090+00:00",
+  "generated_at_utc": "2026-09-28T12:56:25.464322+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "62dd3ebc654b9c7d7c39a33b3ccec11d8743735d",
+        "timestamp": "2026-09-28T12:56:11Z"
+      },
+      {
         "message": "DOCS: document hourly self-hosted QA cadence",
         "sha": "c49c7fbb9a286e86c8f0f9e3c7700127624810b1",
         "timestamp": "2026-09-28T14:55:59+02:00"
@@ -190,11 +195,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "9fefdaf61826ed8a865044350313e984c0987a34",
         "timestamp": "2026-09-28T12:39:22Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "08fad1c9493ce6e8b4971bbfe93c7192367142ee",
-        "timestamp": "2026-09-28T12:39:17Z"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c49c7fbb9a286e86c8f0f9e3c7700127624810b1",
+  "source_master_sha": "62dd3ebc654b9c7d7c39a33b3ccec11d8743735d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36425050568"
+    "run_id": "36425055402"
   }
 }
