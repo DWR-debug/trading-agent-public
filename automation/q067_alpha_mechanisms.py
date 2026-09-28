@@ -41,7 +41,34 @@ E1_RECOVERY_CONSECUTIVE = 5
 E1_EXPOSURE_MULTIPLIER = 0.50
 
 E2_MIN_ABS_WEIGHT_CHANGE = 0.05
+GROSS_EXPOSURE_CAP = 1.0
+GROSS_EXPOSURE_TOLERANCE = 1e-12
 
+
+
+def validate_gross_exposure_cap(
+    weights: Sequence[Mapping[str, float]],
+    *,
+    symbols: Sequence[str] = Q067_SYMBOLS,
+    cap: float = GROSS_EXPOSURE_CAP,
+    tolerance: float = GROSS_EXPOSURE_TOLERANCE,
+) -> None:
+    """Fail closed when a generated portfolio exceeds its preregistered gross cap."""
+    if cap < 0.0 or tolerance < 0.0:
+        raise ValueError("cap and tolerance must be non-negative")
+    for index, row in enumerate(weights):
+        gross = 0.0
+        for symbol in symbols:
+            value = float(row.get(symbol, 0.0))
+            if value != value or value in (float("inf"), float("-inf")):
+                raise ValueError(f"non-finite portfolio weight at row {index}: {symbol}")
+            if value < -tolerance:
+                raise ValueError(f"negative long-only weight at row {index}: {symbol}")
+            gross += abs(value)
+        if gross > cap + tolerance:
+            raise ValueError(
+                f"gross exposure cap exceeded at row {index}: {gross:.12f} > {cap:.12f}"
+            )
 
 def fingerprint(value: object) -> str:
     return hashlib.sha256(
