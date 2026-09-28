@@ -59,7 +59,7 @@
         "issue_number": 589,
         "performance_authorization_allowed": false,
         "preregistration_path": "research/preregistrations/q089_performance_2026_09_28.json",
-        "state": "PREREGISTERED_WAITING_AUTHORIZATION",
+        "state": "PREREGISTERED_WAITING_PREFLIGHT",
         "trial_id": "T-2026-09-28-089-PERFORMANCE"
       },
       {
@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T21:24:29.243981+00:00",
+  "generated_at_utc": "2026-09-28T21:39:01.705127+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,6 +325,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: harden local Gemini worker checkout path",
+        "sha": "a0a3c6f96c28e6cbd5f8a796a468fa104b2e22a4",
+        "timestamp": "2026-09-28T23:38:49+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "a16d8146afe66ad07503a1ac2bc81b59a6875de3",
+        "timestamp": "2026-09-28T21:27:51Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "254dd1243712d64c5de7a0f3bb8d582a8426ade6",
+        "timestamp": "2026-09-28T21:27:44Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "a680fa54edd681b78579a6d728c9a725eac0a2a9",
+        "timestamp": "2026-09-28T21:27:20Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "e92f3593204ce25c2c0682551d4a6714f98af836",
+        "timestamp": "2026-09-28T21:26:00Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "031a1674e5ac6156df63c19645b49309e77b90fb",
+        "timestamp": "2026-09-28T21:24:29Z"
+      },
+      {
         "message": "FIX: invoke Q077 PIT runner as package module",
         "sha": "26939b895cbd92a55982239d7e9dd7466079a724",
         "timestamp": "2026-09-28T23:24:16+02:00"
@@ -333,36 +363,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "3eb4daf16dd5940c75b3cddac3445942759d9ed4",
         "timestamp": "2026-09-28T21:23:53Z"
-      },
-      {
-        "message": "FIX: read canonical snapshot fingerprint at top level",
-        "sha": "68fb64f820062815a27d0b023dd8e6e8896b3a93",
-        "timestamp": "2026-09-28T23:23:43+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "12070a7ae6a861231ee1f0bd6efbd6df0a5f82aa",
-        "timestamp": "2026-09-28T21:23:33Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "464b5e83676c63cadedee5c3ac80e65a2c1fc4a7",
-        "timestamp": "2026-09-28T21:23:17Z"
-      },
-      {
-        "message": "OPS: wake autonomous research lane",
-        "sha": "0b2be1d616e3d2d2123904ff3c0bb48756b4d807",
-        "timestamp": "2026-09-28T23:23:13+02:00"
-      },
-      {
-        "message": "OPS: wake autonomous research lane",
-        "sha": "73c29c64b2939b0994eeb280062d2fa09dafb695",
-        "timestamp": "2026-09-28T23:23:10+02:00"
-      },
-      {
-        "message": "OPS: wake autonomous research lane",
-        "sha": "8773c895c5153f416c2d61ead7021702e4ab0580",
-        "timestamp": "2026-09-28T23:23:08+02:00"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "26939b895cbd92a55982239d7e9dd7466079a724",
+  "source_master_sha": "a0a3c6f96c28e6cbd5f8a796a468fa104b2e22a4",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36485859268"
+    "run_id": "36487491752"
   }
 }
