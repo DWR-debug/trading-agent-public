@@ -12,11 +12,8 @@ def test_hosted_research_fallbacks_are_retired_and_fail_closed():
     assert q068["authorized"] is False
     assert q068["performance_execution_authorized"] is False
 
-    q070 = json.loads(
-        Path("research/authorizations/q070_performance_2026_09_28.json").read_text(encoding="utf-8")
-    )
-    assert q070["authorized"] is False
-    assert q070["performance_execution_authorized"] is False
+    assert not Path("research/authorizations/q070_performance_2026_09_28.json").exists()
+    assert not Path("research/evidence/q070_performance_result.json").exists()
 
 
 def test_retired_hosted_fallback_triggers_are_not_executable_paths():
