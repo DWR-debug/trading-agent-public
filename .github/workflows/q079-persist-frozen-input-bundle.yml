@@ -100,10 +100,23 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          # shellcheck disable=SC2034
           export PUBLISH_MESSAGE="EVIDENCE: persist Q079 immutable coverage PIT input bundle"
           for attempt in 1 2 3 4 5
           do
-            BASE_SHA="$(python -c 'import json,os,urllib.request; u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/git/ref/heads/master"; r=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"}); print(json.load(urllib.request.urlopen(r,timeout=30))["object"]["sha"] )'"
+            BASE_SHA="$(python - <<'PY'
+import json, os, urllib.request
+u = "https://api.github.com/repos/" + os.environ["GITHUB_REPOSITORY"] + "/git/ref/heads/master"
+req = urllib.request.Request(
+    u,
+    headers={
+        "Authorization": "Bearer " + os.environ["GH_TOKEN"],
+        "Accept": "application/vnd.github+json",
+    },
+)
+print(json.load(urllib.request.urlopen(req, timeout=30))["object"]["sha"])
+PY
+)"
             if python automation/github_contents_publish.py --repository "${GITHUB_REPOSITORY}" --branch master --base-sha "${BASE_SHA}" --file research/evidence/q079_coverage_result.json=research/evidence/q079_coverage_result.json --file research/evidence/q079_pit_result.json=research/evidence/q079_pit_result.json --file research/evidence/q079_input_freeze_result.json=research/evidence/q079_input_freeze_result.json --file research/runs/q079_coverage/T-2026-09-28-079-COVERAGE/snapshot_manifest.json=research/runs/q079_coverage/T-2026-09-28-079-COVERAGE/snapshot_manifest.json --file research/runs/q079_coverage/T-2026-09-28-079-COVERAGE/datasets/HAL/1d.csv=research/runs/q079_coverage/T-2026-09-28-079-COVERAGE/datasets/HAL/1d.csv --file research/runs/q079_coverage/T-2026-09-28-079-COVERAGE/datasets/LRCX/1d.csv=research/runs/q079_coverage/T-2026-09-28-079-COVERAGE/datasets/LRCX/1d.csv --file research/runs/q079_coverage/T-2026-09-28-079-COVERAGE/datasets/OXY/1d.csv=research/runs/q079_coverage/T-2026-09-28-079-COVERAGE/datasets/OXY/1d.csv --file research/runs/q079_coverage/T-2026-09-28-079-COVERAGE/datasets/COF/1d.csv=research/runs/q079_coverage/T-2026-09-28-079-COVERAGE/datasets/COF/1d.csv --file research/runs/q079_coverage/T-2026-09-28-079-COVERAGE/datasets/FIS/1d.csv=research/runs/q079_coverage/T-2026-09-28-079-COVERAGE/datasets/FIS/1d.csv --file research/runs/q079_coverage/T-2026-09-28-079-COVERAGE/datasets/FISV/1d.csv=research/runs/q079_coverage/T-2026-09-28-079-COVERAGE/datasets/FISV/1d.csv --file research/runs/q079_coverage/T-2026-09-28-079-COVERAGE/datasets/GM/1d.csv=research/runs/q079_coverage/T-2026-09-28-079-COVERAGE/datasets/GM/1d.csv --file research/runs/q079_coverage/T-2026-09-28-079-COVERAGE/datasets/LHX/1d.csv=research/runs/q079_coverage/T-2026-09-28-079-COVERAGE/datasets/LHX/1d.csv --file research/runs/q079_input_bundle/T-2026-09-28-079-INPUT-FREEZE/input_bundle_manifest.json=research/runs/q079_input_bundle/T-2026-09-28-079-INPUT-FREEZE/input_bundle_manifest.json --file research/runs/q079_input_bundle/T-2026-09-28-079-INPUT-FREEZE/HAL/adjusted_close.csv=research/runs/q079_input_bundle/T-2026-09-28-079-INPUT-FREEZE/HAL/adjusted_close.csv --file research/runs/q079_input_bundle/T-2026-09-28-079-INPUT-FREEZE/LRCX/adjusted_close.csv=research/runs/q079_input_bundle/T-2026-09-28-079-INPUT-FREEZE/LRCX/adjusted_close.csv --file research/runs/q079_input_bundle/T-2026-09-28-079-INPUT-FREEZE/OXY/adjusted_close.csv=research/runs/q079_input_bundle/T-2026-09-28-079-INPUT-FREEZE/OXY/adjusted_close.csv --file research/runs/q079_input_bundle/T-2026-09-28-079-INPUT-FREEZE/COF/adjusted_close.csv=research/runs/q079_input_bundle/T-2026-09-28-079-INPUT-FREEZE/COF/adjusted_close.csv --file research/runs/q079_input_bundle/T-2026-09-28-079-INPUT-FREEZE/FIS/adjusted_close.csv=research/runs/q079_input_bundle/T-2026-09-28-079-INPUT-FREEZE/FIS/adjusted_close.csv --file research/runs/q079_input_bundle/T-2026-09-28-079-INPUT-FREEZE/FISV/adjusted_close.csv=research/runs/q079_input_bundle/T-2026-09-28-079-INPUT-FREEZE/FISV/adjusted_close.csv --file research/runs/q079_input_bundle/T-2026-09-28-079-INPUT-FREEZE/GM/adjusted_close.csv=research/runs/q079_input_bundle/T-2026-09-28-079-INPUT-FREEZE/GM/adjusted_close.csv --file research/runs/q079_input_bundle/T-2026-09-28-079-INPUT-FREEZE/LHX/adjusted_close.csv=research/runs/q079_input_bundle/T-2026-09-28-079-INPUT-FREEZE/LHX/adjusted_close.csv
             then
               echo "Q079 persistent write succeeded on attempt $attempt"
