@@ -40,3 +40,20 @@ def test_q070_workflow_chain_uses_explicit_workflow_dispatch():
         assert "DISPATCH_" in text
         assert "https://api.github.com/repos/%GITHUB_REPOSITORY%/actions/workflows/" in text
         assert "github.token" in text
+
+
+def test_q070_coverage_snapshot_identity_helper_is_available():
+    from automation.q070_fresh_coverage import _coverage_snapshot_spec
+    import json
+    prereg=json.loads(Path("research/preregistrations/q070_performance_2026_09_28.json").read_text())
+    scoped=_coverage_snapshot_spec(prereg)
+    assert prereg["trial_id"]=="T-2026-09-28-070-PERFORMANCE"
+    assert scoped["trial_id"]=="T-2026-09-28-070-COVERAGE"
+
+
+def test_q070_performance_uses_frozen_coverage_fingerprint_not_missing_result_fingerprint():
+    text=Path("automation/q070_performance.py").read_text(encoding="utf-8")
+    assert '"coverage_fingerprint":_fp(freeze)' in text
+    assert 'coverage["result_fingerprint"]' not in text
+    reconcile=Path("automation/q070_reconcile.py").read_text(encoding="utf-8")
+    assert 'coverage_fingerprint' in reconcile
