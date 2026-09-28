@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T11:36:52.654259+00:00",
+  "generated_at_utc": "2026-09-28T11:37:11.434026+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3b6f64e1b40e4c4e048a3adfbcfa77c98d7904ea",
+        "timestamp": "2026-09-28T11:36:52Z"
+      },
+      {
         "message": "TEST: lock Q070 snapshot reconstruction defaults",
         "sha": "14d5d2233e0fe3b756c1f0e0f11700459ac86b4e",
         "timestamp": "2026-09-28T13:36:39+02:00"
@@ -190,11 +195,6 @@
         "message": "CLEANUP: remove temporary Actions diagnostics (.github/workflows/ci-recovered.yml)",
         "sha": "e3a0c41d279b2b35f0ae0f2d56d7283c27d178f1",
         "timestamp": "2026-09-28T13:34:37+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5e4a1dfdee1b5a3bcf27486627f41b106e249c18",
-        "timestamp": "2026-09-28T11:34:09Z"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "14d5d2233e0fe3b756c1f0e0f11700459ac86b4e",
+  "source_master_sha": "3b6f64e1b40e4c4e048a3adfbcfa77c98d7904ea",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36416678238"
+    "run_id": "36416683397"
   }
 }
