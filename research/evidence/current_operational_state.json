@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-27T20:26:18.225251+00:00",
+  "generated_at_utc": "2026-09-28T04:39:00.655077+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -96,44 +96,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "FIX: localize immutable Q043 manifest for Q045 compute (#510)",
-        "sha": "58925b737610508c440cf5ee66af1a71ff3addb9",
-        "timestamp": "2026-09-27T22:26:05+02:00"
+        "message": "STATE: record Q045 outcome and open failure diagnosis",
+        "sha": "fcdeef3e9b9f6009cce81d84fe98311b55da611e",
+        "timestamp": "2026-09-28T06:38:57+02:00"
       },
       {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "8533dc0d641ef13240cfbf68728dd1bd8601a21e",
-        "timestamp": "2026-09-27T20:25:54Z"
+        "message": "EVIDENCE: canonicalize Q045 replication performance",
+        "sha": "ad64f1d076cc476c0d0e61ec7e537500c1447e6b",
+        "timestamp": "2026-09-28T06:38:47+02:00"
       },
       {
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "fa03e63fcda4d5c55ada0f2f173114ed76d1a8dc",
-        "timestamp": "2026-09-27T20:24:45Z"
+        "sha": "16e45f70aae514683ef18aa0286f4f41f6fdb767",
+        "timestamp": "2026-09-28T04:31:38Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2d26154dfcac85d2dfdb01e165780c3401509d00",
-        "timestamp": "2026-09-27T20:24:32Z"
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "e50e02c596ccd2c72ef962ed4741361ac8f50d2c",
+        "timestamp": "2026-09-28T04:16:15Z"
       },
       {
-        "message": "FIX: resolve Q045 PIT dataset root from immutable artifact (#509)",
-        "sha": "1cb6119ad4a1a56e913d8cdbfb59329bd543df73",
-        "timestamp": "2026-09-27T22:24:20+02:00"
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "db14d3b3570bef641b6ecb5da711d9a20ccddc70",
+        "timestamp": "2026-09-28T04:13:55Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3c9d7a53e25d4685730ecab9f31b77eb694a793e",
-        "timestamp": "2026-09-27T20:23:03Z"
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "7d05852a6a5dd334383acb6ded91ba957840a82b",
+        "timestamp": "2026-09-28T03:57:38Z"
       },
       {
-        "message": "FIX: bind Q045 to immutable Q043 coverage (#508)",
-        "sha": "f552740beca94e5da9d33d24bd47d857407c3b64",
-        "timestamp": "2026-09-27T22:22:50+02:00"
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "974d95f74906808d5442dfa1ab2fa86016bda334",
+        "timestamp": "2026-09-28T03:57:21Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "bd278b0b73d4b4d99e2a75082e0d4d2c7b753e89",
-        "timestamp": "2026-09-27T20:21:23Z"
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "1895fe0b2c8729bde42baea09dbe11069e333ab7",
+        "timestamp": "2026-09-28T03:44:59Z"
       }
     ]
   },
@@ -157,7 +157,7 @@
     "decision_basis_stage": "Q044_FRESH_ALPHA_PIT",
     "latest_formal_status": "NO_ARM_PASSED_ALL_T052_GATES",
     "latest_formal_trial": "T-2026-09-27-056",
-    "next_research_focus_recorded": "Q045 fixed replication performance on the fresh Q043 universe, carrying every PIT-safe price-only arm plus pre-registered equal-weight ensembles; no holdout-driven pruning or parameter tuning.",
+    "next_research_focus_recorded": "Q066 failure-mechanism diagnosis and exposure decomposition on Q041/Q045 fixed-alpha evidence; identify whether drawdown bottleneck is asset concentration, regime concentration, correlation, turnover or signal overlap before any tuning.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -195,12 +195,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "58925b737610508c440cf5ee66af1a71ff3addb9",
+  "source_master_sha": "fcdeef3e9b9f6009cce81d84fe98311b55da611e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36348015346"
+    "run_id": "36378607572"
   }
 }
