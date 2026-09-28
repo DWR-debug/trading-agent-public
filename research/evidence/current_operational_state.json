@@ -54,7 +54,7 @@
         "issue_number": 589,
         "performance_authorization_allowed": false,
         "preregistration_path": "research/preregistrations/q089_performance_2026_09_28.json",
-        "state": "PREREGISTERED_WAITING_PREFLIGHT",
+        "state": "PREREGISTERED_WAITING_AUTHORIZATION",
         "trial_id": "T-2026-09-28-089-PERFORMANCE"
       },
       {
@@ -177,7 +177,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:46:54.184551+00:00",
+  "generated_at_utc": "2026-09-28T19:47:10.202975+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -300,6 +300,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOV: record Q089 preflight completion state",
+        "sha": "b88784ee3581ed11d845988598e1529b2a80c5a7",
+        "timestamp": "2026-09-28T21:47:04+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9ae1a95287594b8c4f35261ee4b6fa2fcbf25eda",
+        "timestamp": "2026-09-28T19:46:54Z"
+      },
+      {
         "message": "GOV: register Q077-R1 coverage repair",
         "sha": "457c550932f3db2da6d3f9f1e9ebd592395f521c",
         "timestamp": "2026-09-28T21:46:50+02:00"
@@ -328,16 +338,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "180d2a262872106dec4893dcceef286621b19ab4",
         "timestamp": "2026-09-28T19:43:31Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "4ce69ae3e9d80051965cf5586d361d8112f65348",
-        "timestamp": "2026-09-28T19:43:14Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "3e7bb6fbbefa2046da91e7d215eacde7613576ff",
-        "timestamp": "2026-09-28T19:43:03Z"
       }
     ]
   },
@@ -407,12 +407,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "457c550932f3db2da6d3f9f1e9ebd592395f521c",
+  "source_master_sha": "b88784ee3581ed11d845988598e1529b2a80c5a7",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36474579901"
+    "run_id": "36474602605"
   }
 }
