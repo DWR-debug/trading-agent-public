@@ -169,8 +169,8 @@ def run_discovery(
     # Cache the exact timestamps returned by the first fetch so coverage
     # selection never mixes two different source snapshots for one run.
     timestamp_cache: dict[str, list[str]] = {}
-    with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
-        futures = {pool.submit(_window_timestamps, symbol): symbol for symbol in candidates}
+    with ThreadPoolExecutor(max_workers=max(1, workers)) as executor:
+        futures = {executor.submit(_window_timestamps, symbol): symbol for symbol in candidates}
         for future in as_completed(futures):
             symbol = futures[future]
             try:
