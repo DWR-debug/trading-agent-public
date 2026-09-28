@@ -97,7 +97,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q084-feasibility-\${{ github.run_id }}-\${{ github.run_attempt }}
+          name: q084-feasibility-${{ github.run_id }}-${{ github.run_attempt }}
           path: research/runs/q084_feasibility/
           if-no-files-found: error
           retention-days: 14
