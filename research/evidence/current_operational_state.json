@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:05:43.082438+00:00",
+  "generated_at_utc": "2026-09-28T17:07:20.098502+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -237,6 +237,21 @@
     ],
     "recent_commits": [
       {
+        "message": "DOCS: record permanent PC queue mechanism",
+        "sha": "3a0563ef09775bdc2224eb4ceb294f65ecb5f624",
+        "timestamp": "2026-09-28T19:07:01+02:00"
+      },
+      {
+        "message": "OPS: keep self-hosted PC continuously supplied with bounded research (#611)",
+        "sha": "25a8136ae69da17b57641d261fdae4acef0f23f7",
+        "timestamp": "2026-09-28T19:06:53+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d70dbcdae9000410b38fe989b7227b8993139278",
+        "timestamp": "2026-09-28T17:05:43Z"
+      },
+      {
         "message": "OPS: run RCCSM feasibility in parallel on PC and cloud (#610)",
         "sha": "7b2c8ff093698e76143429678535ec1ea2acafa5",
         "timestamp": "2026-09-28T19:05:28+02:00"
@@ -260,21 +275,6 @@
         "message": "DOCS: define parallel PC and cloud research paths",
         "sha": "c7eef32e76b3ba1ac8601373f4bfe438c7f98677",
         "timestamp": "2026-09-28T19:04:01+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ffba4ce5426414aff84147816e70c33d4fbb3f2c",
-        "timestamp": "2026-09-28T17:02:52Z"
-      },
-      {
-        "message": "DOCS: make permanent work-PC priority explicit",
-        "sha": "a9a41ddfb4c2c906f736805968772b0618f1a171",
-        "timestamp": "2026-09-28T19:02:38+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a94dafed3201182a0dc6c99f02ad726bd7d0c335",
-        "timestamp": "2026-09-28T16:58:07Z"
       }
     ]
   },
@@ -336,12 +336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7b2c8ff093698e76143429678535ec1ea2acafa5",
+  "source_master_sha": "3a0563ef09775bdc2224eb4ceb294f65ecb5f624",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36455678925"
+    "run_id": "36455846120"
   }
 }
