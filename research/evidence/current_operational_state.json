@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:54:13.822140+00:00",
+  "generated_at_utc": "2026-09-28T10:54:25.274342+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,11 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "63c9c97ad052ecea05f12344120cd6f805a4f68f",
+        "timestamp": "2026-09-28T10:54:13Z"
+      },
+      {
         "message": "OPS: dispatch Q077 through status sync bridge",
         "sha": "d430d13269c287a335e08392283b85331623547f",
         "timestamp": "2026-09-28T12:54:11+02:00"
@@ -199,11 +204,6 @@
         "message": "RESEARCH: route Q077 through working coverage discovery workflow",
         "sha": "d013d56d5f0822a18b84b56b70ffc643cf54a02c",
         "timestamp": "2026-09-28T12:52:51+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "42527d4034c37f4f4166297b0494b4b5c03100b3",
-        "timestamp": "2026-09-28T10:52:47Z"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d430d13269c287a335e08392283b85331623547f",
+  "source_master_sha": "63c9c97ad052ecea05f12344120cd6f805a4f68f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36412365287"
+    "run_id": "36412441302"
   }
 }
