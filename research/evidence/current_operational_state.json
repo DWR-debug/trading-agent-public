@@ -124,7 +124,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:58:47.123535+00:00",
+  "generated_at_utc": "2026-09-28T17:59:12.259742+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -247,6 +247,21 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: explicitly retrigger Q089 after governance key fix",
+        "sha": "baf9bd3743222f21bbca8961e4cb49e5f3ee1e1e",
+        "timestamp": "2026-09-28T19:59:01+02:00"
+      },
+      {
+        "message": "FIX: make AI worker state publication race-safe",
+        "sha": "5e7438a6fbe11463181438bfc9d09211d803fc6e",
+        "timestamp": "2026-09-28T19:58:57+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3db530b867ca5d50984d3de8b6294fe204c491bc",
+        "timestamp": "2026-09-28T17:58:47Z"
+      },
+      {
         "message": "OPS: record AI worker state [skip ai-worker]",
         "sha": "ce62ceb76e49fdf5282cb08d79327ba34d1bba9a",
         "timestamp": "2026-09-28T17:58:43Z"
@@ -270,21 +285,6 @@
         "message": "RESEARCH: queue Q089 adversarial AI review",
         "sha": "5e4ec6a12d43799c013d4c28f2cd63ac3f1aba28",
         "timestamp": "2026-09-28T19:58:16+02:00"
-      },
-      {
-        "message": "OPS: add parallel free AI worker workflow",
-        "sha": "70a4ab4ecc47547b5330d6ed207e1c731cddbd35",
-        "timestamp": "2026-09-28T19:58:14+02:00"
-      },
-      {
-        "message": "DOCS: document free-only multi-model AI worker fabric",
-        "sha": "966cfb8aa1e3a4c32719811a7317a01689dfdd8d",
-        "timestamp": "2026-09-28T19:58:11+02:00"
-      },
-      {
-        "message": "TEST: add free-only AI worker fabric contract tests",
-        "sha": "610c845c9f0320d584fcadb6303dae59c7b1cf7b",
-        "timestamp": "2026-09-28T19:58:07+02:00"
       }
     ]
   },
@@ -346,12 +346,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ce62ceb76e49fdf5282cb08d79327ba34d1bba9a",
+  "source_master_sha": "baf9bd3743222f21bbca8961e4cb49e5f3ee1e1e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36461925599"
+    "run_id": "36461982015"
   }
 }
