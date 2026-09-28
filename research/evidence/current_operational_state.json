@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T09:07:01.416414+00:00",
+  "generated_at_utc": "2026-09-28T09:32:24.684541+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -162,6 +162,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: make Q068 evidence publishing runner-path deterministic (#548)",
+        "sha": "a1b505b90f10178f33d2ea827a7129920cec768c",
+        "timestamp": "2026-09-28T11:32:09+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "69d31cda7d6cbddfec09ee43489dc485150761c3",
+        "timestamp": "2026-09-28T09:30:32Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "e957c4286f728a79a3a62d269d17952ad7302508",
+        "timestamp": "2026-09-28T09:18:29Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "803ff4592344ca6b57d0476fc7bbced79f26ffad",
+        "timestamp": "2026-09-28T09:10:02Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3f3b68b095377ebd55f58cdd7c2df129a1152f4c",
+        "timestamp": "2026-09-28T09:07:01Z"
+      },
+      {
         "message": "Merge pull request #546 from DWR-debug/ops/q070-pipeline-status-20260928",
         "sha": "aab4331f97030dbe3c5a771a21a39918ebceb7c2",
         "timestamp": "2026-09-28T11:06:46+02:00"
@@ -175,31 +200,6 @@
         "message": "FIX: bind Q070 reconciliation to exact asset-freeze fingerprint",
         "sha": "2731103b64e41475abebf800decea89a7692dfcf",
         "timestamp": "2026-09-28T11:05:56+02:00"
-      },
-      {
-        "message": "FIX: bind Q070 performance to exact asset-freeze fingerprint",
-        "sha": "314b4c254b089dc1a3419f425444702370297624",
-        "timestamp": "2026-09-28T11:05:53+02:00"
-      },
-      {
-        "message": "FIX: make Q070 pipeline preflight strictly fail closed",
-        "sha": "f4351f975d6b5ac937992d72d211f46ce5f5246a",
-        "timestamp": "2026-09-28T11:05:47+02:00"
-      },
-      {
-        "message": "TEST: lock Q070 current operational status integration",
-        "sha": "3b2d5c1a9f553d2ee07473de297108d9b071ed9a",
-        "timestamp": "2026-09-28T11:05:05+02:00"
-      },
-      {
-        "message": "OPS: include Q070 pipeline in current operational status",
-        "sha": "6b4f2fa82f0467f4a9ddb6a6eb6cc75a4ca0d1a6",
-        "timestamp": "2026-09-28T11:04:54+02:00"
-      },
-      {
-        "message": "OPS: add Q070 current operational pipeline state",
-        "sha": "456d2af9e0040e1b7e1e0e5ecfbfcc42b2dfa5ec",
-        "timestamp": "2026-09-28T11:04:45+02:00"
       }
     ]
   },
@@ -261,12 +261,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "aab4331f97030dbe3c5a771a21a39918ebceb7c2",
+  "source_master_sha": "a1b505b90f10178f33d2ea827a7129920cec768c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36401435243"
+    "run_id": "36404132885"
   }
 }
