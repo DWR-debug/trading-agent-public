@@ -50,7 +50,19 @@ def summarize(repo_root: Path=ROOT):
         if payload.get("trial_id")!=tid or payload.get("status")!=expected: blockers.append(f"{label} receipt identity/status invalid")
         if payload.get("selection_used") is not False or payload.get("performance_trial_authorized") is not False: blockers.append(f"{label} receipt records forbidden state")
         if payload.get("safety")!=SAFETY: blockers.append(f"{label} receipt safety invalid")
-    if coverage is not None and pit is not None and coverage.get("status")=="COVERAGE_PASSED" and pit.get("status")=="PIT_PASSED" and not any("receipt" in x and "invalid" in x for x in blockers):
+    valid_preflight = (
+        prereg is not None
+        and coverage is not None
+        and pit is not None
+        and coverage.get("trial_id") == COVERAGE_ID
+        and coverage.get("status") == "COVERAGE_PASSED"
+        and pit.get("trial_id") == PIT_ID
+        and pit.get("status") == "PIT_PASSED"
+        and coverage.get("selection_used") is False
+        and pit.get("selection_used") is False
+        and not blockers
+    )
+    if valid_preflight:
         state="PREFLIGHT_PASSED_WAITING_FOR_AUTO_AUTH"
         if auth is not None:
             if auth.get("authorized") is True and auth.get("performance_execution_authorized") is True and auth.get("execution_scope")=="Q070_FIXED_CANDIDATE_PERFORMANCE_ONLY" and auth.get("safety")==AUTH_SAFETY and auth.get("source_receipts",{}).get("coverage_result_fingerprint")==coverage.get("result_fingerprint") and auth.get("source_receipts",{}).get("pit_result_fingerprint")==pit.get("result_fingerprint"): state="PERFORMANCE_AUTHORIZED"
