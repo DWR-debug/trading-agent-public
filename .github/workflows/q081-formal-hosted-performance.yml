@@ -1,0 +1,91 @@
+name: Q081 Formal Hosted Performance
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+
+jobs:
+  performance:
+    if: github.event.issue.title == "[Q081-FORMAL] Execute authorized fixed-rule performance" && github.repository == "DWR-debug/trading-agent-public"
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout current master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check pandas pytest
+
+      - name: Verify Q081 authorization, source contract, prerequisites and safety
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          from config import settings
+          prereg=json.loads(Path("research/preregistrations/q081_performance_2026_09_28.json").read_text())
+          auth=json.loads(Path("research/authorizations/q081_performance_2026_09_28.json").read_text())
+          assert prereg["trial_id"]=="T-2026-09-28-081-PERFORMANCE" and auth["authorized"] is True and auth["performance_execution_authorized"] is True
+          assert auth["execution_scope"]=="Q081_FIXED_RULE_PERFORMANCE_ONLY"
+          expected=prereg["source_contract"]
+          actual={path:subprocess.check_output(["git","rev-parse","HEAD:"+path],text=True).strip() for path in expected}
+          assert actual==expected
+          coverage=json.loads(Path("research/evidence/q079_coverage_result.json").read_text())
+          pit=json.loads(Path("research/evidence/q079_pit_result.json").read_text())
+          bundle=json.loads(Path("research/evidence/q079_input_freeze_result.json").read_text())
+          incident=json.loads(Path("research/evidence/q079_performance_execution_incident.json").read_text())
+          dc=prereg["data_contract"]
+          assert coverage["status"]=="COVERAGE_PASSED" and coverage["result_fingerprint"]==dc["coverage_result_fingerprint"] and coverage["snapshot_fingerprint"]==dc["snapshot_fingerprint"]
+          assert pit["status"]=="PIT_PASSED" and pit["result_fingerprint"]==dc["pit_result_fingerprint"]
+          assert bundle["status"]=="INPUT_BUNDLE_FROZEN" and bundle["bundle_fingerprint"]==dc["input_bundle_fingerprint"]
+          assert incident["status"]=="IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME"
+          assert settings.PAPER_ONLY is True and settings.LIVE_TRADING_ENABLED is False and settings.ORDERS_ENABLED is False and settings.AUTOMATIC_PROMOTION is False
+          print("Q081 FORMAL PRECONDITIONS OK")
+          PY
+
+      - name: Run exact Q081 performance
+        run: python -m automation.q081_corrected_e1_e2_performance --preregistration research/preregistrations/q081_performance_2026_09_28.json --repo-root . --output research/evidence/q081_performance_result.json
+
+      - name: Validate result governance and safety
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("research/evidence/q081_performance_result.json").read_text())
+          assert d["status"]=="COMPLETED" and d["performance_evaluation"] is True and d["oos_evaluation"] is True and d["holdout_evaluation"] is True
+          assert d["selection_used"] is False and d["holdout_used_for_selection"] is False
+          assert d["governance"]["promotion_decision"] is False and d["governance"]["automatic_promotion"] is False
+          assert set(d["arms"])=={"CONTROL_6SLEEVE_ENSEMBLE","E1_ALPHA_COMMON_MODE_THROTTLE","E2_TURNOVER_HYSTERESIS"}
+          assert all(0 <= arm["gates_passed"] <= 13 for arm in d["arms"].values())
+          assert d["safety"]=={"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False}
+          for name,arm in d["arms"].items(): print(name,str(arm["gates_passed"])+"/13")
+          print("Q081_REPORT_FINGERPRINT",d["report_fingerprint"])
+          PY
+
+      - name: Persist formal scientific evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git fetch origin master --depth=1
+          BASE_SHA="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
+          test -n "$BASE_SHA"
+          python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$BASE_SHA" --file research/evidence/q081_performance_result.json=research/evidence/q081_performance_result.json
+
+      - name: Publish formal artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q081-formal-performance
+          path: research/evidence/q081_performance_result.json
+          if-no-files-found: error
+          retention-days: 30
