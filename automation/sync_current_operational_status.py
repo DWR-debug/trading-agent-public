@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from automation.q067_pipeline_state import summarize as summarize_q067_pipeline
+from automation.q068_pipeline_state import summarize as summarize_q068_pipeline
 
 ROOT = Path(__file__).resolve().parents[1]
 STATUS_DOC = ROOT / "docs" / "CURRENT_STATUS.md"
@@ -108,6 +109,7 @@ def generate(
     open_prs = github_state.get("open_prs", [])
     agent_ready_issues = github_state.get("agent_ready_issues", [])
     q067_pipeline = summarize_q067_pipeline(ROOT)
+    q068_pipeline = summarize_q068_pipeline(ROOT)
     recorded_qa = project_state.get("quality_assurance", {}).get(
         "last_verified_self_hosted_qa", {}
     )
@@ -172,6 +174,7 @@ def generate(
             },
         },
         "q067_execution_pipeline": q067_pipeline,
+        "q068_execution_pipeline": q068_pipeline,
         "scientific_state_recorded": {
             "latest_formal_trial": project_state.get("latest_formal_trial"),
             "latest_formal_status": project_state.get("latest_trial_status"),
@@ -249,6 +252,18 @@ def generate(
 - Blocking reasons: **{"; ".join(q067_pipeline["blocking_reasons"]) or "none"}**.
 
 This is an operational pipeline summary only; it does not create scientific evidence or select a candidate.
+
+### Q068 execution pipeline
+
+- Operational state: **{q068_pipeline["state"]}**.
+- Coverage receipt: **{q068_pipeline["coverage_receipt"]["status"] or "MISSING"}**.
+- PIT receipt: **{q068_pipeline["pit_receipt"]["status"] or "MISSING"}**.
+- Performance authorization: **{q068_pipeline["performance_authorization"]["authorized"]}**.
+- Performance evidence: **{q068_pipeline["performance_result"]["status"] or "MISSING"}**.
+- Ledger reconciled: **{q068_pipeline["ledger_reconciled"]}**.
+- Blocking reasons: **{"; ".join(q068_pipeline["blocking_reasons"]) or "none"}**.
+
+Q068 is a fresh symbol-disjoint validation of the unchanged Q067 E1/E2 mechanisms. This operational summary does not create scientific evidence or select an arm.
 
 ### Resource policy
 

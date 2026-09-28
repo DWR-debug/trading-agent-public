@@ -28,6 +28,11 @@ def test_current_status_separates_operations_from_science(tmp_path, monkeypatch)
     assert payload["repository_state"]["open_agent_ready_issues"][0]["number"] == 2
     assert payload["status_commit_is_documentation_only"] is True
     assert payload["scientific_state_recorded"]["latest_formal_status"]
+    assert payload["q067_execution_pipeline"]["family"] == "Q067"
+    assert payload["q068_execution_pipeline"]["family"] == "Q068"
+    assert payload["q068_execution_pipeline"]["state"] == "PREFLIGHT_BLOCKED"
+    assert "coverage receipt missing" in payload["q068_execution_pipeline"]["blocking_reasons"]
+    assert "### Q068 execution pipeline" in doc
     assert "canonical current operational status" in doc
     assert payload["safety"]["status"] == "SAFE"
 
