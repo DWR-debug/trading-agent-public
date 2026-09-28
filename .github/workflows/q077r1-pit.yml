@@ -28,7 +28,7 @@ jobs:
       - name: Download immutable Q077-R1 discovery artifact
         uses: actions/download-artifact@v5
         with:
-          name: q077r1-discovery-36474584151
+          artifact-ids: 10992758932
           repository: ${{ github.repository }}
           run-id: 36474584151
           path: ${{ runner.temp }}/q077r1-discovery
