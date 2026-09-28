@@ -342,7 +342,6 @@ def run(preregistration: Path, repo_root: Path, output: Path) -> dict:
         "threshold_search",
         "asset_search",
         "horizon_search",
-        "family_search",
         "variant_search",
         "family_ranking",
         "selection",
