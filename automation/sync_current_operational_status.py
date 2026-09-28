@@ -165,7 +165,7 @@ def generate(
                 "current_pending_requests": queue,
             },
             "self_hosted_qa": {
-                "cadence": "*/15 * * * *",
+                "cadence": "15 * * * *",
                 "label": "trading-agent-research",
                 "architecture": "single runner process claimed; second process prepared but not claimed online",
                 "last_recorded_verified_baseline": recorded_qa,
@@ -233,7 +233,7 @@ def generate(
 - The Forward path contains closed-candle market-data ingestion, a persistent update loop and a schema-v2 per-candle MTM ledger.
 - Canonical data-layer infrastructure is merged.
 - Bounded agent routing uses two queue lanes with fail-closed task contracts.
-- Self-hosted Continuous QA is scheduled every 15 minutes under label `trading-agent-research`.
+- Self-hosted Continuous QA is scheduled hourly at minute 15 under label `trading-agent-research`.
 - The current architecture claims one runner process; a second process is only a prepared scale path, not an online capacity claim.
 
 ### Scientific status
