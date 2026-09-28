@@ -1,0 +1,60 @@
+name: Q068 Autonomous Advance to Performance
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/evidence/q068_coverage_result.json"
+      - "research/evidence/q068_pit_result.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-q068-auto-advance
+  cancel-in-progress: false
+
+jobs:
+  advance:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 15
+    steps:
+      - name: Checkout current master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Verify preflight and safety
+        shell: cmd
+        run: |
+          @echo off
+          if not exist research\evidence\q068_coverage_result.json exit /b 1
+          if not exist research\evidence\q068_pit_result.json exit /b 1
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-q068-advance"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-q068-advance.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            mkdir "%PY_ROOT%" 2>nul
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" -m pip --version >nul 2>&1
+          if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
+          "%PY_EXE%" -c "import json; from pathlib import Path; from config import settings; c=json.loads(Path('research/evidence/q068_coverage_result.json').read_text(encoding='utf-8')); p=json.loads(Path('research/evidence/q068_pit_result.json').read_text(encoding='utf-8')); assert settings.PAPER_ONLY is True; assert settings.LIVE_TRADING_ENABLED is False; assert settings.ORDERS_ENABLED is False; assert settings.AUTOMATIC_PROMOTION is False; assert c['trial_id']=='T-2026-09-28-068-COVERAGE'; assert c['status']=='COVERAGE_PASSED'; assert c['performance_trial_authorized'] is False; assert c['selection_used'] is False; assert p['trial_id']=='T-2026-09-28-068-PIT'; assert p['status']=='PIT_PASSED'; assert p['performance_trial_authorized'] is False; assert p['selection_used'] is False; assert c['safety']=={'paper_only':True,'live_trading_enabled':False,'orders_enabled':False,'automatic_promotion':False}; assert p['safety']==c['safety']; print('Q068 PREFLIGHT PASS')"
+
+      - name: Create one-shot Q068 authorization
+        shell: cmd
+        run: |
+          @echo off
+          if exist research\authorizations\q068_performance_2026_09_28.json exit /b 0
+          "%PY_ROOT%\tools\python.exe" -c "import json; from pathlib import Path; c=json.loads(Path('research/evidence/q068_coverage_result.json').read_text(encoding='utf-8')); p=json.loads(Path('research/evidence/q068_pit_result.json').read_text(encoding='utf-8')); auth={'schema_version':'1.0','authorization_id':'Q068-PERFORMANCE-AUTO-ONE-SHOT-2026-09-28','authorized':True,'authorization_basis':'Both immutable Q068 coverage and PIT receipts passed their fail-closed prerequisites.','execution_scope':'Q068_FIXED_RULE_PERFORMANCE_ONLY','performance_execution_authorized':True,'required_prerequisites':['T-2026-09-28-068-COVERAGE status=COVERAGE_PASSED','T-2026-09-28-068-PIT status=PIT_PASSED'],'source_receipts':{'coverage_result_fingerprint':c['result_fingerprint'],'pit_result_fingerprint':p['result_fingerprint']},'prohibited':['parameter selection','threshold selection','asset selection','family ranking','holdout selection','promotion','live execution'],'safety':{'PAPER_ONLY':True,'LIVE_TRADING_ENABLED':False,'ORDERS_ENABLED':False,'AUTOMATIC_PROMOTION':False}}; Path('research/authorizations').mkdir(parents=True,exist_ok=True); Path('research/authorizations/q068_performance_2026_09_28.json').write_text(json.dumps(auth,indent=2)+'\n',encoding='utf-8')"
+          git diff --check || exit /b 1
+          git add research\authorizations\q068_performance_2026_09_28.json || exit /b 1
+          git diff --cached --quiet
+          if not errorlevel 1 exit /b 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "OPS: authorize Q068 performance after preflight pass" || exit /b 1
+          git push origin HEAD:master || exit /b 1
