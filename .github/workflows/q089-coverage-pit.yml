@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: trading-agent-q089-coverage-pit
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   research:
@@ -156,6 +156,19 @@ jobs:
           "%PY_EXE%" -c "import json,os,urllib.request; u='https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/ref/heads/master'; r=urllib.request.Request(u,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'}); print(json.load(urllib.request.urlopen(r,timeout=30))['object']['sha'])" > "%BASE_SHA_FILE%" || exit /b 1
           set /p BASE_SHA=<"%BASE_SHA_FILE%"
           "%PY_EXE%" automation/github_contents_publish.py --repository "%GITHUB_REPOSITORY%" --branch master --base-sha "%BASE_SHA%" --file research/evidence/q089_pit_result.json=research\evidence\q089_pit_result.json --file research/preregistrations/q089_performance_2026_09_28.json=research\preregistrations\q089_performance_2026_09_28.json --file research/governance/active_research_registry.json=research\governance\active_research_registry.json || exit /b 1
+          endlocal
+
+      - name: Stage Q089 provenance for upload
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          for /d %%D in ("%RUNNER_TEMP%\trading-agent-q089-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
+          if not exist "%GITHUB_WORKSPACE%\research\runs\q089_coverage" mkdir "%GITHUB_WORKSPACE%\research\runs\q089_coverage"
+          if exist "%REPO_SRC%\research\runs\q089_coverage" xcopy /E /I /Y "%REPO_SRC%\research\runs\q089_coverage" "%GITHUB_WORKSPACE%\research\runs\q089_coverage" >nul || exit /b 1
+          if exist "%REPO_SRC%\research\runs\q089_discovery" xcopy /E /I /Y "%REPO_SRC%\research\runs\q089_discovery" "%GITHUB_WORKSPACE%\research\runs\q089_discovery" >nul || exit /b 1
+          if exist "%REPO_SRC%\research\evidence\q089_coverage_result.json" copy /Y "%REPO_SRC%\research\evidence\q089_coverage_result.json" "%GITHUB_WORKSPACE%\research\evidence\q089_coverage_result.json" || exit /b 1
+          if exist "%REPO_SRC%\research\evidence\q089_asset_freeze.json" copy /Y "%REPO_SRC%\research\evidence\q089_asset_freeze.json" "%GITHUB_WORKSPACE%\research\evidence\q089_asset_freeze.json" || exit /b 1
           endlocal
 
       - name: Upload Q089 provenance
