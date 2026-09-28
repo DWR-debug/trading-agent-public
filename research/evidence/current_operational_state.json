@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:05:25.370583+00:00",
+  "generated_at_utc": "2026-09-28T15:05:38.313022+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "07a1aa6f9800b6603a757007cc8d54674c247ee6",
+        "timestamp": "2026-09-28T15:05:25Z"
+      },
+      {
         "message": "OPS: retrigger Q084 to dispatch Q081 fallback",
         "sha": "9dbef1176d8e5c697d54f7f3cb07972225cebb51",
         "timestamp": "2026-09-28T17:05:22+02:00"
@@ -190,11 +195,6 @@
         "message": "FIX: set Q085 repository Python path explicitly",
         "sha": "5ae80effdb501f2fd6b493ad97743ffb4d91a3fb",
         "timestamp": "2026-09-28T17:03:41+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f67a1a237c286d314e90933de5b1003b94b88acd",
-        "timestamp": "2026-09-28T15:03:12Z"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9dbef1176d8e5c697d54f7f3cb07972225cebb51",
+  "source_master_sha": "07a1aa6f9800b6603a757007cc8d54674c247ee6",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36440901543"
+    "run_id": "36440928218"
   }
 }
