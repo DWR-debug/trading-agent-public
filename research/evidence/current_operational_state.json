@@ -156,7 +156,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:11:56.430434+00:00",
+  "generated_at_utc": "2026-09-28T19:12:24.101471+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -270,6 +270,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: record AI worker state",
+        "sha": "142245fd077c5f4184be9d54901787e9f7e7ce94",
+        "timestamp": "2026-09-28T19:12:15Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "ec9dcc9804503ada933a91e2feda4f822ddf3706",
+        "timestamp": "2026-09-28T19:12:13Z"
+      },
+      {
+        "message": "FIX: bootstrap pinned Python for self-hosted capacity audit",
+        "sha": "0a64e71b218ec2f72cc129fbe3f1f92ae756618e",
+        "timestamp": "2026-09-28T21:12:09+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "8c4e8916cc3d73a5ebbdb2b63c99947ef5cdb538",
+        "timestamp": "2026-09-28T19:12:04Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "66bc70338631ce3035d92e1282e2ba477f18bd1f",
+        "timestamp": "2026-09-28T19:12:02Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "33d1fb95ecf109ba0e7c27704457112df191d927",
+        "timestamp": "2026-09-28T19:11:56Z"
+      },
+      {
         "message": "OPS: run two bounded self-hosted research lanes in parallel",
         "sha": "5a3465fc73cbc948ef59874cdb81f578fbfdca2f",
         "timestamp": "2026-09-28T21:11:39+02:00"
@@ -278,36 +308,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "b92d52011d8282e48815896a18d395694c334bed",
         "timestamp": "2026-09-28T19:11:20Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5e07728ef3efeb1b606d9523ee9974f8f624370c",
-        "timestamp": "2026-09-28T19:11:04Z"
-      },
-      {
-        "message": "OPS: use timestamped runner capacity receipt in status sync",
-        "sha": "5c18f37ccf864c647e81b3bcef330ba88439b66d",
-        "timestamp": "2026-09-28T21:10:59+02:00"
-      },
-      {
-        "message": "OPS: record verified two-runner capacity receipt",
-        "sha": "f9be37034552623a810c98de8ced7b3b55725add",
-        "timestamp": "2026-09-28T21:10:53+02:00"
-      },
-      {
-        "message": "FIX: remove runner-list API dependency from status sync",
-        "sha": "2cdc7045b02214f467e8fc4d1735cd426c427951",
-        "timestamp": "2026-09-28T21:10:47+02:00"
-      },
-      {
-        "message": "OPS: synchronize live self-hosted runner telemetry",
-        "sha": "39396ec60e13de1a463a87726ee01f82691e8edc",
-        "timestamp": "2026-09-28T21:10:21+02:00"
-      },
-      {
-        "message": "OPS: collect live self-hosted runner capacity in status sync",
-        "sha": "b46b7f1b1585ab4a183803cfd98c5ab29450a1b4",
-        "timestamp": "2026-09-28T21:10:14+02:00"
       }
     ]
   },
@@ -369,12 +369,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5a3465fc73cbc948ef59874cdb81f578fbfdca2f",
+  "source_master_sha": "142245fd077c5f4184be9d54901787e9f7e7ce94",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36470528521"
+    "run_id": "36470585344"
   }
 }
