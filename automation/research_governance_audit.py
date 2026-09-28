@@ -187,8 +187,56 @@ def _audit_performance_prereg(root: Path, path: Path, data: dict, errors: list[s
             errors.append(f"{location}: fingerprint mismatch in {receipt_path}")
 
 
+def _load_retired_authorizations(root: Path, errors: list[str]) -> set[str]:
+    register_path = root / "research" / "governance" / "retired_authorizations.json"
+    if not register_path.is_file():
+        return set()
+    try:
+        register = _load(register_path)
+    except Exception as exc:
+        errors.append(f"{register_path.relative_to(root)}: cannot parse retired authorization register: {exc}")
+        return set()
+    retired: set[str] = set()
+    entries = register.get("entries", []) if isinstance(register, dict) else []
+    if not isinstance(entries, list):
+        errors.append(f"{register_path.relative_to(root)}: entries must be a list")
+        return set()
+    for entry in entries:
+        if not isinstance(entry, dict):
+            errors.append(f"{register_path.relative_to(root)}: entry must be an object")
+            continue
+        path = entry.get("path")
+        trial_id = entry.get("trial_id")
+        status = entry.get("status")
+        if not all(isinstance(x, str) and x for x in (path, trial_id, status)):
+            errors.append(f"{register_path.relative_to(root)}: malformed retired authorization entry")
+            continue
+        if status != "RETIRED_HISTORICAL_AUTHORIZATION":
+            errors.append(f"{register_path.relative_to(root)}: invalid retired authorization status")
+            continue
+        target = root / path
+        if not target.is_file():
+            errors.append(f"{register_path.relative_to(root)}: registered retired authorization missing: {path}")
+            continue
+        try:
+            data = _load(target)
+        except Exception as exc:
+            errors.append(f"{register_path.relative_to(root)}: cannot parse {path}: {exc}")
+            continue
+        if not isinstance(data, dict):
+            errors.append(f"{register_path.relative_to(root)}: authorization is not an object: {path}")
+            continue
+        observed_trial = data.get("trial_id")
+        if observed_trial is not None and observed_trial != trial_id:
+            errors.append(f"{register_path.relative_to(root)}: trial_id mismatch for {path}")
+            continue
+        retired.add(path)
+    return retired
+
+
 def _audit_authorizations(root: Path, errors: list[str], active_by_trial: dict[str, dict]) -> None:
     auth_root = root / "research" / "authorizations"
+    retired_paths = _load_retired_authorizations(root, errors)
     if not auth_root.exists():
         return
     for path in sorted(auth_root.glob("*.json")):
@@ -201,6 +249,8 @@ def _audit_authorizations(root: Path, errors: list[str], active_by_trial: dict[s
             continue
 
         location = path.relative_to(root).as_posix()
+        if location in retired_paths:
+            continue
         trial_id = data.get("trial_id")
         active = active_by_trial.get(trial_id) if isinstance(trial_id, str) else None
         if active is None:
