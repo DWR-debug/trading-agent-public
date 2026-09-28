@@ -14,11 +14,6 @@ import csv
 import hashlib
 import json
 import os
-import time
-import urllib.error
-import urllib.parse
-import urllib.request
-from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from automation.q067_alpha_mechanisms import (
@@ -59,7 +54,6 @@ HOLDOUT = 700
 FEE = 0.001
 SLIPPAGE = 0.0005
 COSTS = (("base", 1.0), ("stress_1_5x_cost", 1.5), ("stress_2x_cost", 2.0))
-YAHOO = "https://query1.finance.yahoo.com/v8/finance/chart"
 
 
 def _fp(value: object) -> str:
