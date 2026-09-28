@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:36:41.836405+00:00",
+  "generated_at_utc": "2026-09-28T17:37:53.480028+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -237,6 +237,16 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: make frozen snapshot replay cross-platform (#624)",
+        "sha": "8e331fa75c80dc4626d801d053fbaa8818707131",
+        "timestamp": "2026-09-28T19:37:35+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4d022cd4c2ed8ada17d0091f988221af4d23f4cd",
+        "timestamp": "2026-09-28T17:36:41Z"
+      },
+      {
         "message": "OPS: add Q089 cloud coverage cross-check (#623)",
         "sha": "e0a6562dc4b6ac090242a42455960f87a4609515",
         "timestamp": "2026-09-28T19:36:23+02:00"
@@ -265,16 +275,6 @@
         "message": "OPS: retrigger f2_quality_acceleration.trigger on fresh master",
         "sha": "1beb2a910b1d5a0aa8902290a2c90112c01ac4cd",
         "timestamp": "2026-09-28T19:34:39+02:00"
-      },
-      {
-        "message": "OPS: retrigger q081r1_preflight_final.trigger on fresh master",
-        "sha": "e304b5beca356b30f9c1f7f461359e613ce0ba89",
-        "timestamp": "2026-09-28T19:34:35+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0c293c9a3dd1bfa17bc29758d28a0a8b68dad16f",
-        "timestamp": "2026-09-28T17:34:22Z"
       }
     ]
   },
@@ -336,12 +336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e0a6562dc4b6ac090242a42455960f87a4609515",
+  "source_master_sha": "8e331fa75c80dc4626d801d053fbaa8818707131",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36459325034"
+    "run_id": "36459468027"
   }
 }
