@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:34:50.624401+00:00",
+  "generated_at_utc": "2026-09-28T17:35:07.780209+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -237,6 +237,11 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a2c061362d37284c34219534673ebcbacc2c06fa",
+        "timestamp": "2026-09-28T17:34:50Z"
+      },
+      {
         "message": "OPS: retrigger f2_quality_acceleration.trigger on fresh master",
         "sha": "1beb2a910b1d5a0aa8902290a2c90112c01ac4cd",
         "timestamp": "2026-09-28T19:34:39+02:00"
@@ -270,11 +275,6 @@
         "message": "RESEARCH: add RCCSM observational feasibility on fresh Q089 snapshot (#620)",
         "sha": "649a0d27d792a83805724a778e7aa8f00690c749",
         "timestamp": "2026-09-28T19:31:35+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ddd57f6a07b24ba27256b2101bab6656fb5a5348",
-        "timestamp": "2026-09-28T17:30:11Z"
       }
     ]
   },
@@ -336,12 +336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1beb2a910b1d5a0aa8902290a2c90112c01ac4cd",
+  "source_master_sha": "a2c061362d37284c34219534673ebcbacc2c06fa",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36459106509"
+    "run_id": "36459116228"
   }
 }
