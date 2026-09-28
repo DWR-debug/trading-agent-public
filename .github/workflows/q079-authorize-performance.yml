@@ -138,3 +138,35 @@ jobs:
             if [ "$attempt" -eq 5 ]; then exit 1; fi
             sleep $((attempt * 2))
           done
+
+
+      - name: Dispatch Q079 fixed-rule performance
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          url = (
+              "https://api.github.com/repos/"
+              + os.environ["GITHUB_REPOSITORY"]
+              + "/actions/workflows/q079-fixed-rule-performance.yml/dispatches"
+          )
+          req = urllib.request.Request(
+              url,
+              data=json.dumps({"ref": "master"}).encode("utf-8"),
+              method="POST",
+              headers={
+                  "Authorization": "Bearer " + os.environ["GH_TOKEN"],
+                  "Accept": "application/vnd.github+json",
+                  "Content-Type": "application/json",
+              },
+          )
+          urllib.request.urlopen(req, timeout=30).read()
+          print("Q079_PERFORMANCE_DISPATCHED")
+          PY
