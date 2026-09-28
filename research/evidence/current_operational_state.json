@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:57:33.027899+00:00",
+  "generated_at_utc": "2026-09-28T10:58:10.159916+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,16 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: serialize Q079 discovery resource usage",
+        "sha": "1e066affe44e7c58391097f98da4146c9e0e9b1b",
+        "timestamp": "2026-09-28T12:57:54+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "cf7f9e8d9685ec93ee3f36555dd9c4c55cd93c97",
+        "timestamp": "2026-09-28T10:57:33Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "31635ef4a6998ce578cbd98b042f199bf97a276c",
         "timestamp": "2026-09-28T10:57:22Z"
@@ -194,16 +204,6 @@
         "message": "RESEARCH: add Q079 broad fresh coverage discovery",
         "sha": "be06bbeb1ce502a6e846ace8d972f91f412432ce",
         "timestamp": "2026-09-28T12:57:10+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "b8c5b6a6da72be33d7c842368516e75614dee28d",
-        "timestamp": "2026-09-28T10:56:42Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f1836a0fae92b87f9526ef0c9da69895fd7fbc9c",
-        "timestamp": "2026-09-28T10:56:16Z"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "31635ef4a6998ce578cbd98b042f199bf97a276c",
+  "source_master_sha": "1e066affe44e7c58391097f98da4146c9e0e9b1b",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36412755473"
+    "run_id": "36412808810"
   }
 }
