@@ -82,6 +82,17 @@ jobs:
           "%PY_EXE%" -c "import json; from pathlib import Path; from automation.rccsm_feasibility import feasibility_manifest,route_mesh; state={'trend_coherence':0.8,'breadth':0.7,'dispersion':0.3,'event_density':0.1}; out={'manifest':feasibility_manifest(),'state_id':'RCCSM-SYNTHETIC-001','routing':route_mesh('RCCSM-SYNTHETIC-001',state)}; Path('research/evidence/rccsm0_feasibility_artifact.json').write_text(json.dumps(out,sort_keys=True,indent=2)+'\n',encoding='utf-8')" || exit /b 1
           endlocal
 
+      - name: Stage RCCSM-0 artifact for upload
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "WORK=%RUNNER_TEMP%\trading-agent-rccsm-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
+          if not exist "%GITHUB_WORKSPACE%\research\evidence" mkdir "%GITHUB_WORKSPACE%\research\evidence"
+          copy /Y "%REPO_SRC%\research\evidence\rccsm0_feasibility_artifact.json" "%GITHUB_WORKSPACE%\research\evidence\rccsm0_feasibility_artifact.json" || exit /b 1
+          endlocal
+
       - name: Upload RCCSM-0 artifact
         if: always()
         uses: actions/upload-artifact@v6
