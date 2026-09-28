@@ -1,0 +1,39 @@
+name: Q075 Information Channel Contract Feasibility
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/preregistrations/q075_information_channel_contract_2026_09_28.json"
+      - "automation/q075_information_channel_contract.py"
+      - ".github/workflows/q075-information-channel-contract.yml"
+      - "research/run_requests/q075_information_channel_contract.trigger"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  feasibility:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Contract feasibility
+        run: python automation/q075_information_channel_contract.py
+      - name: Publish result
+        uses: actions/upload-artifact@v6
+        with:
+          name: q075-information-channel-contract
+          path: research/runs/q075_information_channel_contract/result.json
+          if-no-files-found: error
+          retention-days: 30
