@@ -79,7 +79,7 @@ jobs:
 
       - name: Run fixed-rule Q079 performance
         run: |
-          python automation/q079_e1_e2_performance.py             --preregistration research/preregistrations/q079_performance_2026_09_28.json             --repo-root .             --output research/evidence/q079_performance_result.json
+          PYTHONPATH="${GITHUB_WORKSPACE}" python automation/q079_e1_e2_performance.py             --preregistration research/preregistrations/q079_performance_2026_09_28.json             --repo-root .             --output research/evidence/q079_performance_result.json
 
       - name: Validate result governance and gate schema
         run: |
