@@ -1,0 +1,1 @@
+Q079 exact network-free self-hosted reproduction request. Non-formal artifact only; do not persist or reconcile scientific evidence. 2026-09-28.
