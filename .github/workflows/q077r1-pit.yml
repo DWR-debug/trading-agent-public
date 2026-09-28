@@ -26,28 +26,24 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 1
 
-      - name: Download immutable Q077-R1 discovery artifact
-        uses: actions/download-artifact@v5
-        with:
-          artifact-ids: 10992758932
-          repository: ${{ github.repository }}
-          run-id: 36474584151
-          path: ${{ runner.temp }}/q077r1-discovery
-
-      - name: Verify PIT preregistration
+      - name: Verify immutable Q077-R1 discovery receipt
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
           import json
           from pathlib import Path
-          p=json.loads(Path('research/preregistrations/q077r1_pit_2026_09_28.json').read_text())
-          d=json.loads(Path('${{ runner.temp }}/q077r1-discovery/discovery.json').read_text())
-          assert p["status"]=="PREREGISTERED_PIT_ONLY"
-          assert d["fingerprint"]==p["discovery_fingerprint"]
-          assert d["selected_coverage_batch"]==p["symbols"]
-          assert d["selected_common_count"]>=3500
-          print("Q077R1 PIT PREREG OK")
+          p=json.loads(Path("research/preregistrations/q077r1_pit_2026_09_28.json").read_text())
+          r=json.loads(Path("research/evidence/q077r1_discovery_result.json").read_text())
+          assert r["source_workflow_run_id"]==36474584151
+          assert r["source_artifact_id"]==10992758932
+          assert r["discovery_fingerprint"]==p["discovery_fingerprint"]
+          assert r["selected_coverage_batch"]==p["symbols"]
+          assert r["selected_common_count"]>=3500
+          assert r["performance_evaluation"] is False
+          assert r["holdout_evaluation"] is False
+          assert r["selection_used"] is False
+          print("Q077R1 DISCOVERY RECEIPT OK")
           PY
 
       - name: Build frozen PIT snapshot
