@@ -1,4 +1,4 @@
-name: Research Worker v4 (hosted Python)
+name: Research Worker v4 (trusted self-hosted Windows)
 
 on:
   push:
@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   worker:
-    runs-on: windows-latest
+    runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 120
     steps:
       - name: Self-hosted repo_qa single-step worker
