@@ -111,6 +111,11 @@ def generate(
     agent_ready_issues = github_state.get("agent_ready_issues", [])
     runner_capacity_receipt = _load_json(ROOT / "research/evidence/self_hosted_runner_capacity_2026-09-28.json", {})
     active_registry = _load_json(ROOT / "research/governance/active_research_registry.json", {})
+    active_trials = {
+        str(entry.get("code")): entry
+        for entry in active_registry.get("active_trials", [])
+        if isinstance(entry, dict)
+    }
     q067_pipeline = {
         "family": "Q067",
         "state": "RETIRED",
@@ -315,8 +320,9 @@ def generate(
 
 ### Active research registry
 
-- Q081-R1: **PREREGISTERED_WAITING_PREFLIGHT**; corrective reproduction only, no performance authorization.
-- Q089: **PLANNED**; clean fresh validation successor to quarantined Q086, not yet performance-authorized.
+- Q081-R2: **{active_trials.get("081R2", {}).get("state", "PREREGISTERED_WAITING_PREFLIGHT")}**; infrastructure-rebased corrective reproduction; no performance authorization.
+- Q089: **{active_trials.get("089", {}).get("state", "UNKNOWN")}**; fresh symbol-disjoint successor to quarantined Q086; separate performance authorization remains required.
+- Q077-R1: **{active_trials.get("077R1", {}).get("state", "PREREGISTERED_WAITING_PREFLIGHT")}**; coverage-only repair after the original Q077 pool left insufficient unused symbols; no performance authorization.
 - Q084, Q088 and Q082 remain **design/feasibility tracks** for unusual market-state, textual-network, rebalance-demand and SEC information channels.
 - The unusual-strategy frontier is maintained in `docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md` and is design-only until feasibility and provenance are established.
 
