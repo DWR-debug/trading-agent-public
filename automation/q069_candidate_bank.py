@@ -49,12 +49,12 @@ def candidate_scores_at(assets, index: int, *, symbols: Sequence[str]) -> dict[s
     closes = {s: [float(b.close) for b in assets[s]] for s in symbols}
     rets = {s: _returns(closes[s]) for s in symbols}
 
-    c7 = _zero(symbols) if index < 21 else {s: max(rets[s][index - 20:index + 1]) for s in symbols}
+    c7 = _zero(symbols) if index < 21 else {s: max(rets[s][index - 21:index]) for s in symbols}
 
     if index < 273:
         c8 = _zero(symbols)
     else:
-        start, end = index - 272, index + 1
+        start, end = index - 273, index
         market = [sum(rets[s][i] for s in symbols) / len(symbols) for i in range(start, end)]
         market_mean = sum(market) / len(market)
         market_var = sum((x - market_mean) ** 2 for x in market)
@@ -73,7 +73,7 @@ def candidate_scores_at(assets, index: int, *, symbols: Sequence[str]) -> dict[s
     else:
         c10 = {}
         for s in symbols:
-            path = rets[s][index - 62:index + 1]
+            path = rets[s][index - 63:index]
             denominator = sum(abs(x) for x in path)
             net = closes[s][index] / closes[s][index - 63] - 1.0
             c10[s] = abs(net) / denominator if denominator > 0 else 0.0
