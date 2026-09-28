@@ -1,0 +1,140 @@
+name: Q079 Authorize Fixed Rule Performance
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q079_authorize_performance.trigger"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-q079-authorize
+  cancel-in-progress: false
+
+jobs:
+  authorize:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact master
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Verify fixed prerequisites
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          from config import settings
+          p=json.loads(Path("research/preregistrations/q079_performance_2026_09_28.json").read_text())
+          c=json.loads(Path("research/evidence/q079_coverage_result.json").read_text())
+          pit=json.loads(Path("research/evidence/q079_pit_result.json").read_text())
+          b=json.loads(Path("research/evidence/q079_input_freeze_result.json").read_text())
+          assert p["status"]=="PREREGISTERED_PERFORMANCE"
+          assert c["trial_id"]=="T-2026-09-28-079-COVERAGE" and c["status"]=="COVERAGE_PASSED"
+          assert pit["trial_id"]=="T-2026-09-28-079-PIT" and pit["status"]=="PIT_PASSED"
+          assert b["trial_id"]=="T-2026-09-28-079-INPUT-FREEZE" and b["status"]=="INPUT_BUNDLE_FROZEN"
+          assert c["performance_trial_authorized"] is False and pit["performance_trial_authorized"] is False
+          assert c["selection_used"] is False and pit["selection_used"] is False and b["selection_used"] is False
+          assert p["symbols"]==["HAL","LRCX","OXY","COF","FIS","FISV","GM","LHX"]
+          assert b["bundle_fingerprint"]
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          assert settings.AUTOMATIC_PROMOTION is False
+          for f in [
+              "automation/q067_alpha_mechanisms.py",
+              "automation/q079_e1_e2_performance.py",
+              "data/canonical_snapshot.py",
+              "execution/cost_contract.py",
+              "config/settings.py",
+          ]:
+              subprocess.check_call(["git","cat-file","-e",f"HEAD:{f}"])
+          print("Q079 AUTH PREREQUISITES OK")
+          PY
+
+      - name: Reject network-dependent Q079 performance implementation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          t=Path("automation/q079_e1_e2_performance.py").read_text()
+          forbidden=["urlopen(","urllib.request","query1.finance.yahoo.com","requests.get(","http://","https://query"]
+          assert not any(x in t for x in forbidden), "Q079 performance implementation still contains network execution"
+          print("Q079 PERFORMANCE NETWORK-FREE STATIC CHECK OK")
+          PY
+
+      - name: Create one-shot authorization
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          p=json.loads(Path("research/preregistrations/q079_performance_2026_09_28.json").read_text())
+          c=json.loads(Path("research/evidence/q079_coverage_result.json").read_text())
+          pit=json.loads(Path("research/evidence/q079_pit_result.json").read_text())
+          b=json.loads(Path("research/evidence/q079_input_freeze_result.json").read_text())
+          contract_files=[
+              "automation/q067_alpha_mechanisms.py",
+              "automation/q079_e1_e2_performance.py",
+              "data/canonical_snapshot.py",
+              "execution/cost_contract.py",
+              "config/settings.py",
+          ]
+          source_contract={path:subprocess.check_output(["git","rev-parse","HEAD:"+path],text=True).strip() for path in contract_files}
+          auth={
+              "schema_version":"1.0",
+              "authorization_id":"Q079-PERFORMANCE-AUTO-ONE-SHOT-2026-09-28",
+              "authorized":True,
+              "performance_execution_authorized":True,
+              "execution_scope":"Q079_FIXED_RULE_PERFORMANCE_ONLY",
+              "authorization_basis":"Q079 coverage, PIT and complete immutable input bundle passed all preregistered fail-closed prerequisites.",
+              "required_prerequisites":[
+                  "T-2026-09-28-079-COVERAGE status=COVERAGE_PASSED",
+                  "T-2026-09-28-079-PIT status=PIT_PASSED",
+                  "T-2026-09-28-079-INPUT-FREEZE status=INPUT_BUNDLE_FROZEN",
+                  "performance implementation network-free static check"
+              ],
+              "source_contract":source_contract,
+              "source_receipts":{
+                  "coverage_result_fingerprint":c["result_fingerprint"],
+                  "pit_result_fingerprint":pit["result_fingerprint"],
+                  "input_bundle_fingerprint":b["bundle_fingerprint"]
+              },
+              "prohibited":[
+                  "parameter selection","threshold selection","asset selection",
+                  "family ranking","holdout selection","promotion","live execution"
+              ],
+              "safety":{
+                  "PAPER_ONLY":True,
+                  "LIVE_TRADING_ENABLED":False,
+                  "ORDERS_ENABLED":False,
+                  "AUTOMATIC_PROMOTION":False
+              }
+          }
+          Path("research/authorizations").mkdir(parents=True,exist_ok=True)
+          Path("research/authorizations/q079_performance_2026_09_28.json").write_text(json.dumps(auth,indent=2)+"\n")
+          print("Q079 AUTHORIZED")
+          PY
+
+      - name: Persist authorization
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          export PUBLISH_MESSAGE="OPS: authorize Q079 fixed-rule performance"
+          for attempt in 1 2 3 4 5
+          do
+            BASE_SHA="$(python -c 'import json,os,urllib.request; u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/git/ref/heads/master"; r=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"}); print(json.load(urllib.request.urlopen(r,timeout=30))["object"]["sha"])')"
+            if python automation/github_contents_publish.py --repository "${GITHUB_REPOSITORY}" --branch master --base-sha "${BASE_SHA}" --file research/authorizations/q079_performance_2026_09_28.json=research/authorizations/q079_performance_2026_09_28.json
+            then
+              echo "Q079 authorization persisted"
+              break
+            fi
+            if [ "$attempt" -eq 5 ]; then exit 1; fi
+            sleep $((attempt * 2))
+          done
