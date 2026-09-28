@@ -13,7 +13,6 @@ on:
 
 permissions:
   contents: read
-  actions: write
 
 concurrency:
   group: trading-agent-q084-feasibility
@@ -92,19 +91,6 @@ jobs:
           powershell.exe -NoProfile -NonInteractive -Command "$p='%TARGET%/runner_manifest.json'; [ordered]@{schema_version=1;task_id='Q-2026-09-28-084-FEASIBILITY';run_id=$env:GITHUB_RUN_ID;run_attempt=$env:GITHUB_RUN_ATTEMPT;source_commit=$env:GITHUB_SHA;runner_name=$env:RUNNER_NAME;runner_os=$env:RUNNER_OS;runner_arch=$env:RUNNER_ARCH;paper_only=$true;live_trading_enabled=$false;orders_enabled=$false;automatic_promotion=$false;formal_scientific_evidence=$false} | ConvertTo-Json | Set-Content -Encoding UTF8 $p"
           if not exist "%TARGET%\result.json" exit /b 1
           if not exist "%TARGET%\runner_manifest.json" exit /b 1
-          endlocal
-
-      - name: Dispatch Q081 preflight fallback
-        if: success()
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: cmd
-        run: |
-          @echo off
-          setlocal
-          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-q084"
-          set "PY_EXE=%PY_ROOT%\tools\python.exe"
-          "%PY_EXE%" -c "import json,os,urllib.request; u='https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/actions/workflows/q081-preflight-fallback.yml/dispatches'; req=urllib.request.Request(u,data=json.dumps({'ref':'master'}).encode(),method='POST',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json'}); urllib.request.urlopen(req,timeout=30).read(); print('Q081_PREFLIGHT_FALLBACK_DISPATCHED')"
           endlocal
 
       - name: Upload Q084 feasibility artifact
