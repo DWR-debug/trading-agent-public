@@ -1,17 +1,7 @@
 name: Local Free AI Worker Fabric
 
 on:
-  schedule:
-    - cron: "17 * * * *"
   workflow_dispatch:
-  push:
-    branches: [master]
-    paths:
-      - "ai_requests/**"
-      - "automation/ai_worker_fabric.py"
-      - "scripts/enable_local_ai_worker.ps1"
-      - "tests/test_ai_worker_fabric.py"
-      - ".github/workflows/self-hosted-ai-worker-fabric.yml"
 
 permissions:
   contents: write
