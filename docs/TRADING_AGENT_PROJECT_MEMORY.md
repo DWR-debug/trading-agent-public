@@ -308,3 +308,47 @@ PAPER_ONLY=True
 LIVE_TRADING_ENABLED=False
 orders_enabled=False
 automatic_promotion=False
+
+## Authentifizierung und Copilot-Free-Reserve — verbindliche Regel ab 2026-09-28
+
+### Gemini
+
+Für den persistenten lokalen Windows-PC ist der bevorzugte kostenlose Weg
+die interaktive Gemini-CLI-Anmeldung mit dem persönlichen Google-Konto. Gemini
+CLI dokumentiert Google-Login als unterstützte lokale Authentifizierung und
+cached credentials für nachfolgende Sessions.
+
+Für GitHub-hosted Headless-Jobs wird ein separat hinterlegtes, ausdrücklich
+kostenfreies Gemini-Credential benötigt. Der lokale Google-Browser-Login wird
+nicht automatisch auf GitHub-hosted Runner übertragen.
+
+Das Google-Konto darf dasselbe Konto sein, das der Benutzer für andere Google-
+Dienste verwendet. Daraus folgt jedoch keine automatische Verbindung zu diesem
+Chat oder zu OpenAI-Konten. Credentials werden niemals in den Chat oder ins
+Repository eingecheckt.
+
+### Claude
+
+Claude bleibt ein separat authentifizierter Provider. Eine Claude-Web-/App-
+Anmeldung wird nicht automatisch auf GitHub-hosted Runner übertragen.
+Automatisierung erfolgt nur über eine vorhandene, ausdrücklich kostenfreie
+CLI-/Account-Berechtigung. Anthropic API-Billing bleibt ausgeschlossen.
+
+### Copilot Free als knappe Monatsreserve
+
+GitHub setzt das enthaltene Monatskontingent am ersten Tag jedes Monats
+um 00:00 UTC zurück. Die Projektarchitektur behandelt dieses Kontingent als
+knappe Spezialreserve und nicht als normalen Dauer-Worker.
+
+Verbindliche interne Schutzkappe:
+- ab 2026-10-01T00:00:00Z wieder freigabefähig;
+- maximal 4 gebundene Copilot-Session-Reservierungen pro Kalendermonat;
+- maximal 12 AI credits pro reservierter Session;
+- maximal 1 paralleler Copilot-Worker;
+- kein Überziehen, kein Kauf zusätzlicher Credits, kein Paid Fallback.
+
+Die 4/12-Grenzen sind bewusst selbst auferlegte Konservativgrenzen und stellen
+nicht die von GitHub garantierte Größe des Free-Kontingents dar.
+
+Deterministische Python-/Research-Läufe, Self-hosted PC und externe AI-Worker
+bleiben von dieser Copilot-Reserve unabhängig und dürfen parallel weiterarbeiten.
