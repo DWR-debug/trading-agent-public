@@ -44,7 +44,7 @@ def _preflight(root):
 
 def _adjclose(symbol,start,end):
     params={"period1":int((start-timedelta(days=3)).timestamp()),"period2":int((end+timedelta(days=3)).timestamp()),"interval":"1d","events":"div,splits","includePrePost":"false"}
-    url=f"{YAHOO}/{urllib.parse.quote(symbol,safe="")}?{urllib.parse.urlencode(params)}"
+    url=f"{YAHOO}/{urllib.parse.quote(symbol, safe='')}?{urllib.parse.urlencode(params)}"
     for attempt in range(4):
         try:
             req=urllib.request.Request(url,headers={"User-Agent":"trading-agent-research/1.0"})
