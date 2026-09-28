@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T09:59:51.781138+00:00",
+  "generated_at_utc": "2026-09-28T10:05:43.446775+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -159,6 +159,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: Q071 orthogonal information-source feasibility design (#553)",
+        "sha": "5922faf0d22cb699065f9edfaf739f506340362b",
+        "timestamp": "2026-09-28T12:05:27+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d7cac2b6d5863fa7d15a97e9c8a78806f8355929",
+        "timestamp": "2026-09-28T09:59:51Z"
+      },
+      {
         "message": "FIX: make Q068/Q070 evidence pipelines autonomously chainable (#552)",
         "sha": "b102a186e60fefd6c4bb0c442cf539f5eb46073c",
         "timestamp": "2026-09-28T11:59:37+02:00"
@@ -187,16 +197,6 @@
         "message": "OPS: retrigger Q068 after publisher SHA fix (#551)",
         "sha": "f04640b26e3ce1d7ac2e737ee2bcfe3332bec644",
         "timestamp": "2026-09-28T11:51:15+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0be81b57526241a3046a4f62c50f968d598c69f4",
-        "timestamp": "2026-09-28T09:50:43Z"
-      },
-      {
-        "message": "FIX: harden Q070 Windows evidence publishing (#550)",
-        "sha": "58eb2d43aec2c6b236692341b700acbf50284c2d",
-        "timestamp": "2026-09-28T11:50:31+02:00"
       }
     ]
   },
@@ -258,12 +258,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b102a186e60fefd6c4bb0c442cf539f5eb46073c",
+  "source_master_sha": "5922faf0d22cb699065f9edfaf739f506340362b",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36406965538"
+    "run_id": "36407581841"
   }
 }
