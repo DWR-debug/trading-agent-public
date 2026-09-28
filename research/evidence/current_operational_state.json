@@ -106,7 +106,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:49:11.730843+00:00",
+  "generated_at_utc": "2026-09-28T15:49:25.165449+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -220,6 +220,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6973e965c6e5c095f9d048e80c5b5eb95dfcb1c3",
+        "timestamp": "2026-09-28T15:49:11Z"
+      },
+      {
         "message": "FIX: correct Q068/Q070 retired preregistration status fields",
         "sha": "cf09052500ad38dff055bf0838feb88c77754ec8",
         "timestamp": "2026-09-28T17:49:01+02:00"
@@ -253,11 +258,6 @@
         "message": "CLEANUP: retire obsolete Q045 performance execution path",
         "sha": "4639e846eb52b227180a0e7f1ba9fa16e737e2cc",
         "timestamp": "2026-09-28T17:45:59+02:00"
-      },
-      {
-        "message": "OPS: rerun Q081-R1 preflight with mandatory governance audit",
-        "sha": "e31efcb560df6fcdd966c2237053ff4de70f6874",
-        "timestamp": "2026-09-28T17:45:29+02:00"
       }
     ]
   },
@@ -319,12 +319,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "cf09052500ad38dff055bf0838feb88c77754ec8",
+  "source_master_sha": "6973e965c6e5c095f9d048e80c5b5eb95dfcb1c3",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36446451705"
+    "run_id": "36446460461"
   }
 }
