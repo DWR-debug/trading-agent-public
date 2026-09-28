@@ -48,3 +48,11 @@ def test_hosted_q068_fallback_avoids_nested_heredoc():
     assert "if [ -f research/authorizations/q068_performance_2026_09_28.json ]; then" not in text
     assert "Prepare one-shot Q068 authorization" in text
     assert "Publish Q068 authorization when needed" in text
+
+
+def test_hosted_q068_fallback_persists_frozen_snapshot():
+    text=Path(".github/workflows/q068-hosted-fallback.yml").read_text()
+    assert "Q068 FROZEN SNAPSHOT RECONSTRUCTED EXACTLY" in text
+    assert "EVIDENCE: persist exact Q068 frozen snapshot" in text
+    assert "datasets/ETR/1d.csv" in text
+    assert "datasets/O/1d.csv" in text
