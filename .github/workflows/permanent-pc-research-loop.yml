@@ -28,6 +28,11 @@ concurrency:
 jobs:
   autonomous_pc:
     if: github.repository == 'DWR-debug/trading-agent-public'
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        lane: [autonomous_frontier_qa, local_reproduction]
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 25
     steps:
@@ -71,9 +76,10 @@ jobs:
           set "WORK=%RUNNER_TEMP%\trading-agent-auto-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
           for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
           set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-autonomous\tools\python.exe"
+          set "LANE=${{ matrix.lane }}"
           cd /d "%REPO_SRC%" || exit /b 1
           set "PYTHONPATH=%REPO_SRC%"
-          "%PY_EXE%" -m automation.self_hosted_research_worker --lane autonomous_frontier_qa --output-dir "research/runs/self_hosted/autonomous/%GITHUB_RUN_ID%" || exit /b 1
+          "%PY_EXE%" -m automation.self_hosted_research_worker --lane "%LANE%" --output-dir "research/runs/self_hosted/autonomous/%GITHUB_RUN_ID%/%LANE%" || exit /b 1
           endlocal
 
       - name: Stage autonomous evidence for upload
@@ -83,16 +89,17 @@ jobs:
           setlocal
           set "WORK=%RUNNER_TEMP%\trading-agent-auto-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
           for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
-          if not exist "%GITHUB_WORKSPACE%\research\runs\self_hosted\autonomous\%GITHUB_RUN_ID%" mkdir "%GITHUB_WORKSPACE%\research\runs\self_hosted\autonomous\%GITHUB_RUN_ID%"
-          xcopy /E /I /Y "%REPO_SRC%\research\runs\self_hosted\autonomous\%GITHUB_RUN_ID%" "%GITHUB_WORKSPACE%\research\runs\self_hosted\autonomous\%GITHUB_RUN_ID%" >nul || exit /b 1
+          set "LANE=${{ matrix.lane }}"
+          if not exist "%GITHUB_WORKSPACE%\research\runs\self_hosted\autonomous\%GITHUB_RUN_ID%\%LANE%" mkdir "%GITHUB_WORKSPACE%\research\runs\self_hosted\autonomous\%GITHUB_RUN_ID%\%LANE%"
+          xcopy /E /I /Y "%REPO_SRC%\research\runs\self_hosted\autonomous\%GITHUB_RUN_ID%\%LANE%" "%GITHUB_WORKSPACE%\research\runs\self_hosted\autonomous\%GITHUB_RUN_ID%\%LANE%" >nul || exit /b 1
           endlocal
 
       - name: Upload autonomous evidence
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: permanent-pc-loop-${{ github.run_id }}
+          name: permanent-pc-loop-${{ matrix.lane }}-${{ github.run_id }}
           path: |
-            research/runs/self_hosted/autonomous/${{ github.run_id }}/
+            research/runs/self_hosted/autonomous/${{ github.run_id }}/${{ matrix.lane }}/
           if-no-files-found: warn
           retention-days: 14
