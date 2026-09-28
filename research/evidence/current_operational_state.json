@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T08:57:40.864981+00:00",
+  "generated_at_utc": "2026-09-28T09:01:13.947509+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -122,17 +122,23 @@
     "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "research/q070-fixed-candidate-validation-current-20260928",
-        "number": 541,
-        "title": "RESEARCH: Q070 fresh validation of Q069 OHLCV candidates",
-        "updatedAt": "2026-09-28T08:54:20Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/541"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "Merge pull request #543 from DWR-debug/fix/github-contents-publisher-master-20260928",
+        "sha": "04ce5fc65d5ab906d582cd978ef8834139bea3ed",
+        "timestamp": "2026-09-28T11:00:58+02:00"
+      },
+      {
+        "message": "OPS: add Git-free GitHub evidence publisher",
+        "sha": "928a024060149965ddae5f63e2765c65b06b48d0",
+        "timestamp": "2026-09-28T11:00:40+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a8cb17a2f1a6087fc2e34510b8dcf655ec97d5e4",
+        "timestamp": "2026-09-28T08:57:40Z"
+      },
       {
         "message": "OPS: advance paper-forward MTM state",
         "sha": "c8977ae660f472ef67db263854d477150964214e",
@@ -157,21 +163,6 @@
         "message": "FIX: remove next-bar leakage from Q069 candidate windows",
         "sha": "e07ad332bb0c1177490a713058904d21693286a9",
         "timestamp": "2026-09-28T10:55:29+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "f54943966c8a882b4eef830eb0d74529c73aaa98",
-        "timestamp": "2026-09-28T08:54:23Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f966670b8c035f86de8edfe149984abe0cde07cc",
-        "timestamp": "2026-09-28T08:50:07Z"
-      },
-      {
-        "message": "Merge pull request #540 from DWR-debug/fix/q068-pit-state-and-evidence-publish-20260928",
-        "sha": "b5fe6f9bc8c9c5b2911dbcebb88dc0a49405cbdc",
-        "timestamp": "2026-09-28T10:49:55+02:00"
       }
     ]
   },
@@ -233,12 +224,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c8977ae660f472ef67db263854d477150964214e",
+  "source_master_sha": "04ce5fc65d5ab906d582cd978ef8834139bea3ed",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36400485201"
+    "run_id": "36400850931"
   }
 }
