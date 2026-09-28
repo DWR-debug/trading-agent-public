@@ -170,7 +170,7 @@ def test_continuous_qa_is_matrix_orchestrated_and_bounded():
     assert "fail-fast: false" in text
     assert "max-parallel: 2" in text
     assert "lane: [repo_qa, data_qa, design_qa, local_reproduction]" in text
-    assert "runs-on: windows-latest" in text
+    assert "runs-on: [self-hosted, trading-agent-research]" in text
     assert "Aggregate QA gate" in text
     assert "needs: qa_lane" in text
     assert "if: always()" in text
@@ -184,7 +184,7 @@ def test_self_hosted_continuous_qa_is_scheduled_and_non_formal():
     ).read_text(encoding="utf-8")
     assert 'cron: "*/15 * * * *"' in text
     assert "workflow_dispatch:" in text
-    assert "runs-on: windows-latest" in text
+    assert "runs-on: [self-hosted, trading-agent-research]" in text
     assert "concurrency:" in text
     assert "trading-agent-self-hosted-continuous-qa" in text
     assert "PAPER_ONLY" in text
@@ -230,12 +230,12 @@ def test_self_hosted_worker_v4_is_minimal_single_step_gateway():
     text = (
         ROOT / ".github" / "workflows" / "self-hosted-research-worker-v4.yml"
     ).read_text(encoding="utf-8")
-    assert "name: Research Worker v4 (hosted Python)" in text
+    assert "name: Research Worker v4 (trusted self-hosted Windows)" in text
     assert "workflow_dispatch:" not in text
     assert '  push:' in text
     assert "- master" in text
     assert 'research/run_requests/self_hosted_repo_qa.trigger' in text
-    assert "runs-on: windows-latest" in text
+    assert "runs-on: [self-hosted, trading-agent-research]" in text
     assert "steps:" in text
     assert "Self-hosted repo_qa single-step worker" in text
     assert "uses:" not in text
