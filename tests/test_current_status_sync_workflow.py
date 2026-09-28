@@ -22,4 +22,5 @@ def test_status_sync_uses_checked_out_master_sha_not_push_event_sha():
     assert 'echo "STATUS_SOURCE_SHA=${checked_out_master_sha}" >> "${GITHUB_ENV}"' in text
     assert '--source-master-sha "${source_master_sha}"' in text
     assert 'assert d["source_master_sha"] == os.environ["STATUS_SOURCE_SHA"]' in text
-    assert 'test "$remote_master_sha" = "$STATUS_SOURCE_SHA"' in text
+    assert 'if [ "$remote_master_sha" != "$STATUS_SOURCE_SHA" ]; then' in text
+    assert "STATUS_SYNC_MASTER_MOVED_BEFORE_GENERATION" in text
