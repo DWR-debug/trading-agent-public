@@ -129,7 +129,7 @@ def run(coverage_root: Path, result_path: Path) -> dict:
             mutated_target = _aggregate_at(mutated, index)
             mutated_prev_target = _aggregate_at(mutated, index - 1)
             mutated_e2 = apply_turnover_hysteresis(
-                (mutated_prev_target, mutated_target),
+                (e2_path[index - 1], mutated_target),
                 symbols=Q068_SYMBOLS,
             )[1]
 
