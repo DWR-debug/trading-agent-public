@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:41:31.729930+00:00",
+  "generated_at_utc": "2026-09-28T10:41:56.438607+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,21 @@
     ],
     "recent_commits": [
       {
+        "message": "EVIDENCE: persist Q074 extended source feasibility",
+        "sha": "bff4c56815f7b590b8e1d7267f02724e6641a53d",
+        "timestamp": "2026-09-28T12:41:43+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "b2a186fb7209d690d3eef4079a472f8a0e316f1b",
+        "timestamp": "2026-09-28T10:41:39Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "0e4cbbb6a407b753f8b52179ffcb329d26332645",
+        "timestamp": "2026-09-28T10:41:31Z"
+      },
+      {
         "message": "OPS: retrigger Q068 on corrected frozen-contract verifier",
         "sha": "0451e5f36d902c586a0bc681837c7512a3492dcb",
         "timestamp": "2026-09-28T12:41:25+02:00"
@@ -189,21 +204,6 @@
         "message": "RESEARCH: freeze Q074 source feasibility preregistration",
         "sha": "c02f6908a2fed7d638d0e51fe125bcad7b9ce07b",
         "timestamp": "2026-09-28T12:40:31+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q074 hosted feasibility workflow",
-        "sha": "acaaf74e76836aaab61e55e32c7f0f66c3e98822",
-        "timestamp": "2026-09-28T12:40:29+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q074 SEC/Cboe feasibility runner",
-        "sha": "0f101830f55b79023772453234f0bae9c14f1709",
-        "timestamp": "2026-09-28T12:40:26+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9e6876e6d9b6895d97ed37a1b508767129c78088",
-        "timestamp": "2026-09-28T10:39:39Z"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0451e5f36d902c586a0bc681837c7512a3492dcb",
+  "source_master_sha": "bff4c56815f7b590b8e1d7267f02724e6641a53d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36411116271"
+    "run_id": "36411227704"
   }
 }
