@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T08:45:05.794674+00:00",
+  "generated_at_utc": "2026-09-28T08:50:07.837658+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -125,44 +125,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "DOCS: replace chat-only Q069 literature markers with stable references",
-        "sha": "dcffa90f2bb7ad4d8dca7666b32de31601867dcd",
-        "timestamp": "2026-09-28T10:44:49+02:00"
+        "message": "Merge pull request #540 from DWR-debug/fix/q068-pit-state-and-evidence-publish-20260928",
+        "sha": "b5fe6f9bc8c9c5b2911dbcebb88dc0a49405cbdc",
+        "timestamp": "2026-09-28T10:49:55+02:00"
       },
       {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "af4adb41db45ea0e903358b5e03bdd49b1876cf0",
-        "timestamp": "2026-09-28T08:42:57Z"
+        "message": "TEST: lock Git-independent Q068 evidence persistence",
+        "sha": "0689b96abb9993c9ae3de731dec1e1460c5c9d18",
+        "timestamp": "2026-09-28T10:49:34+02:00"
       },
       {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "261e499b1128708ec091c51a58a47bdc61589326",
-        "timestamp": "2026-09-28T08:30:55Z"
+        "message": "OPS: reconcile Q068 ledger through GitHub API without local Git",
+        "sha": "0655da90802f3baf53ccfb114388f0fccb92f79e",
+        "timestamp": "2026-09-28T10:49:15+02:00"
+      },
+      {
+        "message": "OPS: publish Q068 performance evidence without local Git",
+        "sha": "3412d1fea684d38d750782d8385793cb8c553f70",
+        "timestamp": "2026-09-28T10:49:11+02:00"
+      },
+      {
+        "message": "OPS: publish Q068 authorization without local Git",
+        "sha": "d341d370fa33c70a5dd403193cefb9138d5c3f24",
+        "timestamp": "2026-09-28T10:49:00+02:00"
+      },
+      {
+        "message": "OPS: persist Q068 evidence through GitHub API without local Git",
+        "sha": "39e7b6831f298a9cba6dd78900b2b88fbceebf11",
+        "timestamp": "2026-09-28T10:48:57+02:00"
+      },
+      {
+        "message": "FIX: compare Q068 E2 mutation against actual prior state",
+        "sha": "703b7e93e92007a88cfc51603863cd0ae76d6b97",
+        "timestamp": "2026-09-28T10:48:53+02:00"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "395450d88e5a782d2c0eb2453024d0c7a43c3494",
-        "timestamp": "2026-09-28T08:29:31Z"
-      },
-      {
-        "message": "Merge pull request #537 from DWR-debug/research/q069-orthogonal-ohlcv-candidate-bank-20260928",
-        "sha": "2e7eff73b74d9571c4191301d4f64730424c7c14",
-        "timestamp": "2026-09-28T10:29:18+02:00"
-      },
-      {
-        "message": "Merge pull request #538 from DWR-debug/fix/q068-source-checkout-no-git-20260928",
-        "sha": "0a222c255f9a684c566fd79e24e21e1afdebb4ab",
-        "timestamp": "2026-09-28T10:29:05+02:00"
-      },
-      {
-        "message": "TEST: fix Q069 fixture construction and selection-order assertion",
-        "sha": "cff706b634f7373e1df128a24086b370f52f03f6",
-        "timestamp": "2026-09-28T10:28:20+02:00"
-      },
-      {
-        "message": "TEST: lock Q068 archive-checkout source contract",
-        "sha": "955f8a1bec139660f83535ad6df8b22abee63c0c",
-        "timestamp": "2026-09-28T10:27:15+02:00"
+        "sha": "3710fa5448bcecaff225c4c58f8fc3778ace3b0a",
+        "timestamp": "2026-09-28T08:45:05Z"
       }
     ]
   },
@@ -224,12 +224,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "dcffa90f2bb7ad4d8dca7666b32de31601867dcd",
+  "source_master_sha": "b5fe6f9bc8c9c5b2911dbcebb88dc0a49405cbdc",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36399211205"
+    "run_id": "36399723700"
   }
 }
