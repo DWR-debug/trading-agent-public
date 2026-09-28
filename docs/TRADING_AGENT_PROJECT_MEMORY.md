@@ -1,3 +1,15 @@
+## Kanonische Startregel für neue "trading agent"-Chats — 2026-09-28
+
+Diese Datei `docs/TRADING_AGENT_PROJECT_MEMORY.md` ist die **kanonische dauerhafte Gedächtnis- und Betriebsdatei** des Projekts. Bei jedem neuen Chat, dessen erste substanzielle Nutzernachricht den Trigger **"trading agent"** enthält oder eindeutig auf das Trading-Agent-Projekt verweist, muss diese Datei vor der Auswahl oder Ausführung des nächsten Entwicklungsschritts berücksichtigt werden.
+
+Verbindliche Reihenfolge:
+1. aktuellen öffentlichen Repository-Stand `DWR-debug/trading-agent-public` prüfen;
+2. diese Gedächtnisdatei aus dem aktuellen `master` lesen;
+3. aktuelle Runner-/Workflow-/Evidence-Zustände prüfen;
+4. erst danach planen, ändern oder Forschung ausführen.
+
+GitHub-/Repository-Zustand hat Vorrang vor veralteten Chatannahmen. Diese Datei ist dabei die dauerhafte Projektbeschreibung für Ziel, Sicherheitsgrenzen, Ressourcenmodell, PC-/Cloud-Betrieb, Dringlichkeit, Forschungsmodus und Arbeitsweise.
+
 # Trading-Agent Projektgedächtnis — Ziel, 30-Tage-Meilenstein und Mutkurve
 
 Stand: 2026-09-28
