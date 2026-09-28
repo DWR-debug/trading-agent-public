@@ -94,7 +94,7 @@ def eligible_issues(issues: list[dict], owner: str) -> list[dict]:
     for issue in issues:
         if issue.get("state") != "open" or issue.get("user", {}).get("login") != owner:
             continue
-        if issue.get("pull_request") or "agent-cli-ready" not in _labels(issue) or issue.get("assignees"):
+        if issue.get("pull_request") or not ({"agent", "agent-ready", "agent-cli-ready"} & _labels(issue)) or issue.get("assignees"):
             continue
         if _task_id(issue) is None:
             continue
