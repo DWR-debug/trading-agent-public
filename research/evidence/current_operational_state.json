@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:39:44.086528+00:00",
+  "generated_at_utc": "2026-09-28T17:40:34.958822+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -237,6 +237,16 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: invoke Q089 coverage through Python module entrypoint (#627)",
+        "sha": "885a01863bf4556ba4fa433bec61716ee681d610",
+        "timestamp": "2026-09-28T19:40:18+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "49c586029a225b031c88ec06ba39a864213185e1",
+        "timestamp": "2026-09-28T17:39:44Z"
+      },
+      {
         "message": "RESEARCH: probe SEC source accessibility from cloud (#626)",
         "sha": "56bad94601a089f3786e2dcf2263c98dfe484e85",
         "timestamp": "2026-09-28T19:39:29+02:00"
@@ -265,16 +275,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "45b3c35aae4beccb18ac54c569a7e2cd2c507de2",
         "timestamp": "2026-09-28T17:37:53Z"
-      },
-      {
-        "message": "FIX: make frozen snapshot replay cross-platform (#624)",
-        "sha": "8e331fa75c80dc4626d801d053fbaa8818707131",
-        "timestamp": "2026-09-28T19:37:35+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4d022cd4c2ed8ada17d0091f988221af4d23f4cd",
-        "timestamp": "2026-09-28T17:36:41Z"
       }
     ]
   },
@@ -336,12 +336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "56bad94601a089f3786e2dcf2263c98dfe484e85",
+  "source_master_sha": "885a01863bf4556ba4fa433bec61716ee681d610",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36459686812"
+    "run_id": "36459785857"
   }
 }
