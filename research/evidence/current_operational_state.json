@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:05:17.269217+00:00",
+  "generated_at_utc": "2026-09-28T17:05:43.082438+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -237,6 +237,16 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: run RCCSM feasibility in parallel on PC and cloud (#610)",
+        "sha": "7b2c8ff093698e76143429678535ec1ea2acafa5",
+        "timestamp": "2026-09-28T19:05:28+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "313788d7c86ec056e97c0a22c9914d9f5dd61d16",
+        "timestamp": "2026-09-28T17:05:17Z"
+      },
+      {
         "message": "DOCS: make permanent parallel research operation binding explicit",
         "sha": "25d3a6de97af1ba3221e8d2adb226a626acc4c5c",
         "timestamp": "2026-09-28T19:05:04+02:00"
@@ -265,16 +275,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "a94dafed3201182a0dc6c99f02ad726bd7d0c335",
         "timestamp": "2026-09-28T16:58:07Z"
-      },
-      {
-        "message": "RESEARCH: add RCCSM feasibility router and leakage guards (#608)",
-        "sha": "f45e3ca3b312231414b98621fe2e9cb0e720b79b",
-        "timestamp": "2026-09-28T18:57:52+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c7e178de3028823c4fe397ae656686084859c1c8",
-        "timestamp": "2026-09-28T16:57:03Z"
       }
     ]
   },
@@ -336,12 +336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "25d3a6de97af1ba3221e8d2adb226a626acc4c5c",
+  "source_master_sha": "7b2c8ff093698e76143429678535ec1ea2acafa5",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36455628536"
+    "run_id": "36455678925"
   }
 }
