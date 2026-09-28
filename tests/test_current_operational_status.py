@@ -3,7 +3,7 @@ import json
 from automation.sync_current_operational_status import generate
 
 
-def test_current_status_separates_operations_from_science(tmp_path):
+def test_current_status_separates_operations_from_science(tmp_path, monkeypatch):
     state = tmp_path / "github_state.json"
     state.write_text(
         json.dumps(
@@ -13,6 +13,10 @@ def test_current_status_separates_operations_from_science(tmp_path):
             }
         ),
         encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        "automation.sync_current_operational_status._recent_commits",
+        lambda limit=8: [{"sha": "abc123", "timestamp": "2026-09-28T00:00:00+00:00", "message": "test"}],
     )
     payload, doc = generate(
         source_master_sha="abc123",
@@ -32,6 +36,10 @@ def test_current_status_detects_safety_violation(monkeypatch, tmp_path):
     state = tmp_path / "github_state.json"
     state.write_text("{}", encoding="utf-8")
     monkeypatch.setattr("config.settings.PAPER_ONLY", False)
+    monkeypatch.setattr(
+        "automation.sync_current_operational_status._recent_commits",
+        lambda limit=8: [],
+    )
     payload, _ = generate(
         source_master_sha="abc123",
         workflow_run_id=None,
