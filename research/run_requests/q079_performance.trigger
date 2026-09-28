@@ -1,1 +1,1 @@
-Q079 performance retrigger — PYTHONPATH fixed 2026-09-28.
+Q079 performance retrigger — explicit PYTHONPATH invocation fix 2026-09-28.
