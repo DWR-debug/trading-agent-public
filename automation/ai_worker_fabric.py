@@ -168,7 +168,12 @@ def command_for(provider: str, prompt: str, binary: str | None = None) -> list[s
     if provider == "gemini_cli":
         executable = binary or "gemini"
         if Path(executable).name.lower().startswith("agy"):
-            return [executable, "-p", prompt]
+            return [
+                executable, "-p", prompt,
+                "--output-format", "json",
+                "--print-timeout", f"{MAX_RUNTIME_MINUTES}m",
+                "--sandbox",
+            ]
         return [executable, "--approval-mode", "plan", "--output-format", "json", "--prompt", prompt]
     if provider == "claude_cli":
         return [binary or "claude", "-p", prompt]
