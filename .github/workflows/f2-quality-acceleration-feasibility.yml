@@ -69,7 +69,7 @@ jobs:
           @echo off
           set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-f2\tools\python.exe"
           set "OUT=research\runs\f2_quality_acceleration\f2_source_pit_feasibility.json"
-          "%PY_EXE%" automation\f2_quality_acceleration.py --output "%OUT%" || exit /b 1
+          "%PY_EXE%" -m automation.f2_quality_acceleration --output "%OUT%" || exit /b 1
 
       - name: Persist deterministic F2 receipt
         env:
