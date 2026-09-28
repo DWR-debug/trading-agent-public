@@ -76,11 +76,18 @@ def _probe(item: dict) -> dict:
     if item["id"].startswith("I9"):
         lines = [line.strip() for line in text.splitlines() if line.strip()]
         header = lines[0] if lines else ""
-        result["checks"] = {
-            "has_header": header == "DATE,OPEN,HIGH,LOW,CLOSE",
-            "has_rows": len(lines) > 1,
-            "first_data_row_has_five_fields": bool(lines[1].split(",")) and len(lines[1].split(",")) == 5 if len(lines) > 1 else False,
-        }
+        if item["id"] == "I9B":
+            result["checks"] = {
+                "has_header": header == "DATE,VVIX",
+                "has_rows": len(lines) > 1,
+                "first_data_row_has_two_fields": len(lines[1].split(",")) == 2 if len(lines) > 1 else False,
+            }
+        else:
+            result["checks"] = {
+                "has_header": header == "DATE,OPEN,HIGH,LOW,CLOSE",
+                "has_rows": len(lines) > 1,
+                "first_data_row_has_five_fields": len(lines[1].split(",")) == 5 if len(lines) > 1 else False,
+            }
         result["status"] = "VERIFIABLE" if all(result["checks"].values()) else "SCHEMA_MISMATCH"
         result["sample_first_data_row"] = lines[1] if len(lines) > 1 else None
     else:
