@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T13:32:04.726322+00:00",
+  "generated_at_utc": "2026-09-28T13:33:28.950514+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: add gated Q081 formal hosted evidence path",
+        "sha": "a0fca2333e5a93a83d6c7e3b00a010e424985b3d",
+        "timestamp": "2026-09-28T15:33:13+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a5ebd361cc54ca35f944c32f214bbcc58a560dc6",
+        "timestamp": "2026-09-28T13:32:04Z"
+      },
+      {
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "150e511c55d9ea5ca4fc9c5414cf65cfec390c0d",
         "timestamp": "2026-09-28T13:31:49Z"
@@ -185,16 +195,6 @@
         "message": "RESEARCH: preregister Q081 corrective execution-envelope replication",
         "sha": "896008cd8a513c8d242ed3192a5b907a61fc9245",
         "timestamp": "2026-09-28T15:27:09+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "9278b2ae5283926c0d47aaefba25e4cc7e2f21a5",
-        "timestamp": "2026-09-28T13:18:32Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "4260fcbd6e311ab9381ea0b598356cc29b5e6ee3",
-        "timestamp": "2026-09-28T13:13:28Z"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "150e511c55d9ea5ca4fc9c5414cf65cfec390c0d",
+  "source_master_sha": "a0fca2333e5a93a83d6c7e3b00a010e424985b3d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36429267189"
+    "run_id": "36429438098"
   }
 }
