@@ -1,1 +1,1 @@
-Q068 autonomous advance after persisted coverage/PIT receipts on 2026-09-28.
+Q068 autonomous advance request 2026-09-28T10:09:00Z after frozen source-contract hardening.
