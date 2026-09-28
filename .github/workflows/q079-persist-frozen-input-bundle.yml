@@ -104,16 +104,7 @@ jobs:
           export PUBLISH_MESSAGE="EVIDENCE: persist Q079 immutable coverage PIT input bundle"
           for attempt in 1 2 3 4 5
           do
-            BASE_SHA="$(python - <<'PY'
-import json, os, urllib.request
-u = "https://api.github.com/repos/" + os.environ["GITHUB_REPOSITORY"] + "/git/ref/heads/master"
-req = urllib.request.Request(
-    u,
-    headers={
-        "Authorization": "Bearer " + os.environ["GH_TOKEN"],
-        "Accept": "application/vnd.github+json",
-    },
-)
+            BASE_SHA="$(gh api "/repos/${GITHUB_REPOSITORY}/git/ref/heads/master" --jq .object.sha)"
 print(json.load(urllib.request.urlopen(req, timeout=30))["object"]["sha"])
 PY
 )"
