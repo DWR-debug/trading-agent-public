@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T16:50:24.974337+00:00",
+  "generated_at_utc": "2026-09-28T16:57:03.780622+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -228,6 +228,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: stage RCCSM regime-conditional signal mesh design (#607)",
+        "sha": "e60904b3edb713d4f79412ce312790f3fffb0ce0",
+        "timestamp": "2026-09-28T18:56:48+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "d7ae0b1ff7c2bedd265ed45323141dc4eb2eede3",
+        "timestamp": "2026-09-28T16:56:00Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "13084ea75be65818b6eed21838c997cf78fe91ab",
+        "timestamp": "2026-09-28T16:51:52Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a347e7503058196c97ab2da82b31bdd57672c607",
+        "timestamp": "2026-09-28T16:50:25Z"
+      },
+      {
         "message": "DOCS: record permanent PC use, family urgency and project goal",
         "sha": "0e18d849b6f2a8bc494d950c1f6dece323e70072",
         "timestamp": "2026-09-28T18:50:02+02:00"
@@ -246,26 +266,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "1b1e52dd5caa76ca9363d4a43582c6148feb61d8",
         "timestamp": "2026-09-28T16:46:44Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "8ed2557bd36bcb34544a0a756fe782cdf81a94f9",
-        "timestamp": "2026-09-28T16:46:30Z"
-      },
-      {
-        "message": "OPS: deduplicate Q081-R1 preflight runs",
-        "sha": "36736cec6b8bd908d7fac5da56819a02c0aa69c9",
-        "timestamp": "2026-09-28T18:46:27+02:00"
-      },
-      {
-        "message": "OPS: refresh q081r1_preflight.trigger for autonomous preflight",
-        "sha": "42b57b07261103683394e5ab76efa7e205033be2",
-        "timestamp": "2026-09-28T18:46:17+02:00"
-      },
-      {
-        "message": "OPS: refresh q081r1_preflight_final.trigger for autonomous preflight",
-        "sha": "de7fe659c77ba7caa8afb1458626088c6d90251d",
-        "timestamp": "2026-09-28T18:46:14+02:00"
       }
     ]
   },
@@ -327,12 +327,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0e18d849b6f2a8bc494d950c1f6dece323e70072",
+  "source_master_sha": "e60904b3edb713d4f79412ce312790f3fffb0ce0",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36453893620"
+    "run_id": "36454670524"
   }
 }
