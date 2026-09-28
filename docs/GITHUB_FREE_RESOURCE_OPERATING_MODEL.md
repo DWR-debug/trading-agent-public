@@ -46,7 +46,7 @@ Monatliche Soft-Allokation:
 
 Der Self-hosted Worker mit dem Label `trading-agent-research` ergänzt die kostenlosen GitHub-hosted Runner. Er übernimmt ausschließlich owner-gesteuerte QA-, Reproduktions- und vorbereitende Rechenlast. Er führt keinen untrusted Fork-/PR-Code aus, besitzt keine Trading-Secrets und darf keine Promotion oder Live-Ausführung auslösen.
 
-Formale Research-Evidence bleibt auf den kanonischen, reproduzierbaren GitHub-hosted Pfaden. Der Self-hosted Worker liefert Arbeitsartefakte, die bei wissenschaftlicher Verwendung anschließend kanonisch reproduziert werden.
+Formale Research-Evidence bleibt auf kanonisch reproduzierbaren Pfaden. Für Q067 darf der ausdrücklich vertrauenswürdige owner-eigene Self-hosted Windows-Runner als formaler Ausführungspfad verwendet werden, wenn Snapshot, Commit, Safety, Preregistration, PIT/Prerequisites und Evidence-Gates vollständig maschinengeprüft sind. Untrusted Forks und beliebige Shell-Aufgaben bleiben ausgeschlossen.
 
 Einrichtungsdokument: `docs/SELF_HOSTED_RESEARCH_RUNNER.md`.
 
@@ -114,8 +114,8 @@ Ab 80 Prozent Verbrauch nur noch hochwirksame Aufgaben; ab 100 Prozent Stop für
 | Hypothesen/Alternativen | Steuer-Agent, optional Cloud Agent |
 | Bounded Coding | Cloud Agent |
 | Regression/QA | Cloud Agent + CI |
-| Deterministische Coverage | GitHub Actions |
-| Backtest/Validation | GitHub Actions / lokaler Runner |
+| Deterministische Coverage | GitHub Actions; bei dokumentierter Hosted-Runner-Störung vertrauenswürdiger Self-hosted Runner |
+| Backtest/Validation | GitHub Actions / vertrauenswürdiger Self-hosted Runner |
 | Interaktives Debugging | Codespaces |
 | Evidence-Archivierung | Repository + Actions Artifacts |
 | Holdout-/Promotion-Entscheidungen | formale Research-Governance |
