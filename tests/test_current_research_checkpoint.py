@@ -23,4 +23,4 @@ def test_trial_ledger_contains_new_coverage_and_pit_records_without_promotion():
     assert records["T-2026-09-27-049"]["status"]=="coverage_validated"
     assert records["T-2026-09-27-050"]["status"]=="coverage_validated"
     assert records["T-2026-09-27-051"]["status"]=="pit_passed_no_performance_evidence"
-    assert records["T-2026-09-27-051"]["outcome"]["performance_evaluation"] is False
+    assert records["T-2026-09-27-051"]["outcome"]["performance_authorized"] is False
