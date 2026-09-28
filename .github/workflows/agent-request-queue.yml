@@ -130,7 +130,7 @@ jobs:
           from pathlib import Path
           issue=json.loads(Path(os.environ["RUNNER_TEMP"],"issue.json").read_text(encoding="utf-8"))
           assert issue["user"]["login"] == os.environ["GITHUB_REPOSITORY_OWNER"]
-          assert any(label["name"] == "agent-cli-ready" for label in issue.get("labels", []))
+          assert any(label["name"] in {"agent", "agent-ready", "agent-cli-ready"} for label in issue.get("labels", []))
           Path(os.environ["RUNNER_TEMP"],"event.json").write_text(json.dumps({"issue":issue}),encoding="utf-8")
           PY
           python -m automation.agent_dispatch --event-json "$RUNNER_TEMP/event.json" --master-sha "$GITHUB_SHA" --active-agent-count 0 --output "$RUNNER_TEMP/agent_task_manifest.json"
@@ -163,9 +163,8 @@ jobs:
           echo "skip=false" >> "$GITHUB_OUTPUT"
 
       - name: Check personal Copilot token
-        if: steps.release.outputs.eligible == 'true'
         id: copilot_token
-        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true'
+        if: steps.release.outputs.eligible == 'true' && steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true'
         shell: bash
         env:
           PERSONAL_COPILOT_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
@@ -187,17 +186,15 @@ jobs:
           fi
 
       - name: Reserve protected Copilot Free session
-        if: steps.release.outputs.eligible == 'true'
         id: copilot_budget
-        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true'
+        if: steps.release.outputs.eligible == 'true' && steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true'
         uses: ./.github/actions/copilot-free-gate
         with:
           github-token: ${{ github.token }}
 
       - name: Run bounded Copilot CLI
-        if: steps.release.outputs.eligible == 'true'
         id: copilot_cli
-        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true'
+        if: steps.release.outputs.eligible == 'true' && steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true'
         shell: bash
         env:
           COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
