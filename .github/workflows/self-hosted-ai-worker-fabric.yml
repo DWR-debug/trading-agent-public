@@ -7,7 +7,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: trading-agent-local-ai-fabric-${{ matrix.provider }}
+  group: trading-agent-local-ai-fabric
   cancel-in-progress: false
 
 jobs:
