@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:16:38.165224+00:00",
+  "generated_at_utc": "2026-09-28T15:18:30.136623+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: remove obsolete Q081 bridge from Q084 feasibility",
+        "sha": "a11309713b9f5222d1c3e544f95fe4347cc5f524",
+        "timestamp": "2026-09-28T17:18:13+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5e99494856cfcc3fbddde2320f027d832bd19c9b",
+        "timestamp": "2026-09-28T15:16:38Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "d6efff88f1eca467a41e949221fac516c4f61804",
         "timestamp": "2026-09-28T15:16:21Z"
@@ -185,16 +195,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "3e04825fcf1797d06ff9db3c7244432e4173e588",
         "timestamp": "2026-09-28T15:15:30Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1d852cf8598e7f1dfec4c72696d7b9271e649cf9",
-        "timestamp": "2026-09-28T15:15:16Z"
-      },
-      {
-        "message": "OPS: bridge Q081-R1 self-hosted performance dispatch",
-        "sha": "9a50963f081e7b991651d39fd9a4b57fe9961701",
-        "timestamp": "2026-09-28T17:15:10+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d6efff88f1eca467a41e949221fac516c4f61804",
+  "source_master_sha": "a11309713b9f5222d1c3e544f95fe4347cc5f524",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36442296705"
+    "run_id": "36442554445"
   }
 }
