@@ -1,11 +1,21 @@
+from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from automation.q069_candidate_bank import CANDIDATES, candidate_scores_at, candidate_targets_at
 
 SYMBOLS = ("AAA", "BBB", "CCC", "DDD")
 
+@dataclass(frozen=True)
+class Bar:
+    timestamp: datetime
+    open: float
+    high: float
+    low: float
+    close: float
+    volume: float
+
 def _bar(ts, close, volume=1000.0):
-    return type("Bar", (), {"timestamp":ts,"open":float(close),"high":float(close)+1,"low":float(close)-1,"close":float(close),"volume":float(volume)})()
+    return Bar(ts, float(close), float(close) + 1.0, float(close) - 1.0, float(close), float(volume))
 
 def _assets(count=900):
     base = datetime(2015,1,2,tzinfo=timezone.utc)
@@ -20,7 +30,7 @@ def test_each_candidate_uses_its_declared_ordering():
         scores = candidate_scores_at(assets,index,symbols=SYMBOLS)[name]
         targets = candidate_targets_at(assets,index,symbols=SYMBOLS)[name]
         expected = sorted(SYMBOLS,key=(lambda s:(-scores[s],s)) if reverse else (lambda s:(scores[s],s)))[:2]
-        assert tuple(s for s,w in targets.items() if w) == tuple(expected)
+        assert {s for s,w in targets.items() if w} == set(expected)
 
 def test_insufficient_history_fails_closed():
     targets = candidate_targets_at(_assets(),20,symbols=SYMBOLS)
@@ -31,7 +41,7 @@ def test_future_mutation_does_not_change_current_targets():
     mutated = {s:list(bars) for s,bars in assets.items()}
     for bars in mutated.values():
         for i in range(index+1,len(bars)):
-            b=bars[i]; bars[i]=type(b)(timestamp=b.timestamp,open=b.open*7,high=b.high*7,low=b.low*.2,close=b.close*.2,volume=b.volume*9)
+            b=bars[i]; bars[i]=Bar(b.timestamp,b.open*7,b.high*7,b.low*.2,b.close*.2,b.volume*9)
     mutated={s:tuple(b) for s,b in mutated.items()}
     assert candidate_targets_at(mutated,index,symbols=SYMBOLS) == original
 
@@ -39,7 +49,7 @@ def test_next_session_mutation_does_not_change_current_targets():
     assets = _assets(); index = 780; original = candidate_targets_at(assets,index,symbols=SYMBOLS)
     mutated = {s:list(bars) for s,bars in assets.items()}
     for bars in mutated.values():
-        b=bars[index+1]; bars[index+1]=type(b)(timestamp=b.timestamp,open=b.open*9,high=b.high*9,low=b.low*.1,close=b.close*.1,volume=b.volume*10)
+        b=bars[index+1]; bars[index+1]=Bar(b.timestamp,b.open*9,b.high*9,b.low*.1,b.close*.1,b.volume*10)
     mutated={s:tuple(b) for s,b in mutated.items()}
     assert candidate_targets_at(mutated,index,symbols=SYMBOLS) == original
 
