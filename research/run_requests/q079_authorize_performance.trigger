@@ -1,1 +1,1 @@
-Q079 authorization trigger — dispatch performance after successful authorization 2026-09-28.
+Q079 authorization trigger — actions:write dispatch permission added 2026-09-28.
