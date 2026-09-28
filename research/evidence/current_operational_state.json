@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T16:22:46.918581+00:00",
+  "generated_at_utc": "2026-09-28T16:23:15.466647+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -228,6 +228,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "QA: expand Q089 preflight test surface",
+        "sha": "29b1cd54ab92f0fbc3831881ec88d30af05e79b2",
+        "timestamp": "2026-09-28T18:23:00+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f064dc9c7ebd948b8e93a355b00efcfbee325462",
+        "timestamp": "2026-09-28T16:22:46Z"
+      },
+      {
         "message": "FIX: enforce UTC calendar boundary in C31 news state",
         "sha": "61f3de377e075cb0d9d4bbea20d7a9459377de76",
         "timestamp": "2026-09-28T18:22:29+02:00"
@@ -256,16 +266,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "750950cb195db9c8fd61814ce29ad3c6c9b66e56",
         "timestamp": "2026-09-28T16:16:09Z"
-      },
-      {
-        "message": "DOCS: synchronize unusual frontier feasibility status",
-        "sha": "3022669ffc15c91cdda169b3ffddf75b8a898071",
-        "timestamp": "2026-09-28T18:15:52+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "94b9963e2b8b9b347727b45e909d5fa6d84926bf",
-        "timestamp": "2026-09-28T16:15:32Z"
       }
     ]
   },
@@ -327,12 +327,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "61f3de377e075cb0d9d4bbea20d7a9459377de76",
+  "source_master_sha": "29b1cd54ab92f0fbc3831881ec88d30af05e79b2",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36450563578"
+    "run_id": "36450625837"
   }
 }
