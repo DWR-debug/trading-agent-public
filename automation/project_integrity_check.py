@@ -51,6 +51,8 @@ ACTIVE_WORKFLOWS = {
     "q025-treasury-auction-date-pit-feasibility.yml",
     "q067-coverage-pit.yml",
     "q067-fixed-mechanism-performance.yml",
+    "q067-autonomous-advance.yml",
+    "q067-evidence-reconcile.yml",
     "research-orchestrator.yml",
     "self-hosted-continuous-qa.yml",
     "self-hosted-research-worker-v4.yml",
