@@ -156,7 +156,16 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:12:24.101471+00:00",
+  "generated_at_utc": "2026-09-28T19:18:53.183710+00:00",
+  "operator_action_required": {
+    "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
+    "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
+    "runner_1": "Keep the existing runner process alive in PowerShell window 1.",
+    "runner_2": "Keep LHT-N133732-2 alive in PowerShell window 2.",
+    "secret_rule": "Never paste GitHub registration tokens, API keys, OAuth tokens, passwords, or other credentials into chat; redact them before sharing output.",
+    "service_note": "Windows service installation is a separate maintenance step and requires administrator privileges; do not migrate a runner to service mode until its local AI identity has been verified because Antigravity CLI authentication uses the local user's system keyring or Google Sign-In context.",
+    "windows_shells": 2
+  },
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -270,6 +279,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: make local AI bootstrap compatible with Windows PowerShell 5.1",
+        "sha": "bf5acdce653fc40d5b22a2e4831f347ad7f26505",
+        "timestamp": "2026-09-28T21:18:44+02:00"
+      },
+      {
+        "message": "OPS: persist two-window runner activation instructions",
+        "sha": "72fca60653ea9d6c8a99ac16fd4b19a8801b7a16",
+        "timestamp": "2026-09-28T21:18:36+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "69ae3bd70dceb1ec3a8bfc1a7a7732744e640a8b",
+        "timestamp": "2026-09-28T19:14:19Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "047f9fce5eb12cd2cb0149f43cf6e3a4cebbdf3b",
+        "timestamp": "2026-09-28T19:12:24Z"
+      },
+      {
         "message": "OPS: record AI worker state",
         "sha": "142245fd077c5f4184be9d54901787e9f7e7ce94",
         "timestamp": "2026-09-28T19:12:15Z"
@@ -288,26 +317,6 @@
         "message": "OPS: record AI worker state",
         "sha": "8c4e8916cc3d73a5ebbdb2b63c99947ef5cdb538",
         "timestamp": "2026-09-28T19:12:04Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "66bc70338631ce3035d92e1282e2ba477f18bd1f",
-        "timestamp": "2026-09-28T19:12:02Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "33d1fb95ecf109ba0e7c27704457112df191d927",
-        "timestamp": "2026-09-28T19:11:56Z"
-      },
-      {
-        "message": "OPS: run two bounded self-hosted research lanes in parallel",
-        "sha": "5a3465fc73cbc948ef59874cdb81f578fbfdca2f",
-        "timestamp": "2026-09-28T21:11:39+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b92d52011d8282e48815896a18d395694c334bed",
-        "timestamp": "2026-09-28T19:11:20Z"
       }
     ]
   },
@@ -369,12 +378,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "142245fd077c5f4184be9d54901787e9f7e7ce94",
+  "source_master_sha": "bf5acdce653fc40d5b22a2e4831f347ad7f26505",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36470585344"
+    "run_id": "36471350140"
   }
 }

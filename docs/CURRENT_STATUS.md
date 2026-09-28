@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `142245fd077c5f4184be9d54901787e9f7e7ce94`
+**Current operational snapshot:** `bf5acdce653fc40d5b22a2e4831f347ad7f26505`
 
-**Generated (UTC):** `2026-09-28T19:12:24.101471+00:00`
+**Generated (UTC):** `2026-09-28T19:18:53.183710+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -70,6 +70,15 @@ Q068 is a fresh symbol-disjoint validation of the unchanged Q067 E1/E2 mechanism
 - Blocking reasons: **frozen snapshot unrecoverable; execution workflows retired**.
 
 Q070 is the fresh symbol-disjoint validation pipeline for the fixed Q069 OHLCV candidate bank. This operational summary does not create scientific evidence or rank candidates.
+
+### Operator action when runner capacity is being (re)activated
+
+- Open **two PowerShell windows** on the Windows research PC.
+- Keep the existing Runner #1 process running in window 1.
+- Use window 2 for Runner #2 (LHT-N133732-2).
+- When activation/reconfiguration is needed, paste the resulting **non-secret** commands/output into the current "trading agent" chat so the orchestration can verify the live state.
+- **Never paste registration tokens, API keys, OAuth tokens or passwords into chat.**
+- Do not switch a runner to Windows service mode until local AI authentication has been verified; Windows service mode requires administrative privileges and can change the user/keyring context available to local AI CLIs.
 
 ### Resource policy
 
