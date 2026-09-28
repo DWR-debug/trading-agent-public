@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T06:41:52.810761+00:00",
+  "generated_at_utc": "2026-09-28T07:17:49.512476+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -127,6 +127,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: restore self-hosted QA provenance and current regression contracts",
+        "sha": "66a4c6e40193a080b5fa67e0eb0ee991d81fa72f",
+        "timestamp": "2026-09-28T09:17:32+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "66c114708740bd89286a8ef0ded6a3dc84cfa03c",
+        "timestamp": "2026-09-28T07:16:41Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "ddf62eb57d2e644c0ccc0948df20290b6cb2c631",
+        "timestamp": "2026-09-28T06:59:32Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "a879cc2ae346459f0d6301e4edc8fe5d407c0260",
+        "timestamp": "2026-09-28T06:58:25Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "df494e3d1158129ce41488be7d37c610cb14f718",
+        "timestamp": "2026-09-28T06:41:52Z"
+      },
+      {
         "message": "FIX: align canonical snapshot geometry with frozen preregistration",
         "sha": "d2c498889a4f5d175a6dd1eaa9bef7e16340b347",
         "timestamp": "2026-09-28T08:41:38+02:00"
@@ -140,31 +165,6 @@
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "c48341bf525053189ab281b2c35a98232ac314fd",
         "timestamp": "2026-09-28T06:35:22Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "1e9b3b086556b01d86244c230177ec684067ee87",
-        "timestamp": "2026-09-28T06:14:21Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "574d4ba9c5376b5cc9248ce31ca7e8318df776df",
-        "timestamp": "2026-09-28T06:10:46Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "27748165327aa58c6633d371b1d6fb2f6bfca157",
-        "timestamp": "2026-09-28T06:09:19Z"
-      },
-      {
-        "message": "DOCS record verified Windows runner recovery procedure",
-        "sha": "03360513096ec7fcf1158ef7fa5f7e51e952f242",
-        "timestamp": "2026-09-28T08:09:07+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1395bfe64c3bb7a70d47d33d0f38bc4d04b52d64",
-        "timestamp": "2026-09-28T06:08:01Z"
       }
     ]
   },
@@ -226,12 +226,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d2c498889a4f5d175a6dd1eaa9bef7e16340b347",
+  "source_master_sha": "66a4c6e40193a080b5fa67e0eb0ee991d81fa72f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36387737599"
+    "run_id": "36390881156"
   }
 }
