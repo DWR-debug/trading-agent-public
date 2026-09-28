@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T09:49:18.323112+00:00",
+  "generated_at_utc": "2026-09-28T09:50:43.698604+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -162,6 +162,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: harden Q070 Windows evidence publishing (#550)",
+        "sha": "58eb2d43aec2c6b236692341b700acbf50284c2d",
+        "timestamp": "2026-09-28T11:50:31+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "1243097e0020551ef83f4fdd4cdedf70f231a4db",
+        "timestamp": "2026-09-28T09:49:18Z"
+      },
+      {
         "message": "FIX: make Q068 Windows evidence publishing SHA capture robust (#549)",
         "sha": "26cfbe9b9e2a61f2387f69d4d8d1631647075980",
         "timestamp": "2026-09-28T11:49:04+02:00"
@@ -190,16 +200,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "e957c4286f728a79a3a62d269d17952ad7302508",
         "timestamp": "2026-09-28T09:18:29Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "803ff4592344ca6b57d0476fc7bbced79f26ffad",
-        "timestamp": "2026-09-28T09:10:02Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3f3b68b095377ebd55f58cdd7c2df129a1152f4c",
-        "timestamp": "2026-09-28T09:07:01Z"
       }
     ]
   },
@@ -261,12 +261,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "26cfbe9b9e2a61f2387f69d4d8d1631647075980",
+  "source_master_sha": "58eb2d43aec2c6b236692341b700acbf50284c2d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36405898515"
+    "run_id": "36406046630"
   }
 }
