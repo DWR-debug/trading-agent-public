@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:03:58.017512+00:00",
+  "generated_at_utc": "2026-09-28T15:05:03.003501+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: retry Q085 after Python-path correction",
+        "sha": "26aaa54bea1eb29c6603fc28dc0cf58dd084b5c0",
+        "timestamp": "2026-09-28T17:04:44+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "523c9fdea6a91c2b210efbf8951c54641ee41ab0",
+        "timestamp": "2026-09-28T15:03:58Z"
+      },
+      {
         "message": "FIX: set Q085 repository Python path explicitly",
         "sha": "5ae80effdb501f2fd6b493ad97743ffb4d91a3fb",
         "timestamp": "2026-09-28T17:03:41+02:00"
@@ -185,16 +195,6 @@
         "message": "OPS: retrigger Q081 preflight after runner hardening",
         "sha": "7511c18d7d3dfaf128a3a7acf95f07e95c071b5b",
         "timestamp": "2026-09-28T17:02:23+02:00"
-      },
-      {
-        "message": "OPS: retrigger corrected Q084 feasibility artifact",
-        "sha": "627224d20b822def84782fb16fa584fc1f8b8980",
-        "timestamp": "2026-09-28T17:02:17+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "fa2c23b4fed87570b829573907c8e5ffa845a84f",
-        "timestamp": "2026-09-28T15:02:12Z"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5ae80effdb501f2fd6b493ad97743ffb4d91a3fb",
+  "source_master_sha": "26aaa54bea1eb29c6603fc28dc0cf58dd084b5c0",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36440712744"
+    "run_id": "36440847314"
   }
 }
