@@ -86,7 +86,7 @@ jobs:
           if not exist "%PY_EXE%" exit /b 1
           set "PUBLISH_MESSAGE=EVIDENCE: record Q068 fixed mechanism performance"
           for /f %%H in ('"%PY_EXE%" -c "import json,os,urllib.request; u='https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/ref/heads/master'; r=urllib.request.Request(u,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'}); print(json.load(urllib.request.urlopen(r))['object']['sha'])"') do set "BASE_SHA=%%H"
-          "%PY_EXE%" -m automation.github_contents_publish --repository "%GITHUB_REPOSITORY%" --branch master --base-sha "%BASE_SHA%" --file research/evidence/q068_performance_result.json=research\evidence\q068_performance_result.json
+          "%PY_EXE%" "%GITHUB_WORKSPACE%\automation\github_contents_publish.py --repository "%GITHUB_REPOSITORY%" --branch master --base-sha "%BASE_SHA%" --file research/evidence/q068_performance_result.json=research\evidence\q068_performance_result.json
           if errorlevel 1 exit /b 1
           endlocal
 
