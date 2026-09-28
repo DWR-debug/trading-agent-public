@@ -1,3 +1,5 @@
+import pytest
+
 from automation.f2_quality_acceleration import _fp
 
 
@@ -12,8 +14,8 @@ def test_quality_acceleration_is_second_difference():
     levels = [0.10, 0.14, 0.11, 0.17]
     growth = [levels[i] - levels[i - 1] for i in range(1, len(levels))]
     acceleration = [growth[i] - growth[i - 1] for i in range(1, len(growth))]
-    assert growth == [0.04, -0.03, 0.06]
-    assert acceleration == [-0.07, 0.09]
+    assert growth == pytest.approx([0.04, -0.03, 0.06])
+    assert acceleration == pytest.approx([-0.07, 0.09])
 
 
 def test_fingerprint_is_deterministic():
