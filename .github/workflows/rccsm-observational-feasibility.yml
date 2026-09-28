@@ -93,7 +93,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: rccsm-observational-pc-${{{GITHUB_RUN_ID}}}
+          name: rccsm-observational-pc-${{ github.run_id }}
           path: research/runs/rccsm_observational/q089_rccsm_observational_feasibility.json
           if-no-files-found: error
           retention-days: 30
