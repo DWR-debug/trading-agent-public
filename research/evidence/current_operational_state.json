@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:04:18.706684+00:00",
+  "generated_at_utc": "2026-09-28T17:05:17.269217+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -237,6 +237,16 @@
     ],
     "recent_commits": [
       {
+        "message": "DOCS: make permanent parallel research operation binding explicit",
+        "sha": "25d3a6de97af1ba3221e8d2adb226a626acc4c5c",
+        "timestamp": "2026-09-28T19:05:04+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "dc980abba1e8388d8f9f594bbb3a66d456ef2041",
+        "timestamp": "2026-09-28T17:04:18Z"
+      },
+      {
         "message": "DOCS: define parallel PC and cloud research paths",
         "sha": "c7eef32e76b3ba1ac8601373f4bfe438c7f98677",
         "timestamp": "2026-09-28T19:04:01+02:00"
@@ -265,16 +275,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "c7e178de3028823c4fe397ae656686084859c1c8",
         "timestamp": "2026-09-28T16:57:03Z"
-      },
-      {
-        "message": "RESEARCH: stage RCCSM regime-conditional signal mesh design (#607)",
-        "sha": "e60904b3edb713d4f79412ce312790f3fffb0ce0",
-        "timestamp": "2026-09-28T18:56:48+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "d7ae0b1ff7c2bedd265ed45323141dc4eb2eede3",
-        "timestamp": "2026-09-28T16:56:00Z"
       }
     ]
   },
@@ -336,12 +336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c7eef32e76b3ba1ac8601373f4bfe438c7f98677",
+  "source_master_sha": "25d3a6de97af1ba3221e8d2adb226a626acc4c5c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36455509889"
+    "run_id": "36455628536"
   }
 }
