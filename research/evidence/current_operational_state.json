@@ -67,7 +67,38 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T05:35:23.225068+00:00",
+  "generated_at_utc": "2026-09-28T05:48:01.066713+00:00",
+  "q067_execution_pipeline": {
+    "blocking_reasons": [
+      "coverage receipt missing",
+      "pit receipt missing"
+    ],
+    "coverage_receipt": {
+      "present": false,
+      "status": null,
+      "trial_id": null
+    },
+    "family": "Q067",
+    "ledger_reconciled": false,
+    "no_selection_or_promotion": true,
+    "paper_only": true,
+    "performance_authorization": {
+      "authorized": null,
+      "execution_scope": null,
+      "present": false
+    },
+    "performance_result": {
+      "present": false,
+      "status": null,
+      "trial_id": null
+    },
+    "pit_receipt": {
+      "present": false,
+      "status": null,
+      "trial_id": null
+    },
+    "state": "PREFLIGHT_BLOCKED"
+  },
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -96,6 +127,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS/RESEARCH: harden Q067 safety and automate pipeline state",
+        "sha": "ffbe5558bcec594b5eb8bedeeb9ba45d92f3fc94",
+        "timestamp": "2026-09-28T07:47:48+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "1d3313c6d776cf23ac51f2b4fbbfa5a773b28daf",
+        "timestamp": "2026-09-28T05:42:30Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "dd358e01a824be4efed804f9621988f051eb0b78",
+        "timestamp": "2026-09-28T05:41:45Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "af31bdeee38eaf1a14518b08d2d7aa4b1a4c39e8",
+        "timestamp": "2026-09-28T05:35:23Z"
+      },
+      {
         "message": "OPS: automate Q067 preflight-to-evidence handoff",
         "sha": "95090681e0754b4841c7cad05856152f9bf0e90e",
         "timestamp": "2026-09-28T07:35:06+02:00"
@@ -114,26 +165,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "d18d1714f89e748010804aa373441937dbdadc40",
         "timestamp": "2026-09-28T05:33:28Z"
-      },
-      {
-        "message": "FIX: bind Q067 coverage preregistration to explicit universe identity",
-        "sha": "6aa14a193a72ecf70fd9f3589ed009bcf5d12cf1",
-        "timestamp": "2026-09-28T07:33:15+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6795b311f883d099d7b1e803c16a17e17c988fcf",
-        "timestamp": "2026-09-28T05:32:24Z"
-      },
-      {
-        "message": "RESEARCH: prepare Q067 fixed-rule performance evaluation",
-        "sha": "539dd1b2ddc7395a5b8641133e41eadeb134070d",
-        "timestamp": "2026-09-28T07:32:11+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0b7e4eef673c3740beb5c107508ea1544615cee1",
-        "timestamp": "2026-09-28T05:30:05Z"
       }
     ]
   },
@@ -195,12 +226,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "95090681e0754b4841c7cad05856152f9bf0e90e",
+  "source_master_sha": "ffbe5558bcec594b5eb8bedeeb9ba45d92f3fc94",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36382554252"
+    "run_id": "36383464382"
   }
 }

@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `95090681e0754b4841c7cad05856152f9bf0e90e`
+**Current operational snapshot:** `ffbe5558bcec594b5eb8bedeeb9ba45d92f3fc94`
 
-**Generated (UTC):** `2026-09-28T05:35:23.225068+00:00`
+**Generated (UTC):** `2026-09-28T05:48:01.066713+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -26,6 +26,18 @@
 - Q023 is recorded as **COVERAGE_VALIDATED** and Q025 as **DATE_PIT_VALIDATED**; these are data-contract findings, not promotion evidence.
 - No current candidate is authorized for promotion or live execution.
 - Candidate discovery and PIT feasibility remain the required steps before any new formal performance evaluation.
+
+### Q067 execution pipeline
+
+- Operational state: **PREFLIGHT_BLOCKED**.
+- Coverage receipt: **MISSING**.
+- PIT receipt: **MISSING**.
+- Performance authorization: **None**.
+- Performance evidence: **MISSING**.
+- Ledger reconciled: **False**.
+- Blocking reasons: **coverage receipt missing; pit receipt missing**.
+
+This is an operational pipeline summary only; it does not create scientific evidence or select a candidate.
 
 ### Resource policy
 
