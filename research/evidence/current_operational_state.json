@@ -61,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T07:42:28.181783+00:00",
+  "generated_at_utc": "2026-09-28T07:43:47.554072+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -139,6 +139,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "Merge pull request #534 from DWR-debug/fix/q068-coverage-snapshot-path-20260928",
+        "sha": "b7225a25f5d5fdd296fd5d2e312acdef642bc6ae",
+        "timestamp": "2026-09-28T09:43:34+02:00"
+      },
+      {
+        "message": "TEST: lock Q068 coverage snapshot identity path",
+        "sha": "cb55cede1d779b24b6bad57ad4b7d57b78f21476",
+        "timestamp": "2026-09-28T09:43:15+02:00"
+      },
+      {
+        "message": "FIX: route Q068 snapshot under coverage trial identity",
+        "sha": "9a0a10de8c655717ec6be348f0d568bca132507a",
+        "timestamp": "2026-09-28T09:43:10+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "20e25fcb06c87e888608421c0516b8504109709a",
+        "timestamp": "2026-09-28T07:43:07Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "081b74b770f8353938f463e148e3e44fd30629df",
+        "timestamp": "2026-09-28T07:42:28Z"
+      },
+      {
         "message": "Merge pull request #533 from DWR-debug/fix/q068-governance-schema-current-20260928",
         "sha": "75381ad34532ea61fd1e730d4926179c4cfc7fd0",
         "timestamp": "2026-09-28T09:42:11+02:00"
@@ -152,31 +177,6 @@
         "message": "FIX: align Q068 governance check with frozen preregistration",
         "sha": "8861d994a7749652e45a0b42152eadb001eb27d0",
         "timestamp": "2026-09-28T09:41:45+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "ad5a40a2caa33fe44b7cca9efd01a7f7aa758f3e",
-        "timestamp": "2026-09-28T07:41:16Z"
-      },
-      {
-        "message": "OPS: autonomous agent queue routing",
-        "sha": "9b012cca46e477390db8072e9ac7f1a3002ce48e",
-        "timestamp": "2026-09-28T07:38:33Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f560566c7730daf5df476a7fc7bd218b6bd1bf64",
-        "timestamp": "2026-09-28T07:38:31Z"
-      },
-      {
-        "message": "Merge pull request #531 from DWR-debug/ops/pause-copilot-autoqueue-20260928",
-        "sha": "cb77ee6f30e7ecd82d533f50a6f2b7c0512a8dee",
-        "timestamp": "2026-09-28T09:38:16+02:00"
-      },
-      {
-        "message": "OPS: retire stale Q024 agent queue request",
-        "sha": "21b2fb9004516c80cf3b6bbe577506a3b384613f",
-        "timestamp": "2026-09-28T09:37:59+02:00"
       }
     ]
   },
@@ -238,12 +238,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "75381ad34532ea61fd1e730d4926179c4cfc7fd0",
+  "source_master_sha": "b7225a25f5d5fdd296fd5d2e312acdef642bc6ae",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36393099928"
+    "run_id": "36393227310"
   }
 }
