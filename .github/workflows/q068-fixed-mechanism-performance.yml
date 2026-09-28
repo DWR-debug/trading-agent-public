@@ -53,7 +53,16 @@ jobs:
           if /I not "%GITHUB_REPOSITORY%"=="DWR-debug/trading-agent-public" exit /b 1
           if /I not "%GITHUB_REF%"=="refs/heads/master" exit /b 1
           if not defined GITHUB_SHA exit /b 1
-          "%RUNNER_TEMP%\python-3.13.15-nuget-q068\tools\python.exe" -c "import json; from pathlib import Path; from config import settings; p=json.loads(Path('research/preregistrations/q068_performance_2026_09_28.json').read_text(encoding='utf-8')); a=json.loads(Path('research/authorizations/q068_performance_2026_09_28.json').read_text(encoding='utf-8')); assert settings.PAPER_ONLY is True; assert settings.LIVE_TRADING_ENABLED is False; assert settings.ORDERS_ENABLED is False; assert settings.AUTOMATIC_PROMOTION is False; assert p['status']=='PREREGISTERED_PERFORMANCE'; assert a['authorized'] is True; assert a['performance_execution_authorized'] is True; assert a['execution_scope']=='Q068_FIXED_RULE_PERFORMANCE_ONLY'; assert p['selection_used'] is False; assert p['holdout_used_for_selection'] is False; print('Q068 AUTH/SAFETY OK')"
+          "%RUNNER_TEMP%\python-3.13.15-nuget-q068\tools\python.exe" -c "import json; from pathlib import Path; from config import settings; p=json.loads(Path('research/preregistrations/q068_performance_2026_09_28.json').read_text(encoding='utf-8')); a=json.loads(Path('research/authorizations/q068_performance_2026_09_28.json').read_text(encoding='utf-8')); assert a['source_contract']['automation/q067_alpha_mechanisms.py']=='344343f9910f1ea5eaa9a2d2c295a6f87a520bdc'; assert settings.PAPER_ONLY is True; assert settings.LIVE_TRADING_ENABLED is False; assert settings.ORDERS_ENABLED is False; assert settings.AUTOMATIC_PROMOTION is False; assert p['status']=='PREREGISTERED_PERFORMANCE'; assert a['authorized'] is True; assert a['performance_execution_authorized'] is True; assert a['execution_scope']=='Q068_FIXED_RULE_PERFORMANCE_ONLY'; assert p['selection_used'] is False; assert p['holdout_used_for_selection'] is False; print('Q068 AUTH/SAFETY OK')"
+
+      - name: Verify frozen Q068 source contract
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-q068"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          if not exist "%PY_EXE%" exit /b 1
+          "%PY_EXE%" -c "import json; from pathlib import Path; expected={'automation/q067_alpha_mechanisms.py':'344343f9910f1ea5eaa9a2d2c295a6f87a520bdc','automation/q068_performance.py':'d85e17885ff56353ca677a3aa47d8a5e7b6ec056','data/canonical_snapshot.py':'18c7c051b1b4d3f7f67bc395baf5ef3787e1b028','execution/cost_contract.py':'21b54b45dbe708f3102851fd368ad1b64226b0ad','config/settings.py':'9c7b5199ed09d11ca17eb72493aebf7a7666fd28'}; a=json.loads(Path('research/authorizations/q068_performance_2026_09_28.json').read_text(encoding='utf-8')); assert a['source_contract']==expected; print('Q068 AUTH SOURCE CONTRACT OK')"
 
       - name: Performance prerequisites
         shell: cmd
@@ -62,6 +71,12 @@ jobs:
           if not exist research\evidence\q068_coverage_result.json exit /b 1
           if not exist research\evidence\q068_pit_result.json exit /b 1
           "%RUNNER_TEMP%\python-3.13.15-nuget-q068\tools\python.exe" -c "import json; from pathlib import Path; c=json.loads(Path('research/evidence/q068_coverage_result.json').read_text(encoding='utf-8')); p=json.loads(Path('research/evidence/q068_pit_result.json').read_text(encoding='utf-8')); assert c['trial_id']=='T-2026-09-28-068-COVERAGE'; assert c['status']=='COVERAGE_PASSED'; assert c['performance_trial_authorized'] is False; assert c['selection_used'] is False; assert p['trial_id']=='T-2026-09-28-068-PIT'; assert p['status']=='PIT_PASSED'; assert p['performance_trial_authorized'] is False; assert p['selection_used'] is False; print('Q068 PREREQUISITES OK')"
+
+      - name: Verify checked-out Q068 source files
+        shell: cmd
+        run: |
+          @echo off
+          "%RUNNER_TEMP%\python-3.13.15-nuget-q068\tools\python.exe" -c "import hashlib; from pathlib import Path; expected={'automation/q067_alpha_mechanisms.py':'344343f9910f1ea5eaa9a2d2c295a6f87a520bdc','automation/q068_performance.py':'d85e17885ff56353ca677a3aa47d8a5e7b6ec056','data/canonical_snapshot.py':'18c7c051b1b4d3f7f67bc395baf5ef3787e1b028','execution/cost_contract.py':'21b54b45dbe708f3102851fd368ad1b64226b0ad','config/settings.py':'9c7b5199ed09d11ca17eb72493aebf7a7666fd28'}; blob=lambda p: hashlib.sha1(b'blob '+str(len(Path(p).read_bytes())).encode()+b'\\0'+Path(p).read_bytes()).hexdigest(); assert {p:blob(p) for p in expected}==expected; print('Q068 CHECKED-OUT SOURCE CONTRACT OK')"
 
       - name: Q068 fixed-rule performance
         shell: cmd

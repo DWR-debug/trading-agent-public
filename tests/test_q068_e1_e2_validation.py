@@ -172,3 +172,21 @@ def test_q068_workflow_chain_uses_explicit_workflow_dispatch():
         assert "DISPATCH_" in text
         assert "https://api.github.com/repos/%GITHUB_REPOSITORY%/actions/workflows/" in text
         assert "github.token" in text
+
+
+def test_q068_frozen_source_contract_is_explicitly_locked():
+    expected = {
+        "automation/q067_alpha_mechanisms.py": "344343f9910f1ea5eaa9a2d2c295a6f87a520bdc",
+        "automation/q068_performance.py": "d85e17885ff56353ca677a3aa47d8a5e7b6ec056",
+        "data/canonical_snapshot.py": "18c7c051b1b4d3f7f67bc395baf5ef3787e1b028",
+        "execution/cost_contract.py": "21b54b45dbe708f3102851fd368ad1b64226b0ad",
+        "config/settings.py": "9c7b5199ed09d11ca17eb72493aebf7a7666fd28",
+    }
+    for path in (
+        ".github/workflows/q068-autonomous-advance.yml",
+        ".github/workflows/q068-fixed-mechanism-performance.yml",
+    ):
+        text = Path(path).read_text(encoding="utf-8")
+        for value in expected.values():
+            assert value in text
+        assert "Q068 SOURCE CONTRACT OK" in text or "Q068 AUTH SOURCE CONTRACT OK" in text
