@@ -43,6 +43,13 @@ def _trial_suffix(trial_id: str) -> str:
     return re.sub(r"[^A-Z0-9]", "", match.group(1).upper())
 
 
+def _trial_family_code(trial_id: str) -> str:
+    match = re.fullmatch(r"T-[0-9]{4}-[0-9]{2}-[0-9]{2}-([^-]+)(?:-.+)?", trial_id or "")
+    if not match:
+        raise ValueError(f"invalid trial_id family format: {trial_id!r}")
+    return re.sub(r"[^A-Z0-9]", "", match.group(1).upper())
+
+
 def _path_trial_suffix(path: Path) -> str | None:
     match = re.search(r"(?:^|/)q([0-9]{3}(?:r[0-9]+)?)_", path.as_posix(), re.IGNORECASE)
     if not match:
@@ -115,7 +122,11 @@ def _audit_performance_prereg(root: Path, path: Path, data: dict, errors: list[s
         value = data_contract.get(key)
         if isinstance(value, str):
             ref_ids.append(value)
-    foreign = {ref for ref in ref_ids if ref != trial_id}
+    trial_family = _trial_family_code(trial_id)
+    foreign = {
+        ref for ref in ref_ids
+        if _trial_family_code(ref) != trial_family
+    }
     if mode == "fresh_trial" and foreign:
         errors.append(f"{location}: fresh trial references foreign prerequisite ids: {sorted(foreign)}")
     if mode == "immutable_reuse" and not foreign <= reused_set:
