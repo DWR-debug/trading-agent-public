@@ -66,7 +66,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python automation/q077r1_pit.py --snapshot-root research/runs/q077r1_pit/T-2026-09-28-077R1-PIT --symbols-json <(python -c 'import json; print(json.dumps(json.load(open("research/preregistrations/q077r1_pit_2026_09_28.json"))["symbols"]))' ) --result research/evidence/q077r1_pit_result.json
+          python -m automation.q077r1_pit --snapshot-root research/runs/q077r1_pit/T-2026-09-28-077R1-PIT --symbols-json <(python -c 'import json; print(json.dumps(json.load(open("research/preregistrations/q077r1_pit_2026_09_28.json"))["symbols"]))' ) --result research/evidence/q077r1_pit_result.json
 
       - name: Validate PIT safety
         shell: bash
