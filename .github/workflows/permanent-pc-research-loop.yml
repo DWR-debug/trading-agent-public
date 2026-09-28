@@ -1,0 +1,74 @@
+name: Permanent Self-Hosted Research Loop
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-permanent-pc-loop
+  cancel-in-progress: true
+
+jobs:
+  autonomous_pc:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 25
+    steps:
+      - name: Download current master
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "WORK=%RUNNER_TEMP%\trading-agent-auto-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          set "ARCHIVE=%RUNNER_TEMP%\trading-agent-auto-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%.tar.gz"
+          if exist "%WORK%" rmdir /s /q "%WORK%"
+          mkdir "%WORK%" || exit /b 1
+          curl.exe -L --fail --silent --show-error -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%" || exit /b 1
+          tar.exe -xzf "%ARCHIVE%" -C "%WORK%" || exit /b 1
+          endlocal
+
+      - name: Bootstrap pinned Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-autonomous"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-autonomous.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            mkdir "%PY_ROOT%" 2>nul
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          "%PY_EXE%" -m pip --version >nul 2>&1
+          if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
+          "%PY_EXE%" -m pip install --disable-pip-version-check pytest pandas || exit /b 1
+          endlocal
+
+      - name: Run autonomous bounded research/QA lane
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "WORK=%RUNNER_TEMP%\trading-agent-auto-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-autonomous\tools\python.exe"
+          cd /d "%REPO_SRC%" || exit /b 1
+          set "PYTHONPATH=%REPO_SRC%"
+          "%PY_EXE%" -m automation.self_hosted_research_worker --lane autonomous_frontier_qa --output-dir "research/runs/self_hosted/autonomous/%GITHUB_RUN_ID%" || exit /b 1
+          endlocal
+
+      - name: Upload autonomous evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: permanent-pc-loop-${{ github.run_id }}
+          path: |
+            research/runs/self_hosted/autonomous/${{ github.run_id }}/
+          if-no-files-found: warn
+          retention-days: 14
