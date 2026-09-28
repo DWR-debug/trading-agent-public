@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T20:00:21.456884+00:00",
+  "generated_at_utc": "2026-09-28T20:00:58.538496+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,6 +325,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: preserve running PC research lanes across master updates",
+        "sha": "213bacb3bb52d7b10f4d0ec9e929c1d6d098af38",
+        "timestamp": "2026-09-28T22:00:42+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a8d47691a2947e0b91564e3ad1ae7eba087e8fda",
+        "timestamp": "2026-09-28T20:00:21Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "53c31ec8d822613c347f197c8cb4e81928c2dce9",
         "timestamp": "2026-09-28T20:00:02Z"
@@ -353,16 +363,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "aee91a3e1afcaa04576f2d3531f5b38ae1b26809",
         "timestamp": "2026-09-28T19:59:11Z"
-      },
-      {
-        "message": "OPS: make Gemini worker inherit persistent Antigravity CLI bootstrap",
-        "sha": "45b081b474e4cb3e1243d8ea91359c755b99c72a",
-        "timestamp": "2026-09-28T21:58:55+02:00"
-      },
-      {
-        "message": "FIX: accept normalized boolean/string G1 false in local AI smoke",
-        "sha": "275c067bc86c6185418063e8894f8ad65b18f68b",
-        "timestamp": "2026-09-28T21:58:52+02:00"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "53c31ec8d822613c347f197c8cb4e81928c2dce9",
+  "source_master_sha": "213bacb3bb52d7b10f4d0ec9e929c1d6d098af38",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36476080208"
+    "run_id": "36476185448"
   }
 }
