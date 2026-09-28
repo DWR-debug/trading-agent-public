@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T06:09:19.636891+00:00",
+  "generated_at_utc": "2026-09-28T06:41:52.810761+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -127,6 +127,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: align canonical snapshot geometry with frozen preregistration",
+        "sha": "d2c498889a4f5d175a6dd1eaa9bef7e16340b347",
+        "timestamp": "2026-09-28T08:41:38+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "bee73be5b03e9de63c8e74eea56b66b1e3c2771a",
+        "timestamp": "2026-09-28T06:40:49Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "c48341bf525053189ab281b2c35a98232ac314fd",
+        "timestamp": "2026-09-28T06:35:22Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "1e9b3b086556b01d86244c230177ec684067ee87",
+        "timestamp": "2026-09-28T06:14:21Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "574d4ba9c5376b5cc9248ce31ca7e8318df776df",
+        "timestamp": "2026-09-28T06:10:46Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "27748165327aa58c6633d371b1d6fb2f6bfca157",
+        "timestamp": "2026-09-28T06:09:19Z"
+      },
+      {
         "message": "DOCS record verified Windows runner recovery procedure",
         "sha": "03360513096ec7fcf1158ef7fa5f7e51e952f242",
         "timestamp": "2026-09-28T08:09:07+02:00"
@@ -135,36 +165,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "1395bfe64c3bb7a70d47d33d0f38bc4d04b52d64",
         "timestamp": "2026-09-28T06:08:01Z"
-      },
-      {
-        "message": "FIX: restore trusted Windows runner path for Q067 and QA",
-        "sha": "fbb2e1c66cc951c8543fd6926be7eecb731e798c",
-        "timestamp": "2026-09-28T08:07:46+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "263f78cb47eb8ec3b519cc6c09cc4976724d353a",
-        "timestamp": "2026-09-28T05:55:07Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "2142c41a1654c0d0f333467362e881c18e00c397",
-        "timestamp": "2026-09-28T05:54:35Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b152073baec3203e225a29c250a82ea12ada7dae",
-        "timestamp": "2026-09-28T05:48:01Z"
-      },
-      {
-        "message": "OPS/RESEARCH: harden Q067 safety and automate pipeline state",
-        "sha": "ffbe5558bcec594b5eb8bedeeb9ba45d92f3fc94",
-        "timestamp": "2026-09-28T07:47:48+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "1d3313c6d776cf23ac51f2b4fbbfa5a773b28daf",
-        "timestamp": "2026-09-28T05:42:30Z"
       }
     ]
   },
@@ -226,12 +226,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "03360513096ec7fcf1158ef7fa5f7e51e952f242",
+  "source_master_sha": "d2c498889a4f5d175a6dd1eaa9bef7e16340b347",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36385043312"
+    "run_id": "36387737599"
   }
 }
