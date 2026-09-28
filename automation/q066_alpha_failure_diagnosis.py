@@ -105,17 +105,16 @@ def localize_manifest(manifest_path: Path, root: Path) -> Path:
     for item in datasets:
         raw = Path(str(item["path"]))
         if raw.is_absolute() and raw.exists():
+            item["path"] = str(raw)
             continue
-        parts = raw.parts
-        if "datasets" not in parts:
-            raise ValueError(f"unsupported dataset path: {raw}")
-        idx = parts.index("datasets")
-        if idx == 0:
-            raise ValueError(f"dataset path lacks trial directory: {raw}")
-        local = root / Path(*parts[idx - 1 :])
-        if not local.exists():
-            raise FileNotFoundError(f"localized dataset missing: {local}")
-        item["path"] = str(local)
+        symbol = str(item["symbol"])
+        interval = str(item.get("interval", "1d"))
+        candidates = sorted(root.rglob(f"{symbol}/{interval}.csv"))
+        if len(candidates) != 1:
+            raise FileNotFoundError(
+                f"expected exactly one extracted dataset for {symbol}/{interval}, found {len(candidates)}"
+            )
+        item["path"] = str(candidates[0])
     target = root / "_localized_q066_manifest.json"
     target.write_text(
         json.dumps(localized, indent=2, ensure_ascii=False, allow_nan=False) + "\n",
