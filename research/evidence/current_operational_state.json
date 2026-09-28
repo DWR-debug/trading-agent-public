@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T20:04:35.925595+00:00",
+  "generated_at_utc": "2026-09-28T20:07:21.115611+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,44 +325,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "STYLE: group Copilot queue output redirects",
+        "sha": "58b8e725e84017b1a62f95530fb0b82a7fe2c378",
+        "timestamp": "2026-09-28T22:07:19+02:00"
+      },
+      {
+        "message": "FIX: use project actionlint custom runner-label config",
+        "sha": "3e5ef5079b518e2464575b519b5f10a088777a02",
+        "timestamp": "2026-09-28T22:07:14+02:00"
+      },
+      {
+        "message": "FIX: remove duplicate corrupted T052 exact gate tail",
+        "sha": "642f2d99292829ba2f213e558b4d0d6f4e756aa8",
+        "timestamp": "2026-09-28T22:07:11+02:00"
+      },
+      {
+        "message": "FIX: replace Q020 heredoc with shell-safe python command",
+        "sha": "1b7800bc5c772a043d21e5276607af9fa87a7528",
+        "timestamp": "2026-09-28T22:07:08+02:00"
+      },
+      {
+        "message": "FIX: repair CI CMD label indentation",
+        "sha": "6788fb34ac0aa89434b3b1bd289ac4b4a1d9179b",
+        "timestamp": "2026-09-28T22:07:05+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "09b87133f21e2ddcc136fe0491d686ba10f44e8c",
+        "timestamp": "2026-09-28T20:07:02Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f89922642ec7223cb4f231ba4f48d9e93de4b24c",
+        "timestamp": "2026-09-28T20:04:35Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "b0aec87ccefc2e53cf60e1df98109af7153124be",
         "timestamp": "2026-09-28T20:04:19Z"
-      },
-      {
-        "message": "FIX: repair Q020 heredoc indentation in research orchestrator",
-        "sha": "6d3deb5805196d71e75d60a2641e2a539204230d",
-        "timestamp": "2026-09-28T22:04:17+02:00"
-      },
-      {
-        "message": "FIX: clean T052 exact master gate YAML",
-        "sha": "e6f65ac2c34e866dce95e1a6114f6163a5b1238f",
-        "timestamp": "2026-09-28T22:04:10+02:00"
-      },
-      {
-        "message": "FIX: remove residual broken Q079 heredoc",
-        "sha": "30c7e9e7b6789f3c5148ebbb5d4aa8e26369778f",
-        "timestamp": "2026-09-28T22:04:02+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ef4a76ee701c344a6981bf3d8f9cd4dd8a06ceef",
-        "timestamp": "2026-09-28T20:03:54Z"
-      },
-      {
-        "message": "FIX: use GitHub CLI for Q079 master SHA",
-        "sha": "4f1c3f1a2309f97a56dfddbf3449a7714b9884ee",
-        "timestamp": "2026-09-28T22:03:38+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "69c7c9885eb6e7b40ae49ca14a6fa459f2ea82ec",
-        "timestamp": "2026-09-28T20:02:56Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "29e8c6b96ad24350e04a3556b498745ed2fc0d3a",
-        "timestamp": "2026-09-28T20:02:38Z"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b0aec87ccefc2e53cf60e1df98109af7153124be",
+  "source_master_sha": "58b8e725e84017b1a62f95530fb0b82a7fe2c378",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36476602726"
+    "run_id": "36476924371"
   }
 }
