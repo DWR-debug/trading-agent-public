@@ -58,3 +58,14 @@ jobs:
           set /p BASE_SHA=<"%RUNNER_TEMP%\\q068_base_sha.txt"
           if not defined BASE_SHA exit /b 1
           "%PY_EXE%" "%GITHUB_WORKSPACE%\automation\github_contents_publish.py" --repository "%GITHUB_REPOSITORY%" --branch master --base-sha "%BASE_SHA%" --file research/authorizations/q068_performance_2026_09_28.json=research\authorizations\q068_performance_2026_09_28.json
+
+
+      - name: Q068_DISPATCH_PERFORMANCE
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: cmd
+        run: |
+          @echo off
+          set "DISPATCH_URL=https://api.github.com/repos/%GITHUB_REPOSITORY%/actions/workflows/q068-fixed-mechanism-performance.yml/dispatches"
+          "%PY_EXE%" -c "import json,os,urllib.request; u=os.environ['DISPATCH_URL']; req=urllib.request.Request(u,data=json.dumps({'ref':'master'}).encode('utf-8'),method='POST',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json'}); urllib.request.urlopen(req,timeout=30).read(); print('Q068_DISPATCH_PERFORMANCE OK')" || exit /b 1
