@@ -1,6 +1,3 @@
-RUN_CONTINUOUS_SELF_HOSTED_QA 2026-09-26T16:41Z
-RUN_CONTINUOUS_SELF_HOSTED_QA safety-config-fix 2026-09-26T16:50Z
-RUN_CONTINUOUS_SELF_HOSTED_QA after-3lane-fix 2026-09-26T16:55Z
-
-RUN_CONTINUOUS_SELF_HOSTED_QA income-viability-evaluator-merged
-RUN_CONTINUOUS_SELF_HOSTED_QA status-sync-merge-94c1d7f3b0c30df5c0364f8252926b2f6ca45645
+manual autonomous continuous QA trigger
+requested_utc=2026-09-28T19:06:55.704Z
+reason=activate both self-hosted runner slots after secondary runner registration
