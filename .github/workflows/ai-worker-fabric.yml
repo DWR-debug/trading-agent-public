@@ -1,0 +1,105 @@
+name: Free AI Worker Fabric
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  push:
+    branches: [master]
+    paths:
+      - 'ai_requests/**'
+      - 'automation/ai_worker_fabric.py'
+      - 'tests/test_ai_worker_fabric.py'
+      - 'docs/AI_WORKER_FABRIC.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  worker:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    strategy:
+      fail-fast: false
+      matrix:
+        provider: [gemini_cli, claude_cli]
+        task:
+          - AI-2026-09-28-Q089-ADVERSARIAL
+          - AI-2026-09-28-UNUSUAL-FRONTIER
+    concurrency:
+      group: trading-agent-ai-${{ matrix.provider }}-${{ matrix.task }}
+      cancel-in-progress: false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Install Gemini CLI
+        if: matrix.provider == 'gemini_cli'
+        shell: bash
+        run: npm install -g @google/gemini-cli@latest
+
+      - name: Resolve task file
+        id: task
+        shell: bash
+        run: |
+          set -euo pipefail
+          case '${{ matrix.task }}' in
+            AI-2026-09-28-Q089-ADVERSARIAL) echo 'path=ai_requests/AI-2026-09-28-Q089-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
+            AI-2026-09-28-UNUSUAL-FRONTIER) echo 'path=ai_requests/AI-2026-09-28-UNUSUAL-FRONTIER.json' >> "$GITHUB_OUTPUT" ;;
+            *) exit 1 ;;
+          esac
+
+      - name: Run free-only AI worker
+        id: worker
+        shell: bash
+        env:
+          AI_EXTERNAL_PROVIDER_ALLOWLIST: ${{ secrets.AI_EXTERNAL_PROVIDER_ALLOWLIST }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GEMINI_FREE_MODE_CONFIRMED: ${{ secrets.GEMINI_FREE_MODE_CONFIRMED }}
+          CLAUDE_FREE_MODE_CONFIRMED: ${{ secrets.CLAUDE_FREE_MODE_CONFIRMED }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/ai-worker-output"
+          set +e
+          python -m automation.ai_worker_fabric --run --provider '${{ matrix.provider }}' --task '${{ steps.task.outputs.path }}' --output "$RUNNER_TEMP/ai-worker-output/${{ matrix.task }}-${{ matrix.provider }}.json"
+          rc=$?
+          set -e
+          test "$rc" -ne 1
+
+      - name: Publish operational state
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          state_dir='ops/ai_worker_state'
+          mkdir -p "$state_dir"
+          state_file="$state_dir/${{ matrix.task }}__${{ matrix.provider }}.json"
+          output="$RUNNER_TEMP/ai-worker-output/${{ matrix.task }}-${{ matrix.provider }}.json"
+          if [ -f "$output" ]; then cp "$output" "$state_file"; else echo '{"schema_version":1,"task_id":"${{ matrix.task }}","provider":"${{ matrix.provider }}","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' > "$state_file"; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$state_file"
+          git diff --cached --quiet && exit 0
+          git commit -m 'OPS: record AI worker state [skip ai-worker]'
+          git push origin HEAD:master
+
+      - name: Upload AI worker output
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: ai-worker-${{ matrix.task }}-${{ matrix.provider }}-${{ github.run_id }}
+          path: "$RUNNER_TEMP/ai-worker-output/"
+          if-no-files-found: warn
+          retention-days: 14
