@@ -119,6 +119,18 @@ LIVE_TRADING_ENABLED=False
 orders_enabled=False
 automatic_promotion=False
 
+## Arbeits-PC als bevorzugter Dauerpfad — verbindliche Prioritätsregel
+
+Der permanente Arbeits-PC ist **nicht nur eine verfügbare Ressource, sondern der bevorzugte Standardpfad** des Projekts, sobald der Self-Hosted-Runner betriebsbereit ist.
+
+Prioritätsregel:
+1. Self-Hosted-Arbeits-PC zuerst für deterministische Forschung, Feasibility, PIT/Coverage, QA, Evidence-Erzeugung und bereits freigegebene autonome Jobs.
+2. GitHub-hosted Runner nur als Ausweich-/Parallelpfad, wenn dies technisch oder kapazitiv sinnvoll ist.
+3. Kein unnötiges Verschieben rechenbarer Arbeit auf kostenpflichtige oder extern limitierte Ressourcen.
+4. Der Arbeits-PC soll möglichst dauerhaft für den Trading-Agent verfügbar bleiben; bei Nichtverfügbarkeit wird der Ausfall als Infrastrukturzustand dokumentiert und nicht stillschweigend durch andere, weniger geeignete Pfade verschleiert.
+
+Diese Prioritätsregel gilt dauerhaft und ist bei der Planung jedes neuen Research-Jobs zu berücksichtigen.
+
 ## Dauerhafte Zielbindung, familiäre Dringlichkeit und PC-Betrieb — 2026-09-28
 
 ### Übergeordnetes Ziel
