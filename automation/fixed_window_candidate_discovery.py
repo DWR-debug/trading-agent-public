@@ -11,6 +11,7 @@ import argparse
 import hashlib
 import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from collections.abc import Sequence
 from datetime import date, datetime, timezone
 from pathlib import Path
 
@@ -130,6 +131,7 @@ def run_discovery(
     output: str | Path,
     symbol_limit: int = DEFAULT_SYMBOL_LIMIT,
     workers: int = 8,
+    candidate_pool: Sequence[str] | None = None,
 ) -> dict:
     if settings.PAPER_ONLY is not True:
         raise RuntimeError("Fixed-window discovery requires PAPER_ONLY=True.")
@@ -142,6 +144,10 @@ def run_discovery(
     if symbol_limit < 1:
         raise ValueError("symbol_limit must be positive.")
 
+    pool = tuple(candidate_pool) if candidate_pool is not None else CANDIDATE_POOL
+    if not pool:
+        raise ValueError("candidate_pool must be non-empty.")
+
     used_symbols = {
         symbol
         for universe in list_universes()
@@ -149,10 +155,10 @@ def run_discovery(
     }
     used_symbols |= _prior_research_symbols()
     excluded_existing_universe_symbols = [
-        symbol for symbol in CANDIDATE_POOL if symbol in used_symbols
+        symbol for symbol in pool if symbol in used_symbols
     ]
     candidates = [
-        symbol for symbol in CANDIDATE_POOL if symbol not in used_symbols
+        symbol for symbol in pool if symbol not in used_symbols
     ][:symbol_limit]
     if not candidates:
         raise RuntimeError(
@@ -226,7 +232,7 @@ def run_discovery(
         "selection_used": False,
         "asset_selection_by_performance": False,
         "candidate_pool_limit": symbol_limit,
-        "candidate_pool": list(CANDIDATE_POOL),
+        "candidate_pool": list(pool),
         "eligible_candidate_pool": candidates,
         "excluded_existing_universe_symbols": excluded_existing_universe_symbols,
         "results": ordered_results,
