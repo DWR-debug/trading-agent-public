@@ -21,20 +21,31 @@ PYTHON = sys.executable
 
 LANES: dict[str, list[list[str]]] = {
     "autonomous_frontier_qa": [
-        [PYTHON, "-m", "pytest", "-q",
-         "tests/test_rccsm_feasibility.py",
-         "tests/test_frontier_feasibility.py",
-         "tests/test_q089_validation.py",
-         "tests/test_q089_input_freeze.py",
-         "tests/test_q089_performance_envelope.py",
-         "tests/test_research_governance_audit.py"],
-        [PYTHON, "-c",
-         "from automation.rccsm_feasibility import feasibility_manifest, route_mesh; "
-         "state={'trend_coherence':0.8,'breadth':0.7,'dispersion':0.3,'event_density':0.1}; "
-         "print('RCCSM_AUTONOMOUS_FEASIBILITY', feasibility_manifest()['fingerprint'], "
-         "route_mesh('RCCSM-AUTO', state))"],
+        [
+            PYTHON,
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_rccsm_feasibility.py",
+            "tests/test_rccsm_synthetic.py",
+            "tests/test_rccsm_state_topology.py",
+            "tests/test_frontier_feasibility.py",
+            "tests/test_q089_validation.py",
+            "tests/test_q089_input_freeze.py",
+            "tests/test_q089_performance_envelope.py",
+            "tests/test_research_governance_audit.py",
+        ],
+        [
+            PYTHON,
+            "-c",
+            (
+                "from automation.rccsm_feasibility import feasibility_manifest, route_mesh; "
+                "state={'trend_coherence':0.8,'breadth':0.7,'dispersion':0.3,'event_density':0.1}; "
+                "print('RCCSM_AUTONOMOUS_FEASIBILITY', feasibility_manifest()['fingerprint'], "
+                "route_mesh('RCCSM-AUTO', state))"
+            ),
+        ],
     ],
-\nLANES: dict[str, list[list[str]]] = {
     "repo_qa": [
         [
             PYTHON,
@@ -43,8 +54,7 @@ LANES: dict[str, list[list[str]]] = {
                 "import ast, pathlib; "
                 "files=sorted(p for root in ('automation','data','research') "
                 "for p in pathlib.Path(root).rglob('*.py')); "
-                "[(ast.parse(p.read_text(encoding='utf-8'), filename=str(p)), None)[1] "
-                "for p in files]; "
+                "[ast.parse(p.read_text(encoding='utf-8'), filename=str(p)) for p in files]; "
                 "print(f'AST_SYNTAX_OK files={len(files)}')"
             ),
         ],
@@ -62,7 +72,17 @@ LANES: dict[str, list[list[str]]] = {
     ],
     "design_qa": [[PYTHON, "-m", "automation.q022_design_guard"]],
     "local_reproduction": [
-        [PYTHON, "-c", "import ast, pathlib; files=sorted(p for root in (\"automation\", \"data\", \"research\") for p in pathlib.Path(root).rglob(\"*.py\")); [ast.parse(p.read_text(encoding=\"utf-8\"), filename=str(p)) for p in files]; print(f\"AST_LOCAL_REPRODUCTION_OK files={len(files)}\")"],
+        [
+            PYTHON,
+            "-c",
+            (
+                "import ast, pathlib; "
+                "files=sorted(p for root in ('automation','data','research') "
+                "for p in pathlib.Path(root).rglob('*.py')); "
+                "[ast.parse(p.read_text(encoding='utf-8'), filename=str(p)) for p in files]; "
+                "print(f'AST_LOCAL_REPRODUCTION_OK files={len(files)}')"
+            ),
+        ],
         [PYTHON, "-m", "pytest", "-q", "tests/test_research_gates.py"],
     ],
 }
@@ -70,12 +90,7 @@ LANES: dict[str, list[list[str]]] = {
 
 def run(command: list[str], out_dir: Path, index: int) -> dict[str, object]:
     started = datetime.now(timezone.utc).isoformat()
-    completed = subprocess.run(
-        command,
-        text=True,
-        capture_output=True,
-        check=False,
-    )
+    completed = subprocess.run(command, text=True, capture_output=True, check=False)
     payload = {
         "index": index,
         "command": command,
@@ -88,7 +103,7 @@ def run(command: list[str], out_dir: Path, index: int) -> dict[str, object]:
         json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
-    print(f"[repo_qa step {index}] returncode={completed.returncode}", flush=True)
+    print(f"[self_hosted {index}] returncode={completed.returncode}", flush=True)
     if completed.stdout:
         print(completed.stdout, end="" if completed.stdout.endswith("\n") else "\n", flush=True)
     if completed.stderr:
