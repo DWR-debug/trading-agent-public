@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `0e6e28d10e23ece39a1a71c759b250b048436f27`
+**Current operational snapshot:** `cf09052500ad38dff055bf0838feb88c77754ec8`
 
-**Generated (UTC):** `2026-09-28T15:40:29.127770+00:00`
+**Generated (UTC):** `2026-09-28T15:49:11.730843+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -27,40 +27,47 @@
 - No current candidate is authorized for promotion or live execution.
 - Candidate discovery and PIT feasibility remain the required steps before any new formal performance evaluation.
 
+### Active research registry
+
+- Q081-R1: **PREREGISTERED_WAITING_PREFLIGHT**; corrective reproduction only, no performance authorization.
+- Q089: **PLANNED**; clean fresh validation successor to quarantined Q086, not yet performance-authorized.
+- Q084, Q088 and Q082 remain **design/feasibility tracks** for unusual market-state, textual-network, rebalance-demand and SEC information channels.
+- The unusual-strategy frontier is maintained in `docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md` and is design-only until feasibility and provenance are established.
+
 ### Q067 execution pipeline
 
-- Operational state: **PREFLIGHT_BLOCKED**.
+- Operational state: **RETIRED**.
 - Coverage receipt: **MISSING**.
 - PIT receipt: **MISSING**.
-- Performance authorization: **None**.
+- Performance authorization: **False**.
 - Performance evidence: **MISSING**.
 - Ledger reconciled: **False**.
-- Blocking reasons: **coverage receipt missing; pit receipt missing**.
+- Blocking reasons: **obsolete execution path retired; historical evidence preserved**.
 
 This is an operational pipeline summary only; it does not create scientific evidence or select a candidate.
 
 ### Q068 execution pipeline
 
-- Operational state: **PREFLIGHT_BLOCKED**.
-- Coverage receipt: **COVERAGE_PASSED**.
-- PIT receipt: **PIT_PASSED**.
+- Operational state: **RETIRED**.
+- Coverage receipt: **MISSING**.
+- PIT receipt: **MISSING**.
 - Performance authorization: **False**.
 - Performance evidence: **MISSING**.
 - Ledger reconciled: **False**.
-- Blocking reasons: **Q068 frozen snapshot not persistently available with authoritative fingerprint**.
+- Blocking reasons: **obsolete execution path retired; historical evidence preserved**.
 
 Q068 is a fresh symbol-disjoint validation of the unchanged Q067 E1/E2 mechanisms. This operational summary does not create scientific evidence or select an arm.
 
 ### Q070 execution pipeline
 
-- Operational state: **PREFLIGHT_PASSED_WAITING_FOR_AUTO_AUTH**.
+- Operational state: **PERMANENTLY_BLOCKED**.
 - Coverage receipt: **COVERAGE_PASSED**.
 - PIT receipt: **PIT_PASSED**.
-- Performance preregistration: **PREREGISTERED_PERFORMANCE**.
-- Performance authorization: **None**.
+- Performance preregistration: **PERMANENTLY_BLOCKED**.
+- Performance authorization: **False**.
 - Performance evidence: **MISSING**.
 - Ledger reconciled: **False**.
-- Blocking reasons: **none**.
+- Blocking reasons: **frozen snapshot unrecoverable; execution workflows retired**.
 
 Q070 is the fresh symbol-disjoint validation pipeline for the fixed Q069 OHLCV candidate bank. This operational summary does not create scientific evidence or rank candidates.
 

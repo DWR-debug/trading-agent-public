@@ -1,5 +1,57 @@
 {
+  "active_research_registry": {
+    "active_design_families": [
+      {
+        "class": "market_state_and_earnings",
+        "code": "084",
+        "issue_number": 583,
+        "state": "FEASIBILITY_COMPLETE"
+      },
+      {
+        "class": "textual_peer_network_and_rebalance_demand",
+        "code": "088",
+        "issue_number": 588,
+        "state": "DESIGN_ONLY"
+      },
+      {
+        "class": "sec_shareholder_experience",
+        "code": "082",
+        "issue_number": 580,
+        "state": "DESIGN_ONLY"
+      }
+    ],
+    "active_trials": [
+      {
+        "class": "performance_correction",
+        "code": "081R1",
+        "issue_number": 587,
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q081r1_performance_2026_09_28.json",
+        "state": "PREREGISTERED_WAITING_PREFLIGHT",
+        "trial_id": "T-2026-09-28-081R1-PERFORMANCE"
+      },
+      {
+        "class": "fresh_validation",
+        "code": "089",
+        "issue_number": 589,
+        "performance_authorization_allowed": false,
+        "state": "PLANNED",
+        "trial_id": null
+      }
+    ],
+    "name": "active_research_registry",
+    "policy": {
+      "automatic_promotion": false,
+      "frontier_design_document": "docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md",
+      "legacy_preregistrations_are_historical": true,
+      "only_exactly_listed_authorizations_may_execute": true,
+      "only_listed_performance_trials_may_be_authorized": true,
+      "paper_only": true
+    },
+    "schema_version": 1
+  },
   "canonical_sources": {
+    "active_research_registry": "research/governance/active_research_registry.json",
     "historical_status": "PROJECT_STATUS.md",
     "human_current_status": "docs/CURRENT_STATUS.md",
     "machine_current_status": "research/evidence/current_operational_state.json",
@@ -54,11 +106,10 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:40:29.127770+00:00",
+  "generated_at_utc": "2026-09-28T15:49:11.730843+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
-      "coverage receipt missing",
-      "pit receipt missing"
+      "obsolete execution path retired; historical evidence preserved"
     ],
     "coverage_receipt": {
       "present": false,
@@ -70,9 +121,14 @@
     "no_selection_or_promotion": true,
     "paper_only": true,
     "performance_authorization": {
-      "authorized": null,
+      "authorized": false,
       "execution_scope": null,
       "present": false
+    },
+    "performance_preregistration": {
+      "present": true,
+      "status": "RETIRED",
+      "trial_id": "historical"
     },
     "performance_result": {
       "present": false,
@@ -84,16 +140,16 @@
       "status": null,
       "trial_id": null
     },
-    "state": "PREFLIGHT_BLOCKED"
+    "state": "RETIRED"
   },
   "q068_execution_pipeline": {
     "blocking_reasons": [
-      "Q068 frozen snapshot not persistently available with authoritative fingerprint"
+      "obsolete execution path retired; historical evidence preserved"
     ],
     "coverage_receipt": {
-      "present": true,
-      "status": "COVERAGE_PASSED",
-      "trial_id": "T-2026-09-28-068-COVERAGE"
+      "present": false,
+      "status": null,
+      "trial_id": null
     },
     "family": "Q068",
     "ledger_reconciled": false,
@@ -101,8 +157,13 @@
     "paper_only": true,
     "performance_authorization": {
       "authorized": false,
-      "execution_scope": "Q068_FIXED_RULE_PERFORMANCE_ONLY",
-      "present": true
+      "execution_scope": null,
+      "present": false
+    },
+    "performance_preregistration": {
+      "present": true,
+      "status": "PERMANENTLY_BLOCKED",
+      "trial_id": "T-2026-09-28-068-PERFORMANCE"
     },
     "performance_result": {
       "present": false,
@@ -110,14 +171,16 @@
       "trial_id": null
     },
     "pit_receipt": {
-      "present": true,
-      "status": "PIT_PASSED",
-      "trial_id": "T-2026-09-28-068-PIT"
+      "present": false,
+      "status": null,
+      "trial_id": null
     },
-    "state": "PREFLIGHT_BLOCKED"
+    "state": "RETIRED"
   },
   "q070_execution_pipeline": {
-    "blocking_reasons": [],
+    "blocking_reasons": [
+      "frozen snapshot unrecoverable; execution workflows retired"
+    ],
     "coverage_receipt": {
       "present": true,
       "status": "COVERAGE_PASSED",
@@ -128,13 +191,13 @@
     "no_selection_or_promotion": true,
     "paper_only": true,
     "performance_authorization": {
-      "authorized": null,
+      "authorized": false,
       "execution_scope": null,
       "present": false
     },
     "performance_preregistration": {
       "present": true,
-      "status": "PREREGISTERED_PERFORMANCE",
+      "status": "PERMANENTLY_BLOCKED",
       "trial_id": "T-2026-09-28-070-PERFORMANCE"
     },
     "performance_result": {
@@ -147,7 +210,7 @@
       "status": "PIT_PASSED",
       "trial_id": "T-2026-09-28-070-PIT"
     },
-    "state": "PREFLIGHT_PASSED_WAITING_FOR_AUTO_AUTH"
+    "state": "PERMANENTLY_BLOCKED"
   },
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
@@ -157,44 +220,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0e6e28d10e23ece39a1a71c759b250b048436f27",
-        "timestamp": "2026-09-28T15:40:13Z"
+        "message": "FIX: correct Q068/Q070 retired preregistration status fields",
+        "sha": "cf09052500ad38dff055bf0838feb88c77754ec8",
+        "timestamp": "2026-09-28T17:49:01+02:00"
       },
       {
-        "message": "OPS: run hardened research governance audit",
-        "sha": "9ee4cd5bbda154d067e602a2d6eb2f4c3cf2ba9a",
-        "timestamp": "2026-09-28T17:40:03+02:00"
+        "message": "OPS: final Q081-R1 preflight after governance hardening",
+        "sha": "5355b8f9ae6173f5ff11497971434d66438ca021",
+        "timestamp": "2026-09-28T17:48:23+02:00"
       },
       {
-        "message": "OPS: make Q081-R1 preflight triggerable by immutable request file",
-        "sha": "6b4b502fe28493b7e02dbd00a9fb9420c085882d",
-        "timestamp": "2026-09-28T17:39:57+02:00"
+        "message": "FIX: complete retired pipeline status schema",
+        "sha": "9be6cd1b83b68d592f89f52b49de8796a348a426",
+        "timestamp": "2026-09-28T17:48:05+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "93bf2882b7048089f696b0301e5c8efa15772841",
-        "timestamp": "2026-09-28T15:39:34Z"
+        "message": "FIX: correct Q081-R1 registry guard command",
+        "sha": "bfb84053a35d34529ed4566262ffaa25f9d98e47",
+        "timestamp": "2026-09-28T17:46:38+02:00"
       },
       {
-        "message": "HARDEN: research identity, authorization boundary and stale pipeline cleanup (#590)",
-        "sha": "96f52b360f3c557408db99d5fb8731c95ca31afc",
-        "timestamp": "2026-09-28T17:39:20+02:00"
+        "message": "HARDEN: bind Q081-R1 execution to active registry authorization",
+        "sha": "d0215a0797aab398d50c6804d3610aa0cfef452f",
+        "timestamp": "2026-09-28T17:46:22+02:00"
       },
       {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "e6fd14867ad2d9e6cd051dd1db1c398fe9c7948f",
-        "timestamp": "2026-09-28T15:34:01Z"
+        "message": "CLEANUP: retire obsolete Q035 performance execution path",
+        "sha": "00351a6430a97b214ceb7c7ce1cfb58867a7e8e5",
+        "timestamp": "2026-09-28T17:46:05+02:00"
       },
       {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "347ea968cd416c5c8623231b8a731f18bc788e65",
-        "timestamp": "2026-09-28T15:31:01Z"
+        "message": "CLEANUP: retire obsolete Q045 performance execution path",
+        "sha": "4639e846eb52b227180a0e7f1ba9fa16e737e2cc",
+        "timestamp": "2026-09-28T17:45:59+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "48e9b9ead569d4847d6b227bccbef7cfbb13ca77",
-        "timestamp": "2026-09-28T15:25:35Z"
+        "message": "OPS: rerun Q081-R1 preflight with mandatory governance audit",
+        "sha": "e31efcb560df6fcdd966c2237053ff4de70f6874",
+        "timestamp": "2026-09-28T17:45:29+02:00"
       }
     ]
   },
@@ -256,12 +319,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0e6e28d10e23ece39a1a71c759b250b048436f27",
+  "source_master_sha": "cf09052500ad38dff055bf0838feb88c77754ec8",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36445328490"
+    "run_id": "36446451705"
   }
 }
