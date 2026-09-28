@@ -12,6 +12,9 @@ from pathlib import Path
 
 TRIAL_ID = "T-2026-09-28-068-PERFORMANCE"
 RESULT_PATH = Path("research/evidence/q068_performance_result.json")
+COVERAGE_PATH = Path("research/evidence/q068_coverage_result.json")
+PIT_PATH = Path("research/evidence/q068_pit_result.json")
+AUTH_PATH = Path("research/authorizations/q068_performance_2026_09_28.json")
 LEDGER_PATH = Path("research/evidence/trial_ledger.json")
 
 
@@ -19,10 +22,24 @@ def reconcile(repo_root: Path = Path(".")) -> str:
     result_path = repo_root / RESULT_PATH
     ledger_path = repo_root / LEDGER_PATH
     result = json.loads(result_path.read_text(encoding="utf-8"))
+    coverage = json.loads((repo_root / COVERAGE_PATH).read_text(encoding="utf-8"))
+    pit = json.loads((repo_root / PIT_PATH).read_text(encoding="utf-8"))
+    authorization = json.loads((repo_root / AUTH_PATH).read_text(encoding="utf-8"))
     ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
 
     assert result["trial_id"] == TRIAL_ID
     assert result["status"] == "COMPLETED"
+    assert coverage["trial_id"] == "T-2026-09-28-068-COVERAGE"
+    assert coverage["status"] == "COVERAGE_PASSED"
+    assert pit["trial_id"] == "T-2026-09-28-068-PIT"
+    assert pit["status"] == "PIT_PASSED"
+    assert authorization["authorized"] is True
+    assert authorization["performance_execution_authorized"] is True
+    assert authorization["execution_scope"] == "Q068_FIXED_RULE_PERFORMANCE_ONLY"
+    assert authorization["source_receipts"]["coverage_result_fingerprint"] == coverage["result_fingerprint"]
+    assert authorization["source_receipts"]["pit_result_fingerprint"] == pit["result_fingerprint"]
+    assert result["coverage_prerequisite"]["result_fingerprint"] == coverage["result_fingerprint"]
+    assert result["pit_prerequisite"]["result_fingerprint"] == pit["result_fingerprint"]
     assert result["performance_evaluation"] is True
     assert result["selection_used"] is False
     assert result["holdout_used_for_selection"] is False
