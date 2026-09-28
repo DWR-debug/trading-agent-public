@@ -20,6 +20,21 @@ from pathlib import Path
 PYTHON = sys.executable
 
 LANES: dict[str, list[list[str]]] = {
+    "autonomous_frontier_qa": [
+        [PYTHON, "-m", "pytest", "-q",
+         "tests/test_rccsm_feasibility.py",
+         "tests/test_frontier_feasibility.py",
+         "tests/test_q089_validation.py",
+         "tests/test_q089_input_freeze.py",
+         "tests/test_q089_performance_envelope.py",
+         "tests/test_research_governance_audit.py"],
+        [PYTHON, "-c",
+         "from automation.rccsm_feasibility import feasibility_manifest, route_mesh; "
+         "state={'trend_coherence':0.8,'breadth':0.7,'dispersion':0.3,'event_density':0.1}; "
+         "print('RCCSM_AUTONOMOUS_FEASIBILITY', feasibility_manifest()['fingerprint'], "
+         "route_mesh('RCCSM-AUTO', state))"],
+    ],
+\nLANES: dict[str, list[list[str]]] = {
     "repo_qa": [
         [
             PYTHON,
