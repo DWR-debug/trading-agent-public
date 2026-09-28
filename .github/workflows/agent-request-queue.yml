@@ -44,8 +44,6 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 50
     steps:
-      - name: Checkout master
-        uses: actions/checkout@v5
       - name: Copilot reserve date preflight
         id: release
         shell: bash
@@ -70,6 +68,9 @@ jobs:
             echo "eligible=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Checkout master
+        if: steps.release.outputs.eligible == 'true'
+        uses: actions/checkout@v5
         with:
           ref: master
           fetch-depth: 2
