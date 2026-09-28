@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:05:43.446775+00:00",
+  "generated_at_utc": "2026-09-28T10:08:16.222673+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -159,6 +159,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: bind Q068 performance to frozen source contract (#554)",
+        "sha": "f8bdcad3e52396fa17e4961f691e7b82ed77d7ac",
+        "timestamp": "2026-09-28T12:08:00+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ac2dcf95aa0693a5e400e9ad48ba00688ab88a4a",
+        "timestamp": "2026-09-28T10:05:43Z"
+      },
+      {
         "message": "RESEARCH: Q071 orthogonal information-source feasibility design (#553)",
         "sha": "5922faf0d22cb699065f9edfaf739f506340362b",
         "timestamp": "2026-09-28T12:05:27+02:00"
@@ -187,16 +197,6 @@
         "message": "EVIDENCE: record Q068 coverage and PIT preflight",
         "sha": "86ea92484ff1da96e2808e81c2906803baab9607",
         "timestamp": "2026-09-28T09:53:51Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d269699a709eaa2db7843b380955858a388f4bfd",
-        "timestamp": "2026-09-28T09:51:31Z"
-      },
-      {
-        "message": "OPS: retrigger Q068 after publisher SHA fix (#551)",
-        "sha": "f04640b26e3ce1d7ac2e737ee2bcfe3332bec644",
-        "timestamp": "2026-09-28T11:51:15+02:00"
       }
     ]
   },
@@ -258,12 +258,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5922faf0d22cb699065f9edfaf739f506340362b",
+  "source_master_sha": "f8bdcad3e52396fa17e4961f691e7b82ed77d7ac",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36407581841"
+    "run_id": "36407846590"
   }
 }
