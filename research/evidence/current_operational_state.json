@@ -124,7 +124,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T18:29:09.785498+00:00",
+  "generated_at_utc": "2026-09-28T19:06:19.006991+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -247,44 +247,44 @@
     ],
     "recent_commits": [
       {
-        "message": "DOCS: define AI-to-AI relay protocol",
-        "sha": "87fcecc1dd6922ffce224d48280bca8e45a063fb",
-        "timestamp": "2026-09-28T20:28:55+02:00"
+        "message": "FIX: make current status sync race tolerant",
+        "sha": "9e5e535d330d0620639089337cdb4354434715e1",
+        "timestamp": "2026-09-28T21:06:13+02:00"
       },
       {
-        "message": "OPS: record AI worker state",
-        "sha": "77d1ed193974bd2ac8554b7f2446c239d8508738",
-        "timestamp": "2026-09-28T18:22:35Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "9637415c0af213157a5005d5cffd9046fe56a95c",
-        "timestamp": "2026-09-28T18:22:30Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "4b7715059736062ffc3b2decd3f413d8be1aca0a",
-        "timestamp": "2026-09-28T18:22:24Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "a35f4e225828ca2963d7a5170105e016c29fd84d",
-        "timestamp": "2026-09-28T18:22:22Z"
+        "message": "FIX: harden local AI fabric paths and state push races",
+        "sha": "c1c8f7949180efabf660ee36624143b25571d060",
+        "timestamp": "2026-09-28T21:06:02+02:00"
       },
       {
         "message": "OPS: advance paper-forward MTM state",
-        "sha": "68e98087df72a6cb44f004df22624a3d9235df46",
-        "timestamp": "2026-09-28T18:12:54Z"
+        "sha": "bfdf8b52bcdc9e6c4cf41b55fbd5106f0b2033d0",
+        "timestamp": "2026-09-28T18:57:20Z"
       },
       {
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "5c519380f0a4bd435fde411f7dc026909c90221e",
-        "timestamp": "2026-09-28T18:09:42Z"
+        "sha": "f42213170da4363d8456e3904ffc318207f1ad23",
+        "timestamp": "2026-09-28T18:55:49Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "818431d074d88dac3e7562b1edaedef51c401578",
-        "timestamp": "2026-09-28T18:08:15Z"
+        "message": "OPS: record AI worker state",
+        "sha": "f88eec54d608cbd743a29b58a0c9ea8eba1a558c",
+        "timestamp": "2026-09-28T18:46:22Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "a1da503e656e28602029872dfdd354ff51aa9173",
+        "timestamp": "2026-09-28T18:46:13Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "9f0adba38c85a4a9455c7e094a3b96fb20188867",
+        "timestamp": "2026-09-28T18:46:06Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "e76b6e0a50dbb121cbd0919e74122491a4c4c9dc",
+        "timestamp": "2026-09-28T18:46:04Z"
       }
     ]
   },
@@ -346,12 +346,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "87fcecc1dd6922ffce224d48280bca8e45a063fb",
+  "source_master_sha": "9e5e535d330d0620639089337cdb4354434715e1",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36465491041"
+    "run_id": "36469873827"
   }
 }
