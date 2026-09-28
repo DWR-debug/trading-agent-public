@@ -176,7 +176,7 @@ def _audit_performance_prereg(root: Path, path: Path, data: dict, errors: list[s
             errors.append(f"{location}: fingerprint mismatch in {receipt_path}")
 
 
-def _audit_authorizations(root: Path, errors: list[str]) -> None:
+def _audit_authorizations(root: Path, errors: list[str], active_by_trial: dict[str, dict]) -> None:
     auth_root = root / "research" / "authorizations"
     if not auth_root.exists():
         return
@@ -186,10 +186,17 @@ def _audit_authorizations(root: Path, errors: list[str]) -> None:
         except Exception as exc:
             errors.append(f"{path.relative_to(root)}: cannot parse authorization: {exc}")
             continue
-        if not isinstance(data, dict) or data.get("authorized") is not True:
+        if not isinstance(data, dict) or data.get("authorized") is not True or data.get("performance_execution_authorized") is not True:
             continue
 
         location = path.relative_to(root).as_posix()
+        trial_id = data.get("trial_id")
+        active = active_by_trial.get(trial_id) if isinstance(trial_id, str) else None
+        if active is None:
+            errors.append(f"{location}: authorized performance trial is not in active research registry")
+            continue
+        if active.get("performance_authorization_allowed") is not True:
+            errors.append(f"{location}: active registry does not permit performance authorization")
         if data.get("authorization_contract_version") != 2:
             errors.append(f"{location}: authorized execution requires authorization_contract_version=2")
         if not isinstance(data.get("trial_id"), str) or not data.get("trial_id"):
@@ -223,40 +230,78 @@ def _audit_authorizations(root: Path, errors: list[str]) -> None:
 def audit(root: Path = ROOT) -> dict[str, Any]:
     root = root.resolve()
     errors: list[str] = []
-    prereg_root = root / "research" / "preregistrations"
-    active: list[tuple[Path, dict]] = []
-    seen: dict[str, Path] = {}
+    registry_path = root / "research" / "governance" / "active_research_registry.json"
+    if not registry_path.is_file():
+        return {
+            "schema_version": 1,
+            "governance_contract_version": 2,
+            "status": "BLOCKED",
+            "active_performance_preregistrations": [],
+            "error_count": 1,
+            "errors": ["missing active_research_registry.json"],
+            "safety": SAFETY,
+        }
 
-    for path in sorted(prereg_root.glob("*.json")) if prereg_root.exists() else []:
+    registry = _load(registry_path)
+    policy = registry.get("policy", {}) if isinstance(registry, dict) else {}
+    if policy.get("only_listed_performance_trials_may_be_authorized") is not True:
+        errors.append("active research registry policy is invalid")
+
+    active_by_trial: dict[str, dict] = {}
+    for entry in registry.get("active_trials", []) if isinstance(registry, dict) else []:
+        if not isinstance(entry, dict):
+            errors.append("active research registry entry must be an object")
+            continue
+        trial_id = entry.get("trial_id")
+        if isinstance(trial_id, str) and trial_id:
+            if trial_id in active_by_trial:
+                errors.append(f"duplicate active registry trial_id {trial_id}")
+            active_by_trial[trial_id] = entry
+
+    active: list[tuple[Path, dict]] = []
+    for trial_id, entry in active_by_trial.items():
+        if entry.get("class") not in {"performance_correction", "fresh_validation"}:
+            continue
+        prereg_path = entry.get("preregistration_path")
+        if not prereg_path:
+            if entry.get("state") == "PLANNED":
+                continue
+            errors.append(f"active registry performance entry {trial_id} missing preregistration_path")
+            continue
+        path = root / prereg_path
+        if not path.is_file():
+            errors.append(f"active registry performance preregistration missing: {prereg_path}")
+            continue
         try:
             data = _load(path)
         except Exception as exc:
             errors.append(f"{path.relative_to(root)}: cannot parse JSON: {exc}")
             continue
-        if not isinstance(data, dict) or data.get("status") != PERFORMANCE_STATUS:
+        if not isinstance(data, dict):
+            errors.append(f"{path.relative_to(root)}: preregistration is not an object")
             continue
+        active.append((path, data))
+
+    seen: dict[str, Path] = {}
+    for path, data in active:
         trial_id = data.get("trial_id")
         if isinstance(trial_id, str):
             if trial_id in seen:
                 errors.append(f"duplicate active prereg trial_id {trial_id}: {seen[trial_id]} and {path}")
             seen[trial_id] = path
-        active.append((path, data))
-
-    for path, data in active:
         _audit_performance_prereg(root, path, data, errors)
 
-    _audit_authorizations(root, errors)
+    _audit_authorizations(root, errors, active_by_trial)
     return {
         "schema_version": 1,
         "governance_contract_version": 2,
         "status": "PASS" if not errors else "BLOCKED",
         "active_performance_preregistrations": [p.relative_to(root).as_posix() for p, _ in active],
+        "active_registry_trial_ids": sorted(active_by_trial),
         "error_count": len(errors),
         "errors": errors,
         "safety": SAFETY,
     }
-
-
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-root", type=Path, default=ROOT)
