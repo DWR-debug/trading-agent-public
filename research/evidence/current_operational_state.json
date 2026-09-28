@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T16:44:44.856523+00:00",
+  "generated_at_utc": "2026-09-28T16:46:29.819255+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -228,6 +228,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: deduplicate Q081-R1 preflight runs",
+        "sha": "36736cec6b8bd908d7fac5da56819a02c0aa69c9",
+        "timestamp": "2026-09-28T18:46:27+02:00"
+      },
+      {
+        "message": "OPS: refresh q081r1_preflight.trigger for autonomous preflight",
+        "sha": "42b57b07261103683394e5ab76efa7e205033be2",
+        "timestamp": "2026-09-28T18:46:17+02:00"
+      },
+      {
+        "message": "OPS: refresh q081r1_preflight_final.trigger for autonomous preflight",
+        "sha": "de7fe659c77ba7caa8afb1458626088c6d90251d",
+        "timestamp": "2026-09-28T18:46:14+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a466d5e5748d851371d39a58742c35c07a77b303",
+        "timestamp": "2026-09-28T16:44:44Z"
+      },
+      {
         "message": "OPS: deduplicate F1 feasibility runs with latest-run-wins",
         "sha": "b7b6afbc0fefd2cec952007fa12175dedcc4f4ff",
         "timestamp": "2026-09-28T18:44:31+02:00"
@@ -246,26 +266,6 @@
         "message": "OPS: trigger F1 SEC profitability source/PIT feasibility",
         "sha": "5018ec97dc20bb1c5113ab6fb9e162062eb3a9ab",
         "timestamp": "2026-09-28T18:44:07+02:00"
-      },
-      {
-        "message": "RESEARCH: add F1 SEC profitability feasibility workflow",
-        "sha": "f7b3625254140b60d9c5f913bbd628a46c9fc387",
-        "timestamp": "2026-09-28T18:44:00+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0e87bfff8b53ecf51a9f21115d1e07651ffbe08d",
-        "timestamp": "2026-09-28T16:42:36Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2bee36cb43815913907a8718f79ab753878477bb",
-        "timestamp": "2026-09-28T16:42:24Z"
-      },
-      {
-        "message": "OPS: retrigger Q089 coverage/PIT after publisher race fix",
-        "sha": "c6ed04af629438974b87e82e9e27a8dbe801892d",
-        "timestamp": "2026-09-28T18:42:21+02:00"
       }
     ]
   },
@@ -327,12 +327,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b7b6afbc0fefd2cec952007fa12175dedcc4f4ff",
+  "source_master_sha": "36736cec6b8bd908d7fac5da56819a02c0aa69c9",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36453221800"
+    "run_id": "36453435431"
   }
 }
