@@ -6,7 +6,7 @@
   "latest_formal_trial": "T-2026-09-27-056",
   "latest_trial_status": "NO_ARM_PASSED_ALL_T052_GATES",
   "next_reserved_trial": null,
-  "next_research_focus": "Q045 fixed replication performance on the fresh Q043 universe, carrying every PIT-safe price-only arm plus pre-registered equal-weight ensembles; no holdout-driven pruning or parameter tuning.",
+  "next_research_focus": "Q066 failure-mechanism diagnosis and exposure decomposition on Q041/Q045 fixed-alpha evidence; identify whether drawdown bottleneck is asset concentration, regime concentration, correlation, turnover or signal overlap before any tuning.",
   "cleanup_status": "completed_h06_and_q017_coverage_hardening",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -111,8 +111,8 @@
     ".github/workflows/q031-q030-risk-stability-coverage.yml",
     ".github/workflows/q032-q031-fixed-core-pit.yml"
   ],
-  "current_preregistered_trial": "T-2026-09-27-064",
-  "current_trial_status": "PIT_PASSED_NO_PERFORMANCE_EVIDENCE",
+  "current_preregistered_trial": "T-2026-09-27-065",
+  "current_trial_status": "Q045_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
   "engineering_notes": {
     "t039_preregistered": true,
     "coverage_preflight_active": true,
@@ -536,8 +536,8 @@
     "final_execution_commit": "85acd4e17921a4e2682552bfbe424f17ffaa9322",
     "final_status": "COMPLETED_DISCOVERY_ONLY"
   },
-  "current_queue_task": "Q-2026-09-27-065-Q045-FIXED-ALPHA-REPLICATION-PERFORMANCE-2026-09-27",
-  "last_completed_queue_task": "Q-2026-09-27-064-Q044-FRESH-ALPHA-PIT-2026-09-27",
+  "current_queue_task": "Q-2026-09-27-066-ALPHA-FAILURE-MECHANISM-DIAGNOSIS-2026-09-28",
+  "last_completed_queue_task": "Q-2026-09-27-065-Q045-FIXED-ALPHA-REPLICATION-PERFORMANCE-2026-09-27",
   "master_commit_semantics": "last_verified_master_commit_before_this_state_update; this field must not be interpreted as a self-referential current-HEAD field",
   "state_sync_verified_at": "2026-09-27T19:05:30Z",
   "project_milestone": {
@@ -928,8 +928,47 @@
     "holdout_used_for_selection": false
   },
   "q045": {
-    "status": "PREREGISTRATION_IN_PREPARATION",
+    "status": "COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
     "trial_id": "T-2026-09-27-065",
+    "workflow_run_id": 36348015321,
+    "artifact_id": 10941072485,
+    "artifact_digest": "sha256:7126b5d84eedbaed17e53124a96e8f8b0c987de0ca2410ea4ef61a796d2ba6a7",
+    "report_fingerprint": "0b29881c2405c4498b2327d8252a8db0c41b32deff18bd9482cd08b3abb8fe0a",
+    "universe": "validation_2026_09_27_q043_fresh_alpha_replication",
+    "symbols": [
+      "AON",
+      "CVS",
+      "ADSK",
+      "BA",
+      "T",
+      "F",
+      "LUV",
+      "NFLX"
+    ],
+    "research_periods": 2798,
+    "holdout_periods": 700,
+    "arms": {
+      "CONTROL": "7/13",
+      "A1_TSM_CONSENSUS": "3/13",
+      "A2_CS_MOMENTUM_TOP2": "4/13",
+      "A3_RESIDUAL_MOMENTUM_TOP2": "8/13",
+      "A5_LOW_BETA_TOP2": "7/13",
+      "A1B_52W_HIGH_TOP2": "2/13",
+      "A6_OVERNIGHT_TUGWAR_TOP2": "3/13",
+      "ENSEMBLE_ALL6": "4/13"
+    },
+    "common_failed_gates": [
+      "research_drawdown_lte_10pct",
+      "rolling_average_drawdown_lte_10pct"
+    ],
+    "performance_execution": true,
+    "selection_used": false,
+    "holdout_used_for_selection": false,
+    "automatic_promotion": false
+  },
+  "q066": {
+    "status": "PREREGISTRATION_IN_PREPARATION",
+    "trial_id": "T-2026-09-28-066",
     "performance_execution_authorized": false,
     "selection_used": false,
     "holdout_used_for_selection": false
