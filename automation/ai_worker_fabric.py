@@ -24,16 +24,18 @@ TRUE_VALUES = {"1", "true", "yes", "on"}
 
 PROVIDER_SPECS = {
     "gemini_cli": {
-        "binary": "gemini",
+        "binaries": ("agy", "gemini"),
         "auth_env": ("GEMINI_API_KEY", "GOOGLE_API_KEY"),
         "free_attestation_env": "GEMINI_FREE_MODE_CONFIRMED",
     },
     "claude_cli": {
-        "binary": "claude",
+        "binaries": ("claude",),
         "auth_env": (),
         "free_attestation_env": "CLAUDE_FREE_MODE_CONFIRMED",
     },
 }
+
+LOCAL_ATTESTATION_DEFAULT = Path.home() / ".trading-agent" / "ai_free_attestation.json"
 
 FORBIDDEN_TASK_FLAGS = (
     "deterministic_compute", "holdout_selection", "parameter_selection",
@@ -97,22 +99,50 @@ def load_task(path: Path) -> dict[str, Any]:
         raise AIWorkerError("allow_workspace_writes must be false.")
     return data
 
+def _local_attestation(provider: str, env: dict[str, str]) -> dict[str, Any]:
+    path = Path(env.get("TRADING_AGENT_AI_ATTESTATION", str(LOCAL_ATTESTATION_DEFAULT))).expanduser()
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {"present": False, "path": str(path)}
+    providers = data.get("providers", [])
+    ok = (
+        data.get("schema_version") == 1
+        and data.get("free_only") is True
+        and data.get("paid_fallback_allowed") is False
+        and data.get("personal_credit_fallback_allowed") is False
+        and provider in providers
+    )
+    return {"present": ok, "path": str(path)}
+
+def _resolve_binary(provider: str) -> str | None:
+    for candidate in PROVIDER_SPECS[provider]["binaries"]:
+        found = shutil.which(candidate)
+        if found:
+            return found
+    return None
+
 def preflight(provider: str, env: dict[str, str] | None = None) -> dict[str, Any]:
     if provider not in PROVIDER_SPECS:
         raise AIWorkerError(f"Unknown provider: {provider}.")
     env = dict(os.environ if env is None else env)
     spec = PROVIDER_SPECS[provider]
-    binary = shutil.which(spec["binary"])
-    allowlist = _truth(env.get("AI_EXTERNAL_PROVIDER_ALLOWLIST"))
-    free_gate = _truth(env.get(spec["free_attestation_env"]))
+    local_mode = _truth(env.get("TRADING_AGENT_LOCAL_AI_MODE"))
+    binary = _resolve_binary(provider)
+    explicit_free = _truth(env.get(spec["free_attestation_env"]))
+    local_attestation = _local_attestation(provider, env) if local_mode else {"present": False, "path": None}
+    free_gate = explicit_free or local_attestation["present"]
     auth_ok = bool(spec["auth_env"]) and any(env.get(name) for name in spec["auth_env"])
-    if provider == "claude_cli":
+    if local_mode:
+        auth_ok = binary is not None and local_attestation["present"]
+    elif provider == "claude_cli":
         auth_ok = free_gate
+    allowlist = _truth(env.get("AI_EXTERNAL_PROVIDER_ALLOWLIST"))
     reasons: list[str] = []
     if not allowlist:
         reasons.append("AI_EXTERNAL_PROVIDER_ALLOWLIST is not confirmed")
     if binary is None:
-        reasons.append(f"{spec["binary"]} executable not found")
+        reasons.append("provider executable not found")
     if not auth_ok:
         reasons.append("provider authentication is not available for free-only mode")
     if not free_gate:
@@ -122,6 +152,8 @@ def preflight(provider: str, env: dict[str, str] | None = None) -> dict[str, Any
         "available": not reasons,
         "binary": binary,
         "free_only": True,
+        "local_mode": local_mode,
+        "local_attestation": local_attestation,
         "free_mode_attested": free_gate,
         "reasons": reasons,
     }
@@ -132,11 +164,14 @@ def build_prompt(task: dict[str, Any]) -> str:
             + f"<request>\n{task["prompt"].strip()}\n</request>\n\n"
             + "Return a concise structured worker handoff with findings, counterarguments, concrete next actions, and uncertainty. Do not claim validation or promotion.")
 
-def command_for(provider: str, prompt: str) -> list[str]:
+def command_for(provider: str, prompt: str, binary: str | None = None) -> list[str]:
     if provider == "gemini_cli":
-        return ["gemini", "--approval-mode", "plan", "--output-format", "json", "--prompt", prompt]
+        executable = binary or "gemini"
+        if Path(executable).name.lower().startswith("agy"):
+            return [executable, "-p", prompt]
+        return [executable, "--approval-mode", "plan", "--output-format", "json", "--prompt", prompt]
     if provider == "claude_cli":
-        return ["claude", "-p", prompt]
+        return [binary or "claude", "-p", prompt]
     raise AIWorkerError(f"Unknown provider: {provider}.")
 
 def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, str] | None = None) -> dict[str, Any]:
@@ -154,7 +189,7 @@ def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, s
         result = {**base, "status": "SKIPPED", "returncode": None, "stdout": "", "stderr": ""}
         output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         return result
-    command = command_for(provider, build_prompt(task))
+    command = command_for(provider, build_prompt(task), check.get("binary"))
     started = time.monotonic()
     proc = subprocess.run(command, cwd=Path.cwd(), text=True, capture_output=True,
                           timeout=task.get("max_runtime_minutes", 15) * 60, check=False,
@@ -165,9 +200,13 @@ def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, s
     output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return result
 
+def task_fingerprint(task: dict[str, Any]) -> str:
+    return _fingerprint(task)
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--preflight", choices=sorted(PROVIDER_SPECS))
+    parser.add_argument("--fingerprint", type=Path)
     parser.add_argument("--run", action="store_true")
     parser.add_argument("--provider", choices=sorted(PROVIDER_SPECS))
     parser.add_argument("--task", type=Path)
@@ -177,6 +216,9 @@ def main() -> int:
         result = preflight(args.preflight)
         print(json.dumps(result, sort_keys=True))
         return 0 if result["available"] else 2
+    if args.fingerprint:
+        print(task_fingerprint(load_task(args.fingerprint)))
+        return 0
     if args.run:
         if not args.provider or not args.task or not args.output:
             parser.error("--run requires --provider, --task and --output")
