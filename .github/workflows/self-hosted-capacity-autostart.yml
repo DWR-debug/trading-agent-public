@@ -29,13 +29,31 @@ jobs:
         with:
           ref: master
           fetch-depth: 1
+      - name: Bootstrap pinned Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-capacity"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-capacity.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          endlocal
+
       - name: Run capacity autostart
         shell: cmd
         run: |
           @echo off
-          python -m automation.self_hosted_capacity > "%RUNNER_TEMP%\self-hosted-capacity.json"
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-capacity\tools\python.exe"
+          "%PY_EXE%" -m automation.self_hosted_capacity > "%RUNNER_TEMP%\self-hosted-capacity.json"
           if errorlevel 1 exit /b 1
           type "%RUNNER_TEMP%\self-hosted-capacity.json"
+
       - name: Publish capacity result
         if: always()
         uses: actions/upload-artifact@v6
