@@ -16,6 +16,8 @@ def test_q070_workflows_are_self_hosted_and_git_free():
         assert "automation.github_contents_publish" in text
         assert "git add " not in text
         assert "git push " not in text
+        assert "automation\\github_contents_publish.py" in text
+        assert "for /f %%H in" not in text
 
 def test_q070_design_has_no_performance_selection():
     p=Path("research/preregistrations/q070_fixed_candidate_validation_2026_09_28.json").read_text(encoding="utf-8")
