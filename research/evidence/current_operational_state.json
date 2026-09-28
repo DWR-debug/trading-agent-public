@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:27:57.776924+00:00",
+  "generated_at_utc": "2026-09-28T17:30:11.251819+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -237,6 +237,21 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "e28999dc7d17ea9631fd3b45fcc0c90147d7bb0e",
+        "timestamp": "2026-09-28T17:29:52Z"
+      },
+      {
+        "message": "FIX: use tolerant F2 formula replay on cloud (#619)",
+        "sha": "3f67b25aa3c3c113ab8092475578764a075bdeb0",
+        "timestamp": "2026-09-28T19:29:18+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ea249e9f80a86cbcae768c0ec1f94dd7bcd1ce5d",
+        "timestamp": "2026-09-28T17:27:57Z"
+      },
+      {
         "message": "TEST: use tolerant comparisons for F2 floatingpoint formula (#618)",
         "sha": "c57d5729ac2ade7c5d0d6c1a121e6654d62288b9",
         "timestamp": "2026-09-28T19:27:40+02:00"
@@ -260,21 +275,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "c776fbc13e23b04e915c1707c59e0c7009094b85",
         "timestamp": "2026-09-28T17:26:05Z"
-      },
-      {
-        "message": "RESEARCH: add F2 quality acceleration PIT feasibility (#616)",
-        "sha": "a6b03d5758e64a194ca45ff5ea902944109c0e50",
-        "timestamp": "2026-09-28T19:25:47+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ec91194f51d333d2ff689c4c913077349f6d3210",
-        "timestamp": "2026-09-28T17:23:57Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4fa6622eb4d442cebd4338a3ea50a8005340f950",
-        "timestamp": "2026-09-28T17:23:42Z"
       }
     ]
   },
@@ -336,12 +336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c57d5729ac2ade7c5d0d6c1a121e6654d62288b9",
+  "source_master_sha": "e28999dc7d17ea9631fd3b45fcc0c90147d7bb0e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36458286662"
+    "run_id": "36458475514"
   }
 }
