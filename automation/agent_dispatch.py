@@ -15,7 +15,7 @@ from typing import Any
 
 
 SCHEMA_VERSION = 1
-MAX_CONCURRENT_AGENT_TASKS = 2
+MAX_CONCURRENT_AGENT_TASKS = 1
 ALLOWED_WORKERS = {
     "engineering": "trading-agent-engineer",
 }
