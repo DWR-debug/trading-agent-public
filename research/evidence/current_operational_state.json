@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T14:55:14.829314+00:00",
+  "generated_at_utc": "2026-09-28T14:56:04.472308+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "EVIDENCE: persist Q083 feasibility checkpoint",
+        "sha": "57038cc52cf770a0835261bb22209f22cb8db349",
+        "timestamp": "2026-09-28T16:55:47+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3bb872f2591e7508a2ac965ce97cc96c445959b0",
+        "timestamp": "2026-09-28T14:55:14Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "d79e620115ea38b96f106f11048d960e683a94e1",
         "timestamp": "2026-09-28T14:55:01Z"
@@ -185,16 +195,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "6b88b25fdea8cb9c5f82b97512caf47fa8d338b4",
         "timestamp": "2026-09-28T14:27:50Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a4117a62a2647df2ea4ada6297911888fecdd570",
-        "timestamp": "2026-09-28T14:27:36Z"
-      },
-      {
-        "message": "OPS: expose Q083 source probe detail",
-        "sha": "0e668a7c75db35b209255353847670aecc519812",
-        "timestamp": "2026-09-28T16:27:25+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d79e620115ea38b96f106f11048d960e683a94e1",
+  "source_master_sha": "57038cc52cf770a0835261bb22209f22cb8db349",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36439581701"
+    "run_id": "36439694990"
   }
 }
