@@ -128,6 +128,7 @@ jobs:
           export PUBLISH_MESSAGE
           python automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$BASE_SHA"             --file research/evidence/trial_ledger.json=research/evidence/trial_ledger.json
 
+
       - name: Build and publish one-shot authorization when missing
         env:
           GH_TOKEN: ${{ github.token }}
@@ -202,6 +203,7 @@ jobs:
           PUBLISH_MESSAGE="OPS: authorize Q068 hosted deterministic fallback"
           export PUBLISH_MESSAGE
           python automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$BASE_SHA"             --file research/authorizations/q068_performance_2026_09_28.json=research/authorizations/q068_performance_2026_09_28.json
+
 
 
       - name: Run exact frozen Q068 performance locally
