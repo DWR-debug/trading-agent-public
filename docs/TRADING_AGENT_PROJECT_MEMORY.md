@@ -119,19 +119,21 @@ LIVE_TRADING_ENABLED=False
 orders_enabled=False
 automatic_promotion=False
 
-## Arbeits-PC und Cloud als parallele Forschungsinfrastruktur — verbindliche Prioritätsregel
+## Arbeits-PC und Cloud als permanente parallele Forschungsinfrastruktur — verbindliche Prioritätsregel
 
-Der betriebsbereite Arbeits-PC mit Self-Hosted-Runner und die verfügbaren Cloud-/GitHub-Runner sind **gleichberechtigte, parallel zu nutzende Forschungsressourcen**.
+Der betriebsbereite Arbeits-PC mit Self-Hosted-Runner und die verfügbaren Cloud-/GitHub-Runner sind **dauerhafte, parallel zu nutzende Forschungsressourcen**.
 
-Prioritätsregel:
-1. Der Arbeits-PC soll möglichst dauerhaft aktiv sein und die deterministische Primärausführung für Research, Feasibility, PIT/Coverage, QA, Evidence-Erzeugung und freigegebene autonome Jobs übernehmen.
-2. Cloud-/GitHub-Runner sollen **parallel** für unabhängige Gegenprüfungen, zusätzliche Tests, Reviews, statische Analysen, alternative Implementierungen und weitere klar abgegrenzte Forschungsjobs eingesetzt werden.
-3. Wo ein Forschungsjob sinnvoll duplizierbar ist, sollen PC und Cloud nicht unnötig seriell arbeiten; unabhängige Ausführungen sollen die Forschungszeit verkürzen und Inkonsistenzen früh sichtbar machen.
-4. Ergebnisse aus PC und Cloud werden über Commit-SHA, Testausgaben, Fingerprints und Evidence-Artefakte zusammengeführt. Unterschiedliche Ergebnisse sind ein QA-/Forschungsbefund und werden nicht stillschweigend vereinheitlicht.
-5. Kostenpflichtige externe Ressourcen bleiben ausgeschlossen. Kostenfreie verfügbare Ressourcen werden nach wissenschaftlichem Nutzen und Reproduzierbarkeit eingesetzt.
-6. Bei Nichtverfügbarkeit des PCs oder der Cloud wird der jeweilige Pfad als Infrastrukturzustand dokumentiert; verfügbare Parallelpfade sollen weiterarbeiten.
+Verbindliche Betriebsregel:
+1. Der Arbeits-PC soll **möglichst dauerhaft betriebsbereit und als aktiver Research-Worker verfügbar** bleiben. Sobald er verfügbar ist, soll die Queue ihn kontinuierlich mit sinnvollen, freigegebenen Forschungs-, Feasibility-, PIT/Coverage-, QA- und Evidence-Jobs versorgen.
+2. Cloud-/GitHub-Runner sollen **parallel** arbeiten und nicht erst auf die Fertigstellung der PC-Läufe warten. Sie übernehmen unabhängige Gegenprüfungen, zusätzliche Tests, Reviews, statische Analysen, alternative Implementierungen und weitere klar abgegrenzte Forschungsjobs.
+3. Aufgaben werden so zerlegt, dass PC und Cloud gleichzeitig Fortschritt erzeugen. Wo eine echte Doppelprüfung sinnvoll ist, erhalten beide Pfade denselben Commit und vergleichen ihre Evidence/Fingerprints.
+4. Es darf kein stiller Ressourcen-Leerlauf entstehen, wenn eine sinnvolle, bereits freigegebene Forschungsaufgabe verfügbar ist. Nicht belegte Kapazität soll für autonome Feasibility-, QA-, Review- oder Gegenhypothesenarbeit verwendet werden.
+5. **Keine künstlichen Dauerläufe nur zum Auslasten der Hardware.** Permanente Nutzung bedeutet kontinuierliche Verfügbarkeit und bevorzugt kontinuierliche sinnvolle Forschung, nicht sinnlose CPU-Last.
+6. Ergebnisse aus PC und Cloud werden über Commit-SHA, Testausgaben, Fingerprints und Evidence-Artefakte zusammengeführt. Abweichungen sind ein QA-/Forschungsbefund und werden nicht stillschweigend vereinheitlicht.
+7. Bei Nichtverfügbarkeit eines Pfades wird dieser Zustand dokumentiert; der jeweils andere verfügbare Pfad arbeitet weiter. Die Wiederverfügbarkeit des PC-Workers soll anschließend automatisch wieder für die Forschung genutzt werden.
+8. Kostenpflichtige externe Ressourcen bleiben ausgeschlossen. Kostenfreie verfügbare Ressourcen werden nach wissenschaftlichem Nutzen, Reproduzierbarkeit und Zeitgewinn eingesetzt.
 
-Diese Parallelitätsregel gilt dauerhaft und ist bei der Planung jedes neuen Research-Jobs zu berücksichtigen.
+Diese Regel gilt dauerhaft, ist Teil des Projektgedächtnisses und muss bei der Planung jedes neuen Research-Jobs berücksichtigt werden.
 
 ## Dauerhafte Zielbindung, familiäre Dringlichkeit und PC-Betrieb — 2026-09-28
 
