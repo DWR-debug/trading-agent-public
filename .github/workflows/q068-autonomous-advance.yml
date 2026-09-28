@@ -23,7 +23,7 @@ jobs:
       - name: Checkout current master
         uses: actions/checkout@v5
         with:
-          ref: master
+          ref: ${{ github.sha }}
           fetch-depth: 1
 
       - name: Verify preflight and safety
