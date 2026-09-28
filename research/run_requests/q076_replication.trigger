@@ -1,1 +1,1 @@
-Q076 replication trigger — fresh E1/E2 universe 2026-09-28.
+Q076 replication trigger — retry after workflow registration 2026-09-28T10:53Z.
