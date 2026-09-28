@@ -124,7 +124,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T18:07:29.726884+00:00",
+  "generated_at_utc": "2026-09-28T18:07:57.164371+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -247,6 +247,16 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: preserve two-lane queue with serialized Copilot Free pool",
+        "sha": "eb76e84bb55f58e09742fd2cd5bc0040acab37cc",
+        "timestamp": "2026-09-28T20:07:42+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ec4ae4480b98ded6eb902646f408246a9d07b9a0",
+        "timestamp": "2026-09-28T18:07:29Z"
+      },
+      {
         "message": "DOCS: add external AI worker authentication setup",
         "sha": "39c58e7a73e8b434f0d50c55ef5b53be003305bd",
         "timestamp": "2026-09-28T20:07:28+02:00"
@@ -275,16 +285,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "642e479a8705084e3780e5d3efc164a7b39b74e4",
         "timestamp": "2026-09-28T18:07:08Z"
-      },
-      {
-        "message": "DOCS: anchor provider authentication and Copilot reserve",
-        "sha": "7f3043bb8ab617fff0f87f876c6f2874e23b77c6",
-        "timestamp": "2026-09-28T20:06:58+02:00"
-      },
-      {
-        "message": "DOCS: anchor provider authentication and Copilot reserve",
-        "sha": "f6df35efd6106671f3e5a10e6eda94d1830b8b53",
-        "timestamp": "2026-09-28T20:06:55+02:00"
       }
     ]
   },
@@ -346,12 +346,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "39c58e7a73e8b434f0d50c55ef5b53be003305bd",
+  "source_master_sha": "eb76e84bb55f58e09742fd2cd5bc0040acab37cc",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36462928743"
+    "run_id": "36462984664"
   }
 }
