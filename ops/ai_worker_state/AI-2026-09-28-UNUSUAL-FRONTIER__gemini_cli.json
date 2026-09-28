@@ -5,20 +5,16 @@
   "free_only": true,
   "preflight": {
     "provider": "gemini_cli",
-    "available": false,
-    "binary": "/opt/hostedtoolcache/node/22.23.2/x64/bin/gemini",
+    "available": true,
+    "binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE",
     "free_only": true,
-    "local_mode": false,
+    "local_mode": true,
     "local_attestation": {
-      "present": false,
-      "path": null
+      "present": true,
+      "path": "C:\\Users\\u419680\\.trading-agent\\ai_free_attestation.json"
     },
-    "free_mode_attested": false,
-    "reasons": [
-      "AI_EXTERNAL_PROVIDER_ALLOWLIST is not confirmed",
-      "provider authentication is not available for free-only mode",
-      "provider free-mode attestation is missing"
-    ]
+    "free_mode_attested": true,
+    "reasons": []
   },
   "task_fingerprint": "f7e64971192f6c8992aed8a057a3c57fdfa40e84c0826ed3a7b443d71c012c0a",
   "worker_output_is_scientific_evidence": false,
@@ -28,8 +24,10 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SKIPPED",
-  "returncode": null,
-  "stdout": "",
-  "stderr": ""
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 22.965,
+  "stdout": "{\"conversation_id\":\"2a7f8a7c-9ef7-43fb-8a89-f2a097d0b0d4\",\"status\":\"SUCCESS\",\"response\":\"\",\"duration_seconds\":19.324586,\"num_turns\":1,\"usage\":{\"input_tokens\":88596,\"output_tokens\":2112,\"thinking_tokens\":1131,\"cache_read_tokens\":114260,\"total_tokens\":90708},\"denied_actions\":[{\"action\":\"command\",\"display_name\":\"RunCommand\"}]}\n",
+  "stderr": "jetski: no output produced â€” a tool required the \"command\" permission that headless mode cannot prompt for, so it was auto-denied. Add an allow-rule under permissions.allow in settings.json (e.g. command(<target>)). Alternatively, re-run with --dangerously-skip-permissions to auto-approve all tools.\n",
+  "command_binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE"
 }
