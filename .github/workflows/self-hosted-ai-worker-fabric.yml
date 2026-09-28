@@ -1,0 +1,110 @@
+name: Local Free AI Worker Fabric
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "ai_requests/**"
+      - "automation/ai_worker_fabric.py"
+      - "scripts/enable_local_ai_worker.ps1"
+      - "tests/test_ai_worker_fabric.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-local-ai-fabric-${{ matrix.provider }}
+  cancel-in-progress: false
+
+jobs:
+  worker:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        provider: [gemini_cli, claude_cli]
+        task:
+          - AI-2026-09-28-Q089-ADVERSARIAL
+          - AI-2026-09-28-UNUSUAL-FRONTIER
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Local AI setup and no-credit-fallback hardening
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+          & .\scripts\enable_local_ai_worker.ps1
+
+      - name: Resolve task
+        id: task
+        shell: powershell
+        run: |
+          $map = @{
+            "AI-2026-09-28-Q089-ADVERSARIAL" = "ai_requests/AI-2026-09-28-Q089-ADVERSARIAL.json"
+            "AI-2026-09-28-UNUSUAL-FRONTIER" = "ai_requests/AI-2026-09-28-UNUSUAL-FRONTIER.json"
+          }
+          "path=$($map['${{ matrix.task }}'])" | Out-File -Append $env:GITHUB_OUTPUT
+
+      - name: Check for already-satisfied task
+        id: prior
+        shell: powershell
+        run: |
+          $taskPath = "${{ steps.task.outputs.path }}"
+          $statePath = "ops/ai_worker_state/${{ matrix.task }}__${{ matrix.provider }}.json"
+          if (-not (Test-Path $statePath)) { "run=true" >> $env:GITHUB_OUTPUT; exit 0 }
+          $state = Get-Content $statePath -Raw | ConvertFrom-Json
+          if ($state.status -eq "SUCCESS" -and $state.task_fingerprint) {
+            "run=false" >> $env:GITHUB_OUTPUT
+            "reason=SUCCESS_ALREADY_RECORDED" >> $env:GITHUB_OUTPUT
+          } else {
+            "run=true" >> $env:GITHUB_OUTPUT
+          }
+
+      - name: Run local provider worker
+        if: steps.prior.outputs.run == 'true'
+        shell: powershell
+        env:
+          AI_EXTERNAL_PROVIDER_ALLOWLIST: "true"
+          TRADING_AGENT_LOCAL_AI_MODE: "true"
+          TRADING_AGENT_AI_ATTESTATION: "\${env:USERPROFILE}\.trading-agent\ai_free_attestation.json"
+        run: |
+          python -m automation.ai_worker_fabric --run --provider "${{ matrix.provider }}" --task "${{ steps.task.outputs.path }}" --output "\${env:RUNNER_TEMP}\ai-${{ matrix.task }}-${{ matrix.provider }}.json"
+
+      - name: Publish local worker state
+        if: always() && steps.prior.outputs.run == 'true'
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $stateDir = "ops/ai_worker_state"
+          New-Item -ItemType Directory -Force $stateDir | Out-Null
+          $output = "\${env:RUNNER_TEMP}\ai-${{ matrix.task }}-${{ matrix.provider }}.json"
+          $state = "$stateDir/${{ matrix.task }}__${{ matrix.provider }}.json"
+          if (Test-Path $output) { Copy-Item $output $state -Force }
+          else { '{"schema_version":1,"task_id":"${{ matrix.task }}","provider":"${{ matrix.provider }}","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' | Set-Content -Encoding UTF8 $state }
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add $state
+          if (-not (git diff --cached --quiet)) {
+            git commit -m "OPS: record local AI worker state"
+            git push origin HEAD:master
+          }
+
+      - name: Publish local worker artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: local-ai-worker-${{ matrix.task }}-${{ matrix.provider }}-${{ github.run_id }}
+          path: ${{ runner.temp }}\ai-${{ matrix.task }}-${{ matrix.provider }}.json
+          if-no-files-found: warn
+          retention-days: 14
