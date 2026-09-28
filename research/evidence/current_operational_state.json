@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T11:32:37.660703+00:00",
+  "generated_at_utc": "2026-09-28T11:33:05.918236+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,16 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: remove diagnostic issue gate from recovered CI",
+        "sha": "2aa6fa75b625937e889027b66d1f94b6ea183077",
+        "timestamp": "2026-09-28T13:32:49+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "014518c4d61c0cf71c3a38ca2b6b067539af7d04",
+        "timestamp": "2026-09-28T11:32:37Z"
+      },
+      {
         "message": "INFRA: restore CI on known-good Actions workflow registration",
         "sha": "ab92e9f9eefb4c550e3b96d57b154bd3de6209e0",
         "timestamp": "2026-09-28T13:32:21+02:00"
@@ -194,16 +204,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "9a7046dba0ac66f61494f63af6a25459f80bbab6",
         "timestamp": "2026-09-28T11:31:15Z"
-      },
-      {
-        "message": "OPS: add one-shot Actions registry smoke workflow",
-        "sha": "c23e3a08443a6a320918563b3064fc1b172909cb",
-        "timestamp": "2026-09-28T13:30:59+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f872b195a41bf9c2da89837f17c345589bf35cf0",
-        "timestamp": "2026-09-28T11:30:23Z"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ab92e9f9eefb4c550e3b96d57b154bd3de6209e0",
+  "source_master_sha": "2aa6fa75b625937e889027b66d1f94b6ea183077",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36416245853"
+    "run_id": "36416293230"
   }
 }
