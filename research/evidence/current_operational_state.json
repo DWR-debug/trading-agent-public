@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:08:57.178982+00:00",
+  "generated_at_utc": "2026-09-28T15:09:56.122537+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: issue one-shot Q081 performance authorization after preflight",
+        "sha": "8fb3d95eef1f647c8a743c2366bdb79a8f9d15db",
+        "timestamp": "2026-09-28T17:09:54+02:00"
+      },
+      {
+        "message": "FIX: make Q081 reproduction independent of git.exe",
+        "sha": "504f05c532731f88d41ea1a80be2ad2b87a48ee8",
+        "timestamp": "2026-09-28T17:09:39+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f65670e8672f254c45b0f6709eabf360cec0d067",
+        "timestamp": "2026-09-28T15:08:57Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "ada701346621026a36a201930ff3341b377c7629",
         "timestamp": "2026-09-28T15:08:40Z"
@@ -180,21 +195,6 @@
         "message": "RESEARCH: create Q086 successor file tests/test_q086_validation.py",
         "sha": "4029e08938a0d7054ae049bd7f47077d7590b715",
         "timestamp": "2026-09-28T17:08:16+02:00"
-      },
-      {
-        "message": "RESEARCH: create Q086 successor file automation/q086_coverage_pit.py",
-        "sha": "4d300d03c19b450ad4b6ddb61e95d320bfcecf37",
-        "timestamp": "2026-09-28T17:08:13+02:00"
-      },
-      {
-        "message": "RESEARCH: create Q086 successor file research/preregistrations/q086_performance_2026_09_28.json",
-        "sha": "3a8c7ea1bbe0d5c746f7ca2cbc6facce473e7993",
-        "timestamp": "2026-09-28T17:08:09+02:00"
-      },
-      {
-        "message": "RESEARCH: create Q086 successor file docs/research_design/Q086-fresh-q069-validation-2026-09-28.md",
-        "sha": "3be4fcd88afa0f71de8706b87224ab55b2e96ca0",
-        "timestamp": "2026-09-28T17:08:05+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ada701346621026a36a201930ff3341b377c7629",
+  "source_master_sha": "8fb3d95eef1f647c8a743c2366bdb79a8f9d15db",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36441324837"
+    "run_id": "36441476570"
   }
 }
