@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:50:35.241808+00:00",
+  "generated_at_utc": "2026-09-28T10:52:21.487280+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,16 @@
     ],
     "recent_commits": [
       {
+        "message": "GOVERNANCE: supersede Q076 pre-execution symbol overlap",
+        "sha": "b491c98006dedaf296372bbfd026f53269872dc3",
+        "timestamp": "2026-09-28T12:52:07+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "075d24ec7b66f3a1cf6065128d6ddbef002e3c91",
+        "timestamp": "2026-09-28T10:50:35Z"
+      },
+      {
         "message": "OPS: retrigger Q076 replication",
         "sha": "f26020c16f21dfc34b483cd390daf173051055c2",
         "timestamp": "2026-09-28T12:50:21+02:00"
@@ -194,16 +204,6 @@
         "message": "RESEARCH: add network-free Q076 fixed-rule performance",
         "sha": "9434f6bd1068534474e822563bd4a19839a1fcbd",
         "timestamp": "2026-09-28T12:49:57+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5c0ccdd9fdfb40e8ba818d53e2fa0c567d074721",
-        "timestamp": "2026-09-28T10:49:38Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6105a7ad394979ec90f6fa2324002ad763550f74",
-        "timestamp": "2026-09-28T10:49:23Z"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f26020c16f21dfc34b483cd390daf173051055c2",
+  "source_master_sha": "b491c98006dedaf296372bbfd026f53269872dc3",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36412070518"
+    "run_id": "36412237270"
   }
 }
