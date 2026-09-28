@@ -1,1 +1,1 @@
-Q079 performance retrigger — datetime binding fixed at workflow level; authorized source unchanged 2026-09-28.
+Q079 performance trigger — status-sync bridge enabled; execute current network-free worker 2026-09-28.
