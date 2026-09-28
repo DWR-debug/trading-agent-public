@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:50:10.808797+00:00",
+  "generated_at_utc": "2026-09-28T10:50:35.241808+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,16 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: retrigger Q076 replication",
+        "sha": "f26020c16f21dfc34b483cd390daf173051055c2",
+        "timestamp": "2026-09-28T12:50:21+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b17624ef9b8232d37cff771582ed8dcbcb660158",
+        "timestamp": "2026-09-28T10:50:10Z"
+      },
+      {
         "message": "OPS: trigger Q076 immutable replication",
         "sha": "5b9e8a82f57eeda38fab7e40f43317be23e6e38d",
         "timestamp": "2026-09-28T12:50:06+02:00"
@@ -194,16 +204,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "6105a7ad394979ec90f6fa2324002ad763550f74",
         "timestamp": "2026-09-28T10:49:23Z"
-      },
-      {
-        "message": "RESEARCH: freeze Q076 complete performance input bundle",
-        "sha": "6dc38d256c63905cf4d150db3548eda153065d55",
-        "timestamp": "2026-09-28T12:49:11+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q076 coverage and PIT runner",
-        "sha": "5f1b3f62c5eee0abc056da4028dc8789ca571bee",
-        "timestamp": "2026-09-28T12:49:09+02:00"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5b9e8a82f57eeda38fab7e40f43317be23e6e38d",
+  "source_master_sha": "f26020c16f21dfc34b483cd390daf173051055c2",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36412029132"
+    "run_id": "36412070518"
   }
 }
