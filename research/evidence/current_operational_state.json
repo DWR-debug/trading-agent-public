@@ -174,7 +174,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:35:00.815505+00:00",
+  "generated_at_utc": "2026-09-28T19:35:16.170611+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -304,6 +304,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "00205bffb6be3c5031cb28d84851b1925081a01e",
+        "timestamp": "2026-09-28T19:35:00Z"
+      },
+      {
         "message": "OPS: stage AGENT-025 for protected Copilot queue",
         "sha": "1dc6f9bd43410bd61e76b6f95774a1e51d95b6d8",
         "timestamp": "2026-09-28T21:34:59+02:00"
@@ -337,11 +342,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "0f6bec2e3ce304f2b0a49854647bcafa92b67f72",
         "timestamp": "2026-09-28T19:29:23Z"
-      },
-      {
-        "message": "TEST: verify protected Copilot reserve documentation",
-        "sha": "7e6b851d6155a0957930936755b2d8df36f9052b",
-        "timestamp": "2026-09-28T21:29:14+02:00"
       }
     ]
   },
@@ -411,12 +411,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1dc6f9bd43410bd61e76b6f95774a1e51d95b6d8",
+  "source_master_sha": "00205bffb6be3c5031cb28d84851b1925081a01e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36473215431"
+    "run_id": "36473243528"
   }
 }
