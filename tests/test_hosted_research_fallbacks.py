@@ -42,3 +42,9 @@ def test_hosted_q068_fallback_orders_authorization_before_performance():
         text.index("Publish Q068 ledger reconciliation"),
     ]
     assert positions == sorted(positions)
+
+def test_hosted_q068_fallback_avoids_nested_heredoc():
+    text=Path(".github/workflows/q068-hosted-fallback.yml").read_text()
+    assert "if [ -f research/authorizations/q068_performance_2026_09_28.json ]; then" not in text
+    assert "Prepare one-shot Q068 authorization" in text
+    assert "Publish Q068 authorization when needed" in text

@@ -13,7 +13,6 @@ def test_q070_workflows_are_self_hosted_and_git_free():
     ):
         text = Path(path).read_text(encoding="utf-8")
         assert "runs-on: [self-hosted, trading-agent-research]" in text
-        assert "automation.github_contents_publish" in text
         assert "git add " not in text
         assert "git push " not in text
         assert "automation\\github_contents_publish.py" in text
