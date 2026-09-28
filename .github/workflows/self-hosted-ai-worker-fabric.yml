@@ -68,6 +68,7 @@ jobs:
         env:
           AI_WORKER_TASK_ID: "${{ matrix.task }}"
           AI_WORKER_PROVIDER: "${{ matrix.provider }}"
+          GH_TOKEN: ${{ github.token }}
           AI_WORKER_STATE_PATH: "ops/ai_worker_state/${{ matrix.task }}__${{ matrix.provider }}.json"
           AI_WORKER_OUTPUT_PATH: "%RUNNER_TEMP%\ai-${{ matrix.task }}-${{ matrix.provider }}.json"
         run: |

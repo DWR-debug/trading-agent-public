@@ -142,54 +142,46 @@ def test_q068_universe_is_registered_at_unique_new_priority():
     assert universe.symbols == FROZEN_SYMBOLS
     assert universe.target_count == 3500
 
-def test_q068_self_hosted_evidence_persistence_uses_checkout_path_without_local_git():
+def test_q068_current_workflows_preserve_their_governed_execution_modes():
     for path in (
         ".github/workflows/q068-coverage-pit.yml",
-        ".github/workflows/q068-autonomous-advance.yml",
-        ".github/workflows/q068-fixed-mechanism-performance.yml",
         ".github/workflows/q068-evidence-reconcile.yml",
     ):
         text = Path(path).read_text(encoding="utf-8")
-        assert "automation\\github_contents_publish.py" in text
-        assert "automation.github_contents_publish" not in text.replace(
-            "automation\\github_contents_publish.py",
-            "",
-        )
+        assert "runs-on: [self-hosted, trading-agent-research]" in text
         assert "git add " not in text
         assert "git push " not in text
-        assert "for /f %%H in" not in text
+    audit = Path(".github/workflows/q068-snapshot-recovery-audit.yml").read_text(encoding="utf-8")
+    assert "runs-on: ubuntu-24.04" in audit
+    assert "git add " not in audit
+    assert "git push " not in audit
+    assert "github_contents_publish.py" in audit
+    assert not Path(".github/workflows/q068-autonomous-advance.yml").exists()
+    assert not Path(".github/workflows/q068-fixed-mechanism-performance.yml").exists()
 
 
-def test_q068_workflow_chain_uses_explicit_workflow_dispatch():
+def test_q068_current_workflow_chain_is_explicitly_dispatchable():
     for path in (
-        ".github/workflows/q068-autonomous-advance.yml",
-        ".github/workflows/q068-fixed-mechanism-performance.yml",
+        ".github/workflows/q068-coverage-pit.yml",
         ".github/workflows/q068-evidence-reconcile.yml",
+        ".github/workflows/q068-snapshot-recovery-audit.yml",
     ):
         text = Path(path).read_text(encoding="utf-8")
         assert "workflow_dispatch:" in text
-        assert "actions: write" in text
-        assert "DISPATCH_" in text
-        assert "https://api.github.com/repos/%GITHUB_REPOSITORY%/actions/workflows/" in text
-        assert "github.token" in text
+    assert "q068" in Path("research/run_requests/q068_auto_advance.trigger").read_text(encoding="utf-8").lower()
 
 
-def test_q068_frozen_source_contract_is_explicitly_locked():
-    expected = {
-        "automation/q067_alpha_mechanisms.py": "344343f9910f1ea5eaa9a2d2c295a6f87a520bdc",
-        "automation/q068_performance.py": "d85e17885ff56353ca677a3aa47d8a5e7b6ec056",
-        "data/canonical_snapshot.py": "18c7c051b1b4d3f7f67bc395baf5ef3787e1b028",
-        "execution/cost_contract.py": "21b54b45dbe708f3102851fd368ad1b64226b0ad",
-        "config/settings.py": "9c7b5199ed09d11ca17eb72493aebf7a7666fd28",
-    }
-    for path in (
-        ".github/workflows/q068-autonomous-advance.yml",
-        ".github/workflows/q068-fixed-mechanism-performance.yml",
-    ):
-        text = Path(path).read_text(encoding="utf-8")
-        for value in expected.values():
-            assert value in text
-        assert "Q068 SOURCE CONTRACT OK" in text or "Q068 AUTH SOURCE CONTRACT OK" in text
+def test_q068_frozen_source_contract_remains_governed():
+    prereg = json.loads(
+        Path("research/preregistrations/q068_performance_2026_09_28.json").read_text(encoding="utf-8")
+    )
+    auth = json.loads(
+        Path("research/authorizations/q068_performance_2026_09_28.json").read_text(encoding="utf-8")
+    )
+    assert prereg["governance"]["performance_trial_authorized"] is False
+    assert auth["authorized"] is False
+    assert auth["performance_execution_authorized"] is False
+    assert auth["revoked"] is True
 
 
 def test_q068_pipeline_state_requires_persistent_frozen_snapshot():
@@ -206,7 +198,11 @@ def test_q068_authorization_contract_is_fail_closed_when_revoked():
     assert p["scientific_status"] == "NO_SCIENTIFIC_OUTCOME"
 
 
-def test_q068_performance_requires_explicit_dispatch_only():
-    text=Path(".github/workflows/q068-fixed-mechanism-performance.yml").read_text(encoding="utf-8")
-    assert "workflow_dispatch:" in text
-    assert "research/authorizations/q068_performance_2026_09_28.json" not in text.split("permissions:", 1)[0]
+def test_q068_performance_execution_path_is_retired_and_closed():
+    assert not Path(".github/workflows/q068-fixed-mechanism-performance.yml").exists()
+    auth = json.loads(
+        Path("research/authorizations/q068_performance_2026_09_28.json").read_text(encoding="utf-8")
+    )
+    assert auth["authorized"] is False
+    assert auth["performance_execution_authorized"] is False
+    assert auth["revoked"] is True

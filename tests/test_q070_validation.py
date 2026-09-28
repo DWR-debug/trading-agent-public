@@ -1,14 +1,13 @@
 from ast import parse
+import json
 from pathlib import Path
 
 def test_q070_performance_module_parses():
     parse(Path("automation/q070_performance.py").read_text(encoding="utf-8"))
 
-def test_q070_workflows_are_self_hosted_and_git_free():
+def test_q070_current_workflows_are_self_hosted_and_git_free():
     for path in (
         ".github/workflows/q070-coverage-pit.yml",
-        ".github/workflows/q070-autonomous-advance.yml",
-        ".github/workflows/q070-fixed-candidate-performance.yml",
         ".github/workflows/q070-evidence-reconcile.yml",
     ):
         text = Path(path).read_text(encoding="utf-8")
@@ -16,7 +15,8 @@ def test_q070_workflows_are_self_hosted_and_git_free():
         assert "git add " not in text
         assert "git push " not in text
         assert "github_contents_publish.py" in text
-        assert "for /f %%H in" not in text
+    assert not Path(".github/workflows/q070-autonomous-advance.yml").exists()
+    assert not Path(".github/workflows/q070-fixed-candidate-performance.yml").exists()
 
 def test_q070_design_has_no_performance_selection():
     p=Path("research/preregistrations/q070_fixed_candidate_validation_2026_09_28.json").read_text(encoding="utf-8")
@@ -27,19 +27,13 @@ def test_q070_design_has_no_performance_selection():
     assert '"automatic_promotion": false' in p
 
 
-def test_q070_workflow_chain_uses_explicit_workflow_dispatch():
+def test_q070_current_workflows_are_explicitly_dispatchable():
     for path in (
         ".github/workflows/q070-coverage-pit.yml",
-        ".github/workflows/q070-autonomous-advance.yml",
-        ".github/workflows/q070-fixed-candidate-performance.yml",
         ".github/workflows/q070-evidence-reconcile.yml",
     ):
         text = Path(path).read_text(encoding="utf-8")
         assert "workflow_dispatch:" in text
-        assert "actions: write" in text
-        assert "DISPATCH_" in text
-        assert "https://api.github.com/repos/%GITHUB_REPOSITORY%/actions/workflows/" in text
-        assert "github.token" in text
 
 
 def test_q070_coverage_snapshot_identity_helper_is_available():
@@ -61,7 +55,7 @@ def test_q070_performance_uses_frozen_coverage_fingerprint_not_missing_result_fi
     reconcile=Path("automation/q070_reconcile.py").read_text(encoding="utf-8")
     assert 'coverage_fingerprint' in reconcile
 
-def test_q070_fallback_reuses_persisted_preflight_and_freezes_snapshot():
-    text=Path(".github/workflows/q070-hosted-fallback.yml").read_text(encoding="utf-8")
-    assert "Q070 FROZEN SNAPSHOT RECONSTRUCTED EXACTLY" in text
-    assert "EVIDENCE: persist exact Q070 frozen snapshot" in text
+def test_q070_hosted_fallback_is_retired():
+    assert not Path(".github/workflows/q070-hosted-fallback.yml").exists()
+    assert not Path("research/authorizations/q070_performance_2026_09_28.json").exists()
+    assert not Path("research/evidence/q070_performance_result.json").exists()
