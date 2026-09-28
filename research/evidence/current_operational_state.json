@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T21:05:47.067918+00:00",
+  "generated_at_utc": "2026-09-28T21:22:27.854992+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,44 +325,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "MERGE: add bounded local G1 parse diagnostics",
-        "sha": "18b15bdd5087269acf3a35188c4655a3b6215400",
-        "timestamp": "2026-09-28T23:05:34+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "b3582fdc005b9ff4a79f901f771904935f323eaa",
+        "timestamp": "2026-09-28T21:22:26Z"
       },
       {
-        "message": "TEST: guard local G1 diagnostic fields",
-        "sha": "432e7e5dbc1a2e0649bfe013e077b3b7747abe43",
-        "timestamp": "2026-09-28T23:04:15+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "0164843c05f209ea50c0a0c3ff40d25cd179ce5d",
+        "timestamp": "2026-09-28T21:22:25Z"
       },
       {
-        "message": "DIAG: expose non-sensitive G1 settings parse state",
-        "sha": "e96b274bd0923a571433cc04c74b4cedd07f2b17",
-        "timestamp": "2026-09-28T23:04:12+02:00"
+        "message": "TEST: assert BOM-prefixed attestation acceptance",
+        "sha": "3391f949752a62441b12da0700e70fac2b9ef335",
+        "timestamp": "2026-09-28T23:22:23+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b445446b431d136f58afc1b76fe05e097545abd6",
-        "timestamp": "2026-09-28T21:00:38Z"
+        "message": "TEST: cover BOM-prefixed local AI attestation",
+        "sha": "8809d85ba039015aa1be93a0f7de679e22e4b1fb",
+        "timestamp": "2026-09-28T23:22:17+02:00"
       },
       {
-        "message": "MERGE: make local AI smoke BOM-compatible on Windows",
-        "sha": "4d24cbcf301f5019772fba3878eed32a5e63800e",
-        "timestamp": "2026-09-28T23:00:27+02:00"
+        "message": "FIX: accept BOM-prefixed local AI attestation",
+        "sha": "7677467f2c0bdc0fc3c7d73eeff9d2557b951d73",
+        "timestamp": "2026-09-28T23:22:12+02:00"
       },
       {
-        "message": "TEST: guard BOM-compatible local AI smoke reader",
-        "sha": "f450c841797ba279fe3a9ccef3286af1301a2f30",
-        "timestamp": "2026-09-28T22:59:06+02:00"
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "998f923dc29913265516ff45b84a339da974aea2",
+        "timestamp": "2026-09-28T21:17:24Z"
       },
       {
-        "message": "FIX: parse Windows PowerShell UTF-8 settings with BOM",
-        "sha": "710c42c3191cac4dd0f3af454cd8b55858925a0c",
-        "timestamp": "2026-09-28T22:59:03+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "a941f50a05207d2ceeb2035d81b5d11873694d09",
+        "timestamp": "2026-09-28T21:12:43Z"
       },
       {
-        "message": "FIX: restore Constrained-Language-safe settings writer",
-        "sha": "c6629797c05344a49b4bc45846910640b4747cdc",
-        "timestamp": "2026-09-28T22:59:00+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "29af326b37ad1d59028c05e926132c598205e977",
+        "timestamp": "2026-09-28T21:12:40Z"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "18b15bdd5087269acf3a35188c4655a3b6215400",
+  "source_master_sha": "b3582fdc005b9ff4a79f901f771904935f323eaa",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36483753949"
+    "run_id": "36485632713"
   }
 }
