@@ -53,8 +53,9 @@
         "code": "089",
         "issue_number": 589,
         "performance_authorization_allowed": false,
-        "state": "PLANNED",
-        "trial_id": null
+        "preregistration_path": "research/preregistrations/q089_performance_2026_09_28.json",
+        "state": "PREREGISTERED_WAITING_PREFLIGHT",
+        "trial_id": "T-2026-09-28-089-PERFORMANCE"
       }
     ],
     "name": "active_research_registry",
@@ -167,7 +168,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:39:17.258097+00:00",
+  "generated_at_utc": "2026-09-28T19:42:12.305309+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -290,6 +291,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: dispatch Q081-R2 corrective preflight",
+        "sha": "b8513ff19ac0c12f2591b6a18220c0d743f47b72",
+        "timestamp": "2026-09-28T21:41:55+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "f9a2ad3706bc8946efd0f7d805006b5e0dd74877",
+        "timestamp": "2026-09-28T19:41:31Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "f2a59011cb3137e7c56595cbd3ae6b7a92c557be",
+        "timestamp": "2026-09-28T19:40:02Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "0405fc420fc6c65a33cd731ab9192e7fab2ec489",
+        "timestamp": "2026-09-28T19:39:57Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "5446b16e878e6a6ae2560081f34d81b81b43ef9c",
+        "timestamp": "2026-09-28T19:39:35Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ddba7e771c23b3a1081c51871c09f0bc263ce75e",
+        "timestamp": "2026-09-28T19:39:17Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "d6ffb5cdd8fbc7631b1b8bd72f2d077f103a89e8",
         "timestamp": "2026-09-28T19:39:01Z"
@@ -298,36 +329,6 @@
         "message": "OPS: dispatch fixed-window candidate discovery",
         "sha": "649dd979b1028bb76b7d10bdf6203d259c4ecd5a",
         "timestamp": "2026-09-28T21:38:56+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "24759d2195217e2c38a3a5ab43ef8dd3c8de83db",
-        "timestamp": "2026-09-28T19:38:43Z"
-      },
-      {
-        "message": "OPS: dispatch Q077 fixed candidate discovery",
-        "sha": "9e160e387b527565806556ac616b1a20b2c0314f",
-        "timestamp": "2026-09-28T21:38:31+02:00"
-      },
-      {
-        "message": "OPS: dispatch Q075 information channel feasibility",
-        "sha": "bc39a2c40a1635664c42f8ad3dc2a2f12a5c9dc8",
-        "timestamp": "2026-09-28T21:38:27+02:00"
-      },
-      {
-        "message": "OPS: dispatch Q084 candidate feasibility",
-        "sha": "9b92e1204ec94f68b3a8e23cf3a5bdc0ea443970",
-        "timestamp": "2026-09-28T21:38:24+02:00"
-      },
-      {
-        "message": "OPS: dispatch F2 quality acceleration feasibility",
-        "sha": "f5c08c66e0fe15978280909c4acb9966e9f0832f",
-        "timestamp": "2026-09-28T21:38:22+02:00"
-      },
-      {
-        "message": "OPS: dispatch F1 profitability source feasibility",
-        "sha": "e688dac7031233b352f4f04c5d5e46fc3a72b8f4",
-        "timestamp": "2026-09-28T21:38:19+02:00"
       }
     ]
   },
@@ -397,12 +398,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d6ffb5cdd8fbc7631b1b8bd72f2d077f103a89e8",
+  "source_master_sha": "b8513ff19ac0c12f2591b6a18220c0d743f47b72",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36473695086"
+    "run_id": "36474031529"
   }
 }
