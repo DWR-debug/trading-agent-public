@@ -146,8 +146,8 @@ jobs:
           scientific_outcome = latest.get("outcome", {}).get("scientific_outcome")
           if scientific_outcome is not None:
               assert state["latest_trial_status"] == scientific_outcome
-          assert state["current_trial_status"] in {"ARCHIVED_REJECTED", "ACTIVE", "COMPLETED"}
-          assert state["engineering_notes"]["current_queue_task"] == "Q-022-TREASURY-FAILURE-FOLLOWUP-DESIGN"
+          assert state["current_trial_status"] == "Q066_COMPLETED_DIAGNOSTIC_ONLY"
+          assert state["engineering_notes"]["current_queue_task"] == "Q024-HISTORICAL-XML"
           assert state["engineering_notes"]["last_completed_queue_task"] == "Q-021-TREASURY-AUCTION-FAILURE-MECHANISM-DIAGNOSIS"
           q020 = next(item for item in trial_entries if item["trial_id"] == "T-2026-09-26-046R1-PERFORMANCE")
           assert q020["outcome"]["scientific_outcome"] == "NO_PROMOTION_EVIDENCE"
