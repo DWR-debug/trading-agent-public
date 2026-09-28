@@ -5,6 +5,7 @@ runners can operate in REST/ZIP checkout mode as well as full git checkouts.
 """
 from __future__ import annotations
 
+import base64
 import os
 import time
 from pathlib import Path
@@ -35,6 +36,7 @@ def main() -> int:
 
     repository = os.environ["GITHUB_REPOSITORY"]
     state_path = state.as_posix()
+    desired = state.read_text(encoding="utf-8")
     os.environ.setdefault("PUBLISH_MESSAGE", "OPS: record local AI worker state")
 
     for attempt in range(1, MAX_ATTEMPTS + 1):
@@ -44,6 +46,19 @@ def main() -> int:
                 f"https://api.github.com/repos/{repository}/git/ref/heads/master",
             )
             base_sha = ref["object"]["sha"]
+            try:
+                current = github_contents_publish.api(
+                    "GET",
+                    f"https://api.github.com/repos/{repository}/contents/{state_path}?ref=master",
+                )
+            except RuntimeError as exc:
+                if ": 404:" not in str(exc):
+                    raise
+            else:
+                current_content = base64.b64decode(current["content"]).decode("utf-8")
+                if current_content == desired:
+                    print("LOCAL_AI_STATE_UNCHANGED", flush=True)
+                    return 0
             commit_sha = github_contents_publish.publish(
                 repository,
                 "master",
