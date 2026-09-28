@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:25:16.001172+00:00",
+  "generated_at_utc": "2026-09-28T15:25:35.659763+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a2629d0351cc0d5bea21cbe95d0a40a944474391",
+        "timestamp": "2026-09-28T15:25:16Z"
+      },
+      {
         "message": "RESEARCH: retry Q081-R1 preflight after source-hash correction",
         "sha": "87a2f2920c59230d53ca5f1e8c911ebb6652d96d",
         "timestamp": "2026-09-28T17:25:11+02:00"
@@ -190,11 +195,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "d18d8250870592a05f0c5f8999e4cd43cda8fcf9",
         "timestamp": "2026-09-28T15:23:24Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "489a9e540a905752ef42218a6bc00c3cf3343b78",
-        "timestamp": "2026-09-28T15:19:47Z"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "87a2f2920c59230d53ca5f1e8c911ebb6652d96d",
+  "source_master_sha": "a2629d0351cc0d5bea21cbe95d0a40a944474391",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36443400207"
+    "run_id": "36443450629"
   }
 }
