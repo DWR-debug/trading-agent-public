@@ -151,7 +151,6 @@ def coverage() -> dict:
 
     print("Q089_COVERAGE_PASS", ",".join(selected))
     print("Q089_SNAPSHOT_FP", snap["snapshot_fingerprint"])
-    print("Q089_INPUT_BUNDLE_FP", input_freeze["bundle_fingerprint"])
     return {
         "coverage": freeze,
         "selected": selected,
