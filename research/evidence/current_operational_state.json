@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T12:56:25.464322+00:00",
+  "generated_at_utc": "2026-09-28T13:04:21.557343+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: trigger Q079 self-hosted reproduction",
+        "sha": "1b8883f45e44bf683c2078069175bb3880b9e9ee",
+        "timestamp": "2026-09-28T15:04:13+02:00"
+      },
+      {
+        "message": "OPS: add self-hosted Q079 reproduction path",
+        "sha": "0cf3bb393b29bde39061738dc281d1724a2c24ad",
+        "timestamp": "2026-09-28T15:04:09+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "f88b5604515f72ef3f5886f3b923c025333c90e5",
+        "timestamp": "2026-09-28T12:58:10Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "8c3020de0debdbb9176372d381cf397e6643078a",
+        "timestamp": "2026-09-28T12:57:13Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "206fa2f000e000ceba3f7dfa13953e979af312ee",
+        "timestamp": "2026-09-28T12:56:25Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "62dd3ebc654b9c7d7c39a33b3ccec11d8743735d",
         "timestamp": "2026-09-28T12:56:11Z"
@@ -170,31 +195,6 @@
         "message": "OPS: reduce self-hosted QA cadence to hourly for research capacity",
         "sha": "de715fd4d330ffa21c00b4724639548d48ce3ffb",
         "timestamp": "2026-09-28T14:55:57+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9daa2b94369617532492d9db503a643c52845340",
-        "timestamp": "2026-09-28T12:52:38Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "58f6a3b24d8713ec824d280ce21b58995029d9c4",
-        "timestamp": "2026-09-28T12:52:25Z"
-      },
-      {
-        "message": "OPS: retrigger Q070 self-hosted advance after snapshot recovery hardening",
-        "sha": "7b3b347e5b886b1112a21f063ba66edb9e1bfe9d",
-        "timestamp": "2026-09-28T14:51:45+02:00"
-      },
-      {
-        "message": "FIX: self-hosted Q070 auto-advance recovers and persists frozen snapshot",
-        "sha": "2b38d7b6ac1c686cb5a2954f2ba273e5c77ccb42",
-        "timestamp": "2026-09-28T14:51:37+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "9fefdaf61826ed8a865044350313e984c0987a34",
-        "timestamp": "2026-09-28T12:39:22Z"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "62dd3ebc654b9c7d7c39a33b3ccec11d8743735d",
+  "source_master_sha": "1b8883f45e44bf683c2078069175bb3880b9e9ee",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36425055402"
+    "run_id": "36425992024"
   }
 }
