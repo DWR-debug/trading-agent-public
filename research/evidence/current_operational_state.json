@@ -156,7 +156,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:28:05.541061+00:00",
+  "generated_at_utc": "2026-09-28T19:28:22.364399+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -279,6 +279,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: harden Copilot queue release gate YAML",
+        "sha": "2584145916a01104ea009753b815a9fa96e5dfdb",
+        "timestamp": "2026-09-28T21:28:19+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4bcb701543be33d24a90aea57bc6f31a57d41c6f",
+        "timestamp": "2026-09-28T19:28:05Z"
+      },
+      {
         "message": "OPS: route agent-ready tasks into bounded Copilot queue",
         "sha": "577aa14d0891d783d4a6d0190c890c1b69171929",
         "timestamp": "2026-09-28T21:27:59+02:00"
@@ -307,16 +317,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "8c114ca568f6d53d3c41a726978e6f6eb2d08476",
         "timestamp": "2026-09-28T19:20:54Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f0d02e99a3ba5b614fb05ebd0982731462720ab7",
-        "timestamp": "2026-09-28T19:20:40Z"
-      },
-      {
-        "message": "DOCS: record local AI user-identity and service boundary",
-        "sha": "bfe3d705c498f1012406dc99ec92b24da7c3f382",
-        "timestamp": "2026-09-28T21:20:35+02:00"
       }
     ]
   },
@@ -378,12 +378,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "577aa14d0891d783d4a6d0190c890c1b69171929",
+  "source_master_sha": "2584145916a01104ea009753b815a9fa96e5dfdb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36472416911"
+    "run_id": "36472439376"
   }
 }
