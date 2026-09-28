@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
-  "recorded_on": "2026-09-27",
+  "recorded_on": "2026-09-28",
   "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
-  "current_stage": "Q066_ALPHA_FAILURE_MECHANISM_DIAGNOSIS",
+  "current_stage": "Q066_COMPLETED_DIAGNOSTIC_ONLY",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
@@ -107,7 +107,11 @@
     "Q045 evaluated eight fixed arms on the fresh Q043 universe using 2798 research periods and 700 holdout periods; no arm passed all 13 gates and no holdout-driven selection occurred.",
     "Q045 A3 residual momentum was the highest-gate-count arm at 8/13, with 381.59% research return and 29.24% holdout return, but 36.55% research drawdown and 38.00% holdout drawdown.",
     "Q045 CONTROL reached 7/13 gates; A5 low-beta reached 7/13; A2 cross-sectional momentum 4/13; A1 TSM consensus 3/13; A1b 52-week-high 2/13; A6 overnight/daytime 3/13; ENSEMBLE_ALL6 4/13.",
-    "Across the Q045 arms, drawdown and rolling-average-drawdown remain the dominant robustness bottleneck. The fresh replication therefore does not justify parameter tuning or promotion."
+    "Across the Q045 arms, drawdown and rolling-average-drawdown remain the dominant robustness bottleneck. The fresh replication therefore does not justify parameter tuning or promotion.",
+    "Q066/T-2026-09-28-066 completed as diagnostic-only on workflow 36379909584; evidence was committed to branch and merged into master.",
+    "Q066 exact aggregate reconstruction matched the stored Q041/T060 and Q045/T065 performance reports.",
+    "Q066 found persistent multi-regime drawdowns, high adverse-period cross-arm return co-movement, material concentration in some two-stock arms, and strategy-specific turnover/cost drag.",
+    "Q066 did not perform new market-data acquisition, parameter search, asset search, family ranking, holdout selection or promotion."
   ],
   "implications": [
     "T047R1 did not satisfy the unchanged evidence contract; Q020 is not reopened.",
@@ -142,7 +146,9 @@
     "Q040 source feasibility found technically accessible official data sources but confirmed that source access and release-time PIT are separate research gates.",
     "The second symbol-disjoint performance replication confirms that the project has promising return-bearing mechanisms but insufficient drawdown robustness under the current fixed 13-gate standard.",
     "Because the same failure dimension recurs across distinct mechanisms, the next scientific step is diagnosis of exposure, asset/regime concentration, correlation and turnover rather than changing signal parameters.",
-    "A third performance selection cycle should not start until Q066 isolates the dominant failure mechanisms and a preregistered diversification/risk hypothesis is defined."
+    "A third performance selection cycle should not start until Q066 isolates the dominant failure mechanisms and a preregistered diversification/risk hypothesis is defined.",
+    "Q066 closes the immediate uncertainty whether the Q041/Q045 drawdown problem is plausibly concentrated in a single asset, single regime, single sleeve or tail-loss cluster; the evidence instead points to persistent common-mode path risk with arm-specific concentration/cost effects.",
+    "The next research question should be a separately preregistered, fixed-rule diversification mechanism at the alpha/sleeve level rather than another parameter change to the existing signals."
   ],
   "unknowns": [
     "whether any orthogonal income-oriented mechanism survives independent fixed-rule validation",
@@ -167,12 +173,12 @@
     "whether Q041 A2/A3/A5's positive return and rolling evidence persists on a truly fresh symbol-disjoint universe",
     "whether A1b 52-week-high or A6 overnight/daytime adds independent signal information without worsening the existing drawdown gates",
     "whether event-information candidates with reproducible release timestamps can supply return streams orthogonal to price-only momentum",
-    "whether Q041/Q045 drawdowns are concentrated in a small number of symbols or market phases",
-    "whether A2/A3/A5 exposures overlap heavily during adverse periods despite different signal definitions",
-    "whether the fixed equal-weight ensemble dilutes or merely averages correlated drawdown risk",
-    "whether a parameter-free exposure transformation can reduce drawdown without simply converting the signal into a low-exposure placebo"
+    "whether a parameter-free exposure transformation can reduce drawdown without simply converting the signal into a low-exposure placebo",
+    "whether an alpha-level common-mode exposure rule can reduce adverse-period co-movement without simply creating a low-exposure strategy",
+    "whether any fixed diversification mechanism preserves positive return-bearing alpha on a fresh symbol-disjoint universe",
+    "whether implementation of a common-mode control introduces unacceptable turnover or cost drag"
   ],
-  "next_action": "Execute Q066 fixed-result failure-mechanism diagnosis using Q041/T060 and Q045/T065 artifacts only: decompose drawdown by symbol, sleeve, regime, overlap, correlation and turnover; no new performance search or parameter tuning.",
+  "next_action": "Prepare Q067 design-only preregistration for an alpha-level common-mode risk/diversification mechanism derived from Q066; freeze the mechanism before any fresh coverage/PIT or performance execution.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
