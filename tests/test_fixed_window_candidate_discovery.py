@@ -11,6 +11,7 @@ def test_fixed_window_discovery_reuses_first_symbol_fetch(monkeypatch, tmp_path)
     calls = []
 
     monkeypatch.setattr(discovery, "list_universes", lambda: ())
+    monkeypatch.setattr(discovery, "_prior_research_symbols", lambda: set())
     monkeypatch.setattr(discovery, "_window_timestamps", lambda symbol: (calls.append(symbol) or (timestamps, {})))
 
     report = discovery.run_discovery(
