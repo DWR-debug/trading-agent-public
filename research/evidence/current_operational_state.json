@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:53:47.292522+00:00",
+  "generated_at_utc": "2026-09-28T19:54:34.705286+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,6 +325,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: make local AI bootstrap Constrained-Language safe",
+        "sha": "76392b040f966c188efc8da0c46588e4fd54913b",
+        "timestamp": "2026-09-28T21:54:19+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "64e6590e365d6a516bf6d2f803624a2bad45c47f",
+        "timestamp": "2026-09-28T19:54:10Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "bffdf86d660cd405922ed2f1e37e1b44f0082bbf",
+        "timestamp": "2026-09-28T19:54:08Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c87460f70914ea262f76f2a790692722712f858f",
+        "timestamp": "2026-09-28T19:53:47Z"
+      },
+      {
         "message": "FIX: use persisted Q077-R1 discovery receipt for PIT",
         "sha": "9caa5956f796f8dbe20efd46726e70c4cb79e15b",
         "timestamp": "2026-09-28T21:53:32+02:00"
@@ -343,26 +363,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "363ce2c5cf4cdc9571029d55115514665456af08",
         "timestamp": "2026-09-28T19:52:57Z"
-      },
-      {
-        "message": "EVIDENCE: persist successful Q077-R1 discovery receipt",
-        "sha": "14e80da11744dfafb23a66e3d30bca1a4e223ab1",
-        "timestamp": "2026-09-28T21:52:41+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c1a4a0cf4469217b94d8d082ff9919816e70664f",
-        "timestamp": "2026-09-28T19:52:21Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e6b4396cdc823f8e17e1dd007bf45d34e4a32ea9",
-        "timestamp": "2026-09-28T19:52:05Z"
-      },
-      {
-        "message": "GOV: record Q081-R2 preflight pass",
-        "sha": "bd86512d797ae6804ed8abdae3d6d9e72582bf89",
-        "timestamp": "2026-09-28T21:51:54+02:00"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9caa5956f796f8dbe20efd46726e70c4cb79e15b",
+  "source_master_sha": "76392b040f966c188efc8da0c46588e4fd54913b",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36475366168"
+    "run_id": "36475455998"
   }
 }
