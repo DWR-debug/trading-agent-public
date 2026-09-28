@@ -176,6 +176,33 @@ def test_snapshot_from_preregistration_uses_data_contract(tmp_path):
     assert result["data_snapshot"]["format"] == "csv_ohlcv_common_calendar"
 
 
+def test_snapshot_from_preregistration_accepts_frozen_top_level_target_geometry(tmp_path):
+    from data.canonical_snapshot import snapshot_from_preregistration
+
+    base = datetime(2020, 1, 1, tzinfo=timezone.utc)
+
+    def fake_loader(symbol, interval, total, **kwargs):
+        assert total == 10
+        return [Bar(base + timedelta(days=i), 100.0 + i) for i in range(10)]
+
+    result = snapshot_from_preregistration(
+        {
+            "trial_id": "T-Q067-GEOMETRY-COMPAT",
+            "universe": "test",
+            "symbols": ["AAA", "BBB"],
+            "interval": "1d",
+            "requested_candles": 10,
+            "target_common_candles": 8,
+        },
+        output_root=tmp_path,
+        loader=fake_loader,
+    )
+
+    assert result["status"] == "COVERAGE_PASSED"
+    assert result["requested_candles"] == 10
+    assert result["target_common_candles"] == 8
+
+
 def test_canonical_snapshot_direct_layout_can_be_reloaded_and_verified(tmp_path):
     from data.canonical_snapshot import load_frozen_snapshot
 
