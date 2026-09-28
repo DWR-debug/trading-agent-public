@@ -29,9 +29,25 @@ def _g1_disabled() -> tuple[bool, str, object | None, str | None]:
     home = Path(os.environ.get("USERPROFILE", str(Path.home())))
     path = home / ".gemini" / "antigravity-cli" / "settings.json"
     try:
-        data = json.loads(path.read_text(encoding="utf-8-sig"))
-    except (OSError, json.JSONDecodeError) as exc:
+        raw = path.read_text(encoding="utf-8-sig")
+    except OSError as exc:
         return False, str(path), None, type(exc).__name__
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        # Antigravity may accept a settings form that is not strict JSON.
+        # We only need to prove the safety-critical setting itself is false;
+        # do not rewrite the user's settings merely because of formatting.
+        import re
+        matches = list(
+            re.finditer(r'(?i)"(UseG1Credits|useG1Credits)"\s*:\s*(true|false)', raw)
+        )
+        if matches:
+            value = matches[-1].group(2).lower() == "true"
+            return (not value), str(path), not value, "NON_STRICT_JSON"
+        return False, str(path), None, "JSONDecodeError"
+    if not isinstance(data, dict):
+        return False, str(path), None, "NOT_OBJECT"
     for key in ("UseG1Credits", "useG1Credits"):
         if key in data:
             value = data[key]
