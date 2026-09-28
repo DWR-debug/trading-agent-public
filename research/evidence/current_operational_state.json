@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T08:29:31.410901+00:00",
+  "generated_at_utc": "2026-09-28T08:45:05.794674+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -125,6 +125,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "DOCS: replace chat-only Q069 literature markers with stable references",
+        "sha": "dcffa90f2bb7ad4d8dca7666b32de31601867dcd",
+        "timestamp": "2026-09-28T10:44:49+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "af4adb41db45ea0e903358b5e03bdd49b1876cf0",
+        "timestamp": "2026-09-28T08:42:57Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "261e499b1128708ec091c51a58a47bdc61589326",
+        "timestamp": "2026-09-28T08:30:55Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "395450d88e5a782d2c0eb2453024d0c7a43c3494",
+        "timestamp": "2026-09-28T08:29:31Z"
+      },
+      {
         "message": "Merge pull request #537 from DWR-debug/research/q069-orthogonal-ohlcv-candidate-bank-20260928",
         "sha": "2e7eff73b74d9571c4191301d4f64730424c7c14",
         "timestamp": "2026-09-28T10:29:18+02:00"
@@ -143,26 +163,6 @@
         "message": "TEST: lock Q068 archive-checkout source contract",
         "sha": "955f8a1bec139660f83535ad6df8b22abee63c0c",
         "timestamp": "2026-09-28T10:27:15+02:00"
-      },
-      {
-        "message": "FIX: remove Git dependency from Q068 source verification",
-        "sha": "eef436328c75543ce4bbebeee07d497315a20360",
-        "timestamp": "2026-09-28T10:27:13+02:00"
-      },
-      {
-        "message": "FIX: fail closed per Q069 candidate history requirement",
-        "sha": "2fc7bfc1b83b37481c70ef3e0080a2c4ee58a520",
-        "timestamp": "2026-09-28T10:25:40+02:00"
-      },
-      {
-        "message": "TEST: lock Q069 candidate bank PIT boundaries",
-        "sha": "7e3018919404df975b19b39f822267896c6298c5",
-        "timestamp": "2026-09-28T10:25:10+02:00"
-      },
-      {
-        "message": "RESEARCH: preregister Q069 orthogonal OHLCV candidate bank",
-        "sha": "2778c7fa89403e1669bee982cf2b2759c9f73df2",
-        "timestamp": "2026-09-28T10:25:07+02:00"
       }
     ]
   },
@@ -224,12 +224,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2e7eff73b74d9571c4191301d4f64730424c7c14",
+  "source_master_sha": "dcffa90f2bb7ad4d8dca7666b32de31601867dcd",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36397656369"
+    "run_id": "36399211205"
   }
 }
