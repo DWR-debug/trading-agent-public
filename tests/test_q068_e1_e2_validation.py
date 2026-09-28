@@ -108,3 +108,13 @@ def test_q068_preregistration_freezes_exact_discovery_batch_and_governance():
         "orders_enabled": False,
         "automatic_promotion": False,
     }
+
+
+def test_q068_performance_preregistration_is_pre_registered_but_not_authorized():
+    prereg = json.loads(
+        Path("research/preregistrations/q068_performance_2026_09_28.json")
+        .read_text(encoding="utf-8")
+    )
+    assert prereg["status"] == "PREREGISTERED_PERFORMANCE"
+    assert prereg["governance"]["performance_trial_authorized"] is False
+    assert prereg["safety"]["live_trading_enabled"] is False
