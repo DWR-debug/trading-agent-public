@@ -13,3 +13,10 @@ def test_local_ai_smoke_reader_accepts_windows_powershell_utf8_bom():
     setup = Path("scripts/enable_local_ai_worker.ps1").read_text(encoding="utf-8")
     assert "Set-Content -Encoding UTF8 $settingsPath -Value $settingsText" in setup
     assert "New-Object System.Text.UTF8Encoding" not in setup
+
+
+def test_local_ai_smoke_reports_g1_parse_state():
+    text = Path("automation/local_ai_smoke.py").read_text(encoding="utf-8")
+    assert "g1_setting_value" in text
+    assert "g1_settings_error" in text
+    assert 'encoding="utf-8-sig"' in text
