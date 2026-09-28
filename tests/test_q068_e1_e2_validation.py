@@ -118,3 +118,12 @@ def test_q068_performance_preregistration_is_pre_registered_but_not_authorized()
     assert prereg["status"] == "PREREGISTERED_PERFORMANCE"
     assert prereg["governance"]["performance_trial_authorized"] is False
     assert prereg["safety"]["live_trading_enabled"] is False
+
+
+def test_q068_universe_is_registered_at_unique_new_priority():
+    from research.asset_universes import get_universe
+
+    universe = get_universe("validation_2026_09_28_q068_fresh_e1_e2")
+    assert universe.priority == 73
+    assert universe.symbols == FROZEN_SYMBOLS
+    assert universe.target_count == 3500
