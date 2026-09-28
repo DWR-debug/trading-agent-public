@@ -163,3 +163,38 @@ def test_receipt_trial_identity_mismatch_is_blocked(tmp_path):
     result = audit(tmp_path)
     assert result["status"] == "BLOCKED"
     assert any("trial_id mismatch" in item for item in result["errors"])
+
+from automation.research_governance_audit import audit
+
+
+def test_retired_authorizations_are_not_active(tmp_path):
+    from pathlib import Path
+    import json
+
+    _registry(tmp_path)
+    _write(tmp_path, "research/authorizations/legacy.json", {
+        "trial_id": "T-2026-09-27-052",
+        "authorized": True,
+        "performance_execution_authorized": True,
+    })
+    _write(tmp_path, "research/governance/retired_authorizations.json", {
+        "entries": [{
+            "path": "research/authorizations/legacy.json",
+            "trial_id": "T-2026-09-27-052",
+            "status": "RETIRED_HISTORICAL_AUTHORIZATION",
+        }]
+    })
+    result = audit(tmp_path)
+    assert result["status"] == "PASS"
+
+
+def test_unregistered_authorization_remains_blocked(tmp_path):
+    _registry(tmp_path)
+    _write(tmp_path, "research/authorizations/legacy.json", {
+        "trial_id": "T-2026-09-27-052",
+        "authorized": True,
+        "performance_execution_authorized": True,
+    })
+    result = audit(tmp_path)
+    assert result["status"] == "BLOCKED"
+    assert any("not in active research registry" in item for item in result["errors"])

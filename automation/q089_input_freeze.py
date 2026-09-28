@@ -36,8 +36,20 @@ def _fp(value: object) -> str:
 def freeze(coverage_root: Path, output_root: Path, result_path: Path) -> dict:
     manifest_path = coverage_root / "snapshot_manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    if manifest.get("trial_id") != COVERAGE_ID:
-        raise RuntimeError("Q089 input freeze coverage identity mismatch")
+
+    # The canonical snapshot manifest intentionally carries no trial_id. Bind
+    # identity through the dedicated Q089 coverage receipt and the immutable
+    # snapshot fingerprint instead of overloading the generic snapshot schema.
+    coverage_receipt_path = ROOT / "research" / "evidence" / "q089_coverage_result.json"
+    if not coverage_receipt_path.is_file():
+        raise RuntimeError("Q089 coverage receipt is missing")
+    coverage_receipt = json.loads(coverage_receipt_path.read_text(encoding="utf-8"))
+    if coverage_receipt.get("trial_id") != COVERAGE_ID:
+        raise RuntimeError("Q089 coverage receipt identity mismatch")
+    if coverage_receipt.get("status") != "COVERAGE_PASSED":
+        raise RuntimeError("Q089 coverage receipt is not passed")
+    if coverage_receipt.get("snapshot_fingerprint") != manifest.get("snapshot_fingerprint"):
+        raise RuntimeError("Q089 coverage snapshot fingerprint mismatch")
 
     symbols = list(manifest["symbols"])
     datasets = []
