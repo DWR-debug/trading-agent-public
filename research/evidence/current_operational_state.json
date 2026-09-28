@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T11:33:05.918236+00:00",
+  "generated_at_utc": "2026-09-28T11:33:28.367347+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,21 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: trigger hosted CI registry smoke test",
+        "sha": "1dc5ef802235178a6f0a84d9000da825bf6f2de5",
+        "timestamp": "2026-09-28T13:33:22+02:00"
+      },
+      {
+        "message": "INFRA: isolate recovered CI parser with minimal hosted job",
+        "sha": "ddd15d09819785b1643d88f8b21890ffde4496e5",
+        "timestamp": "2026-09-28T13:33:11+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c7a67d8be986ae4fd9cfb893053302a24780a7e2",
+        "timestamp": "2026-09-28T11:33:05Z"
+      },
+      {
         "message": "FIX: remove diagnostic issue gate from recovered CI",
         "sha": "2aa6fa75b625937e889027b66d1f94b6ea183077",
         "timestamp": "2026-09-28T13:32:49+02:00"
@@ -189,21 +204,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "d246c0ede6245c15ffee729c475b093eecc56ed1",
         "timestamp": "2026-09-28T11:31:54Z"
-      },
-      {
-        "message": "INFRA: add owner-gated CI recovered smoke trigger",
-        "sha": "12f5b712b991ca1c05bf0c2f834b8008ed449fd8",
-        "timestamp": "2026-09-28T13:31:51+02:00"
-      },
-      {
-        "message": "INFRA: rebuild CI workflow registration on fresh path",
-        "sha": "38db266b0e0138a8b6365e7d36732505faa47ff4",
-        "timestamp": "2026-09-28T13:31:35+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9a7046dba0ac66f61494f63af6a25459f80bbab6",
-        "timestamp": "2026-09-28T11:31:15Z"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2aa6fa75b625937e889027b66d1f94b6ea183077",
+  "source_master_sha": "1dc5ef802235178a6f0a84d9000da825bf6f2de5",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36416293230"
+    "run_id": "36416328512"
   }
 }
