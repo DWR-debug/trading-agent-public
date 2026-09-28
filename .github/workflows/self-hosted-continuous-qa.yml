@@ -1,4 +1,4 @@
-name: Continuous QA (hosted Python)
+name: Continuous QA (trusted self-hosted Windows)
 
 on:
   push:
@@ -25,7 +25,7 @@ concurrency:
 jobs:
   qa_lane:
     name: QA lane (${{ matrix.lane }})
-    runs-on: windows-latest
+    runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 75
     strategy:
       fail-fast: false
@@ -129,14 +129,14 @@ jobs:
     name: Aggregate QA gate
     if: always()
     needs: qa_lane
-    runs-on: ubuntu-24.04
+    runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 10
     steps:
       - name: Require all four lanes
         env:
           MATRIX_RESULT: ${{ needs.qa_lane.result }}
-        shell: bash
+        shell: cmd
         run: |
-          set -euo pipefail
-          test "$MATRIX_RESULT" = "success"
-          echo "AGGREGATE_QA=SUCCESS"
+          @echo off
+          if /I not "%MATRIX_RESULT%"=="success" exit /b 1
+          echo AGGREGATE_QA=SUCCESS

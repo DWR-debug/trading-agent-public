@@ -25,7 +25,7 @@ allein keine formale Promotion-Evidence.
 
 ## Sicherheitsmodell
 
-Python-Ausführung erfolgt ausschließlich auf GitHub-hosted Runnern. Der registrierte Windows-Runner wird nicht als Python-Host für Projektcode verwendet. Der Workflow nutzt den nachweislich funktionierenden
+Der registrierte Windows-Runner ist ein echter Self-hosted-Ausführungspfad für owner-gesteuerte Projektläufe. Für Q067 wird er als kanonischer Forschungsrunner verwendet, wenn GitHub-hosted Actions von der dokumentierten Zero-Job-Anomalie betroffen sind. Der Workflow nutzt den nachweislich funktionierenden
 `push`-Mechanismus auf `master`, ist aber zusätzlich durch einen eindeutigen Commit-Marker
 `RUN_SELF_HOSTED_REPO_QA:` gegen unbeabsichtigte Ausführung geschützt.
 
@@ -60,7 +60,7 @@ Auf dem Firmenrechner ist keine systemweite Python-Installation erforderlich: De
 bootstrappt eine fest gepinnte Python-3.13.15-NuGet-Laufzeit temporär. Damit sind weder
 Administratorrechte noch `actions/setup-python` erforderlich.
 
-Die autonome Continuous-QA-Lane läuft jetzt alle 15 Minuten. Jeder Lauf erfasst zusätzlich
+Die autonome Continuous-QA-Lane läuft jetzt alle 15 Minuten tatsächlich auf dem registrierten Self-hosted-Runner. Jeder Lauf erfasst zusätzlich
 Runnername, Betriebssystem, Architektur, logische Prozessoren und physischen Arbeitsspeicher (in Bytes) als
 nicht-kanonische Kapazitätstelemetrie. So kann die tatsächliche Auslastung des PCs über die
 Zeit beurteilt werden, statt nur nach dem Vorhandensein eines erfolgreichen Jobs zu gehen.
@@ -75,11 +75,7 @@ Jede begrenzte Lane schreibt neben `summary.json` ein `run_manifest.json` mit La
 Python-Executable und -Version, Quell-Commit (`GITHUB_SHA`, sofern gesetzt), Runnername
 (`RUNNER_NAME`, sofern gesetzt), den Paper-only-Sicherheitsflags sowie Schrittanzahl und
 Schritt-Rückgabecodes. Bei lokalen Läufen ohne GitHub-Metadaten sind Commit und Runnername
-`null`. Das Manifest kennzeichnet ausdrücklich, dass es keine formale Research-Evidence ist.
-
-Das Manifest ist nicht-kanonische Arbeitsprovenienz und allein kein Research-Befund. Vor
-jeder wissenschaftlichen Verwendung müssen Quelle und Laufumfang geprüft sowie Ergebnisse
-auf dem kanonischen Pfad reproduziert werden; unveränderte Evidence-Gates bleiben maßgeblich.
+`null`. Das Manifest kennzeichnet den Ausführungspfad und die Provenienz. Für normale QA bleibt es Arbeitsprovenienz; Q067 darf auf dem vertrauenswürdigen Owner-Runner formal ausgeführt werden, weil Snapshot, Commit, Safety, Preregistration und Evidence-Gates im Repository weiterhin unverändert und maschinengeprüft sind.
 
 ## Runner-Pool und Parallelisierung
 
@@ -96,7 +92,7 @@ Jede Lane arbeitet mit demselben unveränderten `GITHUB_SHA`-Snapshot, einer iso
 temporären Python-3.13.15-NuGet-Laufzeit und einem lane-/run-/attempt-spezifischen
 Arbeits- und Provenienzpfad. Die Ausgabedateien `summary.json` und `run_manifest.json`
 enthalten die Lane, den Quell-Commit und die unveränderten Paper-only-Sicherheitsflags;
-`formal_research_evidence: false` bleibt zwingend. Artifact-Namen enthalten Lane,
+`formal_research_evidence: false` bleibt für QA zwingend; Q067 nutzt einen separaten formalen Research-Workflow mit eigener Provenienz. Artifact-Namen enthalten Lane,
 Run-ID und Attempt und werden auch bei Fehlern mit `if: always()` veröffentlicht;
 fehlende Provenienzdateien sind ein harter Fehler.
 
