@@ -51,13 +51,31 @@ jobs:
           set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q070-advance\tools\python.exe"
           "%PY_EXE%" -c "import json; from pathlib import Path; from config import settings; c=json.loads(Path('research/evidence/q070_coverage_result.json').read_text(encoding='utf-8')); p=json.loads(Path('research/evidence/q070_pit_result.json').read_text(encoding='utf-8')); assert c['trial_id']=='T-2026-09-28-070-COVERAGE' and c['status']=='COVERAGE_PASSED'; assert p['trial_id']=='T-2026-09-28-070-PIT' and p['status']=='PIT_PASSED'; assert c['performance_trial_authorized'] is False and p['performance_trial_authorized'] is False; assert c['selection_used'] is False and p['selection_used'] is False; assert settings.PAPER_ONLY is True and settings.LIVE_TRADING_ENABLED is False and settings.ORDERS_ENABLED is False and settings.AUTOMATIC_PROMOTION is False; print('Q070 PREFLIGHT PASS')"
 
-      - name: Verify frozen Q070 snapshot before authorization
+      - name: Recover missing frozen Q070 snapshot deterministically
         shell: cmd
         run: |
           @echo off
           set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q070-advance\tools\python.exe"
+          if exist research\runs\q070_coverage\T-2026-09-28-070-COVERAGE\snapshot_manifest.json goto verify_snapshot
+          "%PY_EXE%" -c "import json; from pathlib import Path; from automation.q070_fresh_coverage import _coverage_snapshot_spec, _fp; from data.canonical_snapshot import snapshot_from_preregistration; prereg=json.loads(Path('research/preregistrations/q070_performance_2026_09_28.json').read_text()); c=json.loads(Path('research/evidence/q070_coverage_result.json').read_text()); p=json.loads(Path('research/evidence/q070_pit_result.json').read_text()); f=json.loads(Path('research/evidence/q070_asset_freeze.json').read_text()); assert prereg['trial_id']=='T-2026-09-28-070-PERFORMANCE'; assert c['trial_id']=='T-2026-09-28-070-COVERAGE' and c['status']=='COVERAGE_PASSED'; assert p['trial_id']=='T-2026-09-28-070-PIT' and p['status']=='PIT_PASSED'; assert prereg['asset_freeze_fingerprint']==_fp(f); assert f['snapshot_fingerprint']==c['snapshot_fingerprint']; rebuilt=snapshot_from_preregistration(_coverage_snapshot_spec(prereg),output_root=Path('research/runs/q070_coverage')); assert rebuilt['status']=='COVERAGE_PASSED'; assert rebuilt['snapshot_fingerprint']==c['snapshot_fingerprint']; assert len(rebuilt['data_snapshot']['datasets'])==8; print('Q070 FROZEN SNAPSHOT RECOVERED EXACTLY')"
+          :verify_snapshot
           if not exist research\runs\q070_coverage\T-2026-09-28-070-COVERAGE\snapshot_manifest.json exit /b 1
           "%PY_EXE%" -c "import json; from pathlib import Path; c=json.loads(Path('research/evidence/q070_coverage_result.json').read_text()); m=json.loads(Path('research/runs/q070_coverage/T-2026-09-28-070-COVERAGE/snapshot_manifest.json').read_text()); assert m['snapshot_fingerprint']==c['snapshot_fingerprint']; assert len(m['datasets'])==8; print('Q070 SNAPSHOT GATE PASS')"
+
+      - name: Persist recovered frozen Q070 snapshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-q070-advance"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "BASE_SHA_FILE=%RUNNER_TEMP%\q070_snapshot_base_sha.txt"
+          "%PY_EXE%" -c "import json,os,urllib.request; u='https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/ref/heads/master'; r=urllib.request.Request(u,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'}); print(json.load(urllib.request.urlopen(r,timeout=30))['object']['sha'])" > "%BASE_SHA_FILE%" || exit /b 1
+          set /p BASE_SHA=<"%BASE_SHA_FILE%"
+          if not defined BASE_SHA exit /b 1
+          set "PUBLISH_MESSAGE=EVIDENCE: persist exact Q070 frozen snapshot"
+          "%PY_EXE%" "%GITHUB_WORKSPACE%\automation\github_contents_publish.py" --repository "%GITHUB_REPOSITORY%" --branch master --base-sha "%BASE_SHA%" --file research/runs/q070_coverage/T-2026-09-28-070-COVERAGE/snapshot_manifest.json=research\runs\q070_coverage\T-2026-09-28-070-COVERAGE\snapshot_manifest.json --file research/runs/q070_coverage/T-2026-09-28-070-COVERAGE/datasets/SPG/1d.csv=research\runs\q070_coverage\T-2026-09-28-070-COVERAGE\datasets\SPG\1d.csv --file research/runs/q070_coverage/T-2026-09-28-070-COVERAGE/datasets/CCI/1d.csv=research\runs\q070_coverage\T-2026-09-28-070-COVERAGE\datasets\CCI\1d.csv --file research/runs/q070_coverage/T-2026-09-28-070-COVERAGE/datasets/EQIX/1d.csv=research\runs\q070_coverage\T-2026-09-28-070-COVERAGE\datasets\EQIX\1d.csv --file research/runs/q070_coverage/T-2026-09-28-070-COVERAGE/datasets/ESS/1d.csv=research\runs\q070_coverage\T-2026-09-28-070-COVERAGE\datasets\ESS\1d.csv --file research/runs/q070_coverage/T-2026-09-28-070-COVERAGE/datasets/ARE/1d.csv=research\runs\q070_coverage\T-2026-09-28-070-COVERAGE\datasets\ARE\1d.csv --file research/runs/q070_coverage/T-2026-09-28-070-COVERAGE/datasets/WY/1d.csv=research\runs\q070_coverage\T-2026-09-28-070-COVERAGE\datasets\WY\1d.csv --file research/runs/q070_coverage/T-2026-09-28-070-COVERAGE/datasets/PLD/1d.csv=research\runs\q070_coverage\T-2026-09-28-070-COVERAGE\datasets\PLD\1d.csv --file research/runs/q070_coverage/T-2026-09-28-070-COVERAGE/datasets/KIM/1d.csv=research\runs\q070_coverage\T-2026-09-28-070-COVERAGE\datasets\KIM\1d.csv || exit /b 1
 
       - name: Create one-shot authorization
         env:
