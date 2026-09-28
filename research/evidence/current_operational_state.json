@@ -93,14 +93,7 @@
         "paid_fallback_allowed": false,
         "starts_utc": "2026-10-01T00:00:00Z"
       },
-      "current_pending_requests": [
-        {
-          "issue_number": "642",
-          "lane": "lane1",
-          "request_file": "agent_requests/lane1/AGENT-026.request",
-          "task_id": "AGENT-026"
-        }
-      ],
+      "current_pending_requests": [],
       "local_ai_smoke_after_research_lanes": true,
       "self_hosted_parallel_slots": 2
     },
@@ -174,7 +167,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:37:32.778494+00:00",
+  "generated_at_utc": "2026-09-28T19:38:43.708483+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -291,57 +284,50 @@
   },
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
-    "agent_queue_requests": [
-      {
-        "issue_number": "642",
-        "lane": "lane1",
-        "request_file": "agent_requests/lane1/AGENT-026.request",
-        "task_id": "AGENT-026"
-      }
-    ],
+    "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: dispatch Q077 fixed candidate discovery",
+        "sha": "9e160e387b527565806556ac616b1a20b2c0314f",
+        "timestamp": "2026-09-28T21:38:31+02:00"
+      },
+      {
+        "message": "OPS: dispatch Q075 information channel feasibility",
+        "sha": "bc39a2c40a1635664c42f8ad3dc2a2f12a5c9dc8",
+        "timestamp": "2026-09-28T21:38:27+02:00"
+      },
+      {
+        "message": "OPS: dispatch Q084 candidate feasibility",
+        "sha": "9b92e1204ec94f68b3a8e23cf3a5bdc0ea443970",
+        "timestamp": "2026-09-28T21:38:24+02:00"
+      },
+      {
+        "message": "OPS: dispatch F2 quality acceleration feasibility",
+        "sha": "f5c08c66e0fe15978280909c4acb9966e9f0832f",
+        "timestamp": "2026-09-28T21:38:22+02:00"
+      },
+      {
+        "message": "OPS: dispatch F1 profitability source feasibility",
+        "sha": "e688dac7031233b352f4f04c5d5e46fc3a72b8f4",
+        "timestamp": "2026-09-28T21:38:19+02:00"
+      },
+      {
+        "message": "OPS: autonomous agent queue routing",
+        "sha": "39c86c270460d3d80a02ba9ed6b0f91f5ca79a24",
+        "timestamp": "2026-09-28T19:37:37Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c2021e40bc664a99ffddd29a91e2935d9caee48b",
+        "timestamp": "2026-09-28T19:37:32Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "fe94bbf698c4ada29f8e65adc2a9b865773363e5",
         "timestamp": "2026-09-28T19:37:18Z"
-      },
-      {
-        "message": "OPS: stage AGENT-026 for protected Copilot queue",
-        "sha": "fdad4ae8c639d47ebbb3d3ad1fd41104bbf0d143",
-        "timestamp": "2026-09-28T21:37:17+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "61efbb500c70d57a798350689f7a505e31454ac4",
-        "timestamp": "2026-09-28T19:37:05Z"
-      },
-      {
-        "message": "OPS: dispatch Q083 candidate feasibility",
-        "sha": "7f80edb29b16c3c5ff6ec111c1e57969da67fb92",
-        "timestamp": "2026-09-28T21:36:59+02:00"
-      },
-      {
-        "message": "OPS: dispatch Q081-R1 corrective preflight",
-        "sha": "591f35256bc721537853ff3869467729af1916e1",
-        "timestamp": "2026-09-28T21:36:55+02:00"
-      },
-      {
-        "message": "OPS: dispatch Q089 fresh coverage and PIT",
-        "sha": "1ad5254ddf2743096addf9558ec0f0fe253d776f",
-        "timestamp": "2026-09-28T21:36:51+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a305cab552881ea431443880c79afeebb3c4cd4d",
-        "timestamp": "2026-09-28T19:36:23Z"
-      },
-      {
-        "message": "OPS: run bounded Gemini research workers on permanent PC",
-        "sha": "f7b8dff1f183e9ba4f943a5206137c2b28eb9052",
-        "timestamp": "2026-09-28T21:36:08+02:00"
       }
     ]
   },
@@ -411,12 +397,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "fe94bbf698c4ada29f8e65adc2a9b865773363e5",
+  "source_master_sha": "9e160e387b527565806556ac616b1a20b2c0314f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36473508312"
+    "run_id": "36473625637"
   }
 }
