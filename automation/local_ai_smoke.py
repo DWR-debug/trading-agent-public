@@ -29,7 +29,7 @@ def _g1_disabled() -> tuple[bool, str]:
     home = Path(os.environ.get("USERPROFILE", str(Path.home())))
     path = home / ".gemini" / "antigravity-cli" / "settings.json"
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
+        data = json.loads(path.read_text(encoding="utf-8-sig"))
     except (OSError, json.JSONDecodeError):
         return False, str(path)
     for key in ("UseG1Credits", "useG1Credits"):
