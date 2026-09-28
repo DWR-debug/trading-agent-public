@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T16:44:25.153925+00:00",
+  "generated_at_utc": "2026-09-28T16:44:44.856523+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -228,6 +228,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: deduplicate F1 feasibility runs with latest-run-wins",
+        "sha": "b7b6afbc0fefd2cec952007fa12175dedcc4f4ff",
+        "timestamp": "2026-09-28T18:44:31+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e80319ca6b4930d15c137482d88071ad3f43a05a",
+        "timestamp": "2026-09-28T16:44:25Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "43c236e2fb24b0e409da09bb6ab6ddcb700c5bd2",
         "timestamp": "2026-09-28T16:44:12Z"
@@ -256,16 +266,6 @@
         "message": "OPS: retrigger Q089 coverage/PIT after publisher race fix",
         "sha": "c6ed04af629438974b87e82e9e27a8dbe801892d",
         "timestamp": "2026-09-28T18:42:21+02:00"
-      },
-      {
-        "message": "FIX: make evidence publisher race-safe",
-        "sha": "e1bbafe60fd6013994af5dc65732489617aab4db",
-        "timestamp": "2026-09-28T18:42:08+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6b51f83572dd784f3e8ed336cb920e46494521bd",
-        "timestamp": "2026-09-28T16:41:03Z"
       }
     ]
   },
@@ -327,12 +327,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "43c236e2fb24b0e409da09bb6ab6ddcb700c5bd2",
+  "source_master_sha": "b7b6afbc0fefd2cec952007fa12175dedcc4f4ff",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36453172957"
+    "run_id": "36453221800"
   }
 }
