@@ -16,12 +16,6 @@
       "copilot_cli_queue": ".github/workflows/agent-request-queue.yml",
       "current_pending_requests": [
         {
-          "issue_number": "489",
-          "lane": "lane0",
-          "request_file": "agent_requests/lane0/AGENT-Q040-OFFICIAL-EVENT-SOURCE-FEASIBILITY.request",
-          "task_id": "AGENT-Q040-OFFICIAL-EVENT-SOURCE-FEASIBILITY"
-        },
-        {
           "issue_number": "335",
           "lane": "lane1",
           "request_file": "agent_requests/lane1/AGENT-Q024-GAP-2011-2017.request",
@@ -67,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T07:34:56.793644+00:00",
+  "generated_at_utc": "2026-09-28T07:35:58.205227+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -134,12 +128,6 @@
   "repository_state": {
     "agent_queue_requests": [
       {
-        "issue_number": "489",
-        "lane": "lane0",
-        "request_file": "agent_requests/lane0/AGENT-Q040-OFFICIAL-EVENT-SOURCE-FEASIBILITY.request",
-        "task_id": "AGENT-Q040-OFFICIAL-EVENT-SOURCE-FEASIBILITY"
-      },
-      {
         "issue_number": "335",
         "lane": "lane1",
         "request_file": "agent_requests/lane1/AGENT-Q024-GAP-2011-2017.request",
@@ -157,6 +145,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: retire stale closed Q040 agent request",
+        "sha": "0f066e3e0eb8740a857d0bd6fc8ec25d588266d2",
+        "timestamp": "2026-09-28T09:35:42+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b2fa5ed8faa75fd1a358e05d23bd5c6e6ffc6f10",
+        "timestamp": "2026-09-28T07:34:56Z"
+      },
       {
         "message": "Merge pull request #529 from DWR-debug/fix/q068-test-fixture-20260928",
         "sha": "9b07c177106994b17ecb9dd72ac40967053362f3",
@@ -186,16 +184,6 @@
         "message": "RESEARCH: Q068 fresh E1/E2 validation pipeline",
         "sha": "fb625604bf0c9948b71caef3169d5478f796a69a",
         "timestamp": "2026-09-28T09:25:10+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "0bb9e2b9924f27bd43f53b90dc18d65e8b5402d3",
-        "timestamp": "2026-09-28T07:20:51Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c8a363bb7f281c61c1da0e5f86cce384bbef1ec8",
-        "timestamp": "2026-09-28T07:17:49Z"
       }
     ]
   },
@@ -257,12 +245,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9b07c177106994b17ecb9dd72ac40967053362f3",
+  "source_master_sha": "0f066e3e0eb8740a857d0bd6fc8ec25d588266d2",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36392414263"
+    "run_id": "36392508868"
   }
 }
