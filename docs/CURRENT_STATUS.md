@@ -1,6 +1,6 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `120ad3504b514268d56032f68ebf375ef1d0712a`
+**Current operational snapshot:** `5b91675d78a24d709aeb5337848ca9f6876f026d`
 
 **Generated (UTC):** `2026-09-28T05:04:14.909943+00:00`
 
@@ -21,11 +21,13 @@
 
 ### Scientific status
 
-- Latest recorded formal result: **NO_ARM_PASSED_ALL_T052_GATES** for `T-2026-09-27-056`.
-- Q026 is recorded as **DATA_INVALID / NO_SCIENTIFIC_OUTCOME**; it did not produce performance evidence.
-- Q023 is recorded as **COVERAGE_VALIDATED** and Q025 as **DATE_PIT_VALIDATED**; these are data-contract findings, not promotion evidence.
-- No current candidate is authorized for promotion or live execution.
-- Candidate discovery and PIT feasibility remain the required steps before any new formal performance evaluation.
+- Latest formal performance trial: **T-2026-09-27-065 / NO_ARM_PASSED_ALL_13_GATES**.
+- **Q066/T-2026-09-28-066** is completed as **DIAGNOSTIC_ONLY**; it reconstructed Q041/T060 and Q045/T065 exactly from immutable Actions evidence.
+- Q066 identifies persistent multi-regime drawdowns and high adverse-period return co-movement as the shared risk patterns; concentration amplifies some arms, while turnover/cost is a separate failure mode for high-churn arms.
+- Q041/T060 is now canonically present in the trial ledger; Q066 is also canonically recorded.
+- **Q067 is DESIGN_ONLY_UNRANKED** with two follow-up mechanisms: alpha-level common-mode exposure control and turnover hysteresis.
+- No current candidate is authorized for promotion or live execution. Any Q067 performance study remains blocked until ex-ante parameter freeze, fresh symbol-disjoint coverage and PIT validation.
+- Current generic master Actions lanes are showing immediate failures with no job records; this is treated as infrastructure evidence, not scientific evidence. Q066's dedicated workflow itself completed successfully.
 
 ### Resource policy
 
@@ -35,6 +37,15 @@
 - Legacy 500-EUR operational canary remains separate.
 - Deterministic research stays on reproducible runner paths.
 - Agent output is never scientific evidence by itself.
+
+## Q067 — next research design
+
+Two unranked mechanisms are frozen at the design level only:
+
+- **E1 Alpha Common-Mode Throttle:** tests whether dependence among alpha-sleeve return streams can be controlled without collapsing exposure.
+- **E2 Turnover Hysteresis:** tests whether deterministic rebalance deadbands can reduce cost drag in high-churn mechanisms without redefining the signal.
+
+Neither mechanism has performance evidence yet. The existing 13-gate contract remains unchanged.
 
 ## Safety
 
