@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 import pytest
 
@@ -93,3 +93,27 @@ def test_t_plus_one_text_mutation_cannot_change_state() -> None:
     baseline = c31_persistence_state(base, dt(21, 23))
     mutated = base + (record("AAA", 22, 22, -10000.0),)
     assert c31_persistence_state(mutated, dt(21, 23)) == baseline
+
+
+def test_daily_mean_uses_utc_calendar_date() -> None:
+    plus_two = timezone(timedelta(hours=2))
+    records = (
+        NewsToneRecord(
+            record_id="UTC-A",
+            observed_at=datetime(2026, 1, 2, 1, 0, tzinfo=plus_two),
+            symbol="AAA",
+            tone=1.0,
+        ),
+        NewsToneRecord(
+            record_id="UTC-B",
+            observed_at=datetime(2026, 1, 1, 23, 30, tzinfo=timezone.utc),
+            symbol="AAA",
+            tone=3.0,
+        ),
+    )
+    daily = daily_mean_tone(
+        records,
+        datetime(2026, 1, 2, 2, 0, tzinfo=timezone.utc),
+    )
+    assert list(daily) == [datetime(2026, 1, 1, tzinfo=timezone.utc).date()]
+    assert daily[datetime(2026, 1, 1, tzinfo=timezone.utc).date()] == pytest.approx(2.0)

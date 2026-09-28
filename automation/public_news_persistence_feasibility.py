@@ -11,7 +11,7 @@ import math
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 
 
 @dataclass(frozen=True)
@@ -63,7 +63,7 @@ def daily_mean_tone(
     """Aggregate visible article tone by UTC observation date."""
     grouped: dict[date, list[float]] = defaultdict(list)
     for record in visible_news(records, as_of):
-        grouped[record.observed_at.astimezone().date()].append(float(record.tone))
+        grouped[record.observed_at.astimezone(timezone.utc).date()].append(float(record.tone))
     return {
         day: sum(values) / len(values)
         for day, values in sorted(grouped.items())
