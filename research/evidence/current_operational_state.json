@@ -106,7 +106,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:51:55.347987+00:00",
+  "generated_at_utc": "2026-09-28T15:52:43.722049+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -220,6 +220,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: trigger Q081-R1 final preflight through control plane",
+        "sha": "4ff8713d7deb826a47a864adeb739dbbf928521f",
+        "timestamp": "2026-09-28T17:52:34+02:00"
+      },
+      {
+        "message": "OPS: include final Q081-R1 trigger in control-plane dispatch",
+        "sha": "242d470b2745211ed583be5714be7ce94ecefe45",
+        "timestamp": "2026-09-28T17:52:26+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "77d6069bcca01c6240c8dc5cff08f47df4d07b3b",
+        "timestamp": "2026-09-28T15:51:55Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "2dff236634d726093bc3c658763ef893c57cfd10",
         "timestamp": "2026-09-28T15:51:38Z"
@@ -243,21 +258,6 @@
         "message": "OPS: rerun Q081-R1 after governance family-ID fix",
         "sha": "eb0ff7c266d2d119bbaaa3d5c2bf4d8bc7d15d41",
         "timestamp": "2026-09-28T17:51:06+02:00"
-      },
-      {
-        "message": "FIX: distinguish same-trial phase IDs from cross-trial references",
-        "sha": "cb69bd0a457057b6e9cba4ad808ff602486b56db",
-        "timestamp": "2026-09-28T17:50:54+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "39b5ab8301e4f6b7e4eca563385884d9a958c036",
-        "timestamp": "2026-09-28T15:50:31Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "af13b825b90f4d55afc247da1d972c0c8bf379ec",
-        "timestamp": "2026-09-28T15:50:17Z"
       }
     ]
   },
@@ -319,12 +319,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2dff236634d726093bc3c658763ef893c57cfd10",
+  "source_master_sha": "4ff8713d7deb826a47a864adeb739dbbf928521f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36446770318"
+    "run_id": "36446886469"
   }
 }
