@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T22:24:45.775608+00:00",
+  "generated_at_utc": "2026-09-28T22:36:05.013470+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,44 +325,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "FIX: anchor Antigravity headless settings helper in master",
-        "sha": "9f39ee7d8f7a0b51333ddd7e84cbc73bbce205a4",
-        "timestamp": "2026-09-29T00:24:33+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "2e64619fadeaaa56933642b101010291157f24fc",
+        "timestamp": "2026-09-28T22:36:03Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "eb4bc976a7ad717a2bf5c497267c71c210346be5",
+        "timestamp": "2026-09-28T22:36:02Z"
+      },
+      {
+        "message": "CLEANUP: retire brittle Antigravity settings helper trigger",
+        "sha": "f53e28aba824329e246dd77b4938472d88c005d2",
+        "timestamp": "2026-09-29T00:35:56+02:00"
+      },
+      {
+        "message": "FIX: remove strict settings rewrite from AI worker loop",
+        "sha": "09775e5876af29b1cdbfa41372df83c134763eff",
+        "timestamp": "2026-09-29T00:35:51+02:00"
+      },
+      {
+        "message": "FIX: provide deterministic repo context to headless Gemini",
+        "sha": "6a9f6e2e494cd4ecd70c73e07126e6b2218e942a",
+        "timestamp": "2026-09-29T00:35:47+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "087071339c5bee339e4e4fd25d0f9fcf8a963f20",
+        "timestamp": "2026-09-28T22:26:51Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "dbf3c16408d23d5373f26bd7d12a88e2d4d0ab46",
+        "timestamp": "2026-09-28T22:25:16Z"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "76aa67a3cca9b37b825e6ed05d2a2784ca96a74e",
-        "timestamp": "2026-09-28T22:18:53Z"
-      },
-      {
-        "message": "OPS: trigger permanent loop on headless settings helper",
-        "sha": "9af4b10fc2e55323d82a2a93e93803fcac262e4a",
-        "timestamp": "2026-09-29T00:18:38+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "603aea75b74d6de33db1820477a45b03cdf90d25",
-        "timestamp": "2026-09-28T22:13:18Z"
-      },
-      {
-        "message": "FIX: invoke Antigravity settings normalizer as module",
-        "sha": "c4945a8cc5a1428037a33f129e6908f895f5ac94",
-        "timestamp": "2026-09-29T00:13:07+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "732241268ba867803d990b13bb3542a1baa3d857",
-        "timestamp": "2026-09-28T22:12:28Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "34add784e5a76d42936d304b28c7161b95caf0f8",
-        "timestamp": "2026-09-28T22:12:24Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "8cf9e0c800ce60dc49f7beb37ce4c368b7d0175a",
-        "timestamp": "2026-09-28T22:12:19Z"
+        "sha": "d5581994f4d98c2d98cb30e2af87cc2b676fff61",
+        "timestamp": "2026-09-28T22:24:45Z"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9f39ee7d8f7a0b51333ddd7e84cbc73bbce205a4",
+  "source_master_sha": "2e64619fadeaaa56933642b101010291157f24fc",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36492208876"
+    "run_id": "36493325786"
   }
 }
