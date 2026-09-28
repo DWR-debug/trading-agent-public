@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "updated": "2026-09-28",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "5392fe8d47efaf1d82de94ecded484209ea1f768",
+  "master_commit": "5b91675d78a24d709aeb5337848ca9f6876f026d",
   "latest_formal_trial": "T-2026-09-27-065",
   "latest_trial_status": "NO_ARM_PASSED_ALL_13_GATES",
   "next_reserved_trial": null,
-  "next_research_focus": "Q067 ex-ante design of an alpha-level common-mode risk/diversification mechanism from Q066 findings; no performance evaluation until fresh coverage/PIT and parameter freeze.",
+  "next_research_focus": "Q067 design-only: two unranked follow-up mechanisms derived from Q066 — alpha-level common-mode exposure control and turnover hysteresis; no performance evaluation until parameter freeze, fresh coverage and PIT.",
   "cleanup_status": "completed_h06_and_q017_coverage_hardening",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -26,7 +26,7 @@
       "artifact_sha256": "sha256:b32f2cffdff27091187d7f7f7ac6759c23b2e141081f6d9c9143e1c790d73da9"
     },
     "current_master_qa_run_id": null,
-    "current_master_qa_run_status": "pending_after_q066_state_synchronization",
+    "current_master_qa_run_status": "UNVERIFIED_AFTER_STATE_MERGE_ZERO_JOB_GENERIC_ACTION_FAILURES",
     "current_master_qa_failure_run_id": 36254919993,
     "current_master_qa_verified": false,
     "current_master_qa_tests_passed": null,
@@ -539,7 +539,7 @@
   "current_queue_task": "Q-2026-09-27-066-ALPHA-FAILURE-MECHANISM-DIAGNOSIS-2026-09-28",
   "last_completed_queue_task": "Q-2026-09-27-065-Q045-FIXED-ALPHA-REPLICATION-PERFORMANCE-2026-09-27",
   "master_commit_semantics": "last_verified_master_commit_before_this_state_update; this field must not be interpreted as a self-referential current-HEAD field",
-  "state_sync_verified_at": "2026-09-27T19:05:30Z",
+  "state_sync_verified_at": "2026-09-28T05:06:00Z",
   "project_milestone": {
     "name": "FIRST_PRESENTABLE_RESULT",
     "anchored_on": "2026-09-25",
@@ -623,7 +623,7 @@
     "holdout_used": false,
     "remaining_events_without_timestamp": 31
   },
-  "latest_master_commit": "5392fe8d47efaf1d82de94ecded484209ea1f768",
+  "latest_master_commit": "5b91675d78a24d709aeb5337848ca9f6876f026d",
   "q027": {
     "status": "COMPLETED_DIAGNOSTIC_ONLY",
     "source_trial": "T-2026-09-27-052",
@@ -995,5 +995,16 @@
     "performance_execution_authorized": false,
     "selection_used": false,
     "holdout_used_for_selection": false
+  },
+  "q067": {
+    "status": "DESIGN_ONLY_UNRANKED",
+    "design": "research/preregistrations/q067_alpha_common_mode_and_turnover_design_2026_09_28.json",
+    "document": "docs/research_design/Q067-alpha-common-mode-turnover-design-2026-09-28.md",
+    "performance_execution_authorized": false,
+    "holdout_selection": false,
+    "mechanisms": [
+      "E1_ALPHA_COMMON_MODE_THROTTLE",
+      "E2_TURNOVER_HYSTERESIS"
+    ]
   }
 }
