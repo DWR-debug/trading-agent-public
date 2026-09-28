@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T07:17:49.512476+00:00",
+  "generated_at_utc": "2026-09-28T07:25:23.269756+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -127,6 +127,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: Q068 fresh E1/E2 validation pipeline",
+        "sha": "fb625604bf0c9948b71caef3169d5478f796a69a",
+        "timestamp": "2026-09-28T09:25:10+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "0bb9e2b9924f27bd43f53b90dc18d65e8b5402d3",
+        "timestamp": "2026-09-28T07:20:51Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c8a363bb7f281c61c1da0e5f86cce384bbef1ec8",
+        "timestamp": "2026-09-28T07:17:49Z"
+      },
+      {
         "message": "FIX: restore self-hosted QA provenance and current regression contracts",
         "sha": "66a4c6e40193a080b5fa67e0eb0ee991d81fa72f",
         "timestamp": "2026-09-28T09:17:32+02:00"
@@ -150,21 +165,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "df494e3d1158129ce41488be7d37c610cb14f718",
         "timestamp": "2026-09-28T06:41:52Z"
-      },
-      {
-        "message": "FIX: align canonical snapshot geometry with frozen preregistration",
-        "sha": "d2c498889a4f5d175a6dd1eaa9bef7e16340b347",
-        "timestamp": "2026-09-28T08:41:38+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "bee73be5b03e9de63c8e74eea56b66b1e3c2771a",
-        "timestamp": "2026-09-28T06:40:49Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "c48341bf525053189ab281b2c35a98232ac314fd",
-        "timestamp": "2026-09-28T06:35:22Z"
       }
     ]
   },
@@ -226,12 +226,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "66a4c6e40193a080b5fa67e0eb0ee991d81fa72f",
+  "source_master_sha": "fb625604bf0c9948b71caef3169d5478f796a69a",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36390881156"
+    "run_id": "36391552978"
   }
 }
