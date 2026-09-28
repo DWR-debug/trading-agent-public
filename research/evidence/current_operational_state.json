@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T11:08:48.864029+00:00",
+  "generated_at_utc": "2026-09-28T11:09:03.077327+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,16 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: dispatch Q079 authorization through status bridge",
+        "sha": "1aa2bfd254136e3d73e02c7e5714fa7a0fa28047",
+        "timestamp": "2026-09-28T13:08:53+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "58121111ef5e72fec7e618c12df2bc2e15eb4a61",
+        "timestamp": "2026-09-28T11:08:48Z"
+      },
+      {
         "message": "OPS: add Q079 authorization dispatch bridge",
         "sha": "1b7851817670c5c59460442c3cb417d225ea2be3",
         "timestamp": "2026-09-28T13:08:47+02:00"
@@ -194,16 +204,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "aad69c434feeb791439cc169456107796fb0e3be",
         "timestamp": "2026-09-28T11:08:17Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "5d7bb6ea23bc939b2a1786efc13151ede038448e",
-        "timestamp": "2026-09-28T11:08:15Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6ef951f0e368fbd9a3885b277359fad1914e105e",
-        "timestamp": "2026-09-28T11:08:03Z"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1b7851817670c5c59460442c3cb417d225ea2be3",
+  "source_master_sha": "1aa2bfd254136e3d73e02c7e5714fa7a0fa28047",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36413866252"
+    "run_id": "36413891066"
   }
 }
