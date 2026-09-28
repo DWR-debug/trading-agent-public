@@ -5,6 +5,7 @@ on:
     branches: [master]
     paths:
       - "research/authorizations/q079_performance_2026_09_28.json"
+      - "research/run_requests/q079_performance.trigger"
   workflow_dispatch:
 
 permissions:
@@ -19,6 +20,8 @@ jobs:
     if: github.repository == 'DWR-debug/trading-agent-public'
     runs-on: ubuntu-24.04
     timeout-minutes: 240
+    env:
+      PYTHONPATH: ${{ github.workspace }}
     steps:
       - name: Checkout exact authorized master
         uses: actions/checkout@v5
