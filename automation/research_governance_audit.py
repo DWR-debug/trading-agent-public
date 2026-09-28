@@ -84,7 +84,7 @@ def _audit_performance_prereg(root: Path, path: Path, data: dict, errors: list[s
         errors.append(f"{location}: governance_contract_version must be 2")
 
     expected_suffix = _path_trial_suffix(path)
-    actual_suffix = _trial_suffix(trial_id)
+    actual_suffix = _trial_family_code(trial_id)
     if expected_suffix is not None and expected_suffix != actual_suffix:
         errors.append(
             f"{location}: filename trial code {expected_suffix} != trial_id code {actual_suffix}"
