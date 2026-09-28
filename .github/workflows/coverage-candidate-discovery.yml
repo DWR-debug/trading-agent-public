@@ -9,6 +9,9 @@ on:
       - "data/yahoo_loader.py"
       - "data/**"
       - "config/**"
+      - "automation/q077_fixed_candidate_discovery.py"
+      - "research/preregistrations/q077_discovery_2026_09_28.json"
+      - "research/run_requests/q077_discovery.trigger"
       - ".github/workflows/coverage-candidate-discovery.yml"
   schedule:
     - cron: "17 */6 * * *"
@@ -78,5 +81,55 @@ jobs:
         with:
           name: coverage-candidate-discovery-${{ github.run_id }}
           path: research/runs/coverage_discovery/t040_candidates.json
+          if-no-files-found: error
+          retention-days: 30
+
+
+  q077-discover:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact Q077 source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check pandas pytest
+
+      - name: Q077 coverage-only discovery
+        run: python automation/q077_fixed_candidate_discovery.py --output research/runs/q077_discovery/discovery.json --workers 12
+
+      - name: Validate Q077 discovery
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("research/runs/q077_discovery/discovery.json").read_text())
+          assert d["performance_evaluation"] is False
+          assert d["holdout_evaluation"] is False
+          assert d["selection_used"] is False
+          assert d["asset_selection_by_performance"] is False
+          assert d["safety"] == {"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False}
+          assert len(d["selected_coverage_batch"]) >= 8
+          assert d["selected_common_count"] >= 3500
+          print("Q077 DISCOVERY CONTRACT OK")
+          print("Q077 SELECTED:",d["selected_coverage_batch"])
+          print("Q077 COMMON:",d["selected_common_count"])
+          print("Q077 FINGERPRINT:",d["fingerprint"])
+          PY
+
+      - name: Upload Q077 discovery artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: q077-discovery
+          path: research/runs/q077_discovery/discovery.json
           if-no-files-found: error
           retention-days: 30
