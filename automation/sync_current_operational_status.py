@@ -109,9 +109,37 @@ def generate(
     queue = _read_queue_files()
     open_prs = github_state.get("open_prs", [])
     agent_ready_issues = github_state.get("agent_ready_issues", [])
-    q067_pipeline = summarize_q067_pipeline(ROOT)
-    q068_pipeline = summarize_q068_pipeline(ROOT)
-    q070_pipeline = summarize_q070_pipeline(ROOT)
+    active_registry = _load_json(ROOT / "research/governance/active_research_registry.json", {})
+    q067_pipeline = {
+        "family": "Q067",
+        "state": "RETIRED",
+        "blocking_reasons": ["obsolete execution path retired; historical evidence preserved"],
+        "performance_authorization": {"present": False, "authorized": False, "execution_scope": None},
+        "performance_result": {"present": False, "status": None, "trial_id": None},
+        "ledger_reconciled": False,
+        "no_selection_or_promotion": True,
+        "paper_only": True,
+    }
+    q068_pipeline = {
+        "family": "Q068",
+        "state": "RETIRED",
+        "blocking_reasons": ["obsolete execution path retired; historical evidence preserved"],
+        "performance_authorization": {"present": False, "authorized": False, "execution_scope": None},
+        "performance_result": {"present": False, "status": None, "trial_id": None},
+        "ledger_reconciled": False,
+        "no_selection_or_promotion": True,
+        "paper_only": True,
+    }
+    q070_pipeline = {
+        "family": "Q070",
+        "state": "PERMANENTLY_BLOCKED",
+        "blocking_reasons": ["frozen snapshot unrecoverable; execution workflows retired"],
+        "performance_authorization": {"present": False, "authorized": False, "execution_scope": None},
+        "performance_result": {"present": False, "status": None, "trial_id": None},
+        "ledger_reconciled": False,
+        "no_selection_or_promotion": True,
+        "paper_only": True,
+    }
     recorded_qa = project_state.get("quality_assurance", {}).get(
         "last_verified_self_hosted_qa", {}
     )
@@ -132,6 +160,7 @@ def generate(
             "research_checkpoint": "research/evidence/current_project_checkpoint.json",
             "research_decision_basis": "research/evidence/decision_basis_latest.json",
             "trial_ledger": "research/evidence/trial_ledger.json",
+            "active_research_registry": "research/governance/active_research_registry.json",
         },
         "repository_state": {
             "default_branch": "master",
