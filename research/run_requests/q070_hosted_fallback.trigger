@@ -1,1 +1,1 @@
-Activate hosted Q070 fallback because self-hosted research runner is capacity-blocked.
+Activate hosted Q070 fallback after the focused test contract repair (2026-09-28).
