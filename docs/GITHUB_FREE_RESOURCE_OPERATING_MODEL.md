@@ -253,3 +253,28 @@ Paid agent/API budget = 0 USD.
 Kein Workflow darf automatisch eine kostenpflichtige API, ein Upgrade, Overages oder
 einen bezahlten Agenten aktivieren. Jeder externe Provider besitzt einen separaten
 Free-Mode-Gate und fail-closed Verhalten.
+
+## Copilot Free — geschützte Monatsreserve ab 2026-10-01
+
+GitHub dokumentiert ein monatliches AI-Credit-Kontingent auch für Copilot Free;
+die inkludierten Kontingente werden am ersten Tag jedes Monats um 00:00 UTC
+zurückgesetzt. Komplexe agentische Aufgaben können deutlich mehr Verbrauch
+verursachen als einfache Interaktionen.
+
+Für dieses Projekt wird deshalb bewusst nicht das komplette Free-Kontingent
+automatisch ausgenutzt.
+
+Interne Schutzkappe:
+- Startfenster: 2026-10-01T00:00:00Z
+- 4 Session-Reservierungen pro Monat
+- 12 AI credits maximale Agent-Session
+- 1 parallele Copilot-Queue-Lane
+- keine zusätzlichen Käufe und keine Overages
+
+Diese Werte sind eine konservative Projektreserve und nicht die Behauptung,
+dass Copilot Free exakt 48 AI credits pro Monat enthält.
+
+Copilot Free wird nur für hochwirksame, klar abgegrenzte Engineering-/QA-/
+Review-Aufgaben eingesetzt. Große explorative Aufgaben gehen stattdessen an
+Gemini/Claude, Self-hosted oder deterministische Pfade, sofern diese kostenlos
+verfügbar sind.
