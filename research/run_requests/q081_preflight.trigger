@@ -1,1 +1,1 @@
-Q081 preflight: verify corrected execution envelope, frozen Q079 prerequisites and focused tests. NO performance execution before separate one-shot authorization. 2026-09-28.
+Q081 preflight retry: native Git blob SHA verification replaces git.exe dependency; no performance execution. 2026-09-28.

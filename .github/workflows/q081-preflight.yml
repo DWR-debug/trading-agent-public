@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   preflight:
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    if: github.repository == "DWR-debug/trading-agent-public"
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 30
     steps:
@@ -50,14 +50,14 @@ jobs:
         run: |
           @echo off
           set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q081-preflight\tools\python.exe"
-          "%PY_EXE%" -c "import json,subprocess; from pathlib import Path; from config import settings; p=json.loads(Path('research/preregistrations/q081_performance_2026_09_28.json').read_text(encoding='utf-8')); assert p['trial_id']=='T-2026-09-28-081-PERFORMANCE' and p['status']=='PREREGISTERED_PERFORMANCE'; assert p['governance']['performance_trial_authorized'] is False; expected=p['source_contract']; actual={path:subprocess.check_output(['git','rev-parse','HEAD:'+path],text=True).strip() for path in expected}; assert actual==expected; assert settings.PAPER_ONLY is True and settings.LIVE_TRADING_ENABLED is False and settings.ORDERS_ENABLED is False and settings.AUTOMATIC_PROMOTION is False; print('Q081 PREREGISTRATION/SOURCE/SAFETY OK')"
+          "%PY_EXE%" -c "import hashlib,json; from pathlib import Path; from config import settings; p=json.loads(Path('research/preregistrations/q081_performance_2026_09_28.json').read_text(encoding='utf-8')); assert p['trial_id']=='T-2026-09-28-081-PERFORMANCE' and p['status']=='PREREGISTERED_PERFORMANCE'; assert p['governance']['performance_trial_authorized'] is False; expected=p['source_contract']; actual={}; [actual.update({path:hashlib.sha1(('blob '+str(len(Path(path).read_bytes()))+'\\0').encode()+Path(path).read_bytes()).hexdigest()}) for path in expected]; assert actual==expected; assert settings.PAPER_ONLY is True and settings.LIVE_TRADING_ENABLED is False and settings.ORDERS_ENABLED is False and settings.AUTOMATIC_PROMOTION is False; print('Q081 PREREGISTRATION/BLOB-SOURCE/SAFETY OK')"
 
       - name: Verify unchanged Q079 frozen prerequisites
         shell: cmd
         run: |
           @echo off
           set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q081-preflight\tools\python.exe"
-          "%PY_EXE%" -c "import json; from pathlib import Path; p=json.loads(Path('research/preregistrations/q081_performance_2026_09_28.json').read_text()); c=json.loads(Path('research/evidence/q079_coverage_result.json').read_text()); h=json.loads(Path('research/evidence/q079_pit_result.json').read_text()); b=json.loads(Path('research/evidence/q079_input_freeze_result.json').read_text()); assert c['status']=='COVERAGE_PASSED' and c['result_fingerprint']==p['data_contract']['coverage_result_fingerprint'] and c['snapshot_fingerprint']==p['data_contract']['snapshot_fingerprint']; assert h['status']=='PIT_PASSED' and h['result_fingerprint']==p['data_contract']['pit_result_fingerprint']; assert b['status']=='INPUT_BUNDLE_FROZEN' and b['bundle_fingerprint']==p['data_contract']['input_bundle_fingerprint']; assert json.loads(Path('research/evidence/q079_performance_execution_incident.json').read_text())['status']=='IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME'; print('Q081 FROZEN PREREQUISITES OK')"
+          "%PY_EXE%" -c "import json; from pathlib import Path; p=json.loads(Path('research/preregistrations/q081_performance_2026_09_28.json').read_text()); c=json.loads(Path('research/evidence/q079_coverage_result.json').read_text()); h=json.loads(Path('research/evidence/q079_pit_result.json').read_text()); b=json.loads(Path('research/evidence/q079_input_freeze_result.json').read_text()); i=json.loads(Path('research/evidence/q079_performance_execution_incident.json').read_text()); dc=p['data_contract']; assert c['status']=='COVERAGE_PASSED' and c['result_fingerprint']==dc['coverage_result_fingerprint'] and c['snapshot_fingerprint']==dc['snapshot_fingerprint']; assert h['status']=='PIT_PASSED' and h['result_fingerprint']==dc['pit_result_fingerprint']; assert b['status']=='INPUT_BUNDLE_FROZEN' and b['bundle_fingerprint']==dc['input_bundle_fingerprint']; assert i['status']=='IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME'; print('Q081 FROZEN PREREQUISITES OK')"
 
       - name: Run Q081 focused unit tests
         shell: cmd
@@ -70,6 +70,6 @@ jobs:
         shell: cmd
         run: |
           @echo off
-          echo Q081_PREKFLT_NO_PERFORMANCE_EXECUTED=TRUE
+          echo Q081_PREFLIGHT_PASS=TRUE
           echo Q081_RUNNER=%RUNNER_NAME%
           echo Q081_SHA=%GITHUB_SHA%
