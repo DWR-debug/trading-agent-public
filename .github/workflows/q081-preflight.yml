@@ -10,6 +10,8 @@ on:
       - "tests/test_q081_execution_envelope.py"
   issues:
     types: [opened]
+  schedule:
+    - cron: "45 13 28 9 *"
   workflow_dispatch:
 
 permissions:
