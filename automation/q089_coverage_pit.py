@@ -149,49 +149,12 @@ def coverage() -> dict:
         json.dumps(freeze, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
 
-    manifest, root = _coverage_paths()
-    manifest_data = json.loads(manifest.read_text(encoding="utf-8"))
-    members = []
-    for path in [manifest] + [
-        Path(item["path"]) if Path(item["path"]).is_absolute() else ROOT / item["path"]
-        for item in manifest_data["data_snapshot"]["datasets"]
-    ]:
-        digest = hashlib.sha256(path.read_bytes()).hexdigest()
-        members.append(
-            {
-                "path": path.relative_to(ROOT).as_posix()
-                if path.is_relative_to(ROOT)
-                else str(path),
-                "sha256": digest,
-                "bytes": path.stat().st_size,
-            }
-        )
-    input_freeze = {
-        "schema_version": "1.0",
-        "trial_id": INPUT_ID,
-        "status": "INPUT_BUNDLE_FROZEN",
-        "coverage_trial_id": COVERAGE_ID,
-        "snapshot_fingerprint": snap["snapshot_fingerprint"],
-        "symbols": list(selected),
-        "members": members,
-        "performance_evaluation": False,
-        "selection_used": False,
-        "holdout_used_for_selection": False,
-        "safety": SAFETY,
-    }
-    input_freeze["bundle_fingerprint"] = _fp(input_freeze)
-    (evidence / "q089_input_freeze_result.json").write_text(
-        json.dumps(input_freeze, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
-    )
-
     print("Q089_COVERAGE_PASS", ",".join(selected))
     print("Q089_SNAPSHOT_FP", snap["snapshot_fingerprint"])
     print("Q089_INPUT_BUNDLE_FP", input_freeze["bundle_fingerprint"])
     return {
         "coverage": freeze,
-        "input_freeze": input_freeze,
         "selected": selected,
-        "manifest": manifest,
     }
 
 
