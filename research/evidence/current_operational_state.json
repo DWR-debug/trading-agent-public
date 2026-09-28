@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T14:23:58.605914+00:00",
+  "generated_at_utc": "2026-09-28T14:24:15.467362+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: trigger Q083 self-hosted feasibility",
+        "sha": "14d87f404253db4e5d4fea24df0a6d651061e205",
+        "timestamp": "2026-09-28T16:24:08+02:00"
+      },
+      {
+        "message": "OPS: add self-hosted Q083 feasibility workflow",
+        "sha": "0829434913e1ce16acc01915ed23eb7e753269dd",
+        "timestamp": "2026-09-28T16:24:04+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e9068d6363dfd762df0258d510c857978c8864a8",
+        "timestamp": "2026-09-28T14:23:58Z"
+      },
+      {
         "message": "TEST: guard Q083 design-only feasibility",
         "sha": "0209b4b60b2ce29c835f5cf41a952374a193613c",
         "timestamp": "2026-09-28T16:23:45+02:00"
@@ -180,21 +195,6 @@
         "message": "RESEARCH: preregister Q083 design-only governance",
         "sha": "2228b23d43dd06cc3a8572ace530718131415fc0",
         "timestamp": "2026-09-28T16:23:11+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q083 literature-driven candidate design",
-        "sha": "9e8c87be40a510717a9e007a1abb20146975aa7b",
-        "timestamp": "2026-09-28T16:23:08+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "4358849c4173a328b6a662931c32042209ad880c",
-        "timestamp": "2026-09-28T14:22:47Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "30dc64764412cbb8d1ba22ce9806b8793dbc1336",
-        "timestamp": "2026-09-28T14:11:48Z"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0209b4b60b2ce29c835f5cf41a952374a193613c",
+  "source_master_sha": "14d87f404253db4e5d4fea24df0a6d651061e205",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36435618400"
+    "run_id": "36435652455"
   }
 }
