@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T16:16:09.716874+00:00",
+  "generated_at_utc": "2026-09-28T16:19:12.247760+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -228,6 +228,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: harden Q089 immutable input bundle",
+        "sha": "aee5460e91a7c4145ee3a42b09c140f9d1e8dc85",
+        "timestamp": "2026-09-28T18:18:54+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "750950cb195db9c8fd61814ce29ad3c6c9b66e56",
+        "timestamp": "2026-09-28T16:16:09Z"
+      },
+      {
         "message": "DOCS: synchronize unusual frontier feasibility status",
         "sha": "3022669ffc15c91cdda169b3ffddf75b8a898071",
         "timestamp": "2026-09-28T18:15:52+02:00"
@@ -256,16 +266,6 @@
         "message": "RESEARCH: stage Q089 clean fresh Q069 validation",
         "sha": "6a5e3ca38366d90db9e0076d5bc5412ec17caaf6",
         "timestamp": "2026-09-28T18:13:46+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "19965b5a77e7b116fc99eb8803b960afe4f23b72",
-        "timestamp": "2026-09-28T16:10:23Z"
-      },
-      {
-        "message": "RESEARCH: open public C31 news persistence path",
-        "sha": "7ec045687c8e433cd805b2d69741f541dd304129",
-        "timestamp": "2026-09-28T18:10:08+02:00"
       }
     ]
   },
@@ -327,12 +327,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "3022669ffc15c91cdda169b3ffddf75b8a898071",
+  "source_master_sha": "aee5460e91a7c4145ee3a42b09c140f9d1e8dc85",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36449783056"
+    "run_id": "36450136924"
   }
 }
