@@ -44,6 +44,18 @@ jobs:
         shell: cmd
         run: |
           @echo off
-          "%RUNNER_TEMP%\python-3.13.15-nuget-q068-reconcile\tools\python.exe" -c "import json; from pathlib import Path; d=json.loads(Path('research/evidence/q068_performance_result.json').read_text(encoding='utf-8')); assert d['trial_id']=='T-2026-09-28-068-PERFORMANCE'; assert d['status']=='COMPLETED'; assert d['performance_evaluation'] is True; assert d['selection_used'] is False; assert d['holdout_used_for_selection'] is False; assert d['governance']['promotion_decision'] is False; assert d['governance']['automatic_promotion'] is False; assert d['safety']=={'paper_only':True,'live_trading_enabled':False,'orders_enabled':False,'automatic_promotion':False}; print('Q068 RESULT SAFE FOR LEDGER')"
-          "%RUNNER_TEMP%\python-3.13.15-nuget-q068-reconcile\tools\python.exe" - <<PY
-PY
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-q068-reconcile"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          if not exist "%PY_EXE%" exit /b 1
+          "%PY_EXE%" -m automation.q068_reconcile --repo-root . || exit /b 1
+          git diff --check || exit /b 1
+          git add research\evidence\trial_ledger.json || exit /b 1
+          git diff --cached --quiet
+          if not errorlevel 1 (
+            echo No Q068 ledger changes
+            exit /b 0
+          )
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "EVIDENCE: reconcile Q068 performance trial ledger entry" || exit /b 1
+          git push origin HEAD:master || exit /b 1
