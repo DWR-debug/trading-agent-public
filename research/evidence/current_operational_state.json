@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:00:48.670607+00:00",
+  "generated_at_utc": "2026-09-28T15:01:14.082557+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "20972e906694454154cde107b7a47ba578c7f82d",
+        "timestamp": "2026-09-28T15:01:05Z"
+      },
+      {
+        "message": "TEST: guard Q085 preregistration and safety",
+        "sha": "16a884be6e6e1f7109bccdc5536616cf7ed5cb91",
+        "timestamp": "2026-09-28T17:01:01+02:00"
+      },
+      {
+        "message": "RESEARCH: implement Q085 coverage and PIT harness",
+        "sha": "7b6aa131b4fb6b36a18a86dd39f021d3e4ca5e01",
+        "timestamp": "2026-09-28T17:00:54+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "177d01609ce0062330eaa4a8615cf9f97173609f",
+        "timestamp": "2026-09-28T15:00:48Z"
+      },
+      {
         "message": "RESEARCH: preregister Q085 fixed candidate validation",
         "sha": "74885c364b6796bcc56638a0b4b4271953d786ec",
         "timestamp": "2026-09-28T17:00:38+02:00"
@@ -175,26 +195,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "88b9064f7f69e78fa9900850729bda36fe2c4b96",
         "timestamp": "2026-09-28T14:59:31Z"
-      },
-      {
-        "message": "SAFETY: fail-closed unrecoverable Q070 auto-advance",
-        "sha": "df850bc271af477dbde5daeaef72a3da5cfdef87",
-        "timestamp": "2026-09-28T16:59:22+02:00"
-      },
-      {
-        "message": "OPS: permanently block unrecoverable Q070 execution",
-        "sha": "6f72341c989fe9c2f2c8a714d5e9a5fda48ad65b",
-        "timestamp": "2026-09-28T16:59:16+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "679eeea28158f80e3bd8c8d1636ec4db13f4b7f2",
-        "timestamp": "2026-09-28T14:57:36Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e559e5b63cc09b4ea9eb75625357080c7b097afa",
-        "timestamp": "2026-09-28T14:57:11Z"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "74885c364b6796bcc56638a0b4b4271953d786ec",
+  "source_master_sha": "20972e906694454154cde107b7a47ba578c7f82d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36440307715"
+    "run_id": "36440363383"
   }
 }
