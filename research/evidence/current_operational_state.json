@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T16:38:52.847648+00:00",
+  "generated_at_utc": "2026-09-28T16:39:07.014326+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -228,6 +228,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "371527863703816835f422f4b7846025aa71ba7a",
+        "timestamp": "2026-09-28T16:38:52Z"
+      },
+      {
         "message": "OPS: retrigger Q089 coverage/PIT after test fixture fix",
         "sha": "7e5349a7b3529e80fff55d10dc1b73ca82038e44",
         "timestamp": "2026-09-28T18:38:44+02:00"
@@ -261,11 +266,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "bbd786f1053f0918f989a5f0eb753e016edae03d",
         "timestamp": "2026-09-28T16:34:16Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "9837fe03d4d389bab64fb918309cd03ba3b466ba",
-        "timestamp": "2026-09-28T16:29:56Z"
       }
     ]
   },
@@ -327,12 +327,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7e5349a7b3529e80fff55d10dc1b73ca82038e44",
+  "source_master_sha": "371527863703816835f422f4b7846025aa71ba7a",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36452528822"
+    "run_id": "36452541662"
   }
 }
