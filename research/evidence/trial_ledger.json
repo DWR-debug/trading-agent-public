@@ -11,6 +11,940 @@
   },
   "trials": [
     {
+      "trial_id": "T-2026-09-24-025",
+      "recorded_at": "2026-09-24",
+      "status": "archived_rejected",
+      "research_family": "cross_sectional_market_residual_volatility",
+      "hypothesis": {
+        "text": "Assets with the lowest market-residual volatility over the prior 252 completed sessions outperform the four highest-residual-volatility assets in the following calendar month after costs."
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10818270142
+        ],
+        "fully_symbol_disjoint_validation_set": true,
+        "symbols": [
+          "COST",
+          "TMO",
+          "LIN",
+          "DE",
+          "EMR",
+          "SBUX",
+          "VZ",
+          "MA"
+        ],
+        "report_fingerprint": "9f2088cb95fb6f7d0d5e3a1b9e6b2857c03c5904871cad4cefaffef9533e860e",
+        "manifest_fingerprint": "bc146938fa2b112b23bc71503c1649fcf9d84f802b2ce27dc8c8e9a8441f5ed7",
+        "artifact_digest_sha256": "183d51f7ae4cdfb817f1a6aa62c8960b6343da10a8db2e306c73f904bd4125d5"
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered single hypothesis",
+        "selection_family_id": "cross-sectional-market-residual-volatility-2026-09-24",
+        "selection_metric": "fixed Research/Holdout return, drawdown, profit factor, rolling stability, OOS/Research, cost stress and low-vs-high residual-volatility edge"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 36022604471,
+        "artifact_id": 10818270142,
+        "report_fingerprint": "9f2088cb95fb6f7d0d5e3a1b9e6b2857c03c5904871cad4cefaffef9533e860e",
+        "all_checks_passed": false,
+        "key_metrics": {
+          "research_return_percent": 150.43062116974636,
+          "research_max_drawdown_percent": 26.084746028391937,
+          "research_profit_factor": 1.118285368297002,
+          "research_rolling_profitable_windows": 5,
+          "research_rolling_window_count": 5,
+          "holdout_return_percent": 35.36678645414133,
+          "holdout_max_drawdown_percent": 15.05591220926087,
+          "holdout_profit_factor": 1.1557797114069652,
+          "oos_to_research_return_ratio": 0.23510363900068817,
+          "holdout_1_5x_cost_return_percent": 35.06271115412809,
+          "holdout_2x_cost_return_percent": 34.75920525888074,
+          "research_mean_low_residual_vol_edge": -0.00021325101103298786,
+          "holdout_mean_low_residual_vol_edge": -0.0002208342161736738,
+          "total_turnover": 23
+        },
+        "gate_results": {
+          "research_return_positive": true,
+          "research_drawdown": false,
+          "research_profit_factor": true,
+          "rolling_profitable_window_ratio": true,
+          "oos_to_research_return_ratio": false,
+          "holdout_return_positive": true,
+          "holdout_drawdown": false,
+          "holdout_profit_factor": true,
+          "stress_1_5x_nonnegative": true,
+          "stress_2x_nonnegative": true,
+          "research_low_residual_vol_edge_positive": false,
+          "holdout_low_residual_vol_edge_positive": false
+        }
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-027",
+      "recorded_at": "2026-09-24",
+      "status": "archived_rejected",
+      "research_family": "tsm_ensemble_trend_sleeve_replacement",
+      "hypothesis": {
+        "text": "Replacing only the fixed SMA 50/200 long-only trend signal with a fixed majority-vote TSM ensemble over 63/126/252 sessions improves candidate quality while preserving the fixed cross-sectional sleeve and risk layer."
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10820593251
+        ],
+        "artifact_digest": "sha256:1320c20515be7d24e64f23d9af7090ab4c9f9bb53b6e17c16b924a84e878c247",
+        "manifest_fingerprint": "c817bd74d4912316726dbc51347fe0dab22049acadd753bef0bdece89fe59748",
+        "fully_symbol_disjoint_validation_set": true,
+        "trend_symbols": [
+          "IVV",
+          "ITOT",
+          "SCHX",
+          "SCHF",
+          "SPAB",
+          "IEI",
+          "MBB",
+          "VCSH"
+        ],
+        "cross_sectional_symbols": [
+          "IYJ",
+          "IYC",
+          "IYM",
+          "IYK",
+          "IYW"
+        ],
+        "common_returns": 3498
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered single hypothesis; no holdout selection",
+        "selection_family_id": "tsm-ensemble-trend-sleeve-replacement-2026-09-24",
+        "selection_metric": "absolute Research gates plus non-worsening comparison against the fixed 50/50 candidate on the same validation set"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 36029169717,
+        "artifact_id": 10820593251,
+        "artifact_sha256": "1320c20515be7d24e64f23d9af7090ab4c9f9bb53b6e17c16b924a84e878c247",
+        "report_fingerprint": "57b87f09de867cb2ef535aaf7e6132618d5e116ca36b04d9968cc8c5b327cf51",
+        "code_commit_sha": "169b239c188678c71d3d9bb9ae092e785832c72e",
+        "all_checks_passed": false,
+        "key_metrics": {
+          "fixed_research_return_percent": 57.55357983903355,
+          "fixed_research_drawdown_percent": 16.3444444024894,
+          "fixed_research_profit_factor": 1.0956517837613973,
+          "fixed_holdout_return_percent": 26.54548561335117,
+          "fixed_holdout_drawdown_percent": 13.449714874345975,
+          "fixed_holdout_profit_factor": 1.1643339519228775,
+          "tsm_research_return_percent": 56.75671193309189,
+          "tsm_research_drawdown_percent": 16.518499675074427,
+          "tsm_research_profit_factor": 1.0958921334797123,
+          "tsm_research_profitable_rolling_windows": 4,
+          "tsm_research_rolling_profit_factor": 1.0958921334797116,
+          "tsm_research_average_rolling_drawdown_percent": 13.318187913186971,
+          "tsm_oos_to_is_return_ratio": 0.521051206810266,
+          "tsm_holdout_return_percent": 29.57315324732015,
+          "tsm_holdout_drawdown_percent": 10.66019327355523,
+          "tsm_holdout_profit_factor": 1.1823201179025096,
+          "tsm_total_return_holdout_percent": 34.80494537133252,
+          "tsm_total_return_holdout_drawdown_percent": 10.249591133096558,
+          "tsm_total_return_holdout_profit_factor": 1.2114439602909792,
+          "tsm_stress_2x_holdout_return_percent": 26.83211735886628
+        },
+        "gate_results": {
+          "research_return_positive": true,
+          "research_drawdown": false,
+          "research_profit_factor": false,
+          "rolling_profit_factor": false,
+          "rolling_profitable_window_ratio": true,
+          "rolling_average_drawdown": false,
+          "oos_to_is_return_ratio": true,
+          "holdout_return_positive": true,
+          "holdout_profit_factor": true,
+          "holdout_drawdown": false,
+          "stress_1_5x_nonnegative": true,
+          "stress_2x_nonnegative": true,
+          "total_return_sensitivity_nonnegative": true,
+          "research_return_not_below_fixed": false,
+          "research_drawdown_not_worse_vs_fixed": false,
+          "research_profit_factor_not_below_fixed": true,
+          "rolling_pf_not_below_fixed": true,
+          "rolling_profitable_ratio_not_below_fixed": true,
+          "rolling_average_drawdown_not_worse_vs_fixed": false,
+          "oos_to_is_not_below_fixed": true,
+          "holdout_return_not_below_fixed": true,
+          "holdout_pf_not_below_fixed": true,
+          "holdout_drawdown_not_worse_vs_fixed": true
+        }
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-028",
+      "recorded_at": "2026-09-24",
+      "status": "archived_rejected",
+      "research_family": "per_sleeve_volatility_budget",
+      "hypothesis": {
+        "text": "Applying the existing 63-session/10% volatility budget independently to the Trend and Cross-Sectional sleeves before fixed 50/50 aggregation reduces sleeve-driven drawdown concentration without reducing holdout performance versus the fixed candidate."
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10825414801
+        ],
+        "artifact_digest": "sha256:1d733848e28cdecf0c7ea9a5a85dcf0cf9f089fa79eeaafe341c424743c74834",
+        "manifest_fingerprint": "f99f1b40c931c860987c26c65fe988a9d140c866f7370fddad2e40af2ec9b2dd",
+        "fully_symbol_disjoint_validation_set": true,
+        "trend_symbols": [
+          "SPLV",
+          "SPHQ",
+          "SPYG",
+          "SPYV",
+          "FXI",
+          "GDX",
+          "PFF",
+          "CWB"
+        ],
+        "cross_sectional_symbols": [
+          "XSD",
+          "IBB",
+          "ITA",
+          "XAR",
+          "XES"
+        ],
+        "common_returns": 3498
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered single risk intervention; no holdout selection",
+        "selection_family_id": "per-sleeve-volatility-budget-2026-09-24",
+        "selection_metric": "absolute gates plus non-worsening comparison against fixed candidate"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 36038357899,
+        "artifact_id": 10825414801,
+        "artifact_sha256": "sha256:1d733848e28cdecf0c7ea9a5a85dcf0cf9f089fa79eeaafe341c424743c74834",
+        "report_fingerprint": "ee00872c970d9c6935ced344a5642b5b17e27e8ce072a97462518b5a203bc57a",
+        "code_commit_sha": "1b2a2918d99a54e933adb8cfe8f1a3b357bb7118",
+        "all_checks_passed": false,
+        "key_metrics": {
+          "fixed_research_return_percent": 48.6277384464445,
+          "fixed_research_drawdown_percent": 22.47870605251383,
+          "fixed_research_profit_factor": 1.0745932876309412,
+          "fixed_holdout_return_percent": 28.66318927795575,
+          "fixed_holdout_drawdown_percent": 10.254113845757484,
+          "fixed_holdout_profit_factor": 1.165130130624257,
+          "per_sleeve_research_return_percent": 48.18375582986765,
+          "per_sleeve_research_drawdown_percent": 17.551085896738993,
+          "per_sleeve_research_profit_factor": 1.0849214448493505,
+          "per_sleeve_holdout_return_percent": 28.452135045130667,
+          "per_sleeve_holdout_drawdown_percent": 9.64771938980926,
+          "per_sleeve_holdout_profit_factor": 1.1903811801171629,
+          "per_sleeve_oos_to_is_return_ratio": 0.5904922635253363,
+          "total_return_holdout_percent": 31.710642158032897,
+          "total_return_holdout_drawdown_percent": 8.494593993233647,
+          "total_return_holdout_profit_factor": 1.2091910692583154,
+          "stress_1_5x_holdout_return_percent": 27.63723866804817,
+          "stress_2x_holdout_return_percent": 26.827425340889597
+        },
+        "gate_results": {
+          "research_return_positive": true,
+          "research_drawdown": false,
+          "research_profit_factor": false,
+          "rolling_profit_factor": false,
+          "rolling_profitable_window_ratio": true,
+          "rolling_average_drawdown": false,
+          "oos_to_is_return_ratio": true,
+          "holdout_return_positive": true,
+          "holdout_profit_factor": true,
+          "holdout_drawdown": true,
+          "stress_1_5x_nonnegative": true,
+          "stress_2x_nonnegative": true,
+          "total_return_sensitivity_nonnegative": true,
+          "research_return_not_below_fixed": false,
+          "research_drawdown_not_worse_vs_fixed": true,
+          "research_profit_factor_not_below_fixed": true,
+          "rolling_pf_not_below_fixed": true,
+          "rolling_profitable_ratio_not_below_fixed": true,
+          "rolling_average_drawdown_not_worse_vs_fixed": true,
+          "oos_to_is_not_below_fixed": true,
+          "holdout_return_not_below_fixed": false,
+          "holdout_pf_not_below_fixed": true,
+          "holdout_drawdown_not_worse_vs_fixed": true
+        },
+        "deltas_vs_fixed": {
+          "research_return_delta_percentage_points": -0.44398261657685456,
+          "research_drawdown_delta_percentage_points": -4.927620155774836,
+          "research_profit_factor_delta": 0.010328157218409295,
+          "holdout_return_delta_percentage_points": -0.21105423282508085,
+          "holdout_drawdown_delta_percentage_points": -0.606394455948223,
+          "holdout_profit_factor_delta": 0.025251049492905908
+        }
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-029",
+      "recorded_at": "2026-09-24",
+      "status": "data_invalid",
+      "research_family": "sleeve_volatility_parity",
+      "scientific_outcome": "NO_SCIENTIFIC_OUTCOME",
+      "reason": "Preregistered data contract requires 3,500 candles and 3,498 common PIT returns; IEFA provided only 3,496 candles, so common calendar length was 3,496.",
+      "data_scope": {
+        "requested_symbols": [
+          "IWB",
+          "IEFA",
+          "BIV",
+          "BSV",
+          "VGIT",
+          "JNK",
+          "HDV",
+          "DBE",
+          "IYF",
+          "IYE",
+          "IYG",
+          "DJP",
+          "EPHE"
+        ],
+        "limiting_symbol": "IEFA",
+        "limiting_symbol_count": 3496,
+        "other_symbol_count": 3520,
+        "common_calendar_count": 3496,
+        "research_count": 2798,
+        "holdout_count": 700,
+        "performance_selection_used": false
+      },
+      "evidence": {
+        "workflow_run_id": 36039285580,
+        "artifact_id": 10826146206,
+        "artifact_sha256": "sha256:652627afbe7ab0cb39d374d986a32d265c779d9f96b27f233d3b8108477fc036",
+        "failure": "ValueError: Gemeinsamer Kalender bleibt zu kurz: 3496 statt 3500 nach 5 Akquisitionen."
+      },
+      "governance": {
+        "modified_after_failure": false,
+        "target_count_relaxed": false,
+        "symbol_replacement_after_failure": false,
+        "no_return_metrics_produced": true,
+        "no_candidate_selection": true
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-030",
+      "recorded_at": "2026-09-24",
+      "status": "archived_rejected",
+      "research_family": "sleeve_volatility_parity_confirmation",
+      "hypothesis": {
+        "text": "Monthly inverse-volatility parity between unchanged Trend and Cross-Sectional sleeves, using prior 63 completed sleeve returns, improves risk concentration without reducing holdout performance versus fixed 50/50."
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10825679094
+        ],
+        "artifact_digest": "sha256:cc46dfadb3581fab21012b651b857b32e06a43dc37399d45479423da899f2191",
+        "manifest_fingerprint": "9ef4c9fa58e6a8a573d0836379572d7a441a2fb5300fc4eca33155b2059cf224",
+        "fully_symbol_disjoint_validation_set": true,
+        "trend_symbols": [
+          "VV",
+          "VHT",
+          "VFH",
+          "VIS",
+          "VAW",
+          "VDE",
+          "VPU",
+          "VGT"
+        ],
+        "cross_sectional_symbols": [
+          "SPDW",
+          "SPMB",
+          "SPEM",
+          "SPTL",
+          "SPIP"
+        ],
+        "common_returns": 3498
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered single hypothesis; no holdout selection",
+        "selection_family_id": "sleeve-volatility-parity-confirmation-2026-09-24",
+        "selection_metric": "absolute gates plus non-worsening comparison against fixed 50/50 candidate"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 36040997311,
+        "artifact_id": 10825679094,
+        "artifact_sha256": "cc46dfadb3581fab21012b651b857b32e06a43dc37399d45479423da899f2191",
+        "report_fingerprint": "26cc96a1d7210a97443016f5374fccc2e1c466ce2eb1f6859ca778c9a3eefabe",
+        "code_commit_sha": "2018c30a4c3ad6afb01208861328666d1ec74b98",
+        "all_checks_passed": false,
+        "key_metrics": {
+          "fixed_research_return_percent": 32.69304886190834,
+          "fixed_research_drawdown_percent": 18.295815828244642,
+          "fixed_research_profit_factor": 1.0642074483997912,
+          "fixed_holdout_return_percent": 23.543481873667215,
+          "fixed_holdout_drawdown_percent": 12.373922346262834,
+          "fixed_holdout_profit_factor": 1.1484373029131294,
+          "parity_research_return_percent": 21.189031831906235,
+          "parity_research_drawdown_percent": 19.191053123266077,
+          "parity_research_profit_factor": 1.0464228676646035,
+          "parity_rolling_profit_factor": 1.0464228676646006,
+          "parity_average_rolling_drawdown_percent": 14.151271161543466,
+          "parity_oos_to_is_return_ratio": 1.1119654683518048,
+          "parity_holdout_return_percent": 23.561471704886916,
+          "parity_holdout_drawdown_percent": 12.319624838215715,
+          "parity_holdout_profit_factor": 1.1492958108036917,
+          "parity_total_return_holdout_percent": 30.17660226740855,
+          "parity_total_return_holdout_drawdown_percent": 11.447481327724917,
+          "parity_total_return_holdout_profit_factor": 1.1871711018661346,
+          "parity_stress_1_5x_holdout_return_percent": 22.466167462122844,
+          "parity_stress_2x_holdout_return_percent": 21.38043476559799
+        },
+        "gate_results": {
+          "research_return_positive": true,
+          "research_drawdown": false,
+          "research_profit_factor": false,
+          "rolling_profit_factor": false,
+          "rolling_profitable_window_ratio": true,
+          "rolling_average_drawdown": false,
+          "oos_to_is_return_ratio": true,
+          "holdout_return_positive": true,
+          "holdout_profit_factor": true,
+          "holdout_drawdown": false,
+          "stress_1_5x_nonnegative": true,
+          "stress_2x_nonnegative": true,
+          "total_return_sensitivity_nonnegative": true,
+          "research_return_not_below_fixed": false,
+          "research_drawdown_not_worse_vs_fixed": false,
+          "research_profit_factor_not_below_fixed": false,
+          "rolling_pf_not_below_fixed": false,
+          "rolling_profitable_ratio_not_below_fixed": true,
+          "rolling_average_drawdown_not_worse_vs_fixed": false,
+          "oos_to_is_not_below_fixed": true,
+          "holdout_return_not_below_fixed": true,
+          "holdout_pf_not_below_fixed": true,
+          "holdout_drawdown_not_worse_vs_fixed": true
+        }
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-032",
+      "recorded_at": "2026-09-24",
+      "status": "data_invalid",
+      "research_family": "relative_value_etf_pairs",
+      "hypothesis": {
+        "text": "Coverage preflight for five fixed ex ante ETF relative-value pairs before any performance evaluation."
+      },
+      "data_scope": {
+        "target_candles": 3500,
+        "requested_candles": 3520,
+        "performance_evaluation": false,
+        "holdout_evaluation": false,
+        "symbols": [
+          "VTWO",
+          "IJR",
+          "QQQM",
+          "ONEQ",
+          "IEMG",
+          "SCHE",
+          "IGIB",
+          "SPIB",
+          "SCHP",
+          "STIP"
+        ],
+        "invalid_symbol": "QQQM",
+        "invalid_candle_count": 1493,
+        "required_candle_count": 3520
+      },
+      "search_scope": {
+        "raw_trial_count": 0,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "holdout_used_for_selection": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "coverage preflight only"
+      },
+      "outcome": {
+        "validation_status": "DATA_INVALID",
+        "workflow_run_id": 36043628557,
+        "error": "Yahoo lieferte nur 1493 von 3520 angeforderten Candles für QQQM.",
+        "no_performance_claim": true
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-033",
+      "recorded_at": "2026-09-24",
+      "status": "data_invalid",
+      "research_family": "relative_value_etf_pairs",
+      "hypothesis": {
+        "text": "Coverage preflight for five fixed ex ante ETF relative-value pairs after one prior coverage correction."
+      },
+      "data_scope": {
+        "target_candles": 3500,
+        "requested_candles": 3520,
+        "performance_evaluation": false,
+        "holdout_evaluation": false,
+        "symbols": [
+          "VTWO",
+          "IJR",
+          "QQEW",
+          "ONEQ",
+          "IEMG",
+          "SCHE",
+          "IGIB",
+          "SPIB",
+          "SCHP",
+          "STIP"
+        ],
+        "invalid_symbol": "IEMG",
+        "invalid_candle_count": 3496,
+        "required_candle_count": 3520
+      },
+      "search_scope": {
+        "raw_trial_count": 0,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "holdout_used_for_selection": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "coverage preflight only"
+      },
+      "outcome": {
+        "validation_status": "DATA_INVALID",
+        "workflow_run_id": 36043884651,
+        "error": "Yahoo lieferte nur 3496 von 3520 angeforderten Candles für IEMG.",
+        "no_performance_claim": true
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-034",
+      "recorded_at": "2026-09-24",
+      "status": "archived_rejected",
+      "research_family": "fixed_cointegration_gated_etf_relative_value",
+      "hypothesis": {
+        "text": "Five fixed ex ante ETF pairs with monthly ADF cointegration eligibility and daily price-ratio mean reversion can provide a standalone market-neutral return stream after project costs."
+      },
+      "data_scope": {
+        "target_candles_per_symbol": 3500,
+        "common_return_count": 3498,
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "fully_symbol_disjoint_validation_set": true,
+        "pairs": [
+          [
+            "VTWO",
+            "IJR"
+          ],
+          [
+            "QQEW",
+            "ONEQ"
+          ],
+          [
+            "EEMV",
+            "SCHE"
+          ],
+          [
+            "IGIB",
+            "SPIB"
+          ],
+          [
+            "SCHP",
+            "STIP"
+          ]
+        ],
+        "coverage_preflight_workflow_id": 36044264502,
+        "coverage_preflight_artifact_id": 10827700370,
+        "coverage_preflight_fingerprint": "b4102c8e01e442ca5657426b96f0dc97ec919783299408946975f49b05c445a4"
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "pair_search": false,
+        "parameter_search": false,
+        "threshold_search": false,
+        "holdout_used_for_selection": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "five pairs fixed ex ante; no pair selection by performance",
+        "selection_family_id": "fixed-cointegration-gated-etf-relative-value-2026-09-24"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 36045225948,
+        "artifact_id": 10827469931,
+        "artifact_sha256": "sha256:c90990863e1844977352a50cd6023c9ccca215e98de5dfa2225782f90bc468f3",
+        "report_fingerprint": "pending_from_archived_report",
+        "code_head_sha": "d4359b81929be13d3d6dc86b9f0617a6acd846b0",
+        "all_checks_passed": false,
+        "key_metrics": {
+          "research_return_percent": -18.924544276335,
+          "research_drawdown_percent": 19.01292208581514,
+          "research_profit_factor": 0.5988111477088774,
+          "research_trade_count": 85,
+          "rolling_profitable_window_ratio": 0,
+          "rolling_profit_factor": 0.5988111477088774,
+          "average_rolling_drawdown_percent": 4.452247603181767,
+          "holdout_return_percent": -0.7088395725081797,
+          "holdout_drawdown_percent": 1.3893976869612357,
+          "holdout_profit_factor": 0.8553531994992126,
+          "holdout_trade_count": 6,
+          "holdout_active_day_ratio": 0.09,
+          "stress_1_5x_holdout_return_percent": -1.6000027411465334,
+          "stress_2x_holdout_return_percent": -2.48382853933391
+        },
+        "pair_diagnostics": {
+          "VTWO/IJR": {
+            "eligible_rebalance_ratio": 0.06369426751592357,
+            "entry_count": 12,
+            "exit_count": 12
+          },
+          "QQEW/ONEQ": {
+            "eligible_rebalance_ratio": 0.12101910828025478,
+            "entry_count": 14,
+            "exit_count": 14
+          },
+          "EEMV/SCHE": {
+            "eligible_rebalance_ratio": 0.05732484076433121,
+            "entry_count": 6,
+            "exit_count": 6
+          },
+          "IGIB/SPIB": {
+            "eligible_rebalance_ratio": 0.2802547770700637,
+            "entry_count": 50,
+            "exit_count": 50
+          },
+          "SCHP/STIP": {
+            "eligible_rebalance_ratio": 0.07643312101910828,
+            "entry_count": 9,
+            "exit_count": 9
+          }
+        }
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-012",
+      "recorded_at": "2026-09-24T10:30:00+02:00",
+      "status": "archived_diagnostic",
+      "research_family": "leverage_long_short_validation",
+      "hypothesis": {
+        "text": "SMA 50/200 Long/Flat 1x versus symmetrisches Long/Short mit 1x/1,5x/2x/3x Margin-Leverage auf einem neuen ETF-Universum"
+      },
+      "data_scope": {
+        "research_count": null,
+        "holdout_count": null,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10801303732
+        ],
+        "fully_symbol_disjoint_validation_set": null
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": true
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered fixed multi-variant comparison; run terminated before analysis",
+        "selection_family_id": "leverage-long-short-2026-09-24",
+        "selection_metric": null
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "technical_status": "INVALID_NO_RESEARCH_RESULT",
+        "workflow_run_id": 35985720320,
+        "artifact_id": 10801303732,
+        "reason": "Data acquisition could only establish 3,495 instead of 3,500 common candles after five acquisition attempts; analysis/backtest was never executed."
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-013",
+      "recorded_at": "2026-09-24T10:30:00+02:00",
+      "status": "archived_diagnostic",
+      "research_family": "leverage_long_short_validation",
+      "hypothesis": {
+        "text": "SMA 50/200 Long/Flat 1x versus symmetrisches Long/Short mit 1x/1,5x/2x/3x Margin-Leverage auf einem neuen ETF-Universum"
+      },
+      "data_scope": {
+        "research_count": null,
+        "holdout_count": null,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10801894033
+        ],
+        "fully_symbol_disjoint_validation_set": null
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": true
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered fixed multi-variant comparison; run terminated before analysis",
+        "selection_family_id": "leverage-long-short-2026-09-24",
+        "selection_metric": null
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "technical_status": "INVALID_NO_RESEARCH_RESULT",
+        "workflow_run_id": 35986053526,
+        "artifact_id": 10801894033,
+        "reason": "Data acquisition could only establish 3,495 instead of 3,500 common candles after five acquisition attempts; analysis/backtest was never executed."
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-24-014",
+      "recorded_at": "2026-09-24T10:30:00+02:00",
+      "status": "archived_rejected",
+      "research_family": "leverage_long_short_validation",
+      "hypothesis": {
+        "text": "Eine symmetrische Long/Short-Version der fixierten SMA-50/200-Trendfamilie und moderates Margin-Leverage erhöhen die robuste Ertrags-/Einkommenskapazität auf einem vollständig neuen US-ETF-Universum."
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10802099615
+        ],
+        "manifest_fingerprint": "1cda83a64549c4f0e6c37b3643f43817449e0ce40e021b64f60a726e88f077d7",
+        "fully_symbol_disjoint_validation_set": true
+      },
+      "search_scope": {
+        "raw_trial_count": 1,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": true
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "pre-registered fixed multi-variant comparison; no selection from holdout",
+        "selection_family_id": "leverage-long-short-2026-09-24",
+        "selection_metric": "Research/Holdout return, drawdown, PF, rolling stability and stress"
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "NO_SUPPORT",
+        "workflow_run_id": 35986741350,
+        "artifact_id": 10802099615,
+        "report_fingerprint": "101d4ff7c6007020460b3912e0256cd5ecdce7f267e78cb88b8af7c6cc2c66f3",
+        "long_flat_1x_base": {
+          "research_return_percent": 30.64897357795222,
+          "research_max_drawdown_percent": 35.465513076727795,
+          "research_profit_factor": 1.0536021333077077,
+          "holdout_return_percent": 46.07694184297413,
+          "holdout_max_drawdown_percent": 20.925178961401404,
+          "holdout_profit_factor": 1.2019132686177783
+        },
+        "long_short_1x_base": {
+          "research_return_percent": -11.959043106332246,
+          "research_max_drawdown_percent": 50.848736467086184,
+          "research_profit_factor": 0.9968752430485975,
+          "holdout_return_percent": 16.558901720018948,
+          "holdout_max_drawdown_percent": 20.494642455062785,
+          "holdout_profit_factor": 1.0918000289382224
+        },
+        "long_short_1_5x_base": {
+          "research_return_percent": -23.6619344150887,
+          "research_max_drawdown_percent": 66.4969475239783,
+          "holdout_return_percent": 23.734968561660573,
+          "holdout_max_drawdown_percent": 29.407495080954515
+        },
+        "long_short_2x_base": {
+          "research_return_percent": -37.28260620827071,
+          "research_max_drawdown_percent": 77.64920925283204,
+          "holdout_return_percent": 29.872859728068224,
+          "holdout_max_drawdown_percent": 37.50027319080481
+        },
+        "long_short_3x_base": {
+          "research_return_percent": -64.1619163365474,
+          "research_max_drawdown_percent": 90.69366504403807,
+          "holdout_return_percent": 38.25307131896201,
+          "holdout_max_drawdown_percent": 51.43466129147507
+        },
+        "adverse_stress_3x": {
+          "research_return_percent": -98.4640785112092,
+          "research_max_drawdown_percent": 98.63630853235831,
+          "holdout_return_percent": -30.758829519138665,
+          "holdout_max_drawdown_percent": 61.20533911921326
+        },
+        "exposure": {
+          "max_gross_1x": 1,
+          "max_gross_1_5x": 1.5,
+          "max_gross_2x": 2,
+          "max_gross_3x": 3,
+          "max_short_1x": 1,
+          "max_short_1_5x": 1.5,
+          "max_short_2x": 2,
+          "max_short_3x": 3
+        }
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false
+      }
+    },
+    {
       "trial_id": "T-2026-09-24-001",
       "recorded_at": "2026-09-24T10:53:00+02:00",
       "status": "archived_rejected",
@@ -456,207 +1390,6 @@
         "report_fingerprint": "ce7db03ddee10928ded0b859a6748c077198bcbe7974d514ccdb77ac6a80f64a",
         "validation_workflow_run_id": 35979270818,
         "validation_artifact_sha256": "f1e0901560ffa4915e59d6058bf81f68d3f2d2af4f7f9d796e75df6a1d55f982"
-      },
-      "safety": {
-        "paper_only": true,
-        "live_trading_enabled": false,
-        "orders_enabled": false
-      }
-    },
-    {
-      "trial_id": "T-2026-09-24-012",
-      "recorded_at": "2026-09-24T10:30:00+02:00",
-      "status": "archived_diagnostic",
-      "research_family": "leverage_long_short_validation",
-      "hypothesis": {
-        "text": "SMA 50/200 Long/Flat 1x versus symmetrisches Long/Short mit 1x/1,5x/2x/3x Margin-Leverage auf einem neuen ETF-Universum"
-      },
-      "data_scope": {
-        "research_count": null,
-        "holdout_count": null,
-        "holdout_used_for_selection": false,
-        "artifact_ids": [
-          10801303732
-        ],
-        "fully_symbol_disjoint_validation_set": null
-      },
-      "search_scope": {
-        "raw_trial_count": 1,
-        "independent_trial_count": 1,
-        "parameter_search": false,
-        "threshold_search": false,
-        "variant_search": true
-      },
-      "selection": {
-        "selected": false,
-        "selection_method": "pre-registered fixed multi-variant comparison; run terminated before analysis",
-        "selection_family_id": "leverage-long-short-2026-09-24",
-        "selection_metric": null
-      },
-      "statistical_evidence": {
-        "psr_probability": null,
-        "dsr_probability": null,
-        "pbo_probability": null,
-        "trial_sharpes": null,
-        "independent_trial_count": 1,
-        "ready": false
-      },
-      "outcome": {
-        "technical_status": "INVALID_NO_RESEARCH_RESULT",
-        "workflow_run_id": 35985720320,
-        "artifact_id": 10801303732,
-        "reason": "Data acquisition could only establish 3,495 instead of 3,500 common candles after five acquisition attempts; analysis/backtest was never executed."
-      },
-      "safety": {
-        "paper_only": true,
-        "live_trading_enabled": false,
-        "orders_enabled": false
-      }
-    },
-    {
-      "trial_id": "T-2026-09-24-013",
-      "recorded_at": "2026-09-24T10:30:00+02:00",
-      "status": "archived_diagnostic",
-      "research_family": "leverage_long_short_validation",
-      "hypothesis": {
-        "text": "SMA 50/200 Long/Flat 1x versus symmetrisches Long/Short mit 1x/1,5x/2x/3x Margin-Leverage auf einem neuen ETF-Universum"
-      },
-      "data_scope": {
-        "research_count": null,
-        "holdout_count": null,
-        "holdout_used_for_selection": false,
-        "artifact_ids": [
-          10801894033
-        ],
-        "fully_symbol_disjoint_validation_set": null
-      },
-      "search_scope": {
-        "raw_trial_count": 1,
-        "independent_trial_count": 1,
-        "parameter_search": false,
-        "threshold_search": false,
-        "variant_search": true
-      },
-      "selection": {
-        "selected": false,
-        "selection_method": "pre-registered fixed multi-variant comparison; run terminated before analysis",
-        "selection_family_id": "leverage-long-short-2026-09-24",
-        "selection_metric": null
-      },
-      "statistical_evidence": {
-        "psr_probability": null,
-        "dsr_probability": null,
-        "pbo_probability": null,
-        "trial_sharpes": null,
-        "independent_trial_count": 1,
-        "ready": false
-      },
-      "outcome": {
-        "technical_status": "INVALID_NO_RESEARCH_RESULT",
-        "workflow_run_id": 35986053526,
-        "artifact_id": 10801894033,
-        "reason": "Data acquisition could only establish 3,495 instead of 3,500 common candles after five acquisition attempts; analysis/backtest was never executed."
-      },
-      "safety": {
-        "paper_only": true,
-        "live_trading_enabled": false,
-        "orders_enabled": false
-      }
-    },
-    {
-      "trial_id": "T-2026-09-24-014",
-      "recorded_at": "2026-09-24T10:30:00+02:00",
-      "status": "archived_rejected",
-      "research_family": "leverage_long_short_validation",
-      "hypothesis": {
-        "text": "Eine symmetrische Long/Short-Version der fixierten SMA-50/200-Trendfamilie und moderates Margin-Leverage erhöhen die robuste Ertrags-/Einkommenskapazität auf einem vollständig neuen US-ETF-Universum."
-      },
-      "data_scope": {
-        "research_count": 2798,
-        "holdout_count": 700,
-        "holdout_used_for_selection": false,
-        "artifact_ids": [
-          10802099615
-        ],
-        "manifest_fingerprint": "1cda83a64549c4f0e6c37b3643f43817449e0ce40e021b64f60a726e88f077d7",
-        "fully_symbol_disjoint_validation_set": true
-      },
-      "search_scope": {
-        "raw_trial_count": 1,
-        "independent_trial_count": 1,
-        "parameter_search": false,
-        "threshold_search": false,
-        "variant_search": true
-      },
-      "selection": {
-        "selected": false,
-        "selection_method": "pre-registered fixed multi-variant comparison; no selection from holdout",
-        "selection_family_id": "leverage-long-short-2026-09-24",
-        "selection_metric": "Research/Holdout return, drawdown, PF, rolling stability and stress"
-      },
-      "statistical_evidence": {
-        "psr_probability": null,
-        "dsr_probability": null,
-        "pbo_probability": null,
-        "trial_sharpes": null,
-        "independent_trial_count": 1,
-        "ready": false
-      },
-      "outcome": {
-        "validation_status": "NO_SUPPORT",
-        "workflow_run_id": 35986741350,
-        "artifact_id": 10802099615,
-        "report_fingerprint": "101d4ff7c6007020460b3912e0256cd5ecdce7f267e78cb88b8af7c6cc2c66f3",
-        "long_flat_1x_base": {
-          "research_return_percent": 30.64897357795222,
-          "research_max_drawdown_percent": 35.465513076727795,
-          "research_profit_factor": 1.0536021333077077,
-          "holdout_return_percent": 46.07694184297413,
-          "holdout_max_drawdown_percent": 20.925178961401404,
-          "holdout_profit_factor": 1.2019132686177783
-        },
-        "long_short_1x_base": {
-          "research_return_percent": -11.959043106332246,
-          "research_max_drawdown_percent": 50.848736467086184,
-          "research_profit_factor": 0.9968752430485975,
-          "holdout_return_percent": 16.558901720018948,
-          "holdout_max_drawdown_percent": 20.494642455062785,
-          "holdout_profit_factor": 1.0918000289382224
-        },
-        "long_short_1_5x_base": {
-          "research_return_percent": -23.6619344150887,
-          "research_max_drawdown_percent": 66.4969475239783,
-          "holdout_return_percent": 23.734968561660573,
-          "holdout_max_drawdown_percent": 29.407495080954515
-        },
-        "long_short_2x_base": {
-          "research_return_percent": -37.28260620827071,
-          "research_max_drawdown_percent": 77.64920925283204,
-          "holdout_return_percent": 29.872859728068224,
-          "holdout_max_drawdown_percent": 37.50027319080481
-        },
-        "long_short_3x_base": {
-          "research_return_percent": -64.1619163365474,
-          "research_max_drawdown_percent": 90.69366504403807,
-          "holdout_return_percent": 38.25307131896201,
-          "holdout_max_drawdown_percent": 51.43466129147507
-        },
-        "adverse_stress_3x": {
-          "research_return_percent": -98.4640785112092,
-          "research_max_drawdown_percent": 98.63630853235831,
-          "holdout_return_percent": -30.758829519138665,
-          "holdout_max_drawdown_percent": 61.20533911921326
-        },
-        "exposure": {
-          "max_gross_1x": 1,
-          "max_gross_1_5x": 1.5,
-          "max_gross_2x": 2,
-          "max_gross_3x": 3,
-          "max_short_1x": 1,
-          "max_short_1_5x": 1.5,
-          "max_short_2x": 2,
-          "max_short_3x": 3
-        }
       },
       "safety": {
         "paper_only": true,
@@ -1808,100 +2541,6 @@
       }
     },
     {
-      "trial_id": "T-2026-09-24-025",
-      "recorded_at": "2026-09-24",
-      "status": "archived_rejected",
-      "research_family": "cross_sectional_market_residual_volatility",
-      "hypothesis": {
-        "text": "Assets with the lowest market-residual volatility over the prior 252 completed sessions outperform the four highest-residual-volatility assets in the following calendar month after costs."
-      },
-      "data_scope": {
-        "research_count": 2798,
-        "holdout_count": 700,
-        "holdout_used_for_selection": false,
-        "artifact_ids": [
-          10818270142
-        ],
-        "fully_symbol_disjoint_validation_set": true,
-        "symbols": [
-          "COST",
-          "TMO",
-          "LIN",
-          "DE",
-          "EMR",
-          "SBUX",
-          "VZ",
-          "MA"
-        ],
-        "report_fingerprint": "9f2088cb95fb6f7d0d5e3a1b9e6b2857c03c5904871cad4cefaffef9533e860e",
-        "manifest_fingerprint": "bc146938fa2b112b23bc71503c1649fcf9d84f802b2ce27dc8c8e9a8441f5ed7",
-        "artifact_digest_sha256": "183d51f7ae4cdfb817f1a6aa62c8960b6343da10a8db2e306c73f904bd4125d5"
-      },
-      "search_scope": {
-        "raw_trial_count": 1,
-        "independent_trial_count": 1,
-        "parameter_search": false,
-        "threshold_search": false,
-        "variant_search": false
-      },
-      "selection": {
-        "selected": false,
-        "selection_method": "pre-registered single hypothesis",
-        "selection_family_id": "cross-sectional-market-residual-volatility-2026-09-24",
-        "selection_metric": "fixed Research/Holdout return, drawdown, profit factor, rolling stability, OOS/Research, cost stress and low-vs-high residual-volatility edge"
-      },
-      "statistical_evidence": {
-        "psr_probability": null,
-        "dsr_probability": null,
-        "pbo_probability": null,
-        "trial_sharpes": null,
-        "independent_trial_count": 1,
-        "ready": false
-      },
-      "safety": {
-        "paper_only": true,
-        "live_trading_enabled": false,
-        "orders_enabled": false
-      },
-      "outcome": {
-        "validation_status": "NO_SUPPORT",
-        "workflow_run_id": 36022604471,
-        "artifact_id": 10818270142,
-        "report_fingerprint": "9f2088cb95fb6f7d0d5e3a1b9e6b2857c03c5904871cad4cefaffef9533e860e",
-        "all_checks_passed": false,
-        "key_metrics": {
-          "research_return_percent": 150.43062116974636,
-          "research_max_drawdown_percent": 26.084746028391937,
-          "research_profit_factor": 1.118285368297002,
-          "research_rolling_profitable_windows": 5,
-          "research_rolling_window_count": 5,
-          "holdout_return_percent": 35.36678645414133,
-          "holdout_max_drawdown_percent": 15.05591220926087,
-          "holdout_profit_factor": 1.1557797114069652,
-          "oos_to_research_return_ratio": 0.23510363900068817,
-          "holdout_1_5x_cost_return_percent": 35.06271115412809,
-          "holdout_2x_cost_return_percent": 34.75920525888074,
-          "research_mean_low_residual_vol_edge": -0.00021325101103298786,
-          "holdout_mean_low_residual_vol_edge": -0.0002208342161736738,
-          "total_turnover": 23
-        },
-        "gate_results": {
-          "research_return_positive": true,
-          "research_drawdown": false,
-          "research_profit_factor": true,
-          "rolling_profitable_window_ratio": true,
-          "oos_to_research_return_ratio": false,
-          "holdout_return_positive": true,
-          "holdout_drawdown": false,
-          "holdout_profit_factor": true,
-          "stress_1_5x_nonnegative": true,
-          "stress_2x_nonnegative": true,
-          "research_low_residual_vol_edge_positive": false,
-          "holdout_low_residual_vol_edge_positive": false
-        }
-      }
-    },
-    {
       "trial_id": "T-2026-09-24-026",
       "recorded_at": "2026-09-24T18:24:50+02:00",
       "status": "archived_rejected",
@@ -2001,422 +2640,6 @@
           "holdout_return_not_worse": false,
           "holdout_drawdown_not_worse": true,
           "holdout_pf_not_worse": false
-        }
-      },
-      "safety": {
-        "paper_only": true,
-        "live_trading_enabled": false,
-        "orders_enabled": false
-      }
-    },
-    {
-      "trial_id": "T-2026-09-24-027",
-      "recorded_at": "2026-09-24",
-      "status": "archived_rejected",
-      "research_family": "tsm_ensemble_trend_sleeve_replacement",
-      "hypothesis": {
-        "text": "Replacing only the fixed SMA 50/200 long-only trend signal with a fixed majority-vote TSM ensemble over 63/126/252 sessions improves candidate quality while preserving the fixed cross-sectional sleeve and risk layer."
-      },
-      "data_scope": {
-        "research_count": 2798,
-        "holdout_count": 700,
-        "holdout_used_for_selection": false,
-        "artifact_ids": [
-          10820593251
-        ],
-        "artifact_digest": "sha256:1320c20515be7d24e64f23d9af7090ab4c9f9bb53b6e17c16b924a84e878c247",
-        "manifest_fingerprint": "c817bd74d4912316726dbc51347fe0dab22049acadd753bef0bdece89fe59748",
-        "fully_symbol_disjoint_validation_set": true,
-        "trend_symbols": [
-          "IVV",
-          "ITOT",
-          "SCHX",
-          "SCHF",
-          "SPAB",
-          "IEI",
-          "MBB",
-          "VCSH"
-        ],
-        "cross_sectional_symbols": [
-          "IYJ",
-          "IYC",
-          "IYM",
-          "IYK",
-          "IYW"
-        ],
-        "common_returns": 3498
-      },
-      "search_scope": {
-        "raw_trial_count": 1,
-        "independent_trial_count": 1,
-        "parameter_search": false,
-        "threshold_search": false,
-        "variant_search": false
-      },
-      "selection": {
-        "selected": false,
-        "selection_method": "pre-registered single hypothesis; no holdout selection",
-        "selection_family_id": "tsm-ensemble-trend-sleeve-replacement-2026-09-24",
-        "selection_metric": "absolute Research gates plus non-worsening comparison against the fixed 50/50 candidate on the same validation set"
-      },
-      "statistical_evidence": {
-        "psr_probability": null,
-        "dsr_probability": null,
-        "pbo_probability": null,
-        "trial_sharpes": null,
-        "independent_trial_count": 1,
-        "ready": false
-      },
-      "outcome": {
-        "validation_status": "NO_SUPPORT",
-        "workflow_run_id": 36029169717,
-        "artifact_id": 10820593251,
-        "artifact_sha256": "1320c20515be7d24e64f23d9af7090ab4c9f9bb53b6e17c16b924a84e878c247",
-        "report_fingerprint": "57b87f09de867cb2ef535aaf7e6132618d5e116ca36b04d9968cc8c5b327cf51",
-        "code_commit_sha": "169b239c188678c71d3d9bb9ae092e785832c72e",
-        "all_checks_passed": false,
-        "key_metrics": {
-          "fixed_research_return_percent": 57.55357983903355,
-          "fixed_research_drawdown_percent": 16.3444444024894,
-          "fixed_research_profit_factor": 1.0956517837613973,
-          "fixed_holdout_return_percent": 26.54548561335117,
-          "fixed_holdout_drawdown_percent": 13.449714874345975,
-          "fixed_holdout_profit_factor": 1.1643339519228775,
-          "tsm_research_return_percent": 56.75671193309189,
-          "tsm_research_drawdown_percent": 16.518499675074427,
-          "tsm_research_profit_factor": 1.0958921334797123,
-          "tsm_research_profitable_rolling_windows": 4,
-          "tsm_research_rolling_profit_factor": 1.0958921334797116,
-          "tsm_research_average_rolling_drawdown_percent": 13.318187913186971,
-          "tsm_oos_to_is_return_ratio": 0.521051206810266,
-          "tsm_holdout_return_percent": 29.57315324732015,
-          "tsm_holdout_drawdown_percent": 10.66019327355523,
-          "tsm_holdout_profit_factor": 1.1823201179025096,
-          "tsm_total_return_holdout_percent": 34.80494537133252,
-          "tsm_total_return_holdout_drawdown_percent": 10.249591133096558,
-          "tsm_total_return_holdout_profit_factor": 1.2114439602909792,
-          "tsm_stress_2x_holdout_return_percent": 26.83211735886628
-        },
-        "gate_results": {
-          "research_return_positive": true,
-          "research_drawdown": false,
-          "research_profit_factor": false,
-          "rolling_profit_factor": false,
-          "rolling_profitable_window_ratio": true,
-          "rolling_average_drawdown": false,
-          "oos_to_is_return_ratio": true,
-          "holdout_return_positive": true,
-          "holdout_profit_factor": true,
-          "holdout_drawdown": false,
-          "stress_1_5x_nonnegative": true,
-          "stress_2x_nonnegative": true,
-          "total_return_sensitivity_nonnegative": true,
-          "research_return_not_below_fixed": false,
-          "research_drawdown_not_worse_vs_fixed": false,
-          "research_profit_factor_not_below_fixed": true,
-          "rolling_pf_not_below_fixed": true,
-          "rolling_profitable_ratio_not_below_fixed": true,
-          "rolling_average_drawdown_not_worse_vs_fixed": false,
-          "oos_to_is_not_below_fixed": true,
-          "holdout_return_not_below_fixed": true,
-          "holdout_pf_not_below_fixed": true,
-          "holdout_drawdown_not_worse_vs_fixed": true
-        }
-      },
-      "safety": {
-        "paper_only": true,
-        "live_trading_enabled": false,
-        "orders_enabled": false
-      }
-    },
-    {
-      "trial_id": "T-2026-09-24-028",
-      "recorded_at": "2026-09-24",
-      "status": "archived_rejected",
-      "research_family": "per_sleeve_volatility_budget",
-      "hypothesis": {
-        "text": "Applying the existing 63-session/10% volatility budget independently to the Trend and Cross-Sectional sleeves before fixed 50/50 aggregation reduces sleeve-driven drawdown concentration without reducing holdout performance versus the fixed candidate."
-      },
-      "data_scope": {
-        "research_count": 2798,
-        "holdout_count": 700,
-        "holdout_used_for_selection": false,
-        "artifact_ids": [
-          10825414801
-        ],
-        "artifact_digest": "sha256:1d733848e28cdecf0c7ea9a5a85dcf0cf9f089fa79eeaafe341c424743c74834",
-        "manifest_fingerprint": "f99f1b40c931c860987c26c65fe988a9d140c866f7370fddad2e40af2ec9b2dd",
-        "fully_symbol_disjoint_validation_set": true,
-        "trend_symbols": [
-          "SPLV",
-          "SPHQ",
-          "SPYG",
-          "SPYV",
-          "FXI",
-          "GDX",
-          "PFF",
-          "CWB"
-        ],
-        "cross_sectional_symbols": [
-          "XSD",
-          "IBB",
-          "ITA",
-          "XAR",
-          "XES"
-        ],
-        "common_returns": 3498
-      },
-      "search_scope": {
-        "raw_trial_count": 1,
-        "independent_trial_count": 1,
-        "parameter_search": false,
-        "threshold_search": false,
-        "variant_search": false
-      },
-      "selection": {
-        "selected": false,
-        "selection_method": "pre-registered single risk intervention; no holdout selection",
-        "selection_family_id": "per-sleeve-volatility-budget-2026-09-24",
-        "selection_metric": "absolute gates plus non-worsening comparison against fixed candidate"
-      },
-      "statistical_evidence": {
-        "psr_probability": null,
-        "dsr_probability": null,
-        "pbo_probability": null,
-        "trial_sharpes": null,
-        "independent_trial_count": 1,
-        "ready": false
-      },
-      "outcome": {
-        "validation_status": "NO_SUPPORT",
-        "workflow_run_id": 36038357899,
-        "artifact_id": 10825414801,
-        "artifact_sha256": "sha256:1d733848e28cdecf0c7ea9a5a85dcf0cf9f089fa79eeaafe341c424743c74834",
-        "report_fingerprint": "ee00872c970d9c6935ced344a5642b5b17e27e8ce072a97462518b5a203bc57a",
-        "code_commit_sha": "1b2a2918d99a54e933adb8cfe8f1a3b357bb7118",
-        "all_checks_passed": false,
-        "key_metrics": {
-          "fixed_research_return_percent": 48.6277384464445,
-          "fixed_research_drawdown_percent": 22.47870605251383,
-          "fixed_research_profit_factor": 1.0745932876309412,
-          "fixed_holdout_return_percent": 28.66318927795575,
-          "fixed_holdout_drawdown_percent": 10.254113845757484,
-          "fixed_holdout_profit_factor": 1.165130130624257,
-          "per_sleeve_research_return_percent": 48.18375582986765,
-          "per_sleeve_research_drawdown_percent": 17.551085896738993,
-          "per_sleeve_research_profit_factor": 1.0849214448493505,
-          "per_sleeve_holdout_return_percent": 28.452135045130667,
-          "per_sleeve_holdout_drawdown_percent": 9.64771938980926,
-          "per_sleeve_holdout_profit_factor": 1.1903811801171629,
-          "per_sleeve_oos_to_is_return_ratio": 0.5904922635253363,
-          "total_return_holdout_percent": 31.710642158032897,
-          "total_return_holdout_drawdown_percent": 8.494593993233647,
-          "total_return_holdout_profit_factor": 1.2091910692583154,
-          "stress_1_5x_holdout_return_percent": 27.63723866804817,
-          "stress_2x_holdout_return_percent": 26.827425340889597
-        },
-        "gate_results": {
-          "research_return_positive": true,
-          "research_drawdown": false,
-          "research_profit_factor": false,
-          "rolling_profit_factor": false,
-          "rolling_profitable_window_ratio": true,
-          "rolling_average_drawdown": false,
-          "oos_to_is_return_ratio": true,
-          "holdout_return_positive": true,
-          "holdout_profit_factor": true,
-          "holdout_drawdown": true,
-          "stress_1_5x_nonnegative": true,
-          "stress_2x_nonnegative": true,
-          "total_return_sensitivity_nonnegative": true,
-          "research_return_not_below_fixed": false,
-          "research_drawdown_not_worse_vs_fixed": true,
-          "research_profit_factor_not_below_fixed": true,
-          "rolling_pf_not_below_fixed": true,
-          "rolling_profitable_ratio_not_below_fixed": true,
-          "rolling_average_drawdown_not_worse_vs_fixed": true,
-          "oos_to_is_not_below_fixed": true,
-          "holdout_return_not_below_fixed": false,
-          "holdout_pf_not_below_fixed": true,
-          "holdout_drawdown_not_worse_vs_fixed": true
-        },
-        "deltas_vs_fixed": {
-          "research_return_delta_percentage_points": -0.44398261657685456,
-          "research_drawdown_delta_percentage_points": -4.927620155774836,
-          "research_profit_factor_delta": 0.010328157218409295,
-          "holdout_return_delta_percentage_points": -0.21105423282508085,
-          "holdout_drawdown_delta_percentage_points": -0.606394455948223,
-          "holdout_profit_factor_delta": 0.025251049492905908
-        }
-      },
-      "safety": {
-        "paper_only": true,
-        "live_trading_enabled": false,
-        "orders_enabled": false
-      }
-    },
-    {
-      "trial_id": "T-2026-09-24-029",
-      "recorded_at": "2026-09-24",
-      "status": "data_invalid",
-      "research_family": "sleeve_volatility_parity",
-      "scientific_outcome": "NO_SCIENTIFIC_OUTCOME",
-      "reason": "Preregistered data contract requires 3,500 candles and 3,498 common PIT returns; IEFA provided only 3,496 candles, so common calendar length was 3,496.",
-      "data_scope": {
-        "requested_symbols": [
-          "IWB",
-          "IEFA",
-          "BIV",
-          "BSV",
-          "VGIT",
-          "JNK",
-          "HDV",
-          "DBE",
-          "IYF",
-          "IYE",
-          "IYG",
-          "DJP",
-          "EPHE"
-        ],
-        "limiting_symbol": "IEFA",
-        "limiting_symbol_count": 3496,
-        "other_symbol_count": 3520,
-        "common_calendar_count": 3496,
-        "research_count": 2798,
-        "holdout_count": 700,
-        "performance_selection_used": false
-      },
-      "evidence": {
-        "workflow_run_id": 36039285580,
-        "artifact_id": 10826146206,
-        "artifact_sha256": "sha256:652627afbe7ab0cb39d374d986a32d265c779d9f96b27f233d3b8108477fc036",
-        "failure": "ValueError: Gemeinsamer Kalender bleibt zu kurz: 3496 statt 3500 nach 5 Akquisitionen."
-      },
-      "governance": {
-        "modified_after_failure": false,
-        "target_count_relaxed": false,
-        "symbol_replacement_after_failure": false,
-        "no_return_metrics_produced": true,
-        "no_candidate_selection": true
-      },
-      "safety": {
-        "paper_only": true,
-        "live_trading_enabled": false,
-        "orders_enabled": false
-      }
-    },
-    {
-      "trial_id": "T-2026-09-24-030",
-      "recorded_at": "2026-09-24",
-      "status": "archived_rejected",
-      "research_family": "sleeve_volatility_parity_confirmation",
-      "hypothesis": {
-        "text": "Monthly inverse-volatility parity between unchanged Trend and Cross-Sectional sleeves, using prior 63 completed sleeve returns, improves risk concentration without reducing holdout performance versus fixed 50/50."
-      },
-      "data_scope": {
-        "research_count": 2798,
-        "holdout_count": 700,
-        "holdout_used_for_selection": false,
-        "artifact_ids": [
-          10825679094
-        ],
-        "artifact_digest": "sha256:cc46dfadb3581fab21012b651b857b32e06a43dc37399d45479423da899f2191",
-        "manifest_fingerprint": "9ef4c9fa58e6a8a573d0836379572d7a441a2fb5300fc4eca33155b2059cf224",
-        "fully_symbol_disjoint_validation_set": true,
-        "trend_symbols": [
-          "VV",
-          "VHT",
-          "VFH",
-          "VIS",
-          "VAW",
-          "VDE",
-          "VPU",
-          "VGT"
-        ],
-        "cross_sectional_symbols": [
-          "SPDW",
-          "SPMB",
-          "SPEM",
-          "SPTL",
-          "SPIP"
-        ],
-        "common_returns": 3498
-      },
-      "search_scope": {
-        "raw_trial_count": 1,
-        "independent_trial_count": 1,
-        "parameter_search": false,
-        "threshold_search": false,
-        "variant_search": false
-      },
-      "selection": {
-        "selected": false,
-        "selection_method": "pre-registered single hypothesis; no holdout selection",
-        "selection_family_id": "sleeve-volatility-parity-confirmation-2026-09-24",
-        "selection_metric": "absolute gates plus non-worsening comparison against fixed 50/50 candidate"
-      },
-      "statistical_evidence": {
-        "psr_probability": null,
-        "dsr_probability": null,
-        "pbo_probability": null,
-        "trial_sharpes": null,
-        "independent_trial_count": 1,
-        "ready": false
-      },
-      "outcome": {
-        "validation_status": "NO_SUPPORT",
-        "workflow_run_id": 36040997311,
-        "artifact_id": 10825679094,
-        "artifact_sha256": "cc46dfadb3581fab21012b651b857b32e06a43dc37399d45479423da899f2191",
-        "report_fingerprint": "26cc96a1d7210a97443016f5374fccc2e1c466ce2eb1f6859ca778c9a3eefabe",
-        "code_commit_sha": "2018c30a4c3ad6afb01208861328666d1ec74b98",
-        "all_checks_passed": false,
-        "key_metrics": {
-          "fixed_research_return_percent": 32.69304886190834,
-          "fixed_research_drawdown_percent": 18.295815828244642,
-          "fixed_research_profit_factor": 1.0642074483997912,
-          "fixed_holdout_return_percent": 23.543481873667215,
-          "fixed_holdout_drawdown_percent": 12.373922346262834,
-          "fixed_holdout_profit_factor": 1.1484373029131294,
-          "parity_research_return_percent": 21.189031831906235,
-          "parity_research_drawdown_percent": 19.191053123266077,
-          "parity_research_profit_factor": 1.0464228676646035,
-          "parity_rolling_profit_factor": 1.0464228676646006,
-          "parity_average_rolling_drawdown_percent": 14.151271161543466,
-          "parity_oos_to_is_return_ratio": 1.1119654683518048,
-          "parity_holdout_return_percent": 23.561471704886916,
-          "parity_holdout_drawdown_percent": 12.319624838215715,
-          "parity_holdout_profit_factor": 1.1492958108036917,
-          "parity_total_return_holdout_percent": 30.17660226740855,
-          "parity_total_return_holdout_drawdown_percent": 11.447481327724917,
-          "parity_total_return_holdout_profit_factor": 1.1871711018661346,
-          "parity_stress_1_5x_holdout_return_percent": 22.466167462122844,
-          "parity_stress_2x_holdout_return_percent": 21.38043476559799
-        },
-        "gate_results": {
-          "research_return_positive": true,
-          "research_drawdown": false,
-          "research_profit_factor": false,
-          "rolling_profit_factor": false,
-          "rolling_profitable_window_ratio": true,
-          "rolling_average_drawdown": false,
-          "oos_to_is_return_ratio": true,
-          "holdout_return_positive": true,
-          "holdout_profit_factor": true,
-          "holdout_drawdown": false,
-          "stress_1_5x_nonnegative": true,
-          "stress_2x_nonnegative": true,
-          "total_return_sensitivity_nonnegative": true,
-          "research_return_not_below_fixed": false,
-          "research_drawdown_not_worse_vs_fixed": false,
-          "research_profit_factor_not_below_fixed": false,
-          "rolling_pf_not_below_fixed": false,
-          "rolling_profitable_ratio_not_below_fixed": true,
-          "rolling_average_drawdown_not_worse_vs_fixed": false,
-          "oos_to_is_not_below_fixed": true,
-          "holdout_return_not_below_fixed": true,
-          "holdout_pf_not_below_fixed": true,
-          "holdout_drawdown_not_worse_vs_fixed": true
         }
       },
       "safety": {
@@ -2541,229 +2764,6 @@
             "holdout_return_not_below_fixed": false,
             "holdout_pf_not_below_fixed": false,
             "holdout_drawdown_not_worse_vs_fixed": true
-          }
-        }
-      },
-      "safety": {
-        "paper_only": true,
-        "live_trading_enabled": false,
-        "orders_enabled": false
-      }
-    },
-    {
-      "trial_id": "T-2026-09-24-032",
-      "recorded_at": "2026-09-24",
-      "status": "data_invalid",
-      "research_family": "relative_value_etf_pairs",
-      "hypothesis": {
-        "text": "Coverage preflight for five fixed ex ante ETF relative-value pairs before any performance evaluation."
-      },
-      "data_scope": {
-        "target_candles": 3500,
-        "requested_candles": 3520,
-        "performance_evaluation": false,
-        "holdout_evaluation": false,
-        "symbols": [
-          "VTWO",
-          "IJR",
-          "QQQM",
-          "ONEQ",
-          "IEMG",
-          "SCHE",
-          "IGIB",
-          "SPIB",
-          "SCHP",
-          "STIP"
-        ],
-        "invalid_symbol": "QQQM",
-        "invalid_candle_count": 1493,
-        "required_candle_count": 3520
-      },
-      "search_scope": {
-        "raw_trial_count": 0,
-        "parameter_search": false,
-        "threshold_search": false,
-        "variant_search": false,
-        "holdout_used_for_selection": false
-      },
-      "selection": {
-        "selected": false,
-        "selection_method": "coverage preflight only"
-      },
-      "outcome": {
-        "validation_status": "DATA_INVALID",
-        "workflow_run_id": 36043628557,
-        "error": "Yahoo lieferte nur 1493 von 3520 angeforderten Candles für QQQM.",
-        "no_performance_claim": true
-      },
-      "safety": {
-        "paper_only": true,
-        "live_trading_enabled": false,
-        "orders_enabled": false
-      }
-    },
-    {
-      "trial_id": "T-2026-09-24-033",
-      "recorded_at": "2026-09-24",
-      "status": "data_invalid",
-      "research_family": "relative_value_etf_pairs",
-      "hypothesis": {
-        "text": "Coverage preflight for five fixed ex ante ETF relative-value pairs after one prior coverage correction."
-      },
-      "data_scope": {
-        "target_candles": 3500,
-        "requested_candles": 3520,
-        "performance_evaluation": false,
-        "holdout_evaluation": false,
-        "symbols": [
-          "VTWO",
-          "IJR",
-          "QQEW",
-          "ONEQ",
-          "IEMG",
-          "SCHE",
-          "IGIB",
-          "SPIB",
-          "SCHP",
-          "STIP"
-        ],
-        "invalid_symbol": "IEMG",
-        "invalid_candle_count": 3496,
-        "required_candle_count": 3520
-      },
-      "search_scope": {
-        "raw_trial_count": 0,
-        "parameter_search": false,
-        "threshold_search": false,
-        "variant_search": false,
-        "holdout_used_for_selection": false
-      },
-      "selection": {
-        "selected": false,
-        "selection_method": "coverage preflight only"
-      },
-      "outcome": {
-        "validation_status": "DATA_INVALID",
-        "workflow_run_id": 36043884651,
-        "error": "Yahoo lieferte nur 3496 von 3520 angeforderten Candles für IEMG.",
-        "no_performance_claim": true
-      },
-      "safety": {
-        "paper_only": true,
-        "live_trading_enabled": false,
-        "orders_enabled": false
-      }
-    },
-    {
-      "trial_id": "T-2026-09-24-034",
-      "recorded_at": "2026-09-24",
-      "status": "archived_rejected",
-      "research_family": "fixed_cointegration_gated_etf_relative_value",
-      "hypothesis": {
-        "text": "Five fixed ex ante ETF pairs with monthly ADF cointegration eligibility and daily price-ratio mean reversion can provide a standalone market-neutral return stream after project costs."
-      },
-      "data_scope": {
-        "target_candles_per_symbol": 3500,
-        "common_return_count": 3498,
-        "research_count": 2798,
-        "holdout_count": 700,
-        "holdout_used_for_selection": false,
-        "fully_symbol_disjoint_validation_set": true,
-        "pairs": [
-          [
-            "VTWO",
-            "IJR"
-          ],
-          [
-            "QQEW",
-            "ONEQ"
-          ],
-          [
-            "EEMV",
-            "SCHE"
-          ],
-          [
-            "IGIB",
-            "SPIB"
-          ],
-          [
-            "SCHP",
-            "STIP"
-          ]
-        ],
-        "coverage_preflight_workflow_id": 36044264502,
-        "coverage_preflight_artifact_id": 10827700370,
-        "coverage_preflight_fingerprint": "b4102c8e01e442ca5657426b96f0dc97ec919783299408946975f49b05c445a4"
-      },
-      "search_scope": {
-        "raw_trial_count": 1,
-        "independent_trial_count": 1,
-        "pair_search": false,
-        "parameter_search": false,
-        "threshold_search": false,
-        "holdout_used_for_selection": false
-      },
-      "selection": {
-        "selected": false,
-        "selection_method": "five pairs fixed ex ante; no pair selection by performance",
-        "selection_family_id": "fixed-cointegration-gated-etf-relative-value-2026-09-24"
-      },
-      "statistical_evidence": {
-        "psr_probability": null,
-        "dsr_probability": null,
-        "pbo_probability": null,
-        "independent_trial_count": 1,
-        "ready": false
-      },
-      "outcome": {
-        "validation_status": "NO_SUPPORT",
-        "workflow_run_id": 36045225948,
-        "artifact_id": 10827469931,
-        "artifact_sha256": "sha256:c90990863e1844977352a50cd6023c9ccca215e98de5dfa2225782f90bc468f3",
-        "report_fingerprint": "pending_from_archived_report",
-        "code_head_sha": "d4359b81929be13d3d6dc86b9f0617a6acd846b0",
-        "all_checks_passed": false,
-        "key_metrics": {
-          "research_return_percent": -18.924544276335,
-          "research_drawdown_percent": 19.01292208581514,
-          "research_profit_factor": 0.5988111477088774,
-          "research_trade_count": 85,
-          "rolling_profitable_window_ratio": 0,
-          "rolling_profit_factor": 0.5988111477088774,
-          "average_rolling_drawdown_percent": 4.452247603181767,
-          "holdout_return_percent": -0.7088395725081797,
-          "holdout_drawdown_percent": 1.3893976869612357,
-          "holdout_profit_factor": 0.8553531994992126,
-          "holdout_trade_count": 6,
-          "holdout_active_day_ratio": 0.09,
-          "stress_1_5x_holdout_return_percent": -1.6000027411465334,
-          "stress_2x_holdout_return_percent": -2.48382853933391
-        },
-        "pair_diagnostics": {
-          "VTWO/IJR": {
-            "eligible_rebalance_ratio": 0.06369426751592357,
-            "entry_count": 12,
-            "exit_count": 12
-          },
-          "QQEW/ONEQ": {
-            "eligible_rebalance_ratio": 0.12101910828025478,
-            "entry_count": 14,
-            "exit_count": 14
-          },
-          "EEMV/SCHE": {
-            "eligible_rebalance_ratio": 0.05732484076433121,
-            "entry_count": 6,
-            "exit_count": 6
-          },
-          "IGIB/SPIB": {
-            "eligible_rebalance_ratio": 0.2802547770700637,
-            "entry_count": 50,
-            "exit_count": 50
-          },
-          "SCHP/STIP": {
-            "eligible_rebalance_ratio": 0.07643312101910828,
-            "entry_count": 9,
-            "exit_count": 9
           }
         }
       },
@@ -4966,6 +4966,112 @@
       ]
     },
     {
+      "trial_id": "T-2026-09-27-060",
+      "recorded_at": "2026-09-27T20:10:19Z",
+      "status": "performance_completed_no_arm_passed_all_gates",
+      "research_family": "q041_price_only_alpha_multiarm",
+      "hypothesis": {
+        "text": "Evaluate four fixed price/OHLCV alpha mechanisms plus the unchanged T052 control on the fresh Q038 universe after successful Q039 PIT validation."
+      },
+      "data_scope": {
+        "symbols": [
+          "IVE",
+          "IWL",
+          "DLN",
+          "DHS",
+          "DON",
+          "DES",
+          "USRT",
+          "ITB"
+        ],
+        "universe": "validation_2026_09_27_q039_price_only_alpha_pit",
+        "requested_candles": 4000,
+        "target_common_candles": 3500,
+        "research_count": 2798,
+        "holdout_count": 700,
+        "performance_workflow_run_id": 36346986793,
+        "performance_artifact_id": 10941341360,
+        "performance_artifact_digest": "sha256:d960f60ebb21a60624d27a33f6eafce561b24f62922f0a26824e418055eed4db",
+        "performance_evidence_report_fingerprint": "18b4529b47e3a768f4b92c3ac7f7bff415585a13a5c8bc17f8ed6790834d63d5",
+        "performance_evaluation": true,
+        "oos_evaluation": true,
+        "holdout_evaluation": true
+      },
+      "search_scope": {
+        "raw_trial_count": 5,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "asset_search": false,
+        "horizon_search": false,
+        "family_ranking": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "none; all preregistered arms evaluated symmetrically",
+        "selection_metric": null,
+        "holdout_used_for_selection": false
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
+        "scientific_outcome": "NO_ARM_PASSED_ALL_13_GATES",
+        "workflow_run_id": 36346986793,
+        "workflow_conclusion": "success",
+        "artifact_id": 10941341360,
+        "artifact_digest": "sha256:d960f60ebb21a60624d27a33f6eafce561b24f62922f0a26824e418055eed4db",
+        "report_fingerprint": "18b4529b47e3a768f4b92c3ac7f7bff415585a13a5c8bc17f8ed6790834d63d5",
+        "arms": [
+          {
+            "id": "CONTROL",
+            "gates_passed": 9,
+            "gates_total": 13
+          },
+          {
+            "id": "A1_TSM_CONSENSUS",
+            "gates_passed": 2,
+            "gates_total": 13
+          },
+          {
+            "id": "A2_CS_MOMENTUM_TOP2",
+            "gates_passed": 9,
+            "gates_total": 13
+          },
+          {
+            "id": "A3_RESIDUAL_MOMENTUM_TOP2",
+            "gates_passed": 9,
+            "gates_total": 13
+          },
+          {
+            "id": "A5_LOW_BETA_TOP2",
+            "gates_passed": 9,
+            "gates_total": 13
+          }
+        ],
+        "common_failed_gates": [
+          "research_drawdown_lte_10pct",
+          "research_profit_factor_gte_1_10",
+          "rolling_average_drawdown_lte_10pct",
+          "holdout_drawdown_lte_10pct"
+        ],
+        "holdout_selection_used": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
+    },
+    {
       "trial_id": "T-2026-09-27-061",
       "recorded_at": "2026-09-27T20:15:00Z",
       "status": "pit_validated",
@@ -5193,80 +5299,6 @@
       }
     },
     {
-      "trial_id": "T-2026-09-27-064",
-      "recorded_at": "2026-09-27T20:28:00Z",
-      "status": "pit_validated",
-      "research_family": "q044_fresh_alpha_pit",
-      "hypothesis": {
-        "text": "Verify point-in-time stability of six fixed price/OHLCV alpha mechanisms on the fresh Q043 symbol-disjoint universe."
-      },
-      "data_scope": {
-        "symbols": [
-          "AON",
-          "CVS",
-          "ADSK",
-          "BA",
-          "T",
-          "F",
-          "LUV",
-          "NFLX"
-        ],
-        "requested_candles": 4000,
-        "target_common_candles": 3500,
-        "common_calendar_count": 4000,
-        "checked_decision_points": 29,
-        "source_coverage_trial": "T-2026-09-27-063",
-        "workflow_run_id": 36347449579,
-        "artifact_id": 10940718513,
-        "artifact_digest": "sha256:25290cde87922ea247feb434ae99103d060a4c0e10a8d34cb43fc00d8e8e9984"
-      },
-      "search_scope": {
-        "raw_trial_count": 6,
-        "independent_trial_count": 1,
-        "parameter_search": false,
-        "threshold_search": false,
-        "variant_search": false,
-        "asset_search": false,
-        "horizon_search": false
-      },
-      "selection": {
-        "selected": false,
-        "selection_method": "none; PIT gate only",
-        "selection_metric": null,
-        "holdout_used_for_selection": false
-      },
-      "statistical_evidence": {
-        "psr_probability": null,
-        "dsr_probability": null,
-        "pbo_probability": null,
-        "trial_sharpes": null,
-        "independent_trial_count": 1,
-        "ready": false
-      },
-      "outcome": {
-        "validation_status": "PIT_PASSED",
-        "scientific_outcome": "PIT_PASSED_NO_PERFORMANCE_EVIDENCE",
-        "workflow_run_id": 36347449579,
-        "workflow_conclusion": "success",
-        "artifact_id": 10940718513,
-        "artifact_digest": "sha256:25290cde87922ea247feb434ae99103d060a4c0e10a8d34cb43fc00d8e8e9984",
-        "checks_fingerprint": "dbd4f0547c047512fdd92757cc14adecf99339a37a3d57c0ef821dd9df18c739",
-        "report_fingerprint": "9f847f54614b1fa634788e0d01a0808e277e28481b70a903d8aec9ebaab0c54d",
-        "checked_decision_points": 29,
-        "future_mutation_checks_passed": true,
-        "next_session_mutation_checks_passed": true,
-        "performance_evaluation": false,
-        "holdout_used_for_selection": false,
-        "selection_used": false
-      },
-      "safety": {
-        "paper_only": true,
-        "live_trading_enabled": false,
-        "orders_enabled": false,
-        "automatic_promotion": false
-      }
-    },
-    {
       "trial_id": "T-2026-09-27-065",
       "recorded_at": "2026-09-27T20:26:53Z",
       "status": "performance_completed_no_arm_passed_all_gates",
@@ -5431,7 +5463,155 @@
         "orders_enabled": false,
         "automatic_promotion": false
       }
+    },
+    {
+      "trial_id": "T-2026-09-27-064",
+      "recorded_at": "2026-09-27T20:28:00Z",
+      "status": "pit_validated",
+      "research_family": "q044_fresh_alpha_pit",
+      "hypothesis": {
+        "text": "Verify point-in-time stability of six fixed price/OHLCV alpha mechanisms on the fresh Q043 symbol-disjoint universe."
+      },
+      "data_scope": {
+        "symbols": [
+          "AON",
+          "CVS",
+          "ADSK",
+          "BA",
+          "T",
+          "F",
+          "LUV",
+          "NFLX"
+        ],
+        "requested_candles": 4000,
+        "target_common_candles": 3500,
+        "common_calendar_count": 4000,
+        "checked_decision_points": 29,
+        "source_coverage_trial": "T-2026-09-27-063",
+        "workflow_run_id": 36347449579,
+        "artifact_id": 10940718513,
+        "artifact_digest": "sha256:25290cde87922ea247feb434ae99103d060a4c0e10a8d34cb43fc00d8e8e9984"
+      },
+      "search_scope": {
+        "raw_trial_count": 6,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "asset_search": false,
+        "horizon_search": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "none; PIT gate only",
+        "selection_metric": null,
+        "holdout_used_for_selection": false
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "PIT_PASSED",
+        "scientific_outcome": "PIT_PASSED_NO_PERFORMANCE_EVIDENCE",
+        "workflow_run_id": 36347449579,
+        "workflow_conclusion": "success",
+        "artifact_id": 10940718513,
+        "artifact_digest": "sha256:25290cde87922ea247feb434ae99103d060a4c0e10a8d34cb43fc00d8e8e9984",
+        "checks_fingerprint": "dbd4f0547c047512fdd92757cc14adecf99339a37a3d57c0ef821dd9df18c739",
+        "report_fingerprint": "9f847f54614b1fa634788e0d01a0808e277e28481b70a903d8aec9ebaab0c54d",
+        "checked_decision_points": 29,
+        "future_mutation_checks_passed": true,
+        "next_session_mutation_checks_passed": true,
+        "performance_evaluation": false,
+        "holdout_used_for_selection": false,
+        "selection_used": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
+    },
+    {
+      "trial_id": "T-2026-09-28-066",
+      "recorded_at": "2026-09-28T05:02:01Z",
+      "status": "archived_diagnostic",
+      "research_family": "q066_alpha_failure_mechanism_diagnosis",
+      "hypothesis": {
+        "text": "Decompose the immutable Q041/T060 and Q045/T065 fixed-alpha results by symbol, sleeve, regime, signal overlap, return correlation, exposure, turnover and drawdown without new performance evaluation or selection."
+      },
+      "data_scope": {
+        "research_count": 2798,
+        "holdout_count": 700,
+        "holdout_used_for_selection": false,
+        "artifact_ids": [
+          10941341360,
+          10941072485
+        ],
+        "source_trials": [
+          "T-2026-09-27-060",
+          "T-2026-09-27-065"
+        ],
+        "fully_symbol_disjoint_source_universes": true,
+        "target_common_candles": 3500,
+        "performance_evaluation": false,
+        "diagnostic_evaluation": true,
+        "evidence_commit": "510ff9e93df9346a647676229173901c4c64b484"
+      },
+      "search_scope": {
+        "raw_trial_count": 2,
+        "independent_trial_count": 2,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "asset_search": false,
+        "horizon_search": false,
+        "family_ranking": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "none; fixed-result diagnostic only",
+        "selection_family_id": "q066-alpha-failure-mechanism-diagnosis-2026-09-28",
+        "selection_metric": null,
+        "holdout_used_for_selection": false
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 2,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "DIAGNOSTIC_COMPLETED",
+        "scientific_outcome": "ARCHIVED_DIAGNOSTIC",
+        "workflow_run_id": 36379909584,
+        "workflow_conclusion": "success",
+        "diagnostic_fingerprint": "d4d0893ce245c04d9d6ba017458331a1dbad66d702163243e8d001dfa15c40c8",
+        "q041_reconstruction_exact": true,
+        "q045_reconstruction_exact": true,
+        "new_market_data": false,
+        "new_performance_evaluation": false,
+        "holdout_inspection_descriptive_only": true,
+        "key_finding": "Persistent multi-regime drawdown and adverse-period common-mode return co-movement are the dominant shared risk patterns; concentration and turnover/cost are important arm-specific amplifiers rather than a universal sole cause.",
+        "selection_used": false,
+        "holdout_used_for_selection": false,
+        "diagnostic_only": true
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
     }
   ],
-  "updated_at": "2026-09-28T04:40:00Z"
+  "updated_at": "2026-09-28T05:06:00Z"
 }
