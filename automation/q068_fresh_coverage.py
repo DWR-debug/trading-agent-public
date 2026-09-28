@@ -31,7 +31,7 @@ def _fp(value: object) -> str:
     ).hexdigest()
 
 
-def _used_symbols() -> set[str]:
+def _used_symbols(*, exclude_universe: str | None = None) -> set[str]:
     used: set[str] = set()
     payload = json.loads(LEDGER.read_text(encoding="utf-8"))
     for trial in payload.get("trials", []):
@@ -51,6 +51,8 @@ def _used_symbols() -> set[str]:
             if isinstance(values, list):
                 used.update(str(value) for value in values)
     for universe in list_universes():
+        if exclude_universe is not None and universe.name == exclude_universe:
+            continue
         used.update(str(symbol) for symbol in universe.symbols)
     return used
 
@@ -63,7 +65,9 @@ def run(preregistration: Path, output_root: Path, result_path: Path) -> dict:
     if symbols != FROZEN_SYMBOLS:
         raise ValueError("Q068 frozen symbol order mismatch")
 
-    overlap = sorted(set(symbols) & _used_symbols())
+    overlap = sorted(
+        set(symbols) & _used_symbols(exclude_universe=str(prereg["universe"]))
+    )
     if overlap:
         raise RuntimeError(f"Q068 fresh-universe overlap detected: {overlap}")
 
