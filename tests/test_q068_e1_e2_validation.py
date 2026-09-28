@@ -76,3 +76,35 @@ def test_q068_pit_constants_are_fixed():
     assert q068_pit.PIT_TRIAL_ID == "T-2026-09-28-068-PIT"
     assert q068_pit.STEP == 113
     assert q068_pit.MIN_HISTORY == 273
+
+
+def test_q068_coverage_and_pit_workflow_is_self_hosted_and_fail_closed():
+    text = Path(".github/workflows/q068-coverage-pit.yml").read_text(encoding="utf-8")
+    assert "runs-on: [self-hosted, trading-agent-research]" in text
+    assert "Q068 COVERAGE PASSED" in text
+    assert "Q068 PIT PASSED" in text
+    assert "performance_trial_authorized" in text
+    assert "selection_used" in text
+    assert "research/evidence/q068_coverage_result.json" in text
+    assert "research/evidence/q068_pit_result.json" in text
+
+
+def test_q068_preregistration_freezes_exact_discovery_batch_and_governance():
+    prereg = json.loads(
+        Path("research/preregistrations/q068_fixed_mechanism_freeze_2026_09_28.json")
+        .read_text(encoding="utf-8")
+    )
+    assert prereg["symbols"] == list(FROZEN_SYMBOLS)
+    assert prereg["source_discovery"]["workflow_run_id"] == 36389197475
+    assert prereg["source_discovery"]["discovery_fingerprint"] == (
+        "b85c7c35b593ce7b8ba4e4bb27de6fe1588338684d51330cd749da076cc5441e"
+    )
+    assert prereg["governance"]["performance_trial_authorized"] is False
+    assert prereg["governance"]["holdout_used_for_selection"] is False
+    assert prereg["governance"]["family_ranking"] is False
+    assert prereg["safety"] == {
+        "paper_only": True,
+        "live_trading_enabled": False,
+        "orders_enabled": False,
+        "automatic_promotion": False,
+    }
