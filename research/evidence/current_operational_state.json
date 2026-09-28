@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:03:12.766965+00:00",
+  "generated_at_utc": "2026-09-28T15:03:58.017512+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: set Q085 repository Python path explicitly",
+        "sha": "5ae80effdb501f2fd6b493ad97743ffb4d91a3fb",
+        "timestamp": "2026-09-28T17:03:41+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f67a1a237c286d314e90933de5b1003b94b88acd",
+        "timestamp": "2026-09-28T15:03:12Z"
+      },
+      {
         "message": "OPS: allow explicit Q081 preflight issue retries",
         "sha": "599b374ff8c5772d61ab85dd6c633f1fb7dd1f09",
         "timestamp": "2026-09-28T17:02:57+02:00"
@@ -185,16 +195,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "fa2c23b4fed87570b829573907c8e5ffa845a84f",
         "timestamp": "2026-09-28T15:02:12Z"
-      },
-      {
-        "message": "FIX: correct Q084 artifact name expression",
-        "sha": "9ad5f60c1e2dbc98fc87647d030f6ff9db2013de",
-        "timestamp": "2026-09-28T17:02:10+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "93e97cb7dfb5c907665d68cef5f0b9324f18a93f",
-        "timestamp": "2026-09-28T15:01:54Z"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "599b374ff8c5772d61ab85dd6c633f1fb7dd1f09",
+  "source_master_sha": "5ae80effdb501f2fd6b493ad97743ffb4d91a3fb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36440618494"
+    "run_id": "36440712744"
   }
 }
