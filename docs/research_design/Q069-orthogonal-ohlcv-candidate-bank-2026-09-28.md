@@ -2,6 +2,7 @@
 
 **Date:** 2026-09-28  
 **Status:** PREREGISTERED / DESIGN-ONLY  
+**Implementation integrity revision:** 2026-09-28 — corrected return-window indexing so decision-time signals exclude the next session; no hypothesis or parameter changed.  
 **Issue:** #536
 
 ## Purpose
