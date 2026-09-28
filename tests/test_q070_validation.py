@@ -57,8 +57,5 @@ def test_q070_performance_uses_frozen_coverage_fingerprint_not_missing_result_fi
 
 def test_q070_hosted_fallback_is_retired():
     assert not Path(".github/workflows/q070-hosted-fallback.yml").exists()
-    auth = json.loads(
-        Path("research/authorizations/q070_performance_2026_09_28.json").read_text(encoding="utf-8")
-    )
-    assert auth["authorized"] is False
-    assert auth["execution_scope"] == "NONE" or auth.get("revoked") is True
+    assert not Path("research/authorizations/q070_performance_2026_09_28.json").exists()
+    assert not Path("research/evidence/q070_performance_result.json").exists()
