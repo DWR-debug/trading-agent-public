@@ -205,6 +205,8 @@ def main():
     print("Q083_PIT_CHECKS: PASS")
     print("Q083_SOURCE_REACHABLE:", sum(1 for x in sources.values() if x.get("reachable")))
     print("Q083_SOURCE_TOTAL:", len(sources))
+    for name, info in sources.items():
+        print("Q083_SOURCE:", name, "reachable=" + str(info.get("reachable")), "status=" + str(info.get("http_status", "NA")))
 
 
 if __name__ == "__main__":
