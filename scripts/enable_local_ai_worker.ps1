@@ -54,8 +54,8 @@ if ($settingsText -match '(?i)"tradingAgentFreeOnly"\s*:\s*(true|false)') {
     }
 }
 
-$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
-[System.IO.File]::WriteAllText($settingsPath, $settingsText, $utf8NoBom)
+$settingsBytes = [System.Text.Encoding]::UTF8.GetBytes($settingsText)
+Set-Content -Encoding Byte $settingsPath -Value $settingsBytes
 $providers = @()
 if ($agy -or $gemini) { $providers += "gemini_cli" }
 if ($claude) { $providers += "claude_cli" }
