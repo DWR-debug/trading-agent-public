@@ -34,7 +34,10 @@ def _g1_disabled() -> tuple[bool, str]:
         return False, str(path)
     for key in ("UseG1Credits", "useG1Credits"):
         if key in data:
-            return data[key] is False, str(path)
+            value = data[key]
+            if value is False or (isinstance(value, str) and value.strip().lower() == "false"):
+                return True, str(path)
+            return False, str(path)
     return False, str(path)
 
 
