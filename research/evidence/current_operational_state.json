@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:37:27.211156+00:00",
+  "generated_at_utc": "2026-09-28T10:38:17.892197+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,21 @@
     ],
     "recent_commits": [
       {
+        "message": "RESEARCH: freeze Q073 unranked candidate catalog",
+        "sha": "0c3c346a9eda27379c413f5e7438b53a68bbed7b",
+        "timestamp": "2026-09-28T12:38:06+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q073 expanded orthogonal candidate search",
+        "sha": "deab7277629db3494f1d903a7bac9920b3cd107a",
+        "timestamp": "2026-09-28T12:38:03+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e7a669bba2932b387097f17651cb6c54eb1fc440",
+        "timestamp": "2026-09-28T10:37:27Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "b310e59a264c6db596fed9e0a9cd51820ff16104",
         "timestamp": "2026-09-28T10:37:15Z"
@@ -189,21 +204,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "e83023a098f1f03dd4c481d5bc1b165d3301438d",
         "timestamp": "2026-09-28T10:33:13Z"
-      },
-      {
-        "message": "OPS: retrigger Q070 from frozen receipts (#566)",
-        "sha": "3bb74dee764e087acb09f94500390c6410ab7812",
-        "timestamp": "2026-09-28T12:33:00+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6c159838b32f1f637e8d93fdde6e20cc1a7a4d28",
-        "timestamp": "2026-09-28T10:32:17Z"
-      },
-      {
-        "message": "TEST: lock Q070 frozen coverage/snapshot contract (#565)",
-        "sha": "903d4e65ad0a11dcbbeadebf1f3a18ea7eac11d9",
-        "timestamp": "2026-09-28T12:32:02+02:00"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b310e59a264c6db596fed9e0a9cd51820ff16104",
+  "source_master_sha": "0c3c346a9eda27379c413f5e7438b53a68bbed7b",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36410784812"
+    "run_id": "36410874601"
   }
 }
