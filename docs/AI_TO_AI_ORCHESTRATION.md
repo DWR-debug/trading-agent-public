@@ -36,3 +36,7 @@ ChatGPT-Abonnement und OpenAI-API-Plattform werden getrennt abgerechnet. Die Anm
 Nicht delegiert werden Holdout-, Parameter-, Asset- oder Horizon-Auswahl nach Performance, Gate- oder Autorisierungsänderungen, Promotion, Live-Ausführung oder wissenschaftliche Evidenzproduktion.
 
 Jede fachlich relevante Aussage muss anschließend unabhängig durch deterministische Projektprüfungen und die Research-Governance bestätigt werden.
+
+## Local Windows AI authentication boundary
+
+The local AI bridge is intentionally exercised from the interactive self-hosted runner process first. Antigravity CLI authenticates through the local system keyring or Google Sign-In, so the runner must initially execute in the same Windows user/session context in which the account was authenticated. A Windows service can auto-start the runner at machine boot, but GitHub documents that Windows service configuration requires administrative privileges and service-mode configuration is part of runner registration. We therefore verify local AI authentication before migrating runner processes to service mode.
