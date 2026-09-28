@@ -21,9 +21,9 @@ from automation.q067_alpha_mechanisms import (
 )
 from data.canonical_snapshot import load_frozen_snapshot
 
-Q079_SYMBOLS = ("ETR", "PPL", "WEC", "FE", "D", "EXR", "PSA", "O")
-COVERAGE_TRIAL_ID = "T-2026-09-28-068-COVERAGE"
-PIT_TRIAL_ID = "T-2026-09-28-068-PIT"
+Q079_SYMBOLS = ("HAL", "LRCX", "OXY", "COF", "FIS", "FISV", "GM", "LHX")
+COVERAGE_TRIAL_ID = "T-2026-09-28-079-COVERAGE"
+PIT_TRIAL_ID = "T-2026-09-28-079-PIT"
 STEP = 113
 MIN_HISTORY = E1_CORRELATION_LOOKBACK + 210
 
