@@ -107,7 +107,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "EVIDENCE: reconcile T052 fixed-core sleeve performance"
 
-          for attempt in 1 2 3; do
+          for _ in 1 2 3; do
             if git push origin HEAD:master; then
               echo "T052_CANONICAL_EVIDENCE_PUSHED"
               exit 0

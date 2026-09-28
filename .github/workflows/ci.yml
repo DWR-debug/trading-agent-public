@@ -270,7 +270,7 @@ jobs:
           mkdir "%PY_ROOT%" 2>nul
           tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%"
           if not exist "%PY_EXE%" exit /b 1
-            :python_ready
+          :python_ready
           "%PY_EXE%" --version
           "%PY_EXE%" -m pip --version >nul 2>&1
           if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade

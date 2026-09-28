@@ -98,7 +98,7 @@ jobs:
             printf '%s\n' '{"schema_version":1,"task_id":"${{ matrix.task }}","provider":"${{ matrix.provider }}","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' > "$state_file"
           fi
           payload="$(base64 -w 0 "$state_file")"
-          for attempt in 1 2 3 4 5; do
+          for _ in 1 2 3 4 5; do
             current_sha=""
             current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/contents/${state_file}?ref=master" --jq '.sha' 2>/dev/null || true)"
             if [ -n "$current_sha" ]; then
