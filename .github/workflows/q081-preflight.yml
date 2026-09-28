@@ -8,6 +8,8 @@ on:
       - "research/preregistrations/q081_performance_2026_09_28.json"
       - "automation/q081_corrected_e1_e2_performance.py"
       - "tests/test_q081_execution_envelope.py"
+  issues:
+    types: [opened]
   workflow_dispatch:
 
 permissions:
@@ -19,7 +21,7 @@ concurrency:
 
 jobs:
   preflight:
-    if: github.repository == "DWR-debug/trading-agent-public"
+    if: github.repository == "DWR-debug/trading-agent-public" && (github.event_name != "issues" || github.event.issue.title == "[Q081-PREFLIGHT] Verify corrected replication prerequisites")
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 30
     steps:
@@ -50,7 +52,7 @@ jobs:
         run: |
           @echo off
           set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q081-preflight\tools\python.exe"
-          "%PY_EXE%" -c "import hashlib,json; from pathlib import Path; from config import settings; p=json.loads(Path('research/preregistrations/q081_performance_2026_09_28.json').read_text(encoding='utf-8')); assert p['trial_id']=='T-2026-09-28-081-PERFORMANCE' and p['status']=='PREREGISTERED_PERFORMANCE'; assert p['governance']['performance_trial_authorized'] is False; expected=p['source_contract']; actual={}; [actual.update({path:hashlib.sha1(('blob '+str(len(Path(path).read_bytes()))+'\\0').encode()+Path(path).read_bytes()).hexdigest()}) for path in expected]; assert actual==expected; assert settings.PAPER_ONLY is True and settings.LIVE_TRADING_ENABLED is False and settings.ORDERS_ENABLED is False and settings.AUTOMATIC_PROMOTION is False; print('Q081 PREREGISTRATION/BLOB-SOURCE/SAFETY OK')"
+          "%PY_EXE%" -c "import hashlib,json; from pathlib import Path; from config import settings; p=json.loads(Path('research/preregistrations/q081_performance_2026_09_28.json').read_text(encoding='utf-8')); assert p['trial_id']=='T-2026-09-28-081-PERFORMANCE' and p['status']=='PREREGISTERED_PERFORMANCE'; assert p['governance']['performance_trial_authorized'] is False; expected=p['source_contract']; actual={path:hashlib.sha1(('blob '+str(len(Path(path).read_bytes()))).encode()+bytes([0])+Path(path).read_bytes()).hexdigest() for path in expected}; assert actual==expected; assert settings.PAPER_ONLY is True and settings.LIVE_TRADING_ENABLED is False and settings.ORDERS_ENABLED is False and settings.AUTOMATIC_PROMOTION is False; print('Q081 PREREGISTRATION/BLOB-SOURCE/SAFETY OK')"
 
       - name: Verify unchanged Q079 frozen prerequisites
         shell: cmd
