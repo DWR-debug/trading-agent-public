@@ -262,3 +262,23 @@ jobs:
           else
             echo "No explicit Q079 authorization trigger in this push."
           fi
+
+
+      - name: Dispatch explicit Q079 performance trigger
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff-tree --no-commit-id --name-only -r "${GITHUB_SHA}" | grep -Fxq "research/run_requests/q079_performance.trigger"; then
+            python - <<'PY'
+          import json, os, urllib.request
+          url="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/actions/workflows/q079-fixed-rule-performance.yml/dispatches"
+          req=urllib.request.Request(url,data=json.dumps({"ref":"master"}).encode(),method="POST",headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json","Content-Type":"application/json"})
+          urllib.request.urlopen(req,timeout=30).read()
+          print("Q079_PERFORMANCE_DISPATCHED")
+          PY
+          else
+            echo "No explicit Q079 performance trigger in this push."
+          fi
