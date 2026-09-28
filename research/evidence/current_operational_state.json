@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:50:28.677608+00:00",
+  "generated_at_utc": "2026-09-28T17:52:28.907509+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -237,6 +237,16 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: invoke F2 feasibility through Python module entrypoint (#633)",
+        "sha": "34d8f6cb6dae67103adcd70e13b454adebd809e3",
+        "timestamp": "2026-09-28T19:52:11+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4b7acf02cb51b17a9cbcb9bcdc89e9017ef88175",
+        "timestamp": "2026-09-28T17:50:28Z"
+      },
+      {
         "message": "OPS: rerun Q089 after transient publisher hardening",
         "sha": "e91e8281f5362883b732f2d80a601ba47649ee8e",
         "timestamp": "2026-09-28T19:50:13+02:00"
@@ -265,16 +275,6 @@
         "message": "RESEARCH: run RCCSM conflict-transition diagnostics in parallel (#630)",
         "sha": "4f3d73592a19dfeccbf811eda5644d450d6a9308",
         "timestamp": "2026-09-28T19:46:04+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "00befe429aed51f12015ca304548973642843d4d",
-        "timestamp": "2026-09-28T17:43:48Z"
-      },
-      {
-        "message": "RESEARCH: add Q089 cross-run reproducibility audit (#629)",
-        "sha": "6b9a499fcecf63d1a2088ae1687a5f0afcbb8141",
-        "timestamp": "2026-09-28T19:43:32+02:00"
       }
     ]
   },
@@ -336,12 +336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e91e8281f5362883b732f2d80a601ba47649ee8e",
+  "source_master_sha": "34d8f6cb6dae67103adcd70e13b454adebd809e3",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36460962911"
+    "run_id": "36461194997"
   }
 }
