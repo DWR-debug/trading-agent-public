@@ -89,6 +89,40 @@ jobs:
               print("Q068 NO PRIOR AUTHORIZATION; FALLBACK WILL CREATE IT")
           PY
 
+      - name: Recover and verify original Q068 frozen snapshot
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from automation.q068_fresh_coverage import _coverage_snapshot_spec
+          from data.canonical_snapshot import snapshot_from_preregistration
+          prereg=json.loads(Path("research/preregistrations/q068_fixed_mechanism_freeze_2026_09_28.json").read_text())
+          authoritative=json.loads(Path("research/evidence/q068_coverage_result.json").read_text())
+          regenerated=snapshot_from_preregistration(
+              _coverage_snapshot_spec(prereg),
+              output_root=Path("research/runs/q068_coverage"),
+          )
+          assert regenerated["status"]=="COVERAGE_PASSED"
+          assert regenerated["coverage"]["common_calendar_count"]==authoritative["common_calendar_count"]
+          assert regenerated["snapshot_fingerprint"]==authoritative["snapshot_fingerprint"]
+          manifest=Path("research/runs/q068_coverage/T-2026-09-28-068-COVERAGE/snapshot_manifest.json")
+          assert manifest.exists()
+          assert len(regenerated["data_snapshot"]["datasets"])==8
+          print("Q068 FROZEN SNAPSHOT RECONSTRUCTED EXACTLY")
+          print("Q068 SNAPSHOT FINGERPRINT:",regenerated["snapshot_fingerprint"])
+          PY
+
+      - name: Persist Q068 frozen snapshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          BASE_SHA="$(python -c 'import json,os,urllib.request; u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/git/ref/heads/master"; r=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"}); print(json.load(urllib.request.urlopen(r,timeout=30))["object"]["sha"])')"
+          test -n "$BASE_SHA"
+          export PUBLISH_MESSAGE="EVIDENCE: persist exact Q068 frozen snapshot"
+          python automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$BASE_SHA"             --file research/runs/q068_coverage/T-2026-09-28-068-COVERAGE/snapshot_manifest.json=research/runs/q068_coverage/T-2026-09-28-068-COVERAGE/snapshot_manifest.json             --file research/runs/q068_coverage/T-2026-09-28-068-COVERAGE/datasets/ETR/1d.csv=research/runs/q068_coverage/T-2026-09-28-068-COVERAGE/datasets/ETR/1d.csv             --file research/runs/q068_coverage/T-2026-09-28-068-COVERAGE/datasets/PPL/1d.csv=research/runs/q068_coverage/T-2026-09-28-068-COVERAGE/datasets/PPL/1d.csv             --file research/runs/q068_coverage/T-2026-09-28-068-COVERAGE/datasets/WEC/1d.csv=research/runs/q068_coverage/T-2026-09-28-068-COVERAGE/datasets/WEC/1d.csv             --file research/runs/q068_coverage/T-2026-09-28-068-COVERAGE/datasets/FE/1d.csv=research/runs/q068_coverage/T-2026-09-28-068-COVERAGE/datasets/FE/1d.csv             --file research/runs/q068_coverage/T-2026-09-28-068-COVERAGE/datasets/D/1d.csv=research/runs/q068_coverage/T-2026-09-28-068-COVERAGE/datasets/D/1d.csv             --file research/runs/q068_coverage/T-2026-09-28-068-COVERAGE/datasets/EXR/1d.csv=research/runs/q068_coverage/T-2026-09-28-068-COVERAGE/datasets/EXR/1d.csv             --file research/runs/q068_coverage/T-2026-09-28-068-COVERAGE/datasets/PSA/1d.csv=research/runs/q068_coverage/T-2026-09-28-068-COVERAGE/datasets/PSA/1d.csv             --file research/runs/q068_coverage/T-2026-09-28-068-COVERAGE/datasets/O/1d.csv=research/runs/q068_coverage/T-2026-09-28-068-COVERAGE/datasets/O/1d.csv
+
       - name: Prepare one-shot Q068 authorization
         env:
           GH_TOKEN: ${{ github.token }}
