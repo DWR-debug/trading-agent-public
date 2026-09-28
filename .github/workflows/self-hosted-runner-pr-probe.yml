@@ -1,0 +1,26 @@
+name: Self-hosted Runner PR Probe
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 5
+    steps:
+      - name: Probe runner
+        shell: cmd
+        run: |
+          @echo off
+          if /I not "%GITHUB_REPOSITORY%"=="DWR-debug/trading-agent-public" exit /b 1
+          echo RUNNER_PROBE_PR=SUCCESS
+          echo RUNNER_NAME=%RUNNER_NAME%
+          echo RUNNER_OS=%RUNNER_OS%
+          echo RUNNER_ARCH=%RUNNER_ARCH%
+          echo GITHUB_SHA=%GITHUB_SHA%
+          whoami
+          hostname
