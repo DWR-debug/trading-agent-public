@@ -1,0 +1,1 @@
+Q070 explicit self-hosted advance request — execute only the already-preregistered Q070 performance path after verifying frozen coverage/PIT prerequisites. 2026-09-28.
