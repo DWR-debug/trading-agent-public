@@ -38,3 +38,5 @@ def test_regime_requires_prior_lookback():
         "DOWNTREND_LOWVOL",
         "DOWNTREND_HIGHVOL",
     }
+
+# Q066 rerun marker: sleeve-path interface hardened.
