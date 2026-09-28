@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `a21683726c5ad2a40c037bfb6cb83c19514cde9d`
+**Current operational snapshot:** `dd3d2057967ed41e1570d486faca24293d07c980`
 
-**Generated (UTC):** `2026-09-28T10:28:54.997938+00:00`
+**Generated (UTC):** `2026-09-28T10:30:16.046512+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -41,13 +41,13 @@ This is an operational pipeline summary only; it does not create scientific evid
 
 ### Q068 execution pipeline
 
-- Operational state: **PERFORMANCE_AUTHORIZED**.
+- Operational state: **PREFLIGHT_BLOCKED**.
 - Coverage receipt: **COVERAGE_PASSED**.
 - PIT receipt: **PIT_PASSED**.
-- Performance authorization: **True**.
+- Performance authorization: **False**.
 - Performance evidence: **MISSING**.
 - Ledger reconciled: **False**.
-- Blocking reasons: **none**.
+- Blocking reasons: **Q068 frozen snapshot not persistently available with authoritative fingerprint**.
 
 Q068 is a fresh symbol-disjoint validation of the unchanged Q067 E1/E2 mechanisms. This operational summary does not create scientific evidence or select an arm.
 
