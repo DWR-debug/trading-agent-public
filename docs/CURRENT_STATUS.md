@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `d722480d246191b37ed37b1ca313f99fd4de6bd3`
+**Current operational snapshot:** `7e6b851d6155a0957930936755b2d8df36f9052b`
 
-**Generated (UTC):** `2026-09-28T19:29:06.201436+00:00`
+**Generated (UTC):** `2026-09-28T19:29:23.512682+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -88,6 +88,8 @@ Q070 is the fresh symbol-disjoint validation pipeline for the fixed Q069 OHLCV c
 - Legacy 500-EUR operational canary remains separate.
 - Deterministic research stays on reproducible runner paths.
 - Agent output is never scientific evidence by itself.
+- Protected Copilot reserve starts **2026-10-01T00:00:00Z**: at most 4 sessions/month, 12 AI credits/session, 1 concurrent session; actual entitlement is verified at dispatch and no paid fallback/overage is permitted.
+- Both self-hosted Windows runners remain the preferred parallel local capacity; the local AI smoke check runs only after the two research lanes complete.
 
 ## Safety
 
