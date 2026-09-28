@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:52:05.288305+00:00",
+  "generated_at_utc": "2026-09-28T19:52:21.101383+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,6 +325,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e6b4396cdc823f8e17e1dd007bf45d34e4a32ea9",
+        "timestamp": "2026-09-28T19:52:05Z"
+      },
+      {
         "message": "GOV: record Q081-R2 preflight pass",
         "sha": "bd86512d797ae6804ed8abdae3d6d9e72582bf89",
         "timestamp": "2026-09-28T21:51:54+02:00"
@@ -358,11 +363,6 @@
         "message": "OPS: trigger Q077-R1 PIT validation",
         "sha": "07d38d23d9bc4de04e67835832a30defbc8dd7b8",
         "timestamp": "2026-09-28T21:49:39+02:00"
-      },
-      {
-        "message": "OPS: add Q077-R1 PIT workflow",
-        "sha": "139af37b117250b199890e7274fa9b127dbd92fa",
-        "timestamp": "2026-09-28T21:49:36+02:00"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "bd86512d797ae6804ed8abdae3d6d9e72582bf89",
+  "source_master_sha": "e6b4396cdc823f8e17e1dd007bf45d34e4a32ea9",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36475176833"
+    "run_id": "36475184426"
   }
 }
