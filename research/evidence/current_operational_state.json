@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:23:58.660460+00:00",
+  "generated_at_utc": "2026-09-28T10:26:09.688439+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -115,15 +115,11 @@
     "state": "PERFORMANCE_AUTHORIZED"
   },
   "q070_execution_pipeline": {
-    "blocking_reasons": [
-      "Q070 performance preregistration not materialized by coverage",
-      "coverage receipt missing",
-      "pit receipt missing"
-    ],
+    "blocking_reasons": [],
     "coverage_receipt": {
-      "present": false,
-      "status": null,
-      "trial_id": null
+      "present": true,
+      "status": "COVERAGE_PASSED",
+      "trial_id": "T-2026-09-28-070-COVERAGE"
     },
     "family": "Q070",
     "ledger_reconciled": false,
@@ -135,9 +131,9 @@
       "present": false
     },
     "performance_preregistration": {
-      "present": false,
-      "status": null,
-      "trial_id": null
+      "present": true,
+      "status": "PREREGISTERED_PERFORMANCE",
+      "trial_id": "T-2026-09-28-070-PERFORMANCE"
     },
     "performance_result": {
       "present": false,
@@ -145,11 +141,11 @@
       "trial_id": null
     },
     "pit_receipt": {
-      "present": false,
-      "status": null,
-      "trial_id": null
+      "present": true,
+      "status": "PIT_PASSED",
+      "trial_id": "T-2026-09-28-070-PIT"
     },
-    "state": "PREFLIGHT_BLOCKED"
+    "state": "PREFLIGHT_PASSED_WAITING_FOR_AUTO_AUTH"
   },
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
@@ -158,6 +154,21 @@
     "open_agent_ready_issues": [],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: retrigger Q068 after self-hosted runner restart",
+        "sha": "de6f9222b4b96b068c5c02fb9593b5aa7014bee4",
+        "timestamp": "2026-09-28T12:25:55+02:00"
+      },
+      {
+        "message": "EVIDENCE: record Q070 hosted deterministic coverage and PIT",
+        "sha": "0bc309fae4b0c6086cbb9974ccdf0e1754d62682",
+        "timestamp": "2026-09-28T10:24:52Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6474a05846d09911c0fa9ccf52cc11faa0ddb5a3",
+        "timestamp": "2026-09-28T10:23:58Z"
+      },
       {
         "message": "OPS: retrigger Q070 after final test normalization (#562)",
         "sha": "8a6bd9f3156b32baf83efde14b0de5f2ca18ca91",
@@ -182,21 +193,6 @@
         "message": "OPS: retrigger Q070 hosted deterministic fallback (#560)",
         "sha": "172c8edbe49bea7e4aa233eb8b65cce8de72a9a5",
         "timestamp": "2026-09-28T12:19:17+02:00"
-      },
-      {
-        "message": "OPS: authorize Q068 hosted deterministic fallback",
-        "sha": "dd834bc70689089d52e29d5adb99a98c6f56f95f",
-        "timestamp": "2026-09-28T10:19:05Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1258897109c793aa737fa742bf594225f0f15233",
-        "timestamp": "2026-09-28T10:18:54Z"
-      },
-      {
-        "message": "FIX: harden hosted fallback shell parsing and stale Q070 tests (#559)",
-        "sha": "e4a98be10a2aae523f4a060c737577da84943cf9",
-        "timestamp": "2026-09-28T12:18:39+02:00"
       }
     ]
   },
@@ -258,12 +254,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8a6bd9f3156b32baf83efde14b0de5f2ca18ca91",
+  "source_master_sha": "de6f9222b4b96b068c5c02fb9593b5aa7014bee4",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36409453286"
+    "run_id": "36409667232"
   }
 }

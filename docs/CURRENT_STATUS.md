@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `8a6bd9f3156b32baf83efde14b0de5f2ca18ca91`
+**Current operational snapshot:** `de6f9222b4b96b068c5c02fb9593b5aa7014bee4`
 
-**Generated (UTC):** `2026-09-28T10:23:58.660460+00:00`
+**Generated (UTC):** `2026-09-28T10:26:09.688439+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -53,14 +53,14 @@ Q068 is a fresh symbol-disjoint validation of the unchanged Q067 E1/E2 mechanism
 
 ### Q070 execution pipeline
 
-- Operational state: **PREFLIGHT_BLOCKED**.
-- Coverage receipt: **MISSING**.
-- PIT receipt: **MISSING**.
-- Performance preregistration: **MISSING**.
+- Operational state: **PREFLIGHT_PASSED_WAITING_FOR_AUTO_AUTH**.
+- Coverage receipt: **COVERAGE_PASSED**.
+- PIT receipt: **PIT_PASSED**.
+- Performance preregistration: **PREREGISTERED_PERFORMANCE**.
 - Performance authorization: **None**.
 - Performance evidence: **MISSING**.
 - Ledger reconciled: **False**.
-- Blocking reasons: **Q070 performance preregistration not materialized by coverage; coverage receipt missing; pit receipt missing**.
+- Blocking reasons: **none**.
 
 Q070 is the fresh symbol-disjoint validation pipeline for the fixed Q069 OHLCV candidate bank. This operational summary does not create scientific evidence or rank candidates.
 
