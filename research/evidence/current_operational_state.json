@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T11:35:06.209148+00:00",
+  "generated_at_utc": "2026-09-28T11:36:52.654259+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -154,17 +154,23 @@
     "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "fix/q070-snapshot-spec-completion-20260928",
-        "number": 567,
-        "title": "FIX: complete Q070 frozen snapshot reconstruction spec",
-        "updatedAt": "2026-09-28T10:34:15Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/567"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "TEST: lock Q070 snapshot reconstruction defaults",
+        "sha": "14d5d2233e0fe3b756c1f0e0f11700459ac86b4e",
+        "timestamp": "2026-09-28T13:36:39+02:00"
+      },
+      {
+        "message": "FIX: complete Q070 frozen snapshot reconstruction spec",
+        "sha": "3bc3d96f25ad681c56f814de90114530fd57e901",
+        "timestamp": "2026-09-28T13:36:37+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f0594fdff71dde88f4251fe83ea24a3750b07b59",
+        "timestamp": "2026-09-28T11:35:06Z"
+      },
       {
         "message": "OPS: synchronize current operational status",
         "sha": "022a788c533a797d9665f6254a2745f70a312e23",
@@ -189,21 +195,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "5e4a1dfdee1b5a3bcf27486627f41b106e249c18",
         "timestamp": "2026-09-28T11:34:09Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "19cabbf1febb0e4c9aedab4892893e7319e40e06",
-        "timestamp": "2026-09-28T11:33:56Z"
-      },
-      {
-        "message": "INFRA: isolate CI matrix runner compatibility",
-        "sha": "c24aeafffdb6a046bee86374c9461e6e53f2b9c3",
-        "timestamp": "2026-09-28T13:33:49+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6739ebb86667d351fa63d06595c203d08886b8d2",
-        "timestamp": "2026-09-28T11:33:42Z"
       }
     ]
   },
@@ -265,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "022a788c533a797d9665f6254a2745f70a312e23",
+  "source_master_sha": "14d5d2233e0fe3b756c1f0e0f11700459ac86b4e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36416482251"
+    "run_id": "36416678238"
   }
 }
