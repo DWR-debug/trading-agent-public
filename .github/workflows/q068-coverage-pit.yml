@@ -88,17 +88,14 @@ jobs:
         shell: cmd
         run: |
           @echo off
-          git diff --check || exit /b 1
-          git add research\runs\q068_coverage research\evidence\q068_coverage_result.json research\evidence\q068_pit_result.json || exit /b 1
-          git diff --cached --quiet
-          if not errorlevel 1 (
-            echo No Q068 preflight changes
-            exit /b 0
-          )
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "EVIDENCE: record Q068 coverage and PIT preflight" || exit /b 1
-          git push origin HEAD:master || exit /b 1
+          setlocal EnableExtensions
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q068\tools\python.exe"
+          if not exist "%PY_EXE%" exit /b 1
+          set "PUBLISH_MESSAGE=EVIDENCE: record Q068 coverage and PIT preflight"
+          for /f %%H in ('"%PY_EXE%" -c "import json,os,urllib.request; u='https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/ref/heads/master'; r=urllib.request.Request(u,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'}); print(json.load(urllib.request.urlopen(r))['object']['sha'])"') do set "BASE_SHA=%%H"
+          "%PY_EXE%" -m automation.github_contents_publish --repository "%GITHUB_REPOSITORY%" --branch master --base-sha "%BASE_SHA%" --file research/evidence/q068_coverage_result.json=research\evidence\q068_coverage_result.json --file research/evidence/q068_pit_result.json=research\evidence\q068_pit_result.json
+          if errorlevel 1 exit /b 1
+          endlocal
 
       - name: Publish Q068 summary
         if: always()

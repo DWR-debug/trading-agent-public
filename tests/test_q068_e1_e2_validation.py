@@ -141,3 +141,15 @@ def test_q068_universe_is_registered_at_unique_new_priority():
     assert universe.priority == 73
     assert universe.symbols == FROZEN_SYMBOLS
     assert universe.target_count == 3500
+
+def test_q068_self_hosted_evidence_persistence_has_no_local_git_dependency():
+    for path in (
+        ".github/workflows/q068-coverage-pit.yml",
+        ".github/workflows/q068-autonomous-advance.yml",
+        ".github/workflows/q068-fixed-mechanism-performance.yml",
+        ".github/workflows/q068-evidence-reconcile.yml",
+    ):
+        text = Path(path).read_text(encoding="utf-8")
+        assert "automation.github_contents_publish" in text
+        assert "git add " not in text
+        assert "git push " not in text
