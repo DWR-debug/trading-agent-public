@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T14:59:30.996541+00:00",
+  "generated_at_utc": "2026-09-28T14:59:45.273621+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "88b9064f7f69e78fa9900850729bda36fe2c4b96",
+        "timestamp": "2026-09-28T14:59:31Z"
+      },
+      {
         "message": "SAFETY: fail-closed unrecoverable Q070 auto-advance",
         "sha": "df850bc271af477dbde5daeaef72a3da5cfdef87",
         "timestamp": "2026-09-28T16:59:22+02:00"
@@ -190,11 +195,6 @@
         "message": "OPS: add self-hosted Q084 feasibility workflow",
         "sha": "183eff1b67eedd6f9d5fe96c4f9bbdc56472b88b",
         "timestamp": "2026-09-28T16:56:38+02:00"
-      },
-      {
-        "message": "TEST: guard Q084 design-only feasibility",
-        "sha": "de7fb9fb1af003e451421229705be6f0aa88e2df",
-        "timestamp": "2026-09-28T16:56:18+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "df850bc271af477dbde5daeaef72a3da5cfdef87",
+  "source_master_sha": "88b9064f7f69e78fa9900850729bda36fe2c4b96",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36440137900"
+    "run_id": "36440149392"
   }
 }
