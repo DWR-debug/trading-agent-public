@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T11:12:52.470011+00:00",
+  "generated_at_utc": "2026-09-28T11:13:46.091856+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,26 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: trigger Q079 performance after Python path fix",
+        "sha": "6f9de49db77ed148bca7e8be4557a1ba761a5a5a",
+        "timestamp": "2026-09-28T13:13:38+02:00"
+      },
+      {
+        "message": "FIX: set Q079 performance repo-root Python path and explicit trigger",
+        "sha": "7a55846db49da5e4d3c5afc9f16faf2eeca8eaf6",
+        "timestamp": "2026-09-28T13:13:31+02:00"
+      },
+      {
+        "message": "OPS: authorize Q079 fixed-rule performance",
+        "sha": "fccf23a2f07099e7336f6303d60276e2aad9a28d",
+        "timestamp": "2026-09-28T11:13:05Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "354b9f182ecec0d04a8ac28556f3c4859a683560",
+        "timestamp": "2026-09-28T11:12:52Z"
+      },
+      {
         "message": "OPS: advance paper-forward MTM state",
         "sha": "0e78d4c981953e292e85adf99f91c141564b71fc",
         "timestamp": "2026-09-28T11:12:45Z"
@@ -184,26 +204,6 @@
         "message": "OPS: retry Q079 authorization with dispatch permission",
         "sha": "7512b7ddc2f3f15528cae0fa0761e47be0178e46",
         "timestamp": "2026-09-28T13:12:26+02:00"
-      },
-      {
-        "message": "FIX: grant Q079 authorization workflow action dispatch permission",
-        "sha": "1ae7c28207d91091c63d1c41c17ebd732c62c389",
-        "timestamp": "2026-09-28T13:12:19+02:00"
-      },
-      {
-        "message": "OPS: authorize Q079 fixed-rule performance",
-        "sha": "70164f9ee5a3ee02c71738dda21094bda2853543",
-        "timestamp": "2026-09-28T11:11:49Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "891fadd9f3c27d1e2a34033c9f8c28614e66736a",
-        "timestamp": "2026-09-28T11:11:37Z"
-      },
-      {
-        "message": "OPS: authorize Q079 fixed-rule performance",
-        "sha": "a8c9bff5c202c8e06423965d977ca7c66da988a9",
-        "timestamp": "2026-09-28T11:11:30Z"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0e78d4c981953e292e85adf99f91c141564b71fc",
+  "source_master_sha": "6f9de49db77ed148bca7e8be4557a1ba761a5a5a",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36414268519"
+    "run_id": "36414379294"
   }
 }
