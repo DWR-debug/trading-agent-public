@@ -35,8 +35,13 @@
         "issue_number": 587,
         "performance_authorization_allowed": false,
         "predecessor_trial_id": "T-2026-09-28-081R1-PERFORMANCE",
+        "preflight": {
+          "artifact_id": 10993950051,
+          "status": "PASSED",
+          "workflow_run_id": 36474031581
+        },
         "preregistration_path": "research/preregistrations/q081r2_performance_2026_09_28.json",
-        "state": "PREREGISTERED_WAITING_PREFLIGHT",
+        "state": "PREREGISTERED_WAITING_AUTHORIZATION",
         "trial_id": "T-2026-09-28-081R2-PERFORMANCE"
       },
       {
@@ -197,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:51:04.195785+00:00",
+  "generated_at_utc": "2026-09-28T19:52:05.288305+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -320,6 +325,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOV: record Q081-R2 preflight pass",
+        "sha": "bd86512d797ae6804ed8abdae3d6d9e72582bf89",
+        "timestamp": "2026-09-28T21:51:54+02:00"
+      },
+      {
+        "message": "FIX: allow cross-run Q077-R1 artifact read",
+        "sha": "34363f0faaf9dfad35fc369ad3432b7f9ee270a9",
+        "timestamp": "2026-09-28T21:51:51+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "fa4986512a47013217e76f80afde3c443b3543f5",
+        "timestamp": "2026-09-28T19:51:04Z"
+      },
+      {
         "message": "FIX: bind Q077-R1 PIT to immutable discovery artifact id",
         "sha": "2481ea8cc49aaefe5b111d23e28de5ca51968cf4",
         "timestamp": "2026-09-28T21:50:49+02:00"
@@ -343,21 +363,6 @@
         "message": "OPS: add Q077-R1 PIT workflow",
         "sha": "139af37b117250b199890e7274fa9b127dbd92fa",
         "timestamp": "2026-09-28T21:49:36+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q077-R1 PIT validator",
-        "sha": "3a1aec1a7b097463aaf0b5e9d00300b86fb83cad",
-        "timestamp": "2026-09-28T21:49:34+02:00"
-      },
-      {
-        "message": "RESEARCH: preregister Q077-R1 PIT validation",
-        "sha": "0ef4df9a079a5dbb4b255b807d6d6e4eca41bc9d",
-        "timestamp": "2026-09-28T21:49:31+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "73bef359de43ecf9e46cabd366f41972f83f00b5",
-        "timestamp": "2026-09-28T19:48:57Z"
       }
     ]
   },
@@ -427,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2481ea8cc49aaefe5b111d23e28de5ca51968cf4",
+  "source_master_sha": "bd86512d797ae6804ed8abdae3d6d9e72582bf89",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36475061712"
+    "run_id": "36475176833"
   }
 }

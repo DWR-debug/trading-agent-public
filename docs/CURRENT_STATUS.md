@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `2481ea8cc49aaefe5b111d23e28de5ca51968cf4`
+**Current operational snapshot:** `bd86512d797ae6804ed8abdae3d6d9e72582bf89`
 
-**Generated (UTC):** `2026-09-28T19:51:04.195785+00:00`
+**Generated (UTC):** `2026-09-28T19:52:05.288305+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -29,7 +29,7 @@
 
 ### Active research registry
 
-- Q081-R2: **PREREGISTERED_WAITING_PREFLIGHT**; infrastructure-rebased corrective reproduction; no performance authorization.
+- Q081-R2: **PREREGISTERED_WAITING_AUTHORIZATION**; infrastructure-rebased corrective reproduction; no performance authorization.
 - Q089: **PREREGISTERED_WAITING_AUTHORIZATION**; fresh symbol-disjoint successor to quarantined Q086; separate performance authorization remains required.
 - Q077-R1: **COVERAGE_VALIDATED_WAITING_PIT**; coverage-only repair after the original Q077 pool left insufficient unused symbols; no performance authorization.
 - Q084, Q088 and Q082 remain **design/feasibility tracks** for unusual market-state, textual-network, rebalance-demand and SEC information channels.
