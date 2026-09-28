@@ -57,3 +57,8 @@ def test_q070_performance_uses_frozen_coverage_fingerprint_not_missing_result_fi
     assert 'coverage["result_fingerprint"]' not in text
     reconcile=Path("automation/q070_reconcile.py").read_text(encoding="utf-8")
     assert 'coverage_fingerprint' in reconcile
+
+def test_q070_fallback_reuses_persisted_preflight_and_freezes_snapshot():
+    text=Path(".github/workflows/q070-hosted-fallback.yml").read_text(encoding="utf-8")
+    assert "Q070 FROZEN SNAPSHOT RECONSTRUCTED EXACTLY" in text
+    assert "EVIDENCE: persist exact Q070 frozen snapshot" in text
