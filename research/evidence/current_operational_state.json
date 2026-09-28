@@ -31,11 +31,21 @@
     "active_trials": [
       {
         "class": "performance_correction",
+        "code": "081R2",
+        "issue_number": 587,
+        "performance_authorization_allowed": false,
+        "predecessor_trial_id": "T-2026-09-28-081R1-PERFORMANCE",
+        "preregistration_path": "research/preregistrations/q081r2_performance_2026_09_28.json",
+        "state": "PREREGISTERED_WAITING_PREFLIGHT",
+        "trial_id": "T-2026-09-28-081R2-PERFORMANCE"
+      },
+      {
+        "class": "performance_correction",
         "code": "081R1",
         "issue_number": 587,
         "performance_authorization_allowed": false,
         "preregistration_path": "research/preregistrations/q081r1_performance_2026_09_28.json",
-        "state": "PREREGISTERED_WAITING_PREFLIGHT",
+        "state": "INVALIDATED_INFRASTRUCTURE_SOURCE_CHANGE",
         "trial_id": "T-2026-09-28-081R1-PERFORMANCE"
       },
       {
@@ -114,7 +124,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:52:28.907509+00:00",
+  "generated_at_utc": "2026-09-28T17:55:55.179240+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -237,6 +247,36 @@
     ],
     "recent_commits": [
       {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "cb207a848499b12410586752e796687c12b292fd",
+        "timestamp": "2026-09-28T17:55:42Z"
+      },
+      {
+        "message": "OPS: trigger Q081-R2 self-hosted preflight",
+        "sha": "e19efbed4c668daf5c46ebf9a07946a0ae62f18f",
+        "timestamp": "2026-09-28T19:55:39+02:00"
+      },
+      {
+        "message": "RESEARCH: register Q081-R2 infrastructure-rebased corrective reproduction (#634)",
+        "sha": "089d901c2cdf1736202b151523282933fd4173bc",
+        "timestamp": "2026-09-28T19:55:25+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "26de6f382722ff8a0684c00b17ef0c44857a968b",
+        "timestamp": "2026-09-28T17:55:05Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "b5e43f3d6e433b4a4d86b7c80abc8c618af874c4",
+        "timestamp": "2026-09-28T17:52:57Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b1ed893014ea5edb026c7a187d20baf4fc542937",
+        "timestamp": "2026-09-28T17:52:28Z"
+      },
+      {
         "message": "FIX: invoke F2 feasibility through Python module entrypoint (#633)",
         "sha": "34d8f6cb6dae67103adcd70e13b454adebd809e3",
         "timestamp": "2026-09-28T19:52:11+02:00"
@@ -245,36 +285,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "4b7acf02cb51b17a9cbcb9bcdc89e9017ef88175",
         "timestamp": "2026-09-28T17:50:28Z"
-      },
-      {
-        "message": "OPS: rerun Q089 after transient publisher hardening",
-        "sha": "e91e8281f5362883b732f2d80a601ba47649ee8e",
-        "timestamp": "2026-09-28T19:50:13+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "530c1c637be27aa18ed4215715beed5fd0e3642a",
-        "timestamp": "2026-09-28T17:48:58Z"
-      },
-      {
-        "message": "FIX: harden evidence publishing and RCCSM transition tests (#631)",
-        "sha": "8a34e0e129d6ee925a6b48a1fa78999bc96e11d5",
-        "timestamp": "2026-09-28T19:48:40+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "2c743c5b8f20b4286986c434633511842ad3000f",
-        "timestamp": "2026-09-28T17:46:39Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "fdc239a2ad792a83610cf60da668976ac2ca4e21",
-        "timestamp": "2026-09-28T17:46:20Z"
-      },
-      {
-        "message": "RESEARCH: run RCCSM conflict-transition diagnostics in parallel (#630)",
-        "sha": "4f3d73592a19dfeccbf811eda5644d450d6a9308",
-        "timestamp": "2026-09-28T19:46:04+02:00"
       }
     ]
   },
@@ -336,12 +346,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "34d8f6cb6dae67103adcd70e13b454adebd809e3",
+  "source_master_sha": "cb207a848499b12410586752e796687c12b292fd",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36461194997"
+    "run_id": "36461602175"
   }
 }
