@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:02:41.404390+00:00",
+  "generated_at_utc": "2026-09-28T15:02:54.596451+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "05fc57f32277bf0392eb0b30b14cb0b905674330",
+        "timestamp": "2026-09-28T15:02:41Z"
+      },
+      {
         "message": "OPS: retrigger Q081 preflight after runner hardening",
         "sha": "7511c18d7d3dfaf128a3a7acf95f07e95c071b5b",
         "timestamp": "2026-09-28T17:02:23+02:00"
@@ -190,11 +195,6 @@
         "message": "OPS: add persistent Q085 coverage and PIT workflow",
         "sha": "2e222314b4cbbf26715173e7dd44b91796814f2c",
         "timestamp": "2026-09-28T17:01:39+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a6fb8830ca0d741f95587490a8c07c504b5f1356",
-        "timestamp": "2026-09-28T15:01:30Z"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7511c18d7d3dfaf128a3a7acf95f07e95c071b5b",
+  "source_master_sha": "05fc57f32277bf0392eb0b30b14cb0b905674330",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36440534326"
+    "run_id": "36440549952"
   }
 }
