@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T14:26:00.020974+00:00",
+  "generated_at_utc": "2026-09-28T14:26:46.529244+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: retrigger corrected Q083 self-hosted feasibility",
+        "sha": "042792bcbc055271da693a6a4e5010b634c80637",
+        "timestamp": "2026-09-28T16:26:29+02:00"
+      },
+      {
+        "message": "FIX: persist Q083 feasibility artifact from codeload workspace",
+        "sha": "46684801c5d78957127a50a0b5a4aec20958724f",
+        "timestamp": "2026-09-28T16:26:15+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6228cb18bc4aad6b6707bcbb0228c5a4c8011251",
+        "timestamp": "2026-09-28T14:26:00Z"
+      },
+      {
         "message": "SAFETY: fail-closed superseded Q079 execution path",
         "sha": "30f60369f8b5571177472730d43863dfbbe61e2a",
         "timestamp": "2026-09-28T16:25:56+02:00"
@@ -180,21 +195,6 @@
         "message": "OPS: remove obsolete Q079 auto-dispatch chain",
         "sha": "dbadbc07535d9caea2f5c3e67279ca0f3e1f7683",
         "timestamp": "2026-09-28T16:25:30+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3521a76d89906e21f4d151a4bd605404d18193b2",
-        "timestamp": "2026-09-28T14:24:29Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "259f73a5e2b679ccdafb85a15df9b6445cd5ab62",
-        "timestamp": "2026-09-28T14:24:15Z"
-      },
-      {
-        "message": "OPS: trigger Q083 self-hosted feasibility",
-        "sha": "14d87f404253db4e5d4fea24df0a6d651061e205",
-        "timestamp": "2026-09-28T16:24:08+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "30f60369f8b5571177472730d43863dfbbe61e2a",
+  "source_master_sha": "042792bcbc055271da693a6a4e5010b634c80637",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36435907381"
+    "run_id": "36436001531"
   }
 }
