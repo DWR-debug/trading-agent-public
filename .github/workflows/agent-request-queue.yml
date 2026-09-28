@@ -7,8 +7,10 @@ on:
       - "agent_requests/**"
   issue_comment:
     types: [created]
-  # Automatic Copilot scheduling is intentionally disabled while the monthly
-  # Copilot quota is exhausted. Use workflow_dispatch only after quota recovery.
+  # The queue is idle-safe before the protected Copilot release date and
+  # automatically resumes on schedule once the reserve becomes eligible.
+  schedule:
+    - cron: "15 */2 * * *"
   workflow_dispatch:
 
 concurrency:
@@ -44,6 +46,30 @@ jobs:
     steps:
       - name: Checkout master
         uses: actions/checkout@v5
+      - name: Copilot reserve date preflight
+        id: release
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from datetime import datetime, timezone
+          release = datetime.fromisoformat("2026-10-01T00:00:00+00:00")
+          now = datetime.now(timezone.utc)
+          print(f"now_utc={now.isoformat()}")
+          print(f"release_utc={release.isoformat()}")
+          eligible = now >= release
+          print(f"COPILOT_QUEUE={'ELIGIBLE' if eligible else 'WAITING_FOR_PROTECTED_RELEASE'}")
+          PY
+          if python - <<'PY'
+          from datetime import datetime, timezone
+          raise SystemExit(0 if datetime.now(timezone.utc) >= datetime.fromisoformat("2026-10-01T00:00:00+00:00") else 1)
+          PY
+          then
+            echo "eligible=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "eligible=false" >> "$GITHUB_OUTPUT"
+          fi
+
         with:
           ref: master
           fetch-depth: 2
@@ -60,6 +86,7 @@ jobs:
           python -m pip install --disable-pip-version-check pytest statsmodels==0.15.0
 
       - name: Resolve next queued request
+        if: steps.release.outputs.eligible == 'true'
         id: request
         shell: bash
         env:
@@ -110,13 +137,13 @@ jobs:
           cp "$RUNNER_TEMP/agent_task_manifest.json" "$RUNNER_TEMP/task_contract.json"
 
       - name: Stop idle lane
-        if: steps.request.outputs.run != 'true'
+        if: steps.release.outputs.eligible == 'true' && steps.request.outputs.run != 'true'
         run: |
           echo "Lane idle; no agent session consumed."
           echo "No Copilot session or paid usage is claimed."
 
       - name: Prepare isolated branch
-        if: steps.request.outputs.run == 'true'
+        if: steps.release.outputs.eligible == 'true' && steps.request.outputs.run == 'true'
         id: branch
         shell: bash
         env:
@@ -136,6 +163,7 @@ jobs:
           echo "skip=false" >> "$GITHUB_OUTPUT"
 
       - name: Check personal Copilot token
+        if: steps.release.outputs.eligible == 'true'
         id: copilot_token
         if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true'
         shell: bash
@@ -159,6 +187,7 @@ jobs:
           fi
 
       - name: Reserve protected Copilot Free session
+        if: steps.release.outputs.eligible == 'true'
         id: copilot_budget
         if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true'
         uses: ./.github/actions/copilot-free-gate
@@ -166,6 +195,7 @@ jobs:
           github-token: ${{ github.token }}
 
       - name: Run bounded Copilot CLI
+        if: steps.release.outputs.eligible == 'true'
         id: copilot_cli
         if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true'
         shell: bash
@@ -215,13 +245,13 @@ jobs:
           exit "$rc"
 
       - name: Enforce task-scoped file scope
-        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true' && steps.copilot_cli.outputs.status == 'success'
+        if: steps.release.outputs.eligible == 'true' && steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true' && steps.copilot_cli.outputs.status == 'success'
         shell: bash
         run: |
           set -euo pipefail
           python -m automation.agent_scope_guard --contract "$RUNNER_TEMP/task_contract.json"
       - name: Final bounded regression gate
-        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true' && steps.copilot_cli.outputs.status == 'success'
+        if: steps.release.outputs.eligible == 'true' && steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true' && steps.copilot_cli.outputs.status == 'success'
         shell: bash
         run: |
           set -euo pipefail
@@ -242,7 +272,7 @@ jobs:
           PY
 
       - name: Commit and publish
-        if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true' && steps.copilot_cli.outputs.status == 'success'
+        if: steps.release.outputs.eligible == 'true' && steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true' && steps.copilot_cli.outputs.status == 'success'
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
