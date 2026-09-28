@@ -1,0 +1,31 @@
+name: Actions Registry Smoke
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  smoke:
+    if: >-
+      ${{
+        github.repository == 'DWR-debug/trading-agent-public' &&
+        github.event.issue.user.login == github.repository_owner &&
+        github.event.issue.title == 'OPS: Actions registry smoke once'
+      }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Runner reached
+        run: |
+          echo ACTIONS_REGISTRY_SMOKE=RUNNER_REACHED
+          echo RUN_ID=${GITHUB_RUN_ID}
+          echo SHA=${GITHUB_SHA}
+      - name: Close smoke issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue close "${{ github.event.issue.number }}" --repo "${GITHUB_REPOSITORY}" --reason completed --comment "Actions registry smoke reached a real job."
