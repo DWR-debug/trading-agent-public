@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0",
+  "trial_id": "T-2026-09-28-089-PERFORMANCE",
+  "research_family": "q089_clean_fresh_q069_validation",
+  "status": "PREREGISTERED_PERFORMANCE",
+  "universe": "validation_2026_09_28_q089_clean_q069",
+  "symbols": [
+    "CNP",
+    "CPT",
+    "CUBE",
+    "DHI",
+    "DPZ",
+    "DRI",
+    "DXC",
+    "ECL"
+  ],
+  "requested_candles": 5000,
+  "target_common_candles": 3500,
+  "research_periods": 2798,
+  "holdout_periods": 700,
+  "initial_capital_eur": 2000,
+  "candidate_source": "Q069 fixed candidate bank",
+  "candidates": [
+    "C7_LOW_MAX_21",
+    "C8_LOW_IDIO_VOL_273",
+    "C9_LONG_TERM_REVERSAL_756",
+    "C10_TREND_EFFICIENCY_63",
+    "C11_VOLUME_CONFIRMED_TREND_126"
+  ],
+  "data_contract": {
+    "coverage_trial_id": "T-2026-09-28-089-COVERAGE",
+    "coverage_result_fingerprint": "04c77784929ad3366b3a92ba615b15b2336bcf3589d90737b81ea671a146d9ae",
+    "snapshot_fingerprint": "01c285cfed64e6f87288f8b0de5d4313295683727ed6e3fb8c76fa119054d087",
+    "pit_trial_id": "T-2026-09-28-089-PIT",
+    "pit_result_fingerprint": "fe55e3b2fcef141f33427706b285736f4a3b4fdf6e949901e5cba7e79b5d850d",
+    "input_bundle_trial_id": "T-2026-09-28-089-INPUT-FREEZE",
+    "input_bundle_fingerprint": "ec7b80d09303e1cdf83ed3e61a0b2d5e07408324949c6578f38314f9da397819"
+  },
+  "identity_contract": {
+    "trial_id": "T-2026-09-28-089-PERFORMANCE",
+    "expected_trial_code": "089",
+    "mode": "fresh_trial",
+    "reused_source_trials": [],
+    "required_receipts": [
+      {
+        "role": "coverage",
+        "path": "research/evidence/q089_coverage_result.json",
+        "trial_id": "T-2026-09-28-089-COVERAGE",
+        "fingerprint_key": "result_fingerprint",
+        "expected_data_contract_key": "coverage_result_fingerprint"
+      },
+      {
+        "role": "pit",
+        "path": "research/evidence/q089_pit_result.json",
+        "trial_id": "T-2026-09-28-089-PIT",
+        "fingerprint_key": "result_fingerprint",
+        "expected_data_contract_key": "pit_result_fingerprint"
+      },
+      {
+        "role": "input_bundle",
+        "path": "research/evidence/q089_input_freeze_result.json",
+        "trial_id": "T-2026-09-28-089-INPUT-FREEZE",
+        "fingerprint_key": "bundle_fingerprint",
+        "expected_data_contract_key": "input_bundle_fingerprint"
+      }
+    ]
+  },
+  "governance_contract_version": 2,
+  "governance": {
+    "performance_trial_authorized": false,
+    "selection": false,
+    "holdout_used_for_selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "asset_search": false,
+    "horizon_search": false,
+    "variant_search": false,
+    "family_ranking": false,
+    "promotion_decision": false,
+    "automatic_promotion": false
+  },
+  "source_discovery_fingerprint": "2b7949203fb9c0f80fa274b60a9205d64381c7ea34479d42643e4c6e3eb4e0ae",
+  "asset_freeze_fingerprint": "689b2099a2977455c8482fb8c975c9c3d0bc9c5cf2daa69e27bec03a32e6a494",
+  "source_scope": {
+    "candidate_definitions": "automation/q069_candidate_bank.py",
+    "candidate_definitions_frozen": true,
+    "fresh_symbol_disjointness": true,
+    "global_prior_research_exclusion": true
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "source_contract": {
+    "performance_runner_path": "automation/q089_performance.py",
+    "performance_runner_sha256": "8527a2e93a552382d1279e03e3e457ecbed246d3843d9992fa54a74bb32042ca",
+    "candidate_bank_path": "automation/q069_candidate_bank.py",
+    "candidate_bank_sha256": "84e008a6152cbea128e5e5f2ac0dfdde0b0172310fe4c510241c60edfd3ff617",
+    "cost_contract_path": "execution/cost_contract.py",
+    "cost_contract_sha256": "bd73fa0a9ff09eea8109ff9a1e0659e890a013818bf6367034a8572cf850260d",
+    "settings_path": "config/settings.py",
+    "settings_sha256": "580b5b2456f5f0eefe01e12ae4aeb36d998b8f66afcf97aa086a9383a00de175"
+  }
+}
