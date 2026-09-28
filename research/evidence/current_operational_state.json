@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T07:28:35.588703+00:00",
+  "generated_at_utc": "2026-09-28T07:34:56.793644+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -158,6 +158,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "Merge pull request #529 from DWR-debug/fix/q068-test-fixture-20260928",
+        "sha": "9b07c177106994b17ecb9dd72ac40967053362f3",
+        "timestamp": "2026-09-28T09:34:43+02:00"
+      },
+      {
+        "message": "TEST: align Q068 alpha fixture with frozen 3500-candle geometry",
+        "sha": "5922f3de916fee269e2526fdbd2e964a9b76d419",
+        "timestamp": "2026-09-28T09:34:22+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3565ebb62bf28e81756afd12b781206c91ec7d50",
+        "timestamp": "2026-09-28T07:28:35Z"
+      },
+      {
         "message": "OPS: integrate Q068 into canonical pipeline status",
         "sha": "f52cb72ba22346727c212be76bd66811796e2797",
         "timestamp": "2026-09-28T09:28:21+02:00"
@@ -181,21 +196,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "c8a363bb7f281c61c1da0e5f86cce384bbef1ec8",
         "timestamp": "2026-09-28T07:17:49Z"
-      },
-      {
-        "message": "FIX: restore self-hosted QA provenance and current regression contracts",
-        "sha": "66a4c6e40193a080b5fa67e0eb0ee991d81fa72f",
-        "timestamp": "2026-09-28T09:17:32+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "66c114708740bd89286a8ef0ded6a3dc84cfa03c",
-        "timestamp": "2026-09-28T07:16:41Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "ddf62eb57d2e644c0ccc0948df20290b6cb2c631",
-        "timestamp": "2026-09-28T06:59:32Z"
       }
     ]
   },
@@ -257,12 +257,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f52cb72ba22346727c212be76bd66811796e2797",
+  "source_master_sha": "9b07c177106994b17ecb9dd72ac40967053362f3",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36391830413"
+    "run_id": "36392414263"
   }
 }
