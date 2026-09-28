@@ -46,7 +46,7 @@ def test_q068_symbols_are_frozen_and_distinct():
 
 
 def test_q068_reuses_exact_six_sleeves_without_sleeve_drift():
-    assets = _assets(300)
+    assets = _assets()
     sleeves = build_alpha_sleeves(assets, symbols=FROZEN_SYMBOLS)
     assert tuple(sleeves) == Q067_SLEEVES
 
