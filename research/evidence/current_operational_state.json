@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:36:02.963139+00:00",
+  "generated_at_utc": "2026-09-28T17:36:41.836405+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -237,6 +237,16 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: add Q089 cloud coverage cross-check (#623)",
+        "sha": "e0a6562dc4b6ac090242a42455960f87a4609515",
+        "timestamp": "2026-09-28T19:36:23+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ce05df4ca0c1bf0d3ac88f5814403b446fb65c54",
+        "timestamp": "2026-09-28T17:36:03Z"
+      },
+      {
         "message": "FIX: invoke RCCSM observational module from repo root (#622)",
         "sha": "1f914089b2e21809b7bd829b0fe23afe2400143f",
         "timestamp": "2026-09-28T19:35:45+02:00"
@@ -265,16 +275,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "0c293c9a3dd1bfa17bc29758d28a0a8b68dad16f",
         "timestamp": "2026-09-28T17:34:22Z"
-      },
-      {
-        "message": "OPS: retrigger q089_coverage_pit.trigger on latest hardened master",
-        "sha": "4131794f9f8a7a229f77599cd5ae125e8a023005",
-        "timestamp": "2026-09-28T19:34:20+02:00"
-      },
-      {
-        "message": "FIX: harden Q089 data acquisition and evidence provenance (#621)",
-        "sha": "f8d2d258f6d282f155e5ab7010901c48fbedce42",
-        "timestamp": "2026-09-28T19:34:03+02:00"
       }
     ]
   },
@@ -336,12 +336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1f914089b2e21809b7bd829b0fe23afe2400143f",
+  "source_master_sha": "e0a6562dc4b6ac090242a42455960f87a4609515",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36459248095"
+    "run_id": "36459325034"
   }
 }
