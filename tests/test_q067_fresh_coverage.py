@@ -12,6 +12,8 @@ def test_q067_fixed_universe_is_disjoint_from_ledger():
             encoding="utf-8"
         )
     )
+    assert prereg["universe"] == "validation_2026_09_28_q067_fixed_mechanism"
+    assert prereg["symbols"] == ["ANSS", "ROP", "NVR", "ZION", "SLB", "EIX", "K", "CCL"]
     assert not (set(prereg["symbols"]) & _used_symbols())
 
 
