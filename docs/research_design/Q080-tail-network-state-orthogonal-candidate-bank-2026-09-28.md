@@ -83,3 +83,13 @@ PAPER_ONLY=True
 LIVE_TRADING_ENABLED=False
 ORDERS_ENABLED=False
 AUTOMATIC_PROMOTION=False
+
+## Primary source references
+
+- Economics Letters (2026), short-term reversal after proper industry adjustment: https://doi.org/10.1016/j.econlet.2026.112153
+- Journal of International Money and Finance (January 2026), idiosyncratic asymmetry risk: https://doi.org/10.1016/j.jimonfin.2025.103464
+- Journal of Financial Economics (June 2026), dual peer effects and cross-stock predictability: https://doi.org/10.1016/j.jfineco.2026.104274
+- International Review of Economics & Finance (March 2026), upside/downside beta asymmetry: https://doi.org/10.1016/j.iref.2026.105033
+- Review of Accounting Studies (2025), news-based investor disagreement: https://doi.org/10.1007/s11142-025-09897-1
+
+These references are used only for hypothesis generation and feasibility design. They do not alter the existing evidence gates.
