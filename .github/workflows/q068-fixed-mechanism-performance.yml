@@ -1,0 +1,103 @@
+name: Q068 Fixed Mechanism Performance
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/authorizations/q068_performance_2026_09_28.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-q068-performance
+  cancel-in-progress: false
+
+jobs:
+  performance:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 240
+    steps:
+      - name: Checkout authorized master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Bootstrap pinned Python 3.13.15
+        shell: cmd
+        run: |
+          @echo off
+          setlocal EnableExtensions
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-q068"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-q068.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            mkdir "%PY_ROOT%" 2>nul
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          "%PY_EXE%" -m pip --version >nul 2>&1
+          if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
+          "%PY_EXE%" -m pip install --disable-pip-version-check pandas pytest || exit /b 1
+          endlocal
+
+      - name: Authorization and safety gate
+        shell: cmd
+        run: |
+          @echo off
+          if /I not "%GITHUB_REPOSITORY%"=="DWR-debug/trading-agent-public" exit /b 1
+          if /I not "%GITHUB_REF%"=="refs/heads/master" exit /b 1
+          if not defined GITHUB_SHA exit /b 1
+          "%RUNNER_TEMP%\python-3.13.15-nuget-q068\tools\python.exe" -c "import json; from pathlib import Path; from config import settings; p=json.loads(Path('research/preregistrations/q068_performance_2026_09_28.json').read_text(encoding='utf-8')); a=json.loads(Path('research/authorizations/q068_performance_2026_09_28.json').read_text(encoding='utf-8')); assert settings.PAPER_ONLY is True; assert settings.LIVE_TRADING_ENABLED is False; assert settings.ORDERS_ENABLED is False; assert settings.AUTOMATIC_PROMOTION is False; assert p['status']=='PREREGISTERED_DESIGN_ONLY'; assert a['authorized'] is True; assert a['performance_execution_authorized'] is True; assert a['execution_scope']=='Q068_FIXED_RULE_PERFORMANCE_ONLY'; assert p['selection_used'] is False; assert p['holdout_used_for_selection'] is False; print('Q068 AUTH/SAFETY OK')"
+
+      - name: Performance prerequisites
+        shell: cmd
+        run: |
+          @echo off
+          if not exist research\evidence\q068_coverage_result.json exit /b 1
+          if not exist research\evidence\q068_pit_result.json exit /b 1
+          "%RUNNER_TEMP%\python-3.13.15-nuget-q068\tools\python.exe" -c "import json; from pathlib import Path; c=json.loads(Path('research/evidence/q068_coverage_result.json').read_text(encoding='utf-8')); p=json.loads(Path('research/evidence/q068_pit_result.json').read_text(encoding='utf-8')); assert c['trial_id']=='T-2026-09-28-068-COVERAGE'; assert c['status']=='COVERAGE_PASSED'; assert c['performance_trial_authorized'] is False; assert c['selection_used'] is False; assert p['trial_id']=='T-2026-09-28-068-PIT'; assert p['status']=='PIT_PASSED'; assert p['performance_trial_authorized'] is False; assert p['selection_used'] is False; print('Q068 PREREQUISITES OK')"
+
+      - name: Q068 fixed-rule performance
+        shell: cmd
+        run: |
+          @echo off
+          "%RUNNER_TEMP%\python-3.13.15-nuget-q068\tools\python.exe" -m automation.q068_performance --preregistration research/preregistrations/q068_performance_2026_09_28.json --repo-root . --output research/evidence/q068_performance_result.json || exit /b 1
+
+      - name: Validate fixed result
+        shell: cmd
+        run: |
+          @echo off
+          "%RUNNER_TEMP%\python-3.13.15-nuget-q068\tools\python.exe" -c "import json; from pathlib import Path; d=json.loads(Path('research/evidence/q068_performance_result.json').read_text(encoding='utf-8')); assert d['status']=='COMPLETED'; assert d['performance_evaluation'] is True; assert d['oos_evaluation'] is True; assert d['holdout_evaluation'] is True; assert d['selection_used'] is False; assert d['holdout_used_for_selection'] is False; assert d['governance']['promotion_decision'] is False; assert d['governance']['automatic_promotion'] is False; assert d['symbols']==['ETR','PPL','WEC','FE','D','EXR','PSA','O']; assert set(d['arms'])=={'CONTROL_6SLEEVE_ENSEMBLE','E1_ALPHA_COMMON_MODE_THROTTLE','E2_TURNOVER_HYSTERESIS'}; assert all(0 <= arm['gates_passed'] <= 13 for arm in d['arms'].values()); print('Q068 RESULT GOVERNANCE OK'); [print(k, str(v['gates_passed'])+'/'+str(v['gates_total'])) for k,v in d['arms'].items()]; print('Q068_REPORT_FINGERPRINT:',d['report_fingerprint'])"
+
+      - name: Persist performance evidence
+        if: success()
+        shell: cmd
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          @echo off
+          git diff --check || exit /b 1
+          git add research\evidence\q068_performance_result.json || exit /b 1
+          git diff --cached --quiet
+          if not errorlevel 1 (
+            echo No Q068 performance evidence changes
+            exit /b 0
+          )
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "EVIDENCE: record Q068 fixed mechanism performance" || exit /b 1
+          git push origin HEAD:master || exit /b 1
+
+      - name: Publish performance artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q068-fixed-mechanism-performance
+          path: research/evidence/q068_performance_result.json
+          if-no-files-found: error
+          retention-days: 30
