@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `30b67031c456194043f35890bdbf6243f62c75e2`
+**Current operational snapshot:** `97b577efdbc522d0c328935e164494d452b38c7a`
 
-**Generated (UTC):** `2026-09-28T13:05:12.698987+00:00`
+**Generated (UTC):** `2026-09-28T13:05:30.797815+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -16,7 +16,7 @@
 - The Forward path contains closed-candle market-data ingestion, a persistent update loop and a schema-v2 per-candle MTM ledger.
 - Canonical data-layer infrastructure is merged.
 - Bounded agent routing uses two queue lanes with fail-closed task contracts.
-- Self-hosted Continuous QA is scheduled every 15 minutes under label `trading-agent-research`.
+- Self-hosted Continuous QA is scheduled hourly at minute 15 under label `trading-agent-research`.
 - The current architecture claims one runner process; a second process is only a prepared scale path, not an online capacity claim.
 
 ### Scientific status
