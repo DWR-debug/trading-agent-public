@@ -1,1 +1,1 @@
-Q077 fresh discovery trigger — route via registered hosted workflow 2026-09-28T10:58Z.
+Q077 fresh discovery trigger — explicit status-sync dispatch bridge 2026-09-28T11:03Z.
