@@ -47,3 +47,35 @@ def test_local_ai_state_publisher_is_gitless_and_race_tolerant(monkeypatch, tmp_
         "DWR-debug/trading-agent-public",
         "master",
     )
+
+
+def test_local_ai_state_publisher_is_idempotent(monkeypatch, tmp_path):
+    import automation.publish_ai_worker_state as publisher
+
+    output = tmp_path / "worker.json"
+    payload = '{"schema_version":1,"task_id":"T","provider":"gemini_cli","status":"SKIPPED"}\\n'
+    output.write_text(payload, encoding="utf-8")
+    state = tmp_path / "ops" / "state.json"
+
+    for key, value in {
+        "AI_WORKER_STATE_PATH": str(state),
+        "AI_WORKER_OUTPUT_PATH": str(output),
+        "AI_WORKER_TASK_ID": "T",
+        "AI_WORKER_PROVIDER": "gemini_cli",
+        "GITHUB_REPOSITORY": "DWR-debug/trading-agent-public",
+        "GH_TOKEN": "test-token",
+    }.items():
+        monkeypatch.setenv(key, value)
+
+    def fake_api(method, url):
+        if "/git/ref/heads/master" in url:
+            return {"object": {"sha": "base-1"}}
+        return {"content": base64.b64encode(payload.encode("utf-8")).decode("ascii")}
+
+    import base64
+    publish_calls = []
+    monkeypatch.setattr(publisher.github_contents_publish, "api", fake_api)
+    monkeypatch.setattr(publisher.github_contents_publish, "publish", lambda *args, **kwargs: publish_calls.append(args))
+
+    assert publisher.main() == 0
+    assert publish_calls == []
