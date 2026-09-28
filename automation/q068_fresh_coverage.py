@@ -19,6 +19,13 @@ FROZEN_SYMBOLS = ("ETR", "PPL", "WEC", "FE", "D", "EXR", "PSA", "O")
 COVERAGE_TRIAL_ID = "T-2026-09-28-068-COVERAGE"
 
 
+def _coverage_snapshot_spec(prereg: dict) -> dict:
+    """Route the frozen snapshot under the execution receipt identity, not the design-freeze identity."""
+    scoped = dict(prereg)
+    scoped["trial_id"] = COVERAGE_TRIAL_ID
+    return scoped
+
+
 def _fp(value: object) -> str:
     return hashlib.sha256(
         json.dumps(
@@ -71,7 +78,7 @@ def run(preregistration: Path, output_root: Path, result_path: Path) -> dict:
     if overlap:
         raise RuntimeError(f"Q068 fresh-universe overlap detected: {overlap}")
 
-    coverage = snapshot_from_preregistration(prereg, output_root=output_root)
+    coverage = snapshot_from_preregistration(_coverage_snapshot_spec(prereg), output_root=output_root)
     result = {
         "schema_version": "1.0",
         "trial_id": COVERAGE_TRIAL_ID,
