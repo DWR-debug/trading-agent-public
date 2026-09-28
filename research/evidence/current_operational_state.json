@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T22:36:39.731638+00:00",
+  "generated_at_utc": "2026-09-28T22:45:01.985673+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,44 +325,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: remove obsolete Antigravity settings helper from worker",
+        "sha": "689921d7c68f111bcd874804569678c62f32136f",
+        "timestamp": "2026-09-29T00:44:49+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "8f834db742b11b5e3c9e673a40d1bf8313988b30",
+        "timestamp": "2026-09-28T22:41:01Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "8fdddbb8867ecd8bbb378afec5eaf92556739ecc",
+        "timestamp": "2026-09-28T22:40:27Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "a580cdd38bd20adee3aa445cbb38057ae05f59e2",
+        "timestamp": "2026-09-28T22:40:11Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "74ece7f81eadf8c59d3c19107eede769a7c8edf7",
+        "timestamp": "2026-09-28T22:40:07Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "efb4b1d83c026b9cc9d7e9874dd25f42e76c8298",
+        "timestamp": "2026-09-28T22:40:04Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "c85807882e331329493318ea15979055e5678f2d",
+        "timestamp": "2026-09-28T22:38:02Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
-        "sha": "a080837dd2f422eb71218ccf2ec93b9083548567",
-        "timestamp": "2026-09-28T22:36:19Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "806ad5ae71af474bdf74ba09dc2b1dbe36b55584",
-        "timestamp": "2026-09-28T22:36:12Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "da8f19694f719b03dc2ee2ec2f0317044704b4e9",
-        "timestamp": "2026-09-28T22:36:11Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "44bc0d3988053e1a21faeff9e14eb2cec9d02eef",
-        "timestamp": "2026-09-28T22:36:05Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "2e64619fadeaaa56933642b101010291157f24fc",
-        "timestamp": "2026-09-28T22:36:03Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "eb4bc976a7ad717a2bf5c497267c71c210346be5",
-        "timestamp": "2026-09-28T22:36:02Z"
-      },
-      {
-        "message": "CLEANUP: retire brittle Antigravity settings helper trigger",
-        "sha": "f53e28aba824329e246dd77b4938472d88c005d2",
-        "timestamp": "2026-09-29T00:35:56+02:00"
-      },
-      {
-        "message": "FIX: remove strict settings rewrite from AI worker loop",
-        "sha": "09775e5876af29b1cdbfa41372df83c134763eff",
-        "timestamp": "2026-09-29T00:35:51+02:00"
+        "sha": "a3a51295a73a7651c188e89892f958af9fb1c6e2",
+        "timestamp": "2026-09-28T22:36:39Z"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a080837dd2f422eb71218ccf2ec93b9083548567",
+  "source_master_sha": "689921d7c68f111bcd874804569678c62f32136f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36493392503"
+    "run_id": "36494188489"
   }
 }
