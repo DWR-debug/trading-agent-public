@@ -11,7 +11,7 @@ from automation.q067_alpha_mechanisms import (
     equal_weight_ensemble,
 )
 from automation.q068_fresh_coverage import FROZEN_SYMBOLS
-from automation import q068_pit
+from automation import q068_fresh_coverage, q068_pit
 
 
 def _bar(ts, value):
@@ -39,6 +39,17 @@ def _assets(count=3500):
         for slot, symbol in enumerate(FROZEN_SYMBOLS)
     }
 
+
+
+
+def test_q068_coverage_snapshot_path_uses_execution_trial_identity():
+    prereg = json.loads(
+        Path("research/preregistrations/q068_fixed_mechanism_freeze_2026_09_28.json")
+        .read_text(encoding="utf-8")
+    )
+    scoped = q068_fresh_coverage._coverage_snapshot_spec(prereg)
+    assert prereg["trial_id"] == "Q-2026-09-28-068-DESIGN-FREEZE"
+    assert scoped["trial_id"] == "T-2026-09-28-068-COVERAGE"
 
 def test_q068_symbols_are_frozen_and_distinct():
     assert FROZEN_SYMBOLS == ("ETR", "PPL", "WEC", "FE", "D", "EXR", "PSA", "O")
