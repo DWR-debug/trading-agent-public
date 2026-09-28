@@ -62,7 +62,20 @@ jobs:
               result.update({"status": "DATA_INSUFFICIENT", "http_status": exc.code, "error": str(exc)})
           except Exception as exc:
               result.update({"status": "DATA_INSUFFICIENT", "error": str(exc)})
+          from pathlib import Path
+          out = Path("research/runs/f2_sec_cloud_source_probe") / (os.environ["ENDPOINT"] + ".json")
+          out.parent.mkdir(parents=True, exist_ok=True)
+          out.write_text(json.dumps(result, sort_keys=True, indent=2) + "\n", encoding="utf-8")
           print(json.dumps(result, sort_keys=True))
           if result["status"] == "ACCESSIBLE":
               assert result["bytes"] > 100
           PY
+
+      - name: Upload SEC source probe evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: f2-sec-cloud-probe-${{ matrix.endpoint }}-${{ github.run_id }}
+          path: research/runs/f2_sec_cloud_source_probe/${{ matrix.endpoint }}.json
+          if-no-files-found: error
+          retention-days: 30
