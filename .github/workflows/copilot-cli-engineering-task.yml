@@ -12,7 +12,7 @@ permissions:
 concurrency:
   # Two deterministic execution lanes enforce the project-wide maximum of
   # two concurrent agent sessions. Additional tasks queue behind these lanes.
-  group: trading-agent-copilot-cli-lane-${{ github.event.issue.number % 2 }}
+  group: trading-agent-copilot-cli
   cancel-in-progress: false
 
 jobs:
