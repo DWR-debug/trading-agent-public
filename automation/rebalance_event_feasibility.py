@@ -16,6 +16,9 @@ class RebalanceEvent:
     published_at: datetime
     effective_at: datetime
 
+    def __post_init__(self) -> None:
+        _validate(self)
+
 
 def _validate(event: RebalanceEvent) -> None:
     if not event.event_id:
