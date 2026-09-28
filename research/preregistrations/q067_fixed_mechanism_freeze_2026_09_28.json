@@ -4,12 +4,24 @@
   "coverage_trial_id": "T-2026-09-28-067-COVERAGE",
   "research_family": "q067_fixed_mechanism_freeze",
   "status": "PREREGISTERED_DESIGN_ONLY_FROZEN",
-  "symbols": ["ANSS", "ROP", "NVR", "ZION", "SLB", "EIX", "K", "CCL"],
+  "symbols": [
+    "ANSS",
+    "ROP",
+    "NVR",
+    "ZION",
+    "SLB",
+    "EIX",
+    "K",
+    "CCL"
+  ],
   "selection_basis": "fixed pre-registration before coverage/performance; cross-sector fresh universe; must be absent from trial ledger and registered asset-universe catalogue; no performance-based replacement",
   "requested_candles": 4000,
   "target_common_candles": 3500,
   "interval": "1d",
-  "study_window": {"start": "2011-01-01", "end": "2025-12-31"},
+  "study_window": {
+    "start": "2011-01-01",
+    "end": "2025-12-31"
+  },
   "mechanisms": {
     "alpha_sleeves": [
       "A1_TSM_CONSENSUS",
@@ -23,10 +35,10 @@
     "E1_ALPHA_COMMON_MODE_THROTTLE": {
       "correlation": "mean pairwise Pearson correlation across the six sleeve return streams",
       "lookback_completed_periods": 63,
-      "activation_threshold": 0.70,
+      "activation_threshold": 0.7,
       "activation_consecutive_observations": 3,
-      "exposure_multiplier": 0.50,
-      "recovery_threshold": 0.50,
+      "exposure_multiplier": 0.5,
+      "recovery_threshold": 0.5,
       "recovery_consecutive_observations": 5,
       "timing": "decision at close t uses only sleeve holding-period returns whose endpoints are fully known before close t",
       "missing_sleeve_handling": "fail closed; no imputation",
@@ -62,5 +74,6 @@
     "live_trading_enabled": false,
     "orders_enabled": false,
     "automatic_promotion": false
-  }
+  },
+  "universe": "validation_2026_09_28_q067_fixed_mechanism"
 }
