@@ -157,3 +157,4 @@ def test_q068_self_hosted_evidence_persistence_uses_checkout_path_without_local_
         )
         assert "git add " not in text
         assert "git push " not in text
+        assert "for /f %%H in" not in text

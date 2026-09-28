@@ -93,7 +93,9 @@ jobs:
           set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q068\tools\python.exe"
           if not exist "%PY_EXE%" exit /b 1
           set "PUBLISH_MESSAGE=EVIDENCE: record Q068 coverage and PIT preflight"
-          for /f %%H in ('"%PY_EXE%" -c "import json,os,urllib.request; u='https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/ref/heads/master'; r=urllib.request.Request(u,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'}); print(json.load(urllib.request.urlopen(r))['object']['sha'])"') do set "BASE_SHA=%%H"
+          "%PY_EXE%" -c "import json,os,urllib.request; u='https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/ref/heads/master'; r=urllib.request.Request(u,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'}); print(json.load(urllib.request.urlopen(r))['object']['sha'])" > "%RUNNER_TEMP%\\q068_base_sha.txt" || exit /b 1
+          set /p BASE_SHA=<"%RUNNER_TEMP%\\q068_base_sha.txt"
+          if not defined BASE_SHA exit /b 1
           "%PY_EXE%" "%GITHUB_WORKSPACE%\automation\github_contents_publish.py" --repository "%GITHUB_REPOSITORY%" --branch master --base-sha "%BASE_SHA%" --file research/evidence/q068_coverage_result.json=research\evidence\q068_coverage_result.json --file research/evidence/q068_pit_result.json=research\evidence\q068_pit_result.json
           if errorlevel 1 exit /b 1
           endlocal
