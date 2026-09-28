@@ -10,6 +10,7 @@ from pathlib import Path
 from automation.fixed_window_candidate_discovery import run_discovery
 from automation.q069_candidate_bank import CANDIDATES, candidate_targets_at
 from data.canonical_snapshot import load_frozen_snapshot, snapshot_from_preregistration
+from data.yahoo_loader import load_yahoo_history
 
 ROOT = Path(__file__).resolve().parents[1]
 COVERAGE_ID = "T-2026-09-28-089-COVERAGE"
@@ -60,6 +61,18 @@ def _coverage_paths() -> tuple[Path, Path]:
     return root / "snapshot_manifest.json", root
 
 
+def _q089_resilient_loader(symbol, interval, requested_candles, **kwargs):
+    """Retry source acquisition before failing a fixed Q089 snapshot build."""
+    last_error = None
+    for attempt in range(3):
+        try:
+            return load_yahoo_history(symbol, interval, requested_candles, **kwargs)
+        except Exception as exc:
+            last_error = exc
+            print(f"Q089_SOURCE_RETRY symbol={symbol} attempt={attempt + 1} error={exc}")
+    raise RuntimeError(f"Q089 source acquisition failed after 3 attempts for {symbol}: {last_error}")
+
+
 def coverage() -> dict:
     discovery = run_discovery(
         output=ROOT / "research" / "runs" / "q089_discovery" / "discovery.json",
@@ -89,10 +102,23 @@ def coverage() -> dict:
         "safety": SAFETY,
     }
     snap = snapshot_from_preregistration(
-        spec, output_root=ROOT / "research" / "runs" / "q089_coverage"
+        spec,
+        output_root=ROOT / "research" / "runs" / "q089_coverage",
+        loader=_q089_resilient_loader,
+    )
+    print(
+        "Q089_SNAPSHOT_STATUS",
+        snap.get("status"),
+        "COMMON_COUNT",
+        snap.get("coverage", {}).get("common_calendar_count"),
+        "ERRORS",
+        json.dumps(snap.get("coverage", {}).get("errors", {}), sort_keys=True),
     )
     if snap["status"] != "COVERAGE_PASSED":
-        raise RuntimeError("Q089 coverage failed")
+        raise RuntimeError(
+            "Q089 coverage failed: "
+            + json.dumps(snap.get("coverage", {}).get("errors", {}), sort_keys=True)
+        )
 
     freeze = {
         "schema_version": "1.0",
