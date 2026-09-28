@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:59:27.895021+00:00",
+  "generated_at_utc": "2026-09-28T20:00:02.802488+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,6 +325,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: add workflow lint guard",
+        "sha": "03178af06a977f5fb0b428e22b1d05adbec409a2",
+        "timestamp": "2026-09-28T21:59:51+02:00"
+      },
+      {
+        "message": "FIX: remove matrix context from workflow-level concurrency",
+        "sha": "5de0675246c090f763c5b76b999ebf954ac0f971",
+        "timestamp": "2026-09-28T21:59:47+02:00"
+      },
+      {
+        "message": "FIX: remove unsupported Actions modulo expression",
+        "sha": "5432ceb8410bb4b828e09db5faa3fedcdde7793f",
+        "timestamp": "2026-09-28T21:59:44+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8b60e5cca2fbd88ef60756344407499230eab7f6",
+        "timestamp": "2026-09-28T19:59:27Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "aee91a3e1afcaa04576f2d3531f5b38ae1b26809",
         "timestamp": "2026-09-28T19:59:11Z"
@@ -343,26 +363,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "029359b78e2448b5192823eb2fddb5f920d9e2d8",
         "timestamp": "2026-09-28T19:58:30Z"
-      },
-      {
-        "message": "FIX: make local AI smoke fail-closed on G1 fallback",
-        "sha": "331a79ea0c8337a7a3dfd88b80a34105ee762294",
-        "timestamp": "2026-09-28T21:58:15+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5d4f5046906b2fac47e543f4147e3050e4c5fc6b",
-        "timestamp": "2026-09-28T19:54:34Z"
-      },
-      {
-        "message": "FIX: make local AI bootstrap Constrained-Language safe",
-        "sha": "76392b040f966c188efc8da0c46588e4fd54913b",
-        "timestamp": "2026-09-28T21:54:19+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "64e6590e365d6a516bf6d2f803624a2bad45c47f",
-        "timestamp": "2026-09-28T19:54:10Z"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "aee91a3e1afcaa04576f2d3531f5b38ae1b26809",
+  "source_master_sha": "03178af06a977f5fb0b428e22b1d05adbec409a2",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36475976453"
+    "run_id": "36476071440"
   }
 }
