@@ -41,76 +41,48 @@ jobs:
           fetch-depth: 1
 
       - name: Local AI setup and no-credit-fallback hardening
-        shell: powershell
+        shell: cmd
         run: |
-          $ErrorActionPreference = "Stop"
-          & .\scripts\enable_local_ai_worker.ps1
+          @echo off
+          powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File ".\scripts\enable_local_ai_worker.ps1"
+          if errorlevel 1 exit /b 1
 
       - name: Resolve task
         id: task
-        shell: powershell
+        shell: cmd
         run: |
-          $map = @{
-            "AI-2026-09-28-Q089-ADVERSARIAL" = "ai_requests/AI-2026-09-28-Q089-ADVERSARIAL.json"
-            "AI-2026-09-28-UNUSUAL-FRONTIER" = "ai_requests/AI-2026-09-28-UNUSUAL-FRONTIER.json"
-          }
-          "path=$($map['${{ matrix.task }}'])" | Out-File -Append $env:GITHUB_OUTPUT
+          @echo off
+          if /I "${{ matrix.task }}"=="AI-2026-09-28-Q089-ADVERSARIAL" echo path=ai_requests/AI-2026-09-28-Q089-ADVERSARIAL.json>>"%GITHUB_OUTPUT%"
+          if /I "${{ matrix.task }}"=="AI-2026-09-28-UNUSUAL-FRONTIER" echo path=ai_requests/AI-2026-09-28-UNUSUAL-FRONTIER.json>>"%GITHUB_OUTPUT%"
 
       - name: Check for already-satisfied task
         id: prior
-        shell: powershell
+        shell: cmd
         run: |
-          $taskPath = "${{ steps.task.outputs.path }}"
-          $statePath = "ops/ai_worker_state/${{ matrix.task }}__${{ matrix.provider }}.json"
-          if (-not (Test-Path $statePath)) { "run=true" >> $env:GITHUB_OUTPUT; exit 0 }
-          $state = Get-Content $statePath -Raw | ConvertFrom-Json
-          if ($state.status -eq "SUCCESS" -and $state.task_fingerprint) {
-            "run=false" >> $env:GITHUB_OUTPUT
-            "reason=SUCCESS_ALREADY_RECORDED" >> $env:GITHUB_OUTPUT
-          } else {
-            "run=true" >> $env:GITHUB_OUTPUT
-          }
+          @echo off
+          python -c "import json,os; from pathlib import Path; p=Path(r'ops/ai_worker_state/${{ matrix.task }}__${{ matrix.provider }}.json'); d=json.loads(p.read_text(encoding='utf-8')) if p.exists() else {}; run=not (d.get('status')=='SUCCESS' and bool(d.get('task_fingerprint'))); open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8').write('run='+str(run).lower()+'\\n')"
 
       - name: Run local provider worker
         if: steps.prior.outputs.run == 'true'
-        shell: powershell
+        shell: cmd
         env:
           AI_EXTERNAL_PROVIDER_ALLOWLIST: "true"
           TRADING_AGENT_LOCAL_AI_MODE: "true"
         run: |
-          $env:TRADING_AGENT_AI_ATTESTATION = Join-Path $HOME ".trading-agent\ai_free_attestation.json"
-          $output = Join-Path $env:RUNNER_TEMP "ai-${{ matrix.task }}-${{ matrix.provider }}.json"
-          python -m automation.ai_worker_fabric --run --provider "${{ matrix.provider }}" --task "${{ steps.task.outputs.path }}" --output $output
+          @echo off
+          python -m automation.ai_worker_fabric --run --provider "${{ matrix.provider }}" --task "${{ steps.task.outputs.path }}" --output "%RUNNER_TEMP%\ai-${{ matrix.task }}-${{ matrix.provider }}.json"
 
       - name: Publish local worker state
         if: always() && steps.prior.outputs.run == 'true'
-        shell: powershell
+        shell: cmd
         env:
-          GH_TOKEN: ${{ github.token }}
+          AI_WORKER_TASK_ID: "${{ matrix.task }}"
+          AI_WORKER_PROVIDER: "${{ matrix.provider }}"
+          AI_WORKER_STATE_PATH: "ops/ai_worker_state/${{ matrix.task }}__${{ matrix.provider }}.json"
+          AI_WORKER_OUTPUT_PATH: "%RUNNER_TEMP%\ai-${{ matrix.task }}-${{ matrix.provider }}.json"
         run: |
-          $stateDir = "ops/ai_worker_state"
-          New-Item -ItemType Directory -Force $stateDir | Out-Null
-          $output = Join-Path $env:RUNNER_TEMP "ai-${{ matrix.task }}-${{ matrix.provider }}.json"
-          $state = "$stateDir/${{ matrix.task }}__${{ matrix.provider }}.json"
-          if (Test-Path $output) { Copy-Item $output $state -Force }
-          else { '{"schema_version":1,"task_id":"${{ matrix.task }}","provider":"${{ matrix.provider }}","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' | Set-Content -Encoding UTF8 $state }
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          for ($attempt = 1; $attempt -le 5; $attempt++) {
-            git fetch origin master
-            git checkout -B master origin/master
-            Copy-Item $output $state -Force -ErrorAction SilentlyContinue
-            if (-not (Test-Path $state)) {
-              '{"schema_version":1,"task_id":"${{ matrix.task }}","provider":"${{ matrix.provider }}","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' | Set-Content -Encoding UTF8 $state
-            }
-            git add $state
-            if (git diff --cached --quiet) { exit 0 }
-            git commit -m "OPS: record local AI worker state"
-            if (git push origin HEAD:master) { exit 0 }
-            Start-Sleep -Seconds 2
-          }
-          throw "Unable to publish local AI worker state after retries."
-
+          @echo off
+          python -m automation.publish_ai_worker_state
       - name: Publish local worker artifact
         if: always()
         uses: actions/upload-artifact@v6
