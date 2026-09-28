@@ -65,7 +65,7 @@ def decompose(data: dict) -> dict:
         "T050_only_shared_between_its_two_sleeves": sorted(
             (failure_sets["T-2026-09-27-050"][SLEEVES[0]]
              & failure_sets["T-2026-09-27-050"][SLEEVES[1]])
-            - cross_universe_shared
+            - set(cross_universe_shared)
         ),
     }
     return {
