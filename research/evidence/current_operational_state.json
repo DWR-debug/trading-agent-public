@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:25:03.727898+00:00",
+  "generated_at_utc": "2026-09-28T15:25:16.001172+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: retry Q081-R1 preflight after source-hash correction",
+        "sha": "87a2f2920c59230d53ca5f1e8c911ebb6652d96d",
+        "timestamp": "2026-09-28T17:25:11+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "efd89a5ef0a471b5e38a6f3c1c7236faf6e75c28",
+        "timestamp": "2026-09-28T15:25:03Z"
+      },
+      {
         "message": "EVIDENCE: quarantine Q086 identity-invalid feasibility run",
         "sha": "86f983d8d5335882957e4fdfbaa882d08d5bcadc",
         "timestamp": "2026-09-28T17:24:46+02:00"
@@ -185,16 +195,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "489a9e540a905752ef42218a6bc00c3cf3343b78",
         "timestamp": "2026-09-28T15:19:47Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e4c09782d4619053e5412f670a05b2c1b5705d6e",
-        "timestamp": "2026-09-28T15:19:30Z"
-      },
-      {
-        "message": "RESEARCH: preregister Q088 design-only governance",
-        "sha": "6db684c424d4cda2748ff64240dbf44800383198",
-        "timestamp": "2026-09-28T17:19:17+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "86f983d8d5335882957e4fdfbaa882d08d5bcadc",
+  "source_master_sha": "87a2f2920c59230d53ca5f1e8c911ebb6652d96d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36443390752"
+    "run_id": "36443400207"
   }
 }
