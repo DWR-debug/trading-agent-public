@@ -65,3 +65,21 @@ methodology review; architecture/refactoring review; test/specification design; 
 research-literature synthesis.
 
 Never delegate formal promotion or scientific gate interpretation.
+
+## Authentifizierung: lokale Google-/Claude-Anmeldung
+
+Auf dem persistenten Windows-PC kann Gemini CLI interaktiv mit einem Google-
+Konto angemeldet werden. Die CLI cached die Authentifizierung lokal; Headless-
+Aufrufe können diese bestehende Authentifizierung verwenden, sofern sie unter
+demselben Windows-Benutzerprofil laufen.
+
+Das ist nicht dasselbe wie eine automatische Verbindung zum Benutzerkonto in
+ChatGPT. Für GitHub-hosted Runner müssen Credentials separat bereitgestellt
+werden; der lokale Browser-Login wird nicht dorthin übertragen.
+
+Claude Code unterstützt ebenfalls nicht-interaktive `claude -p` Aufrufe und
+maschinenlesbare JSON-Ausgabe. Die verfügbare Authentifizierung hängt vom
+Claude-Account-/Planstatus ab; kostenlose Nutzung wird deshalb nicht
+vorausgesetzt.
+
+Credentials werden niemals in Repository-Dateien oder AI-Task-Prompts geschrieben.
