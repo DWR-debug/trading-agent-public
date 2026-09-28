@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T09:02:00.212115+00:00",
+  "generated_at_utc": "2026-09-28T09:03:15.073584+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -125,6 +125,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "Merge pull request #545 from DWR-debug/research/q070-fixed-candidate-validation-rebased-20260928",
+        "sha": "1c5ddabd4f7cf85debc8035cbfa1472dc38e4abb",
+        "timestamp": "2026-09-28T11:03:00+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "11de7685878476810b86796c2160fe91e875dc80",
+        "timestamp": "2026-09-28T09:02:00Z"
+      },
+      {
         "message": "Merge pull request #544 from DWR-debug/fix/q068-publisher-dependency-trigger-20260928",
         "sha": "d70dd76bd4fb5644d89dfb2b0e528a11d0a486f3",
         "timestamp": "2026-09-28T11:01:45+02:00"
@@ -150,19 +160,9 @@
         "timestamp": "2026-09-28T11:00:40+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a8cb17a2f1a6087fc2e34510b8dcf655ec97d5e4",
-        "timestamp": "2026-09-28T08:57:40Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "c8977ae660f472ef67db263854d477150964214e",
-        "timestamp": "2026-09-28T08:57:38Z"
-      },
-      {
-        "message": "Merge pull request #542 from DWR-debug/fix/q069-candidate-pit-off-by-one-20260928",
-        "sha": "8b2c89aa8f49549d71cc4e7aac391829e9b23462",
-        "timestamp": "2026-09-28T10:57:23+02:00"
+        "message": "TEST: restore Q070 pipeline contract tests on current master",
+        "sha": "45308a3e96cf1d2204414c1e109df5d4ffafef98",
+        "timestamp": "2026-09-28T10:59:38+02:00"
       }
     ]
   },
@@ -224,12 +224,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d70dd76bd4fb5644d89dfb2b0e528a11d0a486f3",
+  "source_master_sha": "1c5ddabd4f7cf85debc8035cbfa1472dc38e4abb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36400928885"
+    "run_id": "36401059514"
   }
 }
