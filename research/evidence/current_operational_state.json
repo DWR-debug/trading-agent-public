@@ -124,7 +124,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:08:11.491783+00:00",
+  "generated_at_utc": "2026-09-28T19:08:54.745295+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -247,6 +247,26 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: trigger local AI worker validation on both PC runners",
+        "sha": "be5c39f99f38f19158cff31d0b7c8919a83182cd",
+        "timestamp": "2026-09-28T21:08:52+02:00"
+      },
+      {
+        "message": "FIX: run local AI fabric through policy-safe Windows cmd",
+        "sha": "32d9cb67c58c5915f163c13aa1564d8511a46448",
+        "timestamp": "2026-09-28T21:08:45+02:00"
+      },
+      {
+        "message": "OPS: add race-tolerant local AI state publisher",
+        "sha": "72abb3096669009ee92f85e2e42c443e4e1359f4",
+        "timestamp": "2026-09-28T21:08:34+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "31844aa1be6dcad225d65e6b67e94cc3e5db85ae",
+        "timestamp": "2026-09-28T19:08:11Z"
+      },
+      {
         "message": "FIX: avoid host PowerShell execution-policy block in capacity probe",
         "sha": "cc27fb6bfa0f29b4bdf3b9c632e5aa13161ff0c8",
         "timestamp": "2026-09-28T21:07:57+02:00"
@@ -265,26 +285,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "91d44de3a68df3b31ca15e3f3410e563a3a739d1",
         "timestamp": "2026-09-28T19:06:35Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c1f5632742fd008926cf716826c24ba0e89e7d1c",
-        "timestamp": "2026-09-28T19:06:19Z"
-      },
-      {
-        "message": "FIX: make current status sync race tolerant",
-        "sha": "9e5e535d330d0620639089337cdb4354434715e1",
-        "timestamp": "2026-09-28T21:06:13+02:00"
-      },
-      {
-        "message": "FIX: harden local AI fabric paths and state push races",
-        "sha": "c1c8f7949180efabf660ee36624143b25571d060",
-        "timestamp": "2026-09-28T21:06:02+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "bfdf8b52bcdc9e6c4cf41b55fbd5106f0b2033d0",
-        "timestamp": "2026-09-28T18:57:20Z"
       }
     ]
   },
@@ -346,12 +346,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "cc27fb6bfa0f29b4bdf3b9c632e5aa13161ff0c8",
+  "source_master_sha": "be5c39f99f38f19158cff31d0b7c8919a83182cd",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36470097488"
+    "run_id": "36470168497"
   }
 }
