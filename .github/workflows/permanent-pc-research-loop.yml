@@ -108,7 +108,8 @@ jobs:
           retention-days: 14
 
   local_ai_smoke:
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    needs: autonomous_pc
+    if: ${{ always() && github.repository == 'DWR-debug/trading-agent-public' }}
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 8
     steps:
