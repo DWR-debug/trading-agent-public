@@ -33,6 +33,7 @@ def _receipt(trial_id, status):
         "performance_trial_authorized": False,
         "selection_used": False,
         "symbols": list(FROZEN_SYMBOLS),
+        "snapshot_fingerprint": "snapshot-fp",
         "result_fingerprint": f"{status}-fp",
         "safety": {
             "paper_only": True,
@@ -41,6 +42,19 @@ def _receipt(trial_id, status):
             "automatic_promotion": False,
         },
     }
+
+
+def _snapshot(root):
+    snapshot_root = root / "research/runs/q068_coverage/T-2026-09-28-068-COVERAGE"
+    (snapshot_root / "datasets").mkdir(parents=True, exist_ok=True)
+    (snapshot_root / "snapshot_manifest.json").write_text(
+        json.dumps({"snapshot_fingerprint": "snapshot-fp"}),
+        encoding="utf-8",
+    )
+    for symbol in FROZEN_SYMBOLS:
+        p = snapshot_root / "datasets" / symbol / "1d.csv"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text("timestamp,open,high,low,close,volume\n", encoding="utf-8")
 
 
 def test_q068_pipeline_blocks_until_both_preflight_receipts_exist(tmp_path):
@@ -63,6 +77,7 @@ def test_q068_pipeline_reports_waiting_for_auto_auth_after_both_receipts(tmp_pat
         tmp_path / "research/evidence/q068_pit_result.json",
         _receipt("T-2026-09-28-068-PIT", "PIT_PASSED"),
     )
+    _snapshot(tmp_path)
 
     state = summarize(tmp_path)
 
@@ -95,6 +110,8 @@ def test_q068_pipeline_reports_authorized_only_after_matching_receipts(tmp_path)
         },
     )
 
+    _snapshot(tmp_path)
+
     state = summarize(tmp_path)
 
     assert state["state"] == "PERFORMANCE_AUTHORIZED"
@@ -125,6 +142,8 @@ def test_q068_pipeline_rejects_mismatched_authorization_fingerprint(tmp_path):
             },
         },
     )
+
+    _snapshot(tmp_path)
 
     state = summarize(tmp_path)
 
