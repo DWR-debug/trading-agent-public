@@ -85,8 +85,11 @@ def _validate_state(state: Mapping[str, Any]) -> dict[str, float]:
     if not isinstance(state, Mapping):
         raise TypeError("state must be a mapping")
     missing = [field for field in STATE_FIELDS if field not in state]
+    extra = [field for field in state if field not in STATE_FIELDS]
     if missing:
         raise ValueError(f"state is missing required fields: {missing}")
+    if extra:
+        raise ValueError(f"state contains unexpected fields: {extra}")
     return {
         field: _finite(state[field], f"state[{field}]")
         for field in STATE_FIELDS

@@ -58,15 +58,15 @@ def test_mesh_is_canonical_and_fail_closed() -> None:
         route_mesh("S1", {**STATE, "breadth": float("nan")})
 
 
-def test_future_fields_cannot_change_routing() -> None:
-    baseline = route_mesh("S1", STATE)
-    future_mutation = {
+def test_future_or_holdout_fields_are_rejected() -> None:
+    leaked = {
         **STATE,
         "future_return": 9999.0,
         "future_label": -9999.0,
         "holdout_result": 123.0,
     }
-    assert route_mesh("S1", future_mutation) == baseline
+    with pytest.raises(ValueError):
+        route_mesh("S1", leaked)
 
 
 def test_required_state_fields_are_fail_closed() -> None:
