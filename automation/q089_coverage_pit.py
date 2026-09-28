@@ -33,7 +33,7 @@ CANDIDATE_POOL = (
     "MET","MKC","MLM","MOH","MOS","MRO","MSI","MTB","NDSN","NEM","NKE","NLOK",
     "NOC","NRG","NTRS","NUE","NVR","OMC","OKE","ORLY","OTIS","OXY","PAYX","PFG",
     "PHM","PKG","PNC","PNW","PPG","PPL","PRGO","PVH","RSG","RTX","ROL","ROST",
-    "RRC","SJM","SLB","STT","STX","STT","SWK","SWKS","SYY","TAP","TFX","TGT",
+    "RRC","SJM","SLB","STT","STX","SWK","SWKS","SYY","TAP","TFX","TGT",
     "TJX","TMO","TPR","TSCO","TSN","TT","TROW","TRV","TTEK","TXT","UDR","UHS",
     "USB","VLO","VMC","VRSK","VTR","WEC","WELL","WMB","WRB","WST","WY","XEL"
 )
@@ -137,6 +137,14 @@ def coverage() -> dict:
         + "\n",
         encoding="utf-8",
     )
+    coverage_path = evidence / "q089_coverage_result.json"
+    coverage_data = json.loads(coverage_path.read_text(encoding="utf-8"))
+    coverage_data["result_fingerprint"] = _fp(coverage_data)
+    coverage_path.write_text(
+        json.dumps(coverage_data, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
     (evidence / "q089_asset_freeze.json").write_text(
         json.dumps(freeze, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
@@ -284,7 +292,7 @@ def preregister() -> dict:
         "candidates": list(CANDIDATES),
         "data_contract": {
             "coverage_trial_id": COVERAGE_ID,
-            "coverage_result_fingerprint": coverage["snapshot_fingerprint"],
+            "coverage_result_fingerprint": coverage["result_fingerprint"],
             "snapshot_fingerprint": coverage["snapshot_fingerprint"],
             "pit_trial_id": PIT_ID,
             "pit_result_fingerprint": pit_result["result_fingerprint"],
