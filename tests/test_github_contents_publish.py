@@ -55,3 +55,30 @@ def test_publish_retries_concurrent_fast_forward(monkeypatch, tmp_path) -> None:
     assert result == commit2
     assert patch_attempts["count"] == 2
     assert ref_reads["count"] == 2
+
+
+
+def test_api_retries_transient_502(monkeypatch):
+    module = importlib.import_module("automation.github_contents_publish")
+    calls = {"count": 0}
+
+    class FakeResponse:
+        def __enter__(self):
+            return self
+        def __exit__(self, *args):
+            return False
+        def read(self):
+            return b'{"ok": true}'
+
+    def fake_urlopen(req, timeout=30):
+        calls["count"] += 1
+        if calls["count"] < 3:
+            raise __import__("urllib.error").error.HTTPError(
+                req.full_url, 502, "Bad Gateway", {}, None
+            )
+        return FakeResponse()
+
+    monkeypatch.setattr(module.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(module.time, "sleep", lambda _: None)
+    assert module.api("GET", "https://api.github.com/test") == {"ok": True}
+    assert calls["count"] == 3
