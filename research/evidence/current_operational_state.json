@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:19:30.350718+00:00",
+  "generated_at_utc": "2026-09-28T15:19:47.589903+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e4c09782d4619053e5412f670a05b2c1b5705d6e",
+        "timestamp": "2026-09-28T15:19:30Z"
+      },
+      {
         "message": "RESEARCH: preregister Q088 design-only governance",
         "sha": "6db684c424d4cda2748ff64240dbf44800383198",
         "timestamp": "2026-09-28T17:19:17+02:00"
@@ -190,11 +195,6 @@
         "message": "RESEARCH: retry Q086 after discovery executor fix",
         "sha": "ee18f1cdea21bf9eddff465bd6867a30eaf980a7",
         "timestamp": "2026-09-28T17:16:10+02:00"
-      },
-      {
-        "message": "FIX: avoid candidate-pool executor shadowing",
-        "sha": "b63611499ca770d8a9a76b351f8907bff4f71a03",
-        "timestamp": "2026-09-28T17:16:03+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "6db684c424d4cda2748ff64240dbf44800383198",
+  "source_master_sha": "e4c09782d4619053e5412f670a05b2c1b5705d6e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36442686623"
+    "run_id": "36442690706"
   }
 }
