@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `6973e965c6e5c095f9d048e80c5b5eb95dfcb1c3`
+**Current operational snapshot:** `308b0bbbb747de0547058c8837af34a379b66c98`
 
-**Generated (UTC):** `2026-09-28T15:49:25.165449+00:00`
+**Generated (UTC):** `2026-09-28T15:50:17.634765+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
