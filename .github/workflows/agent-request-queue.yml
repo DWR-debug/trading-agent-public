@@ -90,6 +90,13 @@ jobs:
           fi
 
           gh api "/repos/${GITHUB_REPOSITORY}/issues/${issue_number}" > "$RUNNER_TEMP/issue.json"
+          issue_state="$(python -c 'import json,sys; print(json.load(open(sys.argv[1],encoding="utf-8"))["state"])' "$RUNNER_TEMP/issue.json")"
+          if [ "$issue_state" != "open" ]; then
+            echo "Issue #$issue_number is closed; retiring stale queue request $selected."
+            rm -f "$selected"
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           python - <<'PY'
           import json, os
           from pathlib import Path
