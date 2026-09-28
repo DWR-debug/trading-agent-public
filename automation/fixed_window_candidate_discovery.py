@@ -75,6 +75,56 @@ def _window_timestamps(symbol: str) -> tuple[list[str], dict]:
     return in_window, quality
 
 
+def _prior_research_symbols() -> set[str]:
+    """Collect symbols already touched by frozen research artifacts/preregistrations."""
+    used: set[str] = set()
+
+    ledger = ROOT / "research" / "evidence" / "trial_ledger.json"
+    if ledger.exists():
+        data = json.loads(ledger.read_text(encoding="utf-8"))
+        for trial in data.get("trials", []):
+            if not isinstance(trial, dict):
+                continue
+            scope = trial.get("data_scope", {})
+            if not isinstance(scope, dict):
+                continue
+            for key in ("symbols", "trend_symbols", "cross_sectional_symbols", "requested_symbols", "universe_symbols"):
+                values = scope.get(key)
+                if isinstance(values, list):
+                    used.update(str(v) for v in values)
+
+    prereg_root = ROOT / "research" / "preregistrations"
+    if prereg_root.exists():
+        for path in sorted(prereg_root.glob("*.json")):
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, ValueError, TypeError):
+                continue
+            if not isinstance(data, dict):
+                continue
+            symbols = data.get("symbols")
+            if isinstance(symbols, list) and symbols:
+                # Design documents without a concrete universe normally have no symbols.
+                # Once a concrete universe is registered, its symbols become unavailable
+                # for later fresh-disjoint validation.
+                used.update(str(v) for v in symbols if isinstance(v, (str, int, float)))
+
+    evidence_root = ROOT / "research" / "evidence"
+    if evidence_root.exists():
+        for path in sorted(evidence_root.glob("**/*asset_freeze*.json")):
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, ValueError, TypeError):
+                continue
+            if not isinstance(data, dict):
+                continue
+            symbols = data.get("symbols")
+            if isinstance(symbols, list):
+                used.update(str(v) for v in symbols if isinstance(v, (str, int, float)))
+
+    return used
+
+
 def run_discovery(
     *,
     output: str | Path,
@@ -97,6 +147,7 @@ def run_discovery(
         for universe in list_universes()
         for symbol in universe.symbols
     }
+    used_symbols |= _prior_research_symbols()
     excluded_existing_universe_symbols = [
         symbol for symbol in CANDIDATE_POOL if symbol in used_symbols
     ]
