@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:08:16.222673+00:00",
+  "generated_at_utc": "2026-09-28T10:08:50.756311+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -156,8 +156,27 @@
     "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "ops/q068-retrigger-source-contract-20260928",
+        "number": 556,
+        "title": "OPS: retrigger Q068 source-locked advance",
+        "updatedAt": "2026-09-28T10:08:49Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/556"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "OPS: cancel stale Q068 advance runs in favor of latest request (#555)",
+        "sha": "a871fada722dcc8ed9fb22b813854b07ba43faef",
+        "timestamp": "2026-09-28T12:08:36+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8802283766afb38243eb611ecac51a09342935c3",
+        "timestamp": "2026-09-28T10:08:16Z"
+      },
       {
         "message": "FIX: bind Q068 performance to frozen source contract (#554)",
         "sha": "f8bdcad3e52396fa17e4961f691e7b82ed77d7ac",
@@ -187,16 +206,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "11ab5546ec62372bc151d29473d9b73d8c8500b5",
         "timestamp": "2026-09-28T09:58:00Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "03ee34ffcfdbbfa71a19c7bdba10304ed88ceec9",
-        "timestamp": "2026-09-28T09:54:59Z"
-      },
-      {
-        "message": "EVIDENCE: record Q068 coverage and PIT preflight",
-        "sha": "86ea92484ff1da96e2808e81c2906803baab9607",
-        "timestamp": "2026-09-28T09:53:51Z"
       }
     ]
   },
@@ -258,12 +267,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f8bdcad3e52396fa17e4961f691e7b82ed77d7ac",
+  "source_master_sha": "a871fada722dcc8ed9fb22b813854b07ba43faef",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36407846590"
+    "run_id": "36407908668"
   }
 }
