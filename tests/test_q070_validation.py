@@ -49,6 +49,9 @@ def test_q070_coverage_snapshot_identity_helper_is_available():
     scoped=_coverage_snapshot_spec(prereg)
     assert prereg["trial_id"]=="T-2026-09-28-070-PERFORMANCE"
     assert scoped["trial_id"]=="T-2026-09-28-070-COVERAGE"
+    assert scoped["interval"]=="1d"
+    assert scoped["raw_fetch_candles"]==5000
+    assert scoped["target_common_count"]==3500
 
 
 def test_q070_performance_uses_frozen_coverage_fingerprint_not_missing_result_fingerprint():
