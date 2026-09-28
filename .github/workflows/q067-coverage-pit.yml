@@ -1,0 +1,89 @@
+name: Q067 Coverage and PIT
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "research/authorizations/q067_coverage_pit_2026_09_28.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-q067-coverage-pit
+  cancel-in-progress: false
+
+jobs:
+  q067:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout authorized master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 2
+
+      - name: Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install test dependencies
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Q067 unit contract tests
+        run: python -m pytest -q tests/test_q067_alpha_mechanisms.py tests/test_q067_fresh_coverage.py
+
+      - name: Q067 safety gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path("research/preregistrations/q067_fixed_mechanism_freeze_2026_09_28.json").read_text())
+          assert p["governance"]["performance_trial_authorized"] is False
+          assert p["governance"]["holdout_used_for_selection"] is False
+          s=p["safety"]
+          assert s == {"paper_only": True, "live_trading_enabled": False, "orders_enabled": False, "automatic_promotion": False}
+          print("Q067 SAFETY OK")
+          PY
+
+      - name: Fresh coverage
+        run: |
+          set -euo pipefail
+          python -m automation.q067_fresh_coverage             --preregistration research/preregistrations/q067_fixed_mechanism_freeze_2026_09_28.json             --output-root research/runs/q067_coverage             --result research/evidence/q067_coverage_result.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result=json.loads(Path("research/evidence/q067_coverage_result.json").read_text())
+          assert result["status"] == "COVERAGE_PASSED"
+          assert result["performance_trial_authorized"] is False
+          PY
+
+      - name: PIT
+        run: |
+          set -euo pipefail
+          python -m automation.q067_pit             --coverage-root research/runs/q067_coverage/T-2026-09-28-067-COVERAGE             --result research/evidence/q067_pit_result.json
+
+      - name: Persist one-shot preflight receipts
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git diff --check
+          git add research/runs/q067_coverage research/evidence/q067_coverage_result.json research/evidence/q067_pit_result.json
+          git diff --cached --quiet && { echo "No receipt changes"; exit 0; }
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "EVIDENCE: record Q067 coverage and PIT preflight"
+          git push origin HEAD:master
+
+      - name: Publish summary
+        if: always()
+        run: |
+          test -f research/evidence/q067_coverage_result.json && cat research/evidence/q067_coverage_result.json || true
+          test -f research/evidence/q067_pit_result.json && cat research/evidence/q067_pit_result.json || true
