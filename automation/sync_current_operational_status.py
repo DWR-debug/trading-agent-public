@@ -109,7 +109,7 @@ def generate(
     queue = _read_queue_files()
     open_prs = github_state.get("open_prs", [])
     agent_ready_issues = github_state.get("agent_ready_issues", [])
-    self_hosted_runners = github_state.get("self_hosted_runners", {})
+    runner_capacity_receipt = _load_json(ROOT / "research/evidence/self_hosted_runner_capacity_2026-09-28.json", {})
     active_registry = _load_json(ROOT / "research/governance/active_research_registry.json", {})
     q067_pipeline = {
         "family": "Q067",
@@ -207,8 +207,8 @@ def generate(
             "self_hosted_qa": {
                 "cadence": "15 * * * *",
                 "label": "trading-agent-research",
-                "architecture": "live GitHub runner telemetry",
-                "runner_capacity": self_hosted_runners,
+                "architecture": "latest verified two-runner capacity receipt",
+                "runner_capacity_last_verified": runner_capacity_receipt,
                 "last_recorded_verified_baseline": recorded_qa,
             },
             "scientific_compute": {
@@ -275,7 +275,7 @@ def generate(
 - Canonical data-layer infrastructure is merged.
 - Bounded agent routing uses two queue lanes with fail-closed task contracts.
 - Self-hosted Continuous QA is scheduled hourly at minute 15 under label `trading-agent-research`.
-- Self-hosted runner capacity is recorded from live GitHub Actions telemetry (online/busy counts and runner labels).
+- Latest self-hosted capacity verification: two distinct Windows/X64 runner slots accepted concurrent jobs; see the timestamped capacity receipt.
 
 ### Scientific status
 
