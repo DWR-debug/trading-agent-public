@@ -1,6 +1,6 @@
 # Trading-Agent Projektgedächtnis — Ziel, 30-Tage-Meilenstein und Mutkurve
 
-Stand: 2026-09-25
+Stand: 2026-09-28
 
 ## Historischer Kontext und Deadline
 
@@ -118,6 +118,49 @@ PAPER_ONLY=True
 LIVE_TRADING_ENABLED=False
 orders_enabled=False
 automatic_promotion=False
+
+## Dauerhafte Zielbindung, familiäre Dringlichkeit und PC-Betrieb — 2026-09-28
+
+### Übergeordnetes Ziel
+
+Das übergeordnete wirtschaftliche Ziel des Projekts ist die langfristige Entwicklung eines möglichst robusten Trading-Agenten, der nach ausreichender wissenschaftlicher Validierung einen regelmäßigen, tatsächlich entnehmbaren Cashflow zur finanziellen Absicherung der Familie ermöglichen kann.
+
+Der konkrete Zweck ist ausdrücklich familiäre Sicherheit: Ehefrau und Kind sollen durch verantwortbare finanzielle Entscheidungen geschützt werden. **Ein sicheres monatliches Einkommen kann der Markt nicht garantieren**; deshalb ist das operative Forschungsziel ein belastbares System mit nachvollziehbarem Risiko, Kosten, Drawdown-, Cashflow- und Sequence-of-Returns-Verhalten.
+
+Diese Zielbindung ist dauerhaft. Sie wird nicht durch wechselnde Chatkontexte, einzelne Backtests oder kurzfristigen Erfolgsdruck ersetzt.
+
+### Dringlichkeit
+
+Die familiäre Situation erzeugt einen **hohen zeitlichen und wirtschaftlichen Handlungsdruck**. Dieser Druck ist ab 2026-09-28 ausdrücklich als Projektfaktor festgehalten.
+
+Konsequenz:
+- Wir arbeiten so autonom und zielgerichtet wie innerhalb der Freigaben möglich.
+- Kostenfreie verfügbare Rechen-, Runner- und Agentenressourcen werden effizient und mutig eingesetzt.
+- Neue, orthogonale und auch ungewöhnliche Hypothesen dürfen aktiv gesucht und schnell falsifiziert werden.
+- Die wissenschaftliche Beweislast, Sicherheitsgrenzen und Governance werden gerade wegen der Dringlichkeit nicht gelockert.
+
+**Dringlichkeit erhöht Forschungsgeschwindigkeit, niemals finanzielles Risiko.**
+
+### Permanente Nutzung des Arbeits-PCs
+
+Der betriebsbereite Windows-Arbeits-PC mit Self-Hosted-Runner ist ab 2026-09-28 **dauerhafte Projektinfrastruktur** und soll für das Trading-Agent-Projekt kontinuierlich genutzt werden, soweit der PC verfügbar und betriebsbereit ist.
+
+Der Runner ist bevorzugter Ausführungspfad für:
+- deterministische Research-/Feasibility-/PIT-/Coverage-Läufe;
+- Regressionstests und technische QA;
+- reproduzierbare Evidence-Erzeugung;
+- Paper-/Shadow-/Forward-Simulation;
+- autonome, bereits freigegebene Forschungsjobs.
+
+Die permanente PC-Nutzung dient dazu, Leerlauf zu vermeiden und die Zeit bis zum nächsten evidenzfähigen Ergebnis zu verkürzen. Sie ändert **nicht** die Sicherheitsarchitektur und ersetzt keine formale Forschungsfreigabe.
+
+### Schutzprinzip
+
+Für jede Entscheidung gilt weiterhin:
+
+**Familienziel → hohe Forschungsgeschwindigkeit + hohe wissenschaftliche Strenge → erst bei ausreichender Evidenz weiterer Kapital-/Betriebsschritt.**
+
+Insbesondere sind voreilige Echtgeldnutzung, versteckte Live-Ausführung, übermäßiger Leverage, Gate-Lockerung oder Holdout-/Parameter-Tuning als Reaktion auf familiären Erfolgsdruck ausgeschlossen.
 
 ## Arbeitsweise und Darstellung — dauerhaft
 
