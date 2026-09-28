@@ -5265,7 +5265,173 @@
         "orders_enabled": false,
         "automatic_promotion": false
       }
+    },
+    {
+      "trial_id": "T-2026-09-27-065",
+      "recorded_at": "2026-09-27T20:26:53Z",
+      "status": "performance_completed_no_arm_passed_all_gates",
+      "research_family": "q045_fixed_alpha_replication_performance",
+      "hypothesis": {
+        "text": "Replicate all six PIT-safe price-only alpha mechanisms on a fresh symbol-disjoint universe plus an ex-ante equal-weight ensemble under the unchanged 13-gate evidence contract."
+      },
+      "data_scope": {
+        "symbols": [
+          "AON",
+          "CVS",
+          "ADSK",
+          "BA",
+          "T",
+          "F",
+          "LUV",
+          "NFLX"
+        ],
+        "universe": "validation_2026_09_27_q043_fresh_alpha_replication",
+        "requested_candles": 4000,
+        "target_common_candles": 3500,
+        "research_count": 2798,
+        "holdout_count": 700,
+        "source_coverage_trial": "T-2026-09-27-063",
+        "source_pit_trial": "T-2026-09-27-064",
+        "coverage_workflow_run_id": 36347316117,
+        "coverage_artifact_id": 10940494021,
+        "coverage_artifact_digest": "sha256:f29ca5839913f991236ec3ebd4c8c0b18e90272bb09e061f35da0347d7e8febb",
+        "coverage_fingerprint": "aa9750095c667025663231b406f394403057bea808f0384c2bb665078040bf2b",
+        "snapshot_fingerprint": "c5c121d55f110e8b92c8d9415863b7e4e048d5ec9d3cf27e905a5283ae6b5401",
+        "performance_workflow_run_id": 36348015321,
+        "performance_artifact_id": 10941072485,
+        "performance_artifact_digest": "sha256:7126b5d84eedbaed17e53124a96e8f8b0c987de0ca2410ea4ef61a796d2ba6a7",
+        "performance_evidence_report_fingerprint": "0b29881c2405c4498b2327d8252a8db0c41b32deff18bd9482cd08b3abb8fe0",
+        "performance_evaluation": true,
+        "oos_evaluation": true,
+        "holdout_evaluation": true
+      },
+      "search_scope": {
+        "raw_trial_count": 8,
+        "independent_trial_count": 1,
+        "parameter_search": false,
+        "threshold_search": false,
+        "variant_search": false,
+        "asset_search": false,
+        "horizon_search": false,
+        "family_ranking": false
+      },
+      "selection": {
+        "selected": false,
+        "selection_method": "none; all eight preregistered arms evaluated symmetrically",
+        "selection_metric": null,
+        "holdout_used_for_selection": false
+      },
+      "statistical_evidence": {
+        "psr_probability": null,
+        "dsr_probability": null,
+        "pbo_probability": null,
+        "trial_sharpes": null,
+        "independent_trial_count": 1,
+        "ready": false
+      },
+      "outcome": {
+        "validation_status": "COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
+        "scientific_outcome": "NO_ARM_PASSED_ALL_13_GATES",
+        "workflow_run_id": 36348015321,
+        "workflow_conclusion": "success",
+        "artifact_id": 10941072485,
+        "artifact_digest": "sha256:7126b5d84eedbaed17e53124a96e8f8b0c987de0ca2410ea4ef61a796d2ba6a7",
+        "report_fingerprint": "0b29881c2405c4498b2327d8252a8db0c41b32deff18bd9482cd08b3abb8fe0",
+        "arms": [
+          {
+            "id": "CONTROL",
+            "gates_passed": 7,
+            "gates_total": 13,
+            "research_return": 1.5699,
+            "research_dd": 43.57,
+            "holdout_return": 0.2559,
+            "holdout_dd": 24.99,
+            "holdout_pf": 1.094
+          },
+          {
+            "id": "A1_TSM_CONSENSUS",
+            "gates_passed": 3,
+            "gates_total": 13,
+            "research_return": 0.031,
+            "research_dd": 57.93,
+            "holdout_return": -0.2858,
+            "holdout_dd": 34.06,
+            "holdout_pf": 0.909
+          },
+          {
+            "id": "A2_CS_MOMENTUM_TOP2",
+            "gates_passed": 4,
+            "gates_total": 13,
+            "research_return": 1.851,
+            "research_dd": 51.41,
+            "holdout_return": 0.0289,
+            "holdout_dd": 49.2,
+            "holdout_pf": 1.03
+          },
+          {
+            "id": "A3_RESIDUAL_MOMENTUM_TOP2",
+            "gates_passed": 8,
+            "gates_total": 13,
+            "research_return": 3.8159,
+            "research_dd": 36.55,
+            "holdout_return": 0.2924,
+            "holdout_dd": 38,
+            "holdout_pf": 1.092
+          },
+          {
+            "id": "A5_LOW_BETA_TOP2",
+            "gates_passed": 7,
+            "gates_total": 13,
+            "research_return": 0.1957,
+            "research_dd": 38.42,
+            "holdout_return": 0.0157,
+            "holdout_dd": 24.93,
+            "holdout_pf": 1.023
+          },
+          {
+            "id": "A1B_52W_HIGH_TOP2",
+            "gates_passed": 2,
+            "gates_total": 13,
+            "research_return": -0.0733,
+            "research_dd": 43.86,
+            "holdout_return": -0.1793,
+            "holdout_dd": 29.71,
+            "holdout_pf": 0.969
+          },
+          {
+            "id": "A6_OVERNIGHT_TUGWAR_TOP2",
+            "gates_passed": 3,
+            "gates_total": 13,
+            "research_return": 0.4927,
+            "research_dd": 63.24,
+            "holdout_return": -0.0971,
+            "holdout_dd": 31.45,
+            "holdout_pf": 0.998
+          },
+          {
+            "id": "ENSEMBLE_ALL6",
+            "gates_passed": 4,
+            "gates_total": 13,
+            "research_return": 1.0143,
+            "research_dd": 42.01,
+            "holdout_return": -0.0119,
+            "holdout_dd": 27.12,
+            "holdout_pf": 1.012
+          }
+        ],
+        "common_bottleneck": [
+          "research_drawdown_lte_10pct",
+          "rolling_average_drawdown_lte_10pct"
+        ],
+        "holdout_selection_used": false
+      },
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
     }
   ],
-  "updated_at": "2026-09-27T20:28:00Z"
+  "updated_at": "2026-09-28T04:40:00Z"
 }
