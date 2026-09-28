@@ -35,4 +35,4 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          actionlint -verbose
+          actionlint -config-file .github/actionlint.yaml -verbose
