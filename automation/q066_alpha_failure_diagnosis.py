@@ -597,7 +597,7 @@ def control_sleeve_diagnostics(module, assets: dict, control_series: dict, symbo
         cs_turn.append(sum(abs(cw[s] - prev_cs[s]) for s in symbols))
         prev_tr = tw
         prev_cs = cw
-    dd = control_series["return_drawdown"]["max_drawdown_interval"]
+    dd = max_drawdown_interval(control_series["net"])
     overlap = [
         jaccard(
             {s for s, w in trend[i].items() if abs(float(w)) > 1e-12},
