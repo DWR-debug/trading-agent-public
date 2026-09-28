@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T11:33:42.594746+00:00",
+  "generated_at_utc": "2026-09-28T11:33:56.065262+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,16 @@
     ],
     "recent_commits": [
       {
+        "message": "INFRA: isolate CI matrix runner compatibility",
+        "sha": "c24aeafffdb6a046bee86374c9461e6e53f2b9c3",
+        "timestamp": "2026-09-28T13:33:49+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6739ebb86667d351fa63d06595c203d08886b8d2",
+        "timestamp": "2026-09-28T11:33:42Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "499144fe21ea17571b1f7268993417cc97b788a5",
         "timestamp": "2026-09-28T11:33:28Z"
@@ -194,16 +204,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "014518c4d61c0cf71c3a38ca2b6b067539af7d04",
         "timestamp": "2026-09-28T11:32:37Z"
-      },
-      {
-        "message": "INFRA: restore CI on known-good Actions workflow registration",
-        "sha": "ab92e9f9eefb4c550e3b96d57b154bd3de6209e0",
-        "timestamp": "2026-09-28T13:32:21+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3f2a1c38dc4cb523597d3c849ba08837bbf52267",
-        "timestamp": "2026-09-28T11:32:08Z"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "499144fe21ea17571b1f7268993417cc97b788a5",
+  "source_master_sha": "c24aeafffdb6a046bee86374c9461e6e53f2b9c3",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36416349546"
+    "run_id": "36416359866"
   }
 }
