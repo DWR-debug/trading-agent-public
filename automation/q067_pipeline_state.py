@@ -87,14 +87,6 @@ def summarize(repo_root: Path = ROOT) -> dict[str, Any]:
     if blockers:
         state = "PREFLIGHT_BLOCKED"
 
-    preflight_pass = coverage is not None and pit is not None and not any(
-        item.startswith(("coverage receipt", "pit receipt", "coverage receipt unexpectedly",
-                         "pit receipt unexpectedly", "coverage receipt records",
-                         "pit receipt records", "coverage receipt safety",
-                         "pit receipt safety"))
-        for item in blockers
-    )
-    # Re-evaluate directly so a malformed preregistration can never make the pipeline appear ready.
     preflight_pass = (
         not blockers
         and coverage is not None
@@ -109,12 +101,22 @@ def summarize(repo_root: Path = ROOT) -> dict[str, Any]:
     if preflight_pass:
         if auth is None:
             state = "PREFLIGHT_PASSED_WAITING_FOR_AUTO_AUTH"
-        elif auth.get("authorized") is True and auth.get("performance_execution_authorized") is True:
+        elif (
+            auth.get("authorized") is True
+            and auth.get("performance_execution_authorized") is True
+            and auth.get("execution_scope") == "Q067_FIXED_RULE_PERFORMANCE_ONLY"
+            and auth.get("safety") == {
+                "PAPER_ONLY": True,
+                "LIVE_TRADING_ENABLED": False,
+                "ORDERS_ENABLED": False,
+                "AUTOMATIC_PROMOTION": False,
+            }
+        ):
             state = "PERFORMANCE_AUTHORIZED"
         else:
             blockers.append("Q067 performance authorization exists but is invalid")
             state = "PREFLIGHT_BLOCKED"
-    
+
     if result is not None:
         if result.get("trial_id") != PERFORMANCE_ID:
             blockers.append("Q067 performance result trial identity mismatch")
@@ -125,9 +127,9 @@ def summarize(repo_root: Path = ROOT) -> dict[str, Any]:
         elif result.get("selection_used") is not False or result.get("holdout_used_for_selection") is not False:
             blockers.append("Q067 performance result records selection")
             state = "PERFORMANCE_EVIDENCE_INVALID"
-        elif PERFORMANCE_ID in trial_ids:
+        elif not blockers and PERFORMANCE_ID in trial_ids:
             state = "PERFORMANCE_RECONCILED"
-        else:
+        elif not blockers:
             state = "PERFORMANCE_COMPLETED_PENDING_LEDGER"
 
     return _state(state, blockers, coverage, pit, auth, result, trial_ids)
