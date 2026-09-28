@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:11:44.839877+00:00",
+  "generated_at_utc": "2026-09-28T10:16:38.281745+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -159,6 +159,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: enable fail-closed hosted fallbacks for Q068/Q070 (#558)",
+        "sha": "1df40794bb52b2c835024c82aa2538cbfec9f1ef",
+        "timestamp": "2026-09-28T12:16:24+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "35b5e366a635e4780b9f6cba1ec7a614371ad663",
+        "timestamp": "2026-09-28T10:11:44Z"
+      },
+      {
         "message": "RESEARCH: Q072 information-source candidate bank (#557)",
         "sha": "8644fef052307f7a13bbbe6c7e7b5629e7409178",
         "timestamp": "2026-09-28T12:11:29+02:00"
@@ -187,16 +197,6 @@
         "message": "OPS: cancel stale Q068 advance runs in favor of latest request (#555)",
         "sha": "a871fada722dcc8ed9fb22b813854b07ba43faef",
         "timestamp": "2026-09-28T12:08:36+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "8802283766afb38243eb611ecac51a09342935c3",
-        "timestamp": "2026-09-28T10:08:16Z"
-      },
-      {
-        "message": "FIX: bind Q068 performance to frozen source contract (#554)",
-        "sha": "f8bdcad3e52396fa17e4961f691e7b82ed77d7ac",
-        "timestamp": "2026-09-28T12:08:00+02:00"
       }
     ]
   },
@@ -258,12 +258,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8644fef052307f7a13bbbe6c7e7b5629e7409178",
+  "source_master_sha": "1df40794bb52b2c835024c82aa2538cbfec9f1ef",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36408214098"
+    "run_id": "36408734169"
   }
 }
