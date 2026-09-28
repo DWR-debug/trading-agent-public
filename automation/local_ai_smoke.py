@@ -87,7 +87,7 @@ def main() -> int:
         if not disabled:
             result["status"] = "BLOCKED_G1_FALLBACK_NOT_DISABLED"
             print(json.dumps(result, sort_keys=True))
-            return 0
+            return 2
         command = [
             binary,
             "--print-timeout",
