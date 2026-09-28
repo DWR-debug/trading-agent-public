@@ -89,46 +89,6 @@ jobs:
               print("Q068 NO PRIOR AUTHORIZATION; FALLBACK WILL CREATE IT")
           PY
 
-      - name: Publish Q068 performance evidence
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          BASE_SHA="$(python - <<'PY'
-          import json, os, urllib.request
-          u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/git/ref/heads/master"
-          req=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"})
-          print(json.load(urllib.request.urlopen(req,timeout=30))["object"]["sha"])
-          PY
-          )"
-          test -n "$BASE_SHA"
-          PUBLISH_MESSAGE="EVIDENCE: record Q068 hosted deterministic performance"
-          export PUBLISH_MESSAGE
-          python automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$BASE_SHA"             --file research/evidence/q068_performance_result.json=research/evidence/q068_performance_result.json
-
-      - name: Reconcile Q068 ledger locally
-        run: |
-          set -euo pipefail
-          python -m automation.q068_reconcile --repo-root .
-
-      - name: Publish Q068 ledger reconciliation
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          BASE_SHA="$(python - <<'PY'
-          import json, os, urllib.request
-          u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/git/ref/heads/master"
-          req=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"})
-          print(json.load(urllib.request.urlopen(req,timeout=30))["object"]["sha"])
-          PY
-          )"
-          test -n "$BASE_SHA"
-          PUBLISH_MESSAGE="EVIDENCE: reconcile Q068 hosted deterministic performance"
-          export PUBLISH_MESSAGE
-          python automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$BASE_SHA"             --file research/evidence/trial_ledger.json=research/evidence/trial_ledger.json
-
-
       - name: Build and publish one-shot authorization when missing
         env:
           GH_TOKEN: ${{ github.token }}
@@ -233,6 +193,46 @@ jobs:
           [print(k, f"{v['gates_passed']}/{v['gates_total']}") for k,v in d["arms"].items()]
           print("REPORT_FINGERPRINT", d["report_fingerprint"])
           PY
+
+      - name: Publish Q068 performance evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          BASE_SHA="$(python - <<'PY'
+          import json, os, urllib.request
+          u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/git/ref/heads/master"
+          req=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"})
+          print(json.load(urllib.request.urlopen(req,timeout=30))["object"]["sha"])
+          PY
+          )"
+          test -n "$BASE_SHA"
+          PUBLISH_MESSAGE="EVIDENCE: record Q068 hosted deterministic performance"
+          export PUBLISH_MESSAGE
+          python automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$BASE_SHA"             --file research/evidence/q068_performance_result.json=research/evidence/q068_performance_result.json
+
+      - name: Reconcile Q068 ledger locally
+        run: |
+          set -euo pipefail
+          python -m automation.q068_reconcile --repo-root .
+
+      - name: Publish Q068 ledger reconciliation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          BASE_SHA="$(python - <<'PY'
+          import json, os, urllib.request
+          u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/git/ref/heads/master"
+          req=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"})
+          print(json.load(urllib.request.urlopen(req,timeout=30))["object"]["sha"])
+          PY
+          )"
+          test -n "$BASE_SHA"
+          PUBLISH_MESSAGE="EVIDENCE: reconcile Q068 hosted deterministic performance"
+          export PUBLISH_MESSAGE
+          python automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$BASE_SHA"             --file research/evidence/trial_ledger.json=research/evidence/trial_ledger.json
+
 
       - name: Dispatch canonical status sync
         env:
