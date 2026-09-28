@@ -9,7 +9,7 @@ ROOT = Path(__file__).parents[1]
 
 
 def test_self_hosted_worker_has_only_bounded_lanes():
-    assert set(worker.LANES) == {"repo_qa", "data_qa", "design_qa", "local_reproduction"}
+    assert set(worker.LANES) == {"repo_qa", "data_qa", "design_qa", "local_reproduction", "autonomous_frontier_qa"}
     for commands in worker.LANES.values():
         assert commands
         for command in commands:
@@ -182,7 +182,7 @@ def test_self_hosted_continuous_qa_is_scheduled_and_non_formal():
     text = (
         ROOT / ".github" / "workflows" / "self-hosted-continuous-qa.yml"
     ).read_text(encoding="utf-8")
-    assert 'cron: "*/15 * * * *"' in text
+    assert 'cron: "15 * * * *"' in text
     assert "workflow_dispatch:" in text
     assert "runs-on: [self-hosted, trading-agent-research]" in text
     assert "concurrency:" in text
