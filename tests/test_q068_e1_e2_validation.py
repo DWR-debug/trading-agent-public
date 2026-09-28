@@ -204,3 +204,9 @@ def test_q068_authorization_contract_is_fail_closed_when_revoked():
     assert p["performance_execution_authorized"] is False
     assert p["revoked"] is True
     assert p["scientific_status"] == "NO_SCIENTIFIC_OUTCOME"
+
+
+def test_q068_performance_requires_explicit_dispatch_only():
+    text=Path(".github/workflows/q068-fixed-mechanism-performance.yml").read_text(encoding="utf-8")
+    assert "workflow_dispatch:" in text
+    assert "research/authorizations/q068_performance_2026_09_28.json" not in text.split("permissions:", 1)[0]
