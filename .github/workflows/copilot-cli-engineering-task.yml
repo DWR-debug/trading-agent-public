@@ -137,6 +137,11 @@ jobs:
           git switch -c "${branch}"
           echo "branch=${branch}" >> "${GITHUB_OUTPUT}"
 
+      - name: Reserve protected Copilot Free session
+        uses: ./.github/actions/copilot-free-gate
+        with:
+          github-token: ${{ github.token }}
+
       - name: Run bounded Copilot CLI
         shell: bash
         env:
@@ -182,7 +187,7 @@ jobs:
             --agent=trading-agent-engineer \
             --autopilot \
             --no-ask-user \
-            --max-ai-credits=45 \
+            --max-ai-credits=12 \
             --max-autopilot-continues=1 \
             -p "${prompt}" \
             --allow-tool='read' \

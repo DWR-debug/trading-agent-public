@@ -158,47 +158,12 @@ jobs:
             echo "pat_repo_access=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Check protected Copilot Free monthly reserve
+      - name: Reserve protected Copilot Free session
         id: copilot_budget
         if: steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true'
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          import json
-          from datetime import datetime, timezone
-          from pathlib import Path
-          p = Path('ops/copilot_free_budget_state.json')
-          now = datetime.now(timezone.utc)
-          first_release = datetime(2026, 10, 1, tzinfo=timezone.utc)
-          if now < first_release:
-              print('Copilot Free reserve is intentionally closed until 2026-10-01T00:00:00Z.')
-              raise SystemExit(2)
-          month = now.strftime('%Y-%m')
-          if p.exists():
-              state = json.loads(p.read_text(encoding='utf-8'))
-          else:
-              state = {'month': month, 'reserved_sessions': 0, 'max_reserved_sessions': 4}
-          if state.get('month') != month:
-              state = {'month': month, 'reserved_sessions': 0, 'max_reserved_sessions': 4}
-          limit = int(state.get('max_reserved_sessions', 4))
-          used = int(state.get('reserved_sessions', 0))
-          if used >= limit:
-              print(f'Copilot Free monthly reserve exhausted: {used}/{limit}.')
-              raise SystemExit(3)
-          state['reserved_sessions'] = used + 1
-          state['reservation_policy'] = '4 bounded Copilot sessions/month; max-ai-credits-per-session=12'
-          p.parent.mkdir(parents=True, exist_ok=True)
-          p.write_text(json.dumps(state, indent=2) + '\n', encoding='utf-8')
-          print(f'Reserved Copilot Free session {state["reserved_sessions"]}/{limit}.')
-          PY
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add ops/copilot_free_budget_state.json
-          git commit -m 'OPS: reserve Copilot Free worker budget [skip copilot-queue]'
-          git push origin HEAD:master
+        uses: ./.github/actions/copilot-free-gate
+        with:
+          github-token: ${{ github.token }}
 
       - name: Run bounded Copilot CLI
         id: copilot_cli
