@@ -40,7 +40,7 @@ def test_q089_coverage_entrypoint_does_not_require_undefined_input_bundle(tmp_pa
     monkeypatch.setattr(
         q089,
         "snapshot_from_preregistration",
-        lambda spec, output_root: {
+        lambda spec, output_root, **kwargs: {
             "status": "COVERAGE_PASSED",
             "snapshot_fingerprint": "snapshot-fp",
             "coverage": {"common_calendar_count": q089.TARGET},
