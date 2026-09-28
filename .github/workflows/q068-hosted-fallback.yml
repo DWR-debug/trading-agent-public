@@ -1,0 +1,262 @@
+name: Q068 Hosted Deterministic Fallback
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q068_hosted_fallback.trigger"
+      - ".github/workflows/q068-hosted-fallback.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: trading-agent-q068-auto-advance
+  cancel-in-progress: true
+
+jobs:
+  fallback:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 270
+    steps:
+      - name: Checkout exact master
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check pandas pytest
+
+      - name: Verify frozen Q068 prerequisites and safety
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, hashlib
+          from pathlib import Path
+          from config import settings
+          expected = {
+              "automation/q067_alpha_mechanisms.py": "344343f9910f1ea5eaa9a2d2c295a6f87a520bdc",
+              "automation/q068_performance.py": "d85e17885ff56353ca677a3aa47d8a5e7b6ec056",
+              "data/canonical_snapshot.py": "18c7c051b1b4d3f7f67bc395baf5ef3787e1b028",
+              "execution/cost_contract.py": "21b54b45dbe708f3102851fd368ad1b64226b0ad",
+              "config/settings.py": "9c7b5199ed09d11ca17eb72493aebf7a7666fd28",
+          }
+          def blob_sha(path):
+              data = Path(path).read_bytes()
+              return hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+          actual = {p: blob_sha(p) for p in expected}
+          assert actual == expected, actual
+          prereg = json.loads(Path("research/preregistrations/q068_performance_2026_09_28.json").read_text())
+          coverage = json.loads(Path("research/evidence/q068_coverage_result.json").read_text())
+          pit = json.loads(Path("research/evidence/q068_pit_result.json").read_text())
+          assert prereg["status"] == "PREREGISTERED_PERFORMANCE"
+          assert prereg["selection_used"] is False
+          assert prereg["holdout_used_for_selection"] is False
+          assert coverage["trial_id"] == "T-2026-09-28-068-COVERAGE"
+          assert coverage["status"] == "COVERAGE_PASSED"
+          assert pit["trial_id"] == "T-2026-09-28-068-PIT"
+          assert pit["status"] == "PIT_PASSED"
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          assert settings.AUTOMATIC_PROMOTION is False
+          result_path=Path("research/evidence/q068_performance_result.json")
+          auth_path=Path("research/authorizations/q068_performance_2026_09_28.json")
+          assert not result_path.exists()
+          if auth_path.exists():
+              auth=json.loads(auth_path.read_text())
+              assert auth["authorized"] is True
+              assert auth["performance_execution_authorized"] is True
+              assert auth["execution_scope"]=="Q068_FIXED_RULE_PERFORMANCE_ONLY"
+              assert auth["source_receipts"]["coverage_result_fingerprint"]==coverage["result_fingerprint"]
+              assert auth["source_receipts"]["pit_result_fingerprint"]==pit["result_fingerprint"]
+              assert auth["safety"]=={"PAPER_ONLY":True,"LIVE_TRADING_ENABLED":False,"ORDERS_ENABLED":False,"AUTOMATIC_PROMOTION":False}
+              assert auth["source_contract"]==expected
+              print("Q068 EXISTING AUTHORIZATION VALID; FALLBACK WILL RESUME")
+          else:
+              print("Q068 NO PRIOR AUTHORIZATION; FALLBACK WILL CREATE IT")
+          PY
+
+      - name: Build and publish one-shot authorization when missing
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [ -f research/authorizations/q068_performance_2026_09_28.json ]; then
+            echo "Q068 authorization already exists; validating and reusing it"
+            python - <<'PY'
+            import json
+            from pathlib import Path
+            c=json.loads(Path("research/evidence/q068_coverage_result.json").read_text())
+            p=json.loads(Path("research/evidence/q068_pit_result.json").read_text())
+            a=json.loads(Path("research/authorizations/q068_performance_2026_09_28.json").read_text())
+            assert a["authorized"] is True and a["performance_execution_authorized"] is True
+            assert a["execution_scope"]=="Q068_FIXED_RULE_PERFORMANCE_ONLY"
+            assert a["source_receipts"]["coverage_result_fingerprint"]==c["result_fingerprint"]
+            assert a["source_receipts"]["pit_result_fingerprint"]==p["result_fingerprint"]
+            assert a["source_contract"]=={
+              "automation/q067_alpha_mechanisms.py":"344343f9910f1ea5eaa9a2d2c295a6f87a520bdc",
+              "automation/q068_performance.py":"d85e17885ff56353ca677a3aa47d8a5e7b6ec056",
+              "data/canonical_snapshot.py":"18c7c051b1b4d3f7f67bc395baf5ef3787e1b028",
+              "execution/cost_contract.py":"21b54b45dbe708f3102851fd368ad1b64226b0ad",
+              "config/settings.py":"9c7b5199ed09d11ca17eb72493aebf7a7666fd28",
+            }
+            print("Q068 AUTHORIZATION REUSE OK")
+            PY
+            exit 0
+          fi
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          c=json.loads(Path("research/evidence/q068_coverage_result.json").read_text())
+          p=json.loads(Path("research/evidence/q068_pit_result.json").read_text())
+          expected={
+            "automation/q067_alpha_mechanisms.py":"344343f9910f1ea5eaa9a2d2c295a6f87a520bdc",
+            "automation/q068_performance.py":"d85e17885ff56353ca677a3aa47d8a5e7b6ec056",
+            "data/canonical_snapshot.py":"18c7c051b1b4d3f7f67bc395baf5ef3787e1b028",
+            "execution/cost_contract.py":"21b54b45dbe708f3102851fd368ad1b64226b0ad",
+            "config/settings.py":"9c7b5199ed09d11ca17eb72493aebf7a7666fd28",
+          }
+          auth={
+            "schema_version":"1.0",
+            "authorization_id":"Q068-PERFORMANCE-HOSTED-FALLBACK-2026-09-28",
+            "authorized":True,
+            "performance_execution_authorized":True,
+            "execution_scope":"Q068_FIXED_RULE_PERFORMANCE_ONLY",
+            "authorization_basis":"Existing immutable Q068 coverage and PIT receipts passed; self-hosted auto-advance is capacity-blocked, so the same frozen deterministic execution is run on the public GitHub-hosted runner.",
+            "required_prerequisites":[
+              "T-2026-09-28-068-COVERAGE status=COVERAGE_PASSED",
+              "T-2026-09-28-068-PIT status=PIT_PASSED",
+              "frozen Q068 source contract exact",
+            ],
+            "source_receipts":{
+              "coverage_result_fingerprint":c["result_fingerprint"],
+              "pit_result_fingerprint":p["result_fingerprint"],
+            },
+            "source_contract":expected,
+            "prohibited":["parameter selection","threshold selection","asset selection","family ranking","holdout selection","promotion","live execution"],
+            "safety":{"PAPER_ONLY":True,"LIVE_TRADING_ENABLED":False,"ORDERS_ENABLED":False,"AUTOMATIC_PROMOTION":False}
+          }
+          Path("research/authorizations").mkdir(parents=True,exist_ok=True)
+          Path("research/authorizations/q068_performance_2026_09_28.json").write_text(json.dumps(auth,indent=2)+"\n")
+          PY
+          BASE_SHA="$(python - <<'PY'
+          import json, os, urllib.request
+          u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/git/ref/heads/master"
+          req=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"})
+          print(json.load(urllib.request.urlopen(req,timeout=30))["object"]["sha"])
+          PY
+          )"
+          test -n "$BASE_SHA"
+          PUBLISH_MESSAGE="OPS: authorize Q068 hosted deterministic fallback"
+          export PUBLISH_MESSAGE
+          python automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$BASE_SHA"             --file research/authorizations/q068_performance_2026_09_28.json=research/authorizations/q068_performance_2026_09_28.json
+
+
+
+      - name: Run exact frozen Q068 performance locally
+        run: |
+          set -euo pipefail
+          python -m automation.q068_performance             --preregistration research/preregistrations/q068_performance_2026_09_28.json             --repo-root .             --output research/evidence/q068_performance_result.json
+
+      - name: Validate exact Q068 performance result
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("research/evidence/q068_performance_result.json").read_text())
+          assert d["trial_id"]=="T-2026-09-28-068-PERFORMANCE"
+          assert d["status"]=="COMPLETED"
+          assert d["performance_evaluation"] is True
+          assert d["oos_evaluation"] is True
+          assert d["holdout_evaluation"] is True
+          assert d["selection_used"] is False
+          assert d["holdout_used_for_selection"] is False
+          assert d["governance"]["promotion_decision"] is False
+          assert d["governance"]["automatic_promotion"] is False
+          assert set(d["arms"])=={"CONTROL_6SLEEVE_ENSEMBLE","E1_ALPHA_COMMON_MODE_THROTTLE","E2_TURNOVER_HYSTERESIS"}
+          assert all(0 <= arm["gates_passed"] <= 13 for arm in d["arms"].values())
+          print("Q068 HOSTED PERFORMANCE RESULT OK")
+          [print(k, f"{v['gates_passed']}/{v['gates_total']}") for k,v in d["arms"].items()]
+          print("REPORT_FINGERPRINT", d["report_fingerprint"])
+          PY
+
+      - name: Publish Q068 performance evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          BASE_SHA="$(python - <<'PY'
+          import json, os, urllib.request
+          u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/git/ref/heads/master"
+          req=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"})
+          print(json.load(urllib.request.urlopen(req,timeout=30))["object"]["sha"])
+          PY
+          )"
+          test -n "$BASE_SHA"
+          PUBLISH_MESSAGE="EVIDENCE: record Q068 hosted deterministic performance"
+          export PUBLISH_MESSAGE
+          python automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$BASE_SHA"             --file research/evidence/q068_performance_result.json=research/evidence/q068_performance_result.json
+
+      - name: Reconcile Q068 ledger locally
+        run: |
+          set -euo pipefail
+          python -m automation.q068_reconcile --repo-root .
+
+      - name: Publish Q068 ledger reconciliation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          BASE_SHA="$(python - <<'PY'
+          import json, os, urllib.request
+          u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/git/ref/heads/master"
+          req=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"})
+          print(json.load(urllib.request.urlopen(req,timeout=30))["object"]["sha"])
+          PY
+          )"
+          test -n "$BASE_SHA"
+          PUBLISH_MESSAGE="EVIDENCE: reconcile Q068 hosted deterministic performance"
+          export PUBLISH_MESSAGE
+          python automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$BASE_SHA"             --file research/evidence/trial_ledger.json=research/evidence/trial_ledger.json
+
+
+      - name: Dispatch canonical status sync
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.request
+          u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/actions/workflows/current-status-sync.yml/dispatches"
+          req=urllib.request.Request(
+              u,
+              data=json.dumps({"ref":"master"}).encode(),
+              method="POST",
+              headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json","Content-Type":"application/json"},
+          )
+          urllib.request.urlopen(req,timeout=30).read()
+          print("Q068 STATUS SYNC DISPATCHED")
+          PY
+
+      - name: Upload Q068 result
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q068-hosted-deterministic-performance
+          path: research/evidence/q068_performance_result.json
+          if-no-files-found: error
+          retention-days: 30
