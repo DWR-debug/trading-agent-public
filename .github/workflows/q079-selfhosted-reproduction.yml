@@ -1,0 +1,87 @@
+name: Q079 Self-hosted Reproduction
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q079_selfhosted_reproduction.trigger"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-q079-selfhosted-reproduction
+  cancel-in-progress: false
+
+jobs:
+  reproduce:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 120
+    steps:
+      - name: Checkout exact master
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Bootstrap Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal EnableExtensions
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-q079-repro"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-q079-repro.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            mkdir "%PY_ROOT%" 2>nul
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          endlocal
+
+      - name: Install minimal dependencies
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q079-repro\tools\python.exe"
+          set "SITE=%RUNNER_TEMP%\python-site-q079-repro"
+          if exist "%SITE%" rmdir /s /q "%SITE%"
+          mkdir "%SITE%" || exit /b 1
+          "%PY_EXE%" -m pip install --disable-pip-version-check --target "%SITE%" pandas pytest || exit /b 1
+          setx Q079_SITE "%SITE%" >nul
+          echo Q079_SITE=%SITE%
+
+      - name: Verify authorization, immutable bundle and safety
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q079-repro\tools\python.exe"
+          "%PY_EXE%" -c "import json,subprocess; from pathlib import Path; from config import settings; a=json.loads(Path('research/authorizations/q079_performance_2026_09_28.json').read_text()); c=json.loads(Path('research/evidence/q079_coverage_result.json').read_text()); p=json.loads(Path('research/evidence/q079_pit_result.json').read_text()); b=json.loads(Path('research/evidence/q079_input_freeze_result.json').read_text()); assert a['authorized'] is True and a['performance_execution_authorized'] is True and a['execution_scope']=='Q079_FIXED_RULE_PERFORMANCE_ONLY'; assert c['status']=='COVERAGE_PASSED' and p['status']=='PIT_PASSED' and b['status']=='INPUT_BUNDLE_FROZEN'; assert a['source_receipts']['coverage_result_fingerprint']==c['result_fingerprint']; assert a['source_receipts']['pit_result_fingerprint']==p['result_fingerprint']; assert a['source_receipts']['input_bundle_fingerprint']==b['bundle_fingerprint']; assert settings.PAPER_ONLY is True and settings.LIVE_TRADING_ENABLED is False and settings.ORDERS_ENABLED is False and settings.AUTOMATIC_PROMOTION is False; print('Q079 REPRO PREFLIGHT OK')"
+
+      - name: Run exact network-free Q079 reproduction
+        shell: cmd
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q079-repro\tools\python.exe"
+          "%PY_EXE%" -c "from pathlib import Path; from datetime import datetime; import automation.q079_e1_e2_performance as m; m.datetime=datetime; m.run(Path('research/preregistrations/q079_performance_2026_09_28.json'), Path('.'), Path('research/runs/self_hosted/q079_reproduction_%GITHUB_RUN_ID%/q079_performance_result.json'))"
+
+      - name: Validate reproduction only
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q079-repro\tools\python.exe"
+          "%PY_EXE%" -c "import json; from pathlib import Path; d=json.loads(Path('research/runs/self_hosted/q079_reproduction_%GITHUB_RUN_ID%/q079_performance_result.json').read_text()); assert d['status']=='COMPLETED'; assert d['selection_used'] is False and d['holdout_used_for_selection'] is False; assert d['governance']['promotion_decision'] is False and d['governance']['automatic_promotion'] is False; assert set(d['arms'])=={'CONTROL_6SLEEVE_ENSEMBLE','E1_ALPHA_COMMON_MODE_THROTTLE','E2_TURNOVER_HYSTERESIS'}; assert d['safety']=={'paper_only':True,'live_trading_enabled':False,'orders_enabled':False,'automatic_promotion':False}; print('Q079 SELF-HOSTED REPRODUCTION OK'); [print(k,str(v['gates_passed'])+'/13') for k,v in d['arms'].items()]; print('REPORT_FP',d['report_fingerprint'])"
+
+      - name: Upload non-formal reproduction artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q079-selfhosted-reproduction-${{ github.run_id }}
+          path: research/runs/self_hosted/q079_reproduction_${{ github.run_id }}/q079_performance_result.json
+          if-no-files-found: error
+          retention-days: 14
