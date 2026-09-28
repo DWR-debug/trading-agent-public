@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T16:08:14.936842+00:00",
+  "generated_at_utc": "2026-09-28T16:10:23.904620+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -228,6 +228,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: open public C31 news persistence path",
+        "sha": "7ec045687c8e433cd805b2d69741f541dd304129",
+        "timestamp": "2026-09-28T18:10:08+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "b781071d3f7727e29edb440efc182a1211dd0f04",
+        "timestamp": "2026-09-28T16:09:47Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "625f975f77d174f9e5e87ba46c4b2e01b75c88fc",
+        "timestamp": "2026-09-28T16:08:15Z"
+      },
+      {
         "message": "RESEARCH: add C30 risk-text PIT feasibility layer",
         "sha": "8aaf4248904c6883fd01964595b1fb707495b1fa",
         "timestamp": "2026-09-28T18:07:56+02:00"
@@ -251,21 +266,6 @@
         "message": "OPS: retrigger Q081-R1 final preflight for autonomous advance",
         "sha": "ab58769ccabff9d092b9ba3eae8c101c7e2db761",
         "timestamp": "2026-09-28T18:03:49+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "8fac80fd757e113f845a35b1c3aca22e578bf796",
-        "timestamp": "2026-09-28T15:56:45Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "3881d9a1e1f44a20649e09564f01232e7f7fd177",
-        "timestamp": "2026-09-28T15:55:13Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "7435892cb1479631607d12a2d458b0cc92124604",
-        "timestamp": "2026-09-28T15:54:42Z"
       }
     ]
   },
@@ -327,12 +327,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8aaf4248904c6883fd01964595b1fb707495b1fa",
+  "source_master_sha": "7ec045687c8e433cd805b2d69741f541dd304129",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36448808407"
+    "run_id": "36449076004"
   }
 }
