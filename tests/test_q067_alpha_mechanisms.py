@@ -62,21 +62,21 @@ def test_common_mode_throttle_scales_all_assets_when_active():
 def test_turnover_hysteresis_carries_small_nonzero_changes():
     aggregate = (
         {symbol: (0.125 if symbol == Q067_SYMBOLS[0] else 0.0) for symbol in Q067_SYMBOLS},
-        {symbol: (0.125 - 0.5 * E2_MIN_ABS_WEIGHT_CHANGE if symbol == "SPY" else 0.0) for symbol in Q067_SYMBOLS},
+        {symbol: (0.125 - 0.5 * E2_MIN_ABS_WEIGHT_CHANGE if symbol == Q067_SYMBOLS[0] else 0.0) for symbol in Q067_SYMBOLS},
     )
     out = apply_turnover_hysteresis(aggregate)
-    assert out[1][Q067_SYMBOLS[0]] == out[0]["SPY"]
+    assert out[1][Q067_SYMBOLS[0]] == out[0][Q067_SYMBOLS[0]]
 
 
 def test_turnover_hysteresis_does_not_block_entry_or_exit():
     aggregate = (
-        {symbol: (0.125 if symbol == "SPY" else 0.0) for symbol in Q067_SYMBOLS},
+        {symbol: (0.125 if symbol == Q067_SYMBOLS[0] else 0.0) for symbol in Q067_SYMBOLS},
         {symbol: 0.0 for symbol in Q067_SYMBOLS},
-        {symbol: (0.02 if symbol == "SPY" else 0.0) for symbol in Q067_SYMBOLS},
+        {symbol: (0.02 if symbol == Q067_SYMBOLS[0] else 0.0) for symbol in Q067_SYMBOLS},
     )
     out = apply_turnover_hysteresis(aggregate)
-    assert out[1]["SPY"] == 0.0
-    assert out[2]["SPY"] == 0.02
+    assert out[1][Q067_SYMBOLS[0]] == 0.0
+    assert out[2][Q067_SYMBOLS[0]] == 0.02
 
 
 def test_gross_exposure_cap_accepts_preregistered_limit():
