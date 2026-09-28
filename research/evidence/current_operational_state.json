@@ -156,7 +156,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:20:54.101019+00:00",
+  "generated_at_utc": "2026-09-28T19:28:05.541061+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -279,6 +279,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: route agent-ready tasks into bounded Copilot queue",
+        "sha": "577aa14d0891d783d4a6d0190c890c1b69171929",
+        "timestamp": "2026-09-28T21:27:59+02:00"
+      },
+      {
+        "message": "OPS: allow protected Copilot queue to consume agent-ready tasks",
+        "sha": "b83154c0490476e914995bf22ab4e70fba8c4f9b",
+        "timestamp": "2026-09-28T21:27:56+02:00"
+      },
+      {
+        "message": "OPS: arm protected Copilot queue from 2026-10-01",
+        "sha": "7c48df4e598bd6f488dfad98d309201ed084482d",
+        "timestamp": "2026-09-28T21:27:52+02:00"
+      },
+      {
+        "message": "OPS: prioritize permanent research lanes over local AI smoke",
+        "sha": "acc0e380fc1ff86e644d52c7373e31e3a92af706",
+        "timestamp": "2026-09-28T21:27:49+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "69935c1d284c35644ea489c3a014ec67fd12f524",
+        "timestamp": "2026-09-28T19:26:19Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8c114ca568f6d53d3c41a726978e6f6eb2d08476",
+        "timestamp": "2026-09-28T19:20:54Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "f0d02e99a3ba5b614fb05ebd0982731462720ab7",
         "timestamp": "2026-09-28T19:20:40Z"
@@ -287,36 +317,6 @@
         "message": "DOCS: record local AI user-identity and service boundary",
         "sha": "bfe3d705c498f1012406dc99ec92b24da7c3f382",
         "timestamp": "2026-09-28T21:20:35+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "378c9bb6116dce35ff51f3edee7e9ebdac161629",
-        "timestamp": "2026-09-28T19:20:24Z"
-      },
-      {
-        "message": "OPS: trigger autonomous local AI smoke validation",
-        "sha": "fecca4bb2b1c6a0774041f83cd1d515b5d713577",
-        "timestamp": "2026-09-28T21:20:13+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "787592c73817adf79bf87f203080679b878d6736",
-        "timestamp": "2026-09-28T19:20:11Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "53d1424f14348d5ae4f068d4a244de22f1980b77",
-        "timestamp": "2026-09-28T19:20:06Z"
-      },
-      {
-        "message": "OPS: trigger permanent PC loop on workflow changes",
-        "sha": "cfc36884b8c8328cca388d46a96ed076900e1f8e",
-        "timestamp": "2026-09-28T21:20:05+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "c249302eae290e2a4fdc52c7729591ce15058306",
-        "timestamp": "2026-09-28T19:20:01Z"
       }
     ]
   },
@@ -378,12 +378,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f0d02e99a3ba5b614fb05ebd0982731462720ab7",
+  "source_master_sha": "577aa14d0891d783d4a6d0190c890c1b69171929",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36471579707"
+    "run_id": "36472416911"
   }
 }
