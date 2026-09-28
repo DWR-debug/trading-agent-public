@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T08:50:07.837658+00:00",
+  "generated_at_utc": "2026-09-28T08:57:40.864981+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -122,47 +122,56 @@
     "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "research/q070-fixed-candidate-validation-current-20260928",
+        "number": 541,
+        "title": "RESEARCH: Q070 fresh validation of Q069 OHLCV candidates",
+        "updatedAt": "2026-09-28T08:54:20Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/541"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "c8977ae660f472ef67db263854d477150964214e",
+        "timestamp": "2026-09-28T08:57:38Z"
+      },
+      {
+        "message": "Merge pull request #542 from DWR-debug/fix/q069-candidate-pit-off-by-one-20260928",
+        "sha": "8b2c89aa8f49549d71cc4e7aac391829e9b23462",
+        "timestamp": "2026-09-28T10:57:23+02:00"
+      },
+      {
+        "message": "RESEARCH: record Q069 PIT indexing integrity revision",
+        "sha": "5f377077242576ff25e2d1b3745fe872a034063d",
+        "timestamp": "2026-09-28T10:56:01+02:00"
+      },
+      {
+        "message": "DOCS: record Q069 decision-time indexing correction",
+        "sha": "4fb734c8056b7658fc6568940d568b01c9fcb2c5",
+        "timestamp": "2026-09-28T10:55:58+02:00"
+      },
+      {
+        "message": "FIX: remove next-bar leakage from Q069 candidate windows",
+        "sha": "e07ad332bb0c1177490a713058904d21693286a9",
+        "timestamp": "2026-09-28T10:55:29+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "f54943966c8a882b4eef830eb0d74529c73aaa98",
+        "timestamp": "2026-09-28T08:54:23Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f966670b8c035f86de8edfe149984abe0cde07cc",
+        "timestamp": "2026-09-28T08:50:07Z"
+      },
       {
         "message": "Merge pull request #540 from DWR-debug/fix/q068-pit-state-and-evidence-publish-20260928",
         "sha": "b5fe6f9bc8c9c5b2911dbcebb88dc0a49405cbdc",
         "timestamp": "2026-09-28T10:49:55+02:00"
-      },
-      {
-        "message": "TEST: lock Git-independent Q068 evidence persistence",
-        "sha": "0689b96abb9993c9ae3de731dec1e1460c5c9d18",
-        "timestamp": "2026-09-28T10:49:34+02:00"
-      },
-      {
-        "message": "OPS: reconcile Q068 ledger through GitHub API without local Git",
-        "sha": "0655da90802f3baf53ccfb114388f0fccb92f79e",
-        "timestamp": "2026-09-28T10:49:15+02:00"
-      },
-      {
-        "message": "OPS: publish Q068 performance evidence without local Git",
-        "sha": "3412d1fea684d38d750782d8385793cb8c553f70",
-        "timestamp": "2026-09-28T10:49:11+02:00"
-      },
-      {
-        "message": "OPS: publish Q068 authorization without local Git",
-        "sha": "d341d370fa33c70a5dd403193cefb9138d5c3f24",
-        "timestamp": "2026-09-28T10:49:00+02:00"
-      },
-      {
-        "message": "OPS: persist Q068 evidence through GitHub API without local Git",
-        "sha": "39e7b6831f298a9cba6dd78900b2b88fbceebf11",
-        "timestamp": "2026-09-28T10:48:57+02:00"
-      },
-      {
-        "message": "FIX: compare Q068 E2 mutation against actual prior state",
-        "sha": "703b7e93e92007a88cfc51603863cd0ae76d6b97",
-        "timestamp": "2026-09-28T10:48:53+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3710fa5448bcecaff225c4c58f8fc3778ace3b0a",
-        "timestamp": "2026-09-28T08:45:05Z"
       }
     ]
   },
@@ -224,12 +233,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b5fe6f9bc8c9c5b2911dbcebb88dc0a49405cbdc",
+  "source_master_sha": "c8977ae660f472ef67db263854d477150964214e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36399723700"
+    "run_id": "36400485201"
   }
 }
