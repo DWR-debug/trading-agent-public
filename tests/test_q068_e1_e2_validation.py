@@ -142,16 +142,20 @@ def test_q068_universe_is_registered_at_unique_new_priority():
     assert universe.symbols == FROZEN_SYMBOLS
     assert universe.target_count == 3500
 
-def test_q068_current_workflows_are_self_hosted_and_git_free():
+def test_q068_current_workflows_preserve_their_governed_execution_modes():
     for path in (
         ".github/workflows/q068-coverage-pit.yml",
         ".github/workflows/q068-evidence-reconcile.yml",
-        ".github/workflows/q068-snapshot-recovery-audit.yml",
     ):
         text = Path(path).read_text(encoding="utf-8")
         assert "runs-on: [self-hosted, trading-agent-research]" in text
         assert "git add " not in text
         assert "git push " not in text
+    audit = Path(".github/workflows/q068-snapshot-recovery-audit.yml").read_text(encoding="utf-8")
+    assert "runs-on: ubuntu-24.04" in audit
+    assert "git add " not in audit
+    assert "git push " not in audit
+    assert "github_contents_publish.py" in audit
     assert not Path(".github/workflows/q068-autonomous-advance.yml").exists()
     assert not Path(".github/workflows/q068-fixed-mechanism-performance.yml").exists()
 
