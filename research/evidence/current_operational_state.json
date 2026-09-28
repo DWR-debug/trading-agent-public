@@ -14,7 +14,14 @@
       "bounded_two_lane_queue": true,
       "control_plane": "automation/autonomous_control_plane.py",
       "copilot_cli_queue": ".github/workflows/agent-request-queue.yml",
-      "current_pending_requests": []
+      "current_pending_requests": [
+        {
+          "issue_number": "335",
+          "lane": "lane0",
+          "request_file": "agent_requests/lane0/AGENT-Q024-GAP-2011-2017.request",
+          "task_id": "AGENT-Q024-GAP-2011-2017"
+        }
+      ]
     },
     "canonical_data_layer": {
       "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
@@ -54,7 +61,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T07:38:31.495532+00:00",
+  "generated_at_utc": "2026-09-28T07:42:28.181783+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -119,18 +126,48 @@
   },
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
-    "agent_queue_requests": [],
-    "default_branch": "master",
-    "open_agent_ready_issues": [
+    "agent_queue_requests": [
       {
-        "number": 335,
-        "title": "RESEARCH: Q024 auction-result publication timestamp PIT feasibility",
-        "updatedAt": "2026-09-27T17:25:03Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/issues/335"
+        "issue_number": "335",
+        "lane": "lane0",
+        "request_file": "agent_requests/lane0/AGENT-Q024-GAP-2011-2017.request",
+        "task_id": "AGENT-Q024-GAP-2011-2017"
       }
     ],
+    "default_branch": "master",
+    "open_agent_ready_issues": [],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "Merge pull request #533 from DWR-debug/fix/q068-governance-schema-current-20260928",
+        "sha": "75381ad34532ea61fd1e730d4926179c4cfc7fd0",
+        "timestamp": "2026-09-28T09:42:11+02:00"
+      },
+      {
+        "message": "TEST: lock Q068 governance schema",
+        "sha": "b75f08262454fd5c5838ff726a7673f913f7b2a9",
+        "timestamp": "2026-09-28T09:41:49+02:00"
+      },
+      {
+        "message": "FIX: align Q068 governance check with frozen preregistration",
+        "sha": "8861d994a7749652e45a0b42152eadb001eb27d0",
+        "timestamp": "2026-09-28T09:41:45+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "ad5a40a2caa33fe44b7cca9efd01a7f7aa758f3e",
+        "timestamp": "2026-09-28T07:41:16Z"
+      },
+      {
+        "message": "OPS: autonomous agent queue routing",
+        "sha": "9b012cca46e477390db8072e9ac7f1a3002ce48e",
+        "timestamp": "2026-09-28T07:38:33Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f560566c7730daf5df476a7fc7bd218b6bd1bf64",
+        "timestamp": "2026-09-28T07:38:31Z"
+      },
       {
         "message": "Merge pull request #531 from DWR-debug/ops/pause-copilot-autoqueue-20260928",
         "sha": "cb77ee6f30e7ecd82d533f50a6f2b7c0512a8dee",
@@ -140,36 +177,6 @@
         "message": "OPS: retire stale Q024 agent queue request",
         "sha": "21b2fb9004516c80cf3b6bbe577506a3b384613f",
         "timestamp": "2026-09-28T09:37:59+02:00"
-      },
-      {
-        "message": "OPS: pause automatic Copilot queue scheduling at exhausted quota",
-        "sha": "d45b97fc5aa8237715c97cb4fc8042a5861081db",
-        "timestamp": "2026-09-28T09:37:56+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d7d1d1bef84626e31630b959d76db937dab0f474",
-        "timestamp": "2026-09-28T07:37:21Z"
-      },
-      {
-        "message": "Merge pull request #530 from DWR-debug/fix/agent-queue-closed-issue-guard-20260928",
-        "sha": "59e02ed488a076aedfba0d5e7269f9e60345f7ae",
-        "timestamp": "2026-09-28T09:37:05+02:00"
-      },
-      {
-        "message": "OPS: retire closed issues before agent queue execution",
-        "sha": "e8948ceefae1823c5a86c073c93b6dfd75126f02",
-        "timestamp": "2026-09-28T09:36:52+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ffe7f0851a644c5ec4466fba1296a72e7f66283d",
-        "timestamp": "2026-09-28T07:35:58Z"
-      },
-      {
-        "message": "OPS: retire stale closed Q040 agent request",
-        "sha": "0f066e3e0eb8740a857d0bd6fc8ec25d588266d2",
-        "timestamp": "2026-09-28T09:35:42+02:00"
       }
     ]
   },
@@ -231,12 +238,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "cb77ee6f30e7ecd82d533f50a6f2b7c0512a8dee",
+  "source_master_sha": "75381ad34532ea61fd1e730d4926179c4cfc7fd0",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36392738940"
+    "run_id": "36393099928"
   }
 }
