@@ -11,6 +11,7 @@ on:
       - "automation/ai_worker_fabric.py"
       - "scripts/enable_local_ai_worker.ps1"
       - "tests/test_ai_worker_fabric.py"
+      - ".github/workflows/self-hosted-ai-worker-fabric.yml"
 
 permissions:
   contents: write
@@ -76,9 +77,10 @@ jobs:
         env:
           AI_EXTERNAL_PROVIDER_ALLOWLIST: "true"
           TRADING_AGENT_LOCAL_AI_MODE: "true"
-          TRADING_AGENT_AI_ATTESTATION: "\${env:USERPROFILE}\.trading-agent\ai_free_attestation.json"
         run: |
-          python -m automation.ai_worker_fabric --run --provider "${{ matrix.provider }}" --task "${{ steps.task.outputs.path }}" --output "\${env:RUNNER_TEMP}\ai-${{ matrix.task }}-${{ matrix.provider }}.json"
+          $env:TRADING_AGENT_AI_ATTESTATION = Join-Path $HOME ".trading-agent\ai_free_attestation.json"
+          $output = Join-Path $env:RUNNER_TEMP "ai-${{ matrix.task }}-${{ matrix.provider }}.json"
+          python -m automation.ai_worker_fabric --run --provider "${{ matrix.provider }}" --task "${{ steps.task.outputs.path }}" --output $output
 
       - name: Publish local worker state
         if: always() && steps.prior.outputs.run == 'true'
@@ -88,17 +90,26 @@ jobs:
         run: |
           $stateDir = "ops/ai_worker_state"
           New-Item -ItemType Directory -Force $stateDir | Out-Null
-          $output = "\${env:RUNNER_TEMP}\ai-${{ matrix.task }}-${{ matrix.provider }}.json"
+          $output = Join-Path $env:RUNNER_TEMP "ai-${{ matrix.task }}-${{ matrix.provider }}.json"
           $state = "$stateDir/${{ matrix.task }}__${{ matrix.provider }}.json"
           if (Test-Path $output) { Copy-Item $output $state -Force }
           else { '{"schema_version":1,"task_id":"${{ matrix.task }}","provider":"${{ matrix.provider }}","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' | Set-Content -Encoding UTF8 $state }
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add $state
-          if (-not (git diff --cached --quiet)) {
+          for ($attempt = 1; $attempt -le 5; $attempt++) {
+            git fetch origin master
+            git checkout -B master origin/master
+            Copy-Item $output $state -Force -ErrorAction SilentlyContinue
+            if (-not (Test-Path $state)) {
+              '{"schema_version":1,"task_id":"${{ matrix.task }}","provider":"${{ matrix.provider }}","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' | Set-Content -Encoding UTF8 $state
+            }
+            git add $state
+            if (git diff --cached --quiet) { exit 0 }
             git commit -m "OPS: record local AI worker state"
-            git push origin HEAD:master
+            if (git push origin HEAD:master) { exit 0 }
+            Start-Sleep -Seconds 2
           }
+          throw "Unable to publish local AI worker state after retries."
 
       - name: Publish local worker artifact
         if: always()
