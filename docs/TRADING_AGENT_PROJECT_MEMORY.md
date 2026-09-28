@@ -119,17 +119,19 @@ LIVE_TRADING_ENABLED=False
 orders_enabled=False
 automatic_promotion=False
 
-## Arbeits-PC als bevorzugter Dauerpfad — verbindliche Prioritätsregel
+## Arbeits-PC und Cloud als parallele Forschungsinfrastruktur — verbindliche Prioritätsregel
 
-Der permanente Arbeits-PC ist **nicht nur eine verfügbare Ressource, sondern der bevorzugte Standardpfad** des Projekts, sobald der Self-Hosted-Runner betriebsbereit ist.
+Der betriebsbereite Arbeits-PC mit Self-Hosted-Runner und die verfügbaren Cloud-/GitHub-Runner sind **gleichberechtigte, parallel zu nutzende Forschungsressourcen**.
 
 Prioritätsregel:
-1. Self-Hosted-Arbeits-PC zuerst für deterministische Forschung, Feasibility, PIT/Coverage, QA, Evidence-Erzeugung und bereits freigegebene autonome Jobs.
-2. GitHub-hosted Runner nur als Ausweich-/Parallelpfad, wenn dies technisch oder kapazitiv sinnvoll ist.
-3. Kein unnötiges Verschieben rechenbarer Arbeit auf kostenpflichtige oder extern limitierte Ressourcen.
-4. Der Arbeits-PC soll möglichst dauerhaft für den Trading-Agent verfügbar bleiben; bei Nichtverfügbarkeit wird der Ausfall als Infrastrukturzustand dokumentiert und nicht stillschweigend durch andere, weniger geeignete Pfade verschleiert.
+1. Der Arbeits-PC soll möglichst dauerhaft aktiv sein und die deterministische Primärausführung für Research, Feasibility, PIT/Coverage, QA, Evidence-Erzeugung und freigegebene autonome Jobs übernehmen.
+2. Cloud-/GitHub-Runner sollen **parallel** für unabhängige Gegenprüfungen, zusätzliche Tests, Reviews, statische Analysen, alternative Implementierungen und weitere klar abgegrenzte Forschungsjobs eingesetzt werden.
+3. Wo ein Forschungsjob sinnvoll duplizierbar ist, sollen PC und Cloud nicht unnötig seriell arbeiten; unabhängige Ausführungen sollen die Forschungszeit verkürzen und Inkonsistenzen früh sichtbar machen.
+4. Ergebnisse aus PC und Cloud werden über Commit-SHA, Testausgaben, Fingerprints und Evidence-Artefakte zusammengeführt. Unterschiedliche Ergebnisse sind ein QA-/Forschungsbefund und werden nicht stillschweigend vereinheitlicht.
+5. Kostenpflichtige externe Ressourcen bleiben ausgeschlossen. Kostenfreie verfügbare Ressourcen werden nach wissenschaftlichem Nutzen und Reproduzierbarkeit eingesetzt.
+6. Bei Nichtverfügbarkeit des PCs oder der Cloud wird der jeweilige Pfad als Infrastrukturzustand dokumentiert; verfügbare Parallelpfade sollen weiterarbeiten.
 
-Diese Prioritätsregel gilt dauerhaft und ist bei der Planung jedes neuen Research-Jobs zu berücksichtigen.
+Diese Parallelitätsregel gilt dauerhaft und ist bei der Planung jedes neuen Research-Jobs zu berücksichtigen.
 
 ## Dauerhafte Zielbindung, familiäre Dringlichkeit und PC-Betrieb — 2026-09-28
 
