@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T20:55:03.388155+00:00",
+  "generated_at_utc": "2026-09-28T21:00:38.768030+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,44 +325,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "MERGE: harden Antigravity free-only settings writer",
-        "sha": "67214b28661df8a0a576009a98188bf62070dc01",
-        "timestamp": "2026-09-28T22:54:48+02:00"
+        "message": "MERGE: make local AI smoke BOM-compatible on Windows",
+        "sha": "4d24cbcf301f5019772fba3878eed32a5e63800e",
+        "timestamp": "2026-09-28T23:00:27+02:00"
       },
       {
-        "message": "TEST: align BOM regression with constrained-language writer",
-        "sha": "4d137506aa7aff1a193498fcea94568422d282a2",
-        "timestamp": "2026-09-28T22:53:31+02:00"
+        "message": "TEST: guard BOM-compatible local AI smoke reader",
+        "sha": "f450c841797ba279fe3a9ccef3286af1301a2f30",
+        "timestamp": "2026-09-28T22:59:06+02:00"
       },
       {
-        "message": "TEST: guard constrained-language-safe UTF-8 writer",
-        "sha": "d9f6ccc44621133306ebb91b72bb4ca32b7deb81",
-        "timestamp": "2026-09-28T22:52:09+02:00"
+        "message": "FIX: parse Windows PowerShell UTF-8 settings with BOM",
+        "sha": "710c42c3191cac4dd0f3af454cd8b55858925a0c",
+        "timestamp": "2026-09-28T22:59:03+02:00"
       },
       {
-        "message": "FIX: use Constrained-Language-safe UTF-8 settings write",
-        "sha": "3837dbbc57a9c8a2f5653b3ba0af8f3866e6dd4a",
-        "timestamp": "2026-09-28T22:52:07+02:00"
+        "message": "FIX: restore Constrained-Language-safe settings writer",
+        "sha": "c6629797c05344a49b4bc45846910640b4747cdc",
+        "timestamp": "2026-09-28T22:59:00+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "92f9ae1dd4ec24ccfe194fd88b4fdc243a32433f",
+        "timestamp": "2026-09-28T20:58:24Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "ca35ae4167a53ada1e294c4e56bffae7322fcdf9",
+        "timestamp": "2026-09-28T20:55:42Z"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "756f13fa96806f89ff7f5c0d0e56b12438c4eaff",
-        "timestamp": "2026-09-28T20:47:18Z"
+        "sha": "f94f111eac98ab05b42bc8c57233af999ad6360e",
+        "timestamp": "2026-09-28T20:55:03Z"
       },
       {
-        "message": "MERGE: fix local Antigravity free-only settings encoding",
-        "sha": "8e52f311c278a6844e3e470acc46f5f914a51141",
-        "timestamp": "2026-09-28T22:47:05+02:00"
-      },
-      {
-        "message": "TEST: guard Antigravity settings against UTF-8 BOM",
-        "sha": "2da2dc7f802e69c3eb072ad882e2129f24a0ac24",
-        "timestamp": "2026-09-28T22:45:41+02:00"
-      },
-      {
-        "message": "FIX: write Antigravity settings as UTF-8 without BOM",
-        "sha": "e29fec25751280589e0b95437f732549ff173be2",
-        "timestamp": "2026-09-28T22:45:39+02:00"
+        "message": "MERGE: harden Antigravity free-only settings writer",
+        "sha": "67214b28661df8a0a576009a98188bf62070dc01",
+        "timestamp": "2026-09-28T22:54:48+02:00"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "67214b28661df8a0a576009a98188bf62070dc01",
+  "source_master_sha": "4d24cbcf301f5019772fba3878eed32a5e63800e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36482527890"
+    "run_id": "36483164900"
   }
 }
