@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T14:56:55.358483+00:00",
+  "generated_at_utc": "2026-09-28T14:57:11.859664+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "0d7c52dfda6f11a22d3216ce32dcad57c8f15c41",
+        "timestamp": "2026-09-28T14:56:55Z"
+      },
+      {
         "message": "OPS: trigger Q084 self-hosted feasibility",
         "sha": "8f7380f1c7ff9dde8768a418f5754127d8d4cd72",
         "timestamp": "2026-09-28T16:56:44+02:00"
@@ -190,11 +195,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "849749db12eef9941a54acd7275f20e8be2bd1c5",
         "timestamp": "2026-09-28T14:56:04Z"
-      },
-      {
-        "message": "EVIDENCE: persist Q083 feasibility checkpoint",
-        "sha": "57038cc52cf770a0835261bb22209f22cb8db349",
-        "timestamp": "2026-09-28T16:55:47+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8f7380f1c7ff9dde8768a418f5754127d8d4cd72",
+  "source_master_sha": "0d7c52dfda6f11a22d3216ce32dcad57c8f15c41",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36439805583"
+    "run_id": "36439819098"
   }
 }
