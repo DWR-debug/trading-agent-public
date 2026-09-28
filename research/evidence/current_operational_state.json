@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:40:44.642335+00:00",
+  "generated_at_utc": "2026-09-28T10:41:31.729930+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,21 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: retrigger Q068 on corrected frozen-contract verifier",
+        "sha": "0451e5f36d902c586a0bc681837c7512a3492dcb",
+        "timestamp": "2026-09-28T12:41:25+02:00"
+      },
+      {
+        "message": "FIX: accept native Cboe VVIX single-value schema",
+        "sha": "430af6af30a1aa80125f8732ef72684908df0cdc",
+        "timestamp": "2026-09-28T12:41:06+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b56966d4172c3f195a7c059d647891e646a02023",
+        "timestamp": "2026-09-28T10:40:44Z"
+      },
+      {
         "message": "OPS: trigger Q074 source feasibility",
         "sha": "1287dce06e586d8e46878871836a759c260f62c7",
         "timestamp": "2026-09-28T12:40:33+02:00"
@@ -189,21 +204,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "9e6876e6d9b6895d97ed37a1b508767129c78088",
         "timestamp": "2026-09-28T10:39:39Z"
-      },
-      {
-        "message": "EVIDENCE: persist Q071 source feasibility result",
-        "sha": "0e1a3b3800d1d1b6e844eb435db4bb450404b0d2",
-        "timestamp": "2026-09-28T12:39:25+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "cdc044d443082cc0684205101f9cd3adfab2aff0",
-        "timestamp": "2026-09-28T10:38:30Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c41e5ccd9f51cbc05a9cbb00222cd2fc4edbf4bf",
-        "timestamp": "2026-09-28T10:38:17Z"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1287dce06e586d8e46878871836a759c260f62c7",
+  "source_master_sha": "0451e5f36d902c586a0bc681837c7512a3492dcb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36411105356"
+    "run_id": "36411116271"
   }
 }
