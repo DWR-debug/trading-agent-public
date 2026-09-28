@@ -44,6 +44,13 @@ jobs:
           )
           "%PY_EXE%" --version || exit /b 1
 
+      - name: Enforce permanent Q070 reproducibility block
+        shell: cmd
+        run: |
+          @echo off
+          echo Q070_PERMANENTLY_BLOCKED_REPRODUCIBILITY=TRUE
+          exit /b 1
+
       - name: Verify preflight and safety
         shell: cmd
         run: |
