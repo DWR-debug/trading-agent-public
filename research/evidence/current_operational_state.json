@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:49:38.805090+00:00",
+  "generated_at_utc": "2026-09-28T10:50:10.808797+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,31 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: trigger Q076 immutable replication",
+        "sha": "5b9e8a82f57eeda38fab7e40f43317be23e6e38d",
+        "timestamp": "2026-09-28T12:50:06+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q076 fixed-rule performance workflow",
+        "sha": "5f2209f2561b6a5f38690bada5ec43db63d797ab",
+        "timestamp": "2026-09-28T12:50:03+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q076 immutable replication pipeline",
+        "sha": "45cbf58db2703b691aac0a98f724c53ddd7e35c5",
+        "timestamp": "2026-09-28T12:50:00+02:00"
+      },
+      {
+        "message": "RESEARCH: add network-free Q076 fixed-rule performance",
+        "sha": "9434f6bd1068534474e822563bd4a19839a1fcbd",
+        "timestamp": "2026-09-28T12:49:57+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5c0ccdd9fdfb40e8ba818d53e2fa0c567d074721",
+        "timestamp": "2026-09-28T10:49:38Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "6105a7ad394979ec90f6fa2324002ad763550f74",
         "timestamp": "2026-09-28T10:49:23Z"
@@ -179,31 +204,6 @@
         "message": "RESEARCH: add Q076 coverage and PIT runner",
         "sha": "5f1b3f62c5eee0abc056da4028dc8789ca571bee",
         "timestamp": "2026-09-28T12:49:09+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b9aed635095a47c63dd561731af2255a317bb7f2",
-        "timestamp": "2026-09-28T10:48:58Z"
-      },
-      {
-        "message": "RESEARCH: add Q076 replication design",
-        "sha": "0a77e0b23afe3c9213bfa4be0650966fbb0327c3",
-        "timestamp": "2026-09-28T12:48:47+02:00"
-      },
-      {
-        "message": "RESEARCH: freeze Q076 fresh E1 E2 replication preregistration",
-        "sha": "6a3a7183b1bc2de3c67e4647f3fe834bca97986d",
-        "timestamp": "2026-09-28T12:48:45+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d877290b9dc4f1f76b9126380da1e0c088c83ae5",
-        "timestamp": "2026-09-28T10:45:37Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "21c3a43079028e3bba29be7301c80f9f09cbb80f",
-        "timestamp": "2026-09-28T10:45:25Z"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "6105a7ad394979ec90f6fa2324002ad763550f74",
+  "source_master_sha": "5b9e8a82f57eeda38fab7e40f43317be23e6e38d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36411954818"
+    "run_id": "36412029132"
   }
 }
