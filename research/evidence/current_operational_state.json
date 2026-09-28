@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T16:15:32.597363+00:00",
+  "generated_at_utc": "2026-09-28T16:16:09.716874+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -228,6 +228,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "DOCS: synchronize unusual frontier feasibility status",
+        "sha": "3022669ffc15c91cdda169b3ffddf75b8a898071",
+        "timestamp": "2026-09-28T18:15:52+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "94b9963e2b8b9b347727b45e909d5fa6d84926bf",
+        "timestamp": "2026-09-28T16:15:32Z"
+      },
+      {
         "message": "RESEARCH: harden M5 scheduled rebalance event feasibility",
         "sha": "373380ba45483f1b84d68403a4db442dfeee9742",
         "timestamp": "2026-09-28T18:15:15+02:00"
@@ -256,16 +266,6 @@
         "message": "RESEARCH: open public C31 news persistence path",
         "sha": "7ec045687c8e433cd805b2d69741f541dd304129",
         "timestamp": "2026-09-28T18:10:08+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "b781071d3f7727e29edb440efc182a1211dd0f04",
-        "timestamp": "2026-09-28T16:09:47Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "625f975f77d174f9e5e87ba46c4b2e01b75c88fc",
-        "timestamp": "2026-09-28T16:08:15Z"
       }
     ]
   },
@@ -327,12 +327,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "373380ba45483f1b84d68403a4db442dfeee9742",
+  "source_master_sha": "3022669ffc15c91cdda169b3ffddf75b8a898071",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36449707072"
+    "run_id": "36449783056"
   }
 }
