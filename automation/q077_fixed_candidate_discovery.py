@@ -2,15 +2,19 @@
 No performance, returns, holdout or ranking is consulted.
 """
 from __future__ import annotations
-import argparse, hashlib, json
+import argparse, hashlib, json, sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime, timezone
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from config import settings
 from data.yahoo_loader import load_yahoo_history
 from research.asset_universes import list_universes
 
-ROOT=Path(__file__).resolve().parents[1]
 STUDY_START=date(2011,1,1)
 STUDY_END=date(2025,9,24)
 TARGET=3500
