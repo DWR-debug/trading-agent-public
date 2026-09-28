@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T11:09:18.227081+00:00",
+  "generated_at_utc": "2026-09-28T11:09:41.810510+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,21 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: rerun Q079 authorization after network static cleanup",
+        "sha": "0bf7c08563749d77715b1d6ea31019f4277f1515",
+        "timestamp": "2026-09-28T13:09:36+02:00"
+      },
+      {
+        "message": "FIX: remove obsolete network imports from Q079 performance",
+        "sha": "5bbf4e1ca8781dadd4043378b7b68e8be99445a7",
+        "timestamp": "2026-09-28T13:09:28+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "030e35ab7b7aec42bbf2d1622947d22a0b1fe9b5",
+        "timestamp": "2026-09-28T11:09:18Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "3b6ae33605914d5c5aea7283893db415ff57fa5e",
         "timestamp": "2026-09-28T11:09:03Z"
@@ -189,21 +204,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "7540f25fb99f10b270dc775bd7973022bdf3965a",
         "timestamp": "2026-09-28T11:08:35Z"
-      },
-      {
-        "message": "OPS: trigger Q079 fixed-rule performance authorization",
-        "sha": "d4235d121792e43d3acb34e26ddf9c0cfaabeee1",
-        "timestamp": "2026-09-28T13:08:32+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q079 fixed-rule performance workflow",
-        "sha": "d7de7c213bbb19091d0aa3032680a71b9cc1fc57",
-        "timestamp": "2026-09-28T13:08:25+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q079 one-shot authorization workflow",
-        "sha": "fa74aab590e3b9e542ad5ce557ee33c1ab5ea600",
-        "timestamp": "2026-09-28T13:08:22+02:00"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "3b6ae33605914d5c5aea7283893db415ff57fa5e",
+  "source_master_sha": "0bf7c08563749d77715b1d6ea31019f4277f1515",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36413901182"
+    "run_id": "36413962140"
   }
 }
