@@ -38,17 +38,17 @@ No holdout observation may alter the candidate definitions.
 
 ## Literature basis
 
-C7 is motivated by the documented MAX relation between a prior short-window maximum daily return and subsequent returns. citeturn346660search3
+C7 is motivated by the MAX anomaly studied by Bali, Cakici & Whitelaw (2011), DOI 10.1016/j.jfineco.2010.08.014. 
 
-C8 is motivated by cross-sectional evidence linking high idiosyncratic volatility with lower average returns. citeturn346660search0turn346660search8
+C8 is motivated by Ang, Hodrick, Xing & Zhang (2006), DOI 10.1111/j.1540-6261.2006.00836.x, which studies the cross-section of volatility and expected returns. 
 
-C9 is motivated by the long-horizon reversal/overreaction literature. citeturn319500search0turn319500search1
+C9 is motivated by De Bondt & Thaler (1985), DOI 10.1111/j.1540-6261.1985.tb05004.x. 
 
 C10 is an explicitly project-generated hypothesis; the ratio is a deterministic path-efficiency measure rather than a literature replication claim.
 
-C11 is motivated by evidence that past trading volume is related to the magnitude and persistence of price momentum. citeturn455760search1
+C11 is motivated by Lee & Swaminathan (2000), DOI 10.1111/0022-1080.00280, on the relation between price momentum and trading volume. 
 
-These sources justify research hypotheses only; they do not constitute evidence that any Q069 candidate will pass the project gates. The existing momentum literature documents intermediate-horizon momentum, but also notes later reversal. citeturn346660search2turn319500search9
+These sources justify research hypotheses only; they do not constitute evidence that any Q069 candidate will pass the project gates. Jegadeesh & Titman (1993), DOI 10.1111/j.1540-6261.1993.tb04702.x, is used only as background for the momentum component. 
 
 ## Safety
 
