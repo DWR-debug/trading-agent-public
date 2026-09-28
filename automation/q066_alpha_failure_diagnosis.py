@@ -674,7 +674,7 @@ def analyze_universe(root: Path, expected: dict, prereg: dict, q045: bool) -> di
         }
         if arm == "CONTROL":
             analyses[arm]["sleeves"] = control_sleeve_diagnostics(
-                module, assets, analyses[arm], expected["symbols"]
+                module, assets, series_by_arm[arm], expected["symbols"]
             )
     return {
         "source": {
