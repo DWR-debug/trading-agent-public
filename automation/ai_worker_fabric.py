@@ -242,9 +242,9 @@ def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, s
     command = command_for(provider, build_prompt(task), check.get("binary"))
     started = time.monotonic()
     try:
-        proc = subprocess.run(command, cwd=Path.cwd(), text=True, capture_output=True,
-                              timeout=task.get("max_runtime_minutes", 15) * 60, check=False,
-                              env=env or os.environ.copy())
+        proc = subprocess.run(command, cwd=Path.cwd(), text=True, encoding="utf-8", errors="replace",
+                              capture_output=True, timeout=task.get("max_runtime_minutes", 15) * 60,
+                              check=False, env=env or os.environ.copy())
     except OSError as exc:
         result = {**base, "status": "FAILED_PROCESS", "returncode": None,
                   "duration_seconds": round(time.monotonic() - started, 3),
@@ -254,7 +254,7 @@ def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, s
         return result
     result = {**base, "status": "SUCCESS" if proc.returncode == 0 else "FAILED",
               "returncode": proc.returncode, "duration_seconds": round(time.monotonic() - started, 3),
-              "stdout": proc.stdout[-20000:], "stderr": proc.stderr[-12000:], "command_binary": command[0]}
+              "stdout": (proc.stdout or "")[-20000:], "stderr": (proc.stderr or "")[-12000:], "command_binary": command[0]}
     output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return result
 
