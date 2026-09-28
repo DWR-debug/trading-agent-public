@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T05:34:06.760889+00:00",
+  "generated_at_utc": "2026-09-28T05:35:23.225068+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -95,6 +95,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: automate Q067 preflight-to-evidence handoff",
+        "sha": "95090681e0754b4841c7cad05856152f9bf0e90e",
+        "timestamp": "2026-09-28T07:35:06+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b0f5a5a5985b8f9f10072c812516acdc5bac32ea",
+        "timestamp": "2026-09-28T05:34:06Z"
+      },
       {
         "message": "OPS: reissue corrected Q067 coverage/PIT authorization",
         "sha": "6f459249052e72978bcdd9d8a38aa4fd9ef0e266",
@@ -124,16 +134,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "0b7e4eef673c3740beb5c107508ea1544615cee1",
         "timestamp": "2026-09-28T05:30:05Z"
-      },
-      {
-        "message": "OPS: reissue Q067 coverage/PIT authorization",
-        "sha": "7efb0b08201b08e173e05b564af7bb7881ecc2d5",
-        "timestamp": "2026-09-28T07:29:52+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f6b92b597199815055ea8b6b4325fa25c74fb4db",
-        "timestamp": "2026-09-28T05:28:37Z"
       }
     ]
   },
@@ -195,12 +195,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "6f459249052e72978bcdd9d8a38aa4fd9ef0e266",
+  "source_master_sha": "95090681e0754b4841c7cad05856152f9bf0e90e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36382460442"
+    "run_id": "36382554252"
   }
 }
