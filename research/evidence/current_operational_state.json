@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T07:46:12.087034+00:00",
+  "generated_at_utc": "2026-09-28T08:29:31.410901+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -125,44 +125,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: remove closed Q024 agent request from queue inventory",
-        "sha": "1567e81cc8857a3f48bf660483f3bbe65d1b8199",
-        "timestamp": "2026-09-28T09:46:00+02:00"
+        "message": "Merge pull request #537 from DWR-debug/research/q069-orthogonal-ohlcv-candidate-bank-20260928",
+        "sha": "2e7eff73b74d9571c4191301d4f64730424c7c14",
+        "timestamp": "2026-09-28T10:29:18+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a6e8d9867483302596e3f0a8bd1dc67fcd9dabdb",
-        "timestamp": "2026-09-28T07:45:09Z"
+        "message": "Merge pull request #538 from DWR-debug/fix/q068-source-checkout-no-git-20260928",
+        "sha": "0a222c255f9a684c566fd79e24e21e1afdebb4ab",
+        "timestamp": "2026-09-28T10:29:05+02:00"
       },
       {
-        "message": "Merge pull request #535 from DWR-debug/fix/q068-source-sha-pinning-20260928",
-        "sha": "12fbf523329a60325b7169bd133ff4319b663dda",
-        "timestamp": "2026-09-28T09:44:54+02:00"
+        "message": "TEST: fix Q069 fixture construction and selection-order assertion",
+        "sha": "cff706b634f7373e1df128a24086b370f52f03f6",
+        "timestamp": "2026-09-28T10:28:20+02:00"
       },
       {
-        "message": "TEST: require Q068 exact source provenance",
-        "sha": "240d18076fc99a848e38e6f4ed91da7459c4c134",
-        "timestamp": "2026-09-28T09:44:36+02:00"
+        "message": "TEST: lock Q068 archive-checkout source contract",
+        "sha": "955f8a1bec139660f83535ad6df8b22abee63c0c",
+        "timestamp": "2026-09-28T10:27:15+02:00"
       },
       {
-        "message": "OPS: pin Q068 workflow checkout to github SHA",
-        "sha": "a837acd32d6fb2873497c9ff73dd0b9043c59d14",
-        "timestamp": "2026-09-28T09:44:32+02:00"
+        "message": "FIX: remove Git dependency from Q068 source verification",
+        "sha": "eef436328c75543ce4bbebeee07d497315a20360",
+        "timestamp": "2026-09-28T10:27:13+02:00"
       },
       {
-        "message": "OPS: pin Q068 workflow checkout to github SHA",
-        "sha": "66e2e5e0da35b2f18d8dfc9b11cf93cade73c0a0",
-        "timestamp": "2026-09-28T09:44:29+02:00"
+        "message": "FIX: fail closed per Q069 candidate history requirement",
+        "sha": "2fc7bfc1b83b37481c70ef3e0080a2c4ee58a520",
+        "timestamp": "2026-09-28T10:25:40+02:00"
       },
       {
-        "message": "OPS: pin Q068 workflow checkout to github SHA",
-        "sha": "47ed19d1212a50dde5b537e9553e99161de20e84",
-        "timestamp": "2026-09-28T09:44:25+02:00"
+        "message": "TEST: lock Q069 candidate bank PIT boundaries",
+        "sha": "7e3018919404df975b19b39f822267896c6298c5",
+        "timestamp": "2026-09-28T10:25:10+02:00"
       },
       {
-        "message": "OPS: pin Q068 workflow checkout to github SHA",
-        "sha": "6cdd403a28809c2a67d87336c177460d044561d6",
-        "timestamp": "2026-09-28T09:44:21+02:00"
+        "message": "RESEARCH: preregister Q069 orthogonal OHLCV candidate bank",
+        "sha": "2778c7fa89403e1669bee982cf2b2759c9f73df2",
+        "timestamp": "2026-09-28T10:25:07+02:00"
       }
     ]
   },
@@ -224,12 +224,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1567e81cc8857a3f48bf660483f3bbe65d1b8199",
+  "source_master_sha": "2e7eff73b74d9571c4191301d4f64730424c7c14",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36393453267"
+    "run_id": "36397656369"
   }
 }
