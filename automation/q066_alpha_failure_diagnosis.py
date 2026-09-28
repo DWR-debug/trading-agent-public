@@ -339,6 +339,12 @@ def close_enough(a, b, tol=1e-12) -> bool:
     return math.isclose(float(a), float(b), rel_tol=1e-10, abs_tol=tol)
 
 
+def verify_report_fingerprint(report: dict, expected: str) -> bool:
+    payload = dict(report)
+    actual = payload.pop("report_fingerprint", None)
+    return actual == expected and fingerprint(payload) == expected
+
+
 def verify_aggregate_report(paths: dict, report: dict) -> bool:
     for arm, series in paths.items():
         stored = report["arms"][arm]["base"]
@@ -435,8 +441,8 @@ def symbol_diagnostics(
             "mean_weight": mean(exposure_rows[s]),
             "max_weight": max(exposure_rows[s]),
             "gross_return_contribution": sum(
-                float(weights[i].get(s, 0.0)) * returns[i][k]
-                for i, k in enumerate([symbols.index(s)] * len(returns))
+                float(weights[i].get(s, 0.0)) * returns[i][symbols.index(s)]
+                for i in range(len(returns))
             ),
             "net_contribution": sum(vals),
             "cost_contribution": -COST_RATE * sum(
@@ -625,7 +631,7 @@ def analyze_universe(root: Path, expected: dict, prereg: dict, q045: bool) -> di
     report_path, report = find_report(root)
     if report.get("trial_id") != expected["trial_id"]:
         raise ValueError("performance trial id mismatch")
-    if report.get("report_fingerprint") != expected["report_fingerprint"]:
+    if not verify_report_fingerprint(report, expected["report_fingerprint"]):
         raise ValueError("performance report fingerprint mismatch")
     module_name = (
         "automation.q045_fixed_alpha_replication_performance"
@@ -642,10 +648,8 @@ def analyze_universe(root: Path, expected: dict, prereg: dict, q045: bool) -> di
     exact = verify_aggregate_report(series_by_arm, report)
     if not exact:
         raise RuntimeError(f"aggregate reconstruction mismatch for {expected['trial_id']}")
-    market_returns = [
-        mean([asset_returns(assets, expected["symbols"])[i][k] for k in range(len(expected["symbols"]))])
-        for i in range(3498)
-    ]
+    return_matrix = asset_returns(assets, expected["symbols"])
+    market_returns = [mean(row) for row in return_matrix]
     regimes = classify_regime(market_returns)
     control_net = series_by_arm["CONTROL"]["net"]
     eq = peak = 1.0
@@ -662,6 +666,7 @@ def analyze_universe(root: Path, expected: dict, prereg: dict, q045: bool) -> di
         analyses[arm] = {
             "stored_gate_count": report["arms"][arm]["gates_passed"],
             "stored_gate_total": report["arms"][arm]["gates_total"],
+            "reconstructed_summary": summary(series["net"]),
             "exposure": exposure_diagnostics(series),
             "turnover": turnover_diagnostics(series),
             "return_drawdown": return_drawdown_diagnostics(series),
@@ -677,8 +682,8 @@ def analyze_universe(root: Path, expected: dict, prereg: dict, q045: bool) -> di
             "trial_id": expected["trial_id"],
             "artifact_digest": expected["artifact_digest"],
             "report_fingerprint": expected["report_fingerprint"],
-            "report_path": str(report_path),
-            "manifest_path": str(find_manifest(root)),
+            "report_path": str(report_path.relative_to(root)),
+            "manifest_path": str(find_manifest(root).relative_to(root)),
             "snapshot_fingerprint": manifest.get("snapshot_fingerprint"),
             "symbols": list(expected["symbols"]),
         },
