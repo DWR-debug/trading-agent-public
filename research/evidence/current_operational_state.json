@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T13:27:26.481276+00:00",
+  "generated_at_utc": "2026-09-28T13:30:43.751900+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: add Q081 self-hosted corrective reproduction path",
+        "sha": "6d660624ed21b1483440288850f4053ec54dee9e",
+        "timestamp": "2026-09-28T15:30:29+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "7a12ba6f6c62bfe49e11abe152aadd37be3e4547",
+        "timestamp": "2026-09-28T13:27:26Z"
+      },
+      {
         "message": "RESEARCH: preregister Q081 corrective execution-envelope replication",
         "sha": "896008cd8a513c8d242ed3192a5b907a61fc9245",
         "timestamp": "2026-09-28T15:27:09+02:00"
@@ -185,16 +195,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "ec93ae628aa8d511e476b39ca88bb4329d2f3fc0",
         "timestamp": "2026-09-28T13:05:30Z"
-      },
-      {
-        "message": "FIX: synchronize hourly self-hosted QA cadence",
-        "sha": "97b577efdbc522d0c328935e164494d452b38c7a",
-        "timestamp": "2026-09-28T15:05:17+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "57c30600f690c52ff1bd5ff23837c7ce7105c113",
-        "timestamp": "2026-09-28T13:05:12Z"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "896008cd8a513c8d242ed3192a5b907a61fc9245",
+  "source_master_sha": "6d660624ed21b1483440288850f4053ec54dee9e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36428723518"
+    "run_id": "36429117026"
   }
 }
