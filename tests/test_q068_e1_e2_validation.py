@@ -98,6 +98,8 @@ def test_q068_coverage_and_pit_workflow_is_self_hosted_and_fail_closed():
     assert "selection_used" in text
     assert "research/evidence/q068_coverage_result.json" in text
     assert "research/evidence/q068_pit_result.json" in text
+    assert "ref: ${{ github.sha }}" in text
+    assert "git rev-parse HEAD" in text
 
 
 def test_q068_preregistration_freezes_exact_discovery_batch_and_governance():
