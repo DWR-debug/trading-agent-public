@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T05:04:14.909943+00:00",
+  "generated_at_utc": "2026-09-28T05:05:51.029823+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -95,6 +95,16 @@
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "STATE: canonicalize T060/Q066 evidence",
+        "sha": "5b91675d78a24d709aeb5337848ca9f6876f026d",
+        "timestamp": "2026-09-28T07:05:36+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5392fe8d47efaf1d82de94ecded484209ea1f768",
+        "timestamp": "2026-09-28T05:04:14Z"
+      },
       {
         "message": "RESEARCH: Q066 alpha failure-mechanism diagnosis",
         "sha": "120ad3504b514268d56032f68ebf375ef1d0712a",
@@ -124,16 +134,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "887461dc961b657938a2ca743204981dcfcb2988",
         "timestamp": "2026-09-28T04:39:12Z"
-      },
-      {
-        "message": "STATE: advance decision basis to Q066 failure diagnosis",
-        "sha": "9c091f81e82d0553727513e11123e2b29867d767",
-        "timestamp": "2026-09-28T06:39:07+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d01deff1753dd7b3c1d3f2379c8c45fb82bac650",
-        "timestamp": "2026-09-28T04:39:00Z"
       }
     ]
   },
@@ -154,10 +154,10 @@
   },
   "schema_version": "1.0",
   "scientific_state_recorded": {
-    "decision_basis_stage": "Q066_ALPHA_FAILURE_MECHANISM_DIAGNOSIS",
-    "latest_formal_status": "NO_ARM_PASSED_ALL_T052_GATES",
-    "latest_formal_trial": "T-2026-09-27-056",
-    "next_research_focus_recorded": "Q066 failure-mechanism diagnosis and exposure decomposition on Q041/Q045 fixed-alpha evidence; identify whether drawdown bottleneck is asset concentration, regime concentration, correlation, turnover or signal overlap before any tuning.",
+    "decision_basis_stage": "Q066_COMPLETED_DIAGNOSTIC_ONLY",
+    "latest_formal_status": "NO_ARM_PASSED_ALL_13_GATES",
+    "latest_formal_trial": "T-2026-09-27-065",
+    "next_research_focus_recorded": "Q067 ex-ante design of an alpha-level common-mode risk/diversification mechanism from Q066 findings; no performance evaluation until fresh coverage/PIT and parameter freeze.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -195,12 +195,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "120ad3504b514268d56032f68ebf375ef1d0712a",
+  "source_master_sha": "5b91675d78a24d709aeb5337848ca9f6876f026d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36380296903"
+    "run_id": "36380404211"
   }
 }
