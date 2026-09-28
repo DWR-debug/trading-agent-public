@@ -38,4 +38,4 @@ jobs:
       - name: Structural tests
         run: python -m pytest -q tests/test_rccsm_observational_feasibility.py tests/test_rccsm_state_topology.py
       - name: Execute Q089 observational feasibility
-        run: python automation/rccsm_observational_feasibility.py --output research/runs/rccsm_observational/q089_rccsm_observational_feasibility.json
+        run: python -m automation.rccsm_observational_feasibility --output research/runs/rccsm_observational/q089_rccsm_observational_feasibility.json
