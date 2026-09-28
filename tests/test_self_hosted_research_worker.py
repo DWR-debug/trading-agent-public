@@ -296,3 +296,13 @@ def test_continuous_qa_fails_closed_on_missing_provenance_files():
     assert "physical_memory_bytes" in text
     assert "RUNNER_ARCH" in text
     assert "if-no-files-found: error" in text
+
+
+def test_self_hosted_runner_probe_targets_trusted_label_and_master_only():
+    text = (
+        ROOT / ".github" / "workflows" / "self-hosted-runner-probe.yml"
+    ).read_text(encoding="utf-8")
+    assert "runs-on: [self-hosted, trading-agent-research]" in text
+    assert "branches: [master]" in text
+    assert "RUNNER_PROBE=SUCCESS" in text
+    assert "pull_request:" not in text
