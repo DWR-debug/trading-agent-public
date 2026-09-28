@@ -10,7 +10,7 @@ def test_cross_runner_agreement_can_pass_with_fingerprint_variance(tmp_path):
     result=compare(left,right)
     assert result["structural_cross_runner_agreement"] is True
     assert result["snapshot_fingerprint_variance"] is True
-    assert result["performance_trial_authorized"] if "performance_trial_authorized" in result else True
+    assert result["governance"]["performance_trial_authorized"] is False
 
 def test_cross_runner_selection_difference_is_not_silently_hidden(tmp_path):
     left=tmp_path/"left.json"; right=tmp_path/"right.json"
