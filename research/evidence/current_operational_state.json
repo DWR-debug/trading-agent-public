@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:12:46.651945+00:00",
+  "generated_at_utc": "2026-09-28T17:15:56.017676+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -237,6 +237,26 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: retrigger q089_coverage_pit.trigger after governance and identity fixes",
+        "sha": "c30ed8c007b17bc49e196c58766ec0ee81e626e9",
+        "timestamp": "2026-09-28T19:15:42+02:00"
+      },
+      {
+        "message": "OPS: retrigger q081r1_preflight_final.trigger after governance and identity fixes",
+        "sha": "af47a838b7cc7c868456a2ff60cca8776532bc4c",
+        "timestamp": "2026-09-28T19:15:39+02:00"
+      },
+      {
+        "message": "FIX: repair Q089 identity binding and retire legacy authorizations (#614)",
+        "sha": "8d986b07fc277edf6d5a2131ae32a6ea301d736f",
+        "timestamp": "2026-09-28T19:15:27+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d910e0f020d466824f561970488cc245e3186c9d",
+        "timestamp": "2026-09-28T17:12:46Z"
+      },
+      {
         "message": "RESEARCH: advance RCCSM-1 synthetic structural validation (#613)",
         "sha": "e2162a68bcd38d1bd006551c3cbb502a59407cd0",
         "timestamp": "2026-09-28T19:12:30+02:00"
@@ -255,26 +275,6 @@
         "message": "FIX: make self-hosted research artifacts upload reliably (#612)",
         "sha": "c1be426b9dd08427db7401621ca34a7b703a9e27",
         "timestamp": "2026-09-28T19:11:15+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "88b19789b1c6c19d8970705a9af173d01527bfe1",
-        "timestamp": "2026-09-28T17:10:37Z"
-      },
-      {
-        "message": "DOCS: make project memory the canonical new-chat start source",
-        "sha": "353d5a2c6bdaf0e357c34378df141d83d64845e3",
-        "timestamp": "2026-09-28T19:10:23+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "9e7a9560e6257052511fd3523d1ab1734fa389a4",
-        "timestamp": "2026-09-28T17:08:28Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ef0c229c8031c806ff307f8a5f8cb353bf980dda",
-        "timestamp": "2026-09-28T17:07:38Z"
       }
     ]
   },
@@ -336,12 +336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e2162a68bcd38d1bd006551c3cbb502a59407cd0",
+  "source_master_sha": "c30ed8c007b17bc49e196c58766ec0ee81e626e9",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36456505500"
+    "run_id": "36456882954"
   }
 }
