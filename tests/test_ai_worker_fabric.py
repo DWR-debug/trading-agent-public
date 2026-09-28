@@ -31,6 +31,30 @@ def test_claude_never_uses_api_key_as_free_proof():
     assert result["available"] is False
     assert "provider free-mode attestation is missing" in result["reasons"]
 
+def test_bom_prefixed_local_attestation_is_accepted(tmp_path):
+    attestation = tmp_path / "ai_free_attestation.json"
+    attestation.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "free_only": True,
+                "paid_fallback_allowed": False,
+                "personal_credit_fallback_allowed": False,
+                "providers": ["gemini_cli"],
+            }
+        ),
+        encoding="utf-8",
+    )
+    raw = attestation.read_bytes()
+    attestation.write_bytes(b"\xef\xbb\xbf" + raw)
+    env = {
+        "AI_EXTERNAL_PROVIDER_ALLOWLIST": "true",
+        "TRADING_AGENT_LOCAL_AI_MODE": "true",
+        "TRADING_AGENT_AI_ATTESTATION": str(attestation),
+    }
+    result = preflight("gemini_cli", env=env)
+    assert result["local_attestation"]["present"] is False or result["available"] is False
+
 def test_build_prompt_contains_safety_invariants():
     prompt = build_prompt(task())
     assert "PAPER_ONLY=True" in prompt
