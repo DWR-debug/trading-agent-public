@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T11:08:17.601264+00:00",
+  "generated_at_utc": "2026-09-28T11:08:34.971936+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,26 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: trigger Q079 fixed-rule performance authorization",
+        "sha": "d4235d121792e43d3acb34e26ddf9c0cfaabeee1",
+        "timestamp": "2026-09-28T13:08:32+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q079 fixed-rule performance workflow",
+        "sha": "d7de7c213bbb19091d0aa3032680a71b9cc1fc57",
+        "timestamp": "2026-09-28T13:08:25+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q079 one-shot authorization workflow",
+        "sha": "fa74aab590e3b9e542ad5ce557ee33c1ab5ea600",
+        "timestamp": "2026-09-28T13:08:22+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "aad69c434feeb791439cc169456107796fb0e3be",
+        "timestamp": "2026-09-28T11:08:17Z"
+      },
+      {
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "5d7bb6ea23bc939b2a1786efc13151ede038448e",
         "timestamp": "2026-09-28T11:08:15Z"
@@ -184,26 +204,6 @@
         "message": "RESEARCH: add network-free Q079 fixed-rule performance",
         "sha": "3065e735afd6609ef68604501a6f25e34dee3544",
         "timestamp": "2026-09-28T13:07:49+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b2a8be026bb679c4a118c77c3b5829552006ad4b",
-        "timestamp": "2026-09-28T11:06:34Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "05546c8ca964e072a9b09ff9fe50a0903eabed11",
-        "timestamp": "2026-09-28T11:06:19Z"
-      },
-      {
-        "message": "EVIDENCE: retry Q079 immutable bundle persistence",
-        "sha": "bb6c4183475ba75d14ab1071842a5656d1b722ee",
-        "timestamp": "2026-09-28T13:06:13+02:00"
-      },
-      {
-        "message": "FIX: retry Q079 persistence across master status-sync races",
-        "sha": "ba90394f7156e161847d93282a67e3356fcefed2",
-        "timestamp": "2026-09-28T13:06:04+02:00"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5d7bb6ea23bc939b2a1786efc13151ede038448e",
+  "source_master_sha": "d4235d121792e43d3acb34e26ddf9c0cfaabeee1",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36413809253"
+    "run_id": "36413850864"
   }
 }
