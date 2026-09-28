@@ -1,0 +1,49 @@
+name: Q068 Autonomous Evidence Reconciliation
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/evidence/q068_performance_result.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-q068-evidence-reconcile
+  cancel-in-progress: false
+
+jobs:
+  reconcile:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Bootstrap pinned Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal EnableExtensions
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-q068-reconcile"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-q068-reconcile.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            mkdir "%PY_ROOT%" 2>nul
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          endlocal
+
+      - name: Reconcile immutable Q068 ledger entry
+        shell: cmd
+        run: |
+          @echo off
+          "%RUNNER_TEMP%\python-3.13.15-nuget-q068-reconcile\tools\python.exe" -c "import json; from pathlib import Path; d=json.loads(Path('research/evidence/q068_performance_result.json').read_text(encoding='utf-8')); assert d['trial_id']=='T-2026-09-28-068-PERFORMANCE'; assert d['status']=='COMPLETED'; assert d['performance_evaluation'] is True; assert d['selection_used'] is False; assert d['holdout_used_for_selection'] is False; assert d['governance']['promotion_decision'] is False; assert d['governance']['automatic_promotion'] is False; assert d['safety']=={'paper_only':True,'live_trading_enabled':False,'orders_enabled':False,'automatic_promotion':False}; print('Q068 RESULT SAFE FOR LEDGER')"
+          "%RUNNER_TEMP%\python-3.13.15-nuget-q068-reconcile\tools\python.exe" - <<PY
+PY
