@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T11:34:52.511558+00:00",
+  "generated_at_utc": "2026-09-28T11:35:06.209148+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,11 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "022a788c533a797d9665f6254a2745f70a312e23",
+        "timestamp": "2026-09-28T11:34:52Z"
+      },
+      {
         "message": "CLEANUP: remove temporary Actions diagnostics (research/run_requests/ci_registry_smoke.trigger)",
         "sha": "732668715e7526e3088172ecec2be75c80b4f4ed",
         "timestamp": "2026-09-28T13:34:43+02:00"
@@ -199,11 +204,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "6739ebb86667d351fa63d06595c203d08886b8d2",
         "timestamp": "2026-09-28T11:33:42Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "499144fe21ea17571b1f7268993417cc97b788a5",
-        "timestamp": "2026-09-28T11:33:28Z"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "732668715e7526e3088172ecec2be75c80b4f4ed",
+  "source_master_sha": "022a788c533a797d9665f6254a2745f70a312e23",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36416475072"
+    "run_id": "36416482251"
   }
 }
