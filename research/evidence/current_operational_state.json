@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T16:57:03.780622+00:00",
+  "generated_at_utc": "2026-09-28T16:58:07.092313+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -228,6 +228,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: add RCCSM feasibility router and leakage guards (#608)",
+        "sha": "f45e3ca3b312231414b98621fe2e9cb0e720b79b",
+        "timestamp": "2026-09-28T18:57:52+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c7e178de3028823c4fe397ae656686084859c1c8",
+        "timestamp": "2026-09-28T16:57:03Z"
+      },
+      {
         "message": "RESEARCH: stage RCCSM regime-conditional signal mesh design (#607)",
         "sha": "e60904b3edb713d4f79412ce312790f3fffb0ce0",
         "timestamp": "2026-09-28T18:56:48+02:00"
@@ -256,16 +266,6 @@
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "0c61e21f700c03eb5179bd6bd5a44d3cebe97c16",
         "timestamp": "2026-09-28T16:47:46Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "57a737e7ca724672920e03f4a1dc59ba3d9f234c",
-        "timestamp": "2026-09-28T16:47:24Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1b1e52dd5caa76ca9363d4a43582c6148feb61d8",
-        "timestamp": "2026-09-28T16:46:44Z"
       }
     ]
   },
@@ -327,12 +327,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e60904b3edb713d4f79412ce312790f3fffb0ce0",
+  "source_master_sha": "f45e3ca3b312231414b98621fe2e9cb0e720b79b",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36454670524"
+    "run_id": "36454795451"
   }
 }
