@@ -11,6 +11,7 @@ from typing import Any
 
 from automation.q067_pipeline_state import summarize as summarize_q067_pipeline
 from automation.q068_pipeline_state import summarize as summarize_q068_pipeline
+from automation.q070_pipeline_state import summarize as summarize_q070_pipeline
 
 ROOT = Path(__file__).resolve().parents[1]
 STATUS_DOC = ROOT / "docs" / "CURRENT_STATUS.md"
@@ -110,6 +111,7 @@ def generate(
     agent_ready_issues = github_state.get("agent_ready_issues", [])
     q067_pipeline = summarize_q067_pipeline(ROOT)
     q068_pipeline = summarize_q068_pipeline(ROOT)
+    q070_pipeline = summarize_q070_pipeline(ROOT)
     recorded_qa = project_state.get("quality_assurance", {}).get(
         "last_verified_self_hosted_qa", {}
     )
@@ -175,6 +177,7 @@ def generate(
         },
         "q067_execution_pipeline": q067_pipeline,
         "q068_execution_pipeline": q068_pipeline,
+        "q070_execution_pipeline": q070_pipeline,
         "scientific_state_recorded": {
             "latest_formal_trial": project_state.get("latest_formal_trial"),
             "latest_formal_status": project_state.get("latest_trial_status"),
@@ -264,6 +267,19 @@ This is an operational pipeline summary only; it does not create scientific evid
 - Blocking reasons: **{"; ".join(q068_pipeline["blocking_reasons"]) or "none"}**.
 
 Q068 is a fresh symbol-disjoint validation of the unchanged Q067 E1/E2 mechanisms. This operational summary does not create scientific evidence or select an arm.
+
+### Q070 execution pipeline
+
+- Operational state: **{q070_pipeline["state"]}**.
+- Coverage receipt: **{q070_pipeline["coverage_receipt"]["status"] or "MISSING"}**.
+- PIT receipt: **{q070_pipeline["pit_receipt"]["status"] or "MISSING"}**.
+- Performance preregistration: **{q070_pipeline["performance_preregistration"]["status"] or "MISSING"}**.
+- Performance authorization: **{q070_pipeline["performance_authorization"]["authorized"]}**.
+- Performance evidence: **{q070_pipeline["performance_result"]["status"] or "MISSING"}**.
+- Ledger reconciled: **{q070_pipeline["ledger_reconciled"]}**.
+- Blocking reasons: **{"; ".join(q070_pipeline["blocking_reasons"]) or "none"}**.
+
+Q070 is the fresh symbol-disjoint validation pipeline for the fixed Q069 OHLCV candidate bank. This operational summary does not create scientific evidence or rank candidates.
 
 ### Resource policy
 

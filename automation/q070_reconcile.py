@@ -31,6 +31,8 @@ def reconcile(root: Path="."):
     assert auth["source_receipts"]["pit_result_fingerprint"]==pit["result_fingerprint"]
     assert result["coverage_prerequisite"]["result_fingerprint"]==coverage["result_fingerprint"]
     assert result["pit_prerequisite"]["result_fingerprint"]==pit["result_fingerprint"]
+    assert result.get("asset_freeze_fingerprint")==_fp(freeze)
+    assert prereg["asset_freeze_fingerprint"]==_fp(freeze)
     assert prereg["symbols"]==result["symbols"]==freeze["symbols"]
     assert result["selection_used"] is False and result["holdout_used_for_selection"] is False
     assert result["governance"]["promotion_decision"] is False and result["governance"]["automatic_promotion"] is False
