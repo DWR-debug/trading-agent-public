@@ -63,6 +63,17 @@ jobs:
           "%PY_EXE%" -m automation.self_hosted_research_worker --lane autonomous_frontier_qa --output-dir "research/runs/self_hosted/autonomous/%GITHUB_RUN_ID%" || exit /b 1
           endlocal
 
+      - name: Stage autonomous evidence for upload
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "WORK=%RUNNER_TEMP%\trading-agent-auto-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
+          if not exist "%GITHUB_WORKSPACE%\research\runs\self_hosted\autonomous\%GITHUB_RUN_ID%" mkdir "%GITHUB_WORKSPACE%\research\runs\self_hosted\autonomous\%GITHUB_RUN_ID%"
+          xcopy /E /I /Y "%REPO_SRC%\research\runs\self_hosted\autonomous\%GITHUB_RUN_ID%" "%GITHUB_WORKSPACE%\research\runs\self_hosted\autonomous\%GITHUB_RUN_ID%" >nul || exit /b 1
+          endlocal
+
       - name: Upload autonomous evidence
         if: always()
         uses: actions/upload-artifact@v6
