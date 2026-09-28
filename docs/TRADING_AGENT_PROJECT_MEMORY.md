@@ -220,3 +220,91 @@ Copilot Cloud Agent ist fachlich besonders geeignet für CI-/Testfehler, Regress
 Aktueller GitHub-Planstand: Cloud Agent ist nicht im Copilot Free enthalten. Paid agent budget bleibt deshalb 0 USD. Eine bereits ohne Zusatzkosten vorhandene Berechtigung darf genutzt werden.
 
 Bei jedem neuen Chat mit "trading agent" wird das Ressourcenmodell vor der Auswahl des nächsten Arbeitsschritts eingelesen.
+
+## Permanenter Multi-Model-AI-Worker-Pool — 2026-09-28
+
+Ab 2026-09-28 ist zusätzlich zum PC-/GitHub-/Python-Ressourcenmodell ein
+provider-neutraler, kostenfreier AI-Worker-Pool verbindlich vorgesehen und im
+Repository implementiert.
+
+### Zweck
+
+Die Engstelle wird nicht durch künstliche Parallelisierung derselben Berechnung,
+sondern durch zusätzliche unabhängige Denk-, Review-, Design- und Engineering-
+Kapazität erweitert.
+
+Die Ressourcenklassen sollen gleichzeitig arbeiten:
+
+Self-hosted PC-Runner + GitHub-hosted Runner + bounded GitHub Agents + Python +
+optionale externe AI-Worker.
+
+Eine freie Ressource wartet nicht auf eine andere, wenn keine echte fachliche
+Abhängigkeit besteht.
+
+### Externe AI-Worker
+
+Implementierte Schnittstelle:
+- automation/ai_worker_fabric.py
+- .github/workflows/ai-worker-fabric.yml
+- docs/AI_WORKER_FABRIC.md
+- ai_requests/
+
+Primärer opportunistischer Provider: Gemini CLI.
+Die offizielle Gemini CLI unterstützt nicht-interaktive Prompt-Ausführung und
+maschinenlesbares JSON und ist damit für automatisierte Worker geeignet.
+Die aktuelle Gemini Developer API besitzt eine Free Tier für ausgewählte Modelle,
+mit jeweils geltenden Limits.
+
+Sekundärer opportunistischer Provider: Claude CLI.
+Claude wird nur verwendet, wenn eine bereits vorhandene CLI-/Session-
+Berechtigung ausdrücklich als kostenfrei bestätigt wurde. Ein Anthropic-API-Key
+gilt niemals als Beweis für kostenlose Nutzung.
+
+### Kosten- und Sicherheitsregel
+
+Externe AI-Worker laufen fail-closed.
+
+Ein Provider darf nur starten, wenn:
+1. das externe Provider-Allowlisting ausdrücklich bestätigt wurde;
+2. das erforderliche Programm und die Authentifizierung vorhanden sind;
+3. der Provider-spezifische Free-Mode ausdrücklich bestätigt ist;
+4. der Task selbst deterministische Berechnung, Holdout-/Parameter-/Asset-
+   Auswahl, Gateänderung, Promotion, Live-Ausführung und Paid Usage verbietet.
+
+Fehlt irgendeine Voraussetzung, wird SKIPPED statt eines kostenpflichtigen
+Fallbacks erzeugt.
+
+Paid agent/API budget bleibt 0 USD.
+
+### Rollen
+
+Externe AI-Worker dürfen:
+- ungewöhnliche Alpha-Hypothesen erzeugen;
+- Gegenhypothesen und adversarial Reviews liefern;
+- Research-Designs und Testideen entwickeln;
+- Architektur-/Code-Reviews unterstützen;
+- Dokumentations- und QA-Vorschläge erzeugen.
+
+Externe AI-Worker dürfen niemals:
+- wissenschaftliche Evidenz selbst erzeugen oder behaupten;
+- Holdout- oder Kandidatenselektion entscheiden;
+- Research-Gates ändern;
+- Promotion oder Live-Trading autorisieren.
+
+Worker-Output ist immer nur Inputmaterial für die nachgelagerte deterministische
+und unabhängige Prüfung.
+
+### Persistente Parallelitätsregel
+
+Der neue AI-Worker-Workflow ist bewusst getrennt vom Self-hosted Research Loop und
+von der bestehenden bounded Agent Queue. Dadurch kann AI-Worker-Arbeit auf
+GitHub-hosted Runnern laufen, während der lokale PC-Runner sowie deterministische
+Python-/Research-Läufe unabhängig weiterarbeiten.
+
+Diese Architektur ist Bestandteil der dauerhaften Startregeln für neue Chats mit
+dem Trigger trading agent.
+
+PAPER_ONLY=True
+LIVE_TRADING_ENABLED=False
+orders_enabled=False
+automatic_promotion=False
