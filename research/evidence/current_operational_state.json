@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:37:53.480028+00:00",
+  "generated_at_utc": "2026-09-28T17:38:47.720606+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -237,6 +237,21 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: retrigger Q089 on current hardened master",
+        "sha": "3aeb7c02474ab2781e63e8af7cb57c4de0200d21",
+        "timestamp": "2026-09-28T19:38:34+02:00"
+      },
+      {
+        "message": "TEST: accept Q089 snapshot loader fixture parameter (#625)",
+        "sha": "778115214a387cf41db0f796a1120039a7c19657",
+        "timestamp": "2026-09-28T19:38:23+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "45b3c35aae4beccb18ac54c569a7e2cd2c507de2",
+        "timestamp": "2026-09-28T17:37:53Z"
+      },
+      {
         "message": "FIX: make frozen snapshot replay cross-platform (#624)",
         "sha": "8e331fa75c80dc4626d801d053fbaa8818707131",
         "timestamp": "2026-09-28T19:37:35+02:00"
@@ -260,21 +275,6 @@
         "message": "FIX: invoke RCCSM observational module from repo root (#622)",
         "sha": "1f914089b2e21809b7bd829b0fe23afe2400143f",
         "timestamp": "2026-09-28T19:35:45+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "275e26e9eec0993fd60899dd2786492254c2c8f6",
-        "timestamp": "2026-09-28T17:35:07Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a2c061362d37284c34219534673ebcbacc2c06fa",
-        "timestamp": "2026-09-28T17:34:50Z"
-      },
-      {
-        "message": "OPS: retrigger f2_quality_acceleration.trigger on fresh master",
-        "sha": "1beb2a910b1d5a0aa8902290a2c90112c01ac4cd",
-        "timestamp": "2026-09-28T19:34:39+02:00"
       }
     ]
   },
@@ -336,12 +336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8e331fa75c80dc4626d801d053fbaa8818707131",
+  "source_master_sha": "3aeb7c02474ab2781e63e8af7cb57c4de0200d21",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36459468027"
+    "run_id": "36459561830"
   }
 }
