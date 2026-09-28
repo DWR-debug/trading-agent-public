@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:05:03.003501+00:00",
+  "generated_at_utc": "2026-09-28T15:05:25.370583+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: retrigger Q084 to dispatch Q081 fallback",
+        "sha": "9dbef1176d8e5c697d54f7f3cb07972225cebb51",
+        "timestamp": "2026-09-28T17:05:22+02:00"
+      },
+      {
+        "message": "OPS: dispatch Q081 preflight via verified self-hosted Q084 path",
+        "sha": "99bf2da9e96ff97ee0bac094ff0c66dbcb735f94",
+        "timestamp": "2026-09-28T17:05:16+02:00"
+      },
+      {
+        "message": "OPS: add minimal Q081 preflight fallback",
+        "sha": "04c671364aba10b98ddbdc01638ae21d4de87fd2",
+        "timestamp": "2026-09-28T17:05:08+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "85f30670af94e28a811d4a0724164e8118a7e3a7",
+        "timestamp": "2026-09-28T15:05:03Z"
+      },
+      {
         "message": "RESEARCH: retry Q085 after Python-path correction",
         "sha": "26aaa54bea1eb29c6603fc28dc0cf58dd084b5c0",
         "timestamp": "2026-09-28T17:04:44+02:00"
@@ -175,26 +195,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "f67a1a237c286d314e90933de5b1003b94b88acd",
         "timestamp": "2026-09-28T15:03:12Z"
-      },
-      {
-        "message": "OPS: allow explicit Q081 preflight issue retries",
-        "sha": "599b374ff8c5772d61ab85dd6c633f1fb7dd1f09",
-        "timestamp": "2026-09-28T17:02:57+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3f8efa9241688508130add389f3dd1169720f2cd",
-        "timestamp": "2026-09-28T15:02:54Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "05fc57f32277bf0392eb0b30b14cb0b905674330",
-        "timestamp": "2026-09-28T15:02:41Z"
-      },
-      {
-        "message": "OPS: retrigger Q081 preflight after runner hardening",
-        "sha": "7511c18d7d3dfaf128a3a7acf95f07e95c071b5b",
-        "timestamp": "2026-09-28T17:02:23+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "26aaa54bea1eb29c6603fc28dc0cf58dd084b5c0",
+  "source_master_sha": "9dbef1176d8e5c697d54f7f3cb07972225cebb51",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36440847314"
+    "run_id": "36440901543"
   }
 }
