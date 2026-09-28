@@ -13,6 +13,7 @@ def _write_snapshot(root, symbols):
         "target_common_candles": 2,
         "snapshot_fingerprint": "snapshot-test-fp",
     }
+    root.mkdir(parents=True, exist_ok=True)
     (root / "snapshot_manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
     for symbol in symbols:
         path = root / "datasets" / symbol
