@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T21:00:38.768030+00:00",
+  "generated_at_utc": "2026-09-28T21:05:47.067918+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,6 +325,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "MERGE: add bounded local G1 parse diagnostics",
+        "sha": "18b15bdd5087269acf3a35188c4655a3b6215400",
+        "timestamp": "2026-09-28T23:05:34+02:00"
+      },
+      {
+        "message": "TEST: guard local G1 diagnostic fields",
+        "sha": "432e7e5dbc1a2e0649bfe013e077b3b7747abe43",
+        "timestamp": "2026-09-28T23:04:15+02:00"
+      },
+      {
+        "message": "DIAG: expose non-sensitive G1 settings parse state",
+        "sha": "e96b274bd0923a571433cc04c74b4cedd07f2b17",
+        "timestamp": "2026-09-28T23:04:12+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b445446b431d136f58afc1b76fe05e097545abd6",
+        "timestamp": "2026-09-28T21:00:38Z"
+      },
+      {
         "message": "MERGE: make local AI smoke BOM-compatible on Windows",
         "sha": "4d24cbcf301f5019772fba3878eed32a5e63800e",
         "timestamp": "2026-09-28T23:00:27+02:00"
@@ -343,26 +363,6 @@
         "message": "FIX: restore Constrained-Language-safe settings writer",
         "sha": "c6629797c05344a49b4bc45846910640b4747cdc",
         "timestamp": "2026-09-28T22:59:00+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "92f9ae1dd4ec24ccfe194fd88b4fdc243a32433f",
-        "timestamp": "2026-09-28T20:58:24Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "ca35ae4167a53ada1e294c4e56bffae7322fcdf9",
-        "timestamp": "2026-09-28T20:55:42Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f94f111eac98ab05b42bc8c57233af999ad6360e",
-        "timestamp": "2026-09-28T20:55:03Z"
-      },
-      {
-        "message": "MERGE: harden Antigravity free-only settings writer",
-        "sha": "67214b28661df8a0a576009a98188bf62070dc01",
-        "timestamp": "2026-09-28T22:54:48+02:00"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4d24cbcf301f5019772fba3878eed32a5e63800e",
+  "source_master_sha": "18b15bdd5087269acf3a35188c4655a3b6215400",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36483164900"
+    "run_id": "36483753949"
   }
 }
