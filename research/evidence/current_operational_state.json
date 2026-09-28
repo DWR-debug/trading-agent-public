@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:01:54.674497+00:00",
+  "generated_at_utc": "2026-09-28T15:02:12.399133+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: correct Q084 artifact name expression",
+        "sha": "9ad5f60c1e2dbc98fc87647d030f6ff9db2013de",
+        "timestamp": "2026-09-28T17:02:10+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "93e97cb7dfb5c907665d68cef5f0b9324f18a93f",
+        "timestamp": "2026-09-28T15:01:54Z"
+      },
+      {
         "message": "RESEARCH: trigger Q085 persistent coverage and PIT",
         "sha": "d0401fad5d5c33cf4e46615fdd3042be82b16c80",
         "timestamp": "2026-09-28T17:01:43+02:00"
@@ -185,16 +195,6 @@
         "message": "TEST: guard Q085 preregistration and safety",
         "sha": "16a884be6e6e1f7109bccdc5536616cf7ed5cb91",
         "timestamp": "2026-09-28T17:01:01+02:00"
-      },
-      {
-        "message": "RESEARCH: implement Q085 coverage and PIT harness",
-        "sha": "7b6aa131b4fb6b36a18a86dd39f021d3e4ca5e01",
-        "timestamp": "2026-09-28T17:00:54+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "177d01609ce0062330eaa4a8615cf9f97173609f",
-        "timestamp": "2026-09-28T15:00:48Z"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d0401fad5d5c33cf4e46615fdd3042be82b16c80",
+  "source_master_sha": "9ad5f60c1e2dbc98fc87647d030f6ff9db2013de",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36440454058"
+    "run_id": "36440461873"
   }
 }
