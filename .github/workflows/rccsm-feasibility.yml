@@ -86,7 +86,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: rccsm0-feasibility-\${{ github.run_id }}-\${{ github.run_attempt }}
+          name: rccsm0-feasibility-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             research/evidence/rccsm0_feasibility_artifact.json
           if-no-files-found: error
