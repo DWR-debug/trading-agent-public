@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:07:35.920459+00:00",
+  "generated_at_utc": "2026-09-28T15:08:26.355033+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,44 +157,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: trigger Q086 fresh disjoint coverage and PIT",
+        "sha": "8d81ac63b1efdfcd2ef237aac914d7887c1f33ff",
+        "timestamp": "2026-09-28T17:08:24+02:00"
+      },
+      {
+        "message": "RESEARCH: create Q086 successor file .github/workflows/q086-coverage-pit.yml",
+        "sha": "0d0dfbe3d6aa837fa5a0322ec6b999e2da0a9ca1",
+        "timestamp": "2026-09-28T17:08:19+02:00"
+      },
+      {
+        "message": "RESEARCH: create Q086 successor file tests/test_q086_validation.py",
+        "sha": "4029e08938a0d7054ae049bd7f47077d7590b715",
+        "timestamp": "2026-09-28T17:08:16+02:00"
+      },
+      {
+        "message": "RESEARCH: create Q086 successor file automation/q086_coverage_pit.py",
+        "sha": "4d300d03c19b450ad4b6ddb61e95d320bfcecf37",
+        "timestamp": "2026-09-28T17:08:13+02:00"
+      },
+      {
+        "message": "RESEARCH: create Q086 successor file research/preregistrations/q086_performance_2026_09_28.json",
+        "sha": "3a8c7ea1bbe0d5c746f7ca2cbc6facce473e7993",
+        "timestamp": "2026-09-28T17:08:09+02:00"
+      },
+      {
+        "message": "RESEARCH: create Q086 successor file docs/research_design/Q086-fresh-q069-validation-2026-09-28.md",
+        "sha": "3be4fcd88afa0f71de8706b87224ab55b2e96ca0",
+        "timestamp": "2026-09-28T17:08:05+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "09b3baa487b1d2c93390f18293d35bc7ea4dfcf9",
+        "timestamp": "2026-09-28T15:07:35Z"
+      },
+      {
         "message": "TEST: enforce prior-research universe exclusion globally",
         "sha": "0f1f431331ef2ae7b3507ecddb3b99ab1225152b",
         "timestamp": "2026-09-28T17:07:34+02:00"
-      },
-      {
-        "message": "FIX: enforce global prior-research symbol exclusion",
-        "sha": "b594427b211cfb9254dd0895896a1c1416d3a91e",
-        "timestamp": "2026-09-28T17:07:16+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "61737d5e9300351d580f1ae9b457508ac6cff50b",
-        "timestamp": "2026-09-28T15:06:22Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "ef4fbe640d74661909bdf5c066bfa6bffa6cef6c",
-        "timestamp": "2026-09-28T15:06:17Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5609c5d342adab881bf18bf918db7710cc1d5ea0",
-        "timestamp": "2026-09-28T15:05:38Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "07a1aa6f9800b6603a757007cc8d54674c247ee6",
-        "timestamp": "2026-09-28T15:05:25Z"
-      },
-      {
-        "message": "OPS: retrigger Q084 to dispatch Q081 fallback",
-        "sha": "9dbef1176d8e5c697d54f7f3cb07972225cebb51",
-        "timestamp": "2026-09-28T17:05:22+02:00"
-      },
-      {
-        "message": "OPS: dispatch Q081 preflight via verified self-hosted Q084 path",
-        "sha": "99bf2da9e96ff97ee0bac094ff0c66dbcb735f94",
-        "timestamp": "2026-09-28T17:05:16+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0f1f431331ef2ae7b3507ecddb3b99ab1225152b",
+  "source_master_sha": "8d81ac63b1efdfcd2ef237aac914d7887c1f33ff",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36441178079"
+    "run_id": "36441213789"
   }
 }
