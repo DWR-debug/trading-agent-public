@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:12:21.500610+00:00",
+  "generated_at_utc": "2026-09-28T15:13:51.124468+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: preregister Q081-R1 schema-corrected rerun",
+        "sha": "fcf645a3d09d7c2452b509a816d4dac0614dc4a8",
+        "timestamp": "2026-09-28T17:13:44+02:00"
+      },
+      {
+        "message": "FIX: create Q081-R1 corrected bundle fingerprint access",
+        "sha": "79041b01fe49aba1037bc236c635b77b38e3fddf",
+        "timestamp": "2026-09-28T17:13:36+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "84cdff96c8fd9ee177d2fd8d3ae710d9cb8e1b80",
+        "timestamp": "2026-09-28T15:12:21Z"
+      },
+      {
         "message": "RESEARCH: retry Q086 with extended disjoint source pool",
         "sha": "8ee42dc7c97570d0d849479b1138bf255d55c6f9",
         "timestamp": "2026-09-28T17:12:05+02:00"
@@ -180,21 +195,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "9ed949593b4ee01fa02395b4ee4691e04cf4a468",
         "timestamp": "2026-09-28T15:11:33Z"
-      },
-      {
-        "message": "FIX: extend Q086 fixed ex-ante candidate pool",
-        "sha": "d6151491f080761360bfb129499330d6874ff297",
-        "timestamp": "2026-09-28T17:11:28+02:00"
-      },
-      {
-        "message": "FIX: support fixed extended pools for fresh disjoint research",
-        "sha": "a8f04890bfd431bc4117b957124539fa6da1fcaf",
-        "timestamp": "2026-09-28T17:11:17+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f24dab2261e0671944125aa5a66db6dc94979806",
-        "timestamp": "2026-09-28T15:10:45Z"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8ee42dc7c97570d0d849479b1138bf255d55c6f9",
+  "source_master_sha": "fcf645a3d09d7c2452b509a816d4dac0614dc4a8",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36441782314"
+    "run_id": "36441968135"
   }
 }
