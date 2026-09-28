@@ -6,6 +6,7 @@ from automation.t052_cross_universe_decomposition import decompose, load_result
 
 def _result():
     false = False
+    true = True
     return {
         "trial_id": "T-2026-09-27-052",
         "status": "COMPLETED",
@@ -50,10 +51,10 @@ def test_within_universe_sleeve_pattern_is_descriptive():
     assert out["cross_sleeve"]["T-2026-09-27-050"]["shared_between_sleeves"] == ["a"]
 
 
-def test_selection_is_not_used():
+def test_selection_is_not_used(tmp_path):
     data = _result()
     data["governance"]["selection_used"] = True
-    path = Path("/tmp/t052-cross-universe-bad.json")
+    path = tmp_path / "t052-cross-universe-bad.json"
     path.write_text(json.dumps(data), encoding="utf-8")
     try:
         load_result(path)

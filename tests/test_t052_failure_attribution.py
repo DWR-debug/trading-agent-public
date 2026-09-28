@@ -53,10 +53,10 @@ def test_fixed_cell_set_and_counts():
     assert out["shared_failures_all_cells"] == ["a"]
 
 
-def test_load_result_rejects_selection():
+def test_load_result_rejects_selection(tmp_path):
     bad = _result()
     bad["governance"]["selection_used"] = True
-    path = Path("/tmp/t052-attribution-bad.json")
+    path = tmp_path / "t052-attribution-bad.json"
     path.write_text(json.dumps(bad), encoding="utf-8")
     try:
         load_result(path)
