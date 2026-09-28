@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:45:37.138665+00:00",
+  "generated_at_utc": "2026-09-28T10:48:58.297822+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,21 @@
     ],
     "recent_commits": [
       {
+        "message": "RESEARCH: add Q076 replication design",
+        "sha": "0a77e0b23afe3c9213bfa4be0650966fbb0327c3",
+        "timestamp": "2026-09-28T12:48:47+02:00"
+      },
+      {
+        "message": "RESEARCH: freeze Q076 fresh E1 E2 replication preregistration",
+        "sha": "6a3a7183b1bc2de3c67e4647f3fe834bca97986d",
+        "timestamp": "2026-09-28T12:48:45+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d877290b9dc4f1f76b9126380da1e0c088c83ae5",
+        "timestamp": "2026-09-28T10:45:37Z"
+      },
+      {
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "21c3a43079028e3bba29be7301c80f9f09cbb80f",
         "timestamp": "2026-09-28T10:45:25Z"
@@ -189,21 +204,6 @@
         "message": "OPS: retrigger Q068 after persisted contract fix",
         "sha": "07e014a5214b3fea35b3e6815642aa181625f017",
         "timestamp": "2026-09-28T12:44:34+02:00"
-      },
-      {
-        "message": "FIX: persist Q068 Git-tree source contract verifier",
-        "sha": "5534b3e0197ae94ca4f63155cba396e3116f103b",
-        "timestamp": "2026-09-28T12:44:26+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1ff78b13893d3d7c435c323a9bb733c730bfe406",
-        "timestamp": "2026-09-28T10:44:06Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1a26c9a77e0b73ebff2ee6a8872694006b986fea",
-        "timestamp": "2026-09-28T10:43:55Z"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "21c3a43079028e3bba29be7301c80f9f09cbb80f",
+  "source_master_sha": "0a77e0b23afe3c9213bfa4be0650966fbb0327c3",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36411583612"
+    "run_id": "36411913837"
   }
 }
