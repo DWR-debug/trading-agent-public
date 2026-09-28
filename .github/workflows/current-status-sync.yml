@@ -225,7 +225,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git diff-tree --no-commit-id --name-only -r "${GITHUB_SHA}" | grep -Fxq "research/run_requests/q081r1_preflight.trigger"; then
+          if git diff-tree --no-commit-id --name-only -r "${GITHUB_SHA}" | grep -Eq "^research/run_requests/q081r1_preflight(_final)?\\.trigger$"; then
             python - <<'PY'
           import json
           import os
