@@ -1,0 +1,97 @@
+name: Q077-R1 PIT Validation
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/preregistrations/q077r1_pit_2026_09_28.json"
+      - "automation/q077r1_pit.py"
+      - "research/run_requests/q077r1_pit.trigger"
+      - ".github/workflows/q077r1-pit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pit:
+    if: ${{ github.repository == 'DWR-debug/trading-agent-public' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Download immutable Q077-R1 discovery artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: q077r1-discovery-36474584151
+          repository: ${{ github.repository }}
+          run-id: 36474584151
+          path: ${{ runner.temp }}/q077r1-discovery
+
+      - name: Verify PIT preregistration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('research/preregistrations/q077r1_pit_2026_09_28.json').read_text())
+          d=json.loads(Path('${{ runner.temp }}/q077r1-discovery/discovery.json').read_text())
+          assert p["status"]=="PREREGISTERED_PIT_ONLY"
+          assert d["fingerprint"]==p["discovery_fingerprint"]
+          assert d["selected_coverage_batch"]==p["symbols"]
+          assert d["selected_common_count"]>=3500
+          print("Q077R1 PIT PREREG OK")
+          PY
+
+      - name: Build frozen PIT snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from datetime import date
+          from pathlib import Path
+          from data.canonical_snapshot import SnapshotSpec, build_frozen_snapshot
+          p=json.loads(Path("research/preregistrations/q077r1_pit_2026_09_28.json").read_text())
+          out=Path('research/runs/q077r1_pit/T-2026-09-28-077R1-PIT')
+          r=build_frozen_snapshot(SnapshotSpec(universe='validation_2026_09_28_q077r1_pit',symbols=tuple(p['symbols']),interval='1d',requested_candles=5000,target_common_candles=3500,raw_fetch_candles=5000,study_start=date(2011,1,1),study_end=date(2025,9,24),output_dir=out))
+          assert r['status']=='COVERAGE_PASSED'
+          print('Q077R1 SNAPSHOT READY',r['data_snapshot']['snapshot_fingerprint'] if 'data_snapshot' in r else 'ok')
+          PY
+
+      - name: Run PIT mutation tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python automation/q077r1_pit.py --snapshot-root research/runs/q077r1_pit/T-2026-09-28-077R1-PIT --symbols-json <(python -c 'import json; print(json.dumps(json.load(open("research/preregistrations/q077r1_pit_2026_09_28.json"))["symbols"]))' ) --result research/evidence/q077r1_pit_result.json
+
+      - name: Validate PIT safety
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('research/evidence/q077r1_pit_result.json').read_text())
+          assert d["status"]=="PIT_PASSED" and d["performance_evaluation"] is False and d["holdout_evaluation"] is False
+          assert d["selection_used"] is False and d["performance_trial_authorized"] is False
+          assert d["future_mutation_checks_passed"] is True and d["next_session_mutation_checks_passed"] is True
+          print('Q077R1 PIT CONTRACT OK',d['result_fingerprint'])
+          PY
+
+      - name: Upload PIT evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q077r1-pit-${{ github.run_id }}
+          path: |
+            research/evidence/q077r1_pit_result.json
+            research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/
+          if-no-files-found: error
+          retention-days: 30
