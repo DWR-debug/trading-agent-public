@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T11:31:14.959490+00:00",
+  "generated_at_utc": "2026-09-28T11:31:54.446374+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,21 @@
     ],
     "recent_commits": [
       {
+        "message": "INFRA: add owner-gated CI recovered smoke trigger",
+        "sha": "12f5b712b991ca1c05bf0c2f834b8008ed449fd8",
+        "timestamp": "2026-09-28T13:31:51+02:00"
+      },
+      {
+        "message": "INFRA: rebuild CI workflow registration on fresh path",
+        "sha": "38db266b0e0138a8b6365e7d36732505faa47ff4",
+        "timestamp": "2026-09-28T13:31:35+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9a7046dba0ac66f61494f63af6a25459f80bbab6",
+        "timestamp": "2026-09-28T11:31:15Z"
+      },
+      {
         "message": "OPS: add one-shot Actions registry smoke workflow",
         "sha": "c23e3a08443a6a320918563b3064fc1b172909cb",
         "timestamp": "2026-09-28T13:30:59+02:00"
@@ -189,21 +204,6 @@
         "message": "OPS: add explicit Q070 self-hosted advance trigger",
         "sha": "ebf3911422a84cb6e3883beafa34274983c9998b",
         "timestamp": "2026-09-28T13:29:56+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "4455adb9ad235ae4507f188dd36dcb35bf0435af",
-        "timestamp": "2026-09-28T11:27:12Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "22f8ce5a05db5425106ce4f32fb3e358e39817af",
-        "timestamp": "2026-09-28T11:25:24Z"
-      },
-      {
-        "message": "FIX: repair malformed T052 workflow YAML receipt step",
-        "sha": "6ec76288d80f25d8d41f3ab9eaf5db4995b99a8f",
-        "timestamp": "2026-09-28T13:25:09+02:00"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c23e3a08443a6a320918563b3064fc1b172909cb",
+  "source_master_sha": "12f5b712b991ca1c05bf0c2f834b8008ed449fd8",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36416121374"
+    "run_id": "36416162574"
   }
 }
