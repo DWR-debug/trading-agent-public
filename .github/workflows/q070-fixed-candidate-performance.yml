@@ -98,3 +98,14 @@ jobs:
           echo Q070_RUNNER=%RUNNER_NAME%
           echo Q070_SHA=%GITHUB_SHA%
           echo Q070_RUN_ID=%GITHUB_RUN_ID%
+
+
+      - name: Q070_DISPATCH_RECONCILE
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: cmd
+        run: |
+          @echo off
+          set "DISPATCH_URL=https://api.github.com/repos/%GITHUB_REPOSITORY%/actions/workflows/q070-evidence-reconcile.yml/dispatches"
+          "%PY_EXE%" -c "import json,os,urllib.request; u=os.environ['DISPATCH_URL']; req=urllib.request.Request(u,data=json.dumps({'ref':'master'}).encode('utf-8'),method='POST',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json'}); urllib.request.urlopen(req,timeout=30).read(); print('Q070_DISPATCH_RECONCILE OK')" || exit /b 1
