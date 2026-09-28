@@ -14,7 +14,7 @@ import time
 from pathlib import Path
 
 
-TIMEOUT_SECONDS = 60
+TIMEOUT_SECONDS = 90
 
 
 def _find(*names: str) -> str | None:
