@@ -37,6 +37,18 @@ jobs:
       - name: Install dependencies
         run: python -m pip install --disable-pip-version-check pandas pytest
 
+      - name: Enforce permanent Q079 supersession block
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          b=json.loads(Path("research/authorizations/q079_permanent_block_2026_09_28.json").read_text())
+          assert b["trial_id"] == "T-2026-09-28-079-PERFORMANCE"
+          assert b["status"] == "SUPERSEDED_BY_Q081"
+          assert b["performance_execution_permanently_blocked"] is True
+          raise SystemExit("Q079 permanently blocked: execute Q081 instead")
+          PY
+
       - name: Authorization, source, safety and network-free gate
         run: |
           python - <<'PY'
