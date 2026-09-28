@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:59:11.214295+00:00",
+  "generated_at_utc": "2026-09-28T19:59:27.895021+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,6 +325,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "aee91a3e1afcaa04576f2d3531f5b38ae1b26809",
+        "timestamp": "2026-09-28T19:59:11Z"
+      },
+      {
         "message": "OPS: make Gemini worker inherit persistent Antigravity CLI bootstrap",
         "sha": "45b081b474e4cb3e1243d8ea91359c755b99c72a",
         "timestamp": "2026-09-28T21:58:55+02:00"
@@ -358,11 +363,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "64e6590e365d6a516bf6d2f803624a2bad45c47f",
         "timestamp": "2026-09-28T19:54:10Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "bffdf86d660cd405922ed2f1e37e1b44f0082bbf",
-        "timestamp": "2026-09-28T19:54:08Z"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "45b081b474e4cb3e1243d8ea91359c755b99c72a",
+  "source_master_sha": "aee91a3e1afcaa04576f2d3531f5b38ae1b26809",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36475974105"
+    "run_id": "36475976453"
   }
 }
