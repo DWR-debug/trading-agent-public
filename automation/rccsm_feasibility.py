@@ -109,10 +109,7 @@ def route_mechanism(
     *,
     state_id: str = "STATE-UNSPECIFIED",
 ) -> dict[str, Any]:
-    """Route one frozen mechanism from one explicitly supplied state.
-
-    The output is deliberately limited to structural routing and provenance.
-    """
+    """Route one frozen mechanism from one explicitly supplied state."""
     if mechanism_id not in MECHANISM_RULES:
         raise ValueError(f"unknown mechanism_id: {mechanism_id}")
     state_values = _validate_state(state)
@@ -144,8 +141,7 @@ def route_mesh(
 ) -> tuple[dict[str, Any], ...]:
     """Route the complete frozen mechanism registry in canonical order."""
     return tuple(
-        route_mechanism(mechanism_id, state, state_id=state_id)["provenance_fingerprint"]
-        and route_mechanism(mechanism_id, state, state_id=state_id)
+        route_mechanism(mechanism_id, state, state_id=state_id)
         for mechanism_id in sorted(MECHANISM_RULES)
     )
 
