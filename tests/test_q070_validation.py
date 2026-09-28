@@ -26,3 +26,18 @@ def test_q070_design_has_no_performance_selection():
     assert '"selection_used": false' in p
     assert '"holdout_used_for_selection": false' in p
     assert '"automatic_promotion": false' in p
+
+
+def test_q070_workflow_chain_uses_explicit_workflow_dispatch():
+    for path in (
+        ".github/workflows/q070-coverage-pit.yml",
+        ".github/workflows/q070-autonomous-advance.yml",
+        ".github/workflows/q070-fixed-candidate-performance.yml",
+        ".github/workflows/q070-evidence-reconcile.yml",
+    ):
+        text = Path(path).read_text(encoding="utf-8")
+        assert "workflow_dispatch:" in text
+        assert "actions: write" in text
+        assert "DISPATCH_" in text
+        assert "https://api.github.com/repos/%GITHUB_REPOSITORY%/actions/workflows/" in text
+        assert "github.token" in text
