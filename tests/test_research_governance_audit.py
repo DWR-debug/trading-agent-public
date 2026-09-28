@@ -30,7 +30,25 @@ def _receipt(trial_id: str, status: str, fp_key: str, fp: str, **extra: str) -> 
     }
 
 
+def _registry(root: Path) -> None:
+    _write(root, "research/governance/active_research_registry.json", {
+        "schema_version": 1,
+        "policy": {
+            "only_listed_performance_trials_may_be_authorized": True,
+        },
+        "active_trials": [{
+            "code": "089",
+            "trial_id": "T-2026-09-28-089-PERFORMANCE",
+            "class": "fresh_validation",
+            "state": "PREREGISTERED_WAITING_PREFLIGHT",
+            "performance_authorization_allowed": False,
+            "preregistration_path": "research/preregistrations/q089_performance_2026_09_28.json",
+        }],
+    })
+
+
 def _prereg(root: Path, *, foreign: bool = False) -> None:
+    _registry(root)
     _write(root, "research/evidence/coverage.json", _receipt(
         "T-2026-09-28-089-COVERAGE", "COVERAGE_PASSED",
         "result_fingerprint", "coverage-fp", snapshot_fingerprint="snapshot-fp",
@@ -95,7 +113,10 @@ def _prereg(root: Path, *, foreign: bool = False) -> None:
             "result_fingerprint", "old-coverage", snapshot_fingerprint="snapshot-fp",
         ))
 
-    identity["prior_trial_id"] = "T-2026-09-28-079-PERFORMANCE" if foreign else None
+    if foreign:
+        payload_prior = "T-2026-09-28-079-PERFORMANCE"
+    else:
+        payload_prior = None
     payload = {
         "schema_version": "1.0",
         "trial_id": "T-2026-09-28-089-PERFORMANCE",
@@ -103,6 +124,7 @@ def _prereg(root: Path, *, foreign: bool = False) -> None:
         "governance_contract_version": 2,
         "identity_contract": identity,
         "data_contract": data_contract,
+        "prior_trial_id": payload_prior,
         "safety": _safety(),
     }
     _write(root, "research/preregistrations/q089_performance_2026_09_28.json", payload)
