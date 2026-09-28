@@ -177,7 +177,6 @@ jobs:
           set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-ai-smoke\tools\python.exe"
           cd /d "%REPO_SRC%" || exit /b 1
           set "PYTHONPATH=%REPO_SRC%"
-          "%PY_EXE%" -m automation.prepare_antigravity_headless || exit /b 1
           "%PY_EXE%" -m automation.local_ai_smoke > "%RUNNER_TEMP%\local-ai-smoke.json"
           type "%RUNNER_TEMP%\local-ai-smoke.json"
           if errorlevel 1 exit /b 1
