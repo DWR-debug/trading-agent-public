@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:11:30.611727+00:00",
+  "generated_at_utc": "2026-09-28T17:12:46.651945+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -237,6 +237,21 @@
     ],
     "recent_commits": [
       {
+        "message": "RESEARCH: advance RCCSM-1 synthetic structural validation (#613)",
+        "sha": "e2162a68bcd38d1bd006551c3cbb502a59407cd0",
+        "timestamp": "2026-09-28T19:12:30+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "d368a37a5c7f7c173db59907f9aef14a62b3bfeb",
+        "timestamp": "2026-09-28T17:12:18Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "57b96525696c1370fd7006eb4f89677247f038c6",
+        "timestamp": "2026-09-28T17:11:30Z"
+      },
+      {
         "message": "FIX: make self-hosted research artifacts upload reliably (#612)",
         "sha": "c1be426b9dd08427db7401621ca34a7b703a9e27",
         "timestamp": "2026-09-28T19:11:15+02:00"
@@ -260,21 +275,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "ef0c229c8031c806ff307f8a5f8cb353bf980dda",
         "timestamp": "2026-09-28T17:07:38Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "dfb7a34c48e599f2441601f6adcfc494e0dcd3f6",
-        "timestamp": "2026-09-28T17:07:20Z"
-      },
-      {
-        "message": "DOCS: record permanent PC queue mechanism",
-        "sha": "3a0563ef09775bdc2224eb4ceb294f65ecb5f624",
-        "timestamp": "2026-09-28T19:07:01+02:00"
-      },
-      {
-        "message": "OPS: keep self-hosted PC continuously supplied with bounded research (#611)",
-        "sha": "25a8136ae69da17b57641d261fdae4acef0f23f7",
-        "timestamp": "2026-09-28T19:06:53+02:00"
       }
     ]
   },
@@ -336,12 +336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c1be426b9dd08427db7401621ca34a7b703a9e27",
+  "source_master_sha": "e2162a68bcd38d1bd006551c3cbb502a59407cd0",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36456360099"
+    "run_id": "36456505500"
   }
 }
