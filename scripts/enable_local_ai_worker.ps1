@@ -13,6 +13,7 @@ $claude = Get-Command claude -ErrorAction SilentlyContinue
 if (-not $agy -and -not $gemini) { throw "No Antigravity/Gemini CLI found in this Windows user's PATH." }
 if (-not $claude) { Write-Warning "Claude CLI is not installed; Claude lane will remain skipped." }
 
+# Local worker bootstrap: free-only, no paid or personal-credit fallback.
 # Never allow Antigravity personal G1 credit fallback for project work.
 $settingsPath = Join-Path $HOME ".gemini\antigravity-cli\settings.json"
 New-Item -ItemType Directory -Force -Path (Split-Path $settingsPath) | Out-Null
