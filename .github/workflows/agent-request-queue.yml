@@ -7,8 +7,8 @@ on:
       - "agent_requests/**"
   issue_comment:
     types: [created]
-  schedule:
-    - cron: "*/10 * * * *"
+  # Automatic Copilot scheduling is intentionally disabled while the monthly
+  # Copilot quota is exhausted. Use workflow_dispatch only after quota recovery.
   workflow_dispatch:
 
 concurrency:
