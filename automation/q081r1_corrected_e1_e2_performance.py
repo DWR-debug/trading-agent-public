@@ -31,7 +31,7 @@ from automation.q067_alpha_mechanisms import (
 from config import settings
 from execution.cost_contract import validate_research_cost_compatibility
 
-TRIAL_ID = "T-2026-09-28-081-PERFORMANCE"
+TRIAL_ID = "T-2026-09-28-081R1-PERFORMANCE"
 Q079_TRIAL_ID = "T-2026-09-28-079-PERFORMANCE"
 Q079_COVERAGE_TRIAL_ID = "T-2026-09-28-079-COVERAGE"
 Q079_PIT_TRIAL_ID = "T-2026-09-28-079-PIT"

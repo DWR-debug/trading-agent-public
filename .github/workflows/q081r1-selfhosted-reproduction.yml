@@ -4,7 +4,7 @@ on:
   push:
     branches: [master]
     paths:
-      - "research/run_requests/q081_selfhosted_reproduction.trigger"
+      - "research/run_requests/q081r1_selfhosted_reproduction.trigger"
   workflow_dispatch:
 
 permissions:
@@ -48,7 +48,7 @@ jobs:
         run: |
           @echo off
           set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q081-repro\tools\python.exe"
-          "%PY_EXE%" -c "import hashlib,json; from pathlib import Path; from config import settings; p=json.loads(Path('research/preregistrations/q081r1_performance_2026_09_28.json').read_text(encoding='utf-8')); a=json.loads(Path('research/authorizations/q081r1_performance_2026_09_28.json').read_text(encoding='utf-8')); assert p['trial_id']=='T-2026-09-28-081-PERFORMANCE' and a['authorized'] is True and a['performance_execution_authorized'] is True and a['execution_scope']=='Q081R1_FIXED_RULE_PERFORMANCE_ONLY'; expected=p['source_contract']; actual={path:hashlib.sha1(('blob '+str(len(Path(path).read_bytes()))).encode()+bytes([0])+Path(path).read_bytes()).hexdigest() for path in expected}; assert actual==expected; assert settings.PAPER_ONLY is True and settings.LIVE_TRADING_ENABLED is False and settings.ORDERS_ENABLED is False and settings.AUTOMATIC_PROMOTION is False; print('Q081R1 AUTH/BLOB-SOURCE/SAFETY OK')"
+          "%PY_EXE%" -c "import hashlib,json; from pathlib import Path; from config import settings; p=json.loads(Path('research/preregistrations/q081r1_performance_2026_09_28.json').read_text(encoding='utf-8')); a=json.loads(Path('research/authorizations/q081r1_performance_2026_09_28.json').read_text(encoding='utf-8')); assert p['trial_id']=='T-2026-09-28-081R1-PERFORMANCE' and a['authorized'] is True and a['performance_execution_authorized'] is True and a['execution_scope']=='Q081R1_FIXED_RULE_PERFORMANCE_ONLY'; expected=p['source_contract']; actual={path:hashlib.sha1(('blob '+str(len(Path(path).read_bytes()))).encode()+bytes([0])+Path(path).read_bytes()).hexdigest() for path in expected}; assert actual==expected; assert settings.PAPER_ONLY is True and settings.LIVE_TRADING_ENABLED is False and settings.ORDERS_ENABLED is False and settings.AUTOMATIC_PROMOTION is False; print('Q081R1 AUTH/BLOB-SOURCE/SAFETY OK')"
 
       - name: Verify frozen Q079 prerequisites
         shell: cmd
@@ -64,7 +64,7 @@ jobs:
         run: |
           @echo off
           set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q081-repro\tools\python.exe"
-          "%PY_EXE%" -m automation.q081_corrected_e1_e2_performance --preregistration research/preregistrations/q081r1_performance_2026_09_28.json --repo-root . --output research/runs/self_hosted/q081r1_reproduction_%GITHUB_RUN_ID%/q081_performance_result.json
+          "%PY_EXE%" -m automation.q081r1_corrected_e1_e2_performance --preregistration research/preregistrations/q081r1_performance_2026_09_28.json --repo-root . --output research/runs/self_hosted/q081r1_reproduction_%GITHUB_RUN_ID%/q081r1_performance_result.json
 
       - name: Validate non-formal reproduction
         shell: cmd
