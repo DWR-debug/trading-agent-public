@@ -38,8 +38,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: self-hosted-capacity-arm-\${{ github.run_id }}-\${{ github.run_attempt }}
-          path: \${{ runner.temp }}\self-hosted-capacity.json
+          name: self-hosted-capacity-arm-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}\self-hosted-capacity.json
           if-no-files-found: warn
           retention-days: 14
 
@@ -59,7 +59,7 @@ jobs:
         run: |
           @echo off
           if /I not "%GITHUB_REPOSITORY%"=="DWR-debug/trading-agent-public" exit /b 1
-          echo CAPACITY_PROBE_SLOT=\${{ matrix.slot }}
+          echo CAPACITY_PROBE_SLOT=${{ matrix.slot }}
           echo RUNNER_NAME=%RUNNER_NAME%
           echo RUNNER_OS=%RUNNER_OS%
           echo RUNNER_ARCH=%RUNNER_ARCH%
