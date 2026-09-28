@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:16:21.724158+00:00",
+  "generated_at_utc": "2026-09-28T15:16:38.165224+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d6efff88f1eca467a41e949221fac516c4f61804",
+        "timestamp": "2026-09-28T15:16:21Z"
+      },
+      {
         "message": "RESEARCH: retry Q086 after discovery executor fix",
         "sha": "ee18f1cdea21bf9eddff465bd6867a30eaf980a7",
         "timestamp": "2026-09-28T17:16:10+02:00"
@@ -190,11 +195,6 @@
         "message": "OPS: bridge Q081-R1 self-hosted performance dispatch",
         "sha": "9a50963f081e7b991651d39fd9a4b57fe9961701",
         "timestamp": "2026-09-28T17:15:10+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "f462e0169469e514456f0d5f161c9360aa3c9b10",
-        "timestamp": "2026-09-28T15:15:02Z"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ee18f1cdea21bf9eddff465bd6867a30eaf980a7",
+  "source_master_sha": "d6efff88f1eca467a41e949221fac516c4f61804",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36442283597"
+    "run_id": "36442296705"
   }
 }
