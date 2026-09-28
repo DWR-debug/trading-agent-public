@@ -40,6 +40,7 @@ def _preflight(root):
     if tuple(assets)!=symbols or any(len(assets[s])!=N for s in symbols): raise RuntimeError("Q070 snapshot geometry mismatch")
     if freeze.get("snapshot_fingerprint")!=coverage.get("snapshot_fingerprint"): raise RuntimeError("Q070 snapshot fingerprint mismatch")
     if prereg.get("source_discovery_fingerprint")!=freeze.get("source_discovery_fingerprint"): raise RuntimeError("Q070 discovery fingerprint mismatch")
+    if prereg.get("asset_freeze_fingerprint")!=_fp(freeze): raise RuntimeError("Q070 asset-freeze fingerprint mismatch")
     return assets,symbols,coverage,pit,freeze,prereg
 
 def _adjclose(symbol,start,end):
