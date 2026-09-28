@@ -87,13 +87,28 @@ jobs:
           mkdir -p "$state_dir"
           state_file="$state_dir/${{ matrix.task }}__${{ matrix.provider }}.json"
           output="$RUNNER_TEMP/ai-worker-output/${{ matrix.task }}-${{ matrix.provider }}.json"
-          if [ -f "$output" ]; then cp "$output" "$state_file"; else echo '{"schema_version":1,"task_id":"${{ matrix.task }}","provider":"${{ matrix.provider }}","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' > "$state_file"; fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add "$state_file"
-          git diff --cached --quiet && exit 0
-          git commit -m 'OPS: record AI worker state [skip ai-worker]'
-          git push origin HEAD:master
+          if [ -f "$output" ]; then
+            cp "$output" "$state_file"
+          else
+            printf '%s\n' '{"schema_version":1,"task_id":"${{ matrix.task }}","provider":"${{ matrix.provider }}","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' > "$state_file"
+          fi
+          payload="$(base64 -w 0 "$state_file")"
+          for attempt in 1 2 3 4 5; do
+            current_sha=""
+            current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/contents/${state_file}?ref=master" --jq '.sha' 2>/dev/null || true)"
+            if [ -n "$current_sha" ]; then
+              if gh api --method PUT "/repos/$GITHUB_REPOSITORY/contents/${state_file}" -f message='OPS: record AI worker state' -f content="$payload" -f branch='master' -f sha="$current_sha" >/dev/null; then
+                exit 0
+              fi
+            else
+              if gh api --method PUT "/repos/$GITHUB_REPOSITORY/contents/${state_file}" -f message='OPS: record AI worker state' -f content="$payload" -f branch='master' >/dev/null; then
+                exit 0
+              fi
+            fi
+            sleep 2
+          done
+          echo 'Unable to publish operational AI-worker state after retries.' >&2
+          exit 1
 
       - name: Upload AI worker output
         if: always()
