@@ -158,3 +158,17 @@ def test_q068_self_hosted_evidence_persistence_uses_checkout_path_without_local_
         assert "git add " not in text
         assert "git push " not in text
         assert "for /f %%H in" not in text
+
+
+def test_q068_workflow_chain_uses_explicit_workflow_dispatch():
+    for path in (
+        ".github/workflows/q068-autonomous-advance.yml",
+        ".github/workflows/q068-fixed-mechanism-performance.yml",
+        ".github/workflows/q068-evidence-reconcile.yml",
+    ):
+        text = Path(path).read_text(encoding="utf-8")
+        assert "workflow_dispatch:" in text
+        assert "actions: write" in text
+        assert "DISPATCH_" in text
+        assert "https://api.github.com/repos/%GITHUB_REPOSITORY%/actions/workflows/" in text
+        assert "github.token" in text
