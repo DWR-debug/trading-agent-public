@@ -1,6 +1,6 @@
 """Q068 fixed-rule performance evaluation for E1 and E2.
 
-Execution is allowed only after the immutable Q067 coverage and PIT receipts pass.
+Execution is allowed only after the immutable Q068 coverage and PIT receipts pass.
 The three arms are evaluated symmetrically: unmodified six-sleeve ensemble,
 E1 alpha common-mode throttle, and E2 turnover hysteresis.
 
@@ -20,9 +20,9 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from automation.q068_alpha_mechanisms import (
-    Q068_SLEEVES,
-    Q068_SYMBOLS,
+from automation.q067_alpha_mechanisms import (
+    Q067_SLEEVES,
+    Q067_SYMBOLS,
     RETURN_COUNT,
     apply_common_mode_throttle,
     apply_turnover_hysteresis,
@@ -35,6 +35,8 @@ from automation.q068_alpha_mechanisms import (
 from config import settings
 from data.canonical_snapshot import load_frozen_snapshot
 from execution.cost_contract import validate_research_cost_compatibility
+
+Q068_SLEEVES = Q067_SLEEVES
 
 TRIAL_ID = "T-2026-09-28-068-PERFORMANCE"
 COVERAGE_TRIAL_ID = "T-2026-09-28-068-COVERAGE"
@@ -79,22 +81,22 @@ def _assert_preflight(repo_root: Path) -> tuple[dict[str, tuple], dict, dict]:
     pit_result = _load_json(repo_root / "research/evidence/q068_pit_result.json")
 
     if coverage_result.get("trial_id") != COVERAGE_TRIAL_ID:
-        raise RuntimeError("Q067 coverage trial identity mismatch")
+        raise RuntimeError("Q068 coverage trial identity mismatch")
     if coverage_result.get("status") != "COVERAGE_PASSED":
-        raise RuntimeError("Q067 coverage prerequisite did not pass")
+        raise RuntimeError("Q068 coverage prerequisite did not pass")
     if coverage_result.get("performance_trial_authorized") is not False:
-        raise RuntimeError("Q067 coverage receipt unexpectedly authorizes performance")
+        raise RuntimeError("Q068 coverage receipt unexpectedly authorizes performance")
     if coverage_result.get("selection_used") is not False:
-        raise RuntimeError("Q067 coverage receipt indicates selection")
+        raise RuntimeError("Q068 coverage receipt indicates selection")
 
     if pit_result.get("trial_id") != PIT_TRIAL_ID:
-        raise RuntimeError("Q067 PIT trial identity mismatch")
+        raise RuntimeError("Q068 PIT trial identity mismatch")
     if pit_result.get("status") != "PIT_PASSED":
-        raise RuntimeError("Q067 PIT prerequisite did not pass")
+        raise RuntimeError("Q068 PIT prerequisite did not pass")
     if pit_result.get("performance_trial_authorized") is not False:
-        raise RuntimeError("Q067 PIT receipt unexpectedly authorizes performance")
+        raise RuntimeError("Q068 PIT receipt unexpectedly authorizes performance")
     if pit_result.get("selection_used") is not False:
-        raise RuntimeError("Q067 PIT receipt indicates selection")
+        raise RuntimeError("Q068 PIT receipt indicates selection")
 
     coverage_root = repo_root / "research/runs/q068_coverage" / COVERAGE_TRIAL_ID
     assets = load_frozen_snapshot(coverage_root / "snapshot_manifest.json")
@@ -359,11 +361,22 @@ def run(preregistration: Path, repo_root: Path, output: Path) -> dict:
     validate_research_cost_compatibility(fee_rate=FEE, slippage_rate=SLIPPAGE)
     assets, coverage_result, pit_result = _assert_preflight(repo_root)
 
-    sleeves = build_alpha_sleeves(assets)
-    aggregate = equal_weight_ensemble(sleeves)
-    sleeve_returns = sleeve_period_returns(assets, sleeves)
-    e1 = apply_common_mode_throttle(aggregate, sleeve_returns)
-    e2 = apply_turnover_hysteresis(aggregate)
+    sleeves = build_alpha_sleeves(assets, symbols=Q068_SYMBOLS)
+    aggregate = equal_weight_ensemble(sleeves, symbols=Q068_SYMBOLS)
+    sleeve_returns = sleeve_period_returns(
+        assets,
+        sleeves,
+        symbols=Q068_SYMBOLS,
+    )
+    e1 = apply_common_mode_throttle(
+        aggregate,
+        sleeve_returns,
+        symbols=Q068_SYMBOLS,
+    )
+    e2 = apply_turnover_hysteresis(
+        aggregate,
+        symbols=Q068_SYMBOLS,
+    )
 
     adjusted = {
         symbol: _adjclose(symbol, assets[symbol][0].timestamp, assets[symbol][-1].timestamp)
@@ -377,7 +390,7 @@ def run(preregistration: Path, repo_root: Path, output: Path) -> dict:
     }
 
     for name, weights in arms.items():
-        validate_gross_exposure_cap(weights)
+        validate_gross_exposure_cap(weights, symbols=Q068_SYMBOLS)
 
     reports = {name: _evaluate(assets, weights, adjusted) for name, weights in arms.items()}
     result = {
