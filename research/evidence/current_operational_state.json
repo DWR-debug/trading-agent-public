@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:30:11.251819+00:00",
+  "generated_at_utc": "2026-09-28T17:31:51.405578+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -237,6 +237,16 @@
     ],
     "recent_commits": [
       {
+        "message": "RESEARCH: add RCCSM observational feasibility on fresh Q089 snapshot (#620)",
+        "sha": "649a0d27d792a83805724a778e7aa8f00690c749",
+        "timestamp": "2026-09-28T19:31:35+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ddd57f6a07b24ba27256b2101bab6656fb5a5348",
+        "timestamp": "2026-09-28T17:30:11Z"
+      },
+      {
         "message": "OPS: advance paper-forward MTM state",
         "sha": "e28999dc7d17ea9631fd3b45fcc0c90147d7bb0e",
         "timestamp": "2026-09-28T17:29:52Z"
@@ -265,16 +275,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "8bd6b8c39fe736817fa553793243af34fe8e89ce",
         "timestamp": "2026-09-28T17:27:07Z"
-      },
-      {
-        "message": "TEST: make retired authorization audit fixture complete (#617)",
-        "sha": "fef7ba45927b48e3c827b2dba6cc398a51c7c2e7",
-        "timestamp": "2026-09-28T19:26:49+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c776fbc13e23b04e915c1707c59e0c7009094b85",
-        "timestamp": "2026-09-28T17:26:05Z"
       }
     ]
   },
@@ -336,12 +336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e28999dc7d17ea9631fd3b45fcc0c90147d7bb0e",
+  "source_master_sha": "649a0d27d792a83805724a778e7aa8f00690c749",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36458475514"
+    "run_id": "36458752243"
   }
 }
