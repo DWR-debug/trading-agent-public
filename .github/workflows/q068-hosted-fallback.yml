@@ -77,33 +77,44 @@ jobs:
           print("Q068 HOSTED FALLBACK PREREQUISITES OK")
           PY
 
-      - name: Run exact frozen Q068 performance locally
+      - name: Publish Q068 performance evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          python -m automation.q068_performance             --preregistration research/preregistrations/q068_performance_2026_09_28.json             --repo-root .             --output research/evidence/q068_performance_result.json
-
-      - name: Validate exact Q068 performance result
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          d=json.loads(Path("research/evidence/q068_performance_result.json").read_text())
-          assert d["trial_id"]=="T-2026-09-28-068-PERFORMANCE"
-          assert d["status"]=="COMPLETED"
-          assert d["performance_evaluation"] is True
-          assert d["oos_evaluation"] is True
-          assert d["holdout_evaluation"] is True
-          assert d["selection_used"] is False
-          assert d["holdout_used_for_selection"] is False
-          assert d["governance"]["promotion_decision"] is False
-          assert d["governance"]["automatic_promotion"] is False
-          assert set(d["arms"])=={"CONTROL_6SLEEVE_ENSEMBLE","E1_ALPHA_COMMON_MODE_THROTTLE","E2_TURNOVER_HYSTERESIS"}
-          assert all(0 <= arm["gates_passed"] <= 13 for arm in d["arms"].values())
-          print("Q068 HOSTED PERFORMANCE RESULT OK")
-          [print(k, f"{v['gates_passed']}/{v['gates_total']}") for k,v in d["arms"].items()]
-          print("REPORT_FINGERPRINT", d["report_fingerprint"])
+          BASE_SHA="$(python - <<'PY'
+          import json, os, urllib.request
+          u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/git/ref/heads/master"
+          req=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"})
+          print(json.load(urllib.request.urlopen(req,timeout=30))["object"]["sha"])
           PY
+          )"
+          test -n "$BASE_SHA"
+          PUBLISH_MESSAGE="EVIDENCE: record Q068 hosted deterministic performance"
+          export PUBLISH_MESSAGE
+          python automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$BASE_SHA"             --file research/evidence/q068_performance_result.json=research/evidence/q068_performance_result.json
+
+      - name: Reconcile Q068 ledger locally
+        run: |
+          set -euo pipefail
+          python -m automation.q068_reconcile --repo-root .
+
+      - name: Publish Q068 ledger reconciliation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          BASE_SHA="$(python - <<'PY'
+          import json, os, urllib.request
+          u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/git/ref/heads/master"
+          req=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"})
+          print(json.load(urllib.request.urlopen(req,timeout=30))["object"]["sha"])
+          PY
+          )"
+          test -n "$BASE_SHA"
+          PUBLISH_MESSAGE="EVIDENCE: reconcile Q068 hosted deterministic performance"
+          export PUBLISH_MESSAGE
+          python automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$BASE_SHA"             --file research/evidence/trial_ledger.json=research/evidence/trial_ledger.json
 
       - name: Build and publish one-shot authorization
         env:
@@ -157,44 +168,34 @@ jobs:
           export PUBLISH_MESSAGE
           python automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$BASE_SHA"             --file research/authorizations/q068_performance_2026_09_28.json=research/authorizations/q068_performance_2026_09_28.json
 
-      - name: Publish Q068 performance evidence
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          BASE_SHA="$(python - <<'PY'
-          import json, os, urllib.request
-          u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/git/ref/heads/master"
-          req=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"})
-          print(json.load(urllib.request.urlopen(req,timeout=30))["object"]["sha"])
-          PY
-          )"
-          test -n "$BASE_SHA"
-          PUBLISH_MESSAGE="EVIDENCE: record Q068 hosted deterministic performance"
-          export PUBLISH_MESSAGE
-          python automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$BASE_SHA"             --file research/evidence/q068_performance_result.json=research/evidence/q068_performance_result.json
 
-      - name: Reconcile Q068 ledger locally
+      - name: Run exact frozen Q068 performance locally
         run: |
           set -euo pipefail
-          python -m automation.q068_reconcile --repo-root .
+          python -m automation.q068_performance             --preregistration research/preregistrations/q068_performance_2026_09_28.json             --repo-root .             --output research/evidence/q068_performance_result.json
 
-      - name: Publish Q068 ledger reconciliation
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Validate exact Q068 performance result
         run: |
           set -euo pipefail
-          BASE_SHA="$(python - <<'PY'
-          import json, os, urllib.request
-          u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/git/ref/heads/master"
-          req=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"})
-          print(json.load(urllib.request.urlopen(req,timeout=30))["object"]["sha"])
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("research/evidence/q068_performance_result.json").read_text())
+          assert d["trial_id"]=="T-2026-09-28-068-PERFORMANCE"
+          assert d["status"]=="COMPLETED"
+          assert d["performance_evaluation"] is True
+          assert d["oos_evaluation"] is True
+          assert d["holdout_evaluation"] is True
+          assert d["selection_used"] is False
+          assert d["holdout_used_for_selection"] is False
+          assert d["governance"]["promotion_decision"] is False
+          assert d["governance"]["automatic_promotion"] is False
+          assert set(d["arms"])=={"CONTROL_6SLEEVE_ENSEMBLE","E1_ALPHA_COMMON_MODE_THROTTLE","E2_TURNOVER_HYSTERESIS"}
+          assert all(0 <= arm["gates_passed"] <= 13 for arm in d["arms"].values())
+          print("Q068 HOSTED PERFORMANCE RESULT OK")
+          [print(k, f"{v['gates_passed']}/{v['gates_total']}") for k,v in d["arms"].items()]
+          print("REPORT_FINGERPRINT", d["report_fingerprint"])
           PY
-          )"
-          test -n "$BASE_SHA"
-          PUBLISH_MESSAGE="EVIDENCE: reconcile Q068 hosted deterministic performance"
-          export PUBLISH_MESSAGE
-          python automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$BASE_SHA"             --file research/evidence/trial_ledger.json=research/evidence/trial_ledger.json
 
       - name: Dispatch canonical status sync
         env:
