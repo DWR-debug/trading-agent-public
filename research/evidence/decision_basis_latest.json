@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "recorded_on": "2026-09-27",
   "purpose": "Chatübergreifende, verifizierbare Entscheidungsgrundlage nach Research-/Engineering-Schritten.",
-  "current_stage": "Q044_FRESH_ALPHA_PIT",
+  "current_stage": "Q066_ALPHA_FAILURE_MECHANISM_DIAGNOSIS",
   "verified_facts": [
     "canonical_repository=DWR-debug/trading-agent-public",
     "wide_search_round_001=COMPLETED_EXPLORATORY_PRUNING; workflow=36187003417; artifact=10887060908",
@@ -102,7 +102,12 @@
     "The expanded alpha candidate catalogue now separates price-only mechanisms from event/fundamental/options families that require source/PIT feasibility before performance.",
     "Q040/T062 completed source feasibility successfully on workflow 36347185905; all five fixed official probes returned HTTP 200, but no source was upgraded to performance-ready PIT eligibility solely from endpoint accessibility.",
     "Q043/T063 completed fresh symbol-disjoint coverage successfully on workflow 36347316117; AON/CVS/ADSK/BA/T/F/LUV/NFLX produced 4000 common sessions and a 3500-session frozen snapshot.",
-    "Q044/T064 is now running a fresh PIT mutation gate for six fixed alpha mechanisms on the Q043 universe; no performance computation is authorized until PIT passes."
+    "Q044/T064 is now running a fresh PIT mutation gate for six fixed alpha mechanisms on the Q043 universe; no performance computation is authorized until PIT passes.",
+    "Q045/T065 completed successfully on workflow 36348015321 with artifact 10941072485 (artifact digest sha256:7126b5d84eedbaed17e53124a96e8f8b0c987de0ca2410ea4ef61a796d2ba6a7) and report fingerprint 0b29881c2405c4498b2327d8252a8db0c41b32deff18bd9482cd08b3abb8fe0a.",
+    "Q045 evaluated eight fixed arms on the fresh Q043 universe using 2798 research periods and 700 holdout periods; no arm passed all 13 gates and no holdout-driven selection occurred.",
+    "Q045 A3 residual momentum was the highest-gate-count arm at 8/13, with 381.59% research return and 29.24% holdout return, but 36.55% research drawdown and 38.00% holdout drawdown.",
+    "Q045 CONTROL reached 7/13 gates; A5 low-beta reached 7/13; A2 cross-sectional momentum 4/13; A1 TSM consensus 3/13; A1b 52-week-high 2/13; A6 overnight/daytime 3/13; ENSEMBLE_ALL6 4/13.",
+    "Across the Q045 arms, drawdown and rolling-average-drawdown remain the dominant robustness bottleneck. The fresh replication therefore does not justify parameter tuning or promotion."
   ],
   "implications": [
     "T047R1 did not satisfy the unchanged evidence contract; Q020 is not reopened.",
@@ -134,7 +139,10 @@
     "Q040 remains the parallel path for timestamped information alpha; no event family should enter performance until first-public-availability or release-time semantics are reproducible.",
     "The project now has independent coverage/PIT infrastructure for a second universe rather than repeatedly reusing the Q038 holdout.",
     "Q041 performance evidence shows positive returns for A2/A3/A5 but a persistent drawdown bottleneck; the appropriate next test is replication, not parameter tuning.",
-    "Q040 source feasibility found technically accessible official data sources but confirmed that source access and release-time PIT are separate research gates."
+    "Q040 source feasibility found technically accessible official data sources but confirmed that source access and release-time PIT are separate research gates.",
+    "The second symbol-disjoint performance replication confirms that the project has promising return-bearing mechanisms but insufficient drawdown robustness under the current fixed 13-gate standard.",
+    "Because the same failure dimension recurs across distinct mechanisms, the next scientific step is diagnosis of exposure, asset/regime concentration, correlation and turnover rather than changing signal parameters.",
+    "A third performance selection cycle should not start until Q066 isolates the dominant failure mechanisms and a preregistered diversification/risk hypothesis is defined."
   ],
   "unknowns": [
     "whether any orthogonal income-oriented mechanism survives independent fixed-rule validation",
@@ -158,9 +166,13 @@
     "whether any of the newly PIT-validated price-only mechanisms can later satisfy the unchanged 13-gate performance contract on an independent holdout",
     "whether Q041 A2/A3/A5's positive return and rolling evidence persists on a truly fresh symbol-disjoint universe",
     "whether A1b 52-week-high or A6 overnight/daytime adds independent signal information without worsening the existing drawdown gates",
-    "whether event-information candidates with reproducible release timestamps can supply return streams orthogonal to price-only momentum"
+    "whether event-information candidates with reproducible release timestamps can supply return streams orthogonal to price-only momentum",
+    "whether Q041/Q045 drawdowns are concentrated in a small number of symbols or market phases",
+    "whether A2/A3/A5 exposures overlap heavily during adverse periods despite different signal definitions",
+    "whether the fixed equal-weight ensemble dilutes or merely averages correlated drawdown risk",
+    "whether a parameter-free exposure transformation can reduce drawdown without simply converting the signal into a low-exposure placebo"
   ],
-  "next_action": "Complete Q044 PIT on the fresh Q043 universe. On success, prepare Q045 fixed seven-arm replication performance with unchanged 13 gates; on failure, archive the affected mechanism without tuning. Continue Q040/Q023/Q024 event timestamp work separately.",
+  "next_action": "Execute Q066 fixed-result failure-mechanism diagnosis using Q041/T060 and Q045/T065 artifacts only: decompose drawdown by symbol, sleeve, regime, overlap, correlation and turnover; no new performance search or parameter tuning.",
   "invariants": {
     "paper_only": true,
     "live_trading_enabled": false,
