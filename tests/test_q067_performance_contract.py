@@ -22,11 +22,6 @@ def test_q067_formal_workflow_path_is_retired():
     assert not Path(".github/workflows/q067-fixed-mechanism-performance.yml").exists()
     assert Path("automation/q067_performance.py").exists()
 
-def test_q067_performance_authorization_is_closed():
-    p = json.loads(
-        Path("research/authorizations/q067_performance_2026_09_28.json").read_text(encoding="utf-8")
-    )
-    assert p["authorized"] is False
-    assert p["performance_execution_authorized"] is False
-    assert p["safety"]["PAPER_ONLY"] is True
-    assert p["safety"]["LIVE_TRADING_ENABLED"] is False
+def test_q067_performance_authorization_is_retired_and_not_present():
+    assert not Path("research/authorizations/q067_performance_2026_09_28.json").exists()
+    assert not Path("research/evidence/q067_performance_result.json").exists()
