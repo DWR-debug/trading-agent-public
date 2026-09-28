@@ -95,6 +95,11 @@ def test_reconcile_refuses_duplicate_entry(tmp_path):
     (tmp_path / "research" / "evidence").mkdir(parents=True)
     result_path = tmp_path / "research" / "evidence" / "q068_performance_result.json"
     result_path.write_text(json.dumps(_result()), encoding="utf-8")
+    coverage, pit, authorization = _preflight_records()
+    (tmp_path / "research" / "evidence" / "q068_coverage_result.json").write_text(json.dumps(coverage), encoding="utf-8")
+    (tmp_path / "research" / "evidence" / "q068_pit_result.json").write_text(json.dumps(pit), encoding="utf-8")
+    (tmp_path / "research" / "authorizations").mkdir(parents=True)
+    (tmp_path / "research" / "authorizations" / "q068_performance_2026_09_28.json").write_text(json.dumps(authorization), encoding="utf-8")
     ledger_path = tmp_path / "research" / "evidence" / "trial_ledger.json"
     ledger_path.write_text(
         json.dumps({"trials": [{"trial_id": TRIAL_ID}]}),
