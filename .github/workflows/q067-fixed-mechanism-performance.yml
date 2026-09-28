@@ -1,0 +1,115 @@
+name: Q067 Fixed Mechanism Performance
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/authorizations/q067_performance_2026_09_28.json"
+      - "research/preregistrations/q067_performance_2026_09_28.json"
+      - "automation/q067_performance.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-q067-performance
+  cancel-in-progress: false
+
+jobs:
+  performance:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check pandas pytest
+      - name: Authorization and safety
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from config import settings
+          p=json.loads(Path("research/preregistrations/q067_performance_2026_09_28.json").read_text())
+          a=json.loads(Path("research/authorizations/q067_performance_2026_09_28.json").read_text())
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          assert settings.AUTOMATIC_PROMOTION is False
+          assert p["status"]=="PREREGISTERED_PERFORMANCE"
+          assert a["authorized"] is True
+          assert a["performance_execution_authorized"] is True
+          assert a["execution_scope"]=="Q067_FIXED_RULE_PERFORMANCE_ONLY"
+          assert p["governance"]["selection"] is False
+          assert p["governance"]["holdout_used_for_selection"] is False
+          print("Q067 AUTH/SAFETY OK")
+          PY
+      - name: Performance prerequisite gate
+        run: |
+          test -f research/evidence/q067_coverage_result.json
+          test -f research/evidence/q067_pit_result.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path("research/evidence/q067_coverage_result.json").read_text())
+          p=json.loads(Path("research/evidence/q067_pit_result.json").read_text())
+          assert c["status"]=="COVERAGE_PASSED"
+          assert c["performance_trial_authorized"] is False
+          assert p["status"]=="PIT_PASSED"
+          assert p["performance_trial_authorized"] is False
+          print("Q067 PREREQUISITES OK")
+          PY
+      - name: Q067 performance
+        run: |
+          python -m automation.q067_performance \
+            --preregistration research/preregistrations/q067_performance_2026_09_28.json \
+            --repo-root . \
+            --output research/evidence/q067_performance_result.json
+      - name: Validate result
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("research/evidence/q067_performance_result.json").read_text())
+          assert d["status"]=="COMPLETED"
+          assert d["performance_evaluation"] is True
+          assert d["oos_evaluation"] is True
+          assert d["holdout_evaluation"] is True
+          assert d["selection_used"] is False
+          assert d["holdout_used_for_selection"] is False
+          assert d["governance"]["promotion_decision"] is False
+          assert d["governance"]["automatic_promotion"] is False
+          assert set(d["arms"])=={
+            "CONTROL_6SLEEVE_ENSEMBLE",
+            "E1_ALPHA_COMMON_MODE_THROTTLE",
+            "E2_TURNOVER_HYSTERESIS",
+          }
+          assert all(0 <= arm["gates_passed"] <= 13 for arm in d["arms"].values())
+          print("Q067 RESULT GOVERNANCE OK")
+          for k,v in d["arms"].items():
+              print(k, f"{v['gates_passed']}/{v['gates_total']}")
+          print("Q067_REPORT_FINGERPRINT:",d["report_fingerprint"])
+          PY
+      - name: Persist performance evidence
+        if: success()
+        run: |
+          set -euo pipefail
+          git diff --check
+          git add research/evidence/q067_performance_result.json
+          git commit -m "EVIDENCE: record Q067 fixed mechanism performance"
+          git push origin HEAD:master
+      - name: Publish result artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q067-fixed-mechanism-performance-${{ github.run_id }}
+          path: research/evidence/q067_performance_result.json
+          if-no-files-found: error
+          retention-days: 30
