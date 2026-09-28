@@ -89,36 +89,13 @@ jobs:
               print("Q068 NO PRIOR AUTHORIZATION; FALLBACK WILL CREATE IT")
           PY
 
-      - name: Build and publish one-shot authorization when missing
+      - name: Prepare one-shot Q068 authorization
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          if [ -f research/authorizations/q068_performance_2026_09_28.json ]; then
-            echo "Q068 authorization already exists; validating and reusing it"
-            python - <<'PY'
-            import json
-            from pathlib import Path
-            c=json.loads(Path("research/evidence/q068_coverage_result.json").read_text())
-            p=json.loads(Path("research/evidence/q068_pit_result.json").read_text())
-            a=json.loads(Path("research/authorizations/q068_performance_2026_09_28.json").read_text())
-            assert a["authorized"] is True and a["performance_execution_authorized"] is True
-            assert a["execution_scope"]=="Q068_FIXED_RULE_PERFORMANCE_ONLY"
-            assert a["source_receipts"]["coverage_result_fingerprint"]==c["result_fingerprint"]
-            assert a["source_receipts"]["pit_result_fingerprint"]==p["result_fingerprint"]
-            assert a["source_contract"]=={
-              "automation/q067_alpha_mechanisms.py":"344343f9910f1ea5eaa9a2d2c295a6f87a520bdc",
-              "automation/q068_performance.py":"d85e17885ff56353ca677a3aa47d8a5e7b6ec056",
-              "data/canonical_snapshot.py":"18c7c051b1b4d3f7f67bc395baf5ef3787e1b028",
-              "execution/cost_contract.py":"21b54b45dbe708f3102851fd368ad1b64226b0ad",
-              "config/settings.py":"9c7b5199ed09d11ca17eb72493aebf7a7666fd28",
-            }
-            print("Q068 AUTHORIZATION REUSE OK")
-            PY
-            exit 0
-          fi
           python - <<'PY'
-          import json, os
+          import json
           from pathlib import Path
           c=json.loads(Path("research/evidence/q068_coverage_result.json").read_text())
           p=json.loads(Path("research/evidence/q068_pit_result.json").read_text())
@@ -129,42 +106,50 @@ jobs:
             "execution/cost_contract.py":"21b54b45dbe708f3102851fd368ad1b64226b0ad",
             "config/settings.py":"9c7b5199ed09d11ca17eb72493aebf7a7666fd28",
           }
-          auth={
-            "schema_version":"1.0",
-            "authorization_id":"Q068-PERFORMANCE-HOSTED-FALLBACK-2026-09-28",
-            "authorized":True,
-            "performance_execution_authorized":True,
-            "execution_scope":"Q068_FIXED_RULE_PERFORMANCE_ONLY",
-            "authorization_basis":"Existing immutable Q068 coverage and PIT receipts passed; self-hosted auto-advance is capacity-blocked, so the same frozen deterministic execution is run on the public GitHub-hosted runner.",
-            "required_prerequisites":[
-              "T-2026-09-28-068-COVERAGE status=COVERAGE_PASSED",
-              "T-2026-09-28-068-PIT status=PIT_PASSED",
-              "frozen Q068 source contract exact",
-            ],
-            "source_receipts":{
-              "coverage_result_fingerprint":c["result_fingerprint"],
-              "pit_result_fingerprint":p["result_fingerprint"],
-            },
-            "source_contract":expected,
-            "prohibited":["parameter selection","threshold selection","asset selection","family ranking","holdout selection","promotion","live execution"],
-            "safety":{"PAPER_ONLY":True,"LIVE_TRADING_ENABLED":False,"ORDERS_ENABLED":False,"AUTOMATIC_PROMOTION":False}
-          }
-          Path("research/authorizations").mkdir(parents=True,exist_ok=True)
-          Path("research/authorizations/q068_performance_2026_09_28.json").write_text(json.dumps(auth,indent=2)+"\n")
+          auth_path=Path("research/authorizations/q068_performance_2026_09_28.json")
+          if auth_path.exists():
+              a=json.loads(auth_path.read_text())
+              assert a["authorized"] is True and a["performance_execution_authorized"] is True
+              assert a["execution_scope"]=="Q068_FIXED_RULE_PERFORMANCE_ONLY"
+              assert a["source_receipts"]["coverage_result_fingerprint"]==c["result_fingerprint"]
+              assert a["source_receipts"]["pit_result_fingerprint"]==p["result_fingerprint"]
+              assert a["source_contract"]==expected
+              assert a["safety"]=={"PAPER_ONLY":True,"LIVE_TRADING_ENABLED":False,"ORDERS_ENABLED":False,"AUTOMATIC_PROMOTION":False}
+              Path("research/authorizations/q068_publish_needed.flag").unlink(missing_ok=True)
+              print("Q068 AUTHORIZATION REUSE OK")
+          else:
+              auth={
+                "schema_version":"1.0",
+                "authorization_id":"Q068-PERFORMANCE-HOSTED-FALLBACK-2026-09-28",
+                "authorized":True,
+                "performance_execution_authorized":True,
+                "execution_scope":"Q068_FIXED_RULE_PERFORMANCE_ONLY",
+                "authorization_basis":"Existing immutable Q068 coverage and PIT receipts passed; self-hosted auto-advance is capacity-blocked, so the same frozen deterministic execution is run on the public GitHub-hosted runner.",
+                "required_prerequisites":["T-2026-09-28-068-COVERAGE status=COVERAGE_PASSED","T-2026-09-28-068-PIT status=PIT_PASSED","frozen Q068 source contract exact"],
+                "source_receipts":{"coverage_result_fingerprint":c["result_fingerprint"],"pit_result_fingerprint":p["result_fingerprint"]},
+                "source_contract":expected,
+                "prohibited":["parameter selection","threshold selection","asset selection","family ranking","holdout selection","promotion","live execution"],
+                "safety":{"PAPER_ONLY":True,"LIVE_TRADING_ENABLED":False,"ORDERS_ENABLED":False,"AUTOMATIC_PROMOTION":False}
+              }
+              auth_path.parent.mkdir(parents=True,exist_ok=True)
+              auth_path.write_text(json.dumps(auth,indent=2)+"\n")
+              Path("research/authorizations/q068_publish_needed.flag").write_text("1\n")
+              print("Q068 AUTHORIZATION PREPARED")
           PY
-          BASE_SHA="$(python - <<'PY'
-          import json, os, urllib.request
-          u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/git/ref/heads/master"
-          req=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"})
-          print(json.load(urllib.request.urlopen(req,timeout=30))["object"]["sha"])
-          PY
-          )"
+
+      - name: Publish Q068 authorization when needed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [ ! -f research/authorizations/q068_publish_needed.flag ]; then
+            echo "Q068 authorization already valid on checkout"
+            exit 0
+          fi
+          BASE_SHA="$(python -c 'import json,os,urllib.request; u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/git/ref/heads/master"; r=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"}); print(json.load(urllib.request.urlopen(r,timeout=30))["object"]["sha"])')"
           test -n "$BASE_SHA"
-          PUBLISH_MESSAGE="OPS: authorize Q068 hosted deterministic fallback"
-          export PUBLISH_MESSAGE
-          python automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$BASE_SHA"             --file research/authorizations/q068_performance_2026_09_28.json=research/authorizations/q068_performance_2026_09_28.json
-
-
+          export PUBLISH_MESSAGE="OPS: authorize Q068 hosted deterministic fallback"
+          python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$BASE_SHA" --file research/authorizations/q068_performance_2026_09_28.json=research/authorizations/q068_performance_2026_09_28.json
 
       - name: Run exact frozen Q068 performance locally
         run: |
