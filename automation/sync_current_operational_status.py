@@ -237,6 +237,15 @@ def generate(
             "hypothetical_reference_capital_eur": float(settings.HYPOTHETICAL_STARTING_CAPITAL_EUR),
             "legacy_operational_canary_capital_eur": 500.0,
         },
+        "operator_action_required": {
+            "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
+            "windows_shells": 2,
+            "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
+            "runner_1": "Keep the existing runner process alive in PowerShell window 1.",
+            "runner_2": "Keep LHT-N133732-2 alive in PowerShell window 2.",
+            "secret_rule": "Never paste GitHub registration tokens, API keys, OAuth tokens, passwords, or other credentials into chat; redact them before sharing output.",
+            "service_note": "Windows service installation is a separate maintenance step and requires administrator privileges; do not migrate a runner to service mode until its local AI identity has been verified because Antigravity CLI authentication uses the local user's system keyring or Google Sign-In context.",
+        },
         "safety": safety,
         "workflow": {
             "name": "Current Operational Status Synchronizer",
@@ -328,6 +337,15 @@ Q068 is a fresh symbol-disjoint validation of the unchanged Q067 E1/E2 mechanism
 - Blocking reasons: **{"; ".join(q070_pipeline["blocking_reasons"]) or "none"}**.
 
 Q070 is the fresh symbol-disjoint validation pipeline for the fixed Q069 OHLCV candidate bank. This operational summary does not create scientific evidence or rank candidates.
+
+### Operator action when runner capacity is being (re)activated
+
+- Open **two PowerShell windows** on the Windows research PC.
+- Keep the existing Runner #1 process running in window 1.
+- Use window 2 for Runner #2 (LHT-N133732-2).
+- When activation/reconfiguration is needed, paste the resulting **non-secret** commands/output into the current "trading agent" chat so the orchestration can verify the live state.
+- **Never paste registration tokens, API keys, OAuth tokens or passwords into chat.**
+- Do not switch a runner to Windows service mode until local AI authentication has been verified; Windows service mode requires administrative privileges and can change the user/keyring context available to local AI CLIs.
 
 ### Resource policy
 
