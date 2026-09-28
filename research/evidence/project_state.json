@@ -1,12 +1,12 @@
 {
   "schema_version": "1.0",
-  "updated": "2026-09-27",
+  "updated": "2026-09-28",
   "repository": "DWR-debug/trading-agent-public",
-  "master_commit": "4017743284db97f82c546a088c940df377370e7f",
-  "latest_formal_trial": "T-2026-09-27-056",
-  "latest_trial_status": "NO_ARM_PASSED_ALL_T052_GATES",
+  "master_commit": "5392fe8d47efaf1d82de94ecded484209ea1f768",
+  "latest_formal_trial": "T-2026-09-27-065",
+  "latest_trial_status": "NO_ARM_PASSED_ALL_13_GATES",
   "next_reserved_trial": null,
-  "next_research_focus": "Q066 failure-mechanism diagnosis and exposure decomposition on Q041/Q045 fixed-alpha evidence; identify whether drawdown bottleneck is asset concentration, regime concentration, correlation, turnover or signal overlap before any tuning.",
+  "next_research_focus": "Q067 ex-ante design of an alpha-level common-mode risk/diversification mechanism from Q066 findings; no performance evaluation until fresh coverage/PIT and parameter freeze.",
   "cleanup_status": "completed_h06_and_q017_coverage_hardening",
   "quality_assurance": {
     "deterministic_ci": true,
@@ -26,7 +26,7 @@
       "artifact_sha256": "sha256:b32f2cffdff27091187d7f7f7ac6759c23b2e141081f6d9c9143e1c790d73da9"
     },
     "current_master_qa_run_id": null,
-    "current_master_qa_run_status": "pending_after_project_state_synchronization",
+    "current_master_qa_run_status": "pending_after_q066_state_synchronization",
     "current_master_qa_failure_run_id": 36254919993,
     "current_master_qa_verified": false,
     "current_master_qa_tests_passed": null,
@@ -111,8 +111,8 @@
     ".github/workflows/q031-q030-risk-stability-coverage.yml",
     ".github/workflows/q032-q031-fixed-core-pit.yml"
   ],
-  "current_preregistered_trial": "T-2026-09-27-065",
-  "current_trial_status": "Q045_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
+  "current_preregistered_trial": null,
+  "current_trial_status": "Q066_COMPLETED_DIAGNOSTIC_ONLY",
   "engineering_notes": {
     "t039_preregistered": true,
     "coverage_preflight_active": true,
@@ -623,7 +623,7 @@
     "holdout_used": false,
     "remaining_events_without_timestamp": 31
   },
-  "latest_master_commit": "2c165171c1c102117c071c35245d0249274c5e11",
+  "latest_master_commit": "5392fe8d47efaf1d82de94ecded484209ea1f768",
   "q027": {
     "status": "COMPLETED_DIAGNOSTIC_ONLY",
     "source_trial": "T-2026-09-27-052",
@@ -967,8 +967,31 @@
     "automatic_promotion": false
   },
   "q066": {
-    "status": "PREREGISTRATION_IN_PREPARATION",
+    "status": "COMPLETED_DIAGNOSTIC_ONLY",
     "trial_id": "T-2026-09-28-066",
+    "workflow_run_id": 36379909584,
+    "evidence_commit": "510ff9e93df9346a647676229173901c4c64b484",
+    "diagnostic_fingerprint": "d4d0893ce245c04d9d6ba017458331a1dbad66d702163243e8d001dfa15c40c8",
+    "source_trials": [
+      "T-2026-09-27-060",
+      "T-2026-09-27-065"
+    ],
+    "source_artifact_ids": [
+      10941341360,
+      10941072485
+    ],
+    "aggregate_reconstruction_exact": {
+      "q041": true,
+      "q045": true
+    },
+    "key_findings": [
+      "CONTROL drawdowns are persistent and span multiple market regimes rather than being dominated by isolated tail days.",
+      "Asset concentration is present and amplifies some two-stock arms, but does not by itself explain the CONTROL drawdown pattern.",
+      "Alpha-family return co-movement remains high during CONTROL-underwater periods despite modest signal-set overlap.",
+      "CONTROL max-drawdown episodes are not explained by one universal sleeve; the relative contribution of trend and cross-sectional sleeves changes across universes.",
+      "Turnover/cost drag is material for A1/A1b/A6 but small relative to CONTROL's max-drawdown intervals.",
+      "The next causal test should target common-mode alpha risk/diversification rather than tune existing signal parameters."
+    ],
     "performance_execution_authorized": false,
     "selection_used": false,
     "holdout_used_for_selection": false
