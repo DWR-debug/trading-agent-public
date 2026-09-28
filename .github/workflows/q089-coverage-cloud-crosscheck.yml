@@ -37,4 +37,4 @@ jobs:
       - name: Structural Q089 tests
         run: python -m pytest -q tests/test_q089_validation.py tests/test_q089_input_freeze.py tests/test_q089_performance_envelope.py
       - name: Coverage-only cross-check
-        run: python automation/q089_coverage_pit.py coverage
+        run: python -m automation.q089_coverage_pit coverage
