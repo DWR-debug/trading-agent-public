@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:53:14.646665+00:00",
+  "generated_at_utc": "2026-09-28T10:54:13.822140+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -166,6 +166,31 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: dispatch Q077 through status sync bridge",
+        "sha": "d430d13269c287a335e08392283b85331623547f",
+        "timestamp": "2026-09-28T12:54:11+02:00"
+      },
+      {
+        "message": "OPS: add explicit Q077 workflow dispatch bridge",
+        "sha": "dd303470d77503eb4fecfb2312c83a5b4d8a1355",
+        "timestamp": "2026-09-28T12:54:05+02:00"
+      },
+      {
+        "message": "OPS: retrigger Q077 via registered workflow",
+        "sha": "f0d47b4529250a46b448daddebb63bbb4c01a033",
+        "timestamp": "2026-09-28T12:53:30+02:00"
+      },
+      {
+        "message": "OPS: route Q077 discovery through registered hosted workflow",
+        "sha": "4bc41d66729c33fe9224a383a3686873f8f623b2",
+        "timestamp": "2026-09-28T12:53:25+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3b954f89dec743b4997ca9b7aa64e879df279fea",
+        "timestamp": "2026-09-28T10:53:14Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "9ca234953eb9211deb2378dfdf5affbb51c9f39b",
         "timestamp": "2026-09-28T10:53:02Z"
@@ -179,31 +204,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "42527d4034c37f4f4166297b0494b4b5c03100b3",
         "timestamp": "2026-09-28T10:52:47Z"
-      },
-      {
-        "message": "OPS: trigger Q077 fresh coverage discovery",
-        "sha": "6e86a63eacfa62917c64cee22b788c164d1077bf",
-        "timestamp": "2026-09-28T12:52:36+02:00"
-      },
-      {
-        "message": "RESEARCH: freeze Q077 discovery contract",
-        "sha": "a41e8fb622cb8b2533f2c94835cbae12b9c8f48b",
-        "timestamp": "2026-09-28T12:52:34+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q077 fresh discovery workflow",
-        "sha": "5c7ed9071ae3192ad04154b42861cd76d6dc1046",
-        "timestamp": "2026-09-28T12:52:31+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q077 fresh coverage-only discovery",
-        "sha": "237c43c2165398c97b76c51bfc39a426667a2598",
-        "timestamp": "2026-09-28T12:52:29+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "fc66d632f42a379740d7ad40e6390b97d89cd9bc",
-        "timestamp": "2026-09-28T10:52:21Z"
       }
     ]
   },
@@ -265,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9ca234953eb9211deb2378dfdf5affbb51c9f39b",
+  "source_master_sha": "d430d13269c287a335e08392283b85331623547f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36412309869"
+    "run_id": "36412365287"
   }
 }
