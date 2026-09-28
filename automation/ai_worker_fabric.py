@@ -37,6 +37,30 @@ PROVIDER_SPECS = {
 
 LOCAL_ATTESTATION_DEFAULT = Path.home() / ".trading-agent" / "ai_free_attestation.json"
 
+CONTEXT_FILES = {
+    "AI-2026-09-28-Q089-ADVERSARIAL": (
+        "docs/research_design/Q089-clean-fresh-q069-validation-2026-09-28.md",
+        "docs/research_design/Q089_CROSS_RUN_REPRO_AUDIT_2026-09-28.md",
+        "research/evidence/q089_coverage_result.json",
+        "research/evidence/q089_input_freeze_result.json",
+        "research/evidence/q089_pit_result.json",
+        "research/evidence/q089_asset_freeze.json",
+        "automation/q089_coverage_pit.py",
+        "automation/q089_input_freeze.py",
+        "docs/DECISION_BASIS.md",
+        "docs/EVIDENCE_GOVERNANCE.md",
+        "research/governance/active_research_registry.json",
+    ),
+    "AI-2026-09-28-UNUSUAL-FRONTIER": (
+        "docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md",
+        "docs/DECISION_BASIS.md",
+        "research/evidence/current_operational_state.json",
+        "research/governance/active_research_registry.json",
+    ),
+}
+CONTEXT_FILE_LIMIT = 8000
+CONTEXT_TOTAL_LIMIT = 50000
+
 FORBIDDEN_TASK_FLAGS = (
     "deterministic_compute", "holdout_selection", "parameter_selection",
     "asset_selection", "threshold_selection", "horizon_selection",
@@ -161,9 +185,32 @@ def preflight(provider: str, env: dict[str, str] | None = None) -> dict[str, Any
         "reasons": reasons,
     }
 
+def _context_bundle(task: dict[str, Any]) -> str:
+    files = CONTEXT_FILES.get(task["task_id"], ())
+    if not files:
+        return "No repository context bundle is configured for this task. Do not use terminal tools."
+    sections: list[str] = []
+    total = 0
+    for rel in files:
+        path = Path.cwd() / rel
+        if not path.is_file():
+            raise AIWorkerError(f"Required context file is missing: {rel}")
+        file_text = path.read_text(encoding="utf-8")
+        remaining = CONTEXT_TOTAL_LIMIT - total
+        if remaining <= 0:
+            break
+        file_text = file_text[: min(CONTEXT_FILE_LIMIT, remaining)]
+        sections.append(f"=== FILE {rel} ===\n{file_text}")
+        total += len(file_text)
+    return "\n\n".join(sections)
+
 def build_prompt(task: dict[str, Any]) -> str:
-    return (SYSTEM_GUARD + "\n\n" + f"<task_id>{task["task_id"]}</task_id>\n"
+    context = _context_bundle(task)
+    return (SYSTEM_GUARD + "\n\n"
+            + f"<task_id>{task["task_id"]}</task_id>\n"
             + f"<scope>{task.get("scope", "bounded research support")}</scope>\n"
+            + "<repository_context>\n" + context + "\n</repository_context>\n\n"
+            + "<execution_guard>All required repository context is included above. Do not call terminal, command, shell, file, browser, git, or other tools. Do not modify the workspace. Analyze only the supplied context and task request.</execution_guard>\n\n"
             + f"<request>\n{task["prompt"].strip()}\n</request>\n\n"
             + "Return a concise structured worker handoff with findings, counterarguments, concrete next actions, and uncertainty. Do not claim validation or promotion.")
 
