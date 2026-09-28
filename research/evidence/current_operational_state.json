@@ -124,7 +124,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T18:05:33.191465+00:00",
+  "generated_at_utc": "2026-09-28T18:05:58.671768+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -247,6 +247,16 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: conserve scarce Copilot Free worker capacity",
+        "sha": "3dd1e192e0f1205ee8c4598186f287ab3f874aed",
+        "timestamp": "2026-09-28T20:05:43+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5ec4a50a12a3c63b1cd2df81db35eb0fc94f3d20",
+        "timestamp": "2026-09-28T18:05:33Z"
+      },
+      {
         "message": "FIX: add TTAF implementation files required by feasibility workflow (#638)",
         "sha": "3230863394312c4e9c0f38422cb4bd986e5cbb6b",
         "timestamp": "2026-09-28T20:05:15+02:00"
@@ -275,16 +285,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "9fbdc80ee95002e127fb46a2fd28ffebad0d8319",
         "timestamp": "2026-09-28T18:00:37Z"
-      },
-      {
-        "message": "FIX: pin Node runtime for Gemini worker",
-        "sha": "aca0728c659ccd7e605de6211831312f1291755a",
-        "timestamp": "2026-09-28T20:00:21+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1080efecbc90462c9941b96d96fec443643ebbef",
-        "timestamp": "2026-09-28T17:59:52Z"
       }
     ]
   },
@@ -346,12 +346,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "3230863394312c4e9c0f38422cb4bd986e5cbb6b",
+  "source_master_sha": "3dd1e192e0f1205ee8c4598186f287ab3f874aed",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36462726621"
+    "run_id": "36462779028"
   }
 }
