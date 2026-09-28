@@ -305,6 +305,8 @@ def preregister() -> dict:
             "promotion_decision": False,
             "automatic_promotion": False,
         },
+        "source_discovery_fingerprint": coverage["source_discovery"]["fingerprint"],
+        "asset_freeze_fingerprint": _fp(freeze),
         "source_scope": {
             "candidate_definitions": "automation/q069_candidate_bank.py",
             "candidate_definitions_frozen": True,
@@ -313,7 +315,24 @@ def preregister() -> dict:
         },
         "safety": SAFETY,
     }
-    prereg["source_contract_pending"] = "Performance runner must be fingerprinted before one-shot authorization."
+    prereg["source_contract"] = {
+        "performance_runner_path": "automation/q089_performance.py",
+        "performance_runner_sha256": hashlib.sha256(
+            (ROOT / "automation/q089_performance.py").read_bytes()
+        ).hexdigest(),
+        "candidate_bank_path": "automation/q069_candidate_bank.py",
+        "candidate_bank_sha256": hashlib.sha256(
+            (ROOT / "automation/q069_candidate_bank.py").read_bytes()
+        ).hexdigest(),
+        "cost_contract_path": "execution/cost_contract.py",
+        "cost_contract_sha256": hashlib.sha256(
+            (ROOT / "execution/cost_contract.py").read_bytes()
+        ).hexdigest(),
+        "settings_path": "config/settings.py",
+        "settings_sha256": hashlib.sha256(
+            (ROOT / "config/settings.py").read_bytes()
+        ).hexdigest(),
+    }
     path = ROOT / "research" / "preregistrations" / "q089_performance_2026_09_28.json"
     path.write_text(json.dumps(prereg, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
