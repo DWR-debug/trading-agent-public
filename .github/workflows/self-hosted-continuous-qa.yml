@@ -7,10 +7,6 @@ on:
       - "research/run_requests/self_hosted_continuous_qa.trigger"
       - ".github/workflows/self-hosted-continuous-qa.yml"
       - "automation/self_hosted_research_worker.py"
-      - "tests/**"
-      - "automation/**"
-      - "data/**"
-      - "research/**"
   schedule:
     - cron: "15 * * * *"
   workflow_dispatch:
