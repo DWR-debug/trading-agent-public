@@ -65,12 +65,12 @@ def summarize(repo_root: Path=ROOT):
     if valid_preflight:
         state="PREFLIGHT_PASSED_WAITING_FOR_AUTO_AUTH"
         if auth is not None:
-            if auth.get("authorized") is True and auth.get("performance_execution_authorized") is True and auth.get("execution_scope")=="Q070_FIXED_CANDIDATE_PERFORMANCE_ONLY" and auth.get("safety")==AUTH_SAFETY and auth.get("source_receipts",{}).get("coverage_result_fingerprint")==coverage.get("result_fingerprint") and auth.get("source_receipts",{}).get("pit_result_fingerprint")==pit.get("result_fingerprint"): state="PERFORMANCE_AUTHORIZED"
+            if auth.get("authorized") is True and auth.get("performance_execution_authorized") is True and auth.get("execution_scope")=="Q070_FIXED_CANDIDATE_PERFORMANCE_ONLY" and auth.get("safety")==AUTH_SAFETY and auth.get("source_receipts",{}).get("coverage_fingerprint")==prereg.get("asset_freeze_fingerprint") and auth.get("source_receipts",{}).get("pit_result_fingerprint")==pit.get("result_fingerprint"): state="PERFORMANCE_AUTHORIZED"
             else: blockers.append("Q070 performance authorization exists but is invalid")
     if result is not None:
         if result.get("trial_id")!=PERF_ID or result.get("status")!="COMPLETED": blockers.append("Q070 performance result identity/status invalid"); state="PERFORMANCE_EVIDENCE_INVALID"
         elif result.get("selection_used") is not False or result.get("holdout_used_for_selection") is not False or result.get("governance",{}).get("promotion_decision") is not False or result.get("governance",{}).get("automatic_promotion") is not False: blockers.append("Q070 performance result records forbidden selection/promotion"); state="PERFORMANCE_EVIDENCE_INVALID"
-        elif result.get("coverage_prerequisite",{}).get("result_fingerprint")!=(coverage or {}).get("result_fingerprint") or result.get("pit_prerequisite",{}).get("result_fingerprint")!=(pit or {}).get("result_fingerprint"): blockers.append("Q070 performance result prerequisite fingerprint mismatch"); state="PERFORMANCE_EVIDENCE_INVALID"
+        elif result.get("coverage_prerequisite",{}).get("coverage_fingerprint")!=(prereg or {}).get("asset_freeze_fingerprint") or result.get("coverage_prerequisite",{}).get("snapshot_fingerprint")!=(coverage or {}).get("snapshot_fingerprint") or result.get("pit_prerequisite",{}).get("result_fingerprint")!=(pit or {}).get("result_fingerprint"): blockers.append("Q070 performance result prerequisite fingerprint mismatch"); state="PERFORMANCE_EVIDENCE_INVALID"
         elif PERF_ID in ledger_ids: state="PERFORMANCE_RECONCILED"
         else: state="PERFORMANCE_COMPLETED_PENDING_LEDGER"
     if blockers and state not in {"PERFORMANCE_EVIDENCE_INVALID","PERFORMANCE_COMPLETED_PENDING_LEDGER"}: state="PREFLIGHT_BLOCKED"
