@@ -30,6 +30,7 @@ from automation.q067_alpha_mechanisms import (
     common_mode_multipliers,
     equal_weight_ensemble,
     sleeve_period_returns,
+    validate_gross_exposure_cap,
 )
 from config import settings
 from data.canonical_snapshot import load_frozen_snapshot
@@ -364,6 +365,9 @@ def run(preregistration: Path, repo_root: Path, output: Path) -> dict:
         "E1_ALPHA_COMMON_MODE_THROTTLE": e1,
         "E2_TURNOVER_HYSTERESIS": e2,
     }
+
+    for name, weights in arms.items():
+        validate_gross_exposure_cap(weights)
 
     reports = {name: _evaluate(assets, weights, adjusted) for name, weights in arms.items()}
     result = {
