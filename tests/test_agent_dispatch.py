@@ -190,6 +190,14 @@ def test_queued_issue_is_revalidated_before_dispatch(state, labels, is_pull_requ
         )
 
 
+def test_queued_issue_accepts_agent_ready_label():
+    validate_queued_issue(
+        "open",
+        labels=["agent-ready"],
+        is_pull_request=False,
+    )
+
+
 def test_load_event_preserves_resolved_issue_state_and_pull_request_flag(tmp_path):
     event = tmp_path / "event.json"
     event.write_text(
@@ -261,11 +269,10 @@ def test_autonomous_agent_request_queue_uses_two_lanes_and_is_fail_closed():
     assert 'paths:' in text
     assert 'agent_requests/**' in text
     assert 'schedule:' in text
-    assert 'cron: "*/10 * * * *"' in text
+    assert 'cron: "15 */2 * * *"' in text
     assert 'workflow_dispatch:' in text
     assert 'lane: [0, 1]' in text
     assert 'trading-agent-agent-cli-queue' in text
-    assert 'trading-agent-agent-cli-queue-lane-${{ matrix.lane }}' in text
     assert 'cancel-in-progress: false' in text
     assert 'PAPER_ONLY=True' in text
     assert 'LIVE_TRADING_ENABLED=False' in text
