@@ -59,7 +59,7 @@ jobs:
           out=Path('research/runs/q077r1_pit/T-2026-09-28-077R1-PIT')
           r=build_frozen_snapshot(SnapshotSpec(universe='validation_2026_09_28_q077r1_pit',symbols=tuple(p['symbols']),interval='1d',requested_candles=5000,target_common_candles=3500,raw_fetch_candles=5000,study_start=date(2011,1,1),study_end=date(2025,9,24),output_dir=out))
           assert r['status']=='COVERAGE_PASSED'
-          print('Q077R1 SNAPSHOT READY',r['data_snapshot']['snapshot_fingerprint'] if 'data_snapshot' in r else 'ok')
+          print('Q077R1 SNAPSHOT READY',r['snapshot_fingerprint'])
           PY
 
       - name: Run PIT mutation tests
