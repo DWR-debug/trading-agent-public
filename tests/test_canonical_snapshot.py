@@ -273,3 +273,59 @@ def test_load_frozen_snapshot_accepts_lowercase_coverage_status(tmp_path):
     loaded = load_frozen_snapshot(manifest)
     assert set(loaded) == {"AAA","BBB"}
     assert len(loaded["AAA"]) == 8
+
+
+
+def test_load_frozen_snapshot_normalizes_windows_manifest_separators(tmp_path):
+    from data.canonical_snapshot import load_frozen_snapshot
+    import csv
+    import json
+    from backtesting.models import Candle
+    from research.protocol import dataset_fingerprint
+
+    base = datetime(2020, 1, 1, tzinfo=timezone.utc)
+    root = tmp_path / "windows_paths"
+    dataset = root / "datasets"
+    dataset.mkdir(parents=True)
+    candles = tuple(
+        Candle(
+            timestamp=base + timedelta(days=i),
+            open=100.0 + i,
+            high=101.0 + i,
+            low=99.0 + i,
+            close=100.5 + i,
+            volume=1000.0 + i,
+        )
+        for i in range(8)
+    )
+    path = dataset / "AAA.csv"
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(["timestamp", "open", "high", "low", "close", "volume"])
+        for candle in candles:
+            writer.writerow([
+                candle.timestamp.isoformat(),
+                candle.open,
+                candle.high,
+                candle.low,
+                candle.close,
+                candle.volume,
+            ])
+
+    windows_style_path = str(path).replace("/", "\\")
+    manifest = root / "snapshot_manifest.json"
+    manifest.write_text(json.dumps({
+        "status": "COVERAGE_PASSED",
+        "data_snapshot": {
+            "datasets": [{
+                "symbol": "AAA",
+                "path": windows_style_path,
+                "candle_count": len(candles),
+                "fingerprint": dataset_fingerprint(candles),
+            }]
+        }
+    }), encoding="utf-8")
+
+    loaded = load_frozen_snapshot(manifest)
+    assert tuple(loaded) == ("AAA",)
+    assert loaded["AAA"] == candles
