@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T20:11:10.616408+00:00",
+  "generated_at_utc": "2026-09-28T20:38:38.770896+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,44 +325,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "FIX: clear remaining workflow lint blockers",
-        "sha": "8c2f7e8f9c241d4407034a89101364ba09aec887",
-        "timestamp": "2026-09-28T22:10:55+02:00"
+        "message": "MERGE: restore CI contracts and harden permanent local-AI research path",
+        "sha": "aeddae404cb14c2a59a58f2ee4446f5044027f95",
+        "timestamp": "2026-09-28T22:38:25+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "23cd2f97f5604080195f5e78576eef36125ade03",
-        "timestamp": "2026-09-28T20:10:18Z"
+        "message": "FIX: align CI state assertions with canonical project state",
+        "sha": "7d445ffae7255c808ef18925ccbb8838428cc664",
+        "timestamp": "2026-09-28T22:36:40+02:00"
       },
       {
-        "message": "FIX: allow status-only descendant for T052 performance race",
-        "sha": "84ab5a65781b3bfa815c3ef21af7b78e6270dd58",
-        "timestamp": "2026-09-28T22:10:07+02:00"
+        "message": "FIX: allow governed empty current preregistered trial state",
+        "sha": "7f82820cea1c1156bca976efcfa36312ed917d98",
+        "timestamp": "2026-09-28T22:34:43+02:00"
       },
       {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "9726f47f9e1cd6a2390e09fa9c81bc2b169b81df",
-        "timestamp": "2026-09-28T20:09:24Z"
+        "message": "FIX: align current research queue family contract",
+        "sha": "2cc99381b4681a9f00b4e7a98b9572b27590f6d3",
+        "timestamp": "2026-09-28T22:33:13+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1889bf9108a5121b718e711562e16b82249c9889",
-        "timestamp": "2026-09-28T20:08:59Z"
+        "message": "TEST: fix idempotent publisher API fixture",
+        "sha": "a1034e62b38908223fb1abf27db5f87e6670f321",
+        "timestamp": "2026-09-28T22:30:56+02:00"
       },
       {
-        "message": "FIX: repair malformed github publish regression fixture",
-        "sha": "b59923bfdbd077b7321c8501c8622a84149cd00d",
-        "timestamp": "2026-09-28T22:08:48+02:00"
+        "message": "TEST: assert retired Q070 authorization is absent",
+        "sha": "eed56f1a767d17e65e01fb798dec99ac31fab782",
+        "timestamp": "2026-09-28T22:30:54+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2a0d854b83b9046e40fc574709dfa7ffff6a2c8b",
-        "timestamp": "2026-09-28T20:08:29Z"
+        "message": "TEST: assert retired hosted paths stay fail closed",
+        "sha": "49c916b67ce3a741c388254db2f7ab38684ee7c8",
+        "timestamp": "2026-09-28T22:30:51+02:00"
       },
       {
-        "message": "FIX: repair CI CMD label indentation",
-        "sha": "bb6988d774674b0fcd2d0da10903ba67811c71df",
-        "timestamp": "2026-09-28T22:08:14+02:00"
+        "message": "TEST: assert retired Q067 path is absent and closed",
+        "sha": "f43941a87388aef4294f1ac531465bb3b97c977f",
+        "timestamp": "2026-09-28T22:30:49+02:00"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8c2f7e8f9c241d4407034a89101364ba09aec887",
+  "source_master_sha": "aeddae404cb14c2a59a58f2ee4446f5044027f95",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36477374911"
+    "run_id": "36480634826"
   }
 }
