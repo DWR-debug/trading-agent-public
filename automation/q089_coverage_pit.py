@@ -297,7 +297,7 @@ def preregister() -> dict:
                     "role": "coverage",
                     "path": "research/evidence/q089_coverage_result.json",
                     "trial_id": COVERAGE_ID,
-                    "fingerprint_key": "snapshot_fingerprint",
+                    "fingerprint_key": "result_fingerprint",
                     "expected_data_contract_key": "coverage_result_fingerprint",
                 },
                 {
