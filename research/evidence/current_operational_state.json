@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T14:59:45.273621+00:00",
+  "generated_at_utc": "2026-09-28T15:00:48.670607+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: preregister Q085 fixed candidate validation",
+        "sha": "74885c364b6796bcc56638a0b4b4271953d786ec",
+        "timestamp": "2026-09-28T17:00:38+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q085 fresh validation design",
+        "sha": "fe3d1b1f38641715673966e770f05fcfa4fc28c9",
+        "timestamp": "2026-09-28T17:00:32+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a298c6a5bddff1ad2b8068ead991b74b1144d566",
+        "timestamp": "2026-09-28T14:59:45Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "88b9064f7f69e78fa9900850729bda36fe2c4b96",
         "timestamp": "2026-09-28T14:59:31Z"
@@ -180,21 +195,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "e559e5b63cc09b4ea9eb75625357080c7b097afa",
         "timestamp": "2026-09-28T14:57:11Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0d7c52dfda6f11a22d3216ce32dcad57c8f15c41",
-        "timestamp": "2026-09-28T14:56:55Z"
-      },
-      {
-        "message": "OPS: trigger Q084 self-hosted feasibility",
-        "sha": "8f7380f1c7ff9dde8768a418f5754127d8d4cd72",
-        "timestamp": "2026-09-28T16:56:44+02:00"
-      },
-      {
-        "message": "OPS: add self-hosted Q084 feasibility workflow",
-        "sha": "183eff1b67eedd6f9d5fe96c4f9bbdc56472b88b",
-        "timestamp": "2026-09-28T16:56:38+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "88b9064f7f69e78fa9900850729bda36fe2c4b96",
+  "source_master_sha": "74885c364b6796bcc56638a0b4b4271953d786ec",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36440149392"
+    "run_id": "36440307715"
   }
 }
