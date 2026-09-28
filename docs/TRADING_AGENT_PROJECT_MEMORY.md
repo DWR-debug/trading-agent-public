@@ -135,6 +135,9 @@ Verbindliche Betriebsregel:
 
 Diese Regel gilt dauerhaft, ist Teil des Projektgedächtnisses und muss bei der Planung jedes neuen Research-Jobs berücksichtigt werden.
 
+Technische Umsetzung der Dauerzufuhr: Workflow `.github/workflows/permanent-pc-research-loop.yml` startet bei verfügbarem Self-Hosted-Runner alle 30 Minuten einen begrenzten `autonomous_frontier_qa`-Forschungs-/QA-Block mit Latest-Run-Wins, sodass kein unnötiger Rückstau entsteht. Der Loop umfasst RCCSM-Feasibility, Frontier-Feasibility, Q089-Scaffolding/Envelope und Governance-Regressionen sowie einen deterministischen RCCSM-Provenienztest. Er erzeugt ausschließlich Paper-/QA-Evidence und besitzt keine Performance- oder Live-Autorisierung.
+
+
 ## Dauerhafte Zielbindung, familiäre Dringlichkeit und PC-Betrieb — 2026-09-28
 
 ### Übergeordnetes Ziel
