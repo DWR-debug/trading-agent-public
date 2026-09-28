@@ -68,7 +68,7 @@ jobs:
             "trial_id": expected,
             "recorded_at": datetime.now(timezone.utc).isoformat(),
             "status": trial_status,
-            "research_family": result["universe"],
+            "research_family": "q067_alpha_common_mode_and_turnover_performance",
             "hypothesis": {
               "text": "Evaluate the frozen Q067 alpha common-mode throttle and turnover hysteresis mechanisms against the unchanged six-sleeve ensemble under the fixed 13-gate contract."
             },
