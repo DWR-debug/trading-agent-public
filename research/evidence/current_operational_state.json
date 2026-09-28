@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T22:51:47.651915+00:00",
+  "generated_at_utc": "2026-09-28T22:57:57.735841+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -326,43 +326,43 @@
     "recent_commits": [
       {
         "message": "OPS: record AI worker state",
-        "sha": "f3a61517811f173f5ba9ba3dc0b140562b4c3612",
-        "timestamp": "2026-09-28T22:51:45Z"
+        "sha": "ca490289bd5089e6aa07b5dd362885e8fc18a450",
+        "timestamp": "2026-09-28T22:57:55Z"
       },
       {
-        "message": "FIX: bound Gemini context below Windows process limit",
-        "sha": "9da6a9c1d82b8f31aab89e9d30cacb00c8f4ed5b",
-        "timestamp": "2026-09-29T00:51:33+02:00"
+        "message": "FIX: decode Antigravity output as UTF-8",
+        "sha": "049e50b43a43022768cd0ec722b21fd0ba260d04",
+        "timestamp": "2026-09-29T00:57:44+02:00"
       },
       {
         "message": "OPS: record local AI worker state",
-        "sha": "e7ad5071b3acf93d5351709a9789a16c7a348e3f",
-        "timestamp": "2026-09-28T22:50:34Z"
+        "sha": "b5196673679b47465c9d5305f04911470eadd9b7",
+        "timestamp": "2026-09-28T22:56:06Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1760ba424957700099832640611eef5ed434a14d",
-        "timestamp": "2026-09-28T22:45:02Z"
-      },
-      {
-        "message": "FIX: remove obsolete Antigravity settings helper from worker",
-        "sha": "689921d7c68f111bcd874804569678c62f32136f",
-        "timestamp": "2026-09-29T00:44:49+02:00"
+        "message": "OPS: record local AI worker state",
+        "sha": "f251f25ffe7fdb1fb2e08f686665eb95bae4b3b6",
+        "timestamp": "2026-09-28T22:55:56Z"
       },
       {
         "message": "OPS: advance paper-forward MTM state",
-        "sha": "8f834db742b11b5e3c9e673a40d1bf8313988b30",
-        "timestamp": "2026-09-28T22:41:01Z"
+        "sha": "5b1c8586c8e896bc9b7c4016b3750a768bd097e6",
+        "timestamp": "2026-09-28T22:53:40Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "0d4c7e4e8e700316a0920d40ba4ceb5fdb12832a",
+        "timestamp": "2026-09-28T22:52:10Z"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "8fdddbb8867ecd8bbb378afec5eaf92556739ecc",
-        "timestamp": "2026-09-28T22:40:27Z"
+        "sha": "c8682f2019d7439c3a31fe063b59a0c3c325bce9",
+        "timestamp": "2026-09-28T22:51:56Z"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "a580cdd38bd20adee3aa445cbb38057ae05f59e2",
-        "timestamp": "2026-09-28T22:40:11Z"
+        "sha": "e3b138bdd2a102f1f6ca70e1d6b2603b60e8f820",
+        "timestamp": "2026-09-28T22:51:52Z"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f3a61517811f173f5ba9ba3dc0b140562b4c3612",
+  "source_master_sha": "ca490289bd5089e6aa07b5dd362885e8fc18a450",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36494826102"
+    "run_id": "36495395254"
   }
 }
