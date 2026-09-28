@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T09:32:24.684541+00:00",
+  "generated_at_utc": "2026-09-28T09:49:18.323112+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -162,6 +162,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: make Q068 Windows evidence publishing SHA capture robust (#549)",
+        "sha": "26cfbe9b9e2a61f2387f69d4d8d1631647075980",
+        "timestamp": "2026-09-28T11:49:04+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "efb209952d9445b1e98febcd4e52b1b2b220f0d2",
+        "timestamp": "2026-09-28T09:42:51Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6bc2404ff7d65abbb68665417772804d890ae40d",
+        "timestamp": "2026-09-28T09:32:24Z"
+      },
+      {
         "message": "FIX: make Q068 evidence publishing runner-path deterministic (#548)",
         "sha": "a1b505b90f10178f33d2ea827a7129920cec768c",
         "timestamp": "2026-09-28T11:32:09+02:00"
@@ -185,21 +200,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "3f3b68b095377ebd55f58cdd7c2df129a1152f4c",
         "timestamp": "2026-09-28T09:07:01Z"
-      },
-      {
-        "message": "Merge pull request #546 from DWR-debug/ops/q070-pipeline-status-20260928",
-        "sha": "aab4331f97030dbe3c5a771a21a39918ebceb7c2",
-        "timestamp": "2026-09-28T11:06:46+02:00"
-      },
-      {
-        "message": "TEST: lock Q070 pipeline state fail-closed behavior",
-        "sha": "ba4f7833628f3d204762c1208d4cdd74701b942a",
-        "timestamp": "2026-09-28T11:06:06+02:00"
-      },
-      {
-        "message": "FIX: bind Q070 reconciliation to exact asset-freeze fingerprint",
-        "sha": "2731103b64e41475abebf800decea89a7692dfcf",
-        "timestamp": "2026-09-28T11:05:56+02:00"
       }
     ]
   },
@@ -261,12 +261,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a1b505b90f10178f33d2ea827a7129920cec768c",
+  "source_master_sha": "26cfbe9b9e2a61f2387f69d4d8d1631647075980",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36404132885"
+    "run_id": "36405898515"
   }
 }
