@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:32:17.109264+00:00",
+  "generated_at_utc": "2026-09-28T10:33:13.072553+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: retrigger Q070 from frozen receipts (#566)",
+        "sha": "3bb74dee764e087acb09f94500390c6410ab7812",
+        "timestamp": "2026-09-28T12:33:00+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6c159838b32f1f637e8d93fdde6e20cc1a7a4d28",
+        "timestamp": "2026-09-28T10:32:17Z"
+      },
+      {
         "message": "TEST: lock Q070 frozen coverage/snapshot contract (#565)",
         "sha": "903d4e65ad0a11dcbbeadebf1f3a18ea7eac11d9",
         "timestamp": "2026-09-28T12:32:02+02:00"
@@ -185,16 +195,6 @@
         "message": "FIX: harden Q070 frozen snapshot and coverage fingerprint chain (#563)",
         "sha": "1578b695b2e337c43f4948de00e21aee22ee97fa",
         "timestamp": "2026-09-28T12:28:36+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "756406ce5439132b034cdbf0acb5d6f6b3bb2e01",
-        "timestamp": "2026-09-28T10:26:09Z"
-      },
-      {
-        "message": "OPS: retrigger Q068 after self-hosted runner restart",
-        "sha": "de6f9222b4b96b068c5c02fb9593b5aa7014bee4",
-        "timestamp": "2026-09-28T12:25:55+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "903d4e65ad0a11dcbbeadebf1f3a18ea7eac11d9",
+  "source_master_sha": "3bb74dee764e087acb09f94500390c6410ab7812",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36410281101"
+    "run_id": "36410376054"
   }
 }
