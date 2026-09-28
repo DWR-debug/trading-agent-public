@@ -198,3 +198,24 @@ def test_unregistered_authorization_remains_blocked(tmp_path):
     result = audit(tmp_path)
     assert result["status"] == "BLOCKED"
     assert any("not in active research registry" in item for item in result["errors"])
+
+
+def test_infrastructure_invalidated_trial_is_not_active(tmp_path):
+    _registry(tmp_path)
+    registry = json.loads(
+        (tmp_path / "research/governance/active_research_registry.json").read_text()
+    )
+    registry["active_trials"].insert(0, {
+        "code": "081R1",
+        "trial_id": "T-2026-09-28-081R1-PERFORMANCE",
+        "class": "historical_infrastructure_invalidated",
+        "state": "HISTORICAL_INFRASTRUCTURE_INVALIDATED",
+        "preregistration_path": "research/preregistrations/q081r1_performance_2026_09_28.json",
+        "performance_authorization_allowed": False,
+    })
+    (tmp_path / "research/governance/active_research_registry.json").write_text(
+        json.dumps(registry), encoding="utf-8"
+    )
+    _prereg(tmp_path)
+    result = audit(tmp_path)
+    assert result["status"] == "PASS"
