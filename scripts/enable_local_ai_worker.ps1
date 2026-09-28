@@ -17,32 +17,44 @@ if (-not $claude) { Write-Warning "Claude CLI is not installed; Claude lane will
 # Never allow Antigravity personal G1 credit fallback for project work.
 $settingsPath = Join-Path $HOME ".gemini\antigravity-cli\settings.json"
 New-Item -ItemType Directory -Force -Path (Split-Path $settingsPath) | Out-Null
-$settings = $null
-if (Test-Path $settingsPath) {
-    try { $settings = Get-Content $settingsPath -Raw | ConvertFrom-Json }
-    catch {
-        if (-not $Force) { throw "Cannot parse $settingsPath. Use -Force only after verifying the file." }
-        $settings = [pscustomobject]@{}
+$settingsText = if (Test-Path $settingsPath) {
+    Get-Content $settingsPath -Raw
+} else {
+    "{}"
+}
+
+if ([string]::IsNullOrWhiteSpace($settingsText)) { $settingsText = "{}" }
+if ($settingsText.TrimStart()[0] -ne "{") {
+    if (-not $Force) { throw "Cannot parse $settingsPath as a JSON object. Use -Force only after verifying the file." }
+    $settingsText = "{}"
+}
+
+# Constrained Language compatible JSON text mutation: no PSCustomObject/Add-Member operations.
+if ($settingsText -match '(?i)"UseG1Credits"\s*:\s*(true|false)') {
+    $settingsText = [regex]::Replace($settingsText, '(?i)"UseG1Credits"\s*:\s*(true|false)', '"UseG1Credits": false', 1)
+} elseif ($settingsText -match '(?i)"useG1Credits"\s*:\s*(true|false)') {
+    $settingsText = [regex]::Replace($settingsText, '(?i)"useG1Credits"\s*:\s*(true|false)', '"useG1Credits": false', 1)
+} else {
+    $trimmed = $settingsText.TrimEnd()
+    if ($trimmed.EndsWith("}")) {
+        $body = $trimmed.Substring(0, $trimmed.Length - 1).TrimEnd()
+        if ($body -and -not $body.EndsWith(",")) { $body += "," }
+        $settingsText = $body + '"UseG1Credits": false}'
     }
-} else {
-    $settings = [pscustomobject]@{}
 }
 
-$useG1 = $settings.PSObject.Properties["UseG1Credits"]
-if ($null -eq $useG1) { $useG1 = $settings.PSObject.Properties["useG1Credits"] }
-if ($null -ne $useG1) {
-    $useG1.Value = $false
+if ($settingsText -match '(?i)"tradingAgentFreeOnly"\s*:\s*(true|false)') {
+    $settingsText = [regex]::Replace($settingsText, '(?i)"tradingAgentFreeOnly"\s*:\s*(true|false)', '"tradingAgentFreeOnly": true', 1)
 } else {
-    $settings | Add-Member -NotePropertyName "UseG1Credits" -NotePropertyValue $false
+    $trimmed = $settingsText.TrimEnd()
+    if ($trimmed.EndsWith("}")) {
+        $body = $trimmed.Substring(0, $trimmed.Length - 1).TrimEnd()
+        if ($body -and -not $body.EndsWith(",")) { $body += "," }
+        $settingsText = $body + '"tradingAgentFreeOnly": true}'
+    }
 }
-$tradingOnly = $settings.PSObject.Properties["tradingAgentFreeOnly"]
-if ($null -ne $tradingOnly) {
-    $tradingOnly.Value = $true
-} else {
-    $settings | Add-Member -NotePropertyName "tradingAgentFreeOnly" -NotePropertyValue $true
-}
-$settings | ConvertTo-Json -Depth 20 | Set-Content -Encoding UTF8 $settingsPath
 
+Set-Content -Encoding UTF8 $settingsPath -Value $settingsText
 $providers = @()
 if ($agy -or $gemini) { $providers += "gemini_cli" }
 if ($claude) { $providers += "claude_cli" }
