@@ -81,13 +81,18 @@ jobs:
           checked_out_master_sha="$(git rev-parse HEAD)"
           echo "STATUS_SOURCE_SHA=${checked_out_master_sha}" >> "${GITHUB_ENV}"
           test -n "$checked_out_master_sha"
-      - name: Verify master tip before status generation
+      - name: Record master race-tolerant source
         shell: bash
         run: |
           set -euo pipefail
-          echo "STATUS_SYNC_STALE_MASTER_GUARD"
+          echo "STATUS_SYNC_RACE_TOLERANT_SOURCE"
+          echo "initial_checked_out_master=${STATUS_SOURCE_SHA}"
           remote_master_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
-          test "$remote_master_sha" = "$STATUS_SOURCE_SHA"
+          if [ "$remote_master_sha" != "$STATUS_SOURCE_SHA" ]; then
+            echo "STATUS_SYNC_MASTER_MOVED_BEFORE_GENERATION remote=${remote_master_sha}"
+          else
+            echo "STATUS_SYNC_MASTER_STABLE_AT_CHECK"
+          fi
       - name: Generate, verify and commit synchronized status with race retry
         shell: bash
         run: |
