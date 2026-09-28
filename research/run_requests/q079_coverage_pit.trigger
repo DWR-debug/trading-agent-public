@@ -1,1 +1,1 @@
-Q079 final coverage + PIT trigger — stale-reference audit passed 2026-09-28T11:26Z.
+Q079 authoritative coverage + PIT trigger — current master 6c06592182be2398bf59a362657e13aad1a49c9d; prior run ignored due stale PIT checkout.
