@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T20:07:35.337040+00:00",
+  "generated_at_utc": "2026-09-28T20:08:29.264757+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,6 +325,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: repair CI CMD label indentation",
+        "sha": "bb6988d774674b0fcd2d0da10903ba67811c71df",
+        "timestamp": "2026-09-28T22:08:14+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2cd7671b280360498503154c292e31309d2eec2a",
+        "timestamp": "2026-09-28T20:07:35Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "65e590b998e1c3d94bc760d48d52380088906222",
         "timestamp": "2026-09-28T20:07:21Z"
@@ -353,16 +363,6 @@
         "message": "FIX: repair CI CMD label indentation",
         "sha": "6788fb34ac0aa89434b3b1bd289ac4b4a1d9179b",
         "timestamp": "2026-09-28T22:07:05+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "09b87133f21e2ddcc136fe0491d686ba10f44e8c",
-        "timestamp": "2026-09-28T20:07:02Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f89922642ec7223cb4f231ba4f48d9e93de4b24c",
-        "timestamp": "2026-09-28T20:04:35Z"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "65e590b998e1c3d94bc760d48d52380088906222",
+  "source_master_sha": "bb6988d774674b0fcd2d0da10903ba67811c71df",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36476950038"
+    "run_id": "36477060360"
   }
 }
