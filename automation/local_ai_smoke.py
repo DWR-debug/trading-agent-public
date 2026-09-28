@@ -25,20 +25,20 @@ def _find(*names: str) -> str | None:
     return None
 
 
-def _g1_disabled() -> tuple[bool, str]:
+def _g1_disabled() -> tuple[bool, str, object | None, str | None]:
     home = Path(os.environ.get("USERPROFILE", str(Path.home())))
     path = home / ".gemini" / "antigravity-cli" / "settings.json"
     try:
         data = json.loads(path.read_text(encoding="utf-8-sig"))
-    except (OSError, json.JSONDecodeError):
-        return False, str(path)
+    except (OSError, json.JSONDecodeError) as exc:
+        return False, str(path), None, type(exc).__name__
     for key in ("UseG1Credits", "useG1Credits"):
         if key in data:
             value = data[key]
             if value is False or (isinstance(value, str) and value.strip().lower() == "false"):
-                return True, str(path)
-            return False, str(path)
-    return False, str(path)
+                return True, str(path), value, None
+            return False, str(path), value, None
+    return False, str(path), None, "MISSING_KEY"
 
 
 def _run(cmd: list[str], timeout: int = TIMEOUT_SECONDS) -> subprocess.CompletedProcess[str]:
@@ -84,8 +84,10 @@ def main() -> int:
         result["version"] = version.stdout.strip().splitlines()[-1][:200] if version.stdout.strip() else None
 
     if agy:
-        disabled, settings_path = _g1_disabled()
+        disabled, settings_path, g1_value, g1_error = _g1_disabled()
         result["g1_fallback_disabled"] = disabled
+        result["g1_setting_value"] = g1_value
+        result["g1_settings_error"] = g1_error
         result["settings_path"] = settings_path
         if not disabled:
             result["status"] = "BLOCKED_G1_FALLBACK_NOT_DISABLED"
