@@ -13,6 +13,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: trading-agent-q079-discovery
+  cancel-in-progress: true
+
 jobs:
   discover:
     if: github.repository == 'DWR-debug/trading-agent-public'
