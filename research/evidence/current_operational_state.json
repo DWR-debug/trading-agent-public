@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T10:33:13.072553+00:00",
+  "generated_at_utc": "2026-09-28T10:37:15.268193+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -154,8 +154,37 @@
     "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "fix/q070-snapshot-spec-completion-20260928",
+        "number": 567,
+        "title": "FIX: complete Q070 frozen snapshot reconstruction spec",
+        "updatedAt": "2026-09-28T10:34:15Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/567"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "OPS: rerun Q068 after source-contract verifier fix",
+        "sha": "a2c6c99a5c216bd3df02f82ad5620100922e0ddf",
+        "timestamp": "2026-09-28T12:37:08+02:00"
+      },
+      {
+        "message": "FIX: verify Q068 frozen performance contract from Git tree",
+        "sha": "e5a190adbd83374153b46ebeb162d364aaed85c3",
+        "timestamp": "2026-09-28T12:37:02+02:00"
+      },
+      {
+        "message": "FIX: verify Q068 frozen contract from checked-out Git tree",
+        "sha": "2c1c501da0d600d6a0aec3f874250fd1cd40695a",
+        "timestamp": "2026-09-28T12:36:49+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e83023a098f1f03dd4c481d5bc1b165d3301438d",
+        "timestamp": "2026-09-28T10:33:13Z"
+      },
       {
         "message": "OPS: retrigger Q070 from frozen receipts (#566)",
         "sha": "3bb74dee764e087acb09f94500390c6410ab7812",
@@ -175,26 +204,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "31cfa26b1c3d620fc21ac3884f85f6bf20226bb8",
         "timestamp": "2026-09-28T10:30:16Z"
-      },
-      {
-        "message": "GOV: revoke Q068 performance after frozen snapshot mismatch (#564)",
-        "sha": "dd3d2057967ed41e1570d486faca24293d07c980",
-        "timestamp": "2026-09-28T12:30:02+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "543b0e0eb385e781d1a7a1d2afcc7a13903d373a",
-        "timestamp": "2026-09-28T10:28:55Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "a21683726c5ad2a40c037bfb6cb83c19514cde9d",
-        "timestamp": "2026-09-28T10:28:51Z"
-      },
-      {
-        "message": "FIX: harden Q070 frozen snapshot and coverage fingerprint chain (#563)",
-        "sha": "1578b695b2e337c43f4948de00e21aee22ee97fa",
-        "timestamp": "2026-09-28T12:28:36+02:00"
       }
     ]
   },
@@ -256,12 +265,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "3bb74dee764e087acb09f94500390c6410ab7812",
+  "source_master_sha": "a2c6c99a5c216bd3df02f82ad5620100922e0ddf",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36410376054"
+    "run_id": "36410775183"
   }
 }
