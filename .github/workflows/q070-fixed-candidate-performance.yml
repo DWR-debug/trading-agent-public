@@ -1,0 +1,98 @@
+name: Q070 Fixed Candidate Performance
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/authorizations/q070_performance_2026_09_28.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-q070-performance
+  cancel-in-progress: false
+
+jobs:
+  performance:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 240
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Bootstrap Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal EnableExtensions
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-q070"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-q070.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            mkdir "%PY_ROOT%" 2>nul
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" -m pip --version >nul 2>&1
+          if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
+          "%PY_EXE%" -m pip install --disable-pip-version-check pandas || exit /b 1
+          "%PY_EXE%" --version || exit /b 1
+          endlocal
+
+      - name: Authorization and safety gate
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q070\tools\python.exe"
+          "%PY_EXE%" -c "import json; from pathlib import Path; from config import settings; p=json.loads(Path('research/preregistrations/q070_performance_2026_09_28.json').read_text(encoding='utf-8')); a=json.loads(Path('research/authorizations/q070_performance_2026_09_28.json').read_text(encoding='utf-8')); assert p['status']=='PREREGISTERED_PERFORMANCE'; assert p['selection_used'] is False and p['holdout_used_for_selection'] is False; assert a['authorized'] is True and a['performance_execution_authorized'] is True and a['execution_scope']=='Q070_FIXED_CANDIDATE_PERFORMANCE_ONLY'; assert settings.PAPER_ONLY is True and settings.LIVE_TRADING_ENABLED is False and settings.ORDERS_ENABLED is False and settings.AUTOMATIC_PROMOTION is False; print('Q070 AUTH SAFETY OK')"
+
+      - name: Verify preflight receipts
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q070\tools\python.exe"
+          if not exist research\evidence\q070_coverage_result.json exit /b 1
+          if not exist research\evidence\q070_pit_result.json exit /b 1
+          "%PY_EXE%" -c "import json; from pathlib import Path; c=json.loads(Path('research/evidence/q070_coverage_result.json').read_text()); p=json.loads(Path('research/evidence/q070_pit_result.json').read_text()); a=json.loads(Path('research/authorizations/q070_performance_2026_09_28.json').read_text()); assert c['status']=='COVERAGE_PASSED' and p['status']=='PIT_PASSED'; assert a['source_receipts']['coverage_result_fingerprint']==c['result_fingerprint']; assert a['source_receipts']['pit_result_fingerprint']==p['result_fingerprint']; print('Q070 PREREQUISITES OK')"
+
+      - name: Fixed-rule performance
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q070\tools\python.exe"
+          "%PY_EXE%" -m automation.q070_performance --repo-root . --output research/evidence/q070_performance_result.json || exit /b 1
+
+      - name: Validate performance result
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q070\tools\python.exe"
+          "%PY_EXE%" -c "import json; from pathlib import Path; d=json.loads(Path('research/evidence/q070_performance_result.json').read_text()); assert d['status']=='COMPLETED'; assert d['performance_evaluation'] is True and d['oos_evaluation'] is True and d['holdout_evaluation'] is True; assert d['selection_used'] is False and d['holdout_used_for_selection'] is False; assert d['governance']['promotion_decision'] is False and d['governance']['automatic_promotion'] is False; assert set(d['arms'])=={'C7_LOW_MAX_21','C8_LOW_IDIO_VOL_273','C9_LONG_TERM_REVERSAL_756','C10_TREND_EFFICIENCY_63','C11_VOLUME_CONFIRMED_TREND_126'}; assert all(0<=x['gates_passed']<=13 for x in d['arms'].values()); print('Q070 RESULT GOVERNANCE OK'); [print(k,str(v['gates_passed'])+'/13') for k,v in d['arms'].items()]"
+
+      - name: Persist performance evidence
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q070\tools\python.exe"
+          set "PUBLISH_MESSAGE=EVIDENCE: record Q070 fixed candidate performance"
+          for /f %%H in ('"%PY_EXE%" -c "import os,urllib.request,json; u='https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/ref/heads/master'; r=urllib.request.Request(u,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'}); print(json.load(urllib.request.urlopen(r))['object']['sha'])"') do set "BASE_SHA=%%H"
+          "%PY_EXE%" -m automation.github_contents_publish --repository "%GITHUB_REPOSITORY%" --branch master --base-sha "%BASE_SHA%" --file research/evidence/q070_performance_result.json=research\evidence\q070_performance_result.json || exit /b 1
+
+      - name: Publish summary
+        if: always()
+        shell: cmd
+        run: |
+          @echo off
+          if exist research\evidence\q070_performance_result.json type research\evidence\q070_performance_result.json
+          echo Q070_RUNNER=%RUNNER_NAME%
+          echo Q070_SHA=%GITHUB_SHA%
+          echo Q070_RUN_ID=%GITHUB_RUN_ID%
