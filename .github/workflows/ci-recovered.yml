@@ -1,20 +1,26 @@
-name: CI Recovered Smoke
+name: CI Matrix Smoke
 
 on:
-  push:
-    branches: [master]
-  workflow_dispatch:
+  issues:
+    types: [opened]
 
 permissions:
   contents: read
 
 jobs:
   smoke:
-    runs-on: ubuntu-24.04
+    if: >-
+      ${{
+        github.repository == 'DWR-debug/trading-agent-public' &&
+        github.event.issue.user.login == github.repository_owner &&
+        github.event.issue.title == 'OPS: CI matrix smoke'
+      }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 5
     steps:
-      - name: Smoke
-        run: |
-          echo CI_RECOVERED_SMOKE=RUNNER_REACHED
-          echo SHA=${GITHUB_SHA}
-          echo RUN_ID=${GITHUB_RUN_ID}
+      - name: Matrix smoke
+        run: echo CI_MATRIX_SMOKE=${{ matrix.runner }}
