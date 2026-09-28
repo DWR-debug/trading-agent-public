@@ -28,6 +28,9 @@ def test_github_free_resource_policy_is_structurally_valid():
     assert "Nicht delegieren:" in policy
     assert "finale Forschungsentscheidung" in policy
     assert "Holdout-/Promotion-Entscheidungen" in policy
+    assert "2026-10-01T00:00:00Z" in policy
+    assert "12 AI credits maximale Agent-Session" in policy
+    assert "4 Session-Reservierungen pro Monat" in policy
     assert "Steuer-/Research-Agent" in supervision
     assert "Worker dürfen niemals" in supervision
     assert "Technical-QA-Gate" in supervision
