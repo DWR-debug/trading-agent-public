@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T17:26:05.776975+00:00",
+  "generated_at_utc": "2026-09-28T17:27:07.161774+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -237,6 +237,16 @@
     ],
     "recent_commits": [
       {
+        "message": "TEST: make retired authorization audit fixture complete (#617)",
+        "sha": "fef7ba45927b48e3c827b2dba6cc398a51c7c2e7",
+        "timestamp": "2026-09-28T19:26:49+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c776fbc13e23b04e915c1707c59e0c7009094b85",
+        "timestamp": "2026-09-28T17:26:05Z"
+      },
+      {
         "message": "RESEARCH: add F2 quality acceleration PIT feasibility (#616)",
         "sha": "a6b03d5758e64a194ca45ff5ea902944109c0e50",
         "timestamp": "2026-09-28T19:25:47+02:00"
@@ -265,16 +275,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "464c4d7094c1fab8a76efbd668b93c978df78bbf",
         "timestamp": "2026-09-28T17:23:12Z"
-      },
-      {
-        "message": "RESEARCH: add lagged RCCSM state topology and mechanism disagreement (#615)",
-        "sha": "08eccdfb409373e809a3428f081fd21992797c0d",
-        "timestamp": "2026-09-28T19:22:53+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "fee1a5858f31e633bc8e2c36086c8f5cf427c176",
-        "timestamp": "2026-09-28T17:19:10Z"
       }
     ]
   },
@@ -336,12 +336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a6b03d5758e64a194ca45ff5ea902944109c0e50",
+  "source_master_sha": "fef7ba45927b48e3c827b2dba6cc398a51c7c2e7",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36458065577"
+    "run_id": "36458187730"
   }
 }
