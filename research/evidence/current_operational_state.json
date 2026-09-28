@@ -106,7 +106,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:51:38.692165+00:00",
+  "generated_at_utc": "2026-09-28T15:51:55.347987+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -220,6 +220,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2dff236634d726093bc3c658763ef893c57cfd10",
+        "timestamp": "2026-09-28T15:51:38Z"
+      },
+      {
         "message": "OPS: rerun Q081-R1 after final governance identity fix",
         "sha": "1f3ac3a9e63c1c9f749c41b2d04bd938710583ca",
         "timestamp": "2026-09-28T17:51:30+02:00"
@@ -253,11 +258,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "af13b825b90f4d55afc247da1d972c0c8bf379ec",
         "timestamp": "2026-09-28T15:50:17Z"
-      },
-      {
-        "message": "OPS: trigger final Q081-R1 governance preflight",
-        "sha": "308b0bbbb747de0547058c8837af34a379b66c98",
-        "timestamp": "2026-09-28T17:50:13+02:00"
       }
     ]
   },
@@ -319,12 +319,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1f3ac3a9e63c1c9f749c41b2d04bd938710583ca",
+  "source_master_sha": "2dff236634d726093bc3c658763ef893c57cfd10",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36446754716"
+    "run_id": "36446770318"
   }
 }
