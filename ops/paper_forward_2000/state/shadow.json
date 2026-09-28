@@ -23,7 +23,7 @@
   },
   "candidate_fingerprint": "233139d7e349e17fa7a4025e8db8f3d6c43798e828bfe5bca1e0c216bdc439d4",
   "candidate_id": "paper-forward-operational-canary-btcusdt-1h-v1-capital-2000",
-  "candle_count": 522,
+  "candle_count": 523,
   "candles": [
     {
       "close": 79912.0,
@@ -4200,15 +4200,23 @@
       "open": 83579.75,
       "timestamp": "2026-09-28T13:00:00+00:00",
       "volume": 1176.20149
+    },
+    {
+      "close": 83020.0,
+      "high": 83642.0,
+      "low": 82563.0,
+      "open": 83641.99,
+      "timestamp": "2026-09-28T14:00:00+00:00",
+      "volume": 1496.68398
     }
   ],
-  "feed_candle_fingerprint": "b246cea2ce6754cceb954de38017384a32d1fe9c62a402742096631926cbac10",
-  "feed_fetch_fingerprint": "eb0a3da615f8200547b1c8c603669a1171706ed2de066147025b098eefaf17fb",
-  "feed_receipt_fingerprint": "a051dfb83b12828d8a7718890196a75f3dd24042a938af4a28021197ccee4e17",
+  "feed_candle_fingerprint": "8527e17ba2acd56f9793a7d87c62be8fbd360bb8d1eaef15070f3570e200cc90",
+  "feed_fetch_fingerprint": "e56eb4ebc0821d7ac80488b7f1e5f26f935c003a88661829c75b7624c0c0af46",
+  "feed_receipt_fingerprint": "93a32c7837332d724818b3836e6413f549f53086e73250941de9c4b01388cc68",
   "freeze_ref": "paper-forward-operational-canary-v1-capital-2000",
-  "input_fingerprint": "567fe5892a128e52634ef990fa943606d5e552aee185d41237505f125791b407",
+  "input_fingerprint": "70d71457219e8d82d50fb8da77e03eb9af00d9b30d1901e782b95cc55cac2cf6",
   "interval": "1h",
-  "last_market_timestamp_utc": "2026-09-28T13:00:00+00:00",
+  "last_market_timestamp_utc": "2026-09-28T14:00:00+00:00",
   "mode": "PAPER_FORWARD_SHADOW",
   "portfolio": {
     "cash_eur": 1954.2051706803004,
@@ -16208,6 +16216,29 @@
           "signal": "HOLD"
         },
         "unrealized_pnl_eur": 0.0
+      },
+      {
+        "action": "HOLD",
+        "cash_eur": 1954.2051706803004,
+        "close_price": 83020.0,
+        "cumulative_fees_eur": 4.016759574749948,
+        "equity_eur": 1954.2051706803004,
+        "gross_traded_notional_eur": 4016.759574749948,
+        "market_timestamp_utc": "2026-09-28T14:00:00+00:00",
+        "mtm_drawdown_percent": 4.501116235153968,
+        "position_entry_price": null,
+        "position_entry_timestamp_utc": null,
+        "position_exposure_eur": 0.0,
+        "position_quantity": 0.0,
+        "position_side": null,
+        "realized_drawdown_percent": 2.2897414659849735,
+        "realized_pnl_eur": -45.79482931969947,
+        "signal": {
+          "confidence": 0.0,
+          "reason": "Signal Combiner: Score unterhalb der Entscheidungsschwelle.",
+          "signal": "HOLD"
+        },
+        "unrealized_pnl_eur": 0.0
       }
     ],
     "maximum_mtm_drawdown_percent": 4.501116235153968,
@@ -16256,10 +16287,10 @@
     "orders_enabled": false
   },
   "schema_version": 2,
-  "signal_fingerprint": "372c123b2ea04943a645ca2ca551d034eeea99605762a84cc04a62909b14381b",
+  "signal_fingerprint": "6ca2487a27cb6bd6d1291d8fc3a597d5ee3043e85cc99fb3a57c0cb7e284fc2b",
   "started_at_utc": "2026-09-06T20:00:00+00:00",
   "status": "RUNNING",
   "stopped_at_utc": null,
   "symbol": "BTCUSDT",
-  "updated_at_utc": "2026-09-28T13:00:00+00:00"
+  "updated_at_utc": "2026-09-28T14:00:00+00:00"
 }
