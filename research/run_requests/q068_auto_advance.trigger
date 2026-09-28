@@ -1,1 +1,1 @@
-Q068 autonomous advance request — rerun on current master after Git-tree contract verifier fix 2026-09-28T10:43Z.
+Q068 autonomous advance request — retrigger on persisted Git-tree contract verifier 2026-09-28T10:47Z.
