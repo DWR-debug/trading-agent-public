@@ -7,8 +7,7 @@ from pathlib import Path
 def test_publish_retries_concurrent_fast_forward(monkeypatch, tmp_path) -> None:
     module = importlib.import_module("automation.github_contents_publish")
     payload = tmp_path / "evidence.json"
-    payload.write_text('{"status":"ok"}
-', encoding="utf-8")
+    payload.write_text('{"status":"ok"}\n', encoding="utf-8")
 
     base1 = "1" * 40
     base2 = "2" * 40
