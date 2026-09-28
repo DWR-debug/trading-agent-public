@@ -67,7 +67,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T05:05:51.029823+00:00",
+  "generated_at_utc": "2026-09-28T05:07:54.513999+00:00",
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -93,8 +93,32 @@
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/335"
       }
     ],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "state/q066-final-current-status",
+        "number": 513,
+        "title": "STATE/RESEARCH: finalize Q066 and register Q067 design",
+        "updatedAt": "2026-09-28T05:07:00Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/513"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "STATE/RESEARCH: finalize Q066 and register Q067 design",
+        "sha": "e32c548e80990a008264cd31d14baaf2efe08b42",
+        "timestamp": "2026-09-28T07:07:41+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "25a1313f6672f782f9f289dc6f50b4168562c720",
+        "timestamp": "2026-09-28T05:07:34Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3e787fdd0fea9b79803f5e7b8300853de1592057",
+        "timestamp": "2026-09-28T05:05:51Z"
+      },
       {
         "message": "STATE: canonicalize T060/Q066 evidence",
         "sha": "5b91675d78a24d709aeb5337848ca9f6876f026d",
@@ -119,21 +143,6 @@
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "d400a54a8d975d9b3ae7b2ab8824482aabb3a014",
         "timestamp": "2026-09-28T04:54:23Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "7aa963fa3c9e0880eb6ae5478df94d00a218f67e",
-        "timestamp": "2026-09-28T04:43:48Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9ce5e673c1ff0a5de6dc92bb6beef72c00127011",
-        "timestamp": "2026-09-28T04:39:23Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "887461dc961b657938a2ca743204981dcfcb2988",
-        "timestamp": "2026-09-28T04:39:12Z"
       }
     ]
   },
@@ -157,7 +166,7 @@
     "decision_basis_stage": "Q066_COMPLETED_DIAGNOSTIC_ONLY",
     "latest_formal_status": "NO_ARM_PASSED_ALL_13_GATES",
     "latest_formal_trial": "T-2026-09-27-065",
-    "next_research_focus_recorded": "Q067 ex-ante design of an alpha-level common-mode risk/diversification mechanism from Q066 findings; no performance evaluation until fresh coverage/PIT and parameter freeze.",
+    "next_research_focus_recorded": "Q067 design-only: two unranked follow-up mechanisms derived from Q066 — alpha-level common-mode exposure control and turnover hysteresis; no performance evaluation until parameter freeze, fresh coverage and PIT.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -195,12 +204,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5b91675d78a24d709aeb5337848ca9f6876f026d",
+  "source_master_sha": "e32c548e80990a008264cd31d14baaf2efe08b42",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36380404211"
+    "run_id": "36380550087"
   }
 }
