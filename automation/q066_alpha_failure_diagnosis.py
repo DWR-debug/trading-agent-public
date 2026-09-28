@@ -546,7 +546,12 @@ def overlap_diagnostics(
         for b in arms[i + 1 :]:
             all_values = []
             adverse_values = []
-            for j in range(len(weights_by_arm[a])):
+            observation_count = min(
+                len(weights_by_arm[a]),
+                len(weights_by_arm[b]),
+                len(control_underwater),
+            )
+            for j in range(observation_count):
                 sa = {s for s, w in weights_by_arm[a][j].items() if abs(float(w)) > 1e-12}
                 sb = {s for s, w in weights_by_arm[b][j].items() if abs(float(w)) > 1e-12}
                 value = jaccard(sa, sb)
