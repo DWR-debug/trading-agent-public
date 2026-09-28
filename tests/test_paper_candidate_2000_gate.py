@@ -129,7 +129,10 @@ def test_evidence_symlink_outside_checkout_is_fail_closed(tmp_path, monkeypatch)
     manifest = _write_fixture(tmp_path, monkeypatch)
     outside_evidence = tmp_path.parent / "outside-evidence.json"
     outside_evidence.write_text(json.dumps(_evidence_payload()), encoding="utf-8")
-    (tmp_path / "research" / "evidence-link.json").symlink_to(outside_evidence)
+    try:
+        (tmp_path / "research" / "evidence-link.json").symlink_to(outside_evidence)
+    except OSError as exc:
+        pytest.skip(f"symlink creation unavailable on this Windows runner: {exc}")
     payload = json.loads((tmp_path / manifest).read_text(encoding="utf-8"))
     payload["evidence_path"] = "research/evidence-link.json"
     (tmp_path / manifest).write_text(json.dumps(payload), encoding="utf-8")
