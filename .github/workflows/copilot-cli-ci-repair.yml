@@ -117,6 +117,11 @@ jobs:
           fi
           test -s "$RUNNER_TEMP/ci_failure.log"
 
+      - name: Reserve protected Copilot Free session
+        uses: ./.github/actions/copilot-free-gate
+        with:
+          github-token: ${{ github.token }}
+
       - name: Install Copilot CLI
         run: npm install -g @github/copilot
 
@@ -154,7 +159,7 @@ jobs:
           copilot \
             --autopilot \
             --no-ask-user \
-            --max-ai-credits=60 \
+            --max-ai-credits=12 \
             --max-autopilot-continues=2 \
             -p "$prompt" \
             --available-tools='read,write,shell(git:*),shell(pytest)' \
