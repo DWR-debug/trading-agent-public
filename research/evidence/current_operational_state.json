@@ -54,7 +54,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T15:14:59.328158+00:00",
+  "generated_at_utc": "2026-09-28T15:15:16.289713+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "coverage receipt missing",
@@ -157,6 +157,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: bridge Q081-R1 self-hosted performance dispatch",
+        "sha": "9a50963f081e7b991651d39fd9a4b57fe9961701",
+        "timestamp": "2026-09-28T17:15:10+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "f462e0169469e514456f0d5f161c9360aa3c9b10",
+        "timestamp": "2026-09-28T15:15:02Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b88d187983827f4dc2aaf6e2861b590dea67e66f",
+        "timestamp": "2026-09-28T15:14:59Z"
+      },
+      {
         "message": "OPS: add Q081-R1 self-hosted performance workflow",
         "sha": "7e8b0f07f325f7e9c85dc234ee82017481169468",
         "timestamp": "2026-09-28T17:14:58+02:00"
@@ -180,21 +195,6 @@
         "message": "OPS: add Q081-R1 preflight fallback",
         "sha": "55d3a45a1279da659e1bca879279f64641ae44e9",
         "timestamp": "2026-09-28T17:14:24+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "533dd5aa7743a6b6662a9e77e9d01ecc48d33027",
-        "timestamp": "2026-09-28T15:14:05Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "184930217eba537487139717daf554e307944133",
-        "timestamp": "2026-09-28T15:13:51Z"
-      },
-      {
-        "message": "RESEARCH: preregister Q081-R1 schema-corrected rerun",
-        "sha": "fcf645a3d09d7c2452b509a816d4dac0614dc4a8",
-        "timestamp": "2026-09-28T17:13:44+02:00"
       }
     ]
   },
@@ -256,12 +256,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7e8b0f07f325f7e9c85dc234ee82017481169468",
+  "source_master_sha": "9a50963f081e7b991651d39fd9a4b57fe9961701",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36442086063"
+    "run_id": "36442135247"
   }
 }
