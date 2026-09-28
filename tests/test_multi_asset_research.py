@@ -8,7 +8,6 @@ def test_asset_universe_priority_is_unique_and_ordered():
     priorities = [item.priority for item in universes]
 
     assert priorities == sorted(priorities)
-    assert priorities == sorted(priorities)
 
 
 def test_small_cap_universe_is_first_research_tier():
