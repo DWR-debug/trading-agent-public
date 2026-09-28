@@ -124,7 +124,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T19:07:13.479850+00:00",
+  "generated_at_utc": "2026-09-28T19:08:11.491783+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -247,6 +247,16 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: avoid host PowerShell execution-policy block in capacity probe",
+        "sha": "cc27fb6bfa0f29b4bdf3b9c632e5aa13161ff0c8",
+        "timestamp": "2026-09-28T21:07:57+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6e4257890b23c4a7578f870eb0c870a6bd09b864",
+        "timestamp": "2026-09-28T19:07:13Z"
+      },
+      {
         "message": "OPS: trigger parallel self-hosted continuous QA after runner #2 online",
         "sha": "7cb9d11e06d84781a6713eb5d4bb65ca2b944f09",
         "timestamp": "2026-09-28T21:06:57+02:00"
@@ -275,16 +285,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "bfdf8b52bcdc9e6c4cf41b55fbd5106f0b2033d0",
         "timestamp": "2026-09-28T18:57:20Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "f42213170da4363d8456e3904ffc318207f1ad23",
-        "timestamp": "2026-09-28T18:55:49Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "f88eec54d608cbd743a29b58a0c9ea8eba1a558c",
-        "timestamp": "2026-09-28T18:46:22Z"
       }
     ]
   },
@@ -346,12 +346,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7cb9d11e06d84781a6713eb5d4bb65ca2b944f09",
+  "source_master_sha": "cc27fb6bfa0f29b4bdf3b9c632e5aa13161ff0c8",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36469983219"
+    "run_id": "36470097488"
   }
 }
