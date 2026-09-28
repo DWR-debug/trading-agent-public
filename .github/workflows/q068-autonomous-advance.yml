@@ -53,11 +53,6 @@ jobs:
           if not exist "%PY_EXE%" exit /b 1
           if exist research\authorizations\q068_performance_2026_09_28.json exit /b 0
           "%PY_EXE%" -c "import json; from pathlib import Path; c=json.loads(Path('research/evidence/q068_coverage_result.json').read_text(encoding='utf-8')); p=json.loads(Path('research/evidence/q068_pit_result.json').read_text(encoding='utf-8')); auth={'schema_version':'1.0','authorization_id':'Q068-PERFORMANCE-AUTO-ONE-SHOT-2026-09-28','authorized':True,'authorization_basis':'Both immutable Q068 coverage and PIT receipts passed their fail-closed prerequisites.','execution_scope':'Q068_FIXED_RULE_PERFORMANCE_ONLY','performance_execution_authorized':True,'required_prerequisites':['T-2026-09-28-068-COVERAGE status=COVERAGE_PASSED','T-2026-09-28-068-PIT status=PIT_PASSED'],'source_receipts':{'coverage_result_fingerprint':c['result_fingerprint'],'pit_result_fingerprint':p['result_fingerprint']},'prohibited':['parameter selection','threshold selection','asset selection','family ranking','holdout selection','promotion','live execution'],'safety':{'PAPER_ONLY':True,'LIVE_TRADING_ENABLED':False,'ORDERS_ENABLED':False,'AUTOMATIC_PROMOTION':False}}; Path('research/authorizations').mkdir(parents=True,exist_ok=True); Path('research/authorizations/q068_performance_2026_09_28.json').write_text(json.dumps(auth,indent=2)+'\n',encoding='utf-8')"
-          git diff --check || exit /b 1
-          git add research\authorizations\q068_performance_2026_09_28.json || exit /b 1
-          git diff --cached --quiet
-          if not errorlevel 1 exit /b 0
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "OPS: authorize Q068 performance after preflight pass" || exit /b 1
-          git push origin HEAD:master || exit /b 1
+          set "PUBLISH_MESSAGE=OPS: authorize Q068 performance after preflight pass"
+          for /f %%H in ('"%PY_EXE%" -c "import os,urllib.request,json; u='https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/ref/heads/master'; r=urllib.request.Request(u,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'}); print(json.load(urllib.request.urlopen(r))['object']['sha'])"') do set "BASE_SHA=%%H"
+          "%PY_EXE%" -m automation.github_contents_publish --repository "%GITHUB_REPOSITORY%" --branch master --base-sha "%BASE_SHA%" --file research/authorizations/q068_performance_2026_09_28.json=research\authorizations\q068_performance_2026_09_28.json
