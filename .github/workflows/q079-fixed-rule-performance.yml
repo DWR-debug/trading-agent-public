@@ -1,0 +1,129 @@
+name: Q079 Fixed Rule Performance
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/authorizations/q079_performance_2026_09_28.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-q079-performance
+  cancel-in-progress: false
+
+jobs:
+  performance:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - name: Checkout exact authorized master
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check pandas pytest
+
+      - name: Authorization, source, safety and network-free gate
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          from config import settings
+          a=json.loads(Path("research/authorizations/q079_performance_2026_09_28.json").read_text())
+          p=json.loads(Path("research/preregistrations/q079_performance_2026_09_28.json").read_text())
+          assert a["authorized"] is True and a["performance_execution_authorized"] is True
+          assert a["execution_scope"]=="Q079_FIXED_RULE_PERFORMANCE_ONLY"
+          assert p["status"]=="PREREGISTERED_PERFORMANCE"
+          assert p["selection_used"] is False and p["holdout_used_for_selection"] is False
+          actual={path:subprocess.check_output(["git","rev-parse","HEAD:"+path],text=True).strip() for path in a["source_contract"]}
+          assert actual==a["source_contract"]
+          assert settings.PAPER_ONLY is True and settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False and settings.AUTOMATIC_PROMOTION is False
+          t=Path("automation/q079_e1_e2_performance.py").read_text()
+          forbidden=["urlopen(","urllib.request","query1.finance.yahoo.com","requests.get(","http://","https://query"]
+          assert not any(x in t for x in forbidden)
+          print("Q079 AUTH/SOURCE/SAFETY/NETWORK-FREE OK")
+          PY
+
+      - name: Immutable prerequisite verification
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path("research/authorizations/q079_performance_2026_09_28.json").read_text())
+          c=json.loads(Path("research/evidence/q079_coverage_result.json").read_text())
+          p=json.loads(Path("research/evidence/q079_pit_result.json").read_text())
+          b=json.loads(Path("research/evidence/q079_input_freeze_result.json").read_text())
+          assert c["status"]=="COVERAGE_PASSED"
+          assert p["status"]=="PIT_PASSED"
+          assert b["status"]=="INPUT_BUNDLE_FROZEN"
+          assert a["source_receipts"]["coverage_result_fingerprint"]==c["result_fingerprint"]
+          assert a["source_receipts"]["pit_result_fingerprint"]==p["result_fingerprint"]
+          assert a["source_receipts"]["input_bundle_fingerprint"]==b["bundle_fingerprint"]
+          print("Q079 IMMUTABLE PREREQUISITES OK")
+          PY
+
+      - name: Run fixed-rule Q079 performance
+        run: |
+          python automation/q079_e1_e2_performance.py             --preregistration research/preregistrations/q079_performance_2026_09_28.json             --repo-root .             --output research/evidence/q079_performance_result.json
+
+      - name: Validate result governance and gate schema
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("research/evidence/q079_performance_result.json").read_text())
+          assert d["status"]=="COMPLETED"
+          assert d["performance_evaluation"] is True
+          assert d["oos_evaluation"] is True
+          assert d["holdout_evaluation"] is True
+          assert d["selection_used"] is False
+          assert d["holdout_used_for_selection"] is False
+          assert d["governance"]["promotion_decision"] is False
+          assert d["governance"]["automatic_promotion"] is False
+          assert d["symbols"]==["HAL","LRCX","OXY","COF","FIS","FISV","GM","LHX"]
+          assert set(d["arms"])=={"CONTROL_6SLEEVE_ENSEMBLE","E1_ALPHA_COMMON_MODE_THROTTLE","E2_TURNOVER_HYSTERESIS"}
+          assert all(0 <= v["gates_passed"] <= 13 for v in d["arms"].values())
+          print("Q079 RESULT GOVERNANCE OK")
+          for k,v in d["arms"].items():
+              print(k, f"{v['gates_passed']}/{v['gates_total']}")
+          print("Q079_REPORT_FINGERPRINT:",d["report_fingerprint"])
+          PY
+
+      - name: Persist performance evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          export PUBLISH_MESSAGE="EVIDENCE: record Q079 fixed-rule performance"
+          for attempt in 1 2 3 4 5
+          do
+            BASE_SHA="$(python -c 'import json,os,urllib.request; u="https://api.github.com/repos/"+os.environ["GITHUB_REPOSITORY"]+"/git/ref/heads/master"; r=urllib.request.Request(u,headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json"}); print(json.load(urllib.request.urlopen(r,timeout=30))["object"]["sha"])')"
+            if python automation/github_contents_publish.py --repository "${GITHUB_REPOSITORY}" --branch master --base-sha "${BASE_SHA}" --file research/evidence/q079_performance_result.json=research/evidence/q079_performance_result.json
+            then
+              echo "Q079 performance evidence persisted"
+              break
+            fi
+            if [ "$attempt" -eq 5 ]; then exit 1; fi
+            sleep $((attempt * 2))
+          done
+
+      - name: Upload performance result
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q079-fixed-rule-performance
+          path: research/evidence/q079_performance_result.json
+          if-no-files-found: error
+          retention-days: 30
