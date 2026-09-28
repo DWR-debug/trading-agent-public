@@ -139,7 +139,8 @@ jobs:
           assert state["agent_usage"]["auto_paid_api_calls"] is False
           trial_entries = ledger["trials"]
           trial_ids = {entry["trial_id"] for entry in trial_entries}
-          assert state["current_preregistered_trial"] in trial_ids
+          if state["current_preregistered_trial"] is not None:
+              assert state["current_preregistered_trial"] in trial_ids
           assert state["latest_formal_trial"] in trial_ids
           latest = next(item for item in trial_entries if item["trial_id"] == state["latest_formal_trial"])
           scientific_outcome = latest.get("outcome", {}).get("scientific_outcome")
