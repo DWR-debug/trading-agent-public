@@ -114,7 +114,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T16:46:29.819255+00:00",
+  "generated_at_utc": "2026-09-28T16:46:44.207785+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -228,6 +228,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8ed2557bd36bcb34544a0a756fe782cdf81a94f9",
+        "timestamp": "2026-09-28T16:46:30Z"
+      },
+      {
         "message": "OPS: deduplicate Q081-R1 preflight runs",
         "sha": "36736cec6b8bd908d7fac5da56819a02c0aa69c9",
         "timestamp": "2026-09-28T18:46:27+02:00"
@@ -261,11 +266,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "43c236e2fb24b0e409da09bb6ab6ddcb700c5bd2",
         "timestamp": "2026-09-28T16:44:12Z"
-      },
-      {
-        "message": "OPS: trigger F1 SEC profitability source/PIT feasibility",
-        "sha": "5018ec97dc20bb1c5113ab6fb9e162062eb3a9ab",
-        "timestamp": "2026-09-28T18:44:07+02:00"
       }
     ]
   },
@@ -327,12 +327,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "36736cec6b8bd908d7fac5da56819a02c0aa69c9",
+  "source_master_sha": "8ed2557bd36bcb34544a0a756fe782cdf81a94f9",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36453435431"
+    "run_id": "36453462394"
   }
 }
