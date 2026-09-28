@@ -175,7 +175,7 @@ def test_continuous_qa_is_matrix_orchestrated_and_bounded():
     assert "needs: qa_lane" in text
     assert "if: always()" in text
     assert "MATRIX_RESULT: ${{ needs.qa_lane.result }}" in text
-    assert 'test "$MATRIX_RESULT" = "success"' in text
+    assert 'if /I not "%MATRIX_RESULT%"=="success" exit /b 1' in text
 
 
 def test_self_hosted_continuous_qa_is_scheduled_and_non_formal():
