@@ -102,7 +102,10 @@ def load_task(path: Path) -> dict[str, Any]:
 def _local_attestation(provider: str, env: dict[str, str]) -> dict[str, Any]:
     path = Path(env.get("TRADING_AGENT_AI_ATTESTATION", str(LOCAL_ATTESTATION_DEFAULT))).expanduser()
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
+        # Windows PowerShell 5.1 writes UTF-8 text files with a BOM. Accept
+        # both BOM-prefixed and BOM-free JSON so a locally generated
+        # free-only attestation is not falsely rejected.
+        data = json.loads(path.read_text(encoding="utf-8-sig"))
     except (OSError, json.JSONDecodeError):
         return {"present": False, "path": str(path)}
     providers = data.get("providers", [])
