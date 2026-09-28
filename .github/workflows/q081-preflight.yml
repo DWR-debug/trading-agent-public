@@ -24,7 +24,7 @@ concurrency:
 
 jobs:
   preflight:
-    if: github.repository == "DWR-debug/trading-agent-public" && (github.event_name != "issues" || github.event.issue.title == "[Q081-PREFLIGHT] Verify corrected replication prerequisites")
+    if: github.repository == "DWR-debug/trading-agent-public" && (github.event_name != "issues" || startsWith(github.event.issue.title, "[Q081-PREFLIGHT]"))
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 30
     steps:
