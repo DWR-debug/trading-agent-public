@@ -124,7 +124,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-28T18:07:08.602112+00:00",
+  "generated_at_utc": "2026-09-28T18:07:29.726884+00:00",
   "q067_execution_pipeline": {
     "blocking_reasons": [
       "obsolete execution path retired; historical evidence preserved"
@@ -247,6 +247,36 @@
     ],
     "recent_commits": [
       {
+        "message": "DOCS: add external AI worker authentication setup",
+        "sha": "39c58e7a73e8b434f0d50c55ef5b53be003305bd",
+        "timestamp": "2026-09-28T20:07:28+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "d799fc5afaf0ad0983c7fcc70f09b74e0647d2e7",
+        "timestamp": "2026-09-28T18:07:25Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "36bbd5259cdb5b97e5f5285d509855014291bd73",
+        "timestamp": "2026-09-28T18:07:23Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "db3d862eb293ae15fcf53b63eb6cf1f102a31c6b",
+        "timestamp": "2026-09-28T18:07:16Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "928761f3752a82bbf154c3b651dcf79d38f42702",
+        "timestamp": "2026-09-28T18:07:14Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "642e479a8705084e3780e5d3efc164a7b39b74e4",
+        "timestamp": "2026-09-28T18:07:08Z"
+      },
+      {
         "message": "DOCS: anchor provider authentication and Copilot reserve",
         "sha": "7f3043bb8ab617fff0f87f876c6f2874e23b77c6",
         "timestamp": "2026-09-28T20:06:58+02:00"
@@ -255,36 +285,6 @@
         "message": "DOCS: anchor provider authentication and Copilot reserve",
         "sha": "f6df35efd6106671f3e5a10e6eda94d1830b8b53",
         "timestamp": "2026-09-28T20:06:55+02:00"
-      },
-      {
-        "message": "DOCS: anchor provider authentication and Copilot reserve",
-        "sha": "3e16171150f61d4ad35fe1a5fd990efff852818b",
-        "timestamp": "2026-09-28T20:06:53+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6caac8e85e3afbc3ea4081a5ec3721c7f71e11a9",
-        "timestamp": "2026-09-28T18:06:36Z"
-      },
-      {
-        "message": "OPS: protect monthly Copilot Free research reserve",
-        "sha": "faf5c3384d7c3472786af785ef48c8c4b710b2c8",
-        "timestamp": "2026-09-28T20:06:20+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ebf274708cdae13d08ee27383e11b23112be208a",
-        "timestamp": "2026-09-28T18:05:58Z"
-      },
-      {
-        "message": "OPS: conserve scarce Copilot Free worker capacity",
-        "sha": "3dd1e192e0f1205ee8c4598186f287ab3f874aed",
-        "timestamp": "2026-09-28T20:05:43+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5ec4a50a12a3c63b1cd2df81db35eb0fc94f3d20",
-        "timestamp": "2026-09-28T18:05:33Z"
       }
     ]
   },
@@ -346,12 +346,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7f3043bb8ab617fff0f87f876c6f2874e23b77c6",
+  "source_master_sha": "39c58e7a73e8b434f0d50c55ef5b53be003305bd",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36462915189"
+    "run_id": "36462928743"
   }
 }
