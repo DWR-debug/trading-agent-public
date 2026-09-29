@@ -146,12 +146,13 @@
         "trial_id": "T-2026-09-29-094"
       },
       {
+        "authorization_id": "AUTH-Q095-2026-09-29-01",
         "class": "independent_replication",
         "code": "095",
         "issue_number": null,
-        "performance_authorization_allowed": false,
+        "performance_authorization_allowed": true,
         "preregistration_path": "research/preregistrations/q095_monthly_rebalance_independent_replication_2026_09_29.json",
-        "state": "PREREGISTERED_WAITING_AUTHORIZATION",
+        "state": "PERFORMANCE_AUTHORIZED",
         "trial_id": "T-2026-09-29-095"
       }
     ],
@@ -265,7 +266,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T14:01:49.216315+00:00",
+  "generated_at_utc": "2026-09-29T14:03:35.864532+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -388,6 +389,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: dispatch Q095 independent replication performance once",
+        "sha": "1859fc8f80d66486f11109d9fd88bf076eb4988b",
+        "timestamp": "2026-09-29T16:03:21+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "b67f5a740543a7f53fdf13d6849cee7bb5b58436",
+        "timestamp": "2026-09-29T14:02:34Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "169d8320fba7b5e55367853e42eee75795a498f7",
+        "timestamp": "2026-09-29T14:01:49Z"
+      },
+      {
         "message": "GOVERNANCE: final retry Q095 one-shot authorization after green provenance gate",
         "sha": "adaf0e73447bef373bdaf3737aecafe94be2489e",
         "timestamp": "2026-09-29T16:01:35+02:00"
@@ -411,21 +427,6 @@
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "40ad2786555532db55e2e8bf92981816650757fa",
         "timestamp": "2026-09-29T13:58:26Z"
-      },
-      {
-        "message": "GOVERNANCE: make Q095 authorization token job-scoped",
-        "sha": "4b60271a7bbac38fafff25bc2035fdc9e9cffaed",
-        "timestamp": "2026-09-29T15:58:23+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "773fcdb107a890381cded76bf5898385c6103ce9",
-        "timestamp": "2026-09-29T13:57:00Z"
-      },
-      {
-        "message": "GOVERNANCE: retry Q095 authorization after green frozen code gate",
-        "sha": "5bfbd1b3d0959811099e0e1a101ff8e4bde3561a",
-        "timestamp": "2026-09-29T15:56:46+02:00"
       }
     ]
   },
@@ -495,12 +496,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "adaf0e73447bef373bdaf3737aecafe94be2489e",
+  "source_master_sha": "1859fc8f80d66486f11109d9fd88bf076eb4988b",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36579530951"
+    "run_id": "36579758994"
   }
 }
