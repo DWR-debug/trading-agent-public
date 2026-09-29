@@ -68,7 +68,7 @@ jobs:
         run: |
           set -euo pipefail
           test -f research/authorizations/q089_performance_2026_09_28.json
-          python automation/q089_performance.py --repo-root . --output research/evidence/q089_performance_result.json
+          python -m automation.q089_performance --repo-root . --output research/evidence/q089_performance_result.json
 
       - name: Reconcile immutable result and consume authorization
         shell: bash
