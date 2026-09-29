@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T16:19:47.800044+00:00",
+  "generated_at_utc": "2026-09-29T16:20:04.145222+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "QA: cover Q097 public source channels and 48-candidate inventory",
+        "sha": "e95b97442a0a4dcf2dd0a4250b928226b35576b9",
+        "timestamp": "2026-09-29T18:19:55+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d5d2b8c1911f86c28f3204fdf2eb94779e2902b0",
+        "timestamp": "2026-09-29T16:19:47Z"
+      },
+      {
         "message": "RESEARCH: classify Q097 public information channels in frontier gate matrix",
         "sha": "6856b5bd67b14909ad645026b23a6d04ae7b7734",
         "timestamp": "2026-09-29T18:19:46+02:00"
@@ -423,16 +433,6 @@
         "message": "RESEARCH: extend candidate inventory with public short-flow ownership channels",
         "sha": "c8300b15b0ec51e849e6b8f48222679ed17c35cf",
         "timestamp": "2026-09-29T18:19:09+02:00"
-      },
-      {
-        "message": "RESEARCH: extend Q096 audit to FTD short-interest and SEC ownership channels",
-        "sha": "d8087f7f63d41b0ef63c1f858ea6f54756250f5c",
-        "timestamp": "2026-09-29T18:19:01+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e6113e20319608d4f6b869f696a8ec82c707e005",
-        "timestamp": "2026-09-29T16:17:47Z"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "6856b5bd67b14909ad645026b23a6d04ae7b7734",
+  "source_master_sha": "e95b97442a0a4dcf2dd0a4250b928226b35576b9",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36596873145"
+    "run_id": "36596908896"
   }
 }
