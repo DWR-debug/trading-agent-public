@@ -118,9 +118,9 @@
         "class": "fresh_validation",
         "code": "091",
         "issue_number": null,
-        "performance_authorization_allowed": false,
+        "performance_authorization_allowed": true,
         "preregistration_path": "research/preregistrations/q091_fixed_portfolio_architecture_2026_09_29.json",
-        "state": "PREREGISTERED_WAITING_AUTHORIZATION",
+        "state": "PERFORMANCE_AUTHORIZED",
         "trial_id": "T-2026-09-29-091"
       }
     ],
@@ -234,7 +234,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T11:43:05.056369+00:00",
+  "generated_at_utc": "2026-09-29T11:43:19.609751+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -357,6 +357,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOVERNANCE: activate Q091 one-shot performance authorization",
+        "sha": "9d97230cabdd4e3af6efdfa782af4d3502448804",
+        "timestamp": "2026-09-29T11:43:17Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a5f53e550026926d942ec04a092199a72c04ac40",
+        "timestamp": "2026-09-29T11:43:05Z"
+      },
+      {
         "message": "OPS: record AI worker state",
         "sha": "42e228d2ab8b6915899e787ccd58356c60715224",
         "timestamp": "2026-09-29T11:43:02Z"
@@ -385,16 +395,6 @@
         "message": "FIX: install pytest in Q091 authorization preflight",
         "sha": "d76b105ada7ba14272c43b4998f4f0908c076e38",
         "timestamp": "2026-09-29T13:42:49+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "36488154e8317626cabdce876d4d67ff954e7483",
-        "timestamp": "2026-09-29T11:42:42Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a0bfa12598e11553d359a091a981b3aa8f7eb8f9",
-        "timestamp": "2026-09-29T11:42:31Z"
       }
     ]
   },
@@ -464,12 +464,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "42e228d2ab8b6915899e787ccd58356c60715224",
+  "source_master_sha": "9d97230cabdd4e3af6efdfa782af4d3502448804",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36563448639"
+    "run_id": "36563463472"
   }
 }
