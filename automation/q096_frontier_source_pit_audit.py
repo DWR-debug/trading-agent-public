@@ -162,6 +162,14 @@ def sec_submission_probe(label: str, cik: str, target_forms: set[str], text_chec
             s, data, c = get(filing)
             filing_text = data.decode("utf-8", "replace") if s == 200 else ""
             normalized_text = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", filing_text))).strip()
+            normalized_text = (
+                normalized_text
+                .replace("’", "'")
+                .replace("‘", "'")
+                .replace("“", '"')
+                .replace("”", '"')
+                .replace("\u00a0", " ")
+            )
             header = (
                 f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/"
                 f"{candidate['accessionNumber'].replace('-', '')}/"
