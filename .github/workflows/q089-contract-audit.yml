@@ -26,10 +26,8 @@ jobs:
         include:
           - lane: ubuntu
             runs_on: ubuntu-latest
-            shell: bash
           - lane: self_hosted
             runs_on: '["self-hosted","trading-agent-research"]'
-            shell: cmd
     runs-on: ${{ contains(matrix.lane, 'self') && fromJSON(matrix.runs_on) || matrix.runs_on }}
     timeout-minutes: 8
     steps:
@@ -63,17 +61,36 @@ jobs:
           echo %PY_ROOT%\tools>>"%GITHUB_PATH%"
           endlocal
 
-      - name: Install test dependency
-        shell: ${{ matrix.shell }}
+      - name: Install test dependency (hosted)
+        if: matrix.lane == 'ubuntu'
+        shell: bash
         run: python -m pip install --disable-pip-version-check pytest
-      - name: Run unit test
-        shell: ${{ matrix.shell }}
+      - name: Install test dependency (self-hosted)
+        if: matrix.lane == 'self_hosted'
+        shell: cmd
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Run unit test (hosted)
+        if: matrix.lane == 'ubuntu'
+        shell: bash
         run: python -m pytest -q tests/test_q089_contract_audit.py
-      - name: Run read-only audit
-        shell: ${{ matrix.shell }}
+      - name: Run unit test (self-hosted)
+        if: matrix.lane == 'self_hosted'
+        shell: cmd
+        run: python -m pytest -q tests/test_q089_contract_audit.py
+
+      - name: Run read-only audit (hosted)
+        if: matrix.lane == 'ubuntu'
+        shell: bash
         run: |
           python -m automation.q089_contract_audit > q089-contract-audit.json
           cat q089-contract-audit.json
+      - name: Run read-only audit (self-hosted)
+        if: matrix.lane == 'self_hosted'
+        shell: cmd
+        run: |
+          python -m automation.q089_contract_audit > q089-contract-audit.json
+          type q089-contract-audit.json
       - name: Upload audit receipt
         if: always()
         uses: actions/upload-artifact@v6
