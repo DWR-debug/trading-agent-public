@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T18:14:59.472312+00:00",
+  "generated_at_utc": "2026-09-29T18:20:24.818977+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,44 +395,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: make Q098 historical SEC depth contract anchor-aware and acceptance-time robust",
+        "sha": "9e31bb5806eac4242f053d2e300d1d5492a3033d",
+        "timestamp": "2026-09-29T20:20:13+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "9160b0af9f6d64e457d0f5bc8a12bd360a16ba5c",
+        "timestamp": "2026-09-29T18:18:56Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "b98566a092ce3e3254959b2b3b913c1ab9908900",
+        "timestamp": "2026-09-29T18:16:20Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "2fa6e4fe84a2f742f6a32cc3a1b3afd13f222161",
+        "timestamp": "2026-09-29T18:15:39Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "d12d34a305c4495fc307cba4fc233d0503ca0f1b",
+        "timestamp": "2026-09-29T18:15:36Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "d3e44e7e8d41968440502184c5275e98b9852f83",
+        "timestamp": "2026-09-29T18:15:27Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "98700e42aa3feadade0a06a91dbe181025f7b740",
+        "timestamp": "2026-09-29T18:15:25Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
-        "sha": "c4cd7ab70e931c0eeae82567ee5e166053fba692",
-        "timestamp": "2026-09-29T18:14:45Z"
-      },
-      {
-        "message": "QA: trigger permanent loop on AI quota guard changes",
-        "sha": "d85a2a3cf2c2a98c4e573770f617392cd9577266",
-        "timestamp": "2026-09-29T20:14:37+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ac6fa0193c4a252d5c3573a43d01fccf6b7b9f2e",
-        "timestamp": "2026-09-29T18:14:27Z"
-      },
-      {
-        "message": "QA: add local AI quota cache regression tests",
-        "sha": "375a8087d672320e4c94345556c757a26ece2f3f",
-        "timestamp": "2026-09-29T20:14:26+02:00"
-      },
-      {
-        "message": "OPS: skip local AI worker matrix when provider quota is blocked",
-        "sha": "d242566fdaa148c9ab3b53177f1392d2422cea79",
-        "timestamp": "2026-09-29T20:14:12+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2e68e885e078ba3ff9bdbfe8fdc46e1c02908cf9",
-        "timestamp": "2026-09-29T18:13:26Z"
-      },
-      {
-        "message": "OPS: keep G1 safety verification before local AI quota cache short-circuit",
-        "sha": "762009e9a7c0b8d52bc5cefc500a5669ed639bf1",
-        "timestamp": "2026-09-29T20:13:11+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "13313dd47addbba3e88d292e0a40546040a5d56c",
-        "timestamp": "2026-09-29T18:13:07Z"
+        "sha": "a9ab6b4f894dcaaa59e0a067f1bf6ce8987c678c",
+        "timestamp": "2026-09-29T18:14:59Z"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c4cd7ab70e931c0eeae82567ee5e166053fba692",
+  "source_master_sha": "9e31bb5806eac4242f053d2e300d1d5492a3033d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36610666228"
+    "run_id": "36611328707"
   }
 }
