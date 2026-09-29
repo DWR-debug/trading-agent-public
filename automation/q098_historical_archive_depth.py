@@ -24,12 +24,14 @@ GDELT_DATES = ("20130401", "20190101", "20210101")
 
 HISTORICAL_EDGAR_ANCHORS = {
     "13D_G": {
-        "url": "https://www.sec.gov/Archives/edgar/data/1020066/000102006611000014/0001020066-11-000014-index.html",
+        "url": "https://www.sec.gov/Archives/edgar/data/1020066/000102006611000014/0001020066-11-000014-index-headers.html",
+        "accession": "0001020066-11-000014",
         "forms": {"SC 13G", "SC 13G/A", "SCHEDULE 13G", "SCHEDULE 13G/A"},
         "study_date": "2011-06-09",
     },
     "FORM144": {
-        "url": "https://www.sec.gov/Archives/edgar/data/1326801/000192109423000806/0001921094-23-000806-index.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/1326801/000192109423000806/0001921094-23-000806-index-headers.html",
+        "accession": "0001921094-23-000806",
         "forms": {"144"},
         "study_date": "2023-11-06",
     },
