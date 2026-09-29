@@ -128,8 +128,8 @@ def sec_submission_probe(label: str, cik: str, target_forms: set[str], text_chec
     row["checks"] = {
         "valid_json": True,
         "has_recent_filings": bool(rows),
-        "has_acceptance_timestamps": bool(rows) and all(x["acceptanceDateTime"] for x in rows[: min(25, len(rows))]),
         "has_accession_numbers": bool(rows) and all(x["accessionNumber"] for x in rows[: min(25, len(rows))]),
+        "submission_acceptance_field_present": any(x["acceptanceDateTime"] for x in rows[: min(25, len(rows))]),
         "target_forms_present": bool(matched),
         "historical_extension_metadata_present": bool(older_files) or len(rows) >= 1000,
     }
@@ -147,16 +147,36 @@ def sec_submission_probe(label: str, cik: str, target_forms: set[str], text_chec
                 continue
             filing = filing_url(cik, candidate["accessionNumber"], candidate["primaryDocument"])
             s, data, c = get(filing)
-            text = data.decode("utf-8", "replace") if s == 200 else ""
+            filing_text = data.decode("utf-8", "replace") if s == 200 else ""
+            header = (
+                f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/"
+                f"{candidate['accessionNumber'].replace('-', '')}/"
+                f"{candidate['accessionNumber']}-index-headers.html"
+            )
+            hs, hdata, hc = get(header)
+            header_text = hdata.decode("utf-8", "replace") if hs == 200 else ""
+            row.setdefault("header_probes", []).append({
+                "form": form,
+                "url": header,
+                "http_status": hs,
+                "response_sha256": fp(hdata),
+                "checks": {
+                    "acceptance_datetime": "<ACCEPTANCE-DATETIME>" in header_text.upper(),
+                    "accession_number": candidate["accessionNumber"] in header_text,
+                    "conformed_submission_type": form.upper() in header_text.upper(),
+                },
+            })
             row["text_probe"] = {
                 "form": form,
                 "url": filing,
                 "http_status": s,
                 "response_sha256": fp(data),
-                "checks": {check: check.lower() in text.lower() for check in checks},
+                "checks": {check: check.lower() in filing_text.lower() for check in checks},
             }
             row["checks"][f"{form}_primary_document_found"] = s == 200
-            row["checks"].update({f"{form}_{check}": check.lower() in text.lower() for check in checks})
+            row["checks"][f"{form}_header_found"] = hs == 200
+            row["checks"][f"{form}_acceptance_datetime"] = hs == 200 and "<ACCEPTANCE-DATETIME>" in header_text.upper()
+            row["checks"].update({f"{form}_{check}": check.lower() in filing_text.lower() for check in checks})
 
     row["status"] = "VERIFIABLE" if row["checks"] and all(row["checks"].values()) else "SCHEMA_MISMATCH"
     return row
