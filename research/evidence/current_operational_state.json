@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T17:18:13.499071+00:00",
+  "generated_at_utc": "2026-09-29T17:19:41.952914+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "QA: require all Q096 public source probes to execute",
+        "sha": "e2d13dc54b7958bbabf5eb8b9b72ffd4abcc25af",
+        "timestamp": "2026-09-29T19:19:37+02:00"
+      },
+      {
+        "message": "FIX: execute all Q096 public source probes",
+        "sha": "fa61507c3858bae2cc2029aee2410045b1ead279",
+        "timestamp": "2026-09-29T19:19:31+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8a8f827b6af0516fcc5a65f98dc2b4b2c00baa5c",
+        "timestamp": "2026-09-29T17:18:13Z"
+      },
+      {
         "message": "QA: fix continuous QA concurrency contract assertion",
         "sha": "e79b0f397f744f6de00edffe2c38e958a92d45be",
         "timestamp": "2026-09-29T19:18:03+02:00"
@@ -418,21 +433,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "fe69e9d16c05d0af892e2298f3300081ded0ea76",
         "timestamp": "2026-09-29T17:16:22Z"
-      },
-      {
-        "message": "OPS: harden permanent research snapshot downloads against transient resets",
-        "sha": "f3c79d5b3e513b8e01614b6a3b9d6291796b3844",
-        "timestamp": "2026-09-29T19:15:50+02:00"
-      },
-      {
-        "message": "QA: lock verified SEC sample filer identifiers",
-        "sha": "4967fe9fca09edf4c7a8762be6e57c7df538e340",
-        "timestamp": "2026-09-29T19:15:17+02:00"
-      },
-      {
-        "message": "RESEARCH: base SEC submission probe on actual target filings",
-        "sha": "42fb3ea867667383adaf935eecf5b704dbd15619",
-        "timestamp": "2026-09-29T19:15:10+02:00"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e79b0f397f744f6de00edffe2c38e958a92d45be",
+  "source_master_sha": "e2d13dc54b7958bbabf5eb8b9b72ffd4abcc25af",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36603955398"
+    "run_id": "36604122047"
   }
 }
