@@ -19,7 +19,7 @@ def test_q096_inventory_is_the_frozen_current_inventory() -> None:
     assert inventory["status"] == "DESIGN_INVENTORY_ONLY"
     assert inventory["policy"]["performance_authorized"] is False
     assert inventory["policy"]["holdout_selection_allowed"] is False
-    assert len(inventory["candidates"]) == 44
+    assert len(inventory["candidates"]) == 48
     option_rows = [row for row in inventory["candidates"] if row[0] == "Q078:O1"]
     assert option_rows and option_rows[0][3] == "BLOCKED_FREE_HISTORICAL_SOURCE"
 
@@ -36,6 +36,10 @@ def test_q096_probes_cover_the_new_frontier_data_channels() -> None:
     assert "FORM4_SAMPLE" in module
     assert "FORM13F_SAMPLE" in module
     assert "GDELT_DAILY_ARCHIVE" in module
+    assert "SEC_FTD_HISTORY" in module
+    assert "FINRA_SHORT_INTEREST" in module
+    assert "BENEFICIAL_OWNERSHIP_SAMPLE" in module
+    assert "FORM144_SAMPLE" in module
 
 
 def test_q096_matrix_is_non_evaluative() -> None:
@@ -83,3 +87,15 @@ def test_q096_sec_submission_row_normalization_and_filing_url() -> None:
     assert filing_url(SEC_SAMPLE_CIKS["MSFT"], rows[0]["accessionNumber"], rows[0]["primaryDocument"]).endswith(
         "/Archives/edgar/data/789019/000078901926000001/annual.htm"
     )
+
+
+def test_q096_matrix_classifies_q097_public_channels_as_sec_or_public_source() -> None:
+    candidates = [
+        ["Q097:I15", "Fails-to-deliver stress change", "SEC Fails-to-Deliver", "SOURCE_FEASIBILITY_ONLY"],
+        ["Q097:I16", "Short-interest change", "FINRA Short Interest", "SOURCE_FEASIBILITY_ONLY"],
+        ["Q097:I17", "Beneficial-ownership change", "SEC Schedule 13D/13G", "SOURCE_FEASIBILITY_ONLY"],
+        ["Q097:I18", "Proposed insider-sale flow", "SEC Form 144", "SOURCE_FEASIBILITY_ONLY"],
+    ]
+    matrix = candidate_gate_matrix(candidates)
+    assert all(row["source_state"] == "PUBLIC_SOURCE_CHANNEL_CONFIRMED" for row in matrix)
+    assert all(row["performance_authorized"] is False for row in matrix)
