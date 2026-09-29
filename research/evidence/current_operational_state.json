@@ -225,7 +225,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T10:19:42.164958+00:00",
+  "generated_at_utc": "2026-09-29T10:20:12.866545+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -348,6 +348,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "EVIDENCE: persist Q091 coverage and PIT snapshot",
+        "sha": "09b6ca2c1faa36502268cbbbd8d3767eeef5858d",
+        "timestamp": "2026-09-29T10:20:10Z"
+      },
+      {
+        "message": "OPS: record local AI worker state",
+        "sha": "f3de9b13d73a27e317c9531c17fbb59d73587497",
+        "timestamp": "2026-09-29T10:20:03Z"
+      },
+      {
+        "message": "OPS: retry Q091 verified coverage persistence",
+        "sha": "7284239cb2d42389226fbad0c184f5d6c58fad20",
+        "timestamp": "2026-09-29T12:19:57+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4756d34c106e409199891a583dce9638eb457787",
+        "timestamp": "2026-09-29T10:19:42Z"
+      },
+      {
         "message": "FIX: persist Q091 snapshot without CSV whitespace false positive",
         "sha": "f7d648836f1eca3b17817430304add6cf471654c",
         "timestamp": "2026-09-29T12:19:27+02:00"
@@ -366,26 +386,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "fea1583af08cb1e8198b0f505b441f59b35f5e83",
         "timestamp": "2026-09-29T10:18:13Z"
-      },
-      {
-        "message": "OPS: persist verified Q091 coverage snapshot",
-        "sha": "a26d72fe25b5fac2cc20f90e64881d4ee9863a25",
-        "timestamp": "2026-09-29T12:18:02+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5d05e69f142c7444b8e92c222436d489a86c6eba",
-        "timestamp": "2026-09-29T10:17:01Z"
-      },
-      {
-        "message": "RESEARCH: integrate Q091 fixed portfolio architecture",
-        "sha": "fe4fae22bf387c89c968741e290d657ad9e37782",
-        "timestamp": "2026-09-29T12:16:48+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "f8447f14df595a042094962f01f998628e5ab487",
-        "timestamp": "2026-09-29T10:14:12Z"
       }
     ]
   },
@@ -455,12 +455,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f7d648836f1eca3b17817430304add6cf471654c",
+  "source_master_sha": "09b6ca2c1faa36502268cbbbd8d3767eeef5858d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36554850372"
+    "run_id": "36554901898"
   }
 }
