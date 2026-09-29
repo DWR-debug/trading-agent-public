@@ -35,10 +35,32 @@ jobs:
         with:
           ref: master
           fetch-depth: 1
-      - name: Set up Python
+      - name: Set up Python (hosted)
+        if: matrix.lane == 'ubuntu'
         uses: actions/setup-python@v6
         with:
           python-version: "3.13"
+
+      - name: Bootstrap pinned Python (self-hosted)
+        if: matrix.lane == 'self_hosted'
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-q089-audit"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-q089-audit.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          "%PY_EXE%" -m pip --version >nul 2>&1
+          if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
+          echo %PY_ROOT%\tools>>"%GITHUB_PATH%"
+          endlocal
+
       - name: Install test dependency
         run: python -m pip install --disable-pip-version-check pytest
       - name: Run unit test
