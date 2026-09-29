@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T17:59:12.662113+00:00",
+  "generated_at_utc": "2026-09-29T18:00:48.742338+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "QA: freeze historical SEC EDGAR PIT anchor filings",
+        "sha": "8d1cc206f73903b0bee8751530ae2b3336919782",
+        "timestamp": "2026-09-29T20:00:46+02:00"
+      },
+      {
+        "message": "RESEARCH: use historical SEC EDGAR anchor filings for PIT depth audit",
+        "sha": "e1533499a5ad6a1aff9a04cd6803c0de39756486",
+        "timestamp": "2026-09-29T20:00:36+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b226e3d7652582340deff47be24eb5e6f78c7879",
+        "timestamp": "2026-09-29T17:59:12Z"
+      },
+      {
         "message": "FIX: correct Q098 SEC download-link regex syntax",
         "sha": "f6232f85d659aff6b79083100439e0539855bc21",
         "timestamp": "2026-09-29T19:58:59+02:00"
@@ -418,21 +433,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "37ab6b4f5b14f0e316dad6bdfbfea02335ea761d",
         "timestamp": "2026-09-29T17:57:35Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e982283e477d733f28d3dd35bedb8f08e7ee387e",
-        "timestamp": "2026-09-29T17:57:24Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "93e9f9f7debd63debd985f71043252558c8a45ab",
-        "timestamp": "2026-09-29T17:57:11Z"
-      },
-      {
-        "message": "OPS: add Q098 historical archive audit to hosted frontier lane",
-        "sha": "1bb8e437392f5ef52d7801bcd2dc5a3ea6848a91",
-        "timestamp": "2026-09-29T19:57:07+02:00"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f6232f85d659aff6b79083100439e0539855bc21",
+  "source_master_sha": "8d1cc206f73903b0bee8751530ae2b3336919782",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36608788079"
+    "run_id": "36608981306"
   }
 }
