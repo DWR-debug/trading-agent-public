@@ -62,8 +62,8 @@ def audit(root:Path=ROOT)->dict:
     implementation_src=text_src+"\n"+portfolio_src
     if "urllib" in text_src or "requests" in text_src or "http://" in text_src or "https://" in text_src:
         finding("Q095_NETWORK_IN_PERFORMANCE_RUNNER")
-    for guard in ("_assert_authorization(root, prereg)","_assert_source_contract(root, prereg)"):
-        if "_assert_authorization(" not in text_src or guard.endswith("authorization(root, prereg)") and "_assert_authorization(" not in text_src: finding("Q095_FAIL_CLOSED_GUARD_MISSING",guard=guard)
+    for function_name in ("_assert_authorization", "_assert_source_contract"):
+        if f"{function_name}(root" not in text_src: finding("Q095_FAIL_CLOSED_GUARD_MISSING",guard=function_name)
 
     assign={}
     for node in ast.walk(tree):
