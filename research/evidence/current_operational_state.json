@@ -240,7 +240,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:20:35.098489+00:00",
+  "generated_at_utc": "2026-09-29T12:20:52.753301+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -363,6 +363,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "TEST: add Q094 monthly rebalance contract tests",
+        "sha": "3bf9ba0e8a70441c1f45eddc0677af4d03823f62",
+        "timestamp": "2026-09-29T14:20:51+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q094 coverage PIT and input freeze pipeline",
+        "sha": "4930575b165b2f03cd8dfaab552231b8500a6758",
+        "timestamp": "2026-09-29T14:20:40+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e2722e1716dc326323f3d96d4a02a13614912e54",
+        "timestamp": "2026-09-29T12:20:35Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "9c84dd0e6790dba623b24ebb8974eb59cc0bd46f",
         "timestamp": "2026-09-29T12:20:16Z"
@@ -386,21 +401,6 @@
         "message": "OPS: record AI worker state",
         "sha": "e0b2232a44b7e3fa8e4cf4263e3e36a2ca6c9bba",
         "timestamp": "2026-09-29T12:16:37Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "df629d993813d93f189835c10424ca71dd5f9396",
-        "timestamp": "2026-09-29T12:16:31Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "7b7f5e7370531905f35409a9496938f67ec0af9f",
-        "timestamp": "2026-09-29T12:16:27Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "08883bff01e4c9a4241c08fc7ae7685389f6a609",
-        "timestamp": "2026-09-29T12:15:33Z"
       }
     ]
   },
@@ -470,12 +470,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9c84dd0e6790dba623b24ebb8974eb59cc0bd46f",
+  "source_master_sha": "3bf9ba0e8a70441c1f45eddc0677af4d03823f62",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36567432417"
+    "run_id": "36567479141"
   }
 }
