@@ -240,7 +240,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:06:55.076060+00:00",
+  "generated_at_utc": "2026-09-29T12:07:49.896597+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -363,6 +363,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "TEST: add Q092 failure diagnosis contract tests",
+        "sha": "ea8daa5a33fa5ad34a9e1c010178a4c52b178054",
+        "timestamp": "2026-09-29T14:07:48+02:00"
+      },
+      {
+        "message": "RESEARCH: implement Q092 Q091 failure mechanism diagnosis",
+        "sha": "c3c906b0b1ed6b75fb8749a75d06b4c3ad763f8e",
+        "timestamp": "2026-09-29T14:07:32+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "86dc16677db9c9523c20aa1ff8a1b530ab3d27d6",
+        "timestamp": "2026-09-29T12:06:55Z"
+      },
+      {
         "message": "RESEARCH: preregister Q092 Q091 failure mechanism diagnosis",
         "sha": "1699a836a75dd02f652444279eb77deae85d7384",
         "timestamp": "2026-09-29T14:06:42+02:00"
@@ -386,21 +401,6 @@
         "message": "OPS: fail-soft paper-forward state push race",
         "sha": "53085020c6fed12d895ba73fea34be3dd56ba237",
         "timestamp": "2026-09-29T13:50:22+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "818ccc08a12442ef7fdefa5c8b2804f13bfa27f1",
-        "timestamp": "2026-09-29T11:50:17Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "356d570ccdffe2d2bc67c4cde01495aa6e68e4b2",
-        "timestamp": "2026-09-29T11:50:02Z"
-      },
-      {
-        "message": "RESEARCH: run Q092 diagnosis in frontier QA lane",
-        "sha": "8568a114e9a28bb503d0202c748d3c578a68052c",
-        "timestamp": "2026-09-29T13:49:52+02:00"
       }
     ]
   },
@@ -470,12 +470,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1699a836a75dd02f652444279eb77deae85d7384",
+  "source_master_sha": "ea8daa5a33fa5ad34a9e1c010178a4c52b178054",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36565979837"
+    "run_id": "36566067799"
   }
 }
