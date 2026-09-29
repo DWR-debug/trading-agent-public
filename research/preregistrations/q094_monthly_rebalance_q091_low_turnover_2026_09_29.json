@@ -1,0 +1,157 @@
+{
+  "schema_version": "1.0",
+  "trial_id": "T-2026-09-29-094",
+  "research_family": "low_turnover_monthly_rebalance_after_q093_cost_diagnosis",
+  "status": "PREREGISTERED_DESIGN_ONLY",
+  "purpose": "Test whether the unchanged Q091 fixed portfolio signals retain gross and net out-of-sample behavior when portfolio targets are refreshed only at the first trading session of each calendar month, using the same fixed rule symmetrically for both Q091 constructions.",
+  "parent_diagnostics": [
+    {
+      "trial_id": "T-2026-09-29-092",
+      "diagnostic_fingerprint": "9f053534319eb22b0d3f90b55057d04ed504dc6681bc27f62b8467f72017f7da"
+    },
+    {
+      "trial_id": "T-2026-09-29-093",
+      "diagnostic_fingerprint": "014264a8ae8d2556b89e55dd574cddabe95ecaee55323382cc252469e68b809c"
+    }
+  ],
+  "hypothesis": "A fixed calendar-month rebalance overlay can reduce Q091 turnover/cost drag while preserving any genuine signal component; this is tested on a fresh symbol-disjoint universe under the unchanged 13-gate contract.",
+  "variants": [
+    {
+      "id": "M1_MONTHLY_REBALANCED_Q091_E1",
+      "rule": "On the first available trading session of each calendar month, compute the frozen Q091 E1 target-weight vector and hold that vector unchanged until the next calendar-month first trading session.",
+      "parent_variant": "E1_EQUAL_WEIGHT_Q069_5SLEEVE",
+      "parameter_search": false
+    },
+    {
+      "id": "M2_MONTHLY_REBALANCED_Q091_E2",
+      "rule": "On the first available trading session of each calendar month, compute the frozen Q091 E2 target-weight vector and hold that vector unchanged until the next calendar-month first trading session.",
+      "parent_variant": "E2_CROSS_SECTIONAL_RESIDUALIZED_Q069_5SLEEVE",
+      "parameter_search": false
+    }
+  ],
+  "rebalance_contract": {
+    "schedule": "first_available_trading_session_of_each_calendar_month",
+    "cadence_parameter_search": false,
+    "carry_weights_between_rebalance_dates": true,
+    "asymmetric_variants": false,
+    "no_intramonth_refresh": true
+  },
+  "data_contract": {
+    "candidate_pool": [
+      "ROP",
+      "EQIX",
+      "VRSK",
+      "CDNS",
+      "SNPS",
+      "FTV",
+      "AME",
+      "WAB",
+      "TT",
+      "ODFL",
+      "URI",
+      "DECK",
+      "NVR",
+      "LEN",
+      "DHI",
+      "MAS",
+      "MLM",
+      "NUE",
+      "PHM",
+      "TSCO",
+      "ZBRA",
+      "KEYS",
+      "TER",
+      "SWK",
+      "CARR",
+      "OTIS",
+      "HUBB",
+      "IR",
+      "RMD",
+      "IDXX",
+      "STE",
+      "IEX",
+      "HOLX",
+      "COO",
+      "PODD",
+      "EXAS"
+    ],
+    "source_order_rule": "Frozen candidate-pool order; symbols already claimed by registered research are excluded; the first eight symbols satisfying only the fixed coverage/common-calendar contract are selected.",
+    "symbols": [],
+    "universe": "validation_2026_09_29_q094_monthly_rebalance",
+    "interval": "1d",
+    "requested_candles": 5000,
+    "target_common_candles": 3500,
+    "research_periods": 2798,
+    "holdout_periods": 700,
+    "study_window": {
+      "start": "2011-01-01",
+      "end": "2025-09-24"
+    },
+    "coverage_trial_id": null,
+    "coverage_result_fingerprint": null,
+    "snapshot_fingerprint": null,
+    "pit_trial_id": null,
+    "pit_result_fingerprint": null,
+    "input_bundle_trial_id": null,
+    "input_bundle_fingerprint": null,
+    "cost_contract": {
+      "fee_rate": 0.001,
+      "slippage_rate": 0.0005,
+      "stress_multipliers": [
+        1,
+        1.5,
+        2
+      ]
+    }
+  },
+  "search_scope": {
+    "raw_trial_count": 2,
+    "independent_trial_count": 1,
+    "parameter_search": false,
+    "threshold_search": false,
+    "asset_search": false,
+    "horizon_search": false,
+    "variant_search": false,
+    "family_ranking": false
+  },
+  "governance": {
+    "performance_trial_authorized": false,
+    "selection": false,
+    "holdout_used_for_selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "asset_search": false,
+    "horizon_search": false,
+    "variant_search": false,
+    "family_ranking": false,
+    "promotion_decision": false,
+    "automatic_promotion": false
+  },
+  "source_scope": {
+    "parent_q091_candidate_bank_frozen": true,
+    "parent_q091_portfolio_transform_frozen": true,
+    "monthly_overlay_frozen": true,
+    "fresh_symbol_disjointness": true,
+    "global_prior_research_exclusion": true
+  },
+  "source_contract": {
+    "performance_runner_path": "automation/q094_performance.py",
+    "performance_runner_sha256": null,
+    "monthly_overlay_path": "portfolio/q094_monthly_rebalance.py",
+    "monthly_overlay_sha256": null,
+    "candidate_bank_path": "automation/q069_candidate_bank.py",
+    "candidate_bank_sha256": "84e008a6152cbea128e5e5f2ac0dfdde0b0172310fe4c510241c60edfd3ff617",
+    "cost_contract_path": "execution/cost_contract.py",
+    "cost_contract_sha256": null,
+    "settings_path": "config/settings.py",
+    "settings_sha256": null,
+    "input_freeze_path": "automation/q094_input_freeze.py",
+    "input_freeze_sha256": null
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
