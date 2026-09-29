@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T22:14:40.418213+00:00",
+  "generated_at_utc": "2026-09-29T22:14:57.756725+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: satisfy Q081R2 authorization workflow lint",
+        "sha": "de0731a3c7e0ebdf92cc9ab11f545090024b0044",
+        "timestamp": "2026-09-30T00:14:46+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b74353ca6172389b646aa37ada6f3fa25280da6b",
+        "timestamp": "2026-09-29T22:14:40Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "3c18be8cec9a755d86c919ca2e916bae2a9b1a9c",
         "timestamp": "2026-09-29T22:14:27Z"
@@ -423,16 +433,6 @@
         "message": "FEAT: add Q081R2 one-shot authorization control path",
         "sha": "9bc0280c1e6f5bb108ce5b9e151ff89b444ab1d5",
         "timestamp": "2026-09-30T00:14:00+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a6e96c105330ca34b09e6de393a2c8f8e10be284",
-        "timestamp": "2026-09-29T22:13:08Z"
-      },
-      {
-        "message": "FEAT: add Q081R2 immutable reconciliation",
-        "sha": "308d438906dbc9dfa01ee19fc404fab4e16ac20a",
-        "timestamp": "2026-09-30T00:12:56+02:00"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "3c18be8cec9a755d86c919ca2e916bae2a9b1a9c",
+  "source_master_sha": "de0731a3c7e0ebdf92cc9ab11f545090024b0044",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36638376731"
+    "run_id": "36638411106"
   }
 }
