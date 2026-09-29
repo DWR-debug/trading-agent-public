@@ -31,10 +31,12 @@ def test_q096_probes_cover_the_new_frontier_data_channels() -> None:
         "CBOE_VIX_HISTORY",
     } <= ids
     module = Path("automation/q096_frontier_source_pit_audit.py").read_text(encoding="utf-8")
-    assert "SEC_10K" in module
-    assert "SEC_10Q" in module
+    assert "MSFT_10K_10Q" in module
+    assert "AAPL_10K_10Q" in module
     assert "FORM4_SAMPLE" in module
     assert "FORM13F_SAMPLE" in module
+    assert "BENEFICIAL_OWNERSHIP_SAMPLE" in module
+    assert "FORM144_SAMPLE" in module
     assert "GDELT_DAILY_ARCHIVE" in module
     assert "SEC_FTD_HISTORY" in module
     assert "FINRA_SHORT_INTEREST" in module
