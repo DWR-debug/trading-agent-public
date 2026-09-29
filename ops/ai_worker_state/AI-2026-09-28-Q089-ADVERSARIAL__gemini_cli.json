@@ -5,16 +5,20 @@
   "free_only": true,
   "preflight": {
     "provider": "gemini_cli",
-    "available": true,
-    "binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE",
+    "available": false,
+    "binary": "/opt/hostedtoolcache/node/22.23.2/x64/bin/gemini",
     "free_only": true,
-    "local_mode": true,
+    "local_mode": false,
     "local_attestation": {
-      "present": true,
-      "path": "C:\\Users\\u419680\\.trading-agent\\ai_free_attestation.json"
+      "present": false,
+      "path": null
     },
-    "free_mode_attested": true,
-    "reasons": []
+    "free_mode_attested": false,
+    "reasons": [
+      "AI_EXTERNAL_PROVIDER_ALLOWLIST is not confirmed",
+      "provider authentication is not available for free-only mode",
+      "provider free-mode attestation is missing"
+    ]
   },
   "task_fingerprint": "d7f78f334a0e1a67b390f80e5b5a520e2db981af0323b0c03f589527b0c7641f",
   "worker_output_is_scientific_evidence": false,
@@ -24,10 +28,8 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 49.04,
-  "stdout": "{\"conversation_id\":\"059e912b-18ab-4edd-ba2b-944aaffbf43d\",\"status\":\"SUCCESS\",\"response\":\"# Adversarial Pre-Performance Review: Q089 Methodology \\u0026 Evidence Chain\\n\\n**Task ID:** `AI-2026-09-28-Q089-ADVERSARIAL`  \\n**Scope:** Q089 methodology, provenance, and pre-performance adversarial review  \\n**Governance Invariants:** `PAPER_ONLY=True` | `LIVE_TRADING_ENABLED=False` | `ORDERS_ENABLED=False` | `AUTOMATIC_PROMOTION=False`  \\n**Worker Boundary:** Non-promotional, non-authorizing worker handoff. All findings and invariant checks require independent deterministic reproduction.\\n\\n---\\n\\n## 1. Executive Summary\\n\\nA methodological and architectural audit of the Q089 pipeline prior to performance execution reveals **six critical failure modes** that threaten to invalidate the scientific integrity of the clean fresh Q069 candidate validation. \\n\\nMost critically, the frozen input bundle in [`q089_input_freeze_result.json`](file:///C:/Users/u419680/actions-runner/_work/_temp/trading-agent-ai-worker-36499359237-1/trading-agent-public-e78b60baedd216771eadbf94a3514be25e605484/research/evidence/q089_input_freeze_result.json) contains **only adjusted close prices**, yet candidate **C11 requires Volume** and **C8 requires a market benchmark factor**. Furthermore, the Point-in-Time (PIT) receipt in [`q089_pit_result.json`](file:///C:/Users/u419680/actions-runner/_work/_temp/trading-agent-ai-worker-36499359237-1/trading-agent-public-e78b60baedd216771eadbf94a3514be25e605484/research/evidence/q089_pit_result.json) fails to cryptographically bind the `bundle_fingerprint`, and an off-by-2 arithmetic mismatch exists in the geometry partition ($2798 + 700 = 3498 \\\\neq 3500$).\\n\\n---\\n\\n## 2. Adversarial Findings \\u0026 Methodological Failure Modes\\n\\n### Finding 1: Severe Feature Deficiency in Input Bundle vs. Candidate Bank Requirements\\n* **Context:** In [`q089_input_freeze.py`](file:///C:/Users/u419680/actions-runner/_work/_temp/trading-agent-ai-worker-36499359237-1/trading-agent-public-e78b60baedd216771eadbf94a3514be25e605484/automation/q089_input_freeze.py#L31-L70), the freeze function extracts only `adjusted_close` via [`fetch_adjusted_close`](file:///C:/Users/u419680/actions-runner/_work/_temp/trading-agent-ai-worker-36499359237-1/trading-agent-public-e78b60baedd216771eadbf94a3514be25e605484/automation/q089_input_freeze.py#L11) and packages only `adjusted_close.csv` with columns `[\\\"timestamp\\\", \\\"adjusted_close\\\"]`.\\n* **Vulnerability:** \\n  1. The frozen candidate bank in [Q089-clean-fresh-q069-validation-2026-09-28.md](file:///C:/Users/u419680/actions-runner/_work/_temp/trading-agent-ai-worker-36499359237-1/trading-agent-public-e78b60baedd216771eadbf94a3514be25e605484/docs/research_design/Q089-clean-fresh-q069-validation-2026-09-28.md) includes:\\n     - **C11 (`VOLUME_CONFIRMED_TREND_126`)**: Strictly requires trading volume.\\n     - **C7 (`LOW_MAX_21`)**: Typically requires daily high/maximum returns.\\n  2. If the performance engine relies solely on the frozen input bundle `T-2026-09-28-089-INPUT-FREEZE` to remain network-free, **C11 cannot compute its signal**.\\n  3. If the performance engine reaches back into the unbundled raw coverage snapshot (`1d.csv`) for volume, the input bundle fingerprint `c4261e23...` fails to guarantee input immutability.\\n  4. If volume is retrieved live over the network, `performance_network_access: false` is violated.\\n\\n### Finding 2: Decoupled Second-Fetch \\u0026 Retroactive Corporate Action Leakage\\n* **Context:** The coverage snapshot stores raw `1d.csv` candles (fingerprint: `bb82ae...`). However, [`freeze`](file:///C:/Users/u419680/actions-runner/_work/_temp/trading-agent-ai-worker-36499359237-1/trading-agent-public-e78b60baedd216771eadbf94a3514be25e605484/automation/q089_input_freeze.py#L31-L70) performs a separate call to [`fetch_adjusted_close`](file:///C:/Users/u419680/actions-runner/_work/_temp/trading-agent-ai-worker-36499359237-1/trading-agent-public-e78b60baedd216771eadbf94a3514be25e605484/automation/q089_input_freeze.py#L11).\\n* **Vulnerability:**\\n  - If `fetch_adjusted_close` is an external API call executed days after the coverage snapshot, historical adjusted prices are subject to provider restatements (dividend ex-dates, spin-offs, retroactive stock splits). \\n  - Applying backward adjustments using corporate events occurri\",\"duration_seconds\":0,\"num_turns\":1,\"usage\":{\"input_tokens\":0,\"output_tokens\":0,\"thinking_tokens\":0,\"cache_read_tokens\":0,\"total_tokens\":0}}\n",
-  "stderr": "[agy] print timeout after 45s with turn in progress; returning partial output\n",
-  "command_binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE"
+  "status": "SKIPPED",
+  "returncode": null,
+  "stdout": "",
+  "stderr": ""
 }
