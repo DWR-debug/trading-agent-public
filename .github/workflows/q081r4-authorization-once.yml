@@ -102,7 +102,7 @@ jobs:
           assert c["status"]=="COVERAGE_PASSED" and c["result_fingerprint"]==dc["coverage_result_fingerprint"] and c["snapshot_fingerprint"]==dc["snapshot_fingerprint"]
           assert h["status"]=="PIT_PASSED" and h["result_fingerprint"]==dc["pit_result_fingerprint"]
           assert b["status"]=="INPUT_BUNDLE_FROZEN" and b["bundle_fingerprint"]==dc["input_bundle_fingerprint"]
-          assert i["status"]=="IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME" and i["workflow_run_id"]=="36639171349" and i["result_created"] is False
+          assert i["status"]=="IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME" and i["workflow_run_id"]=="36640012014" and i["result_created"] is False
           for obj in (c,h,b):
               assert obj.get("performance_evaluation") is False
               assert obj.get("selection_used") is False
