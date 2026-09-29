@@ -5,6 +5,7 @@ import json
 import urllib.error
 import urllib.request
 import zipfile
+from datetime import date, timedelta
 from io import BytesIO
 from pathlib import Path
 
@@ -13,15 +14,18 @@ INVENTORY = ROOT / "research" / "frontier" / "candidate_inventory_2026_09_29.jso
 TIMEOUT = 30
 UA = "trading-agent-public/Q096-frontier-audit contact=research"
 
-PROBES = [
-    ("SEC_10K_ITEM1A", "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/msft-20260630.htm", "html", ["Item 1A", "RISK FACTORS"]),
-    ("SEC_10Q_MDA", "https://www.sec.gov/Archives/edgar/data/1125345/000119312526000056/mgnx-20260630.htm", "html", ["MANAGEMENT'S DISCUSSION AND ANALYSIS", "Item 2"]),
-    ("SEC_SUBMISSIONS_MSFT", "https://data.sec.gov/submissions/CIK0000789019.json", "json", []),
-    ("SEC_COMPANYFACTS_MSFT", "https://data.sec.gov/api/xbrl/companyfacts/CIK0000789019.json", "companyfacts", []),
-    ("LSEG_RUSSELL_RECON", "https://www.lseg.com/en/ftse-russell/russell-reconstitution", "html", ["December 2026 Russell Reconstitution Calendar", "2026 June final index additions and deletions"]),
+STATIC_PROBES = [
+    ("LSEG_RUSSELL_RECON", "https://www.lseg.com/en/ftse-russell/russell-reconstitution", "html", ["reconstitution", "Russell"]),
     ("CBOE_VIX_HISTORY", "https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv", "csv", ["DATE,OPEN,HIGH,LOW,CLOSE"]),
-    ("GDELT_DAILY_ARCHIVE", "https://data.gdeltproject.org/events/20260928.export.CSV.zip", "zip", []),
 ]
+
+SEC_SAMPLE_CIKS = {
+    "MSFT": "0000789019",
+    "AAPL": "0000320193",
+    # Existing Q075 sample manager CIK; used only as a source-contract probe.
+    "SEC_13F_SAMPLE": "0001418814",
+}
+
 
 def get(url: str) -> tuple[int, bytes, str | None]:
     req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "*/*"})
@@ -31,10 +35,12 @@ def get(url: str) -> tuple[int, bytes, str | None]:
     except urllib.error.HTTPError as exc:
         return int(exc.code), exc.read(), None
 
+
 def fp(data: bytes) -> str:
     return "sha256:" + hashlib.sha256(data).hexdigest()
 
-def probe(item):
+
+def probe_static(item):
     ident, url, kind, checks = item
     status, data, ctype = get(url)
     row = {
@@ -53,34 +59,6 @@ def probe(item):
     text = data.decode("utf-8", "replace")
     if kind == "html":
         row["checks"] = {c: c.lower() in text.lower() for c in checks}
-    elif kind == "json":
-        try:
-            payload = json.loads(data)
-            filing = payload.get("filings", {}).get("recent", {})
-            row["checks"] = {
-                "valid_json": True,
-                "has_name": bool(payload.get("name")),
-                "has_recent_filings": bool(filing),
-                "has_forms": bool(filing.get("form")),
-                "has_accession_numbers": bool(filing.get("accessionNumber")),
-            }
-        except json.JSONDecodeError:
-            row["checks"] = {"valid_json": False}
-    elif kind == "companyfacts":
-        try:
-            payload = json.loads(data)
-            dei = payload.get("facts", {}).get("dei", {})
-            shares = dei.get("EntityCommonStockSharesOutstanding", {})
-            units = shares.get("units", {})
-            row["checks"] = {
-                "valid_json": True,
-                "has_entity_name": bool(payload.get("entityName")),
-                "has_dei_namespace": bool(dei),
-                "has_shares_outstanding_fact": bool(units),
-                "has_instant_values": any(bool(v) for v in units.values()),
-            }
-        except json.JSONDecodeError:
-            row["checks"] = {"valid_json": False}
     elif kind == "csv":
         lines = [x.strip() for x in text.splitlines() if x.strip()]
         row["checks"] = {
@@ -88,19 +66,162 @@ def probe(item):
             "has_rows": len(lines) > 1,
             "five_columns": len(lines[1].split(",")) == 5 if len(lines) > 1 else False,
         }
-    elif kind == "zip":
-        try:
-            with zipfile.ZipFile(BytesIO(data)) as z:
-                names = z.namelist()
-                row["checks"] = {
-                    "valid_zip": bool(names),
-                    "contains_csv": any(n.lower().endswith(".csv") for n in names),
-                }
-                row["zip_members"] = names[:5]
-        except zipfile.BadZipFile:
-            row["checks"] = {"valid_zip": False}
     row["status"] = "VERIFIABLE" if row["checks"] and all(row["checks"].values()) else "SCHEMA_MISMATCH"
     return row
+
+
+def json_get(url: str) -> tuple[int, dict | None, str | None]:
+    status, data, ctype = get(url)
+    if status != 200:
+        return status, None, ctype
+    try:
+        return status, json.loads(data), ctype
+    except json.JSONDecodeError:
+        return status, None, ctype
+
+
+def recent_filing_rows(payload: dict) -> list[dict]:
+    recent = payload.get("filings", {}).get("recent", {})
+    forms = recent.get("form", [])
+    dates = recent.get("filingDate", [])
+    acc = recent.get("accessionNumber", [])
+    docs = recent.get("primaryDocument", [])
+    acceptance = recent.get("acceptanceDateTime", [])
+    n = min(len(forms), len(dates), len(acc))
+    return [
+        {
+            "form": forms[i],
+            "filingDate": dates[i],
+            "accessionNumber": acc[i],
+            "primaryDocument": docs[i] if i < len(docs) else None,
+            "acceptanceDateTime": acceptance[i] if i < len(acceptance) else None,
+        }
+        for i in range(n)
+    ]
+
+
+def filing_url(cik: str, accession: str, primary_document: str) -> str:
+    return (
+        f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/"
+        f"{accession.replace('-', '')}/{primary_document}"
+    )
+
+
+def sec_submission_probe(label: str, cik: str, target_forms: set[str], text_checks: dict[str, list[str]] | None = None) -> dict:
+    url = f"https://data.sec.gov/submissions/CIK{cik}.json"
+    status, payload, ctype = json_get(url)
+    row = {
+        "id": f"SEC_SUBMISSIONS_{label}",
+        "url": url,
+        "http_status": status,
+        "content_type": ctype,
+        "status": "BLOCKED" if status != 200 else "SCHEMA_MISMATCH",
+        "checks": {},
+    }
+    if status != 200 or payload is None:
+        row["reason"] = f"HTTP_{status}" if status != 200 else "INVALID_JSON"
+        return row
+
+    rows = recent_filing_rows(payload)
+    matched = [x for x in rows if x["form"] in target_forms]
+    older_files = payload.get("filings", {}).get("files", [])
+    row["checks"] = {
+        "valid_json": True,
+        "has_recent_filings": bool(rows),
+        "has_acceptance_timestamps": bool(rows) and all(x["acceptanceDateTime"] for x in rows[: min(25, len(rows))]),
+        "has_accession_numbers": bool(rows) and all(x["accessionNumber"] for x in rows[: min(25, len(rows))]),
+        "target_forms_present": bool(matched),
+        "historical_extension_metadata_present": bool(older_files) or len(rows) >= 1000,
+    }
+    row["target_form_counts"] = {form: sum(x["form"] == form for x in rows) for form in sorted(target_forms)}
+    row["recent_range"] = {
+        "min_filing_date": min((x["filingDate"] for x in rows), default=None),
+        "max_filing_date": max((x["filingDate"] for x in rows), default=None),
+    }
+
+    if text_checks:
+        for form, checks in text_checks.items():
+            candidate = next((x for x in matched if x["form"] == form and x["primaryDocument"]), None)
+            if not candidate:
+                row["checks"][f"{form}_primary_document_found"] = False
+                continue
+            filing = filing_url(cik, candidate["accessionNumber"], candidate["primaryDocument"])
+            s, data, c = get(filing)
+            text = data.decode("utf-8", "replace") if s == 200 else ""
+            row["text_probe"] = {
+                "form": form,
+                "url": filing,
+                "http_status": s,
+                "response_sha256": fp(data),
+                "checks": {check: check.lower() in text.lower() for check in checks},
+            }
+            row["checks"][f"{form}_primary_document_found"] = s == 200
+            row["checks"].update({f"{form}_{check}": check.lower() in text.lower() for check in checks})
+
+    row["status"] = "VERIFIABLE" if row["checks"] and all(row["checks"].values()) else "SCHEMA_MISMATCH"
+    return row
+
+
+def companyfacts_probe(cik: str) -> dict:
+    url = f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json"
+    status, payload, ctype = json_get(url)
+    row = {
+        "id": f"SEC_COMPANYFACTS_{cik}",
+        "url": url,
+        "http_status": status,
+        "content_type": ctype,
+        "status": "BLOCKED" if status != 200 else "SCHEMA_MISMATCH",
+        "checks": {},
+    }
+    if status != 200 or payload is None:
+        row["reason"] = f"HTTP_{status}" if status != 200 else "INVALID_JSON"
+        return row
+    dei = payload.get("facts", {}).get("dei", {})
+    shares = dei.get("EntityCommonStockSharesOutstanding", {})
+    units = shares.get("units", {})
+    row["checks"] = {
+        "valid_json": True,
+        "has_entity_name": bool(payload.get("entityName")),
+        "has_dei_namespace": bool(dei),
+        "has_shares_outstanding_fact": bool(units),
+        "has_instant_values": any(bool(v) for v in units.values()),
+    }
+    row["status"] = "VERIFIABLE" if all(row["checks"].values()) else "SCHEMA_MISMATCH"
+    return row
+
+
+def gdelt_probe() -> dict:
+    probe_date = date.today() - timedelta(days=1)
+    stamp = probe_date.strftime("%Y%m%d")
+    url = f"https://data.gdeltproject.org/events/{stamp}.export.CSV.zip"
+    status, data, ctype = get(url)
+    row = {
+        "id": "GDELT_DAILY_ARCHIVE",
+        "url": url,
+        "probe_date": stamp,
+        "http_status": status,
+        "content_type": ctype,
+        "response_bytes": len(data),
+        "response_sha256": fp(data),
+        "status": "BLOCKED" if status != 200 else "SCHEMA_MISMATCH",
+        "checks": {},
+    }
+    if status != 200:
+        row["reason"] = f"HTTP_{status}"
+        return row
+    try:
+        with zipfile.ZipFile(BytesIO(data)) as z:
+            names = z.namelist()
+            row["checks"] = {
+                "valid_zip": bool(names),
+                "contains_csv": any(n.lower().endswith(".csv") for n in names),
+            }
+            row["zip_members"] = names[:5]
+    except zipfile.BadZipFile:
+        row["checks"] = {"valid_zip": False}
+    row["status"] = "VERIFIABLE" if all(row["checks"].values()) else "SCHEMA_MISMATCH"
+    return row
+
 
 def candidate_gate_matrix(candidates):
     rows = []
@@ -143,17 +264,45 @@ def candidate_gate_matrix(candidates):
         })
     return rows
 
+
 def main() -> int:
     inventory = json.loads(INVENTORY.read_text(encoding="utf-8"))
     candidates = [list(row) for row in inventory["candidates"]]
-    probes = [probe(item) for item in PROBES]
+
+    live_probes = [
+        probe_static(STATIC_PROBES[0]),
+        probe_static(STATIC_PROBES[1]),
+        sec_submission_probe(
+            "MSFT_10K_10Q",
+            SEC_SAMPLE_CIKS["MSFT"],
+            {"10-K", "10-Q"},
+            {
+                "10-K": ["Item 1A", "Risk Factors"],
+                "10-Q": ["Management's Discussion and Analysis", "Item 2"],
+            },
+        ),
+        sec_submission_probe(
+            "AAPL_10K_10Q",
+            SEC_SAMPLE_CIKS["AAPL"],
+            {"10-K", "10-Q"},
+            {
+                "10-K": ["Item 1A", "Risk Factors"],
+                "10-Q": ["Management's Discussion and Analysis", "Item 2"],
+            },
+        ),
+        sec_submission_probe("FORM4_SAMPLE", SEC_SAMPLE_CIKS["MSFT"], {"4", "4/A"}),
+        sec_submission_probe("FORM13F_SAMPLE", SEC_SAMPLE_CIKS["SEC_13F_SAMPLE"], {"13F-HR", "13F-HR/A"}),
+        companyfacts_probe(SEC_SAMPLE_CIKS["MSFT"]),
+        gdelt_probe(),
+    ]
+
     result = {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "task_id": "Q-2026-09-29-096-FRONTIER-SOURCE-PIT-AUDIT",
         "status": "SOURCE_AND_PIT_FEASIBILITY_ONLY",
         "inventory_count": len(candidates),
         "candidate_gate_matrix": candidate_gate_matrix(candidates),
-        "live_source_probes": probes,
+        "live_source_probes": live_probes,
         "governance": {
             "performance_evaluation": False,
             "holdout_evaluation": False,
@@ -175,9 +324,10 @@ def main() -> int:
     out.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print("Q096_STATUS:", result["status"])
     print("Q096_INVENTORY_COUNT:", len(candidates))
-    for row in probes:
+    for row in live_probes:
         print(row["id"], row["status"], row.get("reason", ""))
     return 0
+
 
 if __name__ == "__main__":
     raise SystemExit(main())
