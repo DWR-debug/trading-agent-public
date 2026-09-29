@@ -112,3 +112,16 @@ def freeze(root: Path, output_root: Path, result_path: Path) -> dict:
     print("Q091_INPUT_FREEZE_STATUS:", result["status"])
     print("Q091_INPUT_BUNDLE_FINGERPRINT:", result["bundle_fingerprint"])
     return result
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--repo-root", required=True)
+    parser.add_argument("--output-root", required=True)
+    parser.add_argument("--result", required=True)
+    args = parser.parse_args()
+    freeze(
+        Path(args.repo_root),
+        Path(args.output_root),
+        Path(args.result),
+    )
