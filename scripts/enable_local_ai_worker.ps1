@@ -55,6 +55,13 @@ if ($settingsText -match '(?i)"tradingAgentFreeOnly"\s*:\s*(true|false)') {
 }
 
 Set-Content -Encoding UTF8 $settingsPath -Value $settingsText
+
+# Fail closed if the final on-disk settings do not explicitly disable G1 credit fallback.
+$writtenSettings = Get-Content $settingsPath -Raw
+if ($writtenSettings -notmatch '(?i)"(?:UseG1Credits|useG1Credits)"\s*:\s*false\b') {
+    throw "Unable to verify UseG1Credits=false in $settingsPath after write."
+}
+
 $providers = @()
 if ($agy -or $gemini) { $providers += "gemini_cli" }
 if ($claude) { $providers += "claude_cli" }
@@ -72,5 +79,6 @@ if ($claude) { $providers += "claude_cli" }
 Write-Output "LOCAL_AI_WORKER_ATTESTATION=$attestationPath"
 Write-Output "ANTIGRAVITY_OR_GEMINI_PRESENT=$([bool]($agy -or $gemini))"
 Write-Output "CLAUDE_PRESENT=$([bool]$claude)"
+Write-Output "LOCAL_AI_SETTINGS_PATH=$settingsPath"
 Write-Output "PERSONAL_G1_CREDITS_DISABLED=$true"
 Write-Output "POWERSHELL_COMPATIBLE=WindowsPowerShell_5.1+"
