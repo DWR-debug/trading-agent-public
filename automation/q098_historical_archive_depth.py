@@ -204,7 +204,7 @@ def sec_ftd_archive_probe() -> dict[str, Any]:
         result["reason"] = f"HTTP_{status}"
         return result
     text = body.decode("utf-8", "replace")
-    hrefs = re.findall(r'href=["\\']([^"\\']+)["\\']', text, flags=re.I)
+    hrefs = re.findall(r"""href=["']([^"']+)["']""", text, flags=re.I)
     archives = [h for h in hrefs if any(k in h.lower() for k in (".zip", "fails-to-deliver", "ftd"))]
     years = sorted(set(re.findall(r"\b(2004|2008|2009|2024|2025|2026)\b", text)))
     result["checks"] = {
