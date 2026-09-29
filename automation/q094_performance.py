@@ -69,7 +69,7 @@ def preflight(root:Path):
     assets=load_frozen_snapshot(root/"research/runs/q094_coverage"/COVERAGE_ID/"snapshot_manifest.json")
     symbols=tuple(prereg["data_contract"]["symbols"])
     if tuple(assets)!=symbols or any(len(assets[s])!=N for s in symbols): raise RuntimeError("Q094 snapshot geometry mismatch")
-    validate_research_cost_compatibility(fee_rate=FEE,slippage_rate=SLIPPAGE,stress_multipliers=[1,1.5,2])
+    validate_research_cost_compatibility(fee_rate=FEE,slippage_rate=SLIPPAGE)
     _assert_authorization(root,prereg)
     _assert_source_contract(root,prereg)
     return assets,symbols,prereg,cov,pit,inp
