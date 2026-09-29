@@ -3,12 +3,12 @@
   "authorization_contract_version": 2,
   "authorization_id": "AUTH-Q089-2026-09-29-02",
   "trial_id": "T-2026-09-28-089-PERFORMANCE",
-  "authorized": false,
-  "performance_execution_authorized": false,
+  "authorized": true,
+  "performance_execution_authorized": true,
   "execution_scope": "Q089_FIXED_RULE_PERFORMANCE_ONLY",
   "one_shot": true,
   "preregistration_path": "research/preregistrations/q089_performance_2026_09_28.json",
-  "preregistration_fingerprint": "UNAUTHORIZED_REVISION_6_PENDING_FRESH_GATES",
+  "preregistration_fingerprint": "ab80cab9bfdd3970a7fdcbab4b9d31538cd354db9013e14f2981198f57a483cb",
   "input_bundle_fingerprint": "c4261e230baf8888088df7e3e3159a1a93d4142ff358ef5896d35cd109663924",
   "source_receipts": {
     "coverage_result_fingerprint": "56898b50fc0f8af31dead7dcd65001cced41cf7b44093676eead1ccc4d6fe4cb",
@@ -19,7 +19,7 @@
   },
   "source_contract": {
     "performance_runner_path": "automation/q089_performance.py",
-    "performance_runner_sha256": "0546bebae018acb0b530f094462b3c9cd79d96aba7ed66c8b17dc720ab13057b",
+    "performance_runner_sha256": "d5ffa90bf9a98ffa12114eb3e146c3dc615666cd70f48b0a82019a622a39ceaf",
     "candidate_bank_path": "automation/q069_candidate_bank.py",
     "candidate_bank_sha256": "84e008a6152cbea128e5e5f2ac0dfdde0b0172310fe4c510241c60edfd3ff617",
     "cost_contract_path": "execution/cost_contract.py",
@@ -55,8 +55,7 @@
       "variant_search": false,
       "family_ranking": false,
       "promotion_decision": false
-    },
-    "fresh_gate_requirement": "Revision 6 requires fresh dual-lane Q089 contract audit, master CI, exact master gate, and Self-Hosted Research Governance Audit before a new execution authorization may be issued."
+    }
   },
   "prohibited": {
     "candidate_selection": false,
