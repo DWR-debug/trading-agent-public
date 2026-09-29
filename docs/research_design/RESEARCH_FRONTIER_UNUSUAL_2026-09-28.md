@@ -77,6 +77,18 @@ The research version should model only events whose timing and membership are pu
 
 Source inspiration: Broner et al. (2026), “Demand shocks in equity markets and firm responses”, and Nathan (2026), “Anticipated Orders and the Measurement of Stock Demand Elasticity: Evidence from Scheduled Index Rebalances.”
 
+## Q097 public short-flow / ownership expansion
+
+Four additional information channels were admitted to the design inventory on 2026-09-29:
+
+- I15: SEC Fails-to-Deliver stress change.
+- I16: FINRA Short Interest change.
+- I17: SEC Schedule 13D/13G beneficial-ownership change.
+- I18: SEC Form 144 proposed-sale flow.
+
+They remain source-feasibility-only and unranked. Each requires a publication/acceptance-time contract, security/entity mapping, immutable historical source preservation, PIT mutation tests and fresh disjoint validation before any performance authorization.
+
+The Q097 candidate registry is research/frontier/q097_public_short_flow_candidates.json.
 ## Deliberately excluded for now
 
 LLM-heavy alpha families are not on the immediate execution path because the project has a zero paid API budget. They can still inform deterministic, public-data approximations, but only when the data lineage can be reproduced without proprietary services.
