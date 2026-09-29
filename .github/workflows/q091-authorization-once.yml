@@ -1,0 +1,236 @@
+name: Q091 One-Shot Authorization
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/q091_authorize_once.trigger"
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: trading-agent-q091-one-shot-authorization
+  cancel-in-progress: false
+
+jobs:
+  authorize:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact authorization request
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Verify explicit one-shot authorization request
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f research/run_requests/q091_authorize_once.trigger
+          grep -Fx "TRIAL_ID=T-2026-09-29-091" research/run_requests/q091_authorize_once.trigger
+          grep -Fx "PERFORMANCE_AUTHORIZATION_GRANTED=true" research/run_requests/q091_authorize_once.trigger
+          grep -Fx "PAPER_ONLY=true" research/run_requests/q091_authorize_once.trigger
+          echo "Q091 EXPLICIT AUTHORIZATION REQUEST VERIFIED"
+
+      - name: Bootstrap deterministic preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest -q tests/test_q091_fixed_ensemble.py tests/test_q091_input_freeze.py tests/test_q091_contract_audit.py tests/test_q089_validation.py tests/test_q089_performance_envelope.py
+
+      - name: Run read-only Q091 source-contract audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q091_contract_audit > q091_contract_audit.json
+          cat q091_contract_audit.json
+          python - <<'PY'
+          import json
+          d=json.load(open("q091_contract_audit.json", encoding="utf-8"))
+          if d.get("status") != "PASS":
+              raise SystemExit("Q091 contract audit did not pass")
+          if d.get("performance_authorization_changed") is not False:
+              raise SystemExit("Contract audit changed authorization state")
+          if d.get("performance_executed") is not False:
+              raise SystemExit("Performance was executed during authorization preflight")
+          PY
+
+      - name: Verify paper-only safety
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          assert settings.AUTOMATIC_PROMOTION is False
+          print("Q091 SAFETY INVARIANTS OK")
+          PY
+
+      - name: Materialize one-shot authorization and performance trigger
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+
+          ROOT=Path(".")
+          TRIAL="T-2026-09-29-091"
+          PREREG_PATH=ROOT/"research/preregistrations/q091_fixed_portfolio_architecture_2026_09_29.json"
+          REGISTRY_PATH=ROOT/"research/governance/active_research_registry.json"
+          AUTH_PATH=ROOT/"research/authorizations/q091_performance_2026_09_29.json"
+          TRIGGER_PATH=ROOT/"research/run_requests/q091_performance_once.trigger"
+
+          prereg=json.loads(PREREG_PATH.read_text(encoding="utf-8"))
+          registry=json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+
+          if prereg.get("trial_id") != TRIAL:
+              raise SystemExit("Q091 preregistration identity mismatch")
+          if prereg.get("status") != "PREREGISTERED_PERFORMANCE":
+              raise SystemExit("Q091 preregistration status invalid")
+          if prereg.get("governance", {}).get("performance_trial_authorized") is not True:
+              raise SystemExit("Q091 performance approval is not present in preregistration")
+          safety={"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False}
+          if prereg.get("safety") != safety:
+              raise SystemExit("Q091 safety contract mismatch")
+
+          active=next((x for x in registry.get("active_trials",[]) if x.get("code")=="091"),None)
+          if active is None or active.get("trial_id") != TRIAL:
+              raise SystemExit("Q091 active registry entry missing")
+          if active.get("performance_authorization_allowed") is True:
+              raise SystemExit("Q091 authorization already active; refusing duplicate authorization")
+          if AUTH_PATH.exists():
+              raise SystemExit("Q091 authorization artifact already exists; refusing duplicate authorization")
+
+          def fp(value):
+              return hashlib.sha256(json.dumps(
+                  value, sort_keys=True, separators=(",",":"), ensure_ascii=True, allow_nan=False
+              ).encode("utf-8")).hexdigest()
+
+          audit=json.loads(Path("q091_contract_audit.json").read_text(encoding="utf-8"))
+          prereg_fp=fp(prereg)
+
+          auth={
+            "schema_version":1,
+            "authorization_contract_version":2,
+            "authorization_id":"AUTH-Q091-2026-09-29-01",
+            "trial_id":TRIAL,
+            "authorized":True,
+            "performance_execution_authorized":True,
+            "execution_scope":"Q091_FIXED_PORTFOLIO_PERFORMANCE_ONLY",
+            "one_shot":True,
+            "preregistration_path":"research/preregistrations/q091_fixed_portfolio_architecture_2026_09_29.json",
+            "preregistration_fingerprint":prereg_fp,
+            "input_bundle_fingerprint":prereg["data_contract"]["input_bundle_fingerprint"],
+            "source_receipts":{
+              "coverage_result_fingerprint":prereg["data_contract"]["coverage_result_fingerprint"],
+              "snapshot_fingerprint":prereg["data_contract"]["snapshot_fingerprint"],
+              "pit_result_fingerprint":prereg["data_contract"]["pit_result_fingerprint"],
+              "input_bundle_trial_id":prereg["data_contract"]["input_bundle_trial_id"],
+              "input_bundle_fingerprint":prereg["data_contract"]["input_bundle_fingerprint"]
+            },
+            "source_contract":prereg["source_contract"],
+            "authorization_basis":{
+              "explicit_operator_request":{
+                "trigger_path":"research/run_requests/q091_authorize_once.trigger",
+                "trigger_commit_sha":os.environ["GITHUB_SHA"],
+                "activation_workflow_run_id":int(os.environ["GITHUB_RUN_ID"])
+              },
+              "q091_contract_audit":{
+                "audit_id":audit["audit_id"],
+                "audit_fingerprint":audit["audit_fingerprint"],
+                "conclusion":"success"
+              },
+              "governance":{
+                "selection":False,
+                "holdout_used_for_selection":False,
+                "parameter_search":False,
+                "threshold_search":False,
+                "asset_search":False,
+                "horizon_search":False,
+                "variant_search":False,
+                "family_ranking":False,
+                "promotion_decision":False
+              }
+            },
+            "prohibited":{
+              "candidate_selection":False,
+              "holdout_selection":False,
+              "parameter_search":False,
+              "threshold_search":False,
+              "asset_search":False,
+              "horizon_search":False,
+              "variant_search":False,
+              "family_ranking":False,
+              "automatic_promotion":False,
+              "live_execution":False
+            },
+            "safety":safety
+          }
+
+          active["performance_authorization_allowed"]=True
+          active["state"]="PERFORMANCE_AUTHORIZED"
+
+          AUTH_PATH.parent.mkdir(parents=True,exist_ok=True)
+          AUTH_PATH.write_text(json.dumps(auth,indent=2,ensure_ascii=False,allow_nan=False)+"\n",encoding="utf-8")
+          REGISTRY_PATH.write_text(json.dumps(registry,indent=2,ensure_ascii=False,allow_nan=False)+"\n",encoding="utf-8")
+          TRIGGER_PATH.write_text(
+            "RUN_T2026-09-29-091_PERFORMANCE_ONCE\n"
+            "TRIAL_ID=T-2026-09-29-091\n"
+            "SCOPE=Q091_FIXED_PORTFOLIO_PERFORMANCE_ONLY\n"
+            "ONE_SHOT=true\n",
+            encoding="utf-8"
+          )
+
+          print("Q091 AUTHORIZATION MATERIALIZED")
+          print("PREREGISTRATION_FINGERPRINT="+prereg_fp)
+          print("AUTHORIZATION_ID="+auth["authorization_id"])
+          print("PERFORMANCE_TRIGGER_READY=true")
+          PY
+
+      - name: Governance audit after authorization staging
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.research_governance_audit --repo-root .
+
+      - name: Publish authorization and exact performance trigger atomically
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PUBLISH_MESSAGE: "GOVERNANCE: activate Q091 one-shot performance authorization"
+        run: |
+          set -euo pipefail
+          base_sha="$(python - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ["GITHUB_REPOSITORY"]
+          req=urllib.request.Request(
+              f"https://api.github.com/repos/{repo}/git/ref/heads/master",
+              headers={"Authorization":f"Bearer {os.environ['GH_TOKEN']}","Accept":"application/vnd.github+json"}
+          )
+          with urllib.request.urlopen(req, timeout=30) as r:
+              print(json.load(r)["object"]["sha"])
+          PY
+          )"
+          test -n "$base_sha"
+          python automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY"             --branch master             --base-sha "$base_sha"             --file research/authorizations/q091_performance_2026_09_29.json=research/authorizations/q091_performance_2026_09_29.json             --file research/governance/active_research_registry.json=research/governance/active_research_registry.json             --file research/run_requests/q091_performance_once.trigger=research/run_requests/q091_performance_once.trigger
+
+      - name: Upload authorization audit receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q091-authorization-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q091_contract_audit.json
+          if-no-files-found: warn
+          retention-days: 30
