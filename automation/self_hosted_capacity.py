@@ -6,7 +6,7 @@ from typing import Any
 
 def candidate_roots() -> list[Path]:
     home = Path(os.environ.get("USERPROFILE") or Path.home())
-    preferred = [home/"actions-runner-2", home/"actions-runner-02", home/"actions-runner-secondary", home/"actions-runner-1"]
+    preferred = [home/"actions-runner-2", home/"actions-runner-02", home/"actions-runner-secondary", home/"actions-runner-1", Path(r"C:\actions-runner-2")]
     roots = []
     for root in preferred:
         if root not in roots: roots.append(root)
