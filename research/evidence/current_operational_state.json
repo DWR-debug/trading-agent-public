@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T17:27:14.216815+00:00",
+  "generated_at_utc": "2026-09-29T17:53:49.868921+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,44 +395,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "28e08db5c01d6ff54ca7b7a4f55d030c267ab507",
-        "timestamp": "2026-09-29T17:27:00Z"
+        "message": "OPS: isolate local AI readiness and fail-open on artifact DNS outages",
+        "sha": "9a55275192e02b95fec77e9ecba2c6fac82351d2",
+        "timestamp": "2026-09-29T19:53:48+02:00"
       },
       {
-        "message": "QA: cover Unicode punctuation normalization in SEC text probe",
-        "sha": "895186320072c1562cdeae98b956404fdc1b078d",
-        "timestamp": "2026-09-29T19:26:56+02:00"
+        "message": "OPS: add isolated local AI readiness verifier",
+        "sha": "83b67ec178888dac0d8c7ff264220ff2f30fa075",
+        "timestamp": "2026-09-29T19:53:37+02:00"
       },
       {
-        "message": "FIX: normalize Unicode punctuation in SEC section matching",
-        "sha": "7aaa43581be63c0efde601c8157ffd41969ea631",
-        "timestamp": "2026-09-29T19:26:49+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "9b3d88a26495ca586eb900d9af3f7176f55b36f5",
+        "timestamp": "2026-09-29T17:43:47Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5197b039db173e75b4332c895661b5fe35adbd1f",
-        "timestamp": "2026-09-29T17:26:10Z"
+        "message": "OPS: record AI worker state",
+        "sha": "206f5d4d6006c5852ef963110b2de4672ef3a9db",
+        "timestamp": "2026-09-29T17:43:44Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c997a9708cd7de84517f40a3379b3644978777b5",
-        "timestamp": "2026-09-29T17:25:55Z"
+        "message": "OPS: record AI worker state",
+        "sha": "06d00c4ff53ebac6e43fcd562995c0d4cbd4ef02",
+        "timestamp": "2026-09-29T17:43:40Z"
       },
       {
-        "message": "QA: test HTML-normalized SEC section matching",
-        "sha": "aa0f04213ac305f9966fbc09786ae4b89f88d579",
-        "timestamp": "2026-09-29T19:25:53+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "86d0726ddab872e7420ff19c002492b383b4c5cb",
+        "timestamp": "2026-09-29T17:43:34Z"
       },
       {
-        "message": "RESEARCH: normalize SEC filing HTML for robust section detection",
-        "sha": "e93459ab246e4643c27a1d662a01efcdd7ff12d2",
-        "timestamp": "2026-09-29T19:25:41+02:00"
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "929cece1fac55bf7e264895fb78a1a4ff92dd40e",
+        "timestamp": "2026-09-29T17:42:19Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "52650099c11e9e7e8012c58915f3049c3cedee5b",
-        "timestamp": "2026-09-29T17:25:22Z"
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "89b79081251fb391a2524850f01694c6215e0a90",
+        "timestamp": "2026-09-29T17:27:32Z"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "28e08db5c01d6ff54ca7b7a4f55d030c267ab507",
+  "source_master_sha": "9a55275192e02b95fec77e9ecba2c6fac82351d2",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36604999394"
+    "run_id": "36608159604"
   }
 }
