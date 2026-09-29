@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T17:16:36.066926+00:00",
+  "generated_at_utc": "2026-09-29T17:18:13.499071+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "QA: fix continuous QA concurrency contract assertion",
+        "sha": "e79b0f397f744f6de00edffe2c38e958a92d45be",
+        "timestamp": "2026-09-29T19:18:03+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "51e8d761ab590513f3143f4f323b0f7e90bc906a",
+        "timestamp": "2026-09-29T17:17:19Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "97c4e234715053751788aa4dab9fa0142b1c16fb",
+        "timestamp": "2026-09-29T17:16:36Z"
+      },
+      {
         "message": "QA: update continuous QA resource orchestration contract",
         "sha": "ec276e2dc370cc1502c4171f4a5dfc56aaae54d7",
         "timestamp": "2026-09-29T19:16:29+02:00"
@@ -418,21 +433,6 @@
         "message": "RESEARCH: base SEC submission probe on actual target filings",
         "sha": "42fb3ea867667383adaf935eecf5b704dbd15619",
         "timestamp": "2026-09-29T19:15:10+02:00"
-      },
-      {
-        "message": "FIX: expand local AI bootstrap path correctly in PowerShell",
-        "sha": "1d82923e978741a4324815a2f5418326e0889316",
-        "timestamp": "2026-09-29T19:14:48+02:00"
-      },
-      {
-        "message": "OPS: reapply and verify local AI free-credit guard in readiness check",
-        "sha": "538a7e26b89dc73adb9c09c531014ca297f10f01",
-        "timestamp": "2026-09-29T19:14:38+02:00"
-      },
-      {
-        "message": "OPS: verify local AI credit guard on disk after bootstrap",
-        "sha": "3c09e72cc02e944f170443bf594eb2d3f256da9c",
-        "timestamp": "2026-09-29T19:14:27+02:00"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ec276e2dc370cc1502c4171f4a5dfc56aaae54d7",
+  "source_master_sha": "e79b0f397f744f6de00edffe2c38e958a92d45be",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36603703073"
+    "run_id": "36603955398"
   }
 }
