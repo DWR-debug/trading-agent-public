@@ -291,7 +291,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T22:26:40.758617+00:00",
+  "generated_at_utc": "2026-09-29T22:26:57.886492+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -414,6 +414,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "TEST: register Q081R3 one-shot workflows in integrity allowlist",
+        "sha": "ca470bb61435b5d72e35e0b491c9cc0923e84d4c",
+        "timestamp": "2026-09-30T00:26:54+02:00"
+      },
+      {
+        "message": "FEAT: add Q081R3 fixed-rule performance workflow",
+        "sha": "3e909df6efdf50be0be7e85050b277e89e773777",
+        "timestamp": "2026-09-30T00:26:48+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3336bf51bcaf6359d9604132f0c8d8ecf993d703",
+        "timestamp": "2026-09-29T22:26:40Z"
+      },
+      {
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "f38c2edea6d3cb15a24e04ac524be6a3ae608503",
         "timestamp": "2026-09-29T22:26:28Z"
@@ -437,21 +452,6 @@
         "message": "FEAT: add Q081R3 one-shot authorization workflow",
         "sha": "93c333e4983bed22378132ab3e03d59324887a1a",
         "timestamp": "2026-09-30T00:26:11+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a522decbc5de0170ff7da2136ba620baa47b7d8e",
-        "timestamp": "2026-09-29T22:26:01Z"
-      },
-      {
-        "message": "TEST: lock Q081R3 literal correction and source identity",
-        "sha": "45b3712dd0cbc3271efa87e1beb5f000c7675930",
-        "timestamp": "2026-09-30T00:25:59+02:00"
-      },
-      {
-        "message": "FEAT: add Q081R3 immutable reconciliation",
-        "sha": "f346277bbd924b7b43df3ad38ca4cd37d52c1dca",
-        "timestamp": "2026-09-30T00:25:51+02:00"
       }
     ]
   },
@@ -521,12 +521,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f38c2edea6d3cb15a24e04ac524be6a3ae608503",
+  "source_master_sha": "ca470bb61435b5d72e35e0b491c9cc0923e84d4c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36639574492"
+    "run_id": "36639614210"
   }
 }
