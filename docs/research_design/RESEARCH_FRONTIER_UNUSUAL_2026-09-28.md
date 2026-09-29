@@ -86,3 +86,32 @@ LLM-heavy alpha families are not on the immediate execution path because the pro
 The frontier is intentionally broad at the **mechanism** level but narrow at the **execution** level. We are looking for information channels that plausibly fail for different reasons than the existing price-only sleeves, while preserving the same evidence discipline.
 
 The frontier is therefore allowed to be creative before it is allowed to be profitable.
+
+## C32/C33 public SEC signal expansion
+
+### C32 — INSIDER_OPEN_MARKET_CLUSTER
+
+Design-only extension using SEC Form 4. The signal family is based on qualifying insider
+open-market purchase events and must use the EDGAR acceptance timestamp as the earliest
+information boundary. Grants, option exercises, gifts and other non-purchase transaction
+types are excluded. No event-window or issuer search is permitted after parameter freeze.
+
+Required feasibility gates: historical archive completeness, stable issuer/security mapping,
+transaction-code normalization, amendment handling, deduplication and synthetic PIT mutation
+tests.
+
+### C33 — LAGGED_13F_HOLDING_CHANGE
+
+Design-only extension using SEC Form 13F. The signal family compares institution-reported
+equity holdings only after the corresponding filing is publicly available. The regulatory
+quarter-end reporting lag must remain explicit; accepted/public filing timestamps govern
+information availability. Amendments, security mapping and manager aggregation must be fixed
+before any performance authorization.
+
+Required feasibility gates: archive completeness, stable security mapping, 45-day publication
+lag preservation, amendment handling, reproducible manager aggregation and synthetic PIT tests.
+
+Both candidates are **DESIGN_ONLY_UNRANKED**. They are not performance candidates and cannot
+be selected from holdout outcomes. The machine-readable candidate registry is:
+research/frontier/sec_public_signals_candidates.json.
+\n
