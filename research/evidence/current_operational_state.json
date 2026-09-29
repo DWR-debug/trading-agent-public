@@ -30,10 +30,11 @@
     ],
     "active_trials": [
       {
+        "authorization_id": "AUTH-Q081R2-2026-09-30-36638812989",
         "class": "performance_correction",
         "code": "081R2",
         "issue_number": 587,
-        "performance_authorization_allowed": false,
+        "performance_authorization_allowed": true,
         "predecessor_trial_id": "T-2026-09-28-081R1-PERFORMANCE",
         "preflight": {
           "artifact_id": 10993950051,
@@ -41,7 +42,7 @@
           "workflow_run_id": 36474031581
         },
         "preregistration_path": "research/preregistrations/q081r2_performance_2026_09_28.json",
-        "state": "PREREGISTERED_WAITING_AUTHORIZATION",
+        "state": "PERFORMANCE_AUTHORIZED",
         "trial_id": "T-2026-09-28-081R2-PERFORMANCE"
       },
       {
@@ -272,7 +273,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T22:18:56.408884+00:00",
+  "generated_at_utc": "2026-09-29T22:21:30.342583+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +396,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: add auditable issue-comment dispatch for Q081R2 one-shot",
+        "sha": "75494cd382e8c829c56109153f029f5611f0fd72",
+        "timestamp": "2026-09-30T00:21:20+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "bb8d0b292d34d373361c1ca19c421c9ede95a92e",
+        "timestamp": "2026-09-29T22:19:56Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "91979305e506a67f9fbc18c1fc5cb4b006099b57",
+        "timestamp": "2026-09-29T22:18:56Z"
+      },
+      {
         "message": "RETRY: authorize Q081R2 after governance audit repair",
         "sha": "eefd9e09128127023cb0b8bee2edd38b6a117f5c",
         "timestamp": "2026-09-30T00:18:44+02:00"
@@ -418,21 +434,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "9c4ddc9deb1a53c121a05d9cd48b2cc3b6e3f8bb",
         "timestamp": "2026-09-29T22:16:51Z"
-      },
-      {
-        "message": "FIX: mark consumed Q094 authorization as historical",
-        "sha": "243dfa49f916d8ac737285c892cedcfc64472fe8",
-        "timestamp": "2026-09-30T00:16:49+02:00"
-      },
-      {
-        "message": "FIX: exempt terminal historical preregistrations from active v2 audit",
-        "sha": "209e4eb158a52736736212d8a7a6860ec7627202",
-        "timestamp": "2026-09-30T00:16:38+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b01e69727f9a0acf33b6e0df2d82c27f69c5b647",
-        "timestamp": "2026-09-29T22:14:57Z"
       }
     ]
   },
@@ -502,12 +503,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "eefd9e09128127023cb0b8bee2edd38b6a117f5c",
+  "source_master_sha": "75494cd382e8c829c56109153f029f5611f0fd72",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36638812948"
+    "run_id": "36639073750"
   }
 }
