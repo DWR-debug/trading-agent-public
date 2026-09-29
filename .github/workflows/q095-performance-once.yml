@@ -70,19 +70,28 @@ jobs:
             test -s "research/runs/q095_input_bundle/T-2026-09-29-095-INPUT-FREEZE/$symbol/adjusted_close.csv"
           done
           python - <<'PY'
-          import json
+          import hashlib, json
           from pathlib import Path
-          cov=json.loads(Path("research/evidence/q095_coverage_result.json").read_text())
-          pit=json.loads(Path("research/evidence/q095_pit_result.json").read_text())
-          inp=json.loads(Path("research/evidence/q095_input_freeze_result.json").read_text())
-          snap=json.loads(Path("research/runs/q095_coverage/T-2026-09-29-095-COVERAGE/snapshot_manifest.json").read_text())
-          bundle=json.loads(Path("research/runs/q095_input_bundle/T-2026-09-29-095-INPUT-FREEZE/input_bundle_manifest.json").read_text())
-          assert cov["result_fingerprint"]=="9d03dc1c4b01ff8713a25a35b3551ab9ef059b3a0f8f2dc77671a0ba3bc60c53"
-          assert cov["snapshot_fingerprint"]=="d796e11c069e7dd4fb036a9dda804136da8703dbdbc2f64a46f787f32c61130c"
-          assert pit["result_fingerprint"]=="34b83403d86cda4a4b68382a860bf11d5ba1c7c6eba197add23c924094baae9"
-          assert inp["bundle_fingerprint"]=="7a16c2b1c91d9194c9a8e450c8009f3030b28a59d70f7c354c6d6dac56a3e705"
-          assert snap["snapshot_fingerprint"]==cov["snapshot_fingerprint"]
-          assert bundle["bundle_fingerprint"]==inp["bundle_fingerprint"]
+          prereg=json.loads(Path("research/preregistrations/q095_monthly_rebalance_independent_replication_2026_09_29.json").read_text(encoding="utf-8"))
+          cov=json.loads(Path("research/evidence/q095_coverage_result.json").read_text(encoding="utf-8"))
+          pit=json.loads(Path("research/evidence/q095_pit_result.json").read_text(encoding="utf-8"))
+          inp=json.loads(Path("research/evidence/q095_input_freeze_result.json").read_text(encoding="utf-8"))
+          snap=json.loads(Path("research/runs/q095_coverage/T-2026-09-29-095-COVERAGE/snapshot_manifest.json").read_text(encoding="utf-8"))
+          bundle=json.loads(Path("research/runs/q095_input_bundle/T-2026-09-29-095-INPUT-FREEZE/input_bundle_manifest.json").read_text(encoding="utf-8"))
+          def fp(d,key):
+              x=dict(d); got=x.pop(key); calc=hashlib.sha256(json.dumps(x,sort_keys=True,separators=(",",":"),ensure_ascii=True,allow_nan=False).encode()).hexdigest(); assert got==calc,(key,got,calc); return got
+          cov_fp=fp(cov,"result_fingerprint")
+          pit_fp=fp(pit,"result_fingerprint")
+          inp_fp=fp(inp,"bundle_fingerprint")
+          assert cov["status"]=="COVERAGE_PASSED"
+          assert pit["status"]=="PIT_PASSED"
+          assert inp["status"]=="INPUT_BUNDLE_FROZEN"
+          assert cov_fp==prereg["data_contract"]["coverage_result_fingerprint"],("coverage",cov_fp,prereg["data_contract"]["coverage_result_fingerprint"])
+          assert pit_fp==prereg["data_contract"]["pit_result_fingerprint"],("pit",pit_fp,prereg["data_contract"]["pit_result_fingerprint"])
+          assert inp_fp==prereg["data_contract"]["input_bundle_fingerprint"],("input",inp_fp,prereg["data_contract"]["input_bundle_fingerprint"])
+          assert snap["snapshot_fingerprint"]==prereg["data_contract"]["snapshot_fingerprint"]
+          assert bundle["bundle_fingerprint"]==prereg["data_contract"]["input_bundle_fingerprint"]
+          assert cov["performance_evaluation"] is False and pit["performance_evaluation"] is False and inp["performance_evaluation"] is False
           print("Q095 FROZEN PREPARATION RESTORE VERIFIED")
           PY
       - name: Install deterministic dependencies
