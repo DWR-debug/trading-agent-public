@@ -1,6 +1,12 @@
 name: Local Free AI Worker Fabric
 
 on:
+  push:
+    branches: [master]
+    paths:
+      - "ai_requests/AI-2026-09-29-Q091-ADVERSARIAL.json"
+      - ".github/workflows/self-hosted-ai-worker-fabric.yml"
+      - "automation/ai_worker_fabric.py"
   workflow_dispatch:
   schedule:
     - cron: "45 */6 * * *"
@@ -23,6 +29,7 @@ jobs:
         task:
           - AI-2026-09-28-Q089-ADVERSARIAL
           - AI-2026-09-28-UNUSUAL-FRONTIER
+          - AI-2026-09-29-Q091-ADVERSARIAL
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 20
     steps:
@@ -46,6 +53,7 @@ jobs:
           @echo off
           if /I "${{ matrix.task }}"=="AI-2026-09-28-Q089-ADVERSARIAL" echo path=ai_requests/AI-2026-09-28-Q089-ADVERSARIAL.json>>"%GITHUB_OUTPUT%"
           if /I "${{ matrix.task }}"=="AI-2026-09-28-UNUSUAL-FRONTIER" echo path=ai_requests/AI-2026-09-28-UNUSUAL-FRONTIER.json>>"%GITHUB_OUTPUT%"
+          if /I "${{ matrix.task }}"=="AI-2026-09-29-Q091-ADVERSARIAL" echo path=ai_requests/AI-2026-09-29-Q091-ADVERSARIAL.json>>"%GITHUB_OUTPUT%"
 
       - name: Check for already-satisfied task
         id: prior
