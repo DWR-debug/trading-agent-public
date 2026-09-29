@@ -30,15 +30,35 @@
     ],
     "active_trials": [
       {
+        "class": "performance_correction",
+        "code": "081R4",
+        "issue_number": 694,
+        "performance_authorization_allowed": false,
+        "predecessor_execution_incident_path": "research/evidence/q081r3_performance_execution_incident.json",
+        "predecessor_trial_id": "T-2026-09-30-081R3-PERFORMANCE",
+        "preregistration_path": "research/preregistrations/q081r4_ast_literal_audit_2026_09_30.json",
+        "state": "PREREGISTERED_WAITING_AUTHORIZATION",
+        "trial_id": "T-2026-09-30-081R4-PERFORMANCE"
+      },
+      {
         "authorization_id": "AUTH-Q081R3-2026-09-30-36639695710",
         "class": "performance_correction",
         "code": "081R3",
+        "execution_incident": {
+          "error": "NameError: name 'true' is not defined. Did you mean: 'True'?",
+          "execution_incident_path": "research/evidence/q081r3_performance_execution_incident.json",
+          "failing_step": "Execute Q081R3 fixed-rule performance exactly once",
+          "result_created": false,
+          "scientific_outcome": false,
+          "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME",
+          "workflow_run_id": "36640012014"
+        },
         "issue_number": 693,
-        "performance_authorization_allowed": true,
+        "performance_authorization_allowed": false,
         "predecessor_execution_incident_path": "research/evidence/q081r2_performance_execution_incident.json",
         "predecessor_trial_id": "T-2026-09-28-081R2-PERFORMANCE",
         "preregistration_path": "research/preregistrations/q081r3_python_literal_fix_2026_09_30.json",
-        "state": "PERFORMANCE_AUTHORIZED",
+        "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
         "trial_id": "T-2026-09-30-081R3-PERFORMANCE"
       },
       {
@@ -294,7 +314,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T22:32:41.773839+00:00",
+  "generated_at_utc": "2026-09-29T22:32:58.906874+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -417,6 +437,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOVERNANCE: retire Q081R3 after implementation failure and register Q081R4",
+        "sha": "9078ac08ebbe430cd32be03125c2ed2edbedda14",
+        "timestamp": "2026-09-30T00:32:56+02:00"
+      },
+      {
+        "message": "FEAT: add Q081R4 immutable reconciliation",
+        "sha": "b537de9eb6f695a340e6b85c350500a91590f556",
+        "timestamp": "2026-09-30T00:32:47+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "651cd80bfa6d6cbee86815369dd0cb8e2499a790",
+        "timestamp": "2026-09-29T22:32:41Z"
+      },
+      {
         "message": "TEST: lock Q081R4 identity and AST literal guard",
         "sha": "976e3b2a906f82691f1e3a764b3700c0bfc43d5e",
         "timestamp": "2026-09-30T00:32:40+02:00"
@@ -440,21 +475,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "7a11588b717433b884613b37bbbf981766a73651",
         "timestamp": "2026-09-29T22:32:08Z"
-      },
-      {
-        "message": "FIX: create Q081R4 AST-audited performance runner",
-        "sha": "5e643ea05e06a39efcfd96906528b925a6696beb",
-        "timestamp": "2026-09-30T00:31:58+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "427acc56c5596ecf8141f30598d321ea01f3c4ea",
-        "timestamp": "2026-09-29T22:30:54Z"
-      },
-      {
-        "message": "FIX: decouple Q081R3 identity test from consumed authorization state",
-        "sha": "94a5e928cf1021fe76d0b217711fb5d079326996",
-        "timestamp": "2026-09-30T00:30:42+02:00"
       }
     ]
   },
@@ -524,12 +544,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "976e3b2a906f82691f1e3a764b3700c0bfc43d5e",
+  "source_master_sha": "9078ac08ebbe430cd32be03125c2ed2edbedda14",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36640179296"
+    "run_id": "36640204825"
   }
 }
