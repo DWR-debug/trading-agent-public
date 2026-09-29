@@ -142,6 +142,10 @@ def generate(
         "no_selection_or_promotion": True,
         "paper_only": True,
     }
+    q091_registry = active_trials.get("091", {})
+    q091_state = str(q091_registry.get("state", "UNKNOWN"))
+    q091_authorized = q091_registry.get("performance_authorization_allowed") is True
+
     q070_pipeline = {
         "family": "Q070",
         "state": "PERMANENTLY_BLOCKED",
@@ -316,13 +320,14 @@ def generate(
 - Q026 is recorded as **DATA_INVALID / NO_SCIENTIFIC_OUTCOME**; it did not produce performance evidence.
 - Q023 is recorded as **COVERAGE_VALIDATED** and Q025 as **DATE_PIT_VALIDATED**; these are data-contract findings, not promotion evidence.
 - No current candidate is authorized for promotion or live execution.
-- Candidate discovery and PIT feasibility remain the required steps before any new formal performance evaluation.
+- Q091 fixed-portfolio performance is **AUTHORIZED** only when the active registry says so; the one-shot performance workflow remains fail-closed and consumes authorization only through immutable reconciliation.
 
 ### Active research registry
 
 - Q081-R2: **{active_trials.get("081R2", {}).get("state", "PREREGISTERED_WAITING_PREFLIGHT")}**; infrastructure-rebased corrective reproduction; no performance authorization.
 - Q089: **{active_trials.get("089", {}).get("state", "UNKNOWN")}**; fresh symbol-disjoint successor to quarantined Q086; separate performance authorization remains required.
 - Q077-R1: **{active_trials.get("077R1", {}).get("state", "PREREGISTERED_WAITING_PREFLIGHT")}**; coverage-only repair after the original Q077 pool left insufficient unused symbols; no performance authorization.
+- Q091: **{q091_state}**; fixed portfolio architecture on the fresh symbol-disjoint universe; performance authorization flag = **{q091_authorized}**.
 - Q084, Q088 and Q082 remain **design/feasibility tracks** for unusual market-state, textual-network, rebalance-demand and SEC information channels.
 - The unusual-strategy frontier is maintained in `docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md` and is design-only until feasibility and provenance are established.
 
