@@ -225,7 +225,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T08:35:17.879630+00:00",
+  "generated_at_utc": "2026-09-29T10:12:01.818733+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -348,44 +348,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "RUN: Q089 fixed-rule performance attempt 4",
-        "sha": "f2b536d8db97c33e11ac884fc882df6354ac0803",
-        "timestamp": "2026-09-29T10:35:05+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "90f79882507100c79fd5c0bb79cf7d23bb2c7a40",
-        "timestamp": "2026-09-29T08:34:56Z"
-      },
-      {
-        "message": "EVIDENCE: reconcile Q089 fixed-rule performance",
-        "sha": "3c1e9d66d3139ef776a74fb6ccdbc68f54cc565a",
-        "timestamp": "2026-09-29T08:34:11Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d520c9c94f98b950e2a60a190d9f33a0f1b5d617",
-        "timestamp": "2026-09-29T08:32:00Z"
-      },
-      {
-        "message": "RUN: execute Q089 revision 6 fixed-rule performance once",
-        "sha": "89cb63ab00e6a11aa07186ac220675e0759d4c56",
-        "timestamp": "2026-09-29T10:31:48+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "fa6484cf98e7d47e17d1a10fe2a3286ceb6b700d",
-        "timestamp": "2026-09-29T08:31:44Z"
-      },
-      {
-        "message": "AUTH: authorize Q089 revision 6 for one-shot fixed-rule performance (#676)",
-        "sha": "66bd509dccfa3ba929d35882d63c2ef6e88678ba",
-        "timestamp": "2026-09-29T10:31:33+02:00"
+        "message": "RESEARCH: integrate Q090 immutable Q089 diagnosis",
+        "sha": "787104596fff7e048c840cc29559463095ad45ce",
+        "timestamp": "2026-09-29T12:11:48+02:00"
       },
       {
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "d26935c433745d357b18853214491da2dd80ba42",
-        "timestamp": "2026-09-29T08:30:15Z"
+        "sha": "e85c0894608b27daa4298b672f4f5bac005a5505",
+        "timestamp": "2026-09-29T10:08:38Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "5b1700b88132d88775f7c2992879374d7583f0b4",
+        "timestamp": "2026-09-29T09:56:29Z"
+      },
+      {
+        "message": "OPS: record local AI worker state",
+        "sha": "56100c6d3508b1989edc028c65113ef31c761a61",
+        "timestamp": "2026-09-29T09:51:54Z"
+      },
+      {
+        "message": "OPS: record local AI worker state",
+        "sha": "651b741d0f3da8910d4558321ae02c960fa75879",
+        "timestamp": "2026-09-29T09:51:49Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "1b7f0543ab7468d4f782a030492df70e18aacc0f",
+        "timestamp": "2026-09-29T09:47:15Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "784e5bc41c095583e58bfaa6a2e2ceda9991dd74",
+        "timestamp": "2026-09-29T09:44:50Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "3d422aeefc2678eb4ee4578ec9212a4d0891e387",
+        "timestamp": "2026-09-29T09:44:49Z"
       }
     ]
   },
@@ -455,12 +455,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f2b536d8db97c33e11ac884fc882df6354ac0803",
+  "source_master_sha": "787104596fff7e048c840cc29559463095ad45ce",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36543648601"
+    "run_id": "36554052402"
   }
 }
