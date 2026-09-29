@@ -124,7 +124,14 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "OPS: advance paper-forward MTM state"
-          git push origin HEAD:master
+          if git push origin HEAD:master; then
+            echo "PAPER_FORWARD_STATE_PUBLISHED"
+          else
+            echo "PAPER_FORWARD_PUSH_RACE: remote master advanced concurrently; preserving remote state and letting the next scheduled iteration recompute."
+            git fetch origin master
+            git reset --hard origin/master
+            exit 0
+          fi
 
       - name: Publish compact operational receipt
         if: always()
