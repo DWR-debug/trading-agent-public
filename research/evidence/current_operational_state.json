@@ -265,7 +265,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T13:52:06.578496+00:00",
+  "generated_at_utc": "2026-09-29T13:54:07.412850+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -388,6 +388,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOVERNANCE: retry Q095 authorization on green frozen codebase",
+        "sha": "d9a049bf8795811590a922aa575d60d1cb58e569",
+        "timestamp": "2026-09-29T15:53:50+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a3a607170c4a9c0ff6a9f44f667fe810ea9bfce4",
+        "timestamp": "2026-09-29T13:52:06Z"
+      },
+      {
         "message": "GOVERNANCE: remove stale token export from Q095 authorization gate",
         "sha": "281f18fe4f4d9d678e26abad0de67900e468d110",
         "timestamp": "2026-09-29T15:51:51+02:00"
@@ -416,16 +426,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "24e4d9c55a3f89b2547820c8f03326823237ce12",
         "timestamp": "2026-09-29T13:48:13Z"
-      },
-      {
-        "message": "OPS: extend permanent self-hosted QA to Q095 contract integrity",
-        "sha": "4536b137328e51d34dd4b5c89846a54136447c6b",
-        "timestamp": "2026-09-29T15:47:55+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5f3c2894c44e8ff58e39f6b848956a15ef2bb13a",
-        "timestamp": "2026-09-29T13:47:12Z"
       }
     ]
   },
@@ -495,12 +495,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "281f18fe4f4d9d678e26abad0de67900e468d110",
+  "source_master_sha": "d9a049bf8795811590a922aa575d60d1cb58e569",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36578278749"
+    "run_id": "36578537019"
   }
 }
