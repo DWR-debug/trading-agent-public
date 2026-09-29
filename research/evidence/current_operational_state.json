@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T17:25:22.483483+00:00",
+  "generated_at_utc": "2026-09-29T17:25:55.591037+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "QA: test HTML-normalized SEC section matching",
+        "sha": "aa0f04213ac305f9966fbc09786ae4b89f88d579",
+        "timestamp": "2026-09-29T19:25:53+02:00"
+      },
+      {
+        "message": "RESEARCH: normalize SEC filing HTML for robust section detection",
+        "sha": "e93459ab246e4643c27a1d662a01efcdd7ff12d2",
+        "timestamp": "2026-09-29T19:25:41+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "52650099c11e9e7e8012c58915f3049c3cedee5b",
+        "timestamp": "2026-09-29T17:25:22Z"
+      },
+      {
         "message": "OPS: register public frontier feasibility workflow in integrity allowlist",
         "sha": "5b210141bdc0c5d2f2d5939bdbabd9cb8a5fcd59",
         "timestamp": "2026-09-29T19:25:11+02:00"
@@ -418,21 +433,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "6018d1fa6cd235e7aa5613a612abdbd5723aab17",
         "timestamp": "2026-09-29T17:20:47Z"
-      },
-      {
-        "message": "QA: align Q096 SEC form-specific probe assertions",
-        "sha": "c311d6dfe47f6bffe630ef043ca2945f77ecbe38",
-        "timestamp": "2026-09-29T19:20:42+02:00"
-      },
-      {
-        "message": "RESEARCH: separate SEC 10-K and 10-Q feasibility probes",
-        "sha": "1dc88a6b201e008a160b27e27f4a410fb01e4efe",
-        "timestamp": "2026-09-29T19:20:33+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "133805beeb75141c8e4153b64030bf3e6509c8fd",
-        "timestamp": "2026-09-29T17:19:54Z"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5b210141bdc0c5d2f2d5939bdbabd9cb8a5fcd59",
+  "source_master_sha": "aa0f04213ac305f9966fbc09786ae4b89f88d579",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36604789709"
+    "run_id": "36604852749"
   }
 }
