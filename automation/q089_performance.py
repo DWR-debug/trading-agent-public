@@ -33,7 +33,7 @@ def _preflight(root):
         if obj.get("performance_trial_authorized", False) is not False or obj.get("selection_used") is not False: raise RuntimeError("Q089 preflight receipt has forbidden state")
     if prereg.get("trial_id")!=TRIAL_ID or prereg.get("status")!="PREREGISTERED_PERFORMANCE": raise RuntimeError("Q089 performance preregistration invalid")
     if prereg.get("requested_candles") != REQUESTED_CANDLES or prereg.get("target_common_candles") != N or prereg.get("research_periods") != RESEARCH or prereg.get("holdout_periods") != HOLDOUT: raise RuntimeError("Q089 performance geometry metadata mismatch")
-    if prereg.get("selection_used") is not False or prereg.get("holdout_used_for_selection") is not False: raise RuntimeError("Q089 preregistration records selection")
+    if prereg.get("selection_used", False) is not False or prereg.get("holdout_used_for_selection", False) is not False: raise RuntimeError("Q089 preregistration records selection")
     if prereg.get("safety")!=Safety: raise RuntimeError("Q089 performance safety mismatch")
     symbols=tuple(freeze["symbols"])
     if tuple(prereg["symbols"])!=symbols: raise RuntimeError("Q089 asset freeze/prereg symbols mismatch")
