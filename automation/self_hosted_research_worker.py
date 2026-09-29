@@ -37,6 +37,19 @@ LANES: dict[str, list[list[str]]] = {
         ],
         [
             PYTHON,
+            "-m",
+            "py_compile",
+            "automation/q095_contract_audit.py",
+            "automation/q095_performance.py",
+            "automation/q095_reconcile.py",
+        ],
+        [
+            PYTHON,
+            "-m",
+            "automation.q095_contract_audit",
+        ],
+        [
+            PYTHON,
             "-c",
             (
                 "from automation.rccsm_feasibility import feasibility_manifest, route_mesh; "
@@ -93,6 +106,7 @@ LANES: dict[str, list[list[str]]] = {
             ),
         ],
         [PYTHON, "-m", "pytest", "-q", "tests/test_research_gates.py"],
+        [PYTHON, "-m", "automation.q095_contract_audit"],
     ],
 }
 
