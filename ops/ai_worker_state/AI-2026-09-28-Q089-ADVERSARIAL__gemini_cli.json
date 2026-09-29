@@ -1,1 +1,35 @@
-{"schema_version":1,"task_id":"AI-2026-09-28-Q089-ADVERSARIAL","provider":"gemini_cli","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-09-28-Q089-ADVERSARIAL",
+  "provider": "gemini_cli",
+  "free_only": true,
+  "preflight": {
+    "provider": "gemini_cli",
+    "available": false,
+    "binary": "/opt/hostedtoolcache/node/22.23.2/x64/bin/gemini",
+    "free_only": true,
+    "local_mode": false,
+    "local_attestation": {
+      "present": false,
+      "path": null
+    },
+    "free_mode_attested": false,
+    "reasons": [
+      "AI_EXTERNAL_PROVIDER_ALLOWLIST is not confirmed",
+      "provider authentication is not available for free-only mode",
+      "provider free-mode attestation is missing"
+    ]
+  },
+  "task_fingerprint": "d7f78f334a0e1a67b390f80e5b5a520e2db981af0323b0c03f589527b0c7641f",
+  "worker_output_is_scientific_evidence": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "status": "SKIPPED",
+  "returncode": null,
+  "stdout": "",
+  "stderr": ""
+}
