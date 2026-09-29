@@ -240,7 +240,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:14:40.291640+00:00",
+  "generated_at_utc": "2026-09-29T12:14:56.526184+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -363,6 +363,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f5f83ae76da1c95549b31754a5fa1f71aa87b810",
+        "timestamp": "2026-09-29T12:14:40Z"
+      },
+      {
         "message": "RESEARCH: add Q093 deterministic Q091 cost attribution workflow",
         "sha": "5040f041732dfea1f900661260877192af11c6eb",
         "timestamp": "2026-09-29T14:14:38+02:00"
@@ -396,11 +401,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "c1d390ddc529f54b65d378c8165abcad20395a3f",
         "timestamp": "2026-09-29T12:13:45Z"
-      },
-      {
-        "message": "RESEARCH: preregister Q093 Q091 cost attribution diagnosis",
-        "sha": "3d422d1e3ed61393e3cbfa2eff3c08eaaccd3273",
-        "timestamp": "2026-09-29T14:13:36+02:00"
       }
     ]
   },
@@ -470,12 +470,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5040f041732dfea1f900661260877192af11c6eb",
+  "source_master_sha": "f5f83ae76da1c95549b31754a5fa1f71aa87b810",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36566791558"
+    "run_id": "36566828580"
   }
 }
