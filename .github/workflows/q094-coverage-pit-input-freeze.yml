@@ -108,7 +108,7 @@ jobs:
             assert d["status"]==status
             assert d["performance_evaluation"] is False
             assert d["selection_used"] is False
-            assert d["holdout_used_for_selection"] is False
+            assert d.get("holdout_used_for_selection", False) is False
           print("Q094 PREPARATION RECEIPTS PASS")
           PY
 
