@@ -5,16 +5,20 @@
   "free_only": true,
   "preflight": {
     "provider": "gemini_cli",
-    "available": true,
-    "binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE",
+    "available": false,
+    "binary": "/opt/hostedtoolcache/node/22.23.2/x64/bin/gemini",
     "free_only": true,
-    "local_mode": true,
+    "local_mode": false,
     "local_attestation": {
-      "present": true,
-      "path": "C:\\Users\\u419680\\.trading-agent\\ai_free_attestation.json"
+      "present": false,
+      "path": null
     },
-    "free_mode_attested": true,
-    "reasons": []
+    "free_mode_attested": false,
+    "reasons": [
+      "AI_EXTERNAL_PROVIDER_ALLOWLIST is not confirmed",
+      "provider authentication is not available for free-only mode",
+      "provider free-mode attestation is missing"
+    ]
   },
   "task_fingerprint": "d7f78f334a0e1a67b390f80e5b5a520e2db981af0323b0c03f589527b0c7641f",
   "worker_output_is_scientific_evidence": false,
@@ -24,10 +28,8 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 50.19,
-  "stdout": "{\"conversation_id\":\"9510fa59-58ca-4846-ba49-8222a0172dc6\",\"status\":\"SUCCESS\",\"response\":\"# Worker Handoff: Q089 Pre-Performance Adversarial Review\\n\\n**Task ID:** `AI-2026-09-28-Q089-ADVERSARIAL`  \\n**Scope:** Q089 Methodology and Pre-Performance Adversarial Review  \\n**Operational Status:** Bounded worker analysis only. No backtest execution, no statistical claims, no candidate/parameter selection, no promotion authorized.\\n\\n```text\\nPAPER_ONLY=True\\nLIVE_TRADING_ENABLED=False\\nORDERS_ENABLED=False\\nAUTOMATIC_PROMOTION=False\\n```\\n\\n---\\n\\n## 1. Findings \\u0026 Methodological Failure Modes\\n\\n### A. Secondary Network Call in Input Freeze \\u0026 Temporal Disconnect\\nIn [`automation/q089_input_freeze.py`](file:///C:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36548096044-1/trading-agent-public-d6ef8bb9ad31a8d3f9bbb0fe34d0156bd319cfa1/automation/q089_input_freeze.py#L42-L55), the harness extracts timestamps from `1d.csv` in the frozen coverage snapshot, but then executes `fetch_adjusted_close(symbol, timestamps)` (imported from `automation.q079_input_freeze`).\\n- **Failure Mode:** If `fetch_adjusted_close` pulls from an external network source (e.g., Yahoo Finance API) rather than deriving adjusted prices deterministically from the frozen coverage artifact, `input_freeze` introduces an unpinned, secondary network fetch after coverage freeze.\\n- **Impact:** Upstream data changes (e.g. corporate action restatements, retroactive dividend adjustments) occurring between coverage capture ($T_1$) and input freeze ($T_2$) break input invariance. While [`research/evidence/q089_input_freeze_result.json`](file:///C:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36548096044-1/trading-agent-public-d6ef8bb9ad31a8d3f9bbb0fe34d0156bd319cfa1/research/evidence/q089_input_freeze_result.json) states `\\\"performance_network_access\\\": false`, network-free guarantees must be verified for the freeze stage itself.\\n\\n### B. Severe Sector Concentration from Naive Alphabetical Source-Ordering\\nIn [`automation/q089_coverage_pit.py`](file:///C:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36548096044-1/trading-agent-public-d6ef8bb9ad31a8d3f9bbb0fe34d0156bd319cfa1/automation/q089_coverage_pit.py#L24-L38), symbols are selected by iterating alphabetically through `CANDIDATE_POOL` and excluding prior universes.\\nThe resulting 8 symbols in [`research/evidence/q089_coverage_result.json`](file:///C:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36548096044-1/trading-agent-public-d6ef8bb9ad31a8d3f9bbb0fe34d0156bd319cfa1/research/evidence/q089_coverage_result.json#L7-L16) are:\\n- `AEE` (Ameren — Regulated Electric Utility)\\n- `AES` (AES Corp — Utility / Power)\\n- `ATO` (Atmos Energy — Regulated Gas Utility)\\n- `AVY` (Avery Dennison — Materials / Packaging)\\n- `BKH` (Black Hills Corp — Regulated Electric/Gas Utility)\\n- `CAH` (Cardinal Health — Healthcare Distribution)\\n- `CHD` (Church \\u0026 Dwight — Consumer Staples)\\n- `CHRW` (C.H. Robinson — Freight / Industrials)\\n- **Failure Mode:** **4 out of 8 assets (50%) belong to a single sector: Utilities.**\\n- **Impact:** The candidate bank ([`C7 LOW_MAX_21`](file:///C:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36548096044-1/trading-agent-public-d6ef8bb9ad31a8d3f9bbb0fe34d0156bd319cfa1/docs/research_design/Q089-clean-fresh-q069-validation-2026-09-28.md#L14-L18), `C8 LOW_IDIO_VOL_273`, `C10 TREND_EFFICIENCY_63`) is heavily sensitive to low-beta, rate-sensitive utility characteristics. A \\\"validation\\\" on this cluster does not measure general equity cross-sectional anomaly stability; it measures a utility-sector concentration shock.\\n\\n### C. Geometry Inconsistency and Off-by-Two Candle Accounting\\nIn [`automation/q089_coverage_pit.py`](file:///C:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36548096044-1/trading-agent-public-d6ef8bb9ad31a8d3f9bbb0fe34d0156bd319cfa1/automation/q089_coverage_pit.py#L21):\\n```python\\nREQUESTED, RAW, TARGET = 5000, 5000, 3500\\nRESEARCH, HOLDOUT, N = 2798, 700, 3500\\n```\\n- **Failure Mode:** $2,798 + 700 = 3,498 \\\\neq 3,500$.\\n- **Impact:** Two sessions are unaccounted for between research and holdout. If this represents an intentional 2-day purging/embargo buffer, it is not declared in the design or receipts. If it is an off-by-two slicing bug, array boundary misalignment could silently drop candles or shift date alignments across candidates.\\n\\n### D. Lookahead via Backward-Adjusted Prices \\u0026 PIT Blind Spots\\n- In [`research/evidence/q089_input_freeze_result.json`](file:///C:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36548096044-1/trading-agent-public-d6ef8bb9ad31a8d3f9bbb0fe34d0156bd319cfa1/research/evidence/q089_input_freeze_result.json), each dataset provides `adjusted_close`. Standard vendor adjusted close is retroactively multiplied backwards by future split/dividend factors across the entire history.\\n- In [`research/evidence/q089_pit_result.json`](file:///C:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36548096044-1/trading-agent-public-d6ef8bb9ad31a8d3f9bbb0fe34d0156bd319cfa1/research/evidence/q089_pit_result.json#L20), PIT testing evaluates only 50 decision points out of 3,500 rows (~1.4% coverage).\\n- Mutating row $t+k$ in `adjusted_close.csv` tests whether the calculation code looks forward *within the static CSV*, but it **cannot detect whether the price at $t$ was already scaled down by a cash dividend or corporate action announced at $t+k$**. Furthermore, candidate `C11 VOLUME_CONFIRMED_TREND_126` uses volume from `1d.csv` while price comes from `adjusted_close.csv`; mixing d\",\"duration_seconds\":0,\"num_turns\":1,\"usage\":{\"input_tokens\":0,\"output_tokens\":0,\"thinking_tokens\":0,\"cache_read_tokens\":0,\"total_tokens\":0}}\n",
-  "stderr": "[agy] print timeout after 45s with turn in progress; returning partial output\n",
-  "command_binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE"
+  "status": "SKIPPED",
+  "returncode": null,
+  "stdout": "",
+  "stderr": ""
 }
