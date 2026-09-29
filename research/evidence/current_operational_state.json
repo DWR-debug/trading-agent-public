@@ -250,7 +250,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:43:43.131041+00:00",
+  "generated_at_utc": "2026-09-29T12:44:11.339762+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -373,6 +373,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RECONCILE: retry Q094 after reconciler path fix",
+        "sha": "0b1410524765c226918c03bb6697e3aed489ea13",
+        "timestamp": "2026-09-29T14:44:07+02:00"
+      },
+      {
+        "message": "FIX: normalize Q094 reconciler authorization path",
+        "sha": "7d74d686742961a4481c390f74326073ae9b3487",
+        "timestamp": "2026-09-29T14:43:57+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "763652ec384144874777a0aa5a817babd79283dd",
+        "timestamp": "2026-09-29T12:43:43Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "cefccd1420e81322c8dc45af2ab3eafa3fb00afd",
         "timestamp": "2026-09-29T12:43:26Z"
@@ -396,21 +411,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "ae18338e0ac75dddfa26402c853efa7feee30d2a",
         "timestamp": "2026-09-29T12:41:23Z"
-      },
-      {
-        "message": "RUN: trigger amended Q094 one-shot monthly performance",
-        "sha": "5b81b33a74b32b06b651990bbb71529316e64992",
-        "timestamp": "2026-09-29T14:41:12+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2765c1752c4896604ab40e0aa5dbbd958fa0369d",
-        "timestamp": "2026-09-29T12:41:04Z"
-      },
-      {
-        "message": "GOVERNANCE: record superseded Q094 authorization",
-        "sha": "b93568f3dfe7d7d086c0e0fb66b520b11ff381f1",
-        "timestamp": "2026-09-29T14:41:00+02:00"
       }
     ]
   },
@@ -480,12 +480,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "cefccd1420e81322c8dc45af2ab3eafa3fb00afd",
+  "source_master_sha": "0b1410524765c226918c03bb6697e3aed489ea13",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36570024696"
+    "run_id": "36570088702"
   }
 }
