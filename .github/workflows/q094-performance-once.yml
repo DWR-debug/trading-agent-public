@@ -47,8 +47,9 @@ jobs:
           test -d _q094_prep/runs/q094_coverage/T-2026-09-29-094-COVERAGE/datasets
           test -d _q094_prep/runs/q094_input_bundle/T-2026-09-29-094-INPUT-FREEZE
           mkdir -p research
-          cp -a _q094_prep/evidence research/
-          cp -a _q094_prep/runs research/
+          mkdir -p research/evidence research/runs
+          cp -a _q094_prep/evidence/. research/evidence/
+          cp -a _q094_prep/runs/. research/runs/
 
       - name: Verify restored frozen Q094 artifact
         shell: bash
