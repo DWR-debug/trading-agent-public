@@ -9,13 +9,15 @@ if (-not $agy -and -not $gemini) {
     throw "No Antigravity/Gemini CLI found."
 }
 
-$settings = Join-Path $env:USERPROFILE ".geminiantigravity-clisettings.json"
+$geminiDir = Join-Path $env:USERPROFILE ".gemini"
+$agyConfigDir = Join-Path $geminiDir "antigravity-cli"
+$settings = Join-Path $agyConfigDir "settings.json"
 if (-not (Test-Path -LiteralPath $settings)) {
     throw "Local AI settings missing: $settings"
 }
 
 $raw = Get-Content -LiteralPath $settings -Raw
-if ($raw -notmatch '(?i)"(?:UseG1Credits|useG1Credits)"s*:s*false') {
+if ($raw -notmatch '(?i)"(?:UseG1Credits|useG1Credits)"\s*:\s*false\b') {
     throw "Personal G1 credit fallback is not explicitly disabled in $settings"
 }
 
