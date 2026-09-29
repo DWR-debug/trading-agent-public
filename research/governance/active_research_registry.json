@@ -14,11 +14,12 @@
       "code": "081R3",
       "trial_id": "T-2026-09-30-081R3-PERFORMANCE",
       "class": "performance_correction",
-      "state": "PREREGISTERED_WAITING_PREFLIGHT",
-      "issue_number": null,
+      "state": "PREREGISTERED_WAITING_AUTHORIZATION",
+      "issue_number": 693,
       "preregistration_path": "research/preregistrations/q081r3_python_literal_fix_2026_09_30.json",
       "performance_authorization_allowed": false,
-      "predecessor_trial_id": "T-2026-09-28-081R2-PERFORMANCE"
+      "predecessor_trial_id": "T-2026-09-28-081R2-PERFORMANCE",
+      "predecessor_execution_incident_path": "research/evidence/q081r2_performance_execution_incident.json"
     },
     {
       "code": "081R2",
@@ -41,7 +42,8 @@
         "failing_step": "Execute Q081R2 fixed-rule performance exactly once",
         "error": "NameError: name 'false' is not defined. Did you mean: 'False'?",
         "scientific_outcome": false,
-        "result_created": false
+        "result_created": false,
+        "execution_incident_path": "research/evidence/q081r2_performance_execution_incident.json"
       }
     },
     {
