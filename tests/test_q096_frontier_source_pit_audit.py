@@ -3,7 +3,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from automation.q096_frontier_source_pit_audit import PROBES, candidate_gate_matrix
+from automation.q096_frontier_source_pit_audit import (
+    SEC_SAMPLE_CIKS,
+    candidate_gate_matrix,
+    filing_url,
+    recent_filing_rows,
+)
 
 
 def test_q096_inventory_is_the_frozen_current_inventory() -> None:
@@ -55,3 +60,24 @@ def test_q096_does_not_enable_performance_or_live_execution() -> None:
     assert '"paper_only": True' in module
     assert '"live_trading_enabled": False' in module
     assert '"orders_enabled": False' in module
+
+
+def test_q096_sec_submission_row_normalization_and_filing_url() -> None:
+    payload = {
+        "filings": {
+            "recent": {
+                "form": ["10-K", "10-Q"],
+                "filingDate": ["2026-08-01", "2026-05-01"],
+                "accessionNumber": ["0000789019-26-000001", "0000789019-26-000002"],
+                "primaryDocument": ["annual.htm", "quarter.htm"],
+                "acceptanceDateTime": ["20260801160000", "20260501160000"],
+            }
+        }
+    }
+    rows = recent_filing_rows(payload)
+    assert rows[0]["form"] == "10-K"
+    assert rows[1]["accessionNumber"] == "0000789019-26-000002"
+    assert rows[0]["acceptanceDateTime"] == "20260801160000"
+    assert filing_url(SEC_SAMPLE_CIKS["MSFT"], rows[0]["accessionNumber"], rows[0]["primaryDocument"]).endswith(
+        "/Archives/edgar/data/789019/000078901926000001/annual.htm"
+    )
