@@ -249,6 +249,7 @@ def command_for(provider: str, prompt: str, binary: str | None = None) -> list[s
 def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, str] | None = None) -> dict[str, Any]:
     if provider not in task["providers"]:
         raise AIWorkerError(f"Provider {provider} is not enabled for this task.")
+    local_mode = _truth((os.environ if env is None else env).get("TRADING_AGENT_LOCAL_AI_MODE"))
     check = preflight(provider, env)
     base = {
         "schema_version": 1, "task_id": task["task_id"], "provider": provider,
