@@ -16,7 +16,9 @@ permissions:
 
 concurrency:
   group: trading-agent-self-hosted-continuous-qa
-  cancel-in-progress: false
+  # Continuous QA is operational and replaceable; stale snapshots must not
+  # monopolize the finite self-hosted research pool.
+  cancel-in-progress: true
 
 jobs:
   qa_lane:
@@ -25,7 +27,7 @@ jobs:
     timeout-minutes: 75
     strategy:
       fail-fast: false
-      max-parallel: 2
+      max-parallel: 1
       matrix:
         lane: [repo_qa, data_qa, design_qa, local_reproduction]
 
