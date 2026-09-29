@@ -266,7 +266,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T14:09:35.133718+00:00",
+  "generated_at_utc": "2026-09-29T14:09:49.196022+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -389,6 +389,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "24d95f82544c06eeb2ba30be57e58ad70bcb013e",
+        "timestamp": "2026-09-29T14:09:35Z"
+      },
+      {
         "message": "RESEARCH: retry Q095 performance after manifest-level fingerprint fix",
         "sha": "8ea84af0bde3e10b7631d6c092ec27f73b2a9ac1",
         "timestamp": "2026-09-29T16:09:27+02:00"
@@ -422,11 +427,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "2087b142105c743d4c54897db8d45e9c81b1b558",
         "timestamp": "2026-09-29T14:06:12Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "73d3eda1a66c54671338df1926e6bdcf240e7561",
-        "timestamp": "2026-09-29T14:05:51Z"
       }
     ]
   },
@@ -496,12 +496,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8ea84af0bde3e10b7631d6c092ec27f73b2a9ac1",
+  "source_master_sha": "24d95f82544c06eeb2ba30be57e58ad70bcb013e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36580519708"
+    "run_id": "36580538020"
   }
 }
