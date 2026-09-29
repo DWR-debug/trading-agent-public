@@ -146,18 +146,18 @@ jobs:
               print("Q092 LEDGER ALREADY RECONCILED; EXACT MATCH VERIFIED")
           else:
               entries.append({
-            "trial_id":"T-2026-09-29-092",
-            "recorded_at":datetime.now(timezone.utc).isoformat(),
-            "status":"diagnostic_completed_only",
-            "research_family":"q092_q091_failure_mechanism_diagnosis",
-            "parent_trial_id":"T-2026-09-29-091",
-            "parent_report_fingerprint":d["source"]["parent_report_fingerprint"],
-            "diagnostic_fingerprint":d["diagnostic_fingerprint"],
-            "reconstruction_exact":True,
-            "no_new_market_data":True,
-            "selection":{"selected":False,"holdout_used_for_selection":False},
-            "governance":d["governance"],
-            "safety":d["safety"]
+                "trial_id":"T-2026-09-29-092",
+                "recorded_at":datetime.now(timezone.utc).isoformat(),
+                "status":"diagnostic_completed_only",
+                "research_family":"q092_q091_failure_mechanism_diagnosis",
+                "parent_trial_id":"T-2026-09-29-091",
+                "parent_report_fingerprint":d["source"]["parent_report_fingerprint"],
+                "diagnostic_fingerprint":d["diagnostic_fingerprint"],
+                "reconstruction_exact":True,
+                "no_new_market_data":True,
+                "selection":{"selected":False,"holdout_used_for_selection":False},
+                "governance":d["governance"],
+                "safety":d["safety"]
               })
           data[key]=entries
           ledger_path.write_text(json.dumps(data,ensure_ascii=False,indent=2,allow_nan=False)+chr(10),encoding="utf-8")
