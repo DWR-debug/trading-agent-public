@@ -114,6 +114,7 @@ def test_q096_html_section_matching_collapses_tag_boundaries() -> None:
     import html
     import re
 
-    raw = "<div>Management's <b>Discussion</b> and <span>Analysis</span></div>"
+    raw = "<div>Management’s <b>Discussion</b> and <span>Analysis</span></div>"
     normalized = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", raw))).strip()
+    normalized = normalized.replace("’", "'").replace("‘", "'")
     assert "Management's Discussion and Analysis".lower() in normalized.lower()
