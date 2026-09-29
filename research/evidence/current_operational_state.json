@@ -54,12 +54,29 @@
         "trial_id": "T-2026-09-28-081R1-PERFORMANCE"
       },
       {
+        "authorization": {
+          "authorization_basis": {
+            "governance_audit_run_id": 36542080896,
+            "master_ci_run_id": 36542080956,
+            "master_exact_gate_run_id": 36542080816,
+            "preflight_contract_audit_run_id": 36542080853
+          },
+          "authorization_id": "AUTH-Q089-2026-09-29-03",
+          "path": "research/authorizations/q089_performance_2026_09_28.json",
+          "preregistration_fingerprint": "a8be60c87684f089e45ae0406d3b242575abd5ac03e6855a9dad48314afd077a",
+          "source_receipts": {
+            "coverage_result_fingerprint": "56898b50fc0f8af31dead7dcd65001cced41cf7b44093676eead1ccc4d6fe4cb",
+            "input_bundle_fingerprint": "c4261e230baf8888088df7e3e3159a1a93d4142ff358ef5896d35cd109663924",
+            "pit_result_fingerprint": "098da74ebde38d7b5e7c13626bee396eb6e86b4421ca6a4d383e3133cecf19ca",
+            "snapshot_fingerprint": "bb82aeaed86411a8675be7f8ecb1c99e9c144f017466a836b8cafeb9d3b55e1d"
+          }
+        },
         "class": "fresh_validation",
         "code": "089",
         "issue_number": 589,
-        "performance_authorization_allowed": false,
+        "performance_authorization_allowed": true,
         "preregistration_path": "research/preregistrations/q089_performance_2026_09_28.json",
-        "state": "PREREGISTERED_WAITING_AUTHORIZATION",
+        "state": "PERFORMANCE_AUTHORIZED",
         "trial_id": "T-2026-09-28-089-PERFORMANCE"
       },
       {
@@ -202,7 +219,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T08:22:49.539382+00:00",
+  "generated_at_utc": "2026-09-29T08:28:56.498261+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -322,8 +339,37 @@
     "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "auth/q089-revision6-one-shot",
+        "number": 675,
+        "title": "AUTH: authorize Q089 revision 6 for one-shot fixed-rule performance",
+        "updatedAt": "2026-09-29T08:28:19Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/675"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "AUTH: authorize Q089 revision 7 for one-shot fixed-rule performance",
+        "sha": "b4db01a9f07ca7c32861c4c8452395ca9a4ffccb",
+        "timestamp": "2026-09-29T10:28:40+02:00"
+      },
+      {
+        "message": "OPS: record local AI worker state",
+        "sha": "be1fcfdb4fd4220962021cff52a74cc11e88eb81",
+        "timestamp": "2026-09-29T08:26:35Z"
+      },
+      {
+        "message": "OPS: record local AI worker state",
+        "sha": "2b3ce40094151e959f1cfdeee58079e790dc06ff",
+        "timestamp": "2026-09-29T08:25:21Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "30eb1c79f2f719e7a5b367bed8e86d757df37e8f",
+        "timestamp": "2026-09-29T08:22:49Z"
+      },
       {
         "message": "GOV: refresh Q089 contract after runner hardening (#673)",
         "sha": "575b19ef3a68dbea37bfaa7dd4e713183cd88186",
@@ -343,26 +389,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "73d088f7b2192953b8233db0e8c86bd4416c6057",
         "timestamp": "2026-09-29T08:19:31Z"
-      },
-      {
-        "message": "FIX: treat omitted Q089 selection fields as false (#671)",
-        "sha": "9da49180d039edeacb06b5bd7dd29480fbf3fccb",
-        "timestamp": "2026-09-29T10:19:17+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "821810c4f24536abdbc8e5113da55f0386d2054d",
-        "timestamp": "2026-09-29T08:15:52Z"
-      },
-      {
-        "message": "RUN: execute authorized Q089 fixed-rule performance once",
-        "sha": "30f200343c95fb34e81ee88a403ca155a302f9d7",
-        "timestamp": "2026-09-29T10:15:37+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "ee21949b873211cbb8cd60d1dd02619653f9878b",
-        "timestamp": "2026-09-29T08:15:34Z"
       }
     ]
   },
@@ -432,12 +458,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "575b19ef3a68dbea37bfaa7dd4e713183cd88186",
+  "source_master_sha": "b4db01a9f07ca7c32861c4c8452395ca9a4ffccb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36542330003"
+    "run_id": "36542963225"
   }
 }
