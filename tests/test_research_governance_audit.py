@@ -219,3 +219,46 @@ def test_infrastructure_invalidated_trial_is_not_active(tmp_path):
     _prereg(tmp_path)
     result = audit(tmp_path)
     assert result["status"] == "PASS"
+
+
+
+def test_terminal_historical_preregistration_can_remain_v1(tmp_path):
+    _write(tmp_path, "research/governance/active_research_registry.json", {
+        "schema_version": 1,
+        "policy": {"only_listed_performance_trials_may_be_authorized": True},
+        "active_trials": [{
+            "code": "094",
+            "trial_id": "T-2026-09-29-094",
+            "class": "fresh_validation",
+            "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
+            "performance_authorization_allowed": False,
+            "preregistration_path": "research/preregistrations/q094_monthly_rebalance_q091_low_turnover_2026_09_29.json",
+        }],
+    })
+    _write(tmp_path, "research/preregistrations/q094_monthly_rebalance_q091_low_turnover_2026_09_29.json", {
+        "schema_version": "1.0",
+        "trial_id": "T-2026-09-29-094",
+        "status": "PREREGISTERED_PERFORMANCE",
+        "safety": _safety(),
+    })
+    result = audit(tmp_path)
+    assert result["status"] == "PASS"
+    assert result["error_count"] == 0
+
+
+def test_superseded_pre_execution_authorization_is_historical(tmp_path):
+    _prereg(tmp_path)
+    _write(tmp_path, "research/authorizations/legacy.json", {
+        "trial_id": "T-2026-09-27-052",
+        "authorized": True,
+        "performance_execution_authorized": True,
+    })
+    _write(tmp_path, "research/governance/retired_authorizations.json", {
+        "entries": [{
+            "path": "research/authorizations/legacy.json",
+            "trial_id": "T-2026-09-27-052",
+            "status": "SUPERSEDED_PRE_EXECUTION",
+        }]
+    })
+    result = audit(tmp_path)
+    assert result["status"] == "PASS"
