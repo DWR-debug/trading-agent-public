@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from automation.q098_historical_archive_depth import submission_rows
+from automation.q098_historical_archive_depth import (
+    HISTORICAL_EDGAR_ANCHORS,
+    submission_rows,
+)
 
 
 def test_q098_accepts_nested_and_flat_sec_submission_shapes() -> None:
@@ -35,3 +38,10 @@ def test_q098_is_non_evaluative() -> None:
     assert '"candidate_selection": False' in source
     assert '"parameter_search": False' in source
     assert '"performance_authorized": False' in source
+
+
+def test_q098_historical_edgar_anchors_are_frozen_to_study_appropriate_dates() -> None:
+    assert HISTORICAL_EDGAR_ANCHORS["13D_G"]["study_date"] == "2011-06-09"
+    assert HISTORICAL_EDGAR_ANCHORS["FORM144"]["study_date"] == "2023-11-06"
+    assert "0001020066-11-000014" in HISTORICAL_EDGAR_ANCHORS["13D_G"]["url"]
+    assert "0001921094-23-000806" in HISTORICAL_EDGAR_ANCHORS["FORM144"]["url"]
