@@ -16,7 +16,10 @@ UA = "trading-agent-public/Q098-historical-archive-depth contact=research"
 SAMPLES = {
     "MSFT": ("0000789019", {"10-K", "10-Q", "4", "4/A"}),
     "13F_MANAGER": ("0001067983", {"13F-HR", "13F-HR/A"}),
-    "13D_G": ("0001490281", {"SCHEDULE 13D", "SCHEDULE 13D/A", "SCHEDULE 13G", "SCHEDULE 13G/A"}),
+    "13D_G": (
+        "0001020066",
+        {"SC 13D", "SC 13D/A", "SC 13G", "SC 13G/A", "SCHEDULE 13D", "SCHEDULE 13D/A", "SCHEDULE 13G", "SCHEDULE 13G/A"},
+    ),
     "FORM144": ("0001326801", {"144"}),
 }
 
