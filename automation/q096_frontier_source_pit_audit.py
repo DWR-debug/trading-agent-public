@@ -133,13 +133,17 @@ def sec_submission_probe(label: str, cik: str, target_forms: set[str], text_chec
     row["checks"] = {
         "valid_json": True,
         "has_recent_filings": bool(rows),
-        "has_accession_numbers": bool(rows) and all(x["accessionNumber"] for x in rows[: min(25, len(rows))]),
-        "submission_acceptance_field_present": any(
-            x["acceptanceDateTime"] for x in matched[: min(10, len(matched))]
+        "has_accession_numbers": bool(rows) and all(
+            x["accessionNumber"] for x in rows[: min(25, len(rows))]
         ),
         "target_forms_present": bool(matched),
         "historical_extension_metadata_present": bool(older_files) or len(rows) >= 1000,
     }
+    row["submission_acceptance_field_present"] = any(
+        x["acceptanceDateTime"] for x in matched[: min(10, len(matched))]
+    )
+    if not text_checks:
+        row["checks"]["submission_acceptance_field_present"] = row["submission_acceptance_field_present"]
     row["target_form_counts"] = {form: sum(x["form"] == form for x in rows) for form in sorted(target_forms)}
     row["recent_range"] = {
         "min_filing_date": min((x["filingDate"] for x in rows), default=None),
