@@ -61,11 +61,13 @@ LANES: dict[str, list[list[str]]] = {
         [
             PYTHON,
             "-m",
-            "automation.q091_post_performance_diagnosis",
+            "automation.q092_q091_failure_diagnosis",
             "--repo-root",
             ".",
             "--output",
             "research/runs/self_hosted/q092_q091_failure_diagnosis.json",
+            "--markdown",
+            "research/runs/self_hosted/q092_q091_failure_diagnosis.md",
         ],
     ],
     "repo_qa": [
