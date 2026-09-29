@@ -98,6 +98,20 @@ def audit(root: Path = ROOT) -> dict[str, Any]:
                 actual=actual,
             )
 
+    run_fn = next((node for node in ast.walk(perf_tree) if isinstance(node, ast.FunctionDef) and node.name == "run"), None)
+    run_calls = {
+        node.func.id
+        for node in ast.walk(run_fn)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+    } if run_fn is not None else set()
+    for required_guard in ("_assert_authorization", "_assert_source_contract"):
+        if required_guard not in run_calls:
+            finding(
+                "Q089_FAIL_CLOSED_GUARD_MISSING",
+                "BLOCKING",
+                guard=required_guard,
+            )
+
     reported_requested = _find_result_literal(perf_tree, "requested_candles")
     if reported_requested != prereg.get("requested_candles"):
         finding(
