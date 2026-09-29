@@ -149,7 +149,6 @@ jobs:
           print("Q095 AUTHORIZATION PREPARED")
           print("Q095_PREREG_FP="+prereg_fp)
           PY
-          export GH_TOKEN="$GITHUB_TOKEN"
           base_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
           test -n "$base_sha"
           python automation/github_contents_publish.py \
