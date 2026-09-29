@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T17:14:22.328365+00:00",
+  "generated_at_utc": "2026-09-29T17:16:22.079202+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,44 +395,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "RESEARCH: correct SEC sample filers and relax submission acceptance probe",
-        "sha": "d42cfb866eb561824901f9373fe4acad05567b3d",
-        "timestamp": "2026-09-29T19:14:08+02:00"
+        "message": "OPS: harden permanent research snapshot downloads against transient resets",
+        "sha": "f3c79d5b3e513b8e01614b6a3b9d6291796b3844",
+        "timestamp": "2026-09-29T19:15:50+02:00"
+      },
+      {
+        "message": "QA: lock verified SEC sample filer identifiers",
+        "sha": "4967fe9fca09edf4c7a8762be6e57c7df538e340",
+        "timestamp": "2026-09-29T19:15:17+02:00"
+      },
+      {
+        "message": "RESEARCH: base SEC submission probe on actual target filings",
+        "sha": "42fb3ea867667383adaf935eecf5b704dbd15619",
+        "timestamp": "2026-09-29T19:15:10+02:00"
+      },
+      {
+        "message": "FIX: expand local AI bootstrap path correctly in PowerShell",
+        "sha": "1d82923e978741a4324815a2f5418326e0889316",
+        "timestamp": "2026-09-29T19:14:48+02:00"
+      },
+      {
+        "message": "OPS: reapply and verify local AI free-credit guard in readiness check",
+        "sha": "538a7e26b89dc73adb9c09c531014ca297f10f01",
+        "timestamp": "2026-09-29T19:14:38+02:00"
+      },
+      {
+        "message": "OPS: verify local AI credit guard on disk after bootstrap",
+        "sha": "3c09e72cc02e944f170443bf594eb2d3f256da9c",
+        "timestamp": "2026-09-29T19:14:27+02:00"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "5e04479b25ae6656e06d9b4fd049a5da0ae4f216",
-        "timestamp": "2026-09-29T17:12:24Z"
+        "sha": "c5de39faf569b86c974d588277bffeee50a3d5ff",
+        "timestamp": "2026-09-29T17:14:22Z"
       },
       {
-        "message": "OPS: reserve self-hosted capacity by replacing stale QA runs",
-        "sha": "08836e5463ae0baded05306979cd3bd0d0cd4d82",
-        "timestamp": "2026-09-29T19:12:12+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "2a686847b02dc42583eb22724ee10984ce005041",
-        "timestamp": "2026-09-29T17:11:42Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "8cf42e8a3cf35a19a7d5dfacab4c97f014d5c591",
-        "timestamp": "2026-09-29T17:11:28Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "6aa05e6c9d6b521717be10e681a96cef64934df7",
-        "timestamp": "2026-09-29T17:11:25Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "353fde6b56275738c3ed894ba2e76f20047f4604",
-        "timestamp": "2026-09-29T17:11:22Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "bb955a66deb42bff18d57d93b12c74fadeb14fdb",
-        "timestamp": "2026-09-29T17:09:10Z"
+        "message": "RESEARCH: correct SEC sample filers and relax submission acceptance probe",
+        "sha": "d42cfb866eb561824901f9373fe4acad05567b3d",
+        "timestamp": "2026-09-29T19:14:08+02:00"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d42cfb866eb561824901f9373fe4acad05567b3d",
+  "source_master_sha": "f3c79d5b3e513b8e01614b6a3b9d6291796b3844",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36603501773"
+    "run_id": "36603538077"
   }
 }
