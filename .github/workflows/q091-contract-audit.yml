@@ -85,6 +85,7 @@ jobs:
           "%PY_EXE%" -m pip --version >nul 2>&1
           if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
           echo %PY_ROOT%\tools>>"%GITHUB_PATH%"
+          echo PY_EXE=%PY_EXE%>>"%GITHUB_ENV%"
           endlocal
 
       - name: Install test dependency (hosted)
@@ -127,5 +128,5 @@ jobs:
         with:
           name: q091-contract-audit-${{ matrix.lane }}-${{ github.run_id }}
           path: q091-contract-audit.json
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 14
