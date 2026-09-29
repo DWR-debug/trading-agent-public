@@ -265,7 +265,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T13:38:48.008850+00:00",
+  "generated_at_utc": "2026-09-29T13:39:26.407922+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -388,6 +388,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOVERNANCE: add read-only Q095 contract audit",
+        "sha": "06734438c9a444a35bf6b36d4a31d70ac372591d",
+        "timestamp": "2026-09-29T15:39:22+02:00"
+      },
+      {
+        "message": "RESEARCH: add immutable Q095 ledger reconciliation",
+        "sha": "c06557de85442547288d0730529389c62c1d410d",
+        "timestamp": "2026-09-29T15:39:12+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9e7ea95a35bbc57f7068d58665bf5ac28bf37372",
+        "timestamp": "2026-09-29T13:38:48Z"
+      },
+      {
         "message": "RESEARCH: add frozen Q095 independent replication performance runner",
         "sha": "137ef938288e09e16cc0d565f0f134fde4d818f4",
         "timestamp": "2026-09-29T15:38:34+02:00"
@@ -411,21 +426,6 @@
         "message": "OPS: record AI worker state",
         "sha": "25f7a56b05a134c4072d99e72b95ce9ab7a07f51",
         "timestamp": "2026-09-29T13:15:30Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "ea6b71de2a368296d19dafbf7b3ce6aef5f3ef42",
-        "timestamp": "2026-09-29T13:15:28Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "bd1b2cba26151e0cc8baa258f364fb0ec0048b93",
-        "timestamp": "2026-09-29T13:15:24Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "8e754cb550addae58f511504b555a92a1f2a4d14",
-        "timestamp": "2026-09-29T12:59:32Z"
       }
     ]
   },
@@ -495,12 +495,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "137ef938288e09e16cc0d565f0f134fde4d818f4",
+  "source_master_sha": "06734438c9a444a35bf6b36d4a31d70ac372591d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36576603376"
+    "run_id": "36576680127"
   }
 }
