@@ -70,6 +70,12 @@ def test_q096_does_not_enable_performance_or_live_execution() -> None:
     assert '"orders_enabled": False' in module
 
 
+def test_q096_sec_sample_ciks_match_verified_public_filers() -> None:
+    assert SEC_SAMPLE_CIKS["MSFT"] == "0000789019"
+    assert SEC_SAMPLE_CIKS["SEC_13F_SAMPLE"] == "0001067983"
+    assert SEC_SAMPLE_CIKS["SEC_FORM144_SAMPLE"] == "0001326801"
+
+
 def test_q096_sec_submission_row_normalization_and_filing_url() -> None:
     payload = {
         "filings": {
