@@ -47,3 +47,78 @@ def test_q098_historical_edgar_anchors_are_frozen_to_study_appropriate_dates() -
     assert "0001921094-23-000806-index.htm" in HISTORICAL_EDGAR_ANCHORS["FORM144"]["url"]
     assert HISTORICAL_EDGAR_ANCHORS["13D_G"]["accession"] == "0001020066-11-000014"
     assert HISTORICAL_EDGAR_ANCHORS["FORM144"]["accession"] == "0001921094-23-000806"
+
+
+def test_q098_anchor_can_satisfy_historical_depth_without_false_archive_pass(
+    monkeypatch,
+) -> None:
+    import automation.q098_historical_archive_depth as q098
+
+    current = {
+        "filings": {
+            "recent": {
+                "form": ["SC 13G"],
+                "filingDate": ["2026-08-01"],
+                "accessionNumber": ["0001020066-26-000001"],
+                "acceptanceDateTime": ["20260801160000"],
+                "primaryDocument": ["x.htm"],
+            },
+            "files": [
+                {
+                    "name": "CIK0001020066-submissions-001.json",
+                    "filingFrom": "2010-04-28",
+                    "filingTo": "2015-05-10",
+                    "filingCount": 10,
+                }
+            ],
+        }
+    }
+    oldest = {
+        "form": ["10-K"],
+        "filingDate": ["2010-05-01"],
+        "accessionNumber": ["0001020066-10-000001"],
+    }
+
+    def fake_get(url: str):
+        if url.endswith("CIK0001020066.json"):
+            import json
+            return 200, json.dumps(current).encode(), "application/json"
+        import json
+        return 200, json.dumps(oldest).encode(), "application/json"
+
+    monkeypatch.setattr(q098, "get", fake_get)
+    row = q098.submission_archive_probe(
+        "13D_G",
+        "0001020066",
+        {"SC 13G", "SC 13G/A"},
+    )
+    assert row["status"] == "VERIFIABLE"
+    assert (
+        row["coverage_completeness"]
+        == "HISTORICAL_ANCHOR_VERIFIED_COMPLETE_ARCHIVE_NOT_PROVEN"
+    )
+    assert row["checks"]["oldest_extension_contains_target_form"] is False
+
+
+def test_q098_historical_anchor_acceptance_time_contract(monkeypatch) -> None:
+    import automation.q098_historical_archive_depth as q098
+
+    html = (
+        "<html><body>Form SC 13G "
+        "SEC Accession No. 0001020066-11-000014 "
+        "Filing Date 2011-06-09 "
+        "Accepted 2011-06-09 16:13:07</body></html>"
+    )
+
+    monkeypatch.setattr(
+        q098,
+        "get",
+        lambda url: (200, html.encode("utf-8"), "text/html; charset=UTF-8"),
+    )
+    row = q098.historical_edgar_anchor_probe(
+        "13D_G",
+        q098.HISTORICAL_EDGAR_ANCHORS["13D_G"],
+    )
+    assert row["status"] == "VERIFIABLE"
+    assert row["checks"]["accepted_timestamp_present"] is True
+    assert row["checks"]["accession_identity_present"] is True
