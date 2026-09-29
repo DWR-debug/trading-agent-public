@@ -41,6 +41,7 @@ ACTIVE_WORKFLOWS = {
     "paper-forward-persistent-mtm.yml",
     "paper-forward-self-hosted-validation.yml",
     "permanent-pc-research-loop.yml",
+    "public-frontier-feasibility.yml",
     "q014-resilient.yml",
     "q015-mechanism-discrimination.yml",
     "q017-coverage-first-standalone.yml",
