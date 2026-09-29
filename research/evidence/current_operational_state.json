@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T06:13:56.735191+00:00",
+  "generated_at_utc": "2026-09-29T06:18:14.408577+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,6 +325,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "SECURITY: fail-closed Q089 authorization and geometry contract",
+        "sha": "907ab2cf5bbd76b3e4dbcba1bad120863011e5f8",
+        "timestamp": "2026-09-29T08:17:59+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "48c52bcfb42b46ef310f863e03df71c0b95f3c35",
+        "timestamp": "2026-09-29T06:17:25Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "22f1c3dfdf37b10d6a934025bb8b5b65323a578d",
+        "timestamp": "2026-09-29T06:16:08Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "fadd0e49825574ea37e31ef7698108dd845e1285",
+        "timestamp": "2026-09-29T06:15:58Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "55d102b43b92066ae137904a4644e12b99de10dd",
+        "timestamp": "2026-09-29T06:15:55Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "059691ca0ccc358c1865fc5544dd4cccae866a92",
+        "timestamp": "2026-09-29T06:13:56Z"
+      },
+      {
         "message": "CI: pin Q089 self-hosted audit to research label",
         "sha": "0a43599a246d3938fd166dfa4ca0c8b6a43faf35",
         "timestamp": "2026-09-29T08:13:43+02:00"
@@ -333,36 +363,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "4b8d04adb8e21e775a752c5dff5ae695039a5efb",
         "timestamp": "2026-09-29T06:13:19Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c292d2462c7ac476bad1dfa4eb93d2f398d822c8",
-        "timestamp": "2026-09-29T06:13:01Z"
-      },
-      {
-        "message": "CI: run Q089 contract audit on hosted and self-hosted lanes",
-        "sha": "4e0bd006aee7065966d44f5096bd7331a52e4f21",
-        "timestamp": "2026-09-29T08:12:53+02:00"
-      },
-      {
-        "message": "TEST: cover Q089 contract drift detection",
-        "sha": "8fe08367cb1a1c7e35c11fb7930959eca125a038",
-        "timestamp": "2026-09-29T08:12:51+02:00"
-      },
-      {
-        "message": "QA: add read-only Q089 contract audit",
-        "sha": "6b63976790d4efc0491e145057dac24dfaedf0e1",
-        "timestamp": "2026-09-29T08:12:49+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "56ec35e95da1b8f30246704b339783231870478f",
-        "timestamp": "2026-09-29T06:10:26Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a30ce9729d8be626779f784104077fa5e5665ea4",
-        "timestamp": "2026-09-29T06:06:18Z"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0a43599a246d3938fd166dfa4ca0c8b6a43faf35",
+  "source_master_sha": "907ab2cf5bbd76b3e4dbcba1bad120863011e5f8",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36530002459"
+    "run_id": "36530363813"
   }
 }
