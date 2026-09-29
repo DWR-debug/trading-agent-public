@@ -30,11 +30,29 @@
     ],
     "active_trials": [
       {
+        "class": "performance_correction",
+        "code": "081R3",
+        "issue_number": null,
+        "performance_authorization_allowed": false,
+        "predecessor_trial_id": "T-2026-09-28-081R2-PERFORMANCE",
+        "preregistration_path": "research/preregistrations/q081r3_python_literal_fix_2026_09_30.json",
+        "state": "PREREGISTERED_WAITING_PREFLIGHT",
+        "trial_id": "T-2026-09-30-081R3-PERFORMANCE"
+      },
+      {
         "authorization_id": "AUTH-Q081R2-2026-09-30-36638812989",
         "class": "performance_correction",
         "code": "081R2",
+        "execution_incident": {
+          "error": "NameError: name 'false' is not defined. Did you mean: 'False'?",
+          "failing_step": "Execute Q081R2 fixed-rule performance exactly once",
+          "result_created": false,
+          "scientific_outcome": false,
+          "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME",
+          "workflow_run_id": "36639171349"
+        },
         "issue_number": 587,
-        "performance_authorization_allowed": true,
+        "performance_authorization_allowed": false,
         "predecessor_trial_id": "T-2026-09-28-081R1-PERFORMANCE",
         "preflight": {
           "artifact_id": 10993950051,
@@ -42,7 +60,7 @@
           "workflow_run_id": 36474031581
         },
         "preregistration_path": "research/preregistrations/q081r2_performance_2026_09_28.json",
-        "state": "PERFORMANCE_AUTHORIZED",
+        "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
         "trial_id": "T-2026-09-28-081R2-PERFORMANCE"
       },
       {
@@ -273,7 +291,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T22:22:24.356098+00:00",
+  "generated_at_utc": "2026-09-29T22:23:56.719042+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -396,6 +414,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOVERNANCE: retire Q081R2 after implementation failure and register Q081R3",
+        "sha": "d076983f6dd59296952f82ff44c5e53443afae00",
+        "timestamp": "2026-09-30T00:23:44+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a43c7664c40a6101e2e6136bd73bc716d962a790",
+        "timestamp": "2026-09-29T22:22:24Z"
+      },
+      {
         "message": "FIX: decouple Q081R2 identity test from consumed authorization state",
         "sha": "c500ce013b27cf349a2e91b5d8993e373b24739e",
         "timestamp": "2026-09-30T00:22:13+02:00"
@@ -424,16 +452,6 @@
         "message": "RETRY: authorize Q081R2 after governance audit repair",
         "sha": "eefd9e09128127023cb0b8bee2edd38b6a117f5c",
         "timestamp": "2026-09-30T00:18:44+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c1b0c33af73c20f19131067380e742841ccd69d0",
-        "timestamp": "2026-09-29T22:17:41Z"
-      },
-      {
-        "message": "TEST: lock historical governance compatibility rules",
-        "sha": "e7e958991980c84680c7aa1cde84073dd25492fe",
-        "timestamp": "2026-09-30T00:17:30+02:00"
       }
     ]
   },
@@ -503,12 +521,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c500ce013b27cf349a2e91b5d8993e373b24739e",
+  "source_master_sha": "d076983f6dd59296952f82ff44c5e53443afae00",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36639162682"
+    "run_id": "36639313124"
   }
 }
