@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T06:59:16.949119+00:00",
+  "generated_at_utc": "2026-09-29T07:02:08.647991+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -322,8 +322,27 @@
     "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "fix/q089-reconcile-coverage-fingerprint",
+        "number": 658,
+        "title": "FIX: align Q089 reconcile with coverage result schema",
+        "updatedAt": "2026-09-29T07:01:36Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/658"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "FIX: gate Q089 performance on explicit one-shot trigger (#657)",
+        "sha": "0a328d6025c8772b8514fcd3c87e600d899f1325",
+        "timestamp": "2026-09-29T09:01:52+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "82b297c21d3a551789eccceb0b8d581523d3e286",
+        "timestamp": "2026-09-29T06:59:17Z"
+      },
       {
         "message": "RESEARCH: add Q089 fixed-rule performance execution rail (#656)",
         "sha": "5266f1fc48c2e4fe1e3f13ef2ff2e6586823e704",
@@ -353,16 +372,6 @@
         "message": "FIX: allow operational state descendants in exact master gate (#654)",
         "sha": "dd5c3d7bfe44a3059f4f4edf432df095851e83a0",
         "timestamp": "2026-09-29T08:49:36+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0d86bab66b7ffb26661d3b9a6eb5cb1557f1cf5f",
-        "timestamp": "2026-09-29T06:48:43Z"
-      },
-      {
-        "message": "FIX: use explicit shell per Q089 audit lane (#653)",
-        "sha": "eaaeb95f3d7ee75f2bd12a823c62aaaecd1a07f7",
-        "timestamp": "2026-09-29T08:48:31+02:00"
       }
     ]
   },
@@ -432,12 +441,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5266f1fc48c2e4fe1e3f13ef2ff2e6586823e704",
+  "source_master_sha": "0a328d6025c8772b8514fcd3c87e600d899f1325",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36533990958"
+    "run_id": "36534261350"
   }
 }
