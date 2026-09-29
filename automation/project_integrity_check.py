@@ -105,6 +105,8 @@ ACTIVE_WORKFLOWS = {
     "q094-coverage-pit-input-freeze.yml",
     "q094-performance-once.yml",
     "q095-coverage-pit-input-freeze.yml",
+    "q095-contract-audit.yml",
+    "q095-performance-once.yml",
     "rccsm-feasibility-cloud.yml",
     "rccsm-feasibility.yml",
     "rccsm-observational-feasibility-cloud.yml",
