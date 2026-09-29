@@ -157,13 +157,47 @@ def audit(root: Path = ROOT) -> dict[str, Any]:
                 expected=prereg.get("trial_id"),
                 actual=entry.get("trial_id"),
             )
-        if entry.get("performance_authorization_allowed") is not False:
+        allowed = entry.get("performance_authorization_allowed")
+        if allowed not in (False, True):
             finding(
                 "Q089_REGISTRY_AUTHORIZATION_STATE",
                 "BLOCKING",
-                expected=False,
-                actual=entry.get("performance_authorization_allowed"),
+                expected="boolean",
+                actual=allowed,
             )
+        if allowed is True:
+            auth_path = root / "research/authorizations/q089_performance_2026_09_28.json"
+            if prereg.get("governance", {}).get("performance_trial_authorized") is not True:
+                finding(
+                    "Q089_AUTHORIZATION_PREREG_STATE",
+                    "BLOCKING",
+                    expected=True,
+                    actual=prereg.get("governance", {}).get("performance_trial_authorized"),
+                )
+            if not auth_path.exists():
+                finding("Q089_AUTHORIZATION_RECEIPT_MISSING", "BLOCKING")
+            else:
+                try:
+                    auth = json.loads(auth_path.read_text(encoding="utf-8"))
+                    canonical = json.dumps(prereg, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False)
+                    expected_fp = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+                    for field, expected in (
+                        ("trial_id", prereg.get("trial_id")),
+                        ("authorized", True),
+                        ("performance_execution_authorized", True),
+                        ("one_shot", True),
+                        ("preregistration_fingerprint", expected_fp),
+                    ):
+                        if auth.get(field) != expected:
+                            finding(
+                                "Q089_AUTHORIZATION_RECEIPT_MISMATCH",
+                                "BLOCKING",
+                                field=field,
+                                expected=expected,
+                                actual=auth.get(field),
+                            )
+                except (OSError, json.JSONDecodeError):
+                    finding("Q089_AUTHORIZATION_RECEIPT_UNREADABLE", "BLOCKING")
 
     result = {
         "schema_version": "1.0",
