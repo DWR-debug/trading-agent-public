@@ -54,12 +54,18 @@
         "trial_id": "T-2026-09-28-081R1-PERFORMANCE"
       },
       {
+        "authorization": {
+          "authorization_id": "AUTH-Q089-2026-09-29-01",
+          "ci_workflow_run_id": 36534796691,
+          "exact_master_gate_workflow_run_id": 36534796799,
+          "preflight_audit_workflow_run_id": 36533366578
+        },
         "class": "fresh_validation",
         "code": "089",
         "issue_number": 589,
-        "performance_authorization_allowed": false,
+        "performance_authorization_allowed": true,
         "preregistration_path": "research/preregistrations/q089_performance_2026_09_28.json",
-        "state": "PREREGISTERED_WAITING_PREFLIGHT",
+        "state": "PERFORMANCE_AUTHORIZED",
         "trial_id": "T-2026-09-28-089-PERFORMANCE"
       },
       {
@@ -202,7 +208,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T07:07:39.109771+00:00",
+  "generated_at_utc": "2026-09-29T07:18:30.047512+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -322,56 +328,47 @@
     "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "fix/q089-reconcile-coverage-fingerprint",
-        "number": 658,
-        "title": "FIX: align Q089 reconcile with coverage result schema",
-        "updatedAt": "2026-09-29T07:01:36Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/658"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: record local AI worker state",
-        "sha": "b4c1cef95aa5b52bec5d61c12375a33390456a91",
-        "timestamp": "2026-09-29T07:07:34Z"
-      },
-      {
-        "message": "FIX: align Q089 reconcile coverage fingerprint schema (#659)",
-        "sha": "1e41ca768621b8fa5c29f07e6d5b8900b5ca2fba",
-        "timestamp": "2026-09-29T09:07:25+02:00"
-      },
-      {
-        "message": "OPS: record local AI worker state",
-        "sha": "68c883c0f18684e76f533d44a9777c62d946c011",
-        "timestamp": "2026-09-29T07:05:52Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "75d26874b78da0db8c1e9ca7790c4da26a35d4f9",
-        "timestamp": "2026-09-29T07:02:08Z"
-      },
-      {
-        "message": "FIX: gate Q089 performance on explicit one-shot trigger (#657)",
-        "sha": "0a328d6025c8772b8514fcd3c87e600d899f1325",
-        "timestamp": "2026-09-29T09:01:52+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "82b297c21d3a551789eccceb0b8d581523d3e286",
-        "timestamp": "2026-09-29T06:59:17Z"
-      },
-      {
-        "message": "RESEARCH: add Q089 fixed-rule performance execution rail (#656)",
-        "sha": "5266f1fc48c2e4fe1e3f13ef2ff2e6586823e704",
-        "timestamp": "2026-09-29T08:59:04+02:00"
+        "message": "AUTH: authorize Q089 fixed-rule performance once (#661)",
+        "sha": "d19802c12bc77b2ebfdab406351ac82893791e49",
+        "timestamp": "2026-09-29T09:18:16+02:00"
       },
       {
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "b534a7b55a0360e2d634eb2a96a2118cfed9b9d9",
-        "timestamp": "2026-09-29T06:57:39Z"
+        "sha": "375a9bb41a3045ab729fd3a8cbf2c75feacccfe2",
+        "timestamp": "2026-09-29T07:14:46Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "8a790ce272d23a0601cc04a4a21cfa8c54a5cae9",
+        "timestamp": "2026-09-29T07:14:25Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "444a38d71db1c41f9abfae8bfa65da869004fb71",
+        "timestamp": "2026-09-29T07:14:21Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "73481f22d55265c85fe6ca80802275339a51aee6",
+        "timestamp": "2026-09-29T07:14:14Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "2cf8e61d5a296b62e2448ea7d3aa15cf1b74af71",
+        "timestamp": "2026-09-29T07:14:13Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "2537b279d12cec9fee2af411b074cc33df56a888",
+        "timestamp": "2026-09-29T07:12:26Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d1033ea5a46dea61d51b97c9b7eb48f63d83a12f",
+        "timestamp": "2026-09-29T07:07:39Z"
       }
     ]
   },
@@ -441,12 +438,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b4c1cef95aa5b52bec5d61c12375a33390456a91",
+  "source_master_sha": "d19802c12bc77b2ebfdab406351ac82893791e49",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36534796683"
+    "run_id": "36535839642"
   }
 }

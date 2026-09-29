@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `b4c1cef95aa5b52bec5d61c12375a33390456a91`
+**Current operational snapshot:** `d19802c12bc77b2ebfdab406351ac82893791e49`
 
-**Generated (UTC):** `2026-09-29T07:07:39.109771+00:00`
+**Generated (UTC):** `2026-09-29T07:18:30.047512+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -30,7 +30,7 @@
 ### Active research registry
 
 - Q081-R2: **PREREGISTERED_WAITING_AUTHORIZATION**; infrastructure-rebased corrective reproduction; no performance authorization.
-- Q089: **PREREGISTERED_WAITING_PREFLIGHT**; fresh symbol-disjoint successor to quarantined Q086; separate performance authorization remains required.
+- Q089: **PERFORMANCE_AUTHORIZED**; fresh symbol-disjoint successor to quarantined Q086; separate performance authorization remains required.
 - Q077-R1: **COVERAGE_VALIDATED_WAITING_PIT**; coverage-only repair after the original Q077 pool left insufficient unused symbols; no performance authorization.
 - Q084, Q088 and Q082 remain **design/feasibility tracks** for unusual market-state, textual-network, rebalance-demand and SEC information channels.
 - The unusual-strategy frontier is maintained in `docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md` and is design-only until feasibility and provenance are established.
