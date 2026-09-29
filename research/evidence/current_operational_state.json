@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T16:21:10.158873+00:00",
+  "generated_at_utc": "2026-09-29T16:21:31.496788+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "QA: add Q097 PIT mutation and publication-boundary tests",
+        "sha": "21c424915904ac2c76760e2bbd4f54e09f97f592",
+        "timestamp": "2026-09-29T18:21:27+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q097 point-in-time feasibility primitives",
+        "sha": "347ba995555cd278486a5910e5947fe61574f5cb",
+        "timestamp": "2026-09-29T18:21:16+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e6837d17fddb95c72a538c8d9e0ed0e26545d9cf",
+        "timestamp": "2026-09-29T16:21:10Z"
+      },
+      {
         "message": "OPS: trigger permanent frontier loop on Q097 changes",
         "sha": "c5c9a4876b7d56179eadb47ded192139fff9a619",
         "timestamp": "2026-09-29T18:20:55+02:00"
@@ -418,21 +433,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "633f32cceacce21078853f5f6cc78a000811d129",
         "timestamp": "2026-09-29T16:20:33Z"
-      },
-      {
-        "message": "RESEARCH: document Q097 public short-flow frontier expansion",
-        "sha": "278ac70bf358a1077923b7b35ac5e2d840e1f5ed",
-        "timestamp": "2026-09-29T18:20:24+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f5694e1559e44c225bd72c4b36990015b6f3556a",
-        "timestamp": "2026-09-29T16:20:17Z"
-      },
-      {
-        "message": "RESEARCH: freeze Q097 public short-flow candidate registry",
-        "sha": "5c9775d1679b37b566b4a1ef2bca0c1b47fc03b3",
-        "timestamp": "2026-09-29T18:20:12+02:00"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c5c9a4876b7d56179eadb47ded192139fff9a619",
+  "source_master_sha": "21c424915904ac2c76760e2bbd4f54e09f97f592",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36597053449"
+    "run_id": "36597093914"
   }
 }
