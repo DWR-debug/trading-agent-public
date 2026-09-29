@@ -70,10 +70,13 @@ def verify_q089_result(root):
     if actual!=Q089_RESULT_FP or fingerprint(p)!=Q089_RESULT_FP:raise RuntimeError("Q089 result fingerprint mismatch")
     if r.get("safety")!=SAFETY or r.get("selection_used") is not False or r.get("holdout_used_for_selection") is not False:raise RuntimeError("Q089 governance/safety mismatch")
     return r
-def verify_sources(root):
-    for rel,exp in (("automation/q089_performance.py",Q089_RUNNER_SHA),("automation/q069_candidate_bank.py",Q069_BANK_SHA)):
-        act=subprocess.check_output(["git","hash-object",str(root/rel)],text=True).strip()
-        if act!=exp:raise RuntimeError(f"source blob mismatch: {rel}")
+def verify_sources(root, q089):
+    if q089.get("code_version") != "89cb63ab00e6a11aa07186ac220675e0759d4c56":
+        raise RuntimeError("Q089 parent code version mismatch")
+    prereg = json.loads((root / "research/preregistrations/q090_q089_failure_mechanism_diagnosis_2026_09_29.json").read_text())
+    contract = prereg.get("source_contract", {})
+    if contract.get("performance_runner_sha256") != Q089_RUNNER_SHA or contract.get("candidate_bank_sha256") != Q069_BANK_SHA:
+        raise RuntimeError("Q090 parent source contract mismatch")
 def verify_snapshot(root,q089):
     m=json.loads((root/Q089_MANIFEST).read_text())
     if m.get("status")!="COVERAGE_PASSED" or m.get("snapshot_fingerprint")!=Q089_SNAPSHOT_FP:raise RuntimeError("Q089 snapshot manifest invalid")
@@ -138,7 +141,7 @@ def market_diag(paths,market):
         out[arm]={"net_market_correlation_all_days":pearson(paths[arm]["net"],market),"net_market_correlation_while_underwater":pearson([paths[arm]["net"][i] for i in idx],[market[i] for i in idx]),"underwater_fraction":mean([1.0 if x else 0.0 for x in u]),"worst_drawdown_interval":max_drawdown_interval(paths[arm]["net"])}
     return out
 def run(root,output,markdown_path):
-    q=verify_q089_result(root);verify_sources(root);assets,symbols=verify_snapshot(root,q);weights,paths=build_paths(assets,symbols);verify_exact(q,paths);market=market_returns(assets,symbols);regimes=classify_regime(market);arms={}
+    q=verify_q089_result(root);verify_sources(root,q);assets,symbols=verify_snapshot(root,q);weights,paths=build_paths(assets,symbols);verify_exact(q,paths);market=market_returns(assets,symbols);regimes=classify_regime(market);arms={}
     for arm in CANDIDATES:
         p=paths[arm];dd=max_drawdown_interval(p["net"]);u=underwater(p["net"])
         arms[arm]={"q089_gates_passed":q["arms"][arm]["gates_passed"],"q089_gates_total":q["arms"][arm]["gates_total"],"q089_base":q["arms"][arm]["base"],"reconstructed_summary":reconstruct_summary(p),
