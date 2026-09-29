@@ -33,6 +33,7 @@ LANES: dict[str, list[list[str]]] = {
             "tests/test_q096_frontier_source_pit_audit.py",
             "tests/test_q097_public_short_flow_candidates.py",
             "tests/test_q097_public_short_flow_feasibility.py",
+            "tests/test_q098_historical_archive_depth.py",
             "tests/test_q089_validation.py",
             "tests/test_q089_input_freeze.py",
             "tests/test_q089_performance_envelope.py",
@@ -60,6 +61,11 @@ LANES: dict[str, list[list[str]]] = {
             PYTHON,
             "-m",
             "automation.q096_frontier_source_pit_audit",
+        ],
+        [
+            PYTHON,
+            "-m",
+            "automation.q098_historical_archive_depth",
         ],
         [
             PYTHON,
