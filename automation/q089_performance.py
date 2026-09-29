@@ -11,6 +11,7 @@ from execution.cost_contract import validate_research_cost_compatibility
 TRIAL_ID="T-2026-09-28-089-PERFORMANCE"
 COVERAGE_ID="T-2026-09-28-089-COVERAGE"
 PIT_ID="T-2026-09-28-089-PIT"
+REQUESTED_CANDLES=5000
 N=3500; RESEARCH=2798; HOLDOUT=700
 FEE=0.001; SLIPPAGE=0.0005
 COSTS=(("base",1.0),("stress_1_5x_cost",1.5),("stress_2x_cost",2.0))
@@ -31,6 +32,7 @@ def _preflight(root):
         if obj.get("trial_id")!=trial or obj.get("status")!=status: raise RuntimeError("Q089 preflight receipt invalid")
         if obj.get("performance_trial_authorized") is not False or obj.get("selection_used") is not False: raise RuntimeError("Q089 preflight receipt has forbidden state")
     if prereg.get("trial_id")!=TRIAL_ID or prereg.get("status")!="PREREGISTERED_PERFORMANCE": raise RuntimeError("Q089 performance preregistration invalid")
+    if prereg.get("requested_candles") != REQUESTED_CANDLES or prereg.get("target_common_candles") != N or prereg.get("research_periods") != RESEARCH or prereg.get("holdout_periods") != HOLDOUT: raise RuntimeError("Q089 performance geometry metadata mismatch")
     if prereg.get("selection_used") is not False or prereg.get("holdout_used_for_selection") is not False: raise RuntimeError("Q089 preregistration records selection")
     if prereg.get("safety")!=Safety: raise RuntimeError("Q089 performance safety mismatch")
     symbols=tuple(freeze["symbols"])
@@ -173,12 +175,14 @@ def _evaluate(assets,weights,adjusted,symbols):
 
 def run(root:Path,output:Path)->dict:
     assets,symbols,coverage,pit,freeze,prereg=_preflight(root)
+    _assert_authorization(root, prereg)
+    _assert_source_contract(root, prereg)
     if settings.PAPER_ONLY is not True or settings.LIVE_TRADING_ENABLED is not False or settings.ORDERS_ENABLED is not False or settings.AUTOMATIC_PROMOTION is not False: raise RuntimeError("runtime safety invalid")
     validate_research_cost_compatibility(fee_rate=FEE,slippage_rate=SLIPPAGE)
     weights={name:tuple(candidate_targets_at(assets,i,symbols=symbols)[name] for i in range(N)) for name in CANDIDATES}
     adjusted=_load_adjusted_bundle(root, prereg, symbols)
     arms={name:_evaluate(assets,weights[name],adjusted,symbols) for name in CANDIDATES}
-    result={"schema_version":"1.0","trial_id":TRIAL_ID,"status":"COMPLETED","code_version":os.getenv("GITHUB_SHA","UNVERIFIED"),"universe":freeze["universe"],"symbols":list(symbols),"requested_candles":4000,"target_common_candles":N,"research_periods":RESEARCH,"holdout_periods":HOLDOUT,"initial_capital_eur":2000.0,"coverage_prerequisite":{"trial_id":COVERAGE_ID,"coverage_result_fingerprint":coverage["result_fingerprint"],"snapshot_fingerprint":coverage["snapshot_fingerprint"]},"pit_prerequisite":{"trial_id":PIT_ID,"result_fingerprint":pit["result_fingerprint"]},
+    result={"schema_version":"1.0","trial_id":TRIAL_ID,"status":"COMPLETED","code_version":os.getenv("GITHUB_SHA","UNVERIFIED"),"universe":freeze["universe"],"symbols":list(symbols),"requested_candles":REQUESTED_CANDLES,"target_common_candles":N,"research_periods":RESEARCH,"holdout_periods":HOLDOUT,"initial_capital_eur":2000.0,"coverage_prerequisite":{"trial_id":COVERAGE_ID,"coverage_result_fingerprint":coverage["result_fingerprint"],"snapshot_fingerprint":coverage["snapshot_fingerprint"]},"pit_prerequisite":{"trial_id":PIT_ID,"result_fingerprint":pit["result_fingerprint"]},
         "input_bundle_prerequisite":{"trial_id":"T-2026-09-28-089-INPUT-FREEZE","bundle_fingerprint":prereg["data_contract"]["input_bundle_fingerprint"]},"asset_freeze_fingerprint":_fp(freeze),"arms":arms,"performance_evaluation":True,"oos_evaluation":True,"holdout_evaluation":True,"selection_used":False,"holdout_used_for_selection":False,"parameter_search":False,"threshold_search":False,"asset_search":False,"horizon_search":False,"variant_search":False,"family_ranking":False,"governance":{"performance_trial_authorized":True,"selection":False,"holdout_used_for_selection":False,"promotion_decision":False,"automatic_promotion":False},"safety":Safety}
     result["report_fingerprint"]=_fp(result); output.parent.mkdir(parents=True,exist_ok=True); output.write_text(json.dumps(result,indent=2,ensure_ascii=False,allow_nan=False)+"\n",encoding="utf-8")
     for name,report in arms.items(): print(name,report["gates_passed"],"/13")
