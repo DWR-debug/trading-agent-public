@@ -25,10 +25,10 @@ SEC_SAMPLE_CIKS = {
     "MSFT": "0000789019",
     "AAPL": "0000320193",
     # Existing Q075 sample manager CIK; used only as a source-contract probe.
-    "SEC_13F_SAMPLE": "0001418814",
+    "SEC_13F_SAMPLE": "0001067983",
     # Current public EDGAR examples verified on 2026-09-29.
     "SEC_13D_G_SAMPLE": "0001490281",
-    "SEC_FORM144_SAMPLE": "0001921094",
+    "SEC_FORM144_SAMPLE": "0001326801",
 }
 
 
@@ -134,7 +134,9 @@ def sec_submission_probe(label: str, cik: str, target_forms: set[str], text_chec
         "valid_json": True,
         "has_recent_filings": bool(rows),
         "has_accession_numbers": bool(rows) and all(x["accessionNumber"] for x in rows[: min(25, len(rows))]),
-        "submission_acceptance_field_present": any(x["acceptanceDateTime"] for x in rows[: min(25, len(rows))]),
+        "submission_acceptance_field_present": any(
+            x["acceptanceDateTime"] for x in matched[: min(10, len(matched))]
+        ),
         "target_forms_present": bool(matched),
         "historical_extension_metadata_present": bool(older_files) or len(rows) >= 1000,
     }
