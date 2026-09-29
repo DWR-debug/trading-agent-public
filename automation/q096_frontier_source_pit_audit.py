@@ -255,7 +255,20 @@ def candidate_gate_matrix(candidates):
         if "option" in source_l:
             source_state = "BLOCKED_BY_ZERO_PAID_DATA_POLICY"
             archive_state = "NO_FREE_COMPLETE_HISTORICAL_OPTION_SOURCE_VERIFIED"
-        elif any(k in source_l for k in ("sec form 4", "sec 13f", "sec 8-k", "sec filing", "shares outstanding", "sec +")):
+        elif any(k in source_l for k in (
+            "sec form 4",
+            "sec 13f",
+            "sec 8-k",
+            "sec filing",
+            "shares outstanding",
+            "sec +",
+            "fails-to-deliver",
+            "short interest",
+            "schedule 13d",
+            "schedule 13g",
+            "form 144",
+        )):
+
             source_state = "PUBLIC_SOURCE_CHANNEL_CONFIRMED"
             archive_state = "HISTORICAL_ARCHIVE_PIT_AUDIT_PENDING"
         elif "gdelt" in source_l or "public news" in source_l:
