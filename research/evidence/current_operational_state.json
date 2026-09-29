@@ -265,7 +265,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T13:41:19.182024+00:00",
+  "generated_at_utc": "2026-09-29T13:42:44.833765+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -388,6 +388,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "6479abb4f0e171de47193b469b5d11088da2c7f7",
+        "timestamp": "2026-09-29T13:42:41Z"
+      },
+      {
+        "message": "GOVERNANCE: register Q095 audit and performance workflows",
+        "sha": "d8ba5fe43f01887e21a850445ea01b92fd64b7da",
+        "timestamp": "2026-09-29T15:42:09+02:00"
+      },
+      {
+        "message": "GOVERNANCE: correct Q095 reconciliation registry binding",
+        "sha": "feccbe242dbbd08845aad76cd48cf1e4379ee102",
+        "timestamp": "2026-09-29T15:42:02+02:00"
+      },
+      {
+        "message": "GOVERNANCE: remove stale Q094 recovery logic from Q095 workflow",
+        "sha": "b4c522fffb698dce7d0e80495ce9b229c886ae6c",
+        "timestamp": "2026-09-29T15:41:55+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "6a8e579621dd06bb9baa3c9ae22b011bce2bddbf",
+        "timestamp": "2026-09-29T13:41:24Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6a93362fb79339eea8c1e252aa38e63504f184ff",
+        "timestamp": "2026-09-29T13:41:19Z"
+      },
+      {
         "message": "RESEARCH: add Q095 independent replication one-shot workflow",
         "sha": "947ff7d2b8a9cae1d07ca2f1334f8967b99e8457",
         "timestamp": "2026-09-29T15:41:06+02:00"
@@ -396,36 +426,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "f64992a52cbfddc307e377471a1a1c7aa7d672c7",
         "timestamp": "2026-09-29T13:41:00Z"
-      },
-      {
-        "message": "GOVERNANCE: add Q095 contract audit and source freeze",
-        "sha": "4ba15b6071e7721fdd47e8387ccfc4f862a18eae",
-        "timestamp": "2026-09-29T15:40:45+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9e919f4667d4b6681d59fc3b8950fc520b98af53",
-        "timestamp": "2026-09-29T13:40:32Z"
-      },
-      {
-        "message": "RESEARCH: correct Q095 frozen input and authorization paths",
-        "sha": "991df5b7ecc53dd0012a7bc3d6d80ee13c61d199",
-        "timestamp": "2026-09-29T15:40:20+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "8b4f33d016ebf467b2c8ea1c0612d23a37e079fa",
-        "timestamp": "2026-09-29T13:40:00Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5a1c4f70641f6c74f7160e7ec4e305ee5e885526",
-        "timestamp": "2026-09-29T13:39:42Z"
-      },
-      {
-        "message": "GOVERNANCE: correct Q095 contract audit registry and data paths",
-        "sha": "b997d6e41ac3b6e288d4942902aff65926be1ba4",
-        "timestamp": "2026-09-29T15:39:35+02:00"
       }
     ]
   },
@@ -495,12 +495,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "947ff7d2b8a9cae1d07ca2f1334f8967b99e8457",
+  "source_master_sha": "6479abb4f0e171de47193b469b5d11088da2c7f7",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36576918780"
+    "run_id": "36577021770"
   }
 }
