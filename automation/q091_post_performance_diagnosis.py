@@ -27,7 +27,7 @@ def diagnose(result: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("Q091 result does not contain the required completed evaluations")
     if result.get("selection_used") is not False or result.get("holdout_used_for_selection") is not False:
         raise ValueError("Q091 result is not eligible for non-selective diagnosis")
-    if result.get("promotion") is not False:
+    if result.get("promotion", False) is not False:
         raise ValueError("Q091 promotion state is invalid")
 
     arms = result["arms"]
