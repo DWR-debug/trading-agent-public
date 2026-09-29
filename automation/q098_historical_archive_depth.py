@@ -169,15 +169,21 @@ def submission_archive_probe(label: str, cik: str, target_forms: set[str]) -> di
                     result["checks"]["oldest_extension_contains_target_form"] = bool(
                         set(forms).intersection(target_forms)
                     )
+                    result["checks"]["historical_depth_contract"] = (
+                        bool(set(forms).intersection(target_forms))
+                        or label in HISTORICAL_EDGAR_ANCHORS
+                    )
                 else:
                     result["checks"]["oldest_extension_readable"] = False
                     result["checks"]["oldest_extension_contains_target_form"] = False
+                    result["checks"]["historical_depth_contract"] = False
             except json.JSONDecodeError:
                 result["checks"]["oldest_extension_readable"] = False
                 result["checks"]["oldest_extension_contains_target_form"] = False
         else:
             result["checks"]["oldest_extension_readable"] = False
             result["checks"]["oldest_extension_contains_target_form"] = False
+            result["checks"]["historical_depth_contract"] = False
 
     result["status"] = "VERIFIABLE" if all(result["checks"].values()) else "SCHEMA_MISMATCH"
     return result
@@ -221,10 +227,15 @@ def historical_edgar_anchor_probe(label: str, spec: dict[str, Any]) -> dict[str,
     if status != 200:
         result["reason"] = f"HTTP_{status}"
         return result
+    normalized = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", text)).strip()
     result["checks"] = {
         "page_readable": True,
         "form_marker_present": any(form.upper() in upper for form in spec["forms"]),
-        "accepted_timestamp_present": "ACCEPTANCE-DATETIME" in upper,
+        "accepted_timestamp_present": re.search(
+            r"\bAccepted\s+20\d{2}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\b",
+            normalized,
+            flags=re.IGNORECASE,
+        ) is not None,
         "accession_identity_present": spec["accession"].upper() in spec["url"].upper(),
     }
     result["response_sha256"] = sha256(body)
