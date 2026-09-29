@@ -96,6 +96,7 @@ ACTIVE_WORKFLOWS = {
     "q090-q089-failure-diagnosis.yml",
     "q091-portfolio-architecture-coverage.yml",
     "q091-input-freeze.yml",
+    "q091-persist-input-freeze-artifact.yml",
     "q091-persist-coverage.yml",
     "rccsm-feasibility-cloud.yml",
     "rccsm-feasibility.yml",
