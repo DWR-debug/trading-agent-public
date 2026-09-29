@@ -168,7 +168,8 @@ def test_continuous_qa_is_matrix_orchestrated_and_bounded():
     assert "qa_lane:" in text
     assert "name: QA lane (${{ matrix.lane }})" in text
     assert "fail-fast: false" in text
-    assert "max-parallel: 2" in text
+    assert "max-parallel: 1" in text
+    assert "cancel-in-progress: true" in text
     assert "lane: [repo_qa, data_qa, design_qa, local_reproduction]" in text
     assert "runs-on: [self-hosted, trading-agent-research]" in text
     assert "Aggregate QA gate" in text
