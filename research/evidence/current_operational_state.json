@@ -240,7 +240,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T11:48:03.492383+00:00",
+  "generated_at_utc": "2026-09-29T11:49:45.409677+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -363,6 +363,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "TEST: cover Q092 descriptive diagnosis invariants",
+        "sha": "2c139aa6011c5af7d997b482c51b8874c339f783",
+        "timestamp": "2026-09-29T13:49:39+02:00"
+      },
+      {
+        "message": "RESEARCH: add deterministic Q092 post-performance diagnosis",
+        "sha": "0c0f1481152bb99e0f275d3511b28020cd8ab3a2",
+        "timestamp": "2026-09-29T13:49:30+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d3bc7f3d55cccec1a265ff370ae0419ebb2d610d",
+        "timestamp": "2026-09-29T11:48:03Z"
+      },
+      {
         "message": "OPS: retire consumed Q091 one-shot authorization workflow",
         "sha": "4630359392b5ec9aa088a45dff7a73acc356e025",
         "timestamp": "2026-09-29T13:47:49+02:00"
@@ -386,21 +401,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "8ff7897f0a1da65abf17f2dcd08555e74dd4efb8",
         "timestamp": "2026-09-29T11:44:17Z"
-      },
-      {
-        "message": "RUN: trigger Q091 fixed portfolio performance exactly once",
-        "sha": "21768b61bdaff1b39befe650b3dd8233df72e5d4",
-        "timestamp": "2026-09-29T13:44:04+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1d147056f0d65c5a5643f9286ae082b552b5e62c",
-        "timestamp": "2026-09-29T11:43:19Z"
-      },
-      {
-        "message": "GOVERNANCE: activate Q091 one-shot performance authorization",
-        "sha": "9d97230cabdd4e3af6efdfa782af4d3502448804",
-        "timestamp": "2026-09-29T11:43:17Z"
       }
     ]
   },
@@ -470,12 +470,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4630359392b5ec9aa088a45dff7a73acc356e025",
+  "source_master_sha": "2c139aa6011c5af7d997b482c51b8874c339f783",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36563968091"
+    "run_id": "36564142840"
   }
 }
