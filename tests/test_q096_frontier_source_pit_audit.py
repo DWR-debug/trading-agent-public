@@ -14,6 +14,8 @@ def test_q096_inventory_is_the_frozen_current_inventory() -> None:
     assert inventory["policy"]["performance_authorized"] is False
     assert inventory["policy"]["holdout_selection_allowed"] is False
     assert len(inventory["candidates"]) == 44
+    option_rows = [row for row in inventory["candidates"] if row[0] == "Q078:O1"]
+    assert option_rows and option_rows[0][3] == "BLOCKED_FREE_HISTORICAL_SOURCE"
 
 
 def test_q096_probes_cover_the_new_frontier_data_channels() -> None:
