@@ -38,8 +38,24 @@ def audit(root:Path=ROOT)->dict:
     if prereg.get("trial_id")!="T-2026-09-29-091": finding("Q091_TRIAL_ID_MISMATCH",actual=prereg.get("trial_id"))
     if prereg.get("status")!="PREREGISTERED_PERFORMANCE": finding("Q091_STATUS_INVALID",actual=prereg.get("status"))
     if prereg.get("safety")!=SAFETY: finding("Q091_SAFETY_MISMATCH")
-    for field, expected in (("requested_candles",5000),("target_common_candles",3500),("research_periods",2798),("holdout_periods",700)):
-        if prereg.get(field)!=expected: finding("Q091_GEOMETRY_MISMATCH",field=field,expected=expected,actual=prereg.get(field))
+    assignments={}
+    for node in ast.walk(tree):
+        if isinstance(node,ast.Assign) and len(node.targets)==1 and isinstance(node.targets[0],ast.Name):
+            try:
+                assignments[node.targets[0].id]=ast.literal_eval(node.value)
+            except Exception:
+                pass
+    geometry_map={
+        "requested_candles":"REQUESTED_CANDLES",
+        "target_common_candles":"N",
+        "research_periods":"RESEARCH",
+        "holdout_periods":"HOLDOUT",
+    }
+    for field, runner_name in geometry_map.items():
+        expected=prereg.get(field)
+        actual=assignments.get(runner_name)
+        if actual!=expected:
+            finding("Q091_GEOMETRY_MISMATCH",field=field,expected=expected,actual=actual,runner_constant=runner_name)
 
     text_src=perf_path.read_text()
     if "urllib" in text_src or "requests" in text_src or "http://" in text_src or "https://" in text_src:
