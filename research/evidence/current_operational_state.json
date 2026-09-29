@@ -234,7 +234,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T11:43:19.609751+00:00",
+  "generated_at_utc": "2026-09-29T11:44:17.787054+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -357,6 +357,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RUN: trigger Q091 fixed portfolio performance exactly once",
+        "sha": "21768b61bdaff1b39befe650b3dd8233df72e5d4",
+        "timestamp": "2026-09-29T13:44:04+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "1d147056f0d65c5a5643f9286ae082b552b5e62c",
+        "timestamp": "2026-09-29T11:43:19Z"
+      },
+      {
         "message": "GOVERNANCE: activate Q091 one-shot performance authorization",
         "sha": "9d97230cabdd4e3af6efdfa782af4d3502448804",
         "timestamp": "2026-09-29T11:43:17Z"
@@ -385,16 +395,6 @@
         "message": "OPS: record AI worker state",
         "sha": "5022bc6895b627fd57c07a8c8c4bd7ceae868cd8",
         "timestamp": "2026-09-29T11:42:55Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "9196fa75156ef66ec7406a349e2e7572ad63695d",
-        "timestamp": "2026-09-29T11:42:50Z"
-      },
-      {
-        "message": "FIX: install pytest in Q091 authorization preflight",
-        "sha": "d76b105ada7ba14272c43b4998f4f0908c076e38",
-        "timestamp": "2026-09-29T13:42:49+02:00"
       }
     ]
   },
@@ -464,12 +464,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9d97230cabdd4e3af6efdfa782af4d3502448804",
+  "source_master_sha": "21768b61bdaff1b39befe650b3dd8233df72e5d4",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36563463472"
+    "run_id": "36563579932"
   }
 }
