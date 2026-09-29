@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "authorization_contract_version": 2,
-  "authorization_id": "AUTH-Q094-2026-09-29-01",
+  "authorization_contract_version": 3,
+  "authorization_id": "AUTH-Q094-2026-09-29-02",
   "trial_id": "T-2026-09-29-094",
   "authorized": true,
   "performance_execution_authorized": true,
   "execution_scope": "Q094_MONTHLY_REBALANCE_PERFORMANCE_ONLY",
   "one_shot": true,
-  "trigger_nonce": "Q094-ACTIVATE-2026-09-29-01",
+  "trigger_nonce": "Q094-ACTIVATE-2026-09-29-02",
   "preregistration_path": "research/preregistrations/q094_monthly_rebalance_q091_low_turnover_2026_09_29.json",
-  "preregistration_fingerprint": "4214e21e3ab9799c30881d06d2483789207e33e46dfbbcd5c28ae450dbadb1c6",
+  "preregistration_fingerprint": "158eb8ea3f308d7fa119b7d7186017339de250f15c3e69decc175e610f847592",
   "input_bundle_fingerprint": "6d29965db98bc77e22e59fea9f158aca3531afaf1b66ec97ed2996f2b2a94dac",
   "source_receipts": {
     "coverage_result_fingerprint": "3530fe97e0b9532a5b15880ed2c1910c1637a879f1fda3fce1b92736ced56265",
@@ -20,7 +20,7 @@
   },
   "source_contract": {
     "performance_runner_path": "automation/q094_performance.py",
-    "performance_runner_sha256": "bca8cd4a8eccbea89589854605f56d6851a4d6e060f93e0d336f521e715ef407",
+    "performance_runner_sha256": "d2eb912d67cff23390a7590d48abfb65fe237eeb9b18867e51e05a43f7cea837",
     "monthly_overlay_path": "portfolio/q094_monthly_rebalance.py",
     "monthly_overlay_sha256": "b8d6fcb0bda122b853f8ac9a4177de41ccbe0608e0032680b6c7a2fefa95ef6b",
     "candidate_bank_path": "automation/q069_candidate_bank.py",
@@ -34,7 +34,7 @@
   },
   "authorization_basis": {
     "explicit_operator_request": "Current-session operator instruction to continue the preregistered research sequence and execute the next approved Q094 performance step.",
-    "trigger_nonce": "Q094-ACTIVATE-2026-09-29-01",
+    "trigger_nonce": "Q094-ACTIVATE-2026-09-29-02",
     "governance": {
       "selection": false,
       "holdout_used_for_selection": false,
@@ -45,7 +45,9 @@
       "variant_search": false,
       "family_ranking": false,
       "promotion_decision": false
-    }
+    },
+    "supersedes_authorization_id": "AUTH-Q094-2026-09-29-01",
+    "pre_execution_amendment": "A-Q094-01"
   },
   "prohibited": {
     "candidate_selection": false,
@@ -64,5 +66,6 @@
     "live_trading_enabled": false,
     "orders_enabled": false,
     "automatic_promotion": false
-  }
+  },
+  "superseded_authorization_id": "AUTH-Q094-2026-09-29-01"
 }
