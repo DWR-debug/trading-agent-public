@@ -95,6 +95,13 @@ def main() -> int:
     result["provider"] = "antigravity_cli" if agy else "gemini_cli"
     result["binary"] = binary
 
+    cached_block = load_block("gemini_cli")
+    if cached_block:
+        result["status"] = "SKIPPED_QUOTA_BLOCKED"
+        result["quota_block"] = cached_block
+        print(json.dumps(result, sort_keys=True))
+        return 0
+
     version = _run([binary, "--version"])
     if version.returncode == 0:
         result["version"] = version.stdout.strip().splitlines()[-1][:200] if version.stdout.strip() else None
@@ -161,6 +168,14 @@ def main() -> int:
 
     if proc.returncode == 0 and result["response_marker_present"]:
         result["status"] = "SUCCESS"
+    elif quota_error(proc.returncode, stdout, stderr):
+        reset_seconds = parse_reset_seconds(f"{stdout}\n{stderr}") or 3600
+        result["status"] = "SKIPPED_QUOTA_BLOCKED"
+        result["quota_block"] = record_block(
+            "gemini_cli",
+            reset_seconds,
+            raw_error=f"{stdout}\n{stderr}",
+        )
     elif isinstance(agy_status, str) and agy_status != "SUCCESS":
         result["status"] = "FAILED_PROVIDER"
     elif result["error_marker_present"]:
