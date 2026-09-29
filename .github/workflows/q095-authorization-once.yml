@@ -71,6 +71,7 @@ jobs:
         run: |
           set -euo pipefail
           for attempt in $(seq 1 90); do
+            echo "Q095 T052 poll attempt=$attempt"
             line="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ".github/workflows/t052-exact-master-ci-gate.yml" --commit "$GITHUB_SHA" --limit 1 --json databaseId,status,conclusion --jq '.[0] | [.databaseId,.status,(.conclusion // "")] | @tsv' || true)"
             run_id="$(printf '%s' "$line" | cut -f1)"
             status="$(printf '%s' "$line" | cut -f2)"
