@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T15:49:09.787489+00:00",
+  "generated_at_utc": "2026-09-29T15:49:30.187374+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a3d46953487405773a1fdfe1757d4247123d92e5",
+        "timestamp": "2026-09-29T15:49:09Z"
+      },
+      {
         "message": "RESEARCH: extend permanent frontier QA to public information feasibility",
         "sha": "e4e1468f53decf5209582668a84684b4c6d7dfdf",
         "timestamp": "2026-09-29T17:49:06+02:00"
@@ -428,11 +433,6 @@
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "1e210251d0b57e19c81e720a5d6aa3d4206f581c",
         "timestamp": "2026-09-29T15:42:06Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "a6a1a0f23fb935bd4d4630a45dd08931d8ed1251",
-        "timestamp": "2026-09-29T15:31:12Z"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e4e1468f53decf5209582668a84684b4c6d7dfdf",
+  "source_master_sha": "a3d46953487405773a1fdfe1757d4247123d92e5",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36593065749"
+    "run_id": "36593086071"
   }
 }
