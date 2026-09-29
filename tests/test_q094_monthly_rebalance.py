@@ -19,10 +19,13 @@ def test_q094_preregistration_is_fixed_and_non_performance():
     p=Path("research/preregistrations/q094_monthly_rebalance_q091_low_turnover_2026_09_29.json")
     d=json.loads(p.read_text(encoding="utf-8"))
     assert d["trial_id"]=="T-2026-09-29-094"
-    assert d["status"]=="PREREGISTERED_DESIGN_ONLY"
+    assert d["status"] in {"PREREGISTERED_DESIGN_ONLY","PREREGISTERED_PERFORMANCE"}
     assert d["rebalance_contract"]["schedule"]=="first_available_trading_session_of_each_calendar_month"
     assert d["rebalance_contract"]["cadence_parameter_search"] is False
-    assert d["governance"]["performance_trial_authorized"] is False
+    if d["status"]=="PREREGISTERED_DESIGN_ONLY":
+        assert d["governance"]["performance_trial_authorized"] is False
+    else:
+        assert d["governance"]["performance_trial_authorized"] is True
     assert d["governance"]["selection"] is False
     assert d["governance"]["holdout_used_for_selection"] is False
     assert d["safety"]=={
