@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T16:24:48.461592+00:00",
+  "generated_at_utc": "2026-09-29T17:12:24.816935+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,44 +395,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e311e39a6f1659d5e3378e31246b3a2fc8f05fee",
-        "timestamp": "2026-09-29T16:24:31Z"
+        "message": "OPS: reserve self-hosted capacity by replacing stale QA runs",
+        "sha": "08836e5463ae0baded05306979cd3bd0d0cd4d82",
+        "timestamp": "2026-09-29T19:12:12+02:00"
       },
       {
-        "message": "QA: correct Q097 fail-closed governance assertions",
-        "sha": "9ab7d5c318989c0aae2a8d0f5e08e3fbe3f352a4",
-        "timestamp": "2026-09-29T18:24:24+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "2a686847b02dc42583eb22724ee10984ce005041",
+        "timestamp": "2026-09-29T17:11:42Z"
       },
       {
-        "message": "QA: align Q096 assertions with dynamic SEC probe design",
-        "sha": "43831f6fc3c9d97c0b753982cebf7b7eb7a41f12",
-        "timestamp": "2026-09-29T18:24:18+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "8cf42e8a3cf35a19a7d5dfacab4c97f014d5c591",
+        "timestamp": "2026-09-29T17:11:28Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e1808836bb1fb9705c27fd39649e56df97f5826e",
-        "timestamp": "2026-09-29T16:23:41Z"
+        "message": "OPS: record AI worker state",
+        "sha": "6aa05e6c9d6b521717be10e681a96cef64934df7",
+        "timestamp": "2026-09-29T17:11:25Z"
       },
       {
-        "message": "QA: extend Q097 conflict and future-mutation coverage",
-        "sha": "d4458aa3b4f20f113ebc8efab802d4526f57cf89",
-        "timestamp": "2026-09-29T18:23:25+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "353fde6b56275738c3ed894ba2e76f20047f4604",
+        "timestamp": "2026-09-29T17:11:22Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f1665666eadbbc8b6caf7dfbc3b6d455b37d0705",
-        "timestamp": "2026-09-29T16:22:23Z"
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "bb955a66deb42bff18d57d93b12c74fadeb14fdb",
+        "timestamp": "2026-09-29T17:09:10Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a1997d802e6fdbf1d5548baa55e8045db36b507f",
-        "timestamp": "2026-09-29T16:22:07Z"
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "ff0625bb935f664e9cded6ea626b7289a5a857fc",
+        "timestamp": "2026-09-29T16:58:48Z"
       },
       {
-        "message": "OPS: trigger permanent loop on Q097 PIT feasibility changes",
-        "sha": "309c87bbe7dbe642b7f5e99a87bdfc062b83f032",
-        "timestamp": "2026-09-29T18:22:03+02:00"
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "a9972c265cdb547116a81f8356cf42ebb4b85042",
+        "timestamp": "2026-09-29T16:56:00Z"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e311e39a6f1659d5e3378e31246b3a2fc8f05fee",
+  "source_master_sha": "08836e5463ae0baded05306979cd3bd0d0cd4d82",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36597477134"
+    "run_id": "36603270332"
   }
 }
