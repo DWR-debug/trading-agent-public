@@ -118,9 +118,15 @@
         "class": "fresh_validation",
         "code": "091",
         "issue_number": null,
-        "performance_authorization_allowed": true,
+        "performance_authorization_allowed": false,
+        "performance_result": {
+          "report_fingerprint": "0816e49774ff901438e046e162e428884f3f67b305cf26e0ebff2451ce38195d",
+          "status": "COMPLETED",
+          "trial_id": "T-2026-09-29-091",
+          "workflow_run_id": "36563579815"
+        },
         "preregistration_path": "research/preregistrations/q091_fixed_portfolio_architecture_2026_09_29.json",
-        "state": "PERFORMANCE_AUTHORIZED",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
         "trial_id": "T-2026-09-29-091"
       }
     ],
@@ -234,7 +240,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T11:44:17.787054+00:00",
+  "generated_at_utc": "2026-09-29T11:47:01.161476+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -357,6 +363,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: make canonical status reflect Q091 registry state",
+        "sha": "af4c27424a1ae87ed8d10fa69a80df6f673ecc0a",
+        "timestamp": "2026-09-29T13:46:46+02:00"
+      },
+      {
+        "message": "EVIDENCE: reconcile Q091 fixed portfolio performance",
+        "sha": "b1b42426b32697d47031948d2b80e1d0ec17203d",
+        "timestamp": "2026-09-29T11:46:17Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8ff7897f0a1da65abf17f2dcd08555e74dd4efb8",
+        "timestamp": "2026-09-29T11:44:17Z"
+      },
+      {
         "message": "RUN: trigger Q091 fixed portfolio performance exactly once",
         "sha": "21768b61bdaff1b39befe650b3dd8233df72e5d4",
         "timestamp": "2026-09-29T13:44:04+02:00"
@@ -380,21 +401,6 @@
         "message": "OPS: record AI worker state",
         "sha": "42e228d2ab8b6915899e787ccd58356c60715224",
         "timestamp": "2026-09-29T11:43:02Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "5c7d6c48e5dad9c93a6be01070203405c741b7af",
-        "timestamp": "2026-09-29T11:42:58Z"
-      },
-      {
-        "message": "GOVERNANCE: retry Q091 one-shot authorization after preflight fix",
-        "sha": "20315e6c9612eb3ad637d60a6e1e00e495089e20",
-        "timestamp": "2026-09-29T13:42:57+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "5022bc6895b627fd57c07a8c8c4bd7ceae868cd8",
-        "timestamp": "2026-09-29T11:42:55Z"
       }
     ]
   },
@@ -464,12 +470,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "21768b61bdaff1b39befe650b3dd8233df72e5d4",
+  "source_master_sha": "af4c27424a1ae87ed8d10fa69a80df6f673ecc0a",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36563579932"
+    "run_id": "36563860642"
   }
 }
