@@ -24,4 +24,4 @@ def test_local_ai_verifier_uses_segmented_windows_paths_and_real_regex() -> None
     assert 'Join-Path $env:USERPROFILE ".gemini"' in text
     assert 'Join-Path $geminiDir "antigravity-cli"' in text
     assert 'Join-Path $agyConfigDir "settings.json"' in text
-    assert r'"\s*:\s*false\b"' in text
+    assert '"(?:UseG1Credits|useG1Credits)"\\s*:\\s*false\\b' in text
