@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "authorization_contract_version": 2,
-  "authorization_id": "AUTH-Q089-2026-09-29-02",
+  "authorization_id": "AUTH-Q089-2026-09-29-01",
   "trial_id": "T-2026-09-28-089-PERFORMANCE",
   "authorized": true,
   "performance_execution_authorized": true,
   "execution_scope": "Q089_FIXED_RULE_PERFORMANCE_ONLY",
   "one_shot": true,
   "preregistration_path": "research/preregistrations/q089_performance_2026_09_28.json",
-  "preregistration_fingerprint": "ab80cab9bfdd3970a7fdcbab4b9d31538cd354db9013e14f2981198f57a483cb",
+  "preregistration_fingerprint": "e84c344b8a01d537b8b73af31fa48ae3ba26ff678efa3ae5f96c84b66ed579dd",
   "input_bundle_fingerprint": "c4261e230baf8888088df7e3e3159a1a93d4142ff358ef5896d35cd109663924",
   "source_receipts": {
     "coverage_result_fingerprint": "56898b50fc0f8af31dead7dcd65001cced41cf7b44093676eead1ccc4d6fe4cb",
@@ -19,7 +19,7 @@
   },
   "source_contract": {
     "performance_runner_path": "automation/q089_performance.py",
-    "performance_runner_sha256": "d5ffa90bf9a98ffa12114eb3e146c3dc615666cd70f48b0a82019a622a39ceaf",
+    "performance_runner_sha256": "c861ff6921276e6ec4bfe042f6c4a83865873381ab1a7a730394cf14ccc5d062",
     "candidate_bank_path": "automation/q069_candidate_bank.py",
     "candidate_bank_sha256": "84e008a6152cbea128e5e5f2ac0dfdde0b0172310fe4c510241c60edfd3ff617",
     "cost_contract_path": "execution/cost_contract.py",
@@ -29,20 +29,16 @@
   },
   "authorization_basis": {
     "preflight_contract_audit": {
-      "workflow_run_id": 36539304842,
+      "workflow_run_id": 36533366578,
       "conclusion": "success",
       "both_lanes_success": true
     },
     "master_ci": {
-      "workflow_run_id": 36540006838,
+      "workflow_run_id": 36534796691,
       "conclusion": "success"
     },
     "master_exact_gate": {
-      "workflow_run_id": 36540006718,
-      "conclusion": "success"
-    },
-    "governance_audit": {
-      "workflow_run_id": 36540007011,
+      "workflow_run_id": 36534796799,
       "conclusion": "success"
     },
     "governance": {
