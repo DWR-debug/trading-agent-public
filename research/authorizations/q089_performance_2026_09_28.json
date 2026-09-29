@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "authorization_contract_version": 2,
-  "authorization_id": "AUTH-Q089-2026-09-29-02",
+  "authorization_id": "AUTH-Q089-2026-09-29-03",
   "trial_id": "T-2026-09-28-089-PERFORMANCE",
   "authorized": false,
   "performance_execution_authorized": false,
   "execution_scope": "Q089_FIXED_RULE_PERFORMANCE_ONLY",
   "one_shot": true,
   "preregistration_path": "research/preregistrations/q089_performance_2026_09_28.json",
-  "preregistration_fingerprint": "UNAUTHORIZED_REVISION_6_PENDING_FRESH_GATES",
+  "preregistration_fingerprint": "678d864b8c5791c5ad06d7d49096a233a38e4ddb6ab776f377f7420cf2905eba",
   "input_bundle_fingerprint": "c4261e230baf8888088df7e3e3159a1a93d4142ff358ef5896d35cd109663924",
   "source_receipts": {
     "coverage_result_fingerprint": "56898b50fc0f8af31dead7dcd65001cced41cf7b44093676eead1ccc4d6fe4cb",
@@ -29,20 +29,20 @@
   },
   "authorization_basis": {
     "preflight_contract_audit": {
-      "workflow_run_id": 36539304842,
+      "workflow_run_id": 36542330096,
       "conclusion": "success",
       "both_lanes_success": true
     },
     "master_ci": {
-      "workflow_run_id": 36540006838,
+      "workflow_run_id": 36542330308,
       "conclusion": "success"
     },
     "master_exact_gate": {
-      "workflow_run_id": 36540006718,
+      "workflow_run_id": 36542330292,
       "conclusion": "success"
     },
     "governance_audit": {
-      "workflow_run_id": 36540007011,
+      "workflow_run_id": 36542330197,
       "conclusion": "success"
     },
     "governance": {
@@ -55,8 +55,7 @@
       "variant_search": false,
       "family_ranking": false,
       "promotion_decision": false
-    },
-    "fresh_gate_requirement": "Revision 6 requires fresh dual-lane Q089 contract audit, master CI, exact master gate, and Self-Hosted Research Governance Audit before a new execution authorization may be issued."
+    }
   },
   "prohibited": {
     "candidate_selection": false,
