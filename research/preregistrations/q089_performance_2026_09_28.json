@@ -105,5 +105,5 @@
   },
   "revision": 6,
   "supersedes": "q089_performance_2026_09_28.json@revision-5",
-  "revision_reason": "Infrastructure-only revision after Q089 attempt 3 reached the fixed-rule performance runner and exposed legacy-omitted top-level selection fields in the preregistration schema. The runner now treats omitted selection_used and holdout_used_for_selection fields as false. No signal, universe, split, data value, cost, gate, holdout, parameter, threshold, asset, horizon, variant, candidate-selection, or performance rule changed."
+  "revision_reason": "Infrastructure-only source-contract refresh after the Q089 performance runner was hardened to treat omitted optional top-level selection fields as false. No signal, universe, frozen data, split, cost, gate, holdout, parameter, threshold, asset, horizon, variant, candidate-selection, or performance rule changed."
 }
