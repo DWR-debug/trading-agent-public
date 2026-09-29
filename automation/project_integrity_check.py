@@ -95,6 +95,8 @@ ACTIVE_WORKFLOWS = {
     "q089-coverage-pit.yml",
     "q090-q089-failure-diagnosis.yml",
     "q091-portfolio-architecture-coverage.yml",
+    "q091-contract-audit.yml",
+    "q091-performance-once.yml",
     "q091-input-freeze.yml",
     "q091-persist-input-freeze-artifact.yml",
     "q091-persist-coverage.yml",
