@@ -46,6 +46,16 @@ LANES: dict[str, list[list[str]]] = {
         [
             PYTHON,
             "-m",
+            "automation.q075_information_channel_contract",
+        ],
+        [
+            PYTHON,
+            "-m",
+            "automation.q084_candidate_feasibility",
+        ],
+        [
+            PYTHON,
+            "-m",
             "automation.q095_contract_audit",
         ],
         [
