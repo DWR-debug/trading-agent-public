@@ -64,6 +64,8 @@ jobs:
 
       - name: Wait for exact Master CI Gate
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           export GH_TOKEN="$GITHUB_TOKEN"
