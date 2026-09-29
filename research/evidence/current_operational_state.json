@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T18:10:30.919612+00:00",
+  "generated_at_utc": "2026-09-29T18:12:32.059349+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: classify and cache local AI quota exhaustion",
+        "sha": "9ba9573e0b014058fa7b01c89e4af3358a6d6eb8",
+        "timestamp": "2026-09-29T20:12:30+02:00"
+      },
+      {
+        "message": "OPS: record local AI worker state",
+        "sha": "f60f2b67ffd10ebb5e50043267789c3452fa4cd8",
+        "timestamp": "2026-09-29T18:12:29Z"
+      },
+      {
+        "message": "OPS: add local AI quota exhaustion cache guard",
+        "sha": "5819366e8460065d9358c8c28ff245616b1dbad9",
+        "timestamp": "2026-09-29T20:12:17+02:00"
+      },
+      {
+        "message": "OPS: record local AI worker state",
+        "sha": "af47ad2c3ba9cf71bb417fd44145e85467a51a97",
+        "timestamp": "2026-09-29T18:11:39Z"
+      },
+      {
+        "message": "OPS: record local AI worker state",
+        "sha": "2204062e143b65a932138e6eb0dda9448c70437d",
+        "timestamp": "2026-09-29T18:10:50Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "7c31af165f25d403dc064b4bec7af12d80e2dbd6",
+        "timestamp": "2026-09-29T18:10:30Z"
+      },
+      {
         "message": "FIX: finalize SEC historical anchor identity and acceptance checks",
         "sha": "97460180333bcf807acca572f230d2d3906e9c62",
         "timestamp": "2026-09-29T20:10:18+02:00"
@@ -403,36 +433,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "03578bb80a4dce318fbebac94d08aa624ec65ac7",
         "timestamp": "2026-09-29T18:09:35Z"
-      },
-      {
-        "message": "QA: align historical EDGAR anchor URL assertions",
-        "sha": "1ef47de78d7a405cdff8fda33f625cf8a72ff4ce",
-        "timestamp": "2026-09-29T20:09:23+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0913aca871fac8a59e87e40129788d3fd2dd62ec",
-        "timestamp": "2026-09-29T18:09:19Z"
-      },
-      {
-        "message": "FIX: use SEC URL identity for historical anchor accession verification",
-        "sha": "fe771bca97a187089cd50af0ee6051edc2034af4",
-        "timestamp": "2026-09-29T20:09:07+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "681d8a64b303e5bfb486a15f9829cb76c23c1c95",
-        "timestamp": "2026-09-29T18:07:46Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "628963d45da946462cbdcddbbe4eb8d2f641fbe2",
-        "timestamp": "2026-09-29T18:07:29Z"
-      },
-      {
-        "message": "QA: lock SEC historical anchor header endpoints and accessions",
-        "sha": "d89a6950478d3867be7a0ebd5a57c7ebe8cce0f9",
-        "timestamp": "2026-09-29T20:07:26+02:00"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "97460180333bcf807acca572f230d2d3906e9c62",
+  "source_master_sha": "9ba9573e0b014058fa7b01c89e4af3358a6d6eb8",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36610145733"
+    "run_id": "36610381834"
   }
 }
