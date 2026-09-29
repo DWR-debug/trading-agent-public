@@ -61,6 +61,32 @@ def recent_rows(payload: dict[str, Any]) -> list[dict[str, Any]]:
         for i in range(n)
     ]
 
+def submission_rows(payload: object) -> list[dict[str, Any]]:
+    if isinstance(payload, dict):
+        nested = payload.get("filings", {}).get("recent", {})
+        if isinstance(nested, dict) and nested.get("form") is not None:
+            return recent_rows(payload)
+        if all(k in payload for k in ("form", "filingDate", "accessionNumber")):
+            forms = payload.get("form", [])
+            dates = payload.get("filingDate", [])
+            acc = payload.get("accessionNumber", [])
+            acceptance = payload.get("acceptanceDateTime", [])
+            docs = payload.get("primaryDocument", [])
+            n = min(len(forms), len(dates), len(acc))
+            return [
+                {
+                    "form": forms[i],
+                    "filingDate": dates[i],
+                    "accessionNumber": acc[i],
+                    "acceptanceDateTime": acceptance[i] if i < len(acceptance) else None,
+                    "primaryDocument": docs[i] if i < len(docs) else None,
+                }
+                for i in range(n)
+            ]
+    if isinstance(payload, list):
+        return [row for row in payload if isinstance(row, dict)]
+    return []
+
 
 def submission_archive_probe(label: str, cik: str, target_forms: set[str]) -> dict[str, Any]:
     base = f"https://data.sec.gov/submissions/CIK{cik}.json"
@@ -119,7 +145,7 @@ def submission_archive_probe(label: str, cik: str, target_forms: set[str]) -> di
         if s == 200:
             try:
                 old_payload = json.loads(body)
-                old_rows = old_payload if isinstance(old_payload, list) else recent_rows(old_payload)
+                old_rows = submission_rows(old_payload)
                 if isinstance(old_rows, list):
                     forms = [r.get("form") for r in old_rows if isinstance(r, dict)]
                     result["oldest_extension"]["target_form_hits"] = sorted(set(forms).intersection(target_forms))
