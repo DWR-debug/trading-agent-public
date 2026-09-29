@@ -61,6 +61,7 @@ REQUESTED=5000; RAW=5000; TARGET=3500
     codes = {item["code"] for item in result["findings"]}
     assert result["status"] == "FINDINGS_PRESENT"
     assert "Q089_REPORT_REQUESTED_CANDLES_MISMATCH" in codes
+    assert "Q089_SOURCE_CONTRACT_MISMATCH" in codes
 
 
 def test_result_literal_helper_is_ast_based() -> None:
