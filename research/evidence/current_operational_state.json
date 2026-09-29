@@ -265,7 +265,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T13:57:00.762830+00:00",
+  "generated_at_utc": "2026-09-29T13:58:38.354530+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -388,6 +388,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "40ad2786555532db55e2e8bf92981816650757fa",
+        "timestamp": "2026-09-29T13:58:26Z"
+      },
+      {
+        "message": "GOVERNANCE: make Q095 authorization token job-scoped",
+        "sha": "4b60271a7bbac38fafff25bc2035fdc9e9cffaed",
+        "timestamp": "2026-09-29T15:58:23+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "773fcdb107a890381cded76bf5898385c6103ce9",
+        "timestamp": "2026-09-29T13:57:00Z"
+      },
+      {
         "message": "GOVERNANCE: retry Q095 authorization after green frozen code gate",
         "sha": "5bfbd1b3d0959811099e0e1a101ff8e4bde3561a",
         "timestamp": "2026-09-29T15:56:46+02:00"
@@ -411,21 +426,6 @@
         "message": "GOVERNANCE: retry Q095 authorization on green frozen codebase",
         "sha": "d9a049bf8795811590a922aa575d60d1cb58e569",
         "timestamp": "2026-09-29T15:53:50+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a3a607170c4a9c0ff6a9f44f667fe810ea9bfce4",
-        "timestamp": "2026-09-29T13:52:06Z"
-      },
-      {
-        "message": "GOVERNANCE: remove stale token export from Q095 authorization gate",
-        "sha": "281f18fe4f4d9d678e26abad0de67900e468d110",
-        "timestamp": "2026-09-29T15:51:51+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "bdb781520582adc63e7d3e062d48ddce5e657211",
-        "timestamp": "2026-09-29T13:51:08Z"
       }
     ]
   },
@@ -495,12 +495,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5bfbd1b3d0959811099e0e1a101ff8e4bde3561a",
+  "source_master_sha": "40ad2786555532db55e2e8bf92981816650757fa",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36578906001"
+    "run_id": "36579112533"
   }
 }
