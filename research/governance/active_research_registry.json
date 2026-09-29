@@ -38,10 +38,27 @@
       "code": "089",
       "trial_id": "T-2026-09-28-089-PERFORMANCE",
       "class": "fresh_validation",
-      "state": "PREREGISTERED_WAITING_AUTHORIZATION",
+      "state": "PERFORMANCE_AUTHORIZED",
       "issue_number": 589,
-      "performance_authorization_allowed": false,
-      "preregistration_path": "research/preregistrations/q089_performance_2026_09_28.json"
+      "performance_authorization_allowed": true,
+      "preregistration_path": "research/preregistrations/q089_performance_2026_09_28.json",
+      "authorization": {
+        "authorization_id": "AUTH-Q089-2026-09-29-02",
+        "path": "research/authorizations/q089_performance_2026_09_28.json",
+        "preregistration_fingerprint": "44c2b036a5eb0ee54c400ec21dbba6369342bb87e6a0a957551102373960b3ff",
+        "source_receipts": {
+          "coverage_result_fingerprint": "56898b50fc0f8af31dead7dcd65001cced41cf7b44093676eead1ccc4d6fe4cb",
+          "snapshot_fingerprint": "bb82aeaed86411a8675be7f8ecb1c99e9c144f017466a836b8cafeb9d3b55e1d",
+          "pit_result_fingerprint": "098da74ebde38d7b5e7c13626bee396eb6e86b4421ca6a4d383e3133cecf19ca",
+          "input_bundle_fingerprint": "c4261e230baf8888088df7e3e3159a1a93d4142ff358ef5896d35cd109663924"
+        },
+        "authorization_basis": {
+          "preflight_contract_audit_run_id": 36539304842,
+          "master_ci_run_id": 36540006838,
+          "master_exact_gate_run_id": 36540006718,
+          "governance_audit_run_id": 36540007011
+        }
+      }
     },
     {
       "code": "077R1",
