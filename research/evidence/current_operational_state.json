@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T18:01:04.656017+00:00",
+  "generated_at_utc": "2026-09-29T18:01:20.781877+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ab8634d15ce265010c3d38a161eca352f86bdf29",
+        "timestamp": "2026-09-29T18:01:04Z"
+      },
+      {
         "message": "RESEARCH: record historical SEC PIT anchors for Q097 channels",
         "sha": "d3af2adcc1e4c3a2ac8d618fbcd41a7734f03d50",
         "timestamp": "2026-09-29T20:00:56+02:00"
@@ -428,11 +433,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "15e7dfb2dd6debb808d58809143b556f017d3bc4",
         "timestamp": "2026-09-29T17:57:50Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "c8b3e9909faf249591b403d058ab0145dc5e7067",
-        "timestamp": "2026-09-29T17:57:43Z"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d3af2adcc1e4c3a2ac8d618fbcd41a7734f03d50",
+  "source_master_sha": "ab8634d15ce265010c3d38a161eca352f86bdf29",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36609002178"
+    "run_id": "36609030881"
   }
 }
