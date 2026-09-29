@@ -67,7 +67,7 @@
   },
   "governance_contract_version": 2,
   "governance": {
-    "performance_trial_authorized": false,
+    "performance_trial_authorized": true,
     "selection": false,
     "holdout_used_for_selection": false,
     "parameter_search": false,
@@ -103,7 +103,7 @@
     "settings_path": "config/settings.py",
     "settings_sha256": "580b5b2456f5f0eefe01e12ae4aeb36d998b8f66afcf97aa086a9383a00de175"
   },
-  "revision": 2,
-  "supersedes": "q089_performance_2026_09_28.json@revision-1",
-  "revision_reason": "Corrected non-scientific requested-candle reporting metadata and bound the performance runner to its existing fail-closed authorization/source-contract guards. No signal, universe, split, cost, gate, holdout, or performance rule changed."
+  "revision": 3,
+  "supersedes": "q089_performance_2026_09_28.json@revision-2",
+  "revision_reason": "Authorized once after Q089 coverage/PIT/input-freeze prerequisites, dual-lane contract audit success, and green master CI/gate checks. No signal, universe, split, cost, gate, holdout, parameter, threshold, asset, horizon, variant or performance rule changed."
 }
