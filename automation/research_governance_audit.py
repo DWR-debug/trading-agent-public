@@ -73,15 +73,19 @@ def _assert_safety(data: dict, location: str, errors: list[str]) -> None:
         errors.append(f"{location}: safety contract mismatch")
 
 
-def _audit_performance_prereg(root: Path, path: Path, data: dict, errors: list[str]) -> None:
+def _audit_performance_prereg(
+    root: Path,
+    path: Path,
+    data: dict,
+    errors: list[str],
+    *,
+    historical_terminal: bool = False,
+) -> None:
     location = path.relative_to(root).as_posix()
     trial_id = data.get("trial_id")
     if not isinstance(trial_id, str) or not trial_id:
         errors.append(f"{location}: missing top-level trial_id")
         return
-
-    if data.get("governance_contract_version") != 2:
-        errors.append(f"{location}: governance_contract_version must be 2")
 
     expected_suffix = _path_trial_suffix(path)
     actual_suffix = _trial_family_code(trial_id)
@@ -89,6 +93,17 @@ def _audit_performance_prereg(root: Path, path: Path, data: dict, errors: list[s
         errors.append(
             f"{location}: filename trial code {expected_suffix} != trial_id code {actual_suffix}"
         )
+    _assert_safety(data, location, errors)
+
+    # Terminal performance entries that are explicitly non-authorized and already
+    # reconciled are historical records. Their original preregistration schema
+    # remains immutable; governance-v2 validation applies only to active/pending
+    # performance preregistrations.
+    if historical_terminal:
+        return
+
+    if data.get("governance_contract_version") != 2:
+        errors.append(f"{location}: governance_contract_version must be 2")
 
     identity = data.get("identity_contract")
     if not isinstance(identity, dict):
@@ -211,7 +226,7 @@ def _load_retired_authorizations(root: Path, errors: list[str]) -> set[str]:
         if not all(isinstance(x, str) and x for x in (path, trial_id, status)):
             errors.append(f"{register_path.relative_to(root)}: malformed retired authorization entry")
             continue
-        if status != "RETIRED_HISTORICAL_AUTHORIZATION":
+        if status not in {"RETIRED_HISTORICAL_AUTHORIZATION", "SUPERSEDED_PRE_EXECUTION"}:
             errors.append(f"{register_path.relative_to(root)}: invalid retired authorization status")
             continue
         target = root / path
@@ -350,7 +365,19 @@ def audit(root: Path = ROOT) -> dict[str, Any]:
             if trial_id in seen:
                 errors.append(f"duplicate active prereg trial_id {trial_id}: {seen[trial_id]} and {path}")
             seen[trial_id] = path
-        _audit_performance_prereg(root, path, data, errors)
+        registry_entry = active_by_trial.get(trial_id) if isinstance(trial_id, str) else None
+        historical_terminal = bool(
+            registry_entry
+            and registry_entry.get("performance_authorization_allowed") is False
+            and str(registry_entry.get("state", "")).startswith("PERFORMANCE_COMPLETED_")
+        )
+        _audit_performance_prereg(
+            root,
+            path,
+            data,
+            errors,
+            historical_terminal=historical_terminal,
+        )
 
     _audit_authorizations(root, errors, active_by_trial)
     return {
