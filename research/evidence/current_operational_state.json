@@ -240,7 +240,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:11:43.965585+00:00",
+  "generated_at_utc": "2026-09-29T12:12:02.253113+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -363,6 +363,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "30b52ee2a67e7ad0b4deca813d0741fd2eac47a6",
+        "timestamp": "2026-09-29T12:11:44Z"
+      },
+      {
         "message": "FIX: harden Q092 ledger serialization",
         "sha": "79ae19131b93d9a4354da935656d08277b5e022e",
         "timestamp": "2026-09-29T14:11:29+02:00"
@@ -396,11 +401,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "5e4e077d36ffa925e51cd0023bdb8b3e2e034416",
         "timestamp": "2026-09-29T12:08:38Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d1ea21b3f8677e7627d249ffba0269a9542aa5cd",
-        "timestamp": "2026-09-29T12:08:24Z"
       }
     ]
   },
@@ -470,12 +470,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "79ae19131b93d9a4354da935656d08277b5e022e",
+  "source_master_sha": "30b52ee2a67e7ad0b4deca813d0741fd2eac47a6",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36566487726"
+    "run_id": "36566523950"
   }
 }
