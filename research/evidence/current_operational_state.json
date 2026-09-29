@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T17:27:00.141237+00:00",
+  "generated_at_utc": "2026-09-29T17:27:14.216815+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "28e08db5c01d6ff54ca7b7a4f55d030c267ab507",
+        "timestamp": "2026-09-29T17:27:00Z"
+      },
+      {
         "message": "QA: cover Unicode punctuation normalization in SEC text probe",
         "sha": "895186320072c1562cdeae98b956404fdc1b078d",
         "timestamp": "2026-09-29T19:26:56+02:00"
@@ -428,11 +433,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "52650099c11e9e7e8012c58915f3049c3cedee5b",
         "timestamp": "2026-09-29T17:25:22Z"
-      },
-      {
-        "message": "OPS: register public frontier feasibility workflow in integrity allowlist",
-        "sha": "5b210141bdc0c5d2f2d5939bdbabd9cb8a5fcd59",
-        "timestamp": "2026-09-29T19:25:11+02:00"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "895186320072c1562cdeae98b956404fdc1b078d",
+  "source_master_sha": "28e08db5c01d6ff54ca7b7a4f55d030c267ab507",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36604981428"
+    "run_id": "36604999394"
   }
 }
