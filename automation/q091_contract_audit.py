@@ -58,6 +58,8 @@ def audit(root:Path=ROOT)->dict:
             finding("Q091_GEOMETRY_MISMATCH",field=field,expected=expected,actual=actual,runner_constant=runner_name)
 
     text_src=perf_path.read_text()
+    portfolio_src=port_path.read_text()
+    implementation_src=text_src+"\n"+portfolio_src
     if "urllib" in text_src or "requests" in text_src or "http://" in text_src or "https://" in text_src:
         finding("Q091_NETWORK_IN_PERFORMANCE_RUNNER")
     for guard in ("_assert_authorization(root, prereg)","_assert_source_contract(root, prereg)"):
@@ -72,7 +74,7 @@ def audit(root:Path=ROOT)->dict:
     if variant_ids!=EXPECTED_VARIANTS:
         finding("Q091_VARIANT_SET_MISMATCH",expected=sorted(EXPECTED_VARIANTS),actual=sorted(variant_ids))
     for variant_id in EXPECTED_VARIANTS:
-        if variant_id not in text_src:
+        if variant_id not in implementation_src:
             finding("Q091_VARIANT_IMPLEMENTATION_MISSING",variant=variant_id)
     gate_ids=set(EXPECTED_GATES)
     if len(gate_ids)!=13:
