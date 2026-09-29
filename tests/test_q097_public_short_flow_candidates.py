@@ -15,7 +15,13 @@ def test_q097_registry_is_design_only_and_unranked() -> None:
 def test_q097_safety_and_governance_are_fail_closed() -> None:
     p = json.loads(Path('research/frontier/q097_public_short_flow_candidates.json').read_text(encoding='utf-8'))
     g = p['governance']
-    assert all(g.values())
+    assert g['no_parameter_search'] is True
+    assert g['no_threshold_search'] is True
+    assert g['no_asset_search'] is True
+    assert g['no_horizon_search'] is True
+    assert g['family_ranking'] is False
+    assert g['holdout_selection_allowed'] is False
+    assert g['automatic_promotion'] is False
     assert p['safety'] == {
         'paper_only': True,
         'live_trading_enabled': False,
