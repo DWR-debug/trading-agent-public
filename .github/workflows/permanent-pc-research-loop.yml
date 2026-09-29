@@ -56,7 +56,7 @@ jobs:
           set "ARCHIVE=%RUNNER_TEMP%\trading-agent-auto-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%.tar.gz"
           if exist "%WORK%" rmdir /s /q "%WORK%"
           mkdir "%WORK%" || exit /b 1
-          curl.exe -L --fail --silent --show-error -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%" || exit /b 1
+          curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%" || exit /b 1
           tar.exe -xzf "%ARCHIVE%" -C "%WORK%" || exit /b 1
           endlocal
 
@@ -69,7 +69,7 @@ jobs:
           set "PY_EXE=%PY_ROOT%\tools\python.exe"
           set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-autonomous.nupkg"
           if not exist "%PY_EXE%" (
-            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
             mkdir "%PY_ROOT%" 2>nul
             tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
           )
@@ -131,7 +131,7 @@ jobs:
           set "ARCHIVE=%RUNNER_TEMP%\trading-agent-ai-smoke-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%.tar.gz"
           if exist "%WORK%" rmdir /s /q "%WORK%"
           mkdir "%WORK%" || exit /b 1
-          curl.exe -L --fail --silent --show-error -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%" || exit /b 1
+          curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%" || exit /b 1
           tar.exe -xzf "%ARCHIVE%" -C "%WORK%" || exit /b 1
           for /d %%D in ("%WORK%\trading-agent-public-*") do echo REPO_SRC=%%~fD>>"%GITHUB_ENV%"
           endlocal
@@ -170,7 +170,7 @@ jobs:
           set "PY_EXE=%PY_ROOT%\tools\python.exe"
           set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-ai-smoke.nupkg"
           if not exist "%PY_EXE%" (
-            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
             if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
             tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
           )
@@ -227,7 +227,7 @@ jobs:
           set "ARCHIVE=%RUNNER_TEMP%\trading-agent-ai-worker-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%.tar.gz"
           if exist "%WORK%" rmdir /s /q "%WORK%"
           mkdir "%WORK%" || exit /b 1
-          curl.exe -L --fail --silent --show-error -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%" || exit /b 1
+          curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%" || exit /b 1
           tar.exe -xzf "%ARCHIVE%" -C "%WORK%" || exit /b 1
           for /d %%D in ("%WORK%\trading-agent-public-*") do echo REPO_SRC=%%~fD>>"%GITHUB_ENV%"
           endlocal
@@ -266,7 +266,7 @@ jobs:
           set "PY_EXE=%PY_ROOT%\tools\python.exe"
           set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-ai-worker.nupkg"
           if not exist "%PY_EXE%" (
-            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
             if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
             tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
           )
