@@ -31,7 +31,64 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Determine Q094 execution mode
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -Fx "RECONCILE_ONLY=true" research/run_requests/q094_performance_once.trigger; then
+            echo "Q094_MODE=RECONCILE_ONLY" >> "$GITHUB_ENV"
+            echo "Q094_WORKFLOW_RUN_ID=36569776262" >> "$GITHUB_ENV"
+            echo "Q094_MODE=RECONCILE_ONLY"
+          else
+            echo "Q094_MODE=PERFORMANCE" >> "$GITHUB_ENV"
+            echo "Q094_WORKFLOW_RUN_ID=$GITHUB_RUN_ID" >> "$GITHUB_ENV"
+            echo "Q094_MODE=PERFORMANCE"
+          fi
+
+      - name: Restore exact successful Q094 result artifact
+        if: env.Q094_MODE == 'RECONCILE_ONLY'
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: 11033172360
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 36569776262
+          path: _q094_result
+          merge-multiple: true
+
+      - name: Materialize successful Q094 result
+        if: env.Q094_MODE == 'RECONCILE_ONLY'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s _q094_result/q094_performance_result.json
+          mkdir -p research/evidence
+          cp -f _q094_result/q094_performance_result.json research/evidence/q094_performance_result.json
+
+      - name: Verify recovered Q094 result artifact
+        if: env.Q094_MODE == 'RECONCILE_ONLY'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("research/evidence/q094_performance_result.json").read_text())
+          assert d["trial_id"]=="T-2026-09-29-094"
+          assert d["status"]=="COMPLETED"
+          assert d["report_fingerprint"]=="602e85e57698158b10013fb64b69930fd5ac40046e2aeaa588b0e175cd229f73"
+          assert set(d["arms"])=={"M1_MONTHLY_REBALANCED_Q091_E1","M2_MONTHLY_REBALANCED_Q091_E2"}
+          assert d["arms"]["M1_MONTHLY_REBALANCED_Q091_E1"]["gates_passed"]==9
+          assert d["arms"]["M2_MONTHLY_REBALANCED_Q091_E2"]["gates_passed"]==0
+          assert d["selection_used"] is False
+          assert d["holdout_used_for_selection"] is False
+          assert d["governance"]["performance_trial_authorized"] is True
+          assert d["safety"]["paper_only"] is True
+          print("Q094 SUCCESSFUL PERFORMANCE ARTIFACT VERIFIED")
+          PY
+
       - name: Restore exact frozen Q094 preparation artifact
+        if: env.Q094_MODE == 'PERFORMANCE'
         uses: actions/download-artifact@v4
         with:
           artifact-ids: 11031779886
@@ -42,6 +99,7 @@ jobs:
           merge-multiple: true
 
       - name: Materialize frozen Q094 artifact into canonical research paths
+        if: env.Q094_MODE == 'PERFORMANCE'
         shell: bash
         run: |
           set -euo pipefail
@@ -53,6 +111,7 @@ jobs:
           cp -a _q094_prep/runs/. research/runs/
 
       - name: Verify restored frozen Q094 artifact
+        if: env.Q094_MODE == 'PERFORMANCE'
         shell: bash
         run: |
           set -euo pipefail
@@ -83,12 +142,14 @@ jobs:
           PY
 
       - name: Install deterministic dependencies
+        if: env.Q094_MODE == 'PERFORMANCE'
         shell: bash
         run: |
           set -euo pipefail
           python -m pip install --disable-pip-version-check pytest pandas exchange-calendars statsmodels==0.15.0
 
       - name: Verify exact Q094 trigger
+        if: env.Q094_MODE == 'PERFORMANCE'
         shell: bash
         run: |
           set -euo pipefail
@@ -99,6 +160,7 @@ jobs:
           echo "Q094 PERFORMANCE TRIGGER VERIFIED"
 
       - name: Fail-closed active registry guard
+        if: env.Q094_MODE == 'PERFORMANCE'
         shell: bash
         run: |
           set -euo pipefail
@@ -115,6 +177,7 @@ jobs:
           PY
 
       - name: Safety invariants
+        if: env.Q094_MODE == 'PERFORMANCE'
         shell: bash
         run: |
           set -euo pipefail
@@ -128,6 +191,7 @@ jobs:
           PY
 
       - name: Governance preflight
+        if: env.Q094_MODE == 'PERFORMANCE'
         shell: bash
         run: |
           set -euo pipefail
@@ -150,6 +214,7 @@ jobs:
           PY
 
       - name: Source-contract verification
+        if: env.Q094_MODE == 'PERFORMANCE'
         shell: bash
         run: |
           set -euo pipefail
@@ -171,12 +236,14 @@ jobs:
           PY
 
       - name: Structural regression tests
+        if: env.Q094_MODE == 'PERFORMANCE'
         shell: bash
         run: |
           set -euo pipefail
           python -m pytest -q tests/test_q094_monthly_rebalance.py
 
       - name: Execute Q094 fixed monthly-rebalance performance exactly once
+        if: env.Q094_MODE == 'PERFORMANCE'
         shell: bash
         env:
           Q094_PERFORMANCE_ONCE: "true"
