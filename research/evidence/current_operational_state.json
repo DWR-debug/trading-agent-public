@@ -234,7 +234,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T10:43:11.347587+00:00",
+  "generated_at_utc": "2026-09-29T10:45:17.575271+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -358,43 +358,43 @@
     "recent_commits": [
       {
         "message": "OPS: record AI worker state",
-        "sha": "41c4f31067512f55eab98dd2f0898dc6e28d809a",
-        "timestamp": "2026-09-29T10:43:09Z"
-      },
-      {
-        "message": "FIX: supply Q091 context to free AI adversarial worker",
-        "sha": "2927358bcfd8a3dc6f55c2e6ae3bc48f3b54e22c",
-        "timestamp": "2026-09-29T12:42:56+02:00"
+        "sha": "e09210d45e7b01820ffdb020b58f75cfa5755b48",
+        "timestamp": "2026-09-29T10:45:15Z"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "a58ce7a95771e40379e838c59747749624dacaeb",
-        "timestamp": "2026-09-29T10:41:36Z"
+        "sha": "af990f1139e2673d2fc3e0d341d434609a96f93b",
+        "timestamp": "2026-09-29T10:45:13Z"
+      },
+      {
+        "message": "FIX: repair AI worker context mapping indentation",
+        "sha": "6937fc211e2255e1136f899dd288d844fbcc59cd",
+        "timestamp": "2026-09-29T12:45:00+02:00"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "f0e6f92617ac54e390487e993ea6fb19aae653e1",
-        "timestamp": "2026-09-29T10:41:29Z"
+        "sha": "a5404ad68c014a75719f74505bddcca7c31d9fcc",
+        "timestamp": "2026-09-29T10:44:40Z"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "ee694988dd110dcfebca72261d1846e64be2f7f5",
-        "timestamp": "2026-09-29T10:41:28Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a4dc2159fa7465d0d891079f05d4f3733eadd9d5",
-        "timestamp": "2026-09-29T10:41:24Z"
+        "sha": "95f72f7b35b0bc2fdeb7ec09767abbfcecf572e3",
+        "timestamp": "2026-09-29T10:44:39Z"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "a1841f18f4a12f4f6461688d4652f77bfbfb8517",
-        "timestamp": "2026-09-29T10:41:21Z"
+        "sha": "69b8de06fddd3b7ded35950302293235edc9aaea",
+        "timestamp": "2026-09-29T10:44:31Z"
       },
       {
-        "message": "RESEARCH: Q091 fixed portfolio performance framework",
-        "sha": "3ca775f74e27afe1e0161b7d5d2419da0ccc734b",
-        "timestamp": "2026-09-29T12:41:08+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "6d83ffa89d9510081f79d11f434eb9d0d6221620",
+        "timestamp": "2026-09-29T10:44:29Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "49329f8dc7af56a58ff9dde723ed32026e544033",
+        "timestamp": "2026-09-29T10:43:22Z"
       }
     ]
   },
@@ -464,12 +464,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "41c4f31067512f55eab98dd2f0898dc6e28d809a",
+  "source_master_sha": "e09210d45e7b01820ffdb020b58f75cfa5755b48",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36557272668"
+    "run_id": "36557488680"
   }
 }
