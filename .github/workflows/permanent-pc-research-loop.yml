@@ -27,7 +27,7 @@ permissions:
 
 concurrency:
   group: trading-agent-permanent-pc-loop-v2
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   autonomous_pc:
@@ -95,7 +95,8 @@ jobs:
           for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
           set "LANE=${{ matrix.lane }}"
           if not exist "%GITHUB_WORKSPACE%\research\runs\self_hosted\autonomous\%GITHUB_RUN_ID%\%LANE%" mkdir "%GITHUB_WORKSPACE%\research\runs\self_hosted\autonomous\%GITHUB_RUN_ID%\%LANE%"
-          xcopy /E /I /Y "%REPO_SRC%\research\runs\self_hosted\autonomous\%GITHUB_RUN_ID%\%LANE%" "%GITHUB_WORKSPACE%\research\runs\self_hosted\autonomous\%GITHUB_RUN_ID%\%LANE%" >nul || exit /b 1
+          powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "$ErrorActionPreference='Stop'; $s=Join-Path $env:REPO_SRC 'research\runs\self_hosted\autonomous\%GITHUB_RUN_ID%\%LANE%'; $d=Join-Path $env:GITHUB_WORKSPACE 'research\runs\self_hosted\autonomous\%GITHUB_RUN_ID%\%LANE%'; if(-not (Test-Path -LiteralPath $s)){throw ('Evidence source missing: '+$s)}; Get-ChildItem -LiteralPath $s -Force | ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $d -Recurse -Force }"
+          if errorlevel 1 exit /b 1
           endlocal
 
       - name: Upload autonomous evidence
@@ -185,6 +186,17 @@ jobs:
           Write-Output "LOCAL_AI_READINESS=READY"
           Write-Output "LOCAL_AI_PROVIDER_BINARY=$($agy.Source)"
           Write-Output "PERSONAL_G1_CREDITS_DISABLED=True"
+
+      - name: Execute real local AI smoke test
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-ai-smoke\tools\python.exe"
+          "%PY_EXE%" "%REPO_SRC%\automation\local_ai_smoke.py" > "%RUNNER_TEMP%\local-ai-smoke.json"
+          if errorlevel 1 exit /b 1
+          type "%RUNNER_TEMP%\local-ai-smoke.json"
+          endlocal
 
       - name: Upload local AI receipt
         if: always()
