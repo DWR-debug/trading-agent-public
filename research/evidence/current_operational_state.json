@@ -240,7 +240,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:13:50.389965+00:00",
+  "generated_at_utc": "2026-09-29T12:14:22.240094+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -363,6 +363,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "TEST: add Q093 cost attribution contract tests",
+        "sha": "fbf8844e1b12763bf8987f33ad6bc6ac2c656f8a",
+        "timestamp": "2026-09-29T14:14:17+02:00"
+      },
+      {
+        "message": "RESEARCH: implement Q093 Q091 cost attribution diagnosis",
+        "sha": "0460b970df2f6ccfeefce404d58ab7751101e5e6",
+        "timestamp": "2026-09-29T14:14:09+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "b5f1c44439e1449d3ae81404fe87e6374563943a",
+        "timestamp": "2026-09-29T12:13:57Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "729707c21ed2e45af5df0b46c103ac4d516e15ae",
+        "timestamp": "2026-09-29T12:13:50Z"
+      },
+      {
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "c1d390ddc529f54b65d378c8165abcad20395a3f",
         "timestamp": "2026-09-29T12:13:45Z"
@@ -381,26 +401,6 @@
         "message": "FIX: normalize Q092 reconciliation indentation",
         "sha": "9de968a6d39a54005af235121c1d8c15029eb0a2",
         "timestamp": "2026-09-29T14:13:00+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c28e58c3234fe94506abafc39fc37976b5615514",
-        "timestamp": "2026-09-29T12:12:48Z"
-      },
-      {
-        "message": "FIX: make Q092 ledger reconciliation idempotent",
-        "sha": "72be0a2d206ae283be3bb0c21b2344f29504e517",
-        "timestamp": "2026-09-29T14:12:36+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "2a149edf370e80260a9e32eb0555ca695cb3c494",
-        "timestamp": "2026-09-29T12:12:07Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "07052691df9c178fa03664f7800451fd5b3ce54e",
-        "timestamp": "2026-09-29T12:12:02Z"
       }
     ]
   },
@@ -470,12 +470,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c1d390ddc529f54b65d378c8165abcad20395a3f",
+  "source_master_sha": "fbf8844e1b12763bf8987f33ad6bc6ac2c656f8a",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36566716959"
+    "run_id": "36566775058"
   }
 }
