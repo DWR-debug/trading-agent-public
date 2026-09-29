@@ -291,7 +291,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T22:25:05.537496+00:00",
+  "generated_at_utc": "2026-09-29T22:25:31.744366+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -414,6 +414,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "PREREG: freeze Q081R3 literal-only performance correction",
+        "sha": "388105a72f6ebecd663ecfb8877d06183ebce493",
+        "timestamp": "2026-09-30T00:25:29+02:00"
+      },
+      {
+        "message": "EVIDENCE: record Q081R2 implementation failure without scientific outcome",
+        "sha": "d1c4757af836d3a49009439377c7628e97cfab18",
+        "timestamp": "2026-09-30T00:25:20+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "30569109586ea0cb9ed1def72149d936b71b97fb",
+        "timestamp": "2026-09-29T22:25:05Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "e07cbf4432f99363706afcde0a7b6c49374456bb",
         "timestamp": "2026-09-29T22:24:52Z"
@@ -437,21 +452,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "a43c7664c40a6101e2e6136bd73bc716d962a790",
         "timestamp": "2026-09-29T22:22:24Z"
-      },
-      {
-        "message": "FIX: decouple Q081R2 identity test from consumed authorization state",
-        "sha": "c500ce013b27cf349a2e91b5d8993e373b24739e",
-        "timestamp": "2026-09-30T00:22:13+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "499c61c46da24c937c19416d30c18939ae0c3f6f",
-        "timestamp": "2026-09-29T22:21:30Z"
-      },
-      {
-        "message": "FIX: add auditable issue-comment dispatch for Q081R2 one-shot",
-        "sha": "75494cd382e8c829c56109153f029f5611f0fd72",
-        "timestamp": "2026-09-30T00:21:20+02:00"
       }
     ]
   },
@@ -521,12 +521,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e07cbf4432f99363706afcde0a7b6c49374456bb",
+  "source_master_sha": "388105a72f6ebecd663ecfb8877d06183ebce493",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36639421400"
+    "run_id": "36639471622"
   }
 }
