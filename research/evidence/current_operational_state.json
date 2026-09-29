@@ -144,6 +144,15 @@
         "preregistration_path": "research/preregistrations/q094_monthly_rebalance_q091_low_turnover_2026_09_29.json",
         "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
         "trial_id": "T-2026-09-29-094"
+      },
+      {
+        "class": "independent_replication",
+        "code": "095",
+        "issue_number": null,
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q095_monthly_rebalance_independent_replication_2026_09_29.json",
+        "state": "PREREGISTERED_WAITING_AUTHORIZATION",
+        "trial_id": "T-2026-09-29-095"
       }
     ],
     "name": "active_research_registry",
@@ -256,7 +265,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:48:49.082187+00:00",
+  "generated_at_utc": "2026-09-29T12:50:01.643250+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -379,6 +388,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOVERNANCE: register Q095 independent monthly replication",
+        "sha": "ccf2c70ea84419e9fe2a46d4018cf945987810d4",
+        "timestamp": "2026-09-29T14:49:49+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "41031fdabe921d40946761f03222b59ebe9b3d61",
+        "timestamp": "2026-09-29T12:48:49Z"
+      },
+      {
         "message": "OPS: record AI worker state",
         "sha": "ab80c966b8ee7f73f696653d4309f1cc8f319c51",
         "timestamp": "2026-09-29T12:48:47Z"
@@ -407,16 +426,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "67fce2f99d0cc794b568526eccde5fdeb47201ad",
         "timestamp": "2026-09-29T12:48:12Z"
-      },
-      {
-        "message": "RESEARCH: preregister Q095 independent monthly replication",
-        "sha": "494c56d30803a6c0d7775738c31684d5e7ae8009",
-        "timestamp": "2026-09-29T14:48:00+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6569a5e22772482b836503d2e6952eeb3f657f02",
-        "timestamp": "2026-09-29T12:46:41Z"
       }
     ]
   },
@@ -486,12 +495,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ab80c966b8ee7f73f696653d4309f1cc8f319c51",
+  "source_master_sha": "ccf2c70ea84419e9fe2a46d4018cf945987810d4",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36570609551"
+    "run_id": "36570758361"
   }
 }
