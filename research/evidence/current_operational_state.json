@@ -54,29 +54,12 @@
         "trial_id": "T-2026-09-28-081R1-PERFORMANCE"
       },
       {
-        "authorization": {
-          "authorization_basis": {
-            "governance_audit_run_id": 36540007011,
-            "master_ci_run_id": 36540006838,
-            "master_exact_gate_run_id": 36540006718,
-            "preflight_contract_audit_run_id": 36539304842
-          },
-          "authorization_id": "AUTH-Q089-2026-09-29-02",
-          "path": "research/authorizations/q089_performance_2026_09_28.json",
-          "preregistration_fingerprint": "ab80cab9bfdd3970a7fdcbab4b9d31538cd354db9013e14f2981198f57a483cb",
-          "source_receipts": {
-            "coverage_result_fingerprint": "56898b50fc0f8af31dead7dcd65001cced41cf7b44093676eead1ccc4d6fe4cb",
-            "input_bundle_fingerprint": "c4261e230baf8888088df7e3e3159a1a93d4142ff358ef5896d35cd109663924",
-            "pit_result_fingerprint": "098da74ebde38d7b5e7c13626bee396eb6e86b4421ca6a4d383e3133cecf19ca",
-            "snapshot_fingerprint": "bb82aeaed86411a8675be7f8ecb1c99e9c144f017466a836b8cafeb9d3b55e1d"
-          }
-        },
         "class": "fresh_validation",
         "code": "089",
         "issue_number": 589,
-        "performance_authorization_allowed": true,
+        "performance_authorization_allowed": false,
         "preregistration_path": "research/preregistrations/q089_performance_2026_09_28.json",
-        "state": "PERFORMANCE_AUTHORIZED",
+        "state": "PREREGISTERED_WAITING_AUTHORIZATION",
         "trial_id": "T-2026-09-28-089-PERFORMANCE"
       },
       {
@@ -219,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T08:19:31.395263+00:00",
+  "generated_at_utc": "2026-09-29T08:20:46.215695+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -339,17 +322,18 @@
     "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "fix/q089-prereg-schema-compat-r6",
-        "number": 672,
-        "title": "FIX: harden Q089 preregistration schema compatibility",
-        "updatedAt": "2026-09-29T08:18:16Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/672"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: harden Q089 preregistration schema compatibility",
+        "sha": "0e2a099f6771052ccd762935c0b14d72455c3f52",
+        "timestamp": "2026-09-29T10:20:15+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "73d088f7b2192953b8233db0e8c86bd4416c6057",
+        "timestamp": "2026-09-29T08:19:31Z"
+      },
       {
         "message": "FIX: treat omitted Q089 selection fields as false (#671)",
         "sha": "9da49180d039edeacb06b5bd7dd29480fbf3fccb",
@@ -379,16 +363,6 @@
         "message": "OPS: record AI worker state",
         "sha": "ae19de9d6fc1b067771560c3b91f7038b6a011cc",
         "timestamp": "2026-09-29T08:15:17Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "b88a529aa842317cec86aebc86e49e617654a771",
-        "timestamp": "2026-09-29T08:15:13Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "11cde2b10aecce7c4332ce57cf3b33b20c904279",
-        "timestamp": "2026-09-29T08:14:35Z"
       }
     ]
   },
@@ -458,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9da49180d039edeacb06b5bd7dd29480fbf3fccb",
+  "source_master_sha": "0e2a099f6771052ccd762935c0b14d72455c3f52",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36541983968"
+    "run_id": "36542080935"
   }
 }
