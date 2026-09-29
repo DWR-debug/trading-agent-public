@@ -113,6 +113,15 @@
         "preregistration_path": "research/preregistrations/q077r1_discovery_2026_09_28.json",
         "state": "COVERAGE_VALIDATED_WAITING_PIT",
         "trial_id": "Q-2026-09-28-077R1-DISCOVERY"
+      },
+      {
+        "class": "fresh_validation",
+        "code": "091",
+        "issue_number": null,
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q091_fixed_portfolio_architecture_2026_09_29.json",
+        "state": "PREREGISTERED_WAITING_AUTHORIZATION",
+        "trial_id": "T-2026-09-29-091"
       }
     ],
     "name": "active_research_registry",
@@ -225,7 +234,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T10:27:39.074081+00:00",
+  "generated_at_utc": "2026-09-29T10:41:23.966070+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -348,6 +357,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: record AI worker state",
+        "sha": "a1841f18f4a12f4f6461688d4652f77bfbfb8517",
+        "timestamp": "2026-09-29T10:41:21Z"
+      },
+      {
+        "message": "RESEARCH: Q091 fixed portfolio performance framework",
+        "sha": "3ca775f74e27afe1e0161b7d5d2419da0ccc734b",
+        "timestamp": "2026-09-29T12:41:08+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "40a2848b715dd745616bf085d4632555d4d156c0",
+        "timestamp": "2026-09-29T10:33:54Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "9a4c4427a6de9054c842e87f7cbfd6893b49879a",
+        "timestamp": "2026-09-29T10:29:00Z"
+      },
+      {
+        "message": "EVIDENCE: persist Q091 verified adjusted-close input bundle",
+        "sha": "5ebf174b9fb2584a7446af2906938bd6df7d1350",
+        "timestamp": "2026-09-29T10:27:50Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "7b83f9a9535cb85a6f53aebfc870a3ae36bc793b",
+        "timestamp": "2026-09-29T10:27:39Z"
+      },
+      {
         "message": "OPS: persist verified Q091 input bundle with race-safe publisher",
         "sha": "5a08086e0599c0d7fbac0426710c3b964802ce70",
         "timestamp": "2026-09-29T12:27:25+02:00"
@@ -356,36 +395,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "4287f725287e8efb744d1e109673fa2925e556eb",
         "timestamp": "2026-09-29T10:25:44Z"
-      },
-      {
-        "message": "OPS: retrigger Q091 input freeze after CLI repair",
-        "sha": "8d0e934ab0a0f69b3c78d3d3bc56c1c81f662518",
-        "timestamp": "2026-09-29T12:25:32+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4101a9a83b752fc83f0b19b16433315a21a7e9f4",
-        "timestamp": "2026-09-29T10:25:17Z"
-      },
-      {
-        "message": "FIX: add Q091 input-freeze CLI entrypoint",
-        "sha": "f7584b9b25585755dac0f686f32f8dbb4f87a7f1",
-        "timestamp": "2026-09-29T12:25:01+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a1a112cfe47cfa37d623e225e3665237685254df",
-        "timestamp": "2026-09-29T10:24:40Z"
-      },
-      {
-        "message": "FIX: permit evidence-only descendants in T052 provenance gate",
-        "sha": "8911b1f878b56520face7e1c8478ad65d054c173",
-        "timestamp": "2026-09-29T12:24:26+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1d73711dfd9f23a2c366ea23e954b400ebfe5f9b",
-        "timestamp": "2026-09-29T10:23:47Z"
       }
     ]
   },
@@ -455,12 +464,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5a08086e0599c0d7fbac0426710c3b964802ce70",
+  "source_master_sha": "a1841f18f4a12f4f6461688d4652f77bfbfb8517",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36555684501"
+    "run_id": "36557082167"
   }
 }
