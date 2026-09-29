@@ -250,7 +250,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:41:37.745425+00:00",
+  "generated_at_utc": "2026-09-29T12:43:26.687849+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -373,6 +373,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RECONCILE: recover exact successful Q094 performance result",
+        "sha": "a166ff145e9dc26c5893013364175131a75d152c",
+        "timestamp": "2026-09-29T14:43:22+02:00"
+      },
+      {
+        "message": "FIX: reconcile Q094 from exact successful performance artifact",
+        "sha": "c6fe140e160f8076a0c91948b5328c2d20b93691",
+        "timestamp": "2026-09-29T14:43:12+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e92ae32f11ed853ba5d7f0cd75e68c119c5f2ee1",
+        "timestamp": "2026-09-29T12:41:37Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "ae18338e0ac75dddfa26402c853efa7feee30d2a",
         "timestamp": "2026-09-29T12:41:23Z"
@@ -396,21 +411,6 @@
         "message": "GOVERNANCE: activate amended Q094 authorization",
         "sha": "e5c34934c125490c546996ee08796e3c51c3c6d7",
         "timestamp": "2026-09-29T14:40:57+02:00"
-      },
-      {
-        "message": "GOVERNANCE: rotate Q094 pre-execution one-shot authorization",
-        "sha": "b2af82e0e6077bb035b01753870c2a93d06b6b70",
-        "timestamp": "2026-09-29T14:40:53+02:00"
-      },
-      {
-        "message": "GOVERNANCE: amend Q094 preregistration for technical API correction",
-        "sha": "6babbad5509ba180453bc1ecb249d4a84be5dc99",
-        "timestamp": "2026-09-29T14:40:50+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "84ec9eb87e532564038d54cc441fc81fbdffd57d",
-        "timestamp": "2026-09-29T12:39:27Z"
       }
     ]
   },
@@ -480,12 +480,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ae18338e0ac75dddfa26402c853efa7feee30d2a",
+  "source_master_sha": "a166ff145e9dc26c5893013364175131a75d152c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36569776456"
+    "run_id": "36570004290"
   }
 }
