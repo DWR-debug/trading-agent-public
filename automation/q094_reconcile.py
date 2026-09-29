@@ -70,7 +70,7 @@ def main()->int:
     entry["performance_result"]={"trial_id":TRIAL_ID,"status":"COMPLETED","report_fingerprint":result["report_fingerprint"],"workflow_run_id":args.workflow_run_id}
     retired=load(root/RETIRED_PATH) if (root/RETIRED_PATH).exists() else {"schema_version":1,"entries":[]}
     rentry=next((x for x in retired.get("entries",[]) if x.get("trial_id")==TRIAL_ID),None)
-    auth_record={"path":AUTH_PATH.relative_to(root).as_posix(),"trial_id":TRIAL_ID,"status":"RETIRED_HISTORICAL_AUTHORIZATION","authorization_id":auth.get("authorization_id")}
+    auth_record={"path":str(Path(AUTH_PATH).relative_to(root)).replace("\\","/"),"trial_id":TRIAL_ID,"status":"RETIRED_HISTORICAL_AUTHORIZATION","authorization_id":auth.get("authorization_id")}
     if rentry is None: retired.setdefault("entries",[]).append(auth_record)
     (root/LEDGER_PATH).write_text(json.dumps(ledger,ensure_ascii=False,indent=2,allow_nan=False)+"\n",encoding="utf-8")
     (root/REGISTRY_PATH).write_text(json.dumps(registry,ensure_ascii=False,indent=2,allow_nan=False)+"\n",encoding="utf-8")
