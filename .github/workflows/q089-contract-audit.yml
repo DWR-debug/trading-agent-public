@@ -1,0 +1,52 @@
+name: Q089 Contract Audit
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 */6 * * *"
+  push:
+    branches: [master]
+    paths:
+      - "automation/q089_contract_audit.py"
+      - "tests/test_q089_contract_audit.py"
+      - "automation/q089_performance.py"
+      - "automation/q089_coverage_pit.py"
+      - "research/preregistrations/q089_performance_2026_09_28.json"
+      - "research/governance/active_research_registry.json"
+      - ".github/workflows/q089-contract-audit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    strategy:
+      fail-fast: false
+      matrix:
+        lane:
+          - ubuntu
+          - self_hosted
+    runs-on: ${{ matrix.lane == 'ubuntu' && 'ubuntu-latest' || 'self-hosted' }}
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Run unit test
+        run: python -m pytest -q tests/test_q089_contract_audit.py
+      - name: Run read-only audit
+        run: |
+          python -m automation.q089_contract_audit > q089-contract-audit.json
+          cat q089-contract-audit.json
+      - name: Upload audit receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q089-contract-audit-${{ matrix.lane }}-${{ github.run_id }}
+          path: q089-contract-audit.json
+          retention-days: 14
