@@ -5,20 +5,16 @@
   "free_only": true,
   "preflight": {
     "provider": "gemini_cli",
-    "available": false,
-    "binary": "/opt/hostedtoolcache/node/22.23.2/x64/bin/gemini",
+    "available": true,
+    "binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE",
     "free_only": true,
-    "local_mode": false,
+    "local_mode": true,
     "local_attestation": {
-      "present": false,
-      "path": null
+      "present": true,
+      "path": "C:\\Users\\u419680\\.trading-agent\\ai_free_attestation.json"
     },
-    "free_mode_attested": false,
-    "reasons": [
-      "AI_EXTERNAL_PROVIDER_ALLOWLIST is not confirmed",
-      "provider authentication is not available for free-only mode",
-      "provider free-mode attestation is missing"
-    ]
+    "free_mode_attested": true,
+    "reasons": []
   },
   "task_fingerprint": "d7f78f334a0e1a67b390f80e5b5a520e2db981af0323b0c03f589527b0c7641f",
   "worker_output_is_scientific_evidence": false,
@@ -28,8 +24,10 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SKIPPED",
-  "returncode": null,
-  "stdout": "",
-  "stderr": ""
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 48.29,
+  "stdout": "{\"conversation_id\":\"fadd4a52-658b-4cd9-9582-090b2104941d\",\"status\":\"SUCCESS\",\"response\":\"# Adversarial Methodology \\u0026 Pre-Performance Review: Q089\\n\\n**Task ID**: `AI-2026-09-28-Q089-ADVERSARIAL`  \\n**Scope**: Q089 Methodology, Pre-Performance Evidence Audit, and Pipeline Invariant Verification  \\n**Status**: `BOUNDED_WORKER_HANDOFF / PRE-PERFORMANCE ADVERSARIAL REVIEW`\\n\\n---\\n\\n## 1. System Invariant \\u0026 Governance Posture\\n\\n```text\\nPAPER_ONLY=True\\nLIVE_TRADING_ENABLED=False\\nORDERS_ENABLED=False\\nAUTOMATIC_PROMOTION=False\\n```\\n\\n*This review constitutes bounded worker material only. It does not perform backtests, does not claim scientific or statistical validation, does not authorize performance execution, and does not alter research gates. All observations must be independently reproduced by deterministic project tooling.*\\n\\n---\\n\\n## 2. Executive Assessment\\n\\nThe Q089 research design (`docs/research_design/Q089-clean-fresh-q069-validation-2026-09-28.md`) establishes a clean successor to quarantined Q086 for symbol-disjoint validation of the frozen Q069 candidate bank (`C7`–`C11`). \\n\\nHowever, pre-performance adversarial inspection of the registered design, evidence receipts (`q089_coverage_result.json`, `q089_input_freeze_result.json`, `q089_pit_result.json`, `q089_asset_freeze.json`), and automation harnesses (`automation/q089_coverage_pit.py`, `automation/q089_input_freeze.py`) reveals **critical methodological vulnerabilities** that could invalidate the study before performance execution is authorized.\\n\\n---\\n\\n## 3. Adversarial Findings across Core Dimensions\\n\\n### Finding 1: Incomplete Input Bundle Freeze (Cryptographic Decoupling of OHLCV/Volume from Candidates C7, C8, and C11)\\n- **Vulnerability**: In `automation/q089_input_freeze.py`, the bundle freeze only computes hashes over `adjusted_close.csv` files (`bundle_fingerprint: c4261e23...`). The raw OHLCV datasets (`1d.csv`) located under `coverage_root/datasets/\\u003csymbol\\u003e/1d.csv` are read solely to extract timestamps and are **excluded** from `datasets` in `q089_input_freeze_result.json`.\\n- **Methodological Impact**:\\n  - Candidate **C11 (`VOLUME_CONFIRMED_TREND_126`)** requires volume.\\n  - Candidate **C7 (`LOW_MAX_21`)** requires intraday High or daily return extremes.\\n  - Candidate **C8 (`LOW_IDIO_VOL_273`)** requires market benchmark returns and daily variances.\\n  - If performance execution ingests volume, high/low, or benchmark series from `1d.csv` outside the input bundle, **those inputs are not cryptographically sealed by `bundle_fingerprint`**. Any mutation, corruption, or substitution of `1d.csv` after input freeze would pass bundle fingerprint verification unnoticed.\\n  - Alternatively, if candidates are forced to evaluate solely against `adjusted_close.csv`, C11 is mathematically undefined without volume.\\n\\n### Finding 2: Study Geometry Arithmetic Discrepancy (The 3498 vs. 3500 Discrepancy — Q026 Failure Mode Re-emergence)\\n- **Vulnerability**: In `automation/q089_coverage_pit.py`:\\n  $$\\\\text{RESEARCH} = 2798, \\\\quad \\\\text{HOLDOUT} = 700, \\\\quad N = 3500$$\\n  $$\\\\text{Sum} = 2798 + 700 = 3498 \\\\neq 3500$$\\n- **Methodological Impact**:\\n  - In Q026 (`T-2026-09-27-048`), an unfrozen/mismatched session count invalidated the entire run (`DATA_INVALID / NO_SCIENTIFIC_OUTCOME`, per `docs/DECISION_BASIS.md`).\\n  - In Q089, `q089_input_freeze_result.json` freezes exactly $3500$ rows per symbol. A partition of $2798 + 700$ leaves $2$ candles orphaned or creates an undocumented 2-day embargo window.\\n  - If the performance harness performs strict boundary assertion ($\\\\text{len}(\\\\text{research}) + \\\\text{len}(\\\\text{holdout}) == N$), the run will fail with an unhandled assertion. If it slices dynamically, the holdout horizon is either 702 or the last 2 days of 2025 are silently truncated.\\n\\n### Finding 3: Snapshot Fingerprint Variance \\u0026 Runner State Race\\n- **Vulnerability**: `docs/research_design/Q089_CROSS_RUN_REPRO_AUDIT_2026-09-28.md` explicitly documents that independent PC and cloud runners can produce different snapshot fingerprints (`snapshot_fingerprint`) despite identical selection and common calendar count.\\n- **Methodological Impact**:\\n  - In `automation/q089_input_freeze.py`, line 46:\\n    ```python\\n    if coverage_receipt.get(\\\"snapshot_fingerprint\\\") != manifest.get(\\\"snapshot_fingerprint\\\"):\\n        raise RuntimeError(\\\"Q089 coverage snapshot fingerprint mismatch\\\")\\n    ```\\n  - If Runner B (Cloud) executes on a freshly fetched snapshot whose byte stream d\",\"duration_seconds\":0,\"num_turns\":1,\"usage\":{\"input_tokens\":0,\"output_tokens\":0,\"thinking_tokens\":0,\"cache_read_tokens\":0,\"total_tokens\":0}}\n",
+  "stderr": "[agy] print timeout after 45s with turn in progress; returning partial output\n",
+  "command_binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE"
 }
