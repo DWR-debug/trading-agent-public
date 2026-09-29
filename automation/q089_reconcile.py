@@ -58,7 +58,7 @@ def reconcile(root: Path = Path("."), workflow_run_id: str = "UNVERIFIED") -> st
 
     assert coverage["trial_id"] == COVERAGE_ID and coverage["status"] == "COVERAGE_PASSED"
     assert pit["trial_id"] == PIT_ID and pit["status"] == "PIT_PASSED"
-    assert result["coverage_prerequisite"]["result_fingerprint"] == coverage["result_fingerprint"]
+    assert result["coverage_prerequisite"]["coverage_result_fingerprint"] == coverage["result_fingerprint"]
     assert result["pit_prerequisite"]["result_fingerprint"] == pit["result_fingerprint"]
     assert result["input_bundle_prerequisite"]["trial_id"] == INPUT_ID
     assert result["input_bundle_prerequisite"]["bundle_fingerprint"] == prereg["data_contract"]["input_bundle_fingerprint"]
