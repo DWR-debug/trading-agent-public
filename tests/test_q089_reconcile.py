@@ -21,7 +21,7 @@ def _fixture(tmp_path: Path) -> None:
         "safety": q089_reconcile.SAFETY,
         "research_periods": 2798, "holdout_periods": 700, "symbols": ["A", "B"],
         "requested_candles": 5000, "target_common_candles": 3500,
-        "coverage_prerequisite": {"result_fingerprint": "cov"},
+        "coverage_prerequisite": {"coverage_result_fingerprint": "cov"},
         "pit_prerequisite": {"result_fingerprint": "pit"},
         "input_bundle_prerequisite": {"trial_id": q089_reconcile.INPUT_ID, "bundle_fingerprint": "bundle"},
         "arms": {"C7_LOW_MAX_21": {"all_gates_passed": False}},
