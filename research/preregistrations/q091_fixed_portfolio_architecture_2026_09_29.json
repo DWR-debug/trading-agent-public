@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0",
+  "trial_id": "T-2026-09-29-091",
+  "research_family": "fixed_portfolio_architecture_after_q090_diagnosis",
+  "status": "PREREGISTERED_DESIGN_ONLY",
+  "purpose": "Test fixed portfolio construction mechanisms motivated by the descriptive Q090 finding of substantial common market exposure across the five unchanged Q069 sleeves.",
+  "parent_diagnostic": {
+    "trial_id": "T-2026-09-29-090",
+    "diagnostic_fingerprint": "b3db45c4b8c9538e0ae48d94ce9c69450e32663e73c307fb8489b14c66ca4270",
+    "interpretation": "Q090 is descriptive. Its output is not used to rank or select Q091 variants."
+  },
+  "parent_bank": {
+    "source_path": "automation/q069_candidate_bank.py",
+    "source_sha256": "84e008a6152cbea128e5e5f2ac0dfdde0b0172310fe4c510241c60edfd3ff617",
+    "candidates": [
+      "C7_LOW_MAX_21",
+      "C8_LOW_IDIO_VOL_273",
+      "C9_LONG_TERM_REVERSAL_756",
+      "C10_TREND_EFFICIENCY_63",
+      "C11_VOLUME_CONFIRMED_TREND_126"
+    ]
+  },
+  "variants": [
+    {
+      "id": "E1_EQUAL_WEIGHT_Q069_5SLEEVE",
+      "rule": "At every decision date, average the five frozen Q069 target-weight vectors using identical 1/5 sleeve weights.",
+      "exposure_contract": "long-only, unit-or-less gross exposure",
+      "parameter_search": false
+    },
+    {
+      "id": "E2_CROSS_SECTIONAL_RESIDUALIZED_Q069_5SLEEVE",
+      "rule": "At every decision date, demean each frozen Q069 target-weight vector across the full fresh evaluation universe, average the five residual vectors with identical 1/5 sleeve weights, then gross-normalize to exactly unit gross exposure when nonzero.",
+      "exposure_contract": "zero net exposure and unit gross exposure when active",
+      "parameter_search": false
+    }
+  ],
+  "data_contract": {
+    "study_window": {
+      "start": "2011-01-01",
+      "end": "2025-09-24"
+    },
+    "requested_candles": 5000,
+    "raw_fetch_candles": 5000,
+    "target_common_candles": 3500,
+    "research_periods": 2798,
+    "holdout_periods": 700,
+    "fresh_symbol_disjointness": true,
+    "coverage_selection_rule": "Only fixed data-coverage validity may determine the eight-symbol batch; no performance metric is available at selection time."
+  },
+  "governance": {
+    "design_only": true,
+    "performance_trial_authorized": false,
+    "all_variants_evaluated_symmetrically": true,
+    "holdout_used_for_selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "asset_search": false,
+    "horizon_search": false,
+    "variant_search": false,
+    "family_ranking": false,
+    "promotion_decision": false,
+    "automatic_promotion": false
+  },
+  "sequence": [
+    "freeze Q091 rules and source contracts",
+    "fresh symbol-disjoint coverage",
+    "persist immutable common-calendar snapshot",
+    "run PIT/mutation tests for the portfolio transformation",
+    "independent one-shot authorization",
+    "evaluate both fixed variants symmetrically with unchanged 13 gates",
+    "reconcile result immutably into the trial ledger"
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
