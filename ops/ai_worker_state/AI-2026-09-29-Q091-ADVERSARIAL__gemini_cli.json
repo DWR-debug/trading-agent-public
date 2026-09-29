@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-09-29-Q091-ADVERSARIAL",
+  "provider": "gemini_cli",
+  "free_only": true,
+  "preflight": {
+    "provider": "gemini_cli",
+    "available": true,
+    "binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE",
+    "free_only": true,
+    "local_mode": true,
+    "local_attestation": {
+      "present": true,
+      "path": "C:\\Users\\u419680\\.trading-agent\\ai_free_attestation.json"
+    },
+    "free_mode_attested": true,
+    "reasons": []
+  },
+  "task_fingerprint": "6ceefc6cd332e12ea2d705510ec5c4681f8391e90f5722ed31aafbdea2834738",
+  "worker_output_is_scientific_evidence": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "status": "FAILED",
+  "returncode": 3,
+  "duration_seconds": 8.934,
+  "stdout": "{\"conversation_id\":\"d12d0c2e-c1cd-4e9a-bae0-342a3d43b931\",\"status\":\"ERROR\",\"response\":\"\",\"error\":\"Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 147h46m42s.\",\"duration_seconds\":0,\"num_turns\":1,\"usage\":{\"input_tokens\":0,\"output_tokens\":0,\"thinking_tokens\":0,\"cache_read_tokens\":0,\"total_tokens\":0}}\n",
+  "stderr": "error: Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 147h46m42s.\nAGY_ERROR: {\"short_error\":\"RESOURCE_EXHAUSTED (code 429): Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 147h46m42s.\",\"status\":\"RESOURCE_EXHAUSTED\",\"error_code\":429,\"code_kind\":\"http\",\"retryable\":true,\"error_id\":\"d6bbd9f9-acd7-4e13-afd0-120decf32ebf-1\"}\n",
+  "command_binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE"
+}
