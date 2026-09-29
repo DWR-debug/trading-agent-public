@@ -13,6 +13,8 @@ import subprocess
 import time
 from pathlib import Path
 
+from automation.ai_quota_guard import load_block, parse_reset_seconds, quota_error, record_block
+
 
 TIMEOUT_SECONDS = 90
 
