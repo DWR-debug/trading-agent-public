@@ -123,6 +123,8 @@ jobs:
   local_ai_smoke:
     needs: autonomous_pc
     if: ${{ always() && github.repository == 'DWR-debug/trading-agent-public' }}
+    outputs:
+      status: ${{ steps.smoke_result.outputs.status }}
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 8
     steps:
@@ -189,6 +191,7 @@ jobs:
           if errorlevel 1 exit /b 1
 
       - name: Execute real local AI smoke test
+        id: smoke_result
         shell: cmd
         run: |
           @echo off
@@ -197,6 +200,7 @@ jobs:
           "%PY_EXE%" "%REPO_SRC%\automation\local_ai_smoke.py" > "%RUNNER_TEMP%\local-ai-smoke.json"
           if errorlevel 1 exit /b 1
           type "%RUNNER_TEMP%\local-ai-smoke.json"
+          powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "$p=Get-Content -LiteralPath '%RUNNER_TEMP%\local-ai-smoke.json' -Raw | ConvertFrom-Json; ('status=' + $p.status) | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append"
           endlocal
 
       - name: Upload local AI receipt
@@ -211,7 +215,7 @@ jobs:
 
   local_ai_worker:
     needs: [autonomous_pc, local_ai_smoke]
-    if: ${{ always() && needs.local_ai_smoke.result == 'success' && github.repository == 'DWR-debug/trading-agent-public' }}
+    if: ${{ always() && needs.local_ai_smoke.result == 'success' && needs.local_ai_smoke.outputs.status == 'SUCCESS' && github.repository == 'DWR-debug/trading-agent-public' }}
     strategy:
       fail-fast: false
       # Gemini/Antigravity quota is account-wide; serialize provider calls and prioritize the newest Q091 review.
