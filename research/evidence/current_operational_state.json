@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T14:12:24.535262+00:00",
+  "generated_at_utc": "2026-09-29T14:15:14.194139+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: route permanent frontier diagnosis through robust Q092 diagnostic",
+        "sha": "039295d568271d21707de6cb371763271666bf03",
+        "timestamp": "2026-09-29T16:15:00+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "934e8861fed4a340ae8dc08710308a286d25073d",
+        "timestamp": "2026-09-29T14:13:54Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "a7df0fabdc32873ea35602f1d6b72d3b44392355",
+        "timestamp": "2026-09-29T14:13:50Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "bc6f77087abfe561eb9c17c72f068b6bc642b091",
+        "timestamp": "2026-09-29T14:13:48Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "8eb0afbb38463846a60e93d3ab898c8ce6a689a9",
+        "timestamp": "2026-09-29T14:13:44Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "20de39c504e10b9e76ab957dc4b14e8f8b5b2fa9",
+        "timestamp": "2026-09-29T14:12:24Z"
+      },
+      {
         "message": "FIX: run Gemini readiness check with explicit PowerShell bypass",
         "sha": "2623d2b7b69f405867955df9a87ef7573b3a49bb",
         "timestamp": "2026-09-29T16:12:12+02:00"
@@ -403,36 +433,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "ccd68343fcde6a09a598945b2d5dbb44bbe8b596",
         "timestamp": "2026-09-29T14:12:02Z"
-      },
-      {
-        "message": "FIX: allow implicit false promotion state in Q091 diagnostic",
-        "sha": "e40992db99f77002db31696c03feba8ac757aa5a",
-        "timestamp": "2026-09-29T16:11:46+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "1548501bc59b14ad6a99d89c5009b96e61f1d321",
-        "timestamp": "2026-09-29T14:10:12Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6f80cb3e77b2ce144974db6d78b3cc95c93271d0",
-        "timestamp": "2026-09-29T14:09:49Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "24d95f82544c06eeb2ba30be57e58ad70bcb013e",
-        "timestamp": "2026-09-29T14:09:35Z"
-      },
-      {
-        "message": "RESEARCH: retry Q095 performance after manifest-level fingerprint fix",
-        "sha": "8ea84af0bde3e10b7631d6c092ec27f73b2a9ac1",
-        "timestamp": "2026-09-29T16:09:27+02:00"
-      },
-      {
-        "message": "RESEARCH: validate Q095 bundle fingerprint at manifest level",
-        "sha": "e57429b24fdaa868cc2ae998d1b3017b1e50b6cd",
-        "timestamp": "2026-09-29T16:09:20+02:00"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2623d2b7b69f405867955df9a87ef7573b3a49bb",
+  "source_master_sha": "039295d568271d21707de6cb371763271666bf03",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36580883246"
+    "run_id": "36581243297"
   }
 }
