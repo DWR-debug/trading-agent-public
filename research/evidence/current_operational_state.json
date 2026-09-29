@@ -250,7 +250,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:30:29.372867+00:00",
+  "generated_at_utc": "2026-09-29T12:30:53.174498+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -373,6 +373,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RUN: trigger Q094 monthly low-turnover performance exactly once",
+        "sha": "bd20181f110ee95785618508a600076f15f3f64f",
+        "timestamp": "2026-09-29T14:30:50+02:00"
+      },
+      {
+        "message": "GOVERNANCE: create Q094 one-shot performance authorization",
+        "sha": "e8945dd5e834019db23e83705f75e1170120a3f0",
+        "timestamp": "2026-09-29T14:30:35+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d0e9f208eb98400a92a8e123d22c85bdb85909af",
+        "timestamp": "2026-09-29T12:30:29Z"
+      },
+      {
         "message": "GOVERNANCE: activate Q094 one-shot performance authorization",
         "sha": "2597e7f69570fa7d801be70ca56d1604955ecaed",
         "timestamp": "2026-09-29T14:30:22+02:00"
@@ -396,21 +411,6 @@
         "message": "RESEARCH: add Q094 one-shot monthly performance workflow",
         "sha": "d2a9f663f97c17df9f2df709e9536ccd9b86c7f1",
         "timestamp": "2026-09-29T14:29:55+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "a70b697e53436e7f02685de23b8da9748834b260",
-        "timestamp": "2026-09-29T12:26:44Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "27242b03f3b90a998385da91733f1cd8fa9cf59b",
-        "timestamp": "2026-09-29T12:26:10Z"
-      },
-      {
-        "message": "FIX: accept implicit false Q094 holdout-selection receipt",
-        "sha": "602faaaf52a6c5966c573fe9a0cc594c524d54b5",
-        "timestamp": "2026-09-29T14:25:58+02:00"
       }
     ]
   },
@@ -480,12 +480,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2597e7f69570fa7d801be70ca56d1604955ecaed",
+  "source_master_sha": "bd20181f110ee95785618508a600076f15f3f64f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36568516360"
+    "run_id": "36568569903"
   }
 }
