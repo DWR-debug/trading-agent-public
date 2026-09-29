@@ -240,7 +240,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:15:13.736566+00:00",
+  "generated_at_utc": "2026-09-29T12:20:16.508632+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -363,44 +363,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "TEST: allow Q093 diagnostic workflow in project integrity",
-        "sha": "17c7e85b3f1df780a876df4433abe37b10c0c78f",
-        "timestamp": "2026-09-29T14:15:01+02:00"
+        "message": "RESEARCH: add Q094 fixed monthly rebalance overlay",
+        "sha": "d3aa73bed4dccbed57e5dc30f58804844afe3d88",
+        "timestamp": "2026-09-29T14:20:14+02:00"
+      },
+      {
+        "message": "RESEARCH: preregister Q094 monthly low-turnover Q091 validation",
+        "sha": "7517ef9687c43b4b1b6bfc5d5e58a2d8ce6cfffa",
+        "timestamp": "2026-09-29T14:20:01+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "67e84950f169e2f10251a0b71eb96a12d6425769",
+        "timestamp": "2026-09-29T12:16:40Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "e0b2232a44b7e3fa8e4cf4263e3e36a2ca6c9bba",
+        "timestamp": "2026-09-29T12:16:37Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "df629d993813d93f189835c10424ca71dd5f9396",
+        "timestamp": "2026-09-29T12:16:31Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "7b7f5e7370531905f35409a9496938f67ec0af9f",
+        "timestamp": "2026-09-29T12:16:27Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "08883bff01e4c9a4241c08fc7ae7685389f6a609",
+        "timestamp": "2026-09-29T12:15:33Z"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "81c07ca084fd7fe3a4342d036c859afd8f4d1a1e",
-        "timestamp": "2026-09-29T12:14:56Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f5f83ae76da1c95549b31754a5fa1f71aa87b810",
-        "timestamp": "2026-09-29T12:14:40Z"
-      },
-      {
-        "message": "RESEARCH: add Q093 deterministic Q091 cost attribution workflow",
-        "sha": "5040f041732dfea1f900661260877192af11c6eb",
-        "timestamp": "2026-09-29T14:14:38+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "86bbf397d5fa7e37e41acdc5fa5dfc9b08c28df5",
-        "timestamp": "2026-09-29T12:14:22Z"
-      },
-      {
-        "message": "TEST: add Q093 cost attribution contract tests",
-        "sha": "fbf8844e1b12763bf8987f33ad6bc6ac2c656f8a",
-        "timestamp": "2026-09-29T14:14:17+02:00"
-      },
-      {
-        "message": "RESEARCH: implement Q093 Q091 cost attribution diagnosis",
-        "sha": "0460b970df2f6ccfeefce404d58ab7751101e5e6",
-        "timestamp": "2026-09-29T14:14:09+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "b5f1c44439e1449d3ae81404fe87e6374563943a",
-        "timestamp": "2026-09-29T12:13:57Z"
+        "sha": "807f41ffcb3100b3b5fd712db1b68de2d7b56bb4",
+        "timestamp": "2026-09-29T12:15:13Z"
       }
     ]
   },
@@ -470,12 +470,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "17c7e85b3f1df780a876df4433abe37b10c0c78f",
+  "source_master_sha": "d3aa73bed4dccbed57e5dc30f58804844afe3d88",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36566868769"
+    "run_id": "36567407059"
   }
 }
