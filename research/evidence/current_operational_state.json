@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T16:02:14.230304+00:00",
+  "generated_at_utc": "2026-09-29T16:02:37.667308+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "QA: lock zero-paid option source classification",
+        "sha": "458c5fd3cea2ef218a45651568c546b401544e62",
+        "timestamp": "2026-09-29T18:02:35+02:00"
+      },
+      {
+        "message": "RESEARCH: encode zero-paid option source block in Q096",
+        "sha": "cbd4e2cfaeb948ef8d85a6fb352378542079ceec",
+        "timestamp": "2026-09-29T18:02:29+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "408447c6f7492f360d9de243a7c25e06ab2b23fe",
+        "timestamp": "2026-09-29T16:02:14Z"
+      },
+      {
         "message": "RESEARCH: block option-borrow candidate under zero-paid-data policy",
         "sha": "7b15f8ac60f1f1cda6c0f803d44b82deef45a097",
         "timestamp": "2026-09-29T18:02:12+02:00"
@@ -418,21 +433,6 @@
         "message": "QA: harden Q096 non-evaluative contract tests",
         "sha": "35a64114e21b374abcf5f621898571a6727da021",
         "timestamp": "2026-09-29T17:58:11+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2f06eba2e4a6d42b7f67856bf2779aa6527cf249",
-        "timestamp": "2026-09-29T15:57:59Z"
-      },
-      {
-        "message": "OPS: trigger permanent loop on frontier audit changes",
-        "sha": "0027c08b247f3638598adde1167a5aec067c35e6",
-        "timestamp": "2026-09-29T17:57:46+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0c8e329c013f1adba5639f4f4b8981a9f03e5ed1",
-        "timestamp": "2026-09-29T15:57:40Z"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7b15f8ac60f1f1cda6c0f803d44b82deef45a097",
+  "source_master_sha": "458c5fd3cea2ef218a45651568c546b401544e62",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36594717093"
+    "run_id": "36594745990"
   }
 }
