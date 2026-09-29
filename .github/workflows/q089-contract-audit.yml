@@ -31,10 +31,32 @@ jobs:
     runs-on: ${{ contains(matrix.lane, 'self') && fromJSON(matrix.runs_on) || matrix.runs_on }}
     timeout-minutes: 8
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout exact source (hosted)
+        if: matrix.lane == 'ubuntu'
+        uses: actions/checkout@v5
         with:
           ref: master
           fetch-depth: 1
+
+      - name: Download exact source snapshot (self-hosted)
+        if: matrix.lane == 'self_hosted'
+        shell: cmd
+        run: |
+          @echo off
+          setlocal EnableExtensions
+          if not defined GITHUB_SHA exit /b 1
+          set "ROOT=%RUNNER_TEMP%\trading-agent-q089-audit-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          set "ARCHIVE=%RUNNER_TEMP%\trading-agent-q089-audit-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%.tar.gz"
+          if exist "%ROOT%" rmdir /s /q "%ROOT%"
+          mkdir "%ROOT%" || exit /b 1
+          curl.exe -L --fail --silent --show-error -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%" || exit /b 1
+          tar.exe -xzf "%ARCHIVE%" -C "%ROOT%" || exit /b 1
+          set "Q089_REPO_ROOT="
+          for /d %%D in ("%ROOT%\trading-agent-public-*") do set "Q089_REPO_ROOT=%%~fD"
+          if not defined Q089_REPO_ROOT exit /b 1
+          echo Q089_REPO_ROOT=%Q089_REPO_ROOT%>>"%GITHUB_ENV%"
+          echo SELF_HOSTED_EXACT_SNAPSHOT_OK %GITHUB_SHA%
+          endlocal
       - name: Set up Python (hosted)
         if: matrix.lane == 'ubuntu'
         uses: actions/setup-python@v6
@@ -77,7 +99,9 @@ jobs:
       - name: Run unit test (self-hosted)
         if: matrix.lane == 'self_hosted'
         shell: cmd
-        run: python -m pytest -q tests/test_q089_contract_audit.py
+        run: |
+          cd /d "%Q089_REPO_ROOT%" || exit /b 1
+          python -m pytest -q tests/test_q089_contract_audit.py
 
       - name: Run read-only audit (hosted)
         if: matrix.lane == 'ubuntu'
@@ -89,8 +113,9 @@ jobs:
         if: matrix.lane == 'self_hosted'
         shell: cmd
         run: |
-          python -m automation.q089_contract_audit > q089-contract-audit.json
-          type q089-contract-audit.json
+          cd /d "%Q089_REPO_ROOT%" || exit /b 1
+          python -m automation.q089_contract_audit > "%GITHUB_WORKSPACE%\q089-contract-audit.json"
+          type "%GITHUB_WORKSPACE%\q089-contract-audit.json"
       - name: Upload audit receipt
         if: always()
         uses: actions/upload-artifact@v6
