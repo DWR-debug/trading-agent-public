@@ -109,3 +109,11 @@ def test_q096_matrix_classifies_q097_public_channels_as_sec_or_public_source() -
     matrix = candidate_gate_matrix(candidates)
     assert all(row["source_state"] == "PUBLIC_SOURCE_CHANNEL_CONFIRMED" for row in matrix)
     assert all(row["performance_authorized"] is False for row in matrix)
+
+def test_q096_html_section_matching_collapses_tag_boundaries() -> None:
+    import html
+    import re
+
+    raw = "<div>Management's <b>Discussion</b> and <span>Analysis</span></div>"
+    normalized = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", raw))).strip()
+    assert "Management's Discussion and Analysis".lower() in normalized.lower()
