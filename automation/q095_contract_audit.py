@@ -12,7 +12,7 @@ PERF=ROOT/"automation/q095_performance.py"
 PORT=ROOT/"portfolio/q094_monthly_rebalance.py"
 REGISTRY=ROOT/"research/governance/active_research_registry.json"
 SAFETY={"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False}
-EXPECTED_VARIANTS={"M1_MONTHLY_REBALANCED_Q091_E1","M2_MONTHLY_REBALANCED_Q091_E2"}
+EXPECTED_VARIANTS={"R1_MONTHLY_REBALANCED_Q091_E1","R2_MONTHLY_REBALANCED_Q091_E2"}
 EXPECTED_GATES={
  "research_return_positive","research_drawdown_lte_10pct","research_profit_factor_gte_1_10",
  "rolling_profit_factor_gte_1_10","rolling_profitable_window_ratio_gte_0_50",
@@ -95,8 +95,8 @@ def audit(root:Path=ROOT)->dict:
       "cost_contract_sha256":fp_bytes(root/"execution/cost_contract.py"),
       "settings_path":"config/settings.py",
       "settings_sha256":fp_bytes(root/"config/settings.py"),
-      "input_freeze_path":"automation/q091_input_freeze.py",
-      "input_freeze_sha256":fp_bytes(root/"automation/q091_input_freeze.py"),
+      "input_freeze_path":"automation/q095_coverage_pit.py",
+      "input_freeze_sha256":fp_bytes(root/"automation/q095_coverage_pit.py"),
     }
     if contract!=actual: finding("Q095_SOURCE_CONTRACT_MISMATCH",expected=contract,actual=actual)
 
