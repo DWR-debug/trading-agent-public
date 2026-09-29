@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T17:12:24.816935+00:00",
+  "generated_at_utc": "2026-09-29T17:14:22.328365+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: correct SEC sample filers and relax submission acceptance probe",
+        "sha": "d42cfb866eb561824901f9373fe4acad05567b3d",
+        "timestamp": "2026-09-29T19:14:08+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5e04479b25ae6656e06d9b4fd049a5da0ae4f216",
+        "timestamp": "2026-09-29T17:12:24Z"
+      },
+      {
         "message": "OPS: reserve self-hosted capacity by replacing stale QA runs",
         "sha": "08836e5463ae0baded05306979cd3bd0d0cd4d82",
         "timestamp": "2026-09-29T19:12:12+02:00"
@@ -423,16 +433,6 @@
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "bb955a66deb42bff18d57d93b12c74fadeb14fdb",
         "timestamp": "2026-09-29T17:09:10Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "ff0625bb935f664e9cded6ea626b7289a5a857fc",
-        "timestamp": "2026-09-29T16:58:48Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "a9972c265cdb547116a81f8356cf42ebb4b85042",
-        "timestamp": "2026-09-29T16:56:00Z"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "08836e5463ae0baded05306979cd3bd0d0cd4d82",
+  "source_master_sha": "d42cfb866eb561824901f9373fe4acad05567b3d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36603270332"
+    "run_id": "36603501773"
   }
 }
