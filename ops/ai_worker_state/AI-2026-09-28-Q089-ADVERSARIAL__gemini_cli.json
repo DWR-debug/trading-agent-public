@@ -5,16 +5,20 @@
   "free_only": true,
   "preflight": {
     "provider": "gemini_cli",
-    "available": true,
-    "binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE",
+    "available": false,
+    "binary": "/opt/hostedtoolcache/node/22.23.2/x64/bin/gemini",
     "free_only": true,
-    "local_mode": true,
+    "local_mode": false,
     "local_attestation": {
-      "present": true,
-      "path": "C:\\Users\\u419680\\.trading-agent\\ai_free_attestation.json"
+      "present": false,
+      "path": null
     },
-    "free_mode_attested": true,
-    "reasons": []
+    "free_mode_attested": false,
+    "reasons": [
+      "AI_EXTERNAL_PROVIDER_ALLOWLIST is not confirmed",
+      "provider authentication is not available for free-only mode",
+      "provider free-mode attestation is missing"
+    ]
   },
   "task_fingerprint": "d7f78f334a0e1a67b390f80e5b5a520e2db981af0323b0c03f589527b0c7641f",
   "worker_output_is_scientific_evidence": false,
@@ -24,10 +28,8 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 49.089,
-  "stdout": "{\"conversation_id\":\"19fc3e20-8439-46a9-a8da-3822dd850b50\",\"status\":\"SUCCESS\",\"response\":\"# Adversarial Methodology \\u0026 Pre-Performance Review: Q089\\n\\n**Task ID:** `AI-2026-09-28-Q089-ADVERSARIAL`  \\n**Scope:** Q089 methodology, data provenance, and pre-performance integrity review  \\n**Safety Invariants Maintained:** `PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `ORDERS_ENABLED=False`, `AUTOMATIC_PROMOTION=False`\\n\\n---\\n\\n## 1. Executive Summary \\u0026 Findings\\n\\nThis adversarial review evaluated the pre-performance state of the Q089 research pipeline as defined in [Q089-clean-fresh-q069-validation-2026-09-28.md](file:///c:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36527556565-1/trading-agent-public-8c280313b164a959dbef160b8e2cfef2a55567f5/docs/research_design/Q089-clean-fresh-q069-validation-2026-09-28.md), [Q089_CROSS_RUN_REPRO_AUDIT_2026-09-28.md](file:///c:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36527556565-1/trading-agent-public-8c280313b164a959dbef160b8e2cfef2a55567f5/docs/research_design/Q089_CROSS_RUN_REPRO_AUDIT_2026-09-28.md), and associated evidence receipts.\\n\\nSix primary methodological failure modes were identified that must be resolved or falsified prior to any performance execution:\\n\\n| Failure Mode | Area | Severity | Impact |\\n| :--- | :--- | :--- | :--- |\\n| **FM-1: Input Bundle Feature Incompleteness** | Transformation / Candidate Bank | **Critical** | `C7` (`LOW_MAX_21`) and `C11` (`VOLUME_CONFIRMED_TREND_126`) require High and Volume, but `q089_input_freeze.py` only outputs `adjusted_close.csv`. Furthermore, `C8` (`LOW_IDIO_VOL_273`) requires a market return benchmark, which is absent from the frozen bundle. |\\n| **FM-2: Backward-Adjusted Close Lookahead Leakage** | Point-in-Time (PIT) | **High** | Backward adjustment factors applied to historical prices embed corporate actions (splits, cash dividends) occurring inside the holdout window (2022–2025). |\\n| **FM-3: Secondary Network Ingestion in Input Freeze** | Provenance / Snapshot Isolation | **High** | [q089_input_freeze.py](file:///c:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36527556565-1/trading-agent-public-8c280313b164a959dbef160b8e2cfef2a55567f5/automation/q089_input_freeze.py) calls `fetch_adjusted_close(symbol, timestamps)` from `automation.q079_input_freeze` instead of deriving prices deterministically from the local coverage snapshot. |\\n| **FM-4: Sample Geometry Accounting Mismatch** | Study Geometry | **Medium** | In [q089_coverage_pit.py](file:///c:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36527556565-1/trading-agent-public-8c280313b164a959dbef160b8e2cfef2a55567f5/automation/q089_coverage_pit.py), `RESEARCH (2798) + HOLDOUT (700) = 3498`, while `TARGET = 3500`. Two common trading sessions are unaccounted for at the split boundary. |\\n| **FM-5: Governance State Race \\u0026 Preregistration Desync** | Governance Sequencing | **Medium** | [Q089-clean-fresh-q069-validation-2026-09-28.md](file:///c:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36527556565-1/trading-agent-public-8c280313b164a959dbef160b8e2cfef2a55567f5/docs/research_design/Q089-clean-fresh-q069-validation-2026-09-28.md) remains marked `PREREGISTRATION / COVERAGE-PENDING` despite evidence receipts existing for coverage, input freeze, and PIT. |\\n| **FM-6: Severe Factor / Sector Concentration** | Symbol Disjointness / Generalizability | **Medium** | 4 of the 8 selected symbols (`AEE`, `AES`, `ATO`, `BKH`) are regulated utilities, creating heavy cross-asset factor correlation. |\\n\\n---\\n\\n## 2. Detailed Technical Findings\\n\\n### FM-1: Candidate Signal Dependencies vs. Frozen Input Features\\n* **Observation:** The candidate bank frozen from Q069 includes:\\n  - `C7 LOW_MAX_21`: Requires daily High price.\\n  - `C8 LOW_IDIO_VOL_273`: Requires benchmark return to compute idiosyncratic volatility residuals.\\n  - `C11 VOLUME_CONFIRMED_TREND_126`: Requires daily Volume.\\n* **Vulnerability:** In [q089_input_freeze_result.json](file:///c:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36527556565-1/trading-agent-public-8c280313b164a959dbef160b8e2cfef2a55567f5/research/evidence/q089_input_freeze_result.json), each frozen dataset contains only `adjusted_close.csv` (2 columns: `timestamp`, `adjusted_close`). There is no benchmark asset (e.g., `SPY` or equal-weighted universe index) frozen in `datasets`, nor are High and Volume columns included in `adjusted_close.csv`.\\n* **Risk:** During performance execution, the candidate calculation will either:\\n  1. Fail due to missing keys/columns;\\n  2. Fall back to loading `1d.csv` from an unverified directory (bypassing the frozen input bundle fingerprint `c4261e23...`); or\\n  3. Modify candidate behavior (e.g., substituting total volatility for idiosyncratic volatility), violating the frozen Q069 specification.\\n\\n### FM-2: Backward-Adjusted Close Lookahead \\u0026 Price/Volume Mismatches\\n* **Observation:** `adjusted_close` applies backwards-adjustment multipliers for cash dividends and stock splits:\\n  $$P_{\\\\text{adj}}(t) = P(t) \\\\cdot \\\\prod_{s \\u003e t} \\\\gamma(s)$$\\n* **Vulnerability:** \\n  - When corporate actions $\\\\gamma(s)$ occur inside the holdout window ($s \\\\in [2799, 3500]$), they rescale price levels in the research window ($t \\\\in [1, 2798]$).\\n  - While pure 1-day percentage returns on non-dividend days are scale-invariant, indicators computing long-term price differences or ratios against non-split-adjusted volume (`C11`) suffer structural breaks.\\n  - If volume is read unadjusted from `1d.csv` while price is adjusted from `adjusted_close.csv`, volume-trend signals will compute moving averages of distorted price-volume interactions across split dates.\\n\\n### FM-3: Secondary Network Ingestion During Input Freeze\\n* **Observation:** In [q089_input_freeze.py](file:///c:/actions-runner-2/_work/_temp/trading\",\"duration_seconds\":0,\"num_turns\":1,\"usage\":{\"input_tokens\":0,\"output_tokens\":0,\"thinking_tokens\":0,\"cache_read_tokens\":0,\"total_tokens\":0}}\n",
-  "stderr": "[agy] print timeout after 45s with turn in progress; returning partial output\n",
-  "command_binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE"
+  "status": "SKIPPED",
+  "returncode": null,
+  "stdout": "",
+  "stderr": ""
 }
