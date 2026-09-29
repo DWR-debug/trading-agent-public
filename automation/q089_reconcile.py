@@ -142,7 +142,8 @@ def reconcile(root: Path = Path("."), workflow_run_id: str = "UNVERIFIED") -> st
         "workflow_run_id": str(workflow_run_id),
     }
 
-    if RETIRED_AUTH_PATH.exists():
+    retired_path = root / RETIRED_AUTH_PATH
+    if retired_path.exists():
         retired = load(root, RETIRED_AUTH_PATH)
     else:
         retired = {"schema_version": 1, "governance_contract_version": 2, "description": "Historical authorization receipts retained for provenance but no longer eligible for execution.", "entries": []}
