@@ -39,6 +39,7 @@ jobs:
           repository: ${{ github.repository }}
           run-id: 36568067970
           path: _q094_prep
+          merge-multiple: true
 
       - name: Materialize frozen Q094 artifact into canonical research paths
         shell: bash
