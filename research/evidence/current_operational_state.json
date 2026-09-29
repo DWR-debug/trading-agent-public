@@ -134,9 +134,15 @@
         "class": "fresh_validation",
         "code": "094",
         "issue_number": null,
-        "performance_authorization_allowed": true,
+        "performance_authorization_allowed": false,
+        "performance_result": {
+          "report_fingerprint": "602e85e57698158b10013fb64b69930fd5ac40046e2aeaa588b0e175cd229f73",
+          "status": "COMPLETED",
+          "trial_id": "T-2026-09-29-094",
+          "workflow_run_id": "36569776262"
+        },
         "preregistration_path": "research/preregistrations/q094_monthly_rebalance_q091_low_turnover_2026_09_29.json",
-        "state": "PERFORMANCE_AUTHORIZED",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
         "trial_id": "T-2026-09-29-094"
       }
     ],
@@ -250,7 +256,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:44:11.339762+00:00",
+  "generated_at_utc": "2026-09-29T12:44:27.075056+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -373,6 +379,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "d7e377a84e1b597d32956099eb8491fa2a50a3c4",
+        "timestamp": "2026-09-29T12:44:23Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "7da81d866cbfa59882634677252c4941a2dbfe81",
+        "timestamp": "2026-09-29T12:44:11Z"
+      },
+      {
         "message": "RECONCILE: retry Q094 after reconciler path fix",
         "sha": "0b1410524765c226918c03bb6697e3aed489ea13",
         "timestamp": "2026-09-29T14:44:07+02:00"
@@ -401,16 +417,6 @@
         "message": "FIX: reconcile Q094 from exact successful performance artifact",
         "sha": "c6fe140e160f8076a0c91948b5328c2d20b93691",
         "timestamp": "2026-09-29T14:43:12+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e92ae32f11ed853ba5d7f0cd75e68c119c5f2ee1",
-        "timestamp": "2026-09-29T12:41:37Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ae18338e0ac75dddfa26402c853efa7feee30d2a",
-        "timestamp": "2026-09-29T12:41:23Z"
       }
     ]
   },
@@ -480,12 +486,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0b1410524765c226918c03bb6697e3aed489ea13",
+  "source_master_sha": "d7e377a84e1b597d32956099eb8491fa2a50a3c4",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36570088702"
+    "run_id": "36570106154"
   }
 }
