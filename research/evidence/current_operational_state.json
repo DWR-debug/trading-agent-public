@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T16:23:41.813128+00:00",
+  "generated_at_utc": "2026-09-29T16:24:31.403944+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "QA: correct Q097 fail-closed governance assertions",
+        "sha": "9ab7d5c318989c0aae2a8d0f5e08e3fbe3f352a4",
+        "timestamp": "2026-09-29T18:24:24+02:00"
+      },
+      {
+        "message": "QA: align Q096 assertions with dynamic SEC probe design",
+        "sha": "43831f6fc3c9d97c0b753982cebf7b7eb7a41f12",
+        "timestamp": "2026-09-29T18:24:18+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e1808836bb1fb9705c27fd39649e56df97f5826e",
+        "timestamp": "2026-09-29T16:23:41Z"
+      },
+      {
         "message": "QA: extend Q097 conflict and future-mutation coverage",
         "sha": "d4458aa3b4f20f113ebc8efab802d4526f57cf89",
         "timestamp": "2026-09-29T18:23:25+02:00"
@@ -418,21 +433,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "91cd6428800a129d0e7912f223525ec24fd1f489",
         "timestamp": "2026-09-29T16:21:47Z"
-      },
-      {
-        "message": "QA: include Q097 PIT feasibility tests in autonomous lane",
-        "sha": "67ba8bb934e2bc73b7db1cfba2260967785d6a7b",
-        "timestamp": "2026-09-29T18:21:41+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "cc42bee01481343302957b0e969e72d08decb99d",
-        "timestamp": "2026-09-29T16:21:31Z"
-      },
-      {
-        "message": "QA: add Q097 PIT mutation and publication-boundary tests",
-        "sha": "21c424915904ac2c76760e2bbd4f54e09f97f592",
-        "timestamp": "2026-09-29T18:21:27+02:00"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d4458aa3b4f20f113ebc8efab802d4526f57cf89",
+  "source_master_sha": "9ab7d5c318989c0aae2a8d0f5e08e3fbe3f352a4",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36597361707"
+    "run_id": "36597463805"
   }
 }
