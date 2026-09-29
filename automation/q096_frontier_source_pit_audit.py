@@ -314,8 +314,7 @@ def main() -> int:
     candidates = [list(row) for row in inventory["candidates"]]
 
     live_probes = [
-        probe_static(STATIC_PROBES[0]),
-        probe_static(STATIC_PROBES[1]),
+        *[probe_static(item) for item in STATIC_PROBES],
         sec_submission_probe(
             "MSFT_10K_10Q",
             SEC_SAMPLE_CIKS["MSFT"],
