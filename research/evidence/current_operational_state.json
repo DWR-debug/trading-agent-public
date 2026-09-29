@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T22:14:57.756725+00:00",
+  "generated_at_utc": "2026-09-29T22:16:51.003203+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: mark consumed Q094 authorization as historical",
+        "sha": "243dfa49f916d8ac737285c892cedcfc64472fe8",
+        "timestamp": "2026-09-30T00:16:49+02:00"
+      },
+      {
+        "message": "FIX: exempt terminal historical preregistrations from active v2 audit",
+        "sha": "209e4eb158a52736736212d8a7a6860ec7627202",
+        "timestamp": "2026-09-30T00:16:38+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b01e69727f9a0acf33b6e0df2d82c27f69c5b647",
+        "timestamp": "2026-09-29T22:14:57Z"
+      },
+      {
         "message": "FIX: satisfy Q081R2 authorization workflow lint",
         "sha": "de0731a3c7e0ebdf92cc9ab11f545090024b0044",
         "timestamp": "2026-09-30T00:14:46+02:00"
@@ -418,21 +433,6 @@
         "message": "TEST: register Q081R2 one-shot workflows in integrity allowlist",
         "sha": "761ffece33acbcc8a1328ce75d0f3d69179e895c",
         "timestamp": "2026-09-30T00:14:18+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d13af70cc7cc8d44d0c659e4c8eb95b0fb6b9785",
-        "timestamp": "2026-09-29T22:14:14Z"
-      },
-      {
-        "message": "FEAT: add Q081R2 one-shot performance runner",
-        "sha": "456b3368d4cacf578e1173ad5247f18ef6a3e020",
-        "timestamp": "2026-09-30T00:14:13+02:00"
-      },
-      {
-        "message": "FEAT: add Q081R2 one-shot authorization control path",
-        "sha": "9bc0280c1e6f5bb108ce5b9e151ff89b444ab1d5",
-        "timestamp": "2026-09-30T00:14:00+02:00"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "de0731a3c7e0ebdf92cc9ab11f545090024b0044",
+  "source_master_sha": "243dfa49f916d8ac737285c892cedcfc64472fe8",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36638411106"
+    "run_id": "36638604298"
   }
 }
