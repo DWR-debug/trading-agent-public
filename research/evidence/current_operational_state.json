@@ -54,18 +54,12 @@
         "trial_id": "T-2026-09-28-081R1-PERFORMANCE"
       },
       {
-        "authorization": {
-          "authorization_id": "AUTH-Q089-2026-09-29-01",
-          "ci_workflow_run_id": 36534796691,
-          "exact_master_gate_workflow_run_id": 36534796799,
-          "preflight_audit_workflow_run_id": 36533366578
-        },
         "class": "fresh_validation",
         "code": "089",
         "issue_number": 589,
-        "performance_authorization_allowed": true,
+        "performance_authorization_allowed": false,
         "preregistration_path": "research/preregistrations/q089_performance_2026_09_28.json",
-        "state": "PERFORMANCE_AUTHORIZED",
+        "state": "PREREGISTERED_WAITING_AUTHORIZATION",
         "trial_id": "T-2026-09-28-089-PERFORMANCE"
       },
       {
@@ -208,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T07:31:41.251270+00:00",
+  "generated_at_utc": "2026-09-29T07:46:45.837380+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -331,44 +325,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "RUN: retrigger Q089 fixed-rule performance attempt 2 (#665)",
-        "sha": "922170ad28e061e11b132c27a9bd79d60fee3251",
-        "timestamp": "2026-09-29T09:31:28+02:00"
+        "message": "FIX: harden Q089 preflight receipt compatibility before reauthorization",
+        "sha": "03cc063568af97b77c8859ed87974089d8bc02d1",
+        "timestamp": "2026-09-29T09:46:28+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "6daee94e63c65288ccc840dca6af2a84a5a37d82",
+        "timestamp": "2026-09-29T07:43:47Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "2042b20cd678b59dc44173e26b1e553a8e48f22a",
+        "timestamp": "2026-09-29T07:43:43Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "19dac319eb58f246f2bc0e20263ae515981286fe",
+        "timestamp": "2026-09-29T07:43:34Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "5deb70e6ba5b1a9126228c606f683ca401dc5c09",
+        "timestamp": "2026-09-29T07:43:31Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "17c178526550e7b99f86b8d987a8b14680b32eaf",
+        "timestamp": "2026-09-29T07:32:36Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "659574a0477286fbaf18344dca7291ec49217971",
+        "timestamp": "2026-09-29T07:31:48Z"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "1f5d4f34b0b8a31536395aae169e71ccba1add53",
-        "timestamp": "2026-09-29T07:28:40Z"
-      },
-      {
-        "message": "FIX: invoke Q089 performance as Python module (#664)",
-        "sha": "07d852c889c879e9532be31ee74a90ef11362864",
-        "timestamp": "2026-09-29T09:28:27+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c6f9eb6e18c82e3a9a91e5ac946502fc83fd8088",
-        "timestamp": "2026-09-29T07:26:16Z"
-      },
-      {
-        "message": "RUN: trigger Q089 fixed-rule performance once (#663)",
-        "sha": "d9a497912ffef909422d3c0af65020a1539a30be",
-        "timestamp": "2026-09-29T09:26:04+02:00"
-      },
-      {
-        "message": "OPS: record local AI worker state",
-        "sha": "ea106c1f60de0e2f58d45afbb58d38d6fcfb32f4",
-        "timestamp": "2026-09-29T07:24:38Z"
-      },
-      {
-        "message": "OPS: record local AI worker state",
-        "sha": "94b83d7a1621c1b4f5de1ed7985124ac02ca4318",
-        "timestamp": "2026-09-29T07:22:51Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e92048af7a05ec53bccaa61625af14d057e453b6",
-        "timestamp": "2026-09-29T07:21:57Z"
+        "sha": "30fcb665fb58d126a22c1cacf8e9030b5dcd43a2",
+        "timestamp": "2026-09-29T07:31:41Z"
       }
     ]
   },
@@ -438,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "922170ad28e061e11b132c27a9bd79d60fee3251",
+  "source_master_sha": "03cc063568af97b77c8859ed87974089d8bc02d1",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36537146895"
+    "run_id": "36538645581"
   }
 }
