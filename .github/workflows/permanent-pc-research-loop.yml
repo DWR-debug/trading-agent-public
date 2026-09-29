@@ -171,21 +171,10 @@ jobs:
           endlocal
 
       - name: Run local AI readiness check
-        shell: powershell
+        shell: cmd
         run: |
-          $ErrorActionPreference = "Stop"
-          $agy = Get-Command agy -ErrorAction SilentlyContinue
-          if (-not $agy) { $agy = Get-Command gemini -ErrorAction SilentlyContinue }
-          if (-not $agy) { throw "No Gemini/Antigravity CLI found." }
-          $settings = Join-Path $env:USERPROFILE ".gemini\antigravity-cli\settings.json"
-          if (-not (Test-Path $settings)) { throw "Local AI settings missing: $settings" }
-          $raw = Get-Content $settings -Raw
-          if ($raw -notmatch '(?i)"UseG1Credits"\s*:\s*false' -and $raw -notmatch '(?i)"useG1Credits"\s*:\s*false') {
-            throw "Personal G1 credit fallback is not explicitly disabled."
-          }
-          Write-Output "LOCAL_AI_READINESS=READY"
-          Write-Output "LOCAL_AI_PROVIDER_BINARY=$($agy.Source)"
-          Write-Output "PERSONAL_G1_CREDITS_DISABLED=True"
+          @echo off
+          powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "$ErrorActionPreference='Stop'; $agy=Get-Command agy -ErrorAction SilentlyContinue; if(-not $agy){$agy=Get-Command gemini -ErrorAction SilentlyContinue}; if(-not $agy){throw 'No Gemini/Antigravity CLI found.'}; $settings=Join-Path $env:USERPROFILE '.gemini\antigravity-cli\settings.json'; if(-not (Test-Path $settings)){throw ('Local AI settings missing: '+$settings)}; $raw=Get-Content $settings -Raw; if($raw -notmatch '(?i)' + [regex]::Escape('"UseG1Credits"') + '\s*:\s*false' -and $raw -notmatch '(?i)' + [regex]::Escape('"useG1Credits"') + '\s*:\s*false'){throw 'Personal G1 credit fallback is not explicitly disabled.'}; Write-Output 'LOCAL_AI_READINESS=READY'; Write-Output ('LOCAL_AI_PROVIDER_BINARY='+$agy.Source); Write-Output 'PERSONAL_G1_CREDITS_DISABLED=True'"
 
       - name: Execute real local AI smoke test
         shell: cmd
