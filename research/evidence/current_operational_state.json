@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T06:46:12.559586+00:00",
+  "generated_at_utc": "2026-09-29T06:48:43.316514+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,44 +325,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: schedule free local AI worker fabric (#652)",
-        "sha": "6d4a5eeacad17187ba15c24dd4a0e2a2b8dc3211",
-        "timestamp": "2026-09-29T08:46:00+02:00"
+        "message": "FIX: use explicit shell per Q089 audit lane (#653)",
+        "sha": "eaaeb95f3d7ee75f2bd12a823c62aaaecd1a07f7",
+        "timestamp": "2026-09-29T08:48:31+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e67c382ee8292c21537163d9b6ba26d641462d44",
-        "timestamp": "2026-09-29T06:44:17Z"
+        "message": "OPS: record AI worker state",
+        "sha": "5e165494e1422ec4c38bcd74286a01fc7af6912a",
+        "timestamp": "2026-09-29T06:48:06Z"
       },
       {
-        "message": "FIX: use policy-safe Python bootstrap on self-hosted Q089 audit (#651)",
-        "sha": "7ca6c9e1f0cc131f64a9735590ca9ad4114820f0",
-        "timestamp": "2026-09-29T08:44:04+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "d7679752feed33b8f63ecfbc47339f340e3551dc",
+        "timestamp": "2026-09-29T06:48:03Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5c658698f5b481070d2c161c740943c65e878f7c",
-        "timestamp": "2026-09-29T06:42:35Z"
+        "message": "OPS: record AI worker state",
+        "sha": "36199556b59ed2ea12a927eca7072ce5c58b3370",
+        "timestamp": "2026-09-29T06:47:52Z"
       },
       {
-        "message": "FIX: allow active Q089 contract audit in project integrity (#650)",
-        "sha": "e84b83f070f9afddf74d80ef39f991b73b41c55b",
-        "timestamp": "2026-09-29T08:42:23+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "a51263810e9c4784bfeaff330a215d98d8b567b1",
-        "timestamp": "2026-09-29T06:33:00Z"
+        "message": "OPS: record AI worker state",
+        "sha": "3e6e434d7701706c099a3d0a80119738928fc149",
+        "timestamp": "2026-09-29T06:47:51Z"
       },
       {
         "message": "OPS: advance paper-forward MTM state",
-        "sha": "79aac96789330f543f51aa6e0e2698d629de52fb",
-        "timestamp": "2026-09-29T06:22:21Z"
+        "sha": "e1358156d3fc38ef1b6218c59220a95a045e0970",
+        "timestamp": "2026-09-29T06:46:47Z"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "eff32aba82262d34dae5e31eb865cc652c694f65",
-        "timestamp": "2026-09-29T06:20:43Z"
+        "sha": "9a312ae4cc6977741c7cfa39ca099fe4ded27d83",
+        "timestamp": "2026-09-29T06:46:12Z"
+      },
+      {
+        "message": "OPS: schedule free local AI worker fabric (#652)",
+        "sha": "6d4a5eeacad17187ba15c24dd4a0e2a2b8dc3211",
+        "timestamp": "2026-09-29T08:46:00+02:00"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "6d4a5eeacad17187ba15c24dd4a0e2a2b8dc3211",
+  "source_master_sha": "eaaeb95f3d7ee75f2bd12a823c62aaaecd1a07f7",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36532806482"
+    "run_id": "36533032307"
   }
 }
