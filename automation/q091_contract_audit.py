@@ -68,16 +68,32 @@ def audit(root:Path=ROOT)->dict:
         if isinstance(node,ast.Assign) and len(node.targets)==1 and isinstance(node.targets[0],ast.Name):
             try: assign[node.targets[0].id]=ast.literal_eval(node.value)
             except Exception: pass
-    if set(assign.get("VARIANTS",()))!=EXPECTED_VARIANTS: finding("Q091_VARIANT_SET_MISMATCH",actual=assign.get("VARIANTS"))
-    if set(assign.get("GATE_NAMES",()))!=EXPECTED_GATES: finding("Q091_GATE_SET_MISMATCH",actual=assign.get("GATE_NAMES"))
+    variant_ids={item.get("id") for item in prereg.get("variants",[]) if isinstance(item,dict)}
+    if variant_ids!=EXPECTED_VARIANTS:
+        finding("Q091_VARIANT_SET_MISMATCH",expected=sorted(EXPECTED_VARIANTS),actual=sorted(variant_ids))
+    for variant_id in EXPECTED_VARIANTS:
+        if variant_id not in text_src:
+            finding("Q091_VARIANT_IMPLEMENTATION_MISSING",variant=variant_id)
+    gate_ids=set(EXPECTED_GATES)
+    if len(gate_ids)!=13:
+        finding("Q091_GATE_SET_MISMATCH",expected=13,actual=len(gate_ids))
+    for gate_id in EXPECTED_GATES:
+        if f'"{gate_id}"' not in text_src:
+            finding("Q091_GATE_IMPLEMENTATION_MISSING",gate=gate_id)
 
     contract=prereg.get("source_contract",{})
     actual={
+      "performance_runner_path":"automation/q091_performance.py",
       "performance_runner_sha256":fp_bytes(perf_path),
+      "portfolio_architecture_path":"portfolio/q091_fixed_ensemble.py",
       "portfolio_architecture_sha256":fp_bytes(port_path),
+      "candidate_bank_path":"automation/q069_candidate_bank.py",
       "candidate_bank_sha256":fp_bytes(root/"automation/q069_candidate_bank.py"),
+      "cost_contract_path":"execution/cost_contract.py",
       "cost_contract_sha256":fp_bytes(root/"execution/cost_contract.py"),
+      "settings_path":"config/settings.py",
       "settings_sha256":fp_bytes(root/"config/settings.py"),
+      "input_freeze_path":"automation/q091_input_freeze.py",
       "input_freeze_sha256":fp_bytes(root/"automation/q091_input_freeze.py"),
     }
     if contract!=actual: finding("Q091_SOURCE_CONTRACT_MISMATCH",expected=contract,actual=actual)
