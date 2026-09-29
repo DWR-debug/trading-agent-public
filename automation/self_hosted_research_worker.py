@@ -45,6 +45,15 @@ LANES: dict[str, list[list[str]]] = {
                 "route_mesh('RCCSM-AUTO', state))"
             ),
         ],
+        [
+            PYTHON,
+            "-m",
+            "automation.q091_post_performance_diagnosis",
+            "--repo-root",
+            ".",
+            "--output",
+            "research/runs/self_hosted/q092_q091_failure_diagnosis.json",
+        ],
     ],
     "repo_qa": [
         [
