@@ -234,7 +234,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T11:33:08.940179+00:00",
+  "generated_at_utc": "2026-09-29T11:39:37.574909+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -357,6 +357,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOVERNANCE: authorize Q091 fixed-rule performance trial",
+        "sha": "0cb93c01178a6787699f78b787076b9b1ced0382",
+        "timestamp": "2026-09-29T13:39:26+02:00"
+      },
+      {
+        "message": "OPS: record local AI worker state",
+        "sha": "b0a33d949e6ef6ce1d1012ba5a0e8c1386b51b56",
+        "timestamp": "2026-09-29T11:35:17Z"
+      },
+      {
+        "message": "OPS: record local AI worker state",
+        "sha": "31af7893a81514c4a61f5f1b28c85edf92f1b053",
+        "timestamp": "2026-09-29T11:34:19Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f0a6fd8f40bde2c6abaf01a4e7c76ba3d34dd0b9",
+        "timestamp": "2026-09-29T11:33:08Z"
+      },
+      {
         "message": "OPS: optimize free Gemini scheduling and prioritize Q091 review",
         "sha": "af4e3519dd0d7f44855e6abca81f418056f16798",
         "timestamp": "2026-09-29T13:32:52+02:00"
@@ -375,26 +395,6 @@
         "message": "OPS: include Q091 adversarial review in permanent Gemini worker queue",
         "sha": "a770580c752880732bceecd5338f1173c42215d5",
         "timestamp": "2026-09-29T13:27:06+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "afe69df3facdbe416d427d805a8c2421b284b87f",
-        "timestamp": "2026-09-29T11:26:57Z"
-      },
-      {
-        "message": "OPS: record local AI worker state",
-        "sha": "ed89b39b3fcde2d198d6ef66355949cbc901d550",
-        "timestamp": "2026-09-29T11:22:03Z"
-      },
-      {
-        "message": "OPS: record local AI worker state",
-        "sha": "af958209f23ff488d7731c2daa47e9e9d3ccc579",
-        "timestamp": "2026-09-29T11:21:51Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "ab90a22982ffe8fd9b096446f38eb6b8f9208f0d",
-        "timestamp": "2026-09-29T11:12:52Z"
       }
     ]
   },
@@ -464,12 +464,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "af4e3519dd0d7f44855e6abca81f418056f16798",
+  "source_master_sha": "0cb93c01178a6787699f78b787076b9b1ced0382",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36562424186"
+    "run_id": "36563104909"
   }
 }
