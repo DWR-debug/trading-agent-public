@@ -32,6 +32,11 @@ def reconcile(root: Path = Path("."), workflow_run_id: str = "UNVERIFIED") -> st
     auth = load(root, AUTH_PATH)
     registry = load(root, REGISTRY_PATH)
     ledger = load(root, LEDGER_PATH)
+    trials = ledger.get("trials")
+    if not isinstance(trials, list):
+        raise ValueError("trial ledger has no list-valued 'trials'")
+    if any(x.get("trial_id") == TRIAL_ID for x in trials):
+        raise ValueError("Q089 performance trial already exists; refusing duplicate ledger mutation")
 
     assert result["trial_id"] == TRIAL_ID
     assert result["status"] == "COMPLETED"
@@ -67,12 +72,6 @@ def reconcile(root: Path = Path("."), workflow_run_id: str = "UNVERIFIED") -> st
     active = next(x for x in registry["active_trials"] if x.get("code") == "089")
     assert active["trial_id"] == TRIAL_ID
     assert active["performance_authorization_allowed"] is True
-
-    trials = ledger.get("trials")
-    if not isinstance(trials, list):
-        raise ValueError("trial ledger has no list-valued 'trials'")
-    if any(x.get("trial_id") == TRIAL_ID for x in trials):
-        raise ValueError("Q089 performance trial already exists; refusing duplicate ledger mutation")
 
     any_passed = any(bool(arm.get("all_gates_passed")) for arm in result["arms"].values())
     trial_status = "performance_completed_arm_passed_all_13_gates" if any_passed else "performance_completed_no_arm_passed_all_13_gates"
