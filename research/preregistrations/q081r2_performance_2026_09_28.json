@@ -5,7 +5,16 @@
   "status": "PREREGISTERED_PERFORMANCE",
   "prior_trial_id": "T-2026-09-28-081R1-PERFORMANCE",
   "universe": "validation_2026_09_28_q079_fresh_e1_e2",
-  "symbols": ["HAL","LRCX","OXY","COF","FIS","FISV","GM","LHX"],
+  "symbols": [
+    "HAL",
+    "LRCX",
+    "OXY",
+    "COF",
+    "FIS",
+    "FISV",
+    "GM",
+    "LHX"
+  ],
   "data_contract": {
     "coverage_trial_id": "T-2026-09-28-079-COVERAGE",
     "coverage_result_fingerprint": "96402139f2f032334fbb8fcc46868ef679ef84ea5d5ba9f84b6f6398d913e065",
@@ -20,11 +29,18 @@
   "target_common_candles": 3500,
   "research_periods": 2798,
   "holdout_periods": 700,
-  "study_window": {"start": "2011-01-01", "end": "2025-09-24"},
+  "study_window": {
+    "start": "2011-01-01",
+    "end": "2025-09-24"
+  },
   "initial_capital_eur": 2000,
   "mechanisms": {
     "source": "Q067 fixed mechanism implementation",
-    "arms": ["CONTROL_6SLEEVE_ENSEMBLE","E1_ALPHA_COMMON_MODE_THROTTLE","E2_TURNOVER_HYSTERESIS"],
+    "arms": [
+      "CONTROL_6SLEEVE_ENSEMBLE",
+      "E1_ALPHA_COMMON_MODE_THROTTLE",
+      "E2_TURNOVER_HYSTERESIS"
+    ],
     "e1_unchanged": true,
     "e2_unchanged": true
   },
@@ -34,7 +50,10 @@
     "shorts": false,
     "fee": 0.001,
     "slippage": 0.0005,
-    "cost_stress_multipliers": [1.5,2]
+    "cost_stress_multipliers": [
+      1.5,
+      2
+    ]
   },
   "correction": {
     "layer": "infrastructure_source_contract_rebase",
@@ -42,7 +61,9 @@
     "new_parameters": false,
     "new_thresholds": false,
     "asset_selection": false,
-    "direction_reversal": false
+    "direction_reversal": false,
+    "execution_identity_fix": "Dedicated Q081R2 runner with identical scientific construction and deterministic gross-cap correction; no parameter, threshold, asset, horizon, variant or family-selection changes.",
+    "rebase_note": "The original preregistration referenced the Q081R1 runner whose hard-coded trial identity made Q081R2 execution impossible. This infrastructure-only rebase binds the executable source contract to Q081R2 and requires fresh preflight before authorization."
   },
   "gates_total": 13,
   "governance": {
@@ -64,7 +85,7 @@
     "data/canonical_snapshot.py": "164841d47acc5ec80016f02124143fe5068277b0",
     "execution/cost_contract.py": "21b54b45dbe708f3102851fd368ad1b64226b0ad",
     "config/settings.py": "9c7b5199ed09d11ca17eb72493aebf7a7666fd28",
-    "automation/q081r1_corrected_e1_e2_performance.py": "773f8a801de3712a33667f2ea5735ab3a38dafcb"
+    "automation/q081r2_corrected_e1_e2_performance.py": "7b10d870ef14ca8c1e3021fd93936332b0057ad0"
   },
   "reproducibility": {
     "performance_network_access": false,
