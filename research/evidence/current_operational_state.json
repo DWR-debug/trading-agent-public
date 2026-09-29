@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T18:01:37.264874+00:00",
+  "generated_at_utc": "2026-09-29T18:02:23.877779+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "QA: lock PowerShell-safe path and regex syntax for AI verifier",
+        "sha": "2bcffa9252094e9bbf8168a56f367e3c147048b6",
+        "timestamp": "2026-09-29T20:02:16+02:00"
+      },
+      {
+        "message": "FIX: preserve PowerShell path and regex escaping in local AI verifier",
+        "sha": "031714dee93f3bfdeff96e725d264bd251cf436e",
+        "timestamp": "2026-09-29T20:02:06+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "94d81b0b45f5b703658e642c92c3cb5622117a35",
+        "timestamp": "2026-09-29T18:01:37Z"
+      },
+      {
         "message": "QA: correct local AI verifier contract assertion",
         "sha": "87e1082e57fe29a290f97d2dfb4449af95a96d00",
         "timestamp": "2026-09-29T20:01:25+02:00"
@@ -418,21 +433,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "4ea96c83229634470368d83da873ab0182228c03",
         "timestamp": "2026-09-29T18:00:48Z"
-      },
-      {
-        "message": "QA: freeze historical SEC EDGAR PIT anchor filings",
-        "sha": "8d1cc206f73903b0bee8751530ae2b3336919782",
-        "timestamp": "2026-09-29T20:00:46+02:00"
-      },
-      {
-        "message": "RESEARCH: use historical SEC EDGAR anchor filings for PIT depth audit",
-        "sha": "e1533499a5ad6a1aff9a04cd6803c0de39756486",
-        "timestamp": "2026-09-29T20:00:36+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b226e3d7652582340deff47be24eb5e6f78c7879",
-        "timestamp": "2026-09-29T17:59:12Z"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "87e1082e57fe29a290f97d2dfb4449af95a96d00",
+  "source_master_sha": "2bcffa9252094e9bbf8168a56f367e3c147048b6",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36609081048"
+    "run_id": "36609160948"
   }
 }
