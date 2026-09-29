@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T15:58:32.135024+00:00",
+  "generated_at_utc": "2026-09-29T16:02:14.230304+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: block option-borrow candidate under zero-paid-data policy",
+        "sha": "7b15f8ac60f1f1cda6c0f803d44b82deef45a097",
+        "timestamp": "2026-09-29T18:02:12+02:00"
+      },
+      {
+        "message": "RESEARCH: record Q096 frontier source and PIT audit findings",
+        "sha": "4549e063529a395ad2b9b7e2d485638e62d87a00",
+        "timestamp": "2026-09-29T18:01:58+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5ce09d21d322687dcd77339d8288a81f720a1cf9",
+        "timestamp": "2026-09-29T15:58:32Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "1d7e992d7086ed54667f99fb73fa80179f505ce2",
         "timestamp": "2026-09-29T15:58:16Z"
@@ -418,21 +433,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "0c8e329c013f1adba5639f4f4b8981a9f03e5ed1",
         "timestamp": "2026-09-29T15:57:40Z"
-      },
-      {
-        "message": "QA: include Q096 contract tests in autonomous lane",
-        "sha": "6edf869f14d1364648325471b3204f8bb39c1084",
-        "timestamp": "2026-09-29T17:57:32+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c35a81bd7689f9efb7645b210870e581705bfd11",
-        "timestamp": "2026-09-29T15:57:23Z"
-      },
-      {
-        "message": "QA: test frontier source and PIT audit contract",
-        "sha": "958a260e9a12ff3d584b06f297ab8a77cd15e23c",
-        "timestamp": "2026-09-29T17:57:21+02:00"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1d7e992d7086ed54667f99fb73fa80179f505ce2",
+  "source_master_sha": "7b15f8ac60f1f1cda6c0f803d44b82deef45a097",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36594234705"
+    "run_id": "36594717093"
   }
 }
