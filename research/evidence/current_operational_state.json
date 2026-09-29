@@ -150,9 +150,15 @@
         "class": "independent_replication",
         "code": "095",
         "issue_number": null,
-        "performance_authorization_allowed": true,
+        "performance_authorization_allowed": false,
+        "performance_result": {
+          "report_fingerprint": "2132ad61b30100d1c187ae20ab9e3d2597cdadaf3ef2f0fa85ba7a12c3765772",
+          "status": "COMPLETED",
+          "trial_id": "T-2026-09-29-095",
+          "workflow_run_id": "36580538374"
+        },
         "preregistration_path": "research/preregistrations/q095_monthly_rebalance_independent_replication_2026_09_29.json",
-        "state": "PERFORMANCE_AUTHORIZED",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
         "trial_id": "T-2026-09-29-095"
       }
     ],
@@ -266,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T14:09:49.196022+00:00",
+  "generated_at_utc": "2026-09-29T14:12:01.930988+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -389,6 +395,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: allow implicit false promotion state in Q091 diagnostic",
+        "sha": "e40992db99f77002db31696c03feba8ac757aa5a",
+        "timestamp": "2026-09-29T16:11:46+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "1548501bc59b14ad6a99d89c5009b96e61f1d321",
+        "timestamp": "2026-09-29T14:10:12Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6f80cb3e77b2ce144974db6d78b3cc95c93271d0",
+        "timestamp": "2026-09-29T14:09:49Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "24d95f82544c06eeb2ba30be57e58ad70bcb013e",
         "timestamp": "2026-09-29T14:09:35Z"
@@ -412,21 +433,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "c1e48867e38624d116d6dfef3d61f8099f3a8f83",
         "timestamp": "2026-09-29T14:08:06Z"
-      },
-      {
-        "message": "RESEARCH: retry Q095 after verified frozen-preparation restore",
-        "sha": "2c0291956155052f3d879cc4ea35f5165b2e2b17",
-        "timestamp": "2026-09-29T16:08:04+02:00"
-      },
-      {
-        "message": "RESEARCH: verify Q095 frozen preparation against authenticated fingerprints",
-        "sha": "1c66e7266d811e016641ba5cd7b2ceb6fbaefd55",
-        "timestamp": "2026-09-29T16:07:54+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2087b142105c743d4c54897db8d45e9c81b1b558",
-        "timestamp": "2026-09-29T14:06:12Z"
       }
     ]
   },
@@ -457,7 +463,7 @@
   "scientific_state_recorded": {
     "decision_basis_stage": "Q066_COMPLETED_DIAGNOSTIC_ONLY",
     "latest_formal_status": "performance_completed_no_arm_passed_all_13_gates",
-    "latest_formal_trial": "T-2026-09-29-094",
+    "latest_formal_trial": "T-2026-09-29-095",
     "next_research_focus_recorded": "Q067 design-only: two unranked follow-up mechanisms derived from Q066 — alpha-level common-mode exposure control and turnover hysteresis; no performance evaluation until parameter freeze, fresh coverage and PIT.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
@@ -496,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "24d95f82544c06eeb2ba30be57e58ad70bcb013e",
+  "source_master_sha": "e40992db99f77002db31696c03feba8ac757aa5a",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36580538020"
+    "run_id": "36580830011"
   }
 }
