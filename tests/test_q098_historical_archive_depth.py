@@ -43,7 +43,7 @@ def test_q098_is_non_evaluative() -> None:
 def test_q098_historical_edgar_anchors_are_frozen_to_study_appropriate_dates() -> None:
     assert HISTORICAL_EDGAR_ANCHORS["13D_G"]["study_date"] == "2011-06-09"
     assert HISTORICAL_EDGAR_ANCHORS["FORM144"]["study_date"] == "2023-11-06"
-    assert "index-headers.html" in HISTORICAL_EDGAR_ANCHORS["13D_G"]["url"]
-    assert "index-headers.html" in HISTORICAL_EDGAR_ANCHORS["FORM144"]["url"]
+    assert "0001020066-11-000014-index.html" in HISTORICAL_EDGAR_ANCHORS["13D_G"]["url"]
+    assert "0001921094-23-000806-index.htm" in HISTORICAL_EDGAR_ANCHORS["FORM144"]["url"]
     assert HISTORICAL_EDGAR_ANCHORS["13D_G"]["accession"] == "0001020066-11-000014"
     assert HISTORICAL_EDGAR_ANCHORS["FORM144"]["accession"] == "0001921094-23-000806"
