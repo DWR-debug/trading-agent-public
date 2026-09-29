@@ -17,6 +17,8 @@ UA = "trading-agent-public/Q096-frontier-audit contact=research"
 STATIC_PROBES = [
     ("LSEG_RUSSELL_RECON", "https://www.lseg.com/en/ftse-russell/russell-reconstitution", "html", ["reconstitution", "Russell"]),
     ("CBOE_VIX_HISTORY", "https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv", "csv", ["DATE,OPEN,HIGH,LOW,CLOSE"]),
+    ("SEC_FTD_HISTORY", "https://www.sec.gov/data-research/sec-markets-data/fails-deliver-data", "html", ["February 2004", "August 2026"]),
+    ("FINRA_SHORT_INTEREST", "https://www.finra.org/filing-reporting/regulatory-filing-systems/short-interest", "html", ["Short Interest Reporting", "2026 Short Interest Reporting Dates"]),
 ]
 
 SEC_SAMPLE_CIKS = {
@@ -24,6 +26,9 @@ SEC_SAMPLE_CIKS = {
     "AAPL": "0000320193",
     # Existing Q075 sample manager CIK; used only as a source-contract probe.
     "SEC_13F_SAMPLE": "0001418814",
+    # Current public EDGAR examples verified on 2026-09-29.
+    "SEC_13D_G_SAMPLE": "0001490281",
+    "SEC_FORM144_SAMPLE": "0001921094",
 }
 
 
@@ -312,6 +317,12 @@ def main() -> int:
         ),
         sec_submission_probe("FORM4_SAMPLE", SEC_SAMPLE_CIKS["MSFT"], {"4", "4/A"}),
         sec_submission_probe("FORM13F_SAMPLE", SEC_SAMPLE_CIKS["SEC_13F_SAMPLE"], {"13F-HR", "13F-HR/A"}),
+        sec_submission_probe(
+            "BENEFICIAL_OWNERSHIP_SAMPLE",
+            SEC_SAMPLE_CIKS["SEC_13D_G_SAMPLE"],
+            {"SCHEDULE 13D", "SCHEDULE 13D/A", "SCHEDULE 13G", "SCHEDULE 13G/A"},
+        ),
+        sec_submission_probe("FORM144_SAMPLE", SEC_SAMPLE_CIKS["SEC_FORM144_SAMPLE"], {"144"}),
         companyfacts_probe(SEC_SAMPLE_CIKS["MSFT"]),
         gdelt_probe(),
     ]
