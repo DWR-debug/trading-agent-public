@@ -53,6 +53,15 @@ Feasibility consequence:
 - proposed sale quantity, reporting person, issuer and security mapping must be preserved with acceptance timestamps;
 - pre-electronic paper-era observations must not be reconstructed from later data.
 
+## Historical PIT anchors added in Q098
+
+The source-depth audit uses concrete public EDGAR anchor filings rather than assuming that the oldest submission chunk contains every form family:
+
+- Schedule 13G: accession 0001020066-11-000014, accepted 2011-06-09.
+- Form 144: accession 0001921094-23-000806, accepted 2023-11-06.
+
+These anchors demonstrate historical public visibility and provide acceptance-time PIT anchors for subsequent coverage work. They do not constitute performance evidence.
+
 ## Research governance
 
 All four candidates remain unranked. No performance authorization, holdout selection, parameter search, asset selection or automatic promotion is permitted.
