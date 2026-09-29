@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T06:48:43.316514+00:00",
+  "generated_at_utc": "2026-09-29T06:49:49.494242+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,6 +325,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: allow operational state descendants in exact master gate (#654)",
+        "sha": "dd5c3d7bfe44a3059f4f4edf432df095851e83a0",
+        "timestamp": "2026-09-29T08:49:36+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "0d86bab66b7ffb26661d3b9a6eb5cb1557f1cf5f",
+        "timestamp": "2026-09-29T06:48:43Z"
+      },
+      {
         "message": "FIX: use explicit shell per Q089 audit lane (#653)",
         "sha": "eaaeb95f3d7ee75f2bd12a823c62aaaecd1a07f7",
         "timestamp": "2026-09-29T08:48:31+02:00"
@@ -353,16 +363,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "e1358156d3fc38ef1b6218c59220a95a045e0970",
         "timestamp": "2026-09-29T06:46:47Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9a312ae4cc6977741c7cfa39ca099fe4ded27d83",
-        "timestamp": "2026-09-29T06:46:12Z"
-      },
-      {
-        "message": "OPS: schedule free local AI worker fabric (#652)",
-        "sha": "6d4a5eeacad17187ba15c24dd4a0e2a2b8dc3211",
-        "timestamp": "2026-09-29T08:46:00+02:00"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "eaaeb95f3d7ee75f2bd12a823c62aaaecd1a07f7",
+  "source_master_sha": "dd5c3d7bfe44a3059f4f4edf432df095851e83a0",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36533032307"
+    "run_id": "36533129053"
   }
 }
