@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import hashlib
+import html
 import json
+import re
 import urllib.error
 import urllib.request
 import zipfile
@@ -159,6 +161,7 @@ def sec_submission_probe(label: str, cik: str, target_forms: set[str], text_chec
             filing = filing_url(cik, candidate["accessionNumber"], candidate["primaryDocument"])
             s, data, c = get(filing)
             filing_text = data.decode("utf-8", "replace") if s == 200 else ""
+            normalized_text = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", filing_text))).strip()
             header = (
                 f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/"
                 f"{candidate['accessionNumber'].replace('-', '')}/"
@@ -182,12 +185,12 @@ def sec_submission_probe(label: str, cik: str, target_forms: set[str], text_chec
                 "url": filing,
                 "http_status": s,
                 "response_sha256": fp(data),
-                "checks": {check: check.lower() in filing_text.lower() for check in checks},
+                "checks": {check: check.lower() in normalized_text.lower() for check in checks},
             }
             row["checks"][f"{form}_primary_document_found"] = s == 200
             row["checks"][f"{form}_header_found"] = hs == 200
             row["checks"][f"{form}_acceptance_datetime"] = hs == 200 and "<ACCEPTANCE-DATETIME>" in header_text.upper()
-            row["checks"].update({f"{form}_{check}": check.lower() in filing_text.lower() for check in checks})
+            row["checks"].update({f"{form}_{check}": check.lower() in normalized_text.lower() for check in checks})
 
     row["status"] = "VERIFIABLE" if row["checks"] and all(row["checks"].values()) else "SCHEMA_MISMATCH"
     return row
