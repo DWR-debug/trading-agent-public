@@ -249,7 +249,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:26:10.878425+00:00",
+  "generated_at_utc": "2026-09-29T12:30:09.583994+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -372,6 +372,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "TEST: allow Q094 performance workflow in project integrity",
+        "sha": "92ee01c6af79e4b4ff8b387b82d14a5a25996e72",
+        "timestamp": "2026-09-29T14:30:04+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q094 one-shot monthly performance workflow",
+        "sha": "d2a9f663f97c17df9f2df709e9536ccd9b86c7f1",
+        "timestamp": "2026-09-29T14:29:55+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "a70b697e53436e7f02685de23b8da9748834b260",
+        "timestamp": "2026-09-29T12:26:44Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "27242b03f3b90a998385da91733f1cd8fa9cf59b",
+        "timestamp": "2026-09-29T12:26:10Z"
+      },
+      {
         "message": "FIX: accept implicit false Q094 holdout-selection receipt",
         "sha": "602faaaf52a6c5966c573fe9a0cc594c524d54b5",
         "timestamp": "2026-09-29T14:25:58+02:00"
@@ -390,26 +410,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "b4e4f3050d820c267993993aa672103df87bc6fc",
         "timestamp": "2026-09-29T12:24:15Z"
-      },
-      {
-        "message": "FIX: use valid two-symbol Q094 month-boundary test",
-        "sha": "87ab05eceaa6df387a641379640b909fb5d5be8c",
-        "timestamp": "2026-09-29T14:24:00+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "cb64175821dc65b588f77ee3b1caf94f0852180c",
-        "timestamp": "2026-09-29T12:23:35Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "79dcdc3ed00437080de7c95d3594d6582673d832",
-        "timestamp": "2026-09-29T12:23:20Z"
-      },
-      {
-        "message": "TEST: allow Q094 preparation workflow in project integrity",
-        "sha": "adae032ceac9cea812d8859454e34c17f4f6590a",
-        "timestamp": "2026-09-29T14:23:15+02:00"
       }
     ]
   },
@@ -479,12 +479,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "602faaaf52a6c5966c573fe9a0cc594c524d54b5",
+  "source_master_sha": "92ee01c6af79e4b4ff8b387b82d14a5a25996e72",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36568068099"
+    "run_id": "36568499067"
   }
 }
