@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T17:57:11.046793+00:00",
+  "generated_at_utc": "2026-09-29T17:57:24.034625+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "93e9f9f7debd63debd985f71043252558c8a45ab",
+        "timestamp": "2026-09-29T17:57:11Z"
+      },
+      {
         "message": "OPS: add Q098 historical archive audit to hosted frontier lane",
         "sha": "1bb8e437392f5ef52d7801bcd2dc5a3ea6848a91",
         "timestamp": "2026-09-29T19:57:07+02:00"
@@ -428,11 +433,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "7e4b6d78a7aba1fa696c3f2d1739432ed596606a",
         "timestamp": "2026-09-29T17:56:27Z"
-      },
-      {
-        "message": "RESEARCH: add historical public archive depth audit",
-        "sha": "3cc41afa6a80ecfb6ecd465e1c683dea91d63f41",
-        "timestamp": "2026-09-29T19:56:15+02:00"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1bb8e437392f5ef52d7801bcd2dc5a3ea6848a91",
+  "source_master_sha": "93e9f9f7debd63debd985f71043252558c8a45ab",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36608552183"
+    "run_id": "36608574278"
   }
 }
