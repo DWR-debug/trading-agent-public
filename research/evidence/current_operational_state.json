@@ -314,7 +314,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T22:35:38.973616+00:00",
+  "generated_at_utc": "2026-09-29T22:35:54.203152+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -438,6 +438,11 @@
     "recent_commits": [
       {
         "message": "OPS: synchronize current operational status",
+        "sha": "2a8e9739cb13b23df1a78a4ec52b6a623d088df8",
+        "timestamp": "2026-09-29T22:35:39Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
         "sha": "2637d4d04b6bcab84dbece15777fd180634eb7ea",
         "timestamp": "2026-09-29T22:35:21Z"
       },
@@ -470,11 +475,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "273042535170b0bc2fb029cd7f029d99db8df157",
         "timestamp": "2026-09-29T22:34:04Z"
-      },
-      {
-        "message": "TEST: register Q081R4 one-shot workflows in integrity allowlist",
-        "sha": "b7fa49a7d9c44e03ba5d16fe8cc63250515a8ece",
-        "timestamp": "2026-09-30T00:34:02+02:00"
       }
     ]
   },
@@ -544,12 +544,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2637d4d04b6bcab84dbece15777fd180634eb7ea",
+  "source_master_sha": "2a8e9739cb13b23df1a78a4ec52b6a623d088df8",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36640466232"
+    "run_id": "36640479080"
   }
 }
