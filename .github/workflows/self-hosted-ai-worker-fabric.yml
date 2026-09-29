@@ -2,6 +2,8 @@ name: Local Free AI Worker Fabric
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "45 */6 * * *"
 
 permissions:
   contents: write
