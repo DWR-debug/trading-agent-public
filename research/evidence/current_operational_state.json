@@ -234,7 +234,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T11:42:31.616728+00:00",
+  "generated_at_utc": "2026-09-29T11:43:05.056369+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -357,44 +357,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: record AI worker state",
+        "sha": "42e228d2ab8b6915899e787ccd58356c60715224",
+        "timestamp": "2026-09-29T11:43:02Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "5c7d6c48e5dad9c93a6be01070203405c741b7af",
+        "timestamp": "2026-09-29T11:42:58Z"
+      },
+      {
+        "message": "GOVERNANCE: retry Q091 one-shot authorization after preflight fix",
+        "sha": "20315e6c9612eb3ad637d60a6e1e00e495089e20",
+        "timestamp": "2026-09-29T13:42:57+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "5022bc6895b627fd57c07a8c8c4bd7ceae868cd8",
+        "timestamp": "2026-09-29T11:42:55Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "9196fa75156ef66ec7406a349e2e7572ad63695d",
+        "timestamp": "2026-09-29T11:42:50Z"
+      },
+      {
+        "message": "FIX: install pytest in Q091 authorization preflight",
+        "sha": "d76b105ada7ba14272c43b4998f4f0908c076e38",
+        "timestamp": "2026-09-29T13:42:49+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "36488154e8317626cabdce876d4d67ff954e7483",
+        "timestamp": "2026-09-29T11:42:42Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
-        "sha": "ee04485afd9d8659465210731fe67fbea63323ec",
-        "timestamp": "2026-09-29T11:42:14Z"
-      },
-      {
-        "message": "GOVERNANCE: authorize Q091 one-shot fixed-rule performance",
-        "sha": "7736228137fd0823b2f456682f0c7efbde34b70c",
-        "timestamp": "2026-09-29T13:42:06+02:00"
-      },
-      {
-        "message": "GOVERNANCE: add fail-closed Q091 one-shot authorization workflow",
-        "sha": "991b4929d093b08a1909c82a5f89393dda039f6f",
-        "timestamp": "2026-09-29T13:42:00+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "75343723549ecfcb40578609c650ca13bd94f358",
-        "timestamp": "2026-09-29T11:39:37Z"
-      },
-      {
-        "message": "GOVERNANCE: authorize Q091 fixed-rule performance trial",
-        "sha": "0cb93c01178a6787699f78b787076b9b1ced0382",
-        "timestamp": "2026-09-29T13:39:26+02:00"
-      },
-      {
-        "message": "OPS: record local AI worker state",
-        "sha": "b0a33d949e6ef6ce1d1012ba5a0e8c1386b51b56",
-        "timestamp": "2026-09-29T11:35:17Z"
-      },
-      {
-        "message": "OPS: record local AI worker state",
-        "sha": "31af7893a81514c4a61f5f1b28c85edf92f1b053",
-        "timestamp": "2026-09-29T11:34:19Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f0a6fd8f40bde2c6abaf01a4e7c76ba3d34dd0b9",
-        "timestamp": "2026-09-29T11:33:08Z"
+        "sha": "a0bfa12598e11553d359a091a981b3aa8f7eb8f9",
+        "timestamp": "2026-09-29T11:42:31Z"
       }
     ]
   },
@@ -464,12 +464,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ee04485afd9d8659465210731fe67fbea63323ec",
+  "source_master_sha": "42e228d2ab8b6915899e787ccd58356c60715224",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36563373648"
+    "run_id": "36563448639"
   }
 }
