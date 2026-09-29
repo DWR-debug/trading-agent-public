@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "trial_id": "T-2026-09-29-095",
   "research_family": "independent_replication_monthly_rebalance_after_q094",
-  "status": "PREREGISTERED_DESIGN_ONLY",
+  "status": "PREREGISTERED_PERFORMANCE",
   "purpose": "Independently replicate the entire fixed Q094 monthly-rebalance family on a fresh symbol-disjoint universe, without changing either parent Q091 construction or the calendar-month rebalance rule.",
   "parent_trials": [
     {
@@ -93,7 +93,16 @@
       "XYL"
     ],
     "source_order_rule": "Frozen candidate-pool order; prior-research symbols are globally excluded by the coverage contract; the first eight symbols satisfying the fixed coverage/common-calendar contract are selected.",
-    "symbols": [],
+    "symbols": [
+      "ALB",
+      "BR",
+      "CNP",
+      "EFX",
+      "EXPD",
+      "GEN",
+      "IFF",
+      "IT"
+    ],
     "universe": "validation_2026_09_29_q095_monthly_rebalance_independent_replication",
     "interval": "1d",
     "requested_candles": 5000,
@@ -104,13 +113,13 @@
       "start": "2011-01-01",
       "end": "2025-09-24"
     },
-    "coverage_trial_id": null,
-    "coverage_result_fingerprint": null,
-    "snapshot_fingerprint": null,
-    "pit_trial_id": null,
-    "pit_result_fingerprint": null,
-    "input_bundle_trial_id": null,
-    "input_bundle_fingerprint": null,
+    "coverage_trial_id": "T-2026-09-29-095-COVERAGE",
+    "coverage_result_fingerprint": "9d03dc1c4b01ff8713a25a35b3551ab9ef059b3a0f8f2dc77671a0ba3bc60c53",
+    "snapshot_fingerprint": "d796e11c069e7dd4fb036a9dda804136da8703dbdbc2f64a46f787f32c61130c",
+    "pit_trial_id": "T-2026-09-29-095-PIT",
+    "pit_result_fingerprint": "34b834e03d86cda4a4b68382a860bf11d5ba1c7c6eba197add23c924094baae9",
+    "input_bundle_trial_id": "T-2026-09-29-095-INPUT-FREEZE",
+    "input_bundle_fingerprint": "7a16c2b1c91d9194c9a8e450c8009f3030b28a59d70f7c354c6d6dac56a3e705",
     "cost_contract": {
       "fee_rate": 0.001,
       "slippage_rate": 0.0005,
@@ -155,20 +164,21 @@
     "performance_runner_path": "automation/q095_performance.py",
     "performance_runner_sha256": null,
     "monthly_overlay_path": "portfolio/q094_monthly_rebalance.py",
-    "monthly_overlay_sha256": null,
+    "monthly_overlay_sha256": "b8d6fcb0bda122b853f8ac9a4177de41ccbe0608e0032680b6c7a2fefa95ef6b",
     "candidate_bank_path": "automation/q069_candidate_bank.py",
     "candidate_bank_sha256": "84e008a6152cbea128e5e5f2ac0dfdde0b0172310fe4c510241c60edfd3ff617",
     "cost_contract_path": "execution/cost_contract.py",
-    "cost_contract_sha256": null,
+    "cost_contract_sha256": "bd73fa0a9ff09eea8109ff9a1e0659e890a013818bf6367034a8572cf850260d",
     "settings_path": "config/settings.py",
-    "settings_sha256": null,
+    "settings_sha256": "580b5b2456f5f0eefe01e12ae4aeb36d998b8f66afcf97aa086a9383a00de175",
     "input_freeze_path": "automation/q095_coverage_pit.py",
-    "input_freeze_sha256": null
+    "input_freeze_sha256": "0db5af7d2648c4a15ddaad37aa9b34bdecec059e33a5f73b6746c7c3d66ba600"
   },
   "safety": {
     "paper_only": true,
     "live_trading_enabled": false,
     "orders_enabled": false,
     "automatic_promotion": false
-  }
+  },
+  "prepared_from_master_sha": "0a834dc7628a16bf5b43dfb0c4b4c87a93b1a74f"
 }
