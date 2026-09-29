@@ -57,7 +57,6 @@ CONTEXT_FILES = {
         "research/evidence/current_operational_state.json",
         "research/governance/active_research_registry.json",
     ),
-}
     "AI-2026-09-29-Q091-ADVERSARIAL": (
         "docs/research_design/Q091-fixed-portfolio-architecture-2026-09-29.md",
         "research/preregistrations/q091_fixed_portfolio_architecture_2026_09_29.json",
@@ -73,6 +72,7 @@ CONTEXT_FILES = {
         "execution/cost_contract.py",
         "config/settings.py",
     ),
+}
 CONTEXT_FILE_LIMIT = 3000
 CONTEXT_TOTAL_LIMIT = 18000
 
