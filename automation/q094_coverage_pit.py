@@ -81,12 +81,10 @@ def coverage(prereg:dict)->dict:
     }
     receipt["result_fingerprint"]=_fp(receipt)
     ev=ROOT/"research/evidence";ev.mkdir(parents=True,exist_ok=True)
-    (ev/"q094_coverage_result.json").write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+"
-",encoding="utf-8")
+    (ev/"q094_coverage_result.json").write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+chr(10),encoding="utf-8")
     freeze={**receipt}
     freeze["asset_freeze_fingerprint"]=freeze.pop("result_fingerprint")
-    (ev/"q094_asset_freeze.json").write_text(json.dumps(freeze,ensure_ascii=False,indent=2)+"
-",encoding="utf-8")
+    (ev/"q094_asset_freeze.json").write_text(json.dumps(freeze,ensure_ascii=False,indent=2)+chr(10),encoding="utf-8")
     return receipt
 
 
@@ -127,8 +125,7 @@ def pit(prereg:dict)->dict:
       "asset_freeze_fingerprint":freeze["asset_freeze_fingerprint"],"safety":SAFETY
     }
     receipt["result_fingerprint"]=_fp(receipt)
-    (ROOT/"research/evidence/q094_pit_result.json").write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+"
-",encoding="utf-8")
+    (ROOT/"research/evidence/q094_pit_result.json").write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+chr(10),encoding="utf-8")
     return receipt
 
 
@@ -157,8 +154,7 @@ def input_freeze(prereg:dict)->dict:
       "performance_evaluation":False,"holdout_used_for_selection":False,"safety":SAFETY
     }
     bundle["bundle_fingerprint"]=_fp(bundle)
-    (outroot/"input_bundle_manifest.json").write_text(json.dumps(bundle,ensure_ascii=False,indent=2)+"
-",encoding="utf-8")
+    (outroot/"input_bundle_manifest.json").write_text(json.dumps(bundle,ensure_ascii=False,indent=2)+chr(10),encoding="utf-8")
     result={
       "schema_version":"1.0","trial_id":INPUT_ID,"status":"INPUT_BUNDLE_FROZEN",
       "coverage_trial_id":COVERAGE_ID,"source_snapshot_fingerprint":manifest["snapshot_fingerprint"],
@@ -166,8 +162,7 @@ def input_freeze(prereg:dict)->dict:
       "performance_network_access":False,"selection_used":False,"performance_evaluation":False,
       "holdout_used_for_selection":False,"safety":SAFETY
     }
-    (ROOT/"research/evidence/q094_input_freeze_result.json").write_text(json.dumps(result,ensure_ascii=False,indent=2)+"
-",encoding="utf-8")
+    (ROOT/"research/evidence/q094_input_freeze_result.json").write_text(json.dumps(result,ensure_ascii=False,indent=2)+chr(10),encoding="utf-8")
     return result
 
 
