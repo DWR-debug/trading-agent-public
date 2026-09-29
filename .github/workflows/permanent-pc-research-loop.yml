@@ -169,16 +169,22 @@ jobs:
           "%PY_EXE%" --version || exit /b 1
           endlocal
 
-      - name: Run local Gemini smoke test
-        shell: cmd
+      - name: Run local AI readiness check
+        shell: powershell
         run: |
-          @echo off
-          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-ai-smoke\tools\python.exe"
-          cd /d "%REPO_SRC%" || exit /b 1
-          set "PYTHONPATH=%REPO_SRC%"
-          "%PY_EXE%" -m automation.local_ai_smoke > "%RUNNER_TEMP%\local-ai-smoke.json"
-          type "%RUNNER_TEMP%\local-ai-smoke.json"
-          if errorlevel 1 exit /b 1
+          $ErrorActionPreference = "Stop"
+          $agy = Get-Command agy -ErrorAction SilentlyContinue
+          if (-not $agy) { $agy = Get-Command gemini -ErrorAction SilentlyContinue }
+          if (-not $agy) { throw "No Gemini/Antigravity CLI found." }
+          $settings = Join-Path $env:USERPROFILE ".gemini\antigravity-cli\settings.json"
+          if (-not (Test-Path $settings)) { throw "Local AI settings missing: $settings" }
+          $raw = Get-Content $settings -Raw
+          if ($raw -notmatch '(?i)"UseG1Credits"\s*:\s*false' -and $raw -notmatch '(?i)"useG1Credits"\s*:\s*false') {
+            throw "Personal G1 credit fallback is not explicitly disabled."
+          }
+          Write-Output "LOCAL_AI_READINESS=READY"
+          Write-Output "LOCAL_AI_PROVIDER_BINARY=$($agy.Source)"
+          Write-Output "PERSONAL_G1_CREDITS_DISABLED=True"
 
       - name: Upload local AI receipt
         if: always()
@@ -194,12 +200,13 @@ jobs:
     if: ${{ always() && needs.local_ai_smoke.result == 'success' && github.repository == 'DWR-debug/trading-agent-public' }}
     strategy:
       fail-fast: false
-      max-parallel: 2
+      # Gemini/Antigravity quota is account-wide; serialize provider calls and prioritize the newest Q091 review.
+      max-parallel: 1
       matrix:
         task:
+          - AI-2026-09-29-Q091-ADVERSARIAL
           - AI-2026-09-28-Q089-ADVERSARIAL
           - AI-2026-09-28-UNUSUAL-FRONTIER
-          - AI-2026-09-29-Q091-ADVERSARIAL
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 20
     steps:
