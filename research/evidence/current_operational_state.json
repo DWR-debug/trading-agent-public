@@ -219,7 +219,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T08:13:54.060257+00:00",
+  "generated_at_utc": "2026-09-29T08:15:52.211801+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -342,44 +342,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "RUN: Q089 fixed-rule performance attempt 3",
-        "sha": "4bf8f034507f26b9b15019244ffc166590a8bb0c",
-        "timestamp": "2026-09-29T10:13:39+02:00"
+        "message": "RUN: execute authorized Q089 fixed-rule performance once",
+        "sha": "30f200343c95fb34e81ee88a403ca155a302f9d7",
+        "timestamp": "2026-09-29T10:15:37+02:00"
       },
       {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "a080348e6e794c150a510663c15a34edf32698bf",
-        "timestamp": "2026-09-29T08:10:29Z"
+        "message": "OPS: record AI worker state",
+        "sha": "ee21949b873211cbb8cd60d1dd02619653f9878b",
+        "timestamp": "2026-09-29T08:15:34Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "411e9d86ab37ebfdacfe4f3967cb48ce7b21d477",
-        "timestamp": "2026-09-29T08:09:38Z"
+        "message": "OPS: record AI worker state",
+        "sha": "ead94f5e01b3b9e311c2f5fb7e60d3a50476c804",
+        "timestamp": "2026-09-29T08:15:30Z"
       },
       {
-        "message": "AUTH: authorize Q089 revision 5 for one-shot fixed-rule performance",
-        "sha": "46d14e5b24756c550ee201f0a316b4f560db9824",
-        "timestamp": "2026-09-29T10:09:24+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "ae19de9d6fc1b067771560c3b91f7038b6a011cc",
+        "timestamp": "2026-09-29T08:15:17Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c11aa2bcab40f6fce51000d5805571d6f1deea1c",
-        "timestamp": "2026-09-29T08:00:29Z"
-      },
-      {
-        "message": "GOV: retire superseded Q089 authorization and fix audit artifact",
-        "sha": "d8bd87f67cb9103842349e67b40f5e15332a3368",
-        "timestamp": "2026-09-29T10:00:10+02:00"
-      },
-      {
-        "message": "OPS: record local AI worker state",
-        "sha": "7ee042811d28574a325f4f87616b2b97b4f68fad",
-        "timestamp": "2026-09-29T07:58:44Z"
+        "message": "OPS: record AI worker state",
+        "sha": "b88a529aa842317cec86aebc86e49e617654a771",
+        "timestamp": "2026-09-29T08:15:13Z"
       },
       {
         "message": "OPS: advance paper-forward MTM state",
-        "sha": "70eba044054e159929faff4172f50b5e2a482c57",
-        "timestamp": "2026-09-29T07:55:48Z"
+        "sha": "11cde2b10aecce7c4332ce57cf3b33b20c904279",
+        "timestamp": "2026-09-29T08:14:35Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ffa0c7194f79fa245695b86d614494369a5fb328",
+        "timestamp": "2026-09-29T08:13:54Z"
+      },
+      {
+        "message": "RUN: Q089 fixed-rule performance attempt 3",
+        "sha": "4bf8f034507f26b9b15019244ffc166590a8bb0c",
+        "timestamp": "2026-09-29T10:13:39+02:00"
       }
     ]
   },
@@ -449,12 +449,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4bf8f034507f26b9b15019244ffc166590a8bb0c",
+  "source_master_sha": "30f200343c95fb34e81ee88a403ca155a302f9d7",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36541404442"
+    "run_id": "36541610845"
   }
 }
