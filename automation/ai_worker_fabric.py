@@ -58,6 +58,21 @@ CONTEXT_FILES = {
         "research/governance/active_research_registry.json",
     ),
 }
+    "AI-2026-09-29-Q091-ADVERSARIAL": (
+        "docs/research_design/Q091-fixed-portfolio-architecture-2026-09-29.md",
+        "research/preregistrations/q091_fixed_portfolio_architecture_2026_09_29.json",
+        "research/evidence/q090_q089_failure_diagnosis_result.json",
+        "research/evidence/q091_coverage_result.json",
+        "research/evidence/q091_pit_result.json",
+        "research/evidence/q091_input_freeze_result.json",
+        "research/evidence/q091_asset_freeze.json",
+        "automation/q091_performance.py",
+        "portfolio/q091_fixed_ensemble.py",
+        "automation/q091_contract_audit.py",
+        "research/governance/active_research_registry.json",
+        "execution/cost_contract.py",
+        "config/settings.py",
+    ),
 CONTEXT_FILE_LIMIT = 3000
 CONTEXT_TOTAL_LIMIT = 18000
 
