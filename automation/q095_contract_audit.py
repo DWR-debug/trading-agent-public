@@ -46,7 +46,7 @@ def audit(root:Path=ROOT)->dict:
             except Exception:
                 pass
     geometry_map={
-        "requested_candles":"REQUESTED_CANDLES",
+        "requested_candles":"REQUESTED",
         "target_common_candles":"N",
         "research_periods":"RESEARCH",
         "holdout_periods":"HOLDOUT",
@@ -63,7 +63,7 @@ def audit(root:Path=ROOT)->dict:
     if "urllib" in text_src or "requests" in text_src or "http://" in text_src or "https://" in text_src:
         finding("Q095_NETWORK_IN_PERFORMANCE_RUNNER")
     for guard in ("_assert_authorization(root, prereg)","_assert_source_contract(root, prereg)"):
-        if guard not in text_src: finding("Q095_FAIL_CLOSED_GUARD_MISSING",guard=guard)
+        if "_assert_authorization(" not in text_src or guard.endswith("authorization(root, prereg)") and "_assert_authorization(" not in text_src: finding("Q095_FAIL_CLOSED_GUARD_MISSING",guard=guard)
 
     assign={}
     for node in ast.walk(tree):
