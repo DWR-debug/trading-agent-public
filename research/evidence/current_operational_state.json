@@ -265,7 +265,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T13:39:42.691004+00:00",
+  "generated_at_utc": "2026-09-29T13:40:00.634960+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -388,6 +388,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5a1c4f70641f6c74f7160e7ec4e305ee5e885526",
+        "timestamp": "2026-09-29T13:39:42Z"
+      },
+      {
         "message": "GOVERNANCE: correct Q095 contract audit registry and data paths",
         "sha": "b997d6e41ac3b6e288d4942902aff65926be1ba4",
         "timestamp": "2026-09-29T15:39:35+02:00"
@@ -421,11 +426,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "18be2c58ea95cecc878d2edb276e82365b847a10",
         "timestamp": "2026-09-29T13:23:16Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "71a98005ecd42baf12612f345330b906349a9b86",
-        "timestamp": "2026-09-29T13:18:47Z"
       }
     ]
   },
@@ -495,12 +495,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b997d6e41ac3b6e288d4942902aff65926be1ba4",
+  "source_master_sha": "5a1c4f70641f6c74f7160e7ec4e305ee5e885526",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36576701763"
+    "run_id": "36576728841"
   }
 }
