@@ -250,7 +250,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:31:10.961292+00:00",
+  "generated_at_utc": "2026-09-29T12:32:11.843850+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -373,6 +373,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RUN: retry Q094 one-shot after regression test fix",
+        "sha": "736b4f02eda52bb667f8f9ac31d64d8c38c85490",
+        "timestamp": "2026-09-29T14:32:09+02:00"
+      },
+      {
+        "message": "FIX: accept frozen Q094 performance preregistration in regression test",
+        "sha": "7b731fe1ce7441880478cf95cc6915988c67627f",
+        "timestamp": "2026-09-29T14:31:54+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "360b4d615bcb623879bc71b3ec6ccf901a4c4d81",
+        "timestamp": "2026-09-29T12:31:11Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "4ea44e32744928a0a93a2ae87a9e5587c34127d6",
         "timestamp": "2026-09-29T12:30:53Z"
@@ -396,21 +411,6 @@
         "message": "GOVERNANCE: activate Q094 one-shot performance authorization",
         "sha": "2597e7f69570fa7d801be70ca56d1604955ecaed",
         "timestamp": "2026-09-29T14:30:22+02:00"
-      },
-      {
-        "message": "GOVERNANCE: authorize Q094 one-shot monthly performance trial",
-        "sha": "ba64d75248ef020142991289d989d8c6bcefe893",
-        "timestamp": "2026-09-29T14:30:13+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "7333361b8405c2b9c6dffb4b25e7299c84c5e67f",
-        "timestamp": "2026-09-29T12:30:09Z"
-      },
-      {
-        "message": "TEST: allow Q094 performance workflow in project integrity",
-        "sha": "92ee01c6af79e4b4ff8b387b82d14a5a25996e72",
-        "timestamp": "2026-09-29T14:30:04+02:00"
       }
     ]
   },
@@ -480,12 +480,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4ea44e32744928a0a93a2ae87a9e5587c34127d6",
+  "source_master_sha": "736b4f02eda52bb667f8f9ac31d64d8c38c85490",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36568608713"
+    "run_id": "36568726833"
   }
 }
