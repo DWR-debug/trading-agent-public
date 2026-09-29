@@ -256,7 +256,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:44:27.075056+00:00",
+  "generated_at_utc": "2026-09-29T12:46:41.660452+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -379,6 +379,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: make canonical status reflect Q094 and diagnostics",
+        "sha": "fe79b3132790cd4f2127a6ddd8e78ec4c97f6f36",
+        "timestamp": "2026-09-29T14:46:27+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f75f0008d6059f4bf2d0cfd9fa00ac181494f3ed",
+        "timestamp": "2026-09-29T12:44:27Z"
+      },
+      {
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "d7e377a84e1b597d32956099eb8491fa2a50a3c4",
         "timestamp": "2026-09-29T12:44:23Z"
@@ -407,16 +417,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "cefccd1420e81322c8dc45af2ab3eafa3fb00afd",
         "timestamp": "2026-09-29T12:43:26Z"
-      },
-      {
-        "message": "RECONCILE: recover exact successful Q094 performance result",
-        "sha": "a166ff145e9dc26c5893013364175131a75d152c",
-        "timestamp": "2026-09-29T14:43:22+02:00"
-      },
-      {
-        "message": "FIX: reconcile Q094 from exact successful performance artifact",
-        "sha": "c6fe140e160f8076a0c91948b5328c2d20b93691",
-        "timestamp": "2026-09-29T14:43:12+02:00"
       }
     ]
   },
@@ -446,8 +446,8 @@
   "schema_version": "1.0",
   "scientific_state_recorded": {
     "decision_basis_stage": "Q066_COMPLETED_DIAGNOSTIC_ONLY",
-    "latest_formal_status": "NO_ARM_PASSED_ALL_13_GATES",
-    "latest_formal_trial": "T-2026-09-27-065",
+    "latest_formal_status": "performance_completed_no_arm_passed_all_13_gates",
+    "latest_formal_trial": "T-2026-09-29-094",
     "next_research_focus_recorded": "Q067 design-only: two unranked follow-up mechanisms derived from Q066 — alpha-level common-mode exposure control and turnover hysteresis; no performance evaluation until parameter freeze, fresh coverage and PIT.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
@@ -486,12 +486,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d7e377a84e1b597d32956099eb8491fa2a50a3c4",
+  "source_master_sha": "fe79b3132790cd4f2127a6ddd8e78ec4c97f6f36",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36570106154"
+    "run_id": "36570379935"
   }
 }
