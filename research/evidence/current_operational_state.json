@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T16:02:52.979262+00:00",
+  "generated_at_utc": "2026-09-29T16:16:57.481847+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,44 +395,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: make Q096 SEC archive audit dynamic and reproducible",
+        "sha": "fe80d4f4d75bfe9a3532dde97e8d716700cdae06",
+        "timestamp": "2026-09-29T18:16:42+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "e997e3231824880c709145679eb9c26fbe519b64",
+        "timestamp": "2026-09-29T16:16:29Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "b8cc87c8244c3aaaf99d4d23f180c575ef068769",
+        "timestamp": "2026-09-29T16:14:53Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "06081eaa29725148c0af7ae26670b9ecf1e7e674",
+        "timestamp": "2026-09-29T16:14:41Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "f695043e679cb64a169bed3b62ac170b3204563c",
+        "timestamp": "2026-09-29T16:14:03Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "d34d12b7f7e4d029e9a6593124e763e00520ba3a",
+        "timestamp": "2026-09-29T16:14:00Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "3ed464ce124f0a8db409955f55d3e2a3a06780a5",
+        "timestamp": "2026-09-29T16:13:56Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
-        "sha": "406abc7b5f1ad47014ea8bbc0be7ef9ccb51992b",
-        "timestamp": "2026-09-29T16:02:37Z"
-      },
-      {
-        "message": "QA: lock zero-paid option source classification",
-        "sha": "458c5fd3cea2ef218a45651568c546b401544e62",
-        "timestamp": "2026-09-29T18:02:35+02:00"
-      },
-      {
-        "message": "RESEARCH: encode zero-paid option source block in Q096",
-        "sha": "cbd4e2cfaeb948ef8d85a6fb352378542079ceec",
-        "timestamp": "2026-09-29T18:02:29+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "408447c6f7492f360d9de243a7c25e06ab2b23fe",
-        "timestamp": "2026-09-29T16:02:14Z"
-      },
-      {
-        "message": "RESEARCH: block option-borrow candidate under zero-paid-data policy",
-        "sha": "7b15f8ac60f1f1cda6c0f803d44b82deef45a097",
-        "timestamp": "2026-09-29T18:02:12+02:00"
-      },
-      {
-        "message": "RESEARCH: record Q096 frontier source and PIT audit findings",
-        "sha": "4549e063529a395ad2b9b7e2d485638e62d87a00",
-        "timestamp": "2026-09-29T18:01:58+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5ce09d21d322687dcd77339d8288a81f720a1cf9",
-        "timestamp": "2026-09-29T15:58:32Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1d7e992d7086ed54667f99fb73fa80179f505ce2",
-        "timestamp": "2026-09-29T15:58:16Z"
+        "sha": "943d973cde2bfe7bd35f2be78659ec5081aa8fa3",
+        "timestamp": "2026-09-29T16:02:53Z"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "406abc7b5f1ad47014ea8bbc0be7ef9ccb51992b",
+  "source_master_sha": "fe80d4f4d75bfe9a3532dde97e8d716700cdae06",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36594793960"
+    "run_id": "36596539724"
   }
 }
