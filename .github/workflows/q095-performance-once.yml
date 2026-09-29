@@ -82,15 +82,17 @@ jobs:
               x=dict(d); got=x.pop(key); calc=hashlib.sha256(json.dumps(x,sort_keys=True,separators=(",",":"),ensure_ascii=True,allow_nan=False).encode()).hexdigest(); assert got==calc,(key,got,calc); return got
           cov_fp=fp(cov,"result_fingerprint")
           pit_fp=fp(pit,"result_fingerprint")
-          inp_fp=fp(inp,"bundle_fingerprint")
+          inp_fp=inp["bundle_fingerprint"]
+          bundle_fp=fp(bundle,"bundle_fingerprint")
           assert cov["status"]=="COVERAGE_PASSED"
           assert pit["status"]=="PIT_PASSED"
           assert inp["status"]=="INPUT_BUNDLE_FROZEN"
           assert cov_fp==prereg["data_contract"]["coverage_result_fingerprint"],("coverage",cov_fp,prereg["data_contract"]["coverage_result_fingerprint"])
           assert pit_fp==prereg["data_contract"]["pit_result_fingerprint"],("pit",pit_fp,prereg["data_contract"]["pit_result_fingerprint"])
           assert inp_fp==prereg["data_contract"]["input_bundle_fingerprint"],("input",inp_fp,prereg["data_contract"]["input_bundle_fingerprint"])
+          assert bundle_fp==inp_fp,("bundle",bundle_fp,inp_fp)
           assert snap["snapshot_fingerprint"]==prereg["data_contract"]["snapshot_fingerprint"]
-          assert bundle["bundle_fingerprint"]==prereg["data_contract"]["input_bundle_fingerprint"]
+          assert bundle["source_snapshot_fingerprint"]==snap["snapshot_fingerprint"]
           assert cov["performance_evaluation"] is False and pit["performance_evaluation"] is False and inp["performance_evaluation"] is False
           print("Q095 FROZEN PREPARATION RESTORE VERIFIED")
           PY
