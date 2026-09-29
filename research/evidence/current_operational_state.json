@@ -250,7 +250,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:32:29.545787+00:00",
+  "generated_at_utc": "2026-09-29T12:34:33.213637+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -373,6 +373,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RUN: retry Q094 with exact frozen preparation artifact",
+        "sha": "aba50875cbd042fc55d605acb8d0d31acd16c3f8",
+        "timestamp": "2026-09-29T14:34:29+02:00"
+      },
+      {
+        "message": "FIX: restore exact Q094 frozen prep artifact before performance",
+        "sha": "1e4bae13d760f152712e8dd27fb4f7a6cbf5388a",
+        "timestamp": "2026-09-29T14:34:20+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c7d1ee7031597ca97f33331ecfe61061d8d0d5cd",
+        "timestamp": "2026-09-29T12:32:29Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "c726084d8dc14193b9ff1b4d4dec1228efb346b2",
         "timestamp": "2026-09-29T12:32:11Z"
@@ -396,21 +411,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "4ea44e32744928a0a93a2ae87a9e5587c34127d6",
         "timestamp": "2026-09-29T12:30:53Z"
-      },
-      {
-        "message": "RUN: trigger Q094 monthly low-turnover performance exactly once",
-        "sha": "bd20181f110ee95785618508a600076f15f3f64f",
-        "timestamp": "2026-09-29T14:30:50+02:00"
-      },
-      {
-        "message": "GOVERNANCE: create Q094 one-shot performance authorization",
-        "sha": "e8945dd5e834019db23e83705f75e1170120a3f0",
-        "timestamp": "2026-09-29T14:30:35+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d0e9f208eb98400a92a8e123d22c85bdb85909af",
-        "timestamp": "2026-09-29T12:30:29Z"
       }
     ]
   },
@@ -480,12 +480,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c726084d8dc14193b9ff1b4d4dec1228efb346b2",
+  "source_master_sha": "aba50875cbd042fc55d605acb8d0d31acd16c3f8",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36568754980"
+    "run_id": "36569003227"
   }
 }
