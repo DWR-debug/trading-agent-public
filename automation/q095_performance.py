@@ -30,7 +30,11 @@ INITIAL_CAPITAL_EUR=2000.0
 FEE=0.001
 SLIPPAGE=0.0005
 COSTS=(("base",1.0),("stress_1_5x_cost",1.5),("stress_2x_cost",2.0))
-VARIANTS=(MONTHLY_E1_ID,MONTHLY_E2_ID)
+VARIANT_TARGETS={
+    "R1_MONTHLY_REBALANCED_Q091_E1": MONTHLY_E1_ID,
+    "R2_MONTHLY_REBALANCED_Q091_E2": MONTHLY_E2_ID,
+}
+VARIANTS=tuple(VARIANT_TARGETS)
 GATE_NAMES=(
 "research_return_positive","research_drawdown_lte_10pct","research_profit_factor_gte_1_10",
 "rolling_profit_factor_gte_1_10","rolling_profitable_window_ratio_gte_0_50",
@@ -165,7 +169,7 @@ def main()->int:
     monthly=build_monthly_targets(assets,symbols)
     arms={}
     for variant in VARIANTS:
-        weights=monthly[variant]
+        weights=monthly[VARIANT_TARGETS[variant]]
         gross=[];turn=[];sensitivity=[];prev={s:0.0 for s in symbols}
         for i in range(N-2):
             w=weights[i];t=sum(abs(float(w[s])-prev[s]) for s in symbols);turn.append(t);prev={s:float(w[s]) for s in symbols}
