@@ -62,9 +62,9 @@ jobs:
           PYTHONPATH: .
         run: |
           set -euo pipefail
-          python -m automation.q091_input_freeze
-            --repo-root .
-            --output-root research/runs/q091_input_bundle/T-2026-09-29-091-INPUT-FREEZE
+          python -m automation.q091_input_freeze \
+            --repo-root . \
+            --output-root research/runs/q091_input_bundle/T-2026-09-29-091-INPUT-FREEZE \
             --result research/evidence/q091_input_freeze_result.json
 
       - name: Validate immutable bundle
