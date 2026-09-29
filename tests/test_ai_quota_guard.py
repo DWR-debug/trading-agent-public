@@ -31,3 +31,51 @@ def test_quota_block_round_trip_and_expiry(tmp_path) -> None:
     expired["blocked_until_utc"] = (datetime.now(timezone.utc) - timedelta(seconds=1)).isoformat().replace("+00:00", "Z")
     (tmp_path / "quota.json").write_text(json.dumps(expired), encoding="utf-8")
     assert load_block("gemini_cli", env) is None
+
+
+def test_local_worker_quota_path_is_fail_closed(monkeypatch, tmp_path) -> None:
+    import automation.ai_worker_fabric as fabric
+
+    task = {
+        "task_id": "AI-test-quota",
+        "providers": ["gemini_cli"],
+        "prompt": "bounded test",
+        "max_runtime_minutes": 1,
+    }
+    monkeypatch.setattr(
+        fabric,
+        "preflight",
+        lambda provider, env: {"available": True, "binary": "agy", "provider": provider},
+    )
+    monkeypatch.setattr(
+        fabric,
+        "command_for",
+        lambda provider, prompt, binary=None: ["agy", "-p", prompt],
+    )
+    monkeypatch.setattr(
+        fabric.subprocess,
+        "run",
+        lambda *args, **kwargs: type("Proc", (), {
+            "returncode": 429,
+            "stdout": "RESOURCE_EXHAUSTED Resets in 1h",
+            "stderr": "",
+        })(),
+    )
+    recorded = {}
+    monkeypatch.setattr(
+        fabric,
+        "record_block",
+        lambda provider, reset_seconds, **kwargs: recorded.update(
+            provider=provider, reset_seconds=reset_seconds
+        ) or recorded,
+    )
+    out = tmp_path / "ai.json"
+    result = fabric.run_task(
+        task,
+        "gemini_cli",
+        out,
+        {"TRADING_AGENT_LOCAL_AI_MODE": "true"},
+    )
+    assert result["status"] == "QUOTA_BLOCKED"
+    assert recorded == {"provider": "gemini_cli", "reset_seconds": 3600}
+    assert out.is_file()
