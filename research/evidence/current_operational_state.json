@@ -293,7 +293,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T22:27:42.304642+00:00",
+  "generated_at_utc": "2026-09-29T22:27:55.929968+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -416,6 +416,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "aed7f8a1a4bcf2abd5bbccded494fe564c152565",
+        "timestamp": "2026-09-29T22:27:42Z"
+      },
+      {
         "message": "REQUEST: authorize Q081R3 fixed-rule performance exactly once",
         "sha": "9b2af209c29d302147b65535d43bf99e86fbaca9",
         "timestamp": "2026-09-30T00:27:38+02:00"
@@ -449,11 +454,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "8d6f78e6ab1368678d3cb01a5817680cbcf5b069",
         "timestamp": "2026-09-29T22:26:57Z"
-      },
-      {
-        "message": "TEST: register Q081R3 one-shot workflows in integrity allowlist",
-        "sha": "ca470bb61435b5d72e35e0b491c9cc0923e84d4c",
-        "timestamp": "2026-09-30T00:26:54+02:00"
       }
     ]
   },
@@ -523,12 +523,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9b2af209c29d302147b65535d43bf99e86fbaca9",
+  "source_master_sha": "aed7f8a1a4bcf2abd5bbccded494fe564c152565",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36639673697"
+    "run_id": "36639695622"
   }
 }
