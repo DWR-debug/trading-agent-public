@@ -202,7 +202,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T06:18:14.408577+00:00",
+  "generated_at_utc": "2026-09-29T06:18:56.788956+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -325,6 +325,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "QA: rebind Q089 prereg to hardened runner contract",
+        "sha": "daf54a5b210fd390ba7840d627301c7e02bf8883",
+        "timestamp": "2026-09-29T08:18:43+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "7c655a34914cc3dc82a26ca8d70fd0c9c650f094",
+        "timestamp": "2026-09-29T06:18:14Z"
+      },
+      {
         "message": "SECURITY: fail-closed Q089 authorization and geometry contract",
         "sha": "907ab2cf5bbd76b3e4dbcba1bad120863011e5f8",
         "timestamp": "2026-09-29T08:17:59+02:00"
@@ -353,16 +363,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "059691ca0ccc358c1865fc5544dd4cccae866a92",
         "timestamp": "2026-09-29T06:13:56Z"
-      },
-      {
-        "message": "CI: pin Q089 self-hosted audit to research label",
-        "sha": "0a43599a246d3938fd166dfa4ca0c8b6a43faf35",
-        "timestamp": "2026-09-29T08:13:43+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4b8d04adb8e21e775a752c5dff5ae695039a5efb",
-        "timestamp": "2026-09-29T06:13:19Z"
       }
     ]
   },
@@ -432,12 +432,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "907ab2cf5bbd76b3e4dbcba1bad120863011e5f8",
+  "source_master_sha": "daf54a5b210fd390ba7840d627301c7e02bf8883",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36530363813"
+    "run_id": "36530422337"
   }
 }
