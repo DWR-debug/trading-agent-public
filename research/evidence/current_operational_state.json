@@ -250,7 +250,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:30:53.174498+00:00",
+  "generated_at_utc": "2026-09-29T12:31:10.961292+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -373,6 +373,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4ea44e32744928a0a93a2ae87a9e5587c34127d6",
+        "timestamp": "2026-09-29T12:30:53Z"
+      },
+      {
         "message": "RUN: trigger Q094 monthly low-turnover performance exactly once",
         "sha": "bd20181f110ee95785618508a600076f15f3f64f",
         "timestamp": "2026-09-29T14:30:50+02:00"
@@ -406,11 +411,6 @@
         "message": "TEST: allow Q094 performance workflow in project integrity",
         "sha": "92ee01c6af79e4b4ff8b387b82d14a5a25996e72",
         "timestamp": "2026-09-29T14:30:04+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q094 one-shot monthly performance workflow",
-        "sha": "d2a9f663f97c17df9f2df709e9536ccd9b86c7f1",
-        "timestamp": "2026-09-29T14:29:55+02:00"
       }
     ]
   },
@@ -480,12 +480,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "bd20181f110ee95785618508a600076f15f3f64f",
+  "source_master_sha": "4ea44e32744928a0a93a2ae87a9e5587c34127d6",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36568569903"
+    "run_id": "36568608713"
   }
 }
