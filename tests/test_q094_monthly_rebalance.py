@@ -38,7 +38,8 @@ def test_q094_month_boundary_detection():
         def __init__(self, y, m, d):
             from datetime import datetime, timezone
             self.timestamp=datetime(y,m,d,tzinfo=timezone.utc)
-    assets={"X":[Bar(2020,1,31),Bar(2020,2,3),Bar(2020,2,4)]}
-    assert is_first_trading_session_of_month(assets,0,["X"]) is True
-    assert is_first_trading_session_of_month(assets,1,["X"]) is True
-    assert is_first_trading_session_of_month(assets,2,["X"]) is False
+    bars=[Bar(2020,1,31),Bar(2020,2,3),Bar(2020,2,4)]
+    assets={"X":bars,"Y":[Bar(2020,1,31),Bar(2020,2,3),Bar(2020,2,4)]}
+    assert is_first_trading_session_of_month(assets,0,["X","Y"]) is True
+    assert is_first_trading_session_of_month(assets,1,["X","Y"]) is True
+    assert is_first_trading_session_of_month(assets,2,["X","Y"]) is False
