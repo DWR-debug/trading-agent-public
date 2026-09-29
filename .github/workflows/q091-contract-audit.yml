@@ -18,7 +18,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: trading-agent-q091-contract-audit
+  group: trading-agent-q091-contract-audit-${{ github.sha }}
   cancel-in-progress: false
 
 jobs:
