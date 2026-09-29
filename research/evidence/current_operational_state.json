@@ -234,7 +234,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T10:41:23.966070+00:00",
+  "generated_at_utc": "2026-09-29T10:43:11.347587+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -358,6 +358,36 @@
     "recent_commits": [
       {
         "message": "OPS: record AI worker state",
+        "sha": "41c4f31067512f55eab98dd2f0898dc6e28d809a",
+        "timestamp": "2026-09-29T10:43:09Z"
+      },
+      {
+        "message": "FIX: supply Q091 context to free AI adversarial worker",
+        "sha": "2927358bcfd8a3dc6f55c2e6ae3bc48f3b54e22c",
+        "timestamp": "2026-09-29T12:42:56+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "a58ce7a95771e40379e838c59747749624dacaeb",
+        "timestamp": "2026-09-29T10:41:36Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "f0e6f92617ac54e390487e993ea6fb19aae653e1",
+        "timestamp": "2026-09-29T10:41:29Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "ee694988dd110dcfebca72261d1846e64be2f7f5",
+        "timestamp": "2026-09-29T10:41:28Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a4dc2159fa7465d0d891079f05d4f3733eadd9d5",
+        "timestamp": "2026-09-29T10:41:24Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
         "sha": "a1841f18f4a12f4f6461688d4652f77bfbfb8517",
         "timestamp": "2026-09-29T10:41:21Z"
       },
@@ -365,36 +395,6 @@
         "message": "RESEARCH: Q091 fixed portfolio performance framework",
         "sha": "3ca775f74e27afe1e0161b7d5d2419da0ccc734b",
         "timestamp": "2026-09-29T12:41:08+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "40a2848b715dd745616bf085d4632555d4d156c0",
-        "timestamp": "2026-09-29T10:33:54Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "9a4c4427a6de9054c842e87f7cbfd6893b49879a",
-        "timestamp": "2026-09-29T10:29:00Z"
-      },
-      {
-        "message": "EVIDENCE: persist Q091 verified adjusted-close input bundle",
-        "sha": "5ebf174b9fb2584a7446af2906938bd6df7d1350",
-        "timestamp": "2026-09-29T10:27:50Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "7b83f9a9535cb85a6f53aebfc870a3ae36bc793b",
-        "timestamp": "2026-09-29T10:27:39Z"
-      },
-      {
-        "message": "OPS: persist verified Q091 input bundle with race-safe publisher",
-        "sha": "5a08086e0599c0d7fbac0426710c3b964802ce70",
-        "timestamp": "2026-09-29T12:27:25+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4287f725287e8efb744d1e109673fa2925e556eb",
-        "timestamp": "2026-09-29T10:25:44Z"
       }
     ]
   },
@@ -464,12 +464,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a1841f18f4a12f4f6461688d4652f77bfbfb8517",
+  "source_master_sha": "41c4f31067512f55eab98dd2f0898dc6e28d809a",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36557082167"
+    "run_id": "36557272668"
   }
 }
