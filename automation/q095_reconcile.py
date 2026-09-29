@@ -6,7 +6,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-TRIAL_ID="T-2026-09-29-094"
+TRIAL_ID="T-2026-09-29-095"
 RESULT_PATH="research/evidence/q095_performance_result.json"
 AUTH_PATH="research/authorizations/q095_performance_2026_09_29.json"
 REGISTRY_PATH="research/governance/active_research_registry.json"
@@ -40,7 +40,7 @@ def main()->int:
         __import__("json").dumps(load(root/"research/preregistrations/q095_monthly_rebalance_independent_replication_2026_09_29.json"),sort_keys=True,separators=(",",":"),ensure_ascii=True,allow_nan=False).encode()
     ).hexdigest():
         raise RuntimeError("Q095 authorization/preregistration fingerprint mismatch")
-    entry=next((x for x in registry.get("active_trials",[]) if x.get("code")=="094"),None)
+    entry=next((x for x in registry.get("active_trials",[]) if x.get("code")=="095"),None)
     if entry is None or entry.get("trial_id")!=TRIAL_ID or entry.get("performance_authorization_allowed") is not True:
         raise RuntimeError("Q095 registry authorization invalid")
     key="entries" if "entries" in ledger else "trials"
