@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T14:19:55.598213+00:00",
+  "generated_at_utc": "2026-09-29T14:50:01.131726+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,44 +395,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: isolate permanent research loop from stale queue state",
-        "sha": "a0fb4a9cc5404f5da5d42395a1c0b965b1b6769f",
-        "timestamp": "2026-09-29T16:19:40+02:00"
+        "message": "RESEARCH: expand candidate frontier with SEC public filing signals",
+        "sha": "013b6f284af8f0bdce403a37ac4a501ab25e9d5e",
+        "timestamp": "2026-09-29T16:49:44+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c0ae1a19f264c2e39bad518141e2ba640c14acfe",
-        "timestamp": "2026-09-29T14:17:18Z"
+        "message": "OPS: record AI worker state",
+        "sha": "6f97626e6eef4709b7b8b98e450858e471a578d6",
+        "timestamp": "2026-09-29T14:45:37Z"
       },
       {
-        "message": "OPS: prevent scheduled permanent-loop cancellation races",
-        "sha": "9361c791fe65f182dfd403daabd4c6a30d6833a8",
-        "timestamp": "2026-09-29T16:17:03+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "e0b8159b7970f670efcb030073d34fb1cab8ce34",
+        "timestamp": "2026-09-29T14:45:34Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "99f77c763aed7c7b7cfbedda345167bfdb601ac8",
+        "timestamp": "2026-09-29T14:45:25Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "4e6f53c874f36a85ac364b07e9a05df8865162c0",
+        "timestamp": "2026-09-29T14:45:21Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "fc31322fbbb6804a8373d88131a3abf00cdd62ab",
+        "timestamp": "2026-09-29T14:44:02Z"
       },
       {
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "db856a22a64a867685fad7711737104e081263eb",
-        "timestamp": "2026-09-29T14:16:05Z"
+        "sha": "5a6c57156ac4c3ae36e2c5be4bbe7928d559e226",
+        "timestamp": "2026-09-29T14:41:58Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0e0b7e335fc048e8a07873281388839a49223696",
-        "timestamp": "2026-09-29T14:15:14Z"
-      },
-      {
-        "message": "FIX: route permanent frontier diagnosis through robust Q092 diagnostic",
-        "sha": "039295d568271d21707de6cb371763271666bf03",
-        "timestamp": "2026-09-29T16:15:00+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "934e8861fed4a340ae8dc08710308a286d25073d",
-        "timestamp": "2026-09-29T14:13:54Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "a7df0fabdc32873ea35602f1d6b72d3b44392355",
-        "timestamp": "2026-09-29T14:13:50Z"
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "1dfdd50e9e19a927c8008ca048f9e2628e8dc6f3",
+        "timestamp": "2026-09-29T14:21:14Z"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a0fb4a9cc5404f5da5d42395a1c0b965b1b6769f",
+  "source_master_sha": "013b6f284af8f0bdce403a37ac4a501ab25e9d5e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36581839034"
+    "run_id": "36585592410"
   }
 }
