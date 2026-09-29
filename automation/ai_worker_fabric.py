@@ -18,6 +18,8 @@ import time
 from pathlib import Path
 from typing import Any
 
+from automation.ai_quota_guard import load_block, parse_reset_seconds, quota_error, record_block
+
 SCHEMA_VERSION = 1
 MAX_RUNTIME_MINUTES = 20
 TRUE_VALUES = {"1", "true", "yes", "on"}
@@ -181,6 +183,11 @@ def preflight(provider: str, env: dict[str, str] | None = None) -> dict[str, Any
         auth_ok = free_gate
     allowlist = _truth(env.get("AI_EXTERNAL_PROVIDER_ALLOWLIST"))
     reasons: list[str] = []
+    quota_block = load_block(provider, env) if local_mode else None
+    if quota_block:
+        reasons.append(
+            f"local provider quota blocked until {quota_block['blocked_until_utc']}"
+        )
     if not allowlist:
         reasons.append("AI_EXTERNAL_PROVIDER_ALLOWLIST is not confirmed")
     if binary is None:
@@ -251,7 +258,8 @@ def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, s
     }
     output.parent.mkdir(parents=True, exist_ok=True)
     if not check["available"]:
-        result = {**base, "status": "SKIPPED", "returncode": None, "stdout": "", "stderr": ""}
+        result = {**base, "status": "SKIPPED", "returncode": None, "stdout": "", "stderr": "",
+                  "quota_block": load_block(provider, env)}
         output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         return result
     command = command_for(provider, build_prompt(task), check.get("binary"))
@@ -267,9 +275,36 @@ def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, s
                   "command_binary": command[0]}
         output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
         return result
-    result = {**base, "status": "SUCCESS" if proc.returncode == 0 else "FAILED",
-              "returncode": proc.returncode, "duration_seconds": round(time.monotonic() - started, 3),
-              "stdout": (proc.stdout or "")[-20000:], "stderr": (proc.stderr or "")[-12000:], "command_binary": command[0]}
+    stdout = (proc.stdout or "")[-20000:]
+    stderr = (proc.stderr or "")[-12000:]
+    if local_mode and quota_error(proc.returncode, stdout, stderr):
+        reset_seconds = parse_reset_seconds(f"{stdout}\n{stderr}") or 3600
+        block = record_block(
+            provider,
+            reset_seconds,
+            raw_error=f"{stdout}\n{stderr}",
+            env=env,
+        )
+        result = {
+            **base,
+            "status": "QUOTA_BLOCKED",
+            "returncode": proc.returncode,
+            "duration_seconds": round(time.monotonic() - started, 3),
+            "stdout": stdout,
+            "stderr": stderr,
+            "command_binary": command[0],
+            "quota_block": block,
+        }
+    else:
+        result = {
+            **base,
+            "status": "SUCCESS" if proc.returncode == 0 else "FAILED",
+            "returncode": proc.returncode,
+            "duration_seconds": round(time.monotonic() - started, 3),
+            "stdout": stdout,
+            "stderr": stderr,
+            "command_binary": command[0],
+        }
     output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return result
 
@@ -290,7 +325,7 @@ def main() -> int:
             parser.error("--run requires --provider, --task and --output")
         result = run_task(load_task(args.task), args.provider, args.output)
         print(json.dumps(result, sort_keys=True))
-        return 0 if result["status"] in {"SUCCESS", "SKIPPED"} else 1
+        return 0 if result["status"] in {"SUCCESS", "SKIPPED", "QUOTA_BLOCKED"} else 1
     parser.error("Choose --preflight or --run.")
     return 2
 
