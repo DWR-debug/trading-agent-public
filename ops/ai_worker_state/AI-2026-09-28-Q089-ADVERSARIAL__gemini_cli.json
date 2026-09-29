@@ -5,20 +5,16 @@
   "free_only": true,
   "preflight": {
     "provider": "gemini_cli",
-    "available": false,
-    "binary": "/opt/hostedtoolcache/node/22.23.2/x64/bin/gemini",
+    "available": true,
+    "binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE",
     "free_only": true,
-    "local_mode": false,
+    "local_mode": true,
     "local_attestation": {
-      "present": false,
-      "path": null
+      "present": true,
+      "path": "C:\\Users\\u419680\\.trading-agent\\ai_free_attestation.json"
     },
-    "free_mode_attested": false,
-    "reasons": [
-      "AI_EXTERNAL_PROVIDER_ALLOWLIST is not confirmed",
-      "provider authentication is not available for free-only mode",
-      "provider free-mode attestation is missing"
-    ]
+    "free_mode_attested": true,
+    "reasons": []
   },
   "task_fingerprint": "d7f78f334a0e1a67b390f80e5b5a520e2db981af0323b0c03f589527b0c7641f",
   "worker_output_is_scientific_evidence": false,
@@ -28,8 +24,10 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SKIPPED",
-  "returncode": null,
-  "stdout": "",
-  "stderr": ""
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 49.623,
+  "stdout": "{\"conversation_id\":\"f1d7a725-786e-4e1d-a708-ef30368c2713\",\"status\":\"SUCCESS\",\"response\":\"# Q089 Pre-Performance Adversarial Review \\u0026 Methodology Audit\\n\\n**Task ID:** `AI-2026-09-28-Q089-ADVERSARIAL`  \\n**Scope:** Q089 methodology and pre-performance adversarial review  \\n**Status:** WORKER MATERIAL ONLY — REQUIRES INDEPENDENT DETERMINISTIC CHECK  \\n\\n```\\nHard Invariants Enforced:\\nPAPER_ONLY=True\\nLIVE_TRADING_ENABLED=False\\nORDERS_ENABLED=False\\nAUTOMATIC_PROMOTION=False\\n```\\n\\n---\\n\\n## 1. Executive Summary \\u0026 Findings\\n\\nA rigorous adversarial review of the current Q089 research design (`docs/research_design/Q089-clean-fresh-q069-validation-2026-09-28.md`), cross-runner reproducibility audit design (`docs/research_design/Q089_CROSS_RUN_REPRO_AUDIT_2026-09-28.md`), evidence receipts (`q089_coverage_result.json`, `q089_asset_freeze.json`, `q089_input_freeze_result.json`, `q089_pit_result.json`), and automation harnesses (`automation/q089_coverage_pit.py`, `automation/q089_input_freeze.py`) reveals **six critical pre-performance failure modes**.\\n\\n### Finding A: Frozen Input Bundle Incompleteness (Missing Volume \\u0026 OHLCV for C11)\\n- **Mechanism:** In `q089_input_freeze_result.json`, the frozen bundle contains **only** `adjusted_close.csv` for each of the eight symbols (`AEE`, `AES`, `ATO`, `AVY`, `BKH`, `CAH`, `CHD`, `CHRW`). The `bundle_fingerprint` (`c4261e23...`) covers only these single-column price series.\\n- **Vulnerability:** Frozen Q069 candidate **C11** is `VOLUME_CONFIRMED_TREND_126`. Volume data does not exist in `adjusted_close.csv`.\\n- **Failure Mode:**\\n  1. *Runtime crash:* Performance evaluation strictly isolated to the frozen input bundle will fail when computing C11 due to missing volume columns.\\n  2. *Provenance escape:* If the performance harness bypasses the input bundle to read volume from `research/runs/q089_coverage/T-2026-09-28-089-COVERAGE/datasets/\\u003csymbol\\u003e/1d.csv`, performance runs on data outside the verified `bundle_fingerprint`.\\n\\n### Finding B: Point-in-Time (PIT) Blind Spot in Backwards-Adjusted Close Transformation\\n- **Mechanism:** `automation/q089_input_freeze.py` uses `fetch_adjusted_close(symbol, timestamps)` to generate `adjusted_close.csv`. Adjusted close retroactively adjusts past prices for subsequent stock splits and cash dividends.\\n- **Vulnerability:** Standard Yahoo Finance adjusted prices calculate the adjustment factor using dividends and corporate events through the fetch date (2025/2026). A divid\",\"duration_seconds\":0,\"num_turns\":1,\"usage\":{\"input_tokens\":0,\"output_tokens\":0,\"thinking_tokens\":0,\"cache_read_tokens\":0,\"total_tokens\":0}}\n",
+  "stderr": "[agy] print timeout after 45s with turn in progress; returning partial output\n",
+  "command_binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE"
 }
