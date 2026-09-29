@@ -83,7 +83,7 @@ jobs:
           if [ "$actual" != "${GITHUB_SHA}" ]; then
             echo "MASTER_MOVED_AFTER_TRIGGER=$actual"
             changed="$(git diff --name-only "${GITHUB_SHA}" "$actual")"
-            bad="$(printf '%s\n' "$changed" | grep -Ev '^(docs/CURRENT_STATUS\.md|research/evidence/|research/runs/|ops/paper_forward/state/|ops/ai_worker_state/)' || true)"
+            bad="$(printf '%s\n' "$changed" | grep -Ev '^(docs/CURRENT_STATUS\.md|research/evidence/|research/runs/|ops/paper_forward(_2000)?/state/|ops/ai_worker_state/)' || true)"
             if [ -n "$bad" ]; then
               echo "MASTER_MOVED_WITH_NON_EVIDENCE_CODE_CHANGES"
               printf '%s\n' "$changed"
