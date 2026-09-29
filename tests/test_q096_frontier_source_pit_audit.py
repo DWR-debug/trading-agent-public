@@ -29,6 +29,8 @@ def test_q096_probes_cover_the_new_frontier_data_channels() -> None:
     assert {
         "LSEG_RUSSELL_RECON",
         "CBOE_VIX_HISTORY",
+        "SEC_FTD_HISTORY",
+        "FINRA_SHORT_INTEREST",
     } <= ids
     module = Path("automation/q096_frontier_source_pit_audit.py").read_text(encoding="utf-8")
     assert "MSFT_10K_10Q" in module
