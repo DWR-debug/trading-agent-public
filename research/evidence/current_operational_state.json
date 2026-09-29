@@ -249,7 +249,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:25:09.783156+00:00",
+  "generated_at_utc": "2026-09-29T12:26:10.878425+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -372,6 +372,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: accept implicit false Q094 holdout-selection receipt",
+        "sha": "602faaaf52a6c5966c573fe9a0cc594c524d54b5",
+        "timestamp": "2026-09-29T14:25:58+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d7751da43380b2d4b22e3d423a92b627a880c76a",
+        "timestamp": "2026-09-29T12:25:09Z"
+      },
+      {
         "message": "FIX: harden Q094 preparation serialization",
         "sha": "ba18c23329501599ba72b7d108eb356792bb583a",
         "timestamp": "2026-09-29T14:24:56+02:00"
@@ -400,16 +410,6 @@
         "message": "TEST: allow Q094 preparation workflow in project integrity",
         "sha": "adae032ceac9cea812d8859454e34c17f4f6590a",
         "timestamp": "2026-09-29T14:23:15+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q094 coverage PIT and input freeze workflow",
-        "sha": "3cc08420afce799e7be33ef3cdebe482f8a12cb5",
-        "timestamp": "2026-09-29T14:23:08+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b7b2d018f929e863973fcc7170ecb082dd4c8216",
-        "timestamp": "2026-09-29T12:22:59Z"
       }
     ]
   },
@@ -479,12 +479,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ba18c23329501599ba72b7d108eb356792bb583a",
+  "source_master_sha": "602faaaf52a6c5966c573fe9a0cc594c524d54b5",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36567953729"
+    "run_id": "36568068099"
   }
 }
