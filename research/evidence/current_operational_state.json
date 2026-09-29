@@ -219,7 +219,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T08:15:52.211801+00:00",
+  "generated_at_utc": "2026-09-29T08:19:31.395263+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -339,8 +339,27 @@
     "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "fix/q089-prereg-schema-compat-r6",
+        "number": 672,
+        "title": "FIX: harden Q089 preregistration schema compatibility",
+        "updatedAt": "2026-09-29T08:18:16Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/672"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "FIX: treat omitted Q089 selection fields as false (#671)",
+        "sha": "9da49180d039edeacb06b5bd7dd29480fbf3fccb",
+        "timestamp": "2026-09-29T10:19:17+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "821810c4f24536abdbc8e5113da55f0386d2054d",
+        "timestamp": "2026-09-29T08:15:52Z"
+      },
       {
         "message": "RUN: execute authorized Q089 fixed-rule performance once",
         "sha": "30f200343c95fb34e81ee88a403ca155a302f9d7",
@@ -370,16 +389,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "11cde2b10aecce7c4332ce57cf3b33b20c904279",
         "timestamp": "2026-09-29T08:14:35Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ffa0c7194f79fa245695b86d614494369a5fb328",
-        "timestamp": "2026-09-29T08:13:54Z"
-      },
-      {
-        "message": "RUN: Q089 fixed-rule performance attempt 3",
-        "sha": "4bf8f034507f26b9b15019244ffc166590a8bb0c",
-        "timestamp": "2026-09-29T10:13:39+02:00"
       }
     ]
   },
@@ -449,12 +458,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "30f200343c95fb34e81ee88a403ca155a302f9d7",
+  "source_master_sha": "9da49180d039edeacb06b5bd7dd29480fbf3fccb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36541610845"
+    "run_id": "36541983968"
   }
 }
