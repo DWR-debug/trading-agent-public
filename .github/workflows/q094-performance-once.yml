@@ -38,7 +38,17 @@ jobs:
           github-token: ${{ github.token }}
           repository: ${{ github.repository }}
           run-id: 36568067970
-          path: research
+          path: _q094_prep
+
+      - name: Materialize frozen Q094 artifact into canonical research paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -d _q094_prep/runs/q094_coverage/T-2026-09-29-094-COVERAGE/datasets
+          test -d _q094_prep/runs/q094_input_bundle/T-2026-09-29-094-INPUT-FREEZE
+          mkdir -p research
+          cp -a _q094_prep/evidence research/
+          cp -a _q094_prep/runs research/
 
       - name: Verify restored frozen Q094 artifact
         shell: bash
@@ -49,6 +59,10 @@ jobs:
           test -f research/evidence/q094_input_freeze_result.json
           test -f research/runs/q094_coverage/T-2026-09-29-094-COVERAGE/snapshot_manifest.json
           test -f research/runs/q094_input_bundle/T-2026-09-29-094-INPUT-FREEZE/input_bundle_manifest.json
+          for symbol in VRSK SNPS WAB TT ODFL URI DECK LEN; do
+            test -s "research/runs/q094_coverage/T-2026-09-29-094-COVERAGE/datasets/$symbol/1d.csv"
+            test -s "research/runs/q094_input_bundle/T-2026-09-29-094-INPUT-FREEZE/$symbol/adjusted_close.csv"
+          done
           python - <<'PY'
           import json
           from pathlib import Path
