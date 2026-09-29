@@ -55,7 +55,7 @@ def main() -> int:
         raise RuntimeError("Q081R3 authorization invalid")
     if fingerprint(prereg) != auth.get("preregistration_fingerprint"):
         raise RuntimeError("Q081R3 authorization/preregistration fingerprint mismatch")
-    entry = next((x for x in registry.get("active_trials", []) if x.get("code") == "081R2"), None)
+    entry = next((x for x in registry.get("active_trials", []) if x.get("code") == "081R3"), None)
     if entry is None or entry.get("trial_id") != TRIAL_ID or entry.get("performance_authorization_allowed") is not True:
         raise RuntimeError("Q081R3 registry authorization invalid")
 
