@@ -95,13 +95,6 @@ def main() -> int:
     result["provider"] = "antigravity_cli" if agy else "gemini_cli"
     result["binary"] = binary
 
-    cached_block = load_block("gemini_cli")
-    if cached_block:
-        result["status"] = "SKIPPED_QUOTA_BLOCKED"
-        result["quota_block"] = cached_block
-        print(json.dumps(result, sort_keys=True))
-        return 0
-
     version = _run([binary, "--version"])
     if version.returncode == 0:
         result["version"] = version.stdout.strip().splitlines()[-1][:200] if version.stdout.strip() else None
@@ -116,6 +109,13 @@ def main() -> int:
             result["status"] = "BLOCKED_G1_FALLBACK_NOT_DISABLED"
             print(json.dumps(result, sort_keys=True))
             return 2
+    cached_block = load_block("gemini_cli")
+    if cached_block:
+        result["status"] = "SKIPPED_QUOTA_BLOCKED"
+        result["quota_block"] = cached_block
+        print(json.dumps(result, sort_keys=True))
+        return 0
+    if agy:
         command = [
             binary,
             "--print-timeout",
