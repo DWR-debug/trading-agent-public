@@ -22,6 +22,19 @@ SAMPLES = {
 
 GDELT_DATES = ("20130401", "20190101", "20210101")
 
+HISTORICAL_EDGAR_ANCHORS = {
+    "13D_G": {
+        "url": "https://www.sec.gov/Archives/edgar/data/1020066/000102006611000014/0001020066-11-000014-index.html",
+        "forms": {"SC 13G", "SC 13G/A", "SCHEDULE 13G", "SCHEDULE 13G/A"},
+        "study_date": "2011-06-09",
+    },
+    "FORM144": {
+        "url": "https://www.sec.gov/Archives/edgar/data/1326801/000192109423000806/0001921094-23-000806-index.htm",
+        "forms": {"144"},
+        "study_date": "2023-11-06",
+    },
+}
+
 
 def get(url: str) -> tuple[int, bytes, str | None]:
     req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "*/*"})
@@ -189,6 +202,34 @@ def gdelt_archive_probe() -> dict[str, Any]:
     }
 
 
+
+def historical_edgar_anchor_probe(label: str, spec: dict[str, Any]) -> dict[str, Any]:
+    status, body, ct = get(spec["url"])
+    text = body.decode("utf-8", "replace") if status == 200 else ""
+    upper = text.upper()
+    result = {
+        "id": f"SEC_HISTORICAL_ANCHOR_{label}",
+        "url": spec["url"],
+        "study_date": spec["study_date"],
+        "http_status": status,
+        "content_type": ct,
+        "status": "BLOCKED" if status != 200 else "SCHEMA_MISMATCH",
+        "checks": {},
+    }
+    if status != 200:
+        result["reason"] = f"HTTP_{status}"
+        return result
+    result["checks"] = {
+        "page_readable": True,
+        "form_marker_present": any(form.upper() in upper for form in spec["forms"]),
+        "accepted_timestamp_present": "ACCEPTED" in upper and "20" in text,
+        "accession_marker_present": re.search(r"000\\d{6,}-\\d{2}-\\d{6}", text) is not None,
+    }
+    result["response_sha256"] = sha256(body)
+    result["status"] = "VERIFIABLE" if all(result["checks"].values()) else "SCHEMA_MISMATCH"
+    return result
+
+
 def sec_ftd_archive_probe() -> dict[str, Any]:
     page = "https://www.sec.gov/data-research/sec-markets-data/fails-deliver-data"
     status, body, ct = get(page)
@@ -223,6 +264,10 @@ def main() -> int:
         submission_archive_probe(label, cik, forms)
         for label, (cik, forms) in SAMPLES.items()
     ]
+    probes.extend(
+        historical_edgar_anchor_probe(label, spec)
+        for label, spec in HISTORICAL_EDGAR_ANCHORS.items()
+    )
     probes.extend([gdelt_archive_probe(), sec_ftd_archive_probe()])
     result = {
         "schema_version": "1.0",
