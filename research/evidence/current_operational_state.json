@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T16:19:31.678026+00:00",
+  "generated_at_utc": "2026-09-29T16:19:47.800044+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: classify Q097 public information channels in frontier gate matrix",
+        "sha": "6856b5bd67b14909ad645026b23a6d04ae7b7734",
+        "timestamp": "2026-09-29T18:19:46+02:00"
+      },
+      {
+        "message": "RESEARCH: record Q097 public source verification links",
+        "sha": "1686406b0d31e81e27473d407741ce18138640b6",
+        "timestamp": "2026-09-29T18:19:37+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "eead1aed44ab641113a36386b367f249278119af",
+        "timestamp": "2026-09-29T16:19:31Z"
+      },
+      {
         "message": "RESEARCH: preregister public short-flow and ownership frontier",
         "sha": "5847dab2ed9170341d6715cf0a6bbc7f4499ffd6",
         "timestamp": "2026-09-29T18:19:28+02:00"
@@ -418,21 +433,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "e6113e20319608d4f6b869f696a8ec82c707e005",
         "timestamp": "2026-09-29T16:17:47Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d2b0038241bab53147c2107fa169a01dd5cbb134",
-        "timestamp": "2026-09-29T16:17:33Z"
-      },
-      {
-        "message": "QA: align Q096 tests with dynamic probe design",
-        "sha": "01c8b93dabdfd11c699be58564c9cbd0706996c0",
-        "timestamp": "2026-09-29T18:17:19+02:00"
-      },
-      {
-        "message": "QA: test dynamic SEC filing and PIT helpers",
-        "sha": "b46dec3d247b706bd4126c8f43a75676119de6e2",
-        "timestamp": "2026-09-29T18:17:09+02:00"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5847dab2ed9170341d6715cf0a6bbc7f4499ffd6",
+  "source_master_sha": "6856b5bd67b14909ad645026b23a6d04ae7b7734",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36596833515"
+    "run_id": "36596873145"
   }
 }
