@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T16:20:17.866439+00:00",
+  "generated_at_utc": "2026-09-29T16:20:33.147800+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: document Q097 public short-flow frontier expansion",
+        "sha": "278ac70bf358a1077923b7b35ac5e2d840e1f5ed",
+        "timestamp": "2026-09-29T18:20:24+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f5694e1559e44c225bd72c4b36990015b6f3556a",
+        "timestamp": "2026-09-29T16:20:17Z"
+      },
+      {
         "message": "RESEARCH: freeze Q097 public short-flow candidate registry",
         "sha": "5c9775d1679b37b566b4a1ef2bca0c1b47fc03b3",
         "timestamp": "2026-09-29T18:20:12+02:00"
@@ -423,16 +433,6 @@
         "message": "RESEARCH: record Q097 public source verification links",
         "sha": "1686406b0d31e81e27473d407741ce18138640b6",
         "timestamp": "2026-09-29T18:19:37+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "eead1aed44ab641113a36386b367f249278119af",
-        "timestamp": "2026-09-29T16:19:31Z"
-      },
-      {
-        "message": "RESEARCH: preregister public short-flow and ownership frontier",
-        "sha": "5847dab2ed9170341d6715cf0a6bbc7f4499ffd6",
-        "timestamp": "2026-09-29T18:19:28+02:00"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5c9775d1679b37b566b4a1ef2bca0c1b47fc03b3",
+  "source_master_sha": "278ac70bf358a1077923b7b35ac5e2d840e1f5ed",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36596924351"
+    "run_id": "36596962350"
   }
 }
