@@ -89,6 +89,7 @@ ACTIVE_WORKFLOWS = {
     "q084-feasibility.yml",
     "q085-coverage-pit.yml",
     "q086-coverage-pit.yml",
+    "q089-contract-audit.yml",
     "q089-coverage-cloud-crosscheck.yml",
     "q089-coverage-pit.yml",
     "rccsm-feasibility-cloud.yml",
