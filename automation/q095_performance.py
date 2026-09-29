@@ -66,7 +66,7 @@ def preflight(root:Path):
     if prereg.get("data_contract",{}).get("pit_result_fingerprint")!=pit.get("result_fingerprint"): raise RuntimeError("Q095 PIT fingerprint mismatch")
     if prereg.get("data_contract",{}).get("input_bundle_fingerprint")!=inp.get("bundle_fingerprint"): raise RuntimeError("Q095 input bundle fingerprint mismatch")
     if freeze.get("symbols")!=cov.get("symbols"): raise RuntimeError("Q095 asset freeze symbol mismatch")
-    assets=load_frozen_snapshot(root/"research/runs/q094_coverage"/COVERAGE_ID/"snapshot_manifest.json")
+    assets=load_frozen_snapshot(root/"research/runs/q095_coverage"/COVERAGE_ID/"snapshot_manifest.json")
     symbols=tuple(prereg["data_contract"]["symbols"])
     if tuple(assets)!=symbols or any(len(assets[s])!=N for s in symbols): raise RuntimeError("Q095 snapshot geometry mismatch")
     validate_research_cost_compatibility(fee_rate=FEE,slippage_rate=SLIPPAGE)
@@ -76,9 +76,9 @@ def preflight(root:Path):
 
 def _assert_authorization(root:Path,prereg:dict)->None:
     reg=load(root/"research/governance/active_research_registry.json")
-    entry=next((x for x in reg.get("active_trials",[]) if x.get("code")=="094"),None)
+    entry=next((x for x in reg.get("active_trials",[]) if x.get("code")=="095"),None)
     if entry is None or entry.get("trial_id")!=TRIAL_ID or entry.get("performance_authorization_allowed") is not True: raise RuntimeError("Q095 registry authorization missing")
-    authp=root/"research/authorizations/q094_performance_2026_09_29.json"
+    authp=root/"research/authorizations/q095_performance_2026_09_29.json"
     if not authp.exists(): raise RuntimeError("Q095 authorization missing")
     auth=load(authp)
     if auth.get("trial_id")!=TRIAL_ID or auth.get("authorized") is not True or auth.get("performance_execution_authorized") is not True or auth.get("one_shot") is not True: raise RuntimeError("Q095 authorization flags invalid")
@@ -88,18 +88,18 @@ def _assert_authorization(root:Path,prereg:dict)->None:
 def _assert_source_contract(root:Path,prereg:dict)->None:
     c=prereg.get("source_contract",{})
     mapping={
-      "performance_runner_sha256":root/"automation/q094_performance.py",
+      "performance_runner_sha256":root/"automation/q095_performance.py",
       "monthly_overlay_sha256":root/"portfolio/q094_monthly_rebalance.py",
       "candidate_bank_sha256":root/"automation/q069_candidate_bank.py",
       "cost_contract_sha256":root/"execution/cost_contract.py",
       "settings_sha256":root/"config/settings.py",
-      "input_freeze_sha256":root/"automation/q094_coverage_pit.py",
+      "input_freeze_sha256":root/"automation/q095_coverage_pit.py",
     }
     for key,path in mapping.items():
         if c.get(key)!=hashlib.sha256(path.read_bytes()).hexdigest(): raise RuntimeError("Q095 source contract mismatch: "+key)
 
 def load_adjusted(root:Path,prereg:dict,symbols:tuple[str,...])->dict[str,dict[datetime,float]]:
-    br=root/"research/runs/q094_input_bundle"/INPUT_ID
+    br=root/"research/runs/q095_input_bundle"/INPUT_ID
     manifest=load(br/"input_bundle_manifest.json")
     if manifest.get("bundle_fingerprint")!=prereg["data_contract"]["input_bundle_fingerprint"]: raise RuntimeError("Q095 input manifest fingerprint mismatch")
     actual=manifest["bundle_fingerprint"]
