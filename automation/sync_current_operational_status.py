@@ -102,6 +102,16 @@ def generate(
     decision_basis = _load_json(
         ROOT / "research/evidence/decision_basis_latest.json", {}
     )
+    trial_ledger = _load_json(ROOT / "research/evidence/trial_ledger.json", {})
+    ledger_entries = trial_ledger.get("trials", trial_ledger.get("entries", []))
+    formal_entries = [
+        entry for entry in ledger_entries
+        if isinstance(entry, dict)
+        and str(entry.get("status", "")).startswith("performance_completed")
+    ]
+    latest_formal = formal_entries[-1] if formal_entries else {}
+    q092_diagnosis = _load_json(ROOT / "research/evidence/q092_q091_failure_mechanism_diagnosis_result.json", {})
+    q093_diagnosis = _load_json(ROOT / "research/evidence/q093_q091_cost_attribution_diagnosis_result.json", {})
     github_state = _load_json(github_state_path, {}) if github_state_path else {}
 
     safety = _safety_state()
@@ -240,8 +250,8 @@ def generate(
         "q068_execution_pipeline": q068_pipeline,
         "q070_execution_pipeline": q070_pipeline,
         "scientific_state_recorded": {
-            "latest_formal_trial": project_state.get("latest_formal_trial"),
-            "latest_formal_status": project_state.get("latest_trial_status"),
+            "latest_formal_trial": latest_formal.get("trial_id") or project_state.get("latest_formal_trial"),
+            "latest_formal_status": latest_formal.get("status") or project_state.get("latest_trial_status"),
             "next_research_focus_recorded": project_state.get("next_research_focus"),
             "decision_basis_stage": decision_basis.get("current_stage"),
             "q026_recorded": checkpoint.get("q026"),
@@ -316,7 +326,7 @@ def generate(
 
 ### Scientific status
 
-- Latest recorded formal result: **{project_state.get("latest_trial_status", "UNKNOWN")}** for `{project_state.get("latest_formal_trial", "UNKNOWN")}`.
+- Latest recorded formal result: **{latest_formal.get("status", project_state.get("latest_trial_status", "UNKNOWN"))}** for `{latest_formal.get("trial_id", project_state.get("latest_formal_trial", "UNKNOWN"))}`.
 - Q026 is recorded as **DATA_INVALID / NO_SCIENTIFIC_OUTCOME**; it did not produce performance evidence.
 - Q023 is recorded as **COVERAGE_VALIDATED** and Q025 as **DATE_PIT_VALIDATED**; these are data-contract findings, not promotion evidence.
 - No current candidate is authorized for promotion or live execution.
@@ -328,6 +338,9 @@ def generate(
 - Q089: **{active_trials.get("089", {}).get("state", "UNKNOWN")}**; fresh symbol-disjoint successor to quarantined Q086; separate performance authorization remains required.
 - Q077-R1: **{active_trials.get("077R1", {}).get("state", "PREREGISTERED_WAITING_PREFLIGHT")}**; coverage-only repair after the original Q077 pool left insufficient unused symbols; no performance authorization.
 - Q091: **{q091_state}**; fixed portfolio architecture on the fresh symbol-disjoint universe; performance authorization flag = **{q091_authorized}**.
+- Q092: **{q092_diagnosis.get("status", "DIAGNOSTIC_COMPLETED_ONLY")}**; post-performance Q091 failure-mechanism diagnosis; no performance authorization.
+- Q093: **{q093_diagnosis.get("status", "DIAGNOSTIC_COMPLETED_ONLY")}**; Q091 turnover/cost attribution diagnosis; no performance authorization.
+- Q094: **{active_trials.get("094", {}).get("state", "UNKNOWN")}**; fixed monthly-rebalance successor to the Q091 low-turnover diagnosis; performance authorization flag = **{active_trials.get("094", {}).get("performance_authorization_allowed", False)}**.
 - Q084, Q088 and Q082 remain **design/feasibility tracks** for unusual market-state, textual-network, rebalance-demand and SEC information channels.
 - The unusual-strategy frontier is maintained in `docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md` and is design-only until feasibility and provenance are established.
 
