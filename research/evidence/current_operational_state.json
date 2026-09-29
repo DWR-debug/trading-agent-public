@@ -240,7 +240,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T11:50:02.227755+00:00",
+  "generated_at_utc": "2026-09-29T11:50:17.529388+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -363,6 +363,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "356d570ccdffe2d2bc67c4cde01495aa6e68e4b2",
+        "timestamp": "2026-09-29T11:50:02Z"
+      },
+      {
         "message": "RESEARCH: run Q092 diagnosis in frontier QA lane",
         "sha": "8568a114e9a28bb503d0202c748d3c578a68052c",
         "timestamp": "2026-09-29T13:49:52+02:00"
@@ -396,11 +401,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "30211bd1eb659f1a11f6397b778ddb27f3c76bfd",
         "timestamp": "2026-09-29T11:47:01Z"
-      },
-      {
-        "message": "OPS: make canonical status reflect Q091 registry state",
-        "sha": "af4c27424a1ae87ed8d10fa69a80df6f673ecc0a",
-        "timestamp": "2026-09-29T13:46:46+02:00"
       }
     ]
   },
@@ -470,12 +470,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8568a114e9a28bb503d0202c748d3c578a68052c",
+  "source_master_sha": "356d570ccdffe2d2bc67c4cde01495aa6e68e4b2",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36564156628"
+    "run_id": "36564179562"
   }
 }
