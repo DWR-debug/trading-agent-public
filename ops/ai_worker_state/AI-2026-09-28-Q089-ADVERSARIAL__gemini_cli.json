@@ -5,20 +5,16 @@
   "free_only": true,
   "preflight": {
     "provider": "gemini_cli",
-    "available": false,
-    "binary": "/opt/hostedtoolcache/node/22.23.2/x64/bin/gemini",
+    "available": true,
+    "binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE",
     "free_only": true,
-    "local_mode": false,
+    "local_mode": true,
     "local_attestation": {
-      "present": false,
-      "path": null
+      "present": true,
+      "path": "C:\\Users\\u419680\\.trading-agent\\ai_free_attestation.json"
     },
-    "free_mode_attested": false,
-    "reasons": [
-      "AI_EXTERNAL_PROVIDER_ALLOWLIST is not confirmed",
-      "provider authentication is not available for free-only mode",
-      "provider free-mode attestation is missing"
-    ]
+    "free_mode_attested": true,
+    "reasons": []
   },
   "task_fingerprint": "d7f78f334a0e1a67b390f80e5b5a520e2db981af0323b0c03f589527b0c7641f",
   "worker_output_is_scientific_evidence": false,
@@ -28,8 +24,10 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SKIPPED",
-  "returncode": null,
-  "stdout": "",
-  "stderr": ""
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 53.206,
+  "stdout": "{\"conversation_id\":\"beed78f6-9da7-446b-a51e-51964ec35477\",\"status\":\"SUCCESS\",\"response\":\"# Adversarial Methodological Review: Q089 Clean Fresh Q069 Validation\\n\\n**Task ID:** `AI-2026-09-28-Q089-ADVERSARIAL`  \\n**Scope:** Q089 methodology and pre-performance adversarial review  \\n**Safety Invariants Verified:**  \\n- `PAPER_ONLY=True`  \\n- `LIVE_TRADING_ENABLED=False`  \\n- `ORDERS_ENABLED=False`  \\n- `AUTOMATIC_PROMOTION=False`  \\n\\n---\\n\\n## 1. Executive Summary\\n\\nThis adversarial review evaluates the preregistration and pre-performance evidence chain for Q089 as documented in [`docs/research_design/Q089-clean-fresh-q069-validation-2026-09-28.md`](file:///C:/Users/u419680/actions-runner/_work/_temp/trading-agent-ai-worker-36538461031-1/trading-agent-public-6daee94e63c65288ccc840dca6af2a84a5a37d82/docs/research_design/Q089-clean-fresh-q069-validation-2026-09-28.md), [`docs/research_design/Q089_CROSS_RUN_REPRO_AUDIT_2026-09-28.md`](file:///C:/Users/u419680/actions-runner/_work/_temp/trading-agent-ai-worker-36538461031-1/trading-agent-public-6daee94e63c65288ccc840dca6af2a84a5a37d82/docs/research_design/Q089_CROSS_RUN_REPRO_AUDIT_2026-09-28.md), [`automation/q089_coverage_pit.py`](file:///C:/Users/u419680/actions-runner/_work/_temp/trading-agent-ai-worker-36538461031-1/trading-agent-public-6daee94e63c65288ccc840dca6af2a84a5a37d82/automation/q089_coverage_pit.py), [`automation/q089_input_freeze.py`](file:///C:/Users/u419680/actions-runner/_work/_temp/trading-agent-ai-worker-36538461031-1/trading-agent-public-6daee94e63c65288ccc840dca6af2a84a5a37d82/automation/q089_input_freeze.py), and evidence receipts in [`research/evidence/`](file:///C:/Users/u419680/actions-runner/_work/_temp/trading-agent-ai-worker-36538461031-1/trading-agent-public-6daee94e63c65288ccc840dca6af2a84a5a37d82/research/evidence/).\\n\\nThe pipeline demonstrates rigorous provenance fingerprinting (SHA-256 binding across coverage, input freeze, and PIT checks) and explicit safety guardrails. However, six methodological vulnerabilities and failure modes must be falsified and resolved prior to performance authorization.\\n\\n---\\n\\n## 2. Core Methodological Failure Modes\\n\\n### Failure Mode 1: Split/Dividend Retroactive Lookahead in `fetch_adjusted_close`\\n- **Location:** [`automation/q089_input_freeze.py`](file:///C:/Users/u419680/actions-runner/_work/_temp/trading-agent-ai-worker-36538461031-1/trading-agent-public-6daee94e63c65288ccc840dca6af2a84a5a37d82/automation/q089_input_freeze.py) (`from automation.q079_input_freeze import fetch_adjusted_close`).\\n- **Mechanism:** The coverage harness fetches unadjusted daily candles (`1d.csv`), but the input freeze creates an independent `adjusted_close.csv`. Yahoo Finance's `Adj Close` calculation applies split and cash dividend ratios retroactively across all historical observations.\\n- **Risk:** If a corporate action occurs late in the study window (or post-sample), historical prices are scaled downwards by future adjustment factors. When multi-year indicators (e.g., `C9_LONG_TERM_REVERSAL_756` or `C8_LOW_IDIO_VOL_273`) consume retroactively adjusted levels, future dividend policy and corporate actions leak into past decision points.\\n- **Data Inconsistency:** Decoupling unadjusted volume in `1d.csv` from adjusted prices in `adjusted_close.csv` can distort volume-weighted indicators like `C11_VOLUME_CONFIRMED_TREND_126`.\\n\\n### Failure Mode 2: Sample Arithmetic Discrepancy \\u0026 Truncation Warmup Gap\\n- **Location:** [`automation/q089_coverage_pit.py`](file:///C:/Users/u419680/actions-runner/_work/_temp/trading-agent-ai-worker-36538461031-1/trading-agent-public-6daee94e63c65288ccc840dca6af2a84a5a37d82/automation/q089_coverage_pit.py#L22):\\n  ```python\\n  REQUESTED, RAW, TARGET = 5000, 5000, 3500\\n  RESEARCH, HOLDOUT, N = 2798, 700, 3500\\n  ```\\n- **Arithmetic Mismatch:** $2798 + 700 = 3498 \\\\neq 3500$. There are 2 missing sessions between the research sample and the holdout sample. It is ambiguous whether this represents an intentional 2-session embargo or an off-by-two indexing bug.\\n- **Warmup Truncation:** In [`research/evidence/q089_coverage_result.json`](file:///C:/Users/u419680/actions-runner/_work/_temp/trading-agent-ai-worker-36538461031-1/trading-agent-public-6daee94e63c65288ccc840dca6af2a84a5a37d82/research/evidence/q089_coverage_result.json), `common_calendar_count` was 3,704, but input freeze sliced exactly 3,500 candles starting on `2011-10-24`. For `C9_LONG_TERM_REVERSAL_756`, a 756-session lookback requires approximately 3 full calendar years of warmup. If the series begins on `2011-10-24`, C9 cannot emit a non-NaN signal until approximately November 2014, leaving over 27% of the 2,798 research sessions uninformative.\\n\\n### Failure Mode 3: Governance Sequencing \\u0026 Artifact State Race\\n- **Location:** [`docs/research_design/Q089-clean-fresh-q069-validation-2026-09-28.md`](file:///C:/Users/u419680/actions-runner/_work/_temp/trading-agent-ai-worker-36538461031-1/trading-agent-public-6daee94e63c65288ccc840dca6af2a84a5a37d82/docs/research_design/Q089-clean-fresh-q069-validation-2026-09-28.md).\\n- **Observation:** The research design document states `Status: PREREGISTRATION\",\"duration_seconds\":0,\"num_turns\":1,\"usage\":{\"input_tokens\":0,\"output_tokens\":0,\"thinking_tokens\":0,\"cache_read_tokens\":0,\"total_tokens\":0}}\n",
+  "stderr": "[agy] print timeout after 45s with turn in progress; returning partial output\n",
+  "command_binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE"
 }
