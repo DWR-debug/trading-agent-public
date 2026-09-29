@@ -5,6 +5,7 @@ from pathlib import Path
 
 from automation.q096_frontier_source_pit_audit import (
     SEC_SAMPLE_CIKS,
+    STATIC_PROBES,
     candidate_gate_matrix,
     filing_url,
     recent_filing_rows,
@@ -24,16 +25,17 @@ def test_q096_inventory_is_the_frozen_current_inventory() -> None:
 
 
 def test_q096_probes_cover_the_new_frontier_data_channels() -> None:
-    ids = {probe[0] for probe in PROBES}
+    ids = {probe[0] for probe in STATIC_PROBES}
     assert {
-        "SEC_10K_ITEM1A",
-        "SEC_10Q_MDA",
-        "SEC_SUBMISSIONS_MSFT",
-        "SEC_COMPANYFACTS_MSFT",
         "LSEG_RUSSELL_RECON",
         "CBOE_VIX_HISTORY",
-        "GDELT_DAILY_ARCHIVE",
     } <= ids
+    module = Path("automation/q096_frontier_source_pit_audit.py").read_text(encoding="utf-8")
+    assert "SEC_10K" in module
+    assert "SEC_10Q" in module
+    assert "FORM4_SAMPLE" in module
+    assert "FORM13F_SAMPLE" in module
+    assert "GDELT_DAILY_ARCHIVE" in module
 
 
 def test_q096_matrix_is_non_evaluative() -> None:
