@@ -67,7 +67,7 @@
   },
   "governance_contract_version": 2,
   "governance": {
-    "performance_trial_authorized": true,
+    "performance_trial_authorized": false,
     "selection": false,
     "holdout_used_for_selection": false,
     "parameter_search": false,
@@ -95,7 +95,7 @@
   },
   "source_contract": {
     "performance_runner_path": "automation/q089_performance.py",
-    "performance_runner_sha256": "d5ffa90bf9a98ffa12114eb3e146c3dc615666cd70f48b0a82019a622a39ceaf",
+    "performance_runner_sha256": "0546bebae018acb0b530f094462b3c9cd79d96aba7ed66c8b17dc720ab13057b",
     "candidate_bank_path": "automation/q069_candidate_bank.py",
     "candidate_bank_sha256": "84e008a6152cbea128e5e5f2ac0dfdde0b0172310fe4c510241c60edfd3ff617",
     "cost_contract_path": "execution/cost_contract.py",
@@ -103,7 +103,7 @@
     "settings_path": "config/settings.py",
     "settings_sha256": "580b5b2456f5f0eefe01e12ae4aeb36d998b8f66afcf97aa086a9383a00de175"
   },
-  "revision": 5,
-  "supersedes": "q089_performance_2026_09_28.json@revision-4",
-  "revision_reason": "Governance authorization revision after Q089 revision 4 passed fresh dual-lane contract audit, master CI, exact master gate, and Self-Hosted Research Governance Audit. This revision only transitions the already-frozen trial from waiting-for-authorization to one-shot authorized execution and records the exact authorization binding. No signal, universe, split, data value, cost, gate, holdout, parameter, threshold, asset, horizon, variant, candidate-selection, or performance rule changed."
+  "revision": 6,
+  "supersedes": "q089_performance_2026_09_28.json@revision-5",
+  "revision_reason": "Infrastructure-only revision after Q089 attempt 3 reached the fixed-rule performance runner and exposed legacy-omitted top-level selection fields in the preregistration schema. The runner now treats omitted selection_used and holdout_used_for_selection fields as false. No signal, universe, split, data value, cost, gate, holdout, parameter, threshold, asset, horizon, variant, candidate-selection, or performance rule changed."
 }
