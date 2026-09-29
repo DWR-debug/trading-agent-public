@@ -250,7 +250,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:43:26.687849+00:00",
+  "generated_at_utc": "2026-09-29T12:43:43.131041+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -373,6 +373,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "cefccd1420e81322c8dc45af2ab3eafa3fb00afd",
+        "timestamp": "2026-09-29T12:43:26Z"
+      },
+      {
         "message": "RECONCILE: recover exact successful Q094 performance result",
         "sha": "a166ff145e9dc26c5893013364175131a75d152c",
         "timestamp": "2026-09-29T14:43:22+02:00"
@@ -406,11 +411,6 @@
         "message": "GOVERNANCE: record superseded Q094 authorization",
         "sha": "b93568f3dfe7d7d086c0e0fb66b520b11ff381f1",
         "timestamp": "2026-09-29T14:41:00+02:00"
-      },
-      {
-        "message": "GOVERNANCE: activate amended Q094 authorization",
-        "sha": "e5c34934c125490c546996ee08796e3c51c3c6d7",
-        "timestamp": "2026-09-29T14:40:57+02:00"
       }
     ]
   },
@@ -480,12 +480,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a166ff145e9dc26c5893013364175131a75d152c",
+  "source_master_sha": "cefccd1420e81322c8dc45af2ab3eafa3fb00afd",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36570004290"
+    "run_id": "36570024696"
   }
 }
