@@ -87,6 +87,8 @@ ACTIVE_WORKFLOWS = {
     "q081r1-selfhosted-reproduction.yml",
     "q081r2-preflight.yml",
     "q081r3-authorization-once.yml",
+    "q081r4-authorization-once.yml",
+    "q081r4-performance-once.yml",
     "q081r3-performance-once.yml",
     "q081r2-authorization-once.yml",
     "q081r2-performance-once.yml",
