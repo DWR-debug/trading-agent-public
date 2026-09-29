@@ -316,20 +316,18 @@ def main() -> int:
     live_probes = [
         *[probe_static(item) for item in STATIC_PROBES],
         sec_submission_probe(
-            "MSFT_10K_10Q",
+            "MSFT_10K",
             SEC_SAMPLE_CIKS["MSFT"],
-            {"10-K", "10-Q"},
+            {"10-K"},
             {
                 "10-K": ["Item 1A", "Risk Factors"],
-                "10-Q": ["Management's Discussion and Analysis", "Item 2"],
             },
         ),
         sec_submission_probe(
-            "AAPL_10K_10Q",
+            "AAPL_10Q",
             SEC_SAMPLE_CIKS["AAPL"],
-            {"10-K", "10-Q"},
+            {"10-Q"},
             {
-                "10-K": ["Item 1A", "Risk Factors"],
                 "10-Q": ["Management's Discussion and Analysis", "Item 2"],
             },
         ),
