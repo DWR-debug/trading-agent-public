@@ -250,7 +250,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:32:11.843850+00:00",
+  "generated_at_utc": "2026-09-29T12:32:29.545787+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -373,6 +373,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c726084d8dc14193b9ff1b4d4dec1228efb346b2",
+        "timestamp": "2026-09-29T12:32:11Z"
+      },
+      {
         "message": "RUN: retry Q094 one-shot after regression test fix",
         "sha": "736b4f02eda52bb667f8f9ac31d64d8c38c85490",
         "timestamp": "2026-09-29T14:32:09+02:00"
@@ -406,11 +411,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "d0e9f208eb98400a92a8e123d22c85bdb85909af",
         "timestamp": "2026-09-29T12:30:29Z"
-      },
-      {
-        "message": "GOVERNANCE: activate Q094 one-shot performance authorization",
-        "sha": "2597e7f69570fa7d801be70ca56d1604955ecaed",
-        "timestamp": "2026-09-29T14:30:22+02:00"
       }
     ]
   },
@@ -480,12 +480,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "736b4f02eda52bb667f8f9ac31d64d8c38c85490",
+  "source_master_sha": "c726084d8dc14193b9ff1b4d4dec1228efb346b2",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36568726833"
+    "run_id": "36568754980"
   }
 }
