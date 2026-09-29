@@ -107,8 +107,8 @@ def candidate_gate_matrix(candidates):
     for code, name, source, existing_state in candidates:
         source_l = source.lower()
         if "option" in source_l:
-            source_state = "UNPROVEN_PUBLIC_HISTORICAL_SOURCE"
-            archive_state = "BLOCKED_PENDING_FREE_COMPLETE_OPTION_ARCHIVE"
+            source_state = "BLOCKED_BY_ZERO_PAID_DATA_POLICY"
+            archive_state = "NO_FREE_COMPLETE_HISTORICAL_OPTION_SOURCE_VERIFIED"
         elif any(k in source_l for k in ("sec form 4", "sec 13f", "sec 8-k", "sec filing", "shares outstanding", "sec +")):
             source_state = "PUBLIC_SOURCE_CHANNEL_CONFIRMED"
             archive_state = "HISTORICAL_ARCHIVE_PIT_AUDIT_PENDING"
