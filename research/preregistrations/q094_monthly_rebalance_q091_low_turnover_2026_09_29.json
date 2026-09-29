@@ -145,7 +145,7 @@
   },
   "source_contract": {
     "performance_runner_path": "automation/q094_performance.py",
-    "performance_runner_sha256": "bca8cd4a8eccbea89589854605f56d6851a4d6e060f93e0d336f521e715ef407",
+    "performance_runner_sha256": "d2eb912d67cff23390a7590d48abfb65fe237eeb9b18867e51e05a43f7cea837",
     "monthly_overlay_path": "portfolio/q094_monthly_rebalance.py",
     "monthly_overlay_sha256": "b8d6fcb0bda122b853f8ac9a4177de41ccbe0608e0032680b6c7a2fefa95ef6b",
     "candidate_bank_path": "automation/q069_candidate_bank.py",
@@ -163,5 +163,22 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "prepared_from_master_sha": "602faaaf52a6c5966c573fe9a0cc594c524d54b5"
+  "prepared_from_master_sha": "602faaaf52a6c5966c573fe9a0cc594c524d54b5",
+  "amendments": [
+    {
+      "amendment_id": "A-Q094-01",
+      "type": "technical_pre_execution",
+      "recorded_at": "2026-09-29T14:04:00+02:00",
+      "change": "Removed an unsupported optional stress_multipliers keyword argument from the existing canonical cost-compatibility validation call.",
+      "scientific_rules_unchanged": true,
+      "hypothesis_unchanged": true,
+      "universe_unchanged": true,
+      "rebalance_rule_unchanged": true,
+      "gates_unchanged": true,
+      "data_contract_unchanged": true,
+      "reason": "The prior runner call did not match the already frozen execution-cost API; no performance observation had yet been produced."
+    }
+  ],
+  "source_contract_revision": 2,
+  "amendment_master_sha": "4a88b8743083a0b8e413914b51f83d18e3941044"
 }
