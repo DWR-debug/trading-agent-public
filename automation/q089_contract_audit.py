@@ -113,6 +113,8 @@ def audit(root: Path = ROOT) -> dict[str, Any]:
             )
 
     reported_requested = _find_result_literal(perf_tree, "requested_candles")
+    if reported_requested is None:
+        reported_requested = perf_assign.get("REQUESTED_CANDLES")
     if reported_requested != prereg.get("requested_candles"):
         finding(
             "Q089_REPORT_REQUESTED_CANDLES_MISMATCH",
@@ -127,9 +129,13 @@ def audit(root: Path = ROOT) -> dict[str, Any]:
 
     source_contract = prereg.get("source_contract", {})
     actual_contract = {
+        "performance_runner_path": "automation/q089_performance.py",
         "performance_runner_sha256": _fp_bytes(perf_path),
+        "candidate_bank_path": "automation/q069_candidate_bank.py",
         "candidate_bank_sha256": _fp_bytes(root / "automation/q069_candidate_bank.py"),
+        "cost_contract_path": "execution/cost_contract.py",
         "cost_contract_sha256": _fp_bytes(root / "execution/cost_contract.py"),
+        "settings_path": "config/settings.py",
         "settings_sha256": _fp_bytes(root / "config/settings.py"),
     }
     if source_contract != actual_contract:
