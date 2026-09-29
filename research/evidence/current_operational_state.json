@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T18:02:39.983238+00:00",
+  "generated_at_utc": "2026-09-29T18:04:14.642582+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "QA: correct escaped regex assertion for local AI verifier",
+        "sha": "c70e49f4770a6259f18ae16ee907ad84c3cacc1f",
+        "timestamp": "2026-09-29T20:04:03+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f0f4d91e2c9cc5e418065bb3a8c9eb16fb37c57b",
+        "timestamp": "2026-09-29T18:02:40Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "8c0ccfc70509da0a59078a284139e7186a15904d",
         "timestamp": "2026-09-29T18:02:23Z"
@@ -423,16 +433,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "884015b78f4101e135807922fe165799f9584513",
         "timestamp": "2026-09-29T18:01:20Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ab8634d15ce265010c3d38a161eca352f86bdf29",
-        "timestamp": "2026-09-29T18:01:04Z"
-      },
-      {
-        "message": "RESEARCH: record historical SEC PIT anchors for Q097 channels",
-        "sha": "d3af2adcc1e4c3a2ac8d618fbcd41a7734f03d50",
-        "timestamp": "2026-09-29T20:00:56+02:00"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8c0ccfc70509da0a59078a284139e7186a15904d",
+  "source_master_sha": "c70e49f4770a6259f18ae16ee907ad84c3cacc1f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36609180557"
+    "run_id": "36609395982"
   }
 }
