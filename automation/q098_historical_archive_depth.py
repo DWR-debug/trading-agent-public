@@ -188,7 +188,21 @@ def submission_archive_probe(label: str, cik: str, target_forms: set[str]) -> di
             result["checks"]["oldest_extension_contains_target_form"] = False
             result["checks"]["historical_depth_contract"] = False
 
-    result["status"] = "VERIFIABLE" if all(result["checks"].values()) else "SCHEMA_MISMATCH"
+    strict_required = {
+        key: value
+        for key, value in result["checks"].items()
+        if key != "oldest_extension_contains_target_form"
+    }
+    if all(strict_required.values()) and result["checks"].get("historical_depth_contract") is True:
+        result["status"] = "VERIFIABLE"
+        result["coverage_completeness"] = (
+            "PROBED_OLDEST_EXTENSION_CONTAINS_TARGET"
+            if result["checks"].get("oldest_extension_contains_target_form")
+            else "HISTORICAL_ANCHOR_VERIFIED_COMPLETE_ARCHIVE_NOT_PROVEN"
+        )
+    else:
+        result["status"] = "SCHEMA_MISMATCH"
+        result["coverage_completeness"] = "NOT_VERIFIED"
     return result
 
 
