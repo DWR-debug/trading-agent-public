@@ -24,7 +24,7 @@ GDELT_DATES = ("20130401", "20190101", "20210101")
 
 HISTORICAL_EDGAR_ANCHORS = {
     "13D_G": {
-        "url": "https://www.sec.gov/Archives/edgar/data/1020066/000102006611000014/0001020066-11-000014-index-headers.html",
+        "url": "https://www.sec.gov/Archives/edgar/data/1020066/000102006611000014/0001020066-11-000014-index.html",
         "accession": "0001020066-11-000014",
         "forms": {"SC 13G", "SC 13G/A", "SCHEDULE 13G", "SCHEDULE 13G/A"},
         "study_date": "2011-06-09",
