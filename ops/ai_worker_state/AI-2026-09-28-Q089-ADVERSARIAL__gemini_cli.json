@@ -5,20 +5,16 @@
   "free_only": true,
   "preflight": {
     "provider": "gemini_cli",
-    "available": false,
-    "binary": "/opt/hostedtoolcache/node/22.23.2/x64/bin/gemini",
+    "available": true,
+    "binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE",
     "free_only": true,
-    "local_mode": false,
+    "local_mode": true,
     "local_attestation": {
-      "present": false,
-      "path": null
+      "present": true,
+      "path": "C:\\Users\\u419680\\.trading-agent\\ai_free_attestation.json"
     },
-    "free_mode_attested": false,
-    "reasons": [
-      "AI_EXTERNAL_PROVIDER_ALLOWLIST is not confirmed",
-      "provider authentication is not available for free-only mode",
-      "provider free-mode attestation is missing"
-    ]
+    "free_mode_attested": true,
+    "reasons": []
   },
   "task_fingerprint": "d7f78f334a0e1a67b390f80e5b5a520e2db981af0323b0c03f589527b0c7641f",
   "worker_output_is_scientific_evidence": false,
@@ -28,8 +24,10 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SKIPPED",
-  "returncode": null,
-  "stdout": "",
-  "stderr": ""
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 48.551,
+  "stdout": "{\"conversation_id\":\"f3962c82-df6a-49d6-abc6-9f75de0ad9fc\",\"status\":\"SUCCESS\",\"response\":\"# Bounded Worker Adversarial Review: Q089 Pre-Performance Methodology\\n\\n**Task ID:** `AI-2026-09-28-Q089-ADVERSARIAL`  \\n**Scope:** Q089 methodology and pre-performance adversarial audit  \\n**Safety \\u0026 Governance Invariants:**\\n```python\\nPAPER_ONLY = True\\nLIVE_TRADING_ENABLED = False\\nORDERS_ENABLED = False\\nAUTOMATIC_PROMOTION = False\\n```\\n\\n---\\n\\n## 1. Executive Summary\\n\\nA pre-performance adversarial audit of the Q089 research design, coverage receipts, input bundle freeze, and PIT harness identified **six critical methodological vulnerabilities** that threaten to invalidate Q089 before any performance run occurs. \\n\\nMost critically, **Candidate C11 (`VOLUME_CONFIRMED_TREND_126`) requires volume data, but the frozen input bundle contains exclusively `timestamp` and `adjusted_close`**. Any performance execution will either crash, fall back to unfrozen files (breaking provenance locks), or bypass network isolation. Furthermore, **Candidate C9 (`LONG_TERM_REVERSAL_756`) has a 756-bar lookback that exceeds the 700-bar holdout window**, and the geometry partition ($2798 + 700 = 3498 \\\\ne 3500$) leaves 2 bars unaccounted for.\\n\\nPerformance execution must remain **blocked** until these defects are resolved and frozen preregistrations are committed.\\n\\n---\\n\\n## 2. Adversarial Failure Mode Analysis\\n\\n### A. Candidate Bank vs. Input Bundle Incompatibility (Fatal Pre-Flight Defect)\\n* **Evidence:** In [`automation/q089_input_freeze.py`](file:///automation/q089_input_freeze.py), the dataset builder extracts only `fetch_adjusted_close(symbol, timestamps)` and writes CSV files with header `[\\\"timestamp\\\", \\\"adjusted_close\\\"]`. The frozen receipt [`research/evidence/q089_input_freeze_result.json`](file:///research/evidence/q089_input_freeze_result.json) lists only `adjusted_close.csv` files.\\n* **Failure Mode:**\\n  1. **Missing Volume for C11:** Candidate C11 is frozen as `VOLUME_CONFIRMED_TREND_126`. It cannot evaluate on a bundle lacking volume.\\n  2. **Missing Market Benchmark for C8:** Candidate C8 is `LOW_IDIO_VOL_273` (idiosyncratic volatility relative to a market model). No market index (e.g., SPY) is present in the input bundle; the bundle contains only the 8 test symbols.\\n  3. **Provenance Breach Risk:** If performance evaluation succeeds, it must either be loading raw `1d.csv` files outside the frozen bundle (bypassing `bundle_fingerprint: c4261e23...`), querying the network, or evaluating degenerate/mock signals.\\n\\n### B. Geometry Inconsistencies \\u0026 Lookback/Holdout Discrepancy\\n* **Partition Arithmetic Defect:**\\n  In [`automation/q089_coverage_pit.py`](file:///automation/q089_coverage_pit.py):\\n  $$\\\\text{RESEARCH} (2798) + \\\\text{HOLDOUT} (700) = 3498 \\\\ne N (3500)$$\\n  Two sessions are unaccounted for. It is undocumented whether this represents an intentional 2-day embargo/purge window or an off-by-two indexing bug.\\n* **Warmup Window Overflow (C9 vs. Holdout):**\\n  Candidate C9 is `LONG_TERM_REVERSAL_756` (lookback = 756 bars). The holdout partition is only 700 bars.\\n  - If the holdout is strictly isolated without lookback into research data, **C9 cannot produce a single valid signal** across the entire holdout period ($756 \\u003e 700 \\\\implies \\\\text{NaN count} = 700$).\\n  - If the holdout borrows the trailing 756 bars of the research period as warmup, the holdout boundary interface and rolling statistics must be explicitly guarded against state leakage across the partition boundary.\\n\\n### C. Retrospective Point-in-Time (PIT) \\u0026 Adjustment Leakage\\n* **Survivorship of Dividends/Splits:** [`automation/q089_input_freeze.py`](file:///automation/q089_input_freeze.py) calls `fetch_adjusted_close` from `automation.q079_input_freeze`. Standard Yahoo adjusted close series apply split and dividend adjustment factors backwards across the entire 14-year history from the final download date.\\n  - Corporate actions occurring in the holdout period (2023–2025) retroactively alter the absolute price levels and return magnitudes in the research period (2011–2022).\\n  - Research signals computed on pre-adjusted pric\",\"duration_seconds\":0,\"num_turns\":1,\"usage\":{\"input_tokens\":0,\"output_tokens\":0,\"thinking_tokens\":0,\"cache_read_tokens\":0,\"total_tokens\":0}}\n",
+  "stderr": "[agy] print timeout after 45s with turn in progress; returning partial output\n",
+  "command_binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE"
 }
