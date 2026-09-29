@@ -73,8 +73,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git hash-object automation/q089_performance.py)" = "0546bebae018acb0b530f094462b3c9cd79d96aba7ed66c8b17dc720ab13057b"
-          test "$(git hash-object automation/q069_candidate_bank.py)" = "84e008a6152cbea128e5e5f2ac0dfdde0b0172310fe4c510241c60edfd3ff617"
+          test "$(sha256sum automation/q089_performance.py | cut -d" " -f1)" = "0546bebae018acb0b530f094462b3c9cd79d96aba7ed66c8b17dc720ab13057b"
+          test "$(sha256sum automation/q069_candidate_bank.py | cut -d" " -f1)" = "84e008a6152cbea128e5e5f2ac0dfdde0b0172310fe4c510241c60edfd3ff617"
 
       - name: Execute fixed-result Q090 diagnosis
         shell: bash
