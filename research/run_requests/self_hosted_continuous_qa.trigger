@@ -1,3 +1,4 @@
-manual autonomous continuous QA trigger
-requested_utc=2026-09-28T19:06:55.704Z
-reason=activate both self-hosted runner slots after secondary runner registration
+RUN_CONTINUOUS_QA_RECHECK_2026-09-29
+AUTONOMOUS_WAKE_CURRENT_MASTER
+purpose=repository_data_design_and_reproduction_qa
+formal_research_evidence=false
