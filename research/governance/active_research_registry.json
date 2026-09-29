@@ -11,20 +11,38 @@
   },
   "active_trials": [
     {
+      "code": "081R3",
+      "trial_id": "T-2026-09-30-081R3-PERFORMANCE",
+      "class": "performance_correction",
+      "state": "PREREGISTERED_WAITING_PREFLIGHT",
+      "issue_number": null,
+      "preregistration_path": "research/preregistrations/q081r3_python_literal_fix_2026_09_30.json",
+      "performance_authorization_allowed": false,
+      "predecessor_trial_id": "T-2026-09-28-081R2-PERFORMANCE"
+    },
+    {
       "code": "081R2",
       "trial_id": "T-2026-09-28-081R2-PERFORMANCE",
       "class": "performance_correction",
-      "state": "PERFORMANCE_AUTHORIZED",
+      "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
       "issue_number": 587,
       "preregistration_path": "research/preregistrations/q081r2_performance_2026_09_28.json",
-      "performance_authorization_allowed": true,
+      "performance_authorization_allowed": false,
       "predecessor_trial_id": "T-2026-09-28-081R1-PERFORMANCE",
       "preflight": {
         "status": "PASSED",
         "workflow_run_id": 36474031581,
         "artifact_id": 10993950051
       },
-      "authorization_id": "AUTH-Q081R2-2026-09-30-36638812989"
+      "authorization_id": "AUTH-Q081R2-2026-09-30-36638812989",
+      "execution_incident": {
+        "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME",
+        "workflow_run_id": "36639171349",
+        "failing_step": "Execute Q081R2 fixed-rule performance exactly once",
+        "error": "NameError: name 'false' is not defined. Did you mean: 'False'?",
+        "scientific_outcome": false,
+        "result_created": false
+      }
     },
     {
       "code": "081R1",
