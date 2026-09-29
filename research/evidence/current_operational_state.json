@@ -272,7 +272,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T18:02:23.877779+00:00",
+  "generated_at_utc": "2026-09-29T18:02:39.983238+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -395,6 +395,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8c0ccfc70509da0a59078a284139e7186a15904d",
+        "timestamp": "2026-09-29T18:02:23Z"
+      },
+      {
         "message": "QA: lock PowerShell-safe path and regex syntax for AI verifier",
         "sha": "2bcffa9252094e9bbf8168a56f367e3c147048b6",
         "timestamp": "2026-09-29T20:02:16+02:00"
@@ -428,11 +433,6 @@
         "message": "RESEARCH: record historical SEC PIT anchors for Q097 channels",
         "sha": "d3af2adcc1e4c3a2ac8d618fbcd41a7734f03d50",
         "timestamp": "2026-09-29T20:00:56+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4ea96c83229634470368d83da873ab0182228c03",
-        "timestamp": "2026-09-29T18:00:48Z"
       }
     ]
   },
@@ -502,12 +502,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2bcffa9252094e9bbf8168a56f367e3c147048b6",
+  "source_master_sha": "8c0ccfc70509da0a59078a284139e7186a15904d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36609160948"
+    "run_id": "36609180557"
   }
 }
