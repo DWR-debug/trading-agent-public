@@ -132,10 +132,20 @@ jobs:
           data=json.loads(ledger_path.read_text())
           key="entries" if "entries" in data else "trials"
           entries=data.get(key,[])
-          if any(x.get("trial_id")=="T-2026-09-29-092" for x in entries):
-              raise SystemExit("Q092 ledger entry already exists")
+          existing=next((x for x in entries if x.get("trial_id")=="T-2026-09-29-092"),None)
           d=json.loads(Path("research/evidence/q092_q091_failure_diagnosis_result.json").read_text())
-          entries.append({
+          if existing is not None:
+              if (
+                  existing.get("status") != "diagnostic_completed_only"
+                  or existing.get("parent_trial_id") != "T-2026-09-29-091"
+                  or existing.get("diagnostic_fingerprint") != d["diagnostic_fingerprint"]
+                  or existing.get("no_new_market_data") is not True
+                  or existing.get("selection",{}).get("holdout_used_for_selection") is not False
+              ):
+                  raise SystemExit("Q092 existing ledger entry conflicts with deterministic result")
+              print("Q092 LEDGER ALREADY RECONCILED; EXACT MATCH VERIFIED")
+          else:
+              entries.append({
             "trial_id":"T-2026-09-29-092",
             "recorded_at":datetime.now(timezone.utc).isoformat(),
             "status":"diagnostic_completed_only",
@@ -148,7 +158,7 @@ jobs:
             "selection":{"selected":False,"holdout_used_for_selection":False},
             "governance":d["governance"],
             "safety":d["safety"]
-          })
+              })
           data[key]=entries
           ledger_path.write_text(json.dumps(data,ensure_ascii=False,indent=2,allow_nan=False)+chr(10),encoding="utf-8")
           PY
