@@ -128,6 +128,15 @@
         "preregistration_path": "research/preregistrations/q091_fixed_portfolio_architecture_2026_09_29.json",
         "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
         "trial_id": "T-2026-09-29-091"
+      },
+      {
+        "class": "fresh_validation",
+        "code": "094",
+        "issue_number": null,
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q094_monthly_rebalance_q091_low_turnover_2026_09_29.json",
+        "state": "PREREGISTERED_WAITING_AUTHORIZATION",
+        "trial_id": "T-2026-09-29-094"
       }
     ],
     "name": "active_research_registry",
@@ -240,7 +249,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:21:35.220256+00:00",
+  "generated_at_utc": "2026-09-29T12:22:04.519682+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -363,6 +372,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOVERNANCE: register Q094 monthly low-turnover validation",
+        "sha": "c8367b6dc8c2638bd26a6899e6937d6883d701ce",
+        "timestamp": "2026-09-29T14:21:50+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b11cb92c5a1a4ed232679afef635d544d9a5feb6",
+        "timestamp": "2026-09-29T12:21:35Z"
+      },
+      {
         "message": "FIX: align Q094 input-freeze source contract",
         "sha": "de8612a1feab2c6a504731d2407014b847aa8e19",
         "timestamp": "2026-09-29T14:21:23+02:00"
@@ -391,16 +410,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "e2722e1716dc326323f3d96d4a02a13614912e54",
         "timestamp": "2026-09-29T12:20:35Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9c84dd0e6790dba623b24ebb8974eb59cc0bd46f",
-        "timestamp": "2026-09-29T12:20:16Z"
-      },
-      {
-        "message": "RESEARCH: add Q094 fixed monthly rebalance overlay",
-        "sha": "d3aa73bed4dccbed57e5dc30f58804844afe3d88",
-        "timestamp": "2026-09-29T14:20:14+02:00"
       }
     ]
   },
@@ -470,12 +479,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "de8612a1feab2c6a504731d2407014b847aa8e19",
+  "source_master_sha": "c8367b6dc8c2638bd26a6899e6937d6883d701ce",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36567558534"
+    "run_id": "36567609083"
   }
 }
