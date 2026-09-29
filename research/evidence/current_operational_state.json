@@ -130,7 +130,7 @@
         "trial_id": "T-2026-09-29-091"
       },
       {
-        "authorization_id": "AUTH-Q094-2026-09-29-01",
+        "authorization_id": "AUTH-Q094-2026-09-29-02",
         "class": "fresh_validation",
         "code": "094",
         "issue_number": null,
@@ -250,7 +250,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:38:52.830300+00:00",
+  "generated_at_utc": "2026-09-29T12:41:04.839588+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -373,6 +373,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOVERNANCE: record superseded Q094 authorization",
+        "sha": "b93568f3dfe7d7d086c0e0fb66b520b11ff381f1",
+        "timestamp": "2026-09-29T14:41:00+02:00"
+      },
+      {
+        "message": "GOVERNANCE: activate amended Q094 authorization",
+        "sha": "e5c34934c125490c546996ee08796e3c51c3c6d7",
+        "timestamp": "2026-09-29T14:40:57+02:00"
+      },
+      {
+        "message": "GOVERNANCE: rotate Q094 pre-execution one-shot authorization",
+        "sha": "b2af82e0e6077bb035b01753870c2a93d06b6b70",
+        "timestamp": "2026-09-29T14:40:53+02:00"
+      },
+      {
+        "message": "GOVERNANCE: amend Q094 preregistration for technical API correction",
+        "sha": "6babbad5509ba180453bc1ecb249d4a84be5dc99",
+        "timestamp": "2026-09-29T14:40:50+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "84ec9eb87e532564038d54cc441fc81fbdffd57d",
+        "timestamp": "2026-09-29T12:39:27Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a42d9797e22472a938daec8b320dd03ac3a99eab",
+        "timestamp": "2026-09-29T12:38:52Z"
+      },
+      {
         "message": "FIX: use canonical Q094 cost-contract API",
         "sha": "4a88b8743083a0b8e413914b51f83d18e3941044",
         "timestamp": "2026-09-29T14:38:36+02:00"
@@ -381,36 +411,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "a5b5c1a74c73bf5c46a479fb4575b17c19d83c02",
         "timestamp": "2026-09-29T12:38:05Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1e36e3be5d9d82b3d586bc8eb5a6511f44442d88",
-        "timestamp": "2026-09-29T12:37:48Z"
-      },
-      {
-        "message": "RUN: retry Q094 after flattened artifact restore fix",
-        "sha": "4dee7ccb2fc53ac86c77f62ca7e811e90ef3641d",
-        "timestamp": "2026-09-29T14:37:38+02:00"
-      },
-      {
-        "message": "FIX: flatten Q094 frozen artifact restore layout",
-        "sha": "a10562dfc76afc67339bbf01850f6b319547c99e",
-        "timestamp": "2026-09-29T14:37:29+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5b75a8dbf1b59b35520d2e8e6e124f3ed7266a4b",
-        "timestamp": "2026-09-29T12:37:12Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "75ba85893801d4e59893f648b812fc9e216378ce",
-        "timestamp": "2026-09-29T12:36:59Z"
-      },
-      {
-        "message": "RUN: retry Q094 after frozen artifact tree merge fix",
-        "sha": "23fccb9a50e8d563251e3f36d026e5ba3c339e53",
-        "timestamp": "2026-09-29T14:36:55+02:00"
       }
     ]
   },
@@ -480,12 +480,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4a88b8743083a0b8e413914b51f83d18e3941044",
+  "source_master_sha": "b93568f3dfe7d7d086c0e0fb66b520b11ff381f1",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36569483498"
+    "run_id": "36569735052"
   }
 }
