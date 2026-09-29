@@ -265,7 +265,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T13:58:38.354530+00:00",
+  "generated_at_utc": "2026-09-29T14:01:49.216315+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -388,6 +388,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOVERNANCE: final retry Q095 one-shot authorization after green provenance gate",
+        "sha": "adaf0e73447bef373bdaf3737aecafe94be2489e",
+        "timestamp": "2026-09-29T16:01:35+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "ed1d9e94d8188001de96bc045cd9342bb4b2cb98",
+        "timestamp": "2026-09-29T14:00:11Z"
+      },
+      {
+        "message": "GOVERNANCE: allow paper-forward operational state in master provenance gate",
+        "sha": "1c29253e0dc6027eefb0cc64214b077a6945bdcb",
+        "timestamp": "2026-09-29T15:59:59+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e80683d1cd60cdf6ab5fec7676e19c66a2509494",
+        "timestamp": "2026-09-29T13:58:38Z"
+      },
+      {
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "40ad2786555532db55e2e8bf92981816650757fa",
         "timestamp": "2026-09-29T13:58:26Z"
@@ -406,26 +426,6 @@
         "message": "GOVERNANCE: retry Q095 authorization after green frozen code gate",
         "sha": "5bfbd1b3d0959811099e0e1a101ff8e4bde3561a",
         "timestamp": "2026-09-29T15:56:46+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "87ba7b25de81a4d6b93d530b6e91e6df334e7ab2",
-        "timestamp": "2026-09-29T13:55:44Z"
-      },
-      {
-        "message": "GOVERNANCE: bind GH token directly for Q095 authorization publish",
-        "sha": "85015a39faa6dd47258ac23f6b4a692871eda7c7",
-        "timestamp": "2026-09-29T15:55:28+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "232be15cacf55de5a822d04f9163937d9040a6c8",
-        "timestamp": "2026-09-29T13:54:07Z"
-      },
-      {
-        "message": "GOVERNANCE: retry Q095 authorization on green frozen codebase",
-        "sha": "d9a049bf8795811590a922aa575d60d1cb58e569",
-        "timestamp": "2026-09-29T15:53:50+02:00"
       }
     ]
   },
@@ -495,12 +495,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "40ad2786555532db55e2e8bf92981816650757fa",
+  "source_master_sha": "adaf0e73447bef373bdaf3737aecafe94be2489e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36579112533"
+    "run_id": "36579530951"
   }
 }
