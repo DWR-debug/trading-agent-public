@@ -67,7 +67,7 @@
   },
   "governance_contract_version": 2,
   "governance": {
-    "performance_trial_authorized": true,
+    "performance_trial_authorized": false,
     "selection": false,
     "holdout_used_for_selection": false,
     "parameter_search": false,
@@ -95,7 +95,7 @@
   },
   "source_contract": {
     "performance_runner_path": "automation/q089_performance.py",
-    "performance_runner_sha256": "c861ff6921276e6ec4bfe042f6c4a83865873381ab1a7a730394cf14ccc5d062",
+    "performance_runner_sha256": "d5ffa90bf9a98ffa12114eb3e146c3dc615666cd70f48b0a82019a622a39ceaf",
     "candidate_bank_path": "automation/q069_candidate_bank.py",
     "candidate_bank_sha256": "84e008a6152cbea128e5e5f2ac0dfdde0b0172310fe4c510241c60edfd3ff617",
     "cost_contract_path": "execution/cost_contract.py",
@@ -103,7 +103,7 @@
     "settings_path": "config/settings.py",
     "settings_sha256": "580b5b2456f5f0eefe01e12ae4aeb36d998b8f66afcf97aa086a9383a00de175"
   },
-  "revision": 3,
-  "supersedes": "q089_performance_2026_09_28.json@revision-2",
-  "revision_reason": "Authorized once after Q089 coverage/PIT/input-freeze prerequisites, dual-lane contract audit success, and green master CI/gate checks. No signal, universe, split, cost, gate, holdout, parameter, threshold, asset, horizon, variant or performance rule changed."
+  "revision": 4,
+  "supersedes": "q089_performance_2026_09_28.json@revision-3",
+  "revision_reason": "Infrastructure-only revision after two fail-closed Q089 attempts exposed a compatibility guard for the preflight receipt schema. The runner now treats an omitted legacy performance_trial_authorized field on a coverage receipt as false. No signal, universe, split, data value, cost, gate, holdout, parameter, threshold, asset, horizon, variant, candidate-selection, or performance rule changed."
 }
