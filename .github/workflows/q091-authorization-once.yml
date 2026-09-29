@@ -31,6 +31,12 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Install deterministic test dependency
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pytest
+
       - name: Verify explicit one-shot authorization request
         shell: bash
         run: |
