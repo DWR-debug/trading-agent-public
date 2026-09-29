@@ -32,11 +32,12 @@
       {
         "class": "performance_correction",
         "code": "081R3",
-        "issue_number": null,
+        "issue_number": 693,
         "performance_authorization_allowed": false,
+        "predecessor_execution_incident_path": "research/evidence/q081r2_performance_execution_incident.json",
         "predecessor_trial_id": "T-2026-09-28-081R2-PERFORMANCE",
         "preregistration_path": "research/preregistrations/q081r3_python_literal_fix_2026_09_30.json",
-        "state": "PREREGISTERED_WAITING_PREFLIGHT",
+        "state": "PREREGISTERED_WAITING_AUTHORIZATION",
         "trial_id": "T-2026-09-30-081R3-PERFORMANCE"
       },
       {
@@ -45,6 +46,7 @@
         "code": "081R2",
         "execution_incident": {
           "error": "NameError: name 'false' is not defined. Did you mean: 'False'?",
+          "execution_incident_path": "research/evidence/q081r2_performance_execution_incident.json",
           "failing_step": "Execute Q081R2 fixed-rule performance exactly once",
           "result_created": false,
           "scientific_outcome": false,
@@ -291,7 +293,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T22:26:57.886492+00:00",
+  "generated_at_utc": "2026-09-29T22:27:11.373832+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -414,6 +416,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOVERNANCE: retire consumed Q081R2 authorization after implementation failure",
+        "sha": "8cfa5e47c6b26419ad66fe7b00a03775b216cd9a",
+        "timestamp": "2026-09-30T00:27:09+02:00"
+      },
+      {
+        "message": "GOVERNANCE: bind Q081R3 to Issue 693 and immutable R2 incident receipt",
+        "sha": "f66863389c3d9aad42243fd59ac8e828fef32864",
+        "timestamp": "2026-09-30T00:27:02+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8d6f78e6ab1368678d3cb01a5817680cbcf5b069",
+        "timestamp": "2026-09-29T22:26:57Z"
+      },
+      {
         "message": "TEST: register Q081R3 one-shot workflows in integrity allowlist",
         "sha": "ca470bb61435b5d72e35e0b491c9cc0923e84d4c",
         "timestamp": "2026-09-30T00:26:54+02:00"
@@ -437,21 +454,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "ec6f9c3a754f141fed4a5c545e25cfc9a2869174",
         "timestamp": "2026-09-29T22:26:25Z"
-      },
-      {
-        "message": "FIX: bind Q081R3 authorization workflow to R3 sources and trigger",
-        "sha": "245a391f381805fc9df27d5c19525d3ad809bf6e",
-        "timestamp": "2026-09-30T00:26:23+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "db46f40d1717eb5789d4e3aac1014467c5fd8746",
-        "timestamp": "2026-09-29T22:26:13Z"
-      },
-      {
-        "message": "FEAT: add Q081R3 one-shot authorization workflow",
-        "sha": "93c333e4983bed22378132ab3e03d59324887a1a",
-        "timestamp": "2026-09-30T00:26:11+02:00"
       }
     ]
   },
@@ -521,12 +523,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ca470bb61435b5d72e35e0b491c9cc0923e84d4c",
+  "source_master_sha": "8cfa5e47c6b26419ad66fe7b00a03775b216cd9a",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36639614210"
+    "run_id": "36639626923"
   }
 }
