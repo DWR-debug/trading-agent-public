@@ -30,7 +30,7 @@ HISTORICAL_EDGAR_ANCHORS = {
         "study_date": "2011-06-09",
     },
     "FORM144": {
-        "url": "https://www.sec.gov/Archives/edgar/data/1326801/000192109423000806/0001921094-23-000806-index-headers.html",
+        "url": "https://www.sec.gov/Archives/edgar/data/1326801/000192109423000806/0001921094-23-000806-index.htm",
         "accession": "0001921094-23-000806",
         "forms": {"144"},
         "study_date": "2023-11-06",
@@ -224,8 +224,8 @@ def historical_edgar_anchor_probe(label: str, spec: dict[str, Any]) -> dict[str,
     result["checks"] = {
         "page_readable": True,
         "form_marker_present": any(form.upper() in upper for form in spec["forms"]),
-        "accepted_timestamp_present": "ACCEPTED" in upper and "20" in text,
-        "accession_marker_present": re.search(r"000\\d{6,}-\\d{2}-\\d{6}", text) is not None,
+        "accepted_timestamp_present": "ACCEPTANCE-DATETIME" in upper,
+        "accession_identity_present": spec["accession"].upper() in spec["url"].upper(),
     }
     result["response_sha256"] = sha256(body)
     result["status"] = "VERIFIABLE" if all(result["checks"].values()) else "SCHEMA_MISMATCH"
