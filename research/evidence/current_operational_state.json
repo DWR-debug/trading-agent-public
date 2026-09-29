@@ -250,7 +250,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T12:36:59.528896+00:00",
+  "generated_at_utc": "2026-09-29T12:37:12.812884+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -373,6 +373,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "75ba85893801d4e59893f648b812fc9e216378ce",
+        "timestamp": "2026-09-29T12:36:59Z"
+      },
+      {
         "message": "RUN: retry Q094 after frozen artifact tree merge fix",
         "sha": "23fccb9a50e8d563251e3f36d026e5ba3c339e53",
         "timestamp": "2026-09-29T14:36:55+02:00"
@@ -406,11 +411,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "b6be3a79f4b4be1d8f6cbcac59566faed0ed9a3a",
         "timestamp": "2026-09-29T12:34:49Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1e0dddfc8706760f770543786d61a401d8be9539",
-        "timestamp": "2026-09-29T12:34:33Z"
       }
     ]
   },
@@ -480,12 +480,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "23fccb9a50e8d563251e3f36d026e5ba3c339e53",
+  "source_master_sha": "75ba85893801d4e59893f648b812fc9e216378ce",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36569280211"
+    "run_id": "36569296096"
   }
 }
