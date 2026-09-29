@@ -5,20 +5,16 @@
   "free_only": true,
   "preflight": {
     "provider": "gemini_cli",
-    "available": false,
-    "binary": "/opt/hostedtoolcache/node/22.23.2/x64/bin/gemini",
+    "available": true,
+    "binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE",
     "free_only": true,
-    "local_mode": false,
+    "local_mode": true,
     "local_attestation": {
-      "present": false,
-      "path": null
+      "present": true,
+      "path": "C:\\Users\\u419680\\.trading-agent\\ai_free_attestation.json"
     },
-    "free_mode_attested": false,
-    "reasons": [
-      "AI_EXTERNAL_PROVIDER_ALLOWLIST is not confirmed",
-      "provider authentication is not available for free-only mode",
-      "provider free-mode attestation is missing"
-    ]
+    "free_mode_attested": true,
+    "reasons": []
   },
   "task_fingerprint": "d7f78f334a0e1a67b390f80e5b5a520e2db981af0323b0c03f589527b0c7641f",
   "worker_output_is_scientific_evidence": false,
@@ -28,8 +24,10 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SKIPPED",
-  "returncode": null,
-  "stdout": "",
-  "stderr": ""
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 50.334,
+  "stdout": "{\"conversation_id\":\"fbc4b20b-2bbd-40e6-8b7c-b3d8d66eed10\",\"status\":\"SUCCESS\",\"response\":\"# Adversarial Methodology \\u0026 Pre-Performance Review: Q089\\n\\n**Task ID**: `AI-2026-09-28-Q089-ADVERSARIAL`  \\n**Scope**: Q089 Methodology, Pre-Performance Adversarial Review, Invariant Checks  \\n**Status**: Worker Material Only / Independent Verification Required  \\n\\n---\\n\\n### Mandatory System Invariants\\n```\\nPAPER_ONLY=True\\nLIVE_TRADING_ENABLED=False\\nORDERS_ENABLED=False\\nAUTOMATIC_PROMOTION=False\\n```\\n\\n---\\n\\n## 1. Executive Summary \\u0026 Review Scope\\n\\nThe intended purpose of Q089 (documented in [Q089-clean-fresh-q069-validation-2026-09-28.md](file:///C:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36544806504-1/trading-agent-public-cd2a1dbea458458afd20ab630ecfcda9301c1453/docs/research_design/Q089-clean-fresh-q069-validation-2026-09-28.md)) is to perform a clean, fresh, symbol-disjoint validation of the frozen candidate bank from Q069 (`C7` through `C11`) following the quarantine of Q086.\\n\\nThis adversarial review inspects the governance sequence, coverage discovery receipt ([q089_coverage_result.json](file:///C:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36544806504-1/trading-agent-public-cd2a1dbea458458afd20ab630ecfcda9301c1453/research/evidence/q089_coverage_result.json)), input bundle freeze ([q089_input_freeze_result.json](file:///C:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36544806504-1/trading-agent-public-cd2a1dbea458458afd20ab630ecfcda9301c1453/research/evidence/q089_input_freeze_result.json)), PIT verification ([q089_pit_result.json](file:///C:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36544806504-1/trading-agent-public-cd2a1dbea458458afd20ab630ecfcda9301c1453/research/evidence/q089_pit_result.json)), and supporting harnesses ([q089_coverage_pit.py](file:///C:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36544806504-1/trading-agent-public-cd2a1dbea458458afd20ab630ecfcda9301c1453/automation/q089_coverage_pit.py) and [q089_input_freeze.py](file:///C:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36544806504-1/trading-agent-public-cd2a1dbea458458afd20ab630ecfcda9301c1453/automation/q089_input_freeze.py)).\\n\\nSix methodological vulnerability vectors were identified that could compromise scientific validity prior to performance execution.\\n\\n---\\n\\n## 2. Adversarial Findings \\u0026 Failure Modes\\n\\n### Finding 1: Partition Geometry Discrepancy ($2798 + 700 = 3498 \\\\ne 3500$)\\nIn [`automation/q089_coverage_pit.py`](file:///C:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36544806504-1/trading-agent-public-cd2a1dbea458458afd20ab630ecfcda9301c1453/automation/q089_coverage_pit.py#L22):\\n```python\\nREQUESTED, RAW, TARGET = 5000, 5000, 3500\\nRESEARCH, HOLDOUT, N = 2798, 700, 3500\\n```\\n- **Vulnerability**: $2798 + 700 = 3498$, leaving **2 unallocated sessions** out of the 3500-session frozen bundle.\\n- **Risk**: If the 2 sessions represent an intentional purge/embargo gap between research and holdout to prevent factor lookback spillover, this is undocumented in the design contract. If it represents an indexing mismatch (e.g. slicing `[:2798]` and `[-700:]`), sessions 2798 and 2799 are silently omitted or dropped. If a caller assumes `len(holdout) = N - RESEARCH`, holdout becomes 702 bars, violating the 700-bar fixed geometry contract.\\n\\n---\\n\\n### Finding 2: Weak Cryptographic Linkage in the PIT Evidence Receipt\\nIn [q089_pit_result.json](file:///C:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36544806504-1/trading-agent-public-cd2a1dbea458458afd20ab630ecfcda9301c1453/research/evidence/q089_pit_result.json):\\n- The PIT receipt references `input_bundle_trial_id: \\\"T-2026-09-28-089-INPUT-FREEZE\\\"` and `coverage_trial_id: \\\"T-2026-09-28-089-COVERAGE\\\"`.\\n- However, it does **not** assert the cryptographic digest `bundle_fingerprint` (`c4261e230baf8888088df7e3e3159a1a93d4142ff358ef5896d35cd109663924`) from [q089_input_freeze_result.json](file:///C:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36544806504-1/trading-agent-public-cd2a1dbea458458afd20ab630ecfcda9301c1453/research/evidence/q089_input_freeze_result.json).\\n- **Vulnerability**: Provenance by string ID rather than cryptographic hash creates a verification race: if an input file in `output_root` is modified post-PIT without changing the trial ID string, downstream performance scripts relying on `T-2026-09-28-089-INPUT-FREEZE` will run on unverified data.\\n\\n---\\n\\n### Finding 3: Adjusted-Close Transformation and Retroactive Dividend/Split Leakage\\nIn [`freeze` in `automation/q089_input_freeze.py`](file:///C:/actions-runner-2/_work/_temp/trading-agent-ai-worker-36544806504-1/trading-agent-public-cd2a1dbea458458afd20ab630ecfcda9301c1\",\"duration_seconds\":0,\"num_turns\":1,\"usage\":{\"input_tokens\":0,\"output_tokens\":0,\"thinking_tokens\":0,\"cache_read_tokens\":0,\"total_tokens\":0}}\n",
+  "stderr": "[agy] print timeout after 45s with turn in progress; returning partial output\n",
+  "command_binary": "C:\\Users\\u419680\\AppData\\Local\\agy\\bin\\agy.EXE"
 }
