@@ -35,7 +35,7 @@ def audit(root:Path=ROOT)->dict:
     findings=[]
     def finding(code,**payload): findings.append({"code":code,"severity":"BLOCKING",**payload})
 
-    if prereg.get("trial_id")!="T-2026-09-29-091": finding("Q095_TRIAL_ID_MISMATCH",actual=prereg.get("trial_id"))
+    if prereg.get("trial_id")!="T-2026-09-29-095": finding("Q095_TRIAL_ID_MISMATCH",actual=prereg.get("trial_id"))
     if prereg.get("status")!="PREREGISTERED_PERFORMANCE": finding("Q095_STATUS_INVALID",actual=prereg.get("status"))
     if prereg.get("safety")!=SAFETY: finding("Q095_SAFETY_MISMATCH")
     assignments={}
@@ -52,7 +52,7 @@ def audit(root:Path=ROOT)->dict:
         "holdout_periods":"HOLDOUT",
     }
     for field, runner_name in geometry_map.items():
-        expected=prereg.get(field)
+        expected=prereg.get("data_contract",{}).get(field)
         actual=assignments.get(runner_name)
         if actual!=expected:
             finding("Q095_GEOMETRY_MISMATCH",field=field,expected=expected,actual=actual,runner_constant=runner_name)
@@ -100,7 +100,7 @@ def audit(root:Path=ROOT)->dict:
     }
     if contract!=actual: finding("Q095_SOURCE_CONTRACT_MISMATCH",expected=contract,actual=actual)
 
-    entry=next((x for x in registry.get("active_trials",[]) if x.get("code")=="091"),None)
+    entry=next((x for x in registry.get("active_trials",[]) if x.get("code")=="095"),None)
     if entry is None: finding("Q095_REGISTRY_ENTRY_MISSING")
     else:
         if entry.get("trial_id")!=prereg.get("trial_id"): finding("Q095_REGISTRY_ID_MISMATCH")
