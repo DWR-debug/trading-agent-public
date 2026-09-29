@@ -108,6 +108,7 @@ jobs:
 
       - name: Upload autonomous evidence
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v6
         with:
           name: permanent-pc-loop-${{ matrix.lane }}-${{ github.run_id }}
@@ -181,7 +182,8 @@ jobs:
         shell: cmd
         run: |
           @echo off
-          powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "$ErrorActionPreference='Stop'; & (Join-Path $env:REPO_SRC 'scripts\enable_local_ai_worker.ps1'); $agy=Get-Command agy -ErrorAction SilentlyContinue; if(-not $agy){$agy=Get-Command gemini -ErrorAction SilentlyContinue}; if(-not $agy){throw 'No Gemini/Antigravity CLI found.'}; $settings=Join-Path $env:USERPROFILE '.gemini\antigravity-cli\settings.json'; if(-not (Test-Path $settings)){throw ('Local AI settings missing: '+$settings)}; $raw=Get-Content $settings -Raw; $match=($raw -match '(?i)"(?:UseG1Credits|useG1Credits)"\s*:\s*false\b'); Write-Output ('LOCAL_AI_SETTINGS_MATCH='+$match); if(-not $match){throw ('Personal G1 credit fallback is not explicitly disabled in '+$settings)}; Write-Output 'LOCAL_AI_READINESS=READY'; Write-Output ('LOCAL_AI_PROVIDER_BINARY='+$agy.Source); Write-Output 'PERSONAL_G1_CREDITS_DISABLED=True'"
+          powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "%REPO_SRC%\scripts\verify_local_ai_worker.ps1"
+          if errorlevel 1 exit /b 1
 
       - name: Execute real local AI smoke test
         shell: cmd
@@ -196,6 +198,7 @@ jobs:
 
       - name: Upload local AI receipt
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v6
         with:
           name: local-ai-smoke-${{ github.run_id }}
@@ -304,6 +307,7 @@ jobs:
 
       - name: Upload bounded AI receipt
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v6
         with:
           name: local-ai-worker-${{ matrix.task }}-gemini-${{ github.run_id }}
