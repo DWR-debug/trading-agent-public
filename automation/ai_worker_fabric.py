@@ -29,11 +29,20 @@ PROVIDER_SPECS = {
         "binaries": ("agy", "gemini"),
         "auth_env": ("GEMINI_API_KEY", "GOOGLE_API_KEY"),
         "free_attestation_env": "GEMINI_FREE_MODE_CONFIRMED",
+        "prompt_role": "Primary synthesis: build a rigorous, evidence-aware handoff and identify concrete falsifiers.",
+    },
+    "openrouter_free": {
+        "binaries": (),
+        "auth_env": ("OPENROUTER_API_KEY",),
+        "free_attestation_env": None,
+        "prompt_role": "Independent adversarial second opinion: actively attack assumptions, search for confounds and propose cheap falsification tests. Do not seek consensus.",
+        "fixed_model": "openrouter/free",
     },
     "claude_cli": {
         "binaries": ("claude",),
         "auth_env": (),
         "free_attestation_env": "CLAUDE_FREE_MODE_CONFIRMED",
+        "prompt_role": "Adversarial reasoning: look for overlooked failure modes and hidden assumptions.",
     },
 }
 
@@ -176,6 +185,10 @@ def preflight(provider: str, env: dict[str, str] | None = None) -> dict[str, Any
     explicit_free = _truth(env.get(spec["free_attestation_env"]))
     local_attestation = _local_attestation(provider, env) if local_mode else {"present": False, "path": None}
     free_gate = explicit_free or local_attestation["present"]
+    if provider == "openrouter_free":
+        # The provider is free-only by construction: model selection is not exposed
+        # and the only accepted route is OpenRouter's free-model router.
+        free_gate = spec["fixed_model"] == "openrouter/free"
     auth_ok = bool(spec["auth_env"]) and any(env.get(name) for name in spec["auth_env"])
     if local_mode:
         auth_ok = binary is not None and local_attestation["present"]
@@ -190,7 +203,7 @@ def preflight(provider: str, env: dict[str, str] | None = None) -> dict[str, Any
         )
     if not allowlist:
         reasons.append("AI_EXTERNAL_PROVIDER_ALLOWLIST is not confirmed")
-    if binary is None:
+    if provider != "openrouter_free" and binary is None:
         reasons.append("provider executable not found")
     if not auth_ok:
         reasons.append("provider authentication is not available for free-only mode")
@@ -204,6 +217,11 @@ def preflight(provider: str, env: dict[str, str] | None = None) -> dict[str, Any
         "local_mode": local_mode,
         "local_attestation": local_attestation,
         "free_mode_attested": free_gate,
+        "free_enforcement": (
+            "fixed_model_openrouter_free"
+            if provider == "openrouter_free"
+            else "attestation_or_local_attestation"
+        ),
         "reasons": reasons,
     }
 
@@ -226,9 +244,11 @@ def _context_bundle(task: dict[str, Any]) -> str:
         total += len(file_text)
     return "\n\n".join(sections)
 
-def build_prompt(task: dict[str, Any]) -> str:
+def build_prompt(task: dict[str, Any], provider: str | None = None) -> str:
     context = _context_bundle(task)
-    return (SYSTEM_GUARD + "\n\n"
+    role = PROVIDER_SPECS.get(provider or "", {}).get("prompt_role", "")
+    role_block = f"\n<provider_role>{role}</provider_role>\n" if role else ""
+    return (SYSTEM_GUARD + "\n\n" + role_block
             + f"<task_id>{task["task_id"]}</task_id>\n"
             + f"<scope>{task.get("scope", "bounded research support")}</scope>\n"
             + "<repository_context>\n" + context + "\n</repository_context>\n\n"
@@ -244,38 +264,108 @@ def command_for(provider: str, prompt: str, binary: str | None = None) -> list[s
         return [executable, "--approval-mode", "plan", "--output-format", "json", "--prompt", prompt]
     if provider == "claude_cli":
         return [binary or "claude", "-p", prompt]
+    if provider == "openrouter_free":
+        raise AIWorkerError("openrouter_free uses the fixed HTTPS API path, not a shell command.")
     raise AIWorkerError(f"Unknown provider: {provider}.")
 
 def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, str] | None = None) -> dict[str, Any]:
     if provider not in task["providers"]:
         raise AIWorkerError(f"Provider {provider} is not enabled for this task.")
-    local_mode = _truth((os.environ if env is None else env).get("TRADING_AGENT_LOCAL_AI_MODE"))
-    check = preflight(provider, env)
+    runtime_env = dict(os.environ if env is None else env)
+    local_mode = _truth(runtime_env.get("TRADING_AGENT_LOCAL_AI_MODE"))
+    check = preflight(provider, runtime_env)
     base = {
-        "schema_version": 1, "task_id": task["task_id"], "provider": provider,
-        "free_only": True, "preflight": check, "task_fingerprint": _fingerprint(task),
+        "schema_version": 1,
+        "task_id": task["task_id"],
+        "provider": provider,
+        "free_only": True,
+        "preflight": check,
+        "task_fingerprint": _fingerprint(task),
         "worker_output_is_scientific_evidence": False,
-        "safety": {"paper_only": True, "live_trading_enabled": False, "orders_enabled": False, "automatic_promotion": False},
+        "safety": {
+            "paper_only": True,
+            "live_trading_enabled": False,
+            "orders_enabled": False,
+            "automatic_promotion": False,
+        },
     }
     output.parent.mkdir(parents=True, exist_ok=True)
     if not check["available"]:
-        result = {**base, "status": "SKIPPED", "returncode": None, "stdout": "", "stderr": "",
-                  "quota_block": load_block(provider, env)}
+        result = {
+            **base,
+            "status": "SKIPPED",
+            "returncode": None,
+            "stdout": "",
+            "stderr": "",
+            "quota_block": load_block(provider, runtime_env),
+        }
         output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         return result
-    command = command_for(provider, build_prompt(task), check.get("binary"))
+
     started = time.monotonic()
-    try:
-        proc = subprocess.run(command, cwd=Path.cwd(), text=True, encoding="utf-8", errors="replace",
-                              capture_output=True, timeout=task.get("max_runtime_minutes", 15) * 60,
-                              check=False, env=env or os.environ.copy())
-    except OSError as exc:
-        result = {**base, "status": "FAILED_PROCESS", "returncode": None,
-                  "duration_seconds": round(time.monotonic() - started, 3),
-                  "stdout": "", "stderr": f"{type(exc).__name__}: {exc}",
-                  "command_binary": command[0]}
-        output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+    if provider == "openrouter_free":
+        from automation.openrouter_free import call_openrouter_free
+
+        try:
+            api_result = call_openrouter_free(
+                build_prompt(task, provider),
+                api_key=runtime_env.get("OPENROUTER_API_KEY", ""),
+                timeout_seconds=min(60, task.get("max_runtime_minutes", 15) * 60),
+            )
+        except Exception as exc:
+            result = {
+                **base,
+                "status": "FAILED_PROVIDER",
+                "returncode": None,
+                "duration_seconds": round(time.monotonic() - started, 3),
+                "stdout": "",
+                "stderr": f"{type(exc).__name__}: {exc}",
+                "command_binary": "https-openrouter",
+                "api_model": "openrouter/free",
+            }
+            output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            return result
+        result = {
+            **base,
+            "status": api_result["status"],
+            "returncode": api_result.get("returncode"),
+            "duration_seconds": round(time.monotonic() - started, 3),
+            "stdout": api_result.get("content", ""),
+            "stderr": api_result.get("error", ""),
+            "command_binary": "https-openrouter",
+            "api_model": "openrouter/free",
+            "response_id": api_result.get("response_id"),
+            "usage": api_result.get("usage"),
+        }
+        output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         return result
+
+    command = command_for(provider, build_prompt(task, provider), check.get("binary"))
+    try:
+        proc = subprocess.run(
+            command,
+            cwd=Path.cwd(),
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            capture_output=True,
+            timeout=task.get("max_runtime_minutes", 15) * 60,
+            check=False,
+            env=runtime_env,
+        )
+    except OSError as exc:
+        result = {
+            **base,
+            "status": "FAILED_PROCESS",
+            "returncode": None,
+            "duration_seconds": round(time.monotonic() - started, 3),
+            "stdout": "",
+            "stderr": f"{type(exc).__name__}: {exc}",
+            "command_binary": command[0],
+        }
+        output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        return result
+
     stdout = (proc.stdout or "")[-20000:]
     stderr = (proc.stderr or "")[-12000:]
     if local_mode and quota_error(proc.returncode, stdout, stderr):
@@ -284,7 +374,7 @@ def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, s
             provider,
             reset_seconds,
             raw_error=f"{stdout}\n{stderr}",
-            env=env,
+            env=runtime_env,
         )
         result = {
             **base,
@@ -326,7 +416,7 @@ def main() -> int:
             parser.error("--run requires --provider, --task and --output")
         result = run_task(load_task(args.task), args.provider, args.output)
         print(json.dumps(result, sort_keys=True))
-        return 0 if result["status"] in {"SUCCESS", "SKIPPED", "QUOTA_BLOCKED"} else 1
+        return 0 if result["status"] in {"SUCCESS", "SKIPPED", "QUOTA_BLOCKED", "RATE_LIMITED"} else 1
     parser.error("Choose --preflight or --run.")
     return 2
 
