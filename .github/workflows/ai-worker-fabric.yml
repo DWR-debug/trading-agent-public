@@ -137,7 +137,9 @@ jobs:
           retention-days: 14
 
   mistral_worker:
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    if: >-
+      ${{ github.repository == 'DWR-debug/trading-agent-public' &&
+          (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
     concurrency:
       group: trading-agent-ai-mistral-free
       cancel-in-progress: false
