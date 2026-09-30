@@ -284,3 +284,37 @@ Copilot wird nur für hochwirksame, klar abgegrenzte Engineering-/QA-/Review-
 Aufgaben eingesetzt. Große explorative Aufgaben gehen stattdessen an
 Gemini/Claude, Self-hosted oder deterministische Pfade, sofern diese kostenlos
 verfügbar sind.
+## Live re-validation — 2026-09-30
+
+### Public GitHub-hosted runner capacity
+
+`DWR-debug/trading-agent-public` ist öffentlich. GitHub dokumentiert für öffentliche Repositorys die Standard-GitHub-hosted Runner als kostenlos und unbegrenzt nutzbar; der separate GitHub-Free-Minutenwert von 2.000 betrifft den allgemeinen Plan-/Privat-Repo-Kontext und ist **nicht** der Engpass für Standard-Hosted-Jobs dieses öffentlichen Repositorys.
+
+Für die aktuelle Plattform sind unter anderem verfügbar:
+
+- `ubuntu-24.04` / `ubuntu-22.04` / `ubuntu-26.04`: 4 CPU, 16 GB RAM, x64.
+- `ubuntu-24.04-arm` / `ubuntu-22.04-arm` / `ubuntu-26.04-arm`: 4 CPU, 16 GB RAM, ARM64.
+- `windows-2025` / `windows-2022`: 4 CPU, 16 GB RAM, x64.
+- Standard-Hosted-Jobs auf öffentlichen Repositories sind kostenlos; die normale Hosted-Job-Konkurrenz liegt im GitHub-Free-Plan bei bis zu 20 gleichzeitigen Jobs.
+
+### Tatsächlicher Projektcheck
+
+Am 2026-09-30 liefen auf dem aktuellen öffentlichen `master` erfolgreiche Hosted-Jobs:
+
+- `CI` Run `36757300045`: `ubuntu-24.04` **SUCCESS** und `ubuntu-24.04-arm` **SUCCESS**.
+- `T052 Exact Master CI Gate` Run `36757299960`: **SUCCESS**.
+- `Free AI Worker Fabric` Run `36757408780`: Hosted-Matrix wurde tatsächlich gestartet; OpenRouter-Free/Unusual-Frontier **SUCCESS**, Gemini-Lanes providerseitig fehlgeschlagen, Claude-Lanes erfolgreich beendet. Das sind Providerzustände, kein Hosted-Runner-Ausfall.
+- `Permanent Self-Hosted Research Loop` Run `36757444326`: `local_reproduction` und `autonomous_frontier_qa` **SUCCESS**.
+
+Die frühere Zero-Job-/Queue-Anomalie ist damit **nicht als aktueller Hosted-Runner-Blocker bestätigt**. Neue Läufe werden weiterhin gegen den Live-Zustand geprüft, da GitHub Limits und Infrastrukturzustände sich ändern können.
+
+### Verbindliches Routing
+
+Hosted-Runner sind ab 2026-09-30 **Primärpfad**, nicht bloß Fallback:
+
+1. Hosted x64: CI, Governance, deterministische Reproduktion und formale Gegenprüfungen.
+2. Hosted ARM64: unabhängige Architektur-/Reproduzierbarkeitsprüfung und orthogonale Regression.
+3. Self-hosted Windows: lokale Reproduktion, Frontier-Feasibility, trusted QA und lokale AI-Pfade.
+4. Kostenfreie externe AI: Design, adversarial Review und Hypothesen; kein wissenschaftlicher Evidence-Status.
+
+Die Parallelität soll echte Unabhängigkeit erhöhen; `concurrency`-Gruppen und Latest-Run-Wins werden nur dort verwendet, wo alte Läufe wissenschaftlich/operativ nicht mehr wertvoll sind.
