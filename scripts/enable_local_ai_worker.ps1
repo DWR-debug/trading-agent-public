@@ -8,10 +8,8 @@ New-Item -ItemType Directory -Force -Path $root | Out-Null
 
 $agy = Get-Command agy -ErrorAction SilentlyContinue
 $gemini = Get-Command gemini -ErrorAction SilentlyContinue
-$claude = Get-Command claude -ErrorAction SilentlyContinue
 
 if (-not $agy -and -not $gemini) { throw "No Antigravity/Gemini CLI found in this Windows user's PATH." }
-if (-not $claude) { Write-Warning "Claude CLI is not installed; Claude lane will remain skipped." }
 
 # Local worker bootstrap: free-only, no paid or personal-credit fallback.
 # Never allow Antigravity personal G1 credit fallback for project work.
@@ -64,7 +62,6 @@ if ($writtenSettings -notmatch '(?i)"(?:UseG1Credits|useG1Credits)"\s*:\s*false\
 
 $providers = @()
 if ($agy -or $gemini) { $providers += "gemini_cli" }
-if ($claude) { $providers += "claude_cli" }
 
 @{
   schema_version = 1
@@ -78,7 +75,6 @@ if ($claude) { $providers += "claude_cli" }
 
 Write-Output "LOCAL_AI_WORKER_ATTESTATION=$attestationPath"
 Write-Output "ANTIGRAVITY_OR_GEMINI_PRESENT=$([bool]($agy -or $gemini))"
-Write-Output "CLAUDE_PRESENT=$([bool]$claude)"
 Write-Output "LOCAL_AI_SETTINGS_PATH=$settingsPath"
 Write-Output "PERSONAL_G1_CREDITS_DISABLED=$true"
 Write-Output "POWERSHELL_COMPATIBLE=WindowsPowerShell_5.1+"
