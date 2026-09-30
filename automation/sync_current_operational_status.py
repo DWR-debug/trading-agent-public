@@ -174,6 +174,20 @@ def generate(
     )
 
     recorded_next_research_focus = project_state.get("next_research_focus")
+    # Keep operational status aligned with the actual ledger/active-design frontier.
+    # project_state.json contains historical planning context and can lag behind
+    # newly completed formal trials; this override changes documentation only.
+    if (
+        latest_formal.get("status", "").startswith("performance_completed")
+        and (ROOT / "automation/q100_frontier_feasibility_synthesis.py").is_file()
+    ):
+        recorded_next_research_focus = (
+            "Q099 diagnostic-only is complete and must not be used to retune Q081R4. "
+            "Next gate is Q100 frontier feasibility synthesis, followed by the predeclared "
+            "frontier source/PIT gates for C29/C30/C31/M4/M5 and Q097/C32/C33. "
+            "No step in this sequence creates performance authorization; only an exact, "
+            "fresh, ex-ante preregistered contract may do so."
+        )
     if (
         latest_formal.get("trial_id") == "T-2026-09-30-081R4-PERFORMANCE"
         and latest_formal.get("status") == "performance_completed_no_arm_passed_all_13_gates"
