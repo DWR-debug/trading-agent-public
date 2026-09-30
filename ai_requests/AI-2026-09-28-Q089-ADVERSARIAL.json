@@ -4,8 +4,7 @@
   "providers": [
     "gemini_cli",
     "mistral_api",
-    "openrouter_free",
-    "claude_cli"
+    "openrouter_free"
   ],
   "scope": "Q089 methodology and pre-performance adversarial review",
   "prompt": "Read the current Q089 design, coverage receipt, input-freeze/PIT code, and related governance files. Identify methodological failure modes that could invalidate the intended fresh symbol-disjoint validation before performance. Focus on provenance races, symbol-disjointness, point-in-time leakage, snapshot reproducibility, adjusted-close transformation, and governance sequencing. Do not propose parameter changes or candidate selection. Return concrete tests or invariant checks that could falsify the pipeline.",
