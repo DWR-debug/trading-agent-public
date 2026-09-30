@@ -390,7 +390,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T18:23:12.606001+00:00",
+  "generated_at_utc": "2026-09-30T18:37:31.605324+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -513,6 +513,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: add hosted failover worker",
+        "sha": "b4f73f472fdaabecfc0a3b30b69842e8100fe0d4",
+        "timestamp": "2026-09-30T20:37:21+02:00"
+      },
+      {
+        "message": "OPS: add hosted failover guard",
+        "sha": "56986865a56bd807fb6d1e9a54adf86e7ce0a7ab",
+        "timestamp": "2026-09-30T20:37:18+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "4850e1e9040bb58556531ea1bfaa618630cec586",
+        "timestamp": "2026-09-30T18:35:23Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "512cc2e65b65fb05696a8f626896a2d8d0414dfc",
+        "timestamp": "2026-09-30T18:32:28Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e20baac15e96eee2abe538b54bf4ddba159ed1e4",
+        "timestamp": "2026-09-30T18:23:12Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "3e1d3e20155972266798d65f427310256f41f8b8",
         "timestamp": "2026-09-30T18:22:58Z"
@@ -526,31 +551,6 @@
         "message": "DOCS: anchor chat-independent resource operating model",
         "sha": "022339acc58562a06dcfc900c78bb9a9db561152",
         "timestamp": "2026-09-30T20:22:44+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "6bc03ae3bd044a7e52dd63ba521f8b9504f1f888",
-        "timestamp": "2026-09-30T18:18:10Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "98918f55ccb0869a05b94583680cb610ddcd6c97",
-        "timestamp": "2026-09-30T18:17:27Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "369f11cf2369cc14cbc45d200cebb215b12ec865",
-        "timestamp": "2026-09-30T18:17:19Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "f3d4392983cb7bc9e7d9fd8519ed2ca66f89c0e7",
-        "timestamp": "2026-09-30T18:17:01Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "4a0839f23b1f4b8afb64464af13d8544e86261f2",
-        "timestamp": "2026-09-30T18:16:47Z"
       }
     ]
   },
@@ -620,12 +620,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "3e1d3e20155972266798d65f427310256f41f8b8",
+  "source_master_sha": "b4f73f472fdaabecfc0a3b30b69842e8100fe0d4",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36758165903"
+    "run_id": "36759889754"
   }
 }
