@@ -405,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T20:17:51.305266+00:00",
+  "generated_at_utc": "2026-09-30T20:18:08.765904+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -528,6 +528,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "11ae45bc59322d94e2d720ec13edc0932f0562db",
+        "timestamp": "2026-09-30T20:17:51Z"
+      },
+      {
         "message": "OPS: record AI worker state",
         "sha": "39bddc69808a87530c666f9059ad90aa3882f79c",
         "timestamp": "2026-09-30T20:17:48Z"
@@ -561,11 +566,6 @@
         "message": "FIX: retire stale Claude hosted worker leg",
         "sha": "ca63626f2f3600ce45656a5b33875da3f6112c5c",
         "timestamp": "2026-09-30T22:17:29+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "876f3ccb4b3457cb93a25b4e51345049963d9f0c",
-        "timestamp": "2026-09-30T20:12:12Z"
       }
     ]
   },
@@ -635,12 +635,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "39bddc69808a87530c666f9059ad90aa3882f79c",
+  "source_master_sha": "11ae45bc59322d94e2d720ec13edc0932f0562db",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36771582089"
+    "run_id": "36771611112"
   }
 }
