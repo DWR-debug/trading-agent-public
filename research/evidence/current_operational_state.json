@@ -384,7 +384,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T16:29:12.736421+00:00",
+  "generated_at_utc": "2026-09-30T16:30:42.202075+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -504,17 +504,28 @@
     "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "fix/c29-performance-authorized-test-state-20260930",
-        "number": 707,
-        "title": "FIX: align C29 performance tests with authorized master state",
-        "updatedAt": "2026-09-30T16:29:04Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/707"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: gate C29 retry dispatch on exact master CI (#708)",
+        "sha": "c8f0fd2f0ba554deaf58f0a01a6bcd3688e7bfb1",
+        "timestamp": "2026-09-30T18:30:25+02:00"
+      },
+      {
+        "message": "OPS: queue C29 performance retry after test-state fix",
+        "sha": "934add70d974c4bbe4eb51087e2adb113ad168cb",
+        "timestamp": "2026-09-30T18:30:07+02:00"
+      },
+      {
+        "message": "FIX: require exact T052 before C29 retry dispatch",
+        "sha": "566381ec8759a86b27508956450d90e81f2ae373",
+        "timestamp": "2026-09-30T18:30:03+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "1c4ad0218a9963a8e33027f7c16bc636482c2648",
+        "timestamp": "2026-09-30T16:29:12Z"
+      },
       {
         "message": "OPS: dispatch authorized C29 performance run after contract fix",
         "sha": "bbb8187af029ecf06da81986f1bf4c62992d0d47",
@@ -534,26 +545,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "abdc84cecd4f92e1e817c6240c8727d21767b590",
         "timestamp": "2026-09-30T16:27:46Z"
-      },
-      {
-        "message": "OPS: retry authorized C29 performance dispatch (#706)",
-        "sha": "dc1ea99725169b45f347e2db6c0e1ea493f9bb34",
-        "timestamp": "2026-09-30T18:27:32+02:00"
-      },
-      {
-        "message": "OPS: retry authorized C29 performance dispatch after preflight fix",
-        "sha": "36f3a8bd553c4cba36b0eb604585a5374370f10f",
-        "timestamp": "2026-09-30T18:27:14+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "cfeff7c058a78f026bad6d0d1eefe022a72f1e68",
-        "timestamp": "2026-09-30T16:27:06Z"
-      },
-      {
-        "message": "FIX: repair C29 performance preflight dependency (#705)",
-        "sha": "ca00a268a77210114702da00a0879a177b91715f",
-        "timestamp": "2026-09-30T18:26:51+02:00"
       }
     ]
   },
@@ -623,12 +614,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "bbb8187af029ecf06da81986f1bf4c62992d0d47",
+  "source_master_sha": "c8f0fd2f0ba554deaf58f0a01a6bcd3688e7bfb1",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36744526966"
+    "run_id": "36744706207"
   }
 }
