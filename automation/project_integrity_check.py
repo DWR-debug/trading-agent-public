@@ -18,6 +18,7 @@ ACTIVE_WORKFLOWS = {
     "ai-worker-fabric.yml",
     "autonomous-control-plane.yml",
     "ci.yml",
+    "c29-fresh-coverage-pit.yml",
     "copilot-cli-ci-repair.yml",
     "copilot-cli-engineering-task.yml",
     "copilot-setup-steps.yml",
