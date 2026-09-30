@@ -210,7 +210,10 @@ def preflight(provider: str, env: dict[str, str] | None = None) -> dict[str, Any
         )
     if not allowlist:
         reasons.append("AI_EXTERNAL_PROVIDER_ALLOWLIST is not confirmed")
-    if provider != "openrouter_free" and binary is None:
+    # API-backed providers intentionally have no local executable. Only CLI providers
+    # require a resolved binary; otherwise the preflight would incorrectly block
+    # fixed HTTPS adapters such as Mistral and OpenRouter.
+    if spec["binaries"] and binary is None:
         reasons.append("provider executable not found")
     if not auth_ok:
         reasons.append("provider authentication is not available for free-only mode")
