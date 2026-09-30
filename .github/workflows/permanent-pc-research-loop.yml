@@ -62,7 +62,7 @@ jobs:
         shell: cmd
         run: |
           @echo off
-          setlocal
+          setlocal EnableExtensions EnableDelayedExpansion
           set "WORK=%RUNNER_TEMP%\trading-agent-auto-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
           set "ARCHIVE=%RUNNER_TEMP%\trading-agent-auto-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%.tar.gz"
           if exist "%WORK%" rmdir /s /q "%WORK%"
@@ -101,14 +101,28 @@ jobs:
           set "LANE=${{ matrix.lane }}"
           cd /d "%REPO_SRC%" || exit /b 1
           set "PYTHONPATH=%REPO_SRC%"
-          "%PY_EXE%" -m automation.self_hosted_research_worker --lane "%LANE%" --output-dir "research/runs/self_hosted/autonomous/%GITHUB_RUN_ID%/%LANE%" || exit /b 1
-          if /I "%LANE%"=="autonomous_frontier_qa" (
-            "%PY_EXE%" -m automation.research_os_scheduler --run-number "%GITHUB_RUN_NUMBER%" --output "research/runs/self_hosted/autonomous/%GITHUB_RUN_ID%/%LANE%/research_os_resource_schedule.json" || exit /b 1
-            "%PY_EXE%" -m automation.research_os_source_probe --bucket "%GITHUB_RUN_NUMBER%" --bucket-count 4 --max-sources 4 --output "research/runs/self_hosted/autonomous/%GITHUB_RUN_ID%/%LANE%/research_os_source_probe.json" || exit /b 1
+          set "EXIT_CODE=0"
+          "%PY_EXE%" -m automation.self_hosted_research_worker --lane "%LANE%" --output-dir "research/runs/self_hosted/autonomous/%GITHUB_RUN_ID%/%LANE%"
+          if errorlevel 1 (
+            set "RC=!ERRORLEVEL!"
+            if "!EXIT_CODE!"=="0" set "EXIT_CODE=!RC!"
           )
-          endlocal
+          if /I "%LANE%"=="autonomous_frontier_qa" (
+            "%PY_EXE%" -m automation.research_os_scheduler --run-number "%GITHUB_RUN_NUMBER%" --output "research/runs/self_hosted/autonomous/%GITHUB_RUN_ID%/%LANE%/research_os_resource_schedule.json"
+            if errorlevel 1 (
+              set "RC=!ERRORLEVEL!"
+              if "!EXIT_CODE!"=="0" set "EXIT_CODE=!RC!"
+            )
+            "%PY_EXE%" -m automation.research_os_source_probe --bucket "%GITHUB_RUN_NUMBER%" --bucket-count 4 --max-sources 4 --output "research/runs/self_hosted/autonomous/%GITHUB_RUN_ID%/%LANE%/research_os_source_probe.json"
+            if errorlevel 1 (
+              set "RC=!ERRORLEVEL!"
+              if "!EXIT_CODE!"=="0" set "EXIT_CODE=!RC!"
+            )
+          )
+          endlocal & exit /b %EXIT_CODE%
 
       - name: Stage autonomous evidence for upload
+        if: always()
         shell: cmd
         run: |
           @echo off
