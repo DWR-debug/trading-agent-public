@@ -179,7 +179,7 @@ def generate(
         and latest_formal.get("status") == "performance_completed_no_arm_passed_all_13_gates"
     ):
         recorded_next_research_focus = (
-            "Q098 diagnostic-only: explain the common Q081-R4 risk/stability failure signature "
+            "Q099 diagnostic-only: explain the common Q081-R4 risk/stability failure signature "
             "from the immutable result; do not retune or authorize another Q081-R4 performance run. "
             "Next independent execution gate remains the design-only frontier feasibility layer "
             "(C30/C31/M5/Q097), with exact provenance and PIT requirements."
