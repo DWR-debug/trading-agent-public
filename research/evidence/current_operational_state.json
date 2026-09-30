@@ -405,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T20:08:04.056706+00:00",
+  "generated_at_utc": "2026-09-30T20:17:51.305266+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -528,44 +528,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "TEST: align active provider and rotation contracts",
-        "sha": "20fe0af5c27c9a23a7da761f12c496eb574615e1",
-        "timestamp": "2026-09-30T22:08:02+02:00"
-      },
-      {
-        "message": "OPS: remove retired Claude execution branch",
-        "sha": "48bf6968ee15d3af629e3c3921dd19d80f98ad6f",
-        "timestamp": "2026-09-30T22:07:56+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d6b3de3da4603ca32b9469ebb89af3c568bdaedb",
-        "timestamp": "2026-09-30T20:07:47Z"
-      },
-      {
-        "message": "TEST: enforce manual-only Copilot CI repair lane",
-        "sha": "4e269c9d8e91c91db07b2b84882cc5a8551a8463",
-        "timestamp": "2026-09-30T22:07:43+02:00"
-      },
-      {
-        "message": "DOCS: align Mistral rotation documentation",
-        "sha": "db8941a8337a9a4253b8afe26f83a58fa35fe0ea",
-        "timestamp": "2026-09-30T22:07:38+02:00"
-      },
-      {
-        "message": "OPS: finalize four-way Mistral rotation",
-        "sha": "5fad33fd10a5d207fe191d2feeaef1c27f3e35e4",
-        "timestamp": "2026-09-30T22:07:32+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "8a3f30d24d9898ccec6cdc09b9584e235fdce0db",
-        "timestamp": "2026-09-30T20:07:29Z"
+        "message": "OPS: record AI worker state",
+        "sha": "39bddc69808a87530c666f9059ad90aa3882f79c",
+        "timestamp": "2026-09-30T20:17:48Z"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "02eafe5f482cce706a8cb8b982d8fcf7f225ff90",
-        "timestamp": "2026-09-30T20:07:20Z"
+        "sha": "c1c182f5b664c292a5cfb42bf9b2c736f0f79cab",
+        "timestamp": "2026-09-30T20:17:47Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "8c08d6fe2fb0f8ee3f3a6115494ebe4dfda32840",
+        "timestamp": "2026-09-30T20:17:46Z"
+      },
+      {
+        "message": "FIX: enable bounded-step failure capture on PC lane",
+        "sha": "2b068af6af8e502c818c6108f08d4467178d0013",
+        "timestamp": "2026-09-30T22:17:45+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "9a67eb1f0ea98d1a685e2eb341b87d57c575d4aa",
+        "timestamp": "2026-09-30T20:17:43Z"
+      },
+      {
+        "message": "FIX: preserve PC research artifacts after bounded failures",
+        "sha": "cfc50769fccf5edbd9bb10e0e0c0c4ec1d1273c1",
+        "timestamp": "2026-09-30T22:17:33+02:00"
+      },
+      {
+        "message": "FIX: retire stale Claude hosted worker leg",
+        "sha": "ca63626f2f3600ce45656a5b33875da3f6112c5c",
+        "timestamp": "2026-09-30T22:17:29+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "876f3ccb4b3457cb93a25b4e51345049963d9f0c",
+        "timestamp": "2026-09-30T20:12:12Z"
       }
     ]
   },
@@ -635,12 +635,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "20fe0af5c27c9a23a7da761f12c496eb574615e1",
+  "source_master_sha": "39bddc69808a87530c666f9059ad90aa3882f79c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36770450067"
+    "run_id": "36771582089"
   }
 }
