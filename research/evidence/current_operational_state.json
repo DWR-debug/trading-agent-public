@@ -343,7 +343,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T16:01:33.327577+00:00",
+  "generated_at_utc": "2026-09-30T16:04:27.352354+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -466,44 +466,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "RESEARCH: C29 coverage-only repair discovery (#697)",
-        "sha": "7515dd62d5a24c3c81e78d28977faab5cba3a267",
-        "timestamp": "2026-09-30T18:01:20+02:00"
+        "message": "RESEARCH: C29R1 ICE coverage/PIT repair successor (#698)",
+        "sha": "0992c5245171760f94fe5494f582af3d07520dd3",
+        "timestamp": "2026-09-30T18:04:12+02:00"
       },
       {
-        "message": "RESEARCH: automate C29 coverage repair discovery",
-        "sha": "0e54b66b2d7aa701485ea88fee767cfdf74ec2c5",
-        "timestamp": "2026-09-30T18:00:24+02:00"
+        "message": "RESEARCH: persist C29 coverage repair discovery receipt",
+        "sha": "19b3ea5e10af974ffaa884c8be80a9d80036c2f1",
+        "timestamp": "2026-09-30T18:03:29+02:00"
       },
       {
-        "message": "RESEARCH: persist C29 coverage failure incident",
-        "sha": "583be5c0c5041f888a74f98036f5be1f159c5dd3",
-        "timestamp": "2026-09-30T18:00:13+02:00"
+        "message": "RESEARCH: add isolated C29R1 coverage and PIT workflow",
+        "sha": "3361c96114cd0c2a1d4683a8d550bc309a997769",
+        "timestamp": "2026-09-30T18:03:22+02:00"
       },
       {
-        "message": "RESEARCH: test C29 coverage repair discovery contract",
-        "sha": "8bde0c6a648e19c64bfd33b95a9011d534798954",
-        "timestamp": "2026-09-30T18:00:06+02:00"
+        "message": "RESEARCH: test C29R1 repair successor contract",
+        "sha": "48bb4a2dc5c235108f0d90873df410f0a4103855",
+        "timestamp": "2026-09-30T18:03:10+02:00"
       },
       {
-        "message": "RESEARCH: add deterministic C29 coverage repair discovery",
-        "sha": "d818eb9d014b3ec7c5824f1456c26d56ff8670b9",
-        "timestamp": "2026-09-30T17:59:13+02:00"
+        "message": "RESEARCH: add isolated C29R1 ICE PIT validator",
+        "sha": "47ae67e03f386449d24246054b967fe89f94813c",
+        "timestamp": "2026-09-30T18:03:02+02:00"
       },
       {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "cbd09d685aa8bf5818f2a5d8d5cbe877304e61ec",
-        "timestamp": "2026-09-30T15:59:12Z"
+        "message": "RESEARCH: preregister C29R1 ICE coverage/PIT repair successor",
+        "sha": "9819cdf1362ef6d2ae744fad678d5f0ea9587865",
+        "timestamp": "2026-09-30T18:02:48+02:00"
       },
       {
-        "message": "RESEARCH: preregister C29 coverage-only repair discovery",
-        "sha": "4a02553f80fc2ec10f29ca894d9099ff46597ea7",
-        "timestamp": "2026-09-30T17:58:57+02:00"
+        "message": "RESEARCH: add fixed C29R1 ICE repair universe",
+        "sha": "227e59048a7e576c0db74b61a572f2b8f42d2216",
+        "timestamp": "2026-09-30T18:02:32+02:00"
       },
       {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "7d9b64670a753c3ff7e96f8911ff51c9c853e598",
-        "timestamp": "2026-09-30T15:57:17Z"
+        "message": "OPS: synchronize current operational status",
+        "sha": "7ccb19025f75073baf40802c7c4e5de3942fc526",
+        "timestamp": "2026-09-30T16:01:33Z"
       }
     ]
   },
@@ -573,12 +573,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7515dd62d5a24c3c81e78d28977faab5cba3a267",
+  "source_master_sha": "0992c5245171760f94fe5494f582af3d07520dd3",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36741142804"
+    "run_id": "36741493356"
   }
 }
