@@ -1,7 +1,6 @@
 import json
 import pytest
 from pathlib import Path
-from pathlib import Path
 from automation.ai_worker_fabric import AIWorkerError, _local_attestation, build_prompt, load_task, preflight, run_task
 
 def task(provider="gemini_cli"):
@@ -218,13 +217,13 @@ def test_mistral_lane_is_schedule_or_manual_dispatch_only():
     assert "mistral_worker:" in text
     assert "github.event_name == 'schedule'" in text
     assert "github.event_name == 'workflow_dispatch'" in text
-    assert "provider: [gemini_cli, openrouter_free, claude_cli]" in text
+    assert "provider: [openrouter_free]" in text
 
 
 def test_q100_frontier_task_has_repository_context_and_safe_scope():
     task_path = Path(__file__).parents[1] / "ai_requests" / "AI-2026-09-30-Q100-FRONTIER-FEASIBILITY.json"
     payload = load_task(task_path)
-    assert payload["providers"] == ["gemini_cli", "openrouter_free", "claude_cli"]
+    assert payload["providers"] == ["gemini_cli", "mistral_api", "openrouter_free"]
     assert payload["performance_authorized"] is False
     prompt = build_prompt(payload, "openrouter_free")
     assert "RESEARCH_FRONTIER_UNUSUAL" in prompt
@@ -234,7 +233,7 @@ def test_q100_frontier_task_has_repository_context_and_safe_scope():
 def test_hosted_gemini_and_mistral_are_quota_guarded_by_schedule():
     workflow = Path(__file__).parents[1] / ".github" / "workflows" / "ai-worker-fabric.yml"
     text = workflow.read_text(encoding="utf-8")
-    assert "provider: [openrouter_free, claude_cli]" in text
+    assert "provider: [openrouter_free]" in text
     assert "gemini_worker:" in text
     assert "mistral_worker:" in text
     assert "github.event_name == 'schedule'" in text
@@ -242,4 +241,4 @@ def test_hosted_gemini_and_mistral_are_quota_guarded_by_schedule():
     assert "GEMINI_ROTATION slot=" in text
     assert "MISTRAL_ROTATION slot=" in text
     assert "/ 21600 % 4" in text
-    assert "/ 21600 % 3" in text
+    assert "/ 21600 % 4" in text
