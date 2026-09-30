@@ -187,6 +187,7 @@ def main() -> int:
         "schema_version": "1.0",
         "trial_id": BUNDLE_ID,
         "status": "INPUT_BUNDLE_FROZEN",
+        "symbols": symbols,
         "source_snapshot_fingerprint": manifest["snapshot_fingerprint"],
         "bundle_fingerprint": bundle["bundle_fingerprint"],
         "datasets": datasets,
