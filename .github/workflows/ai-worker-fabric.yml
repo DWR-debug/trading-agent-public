@@ -177,9 +177,11 @@ jobs:
           esac
           path="ai_requests/$task_id.json"
           test -f "$path"
-          echo "slot=$slot" >> "$GITHUB_OUTPUT"
-          echo "task_id=$task_id" >> "$GITHUB_OUTPUT"
-          echo "path=$path" >> "$GITHUB_OUTPUT"
+          {
+            echo "slot=$slot"
+            echo "task_id=$task_id"
+            echo "path=$path"
+          } >> "$GITHUB_OUTPUT"
           echo "GEMINI_ROTATION slot=$slot task=$task_id"
 
       - name: Run Gemini free-only worker
@@ -273,7 +275,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          slot=$(( $(date -u +%s) / 21600 % 4 ))
+          slot=$(( $(date -u +%s) / 21600 % 5 ))
           case "$slot" in
             0) task_id='AI-2026-09-29-Q091-ADVERSARIAL' ;;
             1) task_id='AI-2026-09-28-Q089-ADVERSARIAL' ;;
@@ -289,9 +291,11 @@ jobs:
             AI-2026-09-30-Q101-NEGATIVE-EVIDENCE) path='ai_requests/AI-2026-09-30-Q101-NEGATIVE-EVIDENCE.json' ;;
             *) exit 1 ;;
           esac
-          echo "slot=$slot" >> "$GITHUB_OUTPUT"
-          echo "task_id=$task_id" >> "$GITHUB_OUTPUT"
-          echo "path=$path" >> "$GITHUB_OUTPUT"
+          {
+            echo "slot=$slot"
+            echo "task_id=$task_id"
+            echo "path=$path"
+          } >> "$GITHUB_OUTPUT"
           echo "MISTRAL_ROTATION slot=$slot task=$task_id"
 
       - name: Run Mistral free-only worker
