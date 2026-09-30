@@ -64,19 +64,26 @@ Source:
 https://openrouter.ai/pricing
 https://openrouter.ai/collections/free-models
 
-### 4. Mistral Free Studio
+### 4. Mistral Free Studio / API
 
-Mistral currently offers a Free plan with limited chat/search/coding usage and
-Mistral Studio. Mistral's API documentation states Studio is enabled in Free
-mode by default and does not require a credit card to create an API key.
+Mistral's current Free mode enables Studio API access without a credit card and
+provides included monthly API usage, subject to rate and usage limits. The API
+key itself is not plan-scoped, so pay-as-you-go must remain disabled for this
+project's zero-paid-budget policy.
+
+The fabric uses the fixed `mistral-small-latest` model and a separate free-mode
+attestation. That makes Mistral an independent bounded reasoning/adversarial worker,
+not a consensus voter and not a deterministic evidence source.
 
 Operator action:
-- create a Mistral account
-- activate Studio Free
+- create a Mistral account and use Studio Free
 - create an API key
-- add MISTRAL_API_KEY as a repository secret
+- keep pay-as-you-go disabled
+- add `MISTRAL_API_KEY` as a GitHub repository secret
+- add `MISTRAL_FREE_MODE_CONFIRMED=true` as a GitHub repository secret
 
-The project should never enable automatic paid fallback.
+The worker skips Mistral unless both the key and explicit free-mode attestation are present.
+There is no automatic paid fallback.
 
 Source:
 https://mistral.ai/pricing/
