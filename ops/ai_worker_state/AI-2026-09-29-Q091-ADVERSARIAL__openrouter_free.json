@@ -27,12 +27,12 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 25.012,
-  "stdout": "**Adversarial Review: Q091 Fixed Portfolio Architecture**  \n*Focus: Pre-performance authorization attack surface*  \n\n---\n\n### **Key Findings & Assumption Attacks**  \n1. **E2 Gross-Normalization Leverage Risk**  \n   - E2’s gross-normalization to unit exposure *after* residual averaging can amplify weights when the average residual vector’s L1-norm is near zero (e.g., during low signal dispersion). This creates hidden leverage spikes unaccounted for in the cost model (which assumes constant fee/slippage rates).  \n   - *Invariant check*: Monitor min(L1-norm of average residual vector) over research period. If < ε (e.g., 1e-4), gross-normalization violates the \"unit gross exposure\" contract via numerical instability.  \n\n2. **Cross-Sectional Demeaning Lookahead via Universe Definition**  \n   - E2’s demeaning uses the \"full fresh evaluation universe\" at each decision point. If the universe is defined *after* observing current-period returns (e.g., excluding halted/suspended stocks retroactively), it introduces lookahead bias.  \n   - *Counterargument test*: Verify universe construction timestamp vs. decision timestamp in `q091_targets_at()`. If universe depends on future-adjusted-close data (e.g., via split/dividend adjustments), demeaning leaks forward information.  \n\n3. **E1 Exposure Contract Mismatch**  \n   - E1 claims \"long-only, unit-or-less gross exposure,\" but Q069 sleeves may include short positions (per `q069_candidate_bank.py` logic). Averaging long/short sleeves could yield net ≠ 0 and gross >1, violating the contract.  \n   - *Falsification*: Compute max(gross exposure) and min(net exposure) for E1 sleeves over holdout. If gross >1.01 or \\|net\\| > 0.01, contract is broken.  \n\n4. **Cost Model Misalignment with Turnover Dynamics**  \n   - The cost contract applies flat fee/sl",
+  "duration_seconds": 57.051,
+  "stdout": "# Q091 Adversarial Review — Pre-Performance Handoff\n\n## Executive Summary\n\nThe Q091 framework is **structurally sound on paper** (frozen rules, disjoint symbols, immutable receipts, symmetric evaluation, no selection/promotion), but **four critical attack surfaces** exist that could invalidate any performance claim if not falsified before the one-shot run. The two variants are *not* symmetrically constrained: E1 has a soft \"unit-or-less\" gross cap with no enforcement mechanism visible, while E2 has a hard gross-normalization that can amplify noise violently on 8 symbols.\n\n---\n\n## 1. Portfolio-Weight Timing & PIT Leakage\n\n| Check | Status | Risk |\n|-------|--------|------|\n| Decision-date alignment with common calendar | ❓ Not verified in runner snippet | Weights could be computed on `t` close and applied on `t` close (look-ahead) |\n| Q069 signal computation PIT | ❓ PIT test passed (10 points, 20 mutations) but scope unclear | Longest lookback = 756 days (C9); any expanding-window fit leaks |\n| Demeaning cross-section | ❓ Uses \"full fresh evaluation universe\" at each date — **only 8 symbols** | Cross-sectional mean with n=8 is a single-stock bet; one symbol dominates the demean |\n\n**Falsification test**: Replay the PIT mutation suite with *adversarial* mutations: (a) shift one symbol's corporate action date by ±1 day, (b) drop the highest-weight symbol at each date, (c) inject a 1-day look-ahead in the 756-day window. All must still pass.\n\n---\n\n## 2. Cross-Sectional Demeaning + Gross Normalization (E2) — Hidden Leverage\n\n**Mechanism**:  \n`residual = w_sleeve - mean(w_sleeve)` → `avg_residual = mean(residuals)` → `w_E2 = avg_residual / sum(|avg_residual|)`\n\n**Attack vectors**:\n1. **Denominator near zero**: If the 5 sleeves agree closely (Q090 found \"substantial common exposure\"), `sum(|avg_residual|)` → 0, causing explosive gross leverage before renormalization. The \"when nonzero\" clause is a discontinuity.\n2. **n=8 demeaning**: With 8 symbols, `mean(w)` is driven by the *largest* sleeve weight. If one sleeve puts 0.8 on APA and 0.02 on others, the mean ≈ 0.1, and *every* symbol gets a ~±0.1 shift — the demeaned vector is mostly noise.\n3. **Gross normalization after averaging** vs **before",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1790797458-Xnks1fzL618mHA8U6csO",
+  "response_id": "gen-1790797501-ByDJRSszYej8OMmpigdJ",
   "usage": {
     "prompt_tokens": 8007,
     "completion_tokens": 3200,
@@ -51,7 +51,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 2995,
+      "reasoning_tokens": 2480,
       "image_tokens": 0,
       "audio_tokens": 0
     }
