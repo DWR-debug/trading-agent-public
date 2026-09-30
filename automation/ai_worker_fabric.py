@@ -31,6 +31,13 @@ PROVIDER_SPECS = {
         "free_attestation_env": "GEMINI_FREE_MODE_CONFIRMED",
         "prompt_role": "Primary synthesis: build a rigorous, evidence-aware handoff and identify concrete falsifiers.",
     },
+    "mistral_api": {
+        "binaries": (),
+        "auth_env": ("MISTRAL_API_KEY",),
+        "free_attestation_env": "MISTRAL_FREE_MODE_CONFIRMED",
+        "prompt_role": "Independent Mistral research worker: attack assumptions, surface overlooked mechanisms and propose cheap falsification tests. Preserve disagreement; do not seek consensus.",
+        "fixed_model": "mistral-small-latest",
+    },
     "openrouter_free": {
         "binaries": (),
         "auth_env": ("OPENROUTER_API_KEY",),
@@ -264,6 +271,8 @@ def command_for(provider: str, prompt: str, binary: str | None = None) -> list[s
         return [executable, "--approval-mode", "plan", "--skip-trust", "--model", "gemini-3.7-flash", "--output-format", "json", "--prompt", prompt]
     if provider == "claude_cli":
         return [binary or "claude", "-p", prompt]
+    if provider == "mistral_api":
+        raise AIWorkerError("mistral_api uses the fixed HTTPS API path, not a shell command.")
     if provider == "openrouter_free":
         raise AIWorkerError("openrouter_free uses the fixed HTTPS API path, not a shell command.")
     raise AIWorkerError(f"Unknown provider: {provider}.")
@@ -303,6 +312,42 @@ def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, s
         return result
 
     started = time.monotonic()
+    if provider == "mistral_api":
+        from automation.mistral_free import call_mistral_free
+
+        try:
+            api_result = call_mistral_free(
+                build_prompt(task, provider),
+                api_key=runtime_env.get("MISTRAL_API_KEY", ""),
+                timeout_seconds=min(60, task.get("max_runtime_minutes", 15) * 60),
+            )
+        except Exception as exc:
+            result = {
+                **base,
+                "status": "FAILED_PROVIDER",
+                "returncode": None,
+                "duration_seconds": round(time.monotonic() - started, 3),
+                "stdout": "",
+                "stderr": f"{type(exc).__name__}: {exc}",
+                "command_binary": "https-mistral",
+                "api_model": "mistral-small-latest",
+            }
+            output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+            return result
+        result = {
+            **base,
+            "status": api_result["status"],
+            "returncode": api_result.get("returncode"),
+            "duration_seconds": round(time.monotonic() - started, 3),
+            "stdout": api_result.get("content", ""),
+            "stderr": api_result.get("error", ""),
+            "command_binary": "https-mistral",
+            "api_model": "mistral-small-latest",
+            "response_id": api_result.get("response_id"),
+            "usage": api_result.get("usage"),
+        }
+        output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+        return result
     if provider == "openrouter_free":
         from automation.openrouter_free import call_openrouter_free
 
