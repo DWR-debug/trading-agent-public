@@ -166,3 +166,27 @@ def test_openrouter_request_excludes_reasoning_from_worker_output(monkeypatch) -
     openrouter_free.call_openrouter_free("test", api_key="x")
     assert captured["payload"]["model"] == "openrouter/free"
     assert captured["payload"]["reasoning"]["exclude"] is True
+
+
+def test_openrouter_rejects_tool_call_markup(monkeypatch) -> None:
+    from automation import openrouter_free
+
+    class FakeResponse:
+        status = 200
+        def read(self, limit=None):
+            return json.dumps({
+                "id": "tool-call-output",
+                "choices": [{"message": {"content": "<|tool_call_start|>read(foo)<|tool_call_end|>"}}],
+            }).encode("utf-8")
+        def __enter__(self):
+            return self
+        def __exit__(self, *args):
+            return False
+
+    monkeypatch.setattr(
+        openrouter_free.urllib.request,
+        "urlopen",
+        lambda request, timeout: FakeResponse(),
+    )
+    with pytest.raises(openrouter_free.OpenRouterFreeError):
+        openrouter_free.call_openrouter_free("final answer only", api_key="x")
