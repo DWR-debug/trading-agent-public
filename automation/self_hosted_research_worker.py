@@ -93,6 +93,13 @@ LANES: dict[str, list[list[str]]] = {
         [
             PYTHON,
             "-m",
+            "automation.q102_regime_negative_evidence",
+            "--output-dir",
+            "research/runs/q102_regime_negative_evidence",
+        ],
+        [
+            PYTHON,
+            "-m",
             "automation.q095_contract_audit",
         ],
         [
