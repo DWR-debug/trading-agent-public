@@ -86,10 +86,9 @@ The worker skips Mistral unless both the key and explicit free-mode attestation 
 There is no automatic paid fallback.
 
 Operationally, Mistral runs in its own bounded workflow lane. Within that lane,
-one deterministic 6-hour rotation selects exactly one of the three standing AI
+one deterministic 6-hour rotation selects exactly one of four standing AI
 research tasks per cycle; the choice is time-based and never derived from
-performance, holdout results or candidate preference. The other AI providers remain
-independently parallel. This avoids free-tier burst 429s and keeps the Mistral
+performance, holdout results or candidate preference. The other AI provider remains independently parallel. This avoids free-tier burst 429s and keeps the Mistral
 resource useful without exhausting it on duplicate reviews. A 429 is recorded as
 a provider-rate-limit state, never retried through a paid route, and never treated
 as scientific evidence.
