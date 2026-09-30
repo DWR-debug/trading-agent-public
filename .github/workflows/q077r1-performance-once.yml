@@ -109,6 +109,21 @@ jobs:
           python -m pytest -q tests/test_q077r1_identity.py
           python -m py_compile automation/q077r1_performance.py automation/q077r1_reconcile.py
 
+      - name: Stage durable frozen Q077-R1 snapshot at runner-expected path
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_root="research/runs/q077r1_pit/T-2026-09-28-077R1-PIT"
+          runner_root="research/runs/q077r1_coverage/T-2026-09-28-077R1-COVERAGE"
+          test -f "$source_root/snapshot_manifest.json"
+          test -f "$source_root/datasets/AJG/1d.csv"
+          rm -rf "$runner_root"
+          mkdir -p "$(dirname "$runner_root")"
+          cp -a "$source_root" "$runner_root"
+          cmp "$source_root/snapshot_manifest.json" "$runner_root/snapshot_manifest.json"
+          test -f "$runner_root/datasets/AJG/1d.csv"
+          echo "Q077R1 frozen snapshot staged without modification"
+
       - name: Execute Q077-R1 fixed-rule performance exactly once
         env:
           Q077R1_PERFORMANCE_ONCE: "true"
