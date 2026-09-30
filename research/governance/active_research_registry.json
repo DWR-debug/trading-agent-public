@@ -212,6 +212,46 @@
         "report_fingerprint": "2132ad61b30100d1c187ae20ab9e3d2597cdadaf3ef2f0fa85ba7a12c3765772",
         "workflow_run_id": "36580538374"
       }
+    },
+    {
+      "code": "C29P1",
+      "trial_id": "T-2026-09-30-C29-PERFORMANCE-01",
+      "class": "fresh_validation",
+      "state": "PERFORMANCE_READY_FOR_AUTHORIZATION",
+      "issue_number": null,
+      "preregistration_path": "research/preregistrations/c29_performance_2026_09_30.json",
+      "performance_authorization_allowed": false,
+      "coverage_result": {
+        "status": "COVERAGE_PASSED",
+        "selected_symbols": [
+          "PPG",
+          "GWW",
+          "PGR",
+          "TT",
+          "ICE",
+          "KLAC",
+          "SNA",
+          "SWK"
+        ],
+        "common_sessions": 3500,
+        "fingerprint": "6b3acf5fb179bc93c6fac8eaaef59d71aa909326d5f171d9718a7cfbc71e22a6",
+        "source_trial_id": "T-2026-09-30-C29R1-COVERAGE-PIT"
+      },
+      "pit_result": {
+        "status": "PIT_PASSED_NO_PERFORMANCE_EVIDENCE",
+        "fingerprint": "d88c24271fec55186b5e3aad478d91acc7ebe3b6412193724170365f5b6729c6",
+        "source_trial_id": "T-2026-09-30-C29R1-COVERAGE-PIT"
+      },
+      "input_bundle_result": {
+        "status": "INPUT_BUNDLE_FROZEN",
+        "fingerprint": "743b0a14e646009e7ed5503c4068e399caaebc9719ffcd9e88a5ab40465ab4e9",
+        "source_trial_id": "T-2026-09-30-C29R1-INPUT-FREEZE"
+      },
+      "repair_discovery_fingerprint": "b7541fee48f01105d47ca0e89b05e1c20d14d73c5dad18dc1d2e876a21c4b05d",
+      "execution_incident_paths": [
+        "research/evidence/c29_coverage_execution_incident_2026_09_30.json",
+        "research/evidence/c29r1_input_freeze_incident_2026_09_30.json"
+      ]
     }
   ],
   "active_design_families": [
