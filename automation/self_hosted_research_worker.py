@@ -34,6 +34,7 @@ LANES: dict[str, list[list[str]]] = {
             "tests/test_q097_public_short_flow_candidates.py",
             "tests/test_q097_public_short_flow_feasibility.py",
             "tests/test_q098_historical_archive_depth.py",
+            "tests/test_c29_fresh_pit.py",
             "tests/test_q100_frontier_feasibility_synthesis.py",
             "tests/test_q089_validation.py",
             "tests/test_q089_input_freeze.py",
