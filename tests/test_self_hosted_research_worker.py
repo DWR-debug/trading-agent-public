@@ -313,3 +313,18 @@ def test_self_hosted_runner_probe_targets_trusted_label_and_master_only():
     assert "branches: [master]" in text
     assert "RUNNER_PROBE=SUCCESS" in text
     assert "pull_request:" not in text
+
+
+def test_permanent_loop_harvests_frontier_outputs_even_after_bounded_failure():
+    text = (
+        ROOT / ".github" / "workflows" / "permanent-pc-research-loop.yml"
+    ).read_text(encoding="utf-8")
+    assert "setlocal EnableExtensions EnableDelayedExpansion" in text
+    assert 'set "EXIT_CODE=0"' in text
+    assert "Stage autonomous evidence for upload" in text
+    assert "if: always()" in text
+    assert "research\\runs\\q099_q081r4_failure_diagnosis" in text
+    assert "research\\runs\\q100_frontier_feasibility_synthesis" in text
+    assert "q092_q091_failure_diagnosis.json" in text
+    assert "provenance_index.json" in text
+    assert "Get-FileHash -Algorithm SHA256" in text
