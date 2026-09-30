@@ -390,7 +390,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T17:28:47.986473+00:00",
+  "generated_at_utc": "2026-09-30T17:29:43.064753+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -514,43 +514,43 @@
     "recent_commits": [
       {
         "message": "OPS: record AI worker state",
-        "sha": "74e2312c8aa069261c2c45d5bdd4233743cb735f",
-        "timestamp": "2026-09-30T17:28:39Z"
+        "sha": "2e17980e6d34acb942d488773eaf98fe6171cffe",
+        "timestamp": "2026-09-30T17:29:41Z"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "a67b8428cf425c4349573a0b8cfc686d4b928816",
-        "timestamp": "2026-09-30T17:28:37Z"
+        "sha": "973766008f9b91478ce59df6ea7ea585d89d3372",
+        "timestamp": "2026-09-30T17:29:38Z"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "8645256ab4f3615790e23ce360f1157d42535717",
-        "timestamp": "2026-09-30T17:28:35Z"
+        "sha": "a054bebb5901e2adf7226c6ebf5248fd499344f5",
+        "timestamp": "2026-09-30T17:29:34Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "be995f0bf23cc43cb94f3a6f3ceada6128eb5a3f",
-        "timestamp": "2026-09-30T17:28:31Z"
+        "message": "DOCS: document OpenRouter free worker",
+        "sha": "762ac628e464b334eb8510b14627f6366f003c3e",
+        "timestamp": "2026-09-30T19:29:32+02:00"
       },
       {
-        "message": "TEST: pin Gemini worker to free Flash model",
-        "sha": "c0279e82995845b8d85bb7b97fb9f01863386eba",
-        "timestamp": "2026-09-30T19:28:22+02:00"
+        "message": "TEST: enforce OpenRouter reasoning exclusion",
+        "sha": "e064df0fa2715b7c033859ea917aac308bf932d7",
+        "timestamp": "2026-09-30T19:29:24+02:00"
       },
       {
-        "message": "OPS: record AI worker state",
-        "sha": "b63b35514cdc031724e201d0383a9c4a5e651128",
-        "timestamp": "2026-09-30T17:28:19Z"
-      },
-      {
-        "message": "AI: handle OpenRouter structured content responses",
-        "sha": "f102f1c6d645fff54384eb19425e131699a76137",
-        "timestamp": "2026-09-30T19:28:16+02:00"
+        "message": "AI: reserve output budget for OpenRouter final answer",
+        "sha": "fff16b786e946308dc00adf035f354db7be80216",
+        "timestamp": "2026-09-30T19:29:17+02:00"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "0df823f43fcc9cd6242b1969251b31e56c70d49f",
-        "timestamp": "2026-09-30T17:28:02Z"
+        "sha": "2440bf23f162e790950b943294a4ee469ae36121",
+        "timestamp": "2026-09-30T17:29:16Z"
+      },
+      {
+        "message": "DOCS: record verified OpenRouter integration",
+        "sha": "1c7635a070cc692d012e507b1f1216acc4a2eba8",
+        "timestamp": "2026-09-30T19:28:52+02:00"
       }
     ]
   },
@@ -620,12 +620,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "74e2312c8aa069261c2c45d5bdd4233743cb735f",
+  "source_master_sha": "2e17980e6d34acb942d488773eaf98fe6171cffe",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36751619938"
+    "run_id": "36751727439"
   }
 }
