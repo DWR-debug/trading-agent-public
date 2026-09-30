@@ -321,7 +321,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T13:52:09.631959+00:00",
+  "generated_at_utc": "2026-09-30T13:53:03.027193+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -444,6 +444,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: add Q077-R1 fixed-rule performance runner",
+        "sha": "f6dc2a7eefec51df2674e5adf27cade8e8f54417",
+        "timestamp": "2026-09-30T15:52:49+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "cadad0c902f6a58aaa4afda0c0477e595c2d1d8c",
+        "timestamp": "2026-09-30T13:52:26Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6f08a00b74ad93d607159ab5591f4361b18a266b",
+        "timestamp": "2026-09-30T13:52:09Z"
+      },
+      {
         "message": "FIX: repair Q077-R1 persistence YAML and include complete frozen inputs",
         "sha": "f68f8750b510ced4521f5924fea418fcb078cfe2",
         "timestamp": "2026-09-30T15:51:56+02:00"
@@ -467,21 +482,6 @@
         "message": "RESEARCH: persist Q077-R1 input freeze after PIT pass",
         "sha": "b2d70dad39d1abeda6241f54e12fae61afa83429",
         "timestamp": "2026-09-30T15:49:55+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "77fd643ad6099819d73adde93979800ed34609a9",
-        "timestamp": "2026-09-30T13:49:23Z"
-      },
-      {
-        "message": "RESEARCH: add Q077-R1 immutable input-freeze builder",
-        "sha": "494c8f6907df69565abd61b06ad99244d2fbdde7",
-        "timestamp": "2026-09-30T15:49:10+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "e04436c1208a56c4248564023c0947b4567630b9",
-        "timestamp": "2026-09-30T13:47:45Z"
       }
     ]
   },
@@ -551,12 +551,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f68f8750b510ced4521f5924fea418fcb078cfe2",
+  "source_master_sha": "f6dc2a7eefec51df2674e5adf27cade8e8f54417",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36724781694"
+    "run_id": "36724889264"
   }
 }
