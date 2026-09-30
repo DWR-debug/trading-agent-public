@@ -66,13 +66,6 @@ def run(universe_root: Path, symbols: tuple[str, ...], output: Path) -> dict:
             )
             for symbol in symbols
         }
-        future = {
-            symbol: illusion_momentum_gap_at(
-                [float(row["close"]) for row in mutated[symbol]],
-                index,
-            )
-            for symbol in symbols
-        } if False else None
         future_assets = _mutate(assets, index, "future")
         next_assets = _mutate(assets, index, "next")
         future_values = {
