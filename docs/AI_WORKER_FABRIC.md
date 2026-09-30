@@ -10,13 +10,15 @@ capacity without turning an external LLM into a source of scientific evidence.
 
 The fabric is deliberately separate from deterministic computation.
 
+OpenRouter is integrated through a hard-wired HTTP adapter that accepts only the provider's free router and never exposes a paid model fallback.
+
 ## Resource classes
 
 1. Self-hosted PC: persistent deterministic QA, reproduction, coverage/PIT
    preparation and approved local research workloads.
 2. GitHub-hosted runners: deterministic CI/research plus the bounded
    GitHub-agent queue.
-3. External AI workers: Gemini CLI and optionally Claude CLI for bounded
+3. External AI workers: Gemini CLI, OpenRouter Free and optionally Claude CLI for bounded
    hypothesis generation, adversarial review, architecture review and research
    design support.
 4. Python: canonical numerical computation, statistical validation,
