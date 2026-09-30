@@ -138,14 +138,9 @@ jobs:
 
   mistral_worker:
     if: github.repository == 'DWR-debug/trading-agent-public'
-    strategy:
-      fail-fast: false
-      max-parallel: 1
-      matrix:
-        task:
-          - AI-2026-09-29-Q091-ADVERSARIAL
-          - AI-2026-09-28-Q089-ADVERSARIAL
-          - AI-2026-09-28-UNUSUAL-FRONTIER
+    concurrency:
+      group: trading-agent-ai-mistral-free
+      cancel-in-progress: false
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
@@ -160,17 +155,28 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: Resolve task file
+      - name: Select deterministic Mistral rotation slot
         id: task
         shell: bash
         run: |
           set -euo pipefail
-          case '${{ matrix.task }}' in
-            AI-2026-09-29-Q091-ADVERSARIAL) echo 'path=ai_requests/AI-2026-09-29-Q091-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-09-28-Q089-ADVERSARIAL) echo 'path=ai_requests/AI-2026-09-28-Q089-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
-            AI-2026-09-28-UNUSUAL-FRONTIER) echo 'path=ai_requests/AI-2026-09-28-UNUSUAL-FRONTIER.json' >> "$GITHUB_OUTPUT" ;;
+          slot=$(( $(date -u +%s) / 21600 % 3 ))
+          case "$slot" in
+            0) task_id='AI-2026-09-29-Q091-ADVERSARIAL' ;;
+            1) task_id='AI-2026-09-28-Q089-ADVERSARIAL' ;;
+            2) task_id='AI-2026-09-28-UNUSUAL-FRONTIER' ;;
             *) exit 1 ;;
           esac
+          case "$task_id" in
+            AI-2026-09-29-Q091-ADVERSARIAL) path='ai_requests/AI-2026-09-29-Q091-ADVERSARIAL.json' ;;
+            AI-2026-09-28-Q089-ADVERSARIAL) path='ai_requests/AI-2026-09-28-Q089-ADVERSARIAL.json' ;;
+            AI-2026-09-28-UNUSUAL-FRONTIER) path='ai_requests/AI-2026-09-28-UNUSUAL-FRONTIER.json' ;;
+            *) exit 1 ;;
+          esac
+          echo "slot=$slot" >> "$GITHUB_OUTPUT"
+          echo "task_id=$task_id" >> "$GITHUB_OUTPUT"
+          echo "path=$path" >> "$GITHUB_OUTPUT"
+          echo "MISTRAL_ROTATION slot=$slot task=$task_id"
 
       - name: Run Mistral free-only worker
         id: worker
@@ -183,7 +189,7 @@ jobs:
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/ai-worker-output"
           set +e
-          python -m automation.ai_worker_fabric --run --provider 'mistral_api' --task '${{ steps.task.outputs.path }}' --output "$RUNNER_TEMP/ai-worker-output/${{ matrix.task }}-mistral_api.json"
+          python -m automation.ai_worker_fabric --run --provider 'mistral_api' --task "${{ steps.task.outputs.path }}" --output "$RUNNER_TEMP/ai-worker-output/${{ steps.task.outputs.task_id }}-mistral_api.json"
           rc=$?
           set -e
           test "$rc" -ne 1
@@ -197,12 +203,12 @@ jobs:
           set -euo pipefail
           state_dir='ops/ai_worker_state'
           mkdir -p "$state_dir"
-          state_file="$state_dir/${{ matrix.task }}__mistral_api.json"
-          output="$RUNNER_TEMP/ai-worker-output/${{ matrix.task }}-mistral_api.json"
+          state_file="$state_dir/${{ steps.task.outputs.task_id }}__mistral_api.json"
+          output="$RUNNER_TEMP/ai-worker-output/${{ steps.task.outputs.task_id }}-mistral_api.json"
           if [ -f "$output" ]; then
             cp "$output" "$state_file"
           else
-            printf '%s\n' '{"schema_version":1,"task_id":"${{ matrix.task }}","provider":"mistral_api","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' > "$state_file"
+            printf '%s\n' '{"schema_version":1,"task_id":"${{ steps.task.outputs.task_id }}","provider":"mistral_api","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' > "$state_file"
           fi
           payload="$(base64 -w 0 "$state_file")"
           for _ in 1 2 3 4 5; do
@@ -232,7 +238,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: ai-worker-${{ matrix.task }}-mistral_api-${{ github.run_id }}
+          name: ai-worker-${{ steps.task.outputs.task_id }}-mistral_api-${{ github.run_id }}
           path: "$RUNNER_TEMP/ai-worker-output/"
           if-no-files-found: warn
           retention-days: 14
