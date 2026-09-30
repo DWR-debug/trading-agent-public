@@ -359,6 +359,31 @@
       ],
       "adoption_mode": "monitor; do not replace deterministic project control plane without evidence",
       "source_url": "https://github.com/microsoft/autogen/blob/main/README.md"
+    },
+    {
+      "id": "AGENT-ANTIGRAVITY",
+      "technology": "Google Antigravity CLI",
+      "role": "optional local agent harness",
+      "relevant_features": [
+        "terminal_first",
+        "agentic_execution",
+        "MCP_capability_surface",
+        "local_identity_context"
+      ],
+      "adoption_mode": "optional local worker; free entitlement/auth must be live-verified; never authoritative",
+      "source_url": "https://github.com/google/antigravity-cli"
+    },
+    {
+      "id": "AGENT-OPENROUTER-FREE",
+      "technology": "OpenRouter free routing",
+      "role": "opportunistic remote model pool",
+      "relevant_features": [
+        "model_pool_diversity",
+        "free_route",
+        "provider_abstraction"
+      ],
+      "adoption_mode": "optional adversarial worker; model membership/pricing is live-verified and never relied on as stable identity",
+      "source_url": "https://openrouter.ai/collections/free-models"
     }
   ],
   "highest_value_new_paths": [
