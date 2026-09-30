@@ -25,35 +25,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 24.363,
-  "stdout": "<|tool_call_start|>[read(file_path='docs/research_design/Q089-clean-fresh-q069-validation-2026-09-28.md'), read(file_path='research/evidence/q089_coverage_result.json'), read(file_path='research/evidence/q089_input_freeze_result.json'), read(file_path='research/evidence/q089_pit_result.json'), read(file_path='automation/q089_coverage_pit.py')]<|tool_call_end|>",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 33.439,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1790789450-2zFE9vYhwG5frlyBENXf",
-  "usage": {
-    "prompt_tokens": 6634,
-    "completion_tokens": 1616,
-    "total_tokens": 8250,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 1520,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
