@@ -331,7 +331,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T14:09:46.436742+00:00",
+  "generated_at_utc": "2026-09-30T14:10:15.518697+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -454,6 +454,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: add Q077-R1 one-shot authorization lane",
+        "sha": "aecee1bc5ec4e119ef8b73831a9b07700172db08",
+        "timestamp": "2026-09-30T16:10:00+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "fda67ab1b24c78dd540964631f87e4d1567283cd",
+        "timestamp": "2026-09-30T14:09:46Z"
+      },
+      {
         "message": "TEST: accept Q077-R1 pre- and post-authorization registry states",
         "sha": "ed8c9328e6b2c2433487f436962e461700ea4ddf",
         "timestamp": "2026-09-30T16:09:30+02:00"
@@ -482,16 +492,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "74740f22f33af82ac5ad218b2b34d653063942a8",
         "timestamp": "2026-09-30T14:04:28Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "504888621b1525cfc963ac9894f6598dfe49db48",
-        "timestamp": "2026-09-30T14:04:11Z"
-      },
-      {
-        "message": "FIX: bind Q077-R1 reconciliation to its registry identity",
-        "sha": "362feb4e84adbd39a12681f897d0427f9a0166bb",
-        "timestamp": "2026-09-30T16:04:08+02:00"
       }
     ]
   },
@@ -561,12 +561,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ed8c9328e6b2c2433487f436962e461700ea4ddf",
+  "source_master_sha": "aecee1bc5ec4e119ef8b73831a9b07700172db08",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36726978835"
+    "run_id": "36727039279"
   }
 }
