@@ -384,7 +384,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T16:27:06.572973+00:00",
+  "generated_at_utc": "2026-09-30T16:27:46.902209+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -507,6 +507,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: retry authorized C29 performance dispatch (#706)",
+        "sha": "dc1ea99725169b45f347e2db6c0e1ea493f9bb34",
+        "timestamp": "2026-09-30T18:27:32+02:00"
+      },
+      {
+        "message": "OPS: retry authorized C29 performance dispatch after preflight fix",
+        "sha": "36f3a8bd553c4cba36b0eb604585a5374370f10f",
+        "timestamp": "2026-09-30T18:27:14+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "cfeff7c058a78f026bad6d0d1eefe022a72f1e68",
+        "timestamp": "2026-09-30T16:27:06Z"
+      },
+      {
         "message": "FIX: repair C29 performance preflight dependency (#705)",
         "sha": "ca00a268a77210114702da00a0879a177b91715f",
         "timestamp": "2026-09-30T18:26:51+02:00"
@@ -530,21 +545,6 @@
         "message": "FIX: explicitly dispatch authorized C29 performance workflow (#704)",
         "sha": "ebf0ce8315b7132f89abdfc567d9f92967f44403",
         "timestamp": "2026-09-30T18:25:11+02:00"
-      },
-      {
-        "message": "FIX: make C29 dispatch repair self-contained",
-        "sha": "e59bf40014a098fd6ad52f4b4bbea64541f5757f",
-        "timestamp": "2026-09-30T18:24:56+02:00"
-      },
-      {
-        "message": "OPS: request explicit dispatch of authorized C29 performance workflow",
-        "sha": "5c130cd846fc9846676b157690c57813b2a8e904",
-        "timestamp": "2026-09-30T18:24:30+02:00"
-      },
-      {
-        "message": "FIX: add explicit C29 performance workflow dispatch repair",
-        "sha": "5987d86e03fac233b3cac7371c4a8fbb6d196ace",
-        "timestamp": "2026-09-30T18:24:27+02:00"
       }
     ]
   },
@@ -614,12 +614,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ca00a268a77210114702da00a0879a177b91715f",
+  "source_master_sha": "dc1ea99725169b45f347e2db6c0e1ea493f9bb34",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36744267869"
+    "run_id": "36744348160"
   }
 }
