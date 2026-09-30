@@ -50,9 +50,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -s "_c29r1_coverage/research/runs/c29r1_coverage/T-2026-09-30-C29R1-COVERAGE-PIT/coverage_preflight_20260930T160439Z.json"
+          test -s "_c29r1_coverage/c29r1_coverage/T-2026-09-30-C29R1-COVERAGE-PIT/coverage_preflight_20260930T160439Z.json"
           for symbol in PPG GWW PGR TT ICE KLAC SNA SWK; do
-            test -s "_c29r1_coverage/research/runs/c29r1_coverage/T-2026-09-30-C29R1-COVERAGE-PIT/datasets/$symbol/1d.csv"
+            test -s "_c29r1_coverage/c29r1_coverage/T-2026-09-30-C29R1-COVERAGE-PIT/datasets/$symbol/1d.csv"
           done
 
       - name: Safety invariants
