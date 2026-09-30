@@ -321,7 +321,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T10:52:13.152553+00:00",
+  "generated_at_utc": "2026-09-30T10:52:43.432029+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -444,6 +444,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: advance canonical next-research focus after Q081R4",
+        "sha": "17098cb03ec5eecf891bae1ce689e9279a583f40",
+        "timestamp": "2026-09-30T12:52:32+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "138eca017ce0fb533d17388cafc288650ce0230b",
+        "timestamp": "2026-09-30T10:52:13Z"
+      },
+      {
         "message": "RESEARCH: record Q081R4 failure-mechanism diagnosis",
         "sha": "52b059973d7f1f04a775ba77fa5e5a076e5b5e96",
         "timestamp": "2026-09-30T12:52:02+02:00"
@@ -472,16 +482,6 @@
         "message": "FIX: make Q081R4 registry-state reconciliation exact",
         "sha": "34859cc548867dd95435180878a409b18e787b32",
         "timestamp": "2026-09-30T12:49:44+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "d93bf47c46b2bff9178f5252675889989666e692",
-        "timestamp": "2026-09-30T10:49:04Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f9ce8e7595410fddffe9e37a5b2c29d22c5ca80f",
-        "timestamp": "2026-09-30T10:48:34Z"
       }
     ]
   },
@@ -513,7 +513,7 @@
     "decision_basis_stage": "Q066_COMPLETED_DIAGNOSTIC_ONLY",
     "latest_formal_status": "performance_completed_no_arm_passed_all_13_gates",
     "latest_formal_trial": "T-2026-09-30-081R4-PERFORMANCE",
-    "next_research_focus_recorded": "Q067 design-only: two unranked follow-up mechanisms derived from Q066 — alpha-level common-mode exposure control and turnover hysteresis; no performance evaluation until parameter freeze, fresh coverage and PIT.",
+    "next_research_focus_recorded": "Q098 diagnostic-only: explain the common Q081-R4 risk/stability failure signature from the immutable result; do not retune or authorize another Q081-R4 performance run. Next independent execution gate remains the design-only frontier feasibility layer (C30/C31/M5/Q097), with exact provenance and PIT requirements.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -551,12 +551,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "52b059973d7f1f04a775ba77fa5e5a076e5b5e96",
+  "source_master_sha": "17098cb03ec5eecf891bae1ce689e9279a583f40",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36705019582"
+    "run_id": "36705070901"
   }
 }
