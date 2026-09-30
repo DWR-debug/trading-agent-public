@@ -94,7 +94,7 @@ jobs:
         shell: cmd
         run: |
           @echo off
-          setlocal
+          setlocal EnableExtensions EnableDelayedExpansion
           set "WORK=%RUNNER_TEMP%\trading-agent-auto-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
           for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
           set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-autonomous\tools\python.exe"
