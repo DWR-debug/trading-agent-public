@@ -1,0 +1,82 @@
+name: C29 Performance Dispatch Repair
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/c29_performance_dispatch_repair.trigger"
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: c29-performance-dispatch-repair
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Verify dispatch repair request and authorization
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test -f research/run_requests/c29_performance_dispatch_repair.trigger
+          grep -Fx "DISPATCH_C29_PERFORMANCE=true" research/run_requests/c29_performance_dispatch_repair.trigger
+          grep -Fx "TRIAL_ID=T-2026-09-30-C29-PERFORMANCE-01" research/run_requests/c29_performance_dispatch_repair.trigger
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          auth=json.loads(Path("research/authorizations/c29_performance_2026_09_30.json").read_text(encoding="utf-8"))
+          assert auth["trial_id"]=="T-2026-09-30-C29-PERFORMANCE-01"
+          assert auth["authorized"] is True
+          assert auth["performance_execution_authorized"] is True
+          assert auth["one_shot"] is True
+          print("C29 AUTHORIZATION STILL ACTIVE")
+          PY
+
+      - name: Dispatch already-authorized C29 performance workflow once
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run c29-performance-once.yml --repo "$GITHUB_REPOSITORY" --ref master
+          echo "C29 PERFORMANCE WORKFLOW DISPATCHED"
+
+      - name: Upload dispatch receipt
+        if: always()
+        run: |
+          printf 'dispatch_workflow=c29-performance-once.yml
+trial_id=T-2026-09-30-C29-PERFORMANCE-01
+master_ref=master
+' > c29_dispatch_receipt.txt
+
+      - name: Publish dispatch receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          base_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
+          printf 'DISPATCH_C29_PERFORMANCE=true
+TRIAL_ID=T-2026-09-30-C29-PERFORMANCE-01
+DISPATCHED=true
+' > research/run_requests/c29_performance_dispatch_repair.trigger
+          python - <<'PY'
+          from pathlib import Path
+          Path("research/evidence/c29_performance_dispatch_repair_receipt_2026_09_30.json").write_text(
+              '{"schema_version":"1.0","status":"DISPATCH_REQUEST_ISSUED","trial_id":"T-2026-09-30-C29-PERFORMANCE-01","workflow":"c29-performance-once.yml","scientific_outcome":"NO_SCIENTIFIC_OUTCOME","performance_result":false,"automatic_promotion":false}\n',
+              encoding="utf-8",
+          )
+          PY
+          python automation/github_contents_publish.py \
+            --repository "$GITHUB_REPOSITORY" \
+            --branch master \
+            --base-sha "$base_sha" \
+            --file research/evidence/c29_performance_dispatch_repair_receipt_2026_09_30.json=research/evidence/c29_performance_dispatch_repair_receipt_2026_09_30.json
