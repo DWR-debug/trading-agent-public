@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `6a262ee7c70f0354dc7bbbd6118677a5eb64afb8`
+**Current operational snapshot:** `60e243b4e445810c3d2a8f99b3d9db8c3a3041f7`
 
-**Generated (UTC):** `2026-09-30T10:48:34.749588+00:00`
+**Generated (UTC):** `2026-09-30T10:49:56.342563+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -21,7 +21,7 @@
 
 ### Scientific status
 
-- Latest recorded formal result: **performance_completed_no_arm_passed_all_13_gates** for `T-2026-09-29-095`.
+- Latest recorded formal result: **performance_completed_no_arm_passed_all_13_gates** for `T-2026-09-30-081R4-PERFORMANCE`.
 - Q026 is recorded as **DATA_INVALID / NO_SCIENTIFIC_OUTCOME**; it did not produce performance evidence.
 - Q023 is recorded as **COVERAGE_VALIDATED** and Q025 as **DATE_PIT_VALIDATED**; these are data-contract findings, not promotion evidence.
 - No current candidate is authorized for promotion or live execution.
