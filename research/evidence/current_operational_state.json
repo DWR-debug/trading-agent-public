@@ -405,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T19:57:00.480183+00:00",
+  "generated_at_utc": "2026-09-30T19:57:52.328240+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -528,44 +528,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c25901f805a45d0824263f86ddf26c3a933464b1",
-        "timestamp": "2026-09-30T19:56:47Z"
+        "message": "TEST: enforce quota-guarded Gemini and Mistral scheduling",
+        "sha": "1bf0e85fc90655edf2e87932d881ae40fdbfa106",
+        "timestamp": "2026-09-30T21:57:47+02:00"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "ed0d17ae3429924b39f894a84e5510f203e4bd4c",
-        "timestamp": "2026-09-30T19:56:44Z"
+        "sha": "194e503b37b52e2d8606d5688b9ea32254294156",
+        "timestamp": "2026-09-30T19:57:43Z"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "293dacfb8277d7647065f68a7c2a38d893c8cdfe",
-        "timestamp": "2026-09-30T19:56:41Z"
+        "sha": "5171568e2666efe7f1e21f263798f47608121073",
+        "timestamp": "2026-09-30T19:57:39Z"
       },
       {
-        "message": "DOCS: centralize quota-aware AI scheduling policy",
-        "sha": "8554b012b79a27780a5cd398c8f4d04a2108d44b",
-        "timestamp": "2026-09-30T21:56:35+02:00"
+        "message": "FIX: remove stray ENDLOCAL from Gemini rotation step",
+        "sha": "772a271d9eb77df168e1a62970312d0d98637908",
+        "timestamp": "2026-09-30T21:57:38+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f58cc96713685a7a013bdcbd7d4fcc8e6d0dd1de",
-        "timestamp": "2026-09-30T19:56:31Z"
+        "message": "OPS: record AI worker state",
+        "sha": "f9ebd86da28e7b85d9a6d98e090199e53bc21472",
+        "timestamp": "2026-09-30T19:57:37Z"
       },
       {
-        "message": "FIX: remove duplicated local Gemini artifact block",
-        "sha": "f5c16b0a3d55417f2dc0ab6dd0b1937298086636",
-        "timestamp": "2026-09-30T21:56:24+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "6e4615d66e360648ae71b70af23568d0556d6644",
+        "timestamp": "2026-09-30T19:57:36Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "86a6f17bf13da3cf3d07d4bce7da1923c37cd462",
-        "timestamp": "2026-09-30T19:56:14Z"
+        "message": "OPS: record AI worker state",
+        "sha": "ade2011500ffbd403aab51745784c34eb0df0402",
+        "timestamp": "2026-09-30T19:57:35Z"
       },
       {
-        "message": "OPS: rotate local Gemini work and remove quota burst amplification",
-        "sha": "809e020bc7b6f3d2d9e2f7c068f5dcac14ac7210",
-        "timestamp": "2026-09-30T21:56:12+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "2fb878e4eec6989a83852e90a094e00213cdbd24",
+        "timestamp": "2026-09-30T19:57:34Z"
       }
     ]
   },
@@ -635,12 +635,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c25901f805a45d0824263f86ddf26c3a933464b1",
+  "source_master_sha": "1bf0e85fc90655edf2e87932d881ae40fdbfa106",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36769159408"
+    "run_id": "36769276646"
   }
 }
