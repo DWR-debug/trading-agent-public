@@ -405,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T19:45:37.288620+00:00",
+  "generated_at_utc": "2026-09-30T19:46:53.121515+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -529,43 +529,43 @@
     "recent_commits": [
       {
         "message": "OPS: record AI worker state",
-        "sha": "b41c53aa129da68e7bba994ce9a336c933603325",
-        "timestamp": "2026-09-30T19:45:36Z"
+        "sha": "16887c5c5ac773ef455f088f6575080665a95202",
+        "timestamp": "2026-09-30T19:46:51Z"
+      },
+      {
+        "message": "OPS: record Mistral worker state",
+        "sha": "02edf620d53420ade2709a2e60accb99db439a4f",
+        "timestamp": "2026-09-30T19:46:39Z"
+      },
+      {
+        "message": "DOCS: document Mistral sequential free-tier lane",
+        "sha": "27f90ecdc8cfb18ab2db03682bd9ecbd27119423",
+        "timestamp": "2026-09-30T21:46:37+02:00"
+      },
+      {
+        "message": "OPS: record Mistral worker state",
+        "sha": "e2c9a8c5aa47fa28c155831464687041c2a52f4f",
+        "timestamp": "2026-09-30T19:46:26Z"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "200df4604ecddf759e86bf6987ac0fe5832605d0",
-        "timestamp": "2026-09-30T19:45:34Z"
+        "sha": "b058363175f98b7ecd7660f60b583f1b81272540",
+        "timestamp": "2026-09-30T19:46:18Z"
+      },
+      {
+        "message": "OPS: record Mistral worker state",
+        "sha": "c224b2b2ca09db21e73d3907c27e5f22dbd3961d",
+        "timestamp": "2026-09-30T19:46:12Z"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "7829f0015802bae0690863fa02c0fd03adc1820b",
-        "timestamp": "2026-09-30T19:45:31Z"
-      },
-      {
-        "message": "OPS: serialize Mistral free-worker lane",
-        "sha": "d45e55955e547fee25d064c0ef2d9a43e4f7e693",
-        "timestamp": "2026-09-30T21:45:21+02:00"
+        "sha": "e709728ae85bf3a1aaeec86941fb2809ae245616",
+        "timestamp": "2026-09-30T19:45:58Z"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "d5fbba0ce316cd06490c513d040a130b24ac6076",
-        "timestamp": "2026-09-30T19:45:04Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "c4bab2bbc580f26c7f885c7f9bb81821efd13559",
-        "timestamp": "2026-09-30T19:44:50Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "4f506ffc59f1a8ce756310d61dea2c6cff8a7398",
-        "timestamp": "2026-09-30T19:44:46Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "0a9e304d9f1b11e09307cfb9940526857f78b56d",
-        "timestamp": "2026-09-30T19:44:46Z"
+        "sha": "0f4b63533139c6611a372d887dbf733ba6af4391",
+        "timestamp": "2026-09-30T19:45:51Z"
       }
     ]
   },
@@ -635,12 +635,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b41c53aa129da68e7bba994ce9a336c933603325",
+  "source_master_sha": "16887c5c5ac773ef455f088f6575080665a95202",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36767872138"
+    "run_id": "36768015696"
   }
 }
