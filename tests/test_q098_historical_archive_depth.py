@@ -122,3 +122,14 @@ def test_q098_historical_anchor_acceptance_time_contract(monkeypatch) -> None:
     assert row["status"] == "VERIFIABLE"
     assert row["checks"]["accepted_timestamp_present"] is True
     assert row["checks"]["accession_identity_present"] is True
+
+
+def test_q098_archive_depth_never_authorizes_performance() -> None:
+    import automation.q098_historical_archive_depth as q098
+    import inspect
+
+    source = inspect.getsource(q098.main)
+    assert '"performance_authorized": False' in source
+    assert '"performance_evaluation": False' in source
+    assert '"candidate_selection": False' in source
+    assert '"candidate_ranking": False' in source
