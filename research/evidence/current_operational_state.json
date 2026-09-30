@@ -321,7 +321,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T13:59:13.330712+00:00",
+  "generated_at_utc": "2026-09-30T14:00:07.938257+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -444,6 +444,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: correct registry receipt newline encoding",
+        "sha": "ed11b691ba9a471600f2fbadb3212072d01246bd",
+        "timestamp": "2026-09-30T16:00:06+02:00"
+      },
+      {
+        "message": "FIX: write valid newline in Q077-R1 frozen receipts",
+        "sha": "a5976a7ac0789d8b84e726346239e4e375e209cc",
+        "timestamp": "2026-09-30T15:59:55+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "bf3f7edccb9383d713cf03ef044f63e8840e9fd7",
+        "timestamp": "2026-09-30T13:59:13Z"
+      },
+      {
         "message": "RESEARCH: seal Q077-R1 preregistration after immutable freeze",
         "sha": "75b0e0dee7f4548215cae0fc4e2039b16a864114",
         "timestamp": "2026-09-30T15:58:59+02:00"
@@ -467,21 +482,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "bf2e2a530fde680ef5be9becdfee61e8f8da3a0e",
         "timestamp": "2026-09-30T13:56:12Z"
-      },
-      {
-        "message": "FIX: make Q077-R1 evidence persistence race-safe",
-        "sha": "550135b5a06ff1c63336d4cfecbb1840725c911d",
-        "timestamp": "2026-09-30T15:55:58+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "25608c03279d573f4d596d309afc656492867775",
-        "timestamp": "2026-09-30T13:55:40Z"
-      },
-      {
-        "message": "HARDEN: fail-closed Q077-R1 authorization and input guards",
-        "sha": "d9e42d6121764c8c9a69a33a4a0cbbc987f6bb35",
-        "timestamp": "2026-09-30T15:54:41+02:00"
       }
     ]
   },
@@ -551,12 +551,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "75b0e0dee7f4548215cae0fc4e2039b16a864114",
+  "source_master_sha": "ed11b691ba9a471600f2fbadb3212072d01246bd",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36725653075"
+    "run_id": "36725764751"
   }
 }
