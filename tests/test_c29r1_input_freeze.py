@@ -12,3 +12,8 @@ def test_c29r1_input_freeze_has_fixed_source_identity() -> None:
     assert 'COVERAGE_FINGERPRINT = "6b3acf5fb179bc93c6fac8eaaef59d71aa909326d5f171d9718a7cfbc71e22a6"' in source
     assert '"performance_evaluation": False' in source
     assert '"performance_authorized": False' in source
+
+
+def test_c29r1_input_freeze_supports_flattened_artifact_layout() -> None:
+    source = Path("automation/c29r1_input_freeze.py").read_text(encoding="utf-8")
+    assert 'source_root / "c29r1_coverage" / COVERAGE_TRIAL_ID' in source
