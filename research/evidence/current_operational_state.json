@@ -390,7 +390,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T18:48:32.961332+00:00",
+  "generated_at_utc": "2026-09-30T18:58:57.009719+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -513,6 +513,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "TEST: enforce C29 repair successor identity contract",
+        "sha": "8e229b9c9faee0427a5f692099ca62ecbaf3e4b5",
+        "timestamp": "2026-09-30T20:58:47+02:00"
+      },
+      {
+        "message": "FIX: enforce C29 repair successor PIT identity",
+        "sha": "331ca6ce622749671e7f15416aadb2c4f0cddfa6",
+        "timestamp": "2026-09-30T20:58:44+02:00"
+      },
+      {
+        "message": "FIX: bind C29 PIT receipt identity to explicit trial context",
+        "sha": "6a148c1cd0fcb97350817b9818283094c51166d6",
+        "timestamp": "2026-09-30T20:58:41+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "8639f0452239523e985fd4f3ce2dbedd4876286a",
+        "timestamp": "2026-09-30T18:57:27Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b42a9274566af52614d81bd440435829e76d305d",
+        "timestamp": "2026-09-30T18:48:33Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "83a5f976476f47cf7b7f80dd783a5db26eece21f",
         "timestamp": "2026-09-30T18:48:16Z"
@@ -526,31 +551,6 @@
         "message": "RESEARCH: add C29 coverage repair successor",
         "sha": "49708b2255f3b17ad744418f3296b0d542ecdccd",
         "timestamp": "2026-09-30T20:47:33+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "ff6e344b422e9002954f0dea81e7dbb4e5e08057",
-        "timestamp": "2026-09-30T18:45:46Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "44ca5078fc94fb922d6704f791589c89f5fa9f80",
-        "timestamp": "2026-09-30T18:45:44Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "e7790e5695b9b4f4078da46b2fb199e5515eca06",
-        "timestamp": "2026-09-30T18:45:32Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "967f5ae1590cc1decf7a24505a87f478ae85adb4",
-        "timestamp": "2026-09-30T18:45:25Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "c4efef1bbe5d1e86892fbc200389c4c0e77f26c8",
-        "timestamp": "2026-09-30T18:45:18Z"
       }
     ]
   },
@@ -620,12 +620,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "83a5f976476f47cf7b7f80dd783a5db26eece21f",
+  "source_master_sha": "8e229b9c9faee0427a5f692099ca62ecbaf3e4b5",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36761188377"
+    "run_id": "36762416395"
   }
 }
