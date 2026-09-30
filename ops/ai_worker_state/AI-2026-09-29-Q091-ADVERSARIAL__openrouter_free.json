@@ -25,11 +25,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 12.977,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 125.605,
+  "stdout": "**Findings**\n\n1. **Common‑exposure claim may be mis‑aligned** – Q090’s diagnostic was run on a different symbol set (AEE, APA, …) than the Q091 coverage universe (ACGL, APA, BXP, …). The “substantial common market exposure” could therefore be an artefact of the Q069 sleeves’ own assets rather than a property of the five Q069 signals applied to the Q091 assets.\n\n2. **Weight‑timing invariance not proven** – The preregistration states the Q069 target‑weight vectors are “frozen”, but the performance runner (`q091_performance.py`) loads the vectors from the frozen snapshot without an explicit check that the same vector is used for every decision date. If the underlying Q069 computation varies with the decision date (e.g., rolling windows), the ensemble may be using time‑varying weights, violating the “fixed‑rule” requirement.\n\n3. **Gross‑normalisation may create hidden leverage** – In E2 the residual vectors are averaged, then *gross‑normalized* to a unit gross exposure. This scaling multiplies the absolute sum of the residuals. If the summed absolute residual weight is < 1, the scaling factor > 1, which can produce a net exposure (long + short) larger than the allowed “zero net” contract. No explicit verification that ∑ wᵢ = 0 and ∑ |wᵢ| = 1 is built into the runner.\n\n4. **Residual orthogonality not guaranteed** – Demeaning each vector across the fresh universe removes the cross‑sectional mean *within* each vector, but it does not enforce that the residuals of different assets are uncorrelated. If the residuals are jointly correlated (e.g., all positive in a bull market), the ensemble will still have common‑mode exposure despite the demeaning step.\n\n5. **Adjusted‑close data sensitivity** – The input bundle uses *adjusted close* prices, which incorporate corporate‑action adjustments that may be revised after the decision date. If the frozen snapshot was built from a later‑adjusted series, the weights could be based on information not available at the original decision time, introducing hidden look‑ahead.\n\n6. **Cost/turnover accounting may be optimistic** – The cost contract assumes a fixed fee/slippage and applies stress multipliers only to the *cost* component. The ensemble’s turnover (frequency of re‑balancing) may differ between E1 (static average weights) and E2 (demeaned residuals that can change more often). If turnover is higher than assumed, the cost estimate under‑states the true drag.\n\n7. **PIT test coverage is incomplete** – The PIT suite checks 10 decision points and 20 mutation cases, but none explicitly test:\n   - Zero‑net‑exposure enforcement,\n   - Gross‑normalisation correctness,\n   - Correlation of residuals,\n   - Timing of weight application (open vs close),\n   - Consistency of the frozen snapshot across runs.\n\n**Counterarguments / Potential Defences**\n\n- The preregistration explicitly freezes the Q069 target vectors (`q091_targets_at`), implying they are static across the research period.\n- E2’s “gross‑normalize to exactly unit gross exposure when nonzero” is intended to keep gross exposure ≤ 1; if the sum of absolute residuals is already 1, no scaling is needed, preserving the zero‑net claim.\n- The cost contract’s stress multipliers are applied to the *base* cost, not to turnover; the runner may already incorporate turnover‑adjusted costs via the `validate_research_cost_compatibility` call.\n- The PIT test’s “future_mutation_checks_passed” flag suggests the system has already validated that the implementation respects the required invariants; absence of a failure does not prove correctness but indicates no outright violation was detected.\n\n**Concrete Next Actions (cheap falsification tests)**\n\n1. **Vector‑static check** – Load the frozen Q069 target vectors for each sleeve and verify that the same dictionary/object is used for every decision date in the 2798‑day research window. Flag any date where the vector differs.\n\n2. **Exposure audit** – For each decision date and each variant, compute:\n   - Net exposure = Σ wᵢ,\n   - Gross exposure = Σ |wᵢ|.\n   Verify that net ≈ 0 (|net| ≤ 1e‑6) and gross = 1 (|gross‑1| ≤ 1e‑6). Log any breach.\n\n3. **Residual correlation test** – Using the fresh universe, compute the pairwise correlation matrix of the residuals (after demeaning) for E2. Check that the average off‑diagonal correlation is near zero (e.g., |ρ| < 0.1). If not, common‑mode exposure persists.\n\n4. **Look‑ahead sanity check** – Compare the timestamps of the adjusted‑close files with the decision dates. Ensure that for each decision date the price used is the *last available* price at or before that date (no later corporate‑action adjustments). If any later adjustment is found, the data may be forward‑looking.\n\n5. **Turnover measurement** – Simulate the ensemble over the research period, recording the daily change in weight vector magnitude (∑ |Δwᵢ|). Compare the observed turnover to the cost assumptions (fee + slippage). If turnover is markedly higher, the cost model may be optimistic.\n\n6. **Zero‑net‑exposure stress test** – Apply a uniform market shock (e.g., +10 % to all prices) to the price series and re‑evaluate the portfolio P&L. Since E2 targets zero net exposure, the P&L should be ≈ 0 (ignoring transaction costs). A non‑zero result signals residual net exposure or leverage issues.\n\n7. **Gross‑normalisation edge case** – Force a scenario where the summed absolute residual weight is zero (all residuals cancel exactly). Verify that the implementation handles this without division‑by‑zero or unintended scaling to infinity.\n\n**Uncertainty**\n\n- The exact mechanism by which the Q069 target vectors are generated and frozen is not fully visible; we assume they are truly static, but any hidden rolling‑window logic would break the fixed‑rule invariant.\n- The gross‑normalisation step in E2 is conceptually simple, yet the implementation details (e.g., handling of zero‑sum residuals, rounding errors, floating‑point precision) are not spelled out in the provided code snippets.\n- The PIT test suite, while comprehensive, does not explicitly test the zero‑net‑exposure and gross‑exposure constraints, leaving a gap in verification.\n\n**Summary**\n\nThe adversarial review flags several potential hidden violations of the “fixed‑rule” and “immutable reconciliation” invariants in the Q091 fixed‑portfolio architecture, especially around weight timing, net‑exposure enforcement, residual orthogonality, data look‑ahead, and cost/turnover accounting. A set of inexpensive validation checks (vector staticness, exposure audit, residual correlation, timestamp verification, turnover measurement, stress test, edge‑case normalisation) can quickly confirm or refute these concerns before any performance trial is authorized.",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1790798076-tToZQ5PHnoxOIHBgRJIb",
+  "usage": {
+    "prompt_tokens": 8007,
+    "completion_tokens": 4678,
+    "total_tokens": 12685,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3612,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
