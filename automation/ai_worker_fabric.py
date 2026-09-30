@@ -70,6 +70,7 @@ CONTEXT_FILES = {
         "research/governance/active_research_registry.json",
     ),
     "AI-2026-09-30-Q100-FRONTIER-FEASIBILITY": (
+        "docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md",
         "automation/q100_frontier_feasibility_synthesis.py",
         "tests/test_q100_frontier_feasibility_synthesis.py",
         "automation/q096_frontier_source_pit_audit.py",
@@ -78,7 +79,6 @@ CONTEXT_FILES = {
         "tests/test_q098_historical_archive_depth.py",
         "research/frontier/q097_public_short_flow_candidates.json",
         "automation/q097_public_short_flow_feasibility.py",
-        "docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md",
         "research/governance/active_research_registry.json",
         "docs/DECISION_BASIS.md",
     ),
