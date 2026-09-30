@@ -332,7 +332,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T14:15:34.894078+00:00",
+  "generated_at_utc": "2026-09-30T14:16:57.209629+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -455,6 +455,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: retry Q077-R1 authorization after repaired master gate",
+        "sha": "37d3338107793421caffc9559dc1812d0d3800e1",
+        "timestamp": "2026-09-30T16:16:37+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "e1bc143d2a47d743c22aeff33c67965d038cf852",
+        "timestamp": "2026-09-30T14:16:06Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "e18a381e55b295b43e97b927e4f1b5e46409a98b",
+        "timestamp": "2026-09-30T14:16:01Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "55225b04524574f84b59fac1d3f6fa28759d7cbf",
+        "timestamp": "2026-09-30T14:15:59Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "0417917733ad086d5a010482f140f6dc988b9f81",
+        "timestamp": "2026-09-30T14:15:55Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "cb1532bab46589b581194f2ce3801ee0a4e6ef16",
+        "timestamp": "2026-09-30T14:15:34Z"
+      },
+      {
         "message": "FIX: allow research governance/evidence descendants in master gate",
         "sha": "7685b27b470c21486573b045afaee17ad07a6676",
         "timestamp": "2026-09-30T16:15:18+02:00"
@@ -463,36 +493,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "ef22643b8b2903f1192c8ab9f3f97bc15af98c97",
         "timestamp": "2026-09-30T14:13:42Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "1a45a8c9862ea270f685c5d24af2a28806f9eb8c",
-        "timestamp": "2026-09-30T14:13:33Z"
-      },
-      {
-        "message": "OPS: retry Q077-R1 authorization on current reconciler",
-        "sha": "15de1fe95b967002eb1994574ebe4ce0b31b780a",
-        "timestamp": "2026-09-30T16:13:28+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "be03dc9b5b3ffed393a36225d7d142b055904607",
-        "timestamp": "2026-09-30T14:12:24Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2507f1989dd19644e9acbfeafefbb43ba328df2c",
-        "timestamp": "2026-09-30T14:12:08Z"
-      },
-      {
-        "message": "OPS: retry authorized Q077-R1 one-shot lane after identity fix",
-        "sha": "7d0f5546c2275f13b33980ce98568a4a665522fd",
-        "timestamp": "2026-09-30T16:12:00+02:00"
-      },
-      {
-        "message": "FIX: bind Q077-R1 reconciliation to performance preregistration path",
-        "sha": "fe929bf630fb61cccb4282ab26cfeddd8feff294",
-        "timestamp": "2026-09-30T16:11:52+02:00"
       }
     ]
   },
@@ -562,12 +562,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7685b27b470c21486573b045afaee17ad07a6676",
+  "source_master_sha": "37d3338107793421caffc9559dc1812d0d3800e1",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36727723777"
+    "run_id": "36727891688"
   }
 }
