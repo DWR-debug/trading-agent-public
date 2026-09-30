@@ -25,11 +25,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 24.684,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 43.915,
+  "stdout": "**Worker Hand‑off – Adversarial Review of Q089 Design (Pre‑Performance)**  \n\n---\n\n### 1. Findings – Potential Failure Modes  \n\n| # | Area | Description of Risk | Why It Could Invalidate the Fresh Symbol‑Disjoint Validation |\n|---|------|---------------------|--------------------------------------------------------------|\n| 1 | **Symbol‑disjointness / Provenance race** | The design relies on a *global prior‑research filter* to exclude any symbol that appears in a registered universe, preregistration, or prior asset‑freeze artifact. The coverage receipt shows `selection_used: false`, suggesting the filter may have been bypassed or that the first‑unused symbols were taken without re‑checking the filter after each exclusion. If the filter is not re‑applied after each symbol is tentatively taken, a symbol that later appears in a prior‑research artifact could slip through. | Overlap with prior universes would break the “symbol‑disjoint” claim and introduce hidden performance leakage from earlier work. |\n| 2 | **Provenance race / mutable receipts** | The automation scripts read the coverage receipt from a fixed path (`research/evidence/q089_coverage_result.json`) and later write the input‑freeze and PIT receipts to fixed locations. If two runs overlap (e.g., a developer re‑runs coverage while a PIT run is still writing), a later run could overwrite an earlier receipt, breaking the immutable chain of trial IDs. | The immutable trial‑ID chain (COVERAGE → INPUT‑FREEZE → PIT → PERFORMANCE) would be compromised, making it impossible to attest that performance is bound to the exact pre‑registered artifacts. |\n| 3 | **Snapshot reproducibility & source‑variance handling** | The snapshot fingerprint (`bb82aea…`) is derived from raw Yahoo CSVs. Yahoo occasionally corrects historical data (splits, dividends). The audit treats differing fingerprints as *source‑snapshot variance* and forbids silent normalization. However, the coverage script uses a resilient loader that retries on failure but does **not** verify that the data it finally loads matches the frozen snapshot; it simply reads whatever is present under `coverage_root/datasets`. If a transient network error causes a partial download that is later retried with a corrected Yahoo file, the stored snapshot could diverge from the original fingerprint without detection. | Performance could be evaluated on a different data generation than the one that passed PIT, invalidating the point‑in‑time guarantee. |\n| 4 | **Adjusted‑close transformation look‑ahead** | `freeze()` calls `fetch_adjusted_close(symbol, timestamps)` (imported from `automation.q079_input_freeze`). If that function pulls the *full* adjusted‑close series from Yahoo and then slices it to the requested timestamps, the adjustment factors may incorporate future corporate actions (e.g., a split announced after the timestamp but known to Yahoo at download time). The PIT only checks that the *decision point* does not mutate; it does not verify that the underlying price series is free of look‑ahead bias. | Any look‑ahead in the adjusted close would contaminate the input bundle, causing the PIT to pass on contaminated data and performance to be biased. |\n| 5 | **PIT decision‑point coverage** | The PIT reports `checked_decision_points: 50` over a 3500‑session universe (≈1.4 % coverage). The spacing or selection of these points is not described. If the points are clustered (e.g., all in the first 500 sessions) large stretches of the series remain untested for future‑mutation leakage. | A cleverly crafted future leak that only affects untested regions could escape detection, giving a false sense of PIT safety. |\n| 6 | **Hold‑out / research split determinism** | The constants `RESEARCH=2798`, `HOLDOUT=700`, `N=3500` imply a fixed split, but the scripts do not show how the split is applied (e.g., first 2798 vs. last 700, or a seeded random shuffle). If the split is not deterministic or is inadvertently influenced by the order of symbols, the hold‑out could contain information that leaks into the research set via symbol‑specific features (e.g., volume‑adjusted indicators). | Performance evaluation could unintentionally reuse hold‑out information, violating the “no holdout influence” rule. |\n| 7 | **Governance sequencing enforcement** | The design states that performance preregistration is bound to the exact receipts, then a separate",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1790789273-jZLRkrP0UCxhRD9RjELt",
+  "usage": {
+    "prompt_tokens": 7406,
+    "completion_tokens": 2400,
+    "total_tokens": 9806,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1780,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
