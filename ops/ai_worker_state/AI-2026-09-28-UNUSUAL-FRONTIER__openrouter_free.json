@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-09-28-UNUSUAL-FRONTIER",
+  "provider": "openrouter_free",
+  "free_only": true,
+  "preflight": {
+    "provider": "openrouter_free",
+    "available": true,
+    "binary": null,
+    "free_only": true,
+    "local_mode": false,
+    "local_attestation": {
+      "present": false,
+      "path": null
+    },
+    "free_mode_attested": true,
+    "free_enforcement": "fixed_model_openrouter_free",
+    "reasons": []
+  },
+  "task_fingerprint": "a3e84cf7a3aef76ec39d582e450d949990a7ebef91da5949173fa972cc542b87",
+  "worker_output_is_scientific_evidence": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 15.235,
+  "stdout": "# Falsifiable Alpha Hypotheses — Frontier Design Stage\n\n## Summary\n\nThe current frontier (C29 Illusion Momentum Gap, C30 Risk Text Peer Propagation) operates within established categories: path-dependence of return aggregation (C29) and textual peer-network propagation (C30). To avoid redundancy, the following five hypotheses target orthogonal mechanisms: (1) liquidity-mediated path dependence, (2) cross-asset lead-lag dynamics, (3) corporate-event crowding deleveraging, (4) regime-dependent tail-skew inversion, and (5) order-book-imbalance persistence. Each is designed to be evaluated through a clean 13-gate pipeline before any performance consideration.\n\n---\n\n## Hypothesis 1: Liquidity-Mediated Path Dependence (LMPD)\n\n**Causal Intuition.** Elevated implied volatility (proxied by VIX or sector-specific option implied vol) reduces bid-ask spread quality, amplifying intraday price dislocations. When realized volatility exceeds a threshold *and* the price path exhibits increasing negative skew (more downside volume on down days), the market enters a \"liquidity trap\" where downward momentum is self-reinforcing. The signal predicts amplified continuation of the initial move.\n\n**Minimum Data Requirements.**\n- Daily OHLCV (open, high, low, close) for the target universe\n- Daily realized volatility (or VIX for macro-proxy)\n- Optional: volume-weighted average price (VWAP) to quantify intraday efficiency\n\n**Obvious Confounders.**\n- General market stress (VIX itself)\n- Earnings announcements (same-day volume spikes)\n- Central bank policy announcements\n- News sentiment (NLP-derived polarity)\n\n**Cheap Falsification Test.** Run the signal during a period of sustained high volatility (e.g., 2018 \"flash crash\", 2020 COVID squeeze, or 2022 rate-hike turmoil). If the predicted amplification effect does not materialize—i.e., large-magnitude moves do not continue disproportionately—the hypothesis fails. This can be checked against a held-out high-volatility window without retraining.\n\n**Gate Notes.** This hypothesis is orthogonal to C29 (which examines return-aggregation math) and C30 (textual peers). It introduces market microstructure as a conditioning variable rather than a feature engineering trick.\n\n---\n\n## Hypothesis 2: Cross-Asset Lead-Lag Cycles (CALYC)\n\n**Causal Intuition.** Commodity price movements frequently precede equity responses on predictable lags (e.g., oil → energy stocks, gold → defensive equities, copper → industrial metals). The lead-lag relationship varies by commodity class and economic cycle phase. By constructing a panel of daily returns across equities, commodities, and rates, we can identify statistically significant lead-lag pairs whose sign consistency predicts subsequent returns.\n\n**Minimum Data Requirements.**\n- Daily returns for at least 15 asset classes spanning equities, commodities, and interest rates\n- At least 5 years of history (to allow for multiple business cycles)\n\n**Obvious Confounders.**\n- Macro regime shifts (GDP growth, inflation trends)\n- Central bank policy changes\n- Sector rotation (e.g., tech vs. cyclicals)\n- Global liquidity conditions\n\n**Cheap Falsification Test.** Split the dataset chronologically (train on early years, test on later years). If the lead-lag patterns learned in",
+  "stderr": "",
+  "command_binary": "https-openrouter",
+  "api_model": "openrouter/free",
+  "response_id": "gen-1790789184-VxZNDBb0JVC0kxg1Af0h",
+  "usage": {
+    "prompt_tokens": 3992,
+    "completion_tokens": 2400,
+    "total_tokens": 6392,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1681,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
+}
