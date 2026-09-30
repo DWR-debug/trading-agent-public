@@ -25,35 +25,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 30.421,
-  "stdout": "**Adversarial Review – Q089 Fresh Symbol‑Disjoint Validation**  \n*Task ID: AI-2026-09-28-Q089-ADVERSARIAL*  \n\n---\n\n### 1. Findings – Potential Failure Modes  \n\n| # | Area | Description of Failure Mode | Why It Could Invalidate the Validation |\n|---|------|-----------------------------|----------------------------------------|\n| 1 | **Symbol‑disjointness / Provenance race** | The global prior‑research filter that removes symbols already used in any registered universe, preregistration or prior asset‑freeze artifact may be incomplete or outdated. If a symbol from Q069 (or another prior study) is inadvertently omitted from the exclusion list, the selected batch would not be truly symbol‑disjoint, re‑using prior‑study information. | Re‑use of symbols introduces indirect performance information from earlier runs, breaking the “clean successor” premise and potentially biasing the PIT/performance results. |\n| 2 | **Snapshot reproducibility** | The coverage step relies on a fixed‑source‑order selection from Yahoo Finance. If the provider’s historical data changes (e.g., corrected splits/dividends) between the coverage run and the input‑freeze run, the snapshot fingerprint will differ. The current treats this as “source‑snapshot variance” but does not halt the pipeline; the variance could silently affect the adjusted‑close series used downstream. | A change in the underlying price series after coverage but before freeze would mean the PIT and performance are evaluated on data that were not the exact snapshot the design intended to validate, violating the point‑in‑time guarantee. |\n| 3 | **Adjusted‑close transformation leakage** | `fetch_adjusted_close` (imported from `automation.q079_input_freeze`) may recompute adjusted close using external adjustment data (e.g., a separate dividend/split feed) that is not part of the frozen snapshot. If that external feed incorporates information that was not yet known at the timestamp (look‑ahead bias), the resulting series leaks future information. | Any look‑ahead bias in the adjusted close invalidates the PIT mutation tests and the subsequent performance, because the model would have accessed data unavailable at the decision point. |\n| 4 | **PIT decision‑point selection bias** | The PIT reports “checked_decision_points: 50” but does not disclose how those points are chosen. If the selection is based on any property of the data (e.g., volatility, volume, or prior signal strength) the test is no longer a uniform point‑in‑time check and could be tuned to avoid detecting leaks. | Biased decision‑point selection could mask future‑leakage or over‑fit the PIT to the specific sample, giving a false sense of robustness. |\n| 5 | **Governance sequencing / mutable receipts** | The pipeline assumes that once a receipt (coverage, input‑freeze, PIT) is written it is immutable. However, the receipts are ordinary JSON files under version control; a later edit (intentional or accidental) would change the fingerprint used to bind the performance preregistration step without detection. | If a receipt is altered after the PIT passes but before performance preregistration, the performance bound would be to a different set of inputs, breaking the preregistration‑to‑execution link and allowing undisclosed parameter or data changes. |\n| 6 | **Cross‑run snapshot variance handling** | The cross‑run audit treats differing snapshot fingerprints as “source‑snapshot variance” and proceeds anyway. This assumes that any variance is innocuous (e.g., due to trivial metadata differences). If the variance stems from actual price‑series changes (e.g., Yahoo correcting a historical split), the downstream analysis would be based on a different dataset than the one used for coverage selection. | Using a different dataset after selection violates the symbol‑disjoint, fixed‑window contract and could introduce hidden performance differences that are mistakenly attributed to the candidate signals. |\n| 7 | **Timestamp alignment between OHLCV and adjusted close** | The freeze script extracts timestamps from the 1d.csv (OHLCV) and passes them to `fetch_adjusted_close`. If the function returns adjusted‑close values for a slightly shifted timestamp grid (e.g., using calendar days instead of session timestamps), the resulting series would be misaligned, causing look‑through or look‑back effects. | Misaligned timestamps break the assumption that each adjusted close corresponds exactly to the session bar used in signal calculation, potentially leaking information from adjacent sessions. |\n\n---\n\n### 2. Counterarguments – Why the Mode May Be Benign  \n\n| # | Counterargument |\n|---|-----------------|\n| 1 | The prior‑research filter is applied centrally in `fixed_window_candidate_discovery` and has been used in previous quarantined runs (Q086, Q085) without incident; the symbol list produced matches the expected first‑unused symbols from the pool. |\n| 2 | The snapshot fingerprint is a SHA‑256 over the entire manifest (including per‑symbol dataset fingerprints). Any change in the raw price data would alter at least one dataset fingerprint, causing the manifest fingerprint to differ and the freeze step to abort (m",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 70.896,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1790797456-iedpe7P7hOGlF6sLn4kg",
-  "usage": {
-    "prompt_tokens": 7427,
-    "completion_tokens": 3200,
-    "total_tokens": 10627,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 2671,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
