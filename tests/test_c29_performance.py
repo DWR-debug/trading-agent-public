@@ -10,7 +10,11 @@ def test_c29_performance_preregistration_is_fixed_and_nonselective() -> None:
         .read_text(encoding="utf-8")
     )
     assert spec["trial_id"] == "T-2026-09-30-C29-PERFORMANCE-01"
-    assert spec["status"] == "PREREGISTERED_DESIGN_ONLY"
+    assert spec["status"] in {"PREREGISTERED_DESIGN_ONLY", "PREREGISTERED_PERFORMANCE"}
+    if spec["status"] == "PREREGISTERED_PERFORMANCE":
+        assert spec["governance"]["performance_trial_authorized"] is True
+    else:
+        assert spec["governance"]["performance_trial_authorized"] is False
     assert spec["symbols"] == ["PPG","GWW","PGR","TT","ICE","KLAC","SNA","SWK"]
     assert spec["data_contract"]["evaluation_periods"] == 3478
     assert spec["data_contract"]["research_periods"] == 2778
@@ -39,12 +43,15 @@ def test_c29_performance_source_has_no_unused_authority_placeholder() -> None:
     assert 'turnover = sum(abs(weights[symbol] - previous_weights[symbol])' in source
 
 
-def test_c29_active_registry_starts_unauthorized() -> None:
+def test_c29_active_registry_identity_matches_governance_state() -> None:
     reg = json.loads(
         Path("research/governance/active_research_registry.json")
         .read_text(encoding="utf-8")
     )
     entry = next(x for x in reg["active_trials"] if x.get("code") == "C29P1")
     assert entry["trial_id"] == "T-2026-09-30-C29-PERFORMANCE-01"
-    assert entry["state"] == "PERFORMANCE_READY_FOR_AUTHORIZATION"
-    assert entry["performance_authorization_allowed"] is False
+    assert entry["state"] in {"PERFORMANCE_READY_FOR_AUTHORIZATION", "PERFORMANCE_AUTHORIZED"}
+    if entry["state"] == "PERFORMANCE_AUTHORIZED":
+        assert entry["performance_authorization_allowed"] is True
+    else:
+        assert entry["performance_authorization_allowed"] is False
