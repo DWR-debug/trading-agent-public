@@ -165,6 +165,10 @@ def main() -> None:
     last_heartbeat = 0.0
     last_task_fingerprint = None
 
+    if os.environ.get("EDGE_ONCE") == "1":
+        heartbeat("online", "bootstrap verification")
+        return
+
     while True:
         now = time.time()
         if now - last_heartbeat >= HEARTBEAT_INTERVAL:
