@@ -405,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T19:21:46.498066+00:00",
+  "generated_at_utc": "2026-09-30T19:22:00.927937+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -528,6 +528,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "0989e92171d26862efd23d84ebf6c3eb8057a230",
+        "timestamp": "2026-09-30T19:21:46Z"
+      },
+      {
         "message": "OPS: run Research OS scheduler and rotating source probe on self-hosted loop",
         "sha": "948a1764cc238b6c3c485745b9164dfb3f54dae7",
         "timestamp": "2026-09-30T21:21:41+02:00"
@@ -561,11 +566,6 @@
         "message": "ARCH: add ex-ante Research OS resource scheduler",
         "sha": "3b0e7f110032f3622ba84cd13fe932c031472d6b",
         "timestamp": "2026-09-30T21:21:06+02:00"
-      },
-      {
-        "message": "ARCH: add Research OS Evidence Bus",
-        "sha": "7baebda6b16d7fea6f7b80b0f67d25a1f0da1c75",
-        "timestamp": "2026-09-30T21:20:55+02:00"
       }
     ]
   },
@@ -635,12 +635,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "948a1764cc238b6c3c485745b9164dfb3f54dae7",
+  "source_master_sha": "0989e92171d26862efd23d84ebf6c3eb8057a230",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36765089804"
+    "run_id": "36765126639"
   }
 }
