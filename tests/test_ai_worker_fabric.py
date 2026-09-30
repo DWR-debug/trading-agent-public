@@ -1,5 +1,6 @@
 import json
 import pytest
+from pathlib import Path
 from automation.ai_worker_fabric import AIWorkerError, _local_attestation, build_prompt, load_task, preflight, run_task
 
 def task(provider="gemini_cli"):
@@ -214,3 +215,12 @@ def test_mistral_free_preflight_accepts_key_and_attestation():
     assert result["free_enforcement"] == "attestation_or_local_attestation"
     assert result["binary"] is None
     assert "provider executable not found" not in result["reasons"]
+
+
+def test_mistral_lane_is_schedule_or_manual_dispatch_only():
+    workflow = Path(__file__).parents[1] / ".github" / "workflows" / "ai-worker-fabric.yml"
+    text = workflow.read_text(encoding="utf-8")
+    assert "mistral_worker:" in text
+    assert "github.event_name == 'schedule'" in text
+    assert "github.event_name == 'workflow_dispatch'" in text
+    assert "provider: [gemini_cli, openrouter_free, claude_cli]" in text
