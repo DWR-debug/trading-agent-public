@@ -76,3 +76,11 @@ def test_q077r1_runner_contains_no_inherited_q079_identifiers() -> None:
     assert "Q079" not in source
     assert "q079" not in source
     assert "T-2026-09-28-079" not in source
+
+def test_q077r1_execution_envelope_enforces_existing_gross_cap() -> None:
+    row = {"AJG": 0.6, "ALGN": 0.5}
+    corrected = runner.apply_execution_gross_cap(row)
+    gross = sum(abs(corrected.get(symbol, 0.0)) for symbol in runner.Q077R1_SYMBOLS)
+    assert gross <= 1.0 + 1e-12
+    assert corrected["AJG"] == 0.6 / 1.1
+    assert corrected["ALGN"] == 0.5 / 1.1
