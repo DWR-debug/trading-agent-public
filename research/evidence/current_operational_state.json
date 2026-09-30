@@ -405,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T19:10:55.358365+00:00",
+  "generated_at_utc": "2026-09-30T19:11:36.639590+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -528,6 +528,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "TEST: enforce Research OS anti-convergence scheduler",
+        "sha": "b051426cdffb688271d1ced89db934bed33a0743",
+        "timestamp": "2026-09-30T21:11:28+02:00"
+      },
+      {
+        "message": "ARCH: add anti-convergence and information-gain scheduling policy",
+        "sha": "4d58c4a359aebeb9a8127be392a4371d405065a0",
+        "timestamp": "2026-09-30T21:11:22+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2d9142b044ad4e0f80c435a9966d8c461a6c2e1b",
+        "timestamp": "2026-09-30T19:10:55Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "2f5f1b74ac967ccebff17754a0239440aa905537",
         "timestamp": "2026-09-30T19:10:39Z"
@@ -551,21 +566,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "d9ca38254adf0185b9776ebfbf8262cf8b33ce94",
         "timestamp": "2026-09-30T19:10:12Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "85aff70b06a7d1c3ba10445d630d74a34edfddf5",
-        "timestamp": "2026-09-30T19:09:57Z"
-      },
-      {
-        "message": "TEST: validate Research OS capability registry",
-        "sha": "abe797fe6971b401cbdcea1d8478ab53e49bfcc4",
-        "timestamp": "2026-09-30T21:09:46+02:00"
-      },
-      {
-        "message": "ARCH: define Research OS architecture and external capability frontier",
-        "sha": "fcb4601ea3d439dd0da56533283538334191b754",
-        "timestamp": "2026-09-30T21:09:43+02:00"
       }
     ]
   },
@@ -635,12 +635,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2f5f1b74ac967ccebff17754a0239440aa905537",
+  "source_master_sha": "b051426cdffb688271d1ced89db934bed33a0743",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36763833393"
+    "run_id": "36763919131"
   }
 }
