@@ -233,6 +233,7 @@
         "trial_id": "T-2026-09-29-095"
       },
       {
+        "authorization_id": "AUTH-C29-2026-09-30-01",
         "class": "fresh_validation",
         "code": "C29P1",
         "coverage_result": {
@@ -261,7 +262,7 @@
           "status": "INPUT_BUNDLE_FROZEN"
         },
         "issue_number": null,
-        "performance_authorization_allowed": false,
+        "performance_authorization_allowed": true,
         "pit_result": {
           "fingerprint": "d88c24271fec55186b5e3aad478d91acc7ebe3b6412193724170365f5b6729c6",
           "source_trial_id": "T-2026-09-30-C29R1-COVERAGE-PIT",
@@ -269,7 +270,7 @@
         },
         "preregistration_path": "research/preregistrations/c29_performance_2026_09_30.json",
         "repair_discovery_fingerprint": "b7541fee48f01105d47ca0e89b05e1c20d14d73c5dad18dc1d2e876a21c4b05d",
-        "state": "PERFORMANCE_READY_FOR_AUTHORIZATION",
+        "state": "PERFORMANCE_AUTHORIZED",
         "trial_id": "T-2026-09-30-C29-PERFORMANCE-01"
       }
     ],
@@ -383,7 +384,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T16:22:17.493444+00:00",
+  "generated_at_utc": "2026-09-30T16:25:25.840930+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -506,44 +507,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: explicitly dispatch authorized C29 performance workflow (#704)",
+        "sha": "ebf0ce8315b7132f89abdfc567d9f92967f44403",
+        "timestamp": "2026-09-30T18:25:11+02:00"
+      },
+      {
+        "message": "FIX: make C29 dispatch repair self-contained",
+        "sha": "e59bf40014a098fd6ad52f4b4bbea64541f5757f",
+        "timestamp": "2026-09-30T18:24:56+02:00"
+      },
+      {
+        "message": "OPS: request explicit dispatch of authorized C29 performance workflow",
+        "sha": "5c130cd846fc9846676b157690c57813b2a8e904",
+        "timestamp": "2026-09-30T18:24:30+02:00"
+      },
+      {
+        "message": "FIX: add explicit C29 performance workflow dispatch repair",
+        "sha": "5987d86e03fac233b3cac7371c4a8fbb6d196ace",
+        "timestamp": "2026-09-30T18:24:27+02:00"
+      },
+      {
+        "message": "FIX: register C29 performance dispatch repair workflow",
+        "sha": "814597b731c6a06fbb3e8d580a22677eebc2a0a4",
+        "timestamp": "2026-09-30T18:24:25+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "1fbda184d20be79133fefadfcd99b27e27713a8e",
+        "timestamp": "2026-09-30T16:23:12Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2dbea3834084b24b78783a6734ba5e6730061447",
+        "timestamp": "2026-09-30T16:22:17Z"
+      },
+      {
         "message": "RESEARCH: preregister C29 one-shot performance validation (#703)",
         "sha": "14a9ba79118e4a770e18bba5a5802b1cbe2f2af8",
         "timestamp": "2026-09-30T18:22:02+02:00"
-      },
-      {
-        "message": "RESEARCH: persist C29 performance readiness receipt",
-        "sha": "ae7bc20d6b63ba3666cc110131c2c5ed52a36369",
-        "timestamp": "2026-09-30T18:21:33+02:00"
-      },
-      {
-        "message": "OPS: request one-shot C29 performance authorization",
-        "sha": "56aac6a5440affc453427cadcf548d25b01bdd46",
-        "timestamp": "2026-09-30T18:21:22+02:00"
-      },
-      {
-        "message": "RESEARCH: add C29 one-shot performance authorization",
-        "sha": "e88e2fd7eee257630bc58a111ef991bf8406b06e",
-        "timestamp": "2026-09-30T18:21:14+02:00"
-      },
-      {
-        "message": "RESEARCH: add C29 one-shot performance workflow",
-        "sha": "55467fe5f53ca04e15dcb1ad2237d10e4acbede5",
-        "timestamp": "2026-09-30T18:20:18+02:00"
-      },
-      {
-        "message": "RESEARCH: bind C29 preregistration to finalized runner hash",
-        "sha": "060cba1c02b246bbb008dd889fed22ae6492083d",
-        "timestamp": "2026-09-30T18:19:53+02:00"
-      },
-      {
-        "message": "RESEARCH: enforce C29 preregistered source contract at runtime",
-        "sha": "c781f0a6cb1a4ed324ec22ed149f7026b4af3234",
-        "timestamp": "2026-09-30T18:19:41+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "a3853541ec669cb9555f2edfbc7275fe39256471",
-        "timestamp": "2026-09-30T16:19:32Z"
       }
     ]
   },
@@ -613,12 +614,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "14a9ba79118e4a770e18bba5a5802b1cbe2f2af8",
+  "source_master_sha": "ebf0ce8315b7132f89abdfc567d9f92967f44403",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36743669014"
+    "run_id": "36744056985"
   }
 }
