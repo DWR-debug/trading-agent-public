@@ -260,8 +260,8 @@ def command_for(provider: str, prompt: str, binary: str | None = None) -> list[s
     if provider == "gemini_cli":
         executable = binary or "gemini"
         if Path(executable).name.lower().startswith("agy"):
-            return [executable, "--print-timeout", "45s", "--sandbox", "--output-format", "json", "-p", prompt]
-        return [executable, "--approval-mode", "plan", "--output-format", "json", "--prompt", prompt]
+            return [executable, "--print-timeout", "45s", "--sandbox", "--skip-trust", "--model", "gemini-3.7-flash", "--output-format", "json", "-p", prompt]
+        return [executable, "--approval-mode", "plan", "--skip-trust", "--model", "gemini-3.7-flash", "--output-format", "json", "--prompt", prompt]
     if provider == "claude_cli":
         return [binary or "claude", "-p", prompt]
     if provider == "openrouter_free":
