@@ -41,6 +41,12 @@ def get(url: str) -> tuple[int, bytes, str | None]:
             return int(r.status), r.read(), r.headers.get("content-type")
     except urllib.error.HTTPError as exc:
         return int(exc.code), exc.read(), None
+    except (urllib.error.URLError, TimeoutError, ConnectionResetError, OSError) as exc:
+        # Network/transient source failures are audit findings, not uncaught
+        # process failures. Return a fail-closed synthetic status so the full
+        # non-performance frontier matrix and its provenance can still be
+        # written for the cycle.
+        return 599, b"", None
 
 
 def fp(data: bytes) -> str:
