@@ -61,7 +61,12 @@
       "time_semantics": "filing_dissemination_time_is_available",
       "pit_fit": "high_after_exact_archive_and_release_time_capture",
       "history": "broad",
-      "candidate_uses": ["earnings_quality", "balance_sheet_state", "corporate_event_timing", "insider_and_ownership_research"],
+      "candidate_uses": [
+        "earnings_quality",
+        "balance_sheet_state",
+        "corporate_event_timing",
+        "insider_and_ownership_research"
+      ],
       "source_url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
     },
     {
@@ -73,7 +78,11 @@
       "time_semantics": "settlement_date_plus_published_half_monthly_schedule",
       "pit_fit": "medium_high_after_release_schedule_is_modeled",
       "history": "2004-present",
-      "candidate_uses": ["short_pressure", "settlement_stress", "crowding"],
+      "candidate_uses": [
+        "short_pressure",
+        "settlement_stress",
+        "crowding"
+      ],
       "source_url": "https://www.sec.gov/data-research/sec-markets-data/fails-deliver-data"
     },
     {
@@ -85,7 +94,11 @@
       "time_semantics": "twice_monthly_reporting_and_publication_schedule",
       "pit_fit": "medium_high_after_publication_timestamp_model",
       "history": "five_rolling_years_online",
-      "candidate_uses": ["short_interest_change", "days_to_cover", "crowding"],
+      "candidate_uses": [
+        "short_interest_change",
+        "days_to_cover",
+        "crowding"
+      ],
       "source_url": "https://www.finra.org/finra-data/browse-catalog/equity-short-interest"
     },
     {
@@ -97,7 +110,11 @@
       "time_semantics": "daily_aggregated_trade_reporting",
       "pit_fit": "medium_after_publication_time_and_symbol_mapping_validation",
       "history": "probe_required",
-      "candidate_uses": ["daily_short_volume_pressure", "failed_breakout_pressure", "shorting_intensity"],
+      "candidate_uses": [
+        "daily_short_volume_pressure",
+        "failed_breakout_pressure",
+        "shorting_intensity"
+      ],
       "source_url": "https://developer.finra.org/docs/api-explorer/query_api-equity-reg_sho_daily_short_sale_volume"
     },
     {
@@ -109,7 +126,11 @@
       "time_semantics": "Tuesday_positions_with_weekly_publication",
       "pit_fit": "high_for_weekly_regime_features_after_publication_timestamp_validation",
       "history": "long",
-      "candidate_uses": ["commodity_positioning", "dealer_vs_asset_manager_vs_leveraged_money", "crowding"],
+      "candidate_uses": [
+        "commodity_positioning",
+        "dealer_vs_asset_manager_vs_leveraged_money",
+        "crowding"
+      ],
       "source_url": "https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm"
     },
     {
@@ -121,7 +142,12 @@
       "time_semantics": "explicit_real_time_periods_and_vintage_dates",
       "pit_fit": "very_high",
       "history": "broad",
-      "candidate_uses": ["macro_regimes", "real_rates", "credit_conditions", "labor_inflation_surprises"],
+      "candidate_uses": [
+        "macro_regimes",
+        "real_rates",
+        "credit_conditions",
+        "labor_inflation_surprises"
+      ],
       "source_url": "https://fred.stlouisfed.org/docs/api/fred/realtime_period.html"
     },
     {
@@ -133,7 +159,12 @@
       "time_semantics": "release_schedule_and_dataset_metadata_required",
       "pit_fit": "medium_high_after_release_timestamp_model",
       "history": "broad",
-      "candidate_uses": ["oil_supply", "gas_storage", "power_market_regimes", "energy_shock_channels"],
+      "candidate_uses": [
+        "oil_supply",
+        "gas_storage",
+        "power_market_regimes",
+        "energy_shock_channels"
+      ],
       "source_url": "https://www.eia.gov/opendata/documentation.php"
     },
     {
@@ -145,7 +176,11 @@
       "time_semantics": "published_record_date_plus_release_schedule",
       "pit_fit": "medium_high_after_release_timestamp_audit",
       "history": "broad_for_selected_datasets",
-      "candidate_uses": ["auction_demand", "term_premium_proxies", "fiscal_liquidity"],
+      "candidate_uses": [
+        "auction_demand",
+        "term_premium_proxies",
+        "fiscal_liquidity"
+      ],
       "source_url": "https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/"
     },
     {
@@ -157,7 +192,11 @@
       "time_semantics": "metadata_and_release_schedule_required",
       "pit_fit": "medium_high_for_slow_macro_states",
       "history": "broad",
-      "candidate_uses": ["global_credit_cycle", "cross_border_bank_stress", "liquidity_regimes"],
+      "candidate_uses": [
+        "global_credit_cycle",
+        "cross_border_bank_stress",
+        "liquidity_regimes"
+      ],
       "source_url": "https://stats.bis.org/api-doc/v2/"
     },
     {
@@ -169,7 +208,11 @@
       "time_semantics": "release-calendar-aware",
       "pit_fit": "medium_high_after_release_timestamp_capture",
       "history": "broad",
-      "candidate_uses": ["employment_surprise", "inflation_regime", "wage_pressure"],
+      "candidate_uses": [
+        "employment_surprise",
+        "inflation_regime",
+        "wage_pressure"
+      ],
       "source_url": "https://www.bls.gov/developers/api_signature_v2.htm"
     },
     {
@@ -181,8 +224,27 @@
       "time_semantics": "article/event timestamps require source-specific validation",
       "pit_fit": "discovery_only_until_archive_and_publication_time_are_reproducible",
       "history": "rolling search window for DOC API",
-      "candidate_uses": ["geopolitical_shocks", "news_persistence", "event_clustering"],
+      "candidate_uses": [
+        "geopolitical_shocks",
+        "news_persistence",
+        "event_clustering"
+      ],
       "source_url": "https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/"
+    },
+    {
+      "id": "SRC-NDAQ-RETAIL10",
+      "class": "retail_activity",
+      "provider": "Nasdaq Data Link",
+      "access": "free_dataset",
+      "capability": "daily_top_10_retail_activity_signal",
+      "time_semantics": "publication_timestamp_probe_required",
+      "pit_fit": "discovery_only_until_selection_bias_and_release_time_are_modeled",
+      "history": "documented from 2016",
+      "candidate_uses": [
+        "retail_attention_shocks",
+        "activity_concentration"
+      ],
+      "source_url": "https://data.nasdaq.com/databases/RTAT/documentation"
     },
     {
       "id": "SRC-NDAQ-RTAT10",
@@ -193,7 +255,10 @@
       "time_semantics": "publication_timestamp_probe_required",
       "pit_fit": "discovery_only_until_selection_bias_and_release_time_are modeled",
       "history": "from 2016 for documented product",
-      "candidate_uses": ["retail_attention_shocks", "activity_concentration"],
+      "candidate_uses": [
+        "retail_attention_shocks",
+        "activity_concentration"
+      ],
       "source_url": "https://data.nasdaq.com/databases/RTAT/documentation"
     },
     {
@@ -205,8 +270,28 @@
       "time_semantics": "inherits source semantics; never a PIT guarantee by itself",
       "pit_fit": "adapter_layer_only",
       "history": "depends_on_provider",
-      "candidate_uses": ["discovery", "connector_prototyping", "AI_data_access"],
+      "candidate_uses": [
+        "discovery",
+        "connector_prototyping",
+        "AI_data_access"
+      ],
       "source_url": "https://docs.openbb.co/odp/v4"
+    },
+    {
+      "id": "SRC-HF-COMMUNITY",
+      "class": "community_dataset_discovery",
+      "provider": "Hugging Face Datasets",
+      "access": "public_repository_catalog",
+      "capability": "large_public_finance_and_market_dataset_discovery",
+      "time_semantics": "dataset-specific_and_must_be_reconstructed_from_commit_or_snapshot_metadata",
+      "pit_fit": "discovery_only_until_provenance_license_and_pit_are_established",
+      "history": "varies_by_dataset",
+      "candidate_uses": [
+        "finding historical datasets",
+        "benchmarking",
+        "synthetic_or_public_data_probes"
+      ],
+      "source_url": "https://huggingface.co/datasets?other=market-data"
     }
   ],
   "agent_runtime_lattice": [
@@ -214,7 +299,12 @@
       "id": "AGENT-MCP",
       "technology": "Model Context Protocol 2026-07-28",
       "role": "tool/resource/prompt interchange",
-      "relevant_features": ["stateless_core", "cacheable_lists", "authorization_hardening", "typed_schemas"],
+      "relevant_features": [
+        "stateless_core",
+        "cacheable_lists",
+        "authorization_hardening",
+        "typed_schemas"
+      ],
       "adoption_mode": "architectural_inspiration_and_future_adapter_surface",
       "source_url": "https://blog.modelcontextprotocol.io/posts/2026-07-28/"
     },
@@ -222,7 +312,11 @@
       "id": "AGENT-A2A",
       "technology": "Agent2Agent",
       "role": "agent-to-agent task handoff and capability discovery",
-      "relevant_features": ["agent_cards", "long_running_tasks", "cross_framework_collaboration"],
+      "relevant_features": [
+        "agent_cards",
+        "long_running_tasks",
+        "cross_framework_collaboration"
+      ],
       "adoption_mode": "use_for_future remote specialist workers; local contracts remain canonical",
       "source_url": "https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/"
     },
@@ -230,7 +324,12 @@
       "id": "AGENT-OPENHANDS",
       "technology": "OpenHands Software Agent SDK",
       "role": "local or ephemeral agent workspaces, stateful agent execution and tooling",
-      "relevant_features": ["provider_agnostic_llm", "workspace_abstraction", "security_validation", "MCP"],
+      "relevant_features": [
+        "provider_agnostic_llm",
+        "workspace_abstraction",
+        "security_validation",
+        "MCP"
+      ],
       "adoption_mode": "optional engineering worker substrate, never scientific authority",
       "source_url": "https://github.com/OpenHands/software-agent-sdk"
     },
@@ -238,7 +337,12 @@
       "id": "AGENT-OPENSHELL",
       "technology": "NVIDIA OpenShell",
       "role": "policy-enforced runtime boundary for autonomous agents",
-      "relevant_features": ["kernel_level_isolation", "network_policy", "credential_binding", "formal_policy_checks"],
+      "relevant_features": [
+        "kernel_level_isolation",
+        "network_policy",
+        "credential_binding",
+        "formal_policy_checks"
+      ],
       "adoption_mode": "sandbox design reference; evaluate on WSL2 before any local deployment",
       "source_url": "https://github.com/NVIDIA/OpenShell/"
     },
@@ -246,7 +350,11 @@
       "id": "AGENT-MAF",
       "technology": "Microsoft Agent Framework",
       "role": "supported multi-agent orchestration alternative to AutoGen",
-      "relevant_features": ["multi_provider", "multi_agent", "MCP_and_A2A_interoperability"],
+      "relevant_features": [
+        "multi_provider",
+        "multi_agent",
+        "MCP_and_A2A_interoperability"
+      ],
       "adoption_mode": "monitor; do not replace deterministic project control plane without evidence",
       "source_url": "https://github.com/microsoft/autogen/blob/main/README.md"
     }
@@ -254,27 +362,53 @@
   "highest_value_new_paths": [
     {
       "family": "SEC/FINRA short-flow convergence",
-      "mechanisms": ["FTD", "short_interest", "RegSHO_daily_volume"],
+      "mechanisms": [
+        "FTD",
+        "short_interest",
+        "RegSHO_daily_volume"
+      ],
       "gate": "source/PIT first",
       "why": "Three complementary public channels can express crowding and settlement pressure at different frequencies without buying a proprietary short-flow feed."
     },
     {
       "family": "Macro-vintage regime layer",
-      "mechanisms": ["ALFRED vintage features", "BLS release-aware series", "BIS slow-credit states", "EIA energy states"],
+      "mechanisms": [
+        "ALFRED vintage features",
+        "BLS release-aware series",
+        "BIS slow-credit states",
+        "EIA energy states"
+      ],
       "gate": "vintage/release-time contract before any performance",
       "why": "Creates a genuine information-timing layer rather than another price transform."
     },
     {
       "family": "Retail-attention shock",
-      "mechanisms": ["Nasdaq RTAT10", "GDELT event clustering", "SEC filing bursts"],
+      "mechanisms": [
+        "Nasdaq RTAT10",
+        "GDELT event clustering",
+        "SEC filing bursts"
+      ],
       "gate": "selection/publication-time bias audit",
       "why": "Combines independent attention channels and can be tested as event-state transitions instead of generic sentiment."
     },
     {
       "family": "Agent governance fabric",
-      "mechanisms": ["MCP resource/tool contracts", "A2A specialist handoff", "OpenShell-like policy boundary"],
+      "mechanisms": [
+        "MCP resource/tool contracts",
+        "A2A specialist handoff",
+        "OpenShell-like policy boundary"
+      ],
       "gate": "security/contract tests",
       "why": "Turns the project control plane into a capability-driven OS without allowing agent autonomy to become scientific authority."
+    },
+    {
+      "family": "community-data discovery quarantine",
+      "mechanisms": [
+        "Hugging Face finance/market datasets",
+        "public research corpora"
+      ],
+      "gate": "dataset provenance/license/version/PIT audit",
+      "why": "A broad discovery pool can expose unusual data that official APIs do not expose, while a quarantine boundary prevents community data from entering formal evidence without verification."
     }
   ]
 }
