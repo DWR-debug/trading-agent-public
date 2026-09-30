@@ -3,13 +3,6 @@ name: Free AI Worker Fabric
 on:
   schedule:
     - cron: '0 */6 * * *'
-  push:
-    branches: [master]
-    paths:
-      - 'ai_requests/**'
-      - 'automation/ai_worker_fabric.py'
-      - 'tests/test_ai_worker_fabric.py'
-      - 'docs/AI_WORKER_FABRIC.md'
   workflow_dispatch:
 
 permissions:
