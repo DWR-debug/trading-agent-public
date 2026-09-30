@@ -135,6 +135,7 @@
         "trial_id": "T-2026-09-28-089-PERFORMANCE"
       },
       {
+        "authorization_id": "AUTH-Q077R1-2026-09-30-36727296132",
         "class": "fresh_validation",
         "code": "077R1",
         "coverage_result": {
@@ -163,14 +164,14 @@
           "status": "INPUT_BUNDLE_FROZEN"
         },
         "issue_number": null,
-        "performance_authorization_allowed": false,
+        "performance_authorization_allowed": true,
         "pit_result": {
           "fingerprint": "27bc62136bd376b26afe11f3e0eeb4b0a96d1868c0c84082ae8a58b50add2563",
           "source_trial_id": "T-2026-09-28-077R1-PIT",
           "status": "PIT_PASSED"
         },
         "preregistration_path": "research/preregistrations/q077r1_performance_2026_09_30.json",
-        "state": "PERFORMANCE_READY_FOR_AUTHORIZATION",
+        "state": "PERFORMANCE_AUTHORIZED",
         "trial_id": "T-2026-09-30-077R1-PERFORMANCE"
       },
       {
@@ -331,7 +332,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T14:12:24.020679+00:00",
+  "generated_at_utc": "2026-09-30T14:13:42.792410+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -454,6 +455,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "1a45a8c9862ea270f685c5d24af2a28806f9eb8c",
+        "timestamp": "2026-09-30T14:13:33Z"
+      },
+      {
+        "message": "OPS: retry Q077-R1 authorization on current reconciler",
+        "sha": "15de1fe95b967002eb1994574ebe4ce0b31b780a",
+        "timestamp": "2026-09-30T16:13:28+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "be03dc9b5b3ffed393a36225d7d142b055904607",
+        "timestamp": "2026-09-30T14:12:24Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "2507f1989dd19644e9acbfeafefbb43ba328df2c",
         "timestamp": "2026-09-30T14:12:08Z"
@@ -477,21 +493,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "31d8cfabb655f9defeab36ae5915dca4be109b11",
         "timestamp": "2026-09-30T14:11:01Z"
-      },
-      {
-        "message": "RESEARCH: execute explicitly authorized Q077-R1 one-shot performance lane",
-        "sha": "85f10e5bbf46429d316479b64cf8f57fa2289254",
-        "timestamp": "2026-09-30T16:10:52+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d6ea4ce51807a132270944b86c0791b1059a6616",
-        "timestamp": "2026-09-30T14:10:44Z"
-      },
-      {
-        "message": "FIX: register Q077-R1 once-governance workflows in integrity allowlist",
-        "sha": "a7f9c6aa04fa5f32b724a306d3864714693e052a",
-        "timestamp": "2026-09-30T16:10:39+02:00"
       }
     ]
   },
@@ -561,12 +562,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2507f1989dd19644e9acbfeafefbb43ba328df2c",
+  "source_master_sha": "1a45a8c9862ea270f685c5d24af2a28806f9eb8c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36727296257"
+    "run_id": "36727482978"
   }
 }
