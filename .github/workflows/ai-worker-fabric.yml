@@ -1,6 +1,12 @@
 name: Free AI Worker Fabric
 
 on:
+  push:
+    branches: [master]
+    paths:
+      - "ai_requests/AI-2026-09-29-Q091-ADVERSARIAL.json"
+      - ".github/workflows/ai-worker-fabric.yml"
+      - "automation/ai_worker_fabric.py"
   schedule:
     - cron: '0 */6 * * *'
   workflow_dispatch:
@@ -16,6 +22,7 @@ jobs:
       matrix:
         provider: [gemini_cli, openrouter_free, claude_cli]
         task:
+          - AI-2026-09-29-Q091-ADVERSARIAL
           - AI-2026-09-28-Q089-ADVERSARIAL
           - AI-2026-09-28-UNUSUAL-FRONTIER
     concurrency:
@@ -51,6 +58,7 @@ jobs:
         run: |
           set -euo pipefail
           case '${{ matrix.task }}' in
+            AI-2026-09-29-Q091-ADVERSARIAL) echo 'path=ai_requests/AI-2026-09-29-Q091-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-09-28-Q089-ADVERSARIAL) echo 'path=ai_requests/AI-2026-09-28-Q089-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-09-28-UNUSUAL-FRONTIER) echo 'path=ai_requests/AI-2026-09-28-UNUSUAL-FRONTIER.json' >> "$GITHUB_OUTPUT" ;;
             *) exit 1 ;;
