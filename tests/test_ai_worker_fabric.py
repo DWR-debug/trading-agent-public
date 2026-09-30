@@ -241,4 +241,13 @@ def test_hosted_gemini_and_mistral_are_quota_guarded_by_schedule():
     assert "GEMINI_ROTATION slot=" in text
     assert "MISTRAL_ROTATION slot=" in text
     assert "/ 21600 % 5" in text
-    assert "/ 21600 % 5" in text
+
+
+def test_q101_negative_evidence_task_has_safe_scope():
+    task_path = Path(__file__).parents[1] / "ai_requests" / "AI-2026-09-30-Q101-NEGATIVE-EVIDENCE.json"
+    payload = load_task(task_path)
+    assert payload["providers"] == ["gemini_cli", "mistral_api", "openrouter_free"]
+    assert payload["performance_authorized"] is False
+    prompt = build_prompt(payload, "openrouter_free")
+    assert "q101_negative_evidence_atlas.py" in prompt
+    assert "EXTERNAL_RESEARCH_INSPIRATION_2026-09-30.md" in prompt
