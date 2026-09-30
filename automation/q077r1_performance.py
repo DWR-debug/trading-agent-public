@@ -15,6 +15,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+from datetime import datetime
 
 from automation.q067_alpha_mechanisms import (
     Q067_SLEEVES,
@@ -33,11 +34,11 @@ from data.canonical_snapshot import load_frozen_snapshot
 from execution.cost_contract import validate_research_cost_compatibility
 
 Q077R1_SLEEVES = Q067_SLEEVES
-INPUT_BUNDLE_TRIAL_ID = "T-2026-09-28-079-INPUT-FREEZE"
+INPUT_BUNDLE_TRIAL_ID = "T-2026-09-28-077R1-INPUT-FREEZE"
 
-TRIAL_ID = "T-2026-09-28-079-PERFORMANCE"
-COVERAGE_TRIAL_ID = "T-2026-09-28-079-COVERAGE"
-PIT_TRIAL_ID = "T-2026-09-28-079-PIT"
+TRIAL_ID = "T-2026-09-30-077R1-PERFORMANCE"
+COVERAGE_TRIAL_ID = "T-2026-09-28-077R1-COVERAGE"
+PIT_TRIAL_ID = "T-2026-09-28-077R1-PIT"
 Q077R1_SYMBOLS = (
     "AJG",
     "ALGN",
