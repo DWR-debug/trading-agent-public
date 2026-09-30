@@ -44,7 +44,7 @@ jobs:
       - name: Fresh C29 repair coverage preflight
         run: python -m automation.coverage_preflight --preregistration research/preregistrations/c29_fresh_coverage_pit_repair_2026_09_30.json --output-root research/runs/c29_coverage_r1
       - name: C29 PIT mutation validation
-        run: python -m automation.c29_fresh_pit --universe-root research/runs/c29_coverage_r1/T-2026-09-30-C29-COVERAGE-PIT-R1/datasets --symbols ROP NVR ODFL CPRT FICO AOS ECL VRSN --output research/runs/c29_pit_r1/T-2026-09-30-C29-COVERAGE-PIT-R1/pit_report.json
+        run: python -m automation.c29_fresh_pit --universe-root research/runs/c29_coverage_r1/T-2026-09-30-C29-COVERAGE-PIT-R1/datasets --symbols ROP NVR ODFL CPRT FICO AOS ECL VRSN --trial-id T-2026-09-30-C29-COVERAGE-PIT-R1 --universe validation_2026_09_30_c29_fresh_input_repair --output research/runs/c29_pit_r1/T-2026-09-30-C29-COVERAGE-PIT-R1/pit_report.json
       - name: Validate no-performance contract
         run: |
           python - <<'PY'
@@ -52,6 +52,9 @@ jobs:
           from pathlib import Path
           p=Path("research/runs/c29_pit_r1/T-2026-09-30-C29-COVERAGE-PIT-R1/pit_report.json")
           d=json.loads(p.read_text(encoding="utf-8"))
+          assert d["trial_id"] == "T-2026-09-30-C29-COVERAGE-PIT-R1"
+          assert d["universe"] == "validation_2026_09_30_c29_fresh_input_repair"
+          assert d["symbols"] == ["ROP", "NVR", "ODFL", "CPRT", "FICO", "AOS", "ECL", "VRSN"]
           assert d["status"] == "PIT_PASSED_NO_PERFORMANCE_EVIDENCE"
           assert d["performance_evaluation"] is False
           assert d["holdout_evaluation"] is False
