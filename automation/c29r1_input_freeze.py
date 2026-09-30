@@ -31,7 +31,13 @@ def _file_sha256(path: Path) -> str:
 
 
 def run(source_root: Path, output_root: Path, receipt_path: Path) -> dict:
-    coverage_dir = source_root / "research/runs/c29r1_coverage" / COVERAGE_TRIAL_ID
+    candidate_dirs = (
+        source_root / "research/runs/c29r1_coverage" / COVERAGE_TRIAL_ID,
+        source_root / "c29r1_coverage" / COVERAGE_TRIAL_ID,
+    )
+    coverage_dir = next((path for path in candidate_dirs if path.is_dir()), None)
+    if coverage_dir is None:
+        raise FileNotFoundError("C29R1 coverage dataset root is missing")
     matches = list(coverage_dir.glob("coverage_preflight_*.json"))
     if len(matches) != 1:
         raise FileNotFoundError("C29R1 coverage receipt is missing or ambiguous")
