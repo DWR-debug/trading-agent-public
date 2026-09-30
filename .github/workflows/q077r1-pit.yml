@@ -146,6 +146,24 @@ jobs:
           print("Q077R1 INPUT FREEZE CONTRACT OK",d["bundle_fingerprint"])
           PY
 
+      - name: Freeze Q077-R1 performance preregistration metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q077r1_prepare_performance
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path("research/preregistrations/q077r1_performance_2026_09_30.json").read_text(encoding="utf-8"))
+          assert p["status"]=="PREREGISTERED_PERFORMANCE"
+          assert p["governance"]["performance_trial_authorized"] is False
+          assert p["data_contract"]["coverage_result_fingerprint"]
+          assert p["data_contract"]["snapshot_fingerprint"]
+          assert p["data_contract"]["pit_result_fingerprint"]
+          assert p["data_contract"]["input_bundle_fingerprint"]
+          assert all(p["source_contract"][k] for k in ("performance_runner_sha256","alpha_mechanism_sha256","cost_contract_sha256","settings_sha256","input_freeze_sha256"))
+          print("Q077R1 PERFORMANCE PREREGISTRATION FROZEN")
+          PY
       - name: Persist Q077-R1 immutable coverage, PIT and input bundle
         env:
           GH_TOKEN: ${{ github.token }}
@@ -161,6 +179,8 @@ jobs:
             --file research/evidence/q077r1_input_freeze_result.json=research/evidence/q077r1_input_freeze_result.json
             --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/snapshot_manifest.json=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/snapshot_manifest.json
             --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/input_bundle_manifest.json=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/input_bundle_manifest.json
+            --file research/preregistrations/q077r1_performance_2026_09_30.json=research/preregistrations/q077r1_performance_2026_09_30.json \
+            --file research/governance/active_research_registry.json=research/governance/active_research_registry.json
           )
           args+=(--file "research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/AJG/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/AJG/1d.csv")
           args+=(--file "research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AJG/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AJG/adjusted_close.csv")
@@ -200,13 +220,18 @@ jobs:
             echo "Q077R1 persistence raced with another master update; retrying attempt $((attempt+1))"
             sleep $((attempt * 2))
           done
-                - name: Upload PIT evidence
+      - name: Upload Q077-R1 evidence pack
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q077r1-pit-${{ github.run_id }}
+          name: q077r1-pit-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
+            research/evidence/q077r1_discovery_result.json
+            research/evidence/q077r1_coverage_result.json
             research/evidence/q077r1_pit_result.json
+            research/evidence/q077r1_input_freeze_result.json
+            research/preregistrations/q077r1_performance_2026_09_30.json
             research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/
+            research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/
           if-no-files-found: error
           retention-days: 30
