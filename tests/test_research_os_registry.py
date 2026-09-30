@@ -32,3 +32,13 @@ def test_agent_runtime_is_not_scientific_authority() -> None:
     payload = json.loads(REGISTRY.read_text(encoding="utf-8"))
     for item in payload["agent_runtime_lattice"]:
         assert "adoption_mode" in item
+
+
+def test_research_os_scheduler_forbids_performance_based_routing() -> None:
+    payload = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    scheduler = payload["resource_scheduler"]
+    assert "information_gain_per_compute" in scheduler["allowed_axes"]
+    assert "cheap_falsifiability" in scheduler["allowed_axes"]
+    assert "holdout_return" in scheduler["forbidden_axes"]
+    assert "holdout_drawdown" in scheduler["forbidden_axes"]
+    assert "performance_rank" in scheduler["forbidden_axes"]
