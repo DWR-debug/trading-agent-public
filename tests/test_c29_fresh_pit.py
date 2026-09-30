@@ -15,7 +15,7 @@ def test_c29_preregistration_is_fixed_and_non_authorizing() -> None:
     )
     assert spec["trial_id"] == "T-2026-09-30-C29-COVERAGE-PIT"
     assert spec["universe"] == "validation_2026_09_30_c29_fresh_input"
-    assert spec["symbols"] == ["PPG", "GWW", "ROP", "TT", "IR", "KLAC", "SNA", "SWK"]
+    assert spec["symbols"] == ["PPG", "GWW", "PGR", "TT", "IR", "KLAC", "SNA", "SWK"]
     assert spec["fixed_mechanism"]["lookback_sessions"] == 21
     assert spec["governance"]["performance_trial_authorized"] is False
     assert spec["governance"]["holdout_used_for_selection"] is False
