@@ -118,7 +118,7 @@ def main() -> int:
 
     ledger[key] = entries
     entry["performance_authorization_allowed"] = False
-    entry["state"] = "PERFORMANCE_COMPLETED_ARM_PASSED_ALL_13_GATES" if status.endswith("arm_passed_all_13_gates") else "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES"
+    entry["state"] = "PERFORMANCE_COMPLETED_ARM_PASSED_ALL_13_GATES" if status == "performance_completed_arm_passed_all_13_gates" else "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES"
     entry["performance_result"] = {
         "trial_id": TRIAL_ID,
         "status": "COMPLETED",
