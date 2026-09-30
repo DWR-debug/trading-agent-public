@@ -598,6 +598,14 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
     ),
 
     AssetUniverse(
+        name="validation_2026_09_28_q068_fresh_e1_e2",
+        priority=73,
+        description=(
+            "Frozen fresh symbol-disjoint validation universe for Q068 E1/E2; "
+            "selected only by fixed source-order coverage discovery."
+        ),
+
+    AssetUniverse(
         name="validation_2026_09_30_c29_fresh_input",
         priority=74,
         description=(
