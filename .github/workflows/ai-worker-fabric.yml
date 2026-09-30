@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        provider: [openrouter_free, claude_cli]
+        provider: [openrouter_free]
         task:
           - AI-2026-09-29-Q091-ADVERSARIAL
           - AI-2026-09-28-Q089-ADVERSARIAL
@@ -46,11 +46,6 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
       - name: Resolve task file
         id: task
         shell: bash
@@ -69,7 +64,6 @@ jobs:
         shell: bash
         env:
           AI_EXTERNAL_PROVIDER_ALLOWLIST: ${{ secrets.AI_EXTERNAL_PROVIDER_ALLOWLIST }}
-          CLAUDE_FREE_MODE_CONFIRMED: ${{ secrets.CLAUDE_FREE_MODE_CONFIRMED }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
           set -euo pipefail
