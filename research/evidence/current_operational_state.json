@@ -390,7 +390,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T18:38:14.992089+00:00",
+  "generated_at_utc": "2026-09-30T18:38:30.676842+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -513,6 +513,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ca30827303ae1e85875546dedc3bbd0d279fd1b8",
+        "timestamp": "2026-09-30T18:38:15Z"
+      },
+      {
         "message": "OPS: anchor self-hosted failover in resource model",
         "sha": "724200a724b60838d889263be49f03c2b5cf234c",
         "timestamp": "2026-09-30T20:38:12+02:00"
@@ -546,11 +551,6 @@
         "message": "TEST: cover hosted failover guard",
         "sha": "fd35436aed1c013761b6c2392736563cd67d03e8",
         "timestamp": "2026-09-30T20:37:42+02:00"
-      },
-      {
-        "message": "OPS: add hosted research failover",
-        "sha": "c0aabe8fdbc2ead88dd38965cd890588d0dc8fc4",
-        "timestamp": "2026-09-30T20:37:39+02:00"
       }
     ]
   },
@@ -620,12 +620,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "724200a724b60838d889263be49f03c2b5cf234c",
+  "source_master_sha": "ca30827303ae1e85875546dedc3bbd0d279fd1b8",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36759959280"
+    "run_id": "36759995900"
   }
 }
