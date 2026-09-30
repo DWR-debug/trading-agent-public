@@ -27,9 +27,10 @@ ownership family and must be explicitly compared before admission.
 
 **Status:** SOURCE_FEASIBILITY_SEED_ONLY.
 
-Literature pointer: O. K. et al., “Can foreign investors predict better? investment
-horizons, investor domicile, and stock return predictability” (Finance Research
-Open, 2026), DOI 10.1016/j.finr.2026.100154.
+Literature pointer: Calorine Twongirwe, Martin Bakundana, and Tadeo Masimengo,
+“Can foreign investors predict better? investment horizons, investor domicile,
+and stock return predictability” (Finance Research Open, 2026), DOI
+10.1016/j.finr.2026.100154.
 
 ## S02 — Policy-risk disclosure exposure state
 
