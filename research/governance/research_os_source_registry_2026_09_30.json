@@ -385,6 +385,19 @@
       ],
       "adoption_mode": "optional adversarial worker; model membership/pricing is live-verified and never relied on as stable identity",
       "source_url": "https://openrouter.ai/collections/free-models"
+    },
+    {
+      "id": "AGENT-MISTRAL",
+      "technology": "Mistral Studio API / mistral-small-latest",
+      "role": "independent bounded research and adversarial worker",
+      "relevant_features": [
+        "free_mode_api",
+        "structured_chat_completion",
+        "reasoning",
+        "multilingual_research_support"
+      ],
+      "adoption_mode": "optional free-only remote worker; requires explicit free-mode attestation and no paid fallback",
+      "source_url": "https://docs.mistral.ai/getting-started/quickstarts/studio/activate-and-generate-api-key"
     }
   ],
   "highest_value_new_paths": [
@@ -477,5 +490,17 @@
     "uses_credentials": false,
     "scientific_evidence": false,
     "performance_authorization": false
+  },
+  "ai_provider_policy": {
+    "free_only": true,
+    "providers": [
+      "gemini_cli",
+      "mistral_api",
+      "openrouter_free",
+      "claude_cli"
+    ],
+    "non_consensus_policy": true,
+    "provider_failure_is_not_scientific_failure": true,
+    "mistral_fixed_model": "mistral-small-latest"
   }
 }
