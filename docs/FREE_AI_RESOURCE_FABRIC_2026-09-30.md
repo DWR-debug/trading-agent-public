@@ -85,6 +85,12 @@ Operator action:
 The worker skips Mistral unless both the key and explicit free-mode attestation are present.
 There is no automatic paid fallback.
 
+Operationally, Mistral runs in its own sequential workflow lane (max-parallel: 1).
+The other AI providers remain independently parallel. This avoids free-tier burst
+429s caused by concurrent Mistral requests while preserving the provider as an
+independent research worker. A 429 is recorded as a provider-rate-limit state,
+never retried through a paid route, and never treated as scientific evidence.
+
 Source:
 https://mistral.ai/pricing/
 https://docs.mistral.ai/getting-started/quickstarts/developer/first-api-request
