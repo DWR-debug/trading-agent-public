@@ -390,7 +390,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T16:41:03.543085+00:00",
+  "generated_at_utc": "2026-09-30T16:41:39.854067+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -513,6 +513,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "DOCS: add free AI resource fabric plan",
+        "sha": "3c2138c0e4084d8338f6b93594d5836b2fa62073",
+        "timestamp": "2026-09-30T18:41:24+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "f1fc88621f44b9ac7f963ea36f5c7b4ca9a104c1",
+        "timestamp": "2026-09-30T16:41:07Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "44c05e7f6f5a048719b635c57d1283c74e25fd32",
+        "timestamp": "2026-09-30T16:41:03Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "d5daa0cb037127f92ccc683d1980aad63f3e8dcd",
         "timestamp": "2026-09-30T16:40:48Z"
@@ -536,21 +551,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "15d38bb30b24861b0816e820fb227e2e054e5a6f",
         "timestamp": "2026-09-30T16:40:14Z"
-      },
-      {
-        "message": "OPS: add one-shot mobile edge verification mode",
-        "sha": "b1008d36b2c4747cf577ec3db19cc1310ef14d32",
-        "timestamp": "2026-09-30T18:40:12+02:00"
-      },
-      {
-        "message": "OPS: add paper-only Android edge worker",
-        "sha": "621f71fdedf2bd2ca7dc0d5c275e4c1d277ec1c8",
-        "timestamp": "2026-09-30T18:39:59+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c3ad020aaccb9dcf1d6eaff3d234d69b508b1b60",
-        "timestamp": "2026-09-30T16:39:50Z"
       }
     ]
   },
@@ -620,12 +620,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d5daa0cb037127f92ccc683d1980aad63f3e8dcd",
+  "source_master_sha": "3c2138c0e4084d8338f6b93594d5836b2fa62073",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36745944723"
+    "run_id": "36746039540"
   }
 }
