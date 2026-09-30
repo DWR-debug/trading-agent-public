@@ -352,3 +352,57 @@ nicht die von GitHub garantierte Größe des Free-Kontingents dar.
 
 Deterministische Python-/Research-Läufe, Self-hosted PC und externe AI-Worker
 bleiben von dieser Copilot-Reserve unabhängig und dürfen parallel weiterarbeiten.
+## Betriebsmodell-Verankerung und Live-Preflight — 2026-09-30
+
+Diese Regel konkretisiert die kanonische Startregel für neue Chats mit dem Trigger **"trading agent"** und gilt unabhängig davon, ob gleichzeitig ein aktiver Chat besteht.
+
+### Chat-Einstieg
+
+Bei neuem Chat mit "trading agent" ist die Reihenfolge zwingend:
+
+**aktuelles `master` → kanonisches Projektgedächtnis → Live-Ressourcen-/Runner-Preflight → aktueller Evidence-/Research-Status → nächste autonome Aufgabe.**
+
+Nicht der Chatverlauf, sondern das aktuelle öffentliche Repository ist die technische Source of Truth.
+
+### Chat-unabhängiger Betrieb
+
+Die dauerhafte Forschungsinfrastruktur muss ohne offenen Chat weiterarbeiten können:
+
+- GitHub Actions Schedule/Workflow-Dispatch für hosted Forschung, CI, Status-Synchronisation und AI-Worker.
+- Self-hosted Windows-Runner für lokale QA, Reproduktion und freigegebene bounded Research-Jobs, solange der PC und die Runner-Prozesse online sind.
+- Externe kostenlose AI-Pfade fail-closed und unabhängig von deterministischer Forschung.
+- Eine Ressource wartet nicht auf den Chat, solange eine bereits zulässige und fachlich unabhängige Aufgabe vorhanden ist.
+
+Ein aktiver Chat dient damit der Steuerung, Interpretation und Freigabeentscheidung — nicht als technischer Dauerbetriebsschalter.
+
+### GitHub-hosted Runner Reaktivierung
+
+Für das öffentliche Repository `DWR-debug/trading-agent-public` werden Standard-GitHub-hosted Runner wieder als regulärer Primärpfad genutzt. Eine Live-Prüfung am **2026-09-30** bestätigte:
+
+- `CI` auf `ubuntu-24.04` erfolgreich;
+- `CI` auf `ubuntu-24.04-arm` erfolgreich;
+- `T052 Exact Master CI Gate` erfolgreich;
+- der vorherige Zero-Job-/Queue-Engpass war für diese aktuellen Läufe nicht reproduziert;
+- der `Free AI Worker Fabric` lief auf hosted Runnern tatsächlich an, wobei einzelne Provider-Lanes weiterhin providerbedingt scheitern oder übersprungen werden können;
+- der `Permanent Self-Hosted Research Loop` lief parallel erfolgreich mit `local_reproduction` und `autonomous_frontier_qa`.
+
+Die fachliche Konsequenz: **GitHub-hosted und Self-hosted werden ab jetzt bewusst als parallele, komplementäre Worker-Pools betrieben.** Hosted Runner sind nicht mehr nur Fallback.
+
+### Ressourcen-Routing ab 2026-09-30
+
+1. **Hosted Linux x64/ARM64:** primär für CI, deterministische Reproduktion, Coverage/PIT, formale Gates und unabhängige Gegenprüfungen.
+2. **Self-hosted Windows:** primär für lokale Reproduktion, QA, bounded Frontier-Feasibility und lokale AI-Smoke/Worker-Pfade.
+3. **Kostenfreie externe AI-Worker:** Hypothesen, Gegenhypothesen, Research-Design, adversarial Review und technische Analyse; niemals Evidence oder Promotion.
+4. **Copilot-Free-Reserve:** nur ab dem verifizierten Monats-Reset und nur für hochwirksame, klar begrenzte Engineering-/QA-Aufgaben.
+5. **Paid budget:** dauerhaft 0 USD.
+
+### Forschungs-Governance bleibt unverändert
+
+Die Reaktivierung hosted Runner ändert keine wissenschaftliche Freigabe:
+
+PAPER_ONLY=True  
+LIVE_TRADING_ENABLED=False  
+orders_enabled=False  
+automatic_promotion=False
+
+Performance bleibt erst nach gültiger Coverage/PIT/Input-Provenienz, Preregistration und einmaliger formaler Autorisierung zulässig.
