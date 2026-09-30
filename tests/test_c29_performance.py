@@ -56,9 +56,13 @@ def test_c29_active_registry_matches_authorization_state() -> None:
     assert entry["state"] in {
         "PERFORMANCE_READY_FOR_AUTHORIZATION",
         "PERFORMANCE_AUTHORIZED",
+        "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
     }
     if entry["state"] == "PERFORMANCE_READY_FOR_AUTHORIZATION":
         assert entry["performance_authorization_allowed"] is False
-    else:
+    elif entry["state"] == "PERFORMANCE_AUTHORIZED":
         assert entry["performance_authorization_allowed"] is True
         assert entry["authorization_id"] == "AUTH-C29-2026-09-30-01"
+    else:
+        assert entry["performance_authorization_allowed"] is False
+        assert "authorization_id" in entry
