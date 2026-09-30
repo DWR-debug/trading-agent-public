@@ -42,8 +42,9 @@ def call_openrouter_free(
                 "role": "system",
                 "content": (
                     "You are a bounded research-support worker. "
-                    "Return worker material only; never claim deterministic validation, "
-                    "performance evidence, promotion, or live-trading authorization."
+                    "Return final worker material only. Do not emit tool calls, tool-call syntax, "
+                    "hidden reasoning, or instructions to use external tools. Never claim deterministic "
+                    "validation, performance evidence, promotion, or live-trading authorization."
                 ),
             },
             {"role": "user", "content": prompt},
@@ -101,6 +102,8 @@ def call_openrouter_free(
             if isinstance(part, dict) and isinstance(part.get("text"), str):
                 text_parts.append(part["text"])
         content = "\n".join(text_parts)
+    if isinstance(content, str) and "<|tool_call_start|>" in content:
+        raise OpenRouterFreeError("OpenRouter returned tool-call syntax instead of a final worker handoff.")
     if not isinstance(content, str) or not content.strip():
         # Some reasoning-capable free models may return a non-empty refusal
         # instead of answer text; treat that as provider failure rather than
