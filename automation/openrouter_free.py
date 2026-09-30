@@ -13,7 +13,7 @@ from typing import Any
 
 ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
 FREE_MODEL = "openrouter/free"
-MAX_TOKENS = 2400
+MAX_TOKENS = 3200
 TEMPERATURE = 0.2
 USER_AGENT = "DWR-debug/trading-agent-public-free-ai"
 
@@ -50,6 +50,7 @@ def call_openrouter_free(
         ],
         "temperature": TEMPERATURE,
         "max_tokens": MAX_TOKENS,
+        "reasoning": {"exclude": True},
     }
     body = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
     request = urllib.request.Request(
