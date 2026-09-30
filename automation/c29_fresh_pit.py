@@ -55,7 +55,14 @@ def _mutate(assets: dict, decision_index: int, mode: str) -> dict:
     return mutated
 
 
-def run(universe_root: Path, symbols: tuple[str, ...], output: Path) -> dict:
+def run(
+    universe_root: Path,
+    symbols: tuple[str, ...],
+    output: Path,
+    *,
+    trial_id: str = "T-2026-09-30-C29-COVERAGE-PIT",
+    universe: str = "validation_2026_09_30_c29_fresh_input",
+) -> dict:
     assets = _load(universe_root, symbols)
     checks = []
     for index in range(ILLUSION_LOOKBACK_SESSIONS + 1, TARGET_COUNT - 1, STEP):
@@ -99,9 +106,9 @@ def run(universe_root: Path, symbols: tuple[str, ...], output: Path) -> dict:
     ).hexdigest()
     result = {
         "schema_version": "1.0",
-        "trial_id": "T-2026-09-30-C29-COVERAGE-PIT",
+        "trial_id": trial_id,
         "status": "PIT_PASSED_NO_PERFORMANCE_EVIDENCE",
-        "universe": "validation_2026_09_30_c29_fresh_input",
+        "universe": universe,
         "symbols": list(symbols),
         "target_count": TARGET_COUNT,
         "lookback_sessions": ILLUSION_LOOKBACK_SESSIONS,
@@ -138,6 +145,8 @@ def run(universe_root: Path, symbols: tuple[str, ...], output: Path) -> dict:
     ).hexdigest()
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    print("C29_PIT_TRIAL_ID:", result["trial_id"])
+    print("C29_PIT_UNIVERSE:", result["universe"])
     print("C29_PIT_STATUS:", result["status"])
     print("C29_PIT_CHECKED_DECISION_POINTS:", result["checked_decision_points"])
     print("C29_PIT_REPORT_FINGERPRINT:", result["report_fingerprint"])
@@ -149,8 +158,16 @@ def main() -> int:
     parser.add_argument("--universe-root", required=True)
     parser.add_argument("--symbols", nargs="+", required=True)
     parser.add_argument("--output", required=True)
+    parser.add_argument("--trial-id", default="T-2026-09-30-C29-COVERAGE-PIT")
+    parser.add_argument("--universe", default="validation_2026_09_30_c29_fresh_input")
     args = parser.parse_args()
-    run(Path(args.universe_root), tuple(args.symbols), Path(args.output))
+    run(
+        Path(args.universe_root),
+        tuple(args.symbols),
+        Path(args.output),
+        trial_id=args.trial_id,
+        universe=args.universe,
+    )
     return 0
 
 
