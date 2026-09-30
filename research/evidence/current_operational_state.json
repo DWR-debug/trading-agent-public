@@ -390,7 +390,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T16:50:46.443700+00:00",
+  "generated_at_utc": "2026-09-30T17:25:40.567113+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -513,44 +513,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: parallelize self-hosted frontier QA",
-        "sha": "13043434af61ba6ae50d01368ffa4ff3d0519f84",
-        "timestamp": "2026-09-30T18:50:33+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "3c6b8d728076ebd8912f92be5ffdef79055ef2a4",
-        "timestamp": "2026-09-30T16:44:05Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "7b425c389091f42e0484053e07ee9d08693ace42",
-        "timestamp": "2026-09-30T16:44:03Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "95611321d615496efdf98ef286c0a73dedafed89",
-        "timestamp": "2026-09-30T16:43:57Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "aeaa1a0e30f42f8412669d9ab43ebf14df9653d8",
-        "timestamp": "2026-09-30T16:43:56Z"
+        "message": "AI: add free-only OpenRouter adversarial worker",
+        "sha": "1bfe875b22c8089e857fac959967b113858add1d",
+        "timestamp": "2026-09-30T19:25:27+02:00"
       },
       {
         "message": "OPS: advance paper-forward MTM state",
-        "sha": "735eb034a2dc0bc64c3776c575015c92935920c5",
-        "timestamp": "2026-09-30T16:42:56Z"
+        "sha": "32a9247fe6e3722821d3f66d600e83b8d44f673d",
+        "timestamp": "2026-09-30T17:16:43Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c73d3e7b92cf6f99f5260f3877d76a00163bdadb",
-        "timestamp": "2026-09-30T16:41:39Z"
+        "message": "OPS: record AI worker state",
+        "sha": "c23b702e8ab88180a3d8f893f8e09152fa83f2cb",
+        "timestamp": "2026-09-30T17:13:29Z"
       },
       {
-        "message": "DOCS: add free AI resource fabric plan",
-        "sha": "3c2138c0e4084d8338f6b93594d5836b2fa62073",
-        "timestamp": "2026-09-30T18:41:24+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "55aac3f03f75cbe7ec8e86c576fecbf3b07832af",
+        "timestamp": "2026-09-30T17:13:17Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "15ad34c43c02ebcf0d8c1c74c531b67f83888f00",
+        "timestamp": "2026-09-30T17:13:05Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "0f199680bceb9389b9686f8e28a58f7855f9c166",
+        "timestamp": "2026-09-30T17:12:54Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "7c4f020ffa9cb47448fc1d189f50177e13c8caf7",
+        "timestamp": "2026-09-30T17:08:52Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "7b4583ea01b85921082959dee58614b7a994285b",
+        "timestamp": "2026-09-30T16:57:45Z"
       }
     ]
   },
@@ -620,12 +620,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "13043434af61ba6ae50d01368ffa4ff3d0519f84",
+  "source_master_sha": "1bfe875b22c8089e857fac959967b113858add1d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36747146589"
+    "run_id": "36751274168"
   }
 }
