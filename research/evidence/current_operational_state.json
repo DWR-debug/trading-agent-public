@@ -332,7 +332,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T14:16:57.209629+00:00",
+  "generated_at_utc": "2026-09-30T14:31:21.577565+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -455,6 +455,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: start explicitly authorized Q077-R1 fixed-rule performance once",
+        "sha": "8de392dd16b077d5567dc96a800a2eb69e20fe05",
+        "timestamp": "2026-09-30T16:31:04+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "133f4bb4ae4603bceef4d3acc4cdc9f89e5659b6",
+        "timestamp": "2026-09-30T14:18:26Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "09704d35290ffe8ea38edfd8d9191437615710fe",
+        "timestamp": "2026-09-30T14:16:57Z"
+      },
+      {
         "message": "OPS: retry Q077-R1 authorization after repaired master gate",
         "sha": "37d3338107793421caffc9559dc1812d0d3800e1",
         "timestamp": "2026-09-30T16:16:37+02:00"
@@ -478,21 +493,6 @@
         "message": "OPS: record AI worker state",
         "sha": "0417917733ad086d5a010482f140f6dc988b9f81",
         "timestamp": "2026-09-30T14:15:55Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "cb1532bab46589b581194f2ce3801ee0a4e6ef16",
-        "timestamp": "2026-09-30T14:15:34Z"
-      },
-      {
-        "message": "FIX: allow research governance/evidence descendants in master gate",
-        "sha": "7685b27b470c21486573b045afaee17ad07a6676",
-        "timestamp": "2026-09-30T16:15:18+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ef22643b8b2903f1192c8ab9f3f97bc15af98c97",
-        "timestamp": "2026-09-30T14:13:42Z"
       }
     ]
   },
@@ -562,12 +562,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "37d3338107793421caffc9559dc1812d0d3800e1",
+  "source_master_sha": "8de392dd16b077d5567dc96a800a2eb69e20fe05",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36727891688"
+    "run_id": "36729716005"
   }
 }
