@@ -30,7 +30,8 @@
     {
       "id": "L1",
       "name": "Evidence bus",
-      "role": "Normalized immutable receipts: source URL, retrieval time, publication/availability time, raw fingerprint, parser version, PIT status."
+      "role": "Normalized immutable receipts: source URL, retrieval time, publication/availability time, raw fingerprint, parser version, PIT status.",
+      "operational_contract": "automation/research_os_evidence_bus.py"
     },
     {
       "id": "L2",
@@ -255,7 +256,7 @@
       "access": "free_dataset",
       "capability": "daily_top_10_retail_activity_signal",
       "time_semantics": "publication_timestamp_probe_required",
-      "pit_fit": "discovery_only_until_selection_bias_and_release_time_are modeled",
+      "pit_fit": "discovery_only_until_selection_bias_and_release_time_are_modeled",
       "history": "from 2016 for documented product",
       "candidate_uses": [
         "retail_attention_shocks",
@@ -456,12 +457,25 @@
       "candidate_preference"
     ],
     "lane_policy": "Use at most two deterministic research lanes concurrently; reserve one lane for adversarial or governance work when a performance-sensitive chain is active.",
-    "ai_policy": "Use provider diversity as an adversarial instrument. Consensus is not evidence and disagreement is not a failure condition by itself."
+    "ai_policy": "Use provider diversity as an adversarial instrument. Consensus is not evidence and disagreement is not a failure condition by itself.",
+    "runtime_artifacts": [
+      "research/runs/self_hosted/autonomous/**/research_os_resource_schedule.json",
+      "research/runs/self_hosted/autonomous/**/research_os_source_probe.json"
+    ]
   },
   "knowledge_plane": {
     "idea": "Treat papers, methods, source documentation and benchmark reports as versioned machine-readable research resources, while preserving source claims separately from replicated findings.",
     "inspiration": "Paper2Agent demonstrates turning scientific papers into MCP resources for methods and data.",
     "formal_evidence_allowed": "false",
     "source_url": "https://www.nature.com/articles/s41586-026-11044-y"
+  },
+  "source_probe_policy": {
+    "rotation_bucket_count": 4,
+    "max_sources_per_cycle": 4,
+    "probe_is_reachability_only": true,
+    "downloads_dataset_payloads": false,
+    "uses_credentials": false,
+    "scientific_evidence": false,
+    "performance_authorization": false
   }
 }
