@@ -406,3 +406,22 @@ orders_enabled=False
 automatic_promotion=False
 
 Performance bleibt erst nach gültiger Coverage/PIT/Input-Provenienz, Preregistration und einmaliger formaler Autorisierung zulässig.
+
+## Dauerhafter Self-hosted-Failover — 2026-09-30
+
+Der Self-hosted-Windows-Pool bleibt bevorzugter lokaler Worker, darf aber nie zum Single Point of Failure werden.
+
+Der Workflow `.github/workflows/hosted-research-failover.yml` überwacht den Heartbeat des permanenten Self-hosted Research Loop. Bei fehlendem, zu altem oder zu lange wartendem Self-hosted-Signal startet er automatisch bounded Forschung auf GitHub-hosted `ubuntu-24.04` und `ubuntu-24.04-arm`.
+
+Der Failover ist:
+- chat-unabhängig;
+- kostenfrei;
+- cross-platform;
+- fail-closed gegenüber Performance/Premotion/Live-Trading;
+- ausschließlich für QA, Reproduktion und Frontier-Feasibility vorgesehen.
+
+Das Failover stellt keine wissenschaftliche Abkürzung dar. Seine Artefakte bleiben `formal_evidence_allowed=false` und `formal_research_evidence=false`.
+
+Rückkehrregel: Sobald der Self-hosted Heartbeat wieder frisch ist, wird der Hosted-Fallback automatisch nicht mehr ausgeführt; der normale parallele Worker-Pool übernimmt.
+
+Falls beide Self-hosted Runner gleichzeitig ausfallen, soll die Hosted x64/ARM-Fallbackschicht den Forschungsbetrieb aufrechterhalten. Damit ist Self-hosted Kapazität ein Beschleuniger, aber kein notwendiger Betriebsbestandteil.
