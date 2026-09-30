@@ -6,7 +6,7 @@
   "preflight": {
     "provider": "gemini_cli",
     "available": true,
-    "binary": "/opt/hostedtoolcache/node/22.23.3/x64/bin/gemini",
+    "binary": "/opt/hostedtoolcache/node/22.23.2/x64/bin/gemini",
     "free_only": true,
     "local_mode": false,
     "local_attestation": {
@@ -17,7 +17,7 @@
     "free_enforcement": "attestation_or_local_attestation",
     "reasons": []
   },
-  "task_fingerprint": "d7f78f334a0e1a67b390f80e5b5a520e2db981af0323b0c03f589527b0c7641f",
+  "task_fingerprint": "a658b5e4653adbe0b7ff9f6549cbe057cd2032ba1d247100fde0bc1db5d24f44",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -27,8 +27,8 @@
   },
   "status": "FAILED",
   "returncode": 55,
-  "duration_seconds": 1.015,
+  "duration_seconds": 1.649,
   "stdout": "",
   "stderr": "Approval mode overridden to \"default\" because the current folder is not trusted.\nApproval mode overridden to \"default\" because the current folder is not trusted.\n\u001b[31mGemini CLI is not running in a trusted directory. To proceed, either use `--skip-trust`, set the `GEMINI_CLI_TRUST_WORKSPACE=true` environment variable, or trust this directory in interactive mode. For more details, see https://geminicli.com/docs/cli/trusted-folders/#headless-and-automated-environments\u001b[0m\n",
-  "command_binary": "/opt/hostedtoolcache/node/22.23.3/x64/bin/gemini"
+  "command_binary": "/opt/hostedtoolcache/node/22.23.2/x64/bin/gemini"
 }
