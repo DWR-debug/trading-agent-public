@@ -390,7 +390,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T16:41:39.854067+00:00",
+  "generated_at_utc": "2026-09-30T16:50:46.443700+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -513,44 +513,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: parallelize self-hosted frontier QA",
+        "sha": "13043434af61ba6ae50d01368ffa4ff3d0519f84",
+        "timestamp": "2026-09-30T18:50:33+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "3c6b8d728076ebd8912f92be5ffdef79055ef2a4",
+        "timestamp": "2026-09-30T16:44:05Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "7b425c389091f42e0484053e07ee9d08693ace42",
+        "timestamp": "2026-09-30T16:44:03Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "95611321d615496efdf98ef286c0a73dedafed89",
+        "timestamp": "2026-09-30T16:43:57Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "aeaa1a0e30f42f8412669d9ab43ebf14df9653d8",
+        "timestamp": "2026-09-30T16:43:56Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "735eb034a2dc0bc64c3776c575015c92935920c5",
+        "timestamp": "2026-09-30T16:42:56Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c73d3e7b92cf6f99f5260f3877d76a00163bdadb",
+        "timestamp": "2026-09-30T16:41:39Z"
+      },
+      {
         "message": "DOCS: add free AI resource fabric plan",
         "sha": "3c2138c0e4084d8338f6b93594d5836b2fa62073",
         "timestamp": "2026-09-30T18:41:24+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "f1fc88621f44b9ac7f963ea36f5c7b4ca9a104c1",
-        "timestamp": "2026-09-30T16:41:07Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "44c05e7f6f5a048719b635c57d1283c74e25fd32",
-        "timestamp": "2026-09-30T16:41:03Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d5daa0cb037127f92ccc683d1980aad63f3e8dcd",
-        "timestamp": "2026-09-30T16:40:48Z"
-      },
-      {
-        "message": "DOCS: add simple Android edge setup",
-        "sha": "46da1713bc577509a67b28e81bf7f8047f04bc86",
-        "timestamp": "2026-09-30T18:40:37+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e0c835e240425d6cffa678e269b1a746e6136a17",
-        "timestamp": "2026-09-30T16:40:31Z"
-      },
-      {
-        "message": "OPS: add one-command Android edge bootstrap",
-        "sha": "34d87bccff6cddb212488d34e0846323ee96a41a",
-        "timestamp": "2026-09-30T18:40:22+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "15d38bb30b24861b0816e820fb227e2e054e5a6f",
-        "timestamp": "2026-09-30T16:40:14Z"
       }
     ]
   },
@@ -620,12 +620,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "3c2138c0e4084d8338f6b93594d5836b2fa62073",
+  "source_master_sha": "13043434af61ba6ae50d01368ffa4ff3d0519f84",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36746039540"
+    "run_id": "36747146589"
   }
 }
