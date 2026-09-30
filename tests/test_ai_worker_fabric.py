@@ -72,3 +72,63 @@ def test_run_task_writes_skip_receipt(tmp_path):
 
 def test_unknown_provider_rejected():
     with pytest.raises(AIWorkerError): preflight("unknown", env={})
+
+
+def test_openrouter_free_preflight_is_code_enforced() -> None:
+    env = {
+        "AI_EXTERNAL_PROVIDER_ALLOWLIST": "true",
+        "OPENROUTER_API_KEY": "dummy-key",
+    }
+    result = preflight("openrouter_free", env=env)
+    assert result["available"] is True
+    assert result["free_only"] is True
+    assert result["free_mode_attested"] is True
+    assert result["free_enforcement"] == "fixed_model_openrouter_free"
+    assert result["binary"] is None
+
+
+def test_openrouter_adapter_cannot_select_paid_model(monkeypatch) -> None:
+    from automation import openrouter_free
+
+    captured = {}
+
+    class FakeResponse:
+        status = 200
+
+        def read(self, limit=None):
+            return json.dumps(
+                {
+                    "id": "test-response",
+                    "choices": [{"message": {"content": "bounded worker output"}}],
+                    "usage": {"prompt_tokens": 5, "completion_tokens": 7},
+                }
+            ).encode("utf-8")
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+    def fake_urlopen(request, timeout):
+        captured["request"] = request
+        captured["timeout"] = timeout
+        return FakeResponse()
+
+    monkeypatch.setattr(openrouter_free.urllib.request, "urlopen", fake_urlopen)
+    result = openrouter_free.call_openrouter_free(
+        "falsify this architecture",
+        api_key="secret-test-key",
+        timeout_seconds=11,
+    )
+    payload = json.loads(captured["request"].data.decode("utf-8"))
+    assert payload["model"] == "openrouter/free"
+    assert result["status"] == "SUCCESS"
+    assert captured["timeout"] == 11
+    assert captured["request"].headers["Authorization"] == "Bearer secret-test-key"
+
+
+def test_build_prompt_assigns_independent_openrouter_role():
+    prompt = build_prompt(task("openrouter_free"), "openrouter_free")
+    assert "<provider_role>" in prompt
+    assert "Do not seek consensus." in prompt
