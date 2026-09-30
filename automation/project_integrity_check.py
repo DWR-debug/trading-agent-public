@@ -133,7 +133,6 @@ ACTIVE_WORKFLOWS = {
     "rccsm-transition-diagnostic.yml",
     "research-governance-audit.yml",
     "research-orchestrator.yml",
-    "self-hosted-ai-worker-fabric.yml",
     "self-hosted-capacity-autostart.yml",
     "self-hosted-continuous-qa.yml",
     "self-hosted-research-worker-v4.yml",
