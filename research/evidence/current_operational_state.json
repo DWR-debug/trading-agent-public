@@ -336,7 +336,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T15:11:20.805313+00:00",
+  "generated_at_utc": "2026-09-30T15:27:37.302680+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -459,44 +459,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "CI: silence ShellCheck unused-loop-variable warning",
-        "sha": "e366e2bc89d21e3b3a093eb4221b4b0b5bd2e94d",
-        "timestamp": "2026-09-30T17:11:06+02:00"
+        "message": "RESEARCH: allow issue-comment authorization on valid T052 descendants",
+        "sha": "62aa1a3447f805ef627686b8f692903aa456efd0",
+        "timestamp": "2026-09-30T17:27:24+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "a9ab22908fb94facf2ff91ab12ce157cf88cfc1d",
+        "timestamp": "2026-09-30T15:19:32Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "c5b17556006a783cdbf7f665d44a37f1b79b2fdb",
+        "timestamp": "2026-09-30T15:17:13Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "a4f0078fda70f9b7400c5b3b13d0fab5f3b8f627",
+        "timestamp": "2026-09-30T15:17:09Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "f96324e71017b4e461a7ba8e65a046badbe989cd",
+        "timestamp": "2026-09-30T15:16:54Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "d0a5384a9cc55f48b5e69c9bbfe2ad0d6fa9c33c",
+        "timestamp": "2026-09-30T15:16:51Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "e799ee6f6a237ed3e0da4c3c1dd130e9c35903af",
+        "timestamp": "2026-09-30T15:14:38Z"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "4659e954f8cf1b9d74e80a8a1abe78e7b9ff19ed",
-        "timestamp": "2026-09-30T15:09:34Z"
-      },
-      {
-        "message": "RESEARCH: add owner-bound Q077-R1 authorization command",
-        "sha": "58afed042d07f06e0021b32480fab6b669ceda1e",
-        "timestamp": "2026-09-30T17:09:15+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9f4e1c92351265bd01885f408d9b1db1b49f0ce3",
-        "timestamp": "2026-09-30T15:08:34Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0d74182d85d3c3953be5ee5666fad1afe64623fc",
-        "timestamp": "2026-09-30T15:07:29Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ef91fa797bbfddb85e84dc585fa6a5e84c5a8bb0",
-        "timestamp": "2026-09-30T15:07:12Z"
-      },
-      {
-        "message": "TEST: lock Q077-R1 execution gross-cap contract",
-        "sha": "f3161a7def624100dd4778c7e785abfe0556a724",
-        "timestamp": "2026-09-30T17:07:03+02:00"
-      },
-      {
-        "message": "RESEARCH: reset Q077-R1 authorization state after implementation incidents",
-        "sha": "920f079af38e7c2dadfe0ba6f0323dcc49cc7b45",
-        "timestamp": "2026-09-30T17:06:50+02:00"
+        "sha": "450491182ef9d293851d7aeacb990a5badd03421",
+        "timestamp": "2026-09-30T15:11:20Z"
       }
     ]
   },
@@ -566,12 +566,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e366e2bc89d21e3b3a093eb4221b4b0b5bd2e94d",
+  "source_master_sha": "62aa1a3447f805ef627686b8f692903aa456efd0",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36734784590"
+    "run_id": "36736871491"
   }
 }
