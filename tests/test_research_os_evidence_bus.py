@@ -20,5 +20,13 @@ def test_scheduler_is_ex_ante_and_two_lane_capped():
 def test_scheduler_fingerprint_stable():
     assert build_plan(run_number=7)["fingerprint"]==build_plan(run_number=7)["fingerprint"]
 def test_receipt_rejects_future_availability():
-    r=json.loads(REGISTRY.read_text(encoding="utf-8")); x=build_receipt(source_id="SRC-FRED-ALFRED",retrieved_at="2026-09-30T19:00:00Z",available_at="2026-09-30T20:00:00Z",raw_payload={"status":200},registry=r)
-    with pytest.raises(ValueError,match="available_at cannot"): validate_receipt(x,registry=r)
+    r=json.loads(REGISTRY.read_text(encoding="utf-8"))
+    x=build_receipt(
+        source_id="SRC-FRED-ALFRED",
+        retrieved_at="2026-09-30T19:00:00Z",
+        raw_payload={"status":200},
+        registry=r,
+    )
+    x["available_at"]="2026-09-30T20:00:00Z"
+    with pytest.raises(ValueError,match="available_at cannot"):
+        validate_receipt(x,registry=r)
