@@ -405,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T19:56:31.387343+00:00",
+  "generated_at_utc": "2026-09-30T19:56:47.241975+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -528,6 +528,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: record AI worker state",
+        "sha": "ed0d17ae3429924b39f894a84e5510f203e4bd4c",
+        "timestamp": "2026-09-30T19:56:44Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "293dacfb8277d7647065f68a7c2a38d893c8cdfe",
+        "timestamp": "2026-09-30T19:56:41Z"
+      },
+      {
+        "message": "DOCS: centralize quota-aware AI scheduling policy",
+        "sha": "8554b012b79a27780a5cd398c8f4d04a2108d44b",
+        "timestamp": "2026-09-30T21:56:35+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f58cc96713685a7a013bdcbd7d4fcc8e6d0dd1de",
+        "timestamp": "2026-09-30T19:56:31Z"
+      },
+      {
         "message": "FIX: remove duplicated local Gemini artifact block",
         "sha": "f5c16b0a3d55417f2dc0ab6dd0b1937298086636",
         "timestamp": "2026-09-30T21:56:24+02:00"
@@ -546,26 +566,6 @@
         "message": "OPS: record AI worker state",
         "sha": "40933c168ec2e91af006ad0459c50f375dadf950",
         "timestamp": "2026-09-30T19:56:10Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "03084af37dae879b99025c03b8a3a9ce2c3a5174",
-        "timestamp": "2026-09-30T19:56:09Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "e1724c33c2dd691c5b8d20dfd4de21fb3ac6a269",
-        "timestamp": "2026-09-30T19:56:08Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "d8194b55a06bccf10a409e23c915e6f557899dbd",
-        "timestamp": "2026-09-30T19:56:07Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "3329015f1a2386ebba7f756dd1b2efc216a14a6d",
-        "timestamp": "2026-09-30T19:56:06Z"
       }
     ]
   },
@@ -635,12 +635,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f5c16b0a3d55417f2dc0ab6dd0b1937298086636",
+  "source_master_sha": "ed0d17ae3429924b39f894a84e5510f203e4bd4c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36769114488"
+    "run_id": "36769138291"
   }
 }
