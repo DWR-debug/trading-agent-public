@@ -82,11 +82,46 @@ jobs:
           print('Q077R1 PIT CONTRACT OK',d['result_fingerprint'])
           PY
 
+      - name: Create durable Q077-R1 coverage receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          discovery=json.loads(Path("research/evidence/q077r1_discovery_result.json").read_text(encoding="utf-8"))
+          prereg=json.loads(Path("research/preregistrations/q077r1_pit_2026_09_28.json").read_text(encoding="utf-8"))
+          manifest=json.loads(Path("research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/snapshot_manifest.json").read_text(encoding="utf-8"))
+          assert discovery["discovery_fingerprint"]==prereg["discovery_fingerprint"]
+          assert discovery["selected_coverage_batch"]==prereg["symbols"]
+          assert manifest["symbols"]==prereg["symbols"]
+          assert manifest["target_common_candles"]==3500
+          receipt={
+            "schema_version":"1.0",
+            "trial_id":"T-2026-09-28-077R1-COVERAGE",
+            "research_family":"q077_r1_fresh_e1_e2_replication_coverage",
+            "status":"COVERAGE_PASSED",
+            "symbols":list(prereg["symbols"]),
+            "common_calendar_count":manifest["coverage"]["common_calendar_count"],
+            "snapshot_fingerprint":manifest["snapshot_fingerprint"],
+            "discovery_trial_id":"Q-2026-09-28-077R1-DISCOVERY",
+            "discovery_fingerprint":discovery["discovery_fingerprint"],
+            "performance_evaluation":False,
+            "holdout_evaluation":False,
+            "selection_used":False,
+            "asset_selection_by_performance":False,
+            "performance_trial_authorized":False,
+            "safety":{"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False}
+          }
+          payload=json.dumps(receipt,sort_keys=True,separators=(",",":"),ensure_ascii=True,allow_nan=False).encode()
+          receipt["result_fingerprint"]=hashlib.sha256(payload).hexdigest()
+          Path("research/evidence/q077r1_coverage_result.json").write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+          print("Q077R1 COVERAGE RECEIPT",receipt["result_fingerprint"])
+          PY
       - name: Freeze exact Q077-R1 adjusted-close input bundle
         shell: bash
         run: |
           set -euo pipefail
-          export PYTHONPATH="$GITHUB_WORKSPACE:$PYTHONPATH"
           python -m automation.q077r1_input_freeze \
             --coverage-root research/runs/q077r1_pit/T-2026-09-28-077R1-PIT \
             --output-root research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE \
@@ -140,6 +175,30 @@ jobs:
             --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BRO/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BRO/adjusted_close.csv \
             --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BWA/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BWA/adjusted_close.csv \
             --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/CDNS/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/CDNS/adjusted_close.csv
+            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/snapshot_manifest.json=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/snapshot_manifest.json \
+            --file research/evidence/q077r1_coverage_result.json=research/evidence/q077r1_coverage_result.json \
+            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/AJG/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/AJG/1d.csv \
+            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/ALGN/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/ALGN/1d.csv \
+            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/AME/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/AME/1d.csv \
+            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/AOS/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/AOS/1d.csv \
+            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/APH/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/APH/1d.csv \
+            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/AXON/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/AXON/1d.csv \
+            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BAH/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BAH/1d.csv \
+            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BALL/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BALL/1d.csv \
+            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BBWI/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BBWI/1d.csv \
+            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BRO/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BRO/1d.csv \
+            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BWA/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BWA/1d.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AJG/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AJG/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/ALGN/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/ALGN/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AME/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AME/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AOS/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AOS/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/APH/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/APH/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AXON/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AXON/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BAH/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BAH/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BALL/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BALL/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BBWI/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BBWI/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BRO/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BRO/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BWA/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BWA/adjusted_close.csv \
       - name: Upload PIT evidence
         if: always()
         uses: actions/upload-artifact@v6
