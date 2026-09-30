@@ -8,6 +8,7 @@ future-mutation tests that can be run without paid data, APIs or model calls.
 from __future__ import annotations
 
 import math
+import re
 from collections.abc import Mapping, Sequence
 from typing import TypeAlias
 
@@ -15,6 +16,48 @@ NumericSequence: TypeAlias = Sequence[float]
 
 ILLUSION_LOOKBACK_SESSIONS = 21
 INDUSTRY_RELATIVE_REVERSAL_LOOKBACK_SESSIONS = 21
+
+
+def parse_sec_assigned_sic(header_text: str) -> str:
+    """Parse the issuer SIC from an EDGAR filing header without inference."""
+    if not isinstance(header_text, str) or not header_text.strip():
+        raise ValueError("SEC header text must be non-empty")
+    patterns = (
+        r"<ASSIGNED-SIC>\\s*(\\d{4})\\b",
+        r"STANDARD INDUSTRIAL CLASSIFICATION:\\s*[^\\r\\n\\[]+\\[(\\d{4})\\]",
+    )
+    for pattern in patterns:
+        match = re.search(pattern, header_text, flags=re.IGNORECASE)
+        if match:
+            return match.group(1)
+    raise ValueError("SEC assigned SIC not found")
+
+
+def pit_sec_industry_mapping(
+    filing_headers: Sequence[Mapping[str, object]],
+    decision_time: str,
+) -> dict[str, str]:
+    """Return latest visible symbol->SIC mapping using EDGAR acceptance time."""
+    visible = []
+    for row in filing_headers:
+        symbol = row.get("symbol")
+        acceptance_time = row.get("acceptance_time")
+        accession = row.get("accession")
+        sic = row.get("sic")
+        if not all(isinstance(v, str) and v.strip() for v in (symbol, acceptance_time, accession, sic)):
+            raise ValueError("filing header rows require symbol, acceptance_time, accession, sic")
+        if acceptance_time <= decision_time:
+            visible.append((symbol.strip(), acceptance_time.strip(), accession.strip(), sic.strip()))
+
+    mapping: dict[str, tuple[str, str, str]] = {}
+    for symbol, acceptance_time, accession, sic in visible:
+        prior = mapping.get(symbol)
+        if prior is not None and acceptance_time == prior[0] and sic != prior[2]:
+            raise ValueError("CONFLICTING_SAME_ACCEPTANCE_SIC")
+        candidate = (acceptance_time, accession, sic)
+        if prior is None or candidate > prior:
+            mapping[symbol] = candidate
+    return {symbol: row[2] for symbol, row in mapping.items()}
 
 
 def _finite(value: float, name: str) -> float:
