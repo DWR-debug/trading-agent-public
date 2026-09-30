@@ -27,21 +27,93 @@ def test_q077r1_runner_identity_and_frozen_scope() -> None:
         for key, value in prereg["governance"].items()
         if key != "performance_trial_authorized"
     )
-    registry = json.loads((ROOT / "research" / "governance" / "active_research_registry.json").read_text(encoding="utf-8"))
-    entry = next(x for x in registry["active_trials"] if str(x.get("code")) == "077R1")
-    if authorized is False:
+
+    registry = json.loads(
+        (ROOT / "research" / "governance" / "active_research_registry.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    entry = next(
+        x for x in registry["active_trials"] if str(x.get("code")) == "077R1"
+    )
+    state = entry["state"]
+
+    if state == "PERFORMANCE_READY_FOR_AUTHORIZATION":
+        assert authorized is False
         assert entry["trial_id"] == prereg["trial_id"]
-        assert entry["state"] == "PERFORMANCE_READY_FOR_AUTHORIZATION"
         assert entry["performance_authorization_allowed"] is False
-    else:
-        auth_path = ROOT / "research" / "authorizations" / "q077r1_performance_2026_09_30.json"
+    elif state == "PERFORMANCE_AUTHORIZED":
+        assert authorized is True
+        auth_path = (
+            ROOT
+            / "research"
+            / "authorizations"
+            / "q077r1_performance_2026_09_30.json"
+        )
         auth = json.loads(auth_path.read_text(encoding="utf-8"))
-        canonical = hashlib.sha256(json.dumps(prereg, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode()).hexdigest()
+        canonical = hashlib.sha256(
+            json.dumps(
+                prereg,
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=True,
+                allow_nan=False,
+            ).encode()
+        ).hexdigest()
         assert auth["trial_id"] == prereg["trial_id"]
         assert auth["authorized"] is True and auth["one_shot"] is True
         assert auth["preregistration_fingerprint"] == canonical
-        assert entry["state"] == "PERFORMANCE_AUTHORIZED"
         assert entry["performance_authorization_allowed"] is True
+    elif state in {
+        "PERFORMANCE_COMPLETED_ARM_PASSED_ALL_13_GATES",
+        "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
+    }:
+        # The preregistration is intentionally frozen and therefore retains the
+        # historical authorization fact. Reconciliation consumes eligibility
+        # in the active registry while retaining the immutable authorization
+        # receipt in the retired-authorization ledger.
+        assert authorized is True
+        assert entry["trial_id"] == prereg["trial_id"]
+        assert entry["performance_authorization_allowed"] is False
+
+        auth_path = (
+            ROOT
+            / "research"
+            / "authorizations"
+            / "q077r1_performance_2026_09_30.json"
+        )
+        auth = json.loads(auth_path.read_text(encoding="utf-8"))
+        canonical = hashlib.sha256(
+            json.dumps(
+                prereg,
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=True,
+                allow_nan=False,
+            ).encode()
+        ).hexdigest()
+        assert auth["trial_id"] == prereg["trial_id"]
+        assert auth["authorized"] is True and auth["one_shot"] is True
+        assert auth["preregistration_fingerprint"] == canonical
+
+        retired = json.loads(
+            (
+                ROOT
+                / "research"
+                / "governance"
+                / "retired_authorizations.json"
+            ).read_text(encoding="utf-8")
+        )
+        retired_entry = next(
+            x
+            for x in retired["entries"]
+            if x.get("trial_id") == prereg["trial_id"]
+        )
+        assert retired_entry["status"] == "RETIRED_HISTORICAL_AUTHORIZATION"
+        assert retired_entry["authorization_id"] == auth["authorization_id"]
+    else:
+        raise AssertionError(f"unexpected Q077R1 registry state: {state}")
+
     assert prereg["safety"] == {
         "paper_only": True,
         "live_trading_enabled": False,
@@ -77,10 +149,13 @@ def test_q077r1_runner_contains_no_inherited_q079_identifiers() -> None:
     assert "q079" not in source
     assert "T-2026-09-28-079" not in source
 
+
 def test_q077r1_execution_envelope_enforces_existing_gross_cap() -> None:
     row = {"AJG": 0.6, "ALGN": 0.5}
     corrected = runner.apply_execution_gross_cap(row)
-    gross = sum(abs(corrected.get(symbol, 0.0)) for symbol in runner.Q077R1_SYMBOLS)
+    gross = sum(
+        abs(corrected.get(symbol, 0.0)) for symbol in runner.Q077R1_SYMBOLS
+    )
     assert gross <= 1.0 + 1e-12
     assert corrected["AJG"] == 0.6 / 1.1
     assert corrected["ALGN"] == 0.5 / 1.1
