@@ -64,3 +64,17 @@ def test_c29_repair_workflow_is_preregistration_bound() -> None:
     assert "--preregistration" in source
     assert 'assert d["trial_id"] == "T-2026-09-30-C29-COVERAGE-PIT-R1"' in workflow
     assert 'assert d["universe"] == "validation_2026_09_30_c29_fresh_input_repair"' in workflow
+
+
+def test_c29_repair_preregistration_is_the_execution_identity_source() -> None:
+    spec = json.loads(
+        Path("research/preregistrations/c29_fresh_coverage_pit_repair_2026_09_30.json")
+        .read_text(encoding="utf-8")
+    )
+    workflow = Path(".github/workflows/c29-fresh-coverage-pit-repair.yml").read_text(encoding="utf-8")
+    source = Path("automation/c29_fresh_pit.py").read_text(encoding="utf-8")
+    assert spec["trial_id"] == "T-2026-09-30-C29-COVERAGE-PIT-R1"
+    assert spec["universe"] == "validation_2026_09_30_c29_fresh_input_repair"
+    assert spec["symbols"] == ["ROP", "NVR", "ODFL", "CPRT", "FICO", "AOS", "ECL", "VRSN"]
+    assert "--preregistration" in source
+    assert "--preregistration research/preregistrations/c29_fresh_coverage_pit_repair_2026_09_30.json" in workflow
