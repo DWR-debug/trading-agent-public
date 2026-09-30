@@ -94,8 +94,19 @@ def call_openrouter_free(
         raise OpenRouterFreeError("OpenRouter response contains no choices.")
     message = choices[0].get("message") if isinstance(choices[0], dict) else None
     content = message.get("content") if isinstance(message, dict) else None
+    if isinstance(content, list):
+        text_parts = []
+        for part in content:
+            if isinstance(part, dict) and isinstance(part.get("text"), str):
+                text_parts.append(part["text"])
+        content = "\n".join(text_parts)
     if not isinstance(content, str) or not content.strip():
-        raise OpenRouterFreeError("OpenRouter response contains no textual content.")
+        # Some reasoning-capable free models may return a non-empty refusal
+        # instead of answer text; treat that as provider failure rather than
+        # converting hidden/internal fields into worker evidence.
+        refusal = message.get("refusal") if isinstance(message, dict) else None
+        detail = f" refusal={refusal!r}" if refusal else ""
+        raise OpenRouterFreeError(f"OpenRouter response contains no textual content.{detail}")
 
     usage = data.get("usage")
     return {
