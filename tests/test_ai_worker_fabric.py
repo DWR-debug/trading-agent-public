@@ -190,3 +190,25 @@ def test_openrouter_rejects_tool_call_markup(monkeypatch) -> None:
     )
     with pytest.raises(openrouter_free.OpenRouterFreeError):
         openrouter_free.call_openrouter_free("final answer only", api_key="x")
+
+
+def test_mistral_free_preflight_requires_explicit_free_attestation():
+    env = {
+        "AI_EXTERNAL_PROVIDER_ALLOWLIST": "true",
+        "MISTRAL_API_KEY": "dummy-key",
+        "MISTRAL_FREE_MODE_CONFIRMED": "false",
+    }
+    result = preflight("mistral_api", env=env)
+    assert result["available"] is False
+    assert any("free-mode attestation" in reason for reason in result["reasons"])
+
+
+def test_mistral_free_preflight_accepts_key_and_attestation():
+    env = {
+        "AI_EXTERNAL_PROVIDER_ALLOWLIST": "true",
+        "MISTRAL_API_KEY": "dummy-key",
+        "MISTRAL_FREE_MODE_CONFIRMED": "true",
+    }
+    result = preflight("mistral_api", env=env)
+    assert result["available"] is True
+    assert result["free_enforcement"] == "attestation_or_local_attestation"
