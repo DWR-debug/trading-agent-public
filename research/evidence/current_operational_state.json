@@ -390,7 +390,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T17:26:06.387218+00:00",
+  "generated_at_utc": "2026-09-30T17:26:27.121658+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -513,6 +513,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: record AI worker state",
+        "sha": "9dd839ec44d8bee0ea27905f21279331f9ffff92",
+        "timestamp": "2026-09-30T17:26:25Z"
+      },
+      {
+        "message": "AI: route frontier hypotheses through independent free adversary",
+        "sha": "2dcde4a9081d6b57da480970aebde8dbac22c283",
+        "timestamp": "2026-09-30T19:26:13+02:00"
+      },
+      {
+        "message": "AI: route Q089 reviews through independent free adversary",
+        "sha": "1dfde0383e64b45c046a65eee8218ad7233e2769",
+        "timestamp": "2026-09-30T19:26:10+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b1e97e9f477ee1b5de64a0a916dfb399c69946cd",
+        "timestamp": "2026-09-30T17:26:06Z"
+      },
+      {
         "message": "AI: schedule free workers within quota and add OpenRouter",
         "sha": "90431239c7bc3b6c0944db9d42bed714745958ae",
         "timestamp": "2026-09-30T19:26:04+02:00"
@@ -531,26 +551,6 @@
         "message": "OPS: record AI worker state",
         "sha": "68bf320bfcf2fcae2975be96cced2ff45fe6f908",
         "timestamp": "2026-09-30T17:25:52Z"
-      },
-      {
-        "message": "AI: add hard-wired OpenRouter free adapter",
-        "sha": "00c37409cd76fe6bd9c5b55c3953c289d0812c57",
-        "timestamp": "2026-09-30T19:25:50+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "60adffb42377a93460bdd08aea2cebd59cd620e7",
-        "timestamp": "2026-09-30T17:25:48Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1e0c97c6ac5ffa1bbaf6b00e0ccb677b04197b3d",
-        "timestamp": "2026-09-30T17:25:40Z"
-      },
-      {
-        "message": "AI: add free-only OpenRouter adversarial worker",
-        "sha": "1bfe875b22c8089e857fac959967b113858add1d",
-        "timestamp": "2026-09-30T19:25:27+02:00"
       }
     ]
   },
@@ -620,12 +620,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "90431239c7bc3b6c0944db9d42bed714745958ae",
+  "source_master_sha": "9dd839ec44d8bee0ea27905f21279331f9ffff92",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36751323470"
+    "run_id": "36751348338"
   }
 }
