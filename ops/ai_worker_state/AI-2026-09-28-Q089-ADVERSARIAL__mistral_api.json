@@ -1,1 +1,37 @@
-{"schema_version":1,"task_id":"AI-2026-09-28-Q089-ADVERSARIAL","provider":"mistral_api","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-09-28-Q089-ADVERSARIAL",
+  "provider": "mistral_api",
+  "free_only": true,
+  "preflight": {
+    "provider": "mistral_api",
+    "available": false,
+    "binary": null,
+    "free_only": true,
+    "local_mode": false,
+    "local_attestation": {
+      "present": false,
+      "path": null
+    },
+    "free_mode_attested": false,
+    "free_enforcement": "attestation_or_local_attestation",
+    "reasons": [
+      "provider executable not found",
+      "provider authentication is not available for free-only mode",
+      "provider free-mode attestation is missing"
+    ]
+  },
+  "task_fingerprint": "560462a71129875ba6b851c4bd441dd8f35e3ab4325510a50631b5ca21ef6a8f",
+  "worker_output_is_scientific_evidence": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "status": "SKIPPED",
+  "returncode": null,
+  "stdout": "",
+  "stderr": "",
+  "quota_block": null
+}
