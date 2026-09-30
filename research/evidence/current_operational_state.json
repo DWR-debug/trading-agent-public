@@ -262,7 +262,13 @@
           "status": "INPUT_BUNDLE_FROZEN"
         },
         "issue_number": null,
-        "performance_authorization_allowed": true,
+        "performance_authorization_allowed": false,
+        "performance_result": {
+          "report_fingerprint": "61822d7b7ed717cf983fd0d1b7b4ae1395fc5b389c89b6b231c484470a335a8e",
+          "status": "COMPLETED",
+          "trial_id": "T-2026-09-30-C29-PERFORMANCE-01",
+          "workflow_run_id": "36744622759"
+        },
         "pit_result": {
           "fingerprint": "d88c24271fec55186b5e3aad478d91acc7ebe3b6412193724170365f5b6729c6",
           "source_trial_id": "T-2026-09-30-C29R1-COVERAGE-PIT",
@@ -270,7 +276,7 @@
         },
         "preregistration_path": "research/preregistrations/c29_performance_2026_09_30.json",
         "repair_discovery_fingerprint": "b7541fee48f01105d47ca0e89b05e1c20d14d73c5dad18dc1d2e876a21c4b05d",
-        "state": "PERFORMANCE_AUTHORIZED",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
         "trial_id": "T-2026-09-30-C29-PERFORMANCE-01"
       }
     ],
@@ -384,7 +390,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T16:30:42.202075+00:00",
+  "generated_at_utc": "2026-09-30T16:34:00.770145+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -507,6 +513,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: persist C29 duplicate-dispatch fail-closed incident (#710)",
+        "sha": "bbeaa5afc7985c157f28258300eb00bdafbb2157",
+        "timestamp": "2026-09-30T18:33:46+02:00"
+      },
+      {
+        "message": "FIX: fail closed after C29 authorization consumption (#709)",
+        "sha": "bf28906d998653397b2635f38195ec5a4093dcd5",
+        "timestamp": "2026-09-30T18:33:41+02:00"
+      },
+      {
+        "message": "RESEARCH: persist C29 duplicate-dispatch fail-closed incident",
+        "sha": "1c5bcf038e4045e72ff91ab0c7004534c7790fd1",
+        "timestamp": "2026-09-30T18:33:21+02:00"
+      },
+      {
+        "message": "FIX: fail closed after C29 authorization consumption",
+        "sha": "844ded9d3746c61b189d7b243e6972b9f5370386",
+        "timestamp": "2026-09-30T18:32:14+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "b9d9868738d1de18eee6a77f59e23c4623318f5d",
+        "timestamp": "2026-09-30T16:30:47Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5dfd9af0fb375584b7771395a975ab2fd855bd4e",
+        "timestamp": "2026-09-30T16:30:42Z"
+      },
+      {
         "message": "FIX: gate C29 retry dispatch on exact master CI (#708)",
         "sha": "c8f0fd2f0ba554deaf58f0a01a6bcd3688e7bfb1",
         "timestamp": "2026-09-30T18:30:25+02:00"
@@ -515,36 +551,6 @@
         "message": "OPS: queue C29 performance retry after test-state fix",
         "sha": "934add70d974c4bbe4eb51087e2adb113ad168cb",
         "timestamp": "2026-09-30T18:30:07+02:00"
-      },
-      {
-        "message": "FIX: require exact T052 before C29 retry dispatch",
-        "sha": "566381ec8759a86b27508956450d90e81f2ae373",
-        "timestamp": "2026-09-30T18:30:03+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1c4ad0218a9963a8e33027f7c16bc636482c2648",
-        "timestamp": "2026-09-30T16:29:12Z"
-      },
-      {
-        "message": "OPS: dispatch authorized C29 performance run after contract fix",
-        "sha": "bbb8187af029ecf06da81986f1bf4c62992d0d47",
-        "timestamp": "2026-09-30T18:29:06+02:00"
-      },
-      {
-        "message": "TEST: align C29 contract checks with authorization phase",
-        "sha": "e1c4ce99374197515ce62927235ec9490ce81a49",
-        "timestamp": "2026-09-30T18:29:00+02:00"
-      },
-      {
-        "message": "OPS: user-authored C29 one-shot performance trigger",
-        "sha": "555e42942a618b026ae6e736d0ab8693b44f77b0",
-        "timestamp": "2026-09-30T18:27:58+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "abdc84cecd4f92e1e817c6240c8727d21767b590",
-        "timestamp": "2026-09-30T16:27:46Z"
       }
     ]
   },
@@ -575,7 +581,7 @@
   "scientific_state_recorded": {
     "decision_basis_stage": "Q066_COMPLETED_DIAGNOSTIC_ONLY",
     "latest_formal_status": "performance_completed_no_arm_passed_all_13_gates",
-    "latest_formal_trial": "T-2026-09-30-077R1-PERFORMANCE",
+    "latest_formal_trial": "T-2026-09-30-C29-PERFORMANCE-01",
     "next_research_focus_recorded": "Q067 design-only: two unranked follow-up mechanisms derived from Q066 — alpha-level common-mode exposure control and turnover hysteresis; no performance evaluation until parameter freeze, fresh coverage and PIT.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
@@ -614,12 +620,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c8f0fd2f0ba554deaf58f0a01a6bcd3688e7bfb1",
+  "source_master_sha": "bbeaa5afc7985c157f28258300eb00bdafbb2157",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36744706207"
+    "run_id": "36745106951"
   }
 }
