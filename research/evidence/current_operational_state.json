@@ -331,7 +331,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T14:10:15.518697+00:00",
+  "generated_at_utc": "2026-09-30T14:10:44.910708+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -454,6 +454,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: register Q077-R1 once-governance workflows in integrity allowlist",
+        "sha": "a7f9c6aa04fa5f32b724a306d3864714693e052a",
+        "timestamp": "2026-09-30T16:10:39+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q077-R1 fixed-rule one-shot performance lane",
+        "sha": "e1558686995322796fb19467b95a7ff868c9c46a",
+        "timestamp": "2026-09-30T16:10:31+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6c88ccf8afdf5c8f74e2f8c6b455d3a906f59083",
+        "timestamp": "2026-09-30T14:10:15Z"
+      },
+      {
         "message": "RESEARCH: add Q077-R1 one-shot authorization lane",
         "sha": "aecee1bc5ec4e119ef8b73831a9b07700172db08",
         "timestamp": "2026-09-30T16:10:00+02:00"
@@ -477,21 +492,6 @@
         "message": "TEST: lock Q077-R1 identity and frozen performance scope",
         "sha": "3f0442bb7b93c3c0a56dedac3ef8445766640a3a",
         "timestamp": "2026-09-30T16:09:13+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d1fe4281e11a2780ec768f01abd27d1e814c272d",
-        "timestamp": "2026-09-30T14:05:30Z"
-      },
-      {
-        "message": "FIX: remove inherited Q081R4 reconciliation references",
-        "sha": "3bc21640404f39279112b8c001a2be338e270a48",
-        "timestamp": "2026-09-30T16:05:13+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "74740f22f33af82ac5ad218b2b34d653063942a8",
-        "timestamp": "2026-09-30T14:04:28Z"
       }
     ]
   },
@@ -561,12 +561,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "aecee1bc5ec4e119ef8b73831a9b07700172db08",
+  "source_master_sha": "a7f9c6aa04fa5f32b724a306d3864714693e052a",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36727039279"
+    "run_id": "36727111378"
   }
 }
