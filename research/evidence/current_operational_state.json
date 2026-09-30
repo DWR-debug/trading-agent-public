@@ -405,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T20:50:05.901621+00:00",
+  "generated_at_utc": "2026-09-30T20:52:30.363652+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -525,56 +525,47 @@
     "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "research/frontier-cycle-20260930-repair",
-        "number": 711,
-        "title": "Research: repair frontier feasibility loop and evidence harvesting",
-        "updatedAt": "2026-09-30T20:50:04Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/711"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "a55029351af445ac1afe6989ee2a3b37589cbd4a",
+        "timestamp": "2026-09-30T20:52:28Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "0d374945df23ae4b35d94c425576823b4e2c37a7",
+        "timestamp": "2026-09-30T20:52:22Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "4346ddceda3ec28a4c4eb3c498aa5ca71ec85853",
+        "timestamp": "2026-09-30T20:52:21Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "3772b94de96a464ff8d06707295094eec6e5cc5e",
+        "timestamp": "2026-09-30T20:52:19Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "a2b2c35a730ec4a0f130aeebf103c3947a0afd38",
+        "timestamp": "2026-09-30T20:52:19Z"
+      },
+      {
+        "message": "Research: harden frontier overnight research pipeline",
+        "sha": "77472179aed450debdc4cc5e2a3c218a61849270",
+        "timestamp": "2026-09-30T22:52:06+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "afa206c26b2c54205c1373ca316f5f7f1e480f90",
+        "timestamp": "2026-09-30T20:50:05Z"
+      },
       {
         "message": "OPS: synchronize current operational status",
         "sha": "ae9e5816edcaac27e279e8c8db26c6a30dac31cc",
         "timestamp": "2026-09-30T20:49:49Z"
-      },
-      {
-        "message": "RESEARCH: record external literature inspiration",
-        "sha": "5b1d70990e348251f651848b25eae5cda5f8e4b9",
-        "timestamp": "2026-09-30T22:49:48+02:00"
-      },
-      {
-        "message": "TEST: validate negative-evidence atlas",
-        "sha": "42d7d30c8e177bc8a6c5d57d13a961f522ad9f88",
-        "timestamp": "2026-09-30T22:49:35+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "c0be0a20d70310f65bf8bccd41c29c9a2679251e",
-        "timestamp": "2026-09-30T20:42:45Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "5967fef8e185543d4440d623e87406dc232da067",
-        "timestamp": "2026-09-30T20:30:19Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "22d2ef3eb7f539d8f2cbbe3cb198375db0725a01",
-        "timestamp": "2026-09-30T20:27:41Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f5047beb94ae95724eabb07e38352567c008ed2b",
-        "timestamp": "2026-09-30T20:20:56Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1ee241f3d39cfc2e5c761691572f53978ababb3f",
-        "timestamp": "2026-09-30T20:20:38Z"
       }
     ]
   },
@@ -644,12 +635,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ae9e5816edcaac27e279e8c8db26c6a30dac31cc",
+  "source_master_sha": "a55029351af445ac1afe6989ee2a3b37589cbd4a",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36775357873"
+    "run_id": "36775622219"
   }
 }
