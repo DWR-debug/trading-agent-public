@@ -390,7 +390,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T16:34:00.770145+00:00",
+  "generated_at_utc": "2026-09-30T16:34:18.548242+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -513,6 +513,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "644b6cc4bd8397b4f3bd6eb3366f07640a0c2da3",
+        "timestamp": "2026-09-30T16:34:00Z"
+      },
+      {
         "message": "RESEARCH: persist C29 duplicate-dispatch fail-closed incident (#710)",
         "sha": "bbeaa5afc7985c157f28258300eb00bdafbb2157",
         "timestamp": "2026-09-30T18:33:46+02:00"
@@ -546,11 +551,6 @@
         "message": "FIX: gate C29 retry dispatch on exact master CI (#708)",
         "sha": "c8f0fd2f0ba554deaf58f0a01a6bcd3688e7bfb1",
         "timestamp": "2026-09-30T18:30:25+02:00"
-      },
-      {
-        "message": "OPS: queue C29 performance retry after test-state fix",
-        "sha": "934add70d974c4bbe4eb51087e2adb113ad168cb",
-        "timestamp": "2026-09-30T18:30:07+02:00"
       }
     ]
   },
@@ -620,12 +620,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "bbeaa5afc7985c157f28258300eb00bdafbb2157",
+  "source_master_sha": "644b6cc4bd8397b4f3bd6eb3366f07640a0c2da3",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36745106951"
+    "run_id": "36745116259"
   }
 }
