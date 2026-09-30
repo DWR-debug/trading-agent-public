@@ -405,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T20:07:47.166713+00:00",
+  "generated_at_utc": "2026-09-30T20:08:04.056706+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -528,6 +528,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "TEST: align active provider and rotation contracts",
+        "sha": "20fe0af5c27c9a23a7da761f12c496eb574615e1",
+        "timestamp": "2026-09-30T22:08:02+02:00"
+      },
+      {
+        "message": "OPS: remove retired Claude execution branch",
+        "sha": "48bf6968ee15d3af629e3c3921dd19d80f98ad6f",
+        "timestamp": "2026-09-30T22:07:56+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d6b3de3da4603ca32b9469ebb89af3c568bdaedb",
+        "timestamp": "2026-09-30T20:07:47Z"
+      },
+      {
         "message": "TEST: enforce manual-only Copilot CI repair lane",
         "sha": "4e269c9d8e91c91db07b2b84882cc5a8551a8463",
         "timestamp": "2026-09-30T22:07:43+02:00"
@@ -551,21 +566,6 @@
         "message": "OPS: record AI worker state",
         "sha": "02eafe5f482cce706a8cb8b982d8fcf7f225ff90",
         "timestamp": "2026-09-30T20:07:20Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "96418ea100e23bd19e2b54c45418363b0b79407b",
-        "timestamp": "2026-09-30T20:07:20Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "d9b1f6bef3870b422958dc4ed6c3da82a5e12150",
-        "timestamp": "2026-09-30T20:07:18Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "bbb43c4d32d08563e16427cd7b98757c7dfedc63",
-        "timestamp": "2026-09-30T20:07:15Z"
       }
     ]
   },
@@ -635,12 +635,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4e269c9d8e91c91db07b2b84882cc5a8551a8463",
+  "source_master_sha": "20fe0af5c27c9a23a7da761f12c496eb574615e1",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36770388884"
+    "run_id": "36770450067"
   }
 }
