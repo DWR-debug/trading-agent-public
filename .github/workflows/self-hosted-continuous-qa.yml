@@ -27,9 +27,9 @@ jobs:
     timeout-minutes: 75
     strategy:
       fail-fast: false
-      max-parallel: 1
+      max-parallel: 2
       matrix:
-        lane: [repo_qa, data_qa, design_qa, local_reproduction]
+        lane: [repo_qa, data_qa, design_qa, local_reproduction, autonomous_frontier_qa]
 
     steps:
       - name: Run exact snapshot lane
@@ -130,7 +130,7 @@ jobs:
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 10
     steps:
-      - name: Require all four lanes
+      - name: Require all five lanes
         env:
           MATRIX_RESULT: ${{ needs.qa_lane.result }}
         shell: cmd
