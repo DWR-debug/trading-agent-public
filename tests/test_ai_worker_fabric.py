@@ -240,5 +240,5 @@ def test_hosted_gemini_and_mistral_are_quota_guarded_by_schedule():
     assert "github.event_name == 'workflow_dispatch'" in text
     assert "GEMINI_ROTATION slot=" in text
     assert "MISTRAL_ROTATION slot=" in text
-    assert "/ 21600 % 4" in text
-    assert "/ 21600 % 4" in text
+    assert "/ 21600 % 5" in text
+    assert "/ 21600 % 5" in text
