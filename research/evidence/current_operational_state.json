@@ -135,6 +135,7 @@
         "trial_id": "T-2026-09-28-089-PERFORMANCE"
       },
       {
+        "authorization_id": "AUTH-Q077R1-2026-09-30-36737361478",
         "class": "fresh_validation",
         "code": "077R1",
         "coverage_result": {
@@ -167,7 +168,7 @@
           "status": "INPUT_BUNDLE_FROZEN"
         },
         "issue_number": null,
-        "performance_authorization_allowed": false,
+        "performance_authorization_allowed": true,
         "pit_result": {
           "fingerprint": "27bc62136bd376b26afe11f3e0eeb4b0a96d1868c0c84082ae8a58b50add2563",
           "source_trial_id": "T-2026-09-28-077R1-PIT",
@@ -175,7 +176,7 @@
         },
         "predecessor_authorization_id": "AUTH-Q077R1-2026-09-30-36727296132",
         "preregistration_path": "research/preregistrations/q077r1_performance_2026_09_30.json",
-        "state": "PERFORMANCE_READY_FOR_AUTHORIZATION",
+        "state": "PERFORMANCE_AUTHORIZED",
         "trial_id": "T-2026-09-30-077R1-PERFORMANCE"
       },
       {
@@ -336,7 +337,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T15:29:21.134172+00:00",
+  "generated_at_utc": "2026-09-30T15:34:34.053900+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -459,6 +460,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: re-arm authorized Q077-R1 performance trigger",
+        "sha": "48ec00ce701f519bf0e38826af5f4eb8d44a34eb",
+        "timestamp": "2026-09-30T17:34:15+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "252cdc6ffb5166084d4a9500e41d6e3e94715cda",
+        "timestamp": "2026-09-30T15:31:56Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d5c4978a0a8d8a90f91dd1c58239a55e56b11d3b",
+        "timestamp": "2026-09-30T15:29:21Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "3e23031e788dcfa3df4c6f581934c130e39e9d31",
         "timestamp": "2026-09-30T15:28:57Z"
@@ -482,21 +498,6 @@
         "message": "RESEARCH: allow issue-comment authorization on valid T052 descendants",
         "sha": "62aa1a3447f805ef627686b8f692903aa456efd0",
         "timestamp": "2026-09-30T17:27:24+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "a9ab22908fb94facf2ff91ab12ce157cf88cfc1d",
-        "timestamp": "2026-09-30T15:19:32Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "c5b17556006a783cdbf7f665d44a37f1b79b2fdb",
-        "timestamp": "2026-09-30T15:17:13Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "a4f0078fda70f9b7400c5b3b13d0fab5f3b8f627",
-        "timestamp": "2026-09-30T15:17:09Z"
       }
     ]
   },
@@ -566,12 +567,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "3e23031e788dcfa3df4c6f581934c130e39e9d31",
+  "source_master_sha": "48ec00ce701f519bf0e38826af5f4eb8d44a34eb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36737043113"
+    "run_id": "36737747067"
   }
 }

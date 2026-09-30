@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `3e23031e788dcfa3df4c6f581934c130e39e9d31`
+**Current operational snapshot:** `48ec00ce701f519bf0e38826af5f4eb8d44a34eb`
 
-**Generated (UTC):** `2026-09-30T15:29:21.134172+00:00`
+**Generated (UTC):** `2026-09-30T15:34:34.053900+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -31,7 +31,7 @@
 
 - Q081-R2: **HISTORICAL_IMPLEMENTATION_INVALIDATED**; infrastructure-rebased corrective reproduction; no performance authorization.
 - Q089: **PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES**; fresh symbol-disjoint successor to quarantined Q086; separate performance authorization remains required.
-- Q077-R1: **PERFORMANCE_READY_FOR_AUTHORIZATION**; coverage-only repair after the original Q077 pool left insufficient unused symbols; no performance authorization.
+- Q077-R1: **PERFORMANCE_AUTHORIZED**; coverage-only repair after the original Q077 pool left insufficient unused symbols; no performance authorization.
 - Q091: **PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES**; fixed portfolio architecture on the fresh symbol-disjoint universe; performance authorization flag = **False**.
 - Q092: **DIAGNOSTIC_COMPLETED_ONLY**; post-performance Q091 failure-mechanism diagnosis; no performance authorization.
 - Q093: **COMPLETED_DIAGNOSTIC_ONLY**; Q091 turnover/cost attribution diagnosis; no performance authorization.
