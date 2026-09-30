@@ -70,6 +70,13 @@ LANES: dict[str, list[list[str]]] = {
         [
             PYTHON,
             "-m",
+            "automation.q099_q081r4_failure_diagnosis",
+            "--output",
+            "research/runs/q099_q081r4_failure_diagnosis/result.json",
+        ],
+        [
+            PYTHON,
+            "-m",
             "automation.q095_contract_audit",
         ],
         [
