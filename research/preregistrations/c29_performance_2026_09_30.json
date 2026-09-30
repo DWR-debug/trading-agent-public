@@ -3,7 +3,7 @@
   "preregistration_id": "C29-PERFORMANCE-2026-09-30-01",
   "trial_id": "T-2026-09-30-C29-PERFORMANCE-01",
   "research_family": "frontier_c29_illusion_momentum_gap",
-  "status": "PREREGISTERED_DESIGN_ONLY",
+  "status": "PREREGISTERED_PERFORMANCE",
   "purpose": "One-shot formal performance test of the frozen C29 mechanism on the independently repaired C29R1 input bundle. Two symmetric, predeclared directions are evaluated without post-result selection.",
   "parent_feasibility_trial": "T-2026-09-30-C29R1-COVERAGE-PIT",
   "parent_input_freeze_trial": "T-2026-09-30-C29R1-INPUT-FREEZE",
@@ -105,7 +105,7 @@
     "reason": "The frozen C29R1 performance input bundle contains raw OHLCV only; no post-freeze adjusted-price source is introduced."
   },
   "governance": {
-    "performance_trial_authorized": false,
+    "performance_trial_authorized": true,
     "selection": false,
     "parameter_search": false,
     "threshold_search": false,
@@ -137,5 +137,11 @@
     "live_trading_enabled": false,
     "orders_enabled": false,
     "automatic_promotion": false
+  },
+  "authorization": {
+    "current_status": "AUTHORIZED_ONE_SHOT",
+    "performance_trial_authorized": true,
+    "authorization_id": "AUTH-C29-2026-09-30-01",
+    "master_ci_run_id": 36743668879
   }
 }
