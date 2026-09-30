@@ -620,6 +620,17 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
     ),
 
 
+    AssetUniverse(
+        name="validation_2026_09_30_c29r1_ice_repair_input",
+        priority=75,
+        description=(
+            "Coverage-repair successor for C29: IR is replaced by ICE only after a "
+            "fixed source-order coverage discovery. The C29 mechanism and study geometry remain unchanged."
+        ),
+        symbols=("PPG", "GWW", "PGR", "TT", "ICE", "KLAC", "SNA", "SWK"),
+        target_count=5000,
+    ),
+
 )
 
 
