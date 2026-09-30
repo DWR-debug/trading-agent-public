@@ -1,0 +1,123 @@
+{
+  "schema_version": "1.0",
+  "trial_id": "T-2026-09-30-077R1-PERFORMANCE",
+  "research_family": "q077_r1_fresh_e1_e2_replication",
+  "status": "PREREGISTERED_PERFORMANCE_PREPARATION",
+  "prior_trial_ids": [
+    "Q-2026-09-28-077R1-DISCOVERY",
+    "T-2026-09-28-077R1-PIT"
+  ],
+  "purpose": "Independent fixed-rule replication of the frozen Q067 E1/E2 mechanism set on the Q077-R1 fresh symbol-disjoint universe; no tuning or selection.",
+  "hypothesis": "If the E1/E2 mechanism effects are not universe-specific, the fixed control, E1 and E2 arms should reproduce stable directional and risk signatures under the unchanged 13-gate evaluation.",
+  "universe": "validation_2026_09_28_q077r1_pit",
+  "symbols": [
+    "AJG",
+    "ALGN",
+    "AME",
+    "AOS",
+    "APH",
+    "AXON",
+    "BAH",
+    "BALL",
+    "BBWI",
+    "BRO",
+    "BWA",
+    "CDNS"
+  ],
+  "requested_candles": 5000,
+  "target_common_candles": 3500,
+  "interval": "1d",
+  "study_window": {
+    "start": "2011-01-01",
+    "end": "2025-09-24"
+  },
+  "research_periods": 2798,
+  "holdout_periods": 700,
+  "initial_capital_eur": 2000,
+  "mechanisms": {
+    "source": "Q067 fixed mechanism implementation",
+    "arms": [
+      "CONTROL_6SLEEVE_ENSEMBLE",
+      "E1_ALPHA_COMMON_MODE_THROTTLE",
+      "E2_TURNOVER_HYSTERESIS"
+    ],
+    "e1_unchanged": true,
+    "e2_unchanged": true
+  },
+  "execution": {
+    "gross_cap": 1,
+    "leverage": 1,
+    "shorts": false,
+    "fee": 0.001,
+    "slippage": 0.0005,
+    "cost_stress_multipliers": [
+      1.5,
+      2
+    ]
+  },
+  "data_contract": {
+    "coverage_trial_id": "T-2026-09-28-077R1-COVERAGE",
+    "coverage_result_fingerprint": null,
+    "discovery_fingerprint": "7323a5fe8ab176ee6e0930a4ea05d955547cff1d8d4ac8c1296b2c7b7271c064",
+    "snapshot_fingerprint": null,
+    "pit_trial_id": "T-2026-09-28-077R1-PIT",
+    "pit_result_fingerprint": "27bc62136bd376b26afe11f3e0eeb4b0a96d1868c0c84082ae8a58b50add2563",
+    "input_bundle_trial_id": "T-2026-09-28-077R1-INPUT-FREEZE",
+    "input_bundle_fingerprint": null
+  },
+  "governance": {
+    "performance_trial_authorized": false,
+    "selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "asset_search": false,
+    "horizon_search": false,
+    "variant_search": false,
+    "family_ranking": false,
+    "holdout_used_for_selection": false,
+    "promotion_decision": false,
+    "automatic_promotion": false
+  },
+  "input_freeze": {
+    "freeze_ohlcv": true,
+    "freeze_adjusted_close": true,
+    "performance_network_access": false,
+    "complete_bundle_fingerprint_required": true
+  },
+  "source_contract": {
+    "performance_runner_path": "automation/q077r1_performance.py",
+    "performance_runner_sha256": null,
+    "alpha_mechanism_path": "automation/q067_alpha_mechanisms.py",
+    "alpha_mechanism_sha256": null,
+    "cost_contract_path": "execution/cost_contract.py",
+    "cost_contract_sha256": null,
+    "settings_path": "config/settings.py",
+    "settings_sha256": null,
+    "input_freeze_path": "automation/q077r1_input_freeze.py",
+    "input_freeze_sha256": null
+  },
+  "search_scope": {
+    "raw_trial_count": 1,
+    "independent_trial_count": 1,
+    "parameter_search": false,
+    "threshold_search": false,
+    "asset_search": false,
+    "horizon_search": false,
+    "variant_search": false,
+    "family_ranking": false
+  },
+  "preparation_contract": {
+    "source_order_asset_selection_only": true,
+    "coverage_only_asset_selection": true,
+    "post_freeze_asset_search": false,
+    "performance_network_access": false,
+    "holdout_used_for_selection": false
+  },
+  "gates_total": 13,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
