@@ -272,17 +272,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          slot=$(( $(date -u +%s) / 21600 % 3 ))
+          slot=$(( $(date -u +%s) / 21600 % 4 ))
           case "$slot" in
             0) task_id='AI-2026-09-29-Q091-ADVERSARIAL' ;;
             1) task_id='AI-2026-09-28-Q089-ADVERSARIAL' ;;
             2) task_id='AI-2026-09-28-UNUSUAL-FRONTIER' ;;
+            3) task_id='AI-2026-09-30-Q100-FRONTIER-FEASIBILITY' ;;
             *) exit 1 ;;
           esac
           case "$task_id" in
             AI-2026-09-29-Q091-ADVERSARIAL) path='ai_requests/AI-2026-09-29-Q091-ADVERSARIAL.json' ;;
             AI-2026-09-28-Q089-ADVERSARIAL) path='ai_requests/AI-2026-09-28-Q089-ADVERSARIAL.json' ;;
             AI-2026-09-28-UNUSUAL-FRONTIER) path='ai_requests/AI-2026-09-28-UNUSUAL-FRONTIER.json' ;;
+            AI-2026-09-30-Q100-FRONTIER-FEASIBILITY) path='ai_requests/AI-2026-09-30-Q100-FRONTIER-FEASIBILITY.json' ;;
             *) exit 1 ;;
           esac
           echo "slot=$slot" >> "$GITHUB_OUTPUT"
