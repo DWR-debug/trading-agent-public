@@ -9,6 +9,8 @@ from automation.frontier_feasibility import (
     illusion_momentum_gap_at,
     industry_relative_reversal_residual,
     industry_relative_reversal_residual_at,
+    parse_sec_assigned_sic,
+    pit_sec_industry_mapping,
     simple_returns_from_closes,
 )
 
@@ -94,3 +96,41 @@ def test_m4_next_session_mutation_is_inert() -> None:
 def test_close_conversion_is_deterministic() -> None:
     closes = (100.0, 101.0, 99.0)
     assert simple_returns_from_closes(closes) == pytest.approx((0.01, -0.019801980198019804))
+
+
+def test_m4_parses_sec_assigned_sic_from_standard_header() -> None:
+    header = (
+        "<SEC-HEADER>\\n"
+        "<ACCEPTANCE-DATETIME>20260903112610\\n"
+        "STANDARD INDUSTRIAL CLASSIFICATION: NATIONAL COMMERCIAL BANKS [6021]\\n"
+    )
+    assert parse_sec_assigned_sic(header) == "6021"
+
+
+def test_m4_parses_sgml_assigned_sic() -> None:
+    assert parse_sec_assigned_sic("<ASSIGNED-SIC>3571") == "3571"
+
+
+def test_m4_pit_mapping_ignores_future_filing() -> None:
+    rows = [
+        {"symbol": "AAA", "acceptance_time": "20260101100000", "accession": "a1", "sic": "3571"},
+        {"symbol": "AAA", "acceptance_time": "20270101100000", "accession": "a2", "sic": "6021"},
+    ]
+    assert pit_sec_industry_mapping(rows, "20261231160000") == {"AAA": "3571"}
+
+
+def test_m4_pit_mapping_rejects_same_acceptance_conflict() -> None:
+    rows = [
+        {"symbol": "AAA", "acceptance_time": "20260101100000", "accession": "a1", "sic": "3571"},
+        {"symbol": "AAA", "acceptance_time": "20260101100000", "accession": "a2", "sic": "6021"},
+    ]
+    with pytest.raises(ValueError, match="CONFLICTING_SAME_ACCEPTANCE_SIC"):
+        pit_sec_industry_mapping(rows, "20261231160000")
+
+
+def test_m4_pit_mapping_uses_latest_visible_filing() -> None:
+    rows = [
+        {"symbol": "AAA", "acceptance_time": "20260101100000", "accession": "a1", "sic": "3571"},
+        {"symbol": "AAA", "acceptance_time": "20260301100000", "accession": "a2", "sic": "6021"},
+    ]
+    assert pit_sec_industry_mapping(rows, "20261231160000") == {"AAA": "6021"}
