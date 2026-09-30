@@ -186,6 +186,7 @@ def sec_submission_probe(label: str, cik: str, target_forms: set[str], text_chec
                     "acceptance_datetime": "<ACCEPTANCE-DATETIME>" in header_text.upper(),
                     "accession_number": candidate["accessionNumber"] in header_text,
                     "conformed_submission_type": form.upper() in header_text.upper(),
+                    "standard_industrial_classification": "STANDARD INDUSTRIAL CLASSIFICATION:" in header_text.upper(),
                 },
             })
             row["text_probe"] = {
