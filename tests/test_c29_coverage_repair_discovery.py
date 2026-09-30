@@ -39,6 +39,7 @@ def test_c29_repair_discovery_uses_first_coverage_valid_symbol(monkeypatch, tmp_
         ]
 
     monkeypatch.setattr(module, "load_yahoo_history", fake_loader)
+    monkeypatch.setattr(module, "list_universes", lambda: ())
 
     result = module.run(tmp_path / "result.json")
     assert result["selected_replacement"] == "MCK"
