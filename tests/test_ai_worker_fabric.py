@@ -132,3 +132,11 @@ def test_build_prompt_assigns_independent_openrouter_role():
     prompt = build_prompt(task("openrouter_free"), "openrouter_free")
     assert "<provider_role>" in prompt
     assert "Do not seek consensus." in prompt
+
+
+def test_gemini_command_is_pinned_to_free_flash_model():
+    command = __import__("automation.ai_worker_fabric", fromlist=["command_for"]).command_for(
+        "gemini_cli", "test prompt", binary="/usr/bin/gemini"
+    )
+    assert "--skip-trust" in command
+    assert command[command.index("--model") + 1] == "gemini-3.7-flash"
