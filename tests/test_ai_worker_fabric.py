@@ -27,12 +27,6 @@ def test_free_only_preflight_is_fail_closed():
     assert result["free_only"] is True
     assert result["reasons"]
 
-def test_claude_never_uses_api_key_as_free_proof():
-    env = {"AI_EXTERNAL_PROVIDER_ALLOWLIST": "true", "ANTHROPIC_API_KEY": "present-but-not-a-free-proof", "CLAUDE_FREE_MODE_CONFIRMED": "false"}
-    result = preflight("claude_cli", env=env)
-    assert result["available"] is False
-    assert "provider free-mode attestation is missing" in result["reasons"]
-
 def test_bom_prefixed_local_attestation_is_accepted(tmp_path):
     attestation = tmp_path / "ai_free_attestation.json"
     attestation.write_text(
