@@ -5,7 +5,7 @@
   "free_only": true,
   "preflight": {
     "provider": "mistral_api",
-    "available": false,
+    "available": true,
     "binary": null,
     "free_only": true,
     "local_mode": false,
@@ -13,13 +13,9 @@
       "present": false,
       "path": null
     },
-    "free_mode_attested": false,
+    "free_mode_attested": true,
     "free_enforcement": "attestation_or_local_attestation",
-    "reasons": [
-      "provider executable not found",
-      "provider authentication is not available for free-only mode",
-      "provider free-mode attestation is missing"
-    ]
+    "reasons": []
   },
   "task_fingerprint": "d7979376ea741102984b771771bdac207fbb3a6f528ef1a36dbe3b04693532eb",
   "worker_output_is_scientific_evidence": false,
@@ -29,9 +25,13 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SKIPPED",
-  "returncode": null,
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.884,
   "stdout": "",
-  "stderr": "",
-  "quota_block": null
-}
+  "stderr": "Mistral HTTP 429: {\"object\":\"error\",\"message\":\"Rate limit exceeded\",\"type\":\"rate_limited\",\"param\":null,\"code\":\"1300\",\"raw_status_code\":429}",
+  "command_binary": "https-mistral",
+  "api_model": "mistral-small-latest",
+  "response_id": null,
+  "usage": null
+}\n
