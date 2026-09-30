@@ -235,3 +235,17 @@ def test_q100_frontier_task_has_repository_context_and_safe_scope():
     prompt = build_prompt(payload, "openrouter_free")
     assert "RESEARCH_FRONTIER_UNUSUAL" in prompt
     assert "q100_frontier_feasibility_synthesis.py" in prompt
+
+
+def test_hosted_gemini_and_mistral_are_quota_guarded_by_schedule():
+    workflow = Path(__file__).parents[1] / ".github" / "workflows" / "ai-worker-fabric.yml"
+    text = workflow.read_text(encoding="utf-8")
+    assert "provider: [openrouter_free, claude_cli]" in text
+    assert "gemini_worker:" in text
+    assert "mistral_worker:" in text
+    assert "github.event_name == 'schedule'" in text
+    assert "github.event_name == 'workflow_dispatch'" in text
+    assert "GEMINI_ROTATION slot=" in text
+    assert "MISTRAL_ROTATION slot=" in text
+    assert "/ 21600 % 4" in text
+    assert "/ 21600 % 3" in text
