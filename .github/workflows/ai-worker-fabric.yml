@@ -11,11 +11,14 @@ on:
       - "tests/test_ai_worker_fabric.py"
       - "ai_requests/AI-2026-09-30-Q100-FRONTIER-FEASIBILITY.json"
       - "ai_requests/AI-2026-09-30-Q101-NEGATIVE-EVIDENCE.json"
+      - "ai_requests/AI-2026-09-30-Q102-REGIME-STATE-DESIGN.json"
       - "automation/q101_negative_evidence_atlas.py"
       - "tests/test_q101_negative_evidence_atlas.py"
       - "docs/research_design/EXTERNAL_RESEARCH_INSPIRATION_2026-09-30.md"
       - "automation/q102_regime_negative_evidence.py"
       - "tests/test_q102_regime_negative_evidence.py"
+      - "automation/q103_rccsm_state_routing_integrity.py"
+      - "tests/test_q103_rccsm_state_routing_integrity.py"
   schedule:
     - cron: '0 */6 * * *'
   workflow_dispatch:
@@ -36,6 +39,7 @@ jobs:
           - AI-2026-09-28-UNUSUAL-FRONTIER
           - AI-2026-09-30-Q100-FRONTIER-FEASIBILITY
           - AI-2026-09-30-Q101-NEGATIVE-EVIDENCE
+          - AI-2026-09-30-Q102-REGIME-STATE-DESIGN
     concurrency:
       group: trading-agent-ai-${{ matrix.provider }}-${{ matrix.task }}
       cancel-in-progress: false
@@ -64,6 +68,7 @@ jobs:
             AI-2026-09-28-UNUSUAL-FRONTIER) echo 'path=ai_requests/AI-2026-09-28-UNUSUAL-FRONTIER.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-09-30-Q100-FRONTIER-FEASIBILITY) echo 'path=ai_requests/AI-2026-09-30-Q100-FRONTIER-FEASIBILITY.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-09-30-Q101-NEGATIVE-EVIDENCE) echo 'path=ai_requests/AI-2026-09-30-Q101-NEGATIVE-EVIDENCE.json' >> "$GITHUB_OUTPUT" ;;
+            AI-2026-09-30-Q102-REGIME-STATE-DESIGN) echo 'path=ai_requests/AI-2026-09-30-Q102-REGIME-STATE-DESIGN.json' >> "$GITHUB_OUTPUT" ;;
             *) exit 1 ;;
           esac
 
@@ -168,13 +173,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          slot=$(( $(date -u +%s) / 21600 % 5 ))
+          slot=$(( $(date -u +%s) / 21600 % 6 ))
           case "$slot" in
             0) task_id='AI-2026-09-29-Q091-ADVERSARIAL' ;;
             1) task_id='AI-2026-09-28-Q089-ADVERSARIAL' ;;
             2) task_id='AI-2026-09-28-UNUSUAL-FRONTIER' ;;
             3) task_id='AI-2026-09-30-Q100-FRONTIER-FEASIBILITY' ;;
             4) task_id='AI-2026-09-30-Q101-NEGATIVE-EVIDENCE' ;;
+            5) task_id='AI-2026-09-30-Q102-REGIME-STATE-DESIGN' ;;
             *) exit 1 ;;
           esac
           path="ai_requests/$task_id.json"
@@ -277,12 +283,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          slot=$(( $(date -u +%s) / 21600 % 5 ))
+          slot=$(( $(date -u +%s) / 21600 % 6 ))
           case "$slot" in
             0) task_id='AI-2026-09-29-Q091-ADVERSARIAL' ;;
             1) task_id='AI-2026-09-28-Q089-ADVERSARIAL' ;;
             2) task_id='AI-2026-09-28-UNUSUAL-FRONTIER' ;;
             3) task_id='AI-2026-09-30-Q100-FRONTIER-FEASIBILITY' ;;
+            4) task_id='AI-2026-09-30-Q101-NEGATIVE-EVIDENCE' ;;
+            5) task_id='AI-2026-09-30-Q102-REGIME-STATE-DESIGN' ;;
             *) exit 1 ;;
           esac
           case "$task_id" in
@@ -291,6 +299,7 @@ jobs:
             AI-2026-09-28-UNUSUAL-FRONTIER) path='ai_requests/AI-2026-09-28-UNUSUAL-FRONTIER.json' ;;
             AI-2026-09-30-Q100-FRONTIER-FEASIBILITY) path='ai_requests/AI-2026-09-30-Q100-FRONTIER-FEASIBILITY.json' ;;
             AI-2026-09-30-Q101-NEGATIVE-EVIDENCE) path='ai_requests/AI-2026-09-30-Q101-NEGATIVE-EVIDENCE.json' ;;
+            AI-2026-09-30-Q102-REGIME-STATE-DESIGN) path='ai_requests/AI-2026-09-30-Q102-REGIME-STATE-DESIGN.json' ;;
             *) exit 1 ;;
           esac
           {
