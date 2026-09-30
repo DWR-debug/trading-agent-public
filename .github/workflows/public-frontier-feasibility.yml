@@ -9,10 +9,12 @@ on:
       - "automation/q096_frontier_source_pit_audit.py"
       - "automation/q097_public_short_flow_feasibility.py"
       - "automation/q098_historical_archive_depth.py"
+      - "automation/q100_frontier_feasibility_synthesis.py"
       - "tests/test_q096_frontier_source_pit_audit.py"
       - "tests/test_q097_public_short_flow_candidates.py"
       - "tests/test_q097_public_short_flow_feasibility.py"
       - "tests/test_q098_historical_archive_depth.py"
+      - "tests/test_q100_frontier_feasibility_synthesis.py"
       - "research/frontier/candidate_inventory_2026_09_29.json"
       - "research/frontier/q097_public_short_flow_candidates.json"
       - ".github/workflows/public-frontier-feasibility.yml"
@@ -56,6 +58,8 @@ jobs:
 
       - name: Q098 historical archive depth audit
         run: python -m automation.q098_historical_archive_depth
+      - name: Q100 frontier feasibility synthesis
+        run: python -m automation.q100_frontier_feasibility_synthesis
 
       - name: Upload feasibility result
         if: always()
@@ -65,5 +69,6 @@ jobs:
           path: |
             research/runs/q096_frontier_source_pit_audit/result.json
             research/runs/q098_historical_archive_depth/result.json
+            research/runs/q100_frontier_feasibility_synthesis/result.json
           if-no-files-found: warn
           retention-days: 14
