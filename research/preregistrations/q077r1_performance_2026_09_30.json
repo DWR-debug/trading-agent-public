@@ -66,7 +66,7 @@
     "input_bundle_fingerprint": "775c2f7af2996132b8245c3e5ec2c9dd7d13adacaf742f3252bac49d2bfa594d"
   },
   "governance": {
-    "performance_trial_authorized": true,
+    "performance_trial_authorized": false,
     "selection": false,
     "parameter_search": false,
     "threshold_search": false,
@@ -86,7 +86,7 @@
   },
   "source_contract": {
     "performance_runner_path": "automation/q077r1_performance.py",
-    "performance_runner_sha256": "d050bdf38e76a582b656bff9e1f19aa145c18ab406fc91732aeb0c55451bb9ed",
+    "performance_runner_sha256": "ad4057a2edcd796995f442eaa149f926fbfdd6428275a0b953c42822ec1502a7",
     "alpha_mechanism_path": "automation/q067_alpha_mechanisms.py",
     "alpha_mechanism_sha256": "e6a8366ea31b7f9b6293ad119deb4d0c9c62a7f21f9d03bcb92a74725eaf4855",
     "cost_contract_path": "execution/cost_contract.py",
@@ -120,5 +120,27 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "prepared_from_master_sha": "a7da4864027846467201d1e3a5059515bd1c631d"
+  "prepared_from_master_sha": "a7da4864027846467201d1e3a5059515bd1c631d",
+  "correction": {
+    "layer": "execution_gross_cap_envelope",
+    "rule": "Only the already-preregistered gross exposure cap of 1.0 is enforced pro-rata at the execution envelope after E2 turnover hysteresis. This adds no new parameter or threshold and does not alter the frozen signals, data, PIT logic, costs, timing, universe or evaluation gates.",
+    "incidents": [
+      {
+        "workflow_run_id": "36729715918",
+        "path": "research/evidence/q077r1_performance_execution_incident.json",
+        "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME",
+        "type": "infrastructure_packaging_only"
+      },
+      {
+        "workflow_run_id": "36733213837",
+        "path": "research/evidence/q077r1_performance_execution_incident_cap.json",
+        "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME",
+        "type": "execution_envelope_only"
+      }
+    ],
+    "prior_authorization_id": "AUTH-Q077R1-2026-09-30-36727296132",
+    "no_scientific_outcome": true,
+    "corrected_from_master_sha": "f6347cc5b9137aaad2df647711039747a700a1e9",
+    "scientific_scope_unchanged": true
+  }
 }
