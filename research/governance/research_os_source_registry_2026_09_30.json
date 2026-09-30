@@ -17,7 +17,9 @@
     "deterministic compute is authoritative",
     "AI is adversarial/research assistance, never scientific evidence by itself",
     "no silent source substitution",
-    "immutable receipt before interpretation"
+    "immutable receipt before interpretation",
+    "anti_convergence_in_hypothesis_generation",
+    "schedule research by information_gain_per_compute and falsifiability, never by observed holdout performance"
   ],
   "layers": [
     {
@@ -410,5 +412,31 @@
       "gate": "dataset provenance/license/version/PIT audit",
       "why": "A broad discovery pool can expose unusual data that official APIs do not expose, while a quarantine boundary prevents community data from entering formal evidence without verification."
     }
-  ]
+  ],
+  "resource_scheduler": {
+    "allowed_axes": [
+      "information_gain_per_compute",
+      "cheap_falsifiability",
+      "source_quality",
+      "pit_feasibility",
+      "resource_cost",
+      "mechanism_novelty_distance",
+      "expected_reproducibility"
+    ],
+    "forbidden_axes": [
+      "holdout_return",
+      "holdout_drawdown",
+      "performance_rank",
+      "future_information",
+      "candidate_preference"
+    ],
+    "lane_policy": "Use at most two deterministic research lanes concurrently; reserve one lane for adversarial or governance work when a performance-sensitive chain is active.",
+    "ai_policy": "Use provider diversity as an adversarial instrument. Consensus is not evidence and disagreement is not a failure condition by itself."
+  },
+  "knowledge_plane": {
+    "idea": "Treat papers, methods, source documentation and benchmark reports as versioned machine-readable research resources, while preserving source claims separately from replicated findings.",
+    "inspiration": "Paper2Agent demonstrates turning scientific papers into MCP resources for methods and data.",
+    "formal_evidence_allowed": "false",
+    "source_url": "https://www.nature.com/articles/s41586-026-11044-y"
+  }
 }
