@@ -98,15 +98,11 @@ Source:
 https://mistral.ai/pricing/
 https://docs.mistral.ai/getting-started/quickstarts/developer/first-api-request
 
-## 5. Claude
+## 5. Claude — retired
 
-Keep Claude separate from API billing.
-
-Use only:
-- an explicitly free local CLI/account path on the Windows PC, or
-- a future free-only path that passes the project's attestation.
-
-Never use Anthropic API billing under the 0 USD project policy.
+Claude is retired from the active AI fabric. The current repository execution
+path did not establish a usable free-only Claude session, so it is no longer
+scheduled or called. Historical Claude receipts remain for provenance only.
 
 ## 6. Copilot Free — reserved for October 2026
 
@@ -125,8 +121,7 @@ architecture tasks, not routine generation.
 The permanent research loop remains active every 30 minutes, but quota-limited AI
 calls are deliberately decoupled from that heartbeat. Hosted/local Gemini runs use
 one deterministic task slot per 6-hour cycle. Mistral uses the same 6-hour cadence
-with its own deterministic one-task rotation. Claude and OpenRouter remain the
-parallel higher-throughput review paths. A provider rate-limit is recorded and
+with its own deterministic one-task rotation. OpenRouter remains the parallel higher-throughput review path; Claude is retired. A provider rate-limit is recorded and
 never converted into paid usage or repeated immediately.
 
 ## Research role separation
@@ -139,9 +134,6 @@ OpenRouter:
 
 Mistral:
 - independent coding/design critique and extraction
-
-Claude:
-- separate adversarial reasoning path when free access exists
 
 Copilot:
 - scarce code-maintenance resource
