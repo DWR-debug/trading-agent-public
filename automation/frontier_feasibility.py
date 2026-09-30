@@ -23,8 +23,8 @@ def parse_sec_assigned_sic(header_text: str) -> str:
     if not isinstance(header_text, str) or not header_text.strip():
         raise ValueError("SEC header text must be non-empty")
     patterns = (
-        r"<ASSIGNED-SIC>\\s*(\\d{4})\\b",
-        r"STANDARD INDUSTRIAL CLASSIFICATION:\\s*[^\\r\\n\\[]+\\[(\\d{4})\\]",
+        r"<ASSIGNED-SIC>\s*(\d{4})\b",
+        r"STANDARD INDUSTRIAL CLASSIFICATION:\s*[^\r\n\[]+\[(\d{4})\]",
     )
     for pattern in patterns:
         match = re.search(pattern, header_text, flags=re.IGNORECASE)
