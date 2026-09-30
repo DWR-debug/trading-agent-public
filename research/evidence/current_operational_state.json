@@ -390,7 +390,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T17:27:04.017523+00:00",
+  "generated_at_utc": "2026-09-30T17:27:53.197083+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -514,43 +514,43 @@
     "recent_commits": [
       {
         "message": "OPS: record AI worker state",
-        "sha": "2b67fb3d83490bfb1b21270abb3ce68d03cdd16a",
-        "timestamp": "2026-09-30T17:27:01Z"
+        "sha": "94275c40d60723676a3906252074e26958890f39",
+        "timestamp": "2026-09-30T17:27:51Z"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "34e42161b698e5f94a6bbfe6660673fe9fa7697c",
-        "timestamp": "2026-09-30T17:26:53Z"
+        "sha": "3e00dadf077ec959ed838aa7396a7c04e0d61788",
+        "timestamp": "2026-09-30T17:27:41Z"
+      },
+      {
+        "message": "AI: harden Gemini headless free-tier execution",
+        "sha": "eb7b960491622686c08c729cf10178fa100e862a",
+        "timestamp": "2026-09-30T19:27:37+02:00"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "42c0a33868c6f8f233f3274e3a152741badcd9a6",
-        "timestamp": "2026-09-30T17:26:51Z"
+        "sha": "d83fd04675604194f1a32dac31ede21a5934ca43",
+        "timestamp": "2026-09-30T17:27:25Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "6c346538f7f153a60701ab0b8284ee3779f6b57b",
+        "timestamp": "2026-09-30T17:27:24Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "d0014ac85d8f2c705c33e41ff4f200a0f20fb412",
+        "timestamp": "2026-09-30T17:27:06Z"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "a4f52bc07511ba34fcbdab7edcb7129d17bf33e2",
-        "timestamp": "2026-09-30T17:26:44Z"
+        "sha": "fa202d0983e5a3ecfc155fde930e07ce39535892",
+        "timestamp": "2026-09-30T17:27:04Z"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "42bd70cd076ba6fd74ba11f70ed2492f20b31ac6",
-        "timestamp": "2026-09-30T17:26:42Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "15c6087550b0d74dbddc2c98d577444f37ffe7a1",
-        "timestamp": "2026-09-30T17:26:40Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "f9f0f82c809d872f75e70b6947ecc9eae8b90219",
-        "timestamp": "2026-09-30T17:26:39Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "328389f5c38db2ac4b4fe348bb73a31000dd724a",
-        "timestamp": "2026-09-30T17:26:35Z"
+        "sha": "2b67fb3d83490bfb1b21270abb3ce68d03cdd16a",
+        "timestamp": "2026-09-30T17:27:01Z"
       }
     ]
   },
@@ -620,12 +620,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2b67fb3d83490bfb1b21270abb3ce68d03cdd16a",
+  "source_master_sha": "94275c40d60723676a3906252074e26958890f39",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36751398175"
+    "run_id": "36751532833"
   }
 }
