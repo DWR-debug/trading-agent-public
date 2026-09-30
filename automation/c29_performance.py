@@ -244,6 +244,28 @@ def _scenario_gates(scenarios: dict[str, dict]) -> dict[str, bool]:
     return gates
 
 
+def _assert_source_contract(repo_root: Path, prereg: dict) -> None:
+    contract = prereg.get("source_contract", {})
+    paths = {
+        "performance_runner_git_blob_sha": repo_root / "automation/c29_performance.py",
+        "frontier_feasibility_git_blob_sha": repo_root / "automation/frontier_feasibility.py",
+        "cost_contract_git_blob_sha": repo_root / "execution/cost_contract.py",
+        "settings_git_blob_sha": repo_root / "config/settings.py",
+        "input_freeze_git_blob_sha": repo_root / "automation/c29r1_input_freeze.py",
+    }
+    import subprocess
+    for key, path in paths.items():
+        expected = contract.get(key)
+        if not expected:
+            raise RuntimeError(f"C29 source contract incomplete: {key}")
+        actual = subprocess.check_output(
+            ["git", "hash-object", str(path)],
+            text=True,
+        ).strip()
+        if actual != expected:
+            raise RuntimeError(f"C29 source contract mismatch: {key}")
+
+
 def _assert_authorization(repo_root: Path, prereg: dict) -> dict:
     auth_path = repo_root / "research/authorizations/c29_performance_2026_09_30.json"
     if not auth_path.is_file():
@@ -280,6 +302,7 @@ def run(preregistration: Path, repo_root: Path, bundle_root: Path, output: Path)
     if settings.PAPER_ONLY is not True or settings.LIVE_TRADING_ENABLED is not False or settings.ORDERS_ENABLED is not False or settings.AUTOMATIC_PROMOTION is not False:
         raise RuntimeError("runtime safety invariants violated")
     _assert_authorization(repo_root, prereg)
+    _assert_source_contract(repo_root, prereg)
     _assert_registry(repo_root)
     validate_research_cost_compatibility(fee_rate=FEE, slippage_rate=SLIPPAGE)
     bundle = _load_json(bundle_root / "input_bundle_manifest.json")
