@@ -390,7 +390,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T18:14:19.855268+00:00",
+  "generated_at_utc": "2026-09-30T18:15:40.755255+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -513,6 +513,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "TEST: reject OpenRouter tool-call markup",
+        "sha": "9e7722cd248f70262ac204bceb7a08ebd76b64e9",
+        "timestamp": "2026-09-30T20:15:37+02:00"
+      },
+      {
+        "message": "TEST: align self-hosted QA assertions with two-runner parallel lanes",
+        "sha": "356e090072c347a54d268e0e8f67d2780449b0ef",
+        "timestamp": "2026-09-30T20:15:29+02:00"
+      },
+      {
+        "message": "TEST: accept terminal C29 completed-without-pass state",
+        "sha": "e5a7c858c7340cc578dcce60c9bd30d511cb0deb",
+        "timestamp": "2026-09-30T20:15:24+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d38294fc39d8b866adee016b981679d1c66c5ee0",
+        "timestamp": "2026-09-30T18:14:19Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "088a0fd421c25aee006670d2ea343a47c956f81e",
         "timestamp": "2026-09-30T18:14:01Z"
@@ -531,26 +551,6 @@
         "message": "AI: avoid quota spikes from push-triggered worker runs",
         "sha": "e974c6a30e285c0228a0321a0d881dfe5b8d1f8b",
         "timestamp": "2026-09-30T20:13:12+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "079e9b857f08287cc14410d709ce4efc5aa3fc8d",
-        "timestamp": "2026-09-30T18:12:26Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "1f46025efe02f59694f722d1e30e3163d3c11e73",
-        "timestamp": "2026-09-30T17:56:26Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "0da3a9a9d8276c4014b736da6b522100b7b7b4c3",
-        "timestamp": "2026-09-30T17:55:41Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "8acd231dc53141254d51ecae86d55b1955a2b77b",
-        "timestamp": "2026-09-30T17:43:47Z"
       }
     ]
   },
@@ -620,12 +620,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "088a0fd421c25aee006670d2ea343a47c956f81e",
+  "source_master_sha": "9e7722cd248f70262ac204bceb7a08ebd76b64e9",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36757017926"
+    "run_id": "36757273098"
   }
 }
