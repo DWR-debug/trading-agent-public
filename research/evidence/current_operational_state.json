@@ -405,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T19:22:00.927937+00:00",
+  "generated_at_utc": "2026-09-30T19:22:36.559752+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -528,6 +528,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOV: enforce Research OS runtime integrity contracts",
+        "sha": "f380859971b12e855b776ea2a83ae3094e53205a",
+        "timestamp": "2026-09-30T21:22:24+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "16e8e0c0e0f61fa7a853d9f8f8ed812c3675d5ac",
+        "timestamp": "2026-09-30T19:22:00Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "0989e92171d26862efd23d84ebf6c3eb8057a230",
         "timestamp": "2026-09-30T19:21:46Z"
@@ -556,16 +566,6 @@
         "message": "OPS: add rotating Research OS source reachability probe",
         "sha": "5e283bad0476721ece3d9d3028aad000df0d73ea",
         "timestamp": "2026-09-30T21:21:15+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c35c2a634df7a63657a22e49a8633db9cd4ad626",
-        "timestamp": "2026-09-30T19:21:09Z"
-      },
-      {
-        "message": "ARCH: add ex-ante Research OS resource scheduler",
-        "sha": "3b0e7f110032f3622ba84cd13fe932c031472d6b",
-        "timestamp": "2026-09-30T21:21:06+02:00"
       }
     ]
   },
@@ -635,12 +635,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0989e92171d26862efd23d84ebf6c3eb8057a230",
+  "source_master_sha": "f380859971b12e855b776ea2a83ae3094e53205a",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36765126639"
+    "run_id": "36765209892"
   }
 }
