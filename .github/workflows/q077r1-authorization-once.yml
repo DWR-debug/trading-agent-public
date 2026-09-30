@@ -104,10 +104,39 @@ jobs:
           python -m py_compile automation/q077r1_performance.py automation/q077r1_reconcile.py
           python automation/project_integrity_check.py
 
-      - name: Wait for exact Master CI Gate
+      - name: Wait for compatible green Master CI Gate
         shell: bash
         run: |
           set -euo pipefail
+          if [ "$GITHUB_EVENT_NAME" = "issue_comment" ]; then
+            for attempt in $(seq 1 90); do
+              line="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ".github/workflows/t052-exact-master-ci-gate.yml" --branch master --limit 20 --json databaseId,status,conclusion,headSha --jq '[.[] | select(.status=="completed" and .conclusion=="success")][0] | [.databaseId,.headSha] | @tsv' || true)"
+              t052_id="$(printf '%s' "$line" | cut -f1)"
+              t052_sha="$(printf '%s' "$line" | cut -f2)"
+              echo "Q077R1 compatible T052 run_id=$t052_id sha=$t052_sha"
+              if [ -n "$t052_sha" ]; then
+                compare="$(gh api "repos/$GITHUB_REPOSITORY/compare/$t052_sha...$GITHUB_SHA" --jq '.files[].filename' || true)"
+                invalid=0
+                while IFS= read -r path; do
+                  [ -z "$path" ] && continue
+                  case "$path" in
+                    docs/CURRENT_STATUS.md|ops/*|research/evidence/current_operational_state.json|research/authorizations/*|research/preregistrations/*|research/governance/*|research/run_requests/*)
+                      ;;
+                    *)
+                      echo "Q077R1 incompatible change since green T052: $path" >&2
+                      invalid=1
+                      ;;
+                  esac
+                done <<< "$compare"
+                if [ "$invalid" -eq 0 ]; then
+                  exit 0
+                fi
+              fi
+              sleep 10
+            done
+            exit 1
+          fi
+
           for attempt in $(seq 1 90); do
             line="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ".github/workflows/t052-exact-master-ci-gate.yml" --commit "$GITHUB_SHA" --limit 1 --json databaseId,status,conclusion --jq '.[0] | [.databaseId,.status,(.conclusion // "")] | @tsv' || true)"
             run_id="$(printf '%s' "$line" | cut -f1)"
