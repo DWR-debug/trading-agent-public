@@ -318,3 +318,32 @@ Hosted-Runner sind ab 2026-09-30 **Primärpfad**, nicht bloß Fallback:
 4. Kostenfreie externe AI: Design, adversarial Review und Hypothesen; kein wissenschaftlicher Evidence-Status.
 
 Die Parallelität soll echte Unabhängigkeit erhöhen; `concurrency`-Gruppen und Latest-Run-Wins werden nur dort verwendet, wo alte Läufe wissenschaftlich/operativ nicht mehr wertvoll sind.
+
+## Self-hosted Failover — 2026-09-30
+
+Self-hosted Windows ist kein Single Point of Failure. Der Workflow
+.github/workflows/hosted-research-failover.yml prüft im 30-Minuten-Takt den Heartbeat
+des permanenten Self-hosted Research Loop und startet bei stale/unverfügbarem Signal
+automatisch bounded Hosted-Arbeit.
+
+Failover-Schwellen:
+- queued/pending Self-hosted-Lauf länger als 25 Minuten;
+- letzter Self-hosted-Lauf älter als 45 Minuten;
+- überhaupt kein Self-hosted-Heartbeat.
+
+Bei Failover laufen parallel:
+- ubuntu-24.04: Frontier-QA/Feasibility;
+- ubuntu-24.04-arm: Governance-/Reproduktions-QA.
+
+Der Failover darf keine formale Performance-Evidence erzeugen, keine Research-Gates
+ändern, keine Kandidaten-/Holdout-Selektion vornehmen und keine kostenpflichtige
+Ressource aktivieren.
+
+Der offene Chat ist für Aktivierung und Beendigung nicht erforderlich. Sobald der
+Self-hosted Heartbeat wieder frisch ist, unterdrückt der Guard den Fallback.
+
+Technische Umsetzung:
+- automation/hosted_fallback_guard.py
+- automation/hosted_fallback_worker.py
+- tests/test_hosted_fallback_guard.py
+- docs/RESOURCE_FAILOVER_MODEL.md
