@@ -39,3 +39,11 @@ def test_c29_pit_mutation_boundary_is_explicit() -> None:
 def test_c29_pit_requires_enough_history() -> None:
     with pytest.raises(IndexError):
         illusion_momentum_gap_at([100.0] * 10, 5, lookback_sessions=21)
+
+
+def test_c29_repair_execution_identity_is_explicit() -> None:
+    workflow = Path(".github/workflows/c29-fresh-coverage-pit-repair.yml").read_text(encoding="utf-8")
+    assert "--trial-id T-2026-09-30-C29-COVERAGE-PIT-R1" in workflow
+    assert "--universe validation_2026_09_30_c29_fresh_input_repair" in workflow
+    assert 'assert d["trial_id"] == "T-2026-09-30-C29-COVERAGE-PIT-R1"' in workflow
+    assert 'assert d["universe"] == "validation_2026_09_30_c29_fresh_input_repair"' in workflow
