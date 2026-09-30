@@ -17,6 +17,7 @@ on:
       - "tests/test_q100_frontier_feasibility_synthesis.py"
       - "research/frontier/candidate_inventory_2026_09_29.json"
       - "research/frontier/q097_public_short_flow_candidates.json"
+      - "research/run_requests/frontier_cycle_2026_09_30.trigger"
       - ".github/workflows/public-frontier-feasibility.yml"
   workflow_dispatch:
 
@@ -29,7 +30,11 @@ concurrency:
 
 jobs:
   frontier_feasibility:
-    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 15
     steps:
       - name: Checkout
@@ -61,11 +66,21 @@ jobs:
       - name: Q100 frontier feasibility synthesis
         run: python -m automation.q100_frontier_feasibility_synthesis
 
+      - name: Architecture receipt
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("research/runs/q100_frontier_feasibility_synthesis") / "architecture_receipt.json"
+          p.parent.mkdir(parents=True, exist_ok=True)
+          p.write_text(json.dumps({"runner":"${{ matrix.runner }}","runner_arch":"${{ runner.arch }}","source_commit":"${{ github.sha }}","formal_evidence_allowed":False}, indent=2)+"\\n", encoding="utf-8")
+          PY
+
       - name: Upload feasibility result
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: public-frontier-feasibility-${{ github.run_id }}
+          name: public-frontier-feasibility-${{ matrix.runner }}-${{ github.run_id }}
           path: |
             research/runs/q096_frontier_source_pit_audit/result.json
             research/runs/q098_historical_archive_depth/result.json
