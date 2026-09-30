@@ -160,6 +160,10 @@ REQUIRED_FILES = (
     ROOT / "docs" / "PRE_CLEANUP_INVENTORY_2026_09_24.md",
     ROOT / "research" / "evidence" / "trial_ledger.json",
     ROOT / "research" / "governance" / "research_os_source_registry_2026_09_30.json",
+    ROOT / "automation" / "research_os_evidence_bus.py",
+    ROOT / "automation" / "research_os_scheduler.py",
+    ROOT / "automation" / "research_os_source_probe.py",
+    ROOT / "tests" / "test_research_os_evidence_bus.py",
 )
 
 
@@ -261,6 +265,30 @@ def _validate_research_os_registry() -> None:
     for item in agents:
         if not isinstance(item, dict) or not item.get("adoption_mode"):
             fail("Research OS agent entry lacks adoption_mode")
+
+    scheduler = registry.get("resource_scheduler", {})
+    required_forbidden = {"holdout_return", "holdout_drawdown", "performance_rank", "future_information", "candidate_preference"}
+    if not required_forbidden.issubset(set(scheduler.get("forbidden_axes", []))):
+        fail("Research OS scheduler is missing forbidden anti-leakage axes")
+    artifacts = scheduler.get("runtime_artifacts", [])
+    expected_artifacts = {
+        "research/runs/self_hosted/autonomous/**/research_os_resource_schedule.json",
+        "research/runs/self_hosted/autonomous/**/research_os_source_probe.json",
+    }
+    if set(artifacts) != expected_artifacts:
+        fail("Research OS runtime artifact contract drifted")
+
+    probe = registry.get("source_probe_policy", {})
+    if probe != {
+        "rotation_bucket_count": 4,
+        "max_sources_per_cycle": 4,
+        "probe_is_reachability_only": True,
+        "downloads_dataset_payloads": False,
+        "uses_credentials": False,
+        "scientific_evidence": False,
+        "performance_authorization": False,
+    }:
+        fail("Research OS source-probe safety contract invalid")
 
 
 def main() -> None:
