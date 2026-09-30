@@ -25,11 +25,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 70.222,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter returned tool-call syntax instead of a final worker handoff.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 221.228,
+  "stdout": "# Worker Handoff: Unusual Alpha Hypothesis Generation (FRONTIER-20260928)\n\n## 1. Summary of Existing Frontier Landscape\n\nThe current research frontier (docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md) defines five candidate families:\n\n| Code | Family | Status |\n|------|--------|--------|\n| C29 | Illusion Momentum Gap | Feasibility complete; cross-sectional ordering test pending |\n| C30 | Risk Text Peer Propagation | Deterministic PIT-bounded peer state; synthetic leakage tests underway |\n| C31 | Public News Persistence | Conservative observed-time boundary; PIT checks passed |\n| M4 | Industry-Relative Residual | Deterministic construction; historical PIT mapping pending |\n| M5 | Public Rebalance Event | Publication/effective-time validation completed |\n\nActive trials (research/evidence/current_operational_state.json):\n- **T-2026-09-30-081R4-PERFORMANCE** (AUTH-Q081R4): Completed but failed all 13-gate evaluation (no arm pass)\n- **T-2026-09-30-081R3-PERFORMANCE** (AUTH-Q081R3): Implementation invalid (NameError: 'true' undefined)\n- **T-2026-09-28-081R2-PERFORMANCE** (AUTH-Q081R2): Implementation invalid (same error)\n\nThe governance layer (active_research_registry.json) confirms `performance_authorization_allowed=false` for all frontier candidates. Only pre-authorized, design-only work proceeds through shadow/infrastructure harnesses.\n\n---\n\n## 2. New Hypothesis Set (Orthogonal to Existing Families)\n\nBelow are five structurally distinct alpha hypotheses designed to avoid overlap with C29–C31/M4/M5. Each includes causal intuition, minimal data requirements, key confounders, and a cheap falsification test.\n\n### H1: Intra-Day Volatility Skew (Path-Dependent Asymmetry)\n\n**Causal Intuition.** Stock-specific realized volatility exhibits asymmetric path dependence: downward price paths generate higher realized volatility than equivalent upward paths, creating an exploitable skew. This operates at the single-stock level (no cross-sectional aggregation) and is independent of cross-sectional momentum, residual momentum, or sector beta.\n\n**Minimal Data Requirements.**\n- Daily OHLCV (close, open, high, low, volume)\n- Realized intraday volatility computed from tick-by-tick or minute-bar returns\n- Optional: daily VIX for macro benchmark\n\n**Confounders.**\n- Macro volatility (VIX, SPX volatility index)\n- Earnings announcements (calendar-adjusted)\n- News sentiment (optional, adds complexity)\n\n**Cheap Falsification Test.**  \nCompute the path-dependent skew metric: for each stock, calculate the conditional expectation of log-volatility given the running maximum drawdown (or running minimum price). If the skew reverses sign (upward path → lower realized vol) consistently across a holdout window, the signal is spurious. Alternatively, run a regression of future log-returns on path features while controlling for macro volatility; a significant path coefficient would validate the hypothesis.\n\n**Why It Is Orthogonal.** Unlike C29 (cross-sectional compound return vs. simple return sum) and C31 (news persistence), this targets within-stock path dependence, not aggregate market states or information flows.\n\n---\n\n### H2: Carry Trade Asymmetry (Cross-Asset Funding Cycle)\n\n**Causal Intuition.** Currency pairs and commodity spreads exhibit predictable directional asymmetry tied to carry costs and repatriation cycles. Long positions in high-yield currencies during carry periods systematically underperform after a calibrated calendar window (typically 60–90 days), reflecting crowding and deleveraging dynamics. This is fundamentally different from momentum (which is forward-looking) and residual momentum (which",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1790796589-5I9c2dYaPTVvrQgyVdv8",
+  "usage": {
+    "prompt_tokens": 4013,
+    "completion_tokens": 3200,
+    "total_tokens": 7213,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2375,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
