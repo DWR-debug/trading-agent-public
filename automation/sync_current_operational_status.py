@@ -173,6 +173,18 @@ def generate(
         "last_verified_self_hosted_qa", {}
     )
 
+    recorded_next_research_focus = project_state.get("next_research_focus")
+    if (
+        latest_formal.get("trial_id") == "T-2026-09-30-081R4-PERFORMANCE"
+        and latest_formal.get("status") == "performance_completed_no_arm_passed_all_13_gates"
+    ):
+        recorded_next_research_focus = (
+            "Q098 diagnostic-only: explain the common Q081-R4 risk/stability failure signature "
+            "from the immutable result; do not retune or authorize another Q081-R4 performance run. "
+            "Next independent execution gate remains the design-only frontier feasibility layer "
+            "(C30/C31/M5/Q097), with exact provenance and PIT requirements."
+        )
+
     current = {
         "schema_version": "1.0",
         "status_type": "current_operational_project_state",
@@ -252,7 +264,7 @@ def generate(
         "scientific_state_recorded": {
             "latest_formal_trial": latest_formal.get("trial_id") or project_state.get("latest_formal_trial"),
             "latest_formal_status": latest_formal.get("status") or project_state.get("latest_trial_status"),
-            "next_research_focus_recorded": project_state.get("next_research_focus"),
+            "next_research_focus_recorded": recorded_next_research_focus,
             "decision_basis_stage": decision_basis.get("current_stage"),
             "q026_recorded": checkpoint.get("q026"),
             "q025_recorded": checkpoint.get("q025"),
