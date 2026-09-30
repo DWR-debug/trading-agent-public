@@ -135,11 +135,11 @@
         "trial_id": "T-2026-09-28-089-PERFORMANCE"
       },
       {
-        "class": "coverage_repair",
+        "class": "fresh_validation",
         "code": "077R1",
         "coverage_result": {
-          "common_sessions": 3500,
-          "fingerprint": "7323a5fe8ab176ee6e0930a4ea05d955547cff1d8d4ac8c1296b2c7b7271c064",
+          "common_sessions": 3704,
+          "fingerprint": "653524bcdded25e031a0f16ba8a09c0de3e7057ee320f96fee009ba74c9e1a50",
           "selected_symbols": [
             "AJG",
             "ALGN",
@@ -154,14 +154,24 @@
             "BWA",
             "CDNS"
           ],
-          "source_workflow_run_id": 36474584151,
+          "source_trial_id": "T-2026-09-28-077R1-COVERAGE",
           "status": "COVERAGE_PASSED"
+        },
+        "input_bundle_result": {
+          "fingerprint": "775c2f7af2996132b8245c3e5ec2c9dd7d13adacaf742f3252bac49d2bfa594d",
+          "source_trial_id": "T-2026-09-28-077R1-INPUT-FREEZE",
+          "status": "INPUT_BUNDLE_FROZEN"
         },
         "issue_number": null,
         "performance_authorization_allowed": false,
-        "preregistration_path": "research/preregistrations/q077r1_discovery_2026_09_28.json",
-        "state": "COVERAGE_VALIDATED_WAITING_PIT",
-        "trial_id": "Q-2026-09-28-077R1-DISCOVERY"
+        "pit_result": {
+          "fingerprint": "27bc62136bd376b26afe11f3e0eeb4b0a96d1868c0c84082ae8a58b50add2563",
+          "source_trial_id": "T-2026-09-28-077R1-PIT",
+          "status": "PIT_PASSED"
+        },
+        "preregistration_path": "research/preregistrations/q077r1_performance_2026_09_30.json",
+        "state": "PERFORMANCE_READY_FOR_AUTHORIZATION",
+        "trial_id": "T-2026-09-30-077R1-PERFORMANCE"
       },
       {
         "class": "fresh_validation",
@@ -321,7 +331,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T14:02:00.509391+00:00",
+  "generated_at_utc": "2026-09-30T14:04:11.117275+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -444,6 +454,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: bind Q077-R1 reconciliation to its registry identity",
+        "sha": "362feb4e84adbd39a12681f897d0427f9a0166bb",
+        "timestamp": "2026-09-30T16:04:08+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q077-R1 immutable result reconciliation",
+        "sha": "ad837c27e08a2fd048d721777fda7265bd33bf85",
+        "timestamp": "2026-09-30T16:03:55+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "d61db208b64ad62c5ca839fec6a4118c5ee24e23",
+        "timestamp": "2026-09-30T14:02:43Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "921a6e9239f3019bcab68f96355a2473c8963ee2",
+        "timestamp": "2026-09-30T14:02:00Z"
+      },
+      {
         "message": "OPS: make Q077-R1 freeze helpers explicit pipeline triggers",
         "sha": "a7da4864027846467201d1e3a5059515bd1c631d",
         "timestamp": "2026-09-30T16:01:45+02:00"
@@ -462,26 +492,6 @@
         "message": "FIX: expose frozen Q077-R1 symbols in input receipt",
         "sha": "5c203dd50a74f29e269da836410fed2552e00913",
         "timestamp": "2026-09-30T16:00:45+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "be5736759c28744dd0dd5d65c3ba76954d56ab8a",
-        "timestamp": "2026-09-30T14:00:21Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "7f501c7495a774e705db907c7041bdeb032bafd3",
-        "timestamp": "2026-09-30T14:00:07Z"
-      },
-      {
-        "message": "FIX: correct registry receipt newline encoding",
-        "sha": "ed11b691ba9a471600f2fbadb3212072d01246bd",
-        "timestamp": "2026-09-30T16:00:06+02:00"
-      },
-      {
-        "message": "FIX: write valid newline in Q077-R1 frozen receipts",
-        "sha": "a5976a7ac0789d8b84e726346239e4e375e209cc",
-        "timestamp": "2026-09-30T15:59:55+02:00"
       }
     ]
   },
@@ -551,12 +561,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a7da4864027846467201d1e3a5059515bd1c631d",
+  "source_master_sha": "362feb4e84adbd39a12681f897d0427f9a0166bb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36726004950"
+    "run_id": "36726278361"
   }
 }
