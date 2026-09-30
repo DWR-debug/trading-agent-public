@@ -10,7 +10,7 @@ capacity without turning an external LLM into a source of scientific evidence.
 
 The fabric is deliberately separate from deterministic computation.
 
-OpenRouter is integrated through a hard-wired HTTP adapter that accepts only the provider's free router and never exposes a paid model fallback.
+OpenRouter is integrated through a hard-wired HTTP adapter that accepts only the provider's free router and never exposes a paid model fallback. Mistral is integrated through a fixed `mistral-small-latest` HTTP adapter and requires an explicit free-mode attestation.
 
 ## Resource classes
 
@@ -18,7 +18,7 @@ OpenRouter is integrated through a hard-wired HTTP adapter that accepts only the
    preparation and approved local research workloads.
 2. GitHub-hosted runners: deterministic CI/research plus the bounded
    GitHub-agent queue.
-3. External AI workers: Gemini CLI, OpenRouter Free and optionally Claude CLI for bounded
+3. External AI workers: Gemini CLI, Mistral API, OpenRouter Free and optionally Claude CLI for bounded
    hypothesis generation, adversarial review, architecture review and research
    design support.
 4. Python: canonical numerical computation, statistical validation,
@@ -28,9 +28,7 @@ These classes are intended to operate concurrently whenever their jobs are indep
 
 ## Free-only rule
 
-External AI workers are fail-closed. A provider is used only if its executable
-and authentication are available, AI_EXTERNAL_PROVIDER_ALLOWLIST=true is set,
-a provider-specific free-mode attestation is present, and the task contract
+External AI workers are fail-closed. A provider is used only if its executable/API authentication is available, AI_EXTERNAL_PROVIDER_ALLOWLIST=true is set, a provider-specific free-mode attestation is present where required, and the task contract
 prohibits deterministic computation, selection, gate changes, promotion, live
 execution and paid usage.
 
