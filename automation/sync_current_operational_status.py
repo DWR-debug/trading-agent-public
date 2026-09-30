@@ -179,10 +179,11 @@ def generate(
         and latest_formal.get("status") == "performance_completed_no_arm_passed_all_13_gates"
     ):
         recorded_next_research_focus = (
-            "Q099 diagnostic-only: explain the common Q081-R4 risk/stability failure signature "
-            "from the immutable result; do not retune or authorize another Q081-R4 performance run. "
-            "Next independent execution gate remains the design-only frontier feasibility layer "
-            "(C30/C31/M5/Q097), with exact provenance and PIT requirements."
+            "Q099 diagnostic-only completed on the immutable Q081-R4 result; no retune or repeat "
+            "of Q081-R4 is authorized. Next gate is Q100 frontier feasibility synthesis, followed "
+            "by the predeclared frontier data/PIT gates (C29 fresh input contract; M4 PIT industry "
+            "mapping; C30/C31/M5/Q097 source/archive contracts). No performance authorization is "
+            "created by these feasibility steps."
         )
 
     current = {
