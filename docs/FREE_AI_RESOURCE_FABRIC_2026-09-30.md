@@ -120,6 +120,15 @@ Project rule:
 The project intentionally spends this resource on high-value code review /
 architecture tasks, not routine generation.
 
+## Quota-aware scheduling
+
+The permanent research loop remains active every 30 minutes, but quota-limited AI
+calls are deliberately decoupled from that heartbeat. Hosted/local Gemini runs use
+one deterministic task slot per 6-hour cycle. Mistral uses the same 6-hour cadence
+with its own deterministic one-task rotation. Claude and OpenRouter remain the
+parallel higher-throughput review paths. A provider rate-limit is recorded and
+never converted into paid usage or repeated immediately.
+
 ## Research role separation
 
 Gemini:
