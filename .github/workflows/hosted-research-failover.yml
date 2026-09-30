@@ -1,6 +1,12 @@
 name: Hosted Research Failover
 
 on:
+  push:
+    branches: [master]
+    paths:
+      - ".github/workflows/hosted-research-failover.yml"
+      - "automation/hosted_fallback_guard.py"
+      - "tests/test_hosted_fallback_guard.py"
   schedule:
     - cron: "*/30 * * * *"
   workflow_dispatch:
