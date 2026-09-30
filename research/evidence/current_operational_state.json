@@ -390,7 +390,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T16:39:50.921106+00:00",
+  "generated_at_utc": "2026-09-30T16:40:14.614445+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -513,6 +513,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: add one-shot mobile edge verification mode",
+        "sha": "b1008d36b2c4747cf577ec3db19cc1310ef14d32",
+        "timestamp": "2026-09-30T18:40:12+02:00"
+      },
+      {
+        "message": "OPS: add paper-only Android edge worker",
+        "sha": "621f71fdedf2bd2ca7dc0d5c275e4c1d277ec1c8",
+        "timestamp": "2026-09-30T18:39:59+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c3ad020aaccb9dcf1d6eaff3d234d69b508b1b60",
+        "timestamp": "2026-09-30T16:39:50Z"
+      },
+      {
         "message": "DOCS: add mobile edge worker architecture",
         "sha": "fae86a11319748b4a6fda5b6ea32e8292b74e19d",
         "timestamp": "2026-09-30T18:39:39+02:00"
@@ -536,21 +551,6 @@
         "message": "FIX: fail closed after C29 authorization consumption (#709)",
         "sha": "bf28906d998653397b2635f38195ec5a4093dcd5",
         "timestamp": "2026-09-30T18:33:41+02:00"
-      },
-      {
-        "message": "RESEARCH: persist C29 duplicate-dispatch fail-closed incident",
-        "sha": "1c5bcf038e4045e72ff91ab0c7004534c7790fd1",
-        "timestamp": "2026-09-30T18:33:21+02:00"
-      },
-      {
-        "message": "FIX: fail closed after C29 authorization consumption",
-        "sha": "844ded9d3746c61b189d7b243e6972b9f5370386",
-        "timestamp": "2026-09-30T18:32:14+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "b9d9868738d1de18eee6a77f59e23c4623318f5d",
-        "timestamp": "2026-09-30T16:30:47Z"
       }
     ]
   },
@@ -620,12 +620,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "fae86a11319748b4a6fda5b6ea32e8292b74e19d",
+  "source_master_sha": "b1008d36b2c4747cf577ec3db19cc1310ef14d32",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36745824987"
+    "run_id": "36745865326"
   }
 }
