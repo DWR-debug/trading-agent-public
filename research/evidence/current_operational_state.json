@@ -321,7 +321,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T14:00:21.599176+00:00",
+  "generated_at_utc": "2026-09-30T14:00:57.901121+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -444,6 +444,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: rerun Q077-R1 immutable PIT/freeze after receipt schema fix",
+        "sha": "579f971b869029641c42da5db2f347492e9e65ca",
+        "timestamp": "2026-09-30T16:00:52+02:00"
+      },
+      {
+        "message": "FIX: expose frozen Q077-R1 symbols in input receipt",
+        "sha": "5c203dd50a74f29e269da836410fed2552e00913",
+        "timestamp": "2026-09-30T16:00:45+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "be5736759c28744dd0dd5d65c3ba76954d56ab8a",
+        "timestamp": "2026-09-30T14:00:21Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "7f501c7495a774e705db907c7041bdeb032bafd3",
         "timestamp": "2026-09-30T14:00:07Z"
@@ -467,21 +482,6 @@
         "message": "RESEARCH: seal Q077-R1 preregistration after immutable freeze",
         "sha": "75b0e0dee7f4548215cae0fc4e2039b16a864114",
         "timestamp": "2026-09-30T15:58:59+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "ef94bdc1a28b57097db1a58e49ca0fb94026110a",
-        "timestamp": "2026-09-30T13:57:23Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "25404294eb0d070b386e7e441eacfd40890efc84",
-        "timestamp": "2026-09-30T13:56:49Z"
-      },
-      {
-        "message": "RESEARCH: freeze Q077-R1 performance metadata from immutable receipts",
-        "sha": "660490e4778379d99cce78809dfe4c88a6305097",
-        "timestamp": "2026-09-30T15:56:35+02:00"
       }
     ]
   },
@@ -551,12 +551,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7f501c7495a774e705db907c7041bdeb032bafd3",
+  "source_master_sha": "579f971b869029641c42da5db2f347492e9e65ca",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36725788775"
+    "run_id": "36725875592"
   }
 }
