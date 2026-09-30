@@ -405,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T20:07:28.983859+00:00",
+  "generated_at_utc": "2026-09-30T20:07:47.166713+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -528,6 +528,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "TEST: enforce manual-only Copilot CI repair lane",
+        "sha": "4e269c9d8e91c91db07b2b84882cc5a8551a8463",
+        "timestamp": "2026-09-30T22:07:43+02:00"
+      },
+      {
+        "message": "DOCS: align Mistral rotation documentation",
+        "sha": "db8941a8337a9a4253b8afe26f83a58fa35fe0ea",
+        "timestamp": "2026-09-30T22:07:38+02:00"
+      },
+      {
+        "message": "OPS: finalize four-way Mistral rotation",
+        "sha": "5fad33fd10a5d207fe191d2feeaef1c27f3e35e4",
+        "timestamp": "2026-09-30T22:07:32+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8a3f30d24d9898ccec6cdc09b9584e235fdce0db",
+        "timestamp": "2026-09-30T20:07:29Z"
+      },
+      {
         "message": "OPS: record AI worker state",
         "sha": "02eafe5f482cce706a8cb8b982d8fcf7f225ff90",
         "timestamp": "2026-09-30T20:07:20Z"
@@ -546,26 +566,6 @@
         "message": "OPS: record AI worker state",
         "sha": "bbb43c4d32d08563e16427cd7b98757c7dfedc63",
         "timestamp": "2026-09-30T20:07:15Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "81712bea3a99aa85f5999a6408305f3851e3a8aa",
-        "timestamp": "2026-09-30T20:07:14Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "89c67d2abf669543529e8600f694b2b98e20a5bc",
-        "timestamp": "2026-09-30T20:07:13Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "9fc55c0c386c0ac5f402b92b8298ccc15dc5c638",
-        "timestamp": "2026-09-30T20:07:12Z"
-      },
-      {
-        "message": "OPS: make Copilot CI repair manual-only for scarce Free reserve",
-        "sha": "83afc0174f07528f42c653fdf0d4bb8ca63aa469",
-        "timestamp": "2026-09-30T22:07:11+02:00"
       }
     ]
   },
@@ -635,12 +635,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "02eafe5f482cce706a8cb8b982d8fcf7f225ff90",
+  "source_master_sha": "4e269c9d8e91c91db07b2b84882cc5a8551a8463",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36770359944"
+    "run_id": "36770388884"
   }
 }
