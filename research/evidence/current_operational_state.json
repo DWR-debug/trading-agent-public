@@ -405,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T19:22:36.559752+00:00",
+  "generated_at_utc": "2026-09-30T19:28:22.817524+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -528,6 +528,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: record AI worker state",
+        "sha": "c57cca596850f6f096c3576a7ce915bbd9e1348b",
+        "timestamp": "2026-09-30T19:28:20Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "3db11417a97ba9ae165b0a95a01754b82ff05bc5",
+        "timestamp": "2026-09-30T19:28:18Z"
+      },
+      {
+        "message": "ARCH: add hard-wired Mistral free API adapter",
+        "sha": "1b9e0c83d284d3d6cce1c01cad854bdb3f2d5262",
+        "timestamp": "2026-09-30T21:28:13+02:00"
+      },
+      {
+        "message": "ARCH: add Mistral provider to free AI worker fabric",
+        "sha": "86c1593a94f90d9742a12a7a45cc4b3bc7d93582",
+        "timestamp": "2026-09-30T21:28:04+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "57347ce856ddeea981f4623c3e2e6532b2204958",
+        "timestamp": "2026-09-30T19:22:36Z"
+      },
+      {
         "message": "GOV: enforce Research OS runtime integrity contracts",
         "sha": "f380859971b12e855b776ea2a83ae3094e53205a",
         "timestamp": "2026-09-30T21:22:24+02:00"
@@ -541,31 +566,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "0989e92171d26862efd23d84ebf6c3eb8057a230",
         "timestamp": "2026-09-30T19:21:46Z"
-      },
-      {
-        "message": "OPS: run Research OS scheduler and rotating source probe on self-hosted loop",
-        "sha": "948a1764cc238b6c3c485745b9164dfb3f54dae7",
-        "timestamp": "2026-09-30T21:21:41+02:00"
-      },
-      {
-        "message": "ARCH: bind Research OS registry to operational evidence bus",
-        "sha": "25a9d6d9c1261eb86447bd1d2b3772e3fbc8e503",
-        "timestamp": "2026-09-30T21:21:33+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9ae0a8b8079e3bd6deb67aae0f6acaf657a905fa",
-        "timestamp": "2026-09-30T19:21:23Z"
-      },
-      {
-        "message": "TEST: cover Research OS Evidence Bus and scheduler invariants",
-        "sha": "4843d80e96ffca8a10cb45bc2426426c907f9fec",
-        "timestamp": "2026-09-30T21:21:21+02:00"
-      },
-      {
-        "message": "OPS: add rotating Research OS source reachability probe",
-        "sha": "5e283bad0476721ece3d9d3028aad000df0d73ea",
-        "timestamp": "2026-09-30T21:21:15+02:00"
       }
     ]
   },
@@ -635,12 +635,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f380859971b12e855b776ea2a83ae3094e53205a",
+  "source_master_sha": "c57cca596850f6f096c3576a7ce915bbd9e1348b",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36765209892"
+    "run_id": "36765872489"
   }
 }
