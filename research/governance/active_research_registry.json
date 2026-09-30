@@ -119,10 +119,10 @@
       "code": "077R1",
       "trial_id": "T-2026-09-30-077R1-PERFORMANCE",
       "class": "fresh_validation",
-      "state": "PERFORMANCE_AUTHORIZED",
+      "state": "PERFORMANCE_READY_FOR_AUTHORIZATION",
       "issue_number": null,
       "preregistration_path": "research/preregistrations/q077r1_performance_2026_09_30.json",
-      "performance_authorization_allowed": true,
+      "performance_authorization_allowed": false,
       "coverage_result": {
         "status": "COVERAGE_PASSED",
         "selected_symbols": [
@@ -153,7 +153,11 @@
         "fingerprint": "775c2f7af2996132b8245c3e5ec2c9dd7d13adacaf742f3252bac49d2bfa594d",
         "source_trial_id": "T-2026-09-28-077R1-INPUT-FREEZE"
       },
-      "authorization_id": "AUTH-Q077R1-2026-09-30-36727296132"
+      "predecessor_authorization_id": "AUTH-Q077R1-2026-09-30-36727296132",
+      "execution_incident_paths": [
+        "research/evidence/q077r1_performance_execution_incident.json",
+        "research/evidence/q077r1_performance_execution_incident_cap.json"
+      ]
     },
     {
       "code": "091",
