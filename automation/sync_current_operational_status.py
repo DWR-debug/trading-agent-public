@@ -203,6 +203,7 @@ def generate(
             "research_decision_basis": "research/evidence/decision_basis_latest.json",
             "trial_ledger": "research/evidence/trial_ledger.json",
             "active_research_registry": "research/governance/active_research_registry.json",
+            "research_os_source_registry": "research/governance/research_os_source_registry_2026_09_30.json",
         },
         "active_research_registry": active_registry,
         "repository_state": {
@@ -246,6 +247,13 @@ def generate(
                 "self_hosted_parallel_slots": 2,
                 "local_ai_smoke_after_research_lanes": True,
                 "current_pending_requests": queue,
+            },
+            "research_os": {
+                "version": "ROS-0.1",
+                "source_registry": "research/governance/research_os_source_registry_2026_09_30.json",
+                "layers": ["source_fabric", "evidence_bus", "research_compiler", "agent_mesh", "sandbox_execution_boundary", "decision_state"],
+                "performance_authorization_from_os": False,
+                "agent_output_is_scientific_evidence": False,
             },
             "self_hosted_qa": {
                 "cadence": "15 * * * *",
@@ -356,6 +364,7 @@ def generate(
 - Q094: **{active_trials.get("094", {}).get("state", "UNKNOWN")}**; fixed monthly-rebalance successor to the Q091 low-turnover diagnosis; performance authorization flag = **{active_trials.get("094", {}).get("performance_authorization_allowed", False)}**.
 - Q084, Q088 and Q082 remain **design/feasibility tracks** for unusual market-state, textual-network, rebalance-demand and SEC information channels.
 - The unusual-strategy frontier is maintained in `docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md` and is design-only until feasibility and provenance are established.
+- Research OS capability lattice: `research/governance/research_os_source_registry_2026_09_30.json`; it is metadata only and cannot authorize performance.
 
 ### Q067 execution pipeline
 
