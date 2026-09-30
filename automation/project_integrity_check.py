@@ -23,6 +23,7 @@ ACTIVE_WORKFLOWS = {
     "c29r1-fresh-coverage-pit.yml",
     "c29r1-input-freeze.yml",
     "c29-performance-once.yml",
+    "c29-performance-dispatch-repair.yml",
     "c29-performance-authorization-once.yml",
     "copilot-cli-ci-repair.yml",
     "copilot-cli-engineering-task.yml",
