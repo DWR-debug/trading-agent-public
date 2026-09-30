@@ -25,35 +25,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 13.57,
-  "stdout": "**Worker Handoff — Unusual Alpha Frontier: Falsifiable Hypothesis Set (Paper-Only)**\n\n**Findings**\nSix structurally distinct families are proposed, each orthogonal to the already-tested trend / cross-sectional momentum / residual momentum / low-beta / 52-week-high / overnight tug-of-war groups. None is performance-authorized; all require the project's standard preregistration + PIT leakage tests + data audit before any historical evaluation.\n\n1. **Intraday-dispersion persistence (H1)** — Causal intuition: market-making inventory rebalancing after high intraday range predicts next-day dispersion, not direction. Data: OHLCV only. Confound: volatility clustering. Falsification: cross-sectional rank correlation of prior-day range/close vs next-day dispersion, after residualizing realized vol; null if R² < 0.01.\n\n2. **Volume-signed imbalance proxy (H2)** — (close−open)/(high−low) as aggressive-flow proxy. Data: OHLCV + volume. Confound: closing auctions / ETF flows. Falsification: sign-consistency bootstrap vs shuffled volume; reject if distribution indistinguishable from uniform.\n\n3. **VIX term-structure lead on equity volatility regime (H3)** — front-minus-back slope leading SPX realized vol shifts. Data: VIX futures + SPX. Confound: macro announcements. Falsification: rolling 30-day slope vs next-week vol, out-of-sample monotonicity test.\n\n4. **Analyst-revision cascade timing before earnings (H4)** — count of revisions in PIT window relative to consensus. Data: public estimates. Confound: institutional repositioning. Falsification: revision-quintile returns on symbol-disjoint bundle; require PIT audit trail.\n\n5. **Crowding / deleveraging flow signature (H5)** — fund-flow momentum followed by reversal. Data: flow proxies (EPFR-style public). Confound: index rebalancing. Falsification: flow-quintile subsequent 1-month returns, disjoint symbols.\n\n6. **Time-since-new-high duration (H6)** — path dependence via recovery duration, not proximity. Data: price history. Confound: sector rotation. Falsification: bins of days-since-new-high, cross-sectional alpha per bin.\n\n7. **Yield-curve segment divergence regime (H7)** — 2s10s vs 3m10s divergence as regime switch. Data: treasury curves. Confound: Fed policy. Falsification: regime-label stability + cross-sectional alpha in each regime.\n\n8. **OHLCV illiquidity proxy (H8)** — (high−low)/open as spread proxy. Confound: volatility. Falsification: quintile returns controlling for realized vol.\n\n9. **Cross-sectional skewness predictor (H9)** — third-moment structure. Confound: fat tails. Falsification: skewness-quintile returns, disjoint sample.\n\n10. **Earnings surprise × revision-window interaction (H10)** — PIT revision count moderates surprise impact. Confound: analyst herding. Falsification: 2×2 design on surprise/revision bins, symbol-disjoint.\n\n**Counterarguments**\n- H1/H2/H8 reuse OHLCV and may collapse into realized-volatility effects; must residualize vol explicitly or discard.\n- H3/H7 are macro factors, not stock-alpha; require factor-neutralization design before any alpha claim.\n- H4/H5/H10 depend on third-party public data with PIT coverage risk; audit coverage before testing.\n- H6 may simply be momentum in duration clothing; test orthogonality to existing momentum factor.\n- All ideas risk data-snooping if multiple bins/thresholds are explored; freeze one construction per hypothesis.\n\n**Concrete Next Actions**\n- Pick exactly one hypothesis; write exact rule freeze + provenance + preregistration.\n- Run synthetic PIT/leakage mutation tests on price-path or text state.\n- Audit free/public data coverage and historical availability.\n- Preserve immutable input bundle on symbol-disjoint sample.\n- Only then request one-shot performance authorization through 13-gate evaluation.\n\n**Uncertainty**\n- No hypothesis has passed even feasibility evidence yet; C29–C31 / M4–M5 frontier items are the only ones with deterministic construction today.\n- Public-data PIT coverage is the binding constraint for H4/H5/H10.\n- Orthogonality to existing families is asserted by design, not tested; must be verified after construction freeze.\n\n**Guardrails respected**\nPAPER_ONLY=True, LIVE_TRADING_ENABLED=False, ORDERS_ENABLED=False, AUTOMATIC_PROMOTION=False. No holdout selection, no parameter/asset/horizon/threshold search, no ranking, no performance claims.",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 70.222,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter returned tool-call syntax instead of a final worker handoff.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1790793928-h72v7AL5sAnmxLMBaLsG",
-  "usage": {
-    "prompt_tokens": 4508,
-    "completion_tokens": 2186,
-    "total_tokens": 6694,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 1265,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
