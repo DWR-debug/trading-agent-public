@@ -185,18 +185,26 @@ def main() -> int:
     args.output_dir.mkdir(parents=True, exist_ok=True)
     results = []
     exit_code = 0
+    failed_steps = []
     for index, command in enumerate(LANES[args.lane], start=1):
         result = run(command, args.output_dir, index)
         results.append(result)
         if result["returncode"] != 0:
-            exit_code = int(result["returncode"])
-            break
+            # Keep executing independent bounded research/QA steps so one
+            # non-critical failure cannot suppress unrelated diagnostics.
+            # The lane still exits non-zero and therefore cannot be mistaken
+            # for a clean heartbeat or formal evidence run.
+            if not failed_steps:
+                exit_code = int(result["returncode"]) or 1
+            failed_steps.append(index)
 
     summary = {
         "schema_version": "1.0",
         "lane": args.lane,
         "completed_at": datetime.now(timezone.utc).isoformat(),
         "results": results,
+        "failed_steps": failed_steps,
+        "all_bounded_steps_attempted": True,
         "formal_evidence_allowed": False,
         "paper_only": True,
     }
@@ -218,6 +226,8 @@ def main() -> int:
         "formal_research_evidence": False,
         "step_count": len(results),
         "step_return_codes": [result["returncode"] for result in results],
+        "failed_steps": failed_steps,
+        "all_bounded_steps_attempted": True,
     }
     (args.output_dir / "run_manifest.json").write_text(
         json.dumps(run_manifest, ensure_ascii=False, indent=2) + "\n",
