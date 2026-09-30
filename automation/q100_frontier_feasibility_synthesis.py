@@ -90,9 +90,9 @@ def candidate_gate(next_row: dict, probes96: dict[str, dict], probes98: dict[str
     # Archive probes are evidentiary support only; they never upgrade performance readiness.
     archive_evidence = []
     if "sec form 4" in source_lower:
-        archive_evidence.append(probes98.get("SEC_HISTORICAL_ARCHIVE_13D_G", {}).get("status"))
+        archive_evidence.append(probes96.get("SEC_SUBMISSIONS_FORM4_SAMPLE", {}).get("status"))
     if "sec 13f" in source_lower:
-        archive_evidence.append(probes98.get("SEC_HISTORICAL_ARCHIVE_13D_G", {}).get("status"))
+        archive_evidence.append(probes98.get("SEC_HISTORICAL_ARCHIVE_13F_MANAGER", {}).get("status"))
     if "form 144" in source_lower:
         archive_evidence.append(probes98.get("SEC_HISTORICAL_ANCHOR_FORM144", {}).get("status"))
     if "schedule 13d" in source_lower or "schedule 13g" in source_lower:
