@@ -7,6 +7,8 @@ on:
       - "ai_requests/AI-2026-09-29-Q091-ADVERSARIAL.json"
       - ".github/workflows/ai-worker-fabric.yml"
       - "automation/ai_worker_fabric.py"
+      - "automation/mistral_free.py"
+      - "tests/test_ai_worker_fabric.py"
   schedule:
     - cron: '0 */6 * * *'
   workflow_dispatch:
@@ -126,6 +128,13 @@ jobs:
           set -euo pipefail
           grep -q '"openrouter/free"' automation/openrouter_free.py
           grep -q 'FREE_MODEL = "openrouter/free"' automation/openrouter_free.py
+
+      - name: Assert Mistral fixed free-mode route
+        if: matrix.provider == 'mistral_api'
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'FREE_MODEL="mistral-small-latest"' automation/mistral_free.py
 
       - name: Upload AI worker output
         if: always()
