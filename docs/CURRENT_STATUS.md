@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `48ec00ce701f519bf0e38826af5f4eb8d44a34eb`
+**Current operational snapshot:** `74292bff26fed104f7d139685e2c44bb4ffa439c`
 
-**Generated (UTC):** `2026-09-30T15:34:34.053900+00:00`
+**Generated (UTC):** `2026-09-30T15:39:18.359661+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -21,7 +21,7 @@
 
 ### Scientific status
 
-- Latest recorded formal result: **performance_completed_no_arm_passed_all_13_gates** for `T-2026-09-30-081R4-PERFORMANCE`.
+- Latest recorded formal result: **performance_completed_no_arm_passed_all_13_gates** for `T-2026-09-30-077R1-PERFORMANCE`.
 - Q026 is recorded as **DATA_INVALID / NO_SCIENTIFIC_OUTCOME**; it did not produce performance evidence.
 - Q023 is recorded as **COVERAGE_VALIDATED** and Q025 as **DATE_PIT_VALIDATED**; these are data-contract findings, not promotion evidence.
 - No current candidate is authorized for promotion or live execution.
@@ -31,7 +31,7 @@
 
 - Q081-R2: **HISTORICAL_IMPLEMENTATION_INVALIDATED**; infrastructure-rebased corrective reproduction; no performance authorization.
 - Q089: **PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES**; fresh symbol-disjoint successor to quarantined Q086; separate performance authorization remains required.
-- Q077-R1: **PERFORMANCE_AUTHORIZED**; coverage-only repair after the original Q077 pool left insufficient unused symbols; no performance authorization.
+- Q077-R1: **PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES**; coverage-only repair after the original Q077 pool left insufficient unused symbols; no performance authorization.
 - Q091: **PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES**; fixed portfolio architecture on the fresh symbol-disjoint universe; performance authorization flag = **False**.
 - Q092: **DIAGNOSTIC_COMPLETED_ONLY**; post-performance Q091 failure-mechanism diagnosis; no performance authorization.
 - Q093: **COMPLETED_DIAGNOSTIC_ONLY**; Q091 turnover/cost attribution diagnosis; no performance authorization.

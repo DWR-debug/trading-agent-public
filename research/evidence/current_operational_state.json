@@ -168,7 +168,13 @@
           "status": "INPUT_BUNDLE_FROZEN"
         },
         "issue_number": null,
-        "performance_authorization_allowed": true,
+        "performance_authorization_allowed": false,
+        "performance_result": {
+          "report_fingerprint": "2d9a50ade7a6bb0840f51079bb23affe7f3e5b95389971e7692834ead7ab20f1",
+          "status": "COMPLETED",
+          "trial_id": "T-2026-09-30-077R1-PERFORMANCE",
+          "workflow_run_id": "36737746986"
+        },
         "pit_result": {
           "fingerprint": "27bc62136bd376b26afe11f3e0eeb4b0a96d1868c0c84082ae8a58b50add2563",
           "source_trial_id": "T-2026-09-28-077R1-PIT",
@@ -176,7 +182,7 @@
         },
         "predecessor_authorization_id": "AUTH-Q077R1-2026-09-30-36727296132",
         "preregistration_path": "research/preregistrations/q077r1_performance_2026_09_30.json",
-        "state": "PERFORMANCE_AUTHORIZED",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
         "trial_id": "T-2026-09-30-077R1-PERFORMANCE"
       },
       {
@@ -337,7 +343,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T15:34:34.053900+00:00",
+  "generated_at_utc": "2026-09-30T15:39:18.359661+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -460,6 +466,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: schedule current-master self-hosted repo QA",
+        "sha": "74292bff26fed104f7d139685e2c44bb4ffa439c",
+        "timestamp": "2026-09-30T17:39:00+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "797ec6c1a5a648c133de1d5d4a63b8a67780d4be",
+        "timestamp": "2026-09-30T15:36:30Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "0bdc74c232aa1dfa7adacff1506bfe13616c8852",
+        "timestamp": "2026-09-30T15:35:36Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5d5a408f05908c23ac847ec85b458cbf551499ae",
+        "timestamp": "2026-09-30T15:34:34Z"
+      },
+      {
         "message": "OPS: re-arm authorized Q077-R1 performance trigger",
         "sha": "48ec00ce701f519bf0e38826af5f4eb8d44a34eb",
         "timestamp": "2026-09-30T17:34:15+02:00"
@@ -478,26 +504,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "3e23031e788dcfa3df4c6f581934c130e39e9d31",
         "timestamp": "2026-09-30T15:28:57Z"
-      },
-      {
-        "message": "CI: mark Q077-R1 gate-wait loop counter as used",
-        "sha": "e5908093e8612c941e7850812a3f755e4f11cf80",
-        "timestamp": "2026-09-30T17:28:44+02:00"
-      },
-      {
-        "message": "CI: mark Q077-R1 gate-wait loop counter as used",
-        "sha": "f0196eea70d790ae8cceddf5322ea94ca3765810",
-        "timestamp": "2026-09-30T17:28:40+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "7b3635ec1d3f90c1fe793288a17f0d510766ebc5",
-        "timestamp": "2026-09-30T15:27:37Z"
-      },
-      {
-        "message": "RESEARCH: allow issue-comment authorization on valid T052 descendants",
-        "sha": "62aa1a3447f805ef627686b8f692903aa456efd0",
-        "timestamp": "2026-09-30T17:27:24+02:00"
       }
     ]
   },
@@ -528,8 +534,8 @@
   "scientific_state_recorded": {
     "decision_basis_stage": "Q066_COMPLETED_DIAGNOSTIC_ONLY",
     "latest_formal_status": "performance_completed_no_arm_passed_all_13_gates",
-    "latest_formal_trial": "T-2026-09-30-081R4-PERFORMANCE",
-    "next_research_focus_recorded": "Q099 diagnostic-only completed on the immutable Q081-R4 result; no retune or repeat of Q081-R4 is authorized. Next gate is Q100 frontier feasibility synthesis, followed by the predeclared frontier data/PIT gates (C29 fresh input contract; M4 PIT industry mapping; C30/C31/M5/Q097 source/archive contracts). No performance authorization is created by these feasibility steps.",
+    "latest_formal_trial": "T-2026-09-30-077R1-PERFORMANCE",
+    "next_research_focus_recorded": "Q067 design-only: two unranked follow-up mechanisms derived from Q066 — alpha-level common-mode exposure control and turnover hysteresis; no performance evaluation until parameter freeze, fresh coverage and PIT.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -567,12 +573,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "48ec00ce701f519bf0e38826af5f4eb8d44a34eb",
+  "source_master_sha": "74292bff26fed104f7d139685e2c44bb4ffa439c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36737747067"
+    "run_id": "36738355455"
   }
 }
