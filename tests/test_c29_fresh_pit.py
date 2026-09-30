@@ -43,7 +43,24 @@ def test_c29_pit_requires_enough_history() -> None:
 
 def test_c29_repair_execution_identity_is_explicit() -> None:
     workflow = Path(".github/workflows/c29-fresh-coverage-pit-repair.yml").read_text(encoding="utf-8")
-    assert "--trial-id T-2026-09-30-C29-COVERAGE-PIT-R1" in workflow
-    assert "--universe validation_2026_09_30_c29_fresh_input_repair" in workflow
+    assert "--preregistration research/preregistrations/c29_fresh_coverage_pit_repair_2026_09_30.json" in workflow
+    assert 'assert d["trial_id"] == "T-2026-09-30-C29-COVERAGE-PIT-R1"' in workflow
+    assert 'assert d["universe"] == "validation_2026_09_30_c29_fresh_input_repair"' in workflow
+
+
+def test_c29_repair_receipts_are_persisted() -> None:
+    workflow = Path(".github/workflows/c29-fresh-coverage-pit-repair.yml").read_text(encoding="utf-8")
+    assert "contents: write" in workflow
+    assert "research/evidence/c29_coverage_pit_r1_result.json" in workflow
+    assert "research/evidence/c29_pit_r1_result.json" in workflow
+    assert "automation/github_contents_publish.py" in workflow
+    assert "if: always()" in workflow
+
+
+def test_c29_repair_workflow_is_preregistration_bound() -> None:
+    workflow = Path(".github/workflows/c29-fresh-coverage-pit-repair.yml").read_text(encoding="utf-8")
+    source = Path("automation/c29_fresh_pit.py").read_text(encoding="utf-8")
+    assert "--preregistration research/preregistrations/c29_fresh_coverage_pit_repair_2026_09_30.json" in workflow
+    assert "--preregistration" in source
     assert 'assert d["trial_id"] == "T-2026-09-30-C29-COVERAGE-PIT-R1"' in workflow
     assert 'assert d["universe"] == "validation_2026_09_30_c29_fresh_input_repair"' in workflow
