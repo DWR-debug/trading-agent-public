@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from unittest.mock import patch
+
+import automation.q096_frontier_source_pit_audit as q096
 
 from automation.q096_frontier_source_pit_audit import (
     SEC_SAMPLE_CIKS,
@@ -123,3 +126,15 @@ def test_q096_html_section_matching_collapses_tag_boundaries() -> None:
 def test_q096_sec_header_probe_includes_pit_sic_contract() -> None:
     module = Path("automation/q096_frontier_source_pit_audit.py").read_text(encoding="utf-8")
     assert '"standard_industrial_classification": "STANDARD INDUSTRIAL CLASSIFICATION:"' in module
+
+
+def test_q096_network_errors_fail_closed_without_crashing() -> None:
+    with patch.object(
+        q096.urllib.request,
+        "urlopen",
+        side_effect=ConnectionResetError("synthetic reset"),
+    ):
+        status, data, content_type = q096.get("https://example.invalid/source")
+    assert status == 599
+    assert data == b""
+    assert content_type is None

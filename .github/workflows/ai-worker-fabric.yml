@@ -10,6 +10,10 @@ on:
       - "automation/mistral_free.py"
       - "tests/test_ai_worker_fabric.py"
       - "ai_requests/AI-2026-09-30-Q100-FRONTIER-FEASIBILITY.json"
+      - "ai_requests/AI-2026-09-30-Q101-NEGATIVE-EVIDENCE.json"
+      - "automation/q101_negative_evidence_atlas.py"
+      - "tests/test_q101_negative_evidence_atlas.py"
+      - "docs/research_design/EXTERNAL_RESEARCH_INSPIRATION_2026-09-30.md"
   schedule:
     - cron: '0 */6 * * *'
   workflow_dispatch:
@@ -29,6 +33,7 @@ jobs:
           - AI-2026-09-28-Q089-ADVERSARIAL
           - AI-2026-09-28-UNUSUAL-FRONTIER
           - AI-2026-09-30-Q100-FRONTIER-FEASIBILITY
+          - AI-2026-09-30-Q101-NEGATIVE-EVIDENCE
     concurrency:
       group: trading-agent-ai-${{ matrix.provider }}-${{ matrix.task }}
       cancel-in-progress: false
@@ -56,6 +61,7 @@ jobs:
             AI-2026-09-28-Q089-ADVERSARIAL) echo 'path=ai_requests/AI-2026-09-28-Q089-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-09-28-UNUSUAL-FRONTIER) echo 'path=ai_requests/AI-2026-09-28-UNUSUAL-FRONTIER.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-09-30-Q100-FRONTIER-FEASIBILITY) echo 'path=ai_requests/AI-2026-09-30-Q100-FRONTIER-FEASIBILITY.json' >> "$GITHUB_OUTPUT" ;;
+            AI-2026-09-30-Q101-NEGATIVE-EVIDENCE) echo 'path=ai_requests/AI-2026-09-30-Q101-NEGATIVE-EVIDENCE.json' >> "$GITHUB_OUTPUT" ;;
             *) exit 1 ;;
           esac
 
@@ -160,12 +166,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          slot=$(( $(date -u +%s) / 21600 % 4 ))
+          slot=$(( $(date -u +%s) / 21600 % 5 ))
           case "$slot" in
             0) task_id='AI-2026-09-29-Q091-ADVERSARIAL' ;;
             1) task_id='AI-2026-09-28-Q089-ADVERSARIAL' ;;
             2) task_id='AI-2026-09-28-UNUSUAL-FRONTIER' ;;
             3) task_id='AI-2026-09-30-Q100-FRONTIER-FEASIBILITY' ;;
+            4) task_id='AI-2026-09-30-Q101-NEGATIVE-EVIDENCE' ;;
             *) exit 1 ;;
           esac
           path="ai_requests/$task_id.json"
@@ -279,6 +286,7 @@ jobs:
             AI-2026-09-28-Q089-ADVERSARIAL) path='ai_requests/AI-2026-09-28-Q089-ADVERSARIAL.json' ;;
             AI-2026-09-28-UNUSUAL-FRONTIER) path='ai_requests/AI-2026-09-28-UNUSUAL-FRONTIER.json' ;;
             AI-2026-09-30-Q100-FRONTIER-FEASIBILITY) path='ai_requests/AI-2026-09-30-Q100-FRONTIER-FEASIBILITY.json' ;;
+            AI-2026-09-30-Q101-NEGATIVE-EVIDENCE) path='ai_requests/AI-2026-09-30-Q101-NEGATIVE-EVIDENCE.json' ;;
             *) exit 1 ;;
           esac
           echo "slot=$slot" >> "$GITHUB_OUTPUT"
