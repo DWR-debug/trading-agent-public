@@ -231,6 +231,46 @@
         "preregistration_path": "research/preregistrations/q095_monthly_rebalance_independent_replication_2026_09_29.json",
         "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
         "trial_id": "T-2026-09-29-095"
+      },
+      {
+        "class": "fresh_validation",
+        "code": "C29P1",
+        "coverage_result": {
+          "common_sessions": 3500,
+          "fingerprint": "6b3acf5fb179bc93c6fac8eaaef59d71aa909326d5f171d9718a7cfbc71e22a6",
+          "selected_symbols": [
+            "PPG",
+            "GWW",
+            "PGR",
+            "TT",
+            "ICE",
+            "KLAC",
+            "SNA",
+            "SWK"
+          ],
+          "source_trial_id": "T-2026-09-30-C29R1-COVERAGE-PIT",
+          "status": "COVERAGE_PASSED"
+        },
+        "execution_incident_paths": [
+          "research/evidence/c29_coverage_execution_incident_2026_09_30.json",
+          "research/evidence/c29r1_input_freeze_incident_2026_09_30.json"
+        ],
+        "input_bundle_result": {
+          "fingerprint": "743b0a14e646009e7ed5503c4068e399caaebc9719ffcd9e88a5ab40465ab4e9",
+          "source_trial_id": "T-2026-09-30-C29R1-INPUT-FREEZE",
+          "status": "INPUT_BUNDLE_FROZEN"
+        },
+        "issue_number": null,
+        "performance_authorization_allowed": false,
+        "pit_result": {
+          "fingerprint": "d88c24271fec55186b5e3aad478d91acc7ebe3b6412193724170365f5b6729c6",
+          "source_trial_id": "T-2026-09-30-C29R1-COVERAGE-PIT",
+          "status": "PIT_PASSED_NO_PERFORMANCE_EVIDENCE"
+        },
+        "preregistration_path": "research/preregistrations/c29_performance_2026_09_30.json",
+        "repair_discovery_fingerprint": "b7541fee48f01105d47ca0e89b05e1c20d14d73c5dad18dc1d2e876a21c4b05d",
+        "state": "PERFORMANCE_READY_FOR_AUTHORIZATION",
+        "trial_id": "T-2026-09-30-C29-PERFORMANCE-01"
       }
     ],
     "name": "active_research_registry",
@@ -343,7 +383,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T16:17:12.687620+00:00",
+  "generated_at_utc": "2026-09-30T16:22:17.493444+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -466,44 +506,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "FIX: register C29 research workflows in integrity allowlist (#702)",
-        "sha": "53936d8ef420248ce29f7a02762601a5a694e7d6",
-        "timestamp": "2026-09-30T18:16:55+02:00"
+        "message": "RESEARCH: preregister C29 one-shot performance validation (#703)",
+        "sha": "14a9ba79118e4a770e18bba5a5802b1cbe2f2af8",
+        "timestamp": "2026-09-30T18:22:02+02:00"
       },
       {
-        "message": "FIX: register C29 research workflow allowlist",
-        "sha": "898e02f2a041717eff1c8e0bfe8fe38903b1ec22",
-        "timestamp": "2026-09-30T18:16:38+02:00"
+        "message": "RESEARCH: persist C29 performance readiness receipt",
+        "sha": "ae7bc20d6b63ba3666cc110131c2c5ed52a36369",
+        "timestamp": "2026-09-30T18:21:33+02:00"
       },
       {
-        "message": "OPS: record AI worker state",
-        "sha": "8337f97af1b87beeb908f87e3538df92853d5c78",
-        "timestamp": "2026-09-30T16:15:19Z"
+        "message": "OPS: request one-shot C29 performance authorization",
+        "sha": "56aac6a5440affc453427cadcf548d25b01bdd46",
+        "timestamp": "2026-09-30T18:21:22+02:00"
       },
       {
-        "message": "OPS: record AI worker state",
-        "sha": "cc731040108d7f8835ed5e6629ee35636b5ce154",
-        "timestamp": "2026-09-30T16:15:11Z"
+        "message": "RESEARCH: add C29 one-shot performance authorization",
+        "sha": "e88e2fd7eee257630bc58a111ef991bf8406b06e",
+        "timestamp": "2026-09-30T18:21:14+02:00"
       },
       {
-        "message": "OPS: record AI worker state",
-        "sha": "547ec2d1d9521d457c84377c936a0b333767d4aa",
-        "timestamp": "2026-09-30T16:15:09Z"
+        "message": "RESEARCH: add C29 one-shot performance workflow",
+        "sha": "55467fe5f53ca04e15dcb1ad2237d10e4acbede5",
+        "timestamp": "2026-09-30T18:20:18+02:00"
       },
       {
-        "message": "OPS: record AI worker state",
-        "sha": "466947b69cc8b09b7bb0c7493c1f73c08e3494d5",
-        "timestamp": "2026-09-30T16:15:04Z"
+        "message": "RESEARCH: bind C29 preregistration to finalized runner hash",
+        "sha": "060cba1c02b246bbb008dd889fed22ae6492083d",
+        "timestamp": "2026-09-30T18:19:53+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "21929ad0a2dafd3294d244d7679f1cbdcf60ffbb",
-        "timestamp": "2026-09-30T16:13:12Z"
+        "message": "RESEARCH: enforce C29 preregistered source contract at runtime",
+        "sha": "c781f0a6cb1a4ed324ec22ed149f7026b4af3234",
+        "timestamp": "2026-09-30T18:19:41+02:00"
       },
       {
-        "message": "FIX: isolate C29 repair discovery test fixture (#701)",
-        "sha": "c91109b199308820aabef7f91fa49a27e678bfe2",
-        "timestamp": "2026-09-30T18:12:56+02:00"
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "a3853541ec669cb9555f2edfbc7275fe39256471",
+        "timestamp": "2026-09-30T16:19:32Z"
       }
     ]
   },
@@ -573,12 +613,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "53936d8ef420248ce29f7a02762601a5a694e7d6",
+  "source_master_sha": "14a9ba79118e4a770e18bba5a5802b1cbe2f2af8",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36743056020"
+    "run_id": "36743669014"
   }
 }
