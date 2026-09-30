@@ -343,7 +343,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T16:10:38.564724+00:00",
+  "generated_at_utc": "2026-09-30T16:13:12.738061+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -466,6 +466,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: isolate C29 repair discovery test fixture (#701)",
+        "sha": "c91109b199308820aabef7f91fa49a27e678bfe2",
+        "timestamp": "2026-09-30T18:12:56+02:00"
+      },
+      {
+        "message": "FIX: isolate C29 repair discovery test universe fixture",
+        "sha": "1dec30d04d898ecdb9f6cfb4dbcf3d5045854055",
+        "timestamp": "2026-09-30T18:12:37+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "5a2378fd34e16e28227ed71110d5ac431712e4f1",
+        "timestamp": "2026-09-30T16:10:45Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "096b5095613655cdca7758a1a64c2756215581a0",
+        "timestamp": "2026-09-30T16:10:38Z"
+      },
+      {
         "message": "FIX: repair C29R1 input-freeze artifact path (#700)",
         "sha": "da2a0402b4cc0938d9b224a5cc6223f449364ab3",
         "timestamp": "2026-09-30T18:10:22+02:00"
@@ -484,26 +504,6 @@
         "message": "FIX: correct flattened C29R1 artifact paths",
         "sha": "3f1bb827579f5f1cee0364bb22285d45fa16b55a",
         "timestamp": "2026-09-30T18:09:47+02:00"
-      },
-      {
-        "message": "FIX: accept flattened C29R1 coverage artifact root",
-        "sha": "a88d7a228c8c170c7f73959c018aba1df7cb3ed4",
-        "timestamp": "2026-09-30T18:09:40+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4d403bbd8f0f03ae148e3f29556e02f5da74304a",
-        "timestamp": "2026-09-30T16:08:53Z"
-      },
-      {
-        "message": "RESEARCH: freeze C29R1 performance input bundle (#699)",
-        "sha": "12e8bb328269a5913e53993533b46476e9a715db",
-        "timestamp": "2026-09-30T18:08:39+02:00"
-      },
-      {
-        "message": "RESEARCH: freeze C29R1 performance input bundle",
-        "sha": "c23b204251bbcc016a8e305c0ec6c6e8ca063f74",
-        "timestamp": "2026-09-30T18:08:15+02:00"
       }
     ]
   },
@@ -573,12 +573,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "da2a0402b4cc0938d9b224a5cc6223f449364ab3",
+  "source_master_sha": "c91109b199308820aabef7f91fa49a27e678bfe2",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36742255423"
+    "run_id": "36742569685"
   }
 }
