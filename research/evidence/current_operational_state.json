@@ -390,7 +390,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T19:09:57.118699+00:00",
+  "generated_at_utc": "2026-09-30T19:10:12.381075+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -513,6 +513,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "85aff70b06a7d1c3ba10445d630d74a34edfddf5",
+        "timestamp": "2026-09-30T19:09:57Z"
+      },
+      {
         "message": "TEST: validate Research OS capability registry",
         "sha": "abe797fe6971b401cbdcea1d8478ab53e49bfcc4",
         "timestamp": "2026-09-30T21:09:46+02:00"
@@ -546,11 +551,6 @@
         "message": "FIX: repair C29 R1 workflow step ordering",
         "sha": "dd4909ef0c4dfe2061cd675d87b8652af79e16f2",
         "timestamp": "2026-09-30T21:02:09+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "cabab38641b917369df63ec8ef0687028b9294f3",
-        "timestamp": "2026-09-30T19:01:46Z"
       }
     ]
   },
@@ -620,12 +620,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "abe797fe6971b401cbdcea1d8478ab53e49bfcc4",
+  "source_master_sha": "85aff70b06a7d1c3ba10445d630d74a34edfddf5",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36763724551"
+    "run_id": "36763728485"
   }
 }
