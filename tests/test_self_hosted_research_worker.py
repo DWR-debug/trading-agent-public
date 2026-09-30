@@ -328,3 +328,7 @@ def test_permanent_loop_harvests_frontier_outputs_even_after_bounded_failure():
     assert "q092_q091_failure_diagnosis.json" in text
     assert "provenance_index.json" in text
     assert "Get-FileHash -Algorithm SHA256" in text
+    assert "AI-2026-09-30-Q101-NEGATIVE-EVIDENCE" in text
+    assert "AI-2026-09-30-Q102-REGIME-STATE-DESIGN" in text
+    assert "%% 6" in text
+
