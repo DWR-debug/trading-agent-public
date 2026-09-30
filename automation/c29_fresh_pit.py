@@ -156,17 +156,50 @@ def run(
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--universe-root", required=True)
-    parser.add_argument("--symbols", nargs="+", required=True)
+    parser.add_argument("--symbols", nargs="+")
     parser.add_argument("--output", required=True)
-    parser.add_argument("--trial-id", default="T-2026-09-30-C29-COVERAGE-PIT")
-    parser.add_argument("--universe", default="validation_2026_09_30_c29_fresh_input")
+    parser.add_argument("--trial-id", default=None)
+    parser.add_argument("--universe", default=None)
+    parser.add_argument("--preregistration", default=None)
     args = parser.parse_args()
+
+    symbols = tuple(args.symbols) if args.symbols else None
+    trial_id = args.trial_id
+    universe = args.universe
+
+    if args.preregistration:
+        prereg_path = Path(args.preregistration)
+        if not prereg_path.is_absolute():
+            prereg_path = Path(__file__).resolve().parents[1] / prereg_path
+        spec = json.loads(prereg_path.read_text(encoding="utf-8"))
+        prereg_symbols = tuple(spec["symbols"])
+        prereg_trial_id = str(spec["trial_id"])
+        prereg_universe = str(spec["universe"])
+
+        if symbols is not None and symbols != prereg_symbols:
+            raise SystemExit("--symbols does not match preregistration")
+        if trial_id is not None and trial_id != prereg_trial_id:
+            raise SystemExit("--trial-id does not match preregistration")
+        if universe is not None and universe != prereg_universe:
+            raise SystemExit("--universe does not match preregistration")
+
+        symbols = prereg_symbols
+        trial_id = prereg_trial_id
+        universe = prereg_universe
+
+    if symbols is None:
+        raise SystemExit("provide --preregistration or --symbols")
+    if trial_id is None:
+        trial_id = "T-2026-09-30-C29-COVERAGE-PIT"
+    if universe is None:
+        universe = "validation_2026_09_30_c29_fresh_input"
+
     run(
         Path(args.universe_root),
-        tuple(args.symbols),
+        symbols,
         Path(args.output),
-        trial_id=args.trial_id,
-        universe=args.universe,
+        trial_id=trial_id,
+        universe=universe,
     )
     return 0
 
