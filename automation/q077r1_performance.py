@@ -20,6 +20,8 @@ from datetime import datetime
 from automation.q067_alpha_mechanisms import (
     Q067_SLEEVES,
     Q067_SYMBOLS,
+    GROSS_EXPOSURE_CAP,
+    GROSS_EXPOSURE_TOLERANCE,
     RETURN_COUNT,
     apply_common_mode_throttle,
     apply_turnover_hysteresis,
@@ -121,6 +123,42 @@ def _assert_registry_authorization(repo_root: Path) -> None:
         raise RuntimeError("Q077R1 registry entry missing or identity mismatch")
     if entry.get("performance_authorization_allowed") is not True or entry.get("state") != "PERFORMANCE_AUTHORIZED":
         raise RuntimeError("Q077R1 registry is not in PERFORMANCE_AUTHORIZED state")
+
+
+def apply_execution_gross_cap(
+    row: dict[str, float],
+    *,
+    symbols: tuple[str, ...] = Q077R1_SYMBOLS,
+    cap: float = GROSS_EXPOSURE_CAP,
+    tolerance: float = GROSS_EXPOSURE_TOLERANCE,
+) -> dict[str, float]:
+    """Enforce the already-preregistered gross cap pro-rata at execution time."""
+    if cap < 0.0 or tolerance < 0.0:
+        raise ValueError("cap and tolerance must be non-negative")
+    values = {symbol: float(row.get(symbol, 0.0)) for symbol in symbols}
+    for symbol, value in values.items():
+        if value != value or value in (float("inf"), float("-inf")):
+            raise ValueError(f"non-finite portfolio weight: {symbol}")
+        if value < -tolerance:
+            raise ValueError(f"negative long-only weight: {symbol}")
+    gross = sum(abs(value) for value in values.values())
+    if gross <= cap + tolerance:
+        return values
+    if gross <= 0.0:
+        return values
+    scale = cap / gross
+    return {symbol: value * scale for symbol, value in values.items()}
+
+
+def correct_e2_execution_envelope(
+    weights,
+    *,
+    symbols: tuple[str, ...] = Q077R1_SYMBOLS,
+) -> tuple[dict[str, float], ...]:
+    return tuple(
+        apply_execution_gross_cap(row, symbols=symbols)
+        for row in weights
+    )
 
 
 def _assert_preflight(repo_root: Path) -> tuple[dict[str, tuple], dict, dict]:
@@ -412,8 +450,12 @@ def run(preregistration: Path, repo_root: Path, output: Path) -> dict:
         sleeve_returns,
         symbols=Q077R1_SYMBOLS,
     )
-    e2 = apply_turnover_hysteresis(
+    e2_raw = apply_turnover_hysteresis(
         aggregate,
+        symbols=Q077R1_SYMBOLS,
+    )
+    e2 = correct_e2_execution_envelope(
+        e2_raw,
         symbols=Q077R1_SYMBOLS,
     )
 
