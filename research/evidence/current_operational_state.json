@@ -299,6 +299,7 @@
     "project_context": "docs/PROJECT_CONTEXT.md",
     "research_checkpoint": "research/evidence/current_project_checkpoint.json",
     "research_decision_basis": "research/evidence/decision_basis_latest.json",
+    "research_os_source_registry": "research/governance/research_os_source_registry_2026_09_30.json",
     "research_state": "research/evidence/project_state.json",
     "trial_ledger": "research/evidence/trial_ledger.json"
   },
@@ -336,6 +337,20 @@
       "merge_commit": "a1536a2531ff8341b2ab25a8cdd0012a22e3e3ba",
       "pr": 352,
       "status": "MERGED"
+    },
+    "research_os": {
+      "agent_output_is_scientific_evidence": false,
+      "layers": [
+        "source_fabric",
+        "evidence_bus",
+        "research_compiler",
+        "agent_mesh",
+        "sandbox_execution_boundary",
+        "decision_state"
+      ],
+      "performance_authorization_from_os": false,
+      "source_registry": "research/governance/research_os_source_registry_2026_09_30.json",
+      "version": "ROS-0.1"
     },
     "scientific_compute": {
       "canonical_path": "GitHub-hosted deterministic workflows",
@@ -390,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T19:10:12.381075+00:00",
+  "generated_at_utc": "2026-09-30T19:10:39.695818+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -513,6 +528,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "ARCH: extend Research OS source lattice with community discovery pool",
+        "sha": "77f5feb0040dcdf46f1ef969b4ee489a6aa94410",
+        "timestamp": "2026-09-30T21:10:38+02:00"
+      },
+      {
+        "message": "GOV: expose Research OS capability layer in canonical status",
+        "sha": "d182d1fed61b97117910a3865fb32d4299e09231",
+        "timestamp": "2026-09-30T21:10:27+02:00"
+      },
+      {
+        "message": "GOV: include Research OS registry in project integrity gate",
+        "sha": "ec8efa059d6fccabaf62b90d8c9192336399c5d6",
+        "timestamp": "2026-09-30T21:10:15+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d9ca38254adf0185b9776ebfbf8262cf8b33ce94",
+        "timestamp": "2026-09-30T19:10:12Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "85aff70b06a7d1c3ba10445d630d74a34edfddf5",
         "timestamp": "2026-09-30T19:09:57Z"
@@ -531,26 +566,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "22297230344fd7d9245bdbf02dad2cd55bc25a29",
         "timestamp": "2026-09-30T19:09:15Z"
-      },
-      {
-        "message": "ARCH: add Research OS source and agent capability lattice",
-        "sha": "6cc555bf9e147dda193362b850a8c9970f6cb57c",
-        "timestamp": "2026-09-30T21:09:03+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "bfe493d0a535d16a697b7ac44c5b2264df39837b",
-        "timestamp": "2026-09-30T19:02:38Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c10caf9d221002b3afebfeb8c61fc0952617c9c1",
-        "timestamp": "2026-09-30T19:02:20Z"
-      },
-      {
-        "message": "FIX: repair C29 R1 workflow step ordering",
-        "sha": "dd4909ef0c4dfe2061cd675d87b8652af79e16f2",
-        "timestamp": "2026-09-30T21:02:09+02:00"
       }
     ]
   },
@@ -620,12 +635,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "85aff70b06a7d1c3ba10445d630d74a34edfddf5",
+  "source_master_sha": "77f5feb0040dcdf46f1ef969b4ee489a6aa94410",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36763728485"
+    "run_id": "36763787798"
   }
 }

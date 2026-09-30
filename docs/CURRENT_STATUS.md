@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `85aff70b06a7d1c3ba10445d630d74a34edfddf5`
+**Current operational snapshot:** `77f5feb0040dcdf46f1ef969b4ee489a6aa94410`
 
-**Generated (UTC):** `2026-09-30T19:10:12.381075+00:00`
+**Generated (UTC):** `2026-09-30T19:10:39.695818+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -38,6 +38,7 @@
 - Q094: **PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES**; fixed monthly-rebalance successor to the Q091 low-turnover diagnosis; performance authorization flag = **False**.
 - Q084, Q088 and Q082 remain **design/feasibility tracks** for unusual market-state, textual-network, rebalance-demand and SEC information channels.
 - The unusual-strategy frontier is maintained in `docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md` and is design-only until feasibility and provenance are established.
+- Research OS capability lattice: `research/governance/research_os_source_registry_2026_09_30.json`; it is metadata only and cannot authorize performance.
 
 ### Q067 execution pipeline
 
