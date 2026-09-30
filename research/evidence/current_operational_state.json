@@ -321,7 +321,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T13:04:02.146620+00:00",
+  "generated_at_utc": "2026-09-30T13:04:18.896889+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -444,6 +444,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "TEST: add C29 fresh PIT and governance guards",
+        "sha": "fe19abb8b4b8140da9388cef62a7800f61253849",
+        "timestamp": "2026-09-30T15:04:17+02:00"
+      },
+      {
+        "message": "FIX: remove dead branch from C29 PIT audit",
+        "sha": "81f571a3e1a8dbe7ea68e70b712ee0b865e035da",
+        "timestamp": "2026-09-30T15:04:05+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ef5828188921277a92c2d8295dd57b1acc2f75b9",
+        "timestamp": "2026-09-30T13:04:02Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "62f45d2a12be2505583d9904af9485490e9ae131",
         "timestamp": "2026-09-30T13:03:47Z"
@@ -467,21 +482,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "b45e09f241178970ef2d060eecfa707925a25c6a",
         "timestamp": "2026-09-30T13:03:15Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "3cd41ec884772fd2486f30e0ac6a62ec67425149",
-        "timestamp": "2026-09-30T13:00:58Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "7df8c0cbf3b0afd0b4466e85407e61cb7aeca1c5",
-        "timestamp": "2026-09-30T12:50:52Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "bb467d3396588ffad95889013ec97f75432aeb2f",
-        "timestamp": "2026-09-30T12:50:51Z"
       }
     ]
   },
@@ -551,12 +551,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "62f45d2a12be2505583d9904af9485490e9ae131",
+  "source_master_sha": "fe19abb8b4b8140da9388cef62a7800f61253849",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36718943682"
+    "run_id": "36718997707"
   }
 }
