@@ -212,3 +212,5 @@ def test_mistral_free_preflight_accepts_key_and_attestation():
     result = preflight("mistral_api", env=env)
     assert result["available"] is True
     assert result["free_enforcement"] == "attestation_or_local_attestation"
+    assert result["binary"] is None
+    assert "provider executable not found" not in result["reasons"]
