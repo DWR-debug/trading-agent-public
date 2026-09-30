@@ -390,7 +390,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T19:01:25.730142+00:00",
+  "generated_at_utc": "2026-09-30T19:01:46.328166+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -513,6 +513,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "TEST: bind C29 repair PIT execution to preregistration",
+        "sha": "8d527155e585a4e2b5a0a578044040c0dcc01ea6",
+        "timestamp": "2026-09-30T21:01:29+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "aaa21721335a7257309e90212a19a4b76adb1668",
+        "timestamp": "2026-09-30T19:01:25Z"
+      },
+      {
         "message": "FIX: derive C29 repair PIT identity from preregistration",
         "sha": "7396b38236d0f3f4e11fae9cd12a5a2554e8e1bf",
         "timestamp": "2026-09-30T21:01:24+02:00"
@@ -541,16 +551,6 @@
         "message": "TEST: enforce C29 repair successor identity contract",
         "sha": "8e229b9c9faee0427a5f692099ca62ecbaf3e4b5",
         "timestamp": "2026-09-30T20:58:47+02:00"
-      },
-      {
-        "message": "FIX: enforce C29 repair successor PIT identity",
-        "sha": "331ca6ce622749671e7f15416aadb2c4f0cddfa6",
-        "timestamp": "2026-09-30T20:58:44+02:00"
-      },
-      {
-        "message": "FIX: bind C29 PIT receipt identity to explicit trial context",
-        "sha": "6a148c1cd0fcb97350817b9818283094c51166d6",
-        "timestamp": "2026-09-30T20:58:41+02:00"
       }
     ]
   },
@@ -620,12 +620,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7396b38236d0f3f4e11fae9cd12a5a2554e8e1bf",
+  "source_master_sha": "8d527155e585a4e2b5a0a578044040c0dcc01ea6",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36762695363"
+    "run_id": "36762740611"
   }
 }
