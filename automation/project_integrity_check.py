@@ -159,6 +159,7 @@ REQUIRED_FILES = (
     ROOT / "docs" / "CHAT_CONTEXT_2026_09_24.md",
     ROOT / "docs" / "PRE_CLEANUP_INVENTORY_2026_09_24.md",
     ROOT / "research" / "evidence" / "trial_ledger.json",
+    ROOT / "research" / "governance" / "research_os_source_registry_2026_09_30.json",
 )
 
 
@@ -227,6 +228,41 @@ def _validate_q067_evidence_chain() -> None:
             fail("Q067 performance evidence records holdout selection")
 
 
+def _validate_research_os_registry() -> None:
+    path = ROOT / "research" / "governance" / "research_os_source_registry_2026_09_30.json"
+    try:
+        registry = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        fail(f"Research OS registry is unreadable: {exc}")
+    safety = registry.get("safety", {})
+    if safety != {
+        "paper_only": True,
+        "live_trading_enabled": False,
+        "orders_enabled": False,
+        "automatic_promotion": False,
+        "paid_resources_allowed": False,
+    }:
+        fail("Research OS registry safety contract invalid")
+    sources = registry.get("source_lattice")
+    agents = registry.get("agent_runtime_lattice")
+    if not isinstance(sources, list) or not sources:
+        fail("Research OS source lattice is missing")
+    if not isinstance(agents, list) or not agents:
+        fail("Research OS agent runtime lattice is missing")
+    for item in sources:
+        if not isinstance(item, dict):
+            fail("Research OS source entry is not an object")
+        if not isinstance(item.get("id"), str) or not item["id"]:
+            fail("Research OS source entry lacks id")
+        if not isinstance(item.get("source_url"), str) or not item["source_url"].startswith("https://"):
+            fail(f"Research OS source has invalid source_url: {item.get('id')}")
+        if "pit_fit" not in item:
+            fail(f"Research OS source has no PIT classification: {item.get('id')}")
+    for item in agents:
+        if not isinstance(item, dict) or not item.get("adoption_mode"):
+            fail("Research OS agent entry lacks adoption_mode")
+
+
 def main() -> None:
     workflow_dir = ROOT / ".github" / "workflows"
     active_workflows = {path.name for path in workflow_dir.glob("*.yml")}
@@ -236,6 +272,7 @@ def main() -> None:
             + ", ".join(sorted(active_workflows - ACTIVE_WORKFLOWS))
         )
     _validate_q067_evidence_chain()
+    _validate_research_os_registry()
 
     for path in REQUIRED_FILES:
         if not path.exists():
