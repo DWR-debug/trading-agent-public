@@ -30,14 +30,15 @@
     ],
     "active_trials": [
       {
+        "authorization_id": "AUTH-Q081R4-2026-09-30-36640499423",
         "class": "performance_correction",
         "code": "081R4",
         "issue_number": 694,
-        "performance_authorization_allowed": false,
+        "performance_authorization_allowed": true,
         "predecessor_execution_incident_path": "research/evidence/q081r3_performance_execution_incident.json",
         "predecessor_trial_id": "T-2026-09-30-081R3-PERFORMANCE",
         "preregistration_path": "research/preregistrations/q081r4_ast_literal_audit_2026_09_30.json",
-        "state": "PREREGISTERED_WAITING_AUTHORIZATION",
+        "state": "PERFORMANCE_AUTHORIZED",
         "trial_id": "T-2026-09-30-081R4-PERFORMANCE"
       },
       {
@@ -314,7 +315,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-29T22:36:10.727071+00:00",
+  "generated_at_utc": "2026-09-30T10:43:17.890742+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -437,44 +438,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f36dc76496ad2b0996ed4c51d79c6f016327fb50",
-        "timestamp": "2026-09-29T22:35:54Z"
+        "message": "FIX: bind Q081R4 reconciliation to Q081R4 authorization",
+        "sha": "a6e246454754ce2946cf8f7cf454f8601df54bfc",
+        "timestamp": "2026-09-30T12:42:55+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2a8e9739cb13b23df1a78a4ec52b6a623d088df8",
-        "timestamp": "2026-09-29T22:35:39Z"
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "73a0040d761da6418c8bfc706bd930eded0672a9",
+        "timestamp": "2026-09-30T10:34:36Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2637d4d04b6bcab84dbece15777fd180634eb7ea",
-        "timestamp": "2026-09-29T22:35:21Z"
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "dd87d9077331a47f4b68932938105118ea356ee6",
+        "timestamp": "2026-09-30T10:28:55Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1c570ce77d00145d73b29355ee34f339a1ed932c",
-        "timestamp": "2026-09-29T22:35:05Z"
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "6a3cc8f141f05816204e1b4707c2f9514fb4336d",
+        "timestamp": "2026-09-30T10:14:49Z"
       },
       {
-        "message": "RETRY: authorize Q081R4 after AST guard completion",
-        "sha": "604f9a5df2854029ff909a8a4c5f4bf232a3ad1a",
-        "timestamp": "2026-09-30T00:35:01+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "5e9ad2ab685cd2e403828465e8841ac5625e2d58",
+        "timestamp": "2026-09-30T10:14:04Z"
       },
       {
-        "message": "FIX: bind Q081R4 authorization to exact R3 incident run",
-        "sha": "857c4993453bb63740d1e7a750065a45fe641e72",
-        "timestamp": "2026-09-30T00:34:52+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "a75f5fcc95ad63bf8965e5e88fe6cd2add7fad7e",
+        "timestamp": "2026-09-30T10:14:02Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "cd9576da584c1ebc94dd42cec39c1521f01b2c1d",
-        "timestamp": "2026-09-29T22:34:16Z"
+        "message": "OPS: record AI worker state",
+        "sha": "aa99e810b0c0481b9db78332d41af26075848d56",
+        "timestamp": "2026-09-30T10:13:49Z"
       },
       {
-        "message": "REQUEST: authorize Q081R4 AST-audited fixed-rule performance exactly once",
-        "sha": "8988acf5d8ac13601d5e536c73358080911aec81",
-        "timestamp": "2026-09-30T00:34:08+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "8301b1b6f9abf14aec8bf2fe537aa920ea852234",
+        "timestamp": "2026-09-30T10:13:48Z"
       }
     ]
   },
@@ -544,12 +545,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f36dc76496ad2b0996ed4c51d79c6f016327fb50",
+  "source_master_sha": "a6e246454754ce2946cf8f7cf454f8601df54bfc",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36640499486"
+    "run_id": "36704092410"
   }
 }
