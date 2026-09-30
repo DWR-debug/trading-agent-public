@@ -21,6 +21,12 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
+      - name: Checkout master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
       - name: Verify dispatch repair request and authorization
         shell: bash
         env:
@@ -49,34 +55,12 @@ jobs:
           set -euo pipefail
           gh workflow run c29-performance-once.yml --repo "$GITHUB_REPOSITORY" --ref master
           echo "C29 PERFORMANCE WORKFLOW DISPATCHED"
+          printf 'trial_id=T-2026-09-30-C29-PERFORMANCE-01\ndispatch_workflow=c29-performance-once.yml\n' > /tmp/c29_dispatch_receipt.txt
 
       - name: Upload dispatch receipt
         if: always()
-        run: |
-          printf 'dispatch_workflow=c29-performance-once.yml
-trial_id=T-2026-09-30-C29-PERFORMANCE-01
-master_ref=master
-' > c29_dispatch_receipt.txt
-
-      - name: Publish dispatch receipt
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          base_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
-          printf 'DISPATCH_C29_PERFORMANCE=true
-TRIAL_ID=T-2026-09-30-C29-PERFORMANCE-01
-DISPATCHED=true
-' > research/run_requests/c29_performance_dispatch_repair.trigger
-          python - <<'PY'
-          from pathlib import Path
-          Path("research/evidence/c29_performance_dispatch_repair_receipt_2026_09_30.json").write_text(
-              '{"schema_version":"1.0","status":"DISPATCH_REQUEST_ISSUED","trial_id":"T-2026-09-30-C29-PERFORMANCE-01","workflow":"c29-performance-once.yml","scientific_outcome":"NO_SCIENTIFIC_OUTCOME","performance_result":false,"automatic_promotion":false}\n',
-              encoding="utf-8",
-          )
-          PY
-          python automation/github_contents_publish.py \
-            --repository "$GITHUB_REPOSITORY" \
-            --branch master \
-            --base-sha "$base_sha" \
-            --file research/evidence/c29_performance_dispatch_repair_receipt_2026_09_30.json=research/evidence/c29_performance_dispatch_repair_receipt_2026_09_30.json
+        uses: actions/upload-artifact@v6
+        with:
+          name: c29-dispatch-repair-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/c29_dispatch_receipt.txt
+          if-no-files-found: warn
