@@ -390,7 +390,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T18:44:01.579029+00:00",
+  "generated_at_utc": "2026-09-30T18:44:27.417485+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -513,44 +513,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "RESEARCH: parallelize frontier feasibility across x64 ARM64",
-        "sha": "8734a170fff5147f7d7032acfa83ebe65bf6c3e9",
-        "timestamp": "2026-09-30T20:43:55+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "6b50e7aa647496388b75d78fdab8a1345f90385a",
+        "timestamp": "2026-09-30T18:44:25Z"
       },
       {
-        "message": "RESEARCH: start C29 fresh coverage and PIT gate",
-        "sha": "df059e3f24781798addb0ec66360365cc2388e44",
-        "timestamp": "2026-09-30T20:43:45+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "e90c6881c2c70bfbf9a33ee8efaa62f4888ba0ab",
+        "timestamp": "2026-09-30T18:44:22Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "b4e207e6659f4bd3ee6094516ad362aa74cf07e4",
+        "timestamp": "2026-09-30T18:44:19Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "2544c3e4e3dc25e352433a0972a7ee5a0a58c0b7",
+        "timestamp": "2026-09-30T18:44:18Z"
+      },
+      {
+        "message": "RESEARCH: launch autonomous frontier cycle 01",
+        "sha": "99730dde68b85ef29c371dccd4411b810f9c7779",
+        "timestamp": "2026-09-30T20:44:14+02:00"
+      },
+      {
+        "message": "RESEARCH: add OpenRouter free Q091 adversarial review",
+        "sha": "857501d7430ebb2e33900894b30e3f8272b0f8fb",
+        "timestamp": "2026-09-30T20:44:09+02:00"
+      },
+      {
+        "message": "RESEARCH: add immediate Q091 free-AI adversarial lane",
+        "sha": "94913dffc2bc72f32f085368a2a70c27c41540c5",
+        "timestamp": "2026-09-30T20:44:04+02:00"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "3bf7e6fe9c748edb1fb4fc3482cecb2b2313b43c",
-        "timestamp": "2026-09-30T18:39:13Z"
-      },
-      {
-        "message": "TEST: run hosted failover guard on changes",
-        "sha": "f328150f3e086785d28fc9a3ce82f12fa9568177",
-        "timestamp": "2026-09-30T20:38:55+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2dd57fecdb6646c5b51d86db98560e9a9218aeea",
-        "timestamp": "2026-09-30T18:38:30Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ca30827303ae1e85875546dedc3bbd0d279fd1b8",
-        "timestamp": "2026-09-30T18:38:15Z"
-      },
-      {
-        "message": "OPS: anchor self-hosted failover in resource model",
-        "sha": "724200a724b60838d889263be49f03c2b5cf234c",
-        "timestamp": "2026-09-30T20:38:12+02:00"
-      },
-      {
-        "message": "OPS: anchor self-hosted failover policy",
-        "sha": "4860423951ea54cdb7f770802ca4302607789f8a",
-        "timestamp": "2026-09-30T20:38:03+02:00"
+        "sha": "87d67a3ea48b0c767f9b7fe9f1926391ec82823c",
+        "timestamp": "2026-09-30T18:44:01Z"
       }
     ]
   },
@@ -620,12 +620,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8734a170fff5147f7d7032acfa83ebe65bf6c3e9",
+  "source_master_sha": "6b50e7aa647496388b75d78fdab8a1345f90385a",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36760656854"
+    "run_id": "36760693882"
   }
 }
