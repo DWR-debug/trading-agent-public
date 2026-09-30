@@ -343,7 +343,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T16:08:53.636538+00:00",
+  "generated_at_utc": "2026-09-30T16:10:38.564724+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -466,6 +466,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: repair C29R1 input-freeze artifact path (#700)",
+        "sha": "da2a0402b4cc0938d9b224a5cc6223f449364ab3",
+        "timestamp": "2026-09-30T18:10:22+02:00"
+      },
+      {
+        "message": "FIX: cover flattened C29R1 artifact layout",
+        "sha": "e22e6092142431679692f1626d91a43d85ecec10",
+        "timestamp": "2026-09-30T18:10:01+02:00"
+      },
+      {
+        "message": "FIX: persist C29R1 input-freeze packaging incident",
+        "sha": "adfd5c2b73ed37e677e2865d6175f30e08972d0a",
+        "timestamp": "2026-09-30T18:09:54+02:00"
+      },
+      {
+        "message": "FIX: correct flattened C29R1 artifact paths",
+        "sha": "3f1bb827579f5f1cee0364bb22285d45fa16b55a",
+        "timestamp": "2026-09-30T18:09:47+02:00"
+      },
+      {
+        "message": "FIX: accept flattened C29R1 coverage artifact root",
+        "sha": "a88d7a228c8c170c7f73959c018aba1df7cb3ed4",
+        "timestamp": "2026-09-30T18:09:40+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4d403bbd8f0f03ae148e3f29556e02f5da74304a",
+        "timestamp": "2026-09-30T16:08:53Z"
+      },
+      {
         "message": "RESEARCH: freeze C29R1 performance input bundle (#699)",
         "sha": "12e8bb328269a5913e53993533b46476e9a715db",
         "timestamp": "2026-09-30T18:08:39+02:00"
@@ -474,36 +504,6 @@
         "message": "RESEARCH: freeze C29R1 performance input bundle",
         "sha": "c23b204251bbcc016a8e305c0ec6c6e8ca063f74",
         "timestamp": "2026-09-30T18:08:15+02:00"
-      },
-      {
-        "message": "RESEARCH: test C29R1 input-freeze identity",
-        "sha": "4b5a451d9fc3e9b03ba71d3852f071f831e85194",
-        "timestamp": "2026-09-30T18:07:46+02:00"
-      },
-      {
-        "message": "RESEARCH: freeze immutable C29R1 performance input bundle",
-        "sha": "283b0cecb21d1efa559aaaf020afbda959eca675",
-        "timestamp": "2026-09-30T18:07:39+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1281adcea0a53d8f0d25dd0edac9b4f1d1074e54",
-        "timestamp": "2026-09-30T16:04:27Z"
-      },
-      {
-        "message": "RESEARCH: C29R1 ICE coverage/PIT repair successor (#698)",
-        "sha": "0992c5245171760f94fe5494f582af3d07520dd3",
-        "timestamp": "2026-09-30T18:04:12+02:00"
-      },
-      {
-        "message": "RESEARCH: persist C29 coverage repair discovery receipt",
-        "sha": "19b3ea5e10af974ffaa884c8be80a9d80036c2f1",
-        "timestamp": "2026-09-30T18:03:29+02:00"
-      },
-      {
-        "message": "RESEARCH: add isolated C29R1 coverage and PIT workflow",
-        "sha": "3361c96114cd0c2a1d4683a8d550bc309a997769",
-        "timestamp": "2026-09-30T18:03:22+02:00"
       }
     ]
   },
@@ -573,12 +573,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "12e8bb328269a5913e53993533b46476e9a715db",
+  "source_master_sha": "da2a0402b4cc0938d9b224a5cc6223f449364ab3",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36742045776"
+    "run_id": "36742255423"
   }
 }
