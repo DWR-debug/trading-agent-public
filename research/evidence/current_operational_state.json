@@ -405,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T20:18:08.765904+00:00",
+  "generated_at_utc": "2026-09-30T20:20:38.466884+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -528,6 +528,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "TEST: enforce complete self-hosted result harvesting",
+        "sha": "6a8803ae515bb7c79e37c5ba863de3328fff3ce6",
+        "timestamp": "2026-09-30T22:20:32+02:00"
+      },
+      {
+        "message": "FEAT: harvest frontier results and add provenance index",
+        "sha": "e1e7f34a1e6b1be8dc603da51c005d36c921cda4",
+        "timestamp": "2026-09-30T22:20:23+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "098acbf09ab25d5d10d9e48f889acd6a160b46eb",
+        "timestamp": "2026-09-30T20:18:08Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "11ae45bc59322d94e2d720ec13edc0932f0562db",
         "timestamp": "2026-09-30T20:17:51Z"
@@ -551,21 +566,6 @@
         "message": "FIX: enable bounded-step failure capture on PC lane",
         "sha": "2b068af6af8e502c818c6108f08d4467178d0013",
         "timestamp": "2026-09-30T22:17:45+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "9a67eb1f0ea98d1a685e2eb341b87d57c575d4aa",
-        "timestamp": "2026-09-30T20:17:43Z"
-      },
-      {
-        "message": "FIX: preserve PC research artifacts after bounded failures",
-        "sha": "cfc50769fccf5edbd9bb10e0e0c0c4ec1d1273c1",
-        "timestamp": "2026-09-30T22:17:33+02:00"
-      },
-      {
-        "message": "FIX: retire stale Claude hosted worker leg",
-        "sha": "ca63626f2f3600ce45656a5b33875da3f6112c5c",
-        "timestamp": "2026-09-30T22:17:29+02:00"
       }
     ]
   },
@@ -635,12 +635,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "11ae45bc59322d94e2d720ec13edc0932f0562db",
+  "source_master_sha": "6a8803ae515bb7c79e37c5ba863de3328fff3ce6",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36771611112"
+    "run_id": "36771922675"
   }
 }
