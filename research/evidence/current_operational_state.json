@@ -390,7 +390,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T18:38:00.952604+00:00",
+  "generated_at_utc": "2026-09-30T18:38:14.992089+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -513,6 +513,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: anchor self-hosted failover in resource model",
+        "sha": "724200a724b60838d889263be49f03c2b5cf234c",
+        "timestamp": "2026-09-30T20:38:12+02:00"
+      },
+      {
+        "message": "OPS: anchor self-hosted failover policy",
+        "sha": "4860423951ea54cdb7f770802ca4302607789f8a",
+        "timestamp": "2026-09-30T20:38:03+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4b6916ad88fa0b3b8779e49a196aa2886421a6f2",
+        "timestamp": "2026-09-30T18:38:01Z"
+      },
+      {
         "message": "TEST: register hosted research failover workflow",
         "sha": "9895a702ca02352f1240df3ee5e92dc63c45ea0f",
         "timestamp": "2026-09-30T20:37:50+02:00"
@@ -536,21 +551,6 @@
         "message": "OPS: add hosted research failover",
         "sha": "c0aabe8fdbc2ead88dd38965cd890588d0dc8fc4",
         "timestamp": "2026-09-30T20:37:39+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "aeb13af4ae60c5e58222401e333c428918f6c647",
-        "timestamp": "2026-09-30T18:37:31Z"
-      },
-      {
-        "message": "OPS: add hosted failover worker",
-        "sha": "b4f73f472fdaabecfc0a3b30b69842e8100fe0d4",
-        "timestamp": "2026-09-30T20:37:21+02:00"
-      },
-      {
-        "message": "OPS: add hosted failover guard",
-        "sha": "56986865a56bd807fb6d1e9a54adf86e7ce0a7ab",
-        "timestamp": "2026-09-30T20:37:18+02:00"
       }
     ]
   },
@@ -620,12 +620,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9895a702ca02352f1240df3ee5e92dc63c45ea0f",
+  "source_master_sha": "724200a724b60838d889263be49f03c2b5cf234c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36759942289"
+    "run_id": "36759959280"
   }
 }
