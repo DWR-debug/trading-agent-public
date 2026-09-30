@@ -9,7 +9,7 @@ from pathlib import Path
 
 TRIAL_ID = "T-2026-09-30-077R1-PERFORMANCE"
 RESULT_PATH = "research/evidence/q077r1_performance_result.json"
-AUTH_PATH = "research/authorizations/q077r1_ast_literal_audit_2026_09_30.json"
+AUTH_PATH = "research/authorizations/q077r1_performance_2026_09_30.json"
 PREREG_PATH = "research/preregistrations/q077r1_ast_literal_audit_2026_09_30.json"
 REGISTRY_PATH = "research/governance/active_research_registry.json"
 LEDGER_PATH = "research/evidence/trial_ledger.json"
