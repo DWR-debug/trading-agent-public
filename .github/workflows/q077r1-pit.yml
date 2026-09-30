@@ -154,51 +154,23 @@ jobs:
           set -euo pipefail
           base_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
           test -n "$base_sha"
-          python automation/github_contents_publish.py \
-            --repository "$GITHUB_REPOSITORY" \
-            --branch master \
-            --base-sha "$base_sha" \
-            --file research/evidence/q077r1_discovery_result.json=research/evidence/q077r1_discovery_result.json \
-            --file research/evidence/q077r1_pit_result.json=research/evidence/q077r1_pit_result.json \
-            --file research/evidence/q077r1_input_freeze_result.json=research/evidence/q077r1_input_freeze_result.json \
-            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/snapshot_manifest.json=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/snapshot_manifest.json \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/input_bundle_manifest.json=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/input_bundle_manifest.json \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AJG/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AJG/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/ALGN/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/ALGN/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AME/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AME/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AOS/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AOS/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/APH/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/APH/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AXON/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AXON/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BAH/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BAH/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BALL/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BALL/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BBWI/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BBWI/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BRO/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BRO/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BWA/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BWA/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/CDNS/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/CDNS/adjusted_close.csv
-            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/snapshot_manifest.json=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/snapshot_manifest.json \
-            --file research/evidence/q077r1_coverage_result.json=research/evidence/q077r1_coverage_result.json \
-            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/AJG/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/AJG/1d.csv \
-            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/ALGN/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/ALGN/1d.csv \
-            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/AME/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/AME/1d.csv \
-            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/AOS/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/AOS/1d.csv \
-            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/APH/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/APH/1d.csv \
-            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/AXON/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/AXON/1d.csv \
-            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BAH/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BAH/1d.csv \
-            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BALL/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BALL/1d.csv \
-            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BBWI/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BBWI/1d.csv \
-            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BRO/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BRO/1d.csv \
-            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BWA/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/BWA/1d.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AJG/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AJG/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/ALGN/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/ALGN/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AME/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AME/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AOS/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AOS/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/APH/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/APH/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AXON/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AXON/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BAH/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BAH/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BALL/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BALL/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BBWI/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BBWI/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BRO/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BRO/adjusted_close.csv \
-            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BWA/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BWA/adjusted_close.csv \
+          args=(
+            --repository "$GITHUB_REPOSITORY"
+            --branch master
+            --base-sha "$base_sha"
+            --file research/evidence/q077r1_discovery_result.json=research/evidence/q077r1_discovery_result.json
+            --file research/evidence/q077r1_coverage_result.json=research/evidence/q077r1_coverage_result.json
+            --file research/evidence/q077r1_pit_result.json=research/evidence/q077r1_pit_result.json
+            --file research/evidence/q077r1_input_freeze_result.json=research/evidence/q077r1_input_freeze_result.json
+            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/snapshot_manifest.json=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/snapshot_manifest.json
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/input_bundle_manifest.json=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/input_bundle_manifest.json
+          )
+          
+          for symbol in "AJG" "ALGN" "AME" "AOS" "APH" "AXON" "BAH" "BALL" "BBWI" "BRO" "BWA" "CDNS"; do
+            args+=(--file "research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/${symbol}/1d.csv=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/datasets/${symbol}/1d.csv")
+            args+=(--file "research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/${symbol}/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/${symbol}/adjusted_close.csv")
+          done
+          python automation/github_contents_publish.py "${args[@]}"
       - name: Upload PIT evidence
         if: always()
         uses: actions/upload-artifact@v6
