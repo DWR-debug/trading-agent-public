@@ -60,6 +60,26 @@ classification is not sufficient for historical validation if membership or
 classification can change. The project must therefore freeze the security
 master/industry mapping before performance authorization.
 
+### M4 PIT source feasibility refinement — SEC filing SIC
+
+The feasibility layer now treats an issuer's SEC filing header as a public,
+time-bounded classification source. EDGAR header metadata expose the assigned
+SIC / standard industrial classification together with the filing's acceptance
+timestamp and accession identity.
+
+The implementation only parses the reported SIC; it does not infer or optimize
+an industry grouping. At a decision cutoff, only filings accepted by EDGAR on
+or before that cutoff are visible. A conflicting SIC value at the same
+acceptance timestamp fails closed.
+
+This is a source/PIT feasibility improvement only. It does not establish
+historical completeness for the eventual research universe, does not select
+an industry taxonomy, and does not authorize performance.
+
+Official SEC references:
+- https://www.sec.gov/edgar/searchedgar/edgarzones.htm
+- https://www.sec.gov/about/webmaster-frequently-asked-questions
+
 Literature source: Stosik & Zaremba (2026), Short-term reversal
 persists globally—If properly measured, Economics Letters 267, 113113,
 DOI 10.1016/j.econlet.2026.113113. The paper reports industry-adjusted
