@@ -110,6 +110,7 @@ jobs:
           set -euo pipefail
           if [ "$GITHUB_EVENT_NAME" = "issue_comment" ]; then
             for attempt in $(seq 1 90); do
+            echo "Q077R1 gate wait attempt=$attempt"
               line="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ".github/workflows/t052-exact-master-ci-gate.yml" --branch master --limit 20 --json databaseId,status,conclusion,headSha --jq '[.[] | select(.status=="completed" and .conclusion=="success")][0] | [.databaseId,.headSha] | @tsv' || true)"
               t052_id="$(printf '%s' "$line" | cut -f1)"
               t052_sha="$(printf '%s' "$line" | cut -f2)"
