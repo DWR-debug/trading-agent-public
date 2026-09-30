@@ -240,7 +240,28 @@ def test_hosted_gemini_and_mistral_are_quota_guarded_by_schedule():
     assert "github.event_name == 'workflow_dispatch'" in text
     assert "GEMINI_ROTATION slot=" in text
     assert "MISTRAL_ROTATION slot=" in text
-    assert "/ 21600 % 5" in text
+    assert "/ 21600 % 6" in text
+    assert "AI-2026-09-30-Q102-REGIME-STATE-DESIGN" in text
+
+
+def test_q102_regime_state_task_has_safe_scope():
+    task_path = Path(__file__).parents[1] / "ai_requests" / "AI-2026-09-30-Q102-REGIME-STATE-DESIGN.json"
+    payload = load_task(task_path)
+    assert payload["providers"] == ["gemini_cli", "mistral_api", "openrouter_free"]
+    assert payload["performance_authorized"] is False
+    assert payload["holdout_selection"] is False
+    assert payload["parameter_selection"] is False
+    assert payload["asset_selection"] is False
+    assert payload["threshold_selection"] is False
+    assert payload["horizon_selection"] is False
+    assert payload["research_gate_changes"] is False
+    assert payload["promotion_decision"] is False
+    assert payload["live_execution"] is False
+    assert payload["paid_usage"] is False
+    assert payload["allow_workspace_writes"] is False
+    prompt = build_prompt(payload, "openrouter_free")
+    assert "q102_regime_negative_evidence.py" in prompt
+    assert "q103_rccsm_state_routing_integrity.py" in prompt
 
 
 def test_q101_negative_evidence_task_has_safe_scope():

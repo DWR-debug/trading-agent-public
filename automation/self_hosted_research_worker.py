@@ -36,6 +36,8 @@ LANES: dict[str, list[list[str]]] = {
             "tests/test_q098_historical_archive_depth.py",
             "tests/test_c29_fresh_pit.py",
             "tests/test_q100_frontier_feasibility_synthesis.py",
+            "tests/test_q102_regime_negative_evidence.py",
+            "tests/test_q103_rccsm_state_routing_integrity.py",
             "tests/test_q089_validation.py",
             "tests/test_q089_input_freeze.py",
             "tests/test_q089_performance_envelope.py",
@@ -89,6 +91,13 @@ LANES: dict[str, list[list[str]]] = {
             "automation.q101_negative_evidence_atlas",
             "--output-dir",
             "research/runs/q101_negative_evidence_atlas",
+        ],
+        [
+            PYTHON,
+            "-m",
+            "automation.q103_rccsm_state_routing_integrity",
+            "--output",
+            "research/runs/q103_rccsm_state_routing_integrity/result.json",
         ],
         [
             PYTHON,
