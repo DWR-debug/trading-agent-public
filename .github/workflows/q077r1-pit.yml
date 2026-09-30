@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   actions: read
 
 jobs:
@@ -82,6 +82,64 @@ jobs:
           print('Q077R1 PIT CONTRACT OK',d['result_fingerprint'])
           PY
 
+      - name: Freeze exact Q077-R1 adjusted-close input bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$GITHUB_WORKSPACE:$PYTHONPATH"
+          python -m automation.q077r1_input_freeze \
+            --coverage-root research/runs/q077r1_pit/T-2026-09-28-077R1-PIT \
+            --output-root research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE \
+            --result research/evidence/q077r1_input_freeze_result.json
+
+      - name: Validate immutable Q077-R1 input bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("research/evidence/q077r1_input_freeze_result.json").read_text(encoding="utf-8"))
+          assert d["trial_id"]=="T-2026-09-28-077R1-INPUT-FREEZE"
+          assert d["status"]=="INPUT_BUNDLE_FROZEN"
+          assert d["performance_evaluation"] is False
+          assert d["selection_used"] is False
+          assert d["performance_network_access"] is False
+          assert len(d["datasets"])==12
+          assert all(x["row_count"]==3500 for x in d["datasets"])
+          assert Path("research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/input_bundle_manifest.json").exists()
+          print("Q077R1 INPUT FREEZE CONTRACT OK",d["bundle_fingerprint"])
+          PY
+
+      - name: Persist Q077-R1 immutable coverage, PIT and input bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
+          test -n "$base_sha"
+          python automation/github_contents_publish.py \
+            --repository "$GITHUB_REPOSITORY" \
+            --branch master \
+            --base-sha "$base_sha" \
+            --file research/evidence/q077r1_discovery_result.json=research/evidence/q077r1_discovery_result.json \
+            --file research/evidence/q077r1_pit_result.json=research/evidence/q077r1_pit_result.json \
+            --file research/evidence/q077r1_input_freeze_result.json=research/evidence/q077r1_input_freeze_result.json \
+            --file research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/snapshot_manifest.json=research/runs/q077r1_pit/T-2026-09-28-077R1-PIT/snapshot_manifest.json \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/input_bundle_manifest.json=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/input_bundle_manifest.json \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AJG/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AJG/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/ALGN/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/ALGN/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AME/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AME/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AOS/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AOS/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/APH/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/APH/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AXON/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/AXON/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BAH/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BAH/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BALL/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BALL/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BBWI/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BBWI/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BRO/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BRO/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BWA/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/BWA/adjusted_close.csv \
+            --file research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/CDNS/adjusted_close.csv=research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE/CDNS/adjusted_close.csv
       - name: Upload PIT evidence
         if: always()
         uses: actions/upload-artifact@v6
