@@ -6,6 +6,8 @@ on:
     paths:
       - "research/run_requests/q077r1_authorize_once.trigger"
   workflow_dispatch:
+  issue_comment:
+    types: [created]
 
 permissions:
   contents: write
@@ -16,7 +18,17 @@ concurrency:
 
 jobs:
   authorize:
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    if: >-
+      github.repository == 'DWR-debug/trading-agent-public' &&
+      (
+        github.event_name != 'issue_comment' ||
+        (
+          github.event.issue.number == 694 &&
+          !github.event.issue.pull_request &&
+          github.event.comment.body == 'RUN_Q077R1_AUTHORIZE_ONCE' &&
+          github.event.comment.user.login == github.repository_owner
+        )
+      )
     env:
       GH_TOKEN: ${{ github.token }}
     runs-on: ubuntu-24.04
@@ -41,6 +53,9 @@ jobs:
           grep -Fx "AUTHORIZE_Q077R1=true" research/run_requests/q077r1_authorize_once.trigger
           grep -Fx "TRIAL_ID=T-2026-09-30-077R1-PERFORMANCE" research/run_requests/q077r1_authorize_once.trigger
           grep -Fx "ONE_SHOT=true" research/run_requests/q077r1_authorize_once.trigger
+          if [ "$GITHUB_EVENT_NAME" = "issue_comment" ]; then
+            test "$GITHUB_EVENT_PATH" != ""
+          fi
 
       - name: Install deterministic dependencies
         shell: bash
