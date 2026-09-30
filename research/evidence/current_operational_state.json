@@ -405,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T19:21:23.006776+00:00",
+  "generated_at_utc": "2026-09-30T19:21:46.498066+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -528,6 +528,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: run Research OS scheduler and rotating source probe on self-hosted loop",
+        "sha": "948a1764cc238b6c3c485745b9164dfb3f54dae7",
+        "timestamp": "2026-09-30T21:21:41+02:00"
+      },
+      {
+        "message": "ARCH: bind Research OS registry to operational evidence bus",
+        "sha": "25a9d6d9c1261eb86447bd1d2b3772e3fbc8e503",
+        "timestamp": "2026-09-30T21:21:33+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9ae0a8b8079e3bd6deb67aae0f6acaf657a905fa",
+        "timestamp": "2026-09-30T19:21:23Z"
+      },
+      {
         "message": "TEST: cover Research OS Evidence Bus and scheduler invariants",
         "sha": "4843d80e96ffca8a10cb45bc2426426c907f9fec",
         "timestamp": "2026-09-30T21:21:21+02:00"
@@ -551,21 +566,6 @@
         "message": "ARCH: add Research OS Evidence Bus",
         "sha": "7baebda6b16d7fea6f7b80b0f67d25a1f0da1c75",
         "timestamp": "2026-09-30T21:20:55+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "29e474836e8b32920f7340932404cc4a8c5d6cee",
-        "timestamp": "2026-09-30T19:19:10Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "e3d4db9626e6ca1376806ed288f7edcfcfe9f2ac",
-        "timestamp": "2026-09-30T19:13:42Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9f9d27512713f2bee7d02f4a044efbf72269059c",
-        "timestamp": "2026-09-30T19:12:34Z"
       }
     ]
   },
@@ -635,12 +635,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4843d80e96ffca8a10cb45bc2426426c907f9fec",
+  "source_master_sha": "948a1764cc238b6c3c485745b9164dfb3f54dae7",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36765059999"
+    "run_id": "36765089804"
   }
 }
