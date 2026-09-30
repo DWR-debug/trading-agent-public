@@ -9,11 +9,23 @@
   "parent_input_freeze_trial": "T-2026-09-30-C29R1-INPUT-FREEZE",
   "hypothesis": "The fixed C29 illusion-momentum gap contains directional information about the next-session open-to-close return. Both predeclared polarity arms are tested symmetrically; no arm is selected after observing results.",
   "universe": "validation_2026_09_30_c29r1_ice_repair_input",
-  "symbols": ["PPG","GWW","PGR","TT","ICE","KLAC","SNA","SWK"],
+  "symbols": [
+    "PPG",
+    "GWW",
+    "PGR",
+    "TT",
+    "ICE",
+    "KLAC",
+    "SNA",
+    "SWK"
+  ],
   "data_contract": {
     "interval": "1d",
     "target_common_candles": 3500,
-    "study_window": {"start": "2011-01-01", "end": "2025-09-24"},
+    "study_window": {
+      "start": "2011-01-01",
+      "end": "2025-09-24"
+    },
     "evaluation_periods": 3478,
     "warmup_sessions": 21,
     "research_periods": 2778,
@@ -51,16 +63,20 @@
     "signal_time": "session_close_t",
     "entry": "session_open_t_plus_1",
     "exit": "session_close_t_plus_1",
-    "gross_exposure": 1.0,
-    "leverage": 1.0,
+    "gross_exposure": 1,
+    "leverage": 1,
     "shorts": false,
     "rebalance": "daily target-weight rebalance from prior target weights",
     "turnover": "sum absolute target-weight changes across the eight symbols; initial target is zero",
     "fee_rate": 0.001,
     "slippage_rate": 0.0005,
-    "cost_scenarios": ["base","stress_1_5x_cost","stress_2x_cost"],
+    "cost_scenarios": [
+      "base",
+      "stress_1_5x_cost",
+      "stress_2x_cost"
+    ],
     "tie_break": "lexicographic symbol order",
-    "capital_eur": 2000.0
+    "capital_eur": 2000
   },
   "evaluation_contract": {
     "gates_total": 13,
@@ -103,7 +119,7 @@
   },
   "source_contract": {
     "hash_type": "git_blob_sha",
-    "performance_runner_git_blob_sha": "051f9b6231f590493bf8c9dd6b3ef85662a9b61f",
+    "performance_runner_git_blob_sha": "6324bb470791fd9eb101f87af58702588987616d",
     "frontier_feasibility_git_blob_sha": "9e9dbb2fef4f6b6d4b7b4185fc0c157909dffaf1",
     "cost_contract_git_blob_sha": "21b54b45dbe708f3102851fd368ad1b64226b0ad",
     "settings_git_blob_sha": "9c7b5199ed09d11ca17eb72493aebf7a7666fd28",
