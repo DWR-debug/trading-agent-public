@@ -83,6 +83,7 @@ CONTEXT_FILES = {
         "docs/DECISION_BASIS.md",
     ),
     "AI-2026-09-30-Q101-NEGATIVE-EVIDENCE": (
+        "docs/research_design/EXTERNAL_RESEARCH_INSPIRATION_2026-09-30.md",
         "automation/q101_negative_evidence_atlas.py",
         "tests/test_q101_negative_evidence_atlas.py",
         "research/evidence/q077r1_performance_result.json",
@@ -93,7 +94,6 @@ CONTEXT_FILES = {
         "research/evidence/q095_performance_result.json",
         "research/evidence/c29_performance_result.json",
         "research/evidence/cross_trial_failure_diagnosis_2026_09_25.json",
-        "docs/research_design/EXTERNAL_RESEARCH_INSPIRATION_2026-09-30.md",
         "docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md",
         "research/governance/active_research_registry.json",
         "docs/DECISION_BASIS.md",
