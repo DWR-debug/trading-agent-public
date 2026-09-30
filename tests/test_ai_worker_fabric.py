@@ -231,6 +231,19 @@ def test_q100_frontier_task_has_repository_context_and_safe_scope():
 
 
 def test_hosted_gemini_and_mistral_are_quota_guarded_by_schedule():
+
+def test_mistral_rotation_includes_all_five_task_slots():
+    text = (Path(__file__).parents[1] / ".github" / "workflows" / "ai-worker-fabric.yml").read_text(encoding="utf-8")
+    assert "4) task_id='AI-2026-09-30-Q101-NEGATIVE-EVIDENCE' ;;" in text
+    mistral_start = text.index("name: Select deterministic Mistral rotation slot")
+    mistral_block = text[mistral_start:text.index("      - name: Run Mistral free-only worker", mistral_start)]
+    assert "AI-2026-09-30-Q101-NEGATIVE-EVIDENCE" in mistral_block
+    assert mistral_block.count("task_id='AI-2026-09-29-Q091-ADVERSARIAL'") == 1
+    assert mistral_block.count("task_id='AI-2026-09-28-Q089-ADVERSARIAL'") == 1
+    assert mistral_block.count("task_id='AI-2026-09-28-UNUSUAL-FRONTIER'") == 1
+    assert mistral_block.count("task_id='AI-2026-09-30-Q100-FRONTIER-FEASIBILITY'") == 1
+    assert mistral_block.count("task_id='AI-2026-09-30-Q101-NEGATIVE-EVIDENCE'") == 1
+
     workflow = Path(__file__).parents[1] / ".github" / "workflows" / "ai-worker-fabric.yml"
     text = workflow.read_text(encoding="utf-8")
     assert "provider: [openrouter_free]" in text
