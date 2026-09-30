@@ -140,3 +140,29 @@ def test_gemini_command_is_pinned_to_free_flash_model():
     )
     assert "--skip-trust" in command
     assert command[command.index("--model") + 1] == "gemini-3.7-flash"
+
+
+def test_openrouter_request_excludes_reasoning_from_worker_output(monkeypatch) -> None:
+    from automation import openrouter_free
+    captured = {}
+
+    class FakeResponse:
+        status = 200
+        def read(self, limit=None):
+            return json.dumps({
+                "id": "reasoning-excluded",
+                "choices": [{"message": {"content": "answer"}}],
+            }).encode("utf-8")
+        def __enter__(self):
+            return self
+        def __exit__(self, *args):
+            return False
+
+    def fake_urlopen(request, timeout):
+        captured["payload"] = json.loads(request.data.decode("utf-8"))
+        return FakeResponse()
+
+    monkeypatch.setattr(openrouter_free.urllib.request, "urlopen", fake_urlopen)
+    openrouter_free.call_openrouter_free("test", api_key="x")
+    assert captured["payload"]["model"] == "openrouter/free"
+    assert captured["payload"]["reasoning"]["exclude"] is True
