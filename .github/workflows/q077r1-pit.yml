@@ -6,6 +6,9 @@ on:
     paths:
       - "research/preregistrations/q077r1_pit_2026_09_28.json"
       - "automation/q077r1_pit.py"
+      - "automation/q077r1_input_freeze.py"
+      - "automation/q077r1_prepare_performance.py"
+      - "research/preregistrations/q077r1_performance_2026_09_30.json"
       - "research/run_requests/q077r1_pit.trigger"
       - ".github/workflows/q077r1-pit.yml"
   workflow_dispatch:
@@ -118,6 +121,12 @@ jobs:
           Path("research/evidence/q077r1_coverage_result.json").write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
           print("Q077R1 COVERAGE RECEIPT",receipt["result_fingerprint"])
           PY
+      - name: Validate Q077-R1 freeze helpers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile automation/q077r1_input_freeze.py automation/q077r1_prepare_performance.py
+
       - name: Freeze exact Q077-R1 adjusted-close input bundle
         shell: bash
         run: |
