@@ -321,7 +321,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T12:46:35.724913+00:00",
+  "generated_at_utc": "2026-09-30T12:46:51.445574+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -444,6 +444,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4daf0e03061f70ab163ef825a72107e58ea987e8",
+        "timestamp": "2026-09-30T12:46:35Z"
+      },
+      {
         "message": "DOCS: record SEC SIC PIT source feasibility for M4",
         "sha": "bec4e0d1fb476ad566716a61dd90477bd0ca2186",
         "timestamp": "2026-09-30T14:46:30+02:00"
@@ -477,11 +482,6 @@
         "message": "TEST: add PIT SEC SIC mapping mutation guards for M4",
         "sha": "bc640007aa927576ab09a0d1e0b4e91995d19c78",
         "timestamp": "2026-09-30T14:45:45+02:00"
-      },
-      {
-        "message": "RESEARCH: add PIT SEC SIC mapping primitive for M4",
-        "sha": "236482c89610d9d746a14b58f9ce500585382044",
-        "timestamp": "2026-09-30T14:45:34+02:00"
       }
     ]
   },
@@ -551,12 +551,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "bec4e0d1fb476ad566716a61dd90477bd0ca2186",
+  "source_master_sha": "4daf0e03061f70ab163ef825a72107e58ea987e8",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36716951344"
+    "run_id": "36716967376"
   }
 }
