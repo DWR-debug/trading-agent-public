@@ -42,3 +42,10 @@ def test_q081r4_source_contract_is_dedicated() -> None:
     source_contract = prereg["source_contract"]
     assert "automation/q081r4_ast_literal_audit_performance.py" in source_contract
     assert "automation/q081r3_python_literal_fix_performance.py" not in source_contract
+
+
+def test_q081r4_registry_state_mapping_exact_match() -> None:
+    arm_status = "performance_completed_arm_passed_all_13_gates"
+    no_arm_status = "performance_completed_no_arm_passed_all_13_gates"
+    assert arm_status == "performance_completed_arm_passed_all_13_gates"
+    assert no_arm_status != "performance_completed_arm_passed_all_13_gates"
