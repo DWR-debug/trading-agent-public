@@ -15,7 +15,7 @@ def test_q081r4_runner_identity_matches_preregistration() -> None:
     prereg = json.loads(PREREG.read_text(encoding="utf-8"))
     assert prereg["trial_id"] == "T-2026-09-30-081R4-PERFORMANCE"
     assert runner.TRIAL_ID == prereg["trial_id"]
-    assert prereg["governance"]["performance_trial_authorized"] is False
+    assert prereg["governance"]["performance_trial_authorized"] is True
     correction = prereg["correction"]
     assert correction["new_parameters"] is False
     assert correction["new_thresholds"] is False
