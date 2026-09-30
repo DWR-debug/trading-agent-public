@@ -56,7 +56,7 @@ def main()->int:
     entry["pit_result"]={"status":pit["status"],"fingerprint":pit["result_fingerprint"],"source_trial_id":pit["trial_id"]}
     entry["input_bundle_result"]={"status":freeze["status"],"fingerprint":freeze["bundle_fingerprint"],"source_trial_id":freeze["trial_id"]}
     PREREG.write_text(json.dumps(prereg,ensure_ascii=False,indent=2,allow_nan=False)+"\n",encoding="utf-8")
-    REGISTRY.write_text(json.dumps(registry,ensure_ascii=False,indent=2,allow_nan=False)+"\\n",encoding="utf-8")
+    REGISTRY.write_text(json.dumps(registry,ensure_ascii=False,indent=2,allow_nan=False)+"\n",encoding="utf-8")
     print("Q077R1 PERFORMANCE PREREGISTRATION FROZEN")
     print("COVERAGE_FP="+coverage["result_fingerprint"])
     print("PIT_FP="+pit["result_fingerprint"])
