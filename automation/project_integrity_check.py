@@ -81,6 +81,8 @@ ACTIVE_WORKFLOWS = {
     "q077-fresh-e1-e2-discovery.yml",
     "q077r1-fresh-e1-e2-discovery.yml",
     "q077r1-pit.yml",
+    "q077r1-authorization-once.yml",
+    "q077r1-performance-once.yml",
     "q079-fresh-e1-e2-coverage-pit.yml",
     "q079-fresh-e1-e2-discovery.yml",
     "q079-persist-frozen-input-bundle.yml",
