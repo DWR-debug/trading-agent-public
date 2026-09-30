@@ -336,7 +336,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T15:07:28.892116+00:00",
+  "generated_at_utc": "2026-09-30T15:08:34.922068+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -460,6 +460,11 @@
     "recent_commits": [
       {
         "message": "OPS: synchronize current operational status",
+        "sha": "0d74182d85d3c3953be5ee5666fad1afe64623fc",
+        "timestamp": "2026-09-30T15:07:29Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
         "sha": "ef91fa797bbfddb85e84dc585fa6a5e84c5a8bb0",
         "timestamp": "2026-09-30T15:07:12Z"
       },
@@ -492,11 +497,6 @@
         "message": "RESEARCH: record Q077-R1 gross-cap execution incident",
         "sha": "3dc8c82583606cea89576fb086e170748a8b3872",
         "timestamp": "2026-09-30T17:06:13+02:00"
-      },
-      {
-        "message": "RESEARCH: enforce preregistered Q077-R1 gross cap at execution",
-        "sha": "f6347cc5b9137aaad2df647711039747a700a1e9",
-        "timestamp": "2026-09-30T17:05:56+02:00"
       }
     ]
   },
@@ -566,12 +566,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ef91fa797bbfddb85e84dc585fa6a5e84c5a8bb0",
+  "source_master_sha": "0d74182d85d3c3953be5ee5666fad1afe64623fc",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36734277537"
+    "run_id": "36734433237"
   }
 }
