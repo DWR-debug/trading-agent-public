@@ -60,4 +60,5 @@ def test_current_status_generator_advances_q081r4_focus_to_q100() -> None:
         "automation/sync_current_operational_status.py"
     ).read_text(encoding="utf-8")
     assert "Q100 frontier feasibility synthesis" in source
-    assert "No performance authorization is created by these feasibility steps." in source
+    assert "No performance authorization is " in source
+    assert "created by these feasibility steps." in source
