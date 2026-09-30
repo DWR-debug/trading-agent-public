@@ -384,7 +384,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T16:25:25.840930+00:00",
+  "generated_at_utc": "2026-09-30T16:27:06.572973+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -507,6 +507,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: repair C29 performance preflight dependency (#705)",
+        "sha": "ca00a268a77210114702da00a0879a177b91715f",
+        "timestamp": "2026-09-30T18:26:51+02:00"
+      },
+      {
+        "message": "RESEARCH: persist C29 pre-performance infrastructure incident",
+        "sha": "157de704b9998cda6f993d53d624e96683785663",
+        "timestamp": "2026-09-30T18:26:32+02:00"
+      },
+      {
+        "message": "FIX: install C29 performance worker test dependency",
+        "sha": "ac2b1c726c909b2ad706f555c68aeda50ed9b67f",
+        "timestamp": "2026-09-30T18:26:29+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "303e1635e21b75cf74c356b9c604a0acc18f7215",
+        "timestamp": "2026-09-30T16:25:25Z"
+      },
+      {
         "message": "FIX: explicitly dispatch authorized C29 performance workflow (#704)",
         "sha": "ebf0ce8315b7132f89abdfc567d9f92967f44403",
         "timestamp": "2026-09-30T18:25:11+02:00"
@@ -525,26 +545,6 @@
         "message": "FIX: add explicit C29 performance workflow dispatch repair",
         "sha": "5987d86e03fac233b3cac7371c4a8fbb6d196ace",
         "timestamp": "2026-09-30T18:24:27+02:00"
-      },
-      {
-        "message": "FIX: register C29 performance dispatch repair workflow",
-        "sha": "814597b731c6a06fbb3e8d580a22677eebc2a0a4",
-        "timestamp": "2026-09-30T18:24:25+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "1fbda184d20be79133fefadfcd99b27e27713a8e",
-        "timestamp": "2026-09-30T16:23:12Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2dbea3834084b24b78783a6734ba5e6730061447",
-        "timestamp": "2026-09-30T16:22:17Z"
-      },
-      {
-        "message": "RESEARCH: preregister C29 one-shot performance validation (#703)",
-        "sha": "14a9ba79118e4a770e18bba5a5802b1cbe2f2af8",
-        "timestamp": "2026-09-30T18:22:02+02:00"
       }
     ]
   },
@@ -614,12 +614,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ebf0ce8315b7132f89abdfc567d9f92967f44403",
+  "source_master_sha": "ca00a268a77210114702da00a0879a177b91715f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36744056985"
+    "run_id": "36744267869"
   }
 }
