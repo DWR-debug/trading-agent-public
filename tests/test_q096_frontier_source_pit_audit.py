@@ -118,3 +118,8 @@ def test_q096_html_section_matching_collapses_tag_boundaries() -> None:
     normalized = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", raw))).strip()
     normalized = normalized.replace("’", "'").replace("‘", "'")
     assert "Management's Discussion and Analysis".lower() in normalized.lower()
+
+
+def test_q096_sec_header_probe_includes_pit_sic_contract() -> None:
+    module = Path("automation/q096_frontier_source_pit_audit.py").read_text(encoding="utf-8")
+    assert '"standard_industrial_classification": "STANDARD INDUSTRIAL CLASSIFICATION:"' in module
