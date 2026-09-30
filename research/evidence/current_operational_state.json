@@ -321,7 +321,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T13:04:48.804261+00:00",
+  "generated_at_utc": "2026-09-30T13:05:07.680840+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -444,6 +444,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "TEST: include C29 fresh PIT contract in self-hosted QA",
+        "sha": "484179171dadc8fe919854a5fe9d6646ce788d7a",
+        "timestamp": "2026-09-30T15:04:55+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4eeef6c4f3f0fcf5fe9b2942ea1b7bca59b87bc8",
+        "timestamp": "2026-09-30T13:04:48Z"
+      },
+      {
         "message": "TRIGGER: execute C29 fresh coverage and PIT feasibility",
         "sha": "59bbfe89a4f4d124e5b377c73461c13b11ef3f76",
         "timestamp": "2026-09-30T15:04:41+02:00"
@@ -472,16 +482,6 @@
         "message": "FIX: remove dead branch from C29 PIT audit",
         "sha": "81f571a3e1a8dbe7ea68e70b712ee0b865e035da",
         "timestamp": "2026-09-30T15:04:05+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ef5828188921277a92c2d8295dd57b1acc2f75b9",
-        "timestamp": "2026-09-30T13:04:02Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "62f45d2a12be2505583d9904af9485490e9ae131",
-        "timestamp": "2026-09-30T13:03:47Z"
       }
     ]
   },
@@ -551,12 +551,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "59bbfe89a4f4d124e5b377c73461c13b11ef3f76",
+  "source_master_sha": "484179171dadc8fe919854a5fe9d6646ce788d7a",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36719061398"
+    "run_id": "36719095822"
   }
 }
