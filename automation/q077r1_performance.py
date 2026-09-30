@@ -77,6 +77,52 @@ def _load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _assert_authorization(repo_root: Path, prereg: dict) -> dict:
+    auth_path = repo_root / "research/authorizations/q077r1_performance_2026_09_30.json"
+    if not auth_path.exists():
+        raise RuntimeError("Q077R1 performance authorization missing")
+    auth = _load_json(auth_path)
+    expected_prereg_fp = _fp(prereg)
+    if auth.get("trial_id") != TRIAL_ID:
+        raise RuntimeError("Q077R1 authorization trial identity mismatch")
+    if auth.get("authorized") is not True or auth.get("performance_execution_authorized") is not True:
+        raise RuntimeError("Q077R1 performance execution is not authorized")
+    if auth.get("one_shot") is not True:
+        raise RuntimeError("Q077R1 authorization is not one-shot")
+    if auth.get("preregistration_fingerprint") != expected_prereg_fp:
+        raise RuntimeError("Q077R1 authorization/preregistration fingerprint mismatch")
+    if auth.get("input_bundle_fingerprint") != prereg["data_contract"]["input_bundle_fingerprint"]:
+        raise RuntimeError("Q077R1 authorization/input bundle fingerprint mismatch")
+    return auth
+
+
+def _assert_source_contract(repo_root: Path, prereg: dict) -> None:
+    contract = prereg.get("source_contract", {})
+    paths = {
+        "performance_runner_sha256": repo_root / "automation/q077r1_performance.py",
+        "alpha_mechanism_sha256": repo_root / "automation/q067_alpha_mechanisms.py",
+        "cost_contract_sha256": repo_root / "execution/cost_contract.py",
+        "settings_sha256": repo_root / "config/settings.py",
+        "input_freeze_sha256": repo_root / "automation/q077r1_input_freeze.py",
+    }
+    for key, path in paths.items():
+        expected = contract.get(key)
+        if not expected:
+            raise RuntimeError(f"Q077R1 source contract incomplete: {key}")
+        actual = hashlib.sha256(path.read_bytes()).hexdigest()
+        if actual != expected:
+            raise RuntimeError(f"Q077R1 source contract mismatch: {key}")
+
+
+def _assert_registry_authorization(repo_root: Path) -> None:
+    registry = _load_json(repo_root / "research/governance/active_research_registry.json")
+    entry = next((x for x in registry.get("active_trials", []) if x.get("code") == "077R1"), None)
+    if entry is None or entry.get("trial_id") != TRIAL_ID:
+        raise RuntimeError("Q077R1 registry entry missing or identity mismatch")
+    if entry.get("performance_authorization_allowed") is not True or entry.get("state") != "PERFORMANCE_AUTHORIZED":
+        raise RuntimeError("Q077R1 registry is not in PERFORMANCE_AUTHORIZED state")
+
+
 def _assert_preflight(repo_root: Path) -> tuple[dict[str, tuple], dict, dict]:
     coverage_result = _load_json(repo_root / "research/evidence/q077r1_coverage_result.json")
     pit_result = _load_json(repo_root / "research/evidence/q077r1_pit_result.json")
@@ -192,7 +238,7 @@ def _summary(values):
 
 
 def _load_adjusted_bundle(repo_root: Path) -> tuple[dict, dict]:
-    bundle_root = repo_root / "research/runs/q077r1_input_bundle/T-2026-09-28-079-INPUT-FREEZE"
+    bundle_root = repo_root / "research/runs/q077r1_input_bundle/T-2026-09-28-077R1-INPUT-FREEZE"
     manifest = _load_json(bundle_root / "input_bundle_manifest.json")
     if manifest.get("trial_id") != INPUT_BUNDLE_TRIAL_ID:
         raise RuntimeError("Q077R1 input bundle identity mismatch")
@@ -318,6 +364,10 @@ def run(preregistration: Path, repo_root: Path, output: Path) -> dict:
     if prereg.get("status") != "PREREGISTERED_PERFORMANCE":
         raise ValueError("Q077R1 performance preregistration status mismatch")
 
+    _assert_authorization(repo_root, prereg)
+    _assert_source_contract(repo_root, prereg)
+    _assert_registry_authorization(repo_root)
+
     safety = {
         "paper_only": True,
         "live_trading_enabled": False,
@@ -370,6 +420,13 @@ def run(preregistration: Path, repo_root: Path, output: Path) -> dict:
     bundle_manifest, adjusted = _load_adjusted_bundle(repo_root)
     if bundle_manifest.get("bundle_fingerprint") is None:
         raise RuntimeError("Q077R1 input bundle fingerprint missing")
+    manifest_copy = dict(bundle_manifest)
+    bundle_fp = manifest_copy.pop("bundle_fingerprint", None)
+    if _fp(manifest_copy) != bundle_fp:
+        raise RuntimeError("Q077R1 input bundle self-fingerprint mismatch")
+    freeze_receipt = _load_json(repo_root / "research/evidence/q077r1_input_freeze_result.json")
+    if freeze_receipt.get("bundle_fingerprint") != bundle_fp:
+        raise RuntimeError("Q077R1 input bundle/result fingerprint mismatch")
 
     arms = {
         "CONTROL_6SLEEVE_ENSEMBLE": aggregate,
