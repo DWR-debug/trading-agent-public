@@ -390,7 +390,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T16:40:14.614445+00:00",
+  "generated_at_utc": "2026-09-30T16:40:31.065069+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -513,6 +513,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: add one-command Android edge bootstrap",
+        "sha": "34d87bccff6cddb212488d34e0846323ee96a41a",
+        "timestamp": "2026-09-30T18:40:22+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "15d38bb30b24861b0816e820fb227e2e054e5a6f",
+        "timestamp": "2026-09-30T16:40:14Z"
+      },
+      {
         "message": "OPS: add one-shot mobile edge verification mode",
         "sha": "b1008d36b2c4747cf577ec3db19cc1310ef14d32",
         "timestamp": "2026-09-30T18:40:12+02:00"
@@ -541,16 +551,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "644b6cc4bd8397b4f3bd6eb3366f07640a0c2da3",
         "timestamp": "2026-09-30T16:34:00Z"
-      },
-      {
-        "message": "RESEARCH: persist C29 duplicate-dispatch fail-closed incident (#710)",
-        "sha": "bbeaa5afc7985c157f28258300eb00bdafbb2157",
-        "timestamp": "2026-09-30T18:33:46+02:00"
-      },
-      {
-        "message": "FIX: fail closed after C29 authorization consumption (#709)",
-        "sha": "bf28906d998653397b2635f38195ec5a4093dcd5",
-        "timestamp": "2026-09-30T18:33:41+02:00"
       }
     ]
   },
@@ -620,12 +620,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b1008d36b2c4747cf577ec3db19cc1310ef14d32",
+  "source_master_sha": "34d87bccff6cddb212488d34e0846323ee96a41a",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36745865326"
+    "run_id": "36745891215"
   }
 }
