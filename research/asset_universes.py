@@ -604,7 +604,7 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
             "Fresh fully symbol-disjoint eight-stock universe frozen ex ante for "
             "C29 illusion-momentum coverage/PIT feasibility; no performance selection."
         ),
-        symbols=("PPG", "GWW", "ROP", "TT", "IR", "KLAC", "SNA", "SWK"),
+        symbols=("PPG", "GWW", "PGR", "TT", "IR", "KLAC", "SNA", "SWK"),
         target_count=5000,
     ),
 
