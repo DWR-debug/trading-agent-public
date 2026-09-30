@@ -18,6 +18,10 @@ on:
       - "tests/test_q098_historical_archive_depth.py"
       - "tests/test_q099_q081r4_failure_diagnosis.py"
       - "tests/test_local_ai_verifier_policy.py"
+      - "automation/research_os_evidence_bus.py"
+      - "automation/research_os_scheduler.py"
+      - "automation/research_os_source_probe.py"
+      - "tests/test_research_os_evidence_bus.py"
       - "tests/test_ai_quota_guard.py"
       - "automation/ai_quota_guard.py"
       - "automation/q096_frontier_source_pit_audit.py"
@@ -98,6 +102,10 @@ jobs:
           cd /d "%REPO_SRC%" || exit /b 1
           set "PYTHONPATH=%REPO_SRC%"
           "%PY_EXE%" -m automation.self_hosted_research_worker --lane "%LANE%" --output-dir "research/runs/self_hosted/autonomous/%GITHUB_RUN_ID%/%LANE%" || exit /b 1
+          if /I "%LANE%"=="autonomous_frontier_qa" (
+            "%PY_EXE%" -m automation.research_os_scheduler --run-number "%GITHUB_RUN_NUMBER%" --output "research/runs/self_hosted/autonomous/%GITHUB_RUN_ID%/%LANE%/research_os_resource_schedule.json" || exit /b 1
+            "%PY_EXE%" -m automation.research_os_source_probe --bucket "%GITHUB_RUN_NUMBER%" --bucket-count 4 --max-sources 4 --output "research/runs/self_hosted/autonomous/%GITHUB_RUN_ID%/%LANE%/research_os_source_probe.json" || exit /b 1
+          )
           endlocal
 
       - name: Stage autonomous evidence for upload
