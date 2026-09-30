@@ -151,6 +151,7 @@ jobs:
           tp.write_text('RUN_Q077R1_FIXED_RULE_PERFORMANCE_ONCE=true\nTRIAL_ID=T-2026-09-30-077R1-PERFORMANCE\nONE_SHOT=true\n',encoding='utf-8')
           PY
           for attempt in 1 2 3 4 5; do
+            echo "Q077R1 publish attempt=$attempt"
             base_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
             test -n "$base_sha"
             if python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$base_sha" --file research/preregistrations/q077r1_performance_2026_09_30.json=research/preregistrations/q077r1_performance_2026_09_30.json --file research/authorizations/q077r1_performance_2026_09_30.json=research/authorizations/q077r1_performance_2026_09_30.json --file research/governance/active_research_registry.json=research/governance/active_research_registry.json --file research/run_requests/q077r1_performance_once.trigger=research/run_requests/q077r1_performance_once.trigger; then
