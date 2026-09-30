@@ -45,12 +45,6 @@ PROVIDER_SPECS = {
         "prompt_role": "Independent adversarial second opinion: actively attack assumptions, search for confounds and propose cheap falsification tests. Do not seek consensus.",
         "fixed_model": "openrouter/free",
     },
-    "claude_cli": {
-        "binaries": ("claude",),
-        "auth_env": (),
-        "free_attestation_env": "CLAUDE_FREE_MODE_CONFIRMED",
-        "prompt_role": "Adversarial reasoning: look for overlooked failure modes and hidden assumptions.",
-    },
 }
 
 LOCAL_ATTESTATION_DEFAULT = Path.home() / ".trading-agent" / "ai_free_attestation.json"
@@ -212,8 +206,6 @@ def preflight(provider: str, env: dict[str, str] | None = None) -> dict[str, Any
     auth_ok = bool(spec["auth_env"]) and any(env.get(name) for name in spec["auth_env"])
     if local_mode:
         auth_ok = binary is not None and local_attestation["present"]
-    elif provider == "claude_cli":
-        auth_ok = free_gate
     allowlist = _truth(env.get("AI_EXTERNAL_PROVIDER_ALLOWLIST"))
     reasons: list[str] = []
     quota_block = load_block(provider, env) if local_mode else None
