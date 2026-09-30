@@ -405,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-09-30T19:12:34.284057+00:00",
+  "generated_at_utc": "2026-09-30T19:21:09.480213+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -528,6 +528,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "ARCH: add ex-ante Research OS resource scheduler",
+        "sha": "3b0e7f110032f3622ba84cd13fe932c031472d6b",
+        "timestamp": "2026-09-30T21:21:06+02:00"
+      },
+      {
+        "message": "ARCH: add Research OS Evidence Bus",
+        "sha": "7baebda6b16d7fea6f7b80b0f67d25a1f0da1c75",
+        "timestamp": "2026-09-30T21:20:55+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "29e474836e8b32920f7340932404cc4a8c5d6cee",
+        "timestamp": "2026-09-30T19:19:10Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "e3d4db9626e6ca1376806ed288f7edcfcfe9f2ac",
+        "timestamp": "2026-09-30T19:13:42Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9f9d27512713f2bee7d02f4a044efbf72269059c",
+        "timestamp": "2026-09-30T19:12:34Z"
+      },
+      {
         "message": "ARCH: decouple Research OS from Gemini-specific agent runtime",
         "sha": "7d40a67db7322feeae91e4a68b4b086179de65a4",
         "timestamp": "2026-09-30T21:12:21+02:00"
@@ -541,31 +566,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "3bee3402abed6c6b6883139a7a91d5fbb85154eb",
         "timestamp": "2026-09-30T19:11:36Z"
-      },
-      {
-        "message": "TEST: enforce Research OS anti-convergence scheduler",
-        "sha": "b051426cdffb688271d1ced89db934bed33a0743",
-        "timestamp": "2026-09-30T21:11:28+02:00"
-      },
-      {
-        "message": "ARCH: add anti-convergence and information-gain scheduling policy",
-        "sha": "4d58c4a359aebeb9a8127be392a4371d405065a0",
-        "timestamp": "2026-09-30T21:11:22+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2d9142b044ad4e0f80c435a9966d8c461a6c2e1b",
-        "timestamp": "2026-09-30T19:10:55Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2f5f1b74ac967ccebff17754a0239440aa905537",
-        "timestamp": "2026-09-30T19:10:39Z"
-      },
-      {
-        "message": "ARCH: extend Research OS source lattice with community discovery pool",
-        "sha": "77f5feb0040dcdf46f1ef969b4ee489a6aa94410",
-        "timestamp": "2026-09-30T21:10:38+02:00"
       }
     ]
   },
@@ -635,12 +635,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7d40a67db7322feeae91e4a68b4b086179de65a4",
+  "source_master_sha": "3b0e7f110032f3622ba84cd13fe932c031472d6b",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36764034071"
+    "run_id": "36765037680"
   }
 }
