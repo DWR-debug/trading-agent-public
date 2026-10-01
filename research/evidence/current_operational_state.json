@@ -542,7 +542,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T13:33:24.504256+00:00",
+  "generated_at_utc": "2026-10-01T13:35:59.552926+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -744,6 +744,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: harden ECL model runtime installation and provenance",
+        "sha": "142759099130f7c4306c50ac9e68a46d73ed22f6",
+        "timestamp": "2026-10-01T15:35:44+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "fa5ab6596bcda3dcf1257c1bc078f44aa20793e1",
+        "timestamp": "2026-10-01T13:33:24Z"
+      },
+      {
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "e6672c76d5f176a8153c52b773604db1c361a9ce",
         "timestamp": "2026-10-01T13:33:20Z"
@@ -772,16 +782,6 @@
         "message": "FIX: define ECL substantive verdict labels",
         "sha": "f26b4d3fe715bb23d037f6a90ee4a7d5e5c14dc0",
         "timestamp": "2026-10-01T15:28:04+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "a5bcec9310bc20219ebb48adae8e34c0d55768dd",
-        "timestamp": "2026-10-01T13:14:49Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "53a5fc79131ae36416494e62d19984b2237912fb",
-        "timestamp": "2026-10-01T13:13:06Z"
       }
     ]
   },
@@ -851,12 +851,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e6672c76d5f176a8153c52b773604db1c361a9ce",
+  "source_master_sha": "142759099130f7c4306c50ac9e68a46d73ed22f6",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36869523971"
+    "run_id": "36869838353"
   }
 }
