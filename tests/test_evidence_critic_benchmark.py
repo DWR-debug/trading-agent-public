@@ -13,3 +13,13 @@ def test_metrics_perfect_balanced_sample():
     assert out["accuracy"] == 1.0
     assert out["brier_mean"] == 0.0
     assert out["malformed_or_no_decision"] == 0
+
+def test_request_for_contains_all_substantive_labels():
+    from automation.evidence_critic_benchmark import request_for
+    case={"id":"X","domain":"PIT","claim":"claim","evidence":"evidence","gold_label":"SUPPORTED"}
+    req=request_for(case)
+    assert req["questions"]["verdict"]["criteria"] == {
+        "SUPPORTED": "The supplied evidence establishes the claim.",
+        "REFUTED": "The supplied evidence contradicts the claim.",
+        "INSUFFICIENT": "The supplied evidence is not enough to decide the claim.",
+    }
