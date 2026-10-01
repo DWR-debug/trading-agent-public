@@ -121,6 +121,13 @@ LANES: dict[str, list[list[str]]] = {
         ],
         [
             PYTHON,
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_q120_cftc_positioning_state.py",
+        ],
+        [
+            PYTHON,
             "-c",
             (
                 "from automation.rccsm_feasibility import feasibility_manifest, route_mesh; "
