@@ -306,13 +306,33 @@
       "code": "H06-P2-R2",
       "trial_id": "T-2026-10-01-H06P2R2-PERFORMANCE-01",
       "class": "performance_correction",
-      "state": "PERFORMANCE_AUTHORIZED",
+      "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
       "issue_number": null,
       "preregistration_path": "research/preregistrations/h06_p2_r2_performance_2026_10_01.json",
-      "performance_authorization_allowed": true,
+      "performance_authorization_allowed": false,
       "predecessor_trial_id": "T-2026-10-01-H06P2R1-PERFORMANCE-01",
       "predecessor_execution_incident_path": "research/evidence/h06_p2_r1_performance_execution_incident.json",
-      "authorization_id": "AUTH-H06P2R2-2026-10-01-01"
+      "authorization_id": "AUTH-H06P2R2-2026-10-01-01",
+      "execution_incident": {
+        "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME",
+        "attempt_count": 1,
+        "execution_incident_path": "research/evidence/h06_p2_r2_performance_execution_incident.json",
+        "predecessor_workflow_runs": [
+          36911178921
+        ]
+      },
+      "invalidation_reason": "R2 failed on lowercase JSON boolean literals in the Python result-builder; no immutable scientific result was produced."
+    },
+    {
+      "code": "H06-P2-R3",
+      "trial_id": "T-2026-10-01-H06P2R3-PERFORMANCE-01",
+      "class": "performance_correction",
+      "state": "DESIGN_ONLY_ACTIVE",
+      "issue_number": null,
+      "preregistration_path": "research/preregistrations/h06_p2_r3_performance_2026_10_01.json",
+      "performance_authorization_allowed": false,
+      "predecessor_trial_id": "T-2026-10-01-H06P2R2-PERFORMANCE-01",
+      "predecessor_execution_incident_path": "research/evidence/h06_p2_r2_performance_execution_incident.json"
     }
   ],
   "active_design_families": [
