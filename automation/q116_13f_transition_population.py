@@ -69,7 +69,7 @@ def scan(archive:bytes,dataset_label:str)->dict[str,Any]:
     with zipfile.ZipFile(io.BytesIO(archive)) as zf:
         subs=rows_from_member(zf,"submission.tsv");infos=rows_from_member(zf,"infotable.tsv")
     by_accession={r["ACCESSION_NUMBER"]:r for r in subs}
-    out={s:{"periods":[],"rows":0,"managers":set(),"securities":set(),"filings":set()} for s in TARGETS}
+    out={s:{"periods":set(),"rows":0,"managers":set(),"securities":set(),"filings":set()} for s in TARGETS}
     records=[]
     for row in infos:
         sym=find_target(row.get("NAMEOFISSUER",""))
