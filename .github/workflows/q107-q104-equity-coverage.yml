@@ -15,11 +15,11 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: q107-q104-fresh-equity-coverage
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   coverage:
@@ -28,7 +28,7 @@ jobs:
       matrix:
         runner: [ubuntu-24.04, ubuntu-24.04-arm]
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - name: Checkout exact source
         uses: actions/checkout@v5
@@ -41,8 +41,8 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Install bounded dependencies
-        run: python -m pip install --disable-pip-version-check pandas
+      - name: Install deterministic dependencies
+        run: python -m pip install --disable-pip-version-check pytest pandas
 
       - name: Safety invariants
         run: |
@@ -51,17 +51,71 @@ jobs:
       - name: Q107 universe contract
         run: python -m pytest -q tests/test_q107_q104_equity_coverage.py
 
-      - name: Q107 coverage preflight
+      - name: Q107 canonical coverage preflight
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: |
           python -m automation.coverage_preflight \
             --preregistration research/preregistrations/q107_q104_fresh_equity_coverage_2026_10_01.json \
             --output-root research/runs/q107_coverage
 
-      - name: Upload coverage receipt
+      - name: Validate Q107 coverage result
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("research/runs/q107_coverage/T-2026-10-01-107-Q104-COVERAGE")
+          reports=sorted(root.glob("coverage_preflight_*.json"))
+          assert reports, "Q107 coverage report missing"
+          report=json.loads(reports[-1].read_text(encoding="utf-8"))
+          assert report["status"] == "coverage_passed"
+          assert report["common_calendar_count"] >= 3500
+          assert report["scientific_outcome"] == "COVERAGE_PASSED_NO_PERFORMANCE_EVIDENCE"
+          assert report["performance_evaluation"] is False
+          assert report["holdout_evaluation"] is False
+          assert report["selection_used"] is False
+          assert report["holdout_used_for_selection"] is False
+          print("Q107 COVERAGE CONTRACT OK")
+          print("Q107_SYMBOLS=" + ",".join(report["symbols"]))
+          print("Q107_COMMON_CALENDAR=" + str(report["common_calendar_count"]))
+          print("Q107_FP=" + report["coverage_fingerprint"])
+          PY
+
+      - name: Publish immutable Q107 coverage receipt
+        if: matrix.runner == 'ubuntu-24.04'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          ROOT="research/runs/q107_coverage/T-2026-10-01-107-Q104-COVERAGE"
+          REPORT="$(ls -1 "$ROOT"/coverage_preflight_*.json | tail -n 1)"
+          BASE_SHA="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
+          test -n "$BASE_SHA"
+          python automation/github_contents_publish.py \
+            --repository "$GITHUB_REPOSITORY" \
+            --branch master \
+            --base-sha "$BASE_SHA" \
+            --file research/evidence/q107_coverage_result.json="$REPORT" \
+            --file "$ROOT/snapshot_manifest.json"="$ROOT/snapshot_manifest.json" \
+            $(python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("research/runs/q107_coverage/T-2026-10-01-107-Q104-COVERAGE")
+          report=json.loads(sorted(root.glob("coverage_preflight_*.json"))[-1].read_text(encoding="utf-8"))
+          for symbol in report["symbols"]:
+              p=root/"datasets"/symbol/"1d.csv"
+              print(f"--file research/runs/q107_coverage/T-2026-10-01-107-Q104-COVERAGE/datasets/{symbol}/1d.csv={p}")
+          PY
+          )
+
+      - name: Upload Q107 coverage pack
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q107-q104-equity-coverage-${{ matrix.runner }}-${{ github.run_id }}
-          path: research/runs/q107_coverage/T-2026-10-01-107-Q104-COVERAGE
-          if-no-files-found: error
+          name: q107-q104-equity-coverage-${{ matrix.runner }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            research/runs/q107_coverage/T-2026-10-01-107-Q104-COVERAGE/
+          if-no-files-found: warn
           retention-days: 30
