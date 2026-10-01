@@ -14,7 +14,7 @@ def test_q119_source_validator_accepts_fixed_fields_and_pit_order():
             "security_type": "Note",
             "security_term": "10-Year",
             "high_yield": "4.20",
-            "median_yield": "4.10",
+            "avg_med_yield": "4.10",
             "low_yield": "4.00",
         },
         {
@@ -24,7 +24,7 @@ def test_q119_source_validator_accepts_fixed_fields_and_pit_order():
             "security_type": "Note",
             "security_term": "10-Year",
             "high_yield": "4.10",
-            "median_yield": "4.05",
+            "avg_med_yield": "4.05",
             "low_yield": "4.00",
         },
     ]
