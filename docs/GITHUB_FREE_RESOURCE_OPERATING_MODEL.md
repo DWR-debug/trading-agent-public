@@ -273,7 +273,7 @@ automatisch ausgenutzt.
 Interne Schutzkappe:
 - Startfenster: 2026-10-01T00:00:00Z
 - 4 Session-Reservierungen pro Monat
-- 12 AI credits maximale Agent-Session
+- 30 AI credits maximale Agent-Session
 - 1 parallele Copilot-Queue-Lane
 - keine zusätzlichen Käufe und keine Overages
 
