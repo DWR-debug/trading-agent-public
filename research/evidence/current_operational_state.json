@@ -412,7 +412,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T09:26:14.165564+00:00",
+  "generated_at_utc": "2026-10-01T09:27:09.255675+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -546,17 +546,18 @@
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/642"
       }
     ],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "fix/h06-pit-semantic-reconciliation-v4",
-        "number": 735,
-        "title": "FIX: reconcile H06 PIT using semantic check fingerprint",
-        "updatedAt": "2026-10-01T09:25:38Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/735"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: reconcile H06 PIT using semantic check fingerprint",
+        "sha": "133e2c6fff05f31d890da85983f483ac8f1ff3e1",
+        "timestamp": "2026-10-01T11:26:55+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d91729af9262ca668f267fbfed222c3f8af7494d",
+        "timestamp": "2026-10-01T09:26:14Z"
+      },
       {
         "message": "DOCS: include Q074 in issue triage",
         "sha": "e3e5efca1da8647178b02685aa7868d62af1c074",
@@ -586,16 +587,6 @@
         "message": "FIX: resolve H06 artifact paths from download root",
         "sha": "c6573250d8b6281f234389f97ad57438a1556348",
         "timestamp": "2026-10-01T11:16:31+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "1fee014d57bf8ddc650b8cd0993b57706dcb24ce",
-        "timestamp": "2026-10-01T09:16:19Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4eaa3564ca7dbcfb5b24168a9cc1d672d48e8428",
-        "timestamp": "2026-10-01T09:16:12Z"
       }
     ]
   },
@@ -665,12 +656,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e3e5efca1da8647178b02685aa7868d62af1c074",
+  "source_master_sha": "133e2c6fff05f31d890da85983f483ac8f1ff3e1",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36842699014"
+    "run_id": "36842798654"
   }
 }
