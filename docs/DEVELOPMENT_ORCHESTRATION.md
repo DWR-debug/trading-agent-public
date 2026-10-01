@@ -151,7 +151,7 @@ Die aktuelle Priorität der Ausführung ist:
 3. **Lokale AI-Diagnostik** auf dem PC erst nach Abschluss der beiden
    Forschungs-Lanes, damit sie keinen Forschungs-Slot verdrängt.
 4. **Copilot** ab **2026-10-01T00:00:00Z** als geschützte, einzelne
-   Engineering-Session-Lane; maximal 12 AI-Credits pro reservierter Session,
+   Engineering-Session-Lane; maximal 30 AI-Credits pro reservierter Session,
    vier Reservierungen pro Monat und keinerlei Overages.
 5. **Gemini/Claude** opportunistisch, wenn die kostenlose Authentifizierung
    tatsächlich verfügbar ist.
