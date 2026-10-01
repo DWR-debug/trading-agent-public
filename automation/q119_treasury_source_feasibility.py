@@ -95,7 +95,7 @@ def validate(rows: list[dict]) -> dict:
         "security_type",
         "security_term",
         "high_yield",
-        "median_yield",
+        "avg_med_yield",
         "low_yield",
     }
     normalized = []
@@ -139,11 +139,12 @@ def validate(rows: list[dict]) -> dict:
         "first_event": compiled[0],
         "last_event": compiled[-1],
         "future_mutation_invariance": True,
-        "yield_fields": [
+        "source_yield_fields": [
             "high_yield",
-            "median_yield",
+            "avg_med_yield",
             "low_yield",
         ],
+        "normalized_yield_field": "median_yield",
     }
 
 
