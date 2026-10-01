@@ -542,7 +542,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T12:46:02.704161+00:00",
+  "generated_at_utc": "2026-10-01T12:46:17.428960+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -744,6 +744,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "0b7b64987acac94f50633d1983df3a31a9817220",
+        "timestamp": "2026-10-01T12:46:02Z"
+      },
+      {
         "message": "RESEARCH: add Evidence-Critic pilot manifest",
         "sha": "e1b92e60f76c948b37526c9384f56a94b8d8fe94",
         "timestamp": "2026-10-01T14:45:57+02:00"
@@ -777,11 +782,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "eda278138ca4f3073fd8cff5a347adc00b351e84",
         "timestamp": "2026-10-01T12:33:05Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "1d1a3c3ae3297f14080ffd3aaa20a1181cc6addd",
-        "timestamp": "2026-10-01T12:31:16Z"
       }
     ]
   },
@@ -851,12 +851,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e1b92e60f76c948b37526c9384f56a94b8d8fe94",
+  "source_master_sha": "0b7b64987acac94f50633d1983df3a31a9817220",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36863954765"
+    "run_id": "36863968493"
   }
 }
