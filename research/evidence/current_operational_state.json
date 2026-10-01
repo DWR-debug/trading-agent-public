@@ -553,7 +553,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T13:56:17.149427+00:00",
+  "generated_at_utc": "2026-10-01T13:56:52.632058+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -757,6 +757,21 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: add persistent Trading Agent OS orchestration contract",
+        "sha": "65f742750070ede5cb28438ef763b835bf049959",
+        "timestamp": "2026-10-01T15:56:39+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "8428260445794f2bdbabc9fd9b58700b5c50db3b",
+        "timestamp": "2026-10-01T13:56:31Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5fcf877a39147dec346d2208e9e7740baa0b11fc",
+        "timestamp": "2026-10-01T13:56:17Z"
+      },
+      {
         "message": "OPS: persist Trading Agent OS orchestration state",
         "sha": "78622037b2299b914e77ddc4537e1a82a9c111b9",
         "timestamp": "2026-10-01T15:56:03+02:00"
@@ -780,21 +795,6 @@
         "message": "GOV: prioritize completed Q116 in current status focus",
         "sha": "4e9e8a45e9f0e16032b1e923bd8c2c2dbc112ab8",
         "timestamp": "2026-10-01T15:38:30+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "38b5331437e86691549bfc70f23a56a479dd8e58",
-        "timestamp": "2026-10-01T13:38:11Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "285a9d5116a5d7da7fee0c968488e46315582285",
-        "timestamp": "2026-10-01T13:37:58Z"
-      },
-      {
-        "message": "FIX: persist ECL upstream provenance into benchmark environment",
-        "sha": "ad01da323ba0efdf4ad71fdcf1988495ba3dca9f",
-        "timestamp": "2026-10-01T15:37:55+02:00"
       }
     ]
   },
@@ -864,12 +864,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "78622037b2299b914e77ddc4537e1a82a9c111b9",
+  "source_master_sha": "65f742750070ede5cb28438ef763b835bf049959",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36872405368"
+    "run_id": "36872481878"
   }
 }
