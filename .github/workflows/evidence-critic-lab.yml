@@ -110,7 +110,9 @@ jobs:
           set "PORT=8079"
           if /I "${{ matrix.install }}"=="laya" set "PORT=8090"
           if /I "${{ matrix.install }}"=="kev" set "PORT=8009"
-          "%VENV%\Scripts\python.exe" "%REPO_SRC%\automation\ecl_server_launcher.py" --action start --model "${{ matrix.model }}" --venv "%VENV%" --workdir "%REPO_SRC%" --port %PORT% --stdout "%OUT%" --stderr "%ERR%" --pidfile "%RUNNER_TEMP%\ecl-server.pid" || exit /b 1
+          set "WORKDIR=%REPO_SRC%"
+          if /I "${{ matrix.install }}"=="jeff" for /d %%D in ("%RUNNER_TEMP%\jeff-*") do set "WORKDIR=%%~fD"
+          "%VENV%\Scripts\python.exe" "%REPO_SRC%\automation\ecl_server_launcher.py" --action start --model "${{ matrix.model }}" --venv "%VENV%" --workdir "%WORKDIR%" --port %PORT% --stdout "%OUT%" --stderr "%ERR%" --pidfile "%RUNNER_TEMP%\ecl-server.pid" || exit /b 1
           endlocal
       - name: Run isolated benchmark
         if: steps.resources.outputs.eligible == 'true'
