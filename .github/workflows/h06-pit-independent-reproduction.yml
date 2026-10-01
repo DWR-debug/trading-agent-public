@@ -53,13 +53,17 @@ jobs:
           path: ${{ runner.temp }}/h06-master-coverage-artifact-${{ github.event.workflow_run.id }}
 
       - name: Verify canonical H06 artifact
-        shell: powershell
+        shell: cmd
         env:
           UPSTREAM_RUN_ID: ${{ github.event.workflow_run.id }}
         run: |
-          $artifactRoot = Join-Path $env:RUNNER_TEMP "h06-master-coverage-artifact-$env:UPSTREAM_RUN_ID"
-          if (-not (Test-Path (Join-Path $artifactRoot "research\runs\wide_search\h06_sector_neutral_residual_momentum_repair_coverage.json"))) { throw "canonical H06 coverage receipt missing" }
-          if (-not (Test-Path (Join-Path $artifactRoot "research\runs\wide_search\h06_repair_datasets\snapshot_manifest.json"))) { throw "canonical H06 snapshot manifest missing" }
+          @echo off
+          setlocal
+          set "ARTIFACT_ROOT=%RUNNER_TEMP%\h06-master-coverage-artifact-%UPSTREAM_RUN_ID%"
+          if not exist "%ARTIFACT_ROOT%\research\runs\wide_search\h06_sector_neutral_residual_momentum_repair_coverage.json" exit /b 1
+          if not exist "%ARTIFACT_ROOT%\research\runs\wide_search\h06_repair_datasets\snapshot_manifest.json" exit /b 1
+          echo H06_CANONICAL_ARTIFACT_STRUCTURE=PASS
+          endlocal
       - name: H06 PIT structural tests
         shell: cmd
         run: |
@@ -83,20 +87,16 @@ jobs:
           endlocal
 
       - name: Reconcile PIT fingerprints
-        shell: powershell
+        shell: cmd
         env:
           UPSTREAM_RUN_ID: ${{ github.event.workflow_run.id }}
         run: |
-          $artifactRoot = Join-Path $env:RUNNER_TEMP "h06-master-coverage-artifact-$env:UPSTREAM_RUN_ID"
-          $canonical = Get-Content (Join-Path $artifactRoot "research\runs\wide_search\h06_sector_neutral_residual_momentum_pit.json") -Raw | ConvertFrom-Json
-          $repro = Get-Content "research\runs\h06_pit_independent\reproduced_pit.json" -Raw | ConvertFrom-Json
-          if ($canonical.status -ne 'PIT_PASSED' -or $repro.status -ne 'PIT_PASSED') { throw 'H06 PIT did not pass' }
-          if ($canonical.report_fingerprint -ne $repro.report_fingerprint) { throw "PIT fingerprint mismatch: canonical=$($canonical.report_fingerprint) reproduced=$($repro.report_fingerprint)" }
-          if ($canonical.coverage_input.snapshot_fingerprint -ne $repro.coverage_input.snapshot_fingerprint) { throw 'snapshot fingerprint mismatch' }
-          'H06_INDEPENDENT_PIT_RECONCILIATION=PASS'
-          "H06_PIT_FINGERPRINT=$($repro.report_fingerprint)"
-          "H06_PIT_CHECKED_DECISION_POINTS=$($repro.checked_decision_points)"
-
+          @echo off
+          setlocal
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-h06-pit-repro\tools\python.exe"
+          set "ARTIFACT_ROOT=%RUNNER_TEMP%\h06-master-coverage-artifact-%UPSTREAM_RUN_ID%"
+          "%PY_EXE%" -c "import json,os; from pathlib import Path; a=Path(os.environ['ARTIFACT_ROOT']); c=json.loads((a/'research/runs/wide_search/h06_sector_neutral_residual_momentum_pit.json').read_text(encoding='utf-8')); r=json.loads((Path(os.environ['GITHUB_WORKSPACE'])/'research/runs/h06_pit_independent/reproduced_pit.json').read_text(encoding='utf-8')); assert c.get('status')=='PIT_PASSED' and r.get('status')=='PIT_PASSED', 'H06 PIT did not pass'; assert c.get('report_fingerprint')==r.get('report_fingerprint'), 'PIT fingerprint mismatch'; assert c.get('coverage_input',{}).get('snapshot_fingerprint')==r.get('coverage_input',{}).get('snapshot_fingerprint'), 'snapshot fingerprint mismatch'; print('H06_INDEPENDENT_PIT_RECONCILIATION=PASS'); print('H06_PIT_FINGERPRINT='+str(r.get('report_fingerprint'))); print('H06_PIT_CHECKED_DECISION_POINTS='+str(r.get('checked_decision_points')))" || exit /b 1
+          endlocal
       - name: Upload independent PIT receipt
         if: always()
         uses: actions/upload-artifact@v6
