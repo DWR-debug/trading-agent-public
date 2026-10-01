@@ -68,15 +68,11 @@ def residualize_by_sector(raw: Mapping[str, float]) -> dict[str, float]:
 
 def rank_global(
     scores: Mapping[str, float],
-    *,
-    top_k: int = TOP_K,
 ) -> tuple[tuple[str, ...], tuple[str, ...]]:
     _validate_symbols(scores)
-    if top_k <= 0 or top_k * 2 >= len(SYMBOLS):
-        raise ValueError("H06P2_INVALID_TOP_K")
     ordered = sorted(SYMBOLS, key=lambda symbol: (-float(scores[symbol]), symbol))
-    longs = tuple(ordered[:top_k])
-    shorts = tuple(ordered[-top_k:][::-1])
+    longs = tuple(ordered[:TOP_K])
+    shorts = tuple(ordered[-TOP_K:][::-1])
     if set(longs) & set(shorts):
         raise ValueError("H06P2_LONG_SHORT_OVERLAP")
     return longs, shorts
@@ -84,10 +80,8 @@ def rank_global(
 
 def target_weights(
     scores: Mapping[str, float],
-    *,
-    top_k: int = TOP_K,
 ) -> dict[str, float]:
-    longs, shorts = rank_global(scores, top_k=top_k)
+    longs, shorts = rank_global(scores)
     return {
         symbol: (
             WEIGHT if symbol in longs
