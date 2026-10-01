@@ -1,10 +1,7 @@
 name: Q077-R1 Fixed-Rule Performance Once
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - "research/run_requests/q077r1_performance_once.trigger"
+  # Historical/completed execution path: manual dispatch only. Automatic re-triggering is retired.
   workflow_dispatch:
 
 permissions:
