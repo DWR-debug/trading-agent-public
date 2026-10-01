@@ -542,7 +542,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T13:28:15.791979+00:00",
+  "generated_at_utc": "2026-10-01T13:28:28.362069+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -744,6 +744,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "28361081ea3aa3f7831d4079b54c1afca9a904b2",
+        "timestamp": "2026-10-01T13:28:15Z"
+      },
+      {
         "message": "TEST: cover ECL substantive verdict contract",
         "sha": "ad03d2e89aa19b7b218a7c21a73758435e7a39c1",
         "timestamp": "2026-10-01T15:28:10+02:00"
@@ -777,11 +782,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "26d0e609183c14f692a4edfed86566bebc72c263",
         "timestamp": "2026-10-01T13:11:12Z"
-      },
-      {
-        "message": "FIX: standardize Evidence-Critic benchmark on native three-state abstention",
-        "sha": "3a61976a9abc2e1e0dddcdce427d9fe7f0cee8aa",
-        "timestamp": "2026-10-01T15:10:59+02:00"
       }
     ]
   },
@@ -851,12 +851,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ad03d2e89aa19b7b218a7c21a73758435e7a39c1",
+  "source_master_sha": "28361081ea3aa3f7831d4079b54c1afca9a904b2",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36868895144"
+    "run_id": "36868909013"
   }
 }
