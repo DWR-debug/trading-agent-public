@@ -72,8 +72,7 @@ jobs:
         run: |
           @echo off
           setlocal
-          set "OUT=%RUNNER_TEMP%\\ecl-resource.json"
-          powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "$total=(Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB; $need=[double]'${{ matrix.min_memory_gb }}'; $eligible=($total -ge $need); ('eligible=' + $eligible.ToString().ToLowerInvariant()) | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append; [ordered]@{schema_version=1;model='${{ matrix.model }}';runner_name=$env:RUNNER_NAME;total_memory_gb=[math]::Round($total,2);minimum_memory_gb=$need;eligible=$eligible;status=if($eligible){'RESOURCE_PREFLIGHT_PASSED'}else{'RESOURCE_INSUFFICIENT'};source_commit=$env:GITHUB_SHA} | ConvertTo-Json -Depth 5 | Set-Content -Encoding utf8 $env:OUT"
+          powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "$total=(Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory; $need=[double]'${{ matrix.min_memory_gb }}'; $bytesPerGb=1073741824; if($total -ge ($need*$bytesPerGb)){ Add-Content -Path $env:GITHUB_OUTPUT -Value 'eligible=true'; } else { Add-Content -Path $env:GITHUB_OUTPUT -Value 'eligible=false'; }; Write-Output ('{""schema_version"":1,""model"":""${{ matrix.model }}"",""runner_name"":""' + $env:RUNNER_NAME + '"",""total_memory_gb"":' + [math]::Round($total/$bytesPerGb,2) + ',""minimum_memory_gb"":' + $need + ',""source_commit"":""' + $env:GITHUB_SHA + '""}') | Set-Content -Encoding utf8 (Join-Path $env:RUNNER_TEMP 'ecl-resource.json')"
           endlocal
       - name: Install model runtime
         if: steps.resources.outputs.eligible == 'true'
