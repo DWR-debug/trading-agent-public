@@ -19,3 +19,13 @@ def test_q120_cftc_positioning_is_registered_as_deterministic_frontier():
     assert track["lane"] == "deterministic_frontier"
     assert track["source_ids"] == ["SRC-CFTC-TFF"]
     assert track["next_gate"] == "historical_archive_release_date_pit_probe"
+
+ 
+def test_research_os_scheduler_module_is_syntactically_parseable():
+    from pathlib import Path
+    import ast
+
+    source = (
+        Path(__file__).parents[1] / "automation" / "research_os_scheduler.py"
+    ).read_text(encoding="utf-8")
+    ast.parse(source)
