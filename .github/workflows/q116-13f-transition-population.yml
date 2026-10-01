@@ -47,16 +47,7 @@ jobs:
         run: python -m automation.q116_13f_transition_population
       - name: Validate Q116 receipt
         if: matrix.runner == 'ubuntu-24.04'
-        run: python - <<'PY'
-          import json
-          from pathlib import Path
-          r=json.loads(Path('research/runs/q116_13f_transition_population/result.json').read_text())
-          assert all(v['rows']>0 for v in r['prior']['coverage'].values())
-          assert all(v['rows']>0 for v in r['current']['coverage'].values())
-          assert r['synthetic'] and all(r['synthetic'].values())
-          assert r['governance']['performance_authorized'] is False
-          print('Q116 RECEIPT CONTRACT OK')
-          PY
+        run: python -c "import json; from pathlib import Path; r=json.loads(Path('research/runs/q116_13f_transition_population/result.json').read_text()); assert all(v['rows']>0 for v in r['prior']['coverage'].values()); assert all(v['rows']>0 for v in r['current']['coverage'].values()); assert r['synthetic'] and all(r['synthetic'].values()); assert r['governance']['performance_authorized'] is False; print('Q116 RECEIPT CONTRACT OK')"
       - name: Publish immutable Q116 receipt
         if: matrix.runner == 'ubuntu-24.04'
         env:
