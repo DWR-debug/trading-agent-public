@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: h06-p2-r2-one-shot-authorization
+  group: h06-p2-r3-one-shot-authorization
   cancel-in-progress: false
 
 jobs:
@@ -62,7 +62,7 @@ jobs:
           assert p["trial_id"]=="T-2026-10-01-H06P2R3-PERFORMANCE-01"
           assert p["status"]=="PREREGISTERED_DESIGN_ONLY"
           assert p["governance"]["performance_trial_authorized"] is False
-          assert p["correction"]["prior_trial_id"]=="T-2026-10-01-H06P2R1-PERFORMANCE-01"
+          assert p["correction"]["prior_trial_id"]=="T-2026-10-01-H06P2R2-PERFORMANCE-01"
           assert p["correction"]["scientific_scope_changed"] is False
           assert p["input_contract"]["input_bundle_fingerprint"]==f["bundle_fingerprint"]
           assert p["input_contract"]["pit_check_fingerprint"]==pit["reconciliation"]["check_fingerprint"]
