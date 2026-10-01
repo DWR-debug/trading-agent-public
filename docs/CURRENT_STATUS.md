@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `7fd66fc920740f3b2cf2600e35f545fdbc8a6cd0`
+**Current operational snapshot:** `f057bbf1a418e66c0468bcaa22f1f1296ab445a1`
 
-**Generated (UTC):** `2026-10-01T10:20:58.133974+00:00`
+**Generated (UTC):** `2026-10-01T10:21:14.336943+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -39,6 +39,8 @@
 - Q084, Q088 and Q082 remain **design/feasibility tracks** for unusual market-state, textual-network, rebalance-demand and SEC information channels.
 - The unusual-strategy frontier is maintained in `docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md` and is design-only until feasibility and provenance are established.
 - Research OS capability lattice: `research/governance/research_os_source_registry_2026_09_30.json`; it is metadata only and cannot authorize performance.
+- Q104 orthogonal candidate wave: **SOURCE_FEASIBILITY_COMPLETED_DUAL_ARCH**; 5/6 data-backed candidates are source-feasible and Q104:R9 is synthetic-only. The archived receipt is `research/evidence/q104_source_feasibility_2026_10_01.json`.
+- Q105 historical archive/PIT feasibility is **ACTIVE**; it is a non-performance gate for the five data-backed Q104 candidates.
 
 ### H06 independent PIT
 
