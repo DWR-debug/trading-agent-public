@@ -36,5 +36,24 @@
     "live_trading_enabled": false,
     "orders_enabled": false,
     "automatic_promotion": false
-  }
+  },
+  "attempts": [
+    {
+      "workflow_run_id": 36908441865,
+      "error_type": "RuntimeError",
+      "error": "H06 market coverage is not passed",
+      "root_cause": "Legacy expectation of a top-level status field.",
+      "scientific_outcome": false,
+      "result_created": false
+    },
+    {
+      "workflow_run_id": 36908869666,
+      "error_type": "JSONDecodeError",
+      "error": "Extra data: line 206 column 2 (char 6740)",
+      "root_cause": "Execution-boundary adapter emitted a literal backslash-n sequence instead of a JSON newline.",
+      "scientific_outcome": false,
+      "result_created": false
+    }
+  ],
+  "last_updated_utc": "2026-10-01T18:44:00Z"
 }
