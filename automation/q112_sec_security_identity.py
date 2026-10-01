@@ -150,7 +150,11 @@ def discover_xml(index_url: str, source: str) -> tuple[str, bytes, str]:
 
     payload = json.loads(body)
     items = payload.get("directory", {}).get("item", [])
-    xml_names = [str(item.get("name")) for item in items if str(item.get("name", "")).lower().endswith(".xml")]
+    xml_names = [
+        str(item.get("name"))
+        for item in items
+        if str(item.get("name", "")).lower().endswith(".xml")
+    ]
 
     if source == "13F":
         preferred = [n for n in xml_names if "infotable" in n.lower() or "information" in n.lower()]
@@ -167,12 +171,23 @@ def discover_xml(index_url: str, source: str) -> tuple[str, bytes, str]:
     if not match:
         raise ValueError("Q112_INDEX_URL_UNPARSEABLE")
     cik_folder, accession_folder = match.groups()
-    xml_url = f"https://www.sec.gov/Archives/edgar/data/{cik_folder}/{accession_folder}/{candidates[0]}"
 
-    status_xml, xml_body, xml_type = get(xml_url)
-    if status_xml != 200:
-        raise ValueError(f"Q112_XML_HTTP_{status_xml}:{xml_url}")
-    return xml_url, xml_body, xml_type or content_type
+    last_error: Exception | None = None
+    for filename in candidates:
+        xml_url = f"https://www.sec.gov/Archives/edgar/data/{cik_folder}/{accession_folder}/{filename}"
+        status_xml, xml_body, xml_type = get(xml_url)
+        if status_xml != 200:
+            last_error = ValueError(f"Q112_XML_HTTP_{status_xml}:{xml_url}")
+            continue
+        try:
+            # Select by successful source-schema extraction, not filename alone.
+            extract_fields(source, xml_body)
+        except (ValueError, ET.ParseError) as exc:
+            last_error = exc
+            continue
+        return xml_url, xml_body, xml_type or content_type
+
+    raise ValueError(f"Q112_NO_PARSEABLE_XML:{source}:{last_error}")
 
 
 def synthetic_contract() -> dict[str, Any]:
