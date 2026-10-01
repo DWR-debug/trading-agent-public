@@ -137,6 +137,7 @@ ACTIVE_WORKFLOWS = {
     "q115-treasury-demand-state.yml",
     "q116-13f-transition-population.yml",
     "q117-treasury-demand-population.yml",
+    "q119-treasury-source-feasibility.yml",
     "q095-authorization-once.yml",
     "rccsm-feasibility-cloud.yml",
     "rccsm-feasibility.yml",
