@@ -55,7 +55,7 @@ GitHub am 1. jedes Monats um 00:00 UTC zurückgesetzt.
 Projektinterne Schutzkappe:
 - Freigabe ab 2026-10-01T00:00:00Z
 - 4 Session-Reservierungen pro Monat
-- maximal 12 AI credits pro Session
+- maximal 30 AI credits pro Session
 - nur 1 paralleler Copilot-Worker
 - keinerlei Overages oder Zukäufe
 
