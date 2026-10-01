@@ -11,7 +11,7 @@ def rows():
     ]
 
 def test_i22_filters_fixed_forms_and_preserves_accessions():
-    out=compile_rows(rows(), date(2025,9,24))
+    out=compile_rows(rows(), date(2025,9,30))
     assert out["filing_count"]==3
     assert [x["accession"] for x in out["events"]]==["A1","A2","A3"]
 
