@@ -571,7 +571,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T16:31:05.380157+00:00",
+  "generated_at_utc": "2026-10-01T16:31:50.348336+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -775,6 +775,16 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: synchronize Research OS snapshot with current master",
+        "sha": "2a063c2ca37c5df87f3c58215e1bbf9bbfd214cb",
+        "timestamp": "2026-10-01T18:31:38+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "06d4180f6a6c7a766b32216618d20747f8da2c3e",
+        "timestamp": "2026-10-01T16:31:05Z"
+      },
+      {
         "message": "Q104:I22: correct 20-session SEC filing-arrival window (#766)",
         "sha": "b268accb8c3dd2fa8f5dc0ab7d4d6483805c1400",
         "timestamp": "2026-10-01T18:30:49+02:00"
@@ -803,16 +813,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "6c024dab6fba1be0eba1e7fcf1bf7a23eed1a295",
         "timestamp": "2026-10-01T16:23:13Z"
-      },
-      {
-        "message": "TEST: guard Q119 Research OS routing",
-        "sha": "d01398c68de2aea04c737c2f3d04a29c7eee152d",
-        "timestamp": "2026-10-01T18:23:05+02:00"
-      },
-      {
-        "message": "OPS: route Q119 Treasury demand-shape frontier through Research OS",
-        "sha": "0e5328fa0f1b7e6255dd7d5af16b14a4752cc36d",
-        "timestamp": "2026-10-01T18:22:57+02:00"
       }
     ]
   },
@@ -882,12 +882,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b268accb8c3dd2fa8f5dc0ab7d4d6483805c1400",
+  "source_master_sha": "2a063c2ca37c5df87f3c58215e1bbf9bbfd214cb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36892565335"
+    "run_id": "36892665653"
   }
 }
