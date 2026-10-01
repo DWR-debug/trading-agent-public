@@ -412,7 +412,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T09:01:41.639483+00:00",
+  "generated_at_utc": "2026-10-01T09:02:54.657518+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -546,17 +546,18 @@
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/641"
       }
     ],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "fix/copilot-publish-current-branch-v1",
-        "number": 726,
-        "title": "FIX: publish agent work from the actual working branch",
-        "updatedAt": "2026-10-01T09:01:17Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/726"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: publish agent work from the actual working branch",
+        "sha": "447a41aaf59539520fc7a690e27951121769bd45",
+        "timestamp": "2026-10-01T11:02:41+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e3dba3cbd66d8224f007e6c68dde5d05834a991a",
+        "timestamp": "2026-10-01T09:01:41Z"
+      },
       {
         "message": "TEST: validate H06 independent artifact reproduction path",
         "sha": "393403da4d6c340aec8ec9a560483c7b54a60253",
@@ -586,16 +587,6 @@
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "7bfb6af40119902f1296a37c6cb7a7038e777c14",
         "timestamp": "2026-10-01T08:55:45Z"
-      },
-      {
-        "message": "FIX: align Copilot session cap with CLI credit floor",
-        "sha": "96e835911a5cfc64db09c6f365d4b2c1f899936e",
-        "timestamp": "2026-10-01T10:55:31+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "21b35e6f8363f05208888822b36ac1cccdf5148d",
-        "timestamp": "2026-10-01T08:51:03Z"
       }
     ]
   },
@@ -665,12 +656,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "393403da4d6c340aec8ec9a560483c7b54a60253",
+  "source_master_sha": "447a41aaf59539520fc7a690e27951121769bd45",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36840045235"
+    "run_id": "36840175748"
   }
 }
