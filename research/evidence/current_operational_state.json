@@ -579,7 +579,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T16:42:29.092527+00:00",
+  "generated_at_utc": "2026-10-01T16:44:28.900375+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -774,11 +774,11 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
-        "headRefName": "research/q119-treasury-api-field-fix-2026-10-01",
-        "number": 770,
-        "title": "Q119: fix Treasury Fiscal Data median-yield API field",
-        "updatedAt": "2026-10-01T16:41:31Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/770"
+        "headRefName": "research/q120-cftc-positioning-state-v2-2026-10-01",
+        "number": 771,
+        "title": "Q120: add CFTC TFF positioning-divergence frontier (current base)",
+        "updatedAt": "2026-10-01T16:43:53Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/771"
       },
       {
         "baseRefName": "master",
@@ -798,6 +798,21 @@
       }
     ],
     "recent_commits": [
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "4d46d4c3594cb0d9f88ca339165e6955c8bb54ed",
+        "timestamp": "2026-10-01T16:44:22Z"
+      },
+      {
+        "message": "Q119: fix Treasury Fiscal Data median-yield API field (#770)",
+        "sha": "760e562333532ea87f9940cec22a92de8d4e8199",
+        "timestamp": "2026-10-01T18:44:16+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "589812551b1b31453ad5249833f50c830c5777eb",
+        "timestamp": "2026-10-01T16:42:29Z"
+      },
       {
         "message": "H06-P2: add fail-closed readiness receipt (#767)",
         "sha": "5838df8e22d8462ce1262908be64f557100a3d8f",
@@ -822,21 +837,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "37a04feb5f1a209671d23c995d5eaf7252bd60b7",
         "timestamp": "2026-10-01T16:31:50Z"
-      },
-      {
-        "message": "OPS: synchronize Research OS snapshot with current master",
-        "sha": "2a063c2ca37c5df87f3c58215e1bbf9bbfd214cb",
-        "timestamp": "2026-10-01T18:31:38+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "06d4180f6a6c7a766b32216618d20747f8da2c3e",
-        "timestamp": "2026-10-01T16:31:05Z"
-      },
-      {
-        "message": "Q104:I22: correct 20-session SEC filing-arrival window (#766)",
-        "sha": "b268accb8c3dd2fa8f5dc0ab7d4d6483805c1400",
-        "timestamp": "2026-10-01T18:30:49+02:00"
       }
     ]
   },
@@ -906,12 +906,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5838df8e22d8462ce1262908be64f557100a3d8f",
+  "source_master_sha": "4d46d4c3594cb0d9f88ca339165e6955c8bb54ed",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36893987768"
+    "run_id": "36894232755"
   }
 }
