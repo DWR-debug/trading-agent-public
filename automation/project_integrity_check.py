@@ -160,6 +160,7 @@ ACTIVE_WORKFLOWS = {
     "wide-search.yml",
     "workflow-lint.yml",
     "evidence-critic-lab.yml",
+    "evidence-critic-verdict.yml",
     "q104-i22-filing-arrival.yml",
 }
 
