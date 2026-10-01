@@ -29,7 +29,7 @@ FIELDS = ",".join(
         "security_type",
         "security_term",
         "high_yield",
-        "avg_median_yield",
+        "median_yield",
         "low_yield",
     ]
 )
@@ -67,7 +67,7 @@ def validate(rows: list[dict]) -> dict:
         "security_type",
         "security_term",
         "high_yield",
-        "avg_median_yield",
+        "median_yield",
         "low_yield",
     }
     normalized = []
@@ -83,7 +83,7 @@ def validate(rows: list[dict]) -> dict:
         normalized.append(
             {
                 **row,
-                "median_yield": row["avg_median_yield"],
+                "median_yield": row["median_yield"],
             }
         )
 
@@ -113,7 +113,7 @@ def validate(rows: list[dict]) -> dict:
         "future_mutation_invariance": True,
         "yield_fields": [
             "high_yield",
-            "avg_median_yield",
+            "median_yield",
             "low_yield",
         ],
     }
