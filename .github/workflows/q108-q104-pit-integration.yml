@@ -1,6 +1,18 @@
 name: Q108 Q104 PIT Integration
 
 on:
+  push:
+    branches: [master]
+    paths:
+      - "research/preregistrations/q108_q104_pit_integration_2026_10_01.json"
+      - "automation/q108_q104_pit_integration.py"
+      - "tests/test_q108_q104_pit_integration.py"
+      - "research/evidence/q107_coverage_result.json"
+      - "research/evidence/q023_treasury_release_timestamp_pit_feasibility_2026_09_27.json"
+      - "automation/q106_q104_pit_join.py"
+      - "tests/test_q106_q104_pit_join.py"
+      - ".github/workflows/q108-q104-pit-integration.yml"
+      - "research/run_requests/q108_q104_pit.trigger"
   workflow_dispatch:
 
 permissions:
