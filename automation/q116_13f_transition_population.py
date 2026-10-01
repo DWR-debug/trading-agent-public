@@ -36,15 +36,8 @@ def find_target(v:str)->str|None:
 def parse_sec_date(value:str)->date:
     text=str(value).strip()
     for fmt in ("%Y-%m-%d","%d-%b-%Y","%d-%B-%Y","%m/%d/%Y"):
-        try:return datetime.strptime(text,fmt).date()
-        except ValueError:continue
-    raise ValueError("Q116_INVALID_SEC_DATE:"+text)
-
-def parse_sec_date(value:str)->date:
-    text=str(value).strip()
-    for fmt in ("%Y-%m-%d","%d-%b-%Y","%d-%B-%Y"):
         try:
-            return __import__("datetime").datetime.strptime(text,fmt).date()
+            return datetime.strptime(text,fmt).date()
         except ValueError:
             continue
     raise ValueError("Q116_SEC_DATE_UNPARSEABLE:"+text)
@@ -112,7 +105,7 @@ def latest_as_of(records:list[dict[str,Any]],as_of:date)->dict[tuple[str,str,str
         if filing>as_of:continue
         key=(r["manager_cik"],r["period_of_report"],r["security_key"],r["symbol"])
         old=chosen.get(key)
-        if old is None or (r["filing_date"],r["accession"])>(old["filing_date"],old["accession"]):
+        if old is None or (filing, r["accession"]) > (parse_sec_date(old["filing_date"]), old["accession"]):
             chosen[key]=r
     return chosen
 
@@ -128,8 +121,10 @@ def build_transitions(prior:list[dict[str,Any]],current:list[dict[str,Any]],as_o
             return Position(
                 manager_cik=r["manager_cik"],
                 accession=r["accession"],
-                acceptance_datetime=__import__("datetime").datetime.fromisoformat(
-                    r["filing_date"]+"T23:59:59+00:00"
+                acceptance_datetime=datetime.combine(
+                    parse_sec_date(r["filing_date"]),
+                    datetime.max.time(),
+                    tzinfo=timezone.utc,
                 ),
                 period_of_report=r["period_of_report"],
                 security_key=r["security_key"],
