@@ -662,7 +662,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T20:07:12.782848+00:00",
+  "generated_at_utc": "2026-10-01T20:19:15.105024+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -850,6 +850,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "ops: bootstrap pinned MinGit on self-hosted QA",
+        "sha": "849c5b41bddb9ef9ade18caa7dddc2b7edc46b53",
+        "timestamp": "2026-10-01T22:19:06+02:00"
+      },
+      {
+        "message": "tests: align Q120 fixture with TFF field schema",
+        "sha": "cbfcc292302093cfee30c215dcb0018a600bf27f",
+        "timestamp": "2026-10-01T22:19:03+02:00"
+      },
+      {
+        "message": "research: repair Q120 TFF API field contract",
+        "sha": "c1acc6026372e89067b06825c4ff87bdf5df7d82",
+        "timestamp": "2026-10-01T22:19:01+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "551a143047cae1080e2467606a83d450333cc8c9",
+        "timestamp": "2026-10-01T20:11:25Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "20fd2d77f09a20c68bc404be03286518f707a113",
+        "timestamp": "2026-10-01T20:08:35Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ba8323088df7deba6995631dd7db29ac9bd039c7",
+        "timestamp": "2026-10-01T20:07:12Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "4aa8261bce98822712fa3d2df778db0fc5aefff9",
         "timestamp": "2026-10-01T20:06:59Z"
@@ -858,36 +888,6 @@
         "message": "research: exercise cross-clock temporal join in overnight loop",
         "sha": "6163935428246c301b5f9816731045b1fe99a58d",
         "timestamp": "2026-10-01T22:06:57+02:00"
-      },
-      {
-        "message": "research: add generic cross-clock evidence join contract",
-        "sha": "135d0d491a90b17463c2d4b46be6d729a03312a6",
-        "timestamp": "2026-10-01T22:06:49+02:00"
-      },
-      {
-        "message": "research: add generic cross-clock evidence join contract",
-        "sha": "5286b7859bdeec6fb9580e8e8ca1beb33d9647f3",
-        "timestamp": "2026-10-01T22:06:46+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "8fbaeb1f5be4e440028fd827fb5c1de2ee35a9a2",
-        "timestamp": "2026-10-01T20:05:21Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c6efca1f1f963ffc8f098421e4ef55db70db766f",
-        "timestamp": "2026-10-01T20:05:06Z"
-      },
-      {
-        "message": "research: add discovery quarantine and Q118-Q120 frontier execution",
-        "sha": "27e52fa10b73077e403e61eed20532b2db9ce64c",
-        "timestamp": "2026-10-01T22:05:04+02:00"
-      },
-      {
-        "message": "research: add hypothesis discovery quarantine compiler",
-        "sha": "3928524a9c310e06800017b459e8adf9ff4c28f6",
-        "timestamp": "2026-10-01T22:04:55+02:00"
       }
     ]
   },
@@ -957,12 +957,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4aa8261bce98822712fa3d2df778db0fc5aefff9",
+  "source_master_sha": "849c5b41bddb9ef9ade18caa7dddc2b7edc46b53",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36919221259"
+    "run_id": "36920679237"
   }
 }
