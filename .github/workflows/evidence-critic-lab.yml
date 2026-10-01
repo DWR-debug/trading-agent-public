@@ -15,7 +15,7 @@ permissions:
   contents: read
 concurrency:
   group: trading-agent-evidence-critic-lab
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   benchmark:
     strategy:
@@ -135,10 +135,10 @@ jobs:
           [ordered]@{schema_version=1;task_id='ECL-2026-10-01-001';status='RESOURCE_INSUFFICIENT';model='${{ matrix.model }}';resource_preflight=$resource;worker_output_is_scientific_evidence=$false;governance=@{performance_evaluation=$false;holdout_selection=$false;candidate_selection=$false;candidate_ranking=$false;promotion=$false;live_execution=$false}} | ConvertTo-Json -Depth 8 | Set-Content -Encoding utf8 "$env:RUNNER_TEMP\ecl-${{ matrix.install }}-result.json"
       - name: Stop local model server
         if: always() && steps.resources.outputs.eligible == 'true'
-        shell: powershell
+        shell: cmd
         run: |
-          $path="$env:RUNNER_TEMP\ecl-server.pid"
-          if(Test-Path $path){$pid=[int](Get-Content $path);Stop-Process -Id $pid -Force -ErrorAction SilentlyContinue}
+          @echo off
+          powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "$path=Join-Path $env:RUNNER_TEMP 'ecl-server.pid'; if(Test-Path $path){$serverPid=[int](Get-Content $path);Stop-Process -Id $serverPid -Force -ErrorAction SilentlyContinue}"
       - name: Upload isolated receipt
         if: always()
         continue-on-error: true
