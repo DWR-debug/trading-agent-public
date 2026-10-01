@@ -53,7 +53,15 @@
       "root_cause": "Execution-boundary adapter emitted a literal backslash-n sequence instead of a JSON newline.",
       "scientific_outcome": false,
       "result_created": false
+    },
+    {
+      "workflow_run_id": 36908998353,
+      "error_type": "RuntimeError",
+      "error": "TXN: adjusted close missing at 2011-10-26 13:30:00+00:00",
+      "root_cause": "Frozen adjusted-close timestamps are ISO-formatted strings while canonical market timestamps are datetime objects; the runner used direct dictionary lookup without representation normalization.",
+      "scientific_outcome": false,
+      "result_created": false
     }
   ],
-  "last_updated_utc": "2026-10-01T18:44:00Z"
+  "last_updated_utc": "2026-10-01T18:45:00Z"
 }
