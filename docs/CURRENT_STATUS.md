@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `27a53d7d304edb297879f37fc21813b0c1f9c5ad`
+**Current operational snapshot:** `26597887e6d15440fa869c032304ddde260d97a9`
 
-**Generated (UTC):** `2026-10-01T10:36:14.216082+00:00`
+**Generated (UTC):** `2026-10-01T10:37:10.643497+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -40,7 +40,11 @@
 - The unusual-strategy frontier is maintained in `docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md` and is design-only until feasibility and provenance are established.
 - Research OS capability lattice: `research/governance/research_os_source_registry_2026_09_30.json`; it is metadata only and cannot authorize performance.
 - Q104 orthogonal candidate wave: **SOURCE_FEASIBILITY_COMPLETED_DUAL_ARCH**; 5/6 data-backed candidates are source-feasible and Q104:R9 is synthetic-only. The archived receipt is `research/evidence/q104_source_feasibility_2026_10_01.json`.
-- Q105 historical archive/PIT feasibility is **ACTIVE**; it is a non-performance gate for the five data-backed Q104 candidates.
+- Q105 historical archive/PIT feasibility: **COMPLETED**, with I21 remaining historically window-limited.
+- Q106 shared SEC/Treasury PIT join integrity: **COMPLETED_DUAL_ARCH**.
+- Q107 fresh Q104 equity coverage: **COMPLETED**; 8/8 symbols and 3,704 common sessions.
+- Q108 real SEC/XBRL/13F/Treasury PIT integration: **COMPLETED_DUAL_ARCH**; 8/8 issuer filings and 8/8 XBRL lineage verified, 13F sample and Treasury chain verified.
+- Candidate-specific next gates: I19/I20 = full 13F security coverage; I22 = frozen event-state compiler; M6 = fixed Treasury state reuse; I21 = explicit bounded historical horizon; R9 = synthetic-only.
 
 ### H06 independent PIT
 
