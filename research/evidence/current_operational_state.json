@@ -454,6 +454,15 @@
         "repair_discovery_fingerprint": "b7541fee48f01105d47ca0e89b05e1c20d14d73c5dad18dc1d2e876a21c4b05d",
         "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
         "trial_id": "T-2026-09-30-C29-PERFORMANCE-01"
+      },
+      {
+        "class": "fresh_validation",
+        "code": "H06-P2",
+        "issue_number": null,
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/h06_p2_performance_2026_10_01.json",
+        "state": "DESIGN_ONLY_ACTIVE",
+        "trial_id": "T-2026-10-01-H06P2-PERFORMANCE-01"
       }
     ],
     "name": "active_research_registry",
@@ -581,7 +590,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T18:05:30.787407+00:00",
+  "generated_at_utc": "2026-10-01T18:06:15.877602+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -766,17 +775,18 @@
     "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "repair/2026-10-01-h06-registry-identity",
-        "number": 783,
-        "title": "GOV: register H06-P2 performance trial identity",
-        "updatedAt": "2026-10-01T18:04:01Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/783"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "GOV: register H06-P2 performance trial identity",
+        "sha": "714c16e4773882d799dfa1370623ca27e918a8e7",
+        "timestamp": "2026-10-01T20:05:59+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2d11cf45bfedd6e15d1ca5460618d1b13fe51d95",
+        "timestamp": "2026-10-01T18:05:30Z"
+      },
       {
         "message": "FIX: migrate H06-P2 design family into performance trial authorization",
         "sha": "32de198005ba994f639d66261fc8b0d80bd82e0c",
@@ -806,16 +816,6 @@
         "message": "FIX: repair H06-P2 authorization workflow YAML",
         "sha": "5b31781f14a3158fe89a8258e33190bbb63d834d",
         "timestamp": "2026-10-01T20:01:49+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "698c3504554c3a086e15079a250b4bbbcddf0e03",
-        "timestamp": "2026-10-01T17:58:36Z"
-      },
-      {
-        "message": "RESEARCH: enable H06-P2 one-shot performance lane",
-        "sha": "c5f3165e3b7f7ad48b3a0a4c71368c686219056a",
-        "timestamp": "2026-10-01T19:58:20+02:00"
       }
     ]
   },
@@ -885,12 +885,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "32de198005ba994f639d66261fc8b0d80bd82e0c",
+  "source_master_sha": "714c16e4773882d799dfa1370623ca27e918a8e7",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36904209715"
+    "run_id": "36904300394"
   }
 }
