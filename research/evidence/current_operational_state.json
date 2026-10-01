@@ -591,7 +591,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T18:46:14.436339+00:00",
+  "generated_at_utc": "2026-10-01T18:49:30.910748+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -779,44 +779,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "EVIDENCE: record H06-P2 timestamp implementation incident",
-        "sha": "0af450a9a0427da6e030ca125c2243941274ad61",
-        "timestamp": "2026-10-01T20:45:58+02:00"
+        "message": "RESEARCH: document H06-P2-R1 correction scope",
+        "sha": "fbcfb5d1b3c8e887f915efa6dc89674b0320ae7d",
+        "timestamp": "2026-10-01T20:49:29+02:00"
+      },
+      {
+        "message": "OPS: add H06-P2-R1 corrective performance lane",
+        "sha": "560fd7ec9fe6fffe7e97664b5dd161a75b662c02",
+        "timestamp": "2026-10-01T20:49:26+02:00"
+      },
+      {
+        "message": "OPS: add H06-P2-R1 one-shot authorization lane",
+        "sha": "ee8f871bc008d6e805c3cd0ec197bf0f894e1eec",
+        "timestamp": "2026-10-01T20:49:24+02:00"
+      },
+      {
+        "message": "RESEARCH: preregister H06-P2-R1 implementation correction",
+        "sha": "ea332cd1436dcf4df2d7edf6dcad47d9648cf3ab",
+        "timestamp": "2026-10-01T20:49:19+02:00"
+      },
+      {
+        "message": "RESEARCH: add H06-P2-R1 ledger reconciliation",
+        "sha": "833559bc5fd41f106584fca1d1c5ae6c1df28130",
+        "timestamp": "2026-10-01T20:49:14+02:00"
+      },
+      {
+        "message": "TEST: add H06-P2-R1 corrective contract tests",
+        "sha": "ccf93297e2d56a954b2f2316c74eee6c809c547c",
+        "timestamp": "2026-10-01T20:49:11+02:00"
+      },
+      {
+        "message": "RESEARCH: add H06-P2-R1 corrective performance runner",
+        "sha": "8227436da08ab3e0ac2492f1b11631dc24d8079d",
+        "timestamp": "2026-10-01T20:49:08+02:00"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "d5ecd75576310fe3bacf6bd375dfa1fd2f478de5",
-        "timestamp": "2026-10-01T18:44:39Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "dc258d936bb8a60a8353bd0c70b3a5f7c6a7040d",
-        "timestamp": "2026-10-01T18:44:23Z"
-      },
-      {
-        "message": "OPS: retrigger H06-P2 after JSON emission fix",
-        "sha": "36613598f3fef8c7ec1272cb47d4bac32369f10f",
-        "timestamp": "2026-10-01T20:43:47+02:00"
-      },
-      {
-        "message": "EVIDENCE: extend H06-P2 implementation incident record",
-        "sha": "88fd56a7454e07c8b339648e25dc474ed0114f13",
-        "timestamp": "2026-10-01T20:43:41+02:00"
-      },
-      {
-        "message": "FIX: emit normalized H06 coverage JSON with valid newline",
-        "sha": "9f8147cda31cf467273b328e97b59c4b72ba4e55",
-        "timestamp": "2026-10-01T20:43:34+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "cbef6ea346e8083791ed4e0ec1a7b741fd379301",
-        "timestamp": "2026-10-01T18:43:01Z"
-      },
-      {
-        "message": "OPS: retrigger H06-P2 after execution-boundary schema fix",
-        "sha": "e871ad07552692a879736225cd8b526eebfb78b8",
-        "timestamp": "2026-10-01T20:42:45+02:00"
+        "sha": "4d35d86e3d0a08436bcda94cdf08990b604a8f68",
+        "timestamp": "2026-10-01T18:46:14Z"
       }
     ]
   },
@@ -886,12 +886,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0af450a9a0427da6e030ca125c2243941274ad61",
+  "source_master_sha": "fbcfb5d1b3c8e887f915efa6dc89674b0320ae7d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36909274753"
+    "run_id": "36909676092"
   }
 }
