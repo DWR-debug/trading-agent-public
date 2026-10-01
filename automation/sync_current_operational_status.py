@@ -200,6 +200,13 @@ def generate(
             "mapping; C30/C31/M5/Q097 source/archive contracts). No performance authorization is "
             "created by these feasibility steps."
         )
+    if (ROOT / "research/preregistrations/q105_q104_historical_pit_2026_10_01.json").is_file():
+        recorded_next_research_focus = (
+            "Q104 source-feasibility completed for 5 data-backed candidates; Q105 is the active "
+            "historical archive/PIT feasibility gate. Q104:R9 remains synthetic-only until "
+            "validated underlying families exist. No performance authorization, holdout selection, "
+            "parameter search, promotion or live execution is permitted by Q104/Q105."
+        )
 
     current = {
         "schema_version": "1.0",
@@ -381,6 +388,8 @@ def generate(
 - Q084, Q088 and Q082 remain **design/feasibility tracks** for unusual market-state, textual-network, rebalance-demand and SEC information channels.
 - The unusual-strategy frontier is maintained in `docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md` and is design-only until feasibility and provenance are established.
 - Research OS capability lattice: `research/governance/research_os_source_registry_2026_09_30.json`; it is metadata only and cannot authorize performance.
+- Q104 orthogonal candidate wave: **SOURCE_FEASIBILITY_COMPLETED_DUAL_ARCH**; 5/6 data-backed candidates are source-feasible and Q104:R9 is synthetic-only. The archived receipt is `research/evidence/q104_source_feasibility_2026_10_01.json`.
+- Q105 historical archive/PIT feasibility is **ACTIVE**; it is a non-performance gate for the five data-backed Q104 candidates.
 
 ### H06 independent PIT
 
