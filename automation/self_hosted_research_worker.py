@@ -189,6 +189,11 @@ LANES: dict[str, list[list[str]]] = {
             "--output",
             "research/runs/self_hosted/q120_cftc_source_feasibility/result.json",
         ],
+        [
+            PYTHON,
+            "-m",
+            "automation.s10_probe",
+        ],
     ],
     "repo_qa": [
         [
