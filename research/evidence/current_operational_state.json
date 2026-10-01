@@ -522,7 +522,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T11:27:53.393109+00:00",
+  "generated_at_utc": "2026-10-01T11:28:32.271502+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -717,6 +717,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "Allow Q116 13F transition workflow in integrity gate",
+        "sha": "d78bd3c26bcbcec784f708dca1b5b922ee6cb86d",
+        "timestamp": "2026-10-01T13:28:26+02:00"
+      },
+      {
+        "message": "Harden Q116 two-quarter PIT transition semantics",
+        "sha": "9519ade4fa6f0a82a106df52637f7ecdd20c8243",
+        "timestamp": "2026-10-01T13:28:18+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "3e5f3e33d400a74ecf13ea10e75054b1c61b7b37",
+        "timestamp": "2026-10-01T11:28:11Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "73ba2a7bbdb280f41efa504404184d4e81f3176c",
+        "timestamp": "2026-10-01T11:27:53Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "42a7e254082d6e17b825bb52fb9252fa8addf40f",
         "timestamp": "2026-10-01T11:27:40Z"
@@ -735,26 +755,6 @@
         "message": "Add Q116 two-quarter 13F transition population",
         "sha": "4d420a801f8497e0dcca697d7a5fa4f6543b68a4",
         "timestamp": "2026-10-01T13:27:29+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0d3d4998a8b264e9db22d79815e0e29c14542bd0",
-        "timestamp": "2026-10-01T11:27:16Z"
-      },
-      {
-        "message": "Register Q116 two-quarter 13F transition population",
-        "sha": "3c25aef135b4531747365735b6cb5f03fbcce559",
-        "timestamp": "2026-10-01T13:27:06+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "be3bcd3915b9b2100ab2d7a44752c0ce8d23ad92",
-        "timestamp": "2026-10-01T11:26:11Z"
-      },
-      {
-        "message": "Test Q114 amendment-aware PIT snapshots",
-        "sha": "6289658ee378424202a9bdf0944e3a6b054ebb10",
-        "timestamp": "2026-10-01T13:26:00+02:00"
       }
     ]
   },
@@ -824,12 +824,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "42a7e254082d6e17b825bb52fb9252fa8addf40f",
+  "source_master_sha": "d78bd3c26bcbcec784f708dca1b5b922ee6cb86d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36855498282"
+    "run_id": "36855572382"
   }
 }
