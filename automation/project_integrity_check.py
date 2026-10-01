@@ -135,6 +135,7 @@ ACTIVE_WORKFLOWS = {
     "q113-13f-q107-coverage.yml",
     "q114-13f-manager-transitions.yml",
     "q115-treasury-demand-state.yml",
+    "q116-13f-transition-population.yml",
     "q095-authorization-once.yml",
     "rccsm-feasibility-cloud.yml",
     "rccsm-feasibility.yml",
