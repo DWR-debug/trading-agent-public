@@ -121,8 +121,8 @@ def build_transitions(prior:list[dict[str,Any]],current:list[dict[str,Any]],as_o
 
 def synthetic_contract()->dict[str,bool]:
     rows=[
-      {"ACCESSION_NUMBER":"A1","filing_date":"2026-05-01","CIK":"1","PERIODOFREPORT":"2026-03-31","SUBMISSIONTYPE":"13F-HR","NAMEOFISSUER":"S&P GLOBAL INC","TITLEOFCLASS":"Common Stock","CUSIP":"78409V104","SSHPRNAMT":"100","VALUE":"10000"},
-      {"ACCESSION_NUMBER":"A2","filing_date":"2026-08-01","CIK":"1","PERIODOFREPORT":"2026-06-30","SUBMISSIONTYPE":"13F-HR","NAMEOFISSUER":"S&P GLOBAL INC","TITLEOFCLASS":"Common Stock","CUSIP":"78409V104","SSHPRNAMT":"140","VALUE":"15000"}
+      {"ACCESSION_NUMBER":"A1","filing_date":"2026-05-01","manager_cik":"1","PERIODOFREPORT":"2026-03-31","SUBMISSIONTYPE":"13F-HR","NAMEOFISSUER":"S&P GLOBAL INC","TITLEOFCLASS":"Common Stock","CUSIP":"78409V104","SSHPRNAMT":"100","VALUE":"10000"},
+      {"ACCESSION_NUMBER":"A2","filing_date":"2026-08-01","manager_cik":"1","PERIODOFREPORT":"2026-06-30","SUBMISSIONTYPE":"13F-HR","NAMEOFISSUER":"S&P GLOBAL INC","TITLEOFCLASS":"Common Stock","CUSIP":"78409V104","SSHPRNAMT":"140","VALUE":"15000"}
     ]
     out=build_transitions(rows[:1],rows[1:],date(2026,8,31))
     return {"paired":out["paired_current_positions"]==1,"increase":out["transition_counts"]["SPGI"]["INCREASE"]==1,"pit_cutoff_preserved":out["as_of"]=="2026-08-31","eligible_session_materialized":bool(rows and first_xnys_after(date(2026,8,1)))}
