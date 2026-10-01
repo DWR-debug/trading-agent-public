@@ -36,10 +36,13 @@ def parse_position(row: dict[str, Any]) -> Position:
     )
 
 def deduplicate_positions(rows: list[dict[str,Any]]) -> list[Position]:
-    seen: dict[tuple[str,str,str], Position] = {}
+    seen: dict[tuple[str,str,str,str], Position] = {}
     for row in rows:
         pos=parse_position(row)
-        identity=(pos.manager_cik,pos.period_of_report,pos.security_key)
+        # Accession is part of the filing lineage. Two different filings for
+        # the same manager/period/security may represent an amendment and must
+        # not be collapsed or treated as a data conflict.
+        identity=(pos.manager_cik,pos.period_of_report,pos.security_key,pos.accession)
         old=seen.get(identity)
         if old is None:
             seen[identity]=pos
@@ -47,6 +50,17 @@ def deduplicate_positions(rows: list[dict[str,Any]]) -> list[Position]:
         if old != pos:
             raise ValueError("Q114_POSITION_CONFLICT:"+repr(identity))
     return [seen[key] for key in sorted(seen)]
+
+def latest_position_as_of(rows: list[dict[str,Any]], cutoff: datetime) -> list[Position]:
+    positions=deduplicate_positions(rows)
+    eligible=[p for p in positions if p.acceptance_datetime <= cutoff]
+    latest: dict[tuple[str,str,str], Position] = {}
+    for pos in eligible:
+        key=(pos.manager_cik,pos.period_of_report,pos.security_key)
+        old=latest.get(key)
+        if old is None or (pos.acceptance_datetime,pos.accession) > (old.acceptance_datetime,old.accession):
+            latest[key]=pos
+    return [latest[key] for key in sorted(latest)]
 
 def transition(previous: Position|None, current: Position) -> dict[str,Any]:
     if previous is None:
