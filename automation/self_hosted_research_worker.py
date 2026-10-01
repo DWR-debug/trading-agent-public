@@ -29,6 +29,7 @@ LANES: dict[str, list[list[str]]] = {
             "tests/test_rccsm_feasibility.py",
             "tests/test_rccsm_synthetic.py",
             "tests/test_rccsm_state_topology.py",
+            "tests/test_rccsm_observational_feasibility.py",
             "tests/test_frontier_feasibility.py",
             "tests/test_q096_frontier_source_pit_audit.py",
             "tests/test_q097_public_short_flow_candidates.py",
@@ -98,6 +99,13 @@ LANES: dict[str, list[list[str]]] = {
             "automation.q103_rccsm_state_routing_integrity",
             "--output",
             "research/runs/q103_rccsm_state_routing_integrity/result.json",
+        ],
+        [
+            PYTHON,
+            "-m",
+            "automation.rccsm_observational_feasibility",
+            "--output",
+            "research/runs/rccsm_observational/q089_rccsm_observational_feasibility.json",
         ],
         [
             PYTHON,
