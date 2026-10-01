@@ -412,7 +412,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T09:07:57.990054+00:00",
+  "generated_at_utc": "2026-10-01T09:11:38.131567+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -542,12 +542,41 @@
       {
         "number": 641,
         "title": "AGENT-025: Harden bounded agent scope gate",
-        "updatedAt": "2026-10-01T08:56:16Z",
+        "updatedAt": "2026-10-01T09:09:17Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/641"
       }
     ],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "docs/issue-workflow-triage-2026-10-01",
+        "number": 730,
+        "title": "DOCS: record issue and workflow triage for 2026-10-01",
+        "updatedAt": "2026-10-01T09:10:21Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/730"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "TEST: trigger fresh H06 coverage for repaired reproduction",
+        "sha": "f05e890fbfdd0d1dda89a31982b4129cc37cb71f",
+        "timestamp": "2026-10-01T11:11:22+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "802d02c2ce3ce89a6747be3a9967c320d220d35c",
+        "timestamp": "2026-10-01T09:11:14Z"
+      },
+      {
+        "message": "OPS: reserve protected Copilot Free worker budget",
+        "sha": "5753c38744c733bc3634b02e5a086cbe18ccb3f3",
+        "timestamp": "2026-10-01T09:09:18Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b7ce822b2faea4e792028e7afd87f95fe84e6e0d",
+        "timestamp": "2026-10-01T09:07:58Z"
+      },
       {
         "message": "FIX: remove Windows PowerShell policy dependency from H06 reproduction",
         "sha": "1d5e175d15f211a9cfb6a94bf124f207abf15d85",
@@ -567,26 +596,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "78f1c45ec0d9dcdb06e590141999ddc0ee79239f",
         "timestamp": "2026-10-01T09:02:54Z"
-      },
-      {
-        "message": "FIX: publish agent work from the actual working branch",
-        "sha": "447a41aaf59539520fc7a690e27951121769bd45",
-        "timestamp": "2026-10-01T11:02:41+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e3dba3cbd66d8224f007e6c68dde5d05834a991a",
-        "timestamp": "2026-10-01T09:01:41Z"
-      },
-      {
-        "message": "TEST: validate H06 independent artifact reproduction path",
-        "sha": "393403da4d6c340aec8ec9a560483c7b54a60253",
-        "timestamp": "2026-10-01T11:01:29+02:00"
-      },
-      {
-        "message": "OPS: autonomous agent queue routing",
-        "sha": "d103878aaf2999a2f1caafb78aabccb65c919b64",
-        "timestamp": "2026-10-01T08:59:33Z"
       }
     ]
   },
@@ -656,12 +665,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1d5e175d15f211a9cfb6a94bf124f207abf15d85",
+  "source_master_sha": "f05e890fbfdd0d1dda89a31982b4129cc37cb71f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36840710953"
+    "run_id": "36841097586"
   }
 }
