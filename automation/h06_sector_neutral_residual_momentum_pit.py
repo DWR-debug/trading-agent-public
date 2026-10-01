@@ -97,7 +97,14 @@ def _mutate_future(assets: dict[str, list[Bar]], index: int, include_next: bool)
     return out
 
 
-def run(root: Path, output: Path) -> dict:
+def run(root: Path, output: Path, coverage_result_path: Path) -> dict:
+    coverage = json.loads(coverage_result_path.read_text(encoding="utf-8"))
+    if coverage.get("coverage", {}).get("status") != "COVERAGE_READY":
+        raise ValueError("H06 coverage prerequisite is not COVERAGE_READY")
+    if coverage.get("governance", {}).get("performance_trial_authorized") is not False:
+        raise ValueError("H06 coverage prerequisite unexpectedly authorizes performance")
+    if coverage.get("governance", {}).get("holdout_evaluation") is not False:
+        raise ValueError("H06 coverage prerequisite evaluates holdout")
     assets = _load(root)
     checks = []
     last_research_index = RESEARCH_CANDLES - 1
@@ -161,7 +168,10 @@ def run(root: Path, output: Path) -> dict:
             "automatic_promotion": False,
         },
         "coverage_input": {
+            "coverage_result": str(coverage_result_path).replace("\\", "/"),
+            "coverage_fingerprint": coverage["fingerprint"],
             "snapshot_manifest": "research/runs/wide_search/h06_repair_datasets/snapshot_manifest.json",
+            "snapshot_fingerprint": coverage["snapshot_fingerprint"],
             "snapshot_required": True,
         },
         "check_fingerprint": _fp(checks),
@@ -179,5 +189,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--universe-root", required=True)
     parser.add_argument("--output", required=True)
+    parser.add_argument("--coverage-result", required=True)
     args = parser.parse_args()
-    run(Path(args.universe_root), Path(args.output))
+    run(Path(args.universe_root), Path(args.output), Path(args.coverage_result))
