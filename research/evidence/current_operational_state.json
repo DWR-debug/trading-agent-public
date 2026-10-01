@@ -405,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T08:46:20.120795+00:00",
+  "generated_at_utc": "2026-10-01T08:50:49.501393+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -524,9 +524,36 @@
   "repository_state": {
     "agent_queue_requests": [],
     "default_branch": "master",
-    "open_agent_ready_issues": [],
+    "open_agent_ready_issues": [
+      {
+        "number": 641,
+        "title": "AGENT-025: Harden bounded agent scope gate",
+        "updatedAt": "2026-10-01T08:49:47Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/issues/641"
+      }
+    ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: align control-plane issue discovery with agent labels",
+        "sha": "44100f0de8fead4de1705fd782363f2eff2bbce2",
+        "timestamp": "2026-10-01T10:50:42+02:00"
+      },
+      {
+        "message": "CHORE: retire automatic triggers on completed research workflows",
+        "sha": "21ef48cf7136818fefc1d5b5ee1920680c001c32",
+        "timestamp": "2026-10-01T10:50:36+02:00"
+      },
+      {
+        "message": "OPS: reserve protected Copilot Free worker budget",
+        "sha": "6eb49a987066be48be331f4e32618f1f0a783c6b",
+        "timestamp": "2026-10-01T08:49:47Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "bad6425bb30a16323d2d6baf9eb46135f1a643f1",
+        "timestamp": "2026-10-01T08:46:20Z"
+      },
       {
         "message": "FIX: harden H06 cross-workflow artifact reproduction",
         "sha": "4bb5021ec71f2edb40236942150d892f34894bbb",
@@ -546,26 +573,6 @@
         "message": "OPS: queue AGENT-025 bounded engineering task",
         "sha": "a0db9fd331d1eb58e892bfec9a626e3b2b057b83",
         "timestamp": "2026-10-01T10:45:45+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "24476df329c9eae73a59d49ceb7aa008df003b31",
-        "timestamp": "2026-10-01T08:36:17Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "53ae723ec60dcb89e45510a9362f7b4712e57f26",
-        "timestamp": "2026-10-01T08:31:27Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "62e8369270b5e359a24865f766b55776ab015d59",
-        "timestamp": "2026-10-01T08:14:19Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "0e5288275c67588dbca51562ba23d62483c670d4",
-        "timestamp": "2026-10-01T08:10:05Z"
       }
     ]
   },
@@ -635,12 +642,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4bb5021ec71f2edb40236942150d892f34894bbb",
+  "source_master_sha": "44100f0de8fead4de1705fd782363f2eff2bbce2",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36838395364"
+    "run_id": "36838875353"
   }
 }
