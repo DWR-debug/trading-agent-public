@@ -140,6 +140,13 @@ LANES: dict[str, list[list[str]]] = {
             "--markdown",
             "research/runs/self_hosted/q092_q091_failure_diagnosis.md",
         ],
+        [
+            PYTHON,
+            "-m",
+            "automation.h06_p2_readiness",
+            "--output",
+            "research/runs/self_hosted/h06_p2_readiness/result.json",
+        ],
     ],
     "repo_qa": [
         [

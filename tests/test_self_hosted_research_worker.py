@@ -322,6 +322,13 @@ def test_self_hosted_runner_probe_targets_trusted_label_and_master_only():
     assert "pull_request:" not in text
 
 
+def test_autonomous_frontier_lane_includes_h06_p2_readiness():
+    commands = worker.LANES["autonomous_frontier_qa"]
+    flattened = [" ".join(command) for command in commands]
+    assert any("automation.h06_p2_readiness" in command for command in flattened)
+    assert any("h06_p2_readiness" in command for command in flattened)
+
+
 def test_autonomous_frontier_lane_includes_rccsm_observational_pit_check():
     commands = worker.LANES["autonomous_frontier_qa"]
     flattened = [" ".join(command) for command in commands]
