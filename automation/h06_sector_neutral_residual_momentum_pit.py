@@ -82,19 +82,63 @@ def _signal(assets: dict[str, list[Bar]], index: int) -> dict[str, float]:
     return residual
 
 
-def _mutate_future(assets: dict[str, list[Bar]], index: int, include_next: bool) -> dict[str, list[Bar]]:
-    out = {symbol: list(bars) for symbol, bars in assets.items()}
-    first_future = index + (1 if include_next else 2)
-    for symbol in SYMBOLS:
-        series = out[symbol]
-        for cursor in range(first_future, len(series)):
-            bar = series[cursor]
-            series[cursor] = Bar(bar.timestamp, bar.open * 0.17, bar.high * 1.83, bar.low * 0.23, bar.close * 1.61, bar.volume * 3.0)
-    if include_next and index + 1 < len(out[SYMBOLS[0]]):
-        for symbol in SYMBOLS:
-            bar = out[symbol][index + 1]
-            out[symbol][index + 1] = Bar(bar.timestamp, bar.open * 7.0, bar.high * 8.0, bar.low * 0.11, bar.close * 0.09, bar.volume * 4.0)
-    return out
+class _SeriesView:
+    def __init__(self, series: list[Bar], cutoff: int, mode: str) -> None:
+        self._series = series
+        self._cutoff = cutoff
+        self._mode = mode
+
+    def __len__(self) -> int:
+        if self._mode == "prefix":
+            return self._cutoff + 1
+        return len(self._series)
+
+    @staticmethod
+    def _mutated(bar: Bar) -> Bar:
+        return Bar(
+            bar.timestamp,
+            bar.open * 7.0,
+            bar.high * 8.0,
+            bar.low * 0.11,
+            bar.close * 0.09,
+            bar.volume * 4.0,
+        )
+
+    def __getitem__(self, index: int) -> Bar:
+        if index < 0:
+            index += len(self._series)
+        if self._mode == "prefix" and index > self._cutoff:
+            raise AssertionError(
+                f"prefix view accessed future index {index} > cutoff {self._cutoff}"
+            )
+        bar = self._series[index]
+        if self._mode == "next" and index > self._cutoff:
+            return self._mutated(bar)
+        if self._mode == "future" and index > self._cutoff + 1:
+            return self._mutated(bar)
+        return bar
+
+
+def _prefix_view(
+    assets: dict[str, list[Bar]],
+    index: int,
+) -> dict[str, _SeriesView]:
+    return {
+        symbol: _SeriesView(series, index, "prefix")
+        for symbol, series in assets.items()
+    }
+
+
+def _mutate_future(
+    assets: dict[str, list[Bar]],
+    index: int,
+    include_next: bool,
+) -> dict[str, _SeriesView]:
+    mode = "next" if include_next else "future"
+    return {
+        symbol: _SeriesView(series, index, mode)
+        for symbol, series in assets.items()
+    }
 
 
 def run(root: Path, output: Path, coverage_result_path: Path, authorization_path: Path) -> dict:
@@ -115,8 +159,7 @@ def run(root: Path, output: Path, coverage_result_path: Path, authorization_path
     last_research_index = RESEARCH_CANDLES - 1
     for index in range(LOOKBACK, last_research_index):
         original = _signal(assets, index)
-        prefix_assets = {symbol: bars[: index + 1] for symbol, bars in assets.items()}
-        prefix = _signal(prefix_assets, index)
+        prefix = _signal(_prefix_view(assets, index), index)
         if original != prefix:
             raise AssertionError(f'prefix truncation changed H06 signal at {index}')
         future = _signal(_mutate_future(assets, index, include_next=False), index)
