@@ -113,7 +113,7 @@ def validate(rows: list[dict]) -> dict:
         "future_mutation_invariance": True,
         "yield_fields": [
             "high_yield",
-            "avg_median_yield",
+            "median_yield",
             "low_yield",
         ],
     }
