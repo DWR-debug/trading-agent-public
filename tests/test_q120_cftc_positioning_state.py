@@ -34,8 +34,8 @@ def test_q120_contract_uses_fixed_contract_identity():
         "open_interest_all": 1000,
         "asset_mgr_positions_long_all": 600,
         "asset_mgr_positions_short_all": 300,
-        "lev_money_positions_long_all": 500,
-        "lev_money_positions_short_all": 400,
+        "lev_money_positions_long_all": 700,
+        "lev_money_positions_short_all": 200,
     }
     out = compile_state(row)
     assert out["contract"] == "E-MINI S&P 500 - CHICAGO MERCANTILE EXCHANGE"
