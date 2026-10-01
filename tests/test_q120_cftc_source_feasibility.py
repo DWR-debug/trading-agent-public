@@ -8,10 +8,10 @@ def test_q120_validator_accepts_fixed_contract_rows():
             "report_date_as_yyyy_mm_dd": "2026-01-06",
             "cftc_contract_market_code": "13874A",
             "open_interest_all": "1000",
-            "asset_mgr_positions_long_all": "600",
-            "asset_mgr_positions_short_all": "300",
-            "lev_money_positions_long_all": "700",
-            "lev_money_positions_short_all": "200",
+            "asset_mgr_positions_long": "600",
+            "asset_mgr_positions_short": "300",
+            "lev_money_positions_long": "700",
+            "lev_money_positions_short": "200",
         }
     ]
     out = validate(rows)
