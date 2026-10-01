@@ -93,22 +93,24 @@ jobs:
           REPORT="$(ls -1 "$ROOT"/coverage_preflight_*.json | tail -n 1)"
           BASE_SHA="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
           test -n "$BASE_SHA"
-          python automation/github_contents_publish.py \
-            --repository "$GITHUB_REPOSITORY" \
-            --branch master \
-            --base-sha "$BASE_SHA" \
-            --file research/evidence/q107_coverage_result.json="$REPORT" \
-            --file "$ROOT/snapshot_manifest.json"="$ROOT/snapshot_manifest.json" \
-            $(python - <<'PY'
+          cmd=(python automation/github_contents_publish.py
+            --repository "$GITHUB_REPOSITORY"
+            --branch master
+            --base-sha "$BASE_SHA"
+            --file "research/evidence/q107_coverage_result.json=$REPORT"
+            --file "$ROOT/snapshot_manifest.json=$ROOT/snapshot_manifest.json")
+          while IFS= read -r symbol; do
+            cmd+=(--file "research/runs/q107_coverage/T-2026-10-01-107-Q104-COVERAGE/datasets/$symbol/1d.csv=$ROOT/datasets/$symbol/1d.csv")
+          done < <(python - <<'PY'
           import json
           from pathlib import Path
           root=Path("research/runs/q107_coverage/T-2026-10-01-107-Q104-COVERAGE")
           report=json.loads(sorted(root.glob("coverage_preflight_*.json"))[-1].read_text(encoding="utf-8"))
           for symbol in report["symbols"]:
-              p=root/"datasets"/symbol/"1d.csv"
-              print(f"--file research/runs/q107_coverage/T-2026-10-01-107-Q104-COVERAGE/datasets/{symbol}/1d.csv={p}")
+              print(symbol)
           PY
           )
+          "${cmd[@]}"
 
       - name: Upload Q107 coverage pack
         if: always()
