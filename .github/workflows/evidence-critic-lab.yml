@@ -24,14 +24,17 @@ jobs:
       matrix:
         include:
           - model: jeff
+            upstream_ref: 14ee67e2814a19ebd0a67f508ac1b0f424ba1ebc
             min_memory_gb: 10
             endpoint: http://127.0.0.1:8079
             install: jeff
           - model: laya-typed-decisions
+            upstream_ref: laya==0.3.22
             min_memory_gb: 4
             endpoint: http://127.0.0.1:8090
             install: laya
           - model: kev-0.8b
+            upstream_ref: 90512f1c517d977741f2104470a40635408236c9
             min_memory_gb: 6
             endpoint: http://127.0.0.1:8009
             install: kev
@@ -84,19 +87,30 @@ jobs:
           "%PY_EXE%" -m venv "%RUNNER_TEMP%\ecl-venv-${{ matrix.install }}" || exit /b 1
           set "VENV_PY=%RUNNER_TEMP%\ecl-venv-${{ matrix.install }}\Scripts\python.exe"
           "%VENV_PY%" -m pip install --disable-pip-version-check --upgrade pip pytest || exit /b 1
-          if /I "${{ matrix.install }}"=="laya" "%VENV_PY%" -m pip install --disable-pip-version-check "laya[serve]" || exit /b 1
+          if /I "${{ matrix.install }}"=="laya" (
+            "%VENV_PY%" -m pip install --disable-pip-version-check "laya[serve]==0.3.22" || exit /b 1
+            "%VENV_PY%" -I -c "import laya; print('LAYA_RUNTIME_OK', getattr(laya, '__version__', 'unknown'))" || exit /b 1
+          )
           if /I "${{ matrix.install }}"=="jeff" (
-            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 -o "%RUNNER_TEMP%\jeff.tgz" "https://codeload.github.com/Gestalt-Lab/jeff/tar.gz/refs/heads/main" || exit /b 1
+            set "JEFF_SHA=14ee67e2814a19ebd0a67f508ac1b0f424ba1ebc"
+            set "JEFF_SRC=%RUNNER_TEMP%\jeff-14ee67e2814a19ebd0a67f508ac1b0f424ba1ebc"
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 -o "%RUNNER_TEMP%\jeff.tgz" "https://codeload.github.com/Gestalt-Lab/jeff/tar.gz/%JEFF_SHA%" || exit /b 1
             tar.exe -xzf "%RUNNER_TEMP%\jeff.tgz" -C "%RUNNER_TEMP%" || exit /b 1
-            for /d %%D in ("%RUNNER_TEMP%\jeff-*") do set "D=%%~fD"
-            "%VENV_PY%" -m pip install --disable-pip-version-check "%D%" || exit /b 1
+            if not exist "%JEFF_SRC%\pyproject.toml" exit /b 1
+            "%VENV_PY%" -m pip install --disable-pip-version-check "%JEFF_SRC%" || exit /b 1
+            "%VENV_PY%" -I -c "import torch, jev_clf; print('JEFF_RUNTIME_OK', torch.__version__)" || exit /b 1
           )
           if /I "${{ matrix.install }}"=="kev" (
-            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 -o "%RUNNER_TEMP%\kev.tgz" "https://codeload.github.com/jaredpalmer/kev/tar.gz/refs/heads/main" || exit /b 1
+            set "KEV_SHA=90512f1c517d977741f2104470a40635408236c9"
+            set "KEV_SRC=%RUNNER_TEMP%\kev-90512f1c517d977741f2104470a40635408236c9"
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 -o "%RUNNER_TEMP%\kev.tgz" "https://codeload.github.com/jaredpalmer/kev/tar.gz/%KEV_SHA%" || exit /b 1
             tar.exe -xzf "%RUNNER_TEMP%\kev.tgz" -C "%RUNNER_TEMP%" || exit /b 1
-            for /d %%D in ("%RUNNER_TEMP%\kev-*") do set "D=%%~fD"
-            "%VENV_PY%" -m pip install --disable-pip-version-check "%D%" || exit /b 1
+            if not exist "%KEV_SRC%\pyproject.toml" exit /b 1
+            "%VENV_PY%" -m pip install --disable-pip-version-check "%KEV_SRC%[serve]" || exit /b 1
+            "%VENV_PY%" -I -c "import torch, kev; print('KEV_RUNTIME_OK', torch.__version__)" || exit /b 1
           )
+          set "ECL_UPSTREAM_REF=${{ matrix.upstream_ref }}"
+          "%VENV_PY%" -m pip freeze > "%RUNNER_TEMP%\ecl-${{ matrix.install }}-pip-freeze.txt" || exit /b 1
           endlocal
       - name: Start local model server
         if: steps.resources.outputs.eligible == 'true'
@@ -111,7 +125,7 @@ jobs:
           if /I "${{ matrix.install }}"=="laya" set "PORT=8090"
           if /I "${{ matrix.install }}"=="kev" set "PORT=8009"
           set "WORKDIR=%REPO_SRC%"
-          if /I "${{ matrix.install }}"=="jeff" for /d %%D in ("%RUNNER_TEMP%\jeff-*") do set "WORKDIR=%%~fD"
+          if /I "${{ matrix.install }}"=="jeff" set "WORKDIR=%RUNNER_TEMP%\jeff-14ee67e2814a19ebd0a67f508ac1b0f424ba1ebc"
           "%VENV%\Scripts\python.exe" "%REPO_SRC%\automation\ecl_server_launcher.py" --action start --model "${{ matrix.model }}" --venv "%VENV%" --workdir "%WORKDIR%" --port %PORT% --stdout "%OUT%" --stderr "%ERR%" --pidfile "%RUNNER_TEMP%\ecl-server.pid" || exit /b 1
           endlocal
       - name: Run isolated benchmark
@@ -148,5 +162,6 @@ jobs:
             ${{ runner.temp }}\ecl-${{ matrix.install }}-server.out
             ${{ runner.temp }}\ecl-${{ matrix.install }}-server.err
             ${{ runner.temp }}\ecl-resource.json
+            ${{ runner.temp }}\ecl-${{ matrix.install }}-pip-freeze.txt
           if-no-files-found: warn
           retention-days: 30
