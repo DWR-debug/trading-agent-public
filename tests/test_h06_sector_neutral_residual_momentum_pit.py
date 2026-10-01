@@ -49,7 +49,15 @@ def test_run_is_exhaustive_over_research_decision_points(tmp_path):
     root = tmp_path / "datasets"
     _write_dataset(root)
     out = tmp_path / "pit.json"
-    report = run(root, out)
+    coverage = {
+        "coverage": {"status": "COVERAGE_READY"},
+        "governance": {"performance_trial_authorized": False, "holdout_evaluation": False},
+        "fingerprint": "coverage-fp",
+        "snapshot_fingerprint": "snapshot-fp",
+    }
+    coverage_path = tmp_path / "coverage.json"
+    coverage_path.write_text(__import__("json").dumps(coverage), encoding="utf-8")
+    report = run(root, out, coverage_path)
     assert report["status"] == "PIT_PASSED"
     assert report["checked_decision_points"] == RESEARCH_CANDLES - 252 - 1
     assert report["governance"]["performance_evaluation"] is False
