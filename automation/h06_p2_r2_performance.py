@@ -256,7 +256,7 @@ def run(root:Path, market_root:Path, output:Path)->dict:
         "research_family":"h06_p2_sector_residual_global_rank","universe":prereg["universe"],"symbols":list(SYMBOLS),
         "requested_candles":4000,"target_common_candles":N,"evaluation_return_periods":EVALUATION_PERIODS,
         "research_periods":RESEARCH,"holdout_periods":HOLDOUT,"initial_capital_eur":2000.0,
-        "corrective_basis":{"prior_trial_id":"T-2026-10-01-H06P2-PERFORMANCE-01","execution_incident_path":"research/evidence/h06_p2_performance_execution_incident.json","correction_type":"execution_boundary_normalization_only","coverage_status_schema_normalization":true,"timestamp_representation_normalization":true,"scientific_scope_changed":false},
+        "corrective_basis":{"prior_trial_id":"T-2026-10-01-H06P2R1-PERFORMANCE-01","execution_incident_path":"research/evidence/h06_p2_r1_performance_execution_incident.json","correction_type":"execution_boundary_normalization_only","coverage_status_schema_normalization":true,"timestamp_representation_normalization":true,"scientific_scope_changed":false},
         "coverage_prerequisite":{"trial_id":PIT_TRIAL_ID,"coverage_result_fingerprint":prereg["input_contract"]["coverage_fingerprint"],"snapshot_fingerprint":prereg["input_contract"]["snapshot_fingerprint"]},
         "pit_prerequisite":{"trial_id":PIT_TRIAL_ID,"check_fingerprint":prereg["input_contract"]["pit_check_fingerprint"]},
         "input_bundle_prerequisite":{"trial_id":INPUT_ID,"bundle_fingerprint":freeze["bundle_fingerprint"]},
