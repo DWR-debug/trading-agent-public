@@ -655,7 +655,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T19:03:27.299517+00:00",
+  "generated_at_utc": "2026-10-01T19:04:11.807369+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -843,6 +843,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: retrigger H06-P2-R3 authorization after guard fix",
+        "sha": "855562ba551bd1a0ba64e74e2bb870516515f81d",
+        "timestamp": "2026-10-01T21:04:03+02:00"
+      },
+      {
+        "message": "FIX: bind H06-P2-R3 authorization predecessor and concurrency",
+        "sha": "12b359e45caf07699edb94bf6481e1a2feb1f9ff",
+        "timestamp": "2026-10-01T21:03:59+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "98d15424077b506c209f2a219138398928ee17d3",
+        "timestamp": "2026-10-01T19:03:27Z"
+      },
+      {
         "message": "RESEARCH: register H06-P2-R3 literal-safe result-builder correction",
         "sha": "eaae4ba241ff140ee879b9cf48cc6635beff982f",
         "timestamp": "2026-10-01T21:03:07+02:00"
@@ -866,21 +881,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "3eded80b479237800d5b0da49cb1cfeac9cead67",
         "timestamp": "2026-10-01T19:00:03Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "95b3e145adea22a4c3d73e0fc114c66637c723e6",
-        "timestamp": "2026-10-01T18:59:47Z"
-      },
-      {
-        "message": "OPS: retrigger H06-P2-R2 after final binding audit",
-        "sha": "7bf14209b47c0bf4514b2c1172dc151e6585580a",
-        "timestamp": "2026-10-01T20:59:45+02:00"
-      },
-      {
-        "message": "FIX: bind H06-P2-R2 reconciliation provenance to R1 incident",
-        "sha": "0d5c41c4a6f1b90a17b56931b0831d40b256e8db",
-        "timestamp": "2026-10-01T20:59:38+02:00"
       }
     ]
   },
@@ -950,12 +950,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "eaae4ba241ff140ee879b9cf48cc6635beff982f",
+  "source_master_sha": "855562ba551bd1a0ba64e74e2bb870516515f81d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36911432934"
+    "run_id": "36911532191"
   }
 }
