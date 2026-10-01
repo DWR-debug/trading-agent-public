@@ -90,7 +90,7 @@ jobs:
         run: |
           set -euo pipefail
           ROOT="research/runs/q107_coverage/T-2026-10-01-107-Q104-COVERAGE"
-          REPORT="$(ls -1 "$ROOT"/coverage_preflight_*.json | tail -n 1)"
+          REPORT="$(find "$ROOT" -maxdepth 1 -type f -name 'coverage_preflight_*.json' -print | sort | tail -n 1)"
           BASE_SHA="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
           test -n "$BASE_SHA"
           cmd=(python automation/github_contents_publish.py
