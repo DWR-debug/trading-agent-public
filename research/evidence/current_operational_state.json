@@ -581,7 +581,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T17:34:45.750303+00:00",
+  "generated_at_utc": "2026-10-01T17:39:35.646761+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -769,6 +769,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: align Q119 with raw Treasury yield schema",
+        "sha": "78d570f2d6a88dd73648d050b4a70aa80cf1297d",
+        "timestamp": "2026-10-01T19:39:20+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "875500ef7a138fe95b3a6dff6372a7dcffa30053",
+        "timestamp": "2026-10-01T17:34:45Z"
+      },
+      {
         "message": "FIX: install H06 freeze test dependency",
         "sha": "28cb9c11a1742c50b38ef18805b310b42ce4c93d",
         "timestamp": "2026-10-01T19:34:32+02:00"
@@ -797,16 +807,6 @@
         "message": "H06-P2: formalize candidate roles and adjusted-close prerequisite",
         "sha": "9a6e5e3aabd15114102e8938a8a340373cee43e8",
         "timestamp": "2026-10-01T19:17:54+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "2918c5b8f4c6ac585650f3b80ae34f719027facb",
-        "timestamp": "2026-10-01T17:15:32Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "b59a911732e91d6c5518f4e56acfb189e6533363",
-        "timestamp": "2026-10-01T17:14:52Z"
       }
     ]
   },
@@ -876,12 +876,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "28cb9c11a1742c50b38ef18805b310b42ce4c93d",
+  "source_master_sha": "78d570f2d6a88dd73648d050b4a70aa80cf1297d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36900391600"
+    "run_id": "36900976832"
   }
 }
