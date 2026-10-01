@@ -14,6 +14,7 @@ from automation.h06_p2_signal import (
 from config import settings
 from execution.cost_contract import validate_research_cost_compatibility
 from research.protocol import dataset_fingerprint
+from automation.literature_strategy_lab import load_bars
 
 TRIAL_ID = "T-2026-10-01-H06P2-PERFORMANCE-01"
 PIT_TRIAL_ID = "H06-REPAIR-2026-09-25"
@@ -45,7 +46,7 @@ def _load(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 def _load_market_snapshot(root: Path, coverage: dict) -> dict[str, list[dict]]:
-    data_dir = root / "market_data"
+    data_dir = root / "h06_repair_datasets"
     manifest = coverage
     if manifest.get("status") != "COVERAGE_PASSED":
         raise RuntimeError("H06 market coverage is not passed")
@@ -61,33 +62,10 @@ def _load_market_snapshot(root: Path, coverage: dict) -> dict[str, list[dict]]:
         path = data_dir / symbol / "1d.csv"
         if not path.is_file():
             raise RuntimeError(f"missing market dataset: {symbol}")
-        bars = []
-        with path.open(newline="", encoding="utf-8") as handle:
-            for row in csv.DictReader(handle):
-                bars.append(row)
-        if len(bars) != N:
-            raise RuntimeError(f"{symbol}: expected {N} market rows, got {len(bars)}")
-        parsed = []
-        for row in bars:
-            parsed.append({
-                "timestamp": str(row["timestamp"]),
-                "open": float(row["open"]),
-                "high": float(row["high"]),
-                "low": float(row["low"]),
-                "close": float(row["close"]),
-                "volume": float(row["volume"]),
-            })
-        if dataset_fingerprint(tuple(type("Bar", (), b) for b in [])):
-            pass
-        # Dataset identity is checked against the canonical frozen CSV fingerprint by hashing
-        # the parsed canonical tuple representation used by the project protocol.
-        class Bar:
-            def __init__(self, r):
-                self.timestamp=r["timestamp"]; self.open=r["open"]; self.high=r["high"]; self.low=r["low"]; self.close=r["close"]; self.volume=r["volume"]
-        canonical = [Bar(x) for x in parsed]
-        if dataset_fingerprint(canonical) != expected[symbol]["fingerprint"]:
+        bars = load_bars(path, expected_count=N)
+        if dataset_fingerprint(bars) != expected[symbol]["fingerprint"]:
             raise RuntimeError(f"{symbol}: market dataset fingerprint mismatch")
-        assets[symbol] = canonical
+        assets[symbol] = bars
     timestamps = [bar.timestamp for bar in assets[SYMBOLS[0]]]
     if any([bar.timestamp for bar in assets[s]] != timestamps for s in SYMBOLS[1:]):
         raise RuntimeError("H06 market timestamps are not aligned")
