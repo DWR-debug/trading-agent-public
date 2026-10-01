@@ -468,7 +468,7 @@ def test_scope_guard_does_not_treat_backslash_filename_as_directory_path(
 def test_scope_guard_accepts_allowed_staged_and_untracked_files(tmp_path, monkeypatch):
     repo, contract = _scope_test_repo(tmp_path, monkeypatch)
     (repo / "allowed.txt").write_text("staged change\n", encoding="utf-8")
-    subprocess.run(["git", "add", "allowed.txt"], check=True)
+    _git("add", "allowed.txt")
     (repo / "docs").mkdir()
     (repo / "docs" / "note.md").write_text("untracked\n", encoding="utf-8")
 
