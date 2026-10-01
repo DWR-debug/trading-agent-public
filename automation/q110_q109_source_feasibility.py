@@ -123,8 +123,8 @@ def main() -> int:
         ),
         page_probe(
             "SEC_INSIDER_REAL_FILING",
-            "https://www.sec.gov/Archives/edgar/data/736913/000141036826084698/0001410368-26-084698-index.html",
-            ["Accepted", "Documents"],
+            "https://www.sec.gov/Archives/edgar/data/886982/000191038826000010/0001910388-26-000010-index.htm",
+            ["Form 4", "Accepted", "Reporting"],
         ),
     ]
 
