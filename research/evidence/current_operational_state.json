@@ -531,7 +531,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T11:34:40.655500+00:00",
+  "generated_at_utc": "2026-10-01T11:35:50.929892+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -726,6 +726,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "Parse SEC filing dates in Q116",
+        "sha": "bf30272884c3fbd4e97ba708be655f5ee992ccb0",
+        "timestamp": "2026-10-01T13:35:38+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d9399de7b6bc1de17a7195190e209f7e848f5153",
+        "timestamp": "2026-10-01T11:34:40Z"
+      },
+      {
         "message": "Fix Q116 Position interface to Q114 compiler",
         "sha": "d994302630f3598158a20220048f86c7d16ac8cd",
         "timestamp": "2026-10-01T13:34:27+02:00"
@@ -754,16 +764,6 @@
         "message": "Fix Q116 receipt validation shell integration",
         "sha": "2d5d5b540a7c7aee11bade22a3452ad84198fdad",
         "timestamp": "2026-10-01T13:32:05+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "cbc616fd4ec9cae61bdd1cbdc9439261a95a318c",
-        "timestamp": "2026-10-01T11:32:02Z"
-      },
-      {
-        "message": "Fix Q116 normalized period fixture",
-        "sha": "65504eb5646eb052f99cc8bfd4bae8994573063b",
-        "timestamp": "2026-10-01T13:31:36+02:00"
       }
     ]
   },
@@ -833,12 +833,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d994302630f3598158a20220048f86c7d16ac8cd",
+  "source_master_sha": "bf30272884c3fbd4e97ba708be655f5ee992ccb0",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36856217264"
+    "run_id": "36856342013"
   }
 }
