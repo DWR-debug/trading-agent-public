@@ -44,6 +44,8 @@ ACTIVE_WORKFLOWS = {
     "h06-p2-input-freeze.yml",
     "h06-p2-performance-authorization-once.yml",
     "h06-p2-performance.yml",
+    "h06-p2-r1-performance-authorization-once.yml",
+    "h06-p2-r1-performance.yml",
     "c29-fresh-coverage-pit-repair.yml",
     "hosted-research-failover.yml",
     "intraday-directional-discovery.yml",
