@@ -631,6 +631,18 @@ UNIVERSES: tuple[AssetUniverse, ...] = (
         target_count=5000,
     ),
 
+    AssetUniverse(
+        name="validation_2026_10_01_q104_sec_treasury_equities",
+        priority=76,
+        description=(
+            "Fresh eight-symbol U.S. equity universe frozen ex ante for Q104 "
+            "SEC information and Treasury cross-asset PIT/coverage work; symbols are "
+            "not present in any prior registered research universe."
+        ),
+        symbols=("SPGI", "NDAQ", "AMP", "RJF", "WMB", "VLO", "DVN", "EMN"),
+        target_count=5000,
+    ),
+
 )
 
 
