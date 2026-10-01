@@ -1,0 +1,106 @@
+name: H06 PIT Independent Reproduction (self-hosted)
+
+on:
+  workflow_run:
+    workflows: ["H06 Master Coverage Repair"]
+    types: [completed]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: trading-agent-h06-pit-independent-reproduction
+  cancel-in-progress: true
+
+jobs:
+  reproduce:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact H06 run source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 1
+
+      - name: Bootstrap pinned Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-h06-pit-repro"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-h06-pit-repro.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            mkdir "%PY_ROOT%" 2>nul
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" -m pip --version >nul 2>&1
+          if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
+          "%PY_EXE%" -m pip install --disable-pip-version-check pytest || exit /b 1
+          endlocal
+
+      - name: Download canonical H06 artifact
+        shell: cmd
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          @echo off
+          setlocal
+          set "ARTIFACT_ROOT=%RUNNER_TEMP%\h06-master-coverage-artifact-${{ github.event.workflow_run.id }}"
+          if exist "%ARTIFACT_ROOT%" rmdir /s /q "%ARTIFACT_ROOT%"
+          mkdir "%ARTIFACT_ROOT%" || exit /b 1
+          where gh.exe || exit /b 1
+          gh run download ${{ github.event.workflow_run.id }} --repo "%GITHUB_REPOSITORY%" --name "h06-master-coverage-${{ github.event.workflow_run.id }}" --dir "%ARTIFACT_ROOT%" || exit /b 1
+          if not exist "%ARTIFACT_ROOT%\research\runs\wide_search\h06_sector_neutral_residual_momentum_repair_coverage.json" exit /b 1
+          if not exist "%ARTIFACT_ROOT%\research\runs\wide_search\h06_repair_datasets\snapshot_manifest.json" exit /b 1
+          endlocal
+
+      - name: H06 PIT structural tests
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-h06-pit-repro\tools\python.exe"
+          "%PY_EXE%" -m pytest -q tests/test_h06_sector_neutral_residual_momentum_pit.py || exit /b 1
+          endlocal
+
+      - name: Re-run H06 PIT on frozen artifact
+        shell: cmd
+        env:
+          UPSTREAM_RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          @echo off
+          setlocal
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-h06-pit-repro\tools\python.exe"
+          set "ARTIFACT_ROOT=%RUNNER_TEMP%\h06-master-coverage-artifact-%UPSTREAM_RUN_ID%"
+          if not exist "%GITHUB_WORKSPACE%\research\runs\h06_pit_independent" mkdir "%GITHUB_WORKSPACE%\research\runs\h06_pit_independent"
+          "%PY_EXE%" -m automation.h06_sector_neutral_residual_momentum_pit --universe-root "%ARTIFACT_ROOT%\research\runs\wide_search\h06_repair_datasets" --coverage-result "%ARTIFACT_ROOT%\research\runs\wide_search\h06_sector_neutral_residual_momentum_repair_coverage.json" --authorization "research\authorizations\h06_sector_neutral_residual_momentum_pit_2026_10_01.json" --output "%GITHUB_WORKSPACE%\research\runs\h06_pit_independent\reproduced_pit.json" || exit /b 1
+          endlocal
+
+      - name: Reconcile PIT fingerprints
+        shell: powershell
+        env:
+          UPSTREAM_RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          $artifactRoot = Join-Path $env:RUNNER_TEMP "h06-master-coverage-artifact-$env:UPSTREAM_RUN_ID"
+          $canonical = Get-Content (Join-Path $artifactRoot "research\runs\wide_search\h06_sector_neutral_residual_momentum_pit.json") -Raw | ConvertFrom-Json
+          $repro = Get-Content "research\runs\h06_pit_independent\reproduced_pit.json" -Raw | ConvertFrom-Json
+          if ($canonical.status -ne 'PIT_PASSED' -or $repro.status -ne 'PIT_PASSED') { throw 'H06 PIT did not pass' }
+          if ($canonical.report_fingerprint -ne $repro.report_fingerprint) { throw "PIT fingerprint mismatch: canonical=$($canonical.report_fingerprint) reproduced=$($repro.report_fingerprint)" }
+          if ($canonical.coverage_input.snapshot_fingerprint -ne $repro.coverage_input.snapshot_fingerprint) { throw 'snapshot fingerprint mismatch' }
+          'H06_INDEPENDENT_PIT_RECONCILIATION=PASS'
+          "H06_PIT_FINGERPRINT=$($repro.report_fingerprint)"
+          "H06_PIT_CHECKED_DECISION_POINTS=$($repro.checked_decision_points)"
+
+      - name: Upload independent PIT receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: h06-pit-independent-reproduction-${{ github.run_id }}
+          path: research/runs/h06_pit_independent/reproduced_pit.json
+          if-no-files-found: error
+          retention-days: 30
