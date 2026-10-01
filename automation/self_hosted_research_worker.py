@@ -192,7 +192,7 @@ LANES: dict[str, list[list[str]]] = {
         [
             PYTHON,
             "-m",
-            "automation.s10_live_probe",
+            "automation.s10_probe",
         ],
     ],
     "repo_qa": [
