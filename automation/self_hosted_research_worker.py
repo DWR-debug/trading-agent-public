@@ -158,6 +158,7 @@ LANES: dict[str, list[list[str]]] = {
             "tests/test_q120_cftc_positioning_state.py",
             "tests/test_q120_cftc_source_feasibility.py",
             "tests/test_research_hypothesis_compiler.py",
+            "tests/test_research_clock_join.py",
         ],
         [
             PYTHON,
@@ -165,6 +166,14 @@ LANES: dict[str, list[list[str]]] = {
             "automation.research_hypothesis_compiler",
             "--output",
             "research/runs/self_hosted/research_discovery/hypothesis_quarantine.json",
+        ],
+        [
+            PYTHON,
+            "-c",
+            (
+                "from automation.research_clock_join import synthetic_contract; "
+                "print('CROSS_CLOCK_SYNTHETIC', synthetic_contract())"
+            ),
         ],
         [
             PYTHON,
