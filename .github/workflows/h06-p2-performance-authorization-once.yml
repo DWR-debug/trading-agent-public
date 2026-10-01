@@ -66,7 +66,10 @@ jobs:
           assert p["input_contract"]["input_bundle_fingerprint"]==f["bundle_fingerprint"]
           assert p["input_contract"]["pit_check_fingerprint"]==pit["reconciliation"]["check_fingerprint"]
           assert pit["status"]=="PIT_REPRODUCED_RECONCILED"
-          entry=next(x for x in r["active_trials"] if x.get("code")=="H06-P2")
+          trials=[x for x in r["active_trials"] if x.get("code")=="H06-P2"]
+          designs=[x for x in r.get("active_design_families",[]) if x.get("code")=="H06-P2"]
+          assert len(trials)+len(designs)==1
+          entry=(trials or designs)[0]
           assert entry["performance_authorization_allowed"] is False
           assert entry["state"]=="DESIGN_ONLY_ACTIVE"
           print("H06P2 DESIGN-ONLY GUARD PASS")
@@ -116,7 +119,24 @@ jobs:
           trial="T-2026-10-01-H06P2-PERFORMANCE-01"
           assert prereg["trial_id"]==trial and prereg["status"]=="PREREGISTERED_DESIGN_ONLY"
           assert prereg["governance"]["performance_trial_authorized"] is False
-          entry=next(x for x in registry["active_trials"] if x.get("code")=="H06-P2")
+          trial_entries=[x for x in registry["active_trials"] if x.get("code")=="H06-P2"]
+          design_entries=[x for x in registry.get("active_design_families",[]) if x.get("code")=="H06-P2"]
+          assert len(trial_entries)+len(design_entries)==1
+          if trial_entries:
+              entry=trial_entries[0]
+          else:
+              source=design_entries[0]
+              entry={
+                "code":"H06-P2",
+                "trial_id":trial,
+                "class":source.get("class","sector_residual_global_rank"),
+                "state":"DESIGN_ONLY_ACTIVE",
+                "parent_code":source.get("parent_code","H06"),
+                "preregistration_path":"research/preregistrations/h06_p2_performance_2026_10_01.json",
+                "performance_authorization_allowed":False
+              }
+              registry["active_trials"].append(entry)
+              registry["active_design_families"]=[x for x in registry.get("active_design_families",[]) if x.get("code")!="H06-P2"]
           assert entry["state"]=="DESIGN_ONLY_ACTIVE" and entry["performance_authorization_allowed"] is False
           expected_paths={
             "performance_runner_sha256": root/"automation/h06_p2_performance.py",
