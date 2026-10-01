@@ -1,14 +1,7 @@
 name: Q081-R1 Preflight (self-hosted)
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - "research/run_requests/q081r1_preflight.trigger"
-      - "research/run_requests/q081r1_preflight_final.trigger"
-      - "research/preregistrations/q081r1_performance_2026_09_28.json"
-      - "automation/q081r1_corrected_e1_e2_performance.py"
-      - ".github/workflows/q081r1-preflight.yml"
+  # Historical/completed execution path: manual dispatch only. Automatic re-triggering is retired.
   workflow_dispatch:
 
 permissions:
