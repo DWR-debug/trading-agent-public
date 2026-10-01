@@ -412,7 +412,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T09:05:48.092720+00:00",
+  "generated_at_utc": "2026-10-01T09:07:57.990054+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -546,17 +546,18 @@
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/641"
       }
     ],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "fix/h06-windows-shell-policy-v2",
-        "number": 728,
-        "title": "FIX: remove Windows PowerShell policy dependency from H06 reproduction",
-        "updatedAt": "2026-10-01T09:05:23Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/728"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: remove Windows PowerShell policy dependency from H06 reproduction",
+        "sha": "1d5e175d15f211a9cfb6a94bf124f207abf15d85",
+        "timestamp": "2026-10-01T11:07:43+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "84b31deeee50f6216f23293ff3a84081092fc6b9",
+        "timestamp": "2026-10-01T09:05:48Z"
+      },
       {
         "message": "FIX: fail closed on Copilot budget state read failures",
         "sha": "798d2879c8279c98225407ad83efc879ad8fcf24",
@@ -586,16 +587,6 @@
         "message": "OPS: autonomous agent queue routing",
         "sha": "d103878aaf2999a2f1caafb78aabccb65c919b64",
         "timestamp": "2026-10-01T08:59:33Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "57b2b3f6dd16abfbfc0492bde8b7b25ca4797faf",
-        "timestamp": "2026-10-01T08:56:52Z"
-      },
-      {
-        "message": "OPS: reserve protected Copilot Free worker budget",
-        "sha": "4ae21d8f145c5277fe47e2f659d97f2bd6b0a4aa",
-        "timestamp": "2026-10-01T08:56:17Z"
       }
     ]
   },
@@ -665,12 +656,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "798d2879c8279c98225407ad83efc879ad8fcf24",
+  "source_master_sha": "1d5e175d15f211a9cfb6a94bf124f207abf15d85",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36840482496"
+    "run_id": "36840710953"
   }
 }
