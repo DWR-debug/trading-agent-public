@@ -2,7 +2,12 @@ from __future__ import annotations
 
 from types import SimpleNamespace
 
-from automation.rccsm_observational_feasibility import _fp, _mutate_future, _sample_indices
+from automation.rccsm_observational_feasibility import (
+    Q089_RESEARCH_PERIODS,
+    _fp,
+    _mutate_future,
+    _sample_indices,
+)
 
 
 def _assets(n: int = 500):
@@ -49,3 +54,8 @@ def test_fingerprint_is_deterministic():
 def test_observational_module_has_no_performance_authorization():
     import automation.rccsm_observational_feasibility as module
     assert module.Q089_COVERAGE_ID == "T-2026-09-28-089-COVERAGE"
+
+
+def test_sample_indices_respect_research_boundary():
+    assert max(_sample_indices(3500)) < Q089_RESEARCH_PERIODS
+    assert _sample_indices(1000, research_periods=500) == (273, 400)

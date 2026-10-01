@@ -315,6 +315,14 @@ def test_self_hosted_runner_probe_targets_trusted_label_and_master_only():
     assert "pull_request:" not in text
 
 
+def test_autonomous_frontier_lane_includes_rccsm_observational_pit_check():
+    commands = worker.LANES["autonomous_frontier_qa"]
+    flattened = [" ".join(command) for command in commands]
+    assert any("tests/test_rccsm_observational_feasibility.py" in command for command in flattened)
+    assert any("automation.rccsm_observational_feasibility" in command for command in flattened)
+    assert any("q089_rccsm_observational_feasibility.json" in command for command in flattened)
+
+
 def test_permanent_loop_harvests_frontier_outputs_even_after_bounded_failure():
     text = (
         ROOT / ".github" / "workflows" / "permanent-pc-research-loop.yml"

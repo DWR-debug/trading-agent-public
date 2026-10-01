@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 Q089_COVERAGE_ID = "T-2026-09-28-089-COVERAGE"
 Q089_MANIFEST = ROOT / "research" / "runs" / "q089_coverage" / Q089_COVERAGE_ID / "snapshot_manifest.json"
 Q089_RECEIPT = ROOT / "research" / "evidence" / "q089_coverage_result.json"
+Q089_RESEARCH_PERIODS = 2798
 
 def _fp(value: object) -> str:
     return hashlib.sha256(
@@ -41,9 +42,9 @@ def _mutate_future(assets: dict, index: int, factor: float) -> dict:
         for symbol, bars in assets.items()
     }
 
-def _sample_indices(length: int) -> tuple[int, ...]:
+def _sample_indices(length: int, *, research_periods: int = Q089_RESEARCH_PERIODS) -> tuple[int, ...]:
     candidates = (273, 400, 631, 862, 1093, 1324, 1555, 1786, 2017, 2248, 2479, 2710, 2941, 3172, 3403)
-    return tuple(i for i in candidates if i < length)
+    return tuple(i for i in candidates if i < length and i < research_periods)
 
 def run(
     *,
@@ -78,8 +79,18 @@ def run(
 
     observations = []
     for index in _sample_indices(len(next(iter(assets.values())))):
+        if index >= int(manifest.get("research_periods", Q089_RESEARCH_PERIODS)):
+            raise AssertionError(f"sample index {index} crosses the research boundary")
         state = state_at(assets, index, symbols=symbols)
         disagreement = disagreement_at(assets, index, symbols=symbols)
+        prefix_assets = {
+            symbol: tuple(values[: index + 1])
+            for symbol, values in assets.items()
+        }
+        if state_at(prefix_assets, index, symbols=symbols) != state:
+            raise AssertionError(f"prefix truncation changed state at index {index}")
+        if disagreement_at(prefix_assets, index, symbols=symbols) != disagreement:
+            raise AssertionError(f"prefix truncation changed disagreement at index {index}")
         mutated = _mutate_future(assets, index, 11.0)
         if state_at(mutated, index, symbols=symbols) != state:
             raise AssertionError(f"future mutation changed state at index {index}")
@@ -94,6 +105,8 @@ def run(
             "dispersion_percentile": state["dispersion_percentile"],
             "shock_density": state["shock_density"],
             "mechanism_disagreement": disagreement["mechanism_disagreement"],
+            "research_boundary_invariant": True,
+            "prefix_truncation_invariant": True,
             "future_mutation_invariant": True,
         })
 
@@ -105,6 +118,10 @@ def run(
         "symbols": list(symbols),
         "candidate_ids": list(CANDIDATES),
         "sample_count": len(observations),
+        "sample_boundary": {
+            "research_periods": Q089_RESEARCH_PERIODS,
+            "max_sample_index_exclusive": Q089_RESEARCH_PERIODS,
+        },
         "observations": observations,
         "state_topology": {
             "uses_future_bars": False,
@@ -131,6 +148,11 @@ def run(
             "automatic_promotion": False,
         },
         "status": "OBSERVATIONAL_FEASIBILITY_PASSED",
+        "method": {
+            "prefix_truncation_check": True,
+            "future_mutation_check": True,
+            "research_only_samples": True,
+        },
     }
     result["fingerprint"] = _fp(result)
     output_path = output_path if output_path.is_absolute() else ROOT / output_path
