@@ -295,7 +295,7 @@ def test_bounded_copilot_cli_workflow_uses_personal_repo_token_and_credit_gate()
     assert "PERSONAL_COPILOT_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}" in text
     assert "COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}" in text
     assert "copilot-requests: write" not in text
-    assert "--max-ai-credits=12" in text
+    assert "--max-ai-credits=30" in text
     assert "--agent=trading-agent-engineer" in text
     assert "PAPER_ONLY=True" in text
     assert "LIVE_TRADING_ENABLED=False" in text
