@@ -10,6 +10,7 @@ on:
       - "data/canonical_snapshot.py"
       - "data/yahoo_loader.py"
       - "config/settings.py"
+      - "tests/test_q107_q104_equity_coverage.py"
       - ".github/workflows/q107-q104-equity-coverage.yml"
   workflow_dispatch:
 
@@ -46,6 +47,9 @@ jobs:
       - name: Safety invariants
         run: |
           python -c "from config import settings; assert settings.PAPER_ONLY is True; assert settings.LIVE_TRADING_ENABLED is False; assert settings.ORDERS_ENABLED is False; assert settings.AUTOMATIC_PROMOTION is False; print('SAFETY INVARIANTS OK')"
+
+      - name: Q107 universe contract
+        run: python -m pytest -q tests/test_q107_q104_equity_coverage.py
 
       - name: Q107 coverage preflight
         run: |
