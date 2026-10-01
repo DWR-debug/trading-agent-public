@@ -542,7 +542,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T13:02:48.654956+00:00",
+  "generated_at_utc": "2026-10-01T13:05:36.756216+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -744,6 +744,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "TEST: add ECL server launcher invariants",
+        "sha": "1ec0c48b2621309aec3cfd88c01709d1f22d9600",
+        "timestamp": "2026-10-01T15:05:29+02:00"
+      },
+      {
+        "message": "FIX: launch ECL model servers without PowerShell",
+        "sha": "08b6118a6046db0f493962e6e0fd1ab9f51cc27c",
+        "timestamp": "2026-10-01T15:05:23+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "0c005193cd42bd99b9e21ad6d7e04b02af666b1a",
+        "timestamp": "2026-10-01T13:02:49Z"
+      },
+      {
         "message": "FIX: remove blocked PowerShell static method from ECL preflight",
         "sha": "848437219ba203664f127ca5d8773a6f6b3988e4",
         "timestamp": "2026-10-01T15:02:31+02:00"
@@ -767,21 +782,6 @@
         "message": "FIX: avoid PowerShell method calls in constrained ECL preflight",
         "sha": "ce0cc2087cb97e26992b795cbcee07e0752a1b57",
         "timestamp": "2026-10-01T15:00:50+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f09622ba47e8f216498426a1de64d7df8ba351b1",
-        "timestamp": "2026-10-01T12:59:52Z"
-      },
-      {
-        "message": "FIX: enforce PowerShell execution-policy bypass in ECL preflight",
-        "sha": "f20ed99f54cd40ef259571a8b7c27db6bc53c882",
-        "timestamp": "2026-10-01T14:59:36+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3b8122df41653b1b297484bbeab7d0868bb1b9cf",
-        "timestamp": "2026-10-01T12:56:55Z"
       }
     ]
   },
@@ -851,12 +851,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "848437219ba203664f127ca5d8773a6f6b3988e4",
+  "source_master_sha": "1ec0c48b2621309aec3cfd88c01709d1f22d9600",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36865889628"
+    "run_id": "36866201896"
   }
 }
