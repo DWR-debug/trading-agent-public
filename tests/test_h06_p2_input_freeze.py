@@ -70,5 +70,4 @@ def test_adjusted_close_url_is_bound_to_dividend_and_split_events(monkeypatch):
         ("2020-01-01T13:30:00+00:00", 99.0),
         ("2020-01-02T13:30:00+00:00", 100.0),
     ]
-    assert "events=div%2Csplits" not in seen["url"]
-    assert "events=div%2Csplits" in seen["url"] or "events=div%2Csplits" in seen["url"].replace("%2C", ",")
+    assert "events=div%2Csplits" in seen["url"] or "events=div,splits" in seen["url"]
