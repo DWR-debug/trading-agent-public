@@ -114,7 +114,17 @@
     "last_verified_snapshot_note": "runner online/busy state is volatile and must be checked live on every new chat",
     "copilot_free_protection": "max 4 protected sessions/month, max 30 credits/session, no overages",
     "codespaces": "interactive fallback only; no unattended default",
-    "paid_services": "disabled by project policy"
+    "paid_services": "disabled by project policy",
+    "s10": {
+      "status": "CONFIGURED_BY_OPERATOR",
+      "identity": "S10",
+      "live_verification_required": true,
+      "capability_claim": "UNRESOLVED_UNTIL_LIVE_VERIFIED",
+      "routing_rule": "use only when available + independent + permitted + useful",
+      "scientific_role": "bounded support only; never scientific evidence, authorization, selection, promotion or live execution",
+      "quota_policy": "no artificial consumption; fail-closed when unavailable",
+      "persistence_note": "operator-designated resource; exact interface/capabilities must be discovered from the live configured environment"
+    }
   },
   "chatless_night_policy": {
     "enabled": true,
@@ -123,11 +133,19 @@
     "daily_deepening": "unified orchestrator at 03:30 UTC",
     "ai_rotation": "free AI fabric every 6 hours when provider entitlement/auth passes",
     "agent_queue": "every 2 hours, fail-closed and resource-gated",
-    "persistence": "receipts/artifacts/status are written to repository or Actions artifacts; no open chat required"
+    "persistence": "receipts/artifacts/status are written to repository or Actions artifacts; no open chat required",
+    "s10": {
+      "enabled": true,
+      "mode": "opportunistic_only",
+      "trigger": "only when live interface is available and a bounded useful task exists",
+      "formal_evidence_allowed": false,
+      "performance_authorization": false
+    }
   },
   "new_chat_protocol": [
     "Read docs/TRADING_AGENT_CHAT_ENTRYPOINT.md.",
     "Read docs/TRADING_AGENT_OS_ORCHESTRATION.md and the live current status files.",
+    "Check S10 live availability/capability before assigning any bounded work.",
     "Check current master, PRs, workflows, runners and AI entitlements live.",
     "Do not trust stale runner/auth/queue claims from prior chats.",
     "Continue unfinished safe work without redundant approval.",
