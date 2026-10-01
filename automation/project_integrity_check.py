@@ -40,6 +40,7 @@ ACTIVE_WORKFLOWS = {
     "h06-mechanism-replication.yml",
     "h06-mechanism.yml",
     "h06-master-coverage-repair.yml",
+    "h06-pit-independent-reproduction.yml",
     "c29-fresh-coverage-pit-repair.yml",
     "hosted-research-failover.yml",
     "intraday-directional-discovery.yml",
