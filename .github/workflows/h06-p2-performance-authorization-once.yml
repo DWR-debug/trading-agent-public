@@ -20,12 +20,12 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
-      GH_TOKEN: \${{ github.token }}
+      GH_TOKEN: ${{ github.token }}
     steps:
       - name: Checkout exact authorization request
         uses: actions/checkout@v5
         with:
-          ref: \${{ github.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 1
 
       - name: Verify exact one-shot request
@@ -78,15 +78,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for attempt in \$(seq 1 90); do
-            line="\$(gh run list --repo "\$GITHUB_REPOSITORY" --workflow ".github/workflows/t052-exact-master-ci-gate.yml" --commit "\$GITHUB_SHA" --limit 1 --json databaseId,status,conclusion --jq '.[0] | [.databaseId,.status,(.conclusion // "")] | @tsv' || true)"
-            run_id="\$(printf '%s' "\$line" | cut -f1)"
-            status="\$(printf '%s' "\$line" | cut -f2)"
-            conclusion="\$(printf '%s' "\$line" | cut -f3)"
-            echo "H06P2 T052 attempt=\$attempt run_id=\$run_id status=\$status conclusion=\$conclusion"
-            if [ "\$status" = "completed" ]; then
-              test "\$conclusion" = "success"
-              echo "H06P2_MASTER_CI_RUN_ID=\$run_id" >> "\$GITHUB_ENV"
+          for attempt in $(seq 1 90); do
+            line="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ".github/workflows/t052-exact-master-ci-gate.yml" --commit "$GITHUB_SHA" --limit 1 --json databaseId,status,conclusion --jq '.[0] | [.databaseId,.status,(.conclusion // "")] | @tsv' || true)"
+            run_id="$(printf '%s' "$line" | cut -f1)"
+            status="$(printf '%s' "$line" | cut -f2)"
+            conclusion="$(printf '%s' "$line" | cut -f3)"
+            echo "H06P2 T052 attempt=$attempt run_id=$run_id status=$status conclusion=$conclusion"
+            if [ "$status" = "completed" ]; then
+              test "$conclusion" = "success"
+              echo "H06P2_MASTER_CI_RUN_ID=$run_id" >> "$GITHUB_ENV"
               exit 0
             fi
             sleep 10
@@ -173,10 +173,10 @@ jobs:
           print("H06P2 AUTHORIZATION PREPARED")
           print("H06P2_PREREGISTRATION_FINGERPRINT="+prereg_fp)
           PY
-          base_sha="\$(git ls-remote origin refs/heads/master | awk '{print \$1}')"
-          test -n "\$base_sha"
+          base_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
+          test -n "$base_sha"
           python automation/github_contents_publish.py \
-            --repository "\$GITHUB_REPOSITORY" --branch master --base-sha "\$base_sha" \
+            --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$base_sha" \
             --file research/preregistrations/h06_p2_performance_2026_10_01.json=research/preregistrations/h06_p2_performance_2026_10_01.json \
             --file research/authorizations/h06_p2_performance_2026_10_01.json=research/authorizations/h06_p2_performance_2026_10_01.json \
             --file research/governance/active_research_registry.json=research/governance/active_research_registry.json \
@@ -186,7 +186,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: h06-p2-authorization-\${{ github.run_id }}-\${{ github.run_attempt }}
+          name: h06-p2-authorization-${{ github.run_id }}-${{ github.run_attempt }}
           path: research/authorizations/h06_p2_performance_2026_10_01.json
           if-no-files-found: warn
           retention-days: 30
