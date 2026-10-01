@@ -69,8 +69,9 @@ jobs:
           assert pit["status"]=="PIT_REPRODUCED_RECONCILED"
           trials=[x for x in r["active_trials"] if x.get("code")=="H06-P2"]
           designs=[x for x in r.get("active_design_families",[]) if x.get("code")=="H06-P2"]
-          assert len(trials)+len(designs)==1
-          entry=(trials or designs)[0]
+          assert len(trials)==1
+          assert len(designs)==1
+          entry=trials[0]
           assert entry["performance_authorization_allowed"] is False
           assert entry["state"]=="DESIGN_ONLY_ACTIVE"
           print("H06P2 DESIGN-ONLY GUARD PASS")
