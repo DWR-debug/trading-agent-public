@@ -223,6 +223,18 @@ def generate(
             "I19/I20 historical breadth requirements. No performance authorization, holdout "
             "selection, parameter search, promotion or live execution is permitted."
         )
+    if (ROOT / "research/preregistrations/q117_treasury_demand_population_2026_10_01.json").is_file():
+        recorded_next_research_focus = (
+            "Q112 and Q113 are complete: live SEC identity is verified on 13F/N-PORT/Form 4 "
+            "and the fixed 2026-06-to-08 13F universe scan found all 8 Q107 symbols with manager "
+            "and CUSIP coverage. Q114/Q115 deterministic compilers are contract-complete; Q117 "
+            "verified 89 historical 10-Year Treasury auction events and compiled demand states. "
+            "Q116 is the active two-quarter 13F transition population gate and must remain "
+            "fail-closed until its immutable receipt validates. Next candidate-specific frontier "
+            "work is I22 filing-arrival compilation plus I19/I20 institutional-demand joins. "
+            "No performance authorization, holdout selection, parameter search, promotion or "
+            "live execution is permitted."
+        )
 
     current = {
         "schema_version": "1.0",
