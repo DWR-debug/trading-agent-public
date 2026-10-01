@@ -535,7 +535,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T12:15:21.579435+00:00",
+  "generated_at_utc": "2026-10-01T12:29:39.351321+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -730,44 +730,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "Fix Q116 SEC filing-date format adapter",
-        "sha": "beaf1b8af16827280e791ca69db5f56339b6805e",
-        "timestamp": "2026-10-01T14:15:11+02:00"
+        "message": "Add Q116 SEC date normalization and amendment-ordering regressions",
+        "sha": "247228725bf7bdebc96b30294cefba831226c9c0",
+        "timestamp": "2026-10-01T14:29:34+02:00"
       },
       {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "fee8bbda150fda80713a4cc3856141f1fa8bf063",
-        "timestamp": "2026-10-01T11:58:33Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "bb58aabf47e327dbcb50a757a6e0f8afe042e40e",
-        "timestamp": "2026-10-01T11:58:17Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "f4aec0c23d71d9938ab6a2b7b7fe3e2efdc52531",
-        "timestamp": "2026-10-01T11:44:44Z"
+        "message": "Fix Q116 SEC filing-date normalization and chronological amendment ordering",
+        "sha": "e3d60a499e43a45fdf251f712618e861a9b2efb2",
+        "timestamp": "2026-10-01T14:29:26+02:00"
       },
       {
         "message": "OPS: advance paper-forward MTM state",
-        "sha": "f65e3c2dcffed709009b786d90b2634463a7c787",
-        "timestamp": "2026-10-01T11:42:28Z"
+        "sha": "a26d1ac0c0ebe0bb6aa8e05d317c4d82fefccef3",
+        "timestamp": "2026-10-01T12:23:57Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3ccc8c69d8b402b67836f1e8f86be8a09fbf6ccf",
-        "timestamp": "2026-10-01T11:39:52Z"
+        "message": "OPS: record Gemini worker state",
+        "sha": "fa448cc8cd46aa6c13227fb31a02114b22c2494e",
+        "timestamp": "2026-10-01T12:23:49Z"
       },
       {
-        "message": "Use canonical SEC date parser in Q116 transition adapter",
-        "sha": "307823cc7569c79df2b68dc2b93055013383b290",
-        "timestamp": "2026-10-01T13:39:41+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "ac4f80510be6d6cc9ecb3e72aefd719a10d6a662",
+        "timestamp": "2026-10-01T12:20:44Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d1dcb498a82459971522cf77390c05d99a78c686",
-        "timestamp": "2026-10-01T11:39:27Z"
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "33a3e449710fc090a65c8b7d5f4f0756396bf1af",
+        "timestamp": "2026-10-01T12:20:40Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "11944ac26f6a4d0394a7538e3bc091579e274257",
+        "timestamp": "2026-10-01T12:20:16Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "252bbc147035472b0a7b88feec96570c1aa1acd9",
+        "timestamp": "2026-10-01T12:20:12Z"
       }
     ]
   },
@@ -837,12 +837,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "beaf1b8af16827280e791ca69db5f56339b6805e",
+  "source_master_sha": "247228725bf7bdebc96b30294cefba831226c9c0",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36860528898"
+    "run_id": "36862095809"
   }
 }
