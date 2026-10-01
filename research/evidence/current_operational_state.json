@@ -579,7 +579,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T16:32:12.304787+00:00",
+  "generated_at_utc": "2026-10-01T16:42:29.092527+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -774,6 +774,22 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "research/q119-treasury-api-field-fix-2026-10-01",
+        "number": 770,
+        "title": "Q119: fix Treasury Fiscal Data median-yield API field",
+        "updatedAt": "2026-10-01T16:41:31Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/770"
+      },
+      {
+        "baseRefName": "master",
+        "headRefName": "research/q120-cftc-positioning-state-2026-10-01",
+        "number": 769,
+        "title": "Q120: add CFTC TFF positioning-divergence frontier",
+        "updatedAt": "2026-10-01T16:38:47Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/769"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "research/q104-i22-session-window-fix-v3-2026-10-01",
         "number": 765,
         "title": "Q104:I22: fix session-window semantics on current master",
@@ -782,6 +798,21 @@
       }
     ],
     "recent_commits": [
+      {
+        "message": "H06-P2: add fail-closed readiness receipt (#767)",
+        "sha": "5838df8e22d8462ce1262908be64f557100a3d8f",
+        "timestamp": "2026-10-01T18:42:15+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "c368215b68ed74a09e87118fca6b81337623a4c3",
+        "timestamp": "2026-10-01T16:41:47Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ef01ae7003583b2fc5690deffb7a251d06dc7e68",
+        "timestamp": "2026-10-01T16:32:12Z"
+      },
       {
         "message": "GOV: register H06-P2 design-only candidate",
         "sha": "1659f2e3e356c0963d4f2f390cde23649cf30d38",
@@ -806,21 +837,6 @@
         "message": "Q104:I22: correct 20-session SEC filing-arrival window (#766)",
         "sha": "b268accb8c3dd2fa8f5dc0ab7d4d6483805c1400",
         "timestamp": "2026-10-01T18:30:49+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b9f4f9d0da149517829722d1f1dfd08f078a2c39",
-        "timestamp": "2026-10-01T16:29:10Z"
-      },
-      {
-        "message": "Q119: add live Treasury source/PIT feasibility gate (#764)",
-        "sha": "ac8818e66cc96aff7f0bd101ea8d350b330d38cb",
-        "timestamp": "2026-10-01T18:28:53+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "0a95e618c68496f30077e981e2f4818ae9625118",
-        "timestamp": "2026-10-01T16:28:13Z"
       }
     ]
   },
@@ -890,12 +906,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1659f2e3e356c0963d4f2f390cde23649cf30d38",
+  "source_master_sha": "5838df8e22d8462ce1262908be64f557100a3d8f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36892696886"
+    "run_id": "36893987768"
   }
 }
