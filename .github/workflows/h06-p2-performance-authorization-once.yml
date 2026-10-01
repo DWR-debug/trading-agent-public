@@ -78,11 +78,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for attempt in \$(seq 1 90); do
-            line="\$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ".github/workflows/t052-exact-master-ci-gate.yml" --commit "$GITHUB_SHA" --limit 1 --json databaseId,status,conclusion --jq '.[0] | [.databaseId,.status,(.conclusion // "")] | @tsv' || true)"
-            run_id="\$(printf '%s' "$line" | cut -f1)"
-            status="\$(printf '%s' "$line" | cut -f2)"
-            conclusion="\$(printf '%s' "$line" | cut -f3)"
+          for attempt in $(seq 1 90); do
+            line="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ".github/workflows/t052-exact-master-ci-gate.yml" --commit "$GITHUB_SHA" --limit 1 --json databaseId,status,conclusion --jq '.[0] | [.databaseId,.status,(.conclusion // "")] | @tsv' || true)"
+            run_id="$(printf '%s' "$line" | cut -f1)"
+            status="$(printf '%s' "$line" | cut -f2)"
+            conclusion="$(printf '%s' "$line" | cut -f3)"
             echo "H06P2 T052 attempt=$attempt run_id=$run_id status=$status conclusion=$conclusion"
             if [ "$status" = "completed" ]; then
               test "$conclusion" = "success"
@@ -173,7 +173,7 @@ jobs:
           print("H06P2 AUTHORIZATION PREPARED")
           print("H06P2_PREREGISTRATION_FINGERPRINT="+prereg_fp)
           PY
-          base_sha="\$(git ls-remote origin refs/heads/master | awk '{print \$1}')"
+          base_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
           test -n "$base_sha"
           python automation/github_contents_publish.py \
             --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$base_sha" \
