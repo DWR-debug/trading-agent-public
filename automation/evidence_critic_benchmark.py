@@ -7,6 +7,7 @@ promotion, trading logic or candidate selection.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -185,6 +186,12 @@ def main() -> int:
             "platform": platform.platform(),
             "runner_name": os.environ.get("RUNNER_NAME"),
             "source_commit": os.environ.get("GITHUB_SHA"),
+            "upstream_ref": os.environ.get("ECL_UPSTREAM_REF"),
+            "pip_freeze_sha256": (
+                hashlib.sha256(Path(os.environ["ECL_PIP_FREEZE"]).read_bytes()).hexdigest()
+                if os.environ.get("ECL_PIP_FREEZE") and Path(os.environ["ECL_PIP_FREEZE"]).is_file()
+                else None
+            ),
         },
         "corpus": {"path": str(args.corpus).replace("\\", "/"), "cases": len(cases), "labels": list(LABELS)},
         "metrics": metrics(rows),
