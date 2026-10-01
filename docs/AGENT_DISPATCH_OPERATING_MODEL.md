@@ -44,3 +44,23 @@ Beispiel:
 
 Der Manifest-Fingerprint bindet zusätzlich den vollständigen Issue-Inhalt. Die JSON-Struktur ist absichtlich explizit. Ein prose-only Issue kann nicht
 versehentlich als agentische Ausführungsfreigabe interpretiert werden.
+
+## Normative Scope-Prüfung
+
+`automation.agent_dispatch.normalize_allowed_paths` normalisiert die
+Allowlist beim Auflösen des Vertrags. `automation.agent_dispatch.validate_scope_paths`
+ist die normative Prüfung für geänderte Pfade; der Resolve- und
+Publikationspfad darf keine zweite Wildcard- oder Protected-Prefix-Implementierung
+führen. `automation.agent_scope_guard` bezieht unstaged, staged und nicht
+ignorierte untracked Dateien ein, einschließlich beider Seiten erkannter
+Umbenennungen, und verwendet diese gemeinsame Prüfung. Der Guard muss vor dem
+Staging und nach `git add -A` laufen, damit beide Zustände fail-closed geprüft
+werden.
+
+Die geschützten Präfixe bleiben `.github/`, `research/evidence/`,
+`research/authorizations/` und `gates/`. Die ältere Workflow-Datei
+`.github/workflows/copilot-cli-engineering-task.yml` enthält weiterhin eine
+inline Scope-Prüfung; sie liegt außerhalb des für AGENT-025 freigegebenen
+Änderungsumfangs und muss separat auf den gemeinsamen Python-Validator
+umgestellt werden. Bis dahin gilt diese Workflow-Integration als bekanntes
+Drift-Risiko und nicht als durch diese Änderung zentralisiert.

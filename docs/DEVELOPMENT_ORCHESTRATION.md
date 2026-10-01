@@ -170,3 +170,11 @@ PAPER_ONLY=True
 LIVE_TRADING_ENABLED=False
 orders_enabled=False
 automatic_promotion=False
+
+Für bounded Agent-Publikationen ist `automation.agent_dispatch.validate_scope_paths`
+die gemeinsame Allowlist-Prüfung. Sie validiert die normalisierten Vertragspfade
+und jede Änderung aus Index, Worktree und nicht ignorierten untracked Dateien;
+Workflow-YAML darf diese Regeln nicht abweichend nachbilden. Der Scope-Guard
+wird vor dem Staging sowie nach `git add -A` ausgeführt. Eine legacy Workflow-
+Integration, die noch inline prüft, ist im Agent Dispatch Operating Model als
+bekanntes, separat zu behebendes Drift-Risiko dokumentiert.

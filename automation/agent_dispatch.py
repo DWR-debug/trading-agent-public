@@ -111,6 +111,24 @@ def normalize_allowed_paths(task: dict[str, Any]) -> list[str]:
     return sorted(set(normalized))
 
 
+def validate_scope_paths(paths: list[str], task: dict[str, Any]) -> list[str]:
+    """Validate changed repository paths against the normalized task scope."""
+    allowed_paths = normalize_allowed_paths(task)
+    changed_paths = sorted(set(paths))
+    violations = [
+        path
+        for path in changed_paths
+        if path.startswith(FORBIDDEN_PATH_PREFIXES)
+        or not any(
+            path.startswith(pattern[:-2]) if pattern.endswith("/**") else path == pattern
+            for pattern in allowed_paths
+        )
+    ]
+    if violations:
+        raise AgentDispatchError(",".join(violations))
+    return changed_paths
+
+
 def validate_task(
     task: dict[str, Any],
     *,
