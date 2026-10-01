@@ -662,7 +662,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T20:19:58.024053+00:00",
+  "generated_at_utc": "2026-10-01T21:18:19.898210+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -850,44 +850,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "ops: anchor S10 as live-verified optional resource",
-        "sha": "66b839d038f724f18283bdb55d220d7b0991d2d8",
-        "timestamp": "2026-10-01T22:19:41+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9c96663921d9e88054b2318ef33c9eb46d8613f0",
-        "timestamp": "2026-10-01T20:19:37Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9d5ed73926f8f9a1159e0f97d1128c44eb294815",
-        "timestamp": "2026-10-01T20:19:15Z"
-      },
-      {
-        "message": "ops: bootstrap pinned MinGit on self-hosted QA",
-        "sha": "849c5b41bddb9ef9ade18caa7dddc2b7edc46b53",
-        "timestamp": "2026-10-01T22:19:06+02:00"
-      },
-      {
-        "message": "tests: align Q120 fixture with TFF field schema",
-        "sha": "cbfcc292302093cfee30c215dcb0018a600bf27f",
-        "timestamp": "2026-10-01T22:19:03+02:00"
-      },
-      {
-        "message": "research: repair Q120 TFF API field contract",
-        "sha": "c1acc6026372e89067b06825c4ff87bdf5df7d82",
-        "timestamp": "2026-10-01T22:19:01+02:00"
+        "message": "OPS: verify and route S10 on self-hosted research runner (#788)",
+        "sha": "ca62ee769f0796cf03731c40f60e421f5b4f2b5b",
+        "timestamp": "2026-10-01T23:18:01+02:00"
       },
       {
         "message": "OPS: advance paper-forward MTM state",
-        "sha": "551a143047cae1080e2467606a83d450333cc8c9",
-        "timestamp": "2026-10-01T20:11:25Z"
+        "sha": "9ebbb6c12071bbe39ac472b1697f35a48e4e40a1",
+        "timestamp": "2026-10-01T21:10:28Z"
       },
       {
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "20fd2d77f09a20c68bc404be03286518f707a113",
-        "timestamp": "2026-10-01T20:08:35Z"
+        "sha": "39f9559814e73cae0a6d73aa2a6021b48b95d144",
+        "timestamp": "2026-10-01T21:07:26Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "f04c740a6d5c38faf8f0b9075170b7a909ab829a",
+        "timestamp": "2026-10-01T20:54:44Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "62c82b27103aeff4449fabc01a7e2b9e141c2f49",
+        "timestamp": "2026-10-01T20:46:47Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "9725de443d0bc948ce1fc3191bbbc4a90eb9e4d6",
+        "timestamp": "2026-10-01T20:32:03Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "0f4cfdd3c43fe0a3f415cd963591728ffdb290a4",
+        "timestamp": "2026-10-01T20:29:15Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "dff996dec2dffd901d8a42fad7926817443db59b",
+        "timestamp": "2026-10-01T20:19:58Z"
       }
     ]
   },
@@ -957,12 +957,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "66b839d038f724f18283bdb55d220d7b0991d2d8",
+  "source_master_sha": "ca62ee769f0796cf03731c40f60e421f5b4f2b5b",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36920757985"
+    "run_id": "36927735875"
   }
 }
