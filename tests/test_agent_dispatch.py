@@ -304,3 +304,5 @@ def test_bounded_copilot_cli_workflow_uses_personal_repo_token_and_credit_gate()
     assert "allowed_paths" in text
     assert "research/evidence/" in text
     assert ".github/workflows/ci.yml" not in text
+    assert 'BRANCH="${BRANCH:-$(git branch --show-current)}"' in text
+    assert 'test "$BRANCH" != "master"' in text

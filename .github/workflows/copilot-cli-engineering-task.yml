@@ -255,6 +255,10 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -m "AGENT: issue #${ISSUE_NUMBER} bounded engineering"
+          BRANCH="${BRANCH:-$(git branch --show-current)}"
+          test -n "$BRANCH"
+          test "$BRANCH" != "master"
+          echo "Publishing agent branch: $BRANCH"
           git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:${BRANCH}"
 
           if pr_url="$(gh pr create \
