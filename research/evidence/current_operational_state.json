@@ -542,7 +542,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T13:09:02.612381+00:00",
+  "generated_at_utc": "2026-10-01T13:09:28.270941+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -744,6 +744,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "851098d6976db9d221768585e2cc5d521058a796",
+        "timestamp": "2026-10-01T13:09:02Z"
+      },
+      {
         "message": "FIX: pin Verdict v1.4 model artifact hashes",
         "sha": "448f6defa4624f21b6505799cd1e36277238fe49",
         "timestamp": "2026-10-01T15:09:00+02:00"
@@ -777,11 +782,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "03196b26b33ec395f4dd2846bf7a05f1fa8466fe",
         "timestamp": "2026-10-01T13:05:52Z"
-      },
-      {
-        "message": "FIX: run Evidence-Critic model servers via Python launcher",
-        "sha": "edab5a6d4778a01303c851e20bd2209f285ff5d0",
-        "timestamp": "2026-10-01T15:05:45+02:00"
       }
     ]
   },
@@ -851,12 +851,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "448f6defa4624f21b6505799cd1e36277238fe49",
+  "source_master_sha": "851098d6976db9d221768585e2cc5d521058a796",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36866528417"
+    "run_id": "36866583027"
   }
 }
