@@ -121,11 +121,16 @@ def build_transitions(prior:list[dict[str,Any]],current:list[dict[str,Any]],as_o
 
 def synthetic_contract()->dict[str,bool]:
     rows=[
-      {"ACCESSION_NUMBER":"A1","filing_date":"2026-05-01","manager_cik":"1","period_of_report":"2026-03-31","SUBMISSIONTYPE":"13F-HR","NAMEOFISSUER":"S&P GLOBAL INC","TITLEOFCLASS":"Common Stock","CUSIP":"78409V104","SSHPRNAMT":"100","VALUE":"10000"},
-      {"ACCESSION_NUMBER":"A2","filing_date":"2026-08-01","manager_cik":"1","period_of_report":"2026-06-30","SUBMISSIONTYPE":"13F-HR","NAMEOFISSUER":"S&P GLOBAL INC","TITLEOFCLASS":"Common Stock","CUSIP":"78409V104","SSHPRNAMT":"140","VALUE":"15000"}
+      {"accession":"A1","filing_date":"2026-05-01","manager_cik":"1","period_of_report":"2026-03-31","security_key":"CUSIP:78409V104","symbol":"SPGI","shares":"100","reported_value":"10000"},
+      {"accession":"A2","filing_date":"2026-08-01","manager_cik":"1","period_of_report":"2026-06-30","security_key":"CUSIP:78409V104","symbol":"SPGI","shares":"140","reported_value":"15000"}
     ]
     out=build_transitions(rows[:1],rows[1:],date(2026,8,31))
-    return {"paired":out["paired_current_positions"]==1,"increase":out["transition_counts"]["SPGI"]["INCREASE"]==1,"pit_cutoff_preserved":out["as_of"]=="2026-08-31","eligible_session_materialized":bool(rows and first_xnys_after(date(2026,8,1)))}
+    return {
+      "paired":out["paired_current_positions"]==1,
+      "increase":out["transition_counts"]["SPGI"]["INCREASE"]==1,
+      "pit_cutoff_preserved":out["as_of"]=="2026-08-31",
+      "eligible_session_materialized":first_xnys_after(date(2026,8,1))=="2026-08-03"
+    }
 
 def main()->int:
     p=argparse.ArgumentParser();p.add_argument("--output",type=Path,default=Path("research/runs/q116_13f_transition_population/result.json"));a=p.parse_args()
