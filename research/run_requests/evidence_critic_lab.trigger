@@ -1,0 +1,8 @@
+ECL_WAKE_2026-10-01
+task=ECL-2026-10-01-001
+mode=isolated-shadow-only
+research_computation=false
+performance=false
+holdout_selection=false
+promotion=false
+live_execution=false
