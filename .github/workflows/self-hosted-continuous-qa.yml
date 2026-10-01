@@ -85,8 +85,23 @@ jobs:
 
           echo [3.5/8] Resolve Git executable
           set "GIT_EXE="
-          for %%P in ("%ProgramFiles%\Git\cmd\git.exe" "%ProgramFiles%\Git\bin\git.exe" "%LocalAppData%\Programs\Git\cmd\git.exe" "%LocalAppData%\Programs\Git\bin\git.exe") do if not defined GIT_EXE if exist "%%~P" set "GIT_EXE=%%~P"
+          for %%P in ("%ProgramFiles%\\Git\\cmd\\git.exe" "%ProgramFiles%\\Git\\bin\\git.exe" "%LocalAppData%\\Programs\\Git\\cmd\\git.exe" "%LocalAppData%\\Programs\\Git\\bin\\git.exe") do if not defined GIT_EXE if exist "%%~P" set "GIT_EXE=%%~P"
           if not defined GIT_EXE for /f "delims=" %%P in ('where.exe git 2^>nul') do if not defined GIT_EXE set "GIT_EXE=%%~P"
+          if not defined GIT_EXE (
+            set "MINGIT_VERSION=2.55.0"
+            set "MINGIT_ROOT=%RUNNER_TEMP%\\mingit-%MINGIT_VERSION%"
+            set "MINGIT_ZIP=%RUNNER_TEMP%\\MinGit-%MINGIT_VERSION%-64-bit.zip"
+            set "MINGIT_URL=https://github.com/git-for-windows/git/releases/download/v2.55.0.windows.1/MinGit-2.55.0-64-bit.zip"
+            if not exist "%MINGIT_ROOT%\\cmd\\git.exe" (
+              if exist "%MINGIT_ROOT%" rmdir /s /q "%MINGIT_ROOT%"
+              mkdir "%MINGIT_ROOT%" || exit /b 1
+              echo Git not found; bootstrapping pinned MinGit %MINGIT_VERSION%
+              curl.exe -L --fail --silent --show-error -o "%MINGIT_ZIP%" "%MINGIT_URL%" || exit /b 1
+              powershell.exe -NoProfile -NonInteractive -Command "$h=(Get-FileHash -Algorithm SHA256 -LiteralPath '%MINGIT_ZIP%').Hash.ToLowerInvariant(); if($h -ne '31497e7968196332263459ee319d2524e3ebc5786ab895e2abad34ffdd4f4ebf'){Write-Error 'MinGit SHA256 mismatch'; exit 1}" || exit /b 1
+              tar.exe -xf "%MINGIT_ZIP%" -C "%MINGIT_ROOT%" || exit /b 1
+            )
+            set "GIT_EXE=%MINGIT_ROOT%\\cmd\\git.exe"
+          )
           if not defined GIT_EXE (
             echo GIT_EXECUTABLE=NOT_FOUND
             exit /b 1
