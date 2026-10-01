@@ -1,0 +1,212 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-01-110-Q109-SOURCE-FEASIBILITY",
+  "status": "SOURCE_FEASIBILITY_ONLY",
+  "probes": [
+    {
+      "id": "SEC_13F_DATASETS",
+      "url": "https://www.sec.gov/data-research/sec-markets-data/form-13f-data-sets",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "response_sha256": "sha256:47757ece64bdad41f215245c74fdd95688e0b3c82ea0e7f2cd4d38b1dd76eed5",
+      "checks": {
+        "July 2013": true,
+        "August 2026": true,
+        "as-filed": true,
+        "Data Downloads": true
+      },
+      "status": "VERIFIABLE"
+    },
+    {
+      "id": "SEC_NPORT_DATASETS",
+      "url": "https://www.sec.gov/data-research/sec-markets-data/form-n-port-data-sets",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "response_sha256": "sha256:fab53966bde0e6569a76d88a5fa8a29c1070f2d531cce28446144fbc34be51f6",
+      "checks": {
+        "October 2019": true,
+        "June 2026": true,
+        "monthly portfolio holdings": true,
+        "publicly available information": true
+      },
+      "status": "VERIFIABLE"
+    },
+    {
+      "id": "SEC_INSIDER_DATASETS",
+      "url": "https://www.sec.gov/data-research/sec-markets-data/insider-transactions-data-sets",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "response_sha256": "sha256:c82ca489f8d9f6ea872644d3cfd5aff09e3c85073f2c4f41a4bc011dad0d057b",
+      "checks": {
+        "January 2006": true,
+        "June 2026": true,
+        "Forms 3, 4 and 5": true,
+        "as-filed": true
+      },
+      "status": "VERIFIABLE"
+    },
+    {
+      "id": "SEC_TECHNICAL_SPECS",
+      "url": "https://www.sec.gov/submit-filings/technical-specifications",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "response_sha256": "sha256:babba3c2131e1546d2915fce1005c36be8a6899ef4eb0e3bcc9be320171e4f5b",
+      "checks": {
+        "Schedule 13D & 13G": false,
+        "Version 2.3": true,
+        "Ownership (Forms 3, 4, 5)": false,
+        "Version 5.5": true
+      },
+      "status": "SCHEMA_MISMATCH"
+    },
+    {
+      "id": "SEC_13F_FAQ",
+      "url": "https://www.sec.gov/rules-regulations/staff-guidance/division-investment-management-frequently-asked-questions/frequently-asked-questions-about-form-13f",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "response_sha256": "sha256:9dbf7cf2880b86c37083977b5933a8274f1d1f693d82bf7a2669fde646b79873",
+      "checks": {
+        "$100 million": false,
+        "45 days": true,
+        "2026-2028": true
+      },
+      "status": "SCHEMA_MISMATCH"
+    },
+    {
+      "id": "SEC_TICKER_MAPPING",
+      "url": "https://www.sec.gov/files/company_tickers.json",
+      "http_status": 200,
+      "content_type": "application/json",
+      "response_sha256": "sha256:a1d4b030a746f83f68852c2d081aad7e9468529d9e5b1eda9c93489e967ed405",
+      "checks": {
+        "0.ticker": true,
+        "0.cik_str": true
+      },
+      "status": "VERIFIABLE"
+    },
+    {
+      "id": "SEC_13F_REAL_FILING",
+      "url": "https://www.sec.gov/Archives/edgar/data/1418814/000141881426000003/0001418814-26-000003-index.htm",
+      "http_status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "sha256:ca06808f963eba8b5f545905efdfcec45006bb7a2625190e1369c60eb03a2781",
+      "checks": {
+        "Form 13F-HR": true,
+        "INFORMATION TABLE": true,
+        "Accepted": true
+      },
+      "status": "VERIFIABLE"
+    },
+    {
+      "id": "SEC_NPORT_REAL_FILING",
+      "url": "https://www.sec.gov/Archives/edgar/data/736913/000141036826084698/0001410368-26-084698-index.html",
+      "http_status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "sha256:c130e9afde364ea133af1d7afa70bcb1af5072cc9a06b4e9adca09a3a7d04ec2",
+      "checks": {
+        "Form NPORT-P": true,
+        "Accepted": true,
+        "Monthly Portfolio Investments Report": true
+      },
+      "status": "VERIFIABLE"
+    },
+    {
+      "id": "SEC_INSIDER_REAL_FILING",
+      "url": "https://www.sec.gov/Archives/edgar/data/736913/000141036826084698/0001410368-26-084698-index.html",
+      "http_status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "sha256:c130e9afde364ea133af1d7afa70bcb1af5072cc9a06b4e9adca09a3a7d04ec2",
+      "checks": {
+        "Accepted": true,
+        "Documents": true
+      },
+      "status": "VERIFIABLE"
+    }
+  ],
+  "summary": {
+    "verifiable_probes": 7,
+    "schema_mismatch_probes": 2,
+    "blocked_probes": 0
+  },
+  "candidate_findings": [
+    {
+      "id": "Q109:N1",
+      "status": "ARCHIVE_BOUNDARY_VERIFIED_NOT_YET_SECURITY_COMPLETE",
+      "source_basis": [
+        "SEC_NPORT_DATASETS",
+        "SEC_XBRL"
+      ],
+      "historical_boundary": "2019-10",
+      "performance_authorized": false
+    },
+    {
+      "id": "Q109:N2",
+      "status": "ARCHIVE_BOUNDARY_VERIFIED_NOT_YET_SECURITY_COMPLETE",
+      "source_basis": [
+        "SEC_NPORT_DATASETS",
+        "SEC_10K_Q"
+      ],
+      "historical_boundary": "2019-10",
+      "performance_authorized": false
+    },
+    {
+      "id": "Q109:C32",
+      "status": "FILING_TEXT_SOURCE_VERIFIED",
+      "source_basis": [
+        "SEC_10K",
+        "SEC_SUBMISSIONS"
+      ],
+      "historical_boundary": "subject to issuer/form archive coverage",
+      "performance_authorized": false
+    },
+    {
+      "id": "Q109:C33",
+      "status": "DUAL_SOURCE_BOUNDARY",
+      "source_basis": [
+        "SEC_10K_Q",
+        "SEC_NPORT_DATASETS"
+      ],
+      "historical_boundary": "2019-10 for N-PORT leg unless separately reconstructed",
+      "performance_authorized": false
+    },
+    {
+      "id": "Q109:I23",
+      "status": "INSIDER_ARCHIVE_VERIFIED",
+      "source_basis": [
+        "SEC_INSIDER_DATASETS"
+      ],
+      "historical_boundary": "2006-01",
+      "performance_authorized": false
+    },
+    {
+      "id": "Q109:I24",
+      "status": "EDGAR_PIT_SOURCE_VERIFIED",
+      "source_basis": [
+        "SEC_13D_13G_TECHNICAL_SPECS",
+        "SEC_SUBMISSIONS"
+      ],
+      "historical_boundary": "issuer/form coverage dependent",
+      "performance_authorized": false
+    }
+  ],
+  "governance": {
+    "performance_evaluation": false,
+    "holdout_selection": false,
+    "candidate_selection": false,
+    "candidate_ranking": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "performance_authorization": false,
+    "automatic_promotion": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "receipt_fingerprint": "e7591e5b8bacfa8bf8c6ca432751217502e99c94c807827b40d231b67178e93b"
+}
