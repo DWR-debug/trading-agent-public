@@ -414,7 +414,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T10:20:17.182160+00:00",
+  "generated_at_utc": "2026-10-01T10:20:42.296717+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -609,6 +609,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: wire Q105 historical PIT feasibility into frontier lane",
+        "sha": "dba065bbab5923957262e27f845011183057c8af",
+        "timestamp": "2026-10-01T12:20:40+02:00"
+      },
+      {
+        "message": "TEST: cover Q105 PIT mutation invariants",
+        "sha": "3e4ab01eb34eb388ddb7080c79129fef1ecb3ac3",
+        "timestamp": "2026-10-01T12:20:33+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q105 historical PIT feasibility gate",
+        "sha": "94dd9b67d0b31cf4004d246ef090b4fe24cc03e4",
+        "timestamp": "2026-10-01T12:20:29+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "7c8dcf198e198412862eccc2431c90330e7acf91",
+        "timestamp": "2026-10-01T10:20:17Z"
+      },
+      {
         "message": "RESEARCH: preregister Q105 Q104 historical PIT gate",
         "sha": "337f55795dcbf571990238ba3609efa14b5c5fa2",
         "timestamp": "2026-10-01T12:20:03+02:00"
@@ -627,26 +647,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "5649311bf8730f2425252e11c7e90383b0ce8654",
         "timestamp": "2026-10-01T10:18:05Z"
-      },
-      {
-        "message": "FIX: multiline Q104 frontier pytest command safely",
-        "sha": "d4a644b8d77141ff17d1937f193f560895e09a0b",
-        "timestamp": "2026-10-01T12:17:51+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9bf6abf979b1faf2835fe89d014259415b7ea128",
-        "timestamp": "2026-10-01T10:17:08Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9899aca43e3d08ba7497efd116d50d824b6937fb",
-        "timestamp": "2026-10-01T10:16:47Z"
-      },
-      {
-        "message": "OPS: trigger Q104 full current-master feasibility cycle",
-        "sha": "d500fec405d772605d825f469dd2cbb6cc1b6fa4",
-        "timestamp": "2026-10-01T12:16:45+02:00"
       }
     ]
   },
@@ -716,12 +716,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "337f55795dcbf571990238ba3609efa14b5c5fa2",
+  "source_master_sha": "dba065bbab5923957262e27f845011183057c8af",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36848475195"
+    "run_id": "36848524162"
   }
 }
