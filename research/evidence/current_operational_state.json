@@ -562,7 +562,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T16:16:01.541996+00:00",
+  "generated_at_utc": "2026-10-01T16:21:01.325634+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -754,8 +754,32 @@
     ],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "research/q104-i22-session-window-fix-2026-10-01",
+        "number": 760,
+        "title": "Q104:I22: correct fixed session-window semantics",
+        "updatedAt": "2026-10-01T16:19:51Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/760"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "Q119: add Treasury auction demand-shape design contract (#762)",
+        "sha": "9981520423e357419453ae1afaaae4d1737fae1e",
+        "timestamp": "2026-10-01T18:20:47+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "eded985c62a76518b83b307db54a42d4af1dee8a",
+        "timestamp": "2026-10-01T16:19:02Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3b4e119789a4b45100d7b09221627b4b9b9b2f8c",
+        "timestamp": "2026-10-01T16:16:01Z"
+      },
       {
         "message": "H06/QA: harden fail-closed gates and correct residual design (#759)",
         "sha": "f972ed682241bcceaa3fe2a4a34b656153f189b5",
@@ -780,21 +804,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "7ac0e7d94e07b7d2fad920fb303d64da168f518d",
         "timestamp": "2026-10-01T15:43:46Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "1e699d70d9cb9312abf1143dee25c54ae69b7585",
-        "timestamp": "2026-10-01T15:30:32Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "1ef52f1439800617760bdec4ed29694c426dfca0",
-        "timestamp": "2026-10-01T15:21:25Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "cb12692b0a0c0c859561a30edb2134b733fadb03",
-        "timestamp": "2026-10-01T15:10:49Z"
       }
     ]
   },
@@ -864,12 +873,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f972ed682241bcceaa3fe2a4a34b656153f189b5",
+  "source_master_sha": "9981520423e357419453ae1afaaae4d1737fae1e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36890663714"
+    "run_id": "36891293795"
   }
 }
