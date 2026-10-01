@@ -1,4 +1,4 @@
-"""Durable reconciliation for the one-shot H06-P2 performance trial."""
+"""Durable reconciliation for the H06-P2-R1 corrective one-shot performance trial."""
 from __future__ import annotations
 import argparse, json
 from datetime import datetime, timezone
@@ -7,7 +7,7 @@ from pathlib import Path
 TRIAL_ID="T-2026-10-01-H06P2R1-PERFORMANCE-01"
 RESULT=Path("research/evidence/h06_p2_r1_performance_result.json")
 PREREG=Path("research/preregistrations/h06_p2_r1_performance_2026_10_01.json")
-AUTH=Path("research/authorizations/h06_p2_performance_2026_10_01.json")
+AUTH=Path("research/authorizations/h06_p2_r1_performance_2026_10_01.json")
 REGISTRY=Path("research/governance/active_research_registry.json")
 LEDGER=Path("research/evidence/trial_ledger.json")
 RETIRED=Path("research/governance/retired_authorizations.json")
