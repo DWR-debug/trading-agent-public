@@ -49,6 +49,8 @@ def test_target_weights_have_fixed_gross_and_zero_net():
 
 
 def test_signal_is_invariant_to_future_price_mutation():
+    from automation.h06_p2_signal import build_arms
+
     closes = {
         symbol: [
             100.0 + index + symbol_index * 0.01
@@ -56,16 +58,7 @@ def test_signal_is_invariant_to_future_price_mutation():
         ]
         for symbol_index, symbol in enumerate(SYMBOLS)
     }
-    before = {
-        symbol: values.copy()
-        for symbol, values in closes.items()
-    }
-    # Decision at index 300 only uses t-252 and t-21; mutate a future bar.
+    before = build_arms(closes, 300)
     closes["TXN"][301] += 10000.0
-    assert rank_global({
-        symbol: closes[symbol][279] / closes[symbol][48] - 1.0
-        for symbol in SYMBOLS
-    }) == rank_global({
-        symbol: before[symbol][279] / before[symbol][48] - 1.0
-        for symbol in SYMBOLS
-    })
+    after = build_arms(closes, 300)
+    assert after == before
