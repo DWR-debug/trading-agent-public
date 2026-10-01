@@ -1,7 +1,7 @@
 """Q116 real two-quarter SEC 13F transition population feasibility."""
 from __future__ import annotations
 import argparse,csv,hashlib,io,json,urllib.request,zipfile
-from datetime import date,timedelta
+from datetime import date,datetime,timedelta
 from pathlib import Path
 from typing import Any
 import exchange_calendars as xcals
@@ -32,6 +32,13 @@ def norm_issuer(v:str)->str:
 def find_target(v:str)->str|None:
     n=norm_issuer(v)
     return next((s for s,a in ALIASES.items() if n in a),None)
+
+def parse_sec_date(value:str)->date:
+    text=str(value).strip()
+    for fmt in ("%Y-%m-%d","%d-%b-%Y","%d-%B-%Y","%m/%d/%Y"):
+        try:return datetime.strptime(text,fmt).date()
+        except ValueError:continue
+    raise ValueError("Q116_INVALID_SEC_DATE:"+text)
 
 def first_xnys_after(value:date)->str:
     key=value.isoformat()
@@ -82,7 +89,7 @@ def scan(archive:bytes,dataset_label:str)->dict[str,Any]:
           "reported_value":num(row,("VALUE","REPORTEDVALUE")),"submission_type":str(sub["SUBMISSIONTYPE"]),
           "dataset":dataset_label,
         }
-        rec["eligible_session"]=first_xnys_after(date.fromisoformat(rec["filing_date"]))
+        rec["eligible_session"]=first_xnys_after(parse_sec_date(rec["filing_date"]))
         records.append(rec)
         o=out[sym];o["rows"]+=1;o["managers"].add(rec["manager_cik"]);o["securities"].add(key);o["filings"].add(rec["accession"]);o["periods"].add(rec["period_of_report"])
     for o in out.values():
@@ -92,7 +99,7 @@ def scan(archive:bytes,dataset_label:str)->dict[str,Any]:
 def latest_as_of(records:list[dict[str,Any]],as_of:date)->dict[tuple[str,str,str,str],dict[str,Any]]:
     chosen={}
     for r in records:
-        filing=date.fromisoformat(r["filing_date"])
+        filing=parse_sec_date(r["filing_date"])
         if filing>as_of:continue
         key=(r["manager_cik"],r["period_of_report"],r["security_key"],r["symbol"])
         old=chosen.get(key)
