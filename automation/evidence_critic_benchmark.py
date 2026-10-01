@@ -17,6 +17,7 @@ import urllib.request
 from pathlib import Path
 
 LABELS = ("SUPPORTED", "REFUTED", "INSUFFICIENT")
+SUBSTANTIVE = LABELS
 CRITERIA = {
     "SUPPORTED": "The supplied evidence establishes the claim.",
     "REFUTED": "The supplied evidence contradicts the claim.",
