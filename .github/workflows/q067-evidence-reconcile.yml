@@ -1,10 +1,8 @@
 name: Q067 Autonomous Evidence Reconciliation
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - "research/evidence/q067_performance_result.json"
+  # Historical/completed execution path: manual dispatch only. Automatic re-triggering is retired.
+  workflow_dispatch:
 
 permissions:
   contents: write

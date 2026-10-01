@@ -1,13 +1,8 @@
 name: Q081-R4 Fixed-Rule Performance Once
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - "research/run_requests/q081r4_performance_once.trigger"
+  # Historical/completed execution path: manual dispatch only. Automatic re-triggering is retired.
   workflow_dispatch:
-  issue_comment:
-    types: [created]
 
 permissions:
   contents: write

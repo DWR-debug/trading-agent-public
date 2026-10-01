@@ -1,10 +1,7 @@
 name: C29 One-Shot Performance Evaluation
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - "research/run_requests/c29_performance_once.trigger"
+  # Historical/completed execution path: manual dispatch only. Automatic re-triggering is retired.
   workflow_dispatch:
 
 permissions:

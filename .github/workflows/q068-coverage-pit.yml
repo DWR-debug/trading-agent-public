@@ -2,12 +2,7 @@ name: Q068 Coverage and PIT
 # OPS: retrigger after Windows evidence publisher SHA-capture hardening
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - "research/preregistrations/q068_fixed_mechanism_freeze_2026_09_28.json"
-      - ".github/workflows/q068-coverage-pit.yml"
-      - "automation/github_contents_publish.py"
+  # Historical/completed execution path: manual dispatch only. Automatic re-triggering is retired.
   workflow_dispatch:
 
 permissions:

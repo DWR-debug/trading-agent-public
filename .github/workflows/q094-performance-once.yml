@@ -1,10 +1,7 @@
 name: Q094 Monthly Rebalance Performance Once
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - "research/run_requests/q094_performance_once.trigger"
+  # Historical/completed execution path: manual dispatch only. Automatic re-triggering is retired.
   workflow_dispatch:
 
 permissions:
