@@ -47,15 +47,7 @@ jobs:
         run: python -m automation.q117_treasury_demand_population
       - name: Validate receipt
         if: matrix.runner == 'ubuntu-24.04'
-        run: python - <<'PY'
-          import json
-          from pathlib import Path
-          r=json.loads(Path('research/runs/q117_treasury_demand_population/result.json').read_text())
-          assert r['validation']['raw_events'] > 0
-          assert sum(r['validation']['state_counts'].values()) == r['validation']['compiled_events']
-          assert r['governance']['performance_authorized'] is False
-          print('Q117 RECEIPT CONTRACT OK')
-          PY
+        run: python -c "import json; from pathlib import Path; r=json.loads(Path('research/runs/q117_treasury_demand_population/result.json').read_text()); assert r['validation']['raw_events'] > 0; assert sum(r['validation']['state_counts'].values()) == r['validation']['compiled_events']; assert r['governance']['performance_authorized'] is False; print('Q117 RECEIPT CONTRACT OK')"
       - name: Publish immutable receipt
         if: matrix.runner == 'ubuntu-24.04'
         env:
