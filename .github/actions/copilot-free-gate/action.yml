@@ -57,7 +57,7 @@ runs:
         state["reserved_sessions"] = used + 1
         state["reservation_policy"] = {
             "max_reserved_sessions_per_month": 4,
-            "max_ai_credits_per_session": 12,
+            "max_ai_credits_per_session": 30,
             "max_parallel_copilot_workers": 1,
             "paid_fallback_allowed": False,
             "overages_allowed": False,
@@ -79,7 +79,7 @@ runs:
                 args += ["-f", f"sha={current_sha}"]
             try:
                 subprocess.check_output(args, text=True, stderr=subprocess.STDOUT, env={**os.environ, "GH_TOKEN": token})
-                print(f"COPILOT_FREE_GATE=RESERVED session={state['reserved_sessions']}/{limit} credits_cap=12")
+                print(f"COPILOT_FREE_GATE=RESERVED session={state['reserved_sessions']}/{limit} credits_cap=30")
                 break
             except subprocess.CalledProcessError as exc:
                 if attempt == 5:
@@ -98,5 +98,5 @@ runs:
                 except subprocess.CalledProcessError:
                     pass
         with open(os.environ["GITHUB_STEP_SUMMARY"], "w", encoding="utf-8") as fh:
-            fh.write(f"Copilot Free reservation: {state['reserved_sessions']}/{limit}; max 12 AI credits; paid fallback disabled.\n")
+            fh.write(f"Copilot Free reservation: {state['reserved_sessions']}/{limit}; max 30 AI credits; paid fallback disabled.\n")
         PY
