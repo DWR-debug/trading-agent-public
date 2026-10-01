@@ -7,7 +7,7 @@ from typing import Any
 import exchange_calendars as xcals
 import pandas as pd
 from automation.q111_security_identity_contract import canonical_security_key, normalize_text
-from automation.q114_13f_manager_transitions import transition
+from automation.q114_13f_manager_transitions import Position, transition
 
 DATASETS={
  "prior":"https://www.sec.gov/files/structureddata/data/form-13f-data-sets/01mar2026-31may2026_form13f.zip",
@@ -109,11 +109,17 @@ def build_transitions(prior:list[dict[str,Any]],current:list[dict[str,Any]],as_o
     for key,cur in current_by.items():
         prev=prior_by.get(key)
         def pos(r):
-            return {"manager_cik":r["manager_cik"],"accession":r["accession"],
-                    "acceptance_datetime":r["filing_date"]+"T23:59:59+00:00",
-                    "period_of_report":r["period_of_report"],"name_of_issuer":"SPGI",
-                    "title_of_class":"Common Stock","cusip":r["security_key"].split(":",1)[1] if r["security_key"].startswith("CUSIP:") else None,
-                    "shares":r["shares"],"reported_value":r["reported_value"]}
+            return Position(
+                manager_cik=r["manager_cik"],
+                accession=r["accession"],
+                acceptance_datetime=__import__("datetime").datetime.fromisoformat(
+                    r["filing_date"]+"T23:59:59+00:00"
+                ),
+                period_of_report=r["period_of_report"],
+                security_key=r["security_key"],
+                shares=__import__("decimal").Decimal(r["shares"]),
+                reported_value=__import__("decimal").Decimal(r["reported_value"]),
+            )
         state=transition(pos(prev) if prev else None,pos(cur))["state"]
         out[cur["symbol"]][state]+=1
         if prev is not None:paired+=1
