@@ -1,14 +1,7 @@
 name: Q070 Coverage and PIT
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - "research/preregistrations/q070_fixed_candidate_validation_2026_09_28.json"
-      - "automation/q069_candidate_bank.py"
-      - "automation/q070_fresh_coverage.py"
-      - "automation/q070_pit.py"
-      - ".github/workflows/q070-coverage-pit.yml"
+  # Historical/completed execution path: manual dispatch only. Automatic re-triggering is retired.
   workflow_dispatch:
 
 permissions:
