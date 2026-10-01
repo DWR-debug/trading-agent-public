@@ -456,12 +456,13 @@
         "trial_id": "T-2026-09-30-C29-PERFORMANCE-01"
       },
       {
+        "authorization_id": "AUTH-H06P2-2026-10-01-01",
         "class": "fresh_validation",
         "code": "H06-P2",
         "issue_number": null,
-        "performance_authorization_allowed": false,
+        "performance_authorization_allowed": true,
         "preregistration_path": "research/preregistrations/h06_p2_performance_2026_10_01.json",
-        "state": "DESIGN_ONLY_ACTIVE",
+        "state": "PERFORMANCE_AUTHORIZED",
         "trial_id": "T-2026-10-01-H06P2-PERFORMANCE-01"
       }
     ],
@@ -590,7 +591,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T18:14:35.489034+00:00",
+  "generated_at_utc": "2026-10-01T18:39:35.362381+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -778,44 +779,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "FIX: allow H06-P2 dual registry representation",
-        "sha": "6b81893b25f73f286db78ac3de00cd0b5426f9a5",
-        "timestamp": "2026-10-01T20:14:21+02:00"
+        "message": "OPS: trigger authorized H06-P2 performance one-shot",
+        "sha": "b26c5994e6ba728700de1d25b813630913086812",
+        "timestamp": "2026-10-01T20:39:19+02:00"
       },
       {
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "9fa4d30219179a912aa54d009054d6e436a8b157",
-        "timestamp": "2026-10-01T18:11:35Z"
+        "sha": "201e1dd45d78a970aa5bb6c9152c651b2cc7f997",
+        "timestamp": "2026-10-01T18:34:23Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c992468e3251f786a5b3c5e3f5fe392d79df709c",
-        "timestamp": "2026-10-01T18:10:03Z"
+        "message": "OPS: record Gemini worker state",
+        "sha": "f81ba92ce394b07c4f1236d0fed5fa093759015b",
+        "timestamp": "2026-10-01T18:22:50Z"
       },
       {
-        "message": "FIX: correct H06-P2 authorization registry guard",
-        "sha": "a2fe2660593722fcfcf04fa93017916a8c0e4654",
-        "timestamp": "2026-10-01T20:09:49+02:00"
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "e08845e3951dccb21699dbfb29dd2583fa63ae06",
+        "timestamp": "2026-10-01T18:21:01Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "950f9f75b6320496f0030017201bb7e0880b7705",
-        "timestamp": "2026-10-01T18:06:15Z"
+        "message": "OPS: record AI worker state",
+        "sha": "7df070ff690cb70a0b38a801fe5d93ff3af6d88e",
+        "timestamp": "2026-10-01T18:20:26Z"
       },
       {
-        "message": "GOV: register H06-P2 performance trial identity",
-        "sha": "714c16e4773882d799dfa1370623ca27e918a8e7",
-        "timestamp": "2026-10-01T20:05:59+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "1f2aa2c9ba28bfc42cba0f883035a5e565c81944",
+        "timestamp": "2026-10-01T18:19:45Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2d11cf45bfedd6e15d1ca5460618d1b13fe51d95",
-        "timestamp": "2026-10-01T18:05:30Z"
+        "message": "OPS: record AI worker state",
+        "sha": "34567d5926471f6e7547763dee95d3f3ccb57c25",
+        "timestamp": "2026-10-01T18:19:44Z"
       },
       {
-        "message": "FIX: migrate H06-P2 design family into performance trial authorization",
-        "sha": "32de198005ba994f639d66261fc8b0d80bd82e0c",
-        "timestamp": "2026-10-01T20:05:15+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "66e5da4ccec1bb2ec6e4e20786b277588dcfec60",
+        "timestamp": "2026-10-01T18:19:25Z"
       }
     ]
   },
@@ -885,12 +886,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "6b81893b25f73f286db78ac3de00cd0b5426f9a5",
+  "source_master_sha": "b26c5994e6ba728700de1d25b813630913086812",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36905345457"
+    "run_id": "36908441892"
   }
 }
