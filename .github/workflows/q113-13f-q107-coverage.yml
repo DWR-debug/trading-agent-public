@@ -44,3 +44,42 @@ jobs:
       - name: Fixed SEC archive scan
         if: matrix.runner == 'ubuntu-24.04'
         run: python -m automation.q113_13f_q107_coverage
+
+      - name: Validate Q113 receipt
+        if: matrix.runner == 'ubuntu-24.04'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('research/runs/q113_13f_q107_coverage/result.json')
+          r=json.loads(p.read_text(encoding='utf-8'))
+          assert r['status'] == '13F_COVERAGE_FEASIBILITY_ONLY'
+          assert all(v['coverage_status'] == 'FOUND' for v in r['coverage'].values())
+          assert all(v['matched_rows'] > 0 and len(v['manager_ciks']) > 0 and len(v['cusips']) > 0 for v in r['coverage'].values())
+          assert r['governance']['performance_authorized'] is False
+          assert r['safety'] == {'paper_only': True, 'live_trading_enabled': False, 'orders_enabled': False, 'automatic_promotion': False}
+          print('Q113 RECEIPT CONTRACT OK')
+          PY
+
+      - name: Publish immutable Q113 receipt
+        if: matrix.runner == 'ubuntu-24.04'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          BASE_SHA="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
+          test -n "$BASE_SHA"
+          python automation/github_contents_publish.py
+            --repository "$GITHUB_REPOSITORY"
+            --branch master
+            --base-sha "$BASE_SHA"
+            --file "research/evidence/q113_13f_q107_coverage_result.json=research/runs/q113_13f_q107_coverage/result.json"
+
+      - name: Upload Q113 evidence pack
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q113-13f-q107-coverage-${{ matrix.runner }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q113_13f_q107_coverage/
+          if-no-files-found: warn
+          retention-days: 30
