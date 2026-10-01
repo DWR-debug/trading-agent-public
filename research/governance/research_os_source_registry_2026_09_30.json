@@ -295,6 +295,22 @@
         "synthetic_or_public_data_probes"
       ],
       "source_url": "https://huggingface.co/datasets?other=market-data"
+    },
+    {
+      "id": "SRC-CFTC-TFF",
+      "class": "official_regulatory_public_weekly",
+      "provider": "U.S. CFTC",
+      "access": "public_no_api_key",
+      "capability": "Traders_in_Financial_Futures_positions_and_open_interest",
+      "time_semantics": "report_date_is_prior_Tuesday_close; public_release_date_must_be_recovered",
+      "pit_fit": "high_after_exact_release_date_and_exception_schedule_capture",
+      "history": "broad_historical_archive",
+      "candidate_uses": [
+        "institutional_positioning_state",
+        "allocator_regime",
+        "cross_asset_positioning"
+      ],
+      "source_url": "https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm"
     }
   ],
   "agent_runtime_lattice": [
