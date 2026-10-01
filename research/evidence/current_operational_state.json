@@ -522,7 +522,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T11:26:11.036201+00:00",
+  "generated_at_utc": "2026-10-01T11:27:16.280291+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -717,6 +717,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "Register Q116 two-quarter 13F transition population",
+        "sha": "3c25aef135b4531747365735b6cb5f03fbcce559",
+        "timestamp": "2026-10-01T13:27:06+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "be3bcd3915b9b2100ab2d7a44752c0ce8d23ad92",
+        "timestamp": "2026-10-01T11:26:11Z"
+      },
+      {
         "message": "Test Q114 amendment-aware PIT snapshots",
         "sha": "6289658ee378424202a9bdf0944e3a6b054ebb10",
         "timestamp": "2026-10-01T13:26:00+02:00"
@@ -745,16 +755,6 @@
         "message": "Register Q114-Q115 deterministic research compilers",
         "sha": "bb1b0eb0fffd38834090e1602b0fa5c8676723e1",
         "timestamp": "2026-10-01T13:25:00+02:00"
-      },
-      {
-        "message": "Allow Q114-Q115 research workflows in integrity gate",
-        "sha": "1dff1f8c25ff98dc298b581fc4b4c0d63eea970d",
-        "timestamp": "2026-10-01T13:24:55+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e9e7af3aba187bec87dc7412b340a7210929418e",
-        "timestamp": "2026-10-01T11:24:49Z"
       }
     ]
   },
@@ -824,12 +824,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "6289658ee378424202a9bdf0944e3a6b054ebb10",
+  "source_master_sha": "3c25aef135b4531747365735b6cb5f03fbcce559",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36855331551"
+    "run_id": "36855445729"
   }
 }
