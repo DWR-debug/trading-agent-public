@@ -273,6 +273,8 @@ def main() -> int:
     print("Q112_SCHEMA_MISMATCH:", summary["schema_mismatch_sources"])
     print("Q112_BLOCKED:", summary["blocked_sources"])
     print("Q112_SYNTHETIC_ALL_PASS:", all(synthetic.values()))
+    for entry in live:
+        print("Q112_SOURCE:", entry["source"], entry["status"], entry.get("error", ""), entry.get("extracted", {}).get("canonical_security_key", ""))
     print("Q112_FINGERPRINT:", result["receipt_fingerprint"])
     return 0 if all(synthetic.values()) and summary["blocked_sources"] == 0 and summary["schema_mismatch_sources"] == 0 else 2
 
