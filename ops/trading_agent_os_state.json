@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "state_type": "TRADING_AGENT_OS_ORCHESTRATION_SNAPSHOT",
+  "effective_date_utc": "2026-10-01",
+  "source_master_sha": "c9c4ccd23ab16fdbe29ccc97b834abc0c08d4f27",
+  "purpose": "Persistent orchestration contract for chat-independent Trading Agent research and engineering.",
+  "chat_trigger": "trading agent",
+  "canonical_chat_entrypoint": "docs/TRADING_AGENT_CHAT_ENTRYPOINT.md",
+  "canonical_orchestration_doc": "docs/TRADING_AGENT_OS_ORCHESTRATION.md",
+  "canonical_live_status": "research/evidence/current_operational_state.json",
+  "source_hierarchy": {
+    "technical_truth": "public master",
+    "current_operational_truth": "research/evidence/current_operational_state.json + docs/CURRENT_STATUS.md",
+    "scientific_evidence": "research/evidence/trial_ledger.json + preregistrations + immutable receipts/artifacts",
+    "project_intent": "docs/PROJECT_CONTEXT.md"
+  },
+  "permanent_safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false,
+    "paid_usage_usd": 0
+  },
+  "orchestration_policy": {
+    "principle": "available + independent + permitted + useful => execute",
+    "avoid_duplicate_running_work": true,
+    "no_artificial_quota_consumption": true,
+    "scientific_decision_authority": "orchestrator + formal governance, never delegated AI",
+    "worker_role": "bounded engineering/QA/reproduction/review only",
+    "evidence_rule": "AI/agent outputs are never scientific evidence or authorization by themselves",
+    "performance_rule": "no performance, holdout, candidate selection or promotion without explicit formal governance"
+  },
+  "autonomous_lanes": {
+    "permanent_self_hosted_research": {
+      "workflow": ".github/workflows/permanent-pc-research-loop.yml",
+      "schedule_utc": "*/30 * * * *",
+      "runner_label": "trading-agent-research",
+      "parallel_lanes": 2,
+      "purpose": [
+        "autonomous_frontier_qa",
+        "local_reproduction"
+      ],
+      "night_mode": "continuous; no chat required",
+      "formal_evidence_allowed": false
+    },
+    "hosted_research_failover": {
+      "workflow": ".github/workflows/hosted-research-failover.yml",
+      "schedule_utc": "*/30 * * * *",
+      "purpose": "fallback only when self-hosted heartbeat is stale",
+      "formal_evidence_allowed": false
+    },
+    "unified_research_orchestrator": {
+      "workflow": ".github/workflows/research-orchestrator.yml",
+      "schedule_utc": "30 3 * * *",
+      "default_nightly_mode": "observe + bounded preflight",
+      "purpose": "daily deterministic research observation/preflight",
+      "performance_authorized_by_schedule": false
+    },
+    "free_ai_worker_fabric": {
+      "workflow": ".github/workflows/ai-worker-fabric.yml",
+      "schedule_utc": "0 */6 * * *",
+      "providers": [
+        "openrouter_free",
+        "gemini_cli",
+        "mistral_api"
+      ],
+      "routing": "deterministic six-task rotation",
+      "output_role": "design/review/adversarial input only",
+      "scientific_evidence_allowed": false
+    },
+    "local_ai_worker_rotation": {
+      "workflow": ".github/workflows/permanent-pc-research-loop.yml",
+      "trigger": "scheduled permanent self-hosted loop",
+      "dependency": "real local AI smoke must pass",
+      "provider": "gemini_cli",
+      "quota_behavior": "skip fail-closed when quota/auth is unavailable"
+    },
+    "bounded_agent_queue": {
+      "workflow": ".github/workflows/agent-request-queue.yml",
+      "schedule_utc": "15 */2 * * *",
+      "queue_lanes": 2,
+      "actual_copilot_parallel_sessions": 1,
+      "paid_fallback": false
+    },
+    "self_hosted_capacity": {
+      "workflow": ".github/workflows/self-hosted-capacity-autostart.yml",
+      "schedule_utc": "7 */6 * * *",
+      "runner_label": "trading-agent-research",
+      "probe_slots": 2
+    },
+    "evidence_critic_lab": {
+      "workflow": ".github/workflows/evidence-critic-lab.yml",
+      "activation": "relevant push / explicit dispatch",
+      "runner_label": "trading-agent-research",
+      "corpus_cases": 36,
+      "status_as_of_snapshot": "ECL run 15 queued",
+      "performance": false,
+      "holdout": false,
+      "candidate_selection": false
+    }
+  },
+  "current_research_focus": {
+    "completed": "Q116 two-quarter 13F transition population; Q117 Treasury 10Y demand population",
+    "active_next": "I22 SEC filing-arrival compilation + deterministic XBRL coverage/concept gate for I19/I20",
+    "meta_research": "ECL runtime hardening and first valid model-metrics receipt",
+    "governance_engineering": "AGENT-026-R2 two-slot lease; draft PR 642"
+  },
+  "resource_routing": {
+    "self_hosted_windows": [
+      "LHT-N133732",
+      "LHT-N133732-2"
+    ],
+    "self_hosted_label": "trading-agent-research",
+    "last_verified_snapshot_note": "runner online/busy state is volatile and must be checked live on every new chat",
+    "copilot_free_protection": "max 4 protected sessions/month, max 30 credits/session, no overages",
+    "codespaces": "interactive fallback only; no unattended default",
+    "paid_services": "disabled by project policy"
+  },
+  "chatless_night_policy": {
+    "enabled": true,
+    "primary_path": "permanent self-hosted loop every 30 minutes",
+    "failover_path": "hosted failover every 30 minutes when heartbeat stale",
+    "daily_deepening": "unified orchestrator at 03:30 UTC",
+    "ai_rotation": "free AI fabric every 6 hours when provider entitlement/auth passes",
+    "agent_queue": "every 2 hours, fail-closed and resource-gated",
+    "persistence": "receipts/artifacts/status are written to repository or Actions artifacts; no open chat required"
+  },
+  "new_chat_protocol": [
+    "Read docs/TRADING_AGENT_CHAT_ENTRYPOINT.md.",
+    "Read docs/TRADING_AGENT_OS_ORCHESTRATION.md and the live current status files.",
+    "Check current master, PRs, workflows, runners and AI entitlements live.",
+    "Do not trust stale runner/auth/queue claims from prior chats.",
+    "Continue unfinished safe work without redundant approval.",
+    "Use chat mainly for strategic decisions, scientific interpretation, ambiguity and important developments."
+  ]
+}
