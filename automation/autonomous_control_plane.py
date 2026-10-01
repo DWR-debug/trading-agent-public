@@ -13,7 +13,9 @@ from pathlib import Path
 
 from automation.agent_dispatch import (
     AgentDispatchError,
+    LEASE_SLOT_COUNT,
     extract_task_metadata,
+    normalize_lease_state,
     validate_queued_issue,
     validate_task,
 )
@@ -71,6 +73,14 @@ def validate_request_snapshot(
             "Queue API snapshot does not match the checked-out request inventory."
         )
 
+
+def validate_lease_snapshot(state: dict | None, *, now: float | None = None) -> dict:
+    """Validate and normalize the shared two-slot lease snapshot."""
+    normalized = normalize_lease_state(state, now=now)
+    active = [lease for lease in normalized["slots"] if lease is not None]
+    if len(active) > LEASE_SLOT_COUNT:
+        raise AgentDispatchError("Lease snapshot exceeds the bounded slot count.")
+    return normalized
 
 def _labels(issue: dict) -> set[str]:
     return {
@@ -188,6 +198,7 @@ def plan(
         "schema_version": 1,
         "owner": owner,
         "lanes": list(lanes),
+        "capacity": {"lease_slot_count": LEASE_SLOT_COUNT, "copilot_parallel_session_limit": 1},
         "retire": retire,
         "assign": assign,
     }

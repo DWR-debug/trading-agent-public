@@ -8,6 +8,12 @@ from automation.agent_scope_guard import validate as validate_scope
 from automation.agent_dispatch import (
     AgentDispatchError,
     MAX_CONCURRENT_AGENT_TASKS,
+    acquire_agent_lease,
+    atomic_lease_update,
+    empty_lease_state,
+    normalize_lease_state,
+    release_agent_lease,
+    renew_agent_lease,
     extract_task_metadata,
     load_event,
     main,
@@ -101,6 +107,90 @@ def test_validate_task_rejects_unsafe_flag(field):
             active_agent_count=0,
             labels=["agent-ready"],
         )
+
+
+def test_validate_task_allows_two_bounded_capacity_slots():
+    manifest = validate_task(
+        valid_task(),
+        issue_number=999,
+        current_master_sha="a" * 40,
+        active_agent_count=1,
+        labels=["agent-ready"],
+    )
+    assert manifest["max_concurrent_agent_tasks"] == 2
+    assert manifest["copilot_parallel_session_limit"] == 1
+
+
+def test_validate_task_rejects_third_bounded_capacity_slot():
+    with pytest.raises(AgentDispatchError, match="Concurrency guard"):
+        validate_task(
+            valid_task(), issue_number=999, current_master_sha="a" * 40,
+            active_agent_count=2, labels=["agent-ready"]
+        )
+
+
+def test_two_slot_lease_binds_task_manifest_and_run():
+    state = empty_lease_state()
+    state, slot0, idempotent = acquire_agent_lease(
+        state, task_id="AGENT-A", issue_number=10, manifest_fingerprint="f"*64, run_id="run-1", now=100.0
+    )
+    assert slot0 == 0 and idempotent is False
+    state, slot1, idempotent = acquire_agent_lease(
+        state, task_id="AGENT-B", issue_number=11, manifest_fingerprint="e"*64, run_id="run-2", now=100.0
+    )
+    assert slot1 == 1 and idempotent is False
+    with pytest.raises(AgentDispatchError, match="capacity exhausted"):
+        acquire_agent_lease(
+            state, task_id="AGENT-C", issue_number=12, manifest_fingerprint="d"*64, run_id="run-3", now=100.0
+        )
+
+
+def test_lease_is_idempotent_only_for_exact_same_identity():
+    state, slot, idempotent = acquire_agent_lease(
+        empty_lease_state(), task_id="AGENT-A", issue_number=10, manifest_fingerprint="f"*64, run_id="run-1", now=100.0
+    )
+    same, same_slot, again = acquire_agent_lease(
+        state, task_id="AGENT-A", issue_number=10, manifest_fingerprint="f"*64, run_id="run-1", now=101.0
+    )
+    assert same_slot == slot and again is True and same == state
+    with pytest.raises(AgentDispatchError, match="different manifest fingerprint"):
+        acquire_agent_lease(
+            state, task_id="AGENT-A", issue_number=10, manifest_fingerprint="0"*64, run_id="run-1", now=101.0
+        )
+    with pytest.raises(AgentDispatchError, match="different run_id"):
+        acquire_agent_lease(
+            state, task_id="AGENT-A", issue_number=10, manifest_fingerprint="f"*64, run_id="run-2", now=101.0
+        )
+
+
+def test_stale_lease_is_reclaimed_and_renewal_cannot_revive_it():
+    state, slot, _ = acquire_agent_lease(
+        empty_lease_state(), task_id="AGENT-A", issue_number=10, manifest_fingerprint="f"*64, run_id="run-1", now=100.0, ttl_seconds=10
+    )
+    reclaimed = normalize_lease_state(state, now=110.0)
+    assert reclaimed["slots"][slot] is None
+    with pytest.raises(AgentDispatchError, match="empty or stale"):
+        renew_agent_lease(
+            state, slot=slot, task_id="AGENT-A", issue_number=10, manifest_fingerprint="f"*64, run_id="run-1", now=110.0
+        )
+    reclaimed, new_slot, _ = acquire_agent_lease(
+        reclaimed, task_id="AGENT-B", issue_number=11, manifest_fingerprint="e"*64, run_id="run-2", now=110.0
+    )
+    assert new_slot == slot and reclaimed["slots"][slot]["task_id"] == "AGENT-B"
+
+
+def test_atomic_lease_update_persists_and_recovers_stale_state(tmp_path):
+    path = tmp_path / "lease.json"
+    def acquire(state):
+        return acquire_agent_lease(
+            state, task_id="AGENT-A", issue_number=10, manifest_fingerprint="f"*64, run_id="run-1", now=100.0, ttl_seconds=10
+        )
+    result = atomic_lease_update(path, acquire)
+    assert result[1] == 0
+    loaded = normalize_lease_state(json.loads(path.read_text(encoding="utf-8")), now=100.0)
+    assert loaded["slots"][0]["task_id"] == "AGENT-A"
+    state = normalize_lease_state(json.loads(path.read_text(encoding="utf-8")), now=110.0)
+    assert state["slots"][0] is None
 
 
 def test_validate_task_rejects_two_active_tasks():
