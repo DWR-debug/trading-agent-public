@@ -87,9 +87,9 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json
+          import json, os
           from pathlib import Path
-          p=Path("$RUNNER_TEMP/h06_market/h06_sector_neutral_residual_momentum_repair_coverage.json")
+          p=Path(os.environ["RUNNER_TEMP"]) / "h06_market" / "h06_sector_neutral_residual_momentum_repair_coverage.json"
           m=json.loads(p.read_text(encoding="utf-8"))
           assert m.get("coverage",{}).get("status")=="COVERAGE_READY"
           assert m.get("snapshot_fingerprint")=="e80e63eebbc94a32043dcf9c38aa86d2f7dc88eb7c2a172de24dfd9b269e55c6"
