@@ -581,7 +581,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T18:02:51.491699+00:00",
+  "generated_at_utc": "2026-10-01T18:05:30.787407+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -766,8 +766,27 @@
     "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "repair/2026-10-01-h06-registry-identity",
+        "number": 783,
+        "title": "GOV: register H06-P2 performance trial identity",
+        "updatedAt": "2026-10-01T18:04:01Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/783"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "FIX: migrate H06-P2 design family into performance trial authorization",
+        "sha": "32de198005ba994f639d66261fc8b0d80bd82e0c",
+        "timestamp": "2026-10-01T20:05:15+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "28cdd49b4d081b172cefee8f4d391b2e4b2480e6",
+        "timestamp": "2026-10-01T18:02:51Z"
+      },
       {
         "message": "OPS: synchronize current operational status",
         "sha": "124861c0fd07de54a6e8f41dd79f5082c72ae937",
@@ -797,16 +816,6 @@
         "message": "RESEARCH: enable H06-P2 one-shot performance lane",
         "sha": "c5f3165e3b7f7ad48b3a0a4c71368c686219056a",
         "timestamp": "2026-10-01T19:58:20+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "ce40d34388fa812b6a71ca44184330be448d00fb",
-        "timestamp": "2026-10-01T17:57:54Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "45ea00d4892e357302c27b7f1d225ed108936d4f",
-        "timestamp": "2026-10-01T17:55:17Z"
       }
     ]
   },
@@ -876,12 +885,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "124861c0fd07de54a6e8f41dd79f5082c72ae937",
+  "source_master_sha": "32de198005ba994f639d66261fc8b0d80bd82e0c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36903850307"
+    "run_id": "36904209715"
   }
 }
