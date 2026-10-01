@@ -21,6 +21,8 @@ API = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accoun
 START = "2011-01-01"
 END = "2025-09-24"
 UA = "trading-agent-public/Q119-source-feasibility"
+PAGE_SIZE = 200
+MAX_PAGES = 100
 FIELDS = ",".join(
     [
         "record_date",
@@ -35,28 +37,54 @@ FIELDS = ",".join(
 )
 
 
-def fetch() -> tuple[str, bytes, list[dict]]:
-    params = {
+def fetch() -> tuple[str, bytes, list[dict], int]:
+    base_params = {
         "fields": FIELDS,
         "filter": (
             f"security_type:eq:Note,security_term:eq:10-Year,"
             f"record_date:gte:{START},record_date:lte:{END}"
         ),
         "sort": "auction_date",
-        "page[size]": "2000",
+        "page[size]": PAGE_SIZE,
     }
-    url = API + "?" + urllib.parse.urlencode(params)
-    req = urllib.request.Request(
-        url,
-        headers={"User-Agent": UA, "Accept": "application/json"},
-    )
-    with urllib.request.urlopen(req, timeout=45) as response:
-        body = response.read()
-    payload = json.loads(body.decode("utf-8"))
-    rows = payload.get("data", [])
-    if not isinstance(rows, list) or not rows:
-        raise RuntimeError("Q119_EMPTY_TREASURY_POPULATION")
-    return url, body, rows
+
+    response_bodies: list[bytes] = []
+    all_rows: list[dict] = []
+    first_url = ""
+    page = 1
+
+    while page <= MAX_PAGES:
+        params = dict(base_params)
+        params["page[number]"] = page
+        url = API + "?" + urllib.parse.urlencode(params)
+        if not first_url:
+            first_url = url
+
+        req = urllib.request.Request(
+            url,
+            headers={"User-Agent": UA, "Accept": "application/json"},
+        )
+        with urllib.request.urlopen(req, timeout=45) as response:
+            body = response.read()
+        payload = json.loads(body.decode("utf-8"))
+        rows = payload.get("data", [])
+        if not isinstance(rows, list):
+            raise RuntimeError("Q119_INVALID_TREASURY_PAYLOAD")
+        if not rows:
+            if not all_rows:
+                raise RuntimeError("Q119_EMPTY_TREASURY_POPULATION")
+            break
+
+        response_bodies.append(body)
+        all_rows.extend(rows)
+
+        if len(rows) < PAGE_SIZE:
+            break
+        page += 1
+    else:
+        raise RuntimeError("Q119_MAX_PAGES_EXCEEDED")
+
+    return first_url, b"".join(response_bodies), all_rows, page
 
 
 def validate(rows: list[dict]) -> dict:
@@ -128,7 +156,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    url, body, rows = fetch()
+    url, body, rows, page_count = fetch()
     validation = validate(rows)
     result = {
         "schema_version": 1,
@@ -137,6 +165,8 @@ def main() -> int:
         "source_url": url,
         "source_response_sha256": hashlib.sha256(body).hexdigest(),
         "study_window": {"start": START, "end": END},
+        "source_page_size": PAGE_SIZE,
+        "source_page_count": page_count,
         "validation": validation,
         "governance": {
             "performance": False,

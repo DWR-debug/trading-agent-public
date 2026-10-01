@@ -1,4 +1,8 @@
-from automation.q119_treasury_source_feasibility import validate
+from automation.q119_treasury_source_feasibility import PAGE_SIZE, validate
+
+
+def test_q119_source_page_size_is_bounded():
+    assert PAGE_SIZE == 200
 
 
 def test_q119_source_validator_accepts_fixed_fields_and_pit_order():

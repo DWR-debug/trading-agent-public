@@ -43,10 +43,13 @@ jobs:
 
       - name: Download exact immutable H06 coverage artifact
         if: steps.prior.outputs.already != 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          gh run download 36842998210             --repo "$GITHUB_REPOSITORY"             --name h06-master-coverage-36842998210             --dir "$RUNNER_TEMP/h06_coverage"
+        uses: actions/download-artifact@v6
+        with:
+          name: h06-master-coverage-36842998210
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 36842998210
+          path: ${{ runner.temp }}/h06_coverage
 
       - name: Freeze adjusted-close bundle
         if: steps.prior.outputs.already != 'true'
