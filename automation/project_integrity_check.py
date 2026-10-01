@@ -159,6 +159,8 @@ ACTIVE_WORKFLOWS = {
     "ttaf-feasibility.yml",
     "wide-search.yml",
     "workflow-lint.yml",
+    "evidence-critic-lab.yml",
+    "q104-i22-filing-arrival.yml",
 }
 
 REQUIRED_FILES = (
