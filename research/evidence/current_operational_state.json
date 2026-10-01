@@ -581,7 +581,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T18:02:01.618295+00:00",
+  "generated_at_utc": "2026-10-01T18:02:34.534673+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -766,17 +766,18 @@
     "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "repair/2026-10-01-h06-workflow-escaping",
-        "number": 781,
-        "title": "FIX: repair H06-P2 workflow expression escaping",
-        "updatedAt": "2026-10-01T18:00:21Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/781"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: repair H06-P2 workflow expression escaping",
+        "sha": "f1bdf6b4f1477c7533af1c6df9c8db343c642a03",
+        "timestamp": "2026-10-01T20:02:19+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "022ff93675656f32e326797f5d7c2589a3852db7",
+        "timestamp": "2026-10-01T18:02:01Z"
+      },
       {
         "message": "FIX: repair H06-P2 authorization workflow YAML",
         "sha": "5b31781f14a3158fe89a8258e33190bbb63d834d",
@@ -806,16 +807,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "c06d2b3c2567a1fa52ac8d281399d21662a646c0",
         "timestamp": "2026-10-01T17:49:06Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "796ff3d1638c999da8c9a63c9404f7fe1ffceb9b",
-        "timestamp": "2026-10-01T17:48:44Z"
-      },
-      {
-        "message": "OPS: retrigger and self-trigger H06-P2 freeze",
-        "sha": "beb0a558e6e53199b807c3098463161f2c55496e",
-        "timestamp": "2026-10-01T19:48:33+02:00"
       }
     ]
   },
@@ -885,12 +876,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5b31781f14a3158fe89a8258e33190bbb63d834d",
+  "source_master_sha": "f1bdf6b4f1477c7533af1c6df9c8db343c642a03",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36903782318"
+    "run_id": "36903847770"
   }
 }
