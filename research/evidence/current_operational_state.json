@@ -433,7 +433,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T10:26:35.433521+00:00",
+  "generated_at_utc": "2026-10-01T10:27:42.913841+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -628,6 +628,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: preregister Q107 fresh Q104 equity coverage",
+        "sha": "7193cdf82d9079999ab5743cc6fb872e9958ad44",
+        "timestamp": "2026-10-01T12:27:38+02:00"
+      },
+      {
+        "message": "RESEARCH: add ex ante Q104 fresh equity universe",
+        "sha": "c9531ae442b34eb11f8c860938b349e87d294de3",
+        "timestamp": "2026-10-01T12:27:30+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4279a124c60d3053fe4cdfe3713b56b8d5292a47",
+        "timestamp": "2026-10-01T10:26:35Z"
+      },
+      {
         "message": "EVIDENCE: persist Q106 dual-architecture PIT join receipt",
         "sha": "54b8afce2dbf130dad10a5156c356ad307e0cb1c",
         "timestamp": "2026-10-01T12:26:21+02:00"
@@ -651,21 +666,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "52aee0fac77b904968b8ba4c49155a5b13c88b35",
         "timestamp": "2026-10-01T10:24:07Z"
-      },
-      {
-        "message": "GOV: register Q106 shared PIT join integrity gate",
-        "sha": "5d40ab88f57d269e9db72d2355139fb361506afe",
-        "timestamp": "2026-10-01T12:24:00+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "8ae102d5c3002907f3539900651d401f0e9a6a53",
-        "timestamp": "2026-10-01T10:23:49Z"
-      },
-      {
-        "message": "RESEARCH: wire Q106 PIT join integrity into frontier lane",
-        "sha": "48c5b4a3539a7589f092ed14bb8603e8f1f4e51c",
-        "timestamp": "2026-10-01T12:23:48+02:00"
       }
     ]
   },
@@ -735,12 +735,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "54b8afce2dbf130dad10a5156c356ad307e0cb1c",
+  "source_master_sha": "7193cdf82d9079999ab5743cc6fb872e9958ad44",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36849135868"
+    "run_id": "36849256568"
   }
 }
