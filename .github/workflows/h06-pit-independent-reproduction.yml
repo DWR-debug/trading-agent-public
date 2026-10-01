@@ -44,21 +44,22 @@ jobs:
           endlocal
 
       - name: Download canonical H06 artifact
-        shell: cmd
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          @echo off
-          setlocal
-          set "ARTIFACT_ROOT=%RUNNER_TEMP%\h06-master-coverage-artifact-${{ github.event.workflow_run.id }}"
-          if exist "%ARTIFACT_ROOT%" rmdir /s /q "%ARTIFACT_ROOT%"
-          mkdir "%ARTIFACT_ROOT%" || exit /b 1
-          where gh.exe || exit /b 1
-          gh run download ${{ github.event.workflow_run.id }} --repo "%GITHUB_REPOSITORY%" --name "h06-master-coverage-${{ github.event.workflow_run.id }}" --dir "%ARTIFACT_ROOT%" || exit /b 1
-          if not exist "%ARTIFACT_ROOT%\research\runs\wide_search\h06_sector_neutral_residual_momentum_repair_coverage.json" exit /b 1
-          if not exist "%ARTIFACT_ROOT%\research\runs\wide_search\h06_repair_datasets\snapshot_manifest.json" exit /b 1
-          endlocal
+        uses: actions/download-artifact@v8
+        with:
+          name: h06-master-coverage-${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
+          path: ${{ runner.temp }}/h06-master-coverage-artifact-${{ github.event.workflow_run.id }}
 
+      - name: Verify canonical H06 artifact
+        shell: powershell
+        env:
+          UPSTREAM_RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          $artifactRoot = Join-Path $env:RUNNER_TEMP "h06-master-coverage-artifact-$env:UPSTREAM_RUN_ID"
+          if (-not (Test-Path (Join-Path $artifactRoot "research\runs\wide_search\h06_sector_neutral_residual_momentum_repair_coverage.json"))) { throw "canonical H06 coverage receipt missing" }
+          if (-not (Test-Path (Join-Path $artifactRoot "research\runs\wide_search\h06_repair_datasets\snapshot_manifest.json"))) { throw "canonical H06 snapshot manifest missing" }
       - name: H06 PIT structural tests
         shell: cmd
         run: |
