@@ -108,7 +108,7 @@ scheduled or called. Historical Claude receipts remain for provenance only.
 Project rule:
 - start at 2026-10-01 00:00 UTC
 - maximum four sessions/month
-- maximum 12 AI credits/session
+- maximum 30 AI credits/session
 - one concurrent worker
 - no paid fallback
 
