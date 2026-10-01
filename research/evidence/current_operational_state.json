@@ -562,7 +562,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T14:35:06.739590+00:00",
+  "generated_at_utc": "2026-10-01T15:05:49.106199+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -754,17 +754,38 @@
     ],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "agent/AGENT-026-R2-lease",
-        "number": 642,
-        "title": "AGENT-026-R2: unify bounded agent capacity lease",
-        "updatedAt": "2026-10-01T13:50:35Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/642"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "AGENT-026-R2: unify bounded agent capacity lease (#642)",
+        "sha": "cbd443a8940b2fe5ba001965edce9218a2ca4c48",
+        "timestamp": "2026-10-01T17:05:35+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "2438825a331fcce9391d57543f18dec6534af6db",
+        "timestamp": "2026-10-01T14:59:29Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "951d45252d873b55dc89a6cc5d4186134248b48c",
+        "timestamp": "2026-10-01T14:55:54Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "279a0ce8652ec79191c18a9192290353e0cbad06",
+        "timestamp": "2026-10-01T14:44:40Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "0328b9fbc3d490df8211a58b6e5b396ed63079f8",
+        "timestamp": "2026-10-01T14:35:14Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "84c3b312e40e33a351b535ddfc4819f826ceb2aa",
+        "timestamp": "2026-10-01T14:35:06Z"
+      },
       {
         "message": "OPS: synchronize current operational status",
         "sha": "25bc8f7b1246eb4db38c70ed8f50a920f74ec5dc",
@@ -774,36 +795,6 @@
         "message": "TEST: add Q118 structural composition contract coverage",
         "sha": "70bd9b6ea76a2d0bfd5810cb6465392a6b82f020",
         "timestamp": "2026-10-01T16:34:38+02:00"
-      },
-      {
-        "message": "RESEARCH: implement Q118 structural composition validator",
-        "sha": "3b22fdb4c5c6783d80d4d18512b23cc8718ccd19",
-        "timestamp": "2026-10-01T16:34:34+02:00"
-      },
-      {
-        "message": "RESEARCH: preregister Q118 composition contract",
-        "sha": "2a351f5b11b6152266791d1cdda6c99b815c978a",
-        "timestamp": "2026-10-01T16:34:31+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9057dc2258f41c94bb1a2ee77c4de131a148aecb",
-        "timestamp": "2026-10-01T14:32:33Z"
-      },
-      {
-        "message": "RESEARCH: register Q118 candidate composition design lane",
-        "sha": "9208db0b3843b13f7463f4a115551b4dff3982b8",
-        "timestamp": "2026-10-01T16:32:18+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f9cd3755bbcd39b69f64110d43684b3dbb369a2d",
-        "timestamp": "2026-10-01T14:31:22Z"
-      },
-      {
-        "message": "RESEARCH: define candidate composition contract for future bundles",
-        "sha": "c0bf1d5e204e5f21ff65191044be274939260ba5",
-        "timestamp": "2026-10-01T16:31:09+02:00"
       }
     ]
   },
@@ -873,12 +864,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "25bc8f7b1246eb4db38c70ed8f50a920f74ec5dc",
+  "source_master_sha": "cbd443a8940b2fe5ba001965edce9218a2ca4c48",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36877425505"
+    "run_id": "36881562119"
   }
 }
