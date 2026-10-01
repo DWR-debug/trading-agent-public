@@ -66,18 +66,47 @@ def map_to_issuer(row: dict[str, Any], issuer_map: dict[str, dict[str, Any]]) ->
     }
 
 
+def _normalized_duplicate_projection(row: dict[str, Any]) -> dict[str, Any]:
+    """Normalize textual representations before deciding duplicate equality.
+
+    Case/punctuation differences in issuer/class/ticker/CUSIP must not create
+    false conflicts. Non-text values remain exact so genuine row conflicts
+    still fail closed.
+    """
+    projected: dict[str, Any] = {}
+    for key in sorted(row):
+        value = row[key]
+        if key.lower() == "cusip":
+            projected[key] = normalize_cusip(value)
+        elif key.lower() == "ticker":
+            projected[key] = normalize_ticker(value)
+        elif isinstance(value, str):
+            projected[key] = normalize_text(value)
+        else:
+            projected[key] = value
+    return projected
+
+
 def deduplicate_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     out: dict[str, dict[str, Any]] = {}
+    signatures: dict[str, str] = {}
     for row in rows:
         key = canonical_security_key(row)
         existing = out.get(key)
+        signature = json.dumps(
+            _normalized_duplicate_projection(row),
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=True,
+            allow_nan=False,
+        )
         if existing is None:
             out[key] = dict(row)
+            signatures[key] = signature
             continue
-        # Identical duplicate rows are collapsed. Conflicting rows are not.
-        if json.dumps(existing, sort_keys=True, separators=(",", ":")) != json.dumps(
-            row, sort_keys=True, separators=(",", ":")
-        ):
+        # Semantically identical duplicate rows collapse. Any remaining
+        # normalized-field or value mismatch is a hard identity conflict.
+        if signatures[key] != signature:
             raise ValueError("SECURITY_IDENTITY_CONFLICT:" + key)
     return [out[key] for key in sorted(out)]
 
