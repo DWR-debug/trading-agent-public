@@ -109,7 +109,8 @@ jobs:
             "%VENV_PY%" -m pip install --disable-pip-version-check "%KEV_SRC%[serve]" || exit /b 1
             "%VENV_PY%" -I -c "import torch, kev; print('KEV_RUNTIME_OK', torch.__version__)" || exit /b 1
           )
-          set "ECL_UPSTREAM_REF=${{ matrix.upstream_ref }}"
+          echo ECL_UPSTREAM_REF=${{ matrix.upstream_ref }}>>"%GITHUB_ENV%"
+          echo ECL_PIP_FREEZE=%RUNNER_TEMP%\ecl-${{ matrix.install }}-pip-freeze.txt>>"%GITHUB_ENV%"
           "%VENV_PY%" -m pip freeze > "%RUNNER_TEMP%\ecl-${{ matrix.install }}-pip-freeze.txt" || exit /b 1
           endlocal
       - name: Start local model server
