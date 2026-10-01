@@ -114,7 +114,17 @@
         "parent_code": "111",
         "performance_authorization_allowed": false,
         "preregistration_path": "research/preregistrations/q112_sec_security_identity_2026_10_01.json",
-        "state": "LIVE_SOURCE_FEASIBILITY_ACTIVE"
+        "receipt_fingerprint": "679b99b393038d82fc3800d1d4abb0af01e6ff6c7aaace83748ae31500c86bd1",
+        "state": "LIVE_SOURCE_FEASIBILITY_COMPLETED_DUAL_ARCH"
+      },
+      {
+        "class": "fixed_quarter_13f_manager_security_coverage_on_q107_universe",
+        "code": "113",
+        "issue_number": 748,
+        "parent_code": "112",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q113_13f_q107_coverage_2026_10_01.json",
+        "state": "13F_COVERAGE_FEASIBILITY_ACTIVE"
       }
     ],
     "active_trials": [
@@ -494,7 +504,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T11:14:51.442051+00:00",
+  "generated_at_utc": "2026-10-01T11:15:05.853143+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -689,6 +699,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "Allow Q113 research workflow in integrity gate",
+        "sha": "ff84ff70014f493d3714131a4705f02d75f37cfb",
+        "timestamp": "2026-10-01T13:15:04+02:00"
+      },
+      {
+        "message": "Advance SEC frontier registry through Q113",
+        "sha": "af9aed660d5e40d56ec65c1c07e4a379340b68ea",
+        "timestamp": "2026-10-01T13:14:57+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "7e46e0437c4c0150d509d39d8f88952f8106e2b3",
+        "timestamp": "2026-10-01T11:14:51Z"
+      },
+      {
         "message": "Add Q113 13F Q107 coverage workflow",
         "sha": "7997284e064d4ab83badae029dbb21962640c211",
         "timestamp": "2026-10-01T13:14:49+02:00"
@@ -712,21 +737,6 @@
         "message": "Register Q113 fixed-quarter 13F Q107 coverage feasibility",
         "sha": "b2554f0ad7d064328fac93265eb6bfef690a9241",
         "timestamp": "2026-10-01T13:14:16+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9c077474f6aa7761b971b621d3f521ac7c9d624a",
-        "timestamp": "2026-10-01T11:12:36Z"
-      },
-      {
-        "message": "Allow active Q104-Q112 research workflows in integrity gate",
-        "sha": "9427a1905677165bbe39f8df3bbf56cdcb564901",
-        "timestamp": "2026-10-01T13:12:24+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "50740971bb6be066e8bca998df0386e5e0aa80d7",
-        "timestamp": "2026-10-01T11:10:57Z"
       }
     ]
   },
@@ -796,12 +806,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7997284e064d4ab83badae029dbb21962640c211",
+  "source_master_sha": "ff84ff70014f493d3714131a4705f02d75f37cfb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36854141766"
+    "run_id": "36854162060"
   }
 }
