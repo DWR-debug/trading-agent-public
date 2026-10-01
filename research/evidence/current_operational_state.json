@@ -459,11 +459,33 @@
         "authorization_id": "AUTH-H06P2-2026-10-01-01",
         "class": "fresh_validation",
         "code": "H06-P2",
+        "execution_incident": {
+          "attempt_count": 3,
+          "execution_incident_path": "research/evidence/h06_p2_performance_execution_incident.json",
+          "predecessor_workflow_runs": [
+            36908441865,
+            36908869666,
+            36908998353
+          ],
+          "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME"
+        },
+        "invalidation_reason": "Original one-shot authorization produced no scientific result because three execution-layer defects failed closed; H06-P2-R1 contains only implementation corrections.",
         "issue_number": null,
-        "performance_authorization_allowed": true,
+        "performance_authorization_allowed": false,
         "preregistration_path": "research/preregistrations/h06_p2_performance_2026_10_01.json",
-        "state": "PERFORMANCE_AUTHORIZED",
+        "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
         "trial_id": "T-2026-10-01-H06P2-PERFORMANCE-01"
+      },
+      {
+        "class": "performance_correction",
+        "code": "H06-P2-R1",
+        "issue_number": null,
+        "performance_authorization_allowed": false,
+        "predecessor_execution_incident_path": "research/evidence/h06_p2_performance_execution_incident.json",
+        "predecessor_trial_id": "T-2026-10-01-H06P2-PERFORMANCE-01",
+        "preregistration_path": "research/preregistrations/h06_p2_r1_performance_2026_10_01.json",
+        "state": "DESIGN_ONLY_ACTIVE",
+        "trial_id": "T-2026-10-01-H06P2R1-PERFORMANCE-01"
       }
     ],
     "name": "active_research_registry",
@@ -591,7 +613,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T18:50:29.073481+00:00",
+  "generated_at_utc": "2026-10-01T18:51:05.879661+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -779,6 +801,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOV: retire original H06-P2 authorization",
+        "sha": "1450db02cfd394d8988dca5a516cdb51eb0a9aef",
+        "timestamp": "2026-10-01T20:51:03+02:00"
+      },
+      {
+        "message": "GOV: register H06-P2-R1 and invalidate original H06-P2 execution",
+        "sha": "7b98db57eca1a04e27985456615a6c0059035cb6",
+        "timestamp": "2026-10-01T20:51:00+02:00"
+      },
+      {
+        "message": "FIX: bind H06-P2-R1 performance workflow to corrected runner",
+        "sha": "009c2a6d6882ea783e6152d02c3ae04844cdcfa2",
+        "timestamp": "2026-10-01T20:50:57+02:00"
+      },
+      {
+        "message": "FIX: harden H06-P2-R1 authorization workflow",
+        "sha": "a46e43e9c0c04c9f8e32ef17f38af9b3856cef83",
+        "timestamp": "2026-10-01T20:50:53+02:00"
+      },
+      {
+        "message": "FIX: bind H06-P2-R1 reconciliation to R1 authorization",
+        "sha": "a0c051b16e7ce52a9879983126922ad350f0893a",
+        "timestamp": "2026-10-01T20:50:50+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d0d25634579508862dc879e9c8863181228c2294",
+        "timestamp": "2026-10-01T18:50:29Z"
+      },
+      {
         "message": "FIX: format H06-P2-R1 timestamp normalization",
         "sha": "1b893e32a9e2331b192e31850214087392849f74",
         "timestamp": "2026-10-01T20:50:15+02:00"
@@ -787,36 +839,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "b5d63abaf5343af205ee346cca156588c523af4f",
         "timestamp": "2026-10-01T18:49:49Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "55c14f063401afccb05ac5c4bf38f83d694aa803",
-        "timestamp": "2026-10-01T18:49:31Z"
-      },
-      {
-        "message": "RESEARCH: document H06-P2-R1 correction scope",
-        "sha": "fbcfb5d1b3c8e887f915efa6dc89674b0320ae7d",
-        "timestamp": "2026-10-01T20:49:29+02:00"
-      },
-      {
-        "message": "OPS: add H06-P2-R1 corrective performance lane",
-        "sha": "560fd7ec9fe6fffe7e97664b5dd161a75b662c02",
-        "timestamp": "2026-10-01T20:49:26+02:00"
-      },
-      {
-        "message": "OPS: add H06-P2-R1 one-shot authorization lane",
-        "sha": "ee8f871bc008d6e805c3cd0ec197bf0f894e1eec",
-        "timestamp": "2026-10-01T20:49:24+02:00"
-      },
-      {
-        "message": "RESEARCH: preregister H06-P2-R1 implementation correction",
-        "sha": "ea332cd1436dcf4df2d7edf6dcad47d9648cf3ab",
-        "timestamp": "2026-10-01T20:49:19+02:00"
-      },
-      {
-        "message": "RESEARCH: add H06-P2-R1 ledger reconciliation",
-        "sha": "833559bc5fd41f106584fca1d1c5ae6c1df28130",
-        "timestamp": "2026-10-01T20:49:14+02:00"
       }
     ]
   },
@@ -886,12 +908,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1b893e32a9e2331b192e31850214087392849f74",
+  "source_master_sha": "1450db02cfd394d8988dca5a516cdb51eb0a9aef",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36909816269"
+    "run_id": "36909887253"
   }
 }
