@@ -2,7 +2,9 @@
 
 ## Kanonischer aktueller Betriebsstatus
 
-Vor PROJECT_STATUS.md wird ab jetzt immer gelesen:
+Vor PROJECT_STATUS.md wird jetzt immer auch der dauerhafte Trading Agent OS-Vertrag gelesen:
+- docs/TRADING_AGENT_OS_ORCHESTRATION.md
+- ops/trading_agent_os_state.json
 - docs/CURRENT_STATUS.md
 - research/evidence/current_operational_state.json
 
@@ -64,7 +66,8 @@ hochwertige Hypothesen-/Design-/Review-Arbeit eingesetzt, während deterministis
 Bei jedem neuen `trading agent`-Chat:
 
 1. Dieses Dokument lesen.
-2. `docs/PROJECT_CONTEXT.md` lesen.
+2. `docs/TRADING_AGENT_OS_ORCHESTRATION.md` und `ops/trading_agent_os_state.json` lesen.
+3. `docs/PROJECT_CONTEXT.md` lesen.
 3. `docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md` lesen und Ressourcenrouting prüfen.
 4. `docs/TRADING_AGENT_SUPERVISION_PROTOCOL.md` lesen und Rollen-/Kontrollkette prüfen.
 5. `docs/DEVELOPMENT_ORCHESTRATION.md` lesen, insbesondere das Nicht-Warten-/Parallelisierungsmodell.
@@ -73,13 +76,14 @@ Bei jedem neuen `trading agent`-Chat:
 8. `research/evidence/current_project_checkpoint.json` lesen.
 9. `research/evidence/trial_ledger.json` bzw. die für den aktuellen Task
    relevanten Evidence-Dateien prüfen.
-10. Aktuellen `master`, relevante Branches/PRs und laufende/letzte Workflows prüfen.
-11. Vor der eigentlichen Arbeit einen **Ressourcen- und Kapazitäts-Snapshot** erstellen: alle
+10. Den aktuellen `master`, relevante Branches/PRs und laufende/letzte Workflows prüfen.
+11. Den chatfreien Nachtbetrieb anhand des OS-Vertrags gegen aktive Zeitpläne und Fallbacks prüfen.
+12. Vor der eigentlichen Arbeit einen **Ressourcen- und Kapazitäts-Snapshot** erstellen: alle
    im aktuellen Konto/Repo verfügbaren Agentenpfade, Runner und relevanten Actions-Lanes prüfen.
 12. Für die konkrete Aufgabe jede sinnvolle, **kostenfreie und aktuell verfügbare** Ressource
    aktiv routen; nicht auf eine einzelne Ressource warten, wenn eine unabhängige Aufgabe parallel
    anders ausgeführt werden kann.
-13. Erst danach Änderungen, Research oder neue Hypothesen vornehmen.
+14. Erst danach Änderungen, Research oder neue Hypothesen vornehmen.
 
 ### Pflicht-Ressourcencheck bei jedem neuen Chat
 
