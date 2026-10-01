@@ -447,7 +447,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T10:33:59.763935+00:00",
+  "generated_at_utc": "2026-10-01T10:34:41.867964+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -642,6 +642,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: install pytest in Q108 PIT workflow",
+        "sha": "5579703f28f6a0399f8ad5f8729786bfe135cff5",
+        "timestamp": "2026-10-01T12:34:28+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3bf9a0e03650dfc90f9d58216fc628c740c23dcd",
+        "timestamp": "2026-10-01T10:33:59Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "79906e8d5ed925667d887a58728a59d19f99c5e9",
         "timestamp": "2026-10-01T10:33:45Z"
@@ -670,16 +680,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "9f88e983e8f443c78e13ff592c2c84921268b18d",
         "timestamp": "2026-10-01T10:33:15Z"
-      },
-      {
-        "message": "RESEARCH: add Q108 PIT integration workflow",
-        "sha": "81cc74b7e03d6d886bb562bffb3a01a8fa5c79cb",
-        "timestamp": "2026-10-01T12:33:13+02:00"
-      },
-      {
-        "message": "TEST: cover Q108 PIT integration invariants",
-        "sha": "23dd483700d615ae239b186c2b8f8e363b5bec15",
-        "timestamp": "2026-10-01T12:33:05+02:00"
       }
     ]
   },
@@ -749,12 +749,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "79906e8d5ed925667d887a58728a59d19f99c5e9",
+  "source_master_sha": "5579703f28f6a0399f8ad5f8729786bfe135cff5",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36849907833"
+    "run_id": "36849986761"
   }
 }
