@@ -46,3 +46,26 @@ def test_target_weights_have_fixed_gross_and_zero_net():
     assert sum(value == -0.10 for value in weights.values()) == 5
     assert gross_exposure(weights) == 1.0
     assert net_exposure(weights) == 0.0
+
+
+def test_signal_is_invariant_to_future_price_mutation():
+    closes = {
+        symbol: [
+            100.0 + index + symbol_index * 0.01
+            for index in range(340)
+        ]
+        for symbol_index, symbol in enumerate(SYMBOLS)
+    }
+    before = {
+        symbol: values.copy()
+        for symbol, values in closes.items()
+    }
+    # Decision at index 300 only uses t-252 and t-21; mutate a future bar.
+    closes["TXN"][301] += 10000.0
+    assert rank_global({
+        symbol: closes[symbol][279] / closes[symbol][48] - 1.0
+        for symbol in SYMBOLS
+    }) == rank_global({
+        symbol: before[symbol][279] / before[symbol][48] - 1.0
+        for symbol in SYMBOLS
+    })
