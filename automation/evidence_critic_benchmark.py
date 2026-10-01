@@ -56,12 +56,12 @@ def wait_health(base_url: str, timeout_seconds: int = 180) -> dict:
 def question(order: list[str]) -> dict:
     return {
         "type": "choice",
-        "instructions": "Judge the claim using only the supplied evidence. Do not use outside knowledge.",
-        "criteria": {label: CRITERIA[label] for label in order},
+        "instructions": "Judge the claim using only the supplied evidence. Do not use outside knowledge. Abstain when the evidence is insufficient.",
+        "criteria": {label: CRITERIA[label] for label in order if label in SUBSTANTIVE},
     }
 
 def request_for(case: dict, order: list[str] | None = None) -> dict:
-    order = order or list(LABELS)
+    order = order or list(SUBSTANTIVE)
     return {
         "state": {
             "claim": case["claim"],
