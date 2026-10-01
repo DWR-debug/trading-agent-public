@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: h06-p2-r1-one-shot-authorization
+  group: h06-p2-r2-one-shot-authorization
   cancel-in-progress: false
 
 jobs:
@@ -33,7 +33,7 @@ jobs:
         run: |
           set -euo pipefail
           test -f research/run_requests/h06_p2_r2_authorize_once.trigger
-          grep -Fx "AUTHORIZE_H06_P2_R1_PERFORMANCE=true" research/run_requests/h06_p2_r2_authorize_once.trigger
+          grep -Fx "AUTHORIZE_H06_P2_R2_PERFORMANCE=true" research/run_requests/h06_p2_r2_authorize_once.trigger
           grep -Fx "TRIAL_ID=T-2026-10-01-H06P2R2-PERFORMANCE-01" research/run_requests/h06_p2_r2_authorize_once.trigger
           grep -Fx "ONE_SHOT=true" research/run_requests/h06_p2_r2_authorize_once.trigger
 
