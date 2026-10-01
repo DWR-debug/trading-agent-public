@@ -405,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T10:13:13.485850+00:00",
+  "generated_at_utc": "2026-10-01T10:14:13.313983+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -600,6 +600,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: keep Q104 pytest path inside test command",
+        "sha": "7463159a9986f3f9d038206246fd15e1e86ccb0f",
+        "timestamp": "2026-10-01T12:13:57+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ecedcc35ab3928adcb9363f1ea62feba6b3c0b15",
+        "timestamp": "2026-10-01T10:13:13Z"
+      },
+      {
         "message": "RESEARCH: wire Q104 candidate contract into frontier lane",
         "sha": "61f8e96cf20136f2084fe1bfeac5aca16b95f3db",
         "timestamp": "2026-10-01T12:13:02+02:00"
@@ -628,16 +638,6 @@
         "message": "RESEARCH: add Q104 orthogonal candidate wave",
         "sha": "26889302922d2b5a7d390a6dd9e099de84e99e61",
         "timestamp": "2026-10-01T12:12:25+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "ea5543080df22a17f999d53ebfb34c8873f4af4d",
-        "timestamp": "2026-10-01T10:12:02Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "e35d3decfbe94a1d0f5130f8ae7acbe7ef10efbf",
-        "timestamp": "2026-10-01T09:59:46Z"
       }
     ]
   },
@@ -707,12 +707,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "61f8e96cf20136f2084fe1bfeac5aca16b95f3db",
+  "source_master_sha": "7463159a9986f3f9d038206246fd15e1e86ccb0f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36847727079"
+    "run_id": "36847832375"
   }
 }
