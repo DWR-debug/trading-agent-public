@@ -31,6 +31,12 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Install freeze test dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pytest
+
       - name: Check whether final bundle is already persisted
         id: prior
         shell: bash
