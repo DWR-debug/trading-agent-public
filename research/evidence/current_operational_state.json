@@ -405,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T09:56:53.520573+00:00",
+  "generated_at_utc": "2026-10-01T09:57:08.960684+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -600,6 +600,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3bb7042781afa8209a2d22da45a3018124276be4",
+        "timestamp": "2026-10-01T09:56:53Z"
+      },
+      {
         "message": "FIX: normalize frontier cycle trigger marker",
         "sha": "77fa24dd0a28ef07547ad61069b3255d77993f89",
         "timestamp": "2026-10-01T11:56:47+02:00"
@@ -633,11 +638,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "d4af25009740e643649a7b8edb8d8b44161b1bea",
         "timestamp": "2026-10-01T09:55:13Z"
-      },
-      {
-        "message": "OPS: autonomous agent queue routing",
-        "sha": "0f93d0250a4216d4b3792b2012e22de02220aeb8",
-        "timestamp": "2026-10-01T09:55:01Z"
       }
     ]
   },
@@ -707,12 +707,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "77fa24dd0a28ef07547ad61069b3255d77993f89",
+  "source_master_sha": "3bb7042781afa8209a2d22da45a3018124276be4",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36845971271"
+    "run_id": "36845983563"
   }
 }
