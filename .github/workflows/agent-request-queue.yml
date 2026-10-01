@@ -229,7 +229,7 @@ jobs:
           EOF
           )"
           set +e
-          copilot --agent=trading-agent-engineer --autopilot --no-ask-user --max-ai-credits=12 --max-autopilot-continues=1 -p "$prompt" --allow-tool='read' --allow-tool='search' --allow-tool='write' --allow-tool='shell(git:*)' --allow-tool='shell(python:*)' --allow-tool='shell(pytest:*)' 2>&1 | tee "$RUNNER_TEMP/copilot_cli.log"
+          copilot --agent=trading-agent-engineer --autopilot --no-ask-user --max-ai-credits=30 --max-autopilot-continues=1 -p "$prompt" --allow-tool='read' --allow-tool='search' --allow-tool='write' --allow-tool='shell(git:*)' --allow-tool='shell(python:*)' --allow-tool='shell(pytest:*)' 2>&1 | tee "$RUNNER_TEMP/copilot_cli.log"
           rc=${PIPESTATUS[0]}
           set -e
           if [ "$rc" -eq 0 ]; then
