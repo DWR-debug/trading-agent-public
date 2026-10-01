@@ -614,7 +614,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T18:56:11.677754+00:00",
+  "generated_at_utc": "2026-10-01T18:56:26.224425+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -802,6 +802,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "22793d859a503b2b59e8523f6504b284b36b7dba",
+        "timestamp": "2026-10-01T18:56:11Z"
+      },
+      {
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "18f376a6e35671b5cbc3ff3dfbbc0869fbe2aab9",
         "timestamp": "2026-10-01T18:56:08Z"
@@ -835,11 +840,6 @@
         "message": "GOV: register H06-P2-R1 workflows in project integrity allowlist",
         "sha": "b98e2668d356a4114545668e546d4cd435789848",
         "timestamp": "2026-10-01T20:53:21+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ed1147745e86ae9ca896a07d420864957b8952cb",
-        "timestamp": "2026-10-01T18:52:08Z"
       }
     ]
   },
@@ -909,12 +909,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "18f376a6e35671b5cbc3ff3dfbbc0869fbe2aab9",
+  "source_master_sha": "22793d859a503b2b59e8523f6504b284b36b7dba",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36910527183"
+    "run_id": "36910549150"
   }
 }
