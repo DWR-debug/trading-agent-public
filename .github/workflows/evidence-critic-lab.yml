@@ -110,7 +110,7 @@ jobs:
           set "PORT=8079"
           if /I "${{ matrix.install }}"=="laya" set "PORT=8090"
           if /I "${{ matrix.install }}"=="kev" set "PORT=8009"
-          "%VENV%\Scripts\python.exe" -m automation.ecl_server_launcher --action start --model "${{ matrix.model }}" --venv "%VENV%" --workdir "%REPO_SRC%" --port %PORT% --stdout "%OUT%" --stderr "%ERR%" --pidfile "%RUNNER_TEMP%\ecl-server.pid" || exit /b 1
+          "%VENV%\Scripts\python.exe" "%REPO_SRC%\automation\ecl_server_launcher.py" --action start --model "${{ matrix.model }}" --venv "%VENV%" --workdir "%REPO_SRC%" --port %PORT% --stdout "%OUT%" --stderr "%ERR%" --pidfile "%RUNNER_TEMP%\ecl-server.pid" || exit /b 1
           endlocal
       - name: Run isolated benchmark
         if: steps.resources.outputs.eligible == 'true'
@@ -134,7 +134,7 @@ jobs:
         shell: cmd
         run: |
           @echo off
-          "%RUNNER_TEMP%\ecl-venv-${{ matrix.install }}\Scripts\python.exe" -m automation.ecl_server_launcher --action stop --pidfile "%RUNNER_TEMP%\ecl-server.pid"
+          "%RUNNER_TEMP%\ecl-venv-${{ matrix.install }}\Scripts\python.exe" "%REPO_SRC%\automation\ecl_server_launcher.py" --action stop --pidfile "%RUNNER_TEMP%\ecl-server.pid"
       - name: Upload isolated receipt
         if: always()
         continue-on-error: true
