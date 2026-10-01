@@ -65,7 +65,8 @@ jobs:
           assert p["status"]=="PREREGISTERED_DESIGN_ONLY"
           assert p["governance"]["performance_trial_authorized"] is False
           assert p["correction"]["prior_trial_id"]=="T-2026-10-01-H06P2-PERFORMANCE-01"
-          assert p["correction"]["scientific_scope_changed"] is False\n          assert p["input_contract"]["input_bundle_fingerprint"]==f["bundle_fingerprint"]
+          assert p["correction"]["scientific_scope_changed"] is False
+          assert p["input_contract"]["input_bundle_fingerprint"]==f["bundle_fingerprint"]
           assert p["input_contract"]["pit_check_fingerprint"]==pit["reconciliation"]["check_fingerprint"]
           assert pit["status"]=="PIT_REPRODUCED_RECONCILED"
           trials=[x for x in r["active_trials"] if x.get("code")=="H06-P2-R1"]
