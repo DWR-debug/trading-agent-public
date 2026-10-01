@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `16502669a0dca4341b9c1f12bd188f6b98cd83c7`
+**Current operational snapshot:** `237d0068573985f50e7ce001b8b9997a909a355d`
 
-**Generated (UTC):** `2026-10-01T09:53:28.880361+00:00`
+**Generated (UTC):** `2026-10-01T09:54:57.275047+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -39,6 +39,15 @@
 - Q084, Q088 and Q082 remain **design/feasibility tracks** for unusual market-state, textual-network, rebalance-demand and SEC information channels.
 - The unusual-strategy frontier is maintained in `docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md` and is design-only until feasibility and provenance are established.
 - Research OS capability lattice: `research/governance/research_os_source_registry_2026_09_30.json`; it is metadata only and cannot authorize performance.
+
+### H06 independent PIT
+
+- Status: **PIT_REPRODUCED_RECONCILED**.
+- Independent reproduction workflow: `36843059301`.
+- Canonical coverage workflow: `36842998210`.
+- Checked PIT decision points: **2545**.
+- Semantic check fingerprint: `658ed9e58edb457bf42337fc3ebf081178d157ae88ca0bcca5745112eb60aae7`.
+- This is PIT/data-contract evidence only; it does not authorize performance or promotion.
 
 ### Q067 execution pipeline
 

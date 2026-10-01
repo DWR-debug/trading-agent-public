@@ -317,20 +317,7 @@
         "paid_fallback_allowed": false,
         "starts_utc": "2026-10-01T00:00:00Z"
       },
-      "current_pending_requests": [
-        {
-          "issue_number": "643",
-          "lane": "lane0",
-          "request_file": "agent_requests/lane0/AGENT-027.request",
-          "task_id": "AGENT-027"
-        },
-        {
-          "issue_number": "642",
-          "lane": "lane1",
-          "request_file": "agent_requests/lane1/AGENT-026.request",
-          "task_id": "AGENT-026"
-        }
-      ],
+      "current_pending_requests": [],
       "local_ai_smoke_after_research_lanes": true,
       "self_hosted_parallel_slots": 2
     },
@@ -418,7 +405,72 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T09:53:28.880361+00:00",
+  "generated_at_utc": "2026-10-01T09:54:57.275047+00:00",
+  "h06_independent_pit": {
+    "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
+    "data_contract": {
+      "checked_decision_points": 2545,
+      "coverage_fingerprint": "cd130e0cccf264680bf306ec58d162ddbd09f4b00b96613039f056b80c609936",
+      "research_candles": 2798,
+      "snapshot_fingerprint": "e80e63eebbc94a32043dcf9c38aa86d2f7dc88eb7c2a172de24dfd9b269e55c6",
+      "target_common_candles": 3500
+    },
+    "evidence_type": "INDEPENDENT_PIT_REPRODUCTION",
+    "governance": {
+      "asset_search": false,
+      "automatic_promotion": false,
+      "holdout_evaluation": false,
+      "holdout_used_for_selection": false,
+      "horizon_search": false,
+      "oos_evaluation": false,
+      "parameter_search": false,
+      "performance_evaluation": false,
+      "performance_trial_authorized": false,
+      "selection_used": false,
+      "threshold_search": false
+    },
+    "independent_reproduction_artifact_digest": "sha256:64b9da18e11318f641847cf47fe3954114d00dd5cbfaa2ba74370ea12955821b",
+    "independent_reproduction_artifact_id": 11151823717,
+    "independent_reproduction_run_id": 36843059301,
+    "master_commit": "fab5d7af963c3555e8bd97b4b0d28f762ce0c0f9",
+    "mutation_checks": {
+      "future_mutation_checks_passed": true,
+      "next_session_mutation_checks_passed": true,
+      "prefix_truncation_checks_passed": true
+    },
+    "reconciliation": {
+      "candle_geometry_equal": true,
+      "check_fingerprint": "658ed9e58edb457bf42337fc3ebf081178d157ae88ca0bcca5745112eb60aae7",
+      "checked_decision_points_equal": true,
+      "checks_equal": true,
+      "report_fingerprint_equal": false,
+      "report_fingerprint_mismatch_explained_by": "path-dependent receipt metadata between canonical hosted and self-hosted runs; semantic check fingerprint and all stable contract fields match",
+      "signal_definition_equal": true,
+      "symbols_equal": true,
+      "trial_id_equal": true,
+      "universe_equal": true
+    },
+    "safety": {
+      "automatic_promotion": false,
+      "live_trading_enabled": false,
+      "orders_enabled": false,
+      "paper_only": true
+    },
+    "schema_version": "1.0",
+    "scientific_outcome": "PIT_VALIDATED_NO_PERFORMANCE_EVIDENCE",
+    "signal_definition": {
+      "action_rule": "decision_bar_next_bar",
+      "formation_lookback_sessions": 252,
+      "raw_score": "close[t-skip] / close[t-lookback] - 1",
+      "residualization": "equal_weight_sector_demean",
+      "skip_sessions": 21
+    },
+    "status": "PIT_REPRODUCED_RECONCILED",
+    "trial_id": "H06-REPAIR-2026-09-25",
+    "upstream_coverage_artifact_digest": "sha256:9de9019c33cf4a9300bcf4e901ab015ff4b8b6585bbb70d1c848e5a69e76d1bd",
+    "upstream_coverage_artifact_id": 11152741031,
+    "upstream_coverage_run_id": 36842998210
+  },
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -535,20 +587,7 @@
   },
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
-    "agent_queue_requests": [
-      {
-        "issue_number": "643",
-        "lane": "lane0",
-        "request_file": "agent_requests/lane0/AGENT-027.request",
-        "task_id": "AGENT-027"
-      },
-      {
-        "issue_number": "642",
-        "lane": "lane1",
-        "request_file": "agent_requests/lane1/AGENT-026.request",
-        "task_id": "AGENT-026"
-      }
-    ],
+    "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [
       {
@@ -558,17 +597,28 @@
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/642"
       }
     ],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "fix/current-status-h06-pit-provenance-v1",
-        "number": 738,
-        "title": "FIX: include reconciled H06 PIT in current operational status",
-        "updatedAt": "2026-10-01T09:41:59Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/738"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: retire exhausted Copilot queue request",
+        "sha": "237d0068573985f50e7ce001b8b9997a909a355d",
+        "timestamp": "2026-10-01T11:54:42+02:00"
+      },
+      {
+        "message": "FIX: include reconciled H06 PIT in current operational status",
+        "sha": "523d5f2d2dae140d112055ff105fc28fad6bbe12",
+        "timestamp": "2026-10-01T11:54:39+02:00"
+      },
+      {
+        "message": "OPS: autonomous agent queue routing",
+        "sha": "0f46081c2c99bd803ca66536900281d61b12cb91",
+        "timestamp": "2026-10-01T09:53:31Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "045029c7c38407df6076add3ce1caa7aff734c97",
+        "timestamp": "2026-10-01T09:53:28Z"
+      },
       {
         "message": "OPS: queue AGENT-026 bounded capacity lease task",
         "sha": "16502669a0dca4341b9c1f12bd188f6b98cd83c7",
@@ -588,26 +638,6 @@
         "message": "EVIDENCE: record reconciled independent H06 PIT reproduction",
         "sha": "917da32732940d17ce9f378dce09370f241302c5",
         "timestamp": "2026-10-01T11:38:48+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "ab52f4e6c6b7248456840ec525963888f1f765cc",
-        "timestamp": "2026-10-01T09:30:51Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "fab5d7af963c3555e8bd97b4b0d28f762ce0c0f9",
-        "timestamp": "2026-10-01T09:29:02Z"
-      },
-      {
-        "message": "TEST: validate H06 semantic reconciliation end-to-end",
-        "sha": "04252a050a4194a7ec6921a1239262f52aa98af3",
-        "timestamp": "2026-10-01T11:28:46+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "19c171574b34ca93e0295fa486bf054b1142fa6b",
-        "timestamp": "2026-10-01T09:27:09Z"
       }
     ]
   },
@@ -677,12 +707,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "16502669a0dca4341b9c1f12bd188f6b98cd83c7",
+  "source_master_sha": "237d0068573985f50e7ce001b8b9997a909a355d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36845612215"
+    "run_id": "36845766884"
   }
 }
