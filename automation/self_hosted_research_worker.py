@@ -147,6 +147,13 @@ LANES: dict[str, list[list[str]]] = {
             "--output",
             "research/runs/self_hosted/h06_p2_readiness/result.json",
         ],
+        [
+            PYTHON,
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_q120_cftc_positioning_state.py",
+        ],
     ],
     "repo_qa": [
         [
