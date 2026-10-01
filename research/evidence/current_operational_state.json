@@ -484,7 +484,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T10:50:44.622336+00:00",
+  "generated_at_utc": "2026-10-01T11:05:32.003603+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -679,6 +679,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "Add Q111 normalized duplicate regression test",
+        "sha": "3092b6d4f7dfd21e0ed280c531d517ac48d81481",
+        "timestamp": "2026-10-01T13:05:21+02:00"
+      },
+      {
+        "message": "Fix Q111 normalized duplicate identity semantics",
+        "sha": "852e317c4c10f60e11e22263b6c3192a2d3a9a48",
+        "timestamp": "2026-10-01T13:05:19+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "3f2892e3aa69131032cb4d36ebebfeaedded67aa",
+        "timestamp": "2026-10-01T10:58:05Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "4d1c4c7976678894356e6320504ce676f0982c4a",
+        "timestamp": "2026-10-01T10:55:18Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f3c51243ee9f45ad94f346e2116be5cbf06b930f",
+        "timestamp": "2026-10-01T10:50:44Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "a1eedb38db2e00a82a7df9530d06c7765f23c787",
         "timestamp": "2026-10-01T10:50:31Z"
@@ -692,31 +717,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "b2b007dfa2fccf4a1bc895cb6e7baf4ad846e7c8",
         "timestamp": "2026-10-01T10:50:19Z"
-      },
-      {
-        "message": "GOV: register Q111 security identity contract",
-        "sha": "0d63c8f0910b1f696c053cd3a37553e0b20967a0",
-        "timestamp": "2026-10-01T12:50:16+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0e90b037a56ce7d74511be6353bc447026f5452f",
-        "timestamp": "2026-10-01T10:50:03Z"
-      },
-      {
-        "message": "RESEARCH: preregister Q111 security identity contract",
-        "sha": "f231da2b81da807f146a17b8b966e1f0f79fc04b",
-        "timestamp": "2026-10-01T12:49:55+02:00"
-      },
-      {
-        "message": "TEST: cover Q111 SEC security identity invariants",
-        "sha": "461dda35c20f6b85963fb30d13b2b9c191b8a0b6",
-        "timestamp": "2026-10-01T12:49:52+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q111 deterministic SEC security identity contract",
-        "sha": "7dbde7957a65e6fddabe2f1028621b5e4c934505",
-        "timestamp": "2026-10-01T12:49:49+02:00"
       }
     ]
   },
@@ -786,12 +786,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a1eedb38db2e00a82a7df9530d06c7765f23c787",
+  "source_master_sha": "3092b6d4f7dfd21e0ed280c531d517ac48d81481",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36851622719"
+    "run_id": "36853164255"
   }
 }
