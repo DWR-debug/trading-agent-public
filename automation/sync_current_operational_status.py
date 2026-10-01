@@ -203,11 +203,14 @@ def generate(
     if (ROOT / "research/preregistrations/q105_q104_historical_pit_2026_10_01.json").is_file():
         recorded_next_research_focus = (
             "Q104 source-feasibility completed for 5 data-backed candidates; Q105 historical "
-            "archive/PIT feasibility is completed; Q106 shared PIT join integrity is completed. "
-            "The active research gate is now Q107 fresh disjoint equity coverage for Q104:I19, "
-            "Q104:I20, Q104:I22 and Q104:M6. Q104:R9 remains synthetic-only until validated "
-            "underlying families exist. No performance authorization, holdout selection, parameter "
-            "search, promotion or live execution is permitted by Q104-Q107."
+            "archive/PIT feasibility, Q106 shared PIT join integrity, Q107 fresh disjoint coverage "
+            "and Q108 real SEC/XBRL/13F/Treasury PIT integration are completed. The active gates "
+            "are now candidate-specific: I19/I20 require full 13F security coverage and manager/"
+            "issuer mapping; I22 has issuer-filing PIT verified and requires a frozen signal compiler; "
+            "M6 has Treasury PIT verified and can reuse the existing Q023/Q024/Q025 event contract; "
+            "I21 remains historically window-limited; R9 remains synthetic-only. No performance "
+            "authorization, holdout selection, parameter search, promotion or live execution is "
+            "permitted by Q104-Q108."
         )
 
     current = {
@@ -391,7 +394,11 @@ def generate(
 - The unusual-strategy frontier is maintained in `docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md` and is design-only until feasibility and provenance are established.
 - Research OS capability lattice: `research/governance/research_os_source_registry_2026_09_30.json`; it is metadata only and cannot authorize performance.
 - Q104 orthogonal candidate wave: **SOURCE_FEASIBILITY_COMPLETED_DUAL_ARCH**; 5/6 data-backed candidates are source-feasible and Q104:R9 is synthetic-only. The archived receipt is `research/evidence/q104_source_feasibility_2026_10_01.json`.
-- Q105 historical archive/PIT feasibility is **ACTIVE**; it is a non-performance gate for the five data-backed Q104 candidates.
+- Q105 historical archive/PIT feasibility: **COMPLETED**, with I21 remaining historically window-limited.
+- Q106 shared SEC/Treasury PIT join integrity: **COMPLETED_DUAL_ARCH**.
+- Q107 fresh Q104 equity coverage: **COMPLETED**; 8/8 symbols and 3,704 common sessions.
+- Q108 real SEC/XBRL/13F/Treasury PIT integration: **COMPLETED_DUAL_ARCH**; 8/8 issuer filings and 8/8 XBRL lineage verified, 13F sample and Treasury chain verified.
+- Candidate-specific next gates: I19/I20 = full 13F security coverage; I22 = frozen event-state compiler; M6 = fixed Treasury state reuse; I21 = explicit bounded historical horizon; R9 = synthetic-only.
 
 ### H06 independent PIT
 
