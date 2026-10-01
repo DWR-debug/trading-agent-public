@@ -501,13 +501,33 @@
         "authorization_id": "AUTH-H06P2R2-2026-10-01-01",
         "class": "performance_correction",
         "code": "H06-P2-R2",
+        "execution_incident": {
+          "attempt_count": 1,
+          "execution_incident_path": "research/evidence/h06_p2_r2_performance_execution_incident.json",
+          "predecessor_workflow_runs": [
+            36911178921
+          ],
+          "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME"
+        },
+        "invalidation_reason": "R2 failed on lowercase JSON boolean literals in the Python result-builder; no immutable scientific result was produced.",
         "issue_number": null,
-        "performance_authorization_allowed": true,
+        "performance_authorization_allowed": false,
         "predecessor_execution_incident_path": "research/evidence/h06_p2_r1_performance_execution_incident.json",
         "predecessor_trial_id": "T-2026-10-01-H06P2R1-PERFORMANCE-01",
         "preregistration_path": "research/preregistrations/h06_p2_r2_performance_2026_10_01.json",
-        "state": "PERFORMANCE_AUTHORIZED",
+        "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
         "trial_id": "T-2026-10-01-H06P2R2-PERFORMANCE-01"
+      },
+      {
+        "class": "performance_correction",
+        "code": "H06-P2-R3",
+        "issue_number": null,
+        "performance_authorization_allowed": false,
+        "predecessor_execution_incident_path": "research/evidence/h06_p2_r2_performance_execution_incident.json",
+        "predecessor_trial_id": "T-2026-10-01-H06P2R2-PERFORMANCE-01",
+        "preregistration_path": "research/preregistrations/h06_p2_r3_performance_2026_10_01.json",
+        "state": "DESIGN_ONLY_ACTIVE",
+        "trial_id": "T-2026-10-01-H06P2R3-PERFORMANCE-01"
       }
     ],
     "name": "active_research_registry",
@@ -635,7 +655,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T19:01:19.761989+00:00",
+  "generated_at_utc": "2026-10-01T19:03:27.299517+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -823,6 +843,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: register H06-P2-R3 literal-safe result-builder correction",
+        "sha": "eaae4ba241ff140ee879b9cf48cc6635beff982f",
+        "timestamp": "2026-10-01T21:03:07+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "47094682ce4a0ed5141cc473609ab266765d2f2b",
+        "timestamp": "2026-10-01T19:01:19Z"
+      },
+      {
         "message": "OPS: start H06-P2-R2 authorized performance execution",
         "sha": "447089639fa45e14cd1622a6f7bd275b4fa611f7",
         "timestamp": "2026-10-01T21:01:05+02:00"
@@ -851,16 +881,6 @@
         "message": "FIX: bind H06-P2-R2 reconciliation provenance to R1 incident",
         "sha": "0d5c41c4a6f1b90a17b56931b0831d40b256e8db",
         "timestamp": "2026-10-01T20:59:38+02:00"
-      },
-      {
-        "message": "FIX: bind H06-P2-R2 result provenance to R1 incident",
-        "sha": "1bc4a0b5c753b3f8d7f297e95864f2d387797b8b",
-        "timestamp": "2026-10-01T20:59:35+02:00"
-      },
-      {
-        "message": "FIX: bind H06-P2-R2 performance trigger and evidence artifact",
-        "sha": "619adc597d0531f3e2a378792c7c5d35b4f1cb2e",
-        "timestamp": "2026-10-01T20:59:32+02:00"
       }
     ]
   },
@@ -930,12 +950,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "447089639fa45e14cd1622a6f7bd275b4fa611f7",
+  "source_master_sha": "eaae4ba241ff140ee879b9cf48cc6635beff982f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36911178965"
+    "run_id": "36911432934"
   }
 }
