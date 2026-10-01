@@ -25,13 +25,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.156,
-  "stdout": "",
-  "stderr": "OpenRouter HTTP 429: {\"error\":{\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\",\"code\":429,\"metadata\":{\"headers\":{\"X-RateLimit-Limit\":\"50\",\"X-RateLimit-Remaining\":\"0\",\"X-RateLimit-Reset\":\"1790812800000\"},\"limit_source\":\"openrouter_free_tier_daily\",\"remedy_hint\":\"Wait for the daily reset (see X-RateLimit-Reset), or purchase credits to raise your free-model daily limit.\",\"provider_name\":null,\"previous_errors\":[{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"}]}},\"user_id\":\"user_3K3ZJKAZq4v0T1h5GaKRbugCtn4\"}",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 16.727,
+  "stdout": "**Worker Handoff: Q102 Regime Atlas & RCCSM State-Routing Stress Test**\n\n**Findings**\n- Q102 is a deterministic, retrospective replay of a completed diagnostic artifact (`q090_q089_failure_diagnosis_result.json`). The test expectations show `DOWNTREND_HIGHVOL` consensus direction = `positive` and `UPTREND_LOWVOL` = `negative`. This inversion is a red flag: it may be genuine negative evidence (signals fail in trend regimes) or a labeling artifact. Without inspecting the source artifact, the pattern cannot be trusted.\n- RCCSM state topology (`rccsm_state.py`) is PIT-safe by construction (lagged OHLCV only), but the file is truncated; the exact percentile-history boundaries cannot be verified from the provided context.\n- Synthetic routing tests (`rccsm_synthetic.py`) verify structural admissibility maps only. They contain no returns, mechanism labels, or regime outcomes, so they cannot test whether the state layer separates state-wide exposure from mechanism",
+  "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": null,
-  "usage": null
+  "response_id": "gen-1790814112-oM1HuaPOgEuBXLgLG6qc",
+  "usage": {
+    "prompt_tokens": 5639,
+    "completion_tokens": 3200,
+    "total_tokens": 8839,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3178,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
