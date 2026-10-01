@@ -95,10 +95,10 @@ jobs:
             set "JEFF_SHA=14ee67e2814a19ebd0a67f508ac1b0f424ba1ebc"
             set "JEFF_SRC=%RUNNER_TEMP%\jeff-14ee67e2814a19ebd0a67f508ac1b0f424ba1ebc"
             if exist "%JEFF_SRC%" rmdir /s /q "%JEFF_SRC%"
-            git init "%JEFF_SRC%" || exit /b 1
-            git -C "%JEFF_SRC%" remote add origin https://github.com/Gestalt-Lab/jeff.git || exit /b 1
-            git -C "%JEFF_SRC%" -c protocol.version=2 fetch --depth 1 origin "%JEFF_SHA%" || exit /b 1
-            git -C "%JEFF_SRC%" checkout --detach "%JEFF_SHA%" || exit /b 1
+            set "JEFF_ARCH=%RUNNER_TEMP%\jeff.tgz"
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "%JEFF_ARCH%" "https://api.github.com/repos/Gestalt-Lab/jeff/tarball/%JEFF_SHA%" || exit /b 1
+            mkdir "%JEFF_SRC%" || exit /b 1
+            tar.exe -xzf "%JEFF_ARCH%" -C "%JEFF_SRC%" --strip-components=1 || exit /b 1
             if not exist "%JEFF_SRC%\pyproject.toml" exit /b 1
             "%VENV_PY%" -m pip install --disable-pip-version-check "%JEFF_SRC%" || exit /b 1
             "%VENV_PY%" -I -c "import torch, jev_clf; print('JEFF_RUNTIME_OK', torch.__version__)" || exit /b 1
@@ -107,10 +107,10 @@ jobs:
             set "KEV_SHA=90512f1c517d977741f2104470a40635408236c9"
             set "KEV_SRC=%RUNNER_TEMP%\kev-90512f1c517d977741f2104470a40635408236c9"
             if exist "%KEV_SRC%" rmdir /s /q "%KEV_SRC%"
-            git init "%KEV_SRC%" || exit /b 1
-            git -C "%KEV_SRC%" remote add origin https://github.com/jaredpalmer/kev.git || exit /b 1
-            git -C "%KEV_SRC%" -c protocol.version=2 fetch --depth 1 origin "%KEV_SHA%" || exit /b 1
-            git -C "%KEV_SRC%" checkout --detach "%KEV_SHA%" || exit /b 1
+            set "KEV_ARCH=%RUNNER_TEMP%\kev.tgz"
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "%KEV_ARCH%" "https://api.github.com/repos/jaredpalmer/kev/tarball/%KEV_SHA%" || exit /b 1
+            mkdir "%KEV_SRC%" || exit /b 1
+            tar.exe -xzf "%KEV_ARCH%" -C "%KEV_SRC%" --strip-components=1 || exit /b 1
             if not exist "%KEV_SRC%\pyproject.toml" exit /b 1
             "%VENV_PY%" -m pip install --disable-pip-version-check "%KEV_SRC%[serve]" || exit /b 1
             "%VENV_PY%" -I -c "import torch, kev; print('KEV_RUNTIME_OK', torch.__version__)" || exit /b 1
