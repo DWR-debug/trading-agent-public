@@ -212,6 +212,17 @@ def generate(
             "authorization, holdout selection, parameter search, promotion or live execution is "
             "permitted by Q104-Q108."
         )
+    if (ROOT / "research/preregistrations/q113_13f_q107_coverage_2026_10_01.json").is_file():
+        recorded_next_research_focus = (
+            "Q112 live SEC identity feasibility completed dual-architecture with 3/3 source "
+            "families verifiable and zero schema mismatches. Q113 is now the active feasibility "
+            "gate: one fixed official 13F quarter is scanned against the eight-symbol Q107 "
+            "fresh universe with deterministic Q111 identity resolution and manager/accession "
+            "lineage. If Q113 passes, the next candidate-specific compiler gates are I22 "
+            "(frozen filing-arrival state), M6 (fixed Treasury event contract), and the remaining "
+            "I19/I20 historical breadth requirements. No performance authorization, holdout "
+            "selection, parameter search, promotion or live execution is permitted."
+        )
 
     current = {
         "schema_version": "1.0",
