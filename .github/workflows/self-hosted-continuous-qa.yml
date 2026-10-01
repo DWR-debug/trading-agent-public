@@ -13,6 +13,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: trading-agent-self-hosted-continuous-qa
@@ -127,14 +128,75 @@ jobs:
     name: Aggregate QA gate
     if: always()
     needs: qa_lane
-    runs-on: [self-hosted, trading-agent-research]
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - name: Require all five lanes
-        env:
-          MATRIX_RESULT: ${{ needs.qa_lane.result }}
-        shell: cmd
+      - name: Download all five lane provenance artifacts
+        uses: actions/download-artifact@v6
+        with:
+          pattern: self-hosted-continuous-qa-*-${{ github.run_id }}-${{ github.run_attempt }}
+          path: qa_artifacts
+          merge-multiple: false
+      - name: Require every lane to report success
+        shell: bash
         run: |
-          @echo off
-          if /I not "%MATRIX_RESULT%"=="success" exit /b 1
-          echo AGGREGATE_QA=SUCCESS
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          expected = {
+              "repo_qa",
+              "data_qa",
+              "design_qa",
+              "local_reproduction",
+              "autonomous_frontier_qa",
+          }
+          summaries = sorted(Path("qa_artifacts").glob("**/summary.json"))
+          seen = {}
+
+          if len(summaries) != len(expected):
+              raise SystemExit(
+                  f"AGGREGATE_QA=FAILURE expected {len(expected)} summaries, "
+                  f"found {len(summaries)}"
+              )
+
+          for path in summaries:
+              summary = json.loads(path.read_text(encoding="utf-8"))
+              lane = summary.get("lane")
+              if lane not in expected or lane in seen:
+                  raise SystemExit(f"AGGREGATE_QA=FAILURE invalid/duplicate lane: {lane}")
+              if summary.get("formal_evidence_allowed") is not False:
+                  raise SystemExit(f"AGGREGATE_QA=FAILURE formal evidence flag for {lane}")
+              if summary.get("paper_only") is not True:
+                  raise SystemExit(f"AGGREGATE_QA=FAILURE safety flag for {lane}")
+              if summary.get("failed_steps") != []:
+                  raise SystemExit(
+                      f"AGGREGATE_QA=FAILURE lane={lane} failed_steps={summary.get('failed_steps')}"
+                  )
+
+              manifest_path = path.parent / "run_manifest.json"
+              if not manifest_path.exists():
+                  raise SystemExit(f"AGGREGATE_QA=FAILURE missing run manifest for {lane}")
+              manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+              if manifest.get("lane") != lane:
+                  raise SystemExit(f"AGGREGATE_QA=FAILURE manifest lane mismatch for {lane}")
+              codes = manifest.get("step_return_codes", [])
+              if any(code != 0 for code in codes):
+                  raise SystemExit(f"AGGREGATE_QA=FAILURE nonzero step code for {lane}")
+              expected_flags = {
+                  "paper_only": True,
+                  "live_trading_enabled": False,
+                  "orders_enabled": False,
+                  "automatic_promotion": False,
+                  "formal_research_evidence": False,
+              }
+              for key, value in expected_flags.items():
+                  if manifest.get(key) is not value:
+                      raise SystemExit(f"AGGREGATE_QA=FAILURE flag {key} for {lane}")
+              seen[lane] = path
+
+          if set(seen) != expected:
+              raise SystemExit(f"AGGREGATE_QA=FAILURE lanes seen={sorted(seen)}")
+          print("AGGREGATE_QA=SUCCESS")
+          PY
