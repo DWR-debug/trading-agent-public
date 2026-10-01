@@ -70,3 +70,12 @@ def test_github_free_resource_policy_is_structurally_valid():
         "orders_enabled": False,
         "automatic_promotion": False,
     }
+
+
+def test_copilot_budget_gate_fails_closed_on_state_read_failure():
+    text = (
+        Path(__file__).parents[1] / ".github" / "actions" / "copilot-free-gate" / "action.yml"
+    ).read_text(encoding="utf-8")
+    assert "COPILOT_FREE_GATE=STATE_READ_FAILED" in text
+    assert "COPILOT_FREE_GATE=STATE_REFRESH_FAILED" in text
+    assert "max 30 AI credits" in text
