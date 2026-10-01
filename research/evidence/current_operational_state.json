@@ -535,7 +535,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T11:39:52.525417+00:00",
+  "generated_at_utc": "2026-10-01T12:15:21.579435+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -730,6 +730,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "Fix Q116 SEC filing-date format adapter",
+        "sha": "beaf1b8af16827280e791ca69db5f56339b6805e",
+        "timestamp": "2026-10-01T14:15:11+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "fee8bbda150fda80713a4cc3856141f1fa8bf063",
+        "timestamp": "2026-10-01T11:58:33Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "bb58aabf47e327dbcb50a757a6e0f8afe042e40e",
+        "timestamp": "2026-10-01T11:58:17Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "f4aec0c23d71d9938ab6a2b7b7fe3e2efdc52531",
+        "timestamp": "2026-10-01T11:44:44Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "f65e3c2dcffed709009b786d90b2634463a7c787",
+        "timestamp": "2026-10-01T11:42:28Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3ccc8c69d8b402b67836f1e8f86be8a09fbf6ccf",
+        "timestamp": "2026-10-01T11:39:52Z"
+      },
+      {
         "message": "Use canonical SEC date parser in Q116 transition adapter",
         "sha": "307823cc7569c79df2b68dc2b93055013383b290",
         "timestamp": "2026-10-01T13:39:41+02:00"
@@ -738,36 +768,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "d1dcb498a82459971522cf77390c05d99a78c686",
         "timestamp": "2026-10-01T11:39:27Z"
-      },
-      {
-        "message": "Synchronize research registry through Q117",
-        "sha": "4b46430d57be48dea24440543afd04367c2113bb",
-        "timestamp": "2026-10-01T13:39:15+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ccc3fbb406094fbbaf7288e219095203930d79cd",
-        "timestamp": "2026-10-01T11:38:10Z"
-      },
-      {
-        "message": "Synchronize current research focus through Q117",
-        "sha": "cca9699d827456406bf3768dbb0832721cd9e646",
-        "timestamp": "2026-10-01T13:37:57+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "aa1f24c003ed327e8b6d31ca8a255915daa0c393",
-        "timestamp": "2026-10-01T11:36:59Z"
-      },
-      {
-        "message": "Fix Q116 period accumulator type",
-        "sha": "982ebe7ec7ef871d8c275a4136594a5c10c26a1e",
-        "timestamp": "2026-10-01T13:36:47+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "936f2279d5625ba06043c397790f9b7333bc583c",
-        "timestamp": "2026-10-01T11:35:50Z"
       }
     ]
   },
@@ -837,12 +837,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "307823cc7569c79df2b68dc2b93055013383b290",
+  "source_master_sha": "beaf1b8af16827280e791ca69db5f56339b6805e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36856763509"
+    "run_id": "36860528898"
   }
 }
