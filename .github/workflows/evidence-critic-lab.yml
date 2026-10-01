@@ -68,13 +68,13 @@ jobs:
           endlocal
       - name: Resource preflight
         id: resources
-        shell: powershell
+        shell: cmd
         run: |
-          $total=(Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB
-          $need=[double]'${{ matrix.min_memory_gb }}'
-          $eligible=($total -ge $need)
-          "eligible=$($eligible.ToString().ToLowerInvariant())" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-          [ordered]@{schema_version=1;model='${{ matrix.model }}';runner_name=$env:RUNNER_NAME;total_memory_gb=[math]::Round($total,2);minimum_memory_gb=$need;eligible=$eligible;status=if($eligible){'RESOURCE_PREFLIGHT_PASSED'}else{'RESOURCE_INSUFFICIENT'};source_commit=$env:GITHUB_SHA} | ConvertTo-Json -Depth 5 | Set-Content -Encoding utf8 "$env:RUNNER_TEMP\ecl-resource.json"
+          @echo off
+          setlocal
+          set "OUT=%RUNNER_TEMP%\\ecl-resource.json"
+          powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "$total=(Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB; $need=[double]'${{ matrix.min_memory_gb }}'; $eligible=($total -ge $need); ('eligible=' + $eligible.ToString().ToLowerInvariant()) | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append; [ordered]@{schema_version=1;model='${{ matrix.model }}';runner_name=$env:RUNNER_NAME;total_memory_gb=[math]::Round($total,2);minimum_memory_gb=$need;eligible=$eligible;status=if($eligible){'RESOURCE_PREFLIGHT_PASSED'}else{'RESOURCE_INSUFFICIENT'};source_commit=$env:GITHUB_SHA} | ConvertTo-Json -Depth 5 | Set-Content -Encoding utf8 $env:OUT"
+          endlocal
       - name: Install model runtime
         if: steps.resources.outputs.eligible == 'true'
         shell: cmd
