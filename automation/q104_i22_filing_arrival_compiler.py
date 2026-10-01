@@ -62,8 +62,8 @@ def compile_rows(rows:list[dict], cutoff:date=END)->dict:
     # set of sessions on which an event happened. Otherwise a quiet month
     # could be treated as if it had only a few elapsed sessions.
     calendar_sessions = [ts.date() for ts in CAL.sessions_in_range(
-        datetime.combine(START, datetime.min.time(), tzinfo=timezone.utc),
-        datetime.combine(cutoff, datetime.max.time(), tzinfo=timezone.utc),
+        START.isoformat(),
+        cutoff.isoformat(),
     )]
     density=[]
     for idx, s in enumerate(calendar_sessions):
