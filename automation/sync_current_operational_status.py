@@ -249,6 +249,18 @@ def generate(
             "live execution is permitted."
         )
 
+    if (ROOT / "research/evidence/q116_13f_transition_population_result.json").is_file():
+        q116_receipt = _load_json(ROOT / "research/evidence/q116_13f_transition_population_result.json", {})
+        if q116_receipt.get("status") == "13F_TWO_QUARTER_TRANSITION_FEASIBILITY_ONLY":
+            recorded_next_research_focus = (
+                "Q112/Q113/Q114/Q115 are complete and Q116 now has an immutable two-quarter 13F "
+                "transition-population receipt. Q116 remains feasibility-only: the frozen 2026-03-to-08 "
+                "SEC datasets produced a deterministic manager/security transition population with PIT "
+                "cutoff invariants, but no performance evaluation or candidate selection occurred. Next "
+                "candidate-specific frontier work is I22 filing-arrival compilation plus a separate, "
+                "deterministic XBRL concept/coverage gate for I19/I20. No performance authorization, "
+                "holdout selection, parameter search, promotion or live execution is permitted."
+            )
     current = {
         "schema_version": "1.0",
         "status_type": "current_operational_project_state",
