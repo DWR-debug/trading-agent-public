@@ -35,6 +35,15 @@
         "performance_authorization_allowed": false,
         "preregistration_path": "research/preregistrations/q104_orthogonal_candidate_wave_2026_10_01.json",
         "state": "DESIGN_ONLY"
+      },
+      {
+        "class": "historical_archive_and_pit_feasibility_gate",
+        "code": "105",
+        "issue_number": 740,
+        "parent_code": "104",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q105_q104_historical_pit_2026_10_01.json",
+        "state": "PIT_FEASIBILITY_ACTIVE"
       }
     ],
     "active_trials": [
@@ -414,7 +423,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T10:20:42.296717+00:00",
+  "generated_at_utc": "2026-10-01T10:20:58.133974+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -609,6 +618,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOV: register Q105 historical PIT gate",
+        "sha": "7fd66fc920740f3b2cf2600e35f545fdbc8a6cd0",
+        "timestamp": "2026-10-01T12:20:56+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a539109f174e814517e474fd61c188c5dfa0944f",
+        "timestamp": "2026-10-01T10:20:42Z"
+      },
+      {
         "message": "RESEARCH: wire Q105 historical PIT feasibility into frontier lane",
         "sha": "dba065bbab5923957262e27f845011183057c8af",
         "timestamp": "2026-10-01T12:20:40+02:00"
@@ -637,16 +656,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "52c841261a113244a01228d4648ad04e9d66bf92",
         "timestamp": "2026-10-01T10:19:48Z"
-      },
-      {
-        "message": "EVIDENCE: persist Q104 dual-architecture source feasibility",
-        "sha": "5a6bd83d8e28e09b6a0a3cb1bccf5c415dcb0d23",
-        "timestamp": "2026-10-01T12:19:35+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5649311bf8730f2425252e11c7e90383b0ce8654",
-        "timestamp": "2026-10-01T10:18:05Z"
       }
     ]
   },
@@ -716,12 +725,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "dba065bbab5923957262e27f845011183057c8af",
+  "source_master_sha": "7fd66fc920740f3b2cf2600e35f545fdbc8a6cd0",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36848524162"
+    "run_id": "36848545086"
   }
 }
