@@ -44,7 +44,7 @@ def validate() -> dict:
         raise SystemExit("H06P2_READINESS_PIT_AUTHORIZATION_INVALID")
     if pit.get("governance", {}).get("holdout_evaluation") is not False:
         raise SystemExit("H06P2_READINESS_PIT_HOLDOUT_INVALID")
-    if pit.get("checked_decision_points") != EXPECTED_DECISION_POINTS:
+    if pit.get("data_contract", {}).get("checked_decision_points") != EXPECTED_DECISION_POINTS:
         raise SystemExit("H06P2_READINESS_DECISION_POINT_COUNT_INVALID")
 
     signal_def = pit.get("signal_definition", {})
