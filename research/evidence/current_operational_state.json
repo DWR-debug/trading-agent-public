@@ -105,7 +105,7 @@
         "parent_code": "109",
         "performance_authorization_allowed": false,
         "preregistration_path": "research/preregistrations/q111_sec_security_identity_2026_10_01.json",
-        "state": "STRUCTURAL_CONTRACT_REPAIRED_PENDING_DUAL_ARCH_VALIDATION"
+        "state": "STRUCTURAL_CONTRACT_COMPLETED_DUAL_ARCH"
       },
       {
         "class": "live_sec_security_identity_13f_nport_form4_feasibility",
@@ -504,7 +504,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T11:17:28.538311+00:00",
+  "generated_at_utc": "2026-10-01T11:18:01.344329+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -699,6 +699,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "Mark Q111 structural identity gate completed",
+        "sha": "7fc430d57851778015048e2a4b89f948f4a788cc",
+        "timestamp": "2026-10-01T13:17:50+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "45d36ff3449ae951e310792844eb5c0678545c7f",
+        "timestamp": "2026-10-01T11:17:43Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e7e68ba21a0e11ee76a4102889b5d685819728a4",
+        "timestamp": "2026-10-01T11:17:28Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "4a55a44b1124bdc12b9bf36137bec07be4ca23a3",
         "timestamp": "2026-10-01T11:17:15Z"
@@ -722,21 +737,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "b541e6db6399da7199add8bc3154b5ee913e8284",
         "timestamp": "2026-10-01T11:16:27Z"
-      },
-      {
-        "message": "Harden Q113 receipt publish shell integration",
-        "sha": "5f22f6b803f67ccab2546f7b4c8982aafe2c132c",
-        "timestamp": "2026-10-01T13:16:26+02:00"
-      },
-      {
-        "message": "Persist immutable Q113 13F coverage receipt",
-        "sha": "7fefebb41e7e24c897b3d31feaee0fd7e07c4875",
-        "timestamp": "2026-10-01T13:16:17+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "36f0169ce5e7125dbf61b3927efad023bb82b9a3",
-        "timestamp": "2026-10-01T11:15:57Z"
       }
     ]
   },
@@ -806,12 +806,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4a55a44b1124bdc12b9bf36137bec07be4ca23a3",
+  "source_master_sha": "7fc430d57851778015048e2a4b89f948f4a788cc",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36854413375"
+    "run_id": "36854481476"
   }
 }
