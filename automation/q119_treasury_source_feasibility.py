@@ -31,7 +31,7 @@ FIELDS = ",".join(
         "security_type",
         "security_term",
         "high_yield",
-        "median_yield",
+        "avg_med_yield",
         "low_yield",
     ]
 )
@@ -111,7 +111,7 @@ def validate(rows: list[dict]) -> dict:
         normalized.append(
             {
                 **row,
-                "median_yield": row["median_yield"],
+                "median_yield": row["avg_med_yield"],
             }
         )
 
