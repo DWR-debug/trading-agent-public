@@ -274,7 +274,7 @@ def main() -> int:
     print("Q112_BLOCKED:", summary["blocked_sources"])
     print("Q112_SYNTHETIC_ALL_PASS:", all(synthetic.values()))
     print("Q112_FINGERPRINT:", result["receipt_fingerprint"])
-    return 0 if all(synthetic.values()) and summary["blocked_sources"] == 0 else 2
+    return 0 if all(synthetic.values()) and summary["blocked_sources"] == 0 and summary["schema_mismatch_sources"] == 0 else 2
 
 
 if __name__ == "__main__":
