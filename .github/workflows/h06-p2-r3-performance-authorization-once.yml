@@ -5,6 +5,7 @@ on:
     branches: [master]
     paths:
       - research/run_requests/h06_p2_r3_authorize_once.trigger
+      - research/run_requests/h06_p2_r3_authorize_retrigger.trigger
   workflow_dispatch:
 
 permissions:
@@ -192,7 +193,7 @@ jobs:
           auth_path.parent.mkdir(parents=True,exist_ok=True)
           auth_path.write_text(json.dumps(auth,indent=2,ensure_ascii=False,allow_nan=False)+"\n",encoding="utf-8")
           registry_path.write_text(json.dumps(registry,indent=2,ensure_ascii=False,allow_nan=False)+"\n",encoding="utf-8")
-          trigger_path.write_text("RUN_H06_P2_R1_PERFORMANCE_ONCE=true\nTRIAL_ID=T-2026-10-01-H06P2R3-PERFORMANCE-01\nONE_SHOT=true\n",encoding="utf-8")
+          trigger_path.write_text("RUN_H06_P2_R3_PERFORMANCE_ONCE=true\nTRIAL_ID=T-2026-10-01-H06P2R3-PERFORMANCE-01\nONE_SHOT=true\n",encoding="utf-8")
           print("H06P2R3 AUTHORIZATION PREPARED")
           print("H06P2R3_PREREGISTRATION_FINGERPRINT="+prereg_fp)
           PY
@@ -209,7 +210,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: h06-p2-r1-authorization-${{ github.run_id }}-${{ github.run_attempt }}
+          name: h06-p2-r3-authorization-${{ github.run_id }}-${{ github.run_attempt }}
           path: research/authorizations/h06_p2_r3_performance_2026_10_01.json
           if-no-files-found: warn
           retention-days: 30
