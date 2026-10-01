@@ -99,7 +99,7 @@ def _load_adjusted_bundle(root: Path, prereg: dict):
             raise RuntimeError(f"{symbol}: adjusted-close row count mismatch")
         if _fp(rows) != item["fingerprint"]:
             raise RuntimeError(f"{symbol}: adjusted-close fingerprint mismatch")
-        adjusted[symbol]={_timestamp_key(ts):val for ts,val in rows}
+        adjusted[symbol] = {_timestamp_key(ts): val for ts, val in rows}
     if set(adjusted) != set(SYMBOLS):
         raise RuntimeError("H06 adjusted-close symbol set mismatch")
     return adjusted
