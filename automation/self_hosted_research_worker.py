@@ -157,6 +157,14 @@ LANES: dict[str, list[list[str]]] = {
             "tests/test_q119_treasury_source_feasibility.py",
             "tests/test_q120_cftc_positioning_state.py",
             "tests/test_q120_cftc_source_feasibility.py",
+            "tests/test_research_hypothesis_compiler.py",
+        ],
+        [
+            PYTHON,
+            "-m",
+            "automation.research_hypothesis_compiler",
+            "--output",
+            "research/runs/self_hosted/research_discovery/hypothesis_quarantine.json",
         ],
         [
             PYTHON,
