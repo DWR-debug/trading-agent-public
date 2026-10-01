@@ -1,4 +1,6 @@
 import json
+import os
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -355,32 +357,48 @@ def test_dispatch_main_rejects_stale_issue_before_parsing_task(tmp_path, monkeyp
     assert not output.exists()
 
 
+def _git_executable() -> str:
+    candidates = [
+        os.environ.get("GIT_EXECUTABLE"),
+        shutil.which("git"),
+    ]
+    if os.name == "nt":
+        for variable in ("ProgramFiles", "ProgramW6432", "ProgramFiles(x86)"):
+            root = os.environ.get(variable)
+            if root:
+                candidates.append(str(Path(root) / "Git" / "cmd" / "git.exe"))
+                candidates.append(str(Path(root) / "Git" / "bin" / "git.exe"))
+    for candidate in candidates:
+        if candidate and Path(candidate).exists():
+            return candidate
+    raise RuntimeError(
+        "Git executable not found; set GIT_EXECUTABLE or install Git for Windows."
+    )
+
+
+def _git(*args: str) -> None:
+    subprocess.run([_git_executable(), *args], check=True)
+
+
 def _scope_test_repo(tmp_path, monkeypatch):
     repo = tmp_path / "repo"
     repo.mkdir()
-    subprocess.run(["git", "init", "-q", str(repo)], check=True)
-    subprocess.run(["git", "-C", str(repo), "config", "user.name", "Test"], check=True)
-    subprocess.run(
-        ["git", "-C", str(repo), "config", "user.email", "test@example.com"],
-        check=True,
-    )
+    _git("init", "-q", str(repo))
+    _git("-C", str(repo), "config", "user.name", "Test")
+    _git("-C", str(repo), "config", "user.email", "test@example.com")
     (repo / "allowed.txt").write_text("base\n", encoding="utf-8")
     (repo / "outside.txt").write_text("outside base\n", encoding="utf-8")
     (repo / ".github").mkdir()
     (repo / ".github" / "workflow.yml").write_text("protected\n", encoding="utf-8")
-    subprocess.run(
-        [
-            "git",
-            "-C",
-            str(repo),
-            "add",
-            "allowed.txt",
-            "outside.txt",
-            ".github/workflow.yml",
-        ],
-        check=True,
+    _git(
+        "-C",
+        str(repo),
+        "add",
+        "allowed.txt",
+        "outside.txt",
+        ".github/workflow.yml",
     )
-    subprocess.run(["git", "-C", str(repo), "commit", "-qm", "base"], check=True)
+    _git("-C", str(repo), "commit", "-qm", "base")
     monkeypatch.chdir(repo)
 
     contract = tmp_path / "contract.json"
@@ -402,7 +420,7 @@ def test_scope_guard_rejects_untracked_file_outside_allowlist(tmp_path, monkeypa
 def test_scope_guard_rejects_staged_file_outside_allowlist(tmp_path, monkeypatch):
     repo, contract = _scope_test_repo(tmp_path, monkeypatch)
     (repo / "outside.txt").write_text("staged\n", encoding="utf-8")
-    subprocess.run(["git", "add", "outside.txt"], check=True)
+    _git("add", "outside.txt")
 
     with pytest.raises(SystemExit, match="AGENT_SCOPE_VIOLATION:outside.txt"):
         validate_scope(contract)
@@ -419,10 +437,7 @@ def test_scope_guard_rejects_unstaged_file_outside_allowlist(tmp_path, monkeypat
 def test_scope_guard_rejects_rename_out_of_protected_prefix(tmp_path, monkeypatch):
     repo, contract = _scope_test_repo(tmp_path, monkeypatch)
     (repo / "docs").mkdir()
-    subprocess.run(
-        ["git", "mv", ".github/workflow.yml", "docs/workflow.yml"],
-        check=True,
-    )
+    _git("mv", ".github/workflow.yml", "docs/workflow.yml")
 
     with pytest.raises(SystemExit, match=r"AGENT_SCOPE_VIOLATION:.*\.github/workflow\.yml"):
         validate_scope(contract)
@@ -453,7 +468,7 @@ def test_scope_guard_does_not_treat_backslash_filename_as_directory_path(
 def test_scope_guard_accepts_allowed_staged_and_untracked_files(tmp_path, monkeypatch):
     repo, contract = _scope_test_repo(tmp_path, monkeypatch)
     (repo / "allowed.txt").write_text("staged change\n", encoding="utf-8")
-    subprocess.run(["git", "add", "allowed.txt"], check=True)
+    _git("add", "allowed.txt")
     (repo / "docs").mkdir()
     (repo / "docs" / "note.md").write_text("untracked\n", encoding="utf-8")
 

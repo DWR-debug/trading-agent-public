@@ -181,8 +181,15 @@ def test_continuous_qa_is_matrix_orchestrated_and_parallel_bounded():
     assert "Aggregate QA gate" in text
     assert "needs: qa_lane" in text
     assert "if: always()" in text
-    assert "MATRIX_RESULT: ${{ needs.qa_lane.result }}" in text
-    assert 'if /I not "%MATRIX_RESULT%"=="success" exit /b 1' in text
+    # The aggregate gate must validate the actual lane artifacts rather than
+    # trusting the matrix aggregate result alone.
+    assert "expected = {" in text
+    assert '"repo_qa"' in text
+    assert '"autonomous_frontier_qa"' in text
+    assert "summaries = sorted(Path(" in text
+    assert 'summary.get("failed_steps") != []' in text
+    assert "step_return_codes" in text
+    assert 'print("AGGREGATE_QA=SUCCESS")' in text
 
 
 def test_self_hosted_continuous_qa_is_scheduled_and_non_formal():
