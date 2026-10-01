@@ -42,8 +42,10 @@ runs:
             ).strip()
             encoded, current_sha = raw.rsplit(":", 1)
             state = json.loads(base64.b64decode(encoded).decode("utf-8"))
-        except subprocess.CalledProcessError:
-            pass
+        except subprocess.CalledProcessError as exc:
+            print("COPILOT_FREE_GATE=STATE_READ_FAILED")
+            print(exc.output or "unable to read protected Copilot budget state")
+            raise SystemExit(4) from exc
 
         if not isinstance(state, dict) or state.get("month") != month:
             state = {"schema_version": 1, "month": month, "reserved_sessions": 0, "max_reserved_sessions": 4}
