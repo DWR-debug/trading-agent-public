@@ -31,7 +31,11 @@ jobs:
           curl -L --fail --retry 5 --retry-all-errors --retry-delay 2 -o /tmp/verdict/tokenizer.json https://huggingface.co/heman10x/rlcd-modernbert-151m/resolve/main/tokenizer.json
           curl -L --fail --retry 5 --retry-all-errors --retry-delay 2 -o /tmp/verdict/tokenizer_config.json https://huggingface.co/heman10x/rlcd-modernbert-151m/resolve/main/tokenizer_config.json
           curl -L --fail --retry 5 --retry-all-errors --retry-delay 2 -o /tmp/verdict/config.json https://huggingface.co/heman10x/rlcd-modernbert-151m/resolve/main/config.json
-          sha256sum /tmp/verdict/model.onnx /tmp/verdict/tokenizer.json /tmp/verdict/tokenizer_config.json /tmp/verdict/config.json
+          test "$(sha256sum /tmp/verdict/model.onnx | cut -d' ' -f1)" = "4ae01f822538b000fa0e55859d4b3e6b40871d860149397e8784428b2a42ee5e"
+          test "$(sha256sum /tmp/verdict/tokenizer.json | cut -d' ' -f1)" = "8bb449eb0c037aae44115b65905bb339b8f3f74eb37067c19127feb3c0755723"
+          test "$(sha256sum /tmp/verdict/tokenizer_config.json | cut -d' ' -f1)" = "fb54f027372062b2ca52282efb04d178a8b57167a00cd8f4e816515823a2c016"
+          test "$(sha256sum /tmp/verdict/config.json | cut -d' ' -f1)" = "303f8eef1009cfdcb0cfba3e653247e625f16a4501e2351bad1a633f1f644695"
+
       - name: Run isolated benchmark
         run: |
           python -m automation.evidence_critic_verdict --model-dir /tmp/verdict --output /tmp/verdict/result.json
