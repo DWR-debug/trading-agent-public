@@ -193,6 +193,15 @@
         "parent_code": "H06",
         "performance_authorization_allowed": false,
         "state": "DESIGN_ONLY_ACTIVE"
+      },
+      {
+        "class": "cftc_tff_positioning_divergence",
+        "code": "120",
+        "design_document": "docs/research_design/Q120_CFTC_TFF_POSITIONING_2026-10-01.md",
+        "issue_number": 768,
+        "parent_code": "market_state_and_allocator_frontier",
+        "performance_authorization_allowed": false,
+        "state": "DESIGN_ONLY_ACTIVE"
       }
     ],
     "active_trials": [
@@ -579,7 +588,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T16:44:28.900375+00:00",
+  "generated_at_utc": "2026-10-01T17:05:24.278636+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -771,33 +780,28 @@
     ],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "research/q120-cftc-positioning-state-v2-2026-10-01",
-        "number": 771,
-        "title": "Q120: add CFTC TFF positioning-divergence frontier (current base)",
-        "updatedAt": "2026-10-01T16:43:53Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/771"
-      },
-      {
-        "baseRefName": "master",
-        "headRefName": "research/q120-cftc-positioning-state-2026-10-01",
-        "number": 769,
-        "title": "Q120: add CFTC TFF positioning-divergence frontier",
-        "updatedAt": "2026-10-01T16:38:47Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/769"
-      },
-      {
-        "baseRefName": "master",
-        "headRefName": "research/q104-i22-session-window-fix-v3-2026-10-01",
-        "number": 765,
-        "title": "Q104:I22: fix session-window semantics on current master",
-        "updatedAt": "2026-10-01T16:26:38Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/765"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "Q120: add CFTC TFF positioning-divergence frontier",
+        "sha": "ebd76ffd166064ba37802c1cb7247883bedee188",
+        "timestamp": "2026-10-01T19:05:12+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "5db50b4b17d0811ab36cbded4ce08111795cc300",
+        "timestamp": "2026-10-01T16:58:09Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "9dbecd00559647870af06604f55c13cc5e4235f7",
+        "timestamp": "2026-10-01T16:57:05Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4f06c44f3e9cab7c4f46d196d5d479cb4175f09d",
+        "timestamp": "2026-10-01T16:44:28Z"
+      },
       {
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "4d46d4c3594cb0d9f88ca339165e6955c8bb54ed",
@@ -817,26 +821,6 @@
         "message": "H06-P2: add fail-closed readiness receipt (#767)",
         "sha": "5838df8e22d8462ce1262908be64f557100a3d8f",
         "timestamp": "2026-10-01T18:42:15+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "c368215b68ed74a09e87118fca6b81337623a4c3",
-        "timestamp": "2026-10-01T16:41:47Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ef01ae7003583b2fc5690deffb7a251d06dc7e68",
-        "timestamp": "2026-10-01T16:32:12Z"
-      },
-      {
-        "message": "GOV: register H06-P2 design-only candidate",
-        "sha": "1659f2e3e356c0963d4f2f390cde23649cf30d38",
-        "timestamp": "2026-10-01T18:31:54+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "37a04feb5f1a209671d23c995d5eaf7252bd60b7",
-        "timestamp": "2026-10-01T16:31:50Z"
       }
     ]
   },
@@ -906,12 +890,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4d46d4c3594cb0d9f88ca339165e6955c8bb54ed",
+  "source_master_sha": "ebd76ffd166064ba37802c1cb7247883bedee188",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36894232755"
+    "run_id": "36896782173"
   }
 }
