@@ -581,7 +581,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T17:30:57.781443+00:00",
+  "generated_at_utc": "2026-10-01T17:34:45.750303+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -769,6 +769,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: install H06 freeze test dependency",
+        "sha": "28cb9c11a1742c50b38ef18805b310b42ce4c93d",
+        "timestamp": "2026-10-01T19:34:32+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "a4da7dff6d2178c805d31495dfb2008135c2ceb8",
+        "timestamp": "2026-10-01T17:32:24Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "1398bc1062a4ab3ae586b184fd90830503401ed2",
+        "timestamp": "2026-10-01T17:30:57Z"
+      },
+      {
         "message": "REPAIR: restore H06/Q119/Windows research lanes",
         "sha": "09b7f2752db7ac684142dd00de664c69af18f9df",
         "timestamp": "2026-10-01T19:30:46+02:00"
@@ -792,21 +807,6 @@
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "b59a911732e91d6c5518f4e56acfb189e6533363",
         "timestamp": "2026-10-01T17:14:52Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "dc804410d5bd1602a1a5148ed46fe6cb2c81293f",
-        "timestamp": "2026-10-01T17:05:24Z"
-      },
-      {
-        "message": "Q120: add CFTC TFF positioning-divergence frontier",
-        "sha": "ebd76ffd166064ba37802c1cb7247883bedee188",
-        "timestamp": "2026-10-01T19:05:12+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "5db50b4b17d0811ab36cbded4ce08111795cc300",
-        "timestamp": "2026-10-01T16:58:09Z"
       }
     ]
   },
@@ -876,12 +876,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "09b7f2752db7ac684142dd00de664c69af18f9df",
+  "source_master_sha": "28cb9c11a1742c50b38ef18805b310b42ce4c93d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36899929432"
+    "run_id": "36900391600"
   }
 }
