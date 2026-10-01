@@ -16,10 +16,8 @@ def test_h06_p2_readiness_validates_fixed_contract():
 
 def test_h06_p2_readiness_receipt_is_deterministically_fingerprintable(tmp_path):
     import hashlib
-    from pathlib import Path
 
     out = tmp_path / "result.json"
-    assert h06_p2_readiness.main_args if False else True
     result = h06_p2_readiness.validate()
     result["receipt_fingerprint"] = hashlib.sha256(
         json.dumps(result, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
