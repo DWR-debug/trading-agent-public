@@ -1,4 +1,5 @@
 ECL_WAKE_2026-10-01
+wake_epoch=1790863112
 task=ECL-2026-10-01-001
 mode=isolated-shadow-only
 research_computation=false
