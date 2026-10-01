@@ -1,6 +1,8 @@
 name: Q104 I22 SEC Filing Arrival Compiler
 
 on:
+  schedule:
+    - cron: "5 */6 * * *"
   push:
     paths:
       - "automation/q104_i22_filing_arrival_compiler.py"
