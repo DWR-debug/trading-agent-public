@@ -26,10 +26,10 @@ FIELDS = ",".join([
     "report_date_as_yyyy_mm_dd",
     "cftc_contract_market_code",
     "open_interest_all",
-    "asset_mgr_positions_long_all",
-    "asset_mgr_positions_short_all",
-    "lev_money_positions_long_all",
-    "lev_money_positions_short_all",
+    "asset_mgr_positions_long",
+    "asset_mgr_positions_short",
+    "lev_money_positions_long",
+    "lev_money_positions_short",
 ])
 
 RELEASE_SCHEDULE = "https://www.cftc.gov/MarketReports/CommitmentsofTraders/ReleaseSchedule/index.htm"
@@ -64,10 +64,10 @@ def validate(rows: list[dict]) -> dict:
         "report_date_as_yyyy_mm_dd",
         "cftc_contract_market_code",
         "open_interest_all",
-        "asset_mgr_positions_long_all",
-        "asset_mgr_positions_short_all",
-        "lev_money_positions_long_all",
-        "lev_money_positions_short_all",
+        "asset_mgr_positions_long",
+        "asset_mgr_positions_short",
+        "lev_money_positions_long",
+        "lev_money_positions_short",
     }
     for row in rows:
         if not required.issubset(row):
