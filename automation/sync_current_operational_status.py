@@ -202,10 +202,12 @@ def generate(
         )
     if (ROOT / "research/preregistrations/q105_q104_historical_pit_2026_10_01.json").is_file():
         recorded_next_research_focus = (
-            "Q104 source-feasibility completed for 5 data-backed candidates; Q105 is the active "
-            "historical archive/PIT feasibility gate. Q104:R9 remains synthetic-only until "
-            "validated underlying families exist. No performance authorization, holdout selection, "
-            "parameter search, promotion or live execution is permitted by Q104/Q105."
+            "Q104 source-feasibility completed for 5 data-backed candidates; Q105 historical "
+            "archive/PIT feasibility is completed; Q106 shared PIT join integrity is completed. "
+            "The active research gate is now Q107 fresh disjoint equity coverage for Q104:I19, "
+            "Q104:I20, Q104:I22 and Q104:M6. Q104:R9 remains synthetic-only until validated "
+            "underlying families exist. No performance authorization, holdout selection, parameter "
+            "search, promotion or live execution is permitted by Q104-Q107."
         )
 
     current = {
