@@ -295,6 +295,10 @@ jobs:
           fi
           python -m automation.agent_scope_guard --contract "$RUNNER_TEMP/task_contract.json"
           git commit -m "AGENT: issue #${ISSUE_NUMBER} bounded engineering"
+          BRANCH="${BRANCH:-$(git branch --show-current)}"
+          test -n "$BRANCH"
+          test "$BRANCH" != "master"
+          echo "Publishing agent branch: $BRANCH"
           git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:${BRANCH}"
           if pr_url="$(gh pr create --base master --head "${BRANCH}" --title "AGENT: Issue #${ISSUE_NUMBER} bounded engineering task" --body "Bounded agent task completed and regression-tested." 2>/dev/null)"; then
             gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}/comments" -f body="Agent task completed and published as ${pr_url}."
