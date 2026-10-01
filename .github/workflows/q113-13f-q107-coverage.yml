@@ -69,10 +69,10 @@ jobs:
           set -euo pipefail
           BASE_SHA="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
           test -n "$BASE_SHA"
-          python automation/github_contents_publish.py
-            --repository "$GITHUB_REPOSITORY"
-            --branch master
-            --base-sha "$BASE_SHA"
+          python automation/github_contents_publish.py \
+            --repository "$GITHUB_REPOSITORY" \
+            --branch master \
+            --base-sha "$BASE_SHA" \
             --file "research/evidence/q113_13f_q107_coverage_result.json=research/runs/q113_13f_q107_coverage/result.json"
 
       - name: Upload Q113 evidence pack
