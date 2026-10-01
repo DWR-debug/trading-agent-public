@@ -57,7 +57,15 @@ def test_run_is_exhaustive_over_research_decision_points(tmp_path):
     }
     coverage_path = tmp_path / "coverage.json"
     coverage_path.write_text(__import__("json").dumps(coverage), encoding="utf-8")
-    report = run(root, out, coverage_path)
+    auth = {
+        "authorized": True,
+        "execution_scope": "PIT_ONLY",
+        "performance_execution_authorized": False,
+        "authorization_id": "AUTH-TEST",
+    }
+    auth_path = tmp_path / "auth.json"
+    auth_path.write_text(__import__("json").dumps(auth), encoding="utf-8")
+    report = run(root, out, coverage_path, auth_path)
     assert report["status"] == "PIT_PASSED"
     assert report["checked_decision_points"] == RESEARCH_CANDLES - 252 - 1
     assert report["governance"]["performance_evaluation"] is False
