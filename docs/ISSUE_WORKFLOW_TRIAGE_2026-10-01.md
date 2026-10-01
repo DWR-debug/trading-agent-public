@@ -17,6 +17,7 @@ This is an operational triage record. It does not create scientific evidence, ra
 | Issue | Role | Decision |
 | --- | --- | --- |
 | #568 Q073 | expanded orthogonal candidate search | KEEP OPEN; distinct research-design lane |
+| #569 Q074 | extended SEC/Cboe source feasibility | KEEP OPEN; source/schema feasibility lane |
 | #570 Q075 | information-channel coverage/PIT feasibility | KEEP OPEN; data-contract lane |
 | #573 Q078 | literature-derived orthogonal expansion | KEEP OPEN; design lane |
 | #578 Q080 | tail/network/state orthogonal bank | KEEP OPEN; design lane |
