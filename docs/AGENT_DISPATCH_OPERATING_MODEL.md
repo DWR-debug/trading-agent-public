@@ -17,12 +17,23 @@ Der automatische Coding-Dispatch nutzt derzeit ausschließlich den PR-fähigen `
 explizit deterministische Backtests, Holdout-/Parameter-/Asset-/Threshold-/Horizon-
 Selektion, Gate-Änderungen, Promotion und Live-Ausführung.
 
-## Zwei-Slot-Regel
+## Zwei-Slot-Lease
 
-Vor jeder Zuweisung zählt der Workflow offene Issues mit
-`copilot-swe-agent[bot]`. Bei zwei aktiven Zuweisungen wird der neue Task
-nicht gestartet. Dadurch können zwei unabhängige Sessions parallel laufen,
-ohne eine dritte Session zu erzeugen.
+Die Kapazitätsgrenze wird als gemeinsamer Lease-Zustand mit genau zwei
+benannten Slots modelliert. Die normative Lease-Bindung enthält `task_id`,
+Issue-Nummer, Manifest-Fingerprint und Run-ID. Ein abgelaufener Lease wird
+beim nächsten Zugriff entfernt und kann seinen Slot zurückgeben.
+
+Die Lease-Zustandsmaschine ist idempotent nur für exakt dieselbe Bindung.
+Dieselbe Task-ID mit einem anderen Manifest-Fingerprint oder einer anderen
+Run-ID wird fail-closed abgelehnt. Ein Lease darf nur von genau derselben
+Bindung erneuert oder freigegeben werden.
+
+Die technische Obergrenze beträgt zwei Slots. Das ist unabhängig von der
+separaten Ressourcengrenze für Copilot Free: tatsächlich parallele Copilot-
+Sessions bleiben auf **eine** begrenzt. Der alte Issue-/Bot-Assignment-Count
+darf daher nicht mehr als gemeinsamer Kapazitätszähler interpretiert werden;
+Branch-, Issue- und PR-Zustände sind abgeleitete Prüfungen.
 
 ## Ressourcenregel
 
@@ -31,8 +42,16 @@ Die technische Dispatch-Schicht kennt **keine** bezahlte Erweiterung.
 `paid_agent_budget_usd=0` bleibt unverändert.
 
 Die tatsächliche Agentennutzung wird nicht aus dem Dispatch-Versuch abgeleitet.
-Erst ein verifizierter Agent-PR/Run darf später im Usage-Ledger als tatsächliche
-Nutzung eingetragen werden.
+Ein Lease bedeutet nur reservierte technische Kapazität. Erst ein verifizierter
+Agent-PR/Run darf später im Usage-Ledger als tatsächliche Nutzung eingetragen
+werden.
+
+Die Lease-Datei bzw. der verwendete gemeinsame Zustandsdienst muss atomare
+Schreibzugriffe unterstützen. Das versionierte Python-Modul stellt dafür ein
+plattformübergreifendes Lock-/Atomic-Replace-Primitive bereit. Die Queue-,
+Cloud-Agent- und manuelle Dispatch-Schicht müssen denselben Zustand verwenden;
+ein rein lokaler, pro Runner getrennter Zähler ist **kein** Ersatz für den
+gemeinsamen Lease.
 
 ## Task-Vertrag
 
