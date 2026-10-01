@@ -133,6 +133,8 @@ ACTIVE_WORKFLOWS = {
     "q111-sec-security-identity.yml",
     "q112-sec-security-identity.yml",
     "q113-13f-q107-coverage.yml",
+    "q114-13f-manager-transitions.yml",
+    "q115-treasury-demand-state.yml",
     "q095-authorization-once.yml",
     "rccsm-feasibility-cloud.yml",
     "rccsm-feasibility.yml",
