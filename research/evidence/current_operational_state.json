@@ -542,7 +542,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T12:49:38.141786+00:00",
+  "generated_at_utc": "2026-10-01T12:53:19.934495+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -741,8 +741,27 @@
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/642"
       }
     ],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "research/q104-i22-filing-arrival",
+        "number": 756,
+        "title": "RESEARCH: Q104 I22 deterministic SEC filing-arrival compiler",
+        "updatedAt": "2026-10-01T12:51:55Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/756"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "FIX: make Evidence-Critic Lab Windows workflow policy-safe",
+        "sha": "0fe9ddfcad39de34d5f1ba16c53a11bffb044a43",
+        "timestamp": "2026-10-01T14:53:06+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9ddfb2205b8d6f8205da369dc6bd62bcc9f9f9a3",
+        "timestamp": "2026-10-01T12:49:38Z"
+      },
       {
         "message": "OPS: synchronize current operational status",
         "sha": "d1992d7bf55096f4fcb581300c60c70d490023c3",
@@ -772,16 +791,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "8d9fd46da38f8e4ec1327841023d1e5f94211166",
         "timestamp": "2026-10-01T12:47:36Z"
-      },
-      {
-        "message": "DOCS: define isolated Evidence-Critic Lab",
-        "sha": "432c1b07a2b44057d791bbdfa71c0e6601ba2cdd",
-        "timestamp": "2026-10-01T14:47:24+02:00"
-      },
-      {
-        "message": "TEST: add Evidence-Critic benchmark invariants",
-        "sha": "9bd7fc8bd3a9da361279f0ef1621a7929cfb92cb",
-        "timestamp": "2026-10-01T14:47:20+02:00"
       }
     ]
   },
@@ -851,12 +860,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d1992d7bf55096f4fcb581300c60c70d490023c3",
+  "source_master_sha": "0fe9ddfcad39de34d5f1ba16c53a11bffb044a43",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36864335236"
+    "run_id": "36864790858"
   }
 }
