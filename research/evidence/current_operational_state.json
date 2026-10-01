@@ -571,7 +571,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T16:23:30.624281+00:00",
+  "generated_at_utc": "2026-10-01T16:29:10.232525+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -766,14 +766,29 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
-        "headRefName": "research/q104-i22-session-window-fix-v2-2026-10-01",
-        "number": 763,
-        "title": "Q104:I22: correct fixed session-window semantics on current master",
-        "updatedAt": "2026-10-01T16:22:18Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/763"
+        "headRefName": "research/q104-i22-session-window-fix-v3-2026-10-01",
+        "number": 765,
+        "title": "Q104:I22: fix session-window semantics on current master",
+        "updatedAt": "2026-10-01T16:26:38Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/765"
       }
     ],
     "recent_commits": [
+      {
+        "message": "Q119: add live Treasury source/PIT feasibility gate (#764)",
+        "sha": "ac8818e66cc96aff7f0bd101ea8d350b330d38cb",
+        "timestamp": "2026-10-01T18:28:53+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "0a95e618c68496f30077e981e2f4818ae9625118",
+        "timestamp": "2026-10-01T16:28:13Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b6635b7ecbd3f005e548232fdc63b434d1dc08e4",
+        "timestamp": "2026-10-01T16:23:30Z"
+      },
       {
         "message": "OPS: synchronize current operational status",
         "sha": "6c024dab6fba1be0eba1e7fcf1bf7a23eed1a295",
@@ -798,21 +813,6 @@
         "message": "GOV: register Q119 Treasury demand-shape frontier",
         "sha": "8b152a962e1516b490c6d38ccb40462f94cf31ae",
         "timestamp": "2026-10-01T18:22:41+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a0b4cf8e7676afd2c9916df59d99239bf7dade68",
-        "timestamp": "2026-10-01T16:21:01Z"
-      },
-      {
-        "message": "Q119: add Treasury auction demand-shape design contract (#762)",
-        "sha": "9981520423e357419453ae1afaaae4d1737fae1e",
-        "timestamp": "2026-10-01T18:20:47+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "eded985c62a76518b83b307db54a42d4af1dee8a",
-        "timestamp": "2026-10-01T16:19:02Z"
       }
     ]
   },
@@ -882,12 +882,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "6c024dab6fba1be0eba1e7fcf1bf7a23eed1a295",
+  "source_master_sha": "ac8818e66cc96aff7f0bd101ea8d350b330d38cb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36891579784"
+    "run_id": "36892318096"
   }
 }
