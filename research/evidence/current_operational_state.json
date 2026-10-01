@@ -591,7 +591,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T18:41:47.873774+00:00",
+  "generated_at_utc": "2026-10-01T18:42:06.303296+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -779,6 +779,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: resolve H06 adapter runner temp path",
+        "sha": "798b70640b0c70498548d908caab36a3b8df5301",
+        "timestamp": "2026-10-01T20:42:00+02:00"
+      },
+      {
+        "message": "FIX: adapt H06 coverage receipt schema at execution boundary",
+        "sha": "a4d8c406717932fa52e6cf13b4046cadbf087366",
+        "timestamp": "2026-10-01T20:41:52+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9c8e57f2078eab0705225cbaa6c7c3df6839a386",
+        "timestamp": "2026-10-01T18:41:47Z"
+      },
+      {
         "message": "EVIDENCE: record H06-P2 implementation incident",
         "sha": "4346c717bf6735382cd062ae2ff95f6f1869aecc",
         "timestamp": "2026-10-01T20:41:34+02:00"
@@ -802,21 +817,6 @@
         "message": "OPS: record Gemini worker state",
         "sha": "f81ba92ce394b07c4f1236d0fed5fa093759015b",
         "timestamp": "2026-10-01T18:22:50Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "e08845e3951dccb21699dbfb29dd2583fa63ae06",
-        "timestamp": "2026-10-01T18:21:01Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "7df070ff690cb70a0b38a801fe5d93ff3af6d88e",
-        "timestamp": "2026-10-01T18:20:26Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "1f2aa2c9ba28bfc42cba0f883035a5e565c81944",
-        "timestamp": "2026-10-01T18:19:45Z"
       }
     ]
   },
@@ -886,12 +886,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4346c717bf6735382cd062ae2ff95f6f1869aecc",
+  "source_master_sha": "798b70640b0c70498548d908caab36a3b8df5301",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36908726564"
+    "run_id": "36908764391"
   }
 }
