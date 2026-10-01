@@ -343,7 +343,7 @@ knappe Spezialreserve und nicht als normalen Dauer-Worker.
 Verbindliche interne Schutzkappe:
 - ab 2026-10-01T00:00:00Z wieder freigabefähig;
 - maximal 4 gebundene Copilot-Session-Reservierungen pro Kalendermonat;
-- maximal 12 AI credits pro reservierter Session;
+- maximal 30 AI credits pro reservierter Session;
 - maximal 1 paralleler Copilot-Worker;
 - kein Überziehen, kein Kauf zusätzlicher Credits, kein Paid Fallback.
 
