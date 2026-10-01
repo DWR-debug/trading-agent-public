@@ -30,6 +30,9 @@ on:
       - "research/governance/active_research_registry.json"
       - "automation/q104_source_feasibility.py"
       - "tests/test_q104_source_feasibility.py"
+      - "automation/q105_q104_historical_pit.py"
+      - "tests/test_q105_q104_historical_pit.py"
+      - "research/preregistrations/q105_q104_historical_pit_2026_10_01.json"
       - "research/frontier/candidate_inventory_2026_09_29.json"
       - "research/frontier/q097_public_short_flow_candidates.json"
       - "research/run_requests/frontier_cycle_2026_09_30.trigger"
@@ -80,6 +83,7 @@ jobs:
             tests/test_rccsm_observational_feasibility.py \
             tests/test_q104_candidate_wave_contract.py \
             tests/test_q104_source_feasibility.py
+            tests/test_q105_q104_historical_pit.py
 
       - name: Q096 live public-source audit
         run: python -m automation.q096_frontier_source_pit_audit
@@ -92,6 +96,8 @@ jobs:
         run: python -m automation.q104_candidate_wave_contract
       - name: Q104 source feasibility
         run: python -m automation.q104_source_feasibility
+      - name: Q105 historical PIT feasibility
+        run: python -m automation.q105_q104_historical_pit
       - name: Q101 negative-evidence atlas
         run: python -m automation.q101_negative_evidence_atlas --output-dir research/runs/q101_negative_evidence_atlas
       - name: Q102 regime negative-evidence atlas
@@ -122,6 +128,7 @@ jobs:
             research/runs/q100_frontier_feasibility_synthesis/result.json
             research/runs/q104_candidate_wave_contract/result.json
             research/runs/q104_source_feasibility/result.json
+            research/runs/q105_q104_historical_pit/result.json
             research/runs/q101_negative_evidence_atlas/result.json
             research/runs/q101_negative_evidence_atlas/result.md
             research/runs/q102_regime_negative_evidence/result.json
