@@ -292,7 +292,7 @@
       "code": "104",
       "class": "orthogonal_information_investor_demand_and_meta_state",
       "issue_number": 739,
-      "state": "SOURCE_FEASIBILITY_COMPLETED_5_OF_6",
+      "state": "SOURCE_FEASIBILITY_AND_DOWNSTREAM_GATES_COMPLETED",
       "preregistration_path": "research/preregistrations/q104_orthogonal_candidate_wave_2026_10_01.json",
       "candidate_inventory_path": "research/frontier/q104_candidate_wave_2026_10_01.json",
       "performance_authorization_allowed": false,
@@ -302,7 +302,7 @@
       "code": "105",
       "class": "historical_archive_and_pit_feasibility_gate",
       "issue_number": 740,
-      "state": "PIT_FEASIBILITY_COMPLETED_WITH_I21_PARTIAL_WINDOW",
+      "state": "PIT_FEASIBILITY_COMPLETED",
       "parent_code": "104",
       "preregistration_path": "research/preregistrations/q105_q104_historical_pit_2026_10_01.json",
       "performance_authorization_allowed": false,
@@ -357,7 +357,7 @@
       "preregistration_path": "research/preregistrations/q110_q109_source_feasibility_2026_10_01.json",
       "performance_authorization_allowed": false,
       "receipt_path": "research/evidence/q110_q109_source_feasibility_2026_10_01.json",
-      "receipt_fingerprint": "df1b127bb4faf887b1298a73a89819903efb3a8aab685f110349212759402fa7"
+      "receipt_fingerprint": "df1b127bb4faf887b1298a73a89819903efb3a8ab685f110349212759402fa7"
     },
     {
       "code": "111",
@@ -381,16 +381,18 @@
     {
       "code": "113",
       "class": "fixed_quarter_13f_manager_security_coverage_on_q107_universe",
-      "state": "13F_COVERAGE_FEASIBILITY_ACTIVE",
+      "state": "13F_COVERAGE_COMPLETED",
       "parent_code": "112",
       "issue_number": 748,
       "preregistration_path": "research/preregistrations/q113_13f_q107_coverage_2026_10_01.json",
-      "performance_authorization_allowed": false
+      "performance_authorization_allowed": false,
+      "receipt_path": "research/evidence/q113_13f_q107_coverage_result.json",
+      "receipt_fingerprint": "29da4de843641e4ac5760fdaaeb4833776ca7220842274234bf64236d2ecb19e"
     },
     {
       "code": "114",
       "class": "deterministic_13f_manager_position_transition_compiler",
-      "state": "STRUCTURAL_COMPILER_ACTIVE",
+      "state": "STRUCTURAL_COMPILER_COMPLETED_DUAL_ARCH",
       "parent_code": "113",
       "issue_number": 749,
       "preregistration_path": "research/preregistrations/q114_13f_manager_transitions_2026_10_01.json",
@@ -399,7 +401,7 @@
     {
       "code": "115",
       "class": "deterministic_treasury_auction_demand_state_compiler",
-      "state": "STRUCTURAL_COMPILER_ACTIVE",
+      "state": "STRUCTURAL_COMPILER_COMPLETED_DUAL_ARCH",
       "parent_code": "104",
       "issue_number": 750,
       "preregistration_path": "research/preregistrations/q115_treasury_demand_state_2026_10_01.json",
@@ -408,11 +410,13 @@
     {
       "code": "117",
       "class": "live_treasury_10y_demand_state_population",
-      "state": "TREASURY_STATE_FEASIBILITY_ACTIVE",
+      "state": "TREASURY_DEMAND_POPULATION_COMPLETED",
       "parent_code": "115",
       "issue_number": 753,
       "preregistration_path": "research/preregistrations/q117_treasury_demand_population_2026_10_01.json",
-      "performance_authorization_allowed": false
+      "performance_authorization_allowed": false,
+      "receipt_path": "research/evidence/q117_treasury_demand_population_result.json",
+      "receipt_fingerprint": "ad060e9023eef10599e855f2e5684f0657416abeb15b5bee8fec70bc2a044e78"
     }
   ]
 }
