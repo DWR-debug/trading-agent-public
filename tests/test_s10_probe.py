@@ -1,7 +1,7 @@
 from pathlib import Path
 
 def test_s10_probe_is_fail_closed_and_local_only():
-    text = Path("automation/s10_live_probe.py").read_text(encoding="utf-8")
+    text = Path("automation/s10_probe.py").read_text(encoding="utf-8")
     assert "formal_evidence_allowed" in text
     assert '"secrets_collected":False' in text
     assert "LOCAL" in text
