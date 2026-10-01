@@ -1,12 +1,7 @@
 name: Q068 Frozen Snapshot Recovery Audit
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - "research/run_requests/q068_snapshot_audit.trigger"
-      - "automation/q068_snapshot_recovery_audit.py"
-      - ".github/workflows/q068-snapshot-recovery-audit.yml"
+  # Historical/completed execution path: manual dispatch only. Automatic re-triggering is retired.
   workflow_dispatch:
 
 permissions:
