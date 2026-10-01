@@ -504,7 +504,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T11:22:48.027969+00:00",
+  "generated_at_utc": "2026-10-01T11:24:22.678136+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -699,6 +699,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "Add Q114 transition contract workflow",
+        "sha": "48dc9551f5faf48f239f47258285849fbbd64e05",
+        "timestamp": "2026-10-01T13:24:18+02:00"
+      },
+      {
+        "message": "Add Q114 transition compiler tests",
+        "sha": "857fdf54f94f697ace0be56f4a253f641434dbe9",
+        "timestamp": "2026-10-01T13:24:15+02:00"
+      },
+      {
+        "message": "Add Q114 manager position transition compiler",
+        "sha": "bb4d11c00d4f1950bb38faec6028818ec4420a0f",
+        "timestamp": "2026-10-01T13:24:12+02:00"
+      },
+      {
+        "message": "Register Q114 13F transition compiler",
+        "sha": "6a6cb1f5d5eee389c3d884033f40f17844003f4d",
+        "timestamp": "2026-10-01T13:24:08+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "e19c0cf0d66aecd9ad5fe86f9ce68da62fdcffc6",
+        "timestamp": "2026-10-01T11:23:41Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "22c7868e19e8bdc2db98c5a5da95507fca605c1a",
+        "timestamp": "2026-10-01T11:22:48Z"
+      },
+      {
         "message": "Allow Q113 immutable receipt publication",
         "sha": "5ae7cab3c1c225a371b54f74d30893e088ec9c0a",
         "timestamp": "2026-10-01T13:22:35+02:00"
@@ -707,36 +737,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "345c55cbb9aeccb3c7a692104d75efa658821849",
         "timestamp": "2026-10-01T11:18:01Z"
-      },
-      {
-        "message": "Mark Q111 structural identity gate completed",
-        "sha": "7fc430d57851778015048e2a4b89f948f4a788cc",
-        "timestamp": "2026-10-01T13:17:50+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "45d36ff3449ae951e310792844eb5c0678545c7f",
-        "timestamp": "2026-10-01T11:17:43Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e7e68ba21a0e11ee76a4102889b5d685819728a4",
-        "timestamp": "2026-10-01T11:17:28Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4a55a44b1124bdc12b9bf36137bec07be4ca23a3",
-        "timestamp": "2026-10-01T11:17:15Z"
-      },
-      {
-        "message": "Fix Q107 shellcheck report selection",
-        "sha": "0e8468d1d6972c6b77cbabc467078e3452efbbe5",
-        "timestamp": "2026-10-01T13:17:11+02:00"
-      },
-      {
-        "message": "Fix Q113 shellcheck command-array integration",
-        "sha": "b962378ead08848c187bdb04c469ebe745416c75",
-        "timestamp": "2026-10-01T13:17:05+02:00"
       }
     ]
   },
@@ -806,12 +806,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5ae7cab3c1c225a371b54f74d30893e088ec9c0a",
+  "source_master_sha": "48dc9551f5faf48f239f47258285849fbbd64e05",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36854979299"
+    "run_id": "36855140269"
   }
 }
