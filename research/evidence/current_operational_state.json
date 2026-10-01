@@ -613,7 +613,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T18:51:52.122672+00:00",
+  "generated_at_utc": "2026-10-01T18:52:08.338550+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -801,6 +801,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6fe6275c4f8f2147c9d4cf235585984d117d98e9",
+        "timestamp": "2026-10-01T18:51:52Z"
+      },
+      {
         "message": "OPS: request H06-P2-R1 one-shot authorization",
         "sha": "bd8a227253e33d5d382c125205bf0dc968c0111b",
         "timestamp": "2026-10-01T20:51:51+02:00"
@@ -834,11 +839,6 @@
         "message": "FIX: bind H06-P2-R1 performance workflow to corrected runner",
         "sha": "009c2a6d6882ea783e6152d02c3ae04844cdcfa2",
         "timestamp": "2026-10-01T20:50:57+02:00"
-      },
-      {
-        "message": "FIX: harden H06-P2-R1 authorization workflow",
-        "sha": "a46e43e9c0c04c9f8e32ef17f38af9b3856cef83",
-        "timestamp": "2026-10-01T20:50:53+02:00"
       }
     ]
   },
@@ -908,12 +908,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "bd8a227253e33d5d382c125205bf0dc968c0111b",
+  "source_master_sha": "6fe6275c4f8f2147c9d4cf235585984d117d98e9",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36909990924"
+    "run_id": "36910011985"
   }
 }
