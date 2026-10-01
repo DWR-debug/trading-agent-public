@@ -53,17 +53,30 @@ def compile_rows(rows:list[dict], cutoff:date=END)->dict:
             "eligible_session":eligible.isoformat()
         })
     events.sort(key=lambda x:(x["acceptance_datetime"],x["accession"],x["form"]))
-    sessions=sorted({date.fromisoformat(x["eligible_session"]) for x in events})
-    by_session={s:[] for s in sessions}
-    for e in events: by_session[date.fromisoformat(e["eligible_session"])].append(e)
+    event_sessions=sorted({date.fromisoformat(x["eligible_session"]) for x in events})
+    by_session={s:[] for s in event_sessions}
+    for e in events:
+        by_session[date.fromisoformat(e["eligible_session"])].append(e)
+
+    # The fixed window is defined in actual XNYS sessions, not in the sparse
+    # set of sessions on which an event happened. Otherwise a quiet month
+    # could be treated as if it had only a few elapsed sessions.
+    calendar_sessions = [ts.date() for ts in CAL.sessions_in_range(
+        START.isoformat(),
+        cutoff.isoformat(),
+    )]
     density=[]
-    for s in sessions:
-        idx=sessions.index(s)
-        prior=sessions[max(0,idx-WINDOW+1):idx+1]
-        density.append({"decision_session":s.isoformat(),"arrival_count_20":sum(len(by_session[p]) for p in prior)})
+    for idx, s in enumerate(calendar_sessions):
+        prior=calendar_sessions[max(0,idx-WINDOW+1):idx+1]
+        density.append({
+            "decision_session":s.isoformat(),
+            "arrival_count_20":sum(len(by_session.get(p,[])) for p in prior),
+            "window_session_count":len(prior),
+        })
     return {
         "filing_count":len(events),
-        "eligible_session_count":len(sessions),
+        "eligible_session_count":len(event_sessions),
+        "decision_session_count":len(calendar_sessions),
         "first_acceptance":events[0]["acceptance_datetime"] if events else None,
         "last_acceptance":events[-1]["acceptance_datetime"] if events else None,
         "events":events,
