@@ -317,14 +317,7 @@
         "paid_fallback_allowed": false,
         "starts_utc": "2026-10-01T00:00:00Z"
       },
-      "current_pending_requests": [
-        {
-          "issue_number": "641",
-          "lane": "lane0",
-          "request_file": "agent_requests/lane0/AGENT-025.request",
-          "task_id": "AGENT-025"
-        }
-      ],
+      "current_pending_requests": [],
       "local_ai_smoke_after_research_lanes": true,
       "self_hosted_parallel_slots": 2
     },
@@ -412,7 +405,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T08:45:58.330586+00:00",
+  "generated_at_utc": "2026-10-01T08:46:20.120795+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -529,27 +522,26 @@
   },
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
-    "agent_queue_requests": [
-      {
-        "issue_number": "641",
-        "lane": "lane0",
-        "request_file": "agent_requests/lane0/AGENT-025.request",
-        "task_id": "AGENT-025"
-      }
-    ],
+    "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "repair/h06-cross-workflow-artifact-download-v1",
-        "number": 721,
-        "title": "FIX: harden H06 cross-workflow artifact reproduction",
-        "updatedAt": "2026-10-01T08:42:42Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/721"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: harden H06 cross-workflow artifact reproduction",
+        "sha": "4bb5021ec71f2edb40236942150d892f34894bbb",
+        "timestamp": "2026-10-01T10:46:06+02:00"
+      },
+      {
+        "message": "OPS: autonomous agent queue routing",
+        "sha": "219b7a1eb6bd7080baf4c70b31267982a5b59434",
+        "timestamp": "2026-10-01T08:46:00Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a7a7b8d987f54226db372408acc2114dc2b9959a",
+        "timestamp": "2026-10-01T08:45:58Z"
+      },
       {
         "message": "OPS: queue AGENT-025 bounded engineering task",
         "sha": "a0db9fd331d1eb58e892bfec9a626e3b2b057b83",
@@ -574,21 +566,6 @@
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "0e5288275c67588dbca51562ba23d62483c670d4",
         "timestamp": "2026-10-01T08:10:05Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "016adc8a37694138fc7e2c7b49d8b42da75472d3",
-        "timestamp": "2026-10-01T07:55:50Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "2104d6294a78e8fee39671b946b876d750098af6",
-        "timestamp": "2026-10-01T07:54:51Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "80c65bf63002d1c680b31c7a793f9a80fdc45f7f",
-        "timestamp": "2026-10-01T07:34:09Z"
       }
     ]
   },
@@ -658,12 +635,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a0db9fd331d1eb58e892bfec9a626e3b2b057b83",
+  "source_master_sha": "4bb5021ec71f2edb40236942150d892f34894bbb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36838355472"
+    "run_id": "36838395364"
   }
 }
