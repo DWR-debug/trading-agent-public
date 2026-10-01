@@ -504,7 +504,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T11:24:22.678136+00:00",
+  "generated_at_utc": "2026-10-01T11:24:37.134020+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -699,6 +699,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "Register Q115 Treasury demand-state compiler",
+        "sha": "9b5a7fa7438e66a46c0245134ac2230aba9522eb",
+        "timestamp": "2026-10-01T13:24:35+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2d0a66353c2cc59fc9216555cbe1e47030e03a20",
+        "timestamp": "2026-10-01T11:24:22Z"
+      },
+      {
         "message": "Add Q114 transition contract workflow",
         "sha": "48dc9551f5faf48f239f47258285849fbbd64e05",
         "timestamp": "2026-10-01T13:24:18+02:00"
@@ -727,16 +737,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "22c7868e19e8bdc2db98c5a5da95507fca605c1a",
         "timestamp": "2026-10-01T11:22:48Z"
-      },
-      {
-        "message": "Allow Q113 immutable receipt publication",
-        "sha": "5ae7cab3c1c225a371b54f74d30893e088ec9c0a",
-        "timestamp": "2026-10-01T13:22:35+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "345c55cbb9aeccb3c7a692104d75efa658821849",
-        "timestamp": "2026-10-01T11:18:01Z"
       }
     ]
   },
@@ -806,12 +806,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "48dc9551f5faf48f239f47258285849fbbd64e05",
+  "source_master_sha": "9b5a7fa7438e66a46c0245134ac2230aba9522eb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36855140269"
+    "run_id": "36855154210"
   }
 }
