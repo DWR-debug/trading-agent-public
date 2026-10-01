@@ -97,8 +97,10 @@ runs:
                         raise SystemExit(3)
                     state["month"] = month
                     state["reserved_sessions"] = latest_used + 1
-                except subprocess.CalledProcessError:
-                    pass
+                except subprocess.CalledProcessError as exc:
+                    print("COPILOT_FREE_GATE=STATE_REFRESH_FAILED")
+                    print(exc.output or "unable to refresh protected Copilot budget state")
+                    raise SystemExit(4) from exc
         with open(os.environ["GITHUB_STEP_SUMMARY"], "w", encoding="utf-8") as fh:
             fh.write(f"Copilot Free reservation: {state['reserved_sessions']}/{limit}; max 30 AI credits; paid fallback disabled.\n")
         PY
