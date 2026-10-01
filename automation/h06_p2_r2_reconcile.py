@@ -37,7 +37,7 @@ def reconcile(root=Path("."),workflow_run_id="UNVERIFIED"):
     trials.append({
       "trial_id":TRIAL_ID,"recorded_at":datetime.now(timezone.utc).isoformat(),"status":trial_status,
       "research_family":"h06_p2_sector_residual_global_rank",
-      "correction":{"type":"implementation_only","prior_trial_id":"T-2026-10-01-H06P2-PERFORMANCE-01","execution_incident_path":"research/evidence/h06_p2_performance_execution_incident.json"},
+      "correction":{"type":"implementation_only","prior_trial_id":"T-2026-10-01-H06P2R1-PERFORMANCE-01","execution_incident_path":"research/evidence/h06_p2_r1_performance_execution_incident.json"},
       "hypothesis":{"text":"Evaluate fixed sector-residual global Top5/Bottom5 against fixed raw global Top5/Bottom5 on the preregistered frozen H06 universe under the unchanged 13-gate contract."},
       "data_scope":{"research_count":result["research_periods"],"holdout_count":result["holdout_periods"],"holdout_used_for_selection":False,"symbols":result["symbols"],"requested_candles":result["requested_candles"],"target_common_candles":result["target_common_candles"],"evaluation_return_periods":result["evaluation_return_periods"],"coverage_prerequisite":result["coverage_prerequisite"],"pit_prerequisite":result["pit_prerequisite"],"input_bundle_prerequisite":result["input_bundle_prerequisite"]},
       "search_scope":{"raw_trial_count":2,"independent_trial_count":1,"parameter_search":False,"threshold_search":False,"variant_search":False,"asset_search":False,"sector_map_search":False,"horizon_search":False,"family_ranking":False},
