@@ -90,6 +90,8 @@ jobs:
 
       - name: Publish verified bundle to master
         if: steps.prior.outputs.already != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
