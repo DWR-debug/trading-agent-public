@@ -412,7 +412,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T09:18:28.641635+00:00",
+  "generated_at_utc": "2026-10-01T09:26:14.165564+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -538,18 +538,40 @@
       }
     ],
     "default_branch": "master",
-    "open_agent_ready_issues": [],
+    "open_agent_ready_issues": [
+      {
+        "number": 642,
+        "title": "AGENT-026: unify bounded agent capacity lease",
+        "updatedAt": "2026-10-01T09:20:28Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/issues/642"
+      }
+    ],
     "open_pull_requests": [
       {
         "baseRefName": "master",
-        "headRefName": "docs/issue-workflow-triage-2026-10-01-r1",
-        "number": 734,
-        "title": "DOCS: include Q074 in issue triage",
-        "updatedAt": "2026-10-01T09:17:55Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/734"
+        "headRefName": "fix/h06-pit-semantic-reconciliation-v4",
+        "number": 735,
+        "title": "FIX: reconcile H06 PIT using semantic check fingerprint",
+        "updatedAt": "2026-10-01T09:25:38Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/735"
       }
     ],
     "recent_commits": [
+      {
+        "message": "DOCS: include Q074 in issue triage",
+        "sha": "e3e5efca1da8647178b02685aa7868d62af1c074",
+        "timestamp": "2026-10-01T11:26:01+02:00"
+      },
+      {
+        "message": "OPS: reserve protected Copilot Free worker budget",
+        "sha": "648bd361dcaae648a8af66cefca8572b78de80de",
+        "timestamp": "2026-10-01T09:20:29Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d124ab9d2e7ca32f2db721e5f2c157bf8e9c169c",
+        "timestamp": "2026-10-01T09:18:28Z"
+      },
       {
         "message": "TEST: validate H06 artifact-root fix end-to-end",
         "sha": "3481727139c3ee78bf98a85777fcf3d82283f79e",
@@ -574,21 +596,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "4eaa3564ca7dbcfb5b24168a9cc1d672d48e8428",
         "timestamp": "2026-10-01T09:16:12Z"
-      },
-      {
-        "message": "AGENT: harden bounded agent scope validation",
-        "sha": "de8c42d6f49449746beb6944ce6a9092c78db50b",
-        "timestamp": "2026-10-01T11:15:55+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "fb6811e82d604649b9673e7306e6d3268f92dac8",
-        "timestamp": "2026-10-01T09:12:17Z"
-      },
-      {
-        "message": "DOCS: record issue and workflow triage for 2026-10-01",
-        "sha": "ef117e2d6f97f86b49e7b69cecd04d7867685ef3",
-        "timestamp": "2026-10-01T11:12:04+02:00"
       }
     ]
   },
@@ -658,12 +665,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "3481727139c3ee78bf98a85777fcf3d82283f79e",
+  "source_master_sha": "e3e5efca1da8647178b02685aa7868d62af1c074",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36841846263"
+    "run_id": "36842699014"
   }
 }
