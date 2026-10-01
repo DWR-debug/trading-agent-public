@@ -1,4 +1,4 @@
 AUTHORIZE_H06_P2_PERFORMANCE=true
 TRIAL_ID=T-2026-10-01-H06P2-PERFORMANCE-01
 ONE_SHOT=true
-RETRY_REASON=workflow_expression_fix
+RETRY_REASON=registry_migration_fix
