@@ -335,26 +335,46 @@ def main() -> int:
         and q023.get("pit_check", {}).get("calendar") == "XNYS"
     )
 
+    issuer_all = all(row["status"] == "VERIFIABLE" for row in issuer_submissions.values())
+    xbrl_all = all(row["status"] == "VERIFIABLE" for row in issuer_facts.values())
+    thirteenf_ok = manager_13f.get("status") == "VERIFIABLE" and manager_13f.get("information_table_document_present") is True
+    treasury_ok = treasury.get("status") == "VERIFIABLE"
     candidate_findings = {
         "Q104:I19": {
-            "status": "PIT_INTEGRATION_READY_FOR_FRESH_13F_COVERAGE",
-            "note": "Issuer XBRL lineage is verifiable, while full cross-manager 13F security coverage remains a separate completeness gate.",
+            "status": (
+                "PIT_PARTIAL_13F_COVERAGE_REMAINING"
+                if xbrl_all and thirteenf_ok
+                else "PIT_BLOCKED_SOURCE_OR_SCHEMA"
+            ),
+            "note": "Issuer XBRL lineage plus a real 13F filing/index sample are prerequisites; full cross-manager security coverage remains a separate completeness gate.",
         },
         "Q104:I20": {
-            "status": "PIT_INTEGRATION_READY_FOR_FRESH_13F_COVERAGE",
-            "note": "Issuer XBRL lineage is verifiable, while full cross-manager 13F security coverage remains a separate completeness gate.",
+            "status": (
+                "PIT_PARTIAL_13F_COVERAGE_REMAINING"
+                if xbrl_all and thirteenf_ok
+                else "PIT_BLOCKED_SOURCE_OR_SCHEMA"
+            ),
+            "note": "Issuer XBRL lineage plus a real 13F filing/index sample are prerequisites; exact full historical manager coverage remains separate.",
         },
         "Q104:I21": {
             "status": "HISTORICAL_WINDOW_LIMITED",
             "note": "FINRA consolidated-NMS daily short-sale public archive boundary remains 2018-08-01; no pre-2018 performance horizon is implied here.",
         },
         "Q104:I22": {
-            "status": "PIT_INTEGRATION_READY_IF_ALL_ISSUERS_VERIFIABLE",
-            "note": "SEC issuer filing acceptance timestamps and historical submission extensions are the decisive checks.",
+            "status": (
+                "PIT_ISSUER_FILINGS_VERIFIABLE"
+                if issuer_all
+                else "PIT_BLOCKED_SOURCE_OR_SCHEMA"
+            ),
+            "note": "SEC issuer filing acceptance timestamps and historical submission extensions are checked on the frozen Q107 universe.",
         },
         "Q104:M6": {
-            "status": "PIT_INTEGRATION_READY_IF_TREASURY_AND_Q023_PASS",
-            "note": "Treasury auction field lineage plus prior Q023 XNYS timestamp validation provide the non-performance PIT chain.",
+            "status": (
+                "PIT_TREASURY_CHAIN_VERIFIABLE"
+                if treasury_ok and q023_verified
+                else "PIT_BLOCKED_SOURCE_OR_SCHEMA"
+            ),
+            "note": "Treasury auction fields are combined with the previously validated Q023 XNYS record-date/next-session contract.",
         },
         "Q104:R9": {
             "status": "SYNTHETIC_ONLY",
