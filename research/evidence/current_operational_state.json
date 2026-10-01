@@ -591,7 +591,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T18:39:35.362381+00:00",
+  "generated_at_utc": "2026-10-01T18:41:47.873774+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -779,6 +779,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "EVIDENCE: record H06-P2 implementation incident",
+        "sha": "4346c717bf6735382cd062ae2ff95f6f1869aecc",
+        "timestamp": "2026-10-01T20:41:34+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a8439940c40caf48674fd8a8cfb3fc3685685d21",
+        "timestamp": "2026-10-01T18:39:35Z"
+      },
+      {
         "message": "OPS: trigger authorized H06-P2 performance one-shot",
         "sha": "b26c5994e6ba728700de1d25b813630913086812",
         "timestamp": "2026-10-01T20:39:19+02:00"
@@ -807,16 +817,6 @@
         "message": "OPS: record AI worker state",
         "sha": "1f2aa2c9ba28bfc42cba0f883035a5e565c81944",
         "timestamp": "2026-10-01T18:19:45Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "34567d5926471f6e7547763dee95d3f3ccb57c25",
-        "timestamp": "2026-10-01T18:19:44Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "66e5da4ccec1bb2ec6e4e20786b277588dcfec60",
-        "timestamp": "2026-10-01T18:19:25Z"
       }
     ]
   },
@@ -886,12 +886,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b26c5994e6ba728700de1d25b813630913086812",
+  "source_master_sha": "4346c717bf6735382cd062ae2ff95f6f1869aecc",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36908441892"
+    "run_id": "36908726564"
   }
 }
