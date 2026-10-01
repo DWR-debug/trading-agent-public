@@ -40,6 +40,15 @@ def parse_sec_date(value:str)->date:
         except ValueError:continue
     raise ValueError("Q116_INVALID_SEC_DATE:"+text)
 
+def parse_sec_date(value:str)->date:
+    text=str(value).strip()
+    for fmt in ("%Y-%m-%d","%d-%b-%Y","%d-%B-%Y"):
+        try:
+            return __import__("datetime").datetime.strptime(text,fmt).date()
+        except ValueError:
+            continue
+    raise ValueError("Q116_SEC_DATE_UNPARSEABLE:"+text)
+
 def first_xnys_after(value:date)->str:
     key=value.isoformat()
     if key in _SESSION_CACHE:return _SESSION_CACHE[key]
