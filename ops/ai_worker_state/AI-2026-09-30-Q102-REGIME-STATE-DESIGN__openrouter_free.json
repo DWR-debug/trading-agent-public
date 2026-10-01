@@ -27,16 +27,16 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 16.727,
-  "stdout": "**Worker Handoff: Q102 Regime Atlas & RCCSM State-Routing Stress Test**\n\n**Findings**\n- Q102 is a deterministic, retrospective replay of a completed diagnostic artifact (`q090_q089_failure_diagnosis_result.json`). The test expectations show `DOWNTREND_HIGHVOL` consensus direction = `positive` and `UPTREND_LOWVOL` = `negative`. This inversion is a red flag: it may be genuine negative evidence (signals fail in trend regimes) or a labeling artifact. Without inspecting the source artifact, the pattern cannot be trusted.\n- RCCSM state topology (`rccsm_state.py`) is PIT-safe by construction (lagged OHLCV only), but the file is truncated; the exact percentile-history boundaries cannot be verified from the provided context.\n- Synthetic routing tests (`rccsm_synthetic.py`) verify structural admissibility maps only. They contain no returns, mechanism labels, or regime outcomes, so they cannot test whether the state layer separates state-wide exposure from mechanism",
+  "duration_seconds": 29.197,
+  "stdout": "**Findings**\n\n- The Q102 retrospective regime‑negative‑evidence atlas surfaces a small set of “common‑mode” regimes (e.g., **DOWNTREND_HIGHVOL**, **UPTREND_LOWVOL**) where multiple rejected signal families exhibit consistent directional bias. This points to a possible state‑wide exposure that is orthogonal to any single mechanism.\n- The frozen RCCSM state‑routing layer defines four deterministic lagged descriptors: **trend_coherence**, **breadth**, **dispersion_percentile**, **shock_density**. Synthetic scenarios map these descriptors to admissibility of four mechanisms (cross‑sectional momentum, event timing, reversal, trend efficiency) but do not incorporate real market data.\n- The negative‑evidence regimes are not explicitly defined in the RCCSM topology; they appear to be derived from a separate diagnostic artifact (q090_q089_failure_diagnosis_result.json) that may already embed market‑based conditioning (e.g., trend, volatility) beyond the four RCCSM fields.\n- External research inspiration highlights state‑dependent predictability, pure‑news residuals, shareholder‑experience weighting, risk‑text peer propagation, and foreign‑institution signals—all of which suggest additional conditioning dimensions that are not captured by the current RCCSM descriptors.\n\n**Counterarguments**\n\n- The observed common‑mode directions could be an artifact of the diagnostic source itself (e.g., the same underlying data used to compute the regimes may also have been used to generate the signal failures), creating a leakage risk.\n- The synthetic RCCSM scenarios are purely structural; they do not guarantee that the four descriptors actually separate state‑wide exposure from mechanism‑specific decay in empirical markets.\n- The external research themes (news predictability, peer risk similarity, etc.) may",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1790814112-oM1HuaPOgEuBXLgLG6qc",
+  "response_id": "gen-1790835630-ISPODJguzHmSpUSUuPgT",
   "usage": {
-    "prompt_tokens": 5639,
-    "completion_tokens": 3200,
-    "total_tokens": 8839,
+    "prompt_tokens": 4799,
+    "completion_tokens": 3198,
+    "total_tokens": 7997,
     "cost": 0,
     "is_byok": false,
     "prompt_tokens_details": {
@@ -51,7 +51,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 3178,
+      "reasoning_tokens": 0,
       "image_tokens": 0,
       "audio_tokens": 0
     }
