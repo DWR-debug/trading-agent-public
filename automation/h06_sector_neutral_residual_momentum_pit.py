@@ -97,8 +97,13 @@ def _mutate_future(assets: dict[str, list[Bar]], index: int, include_next: bool)
     return out
 
 
-def run(root: Path, output: Path, coverage_result_path: Path) -> dict:
+def run(root: Path, output: Path, coverage_result_path: Path, authorization_path: Path) -> dict:
     coverage = json.loads(coverage_result_path.read_text(encoding="utf-8"))
+    authorization = json.loads(authorization_path.read_text(encoding="utf-8"))
+    if authorization.get("authorized") is not True or authorization.get("execution_scope") != "PIT_ONLY":
+        raise ValueError("H06 PIT authorization is invalid")
+    if authorization.get("performance_execution_authorized") is not False:
+        raise ValueError("H06 PIT authorization unexpectedly permits performance")
     if coverage.get("coverage", {}).get("status") != "COVERAGE_READY":
         raise ValueError("H06 coverage prerequisite is not COVERAGE_READY")
     if coverage.get("governance", {}).get("performance_trial_authorized") is not False:
@@ -166,6 +171,10 @@ def run(root: Path, output: Path, coverage_result_path: Path) -> dict:
             "live_trading_enabled": False,
             "orders_enabled": False,
             "automatic_promotion": False,
+        },
+        "authorization_input": {
+            "authorization": str(authorization_path).replace("\\", "/"),
+            "authorization_id": authorization["authorization_id"],
         },
         "coverage_input": {
             "coverage_result": str(coverage_result_path).replace("\\", "/"),
