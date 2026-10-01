@@ -176,6 +176,15 @@
         "parent_code": "109",
         "performance_authorization_allowed": false,
         "state": "DESIGN_ONLY_ACTIVE"
+      },
+      {
+        "class": "treasury_auction_demand_shape",
+        "code": "119",
+        "design_document": "docs/research_design/Q119_TREASURY_AUCTION_DEMAND_SHAPE_2026-10-01.md",
+        "issue_number": 761,
+        "parent_code": "115",
+        "performance_authorization_allowed": false,
+        "state": "DESIGN_ONLY_ACTIVE"
       }
     ],
     "active_trials": [
@@ -562,7 +571,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T16:21:01.325634+00:00",
+  "generated_at_utc": "2026-10-01T16:22:55.390718+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -757,14 +766,24 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
-        "headRefName": "research/q104-i22-session-window-fix-2026-10-01",
-        "number": 760,
-        "title": "Q104:I22: correct fixed session-window semantics",
-        "updatedAt": "2026-10-01T16:19:51Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/760"
+        "headRefName": "research/q104-i22-session-window-fix-v2-2026-10-01",
+        "number": 763,
+        "title": "Q104:I22: correct fixed session-window semantics on current master",
+        "updatedAt": "2026-10-01T16:22:18Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/763"
       }
     ],
     "recent_commits": [
+      {
+        "message": "GOV: register Q119 Treasury demand-shape frontier",
+        "sha": "8b152a962e1516b490c6d38ccb40462f94cf31ae",
+        "timestamp": "2026-10-01T18:22:41+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a0b4cf8e7676afd2c9916df59d99239bf7dade68",
+        "timestamp": "2026-10-01T16:21:01Z"
+      },
       {
         "message": "Q119: add Treasury auction demand-shape design contract (#762)",
         "sha": "9981520423e357419453ae1afaaae4d1737fae1e",
@@ -794,16 +813,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "ee689ed4ce421f2a0a454f5d989b4130831dc3d5",
         "timestamp": "2026-10-01T15:58:51Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "99257ea944e99a441aa5a6fd9de24c8a887e60bd",
-        "timestamp": "2026-10-01T15:55:48Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "7ac0e7d94e07b7d2fad920fb303d64da168f518d",
-        "timestamp": "2026-10-01T15:43:46Z"
       }
     ]
   },
@@ -873,12 +882,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9981520423e357419453ae1afaaae4d1737fae1e",
+  "source_master_sha": "8b152a962e1516b490c6d38ccb40462f94cf31ae",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36891293795"
+    "run_id": "36891534025"
   }
 }
