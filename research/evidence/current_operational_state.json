@@ -53,7 +53,7 @@
         "issue_number": 741,
         "parent_code": "105",
         "performance_authorization_allowed": false,
-        "state": "PIT_JOIN_STRUCTURAL_VALIDATION_ACTIVE"
+        "state": "PIT_JOIN_STRUCTURAL_VALIDATION_COMPLETED_DUAL_ARCH"
       },
       {
         "class": "q104_fresh_equity_coverage",
@@ -443,7 +443,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T10:29:40.095128+00:00",
+  "generated_at_utc": "2026-10-01T10:30:07.830902+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -638,6 +638,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: advance canonical research focus to Q107 coverage",
+        "sha": "7a02d21fe031a0e9e79d33708b3bfb527f1a77e2",
+        "timestamp": "2026-10-01T12:30:02+02:00"
+      },
+      {
+        "message": "GOV: mark Q106 complete and keep Q107 as active gate",
+        "sha": "6d842f0c0d6dc93ee9781065485fc91ce82191cf",
+        "timestamp": "2026-10-01T12:29:54+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e9de7647a18d1a7e2e62d5179950da25ccc80b19",
+        "timestamp": "2026-10-01T10:29:40Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "34a845cfb3e543cc6acf54e7f606d6f7d064a1d1",
         "timestamp": "2026-10-01T10:29:25Z"
@@ -661,21 +676,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "7d1d9ca8daaa3005f3426b8f6fb0c60efd601353",
         "timestamp": "2026-10-01T10:28:27Z"
-      },
-      {
-        "message": "TEST: gate Q107 coverage on fixed universe contract",
-        "sha": "5563f912cba92c22e1cfd5d8504ef4e39db72dc8",
-        "timestamp": "2026-10-01T12:28:19+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "df62ec9eac38a0541f8b18b3281ed07f8eabe211",
-        "timestamp": "2026-10-01T10:28:14Z"
-      },
-      {
-        "message": "TEST: enforce Q107 fixed globally disjoint universe",
-        "sha": "11dab46c82bbebbafd6ca0920d1c28d7c592243b",
-        "timestamp": "2026-10-01T12:28:11+02:00"
       }
     ]
   },
@@ -707,7 +707,7 @@
     "decision_basis_stage": "Q066_COMPLETED_DIAGNOSTIC_ONLY",
     "latest_formal_status": "performance_completed_no_arm_passed_all_13_gates",
     "latest_formal_trial": "T-2026-09-30-C29-PERFORMANCE-01",
-    "next_research_focus_recorded": "Q104 source-feasibility completed for 5 data-backed candidates; Q105 is the active historical archive/PIT feasibility gate. Q104:R9 remains synthetic-only until validated underlying families exist. No performance authorization, holdout selection, parameter search, promotion or live execution is permitted by Q104/Q105.",
+    "next_research_focus_recorded": "Q104 source-feasibility completed for 5 data-backed candidates; Q105 historical archive/PIT feasibility is completed; Q106 shared PIT join integrity is completed. The active research gate is now Q107 fresh disjoint equity coverage for Q104:I19, Q104:I20, Q104:I22 and Q104:M6. Q104:R9 remains synthetic-only until validated underlying families exist. No performance authorization, holdout selection, parameter search, promotion or live execution is permitted by Q104-Q107.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -745,12 +745,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "34a845cfb3e543cc6acf54e7f606d6f7d064a1d1",
+  "source_master_sha": "7a02d21fe031a0e9e79d33708b3bfb527f1a77e2",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36849453319"
+    "run_id": "36849506448"
   }
 }
