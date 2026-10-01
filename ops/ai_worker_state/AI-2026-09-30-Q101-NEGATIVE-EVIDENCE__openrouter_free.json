@@ -25,11 +25,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 35.694,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 18.134,
+  "stdout": "**Worker Handoff — AI-2026-09-30-Q101-NEGATIVE-EVIDENCE**\n*Paper-only diagnostic support. No new market data, backtest, optimization, candidate selection, holdout selection, gate change, or authorization.*\n\n---\n\n### 1. Reusable Lessons from Recurring Failures\n*(Derived from visible artifacts and test assertions; full atlas requires running `q101_negative_evidence_atlas.py` on the seven evidence files.)*\n\n| Failure class | Evidence in context | Reusable constraint |\n|---|---|---|\n| **Risk/stability recurrence** | Tests assert `research_drawdown_lte_10pct`, `rolling_average_drawdown_lte_10pct`, `holdout_drawdown_lte_10pct` recur across trials. q081r4 shows research max-drawdown 45.1% and holdout 24.1%. | Treat drawdown gates as hard structural limits, not tunable thresholds; any new signal family must report these three metrics before admission. |\n| **Control-relative failure** | q081r4 corrective basis: prior trial rejected for gross exposure 1.0056 vs preregistered cap 1.0. | Implementation validity must be checked before performance interpretation; exposure-cap breaches invalidate the trial regardless of return. |\n| **OOS fragility** | Holdout returns (0.34–0.51 EUR) are a small fraction of research returns (2.0–2.8 EUR) with higher drawdown. | OOS degradation is a recurring pattern, not an outlier; design questions should target robustness, not incremental research-period alpha. |\n| **Turnover/cost pressure** | Not directly visible in truncated JSON, but rolling-window returns swing sign (q077r1 window 2 is −0.08). | Any state/routing mechanism must include a cost-aware turnover check before claiming net feasibility. |\n| **Data/PIT blockers** | Didisheim et al. require public historical corpus + stable article IDs; Riley & Zhou need daily OHLCV (available) but reconstruction must be PIT-safe. | Define the observable baseline before touching the residual; if the corpus/IDs are unavailable, the idea is discarded at the design stage. |\n\n---\n\n### 2. Stress-Test of Literature-Inspired Ideas\n\n| Idea | Orthogonality check | Confound / Overlap | Cheap falsification test | Discard if |\n|---|---|---|---|---|\n| **State-dependent predictability** (Cong) | Deterministic state descriptors, not learned partition. | May overlap with existing regime detection; risk of peeking at holdout to define states. | Fix states ex-ante (e.g., realized-volatility bins from external index); test whether existing signal failure concentrates in those bins using in-sample only. | States require future data or are learned from holdout outcomes. |\n| **Pure-news residual** (Didisheim) | C31 stops at raw sentiment; residual is a transform, not new signal. | Needs public historical corpus + stable article IDs; may not exist in project. | Build baseline expected news from historical frequency; residual = actual − baseline; check in-sample predictability without holdout selection. | No public corpus with stable IDs, or residual is indistinguishable from noise in-sample. |\n| **Shareholder experience** (Riley & Zhou) | Distinct from raw momentum; OHLCV-only. | Likely collinear with Q082:C22-C25 behavioral-state variables. | Reconstruct holder-weighted cumulative return from OHLCV; correlate with existing Q082 variables; if |r| > 0.5, discard as non-orthogonal. | Cannot prove orthogonality to existing state variables. |\n| **Risk-text peers** (Yuan & Zhang) | C30 is peer-network; test risk similarity vs industry membership. | Peer links from 10-K risk disclosures may proxy industry anyway; amendment chains may be incomplete. | Compute risk-disclosure similarity on a small fixed filing corpus; check predictability without current-industry labels. | Peer effect disappears when industry is controlled, or filings lack stable identifiers. |\n| **Institutional ownership provenance** | Not in external doc; 13F filings are delayed. | Delayed ownership data leaks future info if not carefully lagged. | Use only filings dated before signal formation; test whether lagged ownership predicts returns in-sample. | Ownership signal requires look-ahead or is stale beyond usefulness. |\n| **Anomaly-publication timing** | Literature anomaly may suffer survivorship bias. | Publication lag correlates with return horizon; may confound significance. | Control for publication date in a fixed sample of anomalies; check if alpha persists. | Alpha vanishes after publication-date control. |\n| **Index-reconstitution demand** | Event-driven, not state-dependent. | Reconstitution dates may leak future info if not fixed ex-ante. | Fix reconstitution calendar in advance; test abnormal volume/return around fixed dates only. | Effect is driven by post-announcement drift, not ex-ante predictability. |\n\n---\n\n### 3. Concrete Next Actions (Fixed, Falsifiable, Public-Data-Compatible)\n1. **Execute Q101/Q102 atlas scripts** on the immutable diagnostic artifacts to produce the formal regime-common-mode and gate-recurrence tables (already coded; no new data).\n2. **Define deterministic state descriptors** for Cong-style state-dependency using external index data only; document the ex-ante binning rule.\n3. **Build the pure-news baseline** from a public historical corpus if stable article IDs exist; otherwise record “data blocker” and drop the idea.\n4. **Reconstruct shareholder experience** from existing OHLCV and correlate with Q082 variables; report correlation matrix, not performance.\n5. **Compute risk-text peer similarity** on a small fixed 10-K sample; compare against industry-membership baseline.\n6. **Log all confounds and overlap** in the research registry with a “discard / keep / refine” tag for each idea.\n\n---\n\n### 4. Uncertainty\n- Full artifact content is truncated; gate-recurrence frequencies and exact failure signatures require running the atlas tooling.\n- Public corpus availability for Didisheim-style residualization is unverified.\n- Orthogonality of shareholder experience to Q082 variables is assumed, not tested.\n- Risk-text peer predictability may be an industry proxy; needs explicit control.\n\n**No claim of validation, promotion, or live-trading authorization is made.** All proposals remain paper-only until independently reproduced by deterministic project tooling.",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1790835632-KwYSGCUUTzG1HoDEyIrF",
+  "usage": {
+    "prompt_tokens": 6781,
+    "completion_tokens": 3144,
+    "total_tokens": 9925,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1774,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
