@@ -69,10 +69,20 @@ def test_q118_component_order_does_not_change_fingerprint():
     assert composition_fingerprint(manifest) == composition_fingerprint(reverse)
 
 
-def test_q118_future_information_fails_closed():
+def test_q118_component_published_after_own_cutoff_fails_closed():
     manifest = _manifest()
     manifest["components"][0]["public_at"] = "2026-09-30T16:01:00+00:00"
-    with pytest.raises(ValueError, match="FUTURE_INFORMATION"):
+    with pytest.raises(
+        ValueError, match="^Q118_COMPONENT_PUBLISHED_AFTER_OWN_CUTOFF$"
+    ):
+        validate_composition(manifest)
+
+
+def test_q118_future_information_relative_to_bundle_cutoff_fails_closed():
+    manifest = _manifest()
+    manifest["components"][0]["decision_cutoff"] = "2026-10-01T16:00:00+00:00"
+    manifest["components"][0]["public_at"] = "2026-09-30T16:01:00+00:00"
+    with pytest.raises(ValueError, match="^Q118_FUTURE_INFORMATION_DETECTED$"):
         validate_composition(manifest)
 
 
