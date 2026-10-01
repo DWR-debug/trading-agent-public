@@ -69,7 +69,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          actual="\$(gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/11152741031" --jq .digest)"
+          actual="$(gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/11152741031" --jq .digest)"
           test "$actual" = "sha256:9de9019c33cf4a9300bcf4e901ab015ff4b8b6585bbb70d1c848e5a69e76d1bd"
           echo "H06P2_UPSTREAM_ARTIFACT_DIGEST=$actual"
 
@@ -101,7 +101,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          base_sha="\$(git ls-remote origin refs/heads/master | awk '{print \$1}')"
+          base_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
           test -n "$base_sha"
           python automation/github_contents_publish.py \
             --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$base_sha" \
