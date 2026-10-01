@@ -523,11 +523,17 @@
         "class": "performance_correction",
         "code": "H06-P2-R3",
         "issue_number": null,
-        "performance_authorization_allowed": true,
+        "performance_authorization_allowed": false,
+        "performance_result": {
+          "report_fingerprint": "30341d6303cb8f93e11d948d91ea627686d9207f84d4a4d2018fd6fdf436b5f5",
+          "status": "COMPLETED",
+          "trial_id": "T-2026-10-01-H06P2R3-PERFORMANCE-01",
+          "workflow_run_id": "36911930878"
+        },
         "predecessor_execution_incident_path": "research/evidence/h06_p2_r2_performance_execution_incident.json",
         "predecessor_trial_id": "T-2026-10-01-H06P2R2-PERFORMANCE-01",
         "preregistration_path": "research/preregistrations/h06_p2_r3_performance_2026_10_01.json",
-        "state": "PERFORMANCE_AUTHORIZED",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
         "trial_id": "T-2026-10-01-H06P2R3-PERFORMANCE-01"
       }
     ],
@@ -656,7 +662,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T19:07:28.213162+00:00",
+  "generated_at_utc": "2026-10-01T20:04:07.309840+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -844,44 +850,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: start H06-P2-R3 authorized performance execution",
-        "sha": "e3e5c37ac12c2f3e8ba2f18db91f649b24ed36d9",
-        "timestamp": "2026-10-01T21:07:13+02:00"
+        "message": "research: add Q118 composition guard and Q120 CFTC feasibility probe",
+        "sha": "4ec10d0c199b538c84dc05cf1c83fa50fc12776c",
+        "timestamp": "2026-10-01T22:03:59+02:00"
       },
       {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "4863f1bdb2e0d37e9eff8ccc9d346ca7ec51eb22",
-        "timestamp": "2026-10-01T19:06:54Z"
+        "message": "research: add Q118 composition guard and Q120 CFTC feasibility probe",
+        "sha": "70152339f2a604a7d7d27134e74da75a4187517e",
+        "timestamp": "2026-10-01T22:03:57+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ca0ca782f0bd13a8e22092fe21bf12ee58dbb417",
-        "timestamp": "2026-10-01T19:05:17Z"
+        "message": "research: add Q118 composition guard and Q120 CFTC feasibility probe",
+        "sha": "3f17f2ed7fea6936b4ffed565ac1f0e9449aa0c3",
+        "timestamp": "2026-10-01T22:03:54+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1730d4b954a2b781f831f74b4a1b73c4ca38a3c7",
-        "timestamp": "2026-10-01T19:04:58Z"
+        "message": "research: add Q118 composition guard and Q120 CFTC feasibility probe",
+        "sha": "802579d67ed5e6e03eb95d8e0e9268807ecbcd98",
+        "timestamp": "2026-10-01T22:03:51+02:00"
       },
       {
-        "message": "OPS: trigger H06-P2-R3 authorization retrigger",
-        "sha": "f829578346b5956ad5973ef0e4b7e20549547628",
-        "timestamp": "2026-10-01T21:04:55+02:00"
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "ca4acf3e0b0f3a24eb0c9ff96dec61fcaf342fbc",
+        "timestamp": "2026-10-01T19:54:39Z"
       },
       {
-        "message": "FIX: harden H06-P2-R3 authorization retrigger and generated performance trigger",
-        "sha": "cdabee9d342bfad8e36ff278711501462892fcff",
-        "timestamp": "2026-10-01T21:04:41+02:00"
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "33154883a83b86843156daf83e46db03d263df13",
+        "timestamp": "2026-10-01T19:45:49Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "66065ac3808cf5a367a4b0fd1eb3817a765779bc",
-        "timestamp": "2026-10-01T19:04:27Z"
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "e964eba263d2d0b54513705839fe85e177be4415",
+        "timestamp": "2026-10-01T19:42:37Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "aaa528f506a20d31e74c1215e2144a18425ddd4b",
-        "timestamp": "2026-10-01T19:04:11Z"
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "7cc6df71cbb5129935a606f0100fa88984df654e",
+        "timestamp": "2026-10-01T19:29:56Z"
       }
     ]
   },
@@ -912,7 +918,7 @@
   "scientific_state_recorded": {
     "decision_basis_stage": "Q066_COMPLETED_DIAGNOSTIC_ONLY",
     "latest_formal_status": "performance_completed_no_arm_passed_all_13_gates",
-    "latest_formal_trial": "T-2026-09-30-C29-PERFORMANCE-01",
+    "latest_formal_trial": "T-2026-10-01-H06P2R3-PERFORMANCE-01",
     "next_research_focus_recorded": "Q112/Q113/Q114/Q115 are complete and Q116 now has an immutable two-quarter 13F transition-population receipt. Q116 remains feasibility-only: the frozen 2026-03-to-08 SEC datasets produced a deterministic manager/security transition population with PIT cutoff invariants, but no performance evaluation or candidate selection occurred. Next candidate-specific frontier work is I22 filing-arrival compilation plus a separate, deterministic XBRL concept/coverage gate for I19/I20. No performance authorization, holdout selection, parameter search, promotion or live execution is permitted.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
@@ -951,12 +957,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e3e5c37ac12c2f3e8ba2f18db91f649b24ed36d9",
+  "source_master_sha": "4ec10d0c199b538c84dc05cf1c83fa50fc12776c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36911930775"
+    "run_id": "36918851004"
   }
 }
