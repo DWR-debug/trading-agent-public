@@ -199,5 +199,11 @@ if __name__ == '__main__':
     parser.add_argument("--universe-root", required=True)
     parser.add_argument("--output", required=True)
     parser.add_argument("--coverage-result", required=True)
+    parser.add_argument("--authorization", required=True)
     args = parser.parse_args()
-    run(Path(args.universe_root), Path(args.output), Path(args.coverage_result))
+    run(
+        Path(args.universe_root),
+        Path(args.output),
+        Path(args.coverage_result),
+        Path(args.authorization),
+    )
