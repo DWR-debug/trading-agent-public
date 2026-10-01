@@ -412,7 +412,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T09:27:09.255675+00:00",
+  "generated_at_utc": "2026-10-01T09:29:02.885042+00:00",
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
     "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
@@ -542,12 +542,22 @@
       {
         "number": 642,
         "title": "AGENT-026: unify bounded agent capacity lease",
-        "updatedAt": "2026-10-01T09:20:28Z",
+        "updatedAt": "2026-10-01T09:28:27Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/issues/642"
       }
     ],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "TEST: validate H06 semantic reconciliation end-to-end",
+        "sha": "04252a050a4194a7ec6921a1239262f52aa98af3",
+        "timestamp": "2026-10-01T11:28:46+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "19c171574b34ca93e0295fa486bf054b1142fa6b",
+        "timestamp": "2026-10-01T09:27:09Z"
+      },
       {
         "message": "FIX: reconcile H06 PIT using semantic check fingerprint",
         "sha": "133e2c6fff05f31d890da85983f483ac8f1ff3e1",
@@ -577,16 +587,6 @@
         "message": "TEST: validate H06 artifact-root fix end-to-end",
         "sha": "3481727139c3ee78bf98a85777fcf3d82283f79e",
         "timestamp": "2026-10-01T11:18:13+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3970b5bd0b93fd318211ab557595d415a35a4033",
-        "timestamp": "2026-10-01T09:16:45Z"
-      },
-      {
-        "message": "FIX: resolve H06 artifact paths from download root",
-        "sha": "c6573250d8b6281f234389f97ad57438a1556348",
-        "timestamp": "2026-10-01T11:16:31+02:00"
       }
     ]
   },
@@ -656,12 +656,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "133e2c6fff05f31d890da85983f483ac8f1ff3e1",
+  "source_master_sha": "04252a050a4194a7ec6921a1239262f52aa98af3",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36842798654"
+    "run_id": "36842997756"
   }
 }
