@@ -14,7 +14,12 @@ def test_q110_preregistration_is_design_only():
         )
     )
     assert data["status"] == "PREREGISTERED_SOURCE_FEASIBILITY_ONLY"
-    assert all(value is False for key, value in data["governance"].items() if key != "no_llm_text_scoring")
+    assert data["gating_rules"]["no_performance"] is False
+    assert data["gating_rules"]["no_holdout"] is False
+    assert data["gating_rules"]["no_ranking"] is False
+    assert data["gating_rules"]["no_parameter_search"] is False
+    assert data["gating_rules"]["no_asset_selection"] is False
+    assert data["gating_rules"]["no_llm_text_scoring"] is True
     assert data["safety"]["paper_only"] is True
 
 
