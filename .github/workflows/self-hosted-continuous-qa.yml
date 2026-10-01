@@ -83,6 +83,18 @@ jobs:
           "%PY_EXE%" -m pip install --disable-pip-version-check --target "%SITE%" pytest pandas exchange-calendars statsmodels==0.15.0 pypdf || exit /b 1
           set "PYTHONPATH=%SITE%;%REPO_SRC%"
 
+          echo [3.5/8] Resolve Git executable
+          set "GIT_EXE="
+          for %%P in ("%ProgramFiles%\Git\cmd\git.exe" "%ProgramFiles%\Git\bin\git.exe" "%LocalAppData%\Programs\Git\cmd\git.exe" "%LocalAppData%\Programs\Git\bin\git.exe") do if not defined GIT_EXE if exist "%%~P" set "GIT_EXE=%%~P"
+          if not defined GIT_EXE for /f "delims=" %%P in ('where.exe git 2^>nul') do if not defined GIT_EXE set "GIT_EXE=%%~P"
+          if not defined GIT_EXE (
+            echo GIT_EXECUTABLE=NOT_FOUND
+            exit /b 1
+          )
+          set "GIT_EXECUTABLE=%GIT_EXE%"
+          echo GIT_EXECUTABLE=%GIT_EXECUTABLE%
+          "%GIT_EXECUTABLE%" --version || exit /b 1
+
           echo [4/8] Runner capacity telemetry
           powershell.exe -NoProfile -NonInteractive -Command "$cs = Get-CimInstance Win32_ComputerSystem; $os = Get-CimInstance Win32_OperatingSystem; $payload = [ordered]@{schema_version=1; lane=$env:LANE; run_id=$env:GITHUB_RUN_ID; run_attempt=$env:GITHUB_RUN_ATTEMPT; source_commit=$env:GITHUB_SHA; runner_name=$env:RUNNER_NAME; runner_os=$env:RUNNER_OS; runner_arch=$env:RUNNER_ARCH; logical_processors=[int]$env:NUMBER_OF_PROCESSORS; physical_memory_bytes=$cs.TotalPhysicalMemory; os_caption=$os.Caption}; New-Item -ItemType Directory -Force -Path '%PROV_ROOT%' | Out-Null; $payload | ConvertTo-Json | Set-Content -Encoding UTF8 '%PROV_ROOT%\runner_capacity_%LANE%_%RUN_KEY%.json'" || exit /b 1
 
