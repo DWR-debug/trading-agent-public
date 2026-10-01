@@ -113,6 +113,7 @@ def generate(
     q092_diagnosis = _load_json(ROOT / "research/evidence/q092_q091_failure_mechanism_diagnosis_result.json", {})
     q093_diagnosis = _load_json(ROOT / "research/evidence/q093_q091_cost_attribution_diagnosis_result.json", {})
     github_state = _load_json(github_state_path, {}) if github_state_path else {}
+    h06_pit = _load_json(ROOT / "research/evidence/h06_pit_independent_reproduction_2026_10_01.json", {})
 
     safety = _safety_state()
     from config import settings
@@ -284,6 +285,7 @@ def generate(
         "q067_execution_pipeline": q067_pipeline,
         "q068_execution_pipeline": q068_pipeline,
         "q070_execution_pipeline": q070_pipeline,
+        "h06_independent_pit": h06_pit,
         "scientific_state_recorded": {
             "latest_formal_trial": latest_formal.get("trial_id") or project_state.get("latest_formal_trial"),
             "latest_formal_status": latest_formal.get("status") or project_state.get("latest_trial_status"),
@@ -379,6 +381,15 @@ def generate(
 - Q084, Q088 and Q082 remain **design/feasibility tracks** for unusual market-state, textual-network, rebalance-demand and SEC information channels.
 - The unusual-strategy frontier is maintained in `docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md` and is design-only until feasibility and provenance are established.
 - Research OS capability lattice: `research/governance/research_os_source_registry_2026_09_30.json`; it is metadata only and cannot authorize performance.
+
+### H06 independent PIT
+
+- Status: **{h06_pit.get("status", "NOT_RECORDED")}**.
+- Independent reproduction workflow: `{h06_pit.get("independent_reproduction_run_id", "UNKNOWN")}`.
+- Canonical coverage workflow: `{h06_pit.get("upstream_coverage_run_id", "UNKNOWN")}`.
+- Checked PIT decision points: **{h06_pit.get("data_contract", {}).get("checked_decision_points", "UNKNOWN")}**.
+- Semantic check fingerprint: `{h06_pit.get("reconciliation", {}).get("check_fingerprint", "UNKNOWN")}`.
+- This is PIT/data-contract evidence only; it does not authorize performance or promotion.
 
 ### Q067 execution pipeline
 
