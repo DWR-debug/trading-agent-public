@@ -185,6 +185,10 @@ jobs:
         run: |
           set -euo pipefail
           test -n "$PUSH_TOKEN"
+          BRANCH="${BRANCH:-$(git branch --show-current)}"
+          test -n "$BRANCH"
+          test "$BRANCH" != "master"
+          echo "Publishing repaired branch: $BRANCH"
           git push "https://x-access-token:$PUSH_TOKEN@github.com/$GITHUB_REPOSITORY.git" "HEAD:$BRANCH"
 
       - name: Publish repair log
