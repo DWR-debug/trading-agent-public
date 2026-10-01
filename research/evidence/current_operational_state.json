@@ -58,11 +58,15 @@
       {
         "class": "q104_fresh_equity_coverage",
         "code": "107",
+        "common_calendar_count": 3704,
+        "coverage_fingerprint": "18571a7871f72b8018905c10c289724bb5cf976ab7fa4f9f424599ddc727fbd2",
+        "coverage_result_path": "research/evidence/q107_coverage_result.json",
         "issue_number": 742,
         "parent_code": "104",
         "performance_authorization_allowed": false,
         "preregistration_path": "research/preregistrations/q107_q104_fresh_equity_coverage_2026_10_01.json",
-        "state": "COVERAGE_ACTIVE",
+        "snapshot_fingerprint": "c5eb39fcd802eb73c6c71d4bdbb0c0ec0f132db77c5c0a2c37b4ba1277edf036",
+        "state": "COVERAGE_COMPLETED",
         "universe": "validation_2026_10_01_q104_sec_treasury_equities"
       }
     ],
@@ -443,7 +447,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-01T10:30:45.582570+00:00",
+  "generated_at_utc": "2026-10-01T10:31:44.851189+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -638,6 +642,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOV: record completed Q107 coverage receipt",
+        "sha": "9f2dd9d1b9d37367568a87613f934008891a8ded",
+        "timestamp": "2026-10-01T12:31:32+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "edf30f6166d59f6b95a0e2e692b21b169ef426d8",
+        "timestamp": "2026-10-01T10:31:09Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "ae2da35c8247d8bad0672f8627069c271d941865",
+        "timestamp": "2026-10-01T10:30:49Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "48d1577f3a7d8a6c21178ac354b968acb1cf12c4",
+        "timestamp": "2026-10-01T10:30:45Z"
+      },
+      {
         "message": "FIX: align Q107 target field with coverage preflight contract",
         "sha": "d8d692eccb1e2b45f272d3fd89ee734a5a32d45d",
         "timestamp": "2026-10-01T12:30:31+02:00"
@@ -656,26 +680,6 @@
         "message": "OPS: advance canonical research focus to Q107 coverage",
         "sha": "7a02d21fe031a0e9e79d33708b3bfb527f1a77e2",
         "timestamp": "2026-10-01T12:30:02+02:00"
-      },
-      {
-        "message": "GOV: mark Q106 complete and keep Q107 as active gate",
-        "sha": "6d842f0c0d6dc93ee9781065485fc91ce82191cf",
-        "timestamp": "2026-10-01T12:29:54+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e9de7647a18d1a7e2e62d5179950da25ccc80b19",
-        "timestamp": "2026-10-01T10:29:40Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "34a845cfb3e543cc6acf54e7f606d6f7d064a1d1",
-        "timestamp": "2026-10-01T10:29:25Z"
-      },
-      {
-        "message": "FIX: robust Q107 coverage receipt publishing",
-        "sha": "9d048f87077fd48ba209712b1d8a79ed11618f30",
-        "timestamp": "2026-10-01T12:29:24+02:00"
       }
     ]
   },
@@ -745,12 +749,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d8d692eccb1e2b45f272d3fd89ee734a5a32d45d",
+  "source_master_sha": "9f2dd9d1b9d37367568a87613f934008891a8ded",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36849579433"
+    "run_id": "36849686431"
   }
 }
