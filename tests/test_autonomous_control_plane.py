@@ -4,6 +4,7 @@ import pytest
 
 from automation.agent_dispatch import AgentDispatchError
 from automation.autonomous_control_plane import (
+    validate_lease_snapshot,
     eligible_issues,
     plan,
     validate_assignment_contracts,
@@ -41,6 +42,9 @@ def request(lane, task_id):
         "path": f"agent_requests/lane{lane}/{task_id}.request",
     }
 
+
+def test_validate_lease_snapshot_enforces_two_slot_state():    state = {        "schema_version": 1,        "slot_count": 2,        "slots": [            {"task_id":"AGENT-A","issue_number":1,"manifest_fingerprint":"a"*64,"run_id":"r1","binding_fingerprint":"b"*64,"acquired_at":100.0,"expires_at":200.0,"status":"ACTIVE"},            {"task_id":"AGENT-B","issue_number":2,"manifest_fingerprint":"c"*64,"run_id":"r2","binding_fingerprint":"d"*64,"acquired_at":100.0,"expires_at":200.0,"status":"ACTIVE"},        ],    }    normalized = validate_lease_snapshot(state, now=150.0)    assert len([x for x in normalized["slots"] if x is not None]) == 2
+def test_validate_lease_snapshot_prunes_stale_slots():    state = {        "schema_version": 1,        "slot_count": 2,        "slots": [            {"task_id":"AGENT-A","issue_number":1,"manifest_fingerprint":"a"*64,"run_id":"r1","binding_fingerprint":"b"*64,"acquired_at":100.0,"expires_at":100.0,"status":"ACTIVE"},            None,        ],    }    normalized = validate_lease_snapshot(state, now=100.0)    assert normalized["slots"] == [None, None]
 
 def test_eligible_filters_owner_label_assignment_and_pr():
     good = issue(1, "2026-09-27T11:00:00Z")
