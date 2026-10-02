@@ -77,3 +77,8 @@ def test_s10_worker_workflow_contains_bounded_watchdog():
     assert "S10 watchdog: endpoint unavailable" in source
     assert "sleep 5" in source
     assert "cleanup()" in source
+
+
+def test_s10_bridge_uses_tiny_smoke_response_budget():
+    source = Path("automation/s10_systemone_bridge.py").read_text(encoding="utf-8")
+    assert '"max_tokens": 48 if smoke_mode else 160' in source
