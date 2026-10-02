@@ -27,13 +27,13 @@ permissions:
 
 concurrency:
   group: trading-agent-s10-phone
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   s10_phone:
     if: ${{ github.repository == 'DWR-debug/trading-agent-public' }}
     runs-on: [self-hosted, s10-phone, linux, ARM64]
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - name: Download exact master snapshot
         shell: bash
