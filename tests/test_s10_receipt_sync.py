@@ -72,3 +72,11 @@ def test_s10_receipt_sync_merge_keeps_newer_existing_status():
     old = {"workflow_run_updated_at": "2026-10-02T10:00:00Z", "workflow_run_id": "200"}
     new = {"workflow_run_updated_at": "2026-10-02T09:59:00Z", "workflow_run_id": "201"}
     assert merge_status(old, new) == old
+
+
+def test_s10_workflows_are_master_canonical_only():
+    from pathlib import Path
+    worker = Path(".github/workflows/s10-phone-worker.yml").read_text(encoding="utf-8")
+    sync = Path(".github/workflows/s10-receipt-sync.yml").read_text(encoding="utf-8")
+    assert "    branches:\n      - master" in worker
+    assert "github.event.workflow_run.head_branch == 'master'" in sync
