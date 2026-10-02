@@ -11,10 +11,10 @@ permissions:
 
 jobs:
   plan:
-    if: github.repository == 'DWR-debug/trading-agent-public'
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.plan.outputs.matrix }}
+      has_devices: ${{ steps.plan.outputs.has_devices }}
     steps:
       - name: Checkout exact registry
         uses: actions/checkout@v5
@@ -57,6 +57,7 @@ jobs:
           matrix = json.dumps({"include": selected}, separators=(",", ":"))
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
               f.write("matrix=" + matrix + "\n")
+              f.write("has_devices=" + ("true" if selected else "false") + "\n")
           print(matrix)
           PY
 
@@ -65,8 +66,8 @@ jobs:
     if: needs.plan.outputs.matrix != '{"include":[]}'
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson(needs.plan.outputs.matrix) }}
-    runs-on: [self-hosted, linux, ARM64, ${{ matrix.runner_label }}]
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    runs-on: ${{ matrix.runner_label }}
     timeout-minutes: 45
     env:
       PHONE_RESOURCE_ID: ${{ matrix.resource_id }}
