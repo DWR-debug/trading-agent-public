@@ -8,6 +8,6 @@ def test_q109_design_contract():
     data = json.loads((root/"research/frontier/q109_candidate_wave_2026_10_01.json").read_text(encoding="utf-8"))
     result = validate(data)
     assert result["status"] == "DESIGN_CONTRACT_VALIDATED"
-    assert result["candidate_count"] == 6
+    assert result["candidate_count"] == 7
     assert result["governance"]["performance_authorized"] is False
     assert result["safety"]["paper_only"] is True
