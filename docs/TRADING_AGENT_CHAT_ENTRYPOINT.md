@@ -7,13 +7,15 @@ Vor PROJECT_STATUS.md wird jetzt immer auch der dauerhafte Trading Agent OS-Vert
 - ops/trading_agent_os_state.json
 - docs/CURRENT_STATUS.md
 - research/evidence/current_operational_state.json
+- ops/s10_runtime_status.json
+- docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md
 
 Diese beiden Dateien beschreiben ausschließlich den aktuellen operativen Zustand und werden über
 .github/workflows/current-status-sync.yml nach relevanten master-Pushes automatisch synchronisiert.
 PROJECT_STATUS.md bleibt für historische Rekonstruktion erhalten und darf aktuelle SHA-, PR-,
 Runner- oder Queue-Angaben nicht überstimmen.
 
-Stand: 2026-09-26
+Stand: 2026-10-02
 
 Dieses Dokument ist der **verbindliche Einstiegspunkt für neue Chats**, die mit
 `trading agent` beginnen.
@@ -80,7 +82,7 @@ Bei jedem neuen `trading agent`-Chat:
 11. Den chatfreien Nachtbetrieb anhand des OS-Vertrags gegen aktive Zeitpläne und Fallbacks prüfen.
 12. Vor der eigentlichen Arbeit einen **Ressourcen- und Kapazitäts-Snapshot** erstellen: alle
    im aktuellen Konto/Repo verfügbaren Agentenpfade, Runner und relevanten Actions-Lanes prüfen.
-12. Für die konkrete Aufgabe jede sinnvolle, **kostenfreie und aktuell verfügbare** Ressource
+13. Für die konkrete Aufgabe jede sinnvolle, **kostenfreie und aktuell verfügbare** Ressource
    aktiv routen; nicht auf eine einzelne Ressource warten, wenn eine unabhängige Aufgabe parallel
    anders ausgeführt werden kann.
 14. Erst danach Änderungen, Research oder neue Hypothesen vornehmen.
@@ -202,3 +204,7 @@ Die familiäre Dringlichkeit und das fehlende verfügbare Kapital werden als **M
 Die operative Leitregel lautet:
 
 **mehr Druck → mehr Prozessdisziplin, nicht mehr Beweisnachlass.**
+
+## Samsung-/Android-Ressourcen
+
+S10 ist die erste live-verifizierte Telefoninstanz. Für weitere Samsung-/Android-Geräte wird ausschließlich die generische Vorlage `docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md` mit `scripts/samsung_termux_phone_runner_template.sh` verwendet. Das verhindert einen neuen gerätespezifischen Integrationszyklus und hält Runner-, Runtime-, Receipt- und Governance-Verträge identisch.
