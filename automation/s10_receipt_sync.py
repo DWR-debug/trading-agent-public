@@ -77,7 +77,7 @@ def build_status(
         })
         return base
 
-    provenance_ok = all(provenance.get(key) is expected for key, expected in SAFE_EXPECTED.items() if key in provenance)
+    provenance_ok = all(provenance.get(key) is expected for key, expected in SAFE_EXPECTED.items())
     if not provenance_ok:
         base.update({
             "status": "S10_ARTIFACT_POLICY_INVALID",
