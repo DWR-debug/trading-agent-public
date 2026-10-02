@@ -410,12 +410,12 @@ jobs:
   phone_04:
     needs: plan
     if: ${{ needs.plan.outputs.phone_04 == 'true' }}
-    runs-on: [self-hosted, linux, ARM64, samsung-phone-03]
+    runs-on: [self-hosted, linux, ARM64, samsung-phone-04]
     timeout-minutes: 45
     env:
-      PHONE_RESOURCE_ID: SAMSUNG-PHONE-03
+      PHONE_RESOURCE_ID: SAMSUNG-PHONE-04
       PHONE_MODE: ${{ needs.plan.outputs.phone_04_mode }}
-      PHONE_RUNNER_NAME: SAMSUNG-PHONE-03-TERMUX
+      PHONE_RUNNER_NAME: SAMSUNG-PHONE-04-TERMUX
       PHONE_INTERFACE_PATH: ~/.trading-agent/phone_interface.json
       S10_SEED: "271828"
       S10_INTERFACE_PATH: ~/.trading-agent/phone_interface.json
@@ -448,7 +448,7 @@ jobs:
           python3 -m automation.s10_local_stack \
             --repo-root "$REPO_SRC" \
             --descriptor "$HOME/.trading-agent/phone_interface.json" \
-            --work-root "$HOME/.cache/trading-agent/android-phone/SAMSUNG-PHONE-03/runs"
+            --work-root "$HOME/.cache/trading-agent/android-phone/SAMSUNG-PHONE-04/runs"
 
       - name: Verify bounded loopback interface
         shell: bash
@@ -477,7 +477,7 @@ jobs:
         run: |
           set -euo pipefail
           cd "$REPO_SRC"
-          OUT="$GITHUB_WORKSPACE/research/runs/android_phone/$GITHUB_RUN_ID/SAMSUNG-PHONE-03"
+          OUT="$GITHUB_WORKSPACE/research/runs/android_phone/$GITHUB_RUN_ID/SAMSUNG-PHONE-04"
           mkdir -p "$OUT"
           BASE_URL="$(python3 -c 'import json; from pathlib import Path; print(json.loads((Path.home()/".trading-agent"/"phone_interface.json").read_text(encoding="utf-8-sig"))["base_url"])')"
           PROTOCOL_PATH="$(python3 -c 'import json; from pathlib import Path; print(json.loads((Path.home()/".trading-agent"/"phone_interface.json").read_text(encoding="utf-8-sig")).get("protocol_path","/v1/systemone"))')"
@@ -493,15 +493,15 @@ jobs:
           python3 -m automation.android_phone_acceptance \
             --result "$OUT/evidence_critic.json" \
             --output "$OUT/android_phone_acceptance_receipt.json" \
-            --resource-id "SAMSUNG-PHONE-03" \
-            --runner-name "SAMSUNG-PHONE-03-TERMUX"
+            --resource-id "SAMSUNG-PHONE-04" \
+            --runner-name "SAMSUNG-PHONE-04-TERMUX"
 
       - name: Build provenance receipt
         if: always()
         shell: bash
         run: |
           set -euo pipefail
-          OUT="$GITHUB_WORKSPACE/research/runs/android_phone/$GITHUB_RUN_ID/SAMSUNG-PHONE-03"
+          OUT="$GITHUB_WORKSPACE/research/runs/android_phone/$GITHUB_RUN_ID/SAMSUNG-PHONE-04"
           mkdir -p "$OUT"
           export OUT
           python3 - <<'PY'
@@ -512,7 +512,7 @@ jobs:
           for p in sorted(root.rglob("*")):
               if p.is_file():
                   files.append({"path":str(p.relative_to(root)),"sha256":hashlib.sha256(p.read_bytes()).hexdigest(),"bytes":p.stat().st_size})
-          receipt={"schema_version":1,"receipt_type":"android_phone_run","resource_id":"SAMSUNG-PHONE-03","runner_name":os.environ.get("RUNNER_NAME"),"runner_arch":os.environ.get("RUNNER_ARCH"),"source_commit":os.environ.get("GITHUB_SHA"),"files":files,"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False,"scientific_evidence":False,"performance_authorization":False}
+          receipt={"schema_version":1,"receipt_type":"android_phone_run","resource_id":"SAMSUNG-PHONE-04","runner_name":os.environ.get("RUNNER_NAME"),"runner_arch":os.environ.get("RUNNER_ARCH"),"source_commit":os.environ.get("GITHUB_SHA"),"files":files,"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False,"scientific_evidence":False,"performance_authorization":False}
           (root/"provenance_receipt.json").write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
           PY
 
@@ -521,20 +521,20 @@ jobs:
         continue-on-error: true
         uses: actions/upload-artifact@v6
         with:
-          name: android-phone-${{ github.run_id }}-SAMSUNG-PHONE-03
-          path: research/runs/android_phone/${{ github.run_id }}/SAMSUNG-PHONE-03/
+          name: android-phone-${{ github.run_id }}-SAMSUNG-PHONE-04
+          path: research/runs/android_phone/${{ github.run_id }}/SAMSUNG-PHONE-04/
           if-no-files-found: warn
           retention-days: 30
 
   phone_05:
     needs: plan
     if: ${{ needs.plan.outputs.phone_05 == 'true' }}
-    runs-on: [self-hosted, linux, ARM64, samsung-phone-03]
+    runs-on: [self-hosted, linux, ARM64, samsung-phone-05]
     timeout-minutes: 45
     env:
-      PHONE_RESOURCE_ID: SAMSUNG-PHONE-03
+      PHONE_RESOURCE_ID: SAMSUNG-PHONE-05
       PHONE_MODE: ${{ needs.plan.outputs.phone_05_mode }}
-      PHONE_RUNNER_NAME: SAMSUNG-PHONE-03-TERMUX
+      PHONE_RUNNER_NAME: SAMSUNG-PHONE-05-TERMUX
       PHONE_INTERFACE_PATH: ~/.trading-agent/phone_interface.json
       S10_SEED: "271828"
       S10_INTERFACE_PATH: ~/.trading-agent/phone_interface.json
@@ -567,7 +567,7 @@ jobs:
           python3 -m automation.s10_local_stack \
             --repo-root "$REPO_SRC" \
             --descriptor "$HOME/.trading-agent/phone_interface.json" \
-            --work-root "$HOME/.cache/trading-agent/android-phone/SAMSUNG-PHONE-03/runs"
+            --work-root "$HOME/.cache/trading-agent/android-phone/SAMSUNG-PHONE-05/runs"
 
       - name: Verify bounded loopback interface
         shell: bash
@@ -596,7 +596,7 @@ jobs:
         run: |
           set -euo pipefail
           cd "$REPO_SRC"
-          OUT="$GITHUB_WORKSPACE/research/runs/android_phone/$GITHUB_RUN_ID/SAMSUNG-PHONE-03"
+          OUT="$GITHUB_WORKSPACE/research/runs/android_phone/$GITHUB_RUN_ID/SAMSUNG-PHONE-05"
           mkdir -p "$OUT"
           BASE_URL="$(python3 -c 'import json; from pathlib import Path; print(json.loads((Path.home()/".trading-agent"/"phone_interface.json").read_text(encoding="utf-8-sig"))["base_url"])')"
           PROTOCOL_PATH="$(python3 -c 'import json; from pathlib import Path; print(json.loads((Path.home()/".trading-agent"/"phone_interface.json").read_text(encoding="utf-8-sig")).get("protocol_path","/v1/systemone"))')"
@@ -612,15 +612,15 @@ jobs:
           python3 -m automation.android_phone_acceptance \
             --result "$OUT/evidence_critic.json" \
             --output "$OUT/android_phone_acceptance_receipt.json" \
-            --resource-id "SAMSUNG-PHONE-03" \
-            --runner-name "SAMSUNG-PHONE-03-TERMUX"
+            --resource-id "SAMSUNG-PHONE-05" \
+            --runner-name "SAMSUNG-PHONE-05-TERMUX"
 
       - name: Build provenance receipt
         if: always()
         shell: bash
         run: |
           set -euo pipefail
-          OUT="$GITHUB_WORKSPACE/research/runs/android_phone/$GITHUB_RUN_ID/SAMSUNG-PHONE-03"
+          OUT="$GITHUB_WORKSPACE/research/runs/android_phone/$GITHUB_RUN_ID/SAMSUNG-PHONE-05"
           mkdir -p "$OUT"
           export OUT
           python3 - <<'PY'
@@ -631,7 +631,7 @@ jobs:
           for p in sorted(root.rglob("*")):
               if p.is_file():
                   files.append({"path":str(p.relative_to(root)),"sha256":hashlib.sha256(p.read_bytes()).hexdigest(),"bytes":p.stat().st_size})
-          receipt={"schema_version":1,"receipt_type":"android_phone_run","resource_id":"SAMSUNG-PHONE-03","runner_name":os.environ.get("RUNNER_NAME"),"runner_arch":os.environ.get("RUNNER_ARCH"),"source_commit":os.environ.get("GITHUB_SHA"),"files":files,"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False,"scientific_evidence":False,"performance_authorization":False}
+          receipt={"schema_version":1,"receipt_type":"android_phone_run","resource_id":"SAMSUNG-PHONE-05","runner_name":os.environ.get("RUNNER_NAME"),"runner_arch":os.environ.get("RUNNER_ARCH"),"source_commit":os.environ.get("GITHUB_SHA"),"files":files,"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False,"scientific_evidence":False,"performance_authorization":False}
           (root/"provenance_receipt.json").write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
           PY
 
@@ -640,7 +640,7 @@ jobs:
         continue-on-error: true
         uses: actions/upload-artifact@v6
         with:
-          name: android-phone-${{ github.run_id }}-SAMSUNG-PHONE-03
-          path: research/runs/android_phone/${{ github.run_id }}/SAMSUNG-PHONE-03/
+          name: android-phone-${{ github.run_id }}-SAMSUNG-PHONE-05
+          path: research/runs/android_phone/${{ github.run_id }}/SAMSUNG-PHONE-05/
           if-no-files-found: warn
           retention-days: 30
