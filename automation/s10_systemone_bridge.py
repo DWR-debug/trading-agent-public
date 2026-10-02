@@ -36,6 +36,11 @@ SCHEMA = {
     "additionalProperties": False,
 }
 
+def get_json(url: str) -> dict:
+    req = Request(url, method="GET", headers={"Accept": "application/json"})
+    with urlopen(req, timeout=TIMEOUT) as resp:
+        return json.loads(resp.read().decode("utf-8"))
+
 def post_json(url: str, payload: dict) -> dict:
     body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
     req = Request(url, data=body, method="POST", headers={"Content-Type": "application/json", "Accept": "application/json"})
@@ -71,7 +76,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
         if self.path == "/health":
             try:
-                health = post_json(f"{LLAMA_BASE}/health", {})
+                health = get_json(f"{LLAMA_BASE}/health")
             except Exception as exc:
                 self.send_json(503, {"status": "unavailable", "error": type(exc).__name__})
                 return
