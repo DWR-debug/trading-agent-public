@@ -676,7 +676,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T21:30:12.704468+00:00",
+  "generated_at_utc": "2026-10-02T21:30:45.400167+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -864,6 +864,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "QA: remove unused Git bootstrap from self-hosted lanes (#874)",
+        "sha": "e6a6c7e3377f894de1cb6fadddb274a876935e11",
+        "timestamp": "2026-10-02T23:30:33+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "cf520d937ba7d3490a05b03af5952ed5f0fe23a1",
+        "timestamp": "2026-10-02T21:30:15Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "cbe00c3838ca7bb796048ec7b605351a5296e3f9",
+        "timestamp": "2026-10-02T21:30:13Z"
+      },
+      {
         "message": "OPS: add Samsung capacity-test slots 04 and 05 (#873)",
         "sha": "559303a914c84491bcb576b3c8b38903cd6c743d",
         "timestamp": "2026-10-02T23:30:00+02:00"
@@ -887,21 +902,6 @@
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "9257930587623cc598aa04d21bf4810a21e006f9",
         "timestamp": "2026-10-02T21:09:34Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "fcd577054dad0cc48b692352263a4e377928006f",
-        "timestamp": "2026-10-02T20:56:17Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "9079e65570d4014a62f063b9329344f683002d92",
-        "timestamp": "2026-10-02T20:55:51Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "42b3ff33041cea59983e8220bfb422f5d157a360",
-        "timestamp": "2026-10-02T20:42:17Z"
       }
     ]
   },
@@ -971,12 +971,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "559303a914c84491bcb576b3c8b38903cd6c743d",
+  "source_master_sha": "e6a6c7e3377f894de1cb6fadddb274a876935e11",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37067194411"
+    "run_id": "37067254152"
   }
 }
