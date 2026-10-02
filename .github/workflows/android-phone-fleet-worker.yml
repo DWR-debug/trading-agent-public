@@ -63,7 +63,7 @@ jobs:
 
   phone:
     needs: plan
-    if: needs.plan.outputs.matrix != '{"include":[]}'
+    if: needs.plan.outputs.has_devices == 'true'
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
