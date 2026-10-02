@@ -71,6 +71,7 @@ def test_s10_mobile_server_uses_bounded_memory_defaults():
     assert '"--ubatch-size", "128"' in source
     assert '"--parallel", "1"' in source
     assert '"--seed", str(S10_SEED)' in source
+    assert '"seed": S10_SEED' in source
     assert "S10_SEED = int(os.environ.get(\"S10_SEED\", \"271828\"))" in source
 
 
