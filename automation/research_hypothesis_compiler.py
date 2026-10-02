@@ -121,6 +121,7 @@ def main() -> int:
         default=[
             "research/frontier/q104_candidate_wave_2026_10_01.json",
             "research/frontier/q109_candidate_wave_2026_10_01.json",
+            "research/frontier/q123_candidate_wave_2026_10_02.json",
         ],
     )
     args = parser.parse_args()
