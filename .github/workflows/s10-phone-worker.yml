@@ -120,6 +120,7 @@ jobs:
           OUT="$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID"
           RESULT="$OUT/evidence_critic.json"
           RECEIPT="$OUT/s10_acceptance_receipt.json"
+          cd "$REPO_SRC"
           if [ ! -f "$RESULT" ]; then
             echo "No Evidence-Critic result was produced; keeping receipt-gated S10 eligibility false."
             exit 0

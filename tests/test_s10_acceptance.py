@@ -25,6 +25,13 @@ def good_result():
             "cases": [{"id": f"CASE-{i}", "base_choice": "SUPPORTED", "reversed_choice": "SUPPORTED", "choice_changed": False, "max_probability_delta": 0.0} for i in range(6)],
         },
         "environment": {"source_commit": "abc123", "runner_name": "S10-TERMUX"},
+        "s10_runtime": {
+            "seed": 271828,
+            "threads": 1,
+            "temperature": 0,
+            "top_k": 1,
+            "deterministic_cpu_mode": True,
+        },
         "endpoint": "http://127.0.0.1:8765",
         "worker_output_is_scientific_evidence": False,
         "governance": {

@@ -35,6 +35,7 @@ MODEL_FILENAME = "qwen2.5-1.5b-instruct-q4_k_m.gguf"
 MODEL_ID_FALLBACK = "S10-Qwen2.5-1.5B-Instruct-Q4_K_M"
 BRIDGE_MODULE = "automation.s10_systemone_bridge"
 S10_SEED = int(os.environ.get("S10_SEED", "271828"))
+S10_CPU_THREADS = 1
 USER_AGENT = "trading-agent-public/S10-local-stack-bootstrap/1"
 START_TIMEOUT_SECONDS = 150
 MIN_FREE_BYTES_FOR_MODEL = 1_500_000_000
@@ -225,8 +226,11 @@ def _start_llama(binary: Path, model: Path, log_dir: Path) -> dict:
         "--parallel", "1",
         "--batch-size", "256",
         "--ubatch-size", "128",
-        "--threads", str(min(4, os.cpu_count() or 4)),
+        "--threads", str(S10_CPU_THREADS),
+        "--threads-batch", str(S10_CPU_THREADS),
         "--seed", str(S10_SEED),
+        "--temp", "0",
+        "--top-k", "1",
     ]
     process = subprocess.Popen(
         command,
@@ -286,6 +290,9 @@ def _write_descriptor(path: Path, model_id: str) -> None:
         "protocol_path": "/v1/systemone",
         "timeout_seconds": 90,
         "seed": S10_SEED,
+        "threads": S10_CPU_THREADS,
+        "temperature": 0,
+        "top_k": 1,
         "source": "automation.s10_local_stack",
     }
     # Descriptor is intentionally rejected by s10_runtime if credential-bearing keys exist.
