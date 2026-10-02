@@ -6,11 +6,10 @@ RUNNER_NAME="${S10_RUNNER_NAME:-S10-TERMUX}"
 RUNNER_LABELS="s10-phone,linux,ARM64"
 
 command -v proot-distro >/dev/null 2>&1 || { echo "Install first: pkg install -y proot-distro"; exit 2; }
-command -v gh >/dev/null 2>&1 || { echo "Install first: pkg install -y gh"; exit 2; }
-gh auth status >/dev/null 2>&1 || { echo "Authenticate gh first: gh auth login"; exit 2; }
-
-TOKEN="$(gh api -X POST "repos/$REPO/actions/runners/registration-token" --jq .token)"
-[ -n "$TOKEN" ]
+printf "GitHub runner registration token (input locally; not stored): "
+read -rs TOKEN
+printf "\n"
+[ -n "$TOKEN" ] || { echo "Missing runner registration token"; exit 2; }
 
 proot-distro login ubuntu -- env S10_RUNNER_TOKEN="$TOKEN" S10_RUNNER_NAME="$RUNNER_NAME" S10_RUNNER_LABELS="$RUNNER_LABELS" S10_RUNNER_VERSION="$RUNNER_VERSION" S10_REPO="$REPO" bash -lc '
 set -euo pipefail
