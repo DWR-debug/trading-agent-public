@@ -676,7 +676,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T14:40:07.488447+00:00",
+  "generated_at_utc": "2026-10-02T14:43:26.842365+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -864,6 +864,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: enforce strict Q123 SEC submission identity",
+        "sha": "69dae8eab3f43411711a1e3ad35d3abe11f832d4",
+        "timestamp": "2026-10-02T16:43:11+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ebdb842ac20fa47180cc3fd8b9a4aa21bddaeb19",
+        "timestamp": "2026-10-02T14:40:07Z"
+      },
+      {
         "message": "RESEARCH: add Q123 SEC acceptance-clock PIT audit",
         "sha": "935fba283cae9e3103216caa044bc31cde77d8e9",
         "timestamp": "2026-10-02T16:39:54+02:00"
@@ -892,16 +902,6 @@
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "a97d4bac3a3a5550bbc4117fea5df25add8a7468",
         "timestamp": "2026-10-02T14:15:05Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "77e7ab874bb96d65f8d6df7de493bee81962cf97",
-        "timestamp": "2026-10-02T13:59:38Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "2620f4f088a8919eb0f249cc059d25f95b700c34",
-        "timestamp": "2026-10-02T13:57:53Z"
       }
     ]
   },
@@ -971,12 +971,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "935fba283cae9e3103216caa044bc31cde77d8e9",
+  "source_master_sha": "69dae8eab3f43411711a1e3ad35d3abe11f832d4",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37021446465"
+    "run_id": "37021831913"
   }
 }
