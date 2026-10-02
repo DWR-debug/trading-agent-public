@@ -30,3 +30,8 @@ def test_n7_snapshot_validation_allows_amendment_duplicates_before_pit_collapse(
     out = validate_snapshot(snapshot)
     assert out["required_lineage_complete"] is True
     assert out["unique_manager_period_security_keys"] == 1
+
+
+def test_n7_pit_boundary_is_explicitly_date_level_until_acceptance_enrichment():
+    from automation.q109_n7_common_holder_graph import AS_OF
+    assert AS_OF.isoformat() == "2026-08-31"
