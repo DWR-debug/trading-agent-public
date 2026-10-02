@@ -1,7 +1,5 @@
 name: S10 Runtime Health
 on:
-  schedule:
-    - cron: "*/30 * * * *"
   push:
     branches: [master]
     paths:
@@ -27,7 +25,7 @@ jobs:
       max-parallel: 2
       matrix:
         slot: [a, b]
-    runs-on: [self-hosted, trading-agent-research]
+    runs-on: [self-hosted, s10-phone, linux, ARM64]
     timeout-minutes: 6
     steps:
       - name: Download exact source snapshot
@@ -61,7 +59,7 @@ jobs:
           echo PY_EXE=%PY_EXE%>>"%GITHUB_ENV%"
           endlocal
 
-      - name: Run S10 probe
+      - name: Run S10 phone runtime probe
         shell: cmd
         run: |
           @echo off
