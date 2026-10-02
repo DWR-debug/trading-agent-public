@@ -4,7 +4,7 @@ Stand: 2026-10-02
 
 ## Zweck
 
-Dies ist die wiederverwendbare Integrationsvorlage fuer weitere Samsung-/Android-Geraete im Trading-Agent-OS. S10 ist die Referenzimplementierung; neue Telefone erhalten keinen eigenen wissenschaftlichen oder architekturellen Sonderpfad.
+Dies ist die wiederverwendbare Integrationsvorlage fuer weitere Samsung-/Android-Geraete im Trading-Agent-OS. S10 ist die Referenzimplementierung; neue Telefone erhalten keinen eigenen wissenschaftlichen oder architekturellen Sonderpfad. Nach erfolgreicher Acceptance werden Geräte nicht bei jedem Zyklus erneut mit dem Vollbenchmark belastet.
 
 ## Ressourcenprofil
 
@@ -56,9 +56,9 @@ Die Acceptance ist ausschliesslich ein Capability-/Utility-Nachweis. Sie ist kei
 
 ## Automatisches Routing
 
-Die generische Spur .github/workflows/android-phone-fleet-worker.yml laeuft alle sechs Stunden und kann manuell gestartet werden. Der Planungsjob prueft vor der Matrix-Erzeugung, welche konfigurierten eindeutigen Runner-Labels online sind. Offline-Geraete erzeugen dadurch keine wartenden Android-Jobs.
+Die generische Spur `.github/workflows/android-phone-fleet-worker.yml` laeuft alle sechs Stunden und kann manuell gestartet werden. Der Planungsjob prueft vor der Matrix-Erzeugung, welche konfigurierten eindeutigen Runner-Labels online sind, und liest den letzten Acceptance-Status. Online + nicht akzeptiert => Acceptance; online + akzeptiert => Utility-Review; offline => kein Job.
 
-Nach jedem abgeschlossenen Fleet-Lauf synchronisiert .github/workflows/android-phone-fleet-receipt-sync.yml den technischen Status unter ops/android_phone_runtime_status/. Nur ein aktueller ANDROID_PHONE_UTILITY_ACCEPTED-Receipt setzt eligible=true.
+Nach jedem abgeschlossenen Fleet-Lauf synchronisiert `.github/workflows/android-phone-fleet-receipt-sync.yml` den technischen Status unter `ops/android_phone_runtime_status/`. Ein Utility-only Lauf darf einen bereits gueltigen `ANDROID_PHONE_UTILITY_ACCEPTED`-Receipt nicht widerrufen; ein expliziter neuer Acceptance-Fehler darf die Eligibility dagegen zuruecksetzen.
 
 ## GitHub-Routingprinzip
 
