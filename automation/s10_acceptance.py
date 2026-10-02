@@ -38,6 +38,7 @@ def evaluate(result: dict) -> tuple[str, dict[str, bool]]:
     sensitivity = result.get("option_order_sensitivity") or {}
     environment = result.get("environment") or {}
     governance = result.get("governance") or {}
+    runtime = result.get("s10_runtime") or {}
 
     row_contract_ok = (
         isinstance(rows, list)
@@ -58,7 +59,7 @@ def evaluate(result: dict) -> tuple[str, dict[str, bool]]:
         and len(order_cases) == 6
         and all(isinstance(case, dict) and case.get("error") is None for case in order_cases)
         and sensitivity.get("choice_changes") == 0
-        and isinstance(sensitivity.get("max_probability_delta"), (int, float))
+        and sensitivity.get("max_probability_delta") == 0
     )
     governance_ok = all(governance.get(key) is False for key in REQUIRED_FALSE_GOVERNANCE)
     checks = {
@@ -71,6 +72,13 @@ def evaluate(result: dict) -> tuple[str, dict[str, bool]]:
         "source_commit_present": isinstance(environment.get("source_commit"), str) and bool(environment.get("source_commit")),
         "governance_fail_closed": governance_ok,
         "not_scientific_evidence": result.get("worker_output_is_scientific_evidence") is False,
+        "deterministic_cpu_contract": (
+            runtime.get("deterministic_cpu_mode") is True
+            and runtime.get("seed") == 271828
+            and runtime.get("threads") == 1
+            and runtime.get("temperature") == 0
+            and runtime.get("top_k") == 1
+        ),
     }
     return ("S10_UTILITY_ACCEPTED" if all(checks.values()) else "S10_UTILITY_NOT_ACCEPTED"), checks
 
