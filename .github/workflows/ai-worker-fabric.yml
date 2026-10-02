@@ -20,6 +20,7 @@ on:
       - "automation/q103_rccsm_state_routing_integrity.py"
       - "tests/test_q103_rccsm_state_routing_integrity.py"
       - "ai_requests/AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT.json"
+      - "ai_requests/AI-2026-10-02-Q124-FRONTIER-ADVERSARIAL.json"
       - "automation/research_os_scheduler.py"
       - "automation/research_hypothesis_compiler.py"
       - "automation/autonomous_control_plane.py"
@@ -45,6 +46,7 @@ jobs:
           - AI-2026-09-30-Q101-NEGATIVE-EVIDENCE
           - AI-2026-09-30-Q102-REGIME-STATE-DESIGN
           - AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT
+          - AI-2026-10-02-Q124-FRONTIER-ADVERSARIAL
     concurrency:
       group: trading-agent-ai-${{ matrix.provider }}-${{ matrix.task }}
       cancel-in-progress: false
@@ -75,6 +77,7 @@ jobs:
             AI-2026-09-30-Q101-NEGATIVE-EVIDENCE) echo 'path=ai_requests/AI-2026-09-30-Q101-NEGATIVE-EVIDENCE.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-09-30-Q102-REGIME-STATE-DESIGN) echo 'path=ai_requests/AI-2026-09-30-Q102-REGIME-STATE-DESIGN.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT) echo 'path=ai_requests/AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT.json' >> "$GITHUB_OUTPUT" ;;
+            AI-2026-10-02-Q124-FRONTIER-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-02-Q124-FRONTIER-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
             *) exit 1 ;;
           esac
 
