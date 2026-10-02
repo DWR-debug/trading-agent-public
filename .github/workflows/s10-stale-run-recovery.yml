@@ -27,7 +27,7 @@ jobs:
         run: |
           set -euo pipefail
           now="$(date +%s)"
-          gh api "/repos/${GITHUB_REPOSITORY}/actions/runs?per_page=30"             --jq '.workflow_runs[] | select(.name == "S10 Phone Research Worker" and .status == "in_progress") | [.id, .updated_at, .head_sha] | @tsv' |
+          gh api "/repos/${GITHUB_REPOSITORY}/actions/runs?per_page=30"             --jq '.workflow_runs[] | select(.name == "S10 Phone Research Worker" and .status == "in_progress" and .head_branch == "master") | [.id, .updated_at, .head_sha] | @tsv' |
           while IFS=$'	' read -r run_id updated_at head_sha; do
             [ -n "$run_id" ] || continue
             updated_epoch="$(date -d "$updated_at" +%s)"

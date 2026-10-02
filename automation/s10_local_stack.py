@@ -34,6 +34,7 @@ HF_MODEL_URL = (
 MODEL_FILENAME = "qwen2.5-1.5b-instruct-q4_k_m.gguf"
 MODEL_ID_FALLBACK = "S10-Qwen2.5-1.5B-Instruct-Q4_K_M"
 BRIDGE_MODULE = "automation.s10_systemone_bridge"
+S10_SEED = int(os.environ.get("S10_SEED", "271828"))
 USER_AGENT = "trading-agent-public/S10-local-stack-bootstrap/1"
 START_TIMEOUT_SECONDS = 150
 MIN_FREE_BYTES_FOR_MODEL = 1_500_000_000
@@ -225,6 +226,7 @@ def _start_llama(binary: Path, model: Path, log_dir: Path) -> dict:
         "--batch-size", "256",
         "--ubatch-size", "128",
         "--threads", str(min(4, os.cpu_count() or 4)),
+        "--seed", str(S10_SEED),
     ]
     process = subprocess.Popen(
         command,
@@ -247,6 +249,7 @@ def _start_bridge(repo_root: Path, log_dir: Path, model_id: str) -> dict:
             "S10_BRIDGE_PORT": str(BRIDGE_PORT),
             "S10_LLAMA_BASE_URL": f"http://{HOST}:{LLAMA_PORT}",
             "S10_MODEL": model_id,
+            "S10_SEED": str(S10_SEED),
         }
     )
     process = subprocess.Popen(
