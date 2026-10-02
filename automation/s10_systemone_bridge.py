@@ -14,7 +14,7 @@ from urllib.request import Request, urlopen
 HOST = "127.0.0.1"
 PORT = int(os.environ.get("S10_BRIDGE_PORT", "8765"))
 LLAMA_BASE = os.environ.get("S10_LLAMA_BASE_URL", "http://127.0.0.1:8080").rstrip("/")
-MODEL = os.environ.get("S10_MODEL", "Qwen2.5-1.5B-Instruct")
+MODEL = os.environ.get("S10_MODEL", "S10-Qwen2.5-1.5B")
 TIMEOUT = max(10, min(int(os.environ.get("S10_TIMEOUT_SECONDS", "90")), 180))
 
 SCHEMA = {
@@ -98,7 +98,7 @@ class Handler(BaseHTTPRequestHandler):
                 ],
                 "temperature": 0,
                 "max_tokens": 160,
-                "response_format": {"type": "json_schema", "schema": SCHEMA},
+                "response_format": {"type": "json_object"},
             }
             upstream = post_json(f"{LLAMA_BASE}/v1/chat/completions", req)
             content = ((upstream.get("choices") or [{}])[0].get("message") or {}).get("content", "")
@@ -106,7 +106,13 @@ class Handler(BaseHTTPRequestHandler):
             probs = answer.get("probabilities") or {}
             self.send_json(200, {"answers": {"verdict": {"choice": answer.get("choice"), "probabilities": probs}}})
         except Exception as exc:
-            self.send_json(502, {"error": {"type": type(exc).__name__, "message": str(exc)[:500]}})
+            detail = str(exc)[:500]
+            if hasattr(exc, "read"):
+                try:
+                    detail = exc.read().decode("utf-8")[:500]
+                except Exception:
+                    pass
+            self.send_json(502, {"error": {"type": type(exc).__name__, "message": detail}})
 
 if __name__ == "__main__":
     ThreadingHTTPServer((HOST, PORT), Handler).serve_forever()
