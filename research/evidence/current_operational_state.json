@@ -662,7 +662,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T06:00:46.916638+00:00",
+  "generated_at_utc": "2026-10-02T06:11:03.526008+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -850,6 +850,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "fix: accept short-lived S10 runner token locally (#803)",
+        "sha": "7542f1182157ebfa8be2d5cc7a5cf83bc7ca2759",
+        "timestamp": "2026-10-02T08:10:51+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4cba60633c3443d0c624fe92fedd76ea072bc3f9",
+        "timestamp": "2026-10-02T06:00:46Z"
+      },
+      {
         "message": "feat: advance Q109 N7 common-holder graph integrity (#802)",
         "sha": "f2b21cc30f1e133eb0300e995e7a7f4dc638d67f",
         "timestamp": "2026-10-02T08:00:33+02:00"
@@ -878,16 +888,6 @@
         "message": "feat: independently reproduce Q120 CFTC source/PIT feasibility (#801)",
         "sha": "09bf6797056da1f39c719490b8b56c67aebf0551",
         "timestamp": "2026-10-02T07:54:44+02:00"
-      },
-      {
-        "message": "fix: route S10 health probe to dedicated phone runner (#799)",
-        "sha": "43de7d160244af38c70c42ff9db01f6d28793745",
-        "timestamp": "2026-10-02T07:54:31+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6590743ad0dfc08ac2211947e0c88bf04c5ce827",
-        "timestamp": "2026-10-02T05:53:04Z"
       }
     ]
   },
@@ -957,12 +957,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f2b21cc30f1e133eb0300e995e7a7f4dc638d67f",
+  "source_master_sha": "7542f1182157ebfa8be2d5cc7a5cf83bc7ca2759",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36971504941"
+    "run_id": "36972324748"
   }
 }
