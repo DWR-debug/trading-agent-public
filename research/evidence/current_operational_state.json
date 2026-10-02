@@ -676,7 +676,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T18:05:00.470789+00:00",
+  "generated_at_utc": "2026-10-02T18:07:23.753594+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -864,44 +864,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "Merge pull request #863 from DWR-debug/fix/android-phone-fleet-static-jobs-20261002",
-        "sha": "65f90ae3fd45794eecde7d000587bc82758cef7a",
-        "timestamp": "2026-10-02T20:04:45+02:00"
+        "message": "Merge pull request #865 from DWR-debug/docs/android-phone-fleet-canonical-state-20261002",
+        "sha": "b0b3826a73bc5331c9f5a0722abccf3e3068273e",
+        "timestamp": "2026-10-02T20:07:08+02:00"
       },
       {
-        "message": "FIX: register Samsung phone labels with actionlint",
-        "sha": "618261886ee3a2cb174b34ba33c5f909c24ebc9d",
-        "timestamp": "2026-10-02T20:04:28+02:00"
+        "message": "DOC: pin S10 reference endpoints in reusable template",
+        "sha": "7602d271ee0a8c318150f4f65292c0497fcfc625",
+        "timestamp": "2026-10-02T20:06:47+02:00"
       },
       {
-        "message": "TEST: align Samsung template assertions with fleet slots",
-        "sha": "a86e9f8b19d162196aa0ccafa4abbbdb5c6c3eb9",
-        "timestamp": "2026-10-02T20:03:56+02:00"
+        "message": "FIX: consume Android receipt sync retry variable",
+        "sha": "d0f1f9895b7b7d32ef1acc0514568e15775edbec",
+        "timestamp": "2026-10-02T20:06:17+02:00"
       },
       {
-        "message": "FIX: register Android phone fleet workflows in integrity guard",
-        "sha": "6bb1d3874a0fe45e8e2a13c30475a0912edf41ef",
-        "timestamp": "2026-10-02T20:02:24+02:00"
+        "message": "DOC: add Samsung Android fleet to chat entrypoint",
+        "sha": "e8b996f8f8bfc94e89fcb463d3f62e207f4f18bb",
+        "timestamp": "2026-10-02T20:05:28+02:00"
       },
       {
-        "message": "FIX: use static typed Android phone fleet jobs",
-        "sha": "a66113c01e526c3d13f521a41253b86669e1308c",
-        "timestamp": "2026-10-02T20:02:18+02:00"
+        "message": "DOC: register Samsung Android phone fleet in OS contract",
+        "sha": "d7cea942735a851a5672504f68b52dda6068ce9b",
+        "timestamp": "2026-10-02T20:05:16+02:00"
+      },
+      {
+        "message": "OPS: record reusable Samsung Android phone fleet",
+        "sha": "0010a6689571203f1c25311987b8685b58f2a3fa",
+        "timestamp": "2026-10-02T20:05:04+02:00"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "713af75447f7a4a45c2b215d824f9acece1da888",
-        "timestamp": "2026-10-02T17:59:06Z"
+        "sha": "0afea453693131f23bcd32d4c1083b1fe027aedd",
+        "timestamp": "2026-10-02T18:05:00Z"
       },
       {
-        "message": "Merge pull request #862 from DWR-debug/fix/android-phone-fleet-workflow-robustness-20261002",
-        "sha": "9b61fc5d0e3ad470bc70d3a2a24c02d1c8d8f37c",
-        "timestamp": "2026-10-02T19:58:54+02:00"
-      },
-      {
-        "message": "FIX: gate phone matrix on explicit planner output",
-        "sha": "2f89fb0e26703a1ed38f841e625fbad1750d4a7e",
-        "timestamp": "2026-10-02T19:58:41+02:00"
+        "message": "Merge pull request #863 from DWR-debug/fix/android-phone-fleet-static-jobs-20261002",
+        "sha": "65f90ae3fd45794eecde7d000587bc82758cef7a",
+        "timestamp": "2026-10-02T20:04:45+02:00"
       }
     ]
   },
@@ -971,12 +971,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "65f90ae3fd45794eecde7d000587bc82758cef7a",
+  "source_master_sha": "b0b3826a73bc5331c9f5a0722abccf3e3068273e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37045027128"
+    "run_id": "37045295704"
   }
 }
