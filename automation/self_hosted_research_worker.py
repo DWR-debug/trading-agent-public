@@ -209,6 +209,13 @@ LANES: dict[str, list[list[str]]] = {
         [
             PYTHON,
             "-m",
+            "automation.q125_f1_sec_publication_clock",
+            "--output",
+            "research/runs/self_hosted/q125_f1_sec_publication_clock/result.json",
+        ],
+        [
+            PYTHON,
+            "-m",
             "automation.q104_i22_filing_arrival_compiler",
             "--output",
             "research/runs/self_hosted/q104_i22_filing_arrival/result.json",
