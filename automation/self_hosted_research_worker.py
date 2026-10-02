@@ -162,6 +162,8 @@ LANES: dict[str, list[list[str]]] = {
             "tests/test_s10_acceptance.py",
             "tests/test_research_hypothesis_compiler.py",
             "tests/test_research_clock_join.py",
+            "tests/test_q124_candidate_wave.py",
+            "tests/test_q124_source_feasibility.py",
         ],
         [
             PYTHON,
@@ -191,6 +193,13 @@ LANES: dict[str, list[list[str]]] = {
             "automation.q120_cftc_source_feasibility",
             "--output",
             "research/runs/self_hosted/q120_cftc_source_feasibility/result.json",
+        ],
+        [
+            PYTHON,
+            "-m",
+            "automation.q124_source_feasibility",
+            "--output",
+            "research/runs/self_hosted/q124_source_feasibility/result.json",
         ],
         [
             PYTHON,
