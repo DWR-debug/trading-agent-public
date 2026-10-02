@@ -134,6 +134,24 @@
       "os_status_path": "ops/s10_runtime_status.json",
       "receipt_sync_workflow": ".github/workflows/s10-receipt-sync.yml",
       "routing_contract": "Research OS may route S10 only when the synchronized receipt reports S10_UTILITY_ACCEPTED"
+    },
+    "android_phone_template": {
+      "documentation": "docs/ANDROID_SAMSUNG_RUNNER_TEMPLATE.md",
+      "profile": "research/devices/android_phone_profile_template.json",
+      "register_script": "scripts/android_samsung_runner_register_template.sh",
+      "start_script": "scripts/android_samsung_runner_start_template.sh",
+      "default_labels": [
+        "android-phone",
+        "samsung",
+        "linux",
+        "ARM64"
+      ],
+      "initial_status": "CONFIGURED_UNVERIFIED",
+      "utility_gate": "ANDROID_PHONE_UTILITY_ACCEPTED",
+      "scientific_evidence": false,
+      "performance_authorization": false,
+      "promotion": false,
+      "paid_usage_allowed": false
     }
   },
   "chatless_night_policy": {
