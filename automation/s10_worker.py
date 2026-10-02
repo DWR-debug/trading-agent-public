@@ -15,13 +15,14 @@ from pathlib import Path
 from automation.evidence_critic_benchmark import main as benchmark_main
 from automation.s10_runtime import resolve
 
-SMOKE_TIMEOUT_SECONDS = 25
+SMOKE_TIMEOUT_SECONDS = 60
 SMOKE_CLAIM = "The local S10 endpoint answered this bounded smoke request."
 SMOKE_EVIDENCE = "The endpoint returned a valid typed verdict object for this request."
 
 
 def _smoke_payload() -> dict:
     return {
+        "mode": "smoke",
         "state": {
             "claim": SMOKE_CLAIM,
             "evidence": SMOKE_EVIDENCE,

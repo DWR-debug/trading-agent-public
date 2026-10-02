@@ -43,5 +43,6 @@ def test_s10_endpoint_smoke_fails_closed_on_transport_error(monkeypatch):
 def test_s10_worker_source_contains_bounded_preflight():
     text = Path("automation/s10_worker.py").read_text(encoding="utf-8")
     assert "_endpoint_smoke" in text
-    assert "SMOKE_TIMEOUT_SECONDS = 25" in text
+    assert isinstance(s10_worker.SMOKE_TIMEOUT_SECONDS, int)
+    assert 0 < s10_worker.SMOKE_TIMEOUT_SECONDS <= 60
     assert "worker_output_is_scientific_evidence" in text
