@@ -1,0 +1,102 @@
+{
+  "schema_version": "1.0",
+  "wave_id": "Q124-2026-10-02",
+  "status": "DESIGN_INVENTORY_ONLY",
+  "generated_utc": "2026-10-02T10:35:00Z",
+  "purpose": "Add two orthogonal event-driven mechanisms suggested by current 2026 research, with explicit source-access and PIT feasibility gates before any performance path.",
+  "external_basis": [
+    {
+      "source": "Fleming, Liu & Nguyen (2026), Intraday Price Pressure and Order Flow Around U.S. Treasury Auctions, Federal Reserve Bank of New York Staff Report 1188",
+      "observation": "The study reports pre-auction yield pressure, post-auction reversal and a strong role for net order flow in the transmission mechanism.",
+      "source_url": "https://www.newyorkfed.org/research/staff_reports/sr1188"
+    },
+    {
+      "source": "Lin, Luo & Shao (2026), When Does Intraday Options Trading Predict Stock Returns?",
+      "observation": "The paper reports predictive information in 30-minute options order imbalance, especially near the market close; the project must not treat the paper's signed imbalance measure as equivalent to any simpler public call/put-volume proxy.",
+      "source_url": "https://papers.ssrn.com/sol3/Delivery.cfm/7318198.pdf?abstractid=7318198&mirid=1"
+    },
+    {
+      "source": "Cboe U.S. Options Market Statistics",
+      "observation": "Cboe exposes current and recent 30-minute call/put volume and market-statistics data publicly; historical depth and exact field continuity remain a separate feasibility question.",
+      "source_url": "https://www.cboe.com/us/options/market_statistics/market/"
+    }
+  ],
+  "policy": {
+    "performance_authorized": false,
+    "holdout_selection_allowed": false,
+    "parameter_search_allowed": false,
+    "asset_search_allowed": false,
+    "threshold_search_allowed": false,
+    "horizon_search_allowed": false,
+    "variant_search_allowed": false,
+    "family_ranking_allowed": false,
+    "automatic_promotion": false,
+    "paid_data_required": false
+  },
+  "candidates": [
+    {
+      "id": "Q124:T26",
+      "name": "Treasury Auction Pressure × Equity Risk Transmission",
+      "family": "cross_asset_auction_microstructure",
+      "hypothesis": "A fixed Treasury auction-demand shock and its immediate rates-market response may alter next-session equity risk-taking through a cross-asset liquidity channel.",
+      "construction": "Freeze a fixed set of official Treasury auction-result fields (including bid-to-cover, accepted/high yield and auction identity) at their publication timestamp; separately freeze a predeclared Treasury-market pressure state; map the event to the first eligible U.S. equity session after publication. No learned weights or event-window search.",
+      "sources": [
+        "U.S. Treasury Fiscal Data auction dataset",
+        "Treasury auction results",
+        "public U.S. equity OHLCV"
+      ],
+      "pit_requirements": [
+        "official publication timestamp",
+        "auction identifier continuity",
+        "field-definition freeze",
+        "pre-auction reference availability",
+        "U.S. session/calendar alignment"
+      ],
+      "source_feasibility": {
+        "status": "PUBLIC_SOURCE_PATH_IDENTIFIED",
+        "next_question": "historical field completeness plus exact publication-time reconstruction"
+      },
+      "next_gate": "historical archive + publication-time PIT reconstruction + mutation tests",
+      "status": "DESIGN_ONLY_UNRANKED",
+      "performance_authorized": false
+    },
+    {
+      "id": "Q124:O26",
+      "name": "Thirty-Minute Call/Put Volume Imbalance × Equity Response",
+      "family": "options_attention_flow",
+      "hypothesis": "A fixed 30-minute option call/put volume imbalance state may contain short-horizon cross-sectional or market-level information about subsequent equity returns or risk demand.",
+      "construction": "Use only publicly reproducible Cboe market-statistics fields that are explicitly available at the decision cutoff; derive a fixed 30-minute call-minus-put volume imbalance and align it to a predeclared subsequent equity interval. This is a project-specific public-data proxy and must not be represented as the signed options order-imbalance construct in the cited paper.",
+      "sources": [
+        "Cboe U.S. Options Market Statistics",
+        "public U.S. equity OHLCV"
+      ],
+      "pit_requirements": [
+        "historical 30-minute field continuity",
+        "timestamp/interval semantics",
+        "contract aggregation rules",
+        "publication/delay handling",
+        "symbol-to-underlying mapping"
+      ],
+      "source_feasibility": {
+        "status": "PARTIAL_PUBLIC_ACCESS_REQUIRES_ARCHIVE_PROBE",
+        "hard_boundary": "The paper's signed intraday order-imbalance measure is not assumed available for free."
+      },
+      "next_gate": "historical source-depth audit + deterministic interval/PIT compiler",
+      "status": "DESIGN_ONLY_UNRANKED",
+      "performance_authorized": false
+    }
+  ],
+  "notes": [
+    "These mechanisms are discovery hypotheses, not project evidence.",
+    "Q124:T26 is a distinct event-transmission formulation from Q104:M6 and requires a separate pressure-state contract before use.",
+    "Q124:O26 intentionally uses a simpler public call/put-volume proxy; it must not inherit empirical claims made for signed 30-minute options order imbalance.",
+    "No candidate is ranked, selected, tuned or performance-authorized.",
+    "Any source-depth, timestamp or historical-archive failure is a valid feasibility result and blocks performance."
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
