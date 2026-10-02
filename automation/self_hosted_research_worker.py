@@ -194,6 +194,13 @@ LANES: dict[str, list[list[str]]] = {
             "-m",
             "automation.s10_probe",
         ],
+        [
+            PYTHON,
+            "-m",
+            "automation.s10_worker",
+            "--output",
+            "research/runs/self_hosted/autonomous/s10_evidence_critic.json",
+        ],
     ],
     "repo_qa": [
         [
