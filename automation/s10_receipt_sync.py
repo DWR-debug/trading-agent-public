@@ -43,6 +43,7 @@ def build_status(
     artifact_id: str | None,
     artifact_digest: str | None,
     generated_at_utc: str | None = None,
+    workflow_run_updated_at: str | None = None,
 ) -> dict[str, Any]:
     provenance = _load(artifact_root / "provenance_receipt.json")
     acceptance = _load(artifact_root / "s10_acceptance_receipt.json")
@@ -55,7 +56,7 @@ def build_status(
         "workflow_run_id": workflow_run_id,
         "workflow_conclusion": workflow_conclusion,
         "source_commit": source_commit,
-        "workflow_run_updated_at": generated_at_utc or datetime.now(timezone.utc).isoformat(),
+        "workflow_run_updated_at": workflow_run_updated_at or generated_at_utc or datetime.now(timezone.utc).isoformat(),
         "artifact_id": artifact_id,
         "artifact_digest": artifact_digest,
         "generated_at_utc": generated_at_utc or datetime.now(timezone.utc).isoformat(),
@@ -107,6 +108,16 @@ def build_status(
     return base
 
 
+def merge_status(existing: dict[str, Any] | None, incoming: dict[str, Any]) -> dict[str, Any]:
+    if not existing:
+        return incoming
+    old_ts = str(existing.get("workflow_run_updated_at", ""))
+    new_ts = str(incoming.get("workflow_run_updated_at", ""))
+    if old_ts and new_ts and old_ts > new_ts:
+        return existing
+    return incoming
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--artifact-root", type=Path, required=True)
@@ -115,6 +126,7 @@ def main() -> int:
     ap.add_argument("--source-commit", required=True)
     ap.add_argument("--artifact-id")
     ap.add_argument("--artifact-digest")
+    ap.add_argument("--workflow-updated-at")
     ap.add_argument("--output", type=Path, required=True)
     args = ap.parse_args()
     status = build_status(
@@ -124,6 +136,7 @@ def main() -> int:
         source_commit=args.source_commit,
         artifact_id=args.artifact_id,
         artifact_digest=args.artifact_digest,
+        workflow_run_updated_at=args.workflow_updated_at,
     )
     existing = _load(args.output) if args.output.is_file() else None
     status = merge_status(existing, status)
@@ -139,13 +152,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
-
-def merge_status(existing: dict[str, Any] | None, incoming: dict[str, Any]) -> dict[str, Any]:
-    if not existing:
-        return incoming
-    old_ts = str(existing.get("workflow_run_updated_at", ""))
-    new_ts = str(incoming.get("workflow_run_updated_at", ""))
-    if old_ts and new_ts and old_ts > new_ts:
-        return existing
-    return incoming
