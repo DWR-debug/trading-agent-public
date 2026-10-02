@@ -172,6 +172,7 @@ ACTIVE_WORKFLOWS = {
     "evidence-critic-lab.yml",
     "evidence-critic-verdict.yml",
     "s10-runtime-probe.yml",
+    "s10-phone-worker.yml",
     "q104-i22-filing-arrival.yml",
 }
 
