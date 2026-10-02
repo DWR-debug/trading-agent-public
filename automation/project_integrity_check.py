@@ -176,6 +176,7 @@ ACTIVE_WORKFLOWS = {
     "s10-runtime-probe.yml",
     "s10-phone-worker.yml",
     "s10-receipt-sync.yml",
+    "s10-stale-run-recovery.yml",
     "q104-i22-filing-arrival.yml",
 }
 
