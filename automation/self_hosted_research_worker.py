@@ -199,6 +199,13 @@ LANES: dict[str, list[list[str]]] = {
         [
             PYTHON,
             "-m",
+            "automation.q109_n7_common_holder_graph",
+            "--output",
+            "research/runs/self_hosted/q109_n7_common_holder_graph/result.json",
+        ],
+        [
+            PYTHON,
+            "-m",
             "automation.s10_probe",
         ],
         [
