@@ -100,6 +100,16 @@ CONTEXT_FILES = {
         "research/governance/active_research_registry.json",
         "docs/DECISION_BASIS.md",
     ),
+    "AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT": (
+        "automation/research_os_scheduler.py",
+        "automation/research_hypothesis_compiler.py",
+        "automation/autonomous_control_plane.py",
+        ".github/workflows/permanent-pc-research-loop.yml",
+        ".github/workflows/hosted-research-failover.yml",
+        "research/evidence/current_operational_state.json",
+        "research/governance/active_research_registry.json",
+        "docs/DECISION_BASIS.md",
+    ),
     "AI-2026-09-30-Q102-REGIME-STATE-DESIGN": (
         "docs/research_design/EXTERNAL_RESEARCH_INSPIRATION_2026-09-30.md",
         "automation/q102_regime_negative_evidence.py",
