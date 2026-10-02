@@ -55,6 +55,7 @@ def main() -> int:
         sys.argv = [
             "evidence_critic_benchmark",
             "--endpoint", str(descriptor["base_url"]),
+            "--protocol-path", str(descriptor["protocol_path"]),
             "--model", str(descriptor["model"]),
             "--corpus", str(args.corpus),
             "--output", str(args.output),
