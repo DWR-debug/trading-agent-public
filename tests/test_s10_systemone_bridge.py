@@ -51,3 +51,4 @@ def test_bridge_request_pins_reproducible_seed():
     source = Path("automation/s10_systemone_bridge.py").read_text(encoding="utf-8")
     assert 'S10_SEED = int(os.environ.get("S10_SEED", "271828"))' in source
     assert '"seed": S10_SEED' in source
+    assert '"top_k": 1' in source
