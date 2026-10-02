@@ -1,6 +1,6 @@
 # Trading Agent OS — Persistent Orchestration
 
-Stand: 2026-10-01
+Stand: 2026-10-02
 
 ## Zweck
 
@@ -24,9 +24,10 @@ AI- und Coding-Agenten dürfen Forschung technisch beschleunigen, aber weder Hol
 | Free AI Worker Fabric | alle 6 h | adversariales Design/Review | Provider fail-closed überspringen |
 | Bounded Agent Queue | alle 2 h | begrenztes Engineering | Queue bleibt liegen |
 | Self-hosted Capacity Probe | alle 6 h | Runner-/Kapazitätsprüfung | keiner |
+| S10 Phone Research Worker | alle 6 h + relevante Master-Pushes | bounded mobile QA / Evidence-Critic | receipt-gated, fail-closed |
 | Evidence-Critic Lab | event-/dispatch-basiert | 36-Fälle Evidence-Critic Benchmark | Ressourcen-/Runtime-Gate |
 
-Diese vorhandene Taktung deckt den Nachtbetrieb bereits ab. Eine zusätzliche redundante Nachtpipeline wird deshalb nicht erzeugt.
+Diese Taktung deckt den Nachtbetrieb bereits ab. Eine zusätzliche redundante Nachtpipeline wird deshalb nicht erzeugt.
 
 ## 3. Nachtmodus
 
@@ -34,17 +35,21 @@ Die primäre Nachtspur ist der bestehende 30-Minuten-Self-Hosted-Zyklus. Er star
 
 Wenn der Self-Hosted-Heartbeat ausbleibt, übernimmt die bestehende Hosted-Failover-Spur automatisch bounded Frontier-/Governance-Diagnostik. Damit entsteht keine Forschungspause allein deshalb, weil der Arbeits-PC ausgeschaltet oder der Runner offline ist.
 
-Das tägliche 03:30-UTC-Fenster vertieft die Beobachtungs-/Preflight-Arbeit. AI-Rotationen laufen separat und dürfen nur als Design-/Review-Hilfsmittel wirken.
+S10 ist davon getrennt: das Telefon stellt eigene ARM64/Termux-Compute bereit. Es wird nur dann geroutet, wenn \`ops/s10_runtime_status.json\` einen gültigen \`S10_UTILITY_ACCEPTED\`-Receipt meldet und eine bounded Aufgabe vorhanden ist.
 
 ## 4. Aktuelle Forschungspriorität
 
-Q116 und Q117 sind als Feasibility-/Population-Spuren abgeschlossen. Als nächstes werden I22 Filing-Arrival sowie ein deterministischer XBRL-Concept-/Coverage-Gate für I19/I20 verfolgt. Parallel wird das Evidence-Critic Lab zur ersten belastbaren Modellmetriken-Auswertung gebracht.
+Q119/Q120/Q122 liefern die aktuelle Feasibility-Spur für Treasury- und CFTC-Quellen. Q121 ist die Discovery-/Hypothesen-Schicht für Literatur- und Quellenmaterial. I22 und Q104 verfolgen deterministische SEC/XBRL/PIT-Gates. Parallel wird das Evidence-Critic Lab zur ersten belastbaren Modellmetriken-Auswertung gebracht.
 
 Es bleibt bei keiner Performance-Freigabe, solange die vollständige Coverage/PIT/Authorization-Kette nicht formal erfüllt ist.
 
 ## 5. Ressourcenrouting
 
 Die beiden verifizierten Windows-Runner LHT-N133732 und LHT-N133732-2 arbeiten unter dem Label trading-agent-research. Ihr Live-Status ist flüchtig und wird deshalb in jedem neuen trading agent-Chat neu geprüft.
+
+S10 ist eine separat verifizierte ARM64/Termux-Ressource. Der aktuelle operative Nachweis ist \`ops/s10_runtime_status.json\`; die zuletzt erfolgreiche Acceptance lief in Run \`37023821478\` und meldet \`S10_UTILITY_ACCEPTED\`. Auch dieser Status ist flüchtig für die Routingentscheidung und wird bei neuen Chats bzw. nach neuen Runs neu geprüft.
+
+Für weitere Samsung-/Android-Geräte gilt die generische Vorlage \`docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md\` mit dem Runner-Helper \`scripts/samsung_termux_phone_runner_template.sh\`. Neue Geräte müssen das gleiche Utility-Acceptance-Protokoll erfüllen; ein neues Modell darf keinen eigenen wissenschaftlichen Sonderpfad erzeugen.
 
 Copilot Free wird geschützt behandelt: höchstens eine tatsächliche parallele Session, begrenztes monatliches Reservierungslimit, keine Paid-Fallbacks. ECL- und deterministische Research-Jobs konkurrieren nicht um Copilot-Credits.
 
@@ -53,6 +58,8 @@ Gemini, Mistral und OpenRouter laufen nur bei nachgewiesener kostenloser Zugäng
 ## 6. Neuer trading agent-Chat
 
 Ein neuer Chat soll diesen Vertrag zuerst lesen und anschließend den Live-Status aktualisieren. Vergangene Runner-, Auth-, Queue- und Workflow-Angaben sind niemals autoritativ.
+
+Zusätzlich wird der aktuelle S10-Receipt gegen \`ops/s10_runtime_status.json\` geprüft. Bei einem neuen Samsung-Gerät wird zuerst die generische Vorlage verwendet; erst nach Utility Acceptance darf es in das Routing aufgenommen werden.
 
 Der Chat soll danach vor allem die Arbeit übernehmen, die online nicht sinnvoll oder nicht zulässig autonom fortgeführt werden kann: strategische Priorisierung, Interpretation neuer Evidenz, Umgang mit widersprüchlichen Ergebnissen und wichtige Freigabeentscheidungen.
 
@@ -72,3 +79,4 @@ Diese Invarianten gelten auch im Nachtbetrieb und für jeden Unteragenten.
 Die maschinenlesbare Version dieses Zustands ist ops/trading_agent_os_state.json.
 Der aktuelle operative Zustand bleibt research/evidence/current_operational_state.json.
 Der Chat-Einstiegspunkt bleibt docs/TRADING_AGENT_CHAT_ENTRYPOINT.md.
+Die wiederverwendbare Android-/Samsung-Integrationsvorlage ist docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md.
