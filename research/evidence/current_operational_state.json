@@ -662,7 +662,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T08:04:00.937981+00:00",
+  "generated_at_utc": "2026-10-02T08:07:32.112327+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -850,6 +850,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: trigger S10 phone worker on worker code changes (#814)",
+        "sha": "7dc173378a4b40218d00bcf80971545d2f1dc2aa",
+        "timestamp": "2026-10-02T10:07:20+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "079958d3bcd9d2ebcf9aa55342525384654add01",
+        "timestamp": "2026-10-02T08:04:01Z"
+      },
+      {
         "message": "Harden S10 ECL with bounded endpoint preflight (#813)",
         "sha": "bf1d1a29114dd4bdbd9f1e4deb44cf6d18fea79c",
         "timestamp": "2026-10-02T10:03:49+02:00"
@@ -878,16 +888,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "75bc0af46b9eede6bff79a185e1cf5ba6d847be2",
         "timestamp": "2026-10-02T07:38:53Z"
-      },
-      {
-        "message": "fix: preserve Q109 N7 distinct-neighbor definition (#812)",
-        "sha": "1721b05f626f186ad813a58eb8204395d97aa083",
-        "timestamp": "2026-10-02T09:38:38+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5c7bb4da3005e02ebd041763e626202e494f1066",
-        "timestamp": "2026-10-02T07:38:02Z"
       }
     ]
   },
@@ -957,12 +957,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "bf1d1a29114dd4bdbd9f1e4deb44cf6d18fea79c",
+  "source_master_sha": "7dc173378a4b40218d00bcf80971545d2f1dc2aa",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36981923026"
+    "run_id": "36982259982"
   }
 }
