@@ -18,6 +18,11 @@ from pathlib import Path
 API = "https://publicreporting.cftc.gov/resource/gpe5-46if.json"
 CONTRACT_NAME = "E-MINI S&P 500 - CHICAGO MERCANTILE EXCHANGE"
 CFTC_CODE = "13874A"
+
+def normalize_contract_name(value: object) -> str:
+    """Normalize harmless upstream whitespace/case variation without broadening identity."""
+    return " ".join(str(value or "").split()).upper()
+
 START = "2011-01-01"
 END = "2026-09-30"
 UA = "trading-agent-public/Q120-source-feasibility"
@@ -72,9 +77,9 @@ def validate(rows: list[dict]) -> dict:
     for row in rows:
         if not required.issubset(row):
             raise RuntimeError("Q120_REQUIRED_FIELD_MISSING")
-        if row["market_and_exchange_names"] != CONTRACT_NAME:
+        if normalize_contract_name(row["market_and_exchange_names"]) != normalize_contract_name(CONTRACT_NAME):
             raise RuntimeError("Q120_UNEXPECTED_CONTRACT")
-        if row["cftc_contract_market_code"] != CFTC_CODE:
+        if str(row["cftc_contract_market_code"]).strip().upper() != CFTC_CODE:
             raise RuntimeError("Q120_UNEXPECTED_CONTRACT_CODE")
         if any(row.get(field) in (None, "") for field in required):
             raise RuntimeError("Q120_REQUIRED_FIELD_EMPTY")
