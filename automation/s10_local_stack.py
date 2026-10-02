@@ -93,6 +93,8 @@ def _safe_extract(tf: tarfile.TarFile, destination: Path) -> None:
         target = (destination / member.name).resolve()
         if target != destination and destination not in target.parents:
             raise RuntimeError("UNSAFE_TAR_MEMBER")
+        if member.issym() or member.islnk():
+            raise RuntimeError("UNSAFE_TAR_LINK")
     tf.extractall(destination)
 
 
@@ -117,11 +119,15 @@ def _download(url: str, destination: Path) -> dict:
                     break
                 handle.write(chunk)
     temporary.replace(destination)
+    digest = hashlib.sha256()
+    with destination.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
     return {
         "url": url,
         "path": str(destination),
         "bytes": destination.stat().st_size,
-        "sha256": hashlib.sha256(destination.read_bytes()).hexdigest(),
+        "sha256": digest.hexdigest(),
         "duration_seconds": round(time.monotonic() - started, 3),
     }
 
