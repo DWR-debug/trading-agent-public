@@ -662,7 +662,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T07:38:53.612831+00:00",
+  "generated_at_utc": "2026-10-02T08:04:00.937981+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -850,6 +850,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "Harden S10 ECL with bounded endpoint preflight (#813)",
+        "sha": "bf1d1a29114dd4bdbd9f1e4deb44cf6d18fea79c",
+        "timestamp": "2026-10-02T10:03:49+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "b130c4dcb802785de0ce38f1e5ea2e82508e8511",
+        "timestamp": "2026-10-02T07:58:10Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "a937e73a5a9037f775249afc3ded422723d6b6dc",
+        "timestamp": "2026-10-02T07:56:09Z"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "da5ef0da87382ecee81e92946a73237ac9960ff8",
+        "timestamp": "2026-10-02T07:43:13Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "16019312e609ffbae86bc6557be766d10c59785c",
+        "timestamp": "2026-10-02T07:41:25Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "75bc0af46b9eede6bff79a185e1cf5ba6d847be2",
+        "timestamp": "2026-10-02T07:38:53Z"
+      },
+      {
         "message": "fix: preserve Q109 N7 distinct-neighbor definition (#812)",
         "sha": "1721b05f626f186ad813a58eb8204395d97aa083",
         "timestamp": "2026-10-02T09:38:38+02:00"
@@ -858,36 +888,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "5c7bb4da3005e02ebd041763e626202e494f1066",
         "timestamp": "2026-10-02T07:38:02Z"
-      },
-      {
-        "message": "fix: decouple S10 bridge from response_format quirks (#811)",
-        "sha": "28d952661308793c53f3f425579ae52885a842e5",
-        "timestamp": "2026-10-02T09:37:38+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "cf06ff0e3f17013507917fc0678ed71a5abade8f",
-        "timestamp": "2026-10-02T07:31:42Z"
-      },
-      {
-        "message": "fix: use llama.cpp-compatible JSON object response mode (#810)",
-        "sha": "d0d9bca0ad2ab41cf9f4af111785667204abe137",
-        "timestamp": "2026-10-02T09:31:29+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "7dcb0ea7c32e51f019963da40594f1829c729479",
-        "timestamp": "2026-10-02T07:25:25Z"
-      },
-      {
-        "message": "chore: make S10 local AI startup self-checking (#809)",
-        "sha": "ad39706bd68ac1f3bcb595601e840c147186bc8d",
-        "timestamp": "2026-10-02T09:25:11+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "110a3817caf841451ea06ca49c646f72ee53221c",
-        "timestamp": "2026-10-02T07:20:13Z"
       }
     ]
   },
@@ -957,12 +957,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1721b05f626f186ad813a58eb8204395d97aa083",
+  "source_master_sha": "bf1d1a29114dd4bdbd9f1e4deb44cf6d18fea79c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36979646933"
+    "run_id": "36981923026"
   }
 }
