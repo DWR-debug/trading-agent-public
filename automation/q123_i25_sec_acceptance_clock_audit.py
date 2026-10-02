@@ -22,9 +22,8 @@ PER_SYMBOL = 2
 UA = "trading-agent-public/Q123-I25-SEC-acceptance-clock-audit/1"
 TIMEOUT = 30
 
-ACCEPT_RE = re.compile(r"<ACCEPTANCE-DATETIME>\\s*([0-9]{14})")
+ACCEPT_RE = re.compile(r"<ACCEPTANCE-DATETIME>\s*([0-9]{14})")
 CIK_RE = re.compile(r"CENTRAL INDEX KEY:\\s*([0-9]{10})")
-SUBMISSION_ACCEPT_RE = re.compile(r"<ACCEPTANCE-DATETIME>\\s*([0-9]{14})", re.I)
 
 
 def get_bytes(url: str) -> bytes:
