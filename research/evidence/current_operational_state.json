@@ -662,7 +662,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T08:44:54.207082+00:00",
+  "generated_at_utc": "2026-10-02T08:57:52.382282+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -859,6 +859,26 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: classify historical invalidated preregistrations as terminal",
+        "sha": "aa1288d885a8a0b8315dc77a1505d71ac523e425",
+        "timestamp": "2026-10-02T10:57:39+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "4105af5e7787e14584be740ecce9293f5e54d21d",
+        "timestamp": "2026-10-02T08:56:51Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "b7b867e874c0c23f06ff519f09f3dd844b27ec09",
+        "timestamp": "2026-10-02T08:54:07Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "1cd8e25d2b6a181fefeae5e2de2b0c9c554637c7",
+        "timestamp": "2026-10-02T08:44:54Z"
+      },
+      {
         "message": "Q122: deterministic CFTC release-date evidence compiler (#820)",
         "sha": "d9ca891950a224b3e35b6dbdfcda1b8e1f735636",
         "timestamp": "2026-10-02T10:44:42+02:00"
@@ -877,26 +897,6 @@
         "message": "OPS: retire AGENT-027 Copilot request after free AI fallback",
         "sha": "a2c2c1a16d74104914304d2e6d4362418f303ebf",
         "timestamp": "2026-10-02T10:36:22+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "870d339b62e74e3402e3bc220eec02ccaecd97f1",
-        "timestamp": "2026-10-02T08:36:11Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "168594f24c56054df0911cd9c73707462a09a4ea",
-        "timestamp": "2026-10-02T08:34:31Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "b266c2afde1becfcb7c3ef9c0296a076582ba29f",
-        "timestamp": "2026-10-02T08:34:30Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "3ae8460ac733072d3f4d0d34b88618f8f3bdbc84",
-        "timestamp": "2026-10-02T08:34:12Z"
       }
     ]
   },
@@ -966,12 +966,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d9ca891950a224b3e35b6dbdfcda1b8e1f735636",
+  "source_master_sha": "aa1288d885a8a0b8315dc77a1505d71ac523e425",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36985789496"
+    "run_id": "36987023550"
   }
 }
