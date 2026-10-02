@@ -425,3 +425,31 @@ Das Failover stellt keine wissenschaftliche Abkürzung dar. Seine Artefakte blei
 Rückkehrregel: Sobald der Self-hosted Heartbeat wieder frisch ist, wird der Hosted-Fallback automatisch nicht mehr ausgeführt; der normale parallele Worker-Pool übernimmt.
 
 Falls beide Self-hosted Runner gleichzeitig ausfallen, soll die Hosted x64/ARM-Fallbackschicht den Forschungsbetrieb aufrechterhalten. Damit ist Self-hosted Kapazität ein Beschleuniger, aber kein notwendiger Betriebsbestandteil.
+
+## Live S10 state and Samsung integration standard — 2026-10-02
+
+The dedicated S10 Android/Termux worker is currently reported by the operator as LISTENING_FOR_JOBS. This is an operational transport state only; canonical Research-OS acceptance remains receipt-gated and requires S10_UTILITY_ACCEPTED.
+
+The reusable Samsung onboarding standard has been strengthened after two concrete S10 runtime failures:
+- GitHub runner execution must use a dedicated unprivileged user; root execution is rejected.
+- ARM64 Ubuntu/proot under Termux may require a bounded DOTNET_GCHeapHardLimit; the template default is hexadecimal 40000000 (1 GiB) and is configurable per device.
+- Reboot recovery must never silently re-register an existing runner.
+- A runtime preflight records ARM64, available memory, free storage and runner identity before start.
+- GitHub runner and local inference remain separate processes.
+- Android Doze, battery saver, thermal state and process lifetime are runtime observations, not scientific evidence.
+
+Canonical template files:
+- docs/ANDROID_SAMSUNG_RUNNER_TEMPLATE.md
+- research/devices/android_phone_profile_template.json
+- scripts/android_samsung_runner_register_template.sh
+- scripts/android_samsung_runner_start_template.sh
+
+## Autonomous research frontier expansion — 2026-10-02
+
+Q124-2026-10-02 adds two design-only, literature-derived event mechanisms:
+- Q124:T26 Treasury Auction Pressure × Equity Risk Transmission;
+- Q124:O26 Thirty-Minute Call/Put Volume Imbalance × Equity Response.
+
+Both are quarantined behind source/PIT feasibility. Q124:O26 deliberately uses a simpler public call/put-volume proxy and must not inherit the empirical claims of signed options order imbalance.
+
+External inspiration was checked against current 2026 sources including the Federal Reserve Bank of New York Treasury-auction study, Cboe public options market statistics, and a 2026 SSRN study of intraday options order imbalance. These source findings are hypothesis inspiration only, not project evidence.
