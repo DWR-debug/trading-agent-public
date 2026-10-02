@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 EXPECTED_WAVE = "Q109-2026-10-01"
-REQUIRED = 6
+REQUIRED = 7
 FORBIDDEN_TRUE = {
     "performance_authorized",
     "performance_evaluation",
