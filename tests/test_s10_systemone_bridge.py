@@ -26,3 +26,20 @@ def test_extract_json_object_accepts_contract():
 def test_extract_json_object_rejects_invalid_contract(raw):
     with pytest.raises(ValueError):
         bridge.extract_json_object(raw)
+
+
+def test_build_prompt_canonicalizes_verdict_option_order():
+    payload = {
+        "state": {"claim": "C", "evidence": "E", "domain": "D"},
+        "questions": {
+            "verdict": {
+                "criteria": {
+                    "INSUFFICIENT": "I",
+                    "SUPPORTED": "S",
+                    "REFUTED": "R",
+                }
+            }
+        },
+    }
+    prompt = bridge.build_prompt(payload)
+    assert '"SUPPORTED": "S", "REFUTED": "R", "INSUFFICIENT": "I"' in prompt
