@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-10-02-Q124-FRONTIER-ADVERSARIAL",
+  "providers": [
+    "openrouter_free"
+  ],
+  "scope": "Q124 source/PIT feasibility adversarial design review",
+  "prompt": "Review research/frontier/q124_candidate_wave_2026_10_02.json and automation/q124_source_feasibility.py as an independent adversarial methods reviewer. Attack the two hypotheses only at the design/feasibility layer. For Treasury auction pressure, inspect event identity, publication timestamp, pre-auction reference availability, field semantics, session alignment, cross-asset confounding, and whether the construction duplicates existing Q104:M6 or Q119. For the options hypothesis, inspect the distinction between public call/put volume imbalance and signed options order imbalance, historical depth, interval semantics, symbol mapping, and survivorship/selection risks. Propose only deterministic falsification tests, missing source fields, and explicit discard conditions. Do not rank candidates, select assets, parameters, thresholds or horizons; do not use holdout information; do not alter gates; do not authorize performance; do not promote anything; do not modify the workspace.",
+  "max_runtime_minutes": 15,
+  "deterministic_compute": false,
+  "performance_authorized": false,
+  "holdout_selection": false,
+  "parameter_selection": false,
+  "asset_selection": false,
+  "threshold_selection": false,
+  "horizon_selection": false,
+  "research_gate_changes": false,
+  "promotion_decision": false,
+  "live_execution": false,
+  "paid_usage": false,
+  "research_decision": false,
+  "allow_workspace_writes": false
+}
