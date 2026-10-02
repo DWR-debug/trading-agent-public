@@ -662,7 +662,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T05:51:58.235568+00:00",
+  "generated_at_utc": "2026-10-02T05:53:04.568837+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -859,6 +859,16 @@
     ],
     "recent_commits": [
       {
+        "message": "fix: harden S10 phone workflow descriptor and schedule (#800)",
+        "sha": "d85117f945f47cf15a65ec4330a4884f7e89c4c4",
+        "timestamp": "2026-10-02T07:52:52+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "576ae675c6659a12dfc50a670b68b9c4f2feb102",
+        "timestamp": "2026-10-02T05:51:58Z"
+      },
+      {
         "message": "feat: integrate S10 phone as isolated ARM64 research runner (#795)",
         "sha": "b22c8bc50cd88701e49f5c0f05a2cc5018fa1bdd",
         "timestamp": "2026-10-02T07:51:44+02:00"
@@ -887,16 +897,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "8e08c7b3af8f0749ec65388360a09408a9261d5e",
         "timestamp": "2026-10-02T05:47:33Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1b227bbb6f898d0c67d128f43fcf1b22be20017c",
-        "timestamp": "2026-10-02T05:46:20Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "852dcb745556d2cd6c92b4860c26298439d93749",
-        "timestamp": "2026-10-02T05:46:06Z"
       }
     ]
   },
@@ -966,12 +966,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b22c8bc50cd88701e49f5c0f05a2cc5018fa1bdd",
+  "source_master_sha": "d85117f945f47cf15a65ec4330a4884f7e89c4c4",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36970842019"
+    "run_id": "36970927530"
   }
 }
