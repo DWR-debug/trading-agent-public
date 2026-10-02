@@ -30,7 +30,7 @@ Geraetemodell, IMEI, Seriennummern, private IPs, Registrierungstokens, API-Keys 
 6. register ausfuehren. Das GitHub-Registrierungstoken wird interaktiv lokal eingegeben und nicht gespeichert.
 7. start ausfuehren und Termux mit Wake-Lock aktiv lassen.
 
-Die ersten drei vorbereiteten Fleet-Slots stehen in ops/android_phone_resources.json. Sie sind fuer drei physisch getrennte Telefone gedacht und nutzen die eindeutigen Labels samsung-phone-01, samsung-phone-02 und samsung-phone-03.
+Die vorbereiteten Fleet-Slots stehen in `ops/android_phone_resources.json`. Aktuell sind fuenf eindeutige Labels (`samsung-phone-01` bis `samsung-phone-05`) vorbereitet. Die Slots 04/05 sind als kontrollierte Kapazitaetserweiterung vorgesehen und erzeugen ohne online Runner keine Jobs.
 
 ## Referenzvertrag
 
