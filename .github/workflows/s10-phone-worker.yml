@@ -1,6 +1,8 @@
 name: S10 Phone Research Worker
 
 on:
+  schedule:
+    - cron: "0 */6 * * *"
   workflow_dispatch:
     inputs:
       task:
@@ -21,7 +23,9 @@ concurrency:
 
 jobs:
   s10_phone:
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    if: >-
+      ${{ github.repository == 'DWR-debug/trading-agent-public' &&
+          (github.event_name == 'workflow_dispatch' || vars.S10_PHONE_ENABLED == 'true') }}
     runs-on: [self-hosted, s10-phone, linux, ARM64]
     timeout-minutes: 30
     steps:
