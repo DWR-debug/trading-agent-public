@@ -2,6 +2,8 @@ name: S10 Phone Research Worker
 
 on:
   push:
+    branches:
+      - master
     paths:
       - ".github/workflows/s10-phone-worker.yml"
       - "automation/s10_systemone_bridge.py"
