@@ -37,3 +37,14 @@ def test_s10_descriptor_is_bom_tolerant_and_disableable(tmp_path: Path):
         encoding="utf-8",
     )
     assert load_descriptor(path)["status"] == "S10_DISABLED"
+
+
+def test_s10_descriptor_accepts_custom_local_protocol_path(tmp_path: Path):
+    path = tmp_path / "s10_interface.json"
+    path.write_text(
+        '{"schema_version":1,"enabled":true,"mode":"systemone_http","base_url":"http://localhost:8765","model":"s10-local","protocol_path":"/api/systemone"}',
+        encoding="utf-8",
+    )
+    result = load_descriptor(path)
+    assert result["available"] is True
+    assert result["protocol_path"] == "/api/systemone"
