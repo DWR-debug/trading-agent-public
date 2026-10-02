@@ -16,7 +16,7 @@ import xml.etree.ElementTree as ET
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 
-PAGE_URL = "https://www.sec.gov/data-research/sec-markets-data/market-structure-data-security"
+PAGE_URL = "https://www.sec.gov/data-research/sec-markets-data/marketstructuredata-security"
 RSS_URL = "https://www.sec.gov/rss/marketstructure/data"
 TARGET_VINTAGES = (
     "2025 Q1",
