@@ -106,6 +106,21 @@ jobs:
           python3 -m automation.s10_worker             --output "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID/evidence_critic.json"
           cat "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID/evidence_critic.json"
 
+      - name: Build S10 utility acceptance receipt
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID"
+          RESULT="$OUT/evidence_critic.json"
+          RECEIPT="$OUT/s10_acceptance_receipt.json"
+          if [ ! -f "$RESULT" ]; then
+            echo "No Evidence-Critic result was produced; keeping receipt-gated S10 eligibility false."
+            exit 0
+          fi
+          python3 -m automation.s10_acceptance --result "$RESULT" --output "$RECEIPT"
+          cat "$RECEIPT"
+
       - name: Create safe provenance receipt
         if: always()
         shell: bash
