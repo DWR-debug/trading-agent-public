@@ -7,6 +7,7 @@ evidence, authorization, candidate selection, promotion, or live execution.
 from __future__ import annotations
 
 import json
+import math
 import os
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.request import Request, urlopen
@@ -16,25 +17,6 @@ PORT = int(os.environ.get("S10_BRIDGE_PORT", "8765"))
 LLAMA_BASE = os.environ.get("S10_LLAMA_BASE_URL", "http://127.0.0.1:8080").rstrip("/")
 MODEL = os.environ.get("S10_MODEL", "S10-Qwen2.5-1.5B")
 TIMEOUT = max(10, min(int(os.environ.get("S10_TIMEOUT_SECONDS", "90")), 180))
-
-SCHEMA = {
-    "type": "object",
-    "properties": {
-        "choice": {"type": "string", "enum": ["SUPPORTED", "REFUTED", "INSUFFICIENT"]},
-        "probabilities": {
-            "type": "object",
-            "properties": {
-                "SUPPORTED": {"type": "number", "minimum": 0, "maximum": 1},
-                "REFUTED": {"type": "number", "minimum": 0, "maximum": 1},
-                "INSUFFICIENT": {"type": "number", "minimum": 0, "maximum": 1},
-            },
-            "required": ["SUPPORTED", "REFUTED", "INSUFFICIENT"],
-            "additionalProperties": False,
-        },
-    },
-    "required": ["choice", "probabilities"],
-    "additionalProperties": False,
-}
 
 def get_json(url: str) -> dict:
     req = Request(url, method="GET", headers={"Accept": "application/json"})
@@ -56,16 +38,45 @@ def build_prompt(payload: dict) -> str:
     criteria = ((questions.get("verdict") or {}).get("criteria") or {})
     return (
         "You are an evidence critic. Use ONLY the supplied evidence. Do not use outside knowledge. "
-        "Return ONLY valid JSON matching the requested schema. "
+        "Return ONLY one valid JSON object, with no markdown and no commentary. "
+        'The JSON must have exactly: {"choice":"SUPPORTED|REFUTED|INSUFFICIENT","probabilities":{"SUPPORTED":number,"REFUTED":number,"INSUFFICIENT":number}}. '
+        "Probabilities must be between 0 and 1 and sum to 1. "
         f"Domain: {domain}\nClaim: {claim}\nEvidence:\n{evidence}\n"
-        f"Criteria: {json.dumps(criteria, ensure_ascii=False)}\n"
-        "Choose exactly one verdict and provide probabilities that sum approximately to 1."
+        f"Criteria: {json.dumps(criteria, ensure_ascii=False)}"
     )
+
+def extract_json_object(content: str) -> dict:
+    text = content.strip()
+    if not text:
+        raise ValueError("empty_model_content")
+    try:
+        value = json.loads(text)
+    except json.JSONDecodeError:
+        start = text.find("{")
+        end = text.rfind("}")
+        if start < 0 or end <= start:
+            raise ValueError("model_did_not_return_json_object") from None
+        value = json.loads(text[start:end + 1])
+    if not isinstance(value, dict):
+        raise ValueError("model_json_is_not_object")
+    choice = value.get("choice")
+    probs = value.get("probabilities")
+    allowed = {"SUPPORTED", "REFUTED", "INSUFFICIENT"}
+    if choice not in allowed or not isinstance(probs, dict) or set(probs) != allowed:
+        raise ValueError("model_json_contract_invalid")
+    values = [probs[key] for key in ("SUPPORTED", "REFUTED", "INSUFFICIENT")]
+    if not all(isinstance(v, (int, float)) and math.isfinite(float(v)) and 0 <= float(v) <= 1 for v in values):
+        raise ValueError("model_probabilities_invalid")
+    if abs(sum(float(v) for v in values) - 1.0) > 0.05:
+        raise ValueError("model_probabilities_do_not_sum_to_one")
+    return {"choice": choice, "probabilities": probs}
 
 class Handler(BaseHTTPRequestHandler):
     server_version = "S10-llama-bridge/1"
+
     def log_message(self, *_args) -> None:
         return
+
     def send_json(self, code: int, value: dict) -> None:
         raw = json.dumps(value, ensure_ascii=False).encode("utf-8")
         self.send_response(code)
@@ -73,6 +84,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(raw)))
         self.end_headers()
         self.wfile.write(raw)
+
     def do_GET(self) -> None:
         if self.path == "/health":
             try:
@@ -83,6 +95,7 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(200, {"status": "ok", "upstream": health.get("status"), "model": MODEL})
             return
         self.send_json(404, {"error": "not_found"})
+
     def do_POST(self) -> None:
         if self.path != "/v1/systemone":
             self.send_json(404, {"error": "not_found"})
@@ -93,18 +106,16 @@ class Handler(BaseHTTPRequestHandler):
             req = {
                 "model": MODEL,
                 "messages": [
-                    {"role": "system", "content": "Return only JSON. Never add commentary."},
+                    {"role": "system", "content": "Return only one JSON object. Never add commentary."},
                     {"role": "user", "content": build_prompt(payload)},
                 ],
                 "temperature": 0,
                 "max_tokens": 160,
-                "response_format": {"type": "json_object"},
             }
             upstream = post_json(f"{LLAMA_BASE}/v1/chat/completions", req)
             content = ((upstream.get("choices") or [{}])[0].get("message") or {}).get("content", "")
-            answer = json.loads(content)
-            probs = answer.get("probabilities") or {}
-            self.send_json(200, {"answers": {"verdict": {"choice": answer.get("choice"), "probabilities": probs}}})
+            answer = extract_json_object(content)
+            self.send_json(200, {"answers": {"verdict": answer}})
         except Exception as exc:
             detail = str(exc)[:500]
             if hasattr(exc, "read"):
