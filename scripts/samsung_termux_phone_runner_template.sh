@@ -54,7 +54,7 @@ register() {
   [ -n "\$TOKEN" ] || { echo "Missing runner registration token" >&2; exit 2; }
 
   proot-distro login ubuntu -- env \
-    S10_RUNNER_TOKEN="\$TOKEN" \
+    PHONE_RUNNER_TOKEN="\$TOKEN" \
     PHONE_RUNNER_NAME="\$PHONE_RUNNER_NAME" \
     PHONE_RUNNER_LABEL="\$PHONE_RUNNER_LABEL" \
     RUNNER_VERSION="\$RUNNER_VERSION" \
@@ -68,7 +68,7 @@ register() {
       fi
       ./config.sh \
         --url "https://github.com/\${TRADING_AGENT_REPO}" \
-        --token "\$S10_RUNNER_TOKEN" \
+        --token "\$PHONE_RUNNER_TOKEN" \
         --name "\$PHONE_RUNNER_NAME" \
         --labels "\${PHONE_RUNNER_LABEL},android-phone,linux,ARM64" \
         --work "_work" \
