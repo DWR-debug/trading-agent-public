@@ -414,6 +414,19 @@
       ],
       "adoption_mode": "optional free-only remote worker; requires explicit free-mode attestation and no paid fallback",
       "source_url": "https://docs.mistral.ai/getting-started/quickstarts/studio/activate-and-generate-api-key"
+    },
+    {
+      "id": "AGENT-S10",
+      "technology": "Dedicated Android/Termux local worker",
+      "role": "Independent bounded mobile compute and Evidence-Critic/adversarial QA worker",
+      "relevant_features": [
+        "loopback-only typed interface",
+        "bounded local inference",
+        "fixed-corpus Evidence-Critic benchmark",
+        "operational utility acceptance receipt"
+      ],
+      "adoption_mode": "Operationally routable only after a valid S10 utility-acceptance receipt; never authoritative for scientific evidence, authorization, selection, ranking or promotion",
+      "source_url": "docs/S10_TERMUX_PHONE_INTEGRATION.md"
     }
   ],
   "highest_value_new_paths": [
@@ -490,6 +503,20 @@
     "runtime_artifacts": [
       "research/runs/self_hosted/autonomous/**/research_os_resource_schedule.json",
       "research/runs/self_hosted/autonomous/**/research_os_source_probe.json"
+    ],
+    "optional_worker_resources": [
+      {
+        "id": "S10",
+        "agent_runtime_id": "AGENT-S10",
+        "role": "adversarial_qa_only",
+        "activation_gate": "S10_UTILITY_ACCEPTED",
+        "formal_evidence_allowed": false,
+        "performance_authorization": false,
+        "candidate_selection": false,
+        "candidate_ranking": false,
+        "promotion": false,
+        "paid_usage_allowed": false
+      }
     ]
   },
   "knowledge_plane": {
