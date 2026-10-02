@@ -58,9 +58,10 @@ jobs:
           RUN_ID: ${{ github.event.workflow_run.id }}
           RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
           SOURCE_COMMIT: ${{ github.event.workflow_run.head_sha }}
+          WORKFLOW_UPDATED_AT: ${{ github.event.workflow_run.updated_at }}
         run: |
           set -euo pipefail
-          python -m automation.s10_receipt_sync             --artifact-root "$ARTIFACT_ROOT"             --workflow-run-id "$RUN_ID"             --workflow-conclusion "$RUN_CONCLUSION"             --source-commit "$SOURCE_COMMIT"             --artifact-id "$ARTIFACT_ID"             --artifact-digest "$ARTIFACT_DIGEST"             --output "$GITHUB_WORKSPACE/ops/s10_runtime_status.json"
+          python -m automation.s10_receipt_sync             --artifact-root "$ARTIFACT_ROOT"             --workflow-run-id "$RUN_ID"             --workflow-conclusion "$RUN_CONCLUSION"             --source-commit "$SOURCE_COMMIT"             --artifact-id "$ARTIFACT_ID"             --artifact-digest "$ARTIFACT_DIGEST"             --workflow-updated-at "$WORKFLOW_UPDATED_AT"             --output "$GITHUB_WORKSPACE/ops/s10_runtime_status.json"
           cat "$GITHUB_WORKSPACE/ops/s10_runtime_status.json"
 
       - name: Commit canonical S10 status
@@ -69,10 +70,20 @@ jobs:
           set -euo pipefail
           git config user.name "trading-agent-s10-sync"
           git config user.email "trading-agent-s10-sync@users.noreply.github.com"
+          git fetch origin master
+          git rebase origin/master
           git add ops/s10_runtime_status.json
           if git diff --cached --quiet; then
             echo "No S10 operational status change."
             exit 0
           fi
           git commit -m "OPS: synchronize S10 phone runtime status"
-          git push origin HEAD:master
+          for attempt in 1 2; do
+            if git push origin HEAD:master; then
+              exit 0
+            fi
+            git fetch origin master
+            git rebase origin/master
+          done
+          echo "S10 receipt sync push failed after retry."
+          exit 1
