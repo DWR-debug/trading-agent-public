@@ -142,6 +142,34 @@
         "utility_receipt_required": "S10_UTILITY_ACCEPTED",
         "note": "Operator reports the existing S10-TERMUX runner is currently listening for jobs; this is transport readiness only and does not supersede canonical receipt status."
       }
+    },
+    "free_ai_live_snapshot": {
+      "observed_at_utc": "2026-10-02T10:45:00Z",
+      "openrouter_free": {
+        "available": true,
+        "free_mode_attested": true,
+        "recent_tasks": [
+          "AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT",
+          "AI-2026-09-30-Q100-FRONTIER-FEASIBILITY",
+          "AI-2026-09-30-Q101-NEGATIVE-EVIDENCE",
+          "AI-2026-09-30-Q102-REGIME-STATE-DESIGN"
+        ],
+        "routing": "Q124 adversarial review added"
+      },
+      "gemini_cli": {
+        "binary_available": true,
+        "free_mode_attested": true,
+        "current_status": "temporarily_unavailable",
+        "reason": "recent hosted runs returned model quota exhaustion / HTTP 503 high-demand errors",
+        "policy": "do not spend additional retries until entitlement/quota changes"
+      },
+      "mistral_api": {
+        "free_mode_attested": true,
+        "current_status": "rate_limited",
+        "reason": "recent hosted runs returned HTTP 429",
+        "policy": "fail-closed until rate limit clears"
+      },
+      "paid_usage_usd": 0
     }
   },
   "chatless_night_policy": {
