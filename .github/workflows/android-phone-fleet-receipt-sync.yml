@@ -57,91 +57,28 @@ jobs:
                       z.extractall(out)
               except zipfile.BadZipFile:
                   continue
-              receipt = next(out.rglob("android_phone_acceptance_receipt.json"), None)
-              utility = next(out.rglob("utility_task.json"), None)
+              from automation.android_phone_receipt_sync import build_status
               m = re.match(r"android-phone-[0-9]+-(.+)$", name)
               resource_id = m.group(1) if m else name
-              if receipt and receipt.is_file():
-                  data = json.loads(receipt.read_text(encoding="utf-8"))
-                  status = str(data.get("status","ANDROID_PHONE_UTILITY_NOT_ACCEPTED"))
-                  eligible = status == "ANDROID_PHONE_UTILITY_ACCEPTED"
-                  runner_name = data.get("runner_name")
-                  model = data.get("model")
-                  endpoint = data.get("endpoint")
-                  acceptance_contract_version = data.get("acceptance_contract_version")
-                  acceptance_receipt_sha256 = data.get("result_sha256")
-              else:
-                  data = {}
-                  status = "ANDROID_PHONE_UTILITY_NOT_ACCEPTED"
-                  eligible = False
-                  runner_name = None
-                  model = None
-                  endpoint = None
-                  acceptance_contract_version = None
-                  acceptance_receipt_sha256 = None
-
-              existing_path = Path("ops/android_phone_runtime_status") / (resource_id.replace("/","_")+".json")
+              target = Path("ops/android_phone_runtime_status") / (resource_id.replace("/","_")+".json")
               existing = None
-              if existing_path.is_file():
+              if target.is_file():
                   try:
-                      existing = json.loads(existing_path.read_text(encoding="utf-8"))
+                      existing = json.loads(target.read_text(encoding="utf-8"))
                   except (OSError, json.JSONDecodeError):
                       existing = None
-
-              utility_status = None
-              utility_task_id = None
-              if utility and utility.is_file():
-                  try:
-                      utility_data = json.loads(utility.read_text(encoding="utf-8"))
-                      utility_status = utility_data.get("status")
-                      utility_task_id = utility_data.get("task_id")
-                  except (OSError, json.JSONDecodeError):
-                      utility_status = "UTILITY_ARTIFACT_INVALID"
-
-              prior_accepted = (
-                  existing is not None
-                  and existing.get("eligible") is True
-                  and existing.get("status") == "ANDROID_PHONE_UTILITY_ACCEPTED"
-                  and existing.get("acceptance_contract_version") == "2026-10-02-R3"
-                  and not receipt
+              status = build_status(
+                  out,
+                  resource_id=resource_id,
+                  workflow_run_id=os.environ["RUN_ID"],
+                  workflow_conclusion=os.environ["RUN_CONCLUSION"],
+                  source_commit=os.environ["SOURCE_COMMIT"],
+                  workflow_run_updated_at=os.environ["RUN_UPDATED_AT"],
+                  existing=existing,
               )
-              if prior_accepted:
-                  status = "ANDROID_PHONE_UTILITY_ACCEPTED"
-                  eligible = True
-                  runner_name = existing.get("runner_name")
-                  model = existing.get("model")
-                  endpoint = existing.get("endpoint")
-                  acceptance_contract_version = existing.get("acceptance_contract_version")
-                  acceptance_receipt_sha256 = existing.get("acceptance_receipt_sha256")
-              statuses.append({
-                  "schema_version":1,
-                  "status_type":"android_phone_operational_status",
-                  "resource_id":resource_id,
-                  "workflow_name":"Android Phone Fleet Worker",
-                  "workflow_run_id":os.environ["RUN_ID"],
-                  "workflow_conclusion":os.environ["RUN_CONCLUSION"],
-                  "source_commit":os.environ["SOURCE_COMMIT"],
-                  "workflow_run_updated_at":os.environ["RUN_UPDATED_AT"],
-                  "status":status,
-                  "eligible":eligible,
-                  "runner_name":runner_name,
-                  "model":model,
-                  "endpoint":endpoint,
-                  "acceptance_contract_version": acceptance_contract_version,
-                  "acceptance_receipt_sha256": acceptance_receipt_sha256,
-                  "utility_task_status": utility_status,
-                  "utility_task_id": utility_task_id,
-                  "acceptance_preserved": prior_accepted,
-                  "scientific_evidence":False,
-                  "performance_authorization":False,
-                  "candidate_selection":False,
-                  "candidate_ranking":False,
-                  "promotion":False,
-                  "paper_only":True,
-                  "live_trading_enabled":False,
-                  "orders_enabled":False,
-                  "automatic_promotion":False
-              })
+              statuses.append(status)
+              print(target)
+
           target = Path("ops/android_phone_runtime_status")
           target.mkdir(parents=True, exist_ok=True)
           for status in sorted(statuses, key=lambda x:x["resource_id"]):
