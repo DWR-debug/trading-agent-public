@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - ".github/workflows/s10-phone-worker.yml"
+      - "automation/s10_systemone_bridge.py"
+      - "scripts/s10_local_ai_start.sh"
   schedule:
     - cron: "0 */6 * * *"
   workflow_dispatch:
