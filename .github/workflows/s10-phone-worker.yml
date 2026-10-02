@@ -82,10 +82,27 @@ jobs:
         shell: bash
         env:
           S10_INTERFACE_PATH: "~/.trading-agent/s10_interface.json"
+          PYTHONUNBUFFERED: "1"
         run: |
           set -euo pipefail
           cd "$REPO_SRC"
           mkdir -p "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID"
+          (
+            set +e
+            while true; do
+              if ! curl -fsS --max-time 3 "http://127.0.0.1:8765/health" >/dev/null 2>&1; then
+                echo "S10 watchdog: endpoint unavailable; attempting bounded local-stack recovery."
+                python3 -m automation.s10_local_stack                   --repo-root "$REPO_SRC"                   --descriptor "$HOME/.trading-agent/s10_interface.json"                   --work-root "$HOME/.cache/trading-agent/s10/runs" || true
+              fi
+              sleep 5
+            done
+          ) &
+          WATCHDOG_PID=$!
+          cleanup() {
+            kill "$WATCHDOG_PID" >/dev/null 2>&1 || true
+            wait "$WATCHDOG_PID" 2>/dev/null || true
+          }
+          trap cleanup EXIT
           python3 -m automation.s10_worker             --output "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID/evidence_critic.json"
           cat "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID/evidence_critic.json"
 
