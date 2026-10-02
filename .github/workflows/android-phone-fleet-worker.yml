@@ -30,8 +30,9 @@ jobs:
           import json, os, subprocess
           from pathlib import Path
           registry = json.loads(Path("ops/android_phone_resources.json").read_text(encoding="utf-8"))
+          repository = os.environ["GITHUB_REPOSITORY"]
           runners = json.loads(subprocess.check_output([
-              "gh", "api", f"/repos/{os.environ["GITHUB_REPOSITORY"]}/actions/runners?per_page=100"
+              "gh", "api", f"/repos/{repository}/actions/runners?per_page=100"
           ], text=True))
           online = set()
           for r in runners.get("runners", []):
