@@ -160,9 +160,14 @@ def main() -> int:
         })
 
     order_results = []
+    base_by_id = {row["id"]: row for row in rows}
     for case in cases[:max(0, min(args.option_order_checks, len(cases)))]:
         try:
-            c1, p1 = parse_answer(post_json(args.endpoint.rstrip("/") + "/v1/systemone", request_for(case)))
+            base = base_by_id.get(case["id"])
+            if not base or base.get("error") is not None:
+                raise RuntimeError("base_case_missing_or_invalid")
+            c1 = base["predicted_label"]
+            p1 = base["probabilities"]
             c2, p2 = parse_answer(post_json(args.endpoint.rstrip("/") + args.protocol_path, request_for(case, list(reversed(LABELS)))))
             order_results.append({
                 "id": case["id"],
