@@ -29,6 +29,35 @@ def score(track:dict[str,Any],sources:dict[str,dict[str,Any]])->dict[str,Any]:
     q=sum(quality(str(x.get("access","")),str(x.get("pit_fit",""))) for x in items)/len(items)
     benefit=.28*track["cheap_falsifiability"]+.22*q+.18*pit+.16*track["mechanism_novelty_distance"]+.16*track["expected_reproducibility"]
     out=dict(track); out.update({"source_quality_prior":round(q,6),"pit_feasibility_prior":round(pit,6),"information_gain_per_compute_prior":round(benefit/(.10+track["resource_cost"]),6),"holdout_used":False,"performance_evaluated":False,"candidate_selected":False}); return out
+S10_ACCEPTANCE_PATH = ROOT / "research/runs/self_hosted/autonomous/s10_acceptance_receipt.json"
+
+def _s10_resource_state() -> dict[str, Any]:
+    result = {
+        "id": "S10",
+        "agent_runtime_id": "AGENT-S10",
+        "role": "adversarial_qa_only",
+        "activation_gate": "S10_UTILITY_ACCEPTED",
+        "eligible": False,
+        "receipt_status": "NOT_PRESENT",
+        "receipt_sha256": None,
+        "formal_evidence_allowed": False,
+        "performance_authorization": False,
+        "candidate_selection": False,
+        "candidate_ranking": False,
+        "promotion": False,
+    }
+    if not S10_ACCEPTANCE_PATH.is_file():
+        return result
+    try:
+        import hashlib
+        payload = json.loads(S10_ACCEPTANCE_PATH.read_text(encoding="utf-8"))
+        result["receipt_status"] = str(payload.get("status", "INVALID"))
+        result["eligible"] = result["receipt_status"] == "S10_UTILITY_ACCEPTED"
+        result["receipt_sha256"] = hashlib.sha256(S10_ACCEPTANCE_PATH.read_bytes()).hexdigest()
+    except (OSError, json.JSONDecodeError):
+        result["receipt_status"] = "INVALID"
+    return result
+
 def build_plan(*,run_number:int|None=None)->dict[str,Any]:
     registry=load_registry(); sources=source_index(registry)
     tracks=sorted((score(t,sources) for t in TRACKS),key=lambda x:(-x["information_gain_per_compute_prior"],x["id"]))
@@ -37,7 +66,8 @@ def build_plan(*,run_number:int|None=None)->dict[str,Any]:
         c=[x for x in tracks if x["lane"]==lane and x["id"] not in used]
         if c:
             used.add(c[0]["id"]); assignments.append({"lane":lane,"track_id":c[0]["id"],"reason":"ex_ante_capability_prior","performance_authorized":False})
-    plan={"schema_version":1,"research_os_version":registry["research_os_version"],"plan_type":"resource_schedule","run_number":run_number,"basis":"information_gain_per_compute_prior + cheap_falsifiability + source_quality + PIT_feasibility + novelty + reproducibility","forbidden_inputs":registry["resource_scheduler"]["forbidden_axes"],"tracks":tracks,"assignments":assignments,"resource_policy":{"paid_resources":False,"holdout_used":False,"automatic_promotion":False,"performance_authorization":False,"maximum_deterministic_lanes":2,"adversarial_lane_reserved":True}}
+    s10 = _s10_resource_state()
+    plan={"schema_version":1,"research_os_version":registry["research_os_version"],"plan_type":"resource_schedule","run_number":run_number,"basis":"information_gain_per_compute_prior + cheap_falsifiability + source_quality + PIT_feasibility + novelty + reproducibility","forbidden_inputs":registry["resource_scheduler"]["forbidden_axes"],"tracks":tracks,"assignments":assignments,"agent_resources":[s10],"resource_policy":{"paid_resources":False,"holdout_used":False,"automatic_promotion":False,"performance_authorization":False,"maximum_deterministic_lanes":2,"adversarial_lane_reserved":True}}
     plan["fingerprint"]=fingerprint(plan); return plan
 def main()->int:
     p=argparse.ArgumentParser(); p.add_argument("--output",type=Path,default=Path("research/runs/self_hosted/research_os/resource_schedule.json")); p.add_argument("--run-number",type=int); a=p.parse_args()
