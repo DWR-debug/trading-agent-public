@@ -30,6 +30,7 @@ def score(track:dict[str,Any],sources:dict[str,dict[str,Any]])->dict[str,Any]:
     benefit=.28*track["cheap_falsifiability"]+.22*q+.18*pit+.16*track["mechanism_novelty_distance"]+.16*track["expected_reproducibility"]
     out=dict(track); out.update({"source_quality_prior":round(q,6),"pit_feasibility_prior":round(pit,6),"information_gain_per_compute_prior":round(benefit/(.10+track["resource_cost"]),6),"holdout_used":False,"performance_evaluated":False,"candidate_selected":False}); return out
 S10_ACCEPTANCE_PATH = ROOT / "research/runs/self_hosted/autonomous/s10_acceptance_receipt.json"
+S10_OS_STATUS_PATH = ROOT / "ops/s10_runtime_status.json"
 
 def _s10_resource_state() -> dict[str, Any]:
     result = {
@@ -46,15 +47,20 @@ def _s10_resource_state() -> dict[str, Any]:
         "candidate_ranking": False,
         "promotion": False,
     }
-    if not S10_ACCEPTANCE_PATH.is_file():
-        return result
     try:
         import hashlib
-        payload = json.loads(S10_ACCEPTANCE_PATH.read_text(encoding="utf-8"))
-        result["receipt_status"] = str(payload.get("status", "INVALID"))
-        result["eligible"] = result["receipt_status"] == "S10_UTILITY_ACCEPTED"
-        result["receipt_sha256"] = hashlib.sha256(S10_ACCEPTANCE_PATH.read_bytes()).hexdigest()
-    except (OSError, json.JSONDecodeError):
+        source_path = S10_OS_STATUS_PATH if S10_OS_STATUS_PATH.is_file() else S10_ACCEPTANCE_PATH
+        if not source_path.is_file():
+            return result
+        payload = json.loads(source_path.read_text(encoding="utf-8"))
+        result["receipt_status"] = str(payload.get("receipt_status", payload.get("status", "INVALID")))
+        if source_path == S10_OS_STATUS_PATH:
+            result["eligible"] = payload.get("eligible") is True and result["receipt_status"] == "S10_UTILITY_ACCEPTED"
+        else:
+            result["eligible"] = result["receipt_status"] == "S10_UTILITY_ACCEPTED"
+        result["receipt_sha256"] = hashlib.sha256(source_path.read_bytes()).hexdigest()
+        result["status_source"] = "canonical_os_status" if source_path == S10_OS_STATUS_PATH else "same_run_local_receipt"
+    except (OSError, json.JSONDecodeError, TypeError):
         result["receipt_status"] = "INVALID"
     return result
 

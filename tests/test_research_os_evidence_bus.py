@@ -40,6 +40,7 @@ def test_scheduler_exposes_s10_as_receipt_gated_resource(tmp_path, monkeypatch):
         encoding="utf-8",
     )
     monkeypatch.setattr(scheduler, "S10_ACCEPTANCE_PATH", receipt)
+    monkeypatch.setattr(scheduler, "S10_OS_STATUS_PATH", tmp_path / "missing-os-status.json")
     p = scheduler.build_plan(run_number=9)
     s10 = next(item for item in p["agent_resources"] if item["id"] == "S10")
     assert s10["eligible"] is True

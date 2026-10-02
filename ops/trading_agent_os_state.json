@@ -130,7 +130,10 @@
       "scientific_role": "bounded support only; never scientific evidence, authorization, selection, promotion or live execution",
       "network_boundary": "operator_configured_private_link_only",
       "quota_policy": "no artificial consumption; fail-closed when unavailable",
-      "persistence_note": "S10 is the dedicated phone/Termux resource; exact runtime stack and interface must be discovered from the phone, not inferred from the Windows runners"
+      "persistence_note": "S10 is the dedicated phone/Termux resource; exact runtime stack and interface must be discovered from the phone, not inferred from the Windows runners",
+      "os_status_path": "ops/s10_runtime_status.json",
+      "receipt_sync_workflow": ".github/workflows/s10-receipt-sync.yml",
+      "routing_contract": "Research OS may route S10 only when the synchronized receipt reports S10_UTILITY_ACCEPTED"
     }
   },
   "chatless_night_policy": {
