@@ -123,8 +123,8 @@
       "runtime": "Termux",
       "runner_workflow": ".github/workflows/s10-phone-worker.yml",
       "runner_label": "s10-phone",
-      "runner_mode": "scheduled_after_live_verification",
-      "research_role": "independent_mobile_compute_and_agent_worker",
+      "runner_mode": "scheduled_utility_after_live_verification",
+      "research_role": "independent_mobile bounded utility/QA worker",
       "live_verification_required": true,
       "capability_claim": "UTILITY_ACCEPTED",
       "routing_rule": "use only when available + independent + permitted + useful",
@@ -140,7 +140,10 @@
       "acceptance_status_path": "ops/s10_runtime_status.json",
       "template_path": "docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md",
       "template_runner": "scripts/samsung_termux_phone_runner_template.sh",
-      "latest_verified_run_id": "37046936910"
+      "latest_verified_run_id": "37046936910",
+      "regular_task": "bounded governance/reproducibility/QA utility review",
+      "full_acceptance_policy": "36-case R3 benchmark only on onboarding or explicit revalidation; never as recurring default workload",
+      "throughput_probe": ".github/workflows/s10-throughput-probe.yml"
     },
     "android_phone_fleet": {
       "status": "TEMPLATE_READY",
@@ -160,14 +163,15 @@
         "samsung-phone-02",
         "samsung-phone-03"
       ],
-      "activation_rule": "Only an online uniquely-labelled runner is scheduled; each device must pass ANDROID_PHONE_UTILITY_ACCEPTED before bounded routing.",
+      "activation_rule": "Only online uniquely-labelled runners are scheduled. Unaccepted online devices run onboarding acceptance; accepted devices run bounded utility review. Utility runs never create scientific evidence or authorization.",
       "scientific_role": "bounded support only; never scientific evidence, authorization, selection, ranking, promotion or live execution",
       "safety": {
         "paper_only": true,
         "live_trading_enabled": false,
         "orders_enabled": false,
         "automatic_promotion": false
-      }
+      },
+      "capacity_policy": "Activate at most one additional Samsung device as a controlled capacity test when measurable throughput gain is expected; do not activate dormant slots merely to consume quota."
     }
   },
   "chatless_night_policy": {
@@ -180,15 +184,16 @@
     "persistence": "receipts/artifacts/status are written to repository or Actions artifacts; no open chat required",
     "s10": {
       "enabled": true,
-      "mode": "receipt_gated_opportunistic",
-      "trigger": "when synchronized receipt reports S10_UTILITY_ACCEPTED and a bounded useful task exists",
+      "mode": "receipt_gated_opportunistic_utility",
+      "trigger": "when synchronized S10 receipt is accepted, phone is live, and a bounded useful utility task exists",
       "formal_evidence_allowed": false,
-      "performance_authorization": false
+      "performance_authorization": false,
+      "full_benchmark": "explicit revalidation only"
     },
     "android_phone_fleet": {
       "enabled": true,
-      "mode": "online_label_filtered",
-      "trigger": "every 6 hours plus manual dispatch",
+      "mode": "online_label_filtered_acceptance_then_utility",
+      "trigger": "every 6h only for online slots; acceptance for new slots, utility for accepted slots",
       "receipt_gated": true,
       "formal_evidence_allowed": false,
       "performance_authorization": false
