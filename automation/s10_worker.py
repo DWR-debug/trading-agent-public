@@ -140,6 +140,18 @@ def main() -> int:
         ]
         code = benchmark_main()
         if code == 0 and args.output.is_file():
+            result = json.loads(args.output.read_text(encoding="utf-8"))
+            result["s10_runtime"] = {
+                "seed": int(os.environ.get("S10_SEED", "271828")),
+                "threads": 1,
+                "temperature": 0,
+                "top_k": 1,
+                "deterministic_cpu_mode": True,
+            }
+            args.output.write_text(
+                json.dumps(result, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
             from automation.s10_acceptance import build_receipt
 
             receipt = build_receipt(args.output)
