@@ -676,7 +676,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T12:19:07.353506+00:00",
+  "generated_at_utc": "2026-10-02T12:25:33.331469+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -864,19 +864,35 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "research/2026-10-02-q125-sec-midas-frontier-r2",
+        "number": 845,
+        "title": "RESEARCH: strengthen Q125 SEC MIDAS PIT contract",
+        "updatedAt": "2026-10-02T12:25:12Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/845"
+      },
+      {
+        "baseRefName": "master",
+        "headRefName": "fix/2026-10-02-s10-gate-integrity",
+        "number": 844,
+        "title": "FIX: restore S10 gate integrity",
+        "updatedAt": "2026-10-02T12:23:14Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/844"
+      },
+      {
+        "baseRefName": "master",
+        "headRefName": "fix/2026-10-02-control-plane-snapshot-guard-r2",
+        "number": 842,
+        "title": "FIX: harden agent queue request provenance",
+        "updatedAt": "2026-10-02T12:21:04Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/842"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "fix/2026-10-02-s10-deterministic-seed-r2",
         "number": 841,
         "title": "FIX: make S10 inference reproducible and receipt-canonical",
         "updatedAt": "2026-10-02T12:17:11Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/pull/841"
-      },
-      {
-        "baseRefName": "master",
-        "headRefName": "fix/2026-10-02-s10-acceptance-determinism",
-        "number": 840,
-        "title": "FIX: make S10 acceptance and inference deterministic",
-        "updatedAt": "2026-10-02T12:16:26Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/840"
       },
       {
         "baseRefName": "master",
@@ -905,6 +921,21 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: harden S10 canonical receipt boundary",
+        "sha": "51cefedec0162f1bf651272c074f942f97aa8cdb",
+        "timestamp": "2026-10-02T14:25:21+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "7462b711095213de63630668d55fb75afc2e7317",
+        "timestamp": "2026-10-02T12:19:26Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5a9cc415251b874ec4605abc5167408d17ee909b",
+        "timestamp": "2026-10-02T12:19:07Z"
+      },
+      {
         "message": "OPS: record AI worker state",
         "sha": "c7acab1aeaf76cb4f4f0ce6438709026271d6541",
         "timestamp": "2026-10-02T12:19:03Z"
@@ -928,21 +959,6 @@
         "message": "OPS: record AI worker state",
         "sha": "3b7a429bb6c4010a2358530a8d9fa98101a240ae",
         "timestamp": "2026-10-02T12:18:46Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "858bf9e38bffa9de1ab2d9aa6ff2576f34c6c7cb",
-        "timestamp": "2026-10-02T12:18:44Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "4ad925c5d8ff644f0271a3e74ea9da578a9e91fa",
-        "timestamp": "2026-10-02T12:18:38Z"
-      },
-      {
-        "message": "OPS: record Mistral worker state",
-        "sha": "3c3f8952b46f00c265bb3d03eaef813ae9d49a7b",
-        "timestamp": "2026-10-02T12:18:36Z"
       }
     ]
   },
@@ -1012,12 +1028,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c7acab1aeaf76cb4f4f0ce6438709026271d6541",
+  "source_master_sha": "51cefedec0162f1bf651272c074f942f97aa8cdb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37005915316"
+    "run_id": "37006583275"
   }
 }
