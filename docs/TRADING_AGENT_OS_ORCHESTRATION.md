@@ -25,6 +25,7 @@ AI- und Coding-Agenten dürfen Forschung technisch beschleunigen, aber weder Hol
 | Bounded Agent Queue | alle 2 h | begrenztes Engineering | Queue bleibt liegen |
 | Self-hosted Capacity Probe | alle 6 h | Runner-/Kapazitätsprüfung | keiner |
 | S10 Phone Research Worker | alle 6 h + relevante Master-Pushes | bounded mobile QA / Evidence-Critic | receipt-gated, fail-closed |
+| Android Phone Fleet Worker | alle 6 h + manuell | weitere Samsung/Android-Ressourcen, online-label-gefiltert | receipt-gated, fail-closed |
 | Evidence-Critic Lab | event-/dispatch-basiert | 36-Fälle Evidence-Critic Benchmark | Ressourcen-/Runtime-Gate |
 
 Diese Taktung deckt den Nachtbetrieb bereits ab. Eine zusätzliche redundante Nachtpipeline wird deshalb nicht erzeugt.
@@ -37,9 +38,11 @@ Wenn der Self-Hosted-Heartbeat ausbleibt, übernimmt die bestehende Hosted-Failo
 
 S10 ist davon getrennt: das Telefon stellt eigene ARM64/Termux-Compute bereit. Es wird nur dann geroutet, wenn \`ops/s10_runtime_status.json\` einen gültigen \`S10_UTILITY_ACCEPTED\`-Receipt meldet und eine bounded Aufgabe vorhanden ist.
 
+Weitere Samsung-/Android-Telefone werden über \`ops/android_phone_resources.json\` und die Fleet-Spur geroutet. Der Planungsjob ermittelt online verfügbare, eindeutig gelabelte Runner; offline Slots erzeugen keine wartenden Forschungsjobs. Nach erfolgreicher \`ANDROID_PHONE_UTILITY_ACCEPTED\`-Acceptance darf die Ressource nur für bounded Unterstützung eingesetzt werden.
+
 ## 4. Aktuelle Forschungspriorität
 
-Q119/Q120/Q122 liefern die aktuelle Feasibility-Spur für Treasury- und CFTC-Quellen. Q121 ist die Discovery-/Hypothesen-Schicht für Literatur- und Quellenmaterial. I22 und Q104 verfolgen deterministische SEC/XBRL/PIT-Gates. Parallel wird das Evidence-Critic Lab zur ersten belastbaren Modellmetriken-Auswertung gebracht.
+Q119/Q120/Q122 liefern die aktuelle Feasibility-Spur für Treasury- und CFTC-Quellen. Q121 ist die Discovery-/Hypothesen-Schicht für Literatur- und Quellenmaterial. Q125-F1 prüft die SEC-MIDAS-Publikationsuhr nach dem behobenen Quell-URL-Fehler. I22 und Q104 verfolgen deterministische SEC/XBRL/PIT-Gates. Q124/Q126/Q127/Q128/Q129/Q130 bleiben Discovery-/PIT-Feasibility-Spuren. Parallel wird das Evidence-Critic Lab zur ersten belastbaren Modellmetriken-Auswertung gebracht.
 
 Es bleibt bei keiner Performance-Freigabe, solange die vollständige Coverage/PIT/Authorization-Kette nicht formal erfüllt ist.
 
@@ -47,7 +50,9 @@ Es bleibt bei keiner Performance-Freigabe, solange die vollständige Coverage/PI
 
 Die beiden verifizierten Windows-Runner LHT-N133732 und LHT-N133732-2 arbeiten unter dem Label trading-agent-research. Ihr Live-Status ist flüchtig und wird deshalb in jedem neuen trading agent-Chat neu geprüft.
 
-S10 ist eine separat verifizierte ARM64/Termux-Ressource. Der aktuelle operative Nachweis ist \`ops/s10_runtime_status.json\`; die zuletzt erfolgreiche Acceptance lief in Run \`37023821478\` und meldet \`S10_UTILITY_ACCEPTED\`. Auch dieser Status ist flüchtig für die Routingentscheidung und wird bei neuen Chats bzw. nach neuen Runs neu geprüft.
+S10 ist eine separat verifizierte ARM64/Termux-Ressource. Der aktuelle operative Nachweis ist \`ops/s10_runtime_status.json\`; die zuletzt erfolgreiche Acceptance lief in Run \`37030390371\` und meldet \`S10_UTILITY_ACCEPTED\`. Auch dieser Status ist flüchtig für die Routingentscheidung und wird bei neuen Chats bzw. nach neuen Runs neu geprüft.
+
+Weitere Samsung-/Android-Geräte sind in \`ops/android_phone_resources.json\` als getrennte Slots vorbereitet. Der generische Fleet-Worker und die Receipt-Sync-Spur halten Runner-, Runtime- und Governance-Verträge identisch.
 
 Für weitere Samsung-/Android-Geräte gilt die generische Vorlage \`docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md\` mit dem Runner-Helper \`scripts/samsung_termux_phone_runner_template.sh\`. Neue Geräte müssen das gleiche Utility-Acceptance-Protokoll erfüllen; ein neues Modell darf keinen eigenen wissenschaftlichen Sonderpfad erzeugen.
 
@@ -80,3 +85,4 @@ Die maschinenlesbare Version dieses Zustands ist ops/trading_agent_os_state.json
 Der aktuelle operative Zustand bleibt research/evidence/current_operational_state.json.
 Der Chat-Einstiegspunkt bleibt docs/TRADING_AGENT_CHAT_ENTRYPOINT.md.
 Die wiederverwendbare Android-/Samsung-Integrationsvorlage ist docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md.
+Die Fleet-Konfiguration ist ops/android_phone_resources.json; die Fleet-Betriebsbeschreibung ist docs/SAMSUNG_ANDROID_PHONE_FLEET.md.
