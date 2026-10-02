@@ -118,12 +118,16 @@
     "s10": {
       "status": "CONFIGURED_BY_OPERATOR",
       "identity": "S10",
+      "device_type": "dedicated_android_phone",
+      "runtime": "Termux",
+      "research_role": "independent_mobile_compute_and_agent_worker",
       "live_verification_required": true,
       "capability_claim": "UNRESOLVED_UNTIL_LIVE_VERIFIED",
       "routing_rule": "use only when available + independent + permitted + useful",
       "scientific_role": "bounded support only; never scientific evidence, authorization, selection, promotion or live execution",
+      "network_boundary": "operator_configured_private_link_only",
       "quota_policy": "no artificial consumption; fail-closed when unavailable",
-      "persistence_note": "operator-designated resource; exact interface/capabilities must be discovered from the live configured environment"
+      "persistence_note": "S10 is the dedicated phone/Termux resource; exact runtime stack and interface must be discovered from the phone, not inferred from the Windows runners"
     }
   },
   "chatless_night_policy": {
@@ -145,7 +149,7 @@
   "new_chat_protocol": [
     "Read docs/TRADING_AGENT_CHAT_ENTRYPOINT.md.",
     "Read docs/TRADING_AGENT_OS_ORCHESTRATION.md and the live current status files.",
-    "Check S10 live availability/capability before assigning any bounded work.",
+    "Treat S10 as the dedicated Android/Termux phone; check its live availability/capability from the phone-side runtime before assigning bounded work.",
     "Check current master, PRs, workflows, runners and AI entitlements live.",
     "Do not trust stale runner/auth/queue claims from prior chats.",
     "Continue unfinished safe work without redundant approval.",
