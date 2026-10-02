@@ -177,6 +177,7 @@ ACTIVE_WORKFLOWS = {
     "s10-phone-worker.yml",
     "s10-receipt-sync.yml",
     "s10-stale-run-recovery.yml",
+    "s10-throughput-probe.yml",
     "q104-i22-filing-arrival.yml",
     "android-phone-fleet-worker.yml",
     "android-phone-fleet-receipt-sync.yml",
@@ -196,8 +197,13 @@ REQUIRED_FILES = (
     ROOT / "automation" / "research_os_scheduler.py",
     ROOT / "automation" / "research_os_source_probe.py",
     ROOT / "automation" / "s10_receipt_sync.py",
+    ROOT / "automation" / "s10_utility_task.py",
+    ROOT / "automation" / "android_phone_receipt_sync.py",
     ROOT / "tests" / "test_research_os_evidence_bus.py",
     ROOT / "tests" / "test_s10_receipt_sync.py",
+    ROOT / "tests" / "test_s10_utility_task.py",
+    ROOT / "tests" / "test_android_phone_receipt_sync.py",
+    ROOT / "tests" / "test_s10_throughput_probe.py",
 )
 
 
