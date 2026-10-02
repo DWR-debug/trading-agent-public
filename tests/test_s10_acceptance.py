@@ -1,4 +1,4 @@
-from automation.s10_acceptance import evaluate
+from automation.s10_acceptance import ACCEPTANCE_CONTRACT_VERSION, evaluate
 
 
 def good_result():
@@ -16,6 +16,7 @@ def good_result():
     ]
     return {
         "status": "BENCHMARK_COMPLETED",
+        "acceptance_contract_version": "2026-10-02-R3",
         "corpus": {"cases": 36},
         "metrics": {"n_total": 36, "n_scored": 36, "malformed_or_no_decision": 0},
         "option_order_sensitivity": {
@@ -51,6 +52,10 @@ def good_result():
         },
         "raw_predictions": rows,
     }
+
+
+def test_s10_acceptance_contract_version_is_pinned():
+    assert ACCEPTANCE_CONTRACT_VERSION == "2026-10-02-R3"
 
 
 def test_s10_acceptance_requires_full_typed_benchmark():
