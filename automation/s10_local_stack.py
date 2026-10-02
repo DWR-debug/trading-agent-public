@@ -37,6 +37,7 @@ BRIDGE_MODULE = "automation.s10_systemone_bridge"
 USER_AGENT = "trading-agent-public/S10-local-stack-bootstrap/1"
 START_TIMEOUT_SECONDS = 150
 MIN_FREE_BYTES_FOR_MODEL = 1_500_000_000
+S10_SEED = int(os.environ.get("S10_SEED", "42"))
 
 
 def _urlopen(url: str, *, timeout: int = 30, headers: dict[str, str] | None = None):
@@ -225,6 +226,7 @@ def _start_llama(binary: Path, model: Path, log_dir: Path) -> dict:
         "--batch-size", "256",
         "--ubatch-size", "128",
         "--threads", str(min(4, os.cpu_count() or 4)),
+        "--seed", str(S10_SEED),
     ]
     process = subprocess.Popen(
         command,
@@ -282,6 +284,7 @@ def _write_descriptor(path: Path, model_id: str) -> None:
         "model": model_id,
         "protocol_path": "/v1/systemone",
         "timeout_seconds": 90,
+        "seed": S10_SEED,
         "source": "automation.s10_local_stack",
     }
     # Descriptor is intentionally rejected by s10_runtime if credential-bearing keys exist.
