@@ -1,6 +1,6 @@
-QUEUE_WAKE_2026-10-01T12:34Z
-trigger=post-q116-agent-infrastructure
-source_master_sha=99ec8f9066d5e0a379ae63c48a7aa554c4a7f472
+QUEUE_WAKE_2026-10-02-AUTONOMOUS-AGENT-027
+trigger=post-agent-027-research-os-audit
+source_master_sha=7dc173378a4b40218d00bcf80971545d2f1dc2aa
 purpose=dispatch-next-ready-agent-lanes
 research_computation=false
 performance_selection=false
