@@ -95,10 +95,10 @@ def _audit_performance_prereg(
         )
     _assert_safety(data, location, errors)
 
-    # Terminal performance entries that are explicitly non-authorized and already
-    # reconciled are historical records. Their original preregistration schema
-    # remains immutable; governance-v2 validation applies only to active/pending
-    # performance preregistrations.
+    # Historical terminal entries remain immutable records. This includes
+    # implementation/infrastructure invalidations as well as completed
+    # non-authorized performance records; governance-v2 validation applies only
+    # to active/pending performance preregistrations.
     if historical_terminal:
         return
 
@@ -366,10 +366,15 @@ def audit(root: Path = ROOT) -> dict[str, Any]:
                 errors.append(f"duplicate active prereg trial_id {trial_id}: {seen[trial_id]} and {path}")
             seen[trial_id] = path
         registry_entry = active_by_trial.get(trial_id) if isinstance(trial_id, str) else None
+        state = str(registry_entry.get("state", "")) if registry_entry else ""
         historical_terminal = bool(
             registry_entry
             and registry_entry.get("performance_authorization_allowed") is False
-            and str(registry_entry.get("state", "")).startswith("PERFORMANCE_COMPLETED_")
+            and (
+                state.startswith("HISTORICAL_")
+                or state.startswith("PERFORMANCE_COMPLETED_")
+                or state in {"PERMANENTLY_BLOCKED", "RETIRED"}
+            )
         )
         _audit_performance_prereg(
             root,
