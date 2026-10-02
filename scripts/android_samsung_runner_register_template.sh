@@ -68,12 +68,13 @@ if [ "$ANDROID_ALLOW_REREGISTER" = "true" ] || [ ! -f .runner ]; then
     bash -lc '\''
       set -euo pipefail
       cd "$ANDROID_RUNNER_ROOT"
+      CONFIG_REPLACE=(); if [ "$ANDROID_ALLOW_REREGISTER" = "true" ] && [ -f .runner ]; then CONFIG_REPLACE=(--replace); fi
       ./config.sh --url "https://github.com/$ANDROID_RUNNER_REPO" \
         --token "$ANDROID_RUNNER_TOKEN" \
         --name "$ANDROID_RUNNER_NAME" \
         --labels "$ANDROID_RUNNER_LABELS" \
         --work "_work" \
-        --unattended
+        --unattended "${CONFIG_REPLACE[@]}"
     '\''
   chown -R "$ANDROID_RUNNER_USER:$ANDROID_RUNNER_USER" "$ANDROID_RUNNER_ROOT"
 fi
