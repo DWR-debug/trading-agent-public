@@ -91,3 +91,56 @@ def test_s10_workflow_pins_seed_in_environment():
     worker = Path(".github/workflows/s10-phone-worker.yml").read_text(encoding="utf-8")
     assert 'S10_SEED: "271828"' in worker
     assert '"s10_seed": os.environ.get("S10_SEED")' in worker
+
+
+def test_s10_receipt_sync_preserves_prior_acceptance_for_utility_only_run():
+    from automation.s10_receipt_sync import merge_status
+    existing = {
+        "workflow_run_id": "100",
+        "workflow_run_updated_at": "2026-10-02T10:00:00Z",
+        "status": "S10_UTILITY_ACCEPTED",
+        "eligible": True,
+        "receipt_status": "S10_UTILITY_ACCEPTED",
+        "acceptance_contract_version": "2026-10-02-R3",
+        "acceptance_receipt_sha256": "receipt-hash",
+        "model": "S10-Qwen",
+    }
+    incoming = {
+        "workflow_run_id": "101",
+        "workflow_run_updated_at": "2026-10-02T11:00:00Z",
+        "status": "S10_RESULT_AVAILABLE",
+        "eligible": False,
+        "receipt_status": "S10_UTILITY_REVIEW_COMPLETED",
+        "acceptance_contract_version": None,
+        "model": "S10-Qwen",
+        "acceptance_preserved": False,
+    }
+    merged = merge_status(existing, incoming)
+    assert merged["status"] == "S10_UTILITY_ACCEPTED"
+    assert merged["eligible"] is True
+    assert merged["acceptance_receipt_sha256"] == "receipt-hash"
+    assert merged["acceptance_preserved"] is True
+    assert merged["acceptance_preserved_from_workflow_run_id"] == "100"
+
+
+def test_s10_receipt_sync_allows_explicit_acceptance_failure_to_revoke():
+    from automation.s10_receipt_sync import merge_status
+    existing = {
+        "workflow_run_id": "100",
+        "workflow_run_updated_at": "2026-10-02T10:00:00Z",
+        "status": "S10_UTILITY_ACCEPTED",
+        "eligible": True,
+        "receipt_status": "S10_UTILITY_ACCEPTED",
+        "acceptance_contract_version": "2026-10-02-R3",
+    }
+    incoming = {
+        "workflow_run_id": "102",
+        "workflow_run_updated_at": "2026-10-02T11:00:00Z",
+        "status": "S10_UTILITY_NOT_ACCEPTED",
+        "eligible": False,
+        "receipt_status": "S10_UTILITY_NOT_ACCEPTED",
+        "acceptance_contract_version": "2026-10-02-R3",
+    }
+    merged = merge_status(existing, incoming)
+    assert merged["eligible"] is False
+    assert merged["receipt_status"] == "S10_UTILITY_NOT_ACCEPTED"
