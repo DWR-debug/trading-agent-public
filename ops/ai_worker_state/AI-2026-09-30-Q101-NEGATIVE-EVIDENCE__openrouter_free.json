@@ -25,35 +25,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 50.618,
-  "stdout": "**Worker Handoff: Q101 Negative-Evidence Synthesis & Literature-Inspired Frontier Review**\n\n### Findings\n- **Recurring gate failures across 7 trials (Q101):** `research_drawdown_lte_10pct`, `rolling_average_drawdown_lte_10pct`, `holdout_drawdown_lte_10pct` all recur. Indicates systemic OOS fragility, not isolated signal weakness.\n- **Control-relative degradation:** Both `CONTROL_6SLEEVE_ENSEMBLE` arms (q077r1, q081r4) show positive research-period returns (~2.8% & ~2.0%) but holdout-period drops to ~0.5% and ~0.34% respectively. Even the control fails holdout,",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 1.249,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter returned tool-call syntax instead of a final worker handoff.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1790878732-y3fbZSsUj98ZYrwCXmJ6",
-  "usage": {
-    "prompt_tokens": 6557,
-    "completion_tokens": 3200,
-    "total_tokens": 9757,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 3267,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
