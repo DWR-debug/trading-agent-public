@@ -55,6 +55,7 @@ def build_status(
         "workflow_run_id": workflow_run_id,
         "workflow_conclusion": workflow_conclusion,
         "source_commit": source_commit,
+        "workflow_run_updated_at": generated_at_utc or datetime.now(timezone.utc).isoformat(),
         "artifact_id": artifact_id,
         "artifact_digest": artifact_digest,
         "generated_at_utc": generated_at_utc or datetime.now(timezone.utc).isoformat(),
@@ -88,7 +89,10 @@ def build_status(
 
     acceptance_status = acceptance.get("status") if acceptance else None
     worker_status = result.get("status") if result else None
-    eligible = acceptance_status == "S10_UTILITY_ACCEPTED"
+    eligible = (
+        workflow_conclusion == "success"
+        and acceptance_status == "S10_UTILITY_ACCEPTED"
+    )
 
     base.update({
         "status": "S10_UTILITY_ACCEPTED" if eligible else ("S10_RESULT_AVAILABLE" if result else "S10_ARTIFACT_INCOMPLETE"),
@@ -121,6 +125,8 @@ def main() -> int:
         artifact_id=args.artifact_id,
         artifact_digest=args.artifact_digest,
     )
+    existing = _load(args.output) if args.output.is_file() else None
+    status = merge_status(existing, status)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(status, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({
@@ -133,3 +139,13 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+def merge_status(existing: dict[str, Any] | None, incoming: dict[str, Any]) -> dict[str, Any]:
+    if not existing:
+        return incoming
+    old_ts = str(existing.get("workflow_run_updated_at", ""))
+    new_ts = str(incoming.get("workflow_run_updated_at", ""))
+    if old_ts and new_ts and old_ts > new_ts:
+        return existing
+    return incoming
