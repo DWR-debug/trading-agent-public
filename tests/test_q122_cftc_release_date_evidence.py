@@ -51,3 +51,17 @@ def test_q122_schedule_metadata_does_not_claim_historical_mapping():
     assert out["release_time_et_documented"] is True
     assert out["2026_schedule_documented"] is True
     assert out["schedule_only_not_historical_mapping"] is True
+
+
+def test_q122_parses_live_style_html_table_with_footnote():
+    html = b"""
+    <table>
+      <tr><th>COT Report Date</th><th>Original Publish Date</th><th>New Publish Date</th></tr>
+      <tr><td>09/30/2025</td><td>10/03/2025</td><td>11/19/2025<sup>+</sup></td></tr>
+      <tr><td>10/07/2025</td><td>10/10/2025</td><td>11/21/2025</td></tr>
+    </table>
+    """
+    rows = extract_documented_backlog(html)
+    assert len(rows) == 2
+    assert rows[0]["report_date"] == "2025-09-30"
+    assert rows[0]["documented_new_publish_date"] == "2025-11-19"

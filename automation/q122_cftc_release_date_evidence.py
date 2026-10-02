@@ -12,6 +12,7 @@ import json
 import re
 import urllib.request
 from datetime import date, datetime, time, timezone
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 
@@ -33,24 +34,78 @@ def fetch(url: str) -> tuple[str, bytes]:
 def md(date_text: str) -> str:
     return datetime.strptime(date_text, "%m/%d/%Y").date().isoformat()
 
+class _CftcTableParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.rows: list[list[str]] = []
+        self._row: list[str] | None = None
+        self._cell: list[str] | None = None
+        self._tag: str | None = None
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        tag = tag.lower()
+        if tag == "tr":
+            self._row = []
+        elif tag in {"td", "th"} and self._row is not None:
+            self._cell = []
+            self._tag = tag
+
+    def handle_data(self, data: str) -> None:
+        if self._cell is not None:
+            self._cell.append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        tag = tag.lower()
+        if tag in {"td", "th"} and self._cell is not None and self._row is not None:
+            text = " ".join("".join(self._cell).split())
+            self._row.append(text)
+            self._cell = None
+            self._tag = None
+        elif tag == "tr" and self._row is not None:
+            self.rows.append(self._row)
+            self._row = None
+
+def _append_mapping(rows: list[dict[str, str]], seen: set[str], report: str, original: str, new: str) -> None:
+    if report in seen:
+        return
+    seen.add(report)
+    rows.append({
+        "report_date": report,
+        "original_publish_date": original,
+        "documented_new_publish_date": new,
+        "evidence_type": "DOCUMENTED_SPECIAL_ANNOUNCEMENT",
+    })
+
 def extract_documented_backlog(html: bytes) -> list[dict[str, str]]:
-    text = html.decode("utf-8", errors="replace")
-    rows = []
+    rows: list[dict[str, str]] = []
     seen: set[str] = set()
-    for match in REPORT_RELEASE_RE.finditer(text):
-        report = md(match.group("report"))
-        original = md(match.group("original"))
-        new = md(match.group("new"))
-        key = (report, original, new)
-        if report in seen:
-            continue
-        seen.add(report)
-        rows.append({
-            "report_date": report,
-            "original_publish_date": original,
-            "documented_new_publish_date": new,
-            "evidence_type": "DOCUMENTED_SPECIAL_ANNOUNCEMENT",
-        })
+    text = html.decode("utf-8", errors="replace")
+
+    # The live CFTC page currently presents the mapping as an HTML table.
+    parser = _CftcTableParser()
+    try:
+        parser.feed(text)
+        parser.close()
+    except Exception:
+        parser.rows = []
+
+    for row in parser.rows:
+        dates = re.findall(r"\d{2}/\d{2}/\d{4}", " | ".join(row))
+        if len(dates) >= 3:
+            report, original, new = dates[:3]
+            _append_mapping(rows, seen, md(report), md(original), md(new))
+
+    # Keep the original text-format parser as a deterministic compatibility
+    # fallback for archived/sanitized fixtures and older source snapshots.
+    if not rows:
+        for match in REPORT_RELEASE_RE.finditer(text):
+            _append_mapping(
+                rows,
+                seen,
+                md(match.group("report")),
+                md(match.group("original")),
+                md(match.group("new")),
+            )
     return rows
 
 def extract_schedule_metadata(html: bytes) -> dict[str, Any]:
