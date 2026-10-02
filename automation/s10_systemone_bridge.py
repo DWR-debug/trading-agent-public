@@ -133,7 +133,6 @@ class Handler(BaseHTTPRequestHandler):
                 ],
                 "temperature": 0,
                 "seed": S10_SEED,
-                "temperature": 0,
                 "top_k": 1,
                 "max_tokens": 48 if smoke_mode else 160,
             }
