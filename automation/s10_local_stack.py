@@ -275,7 +275,6 @@ def _write_descriptor(path: Path, model_id: str) -> None:
         "protocol_path": "/v1/systemone",
         "timeout_seconds": 90,
         "source": "automation.s10_local_stack",
-        "credentials": False,
     }
     # Descriptor is intentionally rejected by s10_runtime if credential-bearing keys exist.
     # Keep the marker explicit in a non-secret field instead.
