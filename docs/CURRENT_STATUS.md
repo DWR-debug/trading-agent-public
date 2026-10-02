@@ -1,8 +1,10 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `f7c0c729ef5e2503f03db50ce3fdba31d548c284`
+**Current operational snapshot:** `4b591359927cf0265d2e5161ed468d08c4be6d10`
 
-**Generated (UTC):** `2026-10-02T18:27:41.537600+00:00`
+**Generated (UTC):** `2026-10-02T19:28:40Z`
+
+> This synchronization records the exact `master` basis commit immediately before the documentation-only status commit.
 
 **Repository:** `DWR-debug/trading-agent-public`
 
