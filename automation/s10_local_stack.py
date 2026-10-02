@@ -220,9 +220,11 @@ def _start_llama(binary: Path, model: Path, log_dir: Path) -> dict:
         "--host", HOST,
         "--port", str(LLAMA_PORT),
         "--model", str(model),
-        "--ctx-size", "4096",
+        "--ctx-size", "2048",
         "--parallel", "1",
-        "--threads", str(min(6, os.cpu_count() or 4)),
+        "--batch-size", "256",
+        "--ubatch-size", "128",
+        "--threads", str(min(4, os.cpu_count() or 4)),
     ]
     process = subprocess.Popen(
         command,
