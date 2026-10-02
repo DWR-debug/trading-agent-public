@@ -121,6 +121,12 @@ def generate(
     open_prs = github_state.get("open_prs", [])
     agent_ready_issues = github_state.get("agent_ready_issues", [])
     runner_capacity_receipt = _load_json(ROOT / "research/evidence/self_hosted_runner_capacity_2026-09-28.json", {})
+    s10_operational_status = _load_json(ROOT / "ops/s10_runtime_status.json", {
+        "status": "NOT_YET_SYNCHRONIZED",
+        "eligible": False,
+        "scientific_evidence": False,
+        "performance_authorization": False,
+    })
     active_registry = _load_json(ROOT / "research/governance/active_research_registry.json", {})
     active_trials = {
         str(entry.get("code")): entry
@@ -330,6 +336,20 @@ def generate(
                 "performance_authorization_from_os": False,
                 "agent_output_is_scientific_evidence": False,
             },
+            "s10_phone": {
+                "status": s10_operational_status.get("status"),
+                "eligible": s10_operational_status.get("eligible") is True,
+                "receipt_status": s10_operational_status.get("receipt_status"),
+                "workflow_run_id": s10_operational_status.get("workflow_run_id"),
+                "source_commit": s10_operational_status.get("source_commit"),
+                "artifact_id": s10_operational_status.get("artifact_id"),
+                "acceptance_receipt_sha256": s10_operational_status.get("acceptance_receipt_sha256"),
+                "scientific_evidence": False,
+                "performance_authorization": False,
+                "candidate_selection": False,
+                "candidate_ranking": False,
+                "promotion": False,
+            },
             "self_hosted_qa": {
                 "cadence": "15 * * * *",
                 "label": "trading-agent-research",
@@ -420,6 +440,7 @@ def generate(
 - Bounded agent routing uses two queue lanes with fail-closed task contracts.
 - Self-hosted Continuous QA is scheduled hourly at minute 15 under label `trading-agent-research`.
 - Latest self-hosted capacity verification: two distinct Windows/X64 runner slots accepted concurrent jobs; see the timestamped capacity receipt.
+- S10 phone runtime: **{s10_operational_status.get("status", "NOT_YET_SYNCHRONIZED")}**; receipt-gated eligibility = **{s10_operational_status.get("eligible", False)}**. S10 output remains non-scientific and cannot authorize performance or promotion.
 
 ### Scientific status
 
