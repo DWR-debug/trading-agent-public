@@ -1,118 +1,46 @@
-## Aktueller Stand
+# Trading Agent — Aktuelle Decision Basis
 
-### Was wissen wir?
+Stand (UTC): 2026-10-02T19:47:07.217Z
+Technische Basis: 9ce1e5c5bd82cedd48f1036ef1becaf4242b3e76
+Repository: DWR-debug/trading-agent-public
 
-- Die technische Referenz ist ausschließlich der öffentliche `master` von `DWR-debug/trading-agent-public`.
-- Q020 / `T-2026-09-26-046R1-PERFORMANCE` wurde auf dem eingefrorenen, symbol-disjunkten Snapshot formal ausgeführt und als `NO_PROMOTION_EVIDENCE` abgeschlossen. Das Ergebnis bleibt unverändert; es gab keine Promotion und keine Live-Ausführung.
-- Q021 wurde als `COMPLETED_DIAGNOSTIC_ONLY` aus der kanonischen Q019/Q020-Evidence durchgeführt und liefert sechs ungerankte Folgehypothesen.
-- Q023 hat die offizielle Treasury-Resultat-Timestamp-Frage für 89/89 Events nicht vollständig historisch lösbar gemacht (Q024 = `DATA_INSUFFICIENT`); Q025 hat dagegen die Date-Level-PIT-Grundlage für 89/89 Events validiert.
-- Q024 hat aktuell 58/89 explizit reproduzierbare offizielle XML-`ReleaseTime`-Timestamps; die verbleibenden 31 historischen Events bleiben `DATA_INSUFFICIENT`.
-- Q026 (`T-2026-09-27-048`) ist `DATA_INVALID / NO_SCIENTIFIC_OUTCOME`: die bereits eingefrorene Anforderung verlangte 4.000 Candles, während das feste Universum 3.704 gemeinsame Sessions lieferte. Es wurde keine Performance berechnet.
-- T047R1 ist geschlossen und bleibt `NO_PROMOTION_EVIDENCE`; die exakte Richtungsinvertierung wurde nicht weiter optimiert.
-- T049/T050 sind coverage-validiert; T051 hat die PIT-Prüfung des unveränderten SMA-50/200- und 12-1-Top-2-Pfads bestanden.
-- T052 ist autorisiert, aber derzeit durch technische Regressionen vor der Performancephase blockiert. Der erste echte x64-T052-Run erreichte den Full-CI-Schritt und ergab 1.005 bestandene und 11 fehlgeschlagene Tests; es wurde keine Performance berechnet.
+## Übergeordnetes Ziel
+Entwicklung eines autonomen, risiko- und evidenzgesteuerten Trading Agent, der erst nach ausreichender wissenschaftlicher Validierung für wiederkehrend entnehmbares Einkommen in Betracht kommt.
+Priorität: Kapitalerhalt → kontrollierbares Risiko → robuste OOS-/Holdout-Evidenz → Regelmäßigkeit/Planbarkeit → effiziente Rendite → langfristig entnehmbares Einkommen innerhalb der Sicherheitsgrenzen.
+Reales verfügbares Kapital: 0 EUR. Referenzkapital: 2.000 EUR ausschließlich simulativ.
 
-### Was wissen wir nicht?
+## Aktuelle Evidenzgrenze
+Der aktuelle formale Stand ist PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES für T-2026-10-01-H06P2R3-PERFORMANCE-01. Es gibt damit derzeit keinen promotionsfähigen Kandidaten.
+H06 besitzt replizierte PIT-/Coverage-Evidenz, aber PIT-Evidenz ist keine Performance- oder Promotion-Autorisierung. Frühere negative und diagnostische Resultate bleiben unverändert und werden nicht nachträglich optimiert.
 
-- Ob eine orthogonale, ex ante fixierte Hypothesenfamilie auf einem neuen, symbol-disjunkten Datensatz die unveränderten Evidence-Gates erfüllt.
-- Ob die Q026-H2-Fragestellung in einer neuen, sauber präregistrierten Geometrie reproduzierbar testbar ist.
-- Ob der bestehende Agent bereits einen vollständigen paper-only Forward-/Shadow-Lifecycle besitzt oder der neue Shadow-Harness ergänzt werden muss.
+## Forschungsrichtung
+Der wiederkehrende wissenschaftliche Engpass ist Robustheit, nicht bloß Ideendichte. Mehrere Mechanismen haben positive Renditebeiträge gezeigt, erfüllten aber nicht alle unveränderten Risiko-/Robustheitsgates.
+Neue Information soll mechanistisch orthogonal sein. Drawdown, Co-Movement, Konzentration und Kosten werden als eigene Forschungsfragen behandelt. Coverage/PIT kommt vor Performance; immutable Reconciliation vor Interpretation; negative Evidenz bleibt erhalten.
 
-### Was ändert sich?
+## Aktive Forschungsbahnen
+Q125-F1: SEC-MIDAS-Publikationsuhr/Vintage-PIT nach dem behobenen Quellpfadfehler.
+Q119/Q120/Q122: Treasury-/CFTC-Quellen und historische Veröffentlichungs-/PIT-Semantik.
+I22 und Q104 I19/I20: SEC/XBRL/13F-Informationskanäle mit Akzeptanzzeit, Historienabdeckung und Revisionsschutz.
+Q124/Q126/Q127/Q128/Q129/Q130: Discovery-/PIT-Feasibility, noch keine Performancefreigabe.
+Evidence-Critic: reproduzierbare Model-Metrics-/Runtime-Acceptance.
 
-Die Forschung öffnet Q020 und T047R1 nicht erneut. Stattdessen laufen Exploration, Infrastruktur und Validierung parallel:
-1. unrankter Hypothesenentwurf,
-2. paper-only Shadow/Forward-Infrastruktur,
-3. anschließend ein neuer, ex ante fixierter und coverage-first geprüfter formaler Kandidat.
+## Ressourcen
+Die bestehende Kapazität ist für den aktuellen Engpass ausreichend: GitHub-hosted deterministische Compute-Lanes, zwei Windows-Self-hosted Research-Lanes, S10 als bounded Utility-Worker und kostenlose AI-Pfade nur bei nachgewiesener Zugänglichkeit.
+Weitere Samsung-Geräte werden nur als kontrollierter Kapazitätstest eingebunden; ein messbarer zusätzlicher Forschungsdurchsatz ist Voraussetzung für weitere Geräte.
 
-### Nächste Aktion
+## Externe Hypothesenquellen
+Die aktuelle 2026-Literatur liefert neue, aber unvalidierte Anhaltspunkte zu zustandsabhängiger Predictability, Options-Order-Imbalance/Liquidität, SEC-MIDAS-Marktstruktur und Earnings-Timing. Diese Quellen sind Hypothesen-/Feasibility-Input, keine Evidenz für unseren Agenten.
 
-Die 11 technischen CI-Regressionen reparieren, danach den bereits autorisierten T052-Fixed-Rule-Lauf erneut über Full-CI → Coverage → PIT → Performance führen. Q024 bleibt unabhängig auf die 31 historischen Timestamp-Lücken begrenzt; keine nachträgliche Auswahl oder Retuning.
+## Nächste Schritte
+1. Aktuelle Coverage-/PIT-Feasibility-Gates weiter abarbeiten.
+2. S10 in reale bounded Research-Support-Aufgaben einbinden und den Nutzen per Receipt messen.
+3. Orthogonale Kandidaten erst nach Preregistration, Coverage und PIT in die Performance-Spur überführen.
+4. Einen gültigen Performance-Lauf immutable reconciliieren und in den Trial Ledger übernehmen.
+5. Zusätzliche Hardware nur bei messbarem Parallelisierungsgewinn.
 
-### Welche Schutzgrenzen bleiben unverändert?
-
-- `PAPER_ONLY=True`
-- `LIVE_TRADING_ENABLED=False`
-- `orders_enabled=False`
-- `automatic_promotion=False`
-- Holdout bleibt für Auswahl unberührt.
-- Keine nachträgliche Parameter-, Asset-, Feature-, Horizon-, Threshold- oder Varianten-Selektion.
-- Dringlichkeit erhöht Geschwindigkeit und Parallelisierung, niemals Evidenzstandard oder finanzielles Risiko.
-
-## Q018 Source-Feasibility abgeschlossen — 2026-09-26
-
-Q018 ist als Source-Feasibility-Gate abgeschlossen.
-
-- Workflow: `36237329691`
-- Artifact: `10904273903`
-- Artifact-Digest: `sha256:f8bfe4e1065d3d8a8b82b08fe4f78f6bd3c006bedf71c8cadc4f512d8d308989`
-- Result-Fingerprint: `82b07265b29a93547f2b1547227722005cf9d883baf3ee8b6dc50e029742152d`
-- Gesamtstatus: `DATA_INSUFFICIENT`
-- SEC Form 4: `DATA_INSUFFICIENT` — HTTP 403 aus GitHub Actions.
-- FOMC: `DATA_INSUFFICIENT` — HTTP 403 aus GitHub Actions.
-- Treasury 10-Year Auction Data: `COVERAGE_VALIDATED`.
-- Keine Performanceauswertung, kein Holdout, keine Kandidatenrangfolge, kein Tuning.
-
-Die SEC/Fed-Befunde sind Ausführungs-/Zugriffsprobleme des aktuellen kostenlosen Runners; sie sind keine Behauptung, dass die offiziellen Quellen selbst nicht existieren.
-
-### Nächste Aktion
-
-Q019 — Treasury Auction Signal Contract. Die einzige source-feasible Q018-Familie wird jetzt objektiv auf Signal-Parsing, Point-in-Time-Mapping und deterministische Ereignisabdeckung geprüft. Das ist kein Performance-Trial und keine nachträgliche Optimierung.
-
-## Q019 abgeschlossen / Q020 präregistriert — 2026-09-26
-
-Q019 hat den präregistrierten Treasury-10Y-Signal-/PIT-Vertrag erfolgreich bestanden.
-
-- Workflow: `36238205065`
-- Artifact: `10905325799`
-- Artifact-Digest: `sha256:0e2ec08566b3300b577bb23a1f238b577e3083d0e8985c7466e748310b456325`
-- Result-Fingerprint: `13072dbed7d60684f4a4fb8a3de69555cae83c66f3cfdfb603b9ed2a4b1c225b`
-- 89/89 Rohzeilen validiert
-- 89/89 Events auf den ersten folgenden XNYS-Handelstag gemappt
-- 0 terminal events, 0 Fehler
-- 88 abgeleitete Signale
-- keine Performanceauswertung, kein Holdout, kein Tuning, keine Promotion
-
-### Was bedeutet das für Performance-Evidenz?
-
-Wir haben aus T041/T044/T045 reale Performance-Messungen, aber deren präregistrierte Evidence-Gates wurden nicht bestanden. Das ist etwas anderes als „keine Daten“. Q019 selbst durfte aufgrund seiner Präregistrierung überhaupt keine Performance berechnen.
-
-Damit existiert für den Treasury-Mechanismus bisher weder ein positiver noch ein negativer Performance-Nachweis. Es existiert jetzt jedoch ein sauberer Daten-/Signal-/PIT-Vertrag, auf dessen Basis eine eigenständige Performanceprüfung zulässig ist.
-
-### Q020 — Treasury Auction Performance Design
-
-Q020 ist jetzt `PREREGISTERED_DESIGN_ONLY` und verwendet ein neues vollständig symbol-disjunktes Universum:
-`ACN, AMT, APD, BK, CME, CTAS, GPC, LLY, MCO, NOC, ROST, SHW`.
-
-Die Trading-Regel ist vorab fixiert: erster XNYS-Tag nach `record_date`, Signal +1 = gleichgewichtete Long-Position, −1 = gleichgewichtete Short-Position, 0 = flat; ein Event-Tag lang; 1,0x Gross Exposure; kein Leverage. Alle zentralen Risiko-, Kosten-, Rolling-, OOS- und Holdout-Gates bleiben unverändert.
-
-**Nächste Aktion:** zuerst frische OHLCV-Coverage auf diesem Universum. Erst bei Coverage-Pass wird der Snapshot eingefroren und eine formale Performance-Ausführung autorisiert.
-
-Sicherheitszustand bleibt unverändert:
-`PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
-
-## Q020 Coverage Repair bestanden — 2026-09-26
-
-Der Coverage-only Repair-Successor `T-2026-09-26-046R1` hat den Datenvertrag erfolgreich bestanden.
-
-- Workflow: `36240853419`
-- Artifact: `10905489440`
-- Artifact-Digest: `sha256:f0c5066b879cdc391263e57535ec1e72badbbddfc9c46f27ced51d491c3240a0`
-- 12/12 Symbole verfügbar: `ACN, AMT, APD, TGT, CME, CTAS, GPC, LLY, MCO, NOC, ROST, SHW`
-- 3.704 gemeinsame Handelstage
-- eingefrorenes gemeinsames Fenster: 3.500 Candles
-- Snapshot-Fingerprint: `70cff5df1b92f4f7db2ea09bdc9999abff93dd4230ad4ea5df6e5da204076ef8`
-- Coverage-Fingerprint: `703f9fb9d1cd21618d0acdcbe8dff3267c99b91afb6841d7110eb09a93f04600`
-- Performance: nicht ausgeführt
-- Holdout: nicht verwendet
-- Selection: nicht verwendet
-- Promotion: nicht erfolgt
-
-Die technische Reparatur blieb auf Coverage beschränkt. `BK` wurde durch `TGT` ersetzt, weil `BK` im initialen Yahoo-Lauf technisch nicht ladbar war; die Ersetzung wurde nicht anhand von Performance ausgewählt. Die erhöhte Roh-Anforderungszahl von 4.000 ist nun ausdrücklich als Acquisition Headroom von der Mindestabdeckung von 3.500 getrennt.
-
-### Nächste Aktion
-
-Separate, unveränderliche Q020-Performance-Autorisierung erstellen, die exakt an diesen eingefrorenen Snapshot gebunden ist. Erst danach darf die bereits präregistrierte Fixed-Rule-Performance-Ausführung starten.
-
-Sicherheitszustand bleibt unverändert:
-`PAPER_ONLY=True`, `LIVE_TRADING_ENABLED=False`, `orders_enabled=False`, `automatic_promotion=False`.
+## Unveränderliche Grenzen
+PAPER_ONLY=True
+LIVE_TRADING_ENABLED=False
+ORDERS_ENABLED=False
+AUTOMATIC_PROMOTION=False
+Kostenpflichtige Agent-/API-Nutzung bleibt 0 USD. AI-Ausgaben sind keine wissenschaftliche Evidenz und keine Autorisierung.
