@@ -5,6 +5,9 @@ on:
     paths:
       - ".github/workflows/s10-phone-worker.yml"
       - "automation/s10_systemone_bridge.py"
+      - "automation/s10_worker.py"
+      - "automation/evidence_critic_benchmark.py"
+      - "automation/s10_runtime.py"
       - "scripts/s10_local_ai_start.sh"
   schedule:
     - cron: "0 */6 * * *"
