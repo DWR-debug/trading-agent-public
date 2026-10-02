@@ -12,14 +12,16 @@ def test_decision_basis_is_current_and_separates_fact_from_next_action():
             encoding="utf-8"
         )
     )
-    assert "Was wissen wir?" in md
-    assert "Was wissen wir nicht?" in md
-    assert "Nächste Aktion" in md
-    assert payload["current_stage"] == "Q066_COMPLETED_DIAGNOSTIC_ONLY"
-    assert payload["next_action"].startswith("Prepare Q067 design-only preregistration")
-    assert payload["invariants"] == {
-        "paper_only": True,
-        "live_trading_enabled": False,
-        "orders_enabled": False,
-        "automatic_promotion": False,
-    }
+    assert "Übergeordnetes Ziel" in md
+    assert "Aktuelle Evidenzgrenze" in md
+    assert "Nächste Schritte" in md
+    assert "Unveränderliche Grenzen" in md
+    assert payload["schema_version"] == "2.1"
+    assert payload["project_goal"]
+    assert payload["next_action"]
+    assert payload["safety"]["paper_only"] is True
+    assert payload["safety"]["live_trading_enabled"] is False
+    assert payload["safety"]["orders_enabled"] is False
+    assert payload["safety"]["automatic_promotion"] is False
+    assert payload["scientific_status"]["performance_authorization_allowed"] is False
+    assert payload["scientific_status"]["promotion_allowed"] is False
