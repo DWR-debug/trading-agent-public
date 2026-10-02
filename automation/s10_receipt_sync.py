@@ -50,6 +50,7 @@ def build_status(
     provenance = _load(artifact_root / "provenance_receipt.json")
     acceptance = _load(artifact_root / "s10_acceptance_receipt.json")
     result = _load(artifact_root / "evidence_critic.json")
+    utility_task = _load(artifact_root / "utility_task.json")
 
     base = {
         "schema_version": 1,
@@ -91,7 +92,7 @@ def build_status(
         return base
 
     acceptance_status = acceptance.get("status") if acceptance else None
-    worker_status = result.get("status") if result else None
+    worker_status = result.get("status") if result else (utility_task or {}).get("status")
     contract_ok = acceptance.get("acceptance_contract_version") == CURRENT_ACCEPTANCE_CONTRACT_VERSION if acceptance else False
     eligible = (
         workflow_conclusion == "success"
@@ -109,6 +110,10 @@ def build_status(
         "model": (acceptance or {}).get("model") or (result or {}).get("model"),
         "runner_name": provenance.get("runner_name"),
         "runner_arch": provenance.get("runner_arch"),
+        "utility_task_status": (utility_task or {}).get("status"),
+        "utility_task_id": (utility_task or {}).get("task_id"),
+        "acceptance_preserved": False,
+        "acceptance_preserved_from_workflow_run_id": None,
     })
     return base
 
@@ -120,6 +125,31 @@ def merge_status(existing: dict[str, Any] | None, incoming: dict[str, Any]) -> d
     new_ts = str(incoming.get("workflow_run_updated_at", ""))
     if old_ts and new_ts and old_ts > new_ts:
         return existing
+
+    # A utility-only S10 run has no new acceptance receipt. It must not
+    # revoke a previously valid R3 capability receipt merely because the run
+    # performed a bounded QA task instead of re-running the 36-case acceptance.
+    explicit_acceptance = incoming.get("acceptance_contract_version") is not None
+    prior_acceptance_valid = (
+        existing.get("eligible") is True
+        and existing.get("receipt_status") == "S10_UTILITY_ACCEPTED"
+        and existing.get("acceptance_contract_version") == CURRENT_ACCEPTANCE_CONTRACT_VERSION
+    )
+    if not explicit_acceptance and prior_acceptance_valid:
+        preserved = dict(incoming)
+        for key in (
+            "status", "eligible", "receipt_status", "acceptance_receipt_sha256",
+            "acceptance_contract_version", "model", "runner_name", "runner_arch",
+        ):
+            preserved[key] = existing.get(key)
+        preserved["acceptance_preserved"] = True
+        preserved["acceptance_preserved_from_workflow_run_id"] = existing.get("workflow_run_id")
+        preserved["scientific_evidence"] = False
+        preserved["performance_authorization"] = False
+        preserved["candidate_selection"] = False
+        preserved["candidate_ranking"] = False
+        preserved["promotion"] = False
+        return preserved
     return incoming
 
 
