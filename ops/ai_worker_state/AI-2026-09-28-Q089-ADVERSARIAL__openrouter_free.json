@@ -25,11 +25,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 13.064,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 147.609,
+  "stdout": "# Q089 Adversarial Methodology Review\n\n## Executive Summary\nThe Q089 pipeline has **five critical failure modes** that could invalidate the fresh symbol-disjoint validation before performance. The design intent is sound but implementation gaps create provenance races, symbol-disjointness uncertainty, PIT leakage risk, snapshot non-reproducibility, and adjusted-close transformation opacity.\n\n---\n\n## Findings\n\n### F1: Symbol-Disjointness Not Mechanically Enforced\n**Location**: `automation/q089_coverage_pit.py:47-78`, `research/evidence/q089_coverage_result.json:38-80`\n**Issue**: The \"global prior-research filter\" is documented but not mechanically verified in the coverage receipt. The candidate pool (96 symbols) is hardcoded in source. The discovery logic (`run_discovery` from `fixed_window_candidate_discovery`) claims to exclude \"symbols already claimed by registered universes\" but:\n- No registry of \"registered universes\" appears in the coverage receipt\n- No evidence that Q069/Q086/Q085/Q070 symbols were actually excluded\n- `selection_used: false` in receipt suggests no active selection logic ran\n**Falsification test**: Cross-reference the 8 selected symbols against all prior universe artifacts (Q069, Q086, Q085, Q070 asset freezes). If any overlap exists, disjointness fails.\n\n### F2: Study Window / Data Availability Mismatch for Long-Lookback Candidates\n**Location**: `research/evidence/q089_input_freeze_result.json:15-22`, `docs/research_design/Q089-clean-fresh-q069-validation-2026-09-28.md:15`\n**Issue**: Study window declared as 2011-01-01 to 2025-09-24. Actual adjusted-close data starts **2011-10-24** (9 months later) because 5000 raw candles → 3500 common sessions ending 2025-09-24.\n- Candidate C9_LONG_TERM_REVERSAL_756 requires 756-day lookback\n- First valid signal date: ~2013-11-24 (756 trading days after 2011-10-24)\n- But design claims validation from 2011-01-01\n**Falsification test**: Compute first valid signal date for each candidate given actual data start. If any candidate's effective start > 2011-01-01 + lookback, the \"study window\" claim is false.\n\n### F3: PIT Mutation Test Coverage Too Sparse / Underspecified\n**Location**: `research/evidence/q089_pit_result.json:12-15`, `automation/q089_coverage_pit.py` (PIT logic not shown)\n**Issue**: 50 decision points checked across ~3500 sessions (1.4% coverage). No evidence of:\n- Temporal distribution of check points (clustered? early/late only?)\n- Whether checks cover all 5 candidates equally\n- Whether `candidate_targets_at` uses only data available at decision point\n- The retry logic `_q089_resilient_loader` (3 attempts) in coverage code could mask source non-determinism that PIT doesn't catch\n**Falsification test**: Demand PIT test log showing exact timestamps of 50 decision points, which candidates were evaluated, and confirmation that each evaluation used only `t-1` data.\n\n### F4: Cross-Runner Snapshot Fingerprint Fragility\n**Location**: `docs/research_design/Q089_CROSS_RUN_REPRO_AUDIT_2026-09-28.md`, `automation/q089_coverage_pit.py:80-95`\n**Issue**: Audit design correctly treats fingerprint divergence as \"source-snapshot variance not silently normalized.\" But:\n- `_q089_resilient_loader` retries 3x on Yahoo fetch failures — this **masks transient source differences** that would otherwise cause fingerprint mismatch\n- If cloud runner gets different adjusted-close data (Yahoo's split/dividend adjustments sometimes differ by region/CDN), retries may succeed with different bytes\n- Input freeze **requires** fingerprint match (`coverage_receipt.get(\"snapshot_fingerprint\") != manifest.get(\"snapshot_fingerprint\")` → RuntimeError)\n- So cross-runner divergence either: (a) causes input freeze failure (good), or (b) is masked by retries picking up same transient error (bad — silent divergence)\n**Falsification test**: Run coverage on two isolated runners (no shared cache) and compare `snapshot_fingerprint` and per-symbol CSV byte hashes. Any difference = source variance that must be documented, not retried away.\n\n### F5: Adjusted-Close Transformation Opacity\n**Location**: `automation/q089_input_freeze.py:12` (`from automation.q079_input_freeze import fetch_adjusted_close`), `research/evidence/q089_input_freeze_result.json:15-50`\n**Issue**: The adjusted-close pipeline is imported from Q079 but:\n- No fingerprint of the transformation code itself in the input freeze receipt\n- No verification that `fetch_adjusted_close` is deterministic, PIT-safe, and identical to Q069's transformation\n- Each symbol shows 3500 rows exactly — but coverage reports 3704 common sessions. **204 sessions dropped silently** (likely earliest sessions truncated to hit 3500 target)\n- Truncation logic not documented or fingerprinted\n**Falsification test**: \n1. Fingerprint the `fetch_adjusted_close` source code at freeze time\n2. Verify truncation rule: \"drop earliest N sessions to reach 3500\" vs \"drop latest\" vs \"resample\"\n3. Confirm Q069 used identical transformation (otherwise candidate signals not comparable)\n\n### F6: Governance Sequence Gap — Performance Preregistration Not Yet Bound\n**Location**: `docs/research_design/Q089-clean-fresh-q069-validation-2026-09-28.md:22-28`, `automation/q089_coverage_pit.py:12-15`\n**Issue**: Design requires \"final Q089 performance preregistration bound to those exact receipts\" (step 5) before \"one-shot authorization\" (step ",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1790934710-VkrHAiaqFAz1ULpJJabz",
+  "usage": {
+    "prompt_tokens": 7427,
+    "completion_tokens": 3200,
+    "total_tokens": 10627,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1569,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
