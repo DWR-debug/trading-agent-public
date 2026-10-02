@@ -16,6 +16,7 @@ HOST = "127.0.0.1"
 PORT = int(os.environ.get("S10_BRIDGE_PORT", "8765"))
 LLAMA_BASE = os.environ.get("S10_LLAMA_BASE_URL", "http://127.0.0.1:8080").rstrip("/")
 MODEL = os.environ.get("S10_MODEL", "S10-Qwen2.5-1.5B")
+S10_SEED = int(os.environ.get("S10_SEED", "42"))
 TIMEOUT = max(10, min(int(os.environ.get("S10_TIMEOUT_SECONDS", "90")), 180))
 
 def get_json(url: str) -> dict:
@@ -131,6 +132,7 @@ class Handler(BaseHTTPRequestHandler):
                     {"role": "user", "content": build_prompt(payload)},
                 ],
                 "temperature": 0,
+                "seed": S10_SEED,
                 "max_tokens": 48 if smoke_mode else 160,
             }
             upstream = post_json(f"{LLAMA_BASE}/v1/chat/completions", req)
