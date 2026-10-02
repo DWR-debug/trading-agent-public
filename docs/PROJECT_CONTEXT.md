@@ -1,5 +1,15 @@
 # Trading Agent — Dauerhafter Projektkontext
 
+## 0. Kanonischer Nordstern
+
+Dieses Ziel ist der übergeordnete Zweck des gesamten Trading-Agent-Projekts:
+
+> Wir bauen einen wissenschaftlich validierten, reproduzierbaren, autonomen und risikogesteuerten Trading Agent, der erst nach ausreichender Evidenz und formaler Autorisierung in Betracht kommen darf, um nachhaltigen realisierten P&L-Cashflow zu erzeugen, der durch variable Entnahmen die Familie unterstützen kann, während Kapitalerhalt und fortgesetzte Reinvestition gewährleistet bleiben.
+
+Dazu gehören ausdrücklich: realisierter statt bloß unrealisierter P&L als Grundlage einer späteren Entnahmelogik, variable Entnahmen statt einer vorab versprochenen festen Summe, Reinvestition und Risikoreserven vor Entnahmen sowie vollständige Auditierbarkeit durch Provenienz und unveränderliche Evidence-Ketten.
+
+Der kanonische maschinenlesbare Projektvertrag liegt unter research/governance/project_north_star.json. Er beschreibt die Projektabsicht; technische und wissenschaftliche Wahrheit bleiben an die bestehende Quellenhierarchie gebunden.
+
 Stand: 2026-09-24
 Repository: `DWR-debug/trading-agent-public`
 
