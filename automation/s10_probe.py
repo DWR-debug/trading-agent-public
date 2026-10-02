@@ -57,6 +57,16 @@ def http_post(url, payload, timeout=25):
 
 def main():
     result={"schema_version":1,"identity":"S10","runner_name":os.getenv("RUNNER_NAME"),"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False,"formal_evidence_allowed":False,"secrets_collected":False}
+    try:
+        from automation.s10_runtime import resolve
+        descriptor = resolve()
+    except Exception as exc:
+        descriptor = {"available": False, "status": "S10_RUNTIME_RESOLUTION_ERROR", "error": type(exc).__name__}
+    result["runtime_descriptor"] = {
+        k: descriptor.get(k)
+        for k in ("available", "status", "mode", "base_url", "model", "protocol_path", "path", "error")
+        if k in descriptor
+    }
     result["environment_keys"]=sorted(k for k in os.environ if k.upper().startswith("S10_") and not SECRET.search(k.upper()))
     result["secret_key_names_detected"]=sorted(k for k in os.environ if k.upper().startswith("S10_") and SECRET.search(k.upper()))
     result["cli"]=[]
@@ -106,6 +116,8 @@ def main():
     result["memory"]={}
     r=ps(r'''$o=Get-CimInstance Win32_OperatingSystem -EA SilentlyContinue; if($o){[ordered]@{total_virtual_mb=[math]::Round($o.TotalVirtualMemorySize/1024,1);free_virtual_mb=[math]::Round($o.FreeVirtualMemory/1024,1);total_physical_mb=[math]::Round($o.TotalVisibleMemorySize/1024,1);free_physical_mb=[math]::Round($o.FreePhysicalMemory/1024,1)}}|ConvertTo-Json -Compress''')
     data=parse_json(r.stdout if r else ""); result["memory"]=data if isinstance(data,dict) else {}
+    if result["runtime_descriptor"].get("available") is True and not result["local_interfaces"] and not any(result["processes"] for _ in (0,)):
+        result["status"]="S10_CONFIGURED_ENDPOINT_NOT_REACHED"
     if any(x.get("inference_smoke",{}).get("status")==200 and x.get("inference_smoke",{}).get("marker_present") for x in result["local_interfaces"]): result["status"]="S10_INFERENCE_READY"
     elif any(x.get("version_returncode")==0 for x in result["cli"]): result["status"]="S10_CLI_REACHABLE"
     elif result["local_interfaces"] or processes: result["status"]="S10_INTERFACE_DISCOVERED_NOT_FULLY_VERIFIED"
