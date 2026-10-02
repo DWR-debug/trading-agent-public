@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "status": "TEMPLATE_ONLY",
+  "device_id": "ANDROID-SAMSUNG-<MODEL>-<SHORTID>",
+  "display_name": "Samsung <MODEL>",
+  "manufacturer": "Samsung",
+  "model": "<MODEL>",
+  "android_version": "<ANDROID_VERSION>",
+  "termux_version": "<TERMUX_VERSION>",
+  "proot_distro_version": "<PROOT_VERSION>",
+  "runner_name": "ANDROID-SAMSUNG-<MODEL>-<SHORTID>",
+  "runner_labels": [
+    "android-phone",
+    "samsung",
+    "linux",
+    "ARM64"
+  ],
+  "runner_version": "2.337.0",
+  "runner_user": "androidrunner",
+  "architecture": "ARM64",
+  "termux": true,
+  "proot_distribution": "ubuntu",
+  "runner_root": "/opt/android-actions-runner",
+  "resource_preflight": {
+    "min_mem_available_mb": 1536,
+    "min_free_storage_mb": 4096,
+    "gc_heap_hard_limit_hex": "40000000",
+    "termux_wake_lock": true,
+    "thermal_check": "record_when_available",
+    "battery_saver_check": "record_when_available",
+    "doze_check": "record_when_available"
+  },
+  "local_inference": {
+    "separate_process": true,
+    "endpoint_mode": "loopback_only",
+    "bridge_host": "127.0.0.1",
+    "bridge_port": 8765,
+    "typed_interface_required": true
+  },
+  "network_boundary": "operator_configured_private_link_only",
+  "allowed_roles": [
+    "bounded_qa",
+    "adversarial_review",
+    "deterministic_reproduction",
+    "optional_local_inference"
+  ],
+  "utility_gate": "ANDROID_PHONE_UTILITY_ACCEPTED",
+  "runtime_states": [
+    "CONFIGURED_UNVERIFIED",
+    "LISTENING_FOR_JOBS_UNVERIFIED",
+    "SMOKE_VERIFIED",
+    "UTILITY_ACCEPTED",
+    "INACTIVE"
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false,
+    "scientific_evidence": false,
+    "performance_authorization": false,
+    "candidate_selection": false,
+    "candidate_ranking": false,
+    "promotion": false,
+    "live_execution": false
+  }
+}
