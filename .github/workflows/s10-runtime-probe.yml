@@ -1,0 +1,81 @@
+name: S10 Runtime Health
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  push:
+    branches: [master]
+    paths:
+      - "automation/s10_probe.py"
+      - "automation/s10_runtime.py"
+      - "automation/s10_worker.py"
+      - "tests/test_s10_probe.py"
+      - "tests/test_s10_runtime.py"
+      - ".github/workflows/s10-runtime-probe.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-s10-runtime-health
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        slot: [a, b]
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 6
+    steps:
+      - name: Download exact source snapshot
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "WORK=%RUNNER_TEMP%\s10-probe-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          set "ARCHIVE=%RUNNER_TEMP%\s10-probe-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%.tar.gz"
+          if exist "%WORK%" rmdir /s /q "%WORK%"
+          mkdir "%WORK%" || exit /b 1
+          curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 --connect-timeout 15 --max-time 120 -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%" || exit /b 1
+          tar.exe -xzf "%ARCHIVE%" -C "%WORK%" || exit /b 1
+          for /d %%D in ("%WORK%\trading-agent-public-*") do echo REPO_SRC=%%~fD>>"%GITHUB_ENV%"
+          endlocal
+
+      - name: Run S10 probe
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "OUT=%GITHUB_WORKSPACE%\s10-probe-${{ matrix.slot }}.json"
+          cd /d "%REPO_SRC%" || exit /b 1
+          where py >nul 2>&1
+          if not errorlevel 1 (
+            py -3 -m automation.s10_probe > "%OUT%"
+          ) else (
+            python -m automation.s10_probe > "%OUT%"
+          )
+          if errorlevel 1 exit /b 1
+          type "%OUT%"
+          endlocal
+
+      - name: Create provenance receipt
+        if: always()
+        shell: cmd
+        run: |
+          @echo off
+          powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "$p='%GITHUB_WORKSPACE%\s10-probe-${{ matrix.slot }}.json'; if(-not (Test-Path -LiteralPath $p)){exit 0}; $raw=Get-Content -LiteralPath $p -Raw | ConvertFrom-Json; $out=[ordered]@{schema_version=1; receipt_type='s10_runtime_probe'; source_commit=$env:GITHUB_SHA; runner_name=$env:RUNNER_NAME; matrix_slot='${{ matrix.slot }}'; generated_at_utc=[DateTimeOffset]::UtcNow.ToString('o'); s10_status=$raw.status; identity=$raw.identity; paper_only=$raw.paper_only; live_trading_enabled=$raw.live_trading_enabled; orders_enabled=$raw.orders_enabled; automatic_promotion=$raw.automatic_promotion; formal_evidence_allowed=$raw.formal_evidence_allowed; secrets_collected=$raw.secrets_collected; cli=$raw.cli; processes=$raw.processes; listeners=$raw.listeners; local_interfaces=$raw.local_interfaces; memory=$raw.memory}; $out | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath '%GITHUB_WORKSPACE%\s10-receipt-${{ matrix.slot }}.json' -Encoding utf8"
+
+      - name: Upload S10 receipt
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v6
+        with:
+          name: s10-runtime-${{ matrix.slot }}-${{ github.run_id }}
+          path: |
+            s10-probe-${{ matrix.slot }}.json
+            s10-receipt-${{ matrix.slot }}.json
+          if-no-files-found: warn
+          retention-days: 30
