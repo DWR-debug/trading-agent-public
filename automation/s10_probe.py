@@ -116,9 +116,8 @@ def main():
     result["memory"]={}
     r=ps(r'''$o=Get-CimInstance Win32_OperatingSystem -EA SilentlyContinue; if($o){[ordered]@{total_virtual_mb=[math]::Round($o.TotalVirtualMemorySize/1024,1);free_virtual_mb=[math]::Round($o.FreeVirtualMemory/1024,1);total_physical_mb=[math]::Round($o.TotalVisibleMemorySize/1024,1);free_physical_mb=[math]::Round($o.FreePhysicalMemory/1024,1)}}|ConvertTo-Json -Compress''')
     data=parse_json(r.stdout if r else ""); result["memory"]=data if isinstance(data,dict) else {}
-    if result["runtime_descriptor"].get("available") is True and not result["local_interfaces"] and not any(result["processes"] for _ in (0,)):
-        result["status"]="S10_CONFIGURED_ENDPOINT_NOT_REACHED"
     if any(x.get("inference_smoke",{}).get("status")==200 and x.get("inference_smoke",{}).get("marker_present") for x in result["local_interfaces"]): result["status"]="S10_INFERENCE_READY"
+    elif result["runtime_descriptor"].get("available") is True: result["status"]="S10_CONFIGURED_ENDPOINT_NOT_REACHED"
     elif any(x.get("version_returncode")==0 for x in result["cli"]): result["status"]="S10_CLI_REACHABLE"
     elif result["local_interfaces"] or processes: result["status"]="S10_INTERFACE_DISCOVERED_NOT_FULLY_VERIFIED"
     else: result["status"]="S10_NOT_DISCOVERED"
