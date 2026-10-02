@@ -1,5 +1,9 @@
 # Trading Agent — Chat-Einstiegspunkt
 
+## Kanonischer Projektzweck
+
+Zu Beginn jedes neuen trading-agent-Chats ist research/governance/project_north_star.json als dauerhafte Projektabsicht zu berücksichtigen. Es beantwortet die Frage, wofür das System gebaut wird; technische und wissenschaftliche Quellen beantworten getrennt, was aktuell wahr ist und welche Evidenz belastbar ist.
+
 ## Kanonischer aktueller Betriebsstatus
 
 Vor PROJECT_STATUS.md wird jetzt immer auch der dauerhafte Trading Agent OS-Vertrag gelesen:
