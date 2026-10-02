@@ -19,6 +19,10 @@ on:
       - "tests/test_q102_regime_negative_evidence.py"
       - "automation/q103_rccsm_state_routing_integrity.py"
       - "tests/test_q103_rccsm_state_routing_integrity.py"
+      - "ai_requests/AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT.json"
+      - "automation/research_os_scheduler.py"
+      - "automation/research_hypothesis_compiler.py"
+      - "automation/autonomous_control_plane.py"
   schedule:
     - cron: '0 */6 * * *'
   workflow_dispatch:
@@ -40,6 +44,7 @@ jobs:
           - AI-2026-09-30-Q100-FRONTIER-FEASIBILITY
           - AI-2026-09-30-Q101-NEGATIVE-EVIDENCE
           - AI-2026-09-30-Q102-REGIME-STATE-DESIGN
+          - AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT
     concurrency:
       group: trading-agent-ai-${{ matrix.provider }}-${{ matrix.task }}
       cancel-in-progress: false
@@ -69,6 +74,7 @@ jobs:
             AI-2026-09-30-Q100-FRONTIER-FEASIBILITY) echo 'path=ai_requests/AI-2026-09-30-Q100-FRONTIER-FEASIBILITY.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-09-30-Q101-NEGATIVE-EVIDENCE) echo 'path=ai_requests/AI-2026-09-30-Q101-NEGATIVE-EVIDENCE.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-09-30-Q102-REGIME-STATE-DESIGN) echo 'path=ai_requests/AI-2026-09-30-Q102-REGIME-STATE-DESIGN.json' >> "$GITHUB_OUTPUT" ;;
+            AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT) echo 'path=ai_requests/AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT.json' >> "$GITHUB_OUTPUT" ;;
             *) exit 1 ;;
           esac
 
