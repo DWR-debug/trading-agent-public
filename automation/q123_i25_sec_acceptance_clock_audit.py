@@ -23,7 +23,10 @@ UA = "trading-agent-public/Q123-I25-SEC-acceptance-clock-audit/1"
 TIMEOUT = 30
 
 ACCEPT_RE = re.compile(r"<ACCEPTANCE-DATETIME>\s*([0-9]{14})")
-CIK_RE = re.compile(r"CENTRAL INDEX KEY:\\s*([0-9]{10})")
+CIK_RE = re.compile(r"CENTRAL INDEX KEY:\s*([0-9]{10})", re.I)
+ACCESSION_RE = re.compile(r"ACCESSION NUMBER:\s*([0-9]{10}-[0-9]{2}-[0-9]{6})", re.I)
+HEADER_RE = re.compile(r"<SEC-HEADER>(.*?)</SEC-HEADER>", re.I | re.S)
+
 
 
 def get_bytes(url: str) -> bytes:
@@ -46,13 +49,28 @@ def parse_api_timestamp(value: str) -> tuple[str, str]:
     return digits, value
 
 
+def _header_block(text: str) -> str:
+    match = HEADER_RE.search(text)
+    return match.group(1) if match else text
+
+
 def parse_header_timestamp(text: str) -> str:
-    match = ACCEPT_RE.search(text)
+    match = ACCEPT_RE.search(_header_block(text))
     if not match:
         raise ValueError("ACCEPTANCE_DATETIME_HEADER_MISSING")
     digits = match.group(1)
     datetime.strptime(digits, "%Y%m%d%H%M%S")
     return digits
+
+
+def parse_header_identity(text: str) -> tuple[str | None, str | None]:
+    header = _header_block(text)
+    cik_match = CIK_RE.search(header)
+    accession_match = ACCESSION_RE.search(header)
+    return (
+        cik_match.group(1) if cik_match else None,
+        accession_match.group(1) if accession_match else None,
+    )
 
 
 def select_accessions(recent: dict) -> list[dict]:
@@ -112,7 +130,14 @@ def audit_symbol(symbol: str, cik: int) -> dict:
         index_digits = parse_header_timestamp(headers)
         api_digits = row["acceptance_digits"]
 
-        identity_ok = f"000{cik:07d}" in complete or f"{cik:010d}" in complete or f"{cik:010d}" in headers
+        complete_cik, complete_accession = parse_header_identity(complete)
+        index_cik, index_accession = parse_header_identity(headers)
+        identity_ok = (
+            complete_cik == f"{cik:010d}"
+            and index_cik == f"{cik:010d}"
+            and complete_accession == accession
+            and index_accession == accession
+        )
         timestamp_match = raw_digits == index_digits == api_digits
 
         audited.append({
@@ -123,7 +148,11 @@ def audit_symbol(symbol: str, cik: int) -> dict:
             "index_acceptance_digits": index_digits,
             "api_acceptance_digits": api_digits,
             "timestamp_match": timestamp_match,
-            "identity_marker_present": identity_ok,
+            "identity_ok": identity_ok,
+            "complete_cik": complete_cik,
+            "index_cik": index_cik,
+            "complete_accession": complete_accession,
+            "index_accession": index_accession,
             "complete_sha256": hashlib.sha256(complete.encode("utf-8")).hexdigest(),
             "index_headers_sha256": hashlib.sha256(headers.encode("utf-8")).hexdigest(),
         })
