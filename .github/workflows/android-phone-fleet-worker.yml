@@ -20,6 +20,15 @@ jobs:
       - name: Checkout phone registry
         uses: actions/checkout@v5
 
+      - name: Upload fleet planning receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: android-phone-fleet-plan-${{ github.run_id }}
+          path: research/runs/android_phone/${{ github.run_id }}/fleet_plan/
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Select enabled online Samsung phone slots
         id: plan
         shell: bash
@@ -27,22 +36,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          import json, os, subprocess
-          from pathlib import Path
-          registry = json.loads(Path("ops/android_phone_resources.json").read_text(encoding="utf-8"))
-          repository = os.environ["GITHUB_REPOSITORY"]
-          runners = json.loads(subprocess.check_output(["gh","api",f"/repos/{repository}/actions/runners?per_page=100"],text=True))
-          online=set()
-          for runner in runners.get("runners",[]):
-              if runner.get("status")=="online":
-                  online.update(str(x.get("name")) for x in runner.get("labels",[]) if isinstance(x,dict) and x.get("name"))
-          configured={str(d.get("runner_label")) for d in registry.get("devices",[]) if d.get("enabled")}
-          slots={"01":"samsung-phone-01","02":"samsung-phone-02","03":"samsung-phone-03"}
-          with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as out:
-              for key,label in slots.items(): out.write(f"phone_{key}={str(label in online and label in configured).lower()}\n")
-          print(json.dumps({"online_labels":sorted(online),"configured_labels":sorted(configured)},sort_keys=True))
-          PY
+          mkdir -p "research/runs/android_phone/$GITHUB_RUN_ID/fleet_plan"
+          python3 -m automation.android_phone_fleet_planner \
+            --registry ops/android_phone_resources.json \
+            --output-json "research/runs/android_phone/$GITHUB_RUN_ID/fleet_plan/plan.json" \
+            --github-output "$GITHUB_OUTPUT"
+          cat "research/runs/android_phone/$GITHUB_RUN_ID/fleet_plan/plan.json"
 
   phone_01:
     needs: plan

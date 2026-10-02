@@ -50,7 +50,8 @@ jobs:
               out = root / (re.sub(r"[^A-Za-z0-9_.-]", "_", name))
               out.mkdir(parents=True, exist_ok=True)
               with zip_path.open("wb") as f:
-                  subprocess.run(["gh","api","-H","Accept: application/vnd.github+json",f"/repos/{os.environ[\"REPO\"]}/actions/artifacts/{aid}/zip"], stdout=f, check=True)
+                  repository = os.environ["REPO"]
+                  subprocess.run(["gh","api","-H","Accept: application/vnd.github+json",f"/repos/{repository}/actions/artifacts/{aid}/zip"], stdout=f, check=True)
               try:
                   with zipfile.ZipFile(zip_path) as z:
                       z.extractall(out)
