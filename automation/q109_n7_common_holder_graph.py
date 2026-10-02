@@ -108,7 +108,7 @@ def main() -> int:
     result = {
         "schema_version": 1,
         "task_id": "Q-2026-10-02-109-N7-COMMON-HOLDER-GRAPH-INTEGRITY",
-        "status": "N7_GRAPH_INTEGRITY_AND_PIT_FEASIBILITY_COMPLETED",
+        "status": "N7_GRAPH_INTEGRITY_AND_DATE_LEVEL_PIT_FEASIBILITY_COMPLETED",
         "frozen_metric": "unweighted_one_mode_common_holder_degree",
         "frozen_universe": sorted(TARGETS),
         "as_of": AS_OF.isoformat(),
@@ -117,6 +117,8 @@ def main() -> int:
         "current_validation": current_validation,
         "graph": baseline,
         "future_mutation_invariance": True,
+        "pit_boundary_precision": "filing_date_day",
+        "exact_acceptance_datetime_required_for_filing_arrival_integration": True,
         "governance": {
             "performance": False,
             "holdout": False,
