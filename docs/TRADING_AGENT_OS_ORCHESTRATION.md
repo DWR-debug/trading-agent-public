@@ -72,3 +72,12 @@ Diese Invarianten gelten auch im Nachtbetrieb und für jeden Unteragenten.
 Die maschinenlesbare Version dieses Zustands ist ops/trading_agent_os_state.json.
 Der aktuelle operative Zustand bleibt research/evidence/current_operational_state.json.
 Der Chat-Einstiegspunkt bleibt docs/TRADING_AGENT_CHAT_ENTRYPOINT.md.
+
+
+## 2026-10-02 update: S10 + Samsung Android + frontier expansion
+
+S10 is currently operator-reported as LISTENING_FOR_JOBS. This means the runner is ready to receive a bounded job; it does not satisfy the S10 utility gate. The central OS must continue to require S10_UTILITY_ACCEPTED before routing S10 as a usable QA/adversarial resource.
+
+Samsung Android onboarding is now standardized through docs/ANDROID_SAMSUNG_RUNNER_TEMPLATE.md. The mandatory runtime contract includes a dedicated non-root user, no silent re-registration, ARM64 memory/storage preflight, configurable CoreCLR GC heap hard limit for the runner process, Termux wakelock where available, separate local inference, and receipt-gated routing.
+
+The autonomous research frontier now includes Q124-2026-10-02, with two design-only event-driven hypotheses derived from current 2026 literature/source inspection: Treasury auction pressure transmission (Q124:T26) and a public-data call/put volume imbalance proxy (Q124:O26). Both remain behind deterministic source/PIT feasibility; no ranking, performance selection or authorization is implied.
