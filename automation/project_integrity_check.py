@@ -175,6 +175,7 @@ ACTIVE_WORKFLOWS = {
     "evidence-critic-verdict.yml",
     "s10-runtime-probe.yml",
     "s10-phone-worker.yml",
+    "s10-receipt-sync.yml",
     "q104-i22-filing-arrival.yml",
 }
 
@@ -191,7 +192,9 @@ REQUIRED_FILES = (
     ROOT / "automation" / "research_os_evidence_bus.py",
     ROOT / "automation" / "research_os_scheduler.py",
     ROOT / "automation" / "research_os_source_probe.py",
+    ROOT / "automation" / "s10_receipt_sync.py",
     ROOT / "tests" / "test_research_os_evidence_bus.py",
+    ROOT / "tests" / "test_s10_receipt_sync.py",
 )
 
 
