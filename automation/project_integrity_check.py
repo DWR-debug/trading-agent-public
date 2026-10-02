@@ -193,6 +193,10 @@ REQUIRED_FILES = (
     ROOT / "automation" / "research_os_scheduler.py",
     ROOT / "automation" / "research_os_source_probe.py",
     ROOT / "automation" / "s10_receipt_sync.py",
+    ROOT / "docs" / "ANDROID_SAMSUNG_RUNNER_TEMPLATE.md",
+    ROOT / "research" / "devices" / "android_phone_profile_template.json",
+    ROOT / "scripts" / "android_samsung_runner_register_template.sh",
+    ROOT / "scripts" / "android_samsung_runner_start_template.sh",
     ROOT / "tests" / "test_research_os_evidence_bus.py",
     ROOT / "tests" / "test_s10_receipt_sync.py",
 )
