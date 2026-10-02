@@ -202,3 +202,8 @@ Die familiäre Dringlichkeit und das fehlende verfügbare Kapital werden als **M
 Die operative Leitregel lautet:
 
 **mehr Druck → mehr Prozessdisziplin, nicht mehr Beweisnachlass.**
+
+
+## Current continuity markers — 2026-10-02
+
+At the latest operator handoff, S10 is reported as LISTENING_FOR_JOBS. New chats must still verify the synchronized S10 receipt before routing it as an eligible resource. The Samsung integration template is maintained as a reusable non-root ARM64/Termux contract, and Q124 is now part of the hypothesis-quarantine frontier.
