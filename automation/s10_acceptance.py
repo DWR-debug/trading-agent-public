@@ -51,8 +51,12 @@ def evaluate(result: dict) -> tuple[str, dict[str, bool]]:
             for row in rows
         )
     )
+    order_cases = sensitivity.get("cases")
     order_checks_ok = (
         sensitivity.get("n") == 6
+        and isinstance(order_cases, list)
+        and len(order_cases) == 6
+        and all(isinstance(case, dict) and case.get("error") is None for case in order_cases)
         and sensitivity.get("choice_changes") == 0
         and isinstance(sensitivity.get("max_probability_delta"), (int, float))
     )
