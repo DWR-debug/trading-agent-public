@@ -171,6 +171,7 @@ ACTIVE_WORKFLOWS = {
     "workflow-lint.yml",
     "evidence-critic-lab.yml",
     "evidence-critic-verdict.yml",
+    "s10-runtime-probe.yml",
     "q104-i22-filing-arrival.yml",
 }
 
