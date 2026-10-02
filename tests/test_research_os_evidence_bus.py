@@ -30,3 +30,29 @@ def test_receipt_rejects_future_availability():
     x["available_at"]="2026-09-30T20:00:00Z"
     with pytest.raises(ValueError,match="available_at cannot"):
         validate_receipt(x,registry=r)
+
+
+def test_scheduler_exposes_s10_as_receipt_gated_resource(tmp_path, monkeypatch):
+    import automation.research_os_scheduler as scheduler
+    receipt = tmp_path / "s10_acceptance_receipt.json"
+    receipt.write_text(
+        json.dumps({"status": "S10_UTILITY_ACCEPTED"}) + "\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(scheduler, "S10_ACCEPTANCE_PATH", receipt)
+    p = scheduler.build_plan(run_number=9)
+    s10 = next(item for item in p["agent_resources"] if item["id"] == "S10")
+    assert s10["eligible"] is True
+    assert s10["receipt_status"] == "S10_UTILITY_ACCEPTED"
+    assert s10["formal_evidence_allowed"] is False
+    assert s10["performance_authorization"] is False
+
+
+def test_scheduler_keeps_s10_fail_closed_without_receipt(tmp_path, monkeypatch):
+    import automation.research_os_scheduler as scheduler
+    missing = tmp_path / "missing-s10-receipt.json"
+    monkeypatch.setattr(scheduler, "S10_ACCEPTANCE_PATH", missing)
+    p = scheduler.build_plan(run_number=10)
+    s10 = next(item for item in p["agent_resources"] if item["id"] == "S10")
+    assert s10["eligible"] is False
+    assert s10["receipt_status"] == "NOT_PRESENT"
