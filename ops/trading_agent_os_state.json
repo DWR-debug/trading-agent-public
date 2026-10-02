@@ -101,9 +101,10 @@
   },
   "current_research_focus": {
     "completed": "Q119 Treasury demand-shape design merged; I22 SEC filing-arrival session-window correction merged",
-    "active_next": "Q119 live Treasury source/PIT feasibility receipt; I22 deterministic SEC filing-arrival compilation; Q104 I19/I20 XBRL+13F gates",
+    "active_next": "Q119 live Treasury source/PIT feasibility receipt; I22 deterministic SEC filing-arrival compilation; Q104 I19/I20 XBRL+13F gates; Q124 Treasury-auction pressure and options-volume feasibility",
     "meta_research": "ECL runtime hardening and first valid model-metrics receipt",
-    "governance_engineering": "AGENT-026-R2 two-slot lease; draft PR 642"
+    "governance_engineering": "AGENT-026-R2 two-slot lease; draft PR 642",
+    "discovery_frontier": "Q124-2026-10-02: two orthogonal event-driven hypotheses added as design-only and routed through the deterministic quarantine compiler"
   },
   "resource_routing": {
     "self_hosted_windows": [
@@ -133,7 +134,14 @@
       "persistence_note": "S10 is the dedicated phone/Termux resource; exact runtime stack and interface must be discovered from the phone, not inferred from the Windows runners",
       "os_status_path": "ops/s10_runtime_status.json",
       "receipt_sync_workflow": ".github/workflows/s10-receipt-sync.yml",
-      "routing_contract": "Research OS may route S10 only when the synchronized receipt reports S10_UTILITY_ACCEPTED"
+      "routing_contract": "Research OS may route S10 only when the synchronized receipt reports S10_UTILITY_ACCEPTED",
+      "live_operator_observation": {
+        "state": "LISTENING_FOR_JOBS",
+        "observed_in_chat": true,
+        "scientific_acceptance": false,
+        "utility_receipt_required": "S10_UTILITY_ACCEPTED",
+        "note": "Operator reports the existing S10-TERMUX runner is currently listening for jobs; this is transport readiness only and does not supersede canonical receipt status."
+      }
     }
   },
   "chatless_night_policy": {
@@ -160,5 +168,19 @@
     "Do not trust stale runner/auth/queue claims from prior chats.",
     "Continue unfinished safe work without redundant approval.",
     "Use chat mainly for strategic decisions, scientific interpretation, ambiguity and important developments."
-  ]
+  ],
+  "samsung_android_integration": {
+    "template_contract": "docs/ANDROID_SAMSUNG_RUNNER_TEMPLATE.md",
+    "profile_template": "research/devices/android_phone_profile_template.json",
+    "runtime_hardening": [
+      "dedicated unprivileged runner user",
+      "no silent re-registration",
+      "ARM64 memory/storage preflight",
+      "configurable DOTNET_GCHeapHardLimit for runner only",
+      "Termux wakelock where available",
+      "separate local inference process",
+      "receipt-gated routing"
+    ],
+    "default_gc_heap_hard_limit_hex": "40000000"
+  }
 }
