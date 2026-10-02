@@ -34,6 +34,8 @@ concurrency:
 jobs:
   s10_phone:
     if: ${{ github.repository == 'DWR-debug/trading-agent-public' }}
+    env:
+      S10_SEED: "271828"
     runs-on: [self-hosted, s10-phone, linux, ARM64]
     timeout-minutes: 45
     steps:
@@ -147,6 +149,7 @@ jobs:
               "source_commit": os.environ.get("GITHUB_SHA"),
               "runner_name": os.environ.get("RUNNER_NAME"),
               "runner_arch": os.environ.get("RUNNER_ARCH"),
+              "s10_seed": os.environ.get("S10_SEED"),
               "task": os.environ.get("INPUT_TASK", "unknown"),
               "files": files,
               "paper_only": True,

@@ -285,6 +285,7 @@ def _write_descriptor(path: Path, model_id: str) -> None:
         "model": model_id,
         "protocol_path": "/v1/systemone",
         "timeout_seconds": 90,
+        "seed": S10_SEED,
         "source": "automation.s10_local_stack",
     }
     # Descriptor is intentionally rejected by s10_runtime if credential-bearing keys exist.

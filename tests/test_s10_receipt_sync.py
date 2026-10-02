@@ -80,3 +80,10 @@ def test_s10_workflows_are_master_canonical_only():
     sync = Path(".github/workflows/s10-receipt-sync.yml").read_text(encoding="utf-8")
     assert "    branches:\n      - master" in worker
     assert "github.event.workflow_run.head_branch == 'master'" in sync
+
+
+def test_s10_workflow_pins_seed_in_environment():
+    from pathlib import Path
+    worker = Path(".github/workflows/s10-phone-worker.yml").read_text(encoding="utf-8")
+    assert 'S10_SEED: "271828"' in worker
+    assert '"s10_seed": os.environ.get("S10_SEED")' in worker
