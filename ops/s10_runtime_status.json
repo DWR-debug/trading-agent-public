@@ -18,12 +18,15 @@
   "live_trading_enabled": false,
   "orders_enabled": false,
   "automatic_promotion": false,
-  "status": "S10_UTILITY_ACCEPTED",
-  "eligible": true,
-  "receipt_status": "S10_UTILITY_ACCEPTED",
+  "status": "S10_REVALIDATION_REQUIRED",
+  "eligible": false,
+  "receipt_status": "STALE_ACCEPTANCE_CONTRACT",
   "acceptance_receipt_sha256": "79c9612ef013978c45caac2803033b235b2e7bf50aa0e8d71d57b0d15ba9012d",
   "worker_status": "BENCHMARK_COMPLETED",
   "model": "qwen2.5-1.5b-instruct-q4_k_m.gguf",
   "runner_name": "S10-TERMUX",
-  "runner_arch": "ARM64"
+  "runner_arch": "ARM64",
+  "contract_required_version": "2026-10-02-R3",
+  "revalidation_required": true,
+  "revalidation_reason": "Prior accepted receipt was produced before the versioned R3 acceptance contract was activated; fresh current-contract S10 run required."
 }
