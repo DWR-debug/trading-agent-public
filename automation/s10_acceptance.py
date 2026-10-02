@@ -39,6 +39,7 @@ def evaluate(result: dict) -> tuple[str, dict[str, bool]]:
     environment = result.get("environment") or {}
     governance = result.get("governance") or {}
     runtime = result.get("s10_runtime") or {}
+    repeatability = result.get("s10_repeatability_preflight") or {}
 
     row_contract_ok = (
         isinstance(rows, list)
@@ -72,6 +73,12 @@ def evaluate(result: dict) -> tuple[str, dict[str, bool]]:
         "source_commit_present": isinstance(environment.get("source_commit"), str) and bool(environment.get("source_commit")),
         "governance_fail_closed": governance_ok,
         "not_scientific_evidence": result.get("worker_output_is_scientific_evidence") is False,
+        "repeatability_preflight": (
+            repeatability.get("status") == "PASS"
+            and repeatability.get("attempts") == 2
+            and repeatability.get("choice_equal") is True
+            and repeatability.get("probabilities_equal") is True
+        ),
         "deterministic_cpu_contract": (
             runtime.get("deterministic_cpu_mode") is True
             and runtime.get("seed") == 271828
