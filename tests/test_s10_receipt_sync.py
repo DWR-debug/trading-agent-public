@@ -144,3 +144,33 @@ def test_s10_receipt_sync_allows_explicit_acceptance_failure_to_revoke():
     merged = merge_status(existing, incoming)
     assert merged["eligible"] is False
     assert merged["receipt_status"] == "S10_UTILITY_NOT_ACCEPTED"
+
+
+def test_acceptance_does_not_claim_current_online_presence(tmp_path):
+    from automation.s10_receipt_sync import build_status
+
+    root = tmp_path / "artifact"
+    root.mkdir()
+    (root / "provenance_receipt.json").write_text(
+        '{"paper_only":true,"live_trading_enabled":false,"orders_enabled":false,"automatic_promotion":false,"scientific_evidence":false,"performance_authorization":false}',
+        encoding="utf-8",
+    )
+    (root / "s10_acceptance_receipt.json").write_text(
+        '{"status":"S10_UTILITY_ACCEPTED","acceptance_contract_version":"2026-10-02-R3"}',
+        encoding="utf-8",
+    )
+    (root / "evidence_critic.json").write_text('{"status":"S10_UTILITY_REVIEW_COMPLETED"}', encoding="utf-8")
+    status = build_status(
+        root,
+        workflow_run_id="1",
+        workflow_conclusion="success",
+        source_commit="abc",
+        artifact_id=None,
+        artifact_digest=None,
+        workflow_run_updated_at="2026-10-02T20:39:20Z",
+    )
+    assert status["eligible"] is True
+    assert status["receipt_eligible"] is True
+    assert status["current_online"] is None
+    assert status["current_online_verification"] == "NOT_PERFORMED"
+    assert status["eligibility_basis"] == "completed_workflow_acceptance_receipt"
