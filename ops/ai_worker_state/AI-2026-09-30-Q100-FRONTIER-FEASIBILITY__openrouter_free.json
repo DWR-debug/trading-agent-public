@@ -25,11 +25,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 12.632,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 42.185,
+  "stdout": "\n\n# Worker Handoff — Q100 Frontier Feasibility Synthesis Adversarial Review\n\n## 1. Scope and Missing Context\n\n**Critical gaps in provided context:**\n- The full design document is truncated mid-sentence at C30 (\"a deterministic b…\"). C30, C31, M4, M5 mechanisms are **underspecified** — no formulae, thresholds, or construction rules are visible.\n- Q097 public short-flow code and the active research registry were not supplied. Without these, cross-candidate orthogonality checks against Q078/O1 and other short-flow mechanisms cannot be completed.\n- The candidate inventory file (`research/frontier/candidate_inventory_2026_09_29.json`) is referenced by tests but not provided. The test asserts 48 candidates; the design doc names only 7 (C29, C30, C31, M4, M5, plus Q097/C32/C33 referenced in the request). The remaining 40+ candidates are invisible.\n- Q096 and Q098 implementations are truncated. The full `candidate_gate_matrix`, `filing_url`, `recent_filing_rows`, `submission_rows`, and `synthesize` functions are not visible.\n\n**Verdict:** The synthesis cannot be fully adjudicated. What follows attacks what is visible and identifies where the missing pieces create exploitable gaps.\n\n---\n\n## 2. Gate Logic Attacks\n\n### 2.1 Q100 `candidate_gate` — Single-Branch Fallacy\n\nThe if/elif chain on source keywords means **only one requirement is ever appended** per candidate, regardless of how many data channels the candidate uses. A candidate whose source string matches `\"sec item 1a\"` but which also depends on public news (e.g., C30 risk-text peers cross-referenced with news sentiment) would only get the SEC requirement, silently dropping the news requirement.\n\n**Deterministic check:** For each candidate, enumerate all data channels from the design doc (not just the `source` field) and verify the gate emits at least one requirement per channel. If `source` is a comma-delimited string, the gate must split it.\n\n**Falsification test:**",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1790900443-UlxVx5CmeKzVAp6yfUHz",
+  "usage": {
+    "prompt_tokens": 5520,
+    "completion_tokens": 3200,
+    "total_tokens": 8720,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2923,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
