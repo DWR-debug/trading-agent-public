@@ -8,11 +8,15 @@ on:
       - ".github/workflows/s10-phone-worker.yml"
       - "automation/s10_systemone_bridge.py"
       - "automation/s10_worker.py"
+      - "automation/s10_utility_task.py"
       - "automation/evidence_critic_benchmark.py"
       - "automation/s10_runtime.py"
       - "scripts/s10_local_ai_start.sh"
       - "automation/s10_local_stack.py"
       - "automation/s10_acceptance.py"
+      - "automation/s10_receipt_sync.py"
+      - "tests/test_s10_utility_task.py"
+      - "tests/test_s10_receipt_sync.py"
   schedule:
     - cron: "0 */6 * * *"
   workflow_dispatch:
@@ -20,9 +24,10 @@ on:
       task:
         description: "Bounded S10 task"
         required: false
-        default: "evidence_critic"
+        default: "utility_review"
         type: choice
         options:
+          - utility_review
           - evidence_critic
           - discovery_only
 
@@ -31,22 +36,26 @@ permissions:
 
 concurrency:
   group: trading-agent-s10-phone
-  # Never cancel a live benchmark because an unrelated master commit lands.\n  # The dedicated stale-run recovery workflow handles genuinely stale runs.\n  cancel-in-progress: false
+  cancel-in-progress: false
 
 jobs:
   s10_phone:
     if: ${{ github.repository == 'DWR-debug/trading-agent-public' }}
     env:
       S10_SEED: "271828"
+      S10_TASK: ${{ inputs.task || 'utility_review' }}
     runs-on: [self-hosted, s10-phone, linux, ARM64]
-    timeout-minutes: 45
+    timeout-minutes: 30
+
     steps:
       - name: Download exact master snapshot
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/s10-source"
-          curl -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2             -o "$RUNNER_TEMP/s10-source/repo.tar.gz"             "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/$GITHUB_SHA"
+          curl -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 \
+            -o "$RUNNER_TEMP/s10-source/repo.tar.gz" \
+            "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/$GITHUB_SHA"
           tar -xzf "$RUNNER_TEMP/s10-source/repo.tar.gz" -C "$RUNNER_TEMP/s10-source"
           echo "REPO_SRC=$(find "$RUNNER_TEMP/s10-source" -maxdepth 1 -type d -name 'trading-agent-public-*' -print -quit)" >> "$GITHUB_ENV"
 
@@ -56,26 +65,30 @@ jobs:
           set -euo pipefail
           cd "$REPO_SRC"
           mkdir -p "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID"
-          python3 scripts/s10_termux_discovery.py             > "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID/discovery.json"
+          python3 scripts/s10_termux_discovery.py > "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID/discovery.json"
           cat "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID/discovery.json"
 
       - name: Recover local S10 inference stack
+        if: env.S10_TASK != 'discovery_only'
         shell: bash
         env:
           PYTHONUNBUFFERED: "1"
         run: |
           set -euo pipefail
           cd "$REPO_SRC"
-          python3 -m automation.s10_local_stack             --repo-root "$REPO_SRC"             --descriptor "$HOME/.trading-agent/s10_interface.json"             --work-root "$HOME/.cache/trading-agent/s10/runs"
+          python3 -m automation.s10_local_stack \
+            --repo-root "$REPO_SRC" \
+            --descriptor "$HOME/.trading-agent/s10_interface.json" \
+            --work-root "$HOME/.cache/trading-agent/s10/runs"
 
       - name: Verify local S10 inference interface
+        if: env.S10_TASK != 'discovery_only'
         shell: bash
         run: |
           set -euo pipefail
           cd "$REPO_SRC"
           python3 - <<'PY'
           import json
-          from pathlib import Path
           from automation.s10_runtime import resolve
           d = resolve()
           print(json.dumps({k: d.get(k) for k in ("available","status","base_url","model","protocol_path","path")}, sort_keys=True))
@@ -83,22 +96,24 @@ jobs:
               raise SystemExit("S10 interface is not available after bounded recovery")
           PY
 
-      - name: Run isolated S10 Evidence-Critic benchmark
-        if: github.event_name == 'push' || github.event_name == 'schedule' || inputs.task == 'evidence_critic'
+      - name: Run bounded S10 utility review
+        if: env.S10_TASK == 'utility_review'
         shell: bash
         env:
-          S10_INTERFACE_PATH: "~/.trading-agent/s10_interface.json"
           PYTHONUNBUFFERED: "1"
         run: |
           set -euo pipefail
           cd "$REPO_SRC"
-          mkdir -p "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID"
+          OUT="$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID"
+          mkdir -p "$OUT"
           (
             set +e
             while true; do
               if ! curl -fsS --max-time 3 "http://127.0.0.1:8765/health" >/dev/null 2>&1; then
-                echo "S10 watchdog: endpoint unavailable; attempting bounded local-stack recovery."
-                python3 -m automation.s10_local_stack                   --repo-root "$REPO_SRC"                   --descriptor "$HOME/.trading-agent/s10_interface.json"                   --work-root "$HOME/.cache/trading-agent/s10/runs" || true
+                python3 -m automation.s10_local_stack \
+                  --repo-root "$REPO_SRC" \
+                  --descriptor "$HOME/.trading-agent/s10_interface.json" \
+                  --work-root "$HOME/.cache/trading-agent/s10/runs" || true
               fi
               sleep 5
             done
@@ -109,11 +124,46 @@ jobs:
             wait "$WATCHDOG_PID" 2>/dev/null || true
           }
           trap cleanup EXIT
-          python3 -m automation.s10_worker             --output "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID/evidence_critic.json"
-          cat "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID/evidence_critic.json"
+          python3 -m automation.s10_utility_task \
+            --repo-root "$REPO_SRC" \
+            --output "$OUT/utility_task.json"
+          cat "$OUT/utility_task.json"
 
-      - name: Build S10 utility acceptance receipt
-        if: always()
+      - name: Run isolated S10 Evidence-Critic benchmark
+        if: env.S10_TASK == 'evidence_critic'
+        shell: bash
+        env:
+          S10_INTERFACE_PATH: "~/.trading-agent/s10_interface.json"
+          PYTHONUNBUFFERED: "1"
+        run: |
+          set -euo pipefail
+          cd "$REPO_SRC"
+          OUT="$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID"
+          mkdir -p "$OUT"
+          (
+            set +e
+            while true; do
+              if ! curl -fsS --max-time 3 "http://127.0.0.1:8765/health" >/dev/null 2>&1; then
+                echo "S10 watchdog: endpoint unavailable; attempting bounded local-stack recovery."
+                python3 -m automation.s10_local_stack \
+                  --repo-root "$REPO_SRC" \
+                  --descriptor "$HOME/.trading-agent/s10_interface.json" \
+                  --work-root "$HOME/.cache/trading-agent/s10/runs" || true
+              fi
+              sleep 5
+            done
+          ) &
+          WATCHDOG_PID=$!
+          cleanup() {
+            kill "$WATCHDOG_PID" >/dev/null 2>&1 || true
+            wait "$WATCHDOG_PID" 2>/dev/null || true
+          }
+          trap cleanup EXIT
+          python3 -m automation.s10_worker --output "$OUT/evidence_critic.json"
+          cat "$OUT/evidence_critic.json"
+
+      - name: Build S10 utility acceptance receipt after explicit benchmark
+        if: env.S10_TASK == 'evidence_critic'
         shell: bash
         run: |
           set -euo pipefail
@@ -122,8 +172,8 @@ jobs:
           RECEIPT="$OUT/s10_acceptance_receipt.json"
           cd "$REPO_SRC"
           if [ ! -f "$RESULT" ]; then
-            echo "No Evidence-Critic result was produced; keeping receipt-gated S10 eligibility false."
-            exit 0
+            echo "No Evidence-Critic result was produced."
+            exit 1
           fi
           python3 -m automation.s10_acceptance --result "$RESULT" --output "$RECEIPT"
           cat "$RECEIPT"
@@ -134,6 +184,7 @@ jobs:
         run: |
           set -euo pipefail
           export OUT="$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID"
+          mkdir -p "$OUT"
           python3 - <<'PY'
           import hashlib, json, os
           from pathlib import Path
@@ -153,7 +204,7 @@ jobs:
               "runner_name": os.environ.get("RUNNER_NAME"),
               "runner_arch": os.environ.get("RUNNER_ARCH"),
               "s10_seed": os.environ.get("S10_SEED"),
-              "task": os.environ.get("INPUT_TASK", "unknown"),
+              "task": os.environ.get("S10_TASK"),
               "files": files,
               "paper_only": True,
               "live_trading_enabled": False,
@@ -162,6 +213,9 @@ jobs:
               "formal_evidence_allowed": False,
               "scientific_evidence": False,
               "performance_authorization": False,
+              "candidate_selection": False,
+              "candidate_ranking": False,
+              "promotion": False,
           }
           (root / "provenance_receipt.json").write_text(
               json.dumps(receipt, ensure_ascii=False, indent=2) + "\n",

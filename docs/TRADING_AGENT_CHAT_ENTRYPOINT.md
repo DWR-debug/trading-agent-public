@@ -209,4 +209,4 @@ Die operative Leitregel lautet:
 
 ## Samsung-/Android-Ressourcen
 
-S10 ist die erste live-verifizierte Telefoninstanz. Für weitere Samsung-/Android-Geräte wird ausschließlich die generische Vorlage `docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md` mit `scripts/samsung_termux_phone_runner_template.sh` verwendet. Das verhindert einen neuen gerätespezifischen Integrationszyklus und hält Runner-, Runtime-, Receipt- und Governance-Verträge identisch.
+S10 ist die erste live-verifizierte Telefoninstanz. Im Regelbetrieb wird S10 receipt-gated für kleine, unabhängige Utility-/QA-Aufgaben verwendet; der vollständige 36-Fälle-Acceptance-Lauf dient nur Onboarding/Revalidierung. Für weitere Samsung-/Android-Geräte wird ausschließlich die generische Vorlage `docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md` mit `scripts/samsung_termux_phone_runner_template.sh` verwendet. Onlinee neue Geräte durchlaufen einmalig Acceptance, bereits akzeptierte Geräte erhalten Utility-Aufgaben. Zusätzliche Geräte werden einzeln als Kapazitätstest aktiviert und nur bei messbarem Zusatznutzen weiterbetrieben. Das hält Runner-, Runtime-, Receipt- und Governance-Verträge identisch.

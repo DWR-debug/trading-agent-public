@@ -14,6 +14,8 @@ SLOTS = {
     "02": "samsung-phone-02",
     "03": "samsung-phone-03",
 }
+RUNTIME_STATUS_DIR = Path("ops/android_phone_runtime_status")
+ACCEPTED_STATUS = "ANDROID_PHONE_UTILITY_ACCEPTED"
 
 
 def load_registry(path: Path) -> set[str]:
@@ -46,13 +48,35 @@ def discover_online_labels(repository: str) -> tuple[set[str], str]:
     return labels, "RUNNER_DISCOVERY_OK"
 
 
+def load_acceptance_status(registry_path: Path, slot: str) -> tuple[str, str]:
+    root = registry_path.resolve().parents[1]
+    resource_id = f"SAMSUNG-PHONE-{slot}"
+    path = root / RUNTIME_STATUS_DIR / f"{resource_id}.json"
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return "NOT_ACCEPTED", "NO_RUNTIME_RECEIPT"
+    status = str(payload.get("status", "NOT_ACCEPTED"))
+    if status == ACCEPTED_STATUS and payload.get("eligible") is True:
+        return "ACCEPTED", "ACCEPTED_RECEIPT"
+    return "NOT_ACCEPTED", status or "NOT_ACCEPTED"
+
+
 def build_plan(registry_path: Path, repository: str) -> dict[str, Any]:
     configured = load_registry(registry_path)
     online, status = discover_online_labels(repository)
-    routable = {
-        key: status == "RUNNER_DISCOVERY_OK" and label in configured and label in online
-        for key, label in SLOTS.items()
-    }
+    modes: dict[str, str] = {}
+    receipt_states: dict[str, str] = {}
+    for key, label in SLOTS.items():
+        accepted_state, receipt_state = load_acceptance_status(registry_path, key)
+        receipt_states[key] = receipt_state
+        if status != "RUNNER_DISCOVERY_OK" or label not in configured or label not in online:
+            modes[key] = "none"
+        elif accepted_state == "ACCEPTED":
+            modes[key] = "utility"
+        else:
+            modes[key] = "acceptance"
+    routable = {key: mode != "none" for key, mode in modes.items()}
     return {
         "schema_version": 1,
         "status": status,
@@ -60,6 +84,9 @@ def build_plan(registry_path: Path, repository: str) -> dict[str, Any]:
         "configured_labels": sorted(configured),
         "online_labels": sorted(online),
         "routable_slots": routable,
+        "slot_modes": modes,
+        "receipt_states": receipt_states,
+        "routing_policy": "online + exact label + accepted receipt => utility; otherwise acceptance; never scientific evidence",
         "fail_closed": status != "RUNNER_DISCOVERY_OK",
         "scientific_evidence": False,
         "performance_authorization": False,
@@ -93,6 +120,7 @@ def main() -> int:
     with Path(args.github_output).open("a", encoding="utf-8") as handle:
         for key, value in plan["routable_slots"].items():
             handle.write(f"phone_{key}={str(value).lower()}\n")
+            handle.write(f"phone_{key}_mode={plan['slot_modes'][key]}\n")
         handle.write(f"discovery_status={plan['status']}\n")
     print(json.dumps(plan, ensure_ascii=False, sort_keys=True))
     return 0

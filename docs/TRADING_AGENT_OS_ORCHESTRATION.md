@@ -24,8 +24,9 @@ AI- und Coding-Agenten dürfen Forschung technisch beschleunigen, aber weder Hol
 | Free AI Worker Fabric | alle 6 h | adversariales Design/Review | Provider fail-closed überspringen |
 | Bounded Agent Queue | alle 2 h | begrenztes Engineering | Queue bleibt liegen |
 | Self-hosted Capacity Probe | alle 6 h | Runner-/Kapazitätsprüfung | keiner |
-| S10 Phone Research Worker | alle 6 h + relevante Master-Pushes | bounded mobile QA / Evidence-Critic | receipt-gated, fail-closed |
-| Android Phone Fleet Worker | alle 6 h + manuell | weitere Samsung/Android-Ressourcen, online-label-gefiltert | receipt-gated, fail-closed |
+| S10 Phone Research Worker | alle 6 h + relevante Master-Pushes | bounded mobile Utility-Review; ECL nur gezielt | receipt-gated, fail-closed |
+| S10 Throughput Probe | täglich + manuell | isolierte lokale Kapazitätsmessung | kein Scientific Evidence Gate |
+| Android Phone Fleet Worker | alle 6 h + manuell | Acceptance neuer Geräte; Utility-Review akzeptierter Geräte | receipt-gated, fail-closed |
 | Evidence-Critic Lab | event-/dispatch-basiert | 36-Fälle Evidence-Critic Benchmark | Ressourcen-/Runtime-Gate |
 
 Diese Taktung deckt den Nachtbetrieb bereits ab. Eine zusätzliche redundante Nachtpipeline wird deshalb nicht erzeugt.
@@ -48,7 +49,7 @@ Es bleibt bei keiner Performance-Freigabe, solange die vollständige Coverage/PI
 
 ## 5. Ressourcenrouting
 
-Die beiden verifizierten Windows-Runner LHT-N133732 und LHT-N133732-2 arbeiten unter dem Label trading-agent-research. Ihr Live-Status ist flüchtig und wird deshalb in jedem neuen trading agent-Chat neu geprüft.
+Die beiden Windows-Runner LHT-N133732 und LHT-N133732-2 arbeiten unter dem Label trading-agent-research; ihr Live-Status ist flüchtig und wird bei jedem Start/Materialisierungspunkt neu geprüft. Ihr Live-Status ist flüchtig und wird deshalb in jedem neuen trading agent-Chat neu geprüft.
 
 S10 ist eine separat verifizierte ARM64/Termux-Ressource. Der aktuelle operative Nachweis ist \`ops/s10_runtime_status.json\`; die zuletzt erfolgreiche Acceptance lief in Run \`37030390371\` und meldet \`S10_UTILITY_ACCEPTED\`. Auch dieser Status ist flüchtig für die Routingentscheidung und wird bei neuen Chats bzw. nach neuen Runs neu geprüft.
 

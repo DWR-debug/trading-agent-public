@@ -57,46 +57,28 @@ jobs:
                       z.extractall(out)
               except zipfile.BadZipFile:
                   continue
-              receipt = next(out.rglob("android_phone_acceptance_receipt.json"), None)
+              from automation.android_phone_receipt_sync import build_status
               m = re.match(r"android-phone-[0-9]+-(.+)$", name)
               resource_id = m.group(1) if m else name
-              if receipt and receipt.is_file():
-                  data = json.loads(receipt.read_text(encoding="utf-8"))
-                  status = str(data.get("status","ANDROID_PHONE_UTILITY_NOT_ACCEPTED"))
-                  eligible = status == "ANDROID_PHONE_UTILITY_ACCEPTED"
-                  runner_name = data.get("runner_name")
-                  model = data.get("model")
-                  endpoint = data.get("endpoint")
-              else:
-                  status = "ANDROID_PHONE_UTILITY_NOT_ACCEPTED"
-                  eligible = False
-                  runner_name = None
-                  model = None
-                  endpoint = None
-              statuses.append({
-                  "schema_version":1,
-                  "status_type":"android_phone_operational_status",
-                  "resource_id":resource_id,
-                  "workflow_name":"Android Phone Fleet Worker",
-                  "workflow_run_id":os.environ["RUN_ID"],
-                  "workflow_conclusion":os.environ["RUN_CONCLUSION"],
-                  "source_commit":os.environ["SOURCE_COMMIT"],
-                  "workflow_run_updated_at":os.environ["RUN_UPDATED_AT"],
-                  "status":status,
-                  "eligible":eligible,
-                  "runner_name":runner_name,
-                  "model":model,
-                  "endpoint":endpoint,
-                  "scientific_evidence":False,
-                  "performance_authorization":False,
-                  "candidate_selection":False,
-                  "candidate_ranking":False,
-                  "promotion":False,
-                  "paper_only":True,
-                  "live_trading_enabled":False,
-                  "orders_enabled":False,
-                  "automatic_promotion":False
-              })
+              target = Path("ops/android_phone_runtime_status") / (resource_id.replace("/","_")+".json")
+              existing = None
+              if target.is_file():
+                  try:
+                      existing = json.loads(target.read_text(encoding="utf-8"))
+                  except (OSError, json.JSONDecodeError):
+                      existing = None
+              status = build_status(
+                  out,
+                  resource_id=resource_id,
+                  workflow_run_id=os.environ["RUN_ID"],
+                  workflow_conclusion=os.environ["RUN_CONCLUSION"],
+                  source_commit=os.environ["SOURCE_COMMIT"],
+                  workflow_run_updated_at=os.environ["RUN_UPDATED_AT"],
+                  existing=existing,
+              )
+              statuses.append(status)
+              print(target)
+
           target = Path("ops/android_phone_runtime_status")
           target.mkdir(parents=True, exist_ok=True)
           for status in sorted(statuses, key=lambda x:x["resource_id"]):
