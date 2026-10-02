@@ -25,11 +25,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 8.842,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter returned tool-call syntax instead of a final worker handoff.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 53.337,
+  "stdout": "\n\n# Q100 Frontier Feasibility Synthesis — Adversarial Review\n\n## 1. C29 Classification Is Opaque (Source-String Matching Gap)\n\n**Attack:** C29's source is `\"daily close\"`. In `candidate_gate()`, the if/elif chain has explicit branches for `\"sec item 1a\"`, `\"public news\"`, `\"scheduled benchmark\"`, `\"sec form 4\"`, `\"sec 13f\"`, `\"fails-to-deliver\"`, and `\"short interest\"`. C29 matches **none** of these and falls through to the default `reason = \"PIT_OR_HISTORICAL_PROVENANCE_PENDING\"`. Yet the test asserts `ready_for_next_gate_count == 1`, implying C29 is counted as ready. The code path that promotes C29 from BLOCKED to ready is **not visible** in the provided snippet. This is a transparency failure: the readiness determination for the first frontier candidate is opaque.\n\n**Minimal falsification test:** Add a candidate with `source = \"daily close\"` and `existing_state = \"DESIGN_ONLY_UNRANKED\"` (not MACHINE_FEASIBILITY_IMPLEMENTED). If `ready_for_next_gate_count` increments, the gate is matching on `existing_state` alone without source validation — a false-positive classification.\n\n## 2. Publication-Time Ambiguity for C30 (Risk-Text Peer Propagation)\n\n**Attack:** C30 uses SEC 10-K Item 1A risk-factor text. The feasibility code treats this as a static feature anchored to the filing date. But the economic information content depends on *when the text was first known*. A 10-K filed on 2026-02-28 contains information that was knowable from at least the prior fiscal year. The code has no mechanism to bound the lookback window or to distinguish between \"text disclosed today\" and \"text knowable yesterday.\" This is a PIT violation waiting to happen.\n\n**Deterministic check:** For each risk-text observation, compute the maximum lookback to the prior 10-K filing date. Flag any observation where the feature window extends beyond the prior filing's publication date. This is a pure provenance check — no performance involved.\n\n## 3. Amendment / Revision Handling Is Absent\n\n**Attack:** Q098 tracks amendment forms (`10-K/A`, `13F-HR/A`, `SC 13D/A`). Q100's gate logic has **no amendment-handling rule**. If a 10-K is later amended (which happens — risk factors get revised), which version feeds C30? The original or the amended? The code silently picks one (likely the most recent) without documenting the choice. This is a provenance gap that could silently swap the input data post-hoc.\n\n**Deterministic check:** For each candidate using SEC filings, enumerate all amendments in the historical archive and assert that the gate logic explicitly selects either (a) the original filing only, or (b) the latest amendment, with the choice frozen in writing. Any candidate where amendments exist but no rule is defined is BLOCKED.\n\n## 4. Entity-Mapping Verification Is Not Performed\n\n**Attack:** Q096 uses sample CIKs (`0000789019` for MSFT, `0000320193` for AAPL) but the gate logic never verifies that these CIKs correspond to the intended trading entities at the relevant historical dates. CIKs can be reused after corporate dissolution; entities can restructure and change ticker. The feasibility code treats CIK→ticker mapping as static when it is not.\n\n**Deterministic check:** For each sample CIK used in probes, verify against a static historical directory (e.g., a frozen snapshot of the SEC CIK master file from a specific date) that the CIK→entity mapping was valid at the study date. Any mismatch is a BLOCKED finding.\n\n## 5. FTD / Short-Interest Regime-Shift Blind Spot\n\n**Attack:** The gate logic for `\"fails-to-deliver\"` and `\"short interest\"` sources types appends historical archive gates but does **not** account for regulatory regime changes. Reg SHO (2005), the 2008 emergency orders, the 2021 GameStop-era rule changes, and FINRA short-interest reporting frequency changes all alter the meaning and availability of these data series. A candidate that uses FTD data spanning 2004–2026 is mixing regimes without acknowledging it.\n\n**Deterministic check:** For each FTD/short-interest candidate, enumerate the regulatory regime boundaries within the proposed historical coverage window. The gate matrix must include a `REGIME_BOUNDARY_MAP` field listing each boundary date and the rule change that occurred. Absent this, the archive gate is incomplete.\n\n## 6. Circular Readiness Dependency\n\n**Attack:** The `candidate_gate` function appends `\"FRESH_SYMBOL_DISJOINT_INPUT_FREEZE\"` to `required` when `existing_state == \"MACHINE_FEASIBILITY_IMPLEMENTED\"` and `pit_state == \"MACHINE_FEASIBILITY",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1790934056-9rfFAr9PYFfiSohbTbN0",
+  "usage": {
+    "prompt_tokens": 5520,
+    "completion_tokens": 3200,
+    "total_tokens": 8720,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2279,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
