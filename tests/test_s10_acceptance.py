@@ -55,3 +55,13 @@ def test_s10_acceptance_rejects_non_loopback_endpoint():
     status, checks = evaluate(result)
     assert status == "S10_UTILITY_NOT_ACCEPTED"
     assert checks["loopback_endpoint"] is False
+
+
+def test_s10_acceptance_rejects_option_order_errors():
+    result = good_result()
+    result["option_order_sensitivity"]["cases"] = [
+        {"id": "X", "error": "TimeoutError"},
+    ] * 6
+    status, checks = evaluate(result)
+    assert status == "S10_UTILITY_NOT_ACCEPTED"
+    assert checks["option_order_checks_complete"] is False
