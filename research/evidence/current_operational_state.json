@@ -662,7 +662,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T07:25:25.662756+00:00",
+  "generated_at_utc": "2026-10-02T07:31:42.897230+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -850,6 +850,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "fix: use llama.cpp-compatible JSON object response mode (#810)",
+        "sha": "d0d9bca0ad2ab41cf9f4af111785667204abe137",
+        "timestamp": "2026-10-02T09:31:29+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "7dcb0ea7c32e51f019963da40594f1829c729479",
+        "timestamp": "2026-10-02T07:25:25Z"
+      },
+      {
         "message": "chore: make S10 local AI startup self-checking (#809)",
         "sha": "ad39706bd68ac1f3bcb595601e840c147186bc8d",
         "timestamp": "2026-10-02T09:25:11+02:00"
@@ -878,16 +888,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "f7fff7ebd5a080b610dcdf0bc6fc5d2ee52382c3",
         "timestamp": "2026-10-02T06:53:09Z"
-      },
-      {
-        "message": "chore: trigger S10 lane on local AI integration changes (#808)",
-        "sha": "a5db8a466dc684f4c3d7ecae0d4aa8f1f99affca",
-        "timestamp": "2026-10-02T08:52:58+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e654a0f9c66c54cc99aa16bc3f736f7a3b55f66f",
-        "timestamp": "2026-10-02T06:52:45Z"
       }
     ]
   },
@@ -957,12 +957,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ad39706bd68ac1f3bcb595601e840c147186bc8d",
+  "source_master_sha": "d0d9bca0ad2ab41cf9f4af111785667204abe137",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36978456562"
+    "run_id": "36979016003"
   }
 }
