@@ -189,3 +189,20 @@ def test_unsafe_task_fails_closed():
 def test_master_sha_is_required_even_when_plan_has_no_assignments():
     with pytest.raises(AgentDispatchError, match="explicitly supplied"):
         validate_assignment_contracts({}, [], "")
+
+
+def test_queue_snapshot_rejects_embedded_performance_result_fields(tmp_path):
+    lane = tmp_path / "lane0"
+    lane.mkdir()
+    payload = {
+        "issue_number": 5,
+        "task_id": "AGENT-5",
+        "metadata": {"holdout_return": 0.42},
+    }
+    (lane / "AGENT-5.request").write_text(json.dumps(payload), encoding="utf-8")
+    with pytest.raises(AgentDispatchError, match="Forbidden research-result field"):
+        validate_request_snapshot(
+            [request("0", "AGENT-5")],
+            lanes=("0", "1"),
+            request_root=tmp_path,
+        )
