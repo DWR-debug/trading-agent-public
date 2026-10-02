@@ -11,6 +11,25 @@ import json
 import re
 from pathlib import Path
 
+FORBIDDEN_REQUEST_KEYS = {
+    "performance", "performance_rank", "candidate_rank", "holdout_return",
+    "holdout_drawdown", "profit_factor", "drawdown", "pnl", "return",
+    "returns", "winner", "selected", "optimized_weights",
+}
+
+
+def _reject_forbidden_request_fields(value: object, *, path: str) -> None:
+    if isinstance(value, dict):
+        for key, child in value.items():
+            normalized = str(key).strip().lower()
+            if normalized in FORBIDDEN_REQUEST_KEYS:
+                raise AgentDispatchError(f"Forbidden research-result field in queue request: {path}.{key}")
+            _reject_forbidden_request_fields(child, path=f"{path}.{key}")
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            _reject_forbidden_request_fields(child, path=f"{path}[{index}]")
+
+
 from automation.agent_dispatch import (
     AgentDispatchError,
     LEASE_SLOT_COUNT,
@@ -48,6 +67,7 @@ def validate_request_snapshot(
                 raise AgentDispatchError(f"Cannot read queue request: {path}.") from exc
             if not isinstance(payload, dict) or payload.get("task_id") != task_id:
                 raise AgentDispatchError(f"Invalid task id in queue request: {path}.")
+            _reject_forbidden_request_fields(payload, path=str(path))
             relative_path = Path("agent_requests") / path.relative_to(request_root)
             expected.add((lane, task_id, relative_path.as_posix()))
 
