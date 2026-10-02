@@ -32,6 +32,11 @@ Geraetemodell, IMEI, Seriennummern, private IPs, Registrierungstokens, API-Keys 
 
 Die ersten drei vorbereiteten Fleet-Slots stehen in ops/android_phone_resources.json. Sie sind fuer drei physisch getrennte Telefone gedacht und nutzen die eindeutigen Labels samsung-phone-01, samsung-phone-02 und samsung-phone-03.
 
+## Referenzvertrag
+
+
+Die S10-Referenzinstanz bleibt technisch reproduzierbar unter den bekannten lokalen Loopback-Endpunkten `127.0.0.1:8765` (Bridge) und `127.0.0.1:8080` (lokaler Inferenzdienst). Die gemeinsame Acceptance-Spezifikation ist Version `2026-10-02-R3`.
+
 ## Technische Acceptance
 
 Ein neues Telefon wird erst als nutzbare Ressource akzeptiert, wenn live nachgewiesen ist:

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "state_type": "TRADING_AGENT_OS_ORCHESTRATION_SNAPSHOT",
   "effective_date_utc": "2026-10-02",
-  "source_master_sha": "72137c0fa3126fdf9273beee31ef1a33da424178",
+  "source_master_sha": "65f90ae3fd45794eecde7d000587bc82758cef7a",
   "purpose": "Persistent orchestration contract for chat-independent Trading Agent research and engineering.",
   "chat_trigger": "trading agent",
   "canonical_chat_entrypoint": "docs/TRADING_AGENT_CHAT_ENTRYPOINT.md",
@@ -101,9 +101,10 @@
   },
   "current_research_focus": {
     "completed": "Q119 Treasury demand-shape design merged; I22 SEC filing-arrival session-window correction merged",
-    "active_next": "Q119 live Treasury source/PIT feasibility receipt; I22 deterministic SEC filing-arrival compilation; Q104 I19/I20 XBRL+13F gates",
+    "active_next": "Q125 SEC MIDAS publication-clock rerun; Q119 Treasury source/PIT feasibility; I22 deterministic SEC filing-arrival compilation; Q104 I19/I20 XBRL+13F gates",
     "meta_research": "ECL runtime hardening and first valid model-metrics receipt",
-    "governance_engineering": "AGENT-026-R2 two-slot lease; draft PR 642"
+    "governance_engineering": "AGENT-026-R2 two-slot lease; draft PR 642",
+    "discovery_frontier": "Q124/Q126/Q127/Q128/Q129/Q130 discovery-only source/PIT feasibility; no performance authorization"
   },
   "resource_routing": {
     "self_hosted_windows": [
@@ -134,11 +135,39 @@
       "os_status_path": "ops/s10_runtime_status.json",
       "receipt_sync_workflow": ".github/workflows/s10-receipt-sync.yml",
       "routing_contract": "Research OS may route S10 only when the synchronized receipt reports S10_UTILITY_ACCEPTED",
-      "acceptance_run_id": "37023821478",
+      "acceptance_run_id": "37030390371",
       "acceptance_contract_version": "2026-10-02-R3",
       "acceptance_status_path": "ops/s10_runtime_status.json",
       "template_path": "docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md",
-      "template_runner": "scripts/samsung_termux_phone_runner_template.sh"
+      "template_runner": "scripts/samsung_termux_phone_runner_template.sh",
+      "latest_verified_run_id": "37030390371"
+    },
+    "android_phone_fleet": {
+      "status": "TEMPLATE_READY",
+      "registry_path": "ops/android_phone_resources.json",
+      "template_path": "docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md",
+      "fleet_doc": "docs/SAMSUNG_ANDROID_PHONE_FLEET.md",
+      "worker_workflow": ".github/workflows/android-phone-fleet-worker.yml",
+      "receipt_sync_workflow": ".github/workflows/android-phone-fleet-receipt-sync.yml",
+      "acceptance_module": "automation/android_phone_acceptance.py",
+      "slots": [
+        "SAMSUNG-PHONE-01",
+        "SAMSUNG-PHONE-02",
+        "SAMSUNG-PHONE-03"
+      ],
+      "runner_labels": [
+        "samsung-phone-01",
+        "samsung-phone-02",
+        "samsung-phone-03"
+      ],
+      "activation_rule": "Only an online uniquely-labelled runner is scheduled; each device must pass ANDROID_PHONE_UTILITY_ACCEPTED before bounded routing.",
+      "scientific_role": "bounded support only; never scientific evidence, authorization, selection, ranking, promotion or live execution",
+      "safety": {
+        "paper_only": true,
+        "live_trading_enabled": false,
+        "orders_enabled": false,
+        "automatic_promotion": false
+      }
     }
   },
   "chatless_night_policy": {
@@ -153,6 +182,14 @@
       "enabled": true,
       "mode": "receipt_gated_opportunistic",
       "trigger": "when synchronized receipt reports S10_UTILITY_ACCEPTED and a bounded useful task exists",
+      "formal_evidence_allowed": false,
+      "performance_authorization": false
+    },
+    "android_phone_fleet": {
+      "enabled": true,
+      "mode": "online_label_filtered",
+      "trigger": "every 6 hours plus manual dispatch",
+      "receipt_gated": true,
       "formal_evidence_allowed": false,
       "performance_authorization": false
     }

@@ -9,6 +9,8 @@ Vor PROJECT_STATUS.md wird jetzt immer auch der dauerhafte Trading Agent OS-Vert
 - research/evidence/current_operational_state.json
 - ops/s10_runtime_status.json
 - docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md
+- docs/SAMSUNG_ANDROID_PHONE_FLEET.md
+- ops/android_phone_resources.json
 
 Diese beiden Dateien beschreiben ausschließlich den aktuellen operativen Zustand und werden über
 .github/workflows/current-status-sync.yml nach relevanten master-Pushes automatisch synchronisiert.
@@ -70,19 +72,19 @@ Bei jedem neuen `trading agent`-Chat:
 1. Dieses Dokument lesen.
 2. `docs/TRADING_AGENT_OS_ORCHESTRATION.md` und `ops/trading_agent_os_state.json` lesen.
 3. `docs/PROJECT_CONTEXT.md` lesen.
-3. `docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md` lesen und Ressourcenrouting prüfen.
-4. `docs/TRADING_AGENT_SUPERVISION_PROTOCOL.md` lesen und Rollen-/Kontrollkette prüfen.
-5. `docs/DEVELOPMENT_ORCHESTRATION.md` lesen, insbesondere das Nicht-Warten-/Parallelisierungsmodell.
-6. `PROJECT_STATUS.md` lesen.
-7. `research/evidence/project_state.json` lesen.
-8. `research/evidence/current_project_checkpoint.json` lesen.
-9. `research/evidence/trial_ledger.json` bzw. die für den aktuellen Task
+4. `docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md` lesen und Ressourcenrouting prüfen.
+5. `docs/TRADING_AGENT_SUPERVISION_PROTOCOL.md` lesen und Rollen-/Kontrollkette prüfen.
+6. `docs/DEVELOPMENT_ORCHESTRATION.md` lesen, insbesondere das Nicht-Warten-/Parallelisierungsmodell.
+7. `PROJECT_STATUS.md` lesen.
+8. `research/evidence/project_state.json` lesen.
+9. `research/evidence/current_project_checkpoint.json` lesen.
+10. `research/evidence/trial_ledger.json` bzw. die für den aktuellen Task
    relevanten Evidence-Dateien prüfen.
-10. Den aktuellen `master`, relevante Branches/PRs und laufende/letzte Workflows prüfen.
-11. Den chatfreien Nachtbetrieb anhand des OS-Vertrags gegen aktive Zeitpläne und Fallbacks prüfen.
-12. Vor der eigentlichen Arbeit einen **Ressourcen- und Kapazitäts-Snapshot** erstellen: alle
+11. Den aktuellen `master`, relevante Branches/PRs und laufende/letzte Workflows prüfen.
+12. Den chatfreien Nachtbetrieb anhand des OS-Vertrags gegen aktive Zeitpläne und Fallbacks prüfen.
+13. Vor der eigentlichen Arbeit einen **Ressourcen- und Kapazitäts-Snapshot** erstellen: alle
    im aktuellen Konto/Repo verfügbaren Agentenpfade, Runner und relevanten Actions-Lanes prüfen.
-13. Für die konkrete Aufgabe jede sinnvolle, **kostenfreie und aktuell verfügbare** Ressource
+14. Für die konkrete Aufgabe jede sinnvolle, **kostenfreie und aktuell verfügbare** Ressource
    aktiv routen; nicht auf eine einzelne Ressource warten, wenn eine unabhängige Aufgabe parallel
    anders ausgeführt werden kann.
 14. Erst danach Änderungen, Research oder neue Hypothesen vornehmen.
