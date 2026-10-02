@@ -11,6 +11,8 @@ def test_samsung_template_is_generic_and_secret_safe():
     assert "unset TOKEN" in script
     assert "ANDROID-PHONE" in script
     assert "s10-phone" not in script
+    assert "S10_RUNNER_TOKEN" not in script
+    assert "PHONE_RUNNER_TOKEN" in script
 
 def test_s10_template_reference_is_pinned():
     doc = Path("docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md").read_text(encoding="utf-8")
