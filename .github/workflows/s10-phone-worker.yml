@@ -1,6 +1,9 @@
 name: S10 Phone Research Worker
 
 on:
+  push:
+    paths:
+      - ".github/workflows/s10-phone-worker.yml"
   schedule:
     - cron: "0 */6 * * *"
   workflow_dispatch:
@@ -23,9 +26,7 @@ concurrency:
 
 jobs:
   s10_phone:
-    if: >-
-      ${{ github.repository == 'DWR-debug/trading-agent-public' &&
-          (github.event_name == 'workflow_dispatch' || vars.S10_PHONE_ENABLED == 'true') }}
+    if: ${{ github.repository == 'DWR-debug/trading-agent-public' }}
     runs-on: [self-hosted, s10-phone, linux, ARM64]
     timeout-minutes: 30
     steps:
@@ -48,7 +49,7 @@ jobs:
           cat "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID/discovery.json"
 
       - name: Run isolated S10 Evidence-Critic benchmark
-        if: github.event_name == 'schedule' || inputs.task == 'evidence_critic'
+        if: github.event_name == 'push' || github.event_name == 'schedule' || inputs.task == 'evidence_critic'
         shell: bash
         env:
           S10_INTERFACE_PATH: "~/.trading-agent/s10_interface.json"
