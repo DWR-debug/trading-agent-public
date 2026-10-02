@@ -18,6 +18,7 @@ def test_s10_receipt_sync_accepts_valid_operational_artifact(tmp_path):
     })
     _write(tmp_path / "s10_acceptance_receipt.json", {
         "status": "S10_UTILITY_ACCEPTED",
+        "acceptance_contract_version": "2026-10-02-R3",
         "model": "S10-Qwen",
     })
     _write(tmp_path / "evidence_critic.json", {"status": "BENCHMARK_COMPLETED", "model": "S10-Qwen"})
@@ -53,7 +54,10 @@ def test_s10_receipt_sync_rejects_failed_workflow_even_with_acceptance(tmp_path)
         "scientific_evidence": False,
         "performance_authorization": False,
     })
-    _write(tmp_path / "s10_acceptance_receipt.json", {"status": "S10_UTILITY_ACCEPTED"})
+    _write(tmp_path / "s10_acceptance_receipt.json", {
+        "status": "S10_UTILITY_ACCEPTED",
+        "acceptance_contract_version": "2026-10-02-R3",
+    })
     _write(tmp_path / "evidence_critic.json", {"status": "BENCHMARK_COMPLETED"})
     out = build_status(
         tmp_path,

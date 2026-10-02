@@ -12,6 +12,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+CURRENT_ACCEPTANCE_CONTRACT_VERSION = "2026-10-02-R3"
+
 SAFE_EXPECTED = {
     "paper_only": True,
     "live_trading_enabled": False,
@@ -90,9 +92,11 @@ def build_status(
 
     acceptance_status = acceptance.get("status") if acceptance else None
     worker_status = result.get("status") if result else None
+    contract_ok = acceptance.get("acceptance_contract_version") == CURRENT_ACCEPTANCE_CONTRACT_VERSION if acceptance else False
     eligible = (
         workflow_conclusion == "success"
         and acceptance_status == "S10_UTILITY_ACCEPTED"
+        and contract_ok
     )
 
     base.update({
@@ -100,6 +104,7 @@ def build_status(
         "eligible": eligible,
         "receipt_status": acceptance_status or worker_status or "NOT_PRESENT",
         "acceptance_receipt_sha256": _sha256(artifact_root / "s10_acceptance_receipt.json") if acceptance else None,
+        "acceptance_contract_version": (acceptance or {}).get("acceptance_contract_version"),
         "worker_status": worker_status,
         "model": (acceptance or {}).get("model") or (result or {}).get("model"),
         "runner_name": provenance.get("runner_name"),

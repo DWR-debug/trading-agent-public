@@ -15,6 +15,7 @@ from pathlib import Path
 from automation.evidence_critic_benchmark import main as benchmark_main
 from automation.s10_runtime import resolve
 
+S10_ACCEPTANCE_CONTRACT_VERSION = "2026-10-02-R3"
 SMOKE_TIMEOUT_SECONDS = 180
 SMOKE_CLAIM = "The local S10 endpoint answered this bounded smoke request."
 SMOKE_EVIDENCE = "The endpoint returned a valid typed verdict object for this request."
@@ -174,6 +175,7 @@ def main() -> int:
         if code == 0 and args.output.is_file():
             result = json.loads(args.output.read_text(encoding="utf-8"))
             result["s10_repeatability_preflight"] = repeatability
+            result["s10_acceptance_contract_version"] = S10_ACCEPTANCE_CONTRACT_VERSION
             result["s10_runtime"] = {
                 "seed": int(os.environ.get("S10_SEED", "271828")),
                 "threads": 1,

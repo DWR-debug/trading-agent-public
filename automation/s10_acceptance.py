@@ -13,6 +13,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 LABELS = {"SUPPORTED", "REFUTED", "INSUFFICIENT"}
+ACCEPTANCE_CONTRACT_VERSION = "2026-10-02-R3"
 REQUIRED_FALSE_GOVERNANCE = (
     "performance_evaluation",
     "holdout_selection",
@@ -99,6 +100,7 @@ def build_receipt(result_path: Path) -> dict:
         "receipt_type": "s10_operational_utility_acceptance",
         "task_id": result.get("task_id", "ECL-2026-10-01-001-S10"),
         "status": status,
+        "acceptance_contract_version": ACCEPTANCE_CONTRACT_VERSION,
         "result_sha256": digest,
         "source_commit": (result.get("environment") or {}).get("source_commit", result.get("source_commit")),
         "runner_name": (result.get("environment") or {}).get("runner_name", result.get("runner_name")),
