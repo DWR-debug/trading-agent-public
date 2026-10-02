@@ -52,3 +52,4 @@ def test_bridge_request_pins_reproducible_seed():
     assert 'S10_SEED = int(os.environ.get("S10_SEED", "271828"))' in source
     assert '"seed": S10_SEED' in source
     assert '"top_k": 1' in source
+    assert source.count('"temperature": 0') == 1
