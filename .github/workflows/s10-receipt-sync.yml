@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   sync:
-    if: github.event.workflow_run.repository.full_name == 'DWR-debug/trading-agent-public' && github.event.workflow_run.head_branch == 'master'
+    if: github.event.workflow_run.repository.full_name == 'DWR-debug/trading-agent-public' && github.event.workflow_run.head_branch == 'master' && github.event.workflow_run.head_branch == 'master'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
