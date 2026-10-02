@@ -662,7 +662,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T05:29:59.462748+00:00",
+  "generated_at_utc": "2026-10-02T05:34:19.450193+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -850,6 +850,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "fix: make S10 health probe runner-independent (#792)",
+        "sha": "83a541fdb26a6f7a61a0132ada42c0f9423c7eb5",
+        "timestamp": "2026-10-02T07:34:09+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2966864e76da3e8dc230984e9857bb15906ccb2c",
+        "timestamp": "2026-10-02T05:29:59Z"
+      },
+      {
         "message": "OPS: advance paper-forward MTM state",
         "sha": "651968cb10901c4fd37eabd33654555d471179b4",
         "timestamp": "2026-10-02T05:29:51Z"
@@ -878,16 +888,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "a1cebd95afcda2db889f81c3ad1342d85ec1d3e2",
         "timestamp": "2026-10-02T05:14:52Z"
-      },
-      {
-        "message": "FIX: harden Q120 CFTC source contract normalization (#789)",
-        "sha": "dd392c61447543adc7c551aea25b7e57c8e6e312",
-        "timestamp": "2026-10-02T07:14:41+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "2624c2a72268c2c716d9dc6c8cefab8145eae7e5",
-        "timestamp": "2026-10-02T05:11:39Z"
       }
     ]
   },
@@ -957,12 +957,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "651968cb10901c4fd37eabd33654555d471179b4",
+  "source_master_sha": "83a541fdb26a6f7a61a0132ada42c0f9423c7eb5",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36969186317"
+    "run_id": "36969525806"
   }
 }
