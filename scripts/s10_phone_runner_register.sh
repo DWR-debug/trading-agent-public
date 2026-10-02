@@ -22,6 +22,9 @@ if [ ! -x ./run.sh ]; then
   curl -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 -o actions-runner.tar.gz "https://github.com/actions/runner/releases/download/v${S10_RUNNER_VERSION}/actions-runner-linux-arm64-${S10_RUNNER_VERSION}.tar.gz"
   tar -xzf actions-runner.tar.gz
 fi
+if [ -x ./bin/installdependencies.sh ]; then
+  ./bin/installdependencies.sh
+fi
 ./config.sh --url "https://github.com/${S10_REPO}" --token "$S10_RUNNER_TOKEN" --name "$S10_RUNNER_NAME" --labels "$S10_RUNNER_LABELS" --work "_work" --unattended --replace
 '
 echo "S10 phone runner registered: $RUNNER_NAME"

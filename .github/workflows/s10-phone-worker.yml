@@ -48,10 +48,10 @@ jobs:
           cat "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID/discovery.json"
 
       - name: Run isolated S10 Evidence-Critic benchmark
-        if: inputs.task == 'evidence_critic'
+        if: github.event_name == 'schedule' || inputs.task == 'evidence_critic'
         shell: bash
         env:
-          S10_INTERFACE_PATH: "${HOME}/.trading-agent/s10_interface.json"
+          S10_INTERFACE_PATH: "~/.trading-agent/s10_interface.json"
         run: |
           set -euo pipefail
           cd "$REPO_SRC"
