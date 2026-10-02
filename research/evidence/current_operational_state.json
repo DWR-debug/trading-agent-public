@@ -662,7 +662,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T09:39:39.141866+00:00",
+  "generated_at_utc": "2026-10-02T09:40:56.974524+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -850,14 +850,24 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
-        "headRefName": "feat/s10-os-resource-routing-20261002",
-        "number": 827,
-        "title": "OPS: integrate S10 into Research OS resource routing",
-        "updatedAt": "2026-10-02T09:39:10Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/827"
+        "headRefName": "fix/q122-html-table-parser-20261002",
+        "number": 828,
+        "title": "FIX: make Q122 CFTC release-date parser HTML-table robust",
+        "updatedAt": "2026-10-02T09:40:33Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/828"
       }
     ],
     "recent_commits": [
+      {
+        "message": "OPS: integrate S10 into Research OS resource routing (#827)",
+        "sha": "ef58bdc56295b482ae9ea0711a64e97437559730",
+        "timestamp": "2026-10-02T11:40:44+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "dca7e2e40a3c0d0eee55802ed247bdae2bd721d8",
+        "timestamp": "2026-10-02T09:39:39Z"
+      },
       {
         "message": "RESEARCH: extend autonomous frontier loop with I22 filing-arrival feasibility (#826)",
         "sha": "68b2513999a9a71ddc8fc8cb6f9899667b659a47",
@@ -887,16 +897,6 @@
         "message": "OPS: preserve running S10 ECL across master updates",
         "sha": "03bb2f0b9d2dc0ec70f74f166f8b1c0ad13fbdfd",
         "timestamp": "2026-10-02T11:21:08+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "44a239e19c8e367c9a731a2568d524ff32cc2a95",
-        "timestamp": "2026-10-02T09:18:41Z"
-      },
-      {
-        "message": "FIX: align S10 typed smoke readiness bound",
-        "sha": "1f213ad6b49111d4669478068ca1fb26f03a30e5",
-        "timestamp": "2026-10-02T11:18:29+02:00"
       }
     ]
   },
@@ -966,12 +966,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "68b2513999a9a71ddc8fc8cb6f9899667b659a47",
+  "source_master_sha": "ef58bdc56295b482ae9ea0711a64e97437559730",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36991036744"
+    "run_id": "36991165658"
   }
 }
