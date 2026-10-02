@@ -16,6 +16,7 @@ from automation.evidence_critic_benchmark import main as benchmark_main
 from automation.s10_runtime import resolve
 
 S10_ACCEPTANCE_CONTRACT_VERSION = "2026-10-02-R3"
+# S10 R3 contract revalidation trigger: "active"
 SMOKE_TIMEOUT_SECONDS = 180
 SMOKE_CLAIM = "The local S10 endpoint answered this bounded smoke request."
 SMOKE_EVIDENCE = "The endpoint returned a valid typed verdict object for this request."
