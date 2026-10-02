@@ -272,3 +272,43 @@ def test_q101_negative_evidence_task_has_safe_scope():
     prompt = build_prompt(payload, "openrouter_free")
     assert "q101_negative_evidence_atlas.py" in prompt
     assert "EXTERNAL_RESEARCH_INSPIRATION_2026-09-30.md" in prompt
+
+
+def test_nonlocal_gemini_quota_is_blocked_without_becoming_a_failure(monkeypatch, tmp_path):
+    output = tmp_path / "quota.json"
+    task_payload = task("gemini_cli")
+    monkeypatch.setattr(
+        "automation.ai_worker_fabric.preflight",
+        lambda provider, env=None: {
+            "provider": provider,
+            "available": True,
+            "binary": "/usr/bin/gemini",
+            "free_only": True,
+            "free_mode_attested": True,
+            "local_mode": False,
+            "local_attestation": {"present": False, "path": None},
+            "free_enforcement": "attestation_or_local_attestation",
+            "reasons": [],
+        },
+    )
+
+    class Proc:
+        returncode = 429
+        stdout = ""
+        stderr = "RESOURCE_EXHAUSTED: quota exceeded"
+
+    monkeypatch.setattr(
+        "automation.ai_worker_fabric.subprocess.run",
+        lambda *args, **kwargs: Proc(),
+    )
+    result = run_task(
+        task_payload,
+        "gemini_cli",
+        output,
+        env={
+            "AI_EXTERNAL_PROVIDER_ALLOWLIST": "true",
+            "GEMINI_API_KEY": "dummy",
+        },
+    )
+    assert result["status"] == "QUOTA_BLOCKED"
+    assert result["returncode"] == 429

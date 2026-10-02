@@ -460,7 +460,7 @@ def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, s
 
     stdout = (proc.stdout or "")[-20000:]
     stderr = (proc.stderr or "")[-12000:]
-    if local_mode and quota_error(proc.returncode, stdout, stderr):
+    if quota_error(proc.returncode, stdout, stderr):
         reset_seconds = parse_reset_seconds(f"{stdout}\n{stderr}") or 3600
         block = record_block(
             provider,
