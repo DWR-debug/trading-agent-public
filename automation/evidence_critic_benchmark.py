@@ -133,6 +133,7 @@ def main() -> int:
     ap.add_argument("--corpus", type=Path, default=Path("research/benchmarks/evidence_critic_pilot_2026_10_01.jsonl"))
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--option-order-checks", type=int, default=6)
+    ap.add_argument("--protocol-path", default="/v1/systemone")
     args = ap.parse_args()
 
     cases = load_cases(args.corpus)
@@ -142,7 +143,7 @@ def main() -> int:
     for case in cases:
         t0 = time.monotonic()
         try:
-            payload = post_json(args.endpoint.rstrip("/") + "/v1/systemone", request_for(case))
+            payload = post_json(args.endpoint.rstrip("/") + args.protocol_path, request_for(case))
             choice, probs = parse_answer(payload)
             error = None
         except Exception as exc:
@@ -162,7 +163,7 @@ def main() -> int:
     for case in cases[:max(0, min(args.option_order_checks, len(cases)))]:
         try:
             c1, p1 = parse_answer(post_json(args.endpoint.rstrip("/") + "/v1/systemone", request_for(case)))
-            c2, p2 = parse_answer(post_json(args.endpoint.rstrip("/") + "/v1/systemone", request_for(case, list(reversed(LABELS)))))
+            c2, p2 = parse_answer(post_json(args.endpoint.rstrip("/") + args.protocol_path, request_for(case, list(reversed(LABELS)))))
             order_results.append({
                 "id": case["id"],
                 "base_choice": c1,

@@ -11,3 +11,4 @@ def test_s10_probe_is_fail_closed_and_local_only():
 def test_self_hosted_frontier_lane_routes_s10_probe():
     text = Path("automation/self_hosted_research_worker.py").read_text(encoding="utf-8")
     assert "automation.s10_probe" in text
+    assert "automation.s10_worker" in text
