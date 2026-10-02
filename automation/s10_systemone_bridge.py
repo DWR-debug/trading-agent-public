@@ -51,7 +51,11 @@ def build_prompt(payload: dict) -> str:
     claim = str(state.get("claim", ""))
     evidence = str(state.get("evidence", ""))
     domain = str(state.get("domain", ""))
-    criteria = ((questions.get("verdict") or {}).get("criteria") or {})
+    raw_criteria = ((questions.get("verdict") or {}).get("criteria") or {})
+    # Canonicalize substantive option order at the protocol boundary. This is
+    # an interface normalization, not a scientific decision: the benchmark
+    # must see identical semantics when callers permute dictionary order.
+    criteria = {label: str(raw_criteria[label]) for label in ("SUPPORTED", "REFUTED", "INSUFFICIENT") if label in raw_criteria}
     return (
         "You are an evidence critic. Use ONLY the supplied evidence. Do not use outside knowledge. "
         "Return ONLY one valid JSON object, with no markdown and no commentary. "
