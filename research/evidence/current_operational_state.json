@@ -662,7 +662,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T05:46:06.214255+00:00",
+  "generated_at_utc": "2026-10-02T05:46:20.875580+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -850,6 +850,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "fix/q109-inventory-count-20261002",
+        "number": 798,
+        "title": "test: synchronize Q109 discovery inventory expectations",
+        "updatedAt": "2026-10-02T05:46:09Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/798"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "feat/q119-independent-reproduction-20261002",
         "number": 797,
         "title": "feat: independently reproduce Q119 Treasury source/PIT feasibility",
@@ -874,6 +882,11 @@
       }
     ],
     "recent_commits": [
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "852dcb745556d2cd6c92b4860c26298439d93749",
+        "timestamp": "2026-10-02T05:46:06Z"
+      },
       {
         "message": "test: update Q109 candidate count",
         "sha": "d2454e3f349b8dd86e86ac81802ff35ce7e14eed",
@@ -908,11 +921,6 @@
         "message": "research: add Q109 common-holder network hypothesis",
         "sha": "0f755e08d2e39e432d8b89e52943edec8ad7eb88",
         "timestamp": "2026-10-02T07:43:40+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "20c20e41c1fc1466ae62e7c693b795355aa8a56b",
-        "timestamp": "2026-10-02T05:43:09Z"
       }
     ]
   },
@@ -982,12 +990,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d2454e3f349b8dd86e86ac81802ff35ce7e14eed",
+  "source_master_sha": "852dcb745556d2cd6c92b4860c26298439d93749",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36970407751"
+    "run_id": "36970413301"
   }
 }
