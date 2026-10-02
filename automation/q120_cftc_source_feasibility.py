@@ -77,8 +77,6 @@ def validate(rows: list[dict]) -> dict:
     for row in rows:
         if not required.issubset(row):
             raise RuntimeError("Q120_REQUIRED_FIELD_MISSING")
-        if normalize_contract_name(row["market_and_exchange_names"]) != normalize_contract_name(CONTRACT_NAME):
-            raise RuntimeError("Q120_UNEXPECTED_CONTRACT")
         if str(row["cftc_contract_market_code"]).strip().upper() != CFTC_CODE:
             raise RuntimeError("Q120_UNEXPECTED_CONTRACT_CODE")
         if any(row.get(field) in (None, "") for field in required):
@@ -88,6 +86,15 @@ def validate(rows: list[dict]) -> dict:
                 raise RuntimeError("Q120_NONPOSITIVE_OPEN_INTEREST")
         except (TypeError, ValueError) as exc:
             raise RuntimeError("Q120_INVALID_OPEN_INTEREST") from exc
+    observed_names = sorted({
+        normalize_contract_name(row["market_and_exchange_names"])
+        for row in rows
+        if row.get("market_and_exchange_names")
+    })
+    if not observed_names:
+        raise RuntimeError("Q120_MISSING_MARKET_NAME")
+    if not any("S&P 500" in name for name in observed_names):
+        raise RuntimeError("Q120_PRODUCT_NAME_MISMATCH")
     dates = [str(row["report_date_as_yyyy_mm_dd"]) for row in rows]
     if dates != sorted(dates):
         raise RuntimeError("Q120_REPORT_DATES_NOT_SORTED")
@@ -97,6 +104,8 @@ def validate(rows: list[dict]) -> dict:
         "last_report_date": dates[-1],
         "contract_identity": CONTRACT_NAME,
         "contract_code": CFTC_CODE,
+        "observed_market_names": observed_names,
+        "identity_rule": "CFTC contract market code is primary; observed market name must be nonempty and contain S&P 500",
         "required_fields_complete": True,
         "report_dates_sorted": True,
     }
