@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   sync:
-    if: github.event.workflow_run.repository.full_name == 'DWR-debug/trading-agent-public' && github.event.workflow_run.head_branch == 'master' && github.event.workflow_run.head_branch == 'master'
+    if: github.event.workflow_run.repository.full_name == 'DWR-debug/trading-agent-public' && github.event.workflow_run.head_branch == 'master'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -39,14 +39,18 @@ jobs:
           if [ -n "$artifact_id" ]; then
             gh api -H 'Accept: application/vnd.github+json' "/repos/$REPO/actions/artifacts/$artifact_id/zip" > "$ROOT/artifact.zip"
             unzip -q "$ROOT/artifact.zip" -d "$ROOT/unpacked"
-            echo "artifact_id=$artifact_id" >> "$GITHUB_OUTPUT"
-            echo "artifact_digest=$artifact_digest" >> "$GITHUB_OUTPUT"
-            echo "artifact_root=$ROOT/unpacked" >> "$GITHUB_OUTPUT"
+            {
+              echo "artifact_id=$artifact_id"
+              echo "artifact_digest=$artifact_digest"
+              echo "artifact_root=$ROOT/unpacked"
+            } >> "$GITHUB_OUTPUT"
           else
             mkdir -p "$ROOT/unpacked"
-            echo "artifact_id=" >> "$GITHUB_OUTPUT"
-            echo "artifact_digest=" >> "$GITHUB_OUTPUT"
-            echo "artifact_root=$ROOT/unpacked" >> "$GITHUB_OUTPUT"
+            {
+              echo "artifact_id="
+              echo "artifact_digest="
+              echo "artifact_root=$ROOT/unpacked"
+            } >> "$GITHUB_OUTPUT"
           fi
 
       - name: Build canonical S10 operational status
@@ -77,6 +81,7 @@ jobs:
           fi
           git commit -m "OPS: synchronize S10 phone runtime status"
           for attempt in 1 2; do
+            echo "S10 receipt sync push attempt $attempt"
             git fetch origin master
             if git rebase origin/master && git push origin HEAD:master; then
               exit 0
