@@ -25,35 +25,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 8.649,
-  "stdout": "# Adversarial Orchestration Audit — Worker Material\n\n## Findings\n\n### 1. Lane overlap & duplicate-work risk (scheduler TRACKS)\n- **Mechanism:** Multiple tracks share source_ids (e.g., SRC-TREASURY in C and H; SRC-SEC-EDGAR in E and G) with no visible mutual-exclusion, probe-ordering, or deduplication key.\n- **Why it matters:** Concurrent 30-min workflow runs + failover runner could re-probe the same source, inflating evidence volume and creating race conditions on shared evidence files.\n- **Cheap falsification:** Grep the full scheduler for source_id-level locks, probe queues, or idempotency keys; assert at most one active probe per source_id across lanes.\n\n### 2. Quality scoring used for selection? (scheduler `quality()`)\n- **Mechanism:** `quality(access, pit)` returns a 0–1 score; TRACKS carry `cheap_falsifiability`, `mechanism_novelty_distance`, `expected_reproducibility`, `resource_cost`. If any downstream logic ranks/tracks by these, it becomes a selection gate.\n- **Why it matters:** Violates the \"no performance-adjacent ranking\" invariant; could silently promote high-scoring families.\n- **Cheap falsification:** Trace all callers of `quality()` and confirm none feed ranking/promotion/selection; assert TRACKS scores are only descriptive metadata.\n\n### 3. Stale-state / lease race (control plane)\n- **Mechanism:** `validate_lease_snapshot` normalizes a \"shared two-slot lease\" but the file is truncated — no visible TTL, renewal, or split-brain resolution.\n- **Why it matters:** Two runners (self-hosted + hosted failover) could both believe they hold the lease, writing evidence concurrently.\n- **Cheap falsification:** Inspect `normalize_lease_state` and lease file writes for atomicity (temp+rename) and TTL enforcement; simulate concurrent writes.\n\n### 4. State-machine monotonicity (operational_state.json)\n- **Mechanism:** Families move through states (DESIGN_ONLY → SOURCE_FEASIBILITY… → COVERAGE_COMPLETED). If any transition is reversible or non-deterministic, stale-state reads can misroute work.\n- **Why it matters:** A failed gate could be re-skipped after a retry, introducing leakage.\n- **Cheap falsification:** Enumerate all observed transitions across the registry; assert a deterministic DAG with no backward edges.\n\n### 5. Provenance boundary at compiler vs. scheduler edge\n- **Mechanism:** The compiler quarantines hypotheses and forbids performance keys, but the scheduler consumes TRACKS with `next_gate` values. If a track's `next_gate` is mutated downstream to a performance gate, the quarantine is bypassed.\n- **Why it matters:** Selection/performance logic could enter via the scheduler track definition rather than the candidate.\n- **Cheap falsification:** Assert all `next_gate` values across TRACKS are in the allowed gate vocabulary and never resolve to performance/backtest/select_best.\n\n### 6. AI/agent evidence separation\n- **Mechanism:** `ai_quota_guard.py` is referenced in the workflow but not supplied. If AI-generated candidates bypass the compiler, provenance is lost.\n- **Why it matters:** Unquarantined AI output could enter the evidence bus.\n- **Cheap falsification:** Verify every AI-originated candidate passes through `research_hypothesis_compiler.py` before entering `research/evidence/`.\n\n## Counterarguments / Uncertainty\n- The files are truncated; the actual scheduling loop, concurrency model, and gate enforcement may already mitigate these risks. I cannot confirm presence or absence.\n- Shared source_ids may be intentional with external coordination not visible here.\n- `quality()` may be purely expository; traces are required to confirm.\n\n## Concrete Next Actions (engineering checks)\n1. Full-trace `quality()` and `pit_prior()` callers; ban any ranking/selection use.\n2. Add source_id-level probe lock or deterministic queue in the scheduler.\n3. Audit lease atomicity + TTL; add a split-brain safety timeout.\n4. Validate state-machine DAG monotonicity via a deterministic script over `current_operational_state.json`.\n5. Canonicalize and assert `next_gate` vocabulary for all TRACKS.\n6. Supply and audit `ai_quota_guard.py` to confirm compiler quarantine is mandatory.\n\n## Uncertainty\n- Cannot validate absence of risks without full file contents and runtime traces.\n- No claim of reproducibility, performance evidence, or promotion authorization.\n\n---\n**Engineering handoff:** Run the five falsification scripts above in CI on every PR touching `automation/research_os_scheduler.py`, `autonomous_control_plane.py`, or the evidence registry; fail the build on any ranking/selection use of quality scores, non-monotonic state transitions, or missing source_id locks.",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 28.873,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1790943514-KemmozkkzcBbldsp62M6",
-  "usage": {
-    "prompt_tokens": 6064,
-    "completion_tokens": 2119,
-    "total_tokens": 8183,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 1130,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
