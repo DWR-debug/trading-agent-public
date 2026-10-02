@@ -662,7 +662,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T05:14:52.268399+00:00",
+  "generated_at_utc": "2026-10-02T05:21:03.917175+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -850,6 +850,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "feat: integrate S10 as isolated local evidence-critic runtime (#790)",
+        "sha": "ade6927e45f040c38ae9d8db17365662b226ed9e",
+        "timestamp": "2026-10-02T07:20:52+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a1cebd95afcda2db889f81c3ad1342d85ec1d3e2",
+        "timestamp": "2026-10-02T05:14:52Z"
+      },
+      {
         "message": "FIX: harden Q120 CFTC source contract normalization (#789)",
         "sha": "dd392c61447543adc7c551aea25b7e57c8e6e312",
         "timestamp": "2026-10-02T07:14:41+02:00"
@@ -878,16 +888,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "69bc775fe2d424546ab6e231f26e9983b5fdf05b",
         "timestamp": "2026-10-02T04:31:10Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "ae6661971495e9af3d447801b698f69838e4f643",
-        "timestamp": "2026-10-02T04:28:28Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "4e498ee05a6698a43d35ca6f79e386ca2a8c92ed",
-        "timestamp": "2026-10-02T04:11:46Z"
       }
     ]
   },
@@ -957,12 +957,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "dd392c61447543adc7c551aea25b7e57c8e6e312",
+  "source_master_sha": "ade6927e45f040c38ae9d8db17365662b226ed9e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36968067802"
+    "run_id": "36968526738"
   }
 }
