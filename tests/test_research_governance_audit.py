@@ -246,6 +246,35 @@ def test_terminal_historical_preregistration_can_remain_v1(tmp_path):
     assert result["error_count"] == 0
 
 
+
+def test_historical_implementation_invalidated_preregistration_can_remain_v1(tmp_path):
+    _write(tmp_path, "research/governance/active_research_registry.json", {
+        "schema_version": 1,
+        "policy": {"only_listed_performance_trials_may_be_authorized": True},
+        "active_trials": [{
+            "code": "H06P2R2",
+            "trial_id": "T-2026-10-01-H06P2R2-PERFORMANCE-01",
+            "class": "performance_correction",
+            "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
+            "performance_authorization_allowed": False,
+            "preregistration_path": "research/preregistrations/h06_p2_r2_performance_2026_10_01.json",
+        }],
+    })
+    _write(
+        tmp_path,
+        "research/preregistrations/h06_p2_r2_performance_2026_10_01.json",
+        {
+            "schema_version": "1.0",
+            "trial_id": "T-2026-10-01-H06P2R2-PERFORMANCE-01",
+            "status": "PREREGISTERED_PERFORMANCE",
+            "safety": _safety(),
+        },
+    )
+    result = audit(tmp_path)
+    assert result["status"] == "PASS"
+    assert result["error_count"] == 0
+
+
 def test_superseded_pre_execution_authorization_is_historical(tmp_path):
     _prereg(tmp_path)
     _write(tmp_path, "research/authorizations/legacy.json", {
