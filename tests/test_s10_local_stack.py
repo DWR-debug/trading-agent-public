@@ -62,3 +62,18 @@ def test_s10_stack_source_is_local_only():
     assert 'HOST = "127.0.0.1"' in source
     assert "trading-agent-public/S10-local-stack-bootstrap/1" in source
     assert "credentials_touched" in source
+
+
+def test_s10_mobile_server_uses_bounded_memory_defaults():
+    source = Path("automation/s10_local_stack.py").read_text(encoding="utf-8")
+    assert '"--ctx-size", "2048"' in source
+    assert '"--batch-size", "256"' in source
+    assert '"--ubatch-size", "128"' in source
+    assert '"--parallel", "1"' in source
+
+
+def test_s10_worker_workflow_contains_bounded_watchdog():
+    source = Path(".github/workflows/s10-phone-worker.yml").read_text(encoding="utf-8")
+    assert "S10 watchdog: endpoint unavailable" in source
+    assert "sleep 5" in source
+    assert "cleanup()" in source
