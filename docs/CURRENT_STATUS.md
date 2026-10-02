@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `80ce3db3d6222669559bb9efc7f7c40c8b5d7ff6`
+**Current operational snapshot:** `e03a042ed32817733d290f0bde688d48f7899e7f`
 
-**Generated (UTC):** `2026-10-02T11:48:35.811480+00:00`
+**Generated (UTC):** `2026-10-02T12:18:50.495444+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -18,7 +18,7 @@
 - Bounded agent routing uses two queue lanes with fail-closed task contracts.
 - Self-hosted Continuous QA is scheduled hourly at minute 15 under label `trading-agent-research`.
 - Latest self-hosted capacity verification: two distinct Windows/X64 runner slots accepted concurrent jobs; see the timestamped capacity receipt.
-- S10 phone runtime: **S10_ARTIFACT_INCOMPLETE**; receipt-gated eligibility = **False**. S10 output remains non-scientific and cannot authorize performance or promotion.
+- S10 phone runtime: **S10_RESULT_AVAILABLE**; receipt-gated eligibility = **False**. S10 output remains non-scientific and cannot authorize performance or promotion.
 
 ### Scientific status
 
