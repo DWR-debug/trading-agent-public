@@ -25,6 +25,12 @@ def good_result():
             "cases": [{"id": f"CASE-{i}", "base_choice": "SUPPORTED", "reversed_choice": "SUPPORTED", "choice_changed": False, "max_probability_delta": 0.0} for i in range(6)],
         },
         "environment": {"source_commit": "abc123", "runner_name": "S10-TERMUX"},
+        "s10_repeatability_preflight": {
+            "status": "PASS",
+            "attempts": 2,
+            "choice_equal": True,
+            "probabilities_equal": True,
+        },
         "s10_runtime": {
             "seed": 271828,
             "threads": 1,
