@@ -35,11 +35,17 @@ Weitere Samsung-Geräte werden nur als kontrollierter Kapazitätstest eingebunde
 ## Externe Hypothesenquellen
 Die aktuelle 2026-Literatur liefert neue, aber unvalidierte Anhaltspunkte zu zustandsabhängiger Predictability, Options-Order-Imbalance/Liquidität, SEC-MIDAS-Marktstruktur und Earnings-Timing. Diese Quellen sind Hypothesen-/Feasibility-Input, keine Evidenz für unseren Agenten.
 
+## Kritischer Forschungsmodus bis 2026-10-25
+Die Kandidatensuche priorisiert jetzt ausdrücklich mechanistisch und informationell orthogonale Quellen statt weiterer Varianten bereits ausgeschöpfter Price-only-Momentum-/Trendlinien.
+Vor jeder künftigen Performance-Autorisierung muss ein preregistrierter Robustheits-Screen mindestens Rendite, Drawdown, Profit Factor, Rolling-Stabilität, OOS/IS-Verhältnis, Kostenstress, Turnover, Exposure, Konzentration, Markt-Korrelation, Underwater-Anteil und Regime-/Symbolbeiträge sichtbar machen.
+Ein vollständiger 13/13-Performance-Pass erzeugt keine Promotion. Er erzeugt stattdessen zwingend die sofortige, unveränderte unabhängige Replikation gemäß vorab festgelegtem Replikationsvertrag. Fehlt dieser Vertrag, fail-closed.
+Kanonischer Kontrollvertrag: research/governance/critical_research_quality_control.json.
+
 ## Nächste Schritte
 1. Aktuelle Coverage-/PIT-Feasibility-Gates weiter abarbeiten.
 2. S10 in reale bounded Research-Support-Aufgaben einbinden und den Nutzen per Receipt messen.
-3. Orthogonale Kandidaten erst nach Preregistration, Coverage und PIT in die Performance-Spur überführen.
-4. Einen gültigen Performance-Lauf immutable reconciliieren und in den Trial Ledger übernehmen.
+3. Orthogonale Kandidaten erst nach dem neuen Robustheits-/Replikationsvertrag in die Performance-Spur überführen.
+4. Einen gültigen 13/13-Performance-Lauf immutable reconciliieren und unmittelbar die unabhängige Replikation anstoßen.
 5. Zusätzliche Hardware nur bei messbarem Parallelisierungsgewinn.
 
 ## Unveränderliche Grenzen
