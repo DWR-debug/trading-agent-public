@@ -1,0 +1,58 @@
+name: Post-Pass Independent Replication Gate
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/evidence/trial_ledger.json"
+      - "research/evidence/*performance_result.json"
+      - "research/governance/active_research_registry.json"
+      - "research/preregistrations/**"
+      - "automation/independent_replication_dispatch.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-post-pass-independent-replication
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Validate future performance quality contract
+        run: python automation/future_performance_quality_contract_check.py
+
+      - name: Create fixed replication trigger when a full pass exists
+        run: python automation/independent_replication_dispatch.py --repo-root .
+
+      - name: Publish replication triggers
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- research/run_requests; then
+            echo "No new independent-replication trigger required."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/run_requests
+          git commit -m "OPS: enqueue fixed independent replication after formal pass"
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:master
