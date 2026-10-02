@@ -453,3 +453,13 @@ Q124-2026-10-02 adds two design-only, literature-derived event mechanisms:
 Both are quarantined behind source/PIT feasibility. Q124:O26 deliberately uses a simpler public call/put-volume proxy and must not inherit the empirical claims of signed options order imbalance.
 
 External inspiration was checked against current 2026 sources including the Federal Reserve Bank of New York Treasury-auction study, Cboe public options market statistics, and a 2026 SSRN study of intraday options order imbalance. These source findings are hypothesis inspiration only, not project evidence.
+
+## Live free-AI resource state — 2026-10-02
+
+Recent repository receipts show:
+- OpenRouter Free: currently usable and free-mode attested; recent bounded tasks completed successfully, so it is the preferred external AI reviewer while this state persists.
+- Gemini CLI: executable and free-mode attested, but recent jobs hit model service-unavailable/high-demand and daily free-tier quota exhaustion. Do not spend blind retries; re-check entitlement/quota before future dispatch.
+- Mistral API: free-mode attested, but recent jobs returned HTTP 429 rate limiting. Treat as temporarily unavailable until a fresh preflight passes.
+- Paid usage remains 0 USD.
+
+The AI layer remains strictly advisory: its output can generate hypotheses, counter-hypotheses and engineering/QA checks, but never creates scientific evidence, selects holdouts/candidates, changes gates, authorizes performance, promotes a model or enables live execution.
