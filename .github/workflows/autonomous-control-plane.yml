@@ -117,7 +117,7 @@ jobs:
               pushed=true
               break
             fi
-            echo "Master moved during queue publish; retry \${attempt}/3 after refresh."
+            echo "Master moved during queue publish; retry ${attempt}/3 after refresh."
             sleep 2
           done
           if [ "$pushed" != "true" ]; then
