@@ -1,0 +1,106 @@
+name: S10 Phone Research Worker
+
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "Bounded S10 task"
+        required: false
+        default: "evidence_critic"
+        type: choice
+        options:
+          - evidence_critic
+          - discovery_only
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-s10-phone
+  cancel-in-progress: true
+
+jobs:
+  s10_phone:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: [self-hosted, s10-phone, linux, ARM64]
+    timeout-minutes: 30
+    steps:
+      - name: Download exact master snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/s10-source"
+          curl -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2             -o "$RUNNER_TEMP/s10-source/repo.tar.gz"             "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/$GITHUB_SHA"
+          tar -xzf "$RUNNER_TEMP/s10-source/repo.tar.gz" -C "$RUNNER_TEMP/s10-source"
+          echo "REPO_SRC=$(find "$RUNNER_TEMP/s10-source" -maxdepth 1 -type d -name 'trading-agent-public-*' -print -quit)" >> "$GITHUB_ENV"
+
+      - name: Run phone-side S10 discovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$REPO_SRC"
+          mkdir -p "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID"
+          python3 scripts/s10_termux_discovery.py             > "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID/discovery.json"
+          cat "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID/discovery.json"
+
+      - name: Run isolated S10 Evidence-Critic benchmark
+        if: inputs.task == 'evidence_critic'
+        shell: bash
+        env:
+          S10_INTERFACE_PATH: "${HOME}/.trading-agent/s10_interface.json"
+        run: |
+          set -euo pipefail
+          cd "$REPO_SRC"
+          mkdir -p "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID"
+          python3 -m automation.s10_worker             --output "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID/evidence_critic.json"
+          cat "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID/evidence_critic.json"
+
+      - name: Create safe provenance receipt
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          export OUT="$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID"
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          root = Path(os.environ["OUT"])
+          files = []
+          for p in sorted(root.rglob("*")):
+              if p.is_file():
+                  files.append({
+                      "path": str(p.relative_to(root)),
+                      "sha256": hashlib.sha256(p.read_bytes()).hexdigest(),
+                      "bytes": p.stat().st_size,
+                  })
+          receipt = {
+              "schema_version": 1,
+              "receipt_type": "s10_phone_run",
+              "source_commit": os.environ.get("GITHUB_SHA"),
+              "runner_name": os.environ.get("RUNNER_NAME"),
+              "runner_arch": os.environ.get("RUNNER_ARCH"),
+              "task": os.environ.get("INPUT_TASK", "unknown"),
+              "files": files,
+              "paper_only": True,
+              "live_trading_enabled": False,
+              "orders_enabled": False,
+              "automatic_promotion": False,
+              "formal_evidence_allowed": False,
+              "scientific_evidence": False,
+              "performance_authorization": False,
+          }
+          (root / "provenance_receipt.json").write_text(
+              json.dumps(receipt, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Upload S10 phone receipt
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v6
+        with:
+          name: s10-phone-${{ github.run_id }}
+          path: research/runs/s10_phone/${{ github.run_id }}/
+          if-no-files-found: warn
+          retention-days: 30
