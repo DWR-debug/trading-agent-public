@@ -35,6 +35,12 @@ def _check_no_secret_keys(value: object, path: str = "$") -> None:
             _check_no_secret_keys(child, f"{path}[{i}]")
 
 
+def _protocol_path(value: object) -> str:
+    if not isinstance(value, str) or not value.startswith("/") or value.startswith("//") or "://" in value or any(ch in value for ch in ("?", "#")):
+        raise S10ConfigError("protocol_path must be a local absolute path without query/fragment")
+    return value
+
+
 def _local_base_url(value: object) -> str:
     if not isinstance(value, str) or not value.strip():
         raise S10ConfigError("base_url is required")
@@ -55,14 +61,16 @@ def load_descriptor(path: Path | None = None) -> dict[str, object]:
         model = os.environ.get("S10_MODEL")
         if base or model:
             try:
+                if not isinstance(model, str) or not model.strip():
+                    raise S10ConfigError("S10_MODEL is required")
                 return {
                     "available": True,
                     "status": "S10_CONFIGURED_ENV",
                     "path": "<environment>",
                     "mode": "systemone_http",
                     "base_url": _local_base_url(base),
-                    "model": model.strip() if isinstance(model, str) and model.strip() else (_ for _ in ()).throw(S10ConfigError("S10_MODEL is required")),
-                    "protocol_path": os.environ.get("S10_PROTOCOL_PATH", "/v1/systemone"),
+                    "model": model.strip() if isinstance(model, str) and model.strip() else None,
+                    "protocol_path": _protocol_path(os.environ.get("S10_PROTOCOL_PATH", "/v1/systemone")),
                     "timeout_seconds": max(5, min(int(os.environ.get("S10_TIMEOUT_SECONDS", "90")), 180)),
                 }
             except (S10ConfigError, TypeError, ValueError) as exc:
@@ -85,9 +93,7 @@ def load_descriptor(path: Path | None = None) -> dict[str, object]:
         model = payload.get("model")
         if not isinstance(model, str) or not model.strip():
             raise S10ConfigError("model is required")
-        protocol_path = payload.get("protocol_path", "/v1/systemone")
-        if not isinstance(protocol_path, str) or not protocol_path.startswith("/") or protocol_path.startswith("//"):
-            raise S10ConfigError("protocol_path must be a local absolute path")
+        protocol_path = _protocol_path(payload.get("protocol_path", "/v1/systemone"))
         return {
             "available": True,
             "status": "S10_CONFIGURED",
