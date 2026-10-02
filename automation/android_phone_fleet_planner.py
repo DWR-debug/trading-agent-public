@@ -13,6 +13,8 @@ SLOTS = {
     "01": "samsung-phone-01",
     "02": "samsung-phone-02",
     "03": "samsung-phone-03",
+    "04": "samsung-phone-04",
+    "05": "samsung-phone-05",
 }
 RUNTIME_STATUS_DIR = Path("ops/android_phone_runtime_status")
 ACCEPTED_STATUS = "ANDROID_PHONE_UTILITY_ACCEPTED"

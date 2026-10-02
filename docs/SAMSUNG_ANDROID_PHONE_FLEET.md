@@ -13,6 +13,8 @@ Die Datei `ops/android_phone_resources.json` enthält drei vorbereitete Slots:
 - `SAMSUNG-PHONE-01` → `samsung-phone-01`
 - `SAMSUNG-PHONE-02` → `samsung-phone-02`
 - `SAMSUNG-PHONE-03` → `samsung-phone-03`
+- `SAMSUNG-PHONE-04` → `samsung-phone-04`
+- `SAMSUNG-PHONE-05` → `samsung-phone-05`
 
 Ein Slot wird nur dann benutzt, wenn auf dem Telefon ein Runner mit genau diesem Label online ist. Die Planung unterscheidet zusätzlich nach Receipt-Status: ein unbekanntes/nicht akzeptiertes Gerät bekommt Acceptance; ein bereits akzeptiertes Gerät bekommt Utility-Arbeit. Damit werden vorbereitete oder offline Geräte nicht künstlich beschäftigt.
 

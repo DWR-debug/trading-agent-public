@@ -156,12 +156,16 @@
       "slots": [
         "SAMSUNG-PHONE-01",
         "SAMSUNG-PHONE-02",
-        "SAMSUNG-PHONE-03"
+        "SAMSUNG-PHONE-03",
+        "SAMSUNG-PHONE-04",
+        "SAMSUNG-PHONE-05"
       ],
       "runner_labels": [
         "samsung-phone-01",
         "samsung-phone-02",
-        "samsung-phone-03"
+        "samsung-phone-03",
+        "samsung-phone-04",
+        "samsung-phone-05"
       ],
       "activation_rule": "Only online uniquely-labelled runners are scheduled. Unaccepted online devices run onboarding acceptance; accepted devices run bounded utility review. Utility runs never create scientific evidence or authorization.",
       "scientific_role": "bounded support only; never scientific evidence, authorization, selection, ranking, promotion or live execution",
@@ -171,7 +175,11 @@
         "orders_enabled": false,
         "automatic_promotion": false
       },
-      "capacity_policy": "Activate at most one additional Samsung device as a controlled capacity test when measurable throughput gain is expected; do not activate dormant slots merely to consume quota."
+      "capacity_policy": "Activate at most one additional Samsung device as a controlled capacity test when measurable throughput gain is expected; do not activate dormant slots merely to consume quota.",
+      "capacity_test_slots": [
+        "SAMSUNG-PHONE-04",
+        "SAMSUNG-PHONE-05"
+      ]
     }
   },
   "chatless_night_policy": {
