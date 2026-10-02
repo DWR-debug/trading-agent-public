@@ -609,6 +609,20 @@
       "source_registry": "research/governance/research_os_source_registry_2026_09_30.json",
       "version": "ROS-0.1"
     },
+    "s10_phone": {
+      "acceptance_receipt_sha256": null,
+      "artifact_id": null,
+      "candidate_ranking": false,
+      "candidate_selection": false,
+      "eligible": false,
+      "performance_authorization": false,
+      "promotion": false,
+      "receipt_status": null,
+      "scientific_evidence": false,
+      "source_commit": null,
+      "status": "NOT_YET_SYNCHRONIZED",
+      "workflow_run_id": null
+    },
     "scientific_compute": {
       "canonical_path": "GitHub-hosted deterministic workflows",
       "self_hosted_output_formal_evidence": false
@@ -662,7 +676,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T09:45:37.553071+00:00",
+  "generated_at_utc": "2026-10-02T09:51:54.571161+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -847,56 +861,47 @@
     "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "feat/s10-receipt-sync-os-20261002-v2",
-        "number": 830,
-        "title": "OPS: persist and route verified S10 phone status through Research OS",
-        "updatedAt": "2026-10-02T09:45:07Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/830"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "RESEARCH: quarantine Q123 disclosure-timing friction hypothesis (#829)",
-        "sha": "8980f27080ac9fb53c95f55bc262cee8b916f957",
-        "timestamp": "2026-10-02T11:45:22+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "7e3663b8299f33acae8cad85ea11077ba280cf42",
-        "timestamp": "2026-10-02T09:43:06Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f9919636924ad8539ff0e357f0c6dfaf50682543",
-        "timestamp": "2026-10-02T09:42:46Z"
+        "message": "OPS: record AI worker state",
+        "sha": "6a11283cbd4a28711d8aed7282a02bc351b7c2cb",
+        "timestamp": "2026-10-02T09:51:52Z"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "36079556ddce9156483dcd760bd6e5e3d5180a25",
-        "timestamp": "2026-10-02T09:42:38Z"
-      },
-      {
-        "message": "FIX: make Q122 CFTC release-date parser HTML-table robust (#828)",
-        "sha": "7fed100cba9f3e89a5b4ddf8218822fa25db9f01",
-        "timestamp": "2026-10-02T11:42:35+02:00"
+        "sha": "6a35cfa2fbf31ac742b7f542b0184c80ee1d82aa",
+        "timestamp": "2026-10-02T09:51:50Z"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "43d0867d2f5a3b5d1f6fcb3cf206b85e94fe12fd",
-        "timestamp": "2026-10-02T09:42:03Z"
+        "sha": "46930f4f438b4c7e91e7df78899b84fe746d687f",
+        "timestamp": "2026-10-02T09:51:49Z"
+      },
+      {
+        "message": "OPS: persist and route verified S10 phone status through Research OS (#830)",
+        "sha": "4edeeebf2fb03894b6e5b69bba9c19c8d3cd9bb1",
+        "timestamp": "2026-10-02T11:51:37+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "761ab476e93d03dabb6e398da26b220b30bb5af6",
+        "timestamp": "2026-10-02T09:47:41Z"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "02b2db5a9635902e65e47dd80bd32ab24cab211a",
-        "timestamp": "2026-10-02T09:41:57Z"
+        "sha": "f80eb8a9363033a51dac28d31974e776481b10f4",
+        "timestamp": "2026-10-02T09:47:40Z"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "a324359730c88ef1caa183af9acc716c7f62fd76",
-        "timestamp": "2026-10-02T09:41:50Z"
+        "sha": "4670ef190375d8ac9b4d90fef573008fd11c7822",
+        "timestamp": "2026-10-02T09:46:16Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "948b76dc765024df459fb77a8a36b4b8ed000f12",
+        "timestamp": "2026-10-02T09:46:14Z"
       }
     ]
   },
@@ -966,12 +971,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8980f27080ac9fb53c95f55bc262cee8b916f957",
+  "source_master_sha": "6a11283cbd4a28711d8aed7282a02bc351b7c2cb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36991611868"
+    "run_id": "36992206355"
   }
 }
