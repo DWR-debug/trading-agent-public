@@ -662,7 +662,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T09:18:06.664297+00:00",
+  "generated_at_utc": "2026-10-02T09:18:41.056396+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -847,17 +847,18 @@
     "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "fix/s10-typed-smoke-readiness-bound",
-        "number": 823,
-        "title": "FIX: align S10 typed smoke readiness bound",
-        "updatedAt": "2026-10-02T09:17:09Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/823"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "FIX: align S10 typed smoke readiness bound",
+        "sha": "1f213ad6b49111d4669478068ca1fb26f03a30e5",
+        "timestamp": "2026-10-02T11:18:29+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "0b50d8a8b97d05faf7d618a4878fa1d8d2c07f9b",
+        "timestamp": "2026-10-02T09:18:06Z"
+      },
       {
         "message": "FIX: remove shellcheck false-positive in autonomous control plane",
         "sha": "1ee7a7386629960b0620cd063be1ab94c2ae0782",
@@ -887,16 +888,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "e4a3c5150a639311ab50256b297b1774bbfe5db5",
         "timestamp": "2026-10-02T08:57:52Z"
-      },
-      {
-        "message": "FIX: classify historical invalidated preregistrations as terminal",
-        "sha": "aa1288d885a8a0b8315dc77a1505d71ac523e425",
-        "timestamp": "2026-10-02T10:57:39+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "4105af5e7787e14584be740ecce9293f5e54d21d",
-        "timestamp": "2026-10-02T08:56:51Z"
       }
     ]
   },
@@ -966,12 +957,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1ee7a7386629960b0620cd063be1ab94c2ae0782",
+  "source_master_sha": "1f213ad6b49111d4669478068ca1fb26f03a30e5",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36988971225"
+    "run_id": "36989026684"
   }
 }
