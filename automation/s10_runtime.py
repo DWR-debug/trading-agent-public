@@ -51,6 +51,22 @@ def _local_base_url(value: object) -> str:
 def load_descriptor(path: Path | None = None) -> dict[str, object]:
     path = path or descriptor_path()
     if not path.is_file():
+        base = os.environ.get("S10_BASE_URL") or os.environ.get("S10_ENDPOINT")
+        model = os.environ.get("S10_MODEL")
+        if base or model:
+            try:
+                return {
+                    "available": True,
+                    "status": "S10_CONFIGURED_ENV",
+                    "path": "<environment>",
+                    "mode": "systemone_http",
+                    "base_url": _local_base_url(base),
+                    "model": model.strip() if isinstance(model, str) and model.strip() else (_ for _ in ()).throw(S10ConfigError("S10_MODEL is required")),
+                    "protocol_path": os.environ.get("S10_PROTOCOL_PATH", "/v1/systemone"),
+                    "timeout_seconds": max(5, min(int(os.environ.get("S10_TIMEOUT_SECONDS", "90")), 180)),
+                }
+            except (S10ConfigError, TypeError, ValueError) as exc:
+                return {"available": False, "status": "S10_DESCRIPTOR_INVALID", "path": "<environment>", "error": str(exc)}
         return {"available": False, "status": "S10_UNAVAILABLE", "path": str(path)}
     try:
         payload = json.loads(path.read_text(encoding="utf-8-sig"))
