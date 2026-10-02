@@ -18,7 +18,12 @@ def good_result():
         "status": "BENCHMARK_COMPLETED",
         "corpus": {"cases": 36},
         "metrics": {"n_total": 36, "n_scored": 36, "malformed_or_no_decision": 0},
-        "option_order_sensitivity": {"n": 6, "choice_changes": 0, "max_probability_delta": 0.0},
+        "option_order_sensitivity": {
+            "n": 6,
+            "choice_changes": 0,
+            "max_probability_delta": 0.0,
+            "cases": [{"id": f"CASE-{i}", "base_choice": "SUPPORTED", "reversed_choice": "SUPPORTED", "choice_changed": False, "max_probability_delta": 0.0} for i in range(6)],
+        },
         "environment": {"source_commit": "abc123", "runner_name": "S10-TERMUX"},
         "endpoint": "http://127.0.0.1:8765",
         "worker_output_is_scientific_evidence": False,
