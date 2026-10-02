@@ -53,6 +53,30 @@ jobs:
           python3 scripts/s10_termux_discovery.py             > "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID/discovery.json"
           cat "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID/discovery.json"
 
+      - name: Recover local S10 inference stack
+        shell: bash
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          set -euo pipefail
+          cd "$REPO_SRC"
+          python3 -m automation.s10_local_stack             --repo-root "$REPO_SRC"             --descriptor "$HOME/.trading-agent/s10_interface.json"             --work-root "$HOME/.cache/trading-agent/s10/runs"
+
+      - name: Verify local S10 inference interface
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$REPO_SRC"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          from automation.s10_runtime import resolve
+          d = resolve()
+          print(json.dumps({k: d.get(k) for k in ("available","status","base_url","model","protocol_path","path")}, sort_keys=True))
+          if not d.get("available"):
+              raise SystemExit("S10 interface is not available after bounded recovery")
+          PY
+
       - name: Run isolated S10 Evidence-Critic benchmark
         if: github.event_name == 'push' || github.event_name == 'schedule' || inputs.task == 'evidence_critic'
         shell: bash
