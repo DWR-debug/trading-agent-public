@@ -25,35 +25,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 58.721,
-  "stdout": "# Q091 Adversarial Review: Fixed Portfolio Architecture\n\n## Executive Summary\nCritical vulnerabilities identified in timing assumptions, exposure mechanics, and cost accounting. Two falsification tests proposed before performance authorization.\n\n---\n\n## Critical Attack Vectors\n\n### 1. **Gross Normalization Leverage Risk (E2)**\n**Vulnerability:** E2's \"gross-normalize to unit gross exposure when nonzero\" may create hidden leverage if residualized weights have asymmetric distributions.\n\n**Attack:** \n- Residualized weights = raw weights - cross-sectional mean\n- If raw weights are positively skewed, residuals could have larger absolute values\n- Gross normalization could exceed 100% gross exposure\n\n**Falsification Test:**\n```python\n# Pre-compute: for each decision date, calculate:\n# 1. Raw Q069 weight vectors (5 sleeves × 8 symbols)\n# 2. Cross-sectional demeaned residuals\n# 3. Average residual vector\n# 4. Gross exposure before normalization = sum(|residuals|)\n# 5. Verify: gross exposure after normalization ≤ 1.0\n```\n\n### 2. **Turnover-Cost Accounting Gap**\n**Vulnerability:** Cost contract specifies fee_rate=0.001, slippage_rate=0.0005, but turnover is not explicitly modeled in the runner.\n\n**Attack:**\n- Portfolio rebalancing incurs transaction costs\n- E1 and E2 may have different turnover profiles\n- Unaccounted turnover could mask true performance\n\n**Falsification Test:**\n```python\n# For each variant, compute:\n# turnover_t = sum(|w_t - w_{t-1}|)\n# cost_t = turnover_t × (fee_rate + slippage_rate)\n# Verify: cost_t is applied before return calculation\n# Check: stress multipliers apply to cost-adjusted returns\n```\n\n### 3. **Point-in-Time Leakage in Q069 Signal Generation**\n**Vulnerability:** Q069 signals frozen at \"T-2026-09-29-091-INPUT-FREEZE\" but generation timing unclear.\n\n**Attack:**\n- If Q069 signals use any post-close data, lookahead bias exists\n- Signal generation must be strictly at t-1 close for t-day weights\n\n**Falsification Test:**\n```python\n# Verify Q069 signal generation timestamps:\n# For decision date t, all Q069 inputs must be ≤ t-1 close\n# Check: no future price data in signal calculation\n# Validate: signal generation uses only t-1 information\n```\n\n### 4. **Common-Mode Exposure Persistence**\n**Vulnerability:** Q090 found substantial common market exposure; E2's cross-sectional demeaning may not eliminate systematic risk.\n\n**Attack:**\n- Cross-sectional demeaning removes cross-sectional mean but not time-series commonality\n- All 5 Q069 sleeves may still share systematic factors\n\n**Falsification Test:**\n```python\n# For each variant, compute daily portfolio returns\n# Regress against market benchmark (e.g., S&P 500)\n# Verify: E2 beta < E1 beta (demeaning should reduce market exposure)\n# Check: no significant common factor loadings remain\n```\n\n### 5. **Adjusted-Close Price Consistency**\n**Vulnerability:** Framework uses \"adjusted_close.csv\" but adjustment methodology unspecified.\n\n**Attack:**\n- Different adjustment methods (splits/dividends) create return discrepancies\n- Inconsistent adjustments between symbols introduce bias\n\n**Falsification Test:**\n```python\n# Verify all adjusted_close.csv files:\n# 1. Use identical adjustment methodology\n# 2. Have no price jumps at corporate actions\n# 3. Maintain consistent return calculations across symbols\n```\n\n---\n\n## Concrete Next Actions\n\n### Immediate (Pre-Authorization)\n1. **Execute gross normalization test** - verify E2 never exceeds 100% gross exposure\n2. **Implement turnover-cost accounting** - add explicit cost calculation to runner\n3. **Verify PIT signal generation** - confirm all Q069 signals use t-1 information only\n\n### Secondary (Post-Authorization)\n4. **Common-mode exposure audit** - regress portfolio returns on market factors\n5. **Price consistency check** - validate adjusted close methodology uniformity\n\n---\n\n## Uncertainty Assessment\n\n| Issue | Confidence | Impact |\n|-------|------------|--------|\n| Gross normalization leverage | HIGH | Could invalidate exposure contract |\n| Turnover-cost gap | MEDIUM | May overstate performance |\n| PIT leakage | MEDIUM | Could introduce bias |\n| Common-mode exposure | HIGH | Undermines Q090 diagnosis |\n| Price consistency | LOW | Likely handled correctly |\n\n---\n\n## Recommendation\n**HOLD performance authorization** pending completion of falsification tests #1 and #2. These tests address fundamental exposure and cost accounting that could invalidate the 13-gate framework.",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 20.429,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1790934056-Y1OcWNgpw2AKY0BYyiQo",
-  "usage": {
-    "prompt_tokens": 8085,
-    "completion_tokens": 2109,
-    "total_tokens": 10194,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 1060,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
