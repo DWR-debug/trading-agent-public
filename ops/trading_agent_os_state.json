@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "state_type": "TRADING_AGENT_OS_ORCHESTRATION_SNAPSHOT",
-  "effective_date_utc": "2026-10-01",
-  "source_master_sha": "b268accb8c3dd2fa8f5dc0ab7d4d6483805c1400",
+  "effective_date_utc": "2026-10-02",
+  "source_master_sha": "72137c0fa3126fdf9273beee31ef1a33da424178",
   "purpose": "Persistent orchestration contract for chat-independent Trading Agent research and engineering.",
   "chat_trigger": "trading agent",
   "canonical_chat_entrypoint": "docs/TRADING_AGENT_CHAT_ENTRYPOINT.md",
@@ -116,16 +116,16 @@
     "codespaces": "interactive fallback only; no unattended default",
     "paid_services": "disabled by project policy",
     "s10": {
-      "status": "CONFIGURED_BY_OPERATOR",
+      "status": "UTILITY_ACCEPTED",
       "identity": "S10",
       "device_type": "dedicated_android_phone",
       "runtime": "Termux",
       "runner_workflow": ".github/workflows/s10-phone-worker.yml",
       "runner_label": "s10-phone",
-      "runner_mode": "workflow_dispatch_until_live_verified",
+      "runner_mode": "scheduled_after_live_verification",
       "research_role": "independent_mobile_compute_and_agent_worker",
       "live_verification_required": true,
-      "capability_claim": "UNRESOLVED_UNTIL_LIVE_VERIFIED",
+      "capability_claim": "UTILITY_ACCEPTED",
       "routing_rule": "use only when available + independent + permitted + useful",
       "scientific_role": "bounded support only; never scientific evidence, authorization, selection, promotion or live execution",
       "network_boundary": "operator_configured_private_link_only",
@@ -133,7 +133,12 @@
       "persistence_note": "S10 is the dedicated phone/Termux resource; exact runtime stack and interface must be discovered from the phone, not inferred from the Windows runners",
       "os_status_path": "ops/s10_runtime_status.json",
       "receipt_sync_workflow": ".github/workflows/s10-receipt-sync.yml",
-      "routing_contract": "Research OS may route S10 only when the synchronized receipt reports S10_UTILITY_ACCEPTED"
+      "routing_contract": "Research OS may route S10 only when the synchronized receipt reports S10_UTILITY_ACCEPTED",
+      "acceptance_run_id": "37023821478",
+      "acceptance_contract_version": "2026-10-02-R3",
+      "acceptance_status_path": "ops/s10_runtime_status.json",
+      "template_path": "docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md",
+      "template_runner": "scripts/samsung_termux_phone_runner_template.sh"
     }
   },
   "chatless_night_policy": {
@@ -146,8 +151,8 @@
     "persistence": "receipts/artifacts/status are written to repository or Actions artifacts; no open chat required",
     "s10": {
       "enabled": true,
-      "mode": "opportunistic_only",
-      "trigger": "only when live interface is available and a bounded useful task exists",
+      "mode": "receipt_gated_opportunistic",
+      "trigger": "when synchronized receipt reports S10_UTILITY_ACCEPTED and a bounded useful task exists",
       "formal_evidence_allowed": false,
       "performance_authorization": false
     }
@@ -155,6 +160,7 @@
   "new_chat_protocol": [
     "Read docs/TRADING_AGENT_CHAT_ENTRYPOINT.md.",
     "Read docs/TRADING_AGENT_OS_ORCHESTRATION.md and the live current status files.",
+    "Read ops/s10_runtime_status.json and route S10 only when its current receipt reports S10_UTILITY_ACCEPTED.",
     "Treat S10 as the dedicated Android/Termux phone; check its live availability/capability from the phone-side runtime before assigning bounded work.",
     "Check current master, PRs, workflows, runners and AI entitlements live.",
     "Do not trust stale runner/auth/queue claims from prior chats.",
