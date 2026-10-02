@@ -27,16 +27,16 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 2.123,
-  "stdout": "User Safety: safe",
+  "duration_seconds": 12.225,
+  "stdout": "\n\n# Worker Handoff: Q101 Negative-Evidence Atlas + Frontier Design Review\n\n**Role:** Independent adversarial second opinion. Attacking assumptions, not seeking consensus. Paper-only. No validation, no promotion, no gate changes.\n\n---\n\n## 1. Recurring Failure Lessons (from q101 atlas + evidence files)\n\n**Risk/stability recurrence — the dominant pattern.**\nThree distinct drawdown gates fail across trials: `research_drawdown_lte_10pct`, `rolling_average_drawdown_lte_10pct`, `holdout_drawdown_lte_10pct`. Evidence shows max drawdown of **36% (q077r1)** and **45% (q081r4)** against a 10% gate — a 3.6–4.5× gap. This is not marginal non-compliance; it is a structural risk-budget problem in the control itself.\n\n**Control-relative failure — the comparison is broken.**\nThe `CONTROL_6SLEEVE_ENSEMBLE` fails its own gates. If the control fails, \"improvement over control\" is meaningless. The control should be a stable, gate-compliant benchmark before any candidate is judged against it.\n\n**OOS fragility — research/holdout decay is severe.**\n- q077r1: research 2.82% vs holdout 0.51% (5.5× decay)\n- q081r4: research 2.04% vs holdout 0.34% (6× decay)\n- Rolling windows are unstable (q077r1 window 2: −0.08% return, 27.9% drawdown).\nThis is regime-specific behavior or overfitting, not robust alpha.\n\n**Turnover/cost pressure — unverified but likely.**\n6-sleeve ensemble over ~12 symbols with rolling windows implies frequent rebalancing. Cost pressure is not measured in the visible artifacts; it is an untested confound on the small positive returns.\n\n**Data/PIT blockers — enforcement is leaky.**\nq081r4 corrective_basis records a gross exposure violation: observed 1.0056 vs preregistered cap 1.0. A PIT gate that lets 0.56% over-exposure through is a data-integrity failure, not a signal failure.\n\n---\n\n## 2. Frontier Design Stress-Test (literature ideas)\n\n| Idea | Orthogonal? | Primary confound | Discard condition |\n|---|---|---|---|\n| **State-dependent predictability** (Cong et al.) | Yes — conditioning context, not another optimizer | **Sign-bias confound**: the test fixture expects `DOWNTREND_HIGHVOL` common_direction == \"positive\". In a downtrend, a positive common direction across *rejected* signal families is counterintuitive and suggests all families are long-biased and trivially \"positive\" in any regime. | If flipping all signal signs flips the \"common direction\", the regime finding is a sign artifact, not predictability. |\n| **Pure-news residual** (Didisheim et al.) | Yes — residualization is orthogonal to raw sentiment (C31) | The \"predictable component\" of news may be endogenous to the same characteristics that drive returns → spurious residual predictability. Also data-hungry. | No public historical corpus with stable article identifiers → discard. |\n| **Shareholder experience** (Riley & Zhou) | Partially — uses existing OHLCV, cheap | Likely **collinear with momentum**. Holder experience is a price-history transform; Q082:C22–C25 may already encode behavioral-state variables. | Correlation with existing momentum candidates exceeds a fixed threshold",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1790934708-fCeVHQoQgMYvirR3VY30",
+  "response_id": "gen-1790943516-i1i3coJ6IM5JC58pasZe",
   "usage": {
-    "prompt_tokens": 6686,
-    "completion_tokens": 103,
-    "total_tokens": 6789,
+    "prompt_tokens": 6571,
+    "completion_tokens": 3200,
+    "total_tokens": 9771,
     "cost": 0,
     "is_byok": false,
     "prompt_tokens_details": {
@@ -51,7 +51,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 115,
+      "reasoning_tokens": 2416,
       "image_tokens": 0,
       "audio_tokens": 0
     }
