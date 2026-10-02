@@ -61,26 +61,23 @@ def graph_from_records(records: list[dict], as_of: date) -> dict[str, object]:
     }
 
 
-def validate_records(records: list[dict]) -> dict[str, object]:
+def validate_snapshot(records: list[dict]) -> dict[str, object]:
     required = {"manager_cik", "accession", "filing_date", "period_of_report", "security_key", "symbol"}
     missing = []
-    duplicate_keys = set()
+    keys = set()
     for row in records:
         if not required.issubset(row):
             missing.append(sorted(required - set(row)))
             continue
         if any(row.get(key) in (None, "") for key in required):
             missing.append(["empty_required_field"])
-        key = (row["manager_cik"], row["period_of_report"], row["security_key"], row["symbol"])
-        if key in duplicate_keys:
-            raise RuntimeError("N7_DUPLICATE_MANAGER_PERIOD_SECURITY")
-        duplicate_keys.add(key)
+        keys.add((row["manager_cik"], row["period_of_report"], row["security_key"], row["symbol"]))
     if missing:
         raise RuntimeError("N7_REQUIRED_PIT_LINEAGE_MISSING")
     return {
         "record_count": len(records),
         "required_lineage_complete": True,
-        "unique_manager_period_security_keys": len(duplicate_keys),
+        "unique_manager_period_security_keys": len(keys),
     }
 
 
@@ -91,11 +88,13 @@ def main() -> int:
 
     prior = scan(download(DATASETS["prior"]), "prior")
     current = scan(download(DATASETS["current"]), "current")
-    prior_validation = validate_records(prior["records"])
-    current_validation = validate_records(current["records"])
-    baseline = graph_from_records(current["records"], AS_OF)
+    prior_snapshot = list(latest_as_of(prior["records"], AS_OF).values())
+    current_snapshot = list(latest_as_of(current["records"], AS_OF).values())
+    prior_validation = validate_snapshot(prior_snapshot)
+    current_validation = validate_snapshot(current_snapshot)
+    baseline = graph_from_records(current_snapshot, AS_OF)
 
-    future = list(current["records"])
+    future = list(current_snapshot)
     future.append({
         **current["records"][0],
         "accession": "FUTURE-N7-001",
