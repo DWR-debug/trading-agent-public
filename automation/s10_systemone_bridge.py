@@ -29,6 +29,22 @@ def post_json(url: str, payload: dict) -> dict:
     with urlopen(req, timeout=TIMEOUT) as resp:
         return json.loads(resp.read().decode("utf-8"))
 
+def resolve_upstream_model() -> str:
+    try:
+        models = get_json(f"{LLAMA_BASE}/v1/models").get("data")
+        ids = [
+            str(row.get("id"))
+            for row in (models if isinstance(models, list) else [])
+            if isinstance(row, dict) and row.get("id")
+        ]
+        if MODEL in ids:
+            return MODEL
+        if ids:
+            return ids[0]
+    except Exception:
+        pass
+    return MODEL
+
 def build_prompt(payload: dict) -> str:
     state = payload.get("state") or {}
     questions = payload.get("questions") or {}
@@ -104,7 +120,7 @@ class Handler(BaseHTTPRequestHandler):
             length = int(self.headers.get("Content-Length", "0"))
             payload = json.loads(self.rfile.read(length).decode("utf-8"))
             req = {
-                "model": MODEL,
+                "model": resolve_upstream_model(),
                 "messages": [
                     {"role": "system", "content": "Return only one JSON object. Never add commentary."},
                     {"role": "user", "content": build_prompt(payload)},
