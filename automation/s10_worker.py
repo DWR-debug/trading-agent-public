@@ -138,7 +138,21 @@ def main() -> int:
             "--output", str(args.output),
             "--option-order-checks", str(args.option_order_checks),
         ]
-        return benchmark_main()
+        code = benchmark_main()
+        if code == 0 and args.output.is_file():
+            from automation.s10_acceptance import build_receipt
+
+            receipt = build_receipt(args.output)
+            acceptance_path = args.output.with_name("s10_acceptance_receipt.json")
+            acceptance_path.write_text(
+                json.dumps(receipt, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            print(json.dumps({
+                "s10_utility_status": receipt["status"],
+                "s10_acceptance_receipt": str(acceptance_path),
+            }, ensure_ascii=False))
+        return code
     finally:
         sys.argv = old
 
