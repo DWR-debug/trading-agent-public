@@ -53,6 +53,7 @@ def test_scheduler_keeps_s10_fail_closed_without_receipt(tmp_path, monkeypatch):
     import automation.research_os_scheduler as scheduler
     missing = tmp_path / "missing-s10-receipt.json"
     monkeypatch.setattr(scheduler, "S10_ACCEPTANCE_PATH", missing)
+    monkeypatch.setattr(scheduler, "S10_OS_STATUS_PATH", tmp_path / "missing-os-status.json")
     p = scheduler.build_plan(run_number=10)
     s10 = next(item for item in p["agent_resources"] if item["id"] == "S10")
     assert s10["eligible"] is False
