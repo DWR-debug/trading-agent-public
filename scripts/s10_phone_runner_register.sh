@@ -6,8 +6,10 @@ RUNNER_NAME="${S10_RUNNER_NAME:-S10-TERMUX}"
 RUNNER_LABELS="s10-phone,linux,ARM64"
 
 command -v proot-distro >/dev/null 2>&1 || { echo "Install first: pkg install -y proot-distro"; exit 2; }
-read -rsp "GitHub runner registration token: " TOKEN
-printf "\n"
+command -v gh >/dev/null 2>&1 || { echo "Install first: pkg install -y gh"; exit 2; }
+gh auth status >/dev/null 2>&1 || { echo "Authenticate gh first: gh auth login"; exit 2; }
+
+TOKEN="$(gh api -X POST "repos/$REPO/actions/runners/registration-token" --jq .token)"
 [ -n "$TOKEN" ]
 
 proot-distro login ubuntu -- env S10_RUNNER_TOKEN="$TOKEN" S10_RUNNER_NAME="$RUNNER_NAME" S10_RUNNER_LABELS="$RUNNER_LABELS" S10_RUNNER_VERSION="$RUNNER_VERSION" S10_REPO="$REPO" bash -lc '
@@ -22,5 +24,5 @@ if [ ! -x ./run.sh ]; then
 fi
 ./config.sh --url "https://github.com/${S10_REPO}" --token "$S10_RUNNER_TOKEN" --name "$S10_RUNNER_NAME" --labels "$S10_RUNNER_LABELS" --work "_work" --unattended --replace
 '
-
-echo "Registration completed. Start with: proot-distro login ubuntu -- bash -lc 'cd /opt/s10-actions-runner && ./run.sh'"
+echo "S10 phone runner registered: $RUNNER_NAME"
+echo "Start: proot-distro login ubuntu -- bash -lc \"cd /opt/s10-actions-runner && ./run.sh\""
