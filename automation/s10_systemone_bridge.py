@@ -119,6 +119,7 @@ class Handler(BaseHTTPRequestHandler):
         try:
             length = int(self.headers.get("Content-Length", "0"))
             payload = json.loads(self.rfile.read(length).decode("utf-8"))
+            smoke_mode = payload.get("mode") == "smoke"
             req = {
                 "model": resolve_upstream_model(),
                 "messages": [
@@ -126,7 +127,7 @@ class Handler(BaseHTTPRequestHandler):
                     {"role": "user", "content": build_prompt(payload)},
                 ],
                 "temperature": 0,
-                "max_tokens": 160,
+                "max_tokens": 48 if smoke_mode else 160,
             }
             upstream = post_json(f"{LLAMA_BASE}/v1/chat/completions", req)
             content = ((upstream.get("choices") or [{}])[0].get("message") or {}).get("content", "")
