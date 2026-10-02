@@ -169,7 +169,7 @@
       "name": "Common-Holder Network Connectedness × Filing Arrival",
       "family": "institutional_information_network_event_processing",
       "hypothesis": "The structure of common institutional ownership may alter how quickly public issuer disclosures are incorporated into prices: firms embedded in more connected institutional-holder networks may exhibit a different short-horizon response to newly public filings.",
-      "construction": "Build a deterministic quarterly manager-security bipartite graph from PIT-valid Form 13F holdings; derive an issuer-level network-connectedness exposure from disclosed common ownership, then combine that frozen exposure with the focal issuer's newly public filing-arrival state using only information available at the filing acceptance cutoff.",
+      "construction": "Build a deterministic quarterly manager-security bipartite graph from PIT-valid Form 13F holdings; derive issuer-level network connectedness as the unweighted degree in the one-mode issuer projection (number of distinct other frozen-universe issuers sharing at least one reporting manager), then combine that frozen exposure with the focal issuer's newly public filing-arrival state using only information available at the filing acceptance cutoff.",
       "sources": [
         "SEC 13F",
         "SEC EDGAR submissions",
