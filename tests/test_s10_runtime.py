@@ -48,3 +48,13 @@ def test_s10_descriptor_accepts_custom_local_protocol_path(tmp_path: Path):
     result = load_descriptor(path)
     assert result["available"] is True
     assert result["protocol_path"] == "/api/systemone"
+
+
+def test_s10_runtime_can_use_safe_environment_configuration(tmp_path: Path, monkeypatch):
+    missing = tmp_path / "missing.json"
+    monkeypatch.setenv("S10_BASE_URL", "http://127.0.0.1:8765")
+    monkeypatch.setenv("S10_MODEL", "s10-local")
+    monkeypatch.setenv("S10_PROTOCOL_PATH", "/v1/systemone")
+    result = load_descriptor(missing)
+    assert result["available"] is True
+    assert result["status"] == "S10_CONFIGURED_ENV"
