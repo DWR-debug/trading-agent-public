@@ -14,8 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       phone_01: ${{ steps.plan.outputs.phone_01 }}
+      phone_01_mode: ${{ steps.plan.outputs.phone_01_mode }}
       phone_02: ${{ steps.plan.outputs.phone_02 }}
+      phone_02_mode: ${{ steps.plan.outputs.phone_02_mode }}
       phone_03: ${{ steps.plan.outputs.phone_03 }}
+      phone_03_mode: ${{ steps.plan.outputs.phone_03_mode }}
     steps:
       - name: Checkout phone registry
         uses: actions/checkout@v5
@@ -50,6 +53,7 @@ jobs:
     timeout-minutes: 45
     env:
       PHONE_RESOURCE_ID: SAMSUNG-PHONE-01
+      PHONE_MODE: ${{ needs.plan.outputs.phone_01_mode }}
       PHONE_RUNNER_NAME: SAMSUNG-PHONE-01-TERMUX
       PHONE_INTERFACE_PATH: ~/.trading-agent/phone_interface.json
       S10_SEED: "271828"
@@ -92,7 +96,22 @@ jobs:
           cd "$REPO_SRC"
           python3 -c 'import json; from pathlib import Path; from urllib.parse import urlparse; p=Path.home()/".trading-agent"/"phone_interface.json"; d=json.loads(p.read_text(encoding="utf-8-sig")); u=urlparse(str(d.get("base_url",""))); assert u.hostname in {"127.0.0.1","localhost","::1"}, "PHONE_ENDPOINT_NOT_LOOPBACK"; assert d.get("model"), "PHONE_MODEL_MISSING"; print(json.dumps({"model":d["model"],"base_url":d["base_url"]},sort_keys=True))'
 
+
+      - name: Run bounded utility review on accepted phone
+        if: env.PHONE_MODE == 'utility'
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$REPO_SRC"
+          OUT="$GITHUB_WORKSPACE/research/runs/android_phone/$GITHUB_RUN_ID/$PHONE_RESOURCE_ID"
+          mkdir -p "$OUT"
+          python3 -m automation.s10_utility_task \
+            --repo-root "$REPO_SRC" \
+            --output "$OUT/utility_task.json"
+          cat "$OUT/utility_task.json"
+
       - name: Run bounded 36-case Evidence-Critic benchmark
+        if: env.PHONE_MODE == 'acceptance'
         shell: bash
         run: |
           set -euo pipefail
@@ -153,6 +172,7 @@ jobs:
     timeout-minutes: 45
     env:
       PHONE_RESOURCE_ID: SAMSUNG-PHONE-02
+      PHONE_MODE: ${{ needs.plan.outputs.phone_02_mode }}
       PHONE_RUNNER_NAME: SAMSUNG-PHONE-02-TERMUX
       PHONE_INTERFACE_PATH: ~/.trading-agent/phone_interface.json
       S10_SEED: "271828"
@@ -195,7 +215,22 @@ jobs:
           cd "$REPO_SRC"
           python3 -c 'import json; from pathlib import Path; from urllib.parse import urlparse; p=Path.home()/".trading-agent"/"phone_interface.json"; d=json.loads(p.read_text(encoding="utf-8-sig")); u=urlparse(str(d.get("base_url",""))); assert u.hostname in {"127.0.0.1","localhost","::1"}, "PHONE_ENDPOINT_NOT_LOOPBACK"; assert d.get("model"), "PHONE_MODEL_MISSING"; print(json.dumps({"model":d["model"],"base_url":d["base_url"]},sort_keys=True))'
 
+
+      - name: Run bounded utility review on accepted phone
+        if: env.PHONE_MODE == 'utility'
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$REPO_SRC"
+          OUT="$GITHUB_WORKSPACE/research/runs/android_phone/$GITHUB_RUN_ID/$PHONE_RESOURCE_ID"
+          mkdir -p "$OUT"
+          python3 -m automation.s10_utility_task \
+            --repo-root "$REPO_SRC" \
+            --output "$OUT/utility_task.json"
+          cat "$OUT/utility_task.json"
+
       - name: Run bounded 36-case Evidence-Critic benchmark
+        if: env.PHONE_MODE == 'acceptance'
         shell: bash
         run: |
           set -euo pipefail
@@ -256,6 +291,7 @@ jobs:
     timeout-minutes: 45
     env:
       PHONE_RESOURCE_ID: SAMSUNG-PHONE-03
+      PHONE_MODE: ${{ needs.plan.outputs.phone_03_mode }}
       PHONE_RUNNER_NAME: SAMSUNG-PHONE-03-TERMUX
       PHONE_INTERFACE_PATH: ~/.trading-agent/phone_interface.json
       S10_SEED: "271828"
@@ -298,7 +334,22 @@ jobs:
           cd "$REPO_SRC"
           python3 -c 'import json; from pathlib import Path; from urllib.parse import urlparse; p=Path.home()/".trading-agent"/"phone_interface.json"; d=json.loads(p.read_text(encoding="utf-8-sig")); u=urlparse(str(d.get("base_url",""))); assert u.hostname in {"127.0.0.1","localhost","::1"}, "PHONE_ENDPOINT_NOT_LOOPBACK"; assert d.get("model"), "PHONE_MODEL_MISSING"; print(json.dumps({"model":d["model"],"base_url":d["base_url"]},sort_keys=True))'
 
+
+      - name: Run bounded utility review on accepted phone
+        if: env.PHONE_MODE == 'utility'
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$REPO_SRC"
+          OUT="$GITHUB_WORKSPACE/research/runs/android_phone/$GITHUB_RUN_ID/$PHONE_RESOURCE_ID"
+          mkdir -p "$OUT"
+          python3 -m automation.s10_utility_task \
+            --repo-root "$REPO_SRC" \
+            --output "$OUT/utility_task.json"
+          cat "$OUT/utility_task.json"
+
       - name: Run bounded 36-case Evidence-Critic benchmark
+        if: env.PHONE_MODE == 'acceptance'
         shell: bash
         run: |
           set -euo pipefail
