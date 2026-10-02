@@ -65,3 +65,30 @@ def test_q122_parses_live_style_html_table_with_footnote():
     assert len(rows) == 2
     assert rows[0]["report_date"] == "2025-09-30"
     assert rows[0]["documented_new_publish_date"] == "2025-11-19"
+
+
+def test_q122_release_clock_coverage_is_explicit():
+    from automation.q122_cftc_release_date_evidence import build
+
+    rows = [
+        {
+            "report_date": "2025-09-30",
+            "original_publish_date": "2025-10-03",
+            "documented_new_publish_date": "2025-11-19",
+            "evidence_type": "DOCUMENTED_SPECIAL_ANNOUNCEMENT",
+        },
+        {
+            "report_date": "2025-10-07",
+            "original_publish_date": "2025-10-10",
+            "documented_new_publish_date": "2025-11-21",
+            "evidence_type": "DOCUMENTED_SPECIAL_ANNOUNCEMENT",
+        },
+    ]
+    out = build(rows, {}, {})
+    coverage = out["release_clock_coverage"]
+    assert coverage["documented_mapping_count"] == 2
+    assert coverage["documented_report_date_min"] == "2025-09-30"
+    assert coverage["documented_report_date_max"] == "2025-10-07"
+    assert coverage["documented_release_date_min"] == "2025-11-19"
+    assert coverage["documented_release_date_max"] == "2025-11-21"
+    assert "Only report dates with explicit documented release evidence" in coverage["formalization_rule"]

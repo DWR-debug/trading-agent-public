@@ -141,6 +141,18 @@ def build(rows: list[dict[str, str]], special_meta: dict[str, Any], schedule_met
         "2019-01-08",
     ]
     classifications = [classify(d, documented) for d in test_dates]
+    report_dates = sorted(documented)
+    release_dates = sorted(row["documented_new_publish_date"] for row in rows)
+    unknown_test_count = sum(x["release_evidence_type"] == "UNKNOWN" for x in classifications)
+    coverage = {
+        "documented_mapping_count": len(rows),
+        "documented_report_date_min": report_dates[0] if report_dates else None,
+        "documented_report_date_max": report_dates[-1] if report_dates else None,
+        "documented_release_date_min": release_dates[0] if release_dates else None,
+        "documented_release_date_max": release_dates[-1] if release_dates else None,
+        "tested_unknown_count": unknown_test_count,
+        "formalization_rule": "Only report dates with explicit documented release evidence may enter a PIT availability clock; undocumented history remains blocked.",
+    }
     return {
         "schema_version": 1,
         "task_id": "Q-2026-10-02-122-CFTC-RELEASE-DATE-EVIDENCE",
@@ -152,6 +164,7 @@ def build(rows: list[dict[str, str]], special_meta: dict[str, Any], schedule_met
             "special_announcements": special_meta,
             "release_schedule": schedule_meta,
         },
+        "release_clock_coverage": coverage,
         "rules": {
             "documented_release_dates_are_formalizable": True,
             "schedule_only_dates_are_formalizable": False,
