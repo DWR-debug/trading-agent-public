@@ -13,6 +13,15 @@ def test_samsung_template_is_generic_and_secret_safe():
     assert "s10-phone" not in script
     assert "S10_RUNNER_TOKEN" not in script
     assert "PHONE_RUNNER_TOKEN" in script
+    assert "\${" not in script
+
+def test_samsung_template_has_all_operational_commands():
+    script = Path("scripts/samsung_termux_phone_runner_template.sh").read_text(encoding="utf-8")
+    assert "Usage: $0 prepare|runtime|register|start" in script
+    assert 'runtime) runtime ;;' in script
+    assert "git clone --depth=1" in script
+    assert "automation.s10_local_stack" in script
+    assert "termux-wake-lock" in script
 
 def test_s10_template_reference_is_pinned():
     doc = Path("docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md").read_text(encoding="utf-8")
