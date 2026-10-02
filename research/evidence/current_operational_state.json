@@ -662,7 +662,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T05:49:10.620690+00:00",
+  "generated_at_utc": "2026-10-02T05:50:26.862619+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -858,14 +858,6 @@
       },
       {
         "baseRefName": "master",
-        "headRefName": "feat/q119-independent-reproduction-20261002",
-        "number": 797,
-        "title": "feat: independently reproduce Q119 Treasury source/PIT feasibility",
-        "updatedAt": "2026-10-02T05:48:25Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/797"
-      },
-      {
-        "baseRefName": "master",
         "headRefName": "feat/s10-phone-runner-lane-20261002",
         "number": 795,
         "title": "feat: integrate S10 phone as isolated ARM64 research runner",
@@ -874,6 +866,16 @@
       }
     ],
     "recent_commits": [
+      {
+        "message": "feat: independently reproduce Q119 Treasury source/PIT feasibility (#797)",
+        "sha": "99b3d55cc3a41702f1d411496c72123b01c58888",
+        "timestamp": "2026-10-02T07:50:13+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6b6ff8e694a40d0ba6976368ba5ba2dfa4199cbe",
+        "timestamp": "2026-10-02T05:49:10Z"
+      },
       {
         "message": "fix: make Q120 contract-code identity robust to CFTC naming (#796)",
         "sha": "ad3ed61d561753390eb9eea7422ab4e000a283f3",
@@ -903,16 +905,6 @@
         "message": "test: update discovery count for Q109 wave",
         "sha": "3279bd39856f868470dec3b61c4849eed6a1be98",
         "timestamp": "2026-10-02T07:45:57+02:00"
-      },
-      {
-        "message": "fix: update Q109 contract for new quarantined candidate",
-        "sha": "35cc29ef27a6bab6cac8f4505d79700584c8f4c4",
-        "timestamp": "2026-10-02T07:45:54+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9c193debd9a6fc5eb3bbdeaacd2b8c928c73725d",
-        "timestamp": "2026-10-02T05:44:20Z"
       }
     ]
   },
@@ -982,12 +974,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ad3ed61d561753390eb9eea7422ab4e000a283f3",
+  "source_master_sha": "99b3d55cc3a41702f1d411496c72123b01c58888",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36970635224"
+    "run_id": "36970727833"
   }
 }
