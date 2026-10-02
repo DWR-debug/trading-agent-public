@@ -1,5 +1,9 @@
 # Trading Agent — Aktuelle Decision Basis
 
+## Kanonischer Nordstern
+Unser übergeordnetes Ziel ist die Entwicklung eines wissenschaftlich validierten, reproduzierbaren und risikogesteuerten Trading Agent, der erst nach ausreichender Evidenz und formaler Autorisierung für nachhaltigen realisierten P&L-Cashflow in Betracht kommt, mit variabler Familienunterstützungs-Entnahme, erforderlicher Reinvestition, Kapitalerhalt und vollständiger Auditierbarkeit.
+Kanonischer Projektvertrag: research/governance/project_north_star.json.
+
 Stand (UTC): 2026-10-02T19:47:07.217Z
 Technische Basis: 9ce1e5c5bd82cedd48f1036ef1becaf4242b3e76
 Repository: DWR-debug/trading-agent-public
