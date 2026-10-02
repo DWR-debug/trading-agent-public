@@ -25,11 +25,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 5.268,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter returned tool-call syntax instead of a final worker handoff.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 8.214,
+  "stdout": "User Safety: safe",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1790930034-llBhNqfK5E02JGGpL0A7",
+  "usage": {
+    "prompt_tokens": 7319,
+    "completion_tokens": 121,
+    "total_tokens": 7440,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 133,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
