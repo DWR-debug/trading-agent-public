@@ -662,7 +662,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T09:40:56.974524+00:00",
+  "generated_at_utc": "2026-10-02T09:42:46.879933+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -850,53 +850,53 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
-        "headRefName": "fix/q122-html-table-parser-20261002",
-        "number": 828,
-        "title": "FIX: make Q122 CFTC release-date parser HTML-table robust",
-        "updatedAt": "2026-10-02T09:40:33Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/828"
+        "headRefName": "feat/q123-disclosure-processing-friction-discovery-20261002",
+        "number": 829,
+        "title": "RESEARCH: quarantine Q123 disclosure-timing friction hypothesis",
+        "updatedAt": "2026-10-02T09:42:25Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/829"
       }
     ],
     "recent_commits": [
       {
-        "message": "OPS: integrate S10 into Research OS resource routing (#827)",
-        "sha": "ef58bdc56295b482ae9ea0711a64e97437559730",
-        "timestamp": "2026-10-02T11:40:44+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "36079556ddce9156483dcd760bd6e5e3d5180a25",
+        "timestamp": "2026-10-02T09:42:38Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "dca7e2e40a3c0d0eee55802ed247bdae2bd721d8",
-        "timestamp": "2026-10-02T09:39:39Z"
+        "message": "FIX: make Q122 CFTC release-date parser HTML-table robust (#828)",
+        "sha": "7fed100cba9f3e89a5b4ddf8218822fa25db9f01",
+        "timestamp": "2026-10-02T11:42:35+02:00"
       },
       {
-        "message": "RESEARCH: extend autonomous frontier loop with I22 filing-arrival feasibility (#826)",
-        "sha": "68b2513999a9a71ddc8fc8cb6f9899667b659a47",
-        "timestamp": "2026-10-02T11:39:23+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "43d0867d2f5a3b5d1f6fcb3cf206b85e94fe12fd",
+        "timestamp": "2026-10-02T09:42:03Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "08e10754e987c662361ca36cad5262051aa49025",
-        "timestamp": "2026-10-02T09:30:37Z"
+        "message": "OPS: record AI worker state",
+        "sha": "02b2db5a9635902e65e47dd80bd32ab24cab211a",
+        "timestamp": "2026-10-02T09:41:57Z"
       },
       {
-        "message": "S10: operational utility receipt + Q122 autonomous feasibility (#825)",
-        "sha": "8260aadf309dcade6b52d0cdc647e5b3b65b724a",
-        "timestamp": "2026-10-02T11:30:25+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "a324359730c88ef1caa183af9acc716c7f62fd76",
+        "timestamp": "2026-10-02T09:41:50Z"
       },
       {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "367c64026fb2a5b2641a273d861f1328d195ebcc",
-        "timestamp": "2026-10-02T09:29:42Z"
+        "message": "OPS: record AI worker state",
+        "sha": "070ecb9ad3b6a7c693990954851245691b6e8faa",
+        "timestamp": "2026-10-02T09:41:33Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c663932a3369eda2ddf7e8a5f1c34fe4c9a6868a",
-        "timestamp": "2026-10-02T09:21:58Z"
+        "message": "OPS: record AI worker state",
+        "sha": "6ad35a4bb675148ca0589fee708500d84ea5492a",
+        "timestamp": "2026-10-02T09:41:28Z"
       },
       {
-        "message": "OPS: preserve running S10 ECL across master updates",
-        "sha": "03bb2f0b9d2dc0ec70f74f166f8b1c0ad13fbdfd",
-        "timestamp": "2026-10-02T11:21:08+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "d9f9c46b9b92cad617559bb32f8424c178c988c8",
+        "timestamp": "2026-10-02T09:41:00Z"
       }
     ]
   },
@@ -966,12 +966,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ef58bdc56295b482ae9ea0711a64e97437559730",
+  "source_master_sha": "36079556ddce9156483dcd760bd6e5e3d5180a25",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36991165658"
+    "run_id": "36991341102"
   }
 }
