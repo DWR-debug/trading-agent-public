@@ -36,3 +36,7 @@ The first integration target is the isolated Evidence-Critic Lab. The existing f
 ## Termux bootstrap
 
 Run the repository's phone-side discovery helper in Termux after the phone is online. The helper only emits sanitized runtime information and does not print arbitrary environment variables or secrets.
+
+## GitHub Actions integration
+
+After Termux/Ubuntu-userland is prepared and the runner is registered with the repository label `s10-phone`, `.github/workflows/s10-phone-worker.yml` can execute the bounded phone lane. Scheduled execution is intentionally gated until live verification is complete.
