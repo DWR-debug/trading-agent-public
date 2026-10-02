@@ -40,9 +40,9 @@ def test_q120_validator_normalizes_upstream_contract_whitespace_and_case():
 def test_q120_validator_still_rejects_wrong_contract_identity():
     rows = [
         {
-            "market_and_exchange_names": "E-MINI S&P 100 - CHICAGO MERCANTILE EXCHANGE",
+            "market_and_exchange_names": "E-MINI S&P 500 STOCK INDEX",
             "report_date_as_yyyy_mm_dd": "2026-01-06",
-            "cftc_contract_market_code": "13874A",
+            "cftc_contract_market_code": "99999A",
             "open_interest_all": "1000",
             "asset_mgr_positions_long": "600",
             "asset_mgr_positions_short": "300",
@@ -53,7 +53,7 @@ def test_q120_validator_still_rejects_wrong_contract_identity():
     try:
         validate(rows)
     except RuntimeError as exc:
-        assert str(exc) == "Q120_UNEXPECTED_CONTRACT"
+        assert str(exc) == "Q120_UNEXPECTED_CONTRACT_CODE"
     else:
         raise AssertionError("wrong contract identity must remain fail-closed")
 
