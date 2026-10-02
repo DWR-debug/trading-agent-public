@@ -40,7 +40,7 @@ def _smoke_payload() -> dict:
     }
 
 
-def _endpoint_smoke(descriptor: dict[str, object]) -> dict[str, object]:
+def _endpoint_request(descriptor: dict[str, object]) -> tuple[str, str | None, dict[str, object] | None, str, str | None]:
     url = str(descriptor["base_url"]).rstrip("/") + str(descriptor["protocol_path"])
     body = json.dumps(_smoke_payload(), ensure_ascii=False).encode("utf-8")
     request = urllib.request.Request(
@@ -61,18 +61,42 @@ def _endpoint_smoke(descriptor: dict[str, object]) -> dict[str, object]:
             and isinstance(probabilities, dict)
             and set(probabilities) == {"SUPPORTED", "REFUTED", "INSUFFICIENT"}
         )
-        return {
-            "status": "PASS" if valid else "FAIL_INVALID_RESPONSE",
-            "url": url,
-            "choice_present": choice in {"SUPPORTED", "REFUTED", "INSUFFICIENT"},
-            "probabilities_contract_valid": valid,
-        }
+        return ("PASS" if valid else "FAIL_INVALID_RESPONSE", choice if isinstance(choice, str) else None, probabilities if isinstance(probabilities, dict) else None, url, None)
     except Exception as exc:
-        return {
-            "status": "FAIL_ENDPOINT_UNAVAILABLE",
-            "url": url,
-            "error": f"{type(exc).__name__}: {exc}",
-        }
+        return ("FAIL_ENDPOINT_UNAVAILABLE", None, None, url, f"{type(exc).__name__}: {exc}")
+
+
+def _endpoint_smoke(descriptor: dict[str, object]) -> dict[str, object]:
+    status, choice, probabilities, url, error = _endpoint_request(descriptor)
+    return {
+        "status": status,
+        "url": url,
+        "choice_present": choice in {"SUPPORTED", "REFUTED", "INSUFFICIENT"},
+        "probabilities_contract_valid": status == "PASS",
+        **({"error": error} if error else {}),
+    }
+
+
+def _endpoint_repeatability(descriptor: dict[str, object]) -> dict[str, object]:
+    a_status, a_choice, a_probs, url, a_error = _endpoint_request(descriptor)
+    b_status, b_choice, b_probs, _, b_error = _endpoint_request(descriptor)
+    ok = (
+        a_status == "PASS"
+        and b_status == "PASS"
+        and a_choice == b_choice
+        and a_probs == b_probs
+    )
+    return {
+        "status": "PASS" if ok else "FAIL_NONDETERMINISTIC",
+        "attempts": 2,
+        "url": url,
+        "choice_equal": a_choice == b_choice,
+        "probabilities_equal": a_probs == b_probs,
+        "attempt_1_status": a_status,
+        "attempt_2_status": b_status,
+        **({"attempt_1_error": a_error} if a_error else {}),
+        **({"attempt_2_error": b_error} if b_error else {}),
+    }
 
 
 def _write_operational_skip(args: argparse.Namespace, descriptor: dict[str, object], smoke: dict[str, object]) -> int:
@@ -123,6 +147,14 @@ def main() -> int:
     if smoke.get("status") != "PASS":
         return _write_operational_skip(args, descriptor, smoke)
 
+    repeatability = _endpoint_repeatability(descriptor)
+    if repeatability.get("status") != "PASS":
+        return _write_operational_skip(args, descriptor, {
+            "status": repeatability["status"],
+            "endpoint": repeatability["url"],
+            "repeatability": repeatability,
+        })
+
     # The benchmark CLI reads its arguments from sys.argv, so invoke it through
     # the module-level parser with a controlled temporary argv.
     import sys
@@ -141,6 +173,7 @@ def main() -> int:
         code = benchmark_main()
         if code == 0 and args.output.is_file():
             result = json.loads(args.output.read_text(encoding="utf-8"))
+            result["s10_repeatability_preflight"] = repeatability
             result["s10_runtime"] = {
                 "seed": int(os.environ.get("S10_SEED", "271828")),
                 "threads": 1,
