@@ -662,7 +662,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T09:30:37.553450+00:00",
+  "generated_at_utc": "2026-10-02T09:39:39.141866+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -847,8 +847,27 @@
     "agent_queue_requests": [],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "feat/s10-os-resource-routing-20261002",
+        "number": 827,
+        "title": "OPS: integrate S10 into Research OS resource routing",
+        "updatedAt": "2026-10-02T09:39:10Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/827"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "RESEARCH: extend autonomous frontier loop with I22 filing-arrival feasibility (#826)",
+        "sha": "68b2513999a9a71ddc8fc8cb6f9899667b659a47",
+        "timestamp": "2026-10-02T11:39:23+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "08e10754e987c662361ca36cad5262051aa49025",
+        "timestamp": "2026-10-02T09:30:37Z"
+      },
       {
         "message": "S10: operational utility receipt + Q122 autonomous feasibility (#825)",
         "sha": "8260aadf309dcade6b52d0cdc647e5b3b65b724a",
@@ -878,16 +897,6 @@
         "message": "FIX: align S10 typed smoke readiness bound",
         "sha": "1f213ad6b49111d4669478068ca1fb26f03a30e5",
         "timestamp": "2026-10-02T11:18:29+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0b50d8a8b97d05faf7d618a4878fa1d8d2c07f9b",
-        "timestamp": "2026-10-02T09:18:06Z"
-      },
-      {
-        "message": "FIX: remove shellcheck false-positive in autonomous control plane",
-        "sha": "1ee7a7386629960b0620cd063be1ab94c2ae0782",
-        "timestamp": "2026-10-02T11:17:53+02:00"
       }
     ]
   },
@@ -957,12 +966,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8260aadf309dcade6b52d0cdc647e5b3b65b724a",
+  "source_master_sha": "68b2513999a9a71ddc8fc8cb6f9899667b659a47",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36990171074"
+    "run_id": "36991036744"
   }
 }
