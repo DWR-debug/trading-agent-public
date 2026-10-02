@@ -192,6 +192,13 @@ LANES: dict[str, list[list[str]]] = {
         [
             PYTHON,
             "-m",
+            "automation.q104_xbrl_concept_freeze_audit",
+            "--output",
+            "research/runs/self_hosted/q104_xbrl_concept_freeze_audit/result.json",
+        ],
+        [
+            PYTHON,
+            "-m",
             "automation.s10_probe",
         ],
         [
