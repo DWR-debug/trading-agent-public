@@ -10,6 +10,7 @@ import hashlib
 import html
 import json
 import re
+from html.parser import HTMLParser
 import urllib.request
 import xml.etree.ElementTree as ET
 from email.utils import parsedate_to_datetime
@@ -36,13 +37,40 @@ def fetch(url: str) -> tuple[bytes, dict[str, str]]:
         return response.read(), headers
 
 
+class _LinkParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.links: list[dict[str, str]] = []
+        self._href: str | None = None
+        self._chunks: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag.lower() != "a":
+            return
+        attrs_map = dict(attrs)
+        href = attrs_map.get("href")
+        if href is not None:
+            self._href = html.unescape(href)
+            self._chunks = []
+
+    def handle_data(self, data: str) -> None:
+        if self._href is not None:
+            self._chunks.append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag.lower() != "a" or self._href is None:
+            return
+        text_value = re.sub(r"\s+", " ", " ".join(self._chunks)).strip()
+        self.links.append({"href": self._href, "text": text_value})
+        self._href = None
+        self._chunks = []
+
+
 def page_links(page: str) -> list[dict[str, str]]:
-    out = []
-    for match in re.finditer(r"<a[^>]+href=[\"']([^\\"']+)[\\"'][^>]*>(.*?)</a>", page, re.I | re.S):
-        href = html.unescape(match.group(1))
-        text = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", match.group(2)))).strip()
-        out.append({"href": href, "text": text})
-    return out
+    parser = _LinkParser()
+    parser.feed(page)
+    parser.close()
+    return parser.links
 
 
 def rss_items(raw: bytes) -> list[dict[str, str | None]]:
