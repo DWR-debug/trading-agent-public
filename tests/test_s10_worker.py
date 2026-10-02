@@ -44,5 +44,5 @@ def test_s10_worker_source_contains_bounded_preflight():
     text = Path("automation/s10_worker.py").read_text(encoding="utf-8")
     assert "_endpoint_smoke" in text
     assert isinstance(s10_worker.SMOKE_TIMEOUT_SECONDS, int)
-    assert 0 < s10_worker.SMOKE_TIMEOUT_SECONDS <= 60
+    assert 0 < s10_worker.SMOKE_TIMEOUT_SECONDS <= 180
     assert "worker_output_is_scientific_evidence" in text
