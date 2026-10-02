@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "status": "TEMPLATE_ONLY",
+  "device_id": "ANDROID-SAMSUNG-<MODEL>-<SHORTID>",
+  "display_name": "Samsung <MODEL>",
+  "manufacturer": "Samsung",
+  "model": "<MODEL>",
+  "runner_name": "ANDROID-SAMSUNG-<MODEL>-<SHORTID>",
+  "runner_labels": [
+    "android-phone",
+    "samsung",
+    "linux",
+    "ARM64"
+  ],
+  "architecture": "ARM64",
+  "termux": true,
+  "proot_distribution": "ubuntu",
+  "runner_root": "/opt/android-actions-runner",
+  "allowed_roles": [
+    "bounded_qa",
+    "adversarial_review",
+    "deterministic_reproduction",
+    "optional_local_inference"
+  ],
+  "utility_gate": "ANDROID_PHONE_UTILITY_ACCEPTED",
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false,
+    "scientific_evidence": false,
+    "performance_authorization": false,
+    "candidate_selection": false,
+    "candidate_ranking": false,
+    "promotion": false,
+    "live_execution": false
+  }
+}
