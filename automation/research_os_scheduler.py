@@ -54,7 +54,10 @@ def _s10_resource_state() -> dict[str, Any]:
             return result
         payload = json.loads(source_path.read_text(encoding="utf-8"))
         result["receipt_status"] = str(payload.get("receipt_status", payload.get("status", "INVALID")))
-        result["eligible"] = payload.get("eligible") is True and result["receipt_status"] == "S10_UTILITY_ACCEPTED"
+        if source_path == S10_OS_STATUS_PATH:
+            result["eligible"] = payload.get("eligible") is True and result["receipt_status"] == "S10_UTILITY_ACCEPTED"
+        else:
+            result["eligible"] = result["receipt_status"] == "S10_UTILITY_ACCEPTED"
         result["receipt_sha256"] = hashlib.sha256(source_path.read_bytes()).hexdigest()
         result["status_source"] = "canonical_os_status" if source_path == S10_OS_STATUS_PATH else "same_run_local_receipt"
     except (OSError, json.JSONDecodeError, TypeError):
