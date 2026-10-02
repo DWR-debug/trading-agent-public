@@ -178,6 +178,8 @@ ACTIVE_WORKFLOWS = {
     "s10-receipt-sync.yml",
     "s10-stale-run-recovery.yml",
     "q104-i22-filing-arrival.yml",
+    "android-phone-fleet-worker.yml",
+    "android-phone-fleet-receipt-sync.yml",
 }
 
 REQUIRED_FILES = (

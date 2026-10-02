@@ -4,7 +4,7 @@ def test_samsung_template_is_generic_and_secret_safe():
     doc = Path("docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md").read_text(encoding="utf-8")
     script = Path("scripts/samsung_termux_phone_runner_template.sh").read_text(encoding="utf-8")
     assert "S10 ist die Referenzimplementierung" in doc
-    assert "S11/S12" in doc
+    assert "SAMSUNG-PHONE-01" in doc
     assert "PHONE_RESOURCE_ID" in script
     assert "PHONE_RUNNER_LABEL" in script
     assert "registration token" in script.lower()
