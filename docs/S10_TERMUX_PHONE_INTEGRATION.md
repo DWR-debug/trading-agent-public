@@ -6,6 +6,10 @@
 
 The Windows self-hosted runners are separate infrastructure. The project must not infer S10 availability from a Windows process, Windows executable, or Windows memory reading.
 
+**Current operational status (2026-10-02):** the dedicated phone runner completed the full bounded S10 benchmark successfully and the synchronized canonical receipt reports \`S10_UTILITY_ACCEPTED\` under contract \`2026-10-02-R3\`. This is an operational capability result only, not scientific trading evidence.
+
+For future Samsung/Android devices, use \`docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md\` and \`scripts/samsung_termux_phone_runner_template.sh\`. S10 is the reference instance, not a model-specific integration path.
+
 ## Allowed role
 
 S10 may provide bounded:
@@ -25,7 +29,7 @@ The phone-side runtime is the authority for S10 capability discovery. Verificati
 4. the interface can answer a bounded smoke request;
 5. no credential material is exported in receipts.
 
-Until this is established, S10 is **configured but capability-unresolved**, not a failed scientific resource.
+Until this is established, S10 is **configured but capability-unresolved**, not a failed scientific resource. After acceptance, the receipt remains authoritative for routing until a newer receipt supersedes it.
 
 ## Bridge to the Trading Agent OS
 
@@ -39,22 +43,24 @@ Run the repository's phone-side discovery helper in Termux after the phone is on
 
 ## GitHub Actions integration
 
-After Termux/Ubuntu-userland is prepared and the runner is registered with the repository label `s10-phone`, `.github/workflows/s10-phone-worker.yml` can execute the bounded phone lane. Scheduled execution is intentionally gated until live verification is complete.
+After Termux/Ubuntu-userland is prepared and the runner is registered with the repository label \`s10-phone\`, \`.github/workflows/s10-phone-worker.yml\` executes the bounded phone lane on its configured schedule and on relevant master changes. Routing remains receipt-gated: a runner being online alone is not sufficient.
 
 ## Operator activation
 
-The phone runner is intentionally not enabled for scheduled work until the phone-side runner has been live-verified. Manual `workflow_dispatch` remains available after registration.
+Scheduled execution is enabled because the phone-side live verification has completed. Manual \`workflow_dispatch\` remains available after registration.
 
 Required live evidence:
-- runner label `s10-phone` is online;
+- runner label \`s10-phone\` is online;
 - Termux/ARM64 worker starts successfully;
 - discovery receipt identifies the configured S10 runtime;
 - a bounded Evidence-Critic smoke run completes;
 - no secrets appear in the receipt.
 
+The latest successful acceptance run was GitHub Actions run \`37023821478\`; the synchronized operational state is in \`ops/s10_runtime_status.json\`.
+
 ## Utility acceptance
 
-After a complete fixed-corpus run, the S10 worker emits `s10_acceptance_receipt.json`.
+After a complete fixed-corpus run, the S10 worker emits \`s10_acceptance_receipt.json\`.
 This receipt is operational only. It accepts S10 as a usable bounded worker when all of the
 following are true:
 
