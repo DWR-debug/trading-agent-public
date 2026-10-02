@@ -106,7 +106,7 @@ jobs:
           "%PY_EXE%" --version || exit /b 1
           "%PY_EXE%" -m pip --version >nul 2>&1
           if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
-          "%PY_EXE%" -m pip install --disable-pip-version-check pytest pandas || exit /b 1
+          "%PY_EXE%" -m pip install --disable-pip-version-check pytest pandas exchange-calendars || exit /b 1
           endlocal
 
       - name: Run autonomous bounded research/QA lane
