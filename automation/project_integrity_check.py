@@ -387,6 +387,7 @@ def main() -> None:
         )
     _validate_q067_evidence_chain()
     _validate_research_os_registry()
+    _validate_critical_research_controls()
 
     for path in REQUIRED_FILES:
         if not path.exists():
