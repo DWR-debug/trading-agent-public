@@ -36,6 +36,7 @@ def graph_from_records(records: list[dict], as_of: date) -> dict[str, object]:
         symbol_managers.setdefault(symbol, set()).add(manager)
 
     symbol_degree: dict[str, int] = {symbol: 0 for symbol in TARGETS}
+    issuer_pairs: set[tuple[str, str]] = set()
     for manager, symbols in sorted(manager_symbols.items()):
         ordered = sorted(symbols)
         for left in ordered:
@@ -43,8 +44,11 @@ def graph_from_records(records: list[dict], as_of: date) -> dict[str, object]:
                 if left >= right:
                     continue
                 edges.add((manager, left, right))
-                symbol_degree[left] += 1
-                symbol_degree[right] += 1
+                issuer_pairs.add((left, right))
+
+    for left, right in sorted(issuer_pairs):
+        symbol_degree[left] += 1
+        symbol_degree[right] += 1
 
     return {
         "as_of": as_of.isoformat(),

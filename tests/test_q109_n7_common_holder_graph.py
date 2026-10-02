@@ -35,3 +35,16 @@ def test_n7_snapshot_validation_allows_amendment_duplicates_before_pit_collapse(
 def test_n7_pit_boundary_is_explicitly_date_level_until_acceptance_enrichment():
     from automation.q109_n7_common_holder_graph import AS_OF
     assert AS_OF.isoformat() == "2026-08-31"
+
+
+def test_n7_degree_counts_distinct_issuer_neighbors_not_manager_edges():
+    rows = [
+        {"manager_cik": "1", "period_of_report": "31-MAR-2026", "security_key": "A", "symbol": "SPGI", "filing_date": "2026-05-01", "accession": "A1"},
+        {"manager_cik": "1", "period_of_report": "31-MAR-2026", "security_key": "B", "symbol": "NDAQ", "filing_date": "2026-05-01", "accession": "A2"},
+        {"manager_cik": "2", "period_of_report": "31-MAR-2026", "security_key": "A", "symbol": "SPGI", "filing_date": "2026-05-02", "accession": "B1"},
+        {"manager_cik": "2", "period_of_report": "31-MAR-2026", "security_key": "B", "symbol": "NDAQ", "filing_date": "2026-05-02", "accession": "B2"},
+    ]
+    out = graph_from_records(rows, AS_OF)
+    assert out["common_holder_edge_count"] == 2
+    assert out["symbol_connectedness_degree"]["SPGI"] == 1
+    assert out["symbol_connectedness_degree"]["NDAQ"] == 1
