@@ -51,3 +51,19 @@ Required live evidence:
 - discovery receipt identifies the configured S10 runtime;
 - a bounded Evidence-Critic smoke run completes;
 - no secrets appear in the receipt.
+
+## Utility acceptance
+
+After a complete fixed-corpus run, the S10 worker emits `s10_acceptance_receipt.json`.
+This receipt is operational only. It accepts S10 as a usable bounded worker when all of the
+following are true:
+
+- the fixed 36-case corpus was completed;
+- all 36 responses have a valid typed verdict and all three probability fields;
+- all 36 cases are scored without malformed/no-decision rows;
+- six option-order checks produce no verdict changes;
+- the endpoint remains loopback-only and a source commit is recorded;
+- governance remains fail-closed.
+
+The receipt deliberately does not judge trading performance, choose candidates, create
+scientific evidence, authorize experiments, rank models, or promote anything.
