@@ -72,6 +72,13 @@ def build_status(
         "live_trading_enabled": False,
         "orders_enabled": False,
         "automatic_promotion": False,
+        # Acceptance is historical capability evidence from a completed run.
+        # Current physical runner presence is a separate live fact and is not
+        # inferred from this receipt.
+        "receipt_eligible": False,
+        "current_online": None,
+        "current_online_verification": "NOT_PERFORMED",
+        "eligibility_basis": "completed_workflow_acceptance_receipt",
     }
 
     if provenance is None:
@@ -102,7 +109,9 @@ def build_status(
 
     base.update({
         "status": "S10_UTILITY_ACCEPTED" if eligible else ("S10_RESULT_AVAILABLE" if result else "S10_ARTIFACT_INCOMPLETE"),
+        # `eligible` is receipt-gated capability eligibility, not current physical presence.
         "eligible": eligible,
+        "receipt_eligible": eligible,
         "receipt_status": acceptance_status or worker_status or "NOT_PRESENT",
         "acceptance_receipt_sha256": _sha256(artifact_root / "s10_acceptance_receipt.json") if acceptance else None,
         "acceptance_contract_version": (acceptance or {}).get("acceptance_contract_version"),
