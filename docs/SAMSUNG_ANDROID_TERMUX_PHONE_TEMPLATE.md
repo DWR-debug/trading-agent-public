@@ -4,92 +4,85 @@ Stand: 2026-10-02
 
 ## Zweck
 
-Dieses Dokument ist die wiederverwendbare Vorlage fuer weitere Samsung-/Android-Geraete im Trading-Agent-OS.
+Dies ist die wiederverwendbare Integrationsvorlage fuer weitere Samsung-/Android-Geraete im Trading-Agent-OS. S10 ist die Referenzimplementierung; neue Telefone erhalten keinen eigenen wissenschaftlichen oder architekturellen Sonderpfad.
 
-S10 ist die Referenzimplementierung, aber die OS-Integration darf nicht von einem bestimmten Samsung-Modell, einer bestimmten Modellfamilie oder einem Windows-Prozess abhaengen. Das Geraet gilt erst als nutzbar, wenn sein eigener Termux-/ARM64-Runtimepfad live nachgewiesen wurde.
+## Ressourcenprofil
 
-## Geraeteprofil
+Vor Inbetriebnahme werden nur diese Felder parametrisiert:
 
-Vor Inbetriebnahme werden nur diese Eigenschaften parametrisiert:
+- PHONE_RESOURCE_ID: stabile interne Kennung, z. B. SAMSUNG-PHONE-01
+- PHONE_RUNNER_NAME: eindeutiger GitHub-Runnername, z. B. SAMSUNG-PHONE-01-TERMUX
+- PHONE_RUNNER_LABEL: eindeutiges GitHub-Label, z. B. samsung-phone-01
+- PHONE_MODEL: optionaler lokaler Modell-/Aliaswert; nicht als Research-Ergebnis verwenden
+- PHONE_INTERFACE_PATH: lokale Descriptor-Datei, Standard ~/.trading-agent/phone_interface.json
+- PHONE_ARCH: erwartete Architektur ARM64/aarch64
+- PHONE_RUNTIME: Termux + proot-distro/Ubuntu
 
-- \`PHONE_RESOURCE_ID\`: stabile interne Kennung, z. B. \`S10\`, \`S11\`
-- \`PHONE_RUNNER_NAME\`: GitHub-Runnername, z. B. \`S11-TERMUX\`
-- \`PHONE_RUNNER_LABEL\`: eindeutiges GitHub-Label, z. B. \`s11-phone\`
-- \`PHONE_ARCH\`: erwartete Architektur; ARM64/aarch64 fuer den vorgesehenen Android-Pfad
-- \`PHONE_RUNTIME\`: \`Termux + proot-distro/Ubuntu\`
-- \`PHONE_ROLE\`: bounded research / QA / Evidence-Critic-Unterstuetzung
-- \`PHONE_INTERFACE\`: ausschliesslich lokales/loopback S10-kompatibles Interface
+Geraetemodell, IMEI, Seriennummern, private IPs, Registrierungstokens, API-Keys und andere Geheimnisse werden nicht in Repository-Receipts oder Konfigurationsdateien geschrieben.
 
-Geraetemodell, IMEI, Seriennummern, private IPs, Tokens und andere Geheimnisse werden nicht in Repository-Receipts oder Konfigurationsdateien geschrieben.
+## Standard-Onboarding
 
-## Standardpfad
+1. Termux und proot-distro bereitstellen.
+2. Das Skript scripts/samsung_termux_phone_runner_template.sh verwenden.
+3. PHONE_RESOURCE_ID, PHONE_RUNNER_NAME und PHONE_RUNNER_LABEL auf einen freien Slot setzen.
+4. prepare ausfuehren.
+5. runtime ausfuehren. Das richtet einen bounded lokalen llama.cpp/Qwen-Stack ein und bleibt auf Loopback begrenzt.
+6. register ausfuehren. Das GitHub-Registrierungstoken wird interaktiv lokal eingegeben und nicht gespeichert.
+7. start ausfuehren und Termux mit Wake-Lock aktiv lassen.
 
-1. Termux installieren/aktualisieren und \`proot-distro\` verfuegbar machen.
-2. Ubuntu-Userland erzeugen.
-3. Python, curl, ca-certificates, git und tar installieren.
-4. Den GitHub Actions ARM64 Runner vorbereiten.
-5. Den Runner mit einem eindeutigen Geraetenamen und Label registrieren; der Registrierungstoken wird nur interaktiv lokal eingegeben.
-6. Termux-Wake-Lock aktivieren und Runner starten.
-7. Der Workflow \`S10 Phone Research Worker\` bzw. dessen generischer Nachfolger laedt exakt den Ziel-Commit.
-8. Der lokale Inferenz-Stack wird bounded wiederhergestellt: llama.cpp auf \`127.0.0.1\`, fester kleiner GGUF-Worker, feste Reproduzierbarkeitsparameter.
-9. Runtime-Probe, Interface-Smoke und der feste Evidence-Critic-Benchmark werden ausgefuehrt.
-10. Erst bei \`UTILITY_ACCEPTED\` darf die Ressource fuer bounded Forschung geroutet werden.
+Die ersten drei vorbereiteten Fleet-Slots stehen in ops/android_phone_resources.json. Sie sind fuer drei physisch getrennte Telefone gedacht und nutzen die eindeutigen Labels samsung-phone-01, samsung-phone-02 und samsung-phone-03.
 
-## Akzeptanzvertrag
+## Technische Acceptance
 
-Eine Telefonressource ist technisch akzeptiert, wenn mindestens nachgewiesen ist:
+Ein neues Telefon wird erst als nutzbare Ressource akzeptiert, wenn live nachgewiesen ist:
 
 - Termux/Ubuntu-Userland laeuft;
 - ARM64/aarch64 ist bestaetigt;
-- ein lokaler Interface-Endpunkt ist vorhanden;
-- der Endpunkt ist loopback-only;
-- ein bounded Smoke Request beantwortet wird;
-- ein fester 36-Faelle-Evidence-Critic-Lauf vollstaendig typisiert und reproduzierbar ist;
-- die sechs Option-Order-Checks bleiben invarianten;
-- Seed/Threads/Temperature/Top-K sind fest und receipt-faehig;
-- keine Credentials in Receipts landen;
-- \`PAPER_ONLY=True\`, \`LIVE_TRADING_ENABLED=False\`, \`ORDERS_ENABLED=False\`, \`AUTOMATIC_PROMOTION=False\`.
+- lokaler Interface-Endpunkt ist vorhanden;
+- Endpunkt ist loopback-only;
+- bounded Smoke Request funktioniert;
+- fester 36-Faelle-Evidence-Critic-Lauf ist vollstaendig typisiert;
+- sechs Option-Order-Checks bleiben invariant;
+- Seed 271828, Threads 1, Temperature 0 und Top-K 1 sind der feste Runtime-Vertrag;
+- keine Credentials landen in Receipts;
+- PAPER_ONLY=True, LIVE_TRADING_ENABLED=False, ORDERS_ENABLED=False und AUTOMATIC_PROMOTION=False bleiben unveraendert.
 
-Die technische Akzeptanz sagt nichts ueber Trading-Performance aus. Das Telefon darf keine wissenschaftliche Evidence, keine Performance-Autorisierung, keine Kandidatenselektion, kein Ranking, keine Promotion und keine Live-Ausfuehrung erzeugen.
+Die Acceptance ist ausschliesslich ein Capability-/Utility-Nachweis. Sie ist keine Trading-Evidence, keine Performance-Autorisierung, keine Kandidatenselektion und keine Promotion.
 
-## Wiederverwendung fuer S11/S12/...
+## Automatisches Routing
 
-Fuer das naechste Samsung-Geraet wird nicht ein neuer Integrationspfad entwickelt. Stattdessen werden nur die vier Ressourcenfelder aus dem Profil gesetzt und die bestehende Runner-/Runtime-Prozedur wiederverwendet.
+Die generische Spur .github/workflows/android-phone-fleet-worker.yml laeuft alle sechs Stunden und kann manuell gestartet werden. Der Planungsjob prueft vor der Matrix-Erzeugung, welche konfigurierten eindeutigen Runner-Labels online sind. Offline-Geraete erzeugen dadurch keine wartenden Android-Jobs.
 
-Der lokale Stack darf ein anderes kompatibles Modell nutzen, wenn dessen Interface und Reproduzierbarkeit separat verifiziert werden. Eine Modellwahl ist kein wissenschaftliches Ergebnis und darf nicht als solches in den Research-Ledger einfliessen.
+Nach jedem abgeschlossenen Fleet-Lauf synchronisiert .github/workflows/android-phone-fleet-receipt-sync.yml den technischen Status unter ops/android_phone_runtime_status/. Nur ein aktueller ANDROID_PHONE_UTILITY_ACCEPTED-Receipt setzt eligible=true.
 
-## S10 als Referenz
+## GitHub-Routingprinzip
 
-S10 ist derzeit die Referenzimplementierung dieses Templates:
+Self-hosted Runner werden ueber die Standardlabels self-hosted, linux und ARM64 sowie ein zusaetzliches eindeutiges Geraetelabel adressiert. Das erlaubt mehrere gleichartige ARM64-Telefone ohne Vermischung der Ressourcen.
 
-- Runner: \`S10-TERMUX\`
-- Label: \`s10-phone\`
-- Architektur: ARM64
-- lokaler Bridge-Port: \`127.0.0.1:8765\`
-- lokaler llama.cpp-Port: \`127.0.0.1:8080\`
-- Utility Acceptance Contract: \`2026-10-02-R3\`
+## S10 als Referenzinstanz
 
-Bei zukuenftigen Geraeten bleiben Protokoll, Governance und Receipt-Struktur gleich; nur Geraeteidentitaet und lokale Ressourcenparameter werden ersetzt.
+S10 bleibt separat in .github/workflows/s10-phone-worker.yml und ops/s10_runtime_status.json verankert. Der generische Fleet-Pfad ist fuer zusaetzliche Geraete gedacht und soll die S10-Instanz nicht duplizieren.
 
-## Schnelle Fehlerdiagnose
+Bei zusaetzlichen Geraeten bleiben Protocol, Receipt-Struktur, Governance und Safety-Invarianten gleich. Nur Ressourcenidentitaet und lokale Hardware-/Runtimeparameter unterscheiden sich.
 
-\`TERMUX_NOT_CONFIRMED\` -> Userland/Python pruefen.
+## Fehlerdiagnose
 
-\`RUNNER_OFFLINE\` -> Termux offen halten, Wake-Lock setzen, \`run.sh\` neu starten.
-
-\`INTERFACE_NOT_REACHED\` -> lokalen Stack/Bridge auf \`127.0.0.1\` pruefen.
-
-\`BENCHMARK_NOT_ACCEPTED\` -> keine Forschung routen; Receipt und konkrete Vertragsverletzung pruefen.
-
-\`UTILITY_ACCEPTED\` -> Ressource ist fuer bounded technische/Review-Aufgaben verwendbar.
+TERMUX_NOT_CONFIRMED -> Userland/Python pruefen.
+RUNNER_OFFLINE -> Termux offen halten, Wake-Lock setzen, run.sh neu starten.
+INTERFACE_NOT_REACHED -> lokalen Stack/Bridge auf 127.0.0.1 pruefen.
+ANDROID_PHONE_UTILITY_NOT_ACCEPTED -> keine Research-Routing-Freigabe erteilen; konkrete Acceptance-Pruefung und Receipt analysieren.
+ANDROID_PHONE_UTILITY_ACCEPTED -> Ressource ist fuer bounded technische/Review-Aufgaben verwendbar.
 
 ## Kanonische Dateien
 
-- \`docs/S10_TERMUX_PHONE_INTEGRATION.md\`
-- \`scripts/samsung_termux_phone_runner_template.sh\`
-- \`automation/s10_probe.py\`
-- \`automation/s10_runtime.py\`
-- \`automation/s10_acceptance.py\`
-- \`ops/s10_runtime_status.json\`
+- docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md
+- docs/SAMSUNG_ANDROID_PHONE_FLEET.md
+- scripts/samsung_termux_phone_runner_template.sh
+- ops/android_phone_resources.json
+- ops/android_phone_runtime_status/
+- .github/workflows/android-phone-fleet-worker.yml
+- .github/workflows/android-phone-fleet-receipt-sync.yml
+- automation/evidence_critic_benchmark.py
+- automation/s10_local_stack.py als aktuelle lokale Stack-Implementierung der Referenzinstanz
 
-Die Vorlage ist bewusst generisch: S10 bleibt eine Instanz, kein Sonderfall in der Orchestrierungslogik.
+Die Vorlage ist bewusst generisch. S10 bleibt eine Referenzinstanz und kein Sonderfall der wissenschaftlichen Orchestrierungslogik.
