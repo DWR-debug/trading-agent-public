@@ -50,6 +50,10 @@ Copilot Free wird geschützt behandelt: höchstens eine tatsächliche parallele 
 
 Gemini, Mistral und OpenRouter laufen nur bei nachgewiesener kostenloser Zugänglichkeit. Quota-/Auth-Fehler werden als Ressourcenstatus behandelt, nicht als wissenschaftlicher Fehler.
 
+## 6. Samsung/Android-Ressourcentemplate
+
+Für weitere Samsung-/Android-Telefone wird `docs/ANDROID_SAMSUNG_RUNNER_TEMPLATE.md` zusammen mit `research/devices/android_phone_profile_template.json` und den beiden `scripts/android_samsung_runner_*_template.sh` verwendet. Neue Telefone starten grundsätzlich als unverified; erst Capability- und Utility-Receipt schalten bounded Routing frei. S10 bleibt die Referenzimplementierung.
+
 ## 6. Neuer trading agent-Chat
 
 Ein neuer Chat soll diesen Vertrag zuerst lesen und anschließend den Live-Status aktualisieren. Vergangene Runner-, Auth-, Queue- und Workflow-Angaben sind niemals autoritativ.
