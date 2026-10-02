@@ -1,3 +1,4 @@
+from pathlib import Path
 import pytest
 
 from automation import s10_systemone_bridge as bridge
@@ -44,3 +45,9 @@ def test_build_prompt_canonicalizes_verdict_option_order():
     }
     prompt = bridge.build_prompt(payload)
     assert '"SUPPORTED": "S", "REFUTED": "R", "INSUFFICIENT": "I"' in prompt
+
+
+def test_bridge_request_pins_reproducible_seed():
+    source = Path("automation/s10_systemone_bridge.py").read_text(encoding="utf-8")
+    assert 'S10_SEED = int(os.environ.get("S10_SEED", "271828"))' in source
+    assert '"seed": S10_SEED' in source

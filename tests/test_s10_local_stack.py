@@ -70,6 +70,8 @@ def test_s10_mobile_server_uses_bounded_memory_defaults():
     assert '"--batch-size", "256"' in source
     assert '"--ubatch-size", "128"' in source
     assert '"--parallel", "1"' in source
+    assert '"--seed", str(S10_SEED)' in source
+    assert "S10_SEED = int(os.environ.get(\"S10_SEED\", \"271828\"))" in source
 
 
 def test_s10_worker_workflow_contains_bounded_watchdog():
