@@ -119,6 +119,7 @@ jobs:
           fi
           git commit -m "OPS: synchronize Android phone fleet receipts"
           for attempt in 1 2; do
+            echo "Android phone receipt sync push attempt ${attempt}/2"
             git fetch origin master
             if git rebase origin/master && git push origin HEAD:master; then
               exit 0
