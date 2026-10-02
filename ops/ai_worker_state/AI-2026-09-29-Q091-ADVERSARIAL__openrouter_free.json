@@ -25,11 +25,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 20.429,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 80.89,
+  "stdout": "# Q091 Adversarial Pre-Performance Review\n\n## Executive Summary\nThe Q091 framework has **critical structural vulnerabilities** that invalidate symmetric evaluation and risk silent leakage. The two variants are **not symmetrically specified** (different exposure contracts, different leverage mechanics), the 8-symbol universe makes cross-sectional demeaning a poor market-neutralizer, gross-normalization in E2 introduces unbounded leverage amplification, and the performance runner has incomplete PIT enforcement. **Do not authorize performance evaluation until these are resolved.**\n\n---\n\n## 1. Asymmetric Variant Specification (Critical)\n\n| Property | E1 (Equal Weight) | E2 (Residualized) |\n|----------|-------------------|-------------------|\n| Exposure contract | \"long-only, unit-or-less gross\" | \"zero net, unit gross when active\" |\n| Net exposure | Unconstrained (typically >0) | Forced to 0 by demeaning |\n| Gross exposure | ≤1 (claimed) | Forced to 1 by normalization |\n| Leverage mechanics | Implicit cap | **Explicit amplification** |\n| Shorting | None | Required for zero net |\n\n**Falsification test**: Compute the actual gross exposure of E1 across all decision dates. If any date exceeds 1.0, the \"unit-or-less\" contract is violated. With 5 long-only sleeves averaging, gross exposure = Σ|w_i|/5. If sleeves concentrate on disjoint symbols, gross → 1.0; if they overlap, gross < 1.0. **But the contract says \"unit-or-less\" — this is a one-sided bound that favors E1.**\n\n**Falsification test**: For E2, compute the pre-normalization gross exposure of the averaged residual vector. If it's near zero (all sleeves agree), the normalization factor → ∞. With 8 symbols and 5 sleeves, this is a real risk. The code shows `gross_normalize to exactly unit gross exposure when nonzero` — but \"when nonzero\" is a discontinuity.\n\n---\n\n## 2. Cross-Sectional Demeaning on 8 Symbols is Not Market Neutralization (Critical)\n\n**The confound**: Demeaning across 8 symbols removes the *cross-sectional mean of the 8 symbols*, not the market factor. With sector concentration (e.g., energy, materials, financials in the Q091 universe), the cross-sectional mean **is** a sector bet.\n\n**Evidence from Q090**: The diagnostic found \"substantial common market exposure\" across sleeves. But Q090 used a *different* 8-symbol universe (AEE, AES, ATO, AVY, BKH, CAH, CHD, CHRW — utilities, industrials, healthcare). Q091 uses (ACGL, APA, BXP, CE, CF, CPRT, GLW, GPN — insurance, energy, REIT, chemicals, fertilizers, e-commerce, materials, payments). **Sector overlap is minimal.** The common exposure in Q090 may not transfer.\n\n**Cheap falsification**: \n1. Regress each Q069 sleeve's target weights on SPY returns (using the Q091 universe) — measure market beta of weights.\n2. Regress E2 residual weights on SPY returns — verify market beta ≈ 0.\n3. If E2 still has market beta ≠ 0, the demeaning failed to remove market exposure.\n\n**Alternative**: The preregistration says \"demean each Q069 target-weight vector across the full fresh evaluation universe.\" This is **cross-sectional demeaning**, not **market-factor residualization**. The hypothesis claims \"reducing common cross-sectional market exposure\" but the mechanism doesn't target market exposure.\n\n---\n\n## 3. Gross Normalization in E2 Creates Unbounded Leverage Amplification (Critical)\n\n**Mechanism**: \n```\nresidual = sleeve_weight - mean(sleeve_weight across 8 symbols)\navg_residual = mean(residual across 5 sleeves)\nnormalized = avg_residual / Σ|avg_residual|  (gross = 1.0)\n```\n\n**Failure mode**: If all 5 sleeves agree on a symbol (e.g., all long ACGL), the residual for ACGL = w - mean(w). With 8 symbols, mean(w) ≈ w/8 if others near 0. Residual ≈ 7w/8. Average across 5 sleeves ≈ 7w/8. Gross normalization divides by Σ|residuals|. If only ACGL has signal, Σ|residuals| ≈ 7|w|/8. Normalized weight = sign(w). **Gross = 1.0 concentrated in one symbol.**\n\n**Worse**: If sleeves *disagree* (some long, some short), residuals cancel → avg_residual near 0 → normalization factor explodes → numerical instability or extreme weights on noise.\n\n**Falsification test**: \n- Compute the distribution of pre-normalization gross exposure (Σ|avg_residual|) across all decision dates.\n- Flag any date where pre-normalization gross < 0.01 (100x amplification).\n- Flag any date where max |normalized weight| > 0.5 (concentration risk).\n\n**The preregistration says \"when nonzero\" — but doesn't specify a floor. This is a hidden parameter.**\n\n---\n\n## 4. Point-in-Time Leakage in Weight Timing (High)\n\n**The gap**: `q091_targets_at` (imported but not shown) presumably computes weights \"at\" a decision date. But:\n- Q069 signals use windows (21, 273, 756, 63, 126 days)\n- Adjusted-close data includes dividends/splits **as of the snapshot date (2025-09-24)**\n- If `q091_targets_at` uses the *full* adjusted-close history up to decision date, **dividend adjustments from future splits/dividends leak into past signals**.\n\n**PIT trial checked only 10 decision points and 20 mutations** — insufficient for a 3704-day calendar with 2798 research + 700 holdout periods.\n\n**Required**: \n- Verify `q091_targets_at` uses only data available *at* decision date (unadjusted close + known corporate actions).\n- Or verify adjusted-close snapshot was constructed PIT-correctly (each row uses only adjustments known up to that date).\n- The input bundle manifest shows `first_timestamp: \"2011-10-24T13:30:00+00:00\"` for all symbols — this suggests a *single* adjusted-close series, not PIT-adjusted.\n\n**Falsification test**: Pick 3 symbols with known splits/dividends during 2011-2025. Recompute one signal (e.g., C7_LOW_MAX_21) using:\n(a) The provided adjusted close\n(b) Unadjusted close + corporate action calendar\nCompare weights at 10 random dates. If different → leakage.\n\n---\n\n## 5. Cost Model Omits Short Borrow Costs for E2 (High)\n\n**E2 is market-neutral with shorts**. The cost contract only specifies:\n- `fee_rate: 0.001` (commission)\n- `slippage_rate: 0.0005` (spread)\n- `stress_multipliers: [1, 1.5, 2]`\n\n**Missing**: Short borrow fees (can be 0.5%-50%+ annually for hard-to-borrow), locate fees, recall risk. With 8 symbols including small caps (GLW, GPN, BXP), borrow costs are non-trivial.\n\n**Falsification test**: For each of the 8 symbols, check historical short borrow rates (IBKR, Markit, or public data). If any symbol had >1% annual borrow fee during 2011-2025, the cost model is incomplete.\n\n**Gate 11/12 stress tests (1.5x, 2x costs) only scale commission+slippage — they don't model borrow cost regimes.**\n\n---\n\n## 6. Turnover Unconstrained → Hidden Cost Drag (Medium)\n\n**No turnover gate exists in the 13 gates**. E2's gross normalization + demeaning can create high turnover:\n- Demeaning flips signs when cross-sectional mean crosses sleeve weight\n- Gross normalization amplifies small changes\n\n**Falsification test**: Compute daily turnover for both variants:\n```\nturnover_t = 0.5 * Σ|w_t - w_{t-1} * (1 + r_t)| / Σ|w_t|\n```\nIf annualized turnover > 200",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1790934710-Rzic7I8RgtHE7OnxNKL8",
+  "usage": {
+    "prompt_tokens": 8007,
+    "completion_tokens": 3200,
+    "total_tokens": 11207,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1242,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
