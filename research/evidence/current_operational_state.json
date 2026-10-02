@@ -662,7 +662,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T05:46:20.875580+00:00",
+  "generated_at_utc": "2026-10-02T05:49:10.620690+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -850,38 +850,45 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
-        "headRefName": "fix/q109-inventory-count-20261002",
-        "number": 798,
-        "title": "test: synchronize Q109 discovery inventory expectations",
-        "updatedAt": "2026-10-02T05:46:09Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/798"
+        "headRefName": "fix/s10-health-target-phone-20261002",
+        "number": 799,
+        "title": "fix: route S10 health checks to the dedicated phone",
+        "updatedAt": "2026-10-02T05:47:54Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/799"
       },
       {
         "baseRefName": "master",
         "headRefName": "feat/q119-independent-reproduction-20261002",
         "number": 797,
         "title": "feat: independently reproduce Q119 Treasury source/PIT feasibility",
-        "updatedAt": "2026-10-02T05:45:17Z",
+        "updatedAt": "2026-10-02T05:48:25Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/pull/797"
-      },
-      {
-        "baseRefName": "master",
-        "headRefName": "fix/q120-contract-code-primary-20261002",
-        "number": 796,
-        "title": "fix: make Q120 contract-code identity robust to CFTC naming",
-        "updatedAt": "2026-10-02T05:44:39Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/796"
       },
       {
         "baseRefName": "master",
         "headRefName": "feat/s10-phone-runner-lane-20261002",
         "number": 795,
         "title": "feat: integrate S10 phone as isolated ARM64 research runner",
-        "updatedAt": "2026-10-02T05:44:04Z",
+        "updatedAt": "2026-10-02T05:48:21Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/pull/795"
       }
     ],
     "recent_commits": [
+      {
+        "message": "fix: make Q120 contract-code identity robust to CFTC naming (#796)",
+        "sha": "ad3ed61d561753390eb9eea7422ab4e000a283f3",
+        "timestamp": "2026-10-02T07:48:59+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "8e08c7b3af8f0749ec65388360a09408a9261d5e",
+        "timestamp": "2026-10-02T05:47:33Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "1b227bbb6f898d0c67d128f43fcf1b22be20017c",
+        "timestamp": "2026-10-02T05:46:20Z"
+      },
       {
         "message": "OPS: synchronize current operational status",
         "sha": "852dcb745556d2cd6c92b4860c26298439d93749",
@@ -906,21 +913,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "9c193debd9a6fc5eb3bbdeaacd2b8c928c73725d",
         "timestamp": "2026-10-02T05:44:20Z"
-      },
-      {
-        "message": "feat: add Q104 XBRL concept-freeze audit (#794)",
-        "sha": "979f69fc47d45110ab597cc26a1b64d9deaf35d2",
-        "timestamp": "2026-10-02T07:44:04+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0bfb2b13dd902e4c4510b730e18a64d2ba5ce30a",
-        "timestamp": "2026-10-02T05:43:52Z"
-      },
-      {
-        "message": "research: add Q109 common-holder network hypothesis",
-        "sha": "0f755e08d2e39e432d8b89e52943edec8ad7eb88",
-        "timestamp": "2026-10-02T07:43:40+02:00"
       }
     ]
   },
@@ -990,12 +982,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "852dcb745556d2cd6c92b4860c26298439d93749",
+  "source_master_sha": "ad3ed61d561753390eb9eea7422ab4e000a283f3",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "36970413301"
+    "run_id": "36970635224"
   }
 }
