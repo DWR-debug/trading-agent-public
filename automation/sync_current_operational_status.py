@@ -339,6 +339,10 @@ def generate(
             "s10_phone": {
                 "status": s10_operational_status.get("status"),
                 "eligible": s10_operational_status.get("eligible") is True,
+                "receipt_eligible": s10_operational_status.get("receipt_eligible", s10_operational_status.get("eligible") is True),
+                "current_online": s10_operational_status.get("current_online"),
+                "current_online_verification": s10_operational_status.get("current_online_verification", "NOT_PERFORMED"),
+                "eligibility_basis": s10_operational_status.get("eligibility_basis", "completed_workflow_acceptance_receipt"),
                 "receipt_status": s10_operational_status.get("receipt_status"),
                 "workflow_run_id": s10_operational_status.get("workflow_run_id"),
                 "source_commit": s10_operational_status.get("source_commit"),
@@ -440,7 +444,10 @@ def generate(
 - Bounded agent routing uses two queue lanes with fail-closed task contracts.
 - Self-hosted Continuous QA is scheduled hourly at minute 15 under label `trading-agent-research`.
 - Latest self-hosted capacity verification: two distinct Windows/X64 runner slots accepted concurrent jobs; see the timestamped capacity receipt.
-- S10 phone runtime: **{s10_operational_status.get("status", "NOT_YET_SYNCHRONIZED")}**; receipt-gated eligibility = **{s10_operational_status.get("eligible", False)}**. S10 output remains non-scientific and cannot authorize performance or promotion.
+- S10 phone capability receipt: **{s10_operational_status.get("status", "NOT_YET_SYNCHRONIZED")}**; receipt-gated eligibility = **{s10_operational_status.get("eligible", False)}**.
+- S10 current physical online state: **{s10_operational_status.get("current_online", "UNKNOWN")}**; current-presence verification = **{s10_operational_status.get("current_online_verification", "NOT_PERFORMED")}**.
+- A valid acceptance receipt proves bounded capability at the time of its source run; it does **not** prove that the phone or runner is online now. Live routing separately requires exact online runner discovery.
+- S10 output remains non-scientific and cannot authorize performance or promotion.
 
 ### Scientific status
 
