@@ -9,6 +9,11 @@ echo "S10 phone runner starting. Keep this Termux session alive and the phone po
 # GitHub's runner refuses interactive execution as root. The historical registration
 # lives at /opt/s10-actions-runner, so repair ownership once and run the existing
 # registered identity as an unprivileged Ubuntu user. This does not re-register it.
+#
+# CoreCLR on ARM64 Ubuntu under Termux/proot can fail during GC heap initialization
+# because it attempts an excessively large virtual-memory reservation. A bounded
+# 1-GiB GC heap limit is applied only to the runner process; S10's Python/llama.cpp
+# workload is not configured through this variable.
 proot-distro login ubuntu -- bash -lc '
 set -euo pipefail
 if ! id -u s10runner >/dev/null 2>&1; then
@@ -16,4 +21,4 @@ if ! id -u s10runner >/dev/null 2>&1; then
 fi
 chown -R s10runner:s10runner /opt/s10-actions-runner
 '
-exec proot-distro login ubuntu --user s10runner -- bash -lc "cd /opt/s10-actions-runner && ./run.sh"
+exec proot-distro login ubuntu --user s10runner -- bash -lc 'cd /opt/s10-actions-runner && DOTNET_GCHeapHardLimit=40000000 ./run.sh'
