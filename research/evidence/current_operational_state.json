@@ -614,9 +614,13 @@
       "artifact_id": "11251461126",
       "candidate_ranking": false,
       "candidate_selection": false,
+      "current_online": null,
+      "current_online_verification": "NOT_PERFORMED",
+      "eligibility_basis": "completed_workflow_acceptance_receipt",
       "eligible": true,
       "performance_authorization": false,
       "promotion": false,
+      "receipt_eligible": true,
       "receipt_status": "S10_UTILITY_ACCEPTED",
       "scientific_evidence": false,
       "source_commit": "d394045f120812cb6bfe7331e2c27b97590e24bf",
@@ -676,7 +680,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-02T21:30:45.400167+00:00",
+  "generated_at_utc": "2026-10-02T21:37:31.970522+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -864,6 +868,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: separate S10 acceptance receipt from live online status (#876)",
+        "sha": "224eef16220613968b76ffc2d4465e4f4ecadab9",
+        "timestamp": "2026-10-02T23:37:23+02:00"
+      },
+      {
+        "message": "FIX: bind Samsung fleet slots 04 and 05 correctly (#875)",
+        "sha": "68553aa2dcef067ae2e18ff73707fd422b766e4b",
+        "timestamp": "2026-10-02T23:37:20+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "043b88c323349b40998a51e07450d34cd90c4c8c",
+        "timestamp": "2026-10-02T21:30:47Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "76d6c25988881a57df48ad158e773fee72284bba",
+        "timestamp": "2026-10-02T21:30:45Z"
+      },
+      {
         "message": "QA: remove unused Git bootstrap from self-hosted lanes (#874)",
         "sha": "e6a6c7e3377f894de1cb6fadddb274a876935e11",
         "timestamp": "2026-10-02T23:30:33+02:00"
@@ -882,26 +906,6 @@
         "message": "OPS: add Samsung capacity-test slots 04 and 05 (#873)",
         "sha": "559303a914c84491bcb576b3c8b38903cd6c743d",
         "timestamp": "2026-10-02T23:30:00+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "e3284123c40a8c522b2e21ec53f3a9fbea06e43e",
-        "timestamp": "2026-10-02T21:29:36Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "1a44578bd06030d9d99f58401a425be59480fb5d",
-        "timestamp": "2026-10-02T21:26:50Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "07a63fa4b944e48af6fa7337008a47ae11a1d808",
-        "timestamp": "2026-10-02T21:11:39Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "9257930587623cc598aa04d21bf4810a21e006f9",
-        "timestamp": "2026-10-02T21:09:34Z"
       }
     ]
   },
@@ -971,12 +975,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e6a6c7e3377f894de1cb6fadddb274a876935e11",
+  "source_master_sha": "224eef16220613968b76ffc2d4465e4f4ecadab9",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37067254152"
+    "run_id": "37067927307"
   }
 }
