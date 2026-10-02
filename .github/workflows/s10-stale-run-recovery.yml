@@ -10,11 +10,15 @@ permissions:
   actions: write
   contents: read
 
+concurrency:
+  group: trading-agent-s10-stale-recovery
+  cancel-in-progress: true
+
 jobs:
   recover:
     if: github.repository == 'DWR-debug/trading-agent-public'
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 3
     steps:
       - name: Cancel stale S10 phone runs
         shell: bash
@@ -23,7 +27,7 @@ jobs:
         run: |
           set -euo pipefail
           now="$(date +%s)"
-          gh api --paginate "/repos/${GITHUB_REPOSITORY}/actions/runs?per_page=100"             --jq '.workflow_runs[] | select(.name == "S10 Phone Research Worker" and .status == "in_progress") | [.id, .updated_at, .head_sha] | @tsv' |
+          gh api "/repos/${GITHUB_REPOSITORY}/actions/runs?per_page=30"             --jq '.workflow_runs[] | select(.name == "S10 Phone Research Worker" and .status == "in_progress") | [.id, .updated_at, .head_sha] | @tsv' |
           while IFS=$'	' read -r run_id updated_at head_sha; do
             [ -n "$run_id" ] || continue
             updated_epoch="$(date -d "$updated_at" +%s)"
