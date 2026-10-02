@@ -16,7 +16,7 @@ def test_discovery_compiler_compiles_current_q104_q109_inventories():
         ROOT / "research/frontier/q104_candidate_wave_2026_10_01.json",
         ROOT / "research/frontier/q109_candidate_wave_2026_10_01.json",
     ])
-    assert result["candidate_count"] == 12
+    assert result["candidate_count"] == 13
     assert result["scientific_boundary"]["performance"] is False
     assert len(result["bundle_fingerprint"]) == 64
 
