@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "wave_id": "Q125-2026-10-02",
+  "status": "DESIGN_INVENTORY_ONLY",
+  "generated_utc": "2026-10-02T11:50:00Z",
+  "purpose": "Quarantine a public SEC MIDAS market-structure state for source publication-lag and PIT feasibility before any performance evaluation.",
+  "external_basis": [
+    {
+      "source": "U.S. SEC Market Structure Data Downloads / MIDAS",
+      "observation": "The SEC publishes individual-security market-structure metrics, including cancel-to-trade ratio, trade-to-order volume, hidden rate/volume and odd-lot rate/volume; the current public downloads are updated through June 2026.",
+      "source_url": "https://www.sec.gov/data-research/market-structure-data"
+    },
+    {
+      "source": "SEC Market Activity Report Methodology",
+      "observation": "The source methodology explicitly describes a monthly CRSP universe update with a 3-4 week lag from the prior month's final trading day, making publication timing a first-order PIT question. It also documents that the SEC round-lot definition changed starting November 3, 2025, so odd-lot-derived measures cannot be treated as a single-regime series across that boundary.",
+      "source_url": "https://www.sec.gov/featured-topics/market-structure-analytics/market-activity-report-methodology"
+    }
+  ],
+  "policy": {
+    "performance_authorized": false,
+    "holdout_selection_allowed": false,
+    "parameter_search_allowed": false,
+    "asset_search_allowed": false,
+    "threshold_search_allowed": false,
+    "horizon_search_allowed": false,
+    "variant_search_allowed": false,
+    "family_ranking_allowed": false,
+    "automatic_promotion": false,
+    "paid_data_required": false
+  },
+  "candidates": [
+    {
+      "id": "Q125:M1",
+      "name": "SEC MIDAS Market-Friction State",
+      "family": "public_market_structure_friction",
+      "hypothesis": "A frozen public market-structure state built from order cancellation, trade-to-order, hidden-volume and odd-lot activity may capture a distinct trading-friction/market-participation regime that is not reducible to daily price momentum or volatility.",
+      "construction": "Use only the SEC's published individual-security market-structure fields available at the verified publication cutoff. Treat the source release date as part of the state. Derive a predeclared non-fitted state from the published fields; no daily signal is allowed unless historical publication dates are independently reconstructible.",
+      "sources": [
+        "SEC MIDAS Market Structure Data",
+        "SEC Market Activity Methodology",
+        "public equity OHLCV"
+      ],
+      "pit_requirements": [
+        "historical dataset release/publication timestamps",
+        "security-universe membership cutoff",
+        "ticker/symbol identity continuity",
+        "field-definition and round-lot regime change handling",
+        "no use of post-release corrections"
+      ],
+      "next_gate": "historical publication-lag and individual-security archive audit",
+      "status": "DESIGN_ONLY_UNRANKED",
+      "performance_authorized": false
+    }
+  ],
+  "notes": [
+    "Q125 is discovery design only and contains no project performance evidence.",
+    "The SEC documentation says the CRSP universe is updated monthly with a 3-4 week lag; this must be incorporated into the public-availability clock rather than assumed away.",
+    "The candidate is deliberately not formulated as a higher-frequency order-flow signal because the public SEC download cadence may be too slow for that interpretation.",
+    "The November 3, 2025 round-lot definition change is a mandatory regime boundary for any odd-lot-derived feature; no pooled pre/post-series interpretation is permitted before a definition-consistency audit."
+    "No ranking, selection, tuning, holdout use, performance authorization, promotion or live execution is permitted."
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
