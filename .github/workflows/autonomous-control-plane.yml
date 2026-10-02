@@ -109,9 +109,21 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add agent_requests
           git commit -m "OPS: autonomous agent queue routing"
-          git fetch origin master
-          git rebase origin/master
-          git push origin HEAD:master
+          pushed=false
+          for attempt in 1 2 3; do
+            git fetch origin master
+            git rebase origin/master
+            if git push origin HEAD:master; then
+              pushed=true
+              break
+            fi
+            echo "Master moved during queue publish; retry \${attempt}/3 after refresh."
+            sleep 2
+          done
+          if [ "$pushed" != "true" ]; then
+            echo "::error::AUTONOMOUS_CONTROL_PLANE_PUBLISH_RACE_EXHAUSTED"
+            exit 1
+          fi
 
       - name: Publish operational snapshot
         if: always()
