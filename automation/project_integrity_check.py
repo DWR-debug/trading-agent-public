@@ -163,6 +163,7 @@ ACTIVE_WORKFLOWS = {
     "q120-independent-reproduction.yml",
     "q121-sec-beneficial-ownership-timing.yml",
     "q121r1-sec-reverse-issuer-coverage.yml",
+    "q121r2-sec-daily-index-reconciliation.yml",
     "q127r1-finra-regsho-historical-pit.yml",
     "q130r1-wikimedia-attention-source.yml",
     "q095-authorization-once.yml",
