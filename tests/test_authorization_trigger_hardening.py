@@ -20,3 +20,9 @@ def test_post_pass_noop_when_no_authorized_entry():
     text=(ROOT/".github/workflows/post-pass-independent-replication.yml").read_text(encoding="utf-8")
     assert "No authorized performance entry; post-pass replication dispatch is a no-op." in text
     assert "steps.authorization_presence.outputs.count != '0'" in text
+    
+def test_h06_p2_historical_workflow_does_not_trigger_on_registry_changes():
+    text = (ROOT / ".github/workflows/h06-p2-performance-authorization-once.yml").read_text(encoding="utf-8")
+    trigger_section = text.split("workflow_dispatch:", 1)[0]
+    assert "research/run_requests/h06_p2_authorize_and_execute_once.trigger" in trigger_section
+    assert "research/governance/active_research_registry.json" not in trigger_section
