@@ -609,6 +609,17 @@
         "performance_authorization_allowed": false,
         "note": "Current EIA API is discovery/sample only; formal PIT requires dated publication/issue files and revision lineage."
       }
+    },
+    {
+      "code": "Q121-R1",
+      "class": "sec_beneficial_ownership_reverse_issuer_coverage_correction",
+      "issue_number": 961,
+      "parent_code": "121",
+      "state": "SOURCE_ROUTE_CORRECTION_ACTIVE",
+      "preregistration_path": "research/preregistrations/q121r1_sec_reverse_issuer_coverage_2026_10_03.json",
+      "design_document": "docs/research_design/Q121R1_SEC_REVERSE_ISSUER_COVERAGE_2026-10-03.md",
+      "performance_authorization_allowed": false,
+      "note": "Original Q121 issuer-submission route is not treated as complete issuer-level population; Q121-R1 re-derives reverse issuer coverage via SEC company browse and preserves filer/subject identity separately."
     }
   ]
 }
