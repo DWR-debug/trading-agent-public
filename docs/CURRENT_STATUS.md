@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `16100824f7599335ad4cbb48aba5c9e08231ed46`
+**Current operational snapshot:** `80353bcbae37ebb51ea32f30fc140bbd7b0d46bb`
 
-**Generated (UTC):** `2026-10-03T12:53:39.816955+00:00`
+**Generated (UTC):** `2026-10-03T12:55:34.544136+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -18,11 +18,11 @@
 - Bounded agent routing uses two queue lanes with fail-closed task contracts.
 - Continuous QA is scheduled every 6 hours on GitHub-hosted Windows and uses only the bounded `repo_qa` lane; it consumes no self-hosted Windows research slot.
 - The deterministic frontier loop runs every 10 minutes on free GitHub-hosted Ubuntu; its three 10-step packs cover all 30 frontier-worker steps.
-- Windows Self-Hosted capacity is reserved for local reproduction and local-AI/hardware-dependent work.
+- Windows Self-Hosted capacity is always routable for bounded local reproduction, data QA, local-AI and hardware-dependent work; two physical slots are intended to run in parallel.
 - Latest self-hosted capacity verification: two distinct Windows/X64 runner slots accepted concurrent jobs; see the timestamped capacity receipt.
-- S10 phone capability receipt: **S10_UTILITY_ACCEPTED**; receipt-gated eligibility = **True**.
-- S10 current physical online state: **not independently queried**.
-- A fresh successful S10 utility receipt (maximum 6 hours old) is the operational-presence signal for routing. A separate phone-runner discovery is not required solely for presence confirmation; stale receipts remain fail-closed.
+- S10 phone capability receipt: **S10_UTILITY_ACCEPTED**; routing availability is **ASSUMED_ALWAYS_AVAILABLE** and is independent of receipt freshness.
+- S10 current physical online state is intentionally not treated as a routing blocker; the OS availability policy assumes the configured S10 resource is always routable.
+- Fresh S10 receipts remain mandatory to substantiate successful execution and device-derived evidence. Receipt freshness does not remove the resource from the routing pool.
 - Universal pre-formal candidate robustness gate: **ACTIVE**; structural candidate robustness must pass before PREREGISTRATION, SOURCE_FEASIBILITY, COVERAGE, PIT or PERFORMANCE formal phases.
 - S10 output remains non-scientific and cannot authorize performance or promotion.
 
@@ -117,7 +117,7 @@ Q070 is the fresh symbol-disjoint validation pipeline for the fixed Q069 OHLCV c
 - Deterministic research stays on reproducible runner paths.
 - Agent output is never scientific evidence by itself.
 - Protected Copilot reserve starts **2026-10-01T00:00:00Z**: at most 4 sessions/month, 30 AI credits/session, 1 concurrent session; actual entitlement is verified at dispatch and no paid fallback/overage is permitted.
-- Permanent research continuity uses the two self-hosted Windows lanes every 30 minutes, hosted failover on the same cadence when the self-hosted heartbeat is stale, free-AI rotation every 6 hours when authenticated, S10 utility on a receipt-gated 6-hour/event-driven cadence, and bounded agent dispatch every 2 hours.
+- Permanent research continuity uses the two self-hosted Windows lanes every 30 minutes, free-AI rotation every 6 hours when authenticated, always-routable S10/Android utility capacity, and bounded agent dispatch every 2 hours. Hosted research failover is manual-only.
 
 ## Safety
 
