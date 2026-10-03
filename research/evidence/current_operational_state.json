@@ -784,7 +784,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T12:55:59.130053+00:00",
+  "generated_at_utc": "2026-10-03T12:56:15.335444+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -964,6 +964,154 @@
     },
     "state": "PERMANENTLY_BLOCKED"
   },
+  "q129_options": {
+    "artifact_digest": "sha256:8ed2edb7a1dc732d117ee80232c47d923a4d1f263634517807d4ac22f7765686",
+    "artifact_id": 11274338126,
+    "assets": {
+      "IWM_options.parquet": {
+        "eligible_rows_after_fixed_quarantine": 13379095,
+        "observed_crossed_positive_quote_rows": 478,
+        "observed_non_xnys_dates": [],
+        "observed_non_xnys_rows": 0,
+        "rows": 13379573,
+        "sha256_verified": true
+      },
+      "QQQ_options.parquet": {
+        "eligible_rows_after_fixed_quarantine": 15345637,
+        "observed_crossed_positive_quote_rows": 245,
+        "observed_non_xnys_dates": [],
+        "observed_non_xnys_rows": 0,
+        "rows": 15345882,
+        "sha256_verified": true
+      },
+      "SPY_options.parquet": {
+        "eligible_rows_after_fixed_quarantine": 24679583,
+        "observed_crossed_positive_quote_rows": 2080,
+        "observed_non_xnys_dates": [
+          "2024-01-15"
+        ],
+        "observed_non_xnys_rows": 2,
+        "rows": 24681665,
+        "sha256_verified": true
+      }
+    },
+    "candidate_id": "Q129",
+    "canonical_release": {
+      "published_at": "2026-02-21T19:07:56Z",
+      "release_id": 289029018,
+      "release_tag": "data-v1",
+      "repository": "lambdaclass/options_portfolio_backtester"
+    },
+    "information_boundary": {
+      "decision_boundary": "next eligible XNYS session after EOD observation unless a tighter dissemination timestamp is independently proven",
+      "same_day_decision_use_allowed": false
+    },
+    "normalization_and_quarantine": {
+      "exclude_negative_quotes": true,
+      "exclude_non_xnys_observation_dates": true,
+      "exclude_positive_crossed_quotes": true,
+      "no_return_based_filtering": true,
+      "option_type_map": {
+        "C": "C",
+        "CALL": "C",
+        "P": "P",
+        "PUT": "P"
+      },
+      "raw_source_rows_modified": false
+    },
+    "receipt_fingerprint": "41d723734f030d1a212f5eb4b3e6467223a5cfcdeb97c77ffa9713f8889c7587",
+    "receipt_type": "q129_independent_options_pit_reproduction",
+    "safety": {
+      "AUTOMATIC_PROMOTION": false,
+      "LIVE_TRADING_ENABLED": false,
+      "ORDERS_ENABLED": false,
+      "PAPER_ONLY": true
+    },
+    "schema_version": "1.0",
+    "scientific_boundary": {
+      "candidate_ranking": false,
+      "candidate_selection": false,
+      "holdout_selection": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "threshold_search": false
+    },
+    "source_commit": "9f07bcf4a11b89bb62dbde23aa379cac7aee5a20",
+    "status": "Q129_INDEPENDENT_PIT_REPRODUCED",
+    "workflow_run_attempt": 1,
+    "workflow_run_id": 37123847841
+  },
+  "q133_q170_source_feasibility": {
+    "artifact_digest": "sha256:4981baae8bb6f8ecab806d496a7600f1150de8a7e3934af0d6192ca8e266c36d",
+    "candidate_count": 38,
+    "candidate_range": "Q133-Q170",
+    "newly_source_feasible_candidates": [
+      "Q137",
+      "Q144",
+      "Q147",
+      "Q148",
+      "Q149",
+      "Q150",
+      "Q151",
+      "Q153",
+      "Q154",
+      "Q155",
+      "Q157",
+      "Q158",
+      "Q161",
+      "Q162",
+      "Q163",
+      "Q164",
+      "Q165",
+      "Q166",
+      "Q167",
+      "Q168",
+      "Q169"
+    ],
+    "receipt_fingerprint": "87a608b4db7c07897c6fdc454b8b8bf78f0c068be42362b9f865ba72ff8b1f56",
+    "receipt_type": "q133_q170_discovery_source_feasibility",
+    "safety": {
+      "AUTOMATIC_PROMOTION": false,
+      "LIVE_TRADING_ENABLED": false,
+      "ORDERS_ENABLED": false,
+      "PAPER_ONLY": true
+    },
+    "schema_version": "1.0",
+    "scientific_boundary": {
+      "asset_selection": false,
+      "candidate_ranking": false,
+      "holdout_selection": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "threshold_search": false
+    },
+    "source_commit": "9f07bcf4a11b89bb62dbde23aa379cac7aee5a20",
+    "source_pass_count": 25,
+    "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
+    "still_blocked_or_design_only": [
+      "Q135",
+      "Q136",
+      "Q139",
+      "Q141",
+      "Q142",
+      "Q143",
+      "Q145",
+      "Q146",
+      "Q152",
+      "Q156",
+      "Q159",
+      "Q160",
+      "Q170"
+    ],
+    "workflow_run_id": 37123847584,
+    "workflow_run_number": 5
+  },
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -988,6 +1136,21 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: surface Q129 and Q133-Q170 receipts in canonical status",
+        "sha": "d16b94b3c01bcfc3089d8fb4e78cf60c6ac3ac20",
+        "timestamp": "2026-10-03T14:56:06+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "77a8f5b86426944deba3f4322f2a3c69a332326c",
+        "timestamp": "2026-10-03T12:56:02Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f6845c1491aef2b8a48ee3af404ef869ccd5be41",
+        "timestamp": "2026-10-03T12:56:00Z"
+      },
+      {
         "message": "EVIDENCE: record Q133-Q170 source-feasibility receipt",
         "sha": "da5650a4d6945b613fa1861b316e10d1f85ab96f",
         "timestamp": "2026-10-03T14:55:45+02:00"
@@ -1011,21 +1174,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "eff0e2d9b6fdb13bf54f1bf2f6dc4cef248c661b",
         "timestamp": "2026-10-03T12:53:42Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c98e96eac1bf8aafeb40f8c3c57d958caf0e030a",
-        "timestamp": "2026-10-03T12:53:41Z"
-      },
-      {
-        "message": "OPS: permanently routable Windows and Android capacity (#919)",
-        "sha": "16100824f7599335ad4cbb48aba5c9e08231ed46",
-        "timestamp": "2026-10-03T14:53:27+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "5e880de70850559cda3dd7fef58996c7eab01ca7",
-        "timestamp": "2026-10-03T12:50:08Z"
       }
     ]
   },
@@ -1095,12 +1243,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "da5650a4d6945b613fa1861b316e10d1f85ab96f",
+  "source_master_sha": "d16b94b3c01bcfc3089d8fb4e78cf60c6ac3ac20",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37124471654"
+    "run_id": "37124489312"
   }
 }
