@@ -44,6 +44,18 @@ def fetch(url: str) -> tuple[int, bytes]:
         return int(code), body
 
 
+
+def fetch_with_fixed_retries(url: str, attempts: int = 3) -> tuple[int, bytes, int]:
+    import time
+    last_status = 599
+    last_body = b''
+    for attempt in range(1, attempts + 1):
+        last_status, last_body = fetch(url)
+        if last_status < 500 or attempt == attempts:
+            return last_status, last_body, attempt
+        time.sleep(2 ** (attempt - 1))
+    return last_status, last_body, attempts
+
 def query_index(url: str) -> dict[str, object]:
     endpoint = (
         f"https://index.commoncrawl.org/{CRAWL}-index?"
@@ -58,11 +70,12 @@ def query_index(url: str) -> dict[str, object]:
             }
         )
     )
-    status, body = fetch(endpoint)
+    status, body, attempts = fetch_with_fixed_retries(endpoint, attempts=3)
     if status != 200:
         return {
             "status": "BLOCKED_INDEX_FETCH",
             "http_status": status,
+            "attempts": attempts,
             "index_sha256": hashlib.sha256(body).hexdigest(),
         }
 
@@ -96,6 +109,7 @@ def query_index(url: str) -> dict[str, object]:
     return {
         "status": "CAPTURE_FOUND" if rows else "NO_CAPTURE_FOUND",
         "crawl": CRAWL,
+        "attempts": attempts,
         "requested_url": url,
         "rows": len(rows),
         "malformed_lines": malformed,
@@ -144,6 +158,7 @@ def run(output: Path) -> dict[str, object]:
             "issuers": len(results),
             "status_counts": status_counts,
             "captures_found": status_counts.get("CAPTURE_FOUND", 0),
+            "infra_blocked": status_counts.get("BLOCKED_INDEX_FETCH", 0),
         },
         "scientific_boundary": {
             "performance": False,
