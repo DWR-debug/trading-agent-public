@@ -1,0 +1,73 @@
+name: Full Suite Verification
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-full-suite-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  full_suite:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest pandas exchange-calendars statsmodels==0.15.0 pypdf
+
+      - name: Run full pytest suite
+        shell: bash
+        run: python -m pytest -q
+
+      - name: Run project integrity
+        shell: bash
+        run: python automation/project_integrity_check.py
+
+      - name: Run project-state freshness
+        shell: bash
+        run: python automation/project_state_freshness_check.py
+
+      - name: Verify safety invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from config import settings
+          assert settings.PAPER_ONLY is True
+          assert settings.LIVE_TRADING_ENABLED is False
+          assert settings.ORDERS_ENABLED is False
+          assert settings.AUTOMATIC_PROMOTION is False
+          print("SAFETY INVARIANTS OK")
+          PY
+
+      - name: Upload verification summary
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: full-suite-verification-${{ github.run_id }}
+          path: |
+            .pytest_cache/
+          if-no-files-found: warn
+          retention-days: 14
