@@ -824,7 +824,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T14:59:53.877171+00:00",
+  "generated_at_utc": "2026-10-03T15:02:46.405946+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1229,14 +1229,29 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
-        "headRefName": "fix/q171-warc-payload-boundary-20261003",
-        "number": 949,
-        "title": "FIX: parse Q171 WARC payload boundary exactly",
-        "updatedAt": "2026-10-03T14:59:27Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/949"
+        "headRefName": "fix/q169-archive-sample-contract-20261003",
+        "number": 950,
+        "title": "FIX: correct Q169 NOAA archive sample contract",
+        "updatedAt": "2026-10-03T15:02:16Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/950"
       }
     ],
     "recent_commits": [
+      {
+        "message": "Merge pull request #949 from DWR-debug/fix/q171-warc-payload-boundary-20261003",
+        "sha": "e4b42bc0d10133eb3c7faddfba3d04b3d054dd8c",
+        "timestamp": "2026-10-03T17:02:33+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "643880fb417fe8410c1975d1817317e39001b405",
+        "timestamp": "2026-10-03T14:59:56Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8c616491600f763f1150d1bd9a17a88ed7143c1f",
+        "timestamp": "2026-10-03T14:59:54Z"
+      },
       {
         "message": "Merge pull request #948 from DWR-debug/fix/q169-workflow-expression-escaping-20261003",
         "sha": "b22a4fb626298010e70c3eb8b8764fee9dcfb18f",
@@ -1248,34 +1263,19 @@
         "timestamp": "2026-10-03T14:59:31Z"
       },
       {
+        "message": "TEST: verify Q171 WARC payload boundary parsing",
+        "sha": "4db80523efaa89914f1c8c50223e3bbbcaa1cb83",
+        "timestamp": "2026-10-03T16:59:21+02:00"
+      },
+      {
+        "message": "FIX: delimit Q171 WARC payload using record content length",
+        "sha": "7ce90f62d6c9e224bf68bfdf1d324e9a6d116b4c",
+        "timestamp": "2026-10-03T16:59:00+02:00"
+      },
+      {
         "message": "OPS: record AI worker state",
         "sha": "02e8d7d8cae27094f0fc0445301c8edce32c4edf",
         "timestamp": "2026-10-03T14:58:27Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "f20976786570339f2cad82c0892eca359d604ccb",
-        "timestamp": "2026-10-03T14:58:27Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "22ab43777c8627911d5d8654bcbd4c1f63a43a13",
-        "timestamp": "2026-10-03T14:58:24Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "479b759b463247d60739d89c4c65708101d4aab6",
-        "timestamp": "2026-10-03T14:58:23Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "399be99f6a959a63b506d6eb650a008f485b433d",
-        "timestamp": "2026-10-03T14:58:21Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "e8695991398f93c1125b774892ee6ed3a88b2cc7",
-        "timestamp": "2026-10-03T14:58:20Z"
       }
     ]
   },
@@ -1345,12 +1345,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b22a4fb626298010e70c3eb8b8764fee9dcfb18f",
+  "source_master_sha": "e4b42bc0d10133eb3c7faddfba3d04b3d054dd8c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37131636088"
+    "run_id": "37131828480"
   }
 }
