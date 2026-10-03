@@ -14,6 +14,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from automation import q121r1_sec_reverse_issuer_coverage as r1
+from automation import q121r3_sec_form_index_reverse_issuer as r3
 
 
 WINDOW_START = "2024-02-05"
@@ -224,6 +225,72 @@ def compile_header(row: dict[str, str], body: bytes) -> dict[str, object]:
     return event
 
 
+
+def prepare_population(output: Path) -> dict[str, object]:
+    quarters = (
+        (2024, 1), (2024, 2), (2024, 3), (2024, 4),
+        (2025, 1), (2025, 2), (2025, 3),
+    )
+    rows: list[dict[str, str]] = []
+    quarter_receipts: list[dict[str, object]] = []
+    for year, quarter in quarters:
+        body, transport = r3.fetch_logical_form_index(year, quarter)
+        parsed = [
+            row for row in r3.parse_index(body)
+            if row["form"] in FORMS and r3.within_window(row["filed_date"])
+        ]
+        parsed = [
+            {**row, "accession_number": r3.accession_from_filename(row["filename"])}
+            for row in parsed
+        ]
+        rows.extend(parsed)
+        quarter_receipts.append({
+            "year": year,
+            "quarter": quarter,
+            **transport,
+            "matching_rows": len(parsed),
+        })
+    rows.sort(key=stable_key)
+    fingerprint = key_fingerprint(rows)
+    if len(rows) != R5_ROW_COUNT or fingerprint != R5_ROW_MULTICHET:
+        raise RuntimeError(
+            f"R5_POPULATION_ANCHOR_MISMATCH:count={len(rows)}:fingerprint={fingerprint}"
+        )
+    result = {
+        "schema_version": "1.0",
+        "task_id": "Q-2026-10-03-121R6-SEC-ACCEPTANCE-TIME-COMPILATION",
+        "status": "Q121R6_POPULATION_PREPARED",
+        "source_revision_anchor": {
+            "upstream_trial_id": "Q121-R5",
+            "receipt_fingerprint": "897bc13c5f722d9a701ae7994b237fe7afd233f15cdc5e644061aa674b8f26c1",
+            "row_multiset_fingerprint": R5_ROW_MULTICHET,
+        },
+        "row_count": len(rows),
+        "row_multiset_fingerprint": fingerprint,
+        "rows": rows,
+        "quarter_receipts": quarter_receipts,
+        "scientific_boundary": {
+            "performance": False,
+            "holdout": False,
+            "selection": False,
+            "ranking": False,
+            "parameter_search": False,
+            "threshold_search": False,
+            "horizon_search": False,
+            "promotion": False,
+            "live_execution": False,
+        },
+        "safety": {
+            "paper_only": True,
+            "live_trading_enabled": False,
+            "orders_enabled": False,
+            "automatic_promotion": False,
+        },
+    }
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+    return result
+
 def compile_shard(
     population: list[dict[str, str]],
     *,
@@ -319,13 +386,22 @@ def compile_shard(
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--population", type=Path, required=True)
+    parser.add_argument("--population", type=Path)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--shard-index", type=int, required=True)
+    parser.add_argument("--shard-index", type=int)
     parser.add_argument("--shard-count", type=int, default=16)
     parser.add_argument("--workers", type=int, default=DEFAULT_WORKERS)
     parser.add_argument("--request-gap-seconds", type=float, default=DEFAULT_REQUEST_GAP_SECONDS)
+    parser.add_argument("--prepare-population", action="store_true")
     args = parser.parse_args()
+
+    if args.prepare_population:
+        result = prepare_population(args.output)
+        if result["status"] != "Q121R6_POPULATION_PREPARED":
+            raise SystemExit("Q121R6_POPULATION_PREPARATION_FAILED")
+        return
+    if args.population is None or args.shard_index is None:
+        raise SystemExit("--population and --shard-index are required unless --prepare-population is used")
 
     population_payload = json.loads(args.population.read_text(encoding="utf-8"))
     population = population_payload["rows"]
