@@ -919,7 +919,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-03T17:14:18.934990+00:00",
+  "generated_at_utc": "2026-10-03T18:10:59.212513+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1321,47 +1321,56 @@
     ],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "research/q121r4-master-index-2026-10-03",
+        "number": 981,
+        "title": "RESEARCH: Q121-R4 SEC master-index reverse issuer feasibility",
+        "updatedAt": "2026-10-03T18:09:28Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/981"
+      }
+    ],
     "recent_commits": [
       {
-        "message": "STATUS: persist verified source/PIT frontier outcomes",
-        "sha": "c3695ed45c36202cc9e8d01127e061e11000f0fa",
-        "timestamp": "2026-10-03T19:14:07+02:00"
+        "message": "Merge pull request #979 from DWR-debug/research/q121r3-form-index-2026-10-03",
+        "sha": "f18d09ce3b24243aee07fb478ac55d9fefa444ab",
+        "timestamp": "2026-10-03T20:10:47+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6f1664586eae621ac5ec61b80ef7b3e27b950289",
-        "timestamp": "2026-10-03T17:10:21Z"
+        "message": "CLEANUP: remove temporary SEC identity diagnostics",
+        "sha": "5c32860bf3b9161d5c63c43fa9b686d20f8adc44",
+        "timestamp": "2026-10-03T20:09:24+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "befd44b5df83e51fa731ed1eac2358869a8ae74d",
-        "timestamp": "2026-10-03T17:10:20Z"
+        "message": "FIX: repair SEC gzip and section regex escaping",
+        "sha": "37699c015f252f35469eaa6d0d975efddad98f25",
+        "timestamp": "2026-10-03T20:08:28+02:00"
       },
       {
-        "message": "FIX: harden source/PIT research lanes",
-        "sha": "6022816545f4a269d422754dff858cc319a50407",
-        "timestamp": "2026-10-03T19:10:07+02:00"
+        "message": "FIX: decode gzip-compressed SEC submission payloads",
+        "sha": "a49e0bf3e69cf73f70cb2845a5d41367d2e52837",
+        "timestamp": "2026-10-03T20:06:59+02:00"
       },
       {
-        "message": "OPS: synchronize machine status with Q131 frontier contract",
-        "sha": "bf640b2483a02e0399648fbe7fd101cc0e827c75",
-        "timestamp": "2026-10-03T18:57:44+02:00"
+        "message": "DIAG: expose bounded SEC control header structure",
+        "sha": "39b275899c47cfbf13cbadf25b6efbead8d021bb",
+        "timestamp": "2026-10-03T20:06:09+02:00"
       },
       {
-        "message": "OPS: synchronize human status with Q131 frontier contract",
-        "sha": "348005c1906c22aacda0d9412fae1da25389dce2",
-        "timestamp": "2026-10-03T18:57:37+02:00"
+        "message": "FIX: normalize SEC header sections before CIK extraction",
+        "sha": "2aa9a78373958fb78c9d90c043fd434f2f75e7c9",
+        "timestamp": "2026-10-03T20:05:27+02:00"
       },
       {
-        "message": "RESEARCH: Q131 deterministic SEC disclosure-complexity contract",
-        "sha": "f44f55c63b2da13a2271a3c860331616df74c66e",
-        "timestamp": "2026-10-03T18:57:24+02:00"
+        "message": "FIX: retry SEC controls from raw submission when header parse misses",
+        "sha": "b7f99f5cf0f6904560f6347856e026fcbd428b10",
+        "timestamp": "2026-10-03T20:04:14+02:00"
       },
       {
-        "message": "OPS: include Q131-R1 in active frontier summary",
-        "sha": "6bd015c819efb75a379d25f82177d9760e03a831",
-        "timestamp": "2026-10-03T18:57:11+02:00"
+        "message": "FIX: resolve SEC controls from submission header fallback",
+        "sha": "efb560152038b61d25db0dc3624c267f6d09d2a2",
+        "timestamp": "2026-10-03T20:03:56+02:00"
       }
     ]
   },
@@ -1431,7 +1440,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c3695ed45c36202cc9e8d01127e061e11000f0fa",
+  "source_master_sha": "f18d09ce3b24243aee07fb478ac55d9fefa444ab",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T17:10:39Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -1519,6 +1528,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37139762976"
+    "run_id": "37143230842"
   }
 }
