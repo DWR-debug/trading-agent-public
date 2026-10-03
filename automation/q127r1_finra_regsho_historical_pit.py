@@ -46,7 +46,7 @@ def fetch(url: str) -> tuple[int, bytes, dict[str, str]]:
     except (urllib.error.URLError, TimeoutError, OSError) as exc:
         raise RuntimeError(f"FINRA_TRANSPORT_ERROR:{url}:{exc}") from exc
 
-def parse_file(body: bytes) -> tuple[tuple[str, ...], dict[str, dict[str, str]], list[str]]:
+def parse_file(body: bytes) -> tuple[tuple[str, ...], dict[str, list[dict[str, str]]], list[str], int]:
     text = body.decode("utf-8-sig", errors="strict")
     lines = [line.strip() for line in text.splitlines() if line.strip()]
     if not lines:
@@ -54,28 +54,48 @@ def parse_file(body: bytes) -> tuple[tuple[str, ...], dict[str, dict[str, str]],
     header = tuple(lines[0].split("|"))
     if header != EXPECTED_HEADER:
         raise RuntimeError(f"FINRA_SCHEMA_MISMATCH:{header!r}")
-    rows: dict[str, dict[str, str]] = {}
-    duplicates: list[str] = []
-    for line in lines[1:]:
+
+    payload = lines[1:]
+    if not payload:
+        raise RuntimeError("FINRA_TRAILER_MISSING")
+    trailer = payload[-1]
+    if "|" in trailer or not trailer.isdigit():
+        raise RuntimeError(f"FINRA_TRAILER_INVALID:{trailer[:120]!r}")
+    trailer_count = int(trailer)
+    data_lines = payload[:-1]
+
+    rows: dict[str, list[dict[str, str]]] = {}
+    seen_keys: set[tuple[str, str]] = set()
+    for line in data_lines:
         parts = line.split("|")
         if len(parts) != len(EXPECTED_HEADER):
             raise RuntimeError(f"FINRA_ROW_WIDTH_MISMATCH:{line[:120]!r}")
         row = dict(zip(EXPECTED_HEADER, parts))
-        if not row["Date"] or not row["Symbol"]:
+        if not row["Date"] or not row["Symbol"] or not row["Market"]:
             raise RuntimeError("FINRA_ROW_IDENTITY_MISSING")
-        if row["Symbol"] in rows:
-            duplicates.append(row["Symbol"])
-            continue
+        if not row["Market"].isalpha() or len(row["Market"]) != 1:
+            raise RuntimeError(f"FINRA_MARKET_INVALID:{row['Symbol']}:{row['Market']!r}")
         try:
-            numeric = [float(row[name]) for name in ("ShortVolume", "ShortExemptVolume", "TotalVolume")]
+            numeric = [
+                float(row[name])
+                for name in ("ShortVolume", "ShortExemptVolume", "TotalVolume")
+            ]
         except ValueError as exc:
             raise RuntimeError(f"FINRA_NUMERIC_PARSE_ERROR:{row['Symbol']}") from exc
         if not all(math.isfinite(value) and value >= 0 for value in numeric):
             raise RuntimeError(f"FINRA_NUMERIC_RANGE_ERROR:{row['Symbol']}")
-        rows[row["Symbol"]] = row
-    if duplicates:
-        raise RuntimeError(f"FINRA_DUPLICATE_SYMBOL:{duplicates[0]}")
-    return header, rows, lines
+
+        key = (row["Symbol"], row["Market"])
+        if key in seen_keys:
+            raise RuntimeError(f"FINRA_DUPLICATE_SYMBOL_MARKET:{row['Symbol']}:{row['Market']}")
+        seen_keys.add(key)
+        rows.setdefault(row["Symbol"], []).append(row)
+
+    if trailer_count != len(data_lines):
+        raise RuntimeError(
+            f"FINRA_TRAILER_COUNT_MISMATCH:{trailer_count}!={len(data_lines)}"
+        )
+    return header, rows, lines, trailer_count
 
 def date_url(value: str) -> str:
     parsed = date.fromisoformat(value)
@@ -99,9 +119,14 @@ def run(output: Path) -> dict[str, object]:
         status, body, headers = fetch(url)
         if status != 200:
             raise RuntimeError(f"FINRA_HISTORICAL_FILE_HTTP_{status}:{sample_date}")
-        header, rows, lines = parse_file(body)
+        header, rows, lines, trailer_count = parse_file(body)
         expected_date = date.fromisoformat(sample_date).strftime("%Y%m%d")
-        wrong_dates = sorted({row["Date"] for row in rows.values() if row["Date"] != expected_date})
+        wrong_dates = sorted({
+            row["Date"]
+            for symbol_rows in rows.values()
+            for row in symbol_rows
+            if row["Date"] != expected_date
+        })
         symbol_rows = {symbol: rows[symbol] for symbol in SYMBOLS if symbol in rows}
         missing_symbols = [symbol for symbol in SYMBOLS if symbol not in rows]
         observations[sample_date] = {
@@ -114,6 +139,8 @@ def run(output: Path) -> dict[str, object]:
             },
             "header": list(header),
             "line_count": len(lines),
+            "data_record_count": len(lines) - 2,
+            "trailer_count": trailer_count,
             "rows_for_fixed_symbols": symbol_rows,
             "missing_fixed_symbols": missing_symbols,
             "wrong_dates": wrong_dates,
