@@ -714,7 +714,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-03T10:39:17.402540+00:00",
+  "generated_at_utc": "2026-10-03T10:39:33.898045+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -918,6 +918,21 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: move deterministic frontier from scarce Windows capacity to free hosted Linux",
+        "sha": "8397401fa5014f5878513b9fa41e4c7eb6b83656",
+        "timestamp": "2026-10-03T12:39:22+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2a71ef3b789104b1fe43c7f112ccaba06c0d5ca8",
+        "timestamp": "2026-10-03T10:39:19Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4bd0312dac356ce0a95f9a462e7ae3b9dd4cfb88",
+        "timestamp": "2026-10-03T10:39:18Z"
+      },
+      {
         "message": "OPS: reserve Windows loop for local-only research capacity",
         "sha": "8c37376f6012ec58d7b2490f37d04de5669c8c7a",
         "timestamp": "2026-10-03T12:39:07+02:00"
@@ -941,21 +956,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "3051345b464fc0a927fcb224e86411fde6939f3a",
         "timestamp": "2026-10-03T10:26:41Z"
-      },
-      {
-        "message": "OPS: synchronize S10 phone runtime status",
-        "sha": "c8e0f1a2855e674a4801beace12d98733e6ddd2b",
-        "timestamp": "2026-10-03T10:26:37Z"
-      },
-      {
-        "message": "GOV: pin candidate gate to inventory and bundle fingerprints",
-        "sha": "66de5bf73ee31bdf1d3657beae1c3e0874318814",
-        "timestamp": "2026-10-03T12:26:24+02:00"
-      },
-      {
-        "message": "HARDEN: require pinned candidate gate fingerprints",
-        "sha": "2b2831f819176ffbb7bcb565c4091e59902ee032",
-        "timestamp": "2026-10-03T12:26:18+02:00"
       }
     ]
   },
@@ -1025,12 +1025,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8c37376f6012ec58d7b2490f37d04de5669c8c7a",
+  "source_master_sha": "8397401fa5014f5878513b9fa41e4c7eb6b83656",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37117119132"
+    "run_id": "37117133726"
   }
 }
