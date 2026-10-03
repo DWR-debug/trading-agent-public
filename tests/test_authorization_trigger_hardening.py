@@ -26,3 +26,9 @@ def test_h06_p2_historical_workflow_does_not_trigger_on_registry_changes():
     trigger_section = text.split("workflow_dispatch:", 1)[0]
     assert "research/run_requests/h06_p2_authorize_and_execute_once.trigger" in trigger_section
     assert "research/governance/active_research_registry.json" not in trigger_section
+
+    
+def test_h06_p2_does_not_self_trigger_on_workflow_file_changes():
+    text=(ROOT/".github/workflows/h06-p2-performance-authorization-once.yml").read_text(encoding="utf-8")
+    trigger_section=text.split("workflow_dispatch:",1)[0]
+    assert ".github/workflows/h06-p2-performance-authorization-once.yml" not in trigger_section
