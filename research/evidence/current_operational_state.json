@@ -763,7 +763,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T12:44:38.266214+00:00",
+  "generated_at_utc": "2026-10-03T12:46:41.495404+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -967,6 +967,21 @@
     ],
     "recent_commits": [
       {
+        "message": "EVIDENCE: record Q129 independent PIT reproduction receipt",
+        "sha": "ddc54b34f9e75f908b8386ff60c9cbc6d0c25648",
+        "timestamp": "2026-10-03T14:46:30+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e052c8a0964479811b9bf60f1b9aedd39d23781d",
+        "timestamp": "2026-10-03T12:44:40Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4d7e958ba95a62696ceb9e8774b49445fa1d6d57",
+        "timestamp": "2026-10-03T12:44:39Z"
+      },
+      {
         "message": "FIX: Q129 PIT quarantine and SEC EDGAR frontier source contract (#917)",
         "sha": "9f07bcf4a11b89bb62dbde23aa379cac7aee5a20",
         "timestamp": "2026-10-03T14:44:28+02:00"
@@ -990,21 +1005,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "6919d9faf367840cce9f8da13d243c7c15023470",
         "timestamp": "2026-10-03T12:33:01Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9c1118a1817b123f7b769f06178ad9e614a3c175",
-        "timestamp": "2026-10-03T12:32:59Z"
-      },
-      {
-        "message": "RESEARCH: advance Q129 PIT and public-information frontier (#914)",
-        "sha": "4836fbeb9e3cdf8c39de817aeeff48db61cc47a8",
-        "timestamp": "2026-10-03T14:32:46+02:00"
-      },
-      {
-        "message": "OPS: retire redundant T052 push trigger",
-        "sha": "2842c12089623655e2b2d9fa437ec5910cceeca5",
-        "timestamp": "2026-10-03T14:12:48+02:00"
       }
     ]
   },
@@ -1074,12 +1074,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9f07bcf4a11b89bb62dbde23aa379cac7aee5a20",
+  "source_master_sha": "ddc54b34f9e75f908b8386ff60c9cbc6d0c25648",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37123847659"
+    "run_id": "37123963310"
   }
 }
