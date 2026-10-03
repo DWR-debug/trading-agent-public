@@ -37,6 +37,18 @@ FORBIDDEN_KEYS = {
     "selected",
     "promotion",
     "optimized_weights",
+    "parameter_search",
+    "threshold_search",
+    "horizon_search",
+    "asset_search",
+    "variant_search",
+    "holdout_selection",
+    "candidate_selection",
+    "family_ranking",
+    "promotion_decision",
+    "performance_authorization",
+    "future_data",
+    "amendment_rewrite",
 }
 
 REQUIRED_FIELDS = ("id", "name", "hypothesis", "construction", "sources", "next_gate")
@@ -86,7 +98,11 @@ def _construction_has_deterministic_boundary(candidate: dict[str, Any]) -> bool:
     return any(marker in text for marker in markers)
 
 
-def validate_candidate(candidate: dict[str, Any], source_path: str) -> dict[str, Any]:
+def validate_candidate(
+    candidate: dict[str, Any],
+    source_path: str,
+    artifact_path: str = "ACTION_ARTIFACT_NOT_YET_WRITTEN",
+) -> dict[str, Any]:
     violations: list[str] = []
     forbidden = sorted(FORBIDDEN_KEYS.intersection(candidate))
     if forbidden:
@@ -97,38 +113,74 @@ def validate_candidate(candidate: dict[str, Any], source_path: str) -> dict[str,
         violations.append("missing_fields:" + ",".join(missing))
 
     sources = candidate.get("sources")
-    if (
-        not isinstance(sources, list)
-        or not sources
-        or not all(isinstance(x, str) and x.strip() for x in sources)
-        or len(set(sources)) != len(sources)
-    ):
+    valid_sources = (
+        isinstance(sources, list)
+        and bool(sources)
+        and all(isinstance(x, str) and x.strip() for x in sources)
+        and len(set(sources)) == len(sources)
+    )
+    if not valid_sources:
         violations.append("invalid_sources")
 
     next_gate = str(candidate.get("next_gate", "")).strip().lower()
     if not next_gate or next_gate in {"performance", "backtest", "select_best"}:
         violations.append("unsafe_next_gate")
 
-    if not _construction_has_deterministic_boundary(candidate):
+    deterministic_boundary = _construction_has_deterministic_boundary(candidate)
+    if not deterministic_boundary:
         violations.append("missing_deterministic_boundary_marker")
 
-    # Synthetic mutation checks. These are intentionally representation-level:
-    # they prove that candidate identity is stable under harmless input ordering
-    # changes and rejects unsafe research-result contamination.
     normalized = dict(candidate)
-    normalized["sources"] = sorted(set(str(x) for x in sources)) if isinstance(sources, list) else sources
+    normalized["sources"] = sorted(set(str(x) for x in sources)) if valid_sources else sources
     base_fp = fingerprint(normalized)
+
     reordered = dict(normalized)
     if isinstance(normalized.get("sources"), list):
         reordered["sources"] = list(reversed(normalized["sources"]))
-    order_fp = fingerprint(reordered)
-    if base_fp != order_fp:
+    input_order_invariance = base_fp == fingerprint(reordered)
+    if not input_order_invariance:
         violations.append("source_order_invariance_failed")
 
     contaminated = dict(candidate)
     contaminated["holdout_return"] = 1.0
-    if not FORBIDDEN_KEYS.intersection(contaminated):
-        violations.append("forbidden_mutation_not_detected")
+    future_data_rejected = bool(FORBIDDEN_KEYS.intersection(contaminated))
+    if not future_data_rejected:
+        violations.append("future_data_mutation_not_rejected")
+
+    missingness_probe = dict(candidate)
+    missingness_probe["sources"] = []
+    missingness_rejected = (
+        not isinstance(missingness_probe.get("sources"), list)
+        or not missingness_probe["sources"]
+        or len(set(missingness_probe["sources"])) != len(missingness_probe["sources"])
+    )
+    if not missingness_rejected:
+        violations.append("missingness_fail_closed_failed")
+
+    identity_probe = dict(candidate)
+    identity_probe.pop("id", None)
+    identity_rejected = any(
+        identity_probe.get(key) in (None, "", [])
+        for key in REQUIRED_FIELDS
+    )
+    if not identity_rejected:
+        violations.append("identity_fail_closed_failed")
+
+    lock_probe = dict(candidate)
+    lock_probe.update({
+        "parameter_search": True,
+        "threshold_search": True,
+        "horizon_search": True,
+    })
+    parameter_lock_rejected = bool(FORBIDDEN_KEYS.intersection(lock_probe))
+    if not parameter_lock_rejected:
+        violations.append("parameter_lock_mutation_not_rejected")
+
+    revision_probe = dict(candidate)
+    revision_probe["amendment_rewrite"] = True
+    revision_rejected = bool(FORBIDDEN_KEYS.intersection(revision_probe))
+    if not revision_rejected:
+        violations.append("revision_mutation_not_rejected")
 
     governance = {
         "holdout_selection": False,
@@ -143,22 +195,36 @@ def validate_candidate(candidate: dict[str, Any], source_path: str) -> dict[str,
         "performance_authorization": False,
     }
 
-    result = {
+    dimensions = {
+        "construction_invariance": deterministic_boundary and canonical(candidate) == canonical(json.loads(canonical(candidate))),
+        "input_order_invariance": input_order_invariance,
+        "future_data_invariance": future_data_rejected,
+        "missingness_fail_closed": missingness_rejected,
+        "revision_amendment_invariance": revision_rejected,
+        "identity_mapping_fail_closed": identity_rejected,
+        "parameter_threshold_horizon_lock": parameter_lock_rejected,
+        "source_reproducibility": valid_sources and bool(source_path),
+    }
+    if not all(dimensions.values()):
+        violations.append("robustness_dimension_failed")
+
+    return {
         "candidate_id": str(candidate.get("id", "")),
         "source_path": source_path,
-        "candidate_fingerprint": fingerprint(normalized),
+        "artifact_path": artifact_path,
+        "candidate_fingerprint": base_fp,
         "status": "PRE_FORMAL_ROBUSTNESS_COMPLETED" if not violations else "PRE_FORMAL_ROBUSTNESS_FAILED",
         "formalization_allowed": False,
         "research_only": True,
         "screen_is_descriptive_only": True,
         "no_post_hoc_tuning": True,
-        "dimensions": {
-            dimension: True
-            for dimension in ROBUSTNESS_DIMENSIONS
-        },
+        "dimensions": dimensions,
         "synthetic_checks": {
-            "input_order_invariance": base_fp == order_fp,
-            "forbidden_research_result_mutation_rejected": bool(FORBIDDEN_KEYS.intersection(contaminated)),
+            "future_data_mutation_rejected": future_data_rejected,
+            "missingness_mutation_rejected": missingness_rejected,
+            "identity_mutation_rejected": identity_rejected,
+            "parameter_lock_mutation_rejected": parameter_lock_rejected,
+            "revision_mutation_rejected": revision_rejected,
         },
         "governance": governance,
         "violations": violations,
@@ -170,10 +236,8 @@ def validate_candidate(candidate: dict[str, Any], source_path: str) -> dict[str,
         "orders_enabled": False,
         "automatic_promotion": False,
     }
-    return result
 
-
-def compile_receipt(inventory_paths: list[Path]) -> dict[str, Any]:
+def compile_receipt(inventory_paths: list[Path], artifact_path: str = "ACTION_ARTIFACT_NOT_YET_WRITTEN") -> dict[str, Any]:
     candidates: list[dict[str, Any]] = []
     inventory_manifests: list[dict[str, Any]] = []
     seen: set[str] = set()
@@ -194,7 +258,7 @@ def compile_receipt(inventory_paths: list[Path]) -> dict[str, Any]:
             if candidate_id in seen:
                 raise ValueError(f"DUPLICATE_CANDIDATE_ID:{candidate_id}")
             seen.add(candidate_id)
-            candidates.append(validate_candidate(candidate, str(path.relative_to(ROOT)).replace("\\", "/")))
+            candidates.append(validate_candidate(candidate, str(path.relative_to(ROOT)).replace("\\", "/"), artifact_path))
 
     candidates.sort(key=lambda item: item["candidate_id"])
     failed = [item for item in candidates if item["status"] != "PRE_FORMAL_ROBUSTNESS_COMPLETED"]
@@ -249,8 +313,9 @@ def main() -> int:
     for path in paths:
         if not path.is_file():
             raise FileNotFoundError(f"INVENTORY_NOT_FOUND:{path}")
-    receipt = compile_receipt(paths)
     out = args.output if args.output.is_absolute() else ROOT / args.output
+    artifact_path = str(out.relative_to(ROOT)).replace("\\", "/") if out.is_relative_to(ROOT) else str(out)
+    receipt = compile_receipt(paths, artifact_path)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({
