@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `09fe5a0d3f302d8504d7c798b44182d0e960123d`
+**Current operational snapshot:** `f44f55c63b2da13a2271a3c860331616df74c66e`
 
-**Generated (UTC):** `2026-10-03T16:51:34Z`
+**Generated (UTC):** `2026-10-03T16:57:24Z`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -65,7 +65,9 @@
 
 - **Q130-R1 — Wikimedia Pageviews historical attention:** **SOURCE_FEASIBILITY_ACTIVE**. Public daily pageview retrieval is implemented for the fixed Q107 issuer/article map. The track does not claim an exact historical publication clock or immutable revision lineage. Its first workflow run was cancelled during merge lifecycle, so no scientific receipt is claimed.
 
-All four tracks are **discovery/source/PIT only**. None creates performance authorization, holdout selection, ranking, tuning, promotion or live execution.
+- **Q131-R1 — deterministic SEC disclosure-complexity source contract:** **SOURCE_CONTRACT_ACTIVE**. A fixed Q107 issuer/form/window sample contract now records acceptance clock, issuer/filer identity and SEC filing-detail structural fields (`Documents`, primary-document size, `Data Files` row count, iXBRL flag). It deliberately defines a descriptive vector rather than a tuned scalar score; no scientific receipt has been independently verified.
+
+All five tracks are **discovery/source/PIT only**. None creates performance authorization, holdout selection, ranking, tuning, promotion or live execution.
 
 ### Q129 Options Source / PIT
 
