@@ -95,7 +95,7 @@ jobs:
               --repository "$GITHUB_REPOSITORY" \
               --branch master \
               --base-sha "$base_sha" \
-              --file "$input=$latest"; then
+              --file "$latest=$input"; then
               exit 0
             fi
             sleep "$attempt"
