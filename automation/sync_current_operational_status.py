@@ -329,6 +329,7 @@ def generate(
             "active_research_registry": "research/governance/active_research_registry.json",
             "research_os_source_registry": "research/governance/research_os_source_registry_2026_09_30.json",
             "resource_availability_policy": "research/governance/resource_availability_policy_2026_10_03.json",
+            "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json",
         },
         "active_research_registry": active_registry,
         "repository_state": {
@@ -355,6 +356,25 @@ def generate(
                 "status": "MERGED",
                 "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
                 "pr": 232,
+            },
+            "two_lane_research_mode": {
+                "status": "ACTIVE",
+                "lane_a": {
+                    "name": "FORMAL_READINESS",
+                    "runner_slot": "Windows self-hosted A",
+                    "focus": ["Q104 I19/I20", "I22", "Q119/Q120/Q122", "Q125-F1"],
+                    "performance_authorization_from_capacity": False,
+                },
+                "lane_b": {
+                    "name": "FRONTIER_DISCOVERY",
+                    "runner_slot": "Windows self-hosted B",
+                    "focus": ["Q171-Q178", "Q126-Q132", "public-source/PIT frontier"],
+                    "performance_authorization_from_capacity": False,
+                },
+                "separate_identity_and_outputs": True,
+                "shared_mutable_research_state": False,
+                "cross_lane_retroactive_mutation": False,
+                "performance_capacity_rule": "Two slots never create performance authorization; each exact trial requires its own current formal authorization.",
             },
             "agent_orchestration": {
                 "bounded_two_lane_queue": True,
@@ -421,7 +441,14 @@ def generate(
                 "last_recorded_verified_baseline": recorded_qa,
             },
             "research_continuity": {
-                "permanent_self_hosted_loop": {"cadence": "*/30 * * * *", "parallel_lanes": 2},
+                "two_lane_research": {
+                    "status": "ACTIVE",
+                    "lane_a": "FORMAL_READINESS",
+                    "lane_b": "FRONTIER_DISCOVERY",
+                    "parallel_slots": 2,
+                    "isolation_required": True,
+                },
+                "permanent_self_hosted_loop": {"cadence": "*/30 * * * *", "parallel_lanes": 2, "lane_roles": ["FORMAL_READINESS", "FRONTIER_DISCOVERY"]},
                 "hosted_research_failover": {
                     "cadence": "manual",
                     "mode": "manual_only_under_assumed_always_available_self_hosted_pool",
@@ -558,6 +585,8 @@ def generate(
 - The Forward path contains closed-candle market-data ingestion, a persistent update loop and a schema-v2 per-candle MTM ledger.
 - Canonical data-layer infrastructure is merged.
 - Bounded agent routing uses two queue lanes with fail-closed task contracts.
+- **Permanent two-lane research mode: ACTIVE.** Lane A = **Formal Readiness** (advanced Coverage/PIT/compiler/provenance/authorization readiness); Lane B = **Frontier Discovery** (orthogonal source/PIT feasibility and cheap falsification). The two Windows slots are isolated by candidate/trial identity, branches/workflows and output/provenance paths. Cross-lane findings cannot retroactively alter a frozen trial.
+- Two physical research slots are capacity only: they **never** create performance authorization. A performance run remains individually fail-closed until an exact current formal authorization exists.
 - Continuous QA is scheduled every 6 hours on GitHub-hosted Windows and uses only the bounded `repo_qa` lane; it consumes no self-hosted Windows research slot.
 - The deterministic frontier loop runs every 10 minutes on free GitHub-hosted Ubuntu; its three 10-step packs cover all 30 frontier-worker steps.
 - Windows Self-Hosted capacity is always routable for bounded local reproduction, data QA, local-AI and hardware-dependent work; two physical slots are intended to run in parallel.
