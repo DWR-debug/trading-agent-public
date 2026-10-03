@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `a95d71a3bb301881a6527f1a989bb0420cfe184b`
+**Current operational snapshot:** `17e313a7a35c69c2aef98a586e1412c0f1886018`
 
-**Generated (UTC):** `2026-10-03T09:53:15.561885+00:00`
+**Generated (UTC):** `2026-10-03T10:09:10Z`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -21,6 +21,8 @@
 - S10 phone capability receipt: **S10_UTILITY_ACCEPTED**; receipt-gated eligibility = **True**.
 - S10 current physical online state: **None**; current-presence verification = **NOT_PERFORMED**.
 - A valid acceptance receipt proves bounded capability at the time of its source run; it does **not** prove that the phone or runner is online now. Live routing separately requires exact online runner discovery.
+- Universal pre-formal candidate robustness gate: **ACTIVE**; every new candidate must pass the structural robustness gate and carry its receipt before entering PREREGISTRATION, SOURCE_FEASIBILITY, COVERAGE, PIT or PERFORMANCE formal phases.
+- Permanent self-hosted research loop: **10-minute pulse**, two parallel Windows lanes, deterministic three-pack frontier rotation; Q121 is included in the frontier research cycle.
 - S10 output remains non-scientific and cannot authorize performance or promotion.
 
 ### Scientific status
@@ -114,7 +116,7 @@ Q070 is the fresh symbol-disjoint validation pipeline for the fixed Q069 OHLCV c
 - Deterministic research stays on reproducible runner paths.
 - Agent output is never scientific evidence by itself.
 - Protected Copilot reserve starts **2026-10-01T00:00:00Z**: at most 4 sessions/month, 30 AI credits/session, 1 concurrent session; actual entitlement is verified at dispatch and no paid fallback/overage is permitted.
-- Both self-hosted Windows runners remain the preferred parallel local capacity; the local AI smoke check runs only after the two research lanes complete.
+- Both self-hosted Windows runners remain the preferred parallel local capacity; the local AI smoke check runs only after the two research lanes complete. The permanent frontier loop rotates bounded workpacks rather than re-running the full frontier every pulse.
 
 ## Safety
 
