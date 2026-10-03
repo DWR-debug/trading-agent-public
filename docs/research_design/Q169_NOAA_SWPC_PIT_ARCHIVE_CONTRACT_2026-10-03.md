@@ -11,10 +11,17 @@ The probe is intentionally narrower than a performance study. It verifies offici
 Primary archive:
 https://www.ngdc.noaa.gov/stp/space-weather/swpc-products/daily_reports/geoalerts/2025/10/
 
-Fixed sample files:
+Fixed archive URL files:
 
-- 1014GEOA.txt
-- 1015GEOA.txt
+- 20251014GEOA.txt
+- 20251015GEOA.txt
+
+The report body uses a shorter internal product label:
+
+- 2025-10-14 → `1014GEOA.txt`
+- 2025-10-15 → `1015GEOA.txt`
+
+The URL filename and the internal `:Product:` label are deliberately treated as separate fields.
 
 The sample is not selected after observing market outcomes. These dates are frozen solely as an archive-integrity probe.
 
@@ -26,9 +33,9 @@ The archive file's storage/retrieval time is not substituted for provider Issue 
 
 ## Revision and cancellation rule
 
-NOAA's Notifications Timeline documents that alerts are plotted at Issue Time, that warnings may be extended, and that cancellations can retract products or end a previously valid warning. It also documents archived alert timelines and the existence of an SWPC product archive.
+NOAA's canonical Notifications Timeline documents that alerts are plotted at Issue Time, that warnings may be extended, and that cancellations can retract products or end a previously valid warning. It also documents archived alert timelines and the existence of an SWPC product archive.
 
-The present R1 probe verifies the documentation and archive sample, but it does not claim that candidate-specific revision lineage is fully reconstructed.
+The present R2 probe verifies the documentation and archive sample, but it does not claim that candidate-specific revision lineage is fully reconstructed.
 
 ## Candidate-specific gate still open
 
