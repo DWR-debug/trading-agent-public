@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
-  "contract_id": "Q169-NOAA-SWPC-ARCHIVE-PIT-R1",
+  "contract_id": "Q169-NOAA-SWPC-ARCHIVE-PIT-R2",
   "generated_utc": "2026-10-03T00:00:00Z",
   "provider": "NOAA SWPC / NOAA NCEI",
   "archive_index_url": "https://www.ngdc.noaa.gov/stp/space-weather/swpc-products/daily_reports/geoalerts/2025/10/",
-  "semantics_url": "https://www.swpc.noaa.gov/products/notifications-timeline",
+  "semantics_url": "https://www.spaceweather.gov/products/notifications-timeline",
   "fixed_sample_dates": [
     "2025-10-14",
     "2025-10-15"
@@ -39,7 +39,12 @@
     "automatic_promotion": false,
     "paid_resources_allowed": false
   },
-  "fixed_sample_files": {
+  "version": "R2",
+  "fixed_archive_url_files": {
+    "2025-10-14": "20251014GEOA.txt",
+    "2025-10-15": "20251015GEOA.txt"
+  },
+  "fixed_product_labels": {
     "2025-10-14": "1014GEOA.txt",
     "2025-10-15": "1015GEOA.txt"
   }
