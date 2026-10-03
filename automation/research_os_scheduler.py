@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Any
 from automation.research_os_evidence_bus import ROOT,load_registry,source_index,fingerprint
 QUALITY_POLICY_PATH = ROOT / "research/governance/critical_research_quality_control.json"
-QUALITY_POLICY = json.loads(QUALITY_POLICY_PATH.read_text(encoding="utf-8"))
 S10_PRESENCE_MAX_AGE = timedelta(hours=6)
 TRACKS=[
 {"id":"ROS-TRACK-C-SEC-FINRA-SHORT-FLOW","name":"SEC/FINRA short-flow convergence","source_ids":["SRC-SEC-FTD","SRC-FINRA-SI","SRC-FINRA-REGSHO"],"cheap_falsifiability":.92,"mechanism_novelty_distance":.90,"expected_reproducibility":.88,"resource_cost":.18,"lane":"deterministic_frontier","next_gate":"source_and_release_schedule_probe"},
@@ -86,7 +85,10 @@ def _s10_resource_state() -> dict[str, Any]:
 
 def build_plan(*,run_number:int|None=None)->dict[str,Any]:
     registry=load_registry(); sources=source_index(registry)
-    min_novelty = float(QUALITY_POLICY["orthogonal_search"].get("minimum_scheduler_novelty_distance", 0.80))
+    # Reload governance policy for every scheduler invocation. This prevents a
+    # long-lived interpreter/import cache from using a stale research policy.
+    quality_policy = json.loads(QUALITY_POLICY_PATH.read_text(encoding="utf-8"))
+    min_novelty = float(quality_policy["orthogonal_search"].get("minimum_scheduler_novelty_distance", 0.80))
     candidate_tracks = [
         t for t in TRACKS if float(t["mechanism_novelty_distance"]) >= min_novelty
     ]
@@ -100,7 +102,7 @@ def build_plan(*,run_number:int|None=None)->dict[str,Any]:
         if c:
             used.add(c[0]["id"]); assignments.append({"lane":lane,"track_id":c[0]["id"],"reason":"ex_ante_capability_prior","performance_authorized":False})
     s10 = _s10_resource_state()
-    plan={"schema_version":1,"research_priority":"ORTHOGONAL_INFORMATION_FIRST_WITH_EARLY_ROBUSTNESS","research_os_version":registry["research_os_version"],"plan_type":"resource_schedule","run_number":run_number,"basis":"information_gain_per_compute_prior + cheap_falsifiability + source_quality + PIT_feasibility + novelty + reproducibility","forbidden_inputs":registry["resource_scheduler"]["forbidden_axes"],"tracks":tracks,"assignments":assignments,"agent_resources":[s10],"quality_controls":{"orthogonal_only":True,"minimum_scheduler_novelty_distance":min_novelty,"early_robustness_required_before_future_performance_authorization":True,"immediate_replication_required_after_full_formal_pass":True},
+    plan={"schema_version":1,"research_priority":"ORTHOGONAL_INFORMATION_FIRST_WITH_EARLY_ROBUSTNESS","research_os_version":registry["research_os_version"],"plan_type":"resource_schedule","run_number":run_number,"basis":"information_gain_per_compute_prior + cheap_falsifiability + source_quality + PIT_feasibility + novelty + reproducibility","forbidden_inputs":registry["resource_scheduler"]["forbidden_axes"],"tracks":tracks,"assignments":assignments,"agent_resources":[s10],"quality_controls":{"orthogonal_only":True,"minimum_scheduler_novelty_distance":min_novelty,"early_robustness_required_before_future_performance_authorization":True,"immediate_replication_required_after_full_formal_pass":True,"candidate_robustness_gate_required_before_any_formal_phase":quality_policy["candidate_robustness_gate"]["required_before_any_formal_phase"]},
     "resource_policy":{"paid_resources":False,"holdout_used":False,"automatic_promotion":False,"performance_authorization":False,"maximum_deterministic_lanes":2,"adversarial_lane_reserved":True}}
     plan["fingerprint"]=fingerprint(plan); return plan
 def main()->int:
