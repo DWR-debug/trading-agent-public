@@ -116,14 +116,6 @@ def generate(
     h06_pit = _load_json(ROOT / "research/evidence/h06_pit_independent_reproduction_2026_10_01.json", {})
 
     safety = _safety_state()
-    s10_presence_fresh = False
-    s10_presence_observed = s10_operational_status.get("generated_at_utc") or s10_operational_status.get("workflow_run_updated_at")
-    try:
-        observed = datetime.fromisoformat(str(s10_presence_observed).replace("Z", "+00:00"))
-        now = datetime.now(timezone.utc)
-        s10_presence_fresh = now - observed <= timedelta(hours=6) and observed <= now + timedelta(minutes=5)
-    except (TypeError, ValueError):
-        s10_presence_fresh = False
     from config import settings
     queue = _read_queue_files()
     open_prs = github_state.get("open_prs", [])
@@ -135,6 +127,24 @@ def generate(
         "scientific_evidence": False,
         "performance_authorization": False,
     })
+    # S10 presence is a receipt-age policy, not a mutable runner-online claim.
+    # Load the synchronized receipt before evaluating its freshness.
+    s10_presence_fresh = False
+    s10_presence_observed = (
+        s10_operational_status.get("generated_at_utc")
+        or s10_operational_status.get("workflow_run_updated_at")
+    )
+    try:
+        observed = datetime.fromisoformat(str(s10_presence_observed).replace("Z", "+00:00"))
+        now = datetime.now(timezone.utc)
+        s10_presence_fresh = (
+            s10_operational_status.get("status") == "S10_UTILITY_ACCEPTED"
+            and s10_operational_status.get("eligible") is True
+            and now - observed <= timedelta(hours=6)
+            and observed <= now + timedelta(minutes=5)
+        )
+    except (TypeError, ValueError):
+        s10_presence_fresh = False
     active_registry = _load_json(ROOT / "research/governance/active_research_registry.json", {})
     active_trials = {
         str(entry.get("code")): entry
