@@ -192,26 +192,34 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
+          PUBLISH_MESSAGE: "OPS: persist latest Q171 WARC material receipt"
         run: |
           set -euo pipefail
           input="research/runs/deep_frontier/${GITHUB_RUN_ID}/q171_warc_reconstruction.json"
           latest="research/evidence/q171_warc_reconstruction_latest.json"
           test -f "$input"
           python -m automation.q171_warc_persist --input "$input" --output "$latest" --source-commit "$GITHUB_SHA"
-          git fetch origin master --quiet
-          cp "$latest" "$RUNNER_TEMP/q171_warc_reconstruction_latest.json"
-          git checkout --detach origin/master
-          mkdir -p "$(dirname "$latest")"
-          cp "$RUNNER_TEMP/q171_warc_reconstruction_latest.json" "$latest"
-          if git diff --quiet -- "$latest"; then
-            echo "Q171_MATERIAL_RECEIPT_UNCHANGED"
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "$latest"
-          git commit -m "OPS: persist latest Q171 WARC material receipt"
-          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:master
+          for attempt in 1 2 3; do
+            git fetch origin master --quiet
+            base_sha="$(git rev-parse origin/master)"
+            if git show "origin/master:${latest}" > "$RUNNER_TEMP/q171_current_receipt.json" 2>/dev/null; then
+              if cmp -s "$latest" "$RUNNER_TEMP/q171_current_receipt.json"; then
+                echo "Q171_MATERIAL_RECEIPT_UNCHANGED"
+                exit 0
+              fi
+            fi
+            if python automation/github_contents_publish.py \
+              --repository "$GITHUB_REPOSITORY" \
+              --branch master \
+              --base-sha "$base_sha" \
+              --file "$latest=$latest"; then
+              exit 0
+            fi
+            echo "Q171 receipt publish retry attempt=$attempt"
+            sleep "$attempt"
+          done
+          echo "::error::Q171 material receipt publication failed after retries"
+          exit 1
 
       - name: Upload source-feasibility receipt
         if: always()
