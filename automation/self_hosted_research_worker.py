@@ -235,6 +235,20 @@ LANES: dict[str, list[list[str]]] = {
             "--output",
             "research/runs/self_hosted/q109_n7_common_holder_graph/result.json",
         ],
+        [
+            PYTHON,
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_q121_sec_beneficial_ownership_timing.py",
+        ],
+        [
+            PYTHON,
+            "-m",
+            "automation.q121_sec_beneficial_ownership_timing",
+            "--output",
+            "research/runs/self_hosted/q121_sec_beneficial_ownership_timing/result.json",
+        ],
     ],
     "repo_qa": [
         [
@@ -310,7 +324,7 @@ def default_max_workers(lane: str) -> int:
 FRONTIER_WORKPACKS: tuple[tuple[int, ...], ...] = (
     tuple(range(1, 10)),
     tuple(range(10, 19)),
-    tuple(range(19, 28)),
+    tuple(range(19, 30)),
 )
 
 
