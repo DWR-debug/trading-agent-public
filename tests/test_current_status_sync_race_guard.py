@@ -8,4 +8,4 @@ def test_status_sync_uses_file_level_updates_and_avoids_master_push_races():
     assert "git push origin HEAD:master" not in text
     assert "STATUS_SYNC_FILE_RACE" in text
     assert "CURRENT_STATUS_SYNC_PUBLISH_OK" in text
-    assert "cancel-in-progress: false" in text
+    assert "cancel-in-progress: true" in text
