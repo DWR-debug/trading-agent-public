@@ -70,3 +70,10 @@ def test_parse_fixed_width_form_index():
         "filed_date": "2024-02-13",
         "filename": "edgar/data/64040/000110465924021877.txt",
     }]
+
+def test_parse_accepts_compact_sec_filing_date():
+    body = (
+        "SC 13G      SPGI TEST COMPANY                                          64040       20240213      edgar/data/64040/000110465924021877.txt\n"
+    ).encode("latin-1")
+    rows = parse_index(body)
+    assert rows[0]["filed_date"] == "2024-02-13"
