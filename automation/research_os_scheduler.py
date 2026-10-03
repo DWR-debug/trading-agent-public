@@ -1,11 +1,13 @@
 """Ex-ante Research OS scheduler; performance and holdout data are forbidden inputs."""
 from __future__ import annotations
 import argparse,json
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any
 from automation.research_os_evidence_bus import ROOT,load_registry,source_index,fingerprint
 QUALITY_POLICY_PATH = ROOT / "research/governance/critical_research_quality_control.json"
 QUALITY_POLICY = json.loads(QUALITY_POLICY_PATH.read_text(encoding="utf-8"))
+S10_PRESENCE_MAX_AGE = timedelta(hours=6)
 TRACKS=[
 {"id":"ROS-TRACK-C-SEC-FINRA-SHORT-FLOW","name":"SEC/FINRA short-flow convergence","source_ids":["SRC-SEC-FTD","SRC-FINRA-SI","SRC-FINRA-REGSHO"],"cheap_falsifiability":.92,"mechanism_novelty_distance":.90,"expected_reproducibility":.88,"resource_cost":.18,"lane":"deterministic_frontier","next_gate":"source_and_release_schedule_probe"},
 {"id":"ROS-TRACK-D-MACRO-VINTAGE","name":"Macro-vintage regime layer","source_ids":["SRC-FRED-ALFRED","SRC-BLS","SRC-EIA","SRC-BIS","SRC-TREASURY"],"cheap_falsifiability":.84,"mechanism_novelty_distance":.86,"expected_reproducibility":.91,"resource_cost":.24,"lane":"deterministic_frontier","next_gate":"vintage_and_release_time_probe"},
@@ -48,6 +50,8 @@ def _s10_resource_state() -> dict[str, Any]:
         "candidate_selection": False,
         "candidate_ranking": False,
         "promotion": False,
+        "presence_signal": "none",
+        "presence_signal_fresh": False,
     }
     try:
         import hashlib
@@ -56,14 +60,28 @@ def _s10_resource_state() -> dict[str, Any]:
             return result
         payload = json.loads(source_path.read_text(encoding="utf-8"))
         result["receipt_status"] = str(payload.get("receipt_status", payload.get("status", "INVALID")))
-        if source_path == S10_OS_STATUS_PATH:
-            result["eligible"] = payload.get("eligible") is True and result["receipt_status"] == "S10_UTILITY_ACCEPTED"
-        else:
-            result["eligible"] = result["receipt_status"] == "S10_UTILITY_ACCEPTED"
         result["receipt_sha256"] = hashlib.sha256(source_path.read_bytes()).hexdigest()
         result["status_source"] = "canonical_os_status" if source_path == S10_OS_STATUS_PATH else "same_run_local_receipt"
-    except (OSError, json.JSONDecodeError, TypeError):
+
+        if source_path == S10_OS_STATUS_PATH:
+            accepted = payload.get("eligible") is True and result["receipt_status"] == "S10_UTILITY_ACCEPTED"
+            generated = payload.get("generated_at_utc") or payload.get("workflow_run_updated_at")
+            try:
+                observed = datetime.fromisoformat(str(generated).replace("Z", "+00:00"))
+                now = datetime.now(timezone.utc)
+                fresh = now - observed <= S10_PRESENCE_MAX_AGE and observed <= now + timedelta(minutes=5)
+            except (TypeError, ValueError):
+                fresh = False
+            result["presence_signal"] = "fresh_successful_s10_run" if fresh else "stale_or_unparseable_s10_run"
+            result["presence_signal_fresh"] = fresh
+            result["eligible"] = accepted and fresh
+        else:
+            result["presence_signal"] = "same_run_s10_receipt"
+            result["presence_signal_fresh"] = True
+            result["eligible"] = result["receipt_status"] == "S10_UTILITY_ACCEPTED"
+    except (OSError, json.JSONDecodeError, TypeError, OverflowError):
         result["receipt_status"] = "INVALID"
+        result["presence_signal"] = "invalid"
     return result
 
 def build_plan(*,run_number:int|None=None)->dict[str,Any]:
