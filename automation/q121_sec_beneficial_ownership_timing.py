@@ -45,7 +45,15 @@ def next_xnys(after_date:date)->date:
     return s[0].date()
 
 def parse_acceptance(value:str)->datetime:
-    return datetime.fromisoformat(value.replace("Z","+00:00")).astimezone(timezone.utc)
+    raw = str(value).strip()
+    if raw.isdigit() and len(raw) == 14:
+        # EDGAR header acceptance timestamps are expressed in Eastern Time.
+        return datetime.strptime(raw, "%Y%m%d%H%M%S").replace(tzinfo=ET).astimezone(timezone.utc)
+    parsed = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        # Be explicit rather than inheriting the runner's local timezone.
+        parsed = parsed.replace(tzinfo=ET)
+    return parsed.astimezone(timezone.utc)
 
 def classify_event(row:dict)->dict:
     if str(row.get("form","")) not in FORMS:
@@ -56,8 +64,7 @@ def classify_event(row:dict)->dict:
     local=acc.astimezone(ET)
     local_date=local.date()
     filing=date.fromisoformat(str(row["filingDate"]))
-    if filing != local_date:
-        raise RuntimeError("FILING_DATE_MISMATCH")
+    date_alignment = "ALIGNED" if filing == local_date else "FILING_DATE_DIFFERS_FROM_ACCEPTANCE_DATE"
     t=local.time()
     if t < time(17,30):
         state="STANDARD_DAY"
@@ -71,7 +78,9 @@ def classify_event(row:dict)->dict:
         "form":str(row["form"]),
         "acceptance_datetime_utc":acc.isoformat(),
         "acceptance_datetime_et":local.isoformat(),
-        "filing_date":filing.isoformat()
+        "acceptance_date_et":local_date.isoformat(),
+        "filing_date":filing.isoformat(),
+        "filing_date_alignment":date_alignment
     }
 
 def compile_events(rows:list[dict], cutoff:date=END)->dict:
@@ -82,9 +91,10 @@ def compile_events(rows:list[dict], cutoff:date=END)->dict:
         event=classify_event(row)
         if event["state"] in {"INVALID_MISSING_METADATA","OUT_OF_CONTRACT"}:
             continue
-        if date.fromisoformat(event["filing_date"]) < START or date.fromisoformat(event["filing_date"]) > cutoff:
+        acceptance_date = date.fromisoformat(event["acceptance_date_et"])
+        if acceptance_date < START or acceptance_date > cutoff:
             continue
-        event["eligible_session"]=next_xnys(date.fromisoformat(event["filing_date"])).isoformat()
+        event["eligible_session"]=next_xnys(acceptance_date).isoformat()
         events.append(event)
     events.sort(key=lambda x:(x["acceptance_datetime_utc"],x["accession"]))
     if len({x["accession"] for x in events}) != len(events):
