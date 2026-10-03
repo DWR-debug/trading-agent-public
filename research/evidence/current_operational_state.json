@@ -249,6 +249,13 @@
         "note": "Downstream PIT contract/sample gate only; no performance, ranking, selection, tuning, promotion or live execution.",
         "parent_code": "FRONTIER-20260928",
         "performance_authorization_allowed": false,
+        "q147_q148_clock_contract": {
+          "contract": "research/governance/q147_q148_eia_source_clock_contract_2026_10_03.json",
+          "document": "docs/research_design/Q147_Q148_EIA_SOURCE_CLOCK_CONTRACT_2026-10-03.md",
+          "note": "Current EIA API is discovery/sample only; formal PIT requires dated publication/issue files and revision lineage.",
+          "performance_authorization_allowed": false,
+          "state": "PIT_CONTRACT_DEFINED_PENDING_SERIES_FREEZE"
+        },
         "source_feasible_candidate_count": 21,
         "source_probe_pass_count": 25,
         "source_receipt_path": "research/evidence/q133_q170_source_feasibility_2026_10_03.json",
@@ -817,7 +824,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T14:22:32.291911+00:00",
+  "generated_at_utc": "2026-10-03T14:23:45.116620+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1219,56 +1226,47 @@
     ],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "research/q147-q148-eia-clock-contract-r3-20261003",
-        "number": 939,
-        "title": "RESEARCH: define Q147/Q148 EIA PIT clock contract R3",
-        "updatedAt": "2026-10-03T14:21:43Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/939"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "Merge pull request #939 from DWR-debug/research/q147-q148-eia-clock-contract-r3-20261003",
+        "sha": "059c293fe99e2dccd1ee44e579ea3ed86fc240f4",
+        "timestamp": "2026-10-03T16:23:33+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a704650a2593d022ad28cd783a092bd225ac956c",
+        "timestamp": "2026-10-03T14:22:35Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "205895b773c40f51bb586ff7002746b076c608ec",
+        "timestamp": "2026-10-03T14:22:33Z"
+      },
       {
         "message": "Merge pull request #938 from DWR-debug/fix/q171-warc-diagnostic-persistence-r1-20261003",
         "sha": "23c999215b96913486b76806faff6fa15be515b6",
         "timestamp": "2026-10-03T16:22:17+02:00"
       },
       {
-        "message": "TEST: retain Q171 WARC guards and add persistence checks",
-        "sha": "5c39a04b63cc59dc4b2317653a97638c599190a9",
-        "timestamp": "2026-10-03T16:20:20+02:00"
+        "message": "GOVERNANCE: register Q147 Q148 EIA PIT contract R3",
+        "sha": "e2a5853bc2aac2420c8913b8b7fa6c79fe26a3a2",
+        "timestamp": "2026-10-03T16:21:37+02:00"
       },
       {
-        "message": "OPS: persist and classify Q171 WARC material results",
-        "sha": "e531014c0e708696028b8fa540f751de76567311",
-        "timestamp": "2026-10-03T16:19:49+02:00"
+        "message": "RESEARCH: carry Q147 Q148 EIA PIT clock contract R3",
+        "sha": "5abaa928acdb8862b6b22440afd3b596258c2b46",
+        "timestamp": "2026-10-03T16:21:27+02:00"
       },
       {
-        "message": "TEST: guard Q171 diagnostic persistence and safety",
-        "sha": "a75064f5762e246100163ffb74cebc7d3e63f536",
-        "timestamp": "2026-10-03T16:19:15+02:00"
+        "message": "RESEARCH: carry Q147 Q148 EIA PIT clock contract R3",
+        "sha": "ebb6fbf8a3913a16cfce4f0819ff54a3c36819f5",
+        "timestamp": "2026-10-03T16:21:24+02:00"
       },
       {
-        "message": "OPS: add stable Q171 WARC receipt persistence",
-        "sha": "05b28e4b82565c8164c71a6e65afb6b23114af36",
-        "timestamp": "2026-10-03T16:19:06+02:00"
-      },
-      {
-        "message": "FIX: classify Q171 WARC access failures explicitly",
-        "sha": "d2232f7356e7dd49e244293e0edc5114a9b1d1c5",
-        "timestamp": "2026-10-03T16:18:57+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "bedf2823c6e043d1668e2364d817b44968e0c5c0",
-        "timestamp": "2026-10-03T14:17:19Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e70f6e349a8eec7ae945c2fc074d885ff139729e",
-        "timestamp": "2026-10-03T14:17:17Z"
+        "message": "RESEARCH: carry Q147 Q148 EIA PIT clock contract R3",
+        "sha": "7c0760baaba4c4b4a3f00afc8fac0fead4e73601",
+        "timestamp": "2026-10-03T16:21:20+02:00"
       }
     ]
   },
@@ -1338,12 +1336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "23c999215b96913486b76806faff6fa15be515b6",
+  "source_master_sha": "059c293fe99e2dccd1ee44e579ea3ed86fc240f4",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37129359441"
+    "run_id": "37129428876"
   }
 }
