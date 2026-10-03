@@ -4,6 +4,8 @@ import argparse,json
 from pathlib import Path
 from typing import Any
 from automation.research_os_evidence_bus import ROOT,load_registry,source_index,fingerprint
+QUALITY_POLICY_PATH = ROOT / "research/governance/critical_research_quality_control.json"
+QUALITY_POLICY = json.loads(QUALITY_POLICY_PATH.read_text(encoding="utf-8"))
 TRACKS=[
 {"id":"ROS-TRACK-C-SEC-FINRA-SHORT-FLOW","name":"SEC/FINRA short-flow convergence","source_ids":["SRC-SEC-FTD","SRC-FINRA-SI","SRC-FINRA-REGSHO"],"cheap_falsifiability":.92,"mechanism_novelty_distance":.90,"expected_reproducibility":.88,"resource_cost":.18,"lane":"deterministic_frontier","next_gate":"source_and_release_schedule_probe"},
 {"id":"ROS-TRACK-D-MACRO-VINTAGE","name":"Macro-vintage regime layer","source_ids":["SRC-FRED-ALFRED","SRC-BLS","SRC-EIA","SRC-BIS","SRC-TREASURY"],"cheap_falsifiability":.84,"mechanism_novelty_distance":.86,"expected_reproducibility":.91,"resource_cost":.24,"lane":"deterministic_frontier","next_gate":"vintage_and_release_time_probe"},
@@ -27,7 +29,7 @@ def score(track:dict[str,Any],sources:dict[str,dict[str,Any]])->dict[str,Any]:
     items=[sources[s] for s in track["source_ids"]]
     pit=sum(pit_prior(str(x.get("pit_fit",""))) for x in items)/len(items)
     q=sum(quality(str(x.get("access","")),str(x.get("pit_fit",""))) for x in items)/len(items)
-    benefit=.28*track["cheap_falsifiability"]+.22*q+.18*pit+.16*track["mechanism_novelty_distance"]+.16*track["expected_reproducibility"]
+    benefit=(.24*track["cheap_falsifiability"]+.18*q+.16*pit+.24*track["mechanism_novelty_distance"]+.18*track["expected_reproducibility"])
     out=dict(track); out.update({"source_quality_prior":round(q,6),"pit_feasibility_prior":round(pit,6),"information_gain_per_compute_prior":round(benefit/(.10+track["resource_cost"]),6),"holdout_used":False,"performance_evaluated":False,"candidate_selected":False}); return out
 S10_ACCEPTANCE_PATH = ROOT / "research/runs/self_hosted/autonomous/s10_acceptance_receipt.json"
 S10_OS_STATUS_PATH = ROOT / "ops/s10_runtime_status.json"
@@ -66,14 +68,14 @@ def _s10_resource_state() -> dict[str, Any]:
 
 def build_plan(*,run_number:int|None=None)->dict[str,Any]:
     registry=load_registry(); sources=source_index(registry)
-    tracks=sorted((score(t,sources) for t in TRACKS),key=lambda x:(-x["information_gain_per_compute_prior"],x["id"]))
+    min_novelty=float(QUALITY_POLICY["orthogonal_search"].get("minimum_scheduler_novelty_distance", 0.80))\n    candidate_tracks=[t for t in TRACKS if float(t["mechanism_novelty_distance"]) >= min_novelty]\n    tracks=sorted((score(t,sources) for t in candidate_tracks),key=lambda x:(-x["information_gain_per_compute_prior"],x["id"]))
     assignments=[]; used=set()
     for lane in ("deterministic_frontier","adversarial"):
         c=[x for x in tracks if x["lane"]==lane and x["id"] not in used]
         if c:
             used.add(c[0]["id"]); assignments.append({"lane":lane,"track_id":c[0]["id"],"reason":"ex_ante_capability_prior","performance_authorized":False})
     s10 = _s10_resource_state()
-    plan={"schema_version":1,"research_os_version":registry["research_os_version"],"plan_type":"resource_schedule","run_number":run_number,"basis":"information_gain_per_compute_prior + cheap_falsifiability + source_quality + PIT_feasibility + novelty + reproducibility","forbidden_inputs":registry["resource_scheduler"]["forbidden_axes"],"tracks":tracks,"assignments":assignments,"agent_resources":[s10],"resource_policy":{"paid_resources":False,"holdout_used":False,"automatic_promotion":False,"performance_authorization":False,"maximum_deterministic_lanes":2,"adversarial_lane_reserved":True}}
+    plan={"schema_version":1,"research_priority":"ORTHOGONAL_INFORMATION_FIRST_WITH_EARLY_ROBUSTNESS","research_os_version":registry["research_os_version"],"plan_type":"resource_schedule","run_number":run_number,"basis":"information_gain_per_compute_prior + cheap_falsifiability + source_quality + PIT_feasibility + novelty + reproducibility","forbidden_inputs":registry["resource_scheduler"]["forbidden_axes"],"tracks":tracks,"assignments":assignments,"agent_resources":[s10],"quality_controls":{"orthogonal_only":True,"minimum_scheduler_novelty_distance":min_novelty,"early_robustness_required_before_future_performance_authorization":True,"immediate_replication_required_after_full_formal_pass":True},\n    "resource_policy":{"paid_resources":False,"holdout_used":False,"automatic_promotion":False,"performance_authorization":False,"maximum_deterministic_lanes":2,"adversarial_lane_reserved":True}}
     plan["fingerprint"]=fingerprint(plan); return plan
 def main()->int:
     p=argparse.ArgumentParser(); p.add_argument("--output",type=Path,default=Path("research/runs/self_hosted/research_os/resource_schedule.json")); p.add_argument("--run-number",type=int); a=p.parse_args()

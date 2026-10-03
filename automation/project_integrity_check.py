@@ -181,6 +181,7 @@ ACTIVE_WORKFLOWS = {
     "q104-i22-filing-arrival.yml",
     "android-phone-fleet-worker.yml",
     "android-phone-fleet-receipt-sync.yml",
+    "post-pass-independent-replication.yml",
 }
 
 REQUIRED_FILES = (
@@ -331,6 +332,51 @@ def _validate_research_os_registry() -> None:
         fail("Research OS source-probe safety contract invalid")
 
 
+def _validate_critical_research_controls() -> None:
+    policy_path = ROOT / "research" / "governance" / "critical_research_quality_control.json"
+    validator_path = ROOT / "automation" / "future_performance_quality_contract_check.py"
+    dispatcher_path = ROOT / "automation" / "independent_replication_dispatch.py"
+    workflow_path = ROOT / ".github" / "workflows" / "post-pass-independent-replication.yml"
+    for path in (policy_path, validator_path, dispatcher_path, workflow_path):
+        if not path.exists():
+            fail(f"critical research control missing: {path.relative_to(ROOT)}")
+    try:
+        policy = json.loads(policy_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        fail(f"critical research control policy is unreadable: {exc}")
+    if policy.get("status") != "ACTIVE":
+        fail("critical research quality policy is not active")
+    if policy.get("early_robustness", {}).get("required_before_future_performance_authorization") is not True:
+        fail("early robustness prerequisite is not enforced")
+    if policy.get("immediate_replication", {}).get("required_for_any_future_full_formal_pass") is not True:
+        fail("immediate replication prerequisite is not enforced")
+    required_dimensions = {
+        "research_and_holdout_return",
+        "research_and_holdout_drawdown",
+        "profit_factor",
+        "rolling_profit_factor",
+        "rolling_profitable_window_ratio",
+        "rolling_average_drawdown",
+        "oos_to_is_return_ratio",
+        "cost_stress_1_5x",
+        "cost_stress_2x",
+        "total_return_sensitivity",
+        "turnover",
+        "gross_exposure",
+        "concentration_hhi",
+        "market_correlation",
+        "underwater_fraction",
+        "regime_decomposition",
+    }
+    declared = set(policy.get("early_robustness", {}).get("required_dimensions", []))
+    if not required_dimensions.issubset(declared):
+        fail("critical research robustness dimensions are incomplete")
+    forbidden = set(policy.get("orthogonal_search", {}).get("forbidden_scheduler_inputs", []))
+    required_forbidden = {"holdout_return", "holdout_drawdown", "performance_rank", "future_information", "candidate_preference"}
+    if not required_forbidden.issubset(forbidden):
+        fail("critical research orthogonal scheduler remains vulnerable to forbidden inputs")
+
+
 def main() -> None:
     workflow_dir = ROOT / ".github" / "workflows"
     active_workflows = {path.name for path in workflow_dir.glob("*.yml")}
@@ -341,6 +387,7 @@ def main() -> None:
         )
     _validate_q067_evidence_chain()
     _validate_research_os_registry()
+    _validate_critical_research_controls()
 
     for path in REQUIRED_FILES:
         if not path.exists():
