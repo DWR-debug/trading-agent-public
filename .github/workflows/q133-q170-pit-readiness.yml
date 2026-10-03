@@ -1,0 +1,87 @@
+name: Q133-Q170 PIT Readiness R1
+
+on:
+  schedule:
+    - cron: "41 */6 * * *"
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "automation/q133_q170_pit_readiness.py"
+      - "research/frontier/q133_q170_pit_readiness_wave_2026_10_03.json"
+      - "research/frontier/q133_q145_candidate_wave_2026_10_03.json"
+      - "research/frontier/q146_q151_candidate_wave_2026_10_03.json"
+      - "research/frontier/q152_q165_candidate_wave_2026_10_03.json"
+      - "research/frontier/q166_q170_candidate_wave_2026_10_03.json"
+      - "research/evidence/q133_q170_source_feasibility_2026_10_03.json"
+      - "tests/test_q133_q170_pit_readiness.py"
+      - ".github/workflows/q133-q170-pit-readiness.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-q133-q170-pit-readiness
+  cancel-in-progress: true
+
+jobs:
+  pit_readiness:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Run Q133-Q170 PIT readiness R1
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "research/runs/q133_q170_pit_readiness"
+          python -m automation.q133_q170_pit_readiness \
+            --output "research/runs/q133_q170_pit_readiness/${GITHUB_RUN_ID}.json"
+
+      - name: Validate PIT-readiness boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          p = Path("research/runs/q133_q170_pit_readiness") / f"{os.environ['GITHUB_RUN_ID']}.json"
+          d = json.loads(p.read_text(encoding="utf-8"))
+          assert d["status"] == "PIT_READINESS_COMPLETED_NO_PERFORMANCE"
+          assert d["source_receipt"]["source_probe_pass_count"] == 25
+          assert d["source_receipt"]["source_feasible_candidate_count"] == 21
+          for key in (
+              "performance", "holdout_selection", "asset_selection",
+              "parameter_search", "threshold_search", "horizon_search",
+              "variant_search", "candidate_ranking", "promotion", "live_execution"
+          ):
+              assert d["scientific_boundary"][key] is False
+          assert d["safety"]["PAPER_ONLY"] is True
+          assert d["safety"]["LIVE_TRADING_ENABLED"] is False
+          assert d["safety"]["ORDERS_ENABLED"] is False
+          assert d["safety"]["AUTOMATIC_PROMOTION"] is False
+          assert d["synthetic_mutation_checks"]["future_row_prefix_invariant"] is True
+          assert d["synthetic_mutation_checks"]["no_search_dimension_present"] is True
+          print("Q133_Q170_PIT_READINESS_R1_OK")
+          PY
+
+      - name: Upload PIT-readiness receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q133-q170-pit-readiness-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q133_q170_pit_readiness/
+          if-no-files-found: error
+          retention-days: 30
