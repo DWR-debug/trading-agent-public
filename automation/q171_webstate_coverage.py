@@ -14,8 +14,8 @@ from pathlib import Path
 
 
 UA = "trading-agent-public/Q171-webstate-coverage/1"
-CRAWL = "CC-MAIN-2025-43"
-REQUEST_GAP_SECONDS = 5
+CRAWLS = ("CC-MAIN-2025-13", "CC-MAIN-2025-26", "CC-MAIN-2025-38", "CC-MAIN-2025-51")
+REQUEST_GAP_SECONDS = 3
 MAP_PATH = Path("research/governance/q171_issuer_web_url_map_2026_10_03.json")
 
 
@@ -57,10 +57,10 @@ def fetch_with_fixed_retries(url: str, attempts: int = 3) -> tuple[int, bytes, i
         time.sleep(2 ** (attempt - 1))
     return last_status, last_body, attempts
 
-def query_index(url: str) -> dict[str, object]:
+def query_index(crawl: str, url: str) -> dict[str, object]:
     import time
     endpoint = (
-        f"https://index.commoncrawl.org/{CRAWL}-index?"
+        f"https://index.commoncrawl.org/{crawl}-index?"
         + urllib.parse.urlencode(
             {
                 "url": url,
@@ -112,7 +112,7 @@ def query_index(url: str) -> dict[str, object]:
 
     return {
         "status": "CAPTURE_FOUND" if rows else "NO_CAPTURE_FOUND",
-        "crawl": CRAWL,
+        "crawl": crawl,
         "attempts": attempts,
         "requested_url": url,
         "rows": len(rows),
@@ -130,6 +130,7 @@ def query_index(url: str) -> dict[str, object]:
                 "status": str(row.get("status", "")),
                 "mime": str(row.get("mime", "")),
                 "indexed_url": str(row.get("url", "")),
+                "crawl": crawl,
             }
             for row in rows
         ],
@@ -145,25 +146,62 @@ def run(output: Path) -> dict[str, object]:
     if actual != expected:
         raise RuntimeError(f"Q171 frozen universe mismatch: {actual!r}")
 
-    results = {item["symbol"]: query_index(item["canonical_public_url"]) for item in symbols}
+    results: dict[str, dict[str, object]] = {}
     status_counts: dict[str, int] = {}
-    for result in results.values():
-        status = str(result["status"])
-        status_counts[status] = status_counts.get(status, 0) + 1
+    total_captures = 0
+    for item in symbols:
+        symbol = item["symbol"]
+        per_crawl: dict[str, dict[str, object]] = {}
+        aggregate_rows: list[dict[str, object]] = []
+        for crawl in CRAWLS:
+            result = query_index(crawl, item["canonical_public_url"])
+            per_crawl[crawl] = result
+            aggregate_rows.extend(result.get("capture_rows", []))
+            status = str(result["status"])
+            status_counts[status] = status_counts.get(status, 0) + 1
+        aggregate_rows.sort(key=lambda row: (
+            str(row["timestamp"]),
+            str(row["crawl"]),
+            str(row["digest"]),
+            int(row["offset"]),
+            int(row["length"]),
+        ))
+        if aggregate_rows:
+            results[symbol] = {
+                "status": "CAPTURE_FOUND",
+                "crawl_results": per_crawl,
+                "capture_count": len(aggregate_rows),
+                "capture_rows": aggregate_rows,
+            }
+            total_captures += len(aggregate_rows)
+        else:
+            results[symbol] = {
+                "status": "NO_CAPTURE_FOUND",
+                "crawl_results": per_crawl,
+                "capture_count": 0,
+                "capture_rows": [],
+            }
 
     payload = {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "task_id": "Q-2026-10-03-Q171-WEBSTATE-COVERAGE",
         "status": "Q171_WEBSTATE_SOURCE_COVERAGE_COMPLETED",
-        "crawl": CRAWL,
+        "crawls": list(CRAWLS),
         "url_map_path": str(MAP_PATH),
         "url_map_fingerprint": digest(mapping),
         "results": results,
         "summary": {
             "issuers": len(results),
+            "fixed_crawls": len(CRAWLS),
             "status_counts": status_counts,
-            "captures_found": status_counts.get("CAPTURE_FOUND", 0),
-            "infra_blocked": status_counts.get("BLOCKED_INDEX_FETCH", 0),
+            "issuers_with_any_capture": sum(1 for result in results.values() if result["status"] == "CAPTURE_FOUND"),
+            "captures_found": total_captures,
+            "infra_blocked": sum(
+                1
+                for result in results.values()
+                for crawl_result in result["crawl_results"].values()
+                if crawl_result["status"] == "BLOCKED_INDEX_FETCH"
+            ),
         },
         "scientific_boundary": {
             "performance": False,
