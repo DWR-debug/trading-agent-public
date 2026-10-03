@@ -23,7 +23,7 @@ The permanent rule is:
 
 **verify current state → snapshot live capacity → parallelize independent work → use the smallest useful free resource → cheap falsify early → expose robustness early → immediately independently replicate a complete formal pass.**
 
-The two Windows self-hosted lanes remain the primary deterministic capacity. The autonomous frontier lane uses bounded internal concurrency (default 3 workers); local reproduction and other QA/reproduction paths remain serial unless explicitly proven safe to parallelize.
+The two Windows self-hosted lanes remain the primary deterministic capacity. They operate as **Lane A — Formal Readiness** and **Lane B — Frontier Discovery** when both slots are available. Lane A concentrates on advanced Coverage/PIT/compiler/authorization readiness; Lane B on orthogonal source/PIT feasibility and cheap falsification. Each lane has separate candidate/trial identity, branches/workflows and output/provenance paths. Cross-lane results never retroactively modify a frozen trial. The autonomous hosted frontier lane uses bounded internal concurrency (default 3 workers); local reproduction and other sequential QA/reproduction paths remain serial unless explicitly proven safe to parallelize.
 
 S10 is not a background decoration resource. When its latest successful utility receipt is fresh (currently within 6 hours), that receipt is accepted as the S10 operational-presence signal for routing. A separate phone-runner discovery is not required solely to establish presence. Bounded work remains the only permitted use. Its output remains QA/review support only.
 
@@ -33,7 +33,18 @@ Already-running work is never duplicated. No resource is activated merely to con
 
 The existing Samsung fleet registry already provides five uniquely labelled slots. An additional physical phone is therefore **not required now**. A new device should be activated only as a controlled capacity experiment when independent measurable throughput gain is expected; recurring use requires measured benefit sufficient to justify the added operational complexity.
 
-## 2. Dauerbetrieb ohne Chat
+## 2. Permanenter Zwei-Lanes-Forschungsmodus
+
+Der Zwei-Lanes-Modus ist ein dauerhafter Betriebsstandard und nicht chatabhängig:
+
+| Lane | Primärer Zweck | Aktueller Schwerpunkt | Wissenschaftliche Grenze |
+| --- | --- | --- | --- |
+| **A — Formal Readiness** | Coverage/PIT/Compiler/Provenienz bis zur nächsten zulässigen formalen Autorisierung | Q104 I19/I20, I22, Q119/Q120/Q122, Q125-F1 | keine Autorisierung durch Kapazität; keine Selektion/Rangfolge |
+| **B — Frontier Discovery** | orthogonale Quellen, PIT-Semantik, billige Falsifikation | Q171-Q178, Q126-Q132 und weitere Public-Source-Frontier | keine Performance, keine Selektion/Rangfolge |
+
+Beide Lanes müssen Candidate-/Trial-IDs, Branches/Workflows, Receipt- und Output-Pfade getrennt halten. Ein Ergebnis darf nur als neue, separat eingefrorene Hypothese in die andere Lane einfließen. Zwei Windows-Slots sind Ausführungskapazität; sie erzeugen niemals selbst Performance-Autorisierung.
+
+## 2a. Dauerbetrieb ohne Chat
 
 | Lane | Taktung | Zweck | Fallback |
 | --- | --- | --- | --- |
