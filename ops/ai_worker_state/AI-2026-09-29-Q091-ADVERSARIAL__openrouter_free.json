@@ -27,16 +27,16 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 1.871,
-  "stdout": "User Safety: safe",
+  "duration_seconds": 39.308,
+  "stdout": "\n\n# Q091 Pre-Performance Adversarial Review\n\n## Blocking Issues\n\n### B1. Authorization State Inconsistency (BLOCKING)\n\n| Source | `performance_trial_authorized` |\n|---|---|\n| `q091_fixed_portfolio_architecture_2026_09_29.json` | `true` |\n| `q091_pit_result.json` | `false` |\n\nThe preregistration declares performance authorized; the PIT receipt explicitly records it as not authorized. The performance runner's `_preflight` function checks both receipts and will fail on this mismatch. **No performance evaluation can proceed until one of these is corrected and the correction is immutably reconciled.** If the preregistration is wrong (authorized should be `false`), then the entire Q091 performance sequence is unauthorized and must not run.",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1791015109-Y2WFKmG7Alm1H9XSvuAg",
+  "response_id": "gen-1791015285-9FLIXFEXL0AknxXtvlgC",
   "usage": {
-    "prompt_tokens": 8029,
-    "completion_tokens": 80,
-    "total_tokens": 8109,
+    "prompt_tokens": 7621,
+    "completion_tokens": 3200,
+    "total_tokens": 10821,
     "cost": 0,
     "is_byok": false,
     "prompt_tokens_details": {
@@ -51,7 +51,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 85,
+      "reasoning_tokens": 3413,
       "image_tokens": 0,
       "audio_tokens": 0
     }
