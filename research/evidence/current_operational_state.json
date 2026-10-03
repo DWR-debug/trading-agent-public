@@ -714,7 +714,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-03T10:40:53.827633+00:00",
+  "generated_at_utc": "2026-10-03T10:41:08.385656+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -918,44 +918,44 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: record AI worker state",
+        "sha": "8dee54b80f0057f213b8f4f59319920fa881a416",
+        "timestamp": "2026-10-03T10:41:06Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "2b83f797c2e52a9577307187a7f621861873f3a3",
+        "timestamp": "2026-10-03T10:41:05Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "ff623a865b7f72ef830ffef228917f78192e449e",
+        "timestamp": "2026-10-03T10:41:03Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "dbf1c96e1db82ef7258b9432421e39efc1008d35",
+        "timestamp": "2026-10-03T10:41:02Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "b2affc13e167918a5616ae68abe764f4c36b4c0c",
+        "timestamp": "2026-10-03T10:41:01Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2ff1c7c06b0480e5bb6f39229913792356c49e18",
+        "timestamp": "2026-10-03T10:40:56Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "205a499961415496c5fda73f64a569c218b18fd9",
+        "timestamp": "2026-10-03T10:40:54Z"
+      },
+      {
         "message": "OPS: stop scheduled provider churn for unavailable AI routes",
         "sha": "ae2682e8851990894e63317229e3c27ba5d87fde",
         "timestamp": "2026-10-03T12:40:51+02:00"
-      },
-      {
-        "message": "TEST: align provenance test with hosted frontier architecture",
-        "sha": "e7c470bd061555b1c4bbca7fcf1af044ffc38a08",
-        "timestamp": "2026-10-03T12:40:39+02:00"
-      },
-      {
-        "message": "FIX: remove nonexistent dependency cache manifests from frontier workflow",
-        "sha": "037b57cf88d7854c5197d7fda09940fff9f89b0d",
-        "timestamp": "2026-10-03T12:40:34+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "663ab29ba1b05881facbd716e27648f3c4a18150",
-        "timestamp": "2026-10-03T10:40:10Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5aee87c7c2d3e16818d6be64edabb37d87397de3",
-        "timestamp": "2026-10-03T10:40:09Z"
-      },
-      {
-        "message": "TEST: verify hosted frontier and reduced Windows reservation",
-        "sha": "71e025049f07f6db24b50eced6370fdfb83d7c88",
-        "timestamp": "2026-10-03T12:39:58+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e53d79e181af4c6dfedd3dc72ca0c890790f42cd",
-        "timestamp": "2026-10-03T10:39:48Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "601ad26fd26a95bd630d5aa1930078dfee46cc43",
-        "timestamp": "2026-10-03T10:39:47Z"
       }
     ]
   },
@@ -1025,12 +1025,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ae2682e8851990894e63317229e3c27ba5d87fde",
+  "source_master_sha": "8dee54b80f0057f213b8f4f59319920fa881a416",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37117203762"
+    "run_id": "37117214071"
   }
 }
