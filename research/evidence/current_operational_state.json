@@ -633,7 +633,7 @@
     },
     "s10_phone": {
       "acceptance_receipt_sha256": "2e40b9d37bf0fbd22bd752fffdaceb0f7ad955e7df1070d0793acbe77c77796d",
-      "artifact_id": "11266968503",
+      "artifact_id": "11268797235",
       "candidate_ranking": false,
       "candidate_selection": false,
       "current_online": null,
@@ -645,9 +645,9 @@
       "receipt_eligible": false,
       "receipt_status": "S10_UTILITY_ACCEPTED",
       "scientific_evidence": false,
-      "source_commit": "0897b1b138ac8e5cbef4865227fef2c69c071e90",
+      "source_commit": "d96e1d85b458974a8f71be7c25e0b471acdd0d0a",
       "status": "S10_UTILITY_ACCEPTED",
-      "workflow_run_id": "37102979617"
+      "workflow_run_id": "37108078930"
     },
     "scientific_compute": {
       "canonical_path": "GitHub-hosted deterministic workflows",
@@ -702,7 +702,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-03T07:57:42.717893+00:00",
+  "generated_at_utc": "2026-10-03T08:04:56.674284+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -890,6 +890,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOV: persist accelerated research and S10 routing logic (#891)",
+        "sha": "34f05f989c3293282cb04e9958bf5012a7a7efeb",
+        "timestamp": "2026-10-03T10:04:43+02:00"
+      },
+      {
+        "message": "OPS: synchronize S10 phone runtime status",
+        "sha": "ee390a5d4d48db636cd3b09dd7c66c3f7817b4d6",
+        "timestamp": "2026-10-03T08:01:09Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b0295c083809d55f07740180efb9673f84268784",
+        "timestamp": "2026-10-03T07:57:44Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "1fe001bd21bf6c7556ed7b4765d1ef9c7dba3bac",
+        "timestamp": "2026-10-03T07:57:43Z"
+      },
+      {
         "message": "OPS: route meaningful research changes to S10 utility review (#890)",
         "sha": "d96e1d85b458974a8f71be7c25e0b471acdd0d0a",
         "timestamp": "2026-10-03T09:57:30+02:00"
@@ -908,26 +928,6 @@
         "message": "PERF: bounded parallelism for autonomous frontier preflights (#889)",
         "sha": "179f33274b9ccd675cb68862f205b3d1661e7f6a",
         "timestamp": "2026-10-03T09:56:54+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "7290438a41533641903db9edb2ad72dca050c299",
-        "timestamp": "2026-10-03T07:54:19Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "7c246723aaac6820bea0853d1aa5b7ff7fe6bbda",
-        "timestamp": "2026-10-03T07:43:30Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "c5808dd36c55dc75775fe496b4d8883d4248cc8f",
-        "timestamp": "2026-10-03T07:33:00Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9f7c8851e181ec141cf07979db4461b1ccb375b3",
-        "timestamp": "2026-10-03T07:32:58Z"
       }
     ]
   },
@@ -997,12 +997,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d96e1d85b458974a8f71be7c25e0b471acdd0d0a",
+  "source_master_sha": "34f05f989c3293282cb04e9958bf5012a7a7efeb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37108078915"
+    "run_id": "37108486038"
   }
 }
