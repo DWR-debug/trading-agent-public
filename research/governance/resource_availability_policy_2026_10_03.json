@@ -1,0 +1,33 @@
+{
+  "schema_version":"1.0",
+  "policy_id":"RESOURCE-AVAILABILITY-2026-10-03",
+  "generated_utc":"2026-10-03T12:52:00Z",
+  "routing_policy":{
+    "self_hosted_windows":"ASSUMED_ALWAYS_AVAILABLE",
+    "s10":"ASSUMED_ALWAYS_AVAILABLE",
+    "android_fleet":"ASSUMED_ALWAYS_AVAILABLE",
+    "routing_may_dispatch_without_fresh_presence_receipt":true,
+    "fresh_receipts_are_required_for_evidence_claims":true,
+    "availability_assumption_does_not_create_scientific_evidence":true
+  },
+  "capacity":{
+    "windows_runner_slots":2,
+    "permanent_loop_lanes":["local_reproduction","data_qa"],
+    "android_device_pool":"all configured Samsung/Android devices are routable",
+    "hosted_failover":"manual_only"
+  },
+  "scientific_boundary":{
+    "performance_authorized":false,
+    "holdout_selection_allowed":false,
+    "candidate_ranking_allowed":false,
+    "parameter_search_allowed":false,
+    "promotion_allowed":false,
+    "live_execution_allowed":false
+  },
+  "safety":{
+    "PAPER_ONLY":true,
+    "LIVE_TRADING_ENABLED":false,
+    "ORDERS_ENABLED":false,
+    "AUTOMATIC_PROMOTION":false
+  }
+}
