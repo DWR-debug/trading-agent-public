@@ -224,7 +224,7 @@ def test_continuous_qa_is_matrix_orchestrated_and_parallel_bounded():
     assert "fail-fast: false" in text
     assert "max-parallel: 1" in text
     assert "cancel-in-progress: true" in text
-    assert "lane: [repo_qa, data_qa, design_qa, local_reproduction, autonomous_frontier_qa]" in text
+    assert "lane: [repo_qa]" in text
     assert "runs-on: [self-hosted, trading-agent-research]" in text
     assert "Aggregate QA gate" in text
     assert "needs: qa_lane" in text
@@ -244,7 +244,7 @@ def test_self_hosted_continuous_qa_is_scheduled_and_non_formal():
     text = (
         ROOT / ".github" / "workflows" / "self-hosted-continuous-qa.yml"
     ).read_text(encoding="utf-8")
-    assert 'cron: "15 * * * *"' in text
+    assert 'cron: "15 */6 * * *"' in text
     assert "workflow_dispatch:" in text
     assert "runs-on: [self-hosted, trading-agent-research]" in text
     assert "concurrency:" in text
