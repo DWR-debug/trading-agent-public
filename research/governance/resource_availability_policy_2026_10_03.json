@@ -13,8 +13,8 @@
   "capacity": {
     "windows_runner_slots": 2,
     "permanent_loop_lanes": [
-      "formal_readiness",
-      "frontier_discovery"
+      "local_reproduction",
+      "data_qa"
     ],
     "android_device_pool": "all configured Samsung/Android devices are routable",
     "hosted_failover": "manual_only",
@@ -23,7 +23,15 @@
       "frontier_discovery": "Orthogonal source/PIT feasibility and cheap falsification"
     },
     "lane_isolation_required": true,
-    "performance_authorization_from_capacity": false
+    "performance_authorization_from_capacity": false,
+    "logical_research_lanes": [
+      "formal_readiness",
+      "frontier_discovery"
+    ],
+    "logical_lane_mapping": {
+      "formal_readiness": "orchestrator-owned logical lane; may use the local_reproduction execution label plus hosted deterministic readiness workflows",
+      "frontier_discovery": "orchestrator-owned logical lane; may use the data_qa execution label plus hosted deterministic frontier workflows"
+    }
   },
   "scientific_boundary": {
     "performance_authorized": false,
