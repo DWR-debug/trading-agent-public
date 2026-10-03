@@ -315,13 +315,25 @@ def run(command: list[str], out_dir: Path, index: int) -> dict[str, object]:
 
 
 def default_max_workers(lane: str) -> int:
-    """Return a conservative bounded concurrency for each lane.
-
-    Frontier steps are deliberately independent bounded preflights, so a small
-    worker pool reduces wall-clock time without turning the runner into an
-    unrestricted parallel executor. Reproduction/QA lanes remain serial.
-    """
+    """Return a conservative bounded concurrency for each lane."""
     return 3 if lane == "autonomous_frontier_qa" else 1
+
+
+def execution_groups(lane: str, step_count: int) -> list[list[int]]:
+    """Return dependency-safe bounded execution groups.
+
+    Q100 consumes Q096 and Q098 artifacts, so step 8 must start only after
+    steps 5 and 6 have completed. Other predefined frontier steps are bounded
+    preflights that do not consume another step's output.
+    """
+    all_steps = list(range(1, step_count + 1))
+    if lane != "autonomous_frontier_qa":
+        return [all_steps]
+    dependency = [index for index in all_steps if index != 8]
+    groups = [dependency]
+    if 8 in all_steps:
+        groups.append([8])
+    return groups
 
 
 def main() -> int:
@@ -345,23 +357,24 @@ def main() -> int:
     exit_code = 0
     failed_steps = []
     indexed_commands = list(enumerate(LANES[args.lane], start=1))
+    command_map = dict(indexed_commands)
+    results = []
 
-    if max_workers == 1:
-        results = [
-            run(command, args.output_dir, index)
-            for index, command in indexed_commands
-        ]
-    else:
-        # All commands in this lane are predefined, non-production and
-        # independently bounded. Collect futures in submission order so the
-        # persisted summary remains deterministic even when execution finishes
-        # out of order.
-        with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            futures = [
-                executor.submit(run, command, args.output_dir, index)
-                for index, command in indexed_commands
-            ]
-            results = [future.result() for future in futures]
+    # Execute dependency-safe groups sequentially; each group may use bounded
+    # internal parallelism. This preserves wall-clock savings while preventing
+    # artifact-consumer races such as Q100 reading Q096/Q098 before completion.
+    for group in execution_groups(args.lane, len(indexed_commands)):
+        group_items = [(index, command_map[index]) for index in group]
+        if max_workers == 1 or len(group_items) == 1:
+            group_results = [run(command, args.output_dir, index) for index, command in group_items]
+        else:
+            with ThreadPoolExecutor(max_workers=max_workers) as executor:
+                futures = [
+                    executor.submit(run, command, args.output_dir, index)
+                    for index, command in group_items
+                ]
+                group_results = [future.result() for future in futures]
+        results.extend(group_results)
 
     for result in results:
         if result["returncode"] != 0:

@@ -8,6 +8,15 @@ from automation import self_hosted_research_worker as worker
 ROOT = Path(__file__).parents[1]
 
 
+def test_frontier_execution_groups_keep_q100_after_q096_and_q098():
+    groups = worker.execution_groups("autonomous_frontier_qa", len(worker.LANES["autonomous_frontier_qa"]))
+    assert groups[0][-1] != 8
+    assert 5 in groups[0]
+    assert 6 in groups[0]
+    assert groups[-1] == [8]
+    assert worker.execution_groups("local_reproduction", len(worker.LANES["local_reproduction"])) == [[1, 2, 3]]
+
+
 def test_frontier_lane_has_bounded_parallelism_and_reproduction_stays_serial():
     assert worker.default_max_workers("autonomous_frontier_qa") == 3
     assert worker.default_max_workers("local_reproduction") == 1
@@ -71,6 +80,8 @@ def test_every_lane_writes_non_formal_run_manifest(monkeypatch, tmp_path):
                 lane,
                 "--output-dir",
                 str(output_dir),
+                "--max-workers",
+                "1",
             ],
         )
 
@@ -93,6 +104,7 @@ def test_every_lane_writes_non_formal_run_manifest(monkeypatch, tmp_path):
             "orders_enabled": False,
             "automatic_promotion": False,
             "formal_research_evidence": False,
+            "max_workers": 1,
             "step_count": len(expected_codes),
             "step_return_codes": expected_codes,
             "failed_steps": [] if len(commands) == 1 else list(range(2, len(commands) + 1)),
@@ -133,6 +145,8 @@ def test_each_lane_fails_closed_and_preserves_failure_provenance(
                 lane,
                 "--output-dir",
                 str(output_dir),
+                "--max-workers",
+                "1",
             ],
         )
 
