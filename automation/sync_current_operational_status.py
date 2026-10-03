@@ -317,6 +317,7 @@ def generate(
             "trial_ledger": "research/evidence/trial_ledger.json",
             "active_research_registry": "research/governance/active_research_registry.json",
             "research_os_source_registry": "research/governance/research_os_source_registry_2026_09_30.json",
+            "resource_availability_policy": "research/governance/resource_availability_policy_2026_10_03.json",
         },
         "active_research_registry": active_registry,
         "repository_state": {
