@@ -318,6 +318,7 @@ def generate(
             "orthogonal frontier work; Q104/I22/Q119/Q120/Q125 remain formal-readiness work. "
             "No performance authorization, holdout selection, tuning, ranking, promotion or live "
             "execution is created by these tracks."
+        )
 
         recorded_next_research_focus = (
             "Priority frontier is now the orthogonal SEC/13F/XBRL/Treasury/CFTC channel block plus "
