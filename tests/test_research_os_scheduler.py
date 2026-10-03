@@ -74,3 +74,25 @@ def test_s10_stale_success_receipt_does_not_route(monkeypatch, tmp_path):
     state = scheduler._s10_resource_state()
     assert state["eligible"] is False
     assert state["presence_signal_fresh"] is False
+
+
+def test_scheduler_reloads_quality_policy_each_invocation(monkeypatch, tmp_path):
+    import json
+    import automation.research_os_scheduler as scheduler
+
+    policy = json.loads(
+        (ROOT / "research/governance/critical_research_quality_control.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    policy["orthogonal_search"]["minimum_scheduler_novelty_distance"] = 0.98
+    policy_path = tmp_path / "critical_research_quality_control.json"
+    policy_path.write_text(json.dumps(policy), encoding="utf-8")
+    monkeypatch.setattr(scheduler, "QUALITY_POLICY_PATH", policy_path)
+
+    plan = scheduler.build_plan(run_number=123)
+    assert plan["quality_controls"]["minimum_scheduler_novelty_distance"] == 0.98
+    assert all(
+        item["mechanism_novelty_distance"] >= 0.98
+        for item in plan["tracks"]
+    )
