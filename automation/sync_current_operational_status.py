@@ -285,6 +285,20 @@ def generate(
                 "deterministic XBRL concept/coverage gate for I19/I20. No performance authorization, "
                 "holdout selection, parameter search, promotion or live execution is permitted."
             )
+    if (ROOT / "automation/q126_q132_frontier_feasibility.py").is_file():
+        recorded_next_research_focus = (
+            "Priority frontier is now the orthogonal SEC/13F/XBRL/Treasury/CFTC channel block plus "
+            "Q121 and Q126-Q132. Q121 has a fixed SEC acceptance-time discovery/PIT compiler. "
+            "Q126 reuses frozen SEC filing-arrival components; Q127 uses FINRA Reg-SHO daily short "
+            "volume with revision-aware publication timing; Q128/Q129 remain blocked until a free, "
+            "reproducible historical options source is established; Q130 remains blocked until a "
+            "timestamped reproducible public attention history is established; Q131 has source access "
+            "but its disclosure-complexity definition is not yet frozen; Q132 has a deterministic "
+            "fixed-decomposition synthetic contract. Q119/Q120/Q122 remain active Treasury/CFTC "
+            "source/PIT work. None of these states authorizes performance, holdout selection, tuning, "
+            "promotion or live execution."
+        )
+
     current = {
         "schema_version": "1.0",
         "status_type": "current_operational_project_state",
