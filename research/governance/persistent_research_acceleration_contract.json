@@ -9,7 +9,7 @@
     "Verify current public master and current operational/evidence state before acting.",
     "Snapshot live runner, workflow, agent and bounded mobile capacity; never trust stale availability claims.",
     "Route every meaningful task to the smallest suitable free resource and execute independent work in parallel.",
-    "Use S10 opportunistically when its accepted receipt is valid, live phone-side availability is verified, and a bounded useful task exists.",
+    "Use S10 opportunistically when its latest successful utility receipt is fresh (<=6h), treating that receipt as the operational-presence signal for routing; a separate phone-runner discovery is not required solely for presence confirmation, and a bounded useful task must exist.",
     "Prefer event-driven S10 utility review after meaningful research/governance changes, plus the regular six-hour schedule.",
     "Do not duplicate already-running work and do not consume quotas merely to create activity."
   ],
