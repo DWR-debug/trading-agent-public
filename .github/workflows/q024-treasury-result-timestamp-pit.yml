@@ -10,8 +10,6 @@ on:
       - "docs/research_design/Q024-treasury-auction-result-publication-timestamp-pit-feasibility-2026-09-27.md"
       - "research/run_requests/q024_treasury_result_timestamp_pit.trigger"
       - ".github/workflows/q024-treasury-result-timestamp-pit.yml"
-  schedule:
-    - cron: "41 3 * * 1"
   workflow_dispatch:
 
 permissions:
