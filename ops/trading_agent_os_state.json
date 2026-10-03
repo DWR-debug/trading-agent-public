@@ -38,15 +38,20 @@
       "workflow": ".github/workflows/permanent-pc-research-loop.yml",
       "schedule_utc": "*/30 * * * *",
       "runner_label": "trading-agent-research",
-      "parallel_lanes": 1,
+      "parallel_lanes": 2,
       "purpose": [
-        "local_reproduction"
+        "lane_a_formal_readiness",
+        "lane_b_frontier_discovery"
       ],
       "night_mode": "continuous; no chat required",
       "formal_evidence_allowed": false,
       "internal_frontier_workers": 3,
       "max_worker_cap": 4,
-      "description": "Windows capacity reserved for local reproduction and hardware/local-AI paths; deterministic frontier moved to free hosted Linux."
+      "description": "Two Windows slots operate as Lane A (Formal Readiness) and Lane B (Frontier Discovery). Deterministic hosted frontier work also uses bounded concurrency.",
+      "matrix_lanes": [
+        "formal_readiness",
+        "frontier_discovery"
+      ]
     },
     "hosted_research_failover": {
       "workflow": ".github/workflows/hosted-research-failover.yml",
@@ -240,5 +245,37 @@
     "Do not trust stale runner/auth/queue claims from prior chats.",
     "Continue unfinished safe work without redundant approval.",
     "Use chat mainly for strategic decisions, scientific interpretation, ambiguity and important developments."
-  ]
+  ],
+  "two_lane_research_mode": {
+    "status": "ACTIVE",
+    "effective_date_utc": "2026-10-03",
+    "lane_a": {
+      "name": "FORMAL_READINESS",
+      "slot": "Windows self-hosted A",
+      "focus": [
+        "Q104 I19/I20",
+        "I22",
+        "Q119/Q120/Q122",
+        "Q125-F1"
+      ],
+      "performance_authorization_from_lane": false
+    },
+    "lane_b": {
+      "name": "FRONTIER_DISCOVERY",
+      "slot": "Windows self-hosted B",
+      "focus": [
+        "Q171-Q178",
+        "Q126-Q132",
+        "public-source/PIT frontier"
+      ],
+      "performance_authorization_from_lane": false
+    },
+    "isolation": {
+      "separate_candidate_trial_identity": true,
+      "separate_branches_workflows_outputs": true,
+      "shared_mutable_research_state": false,
+      "retroactive_cross_lane_mutation": false
+    },
+    "performance_capacity_rule": "Physical two-slot capacity never creates authorization; each performance execution needs its own current formal authorization."
+  }
 }

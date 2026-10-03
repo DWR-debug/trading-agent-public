@@ -202,6 +202,18 @@ endlich einen positiven Backtest zu produzieren.
 Autonomie bedeutet dabei nicht unkontrollierte Freiheit:
 Safety, Datenvertrag, Forschungsgovernance und Evidence-Gates bleiben unverändert.
 
+## 8a. Permanenter Zwei-Lanes-Forschungsmodus
+
+Ab 2026-10-03 gilt der **Zwei-Lanes-Forschungsmodus** als dauerhafter Betriebsstandard des Trading Agent OS. Die zwei physischen Windows-Self-Hosted-Slots werden nicht mehr als bloße gemeinsame Kapazität betrachtet, sondern als zwei logisch getrennte Forschungsbahnen betrieben, sofern beide Slots verfügbar sind.
+
+**Lane A — Formal Readiness:** Coverage-, PIT-, Quellen-, Compiler-, Provenienz- und Autorisierungsreife bereits weit fortgeschrittener, vollständig präregistrierter Forschungsobjekte. Ziel ist, den nächsten zulässigen Kandidaten bis zu einem gültigen One-Shot-Performance-Gateway zu bringen, ohne Performance selbst durch die Lane zu autorisieren.
+
+**Lane B — Frontier Discovery:** orthogonale Informationskanäle, öffentliche Quellen, PIT-/Revision-Semantik und billige Falsifikation. Ziel ist die Erweiterung des Kandidatenraums und das frühe Aussortieren schwacher/unerreichbarer Quellen, ohne Performancebewertung oder Ranking.
+
+Für beide Lanes gelten unverändert: eigene Candidate-/Trial-Identität, getrennte Branches/Workflows und Receipt-/Output-Pfade, keine gemeinsam veränderliche Research-State-Datei und keine rückwirkende Übertragung von Ergebnissen in einen bereits eingefrorenen Trial. Ergebnisse der jeweils anderen Lane dürfen nur als Input für eine **neue**, separat eingefrorene Hypothese dienen.
+
+Die physische Parallelität ist ein Kapazitätsmechanismus, keine wissenschaftliche Freigabe. Zwei verfügbare Runner erzeugen insbesondere **keine** Performance-Autorisierung. Performance darf parallel nur laufen, wenn jede einzelne unabhängige Ausführung eine aktuell gültige, exakte formale Autorisierung besitzt; andernfalls bleibt der Performance-Pfad fail-closed.
+
 ## 9. Aktueller historischer Forschungsstand
 
 Bis zum Stand 2026-09-24 existiert eine umfangreiche Folge negativer, diagnostischer und technischer

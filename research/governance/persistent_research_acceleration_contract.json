@@ -25,14 +25,36 @@
       "parallel_lanes": 2,
       "autonomous_frontier_default_workers": 3,
       "other_qa_and_reproduction_default_workers": 1,
-      "hard_worker_cap": 4
+      "hard_worker_cap": 4,
+      "lane_roles": {
+        "lane_a_formal_readiness": {
+          "runner_slot": "Windows self-hosted slot A",
+          "purpose": "Coverage/PIT/authorization readiness for fully pre-registered candidates; candidate-specific compiler and provenance closure.",
+          "current_focus": "Q104 I19/I20, I22, Q119/Q120/Q122, Q125-F1",
+          "performance_allowed": "only when the active research registry contains an exact true performance_authorization_allowed for that independent frozen trial",
+          "selection_or_ranking": false
+        },
+        "lane_b_frontier_discovery": {
+          "runner_slot": "Windows self-hosted slot B",
+          "purpose": "Orthogonal source/PIT feasibility, cheap falsification and new information-channel discovery.",
+          "current_focus": "Q171-Q178, Q126-Q132 and related public-domain frontier work",
+          "performance_allowed": false,
+          "selection_or_ranking": false
+        }
+      }
     },
     "mobile": {
       "s10_mode": "receipt_gated_opportunistic_utility",
       "full_acceptance": "onboarding_or_explicit_revalidation_only",
       "event_driven_review": "meaningful research-runner or critical-governance change",
       "duplicate_work": "forbidden"
-    }
+    },
+    "lane_isolation": {
+      "required": true,
+      "rule": "Separate candidate/trial IDs, branches/workflows, immutable receipts and output paths; no shared mutable research state between lanes.",
+      "cross_lane_transfer": "Only as a new explicitly frozen hypothesis after review; never mutate an already-frozen lane because of the other lane's results."
+    },
+    "performance_capacity_rule": "Two physical slots never create performance authorization. Parallel performance execution is permitted only when each exact trial has its own current formal authorization; otherwise performance remains fail-closed."
   },
   "phone_capacity_policy": {
     "decision": "Do not add another physical phone merely for nominal capacity.",
@@ -50,6 +72,7 @@
   },
   "canonical_sources": [
     "docs/TRADING_AGENT_CHAT_ENTRYPOINT.md",
+    "docs/TRADING_AGENT_TWO_LANE_RESEARCH_MODE.md",
     "docs/TRADING_AGENT_OS_ORCHESTRATION.md",
     "ops/trading_agent_os_state.json",
     "ops/s10_runtime_status.json",
