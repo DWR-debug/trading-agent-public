@@ -919,7 +919,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-03T18:40:15.119030+00:00",
+  "generated_at_utc": "2026-10-03T18:46:58.543929+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1394,6 +1394,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: Q121-R6 exhaustive SEC acceptance-time compilation",
+        "sha": "febf2b28c20f479046cf4464e73579470cff918b",
+        "timestamp": "2026-10-03T20:46:45+02:00"
+      },
+      {
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "cd4eb4a11310bc8229798432d82be220b87fdfba",
+        "timestamp": "2026-10-03T18:40:23Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c7e78158d7ee09ec0804ae8a7abb2ed25761b740",
+        "timestamp": "2026-10-03T18:40:17Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d38564e23d6978953310d7b9000f0ae7d74a7c3c",
+        "timestamp": "2026-10-03T18:40:16Z"
+      },
+      {
         "message": "OPS: persist verified Q121-R5 receipt in status sync",
         "sha": "2a9db1c052c06aae2cb74f462c38722d18631cee",
         "timestamp": "2026-10-03T20:39:55+02:00"
@@ -1412,26 +1432,6 @@
         "message": "LEDGER: append verified Q121-R5 source-population reconciliation",
         "sha": "0ba5789003cda59e1ef3f54c0dc4a93e126690a6",
         "timestamp": "2026-10-03T20:39:08+02:00"
-      },
-      {
-        "message": "EVIDENCE: anchor verified Q121-R5 dual-index receipt",
-        "sha": "949bcebae44d4727fd5bf57fe68d0b4337659abf",
-        "timestamp": "2026-10-03T20:38:55+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3ef679dad9486f805ea542010daa66f979681a6b",
-        "timestamp": "2026-10-03T18:37:24Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a87c86b8b2d281245e5b3eb0ff9aed95d7adfd77",
-        "timestamp": "2026-10-03T18:37:22Z"
-      },
-      {
-        "message": "RESEARCH: harden direct-archive Q121-R5 fallback",
-        "sha": "998fb1b2641666aaa7ce348346888aaf7b5b30f4",
-        "timestamp": "2026-10-03T20:37:09+02:00"
       }
     ]
   },
@@ -1501,7 +1501,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2a9db1c052c06aae2cb74f462c38722d18631cee",
+  "source_master_sha": "febf2b28c20f479046cf4464e73579470cff918b",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -1615,6 +1615,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37145051393"
+    "run_id": "37145483997"
   }
 }
