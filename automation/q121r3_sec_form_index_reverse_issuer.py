@@ -206,53 +206,58 @@ def run(output: Path) -> dict[str, object]:
             if any(key in row["filename"] for key in ("0001104659-24-021877", "0001193125-24-189043")):
                 print("Q121R3_CONTROL_FILENAME_DIAG", json.dumps(row, sort_keys=True))
 
-    by_accession: dict[str, dict[str, str]] = {}
+    by_accession: dict[str, list[dict[str, str]]] = {}
     for row in all_rows:
         accession = accession_from_filename(row["filename"])
-        if accession in by_accession:
-            raise RuntimeError(f"Q121R3_DUPLICATE_ACCESSION:{accession}")
-        by_accession[accession] = row
+        by_accession.setdefault(accession, []).append(row)
 
     controls: list[dict[str, object]] = []
     for accession, expected_subject, expected_filer in CONTROLS:
-        row = by_accession.get(accession)
-        if row is None:
+        matches = by_accession.get(accession, [])
+        if not matches:
             raise RuntimeError(f"Q121R3_CONTROL_NOT_RECOVERED:{accession}")
-        header_url = archive_header_url(row["filename"])
-        time.sleep(REQUEST_GAP_SECONDS)
-        status, body = fetch(header_url)
-        if status != 200:
-            raise RuntimeError(f"Q121R3_HEADER_HTTP_{status}:{accession}")
 
-        text = body.decode("utf-8", errors="replace")
-        subject = r1.extract_header_section_cik(text, "Subject")
-        filer = r1.extract_header_section_cik(text, "Filed by")
-        accepted = r1.extract_accepted(text)
+        matched_check: dict[str, object] | None = None
+        for row in matches:
+            header_url = archive_header_url(row["filename"])
+            time.sleep(REQUEST_GAP_SECONDS)
+            status, body = fetch(header_url)
+            if status != 200:
+                raise RuntimeError(f"Q121R3_HEADER_HTTP_{status}:{accession}")
 
-        check = {
-            "accession_number": accession,
-            "index_cik": row["cik"],
-            "form": row["form"],
-            "filing_date": row["filed_date"],
-            "filename": row["filename"],
-            "header_url": header_url,
-            "header_sha256": sha256_bytes(body),
-            "subject_cik": subject,
-            "filed_by_cik": filer,
-            "accepted_datetime": accepted,
-            "expected_subject_cik": expected_subject,
-            "expected_filer_cik": expected_filer,
-        }
-        controls.append(check)
+            header_text = body.decode("utf-8", errors="replace")
+            subject = r1.extract_header_section_cik(header_text, "Subject")
+            filer = r1.extract_header_section_cik(header_text, "Filed by")
+            accepted = r1.extract_accepted(header_text)
 
-        subject_ok = subject == expected_subject
-        filer_ok = expected_filer is None or filer == expected_filer
-        accepted_ok = accepted is not None
-        if not (subject_ok and filer_ok and accepted_ok):
+            check = {
+                "accession_number": accession,
+                "index_cik": row["cik"],
+                "form": row["form"],
+                "filing_date": row["filed_date"],
+                "filename": row["filename"],
+                "header_url": header_url,
+                "header_sha256": sha256_bytes(body),
+                "subject_cik": subject,
+                "filed_by_cik": filer,
+                "accepted_datetime": accepted,
+                "expected_subject_cik": expected_subject,
+                "expected_filer_cik": expected_filer,
+            }
+
+            subject_ok = subject == expected_subject
+            filer_ok = expected_filer is None or filer == expected_filer
+            accepted_ok = accepted is not None
+            if subject_ok and filer_ok and accepted_ok:
+                matched_check = check
+                break
+
+        if matched_check is None:
             raise RuntimeError(
-                f"Q121R3_CONTROL_IDENTITY_MISMATCH:{accession}:"
-                f"subject_ok={subject_ok}:filer_ok={filer_ok}:accepted_ok={accepted_ok}"
+                f"Q121R3_CONTROL_IDENTITY_NOT_RECOVERED:{accession}:"
+                f"expected_subject={expected_subject}:expected_filer={expected_filer}"
             )
+        controls.append(matched_check)
 
     result: dict[str, object] = {
         "schema_version": "1.0",
