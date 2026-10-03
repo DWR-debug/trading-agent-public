@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `53cc3b76d20d09590a2284fc318e7ec6f4097a7f`
+**Current operational snapshot:** `37a35aefc214cd8cc96232cc9a3b81e5b9d565f4`
 
-**Generated (UTC):** `2026-10-03T16:31:18.327298+00:00`
+**Generated (UTC):** `2026-10-03T16:41:10Z`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -54,6 +54,16 @@
 - Q107 fresh Q104 equity coverage: **COMPLETED**; 8/8 symbols and 3,704 common sessions.
 - Q108 real SEC/XBRL/13F/Treasury PIT integration: **COMPLETED_DUAL_ARCH**; 8/8 issuer filings and 8/8 XBRL lineage verified, 13F sample and Treasury chain verified.
 - Candidate-specific next gates: I19/I20 = full 13F security coverage; I22 = frozen event-state compiler; M6 = fixed Treasury state reuse; I21 = explicit bounded historical horizon; R9 = synthetic-only.
+
+### Active source/PIT correction tracks
+
+- **Q121-R1 — SEC beneficial-ownership reverse issuer coverage:** **SOURCE_ROUTE_CORRECTION_ACTIVE**. The original Q121 issuer-submission route is not treated as a complete issuer-level population. Q121-R1 re-derives issuer-oriented filing coverage while preserving Subject/Filer CIK separately. Its first real probe exposed a parser failure at the SEC identity layer; the parser was corrected against the SEC submission-header structure and merged in 75ed4a99765d71963e71c2cd0d0a5c2614c6a4c1. A new post-fix scientific receipt has **not yet been independently verified**.
+
+- **Q127-R1 — FINRA Reg-SHO historical source/PIT:** **SOURCE_PIT_FEASIBILITY_ACTIVE**. Fixed historical Consolidated NMS retrieval, schema validation and provenance capture are implemented. FINRA's documented same-day 18:00 ET publication statement is treated as an upper bound, not an exact historical first-publication clock; later update/revision lineage remains unresolved. The first workflow run was cancelled during merge lifecycle, so no scientific receipt is claimed.
+
+- **Q130-R1 — Wikimedia Pageviews historical attention:** **SOURCE_FEASIBILITY_ACTIVE**. Public daily pageview retrieval is implemented for the fixed Q107 issuer/article map. The track does not claim an exact historical publication clock or immutable revision lineage. Its first workflow run was cancelled during merge lifecycle, so no scientific receipt is claimed.
+
+All three tracks are **discovery/source/PIT only**. None creates performance authorization, holdout selection, ranking, tuning, promotion or live execution.
 
 ### Q129 Options Source / PIT
 

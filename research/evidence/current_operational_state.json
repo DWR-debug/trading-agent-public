@@ -1,402 +1,138 @@
 {
   "active_research_registry": {
-    "active_design_families": [
-      {
-        "class": "market_state_and_earnings",
-        "code": "084",
-        "issue_number": 583,
-        "state": "FEASIBILITY_COMPLETE"
-      },
-      {
-        "class": "textual_peer_network_and_rebalance_demand",
-        "code": "088",
-        "issue_number": 588,
-        "state": "DESIGN_ONLY"
-      },
-      {
-        "class": "sec_shareholder_experience",
-        "code": "082",
-        "issue_number": 580,
-        "state": "DESIGN_ONLY"
-      },
-      {
-        "class": "unusual_alpha_frontier",
-        "code": "FRONTIER-20260928",
-        "document": "docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md",
-        "issue_number": 591,
-        "performance_authorization_allowed": false,
-        "state": "DESIGN_ONLY"
-      },
-      {
-        "candidate_contracts": {
-          "Q104:I19": {
-            "design_document": "docs/research_design/Q104_I19_EXACT_XBRL_CONCEPT_FREEZE_2026-10-03.md",
-            "next_gate": "historical 13F archive/security completeness + concept-specific PIT compiler + independent reproduction",
-            "performance_authorization_allowed": false,
-            "xbrl_concept_freeze": "research/preregistrations/q104_i19_xbrl_concept_freeze_2026_10_03.json"
-          }
-        },
-        "candidate_inventory_path": "research/frontier/q104_candidate_wave_2026_10_01.json",
-        "class": "orthogonal_information_investor_demand_and_meta_state",
-        "code": "104",
-        "issue_number": 739,
-        "performance_authorization_allowed": false,
-        "preregistration_path": "research/preregistrations/q104_orthogonal_candidate_wave_2026_10_01.json",
-        "source_receipt_path": "research/evidence/q104_source_feasibility_2026_10_01.json",
-        "state": "SOURCE_FEASIBILITY_AND_DOWNSTREAM_GATES_COMPLETED"
-      },
-      {
-        "class": "historical_archive_and_pit_feasibility_gate",
-        "code": "105",
-        "issue_number": 740,
-        "parent_code": "104",
-        "performance_authorization_allowed": false,
-        "preregistration_path": "research/preregistrations/q105_q104_historical_pit_2026_10_01.json",
-        "receipt_path": "research/evidence/q105_historical_pit_feasibility_2026_10_01.json",
-        "state": "PIT_FEASIBILITY_COMPLETED"
-      },
-      {
-        "class": "shared_sec_treasury_pit_join_integrity",
-        "code": "106",
-        "issue_number": 741,
-        "parent_code": "105",
-        "performance_authorization_allowed": false,
-        "state": "PIT_JOIN_STRUCTURAL_VALIDATION_COMPLETED_DUAL_ARCH"
-      },
-      {
-        "class": "q104_fresh_equity_coverage",
-        "code": "107",
-        "common_calendar_count": 3704,
-        "coverage_fingerprint": "18571a7871f72b8018905c10c289724bb5cf976ab7fa4f9f424599ddc727fbd2",
-        "coverage_result_path": "research/evidence/q107_coverage_result.json",
-        "issue_number": 742,
-        "parent_code": "104",
-        "performance_authorization_allowed": false,
-        "preregistration_path": "research/preregistrations/q107_q104_fresh_equity_coverage_2026_10_01.json",
-        "snapshot_fingerprint": "c5eb39fcd802eb73c6c71d4bdbb0c0ec0f132db77c5c0a2c37b4ba1277edf036",
-        "state": "COVERAGE_COMPLETED",
-        "universe": "validation_2026_10_01_q104_sec_treasury_equities"
-      },
-      {
-        "class": "q104_sec_xbrl_13f_treasury_pit_integration",
-        "code": "108",
-        "issue_number": 743,
-        "performance_authorization_allowed": false,
-        "receipt_fingerprint": "07dcc87087f6a762ecbddaab0298625fb1bf50123df48758fa5c9f6d56bdc8c3",
-        "receipt_path": "research/evidence/q108_pit_integration_2026_10_01.json",
-        "state": "PIT_INTEGRATION_COMPLETED_DUAL_ARCH"
-      },
-      {
-        "candidate_inventory_path": "research/frontier/q109_candidate_wave_2026_10_01.json",
-        "class": "literature_driven_nport_text_risk_insider_ownership_frontier",
-        "code": "109",
-        "issue_number": 744,
-        "performance_authorization_allowed": false,
-        "preregistration_path": "research/preregistrations/q109_literature_frontier_2026_10_01.json",
-        "state": "DESIGN_ONLY_ACTIVE"
-      },
-      {
-        "class": "q109_nport_insider_ownership_source_feasibility",
-        "code": "110",
-        "issue_number": 745,
-        "parent_code": "109",
-        "performance_authorization_allowed": false,
-        "preregistration_path": "research/preregistrations/q110_q109_source_feasibility_2026_10_01.json",
-        "receipt_fingerprint": "df1b127bb4faf887b1298a73a89819903efb3a8ab685f110349212759402fa7",
-        "receipt_path": "research/evidence/q110_q109_source_feasibility_2026_10_01.json",
-        "state": "SOURCE_FEASIBILITY_COMPLETED_DUAL_ARCH"
-      },
-      {
-        "class": "deterministic_sec_security_identity_contract",
-        "code": "111",
-        "issue_number": 746,
-        "parent_code": "109",
-        "performance_authorization_allowed": false,
-        "preregistration_path": "research/preregistrations/q111_sec_security_identity_2026_10_01.json",
-        "state": "STRUCTURAL_CONTRACT_COMPLETED_DUAL_ARCH"
-      },
-      {
-        "class": "live_sec_security_identity_13f_nport_form4_feasibility",
-        "code": "112",
-        "issue_number": 747,
-        "parent_code": "111",
-        "performance_authorization_allowed": false,
-        "preregistration_path": "research/preregistrations/q112_sec_security_identity_2026_10_01.json",
-        "receipt_fingerprint": "679b99b393038d82fc3800d1d4abb0af01e6ff6c7aaace83748ae31500c86bd1",
-        "state": "LIVE_SOURCE_FEASIBILITY_COMPLETED_DUAL_ARCH"
-      },
-      {
-        "class": "fixed_quarter_13f_manager_security_coverage_on_q107_universe",
-        "code": "113",
-        "issue_number": 748,
-        "parent_code": "112",
-        "performance_authorization_allowed": false,
-        "preregistration_path": "research/preregistrations/q113_13f_q107_coverage_2026_10_01.json",
-        "receipt_fingerprint": "29da4de843641e4ac5760fdaaeb4833776ca7220842274234bf64236d2ecb19e",
-        "receipt_path": "research/evidence/q113_13f_q107_coverage_result.json",
-        "state": "13F_COVERAGE_COMPLETED"
-      },
-      {
-        "class": "deterministic_13f_manager_position_transition_compiler",
-        "code": "114",
-        "issue_number": 749,
-        "parent_code": "113",
-        "performance_authorization_allowed": false,
-        "preregistration_path": "research/preregistrations/q114_13f_manager_transitions_2026_10_01.json",
-        "state": "STRUCTURAL_COMPILER_COMPLETED_DUAL_ARCH"
-      },
-      {
-        "class": "deterministic_treasury_auction_demand_state_compiler",
-        "code": "115",
-        "issue_number": 750,
-        "parent_code": "104",
-        "performance_authorization_allowed": false,
-        "preregistration_path": "research/preregistrations/q115_treasury_demand_state_2026_10_01.json",
-        "state": "STRUCTURAL_COMPILER_COMPLETED_DUAL_ARCH"
-      },
-      {
-        "class": "live_two_quarter_13f_manager_security_transition_population",
-        "code": "116",
-        "issue_number": 752,
-        "parent_code": "114",
-        "performance_authorization_allowed": false,
-        "preregistration_path": "research/preregistrations/q116_13f_transition_population_2026_10_01.json",
-        "receipt_fingerprint": "cb57b7b19f9328080085888b43447d08ccee090743dcb15b4cc5d8d64b85876d",
-        "receipt_path": "research/evidence/q116_13f_transition_population_result.json",
-        "state": "13F_TWO_QUARTER_TRANSITION_POPULATION_COMPLETED"
-      },
-      {
-        "class": "live_treasury_10y_demand_state_population",
-        "code": "117",
-        "issue_number": 753,
-        "parent_code": "115",
-        "performance_authorization_allowed": false,
-        "preregistration_path": "research/preregistrations/q117_treasury_demand_population_2026_10_01.json",
-        "receipt_fingerprint": "ad060e9023eef10599e855f2e5684f0657416abeb15b5bee8fec70bc2a044e78",
-        "receipt_path": "research/evidence/q117_treasury_demand_population_result.json",
-        "state": "TREASURY_DEMAND_POPULATION_COMPLETED"
-      },
-      {
-        "class": "candidate_composition_and_bundle_compatibility",
-        "code": "118",
-        "design_document": "docs/research_design/CANDIDATE_COMPOSITION_CONTRACT_2026-10-01.md",
-        "issue_number": 757,
-        "parent_code": "109",
-        "performance_authorization_allowed": false,
-        "state": "DESIGN_ONLY_ACTIVE"
-      },
-      {
-        "class": "treasury_auction_demand_shape",
-        "code": "119",
-        "design_document": "docs/research_design/Q119_TREASURY_AUCTION_DEMAND_SHAPE_2026-10-01.md",
-        "issue_number": 761,
-        "parent_code": "115",
-        "performance_authorization_allowed": false,
-        "state": "DESIGN_ONLY_ACTIVE"
-      },
-      {
-        "class": "sector_residual_global_rank",
-        "code": "H06-P2",
-        "design_document": "docs/research_design/H06-P2_SECTOR_RESIDUAL_GLOBAL_RANK_2026-10-01.md",
-        "parent_code": "H06",
-        "performance_authorization_allowed": false,
-        "state": "DESIGN_ONLY_ACTIVE"
-      },
-      {
-        "class": "cftc_tff_positioning_divergence",
-        "code": "120",
-        "design_document": "docs/research_design/Q120_CFTC_TFF_POSITIONING_2026-10-01.md",
-        "issue_number": 768,
-        "parent_code": "market_state_and_allocator_frontier",
-        "performance_authorization_allowed": false,
-        "state": "DESIGN_ONLY_ACTIVE"
-      },
-      {
-        "class": "sec_beneficial_ownership_disclosure_timing",
-        "code": "121",
-        "design_document": "docs/research_design/Q121_SEC_BENEFICIAL_OWNERSHIP_TIMING_2026-10-03.md",
-        "issue_number": 882,
-        "parent_code": "109",
-        "performance_authorization_allowed": false,
-        "preregistration_path": "research/preregistrations/q121_sec_beneficial_ownership_timing_2026_10_03.json",
-        "state": "DISCOVERY_PIT_ONLY_ACTIVE"
-      },
-      {
-        "candidate_inventory_path": "research/frontier/q171_q178_candidate_wave_2026_10_03.json",
-        "class": "public_domain_orthogonal_information_frontier",
-        "code": "FRONTIER-Q171-Q178",
-        "note": "Q171 sample PIT reconstruction is proven; Q174-Q177 source clocks/versions are characterized but candidate-specific PIT compilers remain required; Q173 is license-blocked.",
-        "performance_authorization_allowed": false,
-        "pit_readiness_receipt_path": "research/evidence/q171_q177_pit_readiness_2026_10_03.json",
-        "source_receipt_path": "research/evidence/q171_q178_source_feasibility_2026_10_03.json",
-        "state": "SOURCE_FEASIBILITY_COMPLETED_PIT_READINESS_ACTIVE"
-      },
-      {
-        "candidate_inventory_path": "research/frontier/q133_q170_pit_readiness_wave_2026_10_03.json",
-        "class": "source-feasible-public-information-pit-readiness",
-        "code": "FRONTIER-Q133-Q170-PIT-R1",
-        "micro_pit": {
-          "candidates": [
-            "Q137",
-            "Q144"
-          ],
-          "design_document": "docs/research_design/Q137_Q144_MICRO_PIT_R1_2026-10-03.md",
-          "note": "Bounded historical sample only; full candidate-specific PIT coverage and independent reproduction remain required.",
-          "page_map": "research/governance/q144_q107_wikipedia_page_map_2026_10_03.json",
-          "performance_authorization_allowed": false,
-          "state": "MICRO_PIT_SAMPLE_ACTIVE"
-        },
-        "note": "Downstream PIT contract/sample gate only; no performance, ranking, selection, tuning, promotion or live execution.",
-        "parent_code": "FRONTIER-20260928",
-        "performance_authorization_allowed": false,
-        "q147_q148_clock_contract": {
-          "contract": "research/governance/q147_q148_eia_source_clock_contract_2026_10_03.json",
-          "document": "docs/research_design/Q147_Q148_EIA_SOURCE_CLOCK_CONTRACT_2026-10-03.md",
-          "note": "Current EIA API is discovery/sample only; formal PIT requires dated publication/issue files and revision lineage.",
-          "performance_authorization_allowed": false,
-          "state": "PIT_CONTRACT_DEFINED_PENDING_SERIES_FREEZE"
-        },
-        "source_feasible_candidate_count": 21,
-        "source_probe_pass_count": 25,
-        "source_receipt_path": "research/evidence/q133_q170_source_feasibility_2026_10_03.json",
-        "state": "PIT_READINESS_ACTIVE"
-      },
-      {
-        "class": "sec_beneficial_ownership_reverse_issuer_coverage_correction",
-        "code": "Q121-R1",
-        "design_document": "docs/research_design/Q121R1_SEC_REVERSE_ISSUER_COVERAGE_2026-10-03.md",
-        "issue_number": 961,
-        "note": "Original Q121 issuer-submission route is not treated as complete issuer-level population; Q121-R1 re-derives reverse issuer coverage via SEC company browse and preserves filer/subject identity separately.",
-        "parent_code": "121",
-        "performance_authorization_allowed": false,
-        "preregistration_path": "research/preregistrations/q121r1_sec_reverse_issuer_coverage_2026_10_03.json",
-        "state": "SOURCE_ROUTE_CORRECTION_ACTIVE"
-      },
-      {
-        "class": "finra_regsho_historical_source_pit_correction",
-        "code": "Q127-R1",
-        "design_document": "docs/research_design/Q127R1_FINRA_REGSHO_HISTORICAL_PIT_2026-10-03.md",
-        "issue_number": 964,
-        "note": "Historical FINRA Consolidated NMS source/PIT feasibility; publication upper bound is documented but exact first-publication time and immutable revision lineage are not claimed.",
-        "parent_code": "127",
-        "performance_authorization_allowed": false,
-        "preregistration_path": "research/preregistrations/q127r1_finra_regsho_historical_pit_2026_10_03.json",
-        "state": "SOURCE_PIT_FEASIBILITY_ACTIVE"
-      }
-    ],
+    "schema_version": 1,
+    "name": "active_research_registry",
+    "policy": {
+      "legacy_preregistrations_are_historical": true,
+      "only_listed_performance_trials_may_be_authorized": true,
+      "only_exactly_listed_authorizations_may_execute": true,
+      "paper_only": true,
+      "automatic_promotion": false,
+      "frontier_design_document": "docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md",
+      "critical_research_quality_control": "research/governance/critical_research_quality_control.json",
+      "future_performance_authorization_requires_robustness_contract": true,
+      "future_full_formal_pass_requires_independent_replication_contract": true,
+      "replication_after_full_formal_pass_must_be_unchanged": true,
+      "universal_candidate_robustness_gate": true,
+      "candidate_robustness_gate_module": "automation/candidate_robustness_gate.py",
+      "formal_phase_entry_requires_candidate_robustness_receipt": true
+    },
     "active_trials": [
       {
-        "authorization_id": "AUTH-Q081R4-2026-09-30-36640499423",
-        "class": "performance_correction",
         "code": "081R4",
-        "issue_number": 694,
-        "performance_authorization_allowed": false,
-        "performance_result": {
-          "report_fingerprint": "b57f93d2ebd1076f191076ea77ad37ca5dfd7cf4f8da5fdb0f4047b4217ea30a",
-          "status": "COMPLETED",
-          "trial_id": "T-2026-09-30-081R4-PERFORMANCE",
-          "workflow_run_id": "36704648242"
-        },
-        "predecessor_execution_incident_path": "research/evidence/q081r3_performance_execution_incident.json",
-        "predecessor_trial_id": "T-2026-09-30-081R3-PERFORMANCE",
-        "preregistration_path": "research/preregistrations/q081r4_ast_literal_audit_2026_09_30.json",
+        "trial_id": "T-2026-09-30-081R4-PERFORMANCE",
+        "class": "performance_correction",
         "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
-        "trial_id": "T-2026-09-30-081R4-PERFORMANCE"
-      },
-      {
-        "authorization_id": "AUTH-Q081R3-2026-09-30-36639695710",
-        "class": "performance_correction",
-        "code": "081R3",
-        "execution_incident": {
-          "error": "NameError: name 'true' is not defined. Did you mean: 'True'?",
-          "execution_incident_path": "research/evidence/q081r3_performance_execution_incident.json",
-          "failing_step": "Execute Q081R3 fixed-rule performance exactly once",
-          "result_created": false,
-          "scientific_outcome": false,
-          "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME",
-          "workflow_run_id": "36640012014"
-        },
-        "issue_number": 693,
+        "issue_number": 694,
+        "preregistration_path": "research/preregistrations/q081r4_ast_literal_audit_2026_09_30.json",
         "performance_authorization_allowed": false,
-        "predecessor_execution_incident_path": "research/evidence/q081r2_performance_execution_incident.json",
-        "predecessor_trial_id": "T-2026-09-28-081R2-PERFORMANCE",
-        "preregistration_path": "research/preregistrations/q081r3_python_literal_fix_2026_09_30.json",
-        "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
-        "trial_id": "T-2026-09-30-081R3-PERFORMANCE"
+        "predecessor_trial_id": "T-2026-09-30-081R3-PERFORMANCE",
+        "predecessor_execution_incident_path": "research/evidence/q081r3_performance_execution_incident.json",
+        "authorization_id": "AUTH-Q081R4-2026-09-30-36640499423",
+        "performance_result": {
+          "trial_id": "T-2026-09-30-081R4-PERFORMANCE",
+          "status": "COMPLETED",
+          "report_fingerprint": "b57f93d2ebd1076f191076ea77ad37ca5dfd7cf4f8da5fdb0f4047b4217ea30a",
+          "workflow_run_id": "36704648242"
+        }
       },
       {
-        "authorization_id": "AUTH-Q081R2-2026-09-30-36638812989",
+        "code": "081R3",
+        "trial_id": "T-2026-09-30-081R3-PERFORMANCE",
         "class": "performance_correction",
-        "code": "081R2",
+        "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
+        "issue_number": 693,
+        "preregistration_path": "research/preregistrations/q081r3_python_literal_fix_2026_09_30.json",
+        "performance_authorization_allowed": false,
+        "predecessor_trial_id": "T-2026-09-28-081R2-PERFORMANCE",
+        "predecessor_execution_incident_path": "research/evidence/q081r2_performance_execution_incident.json",
+        "authorization_id": "AUTH-Q081R3-2026-09-30-36639695710",
         "execution_incident": {
-          "error": "NameError: name 'false' is not defined. Did you mean: 'False'?",
-          "execution_incident_path": "research/evidence/q081r2_performance_execution_incident.json",
-          "failing_step": "Execute Q081R2 fixed-rule performance exactly once",
-          "result_created": false,
-          "scientific_outcome": false,
           "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME",
-          "workflow_run_id": "36639171349"
-        },
+          "workflow_run_id": "36640012014",
+          "failing_step": "Execute Q081R3 fixed-rule performance exactly once",
+          "error": "NameError: name 'true' is not defined. Did you mean: 'True'?",
+          "scientific_outcome": false,
+          "result_created": false,
+          "execution_incident_path": "research/evidence/q081r3_performance_execution_incident.json"
+        }
+      },
+      {
+        "code": "081R2",
+        "trial_id": "T-2026-09-28-081R2-PERFORMANCE",
+        "class": "performance_correction",
+        "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
         "issue_number": 587,
+        "preregistration_path": "research/preregistrations/q081r2_performance_2026_09_28.json",
         "performance_authorization_allowed": false,
         "predecessor_trial_id": "T-2026-09-28-081R1-PERFORMANCE",
         "preflight": {
-          "artifact_id": 10993950051,
           "status": "PASSED",
-          "workflow_run_id": 36474031581
+          "workflow_run_id": 36474031581,
+          "artifact_id": 10993950051
         },
-        "preregistration_path": "research/preregistrations/q081r2_performance_2026_09_28.json",
-        "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
-        "trial_id": "T-2026-09-28-081R2-PERFORMANCE"
+        "authorization_id": "AUTH-Q081R2-2026-09-30-36638812989",
+        "execution_incident": {
+          "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME",
+          "workflow_run_id": "36639171349",
+          "failing_step": "Execute Q081R2 fixed-rule performance exactly once",
+          "error": "NameError: name 'false' is not defined. Did you mean: 'False'?",
+          "scientific_outcome": false,
+          "result_created": false,
+          "execution_incident_path": "research/evidence/q081r2_performance_execution_incident.json"
+        }
       },
       {
-        "class": "historical_infrastructure_invalidated",
         "code": "081R1",
-        "issue_number": 587,
-        "performance_authorization_allowed": false,
-        "preregistration_path": "research/preregistrations/q081r1_performance_2026_09_28.json",
+        "trial_id": "T-2026-09-28-081R1-PERFORMANCE",
+        "class": "historical_infrastructure_invalidated",
         "state": "HISTORICAL_INFRASTRUCTURE_INVALIDATED",
-        "trial_id": "T-2026-09-28-081R1-PERFORMANCE"
+        "issue_number": 587,
+        "preregistration_path": "research/preregistrations/q081r1_performance_2026_09_28.json",
+        "performance_authorization_allowed": false
       },
       {
+        "code": "089",
+        "trial_id": "T-2026-09-28-089-PERFORMANCE",
+        "class": "fresh_validation",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
+        "issue_number": 589,
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q089_performance_2026_09_28.json",
         "authorization": {
-          "authorization_basis": {
-            "governance_audit_run_id": 36542330197,
-            "master_ci_run_id": 36542330308,
-            "master_exact_gate_run_id": 36542330292,
-            "preflight_contract_audit_run_id": 36542330096
-          },
           "authorization_id": "AUTH-Q089-2026-09-29-03",
           "path": "research/authorizations/q089_performance_2026_09_28.json",
           "preregistration_fingerprint": "a8be60c87684f089e45ae0406d3b242575abd5ac03e6855a9dad48314afd077a",
           "source_receipts": {
             "coverage_result_fingerprint": "56898b50fc0f8af31dead7dcd65001cced41cf7b44093676eead1ccc4d6fe4cb",
-            "input_bundle_fingerprint": "c4261e230baf8888088df7e3e3159a1a93d4142ff358ef5896d35cd109663924",
+            "snapshot_fingerprint": "bb82aeaed86411a8675be7f8ecb1c99e9c144f017466a836b8cafeb9d3b55e1d",
             "pit_result_fingerprint": "098da74ebde38d7b5e7c13626bee396eb6e86b4421ca6a4d383e3133cecf19ca",
-            "snapshot_fingerprint": "bb82aeaed86411a8675be7f8ecb1c99e9c144f017466a836b8cafeb9d3b55e1d"
+            "input_bundle_fingerprint": "c4261e230baf8888088df7e3e3159a1a93d4142ff358ef5896d35cd109663924"
+          },
+          "authorization_basis": {
+            "preflight_contract_audit_run_id": 36542330096,
+            "master_ci_run_id": 36542330308,
+            "master_exact_gate_run_id": 36542330292,
+            "governance_audit_run_id": 36542330197
           }
         },
-        "class": "fresh_validation",
-        "code": "089",
-        "issue_number": 589,
-        "performance_authorization_allowed": false,
         "performance_result": {
-          "report_fingerprint": "0eee84e44a12b9f4a606aebb63afe50990dfa0f6e6009afcf926f525e3c8e8d1",
-          "status": "COMPLETED",
           "trial_id": "T-2026-09-28-089-PERFORMANCE",
+          "status": "COMPLETED",
+          "report_fingerprint": "0eee84e44a12b9f4a606aebb63afe50990dfa0f6e6009afcf926f525e3c8e8d1",
           "workflow_run_id": "36543296042"
-        },
-        "preregistration_path": "research/preregistrations/q089_performance_2026_09_28.json",
-        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
-        "trial_id": "T-2026-09-28-089-PERFORMANCE"
+        }
       },
       {
-        "authorization_id": "AUTH-Q077R1-2026-09-30-36737361478",
-        "class": "fresh_validation",
         "code": "077R1",
+        "trial_id": "T-2026-09-30-077R1-PERFORMANCE",
+        "class": "fresh_validation",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
+        "issue_number": null,
+        "preregistration_path": "research/preregistrations/q077r1_performance_2026_09_30.json",
+        "performance_authorization_allowed": false,
         "coverage_result": {
-          "common_sessions": 3704,
-          "fingerprint": "653524bcdded25e031a0f16ba8a09c0de3e7057ee320f96fee009ba74c9e1a50",
+          "status": "COVERAGE_PASSED",
           "selected_symbols": [
             "AJG",
             "ALGN",
@@ -411,90 +147,90 @@
             "BWA",
             "CDNS"
           ],
-          "source_trial_id": "T-2026-09-28-077R1-COVERAGE",
-          "status": "COVERAGE_PASSED"
+          "common_sessions": 3704,
+          "fingerprint": "653524bcdded25e031a0f16ba8a09c0de3e7057ee320f96fee009ba74c9e1a50",
+          "source_trial_id": "T-2026-09-28-077R1-COVERAGE"
         },
+        "pit_result": {
+          "status": "PIT_PASSED",
+          "fingerprint": "27bc62136bd376b26afe11f3e0eeb4b0a96d1868c0c84082ae8a58b50add2563",
+          "source_trial_id": "T-2026-09-28-077R1-PIT"
+        },
+        "input_bundle_result": {
+          "status": "INPUT_BUNDLE_FROZEN",
+          "fingerprint": "775c2f7af2996132b8245c3e5ec2c9dd7d13adacaf742f3252bac49d2bfa594d",
+          "source_trial_id": "T-2026-09-28-077R1-INPUT-FREEZE"
+        },
+        "predecessor_authorization_id": "AUTH-Q077R1-2026-09-30-36727296132",
         "execution_incident_paths": [
           "research/evidence/q077r1_performance_execution_incident.json",
           "research/evidence/q077r1_performance_execution_incident_cap.json"
         ],
-        "input_bundle_result": {
-          "fingerprint": "775c2f7af2996132b8245c3e5ec2c9dd7d13adacaf742f3252bac49d2bfa594d",
-          "source_trial_id": "T-2026-09-28-077R1-INPUT-FREEZE",
-          "status": "INPUT_BUNDLE_FROZEN"
-        },
-        "issue_number": null,
-        "performance_authorization_allowed": false,
+        "authorization_id": "AUTH-Q077R1-2026-09-30-36737361478",
         "performance_result": {
-          "report_fingerprint": "2d9a50ade7a6bb0840f51079bb23affe7f3e5b95389971e7692834ead7ab20f1",
-          "status": "COMPLETED",
           "trial_id": "T-2026-09-30-077R1-PERFORMANCE",
+          "status": "COMPLETED",
+          "report_fingerprint": "2d9a50ade7a6bb0840f51079bb23affe7f3e5b95389971e7692834ead7ab20f1",
           "workflow_run_id": "36737746986"
-        },
-        "pit_result": {
-          "fingerprint": "27bc62136bd376b26afe11f3e0eeb4b0a96d1868c0c84082ae8a58b50add2563",
-          "source_trial_id": "T-2026-09-28-077R1-PIT",
-          "status": "PIT_PASSED"
-        },
-        "predecessor_authorization_id": "AUTH-Q077R1-2026-09-30-36727296132",
-        "preregistration_path": "research/preregistrations/q077r1_performance_2026_09_30.json",
-        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
-        "trial_id": "T-2026-09-30-077R1-PERFORMANCE"
+        }
       },
       {
-        "class": "fresh_validation",
         "code": "091",
+        "trial_id": "T-2026-09-29-091",
+        "class": "fresh_validation",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
         "issue_number": null,
-        "performance_authorization_allowed": false,
-        "performance_result": {
-          "report_fingerprint": "0816e49774ff901438e046e162e428884f3f67b305cf26e0ebff2451ce38195d",
-          "status": "COMPLETED",
-          "trial_id": "T-2026-09-29-091",
-          "workflow_run_id": "36563579815"
-        },
         "preregistration_path": "research/preregistrations/q091_fixed_portfolio_architecture_2026_09_29.json",
-        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
-        "trial_id": "T-2026-09-29-091"
+        "performance_authorization_allowed": false,
+        "performance_result": {
+          "trial_id": "T-2026-09-29-091",
+          "status": "COMPLETED",
+          "report_fingerprint": "0816e49774ff901438e046e162e428884f3f67b305cf26e0ebff2451ce38195d",
+          "workflow_run_id": "36563579815"
+        }
       },
       {
-        "authorization_id": "AUTH-Q094-2026-09-29-02",
-        "class": "fresh_validation",
         "code": "094",
-        "issue_number": null,
-        "performance_authorization_allowed": false,
-        "performance_result": {
-          "report_fingerprint": "602e85e57698158b10013fb64b69930fd5ac40046e2aeaa588b0e175cd229f73",
-          "status": "COMPLETED",
-          "trial_id": "T-2026-09-29-094",
-          "workflow_run_id": "36569776262"
-        },
-        "preregistration_path": "research/preregistrations/q094_monthly_rebalance_q091_low_turnover_2026_09_29.json",
-        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
-        "trial_id": "T-2026-09-29-094"
-      },
-      {
-        "authorization_id": "AUTH-Q095-2026-09-29-01",
-        "class": "independent_replication",
-        "code": "095",
-        "issue_number": null,
-        "performance_authorization_allowed": false,
-        "performance_result": {
-          "report_fingerprint": "2132ad61b30100d1c187ae20ab9e3d2597cdadaf3ef2f0fa85ba7a12c3765772",
-          "status": "COMPLETED",
-          "trial_id": "T-2026-09-29-095",
-          "workflow_run_id": "36580538374"
-        },
-        "preregistration_path": "research/preregistrations/q095_monthly_rebalance_independent_replication_2026_09_29.json",
-        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
-        "trial_id": "T-2026-09-29-095"
-      },
-      {
-        "authorization_id": "AUTH-C29-2026-09-30-01",
+        "trial_id": "T-2026-09-29-094",
         "class": "fresh_validation",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
+        "issue_number": null,
+        "preregistration_path": "research/preregistrations/q094_monthly_rebalance_q091_low_turnover_2026_09_29.json",
+        "performance_authorization_allowed": false,
+        "authorization_id": "AUTH-Q094-2026-09-29-02",
+        "performance_result": {
+          "trial_id": "T-2026-09-29-094",
+          "status": "COMPLETED",
+          "report_fingerprint": "602e85e57698158b10013fb64b69930fd5ac40046e2aeaa588b0e175cd229f73",
+          "workflow_run_id": "36569776262"
+        }
+      },
+      {
+        "code": "095",
+        "trial_id": "T-2026-09-29-095",
+        "class": "independent_replication",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
+        "issue_number": null,
+        "preregistration_path": "research/preregistrations/q095_monthly_rebalance_independent_replication_2026_09_29.json",
+        "performance_authorization_allowed": false,
+        "authorization_id": "AUTH-Q095-2026-09-29-01",
+        "performance_result": {
+          "trial_id": "T-2026-09-29-095",
+          "status": "COMPLETED",
+          "report_fingerprint": "2132ad61b30100d1c187ae20ab9e3d2597cdadaf3ef2f0fa85ba7a12c3765772",
+          "workflow_run_id": "36580538374"
+        }
+      },
+      {
         "code": "C29P1",
+        "trial_id": "T-2026-09-30-C29-PERFORMANCE-01",
+        "class": "fresh_validation",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
+        "issue_number": null,
+        "preregistration_path": "research/preregistrations/c29_performance_2026_09_30.json",
+        "performance_authorization_allowed": false,
         "coverage_result": {
-          "common_sessions": 3500,
-          "fingerprint": "6b3acf5fb179bc93c6fac8eaaef59d71aa909326d5f171d9718a7cfbc71e22a6",
+          "status": "COVERAGE_PASSED",
           "selected_symbols": [
             "PPG",
             "GWW",
@@ -505,135 +241,410 @@
             "SNA",
             "SWK"
           ],
-          "source_trial_id": "T-2026-09-30-C29R1-COVERAGE-PIT",
-          "status": "COVERAGE_PASSED"
+          "common_sessions": 3500,
+          "fingerprint": "6b3acf5fb179bc93c6fac8eaaef59d71aa909326d5f171d9718a7cfbc71e22a6",
+          "source_trial_id": "T-2026-09-30-C29R1-COVERAGE-PIT"
         },
+        "pit_result": {
+          "status": "PIT_PASSED_NO_PERFORMANCE_EVIDENCE",
+          "fingerprint": "d88c24271fec55186b5e3aad478d91acc7ebe3b6412193724170365f5b6729c6",
+          "source_trial_id": "T-2026-09-30-C29R1-COVERAGE-PIT"
+        },
+        "input_bundle_result": {
+          "status": "INPUT_BUNDLE_FROZEN",
+          "fingerprint": "743b0a14e646009e7ed5503c4068e399caaebc9719ffcd9e88a5ab40465ab4e9",
+          "source_trial_id": "T-2026-09-30-C29R1-INPUT-FREEZE"
+        },
+        "repair_discovery_fingerprint": "b7541fee48f01105d47ca0e89b05e1c20d14d73c5dad18dc1d2e876a21c4b05d",
         "execution_incident_paths": [
           "research/evidence/c29_coverage_execution_incident_2026_09_30.json",
           "research/evidence/c29r1_input_freeze_incident_2026_09_30.json"
         ],
-        "input_bundle_result": {
-          "fingerprint": "743b0a14e646009e7ed5503c4068e399caaebc9719ffcd9e88a5ab40465ab4e9",
-          "source_trial_id": "T-2026-09-30-C29R1-INPUT-FREEZE",
-          "status": "INPUT_BUNDLE_FROZEN"
-        },
-        "issue_number": null,
-        "performance_authorization_allowed": false,
+        "authorization_id": "AUTH-C29-2026-09-30-01",
         "performance_result": {
-          "report_fingerprint": "61822d7b7ed717cf983fd0d1b7b4ae1395fc5b389c89b6b231c484470a335a8e",
-          "status": "COMPLETED",
           "trial_id": "T-2026-09-30-C29-PERFORMANCE-01",
+          "status": "COMPLETED",
+          "report_fingerprint": "61822d7b7ed717cf983fd0d1b7b4ae1395fc5b389c89b6b231c484470a335a8e",
           "workflow_run_id": "36744622759"
-        },
-        "pit_result": {
-          "fingerprint": "d88c24271fec55186b5e3aad478d91acc7ebe3b6412193724170365f5b6729c6",
-          "source_trial_id": "T-2026-09-30-C29R1-COVERAGE-PIT",
-          "status": "PIT_PASSED_NO_PERFORMANCE_EVIDENCE"
-        },
-        "preregistration_path": "research/preregistrations/c29_performance_2026_09_30.json",
-        "repair_discovery_fingerprint": "b7541fee48f01105d47ca0e89b05e1c20d14d73c5dad18dc1d2e876a21c4b05d",
-        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
-        "trial_id": "T-2026-09-30-C29-PERFORMANCE-01"
+        }
       },
       {
-        "authorization_id": "AUTH-H06P2-2026-10-01-01",
-        "class": "fresh_validation",
         "code": "H06-P2",
+        "trial_id": "T-2026-10-01-H06P2-PERFORMANCE-01",
+        "class": "fresh_validation",
+        "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
+        "issue_number": null,
+        "preregistration_path": "research/preregistrations/h06_p2_performance_2026_10_01.json",
+        "performance_authorization_allowed": false,
+        "authorization_id": "AUTH-H06P2-2026-10-01-01",
         "execution_incident": {
+          "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME",
           "attempt_count": 3,
           "execution_incident_path": "research/evidence/h06_p2_performance_execution_incident.json",
           "predecessor_workflow_runs": [
             36908441865,
             36908869666,
             36908998353
-          ],
-          "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME"
+          ]
         },
-        "invalidation_reason": "Original one-shot authorization produced no scientific result because three execution-layer defects failed closed; H06-P2-R1 contains only implementation corrections.",
-        "issue_number": null,
-        "performance_authorization_allowed": false,
-        "preregistration_path": "research/preregistrations/h06_p2_performance_2026_10_01.json",
-        "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
-        "trial_id": "T-2026-10-01-H06P2-PERFORMANCE-01"
+        "invalidation_reason": "Original one-shot authorization produced no scientific result because three execution-layer defects failed closed; H06-P2-R1 contains only implementation corrections."
       },
       {
-        "authorization_id": "AUTH-H06P2R1-2026-10-01-01",
-        "class": "performance_correction",
         "code": "H06-P2-R1",
+        "trial_id": "T-2026-10-01-H06P2R1-PERFORMANCE-01",
+        "class": "performance_correction",
+        "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
+        "issue_number": null,
+        "preregistration_path": "research/preregistrations/h06_p2_r1_performance_2026_10_01.json",
+        "performance_authorization_allowed": false,
+        "predecessor_trial_id": "T-2026-10-01-H06P2-PERFORMANCE-01",
+        "predecessor_execution_incident_path": "research/evidence/h06_p2_performance_execution_incident.json",
+        "authorization_id": "AUTH-H06P2R1-2026-10-01-01",
         "execution_incident": {
+          "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME",
           "attempt_count": 1,
           "execution_incident_path": "research/evidence/h06_p2_r1_performance_execution_incident.json",
           "predecessor_workflow_runs": [
             36910527120
-          ],
-          "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME"
+          ]
         },
-        "invalidation_reason": "R1 reached the complete arm evaluation path but failed while serializing result metadata because freeze['universe'] does not exist; no immutable scientific result was created.",
-        "issue_number": null,
-        "performance_authorization_allowed": false,
-        "predecessor_execution_incident_path": "research/evidence/h06_p2_performance_execution_incident.json",
-        "predecessor_trial_id": "T-2026-10-01-H06P2-PERFORMANCE-01",
-        "preregistration_path": "research/preregistrations/h06_p2_r1_performance_2026_10_01.json",
-        "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
-        "trial_id": "T-2026-10-01-H06P2R1-PERFORMANCE-01"
+        "invalidation_reason": "R1 reached the complete arm evaluation path but failed while serializing result metadata because freeze['universe'] does not exist; no immutable scientific result was created."
       },
       {
-        "authorization_id": "AUTH-H06P2R2-2026-10-01-01",
-        "class": "performance_correction",
         "code": "H06-P2-R2",
+        "trial_id": "T-2026-10-01-H06P2R2-PERFORMANCE-01",
+        "class": "performance_correction",
+        "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
+        "issue_number": null,
+        "preregistration_path": "research/preregistrations/h06_p2_r2_performance_2026_10_01.json",
+        "performance_authorization_allowed": false,
+        "predecessor_trial_id": "T-2026-10-01-H06P2R1-PERFORMANCE-01",
+        "predecessor_execution_incident_path": "research/evidence/h06_p2_r1_performance_execution_incident.json",
+        "authorization_id": "AUTH-H06P2R2-2026-10-01-01",
         "execution_incident": {
+          "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME",
           "attempt_count": 1,
           "execution_incident_path": "research/evidence/h06_p2_r2_performance_execution_incident.json",
           "predecessor_workflow_runs": [
             36911178921
-          ],
-          "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME"
+          ]
         },
-        "invalidation_reason": "R2 failed on lowercase JSON boolean literals in the Python result-builder; no immutable scientific result was produced.",
-        "issue_number": null,
-        "performance_authorization_allowed": false,
-        "predecessor_execution_incident_path": "research/evidence/h06_p2_r1_performance_execution_incident.json",
-        "predecessor_trial_id": "T-2026-10-01-H06P2R1-PERFORMANCE-01",
-        "preregistration_path": "research/preregistrations/h06_p2_r2_performance_2026_10_01.json",
-        "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
-        "trial_id": "T-2026-10-01-H06P2R2-PERFORMANCE-01"
+        "invalidation_reason": "R2 failed on lowercase JSON boolean literals in the Python result-builder; no immutable scientific result was produced."
       },
       {
-        "authorization_id": "AUTH-H06P2R3-2026-10-01-01",
-        "class": "performance_correction",
         "code": "H06-P2-R3",
-        "issue_number": null,
-        "performance_authorization_allowed": false,
-        "performance_result": {
-          "report_fingerprint": "30341d6303cb8f93e11d948d91ea627686d9207f84d4a4d2018fd6fdf436b5f5",
-          "status": "COMPLETED",
-          "trial_id": "T-2026-10-01-H06P2R3-PERFORMANCE-01",
-          "workflow_run_id": "36911930878"
-        },
-        "predecessor_execution_incident_path": "research/evidence/h06_p2_r2_performance_execution_incident.json",
-        "predecessor_trial_id": "T-2026-10-01-H06P2R2-PERFORMANCE-01",
-        "preregistration_path": "research/preregistrations/h06_p2_r3_performance_2026_10_01.json",
+        "trial_id": "T-2026-10-01-H06P2R3-PERFORMANCE-01",
+        "class": "performance_correction",
         "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
-        "trial_id": "T-2026-10-01-H06P2R3-PERFORMANCE-01"
+        "issue_number": null,
+        "preregistration_path": "research/preregistrations/h06_p2_r3_performance_2026_10_01.json",
+        "performance_authorization_allowed": false,
+        "predecessor_trial_id": "T-2026-10-01-H06P2R2-PERFORMANCE-01",
+        "predecessor_execution_incident_path": "research/evidence/h06_p2_r2_performance_execution_incident.json",
+        "authorization_id": "AUTH-H06P2R3-2026-10-01-01",
+        "performance_result": {
+          "trial_id": "T-2026-10-01-H06P2R3-PERFORMANCE-01",
+          "status": "COMPLETED",
+          "report_fingerprint": "30341d6303cb8f93e11d948d91ea627686d9207f84d4a4d2018fd6fdf436b5f5",
+          "workflow_run_id": "36911930878"
+        }
       }
     ],
-    "name": "active_research_registry",
-    "policy": {
-      "automatic_promotion": false,
-      "candidate_robustness_gate_module": "automation/candidate_robustness_gate.py",
-      "critical_research_quality_control": "research/governance/critical_research_quality_control.json",
-      "formal_phase_entry_requires_candidate_robustness_receipt": true,
-      "frontier_design_document": "docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md",
-      "future_full_formal_pass_requires_independent_replication_contract": true,
-      "future_performance_authorization_requires_robustness_contract": true,
-      "legacy_preregistrations_are_historical": true,
-      "only_exactly_listed_authorizations_may_execute": true,
-      "only_listed_performance_trials_may_be_authorized": true,
-      "paper_only": true,
-      "replication_after_full_formal_pass_must_be_unchanged": true,
-      "universal_candidate_robustness_gate": true
-    },
-    "schema_version": 1
+    "active_design_families": [
+      {
+        "code": "084",
+        "class": "market_state_and_earnings",
+        "issue_number": 583,
+        "state": "FEASIBILITY_COMPLETE"
+      },
+      {
+        "code": "088",
+        "class": "textual_peer_network_and_rebalance_demand",
+        "issue_number": 588,
+        "state": "DESIGN_ONLY"
+      },
+      {
+        "code": "082",
+        "class": "sec_shareholder_experience",
+        "issue_number": 580,
+        "state": "DESIGN_ONLY"
+      },
+      {
+        "code": "FRONTIER-20260928",
+        "class": "unusual_alpha_frontier",
+        "issue_number": 591,
+        "state": "DESIGN_ONLY",
+        "document": "docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "104",
+        "class": "orthogonal_information_investor_demand_and_meta_state",
+        "issue_number": 739,
+        "state": "SOURCE_FEASIBILITY_AND_DOWNSTREAM_GATES_COMPLETED",
+        "preregistration_path": "research/preregistrations/q104_orthogonal_candidate_wave_2026_10_01.json",
+        "candidate_inventory_path": "research/frontier/q104_candidate_wave_2026_10_01.json",
+        "performance_authorization_allowed": false,
+        "source_receipt_path": "research/evidence/q104_source_feasibility_2026_10_01.json",
+        "candidate_contracts": {
+          "Q104:I19": {
+            "xbrl_concept_freeze": "research/preregistrations/q104_i19_xbrl_concept_freeze_2026_10_03.json",
+            "design_document": "docs/research_design/Q104_I19_EXACT_XBRL_CONCEPT_FREEZE_2026-10-03.md",
+            "performance_authorization_allowed": false,
+            "next_gate": "historical 13F archive/security completeness + concept-specific PIT compiler + independent reproduction"
+          }
+        }
+      },
+      {
+        "code": "105",
+        "class": "historical_archive_and_pit_feasibility_gate",
+        "issue_number": 740,
+        "state": "PIT_FEASIBILITY_COMPLETED",
+        "parent_code": "104",
+        "preregistration_path": "research/preregistrations/q105_q104_historical_pit_2026_10_01.json",
+        "performance_authorization_allowed": false,
+        "receipt_path": "research/evidence/q105_historical_pit_feasibility_2026_10_01.json"
+      },
+      {
+        "code": "106",
+        "class": "shared_sec_treasury_pit_join_integrity",
+        "issue_number": 741,
+        "state": "PIT_JOIN_STRUCTURAL_VALIDATION_COMPLETED_DUAL_ARCH",
+        "parent_code": "105",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "107",
+        "class": "q104_fresh_equity_coverage",
+        "issue_number": 742,
+        "state": "COVERAGE_COMPLETED",
+        "parent_code": "104",
+        "preregistration_path": "research/preregistrations/q107_q104_fresh_equity_coverage_2026_10_01.json",
+        "universe": "validation_2026_10_01_q104_sec_treasury_equities",
+        "performance_authorization_allowed": false,
+        "coverage_result_path": "research/evidence/q107_coverage_result.json",
+        "coverage_fingerprint": "18571a7871f72b8018905c10c289724bb5cf976ab7fa4f9f424599ddc727fbd2",
+        "snapshot_fingerprint": "c5eb39fcd802eb73c6c71d4bdbb0c0ec0f132db77c5c0a2c37b4ba1277edf036",
+        "common_calendar_count": 3704
+      },
+      {
+        "code": "108",
+        "class": "q104_sec_xbrl_13f_treasury_pit_integration",
+        "issue_number": 743,
+        "state": "PIT_INTEGRATION_COMPLETED_DUAL_ARCH",
+        "receipt_path": "research/evidence/q108_pit_integration_2026_10_01.json",
+        "receipt_fingerprint": "07dcc87087f6a762ecbddaab0298625fb1bf50123df48758fa5c9f6d56bdc8c3",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "109",
+        "class": "literature_driven_nport_text_risk_insider_ownership_frontier",
+        "issue_number": 744,
+        "state": "DESIGN_ONLY_ACTIVE",
+        "preregistration_path": "research/preregistrations/q109_literature_frontier_2026_10_01.json",
+        "candidate_inventory_path": "research/frontier/q109_candidate_wave_2026_10_01.json",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "110",
+        "class": "q109_nport_insider_ownership_source_feasibility",
+        "issue_number": 745,
+        "state": "SOURCE_FEASIBILITY_COMPLETED_DUAL_ARCH",
+        "parent_code": "109",
+        "preregistration_path": "research/preregistrations/q110_q109_source_feasibility_2026_10_01.json",
+        "performance_authorization_allowed": false,
+        "receipt_path": "research/evidence/q110_q109_source_feasibility_2026_10_01.json",
+        "receipt_fingerprint": "df1b127bb4faf887b1298a73a89819903efb3a8ab685f110349212759402fa7"
+      },
+      {
+        "code": "111",
+        "class": "deterministic_sec_security_identity_contract",
+        "state": "STRUCTURAL_CONTRACT_COMPLETED_DUAL_ARCH",
+        "parent_code": "109",
+        "issue_number": 746,
+        "preregistration_path": "research/preregistrations/q111_sec_security_identity_2026_10_01.json",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "112",
+        "class": "live_sec_security_identity_13f_nport_form4_feasibility",
+        "state": "LIVE_SOURCE_FEASIBILITY_COMPLETED_DUAL_ARCH",
+        "parent_code": "111",
+        "issue_number": 747,
+        "preregistration_path": "research/preregistrations/q112_sec_security_identity_2026_10_01.json",
+        "performance_authorization_allowed": false,
+        "receipt_fingerprint": "679b99b393038d82fc3800d1d4abb0af01e6ff6c7aaace83748ae31500c86bd1"
+      },
+      {
+        "code": "113",
+        "class": "fixed_quarter_13f_manager_security_coverage_on_q107_universe",
+        "state": "13F_COVERAGE_COMPLETED",
+        "parent_code": "112",
+        "issue_number": 748,
+        "preregistration_path": "research/preregistrations/q113_13f_q107_coverage_2026_10_01.json",
+        "performance_authorization_allowed": false,
+        "receipt_path": "research/evidence/q113_13f_q107_coverage_result.json",
+        "receipt_fingerprint": "29da4de843641e4ac5760fdaaeb4833776ca7220842274234bf64236d2ecb19e"
+      },
+      {
+        "code": "114",
+        "class": "deterministic_13f_manager_position_transition_compiler",
+        "state": "STRUCTURAL_COMPILER_COMPLETED_DUAL_ARCH",
+        "parent_code": "113",
+        "issue_number": 749,
+        "preregistration_path": "research/preregistrations/q114_13f_manager_transitions_2026_10_01.json",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "115",
+        "class": "deterministic_treasury_auction_demand_state_compiler",
+        "state": "STRUCTURAL_COMPILER_COMPLETED_DUAL_ARCH",
+        "parent_code": "104",
+        "issue_number": 750,
+        "preregistration_path": "research/preregistrations/q115_treasury_demand_state_2026_10_01.json",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "116",
+        "class": "live_two_quarter_13f_manager_security_transition_population",
+        "state": "13F_TWO_QUARTER_TRANSITION_POPULATION_COMPLETED",
+        "parent_code": "114",
+        "issue_number": 752,
+        "preregistration_path": "research/preregistrations/q116_13f_transition_population_2026_10_01.json",
+        "performance_authorization_allowed": false,
+        "receipt_path": "research/evidence/q116_13f_transition_population_result.json",
+        "receipt_fingerprint": "cb57b7b19f9328080085888b43447d08ccee090743dcb15b4cc5d8d64b85876d"
+      },
+      {
+        "code": "117",
+        "class": "live_treasury_10y_demand_state_population",
+        "state": "TREASURY_DEMAND_POPULATION_COMPLETED",
+        "parent_code": "115",
+        "issue_number": 753,
+        "preregistration_path": "research/preregistrations/q117_treasury_demand_population_2026_10_01.json",
+        "performance_authorization_allowed": false,
+        "receipt_path": "research/evidence/q117_treasury_demand_population_result.json",
+        "receipt_fingerprint": "ad060e9023eef10599e855f2e5684f0657416abeb15b5bee8fec70bc2a044e78"
+      },
+      {
+        "code": "118",
+        "class": "candidate_composition_and_bundle_compatibility",
+        "issue_number": 757,
+        "state": "DESIGN_ONLY_ACTIVE",
+        "parent_code": "109",
+        "design_document": "docs/research_design/CANDIDATE_COMPOSITION_CONTRACT_2026-10-01.md",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "119",
+        "class": "treasury_auction_demand_shape",
+        "issue_number": 761,
+        "state": "DESIGN_ONLY_ACTIVE",
+        "parent_code": "115",
+        "design_document": "docs/research_design/Q119_TREASURY_AUCTION_DEMAND_SHAPE_2026-10-01.md",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "H06-P2",
+        "class": "sector_residual_global_rank",
+        "state": "DESIGN_ONLY_ACTIVE",
+        "parent_code": "H06",
+        "design_document": "docs/research_design/H06-P2_SECTOR_RESIDUAL_GLOBAL_RANK_2026-10-01.md",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "120",
+        "class": "cftc_tff_positioning_divergence",
+        "issue_number": 768,
+        "state": "DESIGN_ONLY_ACTIVE",
+        "parent_code": "market_state_and_allocator_frontier",
+        "design_document": "docs/research_design/Q120_CFTC_TFF_POSITIONING_2026-10-01.md",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "121",
+        "class": "sec_beneficial_ownership_disclosure_timing",
+        "state": "DISCOVERY_PIT_ONLY_ACTIVE",
+        "parent_code": "109",
+        "issue_number": 882,
+        "preregistration_path": "research/preregistrations/q121_sec_beneficial_ownership_timing_2026_10_03.json",
+        "design_document": "docs/research_design/Q121_SEC_BENEFICIAL_OWNERSHIP_TIMING_2026-10-03.md",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "FRONTIER-Q171-Q178",
+        "class": "public_domain_orthogonal_information_frontier",
+        "state": "SOURCE_FEASIBILITY_COMPLETED_PIT_READINESS_ACTIVE",
+        "candidate_inventory_path": "research/frontier/q171_q178_candidate_wave_2026_10_03.json",
+        "source_receipt_path": "research/evidence/q171_q178_source_feasibility_2026_10_03.json",
+        "pit_readiness_receipt_path": "research/evidence/q171_q177_pit_readiness_2026_10_03.json",
+        "performance_authorization_allowed": false,
+        "note": "Q171 sample PIT reconstruction is proven; Q174-Q177 source clocks/versions are characterized but candidate-specific PIT compilers remain required; Q173 is license-blocked."
+      },
+      {
+        "code": "FRONTIER-Q133-Q170-PIT-R1",
+        "class": "source-feasible-public-information-pit-readiness",
+        "state": "PIT_READINESS_ACTIVE",
+        "parent_code": "FRONTIER-20260928",
+        "performance_authorization_allowed": false,
+        "candidate_inventory_path": "research/frontier/q133_q170_pit_readiness_wave_2026_10_03.json",
+        "source_receipt_path": "research/evidence/q133_q170_source_feasibility_2026_10_03.json",
+        "source_probe_pass_count": 25,
+        "source_feasible_candidate_count": 21,
+        "note": "Downstream PIT contract/sample gate only; no performance, ranking, selection, tuning, promotion or live execution.",
+        "micro_pit": {
+          "state": "MICRO_PIT_SAMPLE_ACTIVE",
+          "candidates": [
+            "Q137",
+            "Q144"
+          ],
+          "design_document": "docs/research_design/Q137_Q144_MICRO_PIT_R1_2026-10-03.md",
+          "page_map": "research/governance/q144_q107_wikipedia_page_map_2026_10_03.json",
+          "performance_authorization_allowed": false,
+          "note": "Bounded historical sample only; full candidate-specific PIT coverage and independent reproduction remain required."
+        },
+        "q147_q148_clock_contract": {
+          "state": "PIT_CONTRACT_DEFINED_PENDING_SERIES_FREEZE",
+          "document": "docs/research_design/Q147_Q148_EIA_SOURCE_CLOCK_CONTRACT_2026-10-03.md",
+          "contract": "research/governance/q147_q148_eia_source_clock_contract_2026_10_03.json",
+          "performance_authorization_allowed": false,
+          "note": "Current EIA API is discovery/sample only; formal PIT requires dated publication/issue files and revision lineage."
+        }
+      },
+      {
+        "code": "Q121-R1",
+        "class": "sec_beneficial_ownership_reverse_issuer_coverage_correction",
+        "issue_number": 961,
+        "parent_code": "121",
+        "state": "SOURCE_ROUTE_CORRECTION_ACTIVE",
+        "preregistration_path": "research/preregistrations/q121r1_sec_reverse_issuer_coverage_2026_10_03.json",
+        "design_document": "docs/research_design/Q121R1_SEC_REVERSE_ISSUER_COVERAGE_2026-10-03.md",
+        "performance_authorization_allowed": false,
+        "note": "Original Q121 issuer-submission route is not treated as complete issuer-level population; Q121-R1 re-derives reverse issuer coverage via SEC company browse and preserves filer/subject identity separately."
+      },
+      {
+        "code": "Q127-R1",
+        "class": "finra_regsho_historical_source_pit_correction",
+        "issue_number": 964,
+        "parent_code": "127",
+        "state": "SOURCE_PIT_FEASIBILITY_ACTIVE",
+        "preregistration_path": "research/preregistrations/q127r1_finra_regsho_historical_pit_2026_10_03.json",
+        "design_document": "docs/research_design/Q127R1_FINRA_REGSHO_HISTORICAL_PIT_2026-10-03.md",
+        "performance_authorization_allowed": false,
+        "note": "Historical FINRA Consolidated NMS source/PIT feasibility; publication upper bound is documented but exact first-publication time and immutable revision lineage are not claimed."
+      },
+      {
+        "code": "Q130-R1",
+        "class": "wikimedia_historical_attention_source_feasibility",
+        "issue_number": 967,
+        "parent_code": "130",
+        "state": "SOURCE_FEASIBILITY_ACTIVE",
+        "preregistration_path": "research/preregistrations/q130r1_wikimedia_attention_source_2026_10_03.json",
+        "design_document": "docs/research_design/Q130R1_WIKIMEDIA_ATTENTION_SOURCE_2026-10-03.md",
+        "performance_authorization_allowed": false,
+        "note": "Public Wikimedia Pageviews is being tested as a historical attention proxy. Daily data availability is established by source documentation, but exact historical publication time and revision lineage remain unproven."
+      }
+    ]
   },
   "canonical_sources": {
     "active_research_registry": "research/governance/active_research_registry.json",
@@ -886,7 +897,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-03T16:31:18.327298+00:00",
+  "generated_at_utc": "2026-10-03T16:41:10Z",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1291,44 +1302,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "RESEARCH: Q127-R1 FINRA Reg-SHO historical PIT feasibility",
-        "sha": "53cc3b76d20d09590a2284fc318e7ec6f4097a7f",
-        "timestamp": "2026-10-03T18:31:05+02:00"
+        "sha": "37a35aefc214cd8cc96232cc9a3b81e5b9d565f4",
+        "timestamp": "2026-10-03T16:40:51Z",
+        "message": "OPS: include Q130-R1 in active frontier status focus"
       },
       {
-        "message": "TEST: track Q127-R1 workflow lifecycle registration",
-        "sha": "196761bb4a9ae094ceb2d026a2234bab6a235618",
-        "timestamp": "2026-10-03T18:30:47+02:00"
+        "sha": "75ed4a99765d71963e71c2cd0d0a5c2614c6a4c1",
+        "timestamp": "2026-10-03T16:39:42Z",
+        "message": "FIX: Q121-R1 SEC submission-header identity parsing"
       },
       {
-        "message": "GOV: include Q127-R1 workflow in fail-closed integrity registry",
-        "sha": "7abc1347b3f3ebf31fca109b5b0b60bf3274a33c",
-        "timestamp": "2026-10-03T18:30:42+02:00"
+        "sha": "c8eb5418f4bafa29ab1a5c7a3812e938ddcef35d",
+        "timestamp": "2026-10-03T16:39:12Z",
+        "message": "TEST: cover SEC submission-header identity and URL normalization"
       },
       {
-        "message": "GOV: register Q127-R1 workflow in lifecycle registry",
-        "sha": "087f2956b67ee9fd717982a89c95cead454a365a",
-        "timestamp": "2026-10-03T18:30:37+02:00"
+        "sha": "ec7c55affdf094392c051cdebfb18e203d09b4c3",
+        "timestamp": "2026-10-03T16:39:05Z",
+        "message": "FIX: correct SEC index-header URL regex and provenance field"
       },
       {
-        "message": "GOV: register Q127-R1 FINRA historical PIT feasibility",
-        "sha": "24cbb8136d71126e17aaf70d8899b807a2c48774",
-        "timestamp": "2026-10-03T18:30:31+02:00"
+        "sha": "46d855ab4def01b265b67f9c25567157b17979f8",
+        "timestamp": "2026-10-03T16:38:12Z",
+        "message": "FIX: parse SEC submission header for subject and filer CIK identity"
       },
       {
-        "message": "CI: add Q127-R1 FINRA Reg-SHO historical PIT probe",
-        "sha": "f89b750eb7cb850644d96be49403b8ded4324d5a",
-        "timestamp": "2026-10-03T18:30:26+02:00"
+        "sha": "b70684ee7f7e2f913d42ef16264de63bf7f03d23",
+        "timestamp": "2026-10-03T16:37:02Z",
+        "message": "RESEARCH: Q130-R1 Wikimedia historical attention source feasibility"
       },
       {
-        "message": "TEST: add Q127-R1 FINRA Reg-SHO parser contract tests",
-        "sha": "e2d67c001ec49036988e0f4372b6ac4e79bdcb1f",
-        "timestamp": "2026-10-03T18:30:19+02:00"
+        "sha": "3404f3116f242ade85bafed048fff9c2c463b545",
+        "timestamp": "2026-10-03T16:36:47Z",
+        "message": "GOV: bind Q130-R1 registry entry to dedicated issue"
       },
       {
-        "message": "RESEARCH: implement Q127-R1 FINRA Reg-SHO historical PIT probe",
-        "sha": "c58362873e39eb9a643a96a85c91a6472ec90207",
-        "timestamp": "2026-10-03T18:29:42+02:00"
+        "sha": "f3ab9f551b5516aac52627ff164cf126682d48e3",
+        "timestamp": "2026-10-03T16:36:42Z",
+        "message": "GOV: bind Q130-R1 preregistration to dedicated issue"
       }
     ]
   },
@@ -1343,8 +1354,8 @@
       "starts_utc": "2026-10-01T00:00:00Z"
     },
     "free_resources_only": true,
-    "hypothetical_reference_capital_eur": 2000.0,
-    "legacy_operational_canary_capital_eur": 500.0,
+    "hypothetical_reference_capital_eur": 2000,
+    "legacy_operational_canary_capital_eur": 500,
     "paid_agent_budget_usd": 0,
     "paid_api_budget_usd": 0
   },
@@ -1398,7 +1409,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "53cc3b76d20d09590a2284fc318e7ec6f4097a7f",
+  "source_master_sha": "37a35aefc214cd8cc96232cc9a3b81e5b9d565f4",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
