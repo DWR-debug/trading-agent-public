@@ -149,6 +149,18 @@ def main() -> int:
     out = args.output if args.output.is_absolute() else ROOT / args.output
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    from automation.candidate_robustness_gate import compile_receipt
+    robustness_receipt = compile_receipt(paths, str((out.parent / "pre_formal_candidate_robustness.json").relative_to(ROOT)))
+    robustness_path = out.parent / "pre_formal_candidate_robustness.json"
+    robustness_path.write_text(
+        json.dumps(robustness_receipt, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    if robustness_receipt["status"] != "PRE_FORMAL_ROBUSTNESS_COMPLETED":
+        raise RuntimeError("DISCOVERY_CANDIDATE_ROBUSTNESS_GATE_FAIL")
+    print("PRE_FORMAL_ROBUSTNESS_STATUS=" + robustness_receipt["status"])
+    print("PRE_FORMAL_ROBUSTNESS_FINGERPRINT=" + robustness_receipt["bundle_fingerprint"])
     print("DISCOVERY_STATUS=" + result["status"])
     print("DISCOVERY_CANDIDATES=" + str(result["candidate_count"]))
     print("DISCOVERY_FINGERPRINT=" + result["bundle_fingerprint"])
