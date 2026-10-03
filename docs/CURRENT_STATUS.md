@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `da5650a4d6945b613fa1861b316e10d1f85ab96f`
+**Current operational snapshot:** `d16b94b3c01bcfc3089d8fb4e78cf60c6ac3ac20`
 
-**Generated (UTC):** `2026-10-03T12:55:59.130053+00:00`
+**Generated (UTC):** `2026-10-03T12:56:15.335444+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -52,6 +52,19 @@
 - Q107 fresh Q104 equity coverage: **COMPLETED**; 8/8 symbols and 3,704 common sessions.
 - Q108 real SEC/XBRL/13F/Treasury PIT integration: **COMPLETED_DUAL_ARCH**; 8/8 issuer filings and 8/8 XBRL lineage verified, 13F sample and Treasury chain verified.
 - Candidate-specific next gates: I19/I20 = full 13F security coverage; I22 = frozen event-state compiler; M6 = fixed Treasury state reuse; I21 = explicit bounded historical horizon; R9 = synthetic-only.
+
+### Q129 Options Source / PIT
+
+- Q129 historical options source-feasibility: **COMPLETED** on hosted Linux with pinned release hashes verified.
+- Independent Q129 PIT/structural reproduction: **REPRODUCED**; workflow run `37123847841`, receipt fingerprint `41d723734f030d1a212f5eb4b3e6467223a5cfcdeb97c77ffa9713f8889c7587`.
+- The fixed downstream view preserves raw rows and quarantines quote/calendar anomalies deterministically; same-day use remains **False**.
+- This receipt does **not** authorize performance, holdout selection, ranking, tuning, promotion or live execution.
+
+### Q133–Q170 Public Source Frontier
+
+- Hosted discovery/source-feasibility run: **COMPLETED**; 25 source probes passed across Q133–Q170.
+- Newly source-feasible candidates include Q137, Q144, Q147–Q151, Q153–Q155, Q157–Q158, Q161–Q169; remaining candidates stay blocked or design-only pending further source/PIT work.
+- Source-feasibility is not performance evidence and does not authorize performance, holdout selection, ranking, tuning, promotion or live execution.
 
 ### H06 independent PIT
 
