@@ -235,18 +235,6 @@ LANES: dict[str, list[list[str]]] = {
             "--output",
             "research/runs/self_hosted/q109_n7_common_holder_graph/result.json",
         ],
-        [
-            PYTHON,
-            "-m",
-            "automation.s10_probe",
-        ],
-        [
-            PYTHON,
-            "-m",
-            "automation.s10_worker",
-            "--output",
-            "research/runs/self_hosted/autonomous/s10_evidence_critic.json",
-        ],
     ],
     "repo_qa": [
         [
