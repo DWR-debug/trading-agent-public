@@ -56,6 +56,24 @@ jobs:
           tail -n 160 "$RUNNER_TEMP/pytest.log" >> "$GITHUB_STEP_SUMMARY" || true
           echo '```' >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Publish pytest failure diagnosis to PR
+        if: github.event_name == 'pull_request' && steps.pytest.outputs.exit_code != '0'
+        uses: actions/github-script@v8
+        env:
+          PYTEST_LOG: ${{ runner.temp }}/pytest.log
+        with:
+          script: |
+            const fs = require('fs');
+            const log = fs.readFileSync(process.env.PYTEST_LOG, 'utf8');
+            const tail = log.split('\n').slice(-220).join('\n');
+            const body = '## Hosted pytest failure diagnosis\n\n```text\n' + tail.slice(-18000) + '\n```\n\nRun: ' + context.runId + '\nCommit: ' + context.sha;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            });
+
       - name: Run project integrity
         if: steps.pytest.outputs.exit_code == '0'
         shell: bash
