@@ -794,7 +794,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T13:24:58.712526+00:00",
+  "generated_at_utc": "2026-10-03T13:28:38.187797+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1196,8 +1196,32 @@
     ],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "ops/reconcile-q129-pit-contract-20261003",
+        "number": 927,
+        "title": "OPS: reconcile Q129 contract with independent PIT receipt",
+        "updatedAt": "2026-10-03T13:28:14Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/927"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "RESEARCH: add Q171 frozen issuer web-state coverage",
+        "sha": "2d7d3355a5b925210d3e898146877c081139bb1c",
+        "timestamp": "2026-10-03T15:28:26+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "777a927ee326d585c3b0d20a690eefefe4bf343b",
+        "timestamp": "2026-10-03T13:25:01Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4ce0b344b1f8e2575eb1612c9bcda8341e391f24",
+        "timestamp": "2026-10-03T13:24:59Z"
+      },
       {
         "message": "OPS: stop registry changes from retriggering H06-R1 authorization",
         "sha": "7c7048d4377a68e0416d09c50d4d4e596b59ec25",
@@ -1222,21 +1246,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "3f64c2adeae6abdf1d2d435086e0bbbe5aef3e29",
         "timestamp": "2026-10-03T13:18:02Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d839b879f490d8b3c730e08a118d3955c77b9f7a",
-        "timestamp": "2026-10-03T13:18:01Z"
-      },
-      {
-        "message": "RESEARCH: add Q171-Q177 PIT-readiness lane",
-        "sha": "4b667fdaac95047c3be0e48545c42520e3a3cef9",
-        "timestamp": "2026-10-03T15:17:48+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1375b2f65b602c56be8a0989f3d8cc1476fdd377",
-        "timestamp": "2026-10-03T13:12:41Z"
       }
     ]
   },
@@ -1306,12 +1315,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7c7048d4377a68e0416d09c50d4d4e596b59ec25",
+  "source_master_sha": "2d7d3355a5b925210d3e898146877c081139bb1c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37126086118"
+    "run_id": "37126299063"
   }
 }
