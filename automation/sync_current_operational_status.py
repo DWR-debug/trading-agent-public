@@ -306,8 +306,10 @@ def generate(
         recorded_next_research_focus = (
             "Active correction tracks: Q121-R1 independently repairs SEC beneficial-ownership issuer "
             "coverage by separating subject-issuer and filer identity; Q127-R1 tests fixed historical "
-            "FINRA Reg-SHO source retrieval and preserves the unresolved publication/revision boundary. "
-            "These are source/PIT feasibility tracks only. Q171-Q178 and Q126-Q132 remain active "
+            "FINRA Reg-SHO source retrieval and preserves the unresolved publication/revision boundary; "
+            "Q130-R1 tests Wikimedia Pageviews as a public historical attention proxy while preserving " 
+            "the unresolved publication/revision boundary. These are source/PIT feasibility tracks only. " 
+            "Q171-Q178 and Q126-Q132 remain active "
             "orthogonal frontier work; Q104/I22/Q119/Q120/Q125 remain formal-readiness work. "
             "No performance authorization, holdout selection, tuning, ranking, promotion or live "
             "execution is created by these tracks."
