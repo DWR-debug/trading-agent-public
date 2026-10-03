@@ -702,7 +702,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-03T08:10:14.549615+00:00",
+  "generated_at_utc": "2026-10-03T08:11:50.632645+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -890,6 +890,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: repair Research OS scheduler and Q121 timestamp test (#897)",
+        "sha": "a44c6cade9208ec031503d51feb176214631b845",
+        "timestamp": "2026-10-03T10:11:38+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "590337b51dd88733dc7133e1aac176d05116cdff",
+        "timestamp": "2026-10-03T08:10:16Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6e9f3032dd7c3c44df6b6b529e192b9550a88efe",
+        "timestamp": "2026-10-03T08:10:15Z"
+      },
+      {
         "message": "FIX: anchor Q121 PIT to EDGAR acceptance clock (#896)",
         "sha": "4004d1029544f35a94cf6b50ee50a851d86d0121",
         "timestamp": "2026-10-03T10:10:02+02:00"
@@ -913,21 +928,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "453d8203593258dafdf0de93b0618e1fe72218f9",
         "timestamp": "2026-10-03T08:08:04Z"
-      },
-      {
-        "message": "FIX: dependency-safe frontier parallelism and Q121 syntax (#894)",
-        "sha": "4f14d88186460574b9a2636e01bc9d99fe583c96",
-        "timestamp": "2026-10-03T10:07:51+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "7a13025743d91d84324d170ce64eb76328718278",
-        "timestamp": "2026-10-03T08:06:24Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "942dbea7141578e6cd37fd0b2dd0321b5e54d1ea",
-        "timestamp": "2026-10-03T08:06:22Z"
       }
     ]
   },
@@ -997,12 +997,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4004d1029544f35a94cf6b50ee50a851d86d0121",
+  "source_master_sha": "a44c6cade9208ec031503d51feb176214631b845",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37108780541"
+    "run_id": "37108876309"
   }
 }
