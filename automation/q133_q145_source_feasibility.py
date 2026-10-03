@@ -48,7 +48,7 @@ PROBES: dict[str, dict[str, Any]] = {
     },
     "CFTC_HISTORY": {
         "url": "https://www.cftc.gov/MarketReports/CommitmentsofTraders/HistoricalViewable/index.htm",
-        "markers": ["Full Reports - Starting in 2005", "2026"],
+        "markers": ["Full Reports", "2026"],
     },
     "CFTC_RELEASE": {
         "url": "https://www.cftc.gov/MarketReports/CommitmentsofTraders/ReleaseSchedule/index.htm",
