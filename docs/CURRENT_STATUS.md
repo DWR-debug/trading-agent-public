@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `cb6fc3f348bfd5b24c9df1783cd6b760690917ea`
+**Current operational snapshot:** `6a682f2ccb8249431f0053eed65f21a2c0c8c81c`
 
-**Generated (UTC):** `2026-10-03T15:42:25.777351+00:00`
+**Generated (UTC):** `2026-10-03T15:51:23.109905+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -16,6 +16,8 @@
 - The Forward path contains closed-candle market-data ingestion, a persistent update loop and a schema-v2 per-candle MTM ledger.
 - Canonical data-layer infrastructure is merged.
 - Bounded agent routing uses two queue lanes with fail-closed task contracts.
+- **Permanent two-lane research mode: ACTIVE.** Lane A = **Formal Readiness** (advanced Coverage/PIT/compiler/provenance/authorization readiness); Lane B = **Frontier Discovery** (orthogonal source/PIT feasibility and cheap falsification). The two Windows slots are isolated by candidate/trial identity, branches/workflows and output/provenance paths. Cross-lane findings cannot retroactively alter a frozen trial.
+- Two physical research slots are capacity only: they **never** create performance authorization. A performance run remains individually fail-closed until an exact current formal authorization exists.
 - Continuous QA is scheduled every 6 hours on GitHub-hosted Windows and uses only the bounded `repo_qa` lane; it consumes no self-hosted Windows research slot.
 - The deterministic frontier loop runs every 10 minutes on free GitHub-hosted Ubuntu; its three 10-step packs cover all 30 frontier-worker steps.
 - Windows Self-Hosted capacity is always routable for bounded local reproduction, data QA, local-AI and hardware-dependent work; two physical slots are intended to run in parallel.
