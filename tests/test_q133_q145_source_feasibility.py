@@ -48,3 +48,11 @@ def test_source_feasibility_registers_q166_q170_wave():
     )
     assert data["status"] == "DESIGN_INVENTORY_ONLY"
     assert len(data["candidates"]) == 5
+
+
+def test_source_feasibility_registers_q171_q178_wave():
+    data = json.loads(
+        (ROOT / "research/frontier/q171_q178_candidate_wave_2026_10_03.json").read_text(encoding="utf-8")
+    )
+    assert data["status"] == "DESIGN_INVENTORY_ONLY"
+    assert len(data["candidates"]) == 8
