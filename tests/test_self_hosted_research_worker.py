@@ -283,6 +283,8 @@ def test_s10_diagnostics_do_not_compete_for_parallel_phone_capacity():
     ).read_text(encoding="utf-8")
     assert 'workflow_dispatch: {}' in throughput
     assert 'cron: "30 2 * * *"' not in throughput
+    assert 'cron: "45 3 * * *"' not in runtime
+    assert "workflow_dispatch:" in runtime
     assert 'max-parallel: 1' in runtime
     assert "slot: [a]" in runtime
     assert 'cron: "45 3 * * *"' in runtime
