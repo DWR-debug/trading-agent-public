@@ -21,6 +21,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from html import unescape
+from datetime import date
 
 SYMBOLS = ("SPGI", "NDAQ", "AMP", "RJF", "WMB", "VLO", "DVN", "EMN")
 FORMS = ("SC 13D", "SC 13G", "SC 13D/A", "SC 13G/A")
@@ -89,15 +90,30 @@ def normalize_cik(value: str) -> str:
         raise ValueError(f"INVALID_CIK:{value!r}")
     return digits.zfill(10)
 
+def plain_text(text: str) -> str:
+    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", unescape(text))).strip()
+
 def extract_labeled_cik(text: str, label: str) -> str | None:
-    compact = re.sub(r"\s+", " ", unescape(text))
+    compact = plain_text(text)
     match = re.search(rf"\({re.escape(label)}\)\s*CIK:\s*0*(\d+)", compact, re.IGNORECASE)
     return match.group(1).zfill(10) if match else None
 
 def extract_accepted(text: str) -> str | None:
-    compact = re.sub(r"\s+", " ", unescape(text))
+    compact = plain_text(text)
     match = re.search(r"Accepted\s+([0-9]{4}-[0-9]{2}-[0-9]{2}\s+[0-9]{2}:[0-9]{2}:[0-9]{2})", compact, re.IGNORECASE)
     return match.group(1) if match else None
+
+def validate_page_dates(rows: list[dict[str, str]]) -> None:
+    start = date.fromisoformat(f"{START[:4]}-{START[4:6]}-{START[6:8]}")
+    end = date.fromisoformat(f"{END[:4]}-{END[4:6]}-{END[6:8]}")
+    for row in rows:
+        raw = row.get("filing_date", "")
+        try:
+            filing_date = date.fromisoformat(raw)
+        except ValueError as exc:
+            raise RuntimeError(f"INVALID_FILING_DATE:{raw!r}") from exc
+        if not start <= filing_date <= end:
+            raise RuntimeError(f"SEC_BROWSE_DATE_FILTER_MISMATCH:{raw}:expected={START}..{END}")
 
 def deterministic_sample(rows: list[dict[str, str]]) -> list[dict[str, str]]:
     if not rows:
@@ -158,9 +174,11 @@ def run(output: Path) -> dict[str, object]:
                 if status != 200:
                     raise RuntimeError(f"SEC_BROWSE_HTTP_{status}:{symbol}:{form}:{start}")
                 page_rows = parse_atom_entries(body)
+                validate_page_dates(page_rows)
                 page_records.append({
                     "start": start,
                     "count": len(page_rows),
+                    "source_url": url,
                     "source_sha256": sha256_bytes(body),
                 })
                 rows.extend(page_rows)
