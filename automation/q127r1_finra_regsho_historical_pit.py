@@ -26,6 +26,7 @@ URL_TEMPLATE = "https://cdn.finra.org/equity/regsho/daily/CNMSshvol{yyyymmdd}.tx
 DATES = ("2024-02-05", "2024-07-01", "2025-01-02", "2025-09-24")
 SYMBOLS = ("SPGI", "NDAQ", "AMP", "RJF", "WMB", "VLO", "DVN", "EMN")
 EXPECTED_HEADER = ("Date", "Symbol", "ShortVolume", "ShortExemptVolume", "TotalVolume", "Market")
+MARKET_CODES = frozenset({"N", "Q", "B", "D", "O"})
 UA = "trading-agent-public/Q127R1-finra-regsho-historical-pit/1"
 
 def sha256(data: bytes) -> str:
@@ -73,7 +74,12 @@ def parse_file(body: bytes) -> tuple[tuple[str, ...], dict[str, list[dict[str, s
         row = dict(zip(EXPECTED_HEADER, parts))
         if not row["Date"] or not row["Symbol"] or not row["Market"]:
             raise RuntimeError("FINRA_ROW_IDENTITY_MISSING")
-        if not row["Market"].isalpha() or len(row["Market"]) != 1:
+        market_codes = row["Market"].split(",")
+        if (
+            not market_codes
+            or any(code not in MARKET_CODES for code in market_codes)
+            or len(market_codes) != len(set(market_codes))
+        ):
             raise RuntimeError(f"FINRA_MARKET_INVALID:{row['Symbol']}:{row['Market']!r}")
         try:
             numeric = [
@@ -85,7 +91,11 @@ def parse_file(body: bytes) -> tuple[tuple[str, ...], dict[str, list[dict[str, s
         if not all(math.isfinite(value) and value >= 0 for value in numeric):
             raise RuntimeError(f"FINRA_NUMERIC_RANGE_ERROR:{row['Symbol']}")
 
-        key = (row["Symbol"], row["Market"])
+        # The consolidated file can encode multiple reporting facilities in one
+        # Market field (observed in the fixed historical sample). Preserve the raw
+        # field for provenance while normalizing the identity key to a facility set.
+        market_identity = ",".join(sorted(market_codes))
+        key = (row["Symbol"], market_identity)
         if key in seen_keys:
             raise RuntimeError(f"FINRA_DUPLICATE_SYMBOL_MARKET:{row['Symbol']}:{row['Market']}")
         seen_keys.add(key)
