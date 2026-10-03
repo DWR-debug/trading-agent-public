@@ -38,7 +38,7 @@ The report shows a large historical queue-time difference. It also shows that 79
 
 1. Hosted Linux is the default for deterministic computation.
 2. Hosted Windows is the default for Windows-specific QA.
-3. The two physical Windows runners remain a bounded specialist pool, not the default research substrate.
+3. The two physical Windows runners remain a bounded specialist pool, not the default research substrate; the permanent loop uses two independent bounded lanes when both slots are available.
 4. S10 and future Samsung phones are receipt-gated mobile workers. A device is not scientific authority.
 5. Free AI is used for adversarial design, QA and engineering only. Agreement between models is not evidence.
 6. Copilot Free remains reserved for high-value bounded engineering tasks: at most four sessions per month, at most 30 AI credits/session and one concurrent session.
