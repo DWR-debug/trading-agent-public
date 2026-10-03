@@ -271,6 +271,17 @@
         "performance_authorization_allowed": false,
         "preregistration_path": "research/preregistrations/q121r1_sec_reverse_issuer_coverage_2026_10_03.json",
         "state": "SOURCE_ROUTE_CORRECTION_ACTIVE"
+      },
+      {
+        "class": "finra_regsho_historical_source_pit_correction",
+        "code": "Q127-R1",
+        "design_document": "docs/research_design/Q127R1_FINRA_REGSHO_HISTORICAL_PIT_2026-10-03.md",
+        "issue_number": 964,
+        "note": "Historical FINRA Consolidated NMS source/PIT feasibility; publication upper bound is documented but exact first-publication time and immutable revision lineage are not claimed.",
+        "parent_code": "127",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q127r1_finra_regsho_historical_pit_2026_10_03.json",
+        "state": "SOURCE_PIT_FEASIBILITY_ACTIVE"
       }
     ],
     "active_trials": [
@@ -875,7 +886,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-03T16:27:47.631049+00:00",
+  "generated_at_utc": "2026-10-03T16:31:18.327298+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1280,44 +1291,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "GOV: register Q121-R1 workflow in lifecycle and integrity checks",
-        "sha": "26e9f45fb1f7c128656312cbe164d8f8ac86ddaf",
-        "timestamp": "2026-10-03T18:27:36+02:00"
+        "message": "RESEARCH: Q127-R1 FINRA Reg-SHO historical PIT feasibility",
+        "sha": "53cc3b76d20d09590a2284fc318e7ec6f4097a7f",
+        "timestamp": "2026-10-03T18:31:05+02:00"
       },
       {
-        "message": "TEST: track Q121-R1 workflow lifecycle registration",
-        "sha": "daa906590accf0d069d899fb08a3b95b83502a1d",
-        "timestamp": "2026-10-03T18:27:23+02:00"
+        "message": "TEST: track Q127-R1 workflow lifecycle registration",
+        "sha": "196761bb4a9ae094ceb2d026a2234bab6a235618",
+        "timestamp": "2026-10-03T18:30:47+02:00"
       },
       {
-        "message": "GOV: include Q121-R1 workflow in fail-closed integrity registry",
-        "sha": "bc7290585585433d7cfe984d50dc04972204cc87",
-        "timestamp": "2026-10-03T18:27:15+02:00"
+        "message": "GOV: include Q127-R1 workflow in fail-closed integrity registry",
+        "sha": "7abc1347b3f3ebf31fca109b5b0b60bf3274a33c",
+        "timestamp": "2026-10-03T18:30:42+02:00"
       },
       {
-        "message": "GOV: register Q121-R1 workflow in lifecycle registry",
-        "sha": "94d0ef8c1804dbf9d2a1de95c9e9151c0197e972",
-        "timestamp": "2026-10-03T18:27:11+02:00"
+        "message": "GOV: register Q127-R1 workflow in lifecycle registry",
+        "sha": "087f2956b67ee9fd717982a89c95cead454a365a",
+        "timestamp": "2026-10-03T18:30:37+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "65d2d8e53dcce869beeb9846b95bc992f1b3c761",
-        "timestamp": "2026-10-03T16:26:16Z"
+        "message": "GOV: register Q127-R1 FINRA historical PIT feasibility",
+        "sha": "24cbb8136d71126e17aaf70d8899b807a2c48774",
+        "timestamp": "2026-10-03T18:30:31+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b49a5fd80a9578a47f09c536b0070f3c033dc442",
-        "timestamp": "2026-10-03T16:26:15Z"
+        "message": "CI: add Q127-R1 FINRA Reg-SHO historical PIT probe",
+        "sha": "f89b750eb7cb850644d96be49403b8ded4324d5a",
+        "timestamp": "2026-10-03T18:30:26+02:00"
       },
       {
-        "message": "RESEARCH: Q121-R1 SEC reverse issuer coverage correction",
-        "sha": "d490d1febe9b8f63ecf6ffaaf593d37b697b5c87",
-        "timestamp": "2026-10-03T18:26:03+02:00"
+        "message": "TEST: add Q127-R1 FINRA Reg-SHO parser contract tests",
+        "sha": "e2d67c001ec49036988e0f4372b6ac4e79bdcb1f",
+        "timestamp": "2026-10-03T18:30:19+02:00"
       },
       {
-        "message": "CI: validate Q121-R1 on pull requests before merge",
-        "sha": "044674533348f348b91e76c5f3656767bf4b414d",
-        "timestamp": "2026-10-03T18:25:37+02:00"
+        "message": "RESEARCH: implement Q127-R1 FINRA Reg-SHO historical PIT probe",
+        "sha": "c58362873e39eb9a643a96a85c91a6472ec90207",
+        "timestamp": "2026-10-03T18:29:42+02:00"
       }
     ]
   },
@@ -1387,12 +1398,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "26e9f45fb1f7c128656312cbe164d8f8ac86ddaf",
+  "source_master_sha": "53cc3b76d20d09590a2284fc318e7ec6f4097a7f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37136928952"
+    "run_id": "37137143939"
   }
 }
