@@ -21,10 +21,17 @@ Diese beiden Dateien beschreiben ausschließlich den aktuellen operativen Zustan
 PROJECT_STATUS.md bleibt für historische Rekonstruktion erhalten und darf aktuelle SHA-, PR-,
 Runner- oder Queue-Angaben nicht überstimmen.
 
-Stand: 2026-10-02
+Stand: 2026-10-03
 
 Dieses Dokument ist der **verbindliche Einstiegspunkt für neue Chats**, die mit
 `trading agent` beginnen.
+
+
+### Dauerhafte Beschleunigungslogik
+
+Vor Beginn der ersten fachlichen Arbeit ist zusätzlich `research/governance/persistent_research_acceleration_contract.json` zu berücksichtigen. Die Beschleunigungslogik ist nicht chatabhängig: unabhängige Arbeit wird parallel auf freie Ressourcen verteilt, bereits laufende Arbeit wird nicht dupliziert und S10 wird bei gültiger Receipt, verifizierter Live-Verfügbarkeit und sinnvoller bounded Aufgabe opportunistisch eingesetzt. Nach relevanten Research-/Governance-Änderungen ist ein bounded S10-Utility-Review zulässig und vorgesehen.
+
+Die aktuellen zwei Windows-Self-Hosted-Lanes dürfen die vordefinierten Frontier-Preflights begrenzt parallel ausführen; Reproduktion und andere sequenzielle QA bleiben bewusst seriell. Ein zusätzliches Mobiltelefon ist derzeit keine Voraussetzung. Neue Samsung-Geräte werden nur als kontrollierter Kapazitätstest aktiviert, wenn ein messbarer unabhängiger Durchsatzgewinn zu erwarten ist.
 
 ## Regel für den Chat-Übergang
 
