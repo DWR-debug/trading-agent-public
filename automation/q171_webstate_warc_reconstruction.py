@@ -52,6 +52,26 @@ def parse_headers(blob: bytes) -> dict[str, str]:
     return out
 
 
+def header_value(headers: dict[str, str], name: str) -> str | None:
+    wanted = name.lower()
+    for key, value in headers.items():
+        if key.lower() == wanted:
+            return value
+    return None
+
+
+def parse_positive_content_length(headers: dict[str, str], name: str) -> int | None:
+    raw = header_value(headers, name)
+    if raw is None:
+        return None
+    try:
+        value = int(raw)
+    except ValueError as exc:
+        raise ValueError(f"INVALID_{name.upper().replace('-', '_')}") from exc
+    if value < 0:
+        raise ValueError(f"NEGATIVE_{name.upper().replace('-', '_')}")
+    return value
+
 def reconstruct(symbol: str, item: dict[str, object]) -> dict[str, object]:
     rows = item.get("capture_rows") or []
     if not rows:
@@ -110,30 +130,111 @@ def reconstruct(symbol: str, item: dict[str, object]) -> dict[str, object]:
             "error": str(exc)[:500],
         }
 
-    parts = record.split(b"\r\n\r\n", 2)
-    if len(parts) != 3:
+    first_boundary = record.find(b"\r\n\r\n")
+    if first_boundary < 0:
         return {
             "symbol": symbol,
             "status": "BLOCKED_WARC_SCHEMA",
             "compressed_sha256": compressed_digest,
             "record_sha256": sha256(record),
+            "reason": "missing WARC header terminator",
         }
 
-    warc_header_blob, http_header_blob, payload = parts
+    warc_header_blob = record[:first_boundary]
+    remainder = record[first_boundary + 4:]
     warc_headers = parse_headers(warc_header_blob)
+
+    try:
+        warc_content_length = parse_positive_content_length(warc_headers, "Content-Length")
+    except ValueError as exc:
+        return {
+            "symbol": symbol,
+            "status": "BLOCKED_WARC_SCHEMA",
+            "compressed_sha256": compressed_digest,
+            "record_sha256": sha256(record),
+            "reason": str(exc),
+        }
+
+    if warc_content_length is None or len(remainder) < warc_content_length:
+        return {
+            "symbol": symbol,
+            "status": "BLOCKED_WARC_SCHEMA",
+            "compressed_sha256": compressed_digest,
+            "record_sha256": sha256(record),
+            "warc_content_length": warc_content_length,
+            "available_record_block_bytes": len(remainder),
+            "reason": "WARC Content-Length does not delimit a complete record block",
+        }
+
+    warc_block = remainder[:warc_content_length]
+    warc_trailer = remainder[warc_content_length:]
+    if warc_trailer not in (b"", b"\r\n\r\n"):
+        return {
+            "symbol": symbol,
+            "status": "BLOCKED_WARC_SCHEMA",
+            "compressed_sha256": compressed_digest,
+            "record_sha256": sha256(record),
+            "warc_content_length": warc_content_length,
+            "warc_trailer_bytes": len(warc_trailer),
+            "reason": "unexpected bytes after WARC record block",
+        }
+
+    second_boundary = warc_block.find(b"\r\n\r\n")
+    if second_boundary < 0:
+        return {
+            "symbol": symbol,
+            "status": "BLOCKED_WARC_SCHEMA",
+            "compressed_sha256": compressed_digest,
+            "record_sha256": sha256(record),
+            "warc_content_length": warc_content_length,
+            "reason": "missing HTTP header terminator inside WARC record",
+        }
+
+    http_header_blob = warc_block[:second_boundary]
+    http_remainder = warc_block[second_boundary + 4:]
     http_headers = parse_headers(http_header_blob)
 
+    http_content_length = None
+    try:
+        http_content_length = parse_positive_content_length(http_headers, "Content-Length")
+    except ValueError as exc:
+        return {
+            "symbol": symbol,
+            "status": "BLOCKED_WARC_SCHEMA",
+            "compressed_sha256": compressed_digest,
+            "record_sha256": sha256(record),
+            "warc_content_length": warc_content_length,
+            "reason": str(exc),
+        }
+
+    if http_content_length is not None:
+        if len(http_remainder) < http_content_length:
+            return {
+                "symbol": symbol,
+                "status": "BLOCKED_WARC_SCHEMA",
+                "compressed_sha256": compressed_digest,
+                "record_sha256": sha256(record),
+                "warc_content_length": warc_content_length,
+                "http_content_length": http_content_length,
+                "available_http_body_bytes": len(http_remainder),
+                "reason": "HTTP Content-Length exceeds bytes inside WARC record block",
+            }
+        payload = http_remainder[:http_content_length]
+        http_trailer_bytes = http_remainder[http_content_length:]
+    else:
+        payload = http_remainder
+        http_trailer_bytes = b""
+
+    warc_payload_digest = header_value(warc_headers, "WARC-Payload-Digest")
     payload_digest = hashlib.sha1(payload).digest()
-    payload_digest_b32 = hashlib.sha1(payload).digest()
-    # Common Crawl's index digest uses the base32-encoded SHA-1 payload digest.
     import base64
-    digest_b32 = base64.b32encode(payload_digest_b32).decode("ascii").rstrip("=")
+    digest_b32 = base64.b32encode(payload_digest).decode("ascii").rstrip("=")
 
     expected_digest = str(row["digest"])
-    target = warc_headers.get("WARC-Target-URI")
-    warc_date = warc_headers.get("WARC-Date")
+    target = header_value(warc_headers, "WARC-Target-URI")
+    warc_date = header_value(warc_headers, "WARC-Date")
     indexed_timestamp = str(row["timestamp"])
-    http_status = str(http_header_blob.split(b"\r\n", 1)[0].decode("utf-8", errors="replace"))
+    http_status = http_header_blob.split(b"\r\n", 1)[0].decode("utf-8", errors="replace")
 
     checks = {
         "warc_version_present": record.startswith(b"WARC/"),
@@ -141,8 +242,16 @@ def reconstruct(symbol: str, item: dict[str, object]) -> dict[str, object]:
         "target_uri_present": bool(target),
         "http_status_line_present": http_status.startswith("HTTP/"),
         "payload_digest_matches_index": digest_b32 == expected_digest,
-        "target_matches_index_url": bool(target) and bool(row.get("indexed_url")) and str(row.get("indexed_url")) == target,
+        "warc_payload_digest_present": bool(warc_payload_digest),
+        "payload_digest_matches_warc_header": bool(warc_payload_digest)
+        and warc_payload_digest.split(":", 1)[-1] == digest_b32,
+        "target_matches_index_url": bool(target)
+        and bool(row.get("indexed_url"))
+        and str(row.get("indexed_url")) == target,
+        "http_content_length_boundary_exact": http_content_length is not None
+        and not http_trailer_bytes,
     }
+
 
     return {
         "symbol": symbol,
