@@ -26,6 +26,58 @@ def load(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _repo_relative(root: Path, value: object) -> Path | None:
+    if not isinstance(value, str) or not value or Path(value).is_absolute():
+        return None
+    candidate = (root / value).resolve()
+    try:
+        candidate.relative_to(root.resolve())
+    except ValueError:
+        return None
+    return candidate
+
+
+def _candidate_robustness_receipt(
+    *,
+    root: Path,
+    candidate_id: str,
+    candidate_gate: dict,
+) -> dict | None:
+    receipt_path_value = candidate_gate.get("receipt_path")
+    inventory_path_value = candidate_gate.get("candidate_inventory_path")
+    receipt_path = _repo_relative(root, receipt_path_value)
+    inventory_path = _repo_relative(root, inventory_path_value)
+    if receipt_path is None:
+        return None
+
+    # Prefer an immutable committed receipt when one exists.
+    if receipt_path.is_file():
+        receipt = load(receipt_path)
+    elif inventory_path is not None and inventory_path.is_file():
+        # Deterministic regeneration from the frozen inventory avoids depending
+        # on ephemeral self-hosted run artifacts.
+        receipt = compile_receipt([inventory_path], str(Path(receipt_path_value).as_posix()))
+    else:
+        return None
+
+    require_receipt_for_formal_phase(candidate_id, receipt)
+
+    expected_bundle_fingerprint = candidate_gate.get("bundle_fingerprint")
+    if isinstance(expected_bundle_fingerprint, str) and expected_bundle_fingerprint:
+        if receipt.get("bundle_fingerprint") != expected_bundle_fingerprint:
+            raise RuntimeError("UNIVERSAL_CANDIDATE_ROBUSTNESS_BUNDLE_FINGERPRINT_MISMATCH")
+
+    expected_candidate_fingerprint = candidate_gate.get("candidate_fingerprint")
+    if isinstance(expected_candidate_fingerprint, str) and expected_candidate_fingerprint:
+        item = next(
+            (x for x in receipt.get("candidates", []) if x.get("candidate_id") == candidate_id),
+            None,
+        )
+        if not isinstance(item, dict) or item.get("candidate_fingerprint") != expected_candidate_fingerprint:
+            raise RuntimeError("UNIVERSAL_CANDIDATE_ROBUSTNESS_CANDIDATE_FINGERPRINT_MISMATCH")
+    return receipt
+
+
 def validate(root: Path = ROOT) -> dict:
     root = root.resolve()
     policy_path = root / "research" / "governance" / "critical_research_quality_control.json"
@@ -54,62 +106,21 @@ def validate(root: Path = ROOT) -> dict:
         else:
             receipt_path_value = candidate_gate.get("receipt_path")
             receipt_sha = candidate_gate.get("receipt_sha256")
-            inventory_path_value = candidate_gate.get("candidate_inventory_path")
-            expected_bundle_fingerprint = candidate_gate.get("bundle_fingerprint")
-            expected_candidate_fingerprint = candidate_gate.get("candidate_fingerprint")
-            if not isinstance(receipt_path_value, str) or not receipt_path_value:
-                violations.append(f"{entry.get('code')}: candidate robustness receipt path missing")
-            else:
-                receipt_path = root / receipt_path_value
-                candidate_receipt = None
-
-                # Prefer an immutable committed receipt when one exists.
-                if receipt_path.is_file():
-                    if isinstance(receipt_sha, str) and receipt_sha:
-                        actual_sha = __import__("hashlib").sha256(receipt_path.read_bytes()).hexdigest()
-                        if actual_sha != receipt_sha:
-                            violations.append(f"{entry.get('code')}: candidate robustness receipt sha256 mismatch")
-                    try:
-                        candidate_receipt = load(receipt_path)
-                    except Exception as exc:
-                        violations.append(f"{entry.get('code')}: candidate robustness receipt unreadable: {exc}")
-
-                # Otherwise rebuild the receipt deterministically from the frozen
-                # candidate inventory. This makes the gate durable without
-                # requiring generated run artifacts to be committed.
-                if candidate_receipt is None and isinstance(inventory_path_value, str) and inventory_path_value:
-                    inventory_path = root / inventory_path_value
-                    if not inventory_path.is_file():
-                        violations.append(f"{entry.get('code')}: candidate robustness inventory missing")
-                    else:
-                        try:
-                            candidate_receipt = compile_receipt(
-                                [inventory_path],
-                                receipt_path_value,
-                            )
-                        except Exception as exc:
-                            violations.append(f"{entry.get('code')}: candidate robustness receipt rebuild failed: {exc}")
-
-                if candidate_receipt is None:
-                    violations.append(
-                        f"{entry.get('code')}: candidate robustness receipt unavailable and no deterministic rebuild contract"
-                    )
-                else:
-                    if isinstance(expected_bundle_fingerprint, str) and expected_bundle_fingerprint:
-                        if candidate_receipt.get("bundle_fingerprint") != expected_bundle_fingerprint:
-                            violations.append(f"{entry.get('code')}: candidate robustness bundle fingerprint mismatch")
-                    if isinstance(expected_candidate_fingerprint, str) and expected_candidate_fingerprint:
-                        item = next(
-                            (x for x in candidate_receipt.get("candidates", [])
-                             if x.get("candidate_id") == candidate_id),
-                            None,
-                        )
-                        if not isinstance(item, dict) or item.get("candidate_fingerprint") != expected_candidate_fingerprint:
-                            violations.append(f"{entry.get('code')}: candidate robustness candidate fingerprint mismatch")
-                    try:
-                        require_receipt_for_formal_phase(candidate_id, candidate_receipt)
-                    except Exception as exc:
-                        violations.append(f"{entry.get('code')}: universal candidate robustness gate failed: {exc}")
+            try:
+                receipt_path = _repo_relative(root, receipt_path_value)
+                if receipt_path is None:
+                    raise RuntimeError("candidate robustness receipt path must be repo-relative")
+                if receipt_path.is_file() and isinstance(receipt_sha, str) and receipt_sha:
+                    actual_sha = __import__("hashlib").sha256(receipt_path.read_bytes()).hexdigest()
+                    if actual_sha != receipt_sha:
+                        raise RuntimeError("candidate robustness receipt sha256 mismatch")
+                _candidate_robustness_receipt(
+                    root=root,
+                    candidate_id=candidate_id,
+                    candidate_gate=candidate_gate,
+                )
+            except Exception as exc:
+                violations.append(f"{entry.get('code')}: universal candidate robustness gate failed: {exc}")
 
         robustness = prereg.get("robustness_contract")
         if not isinstance(robustness, dict):
