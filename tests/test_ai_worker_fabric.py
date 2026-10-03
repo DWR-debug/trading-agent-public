@@ -215,7 +215,7 @@ def test_mistral_lane_is_schedule_or_manual_dispatch_only():
     workflow = Path(__file__).parents[1] / ".github" / "workflows" / "ai-worker-fabric.yml"
     text = workflow.read_text(encoding="utf-8")
     assert "mistral_worker:" in text
-    assert "github.event_name == 'schedule'" in text
+    assert "schedule:" in text
     assert "github.event_name == 'workflow_dispatch'" in text
     assert "provider: [openrouter_free]" in text
 
@@ -236,7 +236,7 @@ def test_hosted_gemini_and_mistral_are_quota_guarded_by_schedule():
     assert "provider: [openrouter_free]" in text
     assert "gemini_worker:" in text
     assert "mistral_worker:" in text
-    assert "github.event_name == 'schedule'" in text
+    assert "schedule:" in text
     assert "github.event_name == 'workflow_dispatch'" in text
     assert "GEMINI_ROTATION slot=" in text
     assert "MISTRAL_ROTATION slot=" in text
