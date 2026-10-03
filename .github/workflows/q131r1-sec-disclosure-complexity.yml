@@ -38,6 +38,8 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check pytest
       - name: Contract tests
         run: python -m pytest -q tests/test_q131r1_sec_disclosure_complexity.py
       - name: Run Q131-R1 source/PIT feasibility
