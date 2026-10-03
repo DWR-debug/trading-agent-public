@@ -824,7 +824,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T14:23:45.116620+00:00",
+  "generated_at_utc": "2026-10-03T14:28:36.846309+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1226,47 +1226,56 @@
     ],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "ops/q133-q170-pit-receipt-persistence-r1-20261003",
+        "number": 942,
+        "title": "OPS: persist Q133-Q170 PIT material receipt",
+        "updatedAt": "2026-10-03T14:28:01Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/942"
+      }
+    ],
     "recent_commits": [
       {
-        "message": "Merge pull request #939 from DWR-debug/research/q147-q148-eia-clock-contract-r3-20261003",
-        "sha": "059c293fe99e2dccd1ee44e579ea3ed86fc240f4",
-        "timestamp": "2026-10-03T16:23:33+02:00"
+        "message": "Merge pull request #941 from DWR-debug/fix/q171-warc-persist-publisher-r2-20261003",
+        "sha": "fd5df3cfad48411e265cc58ef4ce1c52d264f699",
+        "timestamp": "2026-10-03T16:28:32+02:00"
+      },
+      {
+        "message": "Merge pull request #940 from DWR-debug/ops/h06-p2-trigger-path-hardening-20261003",
+        "sha": "8dfdde24ca6f54f65ec486f5f792058897ab726c",
+        "timestamp": "2026-10-03T16:28:25+02:00"
+      },
+      {
+        "message": "TEST: guard Q171 contents-publisher persistence path",
+        "sha": "5a14495a8756db6c67f046f60c77b498543b8df2",
+        "timestamp": "2026-10-03T16:26:39+02:00"
+      },
+      {
+        "message": "FIX: publish Q171 material receipt via GitHub Contents API",
+        "sha": "ab076e2149d67cc3fd30300bca7bc61e19b545e6",
+        "timestamp": "2026-10-03T16:26:29+02:00"
+      },
+      {
+        "message": "TEST: guard H06-P2 historical trigger boundary",
+        "sha": "df966d5f7dea21b5fadb6e86acae65db417dcc27",
+        "timestamp": "2026-10-03T16:25:06+02:00"
+      },
+      {
+        "message": "OPS: remove H06-P2 registry push trigger",
+        "sha": "1418b9a8a4180ed095eba36775dda1cbc1bf85ec",
+        "timestamp": "2026-10-03T16:24:58+02:00"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "a704650a2593d022ad28cd783a092bd225ac956c",
-        "timestamp": "2026-10-03T14:22:35Z"
+        "sha": "6d0d8391b21ccba72c3365b05797e3559893c300",
+        "timestamp": "2026-10-03T14:23:47Z"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "205895b773c40f51bb586ff7002746b076c608ec",
-        "timestamp": "2026-10-03T14:22:33Z"
-      },
-      {
-        "message": "Merge pull request #938 from DWR-debug/fix/q171-warc-diagnostic-persistence-r1-20261003",
-        "sha": "23c999215b96913486b76806faff6fa15be515b6",
-        "timestamp": "2026-10-03T16:22:17+02:00"
-      },
-      {
-        "message": "GOVERNANCE: register Q147 Q148 EIA PIT contract R3",
-        "sha": "e2a5853bc2aac2420c8913b8b7fa6c79fe26a3a2",
-        "timestamp": "2026-10-03T16:21:37+02:00"
-      },
-      {
-        "message": "RESEARCH: carry Q147 Q148 EIA PIT clock contract R3",
-        "sha": "5abaa928acdb8862b6b22440afd3b596258c2b46",
-        "timestamp": "2026-10-03T16:21:27+02:00"
-      },
-      {
-        "message": "RESEARCH: carry Q147 Q148 EIA PIT clock contract R3",
-        "sha": "ebb6fbf8a3913a16cfce4f0819ff54a3c36819f5",
-        "timestamp": "2026-10-03T16:21:24+02:00"
-      },
-      {
-        "message": "RESEARCH: carry Q147 Q148 EIA PIT clock contract R3",
-        "sha": "7c0760baaba4c4b4a3f00afc8fac0fead4e73601",
-        "timestamp": "2026-10-03T16:21:20+02:00"
+        "sha": "7581360dd6dbd9ad40ee755c77dab809124e312b",
+        "timestamp": "2026-10-03T14:23:45Z"
       }
     ]
   },
@@ -1336,12 +1345,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "059c293fe99e2dccd1ee44e579ea3ed86fc240f4",
+  "source_master_sha": "fd5df3cfad48411e265cc58ef4ce1c52d264f699",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37129428876"
+    "run_id": "37129711106"
   }
 }
