@@ -25,11 +25,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 17.125,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 101.394,
+  "stdout": "**Q102/Q103 REGIME-STATE DESIGN — WORKER HANDOFF**\n\n**1. Observed Common-Mode Regime Patterns (Q102)**\n- The retrospective atlas (`automation/q102_regime_negative_evidence.py`) consumes a frozen diagnostic JSON (`research/evidence/q090_q089_failure_diagnosis_result.json`). For each arm‑regime cell it records `mean_daily_return`, `day_count`, `negative_day_fraction`. A majority‑vote consensus direction is then assigned per regime: `positive`, `negative`, or `mixed_or_flat`.\n- Tested common‑mode directions: `DOWNTREND_HIGHVOL` → `positive`; `UPTREND_LOWVOL` → `negative`. Both assertions are deterministic (fingerprint‑verified) and require **no new market data, backtest, or candidate selection**.\n- **Stress‑test concern:** The direction is a majority vote across the arms present in the frozen diagnostic. If arm set is small or correlated, the consensus may reflect selection bias rather than a regime‑wide property. The sign of `mean_daily_return` is also agnostic to whether decay is signal‑driven, microstructure, or liquidation‑driven.\n\n**2. RCCSM State Descriptor Alignment**\n- `automation/rccsm_state.py` defines four lagged, feasibility‑only descriptors at each decision index `i`: `trend_coherence`, `breadth`, `dispersion_percentile`, `shock_density`. Every descriptor uses data at or before `i`; no future labels, P&L, or holdout outcomes are accepted.\n- `automation/rccsm_synthetic.py` maps four synthetic state archetypes (",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1791022028-nc6STpssLUhcQEzx0KgR",
+  "usage": {
+    "prompt_tokens": 5369,
+    "completion_tokens": 3200,
+    "total_tokens": 8569,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3054,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
