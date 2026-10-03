@@ -615,68 +615,9 @@
       "pr": 232,
       "status": "MERGED"
     },
-    "hosted_deterministic_frontier": {
-      "cadence": "*/10 * * * *",
-      "formal_evidence_allowed": false,
-      "purpose": "deterministic frontier QA/research workpack rotation without consuming scarce Windows capacity",
-      "runner": "ubuntu-24.04",
-      "workflow": ".github/workflows/hosted-deterministic-frontier.yml",
-      "workpack_rotation": "three equal 10-step packs cover all 30 autonomous_frontier_qa steps"
-    },
-    "paper_forward": {
-      "components": [
-        "closed-candle Binance market feed",
-        "persistent autonomous update loop",
-        "schema-v2 per-candle MTM ledger",
-        "paper-only safety guard",
-        "persistent fingerprint integrity checks"
-      ],
-      "merge_commit": "a1536a2531ff8341b2ab25a8cdd0012a22e3e3ba",
-      "pr": 352,
-      "status": "MERGED"
-    },
-    "research_os": {
-      "agent_output_is_scientific_evidence": false,
-      "layers": [
-        "source_fabric",
-        "evidence_bus",
-        "research_compiler",
-        "agent_mesh",
-        "sandbox_execution_boundary",
-        "decision_state"
-      ],
-      "performance_authorization_from_os": false,
-      "source_registry": "research/governance/research_os_source_registry_2026_09_30.json",
-      "version": "ROS-0.1"
-    },
-    "s10_phone": {
-      "acceptance_receipt_sha256": "2e40b9d37bf0fbd22bd752fffdaceb0f7ad955e7df1070d0793acbe77c77796d",
-      "artifact_id": "11271691984",
-      "candidate_ranking": false,
-      "candidate_selection": false,
-      "current_online": null,
-      "current_online_verification": "NOT_PERFORMED",
-      "eligibility_basis": "fresh_successful_utility_receipt",
-      "eligible": true,
-      "performance_authorization": false,
-      "presence_signal": "fresh_successful_s10_run",
-      "presence_signal_fresh": true,
-      "promotion": false,
-      "receipt_eligible": false,
-      "receipt_status": "S10_UTILITY_ACCEPTED",
-      "scientific_evidence": false,
-      "source_commit": "955d96046183a415444cdef05db7dfa6940948dc",
-      "status": "S10_UTILITY_ACCEPTED",
-      "workflow_run_id": "37115265584"
-    },
-    "scientific_compute": {
-      "canonical_path": "GitHub-hosted deterministic workflows",
-      "self_hosted_output_formal_evidence": false
-    },
-    "self_hosted_qa": {
-      "architecture": "latest verified two-runner capacity receipt",
-      "cadence": "15 * * * *",
-      "label": "trading-agent-research",
+    "continuous_qa": {
+      "architecture": "single bounded hosted QA lane",
+      "cadence": "15 */6 * * *",
       "last_recorded_verified_baseline": {
         "artifact_id": 10911971419,
         "artifact_sha256": "sha256:b32f2cffdff27091187d7f7f7ac6759c23b2e141081f6d9c9143e1c790d73da9",
@@ -688,6 +629,10 @@
         "warnings": 2,
         "workflow_run_id": 36259124979
       },
+      "matrix_lanes": [
+        "repo_qa"
+      ],
+      "runner": "GitHub-hosted windows-latest",
       "runner_capacity_last_verified": {
         "label": "trading-agent-research",
         "note": "This is a timestamped verification receipt, not a claim that the runners remain online after shutdown or logout.",
@@ -719,10 +664,99 @@
         "source_workflow_run_id": 36466580427,
         "verification": "two concurrent self-hosted probe jobs were assigned to distinct Windows/X64 runners",
         "verified_utc": "2026-09-28T19:07:05Z"
+      },
+      "self_hosted_slots_consumed": 0
+    },
+    "hosted_deterministic_frontier": {
+      "cadence": "*/10 * * * *",
+      "formal_evidence_allowed": false,
+      "purpose": "deterministic frontier QA/research workpack rotation without consuming scarce Windows capacity",
+      "runner": "ubuntu-24.04",
+      "workflow": ".github/workflows/hosted-deterministic-frontier.yml",
+      "workpack_rotation": "three equal 10-step packs cover all 30 autonomous_frontier_qa steps"
+    },
+    "paper_forward": {
+      "components": [
+        "closed-candle Binance market feed",
+        "persistent autonomous update loop",
+        "schema-v2 per-candle MTM ledger",
+        "paper-only safety guard",
+        "persistent fingerprint integrity checks"
+      ],
+      "merge_commit": "a1536a2531ff8341b2ab25a8cdd0012a22e3e3ba",
+      "pr": 352,
+      "status": "MERGED"
+    },
+    "research_continuity": {
+      "bounded_agent_queue": {
+        "cadence": "15 */2 * * *",
+        "paid_fallback_allowed": false
+      },
+      "continuous_qa": {
+        "cadence": "15 */6 * * *",
+        "runner": "GitHub-hosted windows-latest",
+        "self_hosted_slots_consumed": 0
+      },
+      "free_ai_worker_fabric": {
+        "authenticated_providers_only": true,
+        "cadence": "0 */6 * * *"
+      },
+      "hosted_research_failover": {
+        "cadence": "*/30 * * * *",
+        "mode": "fallback_only_when_self_hosted_heartbeat_stale"
+      },
+      "permanent_self_hosted_loop": {
+        "cadence": "*/30 * * * *",
+        "parallel_lanes": 2
+      },
+      "principle": "idle runners are capacity, not a defect; the scheduler should keep meaningful work flowing without duplicate or artificial jobs",
+      "s10_phone": {
+        "cadence": "0 */6 * * *",
+        "event_driven": true,
+        "formal_evidence_allowed": false,
+        "receipt_gated": true
       }
+    },
+    "research_os": {
+      "agent_output_is_scientific_evidence": false,
+      "layers": [
+        "source_fabric",
+        "evidence_bus",
+        "research_compiler",
+        "agent_mesh",
+        "sandbox_execution_boundary",
+        "decision_state"
+      ],
+      "performance_authorization_from_os": false,
+      "source_registry": "research/governance/research_os_source_registry_2026_09_30.json",
+      "version": "ROS-0.1"
+    },
+    "s10_phone": {
+      "acceptance_receipt_sha256": "2e40b9d37bf0fbd22bd752fffdaceb0f7ad955e7df1070d0793acbe77c77796d",
+      "artifact_id": "11272312245",
+      "candidate_ranking": false,
+      "candidate_selection": false,
+      "current_online": null,
+      "current_online_verification": "NOT_PERFORMED",
+      "eligibility_basis": "fresh_successful_utility_receipt",
+      "eligible": true,
+      "performance_authorization": false,
+      "presence_signal": "fresh_successful_s10_run",
+      "presence_signal_fresh": true,
+      "promotion": false,
+      "receipt_eligible": false,
+      "receipt_status": "S10_UTILITY_ACCEPTED",
+      "scientific_evidence": false,
+      "source_commit": "66de5bf73ee31bdf1d3657beae1c3e0874318814",
+      "status": "S10_UTILITY_ACCEPTED",
+      "workflow_run_id": "37116424614"
+    },
+    "scientific_compute": {
+      "canonical_path": "GitHub-hosted deterministic workflows",
+      "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T10:47:38.611506+00:00",
+  "generated_at_utc": "2026-10-03T11:05:00.547535+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -914,56 +948,47 @@
     ],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "ops/current-status-heartbeat-and-qa-truth-20261003-r2",
-        "number": 908,
-        "title": "OPS: keep canonical status fresh and reflect permanent research lanes",
-        "updatedAt": "2026-10-03T09:35:08Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/908"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c6dddf0ca80ab1a95664b0a8ecf3ada00c1b81b4",
-        "timestamp": "2026-10-03T10:46:52Z"
+        "message": "OPS/RESEARCH: clean recurring load and add deep orthogonal frontier",
+        "sha": "5b0e9b3de9cf247a563f643e9fc88cafd3c8d601",
+        "timestamp": "2026-10-03T13:04:48+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "115f102a5bbd866d42674a062624426dc06f5665",
-        "timestamp": "2026-10-03T10:46:51Z"
+        "message": "TEST: enforce discovery-only frontier and workflow registry",
+        "sha": "e6b40e549398280e0321a94c2516a8a21408643f",
+        "timestamp": "2026-10-03T13:04:01+02:00"
       },
       {
-        "message": "OPS: record AI worker state",
-        "sha": "6614358ee9f2f91446dab798c72904655990f4e8",
-        "timestamp": "2026-10-03T10:46:50Z"
+        "message": "OPS: add machine-readable workflow lifecycle registry",
+        "sha": "769273d99eba3f5f008089e5521cc0af735b05a4",
+        "timestamp": "2026-10-03T13:03:59+02:00"
       },
       {
-        "message": "OPS: synchronize Windows cadence and active frontier focus",
-        "sha": "847765a31871a565ebc0cf5ef5672124ca82f158",
-        "timestamp": "2026-10-03T12:46:47+02:00"
+        "message": "OPS: define private repository vault role",
+        "sha": "c66e187b8583a55a4772210b576ba2afa76365fd",
+        "timestamp": "2026-10-03T13:03:06+02:00"
       },
       {
-        "message": "OPS: record AI worker state",
-        "sha": "a554e36df53b04e6ed1ef14e6a2a7190baf78e3f",
-        "timestamp": "2026-10-03T10:46:46Z"
+        "message": "OPS: add conservative workflow lifecycle policy",
+        "sha": "bac56a282dc819f37862a4b66eb368df2d418744",
+        "timestamp": "2026-10-03T13:03:04+02:00"
       },
       {
-        "message": "OPS: record AI worker state",
-        "sha": "e6ca8aa1869229ddfc02e4da3818aac3f213c5e2",
-        "timestamp": "2026-10-03T10:46:43Z"
+        "message": "OPS: register expanded public research sources",
+        "sha": "28da405f2e0178a4f5fba45ce2b2d5b1a006c30c",
+        "timestamp": "2026-10-03T13:03:02+02:00"
       },
       {
-        "message": "OPS: record AI worker state",
-        "sha": "ff364f12b5dd5846e1a7b31df56260ed0a269221",
-        "timestamp": "2026-10-03T10:46:40Z"
+        "message": "RESEARCH: register Q133-Q145 discovery inventory",
+        "sha": "5f2a17fc754207f57deb42edf4fbb5f926663aee",
+        "timestamp": "2026-10-03T13:03:00+02:00"
       },
       {
-        "message": "OPS: record AI worker state",
-        "sha": "858058f6bede958772a9b59e3ebfa0d155a5f7df",
-        "timestamp": "2026-10-03T10:46:39Z"
+        "message": "RESEARCH: add deep public-source orthogonal frontier",
+        "sha": "755410696bdefeef29cf4bde9688034e33bbee5d",
+        "timestamp": "2026-10-03T13:02:57+02:00"
       }
     ]
   },
@@ -1033,12 +1058,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c6dddf0ca80ab1a95664b0a8ecf3ada00c1b81b4",
+  "source_master_sha": "5b0e9b3de9cf247a563f643e9fc88cafd3c8d601",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37117525134"
+    "run_id": "37118495897"
   }
 }
