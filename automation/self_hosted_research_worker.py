@@ -330,9 +330,9 @@ def default_max_workers(lane: str) -> int:
 
 
 FRONTIER_WORKPACKS: tuple[tuple[int, ...], ...] = (
-    tuple(range(1, 10)),
-    tuple(range(10, 19)),
-    tuple(range(19, 30)),
+    tuple(range(1, 11)),
+    tuple(range(11, 21)),
+    tuple(range(21, 31)),
 )
 
 
