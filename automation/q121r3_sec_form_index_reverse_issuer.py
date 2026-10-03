@@ -87,7 +87,7 @@ def parse_index(body: bytes) -> list[dict[str, str]]:
         r"(?P<company>.*?)\s+"
         r"(?P<cik>\d{1,10})\s+"
         r"(?P<filed_date>\d{8}|\d{4}-\d{2}-\d{2})\s+"
-        r"(?P<filename>edgar/data/\S+)\\s*$",
+        r"(?P<filename>edgar/data/\S+)\s*$",
         re.IGNORECASE,
     )
 
