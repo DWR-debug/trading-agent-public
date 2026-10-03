@@ -224,7 +224,7 @@ def run(output: Path) -> dict[str, object]:
                 detail_url = sample["filing_href"]
                 if detail_url.startswith("http://"):
                     detail_url = "https://" + detail_url[len("http://"):]
-                header_url = re.sub(r"-index\\.(?:htm|html)$", "-index-headers.html", detail_url, flags=re.IGNORECASE)
+                header_url = re.sub(r"-index\.(?:htm|html)$", "-index-headers.html", detail_url, flags=re.IGNORECASE)
                 if header_url == detail_url:
                     header_url = detail_url.replace("-index.htm", "-index-headers.html").replace("-index.html", "-index-headers.html")
                 time.sleep(REQUEST_GAP_SECONDS)
@@ -251,7 +251,7 @@ def run(output: Path) -> dict[str, object]:
                     "accepted_datetime": accepted,
                     "source_url": header_url,
                     "status": "PASS" if ok else "FAIL",
-                    "detail_sha256": sha256_bytes(dbody),
+                    "header_sha256": sha256_bytes(dbody),
                 })
                 if not ok:
                     raise RuntimeError(
