@@ -93,11 +93,13 @@ def common_crawl_sample() -> dict[str, object]:
     range_url = "https://data.commoncrawl.org/" + str(first["filename"])
     range_headers = {"Range": f"bytes={offset}-{offset + length - 1}"}
     rstatus, record = fetch(range_url, range_headers)
-    if rstatus not in {200, 206}:
+    if rstatus != 206 or len(record) != length:
         return {
             "status": "BLOCKED_WARC_RANGE_FETCH",
             "index_sha256": digest(body),
             "warc_http_status": rstatus,
+            "warc_bytes": len(record),
+            "expected_warc_bytes": length,
         }
     try:
         decompressed = gzip.decompress(record)
