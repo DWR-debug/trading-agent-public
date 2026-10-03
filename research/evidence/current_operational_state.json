@@ -919,7 +919,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-03T18:14:57.668448+00:00",
+  "generated_at_utc": "2026-10-03T18:16:35.520366+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1324,6 +1324,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "STATUS: surface verified Q121-R3/R4 outcomes in canonical sync",
+        "sha": "96788580cdd98b8b090c7cdf9858e84438abc4f3",
+        "timestamp": "2026-10-03T20:16:32+02:00"
+      },
+      {
+        "message": "STATUS: persist verified Q121-R3 and Q121-R4 source feasibility",
+        "sha": "fe01ed7c0efce3b06785e727f9b5a8e2ffae5c2f",
+        "timestamp": "2026-10-03T20:16:24+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5d9a9c8af8666a7ccea2b52cdd3bdf923f404cbc",
+        "timestamp": "2026-10-03T18:15:00Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c0480ed4da101df014f47690367aa62c06ffa926",
+        "timestamp": "2026-10-03T18:14:58Z"
+      },
+      {
         "message": "Merge pull request #981 from DWR-debug/research/q121r4-master-index-2026-10-03",
         "sha": "c26f1151bac5a66c1332fe21d3d1203f1af2e8f0",
         "timestamp": "2026-10-03T20:14:45+02:00"
@@ -1342,26 +1362,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "11b650ca728e59a50c5659785968bb6158de05b3",
         "timestamp": "2026-10-03T18:11:01Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "69cbbf9ef5ae61209471c1d965d38261580fbc36",
-        "timestamp": "2026-10-03T18:10:59Z"
-      },
-      {
-        "message": "Merge pull request #979 from DWR-debug/research/q121r3-form-index-2026-10-03",
-        "sha": "f18d09ce3b24243aee07fb478ac55d9fefa444ab",
-        "timestamp": "2026-10-03T20:10:47+02:00"
-      },
-      {
-        "message": "CLEANUP: remove temporary SEC identity diagnostics",
-        "sha": "5c32860bf3b9161d5c63c43fa9b686d20f8adc44",
-        "timestamp": "2026-10-03T20:09:24+02:00"
-      },
-      {
-        "message": "FIX: repair SEC gzip and section regex escaping",
-        "sha": "37699c015f252f35469eaa6d0d975efddad98f25",
-        "timestamp": "2026-10-03T20:08:28+02:00"
       }
     ]
   },
@@ -1393,7 +1393,7 @@
     "decision_basis_stage": null,
     "latest_formal_status": "performance_completed_no_arm_passed_all_13_gates",
     "latest_formal_trial": "T-2026-10-01-H06P2R3-PERFORMANCE-01",
-    "next_research_focus_recorded": "Verified 2026-10-03 Source/PIT outcomes: Q121-R1 issuer-oriented SEC browse route was falsified by its preregistered subject-issuer identity contract; Q121-R2 was therefore blocked without reconciliation; Q127-R1 historical FINRA Reg-SHO retrieval completed but revision lineage and same-day PIT safety remain unresolved; Q130-R1 historical Wikimedia attention retrieval completed but its publication/revision boundary remains unresolved; Q131-R1 produced no matching filings in its fixed preregistered window, so no complexity vector was inferred. Next work is an independently preregistered alternative Q121 source route plus candidate-specific PIT compilers for the active orthogonal frontier. No outcome above authorizes performance, holdout selection, tuning, ranking, promotion or live execution.",
+    "next_research_focus_recorded": "Verified 2026-10-03 Source/PIT outcomes: Q121-R1 issuer-oriented SEC browse route was falsified by its preregistered subject-issuer identity contract; Q121-R2 was therefore blocked without reconciliation; Q121-R3 completed the official SEC quarterly form-index route on the frozen window (7 quarters, 61,818 relevant form rows, 3 frozen controls); Q121-R4 independently completed the SEC quarterly master-index route on the same frozen window/control set (7 quarters, 61,818 relevant form rows, 3 frozen controls). The two routes establish source-route feasibility and controlled identity recovery only; same-day PIT safety, performance and full subject-issuer population reconstruction remain open. Q127-R1 historical FINRA Reg-SHO retrieval completed but revision lineage and same-day PIT safety remain unresolved; Q130-R1 historical Wikimedia attention retrieval completed but its publication/revision boundary remains unresolved; Q131-R1 produced no matching filings in its fixed preregistered window, so no complexity vector was inferred. Next work is dual-source Q121 reconciliation/PIT compilation before any performance consideration. No outcome above authorizes performance, holdout selection, tuning, ranking, promotion or live execution.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -1431,9 +1431,9 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c26f1151bac5a66c1332fe21d3d1203f1af2e8f0",
+  "source_master_sha": "96788580cdd98b8b090c7cdf9858e84438abc4f3",
   "source_pit_frontier_outcomes": {
-    "as_of_utc": "2026-10-03T17:10:39Z",
+    "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
     "generated_from_verified_workflow_runs": true,
     "global_scientific_boundary": {
@@ -1449,7 +1449,7 @@
       "threshold_search": false,
       "variant_search": false
     },
-    "master_commit": "6022816545f4a269d422754dff858cc319a50407",
+    "master_commit": "c26f1151bac5a66c1332fe21d3d1203f1af2e8f0",
     "outcomes": [
       {
         "code": "Q121-R1",
@@ -1504,6 +1504,32 @@
         "scientific_interpretation": "The preregistered SEC filing window (2025-09-22 through 2025-09-24) yielded no matching filings across the frozen issuer/form set, so no disclosure-complexity vector was inferred or tuned.",
         "workflow_conclusion": "success",
         "workflow_run_id": 37139514732
+      },
+      {
+        "code": "Q121-R3",
+        "observed": {
+          "filtered_form_rows": 61818,
+          "frozen_controls_checked": 3,
+          "quarters_checked": 7
+        },
+        "receipt_fingerprint": "a18abdffe2fde48dc4084d420f0a8d5c6ade92727baa23dcecaad481e9452dc1",
+        "research_status": "Q121R3_FORM_INDEX_ROUTE_FEASIBILITY_COMPLETED",
+        "scientific_interpretation": "The official quarterly SEC form index route completed on the frozen 2024-02-05 through 2025-09-24 window. Subject/filer identity was resolved from archived filing header information without compiling a full subject-issuer population. Same-day PIT safety and performance were not established.",
+        "workflow_conclusion": "success",
+        "workflow_run_id": 37143148365
+      },
+      {
+        "code": "Q121-R4",
+        "observed": {
+          "filtered_form_rows": 61818,
+          "frozen_controls_checked": 3,
+          "quarters_checked": 7
+        },
+        "receipt_fingerprint": "3f5616d6ddc18c0f39a10316fe3cbf69e98be2911741552f8a70d133ba94c076",
+        "research_status": "Q121R4_MASTER_INDEX_ROUTE_FEASIBILITY_COMPLETED",
+        "scientific_interpretation": "The independent SEC quarterly master index route completed on the same frozen window and control set. Identity was resolved from archived filing header information with duplicate-accession handling. Same-day PIT safety and performance were not established.",
+        "workflow_conclusion": "success",
+        "workflow_run_id": 37143398983
       }
     ],
     "safety": {
@@ -1519,6 +1545,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37143463104"
+    "run_id": "37143567709"
   }
 }
