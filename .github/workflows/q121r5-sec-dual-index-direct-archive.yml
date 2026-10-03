@@ -37,7 +37,8 @@ jobs:
           set "Q121R5_REPO=%REPO_SRC%"
           echo Q121R5_REPO=%REPO_SRC%
           echo Q121R5_SHA=%GITHUB_SHA%
-          endlocal & set "Q121R5_REPO=%REPO_SRC%"
+          echo Q121R5_REPO=%REPO_SRC%>>"%GITHUB_ENV%"
+          endlocal
 
       - name: Locate Python
         shell: cmd
