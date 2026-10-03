@@ -29,3 +29,8 @@ def test_research_os_scheduler_module_is_syntactically_parseable():
         Path(__file__).parents[1] / "automation" / "research_os_scheduler.py"
     ).read_text(encoding="utf-8")
     ast.parse(source)
+
+
+def test_scheduler_has_no_literal_newline_in_plan_dictionary_separator():
+    text = (ROOT / "automation" / "research_os_scheduler.py").read_text(encoding="utf-8")
+    assert '},\\n    "resource_policy"' not in text
