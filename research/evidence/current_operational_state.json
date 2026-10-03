@@ -668,11 +668,11 @@
       "self_hosted_slots_consumed": 0
     },
     "deep_frontier_source_feasibility": {
+      "workflow": ".github/workflows/deep-frontier-source-feasibility.yml",
       "cadence": "17 */12 * * *",
-      "formal_evidence_allowed": false,
-      "purpose": "public/free source and PIT feasibility only",
       "runner": "ubuntu-24.04",
-      "workflow": ".github/workflows/deep-frontier-source-feasibility.yml"
+      "formal_evidence_allowed": false,
+      "purpose": "public/free source and PIT feasibility only"
     },
     "hosted_deterministic_frontier": {
       "cadence": "*/10 * * * *",
@@ -763,7 +763,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T11:07:33.713842+00:00",
+  "generated_at_utc": "2026-10-03T11:07:22Z",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -958,44 +958,24 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "RESEARCH: add hosted public-source feasibility lane for Q133-Q145",
         "sha": "5d1bdeaed2675c2c0237c0b7515cfb5e07084b49",
-        "timestamp": "2026-10-03T13:07:22+02:00"
+        "timestamp": "2026-10-03T11:07:22Z",
+        "message": "RESEARCH: add hosted public-source feasibility lane for Q133-Q145"
       },
       {
-        "message": "OPS: expose deep source feasibility in canonical status",
-        "sha": "59e9906bd7faf09e12be9034f233127edc8dd360",
-        "timestamp": "2026-10-03T13:07:07+02:00"
+        "sha": "5b0e9b3de9cf247a563f643e9fc88cafd3c8d601",
+        "timestamp": "2026-10-03T11:04:48Z",
+        "message": "OPS/RESEARCH: clean recurring load and add deep orthogonal frontier"
       },
       {
-        "message": "OPS: register deep frontier source feasibility lane",
-        "sha": "e1b24e2c2b392db60ad55da45b6382249e7c2a68",
-        "timestamp": "2026-10-03T13:07:04+02:00"
+        "sha": "4486d6afac0df007b27af411fd08e46869a889bb",
+        "timestamp": "2026-10-03T11:00:34Z",
+        "message": "OPS: synchronize S10 phone runtime status"
       },
       {
-        "message": "FIX: stabilize CFTC source probe marker",
-        "sha": "a0907e43788cf2f85c513d64de4fa370f6d08d34",
-        "timestamp": "2026-10-03T13:07:01+02:00"
-      },
-      {
-        "message": "TEST: enforce Q133-Q145 source feasibility boundaries",
-        "sha": "72245eda44a2f4e16be4005cd079964254f2d97d",
-        "timestamp": "2026-10-03T13:06:45+02:00"
-      },
-      {
-        "message": "OPS: schedule public source feasibility on hosted runner",
-        "sha": "de9a0738c42286be99076f930414ea3de3cc3667",
-        "timestamp": "2026-10-03T13:06:43+02:00"
-      },
-      {
-        "message": "RESEARCH: add deterministic Q133-Q145 source feasibility gate",
-        "sha": "5dc9ddb7974dc6d4dd5d5693527d316960fb3415",
-        "timestamp": "2026-10-03T13:06:41+02:00"
-      },
-      {
-        "message": "OPS: refresh machine operational status after cleanup merge",
-        "sha": "ed109fd5198d28b5b3e104a3e0f4703fe4c99f9b",
-        "timestamp": "2026-10-03T13:05:51+02:00"
+        "sha": "e38c18d7a9acb257bd5b1e29c51b8f322e7c6a2b",
+        "timestamp": "2026-10-03T11:00:18Z",
+        "message": "OPS: advance paper-forward MTM state"
       }
     ]
   },
@@ -1010,16 +990,16 @@
       "starts_utc": "2026-10-01T00:00:00Z"
     },
     "free_resources_only": true,
-    "hypothetical_reference_capital_eur": 2000.0,
-    "legacy_operational_canary_capital_eur": 500.0,
+    "hypothetical_reference_capital_eur": 2000,
+    "legacy_operational_canary_capital_eur": 500,
     "paid_agent_budget_usd": 0,
     "paid_api_budget_usd": 0
   },
   "safety": {
-    "AUTOMATIC_PROMOTION": false,
+    "PAPER_ONLY": true,
     "LIVE_TRADING_ENABLED": false,
     "ORDERS_ENABLED": false,
-    "PAPER_ONLY": true,
+    "AUTOMATIC_PROMOTION": false,
     "status": "SAFE"
   },
   "schema_version": "1.0",
