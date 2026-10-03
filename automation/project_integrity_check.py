@@ -35,6 +35,7 @@ ACTIVE_WORKFLOWS = {
     "coverage-candidate-search.yml",
     "current-status-sync.yml",
     "deep-frontier-source-feasibility.yml",
+    "q171-material-receipt-sync.yml",
     "q133-q170-pit-readiness.yml",
     "full-suite-verification.yml",
     "q129-options-source-feasibility.yml",
