@@ -763,7 +763,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T12:11:18.740884+00:00",
+  "generated_at_utc": "2026-10-03T12:32:59.083560+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -967,6 +967,31 @@
     ],
     "recent_commits": [
       {
+        "message": "RESEARCH: advance Q129 PIT and public-information frontier (#914)",
+        "sha": "4836fbeb9e3cdf8c39de817aeeff48db61cc47a8",
+        "timestamp": "2026-10-03T14:32:46+02:00"
+      },
+      {
+        "message": "OPS: retire redundant T052 push trigger",
+        "sha": "2842c12089623655e2b2d9fa437ec5910cceeca5",
+        "timestamp": "2026-10-03T14:12:48+02:00"
+      },
+      {
+        "message": "OPS: document receipt-checked frontier rotation",
+        "sha": "09cfb6ee85b7fbf6d355ab0df8ac6228f628ea6a",
+        "timestamp": "2026-10-03T14:11:24+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "aa6cef2dcd1b3c8a3c69fac6cf8c6ef4167c90f5",
+        "timestamp": "2026-10-03T12:11:20Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "1cfca40db82e23313aa695bae7965b8dc5cc1a5c",
+        "timestamp": "2026-10-03T12:11:19Z"
+      },
+      {
         "message": "OPS: increase deep frontier feasibility cadence to 6h",
         "sha": "ae85c118eb0e9ad8e0c3716bab86579055e7e387",
         "timestamp": "2026-10-03T14:11:07+02:00"
@@ -980,31 +1005,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "4d00bd56612114bdcad262ebca994f0a12da5836",
         "timestamp": "2026-10-03T11:51:33Z"
-      },
-      {
-        "message": "RESEARCH: register Q146-Q151 public-domain discovery wave",
-        "sha": "29ca4e73212ae84107ae384dac85a49ee757fdc9",
-        "timestamp": "2026-10-03T13:51:16+02:00"
-      },
-      {
-        "message": "RESEARCH: add public-domain Q146-Q151 frontier",
-        "sha": "361b496851bccf08ae744798621c5d3109523f50",
-        "timestamp": "2026-10-03T13:51:14+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "25acad9d63dd8efda2ff5a023bef3d745609948c",
-        "timestamp": "2026-10-03T11:49:19Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "15d0a70cdec7659c42fa0d77db54dad7cae41eea",
-        "timestamp": "2026-10-03T11:49:17Z"
-      },
-      {
-        "message": "FIX: correct Q129 source receipt shell variables",
-        "sha": "1b1fd356573fd404d2f7a2c51331eae97fa97fca",
-        "timestamp": "2026-10-03T13:49:05+02:00"
       }
     ]
   },
@@ -1074,12 +1074,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ae85c118eb0e9ad8e0c3716bab86579055e7e387",
+  "source_master_sha": "4836fbeb9e3cdf8c39de817aeeff48db61cc47a8",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37122048275"
+    "run_id": "37123220986"
   }
 }
