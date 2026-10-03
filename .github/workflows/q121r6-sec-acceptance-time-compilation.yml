@@ -49,6 +49,8 @@ jobs:
             if errorlevel 1 exit /b 1
           )
           "%PY_EXE%" --version || exit /b 1
+          "%PY_EXE%" -m pip install --disable-pip-version-check --no-cache-dir tzdata==2026.5 || exit /b 1
+          "%PY_EXE%" -c "from zoneinfo import ZoneInfo; print(ZoneInfo(\"America/New_York\"))" || exit /b 1
           if not exist "%GITHUB_WORKSPACE%\q121r6-prepared" mkdir "%GITHUB_WORKSPACE%\q121r6-prepared"
           "%PY_EXE%" -m automation.q121r6_sec_acceptance_time_compiler --prepare-population --output "%GITHUB_WORKSPACE%\q121r6-prepared\population.json"
           if errorlevel 1 exit /b 1
@@ -110,6 +112,8 @@ jobs:
             if errorlevel 1 exit /b 1
           )
           "%PY_EXE%" --version || exit /b 1
+          "%PY_EXE%" -m pip install --disable-pip-version-check --no-cache-dir tzdata==2026.5 || exit /b 1
+          "%PY_EXE%" -c "from zoneinfo import ZoneInfo; print(ZoneInfo(\"America/New_York\"))" || exit /b 1
           echo Q121R6_REPO=%REPO_SRC%>>"%GITHUB_ENV%"
           echo Q121R6_PY=%PY_EXE%>>"%GITHUB_ENV%"
           endlocal & set "Q121R6_REPO=%REPO_SRC%" & set "Q121R6_PY=%PY_EXE%"
@@ -168,6 +172,8 @@ jobs:
             if errorlevel 1 exit /b 1
           )
           "%PY_EXE%" --version || exit /b 1
+          "%PY_EXE%" -m pip install --disable-pip-version-check --no-cache-dir tzdata==2026.5 || exit /b 1
+          "%PY_EXE%" -c "from zoneinfo import ZoneInfo; print(ZoneInfo(\"America/New_York\"))" || exit /b 1
           echo Q121R6_REPO=%REPO_SRC%>>"%GITHUB_ENV%"
           echo Q121R6_PY=%PY_EXE%>>"%GITHUB_ENV%"
           endlocal & set "Q121R6_REPO=%REPO_SRC%" & set "Q121R6_PY=%PY_EXE%"
