@@ -919,7 +919,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-03T18:50:07.827105+00:00",
+  "generated_at_utc": "2026-10-03T18:51:38.996988+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1394,6 +1394,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: align Q121-R6 population anchor with Q121-R5",
+        "sha": "23dd5a98154d8e6c4019d8ac33e71f96ac3e3b59",
+        "timestamp": "2026-10-03T20:51:28+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "63622b269e77dd111dbc9830be02916d8e308543",
+        "timestamp": "2026-10-03T18:50:10Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "0f2bc864ba51f3952b2d6dbe2a88b853854b5c0a",
+        "timestamp": "2026-10-03T18:50:09Z"
+      },
+      {
         "message": "RESEARCH: harden Q121-R6 SEC fair-access cadence",
         "sha": "55a0778ea0c4267cd1cd301a524946d488dd5b36",
         "timestamp": "2026-10-03T20:49:53+02:00"
@@ -1417,21 +1432,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "2c16250742a71c3617fa72eff840a32dfd91649c",
         "timestamp": "2026-10-03T18:47:01Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "befb8f507ae5f486ee191c1c2fe9f1871dfc383e",
-        "timestamp": "2026-10-03T18:46:59Z"
-      },
-      {
-        "message": "RESEARCH: Q121-R6 exhaustive SEC acceptance-time compilation",
-        "sha": "febf2b28c20f479046cf4464e73579470cff918b",
-        "timestamp": "2026-10-03T20:46:45+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "cd4eb4a11310bc8229798432d82be220b87fdfba",
-        "timestamp": "2026-10-03T18:40:23Z"
       }
     ]
   },
@@ -1501,7 +1501,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "55a0778ea0c4267cd1cd301a524946d488dd5b36",
+  "source_master_sha": "23dd5a98154d8e6c4019d8ac33e71f96ac3e3b59",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -1615,6 +1615,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37145677104"
+    "run_id": "37145775247"
   }
 }
