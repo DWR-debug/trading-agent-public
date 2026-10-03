@@ -81,5 +81,38 @@
     "orders_enabled": false,
     "automatic_promotion": false,
     "paid_resources_allowed": false
+  },
+  "candidate_robustness_gate": {
+    "required_before_any_formal_phase": true,
+    "formal_phases": [
+      "PREREGISTRATION",
+      "SOURCE_FEASIBILITY",
+      "COVERAGE",
+      "PIT",
+      "PERFORMANCE"
+    ],
+    "gate_type": "STRUCTURAL_NON_PERFORMANCE",
+    "rule": "Every candidate entering any formal phase must carry a completed structural robustness receipt produced from the frozen candidate contract. The gate is descriptive/structural only and cannot use returns, holdouts, ranking or tuning.",
+    "required_dimensions": [
+      "construction_invariance",
+      "input_order_invariance",
+      "future_data_invariance",
+      "missingness_fail_closed",
+      "revision_amendment_invariance",
+      "identity_mapping_fail_closed",
+      "parameter_threshold_horizon_lock",
+      "source_reproducibility"
+    ],
+    "required_receipt_fields": [
+      "candidate_id",
+      "candidate_fingerprint",
+      "status",
+      "dimensions",
+      "research_only",
+      "no_post_hoc_tuning",
+      "formalization_allowed",
+      "artifact_path"
+    ],
+    "failure_mode": "FORMAL_PHASE_BLOCKED_UNTIL_CANDIDATE_ROBUSTNESS_RECEIPT"
   }
 }
