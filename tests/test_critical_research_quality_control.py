@@ -142,6 +142,7 @@ def test_future_quality_validator_rebuilds_candidate_gate_from_frozen_inventory(
     receipt = gate.compile_receipt(
         [inventory_path],
         "research/evidence/candidate_gate/X01.json",
+        root=root,
     )
     item = receipt["candidates"][0]
 
