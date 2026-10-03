@@ -714,7 +714,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-03T10:39:33.898045+00:00",
+  "generated_at_utc": "2026-10-03T10:39:46.290127+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -918,6 +918,21 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "165e903ee50a704989cc51f61dab5e95de989d4f",
+        "timestamp": "2026-10-03T10:39:36Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "124d6093604a8fd305535dba1c7c74edb706a8a1",
+        "timestamp": "2026-10-03T10:39:35Z"
+      },
+      {
+        "message": "OPS: avoid duplicate frontier priority execution",
+        "sha": "b566dfe1332f39391d68181d4eb8950e4ae92eb1",
+        "timestamp": "2026-10-03T12:39:34+02:00"
+      },
+      {
         "message": "OPS: move deterministic frontier from scarce Windows capacity to free hosted Linux",
         "sha": "8397401fa5014f5878513b9fa41e4c7eb6b83656",
         "timestamp": "2026-10-03T12:39:22+02:00"
@@ -941,21 +956,6 @@
         "message": "OPS: synchronize S10 phone runtime status",
         "sha": "f3a5b2f219653c9a4b6c8400c63dfa60326f3533",
         "timestamp": "2026-10-03T10:33:58Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "e9121706a97edd2a29a32ec08a552cba6ed9b5ea",
-        "timestamp": "2026-10-03T10:26:54Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "157832a767a85968cd306ddefe9dc801d06aa9f6",
-        "timestamp": "2026-10-03T10:26:42Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3051345b464fc0a927fcb224e86411fde6939f3a",
-        "timestamp": "2026-10-03T10:26:41Z"
       }
     ]
   },
@@ -1025,12 +1025,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8397401fa5014f5878513b9fa41e4c7eb6b83656",
+  "source_master_sha": "165e903ee50a704989cc51f61dab5e95de989d4f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37117133726"
+    "run_id": "37117144083"
   }
 }
