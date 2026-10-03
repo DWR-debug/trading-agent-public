@@ -41,3 +41,9 @@ def test_q171_retry_is_fixed_and_infra_blocked_is_distinct():
     assert "fetch_with_fixed_retries(endpoint, attempts=3)" in text
     assert '"infra_blocked"' in text
     assert '"status": "BLOCKED_INDEX_FETCH"' in text
+
+def test_q171_rate_limit_diagnostics_are_preserved():
+    text = (ROOT / "automation/q171_webstate_coverage.py").read_text(encoding="utf-8")
+    assert "REQUEST_GAP_SECONDS = 5" in text
+    assert "time.sleep(REQUEST_GAP_SECONDS)" in text
+    assert '"error_body_excerpt"' in text
