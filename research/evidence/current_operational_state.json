@@ -824,7 +824,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T15:20:11.350126+00:00",
+  "generated_at_utc": "2026-10-03T15:23:00.461299+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1229,6 +1229,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "Merge pull request #954 from DWR-debug/fix/q169-receipt-publish-argument-order-20261003",
+        "sha": "0040474c1e02b8098695bd3b551382fba1e465b3",
+        "timestamp": "2026-10-03T17:22:48+02:00"
+      },
+      {
+        "message": "FIX: correct Q169 publisher repo-path mapping",
+        "sha": "86612e0de86329d9277b08940546b180098a00a0",
+        "timestamp": "2026-10-03T17:21:23+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c8742debfa7cf199ac5a8de508ef882bce4da49e",
+        "timestamp": "2026-10-03T15:20:13Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a4531953068b3546d8bfb50b3ef5254cf49ae968",
+        "timestamp": "2026-10-03T15:20:12Z"
+      },
+      {
         "message": "Merge pull request #953 from DWR-debug/fix/q169-receipt-publish-source-20261003",
         "sha": "a0c8f807897d5ea88511753ce3e1a0f1962aeb92",
         "timestamp": "2026-10-03T17:19:59+02:00"
@@ -1247,26 +1267,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "9baffffbcd9b8573bc3776c50d279082e7697cfc",
         "timestamp": "2026-10-03T15:16:52Z"
-      },
-      {
-        "message": "Merge pull request #952 from DWR-debug/fix/q169-r3-semantic-marker-20261003",
-        "sha": "9355c3dc45960e3d77e4045f81844a2cee86eef4",
-        "timestamp": "2026-10-03T17:16:39+02:00"
-      },
-      {
-        "message": "OPS: align Q169 workflow with R3",
-        "sha": "89fca8c6365a34a1121731362b44531179fd3ccf",
-        "timestamp": "2026-10-03T17:15:07+02:00"
-      },
-      {
-        "message": "TEST: enforce Q169 stable semantic marker set",
-        "sha": "7e1e8c100289099ebb6bed4b9de6d589d64d28e4",
-        "timestamp": "2026-10-03T17:15:05+02:00"
-      },
-      {
-        "message": "GOV: register Q169 R3 contract",
-        "sha": "8d7e0021c044c89485ef1495b583468eb5910a7c",
-        "timestamp": "2026-10-03T17:14:58+02:00"
       }
     ]
   },
@@ -1336,12 +1336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a0c8f807897d5ea88511753ce3e1a0f1962aeb92",
+  "source_master_sha": "0040474c1e02b8098695bd3b551382fba1e465b3",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37132871608"
+    "run_id": "37133036971"
   }
 }
