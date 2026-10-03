@@ -763,7 +763,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T11:47:29.337750+00:00",
+  "generated_at_utc": "2026-10-03T11:49:16.667883+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -958,6 +958,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: correct Q129 source receipt shell variables",
+        "sha": "1b1fd356573fd404d2f7a2c51331eae97fa97fca",
+        "timestamp": "2026-10-03T13:49:05+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9887158d0bd32cd7e95efc9d0db6b0a9f564cbbe",
+        "timestamp": "2026-10-03T11:47:31Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2fb93b108d38ee8b7dca9e824de9bc4fe68cf0ae",
+        "timestamp": "2026-10-03T11:47:30Z"
+      },
+      {
         "message": "FIX: correct Q129 GitHub expression interpolation",
         "sha": "b161d8e950d4c0d887c662d91fbd5bce0c21c84e",
         "timestamp": "2026-10-03T13:47:19+02:00"
@@ -981,21 +996,6 @@
         "message": "FIX: register Q129 feasibility workflow in integrity allowlist",
         "sha": "5f94aa470df2d635055e4237f9a3ac355bf8fd7b",
         "timestamp": "2026-10-03T13:44:27+02:00"
-      },
-      {
-        "message": "TEST: enforce Q129 source contract and safety",
-        "sha": "8eb7b517ad9cdc0b82076f547de4e5c8d1fef5ea",
-        "timestamp": "2026-10-03T13:43:04+02:00"
-      },
-      {
-        "message": "OPS: add hosted Q129 options source feasibility lane",
-        "sha": "8f59c9e4fb13da1abf9de13699854b3d98760a86",
-        "timestamp": "2026-10-03T13:43:02+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q129 pinned options source verifier",
-        "sha": "66c9ea45997ec36da1d8bcf10a2ef1c9478d17ce",
-        "timestamp": "2026-10-03T13:42:52+02:00"
       }
     ]
   },
@@ -1065,12 +1065,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b161d8e950d4c0d887c662d91fbd5bce0c21c84e",
+  "source_master_sha": "1b1fd356573fd404d2f7a2c51331eae97fa97fca",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37120770509"
+    "run_id": "37120859273"
   }
 }
