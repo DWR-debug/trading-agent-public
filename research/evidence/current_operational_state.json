@@ -763,7 +763,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T11:49:16.667883+00:00",
+  "generated_at_utc": "2026-10-03T11:51:32.160941+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -955,8 +955,37 @@
     ],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "research/q129-receipt-and-workflow-load-cleanup-20261003",
+        "number": 913,
+        "title": "RESEARCH/OPS: persist Q129 receipt and reduce redundant CI load",
+        "updatedAt": "2026-10-03T11:50:44Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/913"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "RESEARCH: register Q146-Q151 public-domain discovery wave",
+        "sha": "29ca4e73212ae84107ae384dac85a49ee757fdc9",
+        "timestamp": "2026-10-03T13:51:16+02:00"
+      },
+      {
+        "message": "RESEARCH: add public-domain Q146-Q151 frontier",
+        "sha": "361b496851bccf08ae744798621c5d3109523f50",
+        "timestamp": "2026-10-03T13:51:14+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "25acad9d63dd8efda2ff5a023bef3d745609948c",
+        "timestamp": "2026-10-03T11:49:19Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "15d0a70cdec7659c42fa0d77db54dad7cae41eea",
+        "timestamp": "2026-10-03T11:49:17Z"
+      },
       {
         "message": "FIX: correct Q129 source receipt shell variables",
         "sha": "1b1fd356573fd404d2f7a2c51331eae97fa97fca",
@@ -976,26 +1005,6 @@
         "message": "FIX: correct Q129 GitHub expression interpolation",
         "sha": "b161d8e950d4c0d887c662d91fbd5bce0c21c84e",
         "timestamp": "2026-10-03T13:47:19+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "53c4401e1a8df4885214f63b72511dc78902aee4",
-        "timestamp": "2026-10-03T11:46:22Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "8c4b19d310d3c7a857237bf17be616fe5668670b",
-        "timestamp": "2026-10-03T11:46:21Z"
-      },
-      {
-        "message": "RESEARCH: formalize Q129 historical options source gate",
-        "sha": "b63eb13348bae79db1069fb0a1599eb31ee13036",
-        "timestamp": "2026-10-03T13:46:09+02:00"
-      },
-      {
-        "message": "FIX: register Q129 feasibility workflow in integrity allowlist",
-        "sha": "5f94aa470df2d635055e4237f9a3ac355bf8fd7b",
-        "timestamp": "2026-10-03T13:44:27+02:00"
       }
     ]
   },
@@ -1065,12 +1074,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1b1fd356573fd404d2f7a2c51331eae97fa97fca",
+  "source_master_sha": "29ca4e73212ae84107ae384dac85a49ee757fdc9",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37120859273"
+    "run_id": "37120976784"
   }
 }
