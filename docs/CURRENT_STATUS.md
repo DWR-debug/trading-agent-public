@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `a92186a336572a58b9877d22e95b7f924149509a`
+**Current operational snapshot:** `5c1df4facc4b7542bb9a7ee2e627e919e8f55483`
 
-**Generated (UTC):** `2026-10-03T13:46:04.699214+00:00`
+**Generated (UTC):** `2026-10-03T13:54:46.814737+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -70,7 +70,8 @@
 
 - Hosted discovery/source-feasibility run: **COMPLETED**; 25 source probes passed across Q133–Q170.
 - Newly source-feasible candidates include Q137, Q144, Q147–Q151, Q153–Q155, Q157–Q158, Q161–Q169; remaining candidates stay blocked or design-only pending further source/PIT work.
-- Source-feasibility is not performance evidence and does not authorize performance, holdout selection, ranking, tuning, promotion or live execution.
+- **PIT-readiness R1 is now ACTIVE** for the 21 source-feasible candidates; it audits candidate-specific clock, revision/version, entity-mapping and historical-archive requirements without evaluating returns or ranking candidates.
+- Source-feasibility and PIT-readiness are not performance evidence and do not authorize performance, holdout selection, ranking, tuning, promotion or live execution.
 
 ### H06 independent PIT
 
