@@ -2,7 +2,7 @@
 
 **Current operational snapshot:** `5b0e9b3de9cf247a563f643e9fc88cafd3c8d601`
 
-**Generated (UTC):** `2026-10-03T11:05:00.547535+00:00`
+**Generated (UTC):** `2026-10-03T11:04:48Z`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -139,6 +139,6 @@ Q070 is the fresh symbol-disjoint validation pipeline for the fixed Q069 OHLCV c
 
 ## Continuity protocol
 
-Every relevant `master` push triggers the status synchronizer. It records the exact source commit being synchronized and updates these two operational-status files in a documentation-only commit. Those files are excluded from the synchronizer trigger, preventing recursive commits.
+Every relevant `master` push triggers the status synchronizer. The current snapshot was refreshed after the cleanup/research merge so this file remains aligned with the exact source commit recorded above. It records the exact source commit being synchronized and updates these two operational-status files in a documentation-only commit. Those files are excluded from the synchronizer trigger, preventing recursive commits.
 
 A future `trading agent` chat must read this file first, then verify live GitHub state before acting.
