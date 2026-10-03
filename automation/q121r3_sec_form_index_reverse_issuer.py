@@ -80,8 +80,11 @@ def parse_index(body: bytes) -> list[dict[str, str]]:
         line = raw.rstrip("\r\n")
         if len(line) < 98:
             continue
-        form = line[0:12].strip()
-        company = line[12:74].strip()
+        # SEC quarterly form.idx uses fixed-width EDGAR index fields:
+        # company 0:62, form 62:74, CIK 74:86, filing date 86:98,
+        # filename 98 onward.
+        company = line[0:62].strip()
+        form = line[62:74].strip()
         cik = line[74:86].strip()
         filed_date = line[86:98].strip()
         filename = line[98:].strip()
