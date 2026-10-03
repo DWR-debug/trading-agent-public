@@ -166,6 +166,7 @@ ACTIVE_WORKFLOWS = {
     "q121r2-sec-daily-index-reconciliation.yml",
     "q127r1-finra-regsho-historical-pit.yml",
     "q130r1-wikimedia-attention-source.yml",
+    "q131r1-sec-disclosure-complexity.yml",
     "q095-authorization-once.yml",
     "rccsm-feasibility-cloud.yml",
     "rccsm-feasibility.yml",
