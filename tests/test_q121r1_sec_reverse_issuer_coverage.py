@@ -27,8 +27,15 @@ def test_identity_parser_distinguishes_subject_and_filer():
     assert extract_labeled_cik(text, "Subject") == "0000123456"
     assert extract_labeled_cik(text, "Filed by") == "0000654321"
 
+def test_identity_parser_handles_html_between_label_and_value():
+    text = "<span>(Subject)</span> <b>CIK:</b> <a href='#'>0000123456</a>"
+    assert extract_labeled_cik(text, "Subject") == "0000123456"
+
 def test_acceptance_parser_is_explicit():
     assert extract_accepted("Accepted 2024-02-05 17:53:54") == "2024-02-05 17:53:54"
+
+def test_acceptance_parser_handles_html():
+    assert extract_accepted("<span>Accepted</span> <b>2024-02-05 17:53:54</b>") == "2024-02-05 17:53:54"
 
 def test_deterministic_sample_positions():
     rows = [{"accession_number": str(i)} for i in range(5)]
@@ -49,3 +56,14 @@ def test_governance_boundary_is_source_only():
     assert mod.START == "20240205"
     assert mod.END == "20250924"
     assert "performance" not in mod.browse_url("0000123456", "SC 13G", 0).lower()
+
+def test_date_filter_validation_accepts_only_frozen_window():
+    from automation.q121r1_sec_reverse_issuer_coverage import validate_page_dates
+    validate_page_dates([{"filing_date": "2024-02-05"}])
+    validate_page_dates([{"filing_date": "2025-09-24"}])
+
+def test_date_filter_validation_fails_closed_outside_window():
+    from automation.q121r1_sec_reverse_issuer_coverage import validate_page_dates
+    import pytest
+    with pytest.raises(RuntimeError, match="SEC_BROWSE_DATE_FILTER_MISMATCH"):
+        validate_page_dates([{"filing_date": "2024-02-04"}])
