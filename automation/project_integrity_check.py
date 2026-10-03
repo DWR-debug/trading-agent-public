@@ -340,9 +340,10 @@ def _validate_research_os_registry() -> None:
 def _validate_critical_research_controls() -> None:
     policy_path = ROOT / "research" / "governance" / "critical_research_quality_control.json"
     validator_path = ROOT / "automation" / "future_performance_quality_contract_check.py"
+    candidate_gate_path = ROOT / "automation" / "candidate_robustness_gate.py"
     dispatcher_path = ROOT / "automation" / "independent_replication_dispatch.py"
     workflow_path = ROOT / ".github" / "workflows" / "post-pass-independent-replication.yml"
-    for path in (policy_path, validator_path, dispatcher_path, workflow_path):
+    for path in (policy_path, validator_path, candidate_gate_path, dispatcher_path, workflow_path):
         if not path.exists():
             fail(f"critical research control missing: {path.relative_to(ROOT)}")
     try:
@@ -358,6 +359,23 @@ def _validate_critical_research_controls() -> None:
         fail(f"future performance quality validator failed: {exc}")
     if result.get("status") != "PASS":
         fail("future performance quality validator returned non-PASS")
+    candidate_gate = policy.get("candidate_robustness_gate", {})
+    if candidate_gate.get("required_before_any_formal_phase") is not True:
+        fail("universal candidate robustness gate is not enforced")
+    if candidate_gate.get("gate_type") != "STRUCTURAL_NON_PERFORMANCE":
+        fail("universal candidate robustness gate type is invalid")
+    required_candidate_dimensions = set(candidate_gate.get("required_dimensions", []))
+    if not required_candidate_dimensions.issubset({
+        "construction_invariance",
+        "input_order_invariance",
+        "future_data_invariance",
+        "missingness_fail_closed",
+        "revision_amendment_invariance",
+        "identity_mapping_fail_closed",
+        "parameter_threshold_horizon_lock",
+        "source_reproducibility",
+    }):
+        fail("universal candidate robustness dimensions are invalid")
     if policy.get("early_robustness", {}).get("required_before_future_performance_authorization") is not True:
         fail("early robustness prerequisite is not enforced")
     if policy.get("immediate_replication", {}).get("required_for_any_future_full_formal_pass") is not True:
