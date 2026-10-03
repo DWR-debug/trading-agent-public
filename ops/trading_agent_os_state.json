@@ -36,7 +36,7 @@
   "autonomous_lanes": {
     "permanent_self_hosted_research": {
       "workflow": ".github/workflows/permanent-pc-research-loop.yml",
-      "schedule_utc": "*/10 * * * *",
+      "schedule_utc": "*/30 * * * *",
       "runner_label": "trading-agent-research",
       "parallel_lanes": 1,
       "purpose": [
@@ -117,10 +117,10 @@
   },
   "current_research_focus": {
     "completed": "Q119 Treasury demand-shape design merged; I22 SEC filing-arrival session-window correction merged",
-    "active_next": "Q125 SEC MIDAS publication-clock rerun; Q119 Treasury source/PIT feasibility; Q120 CFTC release-date/PIT recovery; I22 SEC filing-arrival compilation; Q104 I19/I20 XBRL+13F gates; Q121 disclosure-timing discovery",
+    "active_next": "SEC/13F/XBRL + Treasury/CFTC + Q121 + Q126-Q132 source/PIT feasibility; Q119 Treasury demand-shape; Q120 CFTC TFF release-date semantics; I22 filing-arrival; Q104 I19/I20 historical breadth; Q125 SEC publication clock.",
     "meta_research": "ECL runtime hardening and first valid model-metrics receipt",
     "governance_engineering": "AGENT-026-R2 two-slot lease; draft PR 642",
-    "discovery_frontier": "Q121 SEC beneficial-ownership disclosure timing state plus Q124/Q126/Q127/Q128/Q129/Q130 discovery/PIT feasibility; no performance authorization"
+    "discovery_frontier": "Q121 SEC beneficial-ownership disclosure timing plus Q126-Q132 discovery/PIT feasibility; Q128/Q129/Q130 remain source-blocked until free reproducible historical data is established; no performance authorization"
   },
   "resource_routing": {
     "self_hosted_windows": [
