@@ -116,6 +116,7 @@ def generate(
     h06_pit = _load_json(ROOT / "research/evidence/h06_pit_independent_reproduction_2026_10_01.json", {})
     q129_receipt = _load_json(ROOT / "research/evidence/q129_independent_pit_2026_10_03.json", {})
     q133_q170_receipt = _load_json(ROOT / "research/evidence/q133_q170_source_feasibility_2026_10_03.json", {})
+    q171_q177_pit_receipt = _load_json(ROOT / "research/evidence/q171_q177_pit_readiness_2026_10_03.json", {})
 
     safety = _safety_state()
     from config import settings
@@ -287,7 +288,15 @@ def generate(
                 "deterministic XBRL concept/coverage gate for I19/I20. No performance authorization, "
                 "holdout selection, parameter search, promotion or live execution is permitted."
             )
-    if (ROOT / "automation/q126_q132_frontier_feasibility.py").is_file():
+    if (ROOT / "research/evidence/q171_q177_pit_readiness_2026_10_03.json").is_file():
+        recorded_next_research_focus = (
+            "Priority frontier is Q171-Q178 public-domain orthogonal information research plus Q126-Q132. "
+            "Q171 has sample-level Common Crawl historical capture reconstruction; Q174-Q177 have source-clock "
+            "or version semantics confirmed but require candidate-specific PIT compilers; Q173 remains license-blocked. "
+            "Q172/Q178 now have separate GitHub Advisory endpoint and OSV-format source contracts. All remain "
+            "discovery/PIT-only with no performance, holdout selection, tuning, ranking, promotion or live execution."
+        )
+    elif (ROOT / "automation/q126_q132_frontier_feasibility.py").is_file():
         recorded_next_research_focus = (
             "Priority frontier is now the orthogonal SEC/13F/XBRL/Treasury/CFTC channel block plus "
             "Q121 and Q126-Q132. Q121 has a fixed SEC acceptance-time discovery/PIT compiler. "
@@ -476,6 +485,7 @@ def generate(
         "h06_independent_pit": h06_pit,
         "q129_options": q129_receipt,
         "q133_q170_source_feasibility": q133_q170_receipt,
+        "q171_q177_pit_readiness": q171_q177_pit_receipt,
         "scientific_state_recorded": {
             "latest_formal_trial": latest_formal.get("trial_id") or project_state.get("latest_formal_trial"),
             "latest_formal_status": latest_formal.get("status") or project_state.get("latest_trial_status"),
@@ -591,6 +601,12 @@ def generate(
 - Independent Q129 PIT/structural reproduction: **REPRODUCED**; workflow run `37123847841`, receipt fingerprint `41d723734f030d1a212f5eb4b3e6467223a5cfcdeb97c77ffa9713f8889c7587`.
 - The fixed downstream view preserves raw rows and quarantines quote/calendar anomalies deterministically; same-day use remains **False**.
 - This receipt does **not** authorize performance, holdout selection, ranking, tuning, promotion or live execution.
+
+### Q171–Q178 Public Source Frontier
+
+- Source-feasibility run: **COMPLETED** on master; Q171, Q172, Q174–Q177 and Q178 passed source probes; Q173 remains license-blocked.
+- PIT-readiness: Q171 has a sample historical Common Crawl reconstruction receipt; Q174–Q177 have source-clock/version/revision semantics confirmed but are **not yet candidate-specific PIT-valid**.
+- No member of this wave is performance-authorized; no holdout selection, tuning, ranking, promotion or live execution is permitted.
 
 ### Q133–Q170 Public Source Frontier
 
