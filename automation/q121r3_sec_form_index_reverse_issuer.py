@@ -53,6 +53,16 @@ CONTROLS = (
 def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
+def decode_sec_submission_body(body: bytes) -> bytes:
+    """Decode a SEC archive payload when HTTP delivered gzip content."""
+    if body.startswith(b"\\x1f\\x8b"):
+        try:
+            return gzip.decompress(body)
+        except OSError as exc:
+            raise RuntimeError("SEC_SUBMISSION_GZIP_DECODE_FAILED") from exc
+    return body
+
+
 def extract_control_cik(text: str, section: str) -> str | None:
     """Extract the first CIK from the requested SEC-HEADER section."""
     compact = r1.plain_text(text)
@@ -281,7 +291,7 @@ def run(output: Path) -> dict[str, object]:
                 time.sleep(REQUEST_GAP_SECONDS)
                 source_status, source_body = fetch(source_text_url)
                 if source_status == 200:
-                    source_preview = r1.plain_text(source_body.decode("utf-8", errors="replace"))
+                    source_preview = r1.plain_text(decode_sec_submission_body(source_body).decode("utf-8", errors="replace"))
                     print("Q121R3_IDENTITY_DIAG", json.dumps({
                         "accession_number": accession,
                         "index_cik": row["cik"],
@@ -291,7 +301,7 @@ def run(output: Path) -> dict[str, object]:
                         "source_preview": source_preview[:500],
                     }, sort_keys=True))
                 if source_status == 200:
-                    header_text = source_body.decode("utf-8", errors="replace")
+                    header_text = decode_sec_submission_body(source_body).decode("utf-8", errors="replace")
                     subject = r1.extract_header_section_cik(header_text, "Subject") or r1.extract_labeled_cik(header_text, "Subject")
                     filer = r1.extract_header_section_cik(header_text, "Filed by") or r1.extract_labeled_cik(header_text, "Filed by")
                     accepted = r1.extract_accepted(header_text)
