@@ -125,7 +125,7 @@ jobs:
           if not exist "q121r6-input\population.json" exit /b 1
           if exist "%GITHUB_WORKSPACE%\q121r6-shard" rmdir /s /q "%GITHUB_WORKSPACE%\q121r6-shard"
           mkdir "%GITHUB_WORKSPACE%\q121r6-shard" || exit /b 1
-          "%Q121R6_PY%" -m automation.q121r6_sec_acceptance_time_compiler --population "%GITHUB_WORKSPACE%\q121r6-input\population.json" --output "%GITHUB_WORKSPACE%\q121r6-shard\result.json" --shard-index ${{ matrix.shard_index }} --shard-count 16 --workers 8 --request-gap-seconds 0.13
+          "%Q121R6_PY%" -m automation.q121r6_sec_acceptance_time_compiler --population "%GITHUB_WORKSPACE%\q121r6-input\population.json" --output "%GITHUB_WORKSPACE%\q121r6-shard\result.json" --shard-index ${{ matrix.shard_index }} --shard-count 16 --workers 8 --request-gap-seconds 0.25
           if errorlevel 1 exit /b 1
       - uses: actions/upload-artifact@v6
         with:
