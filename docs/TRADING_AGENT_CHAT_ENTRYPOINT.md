@@ -31,7 +31,9 @@ Dieses Dokument ist der **verbindliche Einstiegspunkt für neue Chats**, die mit
 
 Vor Beginn der ersten fachlichen Arbeit ist zusätzlich `research/governance/persistent_research_acceleration_contract.json` zu berücksichtigen. Die Beschleunigungslogik ist nicht chatabhängig: unabhängige Arbeit wird parallel auf freie Ressourcen verteilt, bereits laufende Arbeit wird nicht dupliziert und S10 wird bei einem frischen erfolgreichen Utility-Receipt (aktuell maximal 6 Stunden alt) und sinnvoller bounded Aufgabe opportunistisch eingesetzt; dieser Receipt gilt als Presence-Signal für das Routing. Nach relevanten Research-/Governance-Änderungen ist ein bounded S10-Utility-Review zulässig und vorgesehen.
 
-Die aktuellen zwei Windows-Self-Hosted-Lanes dürfen die vordefinierten Frontier-Preflights begrenzt parallel ausführen; Reproduktion und andere sequenzielle QA bleiben bewusst seriell. Ein zusätzliches Mobiltelefon ist derzeit keine Voraussetzung. Neue Samsung-Geräte werden nur als kontrollierter Kapazitätstest aktiviert, wenn ein messbarer unabhängiger Durchsatzgewinn zu erwarten ist.
+Der dauerhafte Zwei-Lanes-Forschungsmodus ist verbindlich: **Lane A = Formal Readiness**, **Lane B = Frontier Discovery**. Die zwei Windows-Self-Hosted-Slots werden bei Verfügbarkeit getrennt geroutet. Lane A verfolgt fortgeschrittene Coverage/PIT/Compiler-/Authorization-Readiness; Lane B verfolgt orthogonale Quellen, PIT-Semantik und billige Falsifikation. Beide Lanes haben eigene Candidate-/Trial-Identitäten, Branch-/Workflow-/Output-Pfade und dürfen keinen gemeinsam veränderlichen Research-State teilen. Ergebnisse werden nicht rückwirkend in die andere Lane injiziert. Zwei Slots erzeugen niemals Performance-Autorisierung; jede Performance-Ausführung bleibt individuell und formal fail-closed autorisiert.
+
+Reproduktion und andere wissenschaftlich sequenzielle QA bleiben seriell, sofern keine unabhängige Parallelisierbarkeit explizit nachgewiesen ist. Ein zusätzliches Mobiltelefon ist derzeit keine Voraussetzung. Neue Samsung-Geräte werden nur als kontrollierter Kapazitätstest aktiviert, wenn ein messbarer unabhängiger Durchsatzgewinn zu erwarten ist.
 
 ## Regel für den Chat-Übergang
 
@@ -81,7 +83,7 @@ hochwertige Hypothesen-/Design-/Review-Arbeit eingesetzt, während deterministis
 Bei jedem neuen `trading agent`-Chat:
 
 1. Dieses Dokument lesen.
-2. `docs/TRADING_AGENT_OS_ORCHESTRATION.md` und `ops/trading_agent_os_state.json` lesen.
+2. `docs/TRADING_AGENT_OS_ORCHESTRATION.md` und `ops/trading_agent_os_state.json` lesen; dabei den Zwei-Lanes-Forschungsmodus (Lane A Formal Readiness / Lane B Frontier Discovery) als verbindlichen Routingstandard anwenden.
 3. `docs/PROJECT_CONTEXT.md` lesen.
 4. `docs/GITHUB_FREE_RESOURCE_OPERATING_MODEL.md` lesen und Ressourcenrouting prüfen.
 5. `docs/TRADING_AGENT_SUPERVISION_PROTOCOL.md` lesen und Rollen-/Kontrollkette prüfen.
