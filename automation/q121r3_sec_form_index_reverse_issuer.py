@@ -13,6 +13,9 @@ import re
 import time
 import urllib.error
 import urllib.request
+import gzip
+import io
+import zipfile
 from datetime import date
 from pathlib import Path
 
@@ -22,7 +25,8 @@ START = "2024-02-05"
 END = "2025-09-24"
 FORM_SET = {"SC 13D", "SC 13G", "SC 13D/A", "SC 13G/A"}
 REQUEST_GAP_SECONDS = 0.35
-UA = "DWR-debug trading-agent-public Q121R3 via GitHub"
+UA = "trading-agent-public/Q121R3-sec-form-index/1"
+INDEX_TRANSPORTS = ("form.zip", "form.gz", "form.idx")
 
 CIKS = {
     "SPGI": "0000064040",
@@ -53,7 +57,15 @@ def index_url(year: int, quarter: int) -> str:
     return f"https://www.sec.gov/Archives/edgar/full-index/{year}/QTR{quarter}/form.idx"
 
 def fetch(url: str) -> tuple[int, bytes]:
-    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "text/plain,*/*"})
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": UA,
+            "Accept": "text/plain,application/zip,application/gzip,*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Host": "www.sec.gov",
+        },
+    )
     try:
         with urllib.request.urlopen(req, timeout=60) as response:
             return int(getattr(response, "status", 200)), response.read()
@@ -108,23 +120,58 @@ def within_window(value: str) -> bool:
     d = date.fromisoformat(value)
     return date.fromisoformat(START) <= d <= date.fromisoformat(END)
 
+
+def fetch_logical_form_index(year: int, quarter: int) -> tuple[bytes, dict[str, object]]:
+    attempts: list[dict[str, object]] = []
+    for transport in INDEX_TRANSPORTS:
+        url = f"https://www.sec.gov/Archives/edgar/full-index/{year}/QTR{quarter}/{transport}"
+        time.sleep(REQUEST_GAP_SECONDS)
+        status, body = fetch(url)
+        attempts.append({"url": url, "status": status, "transport": transport})
+        if status != 200:
+            continue
+        if transport == "form.zip":
+            try:
+                with zipfile.ZipFile(io.BytesIO(body)) as archive:
+                    names = [n for n in archive.namelist() if n.lower().endswith("/form.idx") or n.lower() == "form.idx"]
+                    if len(names) != 1:
+                        raise RuntimeError(f"SEC_FORM_ZIP_UNEXPECTED_MEMBERS:{names}")
+                    logical = archive.read(names[0])
+            except (zipfile.BadZipFile, OSError, KeyError) as exc:
+                raise RuntimeError(f"SEC_FORM_ZIP_INVALID:{year}:QTR{quarter}:{exc}") from exc
+        elif transport == "form.gz":
+            try:
+                logical = gzip.decompress(body)
+            except OSError as exc:
+                raise RuntimeError(f"SEC_FORM_GZIP_INVALID:{year}:QTR{quarter}:{exc}") from exc
+        else:
+            logical = body
+        return logical, {
+            "transport": transport,
+            "transport_url": url,
+            "transport_sha256": sha256_bytes(body),
+            "logical_sha256": sha256_bytes(logical),
+            "raw_bytes": len(body),
+            "logical_bytes": len(logical),
+            "attempts": attempts,
+        }
+    raise RuntimeError(
+        "SEC_FORM_INDEX_ALL_TRANSPORTS_BLOCKED:"
+        + json.dumps(attempts, sort_keys=True, separators=(",", ":"))
+    )
+
 def run(output: Path) -> dict[str, object]:
     quarter_receipts: list[dict[str, object]] = []
     all_rows: list[dict[str, str]] = []
 
     for year, quarter in QUARTERS:
-        url = index_url(year, quarter)
-        time.sleep(REQUEST_GAP_SECONDS)
-        status, body = fetch(url)
-        if status != 200:
-            raise RuntimeError(f"SEC_FORM_INDEX_HTTP_{status}:{year}:QTR{quarter}")
+        body, transport = fetch_logical_form_index(year, quarter)
         parsed = [row for row in parse_index(body) if row["form"] in FORM_SET and within_window(row["filed_date"])]
         quarter_receipts.append({
             "year": year,
             "quarter": quarter,
-            "source_url": url,
-            "source_sha256": sha256_bytes(body),
-            "raw_bytes": len(body),
+            "source_family": f"https://www.sec.gov/Archives/edgar/full-index/{year}/QTR{quarter}/",
+            **transport,
             "matching_rows": len(parsed),
         })
         all_rows.extend(parsed)
