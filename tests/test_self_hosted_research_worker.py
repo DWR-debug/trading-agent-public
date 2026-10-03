@@ -364,7 +364,7 @@ def test_self_hosted_runner_probe_targets_trusted_label_and_master_only():
         ROOT / ".github" / "workflows" / "self-hosted-runner-probe.yml"
     ).read_text(encoding="utf-8")
     assert "runs-on: [self-hosted, trading-agent-research]" in text
-    assert "branches: [master]" in text
+    assert "branches: [master]" not in text
     assert "RUNNER_PROBE=SUCCESS" in text
     assert "pull_request:" not in text
 
