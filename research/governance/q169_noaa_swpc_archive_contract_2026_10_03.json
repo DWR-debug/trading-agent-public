@@ -5,9 +5,16 @@
   "provider": "NOAA SWPC / NOAA NCEI",
   "archive_index_url": "https://www.ngdc.noaa.gov/stp/space-weather/swpc-products/daily_reports/geoalerts/2025/10/",
   "semantics_url": "https://www.swpc.noaa.gov/products/notifications-timeline",
-  "fixed_sample_dates": ["2025-10-14", "2025-10-15"],
+  "fixed_sample_dates": [
+    "2025-10-14",
+    "2025-10-15"
+  ],
   "information_clock": "provider_embedded_Issued_UTC_timestamp",
-  "revision_semantics": ["extensions", "cancellations", "corrected_products"],
+  "revision_semantics": [
+    "extensions",
+    "cancellations",
+    "corrected_products"
+  ],
   "candidate_specific_requirements": {
     "exposure_map_frozen": false,
     "revision_lineage_reconstructed": false,
@@ -31,5 +38,9 @@
     "orders_enabled": false,
     "automatic_promotion": false,
     "paid_resources_allowed": false
+  },
+  "fixed_sample_files": {
+    "2025-10-14": "1014GEOA.txt",
+    "2025-10-15": "1015GEOA.txt"
   }
 }

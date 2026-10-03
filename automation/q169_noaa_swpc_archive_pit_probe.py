@@ -22,11 +22,15 @@ ARCHIVE_INDEX_URL = (
     "daily_reports/geoalerts/2025/10/"
 )
 SEMANTICS_URL = "https://www.swpc.noaa.gov/products/notifications-timeline"
-SAMPLE_DATES = ("2025-10-14", "2025-10-15")
-UA = "trading-agent-public/Q169-NOAA-SWPC-PIT-R1/1"
-INDEX_MARKERS = tuple(f"{d.replace('-', '')}GEOA.txt" for d in SAMPLE_DATES)
+SAMPLE_FILES = {
+    "2025-10-14": "1014GEOA.txt",
+    "2025-10-15": "1015GEOA.txt",
+}
+SAMPLE_DATES = tuple(SAMPLE_FILES)
+UA = "trading-agent-public/Q169-NOAA-SWPC-PIT-R1/2"
+INDEX_MARKERS = tuple(SAMPLE_FILES.values())
 SEMANTIC_MARKERS = (
-    "plotted at the Issue Time of the alert",
+    "plotted at the Issue Time",
     "CANCELATIONS",
     "corrected product",
     "Archived Alert Timelines",
@@ -66,7 +70,7 @@ def parse_issued(line: str) -> datetime:
 
 
 def validate_archive_file(sample_date: str) -> dict[str, Any]:
-    filename = sample_date.replace("-", "") + "GEOA.txt"
+    filename = SAMPLE_FILES[sample_date]
     url = ARCHIVE_INDEX_URL + filename
     status, body = fetch(url)
     text = body.decode("utf-8", errors="replace")

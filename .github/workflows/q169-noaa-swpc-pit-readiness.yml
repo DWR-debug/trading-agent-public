@@ -84,8 +84,8 @@ jobs:
           test -f "$input"
           for attempt in 1 2 3; do
             git fetch origin master --quiet
-            base_sha="\$(git rev-parse origin/master)"
-            if git show "origin/master:\${latest}" > "$RUNNER_TEMP/q169_current_receipt.json" 2>/dev/null; then
+            base_sha="$(git rev-parse origin/master)"
+            if git show "origin/master:${latest}" > "$RUNNER_TEMP/q169_current_receipt.json" 2>/dev/null; then
               if cmp -s "$latest" "$RUNNER_TEMP/q169_current_receipt.json"; then
                 echo "Q169_NOAA_PIT_RECEIPT_UNCHANGED"
                 exit 0
@@ -107,7 +107,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q169-noaa-swpc-pit-readiness-\${{ github.run_id }}-\${{ github.run_attempt }}
+          name: q169-noaa-swpc-pit-readiness-${{ github.run_id }}-${{ github.run_attempt }}
           path: research/runs/q169_noaa_swpc_pit_readiness/
           if-no-files-found: error
           retention-days: 30

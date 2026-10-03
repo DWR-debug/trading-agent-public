@@ -13,8 +13,8 @@ https://www.ngdc.noaa.gov/stp/space-weather/swpc-products/daily_reports/geoalert
 
 Fixed sample files:
 
-- 20251014GEOA.txt
-- 20251015GEOA.txt
+- 1014GEOA.txt
+- 1015GEOA.txt
 
 The sample is not selected after observing market outcomes. These dates are frozen solely as an archive-integrity probe.
 
