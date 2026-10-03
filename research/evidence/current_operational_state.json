@@ -722,7 +722,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-03T10:43:56.555173+00:00",
+  "generated_at_utc": "2026-10-03T10:44:18.499720+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -926,6 +926,21 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: prevent hosted failover from duplicating permanent frontier",
+        "sha": "eaabc355bf1711fc6fb0fcf607ac6f5a391c1121",
+        "timestamp": "2026-10-03T12:44:08+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "222a27fa2c7d5ba3213a6206456377d0639a4e9d",
+        "timestamp": "2026-10-03T10:43:59Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5ebdace513532005173f29ed3f064f7b00f761c4",
+        "timestamp": "2026-10-03T10:43:57Z"
+      },
+      {
         "message": "OPS: lower Windows local loop cadence after frontier offload",
         "sha": "fdcbf8557f5611457654a42e1224bc5f9cb83f69",
         "timestamp": "2026-10-03T12:43:43+02:00"
@@ -949,21 +964,6 @@
         "message": "FIX: restore valid orchestration snapshot commit provenance",
         "sha": "f667a779e4084acf0c7d2906382bd2b91d8d1875",
         "timestamp": "2026-10-03T12:42:59+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9d279d72e05026f02f53e8db749708d65ef77fc9",
-        "timestamp": "2026-10-03T10:42:38Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e98df0089ff0fc26855e4566703debefcbf09715",
-        "timestamp": "2026-10-03T10:42:36Z"
-      },
-      {
-        "message": "OPS: publish hosted frontier and Windows capacity split in canonical status",
-        "sha": "7bff842922f6db39d9be08e8c2509a67fab41cfd",
-        "timestamp": "2026-10-03T12:42:20+02:00"
       }
     ]
   },
@@ -1033,12 +1033,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "fdcbf8557f5611457654a42e1224bc5f9cb83f69",
+  "source_master_sha": "eaabc355bf1711fc6fb0fcf607ac6f5a391c1121",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37117363004"
+    "run_id": "37117383291"
   }
 }
