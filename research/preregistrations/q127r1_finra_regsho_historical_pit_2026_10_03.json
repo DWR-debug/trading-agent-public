@@ -7,9 +7,23 @@
   "parent_candidate": "Q127",
   "fixed_universe": {
     "name": "validation_2026_10_01_q104_sec_treasury_equities",
-    "symbols": ["SPGI", "NDAQ", "AMP", "RJF", "WMB", "VLO", "DVN", "EMN"]
+    "symbols": [
+      "SPGI",
+      "NDAQ",
+      "AMP",
+      "RJF",
+      "WMB",
+      "VLO",
+      "DVN",
+      "EMN"
+    ]
   },
-  "fixed_dates": ["2024-02-05", "2024-07-01", "2025-01-02", "2025-09-24"],
+  "fixed_dates": [
+    "2024-02-05",
+    "2024-07-01",
+    "2025-01-02",
+    "2025-09-24"
+  ],
   "source_contract": {
     "provider": "FINRA",
     "dataset": "Consolidated NMS Daily Short Sale Volume",
@@ -49,5 +63,13 @@
     "live_trading_enabled": false,
     "orders_enabled": false,
     "automatic_promotion": false
+  },
+  "file_schema_contract": {
+    "header_required": true,
+    "trailer_required": true,
+    "trailer_meaning": "number of data records in the file",
+    "market_is_reporting_facility_identifier": true,
+    "symbol_market_duplicates_rejected": true,
+    "all_fixed_symbol_market_rows_preserved": true
   }
 }
