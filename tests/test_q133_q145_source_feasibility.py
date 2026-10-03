@@ -32,7 +32,7 @@ def test_source_feasibility_registers_new_wave_candidates():
         '"Q146"', '"Q147"', '"Q148"', '"Q149"', '"Q150"', '"Q151"',
         '"Q152"', '"Q153"', '"Q154"', '"Q155"', '"Q156"', '"Q157"',
         '"Q158"', '"Q159"', '"Q160"', '"Q161"', '"Q162"', '"Q163"',
-        '"Q164"', '"Q165"',
+        '"Q164",', '"Q165"',
     ):
         assert marker in text
     wave = json.loads(
