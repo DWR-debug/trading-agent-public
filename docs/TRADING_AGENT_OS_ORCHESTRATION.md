@@ -70,7 +70,7 @@ Es bleibt bei keiner Performance-Freigabe, solange die vollständige Coverage/PI
 
 Die beiden Windows-Runner LHT-N133732 und LHT-N133732-2 arbeiten unter dem Label trading-agent-research; ihr Live-Status ist flüchtig und wird bei jedem Start/Materialisierungspunkt neu geprüft. Ihr Live-Status ist flüchtig und wird deshalb in jedem neuen trading agent-Chat neu geprüft.
 
-S10 ist eine separat verifizierte ARM64/Termux-Ressource. Der aktuelle operative Nachweis ist \`ops/s10_runtime_status.json\`; die historische Acceptance-Receipt bleibt dort unverändert, während der neueste Utility-Lauf separat als aktueller Runpointer geführt wird. Auch dieser Status ist flüchtig für die Routingentscheidung und wird bei neuen Chats bzw. nach neuen Runs neu geprüft.
+S10 ist eine separat verifizierte ARM64/Termux-Ressource. Ein erfolgreicher Utility-Lauf im aktuellen Receipt-Fenster von 6 Stunden dient als operatives Presence-Signal für das Routing. Eine zusätzliche Runner-Discovery ist für die bloße Präsenzbestätigung nicht erforderlich; bei abgelaufenem Receipt wird fail-closed nicht geroutet.
 
 Weitere Samsung-/Android-Geräte sind in \`ops/android_phone_resources.json\` als getrennte Slots vorbereitet. Der generische Fleet-Worker und die Receipt-Sync-Spur halten Runner-, Runtime- und Governance-Verträge identisch.
 
