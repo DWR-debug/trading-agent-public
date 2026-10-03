@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `17a24998ac58f31e30aa3e6a1f2568f1c5d5816f`
+**Current operational snapshot:** `f4bc1ccbf85f087001201cdc52def0e3d83c6027`
 
-**Generated (UTC):** `2026-10-02T21:40:07.946910+00:00`
+**Generated (UTC):** `2026-10-03T07:27:16.661583+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -19,7 +19,7 @@
 - Self-hosted Continuous QA is scheduled hourly at minute 15 under label `trading-agent-research`.
 - Latest self-hosted capacity verification: two distinct Windows/X64 runner slots accepted concurrent jobs; see the timestamped capacity receipt.
 - S10 phone capability receipt: **S10_UTILITY_ACCEPTED**; receipt-gated eligibility = **True**.
-- S10 current physical online state: **UNKNOWN**; current-presence verification = **NOT_PERFORMED**.
+- S10 current physical online state: **None**; current-presence verification = **NOT_PERFORMED**.
 - A valid acceptance receipt proves bounded capability at the time of its source run; it does **not** prove that the phone or runner is online now. Live routing separately requires exact online runner discovery.
 - S10 output remains non-scientific and cannot authorize performance or promotion.
 
