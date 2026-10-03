@@ -37,7 +37,7 @@ The existing Samsung fleet registry already provides five uniquely labelled slot
 
 | Lane | Taktung | Zweck | Fallback |
 | --- | --- | --- | --- |
-| Permanent Self-Hosted Research Loop | alle 30 min | Frontier-QA + lokale Reproduktion | Hosted Research Failover |
+| Permanent Self-Hosted Research Loop | alle 10 min | Frontier-QA + lokale Reproduktion | Hosted Research Failover |
 | Hosted Research Failover | alle 30 min | nur bei stale Self-Hosted Heartbeat | keiner |
 | Unified Research Orchestrator | täglich 03:30 UTC | Beobachtung + bounded Preflight | GitHub-hosted |
 | Free AI Worker Fabric | alle 6 h | adversariales Design/Review | Provider fail-closed überspringen |
