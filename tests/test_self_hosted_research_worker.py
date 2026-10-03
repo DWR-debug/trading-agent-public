@@ -16,6 +16,9 @@ def test_frontier_workpacks_rotate_and_keep_q100_dependency_safe():
     assert set(steps1).isdisjoint(steps2)
     assert set(steps2).isdisjoint(steps3)
     assert set(steps1).isdisjoint(steps3)
+    all_frontier_steps = set().union(steps1, steps2, steps3)
+    assert all_frontier_steps == set(range(1, len(worker.LANES["autonomous_frontier_qa"]) + 1))
+    assert [len(steps1), len(steps2), len(steps3)] == [10, 10, 10]
     groups = worker.execution_groups("autonomous_frontier_qa", len(worker.LANES["autonomous_frontier_qa"]), 0)
     assert groups[0][-1] != 8
     assert 5 in groups[0]
