@@ -57,3 +57,6 @@ Establish deterministic historical security identity mapping and immutable origi
 ## Scientific boundary
 
 No returns, holdout use, ranking, selection, tuning, performance authorization, promotion or live execution.
+## File-schema contract
+
+The FINRA format guide requires a header and a final numeric trailer containing the number of produced records. The `Market` field identifies the reporting facility, so the same symbol may legitimately occur on multiple market rows. The parser therefore keys uniqueness by `(Symbol, Market)`, preserves all fixed-symbol rows, and verifies the trailer count against parsed data rows. This is a source-schema correction only; it creates no performance evidence.
