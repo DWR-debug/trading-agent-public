@@ -897,7 +897,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-03T16:41:50.007Z",
+  "generated_at_utc": "2026-10-03T16:41:10Z",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1303,33 +1303,43 @@
     "recent_commits": [
       {
         "sha": "37a35aefc214cd8cc96232cc9a3b81e5b9d565f4",
-        "timestamp": "2026-10-03T16:41:50.090Z",
+        "timestamp": "2026-10-03T16:40:51Z",
         "message": "OPS: include Q130-R1 in active frontier status focus"
       },
       {
         "sha": "75ed4a99765d71963e71c2cd0d0a5c2614c6a4c1",
-        "timestamp": "2026-10-03T16:41:50.090Z",
+        "timestamp": "2026-10-03T16:39:42Z",
         "message": "FIX: Q121-R1 SEC submission-header identity parsing"
       },
       {
-        "sha": "53cc3b76d20d09590a2284fc318e7ec6f4097a7f",
-        "timestamp": "2026-10-03T16:41:50.090Z",
-        "message": "RESEARCH: Q127-R1 FINRA Reg-SHO historical PIT feasibility"
+        "sha": "c8eb5418f4bafa29ab1a5c7a3812e938ddcef35d",
+        "timestamp": "2026-10-03T16:39:12Z",
+        "message": "TEST: cover SEC submission-header identity and URL normalization"
+      },
+      {
+        "sha": "ec7c55affdf094392c051cdebfb18e203d09b4c3",
+        "timestamp": "2026-10-03T16:39:05Z",
+        "message": "FIX: correct SEC index-header URL regex and provenance field"
+      },
+      {
+        "sha": "46d855ab4def01b265b67f9c25567157b17979f8",
+        "timestamp": "2026-10-03T16:38:12Z",
+        "message": "FIX: parse SEC submission header for subject and filer CIK identity"
       },
       {
         "sha": "b70684ee7f7e2f913d42ef16264de63bf7f03d23",
-        "timestamp": "2026-10-03T16:41:50.090Z",
+        "timestamp": "2026-10-03T16:37:02Z",
         "message": "RESEARCH: Q130-R1 Wikimedia historical attention source feasibility"
       },
       {
-        "sha": "09c11738b2a4c7d19981352c5945031c5affad0e",
-        "timestamp": "2026-10-03T16:41:50.090Z",
-        "message": "OPS: synchronize current operational status"
+        "sha": "3404f3116f242ade85bafed048fff9c2c463b545",
+        "timestamp": "2026-10-03T16:36:47Z",
+        "message": "GOV: bind Q130-R1 registry entry to dedicated issue"
       },
       {
-        "sha": "26e9f45fb1f7c128656312cbe164d8f8ac86ddaf",
-        "timestamp": "2026-10-03T16:41:50.090Z",
-        "message": "GOV: register Q121-R1 workflow in lifecycle and integrity checks"
+        "sha": "f3ab9f551b5516aac52627ff164cf126682d48e3",
+        "timestamp": "2026-10-03T16:36:42Z",
+        "message": "GOV: bind Q130-R1 preregistration to dedicated issue"
       }
     ]
   },
