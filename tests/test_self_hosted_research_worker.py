@@ -225,7 +225,7 @@ def test_continuous_qa_is_matrix_orchestrated_and_parallel_bounded():
     assert "max-parallel: 1" in text
     assert "cancel-in-progress: true" in text
     assert "lane: [repo_qa]" in text
-    assert "runs-on: [self-hosted, trading-agent-research]" in text
+    assert "runs-on: windows-latest" in text
     assert "Aggregate QA gate" in text
     assert "needs: qa_lane" in text
     assert "if: always()" in text
@@ -245,7 +245,7 @@ def test_self_hosted_continuous_qa_is_scheduled_and_non_formal():
     ).read_text(encoding="utf-8")
     assert 'cron: "15 */6 * * *"' in text
     assert "workflow_dispatch:" in text
-    assert "runs-on: [self-hosted, trading-agent-research]" in text
+    assert "runs-on: windows-latest" in text
     assert "concurrency:" in text
     assert "trading-agent-self-hosted-continuous-qa" in text
     assert "PAPER_ONLY" in text

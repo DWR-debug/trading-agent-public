@@ -13,6 +13,7 @@ import re
 from pathlib import Path
 from typing import Any
 
+
 ROOT = Path(__file__).resolve().parents[1]
 SAFETY = {
     "paper_only": True,
@@ -385,6 +386,7 @@ def audit(root: Path = ROOT) -> dict[str, Any]:
         )
 
     _audit_authorizations(root, errors, active_by_trial)
+
     return {
         "schema_version": 1,
         "governance_contract_version": 2,
