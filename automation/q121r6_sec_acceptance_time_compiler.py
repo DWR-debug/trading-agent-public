@@ -187,7 +187,13 @@ def compile_header(row: dict[str, str], body: bytes) -> dict[str, object]:
         raise RuntimeError(f"MISSING_FILED_BY_CIK:{row['accession_number']}")
     if not accepted:
         raise RuntimeError(f"MISSING_ACCEPTANCE_DATETIME:{row['accession_number']}")
-    if filed_as_of and filed_as_of.replace("-", "") != row["filed_date"].replace("-", ""):
+    if not filed_as_of:
+        raise RuntimeError(f"MISSING_FILED_AS_OF_DATE:{row['accession_number']}")
+    if not accession_header:
+        raise RuntimeError(f"MISSING_ACCESSION_NUMBER:{row['accession_number']}")
+    if not submission_type:
+        raise RuntimeError(f"MISSING_SUBMISSION_TYPE:{row['accession_number']}")
+    if filed_as_of.replace("-", "") != row["filed_date"].replace("-", ""):
         raise RuntimeError(
             f"FILED_DATE_MISMATCH:{row['accession_number']}:{row['filed_date']}:{filed_as_of}"
         )
