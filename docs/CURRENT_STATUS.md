@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `5d1bdeaed2675c2c0237c0b7515cfb5e07084b49`
+**Current operational snapshot:** `652c430fae4c57f757fd7c8e73f4535ac8555281`
 
-**Generated (UTC):** `2026-10-03T11:07:22Z`
+**Generated (UTC):** `2026-10-03T11:38:26.679862+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -18,7 +18,6 @@
 - Bounded agent routing uses two queue lanes with fail-closed task contracts.
 - Continuous QA is scheduled every 6 hours on GitHub-hosted Windows and uses only the bounded `repo_qa` lane; it consumes no self-hosted Windows research slot.
 - The deterministic frontier loop runs every 10 minutes on free GitHub-hosted Ubuntu; its three 10-step packs cover all 30 frontier-worker steps.
-- Deep Frontier Public Source Feasibility runs every 12 hours on hosted Ubuntu and is source/PIT feasibility only; it never creates formal evidence.
 - Windows Self-Hosted capacity is reserved for local reproduction and local-AI/hardware-dependent work.
 - Latest self-hosted capacity verification: two distinct Windows/X64 runner slots accepted concurrent jobs; see the timestamped capacity receipt.
 - S10 phone capability receipt: **S10_UTILITY_ACCEPTED**; receipt-gated eligibility = **True**.
