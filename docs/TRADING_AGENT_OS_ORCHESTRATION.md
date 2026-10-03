@@ -1,6 +1,6 @@
 # Trading Agent OS — Persistent Orchestration
 
-Stand: 2026-10-02
+Stand: 2026-10-03
 
 ## Zweck
 
@@ -13,6 +13,25 @@ Das OS arbeitet nach dem Prinzip: verfügbar + unabhängig + zulässig + sinnvol
 Bereits laufende Arbeit wird nicht dupliziert. Kostenlose Ressourcen werden nicht künstlich verbraucht. Wissenschaftliche Wahrheit entsteht nur über deterministische Forschung, formale Preregistration, PIT-/Coverage-Gates und unveränderliche Receipts.
 
 AI- und Coding-Agenten dürfen Forschung technisch beschleunigen, aber weder Holdouts auswählen noch Parameter, Assets oder Horizonte nachträglich optimieren, Performance autorisieren, Kandidaten promoten oder Live-Trading auslösen.
+
+
+## 2a. Persistent acceleration policy
+
+The acceleration contract is stored in `research/governance/persistent_research_acceleration_contract.json` and is part of the mandatory start logic for every new `trading agent` chat.
+
+The permanent rule is:
+
+**verify current state → snapshot live capacity → parallelize independent work → use the smallest useful free resource → cheap falsify early → expose robustness early → immediately independently replicate a complete formal pass.**
+
+The two Windows self-hosted lanes remain the primary deterministic capacity. The autonomous frontier lane uses bounded internal concurrency (default 3 workers); local reproduction and other QA/reproduction paths remain serial unless explicitly proven safe to parallelize.
+
+S10 is not a background decoration resource. When its accepted receipt is valid, its phone-side runtime is live and a bounded useful task exists, it may be used both on its regular six-hour cadence and after meaningful research-runner or critical-governance changes. Its output remains QA/review support only.
+
+Already-running work is never duplicated. No resource is activated merely to consume quota. Scientific evidence, performance authorization, candidate selection, promotion and live trading are unchanged.
+
+### Mobile capacity decision rule
+
+The existing Samsung fleet registry already provides five uniquely labelled slots. An additional physical phone is therefore **not required now**. A new device should be activated only as a controlled capacity experiment when independent measurable throughput gain is expected; recurring use requires measured benefit sufficient to justify the added operational complexity.
 
 ## 2. Dauerbetrieb ohne Chat
 
