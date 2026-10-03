@@ -8,6 +8,15 @@ from automation import self_hosted_research_worker as worker
 ROOT = Path(__file__).parents[1]
 
 
+def test_frontier_execution_groups_keep_q100_after_q096_and_q098():
+    groups = worker.execution_groups("autonomous_frontier_qa", len(worker.LANES["autonomous_frontier_qa"]))
+    assert groups[0][-1] != 8
+    assert 5 in groups[0]
+    assert 6 in groups[0]
+    assert groups[-1] == [8]
+    assert worker.execution_groups("local_reproduction", len(worker.LANES["local_reproduction"])) == [[1, 2, 3]]
+
+
 def test_frontier_lane_has_bounded_parallelism_and_reproduction_stays_serial():
     assert worker.default_max_workers("autonomous_frontier_qa") == 3
     assert worker.default_max_workers("local_reproduction") == 1
