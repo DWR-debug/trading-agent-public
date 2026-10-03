@@ -235,6 +235,17 @@
         "candidate_inventory_path": "research/frontier/q133_q170_pit_readiness_wave_2026_10_03.json",
         "class": "source-feasible-public-information-pit-readiness",
         "code": "FRONTIER-Q133-Q170-PIT-R1",
+        "micro_pit": {
+          "candidates": [
+            "Q137",
+            "Q144"
+          ],
+          "design_document": "docs/research_design/Q137_Q144_MICRO_PIT_R1_2026-10-03.md",
+          "note": "Bounded historical sample only; full candidate-specific PIT coverage and independent reproduction remain required.",
+          "page_map": "research/governance/q144_q107_wikipedia_page_map_2026_10_03.json",
+          "performance_authorization_allowed": false,
+          "state": "MICRO_PIT_SAMPLE_ACTIVE"
+        },
         "note": "Downstream PIT contract/sample gate only; no performance, ranking, selection, tuning, promotion or live execution.",
         "parent_code": "FRONTIER-20260928",
         "performance_authorization_allowed": false,
@@ -806,7 +817,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T13:54:46.814737+00:00",
+  "generated_at_utc": "2026-10-03T14:08:54.255076+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1211,53 +1222,61 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "research/q147-q148-eia-clock-contract-20261003",
+        "number": 935,
+        "title": "RESEARCH: define Q147/Q148 EIA PIT clock contract",
+        "updatedAt": "2026-10-03T14:08:26Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/935"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "fix/q171-warc-infra-classification-20261003",
         "number": 933,
         "title": "FIX: classify Q171 WARC access failures as infrastructure",
-        "updatedAt": "2026-10-03T13:54:21Z",
+        "updatedAt": "2026-10-03T14:05:11Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/pull/933"
       }
     ],
     "recent_commits": [
       {
-        "message": "Merge pull request #932 from DWR-debug/research/q133-q170-pit-readiness-r1-20261003",
-        "sha": "5c1df4facc4b7542bb9a7ee2e627e919e8f55483",
-        "timestamp": "2026-10-03T15:54:34+02:00"
+        "message": "Merge pull request #934 from DWR-debug/research/q137-q144-micro-pit-r1-20261003",
+        "sha": "e0641ff414af2b1efcbde10dc0371dee67a5fa90",
+        "timestamp": "2026-10-03T16:08:43+02:00"
       },
       {
-        "message": "FIX: register Q133-Q170 PIT readiness workflow in integrity guard",
-        "sha": "da265987124cee3e526d87af7474d9959be37212",
-        "timestamp": "2026-10-03T15:53:10+02:00"
+        "message": "FIX: treat Q137 Q144 partial sample as explicit evidence",
+        "sha": "453ce314736b93027235ec1dc8e0b89e42f69a19",
+        "timestamp": "2026-10-03T16:07:19+02:00"
       },
       {
-        "message": "CI: run Q133-Q170 PIT readiness on pull requests",
-        "sha": "0342e52fb51be89af1a4ce57893bfdc59bc1d208",
-        "timestamp": "2026-10-03T15:51:45+02:00"
+        "message": "FIX: classify Q137 Q144 partial sample results without pipeline failure",
+        "sha": "cd1e52eadc0389c810bd27449aff87572bab0ecf",
+        "timestamp": "2026-10-03T16:06:09+02:00"
       },
       {
-        "message": "OPS: surface Q133-Q170 PIT readiness in status sync",
-        "sha": "9370fab11f1bbb0630eb43ffdcffe5963a07aa86",
-        "timestamp": "2026-10-03T15:50:27+02:00"
+        "message": "GOVERNANCE: register Q137 Q144 micro PIT subgate",
+        "sha": "3e0e6ccb5eaa3fced969149a8d1f6e98bf7e36c4",
+        "timestamp": "2026-10-03T16:04:29+02:00"
       },
       {
-        "message": "GOVERNANCE: register Q133-Q170 PIT readiness R1",
-        "sha": "ddc5fb2933167480fd35d58c38580ca73b6125dc",
-        "timestamp": "2026-10-03T15:49:55+02:00"
+        "message": "RESEARCH: add Q137 Q144 micro PIT sample to PIT wave",
+        "sha": "b5983fe69189c623ec3d7628376e63cb47a82d7c",
+        "timestamp": "2026-10-03T16:04:19+02:00"
       },
       {
-        "message": "OPS: add Q133-Q170 PIT readiness workflow",
-        "sha": "e8cbc6f0a5a87831ae289b94090b2b9bdf11fd4e",
-        "timestamp": "2026-10-03T15:49:18+02:00"
+        "message": "TEST: guard Q137 Q144 micro PIT boundary",
+        "sha": "15360d75c9f1f8404a9a1740b6f911b1a740b7e1",
+        "timestamp": "2026-10-03T16:03:41+02:00"
       },
       {
-        "message": "TEST: guard Q133-Q170 PIT readiness boundary",
-        "sha": "61d616484bbb50b2d971b42b61ceef5e04c878d8",
-        "timestamp": "2026-10-03T15:48:56+02:00"
+        "message": "RESEARCH: add Q137 Q144 historical micro PIT sample",
+        "sha": "c3cc3139178057d06d89e3c7971166e1510120ab",
+        "timestamp": "2026-10-03T16:03:32+02:00"
       },
       {
-        "message": "RESEARCH: add Q133-Q170 PIT readiness R1",
-        "sha": "fbadcfbf88160c7f6c85b08951e1be14abf07186",
-        "timestamp": "2026-10-03T15:48:53+02:00"
+        "message": "RESEARCH: define Q137 Q144 micro PIT sample",
+        "sha": "788d8e5b40eeac702004807c83aa82e10787e4b6",
+        "timestamp": "2026-10-03T16:03:04+02:00"
       }
     ]
   },
@@ -1327,12 +1346,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5c1df4facc4b7542bb9a7ee2e627e919e8f55483",
+  "source_master_sha": "e0641ff414af2b1efcbde10dc0371dee67a5fa90",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37127792638"
+    "run_id": "37128610572"
   }
 }
