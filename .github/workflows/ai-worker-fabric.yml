@@ -145,9 +145,11 @@ jobs:
           retention-days: 14
 
   gemini_worker:
+    # Individual-account Gemini CLI traffic moved to Antigravity; keep this
+    # legacy API-key worker manual-only to avoid scheduled 503 churn.
     if: >-
       ${{ github.repository == 'DWR-debug/trading-agent-public' &&
-          (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+          github.event_name == 'workflow_dispatch' }}
     concurrency:
       group: trading-agent-ai-gemini-free
       cancel-in-progress: false
@@ -264,9 +266,12 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
   mistral_worker:
+    # Mistral is retained as an opportunistic manual worker while the observed
+    # hosted endpoint is rate-limited; OpenRouter + local Antigravity remain
+    # the scheduled free paths.
     if: >-
       ${{ github.repository == 'DWR-debug/trading-agent-public' &&
-          (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+          github.event_name == 'workflow_dispatch' }}
     concurrency:
       group: trading-agent-ai-mistral-free
       cancel-in-progress: false
