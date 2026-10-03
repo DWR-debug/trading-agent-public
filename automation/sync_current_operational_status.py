@@ -117,6 +117,7 @@ def generate(
     q129_receipt = _load_json(ROOT / "research/evidence/q129_independent_pit_2026_10_03.json", {})
     q133_q170_receipt = _load_json(ROOT / "research/evidence/q133_q170_source_feasibility_2026_10_03.json", {})
     q171_q177_pit_receipt = _load_json(ROOT / "research/evidence/q171_q177_pit_readiness_2026_10_03.json", {})
+    source_pit_frontier_outcomes = _load_json(ROOT / "research/evidence/source_pit_frontier_outcomes_2026_10_03.json", {})
 
     safety = _safety_state()
     from config import settings
@@ -333,6 +334,19 @@ def generate(
             "promotion or live execution."
         )
 
+    if source_pit_frontier_outcomes.get("generated_from_verified_workflow_runs") is True:
+        recorded_next_research_focus = (
+            "Verified 2026-10-03 Source/PIT outcomes: Q121-R1 issuer-oriented SEC browse route was "
+            "falsified by its preregistered subject-issuer identity contract; Q121-R2 was therefore "
+            "blocked without reconciliation; Q127-R1 historical FINRA Reg-SHO retrieval completed but "
+            "revision lineage and same-day PIT safety remain unresolved; Q130-R1 historical Wikimedia "
+            "attention retrieval completed but its publication/revision boundary remains unresolved; "
+            "Q131-R1 produced no matching filings in its fixed preregistered window, so no complexity "
+            "vector was inferred. Next work is an independently preregistered alternative Q121 source "
+            "route plus candidate-specific PIT compilers for the active orthogonal frontier. No outcome "
+            "above authorizes performance, holdout selection, tuning, ranking, promotion or live execution."
+        )
+
     current = {
         "schema_version": "1.0",
         "status_type": "current_operational_project_state",
@@ -536,6 +550,7 @@ def generate(
         "q129_options": q129_receipt,
         "q133_q170_source_feasibility": q133_q170_receipt,
         "q171_q177_pit_readiness": q171_q177_pit_receipt,
+        "source_pit_frontier_outcomes": source_pit_frontier_outcomes,
         "scientific_state_recorded": {
             "latest_formal_trial": latest_formal.get("trial_id") or project_state.get("latest_formal_trial"),
             "latest_formal_status": latest_formal.get("status") or project_state.get("latest_trial_status"),
@@ -653,6 +668,15 @@ def generate(
 - Independent Q129 PIT/structural reproduction: **REPRODUCED**; workflow run `37123847841`, receipt fingerprint `41d723734f030d1a212f5eb4b3e6467223a5cfcdeb97c77ffa9713f8889c7587`.
 - The fixed downstream view preserves raw rows and quarantines quote/calendar anomalies deterministically; same-day use remains **False**.
 - This receipt does **not** authorize performance, holdout selection, ranking, tuning, promotion or live execution.
+
+### Verified Source/PIT Frontier Outcomes — 2026-10-03
+
+- **Q121-R1:** `Q121R1_SOURCE_ROUTE_FALSIFIED`; the preregistered SEC browse route failed its subject-issuer identity contract. The verified workflow receipt records 93 discovered entries and 15 deterministic identity checks; receipt fingerprint `9c9a3a4fa05ccc5aa8e59d254c75577abb60b869dd53ff35505b335424cfbf8e`.
+- **Q121-R2:** `Q121R2_BLOCKED_BY_Q121R1_FALSIFICATION`; no independent reconciliation was claimed. Receipt fingerprint `fd7b63d9f05e0cf9abf588c9c2d6c2ff02e2ea413927218de6f4e1c29f9fff97`.
+- **Q127-R1:** `Q127R1_SOURCE_PIT_FEASIBILITY_COMPLETED`; four fixed historical dates were retrieved and parsed. Revision lineage and same-day PIT safety remain unresolved. Receipt fingerprint `60815a092421762ac1da2a96d003865b72f25eb640778287964a9648cdfc5b74`.
+- **Q130-R1:** `Q130R1_SOURCE_FEASIBILITY_COMPLETED`; the frozen historical Wikimedia source probe passed, while publication/revision timing remains outside formal same-day PIT safety.
+- **Q131-R1:** `Q131R1_FIXED_WINDOW_NO_MATCHING_FILINGS`; the fixed 2025-09-22 through 2025-09-24 issuer/form window yielded zero matching filings, so no complexity vector was inferred. Receipt fingerprint `e5d5077874d3eaa06b688c7294e83c42d3797da1c9cffdfdb98e067112d07a70`.
+- These are discovery/source/PIT findings only. They do not authorize performance, holdout selection, tuning, ranking, promotion or live execution.
 
 ### Q171–Q178 Public Source Frontier
 
