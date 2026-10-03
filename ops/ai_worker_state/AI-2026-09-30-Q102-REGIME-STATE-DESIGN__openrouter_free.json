@@ -25,13 +25,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.604,
-  "stdout": "",
-  "stderr": "OpenRouter HTTP 429: {\"error\":{\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\",\"code\":429,\"metadata\":{\"headers\":{\"X-RateLimit-Limit\":\"50\",\"X-RateLimit-Remaining\":\"0\",\"X-RateLimit-Reset\":\"1790985600000\"},\"limit_source\":\"openrouter_free_tier_daily\",\"remedy_hint\":\"Wait for the daily reset (see X-RateLimit-Reset), or purchase credits to raise your free-model daily limit.\",\"provider_name\":null,\"previous_errors\":[{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"}]}},\"user_id\":\"user_3K3ZJKAZq4v0T1h5GaKRbugCtn4\"}",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 12.88,
+  "stdout": "**Worker Handoff: Q102 Regime Diagnostic & RCCSM Design Review**\n\n**Findings**\n- Q102 atlas consumes only the immutable `q090_q089_failure_diagnosis_result.json` artifact and reports regime-level directional consensus without new market data or performance trials. The test expectation that `DOWNTREND_HIGHVOL` shows a *positive* common direction and `UPTREND_LOWVOL` shows *negative* is counter-intuitive; treat it as a pattern flag, not evidence of mechanism decay.\n- RCCSM state topology is strictly lagged OHLCV (`uses_future_bars=False`, `uses_holdout=False`). State descriptors are bounded in `[0,1]` by construction.\n- Synthetic routing tests verify structural admissibility maps only; they do not validate predictive power or separate state-wide exposure from mechanism-specific decay.\n\n**Counterarguments / Confounds**\n1. **Common-mode confounding**: Regime consensus may reflect market-wide volatility/macro shocks, not mechanism-specific decay.\n2. **Descriptor overlap**: Trend coherence and breadth are both momentum-derived; dispersion percentile uses a 252-day history that may include the current regime, risking leakage.\n3. **Missing state dimensions**: External inspiration (Cong et al., Didisheim et al.) argues predictability is state-dependent and news is partly predictable; RCCSM state descriptors omit news residuals and shareholder experience, which may be the actual drivers of mechanism failure.\n4. **Synthetic coverage**: Only 4 frozen scenarios are tested; unseen state combinations may route incorrectly.\n5. **Q102 artifact dependency**: If the diagnostic artifact is not `COMPLETED_DIAGNOSTIC_ONLY` or lacks `no_new_performance_trial`, the atlas aborts—any re-run requires the exact same artifact.\n\n**Cheap Integrity / PIT-Feasibility Tests**\n1. **Lookahead audit**: Run `state_at` on a synthetic series where bar `i+1` is NaN; confirm it raises or excludes.\n2. **Descriptor correlation audit**: Compute pairwise correlations of the four state descriptors across a grid of synthetic price paths; flag pairs > 0.8.\n3. **Regime-coverage audit**: Verify every regime in the Q102 artifact has `day_count >= 20` (cheap threshold) before any further use.\n4. **Synthetic routing exhaustiveness**: Enumerate all 4^4 = 256 binary admissibility combinations and verify the frozen routing rules produce a consistent map (no contradictions).\n5. **Fingerprint determinism**: Re-run Q102 and Q103 receipts twice; confirm identical hashes.\n\n**Discard Conditions**\n- Any state descriptor uses future bars or holdout outcomes.\n- Synthetic routing expectations contradict the frozen RCCSM design document.\n- Q102 artifact status is not `COMPLETED_DIAGNOSTIC_ONLY`.\n- Regime day counts are too low for reliable direction estimation.\n- External news/text feeds required by C31/C30 are unavailable in project infrastructure.\n\n**Overlap with Existing Research**\n- Q082:C22-C25 (shareholder experience) may overlap with trend/breadth; treat as behavioral-state variable, not a separate return transform.\n- C30 peer-network may overlap with dispersion if peers are correlation-based.\n- C31 sentiment may overlap with shock density if news drives shocks.\n\n**Concrete Next Actions**\n1. Replay Q102 atlas on the immutable artifact and record regime directions without interpreting them as signal rankings.\n2. Run RCCSM synthetic validation and archive the structural receipt.\n3. Execute the lookahead audit and descriptor correlation audit on synthetic data.\n4. Document the four confounds above in the research registry as open questions, not resolved findings.\n\n**Uncertainty**\n- Real-market values of trend coherence, breadth, dispersion percentile, and shock density are unknown from the provided context.\n- Whether the frozen routing rules are admissible for all possible state combinations is untested outside the four synthetic scenarios.\n- The Q102 common-mode patterns may be artifacts of the specific failure-diagnosis sample and may not generalize.\n\n**Safety Declaration**\n- Paper-only, no live trading, no orders, no automatic promotion, no performance authorization, no holdout selection, no parameter/threshold/horizon selection.",
+  "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": null,
-  "usage": null
+  "response_id": "gen-1790986768-ShbI42zz8dFHcZFrtKcx",
+  "usage": {
+    "prompt_tokens": 5639,
+    "completion_tokens": 2960,
+    "total_tokens": 8599,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2139,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
