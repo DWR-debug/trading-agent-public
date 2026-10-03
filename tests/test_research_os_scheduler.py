@@ -36,3 +36,41 @@ def test_research_os_scheduler_module_is_syntactically_parseable():
 def test_scheduler_has_no_literal_newline_in_plan_dictionary_separator():
     text = (ROOT / "automation" / "research_os_scheduler.py").read_text(encoding="utf-8")
     assert '},\\n    "resource_policy"' not in text
+
+
+def test_s10_fresh_successful_run_is_a_bounded_presence_signal(monkeypatch, tmp_path):
+    import json
+    from datetime import datetime, timezone
+    import automation.research_os_scheduler as scheduler
+    path = tmp_path / "ops" / "s10_runtime_status.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps({
+        "eligible": True,
+        "receipt_status": "S10_UTILITY_ACCEPTED",
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "utility_task_status": "S10_UTILITY_REVIEW_COMPLETED",
+    }), encoding="utf-8")
+    monkeypatch.setattr(scheduler, "S10_OS_STATUS_PATH", path)
+    monkeypatch.setattr(scheduler, "S10_ACCEPTANCE_PATH", tmp_path / "missing.json")
+    state = scheduler._s10_resource_state()
+    assert state["eligible"] is True
+    assert state["presence_signal"] == "fresh_successful_s10_run"
+    assert state["presence_signal_fresh"] is True
+
+
+def test_s10_stale_success_receipt_does_not_route(monkeypatch, tmp_path):
+    import json
+    from datetime import datetime, timezone, timedelta
+    import automation.research_os_scheduler as scheduler
+    path = tmp_path / "ops" / "s10_runtime_status.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps({
+        "eligible": True,
+        "receipt_status": "S10_UTILITY_ACCEPTED",
+        "generated_at_utc": (datetime.now(timezone.utc) - timedelta(hours=7)).isoformat(),
+    }), encoding="utf-8")
+    monkeypatch.setattr(scheduler, "S10_OS_STATUS_PATH", path)
+    monkeypatch.setattr(scheduler, "S10_ACCEPTANCE_PATH", tmp_path / "missing.json")
+    state = scheduler._s10_resource_state()
+    assert state["eligible"] is False
+    assert state["presence_signal_fresh"] is False
