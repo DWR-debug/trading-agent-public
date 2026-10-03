@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `37a35aefc214cd8cc96232cc9a3b81e5b9d565f4`
+**Current operational snapshot:** `09fe5a0d3f302d8504d7c798b44182d0e960123d`
 
-**Generated (UTC):** `2026-10-03T16:41:10Z`
+**Generated (UTC):** `2026-10-03T16:51:34Z`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -59,11 +59,13 @@
 
 - **Q121-R1 — SEC beneficial-ownership reverse issuer coverage:** **SOURCE_ROUTE_CORRECTION_ACTIVE**. The original Q121 issuer-submission route is not treated as a complete issuer-level population. Q121-R1 re-derives issuer-oriented filing coverage while preserving Subject/Filer CIK separately. Its first real probe exposed a parser failure at the SEC identity layer; the parser was corrected against the SEC submission-header structure and merged in 75ed4a99765d71963e71c2cd0d0a5c2614c6a4c1. A new post-fix scientific receipt has **not yet been independently verified**.
 
-- **Q127-R1 — FINRA Reg-SHO historical source/PIT:** **SOURCE_PIT_FEASIBILITY_ACTIVE**. Fixed historical Consolidated NMS retrieval, schema validation and provenance capture are implemented. FINRA's documented same-day 18:00 ET publication statement is treated as an upper bound, not an exact historical first-publication clock; later update/revision lineage remains unresolved. The first workflow run was cancelled during merge lifecycle, so no scientific receipt is claimed.
+- **Q121-R2 — independent SEC daily-index reconciliation:** **INDEPENDENT_SOURCE_RECONCILIATION_ACTIVE**. Deterministic Q121-R1 anchor filings are cross-checked against historical SEC EDGAR daily master indexes, then rechecked for filer/subject identity and acceptance timestamp. This is a second source architecture, but only a bounded anchor reconciliation: it does **not** prove full-window population exhaustiveness. No scientific receipt has been independently verified.
+
+- **Q127-R1 — FINRA Reg-SHO historical source/PIT:** **SOURCE_PIT_FEASIBILITY_ACTIVE**. Fixed historical Consolidated NMS retrieval, schema validation and provenance capture are implemented. The parser was hardened to honor FINRA's final numeric record-count trailer and preserve multiple reporting-facility rows per symbol by `(Symbol, Market)` identity. FINRA's documented same-day 18:00 ET publication statement remains an upper bound, not an exact historical first-publication clock; later update/revision lineage remains unresolved. No new scientific receipt has been independently verified.
 
 - **Q130-R1 — Wikimedia Pageviews historical attention:** **SOURCE_FEASIBILITY_ACTIVE**. Public daily pageview retrieval is implemented for the fixed Q107 issuer/article map. The track does not claim an exact historical publication clock or immutable revision lineage. Its first workflow run was cancelled during merge lifecycle, so no scientific receipt is claimed.
 
-All three tracks are **discovery/source/PIT only**. None creates performance authorization, holdout selection, ranking, tuning, promotion or live execution.
+All four tracks are **discovery/source/PIT only**. None creates performance authorization, holdout selection, ranking, tuning, promotion or live execution.
 
 ### Q129 Options Source / PIT
 
