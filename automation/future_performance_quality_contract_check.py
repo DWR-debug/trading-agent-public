@@ -24,9 +24,12 @@ def load(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def validate() -> dict:
-    policy = load(POLICY_PATH)
-    registry = load(REGISTRY_PATH)
+def validate(root: Path = ROOT) -> dict:
+    root = root.resolve()
+    policy_path = root / "research" / "governance" / "critical_research_quality_control.json"
+    registry_path = root / "research" / "governance" / "active_research_registry.json"
+    policy = load(policy_path)
+    registry = load(registry_path)
     required_robustness = set(policy["early_robustness"]["required_dimensions"])
     violations: list[str] = []
 
@@ -35,7 +38,7 @@ def validate() -> dict:
         if entry.get("performance_authorization_allowed") is not True and state not in AUTHORIZED_STATES:
             continue
 
-        prereg_path = ROOT / entry["preregistration_path"]
+        prereg_path = root / entry["preregistration_path"]
         if not prereg_path.is_file():
             violations.append(f"{entry.get('code')}: missing preregistration")
             continue
@@ -50,6 +53,79 @@ def validate() -> dict:
                 violations.append(f"{entry.get('code')}: incomplete robustness dimensions")
             if robustness.get("research_only_before_formal_pass") is not True:
                 violations.append(f"{entry.get('code')}: robustness contract is not research-only")
+
+        robustness_receipt = prereg.get("pre_performance_robustness")
+        if not isinstance(robustness_receipt, dict):
+            violations.append(f"{entry.get('code')}: missing pre_performance_robustness receipt")
+        else:
+            required_receipt_fields = (
+                "trial_id",
+                "status",
+                "artifact_path",
+                "artifact_sha256",
+                "research_only",
+                "screen_is_descriptive_only",
+                "no_post_hoc_tuning",
+            )
+            for field in required_receipt_fields:
+                if field not in robustness_receipt:
+                    violations.append(f"{entry.get('code')}: robustness receipt missing {field}")
+            if robustness_receipt.get("trial_id") != entry.get("trial_id"):
+                violations.append(f"{entry.get('code')}: robustness receipt trial_id mismatch")
+            if robustness_receipt.get("status") != "PRE_PERFORMANCE_ROBUSTNESS_COMPLETED":
+                violations.append(f"{entry.get('code')}: robustness receipt status invalid")
+            if robustness_receipt.get("research_only") is not True:
+                violations.append(f"{entry.get('code')}: robustness receipt is not research-only")
+            if robustness_receipt.get("screen_is_descriptive_only") is not True:
+                violations.append(f"{entry.get('code')}: robustness screen is not descriptive-only")
+            if robustness_receipt.get("no_post_hoc_tuning") is not True:
+                violations.append(f"{entry.get('code')}: robustness receipt permits post-hoc tuning")
+
+            artifact_path = robustness_receipt.get("artifact_path")
+            artifact_sha256 = robustness_receipt.get("artifact_sha256")
+            if isinstance(artifact_path, str) and artifact_path:
+                artifact = root / artifact_path
+                if not artifact.is_file():
+                    violations.append(f"{entry.get('code')}: robustness artifact missing: {artifact_path}")
+                elif isinstance(artifact_sha256, str) and artifact_sha256:
+                    actual_sha = __import__("hashlib").sha256(artifact.read_bytes()).hexdigest()
+                    if actual_sha != artifact_sha256:
+                        violations.append(f"{entry.get('code')}: robustness artifact sha256 mismatch")
+                try:
+                    payload = load(artifact) if artifact.is_file() else {}
+                except Exception as exc:
+                    violations.append(f"{entry.get('code')}: robustness artifact unreadable: {exc}")
+                    payload = {}
+                if isinstance(payload, dict):
+                    if payload.get("trial_id") != entry.get("trial_id"):
+                        violations.append(f"{entry.get('code')}: robustness artifact trial_id mismatch")
+                    if payload.get("status") != "PRE_PERFORMANCE_ROBUSTNESS_COMPLETED":
+                        violations.append(f"{entry.get('code')}: robustness artifact status invalid")
+                    metrics = payload.get("metrics")
+                    if not isinstance(metrics, dict):
+                        violations.append(f"{entry.get('code')}: robustness artifact missing metrics object")
+                    else:
+                        missing_metrics = sorted(required_robustness - set(metrics))
+                        if missing_metrics:
+                            violations.append(
+                                f"{entry.get('code')}: robustness artifact missing metrics: {missing_metrics}"
+                            )
+                    governance = payload.get("governance")
+                    if not isinstance(governance, dict) or any(
+                        governance.get(key) is not False
+                        for key in (
+                            "holdout_selection",
+                            "parameter_search",
+                            "asset_search",
+                            "threshold_search",
+                            "horizon_search",
+                            "variant_search",
+                            "family_ranking",
+                            "promotion_decision",
+                            "performance_authorization",
+                        )
+                    ):
+                        violations.append(f"{entry.get('code')}: robustness artifact governance boundary invalid")
 
         replication = prereg.get("independent_replication")
         if not isinstance(replication, dict):
