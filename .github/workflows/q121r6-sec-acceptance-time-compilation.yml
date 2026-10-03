@@ -1,0 +1,198 @@
+name: Q121-R6 SEC Acceptance-Time Compilation
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - automation/q121r6_sec_acceptance_time_compiler.py
+      - automation/q121r6_sec_acceptance_time_aggregate.py
+      - tests/test_q121r6_sec_acceptance_time_compiler.py
+      - research/preregistrations/q121r6_sec_acceptance_time_compilation_2026_10_03.json
+      - .github/workflows/q121r6-sec-acceptance-time-compilation.yml
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 20
+    steps:
+      - name: Bootstrap exact repository and pinned Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal EnableExtensions
+          if /I not "%GITHUB_REPOSITORY%"=="DWR-debug/trading-agent-public" exit /b 1
+          if /I not "%GITHUB_REF%"=="refs/heads/master" exit /b 1
+          set "WORK=%RUNNER_TEMP%\q121r6-%GITHUB_SHA%"
+          set "ARCHIVE=%RUNNER_TEMP%\q121r6-%GITHUB_SHA%.tar.gz"
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15.nupkg"
+          if exist "%WORK%" rmdir /s /q "%WORK%"
+          mkdir "%WORK%" || exit /b 1
+          curl.exe -L --fail --silent --show-error -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%"
+          if errorlevel 1 exit /b 1
+          tar.exe -xzf "%ARCHIVE%" -C "%WORK%"
+          if errorlevel 1 exit /b 1
+          set "REPO_SRC="
+          for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
+          if not defined REPO_SRC exit /b 1
+          cd /d "%REPO_SRC%" || exit /b 1
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg"
+            if errorlevel 1 exit /b 1
+            mkdir "%PY_ROOT%" 2>nul
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%"
+            if errorlevel 1 exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          if not exist "%GITHUB_WORKSPACE%\q121r6-prepared" mkdir "%GITHUB_WORKSPACE%\q121r6-prepared"
+          "%PY_EXE%" -m automation.q121r6_sec_acceptance_time_compiler --prepare-population --output "%GITHUB_WORKSPACE%\q121r6-prepared\population.json"
+          if errorlevel 1 exit /b 1
+          if not exist "%GITHUB_WORKSPACE%\q121r6-prepared\population.json" exit /b 1
+          endlocal
+      - name: Contract tests
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          if not exist "%PY_EXE%" exit /b 1
+          "%PY_EXE%" -m pip install --disable-pip-version-check pytest >nul 2>&1
+          if errorlevel 1 exit /b 1
+          "%PY_EXE%" -m pytest -q tests/test_q121r6_sec_acceptance_time_compiler.py
+          if errorlevel 1 exit /b 1
+      - uses: actions/upload-artifact@v6
+        with:
+          name: q121r6-population-${{ github.run_id }}
+          path: q121r6-prepared/population.json
+          if-no-files-found: error
+          retention-days: 30
+
+  compile:
+    needs: prepare
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    strategy:
+      fail-fast: false
+      matrix:
+        shard_index: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 35
+    steps:
+      - name: Bootstrap exact repository and pinned Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal EnableExtensions
+          set "WORK=%RUNNER_TEMP%\q1216-%GITHUB_SHA%"
+          set "ARCHIVE=%RUNNER_TEMP%\q1216-%GITHUB_SHA%.tar.gz"
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15.nupkg"
+          if exist "%WORK%" rmdir /s /q "%WORK%"
+          mkdir "%WORK%" || exit /b 1
+          curl.exe -L --fail --silent --show-error -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%"
+          if errorlevel 1 exit /b 1
+          tar.exe -xzf "%ARCHIVE%" -C "%WORK%"
+          if errorlevel 1 exit /b 1
+          set "REPO_SRC="
+          for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
+          if not defined REPO_SRC exit /b 1
+          cd /d "%REPO_SRC%" || exit /b 1
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg"
+            if errorlevel 1 exit /b 1
+            mkdir "%PY_ROOT%" 2>nul
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%"
+            if errorlevel 1 exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          echo Q121R6_REPO=%REPO_SRC%>>"%GITHUB_ENV%"
+          echo Q121R6_PY=%PY_EXE%>>"%GITHUB_ENV%"
+          endlocal & set "Q121R6_REPO=%REPO_SRC%" & set "Q121R6_PY=%PY_EXE%"
+      - uses: actions/download-artifact@v6
+        with:
+          name: q121r6-population-${{ github.run_id }}
+          path: q121r6-input
+      - name: Run header shard
+        shell: cmd
+        run: |
+          @echo off
+          cd /d "%Q121R6_REPO%" || exit /b 1
+          if not exist "q121r6-input\population.json" exit /b 1
+          if exist "%GITHUB_WORKSPACE%\q121r6-shard" rmdir /s /q "%GITHUB_WORKSPACE%\q121r6-shard"
+          mkdir "%GITHUB_WORKSPACE%\q121r6-shard" || exit /b 1
+          "%Q121R6_PY%" -m automation.q121r6_sec_acceptance_time_compiler --population "%GITHUB_WORKSPACE%\q121r6-input\population.json" --output "%GITHUB_WORKSPACE%\q121r6-shard\result.json" --shard-index ${{ matrix.shard_index }} --shard-count 16 --workers 8 --request-gap-seconds 0.13
+          if errorlevel 1 exit /b 1
+      - uses: actions/upload-artifact@v6
+        with:
+          name: q121r6-shard-${{ matrix.shard_index }}-${{ github.run_id }}
+          path: q121r6-shard/result.json
+          if-no-files-found: error
+          retention-days: 30
+
+  aggregate:
+    needs: compile
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 20
+    steps:
+      - name: Bootstrap exact repository and pinned Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal EnableExtensions
+          set "WORK=%RUNNER_TEMP%\q1216a-%GITHUB_SHA%"
+          set "ARCHIVE=%RUNNER_TEMP%\q1216a-%GITHUB_SHA%.tar.gz"
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15.nupkg"
+          if exist "%WORK%" rmdir /s /q "%WORK%"
+          mkdir "%WORK%" || exit /b 1
+          curl.exe -L --fail --silent --show-error -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%"
+          if errorlevel 1 exit /b 1
+          tar.exe -xzf "%ARCHIVE%" -C "%WORK%"
+          if errorlevel 1 exit /b 1
+          set "REPO_SRC="
+          for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
+          if not defined REPO_SRC exit /b 1
+          cd /d "%REPO_SRC%" || exit /b 1
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg"
+            if errorlevel 1 exit /b 1
+            mkdir "%PY_ROOT%" 2>nul
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%"
+            if errorlevel 1 exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          echo Q121R6_REPO=%REPO_SRC%>>"%GITHUB_ENV%"
+          echo Q121R6_PY=%PY_EXE%>>"%GITHUB_ENV%"
+          endlocal & set "Q121R6_REPO=%REPO_SRC%" & set "Q121R6_PY=%PY_EXE%"
+      - uses: actions/download-artifact@v6
+        with:
+          pattern: q121r6-shard-*-${{ github.run_id }}
+          path: q121r6-shards
+          merge-multiple: true
+      - name: Aggregate and enforce boundary
+        shell: cmd
+        run: |
+          @echo off
+          cd /d "%Q121R6_REPO%" || exit /b 1
+          if not exist "%GITHUB_WORKSPACE%\q121r6-shards\shard-0.json" (
+            echo Expected shard artifacts were not found.
+            exit /b 1
+          )
+          mkdir "%GITHUB_WORKSPACE%\q121r6-final" 2>nul
+          "%Q121R6_PY%" -m automation.q121r6_sec_acceptance_time_aggregate --shards "%GITHUB_WORKSPACE%\q121r6-shards" --output "%GITHUB_WORKSPACE%\q121r6-final\result.json"
+          if errorlevel 1 exit /b 1
+          "%Q121R6_PY%" -c "import json; from pathlib import Path; p=json.loads(Path(r'%GITHUB_WORKSPACE%\q121r6-final\result.json').read_text()); assert p['status']=='Q121R6_SEC_ACCEPTANCE_TIME_COMPILATION_COMPLETED'; assert p['population']['row_count']==61818; assert p['population']['all_header_rows_fetched']==61818; assert p['population']['all_header_rows_validated'] is True; assert p['target_subject_population']['acceptance_timestamp_compiled'] is True; assert p['interpretation']['full_subject_issuer_population_compiled'] is True; assert p['interpretation']['acceptance_timestamps_compiled'] is True; assert p['interpretation']['revision_lineage_established'] is False; assert p['interpretation']['same_day_pit_safe'] is False; assert all(v is False for v in p['governance'].values()); assert p['safety']['paper_only'] and not p['safety']['live_trading_enabled'] and not p['safety']['orders_enabled']; print('Q121R6_BOUNDARY=PASS'); print('Q121R6_RECEIPT='+p['receipt_fingerprint'])"
+          if errorlevel 1 exit /b 1
+      - uses: actions/upload-artifact@v6
+        with:
+          name: q121r6-final-${{ github.run_id }}
+          path: q121r6-final/result.json
+          if-no-files-found: error
+          retention-days: 30
