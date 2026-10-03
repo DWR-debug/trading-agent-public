@@ -199,7 +199,8 @@ def run(coverage_path: Path, output: Path) -> dict[str, object]:
             "automatic_promotion": False,
         },
     }
-    payload["receipt_fingerprint"] = sha256(payload)
+    fingerprint_input = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    payload["receipt_fingerprint"] = sha256(fingerprint_input)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps(payload, sort_keys=True))
