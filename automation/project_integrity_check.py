@@ -146,6 +146,7 @@ ACTIVE_WORKFLOWS = {
     "q115-treasury-demand-state.yml",
     "q116-13f-transition-population.yml",
     "q117-treasury-demand-population.yml",
+    "q118-composition-structural.yml",
     "q119-treasury-source-feasibility.yml",
     "q119-independent-reproduction.yml",
     "q120-independent-reproduction.yml",
