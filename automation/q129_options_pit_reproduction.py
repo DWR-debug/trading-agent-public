@@ -119,19 +119,6 @@ def inspect(path: Path, dataset_name: str) -> dict[str, object]:
             sessions.add(ts.date())
     non_session_dates = sorted(str(x) for x in distinct_dates if x not in sessions)
 
-    structural_ok = (
-        values["rows"] > 0
-        and all(values[k] == 0 for k in (
-            "null_contract_id", "null_symbol", "null_date", "null_expiration",
-            "null_volume", "null_open_interest", "negative_volume",
-            "negative_open_interest", "negative_quote_rows", "expiration_before_observation",
-            "invalid_option_type", "duplicate_contract_date_rows"
-        ))
-        and not non_session_dates
-        and REQUIRED.issubset(columns)
-        and int(eligible_rows) > 0
-    )
-
     next_session_after_latest = None
     if last_date is not None:
         next_session_after_latest = cal.next_session(last_date).date().isoformat()
@@ -158,6 +145,18 @@ def inspect(path: Path, dataset_name: str) -> dict[str, object]:
     eligible_rows = con.execute(
         f"SELECT COUNT(*) FROM read_parquet('{parquet}') WHERE {' AND '.join(eligible_where)}"
     ).fetchone()[0]
+
+    structural_ok = (
+        values["rows"] > 0
+        and all(values[k] == 0 for k in (
+            "null_contract_id", "null_symbol", "null_date", "null_expiration",
+            "null_volume", "null_open_interest", "negative_volume",
+            "negative_open_interest", "negative_quote_rows", "expiration_before_observation",
+            "invalid_option_type", "duplicate_contract_date_rows"
+        ))
+        and REQUIRED.issubset(columns)
+        and int(eligible_rows) > 0
+    )
 
     return {
         "dataset": dataset_name,
