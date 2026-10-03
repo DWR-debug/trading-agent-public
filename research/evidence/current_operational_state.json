@@ -230,6 +230,18 @@
         "pit_readiness_receipt_path": "research/evidence/q171_q177_pit_readiness_2026_10_03.json",
         "source_receipt_path": "research/evidence/q171_q178_source_feasibility_2026_10_03.json",
         "state": "SOURCE_FEASIBILITY_COMPLETED_PIT_READINESS_ACTIVE"
+      },
+      {
+        "candidate_inventory_path": "research/frontier/q133_q170_pit_readiness_wave_2026_10_03.json",
+        "class": "source-feasible-public-information-pit-readiness",
+        "code": "FRONTIER-Q133-Q170-PIT-R1",
+        "note": "Downstream PIT contract/sample gate only; no performance, ranking, selection, tuning, promotion or live execution.",
+        "parent_code": "FRONTIER-20260928",
+        "performance_authorization_allowed": false,
+        "source_feasible_candidate_count": 21,
+        "source_probe_pass_count": 25,
+        "source_receipt_path": "research/evidence/q133_q170_source_feasibility_2026_10_03.json",
+        "state": "PIT_READINESS_ACTIVE"
       }
     ],
     "active_trials": [
@@ -794,7 +806,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T13:46:04.699214+00:00",
+  "generated_at_utc": "2026-10-03T13:54:46.814737+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1196,47 +1208,56 @@
     ],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "fix/q171-warc-infra-classification-20261003",
+        "number": 933,
+        "title": "FIX: classify Q171 WARC access failures as infrastructure",
+        "updatedAt": "2026-10-03T13:54:21Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/933"
+      }
+    ],
     "recent_commits": [
       {
-        "message": "Merge pull request #931 from DWR-debug/research/q171-warc-reconstruction-20261003",
-        "sha": "a92186a336572a58b9877d22e95b7f924149509a",
-        "timestamp": "2026-10-03T15:45:54+02:00"
+        "message": "Merge pull request #932 from DWR-debug/research/q133-q170-pit-readiness-r1-20261003",
+        "sha": "5c1df4facc4b7542bb9a7ee2e627e919e8f55483",
+        "timestamp": "2026-10-03T15:54:34+02:00"
       },
       {
-        "message": "FIX: require explicit indexed URL identity match in Q171 WARC receipt",
-        "sha": "1db73cd9076a6d7a9d2dd323e66d2c4b99200811",
-        "timestamp": "2026-10-03T15:42:03+02:00"
+        "message": "FIX: register Q133-Q170 PIT readiness workflow in integrity guard",
+        "sha": "da265987124cee3e526d87af7474d9959be37212",
+        "timestamp": "2026-10-03T15:53:10+02:00"
       },
       {
-        "message": "FIX: preserve indexed URL for Q171 WARC identity check",
-        "sha": "8d383a37faf7c98c95b587c97ac92155f25f33b2",
-        "timestamp": "2026-10-03T15:41:55+02:00"
+        "message": "CI: run Q133-Q170 PIT readiness on pull requests",
+        "sha": "0342e52fb51be89af1a4ce57893bfdc59bc1d208",
+        "timestamp": "2026-10-03T15:51:45+02:00"
       },
       {
-        "message": "RESEARCH: add Q171 WARC reconstruction lane",
-        "sha": "ea932ea86484639e394d45b0da9a1b8ff6cdfed5",
-        "timestamp": "2026-10-03T15:39:39+02:00"
+        "message": "OPS: surface Q133-Q170 PIT readiness in status sync",
+        "sha": "9370fab11f1bbb0630eb43ffdcffe5963a07aa86",
+        "timestamp": "2026-10-03T15:50:27+02:00"
       },
       {
-        "message": "TEST: guard Q171 WARC reconstruction boundary",
-        "sha": "35b265a1c995f1c5d6eb3c79d859a72d5dd40ee5",
-        "timestamp": "2026-10-03T15:39:15+02:00"
+        "message": "GOVERNANCE: register Q133-Q170 PIT readiness R1",
+        "sha": "ddc5fb2933167480fd35d58c38580ca73b6125dc",
+        "timestamp": "2026-10-03T15:49:55+02:00"
       },
       {
-        "message": "RESEARCH: add Q171 WARC reconstruction gate",
-        "sha": "b89e092672c57278e78a7c16c0f9e32e5a9f3f79",
-        "timestamp": "2026-10-03T15:39:03+02:00"
+        "message": "OPS: add Q133-Q170 PIT readiness workflow",
+        "sha": "e8cbc6f0a5a87831ae289b94090b2b9bdf11fd4e",
+        "timestamp": "2026-10-03T15:49:18+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ea288ad1af6aca9adf9fa7262b7282e6011e506f",
-        "timestamp": "2026-10-03T13:36:02Z"
+        "message": "TEST: guard Q133-Q170 PIT readiness boundary",
+        "sha": "61d616484bbb50b2d971b42b61ceef5e04c878d8",
+        "timestamp": "2026-10-03T15:48:56+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "8bd7038cf5e56e21726acb0b3d3d398660c81428",
-        "timestamp": "2026-10-03T13:36:01Z"
+        "message": "RESEARCH: add Q133-Q170 PIT readiness R1",
+        "sha": "fbadcfbf88160c7f6c85b08951e1be14abf07186",
+        "timestamp": "2026-10-03T15:48:53+02:00"
       }
     ]
   },
@@ -1306,12 +1327,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a92186a336572a58b9877d22e95b7f924149509a",
+  "source_master_sha": "5c1df4facc4b7542bb9a7ee2e627e919e8f55483",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37127292276"
+    "run_id": "37127792638"
   }
 }
