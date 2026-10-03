@@ -52,10 +52,6 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.13"
-          cache: pip
-          cache-dependency-path: |
-            requirements.txt
-            pyproject.toml
 
       - name: Install bounded research dependencies
         shell: bash
