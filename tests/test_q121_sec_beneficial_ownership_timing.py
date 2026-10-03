@@ -21,14 +21,20 @@ def test_boundary_classification():
     assert classify_event(row(acc_dt="2024-06-03T21:29:59Z"))["state"] == "STANDARD_DAY"
     assert classify_event(row(acc_dt="2024-06-03T21:30:00Z"))["state"] == "LATE_DAY_SAME_DATE"
     assert classify_event(row(acc_dt="2024-06-03T23:00:00Z"))["state"] == "LATE_DAY_SAME_DATE"
+    assert classify_event(row(acc_dt="2024-06-04T02:00:00Z"))["state"] == "LATE_DAY_SAME_DATE"
+    assert classify_event(row(acc_dt="2024-06-04T02:00:01Z"))["state"] == "OUT_OF_CONTRACT"
 
 
-def test_acceptance_date_is_pit_clock_and_filing_date_difference_is_observable():
+def test_acceptance_date_is_pit_clock_and_filing_date_difference_fails_closed():
     out = classify_event(row(acc_dt="2024-06-03T20:00:00Z", filing_date="2024-06-04"))
     assert out["acceptance_date_et"] == "2024-06-03"
     assert out["filing_date"] == "2024-06-04"
     assert out["filing_date_alignment"] == "FILING_DATE_DIFFERS_FROM_ACCEPTANCE_DATE"
-    assert out["state"] == "STANDARD_DAY"
+    assert out["state"] == "INVALID_DATE_MISMATCH"
+    assert compile_events(
+        [row(acc="MISMATCH", acc_dt="2024-06-03T20:00:00Z", filing_date="2024-06-04")],
+        date(2024, 6, 10),
+    )["event_count"] == 0
 
 
 def test_future_rows_do_not_change_prior_output():
