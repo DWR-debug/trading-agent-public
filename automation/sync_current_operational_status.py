@@ -301,11 +301,13 @@ def generate(
     # cannot be dominated by an older frontier override. Scientific boundaries remain unchanged.
     if (
         (ROOT / "research/preregistrations/q121r1_sec_reverse_issuer_coverage_2026_10_03.json").is_file()
+        or (ROOT / "research/preregistrations/q121r2_sec_daily_index_reconciliation_2026_10_03.json").is_file()
         or (ROOT / "research/preregistrations/q127r1_finra_regsho_historical_pit_2026_10_03.json").is_file()
     ):
         recorded_next_research_focus = (
             "Active correction tracks: Q121-R1 independently repairs SEC beneficial-ownership issuer "
-            "coverage by separating subject-issuer and filer identity; Q127-R1 tests fixed historical "
+            "coverage by separating subject-issuer and filer identity; Q121-R2 independently reconciles "
+            "deterministic Q121-R1 filing anchors against SEC daily master indexes; Q127-R1 tests fixed historical "
             "FINRA Reg-SHO source retrieval and preserves the unresolved publication/revision boundary; "
             "Q130-R1 tests Wikimedia Pageviews as a public historical attention proxy while preserving " 
             "the unresolved publication/revision boundary. These are source/PIT feasibility tracks only. " 

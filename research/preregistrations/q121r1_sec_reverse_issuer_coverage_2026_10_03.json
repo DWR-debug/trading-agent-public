@@ -8,13 +8,27 @@
   "hypothesis": "The SEC issuer-oriented browse route can provide a deterministic reverse index of SC 13D/13G filings that is structurally distinct from issuer submission-history queries.",
   "fixed_universe": {
     "name": "validation_2026_10_01_q104_sec_treasury_equities",
-    "symbols": ["SPGI", "NDAQ", "AMP", "RJF", "WMB", "VLO", "DVN", "EMN"],
+    "symbols": [
+      "SPGI",
+      "NDAQ",
+      "AMP",
+      "RJF",
+      "WMB",
+      "VLO",
+      "DVN",
+      "EMN"
+    ],
     "source": "Q107 frozen symbol universe"
   },
   "source_contract": {
     "endpoint": "https://www.sec.gov/cgi-bin/browse-edgar",
     "action": "getcompany",
-    "forms": ["SC 13D", "SC 13G", "SC 13D/A", "SC 13G/A"],
+    "forms": [
+      "SC 13D",
+      "SC 13G",
+      "SC 13D/A",
+      "SC 13G/A"
+    ],
     "date_start": "2024-02-05",
     "date_end": "2025-09-24",
     "date_parameter_semantics": {
@@ -26,7 +40,11 @@
     "pagination": "start += page_size until a page contains no entries"
   },
   "identity_contract": {
-    "sample_positions": ["first", "middle", "last"],
+    "sample_positions": [
+      "first",
+      "middle",
+      "last"
+    ],
     "required_fields": [
       "subject_cik",
       "filed_by_cik",
@@ -69,5 +87,11 @@
     "live_trading_enabled": false,
     "orders_enabled": false,
     "automatic_promotion": false
+  },
+  "independent_reconciliation_track": {
+    "candidate_id": "Q121-R2",
+    "issue_number": 972,
+    "role": "independent_daily_edgar_index_anchor_reconciliation",
+    "required_before_population_level_formalization": true
   }
 }

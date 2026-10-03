@@ -622,6 +622,17 @@
       "note": "Original Q121 issuer-submission route is not treated as complete issuer-level population; Q121-R1 re-derives reverse issuer coverage via SEC company browse and preserves filer/subject identity separately."
     },
     {
+      "code": "Q121-R2",
+      "class": "sec_beneficial_ownership_daily_index_independent_reconciliation",
+      "issue_number": 972,
+      "parent_code": "121",
+      "state": "INDEPENDENT_SOURCE_RECONCILIATION_ACTIVE",
+      "preregistration_path": "research/preregistrations/q121r2_sec_daily_index_reconciliation_2026_10_03.json",
+      "design_document": "docs/research_design/Q121R2_SEC_DAILY_INDEX_RECONCILIATION_2026-10-03.md",
+      "performance_authorization_allowed": false,
+      "note": "Independent Q121-R2 daily EDGAR master-index anchor reconciliation. It cross-checks deterministic Q121-R1 filing anchors against a separate SEC index architecture; it does not prove full-window population exhaustiveness."
+    },
+    {
       "code": "Q127-R1",
       "class": "finra_regsho_historical_source_pit_correction",
       "issue_number": 964,
