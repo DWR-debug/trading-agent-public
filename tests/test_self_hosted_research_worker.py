@@ -449,3 +449,10 @@ def test_hosted_frontier_loop_publishes_complete_bounded_outputs():
 
 
 
+
+
+
+def test_permanent_windows_loop_uses_two_bounded_lanes():
+    workflow = (ROOT / ".github/workflows/permanent-pc-research-loop.yml").read_text(encoding="utf-8")
+    assert "max-parallel: 2" in workflow
+    assert "lane: [local_reproduction, data_qa]" in workflow
