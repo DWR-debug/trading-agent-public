@@ -118,6 +118,7 @@ def generate(
     q133_q170_receipt = _load_json(ROOT / "research/evidence/q133_q170_source_feasibility_2026_10_03.json", {})
     q171_q177_pit_receipt = _load_json(ROOT / "research/evidence/q171_q177_pit_readiness_2026_10_03.json", {})
     source_pit_frontier_outcomes = _load_json(ROOT / "research/evidence/source_pit_frontier_outcomes_2026_10_03.json", {})
+    q121_r5_receipt = _load_json(ROOT / "research/evidence/q121r5_dual_index_population_reconciliation_2026_10_03.json", {})
 
     safety = _safety_state()
     from config import settings
@@ -353,6 +354,18 @@ def generate(
             "live execution."
         )
 
+    if q121_r5_receipt.get("research_status") == "Q121R5_DUAL_INDEX_POPULATION_RECONCILIATION_COMPLETED":
+        recorded_next_research_focus = (
+            "Q121-R5 has now completed the preregistered dual SEC-index population reconciliation: "
+            "the official quarterly form.idx and master.idx routes are exactly equal as multisets on "
+            "the frozen 2024-02-05 through 2025-09-24 window and four-form scope (61,818 rows; zero "
+            "left-only/right-only canonical keys). This establishes source-population equivalence only. "
+            "The next Q121 gate is candidate-specific acceptance-timestamp compilation, filing-date "
+            "consistency, accession/revision lineage and synthetic boundary testing; same-day PIT safety "
+            "and performance remain unproven. No performance, holdout selection, ranking, tuning, "
+            "promotion or live execution is authorized."
+        )
+
     current = {
         "schema_version": "1.0",
         "status_type": "current_operational_project_state",
@@ -557,6 +570,7 @@ def generate(
         "q133_q170_source_feasibility": q133_q170_receipt,
         "q171_q177_pit_readiness": q171_q177_pit_receipt,
         "source_pit_frontier_outcomes": source_pit_frontier_outcomes,
+        "q121_r5_dual_index_reconciliation": q121_r5_receipt,
         "scientific_state_recorded": {
             "latest_formal_trial": latest_formal.get("trial_id") or project_state.get("latest_formal_trial"),
             "latest_formal_status": latest_formal.get("status") or project_state.get("latest_trial_status"),
@@ -681,6 +695,7 @@ def generate(
 - **Q121-R2:** `Q121R2_BLOCKED_BY_Q121R1_FALSIFICATION`; no independent reconciliation was claimed. Receipt fingerprint `fd7b63d9f05e0cf9abf588c9c2d6c2ff02e2ea413927218de6f4e1c29f9fff97`.
 - **Q121-R3:** `Q121R3_FORM_INDEX_ROUTE_FEASIBILITY_COMPLETED`; official SEC quarterly form-index route completed for 7 quarters with 61,818 relevant form rows and 3 frozen controls. Receipt fingerprint `a18abdffe2fde48dc4084d420f0a8d5c6ade92727baa23dcecaad481e9452dc1`.
 - **Q121-R4:** `Q121R4_MASTER_INDEX_ROUTE_FEASIBILITY_COMPLETED`; independent SEC quarterly master-index route completed for the same 7-quarter window with 61,818 relevant form rows and 3 frozen controls. Receipt fingerprint `3f5616d6ddc18c0f39a10316fe3cbf69e98be2911741552f8a70d133ba94c076`.
+- **Q121-R5:** `Q121R5_DUAL_INDEX_POPULATION_RECONCILIATION_COMPLETED`; the form-index and master-index populations are exactly equal as multisets on the frozen window/form scope: 61,818 rows, 61,818 unique canonical keys, zero left-only/right-only keys. Receipt fingerprint `897bc13c5f722d9a701ae7994b237fe7afd233f15cdc5e644061aa674b8f26c1`. This is source-population evidence only; acceptance timestamps, revision lineage and same-day PIT safety remain unproven.
 - **Q127-R1:** `Q127R1_SOURCE_PIT_FEASIBILITY_COMPLETED`; four fixed historical dates were retrieved and parsed. Revision lineage and same-day PIT safety remain unresolved. Receipt fingerprint `60815a092421762ac1da2a96d003865b72f25eb640778287964a9648cdfc5b74`.
 - **Q130-R1:** `Q130R1_SOURCE_FEASIBILITY_COMPLETED`; the frozen historical Wikimedia source probe passed, while publication/revision timing remains outside formal same-day PIT safety.
 - **Q131-R1:** `Q131R1_FIXED_WINDOW_NO_MATCHING_FILINGS`; the fixed 2025-09-22 through 2025-09-24 issuer/form window yielded zero matching filings, so no complexity vector was inferred. Receipt fingerprint `e5d5077874d3eaa06b688c7294e83c42d3797da1c9cffdfdb98e067112d07a70`.
