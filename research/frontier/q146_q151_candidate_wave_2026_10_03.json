@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0",
+  "wave_id": "Q146-Q151-2026-10-03",
+  "status": "DESIGN_INVENTORY_ONLY",
+  "generated_utc": "2026-10-03T12:15:00Z",
+  "policy": {
+    "performance_authorized": false,
+    "holdout_selection_allowed": false,
+    "asset_search_allowed": false,
+    "parameter_search_allowed": false,
+    "threshold_search_allowed": false,
+    "horizon_search_allowed": false,
+    "family_ranking_allowed": false,
+    "automatic_promotion": false,
+    "paid_data_required": false
+  },
+  "candidates": [
+    {
+      "id": "Q146",
+      "name": "Climate/weather operational exposure",
+      "sources": [
+        "NOAA/NCEI",
+        "SEC issuer disclosures",
+        "OHLCV"
+      ],
+      "next_gate": "geographic exposure map + weather publication/PIT contract"
+    },
+    {
+      "id": "Q147",
+      "name": "Electricity load imbalance × industrial exposure",
+      "sources": [
+        "EIA electricity",
+        "fixed industry map",
+        "OHLCV"
+      ],
+      "next_gate": "release/vintage treatment for continuously updated EIA series"
+    },
+    {
+      "id": "Q148",
+      "name": "Petroleum inventory shock × sector sensitivity",
+      "sources": [
+        "EIA petroleum",
+        "fixed sector sensitivity",
+        "OHLCV"
+      ],
+      "next_gate": "release schedule and revision-aware inventory contract"
+    },
+    {
+      "id": "Q149",
+      "name": "Federal procurement shock × public contractor",
+      "sources": [
+        "USAspending",
+        "SEC issuer mapping",
+        "OHLCV"
+      ],
+      "next_gate": "transaction/amendment and public dissemination timestamp contract"
+    },
+    {
+      "id": "Q150",
+      "name": "Legal docket intensity × issuer",
+      "sources": [
+        "CourtListener",
+        "SEC issuer mapping",
+        "OHLCV"
+      ],
+      "next_gate": "coverage census and next-session observation boundary"
+    },
+    {
+      "id": "Q151",
+      "name": "Regulatory/enforcement shock",
+      "sources": [
+        "SEC",
+        "CFTC",
+        "public government releases",
+        "OHLCV"
+      ],
+      "next_gate": "fixed event taxonomy and release-time contract"
+    }
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
