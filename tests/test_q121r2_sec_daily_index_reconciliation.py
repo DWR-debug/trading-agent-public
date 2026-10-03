@@ -28,3 +28,8 @@ def test_parse_master_index():
 def test_accession_parsing():
     assert normalize_accession("0001234567-25-000001") == "0001234567-25-000001"
     assert accession_from_filename("edgar/data/1234567890/000123456725000001/a-index.html") == "0001234567-25-000001"
+
+
+def test_q121_anchor_acceptance_header_compatibility():
+    from automation.q121r1_sec_reverse_issuer_coverage import extract_accepted
+    assert extract_accepted("<ACCEPTANCE-DATETIME>20240212181336") == "2024-02-12 18:13:36"

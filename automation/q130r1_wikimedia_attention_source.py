@@ -85,7 +85,7 @@ def mutation_tests() -> dict[str, bool]:
     return {
         "input_order_invariance": compile_items(base) == compile_items(list(reversed(base))),
         "future_date_invariance": compile_items(base) == {
-            k: v for k, v in compile_items(future).items() if k <= END,
+            k: v for k, v in compile_items(future).items() if k <= END
         },
     }
 

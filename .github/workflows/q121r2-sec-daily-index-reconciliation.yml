@@ -50,9 +50,16 @@ jobs:
           import json
           from pathlib import Path
           p=json.loads(Path("research/runs/q121r2_sec_daily_index_reconciliation/result.json").read_text(encoding="utf-8"))
-          assert p["status"] == "Q121R2_INDEPENDENT_DAILY_INDEX_RECONCILIATION_COMPLETED"
-          assert p["anchors_checked"] > 0
-          assert p["interpretation"]["independent_anchor_reconciliation"] is True
+          assert p["status"] in {
+              "Q121R2_INDEPENDENT_DAILY_INDEX_RECONCILIATION_COMPLETED",
+              "Q121R2_BLOCKED_BY_Q121R1_FALSIFICATION",
+          }
+          if p["status"] == "Q121R2_INDEPENDENT_DAILY_INDEX_RECONCILIATION_COMPLETED":
+              assert p["anchors_checked"] > 0
+              assert p["interpretation"]["independent_anchor_reconciliation"] is True
+          else:
+              assert p["anchors_checked"] == 0
+              assert p["interpretation"]["upstream_source_route_falsified"] is True
           assert p["interpretation"]["full_window_population_exhaustiveness"] is False
           for key in ("performance","holdout","selection","ranking","parameter_search","threshold_search","horizon_search","asset_search","variant_search","performance_authorized","automatic_promotion"):
               assert p["governance"][key] is False

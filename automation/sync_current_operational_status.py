@@ -296,7 +296,8 @@ def generate(
             "Q172/Q178 now have separate GitHub Advisory endpoint and OSV-format source contracts. All remain "
             "discovery/PIT-only with no performance, holdout selection, tuning, ranking, promotion or live execution."
         )
-    elif (ROOT / "automation/q126_q132_frontier_feasibility.py").is_file():
+    # The historical q126 branch was left as an empty elif. Keep the newer
+    # correction/frontier overrides below independent of that legacy condition.
     # Explicitly surface newly active correction tracks so the human current-status document
     # cannot be dominated by an older frontier override. Scientific boundaries remain unchanged.
     if (
@@ -317,6 +318,7 @@ def generate(
             "orthogonal frontier work; Q104/I22/Q119/Q120/Q125 remain formal-readiness work. "
             "No performance authorization, holdout selection, tuning, ranking, promotion or live "
             "execution is created by these tracks."
+        )
 
         recorded_next_research_focus = (
             "Priority frontier is now the orthogonal SEC/13F/XBRL/Treasury/CFTC channel block plus "

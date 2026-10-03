@@ -38,6 +38,8 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check pytest
       - name: Contract tests
         run: python -m pytest -q tests/test_q131r1_sec_disclosure_complexity.py
       - name: Run Q131-R1 source/PIT feasibility
@@ -48,8 +50,15 @@ jobs:
           import json
           from pathlib import Path
           p=json.loads(Path("research/runs/q131r1_sec_disclosure_complexity/result.json").read_text(encoding="utf-8"))
-          assert p["status"] == "Q131R1_SOURCE_COMPLEXITY_VECTOR_COMPLETED"
-          assert p["filings_checked"] > 0
+          assert p["status"] in {
+              "Q131R1_SOURCE_COMPLEXITY_VECTOR_COMPLETED",
+              "Q131R1_FIXED_WINDOW_NO_MATCHING_FILINGS",
+          }
+          if p["status"] == "Q131R1_SOURCE_COMPLEXITY_VECTOR_COMPLETED":
+              assert p["filings_checked"] > 0
+          else:
+              assert p["filings_checked"] == 0
+              assert p["negative_evidence"]["reason"] == "NO_MATCHING_FILINGS_IN_PREREGISTERED_WINDOW"
           assert p["pit"]["same_day_formal_use_allowed"] is False
           assert p["governance"]["performance"] is False
           assert p["governance"]["holdout"] is False

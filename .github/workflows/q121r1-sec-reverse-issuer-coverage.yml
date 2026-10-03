@@ -50,8 +50,18 @@ jobs:
           import json
           from pathlib import Path
           p=json.loads(Path("research/runs/q121r1_sec_reverse_issuer_coverage/result.json").read_text(encoding="utf-8"))
-          assert p["status"] == "Q121R1_SOURCE_REVERSE_COVERAGE_COMPLETED"
-          assert p["summary"]["identity_checks"] == p["summary"]["identity_checks_passed"]
+          assert p["status"] in {
+              "Q121R1_SOURCE_REVERSE_COVERAGE_COMPLETED",
+              "Q121R1_SOURCE_ROUTE_FALSIFIED",
+          }
+          if p["status"] == "Q121R1_SOURCE_REVERSE_COVERAGE_COMPLETED":
+              assert p["summary"]["identity_checks"] == p["summary"]["identity_checks_passed"]
+          else:
+              assert p["summary"]["route_falsified"] is True
+              f = p["falsification"]
+              assert f["subject_cik"] != f["issuer_cik"]
+              assert f["filed_by_cik"] is not None
+              assert f["accepted_datetime"] is not None
           assert p["governance"]["performance"] is False
           assert p["governance"]["holdout"] is False
           assert p["governance"]["selection"] is False
