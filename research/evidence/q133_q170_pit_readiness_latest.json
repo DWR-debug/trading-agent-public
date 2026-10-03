@@ -1,0 +1,893 @@
+{
+  "candidate_results": [
+    {
+      "candidate_id": "Q137",
+      "name": "Disclosure-processing congestion",
+      "next_gate": "filing-density clock and amendment handling",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_DEFINED_PENDING_ARCHIVE",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical submissions retained"
+        ],
+        "clock": [
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    },
+    {
+      "candidate_id": "Q144",
+      "name": "Attention-response gap",
+      "next_gate": "attention latency/entity mapping and PIT",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_DEFINED_PENDING_ARCHIVE",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical day-level series required",
+          "historical submissions retained"
+        ],
+        "clock": [
+          "UTC pageview bucket timestamp",
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "issuer/entity-to-page mapping",
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "redirect/entity mapping and historical retention must be frozen",
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "WIKIMEDIA_PAGEVIEWS",
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "WIKIMEDIA_PAGEVIEWS": "INFRA_ACCESS_BLOCKED"
+      }
+    },
+    {
+      "candidate_id": "Q147",
+      "name": "Electricity load imbalance × industrial exposure",
+      "next_gate": "release/vintage treatment for continuously updated EIA series",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_UNRESOLVED",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical vintage availability must be demonstrated",
+          "historical submissions retained"
+        ],
+        "clock": [
+          "release/vintage boundary",
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "fixed industry/energy exposure map",
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "continuous-series revisions must be separated from release state",
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "EIA_OPEN",
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "EIA_OPEN": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    },
+    {
+      "candidate_id": "Q148",
+      "name": "Petroleum inventory shock × sector sensitivity",
+      "next_gate": "release schedule and revision-aware inventory contract",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_UNRESOLVED",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical vintage availability must be demonstrated",
+          "historical submissions retained"
+        ],
+        "clock": [
+          "release/vintage boundary",
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "fixed industry/energy exposure map",
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "continuous-series revisions must be separated from release state",
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "EIA_OPEN",
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "EIA_OPEN": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    },
+    {
+      "candidate_id": "Q149",
+      "name": "Federal procurement shock × public contractor",
+      "next_gate": "transaction/amendment and public dissemination timestamp contract",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_UNRESOLVED",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical transaction reconstruction",
+          "historical submissions retained"
+        ],
+        "clock": [
+          "public dissemination timestamp",
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "contractor/issuer identity map",
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "transaction/amendment semantics",
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "USA_SPENDING",
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "USA_SPENDING": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    },
+    {
+      "candidate_id": "Q150",
+      "name": "Legal docket intensity × issuer",
+      "next_gate": "coverage census and next-session observation boundary",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_UNRESOLVED",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical docket coverage census",
+          "historical submissions retained"
+        ],
+        "clock": [
+          "docket/publication timestamp",
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "party/issuer entity mapping",
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "docket amendment/entry corrections",
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "COURTLISTENER",
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "COURTLISTENER": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    },
+    {
+      "candidate_id": "Q151",
+      "name": "Regulatory/enforcement shock",
+      "next_gate": "fixed event taxonomy and release-time contract",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_DEFINED_PENDING_ARCHIVE",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical submissions retained",
+          "historical released reports"
+        ],
+        "clock": [
+          "filing acceptance timestamp",
+          "public COT release timestamp"
+        ],
+        "mapping": [
+          "issuer CIK and accession identity",
+          "fixed commodity-to-issuer exposure map"
+        ],
+        "revision": [
+          "amendment/accession lineage must remain explicit",
+          "report revision handling"
+        ]
+      },
+      "source_ids": [
+        "SEC_EDGAR_SUBMISSIONS",
+        "CFTC_RELEASE"
+      ],
+      "source_sample_statuses": {
+        "CFTC_RELEASE": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    },
+    {
+      "candidate_id": "Q153",
+      "name": "Lobbying-intensity transition × issuer/industry exposure",
+      "next_gate": "filing/publication timestamp and entity/issue mapping",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_UNRESOLVED",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical filing retention",
+          "historical submissions retained"
+        ],
+        "clock": [
+          "filing/publication timestamp",
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "registrant/entity and issue mapping",
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "filing amendments and duplicate records",
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "LDA_API",
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "LDA_API": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    },
+    {
+      "candidate_id": "Q154",
+      "name": "Drug shortage/manufacturing shock × pharma exposure",
+      "next_gate": "event timestamp, manufacturer mapping, revision/update audit",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_UNRESOLVED",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical event reconstruction",
+          "historical submissions retained"
+        ],
+        "clock": [
+          "event/update timestamp",
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "manufacturer/issuer identity mapping",
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "record updates and corrections",
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "OPENFDA_DRUG",
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "OPENFDA_DRUG": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    },
+    {
+      "candidate_id": "Q155",
+      "name": "Medical-device recall/enforcement shock × manufacturer exposure",
+      "next_gate": "recall/enforcement dissemination clock and manufacturer mapping",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_UNRESOLVED",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical event reconstruction",
+          "historical submissions retained"
+        ],
+        "clock": [
+          "recall/enforcement event timestamp",
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "manufacturer/issuer identity mapping",
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "record updates and corrections",
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "OPENFDA_DEVICE",
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "OPENFDA_DEVICE": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    },
+    {
+      "candidate_id": "Q157",
+      "name": "SEC FOIA topic heat × issuer information-demand state",
+      "next_gate": "request/received/closed date semantics and topic-to-issuer mapping",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_UNRESOLVED",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical FOIA log coverage",
+          "historical submissions retained"
+        ],
+        "clock": [
+          "request/received/closed dates",
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "topic-to-issuer mapping",
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "log correction semantics",
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "SEC_FOIA",
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "SEC_FOIA": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    },
+    {
+      "candidate_id": "Q158",
+      "name": "Federal Register rule-change exposure × industry",
+      "next_gate": "publication/effective-date contract and fixed exposure classes",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_DEFINED_PENDING_ARCHIVE",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical bulk coverage",
+          "historical submissions retained"
+        ],
+        "clock": [
+          "Federal Register publication timestamp",
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "fixed rule-to-industry exposure classes",
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "correction/republication semantics",
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "GOVINFO",
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "GOVINFO": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    },
+    {
+      "candidate_id": "Q161",
+      "name": "Freight-flow composition shock × industrial exposure",
+      "next_gate": "historical FAF vintage and industry concordance",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_UNRESOLVED",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical vintage availability",
+          "historical submissions retained"
+        ],
+        "clock": [
+          "vintage/release boundary",
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "industry/commodity concordance",
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "historical FAF vintage identity",
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "BTS_FAF",
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "BTS_FAF": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    },
+    {
+      "candidate_id": "Q162",
+      "name": "Power-system stress × electricity-intensive issuer state",
+      "next_gate": "continuous-update release boundary and fixed energy-intensity map",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_UNRESOLVED",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical vintage availability must be demonstrated",
+          "historical submissions retained"
+        ],
+        "clock": [
+          "release/vintage boundary",
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "fixed industry/energy exposure map",
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "continuous-series revisions must be separated from release state",
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "EIA_OPEN",
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "EIA_OPEN": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    },
+    {
+      "candidate_id": "Q163",
+      "name": "Environmental enforcement shock × facility-exposed issuer",
+      "next_gate": "agency action timestamp, facility identity and issuer mapping",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_UNRESOLVED",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical action coverage",
+          "historical submissions retained"
+        ],
+        "clock": [
+          "agency action/publication timestamp",
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "facility-to-issuer identity map",
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "facility record correction/update",
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "EPA_ENVIROFACTS",
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "EPA_ENVIROFACTS": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    },
+    {
+      "candidate_id": "Q164",
+      "name": "Federal award concentration × contractor ecosystem",
+      "next_gate": "transaction publication/amendment semantics and contractor graph",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_UNRESOLVED",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical transaction reconstruction",
+          "historical submissions retained"
+        ],
+        "clock": [
+          "public dissemination timestamp",
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "contractor/issuer identity map",
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "transaction/amendment semantics",
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "USA_SPENDING",
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "USA_SPENDING": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    },
+    {
+      "candidate_id": "Q165",
+      "name": "Competition-enforcement shock × industry network",
+      "next_gate": "event publication clock and fixed peer/exposure graph",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_DEFINED_PENDING_ARCHIVE",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical enforcement dataset",
+          "historical release coverage",
+          "historical submissions retained"
+        ],
+        "clock": [
+          "enforcement publication timestamp",
+          "release publication timestamp",
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "industry/peer exposure map",
+          "industry/issuer graph",
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "dataset correction/republication",
+          "release correction/update",
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "FTC_DATA",
+        "DOJ_ANTITRUST",
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "DOJ_ANTITRUST": "INFRA_ACCESS_BLOCKED",
+        "FTC_DATA": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    },
+    {
+      "candidate_id": "Q166",
+      "name": "Package-download shock × software issuer exposure",
+      "next_gate": "historical coverage, bot/CI contamination audit, package-to-issuer mapping",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_DEFINED_PENDING_ARCHIVE",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical period coverage plus bot/CI contamination audit",
+          "historical submissions retained"
+        ],
+        "clock": [
+          "download-series period",
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "package-to-issuer mapping",
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "historical series retention and corrections",
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "PYPI_STATS",
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "PYPI_STATS": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    },
+    {
+      "candidate_id": "Q167",
+      "name": "Scientific-publication burst × R&D exposure",
+      "next_gate": "deposit/publication timing, author-affiliation mapping, backward-only information boundary",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_DEFINED_PENDING_ARCHIVE",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical metadata retrieval",
+          "historical submissions retained"
+        ],
+        "clock": [
+          "created/update/index date",
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "author/affiliation-to-issuer mapping",
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "metadata update and index semantics",
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "CROSSREF_API",
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "CROSSREF_API": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    },
+    {
+      "candidate_id": "Q168",
+      "name": "Seismic shock × geographic industrial exposure",
+      "next_gate": "event origin/publication timing and fixed facility/geography map",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_DEFINED_PENDING_ARCHIVE",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical event archive",
+          "historical submissions retained"
+        ],
+        "clock": [
+          "event origin time plus update time",
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "fixed geography/facility map",
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "product update/supersession semantics",
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "USGS_EARTHQUAKE",
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "USGS_EARTHQUAKE": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    },
+    {
+      "candidate_id": "Q169",
+      "name": "Space-weather shock × operationally sensitive sector",
+      "next_gate": "alert issue time, revision/cancellation handling, fixed exposure map",
+      "performance_authorized": false,
+      "pit_status": "PIT_CONTRACT_DEFINED_PENDING_ARCHIVE",
+      "required_contract_dimensions": {
+        "archive": [
+          "historical product archive",
+          "historical submissions retained"
+        ],
+        "clock": [
+          "product issue time",
+          "filing acceptance timestamp"
+        ],
+        "mapping": [
+          "fixed operational-sensitivity map",
+          "issuer CIK and accession identity"
+        ],
+        "revision": [
+          "cancellation/archive semantics",
+          "amendment/accession lineage must remain explicit"
+        ]
+      },
+      "source_ids": [
+        "NOAA_SWPC",
+        "SEC_EDGAR_SUBMISSIONS"
+      ],
+      "source_sample_statuses": {
+        "NOAA_SWPC": "SOURCE_DATA_SAMPLE_REACHABLE",
+        "SEC_EDGAR_SUBMISSIONS": "SOURCE_DATA_SAMPLE_REACHABLE"
+      }
+    }
+  ],
+  "receipt_fingerprint": "6ad8d41754a02bd37445feefd9e043527129d8ab31a0e793c45bc851710bb3d4",
+  "receipt_type": "q133_q170_pit_readiness_r1",
+  "safety": {
+    "AUTOMATIC_PROMOTION": false,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "PAPER_ONLY": true
+  },
+  "schema_version": "1.0",
+  "scientific_boundary": {
+    "asset_selection": false,
+    "candidate_ranking": false,
+    "holdout_selection": false,
+    "horizon_search": false,
+    "live_execution": false,
+    "parameter_search": false,
+    "performance": false,
+    "promotion": false,
+    "threshold_search": false,
+    "variant_search": false
+  },
+  "source_code_sha256": "07f21cfbb4693f5f1761a3939f3b952f000564383e4d204b76c741b829495db8",
+  "source_receipt": {
+    "candidate_count": 38,
+    "path": "research/evidence/q133_q170_source_feasibility_2026_10_03.json",
+    "receipt_fingerprint": "87a608b4db7c07897c6fdc454b8b8bf78f0c068be42362b9f865ba72ff8b1f56",
+    "source_feasible_candidate_count": 21,
+    "source_probe_pass_count": 25,
+    "workflow_run_id": 37123847584
+  },
+  "source_results": {
+    "BTS_FAF": {
+      "content_sha256": "fc161efb58e8a9149bf2b69ae77019816755db446eb55edb22fef69e9c328952",
+      "http_status": 200,
+      "missing_markers": [],
+      "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
+      "source_id": "BTS_FAF",
+      "url": "https://www.bts.gov/faf"
+    },
+    "CFTC_RELEASE": {
+      "content_sha256": "180fe924b181d6433c4fe9da63ae01a08c77cd1029db5f681b46658538b38dec",
+      "http_status": 200,
+      "missing_markers": [],
+      "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
+      "source_id": "CFTC_RELEASE",
+      "url": "https://www.cftc.gov/MarketReports/CommitmentsofTraders/ReleaseSchedule/index.htm"
+    },
+    "COURTLISTENER": {
+      "content_sha256": "507dd9e77a4b1f4dd78bf41d3ffcb3891fed5fa7215238ebdf75425e317d6a75",
+      "http_status": 200,
+      "missing_markers": [],
+      "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
+      "source_id": "COURTLISTENER",
+      "url": "https://www.courtlistener.com/help/"
+    },
+    "CROSSREF_API": {
+      "content_sha256": "ee81be9b997bf162832d0ff8c4051c12d2b1c0cc2bae7ea02b2cd0accffe8ad8",
+      "http_status": 200,
+      "missing_markers": [],
+      "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
+      "source_id": "CROSSREF_API",
+      "url": "https://api.crossref.org/works?filter=from-created-date:2025-01-01,until-created-date:2025-01-02&rows=1"
+    },
+    "DOJ_ANTITRUST": {
+      "content_sha256": "2181cd70fe0609a8491b5ac90d5df124bed1092cec0275e4104d336ff0c922b6",
+      "http_status": 400,
+      "missing_markers": [
+        "Press Releases",
+        "Antitrust"
+      ],
+      "sample_status": "INFRA_ACCESS_BLOCKED",
+      "source_id": "DOJ_ANTITRUST",
+      "url": "https://www.justice.gov/atr/press-releases"
+    },
+    "EIA_OPEN": {
+      "content_sha256": "572bc754ef0c0c90e769819b1f4bef8b028dd3f8b797b8ffa5a1f190662ccc68",
+      "http_status": 200,
+      "missing_markers": [],
+      "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
+      "source_id": "EIA_OPEN",
+      "url": "https://www.eia.gov/opendata/"
+    },
+    "EPA_ENVIROFACTS": {
+      "content_sha256": "558a9d97f19d3686474384506450b51027d907e55234bf42279fd1c1806dbe85",
+      "http_status": 200,
+      "missing_markers": [],
+      "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
+      "source_id": "EPA_ENVIROFACTS",
+      "url": "https://www.epa.gov/enviro/envirofacts-data-service-api"
+    },
+    "FTC_DATA": {
+      "content_sha256": "d8c8a84885c887ada39047d40ea5ce94b8c1651ceaae95e046edcd7cf68c670f",
+      "http_status": 200,
+      "missing_markers": [],
+      "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
+      "source_id": "FTC_DATA",
+      "url": "https://search.ftc.gov/policy-notices/open-government/data-sets"
+    },
+    "GOVINFO": {
+      "content_sha256": "6a32dbb72dfb29712906141d0ceb86a63bddbc29ae9b869d647e8bbd41232eef",
+      "http_status": 200,
+      "missing_markers": [],
+      "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
+      "source_id": "GOVINFO",
+      "url": "https://www.govinfo.gov/bulkdata/"
+    },
+    "LDA_API": {
+      "content_sha256": "3628d143fb361a2fd2ecd40cfe423b3dd70fca0c2443431a2960889f50f74bca",
+      "http_status": 200,
+      "missing_markers": [],
+      "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
+      "source_id": "LDA_API",
+      "url": "https://lda.gov/api/tos/"
+    },
+    "NOAA_SWPC": {
+      "content_sha256": "14dc90b9000580ee11d9c406258a1dfcd71121537d37476d74a2a5601017e1bf",
+      "http_status": 200,
+      "missing_markers": [],
+      "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
+      "source_id": "NOAA_SWPC",
+      "url": "https://services.swpc.noaa.gov/products/"
+    },
+    "OPENFDA_DEVICE": {
+      "content_sha256": "62bcf2d779d1f437fd588bfabb89b88781465d9c130ec86807bdb9f9f2e5a659",
+      "http_status": 200,
+      "missing_markers": [],
+      "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
+      "source_id": "OPENFDA_DEVICE",
+      "url": "https://api.fda.gov/device/recall.json?limit=1"
+    },
+    "OPENFDA_DRUG": {
+      "content_sha256": "b63e5570fb9ed6a8fb55af47490877fd8fa38318b34628f21035fc5ed7e37384",
+      "http_status": 200,
+      "missing_markers": [],
+      "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
+      "source_id": "OPENFDA_DRUG",
+      "url": "https://api.fda.gov/drug/drugsfda.json?limit=1"
+    },
+    "PYPI_STATS": {
+      "content_sha256": "189663f4fee2d45e6e446e17213d31a9d0241304fb1700a5a39485f9f05b5780",
+      "http_status": 200,
+      "missing_markers": [],
+      "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
+      "source_id": "PYPI_STATS",
+      "url": "https://pypistats.org/api/packages/requests/recent"
+    },
+    "SEC_EDGAR_SUBMISSIONS": {
+      "content_sha256": "2159349dae17cc9148a2f2a9d2eab12c84f59c2135b62e78d56ac9b00ca86b1e",
+      "http_status": 200,
+      "missing_markers": [],
+      "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
+      "source_id": "SEC_EDGAR_SUBMISSIONS",
+      "url": "https://data.sec.gov/submissions/CIK0000320193.json"
+    },
+    "SEC_FOIA": {
+      "content_sha256": "239d8341b7e983a7b2c4acb32d13d07e865f9a6daf4eee957ea7131106d3b87f",
+      "http_status": 200,
+      "missing_markers": [],
+      "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
+      "source_id": "SEC_FOIA",
+      "url": "https://www.sec.gov/foia/frequently-requested-documents/foia-logs"
+    },
+    "USA_SPENDING": {
+      "content_sha256": "afd56dfed11ad19dbde864c0360250611b5c19f8b6a3012d61cbee186cf05d20",
+      "http_status": 200,
+      "missing_markers": [],
+      "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
+      "source_id": "USA_SPENDING",
+      "url": "https://api.usaspending.gov/docs/endpoints"
+    },
+    "USGS_EARTHQUAKE": {
+      "content_sha256": "7c82ca7260f12896402ff79622d03b2605b84f5d8b7586ae414ed1eef7bf2653",
+      "http_status": 200,
+      "missing_markers": [],
+      "sample_status": "SOURCE_DATA_SAMPLE_REACHABLE",
+      "source_id": "USGS_EARTHQUAKE",
+      "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2025-01-01&endtime=2025-01-02&limit=1"
+    },
+    "WIKIMEDIA_PAGEVIEWS": {
+      "content_sha256": "71fc9ae0d0b9db575dbecbfbabac05d20aaabaaf493d35cc0ddd9fbe9d836a13",
+      "http_status": 404,
+      "missing_markers": [
+        "items",
+        "timestamp"
+      ],
+      "sample_status": "INFRA_ACCESS_BLOCKED",
+      "source_id": "WIKIMEDIA_PAGEVIEWS",
+      "url": "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/Apple/20251001/20251003"
+    }
+  },
+  "synthetic_mutation_checks": {
+    "future_change_not_visible_to_prefix": true,
+    "future_row_prefix_invariant": true,
+    "no_search_dimension_present": true
+  },
+  "wave_id": "Q133-Q170-PIT-READINESS-R1-2026-10-03"
+}
