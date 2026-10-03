@@ -23,7 +23,7 @@ concurrency:
 jobs:
   q119_feasibility:
     if: github.repository == 'DWR-debug/trading-agent-public'
-    runs-on: windows-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - name: Checkout exact source
@@ -32,44 +32,32 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 1
 
-      - name: Bootstrap pinned Python
-        shell: cmd
-        run: |
-          @echo off
-          setlocal
-          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-q119"
-          set "PY_EXE=%PY_ROOT%\tools\python.exe"
-          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-q119.nupkg"
-          if not exist "%PY_EXE%" (
-            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
-            mkdir "%PY_ROOT%" 2>nul
-            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
-          )
-          "%PY_EXE%" -m pip install --disable-pip-version-check pytest || exit /b 1
-          endlocal
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check pytest
 
       - name: Structural Q119 tests
-        shell: cmd
-        run: |
-          @echo off
-          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q119\tools\python.exe"
-          "%PY_EXE%" -m pytest -q tests/test_q119_treasury_demand_shape.py tests/test_q119_treasury_source_feasibility.py || exit /b 1
+        run: python -m pytest -q tests/test_q119_treasury_demand_shape.py tests/test_q119_treasury_source_feasibility.py
 
       - name: Fetch and validate live Treasury population
-        shell: cmd
-        run: |
-          @echo off
-          setlocal
-          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q119\tools\python.exe"
-          "%PY_EXE%" -m automation.q119_treasury_source_feasibility --output "research\runs\q119_treasury\q119_source_pit_result.json" || exit /b 1
-          endlocal
+        run: python -m automation.q119_treasury_source_feasibility --output "research/runs/q119_treasury/q119_source_pit_result.json"
 
       - name: Verify governance boundary
-        shell: cmd
         run: |
-          @echo off
-          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q119\tools\python.exe"
-          "%PY_EXE%" -c "import json; from pathlib import Path; p=json.loads(Path(r'research\runs\q119_treasury\q119_source_pit_result.json').read_text(encoding='utf-8')); assert p['status']=='Q119_SOURCE_PIT_FEASIBILITY_COMPLETED'; assert all(v is False for v in p['governance'].values()); assert p['safety']['paper_only'] is True; assert p['safety']['live_trading_enabled'] is False; print('Q119_GOVERNANCE_BOUNDARY=PASS')" || exit /b 1
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path("research/runs/q119_treasury/q119_source_pit_result.json").read_text(encoding="utf-8"))
+          assert p["status"] == "Q119_SOURCE_PIT_FEASIBILITY_COMPLETED"
+          assert all(v is False for v in p["governance"].values())
+          assert p["safety"]["paper_only"] is True
+          assert p["safety"]["live_trading_enabled"] is False
+          print("Q119_GOVERNANCE_BOUNDARY=PASS")
+          PY
 
       - name: Upload Q119 feasibility receipt
         if: always()
