@@ -234,7 +234,7 @@ def test_permanent_loop_uses_short_local_capacity_pulse():
     ).read_text(encoding="utf-8")
     assert 'cron: "*/30 * * * *"' in text
     assert 'max-parallel: 2' in text
-    assert "lane: [local_reproduction]" in text
+    assert "lane: [local_reproduction, data_qa]" in text
     assert "runs-on: [self-hosted, trading-agent-research]" in text
     assert '--rotation-index "%GITHUB_RUN_NUMBER%"' in text
 
