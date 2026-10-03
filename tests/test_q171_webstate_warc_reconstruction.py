@@ -50,3 +50,9 @@ def test_q171_persistence_is_separated_into_workflow_run_sync():
     assert "contents: write" in sync
     assert "automation/github_contents_publish.py" in sync
     assert "git checkout --detach origin/master" not in sync
+
+
+def test_q171_receipt_fingerprint_hashes_canonical_json_bytes():
+    text = (ROOT / "automation/q171_webstate_warc_reconstruction.py").read_text(encoding="utf-8")
+    assert 'json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")' in text
+    assert 'sha256(fingerprint_input)' in text
