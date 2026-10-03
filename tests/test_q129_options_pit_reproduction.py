@@ -17,5 +17,17 @@ def test_q129_independent_workflow_is_hosted_and_boundary_safe():
     text = (ROOT / ".github/workflows/q129-independent-pit-reproduction.yml").read_text(encoding="utf-8")
     assert "runs-on: ubuntu-24.04" in text
     assert "Q129_INDEPENDENT_PIT_REPRODUCED" in text
-    assert "performance: false" in text
+    assert '"performance": false' in text
     assert "automatic_promotion" in text
+
+
+
+def test_q129_contract_freezes_raw_quarantine():
+    contract = json.loads(
+        (ROOT / "research/governance/q129_options_source_contract_2026_10_03.json").read_text(encoding="utf-8")
+    )
+    q = contract["normalization_and_quarantine"]
+    assert q["raw_source_rows_modified"] is False
+    assert q["option_type_map"]["CALL"] == "C"
+    assert q["no_return_based_filtering"] is True
+    assert q["observed_crossed_positive_quote_rows"] == {"SPY": 2080, "QQQ": 245, "IWM": 478}
