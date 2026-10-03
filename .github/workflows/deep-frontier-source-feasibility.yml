@@ -19,6 +19,9 @@ on:
       - "research/governance/research_source_expansion_2026_10_03.json"
       - "tests/test_q133_q145_source_feasibility.py"
       - "automation/q171_q177_pit_readiness.py"
+      - "automation/q171_webstate_coverage.py"
+      - "research/governance/q171_issuer_web_url_map_2026_10_03.json"
+      - "tests/test_q171_webstate_coverage.py"
       - ".github/workflows/deep-frontier-source-feasibility.yml"
 
 permissions:
@@ -76,6 +79,32 @@ jobs:
           print("DEEP_FRONTIER_SOURCE_FEASIBILITY_OK")
           PY
 
+      - name: Run Q171 frozen issuer web-state coverage
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q171_webstate_coverage \
+            --output "research/runs/deep_frontier/${GITHUB_RUN_ID}/q171_webstate_coverage.json"
+
+      - name: Validate Q171 web-state coverage boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p = Path("research/runs/deep_frontier") / os.environ["GITHUB_RUN_ID"] / "q171_webstate_coverage.json"
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['status'] == 'Q171_WEBSTATE_SOURCE_COVERAGE_COMPLETED'
+          assert d['summary']['issuers'] == 8
+          for key in ('performance','holdout','selection','ranking','parameter_search','threshold_search','horizon_search','asset_search','variant_search','promotion','live_execution'):
+              assert d['scientific_boundary'][key] is False
+          assert d['safety']['paper_only'] is True
+          assert d['safety']['live_trading_enabled'] is False
+          assert d['safety']['orders_enabled'] is False
+          assert d['safety']['automatic_promotion'] is False
+          print('Q171_WEBSTATE_COVERAGE_OK')
+          PY
       - name: Run Q171-Q177 PIT-readiness audit
         shell: bash
         run: |
