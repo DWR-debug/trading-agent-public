@@ -84,8 +84,8 @@ jobs:
           test -f "$input"
           for attempt in 1 2 3; do
             git fetch origin master --quiet
-            base_sha="\$(git rev-parse origin/master)"
-            if git show "origin/master:\${latest}" > "$RUNNER_TEMP/q169_current_receipt.json" 2>/dev/null; then
+            base_sha="$(git rev-parse origin/master)"
+            if git show "origin/master:${latest}" > "$RUNNER_TEMP/q169_current_receipt.json" 2>/dev/null; then
               if cmp -s "$latest" "$RUNNER_TEMP/q169_current_receipt.json"; then
                 echo "Q169_NOAA_PIT_RECEIPT_UNCHANGED"
                 exit 0
