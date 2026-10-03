@@ -13,3 +13,8 @@ def test_q133_q170_receipt_persist_has_no_performance_logic():
     text=(ROOT/"automation/q133_q170_pit_receipt_persist.py").read_text(encoding="utf-8").lower()
     for marker in ("sharpe","profit factor","grid search","holdout ranking","parameter sweep"):
         assert marker not in text
+    
+def test_q133_q170_pit_receipt_path_is_not_a_trigger_path():
+    text=(ROOT/".github/workflows/q133-q170-pit-readiness.yml").read_text(encoding="utf-8")
+    paths_section=text.split("paths:",1)[1].split("permissions:",1)[0]
+    assert "research/evidence/q133_q170_pit_readiness_latest.json" not in paths_section
