@@ -714,7 +714,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-03T10:40:08.384457+00:00",
+  "generated_at_utc": "2026-10-03T10:40:53.827633+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -918,6 +918,31 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: stop scheduled provider churn for unavailable AI routes",
+        "sha": "ae2682e8851990894e63317229e3c27ba5d87fde",
+        "timestamp": "2026-10-03T12:40:51+02:00"
+      },
+      {
+        "message": "TEST: align provenance test with hosted frontier architecture",
+        "sha": "e7c470bd061555b1c4bbca7fcf1af044ffc38a08",
+        "timestamp": "2026-10-03T12:40:39+02:00"
+      },
+      {
+        "message": "FIX: remove nonexistent dependency cache manifests from frontier workflow",
+        "sha": "037b57cf88d7854c5197d7fda09940fff9f89b0d",
+        "timestamp": "2026-10-03T12:40:34+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "663ab29ba1b05881facbd716e27648f3c4a18150",
+        "timestamp": "2026-10-03T10:40:10Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5aee87c7c2d3e16818d6be64edabb37d87397de3",
+        "timestamp": "2026-10-03T10:40:09Z"
+      },
+      {
         "message": "TEST: verify hosted frontier and reduced Windows reservation",
         "sha": "71e025049f07f6db24b50eced6370fdfb83d7c88",
         "timestamp": "2026-10-03T12:39:58+02:00"
@@ -931,31 +956,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "601ad26fd26a95bd630d5aa1930078dfee46cc43",
         "timestamp": "2026-10-03T10:39:47Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "165e903ee50a704989cc51f61dab5e95de989d4f",
-        "timestamp": "2026-10-03T10:39:36Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "124d6093604a8fd305535dba1c7c74edb706a8a1",
-        "timestamp": "2026-10-03T10:39:35Z"
-      },
-      {
-        "message": "OPS: avoid duplicate frontier priority execution",
-        "sha": "b566dfe1332f39391d68181d4eb8950e4ae92eb1",
-        "timestamp": "2026-10-03T12:39:34+02:00"
-      },
-      {
-        "message": "OPS: move deterministic frontier from scarce Windows capacity to free hosted Linux",
-        "sha": "8397401fa5014f5878513b9fa41e4c7eb6b83656",
-        "timestamp": "2026-10-03T12:39:22+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2a71ef3b789104b1fe43c7f112ccaba06c0d5ca8",
-        "timestamp": "2026-10-03T10:39:19Z"
       }
     ]
   },
@@ -1025,12 +1025,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "71e025049f07f6db24b50eced6370fdfb83d7c88",
+  "source_master_sha": "ae2682e8851990894e63317229e3c27ba5d87fde",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37117164877"
+    "run_id": "37117203762"
   }
 }
