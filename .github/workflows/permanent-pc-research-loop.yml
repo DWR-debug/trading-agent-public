@@ -61,6 +61,9 @@ on:
       - "automation/ai_worker_fabric.py"
       - "scripts/enable_local_ai_worker.ps1"
       - "scripts/verify_local_ai_worker.ps1"
+      - "tests/test_self_hosted_research_worker.py"
+      - "tests/test_persistent_research_acceleration_contract.py"
+      - "research/governance/persistent_research_acceleration_contract.json"
       - ".github/workflows/permanent-pc-research-loop.yml"
   workflow_dispatch:
 
