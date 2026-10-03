@@ -1,6 +1,5 @@
 from pathlib import Path
 import json
-import json
 
 ROOT = Path(__file__).parents[1]
 
