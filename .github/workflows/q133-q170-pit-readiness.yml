@@ -78,6 +78,18 @@ jobs:
           print("Q133_Q170_PIT_READINESS_R1_OK")
           PY
 
+      - name: Run Q137/Q144 historical micro PIT sample
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q137_q144_micro_pit \
+            --output "research/runs/q133_q170_pit_readiness/${GITHUB_RUN_ID}_q137_q144.json"
+
+      - name: Validate Q137/Q144 micro PIT boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -c "import json,os; from pathlib import Path; p=Path('research/runs/q133_q170_pit_readiness')/(os.environ['GITHUB_RUN_ID']+'_q137_q144.json'); d=json.loads(p.read_text()); assert d['status']=='MICRO_PIT_SAMPLE_COMPLETED_NO_PERFORMANCE'; assert d['q137_sec_submission_sample']['all_symbols_reconstructable'] is True; assert d['q144_wikimedia_pageview_sample']['all_symbols_reconstructable'] is True; assert all(v is False for v in d['scientific_boundary'].values()); assert all(d['safety'].values() if False else [d['safety']['PAPER_ONLY'] is True,d['safety']['LIVE_TRADING_ENABLED'] is False,d['safety']['ORDERS_ENABLED'] is False,d['safety']['AUTOMATIC_PROMOTION'] is False]); assert all(d['mutation_tests'].values()); print('Q137_Q144_MICRO_PIT_OK')"
       - name: Upload PIT-readiness receipt
         if: always()
         uses: actions/upload-artifact@v6
