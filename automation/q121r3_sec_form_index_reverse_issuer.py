@@ -53,6 +53,22 @@ CONTROLS = (
 def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
+def extract_control_cik(text: str, section: str) -> str | None:
+    """Extract the first CIK from the requested SEC-HEADER section."""
+    compact = r1.plain_text(text)
+    if section == "Subject":
+        section_pattern = r"SUBJECT COMPANY\\s*:?(.*?)(?=FILED BY\\s*:|$)"
+    elif section == "Filed by":
+        section_pattern = r"FILED BY\\s*:?(.*)$"
+    else:
+        raise ValueError(f"UNKNOWN_HEADER_SECTION:{section}")
+    section_match = re.search(section_pattern, compact, re.IGNORECASE | re.DOTALL)
+    if not section_match:
+        return None
+    cik_match = re.search(r"CENTRAL\\s+INDEX\\s+KEY\\s*:?\\s*(\\d{1,10})", section_match.group(1), re.IGNORECASE)
+    return cik_match.group(1).zfill(10) if cik_match else None
+
+
 def index_url(year: int, quarter: int) -> str:
     return f"https://www.sec.gov/Archives/edgar/full-index/{year}/QTR{quarter}/form.idx"
 
@@ -238,8 +254,8 @@ def run(output: Path) -> dict[str, object]:
             matched_for_row = None
             for identity_url, identity_body, identity_status in candidates:
                 header_text = identity_body.decode("utf-8", errors="replace")
-                subject = r1.extract_header_section_cik(header_text, "Subject") or r1.extract_labeled_cik(header_text, "Subject")
-                filer = r1.extract_header_section_cik(header_text, "Filed by") or r1.extract_labeled_cik(header_text, "Filed by")
+                subject = extract_control_cik(header_text, "Subject") or r1.extract_header_section_cik(header_text, "Subject") or r1.extract_labeled_cik(header_text, "Subject")
+                filer = extract_control_cik(header_text, "Filed by") or r1.extract_header_section_cik(header_text, "Filed by") or r1.extract_labeled_cik(header_text, "Filed by")
                 accepted = r1.extract_accepted(header_text)
                 if subject == expected_subject and (expected_filer is None or filer == expected_filer) and accepted is not None:
                     matched_for_row = {
