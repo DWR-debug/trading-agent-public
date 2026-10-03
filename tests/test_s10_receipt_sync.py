@@ -90,6 +90,7 @@ def test_s10_workflow_pins_seed_in_environment():
     from pathlib import Path
     worker = Path(".github/workflows/s10-phone-worker.yml").read_text(encoding="utf-8")
     assert 'S10_SEED: "271828"' in worker
+    assert 'research/governance/persistent_research_acceleration_contract.json' in worker
     assert '"s10_seed": os.environ.get("S10_SEED")' in worker
 
 
