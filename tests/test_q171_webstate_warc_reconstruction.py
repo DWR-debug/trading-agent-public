@@ -56,3 +56,54 @@ def test_q171_receipt_fingerprint_hashes_canonical_json_bytes():
     text = (ROOT / "automation/q171_webstate_warc_reconstruction.py").read_text(encoding="utf-8")
     assert 'json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")' in text
     assert 'sha256(fingerprint_input)' in text
+
+
+def test_q171_reconstruct_uses_warc_and_http_content_lengths_for_payload_digest():
+    import base64
+    import gzip
+    import hashlib
+    from automation import q171_webstate_warc_reconstruction as mod
+
+    payload = b"hello world"
+    http_headers = (
+        b"HTTP/1.1 200 \r\n"
+        + b"Content-Type: text/plain\r\n"
+        + b"Content-Length: 11\r\n"
+        + b"\r\n"
+    )
+    warc_block = http_headers + payload
+    digest = base64.b32encode(hashlib.sha1(payload).digest()).decode("ascii").rstrip("=")
+    warc_headers = (
+        b"WARC/1.0\r\n"
+        + b"WARC-Type: response\r\n"
+        + b"WARC-Date: 2025-10-14T00:00:00Z\r\n"
+        + b"WARC-Target-URI: https://example.test/page\r\n"
+        + f"WARC-Payload-Digest: sha1:{digest}\r\n".encode("ascii")
+        + f"Content-Length: {len(warc_block)}\r\n".encode("ascii")
+        + b"\r\n"
+    )
+    compressed = gzip.compress(warc_headers + warc_block + b"\r\n\r\n")
+    row = {
+        "filename": "crawl-data/test.warc.gz",
+        "offset": 0,
+        "length": len(compressed),
+        "timestamp": "20251014000000",
+        "digest": digest,
+        "indexed_url": "https://example.test/page",
+    }
+
+    original_fetch = mod.fetch_range
+    original_sleep = mod.time.sleep
+    try:
+        mod.fetch_range = lambda url, start, length: (206, compressed)
+        mod.time.sleep = lambda seconds: None
+        result = mod.reconstruct("TEST", {"capture_rows": [row]})
+    finally:
+        mod.fetch_range = original_fetch
+        mod.time.sleep = original_sleep
+
+    assert result["status"] == "WARC_RECONSTRUCTED"
+    assert result["payload_bytes"] == len(payload)
+    assert result["checks"]["payload_digest_matches_index"] is True
+    assert result["checks"]["payload_digest_matches_warc_header"] is True
+    assert result["checks"]["http_content_length_boundary_exact"] is True
