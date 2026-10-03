@@ -9,6 +9,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from automation.candidate_robustness_gate import require_receipt_for_formal_phase
+
 ROOT = Path(__file__).resolve().parents[1]
 POLICY_PATH = ROOT / "research/governance/critical_research_quality_control.json"
 REGISTRY_PATH = ROOT / "research/governance/active_research_registry.json"
@@ -44,6 +46,31 @@ def validate(root: Path = ROOT) -> dict:
             continue
 
         prereg = load(prereg_path)
+
+        candidate_id = str(prereg.get("candidate_id") or entry.get("candidate_id") or "")
+        candidate_gate = prereg.get("candidate_robustness_gate")
+        if not candidate_id or not isinstance(candidate_gate, dict):
+            violations.append(f"{entry.get('code')}: missing universal candidate robustness gate")
+        else:
+            receipt_path_value = candidate_gate.get("receipt_path")
+            receipt_sha = candidate_gate.get("receipt_sha256")
+            if not isinstance(receipt_path_value, str) or not receipt_path_value:
+                violations.append(f"{entry.get('code')}: candidate robustness receipt path missing")
+            else:
+                receipt_path = root / receipt_path_value
+                if not receipt_path.is_file():
+                    violations.append(f"{entry.get('code')}: candidate robustness receipt missing")
+                else:
+                    if isinstance(receipt_sha, str) and receipt_sha:
+                        actual_sha = __import__("hashlib").sha256(receipt_path.read_bytes()).hexdigest()
+                        if actual_sha != receipt_sha:
+                            violations.append(f"{entry.get('code')}: candidate robustness receipt sha256 mismatch")
+                    try:
+                        candidate_receipt = load(receipt_path)
+                        require_receipt_for_formal_phase(candidate_id, candidate_receipt)
+                    except Exception as exc:
+                        violations.append(f"{entry.get('code')}: universal candidate robustness gate failed: {exc}")
+
         robustness = prereg.get("robustness_contract")
         if not isinstance(robustness, dict):
             violations.append(f"{entry.get('code')}: missing robustness_contract")
