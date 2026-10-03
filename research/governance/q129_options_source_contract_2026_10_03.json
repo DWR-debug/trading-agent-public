@@ -1,0 +1,99 @@
+{
+  "schema_version": "1.0",
+  "candidate_id": "Q129",
+  "contract_id": "Q129-OPTIONS-SOURCE-2026-10-03",
+  "status": "SOURCE_FEASIBLE_PENDING_INDEPENDENT_PIT_VALIDATION",
+  "generated_utc": "2026-10-03T12:00:00Z",
+  "canonical_release": {
+    "repository": "lambdaclass/options_portfolio_backtester",
+    "release_tag": "data-v1",
+    "release_id": 289029018,
+    "published_at": "2026-02-21T19:07:56Z",
+    "options_source_statement": "philippdubach/options-data; original 104-symbol source",
+    "assets": [
+      {
+        "name": "SPY_options.parquet",
+        "size_bytes": 631738559,
+        "sha256": "a7152991b45b81f090f970e945bf88def8093b8ecb9b250e9891cb6d88041f0a",
+        "url": "https://github.com/lambdaclass/options_portfolio_backtester/releases/download/data-v1/SPY_options.parquet"
+      },
+      {
+        "name": "QQQ_options.parquet",
+        "size_bytes": 387476183,
+        "sha256": "1f831556cd87ec9d7af43d3b47a69a829ffb2fb199cfcef4ff55d289badf8734",
+        "url": "https://github.com/lambdaclass/options_portfolio_backtester/releases/download/data-v1/QQQ_options.parquet"
+      },
+      {
+        "name": "IWM_options.parquet",
+        "size_bytes": 308766441,
+        "sha256": "d16a728116f8095c97c39ed66e75000bf66a0ab422b678002eb9f6086fd10ee5",
+        "url": "https://github.com/lambdaclass/options_portfolio_backtester/releases/download/data-v1/IWM_options.parquet"
+      },
+      {
+        "name": "SPY_underlying.parquet",
+        "size_bytes": 252066,
+        "sha256": "847e60a441eb10969d87cd4a6da604257b782d9076168f68d5730b84096c79db",
+        "url": "https://github.com/lambdaclass/options_portfolio_backtester/releases/download/data-v1/SPY_underlying.parquet"
+      },
+      {
+        "name": "QQQ_underlying.parquet",
+        "size_bytes": 332454,
+        "sha256": "78c015fd7fa9d493cd798d5ae81b3c2ae6dc3b8176e25e7bb90cd4114b103351",
+        "url": "https://github.com/lambdaclass/options_portfolio_backtester/releases/download/data-v1/QQQ_underlying.parquet"
+      },
+      {
+        "name": "IWM_underlying.parquet",
+        "size_bytes": 257707,
+        "sha256": "e980f50473a8c346ba9ac8b05dcf3da691581dae742f649cb3608d0efe2ef940",
+        "url": "https://github.com/lambdaclass/options_portfolio_backtester/releases/download/data-v1/IWM_underlying.parquet"
+      }
+    ]
+  },
+  "preservation_mirror": {
+    "repository": "anahatsingh-ui/options-dataset-hist",
+    "release_tag": "v1.0.0",
+    "license": "MIT",
+    "scope": "SPY 2008-2025, QQQ 2011-2025, IWM 2008-2025",
+    "observation_semantics": "4:00 PM ET end-of-day snapshot",
+    "note": "Preservation mirror; not assumed byte-identical to data-v1 options release."
+  },
+  "broad_source_lead": {
+    "repository": "SaidBahaDev/options-data",
+    "stated_scope": "104 US equities/ETFs, 2008-2025",
+    "stated_storage": "public Cloudflare R2 files",
+    "status": "BREADTH_LEAD_REQUIRES_DIRECT_HTTP_VALIDATION"
+  },
+  "information_boundary": {
+    "observation_date_field": "date",
+    "same_day_use_allowed": false,
+    "conservative_decision_boundary": "next eligible exchange session after option observation date",
+    "rationale": "EOD observation is documented, but exact public dissemination time is not sufficient for same-session use."
+  },
+  "required_checks": [
+    "exact SHA-256 match for pinned release assets",
+    "Parquet structural validity",
+    "expected option columns",
+    "non-negative volume/open_interest",
+    "bid <= ask when both quotes are positive",
+    "date/expiration coherence",
+    "contract_id uniqueness within observation date",
+    "independent reproduction from surviving copy where technically possible"
+  ],
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "candidate_ranking": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false
+  }
+}
