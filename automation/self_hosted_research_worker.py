@@ -307,19 +307,34 @@ def default_max_workers(lane: str) -> int:
     return 3 if lane == "autonomous_frontier_qa" else 1
 
 
-def execution_groups(lane: str, step_count: int) -> list[list[int]]:
-    """Return dependency-safe bounded execution groups.
+FRONTIER_WORKPACKS: tuple[tuple[int, ...], ...] = (
+    tuple(range(1, 10)),
+    tuple(range(10, 19)),
+    tuple(range(19, 28)),
+)
 
-    Q100 consumes Q096 and Q098 artifacts, so step 8 must start only after
-    steps 5 and 6 have completed. Other predefined frontier steps are bounded
-    preflights that do not consume another step's output.
-    """
+
+def select_workpack(lane: str, step_count: int, rotation_index: int = 0) -> tuple[str, list[int]]:
+    """Select a deterministic bounded workpack for the current frontier pulse."""
     all_steps = list(range(1, step_count + 1))
     if lane != "autonomous_frontier_qa":
-        return [all_steps]
-    dependency = [index for index in all_steps if index != 8]
-    groups = [dependency]
-    if 8 in all_steps:
+        return "full", all_steps
+    pack_index = int(rotation_index) % len(FRONTIER_WORKPACKS)
+    name = f"frontier_pack_{pack_index + 1}"
+    selected = [index for index in FRONTIER_WORKPACKS[pack_index] if index <= step_count]
+    return name, selected
+
+
+def execution_groups(
+    lane: str, step_count: int, rotation_index: int = 0
+) -> list[list[int]]:
+    """Return dependency-safe bounded execution groups for one capacity pulse."""
+    _, selected = select_workpack(lane, step_count, rotation_index)
+    if lane != "autonomous_frontier_qa":
+        return [selected]
+    dependency = [index for index in selected if index != 8]
+    groups = [dependency] if dependency else []
+    if 8 in selected:
         groups.append([8])
     return groups
 
@@ -328,6 +343,12 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--lane", choices=sorted(LANES), required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument(
+        "--rotation-index",
+        type=int,
+        default=None,
+        help="Deterministic frontier workpack selector; defaults to GITHUB_RUN_NUMBER.",
+    )
     parser.add_argument(
         "--max-workers",
         type=int,
@@ -341,17 +362,24 @@ def main() -> int:
         parser.error("--max-workers must be between 1 and 4")
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    results = []
+    rotation_index = (
+        args.rotation_index
+        if args.rotation_index is not None
+        else int(os.environ.get("GITHUB_RUN_NUMBER", "0") or "0")
+    )
     exit_code = 0
     failed_steps = []
     indexed_commands = list(enumerate(LANES[args.lane], start=1))
     command_map = dict(indexed_commands)
     results = []
+    workpack_name, selected_steps = select_workpack(
+        args.lane, len(LANES[args.lane]), rotation_index
+    )
 
     # Execute dependency-safe groups sequentially; each group may use bounded
     # internal parallelism. This preserves wall-clock savings while preventing
     # artifact-consumer races such as Q100 reading Q096/Q098 before completion.
-    for group in execution_groups(args.lane, len(indexed_commands)):
+    for group in execution_groups(args.lane, len(indexed_commands), rotation_index):
         group_items = [(index, command_map[index]) for index in group]
         if max_workers == 1 or len(group_items) == 1:
             group_results = [run(command, args.output_dir, index) for index, command in group_items]
@@ -381,9 +409,13 @@ def main() -> int:
         "lane": args.lane,
         "completed_at": datetime.now(timezone.utc).isoformat(),
         "max_workers": max_workers,
+        "rotation_index": rotation_index,
+        "workpack": workpack_name,
+        "selected_steps": selected_steps,
         "results": results,
         "failed_steps": failed_steps,
-        "all_bounded_steps_attempted": True,
+        "all_bounded_steps_attempted": len(results) == len(LANES[args.lane]),
+        "all_selected_bounded_steps_attempted": len(results) == len(selected_steps),
         "formal_evidence_allowed": False,
         "paper_only": True,
     }
@@ -404,6 +436,9 @@ def main() -> int:
         "automatic_promotion": False,
         "formal_research_evidence": False,
         "max_workers": max_workers,
+        "rotation_index": rotation_index,
+        "workpack": workpack_name,
+        "selected_steps": selected_steps,
         "step_count": len(results),
         "step_return_codes": [result["returncode"] for result in results],
         "failed_steps": failed_steps,
