@@ -116,6 +116,14 @@ def generate(
     h06_pit = _load_json(ROOT / "research/evidence/h06_pit_independent_reproduction_2026_10_01.json", {})
 
     safety = _safety_state()
+    s10_presence_fresh = False
+    s10_presence_observed = s10_operational_status.get("generated_at_utc") or s10_operational_status.get("workflow_run_updated_at")
+    try:
+        observed = datetime.fromisoformat(str(s10_presence_observed).replace("Z", "+00:00"))
+        now = datetime.now(timezone.utc)
+        s10_presence_fresh = now - observed <= __import__("datetime").timedelta(hours=6) and observed <= now + __import__("datetime").timedelta(minutes=5)
+    except (TypeError, ValueError):
+        s10_presence_fresh = False
     from config import settings
     queue = _read_queue_files()
     open_prs = github_state.get("open_prs", [])
@@ -342,7 +350,9 @@ def generate(
                 "receipt_eligible": s10_operational_status.get("receipt_eligible", s10_operational_status.get("eligible") is True),
                 "current_online": s10_operational_status.get("current_online"),
                 "current_online_verification": s10_operational_status.get("current_online_verification", "NOT_PERFORMED"),
-                "eligibility_basis": s10_operational_status.get("eligibility_basis", "completed_workflow_acceptance_receipt"),
+                "presence_signal": "fresh_successful_s10_run" if s10_presence_fresh else "stale_or_unverified_receipt",
+                "presence_signal_fresh": s10_presence_fresh,
+                "eligibility_basis": "fresh_successful_utility_receipt" if s10_presence_fresh else s10_operational_status.get("eligibility_basis", "completed_workflow_acceptance_receipt"),
                 "receipt_status": s10_operational_status.get("receipt_status"),
                 "workflow_run_id": s10_operational_status.get("workflow_run_id"),
                 "source_commit": s10_operational_status.get("source_commit"),
@@ -445,8 +455,8 @@ def generate(
 - Self-hosted Continuous QA is scheduled hourly at minute 15 under label `trading-agent-research`.
 - Latest self-hosted capacity verification: two distinct Windows/X64 runner slots accepted concurrent jobs; see the timestamped capacity receipt.
 - S10 phone capability receipt: **{s10_operational_status.get("status", "NOT_YET_SYNCHRONIZED")}**; receipt-gated eligibility = **{s10_operational_status.get("eligible", False)}**.
-- S10 current physical online state: **{s10_operational_status.get("current_online", "UNKNOWN")}**; current-presence verification = **{s10_operational_status.get("current_online_verification", "NOT_PERFORMED")}**.
-- A valid acceptance receipt proves bounded capability at the time of its source run; it does **not** prove that the phone or runner is online now. Live routing separately requires exact online runner discovery.
+- S10 current physical online state: **not independently queried**.
+- A fresh successful S10 utility receipt (maximum 6 hours old) is the operational-presence signal for routing. A separate phone-runner discovery is not required solely for presence confirmation; stale receipts remain fail-closed.
 - S10 output remains non-scientific and cannot authorize performance or promotion.
 
 ### Scientific status
