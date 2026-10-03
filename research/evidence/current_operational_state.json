@@ -558,7 +558,9 @@
     "name": "active_research_registry",
     "policy": {
       "automatic_promotion": false,
+      "candidate_robustness_gate_module": "automation/candidate_robustness_gate.py",
       "critical_research_quality_control": "research/governance/critical_research_quality_control.json",
+      "formal_phase_entry_requires_candidate_robustness_receipt": true,
       "frontier_design_document": "docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md",
       "future_full_formal_pass_requires_independent_replication_contract": true,
       "future_performance_authorization_requires_robustness_contract": true,
@@ -566,7 +568,8 @@
       "only_exactly_listed_authorizations_may_execute": true,
       "only_listed_performance_trials_may_be_authorized": true,
       "paper_only": true,
-      "replication_after_full_formal_pass_must_be_unchanged": true
+      "replication_after_full_formal_pass_must_be_unchanged": true,
+      "universal_candidate_robustness_gate": true
     },
     "schema_version": 1
   },
@@ -640,21 +643,23 @@
     },
     "s10_phone": {
       "acceptance_receipt_sha256": "2e40b9d37bf0fbd22bd752fffdaceb0f7ad955e7df1070d0793acbe77c77796d",
-      "artifact_id": "11269203512",
+      "artifact_id": "11270193421",
       "candidate_ranking": false,
       "candidate_selection": false,
       "current_online": null,
       "current_online_verification": "NOT_PERFORMED",
-      "eligibility_basis": "completed_workflow_acceptance_receipt",
+      "eligibility_basis": "fresh_successful_utility_receipt",
       "eligible": true,
       "performance_authorization": false,
+      "presence_signal": "fresh_successful_s10_run",
+      "presence_signal_fresh": true,
       "promotion": false,
       "receipt_eligible": false,
       "receipt_status": "S10_UTILITY_ACCEPTED",
       "scientific_evidence": false,
-      "source_commit": "5c37ef725819e3aa31b1d77382934a7bed517c9a",
+      "source_commit": "5ae68b21f18f82e68ff9e2a2c9ee793326992874",
       "status": "S10_UTILITY_ACCEPTED",
-      "workflow_run_id": "37110871784"
+      "workflow_run_id": "37114563680"
     },
     "scientific_compute": {
       "canonical_path": "GitHub-hosted deterministic workflows",
@@ -709,7 +714,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-03T09:53:15.561885+00:00",
+  "generated_at_utc": "2026-10-03T10:21:29.555096+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -913,44 +918,44 @@
     ],
     "recent_commits": [
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a95d71a3bb301881a6527f1a989bb0420cfe184b",
-        "timestamp": "2026-10-03T09:53:02Z"
+        "message": "FIX: make candidate robustness receipt deterministically durable",
+        "sha": "b3ed998cb27b86a20aacda3db36150cce336a584",
+        "timestamp": "2026-10-03T12:21:16+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6b8c923b250168dc8ed64ade0cca67a197ef20aa",
-        "timestamp": "2026-10-03T09:53:01Z"
+        "message": "FIX: make status synchronization stale-run safe",
+        "sha": "e664e3ed492693c9f22c30f6b9037cf4cb31a759",
+        "timestamp": "2026-10-03T12:21:06+02:00"
       },
       {
-        "message": "TEST: enforce fresh S10 receipt presence window",
-        "sha": "c618cfbb65c7f07af45f4883633b9f4182a5e907",
-        "timestamp": "2026-10-03T11:52:54+02:00"
+        "message": "FIX: load S10 status before presence evaluation",
+        "sha": "827920f649d8f9d9df9aee08d6a6d2af3db4350e",
+        "timestamp": "2026-10-03T12:20:59+02:00"
       },
       {
-        "message": "TEST: cover rotating frontier workpack semantics",
-        "sha": "50bd596b6bef2c47e4c7c8c71f43f790dfe2153b",
-        "timestamp": "2026-10-03T11:52:47+02:00"
+        "message": "OPS: refresh canonical status after candidate-gate wave",
+        "sha": "bd20ceea5e3832de97a16bacbfd282ac342a4e14",
+        "timestamp": "2026-10-03T12:10:18+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2f783456a366553a84a7b28a94c6106751a242a1",
-        "timestamp": "2026-10-03T09:52:46Z"
+        "message": "GOV: make Q129 deterministic at universal candidate gate",
+        "sha": "6a234880c335a25e94ff5264158e6a2b87bf4f7f",
+        "timestamp": "2026-10-03T12:09:52+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d4efbae5920a4e89aa811d0b020a55b8cdf26b2c",
-        "timestamp": "2026-10-03T09:52:44Z"
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "85cf9015766b72e4d8854f95c30b121d2455e267",
+        "timestamp": "2026-10-03T10:09:36Z"
       },
       {
-        "message": "FIX: record rotated workpack attempt semantics consistently",
-        "sha": "5334731a3000409cc52a7540d6a060e15e647a40",
-        "timestamp": "2026-10-03T11:52:33+02:00"
+        "message": "OPS: refresh canonical current status with active research wave and candidate gate",
+        "sha": "f9645382329b0b87ffeacba2ec6fba47c86b366a",
+        "timestamp": "2026-10-03T12:09:31+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a9012f4de093129fabdc948bb4f6e3103861df6d",
-        "timestamp": "2026-10-03T09:52:13Z"
+        "message": "OPS: record AI worker state",
+        "sha": "17e313a7a35c69c2aef98a586e1412c0f1886018",
+        "timestamp": "2026-10-03T10:09:04Z"
       }
     ]
   },
@@ -1020,12 +1025,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a95d71a3bb301881a6527f1a989bb0420cfe184b",
+  "source_master_sha": "b3ed998cb27b86a20aacda3db36150cce336a584",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37114535097"
+    "run_id": "37116139744"
   }
 }
