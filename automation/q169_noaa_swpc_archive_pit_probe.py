@@ -21,14 +21,20 @@ ARCHIVE_INDEX_URL = (
     "https://www.ngdc.noaa.gov/stp/space-weather/swpc-products/"
     "daily_reports/geoalerts/2025/10/"
 )
-SEMANTICS_URL = "https://www.swpc.noaa.gov/products/notifications-timeline"
+SEMANTICS_URL = "https://www.spaceweather.gov/products/notifications-timeline"
 SAMPLE_FILES = {
-    "2025-10-14": "1014GEOA.txt",
-    "2025-10-15": "1015GEOA.txt",
+    "2025-10-14": {
+        "url_filename": "20251014GEOA.txt",
+        "product_label": "1014GEOA.txt",
+    },
+    "2025-10-15": {
+        "url_filename": "20251015GEOA.txt",
+        "product_label": "1015GEOA.txt",
+    },
 }
 SAMPLE_DATES = tuple(SAMPLE_FILES)
-UA = "trading-agent-public/Q169-NOAA-SWPC-PIT-R1/2"
-INDEX_MARKERS = tuple(SAMPLE_FILES.values())
+UA = "trading-agent-public/Q169-NOAA-SWPC-ARCHIVE-PIT-R2/1"
+INDEX_MARKERS = tuple(v["url_filename"] for v in SAMPLE_FILES.values())
 SEMANTIC_MARKERS = (
     "plotted at the Issue Time",
     "CANCELATIONS",
@@ -70,7 +76,9 @@ def parse_issued(line: str) -> datetime:
 
 
 def validate_archive_file(sample_date: str) -> dict[str, Any]:
-    filename = SAMPLE_FILES[sample_date]
+    sample = SAMPLE_FILES[sample_date]
+    filename = sample["url_filename"]
+    product_label = sample["product_label"]
     url = ARCHIVE_INDEX_URL + filename
     status, body = fetch(url)
     text = body.decode("utf-8", errors="replace")
@@ -94,7 +102,7 @@ def validate_archive_file(sample_date: str) -> dict[str, Any]:
         return result
 
     checks = {
-        "product_identity": lines[0].strip() == f":Product: {filename}",
+        "product_identity": lines[0].strip() == f":Product: {product_label}",
         "prepared_by_noaa_swpc": any(
             "Prepared by the U.S. Dept. of Commerce, NOAA" in line for line in lines[:8]
         ),
@@ -159,7 +167,7 @@ def main(output: Path) -> dict[str, Any]:
 
     result: dict[str, Any] = {
         "schema_version": "1.0",
-        "task_id": "Q-2026-10-03-Q169-NOAA-SWPC-ARCHIVE-PIT-R1",
+        "task_id": "Q-2026-10-03-Q169-NOAA-SWPC-ARCHIVE-PIT-R2",
         "status": (
             "Q169_NOAA_ARCHIVE_SAMPLE_VERIFIED_PENDING_EXPOSURE_REVISION_JOIN"
             if archive_ok and semantics_ok and all(mutation_checks.values())
