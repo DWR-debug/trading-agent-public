@@ -29,7 +29,7 @@ Dieses Dokument ist der **verbindliche Einstiegspunkt für neue Chats**, die mit
 
 ### Dauerhafte Beschleunigungslogik
 
-Vor Beginn der ersten fachlichen Arbeit ist zusätzlich `research/governance/persistent_research_acceleration_contract.json` zu berücksichtigen. Die Beschleunigungslogik ist nicht chatabhängig: unabhängige Arbeit wird parallel auf freie Ressourcen verteilt, bereits laufende Arbeit wird nicht dupliziert und S10 wird bei gültiger Receipt, verifizierter Live-Verfügbarkeit und sinnvoller bounded Aufgabe opportunistisch eingesetzt. Nach relevanten Research-/Governance-Änderungen ist ein bounded S10-Utility-Review zulässig und vorgesehen.
+Vor Beginn der ersten fachlichen Arbeit ist zusätzlich `research/governance/persistent_research_acceleration_contract.json` zu berücksichtigen. Die Beschleunigungslogik ist nicht chatabhängig: unabhängige Arbeit wird parallel auf freie Ressourcen verteilt, bereits laufende Arbeit wird nicht dupliziert und S10 wird bei einem frischen erfolgreichen Utility-Receipt (aktuell maximal 6 Stunden alt) und sinnvoller bounded Aufgabe opportunistisch eingesetzt; dieser Receipt gilt als Presence-Signal für das Routing. Nach relevanten Research-/Governance-Änderungen ist ein bounded S10-Utility-Review zulässig und vorgesehen.
 
 Die aktuellen zwei Windows-Self-Hosted-Lanes dürfen die vordefinierten Frontier-Preflights begrenzt parallel ausführen; Reproduktion und andere sequenzielle QA bleiben bewusst seriell. Ein zusätzliches Mobiltelefon ist derzeit keine Voraussetzung. Neue Samsung-Geräte werden nur als kontrollierter Kapazitätstest aktiviert, wenn ein messbarer unabhängiger Durchsatzgewinn zu erwarten ist.
 
