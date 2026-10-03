@@ -1,4 +1,4 @@
-name: Research Governance Audit (trusted self-hosted)
+name: Research Governance Audit (hosted Windows)
 
 on:
   push:
@@ -23,7 +23,7 @@ concurrency:
 jobs:
   audit:
     if: github.repository == 'DWR-debug/trading-agent-public'
-    runs-on: [self-hosted, trading-agent-research]
+    runs-on: windows-latest
     timeout-minutes: 25
 
     steps:
