@@ -2,7 +2,7 @@
   "schema_version": 1,
   "state_type": "TRADING_AGENT_OS_ORCHESTRATION_SNAPSHOT",
   "effective_date_utc": "2026-10-03",
-  "source_master_sha": "9ce1e5c5bd82cedd48f1036ef1becaf4242b3e76",
+  "source_master_sha": "CURRENT_MASTER_AT_NEXT_STATUS_SYNC",
   "purpose": "Persistent orchestration contract for chat-independent Trading Agent research and engineering.",
   "chat_trigger": "trading agent",
   "capacity_pulse_policy": "10-minute schedule with concurrency-serialized self-hosted loop and deterministic frontier workpack rotation by run number",
@@ -38,15 +38,15 @@
       "workflow": ".github/workflows/permanent-pc-research-loop.yml",
       "schedule_utc": "*/10 * * * *",
       "runner_label": "trading-agent-research",
-      "parallel_lanes": 2,
+      "parallel_lanes": 1,
       "purpose": [
-        "autonomous_frontier_qa",
         "local_reproduction"
       ],
       "night_mode": "continuous; no chat required",
       "formal_evidence_allowed": false,
       "internal_frontier_workers": 3,
-      "max_worker_cap": 4
+      "max_worker_cap": 4,
+      "description": "Windows capacity reserved for local reproduction and hardware/local-AI paths; deterministic frontier moved to free hosted Linux."
     },
     "hosted_research_failover": {
       "workflow": ".github/workflows/hosted-research-failover.yml",
@@ -65,11 +65,9 @@
       "workflow": ".github/workflows/ai-worker-fabric.yml",
       "schedule_utc": "0 */6 * * *",
       "providers": [
-        "openrouter_free",
-        "gemini_cli",
-        "mistral_api"
+        "openrouter_free"
       ],
-      "routing": "deterministic six-task rotation",
+      "routing": "scheduled OpenRouter free; Gemini legacy API and Mistral retained manual-only when explicitly dispatched",
       "output_role": "design/review/adversarial input only",
       "scientific_evidence_allowed": false
     },
@@ -102,6 +100,19 @@
       "performance": false,
       "holdout": false,
       "candidate_selection": false
+    },
+    "hosted_deterministic_frontier": {
+      "workflow": ".github/workflows/hosted-deterministic-frontier.yml",
+      "schedule_utc": "*/10 * * * *",
+      "runner": "ubuntu-24.04",
+      "purpose": [
+        "autonomous_frontier_qa",
+        "Q119/Q120/Q121/Q122",
+        "SEC/13F/XBRL",
+        "Q126-Q132"
+      ],
+      "workpack_rotation": "three equal 10-step packs covering all 30 frontier worker steps",
+      "formal_evidence_allowed": false
     }
   },
   "current_research_focus": {
@@ -150,7 +161,7 @@
       "latest_verified_run_id": "37102979617",
       "regular_task": "bounded governance/reproducibility/QA utility review",
       "full_acceptance_policy": "36-case R3 benchmark only on onboarding or explicit revalidation; never as recurring default workload",
-      "throughput_probe": ".github/workflows/s10-throughput-probe.yml",
+      "throughput_probe": ".github/workflows/s10-throughput-probe.yml (manual diagnostics only)",
       "event_driven_review": "meaningful research-runner or critical-governance change plus regular six-hour cadence",
       "latest_utility_run_id": "37102979617",
       "latest_utility_status": "S10_UTILITY_REVIEW_COMPLETED"
