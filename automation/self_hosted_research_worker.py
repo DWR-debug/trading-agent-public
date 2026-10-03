@@ -241,6 +241,7 @@ LANES: dict[str, list[list[str]]] = {
             "pytest",
             "-q",
             "tests/test_q121_sec_beneficial_ownership_timing.py",
+            "tests/test_q126_q132_frontier_feasibility.py",
         ],
         [
             PYTHON,
@@ -248,6 +249,13 @@ LANES: dict[str, list[list[str]]] = {
             "automation.q121_sec_beneficial_ownership_timing",
             "--output",
             "research/runs/self_hosted/q121_sec_beneficial_ownership_timing/result.json",
+        ],
+        [
+            PYTHON,
+            "-m",
+            "automation.q126_q132_frontier_feasibility",
+            "--output",
+            "research/runs/self_hosted/q126_q132_frontier_feasibility/result.json",
         ],
     ],
     "repo_qa": [
