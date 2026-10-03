@@ -1,0 +1,73 @@
+name: Q121-R5 SEC Dual Index Population Reconciliation (direct archive)
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - .github/workflows/q121r5-sec-dual-index-direct-archive.yml
+
+permissions:
+  contents: read
+
+jobs:
+  reconcile:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 45
+    steps:
+      - name: Download exact repository snapshot
+        shell: cmd
+        run: |
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+          if /I not "%GITHUB_REPOSITORY%"=="DWR-debug/trading-agent-public" exit /b 1
+          if /I not "%GITHUB_REF%"=="refs/heads/master" exit /b 1
+          if not defined GITHUB_SHA exit /b 1
+          set "WORK=%RUNNER_TEMP%\q121r5-%GITHUB_SHA%"
+          set "ARCHIVE=%RUNNER_TEMP%\q121r5-%GITHUB_SHA%.tar.gz"
+          if exist "%WORK%" rmdir /s /q "%WORK%"
+          mkdir "%WORK%" || exit /b 1
+          curl.exe -L --fail --silent --show-error -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%"
+          if errorlevel 1 exit /b 1
+          tar.exe -xzf "%ARCHIVE%" -C "%WORK%"
+          if errorlevel 1 exit /b 1
+          set "REPO_SRC="
+          for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
+          if not defined REPO_SRC exit /b 1
+          set "Q121R5_REPO=%REPO_SRC%"
+          echo Q121R5_REPO=%REPO_SRC%
+          echo Q121R5_SHA=%GITHUB_SHA%
+          endlocal & set "Q121R5_REPO=%REPO_SRC%"
+
+      - name: Locate Python
+        shell: cmd
+        run: |
+          @echo off
+          where python
+          if errorlevel 1 exit /b 1
+          python --version
+
+      - name: Run Q121-R5
+        shell: cmd
+        run: |
+          @echo off
+          cd /d "%Q121R5_REPO%" || exit /b 1
+          python -m automation.q121r5_sec_dual_index_population_reconciliation --output research/runs/q121r5_sec_dual_index_reconciliation/result.json
+          if errorlevel 1 exit /b 1
+
+      - name: Scientific boundary
+        shell: cmd
+        run: |
+          @echo off
+          cd /d "%Q121R5_REPO%" || exit /b 1
+          python -c "import json; from pathlib import Path; p=json.loads(Path(r'research/runs/q121r5_sec_dual_index_reconciliation/result.json').read_text()); assert p['status']=='Q121R5_DUAL_INDEX_POPULATION_RECONCILIATION_COMPLETED'; assert p['comparison']['exact_row_multiset_equal'] is True; assert p['comparison']['left_only_key_count']==0; assert p['comparison']['right_only_key_count']==0; assert p['interpretation']['same_day_pit_safe'] is False; assert all(v is False for v in p['governance'].values()); assert p['safety']['paper_only'] and not p['safety']['live_trading_enabled'] and not p['safety']['orders_enabled']; print('Q121R5_BOUNDARY=PASS'); print('Q121R5_RECEIPT='+p['receipt_fingerprint'])"
+          if errorlevel 1 exit /b 1
+
+      - name: Upload receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q121r5-sec-dual-index-direct-archive-${{ github.run_id }}
+          path: "%Q121R5_REPO%\research\runs\q121r5_sec_dual_index_reconciliation\result.json"
+          if-no-files-found: error
+          retention-days: 30
