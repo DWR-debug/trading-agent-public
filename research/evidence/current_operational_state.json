@@ -875,7 +875,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-03T16:26:14.482795+00:00",
+  "generated_at_utc": "2026-10-03T16:27:47.631049+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1280,6 +1280,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOV: register Q121-R1 workflow in lifecycle and integrity checks",
+        "sha": "26e9f45fb1f7c128656312cbe164d8f8ac86ddaf",
+        "timestamp": "2026-10-03T18:27:36+02:00"
+      },
+      {
+        "message": "TEST: track Q121-R1 workflow lifecycle registration",
+        "sha": "daa906590accf0d069d899fb08a3b95b83502a1d",
+        "timestamp": "2026-10-03T18:27:23+02:00"
+      },
+      {
+        "message": "GOV: include Q121-R1 workflow in fail-closed integrity registry",
+        "sha": "bc7290585585433d7cfe984d50dc04972204cc87",
+        "timestamp": "2026-10-03T18:27:15+02:00"
+      },
+      {
+        "message": "GOV: register Q121-R1 workflow in lifecycle registry",
+        "sha": "94d0ef8c1804dbf9d2a1de95c9e9151c0197e972",
+        "timestamp": "2026-10-03T18:27:11+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "65d2d8e53dcce869beeb9846b95bc992f1b3c761",
+        "timestamp": "2026-10-03T16:26:16Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b49a5fd80a9578a47f09c536b0070f3c033dc442",
+        "timestamp": "2026-10-03T16:26:15Z"
+      },
+      {
         "message": "RESEARCH: Q121-R1 SEC reverse issuer coverage correction",
         "sha": "d490d1febe9b8f63ecf6ffaaf593d37b697b5c87",
         "timestamp": "2026-10-03T18:26:03+02:00"
@@ -1288,36 +1318,6 @@
         "message": "CI: validate Q121-R1 on pull requests before merge",
         "sha": "044674533348f348b91e76c5f3656767bf4b414d",
         "timestamp": "2026-10-03T18:25:37+02:00"
-      },
-      {
-        "message": "TEST: enforce Q121-R1 HTML and SEC date-filter fail-closed guards",
-        "sha": "06a2b9c2546c2f629a7ad8b35db4e65431ac1f86",
-        "timestamp": "2026-10-03T18:25:16+02:00"
-      },
-      {
-        "message": "FIX: harden Q121-R1 SEC HTML parsing and date-filter validation",
-        "sha": "67528825ae89aaacadf711155c8b7b87d75c1dc7",
-        "timestamp": "2026-10-03T18:25:08+02:00"
-      },
-      {
-        "message": "GOV: register Q121-R1 reverse issuer coverage correction",
-        "sha": "2cb9dd74342729ec9858975eb19a07a4f2939119",
-        "timestamp": "2026-10-03T18:23:05+02:00"
-      },
-      {
-        "message": "CI: add Q121-R1 SEC reverse issuer source probe",
-        "sha": "4b9506285d6d4ebb8fb3bfc3ed38b1f70074f9e2",
-        "timestamp": "2026-10-03T18:22:54+02:00"
-      },
-      {
-        "message": "TEST: add Q121-R1 reverse issuer source contract tests",
-        "sha": "6726096f9858d63dcf4c2919f7f7b38348baedf1",
-        "timestamp": "2026-10-03T18:22:47+02:00"
-      },
-      {
-        "message": "RESEARCH: implement Q121-R1 SEC reverse issuer source probe",
-        "sha": "53428d40904e48eea5b76ae8ff27c0318600af54",
-        "timestamp": "2026-10-03T18:22:40+02:00"
       }
     ]
   },
@@ -1387,12 +1387,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d490d1febe9b8f63ecf6ffaaf593d37b697b5c87",
+  "source_master_sha": "26e9f45fb1f7c128656312cbe164d8f8ac86ddaf",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37136832885"
+    "run_id": "37136928952"
   }
 }
