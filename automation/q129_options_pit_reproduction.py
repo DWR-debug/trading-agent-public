@@ -8,7 +8,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-from datetime import date, datetime, timezone
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
 
@@ -83,9 +83,10 @@ def inspect(path: Path, dataset_name: str) -> dict[str, object]:
           COUNT(*) FILTER (WHERE open_interest IS NULL) AS null_open_interest,
           COUNT(*) FILTER (WHERE volume < 0) AS negative_volume,
           COUNT(*) FILTER (WHERE open_interest < 0) AS negative_open_interest,
+          COUNT(*) FILTER (WHERE bid < 0 OR ask < 0) AS negative_quote_rows,
           COUNT(*) FILTER (WHERE bid > 0 AND ask > 0 AND bid > ask) AS crossed_quotes,
           COUNT(*) FILTER (WHERE expiration < date) AS expiration_before_observation,
-          COUNT(*) FILTER (WHERE UPPER(CAST(type AS VARCHAR)) NOT IN ('C','P')) AS invalid_option_type,
+          COUNT(*) FILTER (WHERE UPPER(CAST(type AS VARCHAR)) NOT IN ('C','P','CALL','PUT')) AS invalid_option_type,
           COUNT(*) - COUNT(DISTINCT concat(CAST(contract_id AS VARCHAR), '|', CAST(date AS VARCHAR))) AS duplicate_contract_date_rows,
           MIN(CAST(date AS DATE)) AS first_observation_date,
           MAX(CAST(date AS DATE)) AS last_observation_date
@@ -95,7 +96,7 @@ def inspect(path: Path, dataset_name: str) -> dict[str, object]:
     keys = [
         "rows", "null_contract_id", "null_symbol", "null_date", "null_expiration",
         "null_bid", "null_ask", "null_volume", "null_open_interest",
-        "negative_volume", "negative_open_interest", "crossed_quotes",
+        "negative_volume", "negative_open_interest", "negative_quote_rows", "crossed_quotes",
         "expiration_before_observation", "invalid_option_type",
         "duplicate_contract_date_rows", "first_observation_date", "last_observation_date",
     ]
@@ -123,16 +124,40 @@ def inspect(path: Path, dataset_name: str) -> dict[str, object]:
         and all(values[k] == 0 for k in (
             "null_contract_id", "null_symbol", "null_date", "null_expiration",
             "null_volume", "null_open_interest", "negative_volume",
-            "negative_open_interest", "crossed_quotes", "expiration_before_observation",
+            "negative_open_interest", "negative_quote_rows", "expiration_before_observation",
             "invalid_option_type", "duplicate_contract_date_rows"
         ))
         and not non_session_dates
         and REQUIRED.issubset(columns)
+        and int(eligible_rows) > 0
     )
 
     next_session_after_latest = None
     if last_date is not None:
         next_session_after_latest = cal.next_session(last_date).date().isoformat()
+
+    non_session_row_count = 0
+    for bad_date in non_session_dates:
+        row_count = con.execute(
+            f"SELECT COUNT(*) FROM read_parquet('{parquet}') WHERE CAST(date AS DATE) = DATE '{bad_date}'"
+        ).fetchone()[0]
+        non_session_row_count += int(row_count)
+
+    eligible_where = [
+        "volume >= 0",
+        "open_interest >= 0",
+        "bid >= 0",
+        "ask >= 0",
+        "NOT (bid > 0 AND ask > 0 AND bid > ask)",
+        "expiration >= date",
+        "UPPER(CAST(type AS VARCHAR)) IN ('C','P','CALL','PUT')",
+    ]
+    if non_session_dates:
+        quoted = ",".join(f"DATE '{x}'" for x in non_session_dates)
+        eligible_where.append(f"CAST(date AS DATE) NOT IN ({quoted})")
+    eligible_rows = con.execute(
+        f"SELECT COUNT(*) FROM read_parquet('{parquet}') WHERE {' AND '.join(eligible_where)}"
+    ).fetchone()[0]
 
     return {
         "dataset": dataset_name,
@@ -148,12 +173,23 @@ def inspect(path: Path, dataset_name: str) -> dict[str, object]:
         )},
         "negative_volume": int(values["negative_volume"]),
         "negative_open_interest": int(values["negative_open_interest"]),
+        "negative_quote_rows": int(values["negative_quote_rows"]),
         "crossed_quotes_positive_only": int(values["crossed_quotes"]),
         "expiration_before_observation": int(values["expiration_before_observation"]),
         "invalid_option_type": int(values["invalid_option_type"]),
         "duplicate_contract_date_rows": int(values["duplicate_contract_date_rows"]),
         "non_xnys_observation_dates": non_session_dates[:20],
         "non_xnys_observation_date_count": len(non_session_dates),
+        "non_xnys_observation_row_count": non_session_row_count,
+        "eligible_rows_after_fixed_quarantine": int(eligible_rows),
+        "deterministic_quarantine": {
+            "raw_source_rows_modified": False,
+            "option_type_map": {"CALL":"C","PUT":"P","C":"C","P":"P"},
+            "exclude_positive_crossed_quotes": True,
+            "exclude_negative_quotes": True,
+            "exclude_non_xnys_observation_dates": True,
+            "no_return_based_filtering": True,
+        },
         "next_eligible_xnys_session_after_latest": next_session_after_latest,
     }
 
