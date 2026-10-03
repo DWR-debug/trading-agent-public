@@ -763,7 +763,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T11:46:20.466666+00:00",
+  "generated_at_utc": "2026-10-03T11:47:29.337750+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -958,6 +958,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: correct Q129 GitHub expression interpolation",
+        "sha": "b161d8e950d4c0d887c662d91fbd5bce0c21c84e",
+        "timestamp": "2026-10-03T13:47:19+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "53c4401e1a8df4885214f63b72511dc78902aee4",
+        "timestamp": "2026-10-03T11:46:22Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8c4b19d310d3c7a857237bf17be616fe5668670b",
+        "timestamp": "2026-10-03T11:46:21Z"
+      },
+      {
         "message": "RESEARCH: formalize Q129 historical options source gate",
         "sha": "b63eb13348bae79db1069fb0a1599eb31ee13036",
         "timestamp": "2026-10-03T13:46:09+02:00"
@@ -981,21 +996,6 @@
         "message": "RESEARCH: add Q129 pinned options source verifier",
         "sha": "66c9ea45997ec36da1d8bcf10a2ef1c9478d17ce",
         "timestamp": "2026-10-03T13:42:52+02:00"
-      },
-      {
-        "message": "RESEARCH: freeze Q129 historical options source contract",
-        "sha": "d5f4b737df5ee245dd67c48ba34a064d38fdd9ca",
-        "timestamp": "2026-10-03T13:42:31+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c428ba348f0437f55aaa349c2882c34f718e8a38",
-        "timestamp": "2026-10-03T11:38:37Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c86ffed26e2bb926bbf82b9baa8d1c8fb97d24ee",
-        "timestamp": "2026-10-03T11:38:36Z"
       }
     ]
   },
@@ -1065,12 +1065,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b63eb13348bae79db1069fb0a1599eb31ee13036",
+  "source_master_sha": "b161d8e950d4c0d887c662d91fbd5bce0c21c84e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37120709554"
+    "run_id": "37120770509"
   }
 }
