@@ -7,8 +7,6 @@ on:
       - ".github/workflows/hosted-research-failover.yml"
       - "automation/hosted_fallback_guard.py"
       - "tests/test_hosted_fallback_guard.py"
-  schedule:
-    - cron: "*/30 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -38,7 +36,7 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Inspect self-hosted heartbeat
+      - name: Record self-hosted availability assumption
         id: guard
         env:
           GH_TOKEN: ${{ github.token }}
@@ -74,8 +72,8 @@ jobs:
     needs: guard
     if: ${{ needs.guard.outputs.run_fallback == 'true' }}
     # The deterministic frontier now has its own permanent hosted loop.
-    # Failover is reserved for governance/reproducibility work when Windows
-    # capacity is genuinely stale.
+    # Automatic heartbeat failover is intentionally disabled under the always-available
+  # self-hosted capacity contract. Manual dispatch remains available for explicit recovery.
     strategy:
       fail-fast: false
       matrix:

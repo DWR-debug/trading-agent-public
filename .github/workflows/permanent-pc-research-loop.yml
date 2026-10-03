@@ -31,9 +31,9 @@ jobs:
     if: github.repository == 'DWR-debug/trading-agent-public'
     strategy:
       fail-fast: false
-      max-parallel: 1
+      max-parallel: 2
       matrix:
-        lane: [local_reproduction]
+        lane: [local_reproduction, data_qa]
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 25
     steps:

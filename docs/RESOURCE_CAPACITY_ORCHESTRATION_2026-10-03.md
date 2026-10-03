@@ -10,8 +10,8 @@ This is a point-in-time orchestration record derived from the supplied Actions-u
 |---|---:|---|---|---|
 | GitHub-hosted Linux | 3,907 min / 2,734 runs / 68 workflows | continuous/event-driven | CI, deterministic research, source feasibility, reproduction | shortest queues and reproducible execution |
 | GitHub-hosted Windows | included in hosted pool | 6h | repo_qa | Windows QA without consuming physical PC slots |
-| Self-hosted Windows pool | 3,194 min / 459 runs / 14 workflows | 30m + event/manual | local reproduction, local AI | physical environment only where it adds information |
-| S10 / Android | 499 min / 45 runs | 6h/event-driven | bounded utility/acceptance | mobile/device-specific validation |
+| Self-hosted Windows pool | 3,194 min / 459 runs / 14 workflows | 30m + event/manual | two bounded lanes: local reproduction + data QA | always-routable specialist capacity; receipts remain diagnostic |
+| S10 / Android | 499 min / 45 runs | 6h/event-driven | always-routable bounded utility/QA | routing assumes availability; receipt required only for evidence claims |
 | ci.yml | 1,243 min / 588 runs | push | x64 + ARM CI | architecture regression coverage |
 | self-hosted-continuous-qa.yml | 1,151 min / 75 runs historically | 6h | now hosted Windows repo_qa | historical self-hosted cost no longer repeats |
 | permanent-pc-research-loop.yml | 1,117 min / 164 runs | 30m | local reproduction; local-AI when eligible | physical PC specialist role |
@@ -38,8 +38,8 @@ The report shows a large historical queue-time difference. It also shows that 79
 
 1. Hosted Linux is the default for deterministic computation.
 2. Hosted Windows is the default for Windows-specific QA.
-3. The two physical Windows runners remain a bounded specialist pool, not the default research substrate.
-4. S10 and future Samsung phones are receipt-gated mobile workers. A device is not scientific authority.
+3. The two physical Windows runners are an always-routable bounded specialist pool and may be used in parallel; they remain a specialist substrate rather than the default deterministic compute substrate.
+4. S10 and future Samsung phones are always-routable mobile workers. Receipts validate execution/evidence, but lack of a fresh receipt does not mark the resource offline for scheduling.
 5. Free AI is used for adversarial design, QA and engineering only. Agreement between models is not evidence.
 6. Copilot Free remains reserved for high-value bounded engineering tasks: at most four sessions per month, at most 30 AI credits/session and one concurrent session.
 7. Codespaces retain the existing 120 Core-hour monthly budget and its 50/25/25/10/10 soft allocation.
@@ -55,6 +55,8 @@ The report shows a large historical queue-time difference. It also shows that 79
 - Deterministic frontier remains one 10-step pack every 10 minutes, covering all 30 steps per about 30 minutes without redundant triple execution.
 - Scheduled AI uses OpenRouter-free; Gemini/Mistral stay manual under current observed provider instability.
 - Vault recovery mirror now polls hourly.
+- Heartbeat-based hosted failover is disabled as an automatic routing mechanism under the always-available pool assumption; manual failover remains available.
+- The permanent Windows loop uses both runner slots in parallel (`local_reproduction` + `data_qa`).
 
 ## Remaining optimization work
 

@@ -127,7 +127,7 @@ def generate(
         "scientific_evidence": False,
         "performance_authorization": False,
     })
-    # S10 presence is a receipt-age policy, not a mutable runner-online claim.
+    # S10/Android availability is an orchestration assumption. Receipt freshness remains an evidence/diagnostic signal only.
     # Load the synchronized receipt before evaluating its freshness.
     s10_presence_fresh = False
     s10_presence_observed = (
@@ -317,6 +317,7 @@ def generate(
             "trial_ledger": "research/evidence/trial_ledger.json",
             "active_research_registry": "research/governance/active_research_registry.json",
             "research_os_source_registry": "research/governance/research_os_source_registry_2026_09_30.json",
+            "resource_availability_policy": "research/governance/resource_availability_policy_2026_10_03.json",
         },
         "active_research_registry": active_registry,
         "repository_state": {
@@ -361,6 +362,14 @@ def generate(
                 "local_ai_smoke_after_research_lanes": True,
                 "current_pending_requests": queue,
             },
+            "resource_availability_policy": {
+                "self_hosted_windows": "ASSUMED_ALWAYS_AVAILABLE",
+                "s10": "ASSUMED_ALWAYS_AVAILABLE",
+                "android_fleet": "ASSUMED_ALWAYS_AVAILABLE",
+                "routing_may_use_assumed_capacity": True,
+                "receipts_remain_diagnostic_and_evidentiary": True,
+                "assumption_does_not_authorize_scientific_evidence": True,
+            },
             "research_os": {
                 "version": "ROS-0.1",
                 "source_registry": "research/governance/research_os_source_registry_2026_09_30.json",
@@ -372,9 +381,12 @@ def generate(
                 "status": s10_operational_status.get("status"),
                 "eligible": s10_operational_status.get("eligible") is True,
                 "receipt_eligible": s10_operational_status.get("receipt_eligible", s10_operational_status.get("eligible") is True),
+                "orchestration_available": True,
+                "availability_policy": "ASSUMED_ALWAYS_AVAILABLE",
                 "current_online": s10_operational_status.get("current_online"),
                 "current_online_verification": s10_operational_status.get("current_online_verification", "NOT_PERFORMED"),
                 "presence_signal": "fresh_successful_s10_run" if s10_presence_fresh else "stale_or_unverified_receipt",
+                "routing_uses_presence_receipt": False,
                 "presence_signal_fresh": s10_presence_fresh,
                 "eligibility_basis": "fresh_successful_utility_receipt" if s10_presence_fresh else s10_operational_status.get("eligibility_basis", "completed_workflow_acceptance_receipt"),
                 "receipt_status": s10_operational_status.get("receipt_status"),
@@ -400,8 +412,8 @@ def generate(
             "research_continuity": {
                 "permanent_self_hosted_loop": {"cadence": "*/30 * * * *", "parallel_lanes": 2},
                 "hosted_research_failover": {
-                    "cadence": "*/30 * * * *",
-                    "mode": "fallback_only_when_self_hosted_heartbeat_stale",
+                    "cadence": "manual",
+                    "mode": "manual_only_under_assumed_always_available_self_hosted_pool",
                 },
                 "continuous_qa": {
                     "cadence": "15 */6 * * *",
@@ -415,7 +427,16 @@ def generate(
                 "s10_phone": {
                     "cadence": "0 */6 * * *",
                     "event_driven": True,
-                    "receipt_gated": True,
+                    "orchestration_available": True,
+                    "availability_policy": "ASSUMED_ALWAYS_AVAILABLE",
+                    "receipt_gated_for_routing": False,
+                    "receipt_required_for_evidence": True,
+                    "formal_evidence_allowed": False,
+                },
+                "android_fleet": {
+                    "orchestration_available": True,
+                    "availability_policy": "ASSUMED_ALWAYS_AVAILABLE",
+                    "receipt_required_for_evidence": True,
                     "formal_evidence_allowed": False,
                 },
                 "bounded_agent_queue": {
