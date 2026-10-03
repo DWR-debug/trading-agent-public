@@ -17,11 +17,11 @@ def test_accession_parser():
 
 
 def test_parse_filters_to_beneficial_forms():
-    body = (
-        b"CIK|Company Name|Form Type|Date Filed|Filename\\n"
-        b"0000820027|American|SC 13G|2024-11-14|edgar/data/820027/000119312524258276/0001193125-24-258276-index.htm\\n"
-        b"0000820027|American|10-Q|2024-11-14|edgar/data/820027/000000000000000000/0000000000-24-000000-index.htm\\n"
-    )
+    body = b"\n".join([
+        b"CIK|Company Name|Form Type|Date Filed|Filename",
+        b"0000820027|American|SC 13G|2024-11-14|edgar/data/820027/000119312524258276/0001193125-24-258276-index.htm",
+        b"0000820027|American|10-Q|2024-11-14|edgar/data/820027/000000000000000000/0000000000-24-000000-index.htm",
+    ])
     rows = parse_index(body)
     assert len(rows) == 1
     assert rows[0]["form"] == "SC 13G"
