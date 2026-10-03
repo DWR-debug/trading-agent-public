@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "generated_utc": "2026-10-03T00:00:00Z",
-  "workflow_inventory_count": 172,
+  "workflow_inventory_count": 173,
   "policy": {
     "evidence_preservation": true,
     "blind_mass_deletion": false,
@@ -31,7 +31,7 @@
     ".github/workflows/q116-13f-transition-population.yml",
     ".github/workflows/q117-treasury-demand-population.yml",
     ".github/workflows/deep-frontier-source-feasibility.yml",
-    ".github/workflows/full-suite-verification.yml"
+    ".github/workflows/q129-options-source-feasibility.yml"
   ],
   "manual_only": [
     ".github/workflows/s10-runtime-probe.yml",
@@ -69,6 +69,7 @@
     "Historical evidence and trial ledger are not part of this cleanup operation.",
     "Q081R4 remains scientifically recorded; listing here does not invalidate its archived result.",
     "Deep Frontier Public Source Feasibility is a hosted source/PIT feasibility lane; it never creates performance evidence.",
-    "Q024 and Q031 workflow files are preserved for forensic reconstruction but recurring schedules were removed."
+    "Q024 and Q031 workflow files are preserved for forensic reconstruction but recurring schedules were removed.",
+    "Q129 source verification is now manual/change-triggered because pinned release assets are immutable; recurring 1.3 GB downloads are unnecessary."
   ]
 }
