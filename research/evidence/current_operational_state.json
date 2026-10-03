@@ -864,7 +864,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-03T15:55:20.016222+00:00",
+  "generated_at_utc": "2026-10-03T16:17:38.904288+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1269,44 +1269,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "RESEARCH: Q171 fixed four-crawl historical coverage",
-        "sha": "99136bd9ed70650fcf6a54dccf63058469aee3a9",
-        "timestamp": "2026-10-03T17:55:09+02:00"
+        "message": "GOVERNANCE: align resource policy with permanent two-lane mode",
+        "sha": "787d6d80e7602045ae76d0cfe9e5db86759ef57c",
+        "timestamp": "2026-10-03T18:17:25+02:00"
+      },
+      {
+        "message": "FIX: align resource policy regression expectation",
+        "sha": "0f211f30a1daa6b276ffcf3e8040aa765ed70292",
+        "timestamp": "2026-10-03T18:01:31+02:00"
+      },
+      {
+        "message": "TEST: enforce logical two-lane resource policy",
+        "sha": "f7ce17bc3d16d44470f344284bce9b5e39b35eec",
+        "timestamp": "2026-10-03T17:59:58+02:00"
+      },
+      {
+        "message": "GOVERNANCE: align resource policy with logical two-lane mode",
+        "sha": "46234aaf92407fb8f20464521c11142c0ec14b88",
+        "timestamp": "2026-10-03T17:59:55+02:00"
+      },
+      {
+        "message": "TEST: enforce two-lane resource policy",
+        "sha": "b84094d92ea0e76f7a39f18fbe6c1fce90b0ffd6",
+        "timestamp": "2026-10-03T17:59:37+02:00"
+      },
+      {
+        "message": "GOVERNANCE: align resource policy with permanent two-lane mode",
+        "sha": "9b61290c3199a360476079980f6e668a150f95cb",
+        "timestamp": "2026-10-03T17:59:35+02:00"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "a83ddbe4b7af3daae0694766d857f9a366ad8176",
-        "timestamp": "2026-10-03T15:51:24Z"
+        "sha": "ff2f99a6c225e7635f97506de3bc23d545a7aa38",
+        "timestamp": "2026-10-03T15:55:22Z"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "6a795e336c97cad414ddf6020316e96b2a599b33",
-        "timestamp": "2026-10-03T15:51:23Z"
-      },
-      {
-        "message": "RESEARCH: permanently encode two-lane operating mode",
-        "sha": "6a682f2ccb8249431f0053eed65f21a2c0c8c81c",
-        "timestamp": "2026-10-03T17:51:12+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "fb6785e169b1ec1ba9c1adf18dd0a6a8ff2be95f",
-        "timestamp": "2026-10-03T15:42:28Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "93d7ad0588fbcb7b0649aea5219139df0ddbabd8",
-        "timestamp": "2026-10-03T15:42:26Z"
-      },
-      {
-        "message": "Merge pull request #957 from DWR-debug/fix/t052-s10-runtime-allowlist-20261003",
-        "sha": "cb6fc3f348bfd5b24c9df1783cd6b760690917ea",
-        "timestamp": "2026-10-03T17:42:13+02:00"
-      },
-      {
-        "message": "OPS: persist latest Q171 WARC material receipt",
-        "sha": "a6c6f1bf4f3afb9aef2bffd42a727705f6edf5d7",
-        "timestamp": "2026-10-03T15:36:41Z"
+        "sha": "1a676a1a10ddc653fa4278cc31d2ee7d919d54a6",
+        "timestamp": "2026-10-03T15:55:20Z"
       }
     ]
   },
@@ -1376,12 +1376,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "99136bd9ed70650fcf6a54dccf63058469aee3a9",
+  "source_master_sha": "787d6d80e7602045ae76d0cfe9e5db86759ef57c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37134945118"
+    "run_id": "37136305167"
   }
 }
