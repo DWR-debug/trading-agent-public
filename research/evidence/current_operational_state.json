@@ -714,7 +714,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-03T10:24:48.559774+00:00",
+  "generated_at_utc": "2026-10-03T10:25:08.479590+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -918,6 +918,21 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: expose SEC Treasury CFTC and Q126-Q132 frontier focus in status",
+        "sha": "6f7d29f0664e151961bc40215d23ee856e2290aa",
+        "timestamp": "2026-10-03T12:24:58+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d4cff9a6d55214cf33a95d0c7e1ca903e51c0456",
+        "timestamp": "2026-10-03T10:24:50Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "59b173545d0ef25a19a63cd88f4b1be5ec9dad2d",
+        "timestamp": "2026-10-03T10:24:49Z"
+      },
+      {
         "message": "GOV: record verified SEC FINRA Treasury CFTC source semantics",
         "sha": "2bdbf22a894df3978d5e76ebc6a642b025fb7076",
         "timestamp": "2026-10-03T12:24:39+02:00"
@@ -941,21 +956,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "996427c0b32d9dd93423f9985391524f70db543f",
         "timestamp": "2026-10-03T10:24:15Z"
-      },
-      {
-        "message": "TEST: assert complete 10-10-10 frontier rotation",
-        "sha": "a84aa0c24085ba105b253dfcb88684befca4b645",
-        "timestamp": "2026-10-03T12:24:13+02:00"
-      },
-      {
-        "message": "FIX: cover all 30 frontier steps in three equal workpacks",
-        "sha": "bfdcc6b865aa9fc7948c9d0159d17679b648cce1",
-        "timestamp": "2026-10-03T12:24:03+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "87efe894d428f9f643c1c507a57886087c16c5ce",
-        "timestamp": "2026-10-03T10:23:34Z"
       }
     ]
   },
@@ -987,7 +987,7 @@
     "decision_basis_stage": null,
     "latest_formal_status": "performance_completed_no_arm_passed_all_13_gates",
     "latest_formal_trial": "T-2026-10-01-H06P2R3-PERFORMANCE-01",
-    "next_research_focus_recorded": "Q112/Q113/Q114/Q115 are complete and Q116 now has an immutable two-quarter 13F transition-population receipt. Q116 remains feasibility-only: the frozen 2026-03-to-08 SEC datasets produced a deterministic manager/security transition population with PIT cutoff invariants, but no performance evaluation or candidate selection occurred. Next candidate-specific frontier work is I22 filing-arrival compilation plus a separate, deterministic XBRL concept/coverage gate for I19/I20. No performance authorization, holdout selection, parameter search, promotion or live execution is permitted.",
+    "next_research_focus_recorded": "Priority frontier is now the orthogonal SEC/13F/XBRL/Treasury/CFTC channel block plus Q121 and Q126-Q132. Q121 has a fixed SEC acceptance-time discovery/PIT compiler. Q126 reuses frozen SEC filing-arrival components; Q127 uses FINRA Reg-SHO daily short volume with revision-aware publication timing; Q128/Q129 remain blocked until a free, reproducible historical options source is established; Q130 remains blocked until a timestamped reproducible public attention history is established; Q131 has source access but its disclosure-complexity definition is not yet frozen; Q132 has a deterministic fixed-decomposition synthetic contract. Q119/Q120/Q122 remain active Treasury/CFTC source/PIT work. None of these states authorizes performance, holdout selection, tuning, promotion or live execution.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -1025,12 +1025,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2bdbf22a894df3978d5e76ebc6a642b025fb7076",
+  "source_master_sha": "6f7d29f0664e151961bc40215d23ee856e2290aa",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37116329378"
+    "run_id": "37116344787"
   }
 }
