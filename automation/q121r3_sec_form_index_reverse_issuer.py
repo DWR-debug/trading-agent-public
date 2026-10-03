@@ -226,8 +226,8 @@ def run(output: Path) -> dict[str, object]:
                 raise RuntimeError(f"Q121R3_HEADER_HTTP_{status}:{accession}")
 
             header_text = body.decode("utf-8", errors="replace")
-            subject = r1.extract_header_section_cik(header_text, "Subject")
-            filer = r1.extract_header_section_cik(header_text, "Filed by")
+            subject = r1.extract_header_section_cik(header_text, "Subject") or r1.extract_labeled_cik(header_text, "Subject")
+            filer = r1.extract_header_section_cik(header_text, "Filed by") or r1.extract_labeled_cik(header_text, "Filed by")
             accepted = r1.extract_accepted(header_text)
 
             check = {
