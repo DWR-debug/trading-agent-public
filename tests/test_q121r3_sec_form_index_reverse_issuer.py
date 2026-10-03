@@ -52,3 +52,21 @@ def test_window_boundaries():
     assert within_window("2025-09-24")
     assert not within_window("2024-02-04")
     assert not within_window("2025-09-25")
+
+
+def test_parse_fixed_width_form_index():
+    from automation.q121r3_sec_form_index_reverse_issuer import parse_index
+
+    body = (
+        "Description: Form Index of EDGAR Dissemination Feed\\n"
+        "Company Name                                                   Form Type   CIK         Date Filed  File Name\\n"
+        "--------------------------------------------------------------------------------------------------------------\\n"
+        "SPGI TEST COMPANY                                            SC 13G      0000064040  2024-02-13  edgar/data/64040/000110465924021877.txt\\n"
+    ).encode("latin-1")
+    assert parse_index(body) == [{
+        "cik": "0000064040",
+        "company_name": "SPGI TEST COMPANY",
+        "form": "SC 13G",
+        "filed_date": "2024-02-13",
+        "filename": "edgar/data/64040/000110465924021877.txt",
+    }]
