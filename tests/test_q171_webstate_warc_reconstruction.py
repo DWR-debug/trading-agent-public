@@ -38,3 +38,10 @@ def test_q171_persisted_evidence_path_does_not_trigger_deep_frontier():
     text = (ROOT / ".github/workflows/deep-frontier-source-feasibility.yml").read_text(encoding="utf-8")
     paths_section = text.split("paths:", 1)[1].split("permissions:", 1)[0]
     assert "research/evidence/q171_warc_reconstruction_latest.json" not in paths_section
+
+
+def test_q171_persistence_uses_contents_publisher_not_worktree_switch():
+    text = (ROOT / ".github/workflows/deep-frontier-source-feasibility.yml").read_text(encoding="utf-8")
+    persist = text.split("Persist material Q171 WARC receipt", 1)[1].split("Upload source-feasibility receipt", 1)[0]
+    assert "automation/github_contents_publish.py" in persist
+    assert "git checkout --detach origin/master" not in persist
