@@ -19,7 +19,7 @@ on:
       - ".github/workflows/q133-q170-pit-readiness.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: trading-agent-q133-q170-pit-readiness
@@ -90,6 +90,39 @@ jobs:
         run: |
           set -euo pipefail
           python -c "import json,os; from pathlib import Path; p=Path('research/runs/q133_q170_pit_readiness')/(os.environ['GITHUB_RUN_ID']+'_q137_q144.json'); d=json.loads(p.read_text()); assert d['status']=='MICRO_PIT_SAMPLE_COMPLETED_NO_PERFORMANCE'; assert isinstance(d['q137_sec_submission_sample']['all_symbols_reconstructable'],bool); assert isinstance(d['q144_wikimedia_pageview_sample']['all_symbols_reconstructable'],bool); assert all(v is False for v in d['scientific_boundary'].values()); assert d['safety']['PAPER_ONLY'] is True and d['safety']['LIVE_TRADING_ENABLED'] is False and d['safety']['ORDERS_ENABLED'] is False and d['safety']['AUTOMATIC_PROMOTION'] is False; assert all(d['mutation_tests'].values()); print('Q137_Q144_MICRO_PIT_OK')"
+      - name: Persist validated Q133-Q170 material receipt
+        if: success() && github.event_name != 'pull_request'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PUBLISH_MESSAGE: "OPS: persist latest Q133-Q170 PIT-readiness material receipt"
+        run: |
+          set -euo pipefail
+          input="research/runs/q133_q170_pit_readiness/${GITHUB_RUN_ID}.json"
+          latest="research/evidence/q133_q170_pit_readiness_latest.json"
+          test -f "$input"
+          code_sha="$(sha256sum automation/q133_q170_pit_readiness.py | awk '{print $1}')"
+          python -m automation.q133_q170_pit_receipt_persist --input "$input" --output "$latest" --source-code-sha256 "$code_sha"
+          for attempt in 1 2 3; do
+            git fetch origin master --quiet
+            base_sha="$(git rev-parse origin/master)"
+            if git show "origin/master:${latest}" > "$RUNNER_TEMP/q133_current_receipt.json" 2>/dev/null; then
+              if cmp -s "$latest" "$RUNNER_TEMP/q133_current_receipt.json"; then
+                echo "Q133_Q170_MATERIAL_RECEIPT_UNCHANGED"
+                exit 0
+              fi
+            fi
+            if python automation/github_contents_publish.py \
+              --repository "$GITHUB_REPOSITORY" \
+              --branch master \
+              --base-sha "$base_sha" \
+              --file "$latest=$latest"; then
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          echo "::error::Q133-Q170 material receipt publication failed after retries"
+          exit 1
       - name: Upload PIT-readiness receipt
         if: always()
         uses: actions/upload-artifact@v6
