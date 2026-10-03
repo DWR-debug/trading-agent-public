@@ -824,7 +824,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T14:53:50.753273+00:00",
+  "generated_at_utc": "2026-10-03T14:57:54.211284+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1226,8 +1226,42 @@
     ],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "fix/q169-workflow-expression-escaping-20261003",
+        "number": 948,
+        "title": "FIX: repair Q169 GitHub Actions expression escaping",
+        "updatedAt": "2026-10-03T14:57:52Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/948"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "Merge pull request #947 from DWR-debug/fix/t052-operational-state-allowlist-20261003",
+        "sha": "80b722fece67572eee107b5c1eec610464fa7942",
+        "timestamp": "2026-10-03T16:57:43+02:00"
+      },
+      {
+        "message": "FIX: allow Android runtime receipts as operational drift",
+        "sha": "16182ba5753b3f98a81fb31ca6c4652bc15c7fcf",
+        "timestamp": "2026-10-03T16:54:38+02:00"
+      },
+      {
+        "message": "OPS: persist latest Q171 WARC material receipt",
+        "sha": "6a17248705dfeaa6bc3c5ef891e1fb492cb97e65",
+        "timestamp": "2026-10-03T14:54:03Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c2ec3e53718c414812eae2fa6907f6c658d57bd8",
+        "timestamp": "2026-10-03T14:53:53Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5573acd24d5baa8ade97dfeeb053da6e311850fa",
+        "timestamp": "2026-10-03T14:53:51Z"
+      },
       {
         "message": "Merge pull request #946 from DWR-debug/research/q169-noaa-archive-pit-20261003",
         "sha": "1d23459a3d80694f600daf7601c9581a6efe56a4",
@@ -1242,31 +1276,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "3b8ad1e71cfc54901f9e396d5de60869ab7e01ef",
         "timestamp": "2026-10-03T14:53:21Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "781ae7180b4a802ee183009b99e0dea2c040b339",
-        "timestamp": "2026-10-03T14:53:19Z"
-      },
-      {
-        "message": "Merge pull request #945 from DWR-debug/fix/q171-warc-fingerprint-20261003",
-        "sha": "52a95f3c19b3a5dcbf0c7187de9e6a5ec3fd8b79",
-        "timestamp": "2026-10-03T16:52:31+02:00"
-      },
-      {
-        "message": "OPS: register Q169 NOAA PIT workflow",
-        "sha": "c00461ce6ced55d1798b5c1af8fc1d655e5db635",
-        "timestamp": "2026-10-03T16:52:00+02:00"
-      },
-      {
-        "message": "OPS: add Q169 NOAA archive PIT workflow",
-        "sha": "e2936dfbf5a8361c40c6aff5501b855b91fd6021",
-        "timestamp": "2026-10-03T16:51:51+02:00"
-      },
-      {
-        "message": "GOV: register Q169 NOAA archive PIT contract",
-        "sha": "01f2f5552da93c8fc264fee29094af87ec25fe58",
-        "timestamp": "2026-10-03T16:51:49+02:00"
       }
     ]
   },
@@ -1336,12 +1345,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1d23459a3d80694f600daf7601c9581a6efe56a4",
+  "source_master_sha": "80b722fece67572eee107b5c1eec610464fa7942",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37131268705"
+    "run_id": "37131518157"
   }
 }
