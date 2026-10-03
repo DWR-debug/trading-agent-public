@@ -105,6 +105,10 @@ jobs:
           from pathlib import Path
           p = Path("research/runs/deep_frontier") / os.environ["GITHUB_RUN_ID"] / "q171_warc_reconstruction.json"
           d = json.loads(p.read_text(encoding='utf-8'))
+          for result in d['results'].values():
+              assert result['status'] in {'WARC_RECONSTRUCTED', 'INFRA_ACCESS_BLOCKED'}
+          assert d['summary']['warc_reconstructed'] + d['summary']['blocked'] == d['summary']['capture_candidates']
+          assert d['summary'].get('infra_blocked', 0) == sum(r['status'] == 'INFRA_ACCESS_BLOCKED' for r in d['results'].values())
           assert d['scientific_boundary']['performance'] is False
           assert d['scientific_boundary']['holdout'] is False
           assert d['scientific_boundary']['selection'] is False
