@@ -60,6 +60,10 @@ S10 ist davon getrennt: das Telefon stellt eigene ARM64/Termux-Compute bereit. E
 
 Weitere Samsung-/Android-Telefone werden über \`ops/android_phone_resources.json\` und die Fleet-Spur geroutet. Der Planungsjob ermittelt online verfügbare, eindeutig gelabelte Runner; offline Slots erzeugen keine wartenden Forschungsjobs. Nach erfolgreicher \`ANDROID_PHONE_UTILITY_ACCEPTED\`-Acceptance darf die Ressource nur für bounded Unterstützung eingesetzt werden.
 
+## 3a. Universeller Candidate-Robustheits-Gate
+
+Jeder neue Kandidat durchläuft vor dem Eintritt in eine formale Phase einen strukturellen, nicht-performativen Robustheits-Gate. Geprüft werden unter anderem Konstruktionsinvarianz, Eingabereihenfolge, Zukunftsdaten-Mutation, Missingness/Fault Isolation, Revisions-/Amendment-Verhalten, Identitätsfehler, Parameter-/Threshold-/Horizon-Sperren und Quellenreproduzierbarkeit. Das Gate erzeugt einen unveränderlichen Receipt und bleibt rein deskriptiv; es autorisiert weder Performance noch Promotion. Fehlt der Receipt oder weicht sein Fingerprint vom eingefrorenen Kandidatenvertrag ab, bleibt der formale Eintritt fail-closed blockiert.
+
 ## 4. Aktuelle Forschungspriorität
 
 Q119/Q120/Q122 liefern die aktuelle Feasibility-Spur für Treasury- und CFTC-Quellen. Q121 ist die Discovery-/Hypothesen-Schicht für Literatur- und Quellenmaterial. Q125-F1 prüft die SEC-MIDAS-Publikationsuhr nach dem behobenen Quell-URL-Fehler. I22 und Q104 verfolgen deterministische SEC/XBRL/PIT-Gates. Q124/Q126/Q127/Q128/Q129/Q130 bleiben Discovery-/PIT-Feasibility-Spuren. Parallel wird das Evidence-Critic Lab zur ersten belastbaren Modellmetriken-Auswertung gebracht.
