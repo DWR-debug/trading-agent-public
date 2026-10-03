@@ -623,6 +623,17 @@
         "note": "Original Q121 issuer-submission route is not treated as complete issuer-level population; Q121-R1 re-derives reverse issuer coverage via SEC company browse and preserves filer/subject identity separately."
       },
       {
+        "code": "Q121-R2",
+        "class": "sec_beneficial_ownership_daily_index_independent_reconciliation",
+        "issue_number": 972,
+        "parent_code": "121",
+        "state": "INDEPENDENT_SOURCE_RECONCILIATION_ACTIVE",
+        "preregistration_path": "research/preregistrations/q121r2_sec_daily_index_reconciliation_2026_10_03.json",
+        "design_document": "docs/research_design/Q121R2_SEC_DAILY_INDEX_RECONCILIATION_2026-10-03.md",
+        "performance_authorization_allowed": false,
+        "note": "Independent Q121-R2 daily EDGAR master-index anchor reconciliation. It cross-checks deterministic Q121-R1 filing anchors against a separate SEC index architecture; it does not prove full-window population exhaustiveness."
+      },
+      {
         "code": "Q127-R1",
         "class": "finra_regsho_historical_source_pit_correction",
         "issue_number": 964,
@@ -897,7 +908,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-03T16:41:10Z",
+  "generated_at_utc": "2026-10-03T16:51:34Z",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1302,44 +1313,24 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "sha": "37a35aefc214cd8cc96232cc9a3b81e5b9d565f4",
-        "timestamp": "2026-10-03T16:40:51Z",
-        "message": "OPS: include Q130-R1 in active frontier status focus"
+        "sha": "09fe5a0d3f302d8504d7c798b44182d0e960123d",
+        "message": "GOV: bind Q127 file-schema contract"
       },
       {
-        "sha": "75ed4a99765d71963e71c2cd0d0a5c2614c6a4c1",
-        "timestamp": "2026-10-03T16:39:42Z",
-        "message": "FIX: Q121-R1 SEC submission-header identity parsing"
+        "sha": "ba9c0e9b1db30caeda450d1dd9403511936d1387",
+        "message": "FIX: document FINRA trailer and market-row contract"
       },
       {
-        "sha": "c8eb5418f4bafa29ab1a5c7a3812e938ddcef35d",
-        "timestamp": "2026-10-03T16:39:12Z",
-        "message": "TEST: cover SEC submission-header identity and URL normalization"
+        "sha": "d990ffd82063e513139dce8bc9a5cdb21a2fb424",
+        "message": "TEST: cover FINRA trailer and per-market duplicate semantics"
       },
       {
-        "sha": "ec7c55affdf094392c051cdebfb18e203d09b4c3",
-        "timestamp": "2026-10-03T16:39:05Z",
-        "message": "FIX: correct SEC index-header URL regex and provenance field"
+        "sha": "da472d1f9c3ba542515f0c5176c0e6a73ea8fbff",
+        "message": "FIX: parse FINRA short-sale file trailer and market partitions"
       },
       {
-        "sha": "46d855ab4def01b265b67f9c25567157b17979f8",
-        "timestamp": "2026-10-03T16:38:12Z",
-        "message": "FIX: parse SEC submission header for subject and filer CIK identity"
-      },
-      {
-        "sha": "b70684ee7f7e2f913d42ef16264de63bf7f03d23",
-        "timestamp": "2026-10-03T16:37:02Z",
-        "message": "RESEARCH: Q130-R1 Wikimedia historical attention source feasibility"
-      },
-      {
-        "sha": "3404f3116f242ade85bafed048fff9c2c463b545",
-        "timestamp": "2026-10-03T16:36:47Z",
-        "message": "GOV: bind Q130-R1 registry entry to dedicated issue"
-      },
-      {
-        "sha": "f3ab9f551b5516aac52627ff164cf126682d48e3",
-        "timestamp": "2026-10-03T16:36:42Z",
-        "message": "GOV: bind Q130-R1 preregistration to dedicated issue"
+        "sha": "48366325d79ee3b055b00832e82fc945dbb683e5",
+        "message": "RESEARCH: independent SEC daily-index reconciliation for Q121"
       }
     ]
   },
@@ -1409,12 +1400,13 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "37a35aefc214cd8cc96232cc9a3b81e5b9d565f4",
+  "source_master_sha": "09fe5a0d3f302d8504d7c798b44182d0e960123d",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
     "run_id": "37137143939"
-  }
+  },
+  "active_research_registry_note": "Status synchronized to current technical master; Q121-R2 independent SEC daily-index reconciliation is active; Q127 parser schema correction is merged; no new Q121/Q127/Q130 scientific receipts have been independently verified."
 }
