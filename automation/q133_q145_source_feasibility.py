@@ -19,6 +19,22 @@ ROOT = Path(__file__).resolve().parents[1]
 
 PROBES: dict[str, dict[str, Any]] = {
 
+    "COMMON_CRAWL_CDXJ": {
+        "url": "https://commoncrawl.org/cdxj-index",
+        "markers": ["CDXJ Index", "index.commoncrawl.org", "WARC"],
+    },
+    "GITHUB_ADVISORY": {
+        "url": "https://docs.github.com/en/rest/security-advisories/global-advisories",
+        "markers": ["REST API", "global security advisories", "OSV"],
+    },
+    "OPENSKY_API": {
+        "url": "https://opensky-network.org/about/faq",
+        "markers": ["historical data", "commercial use", "consent"],
+    },
+    "NOAA_ERDDAP": {
+        "url": "https://erddap.gml.noaa.gov/erddap/rest.html",
+        "markers": ["RESTful web service", ".json", "datasets"],
+    },
     "SEC_EDGAR_SUBMISSIONS": {
         "url": "https://data.sec.gov/submissions/CIK0000320193.json",
         "markers": ["filings", "recent", "accessionNumber"],
@@ -216,6 +232,14 @@ CANDIDATE_SOURCES: dict[str, list[str]] = {
     "Q168": ["USGS_EARTHQUAKE", "SEC_EDGAR_SUBMISSIONS"],
     "Q169": ["NOAA_SWPC", "SEC_EDGAR_SUBMISSIONS"],
     "Q170": ["NASA_FIRMS", "SEC_EDGAR_SUBMISSIONS"],
+    "Q171": ["COMMON_CRAWL_CDXJ", "SEC_EDGAR_SUBMISSIONS"],
+    "Q172": ["GITHUB_ADVISORY", "SEC_EDGAR_SUBMISSIONS"],
+    "Q173": ["OPENSKY_API", "SEC_EDGAR_SUBMISSIONS"],
+    "Q174": ["NOAA_ERDDAP", "SEC_EDGAR_SUBMISSIONS"],
+    "Q175": ["USGS_EARTHQUAKE", "SEC_EDGAR_SUBMISSIONS"],
+    "Q176": ["CROSSREF_API", "SEC_EDGAR_SUBMISSIONS"],
+    "Q177": ["NOAA_SWPC", "SEC_EDGAR_SUBMISSIONS"],
+    "Q178": ["COMMON_CRAWL_CDXJ", "GITHUB_ADVISORY", "SEC_EDGAR_SUBMISSIONS"],
 }
 
 
@@ -295,7 +319,7 @@ def main() -> int:
     mutations = future_mutation_invariance()
     result = {
         "schema_version": "1.0",
-        "task_id": "Q-2026-10-03-Q133-Q170-SOURCE-FEASIBILITY",
+        "task_id": "Q-2026-10-03-Q133-Q178-SOURCE-FEASIBILITY",
         "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
         "source_results": source_results,
         "candidate_results": candidate_results,
