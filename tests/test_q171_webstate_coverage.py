@@ -35,3 +35,9 @@ def test_q171_webstate_coverage_is_discovery_only():
     assert '"ranking": False' in text
     assert '"live_execution": False' in text
     assert "CC-MAIN-2025-43" in text
+
+def test_q171_retry_is_fixed_and_infra_blocked_is_distinct():
+    text = (ROOT / "automation/q171_webstate_coverage.py").read_text(encoding="utf-8")
+    assert "fetch_with_fixed_retries(endpoint, attempts=3)" in text
+    assert '"infra_blocked"' in text
+    assert '"status": "BLOCKED_INDEX_FETCH"' in text
