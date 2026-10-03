@@ -67,3 +67,36 @@ def test_date_filter_validation_fails_closed_outside_window():
     import pytest
     with pytest.raises(RuntimeError, match="SEC_BROWSE_DATE_FILTER_MISMATCH"):
         validate_page_dates([{"filing_date": "2024-02-04"}])
+
+def test_submission_header_identity_parser():
+    from automation.q121r1_sec_reverse_issuer_coverage import (
+        extract_header_section_cik, extract_accepted
+    )
+    sample = """
+    <SEC-HEADER>
+    <ACCEPTANCE-DATETIME>20240212181336
+    SUBJECT COMPANY:
+      COMPANY DATA:
+        COMPANY CONFORMED NAME: AUDIOCODES LTD
+        CENTRAL INDEX KEY: 0001086434
+    FILED BY:
+      COMPANY DATA:
+        COMPANY CONFORMED NAME: WILLIAM BLAIR INVESTMENT MANAGEMENT, LLC
+        CENTRAL INDEX KEY: 0001644956
+    </SEC-HEADER>
+    """
+    assert extract_header_section_cik(sample, "Subject") == "0001086434"
+    assert extract_header_section_cik(sample, "Filed by") == "0001644956"
+    assert extract_accepted(sample) == "2024-02-12 18:13:36"
+
+def test_submission_header_url_normalizes_both_html_suffixes():
+    import re
+    for suffix in ("-index.htm", "-index.html"):
+        detail = "https://www.sec.gov/Archives/edgar/data/1/2/000-index" + suffix[len("-index"):]
+        normalized = re.sub(
+            r"-index\.(?:htm|html)$",
+            "-index-headers.html",
+            detail,
+            flags=re.IGNORECASE,
+        )
+        assert normalized.endswith("-index-headers.html")

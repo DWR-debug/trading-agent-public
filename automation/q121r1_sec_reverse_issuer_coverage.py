@@ -98,10 +98,27 @@ def extract_labeled_cik(text: str, label: str) -> str | None:
     match = re.search(rf"\({re.escape(label)}\)\s*CIK:\s*0*(\d+)", compact, re.IGNORECASE)
     return match.group(1).zfill(10) if match else None
 
+def extract_header_section_cik(text: str, section: str) -> str | None:
+    compact = unescape(text)
+    if section == "Subject":
+        pattern = r"SUBJECT COMPANY:.*?CENTRAL INDEX KEY:\s*(\d+)"
+    elif section == "Filed by":
+        pattern = r"FILED BY:.*?CENTRAL INDEX KEY:\s*(\d+)"
+    else:
+        raise ValueError(f"UNKNOWN_HEADER_SECTION:{section}")
+    match = re.search(pattern, compact, re.IGNORECASE | re.DOTALL)
+    return match.group(1).zfill(10) if match else None
+
 def extract_accepted(text: str) -> str | None:
     compact = plain_text(text)
     match = re.search(r"Accepted\s+([0-9]{4}-[0-9]{2}-[0-9]{2}\s+[0-9]{2}:[0-9]{2}:[0-9]{2})", compact, re.IGNORECASE)
-    return match.group(1) if match else None
+    if match:
+        return match.group(1)
+    header_match = re.search(r"ACCEPTANCE-DATETIME:\s*([0-9]{14})", unescape(text), re.IGNORECASE)
+    if header_match:
+        raw = header_match.group(1)
+        return f"{raw[0:4]}-{raw[4:6]}-{raw[6:8]} {raw[8:10]}:{raw[10:12]}:{raw[12:14]}"
+    return None
 
 def validate_page_dates(rows: list[dict[str, str]]) -> None:
     start = date.fromisoformat(f"{START[:4]}-{START[4:6]}-{START[6:8]}")
@@ -207,13 +224,16 @@ def run(output: Path) -> dict[str, object]:
                 detail_url = sample["filing_href"]
                 if detail_url.startswith("http://"):
                     detail_url = "https://" + detail_url[len("http://"):]
+                header_url = re.sub(r"-index\.(?:htm|html)$", "-index-headers.html", detail_url, flags=re.IGNORECASE)
+                if header_url == detail_url:
+                    header_url = detail_url.replace("-index.htm", "-index-headers.html").replace("-index.html", "-index-headers.html")
                 time.sleep(REQUEST_GAP_SECONDS)
-                dstatus, dbody = get(detail_url)
+                dstatus, dbody = get(header_url)
                 if dstatus != 200:
-                    raise RuntimeError(f"SEC_DETAIL_HTTP_{dstatus}:{symbol}:{form}:{sample['accession_number']}")
+                    raise RuntimeError(f"SEC_HEADER_HTTP_{dstatus}:{symbol}:{form}:{sample['accession_number']}")
                 detail = dbody.decode("utf-8", errors="replace")
-                subject = extract_labeled_cik(detail, "Subject")
-                filer = extract_labeled_cik(detail, "Filed by")
+                subject = extract_header_section_cik(detail, "Subject") or extract_labeled_cik(detail, "Subject")
+                filer = extract_header_section_cik(detail, "Filed by") or extract_labeled_cik(detail, "Filed by")
                 accepted = extract_accepted(detail)
                 ok = (
                     subject == issuer_cik
@@ -229,9 +249,9 @@ def run(output: Path) -> dict[str, object]:
                     "subject_cik": subject,
                     "filed_by_cik": filer,
                     "accepted_datetime": accepted,
-                    "source_url": detail_url,
+                    "source_url": header_url,
                     "status": "PASS" if ok else "FAIL",
-                    "detail_sha256": sha256_bytes(dbody),
+                    "header_sha256": sha256_bytes(dbody),
                 })
                 if not ok:
                     raise RuntimeError(
