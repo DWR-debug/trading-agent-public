@@ -77,16 +77,16 @@ def fetch(url: str) -> tuple[int, bytes]:
 def parse_index(body: bytes) -> list[dict[str, str]]:
     """Parse SEC form.idx rows by stable semantic anchors.
 
-    The official quarterly form index uses a fixed-width row layout, but its
-    human-readable header can wrap across two lines. Parsing the actual rows
-    from the right-hand CIK/date/file-name anchors therefore avoids coupling
-    the data parser to header rendering.
+    The official quarterly form index uses a fixed-width row layout and may
+    render its header over multiple lines. Historical index rows also use a
+    compact YYYYMMDD filing-date field, so the parser normalizes both that
+    representation and the dashed ISO form.
     """
     row_pattern = re.compile(
         r"^\\s*(?P<form>SC 13[DG](?:/A)?)\\s+"
         r"(?P<company>.*?)\\s+"
         r"(?P<cik>\\d{1,10})\\s+"
-        r"(?P<filed_date>\\d{4}-\\d{2}-\\d{2})\\s+"
+        r"(?P<filed_date>\\d{8}|\\d{4}-\\d{2}-\\d{2})\\s+"
         r"(?P<filename>edgar/data/\\S+)\\s*$",
         re.IGNORECASE,
     )
@@ -99,13 +99,17 @@ def parse_index(body: bytes) -> list[dict[str, str]]:
         data = match.groupdict()
         form = data["form"].upper()
         filed_date = data["filed_date"]
+        if len(filed_date) == 8 and "-" not in filed_date:
+            filed_date = (
+                f"{filed_date[0:4]}-{filed_date[4:6]}-{filed_date[6:8]}"
+            )
         cik = data["cik"]
         filename = data["filename"]
         if form not in FORM_SET:
             continue
-        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", filed_date):
+        if not re.fullmatch(r"\\d{4}-\\d{2}-\\d{2}", filed_date):
             continue
-        if not re.fullmatch(r"\d{1,10}", cik):
+        if not re.fullmatch(r"\\d{1,10}", cik):
             continue
         if not filename.startswith("edgar/data/"):
             continue
