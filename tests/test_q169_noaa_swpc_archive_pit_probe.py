@@ -23,3 +23,9 @@ def test_q169_probe_requires_candidate_specific_join_before_pit_validated():
     assert '"candidate_specific_exposure_map_frozen": False' in text
     assert '"candidate_specific_revision_lineage_reconstructed": False' in text
     assert '"candidate_pit_validated": False' in text
+
+
+def test_q169_probe_freezes_exact_noaa_daily_filenames():
+    text = (ROOT / "automation/q169_noaa_swpc_archive_pit_probe.py").read_text(encoding="utf-8")
+    assert '"2025-10-14": "1014GEOA.txt"' in text
+    assert '"2025-10-15": "1015GEOA.txt"' in text
