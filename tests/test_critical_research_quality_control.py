@@ -94,6 +94,15 @@ def test_future_quality_validator_requires_receipt_contract_for_authorized_entri
     with __import__("pytest").raises(RuntimeError, match="pre_performance_robustness"):
         checker.validate(root)
 
+def test_project_integrity_binds_future_quality_validator():
+    text = (
+        (ROOT / "automation" / "project_integrity_check.py")
+        .read_text(encoding="utf-8")
+    )
+    assert "future_performance_quality_contract_check import validate" in text
+    assert "future performance quality validator returned non-PASS" in text
+
+
 def test_orthogonal_search_forbids_holdout_driven_scheduler_selection():
     p = json.loads(POLICY.read_text(encoding="utf-8"))
     forbidden = set(p["orthogonal_search"]["forbidden_scheduler_inputs"])
