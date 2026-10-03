@@ -56,7 +56,11 @@ def _candidate_robustness_receipt(
     elif inventory_path is not None and inventory_path.is_file():
         # Deterministic regeneration from the frozen inventory avoids depending
         # on ephemeral self-hosted run artifacts.
-        receipt = compile_receipt([inventory_path], str(Path(receipt_path_value).as_posix()))
+        receipt = compile_receipt(
+            [inventory_path],
+            str(Path(receipt_path_value).as_posix()),
+            root=root,
+        )
     else:
         return None
 

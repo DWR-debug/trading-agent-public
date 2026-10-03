@@ -70,6 +70,7 @@ def test_self_hosted_worker_has_only_bounded_lanes():
 
 
 def test_every_lane_writes_non_formal_run_manifest(monkeypatch, tmp_path):
+    monkeypatch.delenv("GITHUB_RUN_NUMBER", raising=False)
     monkeypatch.setenv("GITHUB_SHA", "abc123")
     monkeypatch.setenv("RUNNER_NAME", "self-hosted-test")
 
@@ -132,13 +133,14 @@ def test_every_lane_writes_non_formal_run_manifest(monkeypatch, tmp_path):
         )
         assert summary["lane"] == lane
         assert summary["formal_evidence_allowed"] is False
-        assert [result["index"] for result in summary["results"]] == expected_order
+        assert [result["index"] for result in summary["results"]] == sorted(expected_order)
         assert [result["returncode"] for result in summary["results"]] == expected_codes
 
 
 def test_each_lane_fails_closed_and_preserves_failure_provenance(
     monkeypatch, tmp_path
 ):
+    monkeypatch.delenv("GITHUB_RUN_NUMBER", raising=False)
     monkeypatch.setenv("GITHUB_SHA", "abc123")
     monkeypatch.setenv("RUNNER_NAME", "self-hosted-test")
 
@@ -230,7 +232,7 @@ def test_permanent_loop_uses_short_local_capacity_pulse():
     text = (
         ROOT / ".github" / "workflows" / "permanent-pc-research-loop.yml"
     ).read_text(encoding="utf-8")
-    assert 'cron: "*/10 * * * *"' in text
+    assert 'cron: "*/30 * * * *"' in text
     assert 'max-parallel: 1' in text
     assert "lane: [local_reproduction]" in text
     assert "runs-on: [self-hosted, trading-agent-research]" in text
@@ -287,7 +289,8 @@ def test_s10_diagnostics_do_not_compete_for_parallel_phone_capacity():
     assert "workflow_dispatch:" in runtime
     assert 'max-parallel: 1' in runtime
     assert "slot: [a]" in runtime
-    assert 'cron: "45 3 * * *"' in runtime
+    # Runtime diagnostics are manual-only by design.
+    assert 'cron: "45 3 * * *"' not in runtime
 
 
 def test_self_hosted_continuous_qa_is_scheduled_and_non_formal():

@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from automation.future_performance_quality_contract_check import validate
+
+ROOT = Path(__file__).resolve().parents[1]
 from automation.research_os_scheduler import build_plan
 
 

@@ -11,8 +11,6 @@ on:
       - research/authorizations/q031_q030_risk_stability_coverage_2026_09_27.json
       - tests/test_q031_q030_risk_stability_coverage.py
       - .github/workflows/q031-q030-risk-stability-coverage.yml
-  schedule:
-    - cron: "17 4 * * 1"
   workflow_dispatch:
 
 permissions:
