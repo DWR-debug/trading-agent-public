@@ -128,6 +128,7 @@ def inspect(path: Path, dataset_name: str) -> dict[str, object]:
             "invalid_option_type", "duplicate_contract_date_rows"
         ))
         and REQUIRED.issubset(columns)
+        and int(eligible_rows) > 0
     )
 
     next_session_after_latest = None
