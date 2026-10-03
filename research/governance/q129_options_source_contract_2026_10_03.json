@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "candidate_id": "Q129",
   "contract_id": "Q129-OPTIONS-SOURCE-2026-10-03",
-  "status": "SOURCE_FEASIBLE_PENDING_INDEPENDENT_PIT_VALIDATION",
+  "status": "SOURCE_FEASIBILITY_COMPLETED_INDEPENDENT_PIT_REPRODUCED",
   "generated_utc": "2026-10-03T12:00:00Z",
   "canonical_release": {
     "repository": "lambdaclass/options_portfolio_backtester",
@@ -80,7 +80,7 @@
     "date/expiration coherence",
     "deterministic quarantine of non-XNYS observation dates",
     "contract_id uniqueness within observation date",
-    "independent reproduction from surviving copy where technically possible"
+    "independent reproduction from surviving copy completed; receipt persisted"
   ],
   "scientific_boundary": {
     "performance": false,
@@ -124,5 +124,10 @@
       "QQQ": [],
       "IWM": []
     }
+  },
+  "independent_pit_receipt": {
+    "path": "research/evidence/q129_independent_pit_2026_10_03.json",
+    "workflow_run_id": 37123847841,
+    "receipt_fingerprint": "41d723734f030d1a212f5eb4b3e6467223a5cfcdeb97c77ffa9713f8889c7587"
   }
 }
