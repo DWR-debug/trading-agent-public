@@ -126,7 +126,7 @@ def reconstruct(symbol: str, item: dict[str, object]) -> dict[str, object]:
         "target_uri_present": bool(target),
         "http_status_line_present": http_status.startswith("HTTP/"),
         "payload_digest_matches_index": digest_b32 == expected_digest,
-        "target_matches_index_url": target is None or str(row.get("url", target)) == target,
+        "target_matches_index_url": bool(target) and bool(row.get("indexed_url")) and str(row.get("indexed_url")) == target,
     }
 
     return {
