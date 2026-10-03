@@ -763,7 +763,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T12:32:59.083560+00:00",
+  "generated_at_utc": "2026-10-03T12:33:44.753480+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -967,6 +967,21 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: restore Q146-Q170 candidate source mapping",
+        "sha": "162009c6e58964268b95994a4207ebf551246a62",
+        "timestamp": "2026-10-03T14:33:33+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6919d9faf367840cce9f8da13d243c7c15023470",
+        "timestamp": "2026-10-03T12:33:01Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9c1118a1817b123f7b769f06178ad9e614a3c175",
+        "timestamp": "2026-10-03T12:32:59Z"
+      },
+      {
         "message": "RESEARCH: advance Q129 PIT and public-information frontier (#914)",
         "sha": "4836fbeb9e3cdf8c39de817aeeff48db61cc47a8",
         "timestamp": "2026-10-03T14:32:46+02:00"
@@ -990,21 +1005,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "1cfca40db82e23313aa695bae7965b8dc5cc1a5c",
         "timestamp": "2026-10-03T12:11:19Z"
-      },
-      {
-        "message": "OPS: increase deep frontier feasibility cadence to 6h",
-        "sha": "ae85c118eb0e9ad8e0c3716bab86579055e7e387",
-        "timestamp": "2026-10-03T14:11:07+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "517b1e87a9fd1b9a9eecc1d39f5627efd22d1605",
-        "timestamp": "2026-10-03T11:51:35Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4d00bd56612114bdcad262ebca994f0a12da5836",
-        "timestamp": "2026-10-03T11:51:33Z"
       }
     ]
   },
@@ -1074,12 +1074,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4836fbeb9e3cdf8c39de817aeeff48db61cc47a8",
+  "source_master_sha": "162009c6e58964268b95994a4207ebf551246a62",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37123220986"
+    "run_id": "37123262523"
   }
 }
