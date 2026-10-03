@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "receipt_type": "q171_q178_public_domain_source_feasibility",
+  "workflow_run_id": 37125349520,
+  "run_attempt": 1,
+  "artifact_id": 11275455091,
+  "artifact_sha256": "bdc7f38f67b04bc49a1223a6f4f75c025ed10132fef435fa76aa12a40c25c6a5",
+  "source_commit": "02c26f6d746f7b4d295f7f1f930a27d73481c5c5",
+  "receipt_fingerprint": "fb131cf9b743abe0d09c9cc087c2c474f7179a4ecb3990a250eb9b473d8aaaba",
+  "candidates": {
+    "Q171": "SOURCE_PROBES_PASSED",
+    "Q172": "BLOCKED_SOURCE_PROBE",
+    "Q173": "BLOCKED_LICENSE_GATE",
+    "Q174": "SOURCE_PROBES_PASSED",
+    "Q175": "SOURCE_PROBES_PASSED",
+    "Q176": "SOURCE_PROBES_PASSED",
+    "Q177": "SOURCE_PROBES_PASSED",
+    "Q178": "BLOCKED_SOURCE_PROBE"
+  },
+  "source_results": {
+    "COMMON_CRAWL_CDXJ": {"http_status": 200, "required_markers_present": true, "content_sha256": "2845c2240d3dcc196c6219e5519f9bd1daf22f800361010bc4174e5c15f8378d"},
+    "GITHUB_ADVISORY": {"http_status": 200, "required_markers_present": false, "missing_markers": ["OSV"], "content_sha256": "74d39644a3aecca60f057a0f6dc42770af459e107db50c6b3f8b0fdc61a26ce4"},
+    "OPENSKY_API": {"http_status": 403, "required_markers_present": false, "license_gate": "CONSENT_REQUIRED_FOR_COMMERCIAL_USE", "content_sha256": "32f2fa940d4b4fe19aca1e53a24e5aac29c57b7c5ee78588325b87f1b649c864"},
+    "NOAA_ERDDAP": {"http_status": 200, "required_markers_present": true, "content_sha256": "e759b1a4d364644913999a68768ef14ff4862e12d05567721de29a8824cee1c2"},
+    "SEC_EDGAR_SUBMISSIONS": {"http_status": 200, "required_markers_present": true, "content_sha256": "2159349dae17cc9148a2f2a9d2eab12c84f59c2135b62e78d56ac9b00ca86b1e"},
+    "USGS_EARTHQUAKE": {"http_status": 200, "required_markers_present": true, "content_sha256": "477d4f2704783f9f060f6a6100f4808c448f7228c3ce6909a730a1f8cc3c01e7"},
+    "NOAA_SWPC": {"http_status": 200, "required_markers_present": true, "content_sha256": "5a1671cbe2c4642785c84731652659f32e4ba9e772b0e168885e47079cddcb30"},
+    "CROSSREF_API": {"http_status": 200, "required_markers_present": true, "content_sha256": "4fb3ea03c2372eed4ad9b23c09f411402745915167aab0584b594f0a9c737624"}
+  },
+  "synthetic_mutation_checks": {
+    "future_row_invariance": true,
+    "fixed_decomposition_prefix_invariance": true,
+    "no_search_dimension_present": true
+  },
+  "scientific_boundary": {
+    "performance": false,
+    "holdout": false,
+    "ranking": false,
+    "selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "notes": [
+    "Q172/Q178 are blocked by the current deterministic GitHub Advisory probe requiring an OSV marker; source access itself returned HTTP 200.",
+    "Q173 is fail-closed on the predeclared commercial-use consent gate; no commercial-use assumption is made.",
+    "This compact receipt preserves the workflow/artifact identity and core source boundary. The raw workflow artifact remains retained by GitHub through 2026-11-02."
+  ]
+}
