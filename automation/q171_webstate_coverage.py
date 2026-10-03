@@ -129,6 +129,7 @@ def query_index(url: str) -> dict[str, object]:
                 "length": int(row["length"]),
                 "status": str(row.get("status", "")),
                 "mime": str(row.get("mime", "")),
+                "indexed_url": str(row.get("url", "")),
             }
             for row in rows
         ],
