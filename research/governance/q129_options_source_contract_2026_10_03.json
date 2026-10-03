@@ -73,9 +73,11 @@
     "exact SHA-256 match for pinned release assets",
     "Parquet structural validity",
     "expected option columns",
+    "option type normalization CALL/PUT -> C/P",
     "non-negative volume/open_interest",
-    "bid <= ask when both quotes are positive",
+    "bid <= ask when both quotes are positive after deterministic quote quarantine",
     "date/expiration coherence",
+    "observation-date calendar eligibility after deterministic non-session quarantine",
     "contract_id uniqueness within observation date",
     "independent reproduction from surviving copy where technically possible"
   ],
@@ -95,5 +97,27 @@
     "LIVE_TRADING_ENABLED": false,
     "ORDERS_ENABLED": false,
     "AUTOMATIC_PROMOTION": false
+  },
+  "normalization_and_quarantine": {
+    "raw_source_rows_modified": false,
+    "option_type_map": {
+      "CALL": "C",
+      "PUT": "P",
+      "C": "C",
+      "P": "P"
+    },
+    "quote_rule": "Rows with bid > 0 and ask > 0 and bid > ask are excluded from the downstream eligible view; raw rows remain preserved.",
+    "calendar_rule": "Rows whose observation date is not an XNYS session are excluded from the downstream eligible view; raw rows remain preserved.",
+    "negative_quote_rule": "Rows with negative bid or ask are excluded from the downstream eligible view if encountered.",
+    "no_return_based_filtering": true,
+    "observed_raw_anomalies_2026_10_03": {
+      "SPY_crossed_positive_quote_rows": 2080,
+      "QQQ_crossed_positive_quote_rows": 245,
+      "IWM_crossed_positive_quote_rows": 478,
+      "SPY_non_xnys_observation_dates": [
+        "2024-01-15"
+      ]
+    },
+    "interpretation": "These are data-quality observations and do not constitute performance evidence. Any downstream study must apply the same fixed eligibility rules without return-driven tuning."
   }
 }
