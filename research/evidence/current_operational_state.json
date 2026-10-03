@@ -616,13 +616,63 @@
       "status": "MERGED"
     },
     "continuous_qa": {
+      "architecture": "single bounded hosted QA lane",
       "cadence": "15 */6 * * *",
-      "runner": "GitHub-hosted windows-latest",
+      "last_recorded_verified_baseline": {
+        "artifact_id": 10911971419,
+        "artifact_sha256": "sha256:b32f2cffdff27091187d7f7f7ac6759c23b2e141081f6d9c9143e1c790d73da9",
+        "ast_syntax": "success",
+        "conclusion": "success",
+        "head_sha": "5ef8730bbb55f86701fc0a8b9c88e152fe83291c",
+        "safety_invariants": "success",
+        "tests_passed": 881,
+        "warnings": 2,
+        "workflow_run_id": 36259124979
+      },
       "matrix_lanes": [
         "repo_qa"
       ],
-      "self_hosted_slots_consumed": 0,
-      "status": "ACTIVE"
+      "runner": "GitHub-hosted windows-latest",
+      "runner_capacity_last_verified": {
+        "label": "trading-agent-research",
+        "note": "This is a timestamped verification receipt, not a claim that the runners remain online after shutdown or logout.",
+        "runners": [
+          {
+            "arch": "X64",
+            "job_id": 109089465117,
+            "name": "LHT-N133732",
+            "os": "Windows",
+            "slot": 1,
+            "status_at_probe": "online_and_accepted_job"
+          },
+          {
+            "arch": "X64",
+            "job_id": 109089465001,
+            "name": "LHT-N133732-2",
+            "os": "Windows",
+            "slot": 2,
+            "status_at_probe": "online_and_accepted_job"
+          }
+        ],
+        "safety": {
+          "automatic_promotion": false,
+          "live_trading_enabled": false,
+          "orders_enabled": false,
+          "paper_only": true
+        },
+        "schema_version": 1,
+        "source_workflow_run_id": 36466580427,
+        "verification": "two concurrent self-hosted probe jobs were assigned to distinct Windows/X64 runners",
+        "verified_utc": "2026-09-28T19:07:05Z"
+      },
+      "self_hosted_slots_consumed": 0
+    },
+    "deep_frontier_source_feasibility": {
+      "cadence": "17 */12 * * *",
+      "formal_evidence_allowed": false,
+      "purpose": "public/free source and PIT feasibility only",
+      "runner": "ubuntu-24.04",
+      "workflow": ".github/workflows/deep-frontier-source-feasibility.yml"
     },
     "hosted_deterministic_frontier": {
       "cadence": "*/10 * * * *",
@@ -645,13 +695,9 @@
       "status": "MERGED"
     },
     "research_continuity": {
-      "permanent_self_hosted_loop": {
-        "cadence": "*/30 * * * *",
-        "parallel_lanes": 2
-      },
-      "hosted_research_failover": {
-        "cadence": "*/30 * * * *",
-        "mode": "fallback_only_when_self_hosted_heartbeat_stale"
+      "bounded_agent_queue": {
+        "cadence": "15 */2 * * *",
+        "paid_fallback_allowed": false
       },
       "continuous_qa": {
         "cadence": "15 */6 * * *",
@@ -659,18 +705,23 @@
         "self_hosted_slots_consumed": 0
       },
       "free_ai_worker_fabric": {
-        "cadence": "0 */6 * * *",
-        "authenticated_providers_only": true
+        "authenticated_providers_only": true,
+        "cadence": "0 */6 * * *"
       },
+      "hosted_research_failover": {
+        "cadence": "*/30 * * * *",
+        "mode": "fallback_only_when_self_hosted_heartbeat_stale"
+      },
+      "permanent_self_hosted_loop": {
+        "cadence": "*/30 * * * *",
+        "parallel_lanes": 2
+      },
+      "principle": "idle runners are capacity, not a defect; the scheduler should keep meaningful work flowing without duplicate or artificial jobs",
       "s10_phone": {
         "cadence": "0 */6 * * *",
         "event_driven": true,
-        "receipt_gated": true,
-        "formal_evidence_allowed": false
-      },
-      "bounded_agent_queue": {
-        "cadence": "15 */2 * * *",
-        "paid_fallback_allowed": false
+        "formal_evidence_allowed": false,
+        "receipt_gated": true
       }
     },
     "research_os": {
@@ -712,7 +763,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T11:04:48Z",
+  "generated_at_utc": "2026-10-03T11:07:33.713842+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -907,24 +958,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "sha": "5b0e9b3de9cf247a563f643e9fc88cafd3c8d601",
-        "timestamp": "2026-10-03T11:04:48Z",
-        "message": "OPS/RESEARCH: clean recurring load and add deep orthogonal frontier"
+        "message": "RESEARCH: add hosted public-source feasibility lane for Q133-Q145",
+        "sha": "5d1bdeaed2675c2c0237c0b7515cfb5e07084b49",
+        "timestamp": "2026-10-03T13:07:22+02:00"
       },
       {
-        "sha": "4486d6afac0df007b27af411fd08e46869a889bb",
-        "timestamp": "2026-10-03T11:00:34Z",
-        "message": "OPS: synchronize S10 phone runtime status"
+        "message": "OPS: expose deep source feasibility in canonical status",
+        "sha": "59e9906bd7faf09e12be9034f233127edc8dd360",
+        "timestamp": "2026-10-03T13:07:07+02:00"
       },
       {
-        "sha": "e38c18d7a9acb257bd5b1e29c51b8f322e7c6a2b",
-        "timestamp": "2026-10-03T11:00:18Z",
-        "message": "OPS: advance paper-forward MTM state"
+        "message": "OPS: register deep frontier source feasibility lane",
+        "sha": "e1b24e2c2b392db60ad55da45b6382249e7c2a68",
+        "timestamp": "2026-10-03T13:07:04+02:00"
       },
       {
-        "sha": "2b611e206229f1acef87386587ab0cdc3b5841b5",
-        "timestamp": "2026-10-03T10:57:08Z",
-        "message": "OPS: advance 2000 EUR paper-forward MTM state"
+        "message": "FIX: stabilize CFTC source probe marker",
+        "sha": "a0907e43788cf2f85c513d64de4fa370f6d08d34",
+        "timestamp": "2026-10-03T13:07:01+02:00"
+      },
+      {
+        "message": "TEST: enforce Q133-Q145 source feasibility boundaries",
+        "sha": "72245eda44a2f4e16be4005cd079964254f2d97d",
+        "timestamp": "2026-10-03T13:06:45+02:00"
+      },
+      {
+        "message": "OPS: schedule public source feasibility on hosted runner",
+        "sha": "de9a0738c42286be99076f930414ea3de3cc3667",
+        "timestamp": "2026-10-03T13:06:43+02:00"
+      },
+      {
+        "message": "RESEARCH: add deterministic Q133-Q145 source feasibility gate",
+        "sha": "5dc9ddb7974dc6d4dd5d5693527d316960fb3415",
+        "timestamp": "2026-10-03T13:06:41+02:00"
+      },
+      {
+        "message": "OPS: refresh machine operational status after cleanup merge",
+        "sha": "ed109fd5198d28b5b3e104a3e0f4703fe4c99f9b",
+        "timestamp": "2026-10-03T13:05:51+02:00"
       }
     ]
   },
@@ -939,16 +1010,16 @@
       "starts_utc": "2026-10-01T00:00:00Z"
     },
     "free_resources_only": true,
-    "hypothetical_reference_capital_eur": 2000,
-    "legacy_operational_canary_capital_eur": 500,
+    "hypothetical_reference_capital_eur": 2000.0,
+    "legacy_operational_canary_capital_eur": 500.0,
     "paid_agent_budget_usd": 0,
     "paid_api_budget_usd": 0
   },
   "safety": {
-    "PAPER_ONLY": true,
+    "AUTOMATIC_PROMOTION": false,
     "LIVE_TRADING_ENABLED": false,
     "ORDERS_ENABLED": false,
-    "AUTOMATIC_PROMOTION": false,
+    "PAPER_ONLY": true,
     "status": "SAFE"
   },
   "schema_version": "1.0",
@@ -994,12 +1065,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5b0e9b3de9cf247a563f643e9fc88cafd3c8d601",
+  "source_master_sha": "5d1bdeaed2675c2c0237c0b7515cfb5e07084b49",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": null
+    "run_id": "37118644463"
   }
 }
