@@ -110,9 +110,9 @@
       "provider": "FINRA",
       "access": "public_query_api",
       "capability": "daily_reg_sho_short_sale_volume",
-      "time_semantics": "daily_aggregated_trade_reporting",
-      "pit_fit": "medium_after_publication_time_and_symbol_mapping_validation",
-      "history": "probe_required",
+      "time_semantics": "daily_file_published_by_6pm_ET_with_rare_subsequent_updates",
+      "pit_fit": "medium_high_after_publication_time_symbol_mapping_and_revision_validation",
+      "history": "daily_history_beyond_365_days_via_transaction_files_or_query_api",
       "candidate_uses": [
         "daily_short_volume_pressure",
         "failed_breakout_pressure",
@@ -176,15 +176,22 @@
       "provider": "U.S. Treasury Fiscal Data",
       "access": "public_dataset_api",
       "capability": "treasury_auctions_and_fiscal_state",
-      "time_semantics": "published_record_date_plus_release_schedule",
-      "pit_fit": "medium_high_after_release_timestamp_audit",
-      "history": "broad_for_selected_datasets",
+      "time_semantics": "public_record_date_and_auction_result_fields_with_release_timestamp_audit",
+      "pit_fit": "high_for_auction_result_states_after_publication_boundary_validation",
+      "history": "broad_for_selected_auction_datasets",
       "candidate_uses": [
         "auction_demand",
         "term_premium_proxies",
         "fiscal_liquidity"
       ],
-      "source_url": "https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/"
+      "source_url": "https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/",
+      "companion_source": "https://www.treasurydirect.gov/auctions/auction-query/",
+      "observed_public_fields_for_q119": [
+        "High Yield",
+        "Median Yield",
+        "Low Yield",
+        "Bid-to-Cover Ratio"
+      ]
     },
     {
       "id": "SRC-BIS",
