@@ -68,7 +68,14 @@ def _s10_resource_state() -> dict[str, Any]:
 
 def build_plan(*,run_number:int|None=None)->dict[str,Any]:
     registry=load_registry(); sources=source_index(registry)
-    min_novelty=float(QUALITY_POLICY["orthogonal_search"].get("minimum_scheduler_novelty_distance", 0.80))\n    candidate_tracks=[t for t in TRACKS if float(t["mechanism_novelty_distance"]) >= min_novelty]\n    tracks=sorted((score(t,sources) for t in candidate_tracks),key=lambda x:(-x["information_gain_per_compute_prior"],x["id"]))
+    min_novelty = float(QUALITY_POLICY["orthogonal_search"].get("minimum_scheduler_novelty_distance", 0.80))
+    candidate_tracks = [
+        t for t in TRACKS if float(t["mechanism_novelty_distance"]) >= min_novelty
+    ]
+    tracks = sorted(
+        (score(t, sources) for t in candidate_tracks),
+        key=lambda x: (-x["information_gain_per_compute_prior"], x["id"]),
+    )
     assignments=[]; used=set()
     for lane in ("deterministic_frontier","adversarial"):
         c=[x for x in tracks if x["lane"]==lane and x["id"] not in used]
