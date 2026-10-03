@@ -100,11 +100,12 @@ def parse_index(body: bytes) -> list[dict[str, str]]:
     return rows
 
 def accession_from_filename(filename: str) -> str:
+    dashed = re.search(r"(\d{10}-\d{2}-\d{6})(?:[-.]|$)", filename)
+    if dashed:
+        return dashed.group(1)
     m = re.search(r"/(\d{18})/", filename)
-    if not m:
-        m = re.search(r"/(\d{10})-(\d{2})-(\d{6})", filename)
     if m:
-        raw = m.group(1) if len(m.groups()) == 1 else "".join(m.groups())
+        raw = m.group(1)
         return f"{raw[:10]}-{raw[10:12]}-{raw[12:]}"
     raise ValueError(f"ACCESSION_NOT_FOUND_IN_FILENAME:{filename}")
 
