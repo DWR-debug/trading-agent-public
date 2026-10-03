@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -121,7 +121,7 @@ def generate(
     try:
         observed = datetime.fromisoformat(str(s10_presence_observed).replace("Z", "+00:00"))
         now = datetime.now(timezone.utc)
-        s10_presence_fresh = now - observed <= __import__("datetime").timedelta(hours=6) and observed <= now + __import__("datetime").timedelta(minutes=5)
+        s10_presence_fresh = now - observed <= timedelta(hours=6) and observed <= now + timedelta(minutes=5)
     except (TypeError, ValueError):
         s10_presence_fresh = False
     from config import settings
