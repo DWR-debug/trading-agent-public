@@ -30,7 +30,8 @@ For each recovered SEC filing, preserve:
 
 1. acceptance datetime from the SEC filing header;
 2. filer CIK;
-3. subject/registrant CIK;
+3. subject/registrant CIK when present in the SEC header; if the SEC issuer filing header does not expose a separate subject section, the daily-index filer CIK is the issuer identity;
+9. whether the primary document is marked `iXBRL`.
 4. accession number and filing date;
 5. filing form;
 6. SEC filing-detail `Documents` count;
