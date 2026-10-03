@@ -134,9 +134,10 @@ def validate_candidate(
     normalized["sources"] = sorted(set(str(x) for x in sources)) if valid_sources else sources
     base_fp = fingerprint(normalized)
 
-    reordered = dict(normalized)
-    if isinstance(normalized.get("sources"), list):
-        reordered["sources"] = list(reversed(normalized["sources"]))
+    reordered = dict(candidate)
+    if isinstance(candidate.get("sources"), list):
+        reordered["sources"] = list(reversed(candidate["sources"]))
+    reordered["sources"] = sorted(set(str(x) for x in reordered["sources"])) if valid_sources else reordered["sources"]
     input_order_invariance = base_fp == fingerprint(reordered)
     if not input_order_invariance:
         violations.append("source_order_invariance_failed")
@@ -237,7 +238,11 @@ def validate_candidate(
         "automatic_promotion": False,
     }
 
-def compile_receipt(inventory_paths: list[Path], artifact_path: str = "ACTION_ARTIFACT_NOT_YET_WRITTEN") -> dict[str, Any]:
+def compile_receipt(
+    inventory_paths: list[Path],
+    artifact_path: str = "ACTION_ARTIFACT_NOT_YET_WRITTEN",
+    root: Path = ROOT,
+) -> dict[str, Any]:
     candidates: list[dict[str, Any]] = []
     inventory_manifests: list[dict[str, Any]] = []
     seen: set[str] = set()
@@ -247,7 +252,7 @@ def compile_receipt(inventory_paths: list[Path], artifact_path: str = "ACTION_AR
         if not isinstance(payload, dict) or not isinstance(payload.get("candidates"), list):
             raise ValueError(f"INVALID_INVENTORY:{path}")
         inventory_manifests.append({
-            "path": str(path.relative_to(ROOT)).replace("\\", "/"),
+            "path": str(path.resolve().relative_to(root.resolve())).replace("\\", "/"),
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
             "candidate_count": len(payload["candidates"]),
         })
@@ -258,7 +263,13 @@ def compile_receipt(inventory_paths: list[Path], artifact_path: str = "ACTION_AR
             if candidate_id in seen:
                 raise ValueError(f"DUPLICATE_CANDIDATE_ID:{candidate_id}")
             seen.add(candidate_id)
-            candidates.append(validate_candidate(candidate, str(path.relative_to(ROOT)).replace("\\", "/"), artifact_path))
+            candidates.append(
+                validate_candidate(
+                    candidate,
+                    str(path.resolve().relative_to(root.resolve())).replace("\\", "/"),
+                    artifact_path,
+                )
+            )
 
     candidates.sort(key=lambda item: item["candidate_id"])
     failed = [item for item in candidates if item["status"] != "PRE_FORMAL_ROBUSTNESS_COMPLETED"]
