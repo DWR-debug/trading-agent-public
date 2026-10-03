@@ -18,6 +18,83 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 
 PROBES: dict[str, dict[str, Any]] = {
+
+    "NOAA_STORM": {
+        "url": "https://www.ncei.noaa.gov/access/storm-events-database/",
+        "markers": ["Storm Events Database", "January 1950", "Bulk Data Access"],
+    },
+    "EIA_OPEN": {
+        "url": "https://www.eia.gov/opendata/",
+        "markers": ["Open Data", "Bulk", "Electricity"],
+    },
+    "USA_SPENDING": {
+        "url": "https://api.usaspending.gov/docs/endpoints",
+        "markers": ["Endpoints do not currently require any authorization", "/api/v2/search/spending_by_award"],
+    },
+    "COURTLISTENER": {
+        "url": "https://www.courtlistener.com/help/",
+        "markers": ["REST APIs", "Developer"],
+    },
+    "SEC_FOIA": {
+        "url": "https://www.sec.gov/foia/frequently-requested-documents/foia-logs",
+        "markers": ["FOIA Logs", "August 2026", "CSV"],
+    },
+    "HOUSE_DISCLOSURE": {
+        "url": "https://disclosures-clerk.house.gov/FinancialDisclosure",
+        "markers": ["Financial Disclosure", "2026"],
+    },
+    "LDA_API": {
+        "url": "https://lda.gov/api/tos/",
+        "markers": ["Unauthenticated", "rate limited"],
+    },
+    "OPENFDA_DRUG": {
+        "url": "https://open.fda.gov/apis/drug/",
+        "markers": ["Drugs@FDA", "Drug shortages", "Recall enforcement reports"],
+    },
+    "OPENFDA_DEVICE": {
+        "url": "https://open.fda.gov/apis/device/",
+        "markers": ["510(k) clearances", "Recall enforcement reports", "Registrations and listings"],
+    },
+    "CISA_KEV": {
+        "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+        "markers": ["Known Exploited Vulnerabilities Catalog", "CSV", "JSON"],
+    },
+    "NVD": {
+        "url": "https://nvd.nist.gov/developers/vulnerabilities-1",
+        "markers": ["pubStartDate", "pubEndDate", "published"],
+    },
+    "FEMA": {
+        "url": "https://www.fema.gov/about/openfema/disaster-declarations-summaries",
+        "markers": ["Disaster Declarations Summaries", "API", "1953"],
+    },
+    "USDA_NASS": {
+        "url": "https://data.nass.usda.gov/Quick_Stats/",
+        "markers": ["Quick Stats", "updated", "JSON"],
+    },
+    "GOVINFO": {
+        "url": "https://www.govinfo.gov/bulkdata/",
+        "markers": ["Federal Register", "Congressional Bills", "Bill Status"],
+    },
+    "FEC": {
+        "url": "https://api.open.fec.gov/developers/",
+        "markers": ["Bulk downloads", "Schedule A"],
+    },
+    "FTC_DATA": {
+        "url": "https://search.ftc.gov/policy-notices/open-government/data-sets",
+        "markers": ["FTC Nonmerger Enforcement Actions", "FTC Merger Enforcement Actions"],
+    },
+    "DOJ_ANTITRUST": {
+        "url": "https://www.justice.gov/atr/press-releases",
+        "markers": ["Press Releases", "Antitrust"],
+    },
+    "BTS_FAF": {
+        "url": "https://www.bts.gov/faf",
+        "markers": ["Freight Analysis Framework", "commodity"],
+    },
+    "EPA_ENVIROFACTS": {
+        "url": "https://www.epa.gov/enviro/envirofacts-data-service-api",
+        "markers": ["RESTful", "JSON", "environmental"],
+    },
     "SEC_FTD": {
         "url": "https://www.sec.gov/data-research/sec-markets-data/fails-deliver-data",
         "markers": ["February 2004", "September 2026", "balance level outstanding"],
@@ -169,7 +246,7 @@ def main() -> int:
     mutations = future_mutation_invariance()
     result = {
         "schema_version": "1.0",
-        "task_id": "Q-2026-10-03-Q133-Q145-SOURCE-FEASIBILITY",
+        "task_id": "Q-2026-10-03-Q133-Q165-SOURCE-FEASIBILITY",
         "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
         "source_results": source_results,
         "candidate_results": candidate_results,
