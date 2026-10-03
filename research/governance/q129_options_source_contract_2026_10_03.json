@@ -73,9 +73,12 @@
     "exact SHA-256 match for pinned release assets",
     "Parquet structural validity",
     "expected option columns",
+    "option type normalization CALL/PUT -> C/P for downstream semantics",
     "non-negative volume/open_interest",
-    "bid <= ask when both quotes are positive",
+    "deterministic quarantine of rows with bid > 0 and ask > 0 and bid > ask",
+    "deterministic quarantine of rows with negative bid/ask if encountered",
     "date/expiration coherence",
+    "deterministic quarantine of non-XNYS observation dates",
     "contract_id uniqueness within observation date",
     "independent reproduction from surviving copy where technically possible"
   ],
@@ -95,5 +98,31 @@
     "LIVE_TRADING_ENABLED": false,
     "ORDERS_ENABLED": false,
     "AUTOMATIC_PROMOTION": false
+  },
+  "normalization_and_quarantine": {
+    "raw_source_rows_modified": false,
+    "option_type_map": {
+      "CALL": "C",
+      "PUT": "P",
+      "C": "C",
+      "P": "P"
+    },
+    "quote_rule": "Rows with bid > 0 and ask > 0 and bid > ask are excluded from the downstream eligible view; raw source rows remain preserved.",
+    "negative_quote_rule": "Rows with negative bid or ask are excluded from the downstream eligible view if encountered.",
+    "calendar_rule": "Rows whose observation date is not an XNYS session are excluded from the downstream eligible view; raw source rows remain preserved.",
+    "no_return_based_filtering": true,
+    "observed_anomaly_receipt": "first independent reproduction 37123220958",
+    "observed_crossed_positive_quote_rows": {
+      "SPY": 2080,
+      "QQQ": 245,
+      "IWM": 478
+    },
+    "observed_non_xnys_dates": {
+      "SPY": [
+        "2024-01-15"
+      ],
+      "QQQ": [],
+      "IWM": []
+    }
   }
 }
