@@ -125,7 +125,7 @@ jobs:
           cd /d "%REPO_SRC%" || exit /b 1
           set "PYTHONPATH=%REPO_SRC%"
           set "EXIT_CODE=0"
-          "%PY_EXE%" -m automation.self_hosted_research_worker --lane "%LANE%" --output-dir "research/runs/self_hosted/autonomous/%GITHUB_RUN_ID%/%LANE%"
+          "%PY_EXE%" -m automation.self_hosted_research_worker --lane "%LANE%" --rotation-index "%GITHUB_RUN_NUMBER%" --output-dir "research/runs/self_hosted/autonomous/%GITHUB_RUN_ID%/%LANE%"
           if errorlevel 1 (
             set "RC=!ERRORLEVEL!"
             if "!EXIT_CODE!"=="0" set "EXIT_CODE=!RC!"
