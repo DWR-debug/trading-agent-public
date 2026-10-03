@@ -1,0 +1,35 @@
+{
+  "schema_version":"1.0",
+  "wave_id":"Q171-Q178-2026-10-03",
+  "status":"DESIGN_INVENTORY_ONLY",
+  "generated_utc":"2026-10-03T13:00:00Z",
+  "purpose":"Deep public-domain information discovery using independent digital, scientific, geophysical and transportation clocks.",
+  "policy":{
+    "performance_authorized":false,
+    "holdout_selection_allowed":false,
+    "asset_search_allowed":false,
+    "parameter_search_allowed":false,
+    "threshold_search_allowed":false,
+    "horizon_search_allowed":false,
+    "family_ranking_allowed":false,
+    "automatic_promotion":false,
+    "paid_data_required":false
+  },
+  "candidates":[
+    {"id":"Q171","name":"Historical issuer web-state change × disclosure arrival","sources":["Common Crawl CDXJ/WARC","SEC EDGAR submissions","OHLCV"],"core_hypothesis":"Publicly visible issuer web-state transitions may contain operational/disclosure timing not present in filing metadata alone.","next_gate":"capture timestamp semantics, crawl lag characterization, immutable issuer URL map, future-capture invariance"},
+    {"id":"Q172","name":"Open-source vulnerability disclosure shock × software issuer exposure","sources":["GitHub Advisory Database","OSV format","SEC issuer disclosures","OHLCV"],"core_hypothesis":"Newly public package vulnerabilities may create a technology-risk information state before broad repricing.","next_gate":"advisory publication/updated timestamps, fixed package-to-issuer graph, withdrawn/revised advisory handling"},
+    {"id":"Q173","name":"Flight-network disruption × exposed airline/airport ecosystem","sources":["OpenSky historical flight data","SEC issuer disclosures","OHLCV"],"core_hypothesis":"Observed aircraft/airport network disruptions may encode operational stress independently of market prices.","next_gate":"license/commercial-use eligibility, historical completeness, nightly-batch timing, fixed airport/issuer exposure graph"},
+    {"id":"Q174","name":"Marine/weather extreme × shipping and industrial exposure","sources":["NOAA ERDDAP","SEC issuer disclosures","OHLCV"],"core_hypothesis":"Public ocean/weather state changes may create supply-chain and physical-operating shocks.","next_gate":"dataset-vintage stability, station/entity geography, update timing and revision semantics"},
+    {"id":"Q175","name":"Seismic sequence state × extractive/utility exposure","sources":["USGS Earthquake Catalog","SEC issuer disclosures","OHLCV"],"core_hypothesis":"Not just single large earthquakes but deterministic aftershock/sequence transitions may alter operating-location states.","next_gate":"sequence-definition freeze independent of returns, event update timestamps, fixed facility geography"},
+    {"id":"Q176","name":"Science-output burst × issuer technology exposure","sources":["Crossref","OpenAlex","SEC issuer disclosures","OHLCV"],"core_hypothesis":"Accelerating public research output around a fixed technology domain may capture innovation intensity.","next_gate":"deposit/publication timing, affiliation mapping, duplicate/venue correction and pre-frozen domain taxonomy"},
+    {"id":"Q177","name":"Space-weather state transition × infrastructure sensitivity","sources":["NOAA SWPC","SEC issuer disclosures","OHLCV"],"core_hypothesis":"Alert/warning transitions may contain external operational information for communication, power and navigation-sensitive firms.","next_gate":"issue/correction/cancellation clock, fixed exposure taxonomy and revision-safe PIT"},
+    {"id":"Q178","name":"Web-corpus × security-disclosure collision state","sources":["Common Crawl","GitHub Advisory Database","SEC EDGAR","OHLCV"],"core_hypothesis":"The interaction between public web-state change and formal security disclosure may reveal distinct dissemination phases.","next_gate":"separate source clocks, collision definition frozen ex ante, no same-source duplicate information"}
+  ],
+  "cross_channel_designs":[
+    "web-state transition × security advisory",
+    "science-output burst × technology vulnerability",
+    "marine extreme × freight/flight disruption",
+    "earthquake sequence × environmental/operational enforcement"
+  ],
+  "safety":{"paper_only":true,"live_trading_enabled":false,"orders_enabled":false,"automatic_promotion":false}
+}
