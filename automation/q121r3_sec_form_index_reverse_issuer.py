@@ -83,11 +83,11 @@ def parse_index(body: bytes) -> list[dict[str, str]]:
     representation and the dashed ISO form.
     """
     row_pattern = re.compile(
-        r"^\\s*(?P<form>SC 13[DG](?:/A)?)\\s+"
-        r"(?P<company>.*?)\\s+"
-        r"(?P<cik>\\d{1,10})\\s+"
-        r"(?P<filed_date>\\d{8}|\\d{4}-\\d{2}-\\d{2})\\s+"
-        r"(?P<filename>edgar/data/\\S+)\\s*$",
+        r"^\s*(?P<form>SC 13[DG](?:/A)?)\s+"
+        r"(?P<company>.*?)\s+"
+        r"(?P<cik>\d{1,10})\s+"
+        r"(?P<filed_date>\d{8}|\d{4}-\d{2}-\d{2})\s+"
+        r"(?P<filename>edgar/data/\S+)\\s*$",
         re.IGNORECASE,
     )
 
@@ -107,9 +107,9 @@ def parse_index(body: bytes) -> list[dict[str, str]]:
         filename = data["filename"]
         if form not in FORM_SET:
             continue
-        if not re.fullmatch(r"\\d{4}-\\d{2}-\\d{2}", filed_date):
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", filed_date):
             continue
-        if not re.fullmatch(r"\\d{1,10}", cik):
+        if not re.fullmatch(r"\d{1,10}", cik):
             continue
         if not filename.startswith("edgar/data/"):
             continue
