@@ -114,6 +114,8 @@ def generate(
     q093_diagnosis = _load_json(ROOT / "research/evidence/q093_q091_cost_attribution_diagnosis_result.json", {})
     github_state = _load_json(github_state_path, {}) if github_state_path else {}
     h06_pit = _load_json(ROOT / "research/evidence/h06_pit_independent_reproduction_2026_10_01.json", {})
+    q129_receipt = _load_json(ROOT / "research/evidence/q129_independent_pit_2026_10_03.json", {})
+    q133_q170_receipt = _load_json(ROOT / "research/evidence/q133_q170_source_feasibility_2026_10_03.json", {})
 
     safety = _safety_state()
     from config import settings
@@ -472,6 +474,8 @@ def generate(
         "q068_execution_pipeline": q068_pipeline,
         "q070_execution_pipeline": q070_pipeline,
         "h06_independent_pit": h06_pit,
+        "q129_options": q129_receipt,
+        "q133_q170_source_feasibility": q133_q170_receipt,
         "scientific_state_recorded": {
             "latest_formal_trial": latest_formal.get("trial_id") or project_state.get("latest_formal_trial"),
             "latest_formal_status": latest_formal.get("status") or project_state.get("latest_trial_status"),
@@ -580,6 +584,19 @@ def generate(
 - Q107 fresh Q104 equity coverage: **COMPLETED**; 8/8 symbols and 3,704 common sessions.
 - Q108 real SEC/XBRL/13F/Treasury PIT integration: **COMPLETED_DUAL_ARCH**; 8/8 issuer filings and 8/8 XBRL lineage verified, 13F sample and Treasury chain verified.
 - Candidate-specific next gates: I19/I20 = full 13F security coverage; I22 = frozen event-state compiler; M6 = fixed Treasury state reuse; I21 = explicit bounded historical horizon; R9 = synthetic-only.
+
+### Q129 Options Source / PIT
+
+- Q129 historical options source-feasibility: **COMPLETED** on hosted Linux with pinned release hashes verified.
+- Independent Q129 PIT/structural reproduction: **REPRODUCED**; workflow run `37123847841`, receipt fingerprint `41d723734f030d1a212f5eb4b3e6467223a5cfcdeb97c77ffa9713f8889c7587`.
+- The fixed downstream view preserves raw rows and quarantines quote/calendar anomalies deterministically; same-day use remains **False**.
+- This receipt does **not** authorize performance, holdout selection, ranking, tuning, promotion or live execution.
+
+### Q133–Q170 Public Source Frontier
+
+- Hosted discovery/source-feasibility run: **COMPLETED**; 25 source probes passed across Q133–Q170.
+- Newly source-feasible candidates include Q137, Q144, Q147–Q151, Q153–Q155, Q157–Q158, Q161–Q169; remaining candidates stay blocked or design-only pending further source/PIT work.
+- Source-feasibility is not performance evidence and does not authorize performance, holdout selection, ranking, tuning, promotion or live execution.
 
 ### H06 independent PIT
 
