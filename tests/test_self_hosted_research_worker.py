@@ -449,3 +449,10 @@ def test_hosted_frontier_loop_publishes_complete_bounded_outputs():
 
 
 
+
+
+
+def test_hosted_failover_is_manual_only_under_always_available_policy():
+    workflow = (ROOT / ".github/workflows/hosted-research-failover.yml").read_text(encoding="utf-8")
+    assert "workflow_dispatch:" in workflow
+    assert 'schedule:' not in workflow
