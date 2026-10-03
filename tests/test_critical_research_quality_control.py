@@ -47,6 +47,53 @@ def test_robustness_dimensions_cover_failure_modes_seen_in_project():
     assert required <= dims
 
 
+def test_future_quality_validator_requires_receipt_contract_for_authorized_entries(tmp_path):
+    import automation.future_performance_quality_contract_check as checker
+
+    policy = json.loads(POLICY.read_text(encoding="utf-8"))
+    root = tmp_path
+    (root / "research/governance").mkdir(parents=True)
+    (root / "research/preregistrations").mkdir(parents=True)
+    (root / "research/evidence").mkdir(parents=True)
+    (root / "research/governance/critical_research_quality_control.json").write_text(
+        json.dumps(policy), encoding="utf-8"
+    )
+
+    trial_id = "T-2026-10-03-X01"
+    prereg_path = root / "research/preregistrations/x01_performance.json"
+    base = {
+        "trial_id": trial_id,
+        "governance": {"performance_trial_authorized": False},
+        "robustness_contract": {
+            "required_dimensions": policy["early_robustness"]["required_dimensions"],
+            "research_only_before_formal_pass": True,
+        },
+        "independent_replication": {
+            "trial_id": trial_id,
+            "preregistration_path": "research/preregistrations/x01_replication.json",
+            "trigger_path": "research/run_requests/x01_replication.trigger",
+            "fresh_symbol_disjoint": True,
+            "no_post_pass_optimization": True,
+        },
+    }
+    prereg_path.write_text(json.dumps(base), encoding="utf-8")
+    (root / "research/preregistrations/x01_replication.json").write_text(json.dumps(base), encoding="utf-8")
+    (root / "research/governance/active_research_registry.json").write_text(
+        json.dumps({
+            "active_trials": [{
+                "code": "X01",
+                "trial_id": trial_id,
+                "state": "PERFORMANCE_AUTHORIZED",
+                "performance_authorization_allowed": True,
+                "preregistration_path": "research/preregistrations/x01_performance.json",
+            }]
+        }),
+        encoding="utf-8",
+    )
+
+    with __import__("pytest").raises(RuntimeError, match="pre_performance_robustness"):
+        checker.validate(root)
+
 def test_orthogonal_search_forbids_holdout_driven_scheduler_selection():
     p = json.loads(POLICY.read_text(encoding="utf-8"))
     forbidden = set(p["orthogonal_search"]["forbidden_scheduler_inputs"])
