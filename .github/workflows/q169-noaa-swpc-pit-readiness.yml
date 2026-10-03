@@ -68,7 +68,7 @@ jobs:
           assert d["safety"]["ORDERS_ENABLED"] is False
           assert d["safety"]["AUTOMATIC_PROMOTION"] is False
           assert all(d["mutation_checks"].values())
-          print("Q169_NOAA_SWPC_PIT_ARCHIVE_R2_OK")
+          print("Q169_NOAA_SWPC_PIT_ARCHIVE_R3_OK")
           PY
 
       - name: Persist material Q169 R3 PIT receipt
@@ -76,7 +76,7 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-          PUBLISH_MESSAGE: "OPS: persist latest Q169 R2 NOAA PIT archive receipt"
+          PUBLISH_MESSAGE: "OPS: persist latest Q169 R3 NOAA PIT archive receipt"
         run: |
           set -euo pipefail
           input="research/runs/q169_noaa_swpc_pit_readiness/${GITHUB_RUN_ID}.json"
@@ -95,7 +95,7 @@ jobs:
               --repository "$GITHUB_REPOSITORY" \
               --branch master \
               --base-sha "$base_sha" \
-              --file "$latest=$latest"; then
+              --file "$input=$latest"; then
               exit 0
             fi
             sleep "$attempt"
