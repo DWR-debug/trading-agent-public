@@ -379,6 +379,29 @@ def _validate_critical_research_controls() -> None:
         fail("critical research orthogonal scheduler remains vulnerable to forbidden inputs")
 
 
+def _validate_i19_concept_freeze() -> None:
+    path = ROOT / "research" / "preregistrations" / "q104_i19_xbrl_concept_freeze_2026_10_03.json"
+    test_path = ROOT / "tests" / "test_q104_i19_xbrl_concept_freeze.py"
+    if not path.exists() or not test_path.exists():
+        fail("Q104 I19 exact XBRL concept freeze artifacts are missing")
+    try:
+        spec = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        fail(f"Q104 I19 exact concept freeze is unreadable: {exc}")
+    if spec.get("candidate_id") != "Q104:I19":
+        fail("Q104 I19 concept freeze identity mismatch")
+    if spec.get("governance", {}).get("performance_authorized") is not False:
+        fail("Q104 I19 concept freeze unexpectedly authorizes performance")
+    if spec.get("fact_contract", {}).get("selection_rule") != "Choose the latest filing accepted no later than the decision cutoff that contains all three required concepts with a valid duration/instant alignment. No concept substitution is allowed.":
+        fail("Q104 I19 concept-selection rule drifted")
+    expected = {
+        "net_income_loss": "us-gaap:NetIncomeLoss",
+        "operating_cash_flow": "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+        "assets": "us-gaap:Assets",
+    }
+    if spec.get("xbrl_concepts") != expected:
+        fail("Q104 I19 XBRL concept identifiers drifted")
+
 def main() -> None:
     workflow_dir = ROOT / ".github" / "workflows"
     active_workflows = {path.name for path in workflow_dir.glob("*.yml")}
@@ -390,6 +413,7 @@ def main() -> None:
     _validate_q067_evidence_chain()
     _validate_research_os_registry()
     _validate_critical_research_controls()
+    _validate_i19_concept_freeze()
 
     for path in REQUIRED_FILES:
         if not path.exists():
