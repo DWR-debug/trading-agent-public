@@ -25,7 +25,11 @@ PROBES: dict[str, dict[str, Any]] = {
     },
     "GITHUB_ADVISORY": {
         "url": "https://docs.github.com/en/rest/security-advisories/global-advisories",
-        "markers": ["REST API", "global security advisories", "OSV"],
+        "markers": ["REST API", "global security advisories"],
+    },
+    "GITHUB_ADVISORY_FORMAT": {
+        "url": "https://docs.github.com/en/code-security/concepts/vulnerability-reporting-and-management/github-advisory-database",
+        "markers": ["OSV"],
     },
     "OPENSKY_API": {
         "url": "https://opensky-network.org/about/faq",
@@ -234,13 +238,13 @@ CANDIDATE_SOURCES: dict[str, list[str]] = {
     "Q169": ["NOAA_SWPC", "SEC_EDGAR_SUBMISSIONS"],
     "Q170": ["NASA_FIRMS", "SEC_EDGAR_SUBMISSIONS"],
     "Q171": ["COMMON_CRAWL_CDXJ", "SEC_EDGAR_SUBMISSIONS"],
-    "Q172": ["GITHUB_ADVISORY", "SEC_EDGAR_SUBMISSIONS"],
+    "Q172": ["GITHUB_ADVISORY", "GITHUB_ADVISORY_FORMAT", "SEC_EDGAR_SUBMISSIONS"],
     "Q173": ["OPENSKY_API", "SEC_EDGAR_SUBMISSIONS"],
     "Q174": ["NOAA_ERDDAP", "SEC_EDGAR_SUBMISSIONS"],
     "Q175": ["USGS_EARTHQUAKE", "SEC_EDGAR_SUBMISSIONS"],
     "Q176": ["CROSSREF_API", "SEC_EDGAR_SUBMISSIONS"],
     "Q177": ["NOAA_SWPC", "SEC_EDGAR_SUBMISSIONS"],
-    "Q178": ["COMMON_CRAWL_CDXJ", "GITHUB_ADVISORY", "SEC_EDGAR_SUBMISSIONS"],
+    "Q178": ["COMMON_CRAWL_CDXJ", "GITHUB_ADVISORY", "GITHUB_ADVISORY_FORMAT", "SEC_EDGAR_SUBMISSIONS"],
 }
 
 
