@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from concurrent.futures import ThreadPoolExecutor
 import os
 import platform
 import subprocess
@@ -313,32 +314,72 @@ def run(command: list[str], out_dir: Path, index: int) -> dict[str, object]:
     return payload
 
 
+def default_max_workers(lane: str) -> int:
+    """Return a conservative bounded concurrency for each lane.
+
+    Frontier steps are deliberately independent bounded preflights, so a small
+    worker pool reduces wall-clock time without turning the runner into an
+    unrestricted parallel executor. Reproduction/QA lanes remain serial.
+    """
+    return 3 if lane == "autonomous_frontier_qa" else 1
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--lane", choices=sorted(LANES), required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument(
+        "--max-workers",
+        type=int,
+        default=None,
+        help="Bounded concurrency override; defaults to lane-specific safe value.",
+    )
     args = parser.parse_args()
+
+    max_workers = args.max_workers if args.max_workers is not None else default_max_workers(args.lane)
+    if max_workers < 1 or max_workers > 4:
+        parser.error("--max-workers must be between 1 and 4")
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     results = []
     exit_code = 0
     failed_steps = []
-    for index, command in enumerate(LANES[args.lane], start=1):
-        result = run(command, args.output_dir, index)
-        results.append(result)
+    indexed_commands = list(enumerate(LANES[args.lane], start=1))
+
+    if max_workers == 1:
+        results = [
+            run(command, args.output_dir, index)
+            for index, command in indexed_commands
+        ]
+    else:
+        # All commands in this lane are predefined, non-production and
+        # independently bounded. Collect futures in submission order so the
+        # persisted summary remains deterministic even when execution finishes
+        # out of order.
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = [
+                executor.submit(run, command, args.output_dir, index)
+                for index, command in indexed_commands
+            ]
+            results = [future.result() for future in futures]
+
+    for result in results:
         if result["returncode"] != 0:
             # Keep executing independent bounded research/QA steps so one
             # non-critical failure cannot suppress unrelated diagnostics.
             # The lane still exits non-zero and therefore cannot be mistaken
             # for a clean heartbeat or formal evidence run.
-            if not failed_steps:
+            if exit_code == 0:
                 exit_code = int(result["returncode"]) or 1
-            failed_steps.append(index)
+            failed_steps.append(int(result["index"]))
+
+    results.sort(key=lambda result: int(result["index"]))
 
     summary = {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "lane": args.lane,
         "completed_at": datetime.now(timezone.utc).isoformat(),
+        "max_workers": max_workers,
         "results": results,
         "failed_steps": failed_steps,
         "all_bounded_steps_attempted": True,
@@ -361,6 +402,7 @@ def main() -> int:
         "orders_enabled": False,
         "automatic_promotion": False,
         "formal_research_evidence": False,
+        "max_workers": max_workers,
         "step_count": len(results),
         "step_return_codes": [result["returncode"] for result in results],
         "failed_steps": failed_steps,
