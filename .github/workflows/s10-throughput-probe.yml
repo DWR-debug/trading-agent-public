@@ -1,4 +1,4 @@
-name: S10 Throughput Probe
+name: S10 Throughput Probe (manual diagnostics)
 
 on:
   push:
@@ -7,8 +7,6 @@ on:
       - "automation/s10_throughput_probe.py"
       - ".github/workflows/s10-throughput-probe.yml"
       - "tests/test_s10_throughput_probe.py"
-  schedule:
-    - cron: "30 2 * * *"
   workflow_dispatch: {}
 
 permissions:
