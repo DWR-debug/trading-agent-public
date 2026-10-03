@@ -17,14 +17,34 @@ def test_accession_parser():
 
 
 def test_parse_filters_to_beneficial_forms():
+    def row(form, company, cik, filed, filename):
+        return (
+            f"{form:<12}{company:<62}{cik:<12}{filed:<12}{filename}"
+        ).encode()
+
     body = b"\n".join([
-        b"CIK|Company Name|Form Type|Date Filed|Filename",
-        b"0000820027|American|SC 13G|2024-11-14|edgar/data/820027/000119312524258276/0001193125-24-258276-index.htm",
-        b"0000820027|American|10-Q|2024-11-14|edgar/data/820027/000000000000000000/0000000000-24-000000-index.htm",
+        b"Form Index header",
+        b"Form Type   Company Name                                              CIK         Date Filed  File Name",
+        b"-" * 140,
+        row(
+            "SC 13G/A",
+            "S&P Global Inc.",
+            "64040",
+            "2024-02-13",
+            "edgar/data/64040/000110465924021877/0001104659-24-021877-index.htm",
+        ),
+        row(
+            "10-Q",
+            "S&P Global Inc.",
+            "64040",
+            "2024-02-13",
+            "edgar/data/64040/000000000000000000/0000000000-24-000000-index.htm",
+        ),
     ])
     rows = parse_index(body)
     assert len(rows) == 1
-    assert rows[0]["form"] == "SC 13G"
+    assert rows[0]["form"] == "SC 13G/A"
+    assert rows[0]["cik"] == "0000064040"
 
 
 def test_window_boundaries():
