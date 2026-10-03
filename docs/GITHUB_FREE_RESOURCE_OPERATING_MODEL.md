@@ -331,9 +331,7 @@ Failover-Schwellen:
 - letzter Self-hosted-Lauf älter als 45 Minuten;
 - überhaupt kein Self-hosted-Heartbeat.
 
-Bei Failover laufen parallel:
-- ubuntu-24.04: Frontier-QA/Feasibility;
-- ubuntu-24.04-arm: Governance-/Reproduktions-QA.
+Bei Failover läuft ausschließlich die Governance-/Reproduktionsspur auf `ubuntu-24.04-arm`; die dauerhafte Frontier-QA ist separat auf `ubuntu-24.04` verankert und darf durch Failover nicht dupliziert werden.
 
 Der Failover darf keine formale Performance-Evidence erzeugen, keine Research-Gates
 ändern, keine Kandidaten-/Holdout-Selektion vornehmen und keine kostenpflichtige
