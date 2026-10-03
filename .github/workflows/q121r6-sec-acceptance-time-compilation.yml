@@ -1,14 +1,6 @@
 name: Q121-R6 SEC Acceptance-Time Compilation
 
 on:
-  pull_request:
-    branches: [master]
-    paths:
-      - automation/q121r6_sec_acceptance_time_compiler.py
-      - automation/q121r6_sec_acceptance_time_aggregate.py
-      - tests/test_q121r6_sec_acceptance_time_compiler.py
-      - research/preregistrations/q121r6_sec_acceptance_time_compilation_2026_10_03.json
-      - .github/workflows/q121r6-sec-acceptance-time-compilation.yml
   push:
     branches: [master]
     paths:
