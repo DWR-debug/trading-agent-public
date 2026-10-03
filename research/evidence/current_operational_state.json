@@ -709,7 +709,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-03T09:51:25.575863+00:00",
+  "generated_at_utc": "2026-10-03T09:51:42.954414+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -913,6 +913,31 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: align TRADING_AGENT_OS_ORCHESTRATION.md with continuous capacity policy",
+        "sha": "f6f92d7ae58629d7b693f8891973a7da75d7790c",
+        "timestamp": "2026-10-03T11:51:41+02:00"
+      },
+      {
+        "message": "OPS: align TRADING_AGENT_OS_ORCHESTRATION.md with continuous capacity policy",
+        "sha": "2eb797b9ae267c308db317366799fe857a4002e3",
+        "timestamp": "2026-10-03T11:51:38+02:00"
+      },
+      {
+        "message": "OPS: use fresh S10 utility receipt as bounded presence signal",
+        "sha": "5f5f90a41686bb1101531d80c6677f5939b44771",
+        "timestamp": "2026-10-03T11:51:32+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8bdac9ff373e3afdb00392012b56923138416f5b",
+        "timestamp": "2026-10-03T09:51:28Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b99364797b39210e11e72df81869914814b74f0a",
+        "timestamp": "2026-10-03T09:51:26Z"
+      },
+      {
         "message": "OPS: pulse permanent research loop every 10 minutes",
         "sha": "b122239f9e448c09e4f1d950b5ead3693222f973",
         "timestamp": "2026-10-03T11:51:18+02:00"
@@ -926,31 +951,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "905b3386bad4bb44509da9985eb872ab24a56737",
         "timestamp": "2026-10-03T09:46:09Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "bf64af8126d3cfd8e6075166bbb096ccf05cb261",
-        "timestamp": "2026-10-03T09:43:17Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "8fc420870414adaddbe0e0af2bce1902560cb27d",
-        "timestamp": "2026-10-03T09:29:38Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "b5ea85a7da057ef0d02c67df1d095a1ef1dabd65",
-        "timestamp": "2026-10-03T09:27:40Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "e63285c7014afce78b3ded68718b13d83e268ed2",
-        "timestamp": "2026-10-03T09:09:36Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "71645e3e72c2152d5abed9ea5f930ac4019530d1",
-        "timestamp": "2026-10-03T09:09:06Z"
       }
     ]
   },
@@ -1020,12 +1020,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b122239f9e448c09e4f1d950b5ead3693222f973",
+  "source_master_sha": "f6f92d7ae58629d7b693f8891973a7da75d7790c",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37114440399"
+    "run_id": "37114444540"
   }
 }
