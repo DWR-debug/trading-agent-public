@@ -57,6 +57,7 @@ ACTIVE_WORKFLOWS = {
     "h06-p2-r3-performance.yml",
     "c29-fresh-coverage-pit-repair.yml",
     "hosted-research-failover.yml",
+    "hosted-deterministic-frontier.yml",
     "intraday-directional-discovery.yml",
     "intraday-discovery.yml",
     "paper-2000-candidate.yml",
