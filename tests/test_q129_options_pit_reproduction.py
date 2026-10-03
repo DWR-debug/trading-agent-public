@@ -17,7 +17,7 @@ def test_q129_independent_workflow_is_hosted_and_boundary_safe():
     text = (ROOT / ".github/workflows/q129-independent-pit-reproduction.yml").read_text(encoding="utf-8")
     assert "runs-on: ubuntu-24.04" in text
     assert "Q129_INDEPENDENT_PIT_REPRODUCED" in text
-    assert '"performance": false' in text
+    assert 'data["scientific_boundary"]["performance"] is False' in text
     assert "automatic_promotion" in text
 
 
