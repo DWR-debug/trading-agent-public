@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-03-131R1-SEC-DISCLOSURE-COMPLEXITY",
+  "issue_number": 974,
+  "status": "PREREGISTERED_SOURCE_FEASIBILITY_PIT_ONLY",
+  "candidate_id": "Q131-R1",
+  "parent_candidate": "Q131",
+  "fixed_universe": ["SPGI","NDAQ","AMP","RJF","WMB","VLO","DVN","EMN"],
+  "fixed_window": {"start":"2025-09-22","end":"2025-09-24"},
+  "forms": ["8-K","8-K/A","10-Q","10-Q/A","10-K","10-K/A"],
+  "complexity_vector": [
+    "accepted_datetime",
+    "filer_cik",
+    "subject_cik",
+    "accession_number",
+    "filing_date",
+    "form",
+    "documents_count",
+    "primary_document_size_bytes",
+    "data_files_count",
+    "primary_document_ixbrl"
+  ],
+  "sampling": {
+    "daily_index_source": true,
+    "max_filings_per_issuer_form": 2,
+    "selection": "lexicographic ascending accession within fixed issuer/form/window"
+  },
+  "pit": {
+    "acceptance_datetime_is_primary_clock": true,
+    "exact_first_publication_time_proven": false,
+    "immutable_revision_lineage_proven": false,
+    "same_day_formal_use_allowed": false
+  },
+  "governance": {
+    "performance": false,
+    "holdout": false,
+    "selection": false,
+    "ranking": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "performance_authorized": false,
+    "automatic_promotion": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
