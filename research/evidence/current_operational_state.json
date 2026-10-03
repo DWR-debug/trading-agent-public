@@ -220,6 +220,16 @@
         "performance_authorization_allowed": false,
         "preregistration_path": "research/preregistrations/q121_sec_beneficial_ownership_timing_2026_10_03.json",
         "state": "DISCOVERY_PIT_ONLY_ACTIVE"
+      },
+      {
+        "candidate_inventory_path": "research/frontier/q171_q178_candidate_wave_2026_10_03.json",
+        "class": "public_domain_orthogonal_information_frontier",
+        "code": "FRONTIER-Q171-Q178",
+        "note": "Q171 sample PIT reconstruction is proven; Q174-Q177 source clocks/versions are characterized but candidate-specific PIT compilers remain required; Q173 is license-blocked.",
+        "performance_authorization_allowed": false,
+        "pit_readiness_receipt_path": "research/evidence/q171_q177_pit_readiness_2026_10_03.json",
+        "source_receipt_path": "research/evidence/q171_q178_source_feasibility_2026_10_03.json",
+        "state": "SOURCE_FEASIBILITY_COMPLETED_PIT_READINESS_ACTIVE"
       }
     ],
     "active_trials": [
@@ -784,7 +794,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T13:18:00.168465+00:00",
+  "generated_at_utc": "2026-10-03T13:21:07.659432+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1112,6 +1122,68 @@
     "workflow_run_id": 37123847584,
     "workflow_run_number": 5
   },
+  "q171_q177_pit_readiness": {
+    "artifact_id": 11275045873,
+    "artifact_sha256": "33ae3b36dca75bb06bed8d1cae963d5bed4f559672fb1745c98097288626be8e",
+    "candidate_range": "Q171-Q177",
+    "receipt_fingerprint": "1e571bf36a7ec522b66f14d9e7f41abdd79e8c817411b528710c43600a184372",
+    "receipt_type": "q171_q177_pit_readiness",
+    "results": {
+      "Q171": {
+        "boundary": "sample-only; issuer URL map and candidate-specific state compiler required",
+        "capture_digest": "D4IRZZ6NS7QW37BB2ODQPCUGG7ISRFGV",
+        "capture_timestamp": "20251014220259",
+        "crawl": "CC-MAIN-2025-43",
+        "index_sha256": "cd1e85d8cd25349b236df8faccbcad59d205f3ffbba52f41b8412ccb2e3faf6c",
+        "status": "PIT_SAMPLE_RECONSTRUCTABLE",
+        "warc_http_status": 206,
+        "warc_sha256": "1eafcb1574ad47bbe35b3504caf155783ead21812fb792c9d828b318804e902d"
+      },
+      "Q174": {
+        "blocker": "dataset-vintage stability/update-revision contract remains",
+        "pit_ready": false,
+        "status": "SOURCE_CLOCK_ACCESS_CONFIRMED"
+      },
+      "Q175": {
+        "blocker": "candidate-specific historical product-state compiler remains",
+        "pit_ready": false,
+        "status": "VERSIONED_PRODUCT_SEMANTICS_CONFIRMED"
+      },
+      "Q176": {
+        "blocker": "record-vintage/affiliation and correction handling remain",
+        "pit_ready": false,
+        "status": "MULTIPLE_DEPOSIT_CLOCKS_CONFIRMED"
+      },
+      "Q177": {
+        "blocker": "archive payload retrieval and fixed exposure taxonomy remain",
+        "pit_ready": false,
+        "status": "ARCHIVE_AND_REVISION_SEMANTICS_CONFIRMED"
+      }
+    },
+    "safety": {
+      "automatic_promotion": false,
+      "live_trading_enabled": false,
+      "orders_enabled": false,
+      "paper_only": true
+    },
+    "schema_version": "1.0",
+    "scientific_boundary": {
+      "asset_search": false,
+      "holdout": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "ranking": false,
+      "selection": false,
+      "threshold_search": false
+    },
+    "source_commit": "4b667fdaac95047c3be0e48545c42520e3a3cef9",
+    "status": "PIT_READINESS_COMPLETED_NO_PERFORMANCE",
+    "workflow_run_attempt": 1,
+    "workflow_run_id": 37125689936
+  },
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -1126,6 +1198,21 @@
     "open_agent_ready_issues": [],
     "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS/EVIDENCE: persist Q171-Q177 PIT readiness",
+        "sha": "c5f102d4ddf2a4d2c74d08de5a2b711e32c43293",
+        "timestamp": "2026-10-03T15:20:56+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3f64c2adeae6abdf1d2d435086e0bbbe5aef3e29",
+        "timestamp": "2026-10-03T13:18:02Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d839b879f490d8b3c730e08a118d3955c77b9f7a",
+        "timestamp": "2026-10-03T13:18:01Z"
+      },
       {
         "message": "RESEARCH: add Q171-Q177 PIT-readiness lane",
         "sha": "4b667fdaac95047c3be0e48545c42520e3a3cef9",
@@ -1150,21 +1237,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "a28bd6162a62eb5a0f341352d77d7c629bee6852",
         "timestamp": "2026-10-03T13:11:46Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "aa04adab78abc0d6e27098081e0b9dc2ba05ec73",
-        "timestamp": "2026-10-03T13:11:45Z"
-      },
-      {
-        "message": "RESEARCH: integrate public-domain frontier Q171-Q178",
-        "sha": "02c26f6d746f7b4d295f7f1f930a27d73481c5c5",
-        "timestamp": "2026-10-03T15:11:33+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "1287c984c1c4e2cbd8364a78f04da7acabd947de",
-        "timestamp": "2026-10-03T13:10:49Z"
       }
     ]
   },
@@ -1196,7 +1268,7 @@
     "decision_basis_stage": null,
     "latest_formal_status": "performance_completed_no_arm_passed_all_13_gates",
     "latest_formal_trial": "T-2026-10-01-H06P2R3-PERFORMANCE-01",
-    "next_research_focus_recorded": "Priority frontier is now the orthogonal SEC/13F/XBRL/Treasury/CFTC channel block plus Q121 and Q126-Q132. Q121 has a fixed SEC acceptance-time discovery/PIT compiler. Q126 reuses frozen SEC filing-arrival components; Q127 uses FINRA Reg-SHO daily short volume with revision-aware publication timing; Q128/Q129 remain blocked until a free, reproducible historical options source is established; Q130 remains blocked until a timestamped reproducible public attention history is established; Q131 has source access but its disclosure-complexity definition is not yet frozen; Q132 has a deterministic fixed-decomposition synthetic contract. Q119/Q120/Q122 remain active Treasury/CFTC source/PIT work. None of these states authorizes performance, holdout selection, tuning, promotion or live execution.",
+    "next_research_focus_recorded": "Priority frontier is Q171-Q178 public-domain orthogonal information research plus Q126-Q132. Q171 has sample-level Common Crawl historical capture reconstruction; Q174-Q177 have source-clock or version semantics confirmed but require candidate-specific PIT compilers; Q173 remains license-blocked. Q172/Q178 now have separate GitHub Advisory endpoint and OSV-format source contracts. All remain discovery/PIT-only with no performance, holdout selection, tuning, ranking, promotion or live execution.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -1234,12 +1306,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4b667fdaac95047c3be0e48545c42520e3a3cef9",
+  "source_master_sha": "c5f102d4ddf2a4d2c74d08de5a2b711e32c43293",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37125689875"
+    "run_id": "37125868278"
   }
 }
