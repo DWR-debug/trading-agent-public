@@ -1,0 +1,98 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-03-Q169-NOAA-SWPC-ARCHIVE-PIT-R3",
+  "status": "Q169_NOAA_ARCHIVE_SAMPLE_VERIFIED_PENDING_EXPOSURE_REVISION_JOIN",
+  "source": {
+    "provider": "NOAA SWPC / NOAA NCEI",
+    "archive_index_url": "https://www.ngdc.noaa.gov/stp/space-weather/swpc-products/daily_reports/geoalerts/2025/10/",
+    "semantics_url": "https://www.spaceweather.gov/products/notifications-timeline",
+    "sample_dates": [
+      "2025-10-14",
+      "2025-10-15"
+    ],
+    "index_http_status": 200,
+    "index_sha256": "939ea906654dee122c2370f15799192f6c04d522cef4fcb54247d61ade6ed9be",
+    "index_markers": {
+      "20251014GEOA.txt": true,
+      "20251015GEOA.txt": true
+    },
+    "semantics_http_status": 200,
+    "semantics_sha256": "74d9882231866ad5e89507dc90daa18d75978b8b919ee624b805da222817438f",
+    "semantic_markers": {
+      "plotted at the Issue Time": true,
+      "CANCELATIONS": true,
+      "corrected product": true,
+      "Archived Alert Timelines": true
+    },
+    "archive_results": {
+      "2025-10-14": {
+        "sample_date": "2025-10-14",
+        "filename": "20251014GEOA.txt",
+        "url": "https://www.ngdc.noaa.gov/stp/space-weather/swpc-products/daily_reports/geoalerts/2025/10/20251014GEOA.txt",
+        "http_status": 200,
+        "content_sha256": "e73f6e9b573555ca7656ad06999820d1f1437d79ccf1b97202b5ebd5df47ed76",
+        "status": "PIT_ARCHIVE_SAMPLE_VERIFIED",
+        "issued_datetime_utc": "2025-10-14T03:30:00+00:00",
+        "checks": {
+          "product_identity": true,
+          "prepared_by_noaa_swpc": true,
+          "geoalert_record_present": true,
+          "issued_date_matches_archive_day": true,
+          "nonempty_payload": true,
+          "issue_timestamp_has_utc": true
+        },
+        "bytes": 1337
+      },
+      "2025-10-15": {
+        "sample_date": "2025-10-15",
+        "filename": "20251015GEOA.txt",
+        "url": "https://www.ngdc.noaa.gov/stp/space-weather/swpc-products/daily_reports/geoalerts/2025/10/20251015GEOA.txt",
+        "http_status": 200,
+        "content_sha256": "3e79d7460ba10e11d0f4c6b16e3e464a33e64243beb9f17be5c5aaec64c4cf0c",
+        "status": "PIT_ARCHIVE_SAMPLE_VERIFIED",
+        "issued_datetime_utc": "2025-10-15T03:30:00+00:00",
+        "checks": {
+          "product_identity": true,
+          "prepared_by_noaa_swpc": true,
+          "geoalert_record_present": true,
+          "issued_date_matches_archive_day": true,
+          "nonempty_payload": true,
+          "issue_timestamp_has_utc": true
+        },
+        "bytes": 1289
+      }
+    }
+  },
+  "pit_boundary": {
+    "issue_time_available": true,
+    "historical_archive_sample_reconstructable": true,
+    "provider_revision_and_cancellation_semantics_documented": true,
+    "candidate_specific_exposure_map_frozen": false,
+    "candidate_specific_revision_lineage_reconstructed": false,
+    "candidate_pit_validated": false
+  },
+  "mutation_checks": {
+    "sample_order_invariance": true,
+    "future_cutoff_invariance": true,
+    "no_search_dimension_present": true
+  },
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "asset_selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "variant_search": false,
+    "candidate_ranking": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false
+  },
+  "receipt_fingerprint": "f4e9b13fa81dcc36479085eb73d223193b733b3a0c88253e4cb0fd72c679c7f7"
+}
