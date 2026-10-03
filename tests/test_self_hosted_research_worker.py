@@ -129,9 +129,7 @@ def test_every_lane_writes_non_formal_run_manifest(monkeypatch, tmp_path):
         )
         assert summary["lane"] == lane
         assert summary["formal_evidence_allowed"] is False
-        assert [result["index"] for result in summary["results"]] == list(
-            range(1, len(expected_codes) + 1)
-        )
+        assert [result["index"] for result in summary["results"]] == expected_order
         assert [result["returncode"] for result in summary["results"]] == expected_codes
 
 
@@ -223,6 +221,15 @@ def test_copilot_cli_publication_has_nonfatal_pr_creation_fallback():
     assert "Automatic PR creation is unavailable" in text
     assert "tests/safety passed" in text
 
+
+
+def test_permanent_loop_uses_short_capacity_pulse_and_rotation():
+    text = (
+        ROOT / ".github" / "workflows" / "permanent-pc-research-loop.yml"
+    ).read_text(encoding="utf-8")
+    assert 'cron: "*/10 * * * *"' in text
+    assert 'max-parallel: 2' in text
+    assert '--rotation-index "%GITHUB_RUN_NUMBER%"' in text
 
 
 def test_continuous_qa_is_matrix_orchestrated_and_parallel_bounded():
