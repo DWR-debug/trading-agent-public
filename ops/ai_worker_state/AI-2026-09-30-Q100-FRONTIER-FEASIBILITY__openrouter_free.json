@@ -25,11 +25,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 11.581,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 39.16,
+  "stdout": "\n\n# Worker Handoff — Q100 Frontier Feasibility Synthesis Adversarial Review\n\n## 1. Findings\n\n### 1.1 Circular readiness rule in Q100 gate\n\nIn `candidate_gate()`, when `existing_state == \"MACHINE_FEASIBILITY_IMPLEMENTED\"` and `pit_state == \"MACHINE_FEASIBILITY_PRESENT\"`, the code appends `FRESH_SYMBOL_DISJOINT_INPUT_FREEZE` to `required`. But **no process exists anywhere in the repository that produces this artifact**. The gate demands a deliverable that nothing can supply. This is a circular dependency: the gate will permanently block every machine-feasible candidate because the required next step is unobtainable.\n\n**Evidence:** `automation/q100_frontier_feasibility_synthesis.py` lines 37–39. The string `FRESH_SYMBOL_DISJOINT_INPUT_FREEZE` appears nowhere else in the codebase.\n\n### 1.2 Source-type branching creates hidden ranking\n\nThe `candidate_gate()` function branches on `source_lower` content (SEC Item 1A, public news, scheduled benchmark, SEC Form 4, SEC 13F, fails-to-deliver, short interest). Each branch appends a **different** required artifact and assigns a **different** reason string. This is functionally equivalent to ranking: candidates with \"SEC Item 1A\" text are routed through `HISTORICAL_10K_ARCHIVE_COMPLETENESS_AND_ACCEPTANCE_PIT` while \"public news\" candidates get `HISTORICAL_NEWS_ENTITY_MAPPING_AND_PIT`. The gate treats source families unequally, which is a de-facto family preference mechanism even though no performance scores are computed.\n\n### 1.3 No amendment/revision handling in SEC filing probes\n\n`recent_filing_rows()` in Q096 and `recent_rows()` in Q098 return all filings including amendments (forms ending in `/A`). A 10-K/A supersedes the original 10-K, but:\n- No code distinguishes original from amended filings.\n- No code validates that the most recent version is used.\n- The gate matrix has no field for amendment completeness.\n\nIf a candidate depends on risk-text from 10-K Item 1A and the 2024 10-K was amended in 2025, the probe could read stale text without any detection.\n\n### 1.4 Publication-time ambiguity\n\nFor C31 (public news), the frontier document references a \"conservative observed-time boundary\" but neither Q096 nor Q098 implements any time-boundary logic. The GDELT probes in Q098 use hardcoded dates (`20130401`, `20190101`, `20210101`) but there is no check that these represent publication time rather than ingestion time. GDELT's `published` vs. `created` timestamp distinction is not examined.\n\nFor M5 (benchmark rebalances), \"publication/effective-time validation\" is claimed but no code validates whether the Russell reconstitution announcement time differs from the effective date, which would create a look-ahead bias if conflated.\n\n### 1.5 CIK-to-entity mapping is unverified\n\nQ096 hardcodes `SEC_SAMPLE_CIKS` with CIKs for MSFT, AAPL, and sample filers. Nothing verifies that `0000789019` actually resolves to Microsoft Corporation in the current EDGAR system. A CIK reassignment (rare but possible) would silently corrupt all downstream probes.\n\n### 1.6 Study-boundary creep risk in test fixtures\n\n`test_q100_classifies_c29_without_ranking` constructs a Q096 payload with `candidate_gate_matrix` containing a row for `frontier:C29` with specific state values. If a future change alters the expected `existing_state` or `pit_state` values for C29, the test could fail or—worse—be \"fixed\" by changing the production code in a way that relaxes gates. The test encodes assumptions about C29's specific state that are not independently derived.\n\n### 1.7 Shared infrastructure undermines orthogonal reproducibility\n\nC29, C30, C31, M4, M5, Q097, C32, C33 all flow through the same Q096 → Q098 → Q100 pipeline. A single bug in `candidate_gate()` or `synthesize()` affects every candidate identically. This means:\n- A bug is not isolated to one candidate family.\n- \"Independently reproducible\" is not achievable when all candidates share the same synthesis function.\n- The gate logic itself is the single point of failure for the entire frontier's feasibility classification.\n\n### 1.8 No falsification path for \"MACHINE_FEASIBILITY_PRESENT\"\n\nThe `pit_state` value `\"MACHINE_FEASIBILITY_PRESENT\"` is asserted in test fixtures but there is no code that computes or verifies this state from actual PIT test results. It is an **unverified assertion**. A candidate could have `pit_state: \"MACHINE_FEASIBILITY_PRESENT\"` in the input JSON without any actual PIT mutation test having been run.\n\n## 2. Counterarguments\n\n**On 1.1 (circular readiness):** One could argue that `FRESH_SYMBOL_DISJOINT_INPUT_FREEZE` is a *future* requirement, not a *current* one—it's what the next gate needs, not what this gate needs. But the function returns `readiness: \"BLOCKED\"` with `reason: \"PIT_OR_HISTORICAL_PROVENANCE_PENDING\"` for these candidates, implying they are not ready to advance. If the intent is merely to document the next step, the readiness status should be `\"NEXT_STEP_DOCUMENTED\"` not `\"BLOCKED\"`.\n\n**On 1.2 (source-type ranking):** The branching could be defended as source-appropriate gate selection—different data sources legitimately require different archival checks. But the asymmetry extends to the *reason* field, which could influence human review bias. A neutral design would use a uniform lookup table keyed by source type rather than inline if/elif chains that implicitly privilege certain source families.\n\n**On 1.7 (shared infrastructure):** Shared synthesis code is a practical engineering choice. The defense is that the synthesis function is pure (same input → same output) and tested. However, purity does not prevent a common logic error from propagating to all candidates simultaneously.\n\n## 3. Concrete Deterministic Checks\n\nAdd these as unit tests or lint rules:\n\n1. **`test_no_unobtainable_required_artifacts`**: For every `required` string emitted by `candidate_gate()`, grep the entire repository for that string outside the gate function itself. If a required artifact",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1791021994-wOYgHuBIYHnmnLjUWFBu",
+  "usage": {
+    "prompt_tokens": 5520,
+    "completion_tokens": 3200,
+    "total_tokens": 8720,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1938,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
