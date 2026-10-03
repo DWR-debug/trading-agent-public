@@ -824,7 +824,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T15:13:20.790141+00:00",
+  "generated_at_utc": "2026-10-03T15:16:51.660890+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1229,44 +1229,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "Merge pull request #951 from DWR-debug/fix/q169-noaa-r2-archive-contract-20261003",
-        "sha": "0757cddd590cc72951d33f6167f2c14d7a5bba0c",
-        "timestamp": "2026-10-03T17:13:09+02:00"
+        "message": "Merge pull request #952 from DWR-debug/fix/q169-r3-semantic-marker-20261003",
+        "sha": "9355c3dc45960e3d77e4045f81844a2cee86eef4",
+        "timestamp": "2026-10-03T17:16:39+02:00"
       },
       {
-        "message": "OPS: align Q169 workflow with R2 archive contract",
-        "sha": "95328bed668f05fa5dae0892cb0373ff7f1caf11",
-        "timestamp": "2026-10-03T17:11:34+02:00"
+        "message": "OPS: align Q169 workflow with R3",
+        "sha": "89fca8c6365a34a1121731362b44531179fd3ccf",
+        "timestamp": "2026-10-03T17:15:07+02:00"
       },
       {
-        "message": "TEST: enforce Q169 R2 filename and label separation",
-        "sha": "e243ac361c7240ff59dbc2675f06c9e13af154c2",
-        "timestamp": "2026-10-03T17:11:30+02:00"
+        "message": "TEST: enforce Q169 stable semantic marker set",
+        "sha": "7e1e8c100289099ebb6bed4b9de6d589d64d28e4",
+        "timestamp": "2026-10-03T17:15:05+02:00"
       },
       {
-        "message": "GOV: register Q169 R2 archive contract",
-        "sha": "979beeaee9bd0f968317d6753c08ca3f4b76200a",
-        "timestamp": "2026-10-03T17:11:27+02:00"
+        "message": "GOV: register Q169 R3 contract",
+        "sha": "8d7e0021c044c89485ef1495b583468eb5910a7c",
+        "timestamp": "2026-10-03T17:14:58+02:00"
       },
       {
-        "message": "DOC: formalize Q169 R2 NOAA archive filename contract",
-        "sha": "c415b77a3dec61e565a30ddb20ec0ed827607735",
-        "timestamp": "2026-10-03T17:11:24+02:00"
+        "message": "DOC: record Q169 R3 marker-stability refinement",
+        "sha": "3fa51f0f68ce16f7eeac4b4c8a4b65f38ea0a7b7",
+        "timestamp": "2026-10-03T17:14:54+02:00"
       },
       {
-        "message": "FIX: align Q169 URL and Product filenames",
-        "sha": "0b0762a38e563f52935d85fe9a43ded0b3e797e8",
-        "timestamp": "2026-10-03T17:10:12+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "036e9a6d2796823a8e8d434b931a4f32b55976e5",
-        "timestamp": "2026-10-03T15:08:30Z"
+        "message": "FIX: stabilize Q169 NOAA semantics markers",
+        "sha": "3aefb0f170a107844a50f38a0a3349a92c29ffd2",
+        "timestamp": "2026-10-03T17:14:38+02:00"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "a3949b6f052ea70c4a6e06cec4ceba198f529201",
-        "timestamp": "2026-10-03T15:08:28Z"
+        "sha": "d97d12094cca4fc21aca52958c926738ad9db404",
+        "timestamp": "2026-10-03T15:13:23Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "73846caca823d0ad8b6dc8b397b1e6748fdcf24b",
+        "timestamp": "2026-10-03T15:13:21Z"
       }
     ]
   },
@@ -1336,12 +1336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0757cddd590cc72951d33f6167f2c14d7a5bba0c",
+  "source_master_sha": "9355c3dc45960e3d77e4045f81844a2cee86eef4",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37132464638"
+    "run_id": "37132677088"
   }
 }
