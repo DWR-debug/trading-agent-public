@@ -25,13 +25,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.518,
-  "stdout": "",
-  "stderr": "OpenRouter HTTP 429: {\"error\":{\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\",\"code\":429,\"metadata\":{\"headers\":{\"X-RateLimit-Limit\":\"50\",\"X-RateLimit-Remaining\":\"0\",\"X-RateLimit-Reset\":\"1790985600000\"},\"limit_source\":\"openrouter_free_tier_daily\",\"remedy_hint\":\"Wait for the daily reset (see X-RateLimit-Reset), or purchase credits to raise your free-model daily limit.\",\"provider_name\":null,\"previous_errors\":[{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"}]}},\"user_id\":\"user_3K3ZJKAZq4v0T1h5GaKRbugCtn4\"}",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 12.507,
+  "stdout": "**Worker Handoff: AI-2026-09-30-Q101-NEGATIVE-EVIDENCE**\n\n**Findings**\n- **Risk/stability recurrence**: q077r1 and q081r4 both show `max_drawdown_percent` far above 10% (36.1% and 45.1%) in research, with rolling windows reaching 27.9–32.4%. This confirms recurring `research_drawdown_lte_10pct` and `rolling_average_drawdown_lte_10pct` failures.\n- **Control-relative failure**: `CONTROL_6SLEEVE_ENSEMBLE` exhibits positive but modest research returns (2.04–2.82) with large drawdowns; holdout returns shrink to 0.34–0.51 while drawdowns remain material (15.6–24.1%).\n- **OOS fragility**: Holdout profit factors (~1.12–1.17) barely exceed research profit factors (~1.12–1.14), suggesting limited generalization despite gate failures.\n- **Data/PIT blockers**: External inspiration requires public historical news corpora, stable article identifiers, and filing acceptance timestamps before formal admission.\n\n**Counterarguments / Confounds**\n- **State-dependent predictability** (Cong et al.): Overlaps with Q082:C22-C25 if those are behavioral-state variables. Discard if state partition is learned from holdout outcomes.\n- **Pure-news residual** (Didisheim et al.): Overlaps with C31 raw sentiment. Discard if no public corpus with stable identifiers; residual must be the experimental object, not raw news.\n- **Shareholder experience** (Riley & Zhou): Overlaps with raw momentum. Discard if holder experience is collinear with return transforms rather than a distinct behavioral state.\n- **Risk-text peers** (Yuan & Zhang): Overlaps with C30 industry membership. Discard if risk similarity cannot be separated from industry substitution.\n- **Institutional provenance / anomaly timing / index reconstitution**: Insufficient source detail; treat as unvalidated hypotheses until public-data compatibility is confirmed.\n\n**Concrete Next Actions (fixed, falsifiable, no new market data)**\n1. Re-run q101/q102 on full evidence set to quantify exact gate recurrence counts and regime consensus directions.\n2. Fix deterministic state descriptors ex-ante; test distribution stability across time blocks (KS / chi-square) before any holdout inspection.\n3. Audit C31 news corpus for public availability, stable article identifiers, and PIT-safe baseline definition.\n4. Ablation test for C30: compare risk-similarity peer links vs industry membership using existing 10-K filings.\n5. Verify Q082:C22-C25 interpretation as behavioral-state variable vs return transform using OHLCV-only reconstruction.\n6. Document cheap integrity tests: state-stability p-values, news-residual OOS correlation, peer-link vs industry AUC, holder-experience partial correlation controlling for momentum.\n\n**Uncertainty**\n- Evidence files truncated; exact gate recurrence counts and turnover/cost pressure metrics unconfirmed.\n- Foreign-institution source incomplete; cannot assess public-data compatibility.\n- No performance authorization; these are design constraints only, not scientific evidence.",
+  "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": null,
-  "usage": null
+  "response_id": "gen-1790986767-tzRASFqu7zJmiRjgltNe",
+  "usage": {
+    "prompt_tokens": 6781,
+    "completion_tokens": 2584,
+    "total_tokens": 9365,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1908,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
