@@ -58,10 +58,10 @@ def test_parse_fixed_width_form_index():
     from automation.q121r3_sec_form_index_reverse_issuer import parse_index
 
     body = (
-        "Description: Form Index of EDGAR Dissemination Feed\\n"
-        "Form Type   Company Name                                              CIK         Date Filed  File Name\\n"
-        "----------------------------------------------------------------------------------------------------------------\\n"
-        "SC 13G      SPGI TEST COMPANY                                          64040       2024-02-13  edgar/data/64040/000110465924021877.txt\\n"
+        "Description: Form Index of EDGAR Dissemination Feed\n"
+        "Form Type   Company Name                                              CIK         Date Filed  File Name\n"
+        "----------------------------------------------------------------------------------------------------------------\n"
+        "SC 13G      SPGI TEST COMPANY                                          64040       2024-02-13  edgar/data/64040/000110465924021877.txt\n"
     ).encode("latin-1")
     assert parse_index(body) == [{
         "cik": "0000064040",
