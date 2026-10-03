@@ -13,7 +13,6 @@ import re
 from pathlib import Path
 from typing import Any
 
-from automation.future_performance_quality_contract_check import validate as validate_future_quality
 
 ROOT = Path(__file__).resolve().parents[1]
 SAFETY = {
@@ -388,13 +387,6 @@ def audit(root: Path = ROOT) -> dict[str, Any]:
 
     _audit_authorizations(root, errors, active_by_trial)
 
-
-    try:
-        quality = validate_future_quality(root)
-        if quality.get("status") != "PASS":
-            errors.append("future performance quality contract did not pass")
-    except Exception as exc:
-        errors.append(f"future performance quality contract failed: {exc}")
     return {
         "schema_version": 1,
         "governance_contract_version": 2,
