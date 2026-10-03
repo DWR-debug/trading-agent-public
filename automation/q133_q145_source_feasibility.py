@@ -19,6 +19,23 @@ ROOT = Path(__file__).resolve().parents[1]
 
 PROBES: dict[str, dict[str, Any]] = {
 
+    "COMMON_CRAWL_CDXJ": {
+        "url": "https://commoncrawl.org/cdxj-index",
+        "markers": ["CDXJ Index", "index.commoncrawl.org", "WARC"],
+    },
+    "GITHUB_ADVISORY": {
+        "url": "https://docs.github.com/en/rest/security-advisories/global-advisories",
+        "markers": ["REST API", "global security advisories", "OSV"],
+    },
+    "OPENSKY_API": {
+        "url": "https://opensky-network.org/about/faq",
+        "markers": ["historical data", "commercial use", "consent"],
+        "license_gate": "CONSENT_REQUIRED_FOR_COMMERCIAL_USE",
+    },
+    "NOAA_ERDDAP": {
+        "url": "https://erddap.gml.noaa.gov/erddap/rest.html",
+        "markers": ["RESTful web service", ".json", "datasets"],
+    },
     "SEC_EDGAR_SUBMISSIONS": {
         "url": "https://data.sec.gov/submissions/CIK0000320193.json",
         "markers": ["filings", "recent", "accessionNumber"],
@@ -216,6 +233,14 @@ CANDIDATE_SOURCES: dict[str, list[str]] = {
     "Q168": ["USGS_EARTHQUAKE", "SEC_EDGAR_SUBMISSIONS"],
     "Q169": ["NOAA_SWPC", "SEC_EDGAR_SUBMISSIONS"],
     "Q170": ["NASA_FIRMS", "SEC_EDGAR_SUBMISSIONS"],
+    "Q171": ["COMMON_CRAWL_CDXJ", "SEC_EDGAR_SUBMISSIONS"],
+    "Q172": ["GITHUB_ADVISORY", "SEC_EDGAR_SUBMISSIONS"],
+    "Q173": ["OPENSKY_API", "SEC_EDGAR_SUBMISSIONS"],
+    "Q174": ["NOAA_ERDDAP", "SEC_EDGAR_SUBMISSIONS"],
+    "Q175": ["USGS_EARTHQUAKE", "SEC_EDGAR_SUBMISSIONS"],
+    "Q176": ["CROSSREF_API", "SEC_EDGAR_SUBMISSIONS"],
+    "Q177": ["NOAA_SWPC", "SEC_EDGAR_SUBMISSIONS"],
+    "Q178": ["COMMON_CRAWL_CDXJ", "GITHUB_ADVISORY", "SEC_EDGAR_SUBMISSIONS"],
 }
 
 
@@ -276,6 +301,7 @@ def main() -> int:
             "reachable": status == 200,
             "required_markers_present": not missing and status == 200,
             "missing_markers": missing,
+            "license_gate": spec.get("license_gate"),
             "content_sha256": digest(body),
         }
 
@@ -285,7 +311,14 @@ def main() -> int:
             status = "DESIGN_ONLY_NO_SINGLE_SOURCE_PROBE"
         else:
             checks = [source_results[source_id]["required_markers_present"] for source_id in source_ids]
-            status = "SOURCE_PROBES_PASSED" if all(checks) else "BLOCKED_SOURCE_PROBE"
+            license_block = any(
+                source_results[source_id].get("license_gate") == "CONSENT_REQUIRED_FOR_COMMERCIAL_USE"
+                for source_id in source_ids
+            )
+            if license_block:
+                status = "BLOCKED_LICENSE_GATE"
+            else:
+                status = "SOURCE_PROBES_PASSED" if all(checks) else "BLOCKED_SOURCE_PROBE"
         candidate_results.append({
             "candidate_id": candidate_id,
             "status": status,
@@ -295,7 +328,7 @@ def main() -> int:
     mutations = future_mutation_invariance()
     result = {
         "schema_version": "1.0",
-        "task_id": "Q-2026-10-03-Q133-Q170-SOURCE-FEASIBILITY",
+        "task_id": "Q-2026-10-03-Q133-Q178-SOURCE-FEASIBILITY",
         "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
         "source_results": source_results,
         "candidate_results": candidate_results,
