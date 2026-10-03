@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "receipt_type": "q129_source_asset_verification",
+  "candidate_id": "Q129",
+  "status": "SOURCE_ASSETS_VERIFIED_PENDING_PIT_VALIDATION",
+  "generated_at_utc": "2026-10-03T11:49:44.1056843Z",
+  "workflow_run_id": 37120859222,
+  "workflow_run_attempt": 1,
+  "source_commit": "1b1fd356573fd404d2f7a2c51331eae97fa97fca",
+  "artifact_id": 11272873733,
+  "artifact_sha256": "a5f273ee00c7f165e2e4cd24c0f44ec4669167798e57e826a9813bb6dc0405c1",
+  "verified_assets": {
+    "SPY_options.parquet": {
+      "rows": 24681665,
+      "bytes": 631738559,
+      "sha256": "a7152991b45b81f090f970e945bf88def8093b8ecb9b250e9891cb6d88041f0a",
+      "status": "VERIFIED"
+    },
+    "QQQ_options.parquet": {
+      "rows": 15345882,
+      "bytes": 387476183,
+      "sha256": "1f831556cd87ec9d7af43d3b47a69a829ffb2fb199cfcef4ff55d289badf8734",
+      "status": "VERIFIED"
+    },
+    "IWM_options.parquet": {
+      "rows": 13379573,
+      "bytes": 308766441,
+      "sha256": "d16a728116f8095c97c39ed66e75000bf66a0ab422b678002eb9f6086fd10ee5",
+      "status": "VERIFIED"
+    }
+  },
+  "schema_validation": "PASSED",
+  "same_day_decision_use_allowed": false,
+  "pit_status": "PENDING_INDEPENDENT_PIT_VALIDATION",
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "parameter_search": false,
+    "candidate_ranking": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false
+  },
+  "notes": [
+    "The verifier fetched the three pinned option assets from the public data-v1 GitHub release.",
+    "The workflow log reported Q129_SOURCE_ASSETS_VERIFIED and completed the source-boundary assertions.",
+    "The 30-day artifact is retained by GitHub Actions; this compact receipt is persisted permanently in the repository.",
+    "The original upstream source is documented as discontinued; the surviving data-v1 release is therefore treated as the pinned reproducibility source."
+  ]
+}
