@@ -202,6 +202,16 @@
         "parent_code": "market_state_and_allocator_frontier",
         "performance_authorization_allowed": false,
         "state": "DESIGN_ONLY_ACTIVE"
+      },
+      {
+        "class": "sec_beneficial_ownership_disclosure_timing",
+        "code": "121",
+        "design_document": "docs/research_design/Q121_SEC_BENEFICIAL_OWNERSHIP_TIMING_2026-10-03.md",
+        "issue_number": 882,
+        "parent_code": "109",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q121_sec_beneficial_ownership_timing_2026_10_03.json",
+        "state": "DISCOVERY_PIT_ONLY_ACTIVE"
       }
     ],
     "active_trials": [
@@ -684,7 +694,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-03T07:27:47.263978+00:00",
+  "generated_at_utc": "2026-10-03T07:29:44.966494+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -881,44 +891,44 @@
     ],
     "recent_commits": [
       {
-        "message": "OPS: record AI worker state",
-        "sha": "bb4890f4fb67fb2543f586a2162be9aa61bb821e",
-        "timestamp": "2026-10-03T07:27:39Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "149e0778d072e2d5357fc30544a86e2b9d93e433",
-        "timestamp": "2026-10-03T07:27:34Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b87755fcf32bddfc7d58701753ca66a29c4b9a76",
-        "timestamp": "2026-10-03T07:27:33Z"
+        "message": "RESEARCH: add Q121 SEC beneficial-ownership timing discovery (rebased) (#885)",
+        "sha": "e498dcd0bdf5270ecbca3c392a9a47de2e5ee1bb",
+        "timestamp": "2026-10-03T09:29:33+02:00"
       },
       {
         "message": "OPS: record AI worker state",
-        "sha": "11c7999adb3b18a8d6af52905dadd2f4ba9e8698",
-        "timestamp": "2026-10-03T07:27:25Z"
+        "sha": "d3d02330590375719af3b989a0604ca36f16c9ce",
+        "timestamp": "2026-10-03T07:28:07Z"
       },
       {
-        "message": "RESEARCH: add Q118 synthetic composition structural validation (#884)",
-        "sha": "e30328f5616715b2ea38f830c2ec3ce9171f10c5",
-        "timestamp": "2026-10-03T09:27:21+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "c25ddd7fee9af0e637c68cc58d55b4952ad7c39a",
+        "timestamp": "2026-10-03T07:28:04Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "63ea6dd3205c2e2c3fe299a014188fabe620f8e9",
+        "timestamp": "2026-10-03T07:28:01Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "85deef1f4c940e06f6566532bd43dbf6e3dbbad2",
+        "timestamp": "2026-10-03T07:27:57Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "c82550e89768849563e0d651ea68b4db7d7c2c90",
+        "timestamp": "2026-10-03T07:27:53Z"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "7f8c8096fb7b69bd81c19e40f0dad15f56e2e976",
-        "timestamp": "2026-10-03T07:27:19Z"
+        "sha": "462c932f1e0df020cb73faff6937b971fa4b85de",
+        "timestamp": "2026-10-03T07:27:48Z"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "ed36e60723cbe107d3fe6333b3eb9d8363c29c7e",
-        "timestamp": "2026-10-03T07:27:17Z"
-      },
-      {
-        "message": "RESEARCH: enforce orthogonal search, early robustness, immediate replication (#881)",
-        "sha": "f4bc1ccbf85f087001201cdc52def0e3d83c6027",
-        "timestamp": "2026-10-03T09:27:09+02:00"
+        "sha": "9b19209cd65bba0fb39c1ed4308ced01d35db314",
+        "timestamp": "2026-10-03T07:27:47Z"
       }
     ]
   },
@@ -988,12 +998,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "bb4890f4fb67fb2543f586a2162be9aa61bb821e",
+  "source_master_sha": "e498dcd0bdf5270ecbca3c392a9a47de2e5ee1bb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37106400126"
+    "run_id": "37106515518"
   }
 }
