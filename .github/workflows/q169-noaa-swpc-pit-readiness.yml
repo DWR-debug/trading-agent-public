@@ -1,4 +1,4 @@
-name: Q169 NOAA SWPC PIT Readiness R2
+name: Q169 NOAA SWPC PIT Readiness R3
 
 on:
   schedule:
@@ -71,7 +71,7 @@ jobs:
           print("Q169_NOAA_SWPC_PIT_ARCHIVE_R2_OK")
           PY
 
-      - name: Persist material Q169 R2 PIT receipt
+      - name: Persist material Q169 R3 PIT receipt
         if: success() && github.event_name != 'pull_request'
         shell: bash
         env:
@@ -80,7 +80,7 @@ jobs:
         run: |
           set -euo pipefail
           input="research/runs/q169_noaa_swpc_pit_readiness/${GITHUB_RUN_ID}.json"
-          latest="research/evidence/q169_noaa_swpc_archive_pit_r2_latest.json"
+          latest="research/evidence/q169_noaa_swpc_archive_pit_r3_latest.json"
           test -f "$input"
           for attempt in 1 2 3; do
             git fetch origin master --quiet
@@ -107,7 +107,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q169-noaa-swpc-pit-readiness-r2-${{ github.run_id }}-${{ github.run_attempt }}
+          name: q169-noaa-swpc-pit-readiness-r3-${{ github.run_id }}-${{ github.run_attempt }}
           path: research/runs/q169_noaa_swpc_pit_readiness/
           if-no-files-found: error
           retention-days: 30

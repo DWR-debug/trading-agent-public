@@ -1,4 +1,4 @@
-# Q169 NOAA SWPC PIT Archive Contract — 2026-10-03
+# Q169 NOAA SWPC PIT Archive Contract — R3 marker-stability refinement — 2026-10-03
 
 ## Objective
 

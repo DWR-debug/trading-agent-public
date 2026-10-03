@@ -32,3 +32,12 @@ def test_q169_probe_freezes_exact_noaa_daily_filenames():
     assert '"product_label": "1014GEOA.txt"' in text
     assert '"url_filename": "20251015GEOA.txt"' in text
     assert '"product_label": "1015GEOA.txt"' in text
+
+
+def test_q169_semantics_markers_are_stable_requirements_only():
+    text = (ROOT / "automation/q169_noaa_swpc_archive_pit_probe.py").read_text(encoding="utf-8")
+    assert '"plotted at the Issue Time"' in text
+    assert '"CANCELATIONS"' in text
+    assert '"corrected product"' in text
+    assert '"Archived Alert Timelines"' in text
+    assert '"SWPC maintains an archive of SWPC products"' not in text
