@@ -230,7 +230,7 @@ def test_permanent_loop_uses_short_local_capacity_pulse():
     text = (
         ROOT / ".github" / "workflows" / "permanent-pc-research-loop.yml"
     ).read_text(encoding="utf-8")
-    assert 'cron: "*/10 * * * *"' in text
+    assert 'cron: "*/30 * * * *"' in text
     assert 'max-parallel: 1' in text
     assert "lane: [local_reproduction]" in text
     assert "runs-on: [self-hosted, trading-agent-research]" in text
@@ -287,7 +287,8 @@ def test_s10_diagnostics_do_not_compete_for_parallel_phone_capacity():
     assert "workflow_dispatch:" in runtime
     assert 'max-parallel: 1' in runtime
     assert "slot: [a]" in runtime
-    assert 'cron: "45 3 * * *"' in runtime
+    # Runtime diagnostics are manual-only by design.
+    assert 'cron: "45 3 * * *"' not in runtime
 
 
 def test_self_hosted_continuous_qa_is_scheduled_and_non_formal():
