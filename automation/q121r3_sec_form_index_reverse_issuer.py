@@ -177,6 +177,12 @@ def run(output: Path) -> dict[str, object]:
         })
         all_rows.extend(parsed)
 
+    print("Q121R3_INDEX_DIAG rows=", len(all_rows))
+    for row in all_rows:
+        if row["filed_date"] in {"2024-02-13", "2024-07-30"} and row["form"] in FORM_SET:
+            if any(key in row["filename"] for key in ("0001104659-24-021877", "0001193125-24-189043")):
+                print("Q121R3_CONTROL_FILENAME_DIAG", json.dumps(row, sort_keys=True))
+
     by_accession: dict[str, dict[str, str]] = {}
     for row in all_rows:
         accession = accession_from_filename(row["filename"])
