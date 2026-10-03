@@ -70,20 +70,6 @@ jobs:
           mkdir -p "research/runs/self_hosted/autonomous/${GITHUB_RUN_ID}/hosted_frontier"
           python -m automation.self_hosted_research_worker             --lane autonomous_frontier_qa             --rotation-index "${GITHUB_RUN_NUMBER}"             --output-dir "research/runs/self_hosted/autonomous/${GITHUB_RUN_ID}/hosted_frontier"
 
-      - name: Run source/PIT priority checks directly
-        shell: bash
-        run: |
-          set -euo pipefail
-          OUT="research/runs/self_hosted/autonomous/${GITHUB_RUN_ID}/hosted_frontier/priority"
-          mkdir -p "$OUT"
-          python -m automation.q121_sec_beneficial_ownership_timing --output "$OUT/q121.json"
-          python -m automation.q126_q132_frontier_feasibility --output "$OUT/q126_q132.json"
-          python -m automation.q122_cftc_release_date_evidence --output "$OUT/q122.json"
-          python -m automation.q120_cftc_source_feasibility --output "$OUT/q120.json"
-          python -m automation.q119_treasury_source_feasibility --output "$OUT/q119.json"
-          python -m automation.q104_i22_filing_arrival_compiler --output "$OUT/q104_i22.json"
-          python -m automation.q104_xbrl_concept_freeze_audit --output "$OUT/q104_xbrl.json"
-          python -m automation.q109_n7_common_holder_graph --output "$OUT/q109_n7.json"
 
       - name: Validate structural safety and provenance
         if: always()
