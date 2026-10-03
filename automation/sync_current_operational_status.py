@@ -427,6 +427,13 @@ def generate(
                     "work flowing without duplicate or artificial jobs"
                 ),
             },
+            "deep_frontier_source_feasibility": {
+                "workflow": ".github/workflows/deep-frontier-source-feasibility.yml",
+                "cadence": "17 */12 * * *",
+                "runner": "ubuntu-24.04",
+                "formal_evidence_allowed": False,
+                "purpose": "public/free source and PIT feasibility only",
+            },
             "hosted_deterministic_frontier": {
                 "workflow": ".github/workflows/hosted-deterministic-frontier.yml",
                 "cadence": "*/10 * * * *",
