@@ -297,6 +297,21 @@ def generate(
             "discovery/PIT-only with no performance, holdout selection, tuning, ranking, promotion or live execution."
         )
     elif (ROOT / "automation/q126_q132_frontier_feasibility.py").is_file():
+    # Explicitly surface newly active correction tracks so the human current-status document
+    # cannot be dominated by an older frontier override. Scientific boundaries remain unchanged.
+    if (
+        (ROOT / "research/preregistrations/q121r1_sec_reverse_issuer_coverage_2026_10_03.json").is_file()
+        or (ROOT / "research/preregistrations/q127r1_finra_regsho_historical_pit_2026_10_03.json").is_file()
+    ):
+        recorded_next_research_focus = (
+            "Active correction tracks: Q121-R1 independently repairs SEC beneficial-ownership issuer "
+            "coverage by separating subject-issuer and filer identity; Q127-R1 tests fixed historical "
+            "FINRA Reg-SHO source retrieval and preserves the unresolved publication/revision boundary. "
+            "These are source/PIT feasibility tracks only. Q171-Q178 and Q126-Q132 remain active "
+            "orthogonal frontier work; Q104/I22/Q119/Q120/Q125 remain formal-readiness work. "
+            "No performance authorization, holdout selection, tuning, ranking, promotion or live "
+            "execution is created by these tracks."
+
         recorded_next_research_focus = (
             "Priority frontier is now the orthogonal SEC/13F/XBRL/Treasury/CFTC channel block plus "
             "Q121 and Q126-Q132. Q121 has a fixed SEC acceptance-time discovery/PIT compiler. "
