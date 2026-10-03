@@ -338,13 +338,19 @@ def generate(
         recorded_next_research_focus = (
             "Verified 2026-10-03 Source/PIT outcomes: Q121-R1 issuer-oriented SEC browse route was "
             "falsified by its preregistered subject-issuer identity contract; Q121-R2 was therefore "
-            "blocked without reconciliation; Q127-R1 historical FINRA Reg-SHO retrieval completed but "
-            "revision lineage and same-day PIT safety remain unresolved; Q130-R1 historical Wikimedia "
-            "attention retrieval completed but its publication/revision boundary remains unresolved; "
-            "Q131-R1 produced no matching filings in its fixed preregistered window, so no complexity "
-            "vector was inferred. Next work is an independently preregistered alternative Q121 source "
-            "route plus candidate-specific PIT compilers for the active orthogonal frontier. No outcome "
-            "above authorizes performance, holdout selection, tuning, ranking, promotion or live execution."
+            "blocked without reconciliation; Q121-R3 completed the official SEC quarterly form-index "
+            "route on the frozen window (7 quarters, 61,818 relevant form rows, 3 frozen controls); "
+            "Q121-R4 independently completed the SEC quarterly master-index route on the same frozen "
+            "window/control set (7 quarters, 61,818 relevant form rows, 3 frozen controls). The two "
+            "routes establish source-route feasibility and controlled identity recovery only; same-day "
+            "PIT safety, performance and full subject-issuer population reconstruction remain open. "
+            "Q127-R1 historical FINRA Reg-SHO retrieval completed but revision lineage and same-day PIT "
+            "safety remain unresolved; Q130-R1 historical Wikimedia attention retrieval completed but "
+            "its publication/revision boundary remains unresolved; Q131-R1 produced no matching filings "
+            "in its fixed preregistered window, so no complexity vector was inferred. Next work is "
+            "dual-source Q121 reconciliation/PIT compilation before any performance consideration. No "
+            "outcome above authorizes performance, holdout selection, tuning, ranking, promotion or "
+            "live execution."
         )
 
     current = {
