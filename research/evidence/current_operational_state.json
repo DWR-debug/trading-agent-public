@@ -817,7 +817,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T14:08:54.255076+00:00",
+  "generated_at_utc": "2026-10-03T14:17:16.895158+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1222,11 +1222,11 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
-        "headRefName": "research/q147-q148-eia-clock-contract-20261003",
-        "number": 935,
-        "title": "RESEARCH: define Q147/Q148 EIA PIT clock contract",
-        "updatedAt": "2026-10-03T14:08:26Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/935"
+        "headRefName": "research/q147-q148-eia-clock-contract-r2-20261003",
+        "number": 937,
+        "title": "RESEARCH: Q147/Q148 EIA PIT clock contract R2",
+        "updatedAt": "2026-10-03T14:14:22Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/937"
       },
       {
         "baseRefName": "master",
@@ -1239,44 +1239,44 @@
     ],
     "recent_commits": [
       {
+        "message": "Merge pull request #936 from DWR-debug/ops/h06-postpass-trigger-hardening-20261003",
+        "sha": "982ead4b125ce4c66deec489688991a87f055f89",
+        "timestamp": "2026-10-03T16:17:05+02:00"
+      },
+      {
+        "message": "TEST: guard authorization and replication triggers",
+        "sha": "01c3e82f3ccf769b010ae53597fbd2897b1bc154",
+        "timestamp": "2026-10-03T16:13:18+02:00"
+      },
+      {
+        "message": "CLEANUP: remove obsolete H06 push guard branch",
+        "sha": "cf2d2274146f3072532805e95603996e384effca",
+        "timestamp": "2026-10-03T16:10:46+02:00"
+      },
+      {
+        "message": "OPS: trigger post-pass replication only on performance evidence",
+        "sha": "9ef0bf49402b4fa0b6b99df960e4a616b201d4e9",
+        "timestamp": "2026-10-03T16:10:34+02:00"
+      },
+      {
+        "message": "OPS: make H06-R1 authorization explicit-dispatch only",
+        "sha": "7b67fec52339421cc7c930af8e22e07f71cd1b9b",
+        "timestamp": "2026-10-03T16:10:31+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8568a0709f10cad8a7e3d4866631abaeef095f7a",
+        "timestamp": "2026-10-03T14:08:56Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "015b023e3a3340607f34fa5ea65cb3241ec6dffc",
+        "timestamp": "2026-10-03T14:08:55Z"
+      },
+      {
         "message": "Merge pull request #934 from DWR-debug/research/q137-q144-micro-pit-r1-20261003",
         "sha": "e0641ff414af2b1efcbde10dc0371dee67a5fa90",
         "timestamp": "2026-10-03T16:08:43+02:00"
-      },
-      {
-        "message": "FIX: treat Q137 Q144 partial sample as explicit evidence",
-        "sha": "453ce314736b93027235ec1dc8e0b89e42f69a19",
-        "timestamp": "2026-10-03T16:07:19+02:00"
-      },
-      {
-        "message": "FIX: classify Q137 Q144 partial sample results without pipeline failure",
-        "sha": "cd1e52eadc0389c810bd27449aff87572bab0ecf",
-        "timestamp": "2026-10-03T16:06:09+02:00"
-      },
-      {
-        "message": "GOVERNANCE: register Q137 Q144 micro PIT subgate",
-        "sha": "3e0e6ccb5eaa3fced969149a8d1f6e98bf7e36c4",
-        "timestamp": "2026-10-03T16:04:29+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q137 Q144 micro PIT sample to PIT wave",
-        "sha": "b5983fe69189c623ec3d7628376e63cb47a82d7c",
-        "timestamp": "2026-10-03T16:04:19+02:00"
-      },
-      {
-        "message": "TEST: guard Q137 Q144 micro PIT boundary",
-        "sha": "15360d75c9f1f8404a9a1740b6f911b1a740b7e1",
-        "timestamp": "2026-10-03T16:03:41+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q137 Q144 historical micro PIT sample",
-        "sha": "c3cc3139178057d06d89e3c7971166e1510120ab",
-        "timestamp": "2026-10-03T16:03:32+02:00"
-      },
-      {
-        "message": "RESEARCH: define Q137 Q144 micro PIT sample",
-        "sha": "788d8e5b40eeac702004807c83aa82e10787e4b6",
-        "timestamp": "2026-10-03T16:03:04+02:00"
       }
     ]
   },
@@ -1346,12 +1346,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e0641ff414af2b1efcbde10dc0371dee67a5fa90",
+  "source_master_sha": "982ead4b125ce4c66deec489688991a87f055f89",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37128610572"
+    "run_id": "37129068386"
   }
 }
