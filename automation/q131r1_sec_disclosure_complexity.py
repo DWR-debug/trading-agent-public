@@ -148,7 +148,64 @@ def run(output:Path)->dict[str,object]:
             rows=[r for day in cache.values() for r in day["rows"] if r["cik"]==ciks[symbol] and r["form"]==form and r["filed_date"]>=START and r["filed_date"]<=END]
             rows=sorted(rows,key=lambda r:(r["filename"],r["filed_date"]))[:MAX_PER_ISSUER_FORM]
             candidates.extend({"symbol":symbol,"issuer_cik":ciks[symbol],**r} for r in rows)
-    if not candidates: raise RuntimeError("Q131R1_NO_MATCHING_FILINGS")
+    if not candidates:
+        result: dict[str, object] = {
+            "schema_version": "1.0",
+            "task_id": "Q-2026-10-03-131R1-SEC-DISCLOSURE-COMPLEXITY",
+            "status": "Q131R1_FIXED_WINDOW_NO_MATCHING_FILINGS",
+            "fixed_universe": SYMBOLS,
+            "fixed_window": {"start": START, "end": END},
+            "forms": FORMS,
+            "sample_rule": {"max_per_issuer_form": MAX_PER_ISSUER_FORM, "order": "filename ascending"},
+            "daily_index_dates_checked": len(cache),
+            "filings_checked": 0,
+            "daily_index_source_receipts": {
+                day: {
+                    "sha256": payload["sha256"],
+                    "rows_scanned": len(payload["rows"]),
+                }
+                for day, payload in cache.items()
+            },
+            "observations": [],
+            "negative_evidence": {
+                "reason": "NO_MATCHING_FILINGS_IN_PREREGISTERED_WINDOW",
+                "fixed_window": {"start": START, "end": END},
+                "fixed_forms": list(FORMS),
+            },
+            "mutation_tests": {
+                "html_whitespace_invariance": "NOT_RUN_NO_MATCHING_FILINGS",
+            },
+            "pit": {
+                "exact_first_publication_time_proven": False,
+                "immutable_revision_lineage_proven": False,
+                "same_day_formal_use_allowed": False,
+            },
+            "governance": {
+                "performance": False,
+                "holdout": False,
+                "selection": False,
+                "ranking": False,
+                "parameter_search": False,
+                "threshold_search": False,
+                "horizon_search": False,
+                "asset_search": False,
+                "variant_search": False,
+                "performance_authorized": False,
+                "automatic_promotion": False,
+            },
+            "safety": {
+                "paper_only": True,
+                "live_trading_enabled": False,
+                "orders_enabled": False,
+                "automatic_promotion": False,
+            },
+        }
+        result["receipt_fingerprint"] = hashlib.sha256(
+            json.dumps(result, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        return result
     observations=[]
     for item in candidates:
         time.sleep(0.35)
