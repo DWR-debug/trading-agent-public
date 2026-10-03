@@ -18,6 +18,7 @@ on:
       - "docs/research_design/DEEP_PUBLIC_INFORMATION_FRONTIER_2026-10-03.md"
       - "research/governance/research_source_expansion_2026_10_03.json"
       - "tests/test_q133_q145_source_feasibility.py"
+      - "automation/q171_q177_pit_readiness.py"
       - ".github/workflows/deep-frontier-source-feasibility.yml"
 
 permissions:
@@ -73,6 +74,37 @@ jobs:
           assert data["synthetic_mutation_checks"]["future_row_invariance"] is True
           assert data["synthetic_mutation_checks"]["no_search_dimension_present"] is True
           print("DEEP_FRONTIER_SOURCE_FEASIBILITY_OK")
+          PY
+
+      - name: Run Q171-Q177 PIT-readiness audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q171_q177_pit_readiness \
+            --output "research/runs/deep_frontier/${GITHUB_RUN_ID}/q171_q177_pit_readiness.json"
+
+      - name: Validate PIT-readiness boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          p = Path("research/runs/deep_frontier") / os.environ["GITHUB_RUN_ID"] / "q171_q177_pit_readiness.json"
+          data = json.loads(p.read_text(encoding="utf-8"))
+          assert data["status"] == "PIT_READINESS_COMPLETED_NO_PERFORMANCE"
+          assert data["scientific_boundary"]["performance"] is False
+          assert data["scientific_boundary"]["holdout"] is False
+          assert data["scientific_boundary"]["ranking"] is False
+          assert data["scientific_boundary"]["selection"] is False
+          assert data["scientific_boundary"]["promotion"] is False
+          assert data["scientific_boundary"]["live_execution"] is False
+          assert data["safety"]["paper_only"] is True
+          assert data["safety"]["live_trading_enabled"] is False
+          assert data["safety"]["orders_enabled"] is False
+          assert data["safety"]["automatic_promotion"] is False
+          print("Q171_Q177_PIT_READINESS_OK")
           PY
 
       - name: Upload source-feasibility receipt

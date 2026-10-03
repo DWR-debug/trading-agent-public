@@ -62,3 +62,17 @@ def test_opensky_license_gate_is_fail_closed():
     text = (ROOT / "automation/q133_q145_source_feasibility.py").read_text(encoding="utf-8")
     assert "CONSENT_REQUIRED_FOR_COMMERCIAL_USE" in text
     assert "BLOCKED_LICENSE_GATE" in text
+
+
+def test_q171_q177_pit_readiness_is_discovery_only():
+    text = (ROOT / "automation/q171_q177_pit_readiness.py").read_text(encoding="utf-8")
+    assert "PIT_READINESS_COMPLETED_NO_PERFORMANCE" in text
+    assert "\"performance\": False" in text
+    assert "\"live_execution\": False" in text
+
+
+def test_common_crawl_pit_probe_is_not_performance_bound():
+    text = (ROOT / "automation/q171_q177_pit_readiness.py").read_text(encoding="utf-8")
+    assert "CC-MAIN-2025-43" in text
+    assert "WARC-Date:" in text
+    assert "capture_timestamp" in text
