@@ -1,4 +1,4 @@
-name: Permanent Self-Hosted Research Loop
+name: Permanent Windows Local Research Loop
 
 on:
   schedule:
@@ -7,56 +7,8 @@ on:
     branches: [master]
     paths:
       - "automation/self_hosted_research_worker.py"
-      - "automation/rccsm_feasibility.py"
-      - "automation/rccsm_synthetic.py"
-      - "automation/rccsm_observational_feasibility.py"
-      - "tests/test_rccsm_observational_feasibility.py"
-      - "tests/test_rccsm_feasibility.py"
-      - "tests/test_rccsm_synthetic.py"
-      - "tests/test_frontier_feasibility.py"
-      - "tests/test_q096_frontier_source_pit_audit.py"
-      - "tests/test_q097_public_short_flow_candidates.py"
-      - "tests/test_q097_public_short_flow_feasibility.py"
-      - "tests/test_q098_historical_archive_depth.py"
-      - "tests/test_q099_q081r4_failure_diagnosis.py"
       - "tests/test_local_ai_verifier_policy.py"
-      - "automation/research_os_evidence_bus.py"
-      - "automation/research_os_scheduler.py"
-      - "automation/candidate_robustness_gate.py"
-      - "tests/test_candidate_robustness_gate.py"
-      - "automation/research_os_source_probe.py"
-      - "tests/test_research_os_evidence_bus.py"
-      - "tests/test_ai_quota_guard.py"
-      - "automation/ai_quota_guard.py"
-      - "automation/q096_frontier_source_pit_audit.py"
-      - "automation/q099_q081r4_failure_diagnosis.py"
-      - "automation/q102_regime_negative_evidence.py"
-      - "automation/q103_rccsm_state_routing_integrity.py"
-      - "tests/test_q102_regime_negative_evidence.py"
-      - "tests/test_q103_rccsm_state_routing_integrity.py"
-      - "ai_requests/AI-2026-09-30-Q102-REGIME-STATE-DESIGN.json"
-      - "automation/q097_public_short_flow_feasibility.py"
-      - "research/frontier/q097_public_short_flow_candidates.json"
-      - "docs/research_design/Q097_PUBLIC_SHORT_FLOW_OWNERSHIP_FRONTIER_2026-09-29.md"
-      - "tests/test_q089_validation.py"
-      - "tests/test_q089_input_freeze.py"
-      - "tests/test_q089_performance_envelope.py"
-      - "tests/test_research_governance_audit.py"
       - "automation/local_ai_smoke.py"
-      - "automation/evidence_critic_benchmark.py"
-      - "automation/q104_xbrl_concept_freeze_audit.py"
-      - "automation/q122_cftc_release_date_evidence.py"
-      - "tests/test_q122_cftc_release_date_evidence.py"
-      - "tests/test_q104_xbrl_concept_freeze_audit.py"
-      - "automation/q109_n7_common_holder_graph.py"
-      - "automation/q121_sec_beneficial_ownership_timing.py"
-      - "tests/test_q121_sec_beneficial_ownership_timing.py"
-      - "automation/q126_q132_frontier_feasibility.py"
-      - "tests/test_q126_q132_frontier_feasibility.py"
-      - "tests/test_q109_n7_common_holder_graph.py"
-      - "research/frontier/q109_candidate_wave_2026_10_01.json"
-      - "research/frontier/q126_q132_candidate_wave_2026_10_03.json"
-      - "research/frontier/q123_candidate_wave_2026_10_02.json"
       - "research/preregistrations/q109_n7_graph_integrity_2026_10_02.json"
       - "automation/ai_worker_fabric.py"
       - "scripts/enable_local_ai_worker.ps1"
@@ -79,9 +31,9 @@ jobs:
     if: github.repository == 'DWR-debug/trading-agent-public'
     strategy:
       fail-fast: false
-      max-parallel: 2
+      max-parallel: 1
       matrix:
-        lane: [autonomous_frontier_qa, local_reproduction]
+        lane: [local_reproduction]
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 25
     steps:
