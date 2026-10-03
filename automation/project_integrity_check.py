@@ -36,6 +36,7 @@ ACTIVE_WORKFLOWS = {
     "current-status-sync.yml",
     "deep-frontier-source-feasibility.yml",
     "full-suite-verification.yml",
+    "q129-options-source-feasibility.yml",
     "f1-profitability-feasibility.yml",
     "f2-quality-acceleration-cloud.yml",
     "f2-quality-acceleration-feasibility.yml",
