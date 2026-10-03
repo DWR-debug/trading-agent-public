@@ -794,7 +794,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T13:36:00.341579+00:00",
+  "generated_at_utc": "2026-10-03T13:46:04.699214+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1199,44 +1199,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "FIX: harden Q171 Common Crawl pacing and diagnostics",
-        "sha": "a86e9b2657b77b5274732afbf440c86a86fcb07f",
-        "timestamp": "2026-10-03T15:35:49+02:00"
+        "message": "Merge pull request #931 from DWR-debug/research/q171-warc-reconstruction-20261003",
+        "sha": "a92186a336572a58b9877d22e95b7f924149509a",
+        "timestamp": "2026-10-03T15:45:54+02:00"
+      },
+      {
+        "message": "FIX: require explicit indexed URL identity match in Q171 WARC receipt",
+        "sha": "1db73cd9076a6d7a9d2dd323e66d2c4b99200811",
+        "timestamp": "2026-10-03T15:42:03+02:00"
+      },
+      {
+        "message": "FIX: preserve indexed URL for Q171 WARC identity check",
+        "sha": "8d383a37faf7c98c95b587c97ac92155f25f33b2",
+        "timestamp": "2026-10-03T15:41:55+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q171 WARC reconstruction lane",
+        "sha": "ea932ea86484639e394d45b0da9a1b8ff6cdfed5",
+        "timestamp": "2026-10-03T15:39:39+02:00"
+      },
+      {
+        "message": "TEST: guard Q171 WARC reconstruction boundary",
+        "sha": "35b265a1c995f1c5d6eb3c79d859a72d5dd40ee5",
+        "timestamp": "2026-10-03T15:39:15+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q171 WARC reconstruction gate",
+        "sha": "b89e092672c57278e78a7c16c0f9e32e5a9f3f79",
+        "timestamp": "2026-10-03T15:39:03+02:00"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "c7917876d4088ac9e29f85837b28ca79956a8309",
-        "timestamp": "2026-10-03T13:31:50Z"
+        "sha": "ea288ad1af6aca9adf9fa7262b7282e6011e506f",
+        "timestamp": "2026-10-03T13:36:02Z"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "c80d12b04f9ce91c6fc6c9e755ecb702a131e13e",
-        "timestamp": "2026-10-03T13:31:49Z"
-      },
-      {
-        "message": "FIX: harden Q171 Common Crawl index access",
-        "sha": "1e1c5f5d6f0e9e5aad460048191054536496e0cf",
-        "timestamp": "2026-10-03T15:31:36+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6f24d9f5d337a2f073aae8c0877c3955e60d41c0",
-        "timestamp": "2026-10-03T13:30:52Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3e4b413e6bf09fc852d51b1254c7b75f0970f144",
-        "timestamp": "2026-10-03T13:30:51Z"
-      },
-      {
-        "message": "OPS: harden H06-R1 authorization trigger",
-        "sha": "339e5b108499e86f9073033b2f8b340470b6f43b",
-        "timestamp": "2026-10-03T15:30:38+02:00"
-      },
-      {
-        "message": "OPS: reconcile Q129 contract with independent PIT receipt",
-        "sha": "bb1581b43bfaeb2d6d1c00dce7105122c4100db7",
-        "timestamp": "2026-10-03T15:30:35+02:00"
+        "sha": "8bd7038cf5e56e21726acb0b3d3d398660c81428",
+        "timestamp": "2026-10-03T13:36:01Z"
       }
     ]
   },
@@ -1306,12 +1306,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a86e9b2657b77b5274732afbf440c86a86fcb07f",
+  "source_master_sha": "a92186a336572a58b9877d22e95b7f924149509a",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37126722753"
+    "run_id": "37127292276"
   }
 }
