@@ -348,6 +348,13 @@ def _validate_critical_research_controls() -> None:
         fail(f"critical research control policy is unreadable: {exc}")
     if policy.get("status") != "ACTIVE":
         fail("critical research quality policy is not active")
+    try:
+        from automation.future_performance_quality_contract_check import validate
+        result = validate(ROOT)
+    except Exception as exc:
+        fail(f"future performance quality validator failed: {exc}")
+    if result.get("status") != "PASS":
+        fail("future performance quality validator returned non-PASS")
     if policy.get("early_robustness", {}).get("required_before_future_performance_authorization") is not True:
         fail("early robustness prerequisite is not enforced")
     if policy.get("immediate_replication", {}).get("required_for_any_future_full_formal_pass") is not True:
