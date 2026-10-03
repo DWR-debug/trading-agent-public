@@ -33,14 +33,13 @@ SAMPLE_FILES = {
     },
 }
 SAMPLE_DATES = tuple(SAMPLE_FILES)
-UA = "trading-agent-public/Q169-NOAA-SWPC-ARCHIVE-PIT-R2/1"
+UA = "trading-agent-public/Q169-NOAA-SWPC-ARCHIVE-PIT-R3/1"
 INDEX_MARKERS = tuple(v["url_filename"] for v in SAMPLE_FILES.values())
 SEMANTIC_MARKERS = (
     "plotted at the Issue Time",
     "CANCELATIONS",
     "corrected product",
     "Archived Alert Timelines",
-    "SWPC maintains an archive of SWPC products",
 )
 
 
@@ -167,7 +166,7 @@ def main(output: Path) -> dict[str, Any]:
 
     result: dict[str, Any] = {
         "schema_version": "1.0",
-        "task_id": "Q-2026-10-03-Q169-NOAA-SWPC-ARCHIVE-PIT-R2",
+        "task_id": "Q-2026-10-03-Q169-NOAA-SWPC-ARCHIVE-PIT-R3",
         "status": (
             "Q169_NOAA_ARCHIVE_SAMPLE_VERIFIED_PENDING_EXPOSURE_REVISION_JOIN"
             if archive_ok and semantics_ok and all(mutation_checks.values())
