@@ -107,7 +107,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q169-noaa-swpc-pit-readiness-\${{ github.run_id }}-\${{ github.run_attempt }}
+          name: q169-noaa-swpc-pit-readiness-${{ github.run_id }}-${{ github.run_attempt }}
           path: research/runs/q169_noaa_swpc_pit_readiness/
           if-no-files-found: error
           retention-days: 30
