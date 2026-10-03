@@ -27,5 +27,8 @@ def test_q169_probe_requires_candidate_specific_join_before_pit_validated():
 
 def test_q169_probe_freezes_exact_noaa_daily_filenames():
     text = (ROOT / "automation/q169_noaa_swpc_archive_pit_probe.py").read_text(encoding="utf-8")
-    assert '"2025-10-14": "1014GEOA.txt"' in text
-    assert '"2025-10-15": "1015GEOA.txt"' in text
+    assert '"2025-10-14": {' in text
+    assert '"url_filename": "20251014GEOA.txt"' in text
+    assert '"product_label": "1014GEOA.txt"' in text
+    assert '"url_filename": "20251015GEOA.txt"' in text
+    assert '"product_label": "1015GEOA.txt"' in text
