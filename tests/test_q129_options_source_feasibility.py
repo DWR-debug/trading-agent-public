@@ -12,7 +12,8 @@ def test_q129_contract_is_pinned_and_conservative():
         ).read_text(encoding="utf-8")
     )
     assert data["candidate_id"] == "Q129"
-    assert data["status"] == "SOURCE_FEASIBLE_PENDING_INDEPENDENT_PIT_VALIDATION"
+    assert data["status"] == "SOURCE_FEASIBILITY_COMPLETED_INDEPENDENT_PIT_REPRODUCED"
+    assert data["independent_pit_receipt"]["workflow_run_id"] == 37123847841
     assert len(data["canonical_release"]["assets"]) == 6
     assert data["information_boundary"]["same_day_use_allowed"] is False
     assert data["scientific_boundary"]["performance"] is False
