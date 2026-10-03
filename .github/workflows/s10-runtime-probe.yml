@@ -10,8 +10,6 @@ on:
       - "tests/test_s10_runtime.py"
       - ".github/workflows/s10-runtime-probe.yml"
   workflow_dispatch:
-  schedule:
-    - cron: "45 3 * * *"
 
 permissions:
   contents: read

@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "generated_utc": "2026-10-03T00:00:00Z",
+  "workflow_inventory_count": 172,
+  "policy": {
+    "evidence_preservation": true,
+    "blind_mass_deletion": false,
+    "recurring_load_reduction_first": true,
+    "one_canonical_active_implementation_per_function": true
+  },
+  "canonical_active": [
+    ".github/workflows/hosted-deterministic-frontier.yml",
+    ".github/workflows/hosted-research-failover.yml",
+    ".github/workflows/permanent-pc-research-loop.yml",
+    ".github/workflows/self-hosted-continuous-qa.yml",
+    ".github/workflows/current-status-sync.yml",
+    ".github/workflows/autonomous-control-plane.yml",
+    ".github/workflows/agent-request-queue.yml",
+    ".github/workflows/ai-worker-fabric.yml",
+    ".github/workflows/s10-phone-worker.yml",
+    ".github/workflows/s10-receipt-sync.yml",
+    ".github/workflows/q119-treasury-source-feasibility.yml",
+    ".github/workflows/q119-independent-reproduction.yml",
+    ".github/workflows/q120-independent-reproduction.yml",
+    ".github/workflows/q121-sec-beneficial-ownership-timing.yml",
+    ".github/workflows/q104-i22-filing-arrival.yml",
+    ".github/workflows/q108-q104-pit-integration.yml",
+    ".github/workflows/q113-13f-q107-coverage.yml",
+    ".github/workflows/q114-13f-manager-transitions.yml",
+    ".github/workflows/q115-treasury-demand-state.yml",
+    ".github/workflows/q116-13f-transition-population.yml",
+    ".github/workflows/q117-treasury-demand-population.yml"
+  ],
+  "manual_only": [
+    ".github/workflows/s10-runtime-probe.yml",
+    ".github/workflows/s10-throughput-probe.yml"
+  ],
+  "legacy_review_required": [
+    ".github/workflows/q067-coverage-pit.yml",
+    ".github/workflows/q067-evidence-reconcile.yml",
+    ".github/workflows/q068-coverage-pit.yml",
+    ".github/workflows/q068-evidence-reconcile.yml",
+    ".github/workflows/q068-snapshot-recovery-audit.yml",
+    ".github/workflows/q070-coverage-pit.yml",
+    ".github/workflows/q070-evidence-reconcile.yml",
+    ".github/workflows/q081r1-preflight.yml",
+    ".github/workflows/q081r1-selfhosted-reproduction.yml",
+    ".github/workflows/q081r2-preflight.yml",
+    ".github/workflows/q081r2-authorization-once.yml",
+    ".github/workflows/q081r2-performance-once.yml",
+    ".github/workflows/q081r3-authorization-once.yml",
+    ".github/workflows/q081r3-performance-once.yml",
+    ".github/workflows/q081r4-authorization-once.yml",
+    ".github/workflows/q081r4-performance-once.yml",
+    ".github/workflows/q085-coverage-pit.yml",
+    ".github/workflows/q086-coverage-pit.yml",
+    ".github/workflows/q089-coverage-pit.yml",
+    ".github/workflows/q089-performance-once.yml",
+    ".github/workflows/q091-performance-once.yml",
+    ".github/workflows/q094-performance-once.yml",
+    ".github/workflows/q095-performance-once.yml"
+  ],
+  "notes": [
+    "Legacy review means compare workflow role with active_research_registry.json before any schedule or file change.",
+    "Historical evidence and trial ledger are not part of this cleanup operation.",
+    "Q081R4 remains scientifically recorded; listing here does not invalidate its archived result."
+  ]
+}
