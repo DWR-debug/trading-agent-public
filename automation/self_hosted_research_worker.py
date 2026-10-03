@@ -442,7 +442,8 @@ def main() -> int:
         "step_count": len(results),
         "step_return_codes": [result["returncode"] for result in results],
         "failed_steps": failed_steps,
-        "all_bounded_steps_attempted": True,
+        "all_bounded_steps_attempted": len(results) == len(LANES[args.lane]),
+        "all_selected_bounded_steps_attempted": len(results) == len(selected_steps),
     }
     (args.output_dir / "run_manifest.json").write_text(
         json.dumps(run_manifest, ensure_ascii=False, indent=2) + "\n",
