@@ -107,3 +107,120 @@ def test_orthogonal_search_forbids_holdout_driven_scheduler_selection():
     p = json.loads(POLICY.read_text(encoding="utf-8"))
     forbidden = set(p["orthogonal_search"]["forbidden_scheduler_inputs"])
     assert {"holdout_return", "holdout_drawdown", "performance_rank"} <= forbidden
+
+
+def test_future_quality_validator_rebuilds_candidate_gate_from_frozen_inventory(tmp_path):
+    import automation.candidate_robustness_gate as gate
+    import automation.future_performance_quality_contract_check as checker
+
+    root = tmp_path
+    (root / "research/governance").mkdir(parents=True)
+    (root / "research/preregistrations").mkdir(parents=True)
+    (root / "research/evidence").mkdir(parents=True)
+    (root / "research/run_requests").mkdir(parents=True)
+
+    policy = json.loads(POLICY.read_text(encoding="utf-8"))
+    (root / "research/governance/critical_research_quality_control.json").write_text(
+        json.dumps(policy), encoding="utf-8"
+    )
+
+    inventory = {
+        "status": "DESIGN_INVENTORY_ONLY",
+        "candidates": [{
+            "id": "X01-CANDIDATE",
+            "name": "synthetic safe candidate",
+            "hypothesis": "fixed deterministic test hypothesis",
+            "construction": "frozen deterministic PIT construction",
+            "sources": ["synthetic_public_source"],
+            "next_gate": "source_feasibility",
+        }],
+    }
+    inventory_path = root / "research/frontier/x01_inventory.json"
+    inventory_path.parent.mkdir(parents=True)
+    inventory_path.write_text(json.dumps(inventory), encoding="utf-8")
+
+    receipt = gate.compile_receipt(
+        [inventory_path],
+        "research/evidence/candidate_gate/X01.json",
+    )
+    item = receipt["candidates"][0]
+
+    trial_id = "T-2026-10-03-X01"
+    robustness_artifact_path = root / "research/evidence/x01_pre_performance.json"
+    robustness_artifact_path.write_text(
+        json.dumps({
+            "trial_id": trial_id,
+            "status": "PRE_PERFORMANCE_ROBUSTNESS_COMPLETED",
+            "metrics": {
+                name: True for name in policy["early_robustness"]["required_dimensions"]
+            },
+            "governance": {
+                "holdout_selection": False,
+                "parameter_search": False,
+                "asset_search": False,
+                "threshold_search": False,
+                "horizon_search": False,
+                "variant_search": False,
+                "family_ranking": False,
+                "promotion_decision": False,
+                "performance_authorization": False,
+            },
+        }),
+        encoding="utf-8",
+    )
+
+    prereg = {
+        "trial_id": trial_id,
+        "candidate_id": item["candidate_id"],
+        "candidate_robustness_gate": {
+            "receipt_path": "research/evidence/candidate_gate/X01.json",
+            "candidate_inventory_path": "research/frontier/x01_inventory.json",
+            "bundle_fingerprint": receipt["bundle_fingerprint"],
+            "candidate_fingerprint": item["candidate_fingerprint"],
+        },
+        "robustness_contract": {
+            "required_dimensions": policy["early_robustness"]["required_dimensions"],
+            "research_only_before_formal_pass": True,
+        },
+        "pre_performance_robustness": {
+            "trial_id": trial_id,
+            "status": "PRE_PERFORMANCE_ROBUSTNESS_COMPLETED",
+            "artifact_path": "research/evidence/x01_pre_performance.json",
+            "artifact_sha256": __import__("hashlib").sha256(
+                robustness_artifact_path.read_bytes()
+            ).hexdigest(),
+            "research_only": True,
+            "screen_is_descriptive_only": True,
+            "no_post_hoc_tuning": True,
+        },
+        "independent_replication": {
+            "trial_id": trial_id,
+            "preregistration_path": "research/preregistrations/x01_replication.json",
+            "trigger_path": "research/run_requests/x01_replication.trigger",
+            "fresh_symbol_disjoint": True,
+            "no_post_pass_optimization": True,
+        },
+    }
+    (root / "research/preregistrations/x01_performance.json").write_text(
+        json.dumps(prereg), encoding="utf-8"
+    )
+    (root / "research/preregistrations/x01_replication.json").write_text(
+        json.dumps(prereg), encoding="utf-8"
+    )
+    (root / "research/governance/active_research_registry.json").write_text(
+        json.dumps({
+            "active_trials": [{
+                "code": "X01",
+                "trial_id": trial_id,
+                "state": "PERFORMANCE_AUTHORIZED",
+                "performance_authorization_allowed": True,
+                "preregistration_path": "research/preregistrations/x01_performance.json",
+            }]
+        }),
+        encoding="utf-8",
+    )
+
+    assert not (root / "research/evidence/candidate_gate/X01.json").exists()
+    result = checker.validate(root)
+    assert result["status"] == "PASS"
+    assert result["authorized_entries_checked"] == 1
