@@ -64,7 +64,20 @@ def classify_event(row:dict)->dict:
     local=acc.astimezone(ET)
     local_date=local.date()
     filing=date.fromisoformat(str(row["filingDate"]))
-    date_alignment = "ALIGNED" if filing == local_date else "FILING_DATE_DIFFERS_FROM_ACCEPTANCE_DATE"
+    if filing != local_date:
+        # A filing-date/acceptance-date mismatch destroys the frozen PIT clock:
+        # do not silently reinterpret the event using either calendar.
+        return {
+            "state": "INVALID_DATE_MISMATCH",
+            "accession": str(row["accessionNumber"]),
+            "form": str(row["form"]),
+            "acceptance_datetime_utc": acc.isoformat(),
+            "acceptance_datetime_et": local.isoformat(),
+            "acceptance_date_et": local_date.isoformat(),
+            "filing_date": filing.isoformat(),
+            "filing_date_alignment": "FILING_DATE_DIFFERS_FROM_ACCEPTANCE_DATE",
+        }
+    date_alignment = "ALIGNED"
     t=local.time()
     if t < time(17,30):
         state="STANDARD_DAY"
@@ -89,7 +102,7 @@ def compile_events(rows:list[dict], cutoff:date=END)->dict:
         if str(row.get("form","")) not in FORMS:
             continue
         event=classify_event(row)
-        if event["state"] in {"INVALID_MISSING_METADATA","OUT_OF_CONTRACT"}:
+        if event["state"] in {"INVALID_MISSING_METADATA","INVALID_DATE_MISMATCH","OUT_OF_CONTRACT"}:
             continue
         acceptance_date = date.fromisoformat(event["acceptance_date_et"])
         if acceptance_date < START or acceptance_date > cutoff:
