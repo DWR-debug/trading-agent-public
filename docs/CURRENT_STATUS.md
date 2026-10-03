@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `4b667fdaac95047c3be0e48545c42520e3a3cef9`
+**Current operational snapshot:** `c5f102d4ddf2a4d2c74d08de5a2b711e32c43293`
 
-**Generated (UTC):** `2026-10-03T13:18:00.168465+00:00`
+**Generated (UTC):** `2026-10-03T13:21:07.659432+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -59,6 +59,12 @@
 - Independent Q129 PIT/structural reproduction: **REPRODUCED**; workflow run `37123847841`, receipt fingerprint `41d723734f030d1a212f5eb4b3e6467223a5cfcdeb97c77ffa9713f8889c7587`.
 - The fixed downstream view preserves raw rows and quarantines quote/calendar anomalies deterministically; same-day use remains **False**.
 - This receipt does **not** authorize performance, holdout selection, ranking, tuning, promotion or live execution.
+
+### Q171–Q178 Public Source Frontier
+
+- Source-feasibility run: **COMPLETED** on master; Q171, Q172, Q174–Q177 and Q178 passed source probes; Q173 remains license-blocked.
+- PIT-readiness: Q171 has a sample historical Common Crawl reconstruction receipt; Q174–Q177 have source-clock/version/revision semantics confirmed but are **not yet candidate-specific PIT-valid**.
+- No member of this wave is performance-authorized; no holdout selection, tuning, ranking, promotion or live execution is permitted.
 
 ### Q133–Q170 Public Source Frontier
 
