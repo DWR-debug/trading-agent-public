@@ -27,7 +27,7 @@ on:
       - ".github/workflows/deep-frontier-source-feasibility.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: trading-agent-deep-frontier-source-feasibility
@@ -89,12 +89,29 @@ jobs:
             --output "research/runs/deep_frontier/${GITHUB_RUN_ID}/q171_webstate_coverage.json"
 
       - name: Run Q171 WARC reconstruction
+        continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail
           python -m automation.q171_webstate_warc_reconstruction \
             "research/runs/deep_frontier/${GITHUB_RUN_ID}/q171_webstate_coverage.json" \
             --output "research/runs/deep_frontier/${GITHUB_RUN_ID}/q171_warc_reconstruction.json"
+
+      - name: Diagnose Q171 WARC reconstruction
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p = Path("research/runs/deep_frontier") / os.environ["GITHUB_RUN_ID"] / "q171_warc_reconstruction.json"
+          if not p.exists():
+              print("Q171_WARC_RESULT_MISSING")
+          else:
+              d = json.loads(p.read_text(encoding="utf-8"))
+              print(json.dumps({"summary": d.get("summary"), "results": d.get("results")}, ensure_ascii=False, sort_keys=True))
+          PY
 
       - name: Validate Q171 WARC reconstruction boundary
         shell: bash
@@ -105,6 +122,9 @@ jobs:
           from pathlib import Path
           p = Path("research/runs/deep_frontier") / os.environ["GITHUB_RUN_ID"] / "q171_warc_reconstruction.json"
           d = json.loads(p.read_text(encoding='utf-8'))
+          for result in d.get('results', {}).values():
+              assert result.get('status') in {'WARC_RECONSTRUCTED', 'INFRA_ACCESS_BLOCKED'}
+          assert d.get('summary', {}).get('capture_candidates', 0) == len(d.get('results', {}))
           assert d['scientific_boundary']['performance'] is False
           assert d['scientific_boundary']['holdout'] is False
           assert d['scientific_boundary']['selection'] is False
@@ -166,6 +186,32 @@ jobs:
           assert data["safety"]["automatic_promotion"] is False
           print("Q171_Q177_PIT_READINESS_OK")
           PY
+
+      - name: Persist material Q171 WARC receipt
+        if: always() && github.event_name != 'pull_request'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          input="research/runs/deep_frontier/${GITHUB_RUN_ID}/q171_warc_reconstruction.json"
+          latest="research/evidence/q171_warc_reconstruction_latest.json"
+          test -f "$input"
+          python -m automation.q171_warc_persist --input "$input" --output "$latest" --source-commit "$GITHUB_SHA"
+          git fetch origin master --quiet
+          cp "$latest" "$RUNNER_TEMP/q171_warc_reconstruction_latest.json"
+          git checkout --detach origin/master
+          mkdir -p "$(dirname "$latest")"
+          cp "$RUNNER_TEMP/q171_warc_reconstruction_latest.json" "$latest"
+          if git diff --quiet -- "$latest"; then
+            echo "Q171_MATERIAL_RECEIPT_UNCHANGED"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$latest"
+          git commit -m "OPS: persist latest Q171 WARC material receipt"
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:master
 
       - name: Upload source-feasibility receipt
         if: always()
