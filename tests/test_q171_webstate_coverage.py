@@ -34,7 +34,10 @@ def test_q171_webstate_coverage_is_discovery_only():
     assert '"selection": False' in text
     assert '"ranking": False' in text
     assert '"live_execution": False' in text
-    assert "CC-MAIN-2025-43" in text
+    assert '"CC-MAIN-2025-13"' in text
+    assert '"CC-MAIN-2025-26"' in text
+    assert '"CC-MAIN-2025-38"' in text
+    assert '"CC-MAIN-2025-51"' in text
 
 def test_q171_retry_is_fixed_and_infra_blocked_is_distinct():
     text = (ROOT / "automation/q171_webstate_coverage.py").read_text(encoding="utf-8")
@@ -44,6 +47,13 @@ def test_q171_retry_is_fixed_and_infra_blocked_is_distinct():
 
 def test_q171_rate_limit_diagnostics_are_preserved():
     text = (ROOT / "automation/q171_webstate_coverage.py").read_text(encoding="utf-8")
-    assert "REQUEST_GAP_SECONDS = 5" in text
+    assert "REQUEST_GAP_SECONDS = 3" in text
     assert "time.sleep(REQUEST_GAP_SECONDS)" in text
     assert '"error_body_excerpt"' in text
+
+
+def test_q171_multicrawl_rows_preserve_collection_identity():
+    text = (ROOT / "automation/q171_webstate_coverage.py").read_text(encoding="utf-8")
+    assert '"crawl": crawl' in text
+    assert '"crawls": list(CRAWLS)' in text
+    assert '"fixed_crawls": len(CRAWLS)' in text
