@@ -164,6 +164,7 @@ ACTIVE_WORKFLOWS = {
     "q121-sec-beneficial-ownership-timing.yml",
     "q121r1-sec-reverse-issuer-coverage.yml",
     "q121r2-sec-daily-index-reconciliation.yml",
+    "q121r3-sec-form-index.yml",
     "q127r1-finra-regsho-historical-pit.yml",
     "q130r1-wikimedia-attention-source.yml",
     "q131r1-sec-disclosure-complexity.yml",
