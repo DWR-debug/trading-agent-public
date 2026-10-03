@@ -73,12 +73,13 @@ jobs:
   fallback:
     needs: guard
     if: ${{ needs.guard.outputs.run_fallback == 'true' }}
+    # The deterministic frontier now has its own permanent hosted loop.
+    # Failover is reserved for governance/reproducibility work when Windows
+    # capacity is genuinely stale.
     strategy:
       fail-fast: false
       matrix:
         include:
-          - runner: ubuntu-24.04
-            lane: frontier_qa
           - runner: ubuntu-24.04-arm
             lane: governance_reproduction
     runs-on: ${{ matrix.runner }}
