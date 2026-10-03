@@ -101,9 +101,10 @@ Er ist von der Matrix abhängig und verlangt, dass der gesamte statische Vier-La
 erfolgreich abgeschlossen gilt. Ein übersprungener, fehlgeschlagener oder fehlender Lane-Job
 führt damit zu einem fehlgeschlagenen Gesamtstatus.
 
-Die globale Concurrency-Gruppe `trading-agent-self-hosted-continuous-qa` und
-`cancel-in-progress: false`, `workflow_dispatch` und der stündliche Schedule bleiben
-erhalten. Ausgeführt wird ausschließlich der vertrauenswürdige öffentliche
+Die globale Concurrency-Gruppe `trading-agent-self-hosted-continuous-qa` nutzt
+`cancel-in-progress: true`. Die Continuous QA ist auf eine essentielle `repo_qa`-Heartbeat-Lane
+reduziert und läuft planmäßig alle sechs Stunden; die permanente Frontier-Forschung bleibt
+der primäre Self-hosted-Arbeitspfad. Ausgeführt wird ausschließlich der vertrauenswürdige öffentliche
 Repository-Kontext; untrusted Fork-Code wird nicht ausgeführt. Der Self-hosted Runner
 schreibt weiterhin keine Research-Evidence und besitzt keine Live-/Broker-Funktion.
 

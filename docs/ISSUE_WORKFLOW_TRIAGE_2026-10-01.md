@@ -1,4 +1,4 @@
-# Issue / Workflow Triage — 2026-10-01
+# Issue / Workflow Triage — 2026-10-03
 
 ## Scope
 
@@ -8,24 +8,40 @@ This is an operational triage record. It does not create scientific evidence, ra
 
 | Issue | Role | Decision |
 | --- | --- | --- |
-| #641 AGENT-025 | bounded agent scope gate | ACTIVE; third bounded Copilot attempt in progress after publish/credit fixes |
-| #642 AGENT-026 | bounded agent capacity lease | KEEP OPEN; independent governance hardening |
-| #643 AGENT-027 | agent failure handoff | KEEP OPEN; contract corrected to preserve protected-path invariant |
+| #643 AGENT-027 | agent failure handoff | OPEN; bounded engineering backlog; not on the critical candidate-research path |
 
 ## Open research/design issues
 
 | Issue | Role | Decision |
 | --- | --- | --- |
-| #568 Q073 | expanded orthogonal candidate search | KEEP OPEN; distinct research-design lane |
-| #569 Q074 | extended SEC/Cboe source feasibility | KEEP OPEN; source/schema feasibility lane |
-| #570 Q075 | information-channel coverage/PIT feasibility | KEEP OPEN; data-contract lane |
-| #573 Q078 | literature-derived orthogonal expansion | KEEP OPEN; design lane |
-| #578 Q080 | tail/network/state orthogonal bank | KEEP OPEN; design lane |
-| #580 Q082 | SEC shareholder-experience signal | KEEP OPEN; source/PIT feasibility required |
-| #583 Q084 | market-state / earnings transition feasibility | KEEP OPEN; feasibility track |
-| #588 Q088 | textual peer network / rebalance demand | KEEP OPEN; distinct textual-information channel |
-| #591 frontier | unusual-alpha frontier | KEEP OPEN; design-only synthesis / source-PIT progression |
-| #211 milestone | project-level presentable-result milestone | KEEP OPEN; umbrella tracking |
+| #568 Q073 | expanded orthogonal candidate search | OPEN; broad discovery inventory / lower-priority background |
+| #570 Q075 | information-channel coverage/PIT feasibility | OPEN; data-contract lane |
+| #573 Q078 | literature-derived orthogonal expansion | OPEN; design lane |
+| #578 Q080 | tail/network/state orthogonal bank | OPEN; design lane |
+| #580 Q082 | SEC shareholder-experience signal | OPEN; source/PIT feasibility required |
+| #583 Q084 | market-state / earnings transition feasibility | OPEN; feasibility complete in registry; follow-up must be explicit before more compute |
+| #588 Q088 | textual peer network / rebalance demand | OPEN; distinct textual-information channel |
+| #591 frontier | unusual-alpha frontier | OPEN; design-only synthesis / source-PIT progression |
+| #744 Q109 | N-PORT / risk / text / insider frontier | OPEN; active registry and downstream PIT gates |
+| #755 Q104:I22 | SEC filing-arrival compiler | OPEN; compiler implemented; candidate-specific next gate remains |
+| #757 Q118 | composition / bundle compatibility | OPEN; downstream structural contract |
+| #761 Q119 | Treasury demand shape | OPEN; live feasibility path active |
+| #768 Q120 | CFTC TFF positioning divergence | OPEN; release-date/PIT recovery required |
+| #787 Q121 discovery plane | literature-to-hypothesis quarantine | OPEN; capability layer; deterministic intake expansion |
+| #819 Q122 | CFTC release-date evidence | OPEN; evidence compiler required for Q120 PIT |
+| #855 Q124 | orthogonal source/theory frontier matrix | OPEN; discovery inventory |
+| #856 Q126 | SEC filing-arrival × residual momentum | OPEN; newly added discovery wave, now quarantined for routing |
+| #857 Q127 | Reg SHO short-pressure × liquidity | OPEN; newly added discovery wave, now quarantined for routing |
+| #858 Q128 | options imbalance × liquidity | OPEN; newly added discovery wave, source feasibility first |
+| #859 Q129 | gamma concentration | OPEN; newly added discovery wave, source/sign feasibility first |
+| #864 Q130 | information-arrival × attention lag | OPEN; newly added discovery wave, attention-clock feasibility first |
+| #868 Q131 | information complexity × turnover | OPEN; newly added discovery wave, deterministic complexity/PIT first |
+| #869 Q132 | asymmetric residual × systematic state | OPEN; newly added discovery wave, decomposition/PIT first |
+| #871 frontier | turnover × information complexity | OPEN; discovery-only; must remain distinct from Q131 and avoid duplicate-lineage convergence |
+| #879 campaign | candidate-quality/performance-validity campaign | OPEN; umbrella priority through 2026-10-25 |
+| #882 Q121 | SEC beneficial-ownership timing | OPEN; Discovery/PIT-only, 94-event receipt already exists |
+| #754 ECL | isolated Evidence-Critic Lab | OPEN; bounded support/metrics infrastructure only |
+| #211 milestone | presentable-result milestone | OPEN; umbrella tracking |
 
 ## Closed / historical issues
 
@@ -46,7 +62,7 @@ The following were closed after verifying that their work is complete or histori
 - Autonomous Resource Control Plane: bounded issue discovery and routing.
 - Autonomous Agent Request Queue: bounded engineering execution with protected Copilot reserve.
 - Permanent Self-Hosted Research Loop: two parallel Windows runner lanes plus local AI smoke.
-- Continuous QA: four self-hosted QA lanes.
+- Continuous QA: one essential self-hosted repo QA heartbeat lane every six hours; full hosted CI remains the primary broad test suite.
 - Paper Forward / Paper Forward 2000 EUR: operational shadow/MTM only.
 - Public Frontier Feasibility: design/source/PIT feasibility only.
 - H06 Master Coverage Repair + H06 Independent Reproduction: current PIT infrastructure validation.
