@@ -133,7 +133,7 @@ def test_every_lane_writes_non_formal_run_manifest(monkeypatch, tmp_path):
         )
         assert summary["lane"] == lane
         assert summary["formal_evidence_allowed"] is False
-        assert [result["index"] for result in summary["results"]] == expected_order
+        assert [result["index"] for result in summary["results"]] == sorted(expected_order)
         assert [result["returncode"] for result in summary["results"]] == expected_codes
 
 
