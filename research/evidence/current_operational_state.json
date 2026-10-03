@@ -919,7 +919,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-03T18:37:21.239371+00:00",
+  "generated_at_utc": "2026-10-03T18:39:18.673834+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1324,6 +1324,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "LEDGER: append verified Q121-R5 source-population reconciliation",
+        "sha": "0ba5789003cda59e1ef3f54c0dc4a93e126690a6",
+        "timestamp": "2026-10-03T20:39:08+02:00"
+      },
+      {
+        "message": "EVIDENCE: anchor verified Q121-R5 dual-index receipt",
+        "sha": "949bcebae44d4727fd5bf57fe68d0b4337659abf",
+        "timestamp": "2026-10-03T20:38:55+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3ef679dad9486f805ea542010daa66f979681a6b",
+        "timestamp": "2026-10-03T18:37:24Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a87c86b8b2d281245e5b3eb0ff9aed95d7adfd77",
+        "timestamp": "2026-10-03T18:37:22Z"
+      },
+      {
         "message": "RESEARCH: harden direct-archive Q121-R5 fallback",
         "sha": "998fb1b2641666aaa7ce348346888aaf7b5b30f4",
         "timestamp": "2026-10-03T20:37:09+02:00"
@@ -1342,26 +1362,6 @@
         "message": "RESEARCH: add self-hosted Q121-R5 execution lane",
         "sha": "c2f087884ca8dba0d98879c2ca2378d7ca67aedb",
         "timestamp": "2026-10-03T20:34:44+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "8e83a2abe09c294c5ce5bb419447128ae289e478",
-        "timestamp": "2026-10-03T18:30:13Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e535a6ef148457c2a009d1df85a2cbd42844c6b2",
-        "timestamp": "2026-10-03T18:30:12Z"
-      },
-      {
-        "message": "DOCS: record Q121-R5 preregistration state",
-        "sha": "bb7b2b5c0038866bc495785d9c414752aa6d4caa",
-        "timestamp": "2026-10-03T20:30:09+02:00"
-      },
-      {
-        "message": "RESEARCH: Q121-R5 SEC dual-index population reconciliation",
-        "sha": "7c5c08e974e21c9057260f7a583c26f50cb116ec",
-        "timestamp": "2026-10-03T20:29:57+02:00"
       }
     ]
   },
@@ -1431,7 +1431,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "998fb1b2641666aaa7ce348346888aaf7b5b30f4",
+  "source_master_sha": "0ba5789003cda59e1ef3f54c0dc4a93e126690a6",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -1545,6 +1545,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37144876771"
+    "run_id": "37145003307"
   }
 }
