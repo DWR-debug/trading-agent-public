@@ -222,35 +222,52 @@ def run(output: Path) -> dict[str, object]:
             header_url = archive_header_url(row["filename"])
             time.sleep(REQUEST_GAP_SECONDS)
             status, body = fetch(header_url)
-            if status != 200:
-                raise RuntimeError(f"Q121R3_HEADER_HTTP_{status}:{accession}")
+            candidates: list[tuple[str, bytes, int]] = []
+            if status == 200:
+                candidates.append((header_url, body, status))
 
-            header_text = body.decode("utf-8", errors="replace")
-            subject = r1.extract_header_section_cik(header_text, "Subject") or r1.extract_labeled_cik(header_text, "Subject")
-            filer = r1.extract_header_section_cik(header_text, "Filed by") or r1.extract_labeled_cik(header_text, "Filed by")
-            accepted = r1.extract_accepted(header_text)
+            source_text_url = "https://www.sec.gov/Archives/" + row["filename"]
+            if not candidates:
+                time.sleep(REQUEST_GAP_SECONDS)
+                source_status, source_body = fetch(source_text_url)
+                if source_status == 200:
+                    candidates.append((source_text_url, source_body, source_status))
+            else:
+                source_status = None
 
-            check = {
-                "accession_number": accession,
-                "index_cik": row["cik"],
-                "form": row["form"],
-                "filing_date": row["filed_date"],
-                "filename": row["filename"],
-                "header_url": header_url,
-                "header_sha256": sha256_bytes(body),
-                "subject_cik": subject,
-                "filed_by_cik": filer,
-                "accepted_datetime": accepted,
-                "expected_subject_cik": expected_subject,
-                "expected_filer_cik": expected_filer,
-            }
-
-            subject_ok = subject == expected_subject
-            filer_ok = expected_filer is None or filer == expected_filer
-            accepted_ok = accepted is not None
-            if subject_ok and filer_ok and accepted_ok:
-                matched_check = check
+            matched_for_row = None
+            for identity_url, identity_body, identity_status in candidates:
+                header_text = identity_body.decode("utf-8", errors="replace")
+                subject = r1.extract_header_section_cik(header_text, "Subject") or r1.extract_labeled_cik(header_text, "Subject")
+                filer = r1.extract_header_section_cik(header_text, "Filed by") or r1.extract_labeled_cik(header_text, "Filed by")
+                accepted = r1.extract_accepted(header_text)
+                if subject == expected_subject and (expected_filer is None or filer == expected_filer) and accepted is not None:
+                    matched_for_row = {
+                        "accession_number": accession,
+                        "index_cik": row["cik"],
+                        "form": row["form"],
+                        "filing_date": row["filed_date"],
+                        "filename": row["filename"],
+                        "header_url": header_url,
+                        "identity_source_url": identity_url,
+                        "header_http_status": status,
+                        "identity_http_status": identity_status,
+                        "header_sha256": sha256_bytes(identity_body),
+                        "subject_cik": subject,
+                        "filed_by_cik": filer,
+                        "accepted_datetime": accepted,
+                        "expected_subject_cik": expected_subject,
+                        "expected_filer_cik": expected_filer,
+                    }
+                    break
+            if matched_for_row is not None:
+                matched_check = matched_for_row
                 break
+
+            if status != 200:
+                # Keep the first failed header endpoint observable; the source
+                # text fallback is authoritative when it is available.
+                _ = status
 
         if matched_check is None:
             raise RuntimeError(
