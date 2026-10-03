@@ -11,19 +11,24 @@ def row(acc="A1", acc_dt="2024-06-03T16:00:00Z", filing_date="2024-06-03"):
     }
 
 
+def test_raw_edgar_header_acceptance_timestamp_is_explicitly_eastern_time():
+    from automation.q121_sec_beneficial_ownership_timing import parse_acceptance
+    parsed = parse_acceptance("20240603213000")
+    assert parsed.isoformat() == "2024-06-03T21:30:00+00:00"
+
+
 def test_boundary_classification():
     assert classify_event(row(acc_dt="2024-06-03T21:29:59Z"))["state"] == "STANDARD_DAY"
     assert classify_event(row(acc_dt="2024-06-03T21:30:00Z"))["state"] == "LATE_DAY_SAME_DATE"
     assert classify_event(row(acc_dt="2024-06-03T23:00:00Z"))["state"] == "LATE_DAY_SAME_DATE"
 
 
-def test_filing_date_mismatch_fails_closed():
-    try:
-        classify_event(row(acc_dt="2024-06-03T20:00:00Z", filing_date="2024-06-04"))
-    except RuntimeError as exc:
-        assert "FILING_DATE_MISMATCH" in str(exc)
-    else:
-        raise AssertionError("expected filing-date mismatch")
+def test_acceptance_date_is_pit_clock_and_filing_date_difference_is_observable():
+    out = classify_event(row(acc_dt="2024-06-03T20:00:00Z", filing_date="2024-06-04"))
+    assert out["acceptance_date_et"] == "2024-06-03"
+    assert out["filing_date"] == "2024-06-04"
+    assert out["filing_date_alignment"] == "FILING_DATE_DIFFERS_FROM_ACCEPTANCE_DATE"
+    assert out["state"] == "STANDARD_DAY"
 
 
 def test_future_rows_do_not_change_prior_output():
