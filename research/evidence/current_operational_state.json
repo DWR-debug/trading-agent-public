@@ -784,7 +784,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T12:53:39.816955+00:00",
+  "generated_at_utc": "2026-10-03T12:55:34.544136+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -988,6 +988,21 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: align canonical human-readable status with always-available resource policy",
+        "sha": "80353bcbae37ebb51ea32f30fc140bbd7b0d46bb",
+        "timestamp": "2026-10-03T14:55:23+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "eff0e2d9b6fdb13bf54f1bf2f6dc4cef248c661b",
+        "timestamp": "2026-10-03T12:53:42Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c98e96eac1bf8aafeb40f8c3c57d958caf0e030a",
+        "timestamp": "2026-10-03T12:53:41Z"
+      },
+      {
         "message": "OPS: permanently routable Windows and Android capacity (#919)",
         "sha": "16100824f7599335ad4cbb48aba5c9e08231ed46",
         "timestamp": "2026-10-03T14:53:27+02:00"
@@ -1011,21 +1026,6 @@
         "message": "EVIDENCE: record Q129 independent PIT reproduction receipt",
         "sha": "ddc54b34f9e75f908b8386ff60c9cbc6d0c25648",
         "timestamp": "2026-10-03T14:46:30+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e052c8a0964479811b9bf60f1b9aedd39d23781d",
-        "timestamp": "2026-10-03T12:44:40Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4d7e958ba95a62696ceb9e8774b49445fa1d6d57",
-        "timestamp": "2026-10-03T12:44:39Z"
-      },
-      {
-        "message": "FIX: Q129 PIT quarantine and SEC EDGAR frontier source contract (#917)",
-        "sha": "9f07bcf4a11b89bb62dbde23aa379cac7aee5a20",
-        "timestamp": "2026-10-03T14:44:28+02:00"
       }
     ]
   },
@@ -1095,12 +1095,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "16100824f7599335ad4cbb48aba5c9e08231ed46",
+  "source_master_sha": "80353bcbae37ebb51ea32f30fc140bbd7b0d46bb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37124345995"
+    "run_id": "37124451066"
   }
 }
