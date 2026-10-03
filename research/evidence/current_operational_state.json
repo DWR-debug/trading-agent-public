@@ -794,7 +794,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T13:31:48.518125+00:00",
+  "generated_at_utc": "2026-10-03T13:36:00.341579+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1199,6 +1199,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: harden Q171 Common Crawl pacing and diagnostics",
+        "sha": "a86e9b2657b77b5274732afbf440c86a86fcb07f",
+        "timestamp": "2026-10-03T15:35:49+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c7917876d4088ac9e29f85837b28ca79956a8309",
+        "timestamp": "2026-10-03T13:31:50Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c80d12b04f9ce91c6fc6c9e755ecb702a131e13e",
+        "timestamp": "2026-10-03T13:31:49Z"
+      },
+      {
         "message": "FIX: harden Q171 Common Crawl index access",
         "sha": "1e1c5f5d6f0e9e5aad460048191054536496e0cf",
         "timestamp": "2026-10-03T15:31:36+02:00"
@@ -1222,21 +1237,6 @@
         "message": "OPS: reconcile Q129 contract with independent PIT receipt",
         "sha": "bb1581b43bfaeb2d6d1c00dce7105122c4100db7",
         "timestamp": "2026-10-03T15:30:35+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "628dce8c6f43152b6b649acfa8fd7b9aeeb65c62",
-        "timestamp": "2026-10-03T13:28:40Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3a23c45f7edc9d0a7748b97f768068bad8bdf88e",
-        "timestamp": "2026-10-03T13:28:39Z"
-      },
-      {
-        "message": "RESEARCH: add Q171 frozen issuer web-state coverage",
-        "sha": "2d7d3355a5b925210d3e898146877c081139bb1c",
-        "timestamp": "2026-10-03T15:28:26+02:00"
       }
     ]
   },
@@ -1306,12 +1306,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1e1c5f5d6f0e9e5aad460048191054536496e0cf",
+  "source_master_sha": "a86e9b2657b77b5274732afbf440c86a86fcb07f",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37126485214"
+    "run_id": "37126722753"
   }
 }
