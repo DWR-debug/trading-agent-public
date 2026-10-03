@@ -714,7 +714,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-03T10:41:08.385656+00:00",
+  "generated_at_utc": "2026-10-03T10:41:36.526740+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -918,6 +918,36 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: serialize S10 runtime diagnostic and lower cadence",
+        "sha": "406ca2cd91b2f48594fa5266998223e03980a1bf",
+        "timestamp": "2026-10-03T12:41:22+02:00"
+      },
+      {
+        "message": "OPS: make obsolete S10 throughput probe manual-only",
+        "sha": "24a49bbdb478812cfbd8165e791a4c36fe28ae0b",
+        "timestamp": "2026-10-03T12:41:16+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "3163b81f15cf0163878c232887a9f684b3f7d749",
+        "timestamp": "2026-10-03T10:41:12Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "41999de4d273ae2e29072938069612a1de6d31c2",
+        "timestamp": "2026-10-03T10:41:10Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "e19f4058417734208c06a79ecbc5a955cb345f07",
+        "timestamp": "2026-10-03T10:41:09Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "ba919eaf33d18181b3ab3b1f6b8eb144164576b6",
+        "timestamp": "2026-10-03T10:41:08Z"
+      },
+      {
         "message": "OPS: record AI worker state",
         "sha": "8dee54b80f0057f213b8f4f59319920fa881a416",
         "timestamp": "2026-10-03T10:41:06Z"
@@ -926,36 +956,6 @@
         "message": "OPS: record AI worker state",
         "sha": "2b83f797c2e52a9577307187a7f621861873f3a3",
         "timestamp": "2026-10-03T10:41:05Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "ff623a865b7f72ef830ffef228917f78192e449e",
-        "timestamp": "2026-10-03T10:41:03Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "dbf1c96e1db82ef7258b9432421e39efc1008d35",
-        "timestamp": "2026-10-03T10:41:02Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "b2affc13e167918a5616ae68abe764f4c36b4c0c",
-        "timestamp": "2026-10-03T10:41:01Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2ff1c7c06b0480e5bb6f39229913792356c49e18",
-        "timestamp": "2026-10-03T10:40:56Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "205a499961415496c5fda73f64a569c218b18fd9",
-        "timestamp": "2026-10-03T10:40:54Z"
-      },
-      {
-        "message": "OPS: stop scheduled provider churn for unavailable AI routes",
-        "sha": "ae2682e8851990894e63317229e3c27ba5d87fde",
-        "timestamp": "2026-10-03T12:40:51+02:00"
       }
     ]
   },
@@ -1025,12 +1025,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8dee54b80f0057f213b8f4f59319920fa881a416",
+  "source_master_sha": "406ca2cd91b2f48594fa5266998223e03980a1bf",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37117214071"
+    "run_id": "37117241422"
   }
 }
