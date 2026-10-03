@@ -15,6 +15,11 @@ def test_resource_availability_policy_is_always_routable_and_safe():
     assert routing["fresh_receipts_are_required_for_evidence_claims"] is True
     assert data["capacity"]["windows_runner_slots"] == 2
     assert data["capacity"]["permanent_loop_lanes"] == ["local_reproduction", "data_qa"]
+    assert data["capacity"]["logical_research_lanes"] == ["formal_readiness", "frontier_discovery"]
+    assert data["capacity"]["two_lane_roles"]["formal_readiness"].startswith("Advanced Coverage/PIT")
+    assert data["capacity"]["two_lane_roles"]["frontier_discovery"].startswith("Orthogonal source/PIT")
+    assert data["capacity"]["lane_isolation_required"] is True
+    assert data["capacity"]["performance_authorization_from_capacity"] is False
     assert data["capacity"]["hosted_failover"] == "manual_only"
     assert data["safety"]["PAPER_ONLY"] is True
     assert data["safety"]["LIVE_TRADING_ENABLED"] is False
