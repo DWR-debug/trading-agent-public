@@ -612,6 +612,17 @@
         }
       },
       {
+        "code": "Q131-R1",
+        "class": "sec_disclosure_complexity_source_contract",
+        "issue_number": 974,
+        "parent_code": "131",
+        "state": "SOURCE_CONTRACT_ACTIVE",
+        "preregistration_path": "research/preregistrations/q131r1_sec_disclosure_complexity_2026_10_03.json",
+        "design_document": "docs/research_design/Q131R1_SEC_DISCLOSURE_COMPLEXITY_2026-10-03.md",
+        "performance_authorization_allowed": false,
+        "note": "Deterministic SEC structural disclosure-complexity vector only. No scalar threshold, ranking, tuning, performance or promotion is permitted."
+      },
+      {
         "code": "Q121-R1",
         "class": "sec_beneficial_ownership_reverse_issuer_coverage_correction",
         "issue_number": 961,
@@ -908,7 +919,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-03T16:51:34Z",
+  "generated_at_utc": "2026-10-03T16:57:24Z",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1313,16 +1324,12 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "sha": "f44f55c63b2da13a2271a3c860331616df74c66e",
+        "message": "RESEARCH: Q131 deterministic SEC disclosure-complexity contract"
+      },
+      {
         "sha": "09fe5a0d3f302d8504d7c798b44182d0e960123d",
         "message": "GOV: bind Q127 file-schema contract"
-      },
-      {
-        "sha": "ba9c0e9b1db30caeda450d1dd9403511936d1387",
-        "message": "FIX: document FINRA trailer and market-row contract"
-      },
-      {
-        "sha": "d990ffd82063e513139dce8bc9a5cdb21a2fb424",
-        "message": "TEST: cover FINRA trailer and per-market duplicate semantics"
       },
       {
         "sha": "da472d1f9c3ba542515f0c5176c0e6a73ea8fbff",
@@ -1400,7 +1407,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "09fe5a0d3f302d8504d7c798b44182d0e960123d",
+  "source_master_sha": "f44f55c63b2da13a2271a3c860331616df74c66e",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
@@ -1408,5 +1415,5 @@
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
     "run_id": "37137143939"
   },
-  "active_research_registry_note": "Status synchronized to current technical master; Q121-R2 independent SEC daily-index reconciliation is active; Q127 parser schema correction is merged; no new Q121/Q127/Q130 scientific receipts have been independently verified."
+  "active_research_registry_note": "Status synchronized to current technical master; Q121-R1/Q121-R2, Q127-R1, Q130-R1 and Q131-R1 are active source/PIT tracks; no new Q121/Q127/Q130/Q131 scientific receipts have been independently verified."
 }
