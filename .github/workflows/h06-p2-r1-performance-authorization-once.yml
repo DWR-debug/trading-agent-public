@@ -17,7 +17,15 @@ concurrency:
 
 jobs:
   authorize:
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    if: >-
+      github.repository == 'DWR-debug/trading-agent-public' &&
+      (
+        github.event_name == 'workflow_dispatch' ||
+        (
+          github.event_name == 'push' &&
+          contains(join(github.event.commits.*.modified, ','), 'research/run_requests/h06_p2_r1_authorize_once.trigger')
+        )
+      )
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
