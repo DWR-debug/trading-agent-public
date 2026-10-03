@@ -15,6 +15,7 @@ from pathlib import Path
 
 UA = "trading-agent-public/Q171-webstate-coverage/1"
 CRAWL = "CC-MAIN-2025-43"
+REQUEST_GAP_SECONDS = 5
 MAP_PATH = Path("research/governance/q171_issuer_web_url_map_2026_10_03.json")
 
 
@@ -57,6 +58,7 @@ def fetch_with_fixed_retries(url: str, attempts: int = 3) -> tuple[int, bytes, i
     return last_status, last_body, attempts
 
 def query_index(url: str) -> dict[str, object]:
+    import time
     endpoint = (
         f"https://index.commoncrawl.org/{CRAWL}-index?"
         + urllib.parse.urlencode(
@@ -71,11 +73,13 @@ def query_index(url: str) -> dict[str, object]:
         )
     )
     status, body, attempts = fetch_with_fixed_retries(endpoint, attempts=3)
+    time.sleep(REQUEST_GAP_SECONDS)
     if status != 200:
         return {
             "status": "BLOCKED_INDEX_FETCH",
             "http_status": status,
             "attempts": attempts,
+            "error_body_excerpt": body.decode("utf-8", errors="replace")[:500],
             "index_sha256": hashlib.sha256(body).hexdigest(),
         }
 
