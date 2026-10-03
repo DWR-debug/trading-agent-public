@@ -140,6 +140,7 @@ def test_every_lane_writes_non_formal_run_manifest(monkeypatch, tmp_path):
 def test_each_lane_fails_closed_and_preserves_failure_provenance(
     monkeypatch, tmp_path
 ):
+    monkeypatch.delenv("GITHUB_RUN_NUMBER", raising=False)
     monkeypatch.setenv("GITHUB_SHA", "abc123")
     monkeypatch.setenv("RUNNER_NAME", "self-hosted-test")
 
