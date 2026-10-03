@@ -56,7 +56,7 @@ Die primäre Nachtspur ist der bestehende 30-Minuten-Self-Hosted-Zyklus. Er star
 
 Wenn der Self-Hosted-Heartbeat ausbleibt, übernimmt die bestehende Hosted-Failover-Spur automatisch bounded Frontier-/Governance-Diagnostik. Damit entsteht keine Forschungspause allein deshalb, weil der Arbeits-PC ausgeschaltet oder der Runner offline ist.
 
-S10 ist davon getrennt: das Telefon stellt eigene ARM64/Termux-Compute bereit. Es wird nur dann geroutet, wenn \`ops/s10_runtime_status.json\` einen gültigen \`S10_UTILITY_ACCEPTED\`-Receipt meldet und eine bounded Aufgabe vorhanden ist.
+S10 ist davon getrennt: das Telefon stellt eigene ARM64/Termux-Compute bereit. Ein erfolgreicher Utility-Lauf im aktuellen Receipt-Fenster von 6 Stunden dient als Presence-Signal für das Routing; bei abgelaufenem Receipt wird fail-closed nicht geroutet.
 
 Weitere Samsung-/Android-Telefone werden über \`ops/android_phone_resources.json\` und die Fleet-Spur geroutet. Der Planungsjob ermittelt online verfügbare, eindeutig gelabelte Runner; offline Slots erzeugen keine wartenden Forschungsjobs. Nach erfolgreicher \`ANDROID_PHONE_UTILITY_ACCEPTED\`-Acceptance darf die Ressource nur für bounded Unterstützung eingesetzt werden.
 
