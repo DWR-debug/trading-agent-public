@@ -206,7 +206,7 @@ def main()->int:
     }
     result["receipt_fingerprint"]=hashlib.sha256(json.dumps(result,sort_keys=True,separators=(",",":")).encode()).hexdigest()
     args.output.parent.mkdir(parents=True,exist_ok=True)
-    args.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\\n",encoding="utf-8")
+    args.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     print(json.dumps({"status":result["status"],"event_count":total_events,"receipt_fingerprint":result["receipt_fingerprint"]}))
     return 0
 
