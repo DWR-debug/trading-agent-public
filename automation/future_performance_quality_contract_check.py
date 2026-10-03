@@ -104,6 +104,22 @@ def validate(root: Path = ROOT) -> dict:
         if not candidate_id or not isinstance(candidate_gate, dict):
             violations.append(f"{entry.get('code')}: missing universal candidate robustness gate")
         else:
+            required_candidate_gate_fields = (
+                "receipt_path",
+                "candidate_inventory_path",
+                "bundle_fingerprint",
+                "candidate_fingerprint",
+            )
+            missing_candidate_gate_fields = [
+                field for field in required_candidate_gate_fields
+                if not isinstance(candidate_gate.get(field), str) or not candidate_gate.get(field)
+            ]
+            if missing_candidate_gate_fields:
+                violations.append(
+                    f"{entry.get('code')}: candidate robustness gate metadata missing: "
+                    + ",".join(missing_candidate_gate_fields)
+                )
+
             receipt_path_value = candidate_gate.get("receipt_path")
             receipt_sha = candidate_gate.get("receipt_sha256")
             try:
