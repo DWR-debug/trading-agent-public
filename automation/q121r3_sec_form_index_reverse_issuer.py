@@ -77,16 +77,19 @@ def fetch(url: str) -> tuple[int, bytes]:
 def parse_index(body: bytes) -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     for raw in body.decode("latin-1").splitlines():
-        line = raw.strip()
-        if not line or "|" not in line:
+        line = raw.rstrip("\r\n")
+        if len(line) < 98:
             continue
-        parts = line.split("|", 4)
-        if len(parts) != 5:
-            continue
-        cik, company, form, filed_date, filename = parts
+        form = line[0:12].strip()
+        company = line[12:74].strip()
+        cik = line[74:86].strip()
+        filed_date = line[86:98].strip()
+        filename = line[98:].strip()
         if not re.fullmatch(r"SC 13[DG](?:/A)?", form, re.IGNORECASE):
             continue
         if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", filed_date):
+            continue
+        if not re.fullmatch(r"\d{1,10}", cik):
             continue
         if not filename.startswith("edgar/data/"):
             continue
