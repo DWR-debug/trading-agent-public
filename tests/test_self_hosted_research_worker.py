@@ -80,6 +80,8 @@ def test_every_lane_writes_non_formal_run_manifest(monkeypatch, tmp_path):
                 lane,
                 "--output-dir",
                 str(output_dir),
+                "--max-workers",
+                "1",
             ],
         )
 
@@ -102,6 +104,7 @@ def test_every_lane_writes_non_formal_run_manifest(monkeypatch, tmp_path):
             "orders_enabled": False,
             "automatic_promotion": False,
             "formal_research_evidence": False,
+            "max_workers": 1,
             "step_count": len(expected_codes),
             "step_return_codes": expected_codes,
             "failed_steps": [] if len(commands) == 1 else list(range(2, len(commands) + 1)),
@@ -142,6 +145,8 @@ def test_each_lane_fails_closed_and_preserves_failure_provenance(
                 lane,
                 "--output-dir",
                 str(output_dir),
+                "--max-workers",
+                "1",
             ],
         )
 
