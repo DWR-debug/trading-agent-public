@@ -29,7 +29,7 @@ jobs:
       - name: Checkout exact source
         uses: actions/checkout@v5
         with:
-          ref: \${{ github.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 1
 
       - name: Setup Python
@@ -43,7 +43,7 @@ jobs:
           set -euo pipefail
           mkdir -p "research/runs/q169_noaa_swpc_pit_readiness"
           python -m automation.q169_noaa_swpc_archive_pit_probe \
-            --output "research/runs/q169_noaa_swpc_pit_readiness/\${GITHUB_RUN_ID}.json"
+            --output "research/runs/q169_noaa_swpc_pit_readiness/${GITHUB_RUN_ID}.json"
 
       - name: Validate PIT boundary
         shell: bash
@@ -75,30 +75,30 @@ jobs:
         if: success() && github.event_name != 'pull_request'
         shell: bash
         env:
-          GH_TOKEN: \${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
           PUBLISH_MESSAGE: "OPS: persist latest Q169 NOAA PIT archive receipt"
         run: |
           set -euo pipefail
-          input="research/runs/q169_noaa_swpc_pit_readiness/\${GITHUB_RUN_ID}.json"
+          input="research/runs/q169_noaa_swpc_pit_readiness/${GITHUB_RUN_ID}.json"
           latest="research/evidence/q169_noaa_swpc_archive_pit_latest.json"
-          test -f "\$input"
+          test -f "$input"
           for attempt in 1 2 3; do
             git fetch origin master --quiet
             base_sha="\$(git rev-parse origin/master)"
-            if git show "origin/master:\${latest}" > "\$RUNNER_TEMP/q169_current_receipt.json" 2>/dev/null; then
-              if cmp -s "\$latest" "\$RUNNER_TEMP/q169_current_receipt.json"; then
+            if git show "origin/master:\${latest}" > "$RUNNER_TEMP/q169_current_receipt.json" 2>/dev/null; then
+              if cmp -s "$latest" "$RUNNER_TEMP/q169_current_receipt.json"; then
                 echo "Q169_NOAA_PIT_RECEIPT_UNCHANGED"
                 exit 0
               fi
             fi
             if python automation/github_contents_publish.py \
-              --repository "\$GITHUB_REPOSITORY" \
+              --repository "$GITHUB_REPOSITORY" \
               --branch master \
-              --base-sha "\$base_sha" \
-              --file "\$latest=\$latest"; then
+              --base-sha "$base_sha" \
+              --file "$latest=$latest"; then
               exit 0
             fi
-            sleep "\$attempt"
+            sleep "$attempt"
           done
           echo "::error::Q169 NOAA PIT receipt publication failed after retries"
           exit 1
