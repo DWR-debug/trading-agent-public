@@ -85,3 +85,14 @@ def test_parser_rejects_trailer_count_mismatch():
             b"20250924|SPGI|1|0|2|Q\n"
             b"9\n"
         )
+
+
+def test_parser_accepts_consolidated_multi_market_field():
+    body = (
+        b"Date|Symbol|ShortVolume|ShortExemptVolume|TotalVolume|Market\n"
+        b"20250924|A|10|0|20|B,Q,N\n"
+        b"1\n"
+    )
+    _, rows, _, trailer_count = parse_file(body)
+    assert rows["A"][0]["Market"] == "B,Q,N"
+    assert trailer_count == 1
