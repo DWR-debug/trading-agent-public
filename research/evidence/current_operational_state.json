@@ -919,7 +919,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-03T18:16:51.483728+00:00",
+  "generated_at_utc": "2026-10-03T18:17:07.563840+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1325,6 +1325,21 @@
     "recent_commits": [
       {
         "message": "OPS: synchronize current operational status",
+        "sha": "45c9c13656851dd37c0d9d22c454df67c8eb1070",
+        "timestamp": "2026-10-03T18:16:55Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "40bfa2b309738e4957f784840dfd40ac18b87ac6",
+        "timestamp": "2026-10-03T18:16:54Z"
+      },
+      {
+        "message": "STATUS: record verified Q121-R3/R4 outcomes in canonical human status",
+        "sha": "466271f5bbf7e00d5c931af6ec108361e3365e29",
+        "timestamp": "2026-10-03T20:16:51+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
         "sha": "c7bd4bacc9babcb27bb748968a7985f72d529717",
         "timestamp": "2026-10-03T18:16:37Z"
       },
@@ -1347,21 +1362,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "5d9a9c8af8666a7ccea2b52cdd3bdf923f404cbc",
         "timestamp": "2026-10-03T18:15:00Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c0480ed4da101df014f47690367aa62c06ffa926",
-        "timestamp": "2026-10-03T18:14:58Z"
-      },
-      {
-        "message": "Merge pull request #981 from DWR-debug/research/q121r4-master-index-2026-10-03",
-        "sha": "c26f1151bac5a66c1332fe21d3d1203f1af2e8f0",
-        "timestamp": "2026-10-03T20:14:45+02:00"
-      },
-      {
-        "message": "FIX: register Q121-R4 workflow in project integrity",
-        "sha": "7e9044cc48f641b766859daa4f2d1c33896278aa",
-        "timestamp": "2026-10-03T20:13:36+02:00"
       }
     ]
   },
@@ -1431,7 +1431,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c7bd4bacc9babcb27bb748968a7985f72d529717",
+  "source_master_sha": "45c9c13656851dd37c0d9d22c454df67c8eb1070",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -1545,6 +1545,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37143582476"
+    "run_id": "37143593079"
   }
 }
