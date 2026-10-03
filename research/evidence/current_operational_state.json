@@ -824,7 +824,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T14:44:10.919912+00:00",
+  "generated_at_utc": "2026-10-03T14:53:18.703773+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1226,8 +1226,42 @@
     ],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "research/q169-noaa-archive-pit-20261003",
+        "number": 946,
+        "title": "RESEARCH: bounded Q169 NOAA SWPC archive PIT probe",
+        "updatedAt": "2026-10-03T14:52:07Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/946"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "Merge pull request #945 from DWR-debug/fix/q171-warc-fingerprint-20261003",
+        "sha": "52a95f3c19b3a5dcbf0c7187de9e6a5ec3fd8b79",
+        "timestamp": "2026-10-03T16:52:31+02:00"
+      },
+      {
+        "message": "TEST: guard Q171 canonical receipt fingerprint",
+        "sha": "1e99ea61cc338c94d8b710531bdde027ee199af6",
+        "timestamp": "2026-10-03T16:49:06+02:00"
+      },
+      {
+        "message": "FIX: canonicalize Q171 WARC receipt fingerprint",
+        "sha": "2e79c67cac1c106cc312adbfaa0b11e718bc12cc",
+        "timestamp": "2026-10-03T16:48:56+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d85fd0478fbfb20f7b3af06ccb15920ad115cb1a",
+        "timestamp": "2026-10-03T14:44:12Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8f7eae66f036a90dfbce942cad84c2e7713b93e6",
+        "timestamp": "2026-10-03T14:44:11Z"
+      },
       {
         "message": "Merge pull request #944 from DWR-debug/ops/q171-receipt-sync-separation-20261003",
         "sha": "44dd384f05a61d3c2cbeb411c859b7de67c15b18",
@@ -1242,31 +1276,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "2b5c337b3e2133226d00d9502d5566b9ba3972c5",
         "timestamp": "2026-10-03T14:37:24Z"
-      },
-      {
-        "message": "TEST: guard Q171 receipt sync separation",
-        "sha": "2b9f4f76384edab4b8d3a9551e380e1f4f428dfb",
-        "timestamp": "2026-10-03T16:33:23+02:00"
-      },
-      {
-        "message": "OPS: register Q171 receipt sync workflow",
-        "sha": "5f92eebdb2d39a8d88f57c1ccc3a97053e15ca8d",
-        "timestamp": "2026-10-03T16:33:16+02:00"
-      },
-      {
-        "message": "OPS: separate Q171 material receipt sync workflow",
-        "sha": "173e83679a84b2f0f118f5ac654ab32e5533e041",
-        "timestamp": "2026-10-03T16:33:01+02:00"
-      },
-      {
-        "message": "OPS: separate Q171 receipt sync from scientific workflow",
-        "sha": "4a075ef18da561559632139f5ae992708ec8f010",
-        "timestamp": "2026-10-03T16:32:47+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e77e3056e1f731b8fb33665fdb3f83ec8091c4c1",
-        "timestamp": "2026-10-03T14:32:24Z"
       }
     ]
   },
@@ -1336,12 +1345,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "44dd384f05a61d3c2cbeb411c859b7de67c15b18",
+  "source_master_sha": "52a95f3c19b3a5dcbf0c7187de9e6a5ec3fd8b79",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37130666768"
+    "run_id": "37131198379"
   }
 }
