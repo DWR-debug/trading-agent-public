@@ -1,0 +1,73 @@
+name: Q121-R1 SEC Reverse Issuer Coverage
+
+on:
+  schedule:
+    - cron: "40 */12 * * *"
+  workflow_dispatch:
+  pull_request:
+    branches: [master]
+    paths:
+      - "automation/q121r1_sec_reverse_issuer_coverage.py"
+      - "tests/test_q121r1_sec_reverse_issuer_coverage.py"
+      - "research/preregistrations/q121r1_sec_reverse_issuer_coverage_2026_10_03.json"
+      - ".github/workflows/q121r1-sec-reverse-issuer-coverage.yml"
+  push:
+    branches: [master]
+    paths:
+      - "automation/q121r1_sec_reverse_issuer_coverage.py"
+      - "tests/test_q121r1_sec_reverse_issuer_coverage.py"
+      - "research/preregistrations/q121r1_sec_reverse_issuer_coverage_2026_10_03.json"
+      - ".github/workflows/q121r1-sec-reverse-issuer-coverage.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-q121r1-sec-reverse-issuer-coverage
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Contract tests
+        run: python -m pytest -q tests/test_q121r1_sec_reverse_issuer_coverage.py
+      - name: Run source feasibility probe
+        run: python -m automation.q121r1_sec_reverse_issuer_coverage --output research/runs/q121r1_sec_reverse_issuer_coverage/result.json
+      - name: Validate governance boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path("research/runs/q121r1_sec_reverse_issuer_coverage/result.json").read_text(encoding="utf-8"))
+          assert p["status"] == "Q121R1_SOURCE_REVERSE_COVERAGE_COMPLETED"
+          assert p["summary"]["identity_checks"] == p["summary"]["identity_checks_passed"]
+          assert p["governance"]["performance"] is False
+          assert p["governance"]["holdout"] is False
+          assert p["governance"]["selection"] is False
+          assert p["governance"]["ranking"] is False
+          assert p["governance"]["performance_authorized"] is False
+          assert p["safety"]["paper_only"] is True
+          print("Q121R1_SOURCE_REVERSE_BOUNDARY=PASS")
+          print("Q121R1_ENTRIES=", p["summary"]["discovered_filing_entries"])
+          print("Q121R1_IDENTITY_CHECKS=", p["summary"]["identity_checks"])
+          print("Q121R1_RECEIPT=", p["receipt_fingerprint"])
+          PY
+      - name: Upload source receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q121r1-sec-reverse-issuer-coverage-${{ github.run_id }}
+          path: research/runs/q121r1_sec_reverse_issuer_coverage/result.json
+          if-no-files-found: error
+          retention-days: 30
