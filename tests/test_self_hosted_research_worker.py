@@ -8,6 +8,33 @@ from automation import self_hosted_research_worker as worker
 ROOT = Path(__file__).parents[1]
 
 
+def test_frontier_lane_has_bounded_parallelism_and_reproduction_stays_serial():
+    assert worker.default_max_workers("autonomous_frontier_qa") == 3
+    assert worker.default_max_workers("local_reproduction") == 1
+    assert worker.default_max_workers("repo_qa") == 1
+
+
+def test_worker_rejects_unbounded_concurrency(monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "self_hosted_research_worker",
+            "--lane",
+            "data_qa",
+            "--output-dir",
+            str(tmp_path),
+            "--max-workers",
+            "5",
+        ],
+    )
+    try:
+        worker.main()
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("expected argparse failure for unbounded concurrency")
+
+
 def test_self_hosted_worker_has_only_bounded_lanes():
     assert set(worker.LANES) == {"repo_qa", "data_qa", "design_qa", "local_reproduction", "autonomous_frontier_qa"}
     for commands in worker.LANES.values():
