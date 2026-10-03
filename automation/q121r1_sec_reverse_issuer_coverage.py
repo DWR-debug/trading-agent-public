@@ -177,6 +177,7 @@ def run(output: Path) -> dict[str, object]:
     source_records: dict[str, object] = {}
     identity_checks: list[dict[str, object]] = []
     total_entries = 0
+    falsification: dict[str, object] | None = None
 
     for symbol in SYMBOLS:
         issuer_cik = ciks[symbol]
@@ -254,17 +255,20 @@ def run(output: Path) -> dict[str, object]:
                     "header_sha256": sha256_bytes(dbody),
                 })
                 if not ok:
-                    raise RuntimeError(
-                        f"IDENTITY_CHECK_FAILED:{symbol}:{form}:{sample['accession_number']}:"
-                        f"subject={subject}:filer={filer}:accepted={accepted}"
-                    )
+                    falsification = identity_checks[-1]
+                    break
+
+            if falsification is not None:
+                break
 
         source_records[symbol] = per_form
+        if falsification is not None:
+            break
 
     result: dict[str, object] = {
         "schema_version": "1.0",
         "task_id": "Q-2026-10-03-121R1-SEC-REVERSE-ISSUER-COVERAGE",
-        "status": "Q121R1_SOURCE_REVERSE_COVERAGE_COMPLETED",
+        "status": ("Q121R1_SOURCE_ROUTE_FALSIFIED" if falsification is not None else "Q121R1_SOURCE_REVERSE_COVERAGE_COMPLETED"),
         "issuer_cik_map": ciks,
         "source_contract": {
             "endpoint": "https://www.sec.gov/cgi-bin/browse-edgar",
@@ -282,6 +286,12 @@ def run(output: Path) -> dict[str, object]:
             "discovered_filing_entries": total_entries,
             "identity_checks": len(identity_checks),
             "identity_checks_passed": sum(1 for x in identity_checks if x["status"] == "PASS"),
+            "route_falsified": falsification is not None,
+        },
+        "falsification": falsification,
+        "interpretation": {
+            "issuer_oriented_route_proven": falsification is None,
+            "population_formalization_allowed": False,
         },
         "governance": {
             "performance": False,
