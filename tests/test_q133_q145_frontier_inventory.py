@@ -21,9 +21,10 @@ def test_q133_q145_inventory_is_discovery_only():
 def test_workflow_lifecycle_registry_marks_manual_s10_diagnostics():
     p = ROOT / "research/governance/workflow_lifecycle_registry_2026_10_03.json"
     data = json.loads(p.read_text(encoding="utf-8"))
-    assert data["workflow_inventory_count"] == 174
+    assert data["workflow_inventory_count"] == 175
     assert ".github/workflows/s10-runtime-probe.yml" in data["manual_only"]
     assert ".github/workflows/q121r1-sec-reverse-issuer-coverage.yml" in data["canonical_active"]
+    assert ".github/workflows/q127r1-finra-regsho-historical-pit.yml" in data["canonical_active"]
     assert ".github/workflows/s10-throughput-probe.yml" in data["manual_only"]
     assert ".github/workflows/hosted-deterministic-frontier.yml" in data["canonical_active"]
     assert ".github/workflows/q129-independent-pit-reproduction.yml" in data["canonical_active"]
