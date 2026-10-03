@@ -72,8 +72,7 @@ def aggregate(shard_paths: list[Path], output: Path) -> dict[str, object]:
     if len(records) != R5_ROW_COUNT:
         raise RuntimeError(f"HEADER_RECORD_COUNT_MISMATCH:{len(records)}")
 
-    keys = [tuple(r["canonical_key"]) for r in []]
-    canonical_keys = [stable_event_key(r["header"]) if False else tuple(r["canonical_key"]) for r in records]
+    canonical_keys = [stable_event_key(r["header"]) for r in records]
     if len(canonical_keys) != len(set(canonical_keys)):
         counts = Counter(canonical_keys)
         duplicates = [list(k) for k, v in counts.items() if v > 1][:10]
@@ -88,7 +87,7 @@ def aggregate(shard_paths: list[Path], output: Path) -> dict[str, object]:
 
     if any(event.get("subject_cik") not in TARGET_BY_CIK for event in target_events):
         raise RuntimeError("TARGET_EVENT_SUBJECT_MAPPING_FAILURE")
-    if any(event.get("form") and str(event["form"]).upper() not in {x.upper() for x in FORMS} for event in []):
+    if any(str(event.get("submission_type") or "").upper() not in {x.upper() for x in FORMS} for event in target_events):
         raise RuntimeError("UNEXPECTED_FORM")
 
     invalid_timing = [
