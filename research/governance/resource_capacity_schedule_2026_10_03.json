@@ -1,25 +1,143 @@
 {
-  "schema_version":"1.0",
-  "generated_utc":"2026-10-03T12:30:00Z",
-  "report_window":"unspecified_in_user_supplied_usage_extract",
-  "policy":"maximize useful research and engineering progress per free resource; do not consume quota merely to create activity",
-  "capacity_totals":{"hosted_minutes":3907,"hosted_runs":2734,"hosted_workflows":68,"self_hosted_minutes":3194,"self_hosted_runs":459,"self_hosted_workflows":14},
-  "active_resources":[
-    {"id":"HOSTED-UBUNTU","when":"continuous/event-driven","what":"CI, Full Suite, deterministic frontier, source feasibility, reproduction","allocation":"primary","why":"short queue and reproducible environment"},
-    {"id":"HOSTED-WINDOWS","when":"6h","what":"continuous repo_qa","allocation":"one bounded lane","why":"Windows QA without consuming physical capacity"},
-    {"id":"WIN-RUNNER-1","when":"30m/event/manual","what":"local reproduction; local AI when eligible","allocation":"specialist","why":"physical environment"},
-    {"id":"WIN-RUNNER-2","when":"30m/event/manual","what":"independent reproduction / local specialist work","allocation":"specialist","why":"second physical slot for controlled parallelism"},
-    {"id":"S10","when":"6h/event-driven with fresh <=6h receipt","what":"bounded utility/QA","allocation":"receipt-gated","why":"mobile compute and device validation"},
-    {"id":"ANDROID-FLEET","when":"6h","what":"only online uniquely labeled Samsung slots","allocation":"controlled","why":"measured capacity only; no nominal scale-out"},
-    {"id":"OPENROUTER-FREE","when":"6h","what":"adversarial research/engineering prompts","allocation":"preferred recurring AI","why":"historically operational free route"},
-    {"id":"GEMINI","when":"manual / local scheduled smoke","what":"independent adversarial/engineering review","allocation":"opportunistic","why":"previous hosted API instability"},
-    {"id":"MISTRAL","when":"manual","what":"independent adversarial review","allocation":"opportunistic","why":"previous rate limiting"},
-    {"id":"COPILOT-FREE","when":"event-driven","what":"bounded engineering only","allocation":"<=4 sessions/month, <=30 credits/session, <=1 concurrent","why":"protected monthly reserve"},
-    {"id":"CODESPACES","when":"on demand","what":"interactive engineering/data QA/reproduction","allocation":"120 core-hours/month","why":"interactive specialist environment"},
-    {"id":"PRIVATE-VAULT","when":"hourly + critical-change push","what":"public-master recovery bundle","allocation":"one recovery stream","why":"integrity/recovery"},
-    {"id":"SCHEDULED-FRONTIER","when":"every 10m","what":"one deterministic 10-step frontier pack","allocation":"one hosted worker","why":"30-step full rotation every about 30m"}
+  "schema_version": "1.0",
+  "generated_utc": "2026-10-03T12:30:00Z",
+  "report_window": "unspecified_in_user_supplied_usage_extract",
+  "policy": "maximize useful research and engineering progress per free resource; do not consume quota merely to create activity",
+  "capacity_totals": {
+    "hosted_minutes": 3907,
+    "hosted_runs": 2734,
+    "hosted_workflows": 68,
+    "self_hosted_minutes": 3194,
+    "self_hosted_runs": 459,
+    "self_hosted_workflows": 14
+  },
+  "active_resources": [
+    {
+      "id": "HOSTED-UBUNTU",
+      "when": "continuous/event-driven",
+      "what": "CI, Full Suite, deterministic frontier, source feasibility, reproduction",
+      "allocation": "primary",
+      "why": "short queue and reproducible environment"
+    },
+    {
+      "id": "HOSTED-WINDOWS",
+      "when": "6h",
+      "what": "continuous repo_qa",
+      "allocation": "one bounded lane",
+      "why": "Windows QA without consuming physical capacity"
+    },
+    {
+      "id": "WIN-RUNNER-1",
+      "when": "30m/event/manual",
+      "what": "local reproduction; local AI when eligible",
+      "allocation": "specialist-parallel",
+      "why": "physical environment",
+      "availability_policy": "ASSUMED_ALWAYS_AVAILABLE"
+    },
+    {
+      "id": "WIN-RUNNER-2",
+      "when": "30m/event/manual",
+      "what": "independent reproduction / local specialist work",
+      "allocation": "specialist-parallel",
+      "why": "second physical slot for controlled parallelism",
+      "availability_policy": "ASSUMED_ALWAYS_AVAILABLE"
+    },
+    {
+      "id": "S10",
+      "when": "6h/event-driven",
+      "what": "bounded utility/QA",
+      "allocation": "always-routable-receipt-diagnostic",
+      "why": "mobile compute and device validation",
+      "availability_policy": "ASSUMED_ALWAYS_AVAILABLE"
+    },
+    {
+      "id": "ANDROID-FLEET",
+      "when": "6h",
+      "what": "only online uniquely labeled Samsung slots",
+      "allocation": "always-routable-controlled",
+      "why": "measured capacity only; no nominal scale-out",
+      "availability_policy": "ASSUMED_ALWAYS_AVAILABLE"
+    },
+    {
+      "id": "OPENROUTER-FREE",
+      "when": "6h",
+      "what": "adversarial research/engineering prompts",
+      "allocation": "preferred recurring AI",
+      "why": "historically operational free route"
+    },
+    {
+      "id": "GEMINI",
+      "when": "manual / local scheduled smoke",
+      "what": "independent adversarial/engineering review",
+      "allocation": "opportunistic",
+      "why": "previous hosted API instability"
+    },
+    {
+      "id": "MISTRAL",
+      "when": "manual",
+      "what": "independent adversarial review",
+      "allocation": "opportunistic",
+      "why": "previous rate limiting"
+    },
+    {
+      "id": "COPILOT-FREE",
+      "when": "event-driven",
+      "what": "bounded engineering only",
+      "allocation": "<=4 sessions/month, <=30 credits/session, <=1 concurrent",
+      "why": "protected monthly reserve"
+    },
+    {
+      "id": "CODESPACES",
+      "when": "on demand",
+      "what": "interactive engineering/data QA/reproduction",
+      "allocation": "120 core-hours/month",
+      "why": "interactive specialist environment"
+    },
+    {
+      "id": "PRIVATE-VAULT",
+      "when": "hourly + critical-change push",
+      "what": "public-master recovery bundle",
+      "allocation": "one recovery stream",
+      "why": "integrity/recovery"
+    },
+    {
+      "id": "SCHEDULED-FRONTIER",
+      "when": "every 10m",
+      "what": "one deterministic 10-step frontier pack",
+      "allocation": "one hosted worker",
+      "why": "30-step full rotation every about 30m"
+    }
   ],
-  "safety":{"PAPER_ONLY":true,"LIVE_TRADING_ENABLED":false,"ORDERS_ENABLED":false,"AUTOMATIC_PROMOTION":false},
-  "scientific_boundary":{"performance":false,"holdout_selection":false,"asset_selection":false,"parameter_search":false,"threshold_search":false,"horizon_search":false,"candidate_ranking":false,"promotion":false},
-  "optimization_status":{"t052_push_trigger_removed":true,"deep_frontier_cadence_hours":6,"vault_cadence_hours":1,"continuous_qa_uses_hosted_windows":true,"scheduled_ai_provider":"openrouter_free"}
+  "safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false
+  },
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "asset_selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "candidate_ranking": false,
+    "promotion": false
+  },
+  "optimization_status": {
+    "t052_push_trigger_removed": true,
+    "deep_frontier_cadence_hours": 6,
+    "vault_cadence_hours": 1,
+    "continuous_qa_uses_hosted_windows": true,
+    "scheduled_ai_provider": "openrouter_free",
+    "windows_two_lane_loop": true,
+    "heartbeat_fallback_disabled": true
+  },
+  "availability_policy": {
+    "self_hosted_windows": "ASSUMED_ALWAYS_AVAILABLE",
+    "s10": "ASSUMED_ALWAYS_AVAILABLE",
+    "android_fleet": "ASSUMED_ALWAYS_AVAILABLE",
+    "routing_may_use_assumed_capacity": true,
+    "receipts_remain_diagnostic_and_evidentiary": true
+  }
 }
