@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "receipt_type": "q171_q177_pit_readiness",
+  "candidate_range": "Q171-Q177",
+  "workflow_run_id": 37125689936,
+  "workflow_run_attempt": 1,
+  "source_commit": "4b667fdaac95047c3be0e48545c42520e3a3cef9",
+  "artifact_id": 11275045873,
+  "artifact_sha256": "33ae3b36dca75bb06bed8d1cae963d5bed4f559672fb1745c98097288626be8e",
+  "status": "PIT_READINESS_COMPLETED_NO_PERFORMANCE",
+  "receipt_fingerprint": "1e571bf36a7ec522b66f14d9e7f41abdd79e8c817411b528710c43600a184372",
+  "results": {
+    "Q171": {
+      "status": "PIT_SAMPLE_RECONSTRUCTABLE",
+      "crawl": "CC-MAIN-2025-43",
+      "capture_timestamp": "20251014220259",
+      "capture_digest": "D4IRZZ6NS7QW37BB2ODQPCUGG7ISRFGV",
+      "warc_http_status": 206,
+      "warc_sha256": "1eafcb1574ad47bbe35b3504caf155783ead21812fb792c9d828b318804e902d",
+      "index_sha256": "cd1e85d8cd25349b236df8faccbcad59d205f3ffbba52f41b8412ccb2e3faf6c",
+      "boundary": "sample-only; issuer URL map and candidate-specific state compiler required"
+    },
+    "Q174": {
+      "status": "SOURCE_CLOCK_ACCESS_CONFIRMED",
+      "pit_ready": false,
+      "blocker": "dataset-vintage stability/update-revision contract remains"
+    },
+    "Q175": {
+      "status": "VERSIONED_PRODUCT_SEMANTICS_CONFIRMED",
+      "pit_ready": false,
+      "blocker": "candidate-specific historical product-state compiler remains"
+    },
+    "Q176": {
+      "status": "MULTIPLE_DEPOSIT_CLOCKS_CONFIRMED",
+      "pit_ready": false,
+      "blocker": "record-vintage/affiliation and correction handling remain"
+    },
+    "Q177": {
+      "status": "ARCHIVE_AND_REVISION_SEMANTICS_CONFIRMED",
+      "pit_ready": false,
+      "blocker": "archive payload retrieval and fixed exposure taxonomy remain"
+    }
+  },
+  "scientific_boundary": {
+    "performance": false,
+    "holdout": false,
+    "selection": false,
+    "ranking": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
