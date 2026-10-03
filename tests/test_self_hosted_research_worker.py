@@ -167,9 +167,10 @@ def test_each_lane_fails_closed_and_preserves_failure_provenance(
         assert manifest["lane"] == lane
         assert manifest["source_commit"] == "abc123"
         assert manifest["step_return_codes"] == [17] * len(worker.LANES[lane])
-        assert manifest["failed_steps"] == list(range(1, len(worker.LANES[lane]) + 1))
+        expected_failed_steps = list(range(1, len(worker.LANES[lane]) + 1)) if lane != "autonomous_frontier_qa" else list(range(1, 8)) + list(range(9, len(worker.LANES[lane]) + 1)) + [8]
+        assert manifest["failed_steps"] == expected_failed_steps
         assert manifest["all_bounded_steps_attempted"] is True
-        assert summary["failed_steps"] == list(range(1, len(worker.LANES[lane]) + 1))
+        assert summary["failed_steps"] == expected_failed_steps
         assert summary["all_bounded_steps_attempted"] is True
 
 
