@@ -24,6 +24,8 @@ on:
       - "tests/test_q171_webstate_warc_reconstruction.py"
       - "research/governance/q171_issuer_web_url_map_2026_10_03.json"
       - "tests/test_q171_webstate_coverage.py"
+      - "automation/q171_webstate_state_compiler.py"
+      - "tests/test_q171_webstate_state_compiler.py"
       - ".github/workflows/deep-frontier-source-feasibility.yml"
 
 permissions:
@@ -87,6 +89,39 @@ jobs:
           set -euo pipefail
           python -m automation.q171_webstate_coverage \
             --output "research/runs/deep_frontier/${GITHUB_RUN_ID}/q171_webstate_coverage.json"
+
+      - name: Run Q171 deterministic web-state compiler
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q171_webstate_state_compiler             "research/runs/deep_frontier/${GITHUB_RUN_ID}/q171_webstate_coverage.json"             --output "research/runs/deep_frontier/${GITHUB_RUN_ID}/q171_webstate_state_compiler.json"
+
+      - name: Validate Q171 state compiler boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p = Path("research/runs/deep_frontier") / os.environ["GITHUB_RUN_ID"] / "q171_webstate_state_compiler.json"
+          d = json.loads(p.read_text(encoding="utf-8"))
+          assert d["status"] == "Q171_WEBSTATE_STATE_COMPILER_COMPLETED"
+          assert d["synthetic_mutation_checks"]["future_row_invariance"] is True
+          assert d["synthetic_mutation_checks"]["future_row_after_cutoff_not_visible"] is True
+          assert d["information_boundary"]["exact_public_availability_claim"] is False
+          assert d["information_boundary"]["same_day_use"] is False
+          assert d["scientific_boundary"]["performance"] is False
+          assert d["scientific_boundary"]["holdout"] is False
+          assert d["scientific_boundary"]["selection"] is False
+          assert d["scientific_boundary"]["ranking"] is False
+          assert d["scientific_boundary"]["promotion"] is False
+          assert d["scientific_boundary"]["live_execution"] is False
+          assert d["safety"]["paper_only"] is True
+          assert d["safety"]["live_trading_enabled"] is False
+          assert d["safety"]["orders_enabled"] is False
+          assert d["safety"]["automatic_promotion"] is False
+          print("Q171_WEBSTATE_STATE_COMPILER_OK")
+          PY
 
       - name: Run Q171 WARC reconstruction
         continue-on-error: true
