@@ -1,0 +1,155 @@
+{
+  "schema_version": "1.0",
+  "wave_id": "Q133-Q145-2026-10-03",
+  "status": "DESIGN_INVENTORY_ONLY",
+  "generated_utc": "2026-10-03T00:00:00Z",
+  "purpose": "Broad, source-first orthogonal alpha discovery inventory from public/free data channels.",
+  "policy": {
+    "performance_authorized": false,
+    "holdout_selection_allowed": false,
+    "parameter_search_allowed": false,
+    "asset_search_allowed": false,
+    "threshold_search_allowed": false,
+    "horizon_search_allowed": false,
+    "variant_search_allowed": false,
+    "family_ranking_allowed": false,
+    "automatic_promotion": false,
+    "paid_data_required": false
+  },
+  "candidates": [
+    {
+      "id": "Q133",
+      "name": "Settlement-pressure divergence",
+      "sources": [
+        "SEC Fails-to-Deliver",
+        "FINRA Daily Short Sale Volume",
+        "OHLCV"
+      ],
+      "next_gate": "publication timing, security mapping, synthetic PIT"
+    },
+    {
+      "id": "Q134",
+      "name": "Short-interest stock-vs-flow disagreement",
+      "sources": [
+        "FINRA Short Interest",
+        "FINRA Daily Short Sale Volume",
+        "OHLCV"
+      ],
+      "next_gate": "observation-date join and venue completeness"
+    },
+    {
+      "id": "Q135",
+      "name": "Innovation confirmation gap",
+      "sources": [
+        "SEC Form 4",
+        "USPTO PatentsView",
+        "OHLCV"
+      ],
+      "next_gate": "transaction-code and patent-event time contract"
+    },
+    {
+      "id": "Q136",
+      "name": "Patent novelty × public attention",
+      "sources": [
+        "USPTO PatentsView",
+        "Wikimedia Pageviews",
+        "OHLCV"
+      ],
+      "next_gate": "backward-only novelty and entity mapping"
+    },
+    {
+      "id": "Q137",
+      "name": "Disclosure-processing congestion",
+      "sources": [
+        "SEC EDGAR",
+        "OHLCV"
+      ],
+      "next_gate": "filing-density clock and amendment handling"
+    },
+    {
+      "id": "Q138",
+      "name": "Fund-crowding shock",
+      "sources": [
+        "SEC Form N-PORT",
+        "SEC Form 13F",
+        "OHLCV"
+      ],
+      "next_gate": "fixed-quarter accession lineage and bounded processing"
+    },
+    {
+      "id": "Q139",
+      "name": "Treasury-demand × equity rate-sensitivity",
+      "sources": [
+        "Treasury auction results",
+        "SEC XBRL",
+        "OHLCV"
+      ],
+      "next_gate": "financial-field freeze and auction publication clock"
+    },
+    {
+      "id": "Q140",
+      "name": "CFTC positioning × commodity-exposure regime",
+      "sources": [
+        "CFTC COT",
+        "OHLCV"
+      ],
+      "next_gate": "release-date PIT and fixed exposure mapping"
+    },
+    {
+      "id": "Q141",
+      "name": "Institutional calendar collision × liquidity",
+      "sources": [
+        "public institutional calendars",
+        "OHLCV"
+      ],
+      "next_gate": "historical calendar reconstruction"
+    },
+    {
+      "id": "Q142",
+      "name": "Supply-chain macro shock exposure",
+      "sources": [
+        "BEA Input-Output",
+        "FRED/ALFRED",
+        "OHLCV"
+      ],
+      "next_gate": "revision-consistent industry matrix"
+    },
+    {
+      "id": "Q143",
+      "name": "Public OSS release externality",
+      "sources": [
+        "GitHub public repositories/releases",
+        "SEC disclosures",
+        "OHLCV"
+      ],
+      "next_gate": "stable event registration and peer-map provenance"
+    },
+    {
+      "id": "Q144",
+      "name": "Attention-response gap",
+      "sources": [
+        "SEC EDGAR",
+        "Wikimedia Pageviews",
+        "OHLCV"
+      ],
+      "next_gate": "attention latency/entity mapping and PIT"
+    },
+    {
+      "id": "Q145",
+      "name": "Cross-asset policy state",
+      "sources": [
+        "Treasury auction results",
+        "CFTC COT",
+        "FRED/ALFRED",
+        "OHLCV"
+      ],
+      "next_gate": "multi-clock release/vintage alignment"
+    }
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
