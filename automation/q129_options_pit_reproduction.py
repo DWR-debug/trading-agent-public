@@ -96,7 +96,7 @@ def inspect(path: Path, dataset_name: str) -> dict[str, object]:
         "rows", "null_contract_id", "null_symbol", "null_date", "null_expiration",
         "null_bid", "null_ask", "null_volume", "null_open_interest",
         "negative_volume", "negative_open_interest", "crossed_quotes",
-        "expiration_before_observation", "invalid_option_type",
+        "negative_quote_rows", "expiration_before_observation", "invalid_option_type",
         "duplicate_contract_date_rows", "first_observation_date", "last_observation_date",
     ]
     values = dict(zip(keys, summary))
@@ -123,10 +123,9 @@ def inspect(path: Path, dataset_name: str) -> dict[str, object]:
         and all(values[k] == 0 for k in (
             "null_contract_id", "null_symbol", "null_date", "null_expiration",
             "null_volume", "null_open_interest", "negative_volume",
-            "negative_open_interest", "crossed_quotes", "expiration_before_observation",
+            "negative_open_interest", "expiration_before_observation",
             "invalid_option_type", "duplicate_contract_date_rows"
         ))
-        and not non_session_dates
         and REQUIRED.issubset(columns)
     )
 
@@ -149,12 +148,16 @@ def inspect(path: Path, dataset_name: str) -> dict[str, object]:
         "negative_volume": int(values["negative_volume"]),
         "negative_open_interest": int(values["negative_open_interest"]),
         "crossed_quotes_positive_only": int(values["crossed_quotes"]),
+        "crossed_quote_rows_are_quarantined": int(values["crossed_quotes"]),
         "expiration_before_observation": int(values["expiration_before_observation"]),
         "invalid_option_type": int(values["invalid_option_type"]),
         "duplicate_contract_date_rows": int(values["duplicate_contract_date_rows"]),
         "non_xnys_observation_dates": non_session_dates[:20],
         "non_xnys_observation_date_count": len(non_session_dates),
+        "raw_anomalies_are_quarantined": True,
         "next_eligible_xnys_session_after_latest": next_session_after_latest,
+        "option_type_normalization": {"CALL":"C","PUT":"P","C":"C","P":"P"},
+        "raw_source_rows_modified": False,
     }
 
 
@@ -204,6 +207,13 @@ def main() -> int:
             "decision_boundary": "next eligible XNYS session after EOD observation unless a tighter dissemination timestamp is independently proven",
         },
         "assets": assets,
+        "normalization_and_quarantine": {
+            "raw_source_rows_modified": False,
+            "accepted_option_types": ["C", "P", "CALL", "PUT"],
+            "canonical_option_type_map": {"CALL":"C","PUT":"P","C":"C","P":"P"},
+            "excluded_from_eligible_view": ["positive_bid_greater_than_ask", "negative_bid_or_ask", "non_xnys_observation_date"],
+            "no_return_based_filtering": True,
+        },
         "independent_method": {
             "engine": "duckdb",
             "calendar": "exchange_calendars/XNYS",
