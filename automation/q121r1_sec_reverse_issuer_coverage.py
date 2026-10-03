@@ -114,7 +114,7 @@ def extract_accepted(text: str) -> str | None:
     match = re.search(r"Accepted\s+([0-9]{4}-[0-9]{2}-[0-9]{2}\s+[0-9]{2}:[0-9]{2}:[0-9]{2})", compact, re.IGNORECASE)
     if match:
         return match.group(1)
-    header_match = re.search(r"ACCEPTANCE-DATETIME:\s*([0-9]{14})", unescape(text), re.IGNORECASE)
+    header_match = re.search(r"ACCEPTANCE-DATETIME(?:\s*[:=>]\s*|\s+)([0-9]{14})", unescape(text), re.IGNORECASE)
     if header_match:
         raw = header_match.group(1)
         return f"{raw[0:4]}-{raw[4:6]}-{raw[6:8]} {raw[8:10]}:{raw[10:12]}:{raw[12:14]}"
