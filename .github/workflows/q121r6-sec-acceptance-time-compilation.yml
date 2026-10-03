@@ -13,6 +13,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: q121r6-sec-acceptance-time-compilation
+  cancel-in-progress: true
+
 jobs:
   prepare:
     if: github.repository == 'DWR-debug/trading-agent-public'
