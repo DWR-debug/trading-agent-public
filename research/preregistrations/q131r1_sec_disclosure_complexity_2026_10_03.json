@@ -5,13 +5,32 @@
   "status": "PREREGISTERED_SOURCE_FEASIBILITY_PIT_ONLY",
   "candidate_id": "Q131-R1",
   "parent_candidate": "Q131",
-  "fixed_universe": ["SPGI","NDAQ","AMP","RJF","WMB","VLO","DVN","EMN"],
-  "fixed_window": {"start":"2025-09-22","end":"2025-09-24"},
-  "forms": ["8-K","8-K/A","10-Q","10-Q/A","10-K","10-K/A"],
+  "fixed_universe": [
+    "SPGI",
+    "NDAQ",
+    "AMP",
+    "RJF",
+    "WMB",
+    "VLO",
+    "DVN",
+    "EMN"
+  ],
+  "fixed_window": {
+    "start": "2025-09-22",
+    "end": "2025-09-24"
+  },
+  "forms": [
+    "8-K",
+    "8-K/A",
+    "10-Q",
+    "10-Q/A",
+    "10-K",
+    "10-K/A"
+  ],
   "complexity_vector": [
     "accepted_datetime",
     "filer_cik",
-    "subject_cik",
+    "subject_cik_if_present",
     "accession_number",
     "filing_date",
     "form",
@@ -49,5 +68,10 @@
     "live_trading_enabled": false,
     "orders_enabled": false,
     "automatic_promotion": false
+  },
+  "identity_contract": {
+    "daily_index_filer_cik_must_equal_q107_issuer_cik": true,
+    "subject_cik_when_present_must_equal_q107_issuer_cik": true,
+    "accepted_datetime_required": true
   }
 }
