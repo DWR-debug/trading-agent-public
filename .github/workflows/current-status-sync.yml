@@ -6,6 +6,11 @@ on:
     paths-ignore:
       - docs/CURRENT_STATUS.md
       - research/evidence/current_operational_state.json
+  # Automated GITHUB_TOKEN commits do not recursively trigger push workflows.
+  # This low-frequency heartbeat catches those changes; publication is idempotent
+  # and occurs only when master has advanced beyond the recorded status snapshot.
+  schedule:
+    - cron: "7 */2 * * *"
   workflow_dispatch:
 
 permissions:
@@ -103,6 +108,24 @@ jobs:
           git reset --hard origin/master
           source_master_sha="$(git rev-parse HEAD)"
           export STATUS_SOURCE_SHA="${source_master_sha}"
+          recorded_status_sha="$(python - <<'PY'
+          import json
+          from pathlib import Path
+          try:
+              payload = json.loads(
+                  Path("research/evidence/current_operational_state.json").read_text(
+                      encoding="utf-8"
+                  )
+              )
+              print(payload.get("source_master_sha", ""))
+          except Exception:
+              print("")
+          PY
+          )"
+          if [ "${recorded_status_sha}" = "${source_master_sha}" ]; then
+            echo "CURRENT_STATUS_ALREADY_SYNCHRONIZED source_master=${source_master_sha}"
+            exit 0
+          fi
           python -m automation.sync_current_operational_status \
             --source-master-sha "${source_master_sha}" \
             --workflow-run-id "${GITHUB_RUN_ID}" \
