@@ -1,0 +1,71 @@
+name: Q131-R1 SEC Disclosure Complexity Source Feasibility
+
+on:
+  schedule:
+    - cron: "15 */12 * * *"
+  workflow_dispatch:
+  pull_request:
+    branches: [master]
+    paths:
+      - "automation/q131r1_sec_disclosure_complexity.py"
+      - "tests/test_q131r1_sec_disclosure_complexity.py"
+      - "research/preregistrations/q131r1_sec_disclosure_complexity_2026_10_03.json"
+      - ".github/workflows/q131r1-sec-disclosure-complexity.yml"
+  push:
+    branches: [master]
+    paths:
+      - "automation/q131r1_sec_disclosure_complexity.py"
+      - "tests/test_q131r1_sec_disclosure_complexity.py"
+      - "research/preregistrations/q131r1_sec_disclosure_complexity_2026_10_03.json"
+      - ".github/workflows/q131r1-sec-disclosure-complexity.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-q131r1-sec-disclosure-complexity
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Contract tests
+        run: python -m pytest -q tests/test_q131r1_sec_disclosure_complexity.py
+      - name: Run Q131-R1 source/PIT feasibility
+        run: python -m automation.q131r1_sec_disclosure_complexity --output research/runs/q131r1_sec_disclosure_complexity/result.json
+      - name: Validate scientific boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path("research/runs/q131r1_sec_disclosure_complexity/result.json").read_text(encoding="utf-8"))
+          assert p["status"] == "Q131R1_SOURCE_COMPLEXITY_VECTOR_COMPLETED"
+          assert p["filings_checked"] > 0
+          assert p["pit"]["same_day_formal_use_allowed"] is False
+          assert p["governance"]["performance"] is False
+          assert p["governance"]["holdout"] is False
+          assert p["governance"]["ranking"] is False
+          assert p["governance"]["parameter_search"] is False
+          assert p["governance"]["performance_authorized"] is False
+          assert p["safety"]["paper_only"] is True
+          print("Q131R1_BOUNDARY=PASS")
+          print("Q131R1_FILINGS=", p["filings_checked"])
+          print("Q131R1_RECEIPT=", p["receipt_fingerprint"])
+          PY
+      - name: Upload source receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q131r1-sec-disclosure-complexity-${{ github.run_id }}
+          path: research/runs/q131r1_sec_disclosure_complexity/result.json
+          if-no-files-found: error
+          retention-days: 30
