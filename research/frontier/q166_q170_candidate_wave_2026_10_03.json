@@ -1,0 +1,26 @@
+{
+  "schema_version":"1.0",
+  "wave_id":"Q166-Q170-2026-10-03",
+  "status":"DESIGN_INVENTORY_ONLY",
+  "generated_utc":"2026-10-03T12:45:00Z",
+  "purpose":"Exploratory public digital, scientific and physical-event information channels with independent clocks.",
+  "policy":{
+    "performance_authorized":false,
+    "holdout_selection_allowed":false,
+    "asset_search_allowed":false,
+    "parameter_search_allowed":false,
+    "threshold_search_allowed":false,
+    "horizon_search_allowed":false,
+    "family_ranking_allowed":false,
+    "automatic_promotion":false,
+    "paid_data_required":false
+  },
+  "candidates":[
+    {"id":"Q166","name":"Package-download shock × software issuer exposure","sources":["PyPI Stats/BigQuery public downloads","SEC issuer disclosures","OHLCV"],"next_gate":"historical coverage, bot/CI contamination audit, package-to-issuer mapping"},
+    {"id":"Q167","name":"Scientific-publication burst × R&D exposure","sources":["Crossref/OpenAlex public metadata","SEC issuer disclosures","OHLCV"],"next_gate":"deposit/publication timing, author-affiliation mapping, backward-only information boundary"},
+    {"id":"Q168","name":"Seismic shock × geographic industrial exposure","sources":["USGS Earthquake Catalog","SEC issuer disclosures","OHLCV"],"next_gate":"event origin/publication timing and fixed facility/geography map"},
+    {"id":"Q169","name":"Space-weather shock × operationally sensitive sector","sources":["NOAA SWPC public products","SEC issuer disclosures","OHLCV"],"next_gate":"alert issue time, revision/cancellation handling, fixed exposure map"},
+    {"id":"Q170","name":"Wildfire/thermal anomaly × geographic industrial exposure","sources":["NASA FIRMS","SEC issuer disclosures","OHLCV"],"next_gate":"NRT-to-science-quality revision boundary and fixed geography map"}
+  ],
+  "safety":{"paper_only":true,"live_trading_enabled":false,"orders_enabled":false,"automatic_promotion":false}
+}

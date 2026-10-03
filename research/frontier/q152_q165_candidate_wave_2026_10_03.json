@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "wave_id": "Q152-Q165-2026-10-03",
+  "status": "DESIGN_INVENTORY_ONLY",
+  "generated_utc": "2026-10-03T12:30:00Z",
+  "purpose": "Broad public-domain information-channel discovery beyond price-derived signals.",
+  "policy": {
+    "performance_authorized": false,
+    "holdout_selection_allowed": false,
+    "asset_search_allowed": false,
+    "parameter_search_allowed": false,
+    "threshold_search_allowed": false,
+    "horizon_search_allowed": false,
+    "family_ranking_allowed": false,
+    "automatic_promotion": false,
+    "paid_data_required": false
+  },
+  "candidates": [
+    {"id":"Q152","name":"House transaction disclosure × exposed-industry state","sources":["U.S. House Financial Disclosures","SEC issuer disclosures","OHLCV"],"next_gate":"publication/time-of-posting and issuer-exposure provenance"},
+    {"id":"Q153","name":"Lobbying-intensity transition × issuer/industry exposure","sources":["LDA.gov","SEC issuer disclosures","OHLCV"],"next_gate":"filing/publication timestamp and entity/issue mapping"},
+    {"id":"Q154","name":"Drug shortage/manufacturing shock × pharma exposure","sources":["openFDA drug data","SEC issuer disclosures","OHLCV"],"next_gate":"event timestamp, manufacturer mapping, revision/update audit"},
+    {"id":"Q155","name":"Medical-device recall/enforcement shock × manufacturer exposure","sources":["openFDA device data","SEC issuer disclosures","OHLCV"],"next_gate":"recall/enforcement dissemination clock and manufacturer mapping"},
+    {"id":"Q156","name":"Cyber exploitation shock × issuer technology exposure","sources":["CISA KEV","NVD","SEC issuer disclosures","OHLCV"],"next_gate":"publication-time contract and fixed product-to-issuer map"},
+    {"id":"Q157","name":"SEC FOIA topic heat × issuer information-demand state","sources":["SEC FOIA logs","SEC issuer disclosures","OHLCV"],"next_gate":"request/received/closed date semantics and topic-to-issuer mapping"},
+    {"id":"Q158","name":"Federal Register rule-change exposure × industry","sources":["GovInfo Federal Register","SEC issuer disclosures","OHLCV"],"next_gate":"publication/effective-date contract and fixed exposure classes"},
+    {"id":"Q159","name":"Disaster shock × geographic operating exposure","sources":["FEMA Disaster Declarations","NOAA Storm Events","SEC issuer disclosures","OHLCV"],"next_gate":"disaster/publication timestamp and geographic exposure map"},
+    {"id":"Q160","name":"Agricultural release shock × food/input-chain exposure","sources":["USDA NASS","NOAA weather","SEC issuer disclosures","OHLCV"],"next_gate":"release timestamp/vintage and fixed commodity exposure map"},
+    {"id":"Q161","name":"Freight-flow composition shock × industrial exposure","sources":["BTS FAF","SEC issuer disclosures","OHLCV"],"next_gate":"historical FAF vintage and industry concordance"},
+    {"id":"Q162","name":"Power-system stress × electricity-intensive issuer state","sources":["EIA electricity","SEC issuer disclosures","OHLCV"],"next_gate":"continuous-update release boundary and fixed energy-intensity map"},
+    {"id":"Q163","name":"Environmental enforcement shock × facility-exposed issuer","sources":["EPA Envirofacts","SEC issuer disclosures","OHLCV"],"next_gate":"agency action timestamp, facility identity and issuer mapping"},
+    {"id":"Q164","name":"Federal award concentration × contractor ecosystem","sources":["USAspending","SEC issuer disclosures","OHLCV"],"next_gate":"transaction publication/amendment semantics and contractor graph"},
+    {"id":"Q165","name":"Competition-enforcement shock × industry network","sources":["FTC enforcement datasets","DOJ Antitrust releases","SEC issuer disclosures","OHLCV"],"next_gate":"event publication clock and fixed peer/exposure graph"}
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
