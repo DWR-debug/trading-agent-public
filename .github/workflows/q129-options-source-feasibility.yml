@@ -44,10 +44,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p "research/runs/q129-source/\${GITHUB_RUN_ID}"
+          mkdir -p "research/runs/q129-source/${GITHUB_RUN_ID}"
           python -m automation.q129_options_source_feasibility \
-            --workdir "\$RUNNER_TEMP/q129-assets" \
-            --output "research/runs/q129-source/\${GITHUB_RUN_ID}/source_receipt.json"
+            --workdir "$RUNNER_TEMP/q129-assets" \
+            --output "research/runs/q129-source/${GITHUB_RUN_ID}/source_receipt.json"
 
       - name: Enforce Q129 source boundary
         shell: bash
