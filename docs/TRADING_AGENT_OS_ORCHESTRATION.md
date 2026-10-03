@@ -25,7 +25,7 @@ The permanent rule is:
 
 The two Windows self-hosted lanes remain the primary deterministic capacity. The autonomous frontier lane uses bounded internal concurrency (default 3 workers); local reproduction and other QA/reproduction paths remain serial unless explicitly proven safe to parallelize.
 
-S10 is not a background decoration resource. When its accepted receipt is valid, its phone-side runtime is live and a bounded useful task exists, it may be used both on its regular six-hour cadence and after meaningful research-runner or critical-governance changes. Its output remains QA/review support only.
+S10 is not a background decoration resource. When its latest successful utility receipt is fresh (currently within 6 hours), that receipt is accepted as the S10 operational-presence signal for routing. A separate phone-runner discovery is not required solely to establish presence. Bounded work remains the only permitted use. Its output remains QA/review support only.
 
 Already-running work is never duplicated. No resource is activated merely to consume quota. Scientific evidence, performance authorization, candidate selection, promotion and live trading are unchanged.
 
