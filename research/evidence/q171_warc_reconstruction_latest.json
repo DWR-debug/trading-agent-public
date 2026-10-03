@@ -1,23 +1,26 @@
 {
-  "coverage_receipt_fingerprint": "e18538f6afe120f34c9223c03a084242eb9d6067540c8ff993aef56d095de4c4",
-  "receipt_fingerprint": "16197cfd79ca08e9ef79dd990cafeafd872ef7d3da40ce5a170c1a481b9e85ee",
+  "coverage_receipt_fingerprint": "b5b163aafbb7c809acb40b7522f0c7b69285587403aa62e4e64e7151c1950ce1",
+  "receipt_fingerprint": "4e0220effe9a2206d949764328f9c73e28be8ddb82450ef37774cf328eee2ec7",
   "results": {
     "DVN": {
       "checks": {
+        "http_content_length_boundary_exact": true,
         "http_status_line_present": true,
-        "payload_digest_matches_index": false,
+        "payload_digest_matches_index": true,
+        "payload_digest_matches_warc_header": true,
         "target_matches_index_url": true,
         "target_uri_present": true,
         "warc_date_present": true,
+        "warc_payload_digest_present": true,
         "warc_version_present": true
       },
       "compressed_sha256": "25d531a7f49e0cbc91952c14869c24d67936f8550107fc858140837fa9512851",
       "http_status_line": "HTTP/1.1 200 ",
       "index_digest": "KPBEHMJ7WMA47NZUUPDY3ELCS7G5FVH3",
       "indexed_timestamp": "20251014165136",
-      "payload_bytes": 61338,
-      "payload_sha1_base32": "2EVTLWOCBQDUEU74ZKF6KXE2KVRIXJDY",
-      "status": "BLOCKED_WARC_SEMANTIC_CHECK",
+      "payload_bytes": 61334,
+      "payload_sha1_base32": "KPBEHMJ7WMA47NZUUPDY3ELCS7G5FVH3",
+      "status": "WARC_RECONSTRUCTED",
       "symbol": "DVN",
       "target_uri": "https://investors.devonenergy.com/investors/default.aspx",
       "warc_date": "2025-10-14T16:51:36Z",
@@ -25,20 +28,23 @@
     },
     "VLO": {
       "checks": {
+        "http_content_length_boundary_exact": true,
         "http_status_line_present": true,
-        "payload_digest_matches_index": false,
+        "payload_digest_matches_index": true,
+        "payload_digest_matches_warc_header": true,
         "target_matches_index_url": true,
         "target_uri_present": true,
         "warc_date_present": true,
+        "warc_payload_digest_present": true,
         "warc_version_present": true
       },
       "compressed_sha256": "c03b685b9a7975cec00ad9f2ab65a25b5a8d54f258a8f670d5649a455bce5695",
       "http_status_line": "HTTP/1.1 200 ",
       "index_digest": "IH6BGT5CTGDUITO3ZSVGS2JL3ZXWCXA7",
       "indexed_timestamp": "20251014010248",
-      "payload_bytes": 77912,
-      "payload_sha1_base32": "TGMJUZMZSFURC73CPLUEEIOBL6P56L2O",
-      "status": "BLOCKED_WARC_SEMANTIC_CHECK",
+      "payload_bytes": 77908,
+      "payload_sha1_base32": "IH6BGT5CTGDUITO3ZSVGS2JL3ZXWCXA7",
+      "status": "WARC_RECONSTRUCTED",
       "symbol": "VLO",
       "target_uri": "https://investorvalero.com/home/default.aspx",
       "warc_date": "2025-10-14T01:02:48Z",
@@ -65,12 +71,12 @@
     "threshold_search": false,
     "variant_search": false
   },
-  "source_commit": "52a95f3c19b3a5dcbf0c7187de9e6a5ec3fd8b79",
+  "source_commit": "e578b57d3107a41c9d0f3c95961e876d555fd504",
   "summary": {
-    "blocked": 2,
+    "blocked": 0,
     "capture_candidates": 2,
     "infra_blocked": 0,
-    "warc_reconstructed": 0
+    "warc_reconstructed": 2
   },
   "task_id": "Q-2026-10-03-Q171-WARC-RECONSTRUCTION"
 }
