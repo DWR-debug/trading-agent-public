@@ -16,7 +16,7 @@ permissions:
 
 concurrency:
   group: trading-agent-current-status-sync
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   synchronize:
@@ -108,6 +108,15 @@ jobs:
             --workflow-run-id "${GITHUB_RUN_ID}" \
             --github-state "${RUNNER_TEMP}/status/github_state.json"
           git diff --check
+
+          # Never publish a snapshot that was generated from an older master.
+          # A newer push will cancel/restart this workflow; exiting here keeps
+          # the status files from being overwritten by a stale run.
+          latest_master_sha="$(git ls-remote origin refs/heads/master | awk '{print $1}')"
+          if [ "$latest_master_sha" != "$source_master_sha" ]; then
+            echo "STATUS_SYNC_ABORT_STALE_SOURCE latest_master=$latest_master_sha source=$source_master_sha"
+            exit 0
+          fi
 
           python - <<'PY'
           import json
