@@ -24,3 +24,13 @@ def test_status_sync_uses_checked_out_master_sha_not_push_event_sha():
     assert 'assert d["source_master_sha"] == os.environ["STATUS_SOURCE_SHA"]' in text
     assert 'if [ "$remote_master_sha" != "$STATUS_SOURCE_SHA" ]; then' in text
     assert "STATUS_SYNC_MASTER_MOVED_BEFORE_GENERATION" in text
+
+
+def test_generated_status_matches_current_hosted_qa_architecture():
+    generator = Path("automation/sync_current_operational_status.py").read_text(encoding="utf-8")
+    assert '"continuous_qa": {' in generator
+    assert '"cadence": "15 */6 * * *"' in generator
+    assert '"runner": "GitHub-hosted windows-latest"' in generator
+    assert '"self_hosted_slots_consumed": 0' in generator
+    assert '"research_continuity": {' in generator
+    assert "Continuous QA is scheduled every 6 hours on GitHub-hosted Windows" in generator
