@@ -784,7 +784,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T13:12:38.744423+00:00",
+  "generated_at_utc": "2026-10-03T13:18:00.168465+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1124,25 +1124,23 @@
     ],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [
+    "open_pull_requests": [],
+    "recent_commits": [
       {
-        "baseRefName": "master",
-        "headRefName": "research/public-domain-frontier-q171-q178-2026-10-03",
-        "number": 920,
-        "title": "RESEARCH: extend public-domain frontier to Q171-Q178",
-        "updatedAt": "2026-10-03T13:08:35Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/920"
+        "message": "RESEARCH: add Q171-Q177 PIT-readiness lane",
+        "sha": "4b667fdaac95047c3be0e48545c42520e3a3cef9",
+        "timestamp": "2026-10-03T15:17:48+02:00"
       },
       {
-        "baseRefName": "master",
-        "headRefName": "research/q129-receipt-and-workflow-load-cleanup-20261003",
-        "number": 913,
-        "title": "RESEARCH/OPS: persist Q129 receipt and reduce redundant CI load",
-        "updatedAt": "2026-10-03T11:50:44Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/913"
-      }
-    ],
-    "recent_commits": [
+        "message": "OPS: synchronize current operational status",
+        "sha": "1375b2f65b602c56be8a0989f3d8cc1476fdd377",
+        "timestamp": "2026-10-03T13:12:41Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "49c738a93984b9b43d27c84fc2a5e82411e23a42",
+        "timestamp": "2026-10-03T13:12:39Z"
+      },
       {
         "message": "EVIDENCE: persist Q171-Q178 source-feasibility receipt",
         "sha": "a79f51964eb80b95c4a6fd92c61d6864f94987e5",
@@ -1167,21 +1165,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "1287c984c1c4e2cbd8364a78f04da7acabd947de",
         "timestamp": "2026-10-03T13:10:49Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "bbd7cd748d28777203656ec2eafc459849f6d5d9",
-        "timestamp": "2026-10-03T13:10:47Z"
-      },
-      {
-        "message": "FIX: repair two-lane self-hosted capacity regression",
-        "sha": "21e94950733d79f5a65433c1bcb9985ee761ab71",
-        "timestamp": "2026-10-03T15:10:34+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f724fb75990f85cef397e98b6c97bcdc119e7138",
-        "timestamp": "2026-10-03T12:59:23Z"
       }
     ]
   },
@@ -1251,12 +1234,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a79f51964eb80b95c4a6fd92c61d6864f94987e5",
+  "source_master_sha": "4b667fdaac95047c3be0e48545c42520e3a3cef9",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37125398239"
+    "run_id": "37125689875"
   }
 }
