@@ -24,3 +24,10 @@ def test_status_sync_uses_checked_out_master_sha_not_push_event_sha():
     assert 'assert d["source_master_sha"] == os.environ["STATUS_SOURCE_SHA"]' in text
     assert 'if [ "$remote_master_sha" != "$STATUS_SOURCE_SHA" ]; then' in text
     assert "STATUS_SYNC_MASTER_MOVED_BEFORE_GENERATION" in text
+
+
+def test_status_sync_has_idempotent_scheduled_heartbeat_for_automated_commits():
+    text = WORKFLOW.read_text(encoding="utf-8")
+    assert 'cron: "7 */2 * * *"' in text
+    assert "CURRENT_STATUS_ALREADY_SYNCHRONIZED" in text
+    assert "recorded_status_sha" in text
