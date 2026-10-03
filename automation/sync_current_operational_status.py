@@ -303,6 +303,7 @@ def generate(
         (ROOT / "research/preregistrations/q121r1_sec_reverse_issuer_coverage_2026_10_03.json").is_file()
         or (ROOT / "research/preregistrations/q121r2_sec_daily_index_reconciliation_2026_10_03.json").is_file()
         or (ROOT / "research/preregistrations/q127r1_finra_regsho_historical_pit_2026_10_03.json").is_file()
+        or (ROOT / "research/preregistrations/q131r1_sec_disclosure_complexity_2026_10_03.json").is_file()
     ):
         recorded_next_research_focus = (
             "Active correction tracks: Q121-R1 independently repairs SEC beneficial-ownership issuer "
