@@ -75,31 +75,33 @@ def fetch(url: str) -> tuple[int, bytes]:
         raise RuntimeError(f"SEC_FORM_INDEX_TRANSPORT_ERROR:{url}:{exc}") from exc
 
 def parse_index(body: bytes) -> list[dict[str, str]]:
-    """Parse SEC form.idx using the column starts declared by its own header."""
-    lines = body.decode("latin-1").splitlines()
-    field_labels = ("Form Type", "Company Name", "CIK", "Date Filed", "File Name")
-    starts: list[int] | None = None
-    for raw in lines:
-        line = raw.rstrip("\r\n")
-        positions = [line.find(label) for label in field_labels]
-        if all(pos >= 0 for pos in positions) and positions == sorted(positions):
-            starts = positions
-            break
-    if starts is None:
-        return []
+    """Parse SEC form.idx rows by stable semantic anchors.
+
+    The official quarterly form index uses a fixed-width row layout, but its
+    human-readable header can wrap across two lines. Parsing the actual rows
+    from the right-hand CIK/date/file-name anchors therefore avoids coupling
+    the data parser to header rendering.
+    """
+    row_pattern = re.compile(
+        r"^\\s*(?P<form>SC 13[DG](?:/A)?)\\s+"
+        r"(?P<company>.*?)\\s+"
+        r"(?P<cik>\\d{1,10})\\s+"
+        r"(?P<filed_date>\\d{4}-\\d{2}-\\d{2})\\s+"
+        r"(?P<filename>edgar/data/\\S+)\\s*$",
+        re.IGNORECASE,
+    )
 
     rows: list[dict[str, str]] = []
-    ends = starts[1:] + [None]
-    for raw in lines:
-        line = raw.rstrip("\r\n")
-        if len(line) < starts[-1]:
+    for raw in body.decode("latin-1").splitlines():
+        match = row_pattern.match(raw.rstrip("\r\n"))
+        if not match:
             continue
-        fields = [
-            line[start:end].strip() if end is not None else line[start:].strip()
-            for start, end in zip(starts, ends)
-        ]
-        form, company, cik, filed_date, filename = fields
-        if not re.fullmatch(r"SC 13[DG](?:/A)?", form, re.IGNORECASE):
+        data = match.groupdict()
+        form = data["form"].upper()
+        filed_date = data["filed_date"]
+        cik = data["cik"]
+        filename = data["filename"]
+        if form not in FORM_SET:
             continue
         if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", filed_date):
             continue
@@ -109,8 +111,8 @@ def parse_index(body: bytes) -> list[dict[str, str]]:
             continue
         rows.append({
             "cik": cik.zfill(10),
-            "company_name": company,
-            "form": form.upper(),
+            "company_name": data["company"].strip(),
+            "form": form,
             "filed_date": filed_date,
             "filename": filename,
         })
