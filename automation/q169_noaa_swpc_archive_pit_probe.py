@@ -66,7 +66,7 @@ def parse_issued(line: str) -> datetime:
 
 
 def validate_archive_file(sample_date: str) -> dict[str, Any]:
-    filename = sample_date.replace("-", "") + "GEOA.txt"
+    filename = SAMPLE_FILES[sample_date]
     url = ARCHIVE_INDEX_URL + filename
     status, body = fetch(url)
     text = body.decode("utf-8", errors="replace")
