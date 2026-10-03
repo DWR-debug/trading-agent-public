@@ -824,7 +824,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T15:16:51.660890+00:00",
+  "generated_at_utc": "2026-10-03T15:20:11.350126+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1229,6 +1229,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "Merge pull request #953 from DWR-debug/fix/q169-receipt-publish-source-20261003",
+        "sha": "a0c8f807897d5ea88511753ce3e1a0f1962aeb92",
+        "timestamp": "2026-10-03T17:19:59+02:00"
+      },
+      {
+        "message": "FIX: publish Q169 receipt from run artifact input",
+        "sha": "1d716d0fe2fe5b41b8c87fc8151223d11622d872",
+        "timestamp": "2026-10-03T17:17:47+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "951aa728f4d891cc49b757b913f9de36127da3b5",
+        "timestamp": "2026-10-03T15:16:54Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9baffffbcd9b8573bc3776c50d279082e7697cfc",
+        "timestamp": "2026-10-03T15:16:52Z"
+      },
+      {
         "message": "Merge pull request #952 from DWR-debug/fix/q169-r3-semantic-marker-20261003",
         "sha": "9355c3dc45960e3d77e4045f81844a2cee86eef4",
         "timestamp": "2026-10-03T17:16:39+02:00"
@@ -1247,26 +1267,6 @@
         "message": "GOV: register Q169 R3 contract",
         "sha": "8d7e0021c044c89485ef1495b583468eb5910a7c",
         "timestamp": "2026-10-03T17:14:58+02:00"
-      },
-      {
-        "message": "DOC: record Q169 R3 marker-stability refinement",
-        "sha": "3fa51f0f68ce16f7eeac4b4c8a4b65f38ea0a7b7",
-        "timestamp": "2026-10-03T17:14:54+02:00"
-      },
-      {
-        "message": "FIX: stabilize Q169 NOAA semantics markers",
-        "sha": "3aefb0f170a107844a50f38a0a3349a92c29ffd2",
-        "timestamp": "2026-10-03T17:14:38+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d97d12094cca4fc21aca52958c926738ad9db404",
-        "timestamp": "2026-10-03T15:13:23Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "73846caca823d0ad8b6dc8b397b1e6748fdcf24b",
-        "timestamp": "2026-10-03T15:13:21Z"
       }
     ]
   },
@@ -1336,12 +1336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9355c3dc45960e3d77e4045f81844a2cee86eef4",
+  "source_master_sha": "a0c8f807897d5ea88511753ce3e1a0f1962aeb92",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37132677088"
+    "run_id": "37132871608"
   }
 }
