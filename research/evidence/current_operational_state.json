@@ -714,7 +714,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-03T10:24:30.579327+00:00",
+  "generated_at_utc": "2026-10-03T10:24:48.559774+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -918,6 +918,21 @@
     ],
     "recent_commits": [
       {
+        "message": "GOV: record verified SEC FINRA Treasury CFTC source semantics",
+        "sha": "2bdbf22a894df3978d5e76ebc6a642b025fb7076",
+        "timestamp": "2026-10-03T12:24:39+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2e4b6e47fc0d3acbe3d1c1dfe2f790ec8ab5cf61",
+        "timestamp": "2026-10-03T10:24:33Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d6f402af927ff868b758bb85c426d1ea084e7991",
+        "timestamp": "2026-10-03T10:24:31Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "ac993f274fd6a185af15b3afde1f94ece727f987",
         "timestamp": "2026-10-03T10:24:17Z"
@@ -941,21 +956,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "87efe894d428f9f643c1c507a57886087c16c5ce",
         "timestamp": "2026-10-03T10:23:34Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3e4d9d4a913acf2313bac2acadaf7850c4b0d938",
-        "timestamp": "2026-10-03T10:23:33Z"
-      },
-      {
-        "message": "TEST: enforce Q121 17:30/22:00 and date-mismatch boundaries",
-        "sha": "0bb19bfa6aa00e97c73e4de8c313281e68348360",
-        "timestamp": "2026-10-03T12:23:17+02:00"
-      },
-      {
-        "message": "FIX: fail closed on Q121 filing-date PIT mismatch",
-        "sha": "936f603b3dd0578a118412452305d038a9965ddd",
-        "timestamp": "2026-10-03T12:23:10+02:00"
       }
     ]
   },
@@ -1025,12 +1025,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ac993f274fd6a185af15b3afde1f94ece727f987",
+  "source_master_sha": "2bdbf22a894df3978d5e76ebc6a642b025fb7076",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37116304360"
+    "run_id": "37116329378"
   }
 }
