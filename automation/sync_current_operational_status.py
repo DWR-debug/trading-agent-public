@@ -119,6 +119,7 @@ def generate(
     q171_q177_pit_receipt = _load_json(ROOT / "research/evidence/q171_q177_pit_readiness_2026_10_03.json", {})
     source_pit_frontier_outcomes = _load_json(ROOT / "research/evidence/source_pit_frontier_outcomes_2026_10_03.json", {})
     q121_r5_receipt = _load_json(ROOT / "research/evidence/q121r5_dual_index_population_reconciliation_2026_10_03.json", {})
+    q121_r6_attempts = _load_json(ROOT / "research/evidence/q121r6_execution_attempts_2026_10_03.json", {})
 
     safety = _safety_state()
     from config import settings
@@ -366,6 +367,20 @@ def generate(
             "promotion or live execution is authorized."
         )
 
+    if q121_r6_attempts.get("canonical_research") == "Q121-R6 SEC acceptance-time compilation":
+        q121_r6_current = q121_r6_attempts.get("attempts", [])[-1] if q121_r6_attempts.get("attempts") else {}
+        if q121_r6_current.get("classification") == "CURRENT":
+            recorded_next_research_focus = (
+                "Q121-R6 is the active formal PIT/source gate. The verified Q121-R5 dual-index "
+                "population is fixed at 61,818 rows; current R6 execution is waiting for or using "
+                "the two self-hosted Windows research slots. Earlier R6 failures are infrastructure "
+                "only (portable tzdata, workspace handoff, artifact path) and have been corrected. "
+                "No R6 scientific result is claimed until all 61,818 headers are fetched and "
+                "validated and the immutable aggregate receipt passes. Revision lineage and first-public-"
+                "availability timing remain separate gates. No performance, holdout selection, "
+                "ranking, tuning, promotion or live execution is authorized."
+            )
+
     current = {
         "schema_version": "1.0",
         "status_type": "current_operational_project_state",
@@ -571,6 +586,7 @@ def generate(
         "q171_q177_pit_readiness": q171_q177_pit_receipt,
         "source_pit_frontier_outcomes": source_pit_frontier_outcomes,
         "q121_r5_dual_index_reconciliation": q121_r5_receipt,
+        "q121_r6_execution_attempts": q121_r6_attempts,
         "scientific_state_recorded": {
             "latest_formal_trial": latest_formal.get("trial_id") or project_state.get("latest_formal_trial"),
             "latest_formal_status": latest_formal.get("status") or project_state.get("latest_trial_status"),
