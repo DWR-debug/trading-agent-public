@@ -35,6 +35,15 @@ def test_q126_q132_discovery_wave_is_quarantined_and_non_authoritative():
     assert result["scientific_boundary"]["selection"] is False
 
 
+def test_compiled_candidates_are_blocked_from_formalization_until_gate_receipt():
+    result = compile_inventories([
+        ROOT / "research/frontier/q126_q132_candidate_wave_2026_10_03.json",
+    ])
+    assert all(x["candidate_robustness_gate"]["status"] == "PRE_FORMAL_ROBUSTNESS_COMPLETED" for x in result["candidates"])
+    assert all(x["candidate_robustness_gate"]["formalization_allowed"] is False for x in result["candidates"])
+    assert all(x["candidate_robustness_gate"]["receipt_required_before_any_formal_phase"] is True for x in result["candidates"])
+
+
 def test_discovery_compiler_rejects_performance_fields():
     candidate = {
         "id": "X",
