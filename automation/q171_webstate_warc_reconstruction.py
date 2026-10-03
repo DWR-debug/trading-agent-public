@@ -12,6 +12,7 @@ import gzip
 import hashlib
 import json
 import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -64,10 +65,23 @@ def reconstruct(symbol: str, item: dict[str, object]) -> dict[str, object]:
 
     try:
         status, compressed = fetch_range(url, offset, length)
-    except Exception as exc:
+    except urllib.error.HTTPError as exc:
+        try:
+            body = exc.read()
+        except Exception:
+            body = b""
         return {
             "symbol": symbol,
-            "status": "BLOCKED_WARC_FETCH",
+            "status": "INFRA_ACCESS_BLOCKED",
+            "http_status": int(exc.code),
+            "error_type": type(exc).__name__,
+            "error": str(exc)[:500],
+            "error_body_excerpt": body.decode("utf-8", errors="replace")[:500],
+        }
+    except (urllib.error.URLError, TimeoutError, OSError) as exc:
+        return {
+            "symbol": symbol,
+            "status": "INFRA_ACCESS_BLOCKED",
             "error_type": type(exc).__name__,
             "error": str(exc)[:500],
         }
@@ -77,11 +91,12 @@ def reconstruct(symbol: str, item: dict[str, object]) -> dict[str, object]:
     if status != 206 or len(compressed) != length:
         return {
             "symbol": symbol,
-            "status": "BLOCKED_WARC_RANGE_INTEGRITY",
+            "status": "INFRA_ACCESS_BLOCKED",
             "http_status": status,
             "received_bytes": len(compressed),
             "expected_bytes": length,
             "compressed_sha256": sha256(compressed),
+            "reason": "HTTP Range response did not satisfy the indexed byte-range contract",
         }
 
     compressed_digest = sha256(compressed)
