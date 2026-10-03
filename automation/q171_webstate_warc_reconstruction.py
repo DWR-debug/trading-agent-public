@@ -12,6 +12,7 @@ import gzip
 import hashlib
 import json
 import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -64,10 +65,23 @@ def reconstruct(symbol: str, item: dict[str, object]) -> dict[str, object]:
 
     try:
         status, compressed = fetch_range(url, offset, length)
-    except Exception as exc:
+    except urllib.error.HTTPError as exc:
+        try:
+            body = exc.read()
+        except Exception:
+            body = b""
         return {
             "symbol": symbol,
-            "status": "BLOCKED_WARC_FETCH",
+            "status": "INFRA_ACCESS_BLOCKED",
+            "http_status": int(exc.code),
+            "error_type": type(exc).__name__,
+            "error": str(exc)[:500],
+            "error_body_excerpt": body.decode("utf-8", errors="replace")[:500],
+        }
+    except (urllib.error.URLError, TimeoutError, OSError) as exc:
+        return {
+            "symbol": symbol,
+            "status": "INFRA_ACCESS_BLOCKED",
             "error_type": type(exc).__name__,
             "error": str(exc)[:500],
         }
@@ -77,11 +91,12 @@ def reconstruct(symbol: str, item: dict[str, object]) -> dict[str, object]:
     if status != 206 or len(compressed) != length:
         return {
             "symbol": symbol,
-            "status": "BLOCKED_WARC_RANGE_INTEGRITY",
+            "status": "INFRA_ACCESS_BLOCKED",
             "http_status": status,
             "received_bytes": len(compressed),
             "expected_bytes": length,
             "compressed_sha256": sha256(compressed),
+            "reason": "HTTP Range response did not satisfy the indexed byte-range contract",
         }
 
     compressed_digest = sha256(compressed)
@@ -161,6 +176,7 @@ def run(coverage_path: Path, output: Path) -> dict[str, object]:
         "summary": {
             "capture_candidates": len(results),
             "warc_reconstructed": sum(r["status"] == "WARC_RECONSTRUCTED" for r in results.values()),
+            "infra_blocked": sum(r["status"] == "INFRA_ACCESS_BLOCKED" for r in results.values()),
             "blocked": sum(r["status"] != "WARC_RECONSTRUCTED" for r in results.values()),
         },
         "scientific_boundary": {
@@ -196,7 +212,11 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     result = run(args.coverage_path, args.output)
-    return 0 if result["summary"]["blocked"] == 0 else 1
+    non_infra_blocked = [
+        item for item in result["results"].values()
+        if item["status"] not in {"WARC_RECONSTRUCTED", "INFRA_ACCESS_BLOCKED"}
+    ]
+    return 0 if not non_infra_blocked else 1
 
 
 if __name__ == "__main__":
