@@ -233,7 +233,7 @@ def test_permanent_loop_uses_short_local_capacity_pulse():
         ROOT / ".github" / "workflows" / "permanent-pc-research-loop.yml"
     ).read_text(encoding="utf-8")
     assert 'cron: "*/30 * * * *"' in text
-    assert 'max-parallel: 1' in text
+    assert 'max-parallel: 2' in text
     assert "lane: [local_reproduction]" in text
     assert "runs-on: [self-hosted, trading-agent-research]" in text
     assert '--rotation-index "%GITHUB_RUN_NUMBER%"' in text
