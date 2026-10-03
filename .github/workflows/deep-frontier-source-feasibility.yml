@@ -20,6 +20,8 @@ on:
       - "tests/test_q133_q145_source_feasibility.py"
       - "automation/q171_q177_pit_readiness.py"
       - "automation/q171_webstate_coverage.py"
+      - "automation/q171_webstate_warc_reconstruction.py"
+      - "tests/test_q171_webstate_warc_reconstruction.py"
       - "research/governance/q171_issuer_web_url_map_2026_10_03.json"
       - "tests/test_q171_webstate_coverage.py"
       - ".github/workflows/deep-frontier-source-feasibility.yml"
@@ -86,6 +88,35 @@ jobs:
           python -m automation.q171_webstate_coverage \
             --output "research/runs/deep_frontier/${GITHUB_RUN_ID}/q171_webstate_coverage.json"
 
+      - name: Run Q171 WARC reconstruction
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m automation.q171_webstate_warc_reconstruction \
+            "research/runs/deep_frontier/${GITHUB_RUN_ID}/q171_webstate_coverage.json" \
+            --output "research/runs/deep_frontier/${GITHUB_RUN_ID}/q171_warc_reconstruction.json"
+
+      - name: Validate Q171 WARC reconstruction boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p = Path("research/runs/deep_frontier") / os.environ["GITHUB_RUN_ID"] / "q171_warc_reconstruction.json"
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['scientific_boundary']['performance'] is False
+          assert d['scientific_boundary']['holdout'] is False
+          assert d['scientific_boundary']['selection'] is False
+          assert d['scientific_boundary']['ranking'] is False
+          assert d['scientific_boundary']['promotion'] is False
+          assert d['scientific_boundary']['live_execution'] is False
+          assert d['safety']['paper_only'] is True
+          assert d['safety']['live_trading_enabled'] is False
+          assert d['safety']['orders_enabled'] is False
+          assert d['safety']['automatic_promotion'] is False
+          print('Q171_WARC_RECONSTRUCTION_OK')
+          PY
       - name: Validate Q171 web-state coverage boundary
         shell: bash
         run: |
