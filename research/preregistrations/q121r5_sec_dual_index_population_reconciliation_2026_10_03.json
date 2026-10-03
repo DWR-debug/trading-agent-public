@@ -1,0 +1,15 @@
+{
+  "schema_version":"1.0",
+  "task_id":"Q-2026-10-03-121R5-SEC-DUAL-INDEX-POPULATION-RECONCILIATION",
+  "status":"PREREGISTERED_DUAL_SOURCE_POPULATION_RECONCILIATION_PIT_ONLY",
+  "candidate_id":"Q121-R5",
+  "parent_candidate":"Q121",
+  "fixed_window":{"start":"2024-02-05","end":"2025-09-24"},
+  "forms":["SC 13D","SC 13G","SC 13D/A","SC 13G/A"],
+  "canonical_key_fields":["CIK","Form","Filing-Date","Accession-Number"],
+  "hypothesis":"SEC quarterly form.idx and master.idx reconstruct the same complete filing population for the fixed Q121 window and form set.",
+  "decision_rule":"PASS only on exact canonical-key multiset equality; any left-only or right-only key is a mismatch. No adaptive exceptions.",
+  "scope_boundary":{"full_subject_issuer_population":false,"acceptance_timestamps_compiled":false,"same_day_pit_safe":false,"revision_lineage":false},
+  "governance":{"performance":false,"holdout":false,"selection":false,"ranking":false,"parameter_search":false,"threshold_search":false,"horizon_search":false,"asset_search":false,"variant_search":false,"performance_authorized":false,"automatic_promotion":false},
+  "safety":{"paper_only":true,"live_trading_enabled":false,"orders_enabled":false,"automatic_promotion":false}
+}
