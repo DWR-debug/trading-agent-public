@@ -824,7 +824,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T15:23:00.461299+00:00",
+  "generated_at_utc": "2026-10-03T15:33:53.309670+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1229,44 +1229,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "Merge pull request #955 from DWR-debug/research/q171-state-compiler-20261003",
+        "sha": "c2dbdabb6c7705290cb04d1346c799d4495ff8cd",
+        "timestamp": "2026-10-03T17:33:40+02:00"
+      },
+      {
+        "message": "RESEARCH: execute Q171 web-state compiler in frontier gate",
+        "sha": "01148124b3caeb5d6b29e4d73faffd34db2fddca",
+        "timestamp": "2026-10-03T17:29:39+02:00"
+      },
+      {
+        "message": "TEST: cover Q171 web-state compiler PIT invariants",
+        "sha": "b6d9c13e996c7b354f7ab377d4d9ffc57f2b2258",
+        "timestamp": "2026-10-03T17:29:25+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q171 deterministic web-state compiler",
+        "sha": "9f62039bd9bb803520ea53dd97d3d0494ae5b089",
+        "timestamp": "2026-10-03T17:29:21+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3c0de5c8131b63f49027c601eaae3fcfedf04c5d",
+        "timestamp": "2026-10-03T15:23:03Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9a96f77658ce6d7df285bcee5982434de9fcddd9",
+        "timestamp": "2026-10-03T15:23:01Z"
+      },
+      {
+        "message": "OPS: persist latest Q169 R3 NOAA PIT archive receipt",
+        "sha": "5d30a66e45f08aa7238f1e3ff67b535e781f0b8e",
+        "timestamp": "2026-10-03T15:23:00Z"
+      },
+      {
         "message": "Merge pull request #954 from DWR-debug/fix/q169-receipt-publish-argument-order-20261003",
         "sha": "0040474c1e02b8098695bd3b551382fba1e465b3",
         "timestamp": "2026-10-03T17:22:48+02:00"
-      },
-      {
-        "message": "FIX: correct Q169 publisher repo-path mapping",
-        "sha": "86612e0de86329d9277b08940546b180098a00a0",
-        "timestamp": "2026-10-03T17:21:23+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c8742debfa7cf199ac5a8de508ef882bce4da49e",
-        "timestamp": "2026-10-03T15:20:13Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a4531953068b3546d8bfb50b3ef5254cf49ae968",
-        "timestamp": "2026-10-03T15:20:12Z"
-      },
-      {
-        "message": "Merge pull request #953 from DWR-debug/fix/q169-receipt-publish-source-20261003",
-        "sha": "a0c8f807897d5ea88511753ce3e1a0f1962aeb92",
-        "timestamp": "2026-10-03T17:19:59+02:00"
-      },
-      {
-        "message": "FIX: publish Q169 receipt from run artifact input",
-        "sha": "1d716d0fe2fe5b41b8c87fc8151223d11622d872",
-        "timestamp": "2026-10-03T17:17:47+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "951aa728f4d891cc49b757b913f9de36127da3b5",
-        "timestamp": "2026-10-03T15:16:54Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9baffffbcd9b8573bc3776c50d279082e7697cfc",
-        "timestamp": "2026-10-03T15:16:52Z"
       }
     ]
   },
@@ -1336,12 +1336,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0040474c1e02b8098695bd3b551382fba1e465b3",
+  "source_master_sha": "c2dbdabb6c7705290cb04d1346c799d4495ff8cd",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37133036971"
+    "run_id": "37133675873"
   }
 }
