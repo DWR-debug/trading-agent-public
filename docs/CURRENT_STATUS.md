@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `45c9c13656851dd37c0d9d22c454df67c8eb1070`
+**Current operational snapshot:** `bb7b2b5c0038866bc495785d9c414752aa6d4caa`
 
-**Generated (UTC):** `2026-10-03T18:17:07.563840+00:00`
+**Generated (UTC):** `2026-10-03T18:30:11.252685+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -68,7 +68,6 @@
 - **Q121-R2:** `Q121R2_BLOCKED_BY_Q121R1_FALSIFICATION`; no independent reconciliation was claimed. Receipt fingerprint `fd7b63d9f05e0cf9abf588c9c2d6c2ff02e2ea413927218de6f4e1c29f9fff97`.
 - **Q121-R3:** `Q121R3_FORM_INDEX_ROUTE_FEASIBILITY_COMPLETED`; official SEC quarterly form-index route completed for 7 quarters with 61,818 relevant form rows and 3 frozen controls. Receipt fingerprint `a18abdffe2fde48dc4084d420f0a8d5c6ade92727baa23dcecaad481e9452dc1`.
 - **Q121-R4:** `Q121R4_MASTER_INDEX_ROUTE_FEASIBILITY_COMPLETED`; independent SEC quarterly master-index route completed for the same 7-quarter window with 61,818 relevant form rows and 3 frozen controls. Receipt fingerprint `3f5616d6ddc18c0f39a10316fe3cbf69e98be2911741552f8a70d133ba94c076`.
-- **Q121-R5:** `PREREGISTERED_DUAL_SOURCE_POPULATION_RECONCILIATION_PIT_ONLY`; implementation merged in master, but no validated R5 receipt is claimed yet because the post-merge workflow currently exposes no workflow-run record. The exact decision rule is canonical multiset equality on `(CIK, Form, Filing-Date, Accession-Number)` for the frozen Q121 window. Performance/PIT authorization remains unchanged.
 - **Q127-R1:** `Q127R1_SOURCE_PIT_FEASIBILITY_COMPLETED`; four fixed historical dates were retrieved and parsed. Revision lineage and same-day PIT safety remain unresolved. Receipt fingerprint `60815a092421762ac1da2a96d003865b72f25eb640778287964a9648cdfc5b74`.
 - **Q130-R1:** `Q130R1_SOURCE_FEASIBILITY_COMPLETED`; the frozen historical Wikimedia source probe passed, while publication/revision timing remains outside formal same-day PIT safety.
 - **Q131-R1:** `Q131R1_FIXED_WINDOW_NO_MATCHING_FILINGS`; the fixed 2025-09-22 through 2025-09-24 issuer/form window yielded zero matching filings, so no complexity vector was inferred. Receipt fingerprint `e5d5077874d3eaa06b688c7294e83c42d3797da1c9cffdfdb98e067112d07a70`.
