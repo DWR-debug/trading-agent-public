@@ -919,7 +919,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-03T18:39:18.673834+00:00",
+  "generated_at_utc": "2026-10-03T18:40:15.119030+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1098,6 +1098,76 @@
       "trial_id": "T-2026-09-28-070-PIT"
     },
     "state": "PERMANENTLY_BLOCKED"
+  },
+  "q121_r5_dual_index_reconciliation": {
+    "canonical_revision": {
+      "r5_implementation_merge_commit": "7c5c08e974e21c9057260f7a583c26f50cb116ec",
+      "validating_workflow_run_id": 37144415794
+    },
+    "governance": {
+      "asset_search": false,
+      "automatic_promotion": false,
+      "holdout": false,
+      "horizon_search": false,
+      "parameter_search": false,
+      "performance": false,
+      "performance_authorized": false,
+      "ranking": false,
+      "selection": false,
+      "threshold_search": false,
+      "variant_search": false
+    },
+    "interpretation_boundary": {
+      "acceptance_timestamps_compiled": false,
+      "dual_index_population_equivalence": true,
+      "full_subject_issuer_population_compiled": false,
+      "revision_lineage_established": false,
+      "same_day_pit_safe": false
+    },
+    "provenance_note": "Durable anchor for the immutable workflow receipt. The full result.json remains in GitHub Actions artifact 11282096304; this file preserves the exact receipt/result/artifact hashes and scientific boundary.",
+    "receipt": {
+      "artifact_id": 11282096304,
+      "artifact_sha256": "55dbe4102219ad704c25a776dd7799693d92bf9b2301451ef55898e3423c6dce",
+      "receipt_fingerprint": "897bc13c5f722d9a701ae7994b237fe7afd233f15cdc5e644061aa674b8f26c1",
+      "result_json_sha256": "524c4ba6872dfff36aa3e6018ed0a4aed7b3511f4c86fac86729dd5b815cb6cb"
+    },
+    "reconciliation": {
+      "exact_row_multiset_equal": true,
+      "form_index_rows": 61818,
+      "left_only_key_count": 0,
+      "master_index_rows": 61818,
+      "right_only_key_count": 0,
+      "row_multiset_fingerprint": "7251f0e25d7293802d389cac875abfd8552b9441ac604b69918bd7d5b9aec554",
+      "unique_canonical_keys_form_index": 61818,
+      "unique_canonical_keys_master_index": 61818
+    },
+    "recorded_at_utc": "2026-10-03",
+    "research_status": "Q121R5_DUAL_INDEX_POPULATION_RECONCILIATION_COMPLETED",
+    "safety": {
+      "automatic_promotion": false,
+      "live_trading_enabled": false,
+      "orders_enabled": false,
+      "paper_only": true
+    },
+    "schema_version": "1.0",
+    "source_scope": {
+      "canonical_key_fields": [
+        "cik",
+        "form",
+        "filed_date",
+        "accession_number"
+      ],
+      "forms": [
+        "SC 13D",
+        "SC 13D/A",
+        "SC 13G",
+        "SC 13G/A"
+      ],
+      "quarters_checked": 7,
+      "window_end": "2025-09-24",
+      "window_start": "2024-02-05"
+    },
+    "task_id": "Q-2026-10-03-121R5-SEC-DUAL-INDEX-POPULATION-RECONCILIATION"
   },
   "q129_options": {
     "artifact_digest": "sha256:8ed2edb7a1dc732d117ee80232c47d923a4d1f263634517807d4ac22f7765686",
@@ -1324,6 +1394,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: persist verified Q121-R5 receipt in status sync",
+        "sha": "2a9db1c052c06aae2cb74f462c38722d18631cee",
+        "timestamp": "2026-10-03T20:39:55+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "0a09a04141b472293686d1e83bb256d2643d8571",
+        "timestamp": "2026-10-03T18:39:21Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a5016d91ef120576f863f60b385bf08eaeafb9e8",
+        "timestamp": "2026-10-03T18:39:19Z"
+      },
+      {
         "message": "LEDGER: append verified Q121-R5 source-population reconciliation",
         "sha": "0ba5789003cda59e1ef3f54c0dc4a93e126690a6",
         "timestamp": "2026-10-03T20:39:08+02:00"
@@ -1347,21 +1432,6 @@
         "message": "RESEARCH: harden direct-archive Q121-R5 fallback",
         "sha": "998fb1b2641666aaa7ce348346888aaf7b5b30f4",
         "timestamp": "2026-10-03T20:37:09+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "67f8af89364812784cf5319ca57826fd6c3bbf83",
-        "timestamp": "2026-10-03T18:34:57Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0b35f2fa8a940d30f7fbcc71a56288120846ce01",
-        "timestamp": "2026-10-03T18:34:56Z"
-      },
-      {
-        "message": "RESEARCH: add self-hosted Q121-R5 execution lane",
-        "sha": "c2f087884ca8dba0d98879c2ca2378d7ca67aedb",
-        "timestamp": "2026-10-03T20:34:44+02:00"
       }
     ]
   },
@@ -1393,7 +1463,7 @@
     "decision_basis_stage": null,
     "latest_formal_status": "performance_completed_no_arm_passed_all_13_gates",
     "latest_formal_trial": "T-2026-10-01-H06P2R3-PERFORMANCE-01",
-    "next_research_focus_recorded": "Verified 2026-10-03 Source/PIT outcomes: Q121-R1 issuer-oriented SEC browse route was falsified by its preregistered subject-issuer identity contract; Q121-R2 was therefore blocked without reconciliation; Q121-R3 completed the official SEC quarterly form-index route on the frozen window (7 quarters, 61,818 relevant form rows, 3 frozen controls); Q121-R4 independently completed the SEC quarterly master-index route on the same frozen window/control set (7 quarters, 61,818 relevant form rows, 3 frozen controls). The two routes establish source-route feasibility and controlled identity recovery only; same-day PIT safety, performance and full subject-issuer population reconstruction remain open. Q127-R1 historical FINRA Reg-SHO retrieval completed but revision lineage and same-day PIT safety remain unresolved; Q130-R1 historical Wikimedia attention retrieval completed but its publication/revision boundary remains unresolved; Q131-R1 produced no matching filings in its fixed preregistered window, so no complexity vector was inferred. Next work is dual-source Q121 reconciliation/PIT compilation before any performance consideration. No outcome above authorizes performance, holdout selection, tuning, ranking, promotion or live execution.",
+    "next_research_focus_recorded": "Q121-R5 has now completed the preregistered dual SEC-index population reconciliation: the official quarterly form.idx and master.idx routes are exactly equal as multisets on the frozen 2024-02-05 through 2025-09-24 window and four-form scope (61,818 rows; zero left-only/right-only canonical keys). This establishes source-population equivalence only. The next Q121 gate is candidate-specific acceptance-timestamp compilation, filing-date consistency, accession/revision lineage and synthetic boundary testing; same-day PIT safety and performance remain unproven. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -1431,7 +1501,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0ba5789003cda59e1ef3f54c0dc4a93e126690a6",
+  "source_master_sha": "2a9db1c052c06aae2cb74f462c38722d18631cee",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -1545,6 +1615,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37145003307"
+    "run_id": "37145051393"
   }
 }
