@@ -1,12 +1,7 @@
 name: Continuous QA (trusted self-hosted Windows)
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - "research/run_requests/self_hosted_continuous_qa.trigger"
-      - ".github/workflows/self-hosted-continuous-qa.yml"
-      - "automation/self_hosted_research_worker.py"
+  # Pushes do not reserve scarce Windows capacity; heartbeat is schedule/manual only.
   schedule:
     - cron: "15 */6 * * *"
   workflow_dispatch:
