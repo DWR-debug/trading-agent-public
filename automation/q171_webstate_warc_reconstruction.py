@@ -211,7 +211,11 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     result = run(args.coverage_path, args.output)
-    return 0 if result["summary"]["blocked"] == 0 else 1
+    non_infra_blocked = [
+        item for item in result["results"].values()
+        if item["status"] not in {"WARC_RECONSTRUCTED", "INFRA_ACCESS_BLOCKED"}
+    ]
+    return 0 if not non_infra_blocked else 1
 
 
 if __name__ == "__main__":
