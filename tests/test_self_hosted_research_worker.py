@@ -87,7 +87,8 @@ def test_every_lane_writes_non_formal_run_manifest(monkeypatch, tmp_path):
 
         expected_codes = [0] if len(commands) == 1 else [0] + [7] * (len(commands) - 1)
         assert worker.main() == (0 if len(commands) == 1 else 7)
-        assert attempted == list(range(1, len(commands) + 1))
+        expected_order = list(range(1, len(commands) + 1)) if lane != "autonomous_frontier_qa" else list(range(1, 8)) + list(range(9, len(commands) + 1)) + [8]
+        assert attempted == expected_order
 
         manifest = json.loads(
             (output_dir / "run_manifest.json").read_text(encoding="utf-8")
@@ -151,7 +152,8 @@ def test_each_lane_fails_closed_and_preserves_failure_provenance(
         )
 
         assert worker.main() == 17
-        assert attempted == list(range(1, len(worker.LANES[lane]) + 1))
+        expected_order = list(range(1, len(worker.LANES[lane]) + 1)) if lane != "autonomous_frontier_qa" else list(range(1, 8)) + list(range(9, len(worker.LANES[lane]) + 1)) + [8]
+        assert attempted == expected_order
 
         summary = json.loads(
             (output_dir / "summary.json").read_text(encoding="utf-8")
@@ -165,9 +167,10 @@ def test_each_lane_fails_closed_and_preserves_failure_provenance(
         assert manifest["lane"] == lane
         assert manifest["source_commit"] == "abc123"
         assert manifest["step_return_codes"] == [17] * len(worker.LANES[lane])
-        assert manifest["failed_steps"] == list(range(1, len(worker.LANES[lane]) + 1))
+        expected_failed_steps = list(range(1, len(worker.LANES[lane]) + 1)) if lane != "autonomous_frontier_qa" else list(range(1, 8)) + list(range(9, len(worker.LANES[lane]) + 1)) + [8]
+        assert manifest["failed_steps"] == expected_failed_steps
         assert manifest["all_bounded_steps_attempted"] is True
-        assert summary["failed_steps"] == list(range(1, len(worker.LANES[lane]) + 1))
+        assert summary["failed_steps"] == expected_failed_steps
         assert summary["all_bounded_steps_attempted"] is True
 
 
