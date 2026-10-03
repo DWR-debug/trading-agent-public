@@ -4,6 +4,13 @@ on:
   schedule:
     - cron: "40 */12 * * *"
   workflow_dispatch:
+  pull_request:
+    branches: [master]
+    paths:
+      - "automation/q121r1_sec_reverse_issuer_coverage.py"
+      - "tests/test_q121r1_sec_reverse_issuer_coverage.py"
+      - "research/preregistrations/q121r1_sec_reverse_issuer_coverage_2026_10_03.json"
+      - ".github/workflows/q121r1-sec-reverse-issuer-coverage.yml"
   push:
     branches: [master]
     paths:
