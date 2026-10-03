@@ -19,6 +19,26 @@ ROOT = Path(__file__).resolve().parents[1]
 
 PROBES: dict[str, dict[str, Any]] = {
 
+    "PYPI_STATS": {
+        "url": "https://pypistats.org/api/",
+        "markers": ["PyPI Stats API", "time series", "updated once daily"],
+    },
+    "CROSSREF_API": {
+        "url": "https://www.crossref.org/documentation/retrieve-metadata/rest-api/",
+        "markers": ["publicly available REST API", "/works", "JSON"],
+    },
+    "USGS_EARTHQUAKE": {
+        "url": "https://earthquake.usgs.gov/fdsnws/event/1/swagger.json",
+        "markers": ["format=geojson", "All times use ISO8601", "updatedafter"],
+    },
+    "NOAA_SWPC": {
+        "url": "https://services.swpc.noaa.gov/products/",
+        "markers": ["alerts.json", "kyoto-dst.json", "noaa-planetary-k-index.json"],
+    },
+    "NASA_FIRMS": {
+        "url": "https://firms.modaps.eosdis.nasa.gov/active_fire/",
+        "markers": ["FIRMS Archive Download", "MODIS", "VIIRS"],
+    },
     "NOAA_STORM": {
         "url": "https://www.ncei.noaa.gov/access/storm-events-database/",
         "markers": ["Storm Events Database", "January 1950", "Bulk Data Access"],
@@ -246,7 +266,7 @@ def main() -> int:
     mutations = future_mutation_invariance()
     result = {
         "schema_version": "1.0",
-        "task_id": "Q-2026-10-03-Q133-Q165-SOURCE-FEASIBILITY",
+        "task_id": "Q-2026-10-03-Q133-Q170-SOURCE-FEASIBILITY",
         "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
         "source_results": source_results,
         "candidate_results": candidate_results,
