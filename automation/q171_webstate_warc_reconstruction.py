@@ -176,6 +176,7 @@ def run(coverage_path: Path, output: Path) -> dict[str, object]:
         "summary": {
             "capture_candidates": len(results),
             "warc_reconstructed": sum(r["status"] == "WARC_RECONSTRUCTED" for r in results.values()),
+            "infra_blocked": sum(r["status"] == "INFRA_ACCESS_BLOCKED" for r in results.values()),
             "blocked": sum(r["status"] != "WARC_RECONSTRUCTED" for r in results.values()),
         },
         "scientific_boundary": {
