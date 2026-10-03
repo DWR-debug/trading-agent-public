@@ -57,7 +57,7 @@
     ],
     "complete_scan": true,
     "shard_count": 16,
-    "rate_limit_gap_seconds": 0.13,
+    "rate_limit_gap_seconds": 0.25,
     "max_workers_per_shard": 8,
     "retry_statuses": [
       429,
@@ -65,7 +65,8 @@
       502,
       503,
       504
-    ]
+    ],
+    "fair_access_basis": "SEC current public guidance limits total automated EDGAR access to <=10 requests/second regardless of number of machines; with two concurrent self-hosted runners this contract uses 0.25s per-runner spacing (<=8 requests/second aggregate before transient retries/backoff)."
   },
   "identity_contract": {
     "filing_index_cik_must_equal_filed_by_cik": true,
