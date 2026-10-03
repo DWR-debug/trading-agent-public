@@ -83,9 +83,10 @@ def inspect(path: Path, dataset_name: str) -> dict[str, object]:
           COUNT(*) FILTER (WHERE open_interest IS NULL) AS null_open_interest,
           COUNT(*) FILTER (WHERE volume < 0) AS negative_volume,
           COUNT(*) FILTER (WHERE open_interest < 0) AS negative_open_interest,
+          COUNT(*) FILTER (WHERE bid < 0 OR ask < 0) AS negative_quote_rows,
           COUNT(*) FILTER (WHERE bid > 0 AND ask > 0 AND bid > ask) AS crossed_quotes,
           COUNT(*) FILTER (WHERE expiration < date) AS expiration_before_observation,
-          COUNT(*) FILTER (WHERE UPPER(CAST(type AS VARCHAR)) NOT IN ('C','P')) AS invalid_option_type,
+          COUNT(*) FILTER (WHERE UPPER(CAST(type AS VARCHAR)) NOT IN ('C','P','CALL','PUT')) AS invalid_option_type,
           COUNT(*) - COUNT(DISTINCT concat(CAST(contract_id AS VARCHAR), '|', CAST(date AS VARCHAR))) AS duplicate_contract_date_rows,
           MIN(CAST(date AS DATE)) AS first_observation_date,
           MAX(CAST(date AS DATE)) AS last_observation_date
@@ -95,8 +96,8 @@ def inspect(path: Path, dataset_name: str) -> dict[str, object]:
     keys = [
         "rows", "null_contract_id", "null_symbol", "null_date", "null_expiration",
         "null_bid", "null_ask", "null_volume", "null_open_interest",
-        "negative_volume", "negative_open_interest", "crossed_quotes",
-        "negative_quote_rows", "expiration_before_observation", "invalid_option_type",
+        "negative_volume", "negative_open_interest", "negative_quote_rows", "crossed_quotes",
+        "expiration_before_observation", "invalid_option_type",
         "duplicate_contract_date_rows", "first_observation_date", "last_observation_date",
     ]
     values = dict(zip(keys, summary))
