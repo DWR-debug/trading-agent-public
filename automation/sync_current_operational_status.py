@@ -354,10 +354,12 @@ def generate(
                 "candidate_ranking": False,
                 "promotion": False,
             },
-            "self_hosted_qa": {
-                "cadence": "15 * * * *",
-                "label": "trading-agent-research",
-                "architecture": "latest verified two-runner capacity receipt",
+            "continuous_qa": {
+                "cadence": "15 */6 * * *",
+                "runner": "GitHub-hosted windows-latest",
+                "matrix_lanes": ["repo_qa"],
+                "self_hosted_slots_consumed": 0,
+                "architecture": "single bounded hosted QA lane",
                 "runner_capacity_last_verified": runner_capacity_receipt,
                 "last_recorded_verified_baseline": recorded_qa,
             },
@@ -442,7 +444,7 @@ def generate(
 - The Forward path contains closed-candle market-data ingestion, a persistent update loop and a schema-v2 per-candle MTM ledger.
 - Canonical data-layer infrastructure is merged.
 - Bounded agent routing uses two queue lanes with fail-closed task contracts.
-- Self-hosted Continuous QA is scheduled hourly at minute 15 under label `trading-agent-research`.
+- Continuous QA is scheduled every 6 hours on GitHub-hosted Windows and uses only the bounded `repo_qa` lane; it consumes no self-hosted Windows research slot.
 - Latest self-hosted capacity verification: two distinct Windows/X64 runner slots accepted concurrent jobs; see the timestamped capacity receipt.
 - S10 phone capability receipt: **{s10_operational_status.get("status", "NOT_YET_SYNCHRONIZED")}**; receipt-gated eligibility = **{s10_operational_status.get("eligible", False)}**.
 - S10 current physical online state: **{s10_operational_status.get("current_online", "UNKNOWN")}**; current-presence verification = **{s10_operational_status.get("current_online_verification", "NOT_PERFORMED")}**.
@@ -540,7 +542,7 @@ Q070 is the fresh symbol-disjoint validation pipeline for the fixed Q069 OHLCV c
 - Deterministic research stays on reproducible runner paths.
 - Agent output is never scientific evidence by itself.
 - Protected Copilot reserve starts **2026-10-01T00:00:00Z**: at most 4 sessions/month, 30 AI credits/session, 1 concurrent session; actual entitlement is verified at dispatch and no paid fallback/overage is permitted.
-- Both self-hosted Windows runners remain the preferred parallel local capacity; the local AI smoke check runs only after the two research lanes complete.
+- Permanent research continuity uses the two self-hosted Windows lanes every 30 minutes, hosted failover on the same cadence when the self-hosted heartbeat is stale, free-AI rotation every 6 hours when authenticated, S10 utility on a receipt-gated 6-hour/event-driven cadence, and bounded agent dispatch every 2 hours.
 
 ## Safety
 
