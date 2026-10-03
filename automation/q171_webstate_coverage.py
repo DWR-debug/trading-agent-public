@@ -143,7 +143,7 @@ def run(output: Path) -> dict[str, object]:
         "summary": {
             "issuers": len(results),
             "status_counts": status_counts,
-            "captures_found": sum(v == "CAPTURE_FOUND" for v in status_counts),
+            "captures_found": status_counts.get("CAPTURE_FOUND", 0),
         },
         "scientific_boundary": {
             "performance": False,
