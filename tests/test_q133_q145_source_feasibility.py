@@ -1,6 +1,5 @@
 from pathlib import Path
 import json
-import json
 
 ROOT = Path(__file__).parents[1]
 
@@ -16,7 +15,7 @@ def test_source_feasibility_script_is_discovery_only():
 def test_source_feasibility_workflow_is_hosted_and_safety_bound():
     text = (ROOT / ".github/workflows/deep-frontier-source-feasibility.yml").read_text(encoding="utf-8")
     assert "runs-on: ubuntu-24.04" in text
-    assert 'cron: "17 */12 * * *"' in text
+    assert 'cron: "17 */6 * * *"' in text
     assert "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED" in text
     assert "automatic_promotion" in text
 
@@ -40,3 +39,12 @@ def test_source_feasibility_registers_new_wave_candidates():
     )
     assert wave["status"] == "DESIGN_INVENTORY_ONLY"
     assert len(wave["candidates"]) == 14
+
+
+
+def test_source_feasibility_registers_q166_q170_wave():
+    data = json.loads(
+        (ROOT / "research/frontier/q166_q170_candidate_wave_2026_10_03.json").read_text(encoding="utf-8")
+    )
+    assert data["status"] == "DESIGN_INVENTORY_ONLY"
+    assert len(data["candidates"]) == 5
