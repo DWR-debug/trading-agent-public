@@ -56,3 +56,9 @@ def test_source_feasibility_registers_q171_q178_wave():
     )
     assert data["status"] == "DESIGN_INVENTORY_ONLY"
     assert len(data["candidates"]) == 8
+
+
+def test_opensky_license_gate_is_fail_closed():
+    text = (ROOT / "automation/q133_q145_source_feasibility.py").read_text(encoding="utf-8")
+    assert "CONSENT_REQUIRED_FOR_COMMERCIAL_USE" in text
+    assert "BLOCKED_LICENSE_GATE" in text
