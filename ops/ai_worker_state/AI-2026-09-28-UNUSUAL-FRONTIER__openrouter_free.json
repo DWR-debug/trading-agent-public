@@ -25,13 +25,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.236,
-  "stdout": "",
-  "stderr": "OpenRouter HTTP 429: {\"error\":{\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\",\"code\":429,\"metadata\":{\"headers\":{\"X-RateLimit-Limit\":\"50\",\"X-RateLimit-Remaining\":\"0\",\"X-RateLimit-Reset\":\"1790985600000\"},\"limit_source\":\"openrouter_free_tier_daily\",\"remedy_hint\":\"Wait for the daily reset (see X-RateLimit-Reset), or purchase credits to raise your free-model daily limit.\",\"provider_name\":null,\"previous_errors\":[{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"}]}},\"user_id\":\"user_3K3ZJKAZq4v0T1h5GaKRbugCtn4\"}",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 20.177,
+  "stdout": "**Worker Handoff: Unusual‑Alpha Hypothesis Generation (AI‑2026‑09‑28‑UNUSUAL‑FRONTIER)**  \n\n**Findings from context review**  \n- The frontier document (RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md) lists four machine‑feasibility‑validated candidates (C29, C30, M4, M5) that are *design‑only*; none have performance authorization.  \n- The decision basis (DECISION_BASIS.md) reports the project at `PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES`; no promotions or live‑trading are active.  \n- The already‑tested alpha families include: trend, cross‑sectional momentum, residual momentum, low‑beta, 52‑week‑high, overnight tug‑of‑war.  \n- The active research registry contains many feasibility‑completed families (Q104‑Q108, etc.) but all remain in `DESIGN_ONLY` or `SOURCE_FEASIBILITY` states; performance gates are closed until immutable 13‑gate evaluation is passed.  \n\n**Structurally distinct, falsifiable alpha hypotheses**  \n*(Each is deliberately orthogonal to the listed tested families. No parameter tuning, holdout selection, or performance claim is embedded.)*\n\n| Hyp | Causal Intuition | Minimum Data Requirements | Obvious Confounders | Cheap Falsification Test |\n|-----|------------------|---------------------------|---------------------|--------------------------|\n| **A** | **Intraday reversal from opening‑price deviation** – The signed deviation of the day’s open from the prior close, normalized by the daily range, predicts the *sign* of the next day’s cross‑sectional return. Overnight news creates an opening drift; the drift’s sign indicates the information direction, which promptly reverses. | Daily `open`, `close`, `high`, `low` for a universe of equities; prior‑close reference. | Earnings gaps, macro announcements, time‑zone effects. | Randomly permute opening prices across days; predictive signal should vanish if the effect is genuine. |\n| **B** | **Cross‑asset lead‑lag from 10‑yr yield change to equity momentum** – A change in the 10‑year Treasury yield on day",
+  "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": null,
-  "usage": null
+  "response_id": "gen-1790986769-RWxGF0gxkPQzLuId3u0O",
+  "usage": {
+    "prompt_tokens": 4298,
+    "completion_tokens": 3200,
+    "total_tokens": 7498,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3195,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
