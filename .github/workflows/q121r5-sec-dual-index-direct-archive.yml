@@ -23,7 +23,7 @@ jobs:
           if /I not "%GITHUB_REPOSITORY%"=="DWR-debug/trading-agent-public" exit /b 1
           if /I not "%GITHUB_REF%"=="refs/heads/master" exit /b 1
           if not defined GITHUB_SHA exit /b 1
-          set "WORK=%RUNNER_TEMP%\q121r5-%GITHUB_SHA%"
+          set "WORK=%GITHUB_WORKSPACE%\q121r5-src"
           set "ARCHIVE=%RUNNER_TEMP%\q121r5-%GITHUB_SHA%.tar.gz"
           if exist "%WORK%" rmdir /s /q "%WORK%"
           mkdir "%WORK%" || exit /b 1
@@ -34,8 +34,11 @@ jobs:
           set "REPO_SRC="
           for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
           if not defined REPO_SRC exit /b 1
-          set "Q121R5_REPO=%REPO_SRC%"
-          echo Q121R5_REPO=%REPO_SRC%
+          if exist "%GITHUB_WORKSPACE%\q121r5-repo" rmdir /s /q "%GITHUB_WORKSPACE%\q121r5-repo"
+          move "%REPO_SRC%" "%GITHUB_WORKSPACE%\q121r5-repo" >nul || exit /b 1
+          echo Q121R5_REPO=%GITHUB_WORKSPACE%\q121r5-repo>>"%GITHUB_ENV%"
+          echo Q121R5_SHA=%GITHUB_SHA%>>"%GITHUB_ENV%"
+          echo Q121R5_REPO=%GITHUB_WORKSPACE%\q121r5-repo
           echo Q121R5_SHA=%GITHUB_SHA%
           echo Q121R5_REPO=%REPO_SRC%>>"%GITHUB_ENV%"
           endlocal
@@ -69,6 +72,6 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: q121r5-sec-dual-index-direct-archive-${{ github.run_id }}
-          path: "%Q121R5_REPO%\research\runs\q121r5_sec_dual_index_reconciliation\result.json"
+          path: q121r5-repo\research\runs\q121r5_sec_dual_index_reconciliation\result.json
           if-no-files-found: error
           retention-days: 30
