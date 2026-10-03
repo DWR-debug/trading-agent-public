@@ -5,6 +5,7 @@
   "source_master_sha": "9ce1e5c5bd82cedd48f1036ef1becaf4242b3e76",
   "purpose": "Persistent orchestration contract for chat-independent Trading Agent research and engineering.",
   "chat_trigger": "trading agent",
+  "capacity_pulse_policy": "10-minute schedule with concurrency-serialized self-hosted loop and deterministic frontier workpack rotation by run number",
   "canonical_chat_entrypoint": "docs/TRADING_AGENT_CHAT_ENTRYPOINT.md",
   "canonical_orchestration_doc": "docs/TRADING_AGENT_OS_ORCHESTRATION.md",
   "canonical_live_status": "research/evidence/current_operational_state.json",
@@ -35,7 +36,7 @@
   "autonomous_lanes": {
     "permanent_self_hosted_research": {
       "workflow": ".github/workflows/permanent-pc-research-loop.yml",
-      "schedule_utc": "*/30 * * * *",
+      "schedule_utc": "*/10 * * * *",
       "runner_label": "trading-agent-research",
       "parallel_lanes": 2,
       "purpose": [
@@ -127,9 +128,11 @@
       "runtime": "Termux",
       "runner_workflow": ".github/workflows/s10-phone-worker.yml",
       "runner_label": "s10-phone",
-      "runner_mode": "scheduled_utility_after_live_verification",
+      "runner_mode": "scheduled_utility_after_fresh_receipt",
       "research_role": "independent_mobile_bounded_utility_qa_worker",
-      "live_verification_required": true,
+      "live_verification_required": false,
+      "presence_signal": "fresh_successful_utility_receipt",
+      "presence_max_age_hours": 6,
       "capability_claim": "UTILITY_ACCEPTED",
       "routing_rule": "use only when available + independent + permitted + useful",
       "scientific_role": "bounded support only; never scientific evidence, authorization, selection, promotion or live execution",
