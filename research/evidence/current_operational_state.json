@@ -919,7 +919,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-03T17:10:19.355957+00:00",
+  "generated_at_utc": "2026-10-03T17:14:18.934990+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1324,6 +1324,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "STATUS: persist verified source/PIT frontier outcomes",
+        "sha": "c3695ed45c36202cc9e8d01127e061e11000f0fa",
+        "timestamp": "2026-10-03T19:14:07+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6f1664586eae621ac5ec61b80ef7b3e27b950289",
+        "timestamp": "2026-10-03T17:10:21Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "befd44b5df83e51fa731ed1eac2358869a8ae74d",
+        "timestamp": "2026-10-03T17:10:20Z"
+      },
+      {
         "message": "FIX: harden source/PIT research lanes",
         "sha": "6022816545f4a269d422754dff858cc319a50407",
         "timestamp": "2026-10-03T19:10:07+02:00"
@@ -1347,21 +1362,6 @@
         "message": "OPS: include Q131-R1 in active frontier summary",
         "sha": "6bd015c819efb75a379d25f82177d9760e03a831",
         "timestamp": "2026-10-03T18:57:11+02:00"
-      },
-      {
-        "message": "OPS: surface Q131-R1 in current status focus",
-        "sha": "f0645347b769e4d0af055763a688d21be3bb9c35",
-        "timestamp": "2026-10-03T18:57:03+02:00"
-      },
-      {
-        "message": "TEST: bind Q131-R1 workflow lifecycle registration",
-        "sha": "e302cf7bd21acc9f108d034c67e3a25188cc0d94",
-        "timestamp": "2026-10-03T18:56:54+02:00"
-      },
-      {
-        "message": "GOV: include Q131-R1 in active workflow integrity checks",
-        "sha": "6e4dcef5173ba5d7857d1e11dd1628a8a39c72a9",
-        "timestamp": "2026-10-03T18:56:49+02:00"
       }
     ]
   },
@@ -1393,7 +1393,7 @@
     "decision_basis_stage": null,
     "latest_formal_status": "performance_completed_no_arm_passed_all_13_gates",
     "latest_formal_trial": "T-2026-10-01-H06P2R3-PERFORMANCE-01",
-    "next_research_focus_recorded": "Priority frontier is now the orthogonal SEC/13F/XBRL/Treasury/CFTC channel block plus Q121 and Q126-Q132. Q121 has a fixed SEC acceptance-time discovery/PIT compiler. Q126 reuses frozen SEC filing-arrival components; Q127 uses FINRA Reg-SHO daily short volume with revision-aware publication timing; Q128/Q129 remain blocked until a free, reproducible historical options source is established; Q130 remains blocked until a timestamped reproducible public attention history is established; Q131 has source access but its disclosure-complexity definition is not yet frozen; Q132 has a deterministic fixed-decomposition synthetic contract. Q119/Q120/Q122 remain active Treasury/CFTC source/PIT work. None of these states authorizes performance, holdout selection, tuning, promotion or live execution.",
+    "next_research_focus_recorded": "Verified 2026-10-03 Source/PIT outcomes: Q121-R1 issuer-oriented SEC browse route was falsified by its preregistered subject-issuer identity contract; Q121-R2 was therefore blocked without reconciliation; Q127-R1 historical FINRA Reg-SHO retrieval completed but revision lineage and same-day PIT safety remain unresolved; Q130-R1 historical Wikimedia attention retrieval completed but its publication/revision boundary remains unresolved; Q131-R1 produced no matching filings in its fixed preregistered window, so no complexity vector was inferred. Next work is an independently preregistered alternative Q121 source route plus candidate-specific PIT compilers for the active orthogonal frontier. No outcome above authorizes performance, holdout selection, tuning, ranking, promotion or live execution.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -1431,12 +1431,94 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "6022816545f4a269d422754dff858cc319a50407",
+  "source_master_sha": "c3695ed45c36202cc9e8d01127e061e11000f0fa",
+  "source_pit_frontier_outcomes": {
+    "as_of_utc": "2026-10-03T17:10:39Z",
+    "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
+    "generated_from_verified_workflow_runs": true,
+    "global_scientific_boundary": {
+      "asset_search": false,
+      "holdout": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "ranking": false,
+      "selection": false,
+      "threshold_search": false,
+      "variant_search": false
+    },
+    "master_commit": "6022816545f4a269d422754dff858cc319a50407",
+    "outcomes": [
+      {
+        "code": "Q121-R1",
+        "observed": {
+          "discovered_filing_entries": 93,
+          "identity_checks": 15
+        },
+        "receipt_fingerprint": "9c9a3a4fa05ccc5aa8e59d254c75577abb60b869dd53ff35505b335424cfbf8e",
+        "research_status": "Q121R1_SOURCE_ROUTE_FALSIFIED",
+        "scientific_interpretation": "The preregistered SEC issuer-oriented browse route failed its subject-issuer identity contract; the observed counterexample had subject CIK different from the frozen issuer CIK. The preregistration was not relaxed.",
+        "workflow_conclusion": "success",
+        "workflow_run_id": 37139514721
+      },
+      {
+        "code": "Q121-R2",
+        "observed": {
+          "anchors_checked": 0,
+          "daily_index_dates_checked": 0
+        },
+        "receipt_fingerprint": "fd7b63d9f05e0cf9abf588c9c2d6c2ff02e2ea413927218de6f4e1c29f9fff97",
+        "research_status": "Q121R2_BLOCKED_BY_Q121R1_FALSIFICATION",
+        "scientific_interpretation": "Independent reconciliation was intentionally not performed because its preregistered upstream route was falsified.",
+        "workflow_conclusion": "success",
+        "workflow_run_id": 37139514724
+      },
+      {
+        "code": "Q127-R1",
+        "observed": {
+          "fixed_dates_checked": 4
+        },
+        "receipt_fingerprint": "60815a092421762ac1da2a96d003865b72f25eb640778287964a9648cdfc5b74",
+        "research_status": "Q127R1_SOURCE_PIT_FEASIBILITY_COMPLETED",
+        "scientific_interpretation": "Historical FINRA Reg-SHO source retrieval and parsing completed for the frozen sample; revision lineage and same-day PIT safety remain unresolved.",
+        "workflow_conclusion": "success",
+        "workflow_run_id": 37139514699
+      },
+      {
+        "code": "Q130-R1",
+        "receipt_fingerprint": null,
+        "research_status": "Q130R1_SOURCE_FEASIBILITY_COMPLETED",
+        "scientific_interpretation": "The frozen Wikimedia historical pageview source probe completed successfully. Publication/revision timing remains outside formal same-day PIT safety.",
+        "workflow_conclusion": "success",
+        "workflow_run_id": 37139514761
+      },
+      {
+        "code": "Q131-R1",
+        "observed": {
+          "filings_checked": 0
+        },
+        "receipt_fingerprint": "e5d5077874d3eaa06b688c7294e83c42d3797da1c9cffdfdb98e067112d07a70",
+        "research_status": "Q131R1_FIXED_WINDOW_NO_MATCHING_FILINGS",
+        "scientific_interpretation": "The preregistered SEC filing window (2025-09-22 through 2025-09-24) yielded no matching filings across the frozen issuer/form set, so no disclosure-complexity vector was inferred or tuned.",
+        "workflow_conclusion": "success",
+        "workflow_run_id": 37139514732
+      }
+    ],
+    "safety": {
+      "automatic_promotion": false,
+      "live_trading_enabled": false,
+      "orders_enabled": false,
+      "paper_only": true
+    },
+    "schema_version": "1.0"
+  },
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37139514684"
+    "run_id": "37139762976"
   }
 }
