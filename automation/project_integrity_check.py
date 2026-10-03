@@ -150,6 +150,7 @@ ACTIVE_WORKFLOWS = {
     "q119-treasury-source-feasibility.yml",
     "q119-independent-reproduction.yml",
     "q120-independent-reproduction.yml",
+    "q121-sec-beneficial-ownership-timing.yml",
     "q095-authorization-once.yml",
     "rccsm-feasibility-cloud.yml",
     "rccsm-feasibility.yml",
