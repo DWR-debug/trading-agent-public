@@ -97,6 +97,24 @@ jobs:
             "research/runs/deep_frontier/${GITHUB_RUN_ID}/q171_webstate_coverage.json" \
             --output "research/runs/deep_frontier/${GITHUB_RUN_ID}/q171_warc_reconstruction.json"
 
+      - name: Diagnose Q171 WARC reconstruction result
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p = Path("research/runs/deep_frontier") / os.environ["GITHUB_RUN_ID"] / "q171_warc_reconstruction.json"
+          if p.exists():
+              d = json.loads(p.read_text(encoding="utf-8"))
+              print(json.dumps({
+                  "summary": d.get("summary"),
+                  "results": {k: {"status": v.get("status"), "http_status": v.get("http_status"), "error_type": v.get("error_type"), "checks": v.get("checks")} for k, v in d.get("results", {}).items()},
+              }, sort_keys=True))
+          else:
+              print("Q171_WARC_RESULT_MISSING")
+          PY
       - name: Validate Q171 WARC reconstruction boundary
         shell: bash
         run: |
