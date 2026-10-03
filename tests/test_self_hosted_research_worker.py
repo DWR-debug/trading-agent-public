@@ -8,8 +8,15 @@ from automation import self_hosted_research_worker as worker
 ROOT = Path(__file__).parents[1]
 
 
-def test_frontier_execution_groups_keep_q100_after_q096_and_q098():
-    groups = worker.execution_groups("autonomous_frontier_qa", len(worker.LANES["autonomous_frontier_qa"]))
+def test_frontier_workpacks_rotate_and_keep_q100_dependency_safe():
+    name1, steps1 = worker.select_workpack("autonomous_frontier_qa", len(worker.LANES["autonomous_frontier_qa"]), 0)
+    name2, steps2 = worker.select_workpack("autonomous_frontier_qa", len(worker.LANES["autonomous_frontier_qa"]), 1)
+    name3, steps3 = worker.select_workpack("autonomous_frontier_qa", len(worker.LANES["autonomous_frontier_qa"]), 2)
+    assert [name1, name2, name3] == ["frontier_pack_1", "frontier_pack_2", "frontier_pack_3"]
+    assert set(steps1).isdisjoint(steps2)
+    assert set(steps2).isdisjoint(steps3)
+    assert set(steps1).isdisjoint(steps3)
+    groups = worker.execution_groups("autonomous_frontier_qa", len(worker.LANES["autonomous_frontier_qa"]), 0)
     assert groups[0][-1] != 8
     assert 5 in groups[0]
     assert 6 in groups[0]
@@ -85,9 +92,10 @@ def test_every_lane_writes_non_formal_run_manifest(monkeypatch, tmp_path):
             ],
         )
 
-        expected_codes = [0] if len(commands) == 1 else [0] + [7] * (len(commands) - 1)
-        assert worker.main() == (0 if len(commands) == 1 else 7)
-        expected_order = list(range(1, len(commands) + 1)) if lane != "autonomous_frontier_qa" else list(range(1, 8)) + list(range(9, len(commands) + 1)) + [8]
+        selected = worker.select_workpack(lane, len(commands), 0)[1]
+        expected_order = [x for x in selected if x != 8] + ([8] if 8 in selected else [])
+        expected_codes = [0] if len(expected_order) == 1 else [0] + [7] * (len(expected_order) - 1)
+        assert worker.main() == (0 if len(expected_order) == 1 else 7)
         assert attempted == expected_order
 
         manifest = json.loads(
@@ -106,14 +114,14 @@ def test_every_lane_writes_non_formal_run_manifest(monkeypatch, tmp_path):
             "automatic_promotion": False,
             "formal_research_evidence": False,
             "max_workers": 1,
+            "rotation_index": 0,
+            "workpack": worker.select_workpack(lane, len(commands), 0)[0],
+            "selected_steps": selected,
             "step_count": len(expected_codes),
             "step_return_codes": expected_codes,
-            "failed_steps": [] if len(commands) == 1 else (
-                list(range(2, 8)) + list(range(9, len(commands) + 1)) + [8]
-                if lane == "autonomous_frontier_qa"
-                else list(range(2, len(commands) + 1))
-            ),
-            "all_bounded_steps_attempted": True,
+            "failed_steps": [] if len(expected_order) == 1 else [x for x in expected_order if x != 1],
+            "all_bounded_steps_attempted": len(expected_order) == len(commands),
+            "all_selected_bounded_steps_attempted": True,
         }
 
         summary = json.loads(
@@ -156,7 +164,8 @@ def test_each_lane_fails_closed_and_preserves_failure_provenance(
         )
 
         assert worker.main() == 17
-        expected_order = list(range(1, len(worker.LANES[lane]) + 1)) if lane != "autonomous_frontier_qa" else list(range(1, 8)) + list(range(9, len(worker.LANES[lane]) + 1)) + [8]
+        selected = worker.select_workpack(lane, len(worker.LANES[lane]), 0)[1]
+        expected_order = [x for x in selected if x != 8] + ([8] if 8 in selected else [])
         assert attempted == expected_order
 
         summary = json.loads(
@@ -170,12 +179,13 @@ def test_each_lane_fails_closed_and_preserves_failure_provenance(
         assert summary["formal_evidence_allowed"] is False
         assert manifest["lane"] == lane
         assert manifest["source_commit"] == "abc123"
-        assert manifest["step_return_codes"] == [17] * len(worker.LANES[lane])
-        expected_failed_steps = list(range(1, len(worker.LANES[lane]) + 1)) if lane != "autonomous_frontier_qa" else list(range(1, 8)) + list(range(9, len(worker.LANES[lane]) + 1)) + [8]
+        assert manifest["step_return_codes"] == [17] * len(expected_order)
+        expected_failed_steps = expected_order
         assert manifest["failed_steps"] == expected_failed_steps
-        assert manifest["all_bounded_steps_attempted"] is True
+        assert manifest["all_bounded_steps_attempted"] is (len(expected_order) == len(worker.LANES[lane]))
+        assert manifest["all_selected_bounded_steps_attempted"] is True
         assert summary["failed_steps"] == expected_failed_steps
-        assert summary["all_bounded_steps_attempted"] is True
+        assert summary["all_selected_bounded_steps_attempted"] is True
 
 
 def test_run_manifest_allows_local_execution_without_github_metadata(monkeypatch, tmp_path):
