@@ -395,6 +395,14 @@ def generate(
                 "runner_capacity_last_verified": runner_capacity_receipt,
                 "last_recorded_verified_baseline": recorded_qa,
             },
+            "hosted_deterministic_frontier": {
+                "workflow": ".github/workflows/hosted-deterministic-frontier.yml",
+                "cadence": "*/10 * * * *",
+                "runner": "ubuntu-24.04",
+                "purpose": "deterministic frontier QA/research workpack rotation without consuming scarce Windows capacity",
+                "workpack_rotation": "three equal 10-step packs cover all 30 autonomous_frontier_qa steps",
+                "formal_evidence_allowed": False,
+            },
             "scientific_compute": {
                 "canonical_path": "GitHub-hosted deterministic workflows",
                 "self_hosted_output_formal_evidence": False,
@@ -477,6 +485,8 @@ def generate(
 - Canonical data-layer infrastructure is merged.
 - Bounded agent routing uses two queue lanes with fail-closed task contracts.
 - Self-hosted Continuous QA is scheduled hourly at minute 15 under label `trading-agent-research`.
+- The deterministic frontier loop runs every 10 minutes on free GitHub-hosted Ubuntu; its three 10-step packs cover all 30 frontier-worker steps.
+- Windows Self-Hosted capacity is reserved for local reproduction and local-AI/hardware-dependent work.
 - Latest self-hosted capacity verification: two distinct Windows/X64 runner slots accepted concurrent jobs; see the timestamped capacity receipt.
 - S10 phone capability receipt: **{s10_operational_status.get("status", "NOT_YET_SYNCHRONIZED")}**; receipt-gated eligibility = **{s10_operational_status.get("eligible", False)}**.
 - S10 current physical online state: **not independently queried**.
