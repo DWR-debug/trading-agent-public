@@ -1,0 +1,128 @@
+name: Hosted Deterministic Frontier Research Loop
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "automation/self_hosted_research_worker.py"
+      - "automation/candidate_robustness_gate.py"
+      - "automation/research_hypothesis_compiler.py"
+      - "automation/q119_treasury_source_feasibility.py"
+      - "automation/q120_cftc_source_feasibility.py"
+      - "automation/q122_cftc_release_date_evidence.py"
+      - "automation/q104_i22_filing_arrival_compiler.py"
+      - "automation/q104_xbrl_concept_freeze_audit.py"
+      - "automation/q109_n7_common_holder_graph.py"
+      - "automation/q121_sec_beneficial_ownership_timing.py"
+      - "automation/q126_q132_frontier_feasibility.py"
+      - "tests/test_candidate_robustness_gate.py"
+      - "tests/test_q119_treasury_source_feasibility.py"
+      - "tests/test_q120_cftc_source_feasibility.py"
+      - "tests/test_q122_cftc_release_date_evidence.py"
+      - "tests/test_q104_i22_filing_arrival_compiler.py"
+      - "tests/test_q104_xbrl_concept_freeze_audit.py"
+      - "tests/test_q109_n7_common_holder_graph.py"
+      - "tests/test_q121_sec_beneficial_ownership_timing.py"
+      - "tests/test_q126_q132_frontier_feasibility.py"
+      - ".github/workflows/hosted-deterministic-frontier.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-hosted-frontier
+  cancel-in-progress: false
+
+jobs:
+  frontier:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            pyproject.toml
+
+      - name: Install bounded research dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pytest pandas exchange-calendars statsmodels==0.15.0 pypdf
+
+      - name: Run deterministic frontier workpack
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "research/runs/self_hosted/autonomous/${GITHUB_RUN_ID}/hosted_frontier"
+          python -m automation.self_hosted_research_worker             --lane autonomous_frontier_qa             --rotation-index "${GITHUB_RUN_NUMBER}"             --output-dir "research/runs/self_hosted/autonomous/${GITHUB_RUN_ID}/hosted_frontier"
+
+      - name: Run source/PIT priority checks directly
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="research/runs/self_hosted/autonomous/${GITHUB_RUN_ID}/hosted_frontier/priority"
+          mkdir -p "$OUT"
+          python -m automation.q121_sec_beneficial_ownership_timing --output "$OUT/q121.json"
+          python -m automation.q126_q132_frontier_feasibility --output "$OUT/q126_q132.json"
+          python -m automation.q122_cftc_release_date_evidence --output "$OUT/q122.json"
+          python -m automation.q120_cftc_source_feasibility --output "$OUT/q120.json"
+          python -m automation.q119_treasury_source_feasibility --output "$OUT/q119.json"
+          python -m automation.q104_i22_filing_arrival_compiler --output "$OUT/q104_i22.json"
+          python -m automation.q104_xbrl_concept_freeze_audit --output "$OUT/q104_xbrl.json"
+          python -m automation.q109_n7_common_holder_graph --output "$OUT/q109_n7.json"
+
+      - name: Validate structural safety and provenance
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          root = Path("research/runs/self_hosted/autonomous") / os.environ["GITHUB_RUN_ID"] / "hosted_frontier"
+          summary = root / "summary.json"
+          if not summary.is_file():
+              raise SystemExit("HOSTED_FRONTIER_MISSING_SUMMARY")
+          payload = json.loads(summary.read_text(encoding="utf-8"))
+          if payload.get("lane") != "autonomous_frontier_qa":
+              raise SystemExit("HOSTED_FRONTIER_LANE_MISMATCH")
+          if payload.get("formal_evidence_allowed") is not False:
+              raise SystemExit("HOSTED_FRONTIER_FORMAL_EVIDENCE_BOUNDARY_VIOLATION")
+          if payload.get("paper_only") is not True:
+              raise SystemExit("HOSTED_FRONTIER_SAFETY_BOUNDARY_VIOLATION")
+          if payload.get("rotation_index") != int(os.environ["GITHUB_RUN_NUMBER"]):
+              raise SystemExit("HOSTED_FRONTIER_ROTATION_INDEX_MISMATCH")
+          expected_pack = f"frontier_pack_{int(os.environ['GITHUB_RUN_NUMBER']) % 3 + 1}"
+          if payload.get("workpack") != expected_pack:
+              raise SystemExit("HOSTED_FRONTIER_WORKPACK_MISMATCH")
+          print(
+              "HOSTED_FRONTIER_OK",
+              "workpack=", payload.get("workpack"),
+              "selected_steps=", payload.get("selected_steps"),
+              "failed_steps=", payload.get("failed_steps"),
+          )
+          PY
+
+      - name: Upload frontier receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: hosted-frontier-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/self_hosted/autonomous/${{ github.run_id }}/hosted_frontier/
+          if-no-files-found: error
+          retention-days: 30
