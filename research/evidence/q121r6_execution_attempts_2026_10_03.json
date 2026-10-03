@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-03-121R6-EXECUTION-ATTEMPTS",
+  "purpose": "operational provenance only; no scientific result is inferred from failed or queued executions",
+  "canonical_research": "Q121-R6 SEC acceptance-time compilation",
+  "fixed_contract": {
+    "upstream_r5_receipt": "897bc13c5f722d9a701ae7994b237fe7afd233f15cdc5e644061aa674b8f26c1",
+    "upstream_row_count": 61818,
+    "upstream_row_multiset_fingerprint": "7251f0e25d7293802d389cac875abfd8552b9441ac604b69918bd7d5b9aec554"
+  },
+  "attempts": [
+    {
+      "workflow_run_id": 37145484067,
+      "head_sha": "febf2b28c20f479046cf4464e73579470cff918b",
+      "conclusion": "failure",
+      "classification": "INFRASTRUCTURE",
+      "runner": "LHT-N133732",
+      "failure": "portable Python 3.13.15 lacked tzdata; ZoneInfo('America/New_York') failed before data acquisition"
+    },
+    {
+      "workflow_run_id": 37145576760,
+      "head_sha": "db4eeb4ec379805ca321add6a66fa693a8ae69fd",
+      "conclusion": "failure",
+      "classification": "INFRASTRUCTURE",
+      "runner": "LHT-N133732-2",
+      "failure": "bootstrap succeeded after tzdata fix; prepare contract test ran from GITHUB_WORKSPACE instead of extracted repository, so test path was not found"
+    },
+    {
+      "workflow_run_id": 37145775237,
+      "head_sha": "23dd5a98154d8e6c4019d8ac33e71f96ac3e3b59",
+      "conclusion": "failure",
+      "classification": "INFRASTRUCTURE",
+      "runners": [
+        "LHT-N133732",
+        "LHT-N133732-2"
+      ],
+      "failure": "two shards reached header stage but checked the population artifact relative to temporary repository instead of GITHUB_WORKSPACE"
+    },
+    {
+      "workflow_run_id": 37145869497,
+      "head_sha": "8b4656d7cefc9450f263cec326e3b98b3a620299",
+      "conclusion": "queued",
+      "classification": "SUPERSEDED_BY_FIX",
+      "failure": "older workflow revision retains artifact-path defect; queued matrix jobs must not be interpreted as scientific execution"
+    },
+    {
+      "workflow_run_id": 37146014428,
+      "head_sha": "319bcdcaf1bd4f30f57180c6bc20e4c26645a7a2",
+      "conclusion": "queued",
+      "classification": "CURRENT",
+      "failure": "current corrected Q121-R6 workflow waiting for self-hosted execution capacity"
+    }
+  ],
+  "scientific_interpretation": {
+    "q121r5_population_evidence_unchanged": true,
+    "q121r6_acceptance_timestamp_compiled": false,
+    "q121r6_full_subject_issuer_population_compiled": false,
+    "revision_lineage_established": false,
+    "same_day_pit_safe": false,
+    "performance_evidence": false,
+    "performance_authorized": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
