@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "state_type": "TRADING_AGENT_OS_ORCHESTRATION_SNAPSHOT",
-  "effective_date_utc": "2026-10-02",
+  "effective_date_utc": "2026-10-03",
   "source_master_sha": "9ce1e5c5bd82cedd48f1036ef1becaf4242b3e76",
   "purpose": "Persistent orchestration contract for chat-independent Trading Agent research and engineering.",
   "chat_trigger": "trading agent",
@@ -28,7 +28,9 @@
     "scientific_decision_authority": "orchestrator + formal governance, never delegated AI",
     "worker_role": "bounded engineering/QA/reproduction/review only",
     "evidence_rule": "AI/agent outputs are never scientific evidence or authorization by themselves",
-    "performance_rule": "no performance, holdout, candidate selection or promotion without explicit formal governance"
+    "performance_rule": "no performance, holdout, candidate selection or promotion without explicit formal governance",
+    "persistent_acceleration_contract": "research/governance/persistent_research_acceleration_contract.json",
+    "acceleration_rule": "verify current state -> snapshot live capacity -> parallelize independent work -> use the smallest useful free resource -> cheap falsify early -> expose robustness early -> immediately independently replicate a complete formal pass"
   },
   "autonomous_lanes": {
     "permanent_self_hosted_research": {
@@ -41,7 +43,9 @@
         "local_reproduction"
       ],
       "night_mode": "continuous; no chat required",
-      "formal_evidence_allowed": false
+      "formal_evidence_allowed": false,
+      "internal_frontier_workers": 3,
+      "max_worker_cap": 4
     },
     "hosted_research_failover": {
       "workflow": ".github/workflows/hosted-research-failover.yml",
@@ -143,7 +147,8 @@
       "latest_verified_run_id": "37046936910",
       "regular_task": "bounded governance/reproducibility/QA utility review",
       "full_acceptance_policy": "36-case R3 benchmark only on onboarding or explicit revalidation; never as recurring default workload",
-      "throughput_probe": ".github/workflows/s10-throughput-probe.yml"
+      "throughput_probe": ".github/workflows/s10-throughput-probe.yml",
+      "event_driven_review": "meaningful research-runner or critical-governance change plus regular six-hour cadence"
     },
     "android_phone_fleet": {
       "status": "TEMPLATE_READY",
@@ -179,7 +184,8 @@
       "capacity_test_slots": [
         "SAMSUNG-PHONE-04",
         "SAMSUNG-PHONE-05"
-      ]
+      ],
+      "capacity_decision": "Do not add a physical device merely for nominal capacity; activate at most one additional device as a controlled test when measured independent throughput gain is expected."
     }
   },
   "chatless_night_policy": {
@@ -193,10 +199,11 @@
     "s10": {
       "enabled": true,
       "mode": "receipt_gated_opportunistic_utility",
-      "trigger": "when synchronized S10 receipt is accepted, phone is live, and a bounded useful utility task exists",
+      "trigger": "when synchronized S10 receipt is accepted, phone is live, a bounded useful utility task exists, or a meaningful research-runner/critical-governance change has just landed",
       "formal_evidence_allowed": false,
       "performance_authorization": false,
-      "full_benchmark": "explicit revalidation only"
+      "full_benchmark": "explicit revalidation only",
+      "event_driven_review": true
     },
     "android_phone_fleet": {
       "enabled": true,
@@ -210,6 +217,7 @@
   "new_chat_protocol": [
     "Read docs/TRADING_AGENT_CHAT_ENTRYPOINT.md.",
     "Read docs/TRADING_AGENT_OS_ORCHESTRATION.md and the live current status files.",
+    "Read research/governance/persistent_research_acceleration_contract.json and apply its accelerated parallelism/resource-routing logic.",
     "Read ops/s10_runtime_status.json and route S10 only when its current receipt reports S10_UTILITY_ACCEPTED.",
     "Treat S10 as the dedicated Android/Termux phone; check its live availability/capability from the phone-side runtime before assigning bounded work.",
     "Check current master, PRs, workflows, runners and AI entitlements live.",
