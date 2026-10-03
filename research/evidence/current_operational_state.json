@@ -784,7 +784,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T12:56:15.335444+00:00",
+  "generated_at_utc": "2026-10-03T12:59:20.385471+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1127,6 +1127,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "research/public-domain-frontier-q171-q178-2026-10-03",
+        "number": 920,
+        "title": "RESEARCH: extend public-domain frontier to Q171-Q178",
+        "updatedAt": "2026-10-03T12:58:34Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/920"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "research/q129-receipt-and-workflow-load-cleanup-20261003",
         "number": 913,
         "title": "RESEARCH/OPS: persist Q129 receipt and reduce redundant CI load",
@@ -1135,6 +1143,26 @@
       }
     ],
     "recent_commits": [
+      {
+        "message": "FIX: align frontier registration assertion with Q133-Q170",
+        "sha": "b6c43874f9a530548aa9da9d85387944675e5e22",
+        "timestamp": "2026-10-03T14:59:06+02:00"
+      },
+      {
+        "message": "FIX: update Windows lane regression for two-slot policy",
+        "sha": "4b471b5e29b82b6f2010ea6a61547abb2ba0ca86",
+        "timestamp": "2026-10-03T14:59:02+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c42934734a9a951e982681c36da9307936fb2d2e",
+        "timestamp": "2026-10-03T12:56:17Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a19e59d0e6b6dc0741221cb39654ca234114c93c",
+        "timestamp": "2026-10-03T12:56:16Z"
+      },
       {
         "message": "OPS: surface Q129 and Q133-Q170 receipts in canonical status",
         "sha": "d16b94b3c01bcfc3089d8fb4e78cf60c6ac3ac20",
@@ -1154,26 +1182,6 @@
         "message": "EVIDENCE: record Q133-Q170 source-feasibility receipt",
         "sha": "da5650a4d6945b613fa1861b316e10d1f85ab96f",
         "timestamp": "2026-10-03T14:55:45+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "017747b798aa47782f4667f0b9d49a42c409b5c8",
-        "timestamp": "2026-10-03T12:55:37Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "da40ca7539543e3992202163dbca0480d273722b",
-        "timestamp": "2026-10-03T12:55:35Z"
-      },
-      {
-        "message": "OPS: align canonical human-readable status with always-available resource policy",
-        "sha": "80353bcbae37ebb51ea32f30fc140bbd7b0d46bb",
-        "timestamp": "2026-10-03T14:55:23+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "eff0e2d9b6fdb13bf54f1bf2f6dc4cef248c661b",
-        "timestamp": "2026-10-03T12:53:42Z"
       }
     ]
   },
@@ -1243,12 +1251,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d16b94b3c01bcfc3089d8fb4e78cf60c6ac3ac20",
+  "source_master_sha": "b6c43874f9a530548aa9da9d85387944675e5e22",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37124489312"
+    "run_id": "37124649982"
   }
 }
