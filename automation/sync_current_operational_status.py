@@ -457,6 +457,7 @@ def generate(
 - S10 phone capability receipt: **{s10_operational_status.get("status", "NOT_YET_SYNCHRONIZED")}**; receipt-gated eligibility = **{s10_operational_status.get("eligible", False)}**.
 - S10 current physical online state: **not independently queried**.
 - A fresh successful S10 utility receipt (maximum 6 hours old) is the operational-presence signal for routing. A separate phone-runner discovery is not required solely for presence confirmation; stale receipts remain fail-closed.
+- Universal pre-formal candidate robustness gate: **ACTIVE**; structural candidate robustness must pass before PREREGISTRATION, SOURCE_FEASIBILITY, COVERAGE, PIT or PERFORMANCE formal phases.
 - S10 output remains non-scientific and cannot authorize performance or promotion.
 
 ### Scientific status
