@@ -28,7 +28,7 @@ jobs:
       - name: Checkout exact source
         uses: actions/checkout@v5
         with:
-          ref: \${{ github.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 1
 
       - name: Setup Python
@@ -74,7 +74,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q129-source-feasibility-\${{ github.run_id }}-\${{ github.run_attempt }}
-          path: research/runs/q129-source/\${{ github.run_id }}/
+          name: q129-source-feasibility-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q129-source/${{ github.run_id }}/
           if-no-files-found: error
           retention-days: 30
