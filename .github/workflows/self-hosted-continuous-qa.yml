@@ -28,7 +28,7 @@ jobs:
     timeout-minutes: 75
     strategy:
       fail-fast: false
-      max-parallel: 2
+      max-parallel: 1
       matrix:
         lane: [repo_qa, data_qa, design_qa, local_reproduction, autonomous_frontier_qa]
 
