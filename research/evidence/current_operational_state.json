@@ -694,7 +694,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-03T07:29:44.966494+00:00",
+  "generated_at_utc": "2026-10-03T07:31:36.326176+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -891,6 +891,21 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: register Samsung fleet labels 04 and 05 (#886)",
+        "sha": "2bb2deec1553a51b213f8ed70056063c12cbaec8",
+        "timestamp": "2026-10-03T09:31:24+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "eea2d66f303e5e91b5e7aa49047b1e5607c120d9",
+        "timestamp": "2026-10-03T07:29:46Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3e9cb5be1f1cef8812f567b483aa2bc88883aa09",
+        "timestamp": "2026-10-03T07:29:45Z"
+      },
+      {
         "message": "RESEARCH: add Q121 SEC beneficial-ownership timing discovery (rebased) (#885)",
         "sha": "e498dcd0bdf5270ecbca3c392a9a47de2e5ee1bb",
         "timestamp": "2026-10-03T09:29:33+02:00"
@@ -914,21 +929,6 @@
         "message": "OPS: record AI worker state",
         "sha": "85deef1f4c940e06f6566532bd43dbf6e3dbbad2",
         "timestamp": "2026-10-03T07:27:57Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "c82550e89768849563e0d651ea68b4db7d7c2c90",
-        "timestamp": "2026-10-03T07:27:53Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "462c932f1e0df020cb73faff6937b971fa4b85de",
-        "timestamp": "2026-10-03T07:27:48Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9b19209cd65bba0fb39c1ed4308ced01d35db314",
-        "timestamp": "2026-10-03T07:27:47Z"
       }
     ]
   },
@@ -998,12 +998,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e498dcd0bdf5270ecbca3c392a9a47de2e5ee1bb",
+  "source_master_sha": "2bb2deec1553a51b213f8ed70056063c12cbaec8",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37106515518"
+    "run_id": "37106627147"
   }
 }
