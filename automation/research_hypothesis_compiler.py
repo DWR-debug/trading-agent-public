@@ -14,6 +14,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from automation.candidate_robustness_gate import validate_candidate as validate_early_robustness
+
 ROOT = Path(__file__).resolve().parents[1]
 FORBIDDEN_KEYS = {
     "performance", "performance_rank", "candidate_rank", "holdout_return",
@@ -43,6 +45,12 @@ def _validate_candidate(candidate: dict[str, Any], source_path: str) -> dict[str
     next_gate = str(candidate["next_gate"]).strip()
     if not next_gate or next_gate.lower() in {"performance", "backtest", "select_best"}:
         raise ValueError(f"DISCOVERY_UNSAFE_NEXT_GATE:{source_path}:{candidate['id']}")
+    early = validate_early_robustness(candidate, source_path)
+    if early["status"] != "PRE_FORMAL_ROBUSTNESS_COMPLETED":
+        raise ValueError(
+            f"DISCOVERY_CANDIDATE_ROBUSTNESS_GATE_FAIL:{source_path}:{candidate['id']}:"
+            + ";".join(early["violations"])
+        )
     return {
         "id": str(candidate["id"]),
         "name": str(candidate["name"]),
@@ -59,6 +67,13 @@ def _validate_candidate(candidate: dict[str, Any], source_path: str) -> dict[str
         "threshold_search_allowed": False,
         "horizon_search_allowed": False,
         "promotion_allowed": False,
+        "candidate_robustness_gate": {
+            "status": early["status"],
+            "candidate_fingerprint": early["candidate_fingerprint"],
+            "dimensions": early["dimensions"],
+            "formalization_allowed": False,
+            "receipt_required_before_any_formal_phase": True,
+        },
     }
 
 
