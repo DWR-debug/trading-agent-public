@@ -291,16 +291,6 @@ def run(output: Path) -> dict[str, object]:
                 time.sleep(REQUEST_GAP_SECONDS)
                 source_status, source_body = fetch(source_text_url)
                 if source_status == 200:
-                    source_preview = r1.plain_text(decode_sec_submission_body(source_body).decode("utf-8", errors="replace"))
-                    print("Q121R3_IDENTITY_DIAG", json.dumps({
-                        "accession_number": accession,
-                        "index_cik": row["cik"],
-                        "header_status": status,
-                        "source_status": source_status,
-                        "header_preview": r1.plain_text(body.decode("utf-8", errors="replace"))[:500] if status == 200 else "",
-                        "source_preview": source_preview[:500],
-                    }, sort_keys=True))
-                if source_status == 200:
                     header_text = decode_sec_submission_body(source_body).decode("utf-8", errors="replace")
                     subject = r1.extract_header_section_cik(header_text, "Subject") or r1.extract_labeled_cik(header_text, "Subject")
                     filer = r1.extract_header_section_cik(header_text, "Filed by") or r1.extract_labeled_cik(header_text, "Filed by")
