@@ -37,6 +37,7 @@ ACTIVE_WORKFLOWS = {
     "deep-frontier-source-feasibility.yml",
     "q171-material-receipt-sync.yml",
     "q133-q170-pit-readiness.yml",
+    "q169-noaa-swpc-pit-readiness.yml",
     "full-suite-verification.yml",
     "q129-options-source-feasibility.yml",
     "q129-independent-pit-reproduction.yml",
