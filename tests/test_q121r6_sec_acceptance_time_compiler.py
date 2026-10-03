@@ -9,6 +9,7 @@ from automation.q121r6_sec_acceptance_time_compiler import (
     STANDARD_CUTOFF,
     classify_acceptance,
     key_fingerprint,
+    r5_population_fingerprint,
 )
 
 
@@ -49,3 +50,13 @@ def test_key_fingerprint_is_order_sensitive_for_partition_inputs() -> None:
         {"cik":"0000000002","form":"SC 13D","filed_date":"2024-02-06","accession_number":"0000000002-24-000002"},
     ]
     assert key_fingerprint(rows) != key_fingerprint(list(reversed(rows)))
+
+
+def test_r6_reuses_exact_r5_multiset_fingerprint_definition() -> None:
+    rows = [
+        {"cik":"0000000001","form":"SC 13G","filed_date":"2024-02-05","accession_number":"0000000001-24-000001","filename":"edgar/data/1/000000000124000001/a.txt"},
+        {"cik":"0000000002","form":"SC 13D","filed_date":"2024-02-06","accession_number":"0000000002-24-000002","filename":"edgar/data/2/000000000224000002/b.txt"},
+    ]
+    first = r5_population_fingerprint(rows)
+    second = r5_population_fingerprint(list(reversed(rows)))
+    assert first == second

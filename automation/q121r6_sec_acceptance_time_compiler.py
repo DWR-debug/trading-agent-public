@@ -8,6 +8,7 @@ import threading
 import time
 import urllib.error
 import urllib.request
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime, time as dtime
 from pathlib import Path
@@ -15,6 +16,7 @@ from zoneinfo import ZoneInfo
 
 from automation import q121r1_sec_reverse_issuer_coverage as r1
 from automation import q121r3_sec_form_index_reverse_issuer as r3
+from automation import q121r5_sec_dual_index_population_reconciliation as r5
 
 
 WINDOW_START = "2024-02-05"
@@ -170,6 +172,10 @@ def key_fingerprint(rows: list[dict[str, str]]) -> str:
     keys = [stable_key(row) for row in rows]
     return sha256_json(keys)
 
+def r5_population_fingerprint(rows: list[dict[str, str]]) -> str:
+    counter = Counter(stable_key(row) for row in rows)
+    return r5.counter_fingerprint(counter)
+
 
 def compile_header(row: dict[str, str], body: bytes) -> dict[str, object]:
     text = body.decode("utf-8", errors="replace")
@@ -257,7 +263,7 @@ def prepare_population(output: Path) -> dict[str, object]:
             "matching_rows": len(parsed),
         })
     rows.sort(key=stable_key)
-    fingerprint = key_fingerprint(rows)
+    fingerprint = r5_population_fingerprint(rows)
     if len(rows) != R5_ROW_COUNT or fingerprint != R5_ROW_MULTICHET:
         raise RuntimeError(
             f"R5_POPULATION_ANCHOR_MISMATCH:count={len(rows)}:fingerprint={fingerprint}"
@@ -309,8 +315,8 @@ def compile_shard(
         raise ValueError("SHARD_INDEX_OUT_OF_RANGE")
     if len(population) != R5_ROW_COUNT:
         raise RuntimeError(f"R5_ROW_COUNT_MISMATCH:{len(population)}")
-    if key_fingerprint(population) != R5_ROW_MULTICHET:
-        raise RuntimeError("R5_ROW_MULTISE T_FINGERPRINT_MISMATCH")
+    if r5_population_fingerprint(population) != R5_ROW_MULTICHET:
+        raise RuntimeError("R5_ROW_MULTISET_FINGERPRINT_MISMATCH")
     ordered = sorted(population, key=stable_key)
     start = (len(ordered) * shard_index) // shard_count
     end = (len(ordered) * (shard_index + 1)) // shard_count
