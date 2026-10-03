@@ -55,7 +55,7 @@ def sha256_bytes(data: bytes) -> str:
 
 def decode_sec_submission_body(body: bytes) -> bytes:
     """Decode a SEC archive payload when HTTP delivered gzip content."""
-    if body.startswith(b"\\x1f\\x8b"):
+    if body.startswith(b"\x1f\x8b"):
         try:
             return gzip.decompress(body)
         except OSError as exc:
@@ -67,15 +67,15 @@ def extract_control_cik(text: str, section: str) -> str | None:
     """Extract the first CIK from the requested SEC-HEADER section."""
     compact = r1.plain_text(text)
     if section == "Subject":
-        section_pattern = r"SUBJECT COMPANY\\s*:?(.*?)(?=FILED BY\\s*:|$)"
+        section_pattern = r"SUBJECT COMPANY\s*:?(.*?)(?=FILED BY\s*:|$)"
     elif section == "Filed by":
-        section_pattern = r"FILED BY\\s*:?(.*)$"
+        section_pattern = r"FILED BY\s*:?(.*)$"
     else:
         raise ValueError(f"UNKNOWN_HEADER_SECTION:{section}")
     section_match = re.search(section_pattern, compact, re.IGNORECASE | re.DOTALL)
     if not section_match:
         return None
-    cik_match = re.search(r"CENTRAL\\s+INDEX\\s+KEY\\s*:?\\s*(\\d{1,10})", section_match.group(1), re.IGNORECASE)
+    cik_match = re.search(r"CENTRAL\s+INDEX\s+KEY\s*:?\s*(\d{1,10})", section_match.group(1), re.IGNORECASE)
     return cik_match.group(1).zfill(10) if cik_match else None
 
 
