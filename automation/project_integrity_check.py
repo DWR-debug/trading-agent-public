@@ -163,6 +163,7 @@ ACTIVE_WORKFLOWS = {
     "q120-independent-reproduction.yml",
     "q121-sec-beneficial-ownership-timing.yml",
     "q121r1-sec-reverse-issuer-coverage.yml",
+    "q127r1-finra-regsho-historical-pit.yml",
     "q095-authorization-once.yml",
     "rccsm-feasibility-cloud.yml",
     "rccsm-feasibility.yml",
