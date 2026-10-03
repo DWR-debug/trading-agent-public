@@ -10,6 +10,8 @@ on:
       - "tests/test_s10_runtime.py"
       - ".github/workflows/s10-runtime-probe.yml"
   workflow_dispatch:
+  schedule:
+    - cron: "45 3 * * *"
 
 permissions:
   contents: read
@@ -22,9 +24,9 @@ jobs:
   probe:
     strategy:
       fail-fast: false
-      max-parallel: 2
+      max-parallel: 1
       matrix:
-        slot: [a, b]
+        slot: [a]
     runs-on: [self-hosted, s10-phone, linux, ARM64]
     timeout-minutes: 6
     steps:
