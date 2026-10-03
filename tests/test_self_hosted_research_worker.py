@@ -226,13 +226,28 @@ def test_copilot_cli_publication_has_nonfatal_pr_creation_fallback():
 
 
 
-def test_permanent_loop_uses_short_capacity_pulse_and_rotation():
+def test_permanent_loop_uses_short_local_capacity_pulse():
     text = (
         ROOT / ".github" / "workflows" / "permanent-pc-research-loop.yml"
     ).read_text(encoding="utf-8")
     assert 'cron: "*/10 * * * *"' in text
-    assert 'max-parallel: 2' in text
+    assert 'max-parallel: 1' in text
+    assert "lane: [local_reproduction]" in text
+    assert "runs-on: [self-hosted, trading-agent-research]" in text
     assert '--rotation-index "%GITHUB_RUN_NUMBER%"' in text
+
+
+def test_hosted_frontier_loop_owns_deterministic_three_pack_rotation():
+    text = (
+        ROOT / ".github" / "workflows" / "hosted-deterministic-frontier.yml"
+    ).read_text(encoding="utf-8")
+    assert 'cron: "*/10 * * * *"' in text
+    assert "runs-on: ubuntu-24.04" in text
+    assert "--lane autonomous_frontier_qa" in text
+    assert '--rotation-index "${GITHUB_RUN_NUMBER}"' in text
+    assert "HOSTED_FRONTIER_OK" in text
+    assert "retention-days: 30" in text
+
 
 
 def test_continuous_qa_is_matrix_orchestrated_and_parallel_bounded():
