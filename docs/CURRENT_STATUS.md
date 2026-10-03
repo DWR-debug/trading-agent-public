@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `9e8362e484f7a0f425b9aeaad234602223f522f7`
+**Current operational snapshot:** `7bff842922f6db39d9be08e8c2509a67fab41cfd`
 
-**Generated (UTC):** `2026-10-03T10:41:52.042186+00:00`
+**Generated (UTC):** `2026-10-03T10:42:35.785434+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -17,6 +17,8 @@
 - Canonical data-layer infrastructure is merged.
 - Bounded agent routing uses two queue lanes with fail-closed task contracts.
 - Self-hosted Continuous QA is scheduled hourly at minute 15 under label `trading-agent-research`.
+- The deterministic frontier loop runs every 10 minutes on free GitHub-hosted Ubuntu; its three 10-step packs cover all 30 frontier-worker steps.
+- Windows Self-Hosted capacity is reserved for local reproduction and local-AI/hardware-dependent work.
 - Latest self-hosted capacity verification: two distinct Windows/X64 runner slots accepted concurrent jobs; see the timestamped capacity receipt.
 - S10 phone capability receipt: **S10_UTILITY_ACCEPTED**; receipt-gated eligibility = **True**.
 - S10 current physical online state: **not independently queried**.
