@@ -382,6 +382,15 @@ def generate(
             "q023_recorded": checkpoint.get("q023"),
             "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
         },
+        "research_continuity": {
+            "permanent_self_hosted_loop": {"cadence": "*/30 * * * *", "parallel_lanes": 2},
+            "hosted_research_failover": {"cadence": "*/30 * * * *", "mode": "fallback_only_when_self_hosted_heartbeat_stale"},
+            "continuous_qa": {"cadence": "15 */6 * * *", "runner": "GitHub-hosted windows-latest", "self_hosted_slots_consumed": 0},
+            "free_ai_worker_fabric": {"cadence": "0 */6 * * *", "authenticated_providers_only": True},
+            "s10_phone": {"cadence": "0 */6 * * *", "event_driven": True, "receipt_gated": True, "formal_evidence_allowed": False},
+            "bounded_agent_queue": {"cadence": "15 */2 * * *", "paid_fallback_allowed": False},
+            "principle": "idle runners are capacity, not a defect; the scheduler should keep meaningful work flowing without duplicate or artificial jobs"
+        },
         "resource_policy": {
             "paid_agent_budget_usd": 0,
             "paid_api_budget_usd": 0,
