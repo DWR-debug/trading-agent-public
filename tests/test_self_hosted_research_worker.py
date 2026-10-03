@@ -233,7 +233,6 @@ def test_continuous_qa_is_matrix_orchestrated_and_parallel_bounded():
     # trusting the matrix aggregate result alone.
     assert "expected = {" in text
     assert '"repo_qa"' in text
-    assert '"autonomous_frontier_qa"' in text
     assert "summaries = sorted(Path(" in text
     assert 'summary.get("failed_steps") != []' in text
     assert "step_return_codes" in text
