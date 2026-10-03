@@ -65,6 +65,7 @@ jobs:
           assert data["safety"]["orders_enabled"] is False
           assert data["safety"]["automatic_promotion"] is False
           print("Q129_INDEPENDENT_PIT_SAFE")
+          PY
 
       - name: Upload independent PIT receipt
         if: always()
