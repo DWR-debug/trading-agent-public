@@ -7,7 +7,7 @@ def test_q169_probe_uses_fixed_official_archive_and_semantics_sources():
     text = (ROOT / "automation/q169_noaa_swpc_archive_pit_probe.py").read_text(encoding="utf-8")
     assert "daily_reports/geoalerts/2025/10/" in text
     assert "products/notifications-timeline" in text
-    assert 'SAMPLE_DATES = ("2025-10-14", "2025-10-15")' in text
+    assert 'SAMPLE_DATES = tuple(SAMPLE_FILES)' in text
 
 
 def test_q169_probe_is_boundary_only():
