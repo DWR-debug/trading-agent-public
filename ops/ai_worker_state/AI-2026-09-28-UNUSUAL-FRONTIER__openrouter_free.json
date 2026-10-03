@@ -25,11 +25,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 64.532,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 23.053,
+  "stdout": "## Worker Handoff: Orthogonal Alpha Hypotheses from Unusual Frontier Analysis\n\n**Source Documents Analyzed:**\n- `docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md` (C29-C30 frontier candidates)\n- `docs/DECISION_BASIS.md` (current evidence boundary, no promotion candidates)\n- `research/governance/active_research_registry.json` (active trials, all non-promotion)\n\n---\n\n### Key Observations\n\n1. **No Promotion-Capable Candidates Exist**: Current state is `PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES`. Zero candidates cleared for live use.\n\n2. **Frontier Stage is Design-Only**: C29-C31 and M4-M5 are feasibility evidence, not performance-authorized.\n\n3. **Orthogonality Requirement**: Must avoid reparameterization of tested families (momentum, low-beta, overnight, risk-control).\n\n---\n\n### Generated Alpha Hypotheses (Structurally Distinct)\n\n#### H1: Microstructure Liquidity Shock Persistence\n- **Mechanism**: Stocks with widening intraday spread-to-volume ratio exhibit delayed reversal due to temporary liquidity scarcity.\n- **Causal Intuition**: Wider spreads indicate informed trading pressure; post-shock mean reversion.\n- **Data**: Daily OHLCV (bid-ask proxy via high-low range, volume).\n- **Confounders**: Volatility clustering, macro news, earnings announcements.\n- **Falsification Test**: Shuffle spread-volume ratios across stocks within same volatility quintile; signal should vanish.\n\n#### H2: Path-Dependent Volatility Clustering Signature\n- **Mechanism**: Stocks exhibiting volatility clustering with asymmetric decay (GARCH-type) show predictable return continuation.\n- **Causal Intuition**: Persistent volatility regimes reflect slow information diffusion.\n- **Data**: Daily returns (squared), no external factors.\n- **Confounders**: Market-wide volatility shocks, structural breaks.\n- **Falsification Test**: Apply same volatility measure to randomized return series; no predictive power should remain.\n\n#### H3: Cross-Asset Commodity Lead-Lag\n- **Mechanism**: Energy stocks lead oil futures by 1-2 days; metals stocks lead base metal futures.\n- **Causal Intuition**: Equity pricing incorporates fundamental supply/demand before futures adjust.\n- **Data**: Daily equity prices + front-month futures (public/free sources).\n- **Confounders**: Simultaneous macro shocks, common news flow.\n- **Falsification Test**: Reverse time direction (future predicting past); signal should disappear.\n\n#### H4: Corporate Event Timing Arbitrage\n- **Mechanism**: Stocks with upcoming dividend dates show predictable pre-dividend drift due to retail investor behavior.\n- **Causal Intuition**: Retail investors buy too late, causing short-term overreaction.\n- **Data**: Public dividend calendars (SEC filings, exchange announcements).\n- **Confounders**: General market trends, sector effects.\n- **Falsification Test**: Test same signal on stocks with identical dividend yields but irregular payment schedules; should fail.\n\n#### H5: Regime Transition Momentum Exhaustion\n- **Mechanism**: Stocks transitioning from high-volatility to low-volatility regimes show extended momentum due to reduced noise trader influence.\n- **Causal Intuition**: Volatility regime shifts mark information environment changes.\n- **Data**: Rolling volatility estimates (e.g., 60-day standard deviation).\n- **Confounders**: Business cycle effects, monetary policy.\n- **Falsification Test**: Apply transition filter to synthetic volatility series (e.g., AR(1)); no predictive power should exist.\n\n#### H6: Crowding-Deleveraging Feedback Loop\n- **Mechanism**: Stocks in crowded long positions (measured via ETF inclusion frequency) exhibit sharper corrections during risk-off periods.\n- **Causal Intuition**: Forced deleveraging amplifies price moves in highly held names.\n- **Data**: ETF constituent lists (public), market stress indicators (VIX).\n- **Confounders**: Sector concentration, size effects.\n- **Falsification Test**: Replace ETF membership with random peer groups; signal should vanish.\n\n---\n\n### Counterarguments & Limitations\n\n- **Data Snooping Risk**: Even orthogonal mechanisms may appear significant in-sample.\n- **PIT Violations**: Many ideas require careful timestamping (especially H3, H4).\n- **Survivorship Bias**: Historical ETF membership and dividend records may be incomplete.\n- **Non-Stationarity**: Regime-based signals (H5) may degrade as markets evolve.\n\n---\n\n### Concrete Next Actions\n\n1. **Implement Synthetic Mutation Tests**: For each hypothesis, create randomized control datasets to verify signal destruction.\n2. **Establish PIT Provenance**: Map exact data timestamps and publication lags for all required inputs.\n3. **Freeze Rule Definitions**: Write deterministic pseudocode for each mechanism without parameter tuning.\n4. **Audit Data Accessibility**: Confirm free/public availability and historical depth of required datasets.\n\n---\n\n### Uncertainty Assessment\n\n- **High Uncertainty**: All hypotheses lack empirical validation.\n- **Structural Validity**: Mechanisms are theoretically grounded but untested.\n- **Implementation Risk**: PIT compliance and data quality may invalidate some approaches.\n- **No Performance Claims**: Output is strictly exploratory and falsifiable.",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1791015286-1ON9RrS2XiISnketscOi",
+  "usage": {
+    "prompt_tokens": 4281,
+    "completion_tokens": 1118,
+    "total_tokens": 5399,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
