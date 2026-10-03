@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-03-130R1-WIKIMEDIA-ATTENTION-SOURCE",
+  "issue_number": 967,
+  "status": "PREREGISTERED_SOURCE_PIT_FEASIBILITY_ONLY",
+  "candidate_id": "Q130-R1",
+  "parent_candidate": "Q130",
+  "fixed_articles": {
+    "SPGI": "S&P Global",
+    "NDAQ": "Nasdaq",
+    "AMP": "Ameriprise Financial",
+    "RJF": "Raymond James",
+    "WMB": "Williams Companies",
+    "VLO": "Valero Energy",
+    "DVN": "Devon Energy",
+    "EMN": "Eastman Chemical"
+  },
+  "source_contract": {
+    "provider": "Wikimedia",
+    "dataset": "public pageviews",
+    "endpoint_template": "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/{ARTICLE}/daily/{START}/{END}",
+    "coverage_start": "2015-05-01",
+    "granularity": "daily",
+    "agent": "user"
+  },
+  "feasibility_window": {
+    "start": "2025-09-20",
+    "end": "2025-09-24"
+  },
+  "pit_contract": {
+    "historical_value_available": true,
+    "exact_historical_publication_time_proven": false,
+    "revision_lineage_proven": false,
+    "same_day_formal_use_allowed": false
+  },
+  "governance": {
+    "performance": false,
+    "holdout": false,
+    "selection": false,
+    "ranking": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "performance_authorized": false,
+    "automatic_promotion": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
