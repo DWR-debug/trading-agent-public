@@ -590,7 +590,14 @@
       "source_receipt_path": "research/evidence/q133_q170_source_feasibility_2026_10_03.json",
       "source_probe_pass_count": 25,
       "source_feasible_candidate_count": 21,
-      "note": "Downstream PIT contract/sample gate only; no performance, ranking, selection, tuning, promotion or live execution."
+      "note": "Downstream PIT contract/sample gate only; no performance, ranking, selection, tuning, promotion or live execution.",
+      "q147_q148_clock_contract": {
+        "state": "PIT_CONTRACT_DEFINED_PENDING_SERIES_FREEZE",
+        "document": "docs/research_design/Q147_Q148_EIA_SOURCE_CLOCK_CONTRACT_2026-10-03.md",
+        "contract": "research/governance/q147_q148_eia_source_clock_contract_2026_10_03.json",
+        "performance_authorization_allowed": false,
+        "note": "Current EIA API is discovery/sample only; formal PIT requires dated publication/issue files and revision lineage."
+      }
     }
   ]
 }
