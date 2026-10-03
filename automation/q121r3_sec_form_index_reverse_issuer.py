@@ -75,19 +75,30 @@ def fetch(url: str) -> tuple[int, bytes]:
         raise RuntimeError(f"SEC_FORM_INDEX_TRANSPORT_ERROR:{url}:{exc}") from exc
 
 def parse_index(body: bytes) -> list[dict[str, str]]:
-    rows: list[dict[str, str]] = []
-    for raw in body.decode("latin-1").splitlines():
+    """Parse SEC form.idx using the column starts declared by its own header."""
+    lines = body.decode("latin-1").splitlines()
+    field_labels = ("Form Type", "Company Name", "CIK", "Date Filed", "File Name")
+    starts: list[int] | None = None
+    for raw in lines:
         line = raw.rstrip("\r\n")
-        if len(line) < 98:
+        positions = [line.find(label) for label in field_labels]
+        if all(pos >= 0 for pos in positions) and positions == sorted(positions):
+            starts = positions
+            break
+    if starts is None:
+        return []
+
+    rows: list[dict[str, str]] = []
+    ends = starts[1:] + [None]
+    for raw in lines:
+        line = raw.rstrip("\r\n")
+        if len(line) < starts[-1]:
             continue
-        # SEC quarterly form.idx uses fixed-width EDGAR index fields:
-        # company 0:62, form 62:74, CIK 74:86, filing date 86:98,
-        # filename 98 onward.
-        company = line[0:62].strip()
-        form = line[62:74].strip()
-        cik = line[74:86].strip()
-        filed_date = line[86:98].strip()
-        filename = line[98:].strip()
+        fields = [
+            line[start:end].strip() if end is not None else line[start:].strip()
+            for start, end in zip(starts, ends)
+        ]
+        form, company, cik, filed_date, filename = fields
         if not re.fullmatch(r"SC 13[DG](?:/A)?", form, re.IGNORECASE):
             continue
         if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", filed_date):
