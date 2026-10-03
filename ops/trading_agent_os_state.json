@@ -47,7 +47,7 @@
       "formal_evidence_allowed": false,
       "internal_frontier_workers": 3,
       "max_worker_cap": 4,
-      "description": "Two Windows slots operate as Lane A (Formal Readiness) and Lane B (Frontier Discovery). Deterministic frontier also uses bounded hosted concurrency.",
+      "description": "Two Windows slots operate as Lane A (Formal Readiness) and Lane B (Frontier Discovery). Deterministic hosted frontier work also uses bounded concurrency.",
       "matrix_lanes": [
         "formal_readiness",
         "frontier_discovery"
@@ -251,7 +251,7 @@
     "effective_date_utc": "2026-10-03",
     "lane_a": {
       "name": "FORMAL_READINESS",
-      "slot": "self-hosted Windows A",
+      "slot": "Windows self-hosted A",
       "focus": [
         "Q104 I19/I20",
         "I22",
@@ -262,7 +262,7 @@
     },
     "lane_b": {
       "name": "FRONTIER_DISCOVERY",
-      "slot": "self-hosted Windows B",
+      "slot": "Windows self-hosted B",
       "focus": [
         "Q171-Q178",
         "Q126-Q132",
