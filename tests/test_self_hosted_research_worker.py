@@ -274,6 +274,20 @@ def test_continuous_qa_is_matrix_orchestrated_and_parallel_bounded():
     assert 'print("AGGREGATE_QA=SUCCESS")' in text
 
 
+def test_s10_diagnostics_do_not_compete_for_parallel_phone_capacity():
+    throughput = (
+        ROOT / ".github" / "workflows" / "s10-throughput-probe.yml"
+    ).read_text(encoding="utf-8")
+    runtime = (
+        ROOT / ".github" / "workflows" / "s10-runtime-probe.yml"
+    ).read_text(encoding="utf-8")
+    assert 'workflow_dispatch: {}' in throughput
+    assert 'cron: "30 2 * * *"' not in throughput
+    assert 'max-parallel: 1' in runtime
+    assert "slot: [a]" in runtime
+    assert 'cron: "45 3 * * *"' in runtime
+
+
 def test_self_hosted_continuous_qa_is_scheduled_and_non_formal():
     text = (
         ROOT / ".github" / "workflows" / "self-hosted-continuous-qa.yml"
