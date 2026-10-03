@@ -30,6 +30,7 @@ PROBES: dict[str, dict[str, Any]] = {
     "OPENSKY_API": {
         "url": "https://opensky-network.org/about/faq",
         "markers": ["historical data", "commercial use", "consent"],
+        "license_gate": "CONSENT_REQUIRED_FOR_COMMERCIAL_USE",
     },
     "NOAA_ERDDAP": {
         "url": "https://erddap.gml.noaa.gov/erddap/rest.html",
@@ -300,6 +301,7 @@ def main() -> int:
             "reachable": status == 200,
             "required_markers_present": not missing and status == 200,
             "missing_markers": missing,
+            "license_gate": spec.get("license_gate"),
             "content_sha256": digest(body),
         }
 
@@ -309,7 +311,14 @@ def main() -> int:
             status = "DESIGN_ONLY_NO_SINGLE_SOURCE_PROBE"
         else:
             checks = [source_results[source_id]["required_markers_present"] for source_id in source_ids]
-            status = "SOURCE_PROBES_PASSED" if all(checks) else "BLOCKED_SOURCE_PROBE"
+            license_block = any(
+                source_results[source_id].get("license_gate") == "CONSENT_REQUIRED_FOR_COMMERCIAL_USE"
+                for source_id in source_ids
+            )
+            if license_block:
+                status = "BLOCKED_LICENSE_GATE"
+            else:
+                status = "SOURCE_PROBES_PASSED" if all(checks) else "BLOCKED_SOURCE_PROBE"
         candidate_results.append({
             "candidate_id": candidate_id,
             "status": status,
