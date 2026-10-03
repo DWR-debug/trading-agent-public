@@ -260,14 +260,36 @@ def run(output: Path) -> dict[str, object]:
                         "expected_filer_cik": expected_filer,
                     }
                     break
+            if matched_for_row is None:
+                source_text_url = "https://www.sec.gov/Archives/" + row["filename"]
+                time.sleep(REQUEST_GAP_SECONDS)
+                source_status, source_body = fetch(source_text_url)
+                if source_status == 200:
+                    header_text = source_body.decode("utf-8", errors="replace")
+                    subject = r1.extract_header_section_cik(header_text, "Subject") or r1.extract_labeled_cik(header_text, "Subject")
+                    filer = r1.extract_header_section_cik(header_text, "Filed by") or r1.extract_labeled_cik(header_text, "Filed by")
+                    accepted = r1.extract_accepted(header_text)
+                    if subject == expected_subject and (expected_filer is None or filer == expected_filer) and accepted is not None:
+                        matched_for_row = {
+                            "accession_number": accession,
+                            "index_cik": row["cik"],
+                            "form": row["form"],
+                            "filing_date": row["filed_date"],
+                            "filename": row["filename"],
+                            "header_url": header_url,
+                            "identity_source_url": source_text_url,
+                            "header_http_status": status,
+                            "identity_http_status": source_status,
+                            "header_sha256": sha256_bytes(source_body),
+                            "subject_cik": subject,
+                            "filed_by_cik": filer,
+                            "accepted_datetime": accepted,
+                            "expected_subject_cik": expected_subject,
+                            "expected_filer_cik": expected_filer,
+                        }
             if matched_for_row is not None:
                 matched_check = matched_for_row
                 break
-
-            if status != 200:
-                # Keep the first failed header endpoint observable; the source
-                # text fallback is authoritative when it is available.
-                _ = status
 
         if matched_check is None:
             raise RuntimeError(
