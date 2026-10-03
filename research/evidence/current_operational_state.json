@@ -702,7 +702,7 @@
       }
     }
   },
-  "generated_at_utc": "2026-10-03T08:04:56.674284+00:00",
+  "generated_at_utc": "2026-10-03T08:06:22.344156+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -890,6 +890,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: trigger S10 on persistent acceleration contract changes (#893)",
+        "sha": "f1410efd4fca86e900ec011ae83bf486ca6324cb",
+        "timestamp": "2026-10-03T10:05:58+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "94294a0b2cf83241c9a743acdcaf1253efa5973d",
+        "timestamp": "2026-10-03T08:04:58Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "feefafa61cf599556721243572b35f0de109ac54",
+        "timestamp": "2026-10-03T08:04:57Z"
+      },
+      {
         "message": "GOV: persist accelerated research and S10 routing logic (#891)",
         "sha": "34f05f989c3293282cb04e9958bf5012a7a7efeb",
         "timestamp": "2026-10-03T10:04:43+02:00"
@@ -913,21 +928,6 @@
         "message": "OPS: route meaningful research changes to S10 utility review (#890)",
         "sha": "d96e1d85b458974a8f71be7c25e0b471acdd0d0a",
         "timestamp": "2026-10-03T09:57:30+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "768fe7ab211e6900bc7d9edaf2732d4963788dc5",
-        "timestamp": "2026-10-03T07:57:06Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3e7c9f4000f5c22e23e48c145716da35cb17e1ef",
-        "timestamp": "2026-10-03T07:57:05Z"
-      },
-      {
-        "message": "PERF: bounded parallelism for autonomous frontier preflights (#889)",
-        "sha": "179f33274b9ccd675cb68862f205b3d1661e7f6a",
-        "timestamp": "2026-10-03T09:56:54+02:00"
       }
     ]
   },
@@ -997,12 +997,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "34f05f989c3293282cb04e9958bf5012a7a7efeb",
+  "source_master_sha": "f1410efd4fca86e900ec011ae83bf486ca6324cb",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37108486038"
+    "run_id": "37108555554"
   }
 }
