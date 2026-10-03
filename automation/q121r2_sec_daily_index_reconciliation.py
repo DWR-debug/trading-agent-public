@@ -129,6 +129,58 @@ def collect_anchors() -> tuple[dict[str, object], list[dict[str, object]]]:
 
 def run(output: Path) -> dict[str, object]:
     r1_payload, anchors = collect_anchors()
+    if r1_payload.get("status") == "Q121R1_SOURCE_ROUTE_FALSIFIED":
+        result: dict[str, object] = {
+            "schema_version": "1.0",
+            "task_id": "Q-2026-10-03-121R2-SEC-DAILY-INDEX-RECONCILIATION",
+            "status": "Q121R2_BLOCKED_BY_Q121R1_FALSIFICATION",
+            "fixed_universe": list(r1_payload["issuer_cik_map"].keys()),
+            "anchor_rule": "Q121-R1 deterministic first/middle/last per issuer/form",
+            "anchors_checked": 0,
+            "daily_index_dates_checked": 0,
+            "checks": [],
+            "interpretation": {
+                "independent_anchor_reconciliation": False,
+                "full_window_population_exhaustiveness": False,
+                "upstream_source_route_falsified": True,
+            },
+            "upstream": {
+                "status": r1_payload["status"],
+                "receipt_fingerprint": r1_payload["receipt_fingerprint"],
+                "falsification": r1_payload.get("falsification"),
+            },
+            "pit": {
+                "acceptance_timestamp_preserved": False,
+                "exact_first_publication_time_proven": False,
+                "immutable_revision_lineage_proven": False,
+                "same_day_pit_safe": False,
+            },
+            "governance": {
+                "performance": False,
+                "holdout": False,
+                "selection": False,
+                "ranking": False,
+                "parameter_search": False,
+                "threshold_search": False,
+                "horizon_search": False,
+                "asset_search": False,
+                "variant_search": False,
+                "performance_authorized": False,
+                "automatic_promotion": False,
+            },
+            "safety": {
+                "paper_only": True,
+                "live_trading_enabled": False,
+                "orders_enabled": False,
+                "automatic_promotion": False,
+            },
+        }
+        result["receipt_fingerprint"] = hashlib.sha256(
+            json.dumps(result, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        return result
     if not anchors:
         raise RuntimeError("Q121R2_NO_Q121R1_ANCHORS")
 
