@@ -824,7 +824,7 @@
       "self_hosted_output_formal_evidence": false
     }
   },
-  "generated_at_utc": "2026-10-03T14:28:53.067802+00:00",
+  "generated_at_utc": "2026-10-03T14:30:16.031276+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1229,14 +1229,29 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
-        "headRefName": "ops/q133-q170-pit-receipt-persistence-r1-20261003",
-        "number": 942,
-        "title": "OPS: persist Q133-Q170 PIT material receipt",
-        "updatedAt": "2026-10-03T14:28:01Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/942"
+        "headRefName": "ops/h06-p2-remove-workflow-selftrigger-20261003",
+        "number": 943,
+        "title": "OPS: eliminate historical H06-P2 workflow self-trigger",
+        "updatedAt": "2026-10-03T14:29:32Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/943"
       }
     ],
     "recent_commits": [
+      {
+        "message": "Merge pull request #942 from DWR-debug/ops/q133-q170-pit-receipt-persistence-r1-20261003",
+        "sha": "3eb2d0ca103c93c6788d971783bb3044cbda7725",
+        "timestamp": "2026-10-03T16:30:03+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "17de0fd0f3012dc27307dffb827738d5c70110f0",
+        "timestamp": "2026-10-03T14:28:56Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "de1624437fe5958927a7f36573793aaa7ea246ea",
+        "timestamp": "2026-10-03T14:28:54Z"
+      },
       {
         "message": "OPS: synchronize current operational status",
         "sha": "a1e6bff91b4881ee122f1b5058825b279158a69f",
@@ -1258,24 +1273,9 @@
         "timestamp": "2026-10-03T16:28:25+02:00"
       },
       {
-        "message": "TEST: guard Q171 contents-publisher persistence path",
-        "sha": "5a14495a8756db6c67f046f60c77b498543b8df2",
-        "timestamp": "2026-10-03T16:26:39+02:00"
-      },
-      {
-        "message": "FIX: publish Q171 material receipt via GitHub Contents API",
-        "sha": "ab076e2149d67cc3fd30300bca7bc61e19b545e6",
-        "timestamp": "2026-10-03T16:26:29+02:00"
-      },
-      {
-        "message": "TEST: guard H06-P2 historical trigger boundary",
-        "sha": "df966d5f7dea21b5fadb6e86acae65db417dcc27",
-        "timestamp": "2026-10-03T16:25:06+02:00"
-      },
-      {
-        "message": "OPS: remove H06-P2 registry push trigger",
-        "sha": "1418b9a8a4180ed095eba36775dda1cbc1bf85ec",
-        "timestamp": "2026-10-03T16:24:58+02:00"
+        "message": "TEST: ensure Q133-Q170 receipt persistence cannot self-trigger",
+        "sha": "8607739c4dcca6bff956a34aaaa493d049755284",
+        "timestamp": "2026-10-03T16:27:53+02:00"
       }
     ]
   },
@@ -1345,12 +1345,12 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a1e6bff91b4881ee122f1b5058825b279158a69f",
+  "source_master_sha": "3eb2d0ca103c93c6788d971783bb3044cbda7725",
   "status_commit_is_documentation_only": true,
   "status_type": "current_operational_project_state",
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37129719104"
+    "run_id": "37129807398"
   }
 }
