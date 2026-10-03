@@ -19,7 +19,7 @@ def test_accession_parser():
 def test_parse_filters_to_beneficial_forms():
     def row(form, company, cik, filed, filename):
         return (
-            f"{form:<12}{company:<62}{cik:<12}{filed:<12}{filename}"
+            f"{form:<12}{company:<58}{cik:<12}{filed:<12}{filename}"
         ).encode()
 
     body = b"\n".join([
@@ -59,9 +59,9 @@ def test_parse_fixed_width_form_index():
 
     body = (
         "Description: Form Index of EDGAR Dissemination Feed\\n"
-        "Company Name                                                   Form Type   CIK         Date Filed  File Name\\n"
-        "--------------------------------------------------------------------------------------------------------------\\n"
-        "SPGI TEST COMPANY                                            SC 13G      0000064040  2024-02-13  edgar/data/64040/000110465924021877.txt\\n"
+        "Form Type   Company Name                                              CIK         Date Filed  File Name\\n"
+        "----------------------------------------------------------------------------------------------------------------\\n"
+        "SC 13G      SPGI TEST COMPANY                                          64040       2024-02-13  edgar/data/64040/000110465924021877.txt\\n"
     ).encode("latin-1")
     assert parse_index(body) == [{
         "cik": "0000064040",
