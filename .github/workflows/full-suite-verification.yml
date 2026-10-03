@@ -38,18 +38,36 @@ jobs:
           python -m pip install pytest pandas exchange-calendars statsmodels==0.15.0 pypdf
 
       - name: Run full pytest suite
+        id: pytest
         shell: bash
-        run: python -m pytest -q
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python -m pytest -q 2>&1 | tee "$RUNNER_TEMP/pytest.log"
+          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Diagnose pytest result
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "## Pytest diagnostic" >> "$GITHUB_STEP_SUMMARY"
+          echo '```text' >> "$GITHUB_STEP_SUMMARY"
+          tail -n 160 "$RUNNER_TEMP/pytest.log" >> "$GITHUB_STEP_SUMMARY" || true
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
 
       - name: Run project integrity
+        if: steps.pytest.outputs.exit_code == '0'
         shell: bash
         run: python automation/project_integrity_check.py
 
       - name: Run project-state freshness
+        if: steps.pytest.outputs.exit_code == '0'
         shell: bash
         run: python automation/project_state_freshness_check.py
 
       - name: Verify safety invariants
+        if: steps.pytest.outputs.exit_code == '0'
         shell: bash
         run: |
           set -euo pipefail
@@ -61,6 +79,11 @@ jobs:
           assert settings.AUTOMATIC_PROMOTION is False
           print("SAFETY INVARIANTS OK")
           PY
+
+      - name: Fail job on pytest failure
+        if: steps.pytest.outputs.exit_code != '0'
+        shell: bash
+        run: exit 1
 
       - name: Upload verification summary
         if: always()
