@@ -33,8 +33,8 @@ jobs:
   autonomous_pc:
     if: github.repository == 'DWR-debug/trading-agent-public'
     concurrency:
-      # The local-reproduction stream shares the long-run priority group;
-      # data_qa remains independently schedulable on the second PC slot.
+      # Slot 1 is the formal-readiness/reproduction lane.
+      # Slot 2 is the orthogonal frontier-discovery lane.
       group: ${{ matrix.concurrency_group }}
       cancel-in-progress: false
     strategy:
@@ -44,8 +44,8 @@ jobs:
         include:
           - lane: local_reproduction
             concurrency_group: trading-agent-windows-research-capacity-v1
-          - lane: data_qa
-            concurrency_group: trading-agent-windows-research-data-qa-v1
+          - lane: autonomous_frontier_qa
+            concurrency_group: trading-agent-windows-frontier-v1
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 25
     steps:
