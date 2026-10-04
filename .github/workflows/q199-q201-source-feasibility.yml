@@ -46,7 +46,7 @@ jobs:
           python - <<'PY'
           import json, os
           from pathlib import Path
-          p=Path('research/runs/q199_q201_source_feasibility')/f"{{os.environ['GITHUB_RUN_ID']}.json"
+          p=Path('research/runs/q199_q201_source_feasibility')/f"{os.environ['GITHUB_RUN_ID']}.json"
           d=json.loads(p.read_text(encoding='utf-8'))
           assert d['status']=='DISCOVERY_SOURCE_FEASIBILITY_COMPLETED'
           assert len(d['candidate_results'])==2
