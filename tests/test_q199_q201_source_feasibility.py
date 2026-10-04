@@ -26,6 +26,7 @@ def test_source_gate_never_reads_returns_or_authorizes_performance():
 def test_q201_history_probe_is_fixed_and_non_authorizing():
     s = (ROOT / "automation/q199_q201_source_feasibility.py").read_text(encoding="utf-8")
     assert "https://clinicaltrials.gov/study/NCT00125528?a=2&tab=history" in s
+    assert "https://clinicaltrials.gov/ct2/history/NCT00125528" in s
     assert '"2005-07-29"' in s
     assert '"2015-02-19"' in s
     assert '"2016-12-16"' in s
