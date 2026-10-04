@@ -83,13 +83,12 @@ def test_q121r6_aggregate_uses_same_shard_count() -> None:
     assert SHARD_COUNT == 4
 
 
-def test_r6_uses_canonical_r3_accession_parser():
+def test_r6_archive_url_delegates_to_canonical_r3_builder():
     from automation import q121r3_sec_form_index_reverse_issuer as r3
     from automation import q121r6_sec_acceptance_time_compiler as r6
-    filename = "edgar/data/1/000000000124000001/a.txt"
-    assert r3.accession_from_filename(filename) == "0000000001-24-000001"
-    source = __import__("pathlib").Path(r6.__file__).read_text(encoding="utf-8")
-    assert "r3.accession_from_filename(filename)" in source
+    filename = "edgar/data/1007587/000110465924093411/0001104659-24-093411-index.htm"
+    assert r3.accession_from_filename(filename) == "0001104659-24-093411"
+    assert r6.archive_header_url(filename) == r3.archive_header_url(filename)
 
 
 def test_q121r6_archive_url_uses_subject_cik_from_form_index_path():
@@ -109,11 +108,12 @@ def test_q121r6_problem_404_filename_preserves_subject_cik_root():
 
 
 def test_q121r6_subject_and_filer_cik_are_distinct():
-    source = __import__("pathlib").Path(
-        __import__("automation.q121r6_sec_acceptance_time_compiler", fromlist=["__name__"]).__file__
-    ).read_text(encoding="utf-8")
-    assert "INDEX_SUBJECT_CIK_MISMATCH" in source
-    assert "filer_cik = accession_dashed.split" in source
+    from automation.q121r6_sec_acceptance_time_compiler import archive_header_url
+    filename = "edgar/data/1007587/000110465924093411/0001104659-24-093411-index.htm"
+    url = archive_header_url(filename)
+    assert "/data/1007587/000110465924093411/" in url
+    assert "/data/1104659/000110465924093411/" not in url
+    assert "0001104659-24-093411-index-headers.html" in url
 
 
 def test_q121r6_404_failure_payload_includes_source_url():
