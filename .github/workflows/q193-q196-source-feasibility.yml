@@ -40,7 +40,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p research/runs/q193_q196_source_feasibility
-          python -m automation.q193_q196_source_feasibility --output research/runs/q193_q196_source_feasibility/${GITHUB_RUN_ID}.json
+          python -m automation.q193_q196_source_feasibility --output "research/runs/q193_q196_source_feasibility/${GITHUB_RUN_ID}.json"
       - name: Explicit governance boundary
         shell: bash
         run: |
