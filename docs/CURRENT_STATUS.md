@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `3867e1e5ba633a123def4ec27f003b18eedc365e`
+**Current operational snapshot:** `dd5f00e556a1ee2123fdb57f55cf6091473cbf38`
 
-**Generated (UTC):** `2026-10-04T00:49:02.029086+00:00`
+**Generated (UTC):** `2026-10-04T00:49:26.322201+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -79,6 +79,21 @@
 - Source-feasibility run: **COMPLETED** on master; Q171, Q172, Q174–Q177 and Q178 passed source probes; Q173 remains license-blocked.
 - PIT-readiness: Q171 has a sample historical Common Crawl reconstruction receipt; Q174–Q177 have source-clock/version/revision semantics confirmed but are **not yet candidate-specific PIT-valid**.
 - No member of this wave is performance-authorized; no holdout selection, tuning, ranking, promotion or live execution is permitted.
+
+### Q148-R1 EIA WPSR Source/Clock Gate
+
+- Receipt status: **Q148R1_WPSR_SOURCE_CLOCK_CONTRACT_COMPLETED**.
+- Persistent receipt fingerprint: `30e29926cd9a05d803426765a64d0c13354f824fbfc3d9abc430a379d4569cd0`.
+- Frozen controls: **3**; exact first-public-availability timestamp proven = **False**.
+- Candidate-specific revision lineage proven = **False**; same-day PIT safe = **False**.
+- This gate is source/clock evidence only; performance, ranking, holdout selection, tuning, promotion and live execution remain closed.
+
+### Q137/Q144 Historical Micro-PIT
+
+- Micro-PIT receipt status: **MICRO_PIT_SAMPLE_COMPLETED_NO_PERFORMANCE**.
+- Q137 SEC all-symbols reconstructable = **False**.
+- Q144 Wikimedia all-symbols reconstructable = **False**.
+- This bounded sample produced feasibility evidence only; unresolved archive/entity coverage stays fail-closed.
 
 ### Q133–Q170 Public Source Frontier
 
