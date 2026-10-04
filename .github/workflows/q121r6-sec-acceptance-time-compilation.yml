@@ -21,8 +21,10 @@ permissions:
 # Push-triggered runs share a stable branch group and supersede older push runs.
 # One-shot/manual runs stay isolated so a later push cannot cancel them.
 concurrency:
-  group: q121r6-sec-acceptance-time-compilation-${{ github.event_name == 'push' && github.ref || github.run_id }}
-  cancel-in-progress: ${{ github.event_name == 'push' }}
+  # Keep push runs isolated from one-shot/manual invocations, while collapsing
+  # duplicate owner-triggered issue-comment runs into the newest one.
+  group: q121r6-sec-acceptance-time-compilation-${{ github.event_name }}${{ github.event_name == 'push' && github.ref || '' }}
+  cancel-in-progress: ${{ github.event_name == 'push' || github.event_name == 'issue_comment' }}
 
 jobs:
   prepare:
@@ -39,7 +41,7 @@ jobs:
           )
         )
       }}
-    runs-on: [self-hosted, trading-agent-research]
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: Bootstrap exact repository and pinned Python
@@ -122,7 +124,7 @@ jobs:
       max-parallel: 2
       matrix:
         shard_index: [0,1,2,3]
-    runs-on: [self-hosted, trading-agent-research]
+    runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
       - name: Bootstrap exact repository and pinned Python
