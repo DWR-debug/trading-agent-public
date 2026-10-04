@@ -1,0 +1,117 @@
+{
+  "schema_version": "1.0",
+  "review_id": "EXTERNAL-TRADING-AGENT-PRIOR-ART-2026-10-04",
+  "as_of": "2026-10-04",
+  "repository": "DWR-debug/trading-agent-public",
+  "snapshot_commit": "0899b0fbf9f3528411488789caf435b732c8005d",
+  "status": "PRIOR_ART_REVIEW_COMPLETED",
+  "safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false
+  },
+  "external_systems": [
+    {
+      "name": "TradingAgents",
+      "repo": "TauricResearch/TradingAgents",
+      "adopt": "PIT-by-construction; explicit decision-record handling",
+      "do_not_import": [
+        "reported performance",
+        "LLM decision as scientific evidence",
+        "external promotion rules"
+      ]
+    },
+    {
+      "name": "ai-hedge-fund",
+      "repo": "virattt/ai-hedge-fund",
+      "adopt": "agent-facing historical context blinding; replay parity audit",
+      "do_not_import": [
+        "agent execution authority",
+        "auto-promotion"
+      ]
+    },
+    {
+      "name": "RD-Agent",
+      "repo": "microsoft/RD-Agent",
+      "adopt": "information-gain/falsifiability feedback pattern only",
+      "do_not_import": [
+        "performance-driven adaptive optimization within frozen trials"
+      ]
+    },
+    {
+      "name": "FinRobot",
+      "repo": "AI4Finance-Foundation/FinRobot",
+      "adopt": "models reason / software computes / agents orchestrate / systems verify",
+      "do_not_import": [
+        "replacement of deterministic evidence layer"
+      ]
+    },
+    {
+      "name": "Qlib",
+      "repo": "microsoft/qlib",
+      "adopt": "explicit experiment and provenance envelope",
+      "already_present": true
+    },
+    {
+      "name": "AlphaAgent",
+      "repo": "Rn989/AlphaAgent",
+      "adopt": "possible future structural novelty audit",
+      "decision": "defer"
+    },
+    {
+      "name": "Alpha-GPT",
+      "repo": "Harvey-Sun/Alpha-GPT",
+      "adopt": "creative hypothesis generation only",
+      "decision": "non-authoritative worker input"
+    },
+    {
+      "name": "AlphaForge",
+      "repo": "Rn989/AlphaForge",
+      "adopt": "none currently; monitor diversity/combination ideas",
+      "decision": "defer"
+    },
+    {
+      "name": "FinMem",
+      "repo": "https://github.com/pipikuin/FinMem-LLM-StockTrading",
+      "adopt": "possible worker-context memory only",
+      "decision": "reject as evidence store"
+    }
+  ],
+  "adopted_controls": [
+    "agent_historical_context_pit_contract",
+    "historical_asset_and_date_blinding_for_agent_tasks",
+    "replay_parity_audit",
+    "invalid_agent_output_review_required",
+    "information_gain_and_cheap_falsifiability_scheduling"
+  ],
+  "deferred_controls": [
+    "structural_mechanism_ast_similarity_audit",
+    "semantic_layered_agent_memory_for_worker_context"
+  ],
+  "rejected_controls": [
+    "performance_driven_bandit_candidate_selection",
+    "agent_confidence_auto_promotion",
+    "llm_output_as_scientific_evidence"
+  ],
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "candidate_ranking": false,
+    "parameter_search": false,
+    "asset_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "references": [
+    "https://github.com/TauricResearch/TradingAgents",
+    "https://github.com/TauricResearch/TradingAgents/blob/main/CHANGELOG.md",
+    "https://github.com/virattt/ai-hedge-fund",
+    "https://github.com/microsoft/qlib",
+    "https://github.com/microsoft/RD-Agent",
+    "https://github.com/AI4Finance-Foundation/FinRobot",
+    "https://github.com/Rn989/AlphaAgent",
+    "https://github.com/Harvey-Sun/Alpha-GPT",
+    "https://github.com/Rn989/AlphaForge"
+  ]
+}
