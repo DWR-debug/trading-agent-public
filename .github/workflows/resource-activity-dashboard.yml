@@ -1,0 +1,125 @@
+name: Resource Activity Dashboard v2
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+  pull_request:
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: trading-agent-resource-dashboard
+  cancel-in-progress: true
+
+jobs:
+  dashboard:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout current master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Collect live resource snapshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, subprocess
+          from datetime import datetime, timezone
+          from pathlib import Path
+          repo = os.environ['GITHUB_REPOSITORY']
+          def gh(path):
+              return json.loads(subprocess.check_output(['gh','api',path], text=True))
+          self_hosted_runs = gh('/repos/'+repo+'/actions/workflows/permanent-pc-research-loop.yml/runs?branch=master&per_page=10').get('workflow_runs', [])
+          queued = gh('/repos/'+repo+'/actions/runs?status=queued&per_page=50').get('workflow_runs', [])
+          running = gh('/repos/'+repo+'/actions/runs?status=in_progress&per_page=50').get('workflow_runs', [])
+          active_jobs = []
+          for run in running[:20]:
+              run_id = run.get('id')
+              if not run_id:
+                  continue
+              jobs = gh('/repos/'+repo+'/actions/runs/'+str(run_id)+'/jobs?per_page=100').get('jobs', [])
+              for job in jobs:
+                  if job.get('status') == 'in_progress':
+                      active_jobs.append({
+                          'run_id': run_id,
+                          'workflow': run.get('name'),
+                          'job_name': job.get('name'),
+                          'runner_name': job.get('runner_name'),
+                          'runner_os': job.get('runner_os'),
+                          'started_at': job.get('started_at')
+                      })
+          def load(path):
+              try: return json.loads(Path(path).read_text(encoding='utf-8'))
+              except Exception: return {'status':'UNAVAILABLE'}
+          ai = load('ops/ai_credit_availability_plan.json')
+          os_state = load('ops/trading_agent_os_state.json')
+          s10 = load('ops/s10_runtime_status.json')
+          snapshot = {
+              'generated_at_utc': datetime.now(timezone.utc).isoformat(),
+              'repository': repo,
+              'self_hosted_loop': [{'run_id':x.get('id'),'status':x.get('status'),'conclusion':x.get('conclusion'),'created_at':x.get('created_at'),'updated_at':x.get('updated_at')} for x in self_hosted_runs[:10]],
+              'actions': {'queued':[{'name':x.get('name'),'run_id':x.get('id')} for x in queued[:20]], 'in_progress':[{'name':x.get('name'),'run_id':x.get('id')} for x in running[:20]], 'active_jobs':active_jobs},
+              'free_ai': ai,
+              'two_lane': {'status':os_state.get('two_lane_research_mode',{}).get('status'),'lane_a':os_state.get('two_lane_research_mode',{}).get('lane_a',{}).get('focus',[]),'lane_b':os_state.get('two_lane_research_mode',{}).get('lane_b',{}).get('focus',[])},
+              's10': {'status':s10.get('status'),'eligible':s10.get('eligible'),'latest_utility_run_id':s10.get('latest_utility_run_id')},
+              'safety': {'PAPER_ONLY':True,'LIVE_TRADING_ENABLED':False,'ORDERS_ENABLED':False,'AUTOMATIC_PROMOTION':False}
+          }
+          Path('resource_dashboard.json').write_text(json.dumps(snapshot,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+          PY
+
+      - name: Publish dashboard summary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          d=json.load(open('resource_dashboard.json',encoding='utf-8'))
+          print('## Resource Activity Dashboard')
+          print('')
+          print('Generated: **'+d['generated_at_utc']+'**')
+          print('')
+          print('### Permanent self-hosted loop')
+          print('')
+          print('| Run | Status | Conclusion | Created | Updated |')
+          print('|---|---|---|---|---|')
+          for r in d['self_hosted_loop'][:5]: print('| '+str(r['run_id'])+' | '+str(r['status'])+' | '+str(r['conclusion'])+' | '+str(r['created_at'])+' | '+str(r['updated_at'])+' |')
+          print('')
+          print('### Active jobs')
+          print('')
+          print('| Workflow | Job | Runner | Started |')
+          print('|---|---|---|---|')
+          for j in d['actions']['active_jobs']:
+              print('| '+str(j['workflow'])+' | '+str(j['job_name'])+' | '+str(j['runner_name'])+' | '+str(j['started_at'])+' |')
+          print('')
+          print('### GitHub-hosted Actions')
+          print('- In progress: **'+str(len(d['actions']['in_progress']))+'**')
+          print('- Queued: **'+str(len(d['actions']['queued']))+'**')
+          print('')
+          print('### Research lanes')
+          print('- Two-lane mode: **'+str(d['two_lane']['status'])+'**')
+          print('- Lane A: `'+', '.join(d['two_lane']['lane_a'])+'`')
+          print('- Lane B: `'+', '.join(d['two_lane']['lane_b'])+'`')
+          print('')
+          print('### Safety')
+          print('- `PAPER_ONLY=True`')
+          print('- `LIVE_TRADING_ENABLED=False`')
+          print('- `ORDERS_ENABLED=False`')
+          print('- `AUTOMATIC_PROMOTION=False`')
+          PY
+
+      - name: Upload machine-readable snapshot
+        uses: actions/upload-artifact@v6
+        with:
+          name: resource-dashboard
+          path: resource_dashboard.json
+          retention-days: 14
