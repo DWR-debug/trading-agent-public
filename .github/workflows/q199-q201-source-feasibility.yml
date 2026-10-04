@@ -10,14 +10,6 @@ on:
   schedule:
     - cron: "23 */6 * * *"
   workflow_dispatch:
-  push:
-    branches: [master]
-    paths:
-      - "automation/q199_q201_source_feasibility.py"
-      - "research/frontier/q199_q201_candidate_wave_2026_10_04.json"
-      - "docs/research_design/Q199_Q201_DEEP_LITERATURE_AND_CANDIDATE_WAVE_2026-10-04.md"
-      - ".github/workflows/q199-q201-source-feasibility.yml"
-      - "tests/test_q199_q201_source_feasibility.py"
 
 permissions:
   contents: write
