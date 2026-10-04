@@ -75,9 +75,10 @@
       "workflow": ".github/workflows/ai-worker-fabric.yml",
       "schedule_utc": "0 */6 * * *",
       "providers": [
-        "openrouter_free"
+        "openrouter_free",
+        "groq_free"
       ],
-      "routing": "scheduled OpenRouter free; Gemini legacy API and Mistral retained manual-only when explicitly dispatched",
+      "routing": "OpenRouter Free event-driven bounded reviews; Groq Free adversarial Q187-Q192 worker after free-tier preflight; Gemini/Mistral remain manual-only when free-mode gates pass",
       "output_role": "design/review/adversarial input only",
       "scientific_evidence_allowed": false
     },
@@ -88,7 +89,7 @@
       "provider": "gemini_cli",
       "quota_behavior": "skip/fail-closed when quota/auth is unavailable",
       "scientific_evidence_allowed": false,
-      "note": "Isolated from the permanent 10-minute research loop so local AI cannot occupy a research slot and serialize subsequent pulses."
+      "note": "Isolated manual Windows AI worker; local AI cannot occupy the permanent 10-minute Windows research pulse."
     },
     "bounded_agent_queue": {
       "workflow": ".github/workflows/agent-request-queue.yml",
@@ -125,6 +126,16 @@
       ],
       "workpack_rotation": "three equal 10-step packs covering all 30 frontier worker steps",
       "formal_evidence_allowed": false
+    },
+    "groq_free_adversarial_worker": {
+      "workflow": ".github/workflows/groq-free-adversarial-worker.yml",
+      "task": "AI-2026-10-04-Q187-Q192-GROQ-ADVERSARIAL",
+      "trigger": "Groq free-tier preflight success or explicit dispatch",
+      "model": "openai/gpt-oss-20b",
+      "role": "independent adversarial source/PIT review only",
+      "scientific_evidence_allowed": false,
+      "paid_usage_allowed": false,
+      "selection_or_ranking_allowed": false
     }
   },
   "current_research_focus": {
