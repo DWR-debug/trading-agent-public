@@ -5,6 +5,7 @@ on:
     branches: [master]
     paths:
       - "research/run_requests/priority_wave_dispatch_2026-10-04.trigger"
+      - "research/run_requests/next_logical_gate_2026-10-04.trigger"
   workflow_dispatch:
 
 permissions:
@@ -28,7 +29,15 @@ jobs:
         run: |
           set -euo pipefail
           repo="$GITHUB_REPOSITORY"
-          mapfile -t workflows < <(cat <<'EOF'
+          trigger_message="${{ github.event.head_commit.message }}"
+          if [[ "$GITHUB_EVENT_NAME" == "push" && "$trigger_message" == *"RESEARCH: trigger next logical gate"* ]]; then
+            mapfile -t workflows < <(cat <<'EOF'
+          orthogonal-pit-next-gate.yml
+          EOF
+            )
+            echo "MODE=NEXT_LOGICAL_GATE"
+          else
+            mapfile -t workflows < <(cat <<'EOF'
           q185-q186-source-feasibility.yml
           q187-q192-source-feasibility.yml
           q187-q192-pit-readiness-r1.yml
@@ -39,7 +48,9 @@ jobs:
           q199-q201-source-feasibility.yml
           q119-treasury-source-feasibility.yml
           EOF
-          )
+            )
+            echo "MODE=PRIORITY_WAVE"
+          fi
 
           runs="$(gh api "/repos/${repo}/actions/runs?per_page=200")"
           for workflow in "${workflows[@]}"; do
