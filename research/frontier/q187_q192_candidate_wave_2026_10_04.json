@@ -1,0 +1,94 @@
+{
+  "schema_version": "1.0",
+  "wave_id": "Q187-Q192-2026-10-04",
+  "status": "DESIGN_INVENTORY_ONLY",
+  "generated_utc": "2026-10-04T14:00:00Z",
+  "purpose": "Next orthogonal public-information candidate wave centered on operational, regulatory, procurement, environmental and technology-disclosure clocks.",
+  "policy": {
+    "performance_authorized": false,
+    "holdout_selection_allowed": false,
+    "parameter_search_allowed": false,
+    "asset_search_allowed": false,
+    "threshold_search_allowed": false,
+    "horizon_search_allowed": false,
+    "variant_search_allowed": false,
+    "family_ranking_allowed": false,
+    "automatic_promotion": false,
+    "paid_data_required": false
+  },
+  "candidates": [
+    {
+      "id": "Q187",
+      "name": "Federal procurement award-action shock × issuer exposure",
+      "family": "government_demand_operational_information",
+      "hypothesis": "Newly public federal contract or contract-modification actions may reveal demand/capacity changes for listed suppliers before broad market repricing.",
+      "construction": "Use fixed USAspending transaction fields including award identifier, modification/action date, recipient and obligation amount; freeze a recipient-to-issuer map ex ante and use only transactions whose public availability boundary is proven, otherwise use a conservative next-session boundary. Distinguish base awards from later modifications.",
+      "sources": ["USAspending.gov API", "USAspending.gov award data", "SEC issuer disclosures", "OHLCV"],
+      "next_gate": "historical transaction/archive completeness, public-dissemination timing, recipient-to-issuer mapping, modification lineage",
+      "novelty_note": "Demand-side operational shock; distinct from Treasury auction state and issuer filings."
+    },
+    {
+      "id": "Q188",
+      "name": "FDA safety-labeling change shock × pharmaceutical issuer exposure",
+      "family": "regulatory_safety_information_arrival",
+      "hypothesis": "Newly public safety-related labeling changes may create issuer-specific regulatory information states distinct from clinical-trial-result and recall events.",
+      "construction": "Use the FDA SrLC database's fixed event/section fields and application identifiers; freeze drug/application-to-issuer mapping before the historical window and preserve supplement/date/update fields without letting later database updates rewrite earlier states.",
+      "sources": ["FDA SrLC database", "Drugs@FDA", "SEC issuer disclosures", "OHLCV"],
+      "next_gate": "historical archive completeness, exact public-posting/update semantics, NDA/BLA-to-issuer mapping, correction lineage",
+      "novelty_note": "Post-approval safety-label state; distinct from Q179 clinical-trial publication and Q180/NHTSA recall."
+    },
+    {
+      "id": "Q189",
+      "name": "CPSC consumer-product recall publication shock × issuer exposure",
+      "family": "consumer_product_regulatory_shock",
+      "hypothesis": "Newly public consumer-product recalls may transmit product-quality and liability information to listed manufacturers or brands before complete repricing.",
+      "construction": "Use CPSC Recall API machine-readable recall records with fixed recall identifiers/date/product/manufacturer fields; freeze product-to-issuer identity and treat revisions/withdrawals separately from the original public state.",
+      "sources": ["CPSC Recall API", "CPSC public recall records", "SEC issuer disclosures", "OHLCV"],
+      "next_gate": "historical API/archive completeness, exact recall public-availability clock, product/manufacturer identity mapping, revision/withdrawal handling",
+      "novelty_note": "Non-automotive consumer-product channel; separate from Q180 NHTSA recalls and FDA drug recalls/labeling."
+    },
+    {
+      "id": "Q190",
+      "name": "EPA enforcement/compliance state transition × facility issuer exposure",
+      "family": "environmental_operational_enforcement",
+      "hypothesis": "Newly refreshed public environmental compliance/enforcement states may reveal facility-level operating or liability changes before they are fully reflected in issuer disclosures.",
+      "construction": "Use a fixed ECHO enforcement/compliance event taxonomy with the documented data-extraction/update boundary. Build a frozen facility-to-issuer graph; never substitute incident/inspection dates for public refresh availability and never let later refreshes backfill an earlier decision prefix.",
+      "sources": ["EPA ECHO downloads", "EPA ECHO facility/enforcement data", "SEC issuer disclosures", "OHLCV"],
+      "next_gate": "historical refresh/archive reconstruction, facility-to-issuer mapping, enforcement revision semantics, documented lag model",
+      "novelty_note": "Environmental enforcement state; separate from OSHA workplace safety and physical-event channels."
+    },
+    {
+      "id": "Q191",
+      "name": "Science-publication → patent-publication stage gap × technology issuer exposure",
+      "family": "innovation_disclosure_stage_timing",
+      "hypothesis": "The relative public timing of science publication and patent disclosure may contain information about when innovation becomes externally observable, beyond a simple count of papers or patents.",
+      "construction": "Match a frozen set of patent-paper pairs using deterministic bibliographic/title/identifier evidence; construct only a stage-order state comparing the first public science boundary with pre-grant/patent-publication/grant boundaries. Same-day or ambiguous chronology is excluded conservatively.",
+      "sources": ["USPTO Official Gazette/eGrants", "USPTO patent records", "Crossref/OpenAlex", "SEC issuer disclosures", "OHLCV"],
+      "next_gate": "candidate-specific patent-paper linkage census, science/publication timestamp semantics, patent-publication chronology, issuer mapping, revision handling",
+      "novelty_note": "Stage-timing gap rather than Q186's citation-network topology or Q176's publication-burst level."
+    },
+    {
+      "id": "Q192",
+      "name": "FDA drug-shortage publication state × manufacturer exposure",
+      "family": "supply_constraint_regulatory_information",
+      "hypothesis": "Newly public FDA drug-shortage states may reveal supply constraints, manufacturing interruptions or discontinuations for exposed listed manufacturers.",
+      "construction": "Use fixed openFDA/FDA shortage records and product/manufacturer identifiers; preserve daily-list update semantics and distinguish shortage start/resolution dates from first public observation. Resolved/discontinued records must remain in their historical prefixes without current-page overwrite.",
+      "sources": ["FDA Drug Shortages", "openFDA Drug Shortages", "Drugs@FDA", "SEC issuer disclosures", "OHLCV"],
+      "next_gate": "historical archive completeness, first-public-observation timing, manufacturer/product mapping, resolution/discontinuation lineage",
+      "novelty_note": "Supply-availability shock; distinct from Q188 regulatory labeling and Q179 clinical-trial state."
+    }
+  ],
+  "cross_channel_designs": [
+    "procurement demand shock × regulatory state",
+    "consumer recall × issuer operational exposure",
+    "environmental enforcement × facility concentration",
+    "science/patent stage gap × technology exposure",
+    "drug shortage × issuer product concentration"
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
