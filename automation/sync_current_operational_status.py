@@ -120,6 +120,8 @@ def generate(
     q137_q144_micro_receipt = _load_json(ROOT / "research/evidence/q137_q144_micro_pit_latest.json", {})
     q169_r4_receipt = _load_json(ROOT / "research/evidence/q169_noaa_swpc_archive_pit_r4_latest.json", {})
     q171_q177_pit_receipt = _load_json(ROOT / "research/evidence/q171_q177_pit_readiness_2026_10_03.json", {})
+    q179_q184_source_receipt = _load_json(ROOT / "research/evidence/q179_q184_source_feasibility_latest.json", {})
+    q179_q184_pit_receipt = _load_json(ROOT / "research/evidence/q179_q184_pit_readiness_r1_latest.json", {})
     source_pit_frontier_outcomes = _load_json(ROOT / "research/evidence/source_pit_frontier_outcomes_2026_10_03.json", {})
     q121_r5_receipt = _load_json(ROOT / "research/evidence/q121r5_dual_index_population_reconciliation_2026_10_03.json", {})
     q121_r6_attempts = _load_json(ROOT / "research/evidence/q121r6_execution_attempts_2026_10_03.json", {})
@@ -384,6 +386,20 @@ def generate(
                 "ranking, tuning, promotion or live execution is authorized."
             )
 
+    if q179_q184_pit_receipt.get("status") == "PIT_READINESS_R1_COMPLETED_NO_PERFORMANCE":
+        recorded_next_research_focus = (
+            "Q179-Q184 is the active Lane-B frontier after source feasibility. Five of six public source probes "
+            "pass (Q179/Q180/Q181/Q183/Q184); Q182 FERC eLibrary remains runner-access blocked by HTTP 403. "
+            "PIT Readiness R1 is completed without performance: all six candidates have explicit clock/revision/"
+            "mapping/archive contracts, but historical archive reconstruction, exact PIT timing where unresolved, "
+            "fixed issuer mapping and independent reproduction remain open. No performance, holdout selection, "
+            "tuning, ranking, promotion or live execution is authorized."
+        )
+    elif q179_q184_source_receipt.get("status") == "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED":
+        recorded_next_research_focus = (
+            "Q179-Q184 source feasibility is active in Lane B. Current receipt is discovery-only; source/PIT "
+            "contracts remain candidate-specific and no performance or promotion is authorized."
+        )
     current = {
         "schema_version": "1.0",
         "status_type": "current_operational_project_state",
@@ -587,6 +603,8 @@ def generate(
         "q129_options": q129_receipt,
         "q133_q170_source_feasibility": q133_q170_receipt,
         "q171_q177_pit_readiness": q171_q177_pit_receipt,
+        "q179_q184_source_feasibility": q179_q184_source_receipt,
+        "q179_q184_pit_readiness_r1": q179_q184_pit_receipt,
         "source_pit_frontier_outcomes": source_pit_frontier_outcomes,
         "q121_r5_dual_index_reconciliation": q121_r5_receipt,
         "q121_r6_execution_attempts": q121_r6_attempts,
@@ -726,6 +744,14 @@ def generate(
 - PIT-readiness: Q171 has a sample historical Common Crawl reconstruction receipt; Q174–Q177 have source-clock/version/revision semantics confirmed but are **not yet candidate-specific PIT-valid**.
 - No member of this wave is performance-authorized; no holdout selection, tuning, ranking, promotion or live execution is permitted.
 
+### Q179–Q184 Orthogonal Source/PIT Frontier
+
+- Source-feasibility latest receipt: **{q179_q184_source_receipt.get("status", "NOT_RECORDED")}**.
+- Q179 ClinicalTrials.gov, Q180 NHTSA, Q181 OSHA/DOL, Q183 NTSB and Q184 FCC currently pass the bounded source probe; Q182 FERC eLibrary remains **runner-access blocked** where the GitHub-hosted probe receives HTTP 403.
+- PIT Readiness R1 latest receipt: **{q179_q184_pit_receipt.get("status", "NOT_RECORDED")}**.
+- Latest Q179–Q184 PIT receipt fingerprint: `{q179_q184_pit_receipt.get("receipt_fingerprint", "UNKNOWN")}`.
+- Candidate-level PIT status remains non-authorizing; all six current statuses are surfaced directly in `research/evidence/q179_q184_pit_readiness_r1_latest.json`.
+- Remaining gates are historical archive reconstruction, exact public-clock proof where not yet established, fixed entity mapping, revision/amendment lineage and independent reproduction. No performance, holdout selection, tuning, ranking, promotion or live execution is authorized.
 ### Q148-R1 EIA WPSR Source/Clock Gate
 
 - Receipt status: **{q148_r1_receipt.get("status", "NOT_RECORDED")}**.
