@@ -37,6 +37,10 @@ SOURCES = {
         "url": "https://www.uspto.gov/patents/search/patent-document-authority-files",
         "markers": ["Authority Files are normally updated on a twice monthly basis", "withdrawn", "missing"],
     },
+    "USPTO_PATENTSVIEW": {
+        "url": "https://www.uspto.gov/ip-policy/economic-research/patentsview",
+        "markers": ["Granted Patent Disambiguated Data", "Pre-Grant Publication Disambiguated Data", "December 31, 2025"],
+    },
     "USPTO_GRANT_BIBLIOGRAPHIC": {
         "url": "https://developer.uspto.gov/product/patent-grant-bibliographic-datasgml",
         "markers": ["issued weekly (Tuesdays)", "January 1, 1976 to present"],
