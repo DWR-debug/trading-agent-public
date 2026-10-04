@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T18:15:19.611701+00:00",
+  "generated_at_utc": "2026-10-04T18:23:30.575055+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1607,7 +1607,7 @@
         "source_id": "FCC_ULS"
       }
     ],
-    "receipt_fingerprint": "673444099b511f81f18dbe79cd5cfe0abcfee8d1db13dad7d158a34ef89230ee",
+    "receipt_fingerprint": "7f816cf26ebe97ca2ebe56adc765bcc463445dc1b22b5eb66ac270f130242292",
     "receipt_type": "q179_q184_pit_readiness_r1",
     "safety": {
       "AUTOMATIC_PROMOTION": false,
@@ -1638,7 +1638,7 @@
       },
       "https://catalog.data.gov/dataset/dol-enforcement-data-inspection": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "04ede44faa7bc36672b8413853706ef6bb66b28d57e8ac0638b2fedf98f6a069",
+        "content_sha256": "c3f48cc79cb08f5cdb4023523a1d8af6d4e05742e0ee217714a4b1c7e08aaacb",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://catalog.data.gov/dataset/dol-enforcement-data-inspection"
@@ -1652,7 +1652,7 @@
       },
       "https://ferc.gov/what-elibrary": {
         "classification": "RUNNER_ACCESS_BLOCKED",
-        "content_sha256": "15049e5827b68f458058af1a364fc2bc73a389ac9323bba5ced20d9d315da38e",
+        "content_sha256": "436e25c0f9d8bf27f09aadef4024f7d71b710d912f2926876cf92c63187e5043",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -1663,14 +1663,14 @@
       },
       "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "3af6355a20cb95e2d89deb9188c3a2f5d0c5798af5bbee1a8cbcf3a9d0b6e190",
+        "content_sha256": "d2b3209bb406bf0e9a9ff93bab189910b73c71e98bce6a0a54833bb351d05188",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4"
       },
       "https://www.ferc.gov/about/what-ferc/frequently-asked-questions-faqs/documents-and-filing/elibrary": {
         "classification": "RUNNER_ACCESS_BLOCKED",
-        "content_sha256": "a981c39c0a39e93945878912e88972c7b339e537ca988d5b22ad58b959b55cd3",
+        "content_sha256": "d28c7e58fe0bb7f5daf8aaa753d953499de1778f447c50598a8de7d9a648bb8d",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -1681,21 +1681,21 @@
       },
       "https://www.nhtsa.gov/nhtsa-datasets-and-apis": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "153302f82665996e8447ad4cd4dc0706feebb52639d0c3f05b329e9cd2d79921",
+        "content_sha256": "26a3eefe51d88d25e86cbceb4299f74c4d45c0f2c206001001df2eca32df11d3",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis"
       },
       "https://www.ntsb.gov/Pages/CAROL-Data-Dictionary.aspx": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "187e8f884c3b486cf2c14b67073d5b731b788c8757c816c9b70d906735d011cb",
+        "content_sha256": "58d9d5198dcf8257b123ac5df3aa5a23deaff8dc97d6bb998f76210d11e7f1e2",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://www.ntsb.gov/Pages/CAROL-Data-Dictionary.aspx"
       },
       "https://www.ntsb.gov/safety/data/Pages/Data_Stats.aspx": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "64109f51360cb684cca6963af750f3fa3bfca3b7456768b86da3b68c06ea2c37",
+        "content_sha256": "fd285ca871dcae02494133fdddc406f1176eda8564d5c0a4feb22f9a048b5559",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://www.ntsb.gov/safety/data/Pages/Data_Stats.aspx"
@@ -2291,7 +2291,7 @@
         "headRefName": "research/q198-pit-clock-census-2026-10-04",
         "number": 1062,
         "title": "RESEARCH: add historical Q198 Public Inspection PIT census",
-        "updatedAt": "2026-10-04T18:14:20Z",
+        "updatedAt": "2026-10-04T18:21:50Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/pull/1062"
       },
       {
@@ -2304,6 +2304,26 @@
       }
     ],
     "recent_commits": [
+      {
+        "message": "FIX: restore clean orchestration and evidence paths",
+        "sha": "917e50ab804c02aa9430acbc730881a20ddb8d3c",
+        "timestamp": "2026-10-04T20:23:18+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "67ae7320c322806f488789af856e0adeac120be7",
+        "timestamp": "2026-10-04T18:20:03Z"
+      },
+      {
+        "message": "EVIDENCE: persist Q169 R4 independent reproduction receipt",
+        "sha": "8a6530105a838370e36ddf0313f39e97a8f2a654",
+        "timestamp": "2026-10-04T18:19:36Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b7ec4bbd9805087c88d88e34c5166fbd41977428",
+        "timestamp": "2026-10-04T18:15:22Z"
+      },
       {
         "message": "OPS: record Groq API key smoke test",
         "sha": "1b04694df18477d12d14ef3c1725cdab16371222",
@@ -2323,26 +2343,6 @@
         "message": "OPS: synchronize Android phone fleet receipts",
         "sha": "ef7bbf99ea0a52cde400b8fe7458e1b2b381810d",
         "timestamp": "2026-10-04T18:11:36Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "3d0edb290bbdfc24ff84cfc551743d2c6d61bfcc",
-        "timestamp": "2026-10-04T18:02:28Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f376d8f5eb0a3e4b5538ac79be20581dd51fdf42",
-        "timestamp": "2026-10-04T18:00:34Z"
-      },
-      {
-        "message": "OPS: record verified Q197-Q201 source readiness",
-        "sha": "adfbeef9d88289ee0d9aeb9e4096350e2d293f89",
-        "timestamp": "2026-10-04T20:00:18+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "5760d317160077f099576450b40d4b3552a2d888",
-        "timestamp": "2026-10-04T17:59:45Z"
       }
     ]
   },
@@ -2412,7 +2412,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1b04694df18477d12d14ef3c1725cdab16371222",
+  "source_master_sha": "917e50ab804c02aa9430acbc730881a20ddb8d3c",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2526,6 +2526,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37223700497"
+    "run_id": "37224249477"
   }
 }
