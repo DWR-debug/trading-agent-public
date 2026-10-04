@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T20:36:01.504031+00:00",
+  "generated_at_utc": "2026-10-04T20:48:12.990566+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2620,6 +2620,16 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: harden Runner C night queue and free-mode AI attestation",
+        "sha": "e226c479a8b2bf4756a86b74c0be709b0a600fa7",
+        "timestamp": "2026-10-04T22:47:59+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "989b8be69b8b911864c0c881732c9b6666832e24",
+        "timestamp": "2026-10-04T20:36:03Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "933b9f64286ae6f8fa796b026fbb92d1b05b5680",
         "timestamp": "2026-10-04T20:35:50Z"
@@ -2648,16 +2658,6 @@
         "message": "OPS: record AI worker state",
         "sha": "35b109d4eaf450e651d22bd958e613de1b0b40dc",
         "timestamp": "2026-10-04T20:34:51Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "70fbd01c2a8f4d4012744d3bdbd02ac13d045763",
-        "timestamp": "2026-10-04T20:34:35Z"
-      },
-      {
-        "message": "OPS: record Groq free adversarial worker state",
-        "sha": "776929a5d88770300132f2be8ed5ba5ab403ddcc",
-        "timestamp": "2026-10-04T20:34:30Z"
       }
     ]
   },
@@ -2742,7 +2742,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "933b9f64286ae6f8fa796b026fbb92d1b05b5680",
+  "source_master_sha": "e226c479a8b2bf4756a86b74c0be709b0a600fa7",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2856,6 +2856,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37232701879"
+    "run_id": "37233486187"
   }
 }
