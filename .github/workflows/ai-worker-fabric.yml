@@ -14,6 +14,10 @@ on:
       - ".github/workflows/self-hosted-continuous-qa.yml"
   # OpenRouter free is deliberately event-driven. Repeating unchanged research
   # prompts on a timer wastes scarce free capacity without increasing information.
+  workflow_run:
+    workflows:
+      - Q187-Q192 Source Feasibility
+    types: [completed]
   workflow_dispatch:
     inputs:
       task_id:
@@ -59,6 +63,8 @@ jobs:
           EVENT_BEFORE: ${{ github.event.before }}
           GITHUB_SHA: ${{ github.sha }}
           TASK_ID: ${{ github.event.inputs.task_id }}
+          WORKFLOW_RUN_NAME: ${{ github.event.workflow_run.name }}
+          WORKFLOW_RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
         run: |
           set -euo pipefail
           python - <<'PY'
@@ -72,6 +78,13 @@ jobs:
               if not task:
                   raise SystemExit('workflow_dispatch requires task_id')
               tasks = [task]
+          elif os.environ['EVENT_NAME'] == 'workflow_run':
+              name = os.environ.get('WORKFLOW_RUN_NAME', '').strip()
+              conclusion = os.environ.get('WORKFLOW_RUN_CONCLUSION', '').strip()
+              if name == 'Q187-Q192 Source Feasibility' and conclusion == 'success':
+                  tasks = ['AI-2026-10-04-Q187-Q192-ADVERSARIAL']
+              else:
+                  tasks = []
           else:
               before = os.environ.get('EVENT_BEFORE', '')
               after = os.environ['GITHUB_SHA']
