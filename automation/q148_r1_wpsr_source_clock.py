@@ -273,7 +273,9 @@ def schedule_contract() -> dict[str, object]:
 
 
 def revision_notice_markers(body: bytes) -> dict[str, bool]:
-    text = re.sub(r"\s+", " ", body.decode("utf-8", errors="replace")).casefold()
+    parser = LinkTextParser()
+    parser.feed(body.decode("utf-8", errors="replace"))
+    text = re.sub(r"\s+", " ", parser.text).casefold()
     return {
         "dated_august_28_2026": bool(re.search(r"\baugust 28, 2026\b", text)),
         "mentions_august_26_issue": bool(re.search(r"\bon wednesday, august 26\b", text)),
