@@ -963,7 +963,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T10:41:48.109842+00:00",
+  "generated_at_utc": "2026-10-04T10:42:16.216264+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1508,6 +1508,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOVERNANCE: record current master versus code baseline",
+        "sha": "bad5f5c43773b72baf4d1a49d2d829c0be4c6bb7",
+        "timestamp": "2026-10-04T12:42:04+02:00"
+      },
+      {
+        "message": "OPS: distinguish current master from technical code snapshot",
+        "sha": "3c0adcbf6c9d45e63afb6ae08332e115ce59559f",
+        "timestamp": "2026-10-04T12:42:02+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "11de84b03c0693e620dee3a18a29c11ca3c741a0",
+        "timestamp": "2026-10-04T10:41:50Z"
+      },
+      {
         "message": "GOVERNANCE: extend prior-art manifest with current agent benchmarks",
         "sha": "c01de195e6be91e1e1ece432315d4831697dd68b",
         "timestamp": "2026-10-04T12:41:36+02:00"
@@ -1531,21 +1546,6 @@
         "message": "GOVERNANCE: record external agent prior-art decision basis",
         "sha": "bacf64a3f80c54b4fc9384ff5ca563b36b269625",
         "timestamp": "2026-10-04T12:41:05+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "11dc538afe790956f2a6f8625bf4f1bfa15504bf",
-        "timestamp": "2026-10-04T10:40:54Z"
-      },
-      {
-        "message": "GOVERNANCE: correct prior-art source provenance",
-        "sha": "aae45cf2dd8d4ff13a91ce3479b867e1c64df982",
-        "timestamp": "2026-10-04T12:40:37+02:00"
-      },
-      {
-        "message": "RESEARCH: correct prior-art source provenance",
-        "sha": "be71f1ed88b3138d370a87dd5db0ecf4add1b585",
-        "timestamp": "2026-10-04T12:40:35+02:00"
       }
     ]
   },
@@ -1615,7 +1615,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c01de195e6be91e1e1ece432315d4831697dd68b",
+  "source_master_sha": "bad5f5c43773b72baf4d1a49d2d829c0be4c6bb7",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -1729,6 +1729,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37196184686"
+    "run_id": "37196213452"
   }
 }
