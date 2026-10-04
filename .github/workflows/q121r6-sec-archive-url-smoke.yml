@@ -1,0 +1,50 @@
+name: Q121-R6 SEC Archive URL Smoke
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - automation/q121r3_sec_form_index_reverse_issuer.py
+      - automation/q121r6_sec_acceptance_time_compiler.py
+      - automation/q121r6_sec_archive_url_smoke.py
+      - .github/workflows/q121r6-sec-archive-url-smoke.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: q121r6-sec-archive-url-smoke
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    if: github.repository == "DWR-debug/trading-agent-public"
+    strategy:
+      fail-fast: false
+      matrix:
+        lane: [local_reproduction, data_qa]
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          clean: true
+          fetch-depth: 1
+      - name: Setup Python
+        shell: cmd
+        run: python --version
+      - name: Run bounded URL smoke
+        shell: cmd
+        run: python -m automation.q121r6_sec_archive_url_smoke
+      - name: Record lane boundary
+        if: always()
+        shell: cmd
+        run: echo Q121R6_ARCHIVE_URL_SMOKE_LANE=${{ matrix.lane }} SOURCE_COMMIT=${{ github.sha }}
+        env:
+          PAPER_ONLY: "True"
+          LIVE_TRADING_ENABLED: "False"
+          ORDERS_ENABLED: "False"
+          AUTOMATIC_PROMOTION: "False"
