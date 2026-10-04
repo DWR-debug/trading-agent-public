@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trading Agent — Resource Dashboard</title>
+  <meta name="description" content="Operational resource and research dashboard for the Trading Agent OS.">
+  <style>
+    :root { color-scheme: light dark; --border: rgba(127,127,127,.28); --muted: #707070; }
+    * { box-sizing: border-box; }
+    body { margin:0; font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif; background:Canvas; color:CanvasText; }
+    main { max-width:1180px; margin:0 auto; padding:24px; }
+    header { display:flex; gap:16px; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; }
+    h1 { margin:0 0 4px; font-size:28px; } h2 { margin:0 0 12px; font-size:18px; }
+    .muted { color:var(--muted); } .actions { display:flex; gap:8px; flex-wrap:wrap; }
+    button,a.button { border:1px solid var(--border); border-radius:9px; padding:9px 12px; background:ButtonFace; color:ButtonText; text-decoration:none; cursor:pointer; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px; margin-top:18px; }
+    .card { border:1px solid var(--border); border-radius:12px; padding:16px; background:color-mix(in srgb, Canvas 96%, CanvasText 4%); }
+    .wide { grid-column:1/-1; } table { width:100%; border-collapse:collapse; } th,td { text-align:left; vertical-align:top; padding:9px; border-bottom:1px solid var(--border); }
+    code { word-break:break-all; } .badge { display:inline-block; border:1px solid var(--border); border-radius:999px; padding:2px 8px; font-size:12px; margin:2px 4px 2px 0; }
+    ul { padding-left:20px; } .error { border:1px solid #b00; border-radius:10px; padding:12px; } footer { margin-top:18px; font-size:12px; }
+  </style>
+</head>
+<body>
+<main>
+  <header><div><h1>Trading Agent — Resource Dashboard</h1><div id="meta" class="muted">Loading snapshot…</div></div>
+    <div class="actions"><button id="refresh">Refresh snapshot</button>
+      <a class="button" id="update" target="_blank" rel="noopener" href="https://github.com/DWR-debug/trading-agent-public/actions/workflows/resource-dashboard-update.yml">Update now</a>
+    </div></header>
+  <div id="error" hidden class="error" style="margin-top:16px"></div>
+  <section id="app" class="grid" hidden>
+    <article class="card"><h2>Operational state</h2><div id="state"></div></article>
+    <article class="card"><h2>Safety boundary</h2><div id="safety"></div></article>
+    <article class="card wide"><h2>Resources</h2><div id="resources"></div></article>
+    <article class="card wide"><h2>Research frontier</h2><div id="research"></div></article>
+  </section>
+  <footer class="muted">Operational snapshot only. Routing availability is not execution evidence; AI output never authorizes performance or promotion.</footer>
+</main>
+<script>
+const WORKFLOW_URL = "https://github.com/DWR-debug/trading-agent-public/actions/workflows/resource-dashboard-update.yml";
+const $ = id => document.getElementById(id);
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function render(data){
+  $("meta").innerHTML = "Generated <code>"+esc(data.generated_at_utc)+"</code> · master <code>"+esc(data.master_sha)+"</code> · status snapshot <code>"+esc(data.operational_snapshot_sha)+"</code>";
+  $("state").innerHTML = [["Master",data.master_sha],["Status snapshot",data.operational_snapshot_sha],["Dashboard",data.dashboard_policy.daily_update_utc+" UTC daily + manual"],["Local AI",data.resource_policy.local_ai_trigger]].map(([k,v])=>"<div><strong>"+esc(k)+":</strong> <code>"+esc(v)+"</code></div>").join("");
+  const safety=data.scientific_boundary||{}; $("safety").innerHTML=Object.entries(safety).map(([k,v])=>"<span class='badge'>"+esc(k)+" = "+esc(v)+"</span>").join("");
+  $("resources").innerHTML="<table><thead><tr><th>Resource</th><th>Role</th><th>Cadence</th><th>Authority</th></tr></thead><tbody>"+data.resources.map(r=>"<tr><td><strong>"+esc(r.name)+"</strong></td><td>"+esc(r.role)+"</td><td>"+esc(r.cadence)+"</td><td>"+esc(r.authority)+"</td></tr>").join("")+"</tbody></table>";
+  const rc=data.current_research||{}; const highlights=(rc.highlights||[]).map(x=>"<li>"+esc(x)+"</li>").join("");
+  $("research").innerHTML="<div><strong>Latest formal result:</strong> "+esc(rc.latest_formal_result)+"</div><ul>"+highlights+"</ul>";
+  $("app").hidden=false;
+}
+async function load(){ $("error").hidden=true; try{const r=await fetch("dashboard_data.json?ts="+Date.now(),{cache:"no-store"}); if(!r.ok) throw new Error("HTTP "+r.status); render(await r.json());}catch(e){$("error").textContent="Dashboard snapshot could not be loaded: "+e.message; $("error").hidden=false;} }
+$("refresh").addEventListener("click",load); $("update").href=WORKFLOW_URL; load();
+</script>
+</body>
+</html>
