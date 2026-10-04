@@ -1,0 +1,112 @@
+name: Q202-Q204 Information Timing Feasibility
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "automation/q202_q204_information_timing_feasibility.py"
+      - "research/candidates/orthogonal_candidate_specs_2026-10-04.json"
+      - "docs/research_design/Q202_Q204_INFORMATION_TIMING_WAVE_2026-10-04.md"
+      - "tests/test_q202_q204_information_timing_feasibility.py"
+      - ".github/workflows/q202-q204-information-timing-feasibility.yml"
+  schedule:
+    - cron: "37 */6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-q202-q204-information-timing-feasibility
+  cancel-in-progress: true
+
+jobs:
+  source_feasibility:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install test dependency
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pytest
+
+      - name: Run contract tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest -q tests/test_q202_q204_information_timing_feasibility.py
+
+      - name: Run bounded information-timing source probes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/runs/q202_q204_information_timing_feasibility
+          python -m automation.q202_q204_information_timing_feasibility \
+            --output "research/runs/q202_q204_information_timing_feasibility/${GITHUB_RUN_ID}.json"
+
+      - name: Validate non-authorizing boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path("research/runs/q202_q204_information_timing_feasibility")/f"{os.environ['GITHUB_RUN_ID']}.json"
+          d=json.loads(p.read_text(encoding="utf-8"))
+          assert d["status"] == "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED"
+          assert [x["candidate_id"] for x in d["candidate_results"]] == ["Q202","Q203","Q204"]
+          assert all(v is False for v in d["scientific_boundary"].values())
+          s=d["safety"]
+          assert s["paper_only"] is True
+          assert s["live_trading_enabled"] is False
+          assert s["orders_enabled"] is False
+          assert s["automatic_promotion"] is False
+          assert d["governance"]["performance_authorized"] is False
+          assert d["governance"]["historical_pit_validated"] is False
+          print("Q202_Q204_INFORMATION_TIMING_BOUNDARY_OK")
+          PY
+
+      - name: Persist latest receipt
+        if: success() && github.ref == 'refs/heads/master'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          input="research/runs/q202_q204_information_timing_feasibility/${GITHUB_RUN_ID}.json"
+          latest="research/evidence/q202_q204_information_timing_feasibility_latest.json"
+          cp "$input" "$latest"
+          for attempt in 1 2 3 4 5; do
+            current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+            if python automation/github_contents_publish.py \
+              --repository "$GITHUB_REPOSITORY" \
+              --branch master \
+              --base-sha "$current_sha" \
+              --file "$latest=$latest"; then
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          exit 1
+
+      - name: Upload receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q202-q204-information-timing-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q202_q204_information_timing_feasibility/
+          if-no-files-found: error
+          retention-days: 30
