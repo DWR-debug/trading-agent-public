@@ -1,0 +1,73 @@
+name: Q179-Q184 Source Feasibility
+
+on:
+  schedule:
+    - cron: "23 */1 * * *"
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [master]
+    paths:
+      - "automation/q179_q184_source_feasibility.py"
+      - "research/frontier/q179_q184_candidate_wave_2026_10_04.json"
+      - ".github/workflows/q179-q184-source-feasibility.yml"
+      - "tests/test_q179_q184_source_feasibility.py"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-q179-q184-source-feasibility
+  cancel-in-progress: true
+
+jobs:
+  source_feasibility:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Run Q179-Q184 source feasibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "research/runs/q179_q184_source_feasibility"
+          python -m automation.q179_q184_source_feasibility \
+            --output "research/runs/q179_q184_source_feasibility/${GITHUB_RUN_ID}.json"
+      - name: Validate source-feasibility boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path("research/runs/q179_q184_source_feasibility") / f"${os.environ['GITHUB_RUN_ID']}.json"
+          d=json.loads(p.read_text(encoding="utf-8"))
+          assert d["status"]=="DISCOVERY_SOURCE_FEASIBILITY_COMPLETED"
+          assert len(d["candidate_results"])==6
+          assert d["synthetic_mutation_checks"]["future_row_prefix_invariant"] is True
+          assert d["synthetic_mutation_checks"]["future_timestamp_excluded"] is True
+          assert d["synthetic_mutation_checks"]["no_search_dimension_present"] is True
+          assert all(v is False for v in d["scientific_boundary"].values())
+          assert d["safety"]["paper_only"] is True
+          assert d["safety"]["live_trading_enabled"] is False
+          assert d["safety"]["orders_enabled"] is False
+          assert d["safety"]["automatic_promotion"] is False
+          print("Q179_Q184_SOURCE_FEASIBILITY_OK")
+          PY
+      - name: Upload source-feasibility receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q179-q184-source-feasibility-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q179_q184_source_feasibility/
+          if-no-files-found: error
+          retention-days: 30
