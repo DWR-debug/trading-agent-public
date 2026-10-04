@@ -116,6 +116,8 @@ def generate(
     h06_pit = _load_json(ROOT / "research/evidence/h06_pit_independent_reproduction_2026_10_01.json", {})
     q129_receipt = _load_json(ROOT / "research/evidence/q129_independent_pit_2026_10_03.json", {})
     q133_q170_receipt = _load_json(ROOT / "research/evidence/q133_q170_source_feasibility_2026_10_03.json", {})
+    q148_r1_receipt = _load_json(ROOT / "research/evidence/q148_r1_wpsr_source_clock_latest.json", {})
+    q137_q144_micro_receipt = _load_json(ROOT / "research/evidence/q137_q144_micro_pit_latest.json", {})
     q171_q177_pit_receipt = _load_json(ROOT / "research/evidence/q171_q177_pit_readiness_2026_10_03.json", {})
     source_pit_frontier_outcomes = _load_json(ROOT / "research/evidence/source_pit_frontier_outcomes_2026_10_03.json", {})
     q121_r5_receipt = _load_json(ROOT / "research/evidence/q121r5_dual_index_population_reconciliation_2026_10_03.json", {})
@@ -722,6 +724,21 @@ def generate(
 - Source-feasibility run: **COMPLETED** on master; Q171, Q172, Q174–Q177 and Q178 passed source probes; Q173 remains license-blocked.
 - PIT-readiness: Q171 has a sample historical Common Crawl reconstruction receipt; Q174–Q177 have source-clock/version/revision semantics confirmed but are **not yet candidate-specific PIT-valid**.
 - No member of this wave is performance-authorized; no holdout selection, tuning, ranking, promotion or live execution is permitted.
+
+### Q148-R1 EIA WPSR Source/Clock Gate
+
+- Receipt status: **{q148_r1_receipt.get("status", "NOT_RECORDED")}**.
+- Persistent receipt fingerprint: `{q148_r1_receipt.get("receipt_fingerprint", "UNKNOWN")}`.
+- Frozen controls: **{len(q148_r1_receipt.get("controls", []))}**; exact first-public-availability timestamp proven = **{q148_r1_receipt.get("pit_boundary", {}).get("exact_first_public_availability_timestamp_proven", False)}**.
+- Candidate-specific revision lineage proven = **{q148_r1_receipt.get("pit_boundary", {}).get("candidate_specific_revision_lineage_proven", False)}**; same-day PIT safe = **{q148_r1_receipt.get("pit_boundary", {}).get("same_day_pit_safe", False)}**.
+- This gate is source/clock evidence only; performance, ranking, holdout selection, tuning, promotion and live execution remain closed.
+
+### Q137/Q144 Historical Micro-PIT
+
+- Micro-PIT receipt status: **{q137_q144_micro_receipt.get("status", "NOT_RECORDED")}**.
+- Q137 SEC all-symbols reconstructable = **{q137_q144_micro_receipt.get("q137_sec_submission_sample", {}).get("all_symbols_reconstructable", False)}**.
+- Q144 Wikimedia all-symbols reconstructable = **{q137_q144_micro_receipt.get("q144_wikimedia_pageview_sample", {}).get("all_symbols_reconstructable", False)}**.
+- This bounded sample produced feasibility evidence only; unresolved archive/entity coverage stays fail-closed.
 
 ### Q133–Q170 Public Source Frontier
 
