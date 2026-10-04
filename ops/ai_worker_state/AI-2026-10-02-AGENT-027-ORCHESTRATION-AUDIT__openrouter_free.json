@@ -18,6 +18,8 @@
     "reasons": []
   },
   "task_fingerprint": "1bcdfcf7eb7da953528ce0df9b65d39af546277c74e5a857cc04d4d0f1236112",
+  "context_fingerprint": "99e0aa19a7ba020a2215078aa1b6a5eab26683284136ffa3c7d4da70a474d5d4",
+  "observed_at_utc": "2026-10-04T16:21:08.125435Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -25,35 +27,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 27.286,
-  "stdout": "**Adversarial orchestration audit — worker material only**\n\n### Findings (hypotheses, not confirmed defects)\n\n1. **Truncated control files hide downstream gate logic.**  \n   `research_os_scheduler.py`, `research_hypothesis_compiler.py`, `autonomous_control_plane.py`, and both workflows cut off mid-statement. Anything past the truncation point (locking, routing, promotion, fallback clearing) is invisible to this review.  \n   *Why it matters:* hidden logic can bypass the forbidden-fields gates or duplicate work.  \n   *Cheap falsification:* CI rejects any `.py` file whose last non-empty line is an incomplete statement; dump full hashes and line counts.\n\n2. **`pit_prior()` converts post-hoc PIT verdicts to floats.**  \n   If the scheduler uses these scores to order or filter tracks, a post-hoc statistical property becomes a scheduling signal — a weak form of selection/look-ahead.  \n   *Why it matters:* tracks with \"high\" PIT get more compute, corrupting the ex-ante frontier.  \n   *Cheap falsification:* grep repo for `pit_prior(` ; assert usage is limited to audit logging / display, not routing or priority queues.\n\n3. **30-min scheduled run with `cancel-in-progress: false` and no visible lock.**  \n   Two concurrent runs can land on the same self-hosted runner; `current_operational_state.json` is a committed mutable artifact with no ETag/version check visible in the truncated code.  \n   *Why it matters:* stale-state writes, duplicate reproduction, race on registry updates.  \n   *Cheap falsification:* run two instances concurrently against a copy of the state file; assert divergence detector fires.\n\n4. **Lane mismatch between scheduler and CI matrix.**  \n   Scheduler lanes = `{deterministic_frontier, adversarial}`; workflow matrix = `{local_reproduction, data_qa}`.  \n   *Why it matters:* some tracks may run only via manual dispatch, outside CI visibility, or never at all.  \n   *Cheap falsification:* diff the two sets; require CI matrix to cover every declared lane or explicitly document the exception.\n\n5. **Free-text `next_gate` values risk duplicate work.**  \n   E.g., track H's gate is a long concatenation; if a parser splits on `+`, order sensitivity appears. Two tracks could resolve to the same gate string.  \n   *Why it matters:* duplicate reproduction, wasted resources, ambiguous provenance.  \n   *Cheap falsification:* enumerate all `next_gate` values across TRACKS + preregistrations; assert uniqueness under a canonical parser.\n\n6. **Failover guard uses GitHub Actions API with `per_page=10`.**  \n   If self-hosted runs exceed 10, the guard sees an incomplete list; `now=datetime.now(timezone.utc)` vs stored UTC timestamps can mismatch windows. Fallback is \"disabled\" but comment says manual dispatch remains — unclear who clears the flag.  \n   *Why it matters:* stale availability data → wrong failover decision or orphaned fallback.  \n   *Cheap falsification:* unit test guard with empty runs, 11 runs, and runs older than the window.\n\n7. **Source fingerprinting implementation unseen.**  \n   `research_os_evidence_bus` exports `fingerprint`, but its code isn't supplied. If fingerprint is filename-based rather than content-based, provenance breaks on silent source updates.  \n   *Why it matters:* replay attacks on source data look like reproducibility.  \n   *Cheap falsification:* mutate a source file content, assert fingerprint changes; pin source hashes in the registry.\n\n8. **Operational state JSON is both evidence and commit target.**  \n   `current_operational_state.json` lives in `research/evidence/` and is committed; writes aren't shown to be gated by a preregistration hash.  \n   *Why it matters:* evidence drift without traceability.  \n   *Cheap falsification:* CI check that any commit touching this file includes a hash match to the referenced preregistration.\n\n### Counterarguments / uncertainty\n\n- The truncated files may already contain locks/versioning I cannot see — treat findings as unverified until full files are inspected.\n- `pit_prior` may be reporting-only; grep will confirm or refute.\n- An external orchestrator outside this repo may handle dedup/locking; request its spec.\n- The `performance_authorization_allowed: false` flags in the state JSON are a good gate, but their enforcement point is not visible in the supplied snippets.\n\n### Concrete next actions (deterministic, cheap)\n\n1. `git ls-files -s` on the six files; CI gate: reject truncated Python.  \n2. `grep -r 'pit_prior('` — assert no routing usage.  \n3. Enumerate `next_gate` values; assert uniqueness.  \n4. Diff scheduler lanes vs CI matrix; document any gap.  \n5. Inspect `research_os_evidence_bus.py` fingerprint; assert content-hash.  \n6. Add file-lock / registry version to scheduler write path; test concurrent runs.  \n7. Unit-test failover guard with edge-case run lists.  \n8. Require preregistration hash in CI for evidence-state commits.\n\n### Engineering handoff\n\n- **Owner:** orchestration-audit owner (not this worker).  \n- **Gate:** all eight falsifications must pass before any promotion discussion.  \n- **Preserve:** disagreement —",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 12.654,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1791112986-ZWXdQCR6npWTnhFtgIzO",
-  "usage": {
-    "prompt_tokens": 5879,
-    "completion_tokens": 3200,
-    "total_tokens": 9079,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 2191,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
