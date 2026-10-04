@@ -64,7 +64,7 @@ def main() -> None:
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(f"RESOURCE_DASHBOARD_GENERATED master={payload["master_sha"]} path={OUT}")
+    print(f"RESOURCE_DASHBOARD_GENERATED master={payload['master_sha']} path={OUT}")
 
 if __name__ == "__main__":
     main()
