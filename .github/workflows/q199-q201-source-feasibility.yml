@@ -69,7 +69,7 @@ jobs:
           print('Q199_Q201_SOURCE_FEASIBILITY_OK')
           PY
       - name: Persist latest receipt
-        if: success()
+        if: success() && github.event_name != 'pull_request'
         env:
           GH_TOKEN: \${{ github.token }}
         shell: bash
