@@ -461,7 +461,7 @@ def test_scope_guard_does_not_treat_backslash_filename_as_directory_path(
     repo, contract = _scope_test_repo(tmp_path, monkeypatch)
     monkeypatch.setattr(
         "automation.agent_scope_guard.changed_paths",
-        lambda: ["docs\\\\escape.md"],
+        lambda: ["docs\\escape.md"],
     )
 
     with pytest.raises(SystemExit, match="AGENT_SCOPE_VIOLATION:"):
