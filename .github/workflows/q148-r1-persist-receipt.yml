@@ -73,6 +73,19 @@ jobs:
           print("Q148R1_RECEIPT=" + p["receipt_fingerprint"])
           PY
       - name: Publish validated evidence with race-safe fast-forward retries
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PUBLISH_MESSAGE: "EVIDENCE: persist Q148-R1 WPSR source clock receipt"
         run: |
           set -euo pipefail
-          python automation/github_contents_publish.py             --repository "${GITHUB_REPOSITORY}"             --branch master             --file "research/evidence/q148_r1_wpsr_source_clock_run_${GITHUB_RUN_ID}.json=research/evidence/q148_r1_wpsr_source_clock_run_${GITHUB_RUN_ID}.json"             --file "research/evidence/q148_r1_wpsr_source_clock_latest.json=research/evidence/q148_r1_wpsr_source_clock_latest.json"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin master --quiet
+            base_sha="$(git rev-parse origin/master)"
+            if python automation/github_contents_publish.py               --repository "${GITHUB_REPOSITORY}"               --branch master               --base-sha "${base_sha}"               --file "research/evidence/q148_r1_wpsr_source_clock_run_${GITHUB_RUN_ID}.json=research/evidence/q148_r1_wpsr_source_clock_run_${GITHUB_RUN_ID}.json"               --file "research/evidence/q148_r1_wpsr_source_clock_latest.json=research/evidence/q148_r1_wpsr_source_clock_latest.json"; then
+              exit 0
+            fi
+            sleep "${attempt}"
+          done
+          echo "::error::Q148-R1 evidence publication failed after retries"
+          exit 1
