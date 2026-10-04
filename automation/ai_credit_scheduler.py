@@ -311,7 +311,7 @@ def schedule_tasks(
             }
         )
 
-    return {
+    result = {
         "schema_version": 1,
         "generated_at_utc": now.isoformat().replace("+00:00", "Z"),
         "provider_availability": {
@@ -329,7 +329,19 @@ def schedule_tasks(
         "policy_is_non_authorizing": True,
         "paid_usage_allowed": False,
         "scientific_evidence_created": False,
+        "decision_fingerprint": None,
     }
+    stable = {
+        "provider_availability": result["provider_availability"],
+        "task_assignments": result["task_assignments"],
+        "policy_is_non_authorizing": result["policy_is_non_authorizing"],
+        "paid_usage_allowed": result["paid_usage_allowed"],
+        "scientific_evidence_created": result["scientific_evidence_created"],
+    }
+    result["decision_fingerprint"] = __import__("hashlib").sha256(
+        json.dumps(stable, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+    return result
 
 
 def main() -> int:
