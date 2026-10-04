@@ -208,6 +208,7 @@ ACTIVE_WORKFLOWS = {
     "post-pass-independent-replication.yml",
     "q179-q184-source-feasibility.yml",
     "q179-q184-pit-readiness.yml",
+    "q182-ferc-self-hosted-access-probe.yml",
 }
 
 REQUIRED_FILES = (
