@@ -153,7 +153,7 @@ def parse_archive_metadata(body: bytes) -> tuple[str, str, str]:
 
 def normalize_label(value: str) -> str:
     value = value.replace("\ufeff", "")
-    value = re.sub(r"[¹²³⁴⁵⁶⁷⁸⁹⁰]+$", "", value)
+    value = re.sub(r"[0-9¹²³⁴⁵⁶⁷⁸⁹⁰]+$", "", value)
     value = re.sub(r"[\\s.]+", " ", value)
     return value.strip().casefold()
 
