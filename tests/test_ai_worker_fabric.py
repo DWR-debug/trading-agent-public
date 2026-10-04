@@ -345,3 +345,20 @@ def test_ai_workflow_run_triggers_only_after_successful_q187_source_workflow():
     assert "WORKFLOW_RUN_CONCLUSION" in text
     assert "conclusion == 'success'" in text
     assert "tasks = ['AI-2026-10-04-Q187-Q192-ADVERSARIAL']" in text
+
+
+def test_ai_context_fingerprint_contract_is_stable_and_task_specific() -> None:
+    text = (Path(__file__).parents[1] / "automation" / "ai_worker_fabric.py").read_text(encoding="utf-8")
+    assert "CONTEXT_FINGERPRINT_FILES" in text
+    assert "def context_fingerprint" in text
+    assert "--context-fingerprint" in text
+    assert "context_fingerprint(task)" in text
+    assert "observed_at_utc" in text
+
+
+def test_ai_workflow_deduplicates_unchanged_automatic_context() -> None:
+    text = (Path(__file__).parents[1] / ".github" / "workflows" / "ai-worker-fabric.yml").read_text(encoding="utf-8")
+    assert "AI_TASK_DEDUPED" in text
+    assert "context-fingerprint" in text
+    assert "ops/ai_worker_state" in text
+    assert "EVENT_NAME' != 'workflow_dispatch'" in text
