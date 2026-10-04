@@ -7,6 +7,12 @@ on:
       - ".github/workflows/q182-ferc-self-hosted-access-probe.yml"
       - "automation/q182_ferc_self_hosted_access_probe.py"
       - "tests/test_q182_ferc_self_hosted_access_probe.py"
+  push:
+    branches: [master]
+    paths:
+      - ".github/workflows/q182-ferc-self-hosted-access-probe.yml"
+      - "automation/q182_ferc_self_hosted_access_probe.py"
+      - "tests/test_q182_ferc_self_hosted_access_probe.py"
 
 permissions:
   contents: read
