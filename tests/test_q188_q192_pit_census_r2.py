@@ -14,7 +14,7 @@ def test_q188_q192_pit_census_r2_has_five_candidates():
 
 
 def test_q188_q192_pit_census_r2_preserves_pit_prohibitions():
-    text = (ROOT / "automation/q188_q192_pit_census_r1.py").read_text(encoding="utf-8")
+    text = (ROOT / "automation/q188_q192_pit_census_r2.py").read_text(encoding="utf-8")
     for marker in (
         "first-public-observation",
         "revision",
@@ -27,7 +27,7 @@ def test_q188_q192_pit_census_r2_preserves_pit_prohibitions():
 
 
 def test_q188_q192_r2_uses_machine_readable_source_surfaces():
-    text = (ROOT / "automation/q188_q192_pit_census_r1.py").read_text(encoding="utf-8")
+    text = (ROOT / "automation/q188_q192_pit_census_r2.py").read_text(encoding="utf-8")
     assert "saferproducts.gov/RestWebServices/Recall" in text
     assert "api.fda.gov/drug/shortages.json" in text
     assert "api.crossref.org/works" in text
@@ -35,9 +35,9 @@ def test_q188_q192_r2_uses_machine_readable_source_surfaces():
 
 
 def test_q189_accepts_cpsc_json_array_shape() -> None:
-    text = (ROOT / "automation/q188_q192_pit_census_r1.py").read_text(encoding="utf-8")
-    assert "if isinstance(payload, list)" in text
-    assert "elif isinstance(payload, dict)" in text
+    text = (ROOT / "automation/q188_q192_pit_census_r2.py").read_text(encoding="utf-8")
+    assert "if isinstance(payload, list):" in text
+    assert "elif isinstance(payload, dict):" in text
 
 
 def test_q188_q192_r2_uses_correct_response_shapes() -> None:
