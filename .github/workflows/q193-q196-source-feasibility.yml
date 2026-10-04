@@ -41,6 +41,16 @@ jobs:
           set -euo pipefail
           mkdir -p research/runs/q193_q196_source_feasibility
           python -m automation.q193_q196_source_feasibility --output research/runs/q193_q196_source_feasibility/${GITHUB_RUN_ID}.json
+      - name: Explicit governance boundary
+        shell: bash
+        run: |
+          echo 'performance=false'
+          echo 'holdout_selection=false'
+          echo 'ranking=false'
+          echo 'parameter_search=false'
+          echo 'automatic_promotion=false'
+          echo 'live_execution=false'
+
       - name: Validate non-authorizing boundary
         shell: bash
         run: |
