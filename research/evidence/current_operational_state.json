@@ -925,7 +925,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T00:44:22.202189+00:00",
+  "generated_at_utc": "2026-10-04T00:44:40.899077+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1470,6 +1470,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9e19a74d6b1224dddf6f4ac22a0b5b412a8e3253",
+        "timestamp": "2026-10-04T00:44:24Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "a766a06d3a8c74a4c96a46b2e0a62c7d86d11647",
+        "timestamp": "2026-10-04T00:44:23Z"
+      },
+      {
         "message": "FIX: make Q148-R1 evidence publication retry the master race",
         "sha": "ad2b19f6a5c426285007d6b87af9807c65fd83a3",
         "timestamp": "2026-10-04T02:44:19+02:00"
@@ -1498,16 +1508,6 @@
         "message": "OPS: isolate manual Q121-R6 runs from push cancellation",
         "sha": "1baba319b28d4e650f33ef607fbfeec11e6fdcd4",
         "timestamp": "2026-10-04T02:43:28+02:00"
-      },
-      {
-        "message": "TEST: lock Q121-R6 to canonical accession parser",
-        "sha": "c746911cc9bd0aa1b3ec26f0de4f8db1678a9051",
-        "timestamp": "2026-10-04T02:43:25+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0ea868065e2e7595b1c5ef3a01739ef07bb8aa58",
-        "timestamp": "2026-10-04T00:42:59Z"
       }
     ]
   },
@@ -1577,7 +1577,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ad2b19f6a5c426285007d6b87af9807c65fd83a3",
+  "source_master_sha": "9e19a74d6b1224dddf6f4ac22a0b5b412a8e3253",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -1691,6 +1691,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37165855055"
+    "run_id": "37165861260"
   }
 }
