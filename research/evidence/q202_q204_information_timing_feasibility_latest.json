@@ -1,0 +1,194 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-04-Q202-Q204-INFORMATION-TIMING-FEASIBILITY",
+  "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
+  "generated_at_utc": "2026-10-04T21:58:32Z",
+  "fixed_routes": {
+    "Q202_CT_STUDY": "https://clinicaltrials.gov/api/v2/studies/NCT00125528",
+    "Q202_CT_HISTORY": "https://clinicaltrials.gov/study/NCT00125528?a=2&tab=history",
+    "Q203_SEC_SUBMISSIONS": "https://data.sec.gov/submissions/CIK0000789019.json",
+    "Q203_SEC_COMPANYFACTS": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000789019.json",
+    "Q204_FR_20200110": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-01-10&per_page=1000",
+    "Q204_FR_20201216": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-12-16&per_page=1000"
+  },
+  "source_results": {
+    "Q202": {
+      "study": {
+        "url": "https://clinicaltrials.gov/api/v2/studies/NCT00125528",
+        "http_status": 200,
+        "reachable": true,
+        "missing_markers": [],
+        "content_sha256": "d9ae42a4f31df44d2e163ff1a3964474fc6446b2080c57e3e94311f2f21aefcb",
+        "scientific_boundary": {
+          "performance": false,
+          "holdout_selection": false,
+          "ranking": false,
+          "selection": false,
+          "parameter_search": false,
+          "threshold_search": false,
+          "horizon_search": false,
+          "asset_search": false,
+          "variant_search": false,
+          "promotion": false,
+          "live_execution": false
+        }
+      },
+      "history_route": {
+        "url": "https://clinicaltrials.gov/study/NCT00125528?a=2&tab=history",
+        "http_status": 200,
+        "reachable": true,
+        "missing_markers": [
+          "Study Record Versions"
+        ],
+        "content_sha256": "e5bfa50054351e7adaf6f79e3d42273cc157862e5e652c9a13ca737c02132337",
+        "scientific_boundary": {
+          "performance": false,
+          "holdout_selection": false,
+          "ranking": false,
+          "selection": false,
+          "parameter_search": false,
+          "threshold_search": false,
+          "horizon_search": false,
+          "asset_search": false,
+          "variant_search": false,
+          "promotion": false,
+          "live_execution": false
+        }
+      }
+    },
+    "Q203": {
+      "submissions": {
+        "url": "https://data.sec.gov/submissions/CIK0000789019.json",
+        "http_status": 200,
+        "reachable": true,
+        "missing_markers": [],
+        "content_sha256": "2484a2a3b5677d892a1b25af573ce4eda7b6f449f5eda41bac6b3f106dc3139c",
+        "scientific_boundary": {
+          "performance": false,
+          "holdout_selection": false,
+          "ranking": false,
+          "selection": false,
+          "parameter_search": false,
+          "threshold_search": false,
+          "horizon_search": false,
+          "asset_search": false,
+          "variant_search": false,
+          "promotion": false,
+          "live_execution": false
+        }
+      },
+      "companyfacts": {
+        "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000789019.json",
+        "http_status": 200,
+        "reachable": true,
+        "missing_markers": [],
+        "content_sha256": "f8aae2965b20ad0df44bdf7ccbedf797d275b6b8dc030154a7a311361bb7246f",
+        "scientific_boundary": {
+          "performance": false,
+          "holdout_selection": false,
+          "ranking": false,
+          "selection": false,
+          "parameter_search": false,
+          "threshold_search": false,
+          "horizon_search": false,
+          "asset_search": false,
+          "variant_search": false,
+          "promotion": false,
+          "live_execution": false
+        }
+      }
+    },
+    "Q204": {
+      "2020-01-10": {
+        "url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-01-10&per_page=1000",
+        "http_status": 200,
+        "api_count": 66,
+        "records": 66,
+        "records_with_filed_timestamp": 66,
+        "records_with_publication_date": 66,
+        "missing_filed_timestamp_count": 0,
+        "missing_publication_date_count": 0,
+        "correction_or_withdrawal_note_count": 1,
+        "content_sha256": "e4f7eed69c7eb89d5204618f9603e282b39b6b975bc827765980b1a329df202d",
+        "scientific_boundary": {
+          "performance": false,
+          "holdout_selection": false,
+          "ranking": false,
+          "selection": false,
+          "parameter_search": false,
+          "threshold_search": false,
+          "horizon_search": false,
+          "asset_search": false,
+          "variant_search": false,
+          "promotion": false,
+          "live_execution": false
+        }
+      },
+      "2020-12-16": {
+        "url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-12-16&per_page=1000",
+        "http_status": 200,
+        "api_count": 124,
+        "records": 124,
+        "records_with_filed_timestamp": 123,
+        "records_with_publication_date": 123,
+        "missing_filed_timestamp_count": 1,
+        "missing_publication_date_count": 1,
+        "correction_or_withdrawal_note_count": 2,
+        "content_sha256": "e75229453159cb0e333fd5e84a8484c0a9e222d400548fe9bcc73c7b27d5da12",
+        "scientific_boundary": {
+          "performance": false,
+          "holdout_selection": false,
+          "ranking": false,
+          "selection": false,
+          "parameter_search": false,
+          "threshold_search": false,
+          "horizon_search": false,
+          "asset_search": false,
+          "variant_search": false,
+          "promotion": false,
+          "live_execution": false
+        }
+      }
+    }
+  },
+  "candidate_results": [
+    {
+      "candidate_id": "Q202",
+      "status": "SOURCE_COMPONENT_READY"
+    },
+    {
+      "candidate_id": "Q203",
+      "status": "SOURCE_COMPONENT_READY"
+    },
+    {
+      "candidate_id": "Q204",
+      "status": "SOURCE_COMPONENT_READY"
+    }
+  ],
+  "governance": {
+    "historical_pit_validated": false,
+    "performance_authorized": false,
+    "promotion_authorized": false,
+    "live_execution": false
+  },
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "receipt_fingerprint": "dc482048d1123b333699f4cfddc7b47647dd539146511e95617c7ccacd9399c5"
+}
