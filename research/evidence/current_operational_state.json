@@ -393,7 +393,7 @@
         "class": "information_absence_financing_and_public_arrival_latency",
         "code": "FRONTIER-Q202-Q204",
         "design_document": "docs/research_design/Q202_Q204_INFORMATION_TIMING_WAVE_2026-10-04.md",
-        "issue_number": null,
+        "issue_number": 1073,
         "note": "Literature-derived orthogonal candidates covering delayed mandatory disclosure, procurement-to-financing transmission, and public information arrival latency. Discovery/source feasibility only; historical PIT, performance, promotion and live execution remain closed.",
         "parent_code": "FRONTIER-Q187-Q192",
         "performance_authorization_allowed": false,
@@ -1011,7 +1011,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T22:18:38.765878+00:00",
+  "generated_at_utc": "2026-10-04T22:27:13.453121+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -3699,41 +3699,28 @@
     ],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "fix/orchestration-health-2026-10-04-r2",
-        "number": 1071,
-        "title": "FIX: make Q197/Q199 receipt commands actionlint-clean",
-        "updatedAt": "2026-10-04T18:48:14Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1071"
-      },
-      {
-        "baseRefName": "master",
-        "headRefName": "fix/orchestration-health-2026-10-04",
-        "number": 1070,
-        "title": "FIX: restore clean orchestration health and evidence paths",
-        "updatedAt": "2026-10-04T18:46:25Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1070"
-      },
-      {
-        "baseRefName": "master",
-        "headRefName": "fix/fail-closed-resource-gates-2026-10-04",
-        "number": 1069,
-        "title": "FIX: fail closed on unavailable Q198 historical archive",
-        "updatedAt": "2026-10-04T18:39:32Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1069"
-      },
-      {
-        "baseRefName": "master",
-        "headRefName": "fix/workflow-lint-2026-10-04",
-        "number": 1056,
-        "title": "FIX: restore clean workflow lint across research orchestration",
-        "updatedAt": "2026-10-04T17:59:35Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1056"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "GOV: link Q202-Q204 frontier to tracking issue",
+        "sha": "3e00e76fd927366c865c128f8476934909ecda23",
+        "timestamp": "2026-10-05T00:27:01+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "31b00d8a80155240792358cad0cad707d39429f9",
+        "timestamp": "2026-10-04T22:26:48Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "544d5b2ae6f052a6f01885f7b350d6739eebe77b",
+        "timestamp": "2026-10-04T22:19:17Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3a56f67146654734d544082587c626fe4647700b",
+        "timestamp": "2026-10-04T22:18:40Z"
+      },
       {
         "message": "OPS: re-trigger canonical current-status reconciliation",
         "sha": "57b2c5300d20c6e84fcab0ed61f15053aeaf8de9",
@@ -3753,26 +3740,6 @@
         "message": "GOV: integrate Q202-Q204 into next-gate and adversarial review DAG",
         "sha": "74f70f33f9687503e3e6a3cce8ee49dedb4f681e",
         "timestamp": "2026-10-05T00:17:51+02:00"
-      },
-      {
-        "message": "GOV: surface Q202-Q204 in canonical operational status",
-        "sha": "f20f6a1152b649e02e072b4de888aa90e23cc214",
-        "timestamp": "2026-10-05T00:17:20+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "bd564fef613ced0ef7df6bdac2589cc4422312d1",
-        "timestamp": "2026-10-04T22:17:14Z"
-      },
-      {
-        "message": "GOV: surface Q202-Q204 in canonical operational status",
-        "sha": "2537939ae49db7ed85421166781fc37e1975f1f3",
-        "timestamp": "2026-10-05T00:16:57+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b7722326e9f755686c5105ed68deed0f3d5adc89",
-        "timestamp": "2026-10-04T22:15:28Z"
       }
     ]
   },
@@ -3870,7 +3837,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "57b2c5300d20c6e84fcab0ed61f15053aeaf8de9",
+  "source_master_sha": "3e00e76fd927366c865c128f8476934909ecda23",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -3984,6 +3951,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37239516707"
+    "run_id": "37240058492"
   }
 }
