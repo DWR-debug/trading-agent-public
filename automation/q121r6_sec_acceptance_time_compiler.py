@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
 import threading
@@ -372,6 +373,11 @@ def compile_shard(
         "schema_version": "1.0",
         "task_id": "Q-2026-10-03-121R6-SEC-ACCEPTANCE-TIME-COMPILATION",
         "status": status,
+        "execution_identity": {
+            "workflow_run_id": os.environ.get("GITHUB_RUN_ID"),
+            "run_attempt": os.environ.get("GITHUB_RUN_ATTEMPT"),
+            "shard_index": shard_index,
+        },
         "shard_index": shard_index,
         "shard_count": shard_count,
         "population_count": len(population),
