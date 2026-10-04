@@ -234,6 +234,7 @@ ACTIVE_WORKFLOWS = {
     "priority-research-wave-dispatch.yml",
     "windows-runner-c-long-research.yml",
     "runner-c-prepit-falsification.yml",
+    "runner-c-long-duplicate-guard.yml",
 }
 
 REQUIRED_FILES = (
