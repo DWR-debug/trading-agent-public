@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T20:50:18.135684+00:00",
+  "generated_at_utc": "2026-10-04T20:54:13.858973+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2613,6 +2613,31 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: register current orchestration workflows in integrity allowlist",
+        "sha": "9d3df819ddfaa5e656cc3817c1cc428a961cb7b8",
+        "timestamp": "2026-10-04T22:54:00+02:00"
+      },
+      {
+        "message": "TEST: cover all four frontier rotation workpacks",
+        "sha": "93991fd635f6800002438af55bb45368943aeb82",
+        "timestamp": "2026-10-04T22:53:58+02:00"
+      },
+      {
+        "message": "TEST: align AI worker rotation and global trigger expectations",
+        "sha": "0d13cd6f4e14f8fdcd15a89c3fbd8247d84f9bf4",
+        "timestamp": "2026-10-04T22:53:55+02:00"
+      },
+      {
+        "message": "FIX: repair persistent orchestration contract JSON",
+        "sha": "b11d945b165cc897e6f9cd6dd5c6a4ca2231b7da",
+        "timestamp": "2026-10-04T22:53:53+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c32ea5d03624fd2543e08417a6228584211cfab4",
+        "timestamp": "2026-10-04T20:50:20Z"
+      },
+      {
         "message": "QA: pass push commit message through workflow environment",
         "sha": "5e1e3ee0bff1ab8a7fee99fbd209295169bbf871",
         "timestamp": "2026-10-04T22:50:05+02:00"
@@ -2626,31 +2651,6 @@
         "message": "QA: register dedicated Runner C label with actionlint",
         "sha": "3d36f06f86739e8212b875b205111bf5ef29ec9f",
         "timestamp": "2026-10-04T22:50:01+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "76a98621f28084da0baf979ff1446ab87e63e444",
-        "timestamp": "2026-10-04T20:49:10Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "573dec434c80677829fed57388be1a100faedc1a",
-        "timestamp": "2026-10-04T20:48:57Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "0c1069a81537106a6058336f507e7035ead0d352",
-        "timestamp": "2026-10-04T20:48:50Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "37e9fbdd6cc94259486ca59280a00c86c17fbdb0",
-        "timestamp": "2026-10-04T20:48:48Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "13727c07aebb055b9880e16ff30c309256ac274c",
-        "timestamp": "2026-10-04T20:48:44Z"
       }
     ]
   },
@@ -2735,7 +2735,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5e1e3ee0bff1ab8a7fee99fbd209295169bbf871",
+  "source_master_sha": "9d3df819ddfaa5e656cc3817c1cc428a961cb7b8",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2849,6 +2849,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37233618639"
+    "run_id": "37233876871"
   }
 }
