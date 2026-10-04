@@ -26,6 +26,7 @@ class Availability:
     provider: str
     eligible: bool
     next_available_at: str | None
+    next_reset_at: str | None
     confidence: str
     reason: str
     reserve_status: str
@@ -94,6 +95,14 @@ def _latest_block(observations: list[dict[str, Any]]) -> datetime | None:
     return max(candidates) if candidates else None
 
 
+def load_copilot_state(root: Path = ROOT) -> dict[str, Any]:
+    path = root / "ops/copilot_free_budget_state.json"
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
 def _recent_429(observations: list[dict[str, Any]], now: datetime) -> bool:
     for item in observations:
         status = item.get("status")
@@ -113,11 +122,29 @@ def availability_for_provider(
 ) -> Availability:
     spec = policy["providers"][provider]
     obs = observations.get(provider, [])
+
+    if provider == "copilot_free":
+        state = load_copilot_state()
+        reserved = int(state.get("reserved_sessions", 0) or 0)
+        max_reserved = int(state.get("max_reserved_sessions", 4) or 4)
+        if reserved >= max_reserved:
+            reset = next_calendar_boundary(now, tz_name="UTC", rule="month")
+            return Availability(
+                provider,
+                False,
+                reset.isoformat().replace("+00:00", "Z"),
+                reset.isoformat().replace("+00:00", "Z"),
+                "exact_policy",
+                "protected project Copilot reservation is exhausted",
+                "reservation_exhausted",
+            )
+
     explicit = _latest_block(obs)
     if explicit and explicit > now:
         return Availability(
             provider,
             False,
+            explicit.isoformat().replace("+00:00", "Z"),
             explicit.isoformat().replace("+00:00", "Z"),
             "exact_observed",
             "provider-specific quota block is active until an observed reset",
@@ -125,15 +152,15 @@ def availability_for_provider(
         )
 
     if provider == "gemini_api":
-        # Google's RPD reset is explicitly documented at midnight Pacific Time.
         reset = next_calendar_boundary(now, tz_name="America/Los_Angeles", rule="day")
         return Availability(
             provider,
             True,
+            None,
             reset.isoformat().replace("+00:00", "Z"),
             "exact_policy",
-            "daily quota reset boundary is documented; actual remaining quota still requires account telemetry",
-            "policy_known_balance_unknown",
+            "Gemini daily quota reset boundary is documented at midnight Pacific Time; remaining balance is not available in repository telemetry",
+            "balance_unknown",
         )
 
     if provider == "copilot_free":
@@ -141,64 +168,61 @@ def availability_for_provider(
         return Availability(
             provider,
             True,
+            None,
             reset.isoformat().replace("+00:00", "Z"),
             "exact_policy",
-            "included monthly AI-credit allowance resets at the start of the UTC calendar month",
-            "reservation_limited",
+            "protected Copilot reservation budget has capacity",
+            "reservation_available",
         )
 
     if provider == "openrouter_free":
         if _recent_429(obs, now):
-            # Provider docs publish the daily cap but not the exact wall-clock reset.
-            # Conservatively wait 24h from the latest observed 429 rather than guess.
-            latest = max(
-                (
-                    parse_dt(x.get("updated_at_utc") or x.get("finished_at_utc") or x.get("created_at_utc"))
-                    for x in obs
-                    if parse_dt(x.get("updated_at_utc") or x.get("finished_at_utc") or x.get("created_at_utc"))
-                ),
-                default=now,
-            )
+            latest_candidates = [
+                parse_dt(x.get("updated_at_utc") or x.get("finished_at_utc") or x.get("created_at_utc"))
+                for x in obs
+            ]
+            latest = max((x for x in latest_candidates if x is not None), default=now)
             reset = latest + timedelta(days=1)
             return Availability(
                 provider,
                 False,
                 reset.isoformat().replace("+00:00", "Z"),
+                None,
                 "conservative_estimate",
-                "daily free-model cap may be exhausted; exact daily reset wall-clock is not documented",
+                "recent 429 observed; OpenRouter publishes the daily cap but does not document the exact daily wall-clock reset",
                 "cooldown",
             )
         return Availability(
             provider,
             True,
             None,
+            None,
             "unknown",
-            "free route is available by policy, but current daily request balance is not observable from repository telemetry",
+            "OpenRouter free route is policy-allowed, but remaining daily requests are not exposed in repository telemetry; live preflight is the final gate",
             "balance_unknown",
         )
 
     if provider == "mistral_api":
         if _recent_429(obs, now):
-            latest = max(
-                (
-                    parse_dt(x.get("updated_at_utc") or x.get("finished_at_utc") or x.get("created_at_utc"))
-                    for x in obs
-                    if parse_dt(x.get("updated_at_utc") or x.get("finished_at_utc") or x.get("created_at_utc"))
-                ),
-                default=now,
-            )
+            latest_candidates = [
+                parse_dt(x.get("updated_at_utc") or x.get("finished_at_utc") or x.get("created_at_utc"))
+                for x in obs
+            ]
+            latest = max((x for x in latest_candidates if x is not None), default=now)
             reset = latest + timedelta(minutes=5)
             return Availability(
                 provider,
                 False,
                 reset.isoformat().replace("+00:00", "Z"),
+                None,
                 "conservative_estimate",
-                "recent provider rate-limit observed; exact limit dimension/reset not exposed in repository telemetry",
+                "recent 429 observed; Mistral exposes rate-limit dimensions but account-specific free monthly reset is not available in repository telemetry",
                 "cooldown",
             )
         return Availability(
             provider,
             True,
+            None,
             None,
             "unknown",
             "Mistral free monthly usage exists but account-specific remaining balance/reset boundary is not exposed in repository telemetry",
@@ -210,13 +234,13 @@ def availability_for_provider(
             provider,
             True,
             None,
+            None,
             "explicit_error_only",
-            "local Gemini account quota is admitted only when an explicit free-only preflight passes; reset time comes from provider error/observation",
+            "local Gemini account quota is admitted only when explicit free-only preflight passes; reset time comes from provider error/observation",
             "preflight_required",
         )
 
     raise KeyError(provider)
-
 
 def task_cost(task: dict[str, Any]) -> float:
     value = task.get("estimated_cost_units", 1.0)
@@ -294,6 +318,7 @@ def schedule_tasks(
             k: {
                 "eligible": v.eligible,
                 "next_available_at": v.next_available_at,
+                "next_reset_at": v.next_reset_at,
                 "confidence": v.confidence,
                 "reason": v.reason,
                 "reserve_status": v.reserve_status,
