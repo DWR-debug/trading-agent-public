@@ -930,7 +930,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T00:49:02.029086+00:00",
+  "generated_at_utc": "2026-10-04T00:49:26.322201+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1475,6 +1475,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: surface Q148 and Q137-Q144 evidence in canonical status",
+        "sha": "dd5f00e556a1ee2123fdb57f55cf6091473cbf38",
+        "timestamp": "2026-10-04T02:49:15+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "026cdbeb389d2a1adf28610b3e04949dbc329bce",
+        "timestamp": "2026-10-04T00:49:04Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "87273af88dac2e5673875f87094cfba07c285bdc",
+        "timestamp": "2026-10-04T00:49:03Z"
+      },
+      {
         "message": "OPS: persist latest Q133-Q170 PIT-readiness material receipt",
         "sha": "3867e1e5ba633a123def4ec27f003b18eedc365e",
         "timestamp": "2026-10-04T00:48:56Z"
@@ -1498,21 +1513,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "8f8a7a27f5ebccc06872be446eb6a3c9bc9d7b8f",
         "timestamp": "2026-10-04T00:48:47Z"
-      },
-      {
-        "message": "FIX: make Q137-Q144 micro receipt publication race-safe",
-        "sha": "628aa3dd278069d46249586064c47f95a65ff303",
-        "timestamp": "2026-10-04T02:48:30+02:00"
-      },
-      {
-        "message": "EVIDENCE: persist Q137-Q144 micro PIT receipt",
-        "sha": "9ae00f3311bac0b5acaf49dbc8a9b99ff78b44d7",
-        "timestamp": "2026-10-04T02:48:24+02:00"
-      },
-      {
-        "message": "OPS: persist latest Q133-Q170 PIT-readiness material receipt",
-        "sha": "2541b9703926d421be8801e4101636b238012f4c",
-        "timestamp": "2026-10-04T00:47:06Z"
       }
     ]
   },
@@ -1582,7 +1582,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "3867e1e5ba633a123def4ec27f003b18eedc365e",
+  "source_master_sha": "dd5f00e556a1ee2123fdb57f55cf6091473cbf38",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -1696,6 +1696,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37166091520"
+    "run_id": "37166112481"
   }
 }
