@@ -32,6 +32,7 @@ PROBES = {
 HISTORY_PROBES = {
     "CLINICALTRIALS_HISTORY": {
         "url": "https://clinicaltrials.gov/study/NCT00125528?a=2&tab=history",
+        "legacy_url": "https://clinicaltrials.gov/ct2/history/NCT00125528",
         "markers": [
             "Study Record Versions",
             "2005-07-29",
@@ -113,25 +114,33 @@ def main() -> int:
 
     history_results: dict[str, dict] = {}
     for sid, spec in HISTORY_PROBES.items():
-        status, body = fetch(spec["url"])
-        missing = [m for m in spec["markers"] if m.lower() not in body.lower()]
-        version_dates = sorted(set(re.findall(r"20\d\d-\d\d-\d\d", body)))
-        if status == 200 and not missing and len(version_dates) >= 3:
+        probe_attempts = []
+        best_body = ""
+        best_status = 599
+        for field in ("url", "legacy_url"):
+            status, body = fetch(spec[field])
+            probe_attempts.append({"url": spec[field], "http_status": status})
+            if status == 200 and len(body) > len(best_body):
+                best_status, best_body = status, body
+        missing = [m for m in spec["markers"] if m.lower() not in best_body.lower()]
+        version_dates = sorted(set(re.findall(r"20\d\d-\d\d-\d\d", best_body)))
+        if best_status == 200 and not missing and len(version_dates) >= 3:
             classification = "PASS"
-        elif status in (401, 403):
+        elif best_status in (401, 403):
             classification = "RUNNER_ACCESS_BLOCKED"
-        elif status == 200:
+        elif best_status == 200:
             classification = "HISTORY_MARKER_MISMATCH"
         else:
             classification = "UNREACHABLE"
         history_results[sid] = {
-            "url": spec["url"],
-            "http_status": status,
+            "urls": [spec["url"], spec["legacy_url"]],
+            "attempts": probe_attempts,
+            "http_status": best_status,
             "probe_classification": classification,
             "missing_markers": missing,
             "version_date_count": len(version_dates),
             "sample_version_dates": version_dates[:5],
-            "content_sha256": digest(body),
+            "content_sha256": digest(best_body),
             "scientific_boundary": False,
         }
 
