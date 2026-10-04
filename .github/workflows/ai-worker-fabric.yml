@@ -116,21 +116,14 @@ jobs:
           )
           PY
 
-  worker:    needs: plan_openrouter
+  worker:
+    needs: plan_openrouter
     if: ${{ needs.plan_openrouter.outputs.tasks != '["__none__"]' }}
 
     strategy:
       fail-fast: false
       matrix:
-        task:
-          - AI-2026-10-04-Q187-Q192-ADVERSARIAL
-          - AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT
-          - AI-2026-09-29-Q091-ADVERSARIAL
-          - AI-2026-09-28-Q089-ADVERSARIAL
-          - AI-2026-09-28-UNUSUAL-FRONTIER
-          - AI-2026-09-30-Q100-FRONTIER-FEASIBILITY
-          - AI-2026-09-30-Q101-NEGATIVE-EVIDENCE
-          - AI-2026-09-30-Q102-REGIME-STATE-DESIGN
+        task: ${{ fromJSON(needs.plan_openrouter.outputs.tasks) }}
     concurrency:
       group: trading-agent-ai-openrouter-${{ matrix.task }}
       cancel-in-progress: false
