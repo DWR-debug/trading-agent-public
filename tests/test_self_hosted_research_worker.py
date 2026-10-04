@@ -24,13 +24,15 @@ def test_frontier_workpacks_rotate_and_keep_q100_dependency_safe():
     assert 5 in groups[0]
     assert 6 in groups[0]
     assert groups[-1] == [8]
-    assert worker.execution_groups("local_reproduction", len(worker.LANES["local_reproduction"])) == [[1, 2, 3, 4]]
+    assert worker.execution_groups("local_reproduction", len(worker.LANES["local_reproduction"])) == [list(range(1, len(worker.LANES["local_reproduction"]) + 1))]
 
 
 def test_frontier_lane_has_bounded_parallelism_and_reproduction_stays_serial():
     assert worker.default_max_workers("autonomous_frontier_qa") == 3
     assert worker.default_max_workers("local_reproduction") == 1
     assert worker.default_max_workers("repo_qa") == 1
+    assert len(worker.LANES["local_reproduction"]) >= 8
+    assert len(worker.LANES["data_qa"]) >= 5
 
 
 def test_worker_rejects_unbounded_concurrency(monkeypatch, tmp_path):
@@ -97,7 +99,7 @@ def test_every_lane_writes_non_formal_run_manifest(monkeypatch, tmp_path):
         )
 
         selected = worker.select_workpack(lane, len(commands), 0)[1]
-        expected_order = [x for x in selected if x != 8] + ([8] if 8 in selected else [])
+        expected_order = ([x for x in selected if x != 8] + ([8] if 8 in selected else [])) if lane == "autonomous_frontier_qa" else selected
         expected_codes = [0] if len(expected_order) == 1 else [0] + [7] * (len(expected_order) - 1)
         assert worker.main() == (0 if len(expected_order) == 1 else 7)
         assert attempted == expected_order
@@ -168,7 +170,7 @@ def test_each_lane_fails_closed_and_preserves_failure_provenance(
 
         assert worker.main() == 17
         selected = worker.select_workpack(lane, len(worker.LANES[lane]), 0)[1]
-        expected_order = [x for x in selected if x != 8] + ([8] if 8 in selected else [])
+        expected_order = ([x for x in selected if x != 8] + ([8] if 8 in selected else [])) if lane == "autonomous_frontier_qa" else selected
         assert attempted == expected_order
 
         summary = json.loads(
@@ -232,7 +234,7 @@ def test_permanent_loop_uses_short_local_capacity_pulse():
     text = (
         ROOT / ".github" / "workflows" / "permanent-pc-research-loop.yml"
     ).read_text(encoding="utf-8")
-    assert 'cron: "*/30 * * * *"' in text
+    assert 'cron: "*/10 * * * *"' in text
     assert 'max-parallel: 2' in text
     assert "lane: [local_reproduction, data_qa]" in text
     assert "runs-on: [self-hosted, trading-agent-research]" in text
@@ -466,3 +468,9 @@ def test_hosted_failover_is_manual_only_under_always_available_policy():
 def test_local_reproduction_includes_q121r6_sec_archive_smoke():
     commands = [" ".join(command) for command in worker.LANES["local_reproduction"]]
     assert any("automation.q121r6_sec_archive_url_smoke" in command for command in commands)
+
+
+def test_windows_pulse_contains_current_frontier_source_probes():
+    commands = [" ".join(command) for command in worker.LANES["local_reproduction"] + worker.LANES["data_qa"]]
+    for module in ("automation.q185_q186_source_feasibility", "automation.q187_q192_source_feasibility", "automation.q193_q196_source_feasibility", "automation.q179_q184_source_feasibility"):
+        assert any(module in command for command in commands)
