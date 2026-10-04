@@ -988,7 +988,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T15:35:51.936339+00:00",
+  "generated_at_utc": "2026-10-04T16:03:19.851080+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2283,6 +2283,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "research/q193-q196-deep-frontier-2026-10-04",
+        "number": 1043,
+        "title": "RESEARCH: Q193-Q196 deep literature frontier and source gate",
+        "updatedAt": "2026-10-04T16:02:08Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1043"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "research/q182-ferc-access-probe-current-master-2026-10-04",
         "number": 1039,
         "title": "RESEARCH: refresh Q182 FERC self-hosted access probe on current master",
@@ -2291,6 +2299,16 @@
       }
     ],
     "recent_commits": [
+      {
+        "message": "RESEARCH: Q182 FERC self-hosted access probe",
+        "sha": "c5f453e96eb5ba6e797d6ed887f618e9fc9c4b9b",
+        "timestamp": "2026-10-04T18:03:05+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ad13bf9a436b5b24c5b99539cc3158c2207336ca",
+        "timestamp": "2026-10-04T15:35:54Z"
+      },
       {
         "message": "RESEARCH: Q186 conservative citation visibility R3 on current master (#1040)",
         "sha": "8e392f13715ac50eb316a04884a96d6904b371a6",
@@ -2320,16 +2338,6 @@
         "message": "EVIDENCE: persist Q169 R4 independent reproduction receipt",
         "sha": "b828c48d40a224e8ecfa63cb5914488c715bf6f4",
         "timestamp": "2026-10-04T15:18:27Z"
-      },
-      {
-        "message": "AI: add fail-closed Groq free-tier provider",
-        "sha": "776394cf043ab5ebe6ad5d2c2734f305b80689a5",
-        "timestamp": "2026-10-04T17:18:16+02:00"
-      },
-      {
-        "message": "FIX: harden Q169 artifact upload handling",
-        "sha": "0a8d0bdd387e4bec0c17ee7e8e7508b3ab270ec5",
-        "timestamp": "2026-10-04T17:18:13+02:00"
       }
     ]
   },
@@ -2399,7 +2407,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8e392f13715ac50eb316a04884a96d6904b371a6",
+  "source_master_sha": "c5f453e96eb5ba6e797d6ed887f618e9fc9c4b9b",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2513,6 +2521,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37213589281"
+    "run_id": "37215321856"
   }
 }
