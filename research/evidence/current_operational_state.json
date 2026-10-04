@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T21:22:07.972473+00:00",
+  "generated_at_utc": "2026-10-04T21:22:33.343484+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2613,6 +2613,36 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: record AI worker state",
+        "sha": "642e79999c8960cc031d4e91c2a557926fd26519",
+        "timestamp": "2026-10-04T21:22:26Z"
+      },
+      {
+        "message": "OPS: record Groq free adversarial worker state",
+        "sha": "f8c93163ac94834f6eeb7d8dfde8b2b29e0b80ac",
+        "timestamp": "2026-10-04T21:22:23Z"
+      },
+      {
+        "message": "RESEARCH: trigger prioritized overnight source and PIT wave",
+        "sha": "a91e15bebca4176c5d8514932057a6d089eb909a",
+        "timestamp": "2026-10-04T23:22:21+02:00"
+      },
+      {
+        "message": "OPS: launch Runner C long overnight workpack",
+        "sha": "351ee6e148eecbf9b4ebace3b63a86991df587dd",
+        "timestamp": "2026-10-04T23:22:19+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "132c815e36eb6a0b852fa3e750d8bd36b995cc76",
+        "timestamp": "2026-10-04T21:22:13Z"
+      },
+      {
+        "message": "LITELLM: pass transport flag into Groq worker",
+        "sha": "08f016f5d6f172ce84e43fa953ab77e547ef74a5",
+        "timestamp": "2026-10-04T23:22:09+02:00"
+      },
+      {
         "message": "OPS: record Groq free-tier preflight",
         "sha": "35c9b65c63b8af2150856027f5365a62fd36cdf1",
         "timestamp": "2026-10-04T21:22:05Z"
@@ -2621,36 +2651,6 @@
         "message": "OPS: retrigger Groq free-tier preflight after attestation",
         "sha": "7706fb77275ab63aaed275bc9ffa5e353d0b41c4",
         "timestamp": "2026-10-04T23:21:55+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "81a59681ec00c33e4f2f2aac6f1319151d33a644",
-        "timestamp": "2026-10-04T21:21:24Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "13d86759a89ad2689f19a1c25972e696bcf685a6",
-        "timestamp": "2026-10-04T21:20:38Z"
-      },
-      {
-        "message": "OPS: persist latest Q133-Q170 PIT-readiness material receipt",
-        "sha": "96361a23cd61a78d725016c047635090db66bdb8",
-        "timestamp": "2026-10-04T21:20:29Z"
-      },
-      {
-        "message": "EVIDENCE: persist Q137-Q144 micro PIT receipt",
-        "sha": "511901048427135daf1aeb8c2016a2f1155d9275",
-        "timestamp": "2026-10-04T21:20:26Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "cec41ae88684b6557b073bdbc51b0dc5b027c57a",
-        "timestamp": "2026-10-04T21:20:18Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "929913b888bfb734839873a4308220afb38efb5a",
-        "timestamp": "2026-10-04T21:18:03Z"
       }
     ]
   },
@@ -2735,7 +2735,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "35c9b65c63b8af2150856027f5365a62fd36cdf1",
+  "source_master_sha": "642e79999c8960cc031d4e91c2a557926fd26519",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2849,6 +2849,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37235796956"
+    "run_id": "37235828905"
   }
 }
