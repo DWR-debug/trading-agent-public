@@ -5,7 +5,7 @@
   "source_master_sha": "4ebc2b2476c7fda02f435525d1c80dcdde55a2aa",
   "purpose": "Persistent orchestration contract for chat-independent Trading Agent research and engineering.",
   "chat_trigger": "trading agent",
-  "capacity_pulse_policy": "10-minute schedule with concurrency-serialized self-hosted loop and deterministic frontier workpack rotation by run number",
+  "capacity_pulse_policy": "10-minute schedule with independent lane-scoped Windows concurrency; local_reproduction shares the explicit long-reproduction priority group while data_qa remains independently schedulable",
   "canonical_chat_entrypoint": "docs/TRADING_AGENT_CHAT_ENTRYPOINT.md",
   "canonical_orchestration_doc": "docs/TRADING_AGENT_OS_ORCHESTRATION.md",
   "canonical_live_status": "research/evidence/current_operational_state.json",
@@ -49,9 +49,14 @@
       "max_worker_cap": 4,
       "description": "Two Windows slots operate as Lane A (Formal Readiness) and Lane B (Frontier Discovery). Deterministic hosted frontier work also uses bounded concurrency.",
       "matrix_lanes": [
-        "formal_readiness",
-        "frontier_discovery"
-      ]
+        "local_reproduction",
+        "data_qa"
+      ],
+      "concurrency": {
+        "background_local_reproduction_group": "trading-agent-windows-research-capacity-v1",
+        "background_data_qa_group": "trading-agent-windows-research-data-qa-v1",
+        "policy": "no workflow-level serialization; one bounded stream per physical lane; long independent Q121-R6 reproduction can cancel/preempt local_reproduction only"
+      }
     },
     "hosted_research_failover": {
       "workflow": ".github/workflows/hosted-research-failover.yml",
@@ -77,11 +82,13 @@
       "scientific_evidence_allowed": false
     },
     "local_ai_worker_rotation": {
-      "workflow": ".github/workflows/permanent-pc-research-loop.yml",
-      "trigger": "scheduled permanent self-hosted loop",
-      "dependency": "real local AI smoke must pass",
+      "workflow": ".github/workflows/windows-local-ai-worker.yml",
+      "trigger": "manual workflow_dispatch only",
+      "dependency": "real local AI readiness must pass",
       "provider": "gemini_cli",
-      "quota_behavior": "skip fail-closed when quota/auth is unavailable"
+      "quota_behavior": "skip/fail-closed when quota/auth is unavailable",
+      "scientific_evidence_allowed": false,
+      "note": "Isolated from the permanent 10-minute research loop so local AI cannot occupy a research slot and serialize subsequent pulses."
     },
     "bounded_agent_queue": {
       "workflow": ".github/workflows/agent-request-queue.yml",
@@ -212,7 +219,7 @@
   },
   "chatless_night_policy": {
     "enabled": true,
-    "primary_path": "permanent self-hosted loop every 10 minutes",
+    "primary_path": "permanent self-hosted research pulses every 10 minutes with independent lane concurrency",
     "failover_path": "hosted failover every 30 minutes when heartbeat stale",
     "daily_deepening": "unified orchestrator at 03:30 UTC",
     "ai_rotation": "free AI fabric every 6 hours when provider entitlement/auth passes",
@@ -234,7 +241,8 @@
       "receipt_gated": true,
       "formal_evidence_allowed": false,
       "performance_authorization": false
-    }
+    },
+    "local_ai": "manual-only bounded Windows worker"
   },
   "new_chat_protocol": [
     "Read docs/TRADING_AGENT_CHAT_ENTRYPOINT.md.",
@@ -278,5 +286,14 @@
       "retroactive_cross_lane_mutation": false
     },
     "performance_capacity_rule": "Physical two-slot capacity never creates authorization; each performance execution needs its own current formal authorization."
+  },
+  "dashboard": {
+    "website_path": "docs/dashboard/index.html",
+    "data_path": "docs/dashboard/dashboard_data.json",
+    "daily_update_utc": "35 3 * * *",
+    "update_workflow": ".github/workflows/resource-dashboard-update.yml",
+    "manual_update": true,
+    "update_button": "opens the GitHub Actions workflow page; authenticated user can run the dashboard update",
+    "scientific_authority": false
   }
 }
