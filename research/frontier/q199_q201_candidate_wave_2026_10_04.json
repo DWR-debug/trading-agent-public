@@ -3,7 +3,7 @@
   "wave_id": "Q199-Q201-2026-10-04",
   "status": "DESIGN_INVENTORY_ONLY",
   "generated_utc": "2026-10-04T16:35:00Z",
-  "priority_basis": "literature-supported orthogonal information events with explicit public-clock semantics; source/PIT feasibility only",
+  "priority_basis": "literature-supported orthogonal information events with explicit public-clock semantics; source/PIT feasibility only; no authenticated USPTO ODP access assumed",
   "purpose": "Evaluate patent-publication and clinical-trial-results-publication information boundaries as independent event channels before any performance analysis.",
   "policy": {
     "performance_authorized": false,
@@ -21,16 +21,17 @@
     {
       "id": "Q199",
       "name": "PATENT_PUBLICATION_SHOCK × TECHNOLOGY_COMPETITIVE_EXPOSURE",
-      "priority": "A_FRONTIER",
+      "priority": "B_HISTORICAL_SOURCE_READY",
       "hypothesis": "First public disclosure of a previously non-public patent application can reveal technology information before grant and propagate to technologically exposed issuers.",
       "construction": "Freeze the earliest public pre-grant application publication boundary. Build technology exposure only from pre-event public records and freeze applicant/assignee-to-issuer identity. Exclude unresolved continuation/divisional lineage and same-day timing ambiguity.",
       "sources": [
-        "USPTO Open Data Portal / PatentsView pre-grant publications",
-        "USPTO Patent Public Search",
+        "USPTO official publication rules (18-month disclosure clock)",
+        "Google-hosted USPTO Patent Application Publication Bibliographic Data, 2001-2015",
+        "USPTO Patent Public Search for spot validation",
         "SEC issuer identity mapping",
         "OHLCV only downstream"
       ],
-      "next_gate": "historical publication archive completeness; exact public clock; continuity/publication exceptions; frozen issuer and technology mapping; independent reproduction",
+      "next_gate": "download and fingerprint fixed 2001-2015 historical mirror; prove weekly publication boundary; fixed applicant/assignee mapping; continuation/nonpublication lineage; independent reproduction",
       "forbidden_design_searches": [
         "technology-class search",
         "citation-depth search",
@@ -46,7 +47,8 @@
         "pre_event_exposure_only": true,
         "continuation_lineage_locked": true,
         "same_day_ambiguity_excluded": true,
-        "issuer_mapping_frozen": true
+        "issuer_mapping_frozen": true,
+        "historical_window_fixed": true
       }
     },
     {
