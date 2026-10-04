@@ -495,7 +495,8 @@ def test_windows_pulse_contains_current_pit_work():
 
 def test_windows_pulse_contains_current_frontier_source_probes():
     commands = [" ".join(command) for command in worker.LANES["local_reproduction"] + worker.LANES["data_qa"]]
-    for module in ("automation.q185_q186_source_feasibility", "automation.q187_q192_source_feasibility", "automation.q193_q196_source_feasibility", "automation.q179_q184_source_feasibility", "automation.q197_q198_source_feasibility", "automation.q199_q201_source_feasibility"):
+    for module in ("automation.q185_q186_source_feasibility", "automation.q187_q192_source_feasibility", "automation.q193_q196_source_feasibility", "automation.q179_q184_source_feasibility", "automation.q197_q198_source_feasibility", "automation.q198_pit_clock_census", "automation.q199_q201_source_feasibility"):
         assert any(module in command for command in commands)
     assert any("tests/test_q197_q198_source_feasibility.py" in command for command in commands)
+    assert any("tests/test_q198_pit_clock_census.py" in command for command in commands)
     assert any("tests/test_q199_q201_source_feasibility.py" in command for command in commands)

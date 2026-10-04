@@ -1,0 +1,54 @@
+from __future__ import annotations
+
+from automation.q198_pit_clock_census import (
+    FROZEN_DATES,
+    parse_public_inspection,
+)
+
+
+SAMPLE = """
+# 01/10/2020 Public Inspection Issue
+# Special Filing
+Filed on:01/10/2020 at 4:15 pmScheduled Pub. Date:01/13/2020FR Document:[2020-00469]
+# Regular Filing
+Filed on:01/10/2020 at 8:45 amScheduled Pub. Date:01/13/2020FR Document:[2020-00152]
+Filed on:01/09/2020 at 11:15 amScheduled Pub. Date:01/13/2020FR Document:[2020-00373]
+"""
+
+
+def test_frozen_date_set_is_fixed_and_spans_history():
+    assert FROZEN_DATES == (
+        "2020/01/10",
+        "2020/04/22",
+        "2020/12/16",
+        "2026/10/02",
+    )
+
+
+def test_parser_extracts_filing_and_publication_clock():
+    d = parse_public_inspection(SAMPLE)
+    assert d["page_date"] == "2020-01-10"
+    assert d["regular_or_special_sections_present"]["regular"] is True
+    assert d["regular_or_special_sections_present"]["special"] is True
+    assert d["filing_records"] == 3
+    assert d["records_with_filed_timestamp"] == 3
+    assert d["records_with_scheduled_publication_date"] == 3
+    assert d["same_day_clock_ambiguous_count"] == 0
+
+
+def test_parser_rejects_ambiguous_same_day_record():
+    ambiguous = """
+    # 01/10/2020 Public Inspection Issue
+    Filed on:01/10/2020 at 8:45 amScheduled Pub. Date:01/10/2020FR Document:[x]
+    """
+    d = parse_public_inspection(ambiguous)
+    assert d["same_day_clock_ambiguous_count"] == 1
+
+
+def test_source_boundary_is_non_authorizing():
+    d = parse_public_inspection(SAMPLE)
+    assert d["scientific_boundary"]["performance"] is False
+    assert d["scientific_boundary"]["selection"] is False
+    assert d["scientific_boundary"]["promotion"] is False
+    assert d["safety"]["paper_only"] is True
+    assert d["safety"]["live_trading_enabled"] is False

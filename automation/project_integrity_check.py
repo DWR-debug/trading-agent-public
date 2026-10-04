@@ -173,6 +173,7 @@ ACTIVE_WORKFLOWS = {
     "q193-q196-source-feasibility.yml",
     "q199-q201-source-feasibility.yml",
     "q197-q198-source-feasibility.yml",
+    "q198-pit-clock-census.yml",
     "q182-ferc-self-hosted-access-probe.yml",
     "q127r1-finra-regsho-historical-pit.yml",
     "q130r1-wikimedia-attention-source.yml",
