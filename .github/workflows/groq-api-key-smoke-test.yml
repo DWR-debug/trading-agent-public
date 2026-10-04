@@ -71,12 +71,12 @@ jobs:
             "scientific_evidence_created":False,
             "performance_authorized":False
           }
-          json.dump(d,open("ops/groq_api_key_smoke_test.json","w",encoding="utf-8"),indent=2)
-          with open("ops/groq_api_key_smoke_test.json","a",encoding="utf-8") as f: f.write("\n")
+          json.dump(d,open("research/evidence/groq_api_key_smoke_test.json","w",encoding="utf-8"),indent=2)
+          with open("research/evidence/groq_api_key_smoke_test.json","a",encoding="utf-8") as f: f.write("\n")
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add ops/groq_api_key_smoke_test.json
+          git add research/evidence/groq_api_key_smoke_test.json
           git diff --cached --quiet && exit 0
           git commit -m "OPS: record Groq API key smoke test"
           git push origin HEAD:master
