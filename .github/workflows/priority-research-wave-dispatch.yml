@@ -48,7 +48,7 @@ jobs:
               echo "SKIP_ACTIVE workflow=${workflow} active=${active}"
               continue
             fi
-            if gh workflow run "$workflow" --ref master; then
+            if gh workflow run "$workflow" --repo "$repo" --ref master; then
               echo "DISPATCHED workflow=${workflow}"
             else
               echo "DISPATCH_FAILED workflow=${workflow}"
