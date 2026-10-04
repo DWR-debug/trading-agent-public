@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `694308aae44028734fd15528ed5bc954218f1fba`
+**Current operational snapshot:** `2537939ae49db7ed85421166781fc37e1975f1f3`
 
-**Generated (UTC):** `2026-10-04T22:15:26.190791+00:00`
+**Generated (UTC):** `2026-10-04T22:17:11.393773+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -96,6 +96,13 @@
 - Q201 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `5b885ecdc774f6600a04b5d9a7bea4c7aa9d657ac33926bb8e51b504319ee119`. Next gate: historical results-state revision lineage, explicit posted-time semantics, frozen sponsor/exposure mapping and independent PIT reproduction.
 - Q198 historical PIT clock census: **Q198_PIT_CLOCK_CENSUS_COMPLETED**; pages parsed **4** / **4**, with fixed dates **2020/01/10, 2020/04/22, 2020/12/16, 2026/10/02**.
 - All four frontier candidates remain non-authorizing: performance/holdout selection/ranking/tuning/promotion/live execution are closed. Source readiness is not PIT validation.
+### Q202–Q204 Information-Timing Frontier
+
+- Q202 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `7a01a7abfb006d11ce759f36061e6a88c02dd97b3e189931232fb3cc7a16f811`. Next gate: immutable historical record-version snapshots at the applicable reporting boundary, applicability/certification/extension lineage, frozen sponsor-to-issuer mapping and independent PIT reproduction.
+- Q203 Federal procurement × ex-ante financing constraint: **SOURCE_COMPONENT_READY**; source receipt `7a01a7abfb006d11ce759f36061e6a88c02dd97b3e189931232fb3cc7a16f811`. Next gate: immutable historical award-state/public-observation boundary, frozen pre-event financing vintage and entity mapping, correction/amendment lineage and independent PIT reproduction.
+- Q204 Public-information release latency: **SOURCE_COMPONENT_READY**; source receipt `7a01a7abfb006d11ce759f36061e6a88c02dd97b3e189931232fb3cc7a16f811`. Next gate: immutable public-observation/process-stage timestamps, fixed event-class semantics, pre-event-only latency calibration and correction/withdrawal lineage.
+- Q202–Q204 remain source/PIT discovery tracks only: performance, holdout selection, ranking, tuning, promotion and live execution remain closed. Source feasibility is not PIT validation.
+
 ### Q148-R1 EIA WPSR Source/Clock Gate
 
 - Receipt status: **Q148R1_WPSR_SOURCE_CLOCK_CONTRACT_COMPLETED**.

@@ -1011,7 +1011,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T22:15:26.190791+00:00",
+  "generated_at_utc": "2026-10-04T22:17:11.393773+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -3492,6 +3492,201 @@
     },
     "task_id": "Q-2026-10-04-Q199-Q201-SOURCE-FEASIBILITY"
   },
+  "q202_q204_information_timing_feasibility": {
+    "candidate_results": [
+      {
+        "candidate_id": "Q202",
+        "status": "SOURCE_COMPONENT_READY"
+      },
+      {
+        "candidate_id": "Q203",
+        "status": "SOURCE_COMPONENT_READY"
+      },
+      {
+        "candidate_id": "Q204",
+        "status": "SOURCE_COMPONENT_READY"
+      }
+    ],
+    "candidate_spec_sha256": "0abd25e22af9e3964bc879bea08e0b719cabe3fbb434862265da79949dba6dbf",
+    "fixed_routes": {
+      "Q202_CT_HISTORY": "https://clinicaltrials.gov/study/NCT00125528?a=2&tab=history",
+      "Q202_CT_STUDY": "https://clinicaltrials.gov/api/v2/studies/NCT00125528",
+      "Q203_SEC_COMPANYFACTS": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000789019.json",
+      "Q203_SEC_SUBMISSIONS": "https://data.sec.gov/submissions/CIK0000789019.json",
+      "Q204_FR_20200110": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-01-10&per_page=1000",
+      "Q204_FR_20201216": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-12-16&per_page=1000"
+    },
+    "generated_at_utc": "2026-10-04T22:12:57Z",
+    "governance": {
+      "historical_pit_validated": false,
+      "live_execution": false,
+      "performance_authorized": false,
+      "promotion_authorized": false
+    },
+    "receipt_fingerprint": "7a01a7abfb006d11ce759f36061e6a88c02dd97b3e189931232fb3cc7a16f811",
+    "safety": {
+      "automatic_promotion": false,
+      "live_trading_enabled": false,
+      "orders_enabled": false,
+      "paper_only": true
+    },
+    "schema_version": "1.0",
+    "scientific_boundary": {
+      "asset_search": false,
+      "holdout_selection": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "ranking": false,
+      "selection": false,
+      "threshold_search": false,
+      "variant_search": false
+    },
+    "source_results": {
+      "Q202": {
+        "history_route": {
+          "content_sha256": "e5bfa50054351e7adaf6f79e3d42273cc157862e5e652c9a13ca737c02132337",
+          "http_status": 200,
+          "missing_markers": [
+            "Study Record Versions"
+          ],
+          "reachable": true,
+          "scientific_boundary": {
+            "asset_search": false,
+            "holdout_selection": false,
+            "horizon_search": false,
+            "live_execution": false,
+            "parameter_search": false,
+            "performance": false,
+            "promotion": false,
+            "ranking": false,
+            "selection": false,
+            "threshold_search": false,
+            "variant_search": false
+          },
+          "url": "https://clinicaltrials.gov/study/NCT00125528?a=2&tab=history"
+        },
+        "study": {
+          "content_sha256": "d9ae42a4f31df44d2e163ff1a3964474fc6446b2080c57e3e94311f2f21aefcb",
+          "http_status": 200,
+          "missing_markers": [],
+          "reachable": true,
+          "scientific_boundary": {
+            "asset_search": false,
+            "holdout_selection": false,
+            "horizon_search": false,
+            "live_execution": false,
+            "parameter_search": false,
+            "performance": false,
+            "promotion": false,
+            "ranking": false,
+            "selection": false,
+            "threshold_search": false,
+            "variant_search": false
+          },
+          "url": "https://clinicaltrials.gov/api/v2/studies/NCT00125528"
+        }
+      },
+      "Q203": {
+        "companyfacts": {
+          "content_sha256": "f8aae2965b20ad0df44bdf7ccbedf797d275b6b8dc030154a7a311361bb7246f",
+          "http_status": 200,
+          "missing_markers": [],
+          "reachable": true,
+          "scientific_boundary": {
+            "asset_search": false,
+            "holdout_selection": false,
+            "horizon_search": false,
+            "live_execution": false,
+            "parameter_search": false,
+            "performance": false,
+            "promotion": false,
+            "ranking": false,
+            "selection": false,
+            "threshold_search": false,
+            "variant_search": false
+          },
+          "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000789019.json"
+        },
+        "submissions": {
+          "content_sha256": "2484a2a3b5677d892a1b25af573ce4eda7b6f449f5eda41bac6b3f106dc3139c",
+          "http_status": 200,
+          "missing_markers": [],
+          "reachable": true,
+          "scientific_boundary": {
+            "asset_search": false,
+            "holdout_selection": false,
+            "horizon_search": false,
+            "live_execution": false,
+            "parameter_search": false,
+            "performance": false,
+            "promotion": false,
+            "ranking": false,
+            "selection": false,
+            "threshold_search": false,
+            "variant_search": false
+          },
+          "url": "https://data.sec.gov/submissions/CIK0000789019.json"
+        }
+      },
+      "Q204": {
+        "2020-01-10": {
+          "api_count": 66,
+          "content_sha256": "e4f7eed69c7eb89d5204618f9603e282b39b6b975bc827765980b1a329df202d",
+          "correction_or_withdrawal_note_count": 1,
+          "http_status": 200,
+          "missing_filed_timestamp_count": 0,
+          "missing_publication_date_count": 0,
+          "records": 66,
+          "records_with_filed_timestamp": 66,
+          "records_with_publication_date": 66,
+          "scientific_boundary": {
+            "asset_search": false,
+            "holdout_selection": false,
+            "horizon_search": false,
+            "live_execution": false,
+            "parameter_search": false,
+            "performance": false,
+            "promotion": false,
+            "ranking": false,
+            "selection": false,
+            "threshold_search": false,
+            "variant_search": false
+          },
+          "url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-01-10&per_page=1000"
+        },
+        "2020-12-16": {
+          "api_count": 124,
+          "content_sha256": "e75229453159cb0e333fd5e84a8484c0a9e222d400548fe9bcc73c7b27d5da12",
+          "correction_or_withdrawal_note_count": 2,
+          "http_status": 200,
+          "missing_filed_timestamp_count": 1,
+          "missing_publication_date_count": 1,
+          "records": 124,
+          "records_with_filed_timestamp": 123,
+          "records_with_publication_date": 123,
+          "scientific_boundary": {
+            "asset_search": false,
+            "holdout_selection": false,
+            "horizon_search": false,
+            "live_execution": false,
+            "parameter_search": false,
+            "performance": false,
+            "promotion": false,
+            "ranking": false,
+            "selection": false,
+            "threshold_search": false,
+            "variant_search": false
+          },
+          "url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-12-16&per_page=1000"
+        }
+      }
+    },
+    "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
+    "task_id": "Q-2026-10-04-Q202-Q204-INFORMATION-TIMING-FEASIBILITY"
+  },
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -3540,6 +3735,16 @@
     ],
     "recent_commits": [
       {
+        "message": "GOV: surface Q202-Q204 in canonical operational status",
+        "sha": "2537939ae49db7ed85421166781fc37e1975f1f3",
+        "timestamp": "2026-10-05T00:16:57+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b7722326e9f755686c5105ed68deed0f3d5adc89",
+        "timestamp": "2026-10-04T22:15:28Z"
+      },
+      {
         "message": "OPS: trigger canonical current-status reconciliation",
         "sha": "694308aae44028734fd15528ed5bc954218f1fba",
         "timestamp": "2026-10-05T00:15:16+02:00"
@@ -3568,16 +3773,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "4e303ef69632606024ff23e726a6d5942b7e2569",
         "timestamp": "2026-10-04T22:13:30Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "30656dc04a0b2f76b26231afece162540a9e1035",
-        "timestamp": "2026-10-04T22:13:12Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "b12ffe031b4d45f29124423a0722556778c807c9",
-        "timestamp": "2026-10-04T22:13:05Z"
       }
     ]
   },
@@ -3622,6 +3817,19 @@
       },
       "performance_authorized": false
     },
+    "frontier_q202_q204": {
+      "Q202": {
+        "stage": "SOURCE_COMPONENT_READY"
+      },
+      "Q203": {
+        "stage": "SOURCE_COMPONENT_READY"
+      },
+      "Q204": {
+        "stage": "SOURCE_COMPONENT_READY"
+      },
+      "performance_authorized": false,
+      "pit_validated": false
+    },
     "latest_formal_status": "performance_completed_no_arm_passed_all_13_gates",
     "latest_formal_trial": "T-2026-10-01-H06P2R3-PERFORMANCE-01",
     "next_research_focus_recorded": "Q186 has completed PIT-R2 clock/archive verification only: the official weekly grant clock and post-2023 eGrant public-access boundary are established on fixed controls, while citation-publication ordering, historical citation completeness, frozen assignee-to-issuer mapping, correction/withdrawal lineage and independent reproduction remain open. No performance, holdout selection, tuning, ranking, promotion or live execution is authorized.",
@@ -3662,7 +3870,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "694308aae44028734fd15528ed5bc954218f1fba",
+  "source_master_sha": "2537939ae49db7ed85421166781fc37e1975f1f3",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -3776,6 +3984,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37239309238"
+    "run_id": "37239421191"
   }
 }
