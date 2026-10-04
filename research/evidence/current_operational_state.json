@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T21:32:27.798550+00:00",
+  "generated_at_utc": "2026-10-04T21:33:10.540481+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2468,7 +2468,24 @@
         "status": "SOURCE_COMPONENT_READY"
       }
     ],
-    "receipt_fingerprint": "57c9541cfee59515cf4e278fa9de414eecad540693095629f149972144da86d3",
+    "history_results": {
+      "CLINICALTRIALS_HISTORY": {
+        "content_sha256": "e5bfa50054351e7adaf6f79e3d42273cc157862e5e652c9a13ca737c02132337",
+        "http_status": 200,
+        "missing_markers": [
+          "Study Record Versions",
+          "2005-07-29",
+          "2015-02-19",
+          "2016-12-16"
+        ],
+        "probe_classification": "HISTORY_MARKER_MISMATCH",
+        "sample_version_dates": [],
+        "scientific_boundary": false,
+        "url": "https://clinicaltrials.gov/study/NCT00125528?a=2&tab=history",
+        "version_date_count": 0
+      }
+    },
+    "receipt_fingerprint": "8c41468f1766e80795658480b4694251ef22539d2c767c5c45a9d37de94e25e3",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2542,7 +2559,7 @@
             "url": "https://ppubs.uspto.gov/basic/"
           }
         ],
-        "content_sha256": "96ef88b7812ea201812f9f9f5e9f65f25b4d956bafc3b17123a8d61f48a989c1",
+        "content_sha256": "525947795e31eb94d8add59da22bc0181d2165fa86ef3c1536c81953de7c59e9",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -2613,6 +2630,31 @@
     ],
     "recent_commits": [
       {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "5d5b9bcccb76793e1a8cd0f62cda95edfd90da03",
+        "timestamp": "2026-10-04T21:33:08Z"
+      },
+      {
+        "message": "TEST: align Q201 history URL contract",
+        "sha": "2898f384de9f41bc3959b6b0883e0ff0ceffb7df",
+        "timestamp": "2026-10-04T23:32:52+02:00"
+      },
+      {
+        "message": "FIX: use verified ClinicalTrials history URL variant",
+        "sha": "341ce9e93be51818ea2541e3308261cbe47804b7",
+        "timestamp": "2026-10-04T23:32:47+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "cb64ffd1fd628bc8f041abbc41df09cf927fdda2",
+        "timestamp": "2026-10-04T21:32:33Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "37dff1ff2faa35a5fbc224406185472157653a6a",
+        "timestamp": "2026-10-04T21:32:29Z"
+      },
+      {
         "message": "TEST: cover Q201 historical archive probe contract",
         "sha": "99fe0480f475eacfb5b53bbbeda596061255cc63",
         "timestamp": "2026-10-04T23:32:11+02:00"
@@ -2626,31 +2668,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "2da635bffa73a64cd284c1f4aebea3b6852749d4",
         "timestamp": "2026-10-04T21:30:36Z"
-      },
-      {
-        "message": "FIX: satisfy shellcheck in Q187-Q192 LiteLLM worker",
-        "sha": "6e9209079fc7c23f31375f371881e5a4a8a6857f",
-        "timestamp": "2026-10-04T23:30:20+02:00"
-      },
-      {
-        "message": "FIX: satisfy shellcheck in LiteLLM smoke",
-        "sha": "3964b836e04439b37dd0f9532b1b31c3122aa414",
-        "timestamp": "2026-10-04T23:30:17+02:00"
-      },
-      {
-        "message": "FIX: register LiteLLM workflows in project integrity",
-        "sha": "1696bd54acc19d45e6f09459d6539deb1e4b133e",
-        "timestamp": "2026-10-04T23:30:12+02:00"
-      },
-      {
-        "message": "TEST: restore 40-step frontier rotation with LiteLLM contract QA",
-        "sha": "fe384327abe00d09823978b0776f840deab814f5",
-        "timestamp": "2026-10-04T23:30:07+02:00"
-      },
-      {
-        "message": "OPS: update AI credit availability plan",
-        "sha": "8f789b51226ca7743d6e7e198d09812cfad5f55b",
-        "timestamp": "2026-10-04T21:29:23Z"
       }
     ]
   },
@@ -2735,7 +2752,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "99fe0480f475eacfb5b53bbbeda596061255cc63",
+  "source_master_sha": "5d5b9bcccb76793e1a8cd0f62cda95edfd90da03",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2849,6 +2866,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37236493231"
+    "run_id": "37236538145"
   }
 }
