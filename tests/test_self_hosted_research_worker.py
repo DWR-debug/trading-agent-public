@@ -24,7 +24,7 @@ def test_frontier_workpacks_rotate_and_keep_q100_dependency_safe():
     assert 5 in groups[0]
     assert 6 in groups[0]
     assert groups[-1] == [8]
-    assert worker.execution_groups("local_reproduction", len(worker.LANES["local_reproduction"])) == [[1, 2, 3]]
+    assert worker.execution_groups("local_reproduction", len(worker.LANES["local_reproduction"])) == [[1, 2, 3, 4]]
 
 
 def test_frontier_lane_has_bounded_parallelism_and_reproduction_stays_serial():
@@ -456,3 +456,8 @@ def test_hosted_failover_is_manual_only_under_always_available_policy():
     workflow = (ROOT / ".github/workflows/hosted-research-failover.yml").read_text(encoding="utf-8")
     assert "workflow_dispatch:" in workflow
     assert 'schedule:' not in workflow
+
+
+def test_local_reproduction_includes_q121r6_sec_archive_smoke():
+    commands = [" ".join(command) for command in worker.LANES["local_reproduction"]]
+    assert any("automation.q121r6_sec_archive_url_smoke" in command for command in commands)
