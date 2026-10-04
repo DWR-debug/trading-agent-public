@@ -233,10 +233,10 @@
     {
       "id": "Q204",
       "name": "Public-information release-lag surprise",
-      "mechanism": "The elapsed interval between a fixed underlying administrative date and its first public observation may itself measure information latency. Conditional on a fixed event class and frozen source contract, unusually long or short release latency can proxy how much lead time the market plausibly had before the public record became machine-observable.",
-      "event_clock": "The first reproducible public-observation timestamp supplied by the official source. Underlying occurrence/action/submission dates remain metadata and are not treated as public availability.",
+      "mechanism": "The elapsed interval between an official source's earliest public-observation timestamp and a later, separately defined publication or process-stage date can itself measure information latency. The event remains about information arrival speed, not event content.",
+      "event_clock": "The first reproducible public-observation timestamp supplied by the official source. Underlying occurrence/action/submission dates remain metadata and are not treated as public availability. A stage-to-stage gap is admissible only when both endpoints have independently documented semantics.",
       "features": [
-        "fixed_source_release_latency",
+        "fixed_public_observation_to_stage_latency",
         "rolling_pre_event_latency_percentile_using_only_prior_observations",
         "fixed_event_class_indicator"
       ],
@@ -249,6 +249,7 @@
       ],
       "gates": [
         "candidate-specific public-observation timestamp completeness",
+        "independently documented semantics for both endpoints of the latency interval",
         "frozen event-class definition",
         "pre-event-only latency distribution construction",
         "revision/correction lineage",
