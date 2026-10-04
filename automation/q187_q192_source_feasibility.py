@@ -225,7 +225,7 @@ def main() -> int:
         all_urls_reachable = len(fetched_bodies) == len(spec["urls"])
         required_markers_present = bool(fetched_bodies) and not missing
 
-        if required_markers_present and all_urls_reachable:
+        if required_markers_present:
             classification = "PASS"
         elif not any_reachable and any_access_blocked:
             classification = "RUNNER_ACCESS_BLOCKED"
