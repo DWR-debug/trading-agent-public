@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `a28b5b9b8b4f7463c93a290c2989bbebb50692a8`
+**Current operational snapshot:** `3e16af070a65680df5ce2983674886cda6b41aa1`
 
-**Generated (UTC):** `2026-10-04T09:28:59.692683+00:00`
+**Generated (UTC):** `2026-10-04T09:29:24.830659+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -94,6 +94,14 @@
 - Q137 SEC all-symbols reconstructable = **False**.
 - Q144 Wikimedia all-symbols reconstructable = **False**.
 - This bounded sample produced feasibility evidence only; unresolved archive/entity coverage stays fail-closed.
+
+### Q169 R4 Independent NOAA Reproduction
+
+- Independent reproduction status: **Q169_R4_INDEPENDENT_REPRODUCTION_COMPLETED**.
+- Persistent receipt fingerprint: `279c9b84d7d8cf5ca6967655d8cabe04e7a19c1e55a8625acc9262d320589662`.
+- All fixed R3 archive samples reproduced = **True**.
+- Candidate-specific exposure map frozen = **False**; revision lineage reconstructed = **False**.
+- This strengthens NOAA source/archive provenance only; candidate PIT validation and performance remain closed.
 
 ### Q133–Q170 Public Source Frontier
 
