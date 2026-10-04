@@ -23,7 +23,9 @@
         "SEC issuer disclosures",
         "OHLCV"
       ],
-      "next_gate": "geographic exposure map + weather publication/PIT contract"
+      "next_gate": "geographic exposure map + weather publication/PIT contract",
+      "hypothesis": "An exogenous weather shock may alter operations, transport, energy usage or regional demand for geographically concentrated firms.",
+      "construction": "Freeze a public geographic exposure map from issuer disclosures and combine it with NOAA/NCEI observations available before the next eligible session; later location changes and future returns cannot rewrite the map."
     },
     {
       "id": "Q147",
@@ -33,7 +35,9 @@
         "fixed industry map",
         "OHLCV"
       ],
-      "next_gate": "release/vintage treatment for continuously updated EIA series"
+      "next_gate": "release/vintage treatment for continuously updated EIA series",
+      "hypothesis": "Unusual electricity demand or power-system stress may propagate differently to electricity-intensive industries.",
+      "construction": "Use a fixed load/deviation state from a documented EIA public release or frozen vintage boundary and a lagged industrial exposure map; continuous API updates are never treated as a historical clock."
     },
     {
       "id": "Q148",
@@ -43,7 +47,9 @@
         "fixed sector sensitivity",
         "OHLCV"
       ],
-      "next_gate": "release schedule and revision-aware inventory contract"
+      "next_gate": "release schedule and revision-aware inventory contract",
+      "hypothesis": "Energy-inventory surprises may affect transportation, chemicals, refiners and other sectors asymmetrically.",
+      "construction": "Use a fixed EIA inventory state and predeclared sector exposure classes; preserve the publication schedule and a revision-aware vintage policy without threshold optimization."
     },
     {
       "id": "Q149",
@@ -53,7 +59,9 @@
         "SEC issuer mapping",
         "OHLCV"
       ],
-      "next_gate": "transaction/amendment and public dissemination timestamp contract"
+      "next_gate": "transaction/amendment and public dissemination timestamp contract",
+      "hypothesis": "Unusually large or newly started federal awards may create an information event for listed contractors.",
+      "construction": "Construct fixed award-event classes from USAspending transaction/award identities and public dissemination timestamps, with issuer/CIK mapping frozen before the decision period and amendments separated."
     },
     {
       "id": "Q150",
@@ -63,7 +71,9 @@
         "SEC issuer mapping",
         "OHLCV"
       ],
-      "next_gate": "coverage census and next-session observation boundary"
+      "next_gate": "coverage census and next-session observation boundary",
+      "hypothesis": "Abnormal public litigation activity may alter issuer-specific uncertainty or information-processing conditions.",
+      "construction": "Use a fixed daily count/state of newly observable public proceedings for a pre-registered issuer set; use the next-session boundary unless a more exact public timestamp is proven, and do not assume universal court coverage."
     },
     {
       "id": "Q151",
@@ -74,7 +84,9 @@
         "public government releases",
         "OHLCV"
       ],
-      "next_gate": "fixed event taxonomy and release-time contract"
+      "next_gate": "fixed event taxonomy and release-time contract",
+      "hypothesis": "A newly public regulatory or enforcement event may create an exogenous issuer information state.",
+      "construction": "Use a fixed SEC/CFTC/government event taxonomy and explicit release-time contract; duplicate/amended events and entity mappings remain separate and no NLP sentiment or return-based classification is introduced at feasibility stage."
     }
   ],
   "safety": {
