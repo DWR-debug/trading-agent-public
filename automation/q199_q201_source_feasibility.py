@@ -10,11 +10,12 @@ from pathlib import Path
 PROBES = {
     "USPTO_PUBLICATIONS": {
         "urls": [
-            "https://data.uspto.gov/support/transition-guide/patentsview",
+            "https://www.google.com/googlebooks/uspto-patents-applications-biblio.html",
+            "https://www.uspto.gov/web/offices/pac/mpep/s1120.html",
             "https://www.uspto.gov/patents/search",
             "https://ppubs.uspto.gov/basic/"
         ],
-        "markers": ["pg_published_application", "pre-grant publications", "Publication Date"]
+        "markers": ["2015", "2001", "Eighteen-Month Publication of Patent Applications", "Publication Date"]
     },
     "CLINICALTRIALS_RESULTS": {
         "urls": [
@@ -96,7 +97,7 @@ def main() -> int:
         }
 
     candidates = [
-        {"candidate_id":"Q199","status":"SOURCE_COMPONENT_READY" if source_results["USPTO_PUBLICATIONS"]["probe_classification"]=="PASS" else "BLOCKED_SOURCE_COMPONENT"},
+        {"candidate_id":"Q199","status":"HISTORICAL_SOURCE_COMPONENT_READY" if source_results["USPTO_PUBLICATIONS"]["probe_classification"]=="PASS" else "BLOCKED_SOURCE_COMPONENT"},
         {"candidate_id":"Q201","status":"SOURCE_COMPONENT_READY" if source_results["CLINICALTRIALS_RESULTS"]["probe_classification"]=="PASS" else "BLOCKED_SOURCE_COMPONENT"},
     ]
     result = {
