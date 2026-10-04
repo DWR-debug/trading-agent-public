@@ -60,3 +60,24 @@ def test_r6_reuses_exact_r5_multiset_fingerprint_definition() -> None:
     first = r5_population_fingerprint(rows)
     second = r5_population_fingerprint(list(reversed(rows)))
     assert first == second
+
+
+def test_q121r6_workflow_uses_fleet_rate_budget() -> None:
+    from pathlib import Path
+
+    workflow = (
+        Path(__file__).parents[1]
+        / ".github"
+        / "workflows"
+        / "q121r6-sec-acceptance-time-compilation.yml"
+    ).read_text(encoding="utf-8")
+    assert "max-parallel: 2" in workflow
+    assert "shard_index: [0,1,2,3]" in workflow
+    assert "--shard-count 4" in workflow
+    assert "--request-gap-seconds 0.25" in workflow
+
+
+def test_q121r6_aggregate_uses_same_shard_count() -> None:
+    from automation.q121r6_sec_acceptance_time_aggregate import SHARD_COUNT
+
+    assert SHARD_COUNT == 4
