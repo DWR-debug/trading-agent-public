@@ -5,7 +5,7 @@ from automation.candidate_robustness_gate import REQUIRED_FIELDS, DEFAULT_INVENT
 ROOT = Path(__file__).resolve().parents[1]
 
 def test_all_default_candidate_inventories_match_gate_schema():
-    assert len(DEFAULT_INVENTORIES) == 10
+    assert len(DEFAULT_INVENTORIES) == 11
     candidates=[]
     for rel in DEFAULT_INVENTORIES:
         data=json.loads((ROOT/rel).read_text(encoding="utf-8"))
