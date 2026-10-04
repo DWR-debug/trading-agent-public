@@ -13,6 +13,7 @@ import hashlib
 import json
 from pathlib import Path
 from datetime import datetime, timezone
+from automation.source_readiness_snapshot_guard import classify as classify_source_readiness
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -43,12 +44,12 @@ FORBIDDEN = {
 
 NEXT_GATES = {
     "Q194": "BLOCKED_SOURCE_COMPONENTS",
-    "Q195": "READY_FOR_HISTORICAL_PIT_RECONSTRUCTION",
-    "Q196": "READY_FOR_HISTORICAL_PIT_RECONSTRUCTION",
-    "Q197": "READY_FOR_HISTORICAL_PIT_RECONSTRUCTION",
+    "Q195": "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT",
+    "Q196": "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT",
+    "Q197": "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT",
     "Q198": "BLOCKED_SOURCE_ACCESS",
-    "Q199": "READY_FOR_HISTORICAL_PIT_RECONSTRUCTION",
-    "Q201": "READY_FOR_HISTORICAL_PIT_RECONSTRUCTION",
+    "Q199": "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT",
+    "Q201": "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT",
     "Q186": "READY_FOR_CITATION_PUBLICATION_ORDERING_AND_HISTORICAL_COMPLETENESS",
     "Q187-Q192": "READY_FOR_CANDIDATE_SPECIFIC_HISTORICAL_PIT_RECONSTRUCTION",
 }
@@ -95,13 +96,17 @@ def compile_state() -> dict:
     candidates = []
     for cid in ids:
         receipt = load_json(RECEIPTS[cid])
+        durability = classify_source_readiness(receipt)
         result = {
             "candidate_id": cid,
             "next_gate": NEXT_GATES[cid],
+            "source_readiness_durability": durability,
             "source_or_pit_receipt": receipt_boundary(receipt),
             "execution_authorized": False,
             "performance_allowed": False,
         }
+        if durability == "PROVISIONAL_LIVE_PROBE_ONLY" and cid not in {"Q194", "Q198"}:
+            result["next_gate"] = "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT"
         # Do not silently promote a nominally ready candidate if its receipt
         # explicitly records unsafe scientific-boundary fields.
         boundary = receipt.get("scientific_boundary") or {}
@@ -153,6 +158,8 @@ def compile_state() -> dict:
             "duplicate_running_work_forbidden": True,
             "no_performance_from_this_compiler": True,
             "blocked_inputs_remain_blocked": True,
+            "live_endpoint_source_readiness_is_provisional": True,
+            "immutable_historical_binding_required_before_candidate_pit": True,
         },
     }
     out["receipt_fingerprint"] = sha256_json(out)
