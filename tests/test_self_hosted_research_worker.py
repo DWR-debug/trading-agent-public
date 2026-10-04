@@ -487,6 +487,12 @@ def test_local_reproduction_includes_q121r6_sec_archive_smoke():
     assert any("automation.q121r6_sec_archive_url_smoke" in command for command in commands)
 
 
+def test_windows_pulse_contains_current_pit_work():
+    commands = [" ".join(command) for command in worker.LANES["local_reproduction"] + worker.LANES["data_qa"]]
+    assert any("automation.q186_pit_readiness_r2" in command for command in commands)
+    assert any("automation.q188_q192_pit_census_r2" in command for command in commands)
+
+
 def test_windows_pulse_contains_current_frontier_source_probes():
     commands = [" ".join(command) for command in worker.LANES["local_reproduction"] + worker.LANES["data_qa"]]
     for module in ("automation.q185_q186_source_feasibility", "automation.q187_q192_source_feasibility", "automation.q193_q196_source_feasibility", "automation.q179_q184_source_feasibility"):
