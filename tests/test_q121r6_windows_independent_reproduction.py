@@ -12,7 +12,7 @@ def test_q121r6_windows_independent_reproduction_contract() -> None:
     assert "--workers 8" in text
     assert "--request-gap-seconds 0.25" in text
     assert "timeout-minutes: 240" in text
-    assert "independent_reproduction_only':True" in text
-    assert "formal_evidence_allowed':False" in text
+    assert "'independent_reproduction_only':True" in text
+    assert "'formal_evidence_allowed':False" in text
     assert "trading-agent-windows-research-capacity-v1" in text
     assert "cancel-in-progress: true" in text
