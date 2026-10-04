@@ -222,6 +222,7 @@ ACTIVE_WORKFLOWS = {
     "q121r6-windows-independent-reproduction.yml",
     "windows-local-ai-worker.yml",
     "resource-dashboard-update.yml",
+    "groq-free-adversarial-worker.yml",
 }
 
 REQUIRED_FILES = (
