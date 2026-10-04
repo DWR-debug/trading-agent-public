@@ -170,6 +170,7 @@ ACTIVE_WORKFLOWS = {
     "q121r3-sec-form-index.yml",
     "q121r4-sec-master-index.yml",
     "q121r6-sec-acceptance-time-compilation.yml",
+    "q193-q196-source-feasibility.yml",
     "q182-ferc-self-hosted-access-probe.yml",
     "q127r1-finra-regsho-historical-pit.yml",
     "q130r1-wikimedia-attention-source.yml",

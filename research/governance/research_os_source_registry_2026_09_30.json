@@ -318,6 +318,79 @@
         "cross_asset_positioning"
       ],
       "source_url": "https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm"
+    },
+    {
+      "id": "SRC-FDA-SHORTAGES",
+      "class": "regulatory_supply_constraint",
+      "provider": "U.S. FDA",
+      "access": "public",
+      "capability": "drug_shortage_states",
+      "time_semantics": "shortage state date separated from public observation/update boundary",
+      "pit_fit": "discovery_only_until_historical_daily_vintage_is_reconstructed",
+      "history": "broad/current_and_resolved_route",
+      "candidate_uses": [
+        "Q192 shortage state",
+        "Q194 substitution graph"
+      ],
+      "source_url": "https://www.fda.gov/drugs/drug-shortages"
+    },
+    {
+      "id": "SRC-FDA-ORANGEBOOK",
+      "class": "pharmaceutical_product_identity",
+      "provider": "U.S. FDA",
+      "access": "public_dataset_and_api",
+      "capability": "ingredient_applicant_application_product_therapeutic_equivalence",
+      "time_semantics": "monthly public dataset vintage; public vintage must be frozen before historical use",
+      "pit_fit": "discovery_only_until_vintage_reconstruction",
+      "history": "broad",
+      "candidate_uses": [
+        "Q194 substitution graph"
+      ],
+      "source_url": "https://www.fda.gov/drugs/drug-approvals-and-databases/orange-book-data-files"
+    },
+    {
+      "id": "SRC-EPA-ECHO",
+      "class": "environmental_compliance",
+      "provider": "U.S. EPA",
+      "access": "public_dataset_download",
+      "capability": "inspection_violation_enforcement_facility_data",
+      "time_semantics": "weekly ECHO refresh/extraction boundary distinct from underlying event dates",
+      "pit_fit": "discovery_only_until_historical_vintage_reconstruction",
+      "history": "broad_with_long_historical_enforcement_route",
+      "candidate_uses": [
+        "Q190 enforcement state",
+        "Q195 escalation state"
+      ],
+      "source_url": "https://echo.epa.gov/tools/data-downloads"
+    },
+    {
+      "id": "SRC-USPTO-PATENT-PROVENANCE",
+      "class": "technology_information",
+      "provider": "USPTO",
+      "access": "public",
+      "capability": "patent_grant_publication_and_prior_art",
+      "time_semantics": "document publication/issue boundary distinct from later bulk refresh",
+      "pit_fit": "discovery_only_until_provenance_field_completeness_and_clock_reconstruction",
+      "history": "broad",
+      "candidate_uses": [
+        "Q186 citation graph",
+        "Q196 citation provenance"
+      ],
+      "source_url": "https://www.uspto.gov/ip-policy/economic-research/patentsview"
+    },
+    {
+      "id": "SRC-USASPENDING",
+      "class": "government_demand",
+      "provider": "U.S. Treasury / USAspending",
+      "access": "public_api",
+      "capability": "award_transactions_and_modifications",
+      "time_semantics": "action date distinct from public retrievability boundary",
+      "pit_fit": "discovery_only_until_historical_public_clock_reconstruction",
+      "history": "broad",
+      "candidate_uses": [
+        "Q187 procurement actions"
+      ],
+      "source_url": "https://api.usaspending.gov/docs/endpoints"
     }
   ],
   "agent_runtime_lattice": [
