@@ -12,32 +12,32 @@ from typing import Any
 
 PROBES: dict[str, dict[str, Any]] = {
     "CLINICALTRIALS": {
-        "url": "https://clinicaltrials.gov/",
-        "markers": ["First posted", "Last update posted", "Results first posted"],
+        "urls": ["https://clinicaltrials.gov/data-about-studies/csv-download", "https://clinicaltrials.gov/"],
+        "markers": ["First Posted", "Last Update Posted", "Results First Posted"],
         "clock_contract": "Posted-date fields define public availability; submitted dates are separate.",
     },
     "NHTSA_RECALLS": {
-        "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis",
-        "markers": ["Time Period: 1949 to present", "Frequency: Daily", "published"],
+        "urls": ["https://www.nhtsa.gov/nhtsa-datasets-and-apis", "https://www.nhtsa.gov/search-safety-issues"],
+        "markers": ["1949 to present", "Daily", "recall was published"],
         "clock_contract": "Recall publication date is distinct from the underlying safety-issue report date.",
     },
     "OSHA_DATA": {
-        "url": "https://www.osha.gov/enforcement/",
-        "markers": ["Data", "Fatality Inspection Data", "High Penalty Cases - Historical"],
+        "urls": ["https://www.osha.gov/enforcement/", "https://www.osha.gov/es/fatalities"],
+        "markers": ["Fatality Inspection Data", "High Penalty Cases - Historical"],
         "clock_contract": "Inspection/opening and public display/download boundaries must be separated.",
     },
     "FERC_ELIBRARY": {
-        "url": "https://www.ferc.gov/ferc-online/elibrary",
-        "markers": ["issued and received", "Search", "download"],
+        "urls": ["https://www.ferc.gov/ferc-online/elibrary", "https://www.ferc.gov/about/what-ferc/frequently-asked-questions-faqs/documents-and-filing/elibrary"],
+        "markers": ["issued by FERC", "received by FERC", "free"],
         "clock_contract": "Issued/received document records are distinct from later corrections and underlying event dates.",
     },
     "NTSB_CAROL": {
-        "url": "https://www.ntsb.gov/safety/data/pages/data_stats.aspx",
+        "urls": ["https://www.ntsb.gov/safety/data/pages/data_stats.aspx"],
         "markers": ["CAROL", "1982 to the present", "daily and pending aviation publication report"],
         "clock_contract": "Investigation event and publication times remain distinct.",
     },
     "FCC_ULS": {
-        "url": "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4",
+        "urls": ["https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4"],
         "markers": ["daily transaction files", "weekly transaction files", "Public Domain"],
         "clock_contract": "Transaction identity/date is distinct from daily/weekly dissemination files.",
     },
@@ -79,15 +79,26 @@ def main() -> int:
     args = parser.parse_args()
     source_results = {}
     for source_id, spec in PROBES.items():
-        status, body = fetch(spec["url"])
-        lowered = body.lower()
-        missing = [m for m in spec["markers"] if m.lower() not in lowered]
+        attempts = []
+        selected = None
+        for url in spec["urls"]:
+            status, body = fetch(url)
+            lowered = body.lower()
+            missing = [m for m in spec["markers"] if m.lower() not in lowered]
+            attempts.append({"url": url, "http_status": status, "missing_markers": missing})
+            if selected is None:
+                selected = (url, status, body, missing)
+            if status == 200 and not missing:
+                selected = (url, status, body, [])
+                break
+        url, status, body, missing = selected
         source_results[source_id] = {
-            "url": spec["url"],
+            "url": url,
             "http_status": status,
             "reachable": status == 200,
             "required_markers_present": status == 200 and not missing,
             "missing_markers": missing,
+            "attempts": attempts,
             "clock_contract": spec["clock_contract"],
             "content_sha256": digest(body),
         }
@@ -115,7 +126,7 @@ def main() -> int:
     result["receipt_fingerprint"] = digest(json.dumps(result, ensure_ascii=False, sort_keys=True, separators=(",", ":")))
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({"status": result["status"], "candidate_results": candidate_results, "receipt_fingerprint": result["receipt_fingerprint"]}, sort_keys=True))
+    print(json.dumps({"status": result["status"], "candidate_results": candidate_results, "source_results": source_results, "receipt_fingerprint": result["receipt_fingerprint"]}, sort_keys=True))
     return 0
 
 if __name__ == "__main__":
