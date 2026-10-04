@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T18:28:18.968055+00:00",
+  "generated_at_utc": "2026-10-04T18:29:17.936080+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2504,14 +2504,6 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
-        "headRefName": "research/q198-pit-clock-census-2026-10-04",
-        "number": 1062,
-        "title": "RESEARCH: add historical Q198 Public Inspection PIT census",
-        "updatedAt": "2026-10-04T18:27:48Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1062"
-      },
-      {
-        "baseRefName": "master",
         "headRefName": "fix/workflow-lint-2026-10-04",
         "number": 1056,
         "title": "FIX: restore clean workflow lint across research orchestration",
@@ -2520,6 +2512,16 @@
       }
     ],
     "recent_commits": [
+      {
+        "message": "RESEARCH: add Q198 historical Public Inspection PIT census",
+        "sha": "c5e4cbfac6de7e6f25965d7fe3497c0ddcf190c9",
+        "timestamp": "2026-10-04T20:29:05+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b61002530e6b52b60e0fd47df1beef9e9e18c753",
+        "timestamp": "2026-10-04T18:28:21Z"
+      },
       {
         "message": "OPS: render current Q197-Q201 frontier in status",
         "sha": "8509b1099b011c70a2b89e6094fb6ef609ae7041",
@@ -2549,16 +2551,6 @@
         "message": "OPS: record Groq API key smoke test",
         "sha": "93ab6d76b06544ed3a7958475df6be11621f8720",
         "timestamp": "2026-10-04T18:23:30Z"
-      },
-      {
-        "message": "FIX: restore clean orchestration and evidence paths",
-        "sha": "917e50ab804c02aa9430acbc730881a20ddb8d3c",
-        "timestamp": "2026-10-04T20:23:18+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "67ae7320c322806f488789af856e0adeac120be7",
-        "timestamp": "2026-10-04T18:20:03Z"
       }
     ]
   },
@@ -2643,7 +2635,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8509b1099b011c70a2b89e6094fb6ef609ae7041",
+  "source_master_sha": "c5e4cbfac6de7e6f25965d7fe3497c0ddcf190c9",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2757,6 +2749,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37224555560"
+    "run_id": "37224615168"
   }
 }
