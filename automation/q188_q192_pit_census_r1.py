@@ -98,7 +98,12 @@ def json_probe(
         return result
 
     result["json_parse_ok"] = True
-    results = payload.get("results", [])
+    if isinstance(payload, list):
+        results = payload
+    elif isinstance(payload, dict):
+        results = payload.get("results", [])
+    else:
+        results = []
     if isinstance(results, list) and results:
         row = results[0]
         if isinstance(row, dict):

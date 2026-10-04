@@ -32,3 +32,9 @@ def test_q188_q192_uses_machine_readable_source_surfaces():
     assert "api.fda.gov/drug/shortages.json" in text
     assert "api.crossref.org/works" in text
     assert "echo.epa.gov/tools/data-downloads" in text
+
+
+def test_q189_accepts_cpsc_json_array_shape() -> None:
+    text = (ROOT / "automation/q188_q192_pit_census_r1.py").read_text(encoding="utf-8")
+    assert "if isinstance(payload, list)" in text
+    assert "elif isinstance(payload, dict)" in text
