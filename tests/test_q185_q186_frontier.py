@@ -51,4 +51,4 @@ def test_windows_reproduction_is_separate_and_fork_guarded():
     assert "self-hosted" not in main
     assert "self-hosted" in windows
     assert "github.event.pull_request.head.repo.full_name == github.repository" in windows
-    assert "continue-on-error: true" in windows
+    assert "continue-on-error: true" not in windows
