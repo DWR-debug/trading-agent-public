@@ -925,7 +925,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T00:37:03.958772+00:00",
+  "generated_at_utc": "2026-10-04T00:41:00.532114+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1470,6 +1470,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: protect Q148-R1 receipt persistence from cancellation",
+        "sha": "3a352243350f5d47e4ab08041eb98e741bbff0a0",
+        "timestamp": "2026-10-04T02:40:47+02:00"
+      },
+      {
+        "message": "FIX: protect Q121-R6 runs from follow-up push cancellation",
+        "sha": "b83c902240e1810e9482b5ecbceacbd4fe8347b7",
+        "timestamp": "2026-10-04T02:40:45+02:00"
+      },
+      {
+        "message": "TEST: enforce structural WPSR holiday schedule parsing",
+        "sha": "8b617fa8943268bb69e3d091522a2a6bd3e1bba6",
+        "timestamp": "2026-10-04T02:40:43+02:00"
+      },
+      {
+        "message": "FIX: parse EIA WPSR holiday schedule structurally",
+        "sha": "30f4dadc5c9b3fd788e3e263a2cd31730a77e118",
+        "timestamp": "2026-10-04T02:40:40+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5f7a6faa74f5d59d660652e80aa67394375c3770",
+        "timestamp": "2026-10-04T00:37:06Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "d191820c7783c4c63fdd63e795585047a64701d3",
+        "timestamp": "2026-10-04T00:37:04Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "48439c809bfb8b9abbe7d4e5c81a1ed77f6e5b23",
         "timestamp": "2026-10-04T00:36:52Z"
@@ -1478,36 +1508,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "cc4d73118860447b231f317cb2ed923a2384f6de",
         "timestamp": "2026-10-04T00:36:51Z"
-      },
-      {
-        "message": "FIX: provide Actions token to Q148 receipt publisher",
-        "sha": "6397812dc3d20952542a64ad437a80eb4a5c3938",
-        "timestamp": "2026-10-04T02:36:48+02:00"
-      },
-      {
-        "message": "FIX: provide Actions token to R6 receipt publisher",
-        "sha": "05fe643213b467de7cc7bf2dc0a6846b46d5cf76",
-        "timestamp": "2026-10-04T02:36:44+02:00"
-      },
-      {
-        "message": "EVIDENCE: persist Q121-R6 compact execution receipt",
-        "sha": "396ea9999c64686f2ce56cbe06984e3be9cf7ca0",
-        "timestamp": "2026-10-04T02:36:36+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "7f89013e698594720758647b8076da993cc44023",
-        "timestamp": "2026-10-04T00:36:13Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "766b774d6173bd1870af3ff560d215f3b788cf98",
-        "timestamp": "2026-10-04T00:36:12Z"
-      },
-      {
-        "message": "OPS: add owner-only Q121-R6 execution trigger",
-        "sha": "abbe3ef45be36691f8c0324451e01c3ec337ca30",
-        "timestamp": "2026-10-04T02:36:01+02:00"
       }
     ]
   },
@@ -1577,7 +1577,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "48439c809bfb8b9abbe7d4e5c81a1ed77f6e5b23",
+  "source_master_sha": "3a352243350f5d47e4ab08041eb98e741bbff0a0",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -1691,6 +1691,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37165483356"
+    "run_id": "37165683866"
   }
 }
