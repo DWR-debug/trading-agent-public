@@ -20,7 +20,7 @@ def test_q187_q192_inventory_is_design_only_and_complete() -> None:
             candidate.get(k)
             for k in ("id", "name", "hypothesis", "construction", "sources", "next_gate")
         )
-        assert candidate.get("id", "").startswith("Q18") or candidate.get("id") == "Q191"
+        assert candidate.get("id") in {"Q187", "Q188", "Q189", "Q190", "Q191", "Q192"}
         assert "performance" not in candidate
         assert "promotion" not in candidate
     assert data["policy"]["performance_authorized"] is False
