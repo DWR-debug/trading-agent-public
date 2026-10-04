@@ -34,3 +34,12 @@ def test_generated_status_matches_current_hosted_qa_architecture():
     assert '"self_hosted_slots_consumed": 0' in generator
     assert '"research_continuity": {' in generator
     assert "Continuous QA is scheduled every 6 hours on GitHub-hosted Windows" in generator
+
+
+def test_status_generator_exposes_q179_q184_receipts():
+    text = Path("automation/sync_current_operational_status.py").read_text(encoding="utf-8")
+    assert "q179_q184_source_feasibility_latest.json" in text
+    assert "q179_q184_pit_readiness_r1_latest.json" in text
+    assert '"q179_q184_source_feasibility": q179_q184_source_receipt' in text
+    assert '"q179_q184_pit_readiness_r1": q179_q184_pit_receipt' in text
+    assert "Q179-Q184 Orthogonal Source/PIT Frontier" in text
