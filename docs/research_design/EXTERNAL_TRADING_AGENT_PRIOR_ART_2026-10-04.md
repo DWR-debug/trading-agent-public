@@ -112,6 +112,22 @@ Our project already has a stronger domain-specific analogue:
 Potential hardening:
 when mechanism representations become more formal, consider an explicit structural mechanism fingerprint / similarity audit. This must remain a pre-formal anti-duplication control and never become a performance-ranking mechanism.
 
+### AlphaForgeBench — LLMs as Quantitative Researchers
+
+The KDD 2026 benchmark is especially close to our philosophy: it reframes LLMs from sequential trade-action emitters to quantitative researchers that generate executable factor/strategy code, which is then validated and backtested by a separate deterministic pipeline. Its public benchmark uses sandboxed code execution and reproducible scoring artifacts.
+
+High-value lesson:
+**keep the model on the research/hypothesis side of the boundary and make deterministic software responsible for validation, execution semantics and measurement.** This is an independent confirmation of our worker/evidence separation.
+
+The reported benchmark results are not imported as project evidence.
+
+### Janus-Q and event-centric agent research
+
+Janus-Q treats discrete financial events as primary decision units and constructs an event-centric dataset before model optimization. This is conceptually relevant to I22 because our filing-arrival state is also an event-state compiler rather than a raw price feature.
+
+High-value lesson:
+**where an information channel is event-driven, define the event identity, issuer/security mapping, publication/acceptance clock and state boundary explicitly before any predictive evaluation.** We treat this as a source/PIT-contract principle only; Janus-Q's reward-model/RL optimization is not imported.
+
 ### FinMem
 
 Reviewed for layered, time-aware financial memory.
@@ -215,6 +231,9 @@ Only project-native deterministic runs, preregistrations, immutable receipts, in
 - AlphaAgent paper: https://arxiv.org/abs/2502.16789
 - Alpha-GPT paper: https://arxiv.org/abs/2308.00016
 - AlphaForge implementation: https://github.com/dulyhao/alphaforge
+- AlphaForgeBench: https://github.com/finbrain-lab-hkustgz/AlphaForgeBench
+- AlphaForgeBench paper: https://arxiv.org/abs/2602.18481
+- Janus-Q: https://arxiv.org/abs/2602.19919
 
 ## Status
 
