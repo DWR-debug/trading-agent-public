@@ -16,7 +16,13 @@ on:
       - "research/evidence/q197_q198_source_feasibility_latest.json"
       - "research/evidence/q199_q201_source_feasibility_latest.json"
       - ".github/workflows/groq-free-adversarial-worker.yml"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      use_litellm_transport:
+        description: "Use the optional fail-closed LiteLLM transport for the Groq worker"
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -47,6 +53,7 @@ jobs:
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GROQ_FREE_MODE_CONFIRMED: ${{ secrets.GROQ_FREE_MODE_CONFIRMED }}
+          TRADING_AGENT_LITELLM_TRANSPORT: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.use_litellm_transport == 'true' && 'true' || 'false' }}
         run: |
           set -euo pipefail
           python3 - <<'PY'
@@ -66,6 +73,13 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: '3.13'
+
+      - name: Optional LiteLLM transport
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.use_litellm_transport == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check -r requirements-ai.txt
 
       - name: Run bounded Groq adversarial worker
         shell: bash
