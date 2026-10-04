@@ -52,7 +52,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 automation/orthogonal_pit_next_gate.py \
+          python3 -m automation.orthogonal_pit_next_gate \
             --output research/runs/orthogonal_next_gate_latest.json
 
       - name: Publish next-gate receipt
