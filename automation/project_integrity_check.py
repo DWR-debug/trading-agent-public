@@ -169,6 +169,7 @@ ACTIVE_WORKFLOWS = {
     "q121r2-sec-daily-index-reconciliation.yml",
     "q121r3-sec-form-index.yml",
     "q121r4-sec-master-index.yml",
+    "q121r6-sec-acceptance-time-compilation.yml",
     "q127r1-finra-regsho-historical-pit.yml",
     "q130r1-wikimedia-attention-source.yml",
     "q131r1-sec-disclosure-complexity.yml",
@@ -451,11 +452,15 @@ def _validate_i19_concept_freeze() -> None:
 def main() -> None:
     workflow_dir = ROOT / ".github" / "workflows"
     active_workflows = {path.name for path in workflow_dir.glob("*.yml")}
-    if active_workflows != ACTIVE_WORKFLOWS:
-        fail(
-            "unexpected active workflows: "
-            + ", ".join(sorted(active_workflows - ACTIVE_WORKFLOWS))
-        )
+    unexpected = sorted(active_workflows - ACTIVE_WORKFLOWS)
+    missing = sorted(ACTIVE_WORKFLOWS - active_workflows)
+    if unexpected or missing:
+        parts = []
+        if unexpected:
+            parts.append("unexpected active workflows: " + ", ".join(unexpected))
+        if missing:
+            parts.append("missing expected workflows: " + ", ".join(missing))
+        fail("; ".join(parts))
     _validate_q067_evidence_chain()
     _validate_research_os_registry()
     _validate_critical_research_controls()
