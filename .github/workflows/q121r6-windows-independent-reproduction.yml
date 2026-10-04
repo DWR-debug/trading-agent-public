@@ -191,7 +191,6 @@ jobs:
               raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL partition coverage")
 
           primary = {r["primary_workflow_run_id"] for r in parsed}
-          primary = {r["primary_workflow_run_id"] for r in parsed}
           attempts = {r["primary_workflow_run_attempt"] for r in parsed}
           source_shas = {r["primary_source_sha"] for r in parsed}
           if len(primary) != 1 or len(attempts) != 1 or len(source_shas) != 1:
