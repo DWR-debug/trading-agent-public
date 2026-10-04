@@ -25,6 +25,8 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
+      - name: Install test dependency
+        run: python -m pip install --disable-pip-version-check pytest
       - name: Contract tests
         run: python -m pytest -q tests/test_q148_r1_wpsr_source_clock.py
       - name: Run Q148-R1
