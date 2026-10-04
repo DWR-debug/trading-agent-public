@@ -10,7 +10,7 @@ Dieses Dokument ist der dauerhafte Orchestrierungsvertrag des Trading-Agent-OS. 
 
 Das OS arbeitet nach dem Prinzip: verfügbar + unabhängig + zulässig + sinnvoll ⇒ ausführen.
 
-Bereits laufende Arbeit wird nicht dupliziert. Kostenlose Ressourcen werden nicht künstlich verbraucht. Wissenschaftliche Wahrheit entsteht nur über deterministische Forschung, formale Preregistration, PIT-/Coverage-Gates und unveränderliche Receipts.
+Bereits laufende Arbeit wird nicht dupliziert. **Nach Abschluss einer Forschungsrunde darf und soll das OS die logisch folgende, durch die Ergebnisse bestimmte Runde automatisch starten**, sofern deren Eingangsgates erfüllt sind und keine identische Runde bereits läuft. Der nächste Lauf muss eine neue, klar abgegrenzte Trial-/Candidate-Identität besitzen und darf keine abgeschlossenen Ergebnisse rückwirkend verändern. Kostenlose Ressourcen werden nicht künstlich verbraucht. Wissenschaftliche Wahrheit entsteht nur über deterministische Forschung, formale Preregistration, PIT-/Coverage-Gates und unveränderliche Receipts.
 
 AI- und Coding-Agenten dürfen Forschung technisch beschleunigen, aber weder Holdouts auswählen noch Parameter, Assets oder Horizonte nachträglich optimieren, Performance autorisieren, Kandidaten promoten oder Live-Trading auslösen.
 
