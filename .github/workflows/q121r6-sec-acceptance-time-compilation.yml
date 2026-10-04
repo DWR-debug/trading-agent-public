@@ -16,13 +16,9 @@ on:
 permissions:
   contents: write
 
-# A one-shot research run must not be cancelled by a later status-sync or
-# workflow-fix push to master. Each run keeps its own isolated concurrency key.
-# Push-triggered runs share a stable branch group and supersede older push runs.
-# One-shot/manual runs stay isolated so a later push cannot cancel them.
+# Push-triggered and one-shot issue-comment runs are isolated from each other.
+# Duplicate owner issue-comment requests collapse to the newest request.
 concurrency:
-  # Keep push runs isolated from one-shot/manual invocations, while collapsing
-  # duplicate owner-triggered issue-comment runs into the newest one.
   group: q121r6-sec-acceptance-time-compilation-${{ github.event_name }}${{ github.event_name == 'push' && github.ref || '' }}
   cancel-in-progress: ${{ github.event_name == 'push' || github.event_name == 'issue_comment' }}
 
@@ -44,58 +40,40 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - name: Bootstrap exact repository and pinned Python
-        shell: cmd
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Setup pinned Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install deterministic dependencies
+        shell: bash
         run: |
-          @echo off
-          setlocal EnableExtensions
-          if /I not "%GITHUB_REPOSITORY%"=="DWR-debug/trading-agent-public" exit /b 1
-          if /I not "%GITHUB_REF%"=="refs/heads/master" exit /b 1
-          set "WORK=%RUNNER_TEMP%\q121r6-%GITHUB_SHA%"
-          set "ARCHIVE=%RUNNER_TEMP%\q121r6-%GITHUB_SHA%.tar.gz"
-          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget"
-          set "PY_EXE=%PY_ROOT%\tools\python.exe"
-          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15.nupkg"
-          if exist "%WORK%" rmdir /s /q "%WORK%"
-          mkdir "%WORK%" || exit /b 1
-          curl.exe -L --fail --silent --show-error -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%"
-          if errorlevel 1 exit /b 1
-          tar.exe -xzf "%ARCHIVE%" -C "%WORK%"
-          if errorlevel 1 exit /b 1
-          set "REPO_SRC="
-          for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
-          if not defined REPO_SRC exit /b 1
-          cd /d "%REPO_SRC%" || exit /b 1
-          if not exist "%PY_EXE%" (
-            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg"
-            if errorlevel 1 exit /b 1
-            mkdir "%PY_ROOT%" 2>nul
-            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%"
-            if errorlevel 1 exit /b 1
-          )
-          "%PY_EXE%" --version || exit /b 1
-          "%PY_EXE%" -m pip install --disable-pip-version-check --no-cache-dir tzdata==2026.5 || exit /b 1
-          "%PY_EXE%" -c "from zoneinfo import ZoneInfo; print(ZoneInfo(\"America/New_York\"))" || exit /b 1
-          if not exist "%GITHUB_WORKSPACE%\q121r6-prepared" mkdir "%GITHUB_WORKSPACE%\q121r6-prepared"
-          "%PY_EXE%" -m automation.q121r6_sec_acceptance_time_compiler --prepare-population --output "%GITHUB_WORKSPACE%\q121r6-prepared\population.json"
-          if errorlevel 1 exit /b 1
-          if not exist "%GITHUB_WORKSPACE%\q121r6-prepared\population.json" exit /b 1
-          echo Q121R6_REPO=%REPO_SRC%>>"%GITHUB_ENV%"
-          echo Q121R6_PY=%PY_EXE%>>"%GITHUB_ENV%"
-          endlocal
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check --no-cache-dir             pytest exchange-calendars tzdata==2026.5
+          python -c 'from zoneinfo import ZoneInfo; print(ZoneInfo("America/New_York"))'
+
+      - name: Prepare frozen Q121-R5 population
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p q121r6-prepared
+          python -m automation.q121r6_sec_acceptance_time_compiler             --prepare-population             --output q121r6-prepared/population.json
+          test -s q121r6-prepared/population.json
+
       - name: Contract tests
-        shell: cmd
+        shell: bash
         run: |
-          @echo off
-          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget"
-          set "PY_EXE=%PY_ROOT%\tools\python.exe"
-          if not exist "%Q121R6_PY%" exit /b 1
-          cd /d "%Q121R6_REPO%" || exit /b 1
-          "%Q121R6_PY%" -m pip install --disable-pip-version-check pytest >nul 2>&1
-          if errorlevel 1 exit /b 1
-          "%Q121R6_PY%" -m pytest -q tests/test_q121r6_sec_acceptance_time_compiler.py
-          if errorlevel 1 exit /b 1
-      - uses: actions/upload-artifact@v6
+          set -euo pipefail
+          python -m pytest -q tests/test_q121r6_sec_acceptance_time_compiler.py
+
+      - name: Upload frozen population
+        uses: actions/upload-artifact@v6
         with:
           name: q121r6-population-${{ github.run_id }}
           path: q121r6-prepared/population.json
@@ -119,62 +97,47 @@ jobs:
       }}
     strategy:
       fail-fast: false
-      # Two self-hosted slots are available. Keep at most two shards live so
-      # each shard's 0.25s limiter yields <= 8 requests/s fleet-wide.
       max-parallel: 2
       matrix:
         shard_index: [0,1,2,3]
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
-      - name: Bootstrap exact repository and pinned Python
-        shell: cmd
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Setup pinned Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install deterministic dependencies
+        shell: bash
         run: |
-          @echo off
-          setlocal EnableExtensions
-          set "WORK=%RUNNER_TEMP%\q1216-%GITHUB_SHA%"
-          set "ARCHIVE=%RUNNER_TEMP%\q1216-%GITHUB_SHA%.tar.gz"
-          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget"
-          set "PY_EXE=%PY_ROOT%\tools\python.exe"
-          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15.nupkg"
-          if exist "%WORK%" rmdir /s /q "%WORK%"
-          mkdir "%WORK%" || exit /b 1
-          curl.exe -L --fail --silent --show-error -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%"
-          if errorlevel 1 exit /b 1
-          tar.exe -xzf "%ARCHIVE%" -C "%WORK%"
-          if errorlevel 1 exit /b 1
-          set "REPO_SRC="
-          for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
-          if not defined REPO_SRC exit /b 1
-          cd /d "%REPO_SRC%" || exit /b 1
-          if not exist "%PY_EXE%" (
-            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg"
-            if errorlevel 1 exit /b 1
-            mkdir "%PY_ROOT%" 2>nul
-            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%"
-            if errorlevel 1 exit /b 1
-          )
-          "%PY_EXE%" --version || exit /b 1
-          "%PY_EXE%" -m pip install --disable-pip-version-check --no-cache-dir tzdata==2026.5 || exit /b 1
-          "%PY_EXE%" -c "from zoneinfo import ZoneInfo; print(ZoneInfo(\"America/New_York\"))" || exit /b 1
-          echo Q121R6_REPO=%REPO_SRC%>>"%GITHUB_ENV%"
-          echo Q121R6_PY=%PY_EXE%>>"%GITHUB_ENV%"
-          endlocal & set "Q121R6_REPO=%REPO_SRC%" & set "Q121R6_PY=%PY_EXE%"
-      - uses: actions/download-artifact@v6
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check --no-cache-dir             exchange-calendars tzdata==2026.5
+          python -c 'from zoneinfo import ZoneInfo; print(ZoneInfo("America/New_York"))'
+
+      - name: Download frozen population
+        uses: actions/download-artifact@v6
         with:
           name: q121r6-population-${{ github.run_id }}
           path: q121r6-input
+
       - name: Run header shard
-        shell: cmd
+        shell: bash
         run: |
-          @echo off
-          cd /d "%Q121R6_REPO%" || exit /b 1
-          if not exist "%GITHUB_WORKSPACE%\q121r6-input\population.json" exit /b 1
-          if exist "%GITHUB_WORKSPACE%\q121r6-shard" rmdir /s /q "%GITHUB_WORKSPACE%\q121r6-shard"
-          mkdir "%GITHUB_WORKSPACE%\q121r6-shard" || exit /b 1
-          "%Q121R6_PY%" -m automation.q121r6_sec_acceptance_time_compiler --population "%GITHUB_WORKSPACE%\q121r6-input\population.json" --output "%GITHUB_WORKSPACE%\q121r6-shard\result.json" --shard-index ${{ matrix.shard_index }} --shard-count 4 --workers 8 --request-gap-seconds 0.25
-          if errorlevel 1 exit /b 1
-      - uses: actions/upload-artifact@v6
+          set -euo pipefail
+          test -s q121r6-input/population.json
+          mkdir -p q121r6-shard
+          python -m automation.q121r6_sec_acceptance_time_compiler             --population q121r6-input/population.json             --output q121r6-shard/result.json             --shard-index ${{ matrix.shard_index }}             --shard-count 4             --workers 8             --request-gap-seconds 0.25
+          test -s q121r6-shard/result.json
+
+      - name: Upload shard
+        uses: actions/upload-artifact@v6
         with:
           name: q121r6-shard-${{ matrix.shard_index }}-${{ github.run_id }}
           path: q121r6-shard/result.json
@@ -196,93 +159,120 @@ jobs:
           )
         )
       }}
-    runs-on: [self-hosted, trading-agent-research]
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - name: Bootstrap exact repository and pinned Python
-        shell: cmd
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Setup pinned Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install deterministic dependencies
+        shell: bash
         run: |
-          @echo off
-          setlocal EnableExtensions
-          set "WORK=%RUNNER_TEMP%\q1216a-%GITHUB_SHA%"
-          set "ARCHIVE=%RUNNER_TEMP%\q1216a-%GITHUB_SHA%.tar.gz"
-          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget"
-          set "PY_EXE=%PY_ROOT%\tools\python.exe"
-          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15.nupkg"
-          if exist "%WORK%" rmdir /s /q "%WORK%"
-          mkdir "%WORK%" || exit /b 1
-          curl.exe -L --fail --silent --show-error -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%"
-          if errorlevel 1 exit /b 1
-          tar.exe -xzf "%ARCHIVE%" -C "%WORK%"
-          if errorlevel 1 exit /b 1
-          set "REPO_SRC="
-          for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
-          if not defined REPO_SRC exit /b 1
-          cd /d "%REPO_SRC%" || exit /b 1
-          if not exist "%PY_EXE%" (
-            curl.exe -L --fail --silent --show-error -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg"
-            if errorlevel 1 exit /b 1
-            mkdir "%PY_ROOT%" 2>nul
-            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%"
-            if errorlevel 1 exit /b 1
-          )
-          "%PY_EXE%" --version || exit /b 1
-          "%PY_EXE%" -m pip install --disable-pip-version-check --no-cache-dir tzdata==2026.5 || exit /b 1
-          "%PY_EXE%" -c "from zoneinfo import ZoneInfo; print(ZoneInfo(\"America/New_York\"))" || exit /b 1
-          echo Q121R6_REPO=%REPO_SRC%>>"%GITHUB_ENV%"
-          echo Q121R6_PY=%PY_EXE%>>"%GITHUB_ENV%"
-          endlocal & set "Q121R6_REPO=%REPO_SRC%" & set "Q121R6_PY=%PY_EXE%"
-      - uses: actions/download-artifact@v6
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check --no-cache-dir             exchange-calendars tzdata==2026.5
+
+      - name: Download all shards
+        uses: actions/download-artifact@v6
         with:
           pattern: q121r6-shard-*-${{ github.run_id }}
           path: q121r6-shards
           merge-multiple: true
+
       - name: Aggregate and enforce boundary
-        shell: cmd
+        shell: bash
         run: |
-          @echo off
-          cd /d "%Q121R6_REPO%" || exit /b 1
-          if not exist "%GITHUB_WORKSPACE%\q121r6-shards\shard-0.json" (
-            echo Expected shard artifacts were not found.
-            exit /b 1
+          set -euo pipefail
+          test -s q121r6-shards/shard-0.json
+          test -s q121r6-shards/shard-1.json
+          test -s q121r6-shards/shard-2.json
+          test -s q121r6-shards/shard-3.json
+          mkdir -p q121r6-final
+          python -m automation.q121r6_sec_acceptance_time_aggregate             --shards q121r6-shards             --output q121r6-final/result.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          p = json.loads(Path("q121r6-final/result.json").read_text(encoding="utf-8"))
+          assert p["status"] == "Q121R6_SEC_ACCEPTANCE_TIME_COMPILATION_COMPLETED"
+          assert p["population"]["row_count"] == 61818
+          assert p["population"]["all_header_rows_fetched"] == 61818
+          assert p["population"]["all_header_rows_validated"] is True
+          assert p["target_subject_population"]["acceptance_timestamp_compiled"] is True
+          assert p["interpretation"]["full_subject_issuer_population_compiled"] is True
+          assert p["interpretation"]["acceptance_timestamps_compiled"] is True
+          assert p["interpretation"]["revision_lineage_established"] is False
+          assert p["interpretation"]["same_day_pit_safe"] is False
+          assert all(v is False for v in p["governance"].values())
+          assert p["safety"]["paper_only"] is True
+          assert p["safety"]["live_trading_enabled"] is False
+          assert p["safety"]["orders_enabled"] is False
+          print("Q121R6_BOUNDARY=PASS")
+          print("Q121R6_RECEIPT=" + p["receipt_fingerprint"])
+          PY
+
+      - name: Build compact immutable receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/evidence
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          p = json.loads(Path("q121r6-final/result.json").read_text(encoding="utf-8"))
+          out = Path("research/evidence") / f"q121r6_compact_execution_{os.environ['GITHUB_RUN_ID']}.json"
+          receipt = {
+              "schema_version": "1.0",
+              "receipt_type": "q121r6_compact_execution",
+              "workflow_run_id": int(os.environ["GITHUB_RUN_ID"]),
+              "workflow_sha": os.environ["GITHUB_SHA"],
+              "status": p["status"],
+              "population": p["population"],
+              "target_subject_population": p["target_subject_population"],
+              "interpretation": p["interpretation"],
+              "governance": p["governance"],
+              "safety": p["safety"],
+              "receipt_fingerprint": p["receipt_fingerprint"],
+          }
+          out.write_text(
+              json.dumps(receipt, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
+              encoding="utf-8",
           )
-          mkdir "%GITHUB_WORKSPACE%\q121r6-final" 2>nul
-          "%Q121R6_PY%" -m automation.q121r6_sec_acceptance_time_aggregate --shards "%GITHUB_WORKSPACE%\q121r6-shards" --output "%GITHUB_WORKSPACE%\q121r6-final\result.json"
-          if errorlevel 1 exit /b 1
-          "%Q121R6_PY%" -c "import json; from pathlib import Path; p=json.loads(Path(r'%GITHUB_WORKSPACE%\q121r6-final\result.json').read_text()); assert p['status']=='Q121R6_SEC_ACCEPTANCE_TIME_COMPILATION_COMPLETED'; assert p['population']['row_count']==61818; assert p['population']['all_header_rows_fetched']==61818; assert p['population']['all_header_rows_validated'] is True; assert p['target_subject_population']['acceptance_timestamp_compiled'] is True; assert p['interpretation']['full_subject_issuer_population_compiled'] is True; assert p['interpretation']['acceptance_timestamps_compiled'] is True; assert p['interpretation']['revision_lineage_established'] is False; assert p['interpretation']['same_day_pit_safe'] is False; assert all(v is False for v in p['governance'].values()); assert p['safety']['paper_only'] and not p['safety']['live_trading_enabled'] and not p['safety']['orders_enabled']; print('Q121R6_BOUNDARY=PASS'); print('Q121R6_RECEIPT='+p['receipt_fingerprint'])"
-          if errorlevel 1 exit /b 1
+          Path("research/evidence/q121r6_compact_execution_latest.json").write_text(
+              out.read_text(encoding="utf-8"),
+              encoding="utf-8",
+          )
+          print(out)
+          PY
+
       - name: Persist compact immutable R6 receipt
-        shell: cmd
+        shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          PUBLISH_MESSAGE: "EVIDENCE: persist Q121-R6 compact execution receipt"
         run: |
-          @echo off
-          setlocal EnableExtensions
-          set "PUB=%RUNNER_TEMP%\q121r6-publish-%GITHUB_RUN_ID%"
-          set "ARCHIVE=%RUNNER_TEMP%\q121r6-publish-%GITHUB_RUN_ID%.tar.gz"
-          if exist "%PUB%" rmdir /s /q "%PUB%"
-          mkdir "%PUB%" || exit /b 1
-          curl.exe -L --fail --silent --show-error -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%"
-          if errorlevel 1 exit /b 1
-          tar.exe -xzf "%ARCHIVE%" -C "%PUB%"
-          if errorlevel 1 exit /b 1
-          set "REPO_SRC="
-          for /d %%D in ("%PUB%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
-          if not defined REPO_SRC exit /b 1
-          if not exist "%REPO_SRC%\research\evidence" mkdir "%REPO_SRC%\research\evidence"
-          "%Q121R6_PY%" -c "import json; from pathlib import Path; src=Path(r'%GITHUB_WORKSPACE%\q121r6-final\result.json'); p=json.loads(src.read_text(encoding='utf-8')); receipt={'schema_version':'1.0','receipt_type':'q121r6_compact_execution','workflow_run_id':%GITHUB_RUN_ID%,'workflow_sha':'%GITHUB_SHA%','status':p['status'],'population':p['population'],'target_subject_population':p['target_subject_population'],'interpretation':p['interpretation'],'governance':p['governance'],'safety':p['safety'],'receipt_fingerprint':p['receipt_fingerprint']}; out=Path(r'%REPO_SRC%')/'research'/'evidence'/f'q121r6_compact_execution_{%GITHUB_RUN_ID%}.json'; out.write_text(json.dumps(receipt,ensure_ascii=False,sort_keys=True,indent=2)+'\n',encoding='utf-8')"
-          if errorlevel 1 exit /b 1
-          "%Q121R6_PY%" -c "from pathlib import Path; import shutil; src=Path(r'%REPO_SRC%')/'research'/'evidence'/f'q121r6_compact_execution_{%GITHUB_RUN_ID%}.json'; dst=Path(r'%REPO_SRC%')/'research'/'evidence'/'q121r6_compact_execution_latest.json'; shutil.copy2(src,dst)"
-          if errorlevel 1 exit /b 1
-          cd /d "%REPO_SRC%" || exit /b 1
-          git init -q
-          git remote add origin https://x-access-token:%GITHUB_TOKEN%@github.com/DWR-debug/trading-agent-public.git
-          git fetch --depth=1 origin master
-          git checkout -q -B master FETCH_HEAD
-          git add research/evidence/q121r6_compact_execution_%GITHUB_RUN_ID%.json research/evidence/q121r6_compact_execution_latest.json
-          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "EVIDENCE: persist Q121-R6 compact execution receipt"
-          git push origin HEAD:master
-      - uses: actions/upload-artifact@v6
+          set -euo pipefail
+          for attempt in 1 2 3 4 5; do
+            git fetch origin master --quiet
+            base_sha="$(git rev-parse origin/master)"
+            if python automation/github_contents_publish.py               --repository "${GITHUB_REPOSITORY}"               --branch master               --base-sha "${base_sha}"               --file "research/evidence/q121r6_compact_execution_${GITHUB_RUN_ID}.json=research/evidence/q121r6_compact_execution_${GITHUB_RUN_ID}.json"               --file "research/evidence/q121r6_compact_execution_latest.json=research/evidence/q121r6_compact_execution_latest.json"; then
+              exit 0
+            fi
+            sleep "${attempt}"
+          done
+          exit 1
+
+      - name: Upload final receipt
+        uses: actions/upload-artifact@v6
         with:
           name: q121r6-final-${{ github.run_id }}
           path: q121r6-final/result.json
