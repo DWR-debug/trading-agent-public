@@ -345,10 +345,13 @@ def main() -> int:
             "all_pages_api_parsed": len(api_parsed) == len(pages),
             "all_pages_access_blocked": len(blocked) == len(pages),
             "all_have_filed_timestamps": all(
-                int(x["parsed"]["records_with_filed_timestamp"]) > 0 for x in parsed
+                int(x["parsed"]["records_with_filed_timestamp"])
+                == int(x["parsed"]["filing_records"])
+                for x in parsed
             ) if parsed else False,
             "all_have_scheduled_publication_dates": all(
-                int(x["parsed"]["records_with_scheduled_publication_date"]) > 0
+                int(x["parsed"]["records_with_scheduled_publication_date"])
+                == int(x["parsed"]["filing_records"])
                 for x in parsed
             ) if parsed else False,
             "same_day_ambiguous_total": sum(
