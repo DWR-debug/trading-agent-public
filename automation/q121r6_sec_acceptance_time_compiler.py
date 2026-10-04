@@ -435,6 +435,10 @@ def main() -> None:
         encoding="utf-8",
     )
     if result["status"] != "COMPLETED":
+        print(
+            "Q121R6_FAILURE_SAMPLE="
+            + json.dumps(result["failures"][:5], ensure_ascii=False, sort_keys=True)
+        )
         raise SystemExit("Q121R6_SHARD_INCOMPLETE")
 
 
