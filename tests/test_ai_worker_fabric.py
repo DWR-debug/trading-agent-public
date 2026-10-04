@@ -216,7 +216,7 @@ def test_mistral_lane_is_manual_dispatch_only():
     text = workflow.read_text(encoding="utf-8")
     assert "mistral_worker:" in text
     assert "github.event_name == 'workflow_dispatch'" in text
-    assert "provider: [openrouter_free]" in text
+    assert "provider: [openrouter_free]" not in text
 
 
 def test_q100_frontier_task_has_repository_context_and_safe_scope():
@@ -241,6 +241,9 @@ def test_openrouter_is_event_driven_and_gemini_mistral_manual_only():
     assert "MISTRAL_ROTATION slot=" in text
     assert "/ 21600 % 6" in text
     assert "AI-2026-09-30-Q102-REGIME-STATE-DESIGN" in text
+    assert "research/evidence/q187_q192_source_feasibility_latest.json" in text
+    assert "matrix.task == github.event.inputs.task_id" in text
+    assert "trading-agent-ai-openrouter-" in text
     assert "AI-2026-10-04-Q187-Q192-ADVERSARIAL" in text
 
 
@@ -315,6 +318,25 @@ def test_nonlocal_gemini_quota_is_blocked_without_becoming_a_failure(monkeypatch
 
 
 def test_q187_q192_ai_task_is_safe_and_event_driven():
+    task_path = Path(__file__).parents[1] / "ai_requests" / "AI-2026-10-04-Q187-Q192-ADVERSARIAL.json"
+    payload = load_task(task_path)
+    assert payload["providers"] == ["openrouter_free"]
+    assert payload["holdout_selection"] is False
+    assert payload["parameter_selection"] is False
+    assert payload["asset_selection"] is False
+    assert payload["threshold_selection"] is False
+    assert payload["horizon_selection"] is False
+    assert payload["research_gate_changes"] is False
+    assert payload["promotion_decision"] is False
+    assert payload["live_execution"] is False
+    assert payload["paid_usage"] is False
+    assert payload["allow_workspace_writes"] is False
+    prompt = build_prompt(payload, "openrouter_free")
+    assert "Q187_Q192_SOURCE_PIT_WAVE_2026-10-04.md" in prompt
+    assert "q187_q192_source_feasibility_latest.json" in prompt
+
+
+def test_q187_q192_ai_task_context_is_frozen_and_safe():
     task_path = Path(__file__).parents[1] / "ai_requests" / "AI-2026-10-04-Q187-Q192-ADVERSARIAL.json"
     payload = load_task(task_path)
     assert payload["providers"] == ["openrouter_free"]
