@@ -5,6 +5,17 @@ on:
     workflows:
       - Groq Free-Tier Preflight
     types: [completed]
+  push:
+    branches: [master]
+    paths:
+      - "ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json"
+      - "automation/source_readiness_snapshot_guard.py"
+      - "automation/orthogonal_pit_next_gate.py"
+      - "research/evidence/q185_q186_source_feasibility_latest.json"
+      - "research/evidence/q193_q196_source_feasibility_latest.json"
+      - "research/evidence/q197_q198_source_feasibility_latest.json"
+      - "research/evidence/q199_q201_source_feasibility_latest.json"
+      - ".github/workflows/groq-free-adversarial-worker.yml"
   workflow_dispatch: {}
 
 permissions:
@@ -20,6 +31,7 @@ jobs:
       ${{ github.repository == 'DWR-debug/trading-agent-public' &&
           ((github.event_name == 'workflow_run' &&
             github.event.workflow_run.conclusion == 'success') ||
+           github.event_name == 'push' ||
            github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 25
