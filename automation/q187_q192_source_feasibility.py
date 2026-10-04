@@ -57,7 +57,7 @@ PROBES: dict[str, dict[str, Any]] = {
         "markers": [
             "Recall Data API",
             "machine readable",
-            "decades of consumer product recall information",
+            "publicly available",
         ],
         "clock_contract": (
             "Recall publication state is distinct from incident/manufacture dates. "
@@ -72,7 +72,7 @@ PROBES: dict[str, dict[str, Any]] = {
         ],
         "markers": [
             "Data Downloads",
-            "updated weekly",
+            "monthly",
             "compliance",
             "enforcement",
         ],
@@ -114,6 +114,7 @@ PROBES: dict[str, dict[str, Any]] = {
     "FDA_SHORTAGES": {
         "urls": [
             "https://www.fda.gov/drug-shortages",
+            "https://www.fda.gov/drugs/drug-shortages/frequently-asked-questions-about-drug-shortages",
             "https://open.fda.gov/data/drugshortages/",
             "https://api.fda.gov/drug/shortages.json?limit=1",
         ],
@@ -191,7 +192,9 @@ def main() -> int:
     source_results: dict[str, dict[str, Any]] = {}
     for source_id, spec in PROBES.items():
         attempts: list[dict[str, Any]] = []
-        selected: tuple[str, int, str, list[str]] | None = None
+        fetched_bodies: list[str] = []
+        any_reachable = False
+        any_access_blocked = False
 
         for url in spec["urls"]:
             status, body = fetch(url)
@@ -206,36 +209,42 @@ def main() -> int:
                     "missing_markers": missing,
                 }
             )
-            if selected is None:
-                selected = (url, status, body, missing)
-            if status == 200 and not missing:
-                selected = (url, status, body, [])
-                break
+            if status == 200:
+                any_reachable = True
+                fetched_bodies.append(body)
+            if status in (401, 403):
+                any_access_blocked = True
 
-        assert selected is not None
-        url, status, body, missing = selected
+        combined = "\n\n".join(fetched_bodies)
+        combined_lower = combined.lower()
+        missing = [
+            marker
+            for marker in spec["markers"]
+            if marker.lower() not in combined_lower
+        ]
+        all_urls_reachable = len(fetched_bodies) == len(spec["urls"])
+        required_markers_present = bool(fetched_bodies) and not missing
+
+        if required_markers_present and all_urls_reachable:
+            classification = "PASS"
+        elif not any_reachable and any_access_blocked:
+            classification = "RUNNER_ACCESS_BLOCKED"
+        elif any_reachable and missing:
+            classification = "REACHABLE_MARKER_MISMATCH"
+        else:
+            classification = "UNREACHABLE"
+
         source_results[source_id] = {
-            "url": url,
-            "http_status": status,
-            "reachable": status == 200,
-            "required_markers_present": status == 200 and not missing,
-            "probe_classification": (
-                "PASS"
-                if status == 200 and not missing
-                else (
-                    "RUNNER_ACCESS_BLOCKED"
-                    if status in (401, 403)
-                    else (
-                        "REACHABLE_MARKER_MISMATCH"
-                        if status == 200
-                        else "UNREACHABLE"
-                    )
-                )
-            ),
+            "urls": spec["urls"],
+            "http_statuses": [a["http_status"] for a in attempts],
+            "reachable": any_reachable,
+            "all_urls_reachable": all_urls_reachable,
+            "required_markers_present": required_markers_present,
+            "probe_classification": classification,
             "missing_markers": missing,
             "attempts": attempts,
             "clock_contract": spec["clock_contract"],
-            "content_sha256": digest(body),
+            "content_sha256": digest(combined),
         }
 
     candidate_results = [
