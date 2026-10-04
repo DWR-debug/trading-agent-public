@@ -199,7 +199,7 @@ jobs:
       - name: Checkout exact source
         uses: actions/checkout@v5
         with:
-          ref: \${{ github.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 1
       - name: Setup Python
         uses: actions/setup-python@v6
@@ -210,7 +210,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p research/runs/q186_pit_readiness_r2
-          python -m automation.q186_pit_readiness_r2 --output "research/runs/q186_pit_readiness_r2/\${GITHUB_RUN_ID}.json"
+          python -m automation.q186_pit_readiness_r2 --output "research/runs/q186_pit_readiness_r2/${GITHUB_RUN_ID}.json"
       - name: Validate R2 scientific boundary
         shell: bash
         run: |
@@ -236,10 +236,10 @@ jobs:
         if: success() && github.event_name != 'pull_request'
         shell: bash
         env:
-          GH_TOKEN: \${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          input="research/runs/q186_pit_readiness_r2/\${GITHUB_RUN_ID}.json"
+          input="research/runs/q186_pit_readiness_r2/${GITHUB_RUN_ID}.json"
           latest="research/evidence/q186_pit_readiness_r2_latest.json"
           cp "$input" "$latest"
           for attempt in 1 2 3 4 5; do
@@ -254,7 +254,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q186-pit-r2-\${{ github.run_id }}-\${{ github.run_attempt }}
+          name: q186-pit-r2-${{ github.run_id }}-${{ github.run_attempt }}
           path: research/runs/q186_pit_readiness_r2/
           if-no-files-found: error
           retention-days: 30
