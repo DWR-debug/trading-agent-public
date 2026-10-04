@@ -18,19 +18,41 @@ PROBES: dict[str, dict[str, Any]] = {
     "USASPENDING": {
         "urls": [
             "https://api.usaspending.gov/docs/endpoints",
-            "https://www.usaspending.gov/keyword_search/N0018922C0005",
         ],
         "markers": [
             "Endpoints do not currently require any authorization",
-            "Action Date",
-            "Award ID",
-            "Transaction Amount",
+            "spending_by_transaction",
         ],
         "clock_contract": (
             "Award action date is distinct from the time the transaction record "
             "becomes publicly retrievable. Formal PIT must prove a public boundary "
             "or conservatively shift use to the next eligible session."
         ),
+        "transaction_probe": {
+            "url": "https://api.usaspending.gov/api/v2/search/spending_by_transaction/",
+            "payload": {
+                "filters": {
+                    "time_period": [
+                        {"start_date": "2025-01-01", "end_date": "2025-01-02"}
+                    ]
+                },
+                "fields": [
+                    "Award ID",
+                    "Recipient Name",
+                    "Action Date",
+                    "Transaction Amount",
+                ],
+                "page": 1,
+                "limit": 1,
+                "sort": "Action Date",
+                "order": "desc",
+            },
+            "required_keys": [
+                "Award ID",
+                "Action Date",
+                "Transaction Amount",
+            ],
+        },
     },
     "FDA_SRLC": {
         "urls": [
@@ -162,6 +184,30 @@ def fetch(url: str) -> tuple[int, str]:
 def digest(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
+def post_json(url: str, payload: dict[str, Any]) -> tuple[int, str]:
+    body = json.dumps(payload, separators=(",", ":")).encode("utf-8")
+    req = urllib.request.Request(
+        url,
+        data=body,
+        method="POST",
+        headers={
+            "User-Agent": "trading-agent-public/Q187-Q192-source-feasibility/1",
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=25) as response:
+            return int(getattr(response, "status", 200)), response.read().decode(
+                "utf-8", errors="replace"
+            )
+    except urllib.error.HTTPError as exc:
+        return int(exc.code), exc.read().decode("utf-8", errors="replace")
+    except (urllib.error.URLError, TimeoutError, OSError) as exc:
+        return 599, f"FETCH_ERROR:{type(exc).__name__}:{exc}"
+
+
+
 
 def chronology_mutation_invariance() -> dict[str, bool]:
     base = [
@@ -214,6 +260,35 @@ def main() -> int:
             if status in (401, 403):
                 any_access_blocked = True
 
+        transaction_probe_result: dict[str, Any] | None = None
+        if source_id == "USASPENDING":
+            probe = spec["transaction_probe"]
+            tx_status, tx_body = post_json(probe["url"], probe["payload"])
+            transaction_probe_result = {
+                "url": probe["url"],
+                "http_status": tx_status,
+                "required_method": "POST",
+            }
+            if tx_status == 200:
+                try:
+                    payload = json.loads(tx_body)
+                    results = payload.get("results", [])
+                    if results:
+                        row = results[0]
+                        transaction_probe_result["required_keys_present"] = all(
+                            key in row for key in probe["required_keys"]
+                        )
+                        transaction_probe_result["result_keys"] = sorted(row.keys())
+                    else:
+                        transaction_probe_result["required_keys_present"] = False
+                        transaction_probe_result["result_keys"] = []
+                        transaction_probe_result["empty_result_set"] = True
+                except json.JSONDecodeError:
+                    transaction_probe_result["required_keys_present"] = False
+                    transaction_probe_result["invalid_json"] = True
+            else:
+                transaction_probe_result["required_keys_present"] = False
+
         combined = "\n\n".join(fetched_bodies)
         combined_lower = combined.lower()
         missing = [
@@ -223,6 +298,13 @@ def main() -> int:
         ]
         all_urls_reachable = len(fetched_bodies) == len(spec["urls"])
         required_markers_present = bool(fetched_bodies) and not missing
+        if source_id == "USASPENDING":
+            required_markers_present = (
+                required_markers_present
+                and bool(transaction_probe_result)
+                and transaction_probe_result.get("http_status") == 200
+                and transaction_probe_result.get("required_keys_present") is True
+            )
 
         if required_markers_present:
             classification = "PASS"
@@ -245,6 +327,8 @@ def main() -> int:
             "clock_contract": spec["clock_contract"],
             "content_sha256": digest(combined),
         }
+        if transaction_probe_result is not None:
+            source_results[source_id]["transaction_probe"] = transaction_probe_result
 
     candidate_results = [
         {
