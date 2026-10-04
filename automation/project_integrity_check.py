@@ -224,6 +224,7 @@ ACTIVE_WORKFLOWS = {
     "windows-local-ai-worker.yml",
     "resource-dashboard-update.yml",
     "groq-free-adversarial-worker.yml",
+    "github-pages-dashboard.yml",
 }
 
 REQUIRED_FILES = (
