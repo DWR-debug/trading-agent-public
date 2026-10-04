@@ -982,7 +982,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T14:20:15.007562+00:00",
+  "generated_at_utc": "2026-10-04T14:24:47.190182+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2302,6 +2302,21 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: allow AI credit operational state in T052 provenance guard (#1023)",
+        "sha": "aa2d58f1663fae9bdf750f96e4a17013b3ae1282",
+        "timestamp": "2026-10-04T16:24:35+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "000d4f8ecc31c347d36b3a60a4676d30bee6639a",
+        "timestamp": "2026-10-04T14:20:18Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "3b69626e06cb4830e5e7701f4b4652499ff128c3",
+        "timestamp": "2026-10-04T14:20:15Z"
+      },
+      {
         "message": "OPS: close Q187 PIT/AI workflow follow-up chain (#1022)",
         "sha": "d7ccfab2f6eab550790f09e29c0468da90e92cbc",
         "timestamp": "2026-10-04T16:20:03+02:00"
@@ -2325,21 +2340,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "17bb7607fbf73deaf4cf32f285452b8553c97e11",
         "timestamp": "2026-10-04T14:14:56Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "14d6a59447d7cce6f89270a39fc363d81db1c879",
-        "timestamp": "2026-10-04T14:14:51Z"
-      },
-      {
-        "message": "RESEARCH: advance Q179-Q184 historical PIT census R2 (#1020)",
-        "sha": "477c23a2339bacd7e77f9daeef5b8f42301f1798",
-        "timestamp": "2026-10-04T16:14:38+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "07674c9ab48b45ff24f89d12ac169b1eaa94967f",
-        "timestamp": "2026-10-04T14:13:05Z"
       }
     ]
   },
@@ -2409,7 +2409,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d7ccfab2f6eab550790f09e29c0468da90e92cbc",
+  "source_master_sha": "aa2d58f1663fae9bdf750f96e4a17013b3ae1282",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2523,6 +2523,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37208871721"
+    "run_id": "37209153333"
   }
 }
