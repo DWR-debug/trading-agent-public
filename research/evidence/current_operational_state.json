@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T21:58:18.701565+00:00",
+  "generated_at_utc": "2026-10-04T21:59:05.497883+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -3522,44 +3522,44 @@
     ],
     "recent_commits": [
       {
-        "message": "RESEARCH: add bounded Q202-Q204 information-timing feasibility workflow",
-        "sha": "265c98af5e49abdeb019622bebdc7cff761cc462",
-        "timestamp": "2026-10-04T23:58:17+02:00"
+        "message": "TEST: enforce source-first Q202-Q204 next-gate compilation",
+        "sha": "a8134222418b6662c3b0b27d040b1d04ff36ef1c",
+        "timestamp": "2026-10-04T23:58:54+02:00"
       },
       {
-        "message": "TEST: add Q202-Q204 information-timing gate contracts",
-        "sha": "a7adf740920f85e352fc3a29871f3c26feeb4602",
-        "timestamp": "2026-10-04T23:58:06+02:00"
+        "message": "OPS: record Groq free adversarial worker state",
+        "sha": "b3ade93581492e5e46dbefdb411766cb933bd4fa",
+        "timestamp": "2026-10-04T21:58:53Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "fbdda52a1386301ab8dab5a2425214cefabafb7b",
-        "timestamp": "2026-10-04T21:57:56Z"
+        "message": "CLEANUP: remove unused next-gate compiler state copy",
+        "sha": "95b910136b10b624b1a33322af3b66103a899868",
+        "timestamp": "2026-10-04T23:58:49+02:00"
       },
       {
-        "message": "RESEARCH: add bounded Q202-Q204 source feasibility gate",
-        "sha": "708e706e4233681192e0f835f639aba70c5240a7",
-        "timestamp": "2026-10-04T23:57:52+02:00"
+        "message": "GOV: compile Q202-Q204 as source-feasibility-first candidates",
+        "sha": "dbe1cd0ad44c8cab2001bea8d533c64b0f23ea0c",
+        "timestamp": "2026-10-04T23:58:37+02:00"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "655c475e264fb186c810df19162d3f8d91bbc9c3",
-        "timestamp": "2026-10-04T21:57:48Z"
+        "sha": "9b420c73079e402545811ba718e07831f0a16d1a",
+        "timestamp": "2026-10-04T21:58:34Z"
       },
       {
-        "message": "RESEARCH: tighten Q204 latency contract to separately documented stages",
-        "sha": "f43f0d9029d26d4be8b723bfbfefb4a1cef61d67",
-        "timestamp": "2026-10-04T23:57:35+02:00"
+        "message": "ORCH: dispatch Q202-Q204 information-timing feasibility",
+        "sha": "9c7592f44da8f842228bcadb83b4461089d800c4",
+        "timestamp": "2026-10-04T23:58:28+02:00"
       },
       {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "dce5d3397d5c448232beb9c1ac450a6fb8470732",
-        "timestamp": "2026-10-04T21:56:41Z"
+        "message": "GOV: register Q202-Q204 feasibility workflow in project integrity",
+        "sha": "4b1d46ea4c37fbe86919244fc158f8e21ac289cb",
+        "timestamp": "2026-10-04T23:58:22+02:00"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "8e3c4af36d29c24d545abcf22e8629786bd25465",
-        "timestamp": "2026-10-04T21:56:36Z"
+        "sha": "1e7ba809c80d7e60cd6cd03d4713fbbafc03fb37",
+        "timestamp": "2026-10-04T21:58:20Z"
       }
     ]
   },
@@ -3644,7 +3644,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "265c98af5e49abdeb019622bebdc7cff761cc462",
+  "source_master_sha": "a8134222418b6662c3b0b27d040b1d04ff36ef1c",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -3758,6 +3758,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37238187568"
+    "run_id": "37238233948"
   }
 }
