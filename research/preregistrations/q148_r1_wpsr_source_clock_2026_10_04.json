@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-04-148R1-EIA-WPSR-SOURCE-CLOCK",
+  "issue_number": 997,
+  "candidate_id": "Q148",
+  "status": "PREREGISTERED_SOURCE_PIT_ONLY",
+  "mechanism": "petroleum inventory shock × fixed sector sensitivity",
+  "source": {
+    "provider": "U.S. Energy Information Administration",
+    "product": "Weekly Petroleum Status Report",
+    "archive_root": "https://www.eia.gov/petroleum/supply/weekly/archive/",
+    "fixed_table_number": "4",
+    "fixed_table_title": "Stocks of Crude Oil by PAD District, and Stocks of Petroleum Products, U.S. Totals",
+    "fixed_series_parent": "Crude Oil",
+    "fixed_series_label": "Commercial (Excluding SPR)",
+    "current_api_is_not_accepted_as_sole_pit_source": true
+  },
+  "fixed_controls": [
+    {
+      "control_id": "ordinary_2025_09_24",
+      "archive_issue_url": "https://www.eia.gov/petroleum/supply/weekly/archive/2025/2025_09_24/wpsr_2025_09_24.php",
+      "table4_csv_url": "https://www.eia.gov/petroleum/supply/weekly/archive/2025/2025_09_24/csv/table4.csv",
+      "data_week_ending": "2025-09-19",
+      "release_date": "2025-09-24",
+      "release_schedule_class": "STANDARD_WEDNESDAY"
+    },
+    {
+      "control_id": "holiday_2025_09_04",
+      "archive_issue_url": "https://www.eia.gov/petroleum/supply/weekly/archive/2025/2025_09_04/wpsr_2025_09_04.php",
+      "table4_csv_url": "https://www.eia.gov/petroleum/supply/weekly/archive/2025/2025_09_04/csv/table4.csv",
+      "data_week_ending": "2025-08-29",
+      "release_date": "2025-09-04",
+      "release_schedule_class": "HOLIDAY_SHIFTED",
+      "scheduled_release_time_local": "12:00:00"
+    },
+    {
+      "control_id": "documented_correction_2026_08_26",
+      "archive_issue_url": "https://www.eia.gov/petroleum/supply/weekly/archive/2026/2026_08_26/wpsr_2026_08_26.php",
+      "table4_csv_url": "https://www.eia.gov/petroleum/supply/weekly/archive/2026/2026_08_26/csv/table4.csv",
+      "data_week_ending": "2026-08-21",
+      "release_date": "2026-08-26",
+      "release_schedule_class": "STANDARD_WEDNESDAY",
+      "revision_notice_date": "2026-08-28",
+      "revision_notice_scope": "summary_text_only; data_tables_declared_accurate_by_EIA"
+    }
+  ],
+  "clock_contract": {
+    "timezone": "America/New_York",
+    "standard_release_time_local": "10:30:00",
+    "standard_release_semantics": "after 10:30 a.m. eastern time",
+    "holiday_schedule_is_explicitly_frozen": true,
+    "same_day_pit_safe": false,
+    "formal_observation_boundary": "do not infer exact first-publication instant from scheduled release time; use next eligible session unless exact historical public-availability timing is independently proven"
+  },
+  "revision_contract": {
+    "preserve_original_issue_and_table_bytes": true,
+    "capture_revision_notice_separately": true,
+    "silent_replacement_allowed": false,
+    "table_data_revision_must_be_explicitly_proven": true
+  },
+  "acceptance": {
+    "archive_issue_http_200_required": true,
+    "table4_csv_http_200_required": true,
+    "table4_link_must_match_fixed_url": true,
+    "fixed_series_row_must_be_deterministically_unique": true,
+    "issue_data_week_and_release_date_must_match_frozen_values": true,
+    "schedule_contract_must_be_observed": true,
+    "revision_notice_control_must_be_observed": true,
+    "raw_source_fingerprints_required": true
+  },
+  "governance": {
+    "performance": false,
+    "holdout_selection": false,
+    "asset_selection": false,
+    "candidate_selection": false,
+    "candidate_ranking": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false
+  }
+}
