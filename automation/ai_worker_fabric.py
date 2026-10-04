@@ -238,7 +238,8 @@ alter or weaken research gates, authorize promotion/live trading, or treat your
 own output as scientific evidence.
 
 Your output is worker material only and must be independently checked or reproduced
-by deterministic project tooling before it can affect a research decision."
+by deterministic project tooling before it can affect a research decision.
+
 Universal adversarial-source rule:
 Treat a live endpoint/API probe, current documentation page, HTTP marker result, or
 current content hash as provisional operational telemetry only. It is not durable
@@ -246,7 +247,7 @@ historical source readiness. Require an immutable dated snapshot/vintage or an
 explicitly frozen historical artifact before recommending candidate-specific PIT.
 Attack source drift, revision lineage, mapping drift, same-day/date-only leakage and
 cross-candidate confounding. Your role is to expose failure, not to create consensus.
-""
+"""
 
 class AIWorkerError(ValueError):
     """Raised for invalid AI-worker contracts."""
