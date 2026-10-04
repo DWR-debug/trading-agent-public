@@ -115,6 +115,7 @@ jobs:
           cd "$REPO_SRC"
           OUT="$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID"
           mkdir -p "$OUT"
+          python3 -m pip install --disable-pip-version-check pytest
           python3 -m automation.s10_mechanical_research_qa \
             --repo-root "$REPO_SRC" \
             --output "$OUT/mechanical_research_qa.json"
