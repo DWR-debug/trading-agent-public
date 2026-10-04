@@ -55,7 +55,10 @@ jobs:
           assert d["reproduction_boundary"]["all_fixed_samples_reproduced"] is True
           assert d["reproduction_boundary"]["candidate_pit_validated"] is False
           assert all(v is False for v in d["scientific_boundary"].values())
-          assert all(v is False for v in d["safety"].values())
+          assert d["safety"]["PAPER_ONLY"] is True
+          assert d["safety"]["LIVE_TRADING_ENABLED"] is False
+          assert d["safety"]["ORDERS_ENABLED"] is False
+          assert d["safety"]["AUTOMATIC_PROMOTION"] is False
           assert all(d["mutation_checks"].values())
           print("Q169_R4_INDEPENDENT_REPRODUCTION_OK")
           PY
