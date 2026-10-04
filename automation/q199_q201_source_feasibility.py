@@ -4,7 +4,7 @@ Source reachability and structural PIT-contract checks only. No market returns,
 candidate ranking, performance authorization, holdout selection or tuning.
 """
 from __future__ import annotations
-import argparse, hashlib, json, urllib.error, urllib.request
+import argparse, hashlib, json, re, urllib.error, urllib.request
 from pathlib import Path
 
 PROBES = {
@@ -26,6 +26,18 @@ PROBES = {
             "lastUpdatePostDateStruct",
             "resultsFirstPostDateStruct"
         ]
+    }
+}
+
+HISTORY_PROBES = {
+    "CLINICALTRIALS_HISTORY": {
+        "url": "https://clinicaltrials.gov/study/NCT00125528?tab=history",
+        "markers": [
+            "Study Record Versions",
+            "2005-07-29",
+            "2015-02-19",
+            "2016-12-16",
+        ],
     }
 }
 
@@ -99,15 +111,40 @@ def main() -> int:
             "scientific_boundary":False
         }
 
+    history_results: dict[str, dict] = {}
+    for sid, spec in HISTORY_PROBES.items():
+        status, body = fetch(spec["url"])
+        missing = [m for m in spec["markers"] if m.lower() not in body.lower()]
+        version_dates = sorted(set(re.findall(r"20\d\d-\d\d-\d\d", body)))
+        if status == 200 and not missing and len(version_dates) >= 3:
+            classification = "PASS"
+        elif status in (401, 403):
+            classification = "RUNNER_ACCESS_BLOCKED"
+        elif status == 200:
+            classification = "HISTORY_MARKER_MISMATCH"
+        else:
+            classification = "UNREACHABLE"
+        history_results[sid] = {
+            "url": spec["url"],
+            "http_status": status,
+            "probe_classification": classification,
+            "missing_markers": missing,
+            "version_date_count": len(version_dates),
+            "sample_version_dates": version_dates[:5],
+            "content_sha256": digest(body),
+            "scientific_boundary": False,
+        }
+
     candidates = [
         {"candidate_id":"Q199","status":"HISTORICAL_SOURCE_COMPONENT_READY" if source_results["USPTO_PUBLICATIONS"]["probe_classification"]=="PASS" else "BLOCKED_SOURCE_COMPONENT"},
-        {"candidate_id":"Q201","status":"SOURCE_COMPONENT_READY" if source_results["CLINICALTRIALS_RESULTS"]["probe_classification"]=="PASS" else "BLOCKED_SOURCE_COMPONENT"},
+        {"candidate_id":"Q201","status":"HISTORICAL_VERSION_ARCHIVE_COMPONENT_READY" if history_results["CLINICALTRIALS_HISTORY"]["probe_classification"]=="PASS" else ("SOURCE_COMPONENT_READY" if source_results["CLINICALTRIALS_RESULTS"]["probe_classification"]=="PASS" else "BLOCKED_SOURCE_COMPONENT")},
     ]
     result = {
         "schema_version":"1.0",
         "task_id":"Q-2026-10-04-Q199-Q201-SOURCE-FEASIBILITY",
         "status":"DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
         "source_results":source_results,
+        "history_results":history_results,
         "candidate_results":candidates,
         "synthetic_mutation_checks":mutation_checks(),
         "scientific_boundary":{
