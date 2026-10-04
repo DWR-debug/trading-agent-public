@@ -2,12 +2,12 @@
   "schema_version": "1.0",
   "task_id": "Q-2026-10-04-Q187-Q192-PIT-READINESS-R1",
   "status": "PIT_READINESS_COMPILATION_COMPLETED",
-  "source_receipt_fingerprint": "e004665eb323f8ecf2b8e24510bdd074db15015316034fd08cbcad90f64aa464",
+  "source_receipt_fingerprint": "552447c7170ebe3df053441af875023431a13cb7587edc828b535d8f84da28ca",
   "candidate_results": [
     {
       "candidate_id": "Q187",
-      "source_status": "BLOCKED_SOURCE_PROBE",
-      "pit_status": "PIT_READINESS_BLOCKED_BY_SOURCE",
+      "source_status": "SOURCE_PROBES_PASSED",
+      "pit_status": "PIT_CONTRACT_DEFINED_PENDING_HISTORICAL_PROOF",
       "required_proofs": {
         "historical_transaction_archive_reconstructed": false,
         "public_observation_boundary_proven": false,
@@ -16,7 +16,7 @@
         "revision_history_immutable_prefix_proven": false,
         "same_day_use_proven": false
       },
-      "next_gate": "Repair/source-probe gate before PIT work",
+      "next_gate": "Run fixed historical archive/clock/mapping/revision census; no performance access",
       "performance_authorized": false,
       "selection_allowed": false,
       "ranking_allowed": false,
@@ -82,8 +82,8 @@
     },
     {
       "candidate_id": "Q191",
-      "source_status": "BLOCKED_SOURCE_PROBE",
-      "pit_status": "PIT_READINESS_BLOCKED_BY_SOURCE",
+      "source_status": "SOURCE_PROBES_PASSED",
+      "pit_status": "PIT_CONTRACT_DEFINED_PENDING_HISTORICAL_PROOF",
       "required_proofs": {
         "historical_patent_publication_archive_reconstructed": false,
         "historical_science_publication_archive_reconstructed": false,
@@ -93,7 +93,7 @@
         "issuer_mapping_frozen": false,
         "same_day_ordering_proven": false
       },
-      "next_gate": "Repair/source-probe gate before PIT work",
+      "next_gate": "Run fixed historical archive/clock/mapping/revision census; no performance access",
       "performance_authorized": false,
       "selection_allowed": false,
       "ranking_allowed": false,
@@ -102,8 +102,8 @@
     },
     {
       "candidate_id": "Q192",
-      "source_status": "BLOCKED_SOURCE_PROBE",
-      "pit_status": "PIT_READINESS_BLOCKED_BY_SOURCE",
+      "source_status": "SOURCE_PROBES_PASSED",
+      "pit_status": "PIT_CONTRACT_DEFINED_PENDING_HISTORICAL_PROOF",
       "required_proofs": {
         "historical_shortage_archive_reconstructed": false,
         "first_public_observation_boundary_proven": false,
@@ -112,7 +112,7 @@
         "revision_history_immutable_prefix_proven": false,
         "same_day_use_proven": false
       },
-      "next_gate": "Repair/source-probe gate before PIT work",
+      "next_gate": "Run fixed historical archive/clock/mapping/revision census; no performance access",
       "performance_authorized": false,
       "selection_allowed": false,
       "ranking_allowed": false,
@@ -138,5 +138,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "receipt_fingerprint": "8a5af81a4aa949cb69fb6a817504f84935778e72ffed8335f1e44d141d2fb78a"
+  "receipt_fingerprint": "6a0b859468b610758a6e441f1d932e4abb5280f03c438bf0f9bd53afc9129cf4"
 }
