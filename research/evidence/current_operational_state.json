@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T22:00:35.812021+00:00",
+  "generated_at_utc": "2026-10-04T22:01:31.798644+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -3522,6 +3522,21 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: align hosted frontier pack validator with four workpacks",
+        "sha": "a2a038026937e15de0493e62eab7bfb6f936c1fb",
+        "timestamp": "2026-10-05T00:01:21+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "2c5a506f2187a29ca259006a2c1b38fe2acc1462",
+        "timestamp": "2026-10-04T22:00:41Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "454cee10a7f3bc7bb674003911bb69bb23333af9",
+        "timestamp": "2026-10-04T22:00:38Z"
+      },
+      {
         "message": "OPS: record AI worker state",
         "sha": "5eab507f68bbda89978b1c1d0003b7aa3621329c",
         "timestamp": "2026-10-04T22:00:25Z"
@@ -3545,21 +3560,6 @@
         "message": "OPS: record Groq free adversarial worker state",
         "sha": "c285d5066e78aa4a08ac65fcf417bd81e9d3aef4",
         "timestamp": "2026-10-04T22:00:07Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "21e79cf28e971aa7b658bf8f4e9c1141a153a893",
-        "timestamp": "2026-10-04T22:00:04Z"
-      },
-      {
-        "message": "GOV: consume Q202-Q204 source receipts in next-gate compiler",
-        "sha": "9824758b092a20fbfa5434ec1410f578b9ff5850",
-        "timestamp": "2026-10-04T23:59:53+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "f8e2d02fbc8b3575202d3a4b0686e9bcc8a2c19e",
-        "timestamp": "2026-10-04T21:59:33Z"
       }
     ]
   },
@@ -3644,7 +3644,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5eab507f68bbda89978b1c1d0003b7aa3621329c",
+  "source_master_sha": "a2a038026937e15de0493e62eab7bfb6f936c1fb",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -3758,6 +3758,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37238324121"
+    "run_id": "37238396615"
   }
 }
