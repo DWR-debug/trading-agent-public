@@ -9,6 +9,8 @@ on:
       - tests/test_q121r6_sec_acceptance_time_compiler.py
       - research/preregistrations/q121r6_sec_acceptance_time_compilation_2026_10_03.json
       - .github/workflows/q121r6-sec-acceptance-time-compilation.yml
+  issue_comment:
+    types: [created]
 
 permissions:
   contents: read
@@ -19,7 +21,19 @@ concurrency:
 
 jobs:
   prepare:
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    if: >-
+      ${{
+        github.repository == 'DWR-debug/trading-agent-public' &&
+        (
+          github.event_name != 'issue_comment' ||
+          (
+            github.actor == github.repository_owner &&
+            github.event.issue.pull_request == null &&
+            github.event.issue.number == 882 &&
+            github.event.comment.body == '/trading-agent q121-r6-once'
+          )
+        )
+      }}
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 20
     steps:
@@ -83,7 +97,19 @@ jobs:
 
   compile:
     needs: prepare
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    if: >-
+      ${{
+        github.repository == 'DWR-debug/trading-agent-public' &&
+        (
+          github.event_name != 'issue_comment' ||
+          (
+            github.actor == github.repository_owner &&
+            github.event.issue.pull_request == null &&
+            github.event.issue.number == 882 &&
+            github.event.comment.body == '/trading-agent q121-r6-once'
+          )
+        )
+      }}
     strategy:
       fail-fast: false
       # Two self-hosted slots are available. Keep at most two shards live so
@@ -150,7 +176,19 @@ jobs:
 
   aggregate:
     needs: compile
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    if: >-
+      ${{
+        github.repository == 'DWR-debug/trading-agent-public' &&
+        (
+          github.event_name != 'issue_comment' ||
+          (
+            github.actor == github.repository_owner &&
+            github.event.issue.pull_request == null &&
+            github.event.issue.number == 882 &&
+            github.event.comment.body == '/trading-agent q121-r6-once'
+          )
+        )
+      }}
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 20
     steps:
