@@ -24,7 +24,6 @@ jobs:
         lane: [local_reproduction, data_qa]
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 15
-    continue-on-error: true
     steps:
       - name: Checkout exact source
         uses: actions/checkout@v5
