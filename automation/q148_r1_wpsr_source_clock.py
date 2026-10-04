@@ -98,6 +98,53 @@ class LinkTextParser(HTMLParser):
         return re.sub(r"\s+", " ", " ".join(self.text_parts)).strip()
 
 
+class ScheduleTableParser(HTMLParser):
+    """Extract normalized cells from HTML table rows without layout assumptions."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.rows: list[list[str]] = []
+        self._row: list[str] | None = None
+        self._cell_parts: list[str] | None = None
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        tag = tag.lower()
+        if tag == "tr":
+            self._row = []
+            self._cell_parts = None
+        elif tag in {"td", "th"} and self._row is not None:
+            self._cell_parts = []
+
+    def handle_data(self, data: str) -> None:
+        if self._cell_parts is not None:
+            self._cell_parts.append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        tag = tag.lower()
+        if tag in {"td", "th"} and self._row is not None and self._cell_parts is not None:
+            value = re.sub(r"\s+", " ", " ".join(self._cell_parts)).strip()
+            self._row.append(value)
+            self._cell_parts = None
+        elif tag == "tr" and self._row is not None:
+            if any(self._row):
+                self.rows.append(self._row)
+            self._row = None
+            self._cell_parts = None
+
+
+def holiday_schedule_row_present(body: bytes) -> bool:
+    parser = ScheduleTableParser()
+    parser.feed(body.decode("utf-8", errors="replace"))
+    expected = (
+        "August 29, 2025",
+        "September 4, 2025",
+        "Thursday",
+        "12:00 p.m.",
+        "Labor Day",
+    )
+    return any(tuple(row[:5]) == expected for row in parser.rows)
+
+
 def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
@@ -210,7 +257,7 @@ def schedule_contract() -> dict[str, object]:
     normalized = re.sub(r"\s+", " ", text)
     if standard_marker not in normalized:
         raise RuntimeError("EIA_WPSR_STANDARD_SCHEDULE_MARKER_MISSING")
-    if holiday_marker not in normalized:
+    if not holiday_schedule_row_present(body):
         raise RuntimeError("EIA_WPSR_2025_09_04_HOLIDAY_MARKER_MISSING")
     return {
         "url": SCHEDULE_URL,
