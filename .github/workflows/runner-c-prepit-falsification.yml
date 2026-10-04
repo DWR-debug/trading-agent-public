@@ -2,6 +2,10 @@ name: Runner C Pre-PIT Falsification Workpack
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows:
+      - Windows Runner C Long Research Workpack
+    types: [completed]
   push:
     branches: [master]
     paths:
@@ -19,7 +23,9 @@ concurrency:
 
 jobs:
   prepit:
-    if: github.repository == 'DWR-debug/trading-agent-public'
+    if: >-
+      ${{ github.repository == 'DWR-debug/trading-agent-public' &&
+          (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') }}
     runs-on: [self-hosted, trading-agent-research, trading-agent-long]
     timeout-minutes: 240
     steps:
