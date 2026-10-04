@@ -170,7 +170,7 @@ def test_each_lane_fails_closed_and_preserves_failure_provenance(
 
         assert worker.main() == 17
         selected = worker.select_workpack(lane, len(worker.LANES[lane]), 0)[1]
-        expected_order = [x for x in selected if x != 8] + ([8] if 8 in selected else [])
+        expected_order = ([x for x in selected if x != 8] + ([8] if 8 in selected else [])) if lane == "autonomous_frontier_qa" else selected
         assert attempted == expected_order
 
         summary = json.loads(
