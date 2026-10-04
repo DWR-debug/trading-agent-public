@@ -37,9 +37,9 @@ jobs:
           ) }}
     strategy:
       fail-fast: false
-      max-parallel: 2
+      max-parallel: 3
       matrix:
-        shard_index: [0, 1]
+        shard_index: [0, 1, 2]
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 240
     steps:
@@ -123,7 +123,7 @@ jobs:
           set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q121r6-independent\tools\python.exe"
           if not exist "q121r6-input\population.json" exit /b 1
           mkdir q121r6-independent 2>nul
-          "%PY_EXE%" -m automation.q121r6_sec_acceptance_time_compiler --population "q121r6-input\population.json" --output "q121r6-independent\result.json" --shard-index %SHARD_INDEX% --shard-count 2 --workers 8 --request-gap-seconds 0.25
+          "%PY_EXE%" -m automation.q121r6_sec_acceptance_time_compiler --population "q121r6-input\population.json" --output "q121r6-independent\result.json" --shard-index %SHARD_INDEX% --shard-count 3 --workers 8 --request-gap-seconds 0.25
           if errorlevel 1 exit /b 1
           "%PY_EXE%" -c "import json; from pathlib import Path; p=json.loads(Path('q121r6-independent/result.json').read_text(encoding='utf-8')); assert p['status'] == 'COMPLETED'; assert p['records_fetched'] == p['slice_count']; assert p['failures'] == []; print('Q121R6_WINDOWS_SHARD_OK')"
           "%PY_EXE%" -c "import hashlib,json,os; from pathlib import Path; p=json.loads(Path('q121r6-independent/result.json').read_text(encoding='utf-8')); canonical=json.dumps(p,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode('utf-8'); r={'schema_version':'1.0','receipt_type':'q121r6_windows_independent_reproduction_shard','status':'Q121R6_WINDOWS_INDEPENDENT_SHARD_COMPLETED','primary_workflow_run_id':int(os.environ['SOURCE_RUN_ID']),'primary_workflow_run_attempt':int(os.environ['SOURCE_RUN_ATTEMPT']),'primary_source_sha':os.environ['SOURCE_HEAD_SHA'],'runner_name':os.environ.get('RUNNER_NAME'),'shard_index':int(os.environ['SHARD_INDEX']),'shard_count':2,'population_count':p['population_count'],'slice_start':p['slice_start'],'slice_end_exclusive':p['slice_end_exclusive'],'slice_count':p['slice_count'],'population_fingerprint':p['population_fingerprint'],'records_fetched':p['records_fetched'],'header_hash_aggregate':p['header_hash_aggregate'],'failures':p['failures'],'scientific_boundary':p['scientific_boundary'],'safety':{'PAPER_ONLY':True,'LIVE_TRADING_ENABLED':False,'ORDERS_ENABLED':False,'AUTOMATIC_PROMOTION':False},'formal_evidence_allowed':False,'independent_reproduction_only':True,'source_result_digest':hashlib.sha256(canonical).hexdigest()}; Path('q121r6-independent/receipt.json').write_text(json.dumps(r,ensure_ascii=False,sort_keys=True,indent=2)+'\\n',encoding='utf-8')"
@@ -170,15 +170,17 @@ jobs:
           from pathlib import Path
 
           receipts = sorted(Path("q121r6-windows-shards").glob("**/receipt.json"))
-          if len(receipts) != 2:
-              raise SystemExit(f"Q121R6_WINDOWS_AGGREGATE=FAIL expected 2 receipts, found {len(receipts)}")
+          if len(receipts) != 3:
+              raise SystemExit(f"Q121R6_WINDOWS_AGGREGATE=FAIL expected 3 receipts, found {len(receipts)}")
 
           parsed = [json.loads(p.read_text(encoding="utf-8")) for p in receipts]
-          if {r["shard_index"] for r in parsed} != {0, 1}:
+          if {r["shard_index"] for r in parsed} != {0, 1, 2}:
               raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL shard coverage")
           for r in parsed:
               if r["status"] != "Q121R6_WINDOWS_INDEPENDENT_SHARD_COMPLETED":
                   raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL shard status")
+              if r["shard_count"] != 3:
+                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL shard-count contract")
               if r["formal_evidence_allowed"] is not False or r["independent_reproduction_only"] is not True:
                   raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL scientific boundary")
               if r["safety"] != {"PAPER_ONLY": True, "LIVE_TRADING_ENABLED": False, "ORDERS_ENABLED": False, "AUTOMATIC_PROMOTION": False}:
@@ -191,9 +193,12 @@ jobs:
                   raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL population fingerprint")
 
           ordered = sorted(parsed, key=lambda r: r["shard_index"])
-          if ordered[0]["slice_start"] != 0 or ordered[1]["slice_start"] != ordered[0]["slice_end_exclusive"]:
+          if ordered[0]["slice_start"] != 0:
               raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL partition start")
-          if ordered[1]["slice_end_exclusive"] != 61818:
+          for left, right in zip(ordered, ordered[1:]):
+              if right["slice_start"] != left["slice_end_exclusive"]:
+                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL partition continuity")
+          if ordered[-1]["slice_end_exclusive"] != 61818:
               raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL partition end")
           if sum(r["slice_count"] for r in ordered) != 61818:
               raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL partition coverage")
