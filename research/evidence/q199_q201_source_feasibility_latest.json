@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-04-Q199-Q201-SOURCE-FEASIBILITY",
+  "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
+  "source_results": {
+    "USPTO_PUBLICATIONS": {
+      "urls": [
+        "https://www.google.com/googlebooks/uspto-patents-applications-biblio.html",
+        "https://www.uspto.gov/web/offices/pac/mpep/s1120.html",
+        "https://www.uspto.gov/patents/search",
+        "https://ppubs.uspto.gov/basic/"
+      ],
+      "probe_classification": "PASS",
+      "reachable": true,
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://www.google.com/googlebooks/uspto-patents-applications-biblio.html",
+          "http_status": 200,
+          "missing_markers": [
+            "Eighteen-Month Publication of Patent Applications",
+            "Publication Date"
+          ]
+        },
+        {
+          "url": "https://www.uspto.gov/web/offices/pac/mpep/s1120.html",
+          "http_status": 200,
+          "missing_markers": []
+        },
+        {
+          "url": "https://www.uspto.gov/patents/search",
+          "http_status": 200,
+          "missing_markers": [
+            "2015",
+            "2001",
+            "Eighteen-Month Publication of Patent Applications",
+            "Publication Date"
+          ]
+        },
+        {
+          "url": "https://ppubs.uspto.gov/basic/",
+          "http_status": 200,
+          "missing_markers": [
+            "2015",
+            "2001",
+            "Eighteen-Month Publication of Patent Applications"
+          ]
+        }
+      ],
+      "content_sha256": "318e4e7293a543510cd35e9a9d13c615a2b3167f2052ed67add6ab434e4870ee",
+      "scientific_boundary": false
+    },
+    "CLINICALTRIALS_RESULTS": {
+      "urls": [
+        "https://clinicaltrials.gov/data-api",
+        "https://clinicaltrials.gov/api/v2/studies?pageSize=1"
+      ],
+      "probe_classification": "REACHABLE_MARKER_MISMATCH",
+      "reachable": true,
+      "missing_markers": [
+        "Results first posted",
+        "Results first submitted"
+      ],
+      "attempts": [
+        {
+          "url": "https://clinicaltrials.gov/data-api",
+          "http_status": 200,
+          "missing_markers": [
+            "Results first posted",
+            "Results first submitted"
+          ]
+        },
+        {
+          "url": "https://clinicaltrials.gov/api/v2/studies?pageSize=1",
+          "http_status": 200,
+          "missing_markers": [
+            "Results first posted",
+            "Results first submitted",
+            "ClinicalTrials.gov"
+          ]
+        }
+      ],
+      "content_sha256": "8730634329eab20ebb0ac681c0b369b691d857fc36d7f4ede6b0dc2406e6eee4",
+      "scientific_boundary": false
+    }
+  },
+  "candidate_results": [
+    {
+      "candidate_id": "Q199",
+      "status": "HISTORICAL_SOURCE_COMPONENT_READY"
+    },
+    {
+      "candidate_id": "Q201",
+      "status": "BLOCKED_SOURCE_COMPONENT"
+    }
+  ],
+  "synthetic_mutation_checks": {
+    "future_row_prefix_invariant": true,
+    "future_reordering_cannot_change_prefix": true,
+    "future_timestamp_excluded": true,
+    "same_day_ambiguous_events_fail_closed": true,
+    "no_search_dimension_present": true
+  },
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "receipt_fingerprint": "e0ebae75303527dd2e65c80c8ca973464acd88cc114e1e2e56e8dfad9be29089"
+}
