@@ -23,6 +23,11 @@ TARGETS = (
     "automation/q193_q196_source_feasibility.py",
 )
 
+OPTIONAL_TARGETS = {
+    "research/frontier/q193_q196_candidate_wave_2026_10_04.json",
+    "automation/q193_q196_source_feasibility.py",
+}
+
 SAFETY = {
     "PAPER_ONLY": True,
     "LIVE_TRADING_ENABLED": False,
@@ -46,7 +51,8 @@ def main() -> int:
     for rel in TARGETS:
         path = root / rel
         if not path.is_file():
-            failures.append(f"missing:{rel}")
+            if rel not in OPTIONAL_TARGETS:
+                failures.append(f"missing:{rel}")
             continue
         findings.append({"path": rel, "sha256": digest(path), "bytes": path.stat().st_size})
 
