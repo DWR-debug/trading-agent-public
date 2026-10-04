@@ -36,7 +36,7 @@ jobs:
       - name: Checkout exact source
         uses: actions/checkout@v5
         with:
-          ref: \${{ github.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 1
       - name: Setup Python
         uses: actions/setup-python@v6
@@ -71,7 +71,7 @@ jobs:
       - name: Persist latest receipt
         if: success() && github.event_name != 'pull_request'
         env:
-          GH_TOKEN: \${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
@@ -83,7 +83,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: q199-q201-source-feasibility-\${{ github.run_id }}-\${{ github.run_attempt }}
+          name: q199-q201-source-feasibility-${{ github.run_id }}-${{ github.run_attempt }}
           path: research/runs/q199_q201_source_feasibility/
           if-no-files-found: error
           retention-days: 30
