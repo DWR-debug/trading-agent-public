@@ -31,7 +31,7 @@ PROBES = {
 
 HISTORY_PROBES = {
     "CLINICALTRIALS_HISTORY": {
-        "url": "https://clinicaltrials.gov/study/NCT00125528?tab=history",
+        "url": "https://clinicaltrials.gov/study/NCT00125528?a=2&tab=history",
         "markers": [
             "Study Record Versions",
             "2005-07-29",
