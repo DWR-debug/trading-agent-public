@@ -94,11 +94,17 @@ def archive_header_url(filename: str) -> str:
     parts = filename.split("/")
     if len(parts) < 4 or parts[0] != "edgar" or parts[1] != "data":
         raise ValueError(f"INVALID_ARCHIVE_FILENAME:{filename}")
-    cik = str(int(parts[2]))
-    accession = r3.accession_from_filename(filename).replace("-", "")
+    accession_dashed = r3.accession_from_filename(filename)
+    accession = accession_dashed.replace("-", "")
+    # For subject-company beneficial-ownership rows, the archive directory is
+    # keyed by the filer/reporting-person CIK encoded in the accession prefix,
+    # not necessarily the subject-company CIK in the index row.
+    filer_cik = accession_dashed.split("-", 1)[0]
+    if not re.fullmatch(r"\d{10}", filer_cik):
+        raise ValueError(f"INVALID_FILER_CIK_IN_ACCESSION:{accession_dashed}")
     return (
-        f"https://www.sec.gov/Archives/edgar/data/{cik}/{accession}/"
-        f"{accession}-index-headers.html"
+        f"https://www.sec.gov/Archives/edgar/data/{int(filer_cik)}/{accession}/"
+        f"{accession_dashed}-index-headers.html"
     )
 
 
@@ -211,9 +217,9 @@ def compile_header(row: dict[str, str], body: bytes) -> dict[str, object]:
         raise RuntimeError(
             f"FORM_MISMATCH:{row['accession_number']}:{row['form']}:{submission_type}"
         )
-    if filer != row["cik"]:
+    if subject != row["cik"]:
         raise RuntimeError(
-            f"INDEX_FILERC_CIK_MISMATCH:{row['accession_number']}:{row['cik']}:{filer}"
+            f"INDEX_SUBJECT_CIK_MISMATCH:{row['accession_number']}:{row['cik']}:{subject}"
         )
 
     timing = classify_acceptance(row["filed_date"], accepted)
