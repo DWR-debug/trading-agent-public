@@ -65,6 +65,7 @@ jobs:
           assert d["synthetic_mutation_checks"]["reordering_future_row_cannot_change_prefix"] is True
           assert d["synthetic_mutation_checks"]["no_search_dimension_present"] is True
           assert all(v is False for v in d["scientific_boundary"].values())
+          assert d["scientific_boundary"]["holdout_selection"] is False
           assert d["safety"]["paper_only"] is True
           assert d["safety"]["live_trading_enabled"] is False
           assert d["safety"]["orders_enabled"] is False
