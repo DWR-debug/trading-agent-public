@@ -31,6 +31,9 @@ RECEIPTS = {
     "Q187-Q192-SOURCE": ROOT / "research/evidence/q187_q192_source_feasibility_latest.json",
     "Q187-Q192-PIT": ROOT / "research/evidence/q187_q192_pit_readiness_r1_latest.json",
     "Q188-Q192-CENSUS": ROOT / "research/evidence/q188_q192_pit_census_r2_latest.json",
+    "Q202": ROOT / "research/evidence/q202_q204_information_timing_feasibility_latest.json",
+    "Q203": ROOT / "research/evidence/q202_q204_information_timing_feasibility_latest.json",
+    "Q204": ROOT / "research/evidence/q202_q204_information_timing_feasibility_latest.json",
 }
 
 FORBIDDEN = {
@@ -47,9 +50,12 @@ NEXT_GATES = {
     "Q195": "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT",
     "Q196": "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT",
     "Q197": "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT",
-    "Q198": "BLOCKED_SOURCE_ACCESS",
+    "Q198": "CANDIDATE_SPECIFIC_CORRECTION_WITHDRAWAL_LINEAGE_AND_MAPPING",
     "Q199": "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT",
     "Q201": "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT",
+    "Q202": "SOURCE_FEASIBILITY_REQUIRED",
+    "Q203": "SOURCE_FEASIBILITY_REQUIRED",
+    "Q204": "SOURCE_FEASIBILITY_REQUIRED",
     "Q186": "READY_FOR_CITATION_PUBLICATION_ORDERING_AND_HISTORICAL_COMPLETENESS",
     "Q187-Q192": "READY_FOR_CANDIDATE_SPECIFIC_HISTORICAL_PIT_RECONSTRUCTION",
 }
@@ -100,13 +106,32 @@ def compile_state() -> dict:
     # compiler emits SOURCE_FEASIBILITY_REQUIRED and remains non-authorizing.
     for cid in ids:
         if cid in {"Q202", "Q203", "Q204"}:
-            candidates.append({
-                "candidate_id": cid,
-                "next_gate": NEXT_GATES[cid],
-                "source_or_pit_receipt": None,
-                "execution_authorized": False,
-                "performance_allowed": False,
-            })
+            receipt_path = RECEIPTS[cid]
+            if receipt_path.is_file():
+                receipt = load_json(receipt_path)
+                result = {
+                    "candidate_id": cid,
+                    "next_gate": "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT",
+                    "source_readiness_durability": classify_source_readiness(receipt),
+                    "source_or_pit_receipt": receipt_boundary(receipt),
+                    "execution_authorized": False,
+                    "performance_allowed": False,
+                }
+                boundary = receipt.get("scientific_boundary") or {}
+                if any(boundary.get(k) is True for k in ("performance", "holdout_selection", "ranking",
+                                                          "selection", "parameter_search", "threshold_search",
+                                                          "horizon_search", "asset_search", "variant_search",
+                                                          "promotion", "live_execution")):
+                    result["next_gate"] = "BLOCKED_SCIENTIFIC_BOUNDARY_VIOLATION"
+                candidates.append(result)
+            else:
+                candidates.append({
+                    "candidate_id": cid,
+                    "next_gate": NEXT_GATES[cid],
+                    "source_or_pit_receipt": None,
+                    "execution_authorized": False,
+                    "performance_allowed": False,
+                })
             continue
         receipt = load_json(RECEIPTS[cid])
         durability = classify_source_readiness(receipt)
