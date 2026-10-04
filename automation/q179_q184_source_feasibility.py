@@ -12,7 +12,7 @@ from typing import Any
 
 PROBES: dict[str, dict[str, Any]] = {
     "CLINICALTRIALS": {
-        "urls": ["https://clinicaltrials.gov/api/v2/studies/NCT00513929"],
+        "urls": ["https://clinicaltrials.gov/api/v2/studies/NCT00125528"],
         "markers": ["studyFirstPostDateStruct", "lastUpdatePostDateStruct", "resultsFirstPostDateStruct"],
         "clock_contract": "API posted-date fields define public availability; submitted dates are separate.",
     },
@@ -97,6 +97,7 @@ def main() -> int:
             "http_status": status,
             "reachable": status == 200,
             "required_markers_present": status == 200 and not missing,
+            "probe_classification": "PASS" if status == 200 and not missing else ("RUNNER_ACCESS_BLOCKED" if status in (401,403) else ("REACHABLE_MARKER_MISMATCH" if status == 200 else "UNREACHABLE")),
             "missing_markers": missing,
             "attempts": attempts,
             "clock_contract": spec["clock_contract"],
