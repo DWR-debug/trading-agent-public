@@ -229,6 +229,19 @@ def availability_for_provider(
             "preflight_required",
         )
 
+    if provider == "groq_free":
+        # Account tier is not observable from repository telemetry.
+        # Automatic admission requires a fresh explicit free-mode preflight receipt.
+        return Availability(
+            provider,
+            False,
+            None,
+            None,
+            "unknown",
+            "Groq free tier is documented, but account tier/remaining balance is not observable; require explicit free-only preflight before admission",
+            "preflight_required",
+        )
+
     if provider == "gemini_cli":
         return Availability(
             provider,
@@ -294,7 +307,7 @@ def schedule_tasks(
                 }
             )
             continue
-        provider_rank = {"openrouter_free": 0, "gemini_api": 10, "mistral_api": 20, "gemini_cli": 30, "copilot_free": 40}
+        provider_rank = {"openrouter_free": 0, "groq_free": 5, "gemini_api": 10, "mistral_api": 20, "gemini_cli": 30, "copilot_free": 40}
         chosen = sorted(
             compatible,
             key=lambda p: (
