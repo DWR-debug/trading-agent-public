@@ -21,8 +21,13 @@ permissions:
 # Push-triggered and one-shot issue-comment runs are isolated from each other.
 # Duplicate owner issue-comment requests collapse to the newest request.
 concurrency:
-  group: q121r6-sec-acceptance-time-compilation-${{ github.event_name }}${{ github.event_name == 'push' && github.ref || '' }}
-  cancel-in-progress: ${{ github.event_name == 'push' || github.event_name == 'issue_comment' }}
+  group: >-
+    q121r6-sec-acceptance-time-compilation-${{
+      github.event_name == 'push' && github.sha ||
+      github.event_name == 'issue_comment' && github.event.issue.number ||
+      github.run_id
+    }}
+  cancel-in-progress: ${{ github.event_name == 'issue_comment' }}
 
 jobs:
   prepare:
@@ -59,7 +64,7 @@ jobs:
           echo "$runs_json" | jq -r --arg current_sha "$GITHUB_SHA" '
             .[] | .workflow_runs[] |
             select((.status == "queued" or .status == "in_progress")
-              and .event == "issue_comment"
+              and (.event == "push" or .event == "issue_comment")
               and .head_sha != $current_sha) |
             .id
           ' | while IFS= read -r run_id; do
