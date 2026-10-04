@@ -154,6 +154,7 @@ LANES: dict[str, list[list[str]]] = {
             "pytest",
             "-q",
             "tests/test_q118_candidate_composition.py",
+            "tests/test_q104_i19_xbrl_pit_compiler.py",
             "tests/test_q119_treasury_demand_shape.py",
             "tests/test_q119_treasury_source_feasibility.py",
             "tests/test_q120_cftc_positioning_state.py",

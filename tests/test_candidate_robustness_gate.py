@@ -25,7 +25,7 @@ def test_current_frontier_candidates_pass_structural_robustness_gate():
     receipt = compile_receipt(paths, "research/runs/self_hosted/pre_formal_candidate_robustness.json")
     assert receipt["status"] == "PRE_FORMAL_ROBUSTNESS_COMPLETED"
     assert receipt["failed_candidate_count"] == 0
-    assert receipt["candidate_count"] == 21
+    assert receipt["candidate_count"] == 67
     assert receipt["formalization_allowed"] is False
     for item in receipt["candidates"]:
         assert item["status"] == "PRE_FORMAL_ROBUSTNESS_COMPLETED"
