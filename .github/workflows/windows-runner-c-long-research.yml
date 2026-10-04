@@ -47,6 +47,7 @@ jobs:
             tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
           )
           "%PY_EXE%" --version || exit /b 1
+          "%PY_EXE%" -m pip install --disable-pip-version-check --no-cache-dir pytest exchange-calendars tzdata==2026.5 || exit /b 1
           endlocal
 
       - name: Structural contract and snapshot-guard tests
