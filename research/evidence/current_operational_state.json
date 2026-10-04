@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T20:48:12.990566+00:00",
+  "generated_at_utc": "2026-10-04T20:48:29.461208+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1998,7 +1998,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "f8d600dec7452cc4d60ed1145737ccfcb6c1431da12100d86f9e50ef5ffff719",
+    "receipt_fingerprint": "85aa61da97bb7b55bb178d751f420f3066bc2b6cc823cd237988390c732e66d3",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2033,7 +2033,7 @@
           }
         ],
         "clock_contract": "Docket event dates are distinct from underlying incident dates; exact public intraday availability must be proven per event class, otherwise use next-session availability.",
-        "content_sha256": "449aa7d24f49c1a72f9e10b12118c9051609cfb289db68a197cd2b46ff4a85aa",
+        "content_sha256": "df1c1bd1099ab85f17837c9a4668cc59d09754ec788b9e96d8c620fb23652e28",
         "http_status": 403,
         "missing_markers": [
           "RECAP Archive",
@@ -2057,7 +2057,7 @@
           }
         ],
         "clock_contract": "A recorded docket-entry date is not automatically proof of public dissemination time.",
-        "content_sha256": "47e79f8cf591d2e232f58e6cf683809b4114d69c70bf439acee5fa02d7c744b8",
+        "content_sha256": "83ac09f9aec43cec4187bcce5ec00c6596631a9412c31ce1a1014d5be2cde4fc",
         "http_status": 403,
         "missing_markers": [
           "Advanced RECAP Search",
@@ -2620,6 +2620,21 @@
     ],
     "recent_commits": [
       {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "14c28bb83cef5055e7e0fc09789986c18177b3b3",
+        "timestamp": "2026-10-04T20:48:24Z"
+      },
+      {
+        "message": "OPS: trigger Runner C long workpack after reproduction contract fixes",
+        "sha": "8ccd9765d06f51267ff918d0d2c707a9775d7166",
+        "timestamp": "2026-10-04T22:48:19+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "18bdee96aa7316333531c182b840ecaa0498a73f",
+        "timestamp": "2026-10-04T20:48:15Z"
+      },
+      {
         "message": "OPS: harden Runner C night queue and free-mode AI attestation",
         "sha": "e226c479a8b2bf4756a86b74c0be709b0a600fa7",
         "timestamp": "2026-10-04T22:47:59+02:00"
@@ -2643,21 +2658,6 @@
         "message": "FIX: install bounded Python test dependencies on Runner C",
         "sha": "abb412d5be92b100d57235b8035c9988d9a1b91e",
         "timestamp": "2026-10-04T22:35:34+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "32b66043d4a003fae82033b5bb732a0f57b791e4",
-        "timestamp": "2026-10-04T20:35:28Z"
-      },
-      {
-        "message": "STATUS: synchronize three-runner Windows capacity in canonical status",
-        "sha": "ba10ad5cd5214cb7e08d509f26961f460b460c0f",
-        "timestamp": "2026-10-04T22:35:16+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "35b109d4eaf450e651d22bd958e613de1b0b40dc",
-        "timestamp": "2026-10-04T20:34:51Z"
       }
     ]
   },
@@ -2742,7 +2742,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e226c479a8b2bf4756a86b74c0be709b0a600fa7",
+  "source_master_sha": "14c28bb83cef5055e7e0fc09789986c18177b3b3",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2856,6 +2856,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37233486187"
+    "run_id": "37233508001"
   }
 }
