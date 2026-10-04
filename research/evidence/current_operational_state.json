@@ -963,7 +963,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T12:41:44.751401+00:00",
+  "generated_at_utc": "2026-10-04T12:46:38.749885+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2275,6 +2275,16 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: cancel superseded Q121-R6 issue-comment runs on master push",
+        "sha": "c3520f8266d7ddf6abd16474a4e8df4015ed7990",
+        "timestamp": "2026-10-04T14:46:25+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "7513ac499800d09352395b795b5a153e06b6a83a",
+        "timestamp": "2026-10-04T12:41:46Z"
+      },
+      {
         "message": "FIX: preserve Q186 R2 as highest-priority status frontier",
         "sha": "66f0bc80c96aef654c29ea893c11b916cc40260d",
         "timestamp": "2026-10-04T14:41:34+02:00"
@@ -2303,16 +2313,6 @@
         "message": "RESEARCH: establish Q185-Q186 orthogonal frontier and Q186 PIT-R2",
         "sha": "297b25e4a8b11eb02ae9fe3e372a41fb55fa9516",
         "timestamp": "2026-10-04T14:39:31+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4ca845efcca7e113041df64a0a8ea3cd6ee0db87",
-        "timestamp": "2026-10-04T12:20:05Z"
-      },
-      {
-        "message": "FIX: harden Q121-R6 SEC archive URL and shard provenance",
-        "sha": "752e4d37e94f994f6cf0a3262c8f06051ce16c87",
-        "timestamp": "2026-10-04T14:19:53+02:00"
       }
     ]
   },
@@ -2382,7 +2382,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "66f0bc80c96aef654c29ea893c11b916cc40260d",
+  "source_master_sha": "c3520f8266d7ddf6abd16474a4e8df4015ed7990",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2496,6 +2496,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37202980679"
+    "run_id": "37203267006"
   }
 }
