@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T21:22:33.343484+00:00",
+  "generated_at_utc": "2026-10-04T21:23:26.311050+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1998,7 +1998,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "6e1af8ab987a8f016b83de513ccbc392a6a9f3ce93da19da0efd52352569042d",
+    "receipt_fingerprint": "3aaad7528cb24c028564b557babe80b94b831aafd98b38359506a1445e28957a",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2033,7 +2033,7 @@
           }
         ],
         "clock_contract": "Docket event dates are distinct from underlying incident dates; exact public intraday availability must be proven per event class, otherwise use next-session availability.",
-        "content_sha256": "3f2461fb95a81c21b9fd114efe98eeb855cd6f560d17306bb1094dd54ea3d1cc",
+        "content_sha256": "7de9c0e133a569a66c41938187c29d7a30d9f9772b6689cf5a262ca149233045",
         "http_status": 403,
         "missing_markers": [
           "RECAP Archive",
@@ -2057,7 +2057,7 @@
           }
         ],
         "clock_contract": "A recorded docket-entry date is not automatically proof of public dissemination time.",
-        "content_sha256": "14cdbd3f8ba88d7bd66f7afc82a5ed14820ab3c1ebdc0b50c0c7cc1a4070b82c",
+        "content_sha256": "d34b728ef29127a014b43cbc0d63627b8d76a0672ed306a9401368d0cbea4e32",
         "http_status": 403,
         "missing_markers": [
           "Advanced RECAP Search",
@@ -2410,7 +2410,7 @@
       },
       {
         "access_block_reason": "official Federal Register automated-access challenge/request-access page",
-        "content_sha256": "dfaf7946dc2c3bbf89b4ee9d7d42762aa18a6f3a9ccc8b62160ebc1d999ab2c2",
+        "content_sha256": "2fd89b88ecb3bc62c4f8d6b64b194ffc31e1881f79a68456eefe927f6494ff2d",
         "http_status": 200,
         "requested_date": "2020/04/22",
         "status": "SOURCE_ACCESS_BLOCKED",
@@ -2418,7 +2418,7 @@
       },
       {
         "access_block_reason": "official Federal Register automated-access challenge/request-access page",
-        "content_sha256": "dfaf7946dc2c3bbf89b4ee9d7d42762aa18a6f3a9ccc8b62160ebc1d999ab2c2",
+        "content_sha256": "8deac948de57d196a31a92acf5e7d5c14dc7996a5b1245057f5143e9621ec6b1",
         "http_status": 200,
         "requested_date": "2020/12/16",
         "status": "SOURCE_ACCESS_BLOCKED",
@@ -2426,14 +2426,14 @@
       },
       {
         "access_block_reason": "official Federal Register automated-access challenge/request-access page",
-        "content_sha256": "dfaf7946dc2c3bbf89b4ee9d7d42762aa18a6f3a9ccc8b62160ebc1d999ab2c2",
+        "content_sha256": "8deac948de57d196a31a92acf5e7d5c14dc7996a5b1245057f5143e9621ec6b1",
         "http_status": 200,
         "requested_date": "2026/10/02",
         "status": "SOURCE_ACCESS_BLOCKED",
         "url": "https://www.federalregister.gov/public-inspection/2026/10/02"
       }
     ],
-    "receipt_fingerprint": "33dc0cd2275d4b56c5c00ad07217493c57e7656652137d9e9d9c0e10d12201c7",
+    "receipt_fingerprint": "4323915b4114e8779e5aa625683e6972d8d422c742950422505cb85f2752c95e",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2468,7 +2468,7 @@
         "status": "SOURCE_COMPONENT_READY"
       }
     ],
-    "receipt_fingerprint": "90ebb48d060908c49c0a0d5ce98d26668edf5c6c8349f415d046d8ab0ca83c49",
+    "receipt_fingerprint": "57c9541cfee59515cf4e278fa9de414eecad540693095629f149972144da86d3",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2542,7 +2542,7 @@
             "url": "https://ppubs.uspto.gov/basic/"
           }
         ],
-        "content_sha256": "ab55b735745792b778dec549d5dc65822904c8459713f58aa6f7f8502b6cb8cb",
+        "content_sha256": "96ef88b7812ea201812f9f9f5e9f65f25b4d956bafc3b17123a8d61f48a989c1",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -2613,44 +2613,44 @@
     ],
     "recent_commits": [
       {
-        "message": "OPS: record AI worker state",
-        "sha": "642e79999c8960cc031d4e91c2a557926fd26519",
-        "timestamp": "2026-10-04T21:22:26Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "8a3352cb8988a9a7fc6317425fd942dd298c6029",
+        "timestamp": "2026-10-04T21:23:18Z"
       },
       {
-        "message": "OPS: record Groq free adversarial worker state",
-        "sha": "f8c93163ac94834f6eeb7d8dfde8b2b29e0b80ac",
-        "timestamp": "2026-10-04T21:22:23Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "ad185a334fc4b58d8502a49b05728bb774469608",
+        "timestamp": "2026-10-04T21:23:12Z"
       },
       {
-        "message": "RESEARCH: trigger prioritized overnight source and PIT wave",
-        "sha": "a91e15bebca4176c5d8514932057a6d089eb909a",
-        "timestamp": "2026-10-04T23:22:21+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "498976da6d2d0e62325447c406fcca14dc7807c4",
+        "timestamp": "2026-10-04T21:23:09Z"
       },
       {
-        "message": "OPS: launch Runner C long overnight workpack",
-        "sha": "351ee6e148eecbf9b4ebace3b63a86991df587dd",
-        "timestamp": "2026-10-04T23:22:19+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "c7d2582bd659bf8bef8837d0dfcbfadd5b8a2a4d",
+        "timestamp": "2026-10-04T21:23:06Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "132c815e36eb6a0b852fa3e750d8bd36b995cc76",
-        "timestamp": "2026-10-04T21:22:13Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "b9cb0fcd6c10dacfbed65ca5d2c7df80bb438ad6",
+        "timestamp": "2026-10-04T21:23:04Z"
       },
       {
-        "message": "LITELLM: pass transport flag into Groq worker",
-        "sha": "08f016f5d6f172ce84e43fa953ab77e547ef74a5",
-        "timestamp": "2026-10-04T23:22:09+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "bddb94672e23024d4a5fdef8735cadecd9a78110",
+        "timestamp": "2026-10-04T21:23:01Z"
       },
       {
-        "message": "OPS: record Groq free-tier preflight",
-        "sha": "35c9b65c63b8af2150856027f5365a62fd36cdf1",
-        "timestamp": "2026-10-04T21:22:05Z"
+        "message": "OPS: trigger one-shot Groq LiteLLM smoke",
+        "sha": "54eff11e9c0fbd77bdfcd06480754effb71a0f82",
+        "timestamp": "2026-10-04T23:22:59+02:00"
       },
       {
-        "message": "OPS: retrigger Groq free-tier preflight after attestation",
-        "sha": "7706fb77275ab63aaed275bc9ffa5e353d0b41c4",
-        "timestamp": "2026-10-04T23:21:55+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "51ebcc8cb5194579f23a746be5943cbd7def5637",
+        "timestamp": "2026-10-04T21:22:55Z"
       }
     ]
   },
@@ -2735,7 +2735,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "642e79999c8960cc031d4e91c2a557926fd26519",
+  "source_master_sha": "8a3352cb8988a9a7fc6317425fd942dd298c6029",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2849,6 +2849,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37235828905"
+    "run_id": "37235868300"
   }
 }
