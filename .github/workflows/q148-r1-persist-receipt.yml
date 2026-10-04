@@ -1,0 +1,68 @@
+name: Q148-R1 Persist WPSR Source Clock Receipt
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - automation/q148_r1_wpsr_source_clock.py
+      - research/preregistrations/q148_r1_wpsr_source_clock_2026_10_04.json
+      - .github/workflows/q148-r1-persist-receipt.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: q148-r1-persist-receipt
+  cancel-in-progress: true
+
+jobs:
+  persist:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 2
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Contract tests
+        run: python -m pytest -q tests/test_q148_r1_wpsr_source_clock.py
+      - name: Compile Q148-R1 receipt
+        run: python -m automation.q148_r1_wpsr_source_clock --output "research/evidence/q148_r1_wpsr_source_clock_run_${{ github.run_id }}.json"
+      - name: Persist latest pointer
+        run: |
+          set -euo pipefail
+          cp "research/evidence/q148_r1_wpsr_source_clock_run_${{ github.run_id }}.json"              research/evidence/q148_r1_wpsr_source_clock_latest.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = json.loads(Path("research/evidence/q148_r1_wpsr_source_clock_latest.json").read_text(encoding="utf-8"))
+          assert p["status"] == "Q148R1_WPSR_SOURCE_CLOCK_CONTRACT_COMPLETED"
+          assert all(v is False for v in p["scientific_boundary"].values())
+          assert all(v is False for v in p["governance"].values())
+          assert p["safety"]["PAPER_ONLY"] is True
+          assert p["safety"]["LIVE_TRADING_ENABLED"] is False
+          assert p["safety"]["ORDERS_ENABLED"] is False
+          assert p["safety"]["AUTOMATIC_PROMOTION"] is False
+          print("Q148R1_PERSIST_BOUNDARY=PASS")
+          print("Q148R1_RECEIPT=" + p["receipt_fingerprint"])
+          PY
+      - name: Commit validated evidence
+        run: |
+          set -euo pipefail
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/evidence/q148_r1_wpsr_source_clock_run_${{ github.run_id }}.json research/evidence/q148_r1_wpsr_source_clock_latest.json
+          if git diff --cached --quiet; then
+            echo "Q148R1_NO_EVIDENCE_CHANGE"
+            exit 0
+          fi
+          git commit -m "EVIDENCE: persist Q148-R1 WPSR source clock receipt"
+          git push origin HEAD:master
