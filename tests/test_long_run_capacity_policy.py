@@ -5,7 +5,9 @@ from pathlib import Path
 def test_long_q121r6_reproduction_has_priority_over_background_pc() -> None:
     permanent = Path(".github/workflows/permanent-pc-research-loop.yml").read_text(encoding="utf-8")
     long_run = Path(".github/workflows/q121r6-windows-independent-reproduction.yml").read_text(encoding="utf-8")
+    assert "lane: local_reproduction" in permanent
     assert "concurrency_group: trading-agent-windows-research-capacity-v1" in permanent
+    assert "lane: data_qa" in permanent
     assert "concurrency_group: trading-agent-windows-research-data-qa-v1" in permanent
     assert "cancel-in-progress: false" in permanent
     assert "trading-agent-windows-research-capacity-v1" in long_run
