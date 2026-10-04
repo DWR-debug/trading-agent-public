@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T17:56:35.021852+00:00",
+  "generated_at_utc": "2026-10-04T18:00:31.853061+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2291,11 +2291,41 @@
         "headRefName": "fix/workflow-lint-2026-10-04",
         "number": 1056,
         "title": "FIX: restore clean workflow lint across research orchestration",
-        "updatedAt": "2026-10-04T17:56:08Z",
+        "updatedAt": "2026-10-04T17:59:35Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/pull/1056"
       }
     ],
     "recent_commits": [
+      {
+        "message": "OPS: record verified Q197-Q201 source readiness",
+        "sha": "adfbeef9d88289ee0d9aeb9e4096350e2d293f89",
+        "timestamp": "2026-10-04T20:00:18+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "5760d317160077f099576450b40d4b3552a2d888",
+        "timestamp": "2026-10-04T17:59:45Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "ef1f9cd503c1687a26d214e20184c0e16c5d98fc",
+        "timestamp": "2026-10-04T17:56:45Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "3b29e4751de63a2269105ccbf3160eaeb8700728",
+        "timestamp": "2026-10-04T17:56:42Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "38272ae36a2220c3643347aabfe361fcccbf5e20",
+        "timestamp": "2026-10-04T17:56:40Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "ded1e0c038a7db04616b6d59828aad454d9ad9c4",
+        "timestamp": "2026-10-04T17:56:36Z"
+      },
       {
         "message": "FIX: make deterministic evidence publication race-safe",
         "sha": "1897765df0755d20dd5e459d9a877aa77da975a8",
@@ -2305,36 +2335,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "f29a4edefcd57adb22753ebf6e7fe3ae6ce548c0",
         "timestamp": "2026-10-04T17:54:03Z"
-      },
-      {
-        "message": "OPS: persist current orthogonal frontier priorities",
-        "sha": "2f36a4c48a592ee337a0dabdf3784234440a9bf3",
-        "timestamp": "2026-10-04T19:53:44+02:00"
-      },
-      {
-        "message": "RESEARCH: unlock Q201 with proven ClinicalTrials.gov public clock",
-        "sha": "51cf685434078518932b51e8949e14d0b0e536bf",
-        "timestamp": "2026-10-04T19:53:41+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "de50c8e95ffbc6f1feb2d9a97f6911c34d2bb076",
-        "timestamp": "2026-10-04T17:48:29Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e56aa11386b67d97451445f04e2d05a985b79441",
-        "timestamp": "2026-10-04T17:47:47Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "c35e3d3765b39a7c4588c2f49c912e3c9bbc21a6",
-        "timestamp": "2026-10-04T17:47:43Z"
-      },
-      {
-        "message": "FIX: align Q197 USAspending source probe with live endpoint",
-        "sha": "5ab878b11c4a5bf5df41538056daed9520f371d1",
-        "timestamp": "2026-10-04T19:47:30+02:00"
       }
     ]
   },
@@ -2404,7 +2404,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1897765df0755d20dd5e459d9a877aa77da975a8",
+  "source_master_sha": "adfbeef9d88289ee0d9aeb9e4096350e2d293f89",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2518,6 +2518,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37222425814"
+    "run_id": "37222676751"
   }
 }
