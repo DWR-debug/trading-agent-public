@@ -35,6 +35,12 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Install test dependency
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pytest
+
       - name: Run contract tests
         shell: bash
         run: |
