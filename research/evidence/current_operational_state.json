@@ -925,7 +925,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T00:35:32.719250+00:00",
+  "generated_at_utc": "2026-10-04T00:36:11.807295+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1470,6 +1470,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: add owner-only Q121-R6 execution trigger",
+        "sha": "abbe3ef45be36691f8c0324451e01c3ec337ca30",
+        "timestamp": "2026-10-04T02:36:01+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2ab1c7547d92b7b281ac5fd7f90b5cf3bba6184e",
+        "timestamp": "2026-10-04T00:35:35Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "64175e3dc72fbe8b6488809e337a8c8d66c46110",
+        "timestamp": "2026-10-04T00:35:33Z"
+      },
+      {
         "message": "OPS: add owner-only Q148 R1 manual execution trigger",
         "sha": "c34ab0d0382e7bda633745fe04200328bf3fa90f",
         "timestamp": "2026-10-04T02:35:21+02:00"
@@ -1493,21 +1508,6 @@
         "message": "GOV: register Q148 R1 receipt persistence workflow",
         "sha": "81d8f37777369c94e64e91dbd23a9278096d1e2d",
         "timestamp": "2026-10-04T02:34:19+02:00"
-      },
-      {
-        "message": "OPS: persist validated Q148 R1 WPSR receipt",
-        "sha": "d8aa8319801c74a4e5a53fb9f6e0c9fa924408dc",
-        "timestamp": "2026-10-04T02:34:14+02:00"
-      },
-      {
-        "message": "FIX: normalize trailing WPSR footnote whitespace",
-        "sha": "a93d6cb39776bc35724463f50f5b2a932057b5a6",
-        "timestamp": "2026-10-04T02:33:37+02:00"
-      },
-      {
-        "message": "CI: pin pytest dependency for Q148 R1",
-        "sha": "0e63e39e9cfc706c6e89a9c649375dc6d7433e66",
-        "timestamp": "2026-10-04T02:33:22+02:00"
       }
     ]
   },
@@ -1577,7 +1577,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c34ab0d0382e7bda633745fe04200328bf3fa90f",
+  "source_master_sha": "abbe3ef45be36691f8c0324451e01c3ec337ca30",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -1691,6 +1691,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37165409760"
+    "run_id": "37165443846"
   }
 }
