@@ -81,3 +81,12 @@ def test_q121r6_aggregate_uses_same_shard_count() -> None:
     from automation.q121r6_sec_acceptance_time_aggregate import SHARD_COUNT
 
     assert SHARD_COUNT == 4
+
+
+def test_r6_uses_canonical_r3_accession_parser():
+    from automation import q121r3_sec_form_index_reverse_issuer as r3
+    from automation import q121r6_sec_acceptance_time_compiler as r6
+    filename = "edgar/data/1/000000000124000001/a.txt"
+    assert r3.accession_from_filename(filename) == "0000000001-24-000001"
+    source = __import__("pathlib").Path(r6.__file__).read_text(encoding="utf-8")
+    assert "r3.accession_from_filename(filename)" in source
