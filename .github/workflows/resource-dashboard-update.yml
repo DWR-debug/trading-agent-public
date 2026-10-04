@@ -3,6 +3,11 @@ name: Resource Dashboard Update
 on:
   schedule:
     - cron: "35 3 * * *"
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/dashboard_refresh.trigger"
+      - ".github/workflows/resource-dashboard-update.yml"
   workflow_dispatch: {}
 
 permissions:
