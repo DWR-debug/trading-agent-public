@@ -1,62 +1,6 @@
 {
-  "schema_version": 1,
-  "generated_at_utc": "2026-10-04T17:07:14.538Z",
-  "master_sha": "76cde762ca99251d1bf3b63842907eacf7603648",
-  "operational_snapshot_sha": "63bfc6aec536e410fe3a18dbc75038b462f2ee0e",
-  "status_source": "docs/CURRENT_STATUS.md + research/evidence/current_operational_state.json",
-  "scientific_boundary": {
-    "PAPER_ONLY": true,
-    "LIVE_TRADING_ENABLED": false,
-    "ORDERS_ENABLED": false,
-    "AUTOMATIC_PROMOTION": false,
-    "paid_usage_usd": 0
-  },
-  "resources": [
-    {
-      "name": "Windows slot A",
-      "role": "Formal readiness / local reproduction",
-      "cadence": "10 min + event-driven",
-      "authority": "bounded capacity; no automatic performance authorization"
-    },
-    {
-      "name": "Windows slot B",
-      "role": "Frontier discovery / data QA",
-      "cadence": "10 min + event-driven",
-      "authority": "bounded capacity; no automatic performance authorization"
-    },
-    {
-      "name": "GitHub-hosted Ubuntu",
-      "role": "Deterministic frontier / CI / source-PIT",
-      "cadence": "10 min + event-driven",
-      "authority": "non-authorizing unless a separate formal gate says otherwise"
-    },
-    {
-      "name": "S10 / Android",
-      "role": "Deterministic mechanical QA",
-      "cadence": "2 h + meaningful changes",
-      "authority": "non-scientific support only"
-    },
-    {
-      "name": "Free AI pool",
-      "role": "Bounded adversarial / design / engineering review",
-      "cadence": "event-driven",
-      "authority": "AI outputs are never scientific evidence"
-    }
-  ],
-  "resource_policy": {
-    "windows_slots": 2,
-    "windows_pulse_utc": "*/10 * * * *",
-    "windows_lane_concurrency": {
-      "local_reproduction": "trading-agent-windows-research-capacity-v1",
-      "data_qa": "trading-agent-windows-research-data-qa-v1"
-    },
-    "local_ai_workflow": ".github/workflows/windows-local-ai-worker.yml",
-    "local_ai_trigger": "manual only",
-    "s10_role": "deterministic mechanical research/governance QA; non-scientific",
-    "hosted_linux_frontier": "*/10 * * * *"
-  },
   "current_research": {
-    "latest_formal_result": "**performance_completed_no_arm_passed_all_13_gates** for `T-2026-10-01-H06P2R3-PERFORMANCE-01`.",
+    "active_registry_tail": [],
     "highlights": [
       "Q077-R1: **PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES**; coverage-only repair after the original Q077 pool left insufficient unused symbols; no performance authorization.",
       "Q091: **PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES**; fixed portfolio architecture on the fresh symbol-disjoint universe; performance authorization flag = **False**.",
@@ -77,12 +21,68 @@
       "**Q127-R1:** `Q127R1_SOURCE_PIT_FEASIBILITY_COMPLETED`; four fixed historical dates were retrieved and parsed. Revision lineage and same-day PIT safety remain unresolved. Receipt fingerprint `60815a092421762ac1da2a96d003865b72f25eb640778287964a9648cdfc5b74`.",
       "**Q130-R1:** `Q130R1_SOURCE_FEASIBILITY_COMPLETED`; the frozen historical Wikimedia source probe passed, while publication/revision timing remains outside formal same-day PIT safety."
     ],
-    "active_registry_tail": []
+    "latest_formal_result": "**performance_completed_no_arm_passed_all_13_gates** for `T-2026-10-01-H06P2R3-PERFORMANCE-01`."
   },
   "dashboard_policy": {
     "daily_update_utc": "03:35",
     "manual_update": true,
-    "website_update_button": "opens GitHub Actions workflow dispatch page",
-    "pages_source": "/docs on master"
-  }
+    "pages_source": "/docs on master",
+    "website_update_button": "opens GitHub Actions workflow dispatch page"
+  },
+  "generated_at_utc": "2026-10-04T18:13:12.093960+00:00",
+  "master_sha": "ef7bbf99ea0a52cde400b8fe7458e1b2b381810d",
+  "operational_snapshot_sha": "adfbeef9d88289ee0d9aeb9e4096350e2d293f89",
+  "resource_policy": {
+    "hosted_linux_frontier": "*/10 * * * *",
+    "local_ai_trigger": "manual only",
+    "local_ai_workflow": ".github/workflows/windows-local-ai-worker.yml",
+    "s10_role": "deterministic mechanical research/governance QA; non-scientific",
+    "windows_lane_concurrency": {
+      "data_qa": "trading-agent-windows-research-data-qa-v1",
+      "local_reproduction": "trading-agent-windows-research-capacity-v1"
+    },
+    "windows_pulse_utc": "*/10 * * * *",
+    "windows_slots": 2
+  },
+  "resources": [
+    {
+      "authority": "bounded capacity; no automatic performance authorization",
+      "cadence": "10 min + event-driven",
+      "name": "Windows slot A",
+      "role": "Formal readiness / local reproduction"
+    },
+    {
+      "authority": "bounded capacity; no automatic performance authorization",
+      "cadence": "10 min + event-driven",
+      "name": "Windows slot B",
+      "role": "Frontier discovery / data QA"
+    },
+    {
+      "authority": "non-authorizing unless a separate formal gate says otherwise",
+      "cadence": "10 min + event-driven",
+      "name": "GitHub-hosted Ubuntu",
+      "role": "Deterministic frontier / CI / source-PIT"
+    },
+    {
+      "authority": "non-scientific support only",
+      "cadence": "2 h + meaningful changes",
+      "name": "S10 / Android",
+      "role": "Deterministic mechanical QA"
+    },
+    {
+      "authority": "AI outputs are never scientific evidence",
+      "cadence": "event-driven",
+      "name": "Free AI pool",
+      "role": "Bounded adversarial / design / engineering review"
+    }
+  ],
+  "schema_version": 1,
+  "scientific_boundary": {
+    "AUTOMATIC_PROMOTION": false,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "PAPER_ONLY": true,
+    "paid_usage_usd": 0
+  },
+  "status_source": "docs/CURRENT_STATUS.md + research/evidence/current_operational_state.json"
 }
