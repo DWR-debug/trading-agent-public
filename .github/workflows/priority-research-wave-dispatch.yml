@@ -39,6 +39,7 @@ jobs:
             echo "MODE=NEXT_LOGICAL_GATE"
           else
             mapfile -t workflows < <(cat <<'EOF'
+          q121r6-sec-acceptance-time-compilation.yml
           q185-q186-source-feasibility.yml
           q187-q192-source-feasibility.yml
           q187-q192-pit-readiness-r1.yml
@@ -48,6 +49,7 @@ jobs:
           q198-pit-clock-census.yml
           q199-q201-source-feasibility.yml
           q119-treasury-source-feasibility.yml
+          orthogonal-candidate-development.yml
           EOF
             )
             echo "MODE=PRIORITY_WAVE"
