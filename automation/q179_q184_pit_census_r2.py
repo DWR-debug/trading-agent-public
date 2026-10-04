@@ -15,6 +15,8 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
+from pypdf import PdfReader
+
 
 UA = "trading-agent-public/Q179-Q184-PIT-census-R2/1"
 
@@ -72,6 +74,33 @@ def archive_range_probe(url: str, *, expected_magic: bytes = b"PK") -> dict[str,
         "body_prefix_sha256": sha(body),
         "body_bytes": len(body),
         "content_type": headers.get("content-type"),
+    }
+
+
+def pdf_text_probe(url: str, markers: list[str]) -> dict[str, Any]:
+    status, headers, body = fetch(
+        url,
+        headers={"Accept": "application/pdf,*/*"},
+        limit=2_000_000,
+    )
+    text = ""
+    extraction_error = None
+    if status == 200:
+        try:
+            reader = PdfReader(__import__("io").BytesIO(body))
+            text = "\n".join((page.extract_text() or "") for page in reader.pages)
+        except Exception as exc:
+            extraction_error = f"{type(exc).__name__}:{exc}"
+    missing = [m for m in markers if m.lower() not in text.lower()]
+    return {
+        "url": url,
+        "http_status": status,
+        "markers_present": status == 200 and not missing,
+        "missing_markers": missing,
+        "content_sha256": sha(body),
+        "content_type": headers.get("content-type"),
+        "pdf_pages": len(PdfReader(__import__("io").BytesIO(body)).pages) if status == 200 and not extraction_error else None,
+        "extraction_error": extraction_error,
     }
 
 
@@ -176,9 +205,9 @@ def q184_probe() -> dict[str, Any]:
         "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4",
         ["daily transaction files", "weekly transaction files", "Public Domain"],
     )
-    legacy = html_probe(
+    legacy = pdf_text_probe(
         "https://wireless.fcc.gov/uls/releases/da992205.pdf",
-        ["daily transaction files", "5:00 am eastern time", "previous day's transactions"],
+        ["daily transaction files", "5:00 am eastern time", "previous day"],
     )
     return {
         "documentation": docs,
