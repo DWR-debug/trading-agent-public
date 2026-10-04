@@ -47,6 +47,7 @@ jobs:
         shell: powershell
         env:
           EVENT_SOURCE_RUN_ID: ${{ github.event.workflow_run.id }}
+          EVENT_SOURCE_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
           EVENT_SOURCE_RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
           INPUT_SOURCE_RUN_ID: ${{ inputs.source_run_id }}
           INPUT_SOURCE_RUN_ATTEMPT: ${{ inputs.source_run_attempt }}
@@ -55,11 +56,18 @@ jobs:
           if ("${env:INPUT_SOURCE_RUN_ID}") {
             $sourceRunId = [int64]$env:INPUT_SOURCE_RUN_ID
             $sourceAttempt = [int]$env:INPUT_SOURCE_RUN_ATTEMPT
+            $sourceHeadSha = (gh api "repos/$env:GITHUB_REPOSITORY/actions/runs/$sourceRunId" --jq .head_sha).Trim()
           } else {
             $sourceRunId = [int64]$env:EVENT_SOURCE_RUN_ID
             $sourceAttempt = [int]$env:EVENT_SOURCE_RUN_ATTEMPT
+            $sourceHeadSha = $env:EVENT_SOURCE_HEAD_SHA
           }
+          if ($sourceRunId -le 0 -or $sourceAttempt -le 0) { throw "invalid primary Q121-R6 run identity" }
+          if ($sourceHeadSha -notmatch "^[0-9a-f]{40}$") { throw "invalid primary Q121-R6 source SHA" }
           "SOURCE_RUN_ID=$sourceRunId" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "SOURCE_RUN_ATTEMPT=$sourceAttempt" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "SOURCE_HEAD_SHA=$sourceHeadSha" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
           "SOURCE_RUN_ATTEMPT=$sourceAttempt" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Checkout exact Q121-R6 source
@@ -102,6 +110,7 @@ jobs:
           SHARD_INDEX: ${{ matrix.shard_index }}
           SOURCE_RUN_ID: ${{ env.SOURCE_RUN_ID }}
           SOURCE_RUN_ATTEMPT: ${{ env.SOURCE_RUN_ATTEMPT }}
+          SOURCE_HEAD_SHA: ${{ env.SOURCE_HEAD_SHA }}
         run: |
           @echo off
           setlocal
@@ -111,7 +120,7 @@ jobs:
           "%PY_EXE%" -m automation.q121r6_sec_acceptance_time_compiler --population "q121r6-input\population.json" --output "q121r6-independent\result.json" --shard-index %SHARD_INDEX% --shard-count 2 --workers 8 --request-gap-seconds 0.25
           if errorlevel 1 exit /b 1
           "%PY_EXE%" -c "import json; from pathlib import Path; p=json.loads(Path('q121r6-independent/result.json').read_text(encoding='utf-8')); assert p['population']['header_rows_fetched'] == p['population']['header_rows_expected']; assert p['population']['header_rows_failed'] == 0; print('Q121R6_WINDOWS_SHARD_OK')"
-          "%PY_EXE%" -c "import json,os; from pathlib import Path; p=json.loads(Path('q121r6-independent/result.json').read_text(encoding='utf-8')); r={'schema_version':'1.0','receipt_type':'q121r6_windows_independent_reproduction_shard','status':'Q121R6_WINDOWS_INDEPENDENT_SHARD_COMPLETED','primary_workflow_run_id':int(os.environ['SOURCE_RUN_ID']),'primary_workflow_run_attempt':int(os.environ['SOURCE_RUN_ATTEMPT']),'primary_source_sha':os.environ.get('GITHUB_SHA'),'runner_name':os.environ.get('RUNNER_NAME'),'shard_index':int(os.environ['SHARD_INDEX']),'shard_count':2,'population':p['population'],'target_subject_population':p['target_subject_population'],'interpretation':p['interpretation'],'governance':p['governance'],'safety':{'PAPER_ONLY':True,'LIVE_TRADING_ENABLED':False,'ORDERS_ENABLED':False,'AUTOMATIC_PROMOTION':False},'formal_evidence_allowed':False,'independent_reproduction_only':True,'source_result_receipt_fingerprint':p['receipt_fingerprint']}; Path('q121r6-independent/receipt.json').write_text(json.dumps(r,ensure_ascii=False,sort_keys=True,indent=2)+'\n',encoding='utf-8')"
+          "%PY_EXE%" -c "import json,os; from pathlib import Path; p=json.loads(Path('q121r6-independent/result.json').read_text(encoding='utf-8')); r={'schema_version':'1.0','receipt_type':'q121r6_windows_independent_reproduction_shard','status':'Q121R6_WINDOWS_INDEPENDENT_SHARD_COMPLETED','primary_workflow_run_id':int(os.environ['SOURCE_RUN_ID']),'primary_workflow_run_attempt':int(os.environ['SOURCE_RUN_ATTEMPT']),'primary_source_sha':os.environ['SOURCE_HEAD_SHA'],'runner_name':os.environ.get('RUNNER_NAME'),'shard_index':int(os.environ['SHARD_INDEX']),'shard_count':2,'population':p['population'],'target_subject_population':p['target_subject_population'],'interpretation':p['interpretation'],'governance':p['governance'],'safety':{'PAPER_ONLY':True,'LIVE_TRADING_ENABLED':False,'ORDERS_ENABLED':False,'AUTOMATIC_PROMOTION':False},'formal_evidence_allowed':False,'independent_reproduction_only':True,'source_result_receipt_fingerprint':p['receipt_fingerprint']}; Path('q121r6-independent/receipt.json').write_text(json.dumps(r,ensure_ascii=False,sort_keys=True,indent=2)+'\n',encoding='utf-8')"
           endlocal
 
       - name: Upload independent Windows shard receipt
@@ -129,6 +138,12 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
+      - name: Checkout exact primary source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 1
+
       - name: Download independent Windows shard receipts
         uses: actions/download-artifact@v6
         with:
