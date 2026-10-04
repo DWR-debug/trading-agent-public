@@ -7,8 +7,9 @@ def test_q121r6_windows_independent_reproduction_contract() -> None:
     assert "workflow_run:" in text
     assert "Q121-R6 SEC Acceptance-Time Compilation" in text
     assert "self-hosted" in text
-    assert "max-parallel: 2" in text
-    assert "--shard-count 2" in text
+    assert "max-parallel: 3" in text
+    assert "--shard-count 3" in text
+    assert "shard_index: [0, 1, 2]" in text
     assert "--workers 8" in text
     assert "--request-gap-seconds 0.25" in text
     assert "timeout-minutes: 240" in text
