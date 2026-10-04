@@ -1,0 +1,73 @@
+name: LiteLLM Free Transport Compatibility
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - "automation/litellm_free.py"
+      - "automation/free_mode_attestation.py"
+      - "automation/ai_worker_fabric.py"
+      - "tests/test_litellm_free.py"
+      - "requirements-ai.txt"
+      - "docs/LITELLM_FREE_ROUTING.md"
+      - ".github/workflows/litellm-compatibility.yml"
+  push:
+    branches: [master]
+    paths:
+      - "automation/litellm_free.py"
+      - "automation/free_mode_attestation.py"
+      - "automation/ai_worker_fabric.py"
+      - "tests/test_litellm_free.py"
+      - "requirements-ai.txt"
+      - "docs/LITELLM_FREE_ROUTING.md"
+      - ".github/workflows/litellm-compatibility.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-litellm-compatibility-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compatibility:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v5
+
+      - name: Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install pinned LiteLLM
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-ai.txt pytest
+
+      - name: Verify installed version
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import litellm
+          assert str(litellm.__version__) == "1.103.2", litellm.__version__
+          print(f"LITELLM_VERSION={litellm.__version__}")
+          PY
+
+      - name: Static route matrix
+        shell: bash
+        run: python -m automation.litellm_free --contracts
+
+      - name: Deterministic compatibility tests
+        shell: bash
+        run: python -m pytest -q tests/test_litellm_free.py tests/test_free_mode_attestation.py
