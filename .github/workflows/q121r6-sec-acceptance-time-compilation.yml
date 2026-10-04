@@ -16,6 +16,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 # Push-triggered and one-shot issue-comment runs are isolated from each other.
 # Duplicate owner issue-comment requests collapse to the newest request.
@@ -47,6 +48,25 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 1
 
+      - name: Cancel stale Q121-R6 issue-comment runs on new master push
+        if: github.event_name == 'push'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          runs_json="$(gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/actions/workflows/q121r6-sec-acceptance-time-compilation.yml/runs?per_page=100")"
+          echo "$runs_json" | jq -r --arg current_sha "$GITHUB_SHA" '
+            .[] | .workflow_runs[] |
+            select((.status == "queued" or .status == "in_progress")
+              and .event == "issue_comment"
+              and .head_sha != $current_sha) |
+            .id
+          ' | while IFS= read -r run_id; do
+            [ -z "$run_id" ] && continue
+            echo "Cancelling superseded Q121-R6 issue-comment run $run_id"
+            gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}/cancel" >/dev/null
+          done
       - name: Setup pinned Python
         uses: actions/setup-python@v6
         with:
