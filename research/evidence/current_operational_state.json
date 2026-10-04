@@ -382,6 +382,24 @@
         "pit_readiness_evidence": "research/evidence/q187_q192_pit_readiness_r1_latest.json",
         "pit_readiness_workflow": ".github/workflows/q187-q192-pit-readiness-r1.yml",
         "state": "SOURCE_REPAIR_AND_PIT_READINESS_ACTIVE"
+      },
+      {
+        "candidate_ids": [
+          "Q202",
+          "Q203",
+          "Q204"
+        ],
+        "candidate_inventory_path": "research/candidates/orthogonal_candidate_specs_2026-10-04.json",
+        "class": "information_absence_financing_and_public_arrival_latency",
+        "code": "FRONTIER-Q202-Q204",
+        "design_document": "docs/research_design/Q202_Q204_INFORMATION_TIMING_WAVE_2026-10-04.md",
+        "issue_number": null,
+        "note": "Literature-derived orthogonal candidates covering delayed mandatory disclosure, procurement-to-financing transmission, and public information arrival latency. Discovery/source feasibility only; historical PIT, performance, promotion and live execution remain closed.",
+        "parent_code": "FRONTIER-Q187-Q192",
+        "performance_authorization_allowed": false,
+        "source_feasibility_receipt": "research/evidence/q202_q204_information_timing_feasibility_latest.json",
+        "source_feasibility_workflow": ".github/workflows/q202-q204-information-timing-feasibility.yml",
+        "state": "SOURCE_FEASIBILITY_ACTIVE"
       }
     ],
     "active_trials": [
@@ -993,7 +1011,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T22:03:05.200286+00:00",
+  "generated_at_utc": "2026-10-04T22:03:54.473675+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -3522,6 +3540,16 @@
     ],
     "recent_commits": [
       {
+        "message": "GOV: register Q202-Q204 as active orthogonal research family",
+        "sha": "a98eb81ef975ca304f128c6f396ed60af7d27601",
+        "timestamp": "2026-10-05T00:03:44+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "445642af1633640bbb68828222a21c899195a891",
+        "timestamp": "2026-10-04T22:03:06Z"
+      },
+      {
         "message": "TEST: align next-gate test with persisted Q202-Q204 source receipts",
         "sha": "ffa2dbcb25203f2cde2499be6f442c2760b51675",
         "timestamp": "2026-10-05T00:02:53+02:00"
@@ -3550,16 +3578,6 @@
         "message": "OPS: record AI worker state",
         "sha": "5eab507f68bbda89978b1c1d0003b7aa3621329c",
         "timestamp": "2026-10-04T22:00:25Z"
-      },
-      {
-        "message": "TEST: require candidate-spec hash binding in timing receipt",
-        "sha": "bf842542876d8a4e3746482119af1173f6b705c7",
-        "timestamp": "2026-10-05T00:00:21+02:00"
-      },
-      {
-        "message": "GOV: bind Q202-Q204 feasibility receipt to candidate contract hash",
-        "sha": "382aa87fa78ee0c7915d6238e0cdb28ead03349a",
-        "timestamp": "2026-10-05T00:00:14+02:00"
       }
     ]
   },
@@ -3644,7 +3662,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ffa2dbcb25203f2cde2499be6f442c2760b51675",
+  "source_master_sha": "a98eb81ef975ca304f128c6f396ed60af7d27601",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -3758,6 +3776,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37238497923"
+    "run_id": "37238553415"
   }
 }
