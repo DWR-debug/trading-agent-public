@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T20:35:26.644831+00:00",
+  "generated_at_utc": "2026-10-04T20:35:47.012104+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2620,6 +2620,21 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: supersede stale Runner C infrastructure runs after fixes",
+        "sha": "421db8fcc1d063175f5fad4246f3cf7b2f98102c",
+        "timestamp": "2026-10-04T22:35:44+02:00"
+      },
+      {
+        "message": "FIX: install bounded Python test dependencies on Runner C",
+        "sha": "abb412d5be92b100d57235b8035c9988d9a1b91e",
+        "timestamp": "2026-10-04T22:35:34+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "32b66043d4a003fae82033b5bb732a0f57b791e4",
+        "timestamp": "2026-10-04T20:35:28Z"
+      },
+      {
         "message": "STATUS: synchronize three-runner Windows capacity in canonical status",
         "sha": "ba10ad5cd5214cb7e08d509f26961f460b460c0f",
         "timestamp": "2026-10-04T22:35:16+02:00"
@@ -2643,21 +2658,6 @@
         "message": "GOVERNANCE: bind snapshot durability guard to provider-neutral AI review",
         "sha": "070b7c9097341988f2fc5b8d938982ad7175d30c",
         "timestamp": "2026-10-04T22:34:17+02:00"
-      },
-      {
-        "message": "OPS: record Groq free adversarial worker state",
-        "sha": "6bfb63e592a061b7ad1184bf14781bb565962660",
-        "timestamp": "2026-10-04T20:34:11Z"
-      },
-      {
-        "message": "TEST: validate provider-neutral global adversarial AI contract",
-        "sha": "bd75f6d5dac17c7914c149c74eca94a5def56d7d",
-        "timestamp": "2026-10-04T22:34:09+02:00"
-      },
-      {
-        "message": "FIX: align Groq operational state with universal global task",
-        "sha": "c9c3103af9763cf167a7fbeb9e71caa6ed92dbcb",
-        "timestamp": "2026-10-04T22:34:01+02:00"
       }
     ]
   },
@@ -2742,7 +2742,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ba10ad5cd5214cb7e08d509f26961f460b460c0f",
+  "source_master_sha": "421db8fcc1d063175f5fad4246f3cf7b2f98102c",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2856,6 +2856,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37232673184"
+    "run_id": "37232691546"
   }
 }
