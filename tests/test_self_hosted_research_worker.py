@@ -230,6 +230,20 @@ def test_copilot_cli_publication_has_nonfatal_pr_creation_fallback():
 
 
 
+def test_permanent_loop_does_not_carry_slow_local_ai_tail():
+    permanent = (
+        ROOT / ".github" / "workflows" / "permanent-pc-research-loop.yml"
+    ).read_text(encoding="utf-8")
+    local_ai = (
+        ROOT / ".github" / "workflows" / "windows-local-ai-worker.yml"
+    ).read_text(encoding="utf-8")
+    assert "local_ai_worker:" not in permanent
+    assert "local_ai_smoke:" not in permanent
+    assert "workflow_dispatch:" in local_ai
+    assert "trading-agent-windows-local-ai" in local_ai
+    assert 'schedule:' not in local_ai
+
+
 def test_permanent_loop_uses_short_local_capacity_pulse():
     text = (
         ROOT / ".github" / "workflows" / "permanent-pc-research-loop.yml"
