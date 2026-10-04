@@ -122,6 +122,7 @@ jobs:
           PY
           payload="$(base64 -w 0 ops/litellm_groq_smoke_receipt.json)"
           for attempt in 1 2 3 4 5; do
+            echo "receipt publish attempt=$attempt" >&2
             current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/contents/ops/litellm_groq_smoke_receipt.json?ref=master" --jq '.sha' 2>/dev/null || true)"
             if [ -n "$current_sha" ]; then
               if gh api --method PUT "/repos/$GITHUB_REPOSITORY/contents/ops/litellm_groq_smoke_receipt.json"                 -f message='OPS: record Groq LiteLLM smoke receipt'                 -f content="$payload" -f branch='master' -f sha="$current_sha" >/dev/null; then
