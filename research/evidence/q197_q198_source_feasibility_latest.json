@@ -8,31 +8,24 @@
         "https://api.usaspending.gov/docs/endpoints",
         "https://api.usaspending.gov/api/v2/awards/last_updated/"
       ],
-      "probe_classification": "UNREACHABLE",
-      "reachable": false,
-      "missing_markers": [
-        "spending_by_award",
-        "last_updated"
-      ],
+      "probe_classification": "PASS",
+      "reachable": true,
+      "missing_markers": [],
       "attempts": [
         {
           "url": "https://api.usaspending.gov/docs/endpoints",
-          "http_status": 599,
-          "missing_markers": [
-            "spending_by_award",
-            "last_updated"
-          ]
+          "http_status": 200,
+          "missing_markers": []
         },
         {
           "url": "https://api.usaspending.gov/api/v2/awards/last_updated/",
-          "http_status": 599,
+          "http_status": 200,
           "missing_markers": [
-            "spending_by_award",
-            "last_updated"
+            "spending_by_award"
           ]
         }
       ],
-      "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "content_sha256": "65d54624b6866fbd30084eed3d44f4f9bb00df84aa22709cf2b0125aa9d79386",
       "scientific_boundary": false
     },
     "Q198_FEDERAL_REGISTER": {
@@ -75,7 +68,7 @@
   "candidate_results": [
     {
       "candidate_id": "Q197",
-      "status": "BLOCKED_SOURCE_COMPONENT"
+      "status": "SOURCE_COMPONENT_READY"
     },
     {
       "candidate_id": "Q198",
@@ -110,5 +103,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "receipt_fingerprint": "d5865fee13fdfda310b25353bdaaa4055cfecd0081de01e6a868722d4d478cb9"
+  "receipt_fingerprint": "89af8cd3e38348200e8c13350de9410fbfd2817f5cb19a6823894228773dcc2c"
 }
