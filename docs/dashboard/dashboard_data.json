@@ -2,15 +2,6 @@
   "current_research": {
     "active_registry_tail": [],
     "highlights": [
-      "Q077-R1: **PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES**; coverage-only repair after the original Q077 pool left insufficient unused symbols; no performance authorization.",
-      "Q091: **PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES**; fixed portfolio architecture on the fresh symbol-disjoint universe; performance authorization flag = **False**.",
-      "Q092: **DIAGNOSTIC_COMPLETED_ONLY**; post-performance Q091 failure-mechanism diagnosis; no performance authorization.",
-      "Q093: **COMPLETED_DIAGNOSTIC_ONLY**; Q091 turnover/cost attribution diagnosis; no performance authorization.",
-      "Q094: **PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES**; fixed monthly-rebalance successor to the Q091 low-turnover diagnosis; performance authorization flag = **False**.",
-      "Q104 orthogonal candidate wave: **SOURCE_FEASIBILITY_COMPLETED_DUAL_ARCH**; 5/6 data-backed candidates are source-feasible and Q104:R9 is synthetic-only. The archived receipt is `research/evidence/q104_source_feasibility_2026_10_01.json`.",
-      "Q105 historical archive/PIT feasibility: **COMPLETED**, with I21 remaining historically window-limited.",
-      "Q106 shared SEC/Treasury PIT join integrity: **COMPLETED_DUAL_ARCH**.",
-      "Q107 fresh Q104 equity coverage: **COMPLETED**; 8/8 symbols and 3,704 common sessions.",
       "Q108 real SEC/XBRL/13F/Treasury PIT integration: **COMPLETED_DUAL_ARCH**; 8/8 issuer filings and 8/8 XBRL lineage verified, 13F sample and Treasury chain verified.",
       "Q129 historical options source-feasibility: **COMPLETED** on hosted Linux with pinned release hashes verified.",
       "**Q121-R1:** `Q121R1_SOURCE_ROUTE_FALSIFIED`; the preregistered SEC browse route failed its subject-issuer identity contract. The verified workflow receipt records 93 discovered entries and 15 deterministic identity checks; receipt fingerprint `9c9a3a4fa05ccc5aa8e59d254c75577abb60b869dd53ff35505b335424cfbf8e`.",
@@ -19,7 +10,16 @@
       "**Q121-R4:** `Q121R4_MASTER_INDEX_ROUTE_FEASIBILITY_COMPLETED`; independent SEC quarterly master-index route completed for the same 7-quarter window with 61,818 relevant form rows and 3 frozen controls. Receipt fingerprint `3f5616d6ddc18c0f39a10316fe3cbf69e98be2911741552f8a70d133ba94c076`.",
       "**Q121-R5:** `Q121R5_DUAL_INDEX_POPULATION_RECONCILIATION_COMPLETED`; the form-index and master-index populations are exactly equal as multisets on the frozen window/form scope: 61,818 rows, 61,818 unique canonical keys, zero left-only/right-only keys. Receipt fingerprint `897bc13c5f722d9a701ae7994b237fe7afd233f15cdc5e644061aa674b8f26c1`. This is source-population evidence only; acceptance timestamps, revision lineage and same-day PIT safety remain unproven.",
       "**Q127-R1:** `Q127R1_SOURCE_PIT_FEASIBILITY_COMPLETED`; four fixed historical dates were retrieved and parsed. Revision lineage and same-day PIT safety remain unresolved. Receipt fingerprint `60815a092421762ac1da2a96d003865b72f25eb640778287964a9648cdfc5b74`.",
-      "**Q130-R1:** `Q130R1_SOURCE_FEASIBILITY_COMPLETED`; the frozen historical Wikimedia source probe passed, while publication/revision timing remains outside formal same-day PIT safety."
+      "**Q130-R1:** `Q130R1_SOURCE_FEASIBILITY_COMPLETED`; the frozen historical Wikimedia source probe passed, while publication/revision timing remains outside formal same-day PIT safety.",
+      "Q198 Federal Register: **SOURCE_COMPONENT_READY**; source receipt `e933ad80473da8c01d21d2516f17f66b7ead3cc664a95110b734cf22427e51eb`. Next gate: fixed historical Public Inspection filing clock, correction/withdrawal lineage, immutable reconstruction and independent PIT reproduction.",
+      "Q197 USAspending: **SOURCE_COMPONENT_READY**; source receipt `e933ad80473da8c01d21d2516f17f66b7ead3cc664a95110b734cf22427e51eb`. Next gate: historical award-state revision/public-observation boundary, frozen pre-event relationship network and independent event-time reproduction.",
+      "Q199 USPTO: **HISTORICAL_SOURCE_COMPONENT_READY**; source receipt `5b885ecdc774f6600a04b5d9a7bea4c7aa9d657ac33926bb8e51b504319ee119`. Next gate: historical publication-state archive, frozen assignee/technology exposure and independent PIT reproduction.",
+      "Q201 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `5b885ecdc774f6600a04b5d9a7bea4c7aa9d657ac33926bb8e51b504319ee119`. Next gate: historical results-state revision lineage, explicit posted-time semantics, frozen sponsor/exposure mapping and independent PIT reproduction.",
+      "Q198 historical PIT clock census: **Q198_PIT_CLOCK_CENSUS_COMPLETED**; pages parsed **4** / **4**, with fixed dates **2020/01/10, 2020/04/22, 2020/12/16, 2026/10/02**.",
+      "Q202 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `7a01a7abfb006d11ce759f36061e6a88c02dd97b3e189931232fb3cc7a16f811`. Next gate: immutable historical record-version snapshots at the applicable reporting boundary, applicability/certification/extension lineage, frozen sponsor-to-issuer mapping and independent PIT reproduction.",
+      "Q203 Federal procurement × ex-ante financing constraint: **SOURCE_COMPONENT_READY**; source receipt `7a01a7abfb006d11ce759f36061e6a88c02dd97b3e189931232fb3cc7a16f811`. Next gate: immutable historical award-state/public-observation boundary, frozen pre-event financing vintage and entity mapping, correction/amendment lineage and independent PIT reproduction.",
+      "Q204 Public-information release latency: **SOURCE_COMPONENT_READY**; source receipt `7a01a7abfb006d11ce759f36061e6a88c02dd97b3e189931232fb3cc7a16f811`. Next gate: immutable public-observation/process-stage timestamps, fixed event-class semantics, pre-event-only latency calibration and correction/withdrawal lineage.",
+      "Q202–Q204 remain source/PIT discovery tracks only: performance, holdout selection, ranking, tuning, promotion and live execution remain closed. Source feasibility is not PIT validation."
     ],
     "latest_formal_result": "**performance_completed_no_arm_passed_all_13_gates** for `T-2026-10-01-H06P2R3-PERFORMANCE-01`."
   },
@@ -29,9 +29,9 @@
     "pages_source": "/docs on master",
     "website_update_button": "opens GitHub Actions workflow dispatch page"
   },
-  "generated_at_utc": "2026-10-04T18:13:12.093960+00:00",
-  "master_sha": "ef7bbf99ea0a52cde400b8fe7458e1b2b381810d",
-  "operational_snapshot_sha": "adfbeef9d88289ee0d9aeb9e4096350e2d293f89",
+  "generated_at_utc": "2026-10-04T22:27:29.613122+00:00",
+  "master_sha": "eb427fb64c962824154220c95c4172138ee4251b",
+  "operational_snapshot_sha": "3e00e76fd927366c865c128f8476934909ecda23",
   "resource_policy": {
     "hosted_linux_frontier": "*/10 * * * *",
     "local_ai_trigger": "manual only",
