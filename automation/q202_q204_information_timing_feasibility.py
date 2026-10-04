@@ -13,6 +13,8 @@ import urllib.request
 from datetime import datetime
 from pathlib import Path
 
+CANDIDATE_SPEC_PATH = Path("research/candidates/orthogonal_candidate_specs_2026-10-04.json")
+
 SAFETY = {
     "paper_only": True,
     "live_trading_enabled": False,
@@ -63,6 +65,10 @@ def fetch(url: str, user_agent: str) -> tuple[int, bytes]:
         return 599, f"FETCH_ERROR:{type(exc).__name__}:{exc}".encode()
 
 def digest(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+def candidate_spec_sha256() -> str:
+    data = CANDIDATE_SPEC_PATH.read_bytes()
     return hashlib.sha256(data).hexdigest()
 
 def probe_markers(label: str, url: str, markers: list[str], user_agent: str) -> dict:
@@ -150,6 +156,7 @@ def main() -> int:
         "task_id": "Q-2026-10-04-Q202-Q204-INFORMATION-TIMING-FEASIBILITY",
         "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
         "generated_at_utc": datetime.utcnow().isoformat(timespec="seconds") + "Z",
+        "candidate_spec_sha256": candidate_spec_sha256(),
         "fixed_routes": FIXED,
         "source_results": sources,
         "candidate_results": [{"candidate_id": k, "status": v} for k, v in candidate_status.items()],
