@@ -316,7 +316,9 @@ def preflight(provider: str, env: dict[str, str] | None = None) -> dict[str, Any
 def context_fingerprint(task: dict[str, Any]) -> str:
     files = CONTEXT_FINGERPRINT_FILES.get(task["task_id"], ())
     if not files:
-        raise AIWorkerError(f"No stable context fingerprint contract configured for {task['task_id']}.")
+        # Synthetic/unit-test tasks have no repository context contract. Use the
+        # immutable task payload itself so worker receipts remain total and testable.
+        return _fingerprint({"task_only": task})
     hasher = hashlib.sha256()
     for rel in files:
         path = Path.cwd() / rel
