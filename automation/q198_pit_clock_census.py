@@ -28,7 +28,7 @@ FROZEN_DATES = (
 FILING_RE = re.compile(
     r"Filed on:\s*(?P<filed_m>\d{1,2})/(?P<filed_d>\d{1,2})/(?P<filed_y>\d{4})"
     r"\s+at\s+(?P<filed_h>\d{1,2}):(?P<filed_min>\d{2})\s+(?P<ampm>am|pm)"
-    r"\s+Scheduled Pub\. Date:\s*(?P<pub_m>\d{1,2})/(?P<pub_d>\d{1,2})/(?P<pub_y>\d{4})",
+    r"\s*Scheduled Pub\. Date:\s*(?P<pub_m>\d{1,2})/(?P<pub_d>\d{1,2})/(?P<pub_y>\d{4})",
     re.IGNORECASE,
 )
 
