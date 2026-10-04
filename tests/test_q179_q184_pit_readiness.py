@@ -23,4 +23,4 @@ def test_q179_q184_pit_workflow_is_hosted_and_bounded():
     text=(ROOT/".github/workflows/q179-q184-pit-readiness.yml").read_text(encoding="utf-8")
     assert "runs-on: ubuntu-24.04" in text
     assert "PIT_READINESS_R1_COMPLETED_NO_PERFORMANCE" in text
-    assert "automatic_promotion" in text
+    assert "AUTOMATIC_PROMOTION" in text
