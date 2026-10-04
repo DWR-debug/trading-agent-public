@@ -52,3 +52,23 @@ def test_source_boundary_is_non_authorizing():
     assert d["scientific_boundary"]["promotion"] is False
     assert d["safety"]["paper_only"] is True
     assert d["safety"]["live_trading_enabled"] is False
+
+
+def test_source_access_block_is_explicitly_non_authorizing():
+    sample = {
+        "status": "Q198_PIT_CLOCK_CENSUS_SOURCE_ACCESS_BLOCKED",
+        "aggregate": {"pages_parsed": 0},
+        "scientific_boundary": {"performance": False, "promotion": False},
+        "safety": {
+            "paper_only": True,
+            "live_trading_enabled": False,
+            "orders_enabled": False,
+            "automatic_promotion": False,
+        },
+    }
+    assert sample["aggregate"]["pages_parsed"] == 0
+    assert all(v is False for v in sample["scientific_boundary"].values())
+    assert sample["safety"]["paper_only"] is True
+    assert sample["safety"]["live_trading_enabled"] is False
+    assert sample["safety"]["orders_enabled"] is False
+    assert sample["safety"]["automatic_promotion"] is False
