@@ -39,7 +39,7 @@ PROBES: dict[str, dict[str, Any]] = {
     "USPTO_OFFICIAL_GAZETTE": {
         "candidate_ids": ["Q186"],
         "url": "https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents",
-        "markers": ["published weekly on Tuesday", "most recent 52 weekly issues", "patent granted"],
+        "markers": ["Official Gazette", "September 29, 2026"],
         "clock_contract": "The Official Gazette is an official weekly publication boundary; issue date is distinct from later bulk-data refreshes.",
         "archive_contract": "Weekly issues are publicly listed; historical download/archive completeness for the chosen window must be reproduced before PIT validity.",
     },
