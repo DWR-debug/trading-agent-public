@@ -592,7 +592,7 @@
       "source_feasible_candidate_count": 21,
       "note": "Downstream PIT contract/sample gate only; no performance, ranking, selection, tuning, promotion or live execution.",
       "micro_pit": {
-        "state": "MICRO_PIT_SAMPLE_ACTIVE",
+        "state": "MICRO_PIT_SAMPLE_COMPLETED_UNRESOLVED",
         "candidates": [
           "Q137",
           "Q144"
@@ -600,7 +600,27 @@
         "design_document": "docs/research_design/Q137_Q144_MICRO_PIT_R1_2026-10-03.md",
         "page_map": "research/governance/q144_q107_wikipedia_page_map_2026_10_03.json",
         "performance_authorization_allowed": false,
-        "note": "Bounded historical sample only; full candidate-specific PIT coverage and independent reproduction remain required."
+        "note": "Bounded 2025-08-25 through 2025-09-24 micro sample completed with all mutation checks passing. Q137 was reconstructable for 7/8 symbols and Q144 for 1/8; unresolved symbols remain fail-closed and no performance evidence is claimed.",
+        "receipt_path": "research/evidence/q137_q144_micro_pit_latest.json",
+        "receipt_fingerprint": "112c3eb4fe600876b1ba391ab8cecfaa97bc73f3f0917ac4f896716c057c1dea",
+        "workflow_run_id": 37166075665,
+        "q137_reconstructable_symbols": [
+          "NDAQ",
+          "AMP",
+          "RJF",
+          "WMB",
+          "VLO",
+          "DVN",
+          "EMN"
+        ],
+        "q137_reconstructable_count": 7,
+        "q137_total_symbols": 8,
+        "q144_reconstructable_symbols": [
+          "NDAQ"
+        ],
+        "q144_reconstructable_count": 1,
+        "q144_total_symbols": 8,
+        "next_gate": "candidate-specific full historical archive coverage, immutable SEC/Wikimedia entity mappings and independent reproduction"
       },
       "q147_q148_clock_contract": {
         "state": "PIT_CONTRACT_DEFINED_PENDING_SERIES_FREEZE",
