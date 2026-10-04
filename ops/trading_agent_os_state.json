@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "state_type": "TRADING_AGENT_OS_ORCHESTRATION_SNAPSHOT",
-  "effective_date_utc": "2026-10-03",
+  "effective_date_utc": "2026-10-04T19:00:00+02:00",
   "source_master_sha": "4ebc2b2476c7fda02f435525d1c80dcdde55a2aa",
   "purpose": "Persistent orchestration contract for chat-independent Trading Agent research and engineering.",
   "chat_trigger": "trading agent",
@@ -140,10 +140,10 @@
   },
   "current_research_focus": {
     "completed": "Q119 Treasury demand-shape design merged; I22 SEC filing-arrival session-window correction merged",
-    "active_next": "SEC/13F/XBRL + Treasury/CFTC + Q121 + Q126-Q132 source/PIT feasibility; Q119 Treasury demand-shape; Q120 CFTC TFF release-date semantics; I22 filing-arrival; Q104 I19/I20 historical breadth; Q125 SEC publication clock.",
+    "active_next": "Q198 Federal Register public-inspection clock reconstruction (A-priority); Q197 USAspending award-state historical revision/observation boundary (A-priority); Q199 USPTO publication/PIT lineage; Q201 ClinicalTrials.gov results-first-posted historical revision lineage; in parallel close Q186 citation/publication ordering. No performance authorization until each candidate passes its candidate-specific PIT/coverage/authorization gates.",
     "meta_research": "ECL runtime hardening and first valid model-metrics receipt",
     "governance_engineering": "AGENT-026-R2 two-slot lease; draft PR 642",
-    "discovery_frontier": "Q121 SEC beneficial-ownership disclosure timing plus Q126-Q132 discovery/PIT feasibility; Q128/Q129/Q130 remain source-blocked until free reproducible historical data is established; no performance authorization"
+    "discovery_frontier": "Q197/Q198 source components READY; next gate is fixed historical archive/clock/correction lineage and independent event-time reproduction. Q199 historical source component READY; Q201 source probe is being repaired from the proven Q179 ClinicalTrials.gov clock fields, but historical revision lineage remains unresolved. Q188-Q192 remain PIT-history gated. Q193 composition remains dependency-gated. All discovery work is non-authorizing."
   },
   "resource_routing": {
     "self_hosted_windows": [
@@ -306,5 +306,43 @@
     "manual_update": true,
     "update_button": "opens the GitHub Actions workflow page; authenticated user can run the dashboard update",
     "scientific_authority": false
+  },
+  "frontier_status_2026_10_04": {
+    "scientific_boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
+    "priority_order": [
+      {
+        "candidate": "Q198",
+        "stage": "SOURCE_COMPONENT_READY",
+        "next_gate": "historical public-inspection filing timestamp archive + publication/effective mapping + correction lineage + independent event-time reproduction"
+      },
+      {
+        "candidate": "Q197",
+        "stage": "SOURCE_COMPONENT_READY",
+        "next_gate": "historical USAspending award-state revision/public-observation boundary + frozen relationship network + independent event-time reproduction"
+      },
+      {
+        "candidate": "Q199",
+        "stage": "HISTORICAL_SOURCE_COMPONENT_READY",
+        "next_gate": "historical USPTO publication-state archive + assignee/technology exposure freeze + independent PIT reproduction"
+      },
+      {
+        "candidate": "Q201",
+        "stage": "SOURCE_PROBE_REPAIR_IN_PROGRESS",
+        "next_gate": "re-run source probe with proven ClinicalTrials.gov posted-date fields, then historical results-state revision lineage + independent PIT reproduction"
+      },
+      {
+        "candidate": "Q186",
+        "stage": "PIT_R2_COMPLETED_NO_PERFORMANCE",
+        "next_gate": "citation-publication ordering + historical citation completeness + frozen mapping + correction lineage + independent reproduction"
+      }
+    ],
+    "governance": {
+      "performance_authorized": false,
+      "holdout_selection": false,
+      "ranking": false,
+      "tuning": false,
+      "promotion": false,
+      "live_execution": false
+    }
   }
 }
