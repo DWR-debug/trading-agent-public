@@ -42,3 +42,9 @@ def test_q184_uses_pdf_text_extraction_for_clock_notice() -> None:
     assert "pdf_text_probe" in text
     assert "5:00 am eastern time" in text
     assert "previous day" in text
+
+
+def test_q184_pdf_probe_normalizes_extracted_whitespace() -> None:
+    text = (ROOT / "automation/q179_q184_pit_census_r2.py").read_text(encoding="utf-8")
+    assert 're.sub(r"\\s+", " ", text)' in text
+    assert '"normalized_text_length"' in text
