@@ -18,7 +18,7 @@ Systematically review public trading-agent / quantitative-agent research for arc
 
 ### TradingAgents — TauricResearch
 
-Public repository and changelog reviewed.
+Public repository and changelog reviewed; the current README reports v0.6.0 (2026-10), while the changelog documents the preceding v0.5.x PIT/backtest work.
 
 Relevant architecture:
 - role-specialized agents and explicit research/trader/risk stages;
@@ -211,9 +211,10 @@ Only project-native deterministic runs, preregistrations, immutable receipts, in
 - Microsoft Qlib: https://github.com/microsoft/qlib
 - Microsoft RD-Agent: https://github.com/microsoft/RD-Agent
 - AI4Finance FinRobot: https://github.com/AI4Finance-Foundation/FinRobot
-- AlphaAgent: https://github.com/Rn989/AlphaAgent
-- Alpha-GPT: https://github.com/Harvey-Sun/Alpha-GPT
-- AlphaForge: https://github.com/Rn989/AlphaForge
+- AlphaAgent implementation: https://github.com/atanasvasilevjourney/alphaagent
+- AlphaAgent paper: https://arxiv.org/abs/2502.16789
+- Alpha-GPT paper: https://arxiv.org/abs/2308.00016
+- AlphaForge implementation: https://github.com/dulyhao/alphaforge
 
 ## Status
 
