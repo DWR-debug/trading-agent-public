@@ -47,40 +47,24 @@
           ]
         }
       ],
-      "content_sha256": "318e4e7293a543510cd35e9a9d13c615a2b3167f2052ed67add6ab434e4870ee",
+      "content_sha256": "cd118adcb87d3bafaf66aab0add7ef52e67388f707135c7047eea1667625c955",
       "scientific_boundary": false
     },
     "CLINICALTRIALS_RESULTS": {
       "urls": [
-        "https://clinicaltrials.gov/data-api",
-        "https://clinicaltrials.gov/api/v2/studies?pageSize=1"
+        "https://clinicaltrials.gov/api/v2/studies/NCT00125528"
       ],
-      "probe_classification": "REACHABLE_MARKER_MISMATCH",
+      "probe_classification": "PASS",
       "reachable": true,
-      "missing_markers": [
-        "Results first posted",
-        "Results first submitted"
-      ],
+      "missing_markers": [],
       "attempts": [
         {
-          "url": "https://clinicaltrials.gov/data-api",
+          "url": "https://clinicaltrials.gov/api/v2/studies/NCT00125528",
           "http_status": 200,
-          "missing_markers": [
-            "Results first posted",
-            "Results first submitted"
-          ]
-        },
-        {
-          "url": "https://clinicaltrials.gov/api/v2/studies?pageSize=1",
-          "http_status": 200,
-          "missing_markers": [
-            "Results first posted",
-            "Results first submitted",
-            "ClinicalTrials.gov"
-          ]
+          "missing_markers": []
         }
       ],
-      "content_sha256": "8730634329eab20ebb0ac681c0b369b691d857fc36d7f4ede6b0dc2406e6eee4",
+      "content_sha256": "d9ae42a4f31df44d2e163ff1a3964474fc6446b2080c57e3e94311f2f21aefcb",
       "scientific_boundary": false
     }
   },
@@ -91,7 +75,7 @@
     },
     {
       "candidate_id": "Q201",
-      "status": "BLOCKED_SOURCE_COMPONENT"
+      "status": "SOURCE_COMPONENT_READY"
     }
   ],
   "synthetic_mutation_checks": {
@@ -120,5 +104,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "receipt_fingerprint": "e0ebae75303527dd2e65c80c8ca973464acd88cc114e1e2e56e8dfad9be29089"
+  "receipt_fingerprint": "2754cedd67c4e3090e8cce75590f8bec74c9e52244ee076d6692b06640d64d79"
 }
