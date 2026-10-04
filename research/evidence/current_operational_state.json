@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T21:46:53.291771+00:00",
+  "generated_at_utc": "2026-10-04T21:47:31.293805+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2400,12 +2400,14 @@
   },
   "q198_pit_clock_census": {
     "aggregate": {
-      "all_have_filed_timestamps": false,
-      "all_have_scheduled_publication_dates": false,
-      "all_pages_access_blocked": true,
-      "all_pages_parsed": false,
-      "pages_access_blocked": 4,
-      "pages_parsed": 0,
+      "all_have_filed_timestamps": true,
+      "all_have_scheduled_publication_dates": true,
+      "all_pages_access_blocked": false,
+      "all_pages_api_parsed": true,
+      "all_pages_parsed": true,
+      "pages_access_blocked": 0,
+      "pages_api_parsed": 4,
+      "pages_parsed": 4,
       "pages_requested": 4,
       "same_day_ambiguous_total": 0
     },
@@ -2415,42 +2417,902 @@
       "2020/12/16",
       "2026/10/02"
     ],
-    "next_gate": "use an officially supported API or another immutable public-inspection snapshot route; then establish candidate-specific correction/withdrawal lineage, entity mapping, and independent PIT reproduction",
+    "next_gate": "historical By-Date API coverage is now mechanically available; next establish candidate-specific correction/withdrawal lineage, frozen issuer/entity mapping, event classification, and independent PIT reproduction",
     "pages": [
       {
-        "access_block_reason": "official Federal Register automated-access challenge/request-access page",
-        "content_sha256": "2fd89b88ecb3bc62c4f8d6b64b194ffc31e1881f79a68456eefe927f6494ff2d",
+        "api_url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-01-10&per_page=1000",
+        "content_sha256": "e4f7eed69c7eb89d5204618f9603e282b39b6b975bc827765980b1a329df202d",
         "http_status": 200,
+        "parsed": {
+          "api_count": 66,
+          "correction_or_withdrawal_note_count": 1,
+          "filing_records": 66,
+          "missing_filed_timestamp_count": 0,
+          "missing_publication_date_count": 0,
+          "official_clock_contract": {
+            "archive_snapshot_mutation_not_allowed": true,
+            "corrections_and_withdrawals_must_fail_closed": true,
+            "effective_date_separate": true,
+            "filed_timestamp_is_primary_boundary": true,
+            "online_posting_time_not_substituted": true,
+            "publication_date_separate": true
+          },
+          "page_date": "2020-01-10",
+          "records_with_filed_timestamp": 66,
+          "records_with_scheduled_publication_date": 66,
+          "safety": {
+            "automatic_promotion": false,
+            "live_trading_enabled": false,
+            "orders_enabled": false,
+            "paper_only": true
+          },
+          "same_day_clock_ambiguous_count": 0,
+          "sample_rows": [
+            {
+              "document_number": "2019-27846",
+              "filed_at": "2019-12-31T16:15:00.000-05:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-01-13",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2020-00373",
+              "filed_at": "2020-01-09T11:15:00.000-05:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2020-00391",
+              "filed_at": "2020-01-09T16:15:00.000-05:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2019-27965",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2019-28019",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2019-28488",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2019-28500",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2019-28501",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2020-00121",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2020-00149",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2020-00152",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2020-00260",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2020-00261",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2020-00262",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2020-00263",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2020-00264",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2020-00265",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2020-00266",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2020-00267",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2020-00268",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2020-00269",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2020-00270",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2020-00271",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2020-00272",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            },
+            {
+              "document_number": "2020-00273",
+              "filed_at": "2020-01-10T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-01-10",
+              "publication_date": "2020-01-13"
+            }
+          ],
+          "scientific_boundary": {
+            "asset_search": false,
+            "holdout_selection": false,
+            "horizon_search": false,
+            "live_execution": false,
+            "parameter_search": false,
+            "performance": false,
+            "promotion": false,
+            "ranking": false,
+            "selection": false,
+            "threshold_search": false,
+            "variant_search": false
+          },
+          "source_route": "official_api_by_date"
+        },
         "requested_date": "2020/01/10",
-        "status": "SOURCE_ACCESS_BLOCKED",
-        "url": "https://www.federalregister.gov/public-inspection/2020/01/10"
+        "status": "API_PARSED"
       },
       {
-        "access_block_reason": "official Federal Register automated-access challenge/request-access page",
-        "content_sha256": "dfaf7946dc2c3bbf89b4ee9d7d42762aa18a6f3a9ccc8b62160ebc1d999ab2c2",
+        "api_url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-04-22&per_page=1000",
+        "content_sha256": "351101ac982d5b09fbda062c1356bbc072614cc5769726bbaaaf123e313a32f9",
         "http_status": 200,
+        "parsed": {
+          "api_count": 119,
+          "correction_or_withdrawal_note_count": 2,
+          "filing_records": 119,
+          "missing_filed_timestamp_count": 0,
+          "missing_publication_date_count": 0,
+          "official_clock_contract": {
+            "archive_snapshot_mutation_not_allowed": true,
+            "corrections_and_withdrawals_must_fail_closed": true,
+            "effective_date_separate": true,
+            "filed_timestamp_is_primary_boundary": true,
+            "online_posting_time_not_substituted": true,
+            "publication_date_separate": true
+          },
+          "page_date": "2020-04-22",
+          "records_with_filed_timestamp": 119,
+          "records_with_scheduled_publication_date": 119,
+          "safety": {
+            "automatic_promotion": false,
+            "live_trading_enabled": false,
+            "orders_enabled": false,
+            "paper_only": true
+          },
+          "same_day_clock_ambiguous_count": 0,
+          "sample_rows": [
+            {
+              "document_number": "2020-06967",
+              "filed_at": "2020-04-20T16:15:00.000-04:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-04-29",
+              "publication_date": "2020-04-30"
+            },
+            {
+              "document_number": "2020-08581",
+              "filed_at": "2020-04-21T08:45:00.000-04:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-22"
+            },
+            {
+              "document_number": "2020-07419",
+              "filed_at": "2020-04-21T16:15:00.000-04:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-04-30",
+              "publication_date": "2020-05-01"
+            },
+            {
+              "document_number": "2020-08451",
+              "filed_at": "2020-04-21T16:15:00.000-04:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-04-23",
+              "publication_date": "2020-04-24"
+            },
+            {
+              "document_number": "2020-08756",
+              "filed_at": "2020-04-21T16:15:00.000-04:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            },
+            {
+              "document_number": "2020-08802",
+              "filed_at": "2020-04-21T16:15:00.000-04:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            },
+            {
+              "document_number": "2020-05050",
+              "filed_at": "2020-04-21T16:15:00.000-04:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-04-30",
+              "publication_date": "2020-05-01"
+            },
+            {
+              "document_number": "2020-05164",
+              "filed_at": "2020-04-22T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            },
+            {
+              "document_number": "2020-07098",
+              "filed_at": "2020-04-22T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            },
+            {
+              "document_number": "2020-07397",
+              "filed_at": "2020-04-22T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            },
+            {
+              "document_number": "2020-07448",
+              "filed_at": "2020-04-22T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            },
+            {
+              "document_number": "2020-07449",
+              "filed_at": "2020-04-22T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            },
+            {
+              "document_number": "2020-07571",
+              "filed_at": "2020-04-22T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            },
+            {
+              "document_number": "2020-07584",
+              "filed_at": "2020-04-22T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            },
+            {
+              "document_number": "2020-07759",
+              "filed_at": "2020-04-22T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            },
+            {
+              "document_number": "2020-07817",
+              "filed_at": "2020-04-22T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            },
+            {
+              "document_number": "2020-07968",
+              "filed_at": "2020-04-22T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            },
+            {
+              "document_number": "2020-08109",
+              "filed_at": "2020-04-22T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            },
+            {
+              "document_number": "2020-08145",
+              "filed_at": "2020-04-22T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            },
+            {
+              "document_number": "2020-08156",
+              "filed_at": "2020-04-22T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            },
+            {
+              "document_number": "2020-08316",
+              "filed_at": "2020-04-22T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            },
+            {
+              "document_number": "2020-08455",
+              "filed_at": "2020-04-22T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            },
+            {
+              "document_number": "2020-08487",
+              "filed_at": "2020-04-22T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            },
+            {
+              "document_number": "2020-08531",
+              "filed_at": "2020-04-22T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            },
+            {
+              "document_number": "2020-08532",
+              "filed_at": "2020-04-22T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-04-22",
+              "publication_date": "2020-04-23"
+            }
+          ],
+          "scientific_boundary": {
+            "asset_search": false,
+            "holdout_selection": false,
+            "horizon_search": false,
+            "live_execution": false,
+            "parameter_search": false,
+            "performance": false,
+            "promotion": false,
+            "ranking": false,
+            "selection": false,
+            "threshold_search": false,
+            "variant_search": false
+          },
+          "source_route": "official_api_by_date"
+        },
         "requested_date": "2020/04/22",
-        "status": "SOURCE_ACCESS_BLOCKED",
-        "url": "https://www.federalregister.gov/public-inspection/2020/04/22"
+        "status": "API_PARSED"
       },
       {
-        "access_block_reason": "official Federal Register automated-access challenge/request-access page",
-        "content_sha256": "2fd89b88ecb3bc62c4f8d6b64b194ffc31e1881f79a68456eefe927f6494ff2d",
+        "api_url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-12-16&per_page=1000",
+        "content_sha256": "e75229453159cb0e333fd5e84a8484c0a9e222d400548fe9bcc73c7b27d5da12",
         "http_status": 200,
+        "parsed": {
+          "api_count": 124,
+          "correction_or_withdrawal_note_count": 2,
+          "filing_records": 124,
+          "missing_filed_timestamp_count": 1,
+          "missing_publication_date_count": 1,
+          "official_clock_contract": {
+            "archive_snapshot_mutation_not_allowed": true,
+            "corrections_and_withdrawals_must_fail_closed": true,
+            "effective_date_separate": true,
+            "filed_timestamp_is_primary_boundary": true,
+            "online_posting_time_not_substituted": true,
+            "publication_date_separate": true
+          },
+          "page_date": "2020-12-16",
+          "records_with_filed_timestamp": 123,
+          "records_with_scheduled_publication_date": 123,
+          "safety": {
+            "automatic_promotion": false,
+            "live_trading_enabled": false,
+            "orders_enabled": false,
+            "paper_only": true
+          },
+          "same_day_clock_ambiguous_count": 0,
+          "sample_rows": [
+            {
+              "document_number": "2020-26815",
+              "filed_at": "2020-12-02T16:15:00.000-05:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-12-23",
+              "publication_date": "2020-12-28"
+            },
+            {
+              "document_number": "2020-26819",
+              "filed_at": "2020-12-04T08:45:00.000-05:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-12-28",
+              "publication_date": "2020-12-29"
+            },
+            {
+              "document_number": "2020-27084",
+              "filed_at": "2020-12-14T08:45:00.000-05:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-12-16",
+              "publication_date": "2020-12-17"
+            },
+            {
+              "document_number": "2020-27593",
+              "filed_at": "2020-12-14T11:15:00.000-05:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-12-17",
+              "publication_date": "2020-12-18"
+            },
+            {
+              "document_number": "2020-27794",
+              "filed_at": "2020-12-14T16:15:00.000-05:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-12-16",
+              "publication_date": "2020-12-17"
+            },
+            {
+              "document_number": "2020-27703",
+              "filed_at": "2020-12-15T08:45:00.000-05:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-12-16",
+              "publication_date": "2020-12-17"
+            },
+            {
+              "document_number": "2020-27506",
+              "filed_at": "2020-12-15T11:15:00.000-05:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-12-17",
+              "publication_date": "2020-12-18"
+            },
+            {
+              "document_number": "2020-27862",
+              "filed_at": "2020-12-15T11:15:00.000-05:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-12-16",
+              "publication_date": "2020-12-17"
+            },
+            {
+              "document_number": "2020-27866",
+              "filed_at": "2020-12-15T11:15:00.000-05:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-12-16",
+              "publication_date": "2020-12-17"
+            },
+            {
+              "document_number": "2020-27867",
+              "filed_at": "2020-12-15T11:15:00.000-05:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-12-16",
+              "publication_date": "2020-12-17"
+            },
+            {
+              "document_number": "2020-27910",
+              "filed_at": "2020-12-15T14:00:00.000-05:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-12-16",
+              "publication_date": "2020-12-17"
+            },
+            {
+              "document_number": "2020-27918",
+              "filed_at": "2020-12-15T16:15:00.000-05:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-12-17",
+              "publication_date": "2020-12-18"
+            },
+            {
+              "document_number": "2020-27975",
+              "filed_at": "2020-12-15T16:15:00.000-05:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-12-17",
+              "publication_date": "2020-12-18"
+            },
+            {
+              "document_number": "2020-27991",
+              "filed_at": "2020-12-15T16:15:00.000-05:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2020-12-16",
+              "publication_date": "2020-12-17"
+            },
+            {
+              "document_number": "2020-25814",
+              "filed_at": "2020-12-16T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-12-16",
+              "publication_date": "2020-12-17"
+            },
+            {
+              "document_number": "2020-26122",
+              "filed_at": "2020-12-16T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-12-16",
+              "publication_date": "2020-12-17"
+            },
+            {
+              "document_number": "2020-26259",
+              "filed_at": "2020-12-16T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-12-16",
+              "publication_date": "2020-12-17"
+            },
+            {
+              "document_number": "2020-26287",
+              "filed_at": "2020-12-16T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-12-16",
+              "publication_date": "2020-12-17"
+            },
+            {
+              "document_number": "2020-26347",
+              "filed_at": "2020-12-16T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-12-16",
+              "publication_date": "2020-12-17"
+            },
+            {
+              "document_number": "2020-26389",
+              "filed_at": "2020-12-16T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-12-17",
+              "publication_date": "2020-12-17"
+            },
+            {
+              "document_number": "2020-27107",
+              "filed_at": "2020-12-16T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-12-16",
+              "publication_date": "2020-12-17"
+            },
+            {
+              "document_number": "2020-27363",
+              "filed_at": "2020-12-16T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-12-16",
+              "publication_date": "2020-12-17"
+            },
+            {
+              "document_number": "2020-27364",
+              "filed_at": "2020-12-16T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-12-16",
+              "publication_date": "2020-12-17"
+            },
+            {
+              "document_number": "2020-27523",
+              "filed_at": "2020-12-16T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-12-16",
+              "publication_date": "2020-12-17"
+            },
+            {
+              "document_number": "2020-27544",
+              "filed_at": "2020-12-16T08:45:00.000-05:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2020-12-16",
+              "publication_date": "2020-12-17"
+            }
+          ],
+          "scientific_boundary": {
+            "asset_search": false,
+            "holdout_selection": false,
+            "horizon_search": false,
+            "live_execution": false,
+            "parameter_search": false,
+            "performance": false,
+            "promotion": false,
+            "ranking": false,
+            "selection": false,
+            "threshold_search": false,
+            "variant_search": false
+          },
+          "source_route": "official_api_by_date"
+        },
         "requested_date": "2020/12/16",
-        "status": "SOURCE_ACCESS_BLOCKED",
-        "url": "https://www.federalregister.gov/public-inspection/2020/12/16"
+        "status": "API_PARSED"
       },
       {
-        "access_block_reason": "official Federal Register automated-access challenge/request-access page",
-        "content_sha256": "2fd89b88ecb3bc62c4f8d6b64b194ffc31e1881f79a68456eefe927f6494ff2d",
+        "api_url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2026-10-02&per_page=1000",
+        "content_sha256": "fec9344f5057fa0f09ddbb49cdba58e20467267f09a1ce949409d475c040546a",
         "http_status": 200,
+        "parsed": {
+          "api_count": 108,
+          "correction_or_withdrawal_note_count": 1,
+          "filing_records": 108,
+          "missing_filed_timestamp_count": 1,
+          "missing_publication_date_count": 1,
+          "official_clock_contract": {
+            "archive_snapshot_mutation_not_allowed": true,
+            "corrections_and_withdrawals_must_fail_closed": true,
+            "effective_date_separate": true,
+            "filed_timestamp_is_primary_boundary": true,
+            "online_posting_time_not_substituted": true,
+            "publication_date_separate": true
+          },
+          "page_date": "2026-10-02",
+          "records_with_filed_timestamp": 107,
+          "records_with_scheduled_publication_date": 107,
+          "safety": {
+            "automatic_promotion": false,
+            "live_trading_enabled": false,
+            "orders_enabled": false,
+            "paper_only": true
+          },
+          "same_day_clock_ambiguous_count": 0,
+          "sample_rows": [
+            {
+              "document_number": "2026-20295",
+              "filed_at": null,
+              "filing_type": "special",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": null
+            },
+            {
+              "document_number": "2026-20228",
+              "filed_at": "2026-10-01T14:00:00.000-04:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20338",
+              "filed_at": "2026-10-01T16:15:00.000-04:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20396",
+              "filed_at": "2026-10-01T16:15:00.000-04:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20373",
+              "filed_at": "2026-10-01T16:15:00.000-04:00",
+              "filing_type": "special",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20282",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20283",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20284",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20286",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20287",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20288",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20289",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20290",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20291",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20292",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20293",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20294",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20296",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20297",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20298",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20299",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20300",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20301",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20302",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            },
+            {
+              "document_number": "2026-20303",
+              "filed_at": "2026-10-02T08:45:00.000-04:00",
+              "filing_type": "regular",
+              "last_public_inspection_issue": "2026-10-02",
+              "publication_date": "2026-10-05"
+            }
+          ],
+          "scientific_boundary": {
+            "asset_search": false,
+            "holdout_selection": false,
+            "horizon_search": false,
+            "live_execution": false,
+            "parameter_search": false,
+            "performance": false,
+            "promotion": false,
+            "ranking": false,
+            "selection": false,
+            "threshold_search": false,
+            "variant_search": false
+          },
+          "source_route": "official_api_by_date"
+        },
         "requested_date": "2026/10/02",
-        "status": "SOURCE_ACCESS_BLOCKED",
-        "url": "https://www.federalregister.gov/public-inspection/2026/10/02"
+        "status": "API_PARSED"
       }
     ],
-    "receipt_fingerprint": "1c05c75d42dae23d047916b2a1451866df55cae1a86a1474360dd185c423fa87",
+    "receipt_fingerprint": "19cea183de179a1636f1f0e860caf9d02bc3a460bf360c223a52d967811de203",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2471,7 +3333,7 @@
       "threshold_search": false,
       "variant_search": false
     },
-    "status": "Q198_PIT_CLOCK_CENSUS_BLOCKED_SOURCE_ACCESS",
+    "status": "Q198_PIT_CLOCK_CENSUS_COMPLETED",
     "task_id": "Q-2026-10-04-Q198-HISTORICAL-PIT-CLOCK-CENSUS"
   },
   "q199_q201_source_feasibility": {
@@ -2660,6 +3522,26 @@
     ],
     "recent_commits": [
       {
+        "message": "TEST: validate Q198 historical By-Date API parser and lineage flags",
+        "sha": "5c29848b19696de57c3b4f71c5a90254ead649b7",
+        "timestamp": "2026-10-04T23:47:20+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "5b66195afbe5b356999d9d183db2bf626619bff4",
+        "timestamp": "2026-10-04T21:47:11Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "15293340c2390749e7abafaaaaa8cc23e8acc13c",
+        "timestamp": "2026-10-04T21:46:59Z"
+      },
+      {
+        "message": "RESEARCH: switch Q198 historical census to official Federal Register By-Date API",
+        "sha": "bb274e4cfae5d1de0449c5b94f0b8a65e1d9ef27",
+        "timestamp": "2026-10-04T23:46:55+02:00"
+      },
+      {
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "c081113b631c92c7384952962d04d5bec2808b2f",
         "timestamp": "2026-10-04T21:46:20Z"
@@ -2678,26 +3560,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "7b97cf0155ffefc477a0da209113c20e1da0702e",
         "timestamp": "2026-10-04T21:46:02Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "717e0fb96ad7a10256eb72f62013d2d15e58033d",
-        "timestamp": "2026-10-04T21:46:00Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "94a6a197db5d482787227b87a46c34080ec84af2",
-        "timestamp": "2026-10-04T21:45:58Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "5be5575205254577eb15d8ecf600d619afee804e",
-        "timestamp": "2026-10-04T21:45:55Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "d7da2d7ac36502d5cd2cabf21e587a921d9e5b19",
-        "timestamp": "2026-10-04T21:45:53Z"
       }
     ]
   },
@@ -2782,7 +3644,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c081113b631c92c7384952962d04d5bec2808b2f",
+  "source_master_sha": "5c29848b19696de57c3b4f71c5a90254ead649b7",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2896,6 +3758,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37237452651"
+    "run_id": "37237495000"
   }
 }
