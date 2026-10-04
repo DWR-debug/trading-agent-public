@@ -49,7 +49,7 @@
       "id": "Q186",
       "name": "UPSTREAM_PATENT_GRANT_SHOCK × TECHNOLOGY_EXPOSURE",
       "hypothesis": "A newly granted patent to a technologically upstream firm can create a measurable information shock for downstream publicly traded firms that already have a fixed, observable technological dependency on that upstream knowledge.",
-      "construction": "Build a directed upstream→downstream technology graph from publicly observable patent citations and disambiguated assignee organizations. Freeze each exposure edge strictly before the downstream decision point; only previously public citation relationships may define exposure. A patent grant is a distinct public event keyed by its issue/grant date. The signal state is the new grant shock propagated one hop through the frozen technology-dependency graph. No citation-depth, CPC/IPC taxonomy, event-window, threshold or firm-selection search is permitted.",
+      "construction": "Build the directed innovation graph exactly as a fixed rule from backward patent citations: source node = cited upstream firm, target node = citing downstream firm; exclude self-citations. For each decision month, use only citations publicly available by the frozen pre-event cutoff and restrict the edge-weight numerator to citations made in the prior five years. Edge weight = citations from upstream firm j to downstream firm i divided by all external backward citations made by i in that five-year window. For each patent-grant event, propagate the fixed pre-event upstream firm's grant-count shock one hop through those weights. A grant/issue date is a public information event; later assignments, corrections or newly observed citations cannot rewrite the pre-event graph. No citation-depth, technology-class, event-window, threshold, asset or firm-selection search is permitted.",
       "sources": [
         "USPTO PatentsView / USPTO Open Data Portal",
         "USPTO Official Gazette for Patents",
@@ -67,9 +67,12 @@
         "return-derived graph construction"
       ],
       "robustness_contract": {
-        "grant_public_date_provenance_required": true,
-        "graph_frozen_before_decision_time": true,
-        "prior_public_citations_only": true,
+        "five_year_trailing_citation_window": true,
+        "self_citations_excluded": true,
+        "graph_uses_only_pre_event_public_citations": true,
+        "upstream_to_downstream_direction_locked": true,
+        "edge_weight_normalization_locked": true,
+        "grant_event_clock_separate_from_bulk_refresh": true,
         "corrections_cannot_backfill_prior_states": true,
         "assignee_mapping_frozen_ex_ante": true
       }
