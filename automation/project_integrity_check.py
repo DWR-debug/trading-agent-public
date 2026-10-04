@@ -231,6 +231,7 @@ ACTIVE_WORKFLOWS = {
     "current-status-drift-guard.yml",
     "orthogonal-candidate-development.yml",
     "orthogonal-pit-next-gate.yml",
+    "q202-q204-information-timing-feasibility.yml",
     "priority-research-wave-dispatch.yml",
     "windows-runner-c-long-research.yml",
     "runner-c-prepit-falsification.yml",
