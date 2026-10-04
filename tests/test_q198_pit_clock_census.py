@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from automation.q198_pit_clock_census import (
     FROZEN_DATES,
+    _is_access_blocked,
     parse_public_inspection,
 )
 
@@ -73,3 +74,16 @@ def test_parser_accepts_raw_html_source():
     assert d["filing_records"] == 2
     assert d["records_with_filed_timestamp"] == 2
     assert d["records_with_scheduled_publication_date"] == 2
+
+
+def test_federal_register_access_challenge_is_explicitly_blocked():
+    challenge = """
+    <html><body>
+    <h1>Request Access</h1>
+    <p>Your request has been flagged as potentially automated.</p>
+    <p>Due to aggressive automated scraping of FederalRegister.gov.</p>
+    <a href="https://unblock.federalregister.gov/">Request Access</a>
+    <div class="g-recaptcha"></div>
+    </body></html>
+    """
+    assert _is_access_blocked(challenge) is True
