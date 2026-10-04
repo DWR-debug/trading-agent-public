@@ -9,9 +9,10 @@ on:
       - ".github/workflows/q188-q192-pit-census-r2.yml"
       - "research/frontier/q187_q192_candidate_wave_2026_10_04.json"
   workflow_dispatch:
+  pull_request:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: trading-agent-q188-q192-pit-census-r2
