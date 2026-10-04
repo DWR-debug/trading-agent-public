@@ -963,7 +963,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T10:51:26.310983+00:00",
+  "generated_at_utc": "2026-10-04T11:09:30.123469+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1508,6 +1508,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOVERNANCE/RESEARCH: repair candidate gate and launch Q179-Q184 lane",
+        "sha": "92ea79289a709af3f53639c2c42452194fc112ee",
+        "timestamp": "2026-10-04T13:09:16+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "638b0bf63d112d659b687a4d71b6454822a5eb40",
+        "timestamp": "2026-10-04T10:51:28Z"
+      },
+      {
         "message": "RESEARCH: launch Q179-Q184 orthogonal source/PIT wave",
         "sha": "26ca272a85029b93caa7ff64e5e68abd48b5553d",
         "timestamp": "2026-10-04T12:51:16+02:00"
@@ -1536,16 +1546,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "11de84b03c0693e620dee3a18a29c11ca3c741a0",
         "timestamp": "2026-10-04T10:41:50Z"
-      },
-      {
-        "message": "GOVERNANCE: extend prior-art manifest with current agent benchmarks",
-        "sha": "c01de195e6be91e1e1ece432315d4831697dd68b",
-        "timestamp": "2026-10-04T12:41:36+02:00"
-      },
-      {
-        "message": "RESEARCH: extend prior-art review with current agent benchmarks",
-        "sha": "5b41798073d8704ddfa8ece6ac0d0b2deea236e3",
-        "timestamp": "2026-10-04T12:41:33+02:00"
       }
     ]
   },
@@ -1615,7 +1615,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "26ca272a85029b93caa7ff64e5e68abd48b5553d",
+  "source_master_sha": "92ea79289a709af3f53639c2c42452194fc112ee",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -1729,6 +1729,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37196722075"
+    "run_id": "37197760436"
   }
 }
