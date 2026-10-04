@@ -47,7 +47,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p research/runs/q199_q201_source_feasibility
-          python -m automation.q199_q201_source_feasibility --output research/runs/q199_q201_source_feasibility/\${GITHUB_RUN_ID}.json
+          python -m automation.q199_q201_source_feasibility --output research/runs/q199_q201_source_feasibility/${GITHUB_RUN_ID}.json
       - name: Validate non-authorizing boundary
         shell: bash
         run: |
@@ -75,7 +75,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          input=research/runs/q199_q201_source_feasibility/\${GITHUB_RUN_ID}.json
+          input=research/runs/q199_q201_source_feasibility/${GITHUB_RUN_ID}.json
           latest=research/evidence/q199_q201_source_feasibility_latest.json
           cp "$input" "$latest"
           python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$GITHUB_SHA" --file "$latest=$latest"
