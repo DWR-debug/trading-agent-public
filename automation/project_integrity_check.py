@@ -228,6 +228,11 @@ ACTIVE_WORKFLOWS = {
     "groq-free-adversarial-worker.yml",
     "groq-api-key-smoke-test.yml",
     "github-pages-dashboard.yml",
+    "current-status-drift-guard.yml",
+    "orthogonal-candidate-development.yml",
+    "orthogonal-pit-next-gate.yml",
+    "priority-research-wave-dispatch.yml",
+    "windows-runner-c-long-research.yml",
 }
 
 REQUIRED_FILES = (
