@@ -117,8 +117,8 @@ jobs:
           mkdir q121r6-independent 2>nul
           "%PY_EXE%" -m automation.q121r6_sec_acceptance_time_compiler --population "q121r6-input\population.json" --output "q121r6-independent\result.json" --shard-index %SHARD_INDEX% --shard-count 2 --workers 8 --request-gap-seconds 0.25
           if errorlevel 1 exit /b 1
-          "%PY_EXE%" -c "import json; from pathlib import Path; p=json.loads(Path('q121r6-independent/result.json').read_text(encoding='utf-8')); assert p['population']['header_rows_fetched'] == p['population']['header_rows_expected']; assert p['population']['header_rows_failed'] == 0; print('Q121R6_WINDOWS_SHARD_OK')"
-          "%PY_EXE%" -c "import json,os; from pathlib import Path; p=json.loads(Path('q121r6-independent/result.json').read_text(encoding='utf-8')); r={'schema_version':'1.0','receipt_type':'q121r6_windows_independent_reproduction_shard','status':'Q121R6_WINDOWS_INDEPENDENT_SHARD_COMPLETED','primary_workflow_run_id':int(os.environ['SOURCE_RUN_ID']),'primary_workflow_run_attempt':int(os.environ['SOURCE_RUN_ATTEMPT']),'primary_source_sha':os.environ['SOURCE_HEAD_SHA'],'runner_name':os.environ.get('RUNNER_NAME'),'shard_index':int(os.environ['SHARD_INDEX']),'shard_count':2,'population':p['population'],'target_subject_population':p['target_subject_population'],'interpretation':p['interpretation'],'governance':p['governance'],'safety':{'PAPER_ONLY':True,'LIVE_TRADING_ENABLED':False,'ORDERS_ENABLED':False,'AUTOMATIC_PROMOTION':False},'formal_evidence_allowed':False,'independent_reproduction_only':True,'source_result_receipt_fingerprint':p['receipt_fingerprint']}; Path('q121r6-independent/receipt.json').write_text(json.dumps(r,ensure_ascii=False,sort_keys=True,indent=2)+'\n',encoding='utf-8')"
+          "%PY_EXE%" -c "import json; from pathlib import Path; p=json.loads(Path('q121r6-independent/result.json').read_text(encoding='utf-8')); assert p['status'] == 'COMPLETED'; assert p['records_fetched'] == p['slice_count']; assert p['failures'] == []; print('Q121R6_WINDOWS_SHARD_OK')"
+          "%PY_EXE%" -c "import hashlib,json,os; from pathlib import Path; p=json.loads(Path('q121r6-independent/result.json').read_text(encoding='utf-8')); canonical=json.dumps(p,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode('utf-8'); r={'schema_version':'1.0','receipt_type':'q121r6_windows_independent_reproduction_shard','status':'Q121R6_WINDOWS_INDEPENDENT_SHARD_COMPLETED','primary_workflow_run_id':int(os.environ['SOURCE_RUN_ID']),'primary_workflow_run_attempt':int(os.environ['SOURCE_RUN_ATTEMPT']),'primary_source_sha':os.environ['SOURCE_HEAD_SHA'],'runner_name':os.environ.get('RUNNER_NAME'),'shard_index':int(os.environ['SHARD_INDEX']),'shard_count':2,'population_count':p['population_count'],'slice_start':p['slice_start'],'slice_end_exclusive':p['slice_end_exclusive'],'slice_count':p['slice_count'],'population_fingerprint':p['population_fingerprint'],'records_fetched':p['records_fetched'],'header_hash_aggregate':p['header_hash_aggregate'],'failures':p['failures'],'scientific_boundary':p['scientific_boundary'],'safety':{'PAPER_ONLY':True,'LIVE_TRADING_ENABLED':False,'ORDERS_ENABLED':False,'AUTOMATIC_PROMOTION':False},'formal_evidence_allowed':False,'independent_reproduction_only':True,'source_result_digest':hashlib.sha256(canonical).hexdigest()}; Path('q121r6-independent/receipt.json').write_text(json.dumps(r,ensure_ascii=False,sort_keys=True,indent=2)+'\\n',encoding='utf-8')"
           endlocal
 
       - name: Upload independent Windows shard receipt
@@ -168,7 +168,29 @@ jobs:
           parsed = [json.loads(p.read_text(encoding="utf-8")) for p in receipts]
           if {r["shard_index"] for r in parsed} != {0, 1}:
               raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL shard coverage")
-          for r in parsed:,              if r["status"] != "Q121R6_WINDOWS_INDEPENDENT_SHARD_COMPLETED":,                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL shard status"),              if r["formal_evidence_allowed"] is not False or r["independent_reproduction_only"] is not True:,                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL scientific boundary"),              if r["safety"] != {"PAPER_ONLY": True, "LIVE_TRADING_ENABLED": False, "ORDERS_ENABLED": False, "AUTOMATIC_PROMOTION": False}:,                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL safety"),              if r["failures"] != [] or r["records_fetched"] != r["slice_count"]:,                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL fetch failure"),              if r["population_count"] != 61818 or r["slice_count"] <= 0:,                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL population contract"),              if r["population_fingerprint"] != "7251f0e25d7293802d389cac875abfd8552b9441ac604b69918bd7d5b9aec554":,                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL population fingerprint"),,          ordered = sorted(parsed, key=lambda r: r["shard_index"]),          if ordered[0]["slice_start"] != 0 or ordered[1]["slice_start"] != ordered[0]["slice_end_exclusive"]:,              raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL partition start"),          if ordered[1]["slice_end_exclusive"] != 61818:,              raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL partition end"),          if sum(r["slice_count"] for r in ordered) != 61818:,              raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL partition coverage"),,          primary = {r["primary_workflow_run_id"] for r in parsed}
+          for r in parsed:
+              if r["status"] != "Q121R6_WINDOWS_INDEPENDENT_SHARD_COMPLETED":
+                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL shard status")
+              if r["formal_evidence_allowed"] is not False or r["independent_reproduction_only"] is not True:
+                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL scientific boundary")
+              if r["safety"] != {"PAPER_ONLY": True, "LIVE_TRADING_ENABLED": False, "ORDERS_ENABLED": False, "AUTOMATIC_PROMOTION": False}:
+                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL safety")
+              if r["failures"] != [] or r["records_fetched"] != r["slice_count"]:
+                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL fetch failure")
+              if r["population_count"] != 61818 or r["slice_count"] <= 0:
+                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL population contract")
+              if r["population_fingerprint"] != "7251f0e25d7293802d389cac875abfd8552b9441ac604b69918bd7d5b9aec554":
+                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL population fingerprint")
+
+          ordered = sorted(parsed, key=lambda r: r["shard_index"])
+          if ordered[0]["slice_start"] != 0 or ordered[1]["slice_start"] != ordered[0]["slice_end_exclusive"]:
+              raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL partition start")
+          if ordered[1]["slice_end_exclusive"] != 61818:
+              raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL partition end")
+          if sum(r["slice_count"] for r in ordered) != 61818:
+              raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL partition coverage")
+
+          primary = {r["primary_workflow_run_id"] for r in parsed}
           primary = {r["primary_workflow_run_id"] for r in parsed}
           attempts = {r["primary_workflow_run_attempt"] for r in parsed}
           source_shas = {r["primary_source_sha"] for r in parsed}
