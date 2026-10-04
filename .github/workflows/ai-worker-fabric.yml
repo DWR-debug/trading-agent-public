@@ -29,6 +29,25 @@ on:
           - AI-2026-09-30-Q100-FRONTIER-FEASIBILITY
           - AI-2026-09-30-Q101-NEGATIVE-EVIDENCE
           - AI-2026-09-30-Q102-REGIME-STATE-DESIGN
+    inputs:
+      task_id:
+        description: "Explicit bounded OpenRouter review task for manual dispatch"
+        required: true
+        type: choice
+        options:
+          - AI-2026-10-04-Q187-Q192-ADVERSARIAL
+          - AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT
+          - AI-2026-09-29-Q091-ADVERSARIAL
+          - AI-2026-09-28-Q089-ADVERSARIAL
+          - AI-2026-09-28-UNUSUAL-FRONTIER
+          - AI-2026-09-30-Q100-FRONTIER-FEASIBILITY
+          - AI-2026-09-30-Q101-NEGATIVE-EVIDENCE
+          - AI-2026-09-30-Q102-REGIME-STATE-DESIGN
+      run_secondary_provider:
+        description: "Also run the manual Gemini/Mistral secondary review rotation"
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: write
