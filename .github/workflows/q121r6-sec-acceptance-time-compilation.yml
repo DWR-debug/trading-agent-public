@@ -15,9 +15,11 @@ on:
 permissions:
   contents: write
 
+# A one-shot research run must not be cancelled by a later status-sync or
+# workflow-fix push to master. Each run keeps its own isolated concurrency key.
 concurrency:
-  group: q121r6-sec-acceptance-time-compilation
-  cancel-in-progress: true
+  group: q121r6-sec-acceptance-time-compilation-${{ github.run_id }}
+  cancel-in-progress: false
 
 jobs:
   prepare:
