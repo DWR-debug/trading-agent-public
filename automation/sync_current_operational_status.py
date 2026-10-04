@@ -413,7 +413,15 @@ def generate(
             "selection, tuning, ranking, promotion or live execution is authorized."
         )
 
-    if q185_q186_pit_receipt.get("status") == "PIT_READINESS_R1_COMPLETED_NO_PERFORMANCE":
+    if q186_pit_r2_receipt.get("status") == "Q186_PIT_R2_CLOCK_ARCHIVE_COMPLETED_NO_PERFORMANCE":
+        recorded_next_research_focus = (
+            "Q186 has completed PIT-R2 clock/archive verification only: the official weekly grant clock "
+            "and post-2023 eGrant public-access boundary are established on fixed controls, while "
+            "citation-publication ordering, historical citation completeness, frozen assignee-to-issuer mapping, "
+            "correction/withdrawal lineage and independent reproduction remain open. No performance, holdout "
+            "selection, tuning, ranking, promotion or live execution is authorized."
+        )
+    elif q185_q186_pit_receipt.get("status") == "PIT_READINESS_R1_COMPLETED_NO_PERFORMANCE":
         recorded_next_research_focus = (
             "A-priority frontier: Q186 upstream patent-grant shock through a literature-faithful directed "
             "five-year patent-citation dependency graph, and Q185 federal litigation as a deterministic legal-state "
@@ -632,6 +640,9 @@ def generate(
         "q171_q177_pit_readiness": q171_q177_pit_receipt,
         "q179_q184_source_feasibility": q179_q184_source_receipt,
         "q179_q184_pit_readiness_r1": q179_q184_pit_receipt,
+        "q185_q186_source_feasibility": q185_q186_source_receipt,
+        "q185_q186_pit_readiness_r1": q185_q186_pit_receipt,
+        "q186_pit_readiness_r2": q186_pit_r2_receipt,
         "source_pit_frontier_outcomes": source_pit_frontier_outcomes,
         "q121_r5_dual_index_reconciliation": q121_r5_receipt,
         "q121_r6_execution_attempts": q121_r6_attempts,
