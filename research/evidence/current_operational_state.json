@@ -950,7 +950,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T09:27:24.773071+00:00",
+  "generated_at_utc": "2026-10-04T09:27:54.409603+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1495,6 +1495,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: validate Q169 R4 safety invariants correctly",
+        "sha": "d1111a464b394ec2572bd5ac9de8e212f57120fe",
+        "timestamp": "2026-10-04T11:27:43+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "255d18b3cf584f77aa443a4b7693905166dd1a34",
+        "timestamp": "2026-10-04T09:27:27Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "99f98c3c5ad71b495f8ee3ca2605010dd9336bcd",
+        "timestamp": "2026-10-04T09:27:25Z"
+      },
+      {
         "message": "OPS: register Q169 R4 workflow in integrity allowlist",
         "sha": "f10f9b39bde4a8a50e4920c94990c662ea1cb68a",
         "timestamp": "2026-10-04T11:27:09+02:00"
@@ -1518,21 +1533,6 @@
         "message": "PREREG: freeze Q169 R4 independent archive reproduction",
         "sha": "9ea69cf2eeb0116460997475f96228514e5d4d91",
         "timestamp": "2026-10-04T11:26:53+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "ee21233800c57fd0a03061c57d8835a737d99295",
-        "timestamp": "2026-10-04T05:34:40Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "640ab0fc21fbbed8de1f1004dc2d3dddff63022b",
-        "timestamp": "2026-10-04T04:18:47Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "14b3ff245025431254a5b500b7baa3090999bf0e",
-        "timestamp": "2026-10-04T03:45:07Z"
       }
     ]
   },
@@ -1602,7 +1602,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f10f9b39bde4a8a50e4920c94990c662ea1cb68a",
+  "source_master_sha": "d1111a464b394ec2572bd5ac9de8e212f57120fe",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -1716,6 +1716,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37192195959"
+    "run_id": "37192224187"
   }
 }
