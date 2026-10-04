@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0",
+  "wave_id": "Q185-Q186-2026-10-04",
+  "status": "DESIGN_INVENTORY_ONLY",
+  "generated_utc": "2026-10-04T13:46:00+02:00",
+  "priority": "A",
+  "purpose": "Parallel source-first research into legal-state persistence and technological knowledge-spillover networks, selected for economic orthogonality to price-only and SEC-arrival mechanisms.",
+  "policy": {
+    "performance_authorized": false,
+    "holdout_selection_allowed": false,
+    "parameter_search_allowed": false,
+    "asset_search_allowed": false,
+    "threshold_search_allowed": false,
+    "horizon_search_allowed": false,
+    "variant_search_allowed": false,
+    "family_ranking_allowed": false,
+    "automatic_promotion": false,
+    "paid_data_required": false
+  },
+  "candidates": [
+    {
+      "id": "Q185",
+      "name": "FEDERAL_LITIGATION_STATE × ISSUER_EXPOSURE",
+      "hypothesis": "A firm's evolving public federal-litigation state may contain persistent information about uncertainty and operating/legal risk that is distinct from a one-day lawsuit filing shock and from price-derived signals.",
+      "construction": "Fixed legal-state machine: NO_KNOWN_CASE → CASE_FILED → ACTIVE_LITIGATION → MATERIAL_PROCEDURAL_TRANSITION → RESOLVED/TERMINATED. Construct states only from public federal-court docket metadata and entries available by the proven public dissemination boundary. Use the earliest reproducibly observable state for each case and preserve later docket revisions as later information rather than rewriting the historical prefix. Issuer/party mapping is frozen before evaluation and outcome labels are excluded from state construction.",
+      "sources": [
+        "CourtListener RECAP / PACER public archive",
+        "CourtListener federal-court coverage documentation",
+        "SEC issuer identity/disclosure mapping",
+        "OHLCV"
+      ],
+      "next_gate": "historical docket coverage census, public observation clock, docket-entry timestamp semantics, entity/party mapping, amendment/correction lineage, independent reproduction",
+      "forbidden_design_searches": [
+        "case-type search",
+        "court selection",
+        "event-window search",
+        "outcome-conditioned filtering",
+        "return-derived case selection"
+      ],
+      "robustness_contract": {
+        "earliest_public_state_only": true,
+        "future_docket_entries_excluded": true,
+        "later_corrections_do_not_rewrite_prefix": true,
+        "issuer_mapping_frozen_ex_ante": true,
+        "outcome_labels_excluded": true
+      }
+    },
+    {
+      "id": "Q186",
+      "name": "UPSTREAM_PATENT_GRANT_SHOCK × TECHNOLOGY_EXPOSURE",
+      "hypothesis": "A newly granted patent to a technologically upstream firm can create a measurable information shock for downstream publicly traded firms that already have a fixed, observable technological dependency on that upstream knowledge.",
+      "construction": "Build a directed upstream→downstream technology graph from publicly observable patent citations and disambiguated assignee organizations. Freeze each exposure edge strictly before the downstream decision point; only previously public citation relationships may define exposure. A patent grant is a distinct public event keyed by its issue/grant date. The signal state is the new grant shock propagated one hop through the frozen technology-dependency graph. No citation-depth, CPC/IPC taxonomy, event-window, threshold or firm-selection search is permitted.",
+      "sources": [
+        "USPTO PatentsView / USPTO Open Data Portal",
+        "USPTO Official Gazette for Patents",
+        "USPTO Patent Grant Authority Files",
+        "SEC issuer identity mapping",
+        "OHLCV"
+      ],
+      "next_gate": "historical grant/citation archive completeness, grant-publication clock, citation-publication ordering, assignee/issuer mapping, correction/withdrawal lineage, independent reproduction",
+      "forbidden_design_searches": [
+        "citation-depth search",
+        "technology-class search",
+        "event-window search",
+        "threshold search",
+        "asset search",
+        "return-derived graph construction"
+      ],
+      "robustness_contract": {
+        "grant_public_date_provenance_required": true,
+        "graph_frozen_before_decision_time": true,
+        "prior_public_citations_only": true,
+        "corrections_cannot_backfill_prior_states": true,
+        "assignee_mapping_frozen_ex_ante": true
+      }
+    }
+  ],
+  "cross_channel_design": {
+    "priority_order": [
+      "Q186",
+      "Q185"
+    ],
+    "rationale": "Q186 has unusually strong literature support for network spillovers and a mechanically reconstructable public grant clock; Q185 provides a distinct persistent legal-state channel with large historical litigation population.",
+    "no_composition_until_individual_pit_pass": true
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
