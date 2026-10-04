@@ -1,0 +1,98 @@
+name: Q187-Q192 PIT Readiness R1
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/evidence/q187_q192_source_feasibility_latest.json"
+      - "automation/q187_q192_pit_readiness.py"
+      - "tests/test_q187_q192_pit_readiness.py"
+      - ".github/workflows/q187-q192-pit-readiness-r1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-q187-q192-pit-readiness
+  cancel-in-progress: true
+
+jobs:
+  pit_readiness:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Compile PIT readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/runs/q187_q192_pit_readiness
+          python -m automation.q187_q192_pit_readiness             --source-receipt research/evidence/q187_q192_source_feasibility_latest.json             --output "research/runs/q187_q192_pit_readiness/${GITHUB_RUN_ID}.json"
+
+      - name: Validate PIT boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p = Path("research/runs/q187_q192_pit_readiness") / f"{os.environ['GITHUB_RUN_ID']}.json"
+          d = json.loads(p.read_text(encoding="utf-8"))
+          assert d["status"] == "PIT_READINESS_COMPILATION_COMPLETED"
+          assert len(d["candidate_results"]) == 6
+          assert all(v is False for v in d["scientific_boundary"].values())
+          assert d["safety"]["paper_only"] is True
+          assert d["safety"]["live_trading_enabled"] is False
+          assert d["safety"]["orders_enabled"] is False
+          assert d["safety"]["automatic_promotion"] is False
+          assert all(x["performance_authorized"] is False for x in d["candidate_results"])
+          assert all(x["selection_allowed"] is False for x in d["candidate_results"])
+          assert all(x["ranking_allowed"] is False for x in d["candidate_results"])
+          print("Q187_Q192_PIT_READINESS_OK")
+          PY
+
+      - name: Persist latest PIT receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        if: success() && github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          input="research/runs/q187_q192_pit_readiness/${GITHUB_RUN_ID}.json"
+          latest="research/evidence/q187_q192_pit_readiness_r1_latest.json"
+          cp "$input" "$latest"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin master --quiet
+            base_sha="$(git rev-parse origin/master)"
+            if python automation/github_contents_publish.py \
+              --repository "$GITHUB_REPOSITORY" \
+              --branch master \
+              --base-sha "$base_sha" \
+              --file "$latest=$latest"; then
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          echo "::error::PIT receipt publication failed"
+          exit 1
+
+      - name: Upload PIT receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q187-q192-pit-readiness-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q187_q192_pit_readiness/
+          if-no-files-found: error
+          retention-days: 30
