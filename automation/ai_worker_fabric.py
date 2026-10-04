@@ -110,6 +110,14 @@ CONTEXT_FILES = {
         "research/governance/active_research_registry.json",
         "docs/DECISION_BASIS.md",
     ),
+    "AI-2026-10-04-Q187-Q192-ADVERSARIAL": (
+        "docs/research_design/Q187_Q192_SOURCE_PIT_WAVE_2026-10-04.md",
+        "research/frontier/q187_q192_candidate_wave_2026_10_04.json",
+        "research/evidence/q187_q192_source_feasibility_latest.json",
+        "research/governance/active_research_registry.json",
+        "docs/CURRENT_STATUS.md",
+        "docs/EVIDENCE_GOVERNANCE.md",
+    ),
     "AI-2026-09-30-Q102-REGIME-STATE-DESIGN": (
         "docs/research_design/EXTERNAL_RESEARCH_INSPIRATION_2026-09-30.md",
         "automation/q102_regime_negative_evidence.py",
