@@ -96,3 +96,12 @@ def test_scheduler_reloads_quality_policy_each_invocation(monkeypatch, tmp_path)
         item["mechanism_novelty_distance"] >= 0.98
         for item in plan["tracks"]
     )
+
+
+def test_q194_q195_tracks_are_pre_performance_and_novelty_gated():
+    from automation.research_os_scheduler import TRACKS
+    q194=next(x for x in TRACKS if x["id"]=="ROS-TRACK-Q194-THERAPEUTIC-SUBSTITUTION")
+    q195=next(x for x in TRACKS if x["id"]=="ROS-TRACK-Q195-EPA-ESCALATION")
+    assert q194["mechanism_novelty_distance"]>=0.80 and q195["mechanism_novelty_distance"]>=0.80
+    assert q194["lane"]=="deterministic_frontier"
+    assert q195["lane"]=="adversarial"
