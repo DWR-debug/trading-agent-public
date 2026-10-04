@@ -23,7 +23,7 @@ CANDIDATES = {
         "archive_contract": "Federal-district coverage must be censused for the chosen historical window; no universal CourtListener coverage assumption is allowed.",
     },
     "Q186": {
-        "source_id": "USPTO_PATENT_GRANTS",
+        "source_id": "USPTO_OFFICIAL_GAZETTE",
         "pit_status": "PIT_CONTRACT_DEFINED_PENDING_ARCHIVE_CITATION_ORDER_AND_MAPPING",
         "clock_contract": "Use the official patent issue/grant event as the shock boundary, with grant publication/eGrant availability preserved separately from later bulk-data refreshes.",
         "revision_contract": "Assignments, corrections, withdrawals and later data refreshes are later states and cannot backfill the historical decision prefix.",
