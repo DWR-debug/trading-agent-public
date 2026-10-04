@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "5f4c41dba2db593873d5b228799d34f0a134bbd4dbd1cab32f29c3b8a8376c56",
   "context_fingerprint": "c26c0c45e16d23f649bbadfcbe9d9c926653312ba81664a191a95355dd827ed5",
-  "observed_at_utc": "2026-10-04T21:58:55.766516Z",
+  "observed_at_utc": "2026-10-04T21:59:19.332251Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,11 +42,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 11.808,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 12.985,
+  "stdout": "**Worker Handoff: Adversarial Source/PIT Review**\n\n**Findings**\n1. **Cross-candidate receipt confounding.** Q194–Q197 share a single receipt file (`q193_q196_source_feasibility_latest.json`). One update changes readiness for four candidates simultaneously; the guard’s file-level SHA256 does not isolate candidate-specific immutable bindings.\n2. **Durability guard is presence-only.** `has_durable_binding` checks key existence, not a dated vintage or snapshot integrity. A receipt can carry `immutable_historical_snapshot: true` with no date, no archive fingerprint, and no pre-event boundary.\n3. **Date-only leakage risk in Q198.** The PIT clock census receipt may contain date-only timestamps; the shared contract requires next regular-session boundary, but the receipt/census does not appear to enforce or audit granularity.\n4. **Revision/",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1791151159-q4Nl6gRGPqpv0hOtzoOC",
+  "usage": {
+    "prompt_tokens": 5714,
+    "completion_tokens": 3200,
+    "total_tokens": 8914,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3162,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
