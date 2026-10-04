@@ -771,6 +771,12 @@ def generate(
 - Latest Q179–Q184 PIT receipt fingerprint: `{q179_q184_pit_receipt.get("receipt_fingerprint", "UNKNOWN")}`.
 - Candidate-level PIT status remains non-authorizing; all six current statuses are surfaced directly in `research/evidence/q179_q184_pit_readiness_r1_latest.json`.
 - Remaining gates are historical archive reconstruction, exact public-clock proof where not yet established, fixed entity mapping, revision/amendment lineage and independent reproduction. No performance, holdout selection, tuning, ranking, promotion or live execution is authorized.
+
+### Q185-Q186 A-Priority Patent / Legal Frontier
+
+- **Q186:** upstream patent-grant shock propagated through a directed, five-year, pre-event patent-citation dependency graph; self-citations excluded; edge weights are external backward-citation shares. Source/public-clock feasibility and PIT contract work are discovery-only until historical citation ordering, grant archive completeness, issuer mapping and independent reproduction are proven.
+- **Q185:** federal litigation legal-state machine `NO_KNOWN_CASE → CASE_FILED → ACTIVE_LITIGATION → MATERIAL_PROCEDURAL_TRANSITION → RESOLVED`, using only the earliest reproducibly public state. CourtListener coverage is not assumed universal; public intraday dissemination timing, historical coverage and party-to-issuer mapping remain explicit gates.
+- These are **A-priority Lane-B frontier mechanisms** selected for orthogonality to price-only momentum/reversal and SEC filing-arrival channels. No performance, holdout selection, tuning, ranking, promotion or live execution is authorized.
 ### Q148-R1 EIA WPSR Source/Clock Gate
 
 - Receipt status: **{q148_r1_receipt.get("status", "NOT_RECORDED")}**.
