@@ -95,7 +95,7 @@ def archive_header_url(filename: str) -> str:
     if len(parts) < 4 or parts[0] != "edgar" or parts[1] != "data":
         raise ValueError(f"INVALID_ARCHIVE_FILENAME:{filename}")
     cik = str(int(parts[2]))
-    accession = r1.accession_from_filename(filename).replace("-", "")
+    accession = r3.accession_from_filename(filename).replace("-", "")
     return (
         f"https://www.sec.gov/Archives/edgar/data/{cik}/{accession}/"
         f"{accession}-index-headers.html"
