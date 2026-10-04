@@ -4,49 +4,128 @@ on:
   push:
     branches: [master]
     paths:
-      - "ai_requests/AI-2026-09-29-Q091-ADVERSARIAL.json"
-      - ".github/workflows/ai-worker-fabric.yml"
-      - "automation/ai_worker_fabric.py"
-      - "automation/mistral_free.py"
-      - "tests/test_ai_worker_fabric.py"
-      - "ai_requests/AI-2026-09-30-Q100-FRONTIER-FEASIBILITY.json"
-      - "ai_requests/AI-2026-09-30-Q101-NEGATIVE-EVIDENCE.json"
-      - "ai_requests/AI-2026-09-30-Q102-REGIME-STATE-DESIGN.json"
-      - "automation/q101_negative_evidence_atlas.py"
-      - "tests/test_q101_negative_evidence_atlas.py"
-      - "docs/research_design/EXTERNAL_RESEARCH_INSPIRATION_2026-09-30.md"
-      - "automation/q102_regime_negative_evidence.py"
-      - "tests/test_q102_regime_negative_evidence.py"
-      - "automation/q103_rccsm_state_routing_integrity.py"
-      - "tests/test_q103_rccsm_state_routing_integrity.py"
-      - "ai_requests/AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT.json"
+      - "research/evidence/q187_q192_source_feasibility_latest.json"
       - "automation/research_os_scheduler.py"
       - "automation/research_hypothesis_compiler.py"
       - "automation/autonomous_control_plane.py"
-  schedule:
-    - cron: '0 */6 * * *'
+      - ".github/workflows/permanent-pc-research-loop.yml"
+      - ".github/workflows/q121r6-windows-independent-reproduction.yml"
+      - ".github/workflows/q185-q186-windows-reproduction.yml"
+      - ".github/workflows/self-hosted-continuous-qa.yml"
+  # OpenRouter free is deliberately event-driven. Repeating unchanged research
+  # prompts on a timer wastes scarce free capacity without increasing information.
   workflow_dispatch:
-
-permissions:
-  contents: write
-
-jobs:
-  worker:
-    if: github.repository == 'DWR-debug/trading-agent-public'
-    strategy:
-      fail-fast: false
-      matrix:
-        provider: [openrouter_free]
-        task:
+    inputs:
+      task_id:
+        description: "Explicit bounded OpenRouter review task for manual dispatch"
+        required: true
+        type: choice
+        options:
+          - AI-2026-10-04-Q187-Q192-ADVERSARIAL
+          - AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT
           - AI-2026-09-29-Q091-ADVERSARIAL
           - AI-2026-09-28-Q089-ADVERSARIAL
           - AI-2026-09-28-UNUSUAL-FRONTIER
           - AI-2026-09-30-Q100-FRONTIER-FEASIBILITY
           - AI-2026-09-30-Q101-NEGATIVE-EVIDENCE
           - AI-2026-09-30-Q102-REGIME-STATE-DESIGN
-          - AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT
+      run_secondary_provider:
+        description: "Also run the manual Gemini/Mistral secondary review rotation"
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  plan_openrouter:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    outputs:
+      tasks: ${{ steps.plan.outputs.tasks }}
+    steps:
+      - name: Checkout changed commits
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+
+      - name: Plan affected review tasks
+        id: plan
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_BEFORE: ${{ github.event.before }}
+          GITHUB_SHA: ${{ github.sha }}
+          TASK_ID: ${{ github.event.inputs.task_id }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          if os.environ['EVENT_NAME'] == 'workflow_dispatch':
+              task = os.environ.get('TASK_ID', '').strip()
+              if not task:
+                  raise SystemExit('workflow_dispatch requires task_id')
+              tasks = [task]
+          else:
+              before = os.environ.get('EVENT_BEFORE', '')
+              after = os.environ['GITHUB_SHA']
+              if not before or before == '0000000000000000000000000000000000000000':
+                  command = ['git', 'diff-tree', '--no-commit-id', '--name-only', '-r', after]
+              else:
+                  command = ['git', 'diff', '--name-only', before, after]
+              changed = set(subprocess.check_output(command, text=True).splitlines())
+              tasks = []
+              q187_paths = {'research/evidence/q187_q192_source_feasibility_latest.json'}
+              orch_paths = {
+                  'automation/research_os_scheduler.py',
+                  'automation/research_hypothesis_compiler.py',
+                  'automation/autonomous_control_plane.py',
+                  '.github/workflows/permanent-pc-research-loop.yml',
+                  '.github/workflows/q121r6-windows-independent-reproduction.yml',
+                  '.github/workflows/q185-q186-windows-reproduction.yml',
+                  '.github/workflows/self-hosted-continuous-qa.yml',
+              }
+              if changed.intersection(q187_paths):
+                  tasks.append('AI-2026-10-04-Q187-Q192-ADVERSARIAL')
+              if changed.intersection(orch_paths):
+                  tasks.append('AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT')
+              tasks = sorted(set(tasks))
+
+          allowed_manual = {
+              'AI-2026-10-04-Q187-Q192-ADVERSARIAL',
+              'AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT',
+              'AI-2026-09-29-Q091-ADVERSARIAL',
+              'AI-2026-09-28-Q089-ADVERSARIAL',
+              'AI-2026-09-28-UNUSUAL-FRONTIER',
+              'AI-2026-09-30-Q100-FRONTIER-FEASIBILITY',
+              'AI-2026-09-30-Q101-NEGATIVE-EVIDENCE',
+              'AI-2026-09-30-Q102-REGIME-STATE-DESIGN',
+          }
+          if any(task not in allowed_manual for task in tasks):
+              raise SystemExit(f'unexpected AI task: {tasks}')
+          if not tasks:
+              tasks = ['__none__']
+          Path(os.environ['GITHUB_OUTPUT']).open('a', encoding='utf-8').write(
+              'tasks=' + json.dumps(tasks) + '\\n'
+          )
+          PY
+
+  worker:
+    needs: plan_openrouter
+    if: ${{ needs.plan_openrouter.outputs.tasks != '["__none__"]' }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        task: ${{ fromJSON(needs.plan_openrouter.outputs.tasks) }}
     concurrency:
-      group: trading-agent-ai-${{ matrix.provider }}-${{ matrix.task }}
+      group: trading-agent-ai-openrouter-${{ matrix.task }}
       cancel-in-progress: false
     runs-on: ubuntu-24.04
     timeout-minutes: 25
@@ -75,6 +154,7 @@ jobs:
             AI-2026-09-30-Q101-NEGATIVE-EVIDENCE) echo 'path=ai_requests/AI-2026-09-30-Q101-NEGATIVE-EVIDENCE.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-09-30-Q102-REGIME-STATE-DESIGN) echo 'path=ai_requests/AI-2026-09-30-Q102-REGIME-STATE-DESIGN.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT) echo 'path=ai_requests/AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT.json' >> "$GITHUB_OUTPUT" ;;
+            AI-2026-10-04-Q187-Q192-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-04-Q187-Q192-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
             *) exit 1 ;;
           esac
 
@@ -88,7 +168,7 @@ jobs:
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/ai-worker-output"
           set +e
-          python -m automation.ai_worker_fabric --run --provider '${{ matrix.provider }}' --task '${{ steps.task.outputs.path }}' --output "$RUNNER_TEMP/ai-worker-output/${{ matrix.task }}-${{ matrix.provider }}.json"
+          python -m automation.ai_worker_fabric --run --provider 'openrouter_free' --task '${{ steps.task.outputs.path }}' --output "$RUNNER_TEMP/ai-worker-output/${{ matrix.task }}-openrouter_free.json"
           rc=$?
           set -e
           test "$rc" -ne 1
@@ -102,12 +182,12 @@ jobs:
           set -euo pipefail
           state_dir='ops/ai_worker_state'
           mkdir -p "$state_dir"
-          state_file="$state_dir/${{ matrix.task }}__${{ matrix.provider }}.json"
-          output="$RUNNER_TEMP/ai-worker-output/${{ matrix.task }}-${{ matrix.provider }}.json"
+          state_file="$state_dir/${{ matrix.task }}__openrouter_free.json"
+          output="$RUNNER_TEMP/ai-worker-output/${{ matrix.task }}-openrouter_free.json"
           if [ -f "$output" ]; then
             cp "$output" "$state_file"
           else
-            printf '%s\n' '{"schema_version":1,"task_id":"${{ matrix.task }}","provider":"${{ matrix.provider }}","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' > "$state_file"
+            printf '%s\n' '{"schema_version":1,"task_id":"${{ matrix.task }}","provider":"openrouter_free","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' > "$state_file"
           fi
           payload="$(base64 -w 0 "$state_file")"
           for _ in 1 2 3 4 5; do
@@ -128,7 +208,7 @@ jobs:
           exit 1
 
       - name: Assert OpenRouter free route
-        if: matrix.provider == 'openrouter_free'
+        if: matrix.task != '__none__'
         shell: bash
         run: |
           set -euo pipefail
@@ -139,7 +219,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: ai-worker-${{ matrix.task }}-${{ matrix.provider }}-${{ github.run_id }}
+          name: ai-worker-${{ matrix.task }}-openrouter_free-${{ github.run_id }}
           path: "$RUNNER_TEMP/ai-worker-output/"
           if-no-files-found: warn
           retention-days: 14
@@ -149,7 +229,8 @@ jobs:
     # legacy API-key worker manual-only to avoid scheduled 503 churn.
     if: >-
       ${{ github.repository == 'DWR-debug/trading-agent-public' &&
-          github.event_name == 'workflow_dispatch' }}
+          github.event_name == 'workflow_dispatch' &&
+          github.event.inputs.run_secondary_provider == 'true' }}
     concurrency:
       group: trading-agent-ai-gemini-free
       cancel-in-progress: false
@@ -271,7 +352,8 @@ jobs:
     # the scheduled free paths.
     if: >-
       ${{ github.repository == 'DWR-debug/trading-agent-public' &&
-          github.event_name == 'workflow_dispatch' }}
+          github.event_name == 'workflow_dispatch' &&
+          github.event.inputs.run_secondary_provider == 'true' }}
     concurrency:
       group: trading-agent-ai-mistral-free
       cancel-in-progress: false
