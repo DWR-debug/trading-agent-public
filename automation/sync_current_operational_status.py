@@ -122,6 +122,8 @@ def generate(
     q171_q177_pit_receipt = _load_json(ROOT / "research/evidence/q171_q177_pit_readiness_2026_10_03.json", {})
     q179_q184_source_receipt = _load_json(ROOT / "research/evidence/q179_q184_source_feasibility_latest.json", {})
     q179_q184_pit_receipt = _load_json(ROOT / "research/evidence/q179_q184_pit_readiness_r1_latest.json", {})
+    q185_q186_source_receipt = _load_json(ROOT / "research/evidence/q185_q186_source_feasibility_latest.json", {})
+    q185_q186_pit_receipt = _load_json(ROOT / "research/evidence/q185_q186_pit_readiness_r1_latest.json", {})
     source_pit_frontier_outcomes = _load_json(ROOT / "research/evidence/source_pit_frontier_outcomes_2026_10_03.json", {})
     q121_r5_receipt = _load_json(ROOT / "research/evidence/q121r5_dual_index_population_reconciliation_2026_10_03.json", {})
     q121_r6_attempts = _load_json(ROOT / "research/evidence/q121r6_execution_attempts_2026_10_03.json", {})
@@ -400,6 +402,21 @@ def generate(
             "Q179-Q184 source feasibility is active in Lane B. Current receipt is discovery-only; source/PIT "
             "contracts remain candidate-specific and no performance or promotion is authorized."
         )
+
+    if q185_q186_pit_receipt.get("status") == "PIT_READINESS_R1_COMPLETED_NO_PERFORMANCE":
+        recorded_next_research_focus = (
+            "A-priority frontier: Q186 upstream patent-grant shock through a literature-faithful directed "
+            "five-year patent-citation dependency graph, and Q185 federal litigation as a deterministic legal-state "
+            "machine. Both have completed only contract/source/PIT-readiness work; historical archive coverage, "
+            "public dissemination timing, frozen issuer/entity mapping, revision lineage and independent reproduction "
+            "remain mandatory. No performance, holdout selection, tuning, ranking, promotion or live execution is authorized."
+        )
+    elif q185_q186_source_receipt.get("status") == "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED":
+        recorded_next_research_focus = (
+            "A-priority Q185-Q186 source feasibility is active. Q186 targets upstream patent-grant shocks through "
+            "directed five-year citation dependencies; Q185 targets persistent federal litigation states. "
+            "Both remain discovery/PIT-only with no performance or promotion authorization."
+        )
     current = {
         "schema_version": "1.0",
         "status_type": "current_operational_project_state",
@@ -458,7 +475,7 @@ def generate(
                 "lane_b": {
                     "name": "FRONTIER_DISCOVERY",
                     "runner_slot": "Windows self-hosted B",
-                    "focus": ["Q171-Q178", "Q126-Q132", "public-source/PIT frontier"],
+                    "focus": ["Q186", "Q185", "Q171-Q178", "Q126-Q132", "public-source/PIT frontier"],
                     "performance_authorization_from_capacity": False,
                 },
                 "separate_identity_and_outputs": True,
@@ -605,6 +622,8 @@ def generate(
         "q171_q177_pit_readiness": q171_q177_pit_receipt,
         "q179_q184_source_feasibility": q179_q184_source_receipt,
         "q179_q184_pit_readiness_r1": q179_q184_pit_receipt,
+        "q185_q186_source_feasibility": q185_q186_source_receipt,
+        "q185_q186_pit_readiness_r1": q185_q186_pit_receipt,
         "source_pit_frontier_outcomes": source_pit_frontier_outcomes,
         "q121_r5_dual_index_reconciliation": q121_r5_receipt,
         "q121_r6_execution_attempts": q121_r6_attempts,
