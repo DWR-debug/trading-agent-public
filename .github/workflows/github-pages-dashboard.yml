@@ -1,5 +1,6 @@
 name: Deploy Resource Dashboard to GitHub Pages
 
+# Pages deployment is intentionally exercised by repository changes so the public dashboard deployment path is auditable.
 on:
   push:
     branches: [master]
