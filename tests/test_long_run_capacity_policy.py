@@ -33,3 +33,23 @@ def test_agent_queue_treats_copilot_exhaustion_as_pause_but_keeps_other_errors_c
 def test_t052_allows_ai_credit_operational_plan_in_master_move_guard() -> None:
     text = Path(".github/workflows/t052-exact-master-ci-gate.yml").read_text(encoding="utf-8")
     assert "ops/ai_credit_availability_plan\\.json" in text
+
+
+def test_q121r6_now_uses_three_windows_shards_for_third_runner() -> None:
+    text = Path(".github/workflows/q121r6-windows-independent-reproduction.yml").read_text(encoding="utf-8")
+    assert "max-parallel: 3" in text
+    assert "shard_index: [0, 1, 2]" in text
+    assert "--shard-count 3" in text
+    assert "expected 3 receipts" in text
+    assert "{0, 1, 2}" in text
+
+
+def test_runner_c_setup_is_secrets_safe_and_has_dedicated_label() -> None:
+    setup = Path("scripts/setup_third_windows_runner.ps1").read_text(encoding="utf-8")
+    assert "LHT-N133732-3" in setup
+    assert "trading-agent-long" in setup
+    assert "registration-token" in setup
+    assert "$token = $null" in setup
+    doc = Path("docs/SELF_HOSTED_RESEARCH_RUNNER_C.md").read_text(encoding="utf-8")
+    assert "third PowerShell window" in doc
+    assert "non-authorizing" in doc.lower()
