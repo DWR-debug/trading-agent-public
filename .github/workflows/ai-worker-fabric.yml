@@ -134,7 +134,7 @@ jobs:
           if [ -f "$output" ]; then
             cp "$output" "$state_file"
           else
-            printf '%s\n' '{"schema_version":1,"task_id":"${{ matrix.task }}","provider":"${{ matrix.provider }}","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' > "$state_file"
+            printf '%s\n' '{"schema_version":1,"task_id":"${{ matrix.task }}","provider":"openrouter_free","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' > "$state_file"
           fi
           payload="$(base64 -w 0 "$state_file")"
           for _ in 1 2 3 4 5; do
