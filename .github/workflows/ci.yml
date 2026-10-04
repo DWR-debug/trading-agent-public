@@ -10,6 +10,14 @@ on:
       - research/run-self-hosted/repo_qa
       - research/run-self-hosted/data_qa
       - research/run-self-hosted/local_reproduction
+    paths-ignore:
+      - docs/CURRENT_STATUS.md
+      - research/evidence/current_operational_state.json
+      - master
+      - research/execute-q020-coverage
+      - research/run-self-hosted/repo_qa
+      - research/run-self-hosted/data_qa
+      - research/run-self-hosted/local_reproduction
   workflow_dispatch:
 
 permissions:
