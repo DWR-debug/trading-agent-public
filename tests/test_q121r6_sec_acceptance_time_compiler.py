@@ -90,3 +90,20 @@ def test_r6_uses_canonical_r3_accession_parser():
     assert r3.accession_from_filename(filename) == "0000000001-24-000001"
     source = __import__("pathlib").Path(r6.__file__).read_text(encoding="utf-8")
     assert "r3.accession_from_filename(filename)" in source
+
+
+def test_q121r6_archive_url_uses_filer_cik_from_accession():
+    from automation.q121r6_sec_acceptance_time_compiler import archive_header_url
+    filename = "edgar/data/1007587/0000921895-24-000688.txt"
+    assert archive_header_url(filename) == (
+        "https://www.sec.gov/Archives/edgar/data/921895/000092189524000688/"
+        "0000921895-24-000688-index-headers.html"
+    )
+
+
+def test_q121r6_subject_and_filer_cik_are_distinct():
+    source = __import__("pathlib").Path(
+        __import__("automation.q121r6_sec_acceptance_time_compiler", fromlist=["__name__"]).__file__
+    ).read_text(encoding="utf-8")
+    assert "INDEX_SUBJECT_CIK_MISMATCH" in source
+    assert "filer_cik = accession_dashed.split" in source
