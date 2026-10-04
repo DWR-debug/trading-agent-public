@@ -46,6 +46,11 @@ on:
         required: true
         default: false
         type: boolean
+      use_litellm_transport:
+        description: "Use the optional fail-closed LiteLLM transport for the OpenRouter worker"
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -212,6 +217,13 @@ jobs:
         with:
           python-version: '3.13'
 
+      - name: Optional LiteLLM transport
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.use_litellm_transport == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check -r requirements-ai.txt
+
       - name: Resolve task file
         id: task
         shell: bash
@@ -236,6 +248,7 @@ jobs:
         env:
           AI_EXTERNAL_PROVIDER_ALLOWLIST: ${{ secrets.AI_EXTERNAL_PROVIDER_ALLOWLIST }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          TRADING_AGENT_LITELLM_TRANSPORT: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.use_litellm_transport == 'true' && 'true' || 'false' }}
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/ai-worker-output"
