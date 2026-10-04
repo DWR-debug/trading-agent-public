@@ -6,7 +6,7 @@
     "USASPENDING": {
       "urls": [
         "https://api.usaspending.gov/docs/endpoints",
-        "https://www.usaspending.gov/keyword_search/2026"
+        "https://www.usaspending.gov/keyword_search/N0018922C0005"
       ],
       "http_statuses": [
         200,
@@ -30,7 +30,7 @@
           ]
         },
         {
-          "url": "https://www.usaspending.gov/keyword_search/2026",
+          "url": "https://www.usaspending.gov/keyword_search/N0018922C0005",
           "http_status": 200,
           "missing_markers": [
             "Endpoints do not currently require any authorization",
@@ -73,7 +73,7 @@
         }
       ],
       "clock_contract": "Supplement/date/update fields describe the labeling event and database state separately. Exact first-public observation and later corrections must be reconstructed before same-day use.",
-      "content_sha256": "9b957b183262a9c3728f0319db208d93b97e6f674c68df2f6388e532dd423b62"
+      "content_sha256": "8c30069984f05cbb4082e3cc3eb45e3d1ff82894cd1210d3dbfd7aa782453251"
     },
     "CPSC_RECALLS": {
       "urls": [
@@ -142,41 +142,35 @@
     },
     "USPTO_PATENT": {
       "urls": [
-        "https://www.uspto.gov/products/patent-grant-data",
+        "https://www.uspto.gov/learning-and-resources/xml-resources",
         "https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents"
       ],
       "http_statuses": [
-        404,
+        200,
         200
       ],
       "reachable": true,
-      "all_urls_reachable": false,
-      "required_markers_present": false,
-      "probe_classification": "REACHABLE_MARKER_MISMATCH",
-      "missing_markers": [
-        "Patent Grant Full Text Data",
-        "patent grants"
-      ],
+      "all_urls_reachable": true,
+      "required_markers_present": true,
+      "probe_classification": "PASS",
+      "missing_markers": [],
       "attempts": [
         {
-          "url": "https://www.uspto.gov/products/patent-grant-data",
-          "http_status": 404,
-          "missing_markers": [
-            "Patent Grant Full Text Data",
-            "patent grants"
-          ]
+          "url": "https://www.uspto.gov/learning-and-resources/xml-resources",
+          "http_status": 200,
+          "missing_markers": []
         },
         {
           "url": "https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents",
           "http_status": 200,
           "missing_markers": [
             "Patent Grant Full Text Data",
-            "patent grants"
+            "Red Book XML"
           ]
         }
       ],
       "clock_contract": "Patent issue/publication date is distinct from later bulk-data refreshes. For Q191 the science-publication boundary must be separately proven and same-day ambiguous ordering must be excluded.",
-      "content_sha256": "047b77f949efc4ca3412668e07827f6bcd96041cc0b877d2eea831ee5fa1a5c6"
+      "content_sha256": "d427a1deae81683865690ab9078eeb7959c06dd759ad4c4d65bb4e51867bfe08"
     },
     "CROSSREF": {
       "urls": [
@@ -198,7 +192,7 @@
         }
       ],
       "clock_contract": "Crossref deposit/publication metadata is not automatically an exact public-dissemination timestamp; historical stage ordering must be proven.",
-      "content_sha256": "297932588820ae66a68e86809b2b5606516a790823e227b423c6e76f9bc3e2f3"
+      "content_sha256": "4f09c3d8fa559d5d7bde4d961618f49bb312432b414d53168e9a1325b8eb876b"
     },
     "FDA_SHORTAGES": {
       "urls": [
@@ -215,33 +209,27 @@
       ],
       "reachable": true,
       "all_urls_reachable": true,
-      "required_markers_present": false,
-      "probe_classification": "REACHABLE_MARKER_MISMATCH",
-      "missing_markers": [
-        "Drug Shortages download information"
-      ],
+      "required_markers_present": true,
+      "probe_classification": "PASS",
+      "missing_markers": [],
       "attempts": [
         {
           "url": "https://www.fda.gov/drug-shortages",
           "http_status": 200,
           "missing_markers": [
-            "updated daily",
-            "Drug Shortages download information"
+            "updated daily"
           ]
         },
         {
           "url": "https://www.fda.gov/drugs/drug-shortages/frequently-asked-questions-about-drug-shortages",
           "http_status": 200,
-          "missing_markers": [
-            "Drug Shortages download information"
-          ]
+          "missing_markers": []
         },
         {
           "url": "https://open.fda.gov/data/drugshortages/",
           "http_status": 200,
           "missing_markers": [
-            "updated daily",
-            "Drug Shortages download information"
+            "updated daily"
           ]
         },
         {
@@ -249,13 +237,12 @@
           "http_status": 200,
           "missing_markers": [
             "Drug Shortages",
-            "updated daily",
-            "Drug Shortages download information"
+            "updated daily"
           ]
         }
       ],
       "clock_contract": "Shortage start/resolution dates are distinct from first public observation. Historical daily-list state must be reconstructed without allowing current records to overwrite earlier prefixes.",
-      "content_sha256": "e97cb565f188e8c046e2e3c2dc0bc929b595b4f1cc5017920d7c5f54df42e17c"
+      "content_sha256": "6ce26ef0803a68c2ac3ba5ffd3d8ae76916953902c1a800ab06a9589d2a0b78d"
     }
   },
   "candidate_results": [
@@ -289,7 +276,7 @@
     },
     {
       "candidate_id": "Q191",
-      "status": "BLOCKED_SOURCE_PROBE",
+      "status": "SOURCE_PROBES_PASSED",
       "source_ids": [
         "USPTO_PATENT",
         "CROSSREF"
@@ -297,7 +284,7 @@
     },
     {
       "candidate_id": "Q192",
-      "status": "BLOCKED_SOURCE_PROBE",
+      "status": "SOURCE_PROBES_PASSED",
       "source_ids": [
         "FDA_SHORTAGES"
       ]
@@ -328,5 +315,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "receipt_fingerprint": "e004665eb323f8ecf2b8e24510bdd074db15015316034fd08cbcad90f64aa464"
+  "receipt_fingerprint": "2544cb72b2203d4709554837126c17f9991b4cc432d78d7296f2c679aaa96097"
 }
