@@ -24,6 +24,18 @@ PROBES = {
             "last_updated",
         ],
     },
+    "Q198_HISTORICAL_PI_API": {
+        "urls": [
+            "https://www.federalregister.gov/api/v1/public-inspection-documents/2021-07287.json"
+        ],
+        "markers": [
+            "\"document_number\":\"2021-07287\"",
+            "\"filed_at\":",
+            "\"last_public_inspection_issue\":",
+            "\"publication_date\":\"2021-04-09\""
+        ],
+        "purpose": "Official single-document historical Public Inspection API route; route proof only."
+    },
     "Q198_FEDERAL_REGISTER": {
         "urls": [
             "https://www.federalregister.gov/api/v1/documents.json?per_page=1&order=newest",
