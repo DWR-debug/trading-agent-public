@@ -39,7 +39,7 @@ jobs:
           repo = os.environ['GITHUB_REPOSITORY']
           def gh(path):
               return json.loads(subprocess.check_output(['gh','api',path], text=True))
-          runners = gh('/repos/'+repo+'/actions/runners?per_page=100').get('runners', [])
+          self_hosted_runs = gh('/repos/'+repo+'/actions/workflows/permanent-pc-research-loop.yml/runs?branch=master&per_page=10').get('workflow_runs', [])
           queued = gh('/repos/'+repo+'/actions/runs?status=queued&per_page=50').get('workflow_runs', [])
           running = gh('/repos/'+repo+'/actions/runs?status=in_progress&per_page=50').get('workflow_runs', [])
           active_jobs = []
@@ -67,7 +67,7 @@ jobs:
           snapshot = {
               'generated_at_utc': datetime.now(timezone.utc).isoformat(),
               'repository': repo,
-              'runners': [{'name':r.get('name'),'os':r.get('os'),'status':r.get('status'),'busy':r.get('busy'),'labels':[x.get('name') for x in r.get('labels',[])]} for r in runners],
+              'self_hosted_loop': [{'run_id':x.get('id'),'status':x.get('status'),'conclusion':x.get('conclusion'),'created_at':x.get('created_at'),'updated_at':x.get('updated_at')} for x in self_hosted_runs[:10]],
               'actions': {'queued':[{'name':x.get('name'),'run_id':x.get('id')} for x in queued[:20]], 'in_progress':[{'name':x.get('name'),'run_id':x.get('id')} for x in running[:20]], 'active_jobs':active_jobs},
               'free_ai': ai,
               'two_lane': {'status':os_state.get('two_lane_research_mode',{}).get('status'),'lane_a':os_state.get('two_lane_research_mode',{}).get('lane_a',{}).get('focus',[]),'lane_b':os_state.get('two_lane_research_mode',{}).get('lane_b',{}).get('focus',[])},
@@ -88,11 +88,11 @@ jobs:
           print('')
           print('Generated: **'+d['generated_at_utc']+'**')
           print('')
-          print('### Self-hosted Windows')
+          print('### Permanent self-hosted loop')
           print('')
-          print('| Runner | Status | Busy | Labels |')
-          print('|---|---|---|---|')
-          for r in d['runners']: print('| '+str(r['name'])+' | '+str(r['status'])+' | '+str(r['busy'])+' | '+', '.join(r['labels'])+' |')
+          print('| Run | Status | Conclusion | Created | Updated |')
+          print('|---|---|---|---|---|')
+          for r in d['self_hosted_loop'][:5]: print('| '+str(r['run_id'])+' | '+str(r['status'])+' | '+str(r['conclusion'])+' | '+str(r['created_at'])+' | '+str(r['updated_at'])+' |')
           print('')
           print('### Active jobs')
           print('')
