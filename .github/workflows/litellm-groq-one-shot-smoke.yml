@@ -1,0 +1,128 @@
+name: LiteLLM Groq One-Shot Smoke
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/litellm_groq_smoke.trigger"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-litellm-groq-smoke
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install pinned LiteLLM
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check -r requirements-ai.txt
+
+      - name: Execute exactly one Groq LiteLLM request
+        shell: bash
+        env:
+          AI_EXTERNAL_PROVIDER_ALLOWLIST: ${{ secrets.AI_EXTERNAL_PROVIDER_ALLOWLIST }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_FREE_MODE_CONFIRMED: ${{ secrets.GROQ_FREE_MODE_CONFIRMED }}
+          TRADING_AGENT_LITELLM_TRANSPORT: "true"
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+
+          from automation.litellm_free import admission, call_litellm_free
+
+          admission_result = admission("groq_free", os.environ)
+          print(json.dumps({
+              "eligible": admission_result["eligible"],
+              "provider": admission_result["provider"],
+              "litellm_model": admission_result["litellm_model"],
+              "api_model": admission_result["api_model"],
+              "free_only": admission_result["free_only"],
+              "paid_usage_allowed": admission_result["paid_usage_allowed"],
+              "paid_fallback_allowed": admission_result["paid_fallback_allowed"],
+              "retries_allowed": admission_result["retries_allowed"],
+              "reasons": admission_result["reasons"],
+          }, sort_keys=True))
+
+          if not admission_result["eligible"]:
+              raise SystemExit("Groq is not admitted by the free-only gate")
+
+          result = call_litellm_free(
+              "groq_free",
+              "Compatibility smoke only. Return exactly PASS. "
+              "Do not perform research, validation, ranking, tuning, promotion, "
+              "or live execution. This request is not scientific evidence.",
+              api_key=os.environ["GROQ_API_KEY"],
+              timeout_seconds=30,
+          )
+
+          print(json.dumps({
+              "status": result["status"],
+              "returncode": result["returncode"],
+              "response_id": result.get("response_id"),
+              "response_model": result.get("response_model"),
+              "usage": result.get("usage"),
+          }, sort_keys=True))
+
+          if result["status"] != "SUCCESS":
+              raise SystemExit("LiteLLM Groq smoke failed")
+          PY
+
+      - name: Persist non-scientific smoke receipt
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ops
+          python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          Path("ops/litellm_groq_smoke_receipt.json").write_text(
+              json.dumps({
+                  "schema_version": 1,
+                  "provider": "groq_free",
+                  "transport": "litellm",
+                  "litellm_model": "groq/openai/gpt-oss-20b",
+                  "api_model": "openai/gpt-oss-20b",
+                  "one_shot": True,
+                  "scientific_evidence": False,
+                  "performance_authorized": False,
+                  "live_execution": False,
+                  "generated_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00","Z"),
+                  "source_commit": os.environ["GITHUB_SHA"],
+                  "status": "SMOKE_COMPLETED"
+              }, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ops/litellm_groq_smoke_receipt.json
+          git diff --cached --quiet && exit 0
+          git commit -m "OPS: record Groq LiteLLM smoke receipt"
+          git push origin HEAD:master
