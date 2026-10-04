@@ -124,6 +124,7 @@ def generate(
     q179_q184_pit_receipt = _load_json(ROOT / "research/evidence/q179_q184_pit_readiness_r1_latest.json", {})
     q185_q186_source_receipt = _load_json(ROOT / "research/evidence/q185_q186_source_feasibility_latest.json", {})
     q185_q186_pit_receipt = _load_json(ROOT / "research/evidence/q185_q186_pit_readiness_r1_latest.json", {})
+    q186_pit_r2_receipt = _load_json(ROOT / "research/evidence/q186_pit_readiness_r2_latest.json", {})
     source_pit_frontier_outcomes = _load_json(ROOT / "research/evidence/source_pit_frontier_outcomes_2026_10_03.json", {})
     q121_r5_receipt = _load_json(ROOT / "research/evidence/q121r5_dual_index_population_reconciliation_2026_10_03.json", {})
     q121_r6_attempts = _load_json(ROOT / "research/evidence/q121r6_execution_attempts_2026_10_03.json", {})
@@ -401,6 +402,15 @@ def generate(
         recorded_next_research_focus = (
             "Q179-Q184 source feasibility is active in Lane B. Current receipt is discovery-only; source/PIT "
             "contracts remain candidate-specific and no performance or promotion is authorized."
+        )
+
+    if q186_pit_r2_receipt.get("status") == "Q186_PIT_R2_CLOCK_ARCHIVE_COMPLETED_NO_PERFORMANCE":
+        recorded_next_research_focus = (
+            "Q186 has completed PIT-R2 clock/archive verification only: the official weekly grant clock "
+            "and post-2023 eGrant public-access boundary are established on fixed controls, while "
+            "citation-publication ordering, historical citation completeness, frozen assignee-to-issuer mapping, "
+            "correction/withdrawal lineage and independent reproduction remain open. No performance, holdout "
+            "selection, tuning, ranking, promotion or live execution is authorized."
         )
 
     if q185_q186_pit_receipt.get("status") == "PIT_READINESS_R1_COMPLETED_NO_PERFORMANCE":
