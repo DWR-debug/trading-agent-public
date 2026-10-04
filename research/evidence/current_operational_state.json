@@ -988,7 +988,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T15:15:24.628383+00:00",
+  "generated_at_utc": "2026-10-04T15:23:09.908671+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2283,27 +2283,11 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
-        "headRefName": "ops/resource-dashboard-v2-2026-10-04",
-        "number": 1034,
-        "title": "OPS: add live resource activity dashboard v2",
-        "updatedAt": "2026-10-04T15:14:39Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1034"
-      },
-      {
-        "baseRefName": "master",
-        "headRefName": "ops/groq-free-provider-2026-10-04",
-        "number": 1033,
-        "title": "AI: add fail-closed Groq free-tier provider",
-        "updatedAt": "2026-10-04T15:12:26Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1033"
-      },
-      {
-        "baseRefName": "master",
-        "headRefName": "ops/q169-artifact-upload-hardening-2026-10-04",
-        "number": 1032,
-        "title": "FIX: harden Q169 R4 artifact upload handling",
-        "updatedAt": "2026-10-04T15:12:18Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1032"
+        "headRefName": "ops/resource-dashboard-final-2026-10-04",
+        "number": 1035,
+        "title": "OPS: add resource activity dashboard and review policy",
+        "updatedAt": "2026-10-04T15:20:29Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1035"
       },
       {
         "baseRefName": "master",
@@ -2340,6 +2324,36 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: restore Q188-Q192 PIT receipt publication permission",
+        "sha": "774c5dca7a037c7665975cb27fd78141c7ab31d4",
+        "timestamp": "2026-10-04T17:22:59+02:00"
+      },
+      {
+        "message": "OPS: update AI credit availability plan",
+        "sha": "7e1ff04f715c482b54d1465461e84eb60b7ed2ff",
+        "timestamp": "2026-10-04T15:18:29Z"
+      },
+      {
+        "message": "EVIDENCE: persist Q169 R4 independent reproduction receipt",
+        "sha": "b828c48d40a224e8ecfa63cb5914488c715bf6f4",
+        "timestamp": "2026-10-04T15:18:27Z"
+      },
+      {
+        "message": "AI: add fail-closed Groq free-tier provider",
+        "sha": "776394cf043ab5ebe6ad5d2c2734f305b80689a5",
+        "timestamp": "2026-10-04T17:18:16+02:00"
+      },
+      {
+        "message": "FIX: harden Q169 artifact upload handling",
+        "sha": "0a8d0bdd387e4bec0c17ee7e8e7508b3ab270ec5",
+        "timestamp": "2026-10-04T17:18:13+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8349d022db178c93d7716b95dcb09816246d1294",
+        "timestamp": "2026-10-04T15:15:27Z"
+      },
+      {
         "message": "FIX: correct Q188-Q192 PIT census response-shape probes",
         "sha": "2a80fe21330870145266d399efa3e9467010bf2d",
         "timestamp": "2026-10-04T17:15:13+02:00"
@@ -2348,36 +2362,6 @@
         "message": "EVIDENCE: persist Q169 R4 independent reproduction receipt",
         "sha": "69f3a0f1e650fc22bf11cee64288ac9504a6e01e",
         "timestamp": "2026-10-04T14:58:15Z"
-      },
-      {
-        "message": "OPS: update AI credit availability plan",
-        "sha": "ca7b91f4c62b8540d2a30b8758cc369968f0e20a",
-        "timestamp": "2026-10-04T14:46:35Z"
-      },
-      {
-        "message": "FIX: require AI provider preflight for unknown free-tier balances (#1030)",
-        "sha": "eac8d36e807f02412229dcef1fb6af3a54339885",
-        "timestamp": "2026-10-04T16:46:23+02:00"
-      },
-      {
-        "message": "OPS: persist latest Q133-Q170 PIT-readiness material receipt",
-        "sha": "0e8debb8a02c3fde09652132e64f5bd680e3a5f9",
-        "timestamp": "2026-10-04T14:42:29Z"
-      },
-      {
-        "message": "EVIDENCE: persist Q137-Q144 micro PIT receipt",
-        "sha": "c630383f0574131194ef95a552e2fa65b14403a8",
-        "timestamp": "2026-10-04T14:42:27Z"
-      },
-      {
-        "message": "OPS: deduplicate automatic AI reviews by research-state fingerprint (#1026)",
-        "sha": "1fb7bcb7a1dbf564592a6ac7767a496d047417af",
-        "timestamp": "2026-10-04T16:42:18+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b25b525992562dded69e4379e8828b7cace19287",
-        "timestamp": "2026-10-04T14:37:16Z"
       }
     ]
   },
@@ -2447,7 +2431,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2a80fe21330870145266d399efa3e9467010bf2d",
+  "source_master_sha": "774c5dca7a037c7665975cb27fd78141c7ab31d4",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2561,6 +2545,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37212302868"
+    "run_id": "37212784747"
   }
 }
