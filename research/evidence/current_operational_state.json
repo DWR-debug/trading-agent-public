@@ -1011,7 +1011,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T22:55:19.341115+00:00",
+  "generated_at_utc": "2026-10-04T23:02:22.111057+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -3702,6 +3702,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: trigger priority wave R6 after T052 guard repair",
+        "sha": "3ff2d1739ece054dd27ced87d33c5ea7aff33ad7",
+        "timestamp": "2026-10-05T01:02:06+02:00"
+      },
+      {
+        "message": "FIX: treat dashboard snapshots as operational descendants in T052 provenance",
+        "sha": "09469d41e6b828e2eb98fdabe100e88488102ae9",
+        "timestamp": "2026-10-05T01:02:01+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "fd41106eb7d2d37fc38274e4bf1a548276736204",
+        "timestamp": "2026-10-04T22:55:21Z"
+      },
+      {
         "message": "OPS: advance paper-forward MTM state",
         "sha": "e950e0efaef937b64b98d56a789339825a7407a7",
         "timestamp": "2026-10-04T22:54:07Z"
@@ -3725,21 +3740,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "b40371c3df6f3f64bc54dd9a9df0fa5985a63cef",
         "timestamp": "2026-10-04T22:35:13Z"
-      },
-      {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "109a0f5743ce51cf27425bcde6bb741c11733341",
-        "timestamp": "2026-10-04T22:32:28Z"
-      },
-      {
-        "message": "OPS: refresh resource dashboard after priority research waves",
-        "sha": "849578bc1cc4b9a8680a8f31ace820d686ca711e",
-        "timestamp": "2026-10-05T00:32:18+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "43c1672a2b060b5451fb9a263bdc3222a21fc8ce",
-        "timestamp": "2026-10-04T22:32:06Z"
       }
     ]
   },
@@ -3837,7 +3837,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e950e0efaef937b64b98d56a789339825a7407a7",
+  "source_master_sha": "3ff2d1739ece054dd27ced87d33c5ea7aff33ad7",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -3951,6 +3951,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37241824483"
+    "run_id": "37242257287"
   }
 }
