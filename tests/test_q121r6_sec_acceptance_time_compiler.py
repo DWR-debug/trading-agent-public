@@ -92,13 +92,20 @@ def test_r6_uses_canonical_r3_accession_parser():
     assert "r3.accession_from_filename(filename)" in source
 
 
-def test_q121r6_archive_url_uses_filer_cik_from_accession():
+def test_q121r6_archive_url_uses_subject_cik_from_form_index_path():
     from automation.q121r6_sec_acceptance_time_compiler import archive_header_url
-    filename = "edgar/data/1007587/0000921895-24-000688.txt"
+    filename = "edgar/data/1007587/000110465924093411/0001104659-24-093411-index.htm"
     assert archive_header_url(filename) == (
-        "https://www.sec.gov/Archives/edgar/data/921895/000092189524000688/"
-        "0000921895-24-000688-index-headers.html"
+        "https://www.sec.gov/Archives/edgar/data/1007587/000110465924093411/"
+        "0001104659-24-093411-index-headers.html"
     )
+
+def test_q121r6_problem_404_filename_preserves_subject_cik_root():
+    from automation.q121r6_sec_acceptance_time_compiler import archive_header_url
+    filename = "edgar/data/1007587/000110465924093411/0001104659-24-093411-index.htm"
+    url = archive_header_url(filename)
+    assert "/data/1007587/000110465924093411/" in url
+    assert "/data/1104659/000110465924093411/" not in url
 
 
 def test_q121r6_subject_and_filer_cik_are_distinct():
@@ -107,3 +114,10 @@ def test_q121r6_subject_and_filer_cik_are_distinct():
     ).read_text(encoding="utf-8")
     assert "INDEX_SUBJECT_CIK_MISMATCH" in source
     assert "filer_cik = accession_dashed.split" in source
+
+
+def test_q121r6_404_failure_payload_includes_source_url():
+    from pathlib import Path
+    source = Path(__import__("automation.q121r6_sec_acceptance_time_compiler", fromlist=["__name__"]).__file__).read_text(encoding="utf-8")
+    assert '"source_url": archive_header_url(row["filename"])' in source
+    assert "Q121R6_DEBUG_404" in source
