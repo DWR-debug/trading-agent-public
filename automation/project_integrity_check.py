@@ -40,6 +40,7 @@ ACTIVE_WORKFLOWS = {
     "q148-r1-wpsr-source-clock.yml",
     "q148-r1-persist-receipt.yml",
     "q169-noaa-swpc-pit-readiness.yml",
+    "q169-noaa-swpc-pit-independent-reproduction.yml",
     "full-suite-verification.yml",
     "q129-options-source-feasibility.yml",
     "q129-independent-pit-reproduction.yml",
