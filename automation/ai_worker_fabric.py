@@ -65,6 +65,8 @@ CONTEXT_FILES = {    "AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT": (
         "research/candidates/orthogonal_candidate_specs_2026-10-04.json",
         "automation/source_readiness_snapshot_guard.py",
         "automation/orthogonal_pit_next_gate.py",
+        "research/ai_reviews/grok_q194_q201_adversarial_review_2026-10-04.json",
+        "automation/pre_pit_falsification_checks.py",
     ),
 
     "AI-2026-09-28-Q089-ADVERSARIAL": (
@@ -192,6 +194,8 @@ CONTEXT_FINGERPRINT_FILES = {
         "research/candidates/orthogonal_candidate_specs_2026-10-04.json",
         "automation/source_readiness_snapshot_guard.py",
         "automation/orthogonal_pit_next_gate.py",
+        "research/ai_reviews/grok_q194_q201_adversarial_review_2026-10-04.json",
+        "automation/pre_pit_falsification_checks.py",
     ),
 
     "AI-2026-10-04-Q187-Q192-ADVERSARIAL": (
