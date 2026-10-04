@@ -233,6 +233,7 @@ ACTIVE_WORKFLOWS = {
     "orthogonal-pit-next-gate.yml",
     "priority-research-wave-dispatch.yml",
     "windows-runner-c-long-research.yml",
+    "runner-c-prepit-falsification.yml",
 }
 
 REQUIRED_FILES = (
