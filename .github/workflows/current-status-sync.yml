@@ -93,7 +93,7 @@ jobs:
           else
             echo "STATUS_SYNC_MASTER_STABLE_AT_CHECK"
           fi
-      - name: Generate and publish synchronized status with file-level updates
+      - name: Generate and publish synchronized status atomically
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -136,12 +136,7 @@ jobs:
           PY
 
           export PUBLISH_MESSAGE='OPS: synchronize current operational status'
-          python -m automation.github_contents_publish \\
-            --repository "$GITHUB_REPOSITORY" \\
-            --branch master \\
-            --base-sha "$source_master_sha" \\
-            --file docs/CURRENT_STATUS.md=docs/CURRENT_STATUS.md \\
-            --file research/evidence/current_operational_state.json=research/evidence/current_operational_state.json
+          python -m automation.github_contents_publish --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$source_master_sha" --file docs/CURRENT_STATUS.md=docs/CURRENT_STATUS.md --file research/evidence/current_operational_state.json=research/evidence/current_operational_state.json
 
           echo "CURRENT_STATUS_SYNC_PUBLISH_OK"
 
