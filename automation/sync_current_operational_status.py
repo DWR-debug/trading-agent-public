@@ -508,7 +508,7 @@ def generate(
                 "separate_identity_and_outputs": True,
                 "shared_mutable_research_state": False,
                 "cross_lane_retroactive_mutation": False,
-                "performance_capacity_rule": "Two slots never create performance authorization; each exact trial requires its own current formal authorization.",
+                "performance_capacity_rule": "Three physical slots never create performance authorization; each exact trial requires its own current formal authorization.",
             },
             "agent_orchestration": {
                 "bounded_two_lane_queue": True,
@@ -523,7 +523,7 @@ def generate(
                     "overages_allowed": False,
                     "entitlement_is_live_verified_at_dispatch": True,
                 },
-                "self_hosted_parallel_slots": 2,
+                "self_hosted_parallel_slots": 3,
                 "local_ai_smoke_after_research_lanes": True,
                 "current_pending_requests": queue,
             },
@@ -694,11 +694,12 @@ def generate(
             },
         },
         "operator_action_required": {
-            "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
-            "windows_shells": 2,
+            "purpose": "Keep all configured self-hosted Windows research runners available for autonomous parallel work.",
+            "windows_shells": 3,
             "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
             "runner_1": "Keep the existing runner process alive in PowerShell window 1.",
             "runner_2": "Keep LHT-N133732-2 alive in PowerShell window 2.",
+            "runner_3": "Keep LHT-N133732-3 alive in PowerShell window 3 for long deterministic runs/independent reproduction.",
             "secret_rule": "Never paste GitHub registration tokens, API keys, OAuth tokens, passwords, or other credentials into chat; redact them before sharing output.",
             "service_note": "Windows service installation is a separate maintenance step and requires administrator privileges; do not migrate a runner to service mode until its local AI identity has been verified because Antigravity CLI authentication uses the local user's system keyring or Google Sign-In context.",
         },
@@ -740,10 +741,10 @@ def generate(
 - Canonical data-layer infrastructure is merged.
 - Bounded agent routing uses two queue lanes with fail-closed task contracts.
 - **Permanent two-lane research mode: ACTIVE.** Lane A = **Formal Readiness** (advanced Coverage/PIT/compiler/provenance/authorization readiness); Lane B = **Frontier Discovery** (orthogonal source/PIT feasibility and cheap falsification). The two Windows slots are isolated by candidate/trial identity, branches/workflows and output/provenance paths. Cross-lane findings cannot retroactively alter a frozen trial.
-- Two physical research slots are capacity only: they **never** create performance authorization. A performance run remains individually fail-closed until an exact current formal authorization exists.
+- Three physical research slots are capacity only: they **never** create performance authorization. A performance run remains individually fail-closed until an exact current formal authorization exists.
 - Continuous QA is scheduled every 6 hours on GitHub-hosted Windows and uses only the bounded `repo_qa` lane; it consumes no self-hosted Windows research slot.
 - The deterministic frontier loop runs every 10 minutes on free GitHub-hosted Ubuntu; its three 10-step packs cover all 30 frontier-worker steps.
-- Windows Self-Hosted capacity is always routable for bounded local reproduction, data QA, local-AI and hardware-dependent work; two physical slots are intended to run in parallel.
+- Windows Self-Hosted capacity is always routable for bounded local reproduction, data QA, local-AI and hardware-dependent work; three physical slots are intended to run in parallel, with Runner C reserved for long deterministic work and independent reproduction.
 - Latest self-hosted capacity verification: two distinct Windows/X64 runner slots accepted concurrent jobs; see the timestamped capacity receipt.
 - S10 phone capability receipt: **{s10_operational_status.get("status", "NOT_YET_SYNCHRONIZED")}**; routing availability is **ASSUMED_ALWAYS_AVAILABLE** and is independent of receipt freshness.
 - S10 current physical online state is intentionally not treated as a routing blocker; the OS availability policy assumes the configured S10 resource is always routable.
