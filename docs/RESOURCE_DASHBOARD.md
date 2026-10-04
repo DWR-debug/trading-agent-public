@@ -10,11 +10,12 @@ Master verified before dashboard commit: 023ec7a1d047b0e924c687300cc3782aae43eec
 |---|---|---|
 | Windows self-hosted A | Formal Readiness / local reproduction | 10 min + event-driven |
 | Windows self-hosted B | Frontier Discovery / data QA | 10 min + event-driven |
+| Windows self-hosted C | Long deterministic runs / independent reproduction | event-driven |
 | GitHub-hosted Ubuntu | deterministic frontier, CI, source/PIT work | 10 min / event-driven |
 | S10 / Android | deterministic mechanical research/governance QA | 2 h + meaningful changes |
 | Free AI | bounded adversarial/design/engineering review | event-driven |
 
-PR #1046 was merged as 07b3fa39b73203fa99eae3968bb393fd0e362e5b. It increased the permanent Windows research pulse to 10 minutes and made deterministic S10 mechanical QA the recurring default.
+PR #1046 was merged as 07b3fa39b73203fa99eae3968bb393fd0e362e5b. It increased the permanent Windows research pulse to 10 minutes and made deterministic S10 mechanical QA the recurring default. Runner C is reserved for long deterministic reproductions and does not create scientific authorization.
 
 ## Research focus
 
