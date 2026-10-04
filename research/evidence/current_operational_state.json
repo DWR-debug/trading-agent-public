@@ -988,7 +988,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T14:37:11.305608+00:00",
+  "generated_at_utc": "2026-10-04T15:15:24.628383+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2283,19 +2283,35 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "ops/resource-dashboard-v2-2026-10-04",
+        "number": 1034,
+        "title": "OPS: add live resource activity dashboard v2",
+        "updatedAt": "2026-10-04T15:14:39Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1034"
+      },
+      {
+        "baseRefName": "master",
+        "headRefName": "ops/groq-free-provider-2026-10-04",
+        "number": 1033,
+        "title": "AI: add fail-closed Groq free-tier provider",
+        "updatedAt": "2026-10-04T15:12:26Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1033"
+      },
+      {
+        "baseRefName": "master",
+        "headRefName": "ops/q169-artifact-upload-hardening-2026-10-04",
+        "number": 1032,
+        "title": "FIX: harden Q169 R4 artifact upload handling",
+        "updatedAt": "2026-10-04T15:12:18Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1032"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "fix/q184-pdf-marker-normalization-2026-10-04",
         "number": 1027,
         "title": "FIX: normalize FCC PDF text in Q184 PIT clock probe",
         "updatedAt": "2026-10-04T14:33:31Z",
         "url": "https://github.com/DWR-debug/trading-agent-public/pull/1027"
-      },
-      {
-        "baseRefName": "master",
-        "headRefName": "ops/ai-context-fingerprint-dedup-2026-10-04",
-        "number": 1026,
-        "title": "OPS: deduplicate automatic AI reviews by research-state fingerprint",
-        "updatedAt": "2026-10-04T14:36:15Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1026"
       },
       {
         "baseRefName": "master",
@@ -2324,44 +2340,44 @@
     ],
     "recent_commits": [
       {
-        "message": "FIX: handle CPSC JSON-array response in Q188-Q192 PIT census (#1028)",
-        "sha": "a2520b51eaaac3c240c0b654c848a19a04480a99",
-        "timestamp": "2026-10-04T16:37:00+02:00"
+        "message": "FIX: correct Q188-Q192 PIT census response-shape probes",
+        "sha": "2a80fe21330870145266d399efa3e9467010bf2d",
+        "timestamp": "2026-10-04T17:15:13+02:00"
+      },
+      {
+        "message": "EVIDENCE: persist Q169 R4 independent reproduction receipt",
+        "sha": "69f3a0f1e650fc22bf11cee64288ac9504a6e01e",
+        "timestamp": "2026-10-04T14:58:15Z"
+      },
+      {
+        "message": "OPS: update AI credit availability plan",
+        "sha": "ca7b91f4c62b8540d2a30b8758cc369968f0e20a",
+        "timestamp": "2026-10-04T14:46:35Z"
+      },
+      {
+        "message": "FIX: require AI provider preflight for unknown free-tier balances (#1030)",
+        "sha": "eac8d36e807f02412229dcef1fb6af3a54339885",
+        "timestamp": "2026-10-04T16:46:23+02:00"
+      },
+      {
+        "message": "OPS: persist latest Q133-Q170 PIT-readiness material receipt",
+        "sha": "0e8debb8a02c3fde09652132e64f5bd680e3a5f9",
+        "timestamp": "2026-10-04T14:42:29Z"
+      },
+      {
+        "message": "EVIDENCE: persist Q137-Q144 micro PIT receipt",
+        "sha": "c630383f0574131194ef95a552e2fa65b14403a8",
+        "timestamp": "2026-10-04T14:42:27Z"
+      },
+      {
+        "message": "OPS: deduplicate automatic AI reviews by research-state fingerprint (#1026)",
+        "sha": "1fb7bcb7a1dbf564592a6ac7767a496d047417af",
+        "timestamp": "2026-10-04T16:42:18+02:00"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "b0f890a1b504f11ccc5ba14636083999494d7fe5",
-        "timestamp": "2026-10-04T14:32:44Z"
-      },
-      {
-        "message": "RESEARCH: start Q188-Q192 historical PIT census (#1025)",
-        "sha": "ce5ca55525acbe42710dc48355cb2b95ff815a88",
-        "timestamp": "2026-10-04T16:32:30+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "246cc9b4db7e779f6bd483ece91a1a8a63000fab",
-        "timestamp": "2026-10-04T14:27:54Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "939833e42e778ca63feb9ff79b4f2bbd0f74d1c3",
-        "timestamp": "2026-10-04T14:27:46Z"
-      },
-      {
-        "message": "RESEARCH: strengthen Q179-Q184 PIT clock parsing R3 (#1024)",
-        "sha": "971f55ec5d1d486b89f783c86572bbb4312da8a6",
-        "timestamp": "2026-10-04T16:27:34+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ab693956f27f515c53f50dbe6308e1398e6ec101",
-        "timestamp": "2026-10-04T14:24:50Z"
-      },
-      {
-        "message": "FIX: allow AI credit operational state in T052 provenance guard (#1023)",
-        "sha": "aa2d58f1663fae9bdf750f96e4a17013b3ae1282",
-        "timestamp": "2026-10-04T16:24:35+02:00"
+        "sha": "b25b525992562dded69e4379e8828b7cace19287",
+        "timestamp": "2026-10-04T14:37:16Z"
       }
     ]
   },
@@ -2431,7 +2447,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a2520b51eaaac3c240c0b654c848a19a04480a99",
+  "source_master_sha": "2a80fe21330870145266d399efa3e9467010bf2d",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2545,6 +2561,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37209913678"
+    "run_id": "37212302868"
   }
 }
