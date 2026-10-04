@@ -963,7 +963,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T12:39:43.654099+00:00",
+  "generated_at_utc": "2026-10-04T12:41:44.751401+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1883,6 +1883,366 @@
     },
     "task_id": "Q-2026-10-04-Q179-Q184-SOURCE-FEASIBILITY"
   },
+  "q185_q186_pit_readiness_r1": {
+    "candidate_results": [
+      {
+        "archive_contract": "Federal-district coverage must be censused for the chosen historical window; no universal CourtListener coverage assumption is allowed.",
+        "candidate_id": "Q185",
+        "clock_contract": "Use the earliest reproducibly public docket state. Court/date fields may identify the event date but cannot be assumed to be an intraday public dissemination timestamp; use next-session availability unless exact public timing is proven.",
+        "mapping_contract": "Party-to-issuer identity must be frozen ex ante and coverage-tested without using returns or case outcomes.",
+        "performance_authorized": false,
+        "pit_status": "BLOCKED_BY_SOURCE_PROBE",
+        "revision_contract": "Later docket entries, corrected metadata and outcome information remain later states and may not rewrite the earlier state prefix.",
+        "source_id": "COURTLISTENER_RECAP",
+        "source_probe_pass": false
+      },
+      {
+        "archive_contract": "Historical grant and citation coverage plus citation-publication ordering must be reproduced; only citation edges observable before the grant may define exposure.",
+        "candidate_id": "Q186",
+        "clock_contract": "Use the official patent issue/grant event as the shock boundary, with grant publication/eGrant availability preserved separately from later bulk-data refreshes.",
+        "mapping_contract": "Assignee organization disambiguation to public issuer identity must be frozen ex ante and coverage-tested.",
+        "performance_authorized": false,
+        "pit_status": "PIT_CONTRACT_DEFINED_PENDING_ARCHIVE_CITATION_ORDER_AND_MAPPING",
+        "revision_contract": "Assignments, corrections, withdrawals and later data refreshes are later states and cannot backfill the historical decision prefix.",
+        "source_id": "USPTO_OFFICIAL_GAZETTE",
+        "source_probe_pass": true
+      }
+    ],
+    "receipt_fingerprint": "17e14b6ab0ed884fa4445cc0d74c07fe429013be001b6a45626fcc38f4f7d087",
+    "receipt_type": "q185_q186_pit_readiness_r1",
+    "safety": {
+      "AUTOMATIC_PROMOTION": false,
+      "LIVE_TRADING_ENABLED": false,
+      "ORDERS_ENABLED": false,
+      "PAPER_ONLY": true
+    },
+    "schema_version": "1.0",
+    "scientific_boundary": {
+      "asset_search": false,
+      "holdout_selection": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "ranking": false,
+      "threshold_search": false,
+      "variant_search": false
+    },
+    "status": "PIT_READINESS_R1_COMPLETED_NO_PERFORMANCE",
+    "synthetic_mutation_checks": {
+      "legal_future_row_cannot_create_prior_state": true,
+      "legal_future_row_preserves_prefix": true,
+      "no_outcome_conditioning": true,
+      "no_return_derived_mapping": true,
+      "no_search_dimension": true,
+      "patent_future_edge_excluded": true
+    },
+    "task_id": "Q-2026-10-04-Q185-Q186-PIT-READINESS-R1",
+    "unresolved_gate_requirements": [
+      "historical archive/coverage census",
+      "exact public dissemination clock where not proven; otherwise next-session rule",
+      "frozen issuer/entity mapping with coverage evidence",
+      "revision/correction/withdrawal lineage",
+      "independent reproduction"
+    ]
+  },
+  "q185_q186_source_feasibility": {
+    "candidate_results": [
+      {
+        "candidate_id": "Q185",
+        "source_ids": [
+          "COURTLISTENER_COVERAGE",
+          "COURTLISTENER_RECAP"
+        ],
+        "status": "BLOCKED_SOURCE_PROBE"
+      },
+      {
+        "candidate_id": "Q186",
+        "source_ids": [
+          "USPTO_PATENTSVIEW",
+          "USPTO_OFFICIAL_GAZETTE",
+          "USPTO_EGRANTS"
+        ],
+        "status": "SOURCE_PROBES_PASSED"
+      }
+    ],
+    "receipt_fingerprint": "417f4ca1f3005452cd3c27b6b714eaafe83cbcc1f9f836d7a47d735c8fe436a8",
+    "safety": {
+      "automatic_promotion": false,
+      "live_trading_enabled": false,
+      "orders_enabled": false,
+      "paper_only": true
+    },
+    "schema_version": "1.0",
+    "scientific_boundary": {
+      "asset_search": false,
+      "holdout_selection": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "ranking": false,
+      "selection": false,
+      "threshold_search": false,
+      "variant_search": false
+    },
+    "source_results": {
+      "COURTLISTENER_COVERAGE": {
+        "archive_contract": "Coverage is broad but not universal; candidate-specific federal-district coverage census is mandatory.",
+        "attempts": [
+          {
+            "http_status": 403,
+            "missing_markers": [
+              "RECAP Archive",
+              "federal filings"
+            ],
+            "url": "https://courtlistener.com/coverage/"
+          }
+        ],
+        "clock_contract": "Docket event dates are distinct from underlying incident dates; exact public intraday availability must be proven per event class, otherwise use next-session availability.",
+        "content_sha256": "fa7606828b023288667f87d7ca15922b74b7d14d8f6ac7f68af53bdf45391d51",
+        "http_status": 403,
+        "missing_markers": [
+          "RECAP Archive",
+          "federal filings"
+        ],
+        "probe_classification": "RUNNER_ACCESS_BLOCKED",
+        "reachable": false,
+        "url": "https://courtlistener.com/coverage/"
+      },
+      "COURTLISTENER_RECAP": {
+        "archive_contract": "Searchable RECAP coverage must be measured for the exact historical window and issuer population.",
+        "attempts": [
+          {
+            "http_status": 403,
+            "missing_markers": [
+              "Advanced RECAP Search",
+              "Docket Number",
+              "Entry Date"
+            ],
+            "url": "https://courtlistener.com/recap/"
+          }
+        ],
+        "clock_contract": "A recorded docket-entry date is not automatically proof of public dissemination time.",
+        "content_sha256": "b0d87c3f833df9396dff102e785f09f6c3c533dbd80da4886c827440767c1299",
+        "http_status": 403,
+        "missing_markers": [
+          "Advanced RECAP Search",
+          "Docket Number",
+          "Entry Date"
+        ],
+        "probe_classification": "RUNNER_ACCESS_BLOCKED",
+        "reachable": false,
+        "url": "https://courtlistener.com/recap/"
+      },
+      "USPTO_EGRANTS": {
+        "archive_contract": "Historical grants must be complete; corrections/withdrawals cannot rewrite earlier decision prefixes.",
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://www.uspto.gov/patents/apply/patent-center/egrants"
+          }
+        ],
+        "clock_contract": "For post-2023 grants the official eGrant provides a documented public-access boundary; earlier history requires separate proof.",
+        "content_sha256": "96bf90b743ee5d109ac9628fe49acb60ab832153c347d5229d1b3807022774bc",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "url": "https://www.uspto.gov/patents/apply/patent-center/egrants"
+      },
+      "USPTO_OFFICIAL_GAZETTE": {
+        "archive_contract": "Weekly issues are publicly listed; historical download/archive completeness for the chosen window must be reproduced before PIT validity.",
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents"
+          }
+        ],
+        "clock_contract": "The Official Gazette is an official weekly publication boundary; issue date is distinct from later bulk-data refreshes.",
+        "content_sha256": "047b77f949efc4ca3412668e07827f6bcd96041cc0b877d2eea831ee5fa1a5c6",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "url": "https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents"
+      },
+      "USPTO_PATENTSVIEW": {
+        "archive_contract": "Historical disambiguated patent/citation coverage must be reproduced from public USPTO data.",
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://www.uspto.gov/subscription-center/2026/patentsview-releases-q4-2025-data-update"
+          }
+        ],
+        "clock_contract": "PatentsView bulk refresh/vintage is distinct from patent issue/publication timing.",
+        "content_sha256": "2b1043ac3e9ace03bc735d443c5875fec59a38b8b779912e7623db79a77dfe8e",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "url": "https://www.uspto.gov/subscription-center/2026/patentsview-releases-q4-2025-data-update"
+      }
+    },
+    "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
+    "synthetic_mutation_checks": {
+      "legal_future_state_not_visible_in_prefix": true,
+      "legal_prefix_future_invariant": true,
+      "no_outcome_labels_in_state_contract": true,
+      "no_search_dimensions": true,
+      "patent_future_edge_excluded": true,
+      "patent_prior_edge_required": true
+    },
+    "task_id": "Q-2026-10-04-Q185-Q186-SOURCE-FEASIBILITY"
+  },
+  "q186_pit_readiness_r2": {
+    "archive_contract": {
+      "authority_files_twice_monthly_refresh": true,
+      "fixed_week_controls": [
+        {
+          "issue_date": "2026-09-15",
+          "week": 37
+        },
+        {
+          "issue_date": "2026-09-22",
+          "week": 38
+        },
+        {
+          "issue_date": "2026-09-29",
+          "week": 39
+        }
+      ],
+      "withdrawn_and_missing_documents_must_be_quarantined": true
+    },
+    "candidate_id": "Q186",
+    "fixed_controls": [
+      {
+        "issue_date": "2026-09-15",
+        "week": 37
+      },
+      {
+        "issue_date": "2026-09-22",
+        "week": 38
+      },
+      {
+        "issue_date": "2026-09-29",
+        "week": 39
+      }
+    ],
+    "mutation_checks": {
+      "bulk_refresh_cannot_move_grant_clock": true,
+      "future_citation_cannot_pass_pre_event_filter": true,
+      "no_event_window_search": true,
+      "no_parameter_search": true,
+      "no_return_conditioning": true
+    },
+    "pit_boundary": {
+      "bulk_refresh_separate_from_grant_clock": true,
+      "citation_publication_ordering_proven": false,
+      "citation_publication_ordering_status": "UNPROVEN",
+      "conservative_rule": "A citation edge may enter a pre-event graph only when its public-observation boundary is independently proven to be before the upstream grant; otherwise exclude the edge or use a conservative next-session boundary and record the loss explicitly.",
+      "electronic_grant_available_immediately_post_2023": true,
+      "grant_issue_clock_proven": true,
+      "historical_weekly_grant_route_proven": false,
+      "legacy_bibliographic_route_may_be_redirected": true
+    },
+    "receipt_fingerprint": "a830dc7ddb5c3609ab73c2077f846009bd1cba060399582ba9b7d55ac8baa371",
+    "receipt_type": "q186_pit_readiness_r2",
+    "safety": {
+      "AUTOMATIC_PROMOTION": false,
+      "LIVE_TRADING_ENABLED": false,
+      "ORDERS_ENABLED": false,
+      "PAPER_ONLY": true
+    },
+    "schema_version": "1.0",
+    "scientific_boundary": {
+      "asset_search": false,
+      "holdout_selection": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "ranking": false,
+      "threshold_search": false,
+      "variant_search": false
+    },
+    "source_results": {
+      "USPTO_EGRANTS": {
+        "content_sha256": "96bf90b743ee5d109ac9628fe49acb60ab832153c347d5229d1b3807022774bc",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "url": "https://www.uspto.gov/patents/apply/patent-center/egrants"
+      },
+      "USPTO_GAZETTE_INDEX": {
+        "content_sha256": "047b77f949efc4ca3412668e07827f6bcd96041cc0b877d2eea831ee5fa1a5c6",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "url": "https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents"
+      },
+      "USPTO_GAZETTE_WEEK37": {
+        "content_sha256": "c3e3790b93f7d2a00ea05a3ac84437bae258731c0ca238ea9fb71c5fae4c2f97",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "url": "https://patentsgazette.uspto.gov/week37/"
+      },
+      "USPTO_GAZETTE_WEEK38": {
+        "content_sha256": "93869421e6899f42edd5732728d344810fe5ff07161ea40769d27d3a1cb43fe9",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "url": "https://patentsgazette.uspto.gov/week38/"
+      },
+      "USPTO_GAZETTE_WEEK39": {
+        "content_sha256": "f303031a46ffddb187cca6aeba39a25f88109c43f94757f6605c9b7e059592d7",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "url": "https://patentsgazette.uspto.gov/week39/"
+      },
+      "USPTO_GRANT_BIBLIOGRAPHIC": {
+        "content_sha256": "46d38932c3afa99ab7e31741ac93e625554a92d3224610b3ab638da19a0a0513",
+        "http_status": 200,
+        "missing_markers": [
+          "issued weekly (Tuesdays)",
+          "January 1, 1976 to present"
+        ],
+        "probe_classification": "MARKER_MISMATCH",
+        "url": "https://developer.uspto.gov/product/patent-grant-bibliographic-datasgml"
+      },
+      "USPTO_PATENTSVIEW": {
+        "content_sha256": "b07c8d944abde96ff1b39ca150462bf9470f27c2e0b5f808e9906186be8f9d11",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "url": "https://www.uspto.gov/ip-policy/economic-research/patentsview"
+      },
+      "USPTO_PATENT_AUTHORITY": {
+        "content_sha256": "ba2ffd6c614176db6e2db1dfc529c4cbb27bfc4072ce21168fc890d1fe5c395b",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "url": "https://www.uspto.gov/patents/search/patent-document-authority-files"
+      }
+    },
+    "status": "Q186_PIT_R2_CLOCK_ARCHIVE_COMPLETED_NO_PERFORMANCE",
+    "task_id": "Q-2026-10-04-Q186-PIT-R2-CLOCK-ARCHIVE",
+    "unresolved_gates": [
+      "candidate-specific historical grant/citation completeness census",
+      "citation-publication ordering at the pre-grant decision boundary",
+      "frozen assignee-to-issuer identity mapping with coverage evidence",
+      "correction/withdrawal lineage at candidate level",
+      "independent reproduction"
+    ]
+  },
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -1915,6 +2275,31 @@
     ],
     "recent_commits": [
       {
+        "message": "FIX: preserve Q186 R2 as highest-priority status frontier",
+        "sha": "66f0bc80c96aef654c29ea893c11b916cc40260d",
+        "timestamp": "2026-10-04T14:41:34+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "d589473410e5e8489a896a9e19081b534165ce63",
+        "timestamp": "2026-10-04T12:40:23Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "0ee823add1e0e3655c30a48666b211dd07f3d370",
+        "timestamp": "2026-10-04T12:40:05Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "7d8fce844098201a97b70ebf0b6b652873e0987b",
+        "timestamp": "2026-10-04T12:39:48Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c7c78688b070b2022d1524f4dd1290c33ccdebda",
+        "timestamp": "2026-10-04T12:39:45Z"
+      },
+      {
         "message": "RESEARCH: establish Q185-Q186 orthogonal frontier and Q186 PIT-R2",
         "sha": "297b25e4a8b11eb02ae9fe3e372a41fb55fa9516",
         "timestamp": "2026-10-04T14:39:31+02:00"
@@ -1928,31 +2313,6 @@
         "message": "FIX: harden Q121-R6 SEC archive URL and shard provenance",
         "sha": "752e4d37e94f994f6cf0a3262c8f06051ce16c87",
         "timestamp": "2026-10-04T14:19:53+02:00"
-      },
-      {
-        "message": "OPS: synchronize S10 phone runtime status",
-        "sha": "b49307fc93cee54198a207ab683a2bcbe727a783",
-        "timestamp": "2026-10-04T11:38:48Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "79465b552b64c7bc2f94aa7a2d75ad3db86362db",
-        "timestamp": "2026-10-04T11:25:51Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "b1847a9f969b147f30e69d4c6996f9505bb6c68d",
-        "timestamp": "2026-10-04T11:23:35Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "16de76dcfae0d0118469c11bcff93a486f98514b",
-        "timestamp": "2026-10-04T11:23:33Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "3e0b3d4e0ff15e486b803f681d67a366ad34fb98",
-        "timestamp": "2026-10-04T11:23:20Z"
       }
     ]
   },
@@ -1984,7 +2344,7 @@
     "decision_basis_stage": null,
     "latest_formal_status": "performance_completed_no_arm_passed_all_13_gates",
     "latest_formal_trial": "T-2026-10-01-H06P2R3-PERFORMANCE-01",
-    "next_research_focus_recorded": "Q179-Q184 is the active Lane-B frontier after source feasibility. Five of six public source probes pass (Q179/Q180/Q181/Q183/Q184); Q182 FERC eLibrary remains runner-access blocked by HTTP 403. PIT Readiness R1 is completed without performance: all six candidates have explicit clock/revision/mapping/archive contracts, but historical archive reconstruction, exact PIT timing where unresolved, fixed issuer mapping and independent reproduction remain open. No performance, holdout selection, tuning, ranking, promotion or live execution is authorized.",
+    "next_research_focus_recorded": "Q186 has completed PIT-R2 clock/archive verification only: the official weekly grant clock and post-2023 eGrant public-access boundary are established on fixed controls, while citation-publication ordering, historical citation completeness, frozen assignee-to-issuer mapping, correction/withdrawal lineage and independent reproduction remain open. No performance, holdout selection, tuning, ranking, promotion or live execution is authorized.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -2022,7 +2382,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "297b25e4a8b11eb02ae9fe3e372a41fb55fa9516",
+  "source_master_sha": "66f0bc80c96aef654c29ea893c11b916cc40260d",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2136,6 +2496,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37202860910"
+    "run_id": "37202980679"
   }
 }
