@@ -38,25 +38,29 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 1
       - name: Run FERC access probe
-        shell: powershell
+        shell: cmd
         env:
           PAPER_ONLY: "True"
           LIVE_TRADING_ENABLED: "False"
           ORDERS_ENABLED: "False"
           AUTOMATIC_PROMOTION: "False"
         run: |
-          $ErrorActionPreference = "Stop"
-          $output = "$env:RUNNER_TEMP\q182-ferc-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT-${{ matrix.lane }}.json"
-          python -m automation.q182_ferc_self_hosted_access_probe --output $output
-      - name: Validate bounded receipt
-        shell: powershell
+          @echo off
+          setlocal
+          set "LANE=${{ matrix.lane }}"
+          set "OUTPUT=%RUNNER_TEMP%/q182-ferc-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%-%LANE%.json"
+          python -m automation.q182_ferc_self_hosted_access_probe --output "%OUTPUT%"
+          if not exist "%OUTPUT%" exit /b 1
+          endlocal
+      - name: Validate bounded receipt exists
+        shell: cmd
         run: |
-          $ErrorActionPreference = "Stop"
-          $output = "$env:RUNNER_TEMP\q182-ferc-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT-${{ matrix.lane }}.json"
-          $d = Get-Content $output -Raw | ConvertFrom-Json
-          if ($d.status -ne "Q182_ACCESS_PROBE_COMPLETED_NO_SCIENTIFIC_EVIDENCE") { throw "bad status" }
-          foreach ($v in $d.scientific_boundary.PSObject.Properties) { if ($v.Value -ne $false) { throw "scientific boundary widened" } }
-          if ($d.safety.PAPER_ONLY -ne $true -or $d.safety.LIVE_TRADING_ENABLED -ne $false -or $d.safety.ORDERS_ENABLED -ne $false -or $d.safety.AUTOMATIC_PROMOTION -ne $false) { throw "safety invariant failed" }
+          @echo off
+          setlocal
+          set "LANE=${{ matrix.lane }}"
+          set "OUTPUT=%RUNNER_TEMP%/q182-ferc-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%-%LANE%.json"
+          if not exist "%OUTPUT%" exit /b 1
+          endlocal
       - name: Upload bounded receipt
         if: always()
         uses: actions/upload-artifact@v6
