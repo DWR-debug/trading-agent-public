@@ -211,11 +211,10 @@ def test_mistral_free_preflight_accepts_key_and_attestation():
     assert "provider executable not found" not in result["reasons"]
 
 
-def test_mistral_lane_is_schedule_or_manual_dispatch_only():
+def test_mistral_lane_is_manual_dispatch_only():
     workflow = Path(__file__).parents[1] / ".github" / "workflows" / "ai-worker-fabric.yml"
     text = workflow.read_text(encoding="utf-8")
     assert "mistral_worker:" in text
-    assert "schedule:" in text
     assert "github.event_name == 'workflow_dispatch'" in text
     assert "provider: [openrouter_free]" in text
 
@@ -230,18 +229,19 @@ def test_q100_frontier_task_has_repository_context_and_safe_scope():
     assert "q100_frontier_feasibility_synthesis.py" in prompt
 
 
-def test_hosted_gemini_and_mistral_are_quota_guarded_by_schedule():
+def test_openrouter_is_event_driven_and_gemini_mistral_manual_only():
     workflow = Path(__file__).parents[1] / ".github" / "workflows" / "ai-worker-fabric.yml"
     text = workflow.read_text(encoding="utf-8")
     assert "provider: [openrouter_free]" in text
     assert "gemini_worker:" in text
     assert "mistral_worker:" in text
-    assert "schedule:" in text
+    assert "schedule:" not in text
     assert "github.event_name == 'workflow_dispatch'" in text
     assert "GEMINI_ROTATION slot=" in text
     assert "MISTRAL_ROTATION slot=" in text
     assert "/ 21600 % 6" in text
     assert "AI-2026-09-30-Q102-REGIME-STATE-DESIGN" in text
+    assert "AI-2026-10-04-Q187-Q192-ADVERSARIAL" in text
 
 
 def test_q102_regime_state_task_has_safe_scope():
@@ -312,3 +312,22 @@ def test_nonlocal_gemini_quota_is_blocked_without_becoming_a_failure(monkeypatch
     )
     assert result["status"] == "QUOTA_BLOCKED"
     assert result["returncode"] == 429
+
+
+def test_q187_q192_ai_task_is_safe_and_event_driven():
+    task_path = Path(__file__).parents[1] / "ai_requests" / "AI-2026-10-04-Q187-Q192-ADVERSARIAL.json"
+    payload = load_task(task_path)
+    assert payload["providers"] == ["openrouter_free"]
+    assert payload["holdout_selection"] is False
+    assert payload["parameter_selection"] is False
+    assert payload["asset_selection"] is False
+    assert payload["threshold_selection"] is False
+    assert payload["horizon_selection"] is False
+    assert payload["research_gate_changes"] is False
+    assert payload["promotion_decision"] is False
+    assert payload["live_execution"] is False
+    assert payload["paid_usage"] is False
+    assert payload["allow_workspace_writes"] is False
+    prompt = build_prompt(payload, "openrouter_free")
+    assert "Q187_Q192_SOURCE_PIT_WAVE_2026-10-04.md" in prompt
+    assert "q187_q192_source_feasibility_latest.json" in prompt
