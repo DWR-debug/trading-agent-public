@@ -46,8 +46,8 @@ if (-not $token) {
 }
 
 Write-Host "Registering runner..."
-.config.cmd --unattended --url "https://github.com/$Repo" --token $token --name $RunnerName --labels $LabelSet --work "_work"
+.\config.cmd --unattended --url "https://github.com/$Repo" --token $token --name $RunnerName --labels $LabelSet --work "_work"
 $token = $null
 
 Write-Host "Runner C registered. Starting Runner.Listener..."
-.un.cmd
+.\run.cmd
