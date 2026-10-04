@@ -26,6 +26,33 @@ Subagents must not:
 - create scientific evidence merely by producing an AI response;
 - use paid resources.
 
+## Two-AI operating model
+
+A second AI may be attached as an independent bounded worker under the Orchestrator. The
+Orchestrator remains the sole controller of research direction, evidence acceptance, gates,
+authorization and promotion.
+
+A second AI may be operated in either of two modes:
+1. **Connected worker:** provider/API-backed execution through an explicit adapter, fixed task
+   contract, isolated branch/output scope and deterministic verification.
+2. **Independent chat worker:** a separate human-opened AI chat receives the same immutable
+   task contract as a handoff; its answer is returned to the Orchestrator for independent
+   verification. This mode is useful but is not machine-to-machine autonomous control.
+
+The second AI is most valuable for orthogonal adversarial review, source/PIT attack, competing
+implementation proposals and failure diagnosis. It must not share mutable candidate state with
+the primary Orchestrator and must never decide based on hidden or holdout performance.
+
+### Grok route
+
+Grok is an eligible **optional second reviewer**, but under the current project budget it is
+manual/free-chat only. The xAI API requires an xAI API key and credits, so it is not enabled as
+an automated project worker while the repository policy remains 0 USD paid API spend.
+
+A future Grok adapter, if the budget policy is deliberately changed, must use the same bounded
+task contract, secret handling, isolated outputs and deterministic Orchestrator verification as
+every other worker. No API key is placed in chat, commits, issues, artifacts or source files.
+
 ## Provider routes
 
 ### OpenRouter Free
