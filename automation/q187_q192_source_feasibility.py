@@ -18,7 +18,7 @@ PROBES: dict[str, dict[str, Any]] = {
     "USASPENDING": {
         "urls": [
             "https://api.usaspending.gov/docs/endpoints",
-            "https://www.usaspending.gov/keyword_search/2026",
+            "https://www.usaspending.gov/keyword_search/N0018922C0005",
         ],
         "markers": [
             "Endpoints do not currently require any authorization",
@@ -84,13 +84,13 @@ PROBES: dict[str, dict[str, Any]] = {
     },
     "USPTO_PATENT": {
         "urls": [
-            "https://www.uspto.gov/products/patent-grant-data",
+            "https://www.uspto.gov/learning-and-resources/xml-resources",
             "https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents",
         ],
         "markers": [
             "Patent Grant Full Text Data",
             "Official Gazette",
-            "patent grants",
+            "Red Book XML",
         ],
         "clock_contract": (
             "Patent issue/publication date is distinct from later bulk-data refreshes. "
@@ -121,7 +121,6 @@ PROBES: dict[str, dict[str, Any]] = {
         "markers": [
             "Drug Shortages",
             "updated daily",
-            "Drug Shortages download information",
         ],
         "clock_contract": (
             "Shortage start/resolution dates are distinct from first public observation. "
