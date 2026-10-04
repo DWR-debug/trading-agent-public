@@ -1,0 +1,153 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-04-Q185-Q186-SOURCE-FEASIBILITY",
+  "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
+  "source_results": {
+    "COURTLISTENER_COVERAGE": {
+      "url": "https://courtlistener.com/coverage/",
+      "http_status": 403,
+      "probe_classification": "RUNNER_ACCESS_BLOCKED",
+      "reachable": false,
+      "missing_markers": [
+        "RECAP Archive",
+        "federal filings"
+      ],
+      "attempts": [
+        {
+          "url": "https://courtlistener.com/coverage/",
+          "http_status": 403,
+          "missing_markers": [
+            "RECAP Archive",
+            "federal filings"
+          ]
+        }
+      ],
+      "clock_contract": "Docket event dates are distinct from underlying incident dates; exact public intraday availability must be proven per event class, otherwise use next-session availability.",
+      "archive_contract": "Coverage is broad but not universal; candidate-specific federal-district coverage census is mandatory.",
+      "content_sha256": "fa7606828b023288667f87d7ca15922b74b7d14d8f6ac7f68af53bdf45391d51"
+    },
+    "COURTLISTENER_RECAP": {
+      "url": "https://courtlistener.com/recap/",
+      "http_status": 403,
+      "probe_classification": "RUNNER_ACCESS_BLOCKED",
+      "reachable": false,
+      "missing_markers": [
+        "Advanced RECAP Search",
+        "Docket Number",
+        "Entry Date"
+      ],
+      "attempts": [
+        {
+          "url": "https://courtlistener.com/recap/",
+          "http_status": 403,
+          "missing_markers": [
+            "Advanced RECAP Search",
+            "Docket Number",
+            "Entry Date"
+          ]
+        }
+      ],
+      "clock_contract": "A recorded docket-entry date is not automatically proof of public dissemination time.",
+      "archive_contract": "Searchable RECAP coverage must be measured for the exact historical window and issuer population.",
+      "content_sha256": "b0d87c3f833df9396dff102e785f09f6c3c533dbd80da4886c827440767c1299"
+    },
+    "USPTO_PATENTSVIEW": {
+      "url": "https://www.uspto.gov/subscription-center/2026/patentsview-releases-q4-2025-data-update",
+      "http_status": 200,
+      "probe_classification": "PASS",
+      "reachable": true,
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://www.uspto.gov/subscription-center/2026/patentsview-releases-q4-2025-data-update",
+          "http_status": 200,
+          "missing_markers": []
+        }
+      ],
+      "clock_contract": "PatentsView bulk refresh/vintage is distinct from patent issue/publication timing.",
+      "archive_contract": "Historical disambiguated patent/citation coverage must be reproduced from public USPTO data.",
+      "content_sha256": "2b1043ac3e9ace03bc735d443c5875fec59a38b8b779912e7623db79a77dfe8e"
+    },
+    "USPTO_OFFICIAL_GAZETTE": {
+      "url": "https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents",
+      "http_status": 200,
+      "probe_classification": "PASS",
+      "reachable": true,
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents",
+          "http_status": 200,
+          "missing_markers": []
+        }
+      ],
+      "clock_contract": "The Official Gazette is an official weekly publication boundary; issue date is distinct from later bulk-data refreshes.",
+      "archive_contract": "Weekly issues are publicly listed; historical download/archive completeness for the chosen window must be reproduced before PIT validity.",
+      "content_sha256": "047b77f949efc4ca3412668e07827f6bcd96041cc0b877d2eea831ee5fa1a5c6"
+    },
+    "USPTO_EGRANTS": {
+      "url": "https://www.uspto.gov/patents/apply/patent-center/egrants",
+      "http_status": 200,
+      "probe_classification": "PASS",
+      "reachable": true,
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://www.uspto.gov/patents/apply/patent-center/egrants",
+          "http_status": 200,
+          "missing_markers": []
+        }
+      ],
+      "clock_contract": "For post-2023 grants the official eGrant provides a documented public-access boundary; earlier history requires separate proof.",
+      "archive_contract": "Historical grants must be complete; corrections/withdrawals cannot rewrite earlier decision prefixes.",
+      "content_sha256": "96bf90b743ee5d109ac9628fe49acb60ab832153c347d5229d1b3807022774bc"
+    }
+  },
+  "candidate_results": [
+    {
+      "candidate_id": "Q185",
+      "status": "BLOCKED_SOURCE_PROBE",
+      "source_ids": [
+        "COURTLISTENER_COVERAGE",
+        "COURTLISTENER_RECAP"
+      ]
+    },
+    {
+      "candidate_id": "Q186",
+      "status": "SOURCE_PROBES_PASSED",
+      "source_ids": [
+        "USPTO_PATENTSVIEW",
+        "USPTO_OFFICIAL_GAZETTE",
+        "USPTO_EGRANTS"
+      ]
+    }
+  ],
+  "synthetic_mutation_checks": {
+    "legal_prefix_future_invariant": true,
+    "legal_future_state_not_visible_in_prefix": true,
+    "patent_future_edge_excluded": true,
+    "patent_prior_edge_required": true,
+    "no_search_dimensions": true,
+    "no_outcome_labels_in_state_contract": true
+  },
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "receipt_fingerprint": "417f4ca1f3005452cd3c27b6b714eaafe83cbcc1f9f836d7a47d735c8fe436a8"
+}
