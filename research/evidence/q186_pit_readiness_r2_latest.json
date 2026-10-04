@@ -1,0 +1,143 @@
+{
+  "schema_version": "1.0",
+  "receipt_type": "q186_pit_readiness_r2",
+  "task_id": "Q-2026-10-04-Q186-PIT-R2-CLOCK-ARCHIVE",
+  "status": "Q186_PIT_R2_CLOCK_ARCHIVE_COMPLETED_NO_PERFORMANCE",
+  "candidate_id": "Q186",
+  "fixed_controls": [
+    {
+      "week": 37,
+      "issue_date": "2026-09-15"
+    },
+    {
+      "week": 38,
+      "issue_date": "2026-09-22"
+    },
+    {
+      "week": 39,
+      "issue_date": "2026-09-29"
+    }
+  ],
+  "source_results": {
+    "USPTO_GAZETTE_INDEX": {
+      "url": "https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents",
+      "http_status": 200,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "content_sha256": "047b77f949efc4ca3412668e07827f6bcd96041cc0b877d2eea831ee5fa1a5c6"
+    },
+    "USPTO_GAZETTE_WEEK39": {
+      "url": "https://patentsgazette.uspto.gov/week39/",
+      "http_status": 200,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "content_sha256": "f303031a46ffddb187cca6aeba39a25f88109c43f94757f6605c9b7e059592d7"
+    },
+    "USPTO_GAZETTE_WEEK38": {
+      "url": "https://patentsgazette.uspto.gov/week38/",
+      "http_status": 200,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "content_sha256": "93869421e6899f42edd5732728d344810fe5ff07161ea40769d27d3a1cb43fe9"
+    },
+    "USPTO_GAZETTE_WEEK37": {
+      "url": "https://patentsgazette.uspto.gov/week37/",
+      "http_status": 200,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "content_sha256": "c3e3790b93f7d2a00ea05a3ac84437bae258731c0ca238ea9fb71c5fae4c2f97"
+    },
+    "USPTO_EGRANTS": {
+      "url": "https://www.uspto.gov/patents/apply/patent-center/egrants",
+      "http_status": 200,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "content_sha256": "96bf90b743ee5d109ac9628fe49acb60ab832153c347d5229d1b3807022774bc"
+    },
+    "USPTO_PATENT_AUTHORITY": {
+      "url": "https://www.uspto.gov/patents/search/patent-document-authority-files",
+      "http_status": 200,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "content_sha256": "ba2ffd6c614176db6e2db1dfc529c4cbb27bfc4072ce21168fc890d1fe5c395b"
+    },
+    "USPTO_PATENTSVIEW": {
+      "url": "https://www.uspto.gov/ip-policy/economic-research/patentsview",
+      "http_status": 200,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "content_sha256": "b07c8d944abde96ff1b39ca150462bf9470f27c2e0b5f808e9906186be8f9d11"
+    },
+    "USPTO_GRANT_BIBLIOGRAPHIC": {
+      "url": "https://developer.uspto.gov/product/patent-grant-bibliographic-datasgml",
+      "http_status": 200,
+      "probe_classification": "MARKER_MISMATCH",
+      "missing_markers": [
+        "issued weekly (Tuesdays)",
+        "January 1, 1976 to present"
+      ],
+      "content_sha256": "46d38932c3afa99ab7e31741ac93e625554a92d3224610b3ab638da19a0a0513"
+    }
+  },
+  "pit_boundary": {
+    "grant_issue_clock_proven": true,
+    "electronic_grant_available_immediately_post_2023": true,
+    "historical_weekly_grant_route_proven": false,
+    "legacy_bibliographic_route_may_be_redirected": true,
+    "bulk_refresh_separate_from_grant_clock": true,
+    "citation_publication_ordering_proven": false,
+    "citation_publication_ordering_status": "UNPROVEN",
+    "conservative_rule": "A citation edge may enter a pre-event graph only when its public-observation boundary is independently proven to be before the upstream grant; otherwise exclude the edge or use a conservative next-session boundary and record the loss explicitly."
+  },
+  "archive_contract": {
+    "fixed_week_controls": [
+      {
+        "week": 37,
+        "issue_date": "2026-09-15"
+      },
+      {
+        "week": 38,
+        "issue_date": "2026-09-22"
+      },
+      {
+        "week": 39,
+        "issue_date": "2026-09-29"
+      }
+    ],
+    "authority_files_twice_monthly_refresh": true,
+    "withdrawn_and_missing_documents_must_be_quarantined": true
+  },
+  "unresolved_gates": [
+    "candidate-specific historical grant/citation completeness census",
+    "citation-publication ordering at the pre-grant decision boundary",
+    "frozen assignee-to-issuer identity mapping with coverage evidence",
+    "correction/withdrawal lineage at candidate level",
+    "independent reproduction"
+  ],
+  "mutation_checks": {
+    "bulk_refresh_cannot_move_grant_clock": true,
+    "future_citation_cannot_pass_pre_event_filter": true,
+    "no_return_conditioning": true,
+    "no_parameter_search": true,
+    "no_event_window_search": true
+  },
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false
+  },
+  "receipt_fingerprint": "a830dc7ddb5c3609ab73c2077f846009bd1cba060399582ba9b7d55ac8baa371"
+}
