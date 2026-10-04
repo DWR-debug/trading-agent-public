@@ -89,7 +89,7 @@ jobs:
               raise SystemExit("HOSTED_FRONTIER_SAFETY_BOUNDARY_VIOLATION")
           if payload.get("rotation_index") != int(os.environ["GITHUB_RUN_NUMBER"]):
               raise SystemExit("HOSTED_FRONTIER_ROTATION_INDEX_MISMATCH")
-          expected_pack = f"frontier_pack_{int(os.environ['GITHUB_RUN_NUMBER']) % 3 + 1}"
+          expected_pack = f"frontier_pack_{int(os.environ['GITHUB_RUN_NUMBER']) % 4 + 1}"
           if payload.get("workpack") != expected_pack:
               raise SystemExit("HOSTED_FRONTIER_WORKPACK_MISMATCH")
           print(
