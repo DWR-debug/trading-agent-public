@@ -240,7 +240,7 @@ def test_openrouter_is_event_driven_and_gemini_mistral_manual_only():
     assert "github.event.inputs.run_secondary_provider == 'true'" in text
     assert "GEMINI_ROTATION slot=" in text
     assert "MISTRAL_ROTATION slot=" in text
-    assert "/ 21600 % 6" in text
+    assert "/ 21600 % 7" in text
     assert "AI-2026-09-30-Q102-REGIME-STATE-DESIGN" in text
     assert "research/evidence/q187_q192_source_feasibility_latest.json" in text
     assert "fromJSON(needs.plan_openrouter.outputs.tasks)" in text
@@ -344,7 +344,7 @@ def test_ai_workflow_run_triggers_only_after_successful_q187_source_workflow():
     assert "Q187-Q192 Source Feasibility" in text
     assert "WORKFLOW_RUN_CONCLUSION" in text
     assert "conclusion == 'success'" in text
-    assert "tasks = ['AI-2026-10-04-Q187-Q192-ADVERSARIAL']" in text
+    assert "tasks = ['AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT']" in text
 
 
 def test_ai_context_fingerprint_contract_is_stable_and_task_specific() -> None:
