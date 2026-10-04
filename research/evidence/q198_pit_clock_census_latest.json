@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.1",
+  "task_id": "Q-2026-10-04-Q198-HISTORICAL-PIT-CLOCK-CENSUS",
+  "status": "Q198_PIT_CLOCK_CENSUS_BLOCKED_SOURCE_ACCESS",
+  "frozen_dates": [
+    "2020/01/10",
+    "2020/04/22",
+    "2020/12/16",
+    "2026/10/02"
+  ],
+  "pages": [
+    {
+      "requested_date": "2020/01/10",
+      "url": "https://www.federalregister.gov/public-inspection/2020/01/10",
+      "http_status": 200,
+      "content_sha256": "dfaf7946dc2c3bbf89b4ee9d7d42762aa18a6f3a9ccc8b62160ebc1d999ab2c2",
+      "status": "SOURCE_ACCESS_BLOCKED",
+      "access_block_reason": "official Federal Register automated-access challenge/request-access page"
+    },
+    {
+      "requested_date": "2020/04/22",
+      "url": "https://www.federalregister.gov/public-inspection/2020/04/22",
+      "http_status": 200,
+      "content_sha256": "8deac948de57d196a31a92acf5e7d5c14dc7996a5b1245057f5143e9621ec6b1",
+      "status": "SOURCE_ACCESS_BLOCKED",
+      "access_block_reason": "official Federal Register automated-access challenge/request-access page"
+    },
+    {
+      "requested_date": "2020/12/16",
+      "url": "https://www.federalregister.gov/public-inspection/2020/12/16",
+      "http_status": 200,
+      "content_sha256": "8deac948de57d196a31a92acf5e7d5c14dc7996a5b1245057f5143e9621ec6b1",
+      "status": "SOURCE_ACCESS_BLOCKED",
+      "access_block_reason": "official Federal Register automated-access challenge/request-access page"
+    },
+    {
+      "requested_date": "2026/10/02",
+      "url": "https://www.federalregister.gov/public-inspection/2026/10/02",
+      "http_status": 200,
+      "content_sha256": "2fd89b88ecb3bc62c4f8d6b64b194ffc31e1881f79a68456eefe927f6494ff2d",
+      "status": "SOURCE_ACCESS_BLOCKED",
+      "access_block_reason": "official Federal Register automated-access challenge/request-access page"
+    }
+  ],
+  "aggregate": {
+    "pages_requested": 4,
+    "pages_parsed": 0,
+    "pages_access_blocked": 4,
+    "all_pages_parsed": false,
+    "all_pages_access_blocked": true,
+    "all_have_filed_timestamps": false,
+    "all_have_scheduled_publication_dates": false,
+    "same_day_ambiguous_total": 0
+  },
+  "next_gate": "use an officially supported API or another immutable public-inspection snapshot route; then establish candidate-specific correction/withdrawal lineage, entity mapping, and independent PIT reproduction",
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "receipt_fingerprint": "23e6806e5290d6b0c3fe01b80e6f2db2a5676160935dec1e10b3de371aec655b"
+}
