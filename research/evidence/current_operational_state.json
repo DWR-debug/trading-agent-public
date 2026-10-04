@@ -368,6 +368,12 @@
       },
       {
         "candidate_inventory_path": "research/frontier/q187_q192_candidate_wave_2026_10_04.json",
+        "candidate_pit_census_r1": {
+          "performance_authorized": false,
+          "receipt": "research/evidence/q188_q192_pit_census_r1_latest.json",
+          "status": "ACTIVE",
+          "workflow": ".github/workflows/q188-q192-pit-census-r1.yml"
+        },
         "class": "next_orthogonal_public_information_frontier",
         "code": "FRONTIER-Q187-Q192",
         "design_document": "docs/research_design/Q187_Q192_SOURCE_PIT_WAVE_2026-10-04.md",
@@ -982,7 +988,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T14:27:45.075815+00:00",
+  "generated_at_utc": "2026-10-04T14:32:41.728300+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2277,6 +2283,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "ops/ai-context-fingerprint-dedup-2026-10-04",
+        "number": 1026,
+        "title": "OPS: deduplicate automatic AI reviews by research-state fingerprint",
+        "updatedAt": "2026-10-04T14:31:48Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1026"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "fix/q187-q192-source-probes-pit-2026-10-04",
         "number": 1017,
         "title": "FIX: complete Q187 USAspending transaction probe",
@@ -2302,6 +2316,21 @@
     ],
     "recent_commits": [
       {
+        "message": "RESEARCH: start Q188-Q192 historical PIT census (#1025)",
+        "sha": "ce5ca55525acbe42710dc48355cb2b95ff815a88",
+        "timestamp": "2026-10-04T16:32:30+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "246cc9b4db7e779f6bd483ece91a1a8a63000fab",
+        "timestamp": "2026-10-04T14:27:54Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "939833e42e778ca63feb9ff79b4f2bbd0f74d1c3",
+        "timestamp": "2026-10-04T14:27:46Z"
+      },
+      {
         "message": "RESEARCH: strengthen Q179-Q184 PIT clock parsing R3 (#1024)",
         "sha": "971f55ec5d1d486b89f783c86572bbb4312da8a6",
         "timestamp": "2026-10-04T16:27:34+02:00"
@@ -2325,21 +2354,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "3b69626e06cb4830e5e7701f4b4652499ff128c3",
         "timestamp": "2026-10-04T14:20:15Z"
-      },
-      {
-        "message": "OPS: close Q187 PIT/AI workflow follow-up chain (#1022)",
-        "sha": "d7ccfab2f6eab550790f09e29c0468da90e92cbc",
-        "timestamp": "2026-10-04T16:20:03+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0a2ac00e670627ad15645f6d20fd30b7f1bd9cf4",
-        "timestamp": "2026-10-04T14:17:28Z"
-      },
-      {
-        "message": "OPS: update AI credit availability plan",
-        "sha": "60a928dd853c92472a70f562edfba950a54668fd",
-        "timestamp": "2026-10-04T14:17:26Z"
       }
     ]
   },
@@ -2409,7 +2423,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "971f55ec5d1d486b89f783c86572bbb4312da8a6",
+  "source_master_sha": "ce5ca55525acbe42710dc48355cb2b95ff815a88",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2523,6 +2537,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37209334293"
+    "run_id": "37209642687"
   }
 }
