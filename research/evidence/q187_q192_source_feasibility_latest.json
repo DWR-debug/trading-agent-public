@@ -5,43 +5,31 @@
   "source_results": {
     "USASPENDING": {
       "urls": [
-        "https://api.usaspending.gov/docs/endpoints",
-        "https://www.usaspending.gov/keyword_search/N0018922C0005"
+        "https://api.usaspending.gov/docs/endpoints"
       ],
       "http_statuses": [
-        200,
         200
       ],
       "reachable": true,
       "all_urls_reachable": true,
       "required_markers_present": false,
-      "probe_classification": "REACHABLE_MARKER_MISMATCH",
-      "missing_markers": [
-        "Action Date",
-        "Transaction Amount"
-      ],
+      "probe_classification": "UNREACHABLE",
+      "missing_markers": [],
       "attempts": [
         {
           "url": "https://api.usaspending.gov/docs/endpoints",
           "http_status": 200,
-          "missing_markers": [
-            "Action Date",
-            "Transaction Amount"
-          ]
-        },
-        {
-          "url": "https://www.usaspending.gov/keyword_search/N0018922C0005",
-          "http_status": 200,
-          "missing_markers": [
-            "Endpoints do not currently require any authorization",
-            "Action Date",
-            "Award ID",
-            "Transaction Amount"
-          ]
+          "missing_markers": []
         }
       ],
       "clock_contract": "Award action date is distinct from the time the transaction record becomes publicly retrievable. Formal PIT must prove a public boundary or conservatively shift use to the next eligible session.",
-      "content_sha256": "c54af75e879b1d59fe3fcbf5ef7d5a755aa3763b6d9960f8427d2a1e9e5bf677"
+      "content_sha256": "afd56dfed11ad19dbde864c0360250611b5c19f8b6a3012d61cbee186cf05d20",
+      "transaction_probe": {
+        "url": "https://api.usaspending.gov/api/v2/search/spending_by_transaction/",
+        "http_status": 422,
+        "required_method": "POST",
+        "required_keys_present": false
+      }
     },
     "FDA_SRLC": {
       "urls": [
@@ -73,7 +61,7 @@
         }
       ],
       "clock_contract": "Supplement/date/update fields describe the labeling event and database state separately. Exact first-public observation and later corrections must be reconstructed before same-day use.",
-      "content_sha256": "8c30069984f05cbb4082e3cc3eb45e3d1ff82894cd1210d3dbfd7aa782453251"
+      "content_sha256": "9b957b183262a9c3728f0319db208d93b97e6f674c68df2f6388e532dd423b62"
     },
     "CPSC_RECALLS": {
       "urls": [
@@ -107,7 +95,7 @@
         }
       ],
       "clock_contract": "Recall publication state is distinct from incident/manufacture dates. Historical public-observation timing and revisions/withdrawals must be kept separate.",
-      "content_sha256": "6b73e083651a2ba03389fd3741f09098ccd74a8743705f0413527f1039107f95"
+      "content_sha256": "4c2b6bca0f481203a918f8178f20f647aed2d6e3cb5c7e9949b5c0fdbdaae49c"
     },
     "EPA_ECHO": {
       "urls": [
@@ -192,7 +180,7 @@
         }
       ],
       "clock_contract": "Crossref deposit/publication metadata is not automatically an exact public-dissemination timestamp; historical stage ordering must be proven.",
-      "content_sha256": "4f09c3d8fa559d5d7bde4d961618f49bb312432b414d53168e9a1325b8eb876b"
+      "content_sha256": "828e843fe021523f241a6f20f1115715b53aa1cc447cebbc51779d8ba4c6a883"
     },
     "FDA_SHORTAGES": {
       "urls": [
@@ -315,5 +303,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "receipt_fingerprint": "2544cb72b2203d4709554837126c17f9991b4cc432d78d7296f2c679aaa96097"
+  "receipt_fingerprint": "41ad6c77298cf730c5b0d0b3956f47d19c5289de1c1a4ec9b5be44e69dfa25db"
 }
