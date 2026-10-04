@@ -1,0 +1,66 @@
+name: Runner C Pre-PIT Falsification Workpack
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "automation/pre_pit_falsification_checks.py"
+      - "tests/test_pre_pit_falsification_checks.py"
+      - "research/ai_reviews/grok_q194_q201_adversarial_review_2026-10-04.json"
+      - "docs/RESEARCH_DAG.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-windows-long-runner-c
+  cancel-in-progress: true
+
+jobs:
+  prepit:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: [self-hosted, trading-agent-research, trading-agent-long]
+    timeout-minutes: 240
+    steps:
+      - name: Checkout exact master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Bootstrap pinned Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-runner-c"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-runner-c.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" -m pip install --disable-pip-version-check --no-cache-dir pytest || exit /b 1
+          endlocal
+
+      - name: Run deterministic pre-PIT falsification battery
+        shell: cmd
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-runner-c\tools\python.exe"
+          if not exist research\runs\windows_runner_c mkdir research\runs\windows_runner_c
+          "%PY_EXE%" -m pytest -q tests/test_pre_pit_falsification_checks.py
+          if errorlevel 1 exit /b 1
+          "%PY_EXE%" -m automation.pre_pit_falsification_checks --output research\runs\windows_runner_c\pre_pit_falsification_receipt.json
+          if errorlevel 1 exit /b 1
+
+      - name: Upload pre-PIT workpack
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: runner-c-pre-pit-falsification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/windows_runner_c/pre_pit_falsification_receipt.json
+          if-no-files-found: error
+          retention-days: 30
