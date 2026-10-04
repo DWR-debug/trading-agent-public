@@ -38,6 +38,7 @@ def test_parser_extracts_filing_and_publication_clock():
 
 def test_parser_rejects_ambiguous_same_day_record():
     ambiguous = """
+    # 01/10/2020 Public Inspection Issue
     Filed on:01/10/2020 at 8:45 amScheduled Pub. Date:01/10/2020FR Document:[x]
     """
     d = parse_public_inspection(ambiguous)
