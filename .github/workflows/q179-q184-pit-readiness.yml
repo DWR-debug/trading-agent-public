@@ -14,7 +14,7 @@ on:
       - "tests/test_q179_q184_pit_readiness.py"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: trading-agent-q179-q184-pit-readiness
@@ -61,6 +61,26 @@ jobs:
           assert all(d["synthetic_mutation_checks"].values())
           print("Q179_Q184_PIT_READINESS_R1_OK")
           PY
+      - name: Persist latest PIT-readiness receipt
+        if: success() && github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          input="research/runs/q179_q184_pit_readiness/${GITHUB_RUN_ID}.json"
+          latest="research/evidence/q179_q184_pit_readiness_r1_latest.json"
+          test -f "$input"
+          cp "$input" "$latest"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin master --quiet
+            base_sha="$(git rev-parse origin/master)"
+            if python automation/github_contents_publish.py               --repository "$GITHUB_REPOSITORY"               --branch master               --base-sha "$base_sha"               --file "$latest=$latest"; then
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          echo "::error::Q179-Q184 PIT receipt publication failed after retries"
+          exit 1
+
       - name: Upload PIT readiness receipt
         if: always()
         uses: actions/upload-artifact@v6

@@ -14,7 +14,7 @@ on:
       - "tests/test_q179_q184_source_feasibility.py"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: trading-agent-q179-q184-source-feasibility
@@ -63,6 +63,26 @@ jobs:
           assert d["safety"]["automatic_promotion"] is False
           print("Q179_Q184_SOURCE_FEASIBILITY_OK")
           PY
+      - name: Persist latest source-feasibility receipt
+        if: success() && github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          input="research/runs/q179_q184_source_feasibility/${GITHUB_RUN_ID}.json"
+          latest="research/evidence/q179_q184_source_feasibility_latest.json"
+          test -f "$input"
+          cp "$input" "$latest"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin master --quiet
+            base_sha="$(git rev-parse origin/master)"
+            if python automation/github_contents_publish.py               --repository "$GITHUB_REPOSITORY"               --branch master               --base-sha "$base_sha"               --file "$latest=$latest"; then
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          echo "::error::Q179-Q184 source receipt publication failed after retries"
+          exit 1
+
       - name: Upload source-feasibility receipt
         if: always()
         uses: actions/upload-artifact@v6
