@@ -277,5 +277,24 @@
       "retroactive_cross_lane_mutation": false
     },
     "performance_capacity_rule": "Physical two-slot capacity never creates authorization; each performance execution needs its own current formal authorization."
+  },
+  "resource_activity_dashboard": {
+    "workflow": ".github/workflows/resource-activity-dashboard.yml",
+    "documentation": "docs/RESOURCE_ACTIVITY_DASHBOARD.md",
+    "cadence_utc": "*/10 * * * *",
+    "purpose": "operator-facing live resource activity and active-job snapshot",
+    "signals": [
+      "queued/in-progress Actions",
+      "active job runner mapping",
+      "self-hosted online/busy",
+      "free-AI plan/worker states",
+      "two-lane focus",
+      "S10"
+    ],
+    "read_only": true,
+    "scientific_authority": false,
+    "performance_authorization": false,
+    "promotion": false,
+    "live_execution": false
   }
 }
