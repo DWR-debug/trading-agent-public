@@ -18,8 +18,8 @@
     "reasons": []
   },
   "task_fingerprint": "1bcdfcf7eb7da953528ce0df9b65d39af546277c74e5a857cc04d4d0f1236112",
-  "context_fingerprint": "99b69ffa174a57dfab3d638c851401e05e78b4cd62481b38158a830755349d4e",
-  "observed_at_utc": "2026-10-04T16:31:00.036709Z",
+  "context_fingerprint": "d784ae399b1c77d48da940efc8c0325a5f9b3b768506be0705a6bb6fde9b0e9c",
+  "observed_at_utc": "2026-10-04T17:21:10.800568Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -29,16 +29,16 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 48.789,
-  "stdout": "**ADVERSARIAL ORCHESTRATION REVIEW – AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT**\n\n### Findings (mechanism + impact + cheap falsification)\n\n| # | Mechanism | Why it matters | Cheap deterministic check |\n|---|-----------|----------------|---------------------------|\n| 1 | **Stale-state race in `current_operational_state.json`** – 10‑min schedule + push‑based runs mutate the same JSON without file‑locking/atomic write. Later runs may read a partially written or prior‑run state, skipping gates or duplicating work. | Breaks reproducibility; creates silent duplicate‑work or premature gate advancement. | Write to `*.tmp` then `os.rename` (or `fcntl` lock on Linux, `LockFileEx` on Windows). Verify that two concurrent runs never observe the same `state` value for the same `issue_number`. |\n| 2 | **Source‑ID overlap across tracks without provenance dedup** – Track definitions share `source_ids` (e.g., `SRC-SEC-EDGAR` appears in both ROS‑TRACK‑E and ROS‑TRACK‑I). Correlated data is counted as independent replications. | Inflates perceived reproducibility; violates independence assumption in multi‑track orchestration. | Compute Jaccard overlap of `source_id` sets across all 10 track pairs. If any overlap >20%, require explicit provenance branching (e.g., `source_id:SRC-SEC-EDGAR@v1` vs `@v2`). |\n| 3 | **Next‑gate probe external‑dependency non‑determinism** – Probes like `historical_archive_release_date_pit_probe` read live‑archive timestamps. Same candidate yields different gate outcomes if archive metadata shifts between runs. | Same research object passes/fails gate arbitrarily; breaks idempotent reproduction. | Freeze archive snapshot date/ID in probe config; re‑run probe on identical frozen snapshot. Verify output hash is invariant across time. |\n| 4 | **`cheap_falsifiability` scores used as implicit prioritization** – Scores (0.76‑0.95) steer resource allocation across tracks. If scores were calibrated on observed cycle outcomes (even indirectly",
+  "duration_seconds": 15.492,
+  "stdout": "**Adversarial Orchestration Audit — Worker Material Only**\n\n**Findings (mechanism → risk → falsification)**\n\n1. **Stale-state race (scheduler vs. 10-min loop)**\n   - *Mechanism:* `S10_PRESENCE_MAX_AGE = 6h` but `.github/workflows/permanent-pc-research-loop.yml` triggers every 10 min and on every push. If `current_operational_state.json` or source registry is cached/stale, the scheduler may dispatch probes on outdated availability.\n   - *Why it matters:* Duplicate probes, wasted capacity, and potential use of decommissioned sources.\n   - *Falsification:* Assert `now - registry_mtime < S10_PRESENCE_MAX_AGE` before scheduling; log age and abort if stale.\n\n2. **Concurrency overlap / duplicate work**\n   - *Mechanism:* `cancel-in-progress: false` with `max-parallel: 2` and two matrix lanes. A push plus a schedule can launch concurrent runs; the failover workflow adds a third lane (`governance_reproduction`) with its own concurrency group.\n   - *Why it matters:* Race on shared filesystem state (e.g., `current_operational_state.json`), duplicate candidate processing.\n   - *Falsification:* Assert unique `run_id` in queue before processing; enforce file lock or atomic rename on state writes; verify mutual exclusion across all concurrency groups.\n\n3. **Lane boundary / provenance leakage**\n   - *Mechanism:* Tracks declare `lane: deterministic_frontier` vs `lane: adversarial`, but the compiler and control plane only check forbidden keys, not lane provenance. If adversarial quarantine output feeds deterministic frontier without re-validation, selection leakage occurs.\n   - *Why it matters:* Adversarial quarantined data could contaminate the deterministic frontier.\n   - *Falsification:* Assert lane tag on every queued task; reject cross-lane inputs unless fingerprint re-verified against fresh source manifest.\n\n4. **Fingerprint fragility**\n   - *Mechanism:* `fingerprint()` uses `json.dumps(..., sort_keys=True)`. If source metadata is a dict and key insertion order varies by Python version/environment, fingerprints diverge even for identical content.\n   - *Why it matters:* Breaks reproducibility across runners; duplicate work or missed deduplication.\n   - *Falsification:* Canonicalize source manifests with stable serialization (e.g., sorted tuples) before hashing; run fingerprint parity test across Python 3.11/3.12/3.13.\n\n5. **Quarantine bypass via registry read**\n   - *Mechanism:* Compiler sets `status: QUARANTINED_HYPOTHESIS_ONLY` and `performance_authorized: false`, but the scheduler snippet reads the registry directly. If scheduler does not filter on status, quarantined items may be dispatched.\n   - *Why it matters:* Unverified hypotheses enter the pipeline.\n   - *Falsification:* Assert scheduler filters `registry[status] == QUARANTINED_HYPOTHESIS_ONLY` before assigning `next_gate`.\n\n6. **Look-ahead via master checkout**\n   - *Mechanism:* Workflow downloads `codeload.github.com/...tar.gz/%GITHUB_SHA%`. If `research/evidence/` or `research/frontier/` are committed, subsequent runs checkout prior results and may use them as inputs.\n   - *Why it matters:* Accidental look-ahead; evidence contamination.\n   - *Falsification:* Assert evidence files are not in the checked-out tree or are scrubbed before use; verify no forbidden keys in checked-out JSON.\n\n7. **Failover lane collision**\n   - *Mechanism:* `hosted-research-failover.yml` runs `governance_reproduction` on `ubuntu-24.04-arm` when self-hosted unavailable. If self-hosted recovers while failover runs, both loops may process governance tasks.\n   - *Why it matters:* Duplicate governance audits, conflicting state updates.\n   - *Falsification:* Assert failover checks self-hosted heartbeat before starting; add global lock file or GitHub environment protection.\n\n**Counterarguments / Uncertainty**\n- The forbidden-key guards in compiler and control plane suggest strong isolation, but I cannot see `validate_early_robustness` or the full scheduler dispatch logic; the above assumes worst-case missing checks.\n- `cancel-in-progress: false` may be intentional for long-running reproducibility tasks; overlap risk depends on whether runners share storage.\n- 6-hour max-age may be deliberate for slow sources (BLS, FRED); stale-state risk is lower if sources are truly static.\n\n**Compact Engineering Handoff**\n- **Priority 1:** Add registry-age assertion + file-lock on `current_operational_state.json`.\n- **Priority 2:** Enforce lane-tag validation and mutual-exclusion check across workflow concurrency groups.\n- **Priority 3:** Add fingerprint stability test and quarantine-status gate in scheduler.\n- **Evidence status:** Paper-only; no backtests, no promotion, no live-trading authorization claimed.\n- **Disagreement preserved:** If shared storage is absent, duplicate-work risk drops; if present, file-lock is mandatory. Verify runner isolation before deprioritizing finding 2.",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1791131460-XYHp6ZDvTMLFa0uxbUfs",
+  "response_id": "gen-1791134472-vkZ2sbT9sGY77ui3A2U8",
   "usage": {
-    "prompt_tokens": 5831,
-    "completion_tokens": 3200,
-    "total_tokens": 9031,
+    "prompt_tokens": 5879,
+    "completion_tokens": 3081,
+    "total_tokens": 8960,
     "cost": 0,
     "is_byok": false,
     "prompt_tokens_details": {
@@ -53,7 +53,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 3117,
+      "reasoning_tokens": 2177,
       "image_tokens": 0,
       "audio_tokens": 0
     }
