@@ -170,7 +170,6 @@ ACTIVE_WORKFLOWS = {
     "q121r3-sec-form-index.yml",
     "q121r4-sec-master-index.yml",
     "q121r6-sec-acceptance-time-compilation.yml",
-    "q121r6-sec-archive-url-smoke.yml",
     "q127r1-finra-regsho-historical-pit.yml",
     "q130r1-wikimedia-attention-source.yml",
     "q131r1-sec-disclosure-complexity.yml",
