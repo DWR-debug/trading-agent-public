@@ -31,3 +31,16 @@ def test_guard_is_not_a_performance_gate():
     assert "performance_authorized" in text
     assert "holdout_selection" in text
     assert "live_execution" in text
+
+
+def test_q202_q204_are_included_in_durability_audit():
+    text = Path("automation/source_readiness_snapshot_guard.py").read_text(encoding="utf-8")
+    assert '"Q202-Q204": ROOT / "research/evidence/q202_q204_information_timing_feasibility_latest.json"' in text
+
+def test_q202_q204_live_probe_receipt_is_provisional():
+    receipt = {
+        "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
+        "source_results": {"Q202": {"http_status": 200}},
+        "scientific_boundary": {"performance": False, "promotion": False, "live_execution": False},
+    }
+    assert classify(receipt) == "PROVISIONAL_LIVE_PROBE_ONLY"

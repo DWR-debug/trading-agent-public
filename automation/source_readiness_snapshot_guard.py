@@ -23,6 +23,7 @@ RECEIPTS = {
     "Q193-Q196": ROOT / "research/evidence/q193_q196_source_feasibility_latest.json",
     "Q197-Q198": ROOT / "research/evidence/q197_q198_source_feasibility_latest.json",
     "Q199-Q201": ROOT / "research/evidence/q199_q201_source_feasibility_latest.json",
+    "Q202-Q204": ROOT / "research/evidence/q202_q204_information_timing_feasibility_latest.json",
 }
 
 DURABLE_KEYS = (
