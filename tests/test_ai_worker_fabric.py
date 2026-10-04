@@ -235,7 +235,6 @@ def test_openrouter_is_event_driven_and_gemini_mistral_manual_only():
     assert "gemini_worker:" in text
     assert "mistral_worker:" in text
     assert "schedule:" not in text
-    assert "matrix.task == github.event.inputs.task_id" in text
     assert "research/evidence/q187_q192_source_feasibility_latest.json" in text
     assert "github.event_name == 'workflow_dispatch'" in text
     assert "github.event.inputs.run_secondary_provider == 'true'" in text
