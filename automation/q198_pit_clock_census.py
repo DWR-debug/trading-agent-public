@@ -32,6 +32,14 @@ FILING_RE = re.compile(
     re.IGNORECASE,
 )
 
+ACCESS_BLOCK_MARKERS = (
+    "request access",
+    "your request has been flagged as potentially automated",
+    "unblock.federalregister.gov",
+    "recaptcha",
+    "aggressive automated scraping",
+)
+
 
 def fetch(url: str) -> tuple[int, bytes]:
     req = urllib.request.Request(
@@ -83,6 +91,11 @@ def _normalize_source_text(source: str) -> str:
         normalized = re.sub(r"<[^>]+>", " ", source)
     normalized = html.unescape(normalized)
     return re.sub(r"\s+", " ", normalized).strip()
+
+
+def _is_access_blocked(normalized: str) -> bool:
+    lowered = normalized.lower()
+    return any(marker in lowered for marker in ACCESS_BLOCK_MARKERS)
 
 
 def parse_public_inspection(text: str) -> dict[str, object]:
@@ -178,13 +191,17 @@ def main() -> int:
         url = f"https://www.federalregister.gov/public-inspection/{date_path}"
         status, body = fetch(url)
         text = body.decode("utf-8", errors="replace")
+        normalized = _normalize_source_text(text)
         item: dict[str, object] = {
             "requested_date": date_path,
             "url": url,
             "http_status": status,
             "content_sha256": hashlib.sha256(body).hexdigest(),
         }
-        if status == 200:
+        if _is_access_blocked(normalized):
+            item["status"] = "SOURCE_ACCESS_BLOCKED"
+            item["access_block_reason"] = "official Federal Register automated-access challenge/request-access page"
+        elif status == 200:
             try:
                 parsed = parse_public_inspection(text)
                 item["status"] = "PARSED"
@@ -197,16 +214,26 @@ def main() -> int:
         pages.append(item)
 
     parsed = [x for x in pages if x.get("status") == "PARSED"]
+    blocked = [x for x in pages if x.get("status") == "SOURCE_ACCESS_BLOCKED"]
+    if len(blocked) == len(pages):
+        overall_status = "Q198_PIT_CLOCK_CENSUS_BLOCKED_SOURCE_ACCESS"
+    elif len(parsed) >= 3:
+        overall_status = "Q198_PIT_CLOCK_CENSUS_COMPLETED"
+    else:
+        overall_status = "Q198_PIT_CLOCK_CENSUS_INCOMPLETE_SOURCE_ACCESS"
+
     result = {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "task_id": "Q-2026-10-04-Q198-HISTORICAL-PIT-CLOCK-CENSUS",
-        "status": "Q198_PIT_CLOCK_CENSUS_COMPLETED",
+        "status": overall_status,
         "frozen_dates": list(FROZEN_DATES),
         "pages": pages,
         "aggregate": {
             "pages_requested": len(pages),
             "pages_parsed": len(parsed),
+            "pages_access_blocked": len(blocked),
             "all_pages_parsed": len(parsed) == len(pages),
+            "all_pages_access_blocked": len(blocked) == len(pages),
             "all_have_filed_timestamps": all(
                 int(x["parsed"]["records_with_filed_timestamp"]) > 0 for x in parsed
             ) if parsed else False,
@@ -219,8 +246,9 @@ def main() -> int:
             ),
         },
         "next_gate": (
-            "candidate-specific correction/withdrawal lineage, immutable historical "
-            "reconstruction, entity mapping, and independent PIT reproduction"
+            "use an officially supported API or another immutable public-inspection snapshot route; "
+            "then establish candidate-specific correction/withdrawal lineage, entity mapping, "
+            "and independent PIT reproduction"
         ),
         "scientific_boundary": {
             "performance": False,
@@ -257,6 +285,7 @@ def main() -> int:
             {
                 "status": result["status"],
                 "pages_parsed": result["aggregate"]["pages_parsed"],
+                "pages_access_blocked": result["aggregate"]["pages_access_blocked"],
                 "all_pages_parsed": result["aggregate"]["all_pages_parsed"],
                 "same_day_ambiguous_total": result["aggregate"]["same_day_ambiguous_total"],
                 "receipt_fingerprint": result["receipt_fingerprint"],
