@@ -91,10 +91,24 @@ def compile_state() -> dict:
     assert specs.get("shared_contract", {}).get("live_execution") is False
 
     ids = [c.get("id") for c in specs.get("candidates", [])]
-    assert ids == ["Q194", "Q195", "Q196", "Q197", "Q199", "Q201"]
+    assert ids == ["Q194", "Q195", "Q196", "Q197", "Q199", "Q201", "Q202", "Q203", "Q204"]
 
     candidates = []
+
+    existing_receipts = RECEIPTS.copy()
+    # Q202-Q204 are intentionally not mapped to a fabricated evidence receipt.
+    # Until their bounded source-feasibility workflow produces a receipt, the
+    # compiler emits SOURCE_FEASIBILITY_REQUIRED and remains non-authorizing.
     for cid in ids:
+        if cid in {"Q202", "Q203", "Q204"}:
+            candidates.append({
+                "candidate_id": cid,
+                "next_gate": NEXT_GATES[cid],
+                "source_or_pit_receipt": None,
+                "execution_authorized": False,
+                "performance_allowed": False,
+            })
+            continue
         receipt = load_json(RECEIPTS[cid])
         durability = classify_source_readiness(receipt)
         result = {
