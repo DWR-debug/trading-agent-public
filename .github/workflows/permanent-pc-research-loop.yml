@@ -2,7 +2,7 @@ name: Permanent Windows Local Research Loop
 
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "*/10 * * * *"
   push:
     branches: [master]
     paths:
@@ -16,6 +16,13 @@ on:
       - "tests/test_self_hosted_research_worker.py"
       - "tests/test_persistent_research_acceleration_contract.py"
       - "research/governance/persistent_research_acceleration_contract.json"
+      - "research/frontier/q185_q186_candidate_wave_2026_10_04.json"
+      - "research/frontier/q187_q192_candidate_wave_2026_10_04.json"
+      - "research/frontier/q193_q196_candidate_wave_2026_10_04.json"
+      - "automation/q179_q184_source_feasibility.py"
+      - "automation/q185_q186_source_feasibility.py"
+      - "automation/q187_q192_source_feasibility.py"
+      - "automation/q193_q196_source_feasibility.py"
       - ".github/workflows/permanent-pc-research-loop.yml"
   workflow_dispatch:
 
