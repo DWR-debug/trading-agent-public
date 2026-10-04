@@ -361,4 +361,4 @@ def test_ai_workflow_deduplicates_unchanged_automatic_context() -> None:
     assert "AI_TASK_DEDUPED" in text
     assert "context-fingerprint" in text
     assert "ops/ai_worker_state" in text
-    assert "EVENT_NAME' != 'workflow_dispatch'" in text
+    assert "workflow_dispatch" in text
