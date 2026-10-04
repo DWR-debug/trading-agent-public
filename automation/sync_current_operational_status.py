@@ -89,6 +89,12 @@ def _safety_state() -> dict[str, bool]:
     }
 
 
+def _candidate_stage(receipt: dict[str, Any], candidate_id: str) -> str:
+    for row in receipt.get("candidate_results", []):
+        if isinstance(row, dict) and row.get("candidate_id") == candidate_id:
+            return str(row.get("status", "NOT_RECORDED"))
+    return "NOT_RECORDED"
+
 def generate(
     *,
     source_master_sha: str,
@@ -125,6 +131,9 @@ def generate(
     q185_q186_source_receipt = _load_json(ROOT / "research/evidence/q185_q186_source_feasibility_latest.json", {})
     q185_q186_pit_receipt = _load_json(ROOT / "research/evidence/q185_q186_pit_readiness_r1_latest.json", {})
     q186_pit_r2_receipt = _load_json(ROOT / "research/evidence/q186_pit_readiness_r2_latest.json", {})
+    q197_q198_source_receipt = _load_json(ROOT / "research/evidence/q197_q198_source_feasibility_latest.json", {})
+    q199_q201_source_receipt = _load_json(ROOT / "research/evidence/q199_q201_source_feasibility_latest.json", {})
+    q198_pit_clock_receipt = _load_json(ROOT / "research/evidence/q198_pit_clock_census_latest.json", {})
     source_pit_frontier_outcomes = _load_json(ROOT / "research/evidence/source_pit_frontier_outcomes_2026_10_03.json", {})
     q121_r5_receipt = _load_json(ROOT / "research/evidence/q121r5_dual_index_population_reconciliation_2026_10_03.json", {})
     q121_r6_attempts = _load_json(ROOT / "research/evidence/q121r6_execution_attempts_2026_10_03.json", {})
@@ -645,6 +654,9 @@ def generate(
         "q185_q186_source_feasibility": q185_q186_source_receipt,
         "q185_q186_pit_readiness_r1": q185_q186_pit_receipt,
         "q186_pit_readiness_r2": q186_pit_r2_receipt,
+        "q197_q198_source_feasibility": q197_q198_source_receipt,
+        "q199_q201_source_feasibility": q199_q201_source_receipt,
+        "q198_pit_clock_census": q198_pit_clock_receipt,
         "source_pit_frontier_outcomes": source_pit_frontier_outcomes,
         "q121_r5_dual_index_reconciliation": q121_r5_receipt,
         "q121_r6_execution_attempts": q121_r6_attempts,
@@ -652,6 +664,13 @@ def generate(
             "latest_formal_trial": latest_formal.get("trial_id") or project_state.get("latest_formal_trial"),
             "latest_formal_status": latest_formal.get("status") or project_state.get("latest_trial_status"),
             "next_research_focus_recorded": recorded_next_research_focus,
+            "frontier_q197_q201": {
+                "Q198": {"stage": _candidate_stage(q197_q198_source_receipt, "Q198")},
+                "Q197": {"stage": _candidate_stage(q197_q198_source_receipt, "Q197")},
+                "Q199": {"stage": _candidate_stage(q199_q201_source_receipt, "Q199")},
+                "Q201": {"stage": _candidate_stage(q199_q201_source_receipt, "Q201")},
+                "performance_authorized": False,
+            },
             "decision_basis_stage": decision_basis.get("current_stage"),
             "q026_recorded": checkpoint.get("q026"),
             "q025_recorded": checkpoint.get("q025"),
@@ -792,6 +811,14 @@ def generate(
 - Latest Q179–Q184 PIT receipt fingerprint: `{q179_q184_pit_receipt.get("receipt_fingerprint", "UNKNOWN")}`.
 - Candidate-level PIT status remains non-authorizing; all six current statuses are surfaced directly in `research/evidence/q179_q184_pit_readiness_r1_latest.json`.
 - Remaining gates are historical archive reconstruction, exact public-clock proof where not yet established, fixed entity mapping, revision/amendment lineage and independent reproduction. No performance, holdout selection, tuning, ranking, promotion or live execution is authorized.
+### Q197–Q201 Orthogonal Information Frontier
+
+- Q198 Federal Register: **{_candidate_stage(q197_q198_source_receipt, "Q198")}**; source receipt `{q197_q198_source_receipt.get("receipt_fingerprint", "UNKNOWN")}`. Next gate: fixed historical Public Inspection filing clock, correction/withdrawal lineage, immutable reconstruction and independent PIT reproduction.
+- Q197 USAspending: **{_candidate_stage(q197_q198_source_receipt, "Q197")}**; source receipt `{q197_q198_source_receipt.get("receipt_fingerprint", "UNKNOWN")}`. Next gate: historical award-state revision/public-observation boundary, frozen pre-event relationship network and independent event-time reproduction.
+- Q199 USPTO: **{_candidate_stage(q199_q201_source_receipt, "Q199")}**; source receipt `{q199_q201_source_receipt.get("receipt_fingerprint", "UNKNOWN")}`. Next gate: historical publication-state archive, frozen assignee/technology exposure and independent PIT reproduction.
+- Q201 ClinicalTrials.gov: **{_candidate_stage(q199_q201_source_receipt, "Q201")}**; source receipt `{q199_q201_source_receipt.get("receipt_fingerprint", "UNKNOWN")}`. Next gate: historical results-state revision lineage, explicit posted-time semantics, frozen sponsor/exposure mapping and independent PIT reproduction.
+- Q198 historical PIT clock census: **{q198_pit_clock_receipt.get("status", "NOT_RECORDED")}**; pages parsed **{q198_pit_clock_receipt.get("aggregate", {}).get("pages_parsed", 0)}** / **{q198_pit_clock_receipt.get("aggregate", {}).get("pages_requested", 0)}**, with fixed dates **{", ".join(q198_pit_clock_receipt.get("frozen_dates", []))}**.
+- All four frontier candidates remain non-authorizing: performance/holdout selection/ranking/tuning/promotion/live execution are closed. Source readiness is not PIT validation.
 ### Q148-R1 EIA WPSR Source/Clock Gate
 
 - Receipt status: **{q148_r1_receipt.get("status", "NOT_RECORDED")}**.
