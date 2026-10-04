@@ -151,6 +151,29 @@ CONTEXT_FILES = {
 CONTEXT_FILE_LIMIT = 3000
 CONTEXT_TOTAL_LIMIT = 18000
 
+# Only stable/material context participates in automatic AI deduplication.
+# Volatile status synchronization outputs are intentionally excluded.
+CONTEXT_FINGERPRINT_FILES = {
+    "AI-2026-10-04-Q187-Q192-ADVERSARIAL": (
+        "ai_requests/AI-2026-10-04-Q187-Q192-ADVERSARIAL.json",
+        "research/frontier/q187_q192_candidate_wave_2026_10_04.json",
+        "research/evidence/q187_q192_source_feasibility_latest.json",
+        "research/evidence/q187_q192_pit_readiness_r1_latest.json",
+        "research/governance/active_research_registry.json",
+    ),
+    "AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT": (
+        "ai_requests/AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT.json",
+        "automation/research_os_scheduler.py",
+        "automation/research_hypothesis_compiler.py",
+        "automation/autonomous_control_plane.py",
+        ".github/workflows/permanent-pc-research-loop.yml",
+        ".github/workflows/q121r6-windows-independent-reproduction.yml",
+        ".github/workflows/q185-q186-windows-reproduction.yml",
+        ".github/workflows/self-hosted-continuous-qa.yml",
+        "research/governance/active_research_registry.json",
+    ),
+}
+
 FORBIDDEN_TASK_FLAGS = (
     "deterministic_compute", "holdout_selection", "parameter_selection",
     "asset_selection", "threshold_selection", "horizon_selection",
@@ -290,6 +313,23 @@ def preflight(provider: str, env: dict[str, str] | None = None) -> dict[str, Any
         "reasons": reasons,
     }
 
+def context_fingerprint(task: dict[str, Any]) -> str:
+    files = CONTEXT_FINGERPRINT_FILES.get(task["task_id"], ())
+    if not files:
+        raise AIWorkerError(f"No stable context fingerprint contract configured for {task['task_id']}.")
+    hasher = hashlib.sha256()
+    for rel in files:
+        path = Path.cwd() / rel
+        if not path.is_file():
+            raise AIWorkerError(f"Required fingerprint context file is missing: {rel}")
+        data = path.read_bytes()
+        hasher.update(rel.encode("utf-8"))
+        hasher.update(b"\\0")
+        hasher.update(data)
+        hasher.update(b"\\0")
+    return hasher.hexdigest()
+
+
 def _context_bundle(task: dict[str, Any]) -> str:
     files = CONTEXT_FILES.get(task["task_id"], ())
     if not files:
@@ -346,6 +386,7 @@ def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, s
         "free_only": True,
         "preflight": check,
         "task_fingerprint": _fingerprint(task),
+        "context_fingerprint": context_fingerprint(task),
         "observed_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "worker_output_is_scientific_evidence": False,
         "safety": {
@@ -520,6 +561,7 @@ def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, s
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--preflight", choices=sorted(PROVIDER_SPECS))
+    parser.add_argument("--context-fingerprint", action="store_true")
     parser.add_argument("--run", action="store_true")
     parser.add_argument("--provider", choices=sorted(PROVIDER_SPECS))
     parser.add_argument("--task", type=Path)
@@ -529,6 +571,11 @@ def main() -> int:
         result = preflight(args.preflight)
         print(json.dumps(result, sort_keys=True))
         return 0 if result["available"] else 2
+    if args.context_fingerprint:
+        if not args.task:
+            parser.error("--context-fingerprint requires --task")
+        print(context_fingerprint(load_task(args.task)))
+        return 0
     if args.run:
         if not args.provider or not args.task or not args.output:
             parser.error("--run requires --provider, --task and --output")
