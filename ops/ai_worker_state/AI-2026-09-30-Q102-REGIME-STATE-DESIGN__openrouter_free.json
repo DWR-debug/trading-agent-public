@@ -25,13 +25,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.374,
-  "stdout": "",
-  "stderr": "OpenRouter HTTP 429: {\"error\":{\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\",\"code\":429,\"metadata\":{\"headers\":{\"X-RateLimit-Limit\":\"50\",\"X-RateLimit-Remaining\":\"0\",\"X-RateLimit-Reset\":\"1791072000000\"},\"limit_source\":\"openrouter_free_tier_daily\",\"remedy_hint\":\"Wait for the daily reset (see X-RateLimit-Reset), or purchase credits to raise your free-model daily limit.\",\"provider_name\":null,\"previous_errors\":[{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"}]}},\"user_id\":\"user_3K3ZJKAZq4v0T1h5GaKRbugCtn4\"}",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 47.662,
+  "stdout": "**Findings**  \n- The Q102 diagnostic identifies two recurring “common‑mode” regimes: **DOWNTREND_HIGHVOL** (overall positive direction) and **UPTREND_LOWVOL** (overall negative direction).  \n- The Q103 synthetic validation shows that the frozen RCCSM state‑routing layer can, in principle, map the four predeclared descriptors (trend coherence, breadth, dispersion percentile, shock density) to admissibility expectations for each mechanism (cross‑sectional momentum, event timing, reversal, trend efficiency).  \n- Because the RCCSM topology is lagged and deterministic, it provides a structural filter that could separate **state‑wide exposure** (captured by the descriptors) from **mechanism‑specific decay** (captured by disagreement between mechanisms within a regime).  \n\n**Counterarguments / Confounds**  \n- The common‑mode directions may be an artefact of how arms are clustered in the diagnostic; different arm groupings could reverse the assigned direction, undermining the claim of a stable regime pattern.  \n- The state descriptors are derived from lagged OHLCV only; they may not capture the true predictive state that drives the “mosaic” behaviour described by Cong et al. (state‑dependent predictability).  \n- The synthetic scenarios enforce a perfect match between descriptors and admissibility; real‑world data may violate these assumptions, leading to leakage between the diagnostic and the routing test.  \n- Overlap with the external research (e.g., pure‑news residuals, shareholder experience) suggests that the observed regime effects could be confounded by predictable news flow or behavioural experience rather than the RCCSM descriptors themselves.  \n\n**Concrete Next Actions**  \n1. **Deterministic fingerprint check** – rerun `analyze()` on the diagnostic JSON (using the same source path) and verify that the `analysis_fingerprint` remains identical across independent executions; any divergence signals hidden nondeterminism.  \n2. **PIT‑feasibility test** – using the frozen RCCSM state descriptors computed on the same historical window, calculate the empirical distribution of each descriptor within the identified regimes and compute the proportion of **mechanism disagreement** (e.g., differing admissibility outcomes for the same state). This is a cheap, data‑only check that does not require new performance labels.  \n3. **Synthetic integrity replay** – feed a slice of the actual diagnostic arm‑regime data (without performance metrics) into `automation.rccsm_synthetic.synthetic_validation()` to see whether the observed state descriptors satisfy the expected admissibility map; a mismatch would expose a gap between the frozen routing expectations and the real‑world state space.  \n4. **Confounding review** – map the current descriptors onto the concepts from the external papers (state mosaics, pure‑news residuals, shareholder experience) to ensure no double‑counting; if overlap is detected, design a minimal “residual‑only” test (e.g., subtract a news‑baseline return series) before interpreting regime‑specific outcomes.  \n\n**Uncertainty**  \n- It is unclear whether the common‑mode regime directions are robust to alternative arm selections or regime definitions, so the stability of the observed patterns cannot be taken for granted.  \n- The ability of the lagged RCCSM descriptors to isolate mechanism‑specific decay from broader market exposure remains untested in a PIT‑compliant setting; the synthetic validation alone does not guarantee real‑world fidelity.  \n\n*All proposals are limited to integrity checks and feasibility studies; no performance ranking, holdout selection, or live‑trading authorization is implied.*",
+  "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": null,
-  "usage": null
+  "response_id": "gen-1791083435-r4VvVLjpFqarTWD3CHRE",
+  "usage": {
+    "prompt_tokens": 5369,
+    "completion_tokens": 2173,
+    "total_tokens": 7542,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1883,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
