@@ -1,1 +1,65 @@
-{"schema_version":1,"task_id":"AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT","provider":"groq_free","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT",
+  "provider": "groq_free",
+  "free_only": true,
+  "preflight": {
+    "provider": "groq_free",
+    "available": true,
+    "binary": null,
+    "free_only": true,
+    "local_mode": false,
+    "litellm_transport_enabled": false,
+    "local_attestation": {
+      "present": false,
+      "path": null
+    },
+    "free_mode_attested": true,
+    "free_mode_attestation": {
+      "eligible": true,
+      "provider": "groq_free",
+      "fixed_model": "openai/gpt-oss-20b",
+      "free_mode_attested": true,
+      "attestation_required": true,
+      "attestation_type": "operator_account_tier_assertion",
+      "attestation_env": "GROQ_FREE_MODE_CONFIRMED",
+      "paid_usage_allowed": false,
+      "paid_fallback_allowed": false,
+      "personal_credit_fallback_allowed": false,
+      "reasons": []
+    },
+    "free_enforcement": "fixed_model_groq_free_with_attestation",
+    "reasons": []
+  },
+  "litellm_transport_enabled": false,
+  "task_fingerprint": "5f4c41dba2db593873d5b228799d34f0a134bbd4dbd1cab32f29c3b8a8376c56",
+  "context_fingerprint": "14e2896da5bceb2cae89e8d4bdfd386230dee641c2cc259a5d906b5297b6ee4a",
+  "observed_at_utc": "2026-10-04T21:22:19.528154Z",
+  "worker_output_is_scientific_evidence": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 3.147,
+  "stdout": "**Adversarial Methods Review – Source/PIT Readiness**  \n*Scope: Orthogonal candidates Q194, Q195, Q196, Q197, Q199, Q201*  \n*Date: 2026‑10‑04*  \n\n| Candidate | Guard Classification (per `source_readiness_snapshot_guard.py`) | Key Missing Artifacts | Potential Drift / Confounding Issues | Minimal Deterministic Falsifier | Suggested Next Action |\n|-----------|-----------------------------------------------------------------|-----------------------|--------------------------------------|---------------------------------|------------------------|\n| **Q194** | *PROVISIONAL_LIVE_PROBE_ONLY* (unless receipt contains a durable key) | `immutable_snapshot` / `dated_snapshot` / `snapshot_sha256` / `historical_snapshot_sha256` | • Endpoint/API may have changed since probe<br>• Shortage record timestamp may be inferred from occurrence rather than public observation<br>• Manufacturer‑product mapping could have been updated post‑snapshot | Run the guard script on `q193_q196_source_feasibility_latest.json` and check for any of the DURABLE_KEYS. | 1. Inspect the receipt file for durable keys. 2. If absent, request an immutable snapshot of the shortage record (e.g., a dated PDF or database export) and a signed hash. 3. Verify that the public‑observation timestamp is explicitly recorded and not derived from the event occurrence. |\n| **Q195** | *PROVISIONAL_LIVE_PROBE_ONLY* | Same durable keys as Q194 | • Enforcement action may be updated after the probe<br>• Inspection date vs enforcement date may be conflated<br>• Facility‑issuer mapping could have changed | Same as Q194 | 1. Confirm receipt contains a durable snapshot of the enforcement notice. 2. Freeze the facility‑issuer mapping at the time of enforcement. 3. Ensure the public‑observation boundary is recorded (e.g., press release date). |\n| **Q196** | *PROVISIONAL_LIVE_PROBE_ONLY* | Same durable keys | • Similar to Q195 but for a different regulatory channel (e.g., a new enforcement type)<br>• Potential overlap with Q195 if same facility is involved | Same as Q194 | 1. Verify that the receipt references a distinct immutable snapshot for Q196. 2. Check for cross‑candidate overlap: if the same facility appears in both Q195 and Q196, quarantine the joint event and treat as a separate candidate. |\n| **Q197** | *PROVISIONAL_LIVE_PROBE_ONLY* | Same durable keys | • Shortage record may have been corrected after the probe<br>• Manufacturer‑product mapping may have been amended<br>• Potential same‑day leakage if the shortage was reported and acted on within the same trading day | Same as Q194 | 1. Obtain a dated snapshot of the shortage record at the time of public observation. 2. Freeze the manufacturer‑product mapping and record the snapshot hash. 3. Verify that the event clock uses the public‑observation boundary, not the occurrence time. |\n| **Q199** | *PROVISIONAL_LIVE_PROBE_ONLY* | Same durable keys | • Shortage or enforcement record may have been updated<br>• Entity mapping could have changed<br>• Potential overlap with Q197 if same issuer | Same as Q194 | 1. Request an immutable snapshot of the relevant record. 2. Freeze the entity mapping. 3. Ensure the public‑observation timestamp is explicit. |\n| **Q201** | *PROVISIONAL_LIVE_PROBE_ONLY* | Same durable keys | • Same concerns as Q199, plus potential cross‑candidate overlap with Q199 | Same as Q194 | 1. Verify receipt contains a durable snapshot. 2. Freeze entity mapping. 3. Confirm public‑observation boundary. |\n\n### Counterarguments / Caveats\n- The guard script only checks for the presence of any durable key; it does **not** validate the content of those keys. A receipt could contain a `dated_snapshot` that is itself a live probe or a mutable reference.\n- The mapping in `automation/orthogonal_pit_next_gate.py` assumes that the same receipt file is used for multiple candidates (e.g., `q193_q196_source_feasibility_latest.json` for Q194‑196). This introduces a risk of cross‑candidate contamination if the snapshot is not truly frozen for each candidate’s specific event.\n- The current repository status (`CURRENT_STATUS.md`) indicates that the “Permanent two‑lane research mode” is active, but the status file does not guarantee that the source‑feasibility receipts have been updated to reflect the latest immutable snapshots.\n\n### Concrete Next Actions (Deterministic Falsifiers)\n1. **Run Guard Classification**  \n   - Execute `source_readiness_snapshot_guard.py` locally (or via CI) to produce a JSON report for each candidate.  \n   - Falsifier: If any candidate is classified as `PROVISIONAL_LIVE_PROBE_ONLY`, the current readiness is insufficient.\n\n2. **Validate Durable Snapshot Content**  \n   - For each receipt flagged as provisional, open the JSON file and confirm that the value of any DURABLE_KEY is a hash of a file that is itself immutable (e.g., a signed PDF, a database dump with a fixed timestamp).  \n   - Falsifier: If the hash points to a file that can be regenerated or altered, the snapshot is not truly immutable.\n\n3. **Freeze Entity/Exposure Mappings**  \n   - Generate a mapping file (`entity_mapping_v{date}.json`) that records the issuer‑product or facility‑issuer relationships at the time of the event.  \n   - Falsifier: If the mapping file can be altered after the event date, the mapping is not frozen.\n\n4. **Confirm Public‑Observation Timestamps**  \n   - Extract the exact public‑observation timestamp from the source record (e.g., press release date, SEC filing date).  \n   - Falsifier: If the timestamp is derived from the event occurrence or is ambiguous (e.g., “same day”), the clock discipline fails.\n\n5. **Cross‑Candidate Overlap Check**  \n   - Build a graph of events across all candidates to detect shared issuers or facilities.  \n   - Falsifier: If two candidates share an entity and the same snapshot is used, quarantine the joint event and treat it as a separate candidate.\n\n6. **Synthetic Mutation Test Validation**  \n   - Re‑run the synthetic mutation tests (e.g., shifting event availability, shuffling issuer‑exposure assignments) using the frozen snapshot and mapping.  \n   - Falsifier: If the test fails to produce a distinct outcome when the snapshot is frozen, the mutation test is invalid.\n\n### Uncertainty & Risks\n- **Missing Artifact**: The current receipts may not contain any durable binding; we cannot confirm without inspecting the files.\n- **Endpoint Drift**: Even if a snapshot exists, the underlying API may have changed, making the snapshot obsolete for future PIT reconstruction.\n- **Same‑Day Leakage**: If the public observation and event occurrence are on the same day, the clock discipline may be violated; this requires manual verification of publication logs.\n- **Cross‑Candidate Convergence**: Shared entities across candidates may lead to conflated signals; the current guard does not automatically quarantine such overlaps.\n\n### Structured Action Handoff\n| Task | Owner | Deadline | Deliverable |\n|------|-------|----------|-------------|\n| Run guard script and produce classification report | CI Engineer | 2026‑10‑10 | `source_readiness_report.json` |\n| Inspect provisional receipts for durable keys | Research Lead | 2026‑10‑12 | Annotated receipt files |\n| Generate frozen entity/exposure mapping files | Data Engineer | 2026‑10‑15 | `entity_mapping_v{date}.json` |\n| Verify public‑observation timestamps against source logs | Compliance Analyst | 2026‑10‑18 | Timestamp audit log |\n| Perform cross‑candidate overlap analysis | Research Analyst | 2026‑10‑20 | Overlap graph & quarantine list |\n| Re‑run synthetic mutation tests with frozen artifacts | QA Engineer | 2026‑10‑22 | Mutation test results |\n| Compile findings and update candidate status | Project Manager | 2026‑10‑25 | Updated `orthogonal_candidate_specs_2026-10-04.json` with status flags |\n\n*All tasks must be completed before any candidate can proceed to the next formal gate. No performance, ranking, or promotion decisions may be made until the above artifacts are verified and frozen.*",
+  "stderr": "",
+  "command_binary": "https-groq",
+  "api_model": "openai/gpt-oss-20b",
+  "response_id": "chatcmpl-c035a035-8689-4a4d-a640-4d6e145ed8a4",
+  "usage": {
+    "queue_time": 0.004032808,
+    "prompt_tokens": 5036,
+    "prompt_time": 0.283617026,
+    "completion_tokens": 2321,
+    "completion_time": 2.3953975,
+    "total_tokens": 7357,
+    "total_time": 2.679014526,
+    "completion_tokens_details": {
+      "reasoning_tokens": 531
+    }
+  }
+}\n
