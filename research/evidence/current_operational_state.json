@@ -258,9 +258,14 @@
         },
         "q148_r1_wpsr_source_clock": {
           "issue_number": 997,
+          "next_gate": "candidate-specific exact-first-public-availability and revision-lineage proof",
+          "note": "Q148-R1 fixed WPSR Table 4 source/clock contract completed on three frozen controls; exact first-public-availability and candidate-specific revision lineage remain unproven, so same-day PIT and performance remain closed.",
           "performance_authorization_allowed": false,
           "preregistration_path": "research/preregistrations/q148_r1_wpsr_source_clock_2026_10_04.json",
-          "state": "SOURCE_CLOCK_GATE_ACTIVE"
+          "receipt_fingerprint": "30e29926cd9a05d803426765a64d0c13354f824fbfc3d9abc430a379d4569cd0",
+          "receipt_path": "research/evidence/q148_r1_wpsr_source_clock_latest.json",
+          "state": "SOURCE_CLOCK_CONTRACT_COMPLETED_NO_SAME_DAY_PIT",
+          "workflow_run_id": 37165861306
         },
         "source_feasible_candidate_count": 21,
         "source_probe_pass_count": 25,
@@ -925,7 +930,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T00:44:40.899077+00:00",
+  "generated_at_utc": "2026-10-04T00:45:42.589641+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1470,6 +1475,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "EVIDENCE: record completed Q148-R1 WPSR source clock gate",
+        "sha": "50b4eb99d6176654904ea5b40ee0667f9b258278",
+        "timestamp": "2026-10-04T02:45:32+02:00"
+      },
+      {
+        "message": "EVIDENCE: persist Q148-R1 WPSR source clock receipt",
+        "sha": "5eacc93c8685efd42be03bf3d64fc49ab3d4fa04",
+        "timestamp": "2026-10-04T00:44:46Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "01ef544d23146fa8d840b28ed198e19af9e0d8e8",
+        "timestamp": "2026-10-04T00:44:43Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "caf7d67d3c64afc428f224ecfc10f27288f3b877",
+        "timestamp": "2026-10-04T00:44:41Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "9e19a74d6b1224dddf6f4ac22a0b5b412a8e3253",
         "timestamp": "2026-10-04T00:44:24Z"
@@ -1488,26 +1513,6 @@
         "message": "FIX: publish Q148-R1 evidence via race-safe contents publisher",
         "sha": "54d0e3fb68dc04498f18374e8e74bd0a9b032a66",
         "timestamp": "2026-10-04T02:44:11+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c63c2e3f0abd1ec74c51553d1371444b8b177e40",
-        "timestamp": "2026-10-04T00:43:46Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c1ccfa68c579a9d8564d512e77f51fa89e6de477",
-        "timestamp": "2026-10-04T00:43:44Z"
-      },
-      {
-        "message": "OPS: isolate manual Q148-R1 runs from push cancellation",
-        "sha": "1a0e4bfc9abb91c6acd38e637d64e4348ad7d00e",
-        "timestamp": "2026-10-04T02:43:30+02:00"
-      },
-      {
-        "message": "OPS: isolate manual Q121-R6 runs from push cancellation",
-        "sha": "1baba319b28d4e650f33ef607fbfeec11e6fdcd4",
-        "timestamp": "2026-10-04T02:43:28+02:00"
       }
     ]
   },
@@ -1577,7 +1582,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9e19a74d6b1224dddf6f4ac22a0b5b412a8e3253",
+  "source_master_sha": "50b4eb99d6176654904ea5b40ee0667f9b258278",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -1691,6 +1696,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37165861260"
+    "run_id": "37165926212"
   }
 }
