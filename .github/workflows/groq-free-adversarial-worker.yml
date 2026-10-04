@@ -83,7 +83,7 @@ jobs:
           output="$RUNNER_TEMP/groq-worker-output/AI-2026-10-04-Q187-Q192-GROQ-ADVERSARIAL-groq_free.json"
           if [ -f "$output" ]; then cp "$output" "$state_file"; else printf '%s\n' '{"schema_version":1,"task_id":"AI-2026-10-04-Q187-Q192-GROQ-ADVERSARIAL","provider":"groq_free","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' > "$state_file"; fi
           payload="$(base64 -w 0 "$state_file")"
-          current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/contents/${state_file}?ref=master" --jq '.sha' 2>/dev/null || true)
+          current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/contents/${state_file}?ref=master" --jq '.sha' 2>/dev/null || true)"
           if [ -n "$current_sha" ]; then
             gh api --method PUT "/repos/$GITHUB_REPOSITORY/contents/${state_file}" -f message='OPS: record Groq free adversarial worker state' -f content="$payload" -f branch='master' -f sha="$current_sha" >/dev/null
           else
