@@ -1,0 +1,85 @@
+name: Q188-Q192 PIT Historical Census R2
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "automation/q188_q192_pit_census_r2.py"
+      - "tests/test_q188_q192_pit_census_r2.py"
+      - ".github/workflows/q188-q192-pit-census-r2.yml"
+      - "research/frontier/q187_q192_candidate_wave_2026_10_04.json"
+  workflow_dispatch:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-q188-q192-pit-census-r2
+  cancel-in-progress: true
+
+jobs:
+  census:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Run Q188-Q192 PIT historical census
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/runs/q188_q192_pit_census_r2
+          python -m automation.q188_q192_pit_census_r2             --output "research/runs/q188_q192_pit_census_r2/${GITHUB_RUN_ID}.json"
+      - name: Validate non-authorizing PIT boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path("research/runs/q188_q192_pit_census_r2") / f"{os.environ['GITHUB_RUN_ID']}.json"
+          d=json.loads(p.read_text(encoding="utf-8"))
+          assert d["status"] == "PIT_HISTORICAL_CENSUS_COMPLETED_NO_PERFORMANCE"
+          assert len(d["candidate_results"]) == 5
+          assert all(v is False for v in d["cross_wave_checks"].values())
+          assert d["safety"]["PAPER_ONLY"] is True
+          assert d["safety"]["LIVE_TRADING_ENABLED"] is False
+          assert d["safety"]["ORDERS_ENABLED"] is False
+          assert d["safety"]["AUTOMATIC_PROMOTION"] is False
+          print("Q188_Q192_PIT_CENSUS_R2_OK")
+          PY
+      - name: Persist PIT census receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        if: success() && github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          input="research/runs/q188_q192_pit_census_r2/${GITHUB_RUN_ID}.json"
+          latest="research/evidence/q188_q192_pit_census_r2_latest.json"
+          cp "$input" "$latest"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin master --quiet
+            base_sha="$(git rev-parse origin/master)"
+            if python automation/github_contents_publish.py               --repository "$GITHUB_REPOSITORY"               --branch master               --base-sha "$base_sha"               --file "$latest=$latest"; then
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          echo "::error::Q188-Q192 PIT census receipt publication failed"
+          exit 1
+      - name: Upload PIT census receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q188-q192-pit-census-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q188_q192_pit_census_r2/
+          if-no-files-found: error
+          retention-days: 30

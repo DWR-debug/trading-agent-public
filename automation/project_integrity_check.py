@@ -215,6 +215,7 @@ ACTIVE_WORKFLOWS = {
     "ai-credit-availability-planner.yml",
     "q187-q192-pit-readiness-r1.yml",
     "q188-q192-pit-census-r1.yml",
+    "q188-q192-pit-census-r2.yml",
     "q121r6-windows-independent-reproduction.yml",
 }
 
