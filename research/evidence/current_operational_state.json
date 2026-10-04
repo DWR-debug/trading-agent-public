@@ -963,7 +963,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T09:28:59.692683+00:00",
+  "generated_at_utc": "2026-10-04T09:29:24.830659+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1508,6 +1508,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: surface Q169 R4 independent reproduction in canonical status",
+        "sha": "3e16af070a65680df5ce2983674886cda6b41aa1",
+        "timestamp": "2026-10-04T11:29:12+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "1f86bfb1f83986a048f1982afa505ab61f93d14f",
+        "timestamp": "2026-10-04T09:29:02Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "403255700cd6c27a520504aa81e458e7a289dba1",
+        "timestamp": "2026-10-04T09:29:01Z"
+      },
+      {
         "message": "EVIDENCE: record Q169 R4 independent reproduction",
         "sha": "a28b5b9b8b4f7463c93a290c2989bbebb50692a8",
         "timestamp": "2026-10-04T11:28:47+02:00"
@@ -1531,21 +1546,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "6aa4a4906d7d3fe5ea2ac467b696e52e85247100",
         "timestamp": "2026-10-04T09:27:55Z"
-      },
-      {
-        "message": "FIX: validate Q169 R4 safety invariants correctly",
-        "sha": "d1111a464b394ec2572bd5ac9de8e212f57120fe",
-        "timestamp": "2026-10-04T11:27:43+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "255d18b3cf584f77aa443a4b7693905166dd1a34",
-        "timestamp": "2026-10-04T09:27:27Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "99f98c3c5ad71b495f8ee3ca2605010dd9336bcd",
-        "timestamp": "2026-10-04T09:27:25Z"
       }
     ]
   },
@@ -1615,7 +1615,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a28b5b9b8b4f7463c93a290c2989bbebb50692a8",
+  "source_master_sha": "3e16af070a65680df5ce2983674886cda6b41aa1",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -1729,6 +1729,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37192283149"
+    "run_id": "37192303338"
   }
 }
