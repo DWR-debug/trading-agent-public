@@ -39,6 +39,35 @@ def test_parser_extracts_filing_and_publication_clock():
     assert d["same_day_clock_ambiguous_count"] == 0
 
 
+
+def test_api_parser_does_not_equate_partial_timestamp_coverage_with_complete_coverage():
+    import json as _json
+
+    sample = {
+        "count": 2,
+        "results": [
+            {
+                "document_number": "a",
+                "filed_at": "2020-12-16T08:45:00.000-05:00",
+                "publication_date": "2020-12-17",
+                "last_public_inspection_issue": "2020-12-16",
+            },
+            {
+                "document_number": "b",
+                "filed_at": None,
+                "publication_date": None,
+                "last_public_inspection_issue": "2020-12-16",
+            },
+        ],
+    }
+    d = parse_public_inspection_api(_json.dumps(sample), "2020-12-16")
+    assert d["filing_records"] == 2
+    assert d["records_with_filed_timestamp"] == 1
+    assert d["records_with_scheduled_publication_date"] == 1
+    assert d["missing_filed_timestamp_count"] == 1
+    assert d["missing_publication_date_count"] == 1
+
+
 def test_parser_rejects_ambiguous_same_day_record():
     ambiguous = """
     # 01/10/2020 Public Inspection Issue
