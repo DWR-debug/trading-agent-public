@@ -59,7 +59,7 @@ def parse_public_inspection(text: str) -> dict[str, object]:
     )
     if not page_match:
         raise ValueError("missing public-inspection issue heading")
-    page_date = _iso_date(*page_match.groups())
+    page_date = _iso_date(page_match.group(3), page_match.group(1), page_match.group(2))
 
     lower = text.lower()
     filing_records = list(FILING_RE.finditer(text))
