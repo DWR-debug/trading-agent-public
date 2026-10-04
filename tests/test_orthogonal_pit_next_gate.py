@@ -36,7 +36,8 @@ def test_new_literature_candidates_are_source_first_and_non_authorizing():
     result = compile_state()
     current = {item["candidate_id"]: item for item in result["candidates"]}
     for candidate_id in ["Q202", "Q203", "Q204"]:
-        assert current[candidate_id]["source_or_pit_receipt"] is None
+        assert current[candidate_id]["source_or_pit_receipt"] is not None
         assert current[candidate_id]["execution_authorized"] is False
         assert current[candidate_id]["performance_allowed"] is False
+        assert current[candidate_id]["next_gate"] == "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT"
 
