@@ -15,6 +15,7 @@ import os
 import shutil
 import subprocess
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -345,6 +346,7 @@ def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, s
         "free_only": True,
         "preflight": check,
         "task_fingerprint": _fingerprint(task),
+        "observed_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "worker_output_is_scientific_evidence": False,
         "safety": {
             "paper_only": True,
@@ -401,6 +403,14 @@ def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, s
             "response_id": api_result.get("response_id"),
             "usage": api_result.get("usage"),
         }
+        if api_result.get("status") == "RATE_LIMITED":
+            reset_seconds = parse_reset_seconds(str(api_result.get("error", ""))) or 300
+            result["quota_block"] = record_block(
+                provider,
+                reset_seconds,
+                raw_error=str(api_result.get("error", "")),
+                env=runtime_env,
+            )
         output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
         return result
     if provider == "openrouter_free":
@@ -437,6 +447,14 @@ def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, s
             "response_id": api_result.get("response_id"),
             "usage": api_result.get("usage"),
         }
+        if api_result.get("status") == "RATE_LIMITED":
+            reset_seconds = parse_reset_seconds(str(api_result.get("error", ""))) or 3600
+            result["quota_block"] = record_block(
+                provider,
+                reset_seconds,
+                raw_error=str(api_result.get("error", "")),
+                env=runtime_env,
+            )
         output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         return result
 
