@@ -65,10 +65,8 @@ jobs:
           if ($sourceRunId -le 0 -or $sourceAttempt -le 0) { throw "invalid primary Q121-R6 run identity" }
           if ($sourceHeadSha -notmatch "^[0-9a-f]{40}$") { throw "invalid primary Q121-R6 source SHA" }
           "SOURCE_RUN_ID=$sourceRunId" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
-          "SOURCE_RUN_ATTEMPT=$sourceAttempt" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
           "SOURCE_HEAD_SHA=$sourceHeadSha" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
-          "SOURCE_RUN_ATTEMPT=$sourceAttempt" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Checkout exact Q121-R6 source
         uses: actions/checkout@v5
