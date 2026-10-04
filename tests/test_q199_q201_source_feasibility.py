@@ -23,6 +23,14 @@ def test_source_gate_never_reads_returns_or_authorizes_performance():
     for marker in ('DISCOVERY_SOURCE_FEASIBILITY_COMPLETED','performance','holdout_selection','parameter_search','live_execution'): assert marker in s
     assert 'return' not in s.lower() or 'return ' in s.lower()
 
+def test_q201_history_probe_is_fixed_and_non_authorizing():
+    s = (ROOT / "automation/q199_q201_source_feasibility.py").read_text(encoding="utf-8")
+    assert "https://clinicaltrials.gov/study/NCT00125528?tab=history" in s
+    assert '"2005-07-29"' in s
+    assert '"2015-02-19"' in s
+    assert '"2016-12-16"' in s
+    assert "HISTORICAL_VERSION_ARCHIVE_COMPONENT_READY" in s
+
 def test_q201_uses_proven_clinicaltrials_public_clock_fields():
     s = (ROOT / "automation/q199_q201_source_feasibility.py").read_text(encoding="utf-8")
     assert "https://clinicaltrials.gov/api/v2/studies/NCT00125528" in s
