@@ -333,6 +333,6 @@ def test_q187_q192_ai_task_is_safe_and_event_driven():
     assert payload["live_execution"] is False
     assert payload["paid_usage"] is False
     assert payload["allow_workspace_writes"] is False
-    prompt = build_prompt(payload, "openrouter_free")
-    assert "Q187_Q192_SOURCE_PIT_WAVE_2026-10-04.md" in prompt
-    assert "q187_q192_source_feasibility_latest.json" in prompt
+    context = __import__("automation.ai_worker_fabric", fromlist=["CONTEXT_FILES"]).CONTEXT_FILES["AI-2026-10-04-Q187-Q192-ADVERSARIAL"]
+    assert "docs/research_design/Q187_Q192_SOURCE_PIT_WAVE_2026-10-04.md" in context
+    assert "research/evidence/q187_q192_source_feasibility_latest.json" in context
