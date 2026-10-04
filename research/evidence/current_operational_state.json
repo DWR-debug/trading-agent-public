@@ -963,7 +963,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T09:59:12.001719+00:00",
+  "generated_at_utc": "2026-10-04T10:03:09.978470+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1508,6 +1508,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: make status publisher argument passing robust",
+        "sha": "e8dd9975cb695c11f8fadcb31a9d8e0a13025b17",
+        "timestamp": "2026-10-04T12:02:57+02:00"
+      },
+      {
+        "message": "OPTIMIZE: suppress status-only CI",
+        "sha": "eed8eb92fc36901fdcb9aac73a45216e1a8a7588",
+        "timestamp": "2026-10-04T12:02:19+02:00"
+      },
+      {
+        "message": "OPTIMIZE: atomize status sync and suppress status-only CI",
+        "sha": "408ba7fafc40160f05a9c00daffcc27f161fd109",
+        "timestamp": "2026-10-04T12:01:31+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "970d5d26bdea91d2e59c2aacf9342bf3c2834152",
+        "timestamp": "2026-10-04T09:59:14Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6ee9493ec4d6539372b4044b49dc5155526ca6bf",
+        "timestamp": "2026-10-04T09:59:12Z"
+      },
+      {
         "message": "CLEANUP: remove dead frontier branch and repair local AI task id",
         "sha": "f8b18f82136c3a84d9a769aab84d949b754a423e",
         "timestamp": "2026-10-04T11:59:00+02:00"
@@ -1521,31 +1546,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "c95df188bd92275e66adb4f7a3b6d6357709d3fd",
         "timestamp": "2026-10-04T09:56:50Z"
-      },
-      {
-        "message": "CLEANUP: retire obsolete Q121-R5 workflows and fix integrity registry",
-        "sha": "c395ee66e43be9741be668de46cf1b93883b40d2",
-        "timestamp": "2026-10-04T11:56:35+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c5bceab174d26c31089f20903693411bb337495b",
-        "timestamp": "2026-10-04T09:31:00Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "05516debc7cf5184c32ba3aa61071631749194ab",
-        "timestamp": "2026-10-04T09:30:58Z"
-      },
-      {
-        "message": "TEST: lock Q121 subject/filer CIK distinction",
-        "sha": "157f4c984e38c72d73a82ff4d8ece9f07764e09b",
-        "timestamp": "2026-10-04T11:30:43+02:00"
-      },
-      {
-        "message": "FIX: use SEC filer CIK for Q121 archive URLs",
-        "sha": "5d15379c476b6aaff8dca31aca3fe517fc95be21",
-        "timestamp": "2026-10-04T11:30:39+02:00"
       }
     ]
   },
@@ -1615,7 +1615,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f8b18f82136c3a84d9a769aab84d949b754a423e",
+  "source_master_sha": "e8dd9975cb695c11f8fadcb31a9d8e0a13025b17",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -1729,6 +1729,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37193883578"
+    "run_id": "37194102012"
   }
 }
