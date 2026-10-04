@@ -584,8 +584,10 @@ def generate(
                     "self_hosted_slots_consumed": 0,
                 },
                 "free_ai_worker_fabric": {
-                    "cadence": "0 */6 * * *",
+                    "cadence": "event-driven",
+                    "trigger_policy": "new_or_materially_changed_bounded_task_contract_only",
                     "authenticated_providers_only": True,
+                    "deduplicate_unchanged_task_context": True,
                 },
                 "s10_phone": {
                     "cadence": "0 */6 * * *",
@@ -884,7 +886,7 @@ Q070 is the fresh symbol-disjoint validation pipeline for the fixed Q069 OHLCV c
 - Deterministic research stays on reproducible runner paths.
 - Agent output is never scientific evidence by itself.
 - Protected Copilot reserve starts **2026-10-01T00:00:00Z**: at most 4 sessions/month, 30 AI credits/session, 1 concurrent session; actual entitlement is verified at dispatch and no paid fallback/overage is permitted.
-- Permanent research continuity uses the two self-hosted Windows lanes every 30 minutes, free-AI rotation every 6 hours when authenticated, always-routable S10/Android utility capacity, and bounded agent dispatch every 2 hours. Hosted research failover is manual-only.
+- Permanent research continuity uses the two self-hosted Windows lanes every 30 minutes, event-driven free-AI review only when a new high-value task contract or material research-state change warrants it, always-routable S10/Android utility capacity, and bounded agent dispatch every 2 hours. Hosted research failover is manual-only.
 
 ## Safety
 
