@@ -71,6 +71,7 @@ jobs:
           fi
           payload="$(base64 -w 0 "$state_file")"
           for attempt in 1 2 3 4 5; do
+            echo "worker state publish attempt=$attempt" >&2
             current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/contents/${state_file}?ref=master" --jq '.sha' 2>/dev/null || true)"
             if [ -n "$current_sha" ]; then
               if gh api --method PUT "/repos/$GITHUB_REPOSITORY/contents/${state_file}" -f message='OPS: record Q187-Q192 Groq LiteLLM worker state' -f content="$payload" -f branch='master' -f sha="$current_sha" >/dev/null; then exit 0; fi
