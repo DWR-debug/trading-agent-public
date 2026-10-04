@@ -23,7 +23,7 @@ The permanent rule is:
 
 **verify current state → snapshot live capacity → parallelize independent work → use the smallest useful free resource → cheap falsify early → expose robustness early → immediately independently replicate a complete formal pass.**
 
-The two Windows self-hosted lanes remain the primary deterministic capacity. They operate as **Lane A — Formal Readiness** and **Lane B — Frontier Discovery** when both slots are available. Lane A concentrates on advanced Coverage/PIT/compiler/authorization readiness; Lane B on orthogonal source/PIT feasibility and cheap falsification. Each lane has separate candidate/trial identity, branches/workflows and output/provenance paths. Cross-lane results never retroactively modify a frozen trial. The autonomous hosted frontier lane uses bounded internal concurrency (default 3 workers); local reproduction and other sequential QA/reproduction paths remain serial unless explicitly proven safe to parallelize.
+The two Windows self-hosted lanes remain the primary deterministic capacity. The permanent workflow uses lane-scoped concurrency rather than workflow-global serialization; local reproduction retains the explicit Q121-R6 priority group, while data QA remains independently schedulable. They operate as **Lane A — Formal Readiness** and **Lane B — Frontier Discovery** when both slots are available. Lane A concentrates on advanced Coverage/PIT/compiler/authorization readiness; Lane B on orthogonal source/PIT feasibility and cheap falsification. Each lane has separate candidate/trial identity, branches/workflows and output/provenance paths. Cross-lane results never retroactively modify a frozen trial. The autonomous hosted frontier lane uses bounded internal concurrency (default 3 workers); local reproduction and other sequential QA/reproduction paths remain serial unless explicitly proven safe to parallelize.
 
 S10 is not a background decoration resource. When its latest successful utility receipt is fresh (currently within 6 hours), that receipt is accepted as the S10 operational-presence signal for routing. A separate phone-runner discovery is not required solely to establish presence. Bounded work remains the only permitted use. Its output remains QA/review support only.
 
@@ -48,7 +48,7 @@ Beide Lanes müssen Candidate-/Trial-IDs, Branches/Workflows, Receipt- und Outpu
 
 | Lane | Taktung | Zweck | Fallback |
 | --- | --- | --- | --- |
-| Permanent Self-Hosted Research Loop | alle 10 min | Frontier-QA + lokale Reproduktion | Hosted Research Failover |
+| Permanent Self-Hosted Research Loop | alle 10 min | Lane A: local reproduction / Lane B: data QA | Hosted Research Failover |
 | Hosted Research Failover | alle 30 min | nur bei stale Self-Hosted Heartbeat | keiner |
 | Unified Research Orchestrator | täglich 03:30 UTC | Beobachtung + bounded Preflight | GitHub-hosted |
 | Free AI Worker Fabric | alle 6 h | adversariales Design/Review | Provider fail-closed überspringen |
