@@ -963,7 +963,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T10:41:19.226805+00:00",
+  "generated_at_utc": "2026-10-04T10:41:48.109842+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1508,6 +1508,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOVERNANCE: extend prior-art manifest with current agent benchmarks",
+        "sha": "c01de195e6be91e1e1ece432315d4831697dd68b",
+        "timestamp": "2026-10-04T12:41:36+02:00"
+      },
+      {
+        "message": "RESEARCH: extend prior-art review with current agent benchmarks",
+        "sha": "5b41798073d8704ddfa8ece6ac0d0b2deea236e3",
+        "timestamp": "2026-10-04T12:41:33+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9af50e2272d0b4f455529ba559b7a97f7ee35524",
+        "timestamp": "2026-10-04T10:41:20Z"
+      },
+      {
         "message": "GOVERNANCE: record external agent prior-art decision basis",
         "sha": "d9d3ca122453e399f95c9a1ec2fe710dab8877a6",
         "timestamp": "2026-10-04T12:41:07+02:00"
@@ -1531,21 +1546,6 @@
         "message": "RESEARCH: correct prior-art source provenance",
         "sha": "be71f1ed88b3138d370a87dd5db0ecf4add1b585",
         "timestamp": "2026-10-04T12:40:35+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "eab563c22bdee5a3528d3cde4b409067640448ae",
-        "timestamp": "2026-10-04T10:40:12Z"
-      },
-      {
-        "message": "RESEARCH: record external trading-agent prior-art review",
-        "sha": "70237ee1ea6b96fbd7300cca95d3e040bff6cf8f",
-        "timestamp": "2026-10-04T12:39:57+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c7037330e21a409919ea9dd240cb57cb80f86979",
-        "timestamp": "2026-10-04T10:29:17Z"
       }
     ]
   },
@@ -1615,7 +1615,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d9d3ca122453e399f95c9a1ec2fe710dab8877a6",
+  "source_master_sha": "c01de195e6be91e1e1ece432315d4831697dd68b",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -1729,6 +1729,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37196160950"
+    "run_id": "37196184686"
   }
 }
