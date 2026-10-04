@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 import shutil
@@ -21,10 +22,12 @@ from typing import Any
 
 from automation.ai_quota_guard import load_block, parse_reset_seconds, quota_error, record_block
 from automation.free_mode_attestation import validate_free_mode_attestation
+from automation.litellm_free import PROVIDER_CONTRACTS as LITELLM_PROVIDER_CONTRACTS, call_litellm_free
 
 SCHEMA_VERSION = 1
 MAX_RUNTIME_MINUTES = 20
 TRUE_VALUES = {"1", "true", "yes", "on"}
+LITELLM_TRANSPORT_PROVIDERS = frozenset(LITELLM_PROVIDER_CONTRACTS)
 
 PROVIDER_SPECS = {
     "gemini_cli": {
@@ -321,6 +324,7 @@ def preflight(provider: str, env: dict[str, str] | None = None) -> dict[str, Any
     env = dict(os.environ if env is None else env)
     spec = PROVIDER_SPECS[provider]
     local_mode = _truth(env.get("TRADING_AGENT_LOCAL_AI_MODE"))
+    litellm_transport_enabled = _truth(env.get("TRADING_AGENT_LITELLM_TRANSPORT"))
     binary = _resolve_binary(provider)
     local_attestation = _local_attestation(provider, env) if local_mode else {"present": False, "path": None}
     policy_attestation = (
@@ -353,19 +357,27 @@ def preflight(provider: str, env: dict[str, str] | None = None) -> dict[str, Any
         reasons.append("provider authentication is not available for free-only mode")
     if not free_gate:
         reasons.append("provider free-mode attestation is missing")
+    if litellm_transport_enabled:
+        if provider not in LITELLM_TRANSPORT_PROVIDERS:
+            reasons.append(f"LiteLLM transport is not supported for provider {provider}")
+        elif importlib.util.find_spec("litellm") is None:
+            reasons.append("LiteLLM package is not installed for the requested transport")
     return {
         "provider": provider,
         "available": not reasons,
         "binary": binary,
         "free_only": True,
         "local_mode": local_mode,
+        "litellm_transport_enabled": litellm_transport_enabled,
         "local_attestation": local_attestation,
         "free_mode_attested": free_gate,
         "free_mode_attestation": policy_attestation,
         "free_enforcement": (
-            "fixed_model_groq_free_with_attestation"
-            if provider == "groq_free"
-            else ("fixed_model_openrouter_free" if provider == "openrouter_free" else "attestation_or_local_attestation")
+            "litellm_fixed_provider_route" if litellm_transport_enabled else (
+                "fixed_model_groq_free_with_attestation"
+                if provider == "groq_free"
+                else ("fixed_model_openrouter_free" if provider == "openrouter_free" else "attestation_or_local_attestation")
+            )
         ),
         "reasons": reasons,
     }
@@ -446,6 +458,7 @@ def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, s
         "provider": provider,
         "free_only": True,
         "preflight": check,
+        "litellm_transport_enabled": bool(check.get("litellm_transport_enabled")),
         "task_fingerprint": _fingerprint(task),
         "context_fingerprint": context_fingerprint(task),
         "observed_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
@@ -471,6 +484,52 @@ def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, s
         return result
 
     started = time.monotonic()
+    if check.get("litellm_transport_enabled"):
+        contract = LITELLM_PROVIDER_CONTRACTS[provider]
+        api_key_env = contract["api_key_env"]
+        try:
+            api_result = call_litellm_free(
+                provider,
+                build_prompt(task, provider),
+                api_key=runtime_env.get(api_key_env, ""),
+                timeout_seconds=min(60, task.get("max_runtime_minutes", 15) * 60),
+            )
+        except Exception as exc:
+            result = {
+                **base,
+                "status": "FAILED_PROVIDER",
+                "returncode": None,
+                "duration_seconds": round(time.monotonic() - started, 3),
+                "stdout": "",
+                "stderr": f"{type(exc).__name__}: {exc}",
+                "command_binary": "litellm",
+                "api_model": contract["api_model"],
+                "litellm_model": contract["litellm_model"],
+            }
+            output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            return result
+        result = {
+            **base,
+            "status": api_result["status"],
+            "returncode": api_result.get("returncode"),
+            "duration_seconds": round(time.monotonic() - started, 3),
+            "stdout": api_result.get("content", ""),
+            "stderr": api_result.get("error", ""),
+            "command_binary": "litellm",
+            "api_model": contract["api_model"],
+            "litellm_model": contract["litellm_model"],
+            "response_id": api_result.get("response_id"),
+            "response_model": api_result.get("response_model"),
+            "usage": api_result.get("usage"),
+        }
+        if api_result.get("status") == "RATE_LIMITED":
+            reset_seconds = parse_reset_seconds(str(api_result.get("error", ""))) or 3600
+            result["quota_block"] = record_block(
+                provider, reset_seconds, raw_error=str(api_result.get("error", "")), env=runtime_env
+            )
+        output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        return result
+
     if provider == "mistral_api":
         from automation.mistral_free import call_mistral_free
 
