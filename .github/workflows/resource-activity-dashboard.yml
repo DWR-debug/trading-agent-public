@@ -27,6 +27,8 @@ jobs:
           fetch-depth: 1
 
       - name: Collect live resource snapshot
+        env:
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
