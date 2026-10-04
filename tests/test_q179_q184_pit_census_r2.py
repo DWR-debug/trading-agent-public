@@ -34,3 +34,11 @@ def test_q179_q184_r2_workflow_is_hosted_and_paper_only() -> None:
     assert "runs-on: ubuntu-24.04" in text
     assert "PIT_HISTORICAL_CENSUS_COMPLETED_NO_PERFORMANCE" in text
     assert "LIVE_TRADING_ENABLED" in text
+
+
+def test_q184_uses_pdf_text_extraction_for_clock_notice() -> None:
+    text = (ROOT / "automation/q179_q184_pit_census_r2.py").read_text(encoding="utf-8")
+    assert "PdfReader" in text
+    assert "pdf_text_probe" in text
+    assert "5:00 am eastern time" in text
+    assert "previous day" in text
