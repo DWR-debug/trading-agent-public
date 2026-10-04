@@ -1,6 +1,6 @@
 # Trading Agent — Resource Dashboard
 
-Snapshot: 2026-10-04
+Snapshot: 2026-10-04 (architecture update)
 Repository: DWR-debug/trading-agent-public
 Master verified before dashboard commit: 023ec7a1d047b0e924c687300cc3782aae43eec1
 
@@ -8,8 +8,8 @@ Master verified before dashboard commit: 023ec7a1d047b0e924c687300cc3782aae43eec
 
 | Resource | State / role | Cadence |
 |---|---|---|
-| Windows self-hosted A | Formal Readiness, local reproduction, data QA | 10 min + event-driven |
-| Windows self-hosted B | Frontier Discovery, source/PIT feasibility | 10 min + event-driven |
+| Windows self-hosted A | Formal Readiness / local reproduction | 10 min + event-driven |
+| Windows self-hosted B | Frontier Discovery / data QA | 10 min + event-driven |
 | GitHub-hosted Ubuntu | deterministic frontier, CI, source/PIT work | 10 min / event-driven |
 | S10 / Android | deterministic mechanical research/governance QA | 2 h + meaningful changes |
 | Free AI | bounded adversarial/design/engineering review | event-driven |
@@ -49,3 +49,12 @@ Operational capacity never creates scientific authorization. Source feasibility 
 ## Status-lag note
 
 The status synchronizer records the source commit that was synchronized. Because status synchronization itself creates a subsequent documentation-only commit, the status snapshot SHA may intentionally trail the absolute master tip by one or more commits. This dashboard therefore identifies the master SHA it was verified against and must not be treated as a scientific receipt.
+## Dashboard website and refresh policy
+
+The canonical dashboard UI is **`docs/dashboard/index.html`** with machine-readable snapshot data in **`docs/dashboard/dashboard_data.json`**.
+
+The snapshot is refreshed automatically once per day at **03:35 UTC** by **`.github/workflows/resource-dashboard-update.yml`**, and it can also be refreshed on request through workflow dispatch. The website's **Update now** button opens that GitHub Actions workflow so an authenticated user can run the update immediately; no credential is embedded in the public HTML.
+
+The dashboard is an operational snapshot, not a live runner-control plane and not scientific evidence. It deliberately distinguishes routing assumptions from timestamped execution receipts.
+
+For a website deployment, configure GitHub Pages to serve the repository's **`/docs`** directory from `master`. The dashboard will then be available under **`/dashboard/`** on the repository's Pages domain.
