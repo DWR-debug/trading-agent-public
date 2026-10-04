@@ -18,7 +18,7 @@ from automation.q121r6_sec_acceptance_time_compiler import (
 )
 
 
-SHARD_COUNT = 16
+SHARD_COUNT = 4
 EXPECTED_RECEIPT_STATUS = "Q121R6_SEC_ACCEPTANCE_TIME_COMPILATION_COMPLETED"
 
 
