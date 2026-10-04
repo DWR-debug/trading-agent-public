@@ -19,7 +19,9 @@ def test_copilot_reset_is_exact_first_of_next_month_utc() -> None:
     result = availability_for_provider("copilot_free", now=now, policy=policy, observations={})
     assert result.confidence == "exact_policy"
     assert result.eligible is False
+    assert result.eligible is False
     assert result.next_available_at == "2026-11-01T00:00:00Z"
+    assert result.reserve_status == "reservation_exhausted"
 
 
 def test_gemini_daily_reset_is_midnight_pacific() -> None:
