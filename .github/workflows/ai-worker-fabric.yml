@@ -122,6 +122,37 @@ jobs:
           }
           if any(task not in allowed_manual for task in tasks):
               raise SystemExit(f'unexpected AI task: {tasks}')
+
+          if os.environ['EVENT_NAME'] != 'workflow_dispatch' and tasks:
+              task_files = {
+                  'AI-2026-10-04-Q187-Q192-ADVERSARIAL': 'ai_requests/AI-2026-10-04-Q187-Q192-ADVERSARIAL.json',
+                  'AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT': 'ai_requests/AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT.json',
+              }
+              deduped = []
+              for task_id in tasks:
+                  task_path = task_files.get(task_id)
+                  if not task_path:
+                      deduped.append(task_id)
+                      continue
+                  current_fp = subprocess.check_output(
+                      ['python', '-m', 'automation.ai_worker_fabric',
+                       '--context-fingerprint', '--task', task_path],
+                      text=True,
+                  ).strip()
+                  state_path = Path('ops/ai_worker_state') / f'{task_id}__openrouter_free.json'
+                  previous_fp = ''
+                  if state_path.is_file():
+                      try:
+                          previous = json.loads(state_path.read_text(encoding='utf-8'))
+                          previous_fp = str(previous.get('context_fingerprint', ''))
+                      except (OSError, json.JSONDecodeError):
+                          previous_fp = ''
+                  if current_fp != previous_fp:
+                      deduped.append(task_id)
+                  else:
+                      print(f'AI_TASK_DEDUPED task={task_id} context={current_fp}')
+              tasks = deduped
+
           if not tasks:
               tasks = ['__none__']
           Path(os.environ['GITHUB_OUTPUT']).open('a', encoding='utf-8').write(
