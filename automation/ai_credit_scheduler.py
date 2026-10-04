@@ -155,12 +155,12 @@ def availability_for_provider(
         reset = next_calendar_boundary(now, tz_name="America/Los_Angeles", rule="day")
         return Availability(
             provider,
-            True,
-            None,
+            False,
+            reset.isoformat().replace("+00:00", "Z"),
             reset.isoformat().replace("+00:00", "Z"),
             "exact_policy",
-            "Gemini daily quota reset boundary is documented at midnight Pacific Time; remaining balance is not available in repository telemetry",
-            "balance_unknown",
+            "Gemini daily quota reset boundary is documented at midnight Pacific Time, but remaining balance is unknown; require live preflight before admission",
+            "preflight_required",
         )
 
     if provider == "copilot_free":
@@ -221,18 +221,18 @@ def availability_for_provider(
             )
         return Availability(
             provider,
-            True,
+            False,
             None,
             None,
             "unknown",
-            "Mistral free monthly usage exists but account-specific remaining balance/reset boundary is not exposed in repository telemetry",
-            "balance_unknown",
+            "Mistral free monthly usage exists but account-specific remaining balance/reset boundary is not exposed in repository telemetry; require live preflight before admission",
+            "preflight_required",
         )
 
     if provider == "gemini_cli":
         return Availability(
             provider,
-            True,
+            False,
             None,
             None,
             "explicit_error_only",
@@ -294,9 +294,11 @@ def schedule_tasks(
                 }
             )
             continue
+        provider_rank = {"openrouter_free": 0, "gemini_api": 10, "mistral_api": 20, "gemini_cli": 30, "copilot_free": 40}
         chosen = sorted(
             compatible,
             key=lambda p: (
+                provider_rank.get(p, 99),
                 parse_dt(avail[p].next_available_at) or datetime.min.replace(tzinfo=timezone.utc),
                 p,
             ),
