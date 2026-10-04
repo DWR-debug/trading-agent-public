@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T20:48:29.461208+00:00",
+  "generated_at_utc": "2026-10-04T20:50:18.135684+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2278,14 +2278,14 @@
     "candidate_results": [
       {
         "candidate_id": "Q197",
-        "status": "BLOCKED_SOURCE_COMPONENT"
+        "status": "SOURCE_COMPONENT_READY"
       },
       {
         "candidate_id": "Q198",
         "status": "SOURCE_COMPONENT_READY"
       }
     ],
-    "receipt_fingerprint": "d5865fee13fdfda310b25353bdaaa4055cfecd0081de01e6a868722d4d478cb9",
+    "receipt_fingerprint": "89af8cd3e38348200e8c13350de9410fbfd2817f5cb19a6823894228773dcc2c",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2310,29 +2310,22 @@
       "Q197_USASPENDING": {
         "attempts": [
           {
-            "http_status": 599,
-            "missing_markers": [
-              "spending_by_award",
-              "last_updated"
-            ],
+            "http_status": 200,
+            "missing_markers": [],
             "url": "https://api.usaspending.gov/docs/endpoints"
           },
           {
-            "http_status": 599,
+            "http_status": 200,
             "missing_markers": [
-              "spending_by_award",
-              "last_updated"
+              "spending_by_award"
             ],
             "url": "https://api.usaspending.gov/api/v2/awards/last_updated/"
           }
         ],
-        "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "missing_markers": [
-          "spending_by_award",
-          "last_updated"
-        ],
-        "probe_classification": "UNREACHABLE",
-        "reachable": false,
+        "content_sha256": "65d54624b6866fbd30084eed3d44f4f9bb00df84aa22709cf2b0125aa9d79386",
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
         "scientific_boundary": false,
         "urls": [
           "https://api.usaspending.gov/docs/endpoints",
@@ -2425,7 +2418,7 @@
       },
       {
         "access_block_reason": "official Federal Register automated-access challenge/request-access page",
-        "content_sha256": "dfaf7946dc2c3bbf89b4ee9d7d42762aa18a6f3a9ccc8b62160ebc1d999ab2c2",
+        "content_sha256": "2fd89b88ecb3bc62c4f8d6b64b194ffc31e1881f79a68456eefe927f6494ff2d",
         "http_status": 200,
         "requested_date": "2020/12/16",
         "status": "SOURCE_ACCESS_BLOCKED",
@@ -2433,14 +2426,14 @@
       },
       {
         "access_block_reason": "official Federal Register automated-access challenge/request-access page",
-        "content_sha256": "8deac948de57d196a31a92acf5e7d5c14dc7996a5b1245057f5143e9621ec6b1",
+        "content_sha256": "2fd89b88ecb3bc62c4f8d6b64b194ffc31e1881f79a68456eefe927f6494ff2d",
         "http_status": 200,
         "requested_date": "2026/10/02",
         "status": "SOURCE_ACCESS_BLOCKED",
         "url": "https://www.federalregister.gov/public-inspection/2026/10/02"
       }
     ],
-    "receipt_fingerprint": "5a83d2d5c49216550dde0f30ca607098e39846ccccdcd5047fe8ffa249d66373",
+    "receipt_fingerprint": "ba0bcf2e79a233a39717b9461d57618e1f5ea77fe5a0ad21dfb29d4de011a1da",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2475,7 +2468,7 @@
         "status": "SOURCE_COMPONENT_READY"
       }
     ],
-    "receipt_fingerprint": "29e10d2ebe9f81013ceb7d6391e9775a328fadf8aa4f1fb32e372b58e8863e24",
+    "receipt_fingerprint": "96c29a79b0b469b4583efec66a53f83d27ff0c906378e09e804254768f8531cf",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2549,7 +2542,7 @@
             "url": "https://ppubs.uspto.gov/basic/"
           }
         ],
-        "content_sha256": "c170921186344724b47adb886e5551e8f12c4b3b41089b747e37b02365847caa",
+        "content_sha256": "2786cfa4df66c51989b3b8f82868af71d263121eb44bbe7a6901e6f125502dec",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -2620,44 +2613,44 @@
     ],
     "recent_commits": [
       {
+        "message": "QA: pass push commit message through workflow environment",
+        "sha": "5e1e3ee0bff1ab8a7fee99fbd209295169bbf871",
+        "timestamp": "2026-10-04T22:50:05+02:00"
+      },
+      {
+        "message": "QA: remove invalid shell escaping in next-gate workflow",
+        "sha": "cbba6ccc9be3436f0b599fa590ff7951ecebd6fb",
+        "timestamp": "2026-10-04T22:50:03+02:00"
+      },
+      {
+        "message": "QA: register dedicated Runner C label with actionlint",
+        "sha": "3d36f06f86739e8212b875b205111bf5ef29ec9f",
+        "timestamp": "2026-10-04T22:50:01+02:00"
+      },
+      {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "14c28bb83cef5055e7e0fc09789986c18177b3b3",
-        "timestamp": "2026-10-04T20:48:24Z"
+        "sha": "76a98621f28084da0baf979ff1446ab87e63e444",
+        "timestamp": "2026-10-04T20:49:10Z"
       },
       {
-        "message": "OPS: trigger Runner C long workpack after reproduction contract fixes",
-        "sha": "8ccd9765d06f51267ff918d0d2c707a9775d7166",
-        "timestamp": "2026-10-04T22:48:19+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "573dec434c80677829fed57388be1a100faedc1a",
+        "timestamp": "2026-10-04T20:48:57Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "18bdee96aa7316333531c182b840ecaa0498a73f",
-        "timestamp": "2026-10-04T20:48:15Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "0c1069a81537106a6058336f507e7035ead0d352",
+        "timestamp": "2026-10-04T20:48:50Z"
       },
       {
-        "message": "OPS: harden Runner C night queue and free-mode AI attestation",
-        "sha": "e226c479a8b2bf4756a86b74c0be709b0a600fa7",
-        "timestamp": "2026-10-04T22:47:59+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "37e9fbdd6cc94259486ca59280a00c86c17fbdb0",
+        "timestamp": "2026-10-04T20:48:48Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "989b8be69b8b911864c0c881732c9b6666832e24",
-        "timestamp": "2026-10-04T20:36:03Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "933b9f64286ae6f8fa796b026fbb92d1b05b5680",
-        "timestamp": "2026-10-04T20:35:50Z"
-      },
-      {
-        "message": "OPS: supersede stale Runner C infrastructure runs after fixes",
-        "sha": "421db8fcc1d063175f5fad4246f3cf7b2f98102c",
-        "timestamp": "2026-10-04T22:35:44+02:00"
-      },
-      {
-        "message": "FIX: install bounded Python test dependencies on Runner C",
-        "sha": "abb412d5be92b100d57235b8035c9988d9a1b91e",
-        "timestamp": "2026-10-04T22:35:34+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "13727c07aebb055b9880e16ff30c309256ac274c",
+        "timestamp": "2026-10-04T20:48:44Z"
       }
     ]
   },
@@ -2689,7 +2682,7 @@
     "decision_basis_stage": null,
     "frontier_q197_q201": {
       "Q197": {
-        "stage": "BLOCKED_SOURCE_COMPONENT"
+        "stage": "SOURCE_COMPONENT_READY"
       },
       "Q198": {
         "stage": "SOURCE_COMPONENT_READY"
@@ -2742,7 +2735,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "14c28bb83cef5055e7e0fc09789986c18177b3b3",
+  "source_master_sha": "5e1e3ee0bff1ab8a7fee99fbd209295169bbf871",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2856,6 +2849,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37233508001"
+    "run_id": "37233618639"
   }
 }
