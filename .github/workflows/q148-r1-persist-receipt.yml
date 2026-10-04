@@ -15,9 +15,11 @@ permissions:
   contents: write
 
 # Receipt persistence must not be cancelled by a later repository push.
+# Push-triggered runs share a stable branch group and supersede older push runs.
+# One-shot/manual runs stay isolated so a later push cannot cancel them.
 concurrency:
-  group: q148-r1-persist-receipt-${{ github.run_id }}
-  cancel-in-progress: false
+  group: q148-r1-persist-receipt-${{ github.event_name == 'push' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'push' }}
 
 jobs:
   persist:
