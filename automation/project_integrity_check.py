@@ -210,6 +210,7 @@ ACTIVE_WORKFLOWS = {
     "q179-q184-pit-readiness.yml",
     "q185-q186-source-feasibility.yml",
     "q185-q186-windows-reproduction.yml",
+    "q187-q192-source-feasibility.yml",
     "q121r6-windows-independent-reproduction.yml",
 }
 
