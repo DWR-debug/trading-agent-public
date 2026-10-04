@@ -118,6 +118,7 @@ def generate(
     q133_q170_receipt = _load_json(ROOT / "research/evidence/q133_q170_source_feasibility_2026_10_03.json", {})
     q148_r1_receipt = _load_json(ROOT / "research/evidence/q148_r1_wpsr_source_clock_latest.json", {})
     q137_q144_micro_receipt = _load_json(ROOT / "research/evidence/q137_q144_micro_pit_latest.json", {})
+    q169_r4_receipt = _load_json(ROOT / "research/evidence/q169_noaa_swpc_archive_pit_r4_latest.json", {})
     q171_q177_pit_receipt = _load_json(ROOT / "research/evidence/q171_q177_pit_readiness_2026_10_03.json", {})
     source_pit_frontier_outcomes = _load_json(ROOT / "research/evidence/source_pit_frontier_outcomes_2026_10_03.json", {})
     q121_r5_receipt = _load_json(ROOT / "research/evidence/q121r5_dual_index_population_reconciliation_2026_10_03.json", {})
@@ -739,6 +740,14 @@ def generate(
 - Q137 SEC all-symbols reconstructable = **{q137_q144_micro_receipt.get("q137_sec_submission_sample", {}).get("all_symbols_reconstructable", False)}**.
 - Q144 Wikimedia all-symbols reconstructable = **{q137_q144_micro_receipt.get("q144_wikimedia_pageview_sample", {}).get("all_symbols_reconstructable", False)}**.
 - This bounded sample produced feasibility evidence only; unresolved archive/entity coverage stays fail-closed.
+
+### Q169 R4 Independent NOAA Reproduction
+
+- Independent reproduction status: **{q169_r4_receipt.get("status", "NOT_RECORDED")}**.
+- Persistent receipt fingerprint: `{q169_r4_receipt.get("receipt_fingerprint", "UNKNOWN")}`.
+- All fixed R3 archive samples reproduced = **{q169_r4_receipt.get("reproduction_boundary", {}).get("all_fixed_samples_reproduced", False)}**.
+- Candidate-specific exposure map frozen = **{q169_r4_receipt.get("reproduction_boundary", {}).get("candidate_specific_exposure_map_frozen", False)}**; revision lineage reconstructed = **{q169_r4_receipt.get("reproduction_boundary", {}).get("candidate_specific_revision_lineage_reconstructed", False)}**.
+- This strengthens NOAA source/archive provenance only; candidate PIT validation and performance remain closed.
 
 ### Q133–Q170 Public Source Frontier
 
