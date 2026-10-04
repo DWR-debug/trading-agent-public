@@ -235,6 +235,10 @@ ACTIVE_WORKFLOWS = {
     "windows-runner-c-long-research.yml",
     "runner-c-prepit-falsification.yml",
     "runner-c-long-duplicate-guard.yml",
+    "litellm-compatibility.yml",
+    "litellm-provider-smoke.yml",
+    "litellm-groq-one-shot-smoke.yml",
+    "litellm-q187-q192-one-shot.yml",
 }
 
 REQUIRED_FILES = (
