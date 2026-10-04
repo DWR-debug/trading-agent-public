@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T20:56:54.466530+00:00",
+  "generated_at_utc": "2026-10-04T20:57:08.526031+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2613,6 +2613,11 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f3f95c035b4c609e9283cc64e6063cd87db6413a",
+        "timestamp": "2026-10-04T20:56:56Z"
+      },
+      {
         "message": "FIX: register Runner C duplicate guard",
         "sha": "2e8244908b96043ff86363fb10035d56433a188f",
         "timestamp": "2026-10-04T22:56:50+02:00"
@@ -2646,11 +2651,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "fe45a4aa3b44a1e1972be44cbb4470e8b3d2f1a8",
         "timestamp": "2026-10-04T20:55:47Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ba2956bbe40eef4dea915397ae21fe61279fccfc",
-        "timestamp": "2026-10-04T20:55:33Z"
       }
     ]
   },
@@ -2735,7 +2735,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2e8244908b96043ff86363fb10035d56433a188f",
+  "source_master_sha": "f3f95c035b4c609e9283cc64e6063cd87db6413a",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2849,6 +2849,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37234054223"
+    "run_id": "37234062360"
   }
 }
