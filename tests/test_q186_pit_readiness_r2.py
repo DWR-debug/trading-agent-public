@@ -1,4 +1,4 @@
-from automation.q186_pit_readiness_r2 import FIXED_CONTROLS, SOURCES, classify, mutation_checks
+from automation.q186_pit_readiness_r2 import CLOCK_CRITICAL_SOURCES, FIXED_CONTROLS, SOURCES, classify, mutation_checks
 
 
 def test_q186_r2_has_fixed_nonperformance_controls():
@@ -11,3 +11,10 @@ def test_q186_r2_has_fixed_nonperformance_controls():
 def test_q186_r2_keeps_citation_ordering_explicitly_unproven():
     assert classify(200, []) == "PASS"
     assert mutation_checks()["future_citation_cannot_pass_pre_event_filter"] is True
+
+
+
+def test_q186_r2_keeps_legacy_historical_route_noncritical():
+    assert "USPTO_GRANT_BIBLIOGRAPHIC" in SOURCES
+    assert "USPTO_GRANT_BIBLIOGRAPHIC" not in CLOCK_CRITICAL_SOURCES
+    assert "USPTO_EGRANTS" in CLOCK_CRITICAL_SOURCES
