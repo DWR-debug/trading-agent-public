@@ -64,17 +64,19 @@ jobs:
           run_id=os.environ["GITHUB_RUN_ID"]
           p=Path("research/runs/q198_pit_clock_census")/f"{run_id}.json"
           d=json.loads(p.read_text(encoding="utf-8"))
-          allowed={"Q198_PIT_CLOCK_CENSUS_COMPLETED","Q198_PIT_CLOCK_CENSUS_BLOCKED_SOURCE_ACCESS"}
+          allowed={"Q198_PIT_CLOCK_CENSUS_COMPLETED","Q198_PIT_CLOCK_CENSUS_BLOCKED_SOURCE_ACCESS","Q198_PIT_CLOCK_CENSUS_INCOMPLETE_SOURCE_ACCESS"}
           assert d["status"] in allowed
           assert d["frozen_dates"] == ["2020/01/10","2020/04/22","2020/12/16","2026/10/02"]
           assert all(v is False for v in d["scientific_boundary"].values())
           s=d["safety"]
           assert s["paper_only"] is True and s["live_trading_enabled"] is False and s["orders_enabled"] is False and s["automatic_promotion"] is False
           if d["status"] == "Q198_PIT_CLOCK_CENSUS_COMPLETED":
-              assert d["aggregate"]["pages_parsed"] >= 3
-          else:
+              assert d["aggregate"]["pages_api_parsed"] == d["aggregate"]["pages_requested"]
+          elif d["status"] == "Q198_PIT_CLOCK_CENSUS_BLOCKED_SOURCE_ACCESS":
               assert d["aggregate"]["pages_parsed"] == 0
               assert d["aggregate"]["pages_access_blocked"] == d["aggregate"]["pages_requested"]
+          else:
+              assert d["aggregate"]["pages_api_parsed"] < d["aggregate"]["pages_requested"]
           print("Q198_PIT_CENSUS_BOUNDARY_OK")
           PY
 
