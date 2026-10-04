@@ -13,7 +13,7 @@ on:
     types: [created]
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: q121r6-sec-acceptance-time-compilation
@@ -244,6 +244,35 @@ jobs:
           if errorlevel 1 exit /b 1
           "%Q121R6_PY%" -c "import json; from pathlib import Path; p=json.loads(Path(r'%GITHUB_WORKSPACE%\q121r6-final\result.json').read_text()); assert p['status']=='Q121R6_SEC_ACCEPTANCE_TIME_COMPILATION_COMPLETED'; assert p['population']['row_count']==61818; assert p['population']['all_header_rows_fetched']==61818; assert p['population']['all_header_rows_validated'] is True; assert p['target_subject_population']['acceptance_timestamp_compiled'] is True; assert p['interpretation']['full_subject_issuer_population_compiled'] is True; assert p['interpretation']['acceptance_timestamps_compiled'] is True; assert p['interpretation']['revision_lineage_established'] is False; assert p['interpretation']['same_day_pit_safe'] is False; assert all(v is False for v in p['governance'].values()); assert p['safety']['paper_only'] and not p['safety']['live_trading_enabled'] and not p['safety']['orders_enabled']; print('Q121R6_BOUNDARY=PASS'); print('Q121R6_RECEIPT='+p['receipt_fingerprint'])"
           if errorlevel 1 exit /b 1
+      - name: Persist compact immutable R6 receipt
+        shell: cmd
+        run: |
+          @echo off
+          setlocal EnableExtensions
+          set "PUB=%RUNNER_TEMP%\q121r6-publish-%GITHUB_RUN_ID%"
+          set "ARCHIVE=%RUNNER_TEMP%\q121r6-publish-%GITHUB_RUN_ID%.tar.gz"
+          if exist "%PUB%" rmdir /s /q "%PUB%"
+          mkdir "%PUB%" || exit /b 1
+          curl.exe -L --fail --silent --show-error -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%"
+          if errorlevel 1 exit /b 1
+          tar.exe -xzf "%ARCHIVE%" -C "%PUB%"
+          if errorlevel 1 exit /b 1
+          set "REPO_SRC="
+          for /d %%D in ("%PUB%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
+          if not defined REPO_SRC exit /b 1
+          if not exist "%REPO_SRC%\research\evidence" mkdir "%REPO_SRC%\research\evidence"
+          "%Q121R6_PY%" -c "import json; from pathlib import Path; src=Path(r'%GITHUB_WORKSPACE%\q121r6-final\result.json'); p=json.loads(src.read_text(encoding='utf-8')); receipt={'schema_version':'1.0','receipt_type':'q121r6_compact_execution','workflow_run_id':%GITHUB_RUN_ID%,'workflow_sha':'%GITHUB_SHA%','status':p['status'],'population':p['population'],'target_subject_population':p['target_subject_population'],'interpretation':p['interpretation'],'governance':p['governance'],'safety':p['safety'],'receipt_fingerprint':p['receipt_fingerprint']}; out=Path(r'%REPO_SRC%')/'research'/'evidence'/f'q121r6_compact_execution_{%GITHUB_RUN_ID%}.json'; out.write_text(json.dumps(receipt,ensure_ascii=False,sort_keys=True,indent=2)+'\n',encoding='utf-8')"
+          if errorlevel 1 exit /b 1
+          "%Q121R6_PY%" -c "from pathlib import Path; import shutil; src=Path(r'%REPO_SRC%')/'research'/'evidence'/f'q121r6_compact_execution_{%GITHUB_RUN_ID%}.json'; dst=Path(r'%REPO_SRC%')/'research'/'evidence'/'q121r6_compact_execution_latest.json'; shutil.copy2(src,dst)"
+          if errorlevel 1 exit /b 1
+          cd /d "%REPO_SRC%" || exit /b 1
+          git init -q
+          git remote add origin https://x-access-token:%GITHUB_TOKEN%@github.com/DWR-debug/trading-agent-public.git
+          git fetch --depth=1 origin master
+          git checkout -q -B master FETCH_HEAD
+          git add research/evidence/q121r6_compact_execution_%GITHUB_RUN_ID%.json research/evidence/q121r6_compact_execution_latest.json
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "EVIDENCE: persist Q121-R6 compact execution receipt"
+          git push origin HEAD:master
       - uses: actions/upload-artifact@v6
         with:
           name: q121r6-final-${{ github.run_id }}
