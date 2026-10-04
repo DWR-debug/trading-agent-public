@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T21:47:31.293805+00:00",
+  "generated_at_utc": "2026-10-04T21:47:50.334266+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -3522,6 +3522,21 @@
     ],
     "recent_commits": [
       {
+        "message": "GOV: distinguish complete, blocked, and incomplete Q198 PIT census",
+        "sha": "9c7c8bf6423601c9ada291adff4c2847aba91f55",
+        "timestamp": "2026-10-04T23:47:38+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "27647ac4b8b8c528db4a3983ea37043b276c8710",
+        "timestamp": "2026-10-04T21:47:35Z"
+      },
+      {
+        "message": "GOV: require complete historical Q198 By-Date API census",
+        "sha": "3fa8ff4d2744b70bd6a840fda1eeb0be0245754d",
+        "timestamp": "2026-10-04T23:47:31+02:00"
+      },
+      {
         "message": "TEST: validate Q198 historical By-Date API parser and lineage flags",
         "sha": "5c29848b19696de57c3b4f71c5a90254ead649b7",
         "timestamp": "2026-10-04T23:47:20+02:00"
@@ -3545,21 +3560,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "c081113b631c92c7384952962d04d5bec2808b2f",
         "timestamp": "2026-10-04T21:46:20Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "086f266c7a83ea710837f70d8753d17862ceb7f1",
-        "timestamp": "2026-10-04T21:46:06Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "37b9f342e0163d5a04a6b70ca2e72a90ba9cb162",
-        "timestamp": "2026-10-04T21:46:04Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "7b97cf0155ffefc477a0da209113c20e1da0702e",
-        "timestamp": "2026-10-04T21:46:02Z"
       }
     ]
   },
@@ -3644,7 +3644,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5c29848b19696de57c3b4f71c5a90254ead649b7",
+  "source_master_sha": "9c7c8bf6423601c9ada291adff4c2847aba91f55",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -3758,6 +3758,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37237495000"
+    "run_id": "37237514805"
   }
 }
