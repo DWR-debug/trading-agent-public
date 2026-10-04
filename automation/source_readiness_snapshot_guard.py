@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
+RULE_VERSION = "GROK-PRINCIPLE-2026-10-04-V1"
 
 RECEIPTS = {
     "Q185-Q186": ROOT / "research/evidence/q185_q186_source_feasibility_latest.json",
@@ -85,6 +86,7 @@ def audit() -> dict[str, Any]:
     out = {
         "schema_version": "1.0",
         "receipt_type": "source_readiness_snapshot_durability_guard",
+        "rule_version": RULE_VERSION,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "status": "PROVISIONAL_SOURCE_READINESS_REQUIRES_IMMUTABLE_HISTORICAL_BINDING" if provisional else "ALL_SOURCE_READINESS_DURABLE",
         "entries": entries,
