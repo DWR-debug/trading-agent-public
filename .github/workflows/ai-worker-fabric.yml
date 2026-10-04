@@ -334,14 +334,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          slot=$(( $(date -u +%s) / 21600 % 6 ))
+          slot=$(( $(date -u +%s) / 21600 % 7 ))
           case "$slot" in
-            0) task_id='AI-2026-09-29-Q091-ADVERSARIAL' ;;
-            1) task_id='AI-2026-09-28-Q089-ADVERSARIAL' ;;
-            2) task_id='AI-2026-09-28-UNUSUAL-FRONTIER' ;;
-            3) task_id='AI-2026-09-30-Q100-FRONTIER-FEASIBILITY' ;;
-            4) task_id='AI-2026-09-30-Q101-NEGATIVE-EVIDENCE' ;;
-            5) task_id='AI-2026-09-30-Q102-REGIME-STATE-DESIGN' ;;
+            0) task_id='AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT' ;;
+            1) task_id='AI-2026-09-29-Q091-ADVERSARIAL' ;;
+            2) task_id='AI-2026-09-28-Q089-ADVERSARIAL' ;;
+            3) task_id='AI-2026-09-28-UNUSUAL-FRONTIER' ;;
+            4) task_id='AI-2026-09-30-Q100-FRONTIER-FEASIBILITY' ;;
+            5) task_id='AI-2026-09-30-Q101-NEGATIVE-EVIDENCE' ;;
+            6) task_id='AI-2026-09-30-Q102-REGIME-STATE-DESIGN' ;;
             *) exit 1 ;;
           esac
           path="ai_requests/$task_id.json"
@@ -448,17 +449,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          slot=$(( $(date -u +%s) / 21600 % 6 ))
+          slot=$(( $(date -u +%s) / 21600 % 7 ))
           case "$slot" in
-            0) task_id='AI-2026-09-29-Q091-ADVERSARIAL' ;;
-            1) task_id='AI-2026-09-28-Q089-ADVERSARIAL' ;;
-            2) task_id='AI-2026-09-28-UNUSUAL-FRONTIER' ;;
-            3) task_id='AI-2026-09-30-Q100-FRONTIER-FEASIBILITY' ;;
-            4) task_id='AI-2026-09-30-Q101-NEGATIVE-EVIDENCE' ;;
-            5) task_id='AI-2026-09-30-Q102-REGIME-STATE-DESIGN' ;;
+            0) task_id='AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT' ;;
+            1) task_id='AI-2026-09-29-Q091-ADVERSARIAL' ;;
+            2) task_id='AI-2026-09-28-Q089-ADVERSARIAL' ;;
+            3) task_id='AI-2026-09-28-UNUSUAL-FRONTIER' ;;
+            4) task_id='AI-2026-09-30-Q100-FRONTIER-FEASIBILITY' ;;
+            5) task_id='AI-2026-09-30-Q101-NEGATIVE-EVIDENCE' ;;
+            6) task_id='AI-2026-09-30-Q102-REGIME-STATE-DESIGN' ;;
             *) exit 1 ;;
           esac
           case "$task_id" in
+            AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT) path='ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json' ;;
             AI-2026-09-29-Q091-ADVERSARIAL) path='ai_requests/AI-2026-09-29-Q091-ADVERSARIAL.json' ;;
             AI-2026-09-28-Q089-ADVERSARIAL) path='ai_requests/AI-2026-09-28-Q089-ADVERSARIAL.json' ;;
             AI-2026-09-28-UNUSUAL-FRONTIER) path='ai_requests/AI-2026-09-28-UNUSUAL-FRONTIER.json' ;;
