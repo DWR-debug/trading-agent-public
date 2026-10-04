@@ -163,10 +163,11 @@ def main() -> int:
         pages.append(item)
 
     parsed = [x for x in pages if x.get("status") == "PARSED"]
+    source_access_blocked = len(parsed) == 0 and all(x.get("status") == "SOURCE_UNAVAILABLE" for x in pages)
     result = {
         "schema_version": "1.0",
         "task_id": "Q-2026-10-04-Q198-HISTORICAL-PIT-CLOCK-CENSUS",
-        "status": "Q198_PIT_CLOCK_CENSUS_COMPLETED",
+        "status": "Q198_PIT_CLOCK_CENSUS_SOURCE_ACCESS_BLOCKED" if source_access_blocked else "Q198_PIT_CLOCK_CENSUS_COMPLETED",
         "frozen_dates": list(FROZEN_DATES),
         "pages": pages,
         "aggregate": {
