@@ -36,12 +36,12 @@ PROBES: dict[str, dict[str, Any]] = {
         "clock_contract": "PatentsView bulk refresh/vintage is distinct from patent issue/publication timing.",
         "archive_contract": "Historical disambiguated patent/citation coverage must be reproduced from public USPTO data.",
     },
-    "USPTO_PATENT_GRANTS": {
+    "USPTO_OFFICIAL_GAZETTE": {
         "candidate_ids": ["Q186"],
-        "url": "https://developer.uspto.gov/product/patent-grant-bibliographic-datasgml",
-        "markers": ["patent grant", "1976", "weekly"],
-        "clock_contract": "Grant issue date is the candidate event boundary; weekly publication and later bulk refresh remain separate.",
-        "archive_contract": "Grant/citation archive completeness and citation-publication ordering must be reproduced.",
+        "url": "https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents",
+        "markers": ["published weekly on Tuesday", "most recent 52 weekly issues", "patent granted"],
+        "clock_contract": "The Official Gazette is an official weekly publication boundary; issue date is distinct from later bulk-data refreshes.",
+        "archive_contract": "Weekly issues are publicly listed; historical download/archive completeness for the chosen window must be reproduced before PIT validity.",
     },
     "USPTO_EGRANTS": {
         "candidate_ids": ["Q186"],
@@ -54,7 +54,7 @@ PROBES: dict[str, dict[str, Any]] = {
 
 CANDIDATE_SOURCES = {
     "Q185": ["COURTLISTENER_COVERAGE", "COURTLISTENER_RECAP"],
-    "Q186": ["USPTO_PATENTSVIEW", "USPTO_PATENT_GRANTS", "USPTO_EGRANTS"],
+    "Q186": ["USPTO_PATENTSVIEW", "USPTO_OFFICIAL_GAZETTE", "USPTO_EGRANTS"],
 }
 
 def fetch(url: str) -> tuple[int, str]:
