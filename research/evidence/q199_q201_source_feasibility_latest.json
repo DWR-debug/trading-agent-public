@@ -47,7 +47,7 @@
           ]
         }
       ],
-      "content_sha256": "525947795e31eb94d8add59da22bc0181d2165fa86ef3c1536c81953de7c59e9",
+      "content_sha256": "7f5231e5b9e85937665a8697b54aa2fc80bc41f1f658b1cca7c3897f2f8e5f9f",
       "scientific_boundary": false
     },
     "CLINICALTRIALS_RESULTS": {
@@ -70,7 +70,20 @@
   },
   "history_results": {
     "CLINICALTRIALS_HISTORY": {
-      "url": "https://clinicaltrials.gov/study/NCT00125528?a=2&tab=history",
+      "urls": [
+        "https://clinicaltrials.gov/study/NCT00125528?a=2&tab=history",
+        "https://clinicaltrials.gov/ct2/history/NCT00125528"
+      ],
+      "attempts": [
+        {
+          "url": "https://clinicaltrials.gov/study/NCT00125528?a=2&tab=history",
+          "http_status": 200
+        },
+        {
+          "url": "https://clinicaltrials.gov/ct2/history/NCT00125528",
+          "http_status": 200
+        }
+      ],
       "http_status": 200,
       "probe_classification": "HISTORY_MARKER_MISMATCH",
       "missing_markers": [
@@ -121,5 +134,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "receipt_fingerprint": "8c41468f1766e80795658480b4694251ef22539d2c767c5c45a9d37de94e25e3"
+  "receipt_fingerprint": "850e924128e42366491145a7b0e847e61f759f9aca4b85d5a1de29695ae835f2"
 }
