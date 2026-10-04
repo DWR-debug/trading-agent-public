@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T23:05:25.594566+00:00",
+  "generated_at_utc": "2026-10-04T23:05:46.071145+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4136,6 +4136,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: final dashboard refresh after Q205 canonical integration",
+        "sha": "dd41d58d4cae53579d299f40a8ea8c34d3dd0742",
+        "timestamp": "2026-10-05T01:05:35+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f5f433760c25beac174aeb363f4037f611201736",
+        "timestamp": "2026-10-04T23:05:28Z"
+      },
+      {
         "message": "OPS: refresh resource dashboard snapshot",
         "sha": "16d47d753e78af861a0f8321ee8e893749a441eb",
         "timestamp": "2026-10-04T23:05:20Z"
@@ -4164,16 +4174,6 @@
         "message": "OPS: record Groq free adversarial worker state",
         "sha": "198a7c0a2431e20e54d1c8583b8a9b814a519af8",
         "timestamp": "2026-10-04T23:04:07Z"
-      },
-      {
-        "message": "AI: extend adversarial source-PIT review to Q205",
-        "sha": "15590a8d1eef85ded6cd7abec1caf6b215c281c3",
-        "timestamp": "2026-10-05T01:03:52+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4f3884b62c039301dd9995678fe79aa68e56d736",
-        "timestamp": "2026-10-04T23:03:44Z"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "16d47d753e78af861a0f8321ee8e893749a441eb",
+  "source_master_sha": "dd41d58d4cae53579d299f40a8ea8c34d3dd0742",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37242460974"
+    "run_id": "37242486311"
   }
 }
