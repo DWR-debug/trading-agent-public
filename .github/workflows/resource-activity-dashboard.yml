@@ -40,6 +40,22 @@ jobs:
           runners = gh('/repos/'+repo+'/actions/runners?per_page=100').get('runners', [])
           queued = gh('/repos/'+repo+'/actions/runs?status=queued&per_page=50').get('workflow_runs', [])
           running = gh('/repos/'+repo+'/actions/runs?status=in_progress&per_page=50').get('workflow_runs', [])
+          active_jobs = []
+          for run in running[:20]:
+              run_id = run.get('id')
+              if not run_id:
+                  continue
+              jobs = gh('/repos/'+repo+'/actions/runs/'+str(run_id)+'/jobs?per_page=100').get('jobs', [])
+              for job in jobs:
+                  if job.get('status') == 'in_progress':
+                      active_jobs.append({
+                          'run_id': run_id,
+                          'workflow': run.get('name'),
+                          'job_name': job.get('name'),
+                          'runner_name': job.get('runner_name'),
+                          'runner_os': job.get('runner_os'),
+                          'started_at': job.get('started_at')
+                      })
           def load(path):
               try: return json.loads(Path(path).read_text(encoding='utf-8'))
               except Exception: return {'status':'UNAVAILABLE'}
@@ -50,7 +66,7 @@ jobs:
               'generated_at_utc': datetime.now(timezone.utc).isoformat(),
               'repository': repo,
               'runners': [{'name':r.get('name'),'os':r.get('os'),'status':r.get('status'),'busy':r.get('busy'),'labels':[x.get('name') for x in r.get('labels',[])]} for r in runners],
-              'actions': {'queued':[{'name':x.get('name'),'run_id':x.get('id')} for x in queued[:20]], 'in_progress':[{'name':x.get('name'),'run_id':x.get('id')} for x in running[:20]]},
+              'actions': {'queued':[{'name':x.get('name'),'run_id':x.get('id')} for x in queued[:20]], 'in_progress':[{'name':x.get('name'),'run_id':x.get('id')} for x in running[:20]], 'active_jobs':active_jobs},
               'free_ai': ai,
               'two_lane': {'status':os_state.get('two_lane_research_mode',{}).get('status'),'lane_a':os_state.get('two_lane_research_mode',{}).get('lane_a',{}).get('focus',[]),'lane_b':os_state.get('two_lane_research_mode',{}).get('lane_b',{}).get('focus',[])},
               's10': {'status':s10.get('status'),'eligible':s10.get('eligible'),'latest_utility_run_id':s10.get('latest_utility_run_id')},
