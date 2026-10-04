@@ -39,26 +39,86 @@ permissions:
   contents: write
 
 jobs:
-  worker:
-    if: >-
-      ${{ github.repository == 'DWR-debug/trading-agent-public' &&
-          (
-            (github.event_name == 'workflow_dispatch' && matrix.task == github.event.inputs.task_id) ||
-            (matrix.task == 'AI-2026-10-04-Q187-Q192-ADVERSARIAL' &&
-             contains(github.event.head_commit.modified, 'research/evidence/q187_q192_source_feasibility_latest.json')) ||
-            (matrix.task == 'AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT' &&
-             (
-               contains(github.event.head_commit.modified, 'automation/research_os_scheduler.py') ||
-               contains(github.event.head_commit.modified, 'automation/research_hypothesis_compiler.py') ||
-               contains(github.event.head_commit.modified, 'automation/autonomous_control_plane.py') ||
-               contains(github.event.head_commit.modified, '.github/workflows/permanent-pc-research-loop.yml') ||
-               contains(github.event.head_commit.modified, '.github/workflows/q121r6-windows-independent-reproduction.yml') ||
-               contains(github.event.head_commit.modified, '.github/workflows/q185-q186-windows-reproduction.yml') ||
-               contains(github.event.head_commit.modified, '.github/workflows/self-hosted-continuous-qa.yml')
-             )) ||
-            (github.event_name == 'workflow_dispatch' && matrix.task == github.event.inputs.task_id)
+  plan_openrouter:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    outputs:
+      tasks: ${{ steps.plan.outputs.tasks }}
+    steps:
+      - name: Checkout changed commits
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+
+      - name: Plan affected review tasks
+        id: plan
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_BEFORE: ${{ github.event.before }}
+          GITHUB_SHA: ${{ github.sha }}
+          TASK_ID: ${{ github.event.inputs.task_id }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          if os.environ['EVENT_NAME'] == 'workflow_dispatch':
+              task = os.environ.get('TASK_ID', '').strip()
+              if not task:
+                  raise SystemExit('workflow_dispatch requires task_id')
+              tasks = [task]
+          else:
+              before = os.environ.get('EVENT_BEFORE', '')
+              after = os.environ['GITHUB_SHA']
+              if not before or before == '0000000000000000000000000000000000000000':
+                  command = ['git', 'diff-tree', '--no-commit-id', '--name-only', '-r', after]
+              else:
+                  command = ['git', 'diff', '--name-only', before, after]
+              changed = set(subprocess.check_output(command, text=True).splitlines())
+              tasks = []
+              q187_paths = {'research/evidence/q187_q192_source_feasibility_latest.json'}
+              orch_paths = {
+                  'automation/research_os_scheduler.py',
+                  'automation/research_hypothesis_compiler.py',
+                  'automation/autonomous_control_plane.py',
+                  '.github/workflows/permanent-pc-research-loop.yml',
+                  '.github/workflows/q121r6-windows-independent-reproduction.yml',
+                  '.github/workflows/q185-q186-windows-reproduction.yml',
+                  '.github/workflows/self-hosted-continuous-qa.yml',
+              }
+              if changed.intersection(q187_paths):
+                  tasks.append('AI-2026-10-04-Q187-Q192-ADVERSARIAL')
+              if changed.intersection(orch_paths):
+                  tasks.append('AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT')
+              tasks = sorted(set(tasks))
+
+          allowed_manual = {
+              'AI-2026-10-04-Q187-Q192-ADVERSARIAL',
+              'AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT',
+              'AI-2026-09-29-Q091-ADVERSARIAL',
+              'AI-2026-09-28-Q089-ADVERSARIAL',
+              'AI-2026-09-28-UNUSUAL-FRONTIER',
+              'AI-2026-09-30-Q100-FRONTIER-FEASIBILITY',
+              'AI-2026-09-30-Q101-NEGATIVE-EVIDENCE',
+              'AI-2026-09-30-Q102-REGIME-STATE-DESIGN',
+          }
+          if any(task not in allowed_manual for task in tasks):
+              raise SystemExit(f'unexpected AI task: {tasks}')
+          if not tasks:
+              tasks = ['__none__']
+          Path(os.environ['GITHUB_OUTPUT']).open('a', encoding='utf-8').write(
+              'tasks=' + json.dumps(tasks) + '\\n'
           )
-        }}
+          PY
+
+  worker:    needs: plan_openrouter
+    if: ${{ needs.plan_openrouter.outputs.tasks != '["__none__"]' }}
+
     strategy:
       fail-fast: false
       matrix:
