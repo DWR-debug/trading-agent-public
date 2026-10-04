@@ -15,6 +15,8 @@ Vor PROJECT_STATUS.md wird jetzt immer auch der dauerhafte Trading Agent OS-Vert
 - docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md
 - docs/SAMSUNG_ANDROID_PHONE_FLEET.md
 - ops/android_phone_resources.json
+- research/candidates/orthogonal_candidate_specs_2026-10-04.json
+- research/reviews/grok_bounded_review_2026-10-04.json
 
 Diese beiden Dateien beschreiben ausschließlich den aktuellen operativen Zustand und werden über
 .github/workflows/current-status-sync.yml nach relevanten master-Pushes automatisch synchronisiert.
@@ -80,7 +82,7 @@ Der permanente Windows-Loop arbeitet mit zwei **eigenständigen Concurrency-Grup
 - **Lane A / Formal Readiness:** `local_reproduction` → `trading-agent-windows-research-capacity-v1`
 - **Lane B / Frontier Discovery:** `autonomous_frontier_qa` → `trading-agent-windows-frontier-v1`
 
-Der Frontier-Worker rotiert deterministisch durch vier 10-Schritt-Packs; das vierte Pack ist der aktuelle Q179–Q201-Prioritätsblock. Die separate `data_qa`-Lane bleibt im Worker verfügbar und die spezialisierten Q179–Q201-Workflows laufen zusätzlich auf den dafür vorgesehenen Hosted-Lanes. Dadurch wird aktuelle Frontier-Arbeit nicht durch lange Reproduktion blockiert. Der langsame lokale KI-Worker ist aus dem 10-Minuten-Forschungsloop herausgelöst und läuft separat über `windows-local-ai-worker.yml`.
+Der Frontier-Worker rotiert deterministisch durch vier 10-Schritt-Packs; das vierte Pack ist der aktuelle Q179–Q201-Prioritätsblock. Die Kandidatenentwicklung für die daraus priorisierten orthogonalen Mechanismen wird zusätzlich über `orthogonal-candidate-development.yml` als rein mechanische Design-/Governance-Prüfung ausgeführt. Die separate `data_qa`-Lane bleibt im Worker verfügbar und die spezialisierten Q179–Q201-Workflows laufen zusätzlich auf den dafür vorgesehenen Hosted-Lanes. Dadurch wird aktuelle Frontier-Arbeit nicht durch lange Reproduktion blockiert. Der langsame lokale KI-Worker ist aus dem 10-Minuten-Forschungsloop herausgelöst und läuft separat über `windows-local-ai-worker.yml`.
 
 ## Dauerhafte Ressourcenbeschränkung
 
@@ -119,7 +121,7 @@ Bei jedem neuen `trading agent`-Chat:
 14. Für die konkrete Aufgabe jede sinnvolle, **kostenfreie und aktuell verfügbare** Ressource
    aktiv routen; nicht auf eine einzelne Ressource warten, wenn eine unabhängige Aufgabe parallel
    anders ausgeführt werden kann.
-14. Erst danach Änderungen, Research oder neue Hypothesen vornehmen.
+15. Erst danach Änderungen, Research oder neue Hypothesen vornehmen.
 
 ### Pflicht-Ressourcencheck bei jedem neuen Chat
 
