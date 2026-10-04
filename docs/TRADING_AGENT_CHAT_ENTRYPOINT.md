@@ -76,11 +76,11 @@ Unteragenten liefern Arbeitsmaterial, nicht Evidenz. Ihre Ausgaben werden nicht 
 
 ## Windows-Auslastungsmodell
 
-Der permanente Windows-Loop arbeitet mit zwei **eigenständigen Concurrency-Gruppen**:
-- `local_reproduction` → `trading-agent-windows-research-capacity-v1`
-- `data_qa` → `trading-agent-windows-research-data-qa-v1`
+Der permanente Windows-Loop arbeitet mit zwei **eigenständigen Concurrency-Gruppen**, die jetzt exakt den verbindlichen Forschungs-Lanes entsprechen:
+- **Lane A / Formal Readiness:** `local_reproduction` → `trading-agent-windows-research-capacity-v1`
+- **Lane B / Frontier Discovery:** `autonomous_frontier_qa` → `trading-agent-windows-frontier-v1`
 
-Dadurch kann ein langer Reproduktionslauf nur seine eigene Lane blockieren. Die Daten-QA-Lane bleibt unabhängig disponierbar. Der langsame lokale KI-Worker ist aus dem 10-Minuten-Forschungsloop herausgelöst und läuft separat über `windows-local-ai-worker.yml`.
+Der Frontier-Worker rotiert deterministisch durch vier 10-Schritt-Packs; das vierte Pack ist der aktuelle Q179–Q201-Prioritätsblock. Die separate `data_qa`-Lane bleibt im Worker verfügbar und die spezialisierten Q179–Q201-Workflows laufen zusätzlich auf den dafür vorgesehenen Hosted-Lanes. Dadurch wird aktuelle Frontier-Arbeit nicht durch lange Reproduktion blockiert. Der langsame lokale KI-Worker ist aus dem 10-Minuten-Forschungsloop herausgelöst und läuft separat über `windows-local-ai-worker.yml`.
 
 ## Dauerhafte Ressourcenbeschränkung
 
@@ -155,6 +155,27 @@ Ein neuer Chat darf sich niemals allein auf den Ressourcenstand eines vorherigen
 **Runner-, Agenten-, Authentifizierungs- und Workflow-Status sind flüchtig und müssen neu geprüft
 werden.** Repository-/Evidence-Dokumente liefern Konfiguration und Governance; Live-GitHub-/
 Runner-Informationen liefern die aktuelle Verfügbarkeit.
+
+### Persistenter Sitzungsanker gegen Chat-Split-Brüche
+
+Die Modell-Erinnerung ist **kein aktueller Zustandspeicher**. Sie darf dauerhafte Regeln, Architektur,
+Quellenhierarchie und bekannte Governance-Prinzipien enthalten, aber niemals als Autorität für einen
+aktuellen SHA, Runner-Zustand, Agentenstatus, Workflow-Run oder wissenschaftlichen Receipt dienen.
+
+Jede neue `trading agent`-Sitzung setzt vor der ersten Änderung einen frischen
+`MASTER_SHA_AT_START` aus dem tatsächlich gelesenen `master`. Anschließend wird
+`docs/CURRENT_STATUS.md` gegen `research/evidence/current_operational_state.json` und den
+aktuellen `master` abgeglichen. Weicht `source_master_sha` vom aktuellen technischen Stand ab,
+ist dies zunächst **Status-Drift**, nicht automatisch ein wissenschaftlicher Widerspruch. Der
+Status-Synchronisator wird ausgelöst bzw. seine Ausführung verifiziert, bevor neue Research-Fakten
+aus dem veralteten Snapshot übernommen werden.
+
+Für von früheren Chats kopierte Statusmeldungen gilt dieselbe Regel: Sie sind Handoff-Kontext und
+werden nie ungeprüft als Wahrheit übernommen. Nach wesentlichen Arbeiten wird ein neuer
+`MASTER_SHA_AT_END` erfasst; kanonische Statusdateien müssen wieder auf einen nachweisbaren,
+aktuellen Source-SHA synchronisiert sein. Der Workflow `.github/workflows/current-status-drift-guard.yml`
+überbrückt dabei insbesondere den GitHub-Sonderfall, dass `GITHUB_TOKEN`-Pushes keine neuen
+Push-Workflow-Runs auslösen, während `workflow_dispatch` ausdrücklich ausgenommen ist.
 
 ## Automatischer Ressourcen-Preflight — bei jedem neuen `trading agent`-Chat
 
