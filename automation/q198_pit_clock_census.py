@@ -325,7 +325,7 @@ def main() -> int:
     blocked = [x for x in pages if x.get("status") == "SOURCE_ACCESS_BLOCKED"]
     if len(blocked) == len(pages):
         overall_status = "Q198_PIT_CLOCK_CENSUS_BLOCKED_SOURCE_ACCESS"
-    elif len(parsed) >= 3:
+    elif len(api_parsed) == len(pages):
         overall_status = "Q198_PIT_CLOCK_CENSUS_COMPLETED"
     else:
         overall_status = "Q198_PIT_CLOCK_CENSUS_INCOMPLETE_SOURCE_ACCESS"
