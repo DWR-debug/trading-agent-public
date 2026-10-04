@@ -65,16 +65,15 @@ def get_ciks() -> tuple[dict[str, int], str]:
         raise RuntimeError("MISSING_Q107_CIK_MAPPING")
     return mapping, sha(body)
 
-def sec_sample(symbol: str, cik: int) -> dict[str, object]:
-    url = f"https://data.sec.gov/submissions/CIK{cik:010d}.json"
-    status, body = fetch(url)
-    if status != 200:
-        return {"symbol": symbol, "status": "INFRA_ACCESS_BLOCKED", "http_status": status, "source_sha256": sha(body)}
-    payload = json.loads(body)
-    recent = payload.get("filings", {}).get("recent", {})
+
+def _submission_rows(data: dict[str, object], symbol: str) -> list[dict[str, str]]:
+    filings = data.get("filings")
+    recent = filings.get("recent") if isinstance(filings, dict) else data
+    if not isinstance(recent, dict):
+        return []
     keys = ("filingDate", "acceptanceDateTime", "accessionNumber", "form")
-    n = max((len(recent.get(k, [])) for k in keys), default=0)
-    rows=[]
+    n = max((len(recent.get(k, [])) for k in keys if isinstance(recent.get(k), list)), default=0)
+    rows = []
     for i in range(n):
         filing_date = recent.get("filingDate", [None] * n)[i] if i < len(recent.get("filingDate", [])) else None
         acceptance = recent.get("acceptanceDateTime", [None] * n)[i] if i < len(recent.get("acceptanceDateTime", [])) else None
@@ -89,16 +88,99 @@ def sec_sample(symbol: str, cik: int) -> dict[str, object]:
             continue
         if START <= filing_day <= END:
             rows.append({
-                "symbol": symbol, "form": str(form), "filing_date": filing_day.isoformat(),
-                "acceptance_datetime_utc": accepted.isoformat(), "accession": str(accession),
+                "symbol": symbol,
+                "form": str(form),
+                "filing_date": filing_day.isoformat(),
+                "acceptance_datetime_utc": accepted.isoformat(),
+                "accession": str(accession),
             })
+    return rows
+
+
+def _overlapping_submission_files(payload: dict[str, object]) -> list[dict[str, object]]:
+    filings = payload.get("filings")
+    if not isinstance(filings, dict):
+        return []
+    files = filings.get("files")
+    if not isinstance(files, list):
+        return []
+    selected = []
+    for item in files:
+        if not isinstance(item, dict):
+            continue
+        try:
+            filing_from = date.fromisoformat(str(item["filingFrom"]))
+            filing_to = date.fromisoformat(str(item["filingTo"]))
+        except (KeyError, ValueError, TypeError):
+            continue
+        if filing_from <= END and filing_to >= START:
+            selected.append({
+                "name": str(item.get("name", "")),
+                "filing_count": int(item.get("filingCount", 0) or 0),
+                "filing_from": filing_from.isoformat(),
+                "filing_to": filing_to.isoformat(),
+            })
+    return sorted(selected, key=lambda item: (item["filing_from"], item["name"]))
+
+
+def sec_sample(symbol: str, cik: int) -> dict[str, object]:
+    url = f"https://data.sec.gov/submissions/CIK{cik:010d}.json"
+    status, body = fetch(url)
+    if status != 200:
+        return {"symbol": symbol, "status": "INFRA_ACCESS_BLOCKED", "http_status": status, "source_sha256": sha(body)}
+    payload = json.loads(body)
+    source_documents = [{
+        "kind": "current_submission_index",
+        "url": url,
+        "http_status": status,
+        "source_sha256": sha(body),
+    }]
+    rows = _submission_rows(payload, symbol)
+    historical_files = _overlapping_submission_files(payload)
+    for item in historical_files:
+        name = str(item["name"])
+        if not name:
+            continue
+        archive_url = f"https://data.sec.gov/submissions/{name}"
+        archive_status, archive_body = fetch(archive_url)
+        source_documents.append({
+            "kind": "historical_submission_file",
+            "name": name,
+            "filing_count": item["filing_count"],
+            "filing_from": item["filing_from"],
+            "filing_to": item["filing_to"],
+            "url": archive_url,
+            "http_status": archive_status,
+            "source_sha256": sha(archive_body),
+        })
+        if archive_status != 200:
+            continue
+        try:
+            archive_payload = json.loads(archive_body)
+        except json.JSONDecodeError:
+            continue
+        rows.extend(_submission_rows(archive_payload, symbol))
+    by_accession = {}
+    for row in rows:
+        accession = row["accession"]
+        previous = by_accession.get(accession)
+        if previous is None or tuple(row.values()) < tuple(previous.values()):
+            by_accession[accession] = row
+    rows = sorted(by_accession.values(), key=lambda r: (r["acceptance_datetime_utc"], r["accession"]))
     unique = len({r["accession"] for r in rows}) == len(rows)
     return {
-        "symbol": symbol, "status": "PIT_SAMPLE_RECONSTRUCTABLE" if rows and unique else "PIT_SAMPLE_UNRESOLVED",
-        "cik": f"{cik:010d}", "source_url": url, "source_sha256": sha(body),
-        "rows": sorted(rows, key=lambda r:(r["acceptance_datetime_utc"], r["accession"])),
-        "event_count": len(rows), "accessions_unique": unique,
+        "symbol": symbol,
+        "status": "PIT_SAMPLE_RECONSTRUCTABLE" if rows and unique else "PIT_SAMPLE_UNRESOLVED",
+        "cik": f"{cik:010d}",
+        "source_url": url,
+        "source_sha256": sha(body),
+        "historical_submission_files_consulted": historical_files,
+        "source_documents": source_documents,
+        "rows": rows,
+        "event_count": len(rows),
+        "accessions_unique": unique,
     }
+
 
 def pageview_sample(symbol: str, title: str) -> dict[str, object]:
     article = urllib.parse.quote(title, safe="")
