@@ -8,35 +8,33 @@
         "https://api.usaspending.gov/docs/endpoints"
       ],
       "http_statuses": [
-        200
+        599
       ],
-      "reachable": true,
-      "all_urls_reachable": true,
-      "required_markers_present": true,
-      "probe_classification": "PASS",
-      "missing_markers": [],
+      "reachable": false,
+      "all_urls_reachable": false,
+      "required_markers_present": false,
+      "probe_classification": "UNREACHABLE",
+      "missing_markers": [
+        "Endpoints do not currently require any authorization",
+        "spending_by_transaction"
+      ],
       "attempts": [
         {
           "url": "https://api.usaspending.gov/docs/endpoints",
-          "http_status": 200,
-          "missing_markers": []
+          "http_status": 599,
+          "missing_markers": [
+            "Endpoints do not currently require any authorization",
+            "spending_by_transaction"
+          ]
         }
       ],
       "clock_contract": "Award action date is distinct from the time the transaction record becomes publicly retrievable. Formal PIT must prove a public boundary or conservatively shift use to the next eligible session.",
-      "content_sha256": "afd56dfed11ad19dbde864c0360250611b5c19f8b6a3012d61cbee186cf05d20",
+      "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "transaction_probe": {
         "url": "https://api.usaspending.gov/api/v2/search/spending_by_transaction/",
-        "http_status": 200,
+        "http_status": 599,
         "required_method": "POST",
-        "required_keys_present": true,
-        "result_keys": [
-          "Action Date",
-          "Award ID",
-          "Recipient Name",
-          "Transaction Amount",
-          "generated_internal_id",
-          "internal_id"
-        ]
+        "required_keys_present": false
       }
     },
     "FDA_SRLC": {
@@ -69,7 +67,7 @@
         }
       ],
       "clock_contract": "Supplement/date/update fields describe the labeling event and database state separately. Exact first-public observation and later corrections must be reconstructed before same-day use.",
-      "content_sha256": "e11de24e55726275e2a26efa7f96a28c8ae63de0c7eccf33bc026478780e0517"
+      "content_sha256": "582153ff5af9e61fba9f8a6dbbfe10d9a69d73e5f81f60c53160909d62ff4968"
     },
     "CPSC_RECALLS": {
       "urls": [
@@ -134,7 +132,7 @@
         }
       ],
       "clock_contract": "Facility/event dates are not interchangeable with the public ECHO refresh/extraction boundary. Historical PIT must use the documented refresh clock and prevent later refreshes from rewriting the prefix.",
-      "content_sha256": "889e8b30f42081bbdfcb01a839097d7f6dafe3b73b116f24fb45ada98c08427d"
+      "content_sha256": "bf7bfe9529386927f182d087c6d3b02938ba0b34fc5703c79bc7d4025b05f081"
     },
     "USPTO_PATENT": {
       "urls": [
@@ -188,7 +186,7 @@
         }
       ],
       "clock_contract": "Crossref deposit/publication metadata is not automatically an exact public-dissemination timestamp; historical stage ordering must be proven.",
-      "content_sha256": "7bd45de64b3e2ef8b3e0a99e3e08d27d3e8ac8fb2d80b677f3fc254b586a41b7"
+      "content_sha256": "e3b8a592888c81795fdaa9642d95dcc72054dc741db2739c129955a4560f93bd"
     },
     "FDA_SHORTAGES": {
       "urls": [
@@ -238,13 +236,13 @@
         }
       ],
       "clock_contract": "Shortage start/resolution dates are distinct from first public observation. Historical daily-list state must be reconstructed without allowing current records to overwrite earlier prefixes.",
-      "content_sha256": "e6c1198f8c5457bd9e72c018fa87c87f5f9818f574cfe95cf3b9aa19250438e6"
+      "content_sha256": "80646ccfac7ab1f0670ae35a4921b1d3d35a28bb492a8358aaf50fc0aec0788c"
     }
   },
   "candidate_results": [
     {
       "candidate_id": "Q187",
-      "status": "SOURCE_PROBES_PASSED",
+      "status": "BLOCKED_SOURCE_PROBE",
       "source_ids": [
         "USASPENDING"
       ]
@@ -311,5 +309,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "receipt_fingerprint": "fe0b8deb8c564377b12f700bfd4a1c31eb32ebcfc6a75dc3b1f512df8414a97c"
+  "receipt_fingerprint": "a52de2213224271da8c4e1d03a775801fd03fb8b75be346f6adcd9d3a904c1f8"
 }
