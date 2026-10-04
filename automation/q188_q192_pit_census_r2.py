@@ -1,4 +1,4 @@
-"""Q188-Q192 historical/PIT census R1.
+"""Q188-Q192 historical/PIT census R2.
 
 Discovery/PIT only. This compiler tests whether each candidate's public source
 surface exposes the structural fields needed for a historical public-state
@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Any
 
 
-UA = "trading-agent-public/Q188-Q192-PIT-census-R1/1"
+UA = "trading-agent-public/Q188-Q192-PIT-census-R2/2"
 
 
 def fetch(url: str, *, limit: int = 2_000_000) -> tuple[int, dict[str, str], bytes]:
