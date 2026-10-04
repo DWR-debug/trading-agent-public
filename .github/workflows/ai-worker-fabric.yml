@@ -12,6 +12,13 @@ on:
       - ".github/workflows/q121r6-windows-independent-reproduction.yml"
       - ".github/workflows/q185-q186-windows-reproduction.yml"
       - ".github/workflows/self-hosted-continuous-qa.yml"
+      - "research/evidence/q185_q186_source_feasibility_latest.json"
+      - "research/evidence/q193_q196_source_feasibility_latest.json"
+      - "research/evidence/q197_q198_source_feasibility_latest.json"
+      - "research/evidence/q199_q201_source_feasibility_latest.json"
+      - "automation/source_readiness_snapshot_guard.py"
+      - "automation/orthogonal_pit_next_gate.py"
+      - "ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json"
   # OpenRouter free is deliberately event-driven. Repeating unchanged research
   # prompts on a timer wastes scarce free capacity without increasing information.
   workflow_run:
@@ -26,6 +33,7 @@ on:
         type: choice
         options:
           - AI-2026-10-04-Q187-Q192-ADVERSARIAL
+          - AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT
           - AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT
           - AI-2026-09-29-Q091-ADVERSARIAL
           - AI-2026-09-28-Q089-ADVERSARIAL
@@ -81,8 +89,15 @@ jobs:
           elif os.environ['EVENT_NAME'] == 'workflow_run':
               name = os.environ.get('WORKFLOW_RUN_NAME', '').strip()
               conclusion = os.environ.get('WORKFLOW_RUN_CONCLUSION', '').strip()
-              if name == 'Q187-Q192 Source Feasibility' and conclusion == 'success':
-                  tasks = ['AI-2026-10-04-Q187-Q192-ADVERSARIAL']
+              if conclusion == 'success' and name in {
+                  'Q185-Q186 Source Feasibility',
+                  'Q187-Q192 Source Feasibility',
+                  'Q193-Q196 Source Feasibility',
+                  'Q197-Q198 Source Feasibility',
+                  'Q199-Q201 Source Feasibility',
+                  'Orthogonal PIT Next Gate',
+              }:
+                  tasks = ['AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT']
               else:
                   tasks = []
           else:
@@ -95,6 +110,15 @@ jobs:
               changed = set(subprocess.check_output(command, text=True).splitlines())
               tasks = []
               q187_paths = {'research/evidence/q187_q192_source_feasibility_latest.json'}
+              global_paths = {
+                  'research/evidence/q185_q186_source_feasibility_latest.json',
+                  'research/evidence/q193_q196_source_feasibility_latest.json',
+                  'research/evidence/q197_q198_source_feasibility_latest.json',
+                  'research/evidence/q199_q201_source_feasibility_latest.json',
+                  'automation/source_readiness_snapshot_guard.py',
+                  'automation/orthogonal_pit_next_gate.py',
+                  'ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json',
+              }
               orch_paths = {
                   'automation/research_os_scheduler.py',
                   'automation/research_hypothesis_compiler.py',
@@ -106,12 +130,15 @@ jobs:
               }
               if changed.intersection(q187_paths):
                   tasks.append('AI-2026-10-04-Q187-Q192-ADVERSARIAL')
+              if changed.intersection(global_paths):
+                  tasks.append('AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT')
               if changed.intersection(orch_paths):
                   tasks.append('AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT')
               tasks = sorted(set(tasks))
 
           allowed_manual = {
               'AI-2026-10-04-Q187-Q192-ADVERSARIAL',
+              'AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT',
               'AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT',
               'AI-2026-09-29-Q091-ADVERSARIAL',
               'AI-2026-09-28-Q089-ADVERSARIAL',
@@ -199,6 +226,7 @@ jobs:
             AI-2026-09-30-Q102-REGIME-STATE-DESIGN) echo 'path=ai_requests/AI-2026-09-30-Q102-REGIME-STATE-DESIGN.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT) echo 'path=ai_requests/AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-10-04-Q187-Q192-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-04-Q187-Q192-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
+            AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT) echo 'path=ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json' >> "$GITHUB_OUTPUT" ;;
             *) exit 1 ;;
           esac
 
