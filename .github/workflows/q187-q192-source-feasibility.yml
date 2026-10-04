@@ -1,0 +1,108 @@
+name: Q187-Q192 Source Feasibility
+
+on:
+  schedule:
+    - cron: "41 */6 * * *"
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "automation/q187_q192_source_feasibility.py"
+      - "research/frontier/q187_q192_candidate_wave_2026_10_04.json"
+      - "docs/research_design/Q187_Q192_SOURCE_PIT_WAVE_2026-10-04.md"
+      - ".github/workflows/q187-q192-source-feasibility.yml"
+      - "tests/test_q187_q192_source_feasibility.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-q187-q192-source-feasibility
+  cancel-in-progress: true
+
+jobs:
+  source_feasibility:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Run Q187-Q192 source feasibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "research/runs/q187_q192_source_feasibility"
+          python -m automation.q187_q192_source_feasibility             --output "research/runs/q187_q192_source_feasibility/${GITHUB_RUN_ID}.json"
+
+      - name: Validate source-feasibility boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          p = (
+              Path("research/runs/q187_q192_source_feasibility")
+              / f"{os.environ['GITHUB_RUN_ID']}.json"
+          )
+          d = json.loads(p.read_text(encoding="utf-8"))
+          assert d["status"] == "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED"
+          assert len(d["candidate_results"]) == 6
+          assert d["synthetic_mutation_checks"]["future_row_prefix_invariant"] is True
+          assert d["synthetic_mutation_checks"]["future_timestamp_excluded"] is True
+          assert d["synthetic_mutation_checks"]["reordering_future_row_cannot_change_prefix"] is True
+          assert d["synthetic_mutation_checks"]["no_search_dimension_present"] is True
+          assert all(v is False for v in d["scientific_boundary"].values())
+          assert d["safety"]["paper_only"] is True
+          assert d["safety"]["live_trading_enabled"] is False
+          assert d["safety"]["orders_enabled"] is False
+          assert d["safety"]["automatic_promotion"] is False
+          print("Q187_Q192_SOURCE_FEASIBILITY_OK")
+          PY
+
+      - name: Persist latest source-feasibility receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        if: success() && github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          input="research/runs/q187_q192_source_feasibility/${GITHUB_RUN_ID}.json"
+          latest="research/evidence/q187_q192_source_feasibility_latest.json"
+          test -f "$input"
+          cp "$input" "$latest"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin master --quiet
+            base_sha="$(git rev-parse origin/master)"
+            if python automation/github_contents_publish.py \
+              --repository "$GITHUB_REPOSITORY" \
+              --branch master \
+              --base-sha "$base_sha" \
+              --file "$latest=$latest"; then
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          echo "::error::Q187-Q192 source receipt publication failed after retries"
+          exit 1
+
+      - name: Upload source-feasibility receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q187-q192-source-feasibility-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q187_q192_source_feasibility/
+          if-no-files-found: error
+          retention-days: 30
