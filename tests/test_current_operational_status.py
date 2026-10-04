@@ -62,3 +62,20 @@ def test_current_status_generator_advances_q081r4_focus_to_q100() -> None:
     assert "Q100 frontier feasibility synthesis" in source
     assert "No performance authorization is " in source
     assert "created by these feasibility steps." in source
+
+
+def test_current_status_renders_q197_q201_frontier() -> None:
+    payload, doc = __import__("automation.sync_current_operational_status", fromlist=["generate"]).generate(
+        source_master_sha="abc123",
+        workflow_run_id=None,
+        github_state_path=None,
+    )
+    assert "### Q197–Q201 Orthogonal Information Frontier" in doc
+    assert "Q198" in doc
+    assert "Q197" in doc
+    assert "Q199" in doc
+    assert "Q201" in doc
+    frontier = payload["scientific_state_recorded"]["frontier_q197_q201"]
+    assert frontier["Q201"]["stage"] == "SOURCE_COMPONENT_READY"
+    assert frontier["Q198"]["stage"] == "SOURCE_COMPONENT_READY"
+    assert frontier["performance_authorized"] is False
