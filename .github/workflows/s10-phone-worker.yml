@@ -20,16 +20,22 @@ on:
       - "research/governance/persistent_research_acceleration_contract.json"
       - "research/frontier/q126_q132_candidate_wave_2026_10_03.json"
       - "research/governance/critical_research_quality_control.json"
+      - "research/frontier/q185_q186_candidate_wave_2026_10_04.json"
+      - "research/frontier/q187_q192_candidate_wave_2026_10_04.json"
+      - "research/frontier/q193_q196_candidate_wave_2026_10_04.json"
+      - "automation/s10_mechanical_research_qa.py"
+      - "tests/test_s10_mechanical_research_qa.py"
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: "0 */2 * * *"
   workflow_dispatch:
     inputs:
       task:
         description: "Bounded S10 task"
         required: false
-        default: "utility_review"
+        default: "mechanical_qa"
         type: choice
         options:
+          - mechanical_qa
           - utility_review
           - evidence_critic
           - discovery_only
@@ -46,7 +52,7 @@ jobs:
     if: ${{ github.repository == 'DWR-debug/trading-agent-public' }}
     env:
       S10_SEED: "271828"
-      S10_TASK: ${{ inputs.task || 'utility_review' }}
+      S10_TASK: ${{ inputs.task || 'mechanical_qa' }}
     runs-on: [self-hosted, s10-phone, linux, ARM64]
     timeout-minutes: 30
 
@@ -72,7 +78,7 @@ jobs:
           cat "$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID/discovery.json"
 
       - name: Recover local S10 inference stack
-        if: env.S10_TASK != 'discovery_only'
+        if: env.S10_TASK != 'discovery_only' && env.S10_TASK != 'mechanical_qa'
         shell: bash
         env:
           PYTHONUNBUFFERED: "1"
@@ -98,6 +104,25 @@ jobs:
           if not d.get("available"):
               raise SystemExit("S10 interface is not available after bounded recovery")
           PY
+
+      - name: Run deterministic S10 mechanical research QA
+        if: env.S10_TASK == 'mechanical_qa'
+        shell: bash
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          set -euo pipefail
+          cd "$REPO_SRC"
+          OUT="$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID"
+          mkdir -p "$OUT"
+          python3 -m automation.s10_mechanical_research_qa \\
+            --repo-root "$REPO_SRC" \\
+            --output "$OUT/mechanical_research_qa.json"
+          python3 -m pytest -q \\
+            tests/test_s10_mechanical_research_qa.py \\
+            tests/test_q186_conservative_citation_visibility.py \\
+            tests/test_q193_q196_source_feasibility.py
+          cat "$OUT/mechanical_research_qa.json"
 
       - name: Run bounded S10 utility review
         if: env.S10_TASK == 'utility_review'
