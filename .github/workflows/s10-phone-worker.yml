@@ -115,12 +115,12 @@ jobs:
           cd "$REPO_SRC"
           OUT="$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID"
           mkdir -p "$OUT"
-          python3 -m automation.s10_mechanical_research_qa \\
-            --repo-root "$REPO_SRC" \\
+          python3 -m automation.s10_mechanical_research_qa \
+            --repo-root "$REPO_SRC" \
             --output "$OUT/mechanical_research_qa.json"
-          python3 -m pytest -q \\
-            tests/test_s10_mechanical_research_qa.py \\
-            tests/test_q186_conservative_citation_visibility.py \\
+          python3 -m pytest -q \
+            tests/test_s10_mechanical_research_qa.py \
+            tests/test_q186_conservative_citation_visibility.py \
             tests/test_q193_q196_source_feasibility.py
           cat "$OUT/mechanical_research_qa.json"
 

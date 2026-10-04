@@ -42,7 +42,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p research/runs/q197_q198_source_feasibility
-          python -m automation.q197_q198_source_feasibility --output research/runs/q197_q198_source_feasibility/${GITHUB_RUN_ID}.json
+          python -m automation.q197_q198_source_feasibility --output "research/runs/q197_q198_source_feasibility/${GITHUB_RUN_ID}.json"
 
       - name: Declare non-authorizing governance boundary
         shell: bash

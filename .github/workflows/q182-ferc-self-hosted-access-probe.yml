@@ -23,7 +23,7 @@ concurrency:
 
 jobs:
   probe:
-    if: github.repository == "DWR-debug/trading-agent-public" && (github.event_name != "pull_request" || github.event.pull_request.head.repo.full_name == github.repository)
+    if: github.repository == 'DWR-debug/trading-agent-public' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -37,26 +37,47 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 1
+      - name: Bootstrap pinned Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-q182"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-q182.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            mkdir "%PY_ROOT%" 2>nul
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          endlocal
       - name: Run FERC access probe
-        shell: powershell
+        shell: cmd
         env:
           PAPER_ONLY: "True"
           LIVE_TRADING_ENABLED: "False"
           ORDERS_ENABLED: "False"
           AUTOMATIC_PROMOTION: "False"
         run: |
-          $ErrorActionPreference = "Stop"
-          $output = "$env:RUNNER_TEMP\q182-ferc-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT-${{ matrix.lane }}.json"
-          python -m automation.q182_ferc_self_hosted_access_probe --output $output
+          @echo off
+          setlocal
+          set "LANE=${{ matrix.lane }}"
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q182\tools\python.exe"
+          set "OUTPUT=%RUNNER_TEMP%\q182-ferc-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%-%LANE%.json"
+          "%PY_EXE%" -m automation.q182_ferc_self_hosted_access_probe --output "%OUTPUT%"
+          if not exist "%OUTPUT%" exit /b 1
+          endlocal
       - name: Validate bounded receipt
-        shell: powershell
+        shell: cmd
         run: |
-          $ErrorActionPreference = "Stop"
-          $output = "$env:RUNNER_TEMP\q182-ferc-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT-${{ matrix.lane }}.json"
-          $d = Get-Content $output -Raw | ConvertFrom-Json
-          if ($d.status -ne "Q182_ACCESS_PROBE_COMPLETED_NO_SCIENTIFIC_EVIDENCE") { throw "bad status" }
-          foreach ($v in $d.scientific_boundary.PSObject.Properties) { if ($v.Value -ne $false) { throw "scientific boundary widened" } }
-          if ($d.safety.PAPER_ONLY -ne $true -or $d.safety.LIVE_TRADING_ENABLED -ne $false -or $d.safety.ORDERS_ENABLED -ne $false -or $d.safety.AUTOMATIC_PROMOTION -ne $false) { throw "safety invariant failed" }
+          @echo off
+          setlocal
+          set "LANE=${{ matrix.lane }}"
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q182\tools\python.exe"
+          set "OUTPUT=%RUNNER_TEMP%\q182-ferc-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%-%LANE%.json"
+          "%PY_EXE%" -c "import json,pathlib; p=pathlib.Path(r'%OUTPUT%'); d=json.loads(p.read_text(encoding='utf-8')); assert d['status']=='Q182_ACCESS_PROBE_COMPLETED_NO_SCIENTIFIC_EVIDENCE'; assert all(v is False for v in d['scientific_boundary'].values()); s=d['safety']; assert s['PAPER_ONLY'] is True and s['LIVE_TRADING_ENABLED'] is False and s['ORDERS_ENABLED'] is False and s['AUTOMATIC_PROMOTION'] is False"
+          endlocal
       - name: Upload bounded receipt
         if: always()
         uses: actions/upload-artifact@v6
