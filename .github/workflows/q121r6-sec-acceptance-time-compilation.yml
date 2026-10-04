@@ -86,10 +86,13 @@ jobs:
     if: github.repository == 'DWR-debug/trading-agent-public'
     strategy:
       fail-fast: false
+      # Two self-hosted slots are available. Keep at most two shards live so
+      # each shard's 0.25s limiter yields <= 8 requests/s fleet-wide.
+      max-parallel: 2
       matrix:
-        shard_index: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+        shard_index: [0,1,2,3]
     runs-on: [self-hosted, trading-agent-research]
-    timeout-minutes: 35
+    timeout-minutes: 90
     steps:
       - name: Bootstrap exact repository and pinned Python
         shell: cmd
@@ -136,7 +139,7 @@ jobs:
           if not exist "%GITHUB_WORKSPACE%\q121r6-input\population.json" exit /b 1
           if exist "%GITHUB_WORKSPACE%\q121r6-shard" rmdir /s /q "%GITHUB_WORKSPACE%\q121r6-shard"
           mkdir "%GITHUB_WORKSPACE%\q121r6-shard" || exit /b 1
-          "%Q121R6_PY%" -m automation.q121r6_sec_acceptance_time_compiler --population "%GITHUB_WORKSPACE%\q121r6-input\population.json" --output "%GITHUB_WORKSPACE%\q121r6-shard\result.json" --shard-index ${{ matrix.shard_index }} --shard-count 16 --workers 8 --request-gap-seconds 0.25
+          "%Q121R6_PY%" -m automation.q121r6_sec_acceptance_time_compiler --population "%GITHUB_WORKSPACE%\q121r6-input\population.json" --output "%GITHUB_WORKSPACE%\q121r6-shard\result.json" --shard-index ${{ matrix.shard_index }} --shard-count 4 --workers 8 --request-gap-seconds 0.25
           if errorlevel 1 exit /b 1
       - uses: actions/upload-artifact@v6
         with:
