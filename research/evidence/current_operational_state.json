@@ -1011,7 +1011,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T23:03:42.339431+00:00",
+  "generated_at_utc": "2026-10-04T23:04:03.625654+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -3702,6 +3702,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "AI: extend adversarial source-PIT review to Q205",
+        "sha": "15590a8d1eef85ded6cd7abec1caf6b215c281c3",
+        "timestamp": "2026-10-05T01:03:52+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4f3884b62c039301dd9995678fe79aa68e56d736",
+        "timestamp": "2026-10-04T23:03:44Z"
+      },
+      {
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "22cfead4eff46a30ff97d71a1cb8985c8459e208",
         "timestamp": "2026-10-04T23:03:38Z"
@@ -3730,16 +3740,6 @@
         "message": "RESEARCH: document Q205 NLRB discovery contract",
         "sha": "0272e70ed5f52a9714dd585aa1d62df2d34627bf",
         "timestamp": "2026-10-05T01:03:00+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q205 NLRB labor-representation discovery candidate",
-        "sha": "5d0c3552bbcc650003576147c18f5c7b7540a8fa",
-        "timestamp": "2026-10-05T01:02:57+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "7b21ce340e44ee1eaa4bca0718ab156f4abd5244",
-        "timestamp": "2026-10-04T23:02:56Z"
       }
     ]
   },
@@ -3837,7 +3837,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "22cfead4eff46a30ff97d71a1cb8985c8459e208",
+  "source_master_sha": "15590a8d1eef85ded6cd7abec1caf6b215c281c3",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -3951,6 +3951,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37242349758"
+    "run_id": "37242373217"
   }
 }
