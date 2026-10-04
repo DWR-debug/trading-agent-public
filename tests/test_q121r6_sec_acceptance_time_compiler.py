@@ -122,3 +122,56 @@ def test_q121r6_404_failure_payload_includes_source_url():
     assert '"source_url": archive_header_url(row["filename"])' in source
     assert "Q121R6_DEBUG_404" in source
 
+
+def test_q121r6_artifacts_are_attempt_isolated():
+    from pathlib import Path
+
+    workflow = (
+        Path(__file__).parents[1]
+        / ".github"
+        / "workflows"
+        / "q121r6-sec-acceptance-time-compilation.yml"
+    ).read_text(encoding="utf-8")
+    assert "q121r6-population-${{ github.run_id }}-${{ github.run_attempt }}" in workflow
+    assert "q121r6-shard-${{ matrix.shard_index }}-${{ github.run_id }}-${{ github.run_attempt }}" in workflow
+    assert "q121r6-final-${{ github.run_id }}-${{ github.run_attempt }}" in workflow
+    assert "q121r6-shard-*-${{ github.run_id }}-${{ github.run_attempt }}" in workflow
+
+
+def test_q121r6_aggregate_rejects_mixed_execution_attempts(tmp_path):
+    import json
+    from automation.q121r6_sec_acceptance_time_aggregate import aggregate
+
+    base = {
+        "schema_version": "1.0",
+        "task_id": "Q-2026-10-03-121R6-SEC-ACCEPTANCE-TIME-COMPILATION",
+        "status": "COMPLETED",
+        "shard_count": 4,
+        "population_count": 61818,
+        "population_fingerprint": "7251f0e25d7293802d389cac875abfd8552b9441ac604b69918bd7d5b9aec554",
+        "records": [],
+        "failures": [],
+    }
+    paths = []
+    for index in range(4):
+        payload = {
+            **base,
+            "shard_index": index,
+            "slice_start": (61818 * index) // 4,
+            "slice_end_exclusive": (61818 * (index + 1)) // 4,
+            "slice_count": 0,
+            "execution_identity": {
+                "workflow_run_id": "100" if index < 3 else "101",
+                "run_attempt": "1",
+                "shard_index": index,
+            },
+        }
+        p = tmp_path / f"shard-{index}.json"
+        p.write_text(json.dumps(payload), encoding="utf-8")
+        paths.append(p)
+    try:
+        aggregate(paths, tmp_path / "out.json")
+    except RuntimeError as exc:
+        assert str(exc).startswith("SHARD_EXECUTION_IDENTITY_MIXED:")
+    else:
+        raise AssertionError("mixed execution attempts were accepted")
