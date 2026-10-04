@@ -1,0 +1,56 @@
+name: Q185-Q186 Windows Bounded Reproduction
+
+on:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-q185-q186-windows
+  cancel-in-progress: true
+
+jobs:
+  windows_reproduction:
+    if: >
+      github.repository == 'DWR-debug/trading-agent-public' &&
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
+    strategy:
+      fail-fast: false
+      matrix:
+        lane: [local_reproduction, data_qa]
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 15
+    continue-on-error: true
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          path: q185-q186-${{ github.run_id }}-${{ matrix.lane }}
+          fetch-depth: 1
+      - name: Run bounded Windows reproduction
+        shell: powershell
+        working-directory: q185-q186-${{ github.run_id }}-${{ matrix.lane }}
+        env:
+          PAPER_ONLY: "True"
+          LIVE_TRADING_ENABLED: "False"
+          ORDERS_ENABLED: "False"
+          AUTOMATIC_PROMOTION: "False"
+        run: |
+          $ErrorActionPreference = "Stop"
+          python --version
+          python -m automation.q185_q186_source_feasibility --output "$env:RUNNER_TEMP\q185-q186-source-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT-$env:GITHUB_JOB.json"
+          python -m automation.q185_q186_pit_readiness_r1 --source-receipt "$env:RUNNER_TEMP\q185-q186-source-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT-$env:GITHUB_JOB.json" --output "$env:RUNNER_TEMP\q185-q186-pit-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT-$env:GITHUB_JOB.json"
+      - name: Upload bounded Windows receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q185-q186-windows-${{ matrix.lane }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}\q185-q186-*-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}.json
+          if-no-files-found: warn
+          retention-days: 14

@@ -208,6 +208,8 @@ ACTIVE_WORKFLOWS = {
     "post-pass-independent-replication.yml",
     "q179-q184-source-feasibility.yml",
     "q179-q184-pit-readiness.yml",
+    "q185-q186-source-feasibility.yml",
+    "q185-q186-windows-reproduction.yml",
 }
 
 REQUIRED_FILES = (
