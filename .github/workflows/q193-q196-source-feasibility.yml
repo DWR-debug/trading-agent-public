@@ -79,7 +79,15 @@ jobs:
           input=research/runs/q193_q196_source_feasibility/${GITHUB_RUN_ID}.json
           latest=research/evidence/q193_q196_source_feasibility_latest.json
           cp "$input" "$latest"
-          python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$GITHUB_SHA" --file "$latest=$latest"
+          for attempt in 1 2 3 4 5; do
+            current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+            if python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$current_sha" --file "$latest=$latest"; then
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          echo "evidence publish retries exhausted" >&2
+          exit 1
       - name: Upload receipt
         if: always()
         uses: actions/upload-artifact@v6
