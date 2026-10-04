@@ -5,6 +5,7 @@ from pathlib import Path
 
 from automation.q202_q204_information_timing_feasibility import (
     BOUNDARY,
+    CANDIDATE_SPEC_PATH,
     FIXED,
     SAFETY,
     parse_fr_by_date,
@@ -19,6 +20,7 @@ def test_fixed_information_timing_routes_and_safety():
     assert FIXED["Q202_CT_STUDY"].startswith("https://clinicaltrials.gov/")
     assert FIXED["Q203_SEC_SUBMISSIONS"].startswith("https://data.sec.gov/")
     assert FIXED["Q204_FR_20200110"].startswith("https://www.federalregister.gov/api/")
+    assert CANDIDATE_SPEC_PATH.name == "orthogonal_candidate_specs_2026-10-04.json"
     assert all(v is False for v in BOUNDARY.values())
     assert SAFETY == {
         "paper_only": True,
