@@ -99,7 +99,7 @@ def test_every_lane_writes_non_formal_run_manifest(monkeypatch, tmp_path):
         )
 
         selected = worker.select_workpack(lane, len(commands), 0)[1]
-        expected_order = [x for x in selected if x != 8] + ([8] if 8 in selected else [])
+        expected_order = ([x for x in selected if x != 8] + ([8] if 8 in selected else [])) if lane == "autonomous_frontier_qa" else selected
         expected_codes = [0] if len(expected_order) == 1 else [0] + [7] * (len(expected_order) - 1)
         assert worker.main() == (0 if len(expected_order) == 1 else 7)
         assert attempted == expected_order
