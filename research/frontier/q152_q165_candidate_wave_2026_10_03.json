@@ -16,20 +16,178 @@
     "paid_data_required": false
   },
   "candidates": [
-    {"id":"Q152","name":"House transaction disclosure × exposed-industry state","sources":["U.S. House Financial Disclosures","SEC issuer disclosures","OHLCV"],"next_gate":"publication/time-of-posting and issuer-exposure provenance"},
-    {"id":"Q153","name":"Lobbying-intensity transition × issuer/industry exposure","sources":["LDA.gov","SEC issuer disclosures","OHLCV"],"next_gate":"filing/publication timestamp and entity/issue mapping"},
-    {"id":"Q154","name":"Drug shortage/manufacturing shock × pharma exposure","sources":["openFDA drug data","SEC issuer disclosures","OHLCV"],"next_gate":"event timestamp, manufacturer mapping, revision/update audit"},
-    {"id":"Q155","name":"Medical-device recall/enforcement shock × manufacturer exposure","sources":["openFDA device data","SEC issuer disclosures","OHLCV"],"next_gate":"recall/enforcement dissemination clock and manufacturer mapping"},
-    {"id":"Q156","name":"Cyber exploitation shock × issuer technology exposure","sources":["CISA KEV","NVD","SEC issuer disclosures","OHLCV"],"next_gate":"publication-time contract and fixed product-to-issuer map"},
-    {"id":"Q157","name":"SEC FOIA topic heat × issuer information-demand state","sources":["SEC FOIA logs","SEC issuer disclosures","OHLCV"],"next_gate":"request/received/closed date semantics and topic-to-issuer mapping"},
-    {"id":"Q158","name":"Federal Register rule-change exposure × industry","sources":["GovInfo Federal Register","SEC issuer disclosures","OHLCV"],"next_gate":"publication/effective-date contract and fixed exposure classes"},
-    {"id":"Q159","name":"Disaster shock × geographic operating exposure","sources":["FEMA Disaster Declarations","NOAA Storm Events","SEC issuer disclosures","OHLCV"],"next_gate":"disaster/publication timestamp and geographic exposure map"},
-    {"id":"Q160","name":"Agricultural release shock × food/input-chain exposure","sources":["USDA NASS","NOAA weather","SEC issuer disclosures","OHLCV"],"next_gate":"release timestamp/vintage and fixed commodity exposure map"},
-    {"id":"Q161","name":"Freight-flow composition shock × industrial exposure","sources":["BTS FAF","SEC issuer disclosures","OHLCV"],"next_gate":"historical FAF vintage and industry concordance"},
-    {"id":"Q162","name":"Power-system stress × electricity-intensive issuer state","sources":["EIA electricity","SEC issuer disclosures","OHLCV"],"next_gate":"continuous-update release boundary and fixed energy-intensity map"},
-    {"id":"Q163","name":"Environmental enforcement shock × facility-exposed issuer","sources":["EPA Envirofacts","SEC issuer disclosures","OHLCV"],"next_gate":"agency action timestamp, facility identity and issuer mapping"},
-    {"id":"Q164","name":"Federal award concentration × contractor ecosystem","sources":["USAspending","SEC issuer disclosures","OHLCV"],"next_gate":"transaction publication/amendment semantics and contractor graph"},
-    {"id":"Q165","name":"Competition-enforcement shock × industry network","sources":["FTC enforcement datasets","DOJ Antitrust releases","SEC issuer disclosures","OHLCV"],"next_gate":"event publication clock and fixed peer/exposure graph"}
+    {
+      "id": "Q152",
+      "name": "House transaction disclosure × exposed-industry state",
+      "sources": [
+        "U.S. House Financial Disclosures",
+        "SEC issuer disclosures",
+        "OHLCV"
+      ],
+      "next_gate": "publication/time-of-posting and issuer-exposure provenance",
+      "hypothesis": "Public House financial-disclosure transactions may create an issuer/industry information-timing state distinct from market history.",
+      "construction": "Use fixed public posting time, transaction-date semantics and a pre-frozen issuer/industry exposure map; only disclosures observable by the cutoff enter the state, with no political forecasting or return-based labeling."
+    },
+    {
+      "id": "Q153",
+      "name": "Lobbying-intensity transition × issuer/industry exposure",
+      "sources": [
+        "LDA.gov",
+        "SEC issuer disclosures",
+        "OHLCV"
+      ],
+      "next_gate": "filing/publication timestamp and entity/issue mapping",
+      "hypothesis": "A fixed transition in disclosed lobbying activity may define an information-demand state for a pre-registered issuer/industry map.",
+      "construction": "Construct a deterministic transition in public lobbying registration/report activity using the public filing/posting boundary and a frozen issuer/issue mapping; never hand-score issue sentiment or tune transition thresholds."
+    },
+    {
+      "id": "Q154",
+      "name": "Drug shortage/manufacturing shock × pharma exposure",
+      "sources": [
+        "openFDA drug data",
+        "SEC issuer disclosures",
+        "OHLCV"
+      ],
+      "next_gate": "event timestamp, manufacturer mapping, revision/update audit",
+      "hypothesis": "A newly public drug shortage, recall or manufacturing event may create an operational information state for exposed pharmaceutical issuers.",
+      "construction": "Encode fixed openFDA drug event classes using the proven public observation/update boundary and pre-frozen manufacturer/product-to-issuer mapping; occurrence, database update and public observation times remain separate."
+    },
+    {
+      "id": "Q155",
+      "name": "Medical-device recall/enforcement shock × manufacturer exposure",
+      "sources": [
+        "openFDA device data",
+        "SEC issuer disclosures",
+        "OHLCV"
+      ],
+      "next_gate": "recall/enforcement dissemination clock and manufacturer mapping",
+      "hypothesis": "A newly public medical-device recall or enforcement event may create an operational or regulatory information state for exposed manufacturers.",
+      "construction": "Use fixed openFDA device recall/enforcement event classes and dissemination timing with a frozen manufacturer/issuer map; later revisions cannot rewrite an earlier state."
+    },
+    {
+      "id": "Q156",
+      "name": "Cyber exploitation shock × issuer technology exposure",
+      "sources": [
+        "CISA KEV",
+        "NVD",
+        "SEC issuer disclosures",
+        "OHLCV"
+      ],
+      "next_gate": "publication-time contract and fixed product-to-issuer map",
+      "hypothesis": "A newly published or newly exploited software vulnerability may create a technology-risk information state for exposed issuers.",
+      "construction": "Translate fixed CISA KEV/NVD publication events through a pre-registered product-to-issuer graph; publication time is the information boundary and no future incident outcome or post-publication severity reassessment is used."
+    },
+    {
+      "id": "Q157",
+      "name": "SEC FOIA topic heat × issuer information-demand state",
+      "sources": [
+        "SEC FOIA logs",
+        "SEC issuer disclosures",
+        "OHLCV"
+      ],
+      "next_gate": "request/received/closed date semantics and topic-to-issuer mapping",
+      "hypothesis": "Unusually concentrated SEC FOIA demand may define a public information-demand state around an issuer or topic.",
+      "construction": "Construct a fixed request-intensity state from public receipt metadata using request/received/closed date semantics and a pre-frozen topic-to-issuer map; closure information cannot enter an earlier state."
+    },
+    {
+      "id": "Q158",
+      "name": "Federal Register rule-change exposure × industry",
+      "sources": [
+        "GovInfo Federal Register",
+        "SEC issuer disclosures",
+        "OHLCV"
+      ],
+      "next_gate": "publication/effective-date contract and fixed exposure classes",
+      "hypothesis": "A newly published Federal Register rule or order may create an industry-specific regulatory information state.",
+      "construction": "Use a fixed event taxonomy keyed to public Federal Register publication, with effective date kept distinct and exposure classes frozen before observation; next-session use remains the default unless exact dissemination timing is proven."
+    },
+    {
+      "id": "Q159",
+      "name": "Disaster shock × geographic operating exposure",
+      "sources": [
+        "FEMA Disaster Declarations",
+        "NOAA Storm Events",
+        "SEC issuer disclosures",
+        "OHLCV"
+      ],
+      "next_gate": "disaster/publication timestamp and geographic exposure map",
+      "hypothesis": "Public disaster declarations combined with geographic operating exposure may create a heterogeneous operational-shock state.",
+      "construction": "Combine fixed FEMA declaration and NOAA event states with a pre-frozen issuer geography map; publication/observation time is separate from event occurrence and later geographic information cannot alter past exposure."
+    },
+    {
+      "id": "Q160",
+      "name": "Agricultural release shock × food/input-chain exposure",
+      "sources": [
+        "USDA NASS",
+        "NOAA weather",
+        "SEC issuer disclosures",
+        "OHLCV"
+      ],
+      "next_gate": "release timestamp/vintage and fixed commodity exposure map",
+      "hypothesis": "Agricultural release states may create food and input-chain information shocks for exposed issuers.",
+      "construction": "Use a fixed USDA NASS release-state compiler with a pre-frozen issuer/commodity exposure map and NOAA context observed only within the proven release/vintage boundary; no future revision is backfilled."
+    },
+    {
+      "id": "Q161",
+      "name": "Freight-flow composition shock × industrial exposure",
+      "sources": [
+        "BTS FAF",
+        "SEC issuer disclosures",
+        "OHLCV"
+      ],
+      "next_gate": "historical FAF vintage and industry concordance",
+      "hypothesis": "Changes in freight-flow composition may create a slow-moving supply-chain information state for exposed industries.",
+      "construction": "Use fixed BTS FAF historical-vintage observations mapped through a frozen industry concordance; dataset vintage is part of the state and no return-based route selection is permitted."
+    },
+    {
+      "id": "Q162",
+      "name": "Power-system stress × electricity-intensive issuer state",
+      "sources": [
+        "EIA electricity",
+        "SEC issuer disclosures",
+        "OHLCV"
+      ],
+      "next_gate": "continuous-update release boundary and fixed energy-intensity map",
+      "hypothesis": "Power-system stress may interact with a fixed issuer energy-intensity classification to define an operational information state.",
+      "construction": "Use public EIA electricity observations under a frozen release/vintage boundary with a pre-frozen energy-intensity map; continuous updates cannot rewrite historical states."
+    },
+    {
+      "id": "Q163",
+      "name": "Environmental enforcement shock × facility-exposed issuer",
+      "sources": [
+        "EPA Envirofacts",
+        "SEC issuer disclosures",
+        "OHLCV"
+      ],
+      "next_gate": "agency action timestamp, facility identity and issuer mapping",
+      "hypothesis": "A newly public environmental enforcement action may create a facility-specific operational or regulatory information state.",
+      "construction": "Use a fixed EPA action taxonomy and facility identity mapping linked to issuers before evaluation; the agency public action timestamp is distinct from incident dates and later entity corrections cannot leak backward."
+    },
+    {
+      "id": "Q164",
+      "name": "Federal award concentration × contractor ecosystem",
+      "sources": [
+        "USAspending",
+        "SEC issuer disclosures",
+        "OHLCV"
+      ],
+      "next_gate": "transaction publication/amendment semantics and contractor graph",
+      "hypothesis": "Federal award concentration may define a contractor-ecosystem information state when newly published award transitions occur.",
+      "construction": "Construct a fixed issuer/contractor graph from USAspending public award identities and dissemination timestamps; amendments remain separate from initial publication and contractor identity changes are frozen."
+    },
+    {
+      "id": "Q165",
+      "name": "Competition-enforcement shock × industry network",
+      "sources": [
+        "FTC enforcement datasets",
+        "DOJ Antitrust releases",
+        "SEC issuer disclosures",
+        "OHLCV"
+      ],
+      "next_gate": "event publication clock and fixed peer/exposure graph",
+      "hypothesis": "A public competition-enforcement action may alter information states across a fixed industry peer network.",
+      "construction": "Use a fixed FTC/DOJ event taxonomy and pre-frozen peer/exposure graph keyed to public publication; later case developments cannot rewrite the initial event state."
+    }
   ],
   "safety": {
     "paper_only": true,

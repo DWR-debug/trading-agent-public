@@ -25,7 +25,9 @@
         "FINRA Daily Short Sale Volume",
         "OHLCV"
       ],
-      "next_gate": "publication timing, security mapping, synthetic PIT"
+      "next_gate": "publication timing, security mapping, synthetic PIT",
+      "hypothesis": "A fixed disagreement state between short-sale flow intensity and lagged outstanding FTD balance may contain information distinct from either input alone.",
+      "construction": "Fixed state comparing normalized FINRA daily short-sale flow with lagged SEC FTD outstanding balance; use only source observations available by the decision boundary, freeze security mapping, and align to the next eligible session."
     },
     {
       "id": "Q134",
@@ -35,7 +37,9 @@
         "FINRA Daily Short Sale Volume",
         "OHLCV"
       ],
-      "next_gate": "observation-date join and venue completeness"
+      "next_gate": "observation-date join and venue completeness",
+      "hypothesis": "The disagreement between short-interest position snapshots and short-sale flow may define a distinct information state.",
+      "construction": "Fixed categorical state for high-flow/low-stock, low-flow/high-stock and aligned cases using the separately published FINRA products; observation dates and security mapping are frozen and no venue-completeness approximation is introduced."
     },
     {
       "id": "Q135",
@@ -45,7 +49,9 @@
         "USPTO PatentsView",
         "OHLCV"
       ],
-      "next_gate": "transaction-code and patent-event time contract"
+      "next_gate": "transaction-code and patent-event time contract",
+      "hypothesis": "Relative timing between public patent events and open-market insider purchases may define a distinct innovation-confirmation information state.",
+      "construction": "Fixed relative-timing state between USPTO application/publication/grant events and SEC Form 4 open-market purchases; SEC acceptance time anchors public information, transaction-code inclusion is frozen, and patent event dates remain distinct."
     },
     {
       "id": "Q136",
@@ -55,7 +61,9 @@
         "Wikimedia Pageviews",
         "OHLCV"
       ],
-      "next_gate": "backward-only novelty and entity mapping"
+      "next_gate": "backward-only novelty and entity mapping",
+      "hypothesis": "Backward-looking patent novelty combined with public attention may define an information state distinct from either component alone.",
+      "construction": "Fixed backward-only patent-novelty proxy combined with Wikimedia pageview surprise; forward citations and later metadata cannot alter an earlier state, entity mapping is frozen, and attention is observed only after the public event boundary."
     },
     {
       "id": "Q137",
@@ -64,7 +72,9 @@
         "SEC EDGAR",
         "OHLCV"
       ],
-      "next_gate": "filing-density clock and amendment handling"
+      "next_gate": "filing-density clock and amendment handling",
+      "hypothesis": "Issuer filing-density congestion may represent an information-processing state distinct from filing identity alone.",
+      "construction": "Fixed rolling filing-density state from SEC acceptance timestamps and filing categories before each decision point; amendments and duplicate accessions remain separate, with no return-based threshold selection."
     },
     {
       "id": "Q138",
@@ -74,7 +84,9 @@
         "SEC Form 13F",
         "OHLCV"
       ],
-      "next_gate": "fixed-quarter accession lineage and bounded processing"
+      "next_gate": "fixed-quarter accession lineage and bounded processing",
+      "hypothesis": "Overlap or concentration across public fund positions may define a portfolio-network information state beyond one-manager transitions.",
+      "construction": "Fixed fund-ownership overlap/concentration state from SEC N-PORT and 13F public filings; accession lineage, security mapping and dissemination cutoffs are frozen, and no portfolio weighting search is permitted."
     },
     {
       "id": "Q139",
@@ -84,7 +96,9 @@
         "SEC XBRL",
         "OHLCV"
       ],
-      "next_gate": "financial-field freeze and auction publication clock"
+      "next_gate": "financial-field freeze and auction publication clock",
+      "hypothesis": "Issuer financing sensitivity interacting with Treasury auction demand may define a cross-market information state.",
+      "construction": "Fixed issuer financing-sensitivity descriptor from PIT-valid SEC/XBRL facts interacted with fixed Treasury auction-demand states; concept lineage and auction publication time are preserved without threshold optimization."
     },
     {
       "id": "Q140",
@@ -93,7 +107,9 @@
         "CFTC COT",
         "OHLCV"
       ],
-      "next_gate": "release-date PIT and fixed exposure mapping"
+      "next_gate": "release-date PIT and fixed exposure mapping",
+      "hypothesis": "CFTC positioning combined with a fixed commodity-exposure regime may define an information state distinct from equity prices alone.",
+      "construction": "Fixed CFTC positioning state using release time, interacted with a lagged, pre-frozen issuer/industry commodity-exposure descriptor; report date is never substituted for public release date."
     },
     {
       "id": "Q141",
@@ -102,7 +118,9 @@
         "public institutional calendars",
         "OHLCV"
       ],
-      "next_gate": "historical calendar reconstruction"
+      "next_gate": "historical calendar reconstruction",
+      "hypothesis": "Coincident scheduled institutional-demand events combined with liquidity may define a deterministic calendar-collision state.",
+      "construction": "Fixed count of pre-scheduled index, ETF, futures, options and rebalance/roll events coinciding with a fixed liquidity state; historical calendars are reconstructed without using later membership announcements or returns."
     },
     {
       "id": "Q142",
@@ -112,7 +130,9 @@
         "FRED/ALFRED",
         "OHLCV"
       ],
-      "next_gate": "revision-consistent industry matrix"
+      "next_gate": "revision-consistent industry matrix",
+      "hypothesis": "Macro shocks weighted through a fixed industry input-output network may define heterogeneous supply-chain information states.",
+      "construction": "Fixed industry exposure matrix from BEA Input-Output tables multiplied by the macro state from the correct FRED/ALFRED real-time vintage; revisions and classification concordance are frozen before any evaluation."
     },
     {
       "id": "Q143",
@@ -122,7 +142,9 @@
         "SEC disclosures",
         "OHLCV"
       ],
-      "next_gate": "stable event registration and peer-map provenance"
+      "next_gate": "stable event registration and peer-map provenance",
+      "hypothesis": "Material public software releases may transmit ecosystem information to pre-registered complements or competitors independently of price history.",
+      "construction": "Fixed event set of public GitHub releases mapped through a pre-registered ecosystem graph; event visibility and publication metadata are used as observed, while meaningful-release classification is frozen ex ante and never tuned on returns."
     },
     {
       "id": "Q144",
@@ -132,7 +154,9 @@
         "Wikimedia Pageviews",
         "OHLCV"
       ],
-      "next_gate": "attention latency/entity mapping and PIT"
+      "next_gate": "attention latency/entity mapping and PIT",
+      "hypothesis": "Abnormal public attention following an issuer disclosure may define a distinct information-response state.",
+      "construction": "Fixed post-filing Wikimedia pageview-surprise state linked to SEC filing acceptance; entity mapping and measurement latency are frozen, and the response window remains next-session unless a stronger timestamp contract is proven."
     },
     {
       "id": "Q145",
@@ -143,7 +167,9 @@
         "FRED/ALFRED",
         "OHLCV"
       ],
-      "next_gate": "multi-clock release/vintage alignment"
+      "next_gate": "multi-clock release/vintage alignment",
+      "hypothesis": "Unusual Treasury demand combined with unusual CFTC positioning and macro-vintage state may define a cross-asset policy information state.",
+      "construction": "Fixed state machine combining independently timestamped Treasury, CFTC and FRED/ALFRED states; mixed-frequency alignment follows each source's public release/vintage boundary and no collision window is optimized."
     }
   ],
   "safety": {

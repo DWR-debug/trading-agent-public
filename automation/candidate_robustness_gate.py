@@ -25,6 +25,7 @@ DEFAULT_INVENTORIES = (
     "research/frontier/q152_q165_candidate_wave_2026_10_03.json",
     "research/frontier/q166_q170_candidate_wave_2026_10_03.json",
     "research/frontier/q171_q178_candidate_wave_2026_10_03.json",
+    "research/frontier/q179_q184_candidate_wave_2026_10_04.json",
 )
 
 FORBIDDEN_KEYS = {
