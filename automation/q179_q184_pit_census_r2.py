@@ -47,7 +47,8 @@ def sha(data: bytes) -> str:
 def html_probe(url: str, markers: list[str]) -> dict[str, Any]:
     status, headers, body = fetch(url, limit=1_000_000)
     text = body.decode("utf-8", errors="replace")
-    missing = [m for m in markers if m.lower() not in text.lower()]
+    normalized = re.sub(r"\\s+", " ", text).strip()
+    missing = [m for m in markers if m.lower() not in normalized.lower()]
     return {
         "url": url,
         "http_status": status,
@@ -100,6 +101,7 @@ def pdf_text_probe(url: str, markers: list[str]) -> dict[str, Any]:
         "content_sha256": sha(body),
         "content_type": headers.get("content-type"),
         "pdf_pages": len(PdfReader(__import__("io").BytesIO(body)).pages) if status == 200 and not extraction_error else None,
+        "normalized_text_length": len(normalized),
         "extraction_error": extraction_error,
     }
 
