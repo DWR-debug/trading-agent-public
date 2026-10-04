@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T20:35:47.012104+00:00",
+  "generated_at_utc": "2026-10-04T20:36:01.504031+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2620,6 +2620,11 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "933b9f64286ae6f8fa796b026fbb92d1b05b5680",
+        "timestamp": "2026-10-04T20:35:50Z"
+      },
+      {
         "message": "OPS: supersede stale Runner C infrastructure runs after fixes",
         "sha": "421db8fcc1d063175f5fad4246f3cf7b2f98102c",
         "timestamp": "2026-10-04T22:35:44+02:00"
@@ -2653,11 +2658,6 @@
         "message": "OPS: record Groq free adversarial worker state",
         "sha": "776929a5d88770300132f2be8ed5ba5ab403ddcc",
         "timestamp": "2026-10-04T20:34:30Z"
-      },
-      {
-        "message": "GOVERNANCE: bind snapshot durability guard to provider-neutral AI review",
-        "sha": "070b7c9097341988f2fc5b8d938982ad7175d30c",
-        "timestamp": "2026-10-04T22:34:17+02:00"
       }
     ]
   },
@@ -2742,7 +2742,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "421db8fcc1d063175f5fad4246f3cf7b2f98102c",
+  "source_master_sha": "933b9f64286ae6f8fa796b026fbb92d1b05b5680",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2856,6 +2856,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37232691546"
+    "run_id": "37232701879"
   }
 }
