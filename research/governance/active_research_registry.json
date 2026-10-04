@@ -712,11 +712,13 @@
     {
       "code": "FRONTIER-Q187-Q192",
       "class": "next_orthogonal_public_information_frontier",
-      "state": "DESIGN_ONLY_SOURCE_FEASIBILITY_PENDING",
+      "state": "SOURCE_REPAIR_AND_PIT_READINESS_ACTIVE",
       "candidate_inventory_path": "research/frontier/q187_q192_candidate_wave_2026_10_04.json",
       "design_document": "docs/research_design/Q187_Q192_SOURCE_PIT_WAVE_2026-10-04.md",
       "performance_authorization_allowed": false,
-      "note": "New six-candidate orthogonal wave; source-first feasibility only. No candidate ranking, selection, tuning, performance, promotion or live execution."
+      "note": "New six-candidate orthogonal wave; source-first feasibility only. No candidate ranking, selection, tuning, performance, promotion or live execution.",
+      "pit_readiness_workflow": ".github/workflows/q187-q192-pit-readiness-r1.yml",
+      "pit_readiness_evidence": "research/evidence/q187_q192_pit_readiness_r1_latest.json"
     }
   ]
 }
