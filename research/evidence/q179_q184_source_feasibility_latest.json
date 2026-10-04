@@ -1,0 +1,195 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-04-Q179-Q184-SOURCE-FEASIBILITY",
+  "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
+  "source_results": {
+    "CLINICALTRIALS": {
+      "url": "https://clinicaltrials.gov/api/v2/studies/NCT00125528",
+      "http_status": 200,
+      "reachable": true,
+      "required_markers_present": true,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://clinicaltrials.gov/api/v2/studies/NCT00125528",
+          "http_status": 200,
+          "missing_markers": []
+        }
+      ],
+      "clock_contract": "API posted-date fields define public availability; submitted dates are separate.",
+      "content_sha256": "d9ae42a4f31df44d2e163ff1a3964474fc6446b2080c57e3e94311f2f21aefcb"
+    },
+    "NHTSA_RECALLS": {
+      "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis",
+      "http_status": 200,
+      "reachable": true,
+      "required_markers_present": true,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis",
+          "http_status": 200,
+          "missing_markers": []
+        }
+      ],
+      "clock_contract": "Recall publication date is distinct from the underlying safety-issue report date.",
+      "content_sha256": "1ccf3bee7f9916b868181f5c950596611a71850e0d72c3330658aea838123e4a"
+    },
+    "OSHA_DATA": {
+      "url": "https://catalog.data.gov/dataset/dol-enforcement-data-inspection",
+      "http_status": 200,
+      "reachable": true,
+      "required_markers_present": true,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://catalog.data.gov/dataset/dol-enforcement-data-inspection",
+          "http_status": 200,
+          "missing_markers": []
+        }
+      ],
+      "clock_contract": "The DOL public catalog establishes the dataset boundary; inspection/opening and later catalog refresh times remain distinct.",
+      "content_sha256": "8ed2679f3e21ef40e4ab7c5605f8606aee27f2588538c9b69d80a2286df5a624"
+    },
+    "FERC_ELIBRARY": {
+      "url": "https://ferc.gov/what-elibrary",
+      "http_status": 403,
+      "reachable": false,
+      "required_markers_present": false,
+      "probe_classification": "RUNNER_ACCESS_BLOCKED",
+      "missing_markers": [
+        "issued by FERC",
+        "Documents received and issued by FERC",
+        "download"
+      ],
+      "attempts": [
+        {
+          "url": "https://ferc.gov/what-elibrary",
+          "http_status": 403,
+          "missing_markers": [
+            "issued by FERC",
+            "Documents received and issued by FERC",
+            "download"
+          ]
+        },
+        {
+          "url": "https://www.ferc.gov/about/what-ferc/frequently-asked-questions-faqs/documents-and-filing/elibrary",
+          "http_status": 403,
+          "missing_markers": [
+            "issued by FERC",
+            "Documents received and issued by FERC",
+            "download"
+          ]
+        }
+      ],
+      "clock_contract": "Issued/received document records are distinct from later corrections and underlying event dates.",
+      "content_sha256": "553e93057a216aec2d58f57b85421741f813994967b09291dd7a80b7da2450a5"
+    },
+    "NTSB_CAROL": {
+      "url": "https://www.ntsb.gov/safety/data/pages/data_stats.aspx",
+      "http_status": 200,
+      "reachable": true,
+      "required_markers_present": true,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://www.ntsb.gov/safety/data/pages/data_stats.aspx",
+          "http_status": 200,
+          "missing_markers": []
+        }
+      ],
+      "clock_contract": "Investigation event and publication times remain distinct.",
+      "content_sha256": "655488827be65fdf385381a884570d1f5062e3587774a0a9b1f58c633ad32cc6"
+    },
+    "FCC_ULS": {
+      "url": "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4",
+      "http_status": 200,
+      "reachable": true,
+      "required_markers_present": true,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4",
+          "http_status": 200,
+          "missing_markers": []
+        }
+      ],
+      "clock_contract": "Transaction identity/date is distinct from daily/weekly dissemination files.",
+      "content_sha256": "751c17690f1742445305f6c9e755a2ecd528ddacfca2bf7803643cc8d81b345b"
+    }
+  },
+  "candidate_results": [
+    {
+      "candidate_id": "Q179",
+      "status": "SOURCE_PROBES_PASSED",
+      "source_ids": [
+        "CLINICALTRIALS"
+      ]
+    },
+    {
+      "candidate_id": "Q180",
+      "status": "SOURCE_PROBES_PASSED",
+      "source_ids": [
+        "NHTSA_RECALLS"
+      ]
+    },
+    {
+      "candidate_id": "Q181",
+      "status": "SOURCE_PROBES_PASSED",
+      "source_ids": [
+        "OSHA_DATA"
+      ]
+    },
+    {
+      "candidate_id": "Q182",
+      "status": "BLOCKED_SOURCE_PROBE",
+      "source_ids": [
+        "FERC_ELIBRARY"
+      ]
+    },
+    {
+      "candidate_id": "Q183",
+      "status": "SOURCE_PROBES_PASSED",
+      "source_ids": [
+        "NTSB_CAROL"
+      ]
+    },
+    {
+      "candidate_id": "Q184",
+      "status": "SOURCE_PROBES_PASSED",
+      "source_ids": [
+        "FCC_ULS"
+      ]
+    }
+  ],
+  "synthetic_mutation_checks": {
+    "future_row_prefix_invariant": true,
+    "future_timestamp_excluded": true,
+    "no_search_dimension_present": true
+  },
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "receipt_fingerprint": "8c0684a5f625823704c836e48b081f1336ba59936bd9e28f7524bf76ee495481"
+}
