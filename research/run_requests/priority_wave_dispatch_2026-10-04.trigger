@@ -7,3 +7,4 @@ RANKING=false
 TUNING=false
 PROMOTION=false
 LIVE_EXECUTION=false
+RETRY=2
