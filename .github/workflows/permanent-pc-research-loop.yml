@@ -7,12 +7,7 @@ on:
     branches: [master]
     paths:
       - "automation/self_hosted_research_worker.py"
-      - "tests/test_local_ai_verifier_policy.py"
-      - "automation/local_ai_smoke.py"
       - "research/preregistrations/q109_n7_graph_integrity_2026_10_02.json"
-      - "automation/ai_worker_fabric.py"
-      - "scripts/enable_local_ai_worker.ps1"
-      - "scripts/verify_local_ai_worker.ps1"
       - "tests/test_self_hosted_research_worker.py"
       - "tests/test_persistent_research_acceleration_contract.py"
       - "research/governance/persistent_research_acceleration_contract.json"
@@ -27,21 +22,25 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-
-concurrency:
-  # Background PC work yields to an explicit long independent reproduction.
-  group: trading-agent-windows-research-capacity-v1
-  cancel-in-progress: false
+  contents: read
 
 jobs:
   autonomous_pc:
     if: github.repository == 'DWR-debug/trading-agent-public'
+    concurrency:
+      # The local-reproduction stream shares the long-run priority group;
+      # data_qa remains independently schedulable on the second PC slot.
+      group: ${{ matrix.concurrency_group }}
+      cancel-in-progress: false
     strategy:
       fail-fast: false
       max-parallel: 2
       matrix:
-        lane: [local_reproduction, data_qa]
+        include:
+          - lane: local_reproduction
+            concurrency_group: trading-agent-windows-research-capacity-v1
+          - lane: data_qa
+            concurrency_group: trading-agent-windows-research-data-qa-v1
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 25
     steps:
@@ -118,210 +117,5 @@ jobs:
           name: permanent-pc-loop-${{ matrix.lane }}-${{ github.run_id }}
           path: |
             research/runs/self_hosted/autonomous/${{ github.run_id }}/${{ matrix.lane }}/
-          if-no-files-found: warn
-          retention-days: 14
-
-  local_ai_smoke:
-    needs: autonomous_pc
-    if: >-
-      ${{ always() && github.repository == 'DWR-debug/trading-agent-public' &&
-          (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
-    outputs:
-      status: ${{ steps.smoke_result.outputs.status }}
-    runs-on: [self-hosted, trading-agent-research]
-    timeout-minutes: 8
-    steps:
-      - name: Download exact source
-        shell: cmd
-        run: |
-          @echo off
-          setlocal
-          set "WORK=%RUNNER_TEMP%\trading-agent-ai-smoke-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
-          set "ARCHIVE=%RUNNER_TEMP%\trading-agent-ai-smoke-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%.tar.gz"
-          if exist "%WORK%" rmdir /s /q "%WORK%"
-          mkdir "%WORK%" || exit /b 1
-          curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%" || exit /b 1
-          tar.exe -xzf "%ARCHIVE%" -C "%WORK%" || exit /b 1
-          for /d %%D in ("%WORK%\trading-agent-public-*") do echo REPO_SRC=%%~fD>>"%GITHUB_ENV%"
-          endlocal
-
-      - name: Ensure Antigravity CLI
-        shell: cmd
-        run: |
-          @echo off
-          setlocal
-          if not exist "%LOCALAPPDATA%\agy\bin\agy.exe" (
-            echo Antigravity CLI missing; installing for current Windows user...
-            powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "irm https://antigravity.google/cli/install.ps1 | iex"
-            if errorlevel 1 exit /b 1
-          )
-          if not exist "%LOCALAPPDATA%\agy\bin\agy.exe" (
-            echo ::error::Antigravity CLI installation did not produce %LOCALAPPDATA%\agy\bin\agy.exe
-            exit /b 1
-          )
-          echo %LOCALAPPDATA%\agy\bin>>"%GITHUB_PATH%"
-          "%LOCALAPPDATA%\agy\bin\agy.exe" --version
-          endlocal
-
-      - name: Bootstrap local AI policy
-        shell: cmd
-        run: |
-          @echo off
-          powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "%REPO_SRC%\scripts\enable_local_ai_worker.ps1"
-          if errorlevel 1 exit /b 1
-
-      - name: Bootstrap pinned Python
-        shell: cmd
-        run: |
-          @echo off
-          setlocal
-          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-ai-smoke"
-          set "PY_EXE=%PY_ROOT%\tools\python.exe"
-          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-ai-smoke.nupkg"
-          if not exist "%PY_EXE%" (
-            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
-            if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
-            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
-          )
-          "%PY_EXE%" --version || exit /b 1
-          endlocal
-
-      - name: Run local AI readiness check
-        shell: cmd
-        run: |
-          @echo off
-          powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "%REPO_SRC%\scripts\verify_local_ai_worker.ps1"
-          if errorlevel 1 exit /b 1
-
-      - name: Execute real local AI smoke test
-        id: smoke_result
-        shell: cmd
-        run: |
-          @echo off
-          setlocal
-          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-ai-smoke\tools\python.exe"
-          cd /d "%REPO_SRC%" || exit /b 1
-          set "PYTHONPATH=%REPO_SRC%"
-          "%PY_EXE%" "%REPO_SRC%\automation\local_ai_smoke.py" > "%RUNNER_TEMP%\local-ai-smoke.json"
-          if errorlevel 1 exit /b 1
-          type "%RUNNER_TEMP%\local-ai-smoke.json"
-          powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "$p=Get-Content -LiteralPath '%RUNNER_TEMP%\local-ai-smoke.json' -Raw | ConvertFrom-Json; ('status=' + $p.status) | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append"
-          endlocal
-
-      - name: Upload local AI receipt
-        if: always()
-        continue-on-error: true
-        uses: actions/upload-artifact@v6
-        with:
-          name: local-ai-smoke-${{ github.run_id }}
-          path: ${{ runner.temp }}\local-ai-smoke.json
-          if-no-files-found: warn
-          retention-days: 14
-
-  local_ai_worker:
-    needs: [autonomous_pc, local_ai_smoke]
-    if: >-
-      ${{ always() && needs.local_ai_smoke.result == 'success' &&
-          needs.local_ai_smoke.outputs.status == 'SUCCESS' &&
-          github.repository == 'DWR-debug/trading-agent-public' &&
-          (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
-    runs-on: [self-hosted, trading-agent-research]
-    timeout-minutes: 20
-    steps:
-      - name: Download exact source
-        shell: cmd
-        run: |
-          @echo off
-          setlocal
-          set "WORK=%RUNNER_TEMP%\trading-agent-ai-worker-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
-          set "ARCHIVE=%RUNNER_TEMP%\trading-agent-ai-worker-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%.tar.gz"
-          if exist "%WORK%" rmdir /s /q "%WORK%"
-          mkdir "%WORK%" || exit /b 1
-          curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%" || exit /b 1
-          tar.exe -xzf "%ARCHIVE%" -C "%WORK%" || exit /b 1
-          for /d %%D in ("%WORK%\trading-agent-public-*") do echo REPO_SRC=%%~fD>>"%GITHUB_ENV%"
-          endlocal
-
-      - name: Ensure Antigravity CLI
-        shell: cmd
-        run: |
-          @echo off
-          setlocal
-          if not exist "%LOCALAPPDATA%\agy\bin\agy.exe" (
-            echo Antigravity CLI missing; installing for current Windows user...
-            powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "irm https://antigravity.google/cli/install.ps1 | iex"
-            if errorlevel 1 exit /b 1
-          )
-          if not exist "%LOCALAPPDATA%\agy\bin\agy.exe" exit /b 1
-          echo %LOCALAPPDATA%\agy\bin>>"%GITHUB_PATH%"
-          "%LOCALAPPDATA%\agy\bin\agy.exe" --version
-          endlocal
-
-      - name: Bootstrap local AI policy
-        shell: cmd
-        run: |
-          @echo off
-          powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "%REPO_SRC%\scripts\enable_local_ai_worker.ps1"
-          if errorlevel 1 exit /b 1
-
-      - name: Bootstrap pinned Python
-        shell: cmd
-        run: |
-          @echo off
-          setlocal
-          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-ai-worker"
-          set "PY_EXE=%PY_ROOT%\tools\python.exe"
-          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-ai-worker.nupkg"
-          if not exist "%PY_EXE%" (
-            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
-            if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
-            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
-          )
-          "%PY_EXE%" --version || exit /b 1
-          endlocal
-
-      - name: Select deterministic Gemini rotation slot
-        id: task
-        shell: cmd
-        run: |
-          @echo off
-          powershell.exe -NoProfile -NonInteractive -Command "$slot=[int][math]::Floor(([DateTimeOffset]::UtcNow.ToUnixTimeSeconds()) / 21600) %% 6; switch($slot){0{$task='AI-2026-09-29-Q091-ADVERSARIAL'}1{$task='AI-2026-09-28-Q089-ADVERSARIAL'}2{$task='AI-2026-09-28-UNUSUAL-FRONTIER'}3{$task='AI-2026-09-30-Q100-FRONTIER-FEASIBILITY'}4{$task='AI-2026-09-30-Q101-NEGATIVE-EVIDENCE'}5{$task='AI-2026-09-30-Q102-REGIME-STATE-DESIGN'}}; 'task='+$task | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append; 'task_id='+$task | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append; 'slot='+$slot | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append; 'path=ai_requests\'+$task+'.json' | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append; 'GEMINI_LOCAL_ROTATION slot='+$slot+' task='+$task"
-
-      - name: Run bounded Gemini worker
-        shell: cmd
-        env:
-          AI_EXTERNAL_PROVIDER_ALLOWLIST: "true"
-          TRADING_AGENT_LOCAL_AI_MODE: "true"
-        run: |
-          @echo off
-          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-ai-worker\tools\python.exe"
-          cd /d "%REPO_SRC%" || exit /b 1
-          set "PYTHONPATH=%REPO_SRC%"
-          "%PY_EXE%" -m automation.ai_worker_fabric --run --provider "gemini_cli" --task "${{ steps.task.outputs.path }}" --output "%RUNNER_TEMP%\ai-${{ steps.task.outputs.task_id }}-gemini_cli.json"
-          type "%RUNNER_TEMP%\ai-${{ steps.task.outputs.task_id }}-gemini_cli.json"
-
-      - name: Publish Gemini worker state
-        if: always()
-        shell: cmd
-        env:
-          AI_WORKER_TASK_ID: "${{ steps.task.outputs.task_id }}"
-          AI_WORKER_PROVIDER: "gemini_cli"
-          GH_TOKEN: ${{ github.token }}
-          AI_WORKER_STATE_PATH: "ops/ai_worker_state/${{ steps.task.outputs.task_id }}__gemini_cli.json"
-        run: |
-          @echo off
-          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-ai-worker\tools\python.exe"
-          set "AI_WORKER_OUTPUT_PATH=%RUNNER_TEMP%\ai-${{ steps.task.outputs.task_id }}-gemini_cli.json"
-          cd /d "%REPO_SRC%" || exit /b 1
-          set "PYTHONPATH=%REPO_SRC%"
-          "%PY_EXE%" -m automation.publish_ai_worker_state
-
-      - name: Upload bounded AI receipt
-        if: always()
-        continue-on-error: true
-        uses: actions/upload-artifact@v6
-        with:
-          name: local-ai-worker-${{ steps.task.outputs.task_id }}-gemini-${{ github.run_id }}
-          path: ${{ runner.temp }}\ai-${{ steps.task.outputs.task_id }}-gemini_cli.json
           if-no-files-found: warn
           retention-days: 14
