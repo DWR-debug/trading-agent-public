@@ -45,7 +45,7 @@ jobs:
           assert d["shared_contract"]["live_execution"] is False
 
           ids=[c["id"] for c in d["candidates"]]
-          assert ids == ["Q194","Q195","Q196","Q197","Q199","Q201"]
+          assert ids == ["Q194","Q195","Q196","Q197","Q199","Q201","Q202","Q203","Q204"]
 
           required={"id","name","mechanism","event_clock","features","direction","cheap_falsifiers","gates"}
           for c in d["candidates"]:
