@@ -1011,7 +1011,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T22:27:13.453121+00:00",
+  "generated_at_utc": "2026-10-04T22:27:38.620571+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -3702,6 +3702,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: refresh resource dashboard snapshot",
+        "sha": "697eb9bc42a22d7313f8d86019e53abf0260addf",
+        "timestamp": "2026-10-04T22:27:29Z"
+      },
+      {
+        "message": "OPS: request resource dashboard refresh",
+        "sha": "eb427fb64c962824154220c95c4172138ee4251b",
+        "timestamp": "2026-10-05T00:27:23+02:00"
+      },
+      {
+        "message": "OPS: allow explicit dashboard refresh trigger",
+        "sha": "e572ec5a923e1e5328bb206b08ab72db47c5414a",
+        "timestamp": "2026-10-05T00:27:19+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f02926127cf0a086eafd2cac389dbc9732c2c005",
+        "timestamp": "2026-10-04T22:27:15Z"
+      },
+      {
         "message": "GOV: link Q202-Q204 frontier to tracking issue",
         "sha": "3e00e76fd927366c865c128f8476934909ecda23",
         "timestamp": "2026-10-05T00:27:01+02:00"
@@ -3720,26 +3740,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "3a56f67146654734d544082587c626fe4647700b",
         "timestamp": "2026-10-04T22:18:40Z"
-      },
-      {
-        "message": "OPS: re-trigger canonical current-status reconciliation",
-        "sha": "57b2c5300d20c6e84fcab0ed61f15053aeaf8de9",
-        "timestamp": "2026-10-05T00:18:28+02:00"
-      },
-      {
-        "message": "OPS: record Groq free adversarial worker state",
-        "sha": "3878d6739fcf1458a1885479626af9eb17e362fa",
-        "timestamp": "2026-10-04T22:18:08Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "99d048ccb104313803edaefbcae3c3dd0e3f5d1d",
-        "timestamp": "2026-10-04T22:18:05Z"
-      },
-      {
-        "message": "GOV: integrate Q202-Q204 into next-gate and adversarial review DAG",
-        "sha": "74f70f33f9687503e3e6a3cce8ee49dedb4f681e",
-        "timestamp": "2026-10-05T00:17:51+02:00"
       }
     ]
   },
@@ -3837,7 +3837,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "3e00e76fd927366c865c128f8476934909ecda23",
+  "source_master_sha": "697eb9bc42a22d7313f8d86019e53abf0260addf",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -3951,6 +3951,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37240058492"
+    "run_id": "37240080294"
   }
 }
