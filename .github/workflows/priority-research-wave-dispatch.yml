@@ -1,0 +1,57 @@
+name: Priority Research Wave Dispatcher
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/priority_wave_dispatch_2026-10-04.trigger"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: trading-agent-priority-wave-dispatch
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Dispatch non-running priority waves
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          repo="$GITHUB_REPOSITORY"
+          mapfile -t workflows < <(cat <<'EOF'
+          q185-q186-source-feasibility.yml
+          q187-q192-source-feasibility.yml
+          q187-q192-pit-readiness-r1.yml
+          q188-q192-pit-census-r2.yml
+          q193-q196-source-feasibility.yml
+          q197-q198-source-feasibility.yml
+          q198-pit-clock-census.yml
+          q199-q201-source-feasibility.yml
+          q119-treasury-source-feasibility.yml
+          EOF
+          )
+
+          runs="$(gh api "/repos/${repo}/actions/runs?per_page=200")"
+          for workflow in "${workflows[@]}"; do
+            active="$(printf '%s' "$runs" | jq --arg wf "https://github.com/${repo}/actions/workflows/${workflow}" '[.workflow_runs[] | select(.status != "completed") | select(.workflow_url == $wf)] | length')"
+            if [ "$active" -gt 0 ]; then
+              echo "SKIP_ACTIVE workflow=${workflow} active=${active}"
+              continue
+            fi
+            if gh workflow run "$workflow" --ref master; then
+              echo "DISPATCHED workflow=${workflow}"
+            else
+              echo "DISPATCH_FAILED workflow=${workflow}"
+              exit 1
+            fi
+          done
