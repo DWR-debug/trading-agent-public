@@ -20,9 +20,8 @@ PROBES = {
             "https://api.usaspending.gov/api/v2/awards/last_updated/",
         ],
         "markers": [
-            "awards/<AWARD_ID>",
-            "awards/last_updated",
-            "award spending",
+            "spending_by_award",
+            "last_updated",
         ],
     },
     "Q198_FEDERAL_REGISTER": {
