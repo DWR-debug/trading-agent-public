@@ -393,3 +393,13 @@ def test_groq_adapter_uses_only_fixed_model(monkeypatch):
     result = groq_free.call_groq_free("falsify this", api_key="secret-test-key", timeout_seconds=11)
     assert captured["payload"]["model"] == "openai/gpt-oss-20b"
     assert result["status"] == "SUCCESS"
+
+
+def test_global_adversarial_task_is_provider_neutral_and_source_durable():
+    import json
+    from pathlib import Path
+    task = json.loads(Path("ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json").read_text(encoding="utf-8"))
+    assert set(task["providers"]) == {"openrouter_free", "groq_free", "gemini_cli", "mistral_api"}
+    assert task["allow_workspace_writes"] is False
+    assert task["research_gate_changes"] is False
+    assert task["performance_authorized"] is False if "performance_authorized" in task else True
