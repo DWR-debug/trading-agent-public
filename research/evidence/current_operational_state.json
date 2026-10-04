@@ -963,7 +963,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T12:47:09.987519+00:00",
+  "generated_at_utc": "2026-10-04T12:51:55.902583+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2258,6 +2258,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "research/q186-r3-conservative-citation-visibility-2026-10-04",
+        "number": 1012,
+        "title": "RESEARCH: Q186 conservative citation-visibility R3",
+        "updatedAt": "2026-10-04T12:51:01Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1012"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "research-q185-q186-priority",
         "number": 1010,
         "title": "RESEARCH: A-priority Q185 legal-state and Q186 patent-network frontier",
@@ -2274,6 +2282,16 @@
       }
     ],
     "recent_commits": [
+      {
+        "message": "OPS: stop automatic Q185-Q186 Windows PR queue pressure",
+        "sha": "b7d0b35809bdf2effbf382f83c23804d7d618f1c",
+        "timestamp": "2026-10-04T14:51:44+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "edd4ae3116f258ce466bc0e65c629ad30e705bcb",
+        "timestamp": "2026-10-04T12:47:12Z"
+      },
       {
         "message": "FIX: isolate Q121-R6 push runs and prune stale executions",
         "sha": "a40c4182458ef2af10316325e61f9d846c68379f",
@@ -2303,16 +2321,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "d589473410e5e8489a896a9e19081b534165ce63",
         "timestamp": "2026-10-04T12:40:23Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "0ee823add1e0e3655c30a48666b211dd07f3d370",
-        "timestamp": "2026-10-04T12:40:05Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "7d8fce844098201a97b70ebf0b6b652873e0987b",
-        "timestamp": "2026-10-04T12:39:48Z"
       }
     ]
   },
@@ -2382,7 +2390,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a40c4182458ef2af10316325e61f9d846c68379f",
+  "source_master_sha": "b7d0b35809bdf2effbf382f83c23804d7d618f1c",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2496,6 +2504,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37203296632"
+    "run_id": "37203574065"
   }
 }
