@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T20:05:07.549650+00:00",
+  "generated_at_utc": "2026-10-04T20:05:56.105566+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2612,6 +2612,31 @@
     ],
     "recent_commits": [
       {
+        "message": "CAPACITY: probe three self-hosted Windows slots",
+        "sha": "0de4de1aed6086bb7db28e0797dfa1fddad00b25",
+        "timestamp": "2026-10-04T22:05:37+02:00"
+      },
+      {
+        "message": "CAPACITY: document Windows Runner C long-run role",
+        "sha": "0818b33c7112a95d7c899be3a1d3506479b1d5cc",
+        "timestamp": "2026-10-04T22:05:27+02:00"
+      },
+      {
+        "message": "CAPACITY: add Windows Runner C setup script",
+        "sha": "a23e6394ef6db0bb87dc8bcb3e472c856a44287a",
+        "timestamp": "2026-10-04T22:05:25+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "a40eca3ee4321164a49c03cc3a9d0eeefb82c5b9",
+        "timestamp": "2026-10-04T20:05:24Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "90749fbd2eac65406c13f9fcbf6e64c872b3991e",
+        "timestamp": "2026-10-04T20:05:10Z"
+      },
+      {
         "message": "CAPACITY: expand Q121-R6 independent reproduction to three Windows shards",
         "sha": "30372c3b6d10a47bfe17918d1e42086f1b55b342",
         "timestamp": "2026-10-04T22:04:55+02:00"
@@ -2625,31 +2650,6 @@
         "message": "RESEARCH: trigger next logical gate",
         "sha": "72e9d887dd116267f0cf8cceab34db64cb78482d",
         "timestamp": "2026-10-04T21:52:19+02:00"
-      },
-      {
-        "message": "OPS: route completed-round triggers to logical next wave",
-        "sha": "b60897912c402aa2bea79ab24c6851d65aab3656",
-        "timestamp": "2026-10-04T21:52:13+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "60092acdcac2b6d0775d74d12a45533cbc86fd94",
-        "timestamp": "2026-10-04T19:52:02Z"
-      },
-      {
-        "message": "RESEARCH: refresh self-contained Grok packet from current OS state",
-        "sha": "02d3e6631babc1829d8a7789147117125af26930",
-        "timestamp": "2026-10-04T21:51:47+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e4841e643c1005841f31288793e1e2a8ba48c02b",
-        "timestamp": "2026-10-04T19:51:01Z"
-      },
-      {
-        "message": "OPS: synchronize S10 phone runtime status",
-        "sha": "93238610b90d210f6c2ed98c6d40bbe72fce612b",
-        "timestamp": "2026-10-04T19:50:48Z"
       }
     ]
   },
@@ -2734,7 +2734,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "30372c3b6d10a47bfe17918d1e42086f1b55b342",
+  "source_master_sha": "0de4de1aed6086bb7db28e0797dfa1fddad00b25",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2848,6 +2848,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37230732722"
+    "run_id": "37230780369"
   }
 }
