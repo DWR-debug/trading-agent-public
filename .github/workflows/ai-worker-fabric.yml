@@ -29,20 +29,6 @@ on:
           - AI-2026-09-30-Q100-FRONTIER-FEASIBILITY
           - AI-2026-09-30-Q101-NEGATIVE-EVIDENCE
           - AI-2026-09-30-Q102-REGIME-STATE-DESIGN
-    inputs:
-      task_id:
-        description: "Explicit bounded OpenRouter review task for manual dispatch"
-        required: true
-        type: choice
-        options:
-          - AI-2026-10-04-Q187-Q192-ADVERSARIAL
-          - AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT
-          - AI-2026-09-29-Q091-ADVERSARIAL
-          - AI-2026-09-28-Q089-ADVERSARIAL
-          - AI-2026-09-28-UNUSUAL-FRONTIER
-          - AI-2026-09-30-Q100-FRONTIER-FEASIBILITY
-          - AI-2026-09-30-Q101-NEGATIVE-EVIDENCE
-          - AI-2026-09-30-Q102-REGIME-STATE-DESIGN
       run_secondary_provider:
         description: "Also run the manual Gemini/Mistral secondary review rotation"
         required: true
@@ -190,7 +176,8 @@ jobs:
     # legacy API-key worker manual-only to avoid scheduled 503 churn.
     if: >-
       ${{ github.repository == 'DWR-debug/trading-agent-public' &&
-          github.event_name == 'workflow_dispatch' }}
+          github.event_name == 'workflow_dispatch' &&
+          github.event.inputs.run_secondary_provider == 'true' }}
     concurrency:
       group: trading-agent-ai-gemini-free
       cancel-in-progress: false
@@ -312,7 +299,8 @@ jobs:
     # the scheduled free paths.
     if: >-
       ${{ github.repository == 'DWR-debug/trading-agent-public' &&
-          github.event_name == 'workflow_dispatch' }}
+          github.event_name == 'workflow_dispatch' &&
+          github.event.inputs.run_secondary_provider == 'true' }}
     concurrency:
       group: trading-agent-ai-mistral-free
       cancel-in-progress: false
