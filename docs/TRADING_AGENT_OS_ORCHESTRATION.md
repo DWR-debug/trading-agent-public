@@ -1,6 +1,6 @@
 # Trading Agent OS — Persistent Orchestration
 
-Stand: 2026-10-03
+Stand: 2026-10-04
 
 ## Zweck
 
@@ -23,7 +23,7 @@ The permanent rule is:
 
 **verify current state → snapshot live capacity → parallelize independent work → use the smallest useful free resource → cheap falsify early → expose robustness early → immediately independently replicate a complete formal pass.**
 
-The two Windows self-hosted lanes remain the primary deterministic capacity. The permanent workflow uses lane-scoped concurrency rather than workflow-global serialization; local reproduction retains the explicit Q121-R6 priority group, while data QA remains independently schedulable. They operate as **Lane A — Formal Readiness** and **Lane B — Frontier Discovery** when both slots are available. Lane A concentrates on advanced Coverage/PIT/compiler/authorization readiness; Lane B on orthogonal source/PIT feasibility and cheap falsification. Each lane has separate candidate/trial identity, branches/workflows and output/provenance paths. Cross-lane results never retroactively modify a frozen trial. The autonomous hosted frontier lane uses bounded internal concurrency (default 3 workers); local reproduction and other sequential QA/reproduction paths remain serial unless explicitly proven safe to parallelize.
+The two Windows self-hosted lanes remain the primary deterministic capacity. The permanent workflow uses lane-scoped concurrency rather than workflow-global serialization; current formal-readiness priorities follow the active registry, while data QA remains independently schedulable. They operate as **Lane A — Formal Readiness** and **Lane B — Frontier Discovery** when both slots are available. Lane A concentrates on advanced Coverage/PIT/compiler/authorization readiness; Lane B on orthogonal source/PIT feasibility, candidate contract development and cheap falsification. Each lane has separate candidate/trial identity, branches/workflows and output/provenance paths. Cross-lane results never retroactively modify a frozen trial. The autonomous hosted frontier lane uses bounded internal concurrency (default 3 workers); local reproduction and other sequential QA/reproduction paths remain serial unless explicitly proven safe to parallelize.
 
 S10 is not a background decoration resource. When its latest successful utility receipt is fresh (currently within 6 hours), that receipt is accepted as the S10 operational-presence signal for routing. A separate phone-runner discovery is not required solely to establish presence. Bounded work remains the only permitted use. Its output remains QA/review support only.
 
@@ -77,7 +77,14 @@ Jeder neue Kandidat durchläuft vor dem Eintritt in eine formale Phase einen str
 
 ## 4. Aktuelle Forschungspriorität
 
-Q119/Q120/Q122 liefern die aktuelle Feasibility-Spur für Treasury- und CFTC-Quellen. Q121 ist die Discovery-/Hypothesen-Schicht für Literatur- und Quellenmaterial. Q125-F1 prüft die SEC-MIDAS-Publikationsuhr nach dem behobenen Quell-URL-Fehler. I22 und Q104 verfolgen deterministische SEC/XBRL/PIT-Gates. Q124/Q126/Q127/Q128/Q129/Q130 bleiben Discovery-/PIT-Feasibility-Spuren. Parallel wird das Evidence-Critic Lab zur ersten belastbaren Modellmetriken-Auswertung gebracht.
+Die aktuelle Frontier-Spur umfasst Q185–Q201 mit Schwerpunkt auf orthogonalen öffentlichen Informationskanälen. Q185–Q186 verfolgen Patent-/Litigation-PIT, Q187–Q192 historische Source/PIT-Rekonstruktion, Q193–Q196 die vertiefte Kandidatenentwicklung aus administrativen/regulatorischen Quellen, Q197–Q198 Government-Procurement/Federal-Register-Zeitgrenzen und Q199/Q201 Patent-Publikation bzw. Clinical-Trial-Results-Posting. Q198 ist aktuell explizit source-access-blocked und bleibt fail-closed.
+
+Die sechs konkretisierten Kandidaten Q194/Q195/Q196/Q197/Q199/Q201 sind in
+research/candidates/orthogonal_candidate_specs_2026-10-04.json fixiert und werden durch
+.github/workflows/orthogonal-candidate-development.yml rein mechanisch validiert. Der zugehörige Receipt
+ist design-/governance-only und autorisiert keinerlei Performance.
+
+Lane A verfolgt parallel die bestehenden Formal-Readiness-Gates des aktiven Registers, ohne Holdout-/Asset-/Parameter-/Horizon-Selektion. Lane B verfolgt die Q179–Q201-Orthogonalspur sowie weitere Public-Source-Kandidaten.
 
 Es bleibt bei keiner Performance-Freigabe, solange die vollständige Coverage/PIT/Authorization-Kette nicht formal erfüllt ist.
 
