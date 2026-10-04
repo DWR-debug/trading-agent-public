@@ -1,0 +1,332 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-04-Q187-Q192-SOURCE-FEASIBILITY",
+  "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
+  "source_results": {
+    "USASPENDING": {
+      "urls": [
+        "https://api.usaspending.gov/docs/endpoints",
+        "https://www.usaspending.gov/keyword_search/2026"
+      ],
+      "http_statuses": [
+        200,
+        200
+      ],
+      "reachable": true,
+      "all_urls_reachable": true,
+      "required_markers_present": false,
+      "probe_classification": "REACHABLE_MARKER_MISMATCH",
+      "missing_markers": [
+        "Action Date",
+        "Transaction Amount"
+      ],
+      "attempts": [
+        {
+          "url": "https://api.usaspending.gov/docs/endpoints",
+          "http_status": 200,
+          "missing_markers": [
+            "Action Date",
+            "Transaction Amount"
+          ]
+        },
+        {
+          "url": "https://www.usaspending.gov/keyword_search/2026",
+          "http_status": 200,
+          "missing_markers": [
+            "Endpoints do not currently require any authorization",
+            "Action Date",
+            "Award ID",
+            "Transaction Amount"
+          ]
+        }
+      ],
+      "clock_contract": "Award action date is distinct from the time the transaction record becomes publicly retrievable. Formal PIT must prove a public boundary or conservatively shift use to the next eligible session.",
+      "content_sha256": "c54af75e879b1d59fe3fcbf5ef7d5a755aa3763b6d9960f8427d2a1e9e5bf677"
+    },
+    "FDA_SRLC": {
+      "urls": [
+        "https://www.fda.gov/safety/medical-product-safety-information/drug-safety-related-labeling-changes",
+        "https://www.fda.gov/drugs/drug-safety-and-availability/drug-safety-related-labeling-changes-srlc-database-overview-updates-safety-information-fda-approved"
+      ],
+      "http_statuses": [
+        200,
+        200
+      ],
+      "reachable": true,
+      "all_urls_reachable": true,
+      "required_markers_present": true,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://www.fda.gov/safety/medical-product-safety-information/drug-safety-related-labeling-changes",
+          "http_status": 200,
+          "missing_markers": [
+            "Search Labeling by Drug Name",
+            "Search Labeling by Date Range"
+          ]
+        },
+        {
+          "url": "https://www.fda.gov/drugs/drug-safety-and-availability/drug-safety-related-labeling-changes-srlc-database-overview-updates-safety-information-fda-approved",
+          "http_status": 200,
+          "missing_markers": []
+        }
+      ],
+      "clock_contract": "Supplement/date/update fields describe the labeling event and database state separately. Exact first-public observation and later corrections must be reconstructed before same-day use.",
+      "content_sha256": "9b957b183262a9c3728f0319db208d93b97e6f674c68df2f6388e532dd423b62"
+    },
+    "CPSC_RECALLS": {
+      "urls": [
+        "https://www.cpsc.gov/Recalls/CPSC-Recalls-Application-Program-Interface-API-Information",
+        "https://www.cpsc.gov/Data"
+      ],
+      "http_statuses": [
+        200,
+        200
+      ],
+      "reachable": true,
+      "all_urls_reachable": true,
+      "required_markers_present": true,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://www.cpsc.gov/Recalls/CPSC-Recalls-Application-Program-Interface-API-Information",
+          "http_status": 200,
+          "missing_markers": [
+            "Recall Data API"
+          ]
+        },
+        {
+          "url": "https://www.cpsc.gov/Data",
+          "http_status": 200,
+          "missing_markers": [
+            "machine readable",
+            "publicly available"
+          ]
+        }
+      ],
+      "clock_contract": "Recall publication state is distinct from incident/manufacture dates. Historical public-observation timing and revisions/withdrawals must be kept separate.",
+      "content_sha256": "6b73e083651a2ba03389fd3741f09098ccd74a8743705f0413527f1039107f95"
+    },
+    "EPA_ECHO": {
+      "urls": [
+        "https://echo.epa.gov/tools/data-downloads",
+        "https://echo.epa.gov/resources/echo-data/about-the-data"
+      ],
+      "http_statuses": [
+        200,
+        200
+      ],
+      "reachable": true,
+      "all_urls_reachable": true,
+      "required_markers_present": true,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://echo.epa.gov/tools/data-downloads",
+          "http_status": 200,
+          "missing_markers": []
+        },
+        {
+          "url": "https://echo.epa.gov/resources/echo-data/about-the-data",
+          "http_status": 200,
+          "missing_markers": [
+            "Data Downloads"
+          ]
+        }
+      ],
+      "clock_contract": "Facility/event dates are not interchangeable with the public ECHO refresh/extraction boundary. Historical PIT must use the documented refresh clock and prevent later refreshes from rewriting the prefix.",
+      "content_sha256": "ac970ac30cd42d61291167f088efd65cc53d5cef55be97d6fbd1ab5d2496d88d"
+    },
+    "USPTO_PATENT": {
+      "urls": [
+        "https://www.uspto.gov/products/patent-grant-data",
+        "https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents"
+      ],
+      "http_statuses": [
+        404,
+        200
+      ],
+      "reachable": true,
+      "all_urls_reachable": false,
+      "required_markers_present": false,
+      "probe_classification": "REACHABLE_MARKER_MISMATCH",
+      "missing_markers": [
+        "Patent Grant Full Text Data",
+        "patent grants"
+      ],
+      "attempts": [
+        {
+          "url": "https://www.uspto.gov/products/patent-grant-data",
+          "http_status": 404,
+          "missing_markers": [
+            "Patent Grant Full Text Data",
+            "patent grants"
+          ]
+        },
+        {
+          "url": "https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents",
+          "http_status": 200,
+          "missing_markers": [
+            "Patent Grant Full Text Data",
+            "patent grants"
+          ]
+        }
+      ],
+      "clock_contract": "Patent issue/publication date is distinct from later bulk-data refreshes. For Q191 the science-publication boundary must be separately proven and same-day ambiguous ordering must be excluded.",
+      "content_sha256": "047b77f949efc4ca3412668e07827f6bcd96041cc0b877d2eea831ee5fa1a5c6"
+    },
+    "CROSSREF": {
+      "urls": [
+        "https://api.crossref.org/works?rows=1"
+      ],
+      "http_statuses": [
+        200
+      ],
+      "reachable": true,
+      "all_urls_reachable": true,
+      "required_markers_present": true,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://api.crossref.org/works?rows=1",
+          "http_status": 200,
+          "missing_markers": []
+        }
+      ],
+      "clock_contract": "Crossref deposit/publication metadata is not automatically an exact public-dissemination timestamp; historical stage ordering must be proven.",
+      "content_sha256": "297932588820ae66a68e86809b2b5606516a790823e227b423c6e76f9bc3e2f3"
+    },
+    "FDA_SHORTAGES": {
+      "urls": [
+        "https://www.fda.gov/drug-shortages",
+        "https://www.fda.gov/drugs/drug-shortages/frequently-asked-questions-about-drug-shortages",
+        "https://open.fda.gov/data/drugshortages/",
+        "https://api.fda.gov/drug/shortages.json?limit=1"
+      ],
+      "http_statuses": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "reachable": true,
+      "all_urls_reachable": true,
+      "required_markers_present": false,
+      "probe_classification": "REACHABLE_MARKER_MISMATCH",
+      "missing_markers": [
+        "Drug Shortages download information"
+      ],
+      "attempts": [
+        {
+          "url": "https://www.fda.gov/drug-shortages",
+          "http_status": 200,
+          "missing_markers": [
+            "updated daily",
+            "Drug Shortages download information"
+          ]
+        },
+        {
+          "url": "https://www.fda.gov/drugs/drug-shortages/frequently-asked-questions-about-drug-shortages",
+          "http_status": 200,
+          "missing_markers": [
+            "Drug Shortages download information"
+          ]
+        },
+        {
+          "url": "https://open.fda.gov/data/drugshortages/",
+          "http_status": 200,
+          "missing_markers": [
+            "updated daily",
+            "Drug Shortages download information"
+          ]
+        },
+        {
+          "url": "https://api.fda.gov/drug/shortages.json?limit=1",
+          "http_status": 200,
+          "missing_markers": [
+            "Drug Shortages",
+            "updated daily",
+            "Drug Shortages download information"
+          ]
+        }
+      ],
+      "clock_contract": "Shortage start/resolution dates are distinct from first public observation. Historical daily-list state must be reconstructed without allowing current records to overwrite earlier prefixes.",
+      "content_sha256": "e97cb565f188e8c046e2e3c2dc0bc929b595b4f1cc5017920d7c5f54df42e17c"
+    }
+  },
+  "candidate_results": [
+    {
+      "candidate_id": "Q187",
+      "status": "BLOCKED_SOURCE_PROBE",
+      "source_ids": [
+        "USASPENDING"
+      ]
+    },
+    {
+      "candidate_id": "Q188",
+      "status": "SOURCE_PROBES_PASSED",
+      "source_ids": [
+        "FDA_SRLC"
+      ]
+    },
+    {
+      "candidate_id": "Q189",
+      "status": "SOURCE_PROBES_PASSED",
+      "source_ids": [
+        "CPSC_RECALLS"
+      ]
+    },
+    {
+      "candidate_id": "Q190",
+      "status": "SOURCE_PROBES_PASSED",
+      "source_ids": [
+        "EPA_ECHO"
+      ]
+    },
+    {
+      "candidate_id": "Q191",
+      "status": "BLOCKED_SOURCE_PROBE",
+      "source_ids": [
+        "USPTO_PATENT",
+        "CROSSREF"
+      ]
+    },
+    {
+      "candidate_id": "Q192",
+      "status": "BLOCKED_SOURCE_PROBE",
+      "source_ids": [
+        "FDA_SHORTAGES"
+      ]
+    }
+  ],
+  "synthetic_mutation_checks": {
+    "future_row_prefix_invariant": true,
+    "future_timestamp_excluded": true,
+    "reordering_future_row_cannot_change_prefix": true,
+    "no_search_dimension_present": true
+  },
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "receipt_fingerprint": "e004665eb323f8ecf2b8e24510bdd074db15015316034fd08cbcad90f64aa464"
+}
