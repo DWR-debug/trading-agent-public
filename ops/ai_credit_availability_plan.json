@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-10-04T14:17:25.113796Z",
+  "provider_availability": {
+    "openrouter_free": {
+      "eligible": true,
+      "next_available_at": null,
+      "next_reset_at": null,
+      "confidence": "unknown",
+      "reason": "OpenRouter free route is policy-allowed, but remaining daily requests are not exposed in repository telemetry; live preflight is the final gate",
+      "reserve_status": "balance_unknown"
+    },
+    "gemini_api": {
+      "eligible": true,
+      "next_available_at": null,
+      "next_reset_at": "2026-10-05T07:00:00Z",
+      "confidence": "exact_policy",
+      "reason": "Gemini daily quota reset boundary is documented at midnight Pacific Time; remaining balance is not available in repository telemetry",
+      "reserve_status": "balance_unknown"
+    },
+    "mistral_api": {
+      "eligible": true,
+      "next_available_at": null,
+      "next_reset_at": null,
+      "confidence": "unknown",
+      "reason": "Mistral free monthly usage exists but account-specific remaining balance/reset boundary is not exposed in repository telemetry",
+      "reserve_status": "balance_unknown"
+    },
+    "copilot_free": {
+      "eligible": false,
+      "next_available_at": "2026-11-01T00:00:00Z",
+      "next_reset_at": "2026-11-01T00:00:00Z",
+      "confidence": "exact_policy",
+      "reason": "protected project Copilot reservation is exhausted",
+      "reserve_status": "reservation_exhausted"
+    },
+    "gemini_cli": {
+      "eligible": true,
+      "next_available_at": null,
+      "next_reset_at": null,
+      "confidence": "explicit_error_only",
+      "reason": "local Gemini account quota is admitted only when explicit free-only preflight passes; reset time comes from provider error/observation",
+      "reserve_status": "preflight_required"
+    }
+  },
+  "task_assignments": [
+    {
+      "task_id": "AI-2026-10-04-Q187-Q192-ADVERSARIAL",
+      "status": "ADMITTED",
+      "provider": "gemini_api",
+      "provider_confidence": "exact_policy",
+      "reason": "Gemini daily quota reset boundary is documented at midnight Pacific Time; remaining balance is not available in repository telemetry"
+    },
+    {
+      "task_id": "AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT",
+      "status": "ADMITTED",
+      "provider": "gemini_api",
+      "provider_confidence": "exact_policy",
+      "reason": "Gemini daily quota reset boundary is documented at midnight Pacific Time; remaining balance is not available in repository telemetry"
+    },
+    {
+      "task_id": "AI-2026-09-29-Q091-ADVERSARIAL",
+      "status": "ADMITTED",
+      "provider": "gemini_api",
+      "provider_confidence": "exact_policy",
+      "reason": "Gemini daily quota reset boundary is documented at midnight Pacific Time; remaining balance is not available in repository telemetry"
+    }
+  ],
+  "policy_is_non_authorizing": true,
+  "paid_usage_allowed": false,
+  "scientific_evidence_created": false,
+  "decision_fingerprint": "1efba18a202b8e698e5375fa84bbed40137b8ffe3c3e3c7db55f7793668b6bae"
+}
