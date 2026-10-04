@@ -62,6 +62,8 @@ jobs:
           print("Q179_Q184_PIT_READINESS_R1_OK")
           PY
       - name: Persist latest PIT-readiness receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
         if: success() && github.event_name != 'pull_request'
         shell: bash
         run: |
