@@ -8,24 +8,31 @@
         "https://api.usaspending.gov/docs/endpoints",
         "https://api.usaspending.gov/api/v2/awards/last_updated/"
       ],
-      "probe_classification": "PASS",
-      "reachable": true,
-      "missing_markers": [],
+      "probe_classification": "UNREACHABLE",
+      "reachable": false,
+      "missing_markers": [
+        "spending_by_award",
+        "last_updated"
+      ],
       "attempts": [
         {
           "url": "https://api.usaspending.gov/docs/endpoints",
-          "http_status": 200,
-          "missing_markers": []
+          "http_status": 599,
+          "missing_markers": [
+            "spending_by_award",
+            "last_updated"
+          ]
         },
         {
           "url": "https://api.usaspending.gov/api/v2/awards/last_updated/",
-          "http_status": 200,
+          "http_status": 599,
           "missing_markers": [
-            "spending_by_award"
+            "spending_by_award",
+            "last_updated"
           ]
         }
       ],
-      "content_sha256": "65d54624b6866fbd30084eed3d44f4f9bb00df84aa22709cf2b0125aa9d79386",
+      "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "scientific_boundary": false
     },
     "Q198_FEDERAL_REGISTER": {
@@ -61,14 +68,14 @@
           ]
         }
       ],
-      "content_sha256": "85437a6e076de46fc0073de1b79f12e702be2c5a98f883d294940aa4a7d62f4d",
+      "content_sha256": "bacb7652fa15b01825b20f159cf6852f9e8053f5ac05905ad2063aceb19884e2",
       "scientific_boundary": false
     }
   },
   "candidate_results": [
     {
       "candidate_id": "Q197",
-      "status": "SOURCE_COMPONENT_READY"
+      "status": "BLOCKED_SOURCE_COMPONENT"
     },
     {
       "candidate_id": "Q198",
@@ -103,5 +110,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "receipt_fingerprint": "95201f816075deb8ddd27903e50ca95804ffa522cff37139fe77fcff83beaede"
+  "receipt_fingerprint": "d5865fee13fdfda310b25353bdaaa4055cfecd0081de01e6a868722d4d478cb9"
 }
