@@ -25,11 +25,12 @@ jobs:
       - name: Dispatch non-running priority waves
         env:
           GH_TOKEN: ${{ github.token }}
+          TRIGGER_MESSAGE: ${{ github.event.head_commit.message }}
         shell: bash
         run: |
           set -euo pipefail
           repo="$GITHUB_REPOSITORY"
-          trigger_message="${{ github.event.head_commit.message }}"
+          trigger_message="$TRIGGER_MESSAGE"
           if [[ "$GITHUB_EVENT_NAME" == "push" && "$trigger_message" == *"RESEARCH: trigger next logical gate"* ]]; then
             mapfile -t workflows < <(cat <<'EOF'
           orthogonal-pit-next-gate.yml
