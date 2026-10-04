@@ -2,8 +2,10 @@ from __future__ import annotations
 
 from automation.q198_pit_clock_census import (
     FROZEN_DATES,
+    HISTORICAL_API_TEMPLATE,
     _is_access_blocked,
     parse_public_inspection,
+    parse_public_inspection_api,
 )
 
 
@@ -44,6 +46,40 @@ def test_parser_rejects_ambiguous_same_day_record():
     """
     d = parse_public_inspection(ambiguous)
     assert d["same_day_clock_ambiguous_count"] == 1
+
+
+
+def test_historical_api_contract_is_fixed_and_non_authorizing():
+    assert "conditions%5Bavailable_on%5D={date}" in HISTORICAL_API_TEMPLATE
+    sample = {
+        "count": 2,
+        "results": [
+            {
+                "document_number": "2020-08581",
+                "filed_at": "2020-04-21T08:45:00.000-04:00",
+                "publication_date": "2020-04-22",
+                "last_public_inspection_issue": "2020-04-22",
+                "filing_type": "regular",
+                "editorial_note": None,
+            },
+            {
+                "document_number": "2020-06967",
+                "filed_at": "2020-04-20T16:15:00.000-04:00",
+                "publication_date": "2020-04-30",
+                "last_public_inspection_issue": "2020-04-29",
+                "filing_type": "special",
+                "editorial_note": "A correction was made while on public inspection.",
+            },
+        ],
+    }
+    d = parse_public_inspection_api(__import__("json").dumps(sample), "2020-04-22")
+    assert d["source_route"] == "official_api_by_date"
+    assert d["api_count"] == 2
+    assert d["records_with_filed_timestamp"] == 2
+    assert d["correction_or_withdrawal_note_count"] == 1
+    assert d["scientific_boundary"]["performance"] is False
+    assert d["scientific_boundary"]["promotion"] is False
+    assert d["safety"]["paper_only"] is True
 
 
 def test_source_boundary_is_non_authorizing():
