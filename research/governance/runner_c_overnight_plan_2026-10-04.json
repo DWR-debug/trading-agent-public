@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "generated_utc": "2026-10-04T20:50:00Z",
+  "purpose": "Runner C overnight preparation; descriptive queue contract, never performance authorization.",
+  "runner": {
+    "name": "LHT-N133732-3",
+    "label": "trading-agent-long",
+    "physical_parallel_capacity": 1,
+    "max_workflow_duration_minutes": 240
+  },
+  "capacity_math": {
+    "formula": "floor(night_window_minutes / 240)",
+    "examples": {"8h": 2, "9h": 2, "10h": 2, "12h": 3},
+    "note": "Worst-case complete 240-minute slots. Shorter workpacks can permit more completed runs, but the OS must not pad runtimes merely to consume capacity."
+  },
+  "prepared_workpacks": [
+    {"id":"RC-LONG-01","status":"EXECUTABLE_NOW","priority":1,"purpose":"Dedicated structural/next-gate/source-durability verification on Runner C.","workflow":".github/workflows/windows-runner-c-long-research.yml","prerequisite":"current master and Runner C availability"},
+    {"id":"RC-LONG-02","status":"GATED","priority":2,"purpose":"Q186 historical citation/grant completeness and publication-ordering compiler work.","prerequisite":"candidate-specific historical snapshot/archive executor exists and passes contract tests"},
+    {"id":"RC-LONG-03","status":"GATED","priority":3,"purpose":"Q197 historical USAspending award-state snapshot/revision lineage and frozen relationship-map compiler.","prerequisite":"immutable historical snapshot route and candidate-specific compiler exist"},
+    {"id":"RC-LONG-04","status":"GATED","priority":4,"purpose":"Q199/Q201 historical publication/results-state lineage compilers with independent PIT preparation.","prerequisite":"immutable historical snapshot routes and candidate-specific compilers exist"}
+  ],
+  "scheduling_policy": {
+    "no_duplicate_active_work": true,
+    "completed_round_chaining": true,
+    "only_execute_when_contract_is_executable": true,
+    "no_artificial_runtime_padding": true,
+    "formal_evidence_allowed": false,
+    "performance_allowed": false,
+    "promotion_allowed": false,
+    "live_execution": false
+  }
+}

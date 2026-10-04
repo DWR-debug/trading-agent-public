@@ -42,6 +42,7 @@ Write-Host "GitHub requires a short-lived repository runner registration token."
 Write-Host "Generate one at:"
 Write-Host "Repository -> Settings -> Actions -> Runners -> New self-hosted runner"
 Write-Host "The token expires after one hour."
+# The short-lived registration-token is read interactively and never persisted.
 $token = Read-Host "Paste the one-time runner registration token"
 if ([string]::IsNullOrWhiteSpace($token)) {
     throw "No runner registration token supplied."

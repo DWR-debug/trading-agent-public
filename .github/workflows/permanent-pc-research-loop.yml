@@ -44,8 +44,8 @@ jobs:
         include:
           - lane: local_reproduction
             concurrency_group: trading-agent-windows-research-capacity-v1
-          - lane: autonomous_frontier_qa
-            concurrency_group: trading-agent-windows-frontier-v1
+          - lane: data_qa
+            concurrency_group: trading-agent-windows-research-data-qa-v1
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 25
     steps:

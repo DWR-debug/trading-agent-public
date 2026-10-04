@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "purpose": "Diagnostic status for provider free-mode admission gates; no secrets.",
+  "providers": {
+    "groq_free": {"status":"NOT_CONFIGURED","required_secret":"GROQ_FREE_MODE_CONFIRMED","fixed_model":"openai/gpt-oss-20b"},
+    "mistral_api": {"status":"NOT_CONFIGURED","required_secret":"MISTRAL_FREE_MODE_CONFIRMED","fixed_model":"mistral-small-latest"},
+    "gemini_cli": {"status":"NOT_CONFIGURED","required_secret":"GEMINI_FREE_MODE_CONFIRMED","fixed_model":"gemini-3.7-flash"},
+    "openrouter_free": {"status":"FIXED_ZERO_PRICE_ROUTE","required_secret":null,"fixed_model":"openrouter/free"}
+  },
+  "paid_usage_allowed": false,
+  "paid_fallback_allowed": false,
+  "scientific_evidence_created": false,
+  "performance_authorized": false,
+  "live_execution": false
+}
+

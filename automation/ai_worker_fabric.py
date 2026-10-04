@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Any
 
 from automation.ai_quota_guard import load_block, parse_reset_seconds, quota_error, record_block
+from automation.free_mode_attestation import validate_free_mode_attestation
 
 SCHEMA_VERSION = 1
 MAX_RUNTIME_MINUTES = 20
@@ -317,15 +318,14 @@ def preflight(provider: str, env: dict[str, str] | None = None) -> dict[str, Any
     spec = PROVIDER_SPECS[provider]
     local_mode = _truth(env.get("TRADING_AGENT_LOCAL_AI_MODE"))
     binary = _resolve_binary(provider)
-    explicit_free = _truth(env.get(spec["free_attestation_env"]))
     local_attestation = _local_attestation(provider, env) if local_mode else {"present": False, "path": None}
-    free_gate = explicit_free or local_attestation["present"]
-    if provider == "groq_free":
-        free_gate = explicit_free
-    if provider == "openrouter_free":
-        # The provider is free-only by construction: model selection is not exposed
-        # and the only accepted route is OpenRouter's free-model router.
-        free_gate = spec["fixed_model"] == "openrouter/free"
+    policy_attestation = (
+        {"eligible": local_attestation["present"], "free_mode_attested": local_attestation["present"],
+         "attestation_type": "local_file", "reasons": [] if local_attestation["present"] else ["local free-mode attestation file is missing or invalid"]}
+        if local_mode
+        else validate_free_mode_attestation(provider, env)
+    )
+    free_gate = bool(policy_attestation["free_mode_attested"])
     auth_ok = bool(spec["auth_env"]) and any(env.get(name) for name in spec["auth_env"])
     if local_mode:
         auth_ok = binary is not None and local_attestation["present"]
@@ -338,6 +338,8 @@ def preflight(provider: str, env: dict[str, str] | None = None) -> dict[str, Any
         )
     if not allowlist:
         reasons.append("AI_EXTERNAL_PROVIDER_ALLOWLIST is not confirmed")
+    if not policy_attestation["eligible"]:
+        reasons.extend(policy_attestation["reasons"])
     # API-backed providers intentionally have no local executable. Only CLI providers
     # require a resolved binary; otherwise the preflight would incorrectly block
     # fixed HTTPS adapters such as Mistral and OpenRouter.
@@ -355,6 +357,7 @@ def preflight(provider: str, env: dict[str, str] | None = None) -> dict[str, Any
         "local_mode": local_mode,
         "local_attestation": local_attestation,
         "free_mode_attested": free_gate,
+        "free_mode_attestation": policy_attestation,
         "free_enforcement": (
             "fixed_model_groq_free_with_attestation"
             if provider == "groq_free"
