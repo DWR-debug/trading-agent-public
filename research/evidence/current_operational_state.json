@@ -228,6 +228,12 @@
         "note": "Q171 sample PIT reconstruction is proven; Q174-Q177 source clocks/versions are characterized but candidate-specific PIT compilers remain required; Q173 is license-blocked.",
         "performance_authorization_allowed": false,
         "pit_readiness_receipt_path": "research/evidence/q171_q177_pit_readiness_2026_10_03.json",
+        "q179_q184_pit_census_r2": {
+          "performance_authorization_allowed": false,
+          "receipt": "research/evidence/q179_q184_pit_census_r2_latest.json",
+          "state": "ACTIVE",
+          "workflow": ".github/workflows/q179-q184-pit-census-r2.yml"
+        },
         "source_receipt_path": "research/evidence/q171_q178_source_feasibility_2026_10_03.json",
         "state": "SOURCE_FEASIBILITY_COMPLETED_PIT_READINESS_ACTIVE"
       },
@@ -976,7 +982,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T14:12:58.996822+00:00",
+  "generated_at_utc": "2026-10-04T14:14:49.290945+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2271,11 +2277,11 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
-        "headRefName": "research/q179-q184-pit-census-r2-2026-10-04",
-        "number": 1020,
-        "title": "RESEARCH: advance Q179-Q184 historical PIT census R2",
-        "updatedAt": "2026-10-04T14:12:29Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1020"
+        "headRefName": "ops/ai-credit-scheduler-2026-10-04",
+        "number": 1021,
+        "title": "OPS: add deterministic free-AI credit availability scheduler",
+        "updatedAt": "2026-10-04T14:14:06Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1021"
       },
       {
         "baseRefName": "master",
@@ -2304,6 +2310,21 @@
     ],
     "recent_commits": [
       {
+        "message": "RESEARCH: advance Q179-Q184 historical PIT census R2 (#1020)",
+        "sha": "477c23a2339bacd7e77f9daeef5b8f42301f1798",
+        "timestamp": "2026-10-04T16:14:38+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "07674c9ab48b45ff24f89d12ac169b1eaa94967f",
+        "timestamp": "2026-10-04T14:13:05Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3defe804574fce46695c49012e8e44741bec65ed",
+        "timestamp": "2026-10-04T14:13:01Z"
+      },
+      {
         "message": "FIX: satisfy USAspending transaction probe contract for Q187 (#1019)",
         "sha": "902794a7362e1f46f39634679018bdd16f597bb3",
         "timestamp": "2026-10-04T16:12:47+02:00"
@@ -2327,21 +2348,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "0ce769e2d6c4a2878bef2b9095a966446799cc68",
         "timestamp": "2026-10-04T13:50:19Z"
-      },
-      {
-        "message": "FIX: probe Q187 USAspending transactions via documented API (#1018)",
-        "sha": "31b2b77c4269a64691fca15d8b7d566876474f10",
-        "timestamp": "2026-10-04T15:50:04+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a6ae3c3d01cb6b90453faa5dfcc2c0524b26c2fd",
-        "timestamp": "2026-10-04T13:45:16Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "ce1bfb99bb321efa9071870c8fec0cfd24f09b49",
-        "timestamp": "2026-10-04T13:45:12Z"
       }
     ]
   },
@@ -2411,7 +2417,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "902794a7362e1f46f39634679018bdd16f597bb3",
+  "source_master_sha": "477c23a2339bacd7e77f9daeef5b8f42301f1798",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2525,6 +2531,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37208425178"
+    "run_id": "37208535893"
   }
 }
