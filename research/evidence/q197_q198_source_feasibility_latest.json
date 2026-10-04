@@ -28,6 +28,23 @@
       "content_sha256": "65d54624b6866fbd30084eed3d44f4f9bb00df84aa22709cf2b0125aa9d79386",
       "scientific_boundary": false
     },
+    "Q198_HISTORICAL_PI_API": {
+      "urls": [
+        "https://www.federalregister.gov/api/v1/public-inspection-documents/2021-07287.json"
+      ],
+      "probe_classification": "PASS",
+      "reachable": true,
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://www.federalregister.gov/api/v1/public-inspection-documents/2021-07287.json",
+          "http_status": 200,
+          "missing_markers": []
+        }
+      ],
+      "content_sha256": "0e455b7f596ce4ac34c0e490e2d1cbeef6c7b87d1ee2c06aa982bdf7e2eabc76",
+      "scientific_boundary": false
+    },
     "Q198_FEDERAL_REGISTER": {
       "urls": [
         "https://www.federalregister.gov/api/v1/documents.json?per_page=1&order=newest",
@@ -103,5 +120,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "receipt_fingerprint": "89af8cd3e38348200e8c13350de9410fbfd2817f5cb19a6823894228773dcc2c"
+  "receipt_fingerprint": "e933ad80473da8c01d21d2516f17f66b7ead3cc664a95110b734cf22427e51eb"
 }
