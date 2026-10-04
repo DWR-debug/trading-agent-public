@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T18:00:31.853061+00:00",
+  "generated_at_utc": "2026-10-04T18:15:19.611701+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1763,7 +1763,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "8c0684a5f625823704c836e48b081f1336ba59936bd9e28f7524bf76ee495481",
+    "receipt_fingerprint": "e2f3af25dab2cb35271e5676bd4adbbba0f3da92457d749661e8227981f1bbdf",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -1811,7 +1811,7 @@
           }
         ],
         "clock_contract": "Transaction identity/date is distinct from daily/weekly dissemination files.",
-        "content_sha256": "751c17690f1742445305f6c9e755a2ecd528ddacfca2bf7803643cc8d81b345b",
+        "content_sha256": "34b1b34c3ec9e284fba8243a718ccdbcfba3fd6d46a6dd419b460e3485030ef4",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -1841,7 +1841,7 @@
           }
         ],
         "clock_contract": "Issued/received document records are distinct from later corrections and underlying event dates.",
-        "content_sha256": "553e93057a216aec2d58f57b85421741f813994967b09291dd7a80b7da2450a5",
+        "content_sha256": "ea05f538c1304e4314a5e295cc7e720c8143cbb0c7d9d0a0347be75ba09aacac",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -1862,7 +1862,7 @@
           }
         ],
         "clock_contract": "Recall publication date is distinct from the underlying safety-issue report date.",
-        "content_sha256": "1ccf3bee7f9916b868181f5c950596611a71850e0d72c3330658aea838123e4a",
+        "content_sha256": "3854c407e19054cf421074f4e83fc2dc8722a2b7b73cf4778bc99d1bb3ab1951",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -1879,7 +1879,7 @@
           }
         ],
         "clock_contract": "Investigation event and publication times remain distinct.",
-        "content_sha256": "655488827be65fdf385381a884570d1f5062e3587774a0a9b1f58c633ad32cc6",
+        "content_sha256": "0a8b42276e7ac8aeaf53e722a43121ed10d687a76524b166b5539cea85acf4eb",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -1896,7 +1896,7 @@
           }
         ],
         "clock_contract": "The DOL public catalog establishes the dataset boundary; inspection/opening and later catalog refresh times remain distinct.",
-        "content_sha256": "8ed2679f3e21ef40e4ab7c5605f8606aee27f2588538c9b69d80a2286df5a624",
+        "content_sha256": "f0516fbb34f807749ce24b7e1ad6f7c0dfb9141c70497bfa339861a61acde78c",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2288,6 +2288,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "research/q198-pit-clock-census-2026-10-04",
+        "number": 1062,
+        "title": "RESEARCH: add historical Q198 Public Inspection PIT census",
+        "updatedAt": "2026-10-04T18:14:20Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1062"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "fix/workflow-lint-2026-10-04",
         "number": 1056,
         "title": "FIX: restore clean workflow lint across research orchestration",
@@ -2297,6 +2305,36 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: record Groq API key smoke test",
+        "sha": "1b04694df18477d12d14ef3c1725cdab16371222",
+        "timestamp": "2026-10-04T18:15:17Z"
+      },
+      {
+        "message": "OPS: add non-inference Groq API key verification",
+        "sha": "55827630e786839b0e5c141613c3acf5434fe2ba",
+        "timestamp": "2026-10-04T20:15:06+02:00"
+      },
+      {
+        "message": "OPS: refresh resource dashboard snapshot",
+        "sha": "1c1b4268ebab1f257b7264c362b142bed3c8c17d",
+        "timestamp": "2026-10-04T18:13:12Z"
+      },
+      {
+        "message": "OPS: synchronize Android phone fleet receipts",
+        "sha": "ef7bbf99ea0a52cde400b8fe7458e1b2b381810d",
+        "timestamp": "2026-10-04T18:11:36Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "3d0edb290bbdfc24ff84cfc551743d2c6d61bfcc",
+        "timestamp": "2026-10-04T18:02:28Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f376d8f5eb0a3e4b5538ac79be20581dd51fdf42",
+        "timestamp": "2026-10-04T18:00:34Z"
+      },
+      {
         "message": "OPS: record verified Q197-Q201 source readiness",
         "sha": "adfbeef9d88289ee0d9aeb9e4096350e2d293f89",
         "timestamp": "2026-10-04T20:00:18+02:00"
@@ -2305,36 +2343,6 @@
         "message": "OPS: advance 2000 EUR paper-forward MTM state",
         "sha": "5760d317160077f099576450b40d4b3552a2d888",
         "timestamp": "2026-10-04T17:59:45Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "ef1f9cd503c1687a26d214e20184c0e16c5d98fc",
-        "timestamp": "2026-10-04T17:56:45Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "3b29e4751de63a2269105ccbf3160eaeb8700728",
-        "timestamp": "2026-10-04T17:56:42Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "38272ae36a2220c3643347aabfe361fcccbf5e20",
-        "timestamp": "2026-10-04T17:56:40Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "ded1e0c038a7db04616b6d59828aad454d9ad9c4",
-        "timestamp": "2026-10-04T17:56:36Z"
-      },
-      {
-        "message": "FIX: make deterministic evidence publication race-safe",
-        "sha": "1897765df0755d20dd5e459d9a877aa77da975a8",
-        "timestamp": "2026-10-04T19:56:23+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f29a4edefcd57adb22753ebf6e7fe3ae6ce548c0",
-        "timestamp": "2026-10-04T17:54:03Z"
       }
     ]
   },
@@ -2404,7 +2412,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "adfbeef9d88289ee0d9aeb9e4096350e2d293f89",
+  "source_master_sha": "1b04694df18477d12d14ef3c1725cdab16371222",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2518,6 +2526,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37222676751"
+    "run_id": "37223700497"
   }
 }
