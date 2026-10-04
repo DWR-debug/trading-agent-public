@@ -4,8 +4,9 @@
 Unser übergeordnetes Ziel ist die Entwicklung eines wissenschaftlich validierten, reproduzierbaren und risikogesteuerten Trading Agent, der erst nach ausreichender Evidenz und formaler Autorisierung für nachhaltigen realisierten P&L-Cashflow in Betracht kommt, mit variabler Familienunterstützungs-Entnahme, erforderlicher Reinvestition, Kapitalerhalt und vollständiger Auditierbarkeit.
 Kanonischer Projektvertrag: research/governance/project_north_star.json.
 
-Stand (UTC): 2026-10-02T19:47:07.217Z
-Technische Basis: 9ce1e5c5bd82cedd48f1036ef1becaf4242b3e76
+Stand (UTC): 2026-10-04T10:40:00Z
+Technische Code-Basis: 0899b0fbf9f3528411488789caf435b732c8005d
+Aktueller Master (docs/governance): aae45cf2dd8d4ff13a91ce3479b867e1c64df982
 Repository: DWR-debug/trading-agent-public
 
 ## Übergeordnetes Ziel
@@ -41,12 +42,17 @@ Vor jeder künftigen Performance-Autorisierung muss ein preregistrierter Robusth
 Ein vollständiger 13/13-Performance-Pass erzeugt keine Promotion. Er erzeugt stattdessen zwingend die sofortige, unveränderte unabhängige Replikation gemäß vorab festgelegtem Replikationsvertrag. Fehlt dieser Vertrag, fail-closed.
 Kanonischer Kontrollvertrag: research/governance/critical_research_quality_control.json.
 
+## Externe Trading-Agent-Prior-Art — 2026-10-04
+Die systematische Prüfung öffentlicher Trading-Agent-/Quant-Agent-Ansätze bestätigt mehrere bestehende Architekturentscheidungen und liefert drei konkrete Hardening-Richtungen: (1) agent-facing historische Kontexte strikt cutoff-/PIT-gebunden und bei retrospektiven Agent-Aufgaben optional asset-/datumsblind darstellen, (2) Replay-Parität zwischen Backtest und Paper/Forward über einen gemeinsamen State-/Decision-Vertrag absichern, und (3) ungültige/unlesbare Agent-Entscheidungen explizit als REVIEW_REQUIRED/INVALID quarantänisieren statt stillschweigend als neutrale/HOLD-Ausgabe zu interpretieren. Diese Punkte sind Integritäts-/Engineering-Kontrollen, keine neuen Handelssignale.
+Die Referenzsysteme sind `TauricResearch/TradingAgents`, `virattt/ai-hedge-fund`, `microsoft/RD-Agent`, `AI4Finance-Foundation/FinRobot`, `microsoft/qlib`, sowie AlphaAgent/Alpha-GPT/AlphaForge als Alpha-Research-Prior-Art. Externe Performance- oder Promotionsaussagen werden nicht übernommen.
+
 ## Nächste Schritte
 1. Aktuelle Coverage-/PIT-Feasibility-Gates weiter abarbeiten.
-2. S10 in reale bounded Research-Support-Aufgaben einbinden und den Nutzen per Receipt messen.
-3. Orthogonale Kandidaten erst nach dem neuen Robustheits-/Replikationsvertrag in die Performance-Spur überführen.
-4. Einen gültigen 13/13-Performance-Lauf immutable reconciliieren und unmittelbar die unabhängige Replikation anstoßen.
-5. Zusätzliche Hardware nur bei messbarem Parallelisierungsgewinn.
+2. Die drei prior-art-basierten Integrity-Hardening-Punkte nur dort implementieren, wo ein bestehender Code-/Task-Vertrag sie ohne semantische Annahmen eindeutig aufnehmen kann; keine speculative Integration.
+3. S10 in reale bounded Research-Support-Aufgaben einbinden und den Nutzen per Receipt messen.
+4. Orthogonale Kandidaten erst nach dem neuen Robustheits-/Replikationsvertrag in die Performance-Spur überführen.
+5. Einen gültigen 13/13-Performance-Lauf immutable reconciliieren und unmittelbar die unabhängige Replikation anstoßen.
+6. Zusätzliche Hardware nur bei messbarem Parallelisierungsgewinn.
 
 ## Unveränderliche Grenzen
 PAPER_ONLY=True
