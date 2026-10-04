@@ -46,6 +46,17 @@ def aggregate(shard_paths: list[Path], output: Path) -> dict[str, object]:
     if indices != list(range(SHARD_COUNT)):
         raise RuntimeError(f"SHARD_INDEX_SET_MISMATCH:{indices}")
 
+    identities = [x.get("execution_identity") for x in shards]
+    if any(not isinstance(item, dict) for item in identities):
+        raise RuntimeError("SHARD_EXECUTION_IDENTITY_MISSING")
+    run_ids = {str(item.get("workflow_run_id")) for item in identities}
+    attempts = {str(item.get("run_attempt")) for item in identities}
+    shard_ids = {(str(item.get("workflow_run_id")), str(item.get("run_attempt")), int(item.get("shard_index"))) for item in identities}
+    if None in run_ids or None in attempts or len(run_ids) != 1 or len(attempts) != 1:
+        raise RuntimeError(f"SHARD_EXECUTION_IDENTITY_MIXED:{sorted(run_ids)}:{sorted(attempts)}")
+    if len(shard_ids) != SHARD_COUNT:
+        raise RuntimeError("SHARD_EXECUTION_IDENTITY_DUPLICATE")
+
     total_population_counts = {int(x["population_count"]) for x in shards}
     total_fingerprints = {str(x["population_fingerprint"]) for x in shards}
     if total_population_counts != {R5_ROW_COUNT}:
