@@ -57,7 +57,15 @@ PROVIDER_SPECS = {
 
 LOCAL_ATTESTATION_DEFAULT = Path.home() / ".trading-agent" / "ai_free_attestation.json"
 
-CONTEXT_FILES = {
+CONTEXT_FILES = {    "AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT": (
+        "ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json",
+        "docs/CURRENT_STATUS.md",
+        "research/governance/critical_research_quality_control.json",
+        "research/candidates/orthogonal_candidate_specs_2026-10-04.json",
+        "automation/source_readiness_snapshot_guard.py",
+        "automation/orthogonal_pit_next_gate.py",
+    ),
+
     "AI-2026-09-28-Q089-ADVERSARIAL": (
         "docs/research_design/Q089-clean-fresh-q069-validation-2026-09-28.md",
         "docs/research_design/Q089_CROSS_RUN_REPRO_AUDIT_2026-09-28.md",
@@ -177,6 +185,14 @@ CONTEXT_TOTAL_LIMIT = 18000
 # Only stable/material context participates in automatic AI deduplication.
 # Volatile status synchronization outputs are intentionally excluded.
 CONTEXT_FINGERPRINT_FILES = {
+    "AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT": (
+        "ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json",
+        "research/governance/critical_research_quality_control.json",
+        "research/candidates/orthogonal_candidate_specs_2026-10-04.json",
+        "automation/source_readiness_snapshot_guard.py",
+        "automation/orthogonal_pit_next_gate.py",
+    ),
+
     "AI-2026-10-04-Q187-Q192-ADVERSARIAL": (
         "ai_requests/AI-2026-10-04-Q187-Q192-ADVERSARIAL.json",
         "research/frontier/q187_q192_candidate_wave_2026_10_04.json",
@@ -222,7 +238,15 @@ alter or weaken research gates, authorize promotion/live trading, or treat your
 own output as scientific evidence.
 
 Your output is worker material only and must be independently checked or reproduced
-by deterministic project tooling before it can affect a research decision."""
+by deterministic project tooling before it can affect a research decision."
+Universal adversarial-source rule:
+Treat a live endpoint/API probe, current documentation page, HTTP marker result, or
+current content hash as provisional operational telemetry only. It is not durable
+historical source readiness. Require an immutable dated snapshot/vintage or an
+explicitly frozen historical artifact before recommending candidate-specific PIT.
+Attack source drift, revision lineage, mapping drift, same-day/date-only leakage and
+cross-candidate confounding. Your role is to expose failure, not to create consensus.
+""
 
 class AIWorkerError(ValueError):
     """Raised for invalid AI-worker contracts."""
