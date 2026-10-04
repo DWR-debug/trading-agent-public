@@ -359,6 +359,15 @@
         "performance_authorization_allowed": false,
         "preregistration_path": "research/preregistrations/q130r1_wikimedia_attention_source_2026_10_03.json",
         "state": "SOURCE_FEASIBILITY_ACTIVE"
+      },
+      {
+        "candidate_inventory_path": "research/frontier/q187_q192_candidate_wave_2026_10_04.json",
+        "class": "next_orthogonal_public_information_frontier",
+        "code": "FRONTIER-Q187-Q192",
+        "design_document": "docs/research_design/Q187_Q192_SOURCE_PIT_WAVE_2026-10-04.md",
+        "note": "New six-candidate orthogonal wave; source-first feasibility only. No candidate ranking, selection, tuning, performance, promotion or live execution.",
+        "performance_authorization_allowed": false,
+        "state": "DESIGN_ONLY_SOURCE_FEASIBILITY_PENDING"
       }
     ],
     "active_trials": [
@@ -963,7 +972,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T13:16:52.599784+00:00",
+  "generated_at_utc": "2026-10-04T13:40:35.526864+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2258,6 +2267,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "ops/free-ai-event-driven-2026-10-04",
+        "number": 1015,
+        "title": "OPS: make free-AI usage event-driven and task-specific",
+        "updatedAt": "2026-10-04T13:40:09Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1015"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "research/q186-r3-conservative-citation-visibility-2026-10-04",
         "number": 1012,
         "title": "RESEARCH: Q186 conservative citation-visibility R3",
@@ -2274,6 +2291,16 @@
       }
     ],
     "recent_commits": [
+      {
+        "message": "RESEARCH: start Q187-Q192 next orthogonal candidate wave (#1014)",
+        "sha": "5a414f61f5f73bb4fdd7325fc2258a2842256519",
+        "timestamp": "2026-10-04T15:40:23+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8c2aea678b0ee96ccdf7d1e4ab1210ab9d927972",
+        "timestamp": "2026-10-04T13:16:54Z"
+      },
       {
         "message": "OPS: use Permanent PC for long independent reproductions",
         "sha": "abf10c97db9b11dc6348a589c9c59bbd2e7b0689",
@@ -2303,16 +2330,6 @@
         "message": "FIX: update Q185-Q186 Windows fail-closed policy test",
         "sha": "0644727e0fe6a73d485fa6dbc265f0ed6cf0cea4",
         "timestamp": "2026-10-04T14:54:07+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "68f9546266bf42d622912ac4707dfdad913e9d8b",
-        "timestamp": "2026-10-04T12:52:19Z"
-      },
-      {
-        "message": "FIX: fail closed on Q185-Q186 Windows reproduction errors",
-        "sha": "8160b67f0d72935df0f2fb71dfc20e2eadd4bbbe",
-        "timestamp": "2026-10-04T14:52:07+02:00"
       }
     ]
   },
@@ -2382,7 +2399,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "abf10c97db9b11dc6348a589c9c59bbd2e7b0689",
+  "source_master_sha": "5a414f61f5f73bb4fdd7325fc2258a2842256519",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2496,6 +2513,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37205048775"
+    "run_id": "37206455278"
   }
 }
