@@ -29,6 +29,8 @@ def test_gemini_daily_reset_is_midnight_pacific() -> None:
     now = datetime(2026, 10, 4, 14, 0, tzinfo=timezone.utc)
     result = availability_for_provider("gemini_api", now=now, policy=policy, observations={})
     assert result.confidence == "exact_policy"
+    assert result.eligible is False
+    assert result.next_available_at == "2026-10-05T07:00:00Z"
     assert result.next_reset_at == "2026-10-05T07:00:00Z"
 
 
@@ -72,7 +74,15 @@ def test_task_scheduler_uses_available_provider_and_never_authorizes_science() -
         observations={},
     )
     assert result["task_assignments"][0]["status"] == "ADMITTED"
-    assert result["task_assignments"][0]["provider"] == "gemini_api" or result["task_assignments"][0]["provider"] == "openrouter_free"
+    assert result["task_assignments"][0]["provider"] == "openrouter_free"
     assert result["policy_is_non_authorizing"] is True
     assert result["paid_usage_allowed"] is False
     assert result["scientific_evidence_created"] is False
+
+
+def test_unknown_gemini_balance_is_not_admitted():
+    policy = json.loads((ROOT / "research/governance/ai_provider_credit_policies_2026_10_04.json").read_text())
+    now = datetime(2026, 10, 4, 14, 0, tzinfo=timezone.utc)
+    result = availability_for_provider("gemini_api", now=now, policy=policy, observations={})
+    assert result.reserve_status == "preflight_required"
+    assert result.eligible is False
