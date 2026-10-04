@@ -1,0 +1,37 @@
+name: Q121-R6 SEC Archive URL Smoke
+
+on:
+  pull_request:
+    paths:
+      - "automation/q121r6_sec_acceptance_time_compiler.py"
+      - "automation/q121r3_sec_form_index_reverse_issuer.py"
+      - "automation/q121r6_sec_archive_url_smoke.py"
+      - "tests/test_q121r6_sec_acceptance_time_compiler.py"
+      - ".github/workflows/q121r6-sec-archive-url-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    if: github.repository == "DWR-debug/trading-agent-public"
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        lane: [local_reproduction, data_qa]
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Check corrected SEC archive URL
+        shell: pwsh
+        run: python -m automation.q121r6_sec_archive_url_smoke
+      - name: Record bounded result
+        shell: pwsh
+        run: Write-Host "Q121R6_WINDOWS_URL_SMOKE_BOUNDARY scientific_evidence=false live_execution=false"
