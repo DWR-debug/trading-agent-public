@@ -207,6 +207,7 @@ ACTIVE_WORKFLOWS = {
     "android-phone-fleet-receipt-sync.yml",
     "post-pass-independent-replication.yml",
     "q179-q184-source-feasibility.yml",
+    "q179-q184-pit-readiness.yml",
 }
 
 REQUIRED_FILES = (
