@@ -272,21 +272,42 @@ def schedule_contract() -> dict[str, object]:
     }
 
 
+def revision_notice_markers(body: bytes) -> dict[str, bool]:
+    text = re.sub(r"\s+", " ", body.decode("utf-8", errors="replace")).casefold()
+    return {
+        "dated_august_28_2026": bool(re.search(r"\baugust 28, 2026\b", text)),
+        "mentions_august_26_issue": bool(re.search(r"\bon wednesday, august 26\b", text)),
+        "published_full_set_at_1030": bool(
+            re.search(
+                r"published the full set of .*?weekly petroleum status report \(wpsr\) data"
+                r".*?wpsr summary text at 10:30 a\.m\.",
+                text,
+                re.IGNORECASE,
+            )
+        ),
+        "data_tables_declared_accurate": bool(
+            re.search(
+                r"only the text of the summary was erroneous, not the data tables",
+                text,
+            )
+        ),
+        "summary_text_updated_at_1213": bool(
+            re.search(
+                r"updated the text .*?at 12:13 p\.m\. on august 26",
+                text,
+            )
+        ),
+    }
+
+
 def revision_notice_control() -> dict[str, object]:
     status, body = fetch(REVISION_NOTICE_URL)
-    text = re.sub(r"\s+", " ", body.decode("utf-8", errors="replace"))
-    markers = {
-        "dated_august_28_2026": "August 28, 2026" in text,
-        "mentions_august_26_issue": "August 26" in text,
-        "published_full_set_at_1030": "published the full set of Weekly Petroleum Status Report (WPSR) data" in text
-        and "at 10:30 a.m." in text,
-        "data_tables_declared_accurate": "not the data tables" in text,
-        "summary_text_updated_at_1213": "12:13 p.m." in text,
-    }
+    markers = revision_notice_markers(body)
     if status != 200:
         raise RuntimeError(f"EIA_WPSR_REVISION_NOTICE_HTTP_{status}")
     if not all(markers.values()):
-        raise RuntimeError("EIA_WPSR_REVISION_NOTICE_CONTROL_MARKER_MISSING")
+        missing = ",".join(key for key, ok in markers.items() if not ok)
+        raise RuntimeError(f"EIA_WPSR_REVISION_NOTICE_CONTROL_MARKER_MISSING:{missing}")
     return {
         "url": REVISION_NOTICE_URL,
         "http_status": status,
@@ -294,7 +315,6 @@ def revision_notice_control() -> dict[str, object]:
         "markers": markers,
         "interpretation": "documented summary-text correction; no Table-4 data revision is claimed",
     }
-
 
 def probe_control(control: dict[str, str]) -> dict[str, object]:
     issue_status, issue_body = fetch(control["issue_url"])
