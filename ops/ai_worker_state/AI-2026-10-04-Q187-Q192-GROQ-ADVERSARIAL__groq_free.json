@@ -1,1 +1,56 @@
-{"schema_version":1,"task_id":"AI-2026-10-04-Q187-Q192-GROQ-ADVERSARIAL","provider":"groq_free","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-10-04-Q187-Q192-GROQ-ADVERSARIAL",
+  "provider": "groq_free",
+  "free_only": true,
+  "preflight": {
+    "provider": "groq_free",
+    "available": true,
+    "binary": null,
+    "free_only": true,
+    "local_mode": false,
+    "litellm_transport_enabled": true,
+    "local_attestation": {
+      "present": false,
+      "path": null
+    },
+    "free_mode_attested": true,
+    "free_mode_attestation": {
+      "eligible": true,
+      "provider": "groq_free",
+      "fixed_model": "openai/gpt-oss-20b",
+      "free_mode_attested": true,
+      "attestation_required": true,
+      "attestation_type": "operator_account_tier_assertion",
+      "attestation_env": "GROQ_FREE_MODE_CONFIRMED",
+      "paid_usage_allowed": false,
+      "paid_fallback_allowed": false,
+      "personal_credit_fallback_allowed": false,
+      "reasons": []
+    },
+    "free_enforcement": "litellm_fixed_provider_route",
+    "reasons": []
+  },
+  "litellm_transport_enabled": true,
+  "task_fingerprint": "292729d2a89a10ee288ae54d5e4e57c25dc8086750bebcb242cc3f2c9f253924",
+  "context_fingerprint": "7c0e8a34835b3e63313af7a9ba4ae489fce3712b02b487d7b64f7be346d282c8",
+  "observed_at_utc": "2026-10-04T21:25:01.969179Z",
+  "worker_output_is_scientific_evidence": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 5.201,
+  "stdout": "**Worker Handoff – Q187‑Q192 Public‑Information Wave (Adversarial Source/PIT Feasibility)**  \n\n| Section | Content |\n|---------|---------|\n| **Findings** | 1. **Historical Archive Availability** – Source probes passed, but no evidence that the USAspending API or FDA SRLC database expose *complete* historical records for all award/labeling dates.  <br>2. **Exact Public‑Observation Clocks** – The contract specifies that the public‑availability timestamp must be *strictly* after the event date.  Current probe data only shows that the API is reachable; it does not confirm the ordering of timestamps.  <br>3. **Revision/Amendment Lineage** – For Q187, the construction relies on a “modification/action date” field; however, the API documentation does not guarantee that each modification record contains a reference to the prior modification or that the sequence is preserved.  <br>4. **Entity Mapping** – The mapping of recipients (Q187) or drugs/applications (Q188) to issuers is required to be frozen ex‑ante.  No audit trail is provided that guarantees no post‑hoc changes to the mapping tables.  <br>5. **Same‑Day Ambiguity** – Award modifications and FDA labeling updates can occur on the same calendar day.  The contract requires proof that the public record for the modification/labeling is *later* in the same day; this is not demonstrated.  <br>6. **Overlap/Confounding** – Q187 and Q188 both expose issuer‑level signals.  There is no evidence that the two sources are orthogonal; simultaneous events could confound attribution. |\n| **Counterarguments** | • The API documentation states that “All historical award data is available” – but this is a *policy statement* and not a proven invariant.  <br>• The “generated_internal_id” field may be generated at ingestion time, which could be *after* the action date; however, the API does not expose the ingestion timestamp, so the ordering cannot be verified.  <br>• The FDA SRLC “update” field is described as “date of last update” but the database may retroactively correct earlier entries, violating the immutable‑prefix requirement.  <br>• Mapping tables are often updated to correct errors; without an immutable snapshot, the mapping could drift.  <br>• Same‑day use is only guaranteed if the public timestamp is *strictly* later; the API does not expose the exact time of public posting, only the date.  |\n| **Concrete Next Actions (Fixed, Falsifiable Tests)** | 1. **Historical Archive Census** – For each source (USAspending, FDA SRLC, CPSC Recall API): <br>   • Query a *known* historical record (e.g., award ID from 2015, labeling change from 2018, recall from 2016). <br>   • Verify that the API returns the record and that the returned data matches the known source (e.g., award amount, drug name). <br>   • If any record is missing or mismatched, **discard** the candidate. <br>2. **Public‑Availability Clock Test** – For each source: <br>   • Extract the event date (e.g., “Action Date” or “Recall Date”) and the API’s public timestamp (e.g., “generated_internal_id” creation time or API response header “Date”). <br>   • Assert that `public_timestamp > event_date`. <br>   • If the assertion fails for any record, **discard** the candidate. <br>3. **Revision Lineage Verification** – For Q187: <br>   • Identify an award with at least two modifications. <br>   • Request all modification records and confirm that each record contains a `previous_modification_id` field that chains back to the original award. <br>   • If the chain is broken or missing, **discard** the candidate. <br>4. **Entity Mapping Freeze Test** – For Q187 and Q188: <br>   • Export the mapping table (recipient→issuer or drug→issuer) as of the latest historical date. <br>   • Re‑export the same mapping after a 1‑month delay. <br>   • Assert that the two exports are identical. <br>   • If differences exist, **discard** the candidate. <br>5. **Same‑Day Ordering Test** – For Q187: <br>   • Find an award and a modification that share the same calendar day. <br>   • Compare the public timestamps of the award record and the modification record. <br>   • Assert that `mod_public_timestamp > award_public_timestamp`. <br>   • If not, **discard** the candidate. <br>6. **Overlap/Confounding Check** – For Q187 vs Q188: <br>   • For a set of issuers, list all award modification dates and all FDA labeling change dates. <br>   • Compute the intersection of dates. <br>   • If the intersection is non‑empty for a significant proportion of issuers, flag the wave for *confounding* and consider discarding or redesigning the signal extraction. |\n| **Uncertainty** | • The API may impose rate limits or pagination that could hide older records; the tests above assume full retrieval is possible. <br>• The public timestamp may be derived from server clocks that are not synchronized; a small drift could cause false negatives in the clock test. <br>• Mapping tables may be updated for compliance reasons; a single post‑hoc change could invalidate the entire wave if not detected. <br>• The overlap/confounding test depends on the definition of “significant proportion”; without a quantitative threshold, the decision remains subjective. |\n\n**Summary** – The above tests are *fixed* (no parameter tuning) and *falsifiable* (a clear pass/fail outcome). They directly target the hard invariants identified in the task. Executing them will either provide the required proofs for PIT readiness or expose concrete failures that warrant discarding the candidate wave.",
+  "stderr": "",
+  "command_binary": "litellm",
+  "api_model": "openai/gpt-oss-20b",
+  "litellm_model": "groq/openai/gpt-oss-20b",
+  "response_id": "chatcmpl-84ccb0cc-6266-458d-8423-82f4a7ac42fb",
+  "response_model": "openai/gpt-oss-20b",
+  "usage": null
+}
