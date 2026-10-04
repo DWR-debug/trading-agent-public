@@ -963,7 +963,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T11:19:31.943519+00:00",
+  "generated_at_utc": "2026-10-04T11:22:44.732414+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1493,8 +1493,396 @@
     "workflow_run_attempt": 1,
     "workflow_run_id": 37125689936
   },
-  "q179_q184_pit_readiness_r1": {},
-  "q179_q184_source_feasibility": {},
+  "q179_q184_pit_readiness_r1": {
+    "candidate_results": [
+      {
+        "archive_contract": "Historical API/download coverage and a reproducible prior-state archive are still unproven.",
+        "candidate_id": "Q179",
+        "clock_contract": "ClinicalTrials.gov posted-date fields define public availability; submitted dates remain separate.",
+        "mapping_contract": "Sponsor/exposure to listed pharma issuer must be frozen independently of outcomes.",
+        "performance_authorized": false,
+        "pit_status": "PIT_CONTRACT_DEFINED_PENDING_ARCHIVE_AND_ISSUER_MAPPING",
+        "probe_statuses": [
+          "SAMPLE_REACHABLE"
+        ],
+        "revision_contract": "Record update lineage must be reconstructed without replacing the earlier posted state.",
+        "source_id": "CLINICALTRIALS"
+      },
+      {
+        "archive_contract": "Historical flat-file coverage is documented, but candidate-specific archive reconstruction is still pending.",
+        "candidate_id": "Q180",
+        "clock_contract": "NHTSA publication date and ET convention are documented; exact historical event-publication reconstruction is still required.",
+        "mapping_contract": "Vehicle/product-to-issuer exposure mapping must be frozen before evaluation.",
+        "performance_authorized": false,
+        "pit_status": "PIT_CONTRACT_DEFINED_PENDING_PUBLICATION_FIELD_AND_ISSUER_MAPPING",
+        "probe_statuses": [
+          "SAMPLE_REACHABLE",
+          "SAMPLE_REACHABLE"
+        ],
+        "revision_contract": "Flat-file/API revision and amendment semantics must be separated from the initial public state.",
+        "source_id": "NHTSA_RECALLS"
+      },
+      {
+        "archive_contract": "Historical inspection coverage exists at the public dataset level, but candidate-specific PIT reconstruction is pending.",
+        "candidate_id": "Q181",
+        "clock_contract": "DOL catalog confirms public daily accrual; an exact intraday public observation boundary is still unresolved.",
+        "mapping_contract": "Establishment/parent-to-issuer mapping must be frozen and coverage-tested.",
+        "performance_authorized": false,
+        "pit_status": "PIT_CONTRACT_DEFINED_PENDING_INTRADAY_CLOCK_AND_ISSUER_MAPPING",
+        "probe_statuses": [
+          "SAMPLE_REACHABLE"
+        ],
+        "revision_contract": "Dataset refreshes/corrections must be separated from the historical inspection state.",
+        "source_id": "OSHA_DATA"
+      },
+      {
+        "archive_contract": "The official archive is broad, but candidate-specific historical extraction has not been reproduced in this lane.",
+        "candidate_id": "Q182",
+        "clock_contract": "FERC issued/received document semantics are established, but runner access currently returns HTTP 403.",
+        "mapping_contract": "Docket/project/facility-to-issuer mapping must be frozen.",
+        "performance_authorized": false,
+        "pit_status": "PIT_CONTRACT_DEFINED_RUNNER_BLOCKED_PENDING_ACCESS",
+        "probe_statuses": [
+          "RUNNER_ACCESS_BLOCKED",
+          "RUNNER_ACCESS_BLOCKED"
+        ],
+        "revision_contract": "Corrections/updated filings must remain separate from the initial public document state.",
+        "source_id": "FERC_ELIBRARY"
+      },
+      {
+        "archive_contract": "Historical aviation data coverage is documented, but candidate-specific PIT reconstruction remains pending.",
+        "candidate_id": "Q183",
+        "clock_contract": "Recent report publication date plus the daily/pending publication report provide a public publication boundary.",
+        "mapping_contract": "Operator/airport/facility-to-issuer exposure mapping must be frozen.",
+        "performance_authorized": false,
+        "pit_status": "PIT_CONTRACT_DEFINED_PENDING_HISTORICAL_PUBLICATION_AND_ISSUER_MAPPING",
+        "probe_statuses": [
+          "SAMPLE_REACHABLE",
+          "SAMPLE_REACHABLE"
+        ],
+        "revision_contract": "Report publication/correction history must be separated from the underlying incident date.",
+        "source_id": "NTSB_CAROL"
+      },
+      {
+        "archive_contract": "Public access files are available, but candidate-specific historical lineage remains pending.",
+        "candidate_id": "Q184",
+        "clock_contract": "Daily transaction-file dissemination is established; exact transaction/amendment clock and historical file lineage still require audit.",
+        "mapping_contract": "Licensee/application-to-issuer mapping must be frozen.",
+        "performance_authorized": false,
+        "pit_status": "PIT_CONTRACT_DEFINED_PENDING_TRANSACTION_CLOCK_AND_ISSUER_MAPPING",
+        "probe_statuses": [
+          "SAMPLE_REACHABLE"
+        ],
+        "revision_contract": "Application/license modifications and later corrections must not rewrite prior transaction states.",
+        "source_id": "FCC_ULS"
+      }
+    ],
+    "receipt_fingerprint": "673444099b511f81f18dbe79cd5cfe0abcfee8d1db13dad7d158a34ef89230ee",
+    "receipt_type": "q179_q184_pit_readiness_r1",
+    "safety": {
+      "AUTOMATIC_PROMOTION": false,
+      "LIVE_TRADING_ENABLED": false,
+      "ORDERS_ENABLED": false,
+      "PAPER_ONLY": true
+    },
+    "schema_version": "1.0",
+    "scientific_boundary": {
+      "asset_selection": false,
+      "candidate_ranking": false,
+      "holdout_selection": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "threshold_search": false,
+      "variant_search": false
+    },
+    "source_results": {
+      "https://api.nhtsa.gov/recalls/recallsByVehicle?make=acura&model=rdx&modelYear=2012": {
+        "classification": "SAMPLE_REACHABLE",
+        "content_sha256": "6a40f82696ceec4e17d836c579abd86d27c7c2e5312ff690c6f99a9c522af6ed",
+        "http_status": 200,
+        "missing_markers": [],
+        "url": "https://api.nhtsa.gov/recalls/recallsByVehicle?make=acura&model=rdx&modelYear=2012"
+      },
+      "https://catalog.data.gov/dataset/dol-enforcement-data-inspection": {
+        "classification": "SAMPLE_REACHABLE",
+        "content_sha256": "04ede44faa7bc36672b8413853706ef6bb66b28d57e8ac0638b2fedf98f6a069",
+        "http_status": 200,
+        "missing_markers": [],
+        "url": "https://catalog.data.gov/dataset/dol-enforcement-data-inspection"
+      },
+      "https://clinicaltrials.gov/api/v2/studies/NCT00125528": {
+        "classification": "SAMPLE_REACHABLE",
+        "content_sha256": "d9ae42a4f31df44d2e163ff1a3964474fc6446b2080c57e3e94311f2f21aefcb",
+        "http_status": 200,
+        "missing_markers": [],
+        "url": "https://clinicaltrials.gov/api/v2/studies/NCT00125528"
+      },
+      "https://ferc.gov/what-elibrary": {
+        "classification": "RUNNER_ACCESS_BLOCKED",
+        "content_sha256": "15049e5827b68f458058af1a364fc2bc73a389ac9323bba5ced20d9d315da38e",
+        "http_status": 403,
+        "missing_markers": [
+          "issued by FERC",
+          "Documents received and issued by FERC",
+          "download"
+        ],
+        "url": "https://ferc.gov/what-elibrary"
+      },
+      "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4": {
+        "classification": "SAMPLE_REACHABLE",
+        "content_sha256": "3af6355a20cb95e2d89deb9188c3a2f5d0c5798af5bbee1a8cbcf3a9d0b6e190",
+        "http_status": 200,
+        "missing_markers": [],
+        "url": "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4"
+      },
+      "https://www.ferc.gov/about/what-ferc/frequently-asked-questions-faqs/documents-and-filing/elibrary": {
+        "classification": "RUNNER_ACCESS_BLOCKED",
+        "content_sha256": "a981c39c0a39e93945878912e88972c7b339e537ca988d5b22ad58b959b55cd3",
+        "http_status": 403,
+        "missing_markers": [
+          "issued by FERC",
+          "Documents received and issued by FERC",
+          "download"
+        ],
+        "url": "https://www.ferc.gov/about/what-ferc/frequently-asked-questions-faqs/documents-and-filing/elibrary"
+      },
+      "https://www.nhtsa.gov/nhtsa-datasets-and-apis": {
+        "classification": "SAMPLE_REACHABLE",
+        "content_sha256": "153302f82665996e8447ad4cd4dc0706feebb52639d0c3f05b329e9cd2d79921",
+        "http_status": 200,
+        "missing_markers": [],
+        "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis"
+      },
+      "https://www.ntsb.gov/Pages/CAROL-Data-Dictionary.aspx": {
+        "classification": "SAMPLE_REACHABLE",
+        "content_sha256": "187e8f884c3b486cf2c14b67073d5b731b788c8757c816c9b70d906735d011cb",
+        "http_status": 200,
+        "missing_markers": [],
+        "url": "https://www.ntsb.gov/Pages/CAROL-Data-Dictionary.aspx"
+      },
+      "https://www.ntsb.gov/safety/data/Pages/Data_Stats.aspx": {
+        "classification": "SAMPLE_REACHABLE",
+        "content_sha256": "64109f51360cb684cca6963af750f3fa3bfca3b7456768b86da3b68c06ea2c37",
+        "http_status": 200,
+        "missing_markers": [],
+        "url": "https://www.ntsb.gov/safety/data/Pages/Data_Stats.aspx"
+      }
+    },
+    "status": "PIT_READINESS_R1_COMPLETED_NO_PERFORMANCE",
+    "synthetic_mutation_checks": {
+      "future_row_prefix_invariant": true,
+      "future_value_not_visible_to_prefix": true,
+      "input_order_independent_fixture": true,
+      "missingness_fixture_fails_closed": true,
+      "no_search_dimension_present": true
+    },
+    "unresolved_gate_requirements": [
+      "full historical source/archive coverage",
+      "exact public observation clock where not proven",
+      "fixed entity mapping coverage",
+      "revision/amendment lineage",
+      "independent reproduction"
+    ],
+    "wave_id": "Q179-Q184-PIT-READINESS-R1-2026-10-04"
+  },
+  "q179_q184_source_feasibility": {
+    "candidate_results": [
+      {
+        "candidate_id": "Q179",
+        "source_ids": [
+          "CLINICALTRIALS"
+        ],
+        "status": "SOURCE_PROBES_PASSED"
+      },
+      {
+        "candidate_id": "Q180",
+        "source_ids": [
+          "NHTSA_RECALLS"
+        ],
+        "status": "SOURCE_PROBES_PASSED"
+      },
+      {
+        "candidate_id": "Q181",
+        "source_ids": [
+          "OSHA_DATA"
+        ],
+        "status": "SOURCE_PROBES_PASSED"
+      },
+      {
+        "candidate_id": "Q182",
+        "source_ids": [
+          "FERC_ELIBRARY"
+        ],
+        "status": "BLOCKED_SOURCE_PROBE"
+      },
+      {
+        "candidate_id": "Q183",
+        "source_ids": [
+          "NTSB_CAROL"
+        ],
+        "status": "SOURCE_PROBES_PASSED"
+      },
+      {
+        "candidate_id": "Q184",
+        "source_ids": [
+          "FCC_ULS"
+        ],
+        "status": "SOURCE_PROBES_PASSED"
+      }
+    ],
+    "receipt_fingerprint": "8c0684a5f625823704c836e48b081f1336ba59936bd9e28f7524bf76ee495481",
+    "safety": {
+      "automatic_promotion": false,
+      "live_trading_enabled": false,
+      "orders_enabled": false,
+      "paper_only": true
+    },
+    "schema_version": "1.0",
+    "scientific_boundary": {
+      "asset_search": false,
+      "holdout_selection": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "ranking": false,
+      "selection": false,
+      "threshold_search": false,
+      "variant_search": false
+    },
+    "source_results": {
+      "CLINICALTRIALS": {
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://clinicaltrials.gov/api/v2/studies/NCT00125528"
+          }
+        ],
+        "clock_contract": "API posted-date fields define public availability; submitted dates are separate.",
+        "content_sha256": "d9ae42a4f31df44d2e163ff1a3964474fc6446b2080c57e3e94311f2f21aefcb",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "required_markers_present": true,
+        "url": "https://clinicaltrials.gov/api/v2/studies/NCT00125528"
+      },
+      "FCC_ULS": {
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4"
+          }
+        ],
+        "clock_contract": "Transaction identity/date is distinct from daily/weekly dissemination files.",
+        "content_sha256": "751c17690f1742445305f6c9e755a2ecd528ddacfca2bf7803643cc8d81b345b",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "required_markers_present": true,
+        "url": "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4"
+      },
+      "FERC_ELIBRARY": {
+        "attempts": [
+          {
+            "http_status": 403,
+            "missing_markers": [
+              "issued by FERC",
+              "Documents received and issued by FERC",
+              "download"
+            ],
+            "url": "https://ferc.gov/what-elibrary"
+          },
+          {
+            "http_status": 403,
+            "missing_markers": [
+              "issued by FERC",
+              "Documents received and issued by FERC",
+              "download"
+            ],
+            "url": "https://www.ferc.gov/about/what-ferc/frequently-asked-questions-faqs/documents-and-filing/elibrary"
+          }
+        ],
+        "clock_contract": "Issued/received document records are distinct from later corrections and underlying event dates.",
+        "content_sha256": "553e93057a216aec2d58f57b85421741f813994967b09291dd7a80b7da2450a5",
+        "http_status": 403,
+        "missing_markers": [
+          "issued by FERC",
+          "Documents received and issued by FERC",
+          "download"
+        ],
+        "probe_classification": "RUNNER_ACCESS_BLOCKED",
+        "reachable": false,
+        "required_markers_present": false,
+        "url": "https://ferc.gov/what-elibrary"
+      },
+      "NHTSA_RECALLS": {
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis"
+          }
+        ],
+        "clock_contract": "Recall publication date is distinct from the underlying safety-issue report date.",
+        "content_sha256": "1ccf3bee7f9916b868181f5c950596611a71850e0d72c3330658aea838123e4a",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "required_markers_present": true,
+        "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis"
+      },
+      "NTSB_CAROL": {
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://www.ntsb.gov/safety/data/pages/data_stats.aspx"
+          }
+        ],
+        "clock_contract": "Investigation event and publication times remain distinct.",
+        "content_sha256": "655488827be65fdf385381a884570d1f5062e3587774a0a9b1f58c633ad32cc6",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "required_markers_present": true,
+        "url": "https://www.ntsb.gov/safety/data/pages/data_stats.aspx"
+      },
+      "OSHA_DATA": {
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://catalog.data.gov/dataset/dol-enforcement-data-inspection"
+          }
+        ],
+        "clock_contract": "The DOL public catalog establishes the dataset boundary; inspection/opening and later catalog refresh times remain distinct.",
+        "content_sha256": "8ed2679f3e21ef40e4ab7c5605f8606aee27f2588538c9b69d80a2286df5a624",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "required_markers_present": true,
+        "url": "https://catalog.data.gov/dataset/dol-enforcement-data-inspection"
+      }
+    },
+    "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
+    "synthetic_mutation_checks": {
+      "future_row_prefix_invariant": true,
+      "future_timestamp_excluded": true,
+      "no_search_dimension_present": true
+    },
+    "task_id": "Q-2026-10-04-Q179-Q184-SOURCE-FEASIBILITY"
+  },
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -1519,6 +1907,26 @@
     ],
     "recent_commits": [
       {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "6a1a32cfe4a0756c7fa0913834a378b3caa03126",
+        "timestamp": "2026-10-04T11:22:18Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "a15743d94cdf53da97c6ed9dfd216af3116a996b",
+        "timestamp": "2026-10-04T11:22:13Z"
+      },
+      {
+        "message": "FIX: publish Q179-Q184 receipts with GitHub token",
+        "sha": "d0ee57341c7423917157979c70599a2d3cccbf3b",
+        "timestamp": "2026-10-04T13:21:58+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "cc1200e79f43985ecb388fb543cb4629ea4dfd8b",
+        "timestamp": "2026-10-04T11:19:34Z"
+      },
+      {
         "message": "OPS: persist Q179-Q184 receipts in canonical current status",
         "sha": "b513a638e48448ca4e3ae5b0b955622071d6e2dc",
         "timestamp": "2026-10-04T13:19:19+02:00"
@@ -1537,26 +1945,6 @@
         "message": "RESEARCH: add Q179-Q184 PIT readiness R1 lane",
         "sha": "4c0acaf174dea432e2c1f6c0d4c134e525e22820",
         "timestamp": "2026-10-04T13:13:32+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "8603f948ca3640a957e9383a545b0306d95aca76",
-        "timestamp": "2026-10-04T11:09:57Z"
-      },
-      {
-        "message": "OPS: persist latest Q133-Q170 PIT-readiness material receipt",
-        "sha": "6dbe0b1b841871cd2ada44b46f78af4c67f5f708",
-        "timestamp": "2026-10-04T11:09:42Z"
-      },
-      {
-        "message": "EVIDENCE: persist Q137-Q144 micro PIT receipt",
-        "sha": "e2c783326d4dc50e6a431b5d5ac190bf74cf8e11",
-        "timestamp": "2026-10-04T11:09:39Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f390700f4586211f9ae1e627a8ab99c99929c839",
-        "timestamp": "2026-10-04T11:09:33Z"
       }
     ]
   },
@@ -1588,7 +1976,7 @@
     "decision_basis_stage": null,
     "latest_formal_status": "performance_completed_no_arm_passed_all_13_gates",
     "latest_formal_trial": "T-2026-10-01-H06P2R3-PERFORMANCE-01",
-    "next_research_focus_recorded": "Q121-R6 is the active formal PIT/source gate. The verified Q121-R5 dual-index population is fixed at 61,818 rows; current R6 execution is waiting for or using the two self-hosted Windows research slots. Earlier R6 failures are infrastructure only (portable tzdata, workspace handoff, artifact path) and have been corrected. No R6 scientific result is claimed until all 61,818 headers are fetched and validated and the immutable aggregate receipt passes. Revision lineage and first-public-availability timing remain separate gates. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
+    "next_research_focus_recorded": "Q179-Q184 is the active Lane-B frontier after source feasibility. Five of six public source probes pass (Q179/Q180/Q181/Q183/Q184); Q182 FERC eLibrary remains runner-access blocked by HTTP 403. PIT Readiness R1 is completed without performance: all six candidates have explicit clock/revision/mapping/archive contracts, but historical archive reconstruction, exact PIT timing where unresolved, fixed issuer mapping and independent reproduction remain open. No performance, holdout selection, tuning, ranking, promotion or live execution is authorized.",
     "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
     "q023_recorded": {
       "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
@@ -1626,7 +2014,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b513a638e48448ca4e3ae5b0b955622071d6e2dc",
+  "source_master_sha": "6a1a32cfe4a0756c7fa0913834a378b3caa03126",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -1740,6 +2128,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37198339064"
+    "run_id": "37198495875"
   }
 }
