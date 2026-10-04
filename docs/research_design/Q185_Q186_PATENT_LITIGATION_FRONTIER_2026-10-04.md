@@ -17,8 +17,9 @@ Aghdasi and Tagade (LSE CEP Discussion Paper 2117, August 2025) study directed p
 This is substantially different from patent counts: the hypothesis is about **network-mediated information**, not firm innovation volume.
 
 Primary literature:
-- https://cep.lse.ac.uk/_NEW/PUBLICATIONS/abstract.asp?index=11712
-- https://doi.org/10.1111/1475-679X.70071
+- LSE Centre for Economic Performance, Discussion Paper CEPDP2117, 13 August 2025:
+  https://cep.lse.ac.uk/_NEW/PUBLICATIONS/abstract.asp?index=11712
+- The LSE publication record used here does not establish a DOI; do not substitute the litigation paper's DOI.
 
 ### Q185 — corporate litigation
 
@@ -33,13 +34,24 @@ Primary source:
 
 ### Q186
 
-USPTO states that PatentsView Q4 2025 data contain disambiguated patent data through December 31, 2025 and are distributed through the USPTO Open Data Portal. USPTO patent-grant bibliographic data cover weekly patent grants from 1976 to present. USPTO also states that patent grants are issued electronically through Patent Center and are available immediately upon issue.
+PatentsView provides disambiguated research data, with a Q4 2025 vintage through December 31, 2025; it is a research/data source, not the authoritative PIT clock. The official USPTO Official Gazette provides the issue/publication boundary, and USPTO states that electronic grants are available immediately upon issue. USPTO Patent Document Authority Files provide a separate correction/withdrawal/missing-document control surface and are normally refreshed twice monthly. The legacy grant-bibliographic product route used in this wave currently redirects/does not match the expected historical markers, so it is **not** accepted as proof of historical weekly completeness.
+
+R2 fixed controls (non-return-selected):
+- Gazette week 37: September 15, 2026
+- Gazette week 38: September 22, 2026
+- Gazette week 39: September 29, 2026
+
+R2 establishes the 2026 grant/publication clock on these fixed controls only. It does **not** establish citation-publication ordering, historical grant/citation completeness, entity mapping or revision lineage.
 
 Sources:
 - https://www.uspto.gov/subscription-center/2026/patentsview-releases-q4-2025-data-update
-- https://developer.uspto.gov/product/patent-grant-bibliographic-datasgml
+- https://www.uspto.gov/ip-policy/economic-research/patentsview
 - https://www.uspto.gov/patents/apply/patent-center/egrants
 - https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents
+- https://patentsgazette.uspto.gov/week37/
+- https://patentsgazette.uspto.gov/week38/
+- https://patentsgazette.uspto.gov/week39/
+- https://www.uspto.gov/patents/search/patent-document-authority-files
 
 ### Q185
 
@@ -74,6 +86,10 @@ The key falsification condition is **citation-publication ordering**: if the dep
 7. No case-type, court, outcome, return or event-window search is allowed.
 
 Where CourtListener does not provide a proven public intraday boundary, the conservative next-session rule remains in force.
+
+## R2 result boundary
+
+Q186 PIT-R2 confirms, on fixed Gazette controls, that the current official USPTO grant/publication clock is reproducibly reachable and that post-2023 electronic grants have an immediate-public-access boundary. The legacy historical grant-bibliographic route remains unresolved and is not treated as historical completeness evidence. **Citation-publication ordering remains UNPROVEN.** The safe construction rule is therefore: a citation edge enters the pre-grant graph only when its own public-observation boundary is independently proven to precede the grant; otherwise exclude the edge or apply a conservative next-session rule and record the resulting coverage loss.
 
 ## Required gates before formalization
 
