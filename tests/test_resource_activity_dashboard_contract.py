@@ -8,7 +8,7 @@ def test_resource_dashboard_workflow_is_read_only_and_hosted():
     assert 'runs-on: ubuntu-24.04' in text
     assert 'actions: read' in text
     assert 'contents: read' in text
-    assert '/actions/runners' in text
+    assert '/actions/workflows/permanent-pc-research-loop.yml/runs' in text
     assert '/actions/runs?status=queued' in text
     assert '/actions/runs?status=in_progress' in text
     assert 'GITHUB_STEP_SUMMARY' in text
