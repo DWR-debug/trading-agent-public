@@ -86,7 +86,7 @@ jobs:
           if [ "$actual" != "${GITHUB_SHA}" ]; then
             echo "MASTER_MOVED_AFTER_TRIGGER=$actual"
             changed="$(git diff --name-only "${GITHUB_SHA}" "$actual")"
-            bad="$(printf '%s\n' "$changed" | grep -Ev '^(docs/(CURRENT_STATUS\.md|PROJECT_CONTEXT\.md|DECISION_BASIS\.md|TRADING_AGENT_CHAT_ENTRYPOINT\.md)|automation/(s10_receipt_sync|sync_current_operational_status)\.py|tests/test_s10_receipt_sync\.py|research/evidence/|research/runs/|research/authorizations/|research/preregistrations/|research/governance/|research/run_requests/|ops/paper_forward(_2000)?/state/|ops/ai_worker_state/|ops/android_phone_runtime_status/|ops/s10_runtime_status\.json)' || true)"
+            bad="$(printf '%s\n' "$changed" | grep -Ev '^(docs/(CURRENT_STATUS\.md|PROJECT_CONTEXT\.md|DECISION_BASIS\.md|TRADING_AGENT_CHAT_ENTRYPOINT\.md)|automation/(s10_receipt_sync|sync_current_operational_status)\.py|tests/test_s10_receipt_sync\.py|research/evidence/|research/runs/|research/authorizations/|research/preregistrations/|research/governance/|research/run_requests/|ops/paper_forward(_2000)?/state/|ops/ai_worker_state/|ops/ai_credit_availability_plan\.json|ops/android_phone_runtime_status/|ops/s10_runtime_status\.json)' || true)"
             if [ -n "$bad" ]; then
               echo "MASTER_MOVED_WITH_NON_EVIDENCE_CODE_CHANGES"
               printf '%s\n' "$changed"

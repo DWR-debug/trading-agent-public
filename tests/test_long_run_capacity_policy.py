@@ -27,3 +27,8 @@ def test_agent_queue_treats_copilot_exhaustion_as_pause_but_keeps_other_errors_c
     assert "COPILOT_FREE_GATE_RECONCILE=EXHAUSTED" in text
     assert "Copilot Free gate failed and the protected budget is not provably exhausted; fail closed." in text
     assert "steps.copilot_budget.outcome == 'success'" in text
+
+
+def test_t052_allows_ai_credit_operational_plan_in_master_move_guard() -> None:
+    text = Path(".github/workflows/t052-exact-master-ci-gate.yml").read_text(encoding="utf-8")
+    assert "ops/ai_credit_availability_plan\\.json" in text
