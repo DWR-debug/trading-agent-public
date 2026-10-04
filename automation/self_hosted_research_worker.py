@@ -328,6 +328,14 @@ LANES: dict[str, list[list[str]]] = {
             "--output",
             "research/runs/self_hosted/q199_q201_priority/result.json",
         ],
+        [
+            PYTHON,
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_litellm_free.py",
+            "tests/test_ai_worker_fabric_litellm.py",
+        ],
     ],
     "repo_qa": [
         [
