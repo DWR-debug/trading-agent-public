@@ -21,7 +21,7 @@ Diese beiden Dateien beschreiben ausschließlich den aktuellen operativen Zustan
 PROJECT_STATUS.md bleibt für historische Rekonstruktion erhalten und darf aktuelle SHA-, PR-,
 Runner- oder Queue-Angaben nicht überstimmen.
 
-Stand: 2026-10-03
+Stand: 2026-10-04
 
 Dieses Dokument ist der **verbindliche Einstiegspunkt für neue Chats**, die mit
 `trading agent` beginnen.
@@ -62,6 +62,25 @@ Das bedeutet:
   technische Wahrheit = öffentlicher `master`;
   Research-Evidenz = Ledger/Checkpoints/Workflow-Artefakte;
   Projektabsicht = `docs/PROJECT_CONTEXT.md`.
+
+## Dashboard und Unteragenten
+
+Der operative Ressourcenstatus ist zusätzlich über `docs/dashboard/index.html` verfügbar. Der Dashboard-Snapshot liegt unter `docs/dashboard/dashboard_data.json`; die Aktualisierung läuft täglich um 03:35 UTC und kann manuell über `.github/workflows/resource-dashboard-update.yml` angefordert werden.
+
+Der Orchestrator darf kostenlose Unteragenten/Modelle als **bounded workers** einsetzen. Aktive Rollen sind:
+- OpenRouter Free: event-driven adversarial/design review.
+- Groq Free: unabhängige Q187-Q192 Source/PIT-Adversarial-Review nach bestandener Free-Tier-Vorprüfung.
+- Gemini/Antigravity: bounded manuelle lokale Review-/Engineering-Aufgaben auf Windows, nie wissenschaftliche Autorität.
+
+Unteragenten liefern Arbeitsmaterial, nicht Evidenz. Ihre Ausgaben werden nicht für Holdout-/Asset-/Parameter-/Threshold-/Horizon-Selektion verwendet und können weder Gates ändern noch Performance autorisieren. Die genaue Delegations- und Rückgabeform ist in `docs/TRADING_AGENT_SUBAGENT_PROTOCOL.md` festgehalten.
+
+## Windows-Auslastungsmodell
+
+Der permanente Windows-Loop arbeitet mit zwei **eigenständigen Concurrency-Gruppen**:
+- `local_reproduction` → `trading-agent-windows-research-capacity-v1`
+- `data_qa` → `trading-agent-windows-research-data-qa-v1`
+
+Dadurch kann ein langer Reproduktionslauf nur seine eigene Lane blockieren. Die Daten-QA-Lane bleibt unabhängig disponierbar. Der langsame lokale KI-Worker ist aus dem 10-Minuten-Forschungsloop herausgelöst und läuft separat über `windows-local-ai-worker.yml`.
 
 ## Dauerhafte Ressourcenbeschränkung
 
