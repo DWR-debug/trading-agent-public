@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T19:03:48.196745+00:00",
+  "generated_at_utc": "2026-10-04T19:05:41.760390+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1997,7 +1997,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "5bd43de932d249bead70ceddedb2d05c4c0e5e096ab391eea47d59640ced4a52",
+    "receipt_fingerprint": "ad51b1189100f036ad936e24f0dd44fb96c3887f44060fe896e7bed0bffab160",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2032,7 +2032,7 @@
           }
         ],
         "clock_contract": "Docket event dates are distinct from underlying incident dates; exact public intraday availability must be proven per event class, otherwise use next-session availability.",
-        "content_sha256": "83df30fb0fcd4ad1055b69807c8509cc312e2f9163b4c0b7433a334430513e8d",
+        "content_sha256": "0b85fe718235b7d1b221f54e5948af5dfe619435c13c1226f90ef27cee0721b4",
         "http_status": 403,
         "missing_markers": [
           "RECAP Archive",
@@ -2056,7 +2056,7 @@
           }
         ],
         "clock_contract": "A recorded docket-entry date is not automatically proof of public dissemination time.",
-        "content_sha256": "d1acc40ee7c3ed54df1acde09cdaec59b502cc69cb68f00a0c25a233df02c128",
+        "content_sha256": "e0062549d804e51beb15d63841e45cb1b2ee2ff8d173cd6d70f810ae9f95ae5a",
         "http_status": 403,
         "missing_markers": [
           "Advanced RECAP Search",
@@ -2392,7 +2392,7 @@
         "status": "SOURCE_COMPONENT_READY"
       }
     ],
-    "receipt_fingerprint": "b9adfa05721eb542c5704b10e7bbee86a589aab93bc3ea00ba6a75ee7008322c",
+    "receipt_fingerprint": "15cebb68950871a8670284b8d802c73f76a620594749772337f94108781ac6df",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2466,7 +2466,7 @@
             "url": "https://ppubs.uspto.gov/basic/"
           }
         ],
-        "content_sha256": "4b8f5c6102ec0df4658848b834e02c787a20a4185b794fa9dfc2ddceaa99057e",
+        "content_sha256": "51385b92c24be4be22e72f575eb0db864299b08f5c9c7f7a6ec52758a657e12d",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -2537,44 +2537,44 @@
     ],
     "recent_commits": [
       {
-        "message": "RESEARCH: retry priority wave dispatcher after CLI fix",
-        "sha": "1902416467fb21828b58f27406304ded744f31b9",
-        "timestamp": "2026-10-04T21:03:35+02:00"
+        "message": "TEST: cover raw Federal Register HTML parsing",
+        "sha": "0d2c5947e426cb8f7992a0760b7535bf2b6903b9",
+        "timestamp": "2026-10-04T21:05:29+02:00"
       },
       {
-        "message": "FIX: dispatch priority workflows with explicit repository",
-        "sha": "273f756a7d3cae5ffed2d5b18ac1803a1e5f0548",
-        "timestamp": "2026-10-04T21:03:32+02:00"
+        "message": "FIX: parse raw Federal Register HTML deterministically",
+        "sha": "72b35cdb7ac59685691739bf1d4bd364f7c10e55",
+        "timestamp": "2026-10-04T21:05:26+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4bfee61df68dde8d92bee9cfeb00d588bd8bbdd1",
-        "timestamp": "2026-10-04T19:03:27Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "7a672c83d0bb7db2576db5fcaee4f8489300ab17",
+        "timestamp": "2026-10-04T19:04:33Z"
       },
       {
-        "message": "OPS: add controlled Grok reviewer handoff",
-        "sha": "37c859c93f54bb607c4ff206e93d83372ab64eb9",
-        "timestamp": "2026-10-04T21:03:11+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "bb514aaa8a0a6dba45957c061ada6d2497e8163c",
+        "timestamp": "2026-10-04T19:04:19Z"
       },
       {
-        "message": "RESEARCH: trigger priority orthogonal frontier waves",
-        "sha": "5f8d341e7d0fbe5a64c621cd52df0c4528930ec0",
-        "timestamp": "2026-10-04T21:03:09+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "a4dfe9ce68fa191927da5309a7bf88296aa3cc7a",
+        "timestamp": "2026-10-04T19:04:16Z"
       },
       {
-        "message": "OPS: add fail-closed priority research wave dispatcher",
-        "sha": "a765c410d6df7bd20569ffac3ec4a836fff8142d",
-        "timestamp": "2026-10-04T21:03:06+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "8aa533ecd70759521f06b1ac94b545c0c2736f1b",
+        "timestamp": "2026-10-04T19:04:13Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ad9049bf798ce2eff4089b74818bb44fe8c46bb4",
-        "timestamp": "2026-10-04T18:56:20Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "a8d3e8f765955beccf3c85aa7db43d9c9b16e320",
+        "timestamp": "2026-10-04T19:04:10Z"
       },
       {
-        "message": "OPS: formalize two-AI and Grok bounded-worker protocol",
-        "sha": "2c1eaf6807052dd73b2bd02bd46cc7a2179c391b",
-        "timestamp": "2026-10-04T20:56:06+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "fcb8661dcec2a98b7e818c3f564a6ecfe09e8ad9",
+        "timestamp": "2026-10-04T19:04:08Z"
       }
     ]
   },
@@ -2659,7 +2659,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1902416467fb21828b58f27406304ded744f31b9",
+  "source_master_sha": "0d2c5947e426cb8f7992a0760b7535bf2b6903b9",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2773,6 +2773,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37226810962"
+    "run_id": "37226932396"
   }
 }
