@@ -165,11 +165,106 @@
         "revision/QC lineage",
         "independent PIT reproduction"
       ]
+    },
+    {
+      "id": "Q202",
+      "name": "Clinical-trial reporting deadline breach / missing-result state",
+      "mechanism": "A publicly observable failure to provide required clinical-trial results by a fixed statutory reporting boundary is an information-absence event. The mechanism is distinct from the later content of the results themselves and may reflect selective or delayed disclosure.",
+      "event_clock": "The first reproducible public snapshot on or after the fixed reporting deadline at which an applicable trial remains without publicly posted results, after excluding valid certification/extension states known by that boundary.",
+      "features": [
+        "binary_deadline_miss_state",
+        "days_since_fixed_reporting_deadline_capped_by_fixed_rule",
+        "fixed_sponsor_to_issuer_exposure"
+      ],
+      "direction": "two-sided outcome; no sign is assumed ex ante",
+      "cheap_falsifiers": [
+        "permute sponsor-to-issuer mapping",
+        "shift the deadline boundary by one fixed session",
+        "inject future results or future corrections and require historical prefix invariance",
+        "treat a later FDAAA violation notice as if it were the original deadline-miss observation and require the inferred boundary to change"
+      ],
+      "gates": [
+        "historical version snapshots at the statutory boundary",
+        "applicability and valid-extension lineage",
+        "frozen sponsor-to-issuer mapping",
+        "results/revision/QC lineage",
+        "independent PIT reproduction"
+      ],
+      "literature_basis": [
+        "Cochrane 2024, Time to publication for results of clinical trials (PMID 39601300)",
+        "Kim et al. 2017, The significance of the trial outcome was associated with publication rate and time to publication (PMID 28238789)",
+        "Zarin et al./ClinicalTrials.gov reporting-compliance literature"
+      ],
+      "scientific_boundary": "discovery_contract_only"
+    },
+    {
+      "id": "Q203",
+      "name": "Government-demand award × ex-ante financing constraint",
+      "mechanism": "A newly public federal procurement award can relax financing constraints and expand access to credit after award. Conditional on a fixed pre-event financing-constraint state, the same public-demand shock may therefore have a stronger or more persistent economic transmission than an unconditional award indicator.",
+      "event_clock": "Historical public-observation boundary of the award state; award/action date cannot substitute for observation time unless independently proven.",
+      "features": [
+        "binary_new_award_public_state",
+        "fixed_pre_event_financing_constraint_measure",
+        "fixed_prime_recipient_to_issuer_exposure",
+        "fixed_award_amount_log1p"
+      ],
+      "direction": "two-sided outcome; no sign is assumed ex ante",
+      "cheap_falsifiers": [
+        "shuffle financing-constraint values within the frozen event universe",
+        "shift public-observation boundary by one fixed session",
+        "use post-award balance-sheet values and require the construction to fail closed",
+        "permute recipient-to-issuer mapping",
+        "future-amendment mutation preserving original award identity"
+      ],
+      "gates": [
+        "historical award-state reconstruction",
+        "frozen pre-event financing data from latest admissible public filing",
+        "frozen recipient/entity mapping",
+        "amendment/correction lineage",
+        "independent PIT reproduction"
+      ],
+      "literature_basis": [
+        "Hebous & Zimmermann 2021, Can government demand stimulate private investment? Evidence from US federal procurement",
+        "Gabriel 2024, The credit channel of public procurement",
+        "2025, What Can 240,000 New Credit Transactions Tell Us About the Impact of NGEU Funds? (arXiv:2504.01964)"
+      ],
+      "scientific_boundary": "discovery_contract_only"
+    },
+    {
+      "id": "Q204",
+      "name": "Public-information release-lag surprise",
+      "mechanism": "The elapsed interval between a fixed underlying administrative date and its first public observation may itself measure information latency. Conditional on a fixed event class and frozen source contract, unusually long or short release latency can proxy how much lead time the market plausibly had before the public record became machine-observable.",
+      "event_clock": "The first reproducible public-observation timestamp supplied by the official source. Underlying occurrence/action/submission dates remain metadata and are not treated as public availability.",
+      "features": [
+        "fixed_source_release_latency",
+        "rolling_pre_event_latency_percentile_using_only_prior_observations",
+        "fixed_event_class_indicator"
+      ],
+      "direction": "two-sided outcome; no sign is assumed ex ante",
+      "cheap_falsifiers": [
+        "randomize release timestamps within fixed calendar blocks",
+        "replace public-observation time with occurrence time and require a detectable contract change",
+        "use future latency distribution statistics and require fail-closed detection",
+        "same-day timestamp ambiguity must be excluded"
+      ],
+      "gates": [
+        "candidate-specific public-observation timestamp completeness",
+        "frozen event-class definition",
+        "pre-event-only latency distribution construction",
+        "revision/correction lineage",
+        "independent PIT reproduction"
+      ],
+      "literature_basis": [
+        "2026 preprint, Fast Numbers, Slow Language: Bridging Quantitative and Qualitative Earnings Signals (arXiv:2606.29734)",
+        "2026 preprint, Buy the Rumor, Sell the News: When Is News Priced In? (arXiv:2608.14014)",
+        "2026 preprint, Time-Series Foundation Models That Understand Data Revisions (arXiv:2609.28576)"
+      ],
+      "scientific_boundary": "discovery_contract_only"
     }
   ],
   "blocked_or_composite_tracks": {
     "Q193": "Composition remains prohibited until contributing component channels independently pass candidate-specific PIT.",
-    "Q198": "Current direct Federal Register Public Inspection route is source-access blocked in GitHub-hosted automation; candidate remains non-authorizing pending an officially supported API or immutable alternative snapshot route."
+    "Q198": "Historical Federal Register Public Inspection By-Date API route is now source-feasible and a four-date PIT clock census completed. Candidate-specific correction/withdrawal lineage, entity mapping and independent reproduction remain required."
   },
   "forbidden": [
     "performance runs",
@@ -180,6 +275,6 @@
     "promotion",
     "live execution"
   ],
-  "revision": 2,
-  "triggered_by": "workflow_validation_repair"
+  "revision": 3,
+  "triggered_by": "deep_literature_information_timing_wave_2026_10_04"
 }
