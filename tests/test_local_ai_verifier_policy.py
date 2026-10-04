@@ -13,10 +13,13 @@ def test_local_ai_verifier_is_fail_closed() -> None:
     assert "PERSONAL_G1_CREDITS_DISABLED=True" in text
 
 
-def test_local_ai_bootstrap_and_verifier_paths_are_present() -> None:
-    text = Path(".github/workflows/permanent-pc-research-loop.yml").read_text(encoding="utf-8")
+def test_local_ai_bootstrap_and_verifier_paths_are_in_isolated_worker() -> None:
+    text = Path(".github/workflows/windows-local-ai-worker.yml").read_text(encoding="utf-8")
     assert 'enable_local_ai_worker.ps1' in text
     assert 'verify_local_ai_worker.ps1' in text
+    permanent = Path(".github/workflows/permanent-pc-research-loop.yml").read_text(encoding="utf-8")
+    assert "local_ai_worker:" not in permanent
+    assert "local_ai_smoke:" not in permanent
 
 
 def test_local_ai_verifier_uses_segmented_windows_paths_and_real_regex() -> None:

@@ -1,0 +1,128 @@
+name: Windows Local AI Worker (Bounded)
+
+on:
+  workflow_dispatch:
+    inputs:
+      task_id:
+        description: "Bounded AI task"
+        required: true
+        type: choice
+        options:
+          - AI-2026-10-04-Q187-Q192-ADVERSARIAL
+          - AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT
+          - AI-2026-09-29-Q091-ADVERSARIAL
+          - AI-2026-09-28-Q089-ADVERSARIAL
+          - AI-2026-09-28-UNUSUAL-FRONTIER
+          - AI-2026-09-30-Q100-FRONTIER-FEASIBILITY
+          - AI-2026-09-30-Q101-NEGATIVE-EVIDENCE
+          - AI-2026-09-30-Q102-REGIME-STATE-DESIGN
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-windows-local-ai
+  cancel-in-progress: false
+
+jobs:
+  local_ai_worker:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 25
+    steps:
+      - name: Download exact source
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "WORK=%RUNNER_TEMP%\trading-agent-ai-worker-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          set "ARCHIVE=%RUNNER_TEMP%\trading-agent-ai-worker-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%.tar.gz"
+          if exist "%WORK%" rmdir /s /q "%WORK%"
+          mkdir "%WORK%" || exit /b 1
+          curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%" || exit /b 1
+          tar.exe -xzf "%ARCHIVE%" -C "%WORK%" || exit /b 1
+          for /d %%D in ("%WORK%\trading-agent-public-*") do echo REPO_SRC=%%~fD>>"%GITHUB_ENV%"
+          endlocal
+
+      - name: Ensure Antigravity CLI
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          if not exist "%LOCALAPPDATA%\agy\bin\agy.exe" (
+            powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "irm https://antigravity.google/cli/install.ps1 | iex"
+            if errorlevel 1 exit /b 1
+          )
+          if not exist "%LOCALAPPDATA%\agy\bin\agy.exe" exit /b 1
+          echo %LOCALAPPDATA%\agy\bin>>"%GITHUB_PATH%"
+          "%LOCALAPPDATA%\agy\bin\agy.exe" --version
+          endlocal
+
+      - name: Bootstrap local AI policy
+        shell: cmd
+        run: |
+          @echo off
+          powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "%REPO_SRC%\scripts\enable_local_ai_worker.ps1"
+          if errorlevel 1 exit /b 1
+
+      - name: Bootstrap pinned Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-ai-worker"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-ai-worker.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          endlocal
+
+      - name: Verify local AI readiness
+        shell: cmd
+        run: |
+          @echo off
+          powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "%REPO_SRC%\scripts\verify_local_ai_worker.ps1"
+          if errorlevel 1 exit /b 1
+
+      - name: Run bounded Gemini worker
+        shell: cmd
+        env:
+          AI_EXTERNAL_PROVIDER_ALLOWLIST: "true"
+          TRADING_AGENT_LOCAL_AI_MODE: "true"
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-ai-worker\tools\python.exe"
+          cd /d "%REPO_SRC%" || exit /b 1
+          set "PYTHONPATH=%REPO_SRC%"
+          "%PY_EXE%" -m automation.ai_worker_fabric --run --provider "gemini_cli" --task "ai_requests\${{ inputs.task_id }}.json" --output "%RUNNER_TEMP%\ai-${{ inputs.task_id }}-gemini_cli.json"
+          type "%RUNNER_TEMP%\ai-${{ inputs.task_id }}-gemini_cli.json"
+
+      - name: Publish Gemini worker state
+        if: always()
+        shell: cmd
+        env:
+          AI_WORKER_TASK_ID: "${{ inputs.task_id }}"
+          AI_WORKER_PROVIDER: "gemini_cli"
+          GH_TOKEN: ${{ github.token }}
+          AI_WORKER_STATE_PATH: "ops/ai_worker_state/${{ inputs.task_id }}__gemini_cli.json"
+        run: |
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-ai-worker\tools\python.exe"
+          set "AI_WORKER_OUTPUT_PATH=%RUNNER_TEMP%\ai-${{ inputs.task_id }}-gemini_cli.json"
+          cd /d "%REPO_SRC%" || exit /b 1
+          set "PYTHONPATH=%REPO_SRC%"
+          "%PY_EXE%" -m automation.publish_ai_worker_state
+
+      - name: Upload bounded AI receipt
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v6
+        with:
+          name: local-ai-worker-${{ inputs.task_id }}-gemini-${{ github.run_id }}
+          path: ${{ runner.temp }}\ai-${{ inputs.task_id }}-gemini_cli.json
+          if-no-files-found: warn
+          retention-days: 14
