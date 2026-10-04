@@ -168,16 +168,7 @@ jobs:
           parsed = [json.loads(p.read_text(encoding="utf-8")) for p in receipts]
           if {r["shard_index"] for r in parsed} != {0, 1}:
               raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL shard coverage")
-          for r in parsed:
-              if r["status"] != "Q121R6_WINDOWS_INDEPENDENT_SHARD_COMPLETED":
-                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL shard status")
-              if r["formal_evidence_allowed"] is not False or r["independent_reproduction_only"] is not True:
-                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL scientific boundary")
-              if r["safety"] != {"PAPER_ONLY": True, "LIVE_TRADING_ENABLED": False, "ORDERS_ENABLED": False, "AUTOMATIC_PROMOTION": False}:
-                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL safety")
-              if r["population"]["header_rows_failed"] != 0:
-                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL fetch failure")
-
+          for r in parsed:,              if r["status"] != "Q121R6_WINDOWS_INDEPENDENT_SHARD_COMPLETED":,                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL shard status"),              if r["formal_evidence_allowed"] is not False or r["independent_reproduction_only"] is not True:,                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL scientific boundary"),              if r["safety"] != {"PAPER_ONLY": True, "LIVE_TRADING_ENABLED": False, "ORDERS_ENABLED": False, "AUTOMATIC_PROMOTION": False}:,                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL safety"),              if r["failures"] != [] or r["records_fetched"] != r["slice_count"]:,                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL fetch failure"),              if r["population_count"] != 61818 or r["slice_count"] <= 0:,                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL population contract"),              if r["population_fingerprint"] != "7251f0e25d7293802d389cac875abfd8552b9441ac604b69918bd7d5b9aec554":,                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL population fingerprint"),,          ordered = sorted(parsed, key=lambda r: r["shard_index"]),          if ordered[0]["slice_start"] != 0 or ordered[1]["slice_start"] != ordered[0]["slice_end_exclusive"]:,              raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL partition start"),          if ordered[1]["slice_end_exclusive"] != 61818:,              raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL partition end"),          if sum(r["slice_count"] for r in ordered) != 61818:,              raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL partition coverage"),,          primary = {r["primary_workflow_run_id"] for r in parsed}
           primary = {r["primary_workflow_run_id"] for r in parsed}
           attempts = {r["primary_workflow_run_attempt"] for r in parsed}
           source_shas = {r["primary_source_sha"] for r in parsed}
@@ -196,7 +187,7 @@ jobs:
               "independent_workflow_run_id": int(os.environ["GITHUB_RUN_ID"]),
               "independent_workflow_run_attempt": int(os.environ["GITHUB_RUN_ATTEMPT"]),
               "runners": [r["runner_name"] for r in parsed],
-              "shards": [{"shard_index": r["shard_index"], "population": r["population"], "target_subject_population": r["target_subject_population"], "interpretation": r["interpretation"], "source_result_receipt_fingerprint": r["source_result_receipt_fingerprint"]} for r in sorted(parsed, key=lambda x: x["shard_index"])],
+              "shards": [{"shard_index": r["shard_index"], "population": r["population"], "target_subject_population": r["target_subject_population"], "interpretation": r["interpretation"], "source_result_digest": r["source_result_digest"]} for r in sorted(parsed, key=lambda x: x["shard_index"])],
               "scientific_boundary": {"performance": False, "holdout_selection": False, "ranking": False, "parameter_search": False, "threshold_search": False, "horizon_search": False, "asset_search": False, "variant_search": False, "promotion": False, "live_execution": False},
               "safety": {"PAPER_ONLY": True, "LIVE_TRADING_ENABLED": False, "ORDERS_ENABLED": False, "AUTOMATIC_PROMOTION": False},
           }
