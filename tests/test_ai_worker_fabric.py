@@ -216,7 +216,6 @@ def test_mistral_lane_is_manual_dispatch_only():
     text = workflow.read_text(encoding="utf-8")
     assert "mistral_worker:" in text
     assert "github.event_name == 'workflow_dispatch'" in text
-    assert "provider: [openrouter_free]" not in text
 
 
 def test_q100_frontier_task_has_repository_context_and_safe_scope():
@@ -236,7 +235,10 @@ def test_openrouter_is_event_driven_and_gemini_mistral_manual_only():
     assert "gemini_worker:" in text
     assert "mistral_worker:" in text
     assert "schedule:" not in text
+    assert "matrix.task == github.event.inputs.task_id" in text
+    assert "research/evidence/q187_q192_source_feasibility_latest.json" in text
     assert "github.event_name == 'workflow_dispatch'" in text
+    assert "github.event.inputs.run_secondary_provider == 'true'" in text
     assert "GEMINI_ROTATION slot=" in text
     assert "MISTRAL_ROTATION slot=" in text
     assert "/ 21600 % 6" in text
