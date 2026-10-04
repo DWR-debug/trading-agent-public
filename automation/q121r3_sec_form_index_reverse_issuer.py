@@ -159,12 +159,25 @@ def accession_from_filename(filename: str) -> str:
     raise ValueError(f"ACCESSION_NOT_FOUND_IN_FILENAME:{filename}")
 
 def archive_header_url(filename: str) -> str:
+    """Build the SEC archive-header URL from the form-index archive path.
+
+    The ``edgar/data/<cik>/`` path identifies the archived subject-company
+    root. The accession directory is normalized to 18 digits, while the
+    index-header filename preserves the dashed accession spelling used by
+    SEC's archive.
+    """
     parts = filename.split("/")
-    if len(parts) < 4:
+    if len(parts) < 4 or parts[0] != "edgar" or parts[1] != "data":
         raise ValueError(f"INVALID_FILENAME:{filename}")
+    if not re.fullmatch(r"\d{1,10}", parts[2]):
+        raise ValueError(f"INVALID_SUBJECT_CIK_IN_FILENAME:{filename}")
     cik = str(int(parts[2]))
-    accession = accession_from_filename(filename).replace("-", "")
-    return f"https://www.sec.gov/Archives/edgar/data/{cik}/{accession}/{accession}-index-headers.html"
+    accession_dashed = accession_from_filename(filename)
+    accession = accession_dashed.replace("-", "")
+    return (
+        f"https://www.sec.gov/Archives/edgar/data/{cik}/{accession}/"
+        f"{accession_dashed}-index-headers.html"
+    )
 
 def within_window(value: str) -> bool:
     d = date.fromisoformat(value)
