@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: trading-agent-ai-groq-free-q187-q192
+  group: trading-agent-ai-groq-free-global-source-pit
   cancel-in-progress: false
 
 jobs:
@@ -65,7 +65,7 @@ jobs:
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/groq-worker-output"
           set +e
-          python -m automation.ai_worker_fabric --run --provider 'groq_free' --task 'ai_requests/AI-2026-10-04-Q187-Q192-GROQ-ADVERSARIAL.json' --output "$RUNNER_TEMP/groq-worker-output/AI-2026-10-04-Q187-Q192-GROQ-ADVERSARIAL-groq_free.json"
+          python -m automation.ai_worker_fabric --run --provider 'groq_free' --task 'ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json' --output "$RUNNER_TEMP/groq-worker-output/AI-2026-10-04-Q187-Q192-GROQ-ADVERSARIAL-groq_free.json"
           rc=$?
           set -e
           test "$rc" -ne 1
