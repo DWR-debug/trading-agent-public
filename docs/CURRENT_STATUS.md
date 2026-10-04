@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `4c0acaf174dea432e2c1f6c0d4c134e525e22820`
+**Current operational snapshot:** `b513a638e48448ca4e3ae5b0b955622071d6e2dc`
 
-**Generated (UTC):** `2026-10-04T11:13:44.740229+00:00`
+**Generated (UTC):** `2026-10-04T11:19:31.943519+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -80,6 +80,14 @@
 - PIT-readiness: Q171 has a sample historical Common Crawl reconstruction receipt; Q174–Q177 have source-clock/version/revision semantics confirmed but are **not yet candidate-specific PIT-valid**.
 - No member of this wave is performance-authorized; no holdout selection, tuning, ranking, promotion or live execution is permitted.
 
+### Q179–Q184 Orthogonal Source/PIT Frontier
+
+- Source-feasibility latest receipt: **NOT_RECORDED**.
+- Q179 ClinicalTrials.gov, Q180 NHTSA, Q181 OSHA/DOL, Q183 NTSB and Q184 FCC currently pass the bounded source probe; Q182 FERC eLibrary remains **runner-access blocked** where the GitHub-hosted probe receives HTTP 403.
+- PIT Readiness R1 latest receipt: **NOT_RECORDED**.
+- Latest Q179–Q184 PIT receipt fingerprint: `UNKNOWN`.
+- Candidate-level PIT status remains non-authorizing; all six current statuses are surfaced directly in `research/evidence/q179_q184_pit_readiness_r1_latest.json`.
+- Remaining gates are historical archive reconstruction, exact public-clock proof where not yet established, fixed entity mapping, revision/amendment lineage and independent reproduction. No performance, holdout selection, tuning, ranking, promotion or live execution is authorized.
 ### Q148-R1 EIA WPSR Source/Clock Gate
 
 - Receipt status: **Q148R1_WPSR_SOURCE_CLOCK_CONTRACT_COMPLETED**.

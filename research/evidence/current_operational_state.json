@@ -963,7 +963,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T11:13:44.740229+00:00",
+  "generated_at_utc": "2026-10-04T11:19:31.943519+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1493,6 +1493,8 @@
     "workflow_run_attempt": 1,
     "workflow_run_id": 37125689936
   },
+  "q179_q184_pit_readiness_r1": {},
+  "q179_q184_source_feasibility": {},
   "repository": "DWR-debug/trading-agent-public",
   "repository_state": {
     "agent_queue_requests": [
@@ -1505,8 +1507,32 @@
     ],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "research/q182-ferc-self-hosted-access-probe-2026-10-04",
+        "number": 1006,
+        "title": "OPS/RESEARCH: probe Q182 FERC access on both Windows lanes",
+        "updatedAt": "2026-10-04T11:19:06Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1006"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "OPS: persist Q179-Q184 receipts in canonical current status",
+        "sha": "b513a638e48448ca4e3ae5b0b955622071d6e2dc",
+        "timestamp": "2026-10-04T13:19:19+02:00"
+      },
+      {
+        "message": "OPS: synchronize Android phone fleet receipts",
+        "sha": "2c4bb229b408cd35471674a85f81321865a7dca7",
+        "timestamp": "2026-10-04T11:18:40Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "cc97d23183776074f0ef3d796106fa9367065d2d",
+        "timestamp": "2026-10-04T11:13:46Z"
+      },
       {
         "message": "RESEARCH: add Q179-Q184 PIT readiness R1 lane",
         "sha": "4c0acaf174dea432e2c1f6c0d4c134e525e22820",
@@ -1531,21 +1557,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "f390700f4586211f9ae1e627a8ab99c99929c839",
         "timestamp": "2026-10-04T11:09:33Z"
-      },
-      {
-        "message": "GOVERNANCE/RESEARCH: repair candidate gate and launch Q179-Q184 lane",
-        "sha": "92ea79289a709af3f53639c2c42452194fc112ee",
-        "timestamp": "2026-10-04T13:09:16+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "638b0bf63d112d659b687a4d71b6454822a5eb40",
-        "timestamp": "2026-10-04T10:51:28Z"
-      },
-      {
-        "message": "RESEARCH: launch Q179-Q184 orthogonal source/PIT wave",
-        "sha": "26ca272a85029b93caa7ff64e5e68abd48b5553d",
-        "timestamp": "2026-10-04T12:51:16+02:00"
       }
     ]
   },
@@ -1615,7 +1626,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "4c0acaf174dea432e2c1f6c0d4c134e525e22820",
+  "source_master_sha": "b513a638e48448ca4e3ae5b0b955622071d6e2dc",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -1729,6 +1740,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37198007164"
+    "run_id": "37198339064"
   }
 }
