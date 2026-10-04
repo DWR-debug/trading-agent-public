@@ -24,6 +24,9 @@
   "parallelism_policy": {
     "self_hosted_windows": {
       "parallel_lanes": 2,
+      "physical_windows_slots": 3,
+      "reserved_long_run_slot": "Windows self-hosted slot C",
+      "long_run_label": "trading-agent-long",
       "autonomous_frontier_default_workers": 3,
       "other_qa_and_reproduction_default_workers": 1,
       "hard_worker_cap": 4,
