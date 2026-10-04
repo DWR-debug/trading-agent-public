@@ -246,6 +246,8 @@ jobs:
           if errorlevel 1 exit /b 1
       - name: Persist compact immutable R6 receipt
         shell: cmd
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           @echo off
           setlocal EnableExtensions
