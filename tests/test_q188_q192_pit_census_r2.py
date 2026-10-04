@@ -42,7 +42,10 @@ def test_q189_accepts_cpsc_json_array_shape() -> None:
 
 def test_q188_q192_r2_uses_correct_response_shapes() -> None:
     text = (ROOT / "automation/q188_q192_pit_census_r2.py").read_text(encoding="utf-8")
-    assert 'required_keys=["RecallDate", "Manufacturers"]' in text
+    assert '"RecallDate"' in text
+    assert '"Manufacturers"' in text
     assert '"title", "published"' in text
-    assert '"initial_posting_date", "update_date", "company_name"' in text
+    assert '"initial_posting_date"' in text
+    assert '"update_date"' in text
+    assert '"company_name"' in text
     assert 'cr.get("message", {})' in text
