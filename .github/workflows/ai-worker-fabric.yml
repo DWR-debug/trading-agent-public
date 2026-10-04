@@ -130,7 +130,7 @@ jobs:
           state_dir='ops/ai_worker_state'
           mkdir -p "$state_dir"
           state_file="$state_dir/${{ matrix.task }}__openrouter_free.json"
-          output="$RUNNER_TEMP/ai-worker-output/${{ matrix.task }}-${{ matrix.provider }}.json"
+          output="$RUNNER_TEMP/ai-worker-output/${{ matrix.task }}-openrouter_free.json"
           if [ -f "$output" ]; then
             cp "$output" "$state_file"
           else
@@ -155,7 +155,7 @@ jobs:
           exit 1
 
       - name: Assert OpenRouter free route
-        if: true
+        if: matrix.task != '__none__'
         shell: bash
         run: |
           set -euo pipefail
@@ -166,7 +166,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: ai-worker-${{ matrix.task }}-${{ matrix.provider }}-${{ github.run_id }}
+          name: ai-worker-${{ matrix.task }}-openrouter_free-${{ github.run_id }}
           path: "$RUNNER_TEMP/ai-worker-output/"
           if-no-files-found: warn
           retention-days: 14
