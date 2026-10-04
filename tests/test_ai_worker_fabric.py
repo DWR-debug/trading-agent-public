@@ -336,3 +336,12 @@ def test_q187_q192_ai_task_is_safe_and_event_driven():
     context = __import__("automation.ai_worker_fabric", fromlist=["CONTEXT_FILES"]).CONTEXT_FILES["AI-2026-10-04-Q187-Q192-ADVERSARIAL"]
     assert "docs/research_design/Q187_Q192_SOURCE_PIT_WAVE_2026-10-04.md" in context
     assert "research/evidence/q187_q192_source_feasibility_latest.json" in context
+
+def test_ai_workflow_run_triggers_only_after_successful_q187_source_workflow():
+    workflow = Path(__file__).parents[1] / ".github" / "workflows" / "ai-worker-fabric.yml"
+    text = workflow.read_text(encoding="utf-8")
+    assert "workflow_run:" in text
+    assert "Q187-Q192 Source Feasibility" in text
+    assert "WORKFLOW_RUN_CONCLUSION" in text
+    assert "conclusion == 'success'" in text
+    assert "tasks = ['AI-2026-10-04-Q187-Q192-ADVERSARIAL']" in text
