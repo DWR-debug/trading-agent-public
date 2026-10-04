@@ -12,8 +12,8 @@
       ],
       "reachable": true,
       "all_urls_reachable": true,
-      "required_markers_present": false,
-      "probe_classification": "UNREACHABLE",
+      "required_markers_present": true,
+      "probe_classification": "PASS",
       "missing_markers": [],
       "attempts": [
         {
@@ -26,9 +26,17 @@
       "content_sha256": "afd56dfed11ad19dbde864c0360250611b5c19f8b6a3012d61cbee186cf05d20",
       "transaction_probe": {
         "url": "https://api.usaspending.gov/api/v2/search/spending_by_transaction/",
-        "http_status": 422,
+        "http_status": 200,
         "required_method": "POST",
-        "required_keys_present": false
+        "required_keys_present": true,
+        "result_keys": [
+          "Action Date",
+          "Award ID",
+          "Recipient Name",
+          "Transaction Amount",
+          "generated_internal_id",
+          "internal_id"
+        ]
       }
     },
     "FDA_SRLC": {
@@ -61,7 +69,7 @@
         }
       ],
       "clock_contract": "Supplement/date/update fields describe the labeling event and database state separately. Exact first-public observation and later corrections must be reconstructed before same-day use.",
-      "content_sha256": "9b957b183262a9c3728f0319db208d93b97e6f674c68df2f6388e532dd423b62"
+      "content_sha256": "bbaf3b3e9ef38a7fb0d979b91b5631b793bf879fed3fffb79514ad6fcd6624c9"
     },
     "CPSC_RECALLS": {
       "urls": [
@@ -95,7 +103,7 @@
         }
       ],
       "clock_contract": "Recall publication state is distinct from incident/manufacture dates. Historical public-observation timing and revisions/withdrawals must be kept separate.",
-      "content_sha256": "4c2b6bca0f481203a918f8178f20f647aed2d6e3cb5c7e9949b5c0fdbdaae49c"
+      "content_sha256": "fd48a340b3b3207bb0cb203f3e57140475bbda128a90bbae1e47f2844fb79dd3"
     },
     "EPA_ECHO": {
       "urls": [
@@ -180,7 +188,7 @@
         }
       ],
       "clock_contract": "Crossref deposit/publication metadata is not automatically an exact public-dissemination timestamp; historical stage ordering must be proven.",
-      "content_sha256": "828e843fe021523f241a6f20f1115715b53aa1cc447cebbc51779d8ba4c6a883"
+      "content_sha256": "92f7f7be472484f823efd643d29227b6482754ce777672eec4e085e7d78f6279"
     },
     "FDA_SHORTAGES": {
       "urls": [
@@ -236,7 +244,7 @@
   "candidate_results": [
     {
       "candidate_id": "Q187",
-      "status": "BLOCKED_SOURCE_PROBE",
+      "status": "SOURCE_PROBES_PASSED",
       "source_ids": [
         "USASPENDING"
       ]
@@ -303,5 +311,5 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "receipt_fingerprint": "41ad6c77298cf730c5b0d0b3956f47d19c5289de1c1a4ec9b5be44e69dfa25db"
+  "receipt_fingerprint": "552447c7170ebe3df053441af875023431a13cb7587edc828b535d8f84da28ca"
 }
