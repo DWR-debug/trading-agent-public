@@ -12,13 +12,17 @@ def test_frontier_workpacks_rotate_and_keep_q100_dependency_safe():
     name1, steps1 = worker.select_workpack("autonomous_frontier_qa", len(worker.LANES["autonomous_frontier_qa"]), 0)
     name2, steps2 = worker.select_workpack("autonomous_frontier_qa", len(worker.LANES["autonomous_frontier_qa"]), 1)
     name3, steps3 = worker.select_workpack("autonomous_frontier_qa", len(worker.LANES["autonomous_frontier_qa"]), 2)
-    assert [name1, name2, name3] == ["frontier_pack_1", "frontier_pack_2", "frontier_pack_3"]
+    name4, steps4 = worker.select_workpack("autonomous_frontier_qa", len(worker.LANES["autonomous_frontier_qa"]), 3)
+    assert [name1, name2, name3, name4] == ["frontier_pack_1", "frontier_pack_2", "frontier_pack_3", "frontier_pack_4"]
     assert set(steps1).isdisjoint(steps2)
     assert set(steps2).isdisjoint(steps3)
+    assert set(steps3).isdisjoint(steps4)
     assert set(steps1).isdisjoint(steps3)
-    all_frontier_steps = set().union(steps1, steps2, steps3)
+    assert set(steps1).isdisjoint(steps4)
+    assert set(steps2).isdisjoint(steps4)
+    all_frontier_steps = set().union(steps1, steps2, steps3, steps4)
     assert all_frontier_steps == set(range(1, len(worker.LANES["autonomous_frontier_qa"]) + 1))
-    assert [len(steps1), len(steps2), len(steps3)] == [10, 10, 10]
+    assert [len(steps1), len(steps2), len(steps3), len(steps4)] == [10, 10, 10, 10]
     groups = worker.execution_groups("autonomous_frontier_qa", len(worker.LANES["autonomous_frontier_qa"]), 0)
     assert groups[0][-1] != 8
     assert 5 in groups[0]
