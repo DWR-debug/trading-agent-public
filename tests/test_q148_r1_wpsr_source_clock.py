@@ -2,6 +2,7 @@ from automation.q148_r1_wpsr_source_clock import (
     FIXED_SERIES_LABEL,
     normalize_label,
     parse_table4_row,
+    holiday_schedule_row_present,
     CONTROLS,
 )
 
@@ -51,3 +52,22 @@ def test_controls_are_fixed_and_outcome_independent():
     for control in CONTROLS:
         assert "return" not in str(control).lower()
         assert "price" not in str(control).lower()
+
+
+def test_holiday_schedule_row_parses_from_structured_html_cells():
+    body = b"""
+    <table>
+      <tr><th>Data for the week ending</th><th>Alternate release date</th><th>Release day</th><th>Release time</th><th>Holiday</th></tr>
+      <tr><td>August 29, 2025</td><td>September 4, 2025</td><td>Thursday</td><td>12:00 p.m.</td><td>Labor Day</td></tr>
+    </table>
+    """
+    assert holiday_schedule_row_present(body)
+
+
+def test_holiday_schedule_row_mutation_fails_closed():
+    body = b"""
+    <table>
+      <tr><td>August 29, 2025</td><td>September 5, 2025</td><td>Friday</td><td>12:00 p.m.</td><td>Labor Day</td></tr>
+    </table>
+    """
+    assert holiday_schedule_row_present(body) is False
