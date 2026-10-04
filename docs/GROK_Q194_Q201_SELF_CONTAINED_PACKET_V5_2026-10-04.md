@@ -1,0 +1,4030 @@
+# Grok Bounded Review — Q194–Q201 — Self-Contained Packet V5 — 2026-10-04
+
+SOURCE COMMIT: 0ea15ce2515c9d6cb2c0acbe38e80e1d6051ea68
+REPOSITORY: DWR-debug/trading-agent-public
+PURPOSE: independent adversarial methods review only.
+
+The prior Grok attempt correctly failed closed because it received only paths and a commit reference, not the actual repository content. This packet embeds the required artifacts so that no repository checkout is needed.
+
+REQUEST
+Review the embedded artifacts directly. For Q194/Q195/Q196/Q197/Q199/Q201, identify the strongest pre-PIT falsifier; attack public-observation clocks, revision/amendment lineage, entity/exposure mapping, survivorship, overlap/confounding, and engineering provenance; propose only deterministic cheap repair/discard tests; identify exact missing evidence and likely gate failures.
+Do not inspect market returns, holdouts, candidate ranking, asset selection, parameter/threshold/horizon search, promotion, authorization, or live execution. Treat frozen candidate contracts and controls as immutable. Preserve uncertainty and disagreements.
+
+OUTPUT EXACTLY
+STATUS
+PER-CANDIDATE_FALSIFICATION
+PIT/CLOCK_RISKS
+ENTITY/MAPPING_RISKS
+OVERLAP/CONFOUNDING
+CHEAP_TESTS
+MISSING_EVIDENCE
+DISCARD_CONDITIONS
+ENGINEERING/PROVENANCE_RISKS
+CONFIDENCE
+UNSUPPORTED_ASSUMPTIONS
+ACTION_HANDOFF
+
+
+
+===== ARTIFACT: research/candidates/orthogonal_candidate_specs_2026-10-04.json =====
+
+{
+  "schema_version": "1.0",
+  "date": "2026-10-04",
+  "purpose": "Deterministic candidate-development contracts for orthogonal public-information mechanisms. Design only; no performance, ranking, tuning, selection, promotion or live execution.",
+  "shared_contract": {
+    "label": "next_regular_session_5_trading_day_excess_return_vs_frozen_benchmark",
+    "decision_boundary": "event_public_observation_boundary; if only a date is available, use next regular trading-session boundary and do not infer an intraday clock",
+    "exposure_mapping": "frozen before outcome observation; issuer/entity mapping is immutable for the trial",
+    "universe": "fresh symbol-disjoint research universe defined by the relevant trial contract",
+    "pre_formal_robustness_gate": true,
+    "scientific_authority": false,
+    "performance_authorization": false,
+    "promotion_authorization": false,
+    "live_execution": false
+  },
+  "candidates": [
+    {
+      "id": "Q194",
+      "name": "Therapeutic-substitution pressure",
+      "mechanism": "A newly public shortage state creates operational substitution pressure across products sharing an ingredient/application or therapeutic-equivalence relationship; affected manufacturer exposure is the fixed economic transmission channel.",
+      "event_clock": "earliest defensible public observation timestamp for the shortage record or explicitly documented next-publication boundary; occurrence time alone is not admissible.",
+      "features": [
+        "binary_new_shortage_state",
+        "fixed_graph_exposure_to_affected_product_or_ingredient",
+        "event_count_by_frozen_manufacturer_exposure"
+      ],
+      "direction": "two-sided outcome; no sign is assumed ex ante",
+      "cheap_falsifiers": [
+        "shift event availability forward by 1-5 sessions while holding the calendar fixed",
+        "shuffle issuer-exposure assignments within the frozen universe",
+        "replace public-observation time with occurrence time and require the candidate to show that the inference changes; otherwise reject clock discipline",
+        "future-mutation test on a historical shortage record"
+      ],
+      "gates": [
+        "historical shortage-state snapshots",
+        "therapeutic/product identity mapping",
+        "manufacturer-to-issuer mapping",
+        "revision and withdrawal lineage",
+        "independent PIT reproduction"
+      ]
+    },
+    {
+      "id": "Q195",
+      "name": "Inspection-to-enforcement escalation",
+      "mechanism": "A transition from public inspection/compliance evidence to a public enforcement action represents an escalation in operational/regulatory information for facility-exposed issuers.",
+      "event_clock": "public observation boundary of the enforcement state; inspection date and violation date are retained as event metadata but are not substituted for dissemination time.",
+      "features": [
+        "binary_new_enforcement_action",
+        "fixed_facility_to_issuer_exposure",
+        "escalation_from_prior_public_compliance_state"
+      ],
+      "direction": "two-sided outcome; no sign is assumed ex ante",
+      "cheap_falsifiers": [
+        "event-time permutation within calendar blocks",
+        "facility-to-issuer map shuffle preserving facility counts",
+        "force a one-session lag and compare only pre-specified semantic invariants",
+        "historical-vintage mutation test"
+      ],
+      "gates": [
+        "historical public observation boundary",
+        "facility identity lineage",
+        "issuer mapping",
+        "enforcement correction/withdrawal lineage",
+        "independent PIT reproduction"
+      ]
+    },
+    {
+      "id": "Q196",
+      "name": "Patent citation provenance state",
+      "mechanism": "The composition of examiner-originated versus applicant-originated citations on newly public patent documents is a fixed technology-information state distinct from raw patent counts or grant shocks.",
+      "event_clock": "patent publication boundary; no later grant date or citation update may enter the historical prefix.",
+      "features": [
+        "examiner_originated_citation_share",
+        "applicant_originated_citation_share",
+        "new_publication_count_by_frozen_issuer_exposure"
+      ],
+      "direction": "two-sided outcome; no sign is assumed ex ante",
+      "cheap_falsifiers": [
+        "publication-date shift by 1-5 sessions",
+        "assignee-to-issuer map shuffle",
+        "origin-label permutation preserving citation totals",
+        "historical citation-lineage mutation test"
+      ],
+      "gates": [
+        "candidate-specific patent publication archive",
+        "examiner/applicant provenance completeness",
+        "frozen assignee-to-issuer map",
+        "correction and lineage handling",
+        "independent PIT reproduction"
+      ]
+    },
+    {
+      "id": "Q197",
+      "name": "Government-demand shock propagation",
+      "mechanism": "A newly public government-procurement award can change the observable demand state of directly exposed contractors; a fixed contractor/network exposure map supplies the economic transmission channel.",
+      "event_clock": "historical public-observation boundary for the award state; action date or contract start date cannot be used as a substitute unless independently justified as publicly observable at the decision point.",
+      "features": [
+        "binary_new_award_public_state",
+        "award_amount_log1p",
+        "fixed_prime_recipient_to_issuer_exposure",
+        "fixed_connected_supplier_or_customer_graph_when separately proven"
+      ],
+      "direction": "two-sided outcome; no sign is assumed ex ante",
+      "cheap_falsifiers": [
+        "shift public-observation boundary by 1-5 sessions",
+        "recipient-to-issuer map shuffle",
+        "calendar-block permutation of award arrivals",
+        "future-amendment mutation test preserving original award identifiers"
+      ],
+      "gates": [
+        "historical award-state reconstruction",
+        "public-observation timestamp or conservative next-session boundary",
+        "frozen recipient identity mapping",
+        "amendment/correction lineage",
+        "independent PIT reproduction"
+      ]
+    },
+    {
+      "id": "Q199",
+      "name": "Patent-publication shock",
+      "mechanism": "Pre-grant publication of a patent application creates an ex-ante technology disclosure event; issuer exposure is fixed from the assignee/applicant identity before outcomes are read.",
+      "event_clock": "official publication boundary of the patent application; later grant or prosecution updates are excluded from the historical prefix.",
+      "features": [
+        "binary_new_publication",
+        "new_publication_count",
+        "fixed_assignee_or_applicant_to_issuer_exposure"
+      ],
+      "direction": "two-sided outcome; no sign is assumed ex ante",
+      "cheap_falsifiers": [
+        "publication-date shift by 1-5 sessions",
+        "assignee-to-issuer map shuffle",
+        "randomize publication arrivals within the same calendar structure",
+        "future-prosecution mutation test"
+      ],
+      "gates": [
+        "historical publication-state archive",
+        "publication-date completeness",
+        "frozen assignee/applicant-to-issuer map",
+        "withdrawal/correction lineage",
+        "independent PIT reproduction"
+      ]
+    },
+    {
+      "id": "Q201",
+      "name": "Clinical-trial results first-posted shock",
+      "mechanism": "The first public posting of structured clinical-trial results creates a distinct disclosure boundary; sponsor/issuer exposure is fixed independently of post-event market outcomes.",
+      "event_clock": "Results First Posted time/date when available; Results First Posted with QC Comments is a later revision state and cannot overwrite the original public prefix.",
+      "features": [
+        "binary_first_results_posted",
+        "new_results_post_count",
+        "fixed_sponsor_to_issuer_exposure",
+        "revision_indicator_after_original_posting"
+      ],
+      "direction": "two-sided outcome; no result-sign classification is required in the first PIT stage",
+      "cheap_falsifiers": [
+        "shift result-posting boundary by 1-5 sessions",
+        "sponsor-to-issuer map shuffle",
+        "calendar-block permutation of result postings",
+        "future QC-comment mutation test"
+      ],
+      "gates": [
+        "historical Results First Posted archive",
+        "explicit posted-time semantics",
+        "frozen sponsor-to-issuer map",
+        "revision/QC lineage",
+        "independent PIT reproduction"
+      ]
+    }
+  ],
+  "blocked_or_composite_tracks": {
+    "Q193": "Composition remains prohibited until contributing component channels independently pass candidate-specific PIT.",
+    "Q198": "Current direct Federal Register Public Inspection route is source-access blocked in GitHub-hosted automation; candidate remains non-authorizing pending an officially supported API or immutable alternative snapshot route."
+  },
+  "forbidden": [
+    "performance runs",
+    "holdout selection",
+    "return-based ranking",
+    "parameter/threshold/horizon search",
+    "asset selection",
+    "promotion",
+    "live execution"
+  ],
+  "revision": 2,
+  "triggered_by": "workflow_validation_repair"
+}
+
+
+
+===== ARTIFACT: docs/research_design/Q193_Q196_DEEP_LITERATURE_AND_CANDIDATE_WAVE_2026-10-04.md =====
+
+# Q193-Q196 Deep Literature and Candidate Wave — 2026-10-04
+
+## Scientific basis
+
+This wave is derived from a fresh literature and primary-source pass. The goal is to find information channels that are economically distinct from price momentum and from already-tested SEC-only mechanisms.
+
+### Q193 — Administrative information convergence
+Independent public administrative records can be treated as separate observations of operating stress, but only after each source independently satisfies its PIT contract. The convergence compiler therefore stays gated and cannot search which sources or thresholds work.
+
+### Q194 — Therapeutic substitution pressure
+The FDA Orange Book exposes fixed product, ingredient, applicant, application and therapeutic-equivalence fields, while FDA shortage data exposes shortage states. This creates a deterministic manufacturer/product substitution graph without using prices to define edges.
+
+### Q195 — Inspection-to-enforcement escalation
+EPA ECHO exposes inspection/compliance findings, violations and enforcement actions and documents weekly refresh/extraction semantics. The candidate explicitly separates event dates from the public vintage boundary.
+
+### Q196 — Patent citation provenance
+Patent literature distinguishes examiner- and applicant-originated citations. The provenance mix is a different object from Q186's upstream grant shock and citation-network exposure and should be tested as a fixed technology-information state.
+
+## Source discipline
+
+All source clocks, historical coverage, entity mappings and revision semantics are unresolved until receipt-backed validation. Current web accessibility is not treated as historical PIT proof.
+
+## Governance
+
+DESIGN_INVENTORY_ONLY. No performance, holdout selection, ranking, tuning, threshold/horizon/asset search, promotion or live execution. Q193 composition is prohibited until component PIT gates pass.
+
+
+
+===== ARTIFACT: docs/research_design/Q197_Q198_DEEP_LITERATURE_AND_CANDIDATE_WAVE_2026-10-04.md =====
+
+# Q197-Q198 Deep Literature & Candidate Wave — 2026-10-04
+
+## Q197 — government-demand shock propagation
+
+Research motivation: public-procurement events can carry information about expected demand and firm prospects, while shocks involving government customers have documented spillovers through economically connected firms. This wave treats that literature only as mechanism motivation; it does not constitute evidence for this candidate.
+
+Relevant literature located:
+- "Trading on government contracts: The investment potential of public procurement awards" (Economics Letters, 2025): reports an association between contract awards and subsequent stock performance and examines contract size.
+- Research on government procurement and stock-market synchronicity reports lower synchronicity around procurement information, with stronger effects for larger contracts.
+- Research on firms' government-customer exposure links government relationships to stock-price crash-risk properties.
+- Evidence from a government ban affecting ZTE documents spillovers to suppliers, customers and competitors.
+
+Official source path:
+- USAspending provides a public API with award, recipient and transaction endpoints and explicitly states that its endpoints currently do not require authorization.
+- The API exposes a last-update endpoint and a data dictionary. These are source-feasibility inputs only; they do not prove historical point-in-time reconstruction.
+
+Scientific gate:
+The decisive issue is not whether USAspending contains award dates. The decisive issue is whether a historical observer can know the award state at the exact public-information boundary used by the strategy. A future database correction must not alter the historical prefix. Award/action dates therefore cannot be substituted for public-observation timestamps without an independently justified contract.
+
+## Q198 — Federal Register public-inspection → publication → effective stage gap
+
+Official Federal Register/NARA guidance states that documents that publish in the daily Federal Register must be filed for public inspection at least one business day before publication, and that the public-inspection record carries a day/hour filing notation. The official filed version is the controlling record; online posting can occur later. This makes public inspection a potentially earlier and more precise information boundary than publication.
+
+The Federal Register also provides a public API, and current documents expose publication metadata. The research design therefore separates:
+1. official public-inspection filing timestamp;
+2. Federal Register publication date;
+3. explicit effective date.
+
+The event-time contract must use the official filing time, not the later online-posting time, and must fail closed where filing time, correction lineage or document identity cannot be reconstructed.
+
+## Governance
+
+Both candidates are design/source-feasibility only. No market returns are read, no candidate ranking or asset selection is permitted, and no performance authorization exists. The next gate is a fixed historical archive/clock census followed by independent event-time reproduction.
+
+Primary official references:
+- https://api.usaspending.gov/docs/endpoints
+- https://api.usaspending.gov/
+- https://www.federalregister.gov/developers/documentation/api/v1
+- https://www.archives.gov/federal-register/faqs
+
+
+
+===== ARTIFACT: docs/research_design/Q199_Q201_DEEP_LITERATURE_AND_CANDIDATE_WAVE_2026-10-04.md =====
+
+# Q199-Q201 Deep Literature & Candidate Wave — 2026-10-04
+
+## Q199 — patent-publication shock
+
+Primary mechanism source: Hegde & Luo (2018), Patent Publication and the Market for Ideas. The literature treats patent publication as a distinct disclosure stage rather than waiting for grant. Related work on patent spillovers, technological interdependence and patent valuation supports an ex-ante technology-exposure relation.
+
+Key indexed literature located in this wave:
+- Hegde & Luo (2018), Patent Publication and the Market for Ideas.
+- Bloom, Schankerman & Van Reenen (2013), identifying technological spillovers and product-market rivalry.
+- Hall, Jaffe & Trajtenberg (2005), Market Value and Patent Citations.
+- Kogan, Papanikolaou, Seru & Stoffman (2017), Technological Innovation, Resource Allocation, and Growth.
+- A 2023 preprint, Predictive Patentomics, reports that the market may not fully incorporate timely information about patent applications; this is treated only as motivation, not evidence.
+
+Official source feasibility found the USPTO Open Data Portal transition guide exposing pg_published_application and related pre-grant publication tables, the USPTO patent search, and Patent Public Search with publication-date fields.
+
+## Q201 — clinical-trial results first posted
+
+Primary event-study support: a 2022/2023 event-study paper covering 13,807 clinical trials from 2000–2020 reports stock-market responses to trial-result announcements. ClinicalTrials.gov documentation explicitly separates Results first submitted, Results first posted, and Results first posted with QC comments, which provides the information-boundary contract needed here.
+
+Additional indexed literature located in this wave:
+- Timing and completeness of trial results posted at ClinicalTrials.gov and published in journals.
+- Posting of clinical trial results and other critical information from completed medicines trials on ClinicalTrials.gov.
+- Company stock prices before and after public announcements related to oncology drugs.
+- New drugs and stock market: how to predict pharma market reaction to clinical trial announcements.
+
+Official source feasibility found the ClinicalTrials.gov Data API and explicit documentation for Results first posted and Results first posted with QC comments.
+
+## Governance
+
+Both candidates are DESIGN_INVENTORY_ONLY / source-feasibility only. No returns, performance, holdout selection, ranking, tuning, promotion or live execution may enter this wave. Historical archive completeness, public-clock reconstruction, issuer identity and revision lineage must be proven before any candidate-specific PIT claim.
+
+
+===== ARTIFACT: docs/CURRENT_STATUS.md =====
+
+# Trading Agent — Current Operational Status
+
+**Current operational snapshot:** `61d54f4ed54179596549e3d2ebc9de4c32bed06d`
+
+**Generated (UTC):** `2026-10-04T19:50:23.655658+00:00`
+
+**Repository:** `DWR-debug/trading-agent-public`
+
+> This file is the canonical current operational status. `PROJECT_STATUS.md` is historical reconstruction and must not override it for current operational facts. Scientific evidence remains governed by the trial ledger, immutable evidence/checkpoints and workflow artifacts.
+
+## Current state
+
+### Engineering
+
+- Paper/Shadow/Forward infrastructure: **MERGED** via PR #352, merge commit `a1536a2531ff8341b2ab25a8cdd0012a22e3e3ba`.
+- The Forward path contains closed-candle market-data ingestion, a persistent update loop and a schema-v2 per-candle MTM ledger.
+- Canonical data-layer infrastructure is merged.
+- Bounded agent routing uses two queue lanes with fail-closed task contracts.
+- **Permanent two-lane research mode: ACTIVE.** Lane A = **Formal Readiness** (advanced Coverage/PIT/compiler/provenance/authorization readiness); Lane B = **Frontier Discovery** (orthogonal source/PIT feasibility and cheap falsification). The two Windows slots are isolated by candidate/trial identity, branches/workflows and output/provenance paths. Cross-lane findings cannot retroactively alter a frozen trial.
+- Two physical research slots are capacity only: they **never** create performance authorization. A performance run remains individually fail-closed until an exact current formal authorization exists.
+- Continuous QA is scheduled every 6 hours on GitHub-hosted Windows and uses only the bounded `repo_qa` lane; it consumes no self-hosted Windows research slot.
+- The deterministic frontier loop runs every 10 minutes on free GitHub-hosted Ubuntu; its three 10-step packs cover all 30 frontier-worker steps.
+- Windows Self-Hosted capacity is always routable for bounded local reproduction, data QA, local-AI and hardware-dependent work; two physical slots are intended to run in parallel.
+- Latest self-hosted capacity verification: two distinct Windows/X64 runner slots accepted concurrent jobs; see the timestamped capacity receipt.
+- S10 phone capability receipt: **S10_UTILITY_ACCEPTED**; routing availability is **ASSUMED_ALWAYS_AVAILABLE** and is independent of receipt freshness.
+- S10 current physical online state is intentionally not treated as a routing blocker; the OS availability policy assumes the configured S10 resource is always routable.
+- Fresh S10 receipts remain mandatory to substantiate successful execution and device-derived evidence. Receipt freshness does not remove the resource from the routing pool.
+- Universal pre-formal candidate robustness gate: **ACTIVE**; structural candidate robustness must pass before PREREGISTRATION, SOURCE_FEASIBILITY, COVERAGE, PIT or PERFORMANCE formal phases.
+- S10 output remains non-scientific and cannot authorize performance or promotion.
+
+### Scientific status
+
+- Latest recorded formal result: **performance_completed_no_arm_passed_all_13_gates** for `T-2026-10-01-H06P2R3-PERFORMANCE-01`.
+- Q026 is recorded as **DATA_INVALID / NO_SCIENTIFIC_OUTCOME**; it did not produce performance evidence.
+- Q023 is recorded as **COVERAGE_VALIDATED** and Q025 as **DATE_PIT_VALIDATED**; these are data-contract findings, not promotion evidence.
+- No current candidate is authorized for promotion or live execution.
+- Q091 fixed-portfolio performance is **AUTHORIZED** only when the active registry says so; the one-shot performance workflow remains fail-closed and consumes authorization only through immutable reconciliation.
+
+### Active research registry
+
+- Q081-R2: **HISTORICAL_IMPLEMENTATION_INVALIDATED**; infrastructure-rebased corrective reproduction; no performance authorization.
+- Q089: **PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES**; fresh symbol-disjoint successor to quarantined Q086; separate performance authorization remains required.
+- Q077-R1: **PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES**; coverage-only repair after the original Q077 pool left insufficient unused symbols; no performance authorization.
+- Q091: **PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES**; fixed portfolio architecture on the fresh symbol-disjoint universe; performance authorization flag = **False**.
+- Q092: **DIAGNOSTIC_COMPLETED_ONLY**; post-performance Q091 failure-mechanism diagnosis; no performance authorization.
+- Q093: **COMPLETED_DIAGNOSTIC_ONLY**; Q091 turnover/cost attribution diagnosis; no performance authorization.
+- Q094: **PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES**; fixed monthly-rebalance successor to the Q091 low-turnover diagnosis; performance authorization flag = **False**.
+- Q084, Q088 and Q082 remain **design/feasibility tracks** for unusual market-state, textual-network, rebalance-demand and SEC information channels.
+- The unusual-strategy frontier is maintained in `docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md` and is design-only until feasibility and provenance are established.
+- Research OS capability lattice: `research/governance/research_os_source_registry_2026_09_30.json`; it is metadata only and cannot authorize performance.
+- Q104 orthogonal candidate wave: **SOURCE_FEASIBILITY_COMPLETED_DUAL_ARCH**; 5/6 data-backed candidates are source-feasible and Q104:R9 is synthetic-only. The archived receipt is `research/evidence/q104_source_feasibility_2026_10_01.json`.
+- Q105 historical archive/PIT feasibility: **COMPLETED**, with I21 remaining historically window-limited.
+- Q106 shared SEC/Treasury PIT join integrity: **COMPLETED_DUAL_ARCH**.
+- Q107 fresh Q104 equity coverage: **COMPLETED**; 8/8 symbols and 3,704 common sessions.
+- Q108 real SEC/XBRL/13F/Treasury PIT integration: **COMPLETED_DUAL_ARCH**; 8/8 issuer filings and 8/8 XBRL lineage verified, 13F sample and Treasury chain verified.
+- Candidate-specific next gates: I19/I20 = full 13F security coverage; I22 = frozen event-state compiler; M6 = fixed Treasury state reuse; I21 = explicit bounded historical horizon; R9 = synthetic-only.
+
+### Q129 Options Source / PIT
+
+- Q129 historical options source-feasibility: **COMPLETED** on hosted Linux with pinned release hashes verified.
+- Independent Q129 PIT/structural reproduction: **REPRODUCED**; workflow run `37123847841`, receipt fingerprint `41d723734f030d1a212f5eb4b3e6467223a5cfcdeb97c77ffa9713f8889c7587`.
+- The fixed downstream view preserves raw rows and quarantines quote/calendar anomalies deterministically; same-day use remains **False**.
+- This receipt does **not** authorize performance, holdout selection, ranking, tuning, promotion or live execution.
+
+### Verified Source/PIT Frontier Outcomes — 2026-10-03
+
+- **Q121-R1:** `Q121R1_SOURCE_ROUTE_FALSIFIED`; the preregistered SEC browse route failed its subject-issuer identity contract. The verified workflow receipt records 93 discovered entries and 15 deterministic identity checks; receipt fingerprint `9c9a3a4fa05ccc5aa8e59d254c75577abb60b869dd53ff35505b335424cfbf8e`.
+- **Q121-R2:** `Q121R2_BLOCKED_BY_Q121R1_FALSIFICATION`; no independent reconciliation was claimed. Receipt fingerprint `fd7b63d9f05e0cf9abf588c9c2d6c2ff02e2ea413927218de6f4e1c29f9fff97`.
+- **Q121-R3:** `Q121R3_FORM_INDEX_ROUTE_FEASIBILITY_COMPLETED`; official SEC quarterly form-index route completed for 7 quarters with 61,818 relevant form rows and 3 frozen controls. Receipt fingerprint `a18abdffe2fde48dc4084d420f0a8d5c6ade92727baa23dcecaad481e9452dc1`.
+- **Q121-R4:** `Q121R4_MASTER_INDEX_ROUTE_FEASIBILITY_COMPLETED`; independent SEC quarterly master-index route completed for the same 7-quarter window with 61,818 relevant form rows and 3 frozen controls. Receipt fingerprint `3f5616d6ddc18c0f39a10316fe3cbf69e98be2911741552f8a70d133ba94c076`.
+- **Q121-R5:** `Q121R5_DUAL_INDEX_POPULATION_RECONCILIATION_COMPLETED`; the form-index and master-index populations are exactly equal as multisets on the frozen window/form scope: 61,818 rows, 61,818 unique canonical keys, zero left-only/right-only keys. Receipt fingerprint `897bc13c5f722d9a701ae7994b237fe7afd233f15cdc5e644061aa674b8f26c1`. This is source-population evidence only; acceptance timestamps, revision lineage and same-day PIT safety remain unproven.
+- **Q127-R1:** `Q127R1_SOURCE_PIT_FEASIBILITY_COMPLETED`; four fixed historical dates were retrieved and parsed. Revision lineage and same-day PIT safety remain unresolved. Receipt fingerprint `60815a092421762ac1da2a96d003865b72f25eb640778287964a9648cdfc5b74`.
+- **Q130-R1:** `Q130R1_SOURCE_FEASIBILITY_COMPLETED`; the frozen historical Wikimedia source probe passed, while publication/revision timing remains outside formal same-day PIT safety.
+- **Q131-R1:** `Q131R1_FIXED_WINDOW_NO_MATCHING_FILINGS`; the fixed 2025-09-22 through 2025-09-24 issuer/form window yielded zero matching filings, so no complexity vector was inferred. Receipt fingerprint `e5d5077874d3eaa06b688c7294e83c42d3797da1c9cffdfdb98e067112d07a70`.
+- These are discovery/source/PIT findings only. They do not authorize performance, holdout selection, tuning, ranking, promotion or live execution.
+
+### Q171–Q178 Public Source Frontier
+
+- Source-feasibility run: **COMPLETED** on master; Q171, Q172, Q174–Q177 and Q178 passed source probes; Q173 remains license-blocked.
+- PIT-readiness: Q171 has a sample historical Common Crawl reconstruction receipt; Q174–Q177 have source-clock/version/revision semantics confirmed but are **not yet candidate-specific PIT-valid**.
+- No member of this wave is performance-authorized; no holdout selection, tuning, ranking, promotion or live execution is permitted.
+
+### Q179–Q184 Orthogonal Source/PIT Frontier
+
+- Source-feasibility latest receipt: **DISCOVERY_SOURCE_FEASIBILITY_COMPLETED**.
+- Q179 ClinicalTrials.gov, Q180 NHTSA, Q181 OSHA/DOL, Q183 NTSB and Q184 FCC currently pass the bounded source probe; Q182 FERC eLibrary remains **runner-access blocked** where the GitHub-hosted probe receives HTTP 403.
+- PIT Readiness R1 latest receipt: **PIT_READINESS_R1_COMPLETED_NO_PERFORMANCE**.
+- Latest Q179–Q184 PIT receipt fingerprint: `7f816cf26ebe97ca2ebe56adc765bcc463445dc1b22b5eb66ac270f130242292`.
+- Candidate-level PIT status remains non-authorizing; all six current statuses are surfaced directly in `research/evidence/q179_q184_pit_readiness_r1_latest.json`.
+- Remaining gates are historical archive reconstruction, exact public-clock proof where not yet established, fixed entity mapping, revision/amendment lineage and independent reproduction. No performance, holdout selection, tuning, ranking, promotion or live execution is authorized.
+### Q197–Q201 Orthogonal Information Frontier
+
+- Q198 Federal Register: **SOURCE_COMPONENT_READY**; source receipt `95201f816075deb8ddd27903e50ca95804ffa522cff37139fe77fcff83beaede`. Next gate: fixed historical Public Inspection filing clock, correction/withdrawal lineage, immutable reconstruction and independent PIT reproduction.
+- Q197 USAspending: **SOURCE_COMPONENT_READY**; source receipt `95201f816075deb8ddd27903e50ca95804ffa522cff37139fe77fcff83beaede`. Next gate: historical award-state revision/public-observation boundary, frozen pre-event relationship network and independent event-time reproduction.
+- Q199 USPTO: **HISTORICAL_SOURCE_COMPONENT_READY**; source receipt `15d7aadd844d4c1ce3f89e8c1cc891399353e5c37803062e3408162e920cc164`. Next gate: historical publication-state archive, frozen assignee/technology exposure and independent PIT reproduction.
+- Q201 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `15d7aadd844d4c1ce3f89e8c1cc891399353e5c37803062e3408162e920cc164`. Next gate: historical results-state revision lineage, explicit posted-time semantics, frozen sponsor/exposure mapping and independent PIT reproduction.
+- Q198 historical PIT clock census: **Q198_PIT_CLOCK_CENSUS_BLOCKED_SOURCE_ACCESS**; pages parsed **0** / **4**, with fixed dates **2020/01/10, 2020/04/22, 2020/12/16, 2026/10/02**.
+- All four frontier candidates remain non-authorizing: performance/holdout selection/ranking/tuning/promotion/live execution are closed. Source readiness is not PIT validation.
+### Q148-R1 EIA WPSR Source/Clock Gate
+
+- Receipt status: **Q148R1_WPSR_SOURCE_CLOCK_CONTRACT_COMPLETED**.
+- Persistent receipt fingerprint: `30e29926cd9a05d803426765a64d0c13354f824fbfc3d9abc430a379d4569cd0`.
+- Frozen controls: **3**; exact first-public-availability timestamp proven = **False**.
+- Candidate-specific revision lineage proven = **False**; same-day PIT safe = **False**.
+- This gate is source/clock evidence only; performance, ranking, holdout selection, tuning, promotion and live execution remain closed.
+
+### Q137/Q144 Historical Micro-PIT
+
+- Micro-PIT receipt status: **MICRO_PIT_SAMPLE_COMPLETED_NO_PERFORMANCE**.
+- Q137 SEC all-symbols reconstructable = **False**.
+- Q144 Wikimedia all-symbols reconstructable = **False**.
+- This bounded sample produced feasibility evidence only; unresolved archive/entity coverage stays fail-closed.
+
+### Q169 R4 Independent NOAA Reproduction
+
+- Independent reproduction status: **Q169_R4_INDEPENDENT_REPRODUCTION_COMPLETED**.
+- Persistent receipt fingerprint: `279c9b84d7d8cf5ca6967655d8cabe04e7a19c1e55a8625acc9262d320589662`.
+- All fixed R3 archive samples reproduced = **True**.
+- Candidate-specific exposure map frozen = **False**; revision lineage reconstructed = **False**.
+- This strengthens NOAA source/archive provenance only; candidate PIT validation and performance remain closed.
+
+### Q133–Q170 Public Source Frontier
+
+- Hosted discovery/source-feasibility run: **COMPLETED**; 25 source probes passed across Q133–Q170.
+- Newly source-feasible candidates include Q137, Q144, Q147–Q151, Q153–Q155, Q157–Q158, Q161–Q169; remaining candidates stay blocked or design-only pending further source/PIT work.
+- **PIT-readiness R1 is now ACTIVE** for the 21 source-feasible candidates; it audits candidate-specific clock, revision/version, entity-mapping and historical-archive requirements without evaluating returns or ranking candidates.
+- Source-feasibility and PIT-readiness are not performance evidence and do not authorize performance, holdout selection, ranking, tuning, promotion or live execution.
+
+### H06 independent PIT
+
+- Status: **PIT_REPRODUCED_RECONCILED**.
+- Independent reproduction workflow: `36843059301`.
+- Canonical coverage workflow: `36842998210`.
+- Checked PIT decision points: **2545**.
+- Semantic check fingerprint: `658ed9e58edb457bf42337fc3ebf081178d157ae88ca0bcca5745112eb60aae7`.
+- This is PIT/data-contract evidence only; it does not authorize performance or promotion.
+
+### Q067 execution pipeline
+
+- Operational state: **RETIRED**.
+- Coverage receipt: **MISSING**.
+- PIT receipt: **MISSING**.
+- Performance authorization: **False**.
+- Performance evidence: **MISSING**.
+- Ledger reconciled: **False**.
+- Blocking reasons: **obsolete execution path retired; historical evidence preserved**.
+
+This is an operational pipeline summary only; it does not create scientific evidence or select a candidate.
+
+### Q068 execution pipeline
+
+- Operational state: **RETIRED**.
+- Coverage receipt: **MISSING**.
+- PIT receipt: **MISSING**.
+- Performance authorization: **False**.
+- Performance evidence: **MISSING**.
+- Ledger reconciled: **False**.
+- Blocking reasons: **obsolete execution path retired; historical evidence preserved**.
+
+Q068 is a fresh symbol-disjoint validation of the unchanged Q067 E1/E2 mechanisms. This operational summary does not create scientific evidence or select an arm.
+
+### Q070 execution pipeline
+
+- Operational state: **PERMANENTLY_BLOCKED**.
+- Coverage receipt: **COVERAGE_PASSED**.
+- PIT receipt: **PIT_PASSED**.
+- Performance preregistration: **PERMANENTLY_BLOCKED**.
+- Performance authorization: **False**.
+- Performance evidence: **MISSING**.
+- Ledger reconciled: **False**.
+- Blocking reasons: **frozen snapshot unrecoverable; execution workflows retired**.
+
+Q070 is the fresh symbol-disjoint validation pipeline for the fixed Q069 OHLCV candidate bank. This operational summary does not create scientific evidence or rank candidates.
+
+### Operator action when runner capacity is being (re)activated
+
+- Open **two PowerShell windows** on the Windows research PC.
+- Keep the existing Runner #1 process running in window 1.
+- Use window 2 for Runner #2 (LHT-N133732-2).
+- When activation/reconfiguration is needed, paste the resulting **non-secret** commands/output into the current "trading agent" chat so the orchestration can verify the live state.
+- **Never paste registration tokens, API keys, OAuth tokens or passwords into chat.**
+- Do not switch a runner to Windows service mode until local AI authentication has been verified; Windows service mode requires administrative privileges and can change the user/keyring context available to local AI CLIs.
+
+### Resource policy
+
+- Paid agent/API budget: **0 USD**.
+- Actual available capital: **0 EUR**.
+- Hypothetical reference capital: **2000 EUR**, simulation/planning only.
+- Legacy 500-EUR operational canary remains separate.
+- Deterministic research stays on reproducible runner paths.
+- Agent output is never scientific evidence by itself.
+- Protected Copilot reserve starts **2026-10-01T00:00:00Z**: at most 4 sessions/month, 30 AI credits/session, 1 concurrent session; actual entitlement is verified at dispatch and no paid fallback/overage is permitted.
+- Permanent research continuity uses the two self-hosted Windows lanes every 30 minutes, event-driven free-AI review only when a new high-value task contract or material research-state change warrants it, always-routable S10/Android utility capacity, and bounded agent dispatch every 2 hours. Hosted research failover is manual-only.
+
+## Safety
+
+`PAPER_ONLY=True`
+
+`LIVE_TRADING_ENABLED=False`
+
+`ORDERS_ENABLED=False`
+
+`AUTOMATIC_PROMOTION=False`
+
+## Canonical source order
+
+1. Current operational facts: `docs/CURRENT_STATUS.md` and `research/evidence/current_operational_state.json`
+2. Technical truth: current `master`
+3. Scientific evidence: trial ledger, immutable evidence/checkpoints and workflow artifacts
+4. Project intent: `docs/PROJECT_CONTEXT.md`
+5. Historical reconstruction: `PROJECT_STATUS.md`
+
+## Continuity protocol
+
+Every relevant `master` push triggers the status synchronizer. It records the exact source commit being synchronized and updates these two operational-status files in a documentation-only commit. Those files are excluded from the synchronizer trigger, preventing recursive commits.
+
+A future `trading agent` chat must read this file first, then verify live GitHub state before acting.
+
+
+
+===== ARTIFACT: research/evidence/current_operational_state.json =====
+
+{
+  "active_research_registry": {
+    "active_design_families": [
+      {
+        "class": "market_state_and_earnings",
+        "code": "084",
+        "issue_number": 583,
+        "state": "FEASIBILITY_COMPLETE"
+      },
+      {
+        "class": "textual_peer_network_and_rebalance_demand",
+        "code": "088",
+        "issue_number": 588,
+        "state": "DESIGN_ONLY"
+      },
+      {
+        "class": "sec_shareholder_experience",
+        "code": "082",
+        "issue_number": 580,
+        "state": "DESIGN_ONLY"
+      },
+      {
+        "class": "unusual_alpha_frontier",
+        "code": "FRONTIER-20260928",
+        "document": "docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md",
+        "issue_number": 591,
+        "performance_authorization_allowed": false,
+        "state": "DESIGN_ONLY"
+      },
+      {
+        "candidate_contracts": {
+          "Q104:I19": {
+            "design_document": "docs/research_design/Q104_I19_EXACT_XBRL_CONCEPT_FREEZE_2026-10-03.md",
+            "next_gate": "historical 13F archive/security completeness + concept-specific PIT compiler + independent reproduction",
+            "performance_authorization_allowed": false,
+            "xbrl_concept_freeze": "research/preregistrations/q104_i19_xbrl_concept_freeze_2026_10_03.json"
+          }
+        },
+        "candidate_inventory_path": "research/frontier/q104_candidate_wave_2026_10_01.json",
+        "class": "orthogonal_information_investor_demand_and_meta_state",
+        "code": "104",
+        "issue_number": 739,
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q104_orthogonal_candidate_wave_2026_10_01.json",
+        "source_receipt_path": "research/evidence/q104_source_feasibility_2026_10_01.json",
+        "state": "SOURCE_FEASIBILITY_AND_DOWNSTREAM_GATES_COMPLETED"
+      },
+      {
+        "class": "historical_archive_and_pit_feasibility_gate",
+        "code": "105",
+        "issue_number": 740,
+        "parent_code": "104",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q105_q104_historical_pit_2026_10_01.json",
+        "receipt_path": "research/evidence/q105_historical_pit_feasibility_2026_10_01.json",
+        "state": "PIT_FEASIBILITY_COMPLETED"
+      },
+      {
+        "class": "shared_sec_treasury_pit_join_integrity",
+        "code": "106",
+        "issue_number": 741,
+        "parent_code": "105",
+        "performance_authorization_allowed": false,
+        "state": "PIT_JOIN_STRUCTURAL_VALIDATION_COMPLETED_DUAL_ARCH"
+      },
+      {
+        "class": "q104_fresh_equity_coverage",
+        "code": "107",
+        "common_calendar_count": 3704,
+        "coverage_fingerprint": "18571a7871f72b8018905c10c289724bb5cf976ab7fa4f9f424599ddc727fbd2",
+        "coverage_result_path": "research/evidence/q107_coverage_result.json",
+        "issue_number": 742,
+        "parent_code": "104",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q107_q104_fresh_equity_coverage_2026_10_01.json",
+        "snapshot_fingerprint": "c5eb39fcd802eb73c6c71d4bdbb0c0ec0f132db77c5c0a2c37b4ba1277edf036",
+        "state": "COVERAGE_COMPLETED",
+        "universe": "validation_2026_10_01_q104_sec_treasury_equities"
+      },
+      {
+        "class": "q104_sec_xbrl_13f_treasury_pit_integration",
+        "code": "108",
+        "issue_number": 743,
+        "performance_authorization_allowed": false,
+        "receipt_fingerprint": "07dcc87087f6a762ecbddaab0298625fb1bf50123df48758fa5c9f6d56bdc8c3",
+        "receipt_path": "research/evidence/q108_pit_integration_2026_10_01.json",
+        "state": "PIT_INTEGRATION_COMPLETED_DUAL_ARCH"
+      },
+      {
+        "candidate_inventory_path": "research/frontier/q109_candidate_wave_2026_10_01.json",
+        "class": "literature_driven_nport_text_risk_insider_ownership_frontier",
+        "code": "109",
+        "issue_number": 744,
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q109_literature_frontier_2026_10_01.json",
+        "state": "DESIGN_ONLY_ACTIVE"
+      },
+      {
+        "class": "q109_nport_insider_ownership_source_feasibility",
+        "code": "110",
+        "issue_number": 745,
+        "parent_code": "109",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q110_q109_source_feasibility_2026_10_01.json",
+        "receipt_fingerprint": "df1b127bb4faf887b1298a73a89819903efb3a8ab685f110349212759402fa7",
+        "receipt_path": "research/evidence/q110_q109_source_feasibility_2026_10_01.json",
+        "state": "SOURCE_FEASIBILITY_COMPLETED_DUAL_ARCH"
+      },
+      {
+        "class": "deterministic_sec_security_identity_contract",
+        "code": "111",
+        "issue_number": 746,
+        "parent_code": "109",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q111_sec_security_identity_2026_10_01.json",
+        "state": "STRUCTURAL_CONTRACT_COMPLETED_DUAL_ARCH"
+      },
+      {
+        "class": "live_sec_security_identity_13f_nport_form4_feasibility",
+        "code": "112",
+        "issue_number": 747,
+        "parent_code": "111",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q112_sec_security_identity_2026_10_01.json",
+        "receipt_fingerprint": "679b99b393038d82fc3800d1d4abb0af01e6ff6c7aaace83748ae31500c86bd1",
+        "state": "LIVE_SOURCE_FEASIBILITY_COMPLETED_DUAL_ARCH"
+      },
+      {
+        "class": "fixed_quarter_13f_manager_security_coverage_on_q107_universe",
+        "code": "113",
+        "issue_number": 748,
+        "parent_code": "112",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q113_13f_q107_coverage_2026_10_01.json",
+        "receipt_fingerprint": "29da4de843641e4ac5760fdaaeb4833776ca7220842274234bf64236d2ecb19e",
+        "receipt_path": "research/evidence/q113_13f_q107_coverage_result.json",
+        "state": "13F_COVERAGE_COMPLETED"
+      },
+      {
+        "class": "deterministic_13f_manager_position_transition_compiler",
+        "code": "114",
+        "issue_number": 749,
+        "parent_code": "113",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q114_13f_manager_transitions_2026_10_01.json",
+        "state": "STRUCTURAL_COMPILER_COMPLETED_DUAL_ARCH"
+      },
+      {
+        "class": "deterministic_treasury_auction_demand_state_compiler",
+        "code": "115",
+        "issue_number": 750,
+        "parent_code": "104",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q115_treasury_demand_state_2026_10_01.json",
+        "state": "STRUCTURAL_COMPILER_COMPLETED_DUAL_ARCH"
+      },
+      {
+        "class": "live_two_quarter_13f_manager_security_transition_population",
+        "code": "116",
+        "issue_number": 752,
+        "parent_code": "114",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q116_13f_transition_population_2026_10_01.json",
+        "receipt_fingerprint": "cb57b7b19f9328080085888b43447d08ccee090743dcb15b4cc5d8d64b85876d",
+        "receipt_path": "research/evidence/q116_13f_transition_population_result.json",
+        "state": "13F_TWO_QUARTER_TRANSITION_POPULATION_COMPLETED"
+      },
+      {
+        "class": "live_treasury_10y_demand_state_population",
+        "code": "117",
+        "issue_number": 753,
+        "parent_code": "115",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q117_treasury_demand_population_2026_10_01.json",
+        "receipt_fingerprint": "ad060e9023eef10599e855f2e5684f0657416abeb15b5bee8fec70bc2a044e78",
+        "receipt_path": "research/evidence/q117_treasury_demand_population_result.json",
+        "state": "TREASURY_DEMAND_POPULATION_COMPLETED"
+      },
+      {
+        "class": "candidate_composition_and_bundle_compatibility",
+        "code": "118",
+        "design_document": "docs/research_design/CANDIDATE_COMPOSITION_CONTRACT_2026-10-01.md",
+        "issue_number": 757,
+        "parent_code": "109",
+        "performance_authorization_allowed": false,
+        "state": "DESIGN_ONLY_ACTIVE"
+      },
+      {
+        "class": "treasury_auction_demand_shape",
+        "code": "119",
+        "design_document": "docs/research_design/Q119_TREASURY_AUCTION_DEMAND_SHAPE_2026-10-01.md",
+        "issue_number": 761,
+        "parent_code": "115",
+        "performance_authorization_allowed": false,
+        "state": "DESIGN_ONLY_ACTIVE"
+      },
+      {
+        "class": "sector_residual_global_rank",
+        "code": "H06-P2",
+        "design_document": "docs/research_design/H06-P2_SECTOR_RESIDUAL_GLOBAL_RANK_2026-10-01.md",
+        "parent_code": "H06",
+        "performance_authorization_allowed": false,
+        "state": "DESIGN_ONLY_ACTIVE"
+      },
+      {
+        "class": "cftc_tff_positioning_divergence",
+        "code": "120",
+        "design_document": "docs/research_design/Q120_CFTC_TFF_POSITIONING_2026-10-01.md",
+        "issue_number": 768,
+        "parent_code": "market_state_and_allocator_frontier",
+        "performance_authorization_allowed": false,
+        "state": "DESIGN_ONLY_ACTIVE"
+      },
+      {
+        "class": "sec_beneficial_ownership_disclosure_timing",
+        "code": "121",
+        "design_document": "docs/research_design/Q121_SEC_BENEFICIAL_OWNERSHIP_TIMING_2026-10-03.md",
+        "issue_number": 882,
+        "parent_code": "109",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q121_sec_beneficial_ownership_timing_2026_10_03.json",
+        "state": "DISCOVERY_PIT_ONLY_ACTIVE"
+      },
+      {
+        "candidate_inventory_path": "research/frontier/q171_q178_candidate_wave_2026_10_03.json",
+        "class": "public_domain_orthogonal_information_frontier",
+        "code": "FRONTIER-Q171-Q178",
+        "note": "Q171 sample PIT reconstruction is proven; Q174-Q177 source clocks/versions are characterized but candidate-specific PIT compilers remain required; Q173 is license-blocked.",
+        "performance_authorization_allowed": false,
+        "pit_readiness_receipt_path": "research/evidence/q171_q177_pit_readiness_2026_10_03.json",
+        "q179_q184_pit_census_r2": {
+          "performance_authorization_allowed": false,
+          "receipt": "research/evidence/q179_q184_pit_census_r2_latest.json",
+          "state": "ACTIVE",
+          "workflow": ".github/workflows/q179-q184-pit-census-r2.yml"
+        },
+        "source_receipt_path": "research/evidence/q171_q178_source_feasibility_2026_10_03.json",
+        "state": "SOURCE_FEASIBILITY_COMPLETED_PIT_READINESS_ACTIVE"
+      },
+      {
+        "candidate_inventory_path": "research/frontier/q133_q170_pit_readiness_wave_2026_10_03.json",
+        "class": "source-feasible-public-information-pit-readiness",
+        "code": "FRONTIER-Q133-Q170-PIT-R1",
+        "micro_pit": {
+          "candidates": [
+            "Q137",
+            "Q144"
+          ],
+          "design_document": "docs/research_design/Q137_Q144_MICRO_PIT_R1_2026-10-03.md",
+          "next_gate": "candidate-specific full historical archive coverage, immutable SEC/Wikimedia entity mappings and independent reproduction",
+          "note": "Bounded 2025-08-25 through 2025-09-24 micro sample completed with all mutation checks passing. Q137 was reconstructable for 7/8 symbols and Q144 for 1/8; unresolved symbols remain fail-closed and no performance evidence is claimed.",
+          "page_map": "research/governance/q144_q107_wikipedia_page_map_2026_10_03.json",
+          "performance_authorization_allowed": false,
+          "q137_reconstructable_count": 7,
+          "q137_reconstructable_symbols": [
+            "NDAQ",
+            "AMP",
+            "RJF",
+            "WMB",
+            "VLO",
+            "DVN",
+            "EMN"
+          ],
+          "q137_total_symbols": 8,
+          "q144_reconstructable_count": 1,
+          "q144_reconstructable_symbols": [
+            "NDAQ"
+          ],
+          "q144_total_symbols": 8,
+          "receipt_fingerprint": "112c3eb4fe600876b1ba391ab8cecfaa97bc73f3f0917ac4f896716c057c1dea",
+          "receipt_path": "research/evidence/q137_q144_micro_pit_latest.json",
+          "state": "MICRO_PIT_SAMPLE_COMPLETED_UNRESOLVED",
+          "workflow_run_id": 37166075665
+        },
+        "note": "Downstream PIT contract/sample gate only; no performance, ranking, selection, tuning, promotion or live execution.",
+        "parent_code": "FRONTIER-20260928",
+        "performance_authorization_allowed": false,
+        "q147_q148_clock_contract": {
+          "contract": "research/governance/q147_q148_eia_source_clock_contract_2026_10_03.json",
+          "document": "docs/research_design/Q147_Q148_EIA_SOURCE_CLOCK_CONTRACT_2026-10-03.md",
+          "note": "Current EIA API is discovery/sample only; formal PIT requires dated publication/issue files and revision lineage.",
+          "performance_authorization_allowed": false,
+          "state": "PIT_CONTRACT_DEFINED_PENDING_SERIES_FREEZE"
+        },
+        "q148_r1_wpsr_source_clock": {
+          "issue_number": 997,
+          "next_gate": "candidate-specific exact-first-public-availability and revision-lineage proof",
+          "note": "Q148-R1 fixed WPSR Table 4 source/clock contract completed on three frozen controls; exact first-public-availability and candidate-specific revision lineage remain unproven, so same-day PIT and performance remain closed.",
+          "performance_authorization_allowed": false,
+          "preregistration_path": "research/preregistrations/q148_r1_wpsr_source_clock_2026_10_04.json",
+          "receipt_fingerprint": "30e29926cd9a05d803426765a64d0c13354f824fbfc3d9abc430a379d4569cd0",
+          "receipt_path": "research/evidence/q148_r1_wpsr_source_clock_latest.json",
+          "state": "SOURCE_CLOCK_CONTRACT_COMPLETED_NO_SAME_DAY_PIT",
+          "workflow_run_id": 37165861306
+        },
+        "q169_r4_independent_reproduction": {
+          "all_fixed_samples_reproduced": true,
+          "candidate_pit_validated": false,
+          "candidate_specific_exposure_map_frozen": false,
+          "candidate_specific_revision_lineage_reconstructed": false,
+          "note": "Independent parser reproduced both frozen Q169 R3 archive files byte-for-byte and matched both embedded Issue Times. This strengthens source/archive provenance only; candidate-specific exposure and revision lineage remain open.",
+          "performance_authorization_allowed": false,
+          "preregistration_path": "research/preregistrations/q169_noaa_swpc_archive_pit_r4_2026_10_04.json",
+          "receipt_fingerprint": "279c9b84d7d8cf5ca6967655d8cabe04e7a19c1e55a8625acc9262d320589662",
+          "receipt_path": "research/evidence/q169_noaa_swpc_archive_pit_r4_latest.json",
+          "state": "INDEPENDENT_REPRODUCTION_COMPLETED",
+          "workflow_run_id": 37192224278
+        },
+        "source_feasible_candidate_count": 21,
+        "source_probe_pass_count": 25,
+        "source_receipt_path": "research/evidence/q133_q170_source_feasibility_2026_10_03.json",
+        "state": "PIT_READINESS_ACTIVE"
+      },
+      {
+        "class": "sec_disclosure_complexity_source_contract",
+        "code": "Q131-R1",
+        "design_document": "docs/research_design/Q131R1_SEC_DISCLOSURE_COMPLEXITY_2026-10-03.md",
+        "issue_number": 974,
+        "note": "Deterministic SEC structural disclosure-complexity vector only. No scalar threshold, ranking, tuning, performance or promotion is permitted.",
+        "parent_code": "131",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q131r1_sec_disclosure_complexity_2026_10_03.json",
+        "state": "SOURCE_CONTRACT_ACTIVE"
+      },
+      {
+        "class": "sec_beneficial_ownership_reverse_issuer_coverage_correction",
+        "code": "Q121-R1",
+        "design_document": "docs/research_design/Q121R1_SEC_REVERSE_ISSUER_COVERAGE_2026-10-03.md",
+        "issue_number": 961,
+        "note": "Original Q121 issuer-submission route is not treated as complete issuer-level population; Q121-R1 re-derives reverse issuer coverage via SEC company browse and preserves filer/subject identity separately.",
+        "parent_code": "121",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q121r1_sec_reverse_issuer_coverage_2026_10_03.json",
+        "state": "SOURCE_ROUTE_CORRECTION_ACTIVE"
+      },
+      {
+        "class": "sec_beneficial_ownership_daily_index_independent_reconciliation",
+        "code": "Q121-R2",
+        "design_document": "docs/research_design/Q121R2_SEC_DAILY_INDEX_RECONCILIATION_2026-10-03.md",
+        "issue_number": 972,
+        "note": "Independent Q121-R2 daily EDGAR master-index anchor reconciliation. It cross-checks deterministic Q121-R1 filing anchors against a separate SEC index architecture; it does not prove full-window population exhaustiveness.",
+        "parent_code": "121",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q121r2_sec_daily_index_reconciliation_2026_10_03.json",
+        "state": "INDEPENDENT_SOURCE_RECONCILIATION_ACTIVE"
+      },
+      {
+        "class": "finra_regsho_historical_source_pit_correction",
+        "code": "Q127-R1",
+        "design_document": "docs/research_design/Q127R1_FINRA_REGSHO_HISTORICAL_PIT_2026-10-03.md",
+        "issue_number": 964,
+        "note": "Historical FINRA Consolidated NMS source/PIT feasibility; publication upper bound is documented but exact first-publication time and immutable revision lineage are not claimed.",
+        "parent_code": "127",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q127r1_finra_regsho_historical_pit_2026_10_03.json",
+        "state": "SOURCE_PIT_FEASIBILITY_ACTIVE"
+      },
+      {
+        "class": "wikimedia_historical_attention_source_feasibility",
+        "code": "Q130-R1",
+        "design_document": "docs/research_design/Q130R1_WIKIMEDIA_ATTENTION_SOURCE_2026-10-03.md",
+        "issue_number": 967,
+        "note": "Public Wikimedia Pageviews is being tested as a historical attention proxy. Daily data availability is established by source documentation, but exact historical publication time and revision lineage remain unproven.",
+        "parent_code": "130",
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q130r1_wikimedia_attention_source_2026_10_03.json",
+        "state": "SOURCE_FEASIBILITY_ACTIVE"
+      },
+      {
+        "candidate_inventory_path": "research/frontier/q187_q192_candidate_wave_2026_10_04.json",
+        "candidate_pit_census_r1": {
+          "performance_authorized": false,
+          "receipt": "research/evidence/q188_q192_pit_census_r1_latest.json",
+          "status": "ACTIVE",
+          "workflow": ".github/workflows/q188-q192-pit-census-r1.yml"
+        },
+        "class": "next_orthogonal_public_information_frontier",
+        "code": "FRONTIER-Q187-Q192",
+        "design_document": "docs/research_design/Q187_Q192_SOURCE_PIT_WAVE_2026-10-04.md",
+        "note": "New six-candidate orthogonal wave; source-first feasibility only. No candidate ranking, selection, tuning, performance, promotion or live execution.",
+        "performance_authorization_allowed": false,
+        "pit_readiness_evidence": "research/evidence/q187_q192_pit_readiness_r1_latest.json",
+        "pit_readiness_workflow": ".github/workflows/q187-q192-pit-readiness-r1.yml",
+        "state": "SOURCE_REPAIR_AND_PIT_READINESS_ACTIVE"
+      }
+    ],
+    "active_trials": [
+      {
+        "authorization_id": "AUTH-Q081R4-2026-09-30-36640499423",
+        "class": "performance_correction",
+        "code": "081R4",
+        "issue_number": 694,
+        "performance_authorization_allowed": false,
+        "performance_result": {
+          "report_fingerprint": "b57f93d2ebd1076f191076ea77ad37ca5dfd7cf4f8da5fdb0f4047b4217ea30a",
+          "status": "COMPLETED",
+          "trial_id": "T-2026-09-30-081R4-PERFORMANCE",
+          "workflow_run_id": "36704648242"
+        },
+        "predecessor_execution_incident_path": "research/evidence/q081r3_performance_execution_incident.json",
+        "predecessor_trial_id": "T-2026-09-30-081R3-PERFORMANCE",
+        "preregistration_path": "research/preregistrations/q081r4_ast_literal_audit_2026_09_30.json",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
+        "trial_id": "T-2026-09-30-081R4-PERFORMANCE"
+      },
+      {
+        "authorization_id": "AUTH-Q081R3-2026-09-30-36639695710",
+        "class": "performance_correction",
+        "code": "081R3",
+        "execution_incident": {
+          "error": "NameError: name 'true' is not defined. Did you mean: 'True'?",
+          "execution_incident_path": "research/evidence/q081r3_performance_execution_incident.json",
+          "failing_step": "Execute Q081R3 fixed-rule performance exactly once",
+          "result_created": false,
+          "scientific_outcome": false,
+          "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME",
+          "workflow_run_id": "36640012014"
+        },
+        "issue_number": 693,
+        "performance_authorization_allowed": false,
+        "predecessor_execution_incident_path": "research/evidence/q081r2_performance_execution_incident.json",
+        "predecessor_trial_id": "T-2026-09-28-081R2-PERFORMANCE",
+        "preregistration_path": "research/preregistrations/q081r3_python_literal_fix_2026_09_30.json",
+        "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
+        "trial_id": "T-2026-09-30-081R3-PERFORMANCE"
+      },
+      {
+        "authorization_id": "AUTH-Q081R2-2026-09-30-36638812989",
+        "class": "performance_correction",
+        "code": "081R2",
+        "execution_incident": {
+          "error": "NameError: name 'false' is not defined. Did you mean: 'False'?",
+          "execution_incident_path": "research/evidence/q081r2_performance_execution_incident.json",
+          "failing_step": "Execute Q081R2 fixed-rule performance exactly once",
+          "result_created": false,
+          "scientific_outcome": false,
+          "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME",
+          "workflow_run_id": "36639171349"
+        },
+        "issue_number": 587,
+        "performance_authorization_allowed": false,
+        "predecessor_trial_id": "T-2026-09-28-081R1-PERFORMANCE",
+        "preflight": {
+          "artifact_id": 10993950051,
+          "status": "PASSED",
+          "workflow_run_id": 36474031581
+        },
+        "preregistration_path": "research/preregistrations/q081r2_performance_2026_09_28.json",
+        "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
+        "trial_id": "T-2026-09-28-081R2-PERFORMANCE"
+      },
+      {
+        "class": "historical_infrastructure_invalidated",
+        "code": "081R1",
+        "issue_number": 587,
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/q081r1_performance_2026_09_28.json",
+        "state": "HISTORICAL_INFRASTRUCTURE_INVALIDATED",
+        "trial_id": "T-2026-09-28-081R1-PERFORMANCE"
+      },
+      {
+        "authorization": {
+          "authorization_basis": {
+            "governance_audit_run_id": 36542330197,
+            "master_ci_run_id": 36542330308,
+            "master_exact_gate_run_id": 36542330292,
+            "preflight_contract_audit_run_id": 36542330096
+          },
+          "authorization_id": "AUTH-Q089-2026-09-29-03",
+          "path": "research/authorizations/q089_performance_2026_09_28.json",
+          "preregistration_fingerprint": "a8be60c87684f089e45ae0406d3b242575abd5ac03e6855a9dad48314afd077a",
+          "source_receipts": {
+            "coverage_result_fingerprint": "56898b50fc0f8af31dead7dcd65001cced41cf7b44093676eead1ccc4d6fe4cb",
+            "input_bundle_fingerprint": "c4261e230baf8888088df7e3e3159a1a93d4142ff358ef5896d35cd109663924",
+            "pit_result_fingerprint": "098da74ebde38d7b5e7c13626bee396eb6e86b4421ca6a4d383e3133cecf19ca",
+            "snapshot_fingerprint": "bb82aeaed86411a8675be7f8ecb1c99e9c144f017466a836b8cafeb9d3b55e1d"
+          }
+        },
+        "class": "fresh_validation",
+        "code": "089",
+        "issue_number": 589,
+        "performance_authorization_allowed": false,
+        "performance_result": {
+          "report_fingerprint": "0eee84e44a12b9f4a606aebb63afe50990dfa0f6e6009afcf926f525e3c8e8d1",
+          "status": "COMPLETED",
+          "trial_id": "T-2026-09-28-089-PERFORMANCE",
+          "workflow_run_id": "36543296042"
+        },
+        "preregistration_path": "research/preregistrations/q089_performance_2026_09_28.json",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
+        "trial_id": "T-2026-09-28-089-PERFORMANCE"
+      },
+      {
+        "authorization_id": "AUTH-Q077R1-2026-09-30-36737361478",
+        "class": "fresh_validation",
+        "code": "077R1",
+        "coverage_result": {
+          "common_sessions": 3704,
+          "fingerprint": "653524bcdded25e031a0f16ba8a09c0de3e7057ee320f96fee009ba74c9e1a50",
+          "selected_symbols": [
+            "AJG",
+            "ALGN",
+            "AME",
+            "AOS",
+            "APH",
+            "AXON",
+            "BAH",
+            "BALL",
+            "BBWI",
+            "BRO",
+            "BWA",
+            "CDNS"
+          ],
+          "source_trial_id": "T-2026-09-28-077R1-COVERAGE",
+          "status": "COVERAGE_PASSED"
+        },
+        "execution_incident_paths": [
+          "research/evidence/q077r1_performance_execution_incident.json",
+          "research/evidence/q077r1_performance_execution_incident_cap.json"
+        ],
+        "input_bundle_result": {
+          "fingerprint": "775c2f7af2996132b8245c3e5ec2c9dd7d13adacaf742f3252bac49d2bfa594d",
+          "source_trial_id": "T-2026-09-28-077R1-INPUT-FREEZE",
+          "status": "INPUT_BUNDLE_FROZEN"
+        },
+        "issue_number": null,
+        "performance_authorization_allowed": false,
+        "performance_result": {
+          "report_fingerprint": "2d9a50ade7a6bb0840f51079bb23affe7f3e5b95389971e7692834ead7ab20f1",
+          "status": "COMPLETED",
+          "trial_id": "T-2026-09-30-077R1-PERFORMANCE",
+          "workflow_run_id": "36737746986"
+        },
+        "pit_result": {
+          "fingerprint": "27bc62136bd376b26afe11f3e0eeb4b0a96d1868c0c84082ae8a58b50add2563",
+          "source_trial_id": "T-2026-09-28-077R1-PIT",
+          "status": "PIT_PASSED"
+        },
+        "predecessor_authorization_id": "AUTH-Q077R1-2026-09-30-36727296132",
+        "preregistration_path": "research/preregistrations/q077r1_performance_2026_09_30.json",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
+        "trial_id": "T-2026-09-30-077R1-PERFORMANCE"
+      },
+      {
+        "class": "fresh_validation",
+        "code": "091",
+        "issue_number": null,
+        "performance_authorization_allowed": false,
+        "performance_result": {
+          "report_fingerprint": "0816e49774ff901438e046e162e428884f3f67b305cf26e0ebff2451ce38195d",
+          "status": "COMPLETED",
+          "trial_id": "T-2026-09-29-091",
+          "workflow_run_id": "36563579815"
+        },
+        "preregistration_path": "research/preregistrations/q091_fixed_portfolio_architecture_2026_09_29.json",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
+        "trial_id": "T-2026-09-29-091"
+      },
+      {
+        "authorization_id": "AUTH-Q094-2026-09-29-02",
+        "class": "fresh_validation",
+        "code": "094",
+        "issue_number": null,
+        "performance_authorization_allowed": false,
+        "performance_result": {
+          "report_fingerprint": "602e85e57698158b10013fb64b69930fd5ac40046e2aeaa588b0e175cd229f73",
+          "status": "COMPLETED",
+          "trial_id": "T-2026-09-29-094",
+          "workflow_run_id": "36569776262"
+        },
+        "preregistration_path": "research/preregistrations/q094_monthly_rebalance_q091_low_turnover_2026_09_29.json",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
+        "trial_id": "T-2026-09-29-094"
+      },
+      {
+        "authorization_id": "AUTH-Q095-2026-09-29-01",
+        "class": "independent_replication",
+        "code": "095",
+        "issue_number": null,
+        "performance_authorization_allowed": false,
+        "performance_result": {
+          "report_fingerprint": "2132ad61b30100d1c187ae20ab9e3d2597cdadaf3ef2f0fa85ba7a12c3765772",
+          "status": "COMPLETED",
+          "trial_id": "T-2026-09-29-095",
+          "workflow_run_id": "36580538374"
+        },
+        "preregistration_path": "research/preregistrations/q095_monthly_rebalance_independent_replication_2026_09_29.json",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
+        "trial_id": "T-2026-09-29-095"
+      },
+      {
+        "authorization_id": "AUTH-C29-2026-09-30-01",
+        "class": "fresh_validation",
+        "code": "C29P1",
+        "coverage_result": {
+          "common_sessions": 3500,
+          "fingerprint": "6b3acf5fb179bc93c6fac8eaaef59d71aa909326d5f171d9718a7cfbc71e22a6",
+          "selected_symbols": [
+            "PPG",
+            "GWW",
+            "PGR",
+            "TT",
+            "ICE",
+            "KLAC",
+            "SNA",
+            "SWK"
+          ],
+          "source_trial_id": "T-2026-09-30-C29R1-COVERAGE-PIT",
+          "status": "COVERAGE_PASSED"
+        },
+        "execution_incident_paths": [
+          "research/evidence/c29_coverage_execution_incident_2026_09_30.json",
+          "research/evidence/c29r1_input_freeze_incident_2026_09_30.json"
+        ],
+        "input_bundle_result": {
+          "fingerprint": "743b0a14e646009e7ed5503c4068e399caaebc9719ffcd9e88a5ab40465ab4e9",
+          "source_trial_id": "T-2026-09-30-C29R1-INPUT-FREEZE",
+          "status": "INPUT_BUNDLE_FROZEN"
+        },
+        "issue_number": null,
+        "performance_authorization_allowed": false,
+        "performance_result": {
+          "report_fingerprint": "61822d7b7ed717cf983fd0d1b7b4ae1395fc5b389c89b6b231c484470a335a8e",
+          "status": "COMPLETED",
+          "trial_id": "T-2026-09-30-C29-PERFORMANCE-01",
+          "workflow_run_id": "36744622759"
+        },
+        "pit_result": {
+          "fingerprint": "d88c24271fec55186b5e3aad478d91acc7ebe3b6412193724170365f5b6729c6",
+          "source_trial_id": "T-2026-09-30-C29R1-COVERAGE-PIT",
+          "status": "PIT_PASSED_NO_PERFORMANCE_EVIDENCE"
+        },
+        "preregistration_path": "research/preregistrations/c29_performance_2026_09_30.json",
+        "repair_discovery_fingerprint": "b7541fee48f01105d47ca0e89b05e1c20d14d73c5dad18dc1d2e876a21c4b05d",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
+        "trial_id": "T-2026-09-30-C29-PERFORMANCE-01"
+      },
+      {
+        "authorization_id": "AUTH-H06P2-2026-10-01-01",
+        "class": "fresh_validation",
+        "code": "H06-P2",
+        "execution_incident": {
+          "attempt_count": 3,
+          "execution_incident_path": "research/evidence/h06_p2_performance_execution_incident.json",
+          "predecessor_workflow_runs": [
+            36908441865,
+            36908869666,
+            36908998353
+          ],
+          "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME"
+        },
+        "invalidation_reason": "Original one-shot authorization produced no scientific result because three execution-layer defects failed closed; H06-P2-R1 contains only implementation corrections.",
+        "issue_number": null,
+        "performance_authorization_allowed": false,
+        "preregistration_path": "research/preregistrations/h06_p2_performance_2026_10_01.json",
+        "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
+        "trial_id": "T-2026-10-01-H06P2-PERFORMANCE-01"
+      },
+      {
+        "authorization_id": "AUTH-H06P2R1-2026-10-01-01",
+        "class": "performance_correction",
+        "code": "H06-P2-R1",
+        "execution_incident": {
+          "attempt_count": 1,
+          "execution_incident_path": "research/evidence/h06_p2_r1_performance_execution_incident.json",
+          "predecessor_workflow_runs": [
+            36910527120
+          ],
+          "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME"
+        },
+        "invalidation_reason": "R1 reached the complete arm evaluation path but failed while serializing result metadata because freeze['universe'] does not exist; no immutable scientific result was created.",
+        "issue_number": null,
+        "performance_authorization_allowed": false,
+        "predecessor_execution_incident_path": "research/evidence/h06_p2_performance_execution_incident.json",
+        "predecessor_trial_id": "T-2026-10-01-H06P2-PERFORMANCE-01",
+        "preregistration_path": "research/preregistrations/h06_p2_r1_performance_2026_10_01.json",
+        "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
+        "trial_id": "T-2026-10-01-H06P2R1-PERFORMANCE-01"
+      },
+      {
+        "authorization_id": "AUTH-H06P2R2-2026-10-01-01",
+        "class": "performance_correction",
+        "code": "H06-P2-R2",
+        "execution_incident": {
+          "attempt_count": 1,
+          "execution_incident_path": "research/evidence/h06_p2_r2_performance_execution_incident.json",
+          "predecessor_workflow_runs": [
+            36911178921
+          ],
+          "status": "IMPLEMENTATION_INVALID_NO_SCIENTIFIC_OUTCOME"
+        },
+        "invalidation_reason": "R2 failed on lowercase JSON boolean literals in the Python result-builder; no immutable scientific result was produced.",
+        "issue_number": null,
+        "performance_authorization_allowed": false,
+        "predecessor_execution_incident_path": "research/evidence/h06_p2_r1_performance_execution_incident.json",
+        "predecessor_trial_id": "T-2026-10-01-H06P2R1-PERFORMANCE-01",
+        "preregistration_path": "research/preregistrations/h06_p2_r2_performance_2026_10_01.json",
+        "state": "HISTORICAL_IMPLEMENTATION_INVALIDATED",
+        "trial_id": "T-2026-10-01-H06P2R2-PERFORMANCE-01"
+      },
+      {
+        "authorization_id": "AUTH-H06P2R3-2026-10-01-01",
+        "class": "performance_correction",
+        "code": "H06-P2-R3",
+        "issue_number": null,
+        "performance_authorization_allowed": false,
+        "performance_result": {
+          "report_fingerprint": "30341d6303cb8f93e11d948d91ea627686d9207f84d4a4d2018fd6fdf436b5f5",
+          "status": "COMPLETED",
+          "trial_id": "T-2026-10-01-H06P2R3-PERFORMANCE-01",
+          "workflow_run_id": "36911930878"
+        },
+        "predecessor_execution_incident_path": "research/evidence/h06_p2_r2_performance_execution_incident.json",
+        "predecessor_trial_id": "T-2026-10-01-H06P2R2-PERFORMANCE-01",
+        "preregistration_path": "research/preregistrations/h06_p2_r3_performance_2026_10_01.json",
+        "state": "PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES",
+        "trial_id": "T-2026-10-01-H06P2R3-PERFORMANCE-01"
+      }
+    ],
+    "name": "active_research_registry",
+    "policy": {
+      "automatic_promotion": false,
+      "candidate_robustness_gate_module": "automation/candidate_robustness_gate.py",
+      "critical_research_quality_control": "research/governance/critical_research_quality_control.json",
+      "formal_phase_entry_requires_candidate_robustness_receipt": true,
+      "frontier_design_document": "docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md",
+      "future_full_formal_pass_requires_independent_replication_contract": true,
+      "future_performance_authorization_requires_robustness_contract": true,
+      "legacy_preregistrations_are_historical": true,
+      "only_exactly_listed_authorizations_may_execute": true,
+      "only_listed_performance_trials_may_be_authorized": true,
+      "paper_only": true,
+      "replication_after_full_formal_pass_must_be_unchanged": true,
+      "universal_candidate_robustness_gate": true
+    },
+    "schema_version": 1
+  },
+  "canonical_sources": {
+    "active_research_registry": "research/governance/active_research_registry.json",
+    "historical_status": "PROJECT_STATUS.md",
+    "human_current_status": "docs/CURRENT_STATUS.md",
+    "machine_current_status": "research/evidence/current_operational_state.json",
+    "project_context": "docs/PROJECT_CONTEXT.md",
+    "research_checkpoint": "research/evidence/current_project_checkpoint.json",
+    "research_decision_basis": "research/evidence/decision_basis_latest.json",
+    "research_os_source_registry": "research/governance/research_os_source_registry_2026_09_30.json",
+    "research_state": "research/evidence/project_state.json",
+    "resource_availability_policy": "research/governance/resource_availability_policy_2026_10_03.json",
+    "trial_ledger": "research/evidence/trial_ledger.json",
+    "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
+  },
+  "engineering_state": {
+    "agent_orchestration": {
+      "bounded_two_lane_queue": true,
+      "control_plane": "automation/autonomous_control_plane.py",
+      "copilot_cli_queue": ".github/workflows/agent-request-queue.yml",
+      "copilot_protected_reserve": {
+        "entitlement_is_live_verified_at_dispatch": true,
+        "max_ai_credits_per_session": 30,
+        "max_parallel_sessions": 1,
+        "max_sessions_per_month": 4,
+        "overages_allowed": false,
+        "paid_fallback_allowed": false,
+        "starts_utc": "2026-10-01T00:00:00Z"
+      },
+      "current_pending_requests": [
+        {
+          "issue_number": "643",
+          "lane": "lane0",
+          "request_file": "agent_requests/lane0/AGENT-027.request",
+          "task_id": "AGENT-027"
+        }
+      ],
+      "local_ai_smoke_after_research_lanes": true,
+      "self_hosted_parallel_slots": 2
+    },
+    "canonical_data_layer": {
+      "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
+      "pr": 232,
+      "status": "MERGED"
+    },
+    "continuous_qa": {
+      "architecture": "single bounded hosted QA lane",
+      "cadence": "15 */6 * * *",
+      "last_recorded_verified_baseline": {
+        "artifact_id": 10911971419,
+        "artifact_sha256": "sha256:b32f2cffdff27091187d7f7f7ac6759c23b2e141081f6d9c9143e1c790d73da9",
+        "ast_syntax": "success",
+        "conclusion": "success",
+        "head_sha": "5ef8730bbb55f86701fc0a8b9c88e152fe83291c",
+        "safety_invariants": "success",
+        "tests_passed": 881,
+        "warnings": 2,
+        "workflow_run_id": 36259124979
+      },
+      "matrix_lanes": [
+        "repo_qa"
+      ],
+      "runner": "GitHub-hosted windows-latest",
+      "runner_capacity_last_verified": {
+        "label": "trading-agent-research",
+        "note": "This is a timestamped verification receipt, not a claim that the runners remain online after shutdown or logout.",
+        "runners": [
+          {
+            "arch": "X64",
+            "job_id": 109089465117,
+            "name": "LHT-N133732",
+            "os": "Windows",
+            "slot": 1,
+            "status_at_probe": "online_and_accepted_job"
+          },
+          {
+            "arch": "X64",
+            "job_id": 109089465001,
+            "name": "LHT-N133732-2",
+            "os": "Windows",
+            "slot": 2,
+            "status_at_probe": "online_and_accepted_job"
+          }
+        ],
+        "safety": {
+          "automatic_promotion": false,
+          "live_trading_enabled": false,
+          "orders_enabled": false,
+          "paper_only": true
+        },
+        "schema_version": 1,
+        "source_workflow_run_id": 36466580427,
+        "verification": "two concurrent self-hosted probe jobs were assigned to distinct Windows/X64 runners",
+        "verified_utc": "2026-09-28T19:07:05Z"
+      },
+      "self_hosted_slots_consumed": 0
+    },
+    "deep_frontier_source_feasibility": {
+      "cadence": "17 */12 * * *",
+      "formal_evidence_allowed": false,
+      "purpose": "public/free source and PIT feasibility only",
+      "runner": "ubuntu-24.04",
+      "workflow": ".github/workflows/deep-frontier-source-feasibility.yml"
+    },
+    "hosted_deterministic_frontier": {
+      "cadence": "*/10 * * * *",
+      "formal_evidence_allowed": false,
+      "purpose": "deterministic frontier QA/research workpack rotation without consuming scarce Windows capacity",
+      "runner": "ubuntu-24.04",
+      "workflow": ".github/workflows/hosted-deterministic-frontier.yml",
+      "workpack_rotation": "three equal 10-step packs cover all 30 autonomous_frontier_qa steps"
+    },
+    "paper_forward": {
+      "components": [
+        "closed-candle Binance market feed",
+        "persistent autonomous update loop",
+        "schema-v2 per-candle MTM ledger",
+        "paper-only safety guard",
+        "persistent fingerprint integrity checks"
+      ],
+      "merge_commit": "a1536a2531ff8341b2ab25a8cdd0012a22e3e3ba",
+      "pr": 352,
+      "status": "MERGED"
+    },
+    "research_continuity": {
+      "android_fleet": {
+        "availability_policy": "ASSUMED_ALWAYS_AVAILABLE",
+        "formal_evidence_allowed": false,
+        "orchestration_available": true,
+        "receipt_required_for_evidence": true
+      },
+      "bounded_agent_queue": {
+        "cadence": "15 */2 * * *",
+        "paid_fallback_allowed": false
+      },
+      "continuous_qa": {
+        "cadence": "15 */6 * * *",
+        "runner": "GitHub-hosted windows-latest",
+        "self_hosted_slots_consumed": 0
+      },
+      "free_ai_worker_fabric": {
+        "authenticated_providers_only": true,
+        "cadence": "event-driven",
+        "deduplicate_unchanged_task_context": true,
+        "trigger_policy": "new_or_materially_changed_bounded_task_contract_only"
+      },
+      "hosted_research_failover": {
+        "cadence": "manual",
+        "mode": "manual_only_under_assumed_always_available_self_hosted_pool"
+      },
+      "permanent_self_hosted_loop": {
+        "cadence": "*/10 * * * *",
+        "concurrency_model": {
+          "data_qa": "trading-agent-windows-research-data-qa-v1",
+          "local_reproduction": "trading-agent-windows-research-capacity-v1"
+        },
+        "lane_roles": [
+          "FORMAL_READINESS",
+          "FRONTIER_DISCOVERY"
+        ],
+        "local_ai_isolated": true,
+        "parallel_lanes": 2
+      },
+      "principle": "idle runners are capacity, not a defect; the scheduler should keep meaningful work flowing without duplicate or artificial jobs",
+      "s10_phone": {
+        "availability_policy": "ASSUMED_ALWAYS_AVAILABLE",
+        "cadence": "0 */6 * * *",
+        "event_driven": true,
+        "formal_evidence_allowed": false,
+        "orchestration_available": true,
+        "receipt_gated_for_routing": false,
+        "receipt_required_for_evidence": true
+      },
+      "two_lane_research": {
+        "isolation_required": true,
+        "lane_a": "FORMAL_READINESS",
+        "lane_b": "FRONTIER_DISCOVERY",
+        "parallel_slots": 2,
+        "status": "ACTIVE"
+      }
+    },
+    "research_os": {
+      "agent_output_is_scientific_evidence": false,
+      "layers": [
+        "source_fabric",
+        "evidence_bus",
+        "research_compiler",
+        "agent_mesh",
+        "sandbox_execution_boundary",
+        "decision_state"
+      ],
+      "performance_authorization_from_os": false,
+      "source_registry": "research/governance/research_os_source_registry_2026_09_30.json",
+      "version": "ROS-0.1"
+    },
+    "resource_availability_policy": {
+      "android_fleet": "ASSUMED_ALWAYS_AVAILABLE",
+      "assumption_does_not_authorize_scientific_evidence": true,
+      "receipts_remain_diagnostic_and_evidentiary": true,
+      "routing_may_use_assumed_capacity": true,
+      "s10": "ASSUMED_ALWAYS_AVAILABLE",
+      "self_hosted_windows": "ASSUMED_ALWAYS_AVAILABLE"
+    },
+    "s10_phone": {
+      "acceptance_receipt_sha256": "2e40b9d37bf0fbd22bd752fffdaceb0f7ad955e7df1070d0793acbe77c77796d",
+      "artifact_id": "11312015999",
+      "availability_policy": "ASSUMED_ALWAYS_AVAILABLE",
+      "candidate_ranking": false,
+      "candidate_selection": false,
+      "current_online": null,
+      "current_online_verification": "NOT_PERFORMED",
+      "eligibility_basis": "fresh_successful_utility_receipt",
+      "eligible": true,
+      "orchestration_available": true,
+      "performance_authorization": false,
+      "presence_signal": "fresh_successful_s10_run",
+      "presence_signal_fresh": true,
+      "promotion": false,
+      "receipt_eligible": false,
+      "receipt_status": "S10_UTILITY_ACCEPTED",
+      "routing_uses_presence_receipt": false,
+      "scientific_evidence": false,
+      "source_commit": "b3c7fef53617a16581e334f9c17606fe21001787",
+      "status": "S10_UTILITY_ACCEPTED",
+      "workflow_run_id": "37225098627"
+    },
+    "scientific_compute": {
+      "canonical_path": "GitHub-hosted deterministic workflows",
+      "self_hosted_output_formal_evidence": false
+    },
+    "two_lane_research_mode": {
+      "cross_lane_retroactive_mutation": false,
+      "lane_a": {
+        "focus": [
+          "Q104 I19/I20",
+          "I22",
+          "Q119/Q120/Q122",
+          "Q125-F1"
+        ],
+        "name": "FORMAL_READINESS",
+        "performance_authorization_from_capacity": false,
+        "runner_slot": "Windows self-hosted A"
+      },
+      "lane_b": {
+        "focus": [
+          "Q171-Q178",
+          "Q126-Q132",
+          "public-source/PIT frontier"
+        ],
+        "name": "FRONTIER_DISCOVERY",
+        "performance_authorization_from_capacity": false,
+        "runner_slot": "Windows self-hosted B"
+      },
+      "performance_capacity_rule": "Two slots never create performance authorization; each exact trial requires its own current formal authorization.",
+      "separate_identity_and_outputs": true,
+      "shared_mutable_research_state": false,
+      "status": "ACTIVE"
+    }
+  },
+  "generated_at_utc": "2026-10-04T19:50:23.655658+00:00",
+  "h06_independent_pit": {
+    "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
+    "data_contract": {
+      "checked_decision_points": 2545,
+      "coverage_fingerprint": "cd130e0cccf264680bf306ec58d162ddbd09f4b00b96613039f056b80c609936",
+      "research_candles": 2798,
+      "snapshot_fingerprint": "e80e63eebbc94a32043dcf9c38aa86d2f7dc88eb7c2a172de24dfd9b269e55c6",
+      "target_common_candles": 3500
+    },
+    "evidence_type": "INDEPENDENT_PIT_REPRODUCTION",
+    "governance": {
+      "asset_search": false,
+      "automatic_promotion": false,
+      "holdout_evaluation": false,
+      "holdout_used_for_selection": false,
+      "horizon_search": false,
+      "oos_evaluation": false,
+      "parameter_search": false,
+      "performance_evaluation": false,
+      "performance_trial_authorized": false,
+      "selection_used": false,
+      "threshold_search": false
+    },
+    "independent_reproduction_artifact_digest": "sha256:64b9da18e11318f641847cf47fe3954114d00dd5cbfaa2ba74370ea12955821b",
+    "independent_reproduction_artifact_id": 11151823717,
+    "independent_reproduction_run_id": 36843059301,
+    "master_commit": "fab5d7af963c3555e8bd97b4b0d28f762ce0c0f9",
+    "mutation_checks": {
+      "future_mutation_checks_passed": true,
+      "next_session_mutation_checks_passed": true,
+      "prefix_truncation_checks_passed": true
+    },
+    "reconciliation": {
+      "candle_geometry_equal": true,
+      "check_fingerprint": "658ed9e58edb457bf42337fc3ebf081178d157ae88ca0bcca5745112eb60aae7",
+      "checked_decision_points_equal": true,
+      "checks_equal": true,
+      "report_fingerprint_equal": false,
+      "report_fingerprint_mismatch_explained_by": "path-dependent receipt metadata between canonical hosted and self-hosted runs; semantic check fingerprint and all stable contract fields match",
+      "signal_definition_equal": true,
+      "symbols_equal": true,
+      "trial_id_equal": true,
+      "universe_equal": true
+    },
+    "safety": {
+      "automatic_promotion": false,
+      "live_trading_enabled": false,
+      "orders_enabled": false,
+      "paper_only": true
+    },
+    "schema_version": "1.0",
+    "scientific_outcome": "PIT_VALIDATED_NO_PERFORMANCE_EVIDENCE",
+    "signal_definition": {
+      "action_rule": "decision_bar_next_bar",
+      "formation_lookback_sessions": 252,
+      "raw_score": "close[t-skip] / close[t-lookback] - 1",
+      "residualization": "equal_weight_sector_demean",
+      "skip_sessions": 21
+    },
+    "status": "PIT_REPRODUCED_RECONCILED",
+    "trial_id": "H06-REPAIR-2026-09-25",
+    "upstream_coverage_artifact_digest": "sha256:9de9019c33cf4a9300bcf4e901ab015ff4b8b6585bbb70d1c848e5a69e76d1bd",
+    "upstream_coverage_artifact_id": 11152741031,
+    "upstream_coverage_run_id": 36842998210
+  },
+  "operator_action_required": {
+    "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
+    "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
+    "runner_1": "Keep the existing runner process alive in PowerShell window 1.",
+    "runner_2": "Keep LHT-N133732-2 alive in PowerShell window 2.",
+    "secret_rule": "Never paste GitHub registration tokens, API keys, OAuth tokens, passwords, or other credentials into chat; redact them before sharing output.",
+    "service_note": "Windows service installation is a separate maintenance step and requires administrator privileges; do not migrate a runner to service mode until its local AI identity has been verified because Antigravity CLI authentication uses the local user's system keyring or Google Sign-In context.",
+    "windows_shells": 2
+  },
+  "q067_execution_pipeline": {
+    "blocking_reasons": [
+      "obsolete execution path retired; historical evidence preserved"
+    ],
+    "coverage_receipt": {
+      "present": false,
+      "status": null,
+      "trial_id": null
+    },
+    "family": "Q067",
+    "ledger_reconciled": false,
+    "no_selection_or_promotion": true,
+    "paper_only": true,
+    "performance_authorization": {
+      "authorized": false,
+      "execution_scope": null,
+      "present": false
+    },
+    "performance_preregistration": {
+      "present": true,
+      "status": "RETIRED",
+      "trial_id": "historical"
+    },
+    "performance_result": {
+      "present": false,
+      "status": null,
+      "trial_id": null
+    },
+    "pit_receipt": {
+      "present": false,
+      "status": null,
+      "trial_id": null
+    },
+    "state": "RETIRED"
+  },
+  "q068_execution_pipeline": {
+    "blocking_reasons": [
+      "obsolete execution path retired; historical evidence preserved"
+    ],
+    "coverage_receipt": {
+      "present": false,
+      "status": null,
+      "trial_id": null
+    },
+    "family": "Q068",
+    "ledger_reconciled": false,
+    "no_selection_or_promotion": true,
+    "paper_only": true,
+    "performance_authorization": {
+      "authorized": false,
+      "execution_scope": null,
+      "present": false
+    },
+    "performance_preregistration": {
+      "present": true,
+      "status": "PERMANENTLY_BLOCKED",
+      "trial_id": "T-2026-09-28-068-PERFORMANCE"
+    },
+    "performance_result": {
+      "present": false,
+      "status": null,
+      "trial_id": null
+    },
+    "pit_receipt": {
+      "present": false,
+      "status": null,
+      "trial_id": null
+    },
+    "state": "RETIRED"
+  },
+  "q070_execution_pipeline": {
+    "blocking_reasons": [
+      "frozen snapshot unrecoverable; execution workflows retired"
+    ],
+    "coverage_receipt": {
+      "present": true,
+      "status": "COVERAGE_PASSED",
+      "trial_id": "T-2026-09-28-070-COVERAGE"
+    },
+    "family": "Q070",
+    "ledger_reconciled": false,
+    "no_selection_or_promotion": true,
+    "paper_only": true,
+    "performance_authorization": {
+      "authorized": false,
+      "execution_scope": null,
+      "present": false
+    },
+    "performance_preregistration": {
+      "present": true,
+      "status": "PERMANENTLY_BLOCKED",
+      "trial_id": "T-2026-09-28-070-PERFORMANCE"
+    },
+    "performance_result": {
+      "present": false,
+      "status": null,
+      "trial_id": null
+    },
+    "pit_receipt": {
+      "present": true,
+      "status": "PIT_PASSED",
+      "trial_id": "T-2026-09-28-070-PIT"
+    },
+    "state": "PERMANENTLY_BLOCKED"
+  },
+  "q121_r5_dual_index_reconciliation": {
+    "canonical_revision": {
+      "r5_implementation_merge_commit": "7c5c08e974e21c9057260f7a583c26f50cb116ec",
+      "validating_workflow_run_id": 37144415794
+    },
+    "governance": {
+      "asset_search": false,
+      "automatic_promotion": false,
+      "holdout": false,
+      "horizon_search": false,
+      "parameter_search": false,
+      "performance": false,
+      "performance_authorized": false,
+      "ranking": false,
+      "selection": false,
+      "threshold_search": false,
+      "variant_search": false
+    },
+    "interpretation_boundary": {
+      "acceptance_timestamps_compiled": false,
+      "dual_index_population_equivalence": true,
+      "full_subject_issuer_population_compiled": false,
+      "revision_lineage_established": false,
+      "same_day_pit_safe": false
+    },
+    "provenance_note": "Durable anchor for the immutable workflow receipt. The full result.json remains in GitHub Actions artifact 11282096304; this file preserves the exact receipt/result/artifact hashes and scientific boundary.",
+    "receipt": {
+      "artifact_id": 11282096304,
+      "artifact_sha256": "55dbe4102219ad704c25a776dd7799693d92bf9b2301451ef55898e3423c6dce",
+      "receipt_fingerprint": "897bc13c5f722d9a701ae7994b237fe7afd233f15cdc5e644061aa674b8f26c1",
+      "result_json_sha256": "524c4ba6872dfff36aa3e6018ed0a4aed7b3511f4c86fac86729dd5b815cb6cb"
+    },
+    "reconciliation": {
+      "exact_row_multiset_equal": true,
+      "form_index_rows": 61818,
+      "left_only_key_count": 0,
+      "master_index_rows": 61818,
+      "right_only_key_count": 0,
+      "row_multiset_fingerprint": "7251f0e25d7293802d389cac875abfd8552b9441ac604b69918bd7d5b9aec554",
+      "unique_canonical_keys_form_index": 61818,
+      "unique_canonical_keys_master_index": 61818
+    },
+    "recorded_at_utc": "2026-10-03",
+    "research_status": "Q121R5_DUAL_INDEX_POPULATION_RECONCILIATION_COMPLETED",
+    "safety": {
+      "automatic_promotion": false,
+      "live_trading_enabled": false,
+      "orders_enabled": false,
+      "paper_only": true
+    },
+    "schema_version": "1.0",
+    "source_scope": {
+      "canonical_key_fields": [
+        "cik",
+        "form",
+        "filed_date",
+        "accession_number"
+      ],
+      "forms": [
+        "SC 13D",
+        "SC 13D/A",
+        "SC 13G",
+        "SC 13G/A"
+      ],
+      "quarters_checked": 7,
+      "window_end": "2025-09-24",
+      "window_start": "2024-02-05"
+    },
+    "task_id": "Q-2026-10-03-121R5-SEC-DUAL-INDEX-POPULATION-RECONCILIATION"
+  },
+  "q121_r6_execution_attempts": {
+    "attempts": [
+      {
+        "classification": "INFRASTRUCTURE",
+        "conclusion": "failure",
+        "failure": "portable Python 3.13.15 lacked tzdata; ZoneInfo('America/New_York') failed before data acquisition",
+        "head_sha": "febf2b28c20f479046cf4464e73579470cff918b",
+        "runner": "LHT-N133732",
+        "workflow_run_id": 37145484067
+      },
+      {
+        "classification": "INFRASTRUCTURE",
+        "conclusion": "failure",
+        "failure": "bootstrap succeeded after tzdata fix; prepare contract test ran from GITHUB_WORKSPACE instead of extracted repository, so test path was not found",
+        "head_sha": "db4eeb4ec379805ca321add6a66fa693a8ae69fd",
+        "runner": "LHT-N133732-2",
+        "workflow_run_id": 37145576760
+      },
+      {
+        "classification": "INFRASTRUCTURE",
+        "conclusion": "failure",
+        "failure": "two shards reached header stage but checked the population artifact relative to temporary repository instead of GITHUB_WORKSPACE",
+        "head_sha": "23dd5a98154d8e6c4019d8ac33e71f96ac3e3b59",
+        "runners": [
+          "LHT-N133732",
+          "LHT-N133732-2"
+        ],
+        "workflow_run_id": 37145775237
+      },
+      {
+        "classification": "SUPERSEDED_BY_FIX",
+        "conclusion": "queued",
+        "failure": "older workflow revision retains artifact-path defect; queued matrix jobs must not be interpreted as scientific execution",
+        "head_sha": "8b4656d7cefc9450f263cec326e3b98b3a620299",
+        "workflow_run_id": 37145869497
+      },
+      {
+        "classification": "CURRENT",
+        "conclusion": "queued",
+        "failure": "current corrected Q121-R6 workflow waiting for self-hosted execution capacity",
+        "head_sha": "319bcdcaf1bd4f30f57180c6bc20e4c26645a7a2",
+        "workflow_run_id": 37146014428
+      }
+    ],
+    "canonical_research": "Q121-R6 SEC acceptance-time compilation",
+    "fixed_contract": {
+      "upstream_r5_receipt": "897bc13c5f722d9a701ae7994b237fe7afd233f15cdc5e644061aa674b8f26c1",
+      "upstream_row_count": 61818,
+      "upstream_row_multiset_fingerprint": "7251f0e25d7293802d389cac875abfd8552b9441ac604b69918bd7d5b9aec554"
+    },
+    "purpose": "operational provenance only; no scientific result is inferred from failed or queued executions",
+    "safety": {
+      "automatic_promotion": false,
+      "live_trading_enabled": false,
+      "orders_enabled": false,
+      "paper_only": true
+    },
+    "schema_version": "1.0",
+    "scientific_interpretation": {
+      "live_execution": false,
+      "performance_authorized": false,
+      "performance_evidence": false,
+      "q121r5_population_evidence_unchanged": true,
+      "q121r6_acceptance_timestamp_compiled": false,
+      "q121r6_full_subject_issuer_population_compiled": false,
+      "revision_lineage_established": false,
+      "same_day_pit_safe": false
+    },
+    "task_id": "Q-2026-10-03-121R6-EXECUTION-ATTEMPTS"
+  },
+  "q129_options": {
+    "artifact_digest": "sha256:8ed2edb7a1dc732d117ee80232c47d923a4d1f263634517807d4ac22f7765686",
+    "artifact_id": 11274338126,
+    "assets": {
+      "IWM_options.parquet": {
+        "eligible_rows_after_fixed_quarantine": 13379095,
+        "observed_crossed_positive_quote_rows": 478,
+        "observed_non_xnys_dates": [],
+        "observed_non_xnys_rows": 0,
+        "rows": 13379573,
+        "sha256_verified": true
+      },
+      "QQQ_options.parquet": {
+        "eligible_rows_after_fixed_quarantine": 15345637,
+        "observed_crossed_positive_quote_rows": 245,
+        "observed_non_xnys_dates": [],
+        "observed_non_xnys_rows": 0,
+        "rows": 15345882,
+        "sha256_verified": true
+      },
+      "SPY_options.parquet": {
+        "eligible_rows_after_fixed_quarantine": 24679583,
+        "observed_crossed_positive_quote_rows": 2080,
+        "observed_non_xnys_dates": [
+          "2024-01-15"
+        ],
+        "observed_non_xnys_rows": 2,
+        "rows": 24681665,
+        "sha256_verified": true
+      }
+    },
+    "candidate_id": "Q129",
+    "canonical_release": {
+      "published_at": "2026-02-21T19:07:56Z",
+      "release_id": 289029018,
+      "release_tag": "data-v1",
+      "repository": "lambdaclass/options_portfolio_backtester"
+    },
+    "information_boundary": {
+      "decision_boundary": "next eligible XNYS session after EOD observation unless a tighter dissemination timestamp is independently proven",
+      "same_day_decision_use_allowed": false
+    },
+    "normalization_and_quarantine": {
+      "exclude_negative_quotes": true,
+      "exclude_non_xnys_observation_dates": true,
+      "exclude_positive_crossed_quotes": true,
+      "no_return_based_filtering": true,
+      "option_type_map": {
+        "C": "C",
+        "CALL": "C",
+        "P": "P",
+        "PUT": "P"
+      },
+      "raw_source_rows_modified": false
+    },
+    "receipt_fingerprint": "41d723734f030d1a212f5eb4b3e6467223a5cfcdeb97c77ffa9713f8889c7587",
+    "receipt_type": "q129_independent_options_pit_reproduction",
+    "safety": {
+      "AUTOMATIC_PROMOTION": false,
+      "LIVE_TRADING_ENABLED": false,
+      "ORDERS_ENABLED": false,
+      "PAPER_ONLY": true
+    },
+    "schema_version": "1.0",
+    "scientific_boundary": {
+      "candidate_ranking": false,
+      "candidate_selection": false,
+      "holdout_selection": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "threshold_search": false
+    },
+    "source_commit": "9f07bcf4a11b89bb62dbde23aa379cac7aee5a20",
+    "status": "Q129_INDEPENDENT_PIT_REPRODUCED",
+    "workflow_run_attempt": 1,
+    "workflow_run_id": 37123847841
+  },
+  "q133_q170_source_feasibility": {
+    "artifact_digest": "sha256:4981baae8bb6f8ecab806d496a7600f1150de8a7e3934af0d6192ca8e266c36d",
+    "candidate_count": 38,
+    "candidate_range": "Q133-Q170",
+    "newly_source_feasible_candidates": [
+      "Q137",
+      "Q144",
+      "Q147",
+      "Q148",
+      "Q149",
+      "Q150",
+      "Q151",
+      "Q153",
+      "Q154",
+      "Q155",
+      "Q157",
+      "Q158",
+      "Q161",
+      "Q162",
+      "Q163",
+      "Q164",
+      "Q165",
+      "Q166",
+      "Q167",
+      "Q168",
+      "Q169"
+    ],
+    "receipt_fingerprint": "87a608b4db7c07897c6fdc454b8b8bf78f0c068be42362b9f865ba72ff8b1f56",
+    "receipt_type": "q133_q170_discovery_source_feasibility",
+    "safety": {
+      "AUTOMATIC_PROMOTION": false,
+      "LIVE_TRADING_ENABLED": false,
+      "ORDERS_ENABLED": false,
+      "PAPER_ONLY": true
+    },
+    "schema_version": "1.0",
+    "scientific_boundary": {
+      "asset_selection": false,
+      "candidate_ranking": false,
+      "holdout_selection": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "threshold_search": false
+    },
+    "source_commit": "9f07bcf4a11b89bb62dbde23aa379cac7aee5a20",
+    "source_pass_count": 25,
+    "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
+    "still_blocked_or_design_only": [
+      "Q135",
+      "Q136",
+      "Q139",
+      "Q141",
+      "Q142",
+      "Q143",
+      "Q145",
+      "Q146",
+      "Q152",
+      "Q156",
+      "Q159",
+      "Q160",
+      "Q170"
+    ],
+    "workflow_run_id": 37123847584,
+    "workflow_run_number": 5
+  },
+  "q171_q177_pit_readiness": {
+    "artifact_id": 11275045873,
+    "artifact_sha256": "33ae3b36dca75bb06bed8d1cae963d5bed4f559672fb1745c98097288626be8e",
+    "candidate_range": "Q171-Q177",
+    "receipt_fingerprint": "1e571bf36a7ec522b66f14d9e7f41abdd79e8c817411b528710c43600a184372",
+    "receipt_type": "q171_q177_pit_readiness",
+    "results": {
+      "Q171": {
+        "boundary": "sample-only; issuer URL map and candidate-specific state compiler required",
+        "capture_digest": "D4IRZZ6NS7QW37BB2ODQPCUGG7ISRFGV",
+        "capture_timestamp": "20251014220259",
+        "crawl": "CC-MAIN-2025-43",
+        "index_sha256": "cd1e85d8cd25349b236df8faccbcad59d205f3ffbba52f41b8412ccb2e3faf6c",
+        "status": "PIT_SAMPLE_RECONSTRUCTABLE",
+        "warc_http_status": 206,
+        "warc_sha256": "1eafcb1574ad47bbe35b3504caf155783ead21812fb792c9d828b318804e902d"
+      },
+      "Q174": {
+        "blocker": "dataset-vintage stability/update-revision contract remains",
+        "pit_ready": false,
+        "status": "SOURCE_CLOCK_ACCESS_CONFIRMED"
+      },
+      "Q175": {
+        "blocker": "candidate-specific historical product-state compiler remains",
+        "pit_ready": false,
+        "status": "VERSIONED_PRODUCT_SEMANTICS_CONFIRMED"
+      },
+      "Q176": {
+        "blocker": "record-vintage/affiliation and correction handling remain",
+        "pit_ready": false,
+        "status": "MULTIPLE_DEPOSIT_CLOCKS_CONFIRMED"
+      },
+      "Q177": {
+        "blocker": "archive payload retrieval and fixed exposure taxonomy remain",
+        "pit_ready": false,
+        "status": "ARCHIVE_AND_REVISION_SEMANTICS_CONFIRMED"
+      }
+    },
+    "safety": {
+      "automatic_promotion": false,
+      "live_trading_enabled": false,
+      "orders_enabled": false,
+      "paper_only": true
+    },
+    "schema_version": "1.0",
+    "scientific_boundary": {
+      "asset_search": false,
+      "holdout": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "ranking": false,
+      "selection": false,
+      "threshold_search": false
+    },
+    "source_commit": "4b667fdaac95047c3be0e48545c42520e3a3cef9",
+    "status": "PIT_READINESS_COMPLETED_NO_PERFORMANCE",
+    "workflow_run_attempt": 1,
+    "workflow_run_id": 37125689936
+  },
+  "q179_q184_pit_readiness_r1": {
+    "candidate_results": [
+      {
+        "archive_contract": "Historical API/download coverage and a reproducible prior-state archive are still unproven.",
+        "candidate_id": "Q179",
+        "clock_contract": "ClinicalTrials.gov posted-date fields define public availability; submitted dates remain separate.",
+        "mapping_contract": "Sponsor/exposure to listed pharma issuer must be frozen independently of outcomes.",
+        "performance_authorized": false,
+        "pit_status": "PIT_CONTRACT_DEFINED_PENDING_ARCHIVE_AND_ISSUER_MAPPING",
+        "probe_statuses": [
+          "SAMPLE_REACHABLE"
+        ],
+        "revision_contract": "Record update lineage must be reconstructed without replacing the earlier posted state.",
+        "source_id": "CLINICALTRIALS"
+      },
+      {
+        "archive_contract": "Historical flat-file coverage is documented, but candidate-specific archive reconstruction is still pending.",
+        "candidate_id": "Q180",
+        "clock_contract": "NHTSA publication date and ET convention are documented; exact historical event-publication reconstruction is still required.",
+        "mapping_contract": "Vehicle/product-to-issuer exposure mapping must be frozen before evaluation.",
+        "performance_authorized": false,
+        "pit_status": "PIT_CONTRACT_DEFINED_PENDING_PUBLICATION_FIELD_AND_ISSUER_MAPPING",
+        "probe_statuses": [
+          "SAMPLE_REACHABLE",
+          "SAMPLE_REACHABLE"
+        ],
+        "revision_contract": "Flat-file/API revision and amendment semantics must be separated from the initial public state.",
+        "source_id": "NHTSA_RECALLS"
+      },
+      {
+        "archive_contract": "Historical inspection coverage exists at the public dataset level, but candidate-specific PIT reconstruction is pending.",
+        "candidate_id": "Q181",
+        "clock_contract": "DOL catalog confirms public daily accrual; an exact intraday public observation boundary is still unresolved.",
+        "mapping_contract": "Establishment/parent-to-issuer mapping must be frozen and coverage-tested.",
+        "performance_authorized": false,
+        "pit_status": "PIT_CONTRACT_DEFINED_PENDING_INTRADAY_CLOCK_AND_ISSUER_MAPPING",
+        "probe_statuses": [
+          "SAMPLE_REACHABLE"
+        ],
+        "revision_contract": "Dataset refreshes/corrections must be separated from the historical inspection state.",
+        "source_id": "OSHA_DATA"
+      },
+      {
+        "archive_contract": "The official archive is broad, but candidate-specific historical extraction has not been reproduced in this lane.",
+        "candidate_id": "Q182",
+        "clock_contract": "FERC issued/received document semantics are established, but runner access currently returns HTTP 403.",
+        "mapping_contract": "Docket/project/facility-to-issuer mapping must be frozen.",
+        "performance_authorized": false,
+        "pit_status": "PIT_CONTRACT_DEFINED_RUNNER_BLOCKED_PENDING_ACCESS",
+        "probe_statuses": [
+          "RUNNER_ACCESS_BLOCKED",
+          "RUNNER_ACCESS_BLOCKED"
+        ],
+        "revision_contract": "Corrections/updated filings must remain separate from the initial public document state.",
+        "source_id": "FERC_ELIBRARY"
+      },
+      {
+        "archive_contract": "Historical aviation data coverage is documented, but candidate-specific PIT reconstruction remains pending.",
+        "candidate_id": "Q183",
+        "clock_contract": "Recent report publication date plus the daily/pending publication report provide a public publication boundary.",
+        "mapping_contract": "Operator/airport/facility-to-issuer exposure mapping must be frozen.",
+        "performance_authorized": false,
+        "pit_status": "PIT_CONTRACT_DEFINED_PENDING_HISTORICAL_PUBLICATION_AND_ISSUER_MAPPING",
+        "probe_statuses": [
+          "SAMPLE_REACHABLE",
+          "SAMPLE_REACHABLE"
+        ],
+        "revision_contract": "Report publication/correction history must be separated from the underlying incident date.",
+        "source_id": "NTSB_CAROL"
+      },
+      {
+        "archive_contract": "Public access files are available, but candidate-specific historical lineage remains pending.",
+        "candidate_id": "Q184",
+        "clock_contract": "Daily transaction-file dissemination is established; exact transaction/amendment clock and historical file lineage still require audit.",
+        "mapping_contract": "Licensee/application-to-issuer mapping must be frozen.",
+        "performance_authorized": false,
+        "pit_status": "PIT_CONTRACT_DEFINED_PENDING_TRANSACTION_CLOCK_AND_ISSUER_MAPPING",
+        "probe_statuses": [
+          "SAMPLE_REACHABLE"
+        ],
+        "revision_contract": "Application/license modifications and later corrections must not rewrite prior transaction states.",
+        "source_id": "FCC_ULS"
+      }
+    ],
+    "receipt_fingerprint": "7f816cf26ebe97ca2ebe56adc765bcc463445dc1b22b5eb66ac270f130242292",
+    "receipt_type": "q179_q184_pit_readiness_r1",
+    "safety": {
+      "AUTOMATIC_PROMOTION": false,
+      "LIVE_TRADING_ENABLED": false,
+      "ORDERS_ENABLED": false,
+      "PAPER_ONLY": true
+    },
+    "schema_version": "1.0",
+    "scientific_boundary": {
+      "asset_selection": false,
+      "candidate_ranking": false,
+      "holdout_selection": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "threshold_search": false,
+      "variant_search": false
+    },
+    "source_results": {
+      "https://api.nhtsa.gov/recalls/recallsByVehicle?make=acura&model=rdx&modelYear=2012": {
+        "classification": "SAMPLE_REACHABLE",
+        "content_sha256": "6a40f82696ceec4e17d836c579abd86d27c7c2e5312ff690c6f99a9c522af6ed",
+        "http_status": 200,
+        "missing_markers": [],
+        "url": "https://api.nhtsa.gov/recalls/recallsByVehicle?make=acura&model=rdx&modelYear=2012"
+      },
+      "https://catalog.data.gov/dataset/dol-enforcement-data-inspection": {
+        "classification": "SAMPLE_REACHABLE",
+        "content_sha256": "c3f48cc79cb08f5cdb4023523a1d8af6d4e05742e0ee217714a4b1c7e08aaacb",
+        "http_status": 200,
+        "missing_markers": [],
+        "url": "https://catalog.data.gov/dataset/dol-enforcement-data-inspection"
+      },
+      "https://clinicaltrials.gov/api/v2/studies/NCT00125528": {
+        "classification": "SAMPLE_REACHABLE",
+        "content_sha256": "d9ae42a4f31df44d2e163ff1a3964474fc6446b2080c57e3e94311f2f21aefcb",
+        "http_status": 200,
+        "missing_markers": [],
+        "url": "https://clinicaltrials.gov/api/v2/studies/NCT00125528"
+      },
+      "https://ferc.gov/what-elibrary": {
+        "classification": "RUNNER_ACCESS_BLOCKED",
+        "content_sha256": "436e25c0f9d8bf27f09aadef4024f7d71b710d912f2926876cf92c63187e5043",
+        "http_status": 403,
+        "missing_markers": [
+          "issued by FERC",
+          "Documents received and issued by FERC",
+          "download"
+        ],
+        "url": "https://ferc.gov/what-elibrary"
+      },
+      "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4": {
+        "classification": "SAMPLE_REACHABLE",
+        "content_sha256": "d2b3209bb406bf0e9a9ff93bab189910b73c71e98bce6a0a54833bb351d05188",
+        "http_status": 200,
+        "missing_markers": [],
+        "url": "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4"
+      },
+      "https://www.ferc.gov/about/what-ferc/frequently-asked-questions-faqs/documents-and-filing/elibrary": {
+        "classification": "RUNNER_ACCESS_BLOCKED",
+        "content_sha256": "d28c7e58fe0bb7f5daf8aaa753d953499de1778f447c50598a8de7d9a648bb8d",
+        "http_status": 403,
+        "missing_markers": [
+          "issued by FERC",
+          "Documents received and issued by FERC",
+          "download"
+        ],
+        "url": "https://www.ferc.gov/about/what-ferc/frequently-asked-questions-faqs/documents-and-filing/elibrary"
+      },
+      "https://www.nhtsa.gov/nhtsa-datasets-and-apis": {
+        "classification": "SAMPLE_REACHABLE",
+        "content_sha256": "26a3eefe51d88d25e86cbceb4299f74c4d45c0f2c206001001df2eca32df11d3",
+        "http_status": 200,
+        "missing_markers": [],
+        "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis"
+      },
+      "https://www.ntsb.gov/Pages/CAROL-Data-Dictionary.aspx": {
+        "classification": "SAMPLE_REACHABLE",
+        "content_sha256": "58d9d5198dcf8257b123ac5df3aa5a23deaff8dc97d6bb998f76210d11e7f1e2",
+        "http_status": 200,
+        "missing_markers": [],
+        "url": "https://www.ntsb.gov/Pages/CAROL-Data-Dictionary.aspx"
+      },
+      "https://www.ntsb.gov/safety/data/Pages/Data_Stats.aspx": {
+        "classification": "SAMPLE_REACHABLE",
+        "content_sha256": "fd285ca871dcae02494133fdddc406f1176eda8564d5c0a4feb22f9a048b5559",
+        "http_status": 200,
+        "missing_markers": [],
+        "url": "https://www.ntsb.gov/safety/data/Pages/Data_Stats.aspx"
+      }
+    },
+    "status": "PIT_READINESS_R1_COMPLETED_NO_PERFORMANCE",
+    "synthetic_mutation_checks": {
+      "future_row_prefix_invariant": true,
+      "future_value_not_visible_to_prefix": true,
+      "input_order_independent_fixture": true,
+      "missingness_fixture_fails_closed": true,
+      "no_search_dimension_present": true
+    },
+    "unresolved_gate_requirements": [
+      "full historical source/archive coverage",
+      "exact public observation clock where not proven",
+      "fixed entity mapping coverage",
+      "revision/amendment lineage",
+      "independent reproduction"
+    ],
+    "wave_id": "Q179-Q184-PIT-READINESS-R1-2026-10-04"
+  },
+  "q179_q184_source_feasibility": {
+    "candidate_results": [
+      {
+        "candidate_id": "Q179",
+        "source_ids": [
+          "CLINICALTRIALS"
+        ],
+        "status": "SOURCE_PROBES_PASSED"
+      },
+      {
+        "candidate_id": "Q180",
+        "source_ids": [
+          "NHTSA_RECALLS"
+        ],
+        "status": "SOURCE_PROBES_PASSED"
+      },
+      {
+        "candidate_id": "Q181",
+        "source_ids": [
+          "OSHA_DATA"
+        ],
+        "status": "SOURCE_PROBES_PASSED"
+      },
+      {
+        "candidate_id": "Q182",
+        "source_ids": [
+          "FERC_ELIBRARY"
+        ],
+        "status": "BLOCKED_SOURCE_PROBE"
+      },
+      {
+        "candidate_id": "Q183",
+        "source_ids": [
+          "NTSB_CAROL"
+        ],
+        "status": "SOURCE_PROBES_PASSED"
+      },
+      {
+        "candidate_id": "Q184",
+        "source_ids": [
+          "FCC_ULS"
+        ],
+        "status": "SOURCE_PROBES_PASSED"
+      }
+    ],
+    "receipt_fingerprint": "e2f3af25dab2cb35271e5676bd4adbbba0f3da92457d749661e8227981f1bbdf",
+    "safety": {
+      "automatic_promotion": false,
+      "live_trading_enabled": false,
+      "orders_enabled": false,
+      "paper_only": true
+    },
+    "schema_version": "1.0",
+    "scientific_boundary": {
+      "asset_search": false,
+      "holdout_selection": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "ranking": false,
+      "selection": false,
+      "threshold_search": false,
+      "variant_search": false
+    },
+    "source_results": {
+      "CLINICALTRIALS": {
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://clinicaltrials.gov/api/v2/studies/NCT00125528"
+          }
+        ],
+        "clock_contract": "API posted-date fields define public availability; submitted dates are separate.",
+        "content_sha256": "d9ae42a4f31df44d2e163ff1a3964474fc6446b2080c57e3e94311f2f21aefcb",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "required_markers_present": true,
+        "url": "https://clinicaltrials.gov/api/v2/studies/NCT00125528"
+      },
+      "FCC_ULS": {
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4"
+          }
+        ],
+        "clock_contract": "Transaction identity/date is distinct from daily/weekly dissemination files.",
+        "content_sha256": "34b1b34c3ec9e284fba8243a718ccdbcfba3fd6d46a6dd419b460e3485030ef4",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "required_markers_present": true,
+        "url": "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4"
+      },
+      "FERC_ELIBRARY": {
+        "attempts": [
+          {
+            "http_status": 403,
+            "missing_markers": [
+              "issued by FERC",
+              "Documents received and issued by FERC",
+              "download"
+            ],
+            "url": "https://ferc.gov/what-elibrary"
+          },
+          {
+            "http_status": 403,
+            "missing_markers": [
+              "issued by FERC",
+              "Documents received and issued by FERC",
+              "download"
+            ],
+            "url": "https://www.ferc.gov/about/what-ferc/frequently-asked-questions-faqs/documents-and-filing/elibrary"
+          }
+        ],
+        "clock_contract": "Issued/received document records are distinct from later corrections and underlying event dates.",
+        "content_sha256": "ea05f538c1304e4314a5e295cc7e720c8143cbb0c7d9d0a0347be75ba09aacac",
+        "http_status": 403,
+        "missing_markers": [
+          "issued by FERC",
+          "Documents received and issued by FERC",
+          "download"
+        ],
+        "probe_classification": "RUNNER_ACCESS_BLOCKED",
+        "reachable": false,
+        "required_markers_present": false,
+        "url": "https://ferc.gov/what-elibrary"
+      },
+      "NHTSA_RECALLS": {
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis"
+          }
+        ],
+        "clock_contract": "Recall publication date is distinct from the underlying safety-issue report date.",
+        "content_sha256": "3854c407e19054cf421074f4e83fc2dc8722a2b7b73cf4778bc99d1bb3ab1951",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "required_markers_present": true,
+        "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis"
+      },
+      "NTSB_CAROL": {
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://www.ntsb.gov/safety/data/pages/data_stats.aspx"
+          }
+        ],
+        "clock_contract": "Investigation event and publication times remain distinct.",
+        "content_sha256": "0a8b42276e7ac8aeaf53e722a43121ed10d687a76524b166b5539cea85acf4eb",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "required_markers_present": true,
+        "url": "https://www.ntsb.gov/safety/data/pages/data_stats.aspx"
+      },
+      "OSHA_DATA": {
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://catalog.data.gov/dataset/dol-enforcement-data-inspection"
+          }
+        ],
+        "clock_contract": "The DOL public catalog establishes the dataset boundary; inspection/opening and later catalog refresh times remain distinct.",
+        "content_sha256": "f0516fbb34f807749ce24b7e1ad6f7c0dfb9141c70497bfa339861a61acde78c",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "required_markers_present": true,
+        "url": "https://catalog.data.gov/dataset/dol-enforcement-data-inspection"
+      }
+    },
+    "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
+    "synthetic_mutation_checks": {
+      "future_row_prefix_invariant": true,
+      "future_timestamp_excluded": true,
+      "no_search_dimension_present": true
+    },
+    "task_id": "Q-2026-10-04-Q179-Q184-SOURCE-FEASIBILITY"
+  },
+  "q185_q186_pit_readiness_r1": {
+    "candidate_results": [
+      {
+        "archive_contract": "Federal-district coverage must be censused for the chosen historical window; no universal CourtListener coverage assumption is allowed.",
+        "candidate_id": "Q185",
+        "clock_contract": "Use the earliest reproducibly public docket state. Court/date fields may identify the event date but cannot be assumed to be an intraday public dissemination timestamp; use next-session availability unless exact public timing is proven.",
+        "mapping_contract": "Party-to-issuer identity must be frozen ex ante and coverage-tested without using returns or case outcomes.",
+        "performance_authorized": false,
+        "pit_status": "BLOCKED_BY_SOURCE_PROBE",
+        "revision_contract": "Later docket entries, corrected metadata and outcome information remain later states and may not rewrite the earlier state prefix.",
+        "source_id": "COURTLISTENER_RECAP",
+        "source_probe_pass": false
+      },
+      {
+        "archive_contract": "Historical grant and citation coverage plus citation-publication ordering must be reproduced; only citation edges observable before the grant may define exposure.",
+        "candidate_id": "Q186",
+        "clock_contract": "Use the official patent issue/grant event as the shock boundary, with grant publication/eGrant availability preserved separately from later bulk-data refreshes.",
+        "mapping_contract": "Assignee organization disambiguation to public issuer identity must be frozen ex ante and coverage-tested.",
+        "performance_authorized": false,
+        "pit_status": "PIT_CONTRACT_DEFINED_PENDING_ARCHIVE_CITATION_ORDER_AND_MAPPING",
+        "revision_contract": "Assignments, corrections, withdrawals and later data refreshes are later states and cannot backfill the historical decision prefix.",
+        "source_id": "USPTO_OFFICIAL_GAZETTE",
+        "source_probe_pass": true
+      }
+    ],
+    "receipt_fingerprint": "17e14b6ab0ed884fa4445cc0d74c07fe429013be001b6a45626fcc38f4f7d087",
+    "receipt_type": "q185_q186_pit_readiness_r1",
+    "safety": {
+      "AUTOMATIC_PROMOTION": false,
+      "LIVE_TRADING_ENABLED": false,
+      "ORDERS_ENABLED": false,
+      "PAPER_ONLY": true
+    },
+    "schema_version": "1.0",
+    "scientific_boundary": {
+      "asset_search": false,
+      "holdout_selection": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "ranking": false,
+      "threshold_search": false,
+      "variant_search": false
+    },
+    "status": "PIT_READINESS_R1_COMPLETED_NO_PERFORMANCE",
+    "synthetic_mutation_checks": {
+      "legal_future_row_cannot_create_prior_state": true,
+      "legal_future_row_preserves_prefix": true,
+      "no_outcome_conditioning": true,
+      "no_return_derived_mapping": true,
+      "no_search_dimension": true,
+      "patent_future_edge_excluded": true
+    },
+    "task_id": "Q-2026-10-04-Q185-Q186-PIT-READINESS-R1",
+    "unresolved_gate_requirements": [
+      "historical archive/coverage census",
+      "exact public dissemination clock where not proven; otherwise next-session rule",
+      "frozen issuer/entity mapping with coverage evidence",
+      "revision/correction/withdrawal lineage",
+      "independent reproduction"
+    ]
+  },
+  "q185_q186_source_feasibility": {
+    "candidate_results": [
+      {
+        "candidate_id": "Q185",
+        "source_ids": [
+          "COURTLISTENER_COVERAGE",
+          "COURTLISTENER_RECAP"
+        ],
+        "status": "BLOCKED_SOURCE_PROBE"
+      },
+      {
+        "candidate_id": "Q186",
+        "source_ids": [
+          "USPTO_PATENTSVIEW",
+          "USPTO_OFFICIAL_GAZETTE",
+          "USPTO_EGRANTS"
+        ],
+        "status": "SOURCE_PROBES_PASSED"
+      }
+    ],
+    "receipt_fingerprint": "e996e7e8ba049300c787f8901aebabe224a502a905f4ea85bb31de5fe10b9cbe",
+    "safety": {
+      "automatic_promotion": false,
+      "live_trading_enabled": false,
+      "orders_enabled": false,
+      "paper_only": true
+    },
+    "schema_version": "1.0",
+    "scientific_boundary": {
+      "asset_search": false,
+      "holdout_selection": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "ranking": false,
+      "selection": false,
+      "threshold_search": false,
+      "variant_search": false
+    },
+    "source_results": {
+      "COURTLISTENER_COVERAGE": {
+        "archive_contract": "Coverage is broad but not universal; candidate-specific federal-district coverage census is mandatory.",
+        "attempts": [
+          {
+            "http_status": 403,
+            "missing_markers": [
+              "RECAP Archive",
+              "federal filings"
+            ],
+            "url": "https://courtlistener.com/coverage/"
+          }
+        ],
+        "clock_contract": "Docket event dates are distinct from underlying incident dates; exact public intraday availability must be proven per event class, otherwise use next-session availability.",
+        "content_sha256": "138b17b06edb7ba9cc8eadbcd3aeeb31d4dd707fe92cf302fc3ba1494faee229",
+        "http_status": 403,
+        "missing_markers": [
+          "RECAP Archive",
+          "federal filings"
+        ],
+        "probe_classification": "RUNNER_ACCESS_BLOCKED",
+        "reachable": false,
+        "url": "https://courtlistener.com/coverage/"
+      },
+      "COURTLISTENER_RECAP": {
+        "archive_contract": "Searchable RECAP coverage must be measured for the exact historical window and issuer population.",
+        "attempts": [
+          {
+            "http_status": 403,
+            "missing_markers": [
+              "Advanced RECAP Search",
+              "Docket Number",
+              "Entry Date"
+            ],
+            "url": "https://courtlistener.com/recap/"
+          }
+        ],
+        "clock_contract": "A recorded docket-entry date is not automatically proof of public dissemination time.",
+        "content_sha256": "3ab6526fe4523109991c5a45a8e0093c0bc9f228c2351776c6d0470b51a51a24",
+        "http_status": 403,
+        "missing_markers": [
+          "Advanced RECAP Search",
+          "Docket Number",
+          "Entry Date"
+        ],
+        "probe_classification": "RUNNER_ACCESS_BLOCKED",
+        "reachable": false,
+        "url": "https://courtlistener.com/recap/"
+      },
+      "USPTO_EGRANTS": {
+        "archive_contract": "Historical grants must be complete; corrections/withdrawals cannot rewrite earlier decision prefixes.",
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://www.uspto.gov/patents/apply/patent-center/egrants"
+          }
+        ],
+        "clock_contract": "For post-2023 grants the official eGrant provides a documented public-access boundary; earlier history requires separate proof.",
+        "content_sha256": "96bf90b743ee5d109ac9628fe49acb60ab832153c347d5229d1b3807022774bc",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "url": "https://www.uspto.gov/patents/apply/patent-center/egrants"
+      },
+      "USPTO_OFFICIAL_GAZETTE": {
+        "archive_contract": "Weekly issues are publicly listed; historical download/archive completeness for the chosen window must be reproduced before PIT validity.",
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents"
+          }
+        ],
+        "clock_contract": "The Official Gazette is an official weekly publication boundary; issue date is distinct from later bulk-data refreshes.",
+        "content_sha256": "047b77f949efc4ca3412668e07827f6bcd96041cc0b877d2eea831ee5fa1a5c6",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "url": "https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents"
+      },
+      "USPTO_PATENTSVIEW": {
+        "archive_contract": "Historical disambiguated patent/citation coverage must be reproduced from public USPTO data.",
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://www.uspto.gov/subscription-center/2026/patentsview-releases-q4-2025-data-update"
+          }
+        ],
+        "clock_contract": "PatentsView bulk refresh/vintage is distinct from patent issue/publication timing.",
+        "content_sha256": "2b1043ac3e9ace03bc735d443c5875fec59a38b8b779912e7623db79a77dfe8e",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "url": "https://www.uspto.gov/subscription-center/2026/patentsview-releases-q4-2025-data-update"
+      }
+    },
+    "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
+    "synthetic_mutation_checks": {
+      "legal_future_state_not_visible_in_prefix": true,
+      "legal_prefix_future_invariant": true,
+      "no_outcome_labels_in_state_contract": true,
+      "no_search_dimensions": true,
+      "patent_future_edge_excluded": true,
+      "patent_prior_edge_required": true
+    },
+    "task_id": "Q-2026-10-04-Q185-Q186-SOURCE-FEASIBILITY"
+  },
+  "q186_pit_readiness_r2": {
+    "archive_contract": {
+      "authority_files_twice_monthly_refresh": true,
+      "fixed_week_controls": [
+        {
+          "issue_date": "2026-09-15",
+          "week": 37
+        },
+        {
+          "issue_date": "2026-09-22",
+          "week": 38
+        },
+        {
+          "issue_date": "2026-09-29",
+          "week": 39
+        }
+      ],
+      "withdrawn_and_missing_documents_must_be_quarantined": true
+    },
+    "candidate_id": "Q186",
+    "fixed_controls": [
+      {
+        "issue_date": "2026-09-15",
+        "week": 37
+      },
+      {
+        "issue_date": "2026-09-22",
+        "week": 38
+      },
+      {
+        "issue_date": "2026-09-29",
+        "week": 39
+      }
+    ],
+    "mutation_checks": {
+      "bulk_refresh_cannot_move_grant_clock": true,
+      "future_citation_cannot_pass_pre_event_filter": true,
+      "no_event_window_search": true,
+      "no_parameter_search": true,
+      "no_return_conditioning": true
+    },
+    "pit_boundary": {
+      "bulk_refresh_separate_from_grant_clock": true,
+      "citation_publication_ordering_proven": false,
+      "citation_publication_ordering_status": "UNPROVEN",
+      "conservative_rule": "A citation edge may enter a pre-event graph only when its public-observation boundary is independently proven to be before the upstream grant; otherwise exclude the edge or use a conservative next-session boundary and record the loss explicitly.",
+      "electronic_grant_available_immediately_post_2023": true,
+      "grant_issue_clock_proven": true,
+      "historical_weekly_grant_route_proven": false,
+      "legacy_bibliographic_route_may_be_redirected": true
+    },
+    "receipt_fingerprint": "a830dc7ddb5c3609ab73c2077f846009bd1cba060399582ba9b7d55ac8baa371",
+    "receipt_type": "q186_pit_readiness_r2",
+    "safety": {
+      "AUTOMATIC_PROMOTION": false,
+      "LIVE_TRADING_ENABLED": false,
+      "ORDERS_ENABLED": false,
+      "PAPER_ONLY": true
+    },
+    "schema_version": "1.0",
+    "scientific_boundary": {
+      "asset_search": false,
+      "holdout_selection": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "ranking": false,
+      "threshold_search": false,
+      "variant_search": false
+    },
+    "source_results": {
+      "USPTO_EGRANTS": {
+        "content_sha256": "96bf90b743ee5d109ac9628fe49acb60ab832153c347d5229d1b3807022774bc",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "url": "https://www.uspto.gov/patents/apply/patent-center/egrants"
+      },
+      "USPTO_GAZETTE_INDEX": {
+        "content_sha256": "047b77f949efc4ca3412668e07827f6bcd96041cc0b877d2eea831ee5fa1a5c6",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "url": "https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents"
+      },
+      "USPTO_GAZETTE_WEEK37": {
+        "content_sha256": "c3e3790b93f7d2a00ea05a3ac84437bae258731c0ca238ea9fb71c5fae4c2f97",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "url": "https://patentsgazette.uspto.gov/week37/"
+      },
+      "USPTO_GAZETTE_WEEK38": {
+        "content_sha256": "93869421e6899f42edd5732728d344810fe5ff07161ea40769d27d3a1cb43fe9",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "url": "https://patentsgazette.uspto.gov/week38/"
+      },
+      "USPTO_GAZETTE_WEEK39": {
+        "content_sha256": "f303031a46ffddb187cca6aeba39a25f88109c43f94757f6605c9b7e059592d7",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "url": "https://patentsgazette.uspto.gov/week39/"
+      },
+      "USPTO_GRANT_BIBLIOGRAPHIC": {
+        "content_sha256": "46d38932c3afa99ab7e31741ac93e625554a92d3224610b3ab638da19a0a0513",
+        "http_status": 200,
+        "missing_markers": [
+          "issued weekly (Tuesdays)",
+          "January 1, 1976 to present"
+        ],
+        "probe_classification": "MARKER_MISMATCH",
+        "url": "https://developer.uspto.gov/product/patent-grant-bibliographic-datasgml"
+      },
+      "USPTO_PATENTSVIEW": {
+        "content_sha256": "b07c8d944abde96ff1b39ca150462bf9470f27c2e0b5f808e9906186be8f9d11",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "url": "https://www.uspto.gov/ip-policy/economic-research/patentsview"
+      },
+      "USPTO_PATENT_AUTHORITY": {
+        "content_sha256": "ba2ffd6c614176db6e2db1dfc529c4cbb27bfc4072ce21168fc890d1fe5c395b",
+        "http_status": 200,
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "url": "https://www.uspto.gov/patents/search/patent-document-authority-files"
+      }
+    },
+    "status": "Q186_PIT_R2_CLOCK_ARCHIVE_COMPLETED_NO_PERFORMANCE",
+    "task_id": "Q-2026-10-04-Q186-PIT-R2-CLOCK-ARCHIVE",
+    "unresolved_gates": [
+      "candidate-specific historical grant/citation completeness census",
+      "citation-publication ordering at the pre-grant decision boundary",
+      "frozen assignee-to-issuer identity mapping with coverage evidence",
+      "correction/withdrawal lineage at candidate level",
+      "independent reproduction"
+    ]
+  },
+  "q197_q198_source_feasibility": {
+    "candidate_results": [
+      {
+        "candidate_id": "Q197",
+        "status": "SOURCE_COMPONENT_READY"
+      },
+      {
+        "candidate_id": "Q198",
+        "status": "SOURCE_COMPONENT_READY"
+      }
+    ],
+    "receipt_fingerprint": "95201f816075deb8ddd27903e50ca95804ffa522cff37139fe77fcff83beaede",
+    "safety": {
+      "automatic_promotion": false,
+      "live_trading_enabled": false,
+      "orders_enabled": false,
+      "paper_only": true
+    },
+    "schema_version": "1.0",
+    "scientific_boundary": {
+      "asset_search": false,
+      "holdout_selection": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "ranking": false,
+      "selection": false,
+      "threshold_search": false,
+      "variant_search": false
+    },
+    "source_results": {
+      "Q197_USASPENDING": {
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://api.usaspending.gov/docs/endpoints"
+          },
+          {
+            "http_status": 200,
+            "missing_markers": [
+              "spending_by_award"
+            ],
+            "url": "https://api.usaspending.gov/api/v2/awards/last_updated/"
+          }
+        ],
+        "content_sha256": "65d54624b6866fbd30084eed3d44f4f9bb00df84aa22709cf2b0125aa9d79386",
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "scientific_boundary": false,
+        "urls": [
+          "https://api.usaspending.gov/docs/endpoints",
+          "https://api.usaspending.gov/api/v2/awards/last_updated/"
+        ]
+      },
+      "Q198_FEDERAL_REGISTER": {
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [
+              "public inspection",
+              "filed for public inspection"
+            ],
+            "url": "https://www.federalregister.gov/api/v1/documents.json?per_page=1&order=newest"
+          },
+          {
+            "http_status": 200,
+            "missing_markers": [
+              "filed for public inspection"
+            ],
+            "url": "https://www.federalregister.gov/api/v1/public-inspection-documents/current.json"
+          },
+          {
+            "http_status": 200,
+            "missing_markers": [
+              "publication_date"
+            ],
+            "url": "https://www.archives.gov/federal-register/faqs"
+          }
+        ],
+        "content_sha256": "85437a6e076de46fc0073de1b79f12e702be2c5a98f883d294940aa4a7d62f4d",
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "scientific_boundary": false,
+        "urls": [
+          "https://www.federalregister.gov/api/v1/documents.json?per_page=1&order=newest",
+          "https://www.federalregister.gov/api/v1/public-inspection-documents/current.json",
+          "https://www.archives.gov/federal-register/faqs"
+        ]
+      }
+    },
+    "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
+    "synthetic_mutation_checks": {
+      "award_date_not_observation_time": true,
+      "future_reordering_cannot_change_prefix": true,
+      "future_row_prefix_invariant": true,
+      "future_timestamp_excluded": true,
+      "no_search_dimension_present": true,
+      "online_posting_time_not_official_filing_time": true,
+      "same_day_ambiguous_events_fail_closed": true
+    },
+    "task_id": "Q-2026-10-04-Q197-Q198-SOURCE-FEASIBILITY"
+  },
+  "q198_pit_clock_census": {
+    "aggregate": {
+      "all_have_filed_timestamps": false,
+      "all_have_scheduled_publication_dates": false,
+      "all_pages_access_blocked": true,
+      "all_pages_parsed": false,
+      "pages_access_blocked": 4,
+      "pages_parsed": 0,
+      "pages_requested": 4,
+      "same_day_ambiguous_total": 0
+    },
+    "frozen_dates": [
+      "2020/01/10",
+      "2020/04/22",
+      "2020/12/16",
+      "2026/10/02"
+    ],
+    "next_gate": "use an officially supported API or another immutable public-inspection snapshot route; then establish candidate-specific correction/withdrawal lineage, entity mapping, and independent PIT reproduction",
+    "pages": [
+      {
+        "access_block_reason": "official Federal Register automated-access challenge/request-access page",
+        "content_sha256": "8deac948de57d196a31a92acf5e7d5c14dc7996a5b1245057f5143e9621ec6b1",
+        "http_status": 200,
+        "requested_date": "2020/01/10",
+        "status": "SOURCE_ACCESS_BLOCKED",
+        "url": "https://www.federalregister.gov/public-inspection/2020/01/10"
+      },
+      {
+        "access_block_reason": "official Federal Register automated-access challenge/request-access page",
+        "content_sha256": "8deac948de57d196a31a92acf5e7d5c14dc7996a5b1245057f5143e9621ec6b1",
+        "http_status": 200,
+        "requested_date": "2020/04/22",
+        "status": "SOURCE_ACCESS_BLOCKED",
+        "url": "https://www.federalregister.gov/public-inspection/2020/04/22"
+      },
+      {
+        "access_block_reason": "official Federal Register automated-access challenge/request-access page",
+        "content_sha256": "dfaf7946dc2c3bbf89b4ee9d7d42762aa18a6f3a9ccc8b62160ebc1d999ab2c2",
+        "http_status": 200,
+        "requested_date": "2020/12/16",
+        "status": "SOURCE_ACCESS_BLOCKED",
+        "url": "https://www.federalregister.gov/public-inspection/2020/12/16"
+      },
+      {
+        "access_block_reason": "official Federal Register automated-access challenge/request-access page",
+        "content_sha256": "2fd89b88ecb3bc62c4f8d6b64b194ffc31e1881f79a68456eefe927f6494ff2d",
+        "http_status": 200,
+        "requested_date": "2026/10/02",
+        "status": "SOURCE_ACCESS_BLOCKED",
+        "url": "https://www.federalregister.gov/public-inspection/2026/10/02"
+      }
+    ],
+    "receipt_fingerprint": "3fe074956182aaf03c305d59d327c61276d5f15069519ba192f373b5a2a719d5",
+    "safety": {
+      "automatic_promotion": false,
+      "live_trading_enabled": false,
+      "orders_enabled": false,
+      "paper_only": true
+    },
+    "schema_version": "1.1",
+    "scientific_boundary": {
+      "asset_search": false,
+      "holdout_selection": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "ranking": false,
+      "selection": false,
+      "threshold_search": false,
+      "variant_search": false
+    },
+    "status": "Q198_PIT_CLOCK_CENSUS_BLOCKED_SOURCE_ACCESS",
+    "task_id": "Q-2026-10-04-Q198-HISTORICAL-PIT-CLOCK-CENSUS"
+  },
+  "q199_q201_source_feasibility": {
+    "candidate_results": [
+      {
+        "candidate_id": "Q199",
+        "status": "HISTORICAL_SOURCE_COMPONENT_READY"
+      },
+      {
+        "candidate_id": "Q201",
+        "status": "SOURCE_COMPONENT_READY"
+      }
+    ],
+    "receipt_fingerprint": "15d7aadd844d4c1ce3f89e8c1cc891399353e5c37803062e3408162e920cc164",
+    "safety": {
+      "automatic_promotion": false,
+      "live_trading_enabled": false,
+      "orders_enabled": false,
+      "paper_only": true
+    },
+    "schema_version": "1.0",
+    "scientific_boundary": {
+      "asset_search": false,
+      "holdout_selection": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "ranking": false,
+      "selection": false,
+      "threshold_search": false,
+      "variant_search": false
+    },
+    "source_results": {
+      "CLINICALTRIALS_RESULTS": {
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://clinicaltrials.gov/api/v2/studies/NCT00125528"
+          }
+        ],
+        "content_sha256": "d9ae42a4f31df44d2e163ff1a3964474fc6446b2080c57e3e94311f2f21aefcb",
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "scientific_boundary": false,
+        "urls": [
+          "https://clinicaltrials.gov/api/v2/studies/NCT00125528"
+        ]
+      },
+      "USPTO_PUBLICATIONS": {
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [
+              "Eighteen-Month Publication of Patent Applications",
+              "Publication Date"
+            ],
+            "url": "https://www.google.com/googlebooks/uspto-patents-applications-biblio.html"
+          },
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://www.uspto.gov/web/offices/pac/mpep/s1120.html"
+          },
+          {
+            "http_status": 200,
+            "missing_markers": [
+              "2015",
+              "2001",
+              "Eighteen-Month Publication of Patent Applications",
+              "Publication Date"
+            ],
+            "url": "https://www.uspto.gov/patents/search"
+          },
+          {
+            "http_status": 200,
+            "missing_markers": [
+              "2015",
+              "2001",
+              "Eighteen-Month Publication of Patent Applications"
+            ],
+            "url": "https://ppubs.uspto.gov/basic/"
+          }
+        ],
+        "content_sha256": "a20490cb10922d7526c3773e922bb7b158298b26fa85c3de606303d5ac7139f8",
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "scientific_boundary": false,
+        "urls": [
+          "https://www.google.com/googlebooks/uspto-patents-applications-biblio.html",
+          "https://www.uspto.gov/web/offices/pac/mpep/s1120.html",
+          "https://www.uspto.gov/patents/search",
+          "https://ppubs.uspto.gov/basic/"
+        ]
+      }
+    },
+    "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
+    "synthetic_mutation_checks": {
+      "future_reordering_cannot_change_prefix": true,
+      "future_row_prefix_invariant": true,
+      "future_timestamp_excluded": true,
+      "no_search_dimension_present": true,
+      "same_day_ambiguous_events_fail_closed": true
+    },
+    "task_id": "Q-2026-10-04-Q199-Q201-SOURCE-FEASIBILITY"
+  },
+  "repository": "DWR-debug/trading-agent-public",
+  "repository_state": {
+    "agent_queue_requests": [
+      {
+        "issue_number": "643",
+        "lane": "lane0",
+        "request_file": "agent_requests/lane0/AGENT-027.request",
+        "task_id": "AGENT-027"
+      }
+    ],
+    "default_branch": "master",
+    "open_agent_ready_issues": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "fix/orchestration-health-2026-10-04-r2",
+        "number": 1071,
+        "title": "FIX: make Q197/Q199 receipt commands actionlint-clean",
+        "updatedAt": "2026-10-04T18:48:14Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1071"
+      },
+      {
+        "baseRefName": "master",
+        "headRefName": "fix/orchestration-health-2026-10-04",
+        "number": 1070,
+        "title": "FIX: restore clean orchestration health and evidence paths",
+        "updatedAt": "2026-10-04T18:46:25Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1070"
+      },
+      {
+        "baseRefName": "master",
+        "headRefName": "fix/fail-closed-resource-gates-2026-10-04",
+        "number": 1069,
+        "title": "FIX: fail closed on unavailable Q198 historical archive",
+        "updatedAt": "2026-10-04T18:39:32Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1069"
+      },
+      {
+        "baseRefName": "master",
+        "headRefName": "fix/workflow-lint-2026-10-04",
+        "number": 1056,
+        "title": "FIX: restore clean workflow lint across research orchestration",
+        "updatedAt": "2026-10-04T17:59:35Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1056"
+      }
+    ],
+    "recent_commits": [
+      {
+        "message": "OPS: encode completed-round chaining in canonical state",
+        "sha": "61d54f4ed54179596549e3d2ebc9de4c32bed06d",
+        "timestamp": "2026-10-04T21:50:12+02:00"
+      },
+      {
+        "message": "OPS: encode completed-round chaining in canonical state",
+        "sha": "5f4bc5bfeb1f2118ded83d506b872d7dc978fa47",
+        "timestamp": "2026-10-04T21:50:10+02:00"
+      },
+      {
+        "message": "OPS: allow receipt-driven logical next research rounds",
+        "sha": "5b77f1a95fbde425bcf106cba1849b44045f0bea",
+        "timestamp": "2026-10-04T21:50:02+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "284b6c123268c4a7f196c0a91bc2674dbfd5de50",
+        "timestamp": "2026-10-04T19:49:57Z"
+      },
+      {
+        "message": "RESEARCH: orchestrate logical next orthogonal PIT gates",
+        "sha": "1d8268547fd71c70f87c826553888cb0179bf9be",
+        "timestamp": "2026-10-04T21:49:45+02:00"
+      },
+      {
+        "message": "RESEARCH: add deterministic orthogonal PIT next-gate compiler",
+        "sha": "820a7b278c1734eee9078a35ac859ae771b40e59",
+        "timestamp": "2026-10-04T21:49:43+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "eb6ee862ee06893c8faaece4dfeca92c588f0a7d",
+        "timestamp": "2026-10-04T19:48:56Z"
+      },
+      {
+        "message": "RESEARCH: add self-contained Grok Q194-Q201 review packet",
+        "sha": "cbe2b14dcfb37d62e2ae8d8fe48bc22ecb5eaa1d",
+        "timestamp": "2026-10-04T21:48:42+02:00"
+      }
+    ]
+  },
+  "resource_policy": {
+    "actual_capital_available": false,
+    "copilot_protected_reserve": {
+      "max_ai_credits_per_session": 30,
+      "max_parallel_sessions": 1,
+      "max_sessions_per_month": 4,
+      "overages_allowed": false,
+      "paid_fallback_allowed": false,
+      "starts_utc": "2026-10-01T00:00:00Z"
+    },
+    "free_resources_only": true,
+    "hypothetical_reference_capital_eur": 2000.0,
+    "legacy_operational_canary_capital_eur": 500.0,
+    "paid_agent_budget_usd": 0,
+    "paid_api_budget_usd": 0
+  },
+  "safety": {
+    "AUTOMATIC_PROMOTION": false,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "PAPER_ONLY": true,
+    "status": "SAFE"
+  },
+  "schema_version": "1.0",
+  "scientific_state_recorded": {
+    "decision_basis_stage": null,
+    "frontier_q197_q201": {
+      "Q197": {
+        "stage": "SOURCE_COMPONENT_READY"
+      },
+      "Q198": {
+        "stage": "SOURCE_COMPONENT_READY"
+      },
+      "Q199": {
+        "stage": "HISTORICAL_SOURCE_COMPONENT_READY"
+      },
+      "Q201": {
+        "stage": "SOURCE_COMPONENT_READY"
+      },
+      "performance_authorized": false
+    },
+    "latest_formal_status": "performance_completed_no_arm_passed_all_13_gates",
+    "latest_formal_trial": "T-2026-10-01-H06P2R3-PERFORMANCE-01",
+    "next_research_focus_recorded": "Q186 has completed PIT-R2 clock/archive verification only: the official weekly grant clock and post-2023 eGrant public-access boundary are established on fixed controls, while citation-publication ordering, historical citation completeness, frozen assignee-to-issuer mapping, correction/withdrawal lineage and independent reproduction remain open. No performance, holdout selection, tuning, ranking, promotion or live execution is authorized.",
+    "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
+    "q023_recorded": {
+      "artifact_digest": "sha256:03e2c7e9f8da806b9b5b66c634f91f0a6a79a50a80153694a029a12844050604",
+      "artifact_id": 10929255149,
+      "record_date_minus_document_date_days": {
+        "max": 21,
+        "min": 9
+      },
+      "result_fingerprint": "603cea99d73837d91b638e9d03b3dc515377e434db08c3d6ed571cd33fae7c23",
+      "status": "COVERAGE_VALIDATED",
+      "timestamp_validated_events": 89,
+      "total_events": 89,
+      "workflow_run_id": 36309960872
+    },
+    "q025_recorded": {
+      "artifact_id": 10928822681,
+      "next_step": "Fresh symbol-disjoint H2 performance preregistration after coverage.",
+      "result_fingerprint": "a12e603acdad53216cab92bf0c634d4e22ece77e58b84f2fc240046da0de4107",
+      "status": "DATE_PIT_VALIDATED",
+      "total_events": 89,
+      "workflow_run_id": 36310848531
+    },
+    "q026_recorded": {
+      "cause": "All 12 fixed symbols had 3704 candles in the 2011-2025 study window, below the preregistered 4000-candle request.",
+      "common_calendar_count": 3704,
+      "coverage_artifact_digest": "sha256:e5136c727da9d7debb58f398175ada9c7484cba24ed408bb71b23bdcfe5c7bbd",
+      "coverage_artifact_id": 10928579427,
+      "coverage_workflow_run_id": 36311607279,
+      "performance_authorized": false,
+      "requested_candles": 4000,
+      "scientific_outcome": "NO_SCIENTIFIC_OUTCOME",
+      "status": "DATA_INVALID",
+      "symbols": 12,
+      "target_common_calendar": 3500,
+      "trial_id": "T-2026-09-27-048"
+    }
+  },
+  "source_master_sha": "61d54f4ed54179596549e3d2ebc9de4c32bed06d",
+  "source_pit_frontier_outcomes": {
+    "as_of_utc": "2026-10-03T18:14:45Z",
+    "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
+    "generated_from_verified_workflow_runs": true,
+    "global_scientific_boundary": {
+      "asset_search": false,
+      "holdout": false,
+      "horizon_search": false,
+      "live_execution": false,
+      "parameter_search": false,
+      "performance": false,
+      "promotion": false,
+      "ranking": false,
+      "selection": false,
+      "threshold_search": false,
+      "variant_search": false
+    },
+    "master_commit": "c26f1151bac5a66c1332fe21d3d1203f1af2e8f0",
+    "outcomes": [
+      {
+        "code": "Q121-R1",
+        "observed": {
+          "discovered_filing_entries": 93,
+          "identity_checks": 15
+        },
+        "receipt_fingerprint": "9c9a3a4fa05ccc5aa8e59d254c75577abb60b869dd53ff35505b335424cfbf8e",
+        "research_status": "Q121R1_SOURCE_ROUTE_FALSIFIED",
+        "scientific_interpretation": "The preregistered SEC issuer-oriented browse route failed its subject-issuer identity contract; the observed counterexample had subject CIK different from the frozen issuer CIK. The preregistration was not relaxed.",
+        "workflow_conclusion": "success",
+        "workflow_run_id": 37139514721
+      },
+      {
+        "code": "Q121-R2",
+        "observed": {
+          "anchors_checked": 0,
+          "daily_index_dates_checked": 0
+        },
+        "receipt_fingerprint": "fd7b63d9f05e0cf9abf588c9c2d6c2ff02e2ea413927218de6f4e1c29f9fff97",
+        "research_status": "Q121R2_BLOCKED_BY_Q121R1_FALSIFICATION",
+        "scientific_interpretation": "Independent reconciliation was intentionally not performed because its preregistered upstream route was falsified.",
+        "workflow_conclusion": "success",
+        "workflow_run_id": 37139514724
+      },
+      {
+        "code": "Q127-R1",
+        "observed": {
+          "fixed_dates_checked": 4
+        },
+        "receipt_fingerprint": "60815a092421762ac1da2a96d003865b72f25eb640778287964a9648cdfc5b74",
+        "research_status": "Q127R1_SOURCE_PIT_FEASIBILITY_COMPLETED",
+        "scientific_interpretation": "Historical FINRA Reg-SHO source retrieval and parsing completed for the frozen sample; revision lineage and same-day PIT safety remain unresolved.",
+        "workflow_conclusion": "success",
+        "workflow_run_id": 37139514699
+      },
+      {
+        "code": "Q130-R1",
+        "receipt_fingerprint": null,
+        "research_status": "Q130R1_SOURCE_FEASIBILITY_COMPLETED",
+        "scientific_interpretation": "The frozen Wikimedia historical pageview source probe completed successfully. Publication/revision timing remains outside formal same-day PIT safety.",
+        "workflow_conclusion": "success",
+        "workflow_run_id": 37139514761
+      },
+      {
+        "code": "Q131-R1",
+        "observed": {
+          "filings_checked": 0
+        },
+        "receipt_fingerprint": "e5d5077874d3eaa06b688c7294e83c42d3797da1c9cffdfdb98e067112d07a70",
+        "research_status": "Q131R1_FIXED_WINDOW_NO_MATCHING_FILINGS",
+        "scientific_interpretation": "The preregistered SEC filing window (2025-09-22 through 2025-09-24) yielded no matching filings across the frozen issuer/form set, so no disclosure-complexity vector was inferred or tuned.",
+        "workflow_conclusion": "success",
+        "workflow_run_id": 37139514732
+      },
+      {
+        "code": "Q121-R3",
+        "observed": {
+          "filtered_form_rows": 61818,
+          "frozen_controls_checked": 3,
+          "quarters_checked": 7
+        },
+        "receipt_fingerprint": "a18abdffe2fde48dc4084d420f0a8d5c6ade92727baa23dcecaad481e9452dc1",
+        "research_status": "Q121R3_FORM_INDEX_ROUTE_FEASIBILITY_COMPLETED",
+        "scientific_interpretation": "The official quarterly SEC form index route completed on the frozen 2024-02-05 through 2025-09-24 window. Subject/filer identity was resolved from archived filing header information without compiling a full subject-issuer population. Same-day PIT safety and performance were not established.",
+        "workflow_conclusion": "success",
+        "workflow_run_id": 37143148365
+      },
+      {
+        "code": "Q121-R4",
+        "observed": {
+          "filtered_form_rows": 61818,
+          "frozen_controls_checked": 3,
+          "quarters_checked": 7
+        },
+        "receipt_fingerprint": "3f5616d6ddc18c0f39a10316fe3cbf69e98be2911741552f8a70d133ba94c076",
+        "research_status": "Q121R4_MASTER_INDEX_ROUTE_FEASIBILITY_COMPLETED",
+        "scientific_interpretation": "The independent SEC quarterly master index route completed on the same frozen window and control set. Identity was resolved from archived filing header information with duplicate-accession handling. Same-day PIT safety and performance were not established.",
+        "workflow_conclusion": "success",
+        "workflow_run_id": 37143398983
+      }
+    ],
+    "safety": {
+      "automatic_promotion": false,
+      "live_trading_enabled": false,
+      "orders_enabled": false,
+      "paper_only": true
+    },
+    "schema_version": "1.0"
+  },
+  "status_commit_is_documentation_only": true,
+  "status_type": "current_operational_project_state",
+  "workflow": {
+    "name": "Current Operational Status Synchronizer",
+    "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
+    "run_id": "37229786130"
+  }
+}
+
+
+
+===== ARTIFACT: research/evidence/q193_q196_source_feasibility_latest.json =====
+
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-04-Q193-Q196-SOURCE-FEASIBILITY",
+  "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
+  "source_results": {
+    "FDA_ORANGEBOOK": {
+      "urls": [
+        "https://www.fda.gov/drugs/drug-approvals-and-databases/orange-book-data-files"
+      ],
+      "probe_classification": "REACHABLE_MARKER_MISMATCH",
+      "reachable": true,
+      "missing_markers": [
+        "NDA Number"
+      ],
+      "attempts": [
+        {
+          "url": "https://www.fda.gov/drugs/drug-approvals-and-databases/orange-book-data-files",
+          "http_status": 200,
+          "missing_markers": [
+            "NDA Number"
+          ]
+        }
+      ],
+      "content_sha256": "b4599baddf23f72a586ac6f09d1747cad40da39f1bcebbcc2e0ab845463211a4",
+      "scientific_boundary": false
+    },
+    "FDA_SHORTAGES": {
+      "urls": [
+        "https://www.fda.gov/drugs/drug-shortages",
+        "https://open.fda.gov/data/drugshortages/",
+        "https://api.fda.gov/drug/shortages.json?limit=1"
+      ],
+      "probe_classification": "REACHABLE_MARKER_MISMATCH",
+      "reachable": true,
+      "missing_markers": [
+        "Current and Resolved",
+        "message"
+      ],
+      "attempts": [
+        {
+          "url": "https://www.fda.gov/drugs/drug-shortages",
+          "http_status": 404,
+          "missing_markers": [
+            "Drug Shortages",
+            "Current and Resolved",
+            "message"
+          ]
+        },
+        {
+          "url": "https://open.fda.gov/data/drugshortages/",
+          "http_status": 200,
+          "missing_markers": [
+            "Current and Resolved",
+            "message"
+          ]
+        },
+        {
+          "url": "https://api.fda.gov/drug/shortages.json?limit=1",
+          "http_status": 200,
+          "missing_markers": [
+            "Drug Shortages",
+            "Current and Resolved",
+            "message"
+          ]
+        }
+      ],
+      "content_sha256": "fd4a583e989a08ef1b47200dee60c404d462fe1ed8ad02b4dace4f629f36d377",
+      "scientific_boundary": false
+    },
+    "EPA_ECHO": {
+      "urls": [
+        "https://echo.epa.gov/tools/data-downloads",
+        "https://echo.epa.gov/resources/echo-data/about-the-data"
+      ],
+      "probe_classification": "PASS",
+      "reachable": true,
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://echo.epa.gov/tools/data-downloads",
+          "http_status": 200,
+          "missing_markers": []
+        },
+        {
+          "url": "https://echo.epa.gov/resources/echo-data/about-the-data",
+          "http_status": 200,
+          "missing_markers": [
+            "Data Downloads"
+          ]
+        }
+      ],
+      "content_sha256": "d9eab6ac772371ad485176debb25cea19a1505ddddea3c178f1a2e927440077c",
+      "scientific_boundary": false
+    },
+    "USPTO_PATENT": {
+      "urls": [
+        "https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents",
+        "https://www.uspto.gov/ip-policy/economic-research/patentsview"
+      ],
+      "probe_classification": "PASS",
+      "reachable": true,
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents",
+          "http_status": 200,
+          "missing_markers": [
+            "PatentsView"
+          ]
+        },
+        {
+          "url": "https://www.uspto.gov/ip-policy/economic-research/patentsview",
+          "http_status": 200,
+          "missing_markers": []
+        }
+      ],
+      "content_sha256": "5e978f5571188b73375ca2ead119c7066e2340830704877925e3ec905a96216f",
+      "scientific_boundary": false
+    }
+  },
+  "candidate_results": [
+    {
+      "candidate_id": "Q194",
+      "status": "BLOCKED_SOURCE_COMPONENTS"
+    },
+    {
+      "candidate_id": "Q195",
+      "status": "SOURCE_COMPONENT_READY"
+    },
+    {
+      "candidate_id": "Q196",
+      "status": "SOURCE_COMPONENT_READY"
+    },
+    {
+      "candidate_id": "Q193",
+      "status": "DEPENDENCY_PIT_GATED",
+      "note": "Composition is forbidden until the contributing channels independently clear candidate-specific PIT gates."
+    }
+  ],
+  "synthetic_mutation_checks": {
+    "future_row_prefix_invariant": true,
+    "reordering_future_row_cannot_change_prefix": true,
+    "future_timestamp_excluded": true,
+    "no_search_dimension_present": true,
+    "same_day_ambiguous_events_fail_closed": true
+  },
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "receipt_fingerprint": "13ecb7dc768813fa4fe33dd0c3670f7b7f407ebf9454b76e9c5bce215c8a982b"
+}
+
+
+
+===== ARTIFACT: research/evidence/q197_q198_source_feasibility_latest.json =====
+
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-04-Q197-Q198-SOURCE-FEASIBILITY",
+  "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
+  "source_results": {
+    "Q197_USASPENDING": {
+      "urls": [
+        "https://api.usaspending.gov/docs/endpoints",
+        "https://api.usaspending.gov/api/v2/awards/last_updated/"
+      ],
+      "probe_classification": "PASS",
+      "reachable": true,
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://api.usaspending.gov/docs/endpoints",
+          "http_status": 200,
+          "missing_markers": []
+        },
+        {
+          "url": "https://api.usaspending.gov/api/v2/awards/last_updated/",
+          "http_status": 200,
+          "missing_markers": [
+            "spending_by_award"
+          ]
+        }
+      ],
+      "content_sha256": "65d54624b6866fbd30084eed3d44f4f9bb00df84aa22709cf2b0125aa9d79386",
+      "scientific_boundary": false
+    },
+    "Q198_FEDERAL_REGISTER": {
+      "urls": [
+        "https://www.federalregister.gov/api/v1/documents.json?per_page=1&order=newest",
+        "https://www.federalregister.gov/api/v1/public-inspection-documents/current.json",
+        "https://www.archives.gov/federal-register/faqs"
+      ],
+      "probe_classification": "PASS",
+      "reachable": true,
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://www.federalregister.gov/api/v1/documents.json?per_page=1&order=newest",
+          "http_status": 200,
+          "missing_markers": [
+            "public inspection",
+            "filed for public inspection"
+          ]
+        },
+        {
+          "url": "https://www.federalregister.gov/api/v1/public-inspection-documents/current.json",
+          "http_status": 200,
+          "missing_markers": [
+            "filed for public inspection"
+          ]
+        },
+        {
+          "url": "https://www.archives.gov/federal-register/faqs",
+          "http_status": 200,
+          "missing_markers": [
+            "publication_date"
+          ]
+        }
+      ],
+      "content_sha256": "85437a6e076de46fc0073de1b79f12e702be2c5a98f883d294940aa4a7d62f4d",
+      "scientific_boundary": false
+    }
+  },
+  "candidate_results": [
+    {
+      "candidate_id": "Q197",
+      "status": "SOURCE_COMPONENT_READY"
+    },
+    {
+      "candidate_id": "Q198",
+      "status": "SOURCE_COMPONENT_READY"
+    }
+  ],
+  "synthetic_mutation_checks": {
+    "future_row_prefix_invariant": true,
+    "future_reordering_cannot_change_prefix": true,
+    "future_timestamp_excluded": true,
+    "same_day_ambiguous_events_fail_closed": true,
+    "award_date_not_observation_time": true,
+    "online_posting_time_not_official_filing_time": true,
+    "no_search_dimension_present": true
+  },
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "receipt_fingerprint": "95201f816075deb8ddd27903e50ca95804ffa522cff37139fe77fcff83beaede"
+}
+
+
+
+===== ARTIFACT: research/evidence/q198_pit_clock_census_latest.json =====
+
+{
+  "schema_version": "1.1",
+  "task_id": "Q-2026-10-04-Q198-HISTORICAL-PIT-CLOCK-CENSUS",
+  "status": "Q198_PIT_CLOCK_CENSUS_BLOCKED_SOURCE_ACCESS",
+  "frozen_dates": [
+    "2020/01/10",
+    "2020/04/22",
+    "2020/12/16",
+    "2026/10/02"
+  ],
+  "pages": [
+    {
+      "requested_date": "2020/01/10",
+      "url": "https://www.federalregister.gov/public-inspection/2020/01/10",
+      "http_status": 200,
+      "content_sha256": "8deac948de57d196a31a92acf5e7d5c14dc7996a5b1245057f5143e9621ec6b1",
+      "status": "SOURCE_ACCESS_BLOCKED",
+      "access_block_reason": "official Federal Register automated-access challenge/request-access page"
+    },
+    {
+      "requested_date": "2020/04/22",
+      "url": "https://www.federalregister.gov/public-inspection/2020/04/22",
+      "http_status": 200,
+      "content_sha256": "8deac948de57d196a31a92acf5e7d5c14dc7996a5b1245057f5143e9621ec6b1",
+      "status": "SOURCE_ACCESS_BLOCKED",
+      "access_block_reason": "official Federal Register automated-access challenge/request-access page"
+    },
+    {
+      "requested_date": "2020/12/16",
+      "url": "https://www.federalregister.gov/public-inspection/2020/12/16",
+      "http_status": 200,
+      "content_sha256": "dfaf7946dc2c3bbf89b4ee9d7d42762aa18a6f3a9ccc8b62160ebc1d999ab2c2",
+      "status": "SOURCE_ACCESS_BLOCKED",
+      "access_block_reason": "official Federal Register automated-access challenge/request-access page"
+    },
+    {
+      "requested_date": "2026/10/02",
+      "url": "https://www.federalregister.gov/public-inspection/2026/10/02",
+      "http_status": 200,
+      "content_sha256": "2fd89b88ecb3bc62c4f8d6b64b194ffc31e1881f79a68456eefe927f6494ff2d",
+      "status": "SOURCE_ACCESS_BLOCKED",
+      "access_block_reason": "official Federal Register automated-access challenge/request-access page"
+    }
+  ],
+  "aggregate": {
+    "pages_requested": 4,
+    "pages_parsed": 0,
+    "pages_access_blocked": 4,
+    "all_pages_parsed": false,
+    "all_pages_access_blocked": true,
+    "all_have_filed_timestamps": false,
+    "all_have_scheduled_publication_dates": false,
+    "same_day_ambiguous_total": 0
+  },
+  "next_gate": "use an officially supported API or another immutable public-inspection snapshot route; then establish candidate-specific correction/withdrawal lineage, entity mapping, and independent PIT reproduction",
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "receipt_fingerprint": "3fe074956182aaf03c305d59d327c61276d5f15069519ba192f373b5a2a719d5"
+}
+
+
+
+===== ARTIFACT: research/evidence/q199_q201_source_feasibility_latest.json =====
+
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-04-Q199-Q201-SOURCE-FEASIBILITY",
+  "status": "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
+  "source_results": {
+    "USPTO_PUBLICATIONS": {
+      "urls": [
+        "https://www.google.com/googlebooks/uspto-patents-applications-biblio.html",
+        "https://www.uspto.gov/web/offices/pac/mpep/s1120.html",
+        "https://www.uspto.gov/patents/search",
+        "https://ppubs.uspto.gov/basic/"
+      ],
+      "probe_classification": "PASS",
+      "reachable": true,
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://www.google.com/googlebooks/uspto-patents-applications-biblio.html",
+          "http_status": 200,
+          "missing_markers": [
+            "Eighteen-Month Publication of Patent Applications",
+            "Publication Date"
+          ]
+        },
+        {
+          "url": "https://www.uspto.gov/web/offices/pac/mpep/s1120.html",
+          "http_status": 200,
+          "missing_markers": []
+        },
+        {
+          "url": "https://www.uspto.gov/patents/search",
+          "http_status": 200,
+          "missing_markers": [
+            "2015",
+            "2001",
+            "Eighteen-Month Publication of Patent Applications",
+            "Publication Date"
+          ]
+        },
+        {
+          "url": "https://ppubs.uspto.gov/basic/",
+          "http_status": 200,
+          "missing_markers": [
+            "2015",
+            "2001",
+            "Eighteen-Month Publication of Patent Applications"
+          ]
+        }
+      ],
+      "content_sha256": "a20490cb10922d7526c3773e922bb7b158298b26fa85c3de606303d5ac7139f8",
+      "scientific_boundary": false
+    },
+    "CLINICALTRIALS_RESULTS": {
+      "urls": [
+        "https://clinicaltrials.gov/api/v2/studies/NCT00125528"
+      ],
+      "probe_classification": "PASS",
+      "reachable": true,
+      "missing_markers": [],
+      "attempts": [
+        {
+          "url": "https://clinicaltrials.gov/api/v2/studies/NCT00125528",
+          "http_status": 200,
+          "missing_markers": []
+        }
+      ],
+      "content_sha256": "d9ae42a4f31df44d2e163ff1a3964474fc6446b2080c57e3e94311f2f21aefcb",
+      "scientific_boundary": false
+    }
+  },
+  "candidate_results": [
+    {
+      "candidate_id": "Q199",
+      "status": "HISTORICAL_SOURCE_COMPONENT_READY"
+    },
+    {
+      "candidate_id": "Q201",
+      "status": "SOURCE_COMPONENT_READY"
+    }
+  ],
+  "synthetic_mutation_checks": {
+    "future_row_prefix_invariant": true,
+    "future_reordering_cannot_change_prefix": true,
+    "future_timestamp_excluded": true,
+    "same_day_ambiguous_events_fail_closed": true,
+    "no_search_dimension_present": true
+  },
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "selection": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "receipt_fingerprint": "15d7aadd844d4c1ce3f89e8c1cc891399353e5c37803062e3408162e920cc164"
+}
+
+
+
+===== ARTIFACT: research/evidence/q186_pit_readiness_r2_latest.json =====
+
+{
+  "schema_version": "1.0",
+  "receipt_type": "q186_pit_readiness_r2",
+  "task_id": "Q-2026-10-04-Q186-PIT-R2-CLOCK-ARCHIVE",
+  "status": "Q186_PIT_R2_CLOCK_ARCHIVE_COMPLETED_NO_PERFORMANCE",
+  "candidate_id": "Q186",
+  "fixed_controls": [
+    {
+      "week": 37,
+      "issue_date": "2026-09-15"
+    },
+    {
+      "week": 38,
+      "issue_date": "2026-09-22"
+    },
+    {
+      "week": 39,
+      "issue_date": "2026-09-29"
+    }
+  ],
+  "source_results": {
+    "USPTO_GAZETTE_INDEX": {
+      "url": "https://www.uspto.gov/learning-and-resources/official-gazette/official-gazette-patents",
+      "http_status": 200,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "content_sha256": "047b77f949efc4ca3412668e07827f6bcd96041cc0b877d2eea831ee5fa1a5c6"
+    },
+    "USPTO_GAZETTE_WEEK39": {
+      "url": "https://patentsgazette.uspto.gov/week39/",
+      "http_status": 200,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "content_sha256": "f303031a46ffddb187cca6aeba39a25f88109c43f94757f6605c9b7e059592d7"
+    },
+    "USPTO_GAZETTE_WEEK38": {
+      "url": "https://patentsgazette.uspto.gov/week38/",
+      "http_status": 200,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "content_sha256": "93869421e6899f42edd5732728d344810fe5ff07161ea40769d27d3a1cb43fe9"
+    },
+    "USPTO_GAZETTE_WEEK37": {
+      "url": "https://patentsgazette.uspto.gov/week37/",
+      "http_status": 200,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "content_sha256": "c3e3790b93f7d2a00ea05a3ac84437bae258731c0ca238ea9fb71c5fae4c2f97"
+    },
+    "USPTO_EGRANTS": {
+      "url": "https://www.uspto.gov/patents/apply/patent-center/egrants",
+      "http_status": 200,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "content_sha256": "96bf90b743ee5d109ac9628fe49acb60ab832153c347d5229d1b3807022774bc"
+    },
+    "USPTO_PATENT_AUTHORITY": {
+      "url": "https://www.uspto.gov/patents/search/patent-document-authority-files",
+      "http_status": 200,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "content_sha256": "ba2ffd6c614176db6e2db1dfc529c4cbb27bfc4072ce21168fc890d1fe5c395b"
+    },
+    "USPTO_PATENTSVIEW": {
+      "url": "https://www.uspto.gov/ip-policy/economic-research/patentsview",
+      "http_status": 200,
+      "probe_classification": "PASS",
+      "missing_markers": [],
+      "content_sha256": "b07c8d944abde96ff1b39ca150462bf9470f27c2e0b5f808e9906186be8f9d11"
+    },
+    "USPTO_GRANT_BIBLIOGRAPHIC": {
+      "url": "https://developer.uspto.gov/product/patent-grant-bibliographic-datasgml",
+      "http_status": 200,
+      "probe_classification": "MARKER_MISMATCH",
+      "missing_markers": [
+        "issued weekly (Tuesdays)",
+        "January 1, 1976 to present"
+      ],
+      "content_sha256": "46d38932c3afa99ab7e31741ac93e625554a92d3224610b3ab638da19a0a0513"
+    }
+  },
+  "pit_boundary": {
+    "grant_issue_clock_proven": true,
+    "electronic_grant_available_immediately_post_2023": true,
+    "historical_weekly_grant_route_proven": false,
+    "legacy_bibliographic_route_may_be_redirected": true,
+    "bulk_refresh_separate_from_grant_clock": true,
+    "citation_publication_ordering_proven": false,
+    "citation_publication_ordering_status": "UNPROVEN",
+    "conservative_rule": "A citation edge may enter a pre-event graph only when its public-observation boundary is independently proven to be before the upstream grant; otherwise exclude the edge or use a conservative next-session boundary and record the loss explicitly."
+  },
+  "archive_contract": {
+    "fixed_week_controls": [
+      {
+        "week": 37,
+        "issue_date": "2026-09-15"
+      },
+      {
+        "week": 38,
+        "issue_date": "2026-09-22"
+      },
+      {
+        "week": 39,
+        "issue_date": "2026-09-29"
+      }
+    ],
+    "authority_files_twice_monthly_refresh": true,
+    "withdrawn_and_missing_documents_must_be_quarantined": true
+  },
+  "unresolved_gates": [
+    "candidate-specific historical grant/citation completeness census",
+    "citation-publication ordering at the pre-grant decision boundary",
+    "frozen assignee-to-issuer identity mapping with coverage evidence",
+    "correction/withdrawal lineage at candidate level",
+    "independent reproduction"
+  ],
+  "mutation_checks": {
+    "bulk_refresh_cannot_move_grant_clock": true,
+    "future_citation_cannot_pass_pre_event_filter": true,
+    "no_return_conditioning": true,
+    "no_parameter_search": true,
+    "no_event_window_search": true
+  },
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false
+  },
+  "receipt_fingerprint": "a830dc7ddb5c3609ab73c2077f846009bd1cba060399582ba9b7d55ac8baa371"
+}
+
