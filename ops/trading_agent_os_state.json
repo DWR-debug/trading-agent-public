@@ -36,7 +36,7 @@
   "autonomous_lanes": {
     "permanent_self_hosted_research": {
       "workflow": ".github/workflows/permanent-pc-research-loop.yml",
-      "schedule_utc": "*/30 * * * *",
+      "schedule_utc": "*/10 * * * *",
       "runner_label": "trading-agent-research",
       "parallel_lanes": 2,
       "purpose": [
@@ -144,7 +144,7 @@
       "runtime": "Termux",
       "runner_workflow": ".github/workflows/s10-phone-worker.yml",
       "runner_label": "s10-phone",
-      "runner_mode": "scheduled_utility_after_fresh_receipt",
+      "runner_mode": "scheduled_deterministic_mechanical_qa",
       "research_role": "independent_mobile_bounded_utility_qa_worker",
       "live_verification_required": false,
       "presence_signal": "fresh_successful_utility_receipt",
@@ -164,12 +164,13 @@
       "template_path": "docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md",
       "template_runner": "scripts/samsung_termux_phone_runner_template.sh",
       "latest_verified_run_id": "37102979617",
-      "regular_task": "bounded governance/reproducibility/QA utility review",
+      "regular_task": "deterministic mechanical research/governance QA",
       "full_acceptance_policy": "36-case R3 benchmark only on onboarding or explicit revalidation; never as recurring default workload",
       "throughput_probe": ".github/workflows/s10-throughput-probe.yml (manual diagnostics only)",
-      "event_driven_review": "meaningful research-runner or critical-governance change plus regular six-hour cadence",
+      "event_driven_review": "meaningful research-runner or critical-governance change plus regular two-hour mechanical-QA cadence; semantic review remains explicit",
       "latest_utility_run_id": "37102979617",
-      "latest_utility_status": "S10_UTILITY_REVIEW_COMPLETED"
+      "latest_utility_status": "S10_UTILITY_REVIEW_COMPLETED",
+      "default_mode": "mechanical_qa"
     },
     "android_phone_fleet": {
       "status": "TEMPLATE_READY",
@@ -211,7 +212,7 @@
   },
   "chatless_night_policy": {
     "enabled": true,
-    "primary_path": "permanent self-hosted loop every 30 minutes",
+    "primary_path": "permanent self-hosted loop every 10 minutes",
     "failover_path": "hosted failover every 30 minutes when heartbeat stale",
     "daily_deepening": "unified orchestrator at 03:30 UTC",
     "ai_rotation": "free AI fabric every 6 hours when provider entitlement/auth passes",
@@ -219,8 +220,8 @@
     "persistence": "receipts/artifacts/status are written to repository or Actions artifacts; no open chat required",
     "s10": {
       "enabled": true,
-      "mode": "receipt_gated_opportunistic_utility",
-      "trigger": "when synchronized S10 receipt is accepted, phone is live, a bounded useful utility task exists, or a meaningful research-runner/critical-governance change has just landed",
+      "mode": "deterministic_mechanical_qa_default",
+      "trigger": "every two hours plus meaningful research-runner or critical-governance push changes; semantic utility/evidence-critic only when explicitly selected",
       "formal_evidence_allowed": false,
       "performance_authorization": false,
       "full_benchmark": "explicit revalidation only",
