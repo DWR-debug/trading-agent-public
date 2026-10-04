@@ -48,6 +48,16 @@ def test_source_gate_contains_fail_closed_mutation_guards():
         assert marker in s
 
 
+def test_q198_has_official_historical_single_document_api_probe():
+    s = (ROOT / "automation/q197_q198_source_feasibility.py").read_text(
+        encoding="utf-8"
+    )
+    assert "Q198_HISTORICAL_PI_API" in s
+    assert "public-inspection-documents/2021-07287.json" in s
+    assert "filed_at" in s
+    assert "last_public_inspection_issue" in s
+
+
 def test_workflow_is_bounded_and_non_authorizing():
     s = (ROOT / ".github/workflows/q197-q198-source-feasibility.yml").read_text(
         encoding="utf-8"
