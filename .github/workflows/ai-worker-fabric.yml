@@ -4,51 +4,68 @@ on:
   push:
     branches: [master]
     paths:
-      - "ai_requests/AI-2026-09-29-Q091-ADVERSARIAL.json"
-      - ".github/workflows/ai-worker-fabric.yml"
-      - "automation/ai_worker_fabric.py"
-      - "automation/mistral_free.py"
-      - "tests/test_ai_worker_fabric.py"
-      - "ai_requests/AI-2026-09-30-Q100-FRONTIER-FEASIBILITY.json"
-      - "ai_requests/AI-2026-09-30-Q101-NEGATIVE-EVIDENCE.json"
-      - "ai_requests/AI-2026-09-30-Q102-REGIME-STATE-DESIGN.json"
-      - "automation/q101_negative_evidence_atlas.py"
-      - "tests/test_q101_negative_evidence_atlas.py"
-      - "docs/research_design/EXTERNAL_RESEARCH_INSPIRATION_2026-09-30.md"
-      - "automation/q102_regime_negative_evidence.py"
-      - "tests/test_q102_regime_negative_evidence.py"
-      - "automation/q103_rccsm_state_routing_integrity.py"
-      - "tests/test_q103_rccsm_state_routing_integrity.py"
-      - "ai_requests/AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT.json"
+      - "research/evidence/q187_q192_source_feasibility_latest.json"
       - "automation/research_os_scheduler.py"
       - "automation/research_hypothesis_compiler.py"
       - "automation/autonomous_control_plane.py"
-      - "ai_requests/AI-2026-10-04-Q187-Q192-ADVERSARIAL.json"
-      - "research/frontier/q187_q192_candidate_wave_2026_10_04.json"
-      - "research/evidence/q187_q192_source_feasibility_latest.json"
+      - ".github/workflows/permanent-pc-research-loop.yml"
+      - ".github/workflows/q121r6-windows-independent-reproduction.yml"
+      - ".github/workflows/q185-q186-windows-reproduction.yml"
+      - ".github/workflows/self-hosted-continuous-qa.yml"
   # OpenRouter free is deliberately event-driven. Repeating unchanged research
   # prompts on a timer wastes scarce free capacity without increasing information.
   workflow_dispatch:
-
-permissions:
-  contents: write
-
-jobs:
-  worker:
-    if: github.repository == 'DWR-debug/trading-agent-public'
-    strategy:
-      fail-fast: false
-      matrix:
-        provider: [openrouter_free]
-        task:
+    inputs:
+      task_id:
+        description: "Explicit bounded OpenRouter review task for manual dispatch"
+        required: true
+        type: choice
+        options:
+          - AI-2026-10-04-Q187-Q192-ADVERSARIAL
+          - AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT
           - AI-2026-09-29-Q091-ADVERSARIAL
           - AI-2026-09-28-Q089-ADVERSARIAL
           - AI-2026-09-28-UNUSUAL-FRONTIER
           - AI-2026-09-30-Q100-FRONTIER-FEASIBILITY
           - AI-2026-09-30-Q101-NEGATIVE-EVIDENCE
           - AI-2026-09-30-Q102-REGIME-STATE-DESIGN
-          - AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT
+
+permissions:
+  contents: write
+
+jobs:
+  worker:
+    if: >-
+      ${{ github.repository == 'DWR-debug/trading-agent-public' &&
+          (
+            github.event_name == 'workflow_dispatch' ||
+            (matrix.task == 'AI-2026-10-04-Q187-Q192-ADVERSARIAL' &&
+             contains(github.event.head_commit.modified, 'research/evidence/q187_q192_source_feasibility_latest.json')) ||
+            (matrix.task == 'AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT' &&
+             (
+               contains(github.event.head_commit.modified, 'automation/research_os_scheduler.py') ||
+               contains(github.event.head_commit.modified, 'automation/research_hypothesis_compiler.py') ||
+               contains(github.event.head_commit.modified, 'automation/autonomous_control_plane.py') ||
+               contains(github.event.head_commit.modified, '.github/workflows/permanent-pc-research-loop.yml') ||
+               contains(github.event.head_commit.modified, '.github/workflows/q121r6-windows-independent-reproduction.yml') ||
+               contains(github.event.head_commit.modified, '.github/workflows/q185-q186-windows-reproduction.yml') ||
+               contains(github.event.head_commit.modified, '.github/workflows/self-hosted-continuous-qa.yml')
+             )) ||
+            (github.event_name == 'workflow_dispatch' && matrix.task == github.event.inputs.task_id)
+          )
+        }}
+    strategy:
+      fail-fast: false
+      matrix:
+        task:
           - AI-2026-10-04-Q187-Q192-ADVERSARIAL
+          - AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT
+          - AI-2026-09-29-Q091-ADVERSARIAL
+          - AI-2026-09-28-Q089-ADVERSARIAL
+          - AI-2026-09-28-UNUSUAL-FRONTIER
+          - AI-2026-09-30-Q100-FRONTIER-FEASIBILITY
+          - AI-2026-09-30-Q101-NEGATIVE-EVIDENCE
+          - AI-2026-09-30-Q102-REGIME-STATE-DESIGN
     concurrency:
       group: trading-agent-ai-${{ matrix.provider }}-${{ matrix.task }}
       cancel-in-progress: false
