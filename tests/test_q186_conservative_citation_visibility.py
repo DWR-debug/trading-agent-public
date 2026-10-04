@@ -1,35 +1,11 @@
-"""Synthetic contract tests for Q186 conservative citation visibility.
-
-This module tests only the deterministic inclusion rule. It does not fetch data
-and does not create scientific performance evidence.
-"""
+"""Tests for the Q186 conservative citation-visibility contract."""
 from __future__ import annotations
 
 from datetime import date
 
+import pytest
 
-def conservative_public_date(
-    *,
-    citing_patent_grant_date: date,
-    upstream_patent_grant_date: date,
-    citation_present_in_citing_grant_document: bool,
-) -> date | None:
-    """Return the conservative public boundary for a citation edge.
-
-    The citation is accepted only when the citation is present in the public
-    citing-grant document and that grant predates the upstream grant strictly.
-    Same-day ties are excluded because intraday ordering is not proven.
-    """
-    if not isinstance(citing_patent_grant_date, date):
-        raise TypeError("citing_patent_grant_date must be datetime.date")
-    if not isinstance(upstream_patent_grant_date, date):
-        raise TypeError("upstream_patent_grant_date must be datetime.date")
-
-    if not citation_present_in_citing_grant_document:
-        return None
-    if citing_patent_grant_date >= upstream_patent_grant_date:
-        return None
-    return citing_patent_grant_date
+from automation.q186_citation_visibility import conservative_public_date
 
 
 def test_prior_citing_grant_is_eligible() -> None:
@@ -64,14 +40,17 @@ def test_missing_document_evidence_is_excluded() -> None:
     ) is None
 
 
-def test_invalid_dates_fail_closed() -> None:
-    try:
+@pytest.mark.parametrize(
+    ("citing", "upstream"),
+    [
+        ("2024-01-02", date(2024, 3, 5)),
+        (date(2024, 1, 2), "2024-03-05"),
+    ],
+)
+def test_invalid_dates_fail_closed(citing: object, upstream: object) -> None:
+    with pytest.raises(TypeError):
         conservative_public_date(
-            citing_patent_grant_date="2024-01-02",  # type: ignore[arg-type]
-            upstream_patent_grant_date=date(2024, 3, 5),
+            citing_patent_grant_date=citing,  # type: ignore[arg-type]
+            upstream_patent_grant_date=upstream,  # type: ignore[arg-type]
             citation_present_in_citing_grant_document=True,
         )
-    except TypeError:
-        pass
-    else:
-        raise AssertionError("invalid citing date must fail closed")
