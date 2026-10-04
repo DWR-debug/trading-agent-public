@@ -1011,7 +1011,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T22:12:25.310560+00:00",
+  "generated_at_utc": "2026-10-04T22:14:13.911201+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2016,7 +2016,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "0f9f949b2099a85907f0fd833031e4032513fbe9e2125254d987f963297ccb8c",
+    "receipt_fingerprint": "1d57620dc331aa55d212a34550d99184328c65d068835b3cb4eaebb5aab7e1ea",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2051,7 +2051,7 @@
           }
         ],
         "clock_contract": "Docket event dates are distinct from underlying incident dates; exact public intraday availability must be proven per event class, otherwise use next-session availability.",
-        "content_sha256": "6aa135d85b1fddd72f870d9a89e9a2fb7e35a3ce3e8286aeac5fdd373bfdb317",
+        "content_sha256": "1a869db5340e3e773f4dc38bdda596bef8ad86c9e61eb4c7ad93cb140148608a",
         "http_status": 403,
         "missing_markers": [
           "RECAP Archive",
@@ -2075,7 +2075,7 @@
           }
         ],
         "clock_contract": "A recorded docket-entry date is not automatically proof of public dissemination time.",
-        "content_sha256": "620270d5455754adfae8a9aa66309f948a5a7bd4666523b91c41640c02edbdf9",
+        "content_sha256": "c79158de0052d5e21664b6f2a50cf80acb231ca031e45e76ac05dd015d804976",
         "http_status": 403,
         "missing_markers": [
           "Advanced RECAP Search",
@@ -3395,7 +3395,7 @@
         "version_date_count": 0
       }
     },
-    "receipt_fingerprint": "bf683323481b55e106ecb4c159ded4076b34b11aaa08bc77d1280d865e85916b",
+    "receipt_fingerprint": "5b885ecdc774f6600a04b5d9a7bea4c7aa9d657ac33926bb8e51b504319ee119",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -3469,7 +3469,7 @@
             "url": "https://ppubs.uspto.gov/basic/"
           }
         ],
-        "content_sha256": "9f63da942dddf683463ff2a4ea2a47ef3e02e5ec2304c5d68e607322debbf451",
+        "content_sha256": "d6730560cd0cf6667896fbaafd417d97048974891fddde56eac70adc29b999ac",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -3540,44 +3540,44 @@
     ],
     "recent_commits": [
       {
-        "message": "RESEARCH: trigger 2026-10-05 priority research waves",
-        "sha": "2316b32ad0839a5af56b03f7fa71f3cb5f9249b0",
-        "timestamp": "2026-10-05T00:12:15+02:00"
+        "message": "GOV: extend source durability guard to Q202-Q204",
+        "sha": "d9c7ac80a935efdf82316edfa606f2c39fee1348",
+        "timestamp": "2026-10-05T00:14:00+02:00"
       },
       {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "65d4ea2714007a674f176a702bb7b516f6afd548",
-        "timestamp": "2026-10-04T22:10:02Z"
+        "message": "OPS: advance paper-forward MTM state",
+        "sha": "4e303ef69632606024ff23e726a6d5942b7e2569",
+        "timestamp": "2026-10-04T22:13:30Z"
       },
       {
-        "message": "OPS: synchronize S10 phone runtime status",
-        "sha": "cf8f41a5d9619cf8422a131b41141bc313c50c0a",
-        "timestamp": "2026-10-04T22:08:34Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "30656dc04a0b2f76b26231afece162540a9e1035",
+        "timestamp": "2026-10-04T22:13:12Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "20d65bdb4db54454c564b146fafe8dab41790353",
-        "timestamp": "2026-10-04T22:03:56Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "b12ffe031b4d45f29124423a0722556778c807c9",
+        "timestamp": "2026-10-04T22:13:05Z"
       },
       {
-        "message": "GOV: register Q202-Q204 as active orthogonal research family",
-        "sha": "a98eb81ef975ca304f128c6f396ed60af7d27601",
-        "timestamp": "2026-10-05T00:03:44+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "4c94b6880a7ad2da96015facdee91ffc8d59d76b",
+        "timestamp": "2026-10-04T22:13:02Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "445642af1633640bbb68828222a21c899195a891",
-        "timestamp": "2026-10-04T22:03:06Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "c67a6943872494bbfbf455e986388144dba8da35",
+        "timestamp": "2026-10-04T22:12:58Z"
       },
       {
-        "message": "TEST: align next-gate test with persisted Q202-Q204 source receipts",
-        "sha": "ffa2dbcb25203f2cde2499be6f442c2760b51675",
-        "timestamp": "2026-10-05T00:02:53+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "4c65d1fa631af3ca9e8e864b39e7b889465348e9",
+        "timestamp": "2026-10-04T22:12:55Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d37756b76afabf1be80da76b9d2dd69579a0b86b",
-        "timestamp": "2026-10-04T22:01:34Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "9b0c715aeb09120598110a4191f60965a42a6d6d",
+        "timestamp": "2026-10-04T22:12:53Z"
       }
     ]
   },
@@ -3662,7 +3662,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "2316b32ad0839a5af56b03f7fa71f3cb5f9249b0",
+  "source_master_sha": "d9c7ac80a935efdf82316edfa606f2c39fee1348",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -3776,6 +3776,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37239116964"
+    "run_id": "37239228583"
   }
 }
