@@ -384,9 +384,14 @@ def test_q022_design_guard_is_bounded_and_non_executing():
 
 def test_local_reproduction_targets_existing_governance_test():
     commands = worker.LANES["local_reproduction"]
-    assert commands[1][0:4] == [worker.PYTHON, "-m", "pytest", "-q"]
-    assert commands[1][4] == "tests/test_research_gates.py"
-    assert (ROOT / commands[1][4]).is_file()
+    matches = [
+        command for command in commands
+        if len(command) >= 5
+        and command[0:4] == [worker.PYTHON, "-m", "pytest", "-q"]
+        and command[4] == "tests/test_research_gates.py"
+    ]
+    assert len(matches) == 1
+    assert (ROOT / "tests/test_research_gates.py").is_file()
 
 def test_continuous_qa_provenance_is_published_from_workspace():
     text = (
