@@ -1,0 +1,205 @@
+name: Q121-R6 Independent Windows Reproduction (Permanent PC)
+
+on:
+  workflow_run:
+    workflows:
+      - Q121-R6 SEC Acceptance-Time Compilation
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: "Successful Q121-R6 workflow run ID whose frozen population will be independently reproduced"
+        required: true
+        type: string
+      source_run_attempt:
+        description: "Run attempt for the selected Q121-R6 workflow run"
+        required: true
+        type: string
+        default: "1"
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: trading-agent-windows-research-capacity-v1
+  cancel-in-progress: true
+
+jobs:
+  reproduce:
+    if: >-
+      ${{ github.repository == 'DWR-debug/trading-agent-public' &&
+          (
+            (github.event_name == 'workflow_run' &&
+             github.event.workflow_run.conclusion == 'success' &&
+             github.event.workflow_run.head_branch == 'master') ||
+            github.event_name == 'workflow_dispatch'
+          ) }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        shard_index: [0, 1]
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 240
+    steps:
+      - name: Determine source Q121-R6 run
+        shell: powershell
+        env:
+          EVENT_SOURCE_RUN_ID: ${{ github.event.workflow_run.id }}
+          EVENT_SOURCE_RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          INPUT_SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          INPUT_SOURCE_RUN_ATTEMPT: ${{ inputs.source_run_attempt }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          if ("${env:INPUT_SOURCE_RUN_ID}") {
+            $sourceRunId = [int64]$env:INPUT_SOURCE_RUN_ID
+            $sourceAttempt = [int]$env:INPUT_SOURCE_RUN_ATTEMPT
+          } else {
+            $sourceRunId = [int64]$env:EVENT_SOURCE_RUN_ID
+            $sourceAttempt = [int]$env:EVENT_SOURCE_RUN_ATTEMPT
+          }
+          "SOURCE_RUN_ID=$sourceRunId" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "SOURCE_RUN_ATTEMPT=$sourceAttempt" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Checkout exact Q121-R6 source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Bootstrap pinned Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-q121r6-independent"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-q121r6-independent.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          "%PY_EXE%" -m pip --version >nul 2>&1
+          if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
+          "%PY_EXE%" -m pip install --disable-pip-version-check exchange-calendars tzdata==2026.5 || exit /b 1
+          endlocal
+
+      - name: Download frozen Q121-R6 population from primary run
+        uses: actions/download-artifact@v6
+        with:
+          name: q121r6-population-${{ env.SOURCE_RUN_ID }}-${{ env.SOURCE_RUN_ATTEMPT }}
+          path: q121r6-input
+          run-id: ${{ env.SOURCE_RUN_ID }}
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+
+      - name: Run independent full-header shard
+        shell: cmd
+        env:
+          SHARD_INDEX: ${{ matrix.shard_index }}
+          SOURCE_RUN_ID: ${{ env.SOURCE_RUN_ID }}
+          SOURCE_RUN_ATTEMPT: ${{ env.SOURCE_RUN_ATTEMPT }}
+        run: |
+          @echo off
+          setlocal
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q121r6-independent\tools\python.exe"
+          if not exist "q121r6-input\population.json" exit /b 1
+          mkdir q121r6-independent 2>nul
+          "%PY_EXE%" -m automation.q121r6_sec_acceptance_time_compiler --population "q121r6-input\population.json" --output "q121r6-independent\result.json" --shard-index %SHARD_INDEX% --shard-count 2 --workers 8 --request-gap-seconds 0.25
+          if errorlevel 1 exit /b 1
+          "%PY_EXE%" -c "import json; from pathlib import Path; p=json.loads(Path('q121r6-independent/result.json').read_text(encoding='utf-8')); assert p['population']['header_rows_fetched'] == p['population']['header_rows_expected']; assert p['population']['header_rows_failed'] == 0; print('Q121R6_WINDOWS_SHARD_OK')"
+          "%PY_EXE%" -c "import json,os; from pathlib import Path; p=json.loads(Path('q121r6-independent/result.json').read_text(encoding='utf-8')); r={'schema_version':'1.0','receipt_type':'q121r6_windows_independent_reproduction_shard','status':'Q121R6_WINDOWS_INDEPENDENT_SHARD_COMPLETED','primary_workflow_run_id':int(os.environ['SOURCE_RUN_ID']),'primary_workflow_run_attempt':int(os.environ['SOURCE_RUN_ATTEMPT']),'primary_source_sha':os.environ.get('GITHUB_SHA'),'runner_name':os.environ.get('RUNNER_NAME'),'shard_index':int(os.environ['SHARD_INDEX']),'shard_count':2,'population':p['population'],'target_subject_population':p['target_subject_population'],'interpretation':p['interpretation'],'governance':p['governance'],'safety':{'PAPER_ONLY':True,'LIVE_TRADING_ENABLED':False,'ORDERS_ENABLED':False,'AUTOMATIC_PROMOTION':False},'formal_evidence_allowed':False,'independent_reproduction_only':True,'source_result_receipt_fingerprint':p['receipt_fingerprint']}; Path('q121r6-independent/receipt.json').write_text(json.dumps(r,ensure_ascii=False,sort_keys=True,indent=2)+'\n',encoding='utf-8')"
+          endlocal
+
+      - name: Upload independent Windows shard receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q121r6-windows-independent-shard-${{ matrix.shard_index }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q121r6-independent/
+          if-no-files-found: error
+          retention-days: 30
+
+  aggregate:
+    needs: reproduce
+    if: ${{ always() && needs.reproduce.result == 'success' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Download independent Windows shard receipts
+        uses: actions/download-artifact@v6
+        with:
+          pattern: q121r6-windows-independent-shard-*-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q121r6-windows-shards
+          merge-multiple: false
+
+      - name: Validate and publish independent reproduction receipt
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          receipts = sorted(Path("q121r6-windows-shards").glob("**/receipt.json"))
+          if len(receipts) != 2:
+              raise SystemExit(f"Q121R6_WINDOWS_AGGREGATE=FAIL expected 2 receipts, found {len(receipts)}")
+
+          parsed = [json.loads(p.read_text(encoding="utf-8")) for p in receipts]
+          if {r["shard_index"] for r in parsed} != {0, 1}:
+              raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL shard coverage")
+          for r in parsed:
+              if r["status"] != "Q121R6_WINDOWS_INDEPENDENT_SHARD_COMPLETED":
+                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL shard status")
+              if r["formal_evidence_allowed"] is not False or r["independent_reproduction_only"] is not True:
+                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL scientific boundary")
+              if r["safety"] != {"PAPER_ONLY": True, "LIVE_TRADING_ENABLED": False, "ORDERS_ENABLED": False, "AUTOMATIC_PROMOTION": False}:
+                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL safety")
+              if r["population"]["header_rows_failed"] != 0:
+                  raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL fetch failure")
+
+          primary = {r["primary_workflow_run_id"] for r in parsed}
+          attempts = {r["primary_workflow_run_attempt"] for r in parsed}
+          source_shas = {r["primary_source_sha"] for r in parsed}
+          if len(primary) != 1 or len(attempts) != 1 or len(source_shas) != 1:
+              raise SystemExit("Q121R6_WINDOWS_AGGREGATE=FAIL provenance disagreement")
+
+          out = {
+              "schema_version": "1.0",
+              "receipt_type": "q121r6_windows_independent_reproduction",
+              "status": "Q121R6_WINDOWS_INDEPENDENT_REPRODUCTION_COMPLETED",
+              "independent_reproduction_only": True,
+              "formal_evidence_allowed": False,
+              "primary_workflow_run_id": next(iter(primary)),
+              "primary_workflow_run_attempt": next(iter(attempts)),
+              "primary_source_sha": next(iter(source_shas)),
+              "independent_workflow_run_id": int(os.environ["GITHUB_RUN_ID"]),
+              "independent_workflow_run_attempt": int(os.environ["GITHUB_RUN_ATTEMPT"]),
+              "runners": [r["runner_name"] for r in parsed],
+              "shards": [{"shard_index": r["shard_index"], "population": r["population"], "target_subject_population": r["target_subject_population"], "interpretation": r["interpretation"], "source_result_receipt_fingerprint": r["source_result_receipt_fingerprint"]} for r in sorted(parsed, key=lambda x: x["shard_index"])],
+              "scientific_boundary": {"performance": False, "holdout_selection": False, "ranking": False, "parameter_search": False, "threshold_search": False, "horizon_search": False, "asset_search": False, "variant_search": False, "promotion": False, "live_execution": False},
+              "safety": {"PAPER_ONLY": True, "LIVE_TRADING_ENABLED": False, "ORDERS_ENABLED": False, "AUTOMATIC_PROMOTION": False},
+          }
+          out["receipt_fingerprint"] = hashlib.sha256(json.dumps(out, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+          Path("q121r6-windows-independent.json").write_text(json.dumps(out, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+          PY
+          git init -q
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=1 origin master
+          python automation/github_contents_publish.py --repository "${GITHUB_REPOSITORY}" --branch master --base-sha "$(git rev-parse origin/master)" --file "research/evidence/q121r6_windows_independent_reproduction_${GITHUB_RUN_ID}.json=q121r6-windows-independent.json"
+      
+      - name: Upload aggregate independent reproduction receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q121r6-windows-independent-${{ github.run_id }}-${{ github.run_attempt }}
+          path: q121r6-windows-independent.json
+          if-no-files-found: error
+          retention-days: 30
