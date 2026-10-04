@@ -25,6 +25,7 @@
   "orchestration_policy": {
     "principle": "available + independent + permitted + useful => execute",
     "avoid_duplicate_running_work": true,
+    "completed_round_chaining": "allowed_and_preferred_when_receipt_defined_next_gate_is_ready",
     "no_artificial_quota_consumption": true,
     "scientific_decision_authority": "orchestrator + formal governance, never delegated AI",
     "worker_role": "bounded engineering/QA/reproduction/review only",
