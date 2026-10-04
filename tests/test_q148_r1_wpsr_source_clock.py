@@ -3,6 +3,7 @@ from automation.q148_r1_wpsr_source_clock import (
     normalize_label,
     parse_table4_row,
     holiday_schedule_row_present,
+    revision_notice_markers,
     CONTROLS,
 )
 
@@ -71,3 +72,23 @@ def test_holiday_schedule_row_mutation_fails_closed():
     </table>
     """
     assert holiday_schedule_row_present(body) is False
+
+def test_revision_notice_markers_accept_current_eia_prose_variants():
+    body = b"""
+    <p>August 28, 2026</p>
+    <p>On Wednesday, August 26, we published the full set of Weekly Petroleum Status Report (WPSR) data and WPSR summary text at 10:30 a.m.</p>
+    <p>We updated the text to accurately reflect the data at 12:13 p.m. on August 26.</p>
+    <p>Only the text of the summary was erroneous, not the data tables.</p>
+    """
+    assert all(revision_notice_markers(body).values())
+
+
+def test_revision_notice_mutation_fails_closed():
+    body = b"""
+    <p>August 28, 2026</p>
+    <p>On Wednesday, August 26, we published the full set of Weekly Petroleum Status Report (WPSR) data and WPSR summary text at 10:30 a.m.</p>
+    <p>We updated the text at 12:14 p.m. on August 26.</p>
+    <p>Only the text of the summary was erroneous, not the data tables.</p>
+    """
+    markers = revision_notice_markers(body)
+    assert markers["summary_text_updated_at_1213"] is False
