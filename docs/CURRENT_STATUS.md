@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `31b2b77c4269a64691fca15d8b7d566876474f10`
+**Current operational snapshot:** `165cb47cf49ae16c7229ec96e78e995d8bd38bf3`
 
-**Generated (UTC):** `2026-10-04T13:50:16.820945+00:00`
+**Generated (UTC):** `2026-10-04T13:50:54.955611+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -182,7 +182,7 @@ Q070 is the fresh symbol-disjoint validation pipeline for the fixed Q069 OHLCV c
 - Deterministic research stays on reproducible runner paths.
 - Agent output is never scientific evidence by itself.
 - Protected Copilot reserve starts **2026-10-01T00:00:00Z**: at most 4 sessions/month, 30 AI credits/session, 1 concurrent session; actual entitlement is verified at dispatch and no paid fallback/overage is permitted.
-- Permanent research continuity uses the two self-hosted Windows lanes every 30 minutes, free-AI rotation every 6 hours when authenticated, always-routable S10/Android utility capacity, and bounded agent dispatch every 2 hours. Hosted research failover is manual-only.
+- Permanent research continuity uses the two self-hosted Windows lanes every 30 minutes, event-driven free-AI review only when a new high-value task contract or material research-state change warrants it, always-routable S10/Android utility capacity, and bounded agent dispatch every 2 hours. Hosted research failover is manual-only.
 
 ## Safety
 
