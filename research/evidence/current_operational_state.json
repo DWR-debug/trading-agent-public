@@ -988,7 +988,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T16:03:19.851080+00:00",
+  "generated_at_utc": "2026-10-04T16:30:54.291927+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2283,14 +2283,6 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
-        "headRefName": "research/q193-q196-deep-frontier-2026-10-04",
-        "number": 1043,
-        "title": "RESEARCH: Q193-Q196 deep literature frontier and source gate",
-        "updatedAt": "2026-10-04T16:02:08Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1043"
-      },
-      {
-        "baseRefName": "master",
         "headRefName": "research/q182-ferc-access-probe-current-master-2026-10-04",
         "number": 1039,
         "title": "RESEARCH: refresh Q182 FERC self-hosted access probe on current master",
@@ -2300,44 +2292,44 @@
     ],
     "recent_commits": [
       {
-        "message": "RESEARCH: Q182 FERC self-hosted access probe",
-        "sha": "c5f453e96eb5ba6e797d6ed887f618e9fc9c4b9b",
-        "timestamp": "2026-10-04T18:03:05+02:00"
+        "message": "Merge pull request #1046 from DWR-debug/ops/capacity-utilization-research-pulses-2026-10-04",
+        "sha": "07b3fa39b73203fa99eae3968bb393fd0e362e5b",
+        "timestamp": "2026-10-04T18:30:42+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ad13bf9a436b5b24c5b99539cc3158c2207336ca",
-        "timestamp": "2026-10-04T15:35:54Z"
+        "message": "FIX: apply frontier step-8 ordering only to rotating lane",
+        "sha": "060470717887ddd6fdfdb910b89c19a0c588aed2",
+        "timestamp": "2026-10-04T18:23:29+02:00"
       },
       {
-        "message": "RESEARCH: Q186 conservative citation visibility R3 on current master (#1040)",
-        "sha": "8e392f13715ac50eb316a04884a96d6904b371a6",
-        "timestamp": "2026-10-04T17:35:39+02:00"
+        "message": "OPS: record AI worker state",
+        "sha": "dba29103a8a26cc1259c6f922daea987fc3d96c5",
+        "timestamp": "2026-10-04T16:21:21Z"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "1f03e596e3cee3580f5262d4ba31c2e40e75ee8b",
-        "timestamp": "2026-10-04T15:23:14Z"
+        "sha": "80693d17f58e5dd879024cc8d9014345fdee799b",
+        "timestamp": "2026-10-04T16:21:02Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a9d33a3ff9a4f6fed81ac8a938e773f4a94954a0",
-        "timestamp": "2026-10-04T15:23:12Z"
+        "message": "RESEARCH: Q193-Q196 deep orthogonal frontier",
+        "sha": "26cf77e1212d412bf4df66e90ad8d73b2bc31ecd",
+        "timestamp": "2026-10-04T18:20:48+02:00"
       },
       {
-        "message": "FIX: restore Q188-Q192 PIT receipt publication permission",
-        "sha": "774c5dca7a037c7665975cb27fd78141c7ab31d4",
-        "timestamp": "2026-10-04T17:22:59+02:00"
+        "message": "FIX: keep non-frontier lane step ordering unchanged",
+        "sha": "3a84d9b01e8241de5f72b90a327c2dbb60cd47ab",
+        "timestamp": "2026-10-04T18:20:23+02:00"
       },
       {
-        "message": "OPS: update AI credit availability plan",
-        "sha": "7e1ff04f715c482b54d1465461e84eb60b7ed2ff",
-        "timestamp": "2026-10-04T15:18:29Z"
+        "message": "GOV: align OS state with increased Windows and S10 utilization",
+        "sha": "863f2b3162dba19a6a827f958740c6742f03f3f9",
+        "timestamp": "2026-10-04T18:18:48+02:00"
       },
       {
-        "message": "EVIDENCE: persist Q169 R4 independent reproduction receipt",
-        "sha": "b828c48d40a224e8ecfa63cb5914488c715bf6f4",
-        "timestamp": "2026-10-04T15:18:27Z"
+        "message": "GOV: make S10 mechanical QA the durable default",
+        "sha": "a86a686a5c674712fa7605510d79fc7117b76a5b",
+        "timestamp": "2026-10-04T18:18:45+02:00"
       }
     ]
   },
@@ -2407,7 +2399,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c5f453e96eb5ba6e797d6ed887f618e9fc9c4b9b",
+  "source_master_sha": "07b3fa39b73203fa99eae3968bb393fd0e362e5b",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2521,6 +2513,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37215321856"
+    "run_id": "37217035522"
   }
 }
