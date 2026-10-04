@@ -52,3 +52,24 @@ def test_source_boundary_is_non_authorizing():
     assert d["scientific_boundary"]["promotion"] is False
     assert d["safety"]["paper_only"] is True
     assert d["safety"]["live_trading_enabled"] is False
+
+
+def test_parser_accepts_raw_html_source():
+    html = """
+    <html><body>
+    <h1>01/10/2020 Public Inspection Issue</h1>
+    <h2>Special Filing</h2>
+    <p>Filed on: 01/10/2020 at 4:15 pm</p>
+    <p>Scheduled Pub. Date: 01/13/2020</p>
+    <h2>Regular Filing</h2>
+    <p>Filed on: 01/10/2020 at 8:45 am</p>
+    <p>Scheduled Pub. Date: 01/13/2020</p>
+    </body></html>
+    """
+    d = parse_public_inspection(html)
+    assert d["page_date"] == "2020-01-10"
+    assert d["regular_or_special_sections_present"]["regular"] is True
+    assert d["regular_or_special_sections_present"]["special"] is True
+    assert d["filing_records"] == 2
+    assert d["records_with_filed_timestamp"] == 2
+    assert d["records_with_scheduled_publication_date"] == 2
