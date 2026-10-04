@@ -15,8 +15,8 @@ def test_all_default_candidate_inventories_match_gate_schema():
             assert not missing,(c["id"],missing)
             assert "core_hypothesis" not in c,c["id"]
             candidates.append(c)
-    assert len(candidates)==73
-    assert len({c["id"] for c in candidates})==73
+    assert len(candidates)==75
+    assert len({c["id"] for c in candidates})==75
 
 def test_frontier_candidate_contract_contains_no_authorizing_fields():
     forbidden={"performance","return","returns","pnl","drawdown","winner","selected","promotion","parameter_search","threshold_search","horizon_search","asset_search","candidate_selection","family_ranking"}
