@@ -64,3 +64,9 @@ def test_q187_uses_documented_transaction_post_probe():
     assert '"Action Date"' in text
     assert '"Transaction Amount"' in text
     assert '"required_keys_present"' in text
+
+
+def test_q187_transaction_probe_has_required_award_type_filter():
+    text = (ROOT / "automation/q187_q192_source_feasibility.py").read_text(encoding="utf-8")
+    assert '"award_type_codes": ["A", "B", "C", "D"]' in text
+    assert '"sort": "Transaction Amount"' in text
