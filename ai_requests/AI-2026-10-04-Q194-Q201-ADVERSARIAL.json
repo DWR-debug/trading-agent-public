@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-10-04-Q194-Q201-ADVERSARIAL",
+  "providers": ["openrouter_free"],
+  "scope": "Independent adversarial review of the fixed orthogonal candidate contracts Q194/Q195/Q196/Q197/Q199/Q201 and their current source/PIT gates.",
+  "prompt": "Review research/candidates/orthogonal_candidate_specs_2026-10-04.json plus the current Q193-Q201 design/source receipts referenced by docs/CURRENT_STATUS.md. Attack mechanism distinctness, public-observation clocks, revision/amendment lineage, frozen entity mapping, overlap/confounding, and the proposed cheap falsifiers. Identify which gates are most likely to fail and what deterministic evidence would be needed before formal PIT. Do not inspect returns or holdouts, rank candidates, choose assets, tune parameters/thresholds/horizons, change gates, authorize performance, promote, or execute live trading. Treat all candidate contracts as frozen. Return disagreements and uncertainty explicitly, then a compact action handoff.",
+  "max_runtime_minutes": 15,
+  "allow_workspace_writes": false,
+  "deterministic_compute": false,
+  "holdout_selection": false,
+  "parameter_selection": false,
+  "asset_selection": false,
+  "threshold_selection": false,
+  "horizon_selection": false,
+  "research_gate_changes": false,
+  "promotion_decision": false,
+  "live_execution": false,
+  "paid_usage": false,
+  "research_decision": false
+}
