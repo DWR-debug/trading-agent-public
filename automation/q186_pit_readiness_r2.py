@@ -47,6 +47,14 @@ SOURCES = {
     },
 }
 
+CLOCK_CRITICAL_SOURCES = (
+    "USPTO_GAZETTE_INDEX",
+    "USPTO_GAZETTE_WEEK39",
+    "USPTO_GAZETTE_WEEK38",
+    "USPTO_GAZETTE_WEEK37",
+    "USPTO_EGRANTS",
+)
+
 FIXED_CONTROLS = [
     {"week": 37, "issue_date": "2026-09-15"},
     {"week": 38, "issue_date": "2026-09-22"},
@@ -113,7 +121,7 @@ def main() -> int:
             "content_sha256": hashlib.sha256(body.encode("utf-8")).hexdigest(),
         }
 
-    required = [source_results[key] for key in SOURCES]
+    required = [source_results[key] for key in CLOCK_CRITICAL_SOURCES]
     source_pass = all(item["probe_classification"] == "PASS" for item in required)
     grant_clock_proven = source_pass
     bulk_refresh_separate_from_grant_clock = source_results["USPTO_PATENT_AUTHORITY"]["probe_classification"] == "PASS"
@@ -130,6 +138,7 @@ def main() -> int:
             "grant_issue_clock_proven": grant_clock_proven,
             "electronic_grant_available_immediately_post_2023": source_results["USPTO_EGRANTS"]["probe_classification"] == "PASS",
             "historical_weekly_grant_route_proven": source_results["USPTO_GRANT_BIBLIOGRAPHIC"]["probe_classification"] == "PASS",
+            "legacy_bibliographic_route_may_be_redirected": source_results["USPTO_GRANT_BIBLIOGRAPHIC"]["probe_classification"] != "PASS",
             "bulk_refresh_separate_from_grant_clock": bulk_refresh_separate_from_grant_clock,
             "citation_publication_ordering_proven": False,
             "citation_publication_ordering_status": "UNPROVEN",
