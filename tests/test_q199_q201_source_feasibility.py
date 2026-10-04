@@ -23,6 +23,17 @@ def test_source_gate_never_reads_returns_or_authorizes_performance():
     for marker in ('DISCOVERY_SOURCE_FEASIBILITY_COMPLETED','performance','holdout_selection','parameter_search','live_execution'): assert marker in s
     assert 'return' not in s.lower() or 'return ' in s.lower()
 
+def test_q201_uses_proven_clinicaltrials_public_clock_fields():
+    s = (ROOT / "automation/q199_q201_source_feasibility.py").read_text(encoding="utf-8")
+    assert "https://clinicaltrials.gov/api/v2/studies/NCT00125528" in s
+    for marker in (
+        "studyFirstPostDateStruct",
+        "lastUpdatePostDateStruct",
+        "resultsFirstPostDateStruct",
+    ):
+        assert marker in s
+
+
 def test_workflow_is_bounded_and_non_authorizing():
     s=(ROOT/'.github/workflows/q199-q201-source-feasibility.yml').read_text(encoding='utf-8')
     assert 'runs-on: ubuntu-24.04' in s
