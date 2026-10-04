@@ -136,7 +136,14 @@ jobs:
           PY
 
           export PUBLISH_MESSAGE='OPS: synchronize current operational status'
-          python -m automation.github_contents_publish --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$source_master_sha" --file docs/CURRENT_STATUS.md=docs/CURRENT_STATUS.md --file research/evidence/current_operational_state.json=research/evidence/current_operational_state.json
+          publish_args=(
+            --repository "$GITHUB_REPOSITORY"
+            --branch master
+            --base-sha "$source_master_sha"
+            --file "docs/CURRENT_STATUS.md=docs/CURRENT_STATUS.md"
+            --file "research/evidence/current_operational_state.json=research/evidence/current_operational_state.json"
+          )
+          python -m automation.github_contents_publish "${publish_args[@]}"
 
           echo "CURRENT_STATUS_SYNC_PUBLISH_OK"
 
