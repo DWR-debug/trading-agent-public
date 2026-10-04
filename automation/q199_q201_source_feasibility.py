@@ -19,10 +19,13 @@ PROBES = {
     },
     "CLINICALTRIALS_RESULTS": {
         "urls": [
-            "https://clinicaltrials.gov/data-api",
-            "https://clinicaltrials.gov/api/v2/studies?pageSize=1"
+            "https://clinicaltrials.gov/api/v2/studies/NCT00125528"
         ],
-        "markers": ["Results first posted", "Results first submitted", "ClinicalTrials.gov"]
+        "markers": [
+            "studyFirstPostDateStruct",
+            "lastUpdatePostDateStruct",
+            "resultsFirstPostDateStruct"
+        ]
     }
 }
 
