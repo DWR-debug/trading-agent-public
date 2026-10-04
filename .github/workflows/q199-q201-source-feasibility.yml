@@ -1,0 +1,82 @@
+name: Q199-Q201 Source Feasibility
+
+on:
+  schedule:
+    - cron: "23 */6 * * *"
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "automation/q199_q201_source_feasibility.py"
+      - "research/frontier/q199_q201_candidate_wave_2026_10_04.json"
+      - "docs/research_design/Q199_Q201_DEEP_LITERATURE_AND_CANDIDATE_WAVE_2026-10-04.md"
+      - ".github/workflows/q199-q201-source-feasibility.yml"
+      - "tests/test_q199_q201_source_feasibility.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-q199-q201-source-feasibility
+  cancel-in-progress: true
+
+jobs:
+  source_feasibility:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: \${{ github.sha }}
+          fetch-depth: 1
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Run bounded source probes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/runs/q199_q201_source_feasibility
+          python -m automation.q199_q201_source_feasibility --output research/runs/q199_q201_source_feasibility/\${GITHUB_RUN_ID}.json
+      - name: Validate non-authorizing boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path('research/runs/q199_q201_source_feasibility')/f"\${os.environ['GITHUB_RUN_ID']}.json"
+          d=json.loads(p.read_text(encoding='utf-8'))
+          assert d['status']=='DISCOVERY_SOURCE_FEASIBILITY_COMPLETED'
+          assert len(d['candidate_results'])==2
+          assert all(v is False for v in d['scientific_boundary'].values())
+          assert d['synthetic_mutation_checks']['future_row_prefix_invariant'] is True
+          assert d['synthetic_mutation_checks']['future_reordering_cannot_change_prefix'] is True
+          assert d['safety']['paper_only'] is True
+          assert d['safety']['live_trading_enabled'] is False
+          assert d['safety']['orders_enabled'] is False
+          assert d['safety']['automatic_promotion'] is False
+          print('Q199_Q201_SOURCE_FEASIBILITY_OK')
+          PY
+      - name: Persist latest receipt
+        if: success()
+        env:
+          GH_TOKEN: \${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          input=research/runs/q199_q201_source_feasibility/\${GITHUB_RUN_ID}.json
+          latest=research/evidence/q199_q201_source_feasibility_latest.json
+          cp "$input" "$latest"
+          python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$GITHUB_SHA" --file "$latest=$latest"
+      - name: Upload receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q199-q201-source-feasibility-\${{ github.run_id }}-\${{ github.run_attempt }}
+          path: research/runs/q199_q201_source_feasibility/
+          if-no-files-found: error
+          retention-days: 30
