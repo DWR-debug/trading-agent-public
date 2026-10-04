@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T18:29:17.936080+00:00",
+  "generated_at_utc": "2026-10-04T18:32:54.574084+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2504,6 +2504,22 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "fix/s10-pytest-environment-2026-10-04",
+        "number": 1067,
+        "title": "FIX: install pytest in S10 mechanical QA environment",
+        "updatedAt": "2026-10-04T18:31:51Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1067"
+      },
+      {
+        "baseRefName": "master",
+        "headRefName": "fix/q193-shellcheck-2026-10-04",
+        "number": 1066,
+        "title": "FIX: quote Q193 deterministic receipt path",
+        "updatedAt": "2026-10-04T18:31:00Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1066"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "fix/workflow-lint-2026-10-04",
         "number": 1056,
         "title": "FIX: restore clean workflow lint across research orchestration",
@@ -2512,6 +2528,21 @@
       }
     ],
     "recent_commits": [
+      {
+        "message": "FIX: install pytest for Q198 PIT census workflow",
+        "sha": "6ed118c1cc7203b8617203bb75ccf3ed502fc303",
+        "timestamp": "2026-10-04T20:32:44+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "193db9cd54f3b7dee46f54343a17f735f0a94bdc",
+        "timestamp": "2026-10-04T18:30:49Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4bb8fc58052aeecaaa9a4e00f8d56d8b6b3e61e1",
+        "timestamp": "2026-10-04T18:29:20Z"
+      },
       {
         "message": "RESEARCH: add Q198 historical Public Inspection PIT census",
         "sha": "c5e4cbfac6de7e6f25965d7fe3497c0ddcf190c9",
@@ -2536,21 +2567,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "d99b166ce3bc7bb04dd17613480e6c822c2f2a21",
         "timestamp": "2026-10-04T18:23:38Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d43444ac01830d78230d5a039de4892a0927984a",
-        "timestamp": "2026-10-04T18:23:36Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "aac283167bffb619f04a881549dfe36e8a7380f7",
-        "timestamp": "2026-10-04T18:23:33Z"
-      },
-      {
-        "message": "OPS: record Groq API key smoke test",
-        "sha": "93ab6d76b06544ed3a7958475df6be11621f8720",
-        "timestamp": "2026-10-04T18:23:30Z"
       }
     ]
   },
@@ -2635,7 +2651,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c5e4cbfac6de7e6f25965d7fe3497c0ddcf190c9",
+  "source_master_sha": "6ed118c1cc7203b8617203bb75ccf3ed502fc303",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2749,6 +2765,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37224615168"
+    "run_id": "37224849531"
   }
 }
