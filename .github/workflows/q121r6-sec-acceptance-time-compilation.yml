@@ -22,13 +22,8 @@ permissions:
 # Push-triggered and one-shot issue-comment runs are isolated from each other.
 # Duplicate owner issue-comment requests collapse to the newest request.
 concurrency:
-  group: >-
-    q121r6-sec-acceptance-time-compilation-${{
-      github.event_name == 'push' && github.sha ||
-      github.event_name == 'issue_comment' && github.event.issue.number ||
-      github.run_id
-    }}
-  cancel-in-progress: ${{ github.event_name == 'push' }}
+  group: q121r6-sec-acceptance-time-compilation
+  cancel-in-progress: true
 
 jobs:
   prepare:
