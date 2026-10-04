@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T22:00:04.128900+00:00",
+  "generated_at_utc": "2026-10-04T22:00:35.812021+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -3522,6 +3522,36 @@
     ],
     "recent_commits": [
       {
+        "message": "OPS: record AI worker state",
+        "sha": "5eab507f68bbda89978b1c1d0003b7aa3621329c",
+        "timestamp": "2026-10-04T22:00:25Z"
+      },
+      {
+        "message": "TEST: require candidate-spec hash binding in timing receipt",
+        "sha": "bf842542876d8a4e3746482119af1173f6b705c7",
+        "timestamp": "2026-10-05T00:00:21+02:00"
+      },
+      {
+        "message": "GOV: bind Q202-Q204 feasibility receipt to candidate contract hash",
+        "sha": "382aa87fa78ee0c7915d6238e0cdb28ead03349a",
+        "timestamp": "2026-10-05T00:00:14+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "02b4fd0f7e24213e5dbccd8349714c9a5ba90d39",
+        "timestamp": "2026-10-04T22:00:12Z"
+      },
+      {
+        "message": "OPS: record Groq free adversarial worker state",
+        "sha": "c285d5066e78aa4a08ac65fcf417bd81e9d3aef4",
+        "timestamp": "2026-10-04T22:00:07Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "21e79cf28e971aa7b658bf8f4e9c1141a153a893",
+        "timestamp": "2026-10-04T22:00:04Z"
+      },
+      {
         "message": "GOV: consume Q202-Q204 source receipts in next-gate compiler",
         "sha": "9824758b092a20fbfa5434ec1410f578b9ff5850",
         "timestamp": "2026-10-04T23:59:53+02:00"
@@ -3530,36 +3560,6 @@
         "message": "OPS: record AI worker state",
         "sha": "f8e2d02fbc8b3575202d3a4b0686e9bcc8a2c19e",
         "timestamp": "2026-10-04T21:59:33Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "47c1f25b7719536493b20873a7d1b61ef5f4b60d",
-        "timestamp": "2026-10-04T21:59:26Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0306a447046f58bf4f6a383487c72edfce4dd88a",
-        "timestamp": "2026-10-04T21:59:11Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "358703398a4e54a18f6ea114167656504d5d27d7",
-        "timestamp": "2026-10-04T21:59:08Z"
-      },
-      {
-        "message": "OPS: record Groq free adversarial worker state",
-        "sha": "175e8f316c2213c20df11810594a16e64a6f4ae6",
-        "timestamp": "2026-10-04T21:59:06Z"
-      },
-      {
-        "message": "TEST: enforce source-first Q202-Q204 next-gate compilation",
-        "sha": "a8134222418b6662c3b0b27d040b1d04ff36ef1c",
-        "timestamp": "2026-10-04T23:58:54+02:00"
-      },
-      {
-        "message": "OPS: record Groq free adversarial worker state",
-        "sha": "b3ade93581492e5e46dbefdb411766cb933bd4fa",
-        "timestamp": "2026-10-04T21:58:53Z"
       }
     ]
   },
@@ -3644,7 +3644,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9824758b092a20fbfa5434ec1410f578b9ff5850",
+  "source_master_sha": "5eab507f68bbda89978b1c1d0003b7aa3621329c",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -3758,6 +3758,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37238292565"
+    "run_id": "37238324121"
   }
 }
