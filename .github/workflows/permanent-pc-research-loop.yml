@@ -23,7 +23,8 @@ permissions:
   contents: write
 
 concurrency:
-  group: trading-agent-permanent-pc-loop-v3
+  # Background PC work yields to an explicit long independent reproduction.
+  group: trading-agent-windows-research-capacity-v1
   cancel-in-progress: false
 
 jobs:

@@ -191,13 +191,59 @@ jobs:
       - name: Reserve protected Copilot Free session
         id: copilot_budget
         if: steps.release.outputs.eligible == 'true' && steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true'
+        continue-on-error: true
         uses: ./.github/actions/copilot-free-gate
         with:
           github-token: ${{ github.token }}
 
+      - name: Reconcile Copilot budget gate result
+        id: copilot_budget_reconcile
+        if: steps.copilot_budget.outcome == 'failure'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if gh api --silent "/repos/${GITHUB_REPOSITORY}/contents/ops/copilot_free_budget_state.json?ref=master" > "${RUNNER_TEMP}/copilot_budget_state.json"; then
+            python - <<'PY'
+          import base64, json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          payload = json.loads(Path(os.environ["RUNNER_TEMP"], "copilot_budget_state.json").read_text(encoding="utf-8"))
+          state = json.loads(base64.b64decode(payload["content"]).decode("utf-8"))
+          month = datetime.now(timezone.utc).strftime("%Y-%m")
+          used = int(state.get("reserved_sessions", 0)) if state.get("month") == month else 0
+          limit = int(state.get("max_reserved_sessions", 4))
+          if used >= limit:
+              print(f"COPILOT_FREE_GATE_RECONCILE=EXHAUSTED {used}/{limit}")
+              Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8").write("status=exhausted\n")
+          else:
+              print(f"COPILOT_FREE_GATE_RECONCILE=ERROR state not exhausted ({used}/{limit})")
+              Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8").write("status=error\n")
+          PY
+          else
+            echo "status=error" >> "${GITHUB_OUTPUT}"
+            echo "COPILOT_FREE_GATE_RECONCILE=ERROR unable to read budget state"
+            exit 0
+          fi
+
+      - name: Stop on unreconciled Copilot gate error
+        if: steps.copilot_budget_reconcile.outputs.status == 'error'
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Copilot Free gate failed and the protected budget is not provably exhausted; fail closed."
+          exit 1
+
+      - name: Report exhausted Copilot Free budget
+        if: steps.copilot_budget_reconcile.outputs.status == 'exhausted'
+        shell: bash
+        run: |
+          gh api --method POST "/repos/${GITHUB_REPOSITORY}/issues/${{ steps.request.outputs.issue_number }}/comments"             -f body="Agent queue paused: protected Copilot Free budget is exhausted for the current month. No Copilot request was sent."
+
       - name: Run bounded Copilot CLI
         id: copilot_cli
-        if: steps.release.outputs.eligible == 'true' && steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true'
+        if: steps.release.outputs.eligible == 'true' && steps.request.outputs.run == 'true' && steps.branch.outputs.skip != 'true' && steps.copilot_token.outputs.configured == 'true' && steps.copilot_budget.outcome == 'success'
         shell: bash
         env:
           COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
