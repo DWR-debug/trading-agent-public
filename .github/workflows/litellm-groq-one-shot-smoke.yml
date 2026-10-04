@@ -120,9 +120,19 @@ jobs:
               encoding="utf-8",
           )
           PY
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add ops/litellm_groq_smoke_receipt.json
-          git diff --cached --quiet && exit 0
-          git commit -m "OPS: record Groq LiteLLM smoke receipt"
-          git push origin HEAD:master
+          payload="$(base64 -w 0 ops/litellm_groq_smoke_receipt.json)"
+          for attempt in 1 2 3 4 5; do
+            current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/contents/ops/litellm_groq_smoke_receipt.json?ref=master" --jq '.sha' 2>/dev/null || true)"
+            if [ -n "$current_sha" ]; then
+              if gh api --method PUT "/repos/$GITHUB_REPOSITORY/contents/ops/litellm_groq_smoke_receipt.json"                 -f message='OPS: record Groq LiteLLM smoke receipt'                 -f content="$payload" -f branch='master' -f sha="$current_sha" >/dev/null; then
+                exit 0
+              fi
+            else
+              if gh api --method PUT "/repos/$GITHUB_REPOSITORY/contents/ops/litellm_groq_smoke_receipt.json"                 -f message='OPS: record Groq LiteLLM smoke receipt'                 -f content="$payload" -f branch='master' >/dev/null; then
+                exit 0
+              fi
+            fi
+            sleep 2
+          done
+          echo 'Unable to publish LiteLLM smoke receipt after retries.' >&2
+          exit 1
