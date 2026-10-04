@@ -244,7 +244,8 @@ def test_openrouter_is_event_driven_and_gemini_mistral_manual_only():
     assert "/ 21600 % 6" in text
     assert "AI-2026-09-30-Q102-REGIME-STATE-DESIGN" in text
     assert "research/evidence/q187_q192_source_feasibility_latest.json" in text
-    assert "matrix.task == github.event.inputs.task_id" in text
+    assert "fromJSON(needs.plan_openrouter.outputs.tasks)" in text
+    assert "github.event.inputs.task_id" in text
     assert "trading-agent-ai-openrouter-" in text
     assert "AI-2026-10-04-Q187-Q192-ADVERSARIAL" in text
 
