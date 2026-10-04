@@ -21,6 +21,11 @@ def test_current_frontier_candidates_pass_structural_robustness_gate():
         ROOT / "research/frontier/q109_candidate_wave_2026_10_01.json",
         ROOT / "research/frontier/q123_candidate_wave_2026_10_02.json",
         ROOT / "research/frontier/q126_q132_candidate_wave_2026_10_03.json",
+        ROOT / "research/frontier/q133_q145_candidate_wave_2026_10_03.json",
+        ROOT / "research/frontier/q146_q151_candidate_wave_2026_10_03.json",
+        ROOT / "research/frontier/q152_q165_candidate_wave_2026_10_03.json",
+        ROOT / "research/frontier/q166_q170_candidate_wave_2026_10_03.json",
+        ROOT / "research/frontier/q171_q178_candidate_wave_2026_10_03.json",
     ]
     receipt = compile_receipt(paths, "research/runs/self_hosted/pre_formal_candidate_robustness.json")
     assert receipt["status"] == "PRE_FORMAL_ROBUSTNESS_COMPLETED"

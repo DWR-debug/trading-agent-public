@@ -95,7 +95,7 @@ def _bundle()->dict[str,Any]:
     return {"filings":filings,"transitions":transitions,"before":before,"after":after}
 
 def synthetic_bundle()->dict[str,bool]:
-    b=_bundle(); return {"before_amendment_original":b["before"]["filing_state"]["filing_accession"].endswith("000001"),"after_amendment_later":b["after"]["filing_state"]["filing_accession"].endswith("000002"),"amendment_boundary_changes_state":b["before"]["filing_state"]["accrual_state"]=="POSITIVE_ACCRUAL" and b["after"]["filing_state"]["accrual_state"]=="NEGATIVE_ACCRUAL","institutional_state_positive":b["after"]["institutional_state"]["state"]=="POSITIVE_INSTITUTIONAL_DEMAND","future_transition_excluded":b["after"]["institutional_state"]["eligible_transition_count"]==2}
+    b=_bundle(); return {"before_amendment_original":b["before"]["filing_state"]["filing_accession"].endswith("000001"),"after_amendment_later":b["after"]["filing_state"]["filing_accession"].endswith("000002"),"amendment_boundary_changes_state":b["before"]["filing_state"]["accrual_state"]=="POSITIVE_ACCRUAL" and b["after"]["filing_state"]["accrual_state"]=="NEGATIVE_ACCRUAL","institutional_state_positive":b["after"]["institutional_state"]["state"]=="POSITIVE_INSTITUTIONAL_DEMAND","future_transition_excluded":b["after"]["institutional_state"]["eligible_transition_count"]==3}
 
 def mutation_tests(bundle:dict[str,Any])->dict[str,bool]:
     filings,transitions=bundle["filings"],bundle["transitions"]; cutoff=parse_utc("2025-05-04T00:00:00Z"); base=compile_issuer_state(filings,transitions,symbol="SPGI",cutoff=cutoff)
