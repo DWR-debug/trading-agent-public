@@ -1,7 +1,6 @@
-name: Q199-Q201 Source Feasibility
-
 on:
-  pull_request:
+  push:
+    branches: [master, "research/q199-q201-source-feasibility-2026-10-04"]
     paths:
       - "automation/q199_q201_source_feasibility.py"
       - "research/frontier/q199_q201_candidate_wave_2026_10_04.json"
@@ -69,7 +68,7 @@ jobs:
           print('Q199_Q201_SOURCE_FEASIBILITY_OK')
           PY
       - name: Persist latest receipt
-        if: success() && github.event_name != 'pull_request'
+        if: success() && github.ref == 'refs/heads/master'
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
