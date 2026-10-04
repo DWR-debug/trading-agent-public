@@ -749,6 +749,440 @@
         "Q204"
       ],
       "note": "Literature-derived orthogonal candidates covering delayed mandatory disclosure, procurement-to-financing transmission, and public information arrival latency. Discovery/source feasibility only; historical PIT, performance, promotion and live execution remain closed."
+    },
+    {
+      "code": "Q205",
+      "class": "nlrb_labor_representation_certification_shock",
+      "state": "SOURCE_FEASIBILITY_COMPLETED_PIT_READINESS_PENDING",
+      "parent_code": "FRONTIER-Q202-Q204",
+      "issue_number": 1074,
+      "candidate_inventory_path": "research/frontier/q205_nlrb_union_certification_candidate_2026_10_05.json",
+      "design_document": "docs/research_design/Q205_NLRB_UNION_CERTIFICATION_2026-10-05.md",
+      "source_feasibility_workflow": ".github/workflows/q205-nlrb-source-feasibility.yml",
+      "source_feasibility_receipt": "research/evidence/q205_nlrb_source_feasibility_latest.json",
+      "source_receipt_fingerprint": "11a67dea4117e8f555cbd23f0bac566302759ae50d8c094b897898cbcb094e06",
+      "performance_authorization_allowed": false,
+      "note": "Official NLRB recent-results, election-report and historical-pagination routes returned HTTP 200. Historical completeness, exact public-observation clock, employer-to-issuer mapping and immutable historical PIT remain unproven.",
+      "next_gate": "historical NLRB archive completeness + public-clock semantics + frozen employer-to-issuer mapping + case-status lineage + independent PIT reproduction"
     }
-  ]
+  ],
+  "active_research_registry": {
+    "active_design_families": [
+      {
+        "code": "084",
+        "class": "market_state_and_earnings",
+        "issue_number": 583,
+        "state": "FEASIBILITY_COMPLETE"
+      },
+      {
+        "code": "088",
+        "class": "textual_peer_network_and_rebalance_demand",
+        "issue_number": 588,
+        "state": "DESIGN_ONLY"
+      },
+      {
+        "code": "082",
+        "class": "sec_shareholder_experience",
+        "issue_number": 580,
+        "state": "DESIGN_ONLY"
+      },
+      {
+        "code": "FRONTIER-20260928",
+        "class": "unusual_alpha_frontier",
+        "issue_number": 591,
+        "state": "DESIGN_ONLY",
+        "document": "docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "104",
+        "class": "orthogonal_information_investor_demand_and_meta_state",
+        "issue_number": 739,
+        "state": "SOURCE_FEASIBILITY_AND_DOWNSTREAM_GATES_COMPLETED",
+        "preregistration_path": "research/preregistrations/q104_orthogonal_candidate_wave_2026_10_01.json",
+        "candidate_inventory_path": "research/frontier/q104_candidate_wave_2026_10_01.json",
+        "performance_authorization_allowed": false,
+        "source_receipt_path": "research/evidence/q104_source_feasibility_2026_10_01.json",
+        "candidate_contracts": {
+          "Q104:I19": {
+            "xbrl_concept_freeze": "research/preregistrations/q104_i19_xbrl_concept_freeze_2026_10_03.json",
+            "design_document": "docs/research_design/Q104_I19_EXACT_XBRL_CONCEPT_FREEZE_2026-10-03.md",
+            "performance_authorization_allowed": false,
+            "next_gate": "historical 13F archive/security completeness + concept-specific PIT compiler + independent reproduction"
+          }
+        }
+      },
+      {
+        "code": "105",
+        "class": "historical_archive_and_pit_feasibility_gate",
+        "issue_number": 740,
+        "state": "PIT_FEASIBILITY_COMPLETED",
+        "parent_code": "104",
+        "preregistration_path": "research/preregistrations/q105_q104_historical_pit_2026_10_01.json",
+        "performance_authorization_allowed": false,
+        "receipt_path": "research/evidence/q105_historical_pit_feasibility_2026_10_01.json"
+      },
+      {
+        "code": "106",
+        "class": "shared_sec_treasury_pit_join_integrity",
+        "issue_number": 741,
+        "state": "PIT_JOIN_STRUCTURAL_VALIDATION_COMPLETED_DUAL_ARCH",
+        "parent_code": "105",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "107",
+        "class": "q104_fresh_equity_coverage",
+        "issue_number": 742,
+        "state": "COVERAGE_COMPLETED",
+        "parent_code": "104",
+        "preregistration_path": "research/preregistrations/q107_q104_fresh_equity_coverage_2026_10_01.json",
+        "universe": "validation_2026_10_01_q104_sec_treasury_equities",
+        "performance_authorization_allowed": false,
+        "coverage_result_path": "research/evidence/q107_coverage_result.json",
+        "coverage_fingerprint": "18571a7871f72b8018905c10c289724bb5cf976ab7fa4f9f424599ddc727fbd2",
+        "snapshot_fingerprint": "c5eb39fcd802eb73c6c71d4bdbb0c0ec0f132db77c5c0a2c37b4ba1277edf036",
+        "common_calendar_count": 3704
+      },
+      {
+        "code": "108",
+        "class": "q104_sec_xbrl_13f_treasury_pit_integration",
+        "issue_number": 743,
+        "state": "PIT_INTEGRATION_COMPLETED_DUAL_ARCH",
+        "receipt_path": "research/evidence/q108_pit_integration_2026_10_01.json",
+        "receipt_fingerprint": "07dcc87087f6a762ecbddaab0298625fb1bf50123df48758fa5c9f6d56bdc8c3",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "109",
+        "class": "literature_driven_nport_text_risk_insider_ownership_frontier",
+        "issue_number": 744,
+        "state": "DESIGN_ONLY_ACTIVE",
+        "preregistration_path": "research/preregistrations/q109_literature_frontier_2026_10_01.json",
+        "candidate_inventory_path": "research/frontier/q109_candidate_wave_2026_10_01.json",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "110",
+        "class": "q109_nport_insider_ownership_source_feasibility",
+        "issue_number": 745,
+        "state": "SOURCE_FEASIBILITY_COMPLETED_DUAL_ARCH",
+        "parent_code": "109",
+        "preregistration_path": "research/preregistrations/q110_q109_source_feasibility_2026_10_01.json",
+        "performance_authorization_allowed": false,
+        "receipt_path": "research/evidence/q110_q109_source_feasibility_2026_10_01.json",
+        "receipt_fingerprint": "df1b127bb4faf887b1298a73a89819903efb3a8ab685f110349212759402fa7"
+      },
+      {
+        "code": "111",
+        "class": "deterministic_sec_security_identity_contract",
+        "state": "STRUCTURAL_CONTRACT_COMPLETED_DUAL_ARCH",
+        "parent_code": "109",
+        "issue_number": 746,
+        "preregistration_path": "research/preregistrations/q111_sec_security_identity_2026_10_01.json",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "112",
+        "class": "live_sec_security_identity_13f_nport_form4_feasibility",
+        "state": "LIVE_SOURCE_FEASIBILITY_COMPLETED_DUAL_ARCH",
+        "parent_code": "111",
+        "issue_number": 747,
+        "preregistration_path": "research/preregistrations/q112_sec_security_identity_2026_10_01.json",
+        "performance_authorization_allowed": false,
+        "receipt_fingerprint": "679b99b393038d82fc3800d1d4abb0af01e6ff6c7aaace83748ae31500c86bd1"
+      },
+      {
+        "code": "113",
+        "class": "fixed_quarter_13f_manager_security_coverage_on_q107_universe",
+        "state": "13F_COVERAGE_COMPLETED",
+        "parent_code": "112",
+        "issue_number": 748,
+        "preregistration_path": "research/preregistrations/q113_13f_q107_coverage_2026_10_01.json",
+        "performance_authorization_allowed": false,
+        "receipt_path": "research/evidence/q113_13f_q107_coverage_result.json",
+        "receipt_fingerprint": "29da4de843641e4ac5760fdaaeb4833776ca7220842274234bf64236d2ecb19e"
+      },
+      {
+        "code": "114",
+        "class": "deterministic_13f_manager_position_transition_compiler",
+        "state": "STRUCTURAL_COMPILER_COMPLETED_DUAL_ARCH",
+        "parent_code": "113",
+        "issue_number": 749,
+        "preregistration_path": "research/preregistrations/q114_13f_manager_transitions_2026_10_01.json",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "115",
+        "class": "deterministic_treasury_auction_demand_state_compiler",
+        "state": "STRUCTURAL_COMPILER_COMPLETED_DUAL_ARCH",
+        "parent_code": "104",
+        "issue_number": 750,
+        "preregistration_path": "research/preregistrations/q115_treasury_demand_state_2026_10_01.json",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "116",
+        "class": "live_two_quarter_13f_manager_security_transition_population",
+        "state": "13F_TWO_QUARTER_TRANSITION_POPULATION_COMPLETED",
+        "parent_code": "114",
+        "issue_number": 752,
+        "preregistration_path": "research/preregistrations/q116_13f_transition_population_2026_10_01.json",
+        "performance_authorization_allowed": false,
+        "receipt_path": "research/evidence/q116_13f_transition_population_result.json",
+        "receipt_fingerprint": "cb57b7b19f9328080085888b43447d08ccee090743dcb15b4cc5d8d64b85876d"
+      },
+      {
+        "code": "117",
+        "class": "live_treasury_10y_demand_state_population",
+        "state": "TREASURY_DEMAND_POPULATION_COMPLETED",
+        "parent_code": "115",
+        "issue_number": 753,
+        "preregistration_path": "research/preregistrations/q117_treasury_demand_population_2026_10_01.json",
+        "performance_authorization_allowed": false,
+        "receipt_path": "research/evidence/q117_treasury_demand_population_result.json",
+        "receipt_fingerprint": "ad060e9023eef10599e855f2e5684f0657416abeb15b5bee8fec70bc2a044e78"
+      },
+      {
+        "code": "118",
+        "class": "candidate_composition_and_bundle_compatibility",
+        "issue_number": 757,
+        "state": "DESIGN_ONLY_ACTIVE",
+        "parent_code": "109",
+        "design_document": "docs/research_design/CANDIDATE_COMPOSITION_CONTRACT_2026-10-01.md",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "119",
+        "class": "treasury_auction_demand_shape",
+        "issue_number": 761,
+        "state": "DESIGN_ONLY_ACTIVE",
+        "parent_code": "115",
+        "design_document": "docs/research_design/Q119_TREASURY_AUCTION_DEMAND_SHAPE_2026-10-01.md",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "H06-P2",
+        "class": "sector_residual_global_rank",
+        "state": "DESIGN_ONLY_ACTIVE",
+        "parent_code": "H06",
+        "design_document": "docs/research_design/H06-P2_SECTOR_RESIDUAL_GLOBAL_RANK_2026-10-01.md",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "120",
+        "class": "cftc_tff_positioning_divergence",
+        "issue_number": 768,
+        "state": "DESIGN_ONLY_ACTIVE",
+        "parent_code": "market_state_and_allocator_frontier",
+        "design_document": "docs/research_design/Q120_CFTC_TFF_POSITIONING_2026-10-01.md",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "121",
+        "class": "sec_beneficial_ownership_disclosure_timing",
+        "state": "DISCOVERY_PIT_ONLY_ACTIVE",
+        "parent_code": "109",
+        "issue_number": 882,
+        "preregistration_path": "research/preregistrations/q121_sec_beneficial_ownership_timing_2026_10_03.json",
+        "design_document": "docs/research_design/Q121_SEC_BENEFICIAL_OWNERSHIP_TIMING_2026-10-03.md",
+        "performance_authorization_allowed": false
+      },
+      {
+        "code": "FRONTIER-Q171-Q178",
+        "class": "public_domain_orthogonal_information_frontier",
+        "state": "SOURCE_FEASIBILITY_COMPLETED_PIT_READINESS_ACTIVE",
+        "candidate_inventory_path": "research/frontier/q171_q178_candidate_wave_2026_10_03.json",
+        "source_receipt_path": "research/evidence/q171_q178_source_feasibility_2026_10_03.json",
+        "pit_readiness_receipt_path": "research/evidence/q171_q177_pit_readiness_2026_10_03.json",
+        "performance_authorization_allowed": false,
+        "note": "Q171 sample PIT reconstruction is proven; Q174-Q177 source clocks/versions are characterized but candidate-specific PIT compilers remain required; Q173 is license-blocked.",
+        "q179_q184_pit_census_r2": {
+          "state": "ACTIVE",
+          "workflow": ".github/workflows/q179-q184-pit-census-r2.yml",
+          "receipt": "research/evidence/q179_q184_pit_census_r2_latest.json",
+          "performance_authorization_allowed": false
+        }
+      },
+      {
+        "code": "FRONTIER-Q133-Q170-PIT-R1",
+        "class": "source-feasible-public-information-pit-readiness",
+        "state": "PIT_READINESS_ACTIVE",
+        "parent_code": "FRONTIER-20260928",
+        "performance_authorization_allowed": false,
+        "candidate_inventory_path": "research/frontier/q133_q170_pit_readiness_wave_2026_10_03.json",
+        "source_receipt_path": "research/evidence/q133_q170_source_feasibility_2026_10_03.json",
+        "source_probe_pass_count": 25,
+        "source_feasible_candidate_count": 21,
+        "note": "Downstream PIT contract/sample gate only; no performance, ranking, selection, tuning, promotion or live execution.",
+        "micro_pit": {
+          "state": "MICRO_PIT_SAMPLE_COMPLETED_UNRESOLVED",
+          "candidates": [
+            "Q137",
+            "Q144"
+          ],
+          "design_document": "docs/research_design/Q137_Q144_MICRO_PIT_R1_2026-10-03.md",
+          "page_map": "research/governance/q144_q107_wikipedia_page_map_2026_10_03.json",
+          "performance_authorization_allowed": false,
+          "note": "Bounded 2025-08-25 through 2025-09-24 micro sample completed with all mutation checks passing. Q137 was reconstructable for 7/8 symbols and Q144 for 1/8; unresolved symbols remain fail-closed and no performance evidence is claimed.",
+          "receipt_path": "research/evidence/q137_q144_micro_pit_latest.json",
+          "receipt_fingerprint": "112c3eb4fe600876b1ba391ab8cecfaa97bc73f3f0917ac4f896716c057c1dea",
+          "workflow_run_id": 37166075665,
+          "q137_reconstructable_symbols": [
+            "NDAQ",
+            "AMP",
+            "RJF",
+            "WMB",
+            "VLO",
+            "DVN",
+            "EMN"
+          ],
+          "q137_reconstructable_count": 7,
+          "q137_total_symbols": 8,
+          "q144_reconstructable_symbols": [
+            "NDAQ"
+          ],
+          "q144_reconstructable_count": 1,
+          "q144_total_symbols": 8,
+          "next_gate": "candidate-specific full historical archive coverage, immutable SEC/Wikimedia entity mappings and independent reproduction"
+        },
+        "q147_q148_clock_contract": {
+          "state": "PIT_CONTRACT_DEFINED_PENDING_SERIES_FREEZE",
+          "document": "docs/research_design/Q147_Q148_EIA_SOURCE_CLOCK_CONTRACT_2026-10-03.md",
+          "contract": "research/governance/q147_q148_eia_source_clock_contract_2026_10_03.json",
+          "performance_authorization_allowed": false,
+          "note": "Current EIA API is discovery/sample only; formal PIT requires dated publication/issue files and revision lineage."
+        },
+        "q148_r1_wpsr_source_clock": {
+          "issue_number": 997,
+          "preregistration_path": "research/preregistrations/q148_r1_wpsr_source_clock_2026_10_04.json",
+          "performance_authorization_allowed": false,
+          "state": "SOURCE_CLOCK_CONTRACT_COMPLETED_NO_SAME_DAY_PIT",
+          "receipt_path": "research/evidence/q148_r1_wpsr_source_clock_latest.json",
+          "receipt_fingerprint": "30e29926cd9a05d803426765a64d0c13354f824fbfc3d9abc430a379d4569cd0",
+          "workflow_run_id": 37165861306,
+          "next_gate": "candidate-specific exact-first-public-availability and revision-lineage proof",
+          "note": "Q148-R1 fixed WPSR Table 4 source/clock contract completed on three frozen controls; exact first-public-availability and candidate-specific revision lineage remain unproven, so same-day PIT and performance remain closed."
+        },
+        "q169_r4_independent_reproduction": {
+          "state": "INDEPENDENT_REPRODUCTION_COMPLETED",
+          "preregistration_path": "research/preregistrations/q169_noaa_swpc_archive_pit_r4_2026_10_04.json",
+          "receipt_path": "research/evidence/q169_noaa_swpc_archive_pit_r4_latest.json",
+          "receipt_fingerprint": "279c9b84d7d8cf5ca6967655d8cabe04e7a19c1e55a8625acc9262d320589662",
+          "workflow_run_id": 37192224278,
+          "all_fixed_samples_reproduced": true,
+          "candidate_specific_exposure_map_frozen": false,
+          "candidate_specific_revision_lineage_reconstructed": false,
+          "candidate_pit_validated": false,
+          "performance_authorization_allowed": false,
+          "note": "Independent parser reproduced both frozen Q169 R3 archive files byte-for-byte and matched both embedded Issue Times. This strengthens source/archive provenance only; candidate-specific exposure and revision lineage remain open."
+        }
+      },
+      {
+        "code": "Q131-R1",
+        "class": "sec_disclosure_complexity_source_contract",
+        "issue_number": 974,
+        "parent_code": "131",
+        "state": "SOURCE_CONTRACT_ACTIVE",
+        "preregistration_path": "research/preregistrations/q131r1_sec_disclosure_complexity_2026_10_03.json",
+        "design_document": "docs/research_design/Q131R1_SEC_DISCLOSURE_COMPLEXITY_2026-10-03.md",
+        "performance_authorization_allowed": false,
+        "note": "Deterministic SEC structural disclosure-complexity vector only. No scalar threshold, ranking, tuning, performance or promotion is permitted."
+      },
+      {
+        "code": "Q121-R1",
+        "class": "sec_beneficial_ownership_reverse_issuer_coverage_correction",
+        "issue_number": 961,
+        "parent_code": "121",
+        "state": "SOURCE_ROUTE_CORRECTION_ACTIVE",
+        "preregistration_path": "research/preregistrations/q121r1_sec_reverse_issuer_coverage_2026_10_03.json",
+        "design_document": "docs/research_design/Q121R1_SEC_REVERSE_ISSUER_COVERAGE_2026-10-03.md",
+        "performance_authorization_allowed": false,
+        "note": "Original Q121 issuer-submission route is not treated as complete issuer-level population; Q121-R1 re-derives reverse issuer coverage via SEC company browse and preserves filer/subject identity separately."
+      },
+      {
+        "code": "Q121-R2",
+        "class": "sec_beneficial_ownership_daily_index_independent_reconciliation",
+        "issue_number": 972,
+        "parent_code": "121",
+        "state": "INDEPENDENT_SOURCE_RECONCILIATION_ACTIVE",
+        "preregistration_path": "research/preregistrations/q121r2_sec_daily_index_reconciliation_2026_10_03.json",
+        "design_document": "docs/research_design/Q121R2_SEC_DAILY_INDEX_RECONCILIATION_2026-10-03.md",
+        "performance_authorization_allowed": false,
+        "note": "Independent Q121-R2 daily EDGAR master-index anchor reconciliation. It cross-checks deterministic Q121-R1 filing anchors against a separate SEC index architecture; it does not prove full-window population exhaustiveness."
+      },
+      {
+        "code": "Q127-R1",
+        "class": "finra_regsho_historical_source_pit_correction",
+        "issue_number": 964,
+        "parent_code": "127",
+        "state": "SOURCE_PIT_FEASIBILITY_ACTIVE",
+        "preregistration_path": "research/preregistrations/q127r1_finra_regsho_historical_pit_2026_10_03.json",
+        "design_document": "docs/research_design/Q127R1_FINRA_REGSHO_HISTORICAL_PIT_2026-10-03.md",
+        "performance_authorization_allowed": false,
+        "note": "Historical FINRA Consolidated NMS source/PIT feasibility; publication upper bound is documented but exact first-publication time and immutable revision lineage are not claimed."
+      },
+      {
+        "code": "Q130-R1",
+        "class": "wikimedia_historical_attention_source_feasibility",
+        "issue_number": 967,
+        "parent_code": "130",
+        "state": "SOURCE_FEASIBILITY_ACTIVE",
+        "preregistration_path": "research/preregistrations/q130r1_wikimedia_attention_source_2026_10_03.json",
+        "design_document": "docs/research_design/Q130R1_WIKIMEDIA_ATTENTION_SOURCE_2026-10-03.md",
+        "performance_authorization_allowed": false,
+        "note": "Public Wikimedia Pageviews is being tested as a historical attention proxy. Daily data availability is established by source documentation, but exact historical publication time and revision lineage remain unproven."
+      },
+      {
+        "code": "FRONTIER-Q187-Q192",
+        "class": "next_orthogonal_public_information_frontier",
+        "state": "SOURCE_REPAIR_AND_PIT_READINESS_ACTIVE",
+        "candidate_inventory_path": "research/frontier/q187_q192_candidate_wave_2026_10_04.json",
+        "design_document": "docs/research_design/Q187_Q192_SOURCE_PIT_WAVE_2026-10-04.md",
+        "performance_authorization_allowed": false,
+        "note": "New six-candidate orthogonal wave; source-first feasibility only. No candidate ranking, selection, tuning, performance, promotion or live execution.",
+        "pit_readiness_workflow": ".github/workflows/q187-q192-pit-readiness-r1.yml",
+        "pit_readiness_evidence": "research/evidence/q187_q192_pit_readiness_r1_latest.json",
+        "candidate_pit_census_r1": {
+          "status": "ACTIVE",
+          "workflow": ".github/workflows/q188-q192-pit-census-r1.yml",
+          "receipt": "research/evidence/q188_q192_pit_census_r1_latest.json",
+          "performance_authorized": false
+        }
+      },
+      {
+        "code": "FRONTIER-Q202-Q204",
+        "class": "information_absence_financing_and_public_arrival_latency",
+        "state": "SOURCE_FEASIBILITY_ACTIVE",
+        "parent_code": "FRONTIER-Q187-Q192",
+        "issue_number": 1073,
+        "performance_authorization_allowed": false,
+        "candidate_inventory_path": "research/candidates/orthogonal_candidate_specs_2026-10-04.json",
+        "design_document": "docs/research_design/Q202_Q204_INFORMATION_TIMING_WAVE_2026-10-04.md",
+        "source_feasibility_workflow": ".github/workflows/q202-q204-information-timing-feasibility.yml",
+        "source_feasibility_receipt": "research/evidence/q202_q204_information_timing_feasibility_latest.json",
+        "candidate_ids": [
+          "Q202",
+          "Q203",
+          "Q204"
+        ],
+        "note": "Literature-derived orthogonal candidates covering delayed mandatory disclosure, procurement-to-financing transmission, and public information arrival latency. Discovery/source feasibility only; historical PIT, performance, promotion and live execution remain closed."
+      },
+      {
+        "code": "Q205",
+        "class": "nlrb_labor_representation_certification_shock",
+        "state": "SOURCE_FEASIBILITY_COMPLETED_PIT_READINESS_PENDING",
+        "parent_code": "FRONTIER-Q202-Q204",
+        "issue_number": 1074,
+        "candidate_inventory_path": "research/frontier/q205_nlrb_union_certification_candidate_2026_10_05.json",
+        "design_document": "docs/research_design/Q205_NLRB_UNION_CERTIFICATION_2026-10-05.md",
+        "source_feasibility_workflow": ".github/workflows/q205-nlrb-source-feasibility.yml",
+        "source_feasibility_receipt": "research/evidence/q205_nlrb_source_feasibility_latest.json",
+        "source_receipt_fingerprint": "11a67dea4117e8f555cbd23f0bac566302759ae50d8c094b897898cbcb094e06",
+        "performance_authorization_allowed": false,
+        "note": "Official NLRB recent-results, election-report and historical-pagination routes returned HTTP 200. Historical completeness, exact public-observation clock, employer-to-issuer mapping and immutable historical PIT remain unproven.",
+        "next_gate": "historical NLRB archive completeness + public-clock semantics + frozen employer-to-issuer mapping + case-status lineage + independent PIT reproduction"
+      }
+    ]
+  }
 }
