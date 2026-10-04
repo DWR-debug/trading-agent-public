@@ -573,7 +573,7 @@ def generate(
                     "parallel_slots": 2,
                     "isolation_required": True,
                 },
-                "permanent_self_hosted_loop": {"cadence": "*/30 * * * *", "parallel_lanes": 2, "lane_roles": ["FORMAL_READINESS", "FRONTIER_DISCOVERY"]},
+                "permanent_self_hosted_loop": {"cadence": "*/10 * * * *", "parallel_lanes": 2, "lane_roles": ["FORMAL_READINESS", "FRONTIER_DISCOVERY"], "concurrency_model": {"local_reproduction": "trading-agent-windows-research-capacity-v1", "data_qa": "trading-agent-windows-research-data-qa-v1"}, "local_ai_isolated": true},
                 "hosted_research_failover": {
                     "cadence": "manual",
                     "mode": "manual_only_under_assumed_always_available_self_hosted_pool",
