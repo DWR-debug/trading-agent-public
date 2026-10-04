@@ -772,7 +772,7 @@
         }
       ],
       "local_ai_smoke_after_research_lanes": true,
-      "self_hosted_parallel_slots": 2
+      "self_hosted_parallel_slots": 3
     },
     "canonical_data_layer": {
       "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
@@ -987,13 +987,13 @@
         "performance_authorization_from_capacity": false,
         "runner_slot": "Windows self-hosted B"
       },
-      "performance_capacity_rule": "Two slots never create performance authorization; each exact trial requires its own current formal authorization.",
+      "performance_capacity_rule": "Three physical slots never create performance authorization; each exact trial requires its own current formal authorization.",
       "separate_identity_and_outputs": true,
       "shared_mutable_research_state": false,
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T20:34:30.404074+00:00",
+  "generated_at_utc": "2026-10-04T20:35:26.644831+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -1061,12 +1061,13 @@
   },
   "operator_action_required": {
     "instruction": "Open two PowerShell windows. Keep the existing Runner #1 window running. Use the second window for Runner #2 and, when a runner activation or reconfiguration is required, paste the resulting non-secret commands/output into the current trading-agent chat so the orchestration can verify the state.",
-    "purpose": "Keep both self-hosted Windows research runners available for autonomous parallel work.",
+    "purpose": "Keep all configured self-hosted Windows research runners available for autonomous parallel work.",
     "runner_1": "Keep the existing runner process alive in PowerShell window 1.",
     "runner_2": "Keep LHT-N133732-2 alive in PowerShell window 2.",
+    "runner_3": "Keep LHT-N133732-3 alive in PowerShell window 3 for long deterministic runs/independent reproduction.",
     "secret_rule": "Never paste GitHub registration tokens, API keys, OAuth tokens, passwords, or other credentials into chat; redact them before sharing output.",
     "service_note": "Windows service installation is a separate maintenance step and requires administrator privileges; do not migrate a runner to service mode until its local AI identity has been verified because Antigravity CLI authentication uses the local user's system keyring or Google Sign-In context.",
-    "windows_shells": 2
+    "windows_shells": 3
   },
   "q067_execution_pipeline": {
     "blocking_reasons": [
@@ -2619,6 +2620,26 @@
     ],
     "recent_commits": [
       {
+        "message": "STATUS: synchronize three-runner Windows capacity in canonical status",
+        "sha": "ba10ad5cd5214cb7e08d509f26961f460b460c0f",
+        "timestamp": "2026-10-04T22:35:16+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "35b109d4eaf450e651d22bd958e613de1b0b40dc",
+        "timestamp": "2026-10-04T20:34:51Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "70fbd01c2a8f4d4012744d3bdbd02ac13d045763",
+        "timestamp": "2026-10-04T20:34:35Z"
+      },
+      {
+        "message": "OPS: record Groq free adversarial worker state",
+        "sha": "776929a5d88770300132f2be8ed5ba5ab403ddcc",
+        "timestamp": "2026-10-04T20:34:30Z"
+      },
+      {
         "message": "GOVERNANCE: bind snapshot durability guard to provider-neutral AI review",
         "sha": "070b7c9097341988f2fc5b8d938982ad7175d30c",
         "timestamp": "2026-10-04T22:34:17+02:00"
@@ -2637,26 +2658,6 @@
         "message": "FIX: align Groq operational state with universal global task",
         "sha": "c9c3103af9763cf167a7fbeb9e71caa6ed92dbcb",
         "timestamp": "2026-10-04T22:34:01+02:00"
-      },
-      {
-        "message": "FIX: repair universal AI adversarial guard syntax",
-        "sha": "954e8d1ccac3d70e5f335457643d8b2feddbaa11",
-        "timestamp": "2026-10-04T22:33:46+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "02780803858d78eff88fc3d417bbb54fe3189b36",
-        "timestamp": "2026-10-04T20:33:19Z"
-      },
-      {
-        "message": "OPS: record Groq free adversarial worker state",
-        "sha": "0eed738b60c0937af8dd65a98476f577dfa7eb9d",
-        "timestamp": "2026-10-04T20:33:14Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "63ccb6a23b7cbbad1c3726659c5b0d5bcf0738f8",
-        "timestamp": "2026-10-04T20:33:12Z"
       }
     ]
   },
@@ -2741,7 +2742,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "070b7c9097341988f2fc5b8d938982ad7175d30c",
+  "source_master_sha": "ba10ad5cd5214cb7e08d509f26961f460b460c0f",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2855,6 +2856,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37232610934"
+    "run_id": "37232673184"
   }
 }
