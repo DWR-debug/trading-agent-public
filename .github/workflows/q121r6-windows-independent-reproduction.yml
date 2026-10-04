@@ -74,6 +74,14 @@ jobs:
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
           fetch-depth: 1
 
+      - name: Checkout exact selected primary SHA
+        if: github.event_name == 'workflow_dispatch'
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+          git fetch --no-tags --depth=1 origin $env:SOURCE_HEAD_SHA
+          git checkout --detach $env:SOURCE_HEAD_SHA
+
       - name: Bootstrap pinned Python
         shell: cmd
         run: |
