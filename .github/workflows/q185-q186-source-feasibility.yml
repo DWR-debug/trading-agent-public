@@ -166,16 +166,13 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout exact source
-        shell: powershell
-        run: |
-          $ErrorActionPreference = "Stop"
-          $work = Join-Path $env:RUNNER_TEMP ("q185-q186-" + $env:GITHUB_RUN_ID)
-          if (Test-Path $work) { Remove-Item -Recurse -Force $work }
-          git clone --depth 1 --branch $env:GITHUB_REF_NAME https://github.com/DWR-debug/trading-agent-public.git $work
-          "REPO_SRC=$work" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        uses: actions/checkout@v5
+        with:
+          path: q185-q186-${{ github.run_id }}-${{ matrix.lane }}
+          fetch-depth: 1
       - name: Run bounded Windows reproduction
         shell: powershell
-        working-directory: ${{ runner.temp }}/q185-q186-${{ github.run_id }}
+        working-directory: q185-q186-${{ github.run_id }}-${{ matrix.lane }}
         run: |
           $ErrorActionPreference = "Stop"
           python --version
