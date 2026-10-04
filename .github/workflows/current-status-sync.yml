@@ -135,26 +135,13 @@ jobs:
           print("CURRENT_STATUS_SYNC_OK")
           PY
 
-          for path in docs/CURRENT_STATUS.md research/evidence/current_operational_state.json; do
-            payload="$(base64 -w 0 "${path}")"
-            for attempt in 1 2 3 4 5; do
-              current_sha="$(gh api "/repos/${GITHUB_REPOSITORY}/contents/${path}?ref=master" --jq '.sha')"
-              if gh api --method PUT "/repos/${GITHUB_REPOSITORY}/contents/${path}" \
-                -f message='OPS: synchronize current operational status' \
-                -f content="${payload}" \
-                -f branch='master' \
-                -f sha="${current_sha}" >/dev/null; then
-                echo "CURRENT_STATUS_FILE_UPDATED path=${path} attempt=${attempt}"
-                break
-              fi
-              echo "STATUS_SYNC_FILE_RACE path=${path} attempt=${attempt}"
-              sleep 1
-              if [ "${attempt}" -eq 5 ]; then
-                echo "::error::STATUS_SYNC_FILE_UPDATE_EXHAUSTED path=${path}"
-                exit 1
-              fi
-            done
-          done
+          export PUBLISH_MESSAGE='OPS: synchronize current operational status'
+          python -m automation.github_contents_publish \\
+            --repository "$GITHUB_REPOSITORY" \\
+            --branch master \\
+            --base-sha "$source_master_sha" \\
+            --file docs/CURRENT_STATUS.md=docs/CURRENT_STATUS.md \\
+            --file research/evidence/current_operational_state.json=research/evidence/current_operational_state.json
 
           echo "CURRENT_STATUS_SYNC_PUBLISH_OK"
 

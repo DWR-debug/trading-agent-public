@@ -3,6 +3,9 @@ name: T052 Exact Master CI Gate
 on:
   push:
     branches: [master]
+    paths-ignore:
+      - docs/CURRENT_STATUS.md
+      - research/evidence/current_operational_state.json
   issue_comment:
     types: [created]
   workflow_dispatch:
