@@ -87,6 +87,7 @@ def audit() -> dict[str, Any]:
         "schema_version": "1.0",
         "receipt_type": "source_readiness_snapshot_durability_guard",
         "rule_version": RULE_VERSION,
+        "ai_review_principle": "provider_neutral_grok_adversarial",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "status": "PROVISIONAL_SOURCE_READINESS_REQUIRES_IMMUTABLE_HISTORICAL_BINDING" if provisional else "ALL_SOURCE_READINESS_DURABLE",
         "entries": entries,
