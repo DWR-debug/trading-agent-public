@@ -18,8 +18,8 @@
     "reasons": []
   },
   "task_fingerprint": "1bcdfcf7eb7da953528ce0df9b65d39af546277c74e5a857cc04d4d0f1236112",
-  "context_fingerprint": "e684e13548e059641f618d55a79fe662fdb2183dbeefe0bc5a71410997936b96",
-  "observed_at_utc": "2026-10-04T18:29:22.601729Z",
+  "context_fingerprint": "040856089246110c0f244063aabaec76f21b8d98f0222514c5acfc63b1e20899",
+  "observed_at_utc": "2026-10-04T18:55:46.615761Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -27,11 +27,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 86.272,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 12.099,
+  "stdout": "## Adversarial Review: Research-OS Orchestration Risk Assessment\n\n### Summary of Findings\n\nThe Research-OS orchestration layer contains several structural risks that could undermine reproducibility, introduce silent failures, or enable unintended duplication. Below are five concrete findings with mechanisms, impacts, and deterministic falsification checks.\n\n---\n\n### Finding 1: Orchestration Race Condition (Validation → Execution Gap)\n\n**Mechanism:**  \nThe `autonomous_control_plane.py` validates queue requests against repository state (`validate_request_snapshot`) before accepting tasks, but there is no atomic boundary between validation completion and actual execution. A task can be accepted, then the underlying data source (e.g., SEC filings, market data) could be modified, deleted, or become stale between acceptance and execution.\n\n**Why it matters:**  \nThis gap allows \"phantom success\" scenarios where a task appears processed but later fails due to stale dependencies. It also wastes compute cycles on tasks whose premises have since vanished.\n\n**Cheap Deterministic Falsification:**  \nCreate a controlled test where a task is submitted immediately after a critical source (e.g., `SRC-SEC-FTD`) is removed or replaced. Run the control plane's validation step, confirm the task passes initial checks, then attempt to execute. Observe whether the execution fails due to missing/changed data—this would confirm the race condition exists.\n\n**Engineering Fix:**  \nImplement a two-phase commit pattern: (1) accept task with a \"pending\" flag, (2) re-validate dependency freshness before any side-effect operation. Alternatively, pin source versions in the task metadata and reject tasks whose dependencies have changed since acceptance.\n\n---\n\n### Finding 2: Cross-Track Source ID Ambiguity\n\n**Mechanism:**  \nMultiple `ROS-TRACK` entries share identical `source_ids` (e.g., `SRC-SEC-FTD` appears in both \"SEC/FINRA short-flow convergence\" and \"Retail-attention shock lattice\"). While this enables knowledge sharing, it creates ambiguous provenance: it is unclear which track \"owns\" a given data version, leading to potential double-counting or conflicting interpretations.\n\n**Why it matters:**  \nReproducibility hinges on knowing exactly which dataset version was used. Ambiguous source ownership makes it impossible to trace a result back to a specific, verifiable data snapshot.\n\n**Cheap Deterministic Falsification:**  \nSelect one shared source ID (e.g., `SRC-SEC-FTD`), retrieve its version history from the repository, and verify that the same version is referenced consistently across all tracks that cite it. Then artificially mutate one track's reference to a newer version and observe whether the system incorrectly treats the older version as still valid.\n\n**Engineering Fix:**  \nEnforce strict namespace isolation: prefix source IDs per track (e.g., `ROS-TRACK-C-SEC-FNT-FINRA` vs. `ROS-TRACK-C-SEC-FNT-RETAIL`). Alternatively, require each track to declare its exclusive source subset in its configuration.\n\n---\n\n### Finding 3: Broken Provenance Chain for High-Value Candidates\n\n**Mechanism:**  \nThe `current_operational_state.json` lists several active candidates (e.g., Q104, Q105, Q107) with `performance_authorization_allowed: false`. However, the linked preregistrations and evidence artifacts reside in separate files (`q104_orthogonal_candidate_wave_2026_10_01.json`, `q105_historical_pit_feasibility_2026_10_01.json`, etc.). There is no automated verification that each candidate's downstream evidence actually exists and matches the described scope.\n\n**Why it matters:**  \nWithout a closed provenance loop, anyone attempting to reproduce a candidate's results faces a broken chain: they know what the candidate claims, but cannot locate the supporting evidence or verify its integrity.\n\n**Cheap Deterministic Falsification:**  \nPick one high-value candidate (e.g., Q104) and manually trace every field from the candidate definition through the preregistration and evidence files. Count the number of cross-references and verify that each reference points to an existing file with matching metadata. Then delete one intermediate file and confirm the system still produces the correct candidate output (indicating the linkage was fragile).\n\n**Engineering Fix:**  \nImplement a provenance graph checker that validates, at candidate creation time, that all required evidence artifacts exist and are accessible. Make this a hard gate before any candidate moves past the \"QUARANTINED_HYPOTHESIS_ONLY\" stage.\n\n---\n\n### Finding 4: Stale Next-Gate Pointers\n\n**Mechanism:**  \nEach `ROS-TRACK` specifies a `next_gate` (e.g., `\"historical_archive_field_completeness_pit_probe\"`). These pointers assume the target task exists and is ready. If a track advances its gate but the associated task was never created (due to prior failure, resource exhaustion, or manual intervention), the orchestrator will either skip the step silently or attempt to execute a phantom task.\n\n**Why it matters:**  \nSilent skipping hides progress; phantom execution causes wasted resources and potentially erroneous conclusions. Both represent reproducibility hazards because the state of the \"next step\" is opaque until it fails.\n\n**Cheap Deterministic Falsification:**  \nAudit all `next_gate` values against the actual task inventory in the repository. For each track, verify that the target task exists and is in a \"ready\" state. Then simulate a scenario where you remove a task from the target slot and confirm the track's next-gate pointer still resolves to something (indicating stale references).\n\n**Engineering Fix:**  \nAdd a periodic consistency check that compares `next_gate` targets against the current task inventory. Flag any mismatch as a data quality issue requiring manual resolution before the track can proceed.\n\n---\n\n### Finding 5: Adversarial Source Injection Risk\n\n**Mechanism:**  \nThe `research_hypothesis_compiler.py` forbids certain output fields but does not sanitize input strings. An attacker (or careless contributor) could craft a source string that evades the filter (e.g., URL-encoded, base64-encoded, or containing subtle character variations) while passing the `forbidden_keys` check.\n\n**Why it matters:**  \nMalicious or corrupted source references could poison the entire research corpus, introducing false signals into downstream analyses without triggering obvious alarms.\n\n**Cheap Deterministic Falsification:**  \nConstruct a synthetic source string designed to bypass the current filtering logic (e.g., UTF-8 bytes that decode to harmless text when parsed differently). Feed it through the compiler and observe whether it passes validation. If it does, the filter is insufficient.\n\n**Engineering Fix:**  \nImplement strict input sanitization: normalize all source strings to ASCII, reject non-ASCII characters, and whitelist allowed patterns. Additionally, add a secondary \"sanity check\" that verifies each source ID exists in the approved `SRC_*` registry before inclusion.\n\n---\n\n### Engineering Handoff\n\n| Priority | Issue | Action Item | Owner | Verification |\n|----------|-------|-------------|-------|--------------|\n| P0 | Race condition between validation and execution | Implement two-phase commit (accept → pending → execute) with dependency freshness re-check | Control Plane Team | Unit test: submit task after source removal → expect rejection |\n| P0 | Cross-track source ambiguity | Namespace source IDs per track (prefix with track ID) | Orchestration Lead | Audit all `source_ids` across tracks; ensure uniqueness within namespace |\n| P1 | Broken provenance chain | Add provenance graph validation gate before candidate advancement | Hypothesis Compiler Team | Manual trace",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1791140146-hPMQpSO25fCdcTeYEVR5",
+  "usage": {
+    "prompt_tokens": 5730,
+    "completion_tokens": 3200,
+    "total_tokens": 8930,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1562,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
