@@ -1,0 +1,109 @@
+name: Orthogonal Candidate Development
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/candidates/orthogonal_candidate_specs_2026-10-04.json"
+      - ".github/workflows/orthogonal-candidate-development.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-orthogonal-candidate-development
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Validate fixed candidate contracts
+        id: validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          p=Path("research/candidates/orthogonal_candidate_specs_2026-10-04.json")
+          d=json.loads(p.read_text(encoding="utf-8"))
+          assert d["schema_version"] == "1.0"
+          assert d["shared_contract"]["pre_formal_robustness_gate"] is True
+          assert d["shared_contract"]["performance_authorization"] is False
+          assert d["shared_contract"]["promotion_authorization"] is False
+          assert d["shared_contract"]["live_execution"] is False
+
+          ids=[c["id"] for c in d["candidates"]]
+          assert ids == ["Q194","Q195","Q196","Q197","Q199","Q201"]
+
+          required={"id","name","mechanism","event_clock","features","direction","cheap_falsifiers","gates"}
+          for c in d["candidates"]:
+              assert required.issubset(c)
+              assert c["features"]
+              assert len(c["cheap_falsifiers"]) >= 3
+              assert len(c["gates"]) >= 3
+
+          forbidden=set(d["forbidden"])
+          assert {"performance runs","holdout selection","return-based ranking","promotion","live execution"}.issubset(forbidden)
+
+          canonical=json.dumps(d, sort_keys=True, separators=(",",":"), ensure_ascii=False).encode()
+          fp=hashlib.sha256(canonical).hexdigest()
+          out={
+            "schema_version":"1.0",
+            "task_id":"Q-2026-10-04-ORTHOGONAL-CANDIDATE-DEVELOPMENT",
+            "status":"CANDIDATE_CONTRACTS_VALIDATED_NO_PERFORMANCE",
+            "candidate_ids":ids,
+            "candidate_count":len(ids),
+            "spec_sha256":fp,
+            "scientific_evidence":False,
+            "performance_authorization":False,
+            "promotion_authorization":False,
+            "live_execution":False,
+            "shared_label":d["shared_contract"]["label"],
+            "blocked_or_composite_tracks":d["blocked_or_composite_tracks"],
+            "validation":{"all_required_fields":True,"cheap_falsifiers_minimum_met":True,"gate_minimum_met":True}
+          }
+          Path("research/runs").mkdir(exist_ok=True)
+          Path("research/runs/orthogonal_candidate_development_latest.json").write_text(
+              json.dumps(out,indent=2,ensure_ascii=False)+"
+",encoding="utf-8")
+          print(json.dumps(out,sort_keys=True))
+          PY
+
+      - name: Persist candidate-development receipt
+        if: success() && github.ref == 'refs/heads/master'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/evidence
+          cp research/runs/orthogonal_candidate_development_latest.json research/evidence/orthogonal_candidate_development_latest.json
+          for attempt in 1 2 3 4 5; do
+            current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+            if python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$current_sha" --file "research/evidence/orthogonal_candidate_development_latest.json=research/evidence/orthogonal_candidate_development_latest.json"; then
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          exit 1
+
+      - name: Upload receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: orthogonal-candidate-development-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/orthogonal_candidate_development_latest.json
+          if-no-files-found: error
+          retention-days: 30
