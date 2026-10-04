@@ -18,6 +18,7 @@ def test_copilot_reset_is_exact_first_of_next_month_utc() -> None:
     now = datetime(2026, 10, 4, 14, 0, tzinfo=timezone.utc)
     result = availability_for_provider("copilot_free", now=now, policy=policy, observations={})
     assert result.confidence == "exact_policy"
+    assert result.eligible is False
     assert result.next_available_at == "2026-11-01T00:00:00Z"
 
 
@@ -26,7 +27,7 @@ def test_gemini_daily_reset_is_midnight_pacific() -> None:
     now = datetime(2026, 10, 4, 14, 0, tzinfo=timezone.utc)
     result = availability_for_provider("gemini_api", now=now, policy=policy, observations={})
     assert result.confidence == "exact_policy"
-    assert result.next_available_at == "2026-10-05T00:00:00Z"
+    assert result.next_reset_at == "2026-10-05T07:00:00Z"
 
 
 def test_openrouter_is_not_claimed_exact_when_daily_balance_unknown() -> None:
