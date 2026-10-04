@@ -3,6 +3,12 @@ name: Groq Free-Tier Preflight
 on:
   schedule:
     - cron: '11 */6 * * *'
+  push:
+    branches: [master]
+    paths:
+      - "research/evidence/q187_q192_source_feasibility_latest.json"
+      - "ai_requests/AI-2026-10-04-Q187-Q192-GROQ-ADVERSARIAL.json"
+      - ".github/workflows/groq-free-preflight.yml"
   workflow_dispatch:
 
 permissions:
