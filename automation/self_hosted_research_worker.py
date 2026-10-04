@@ -314,6 +314,13 @@ LANES: dict[str, list[list[str]]] = {
         [
             PYTHON,
             "-m",
+            "automation.q199_q201_source_feasibility",
+            "--output",
+            "research/runs/self_hosted/q199_q201_source_feasibility/result.json",
+        ],
+        [
+            PYTHON,
+            "-m",
             "automation.q188_q192_pit_census_r2",
             "--output",
             "research/runs/self_hosted/q188_q192_pit_census_r2/result.json",
@@ -367,6 +374,20 @@ LANES: dict[str, list[list[str]]] = {
             "automation.q193_q196_source_feasibility",
             "--output",
             "research/runs/self_hosted/q193_q196_source_feasibility/result.json",
+        ],
+        [
+            PYTHON,
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_q199_q201_source_feasibility.py",
+        ],
+        [
+            PYTHON,
+            "-m",
+            "automation.q199_q201_source_feasibility",
+            "--output",
+            "research/runs/self_hosted/q199_q201_source_feasibility/result.json",
         ],
         [
             PYTHON,
