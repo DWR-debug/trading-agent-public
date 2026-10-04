@@ -14,7 +14,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: trading-agent-q188-q192-pit-census-r1
+  group: trading-agent-q188-q192-pit-census-r2
   cancel-in-progress: true
 
 jobs:
@@ -34,8 +34,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p research/runs/q188_q192_pit_census_r1
-          python -m automation.q188_q192_pit_census_r1             --output "research/runs/q188_q192_pit_census_r1/${GITHUB_RUN_ID}.json"
+          mkdir -p research/runs/q188_q192_pit_census_r2
+          python -m automation.q188_q192_pit_census_r2             --output "research/runs/q188_q192_pit_census_r2/${GITHUB_RUN_ID}.json"
       - name: Validate non-authorizing PIT boundary
         shell: bash
         run: |
@@ -43,7 +43,7 @@ jobs:
           python - <<'PY'
           import json, os
           from pathlib import Path
-          p=Path("research/runs/q188_q192_pit_census_r1") / f"{os.environ['GITHUB_RUN_ID']}.json"
+          p=Path("research/runs/q188_q192_pit_census_r2") / f"{os.environ['GITHUB_RUN_ID']}.json"
           d=json.loads(p.read_text(encoding="utf-8"))
           assert d["status"] == "PIT_HISTORICAL_CENSUS_COMPLETED_NO_PERFORMANCE"
           assert len(d["candidate_results"]) == 5
@@ -61,8 +61,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          input="research/runs/q188_q192_pit_census_r1/${GITHUB_RUN_ID}.json"
-          latest="research/evidence/q188_q192_pit_census_r1_latest.json"
+          input="research/runs/q188_q192_pit_census_r2/${GITHUB_RUN_ID}.json"
+          latest="research/evidence/q188_q192_pit_census_r2_latest.json"
           cp "$input" "$latest"
           for attempt in 1 2 3 4 5; do
             git fetch origin master --quiet
@@ -79,6 +79,6 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: q188-q192-pit-census-${{ github.run_id }}-${{ github.run_attempt }}
-          path: research/runs/q188_q192_pit_census_r1/
+          path: research/runs/q188_q192_pit_census_r2/
           if-no-files-found: error
           retention-days: 30
