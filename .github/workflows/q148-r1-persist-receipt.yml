@@ -72,16 +72,7 @@ jobs:
           print("Q148R1_PERSIST_BOUNDARY=PASS")
           print("Q148R1_RECEIPT=" + p["receipt_fingerprint"])
           PY
-      - name: Commit validated evidence
+      - name: Publish validated evidence with race-safe fast-forward retries
         run: |
           set -euo pipefail
-          git diff --check
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add research/evidence/q148_r1_wpsr_source_clock_run_${{ github.run_id }}.json research/evidence/q148_r1_wpsr_source_clock_latest.json
-          if git diff --cached --quiet; then
-            echo "Q148R1_NO_EVIDENCE_CHANGE"
-            exit 0
-          fi
-          git commit -m "EVIDENCE: persist Q148-R1 WPSR source clock receipt"
-          git push origin HEAD:master
+          python automation/github_contents_publish.py             --repository "${GITHUB_REPOSITORY}"             --branch master             --file "research/evidence/q148_r1_wpsr_source_clock_run_${GITHUB_RUN_ID}.json=research/evidence/q148_r1_wpsr_source_clock_run_${GITHUB_RUN_ID}.json"             --file "research/evidence/q148_r1_wpsr_source_clock_latest.json=research/evidence/q148_r1_wpsr_source_clock_latest.json"
