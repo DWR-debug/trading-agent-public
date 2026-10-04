@@ -134,6 +134,7 @@ def generate(
     q197_q198_source_receipt = _load_json(ROOT / "research/evidence/q197_q198_source_feasibility_latest.json", {})
     q199_q201_source_receipt = _load_json(ROOT / "research/evidence/q199_q201_source_feasibility_latest.json", {})
     q198_pit_clock_receipt = _load_json(ROOT / "research/evidence/q198_pit_clock_census_latest.json", {})
+    q202_q204_source_receipt = _load_json(ROOT / "research/evidence/q202_q204_information_timing_feasibility_latest.json", {})
     source_pit_frontier_outcomes = _load_json(ROOT / "research/evidence/source_pit_frontier_outcomes_2026_10_03.json", {})
     q121_r5_receipt = _load_json(ROOT / "research/evidence/q121r5_dual_index_population_reconciliation_2026_10_03.json", {})
     q121_r6_attempts = _load_json(ROOT / "research/evidence/q121r6_execution_attempts_2026_10_03.json", {})
@@ -657,6 +658,7 @@ def generate(
         "q197_q198_source_feasibility": q197_q198_source_receipt,
         "q199_q201_source_feasibility": q199_q201_source_receipt,
         "q198_pit_clock_census": q198_pit_clock_receipt,
+        "q202_q204_information_timing_feasibility": q202_q204_source_receipt,
         "source_pit_frontier_outcomes": source_pit_frontier_outcomes,
         "q121_r5_dual_index_reconciliation": q121_r5_receipt,
         "q121_r6_execution_attempts": q121_r6_attempts,
@@ -670,6 +672,13 @@ def generate(
                 "Q199": {"stage": _candidate_stage(q199_q201_source_receipt, "Q199")},
                 "Q201": {"stage": _candidate_stage(q199_q201_source_receipt, "Q201")},
                 "performance_authorized": False,
+            },
+            "frontier_q202_q204": {
+                "Q202": {"stage": _candidate_stage(q202_q204_source_receipt, "Q202")},
+                "Q203": {"stage": _candidate_stage(q202_q204_source_receipt, "Q203")},
+                "Q204": {"stage": _candidate_stage(q202_q204_source_receipt, "Q204")},
+                "performance_authorized": False,
+                "pit_validated": False,
             },
             "decision_basis_stage": decision_basis.get("current_stage"),
             "q026_recorded": checkpoint.get("q026"),
@@ -820,6 +829,13 @@ def generate(
 - Q201 ClinicalTrials.gov: **{_candidate_stage(q199_q201_source_receipt, "Q201")}**; source receipt `{q199_q201_source_receipt.get("receipt_fingerprint", "UNKNOWN")}`. Next gate: historical results-state revision lineage, explicit posted-time semantics, frozen sponsor/exposure mapping and independent PIT reproduction.
 - Q198 historical PIT clock census: **{q198_pit_clock_receipt.get("status", "NOT_RECORDED")}**; pages parsed **{q198_pit_clock_receipt.get("aggregate", {}).get("pages_parsed", 0)}** / **{q198_pit_clock_receipt.get("aggregate", {}).get("pages_requested", 0)}**, with fixed dates **{", ".join(q198_pit_clock_receipt.get("frozen_dates", []))}**.
 - All four frontier candidates remain non-authorizing: performance/holdout selection/ranking/tuning/promotion/live execution are closed. Source readiness is not PIT validation.
+### Q202–Q204 Information-Timing Frontier
+
+- Q202 ClinicalTrials.gov: **{_candidate_stage(q202_q204_source_receipt, "Q202")}**; source receipt `{q202_q204_source_receipt.get("receipt_fingerprint", "UNKNOWN")}`. Next gate: immutable historical record-version snapshots at the applicable reporting boundary, applicability/certification/extension lineage, frozen sponsor-to-issuer mapping and independent PIT reproduction.
+- Q203 Federal procurement × ex-ante financing constraint: **{_candidate_stage(q202_q204_source_receipt, "Q203")}**; source receipt `{q202_q204_source_receipt.get("receipt_fingerprint", "UNKNOWN")}`. Next gate: immutable historical award-state/public-observation boundary, frozen pre-event financing vintage and entity mapping, correction/amendment lineage and independent PIT reproduction.
+- Q204 Public-information release latency: **{_candidate_stage(q202_q204_source_receipt, "Q204")}**; source receipt `{q202_q204_source_receipt.get("receipt_fingerprint", "UNKNOWN")}`. Next gate: immutable public-observation/process-stage timestamps, fixed event-class semantics, pre-event-only latency calibration and correction/withdrawal lineage.
+- Q202–Q204 remain source/PIT discovery tracks only: performance, holdout selection, ranking, tuning, promotion and live execution remain closed. Source feasibility is not PIT validation.
+
 ### Q148-R1 EIA WPSR Source/Clock Gate
 
 - Receipt status: **{q148_r1_receipt.get("status", "NOT_RECORDED")}**.

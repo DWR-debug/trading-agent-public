@@ -79,3 +79,21 @@ def test_current_status_renders_q197_q201_frontier() -> None:
     assert frontier["Q201"]["stage"] == "SOURCE_COMPONENT_READY"
     assert frontier["Q198"]["stage"] == "SOURCE_COMPONENT_READY"
     assert frontier["performance_authorized"] is False
+
+
+def test_current_status_renders_q202_q204_frontier() -> None:
+    payload, doc = __import__("automation.sync_current_operational_status", fromlist=["generate"]).generate(
+        source_master_sha="abc123",
+        workflow_run_id=None,
+        github_state_path=None,
+    )
+    assert "### Q202–Q204 Information-Timing Frontier" in doc
+    assert "Q202" in doc
+    assert "Q203" in doc
+    assert "Q204" in doc
+    frontier = payload["scientific_state_recorded"]["frontier_q202_q204"]
+    assert frontier["Q202"]["stage"] == "SOURCE_COMPONENT_READY"
+    assert frontier["Q203"]["stage"] == "SOURCE_COMPONENT_READY"
+    assert frontier["Q204"]["stage"] == "SOURCE_COMPONENT_READY"
+    assert frontier["performance_authorized"] is False
+    assert frontier["pit_validated"] is False
