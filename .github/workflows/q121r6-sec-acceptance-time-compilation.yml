@@ -28,7 +28,7 @@ concurrency:
       github.event_name == 'issue_comment' && github.event.issue.number ||
       github.run_id
     }}
-  cancel-in-progress: ${{ github.event_name == 'issue_comment' }}
+  cancel-in-progress: ${{ github.event_name == 'push' }}
 
 jobs:
   prepare:
