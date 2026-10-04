@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T20:24:49.482871+00:00",
+  "generated_at_utc": "2026-10-04T20:25:31.828855+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2612,6 +2612,21 @@
     ],
     "recent_commits": [
       {
+        "message": "TEST: validate source-readiness snapshot durability guard",
+        "sha": "e3018a0a329e4105bb7a3eb8fe95ce217464ee38",
+        "timestamp": "2026-10-04T22:25:18+02:00"
+      },
+      {
+        "message": "GOVERNANCE: add immutable source-readiness durability guard",
+        "sha": "6827ff7a2d8e36fdccb76fecd576962068ef5437",
+        "timestamp": "2026-10-04T22:25:16+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "803cf1a75adc901733611c428008899b385c4c81",
+        "timestamp": "2026-10-04T20:24:51Z"
+      },
+      {
         "message": "RESEARCH: add dedicated Windows Runner C long workpack",
         "sha": "01cb600b21101557208df61a5e5653f8e8c7275c",
         "timestamp": "2026-10-04T22:24:38+02:00"
@@ -2635,21 +2650,6 @@
         "message": "CAPACITY: remove gh dependency from Windows Runner C setup",
         "sha": "78bf84b27d3ae9bab458c0e7f051fb07a2dc5e8b",
         "timestamp": "2026-10-04T22:16:24+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "7d3b307beb75706fbe9b4f964466e24265f2b64d",
-        "timestamp": "2026-10-04T20:09:10Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5d4369d7d5ccf6c9c0c0eeca5c2dbbdc9f7dce74",
-        "timestamp": "2026-10-04T20:08:56Z"
-      },
-      {
-        "message": "OPS: record overnight research round chaining capacity",
-        "sha": "502b76bf98d548879b4a45304b66fa8a6316d9ef",
-        "timestamp": "2026-10-04T22:08:54+02:00"
       }
     ]
   },
@@ -2734,7 +2734,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "01cb600b21101557208df61a5e5653f8e8c7275c",
+  "source_master_sha": "e3018a0a329e4105bb7a3eb8fe95ce217464ee38",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2848,6 +2848,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37231983315"
+    "run_id": "37232026893"
   }
 }
