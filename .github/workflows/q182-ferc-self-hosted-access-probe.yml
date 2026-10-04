@@ -1,0 +1,67 @@
+name: Q182 FERC Self-Hosted Access Probe
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/q182-ferc-self-hosted-access-probe.yml"
+      - "automation/q182_ferc_self_hosted_access_probe.py"
+      - "tests/test_q182_ferc_self_hosted_access_probe.py"
+  push:
+    branches: [master]
+    paths:
+      - ".github/workflows/q182-ferc-self-hosted-access-probe.yml"
+      - "automation/q182_ferc_self_hosted_access_probe.py"
+      - "tests/test_q182_ferc_self_hosted_access_probe.py"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-q182-ferc-self-hosted-access-probe
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    if: github.repository == "DWR-debug/trading-agent-public" && (github.event_name != "pull_request" || github.event.pull_request.head.repo.full_name == github.repository)
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        lane: [local_reproduction, data_qa]
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+      - name: Run FERC access probe
+        shell: powershell
+        env:
+          PAPER_ONLY: "True"
+          LIVE_TRADING_ENABLED: "False"
+          ORDERS_ENABLED: "False"
+          AUTOMATIC_PROMOTION: "False"
+        run: |
+          $ErrorActionPreference = "Stop"
+          $output = "$env:RUNNER_TEMP\q182-ferc-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT-${{ matrix.lane }}.json"
+          python -m automation.q182_ferc_self_hosted_access_probe --output $output
+      - name: Validate bounded receipt
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+          $output = "$env:RUNNER_TEMP\q182-ferc-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT-${{ matrix.lane }}.json"
+          $d = Get-Content $output -Raw | ConvertFrom-Json
+          if ($d.status -ne "Q182_ACCESS_PROBE_COMPLETED_NO_SCIENTIFIC_EVIDENCE") { throw "bad status" }
+          foreach ($v in $d.scientific_boundary.PSObject.Properties) { if ($v.Value -ne $false) { throw "scientific boundary widened" } }
+          if ($d.safety.PAPER_ONLY -ne $true -or $d.safety.LIVE_TRADING_ENABLED -ne $false -or $d.safety.ORDERS_ENABLED -ne $false -or $d.safety.AUTOMATIC_PROMOTION -ne $false) { throw "safety invariant failed" }
+      - name: Upload bounded receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q182-ferc-access-${{ matrix.lane }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}\q182-ferc-*.json
+          if-no-files-found: error
+          retention-days: 14
