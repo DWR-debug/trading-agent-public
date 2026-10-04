@@ -213,6 +213,7 @@ ACTIVE_WORKFLOWS = {
     "q185-q186-windows-reproduction.yml",
     "q187-q192-source-feasibility.yml",
     "ai-credit-availability-planner.yml",
+    "groq-free-preflight.yml",
     "q187-q192-pit-readiness-r1.yml",
     "q188-q192-pit-census-r1.yml",
     "q188-q192-pit-census-r2.yml",

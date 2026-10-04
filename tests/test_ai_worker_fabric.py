@@ -362,3 +362,34 @@ def test_ai_workflow_deduplicates_unchanged_automatic_context() -> None:
     assert "context-fingerprint" in text
     assert "ops/ai_worker_state" in text
     assert "workflow_dispatch" in text
+
+
+def test_groq_free_preflight_requires_explicit_attestation():
+    env = {"AI_EXTERNAL_PROVIDER_ALLOWLIST":"true","GROQ_API_KEY":"dummy-key","GROQ_FREE_MODE_CONFIRMED":"false"}
+    result = preflight("groq_free", env=env)
+    assert result["available"] is False
+    assert any("free-mode attestation" in reason for reason in result["reasons"])
+
+def test_groq_free_preflight_accepts_attested_fixed_route():
+    env = {"AI_EXTERNAL_PROVIDER_ALLOWLIST":"true","GROQ_API_KEY":"dummy-key","GROQ_FREE_MODE_CONFIRMED":"true"}
+    result = preflight("groq_free", env=env)
+    assert result["available"] is True
+    assert result["free_only"] is True
+    assert result["free_enforcement"] == "fixed_model_groq_free_with_attestation"
+
+def test_groq_adapter_uses_only_fixed_model(monkeypatch):
+    from automation import groq_free
+    captured = {}
+    class FakeResponse:
+        status = 200
+        def read(self, limit=None):
+            return json.dumps({"id":"groq-test","choices":[{"message":{"content":"bounded worker output"}}]}).encode()
+        def __enter__(self): return self
+        def __exit__(self,*args): return False
+    def fake_urlopen(request, timeout):
+        captured["payload"] = json.loads(request.data.decode("utf-8"))
+        return FakeResponse()
+    monkeypatch.setattr(groq_free.urllib.request, "urlopen", fake_urlopen)
+    result = groq_free.call_groq_free("falsify this", api_key="secret-test-key", timeout_seconds=11)
+    assert captured["payload"]["model"] == "openai/gpt-oss-20b"
+    assert result["status"] == "SUCCESS"

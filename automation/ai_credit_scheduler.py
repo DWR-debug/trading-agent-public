@@ -95,6 +95,13 @@ def _latest_block(observations: list[dict[str, Any]]) -> datetime | None:
     return max(candidates) if candidates else None
 
 
+def load_groq_preflight(root: Path = ROOT) -> dict[str, Any]:
+    path = root / "ops/groq_free_preflight.json"
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+
 def load_copilot_state(root: Path = ROOT) -> dict[str, Any]:
     path = root / "ops/copilot_free_budget_state.json"
     try:
@@ -229,6 +236,36 @@ def availability_for_provider(
             "preflight_required",
         )
 
+    if provider == "groq_free":
+        preflight = load_groq_preflight()
+        observed = parse_dt(preflight.get("generated_at_utc"))
+        fresh = observed is not None and now - observed <= timedelta(hours=6) and observed <= now + timedelta(minutes=5)
+        passed = (
+            preflight.get("status") == "PASS"
+            and preflight.get("free_mode_attested") is True
+            and preflight.get("api_key_present") is True
+            and fresh
+        )
+        if passed:
+            return Availability(
+                provider,
+                True,
+                None,
+                None,
+                "observed_preflight",
+                "fresh explicit Groq free-only preflight passed; fixed model route is eligible",
+                "preflight_passed",
+            )
+        return Availability(
+            provider,
+            False,
+            None,
+            None,
+            "unknown",
+            "Groq requires a fresh explicit free-only preflight; missing, stale or failed preflight keeps the route closed",
+            "preflight_required",
+        )
+
     if provider == "gemini_cli":
         return Availability(
             provider,
@@ -294,7 +331,7 @@ def schedule_tasks(
                 }
             )
             continue
-        provider_rank = {"openrouter_free": 0, "gemini_api": 10, "mistral_api": 20, "gemini_cli": 30, "copilot_free": 40}
+        provider_rank = {"openrouter_free": 0, "groq_free": 5, "gemini_api": 10, "mistral_api": 20, "gemini_cli": 30, "copilot_free": 40}
         chosen = sorted(
             compatible,
             key=lambda p: (

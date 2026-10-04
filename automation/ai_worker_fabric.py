@@ -39,6 +39,13 @@ PROVIDER_SPECS = {
         "prompt_role": "Independent Mistral research worker: attack assumptions, surface overlooked mechanisms and propose cheap falsification tests. Preserve disagreement; do not seek consensus.",
         "fixed_model": "mistral-small-latest",
     },
+    "groq_free": {
+        "binaries": (),
+        "auth_env": ("GROQ_API_KEY",),
+        "free_attestation_env": "GROQ_FREE_MODE_CONFIRMED",
+        "prompt_role": "Independent Groq adversarial research worker: attack assumptions, surface overlooked mechanisms and propose cheap falsification tests. Preserve disagreement; do not seek consensus.",
+        "fixed_model": "openai/gpt-oss-20b",
+    },
     "openrouter_free": {
         "binaries": (),
         "auth_env": ("OPENROUTER_API_KEY",),
@@ -110,6 +117,22 @@ CONTEXT_FILES = {
         "research/evidence/current_operational_state.json",
         "research/governance/active_research_registry.json",
         "docs/DECISION_BASIS.md",
+    ),
+    "AI-2026-10-04-Q187-Q192-GROQ-ADVERSARIAL": (
+        "docs/research_design/Q187_Q192_SOURCE_PIT_WAVE_2026-10-04.md",
+        "research/frontier/q187_q192_candidate_wave_2026_10_04.json",
+        "research/evidence/q187_q192_source_feasibility_latest.json",
+        "research/evidence/q187_q192_pit_readiness_r1_latest.json",
+        "research/governance/active_research_registry.json",
+        "docs/CURRENT_STATUS.md",
+        "docs/EVIDENCE_GOVERNANCE.md",
+    ),
+    "AI-2026-10-04-Q187-Q192-GROQ-ADVERSARIAL": (
+        "ai_requests/AI-2026-10-04-Q187-Q192-GROQ-ADVERSARIAL.json",
+        "research/frontier/q187_q192_candidate_wave_2026_10_04.json",
+        "research/evidence/q187_q192_source_feasibility_latest.json",
+        "research/evidence/q187_q192_pit_readiness_r1_latest.json",
+        "research/governance/active_research_registry.json",
     ),
     "AI-2026-10-04-Q187-Q192-ADVERSARIAL": (
         "docs/research_design/Q187_Q192_SOURCE_PIT_WAVE_2026-10-04.md",
@@ -272,6 +295,8 @@ def preflight(provider: str, env: dict[str, str] | None = None) -> dict[str, Any
     explicit_free = _truth(env.get(spec["free_attestation_env"]))
     local_attestation = _local_attestation(provider, env) if local_mode else {"present": False, "path": None}
     free_gate = explicit_free or local_attestation["present"]
+    if provider == "groq_free":
+        free_gate = explicit_free
     if provider == "openrouter_free":
         # The provider is free-only by construction: model selection is not exposed
         # and the only accepted route is OpenRouter's free-model router.
@@ -306,9 +331,9 @@ def preflight(provider: str, env: dict[str, str] | None = None) -> dict[str, Any
         "local_attestation": local_attestation,
         "free_mode_attested": free_gate,
         "free_enforcement": (
-            "fixed_model_openrouter_free"
-            if provider == "openrouter_free"
-            else "attestation_or_local_attestation"
+            "fixed_model_groq_free_with_attestation"
+            if provider == "groq_free"
+            else ("fixed_model_openrouter_free" if provider == "openrouter_free" else "attestation_or_local_attestation")
         ),
         "reasons": reasons,
     }
@@ -371,6 +396,8 @@ def command_for(provider: str, prompt: str, binary: str | None = None) -> list[s
         return [executable, "--approval-mode", "plan", "--skip-trust", "--model", "gemini-3.7-flash", "--output-format", "json", "--prompt", prompt]
     if provider == "mistral_api":
         raise AIWorkerError("mistral_api uses the fixed HTTPS API path, not a shell command.")
+    if provider == "groq_free":
+        raise AIWorkerError("groq_free uses the fixed HTTPS API path, not a shell command.")
     if provider == "openrouter_free":
         raise AIWorkerError("openrouter_free uses the fixed HTTPS API path, not a shell command.")
     raise AIWorkerError(f"Unknown provider: {provider}.")
@@ -456,6 +483,48 @@ def run_task(task: dict[str, Any], provider: str, output: Path, env: dict[str, s
             )
         output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
         return result
+    if provider == "groq_free":
+        from automation.groq_free import call_groq_free
+
+        try:
+            api_result = call_groq_free(
+                build_prompt(task, provider),
+                api_key=runtime_env.get("GROQ_API_KEY", ""),
+                timeout_seconds=min(60, task.get("max_runtime_minutes", 15) * 60),
+            )
+        except Exception as exc:
+            result = {
+                **base,
+                "status": "FAILED_PROVIDER",
+                "returncode": None,
+                "duration_seconds": round(time.monotonic() - started, 3),
+                "stdout": "",
+                "stderr": f"{type(exc).__name__}: {exc}",
+                "command_binary": "https-groq",
+                "api_model": "openai/gpt-oss-20b",
+            }
+            output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+            return result
+        result = {
+            **base,
+            "status": api_result["status"],
+            "returncode": api_result.get("returncode"),
+            "duration_seconds": round(time.monotonic() - started, 3),
+            "stdout": api_result.get("content", ""),
+            "stderr": api_result.get("error", ""),
+            "command_binary": "https-groq",
+            "api_model": "openai/gpt-oss-20b",
+            "response_id": api_result.get("response_id"),
+            "usage": api_result.get("usage"),
+        }
+        if api_result.get("status") == "RATE_LIMITED":
+            reset_seconds = parse_reset_seconds(str(api_result.get("error", ""))) or 3600
+            result["quota_block"] = record_block(
+                provider, reset_seconds, raw_error=str(api_result.get("error", "")), env=runtime_env
+            )
+        output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+        return result
+
     if provider == "openrouter_free":
         from automation.openrouter_free import call_openrouter_free
 
