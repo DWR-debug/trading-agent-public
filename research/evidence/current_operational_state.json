@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T21:33:10.540481+00:00",
+  "generated_at_utc": "2026-10-04T21:34:23.608207+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2470,6 +2470,16 @@
     ],
     "history_results": {
       "CLINICALTRIALS_HISTORY": {
+        "attempts": [
+          {
+            "http_status": 200,
+            "url": "https://clinicaltrials.gov/study/NCT00125528?a=2&tab=history"
+          },
+          {
+            "http_status": 200,
+            "url": "https://clinicaltrials.gov/ct2/history/NCT00125528"
+          }
+        ],
         "content_sha256": "e5bfa50054351e7adaf6f79e3d42273cc157862e5e652c9a13ca737c02132337",
         "http_status": 200,
         "missing_markers": [
@@ -2481,11 +2491,14 @@
         "probe_classification": "HISTORY_MARKER_MISMATCH",
         "sample_version_dates": [],
         "scientific_boundary": false,
-        "url": "https://clinicaltrials.gov/study/NCT00125528?a=2&tab=history",
+        "urls": [
+          "https://clinicaltrials.gov/study/NCT00125528?a=2&tab=history",
+          "https://clinicaltrials.gov/ct2/history/NCT00125528"
+        ],
         "version_date_count": 0
       }
     },
-    "receipt_fingerprint": "8c41468f1766e80795658480b4694251ef22539d2c767c5c45a9d37de94e25e3",
+    "receipt_fingerprint": "850e924128e42366491145a7b0e847e61f759f9aca4b85d5a1de29695ae835f2",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2559,7 +2572,7 @@
             "url": "https://ppubs.uspto.gov/basic/"
           }
         ],
-        "content_sha256": "525947795e31eb94d8add59da22bc0181d2165fa86ef3c1536c81953de7c59e9",
+        "content_sha256": "7f5231e5b9e85937665a8697b54aa2fc80bc41f1f658b1cca7c3897f2f8e5f9f",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -2631,6 +2644,26 @@
     "recent_commits": [
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "f83b9a2ed21654af6e279ab6763cc8fa80b49826",
+        "timestamp": "2026-10-04T21:34:21Z"
+      },
+      {
+        "message": "TEST: cover ClinicalTrials legacy history route",
+        "sha": "5dac388f749653fb1df9577009530adc6295f981",
+        "timestamp": "2026-10-04T23:34:06+02:00"
+      },
+      {
+        "message": "RESEARCH: add ClinicalTrials legacy history access path",
+        "sha": "a2d9053b5629dc3fb04df77337cafe75b25efb3d",
+        "timestamp": "2026-10-04T23:34:01+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "1741eae532128ae57d4f010598c24c66353fdac5",
+        "timestamp": "2026-10-04T21:33:14Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "5d5b9bcccb76793e1a8cd0f62cda95edfd90da03",
         "timestamp": "2026-10-04T21:33:08Z"
       },
@@ -2648,26 +2681,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "cb64ffd1fd628bc8f041abbc41df09cf927fdda2",
         "timestamp": "2026-10-04T21:32:33Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "37dff1ff2faa35a5fbc224406185472157653a6a",
-        "timestamp": "2026-10-04T21:32:29Z"
-      },
-      {
-        "message": "TEST: cover Q201 historical archive probe contract",
-        "sha": "99fe0480f475eacfb5b53bbbeda596061255cc63",
-        "timestamp": "2026-10-04T23:32:11+02:00"
-      },
-      {
-        "message": "RESEARCH: add deterministic Q201 historical version archive probe",
-        "sha": "db3902bc93d0fdbf31576ace9f2f6dfc92b0efe1",
-        "timestamp": "2026-10-04T23:32:05+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2da635bffa73a64cd284c1f4aebea3b6852749d4",
-        "timestamp": "2026-10-04T21:30:36Z"
       }
     ]
   },
@@ -2752,7 +2765,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5d5b9bcccb76793e1a8cd0f62cda95edfd90da03",
+  "source_master_sha": "f83b9a2ed21654af6e279ab6763cc8fa80b49826",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2866,6 +2879,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37236538145"
+    "run_id": "37236619345"
   }
 }
