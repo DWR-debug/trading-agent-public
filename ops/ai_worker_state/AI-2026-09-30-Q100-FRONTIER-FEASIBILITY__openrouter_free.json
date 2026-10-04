@@ -25,13 +25,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.321,
-  "stdout": "",
-  "stderr": "OpenRouter HTTP 429: {\"error\":{\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\",\"code\":429,\"metadata\":{\"headers\":{\"X-RateLimit-Limit\":\"50\",\"X-RateLimit-Remaining\":\"0\",\"X-RateLimit-Reset\":\"1791072000000\"},\"limit_source\":\"openrouter_free_tier_daily\",\"remedy_hint\":\"Wait for the daily reset (see X-RateLimit-Reset), or purchase credits to raise your free-model daily limit.\",\"provider_name\":null,\"previous_errors\":[{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"},{\"code\":429,\"message\":\"Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day\"}]}},\"user_id\":\"user_3K3ZJKAZq4v0T1h5GaKRbugCtn4\"}",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 2.732,
+  "stdout": "User Safety: safe",
+  "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": null,
-  "usage": null
+  "response_id": "gen-1791083436-zF65vxZ1CdJZvYoCjjPV",
+  "usage": {
+    "prompt_tokens": 6108,
+    "completion_tokens": 155,
+    "total_tokens": 6263,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 179,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
