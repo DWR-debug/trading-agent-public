@@ -9,7 +9,7 @@
     "Verify current public master and current operational/evidence state before acting.",
     "Snapshot live runner, workflow, agent and bounded mobile capacity; never trust stale availability claims.",
     "Route every meaningful task to the smallest suitable free resource and execute independent work in parallel.",
-    "Use S10 opportunistically when its latest successful utility receipt is fresh (<=6h), treating that receipt as the operational-presence signal for routing; a separate phone-runner discovery is not required solely for presence confirmation, and a bounded useful task must exist.",
+    "Use S10 opportunistically for deterministic mechanical research QA; semantic utility/evidence-critic runs remain manual or receipt-gated. Trigger mechanical QA on meaningful research/governance changes and every two hours; do not manufacture work solely to create activity.",
     "Prefer event-driven S10 utility review after meaningful research/governance changes, plus the regular six-hour schedule.",
     "Do not duplicate already-running work and do not consume quotas merely to create activity."
   ],
@@ -41,13 +41,16 @@
           "performance_allowed": false,
           "selection_or_ranking": false
         }
-      }
+      },
+      "windows_pulse_cadence": "10 minutes while each pulse remains bounded, non-formal, and concurrency-protected"
     },
     "mobile": {
-      "s10_mode": "receipt_gated_opportunistic_utility",
+      "s10_mode": "deterministic_mechanical_qa_default",
       "full_acceptance": "onboarding_or_explicit_revalidation_only",
       "event_driven_review": "meaningful research-runner or critical-governance change",
-      "duplicate_work": "forbidden"
+      "duplicate_work": "forbidden",
+      "recurring_schedule": "every 2 hours plus meaningful research/governance push events",
+      "semantic_ai": "manual/explicit utility or acceptance only; no default routing"
     },
     "lane_isolation": {
       "required": true,
