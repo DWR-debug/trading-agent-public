@@ -95,7 +95,6 @@ def compile_state() -> dict:
 
     candidates = []
 
-    existing_receipts = RECEIPTS.copy()
     # Q202-Q204 are intentionally not mapped to a fabricated evidence receipt.
     # Until their bounded source-feasibility workflow produces a receipt, the
     # compiler emits SOURCE_FEASIBILITY_REQUIRED and remains non-authorizing.
