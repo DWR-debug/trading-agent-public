@@ -1,1 +1,37 @@
-{"schema_version":1,"task_id":"AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT","provider":"openrouter_free","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT",
+  "provider": "openrouter_free",
+  "free_only": true,
+  "preflight": {
+    "provider": "openrouter_free",
+    "available": true,
+    "binary": null,
+    "free_only": true,
+    "local_mode": false,
+    "local_attestation": {
+      "present": false,
+      "path": null
+    },
+    "free_mode_attested": true,
+    "free_enforcement": "fixed_model_openrouter_free",
+    "reasons": []
+  },
+  "task_fingerprint": "5f4c41dba2db593873d5b228799d34f0a134bbd4dbd1cab32f29c3b8a8376c56",
+  "context_fingerprint": "f2ff3b7e792c2e7c5b762a92985842d722b65c4a5b174b9a41cca14d80b50bd3",
+  "observed_at_utc": "2026-10-04T20:34:39.125921Z",
+  "worker_output_is_scientific_evidence": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 11.616,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "command_binary": "https-openrouter",
+  "api_model": "openrouter/free"
+}
