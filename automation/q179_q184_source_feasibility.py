@@ -12,9 +12,9 @@ from typing import Any
 
 PROBES: dict[str, dict[str, Any]] = {
     "CLINICALTRIALS": {
-        "urls": ["https://clinicaltrials.gov/data-about-studies/csv-download", "https://clinicaltrials.gov/"],
-        "markers": ["First Posted", "Last Update Posted", "Results First Posted"],
-        "clock_contract": "Posted-date fields define public availability; submitted dates are separate.",
+        "urls": ["https://clinicaltrials.gov/api/v2/studies/NCT00513929"],
+        "markers": ["studyFirstPostDateStruct", "lastUpdatePostDateStruct", "resultsFirstPostDateStruct"],
+        "clock_contract": "API posted-date fields define public availability; submitted dates are separate.",
     },
     "NHTSA_RECALLS": {
         "urls": ["https://www.nhtsa.gov/nhtsa-datasets-and-apis", "https://www.nhtsa.gov/search-safety-issues"],
@@ -22,13 +22,13 @@ PROBES: dict[str, dict[str, Any]] = {
         "clock_contract": "Recall publication date is distinct from the underlying safety-issue report date.",
     },
     "OSHA_DATA": {
-        "urls": ["https://www.osha.gov/enforcement/", "https://www.osha.gov/es/fatalities"],
-        "markers": ["Fatality Inspection Data", "High Penalty Cases - Historical"],
-        "clock_contract": "Inspection/opening and public display/download boundaries must be separated.",
+        "urls": ["https://catalog.data.gov/dataset/dol-enforcement-data-inspection"],
+        "markers": ["accessLevel", "public", "accrualPeriodicity", "R/P1D", "inspections conducted by OSHA"],
+        "clock_contract": "The DOL public catalog establishes the dataset boundary; inspection/opening and later catalog refresh times remain distinct.",
     },
     "FERC_ELIBRARY": {
-        "urls": ["https://www.ferc.gov/ferc-online/elibrary", "https://www.ferc.gov/about/what-ferc/frequently-asked-questions-faqs/documents-and-filing/elibrary"],
-        "markers": ["issued by FERC", "received by FERC", "free"],
+        "urls": ["https://ferc.gov/what-elibrary", "https://www.ferc.gov/about/what-ferc/frequently-asked-questions-faqs/documents-and-filing/elibrary"],
+        "markers": ["issued by FERC", "Documents received and issued by FERC", "download"],
         "clock_contract": "Issued/received document records are distinct from later corrections and underlying event dates.",
     },
     "NTSB_CAROL": {
