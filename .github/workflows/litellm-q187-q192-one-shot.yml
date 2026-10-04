@@ -1,0 +1,83 @@
+name: Groq LiteLLM Q187-Q192 Adversarial One-Shot
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/litellm_q187_q192_groq.trigger"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-litellm-q187-q192
+  cancel-in-progress: true
+
+jobs:
+  groq_litellm:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install pinned LiteLLM
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check -r requirements-ai.txt
+
+      - name: Run bounded Q187-Q192 review through LiteLLM
+        shell: bash
+        env:
+          AI_EXTERNAL_PROVIDER_ALLOWLIST: ${{ secrets.AI_EXTERNAL_PROVIDER_ALLOWLIST }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_FREE_MODE_CONFIRMED: ${{ secrets.GROQ_FREE_MODE_CONFIRMED }}
+          TRADING_AGENT_LITELLM_TRANSPORT: "true"
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/litellm-q187"
+          python -m automation.ai_worker_fabric \
+            --run \
+            --provider groq_free \
+            --task ai_requests/AI-2026-10-04-Q187-Q192-GROQ-ADVERSARIAL.json \
+            --output "$RUNNER_TEMP/litellm-q187/AI-2026-10-04-Q187-Q192-GROQ-ADVERSARIAL__groq_free.json"
+
+      - name: Publish non-scientific worker state
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          state_dir="ops/ai_worker_state"
+          mkdir -p "$state_dir"
+          state_file="$state_dir/AI-2026-10-04-Q187-Q192-GROQ-ADVERSARIAL__groq_free.json"
+          output="$RUNNER_TEMP/litellm-q187/AI-2026-10-04-Q187-Q192-GROQ-ADVERSARIAL__groq_free.json"
+          if [ -f "$output" ]; then
+            cp "$output" "$state_file"
+          else
+            printf '%s\n' '{"schema_version":1,"task_id":"AI-2026-10-04-Q187-Q192-GROQ-ADVERSARIAL","provider":"groq_free","transport":"litellm","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' > "$state_file"
+          fi
+          payload="$(base64 -w 0 "$state_file")"
+          for attempt in 1 2 3 4 5; do
+            current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/contents/${state_file}?ref=master" --jq '.sha' 2>/dev/null || true)"
+            if [ -n "$current_sha" ]; then
+              if gh api --method PUT "/repos/$GITHUB_REPOSITORY/contents/${state_file}" -f message='OPS: record Q187-Q192 Groq LiteLLM worker state' -f content="$payload" -f branch='master' -f sha="$current_sha" >/dev/null; then exit 0; fi
+            else
+              if gh api --method PUT "/repos/$GITHUB_REPOSITORY/contents/${state_file}" -f message='OPS: record Q187-Q192 Groq LiteLLM worker state' -f content="$payload" -f branch='master' >/dev/null; then exit 0; fi
+            fi
+            sleep 2
+          done
+          echo 'Unable to publish Q187-Q192 LiteLLM worker state.' >&2
+          exit 1
