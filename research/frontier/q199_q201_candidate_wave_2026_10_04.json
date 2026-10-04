@@ -1,0 +1,91 @@
+{
+  "schema_version": "1.0",
+  "wave_id": "Q199-Q201-2026-10-04",
+  "status": "DESIGN_INVENTORY_ONLY",
+  "generated_utc": "2026-10-04T16:35:00Z",
+  "priority_basis": "literature-supported orthogonal information events with explicit public-clock semantics; source/PIT feasibility only; no authenticated USPTO ODP access assumed",
+  "purpose": "Evaluate patent-publication and clinical-trial-results-publication information boundaries as independent event channels before any performance analysis.",
+  "policy": {
+    "performance_authorized": false,
+    "holdout_selection_allowed": false,
+    "parameter_search_allowed": false,
+    "asset_search_allowed": false,
+    "threshold_search_allowed": false,
+    "horizon_search_allowed": false,
+    "variant_search_allowed": false,
+    "family_ranking_allowed": false,
+    "automatic_promotion": false,
+    "paid_data_required": false
+  },
+  "candidates": [
+    {
+      "id": "Q199",
+      "name": "PATENT_PUBLICATION_SHOCK × TECHNOLOGY_COMPETITIVE_EXPOSURE",
+      "priority": "B_HISTORICAL_SOURCE_READY",
+      "hypothesis": "First public disclosure of a previously non-public patent application can reveal technology information before grant and propagate to technologically exposed issuers.",
+      "construction": "Freeze the earliest public pre-grant application publication boundary. Build technology exposure only from pre-event public records and freeze applicant/assignee-to-issuer identity. Exclude unresolved continuation/divisional lineage and same-day timing ambiguity.",
+      "sources": [
+        "USPTO official publication rules (18-month disclosure clock)",
+        "Google-hosted USPTO Patent Application Publication Bibliographic Data, 2001-2015",
+        "USPTO Patent Public Search for spot validation",
+        "SEC issuer identity mapping",
+        "OHLCV only downstream"
+      ],
+      "next_gate": "download and fingerprint fixed 2001-2015 historical mirror; prove weekly publication boundary; fixed applicant/assignee mapping; continuation/nonpublication lineage; independent reproduction",
+      "forbidden_design_searches": [
+        "technology-class search",
+        "citation-depth search",
+        "graph-depth search",
+        "event-window search",
+        "threshold search",
+        "asset search",
+        "return-derived similarity"
+      ],
+      "robustness_contract": {
+        "public_boundary_locked": true,
+        "bulk_refresh_separate": true,
+        "pre_event_exposure_only": true,
+        "continuation_lineage_locked": true,
+        "same_day_ambiguity_excluded": true,
+        "issuer_mapping_frozen": true,
+        "historical_window_fixed": true
+      }
+    },
+    {
+      "id": "Q201",
+      "name": "CLINICAL_TRIAL_RESULTS_FIRST_POSTED × SPONSOR_COMPETITIVE_EXPOSURE",
+      "priority": "A_FRONTIER",
+      "hypothesis": "The first public posting of clinical-trial summary results can be a distinct information event from sponsor submission, journal publication and press release, with possible effects on sponsor and pre-defined exposed firms.",
+      "construction": "Use explicit ClinicalTrials.gov results-first-posted fields and preserve QC-comment posting as a separate public state. Freeze sponsor-to-issuer and competitive/therapeutic exposure from pre-event public information. Historical revisions and same-day ambiguity fail closed.",
+      "sources": [
+        "ClinicalTrials.gov Data API",
+        "ClinicalTrials.gov registry history/archive evidence",
+        "SEC issuer identity mapping",
+        "OHLCV only downstream"
+      ],
+      "next_gate": "historical record-version reconstruction; exact public posting boundary; QC-comment semantics; frozen issuer/exposure map; independent reproduction",
+      "forbidden_design_searches": [
+        "therapeutic-class search",
+        "peer-universe search",
+        "event-window search",
+        "threshold search",
+        "asset search",
+        "return-derived peer selection"
+      ],
+      "robustness_contract": {
+        "results_public_clock_locked": true,
+        "submitted_vs_posted_separated": true,
+        "qc_comment_state_preserved": true,
+        "historical_revision_lineage_required": true,
+        "same_day_ambiguity_excluded": true,
+        "issuer_mapping_frozen": true
+      }
+    }
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
