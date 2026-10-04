@@ -24,7 +24,7 @@ def test_frontier_workpacks_rotate_and_keep_q100_dependency_safe():
     assert 5 in groups[0]
     assert 6 in groups[0]
     assert groups[-1] == [8]
-    assert worker.execution_groups("local_reproduction", len(worker.LANES["local_reproduction"])) == [[1, 2, 3]]
+    assert worker.execution_groups("local_reproduction", len(worker.LANES["local_reproduction"])) == [[1, 2, 3, 4]]
 
 
 def test_frontier_lane_has_bounded_parallelism_and_reproduction_stays_serial():
@@ -384,9 +384,14 @@ def test_q022_design_guard_is_bounded_and_non_executing():
 
 def test_local_reproduction_targets_existing_governance_test():
     commands = worker.LANES["local_reproduction"]
-    assert commands[1][0:4] == [worker.PYTHON, "-m", "pytest", "-q"]
-    assert commands[1][4] == "tests/test_research_gates.py"
-    assert (ROOT / commands[1][4]).is_file()
+    matches = [
+        command for command in commands
+        if len(command) >= 5
+        and command[0:4] == [worker.PYTHON, "-m", "pytest", "-q"]
+        and command[4] == "tests/test_research_gates.py"
+    ]
+    assert len(matches) == 1
+    assert (ROOT / "tests/test_research_gates.py").is_file()
 
 def test_continuous_qa_provenance_is_published_from_workspace():
     text = (
@@ -456,3 +461,8 @@ def test_hosted_failover_is_manual_only_under_always_available_policy():
     workflow = (ROOT / ".github/workflows/hosted-research-failover.yml").read_text(encoding="utf-8")
     assert "workflow_dispatch:" in workflow
     assert 'schedule:' not in workflow
+
+
+def test_local_reproduction_includes_q121r6_sec_archive_smoke():
+    commands = [" ".join(command) for command in worker.LANES["local_reproduction"]]
+    assert any("automation.q121r6_sec_archive_url_smoke" in command for command in commands)

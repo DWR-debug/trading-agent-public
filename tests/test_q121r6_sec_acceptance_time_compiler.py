@@ -83,27 +83,95 @@ def test_q121r6_aggregate_uses_same_shard_count() -> None:
     assert SHARD_COUNT == 4
 
 
-def test_r6_uses_canonical_r3_accession_parser():
+def test_r6_archive_url_delegates_to_canonical_r3_builder():
     from automation import q121r3_sec_form_index_reverse_issuer as r3
     from automation import q121r6_sec_acceptance_time_compiler as r6
-    filename = "edgar/data/1/000000000124000001/a.txt"
-    assert r3.accession_from_filename(filename) == "0000000001-24-000001"
-    source = __import__("pathlib").Path(r6.__file__).read_text(encoding="utf-8")
-    assert "r3.accession_from_filename(filename)" in source
+    filename = "edgar/data/1007587/000110465924093411/0001104659-24-093411-index.htm"
+    assert r3.accession_from_filename(filename) == "0001104659-24-093411"
+    assert r6.archive_header_url(filename) == r3.archive_header_url(filename)
 
 
-def test_q121r6_archive_url_uses_filer_cik_from_accession():
+def test_q121r6_archive_url_uses_subject_cik_from_form_index_path():
     from automation.q121r6_sec_acceptance_time_compiler import archive_header_url
-    filename = "edgar/data/1007587/0000921895-24-000688.txt"
+    filename = "edgar/data/1007587/000110465924093411/0001104659-24-093411-index.htm"
     assert archive_header_url(filename) == (
-        "https://www.sec.gov/Archives/edgar/data/921895/000092189524000688/"
-        "0000921895-24-000688-index-headers.html"
+        "https://www.sec.gov/Archives/edgar/data/1007587/000110465924093411/"
+        "0001104659-24-093411-index-headers.html"
     )
+
+def test_q121r6_problem_404_filename_preserves_subject_cik_root():
+    from automation.q121r6_sec_acceptance_time_compiler import archive_header_url
+    filename = "edgar/data/1007587/000110465924093411/0001104659-24-093411-index.htm"
+    url = archive_header_url(filename)
+    assert "/data/1007587/000110465924093411/" in url
+    assert "/data/1104659/000110465924093411/" not in url
 
 
 def test_q121r6_subject_and_filer_cik_are_distinct():
-    source = __import__("pathlib").Path(
-        __import__("automation.q121r6_sec_acceptance_time_compiler", fromlist=["__name__"]).__file__
+    from automation.q121r6_sec_acceptance_time_compiler import archive_header_url
+    filename = "edgar/data/1007587/000110465924093411/0001104659-24-093411-index.htm"
+    url = archive_header_url(filename)
+    assert "/data/1007587/000110465924093411/" in url
+    assert "/data/1104659/000110465924093411/" not in url
+    assert "0001104659-24-093411-index-headers.html" in url
+
+
+def test_q121r6_404_failure_payload_includes_source_url():
+    from pathlib import Path
+    source = Path(__import__("automation.q121r6_sec_acceptance_time_compiler", fromlist=["__name__"]).__file__).read_text(encoding="utf-8")
+    assert '"source_url": archive_header_url(row["filename"])' in source
+    assert "Q121R6_DEBUG_404" in source
+
+
+def test_q121r6_artifacts_are_attempt_isolated():
+    from pathlib import Path
+
+    workflow = (
+        Path(__file__).parents[1]
+        / ".github"
+        / "workflows"
+        / "q121r6-sec-acceptance-time-compilation.yml"
     ).read_text(encoding="utf-8")
-    assert "INDEX_SUBJECT_CIK_MISMATCH" in source
-    assert "filer_cik = accession_dashed.split" in source
+    assert "q121r6-population-${{ github.run_id }}-${{ github.run_attempt }}" in workflow
+    assert "q121r6-shard-${{ matrix.shard_index }}-${{ github.run_id }}-${{ github.run_attempt }}" in workflow
+    assert "q121r6-final-${{ github.run_id }}-${{ github.run_attempt }}" in workflow
+    assert "q121r6-shard-*-${{ github.run_id }}-${{ github.run_attempt }}" in workflow
+
+
+def test_q121r6_aggregate_rejects_mixed_execution_attempts(tmp_path):
+    import json
+    from automation.q121r6_sec_acceptance_time_aggregate import aggregate
+
+    base = {
+        "schema_version": "1.0",
+        "task_id": "Q-2026-10-03-121R6-SEC-ACCEPTANCE-TIME-COMPILATION",
+        "status": "COMPLETED",
+        "shard_count": 4,
+        "population_count": 61818,
+        "population_fingerprint": "7251f0e25d7293802d389cac875abfd8552b9441ac604b69918bd7d5b9aec554",
+        "records": [],
+        "failures": [],
+    }
+    paths = []
+    for index in range(4):
+        payload = {
+            **base,
+            "shard_index": index,
+            "slice_start": (61818 * index) // 4,
+            "slice_end_exclusive": (61818 * (index + 1)) // 4,
+            "slice_count": 0,
+            "execution_identity": {
+                "workflow_run_id": "100" if index < 3 else "101",
+                "run_attempt": "1",
+                "shard_index": index,
+            },
+        }
+        p = tmp_path / f"shard-{index}.json"
+        p.write_text(json.dumps(payload), encoding="utf-8")
+        paths.append(p)
+    try:
+        aggregate(paths, tmp_path / "out.json")
+    except RuntimeError as exc:
+        assert str(exc).startswith("SHARD_EXECUTION_IDENTITY_MIXED:")
+    else:
+        raise AssertionError("mixed execution attempts were accepted")

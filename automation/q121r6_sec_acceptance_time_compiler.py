@@ -3,7 +3,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
+import sys
 import threading
 import time
 import urllib.error
@@ -91,21 +93,13 @@ def http_get(url: str, limiter: RateLimiter, retries: int = 3) -> tuple[int, byt
 
 
 def archive_header_url(filename: str) -> str:
-    parts = filename.split("/")
-    if len(parts) < 4 or parts[0] != "edgar" or parts[1] != "data":
-        raise ValueError(f"INVALID_ARCHIVE_FILENAME:{filename}")
-    accession_dashed = r3.accession_from_filename(filename)
-    accession = accession_dashed.replace("-", "")
-    # For subject-company beneficial-ownership rows, the archive directory is
-    # keyed by the filer/reporting-person CIK encoded in the accession prefix,
-    # not necessarily the subject-company CIK in the index row.
-    filer_cik = accession_dashed.split("-", 1)[0]
-    if not re.fullmatch(r"\d{10}", filer_cik):
-        raise ValueError(f"INVALID_FILER_CIK_IN_ACCESSION:{accession_dashed}")
-    return (
-        f"https://www.sec.gov/Archives/edgar/data/{int(filer_cik)}/{accession}/"
-        f"{accession_dashed}-index-headers.html"
-    )
+    """Build the SEC archive-header URL from the form-index archive path.
+
+    The SEC form index already carries the subject-company CIK in the
+    edgar/data/<subject-cik>/ path. The accession prefix identifies the
+    submitting filer and may differ from the subject company.
+    """
+    return r3.archive_header_url(filename)
 
 
 def extract_header_value(text: str, label: str) -> str | None:
@@ -334,6 +328,13 @@ def compile_shard(
     def fetch_one(row: dict[str, str]) -> dict[str, object]:
         url = archive_header_url(row["filename"])
         status, body = http_get(url, limiter)
+        if status == 404:
+            print(
+                f"Q121R6_DEBUG_404 accession={row['accession_number']} "
+                f"subject_cik={row['cik']} url={url}",
+                file=sys.stderr,
+            )
+            raise RuntimeError(f"SEC_HEADER_HTTP_404:{row['accession_number']}")
         if status != 200:
             raise RuntimeError(f"SEC_HEADER_HTTP_{status}:{row['accession_number']}")
         header = compile_header(row, body)
@@ -357,6 +358,7 @@ def compile_shard(
                         "cik": row["cik"],
                         "form": row["form"],
                         "filed_date": row["filed_date"],
+                        "source_url": archive_header_url(row["filename"]),
                         "error": str(exc),
                     }
                 )
@@ -371,6 +373,11 @@ def compile_shard(
         "schema_version": "1.0",
         "task_id": "Q-2026-10-03-121R6-SEC-ACCEPTANCE-TIME-COMPILATION",
         "status": status,
+        "execution_identity": {
+            "workflow_run_id": os.environ.get("GITHUB_RUN_ID"),
+            "run_attempt": os.environ.get("GITHUB_RUN_ATTEMPT"),
+            "shard_index": shard_index,
+        },
         "shard_index": shard_index,
         "shard_count": shard_count,
         "population_count": len(population),

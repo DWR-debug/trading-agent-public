@@ -287,6 +287,11 @@ LANES: dict[str, list[list[str]]] = {
     "local_reproduction": [
         [
             PYTHON,
+            "-m",
+            "automation.q121r6_sec_archive_url_smoke",
+        ],
+        [
+            PYTHON,
             "-c",
             (
                 "import ast, pathlib; "
