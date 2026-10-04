@@ -25,35 +25,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 39.81,
-  "stdout": "\n\n## Q089 Adversarial Review — Pre‑Performance Failure‑Mode Analysis\n\n### 1. Reviewed Artifacts\n- **Design**: `docs/research_design/Q089-clean-fresh-q069-validation-2026-09-28.md`\n- **Coverage receipt**: `research/evidence/q089_coverage_result.json`\n- **Input‑freeze receipt**: `research/evidence/q089_input_freeze_result.json`\n- **PIT receipt**: `research/evidence/q089_pit_result.json`\n- **Asset‑freeze**: `research/evidence/q089_asset_freeze.json`\n- **Harness snippets**: `automation/q089_coverage_pit.py`, `automation/q089_input_freeze.py`\n- **Cross‑run audit**: `docs/research_design/Q089_CROSS_RUN_REPRO_AUDIT_2026-09-28.md`\n- **Governance**: `docs/DECISION_BASIS.md` (partial)\n\n### 2. Findings (Potential Invalidations)\n\n| # | Failure mode | Evidence | Severity |\n|---|--------------|----------|----------|\n| F1 | **Coverage‑freeze count mismatch** – Coverage receipt reports `common_calendar_count: 3704`, but the input‑freeze expects exactly `target_common_candles: 3500` and each dataset in the freeze has `row_count: 3500`. | `q089_coverage_result.json` vs `q089_input_freeze_result.json` | High |\n| F2 | **Network access in input freeze** – The freeze script calls `fetch_adjusted_close(symbol, timestamps)`, which may re‑download adjusted‑close data from Yahoo, contradicting `performance_network_access: false`",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 11.915,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1791083434-auWXhsnqVlM9vviO0ntm",
-  "usage": {
-    "prompt_tokens": 7068,
-    "completion_tokens": 3200,
-    "total_tokens": 10268,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 3373,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
