@@ -47,6 +47,7 @@ jobs:
       - name: Run exactly one provider smoke request
         shell: bash
         env:
+          PROVIDER_INPUT: ${{ github.event.inputs.provider }}
           AI_EXTERNAL_PROVIDER_ALLOWLIST: ${{ secrets.AI_EXTERNAL_PROVIDER_ALLOWLIST }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
@@ -56,10 +57,51 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json, os
+          import json
+          import os
+
           from automation.litellm_free import admission, call_litellm_free
 
-          provider = os.environ.get("PROVIDER_INPUT", "")
+          provider = os.environ["PROVIDER_INPUT"].strip()
+          key_env = {
+              "openrouter_free": "OPENROUTER_API_KEY",
+              "groq_free": "GROQ_API_KEY",
+              "mistral_api": "MISTRAL_API_KEY",
+          }[provider]
+
+          admitted = admission(provider, os.environ)
+          print(json.dumps({
+              "provider": provider,
+              "eligible": admitted["eligible"],
+              "litellm_model": admitted["litellm_model"],
+              "api_model": admitted["api_model"],
+              "free_only": admitted["free_only"],
+              "paid_usage_allowed": admitted["paid_usage_allowed"],
+              "paid_fallback_allowed": admitted["paid_fallback_allowed"],
+              "retries_allowed": admitted["retries_allowed"],
+              "reasons": admitted["reasons"],
+          }, sort_keys=True))
+
+          if not admitted["eligible"]:
+              raise SystemExit("provider is not admitted by the existing free-only gate")
+
+          result = call_litellm_free(
+              provider,
+              "Compatibility smoke only. Return the single word PASS. "
+              "This request creates no scientific evidence and must not perform "
+              "research selection, validation, tuning, promotion, or live execution.",
+              api_key=os.environ.get(key_env, ""),
+              timeout_seconds=30,
+          )
+          print(json.dumps({
+              "provider": provider,
+              "status": result["status"],
+              "returncode": result["returncode"],
+              "response_id": result.get("response_id"),
+              "response_model": result.get("response_model"),
+              "usage": result.get("usage"),
+          }, sort_keys=True))
+
+          if result["status"] != "SUCCESS":
+              raise SystemExit("LiteLLM provider smoke failed")
           PY
-        env:
-          PROVIDER_INPUT: ${{ github.event.inputs.provider }}
