@@ -24,9 +24,9 @@ FROZEN_DATES = (
 )
 
 FILING_RE = re.compile(
-    r"Filed on:(?P<filed_m>\d{1,2})/(?P<filed_d>\d{1,2})/(?P<filed_y>\d{4})"
-    r" at (?P<filed_h>\d{1,2}):(?P<filed_min>\d{2}) (?P<ampm>am|pm)"
-    r"Scheduled Pub\. Date:(?P<pub_m>\d{1,2})/(?P<pub_d>\d{1,2})/(?P<pub_y>\d{4})",
+    r"Filed on:\s*(?P<filed_m>\d{1,2})/(?P<filed_d>\d{1,2})/(?P<filed_y>\d{4})"
+    r"\s+at\s+(?P<filed_h>\d{1,2}):(?P<filed_min>\d{2})\s+(?P<ampm>am|pm)"
+    r"\s+Scheduled Pub\. Date:\s*(?P<pub_m>\d{1,2})/(?P<pub_d>\d{1,2})/(?P<pub_y>\d{4})",
     re.IGNORECASE,
 )
 
@@ -52,17 +52,49 @@ def _iso_date(y: str, m: str, d: str) -> str:
     return f"{int(y):04d}-{int(m):02d}-{int(d):02d}"
 
 
+
+
+class _HTMLTextParser(HTMLParser):
+    """Extract visible source text from raw HTML deterministically."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.parts: list[str] = []
+
+    def handle_data(self, data: str) -> None:
+        value = data.strip()
+        if value:
+            self.parts.append(value)
+
+    def text(self) -> str:
+        return " ".join(self.parts)
+
+
+def _normalize_source_text(source: str) -> str:
+    """Normalize raw HTML and textual fixtures without changing field values."""
+    parser = _HTMLTextParser()
+    try:
+        parser.feed(source)
+        parser.close()
+        normalized = parser.text()
+    except Exception:
+        normalized = re.sub(r"<[^>]+>", " ", source)
+    normalized = html.unescape(normalized)
+    return re.sub(r"\s+", " ", normalized).strip()
+
+
 def parse_public_inspection(text: str) -> dict[str, object]:
+    normalized = _normalize_source_text(text)
     page_match = re.search(
-        r"#\s+(\d{2})/(\d{2})/(\d{4}) Public Inspection Issue",
-        text,
+        r"(?:#\s+)?(\d{2})/(\d{2})/(\d{4}) Public Inspection Issue",
+        normalized,
     )
     if not page_match:
         raise ValueError("missing public-inspection issue heading")
     page_date = _iso_date(page_match.group(3), page_match.group(1), page_match.group(2))
 
-    lower = text.lower()
-    filing_records = list(FILING_RE.finditer(text))
+    lower = normalized.lower()
+    filing_records = list(FILING_RE.finditer(normalized))
     same_day = 0
     rows: list[dict[str, str]] = []
     for match in filing_records:
@@ -88,8 +120,8 @@ def parse_public_inspection(text: str) -> dict[str, object]:
     result = {
         "page_date": page_date,
         "regular_or_special_sections_present": {
-            "regular": "# Regular Filing" in text,
-            "special": "# Special Filing" in text,
+            "regular": "Regular Filing" in normalized,
+            "special": "Special Filing" in normalized,
         },
         "filing_records": len(rows),
         "records_with_filed_timestamp": sum(bool(x.get("filed_time_et")) for x in rows),
