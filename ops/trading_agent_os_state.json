@@ -140,10 +140,10 @@
   },
   "current_research_focus": {
     "completed": "Q119 Treasury demand-shape design merged; I22 SEC filing-arrival session-window correction merged",
-    "active_next": "Q198 Federal Register public-inspection clock reconstruction (A-priority); Q197 USAspending award-state historical revision/observation boundary (A-priority); Q199 USPTO publication/PIT lineage; Q201 ClinicalTrials.gov results-first-posted historical revision lineage; in parallel close Q186 citation/publication ordering. No performance authorization until each candidate passes its candidate-specific PIT/coverage/authorization gates.",
+    "active_next": "Q198 Federal Register public-inspection clock reconstruction (A); Q197 USAspending award-state historical revision/observation boundary (A); Q199 USPTO publication/PIT lineage; Q201 ClinicalTrials.gov results-first-posted historical revision lineage; in parallel close Q186 citation/publication ordering. No performance authorization until candidate-specific coverage/PIT/authorization gates pass.",
     "meta_research": "ECL runtime hardening and first valid model-metrics receipt",
     "governance_engineering": "AGENT-026-R2 two-slot lease; draft PR 642",
-    "discovery_frontier": "Q197/Q198 source components READY; next gate is fixed historical archive/clock/correction lineage and independent event-time reproduction. Q199 historical source component READY; Q201 source probe is being repaired from the proven Q179 ClinicalTrials.gov clock fields, but historical revision lineage remains unresolved. Q188-Q192 remain PIT-history gated. Q193 composition remains dependency-gated. All discovery work is non-authorizing."
+    "discovery_frontier": "Q197/Q198/Q199/Q201 source components are READY from deterministic source-feasibility runs; next gates are candidate-specific historical archive/revision/clock lineage and independent PIT reproduction. Q188-Q192 remain PIT-history gated. Q193 composition remains dependency-gated. Q186 remains the leading deeper PIT workstream for citation-publication ordering. All discovery work is non-authorizing."
   },
   "resource_routing": {
     "self_hosted_windows": [
@@ -327,8 +327,8 @@
       },
       {
         "candidate": "Q201",
-        "stage": "SOURCE_PROBE_REPAIR_IN_PROGRESS",
-        "next_gate": "re-run source probe with proven ClinicalTrials.gov posted-date fields, then historical results-state revision lineage + independent PIT reproduction"
+        "stage": "SOURCE_COMPONENT_READY",
+        "next_gate": "historical ClinicalTrials.gov results-state archive/revision lineage + explicit posted-time semantics + frozen sponsor/exposure mapping + independent PIT reproduction"
       },
       {
         "candidate": "Q186",
@@ -343,6 +343,11 @@
       "tuning": false,
       "promotion": false,
       "live_execution": false
+    },
+    "updated_at_utc": "2026-10-04T19:00:00+02:00",
+    "verified_receipts": {
+      "Q197-Q198": "37222425792",
+      "Q199-Q201": "37222425840"
     }
   }
 }
