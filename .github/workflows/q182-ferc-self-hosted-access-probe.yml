@@ -23,7 +23,7 @@ concurrency:
 
 jobs:
   probe:
-    if: github.repository == "DWR-debug/trading-agent-public" && (github.event_name != "pull_request" || github.event.pull_request.head.repo.full_name == github.repository)
+    if: github.repository == 'DWR-debug/trading-agent-public' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
     strategy:
       fail-fast: false
       max-parallel: 2
