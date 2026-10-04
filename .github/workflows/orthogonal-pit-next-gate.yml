@@ -58,21 +58,21 @@ jobs:
       - name: Publish next-gate receipt
         shell: bash
         env:
-          GH_TOKEN: \${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           mkdir -p research/evidence
           cp research/runs/orthogonal_next_gate_latest.json research/evidence/orthogonal_next_gate_latest.json
           for attempt in 1 2 3 4 5; do
-            current_sha="\$(gh api "/repos/\$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+            current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
             if python3 automation/github_contents_publish.py \
-              --repository "\$GITHUB_REPOSITORY" \
+              --repository "$GITHUB_REPOSITORY" \
               --branch master \
-              --base-sha "\$current_sha" \
+              --base-sha "$current_sha" \
               --file "research/evidence/orthogonal_next_gate_latest.json=research/evidence/orthogonal_next_gate_latest.json"; then
               exit 0
             fi
-            sleep "\$attempt"
+            sleep "$attempt"
           done
           exit 1
 
@@ -80,7 +80,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: orthogonal-next-gate-\${{ github.run_id }}-\${{ github.run_attempt }}
+          name: orthogonal-next-gate-${{ github.run_id }}-${{ github.run_attempt }}
           path: research/runs/orthogonal_next_gate_latest.json
           if-no-files-found: error
           retention-days: 30
