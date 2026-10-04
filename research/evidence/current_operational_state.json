@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T20:08:53.157178+00:00",
+  "generated_at_utc": "2026-10-04T20:09:07.524256+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2613,6 +2613,16 @@
     "recent_commits": [
       {
         "message": "OPS: synchronize current operational status",
+        "sha": "5d4369d7d5ccf6c9c0c0eeca5c2dbbdc9f7dce74",
+        "timestamp": "2026-10-04T20:08:56Z"
+      },
+      {
+        "message": "OPS: record overnight research round chaining capacity",
+        "sha": "502b76bf98d548879b4a45304b66fa8a6316d9ef",
+        "timestamp": "2026-10-04T22:08:54+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
         "sha": "5e7e09c10c75b684001cc8ad8d88a4bb73ac2ca9",
         "timestamp": "2026-10-04T20:08:43Z"
       },
@@ -2640,16 +2650,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "a5d92690d201e56d108674f380cf17554ea1999a",
         "timestamp": "2026-10-04T20:07:26Z"
-      },
-      {
-        "message": "TEST: update Q121-R6 Windows reproduction for three shards",
-        "sha": "2bfadfc0af2c67033a996365948c1df4f9e1fbef",
-        "timestamp": "2026-10-04T22:07:09+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "de5e6e73f33990b5039a5f776e704621d0ce3dbc",
-        "timestamp": "2026-10-04T20:07:01Z"
       }
     ]
   },
@@ -2734,7 +2734,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5e7e09c10c75b684001cc8ad8d88a4bb73ac2ca9",
+  "source_master_sha": "5d4369d7d5ccf6c9c0c0eeca5c2dbbdc9f7dce74",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2848,6 +2848,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37230975335"
+    "run_id": "37230988180"
   }
 }
