@@ -14,9 +14,10 @@ on:
 permissions:
   contents: write
 
+# Receipt persistence must not be cancelled by a later repository push.
 concurrency:
-  group: q148-r1-persist-receipt
-  cancel-in-progress: true
+  group: q148-r1-persist-receipt-${{ github.run_id }}
+  cancel-in-progress: false
 
 jobs:
   persist:
