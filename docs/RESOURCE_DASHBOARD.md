@@ -57,4 +57,4 @@ The snapshot is refreshed automatically once per day at **03:35 UTC** by **`.git
 
 The dashboard is an operational snapshot, not a live runner-control plane and not scientific evidence. It deliberately distinguishes routing assumptions from timestamped execution receipts.
 
-For a website deployment, configure GitHub Pages to serve the repository's **`/docs`** directory from `master`. The dashboard will then be available under **`/dashboard/`** on the repository's Pages domain.
+GitHub Pages deployment is defined in **`.github/workflows/github-pages-dashboard.yml`** and publishes the repository's **`/docs`** directory. The Pages root redirects to the dashboard, which is available at **`/dashboard/`** on the repository's Pages domain once Pages is enabled.
