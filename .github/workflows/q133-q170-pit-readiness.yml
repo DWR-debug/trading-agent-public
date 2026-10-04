@@ -104,7 +104,16 @@ jobs:
           input="research/runs/q133_q170_pit_readiness/${GITHUB_RUN_ID}_q137_q144.json"
           latest="research/evidence/q137_q144_micro_pit_latest.json"
           test -f "$input"
-          python automation/github_contents_publish.py             --repository "${GITHUB_REPOSITORY}"             --branch master             --file "$latest=$input"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin master --quiet
+            base_sha="$(git rev-parse origin/master)"
+            if python automation/github_contents_publish.py               --repository "${GITHUB_REPOSITORY}"               --branch master               --base-sha "${base_sha}"               --file "$latest=$input"; then
+              exit 0
+            fi
+            sleep "${attempt}"
+          done
+          echo "::error::Q137-Q144 micro PIT evidence publication failed after retries"
+          exit 1
       - name: Persist validated Q133-Q170 material receipt
         if: success() && github.event_name != 'pull_request'
         shell: bash
