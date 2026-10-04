@@ -993,7 +993,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-04T21:44:49.394050+00:00",
+  "generated_at_utc": "2026-10-04T21:45:36.009956+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2285,7 +2285,7 @@
         "status": "SOURCE_COMPONENT_READY"
       }
     ],
-    "receipt_fingerprint": "89af8cd3e38348200e8c13350de9410fbfd2817f5cb19a6823894228773dcc2c",
+    "receipt_fingerprint": "e933ad80473da8c01d21d2516f17f66b7ead3cc664a95110b734cf22427e51eb",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2366,6 +2366,23 @@
           "https://www.federalregister.gov/api/v1/documents.json?per_page=1&order=newest",
           "https://www.federalregister.gov/api/v1/public-inspection-documents/current.json",
           "https://www.archives.gov/federal-register/faqs"
+        ]
+      },
+      "Q198_HISTORICAL_PI_API": {
+        "attempts": [
+          {
+            "http_status": 200,
+            "missing_markers": [],
+            "url": "https://www.federalregister.gov/api/v1/public-inspection-documents/2021-07287.json"
+          }
+        ],
+        "content_sha256": "0e455b7f596ce4ac34c0e490e2d1cbeef6c7b87d1ee2c06aa982bdf7e2eabc76",
+        "missing_markers": [],
+        "probe_classification": "PASS",
+        "reachable": true,
+        "scientific_boundary": false,
+        "urls": [
+          "https://www.federalregister.gov/api/v1/public-inspection-documents/2021-07287.json"
         ]
       }
     },
@@ -2643,6 +2660,21 @@
     ],
     "recent_commits": [
       {
+        "message": "RESEARCH: trigger receipt-driven priority wave R3",
+        "sha": "b3d472d4e5208a9b6351b6c6b6f06ee5667c1906",
+        "timestamp": "2026-10-04T23:45:23+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "06b11e4320673b619ce0c50f629e6330f39263a8",
+        "timestamp": "2026-10-04T21:44:56Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "1375fefbbdcbc83831c29461e96b7ec9fa246a8f",
+        "timestamp": "2026-10-04T21:44:51Z"
+      },
+      {
         "message": "TEST: enforce historical Federal Register PI API probe contract",
         "sha": "75d96aea954e1eeed9f7cb00848b730d1671fc5b",
         "timestamp": "2026-10-04T23:44:35+02:00"
@@ -2666,21 +2698,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "e2888a9261af1cdff250950e4bfccdfe334eca86",
         "timestamp": "2026-10-04T21:43:43Z"
-      },
-      {
-        "message": "FIX: allow orchestrator to dispatch Q121-R6",
-        "sha": "e2bb751a244b07794c0448626afb43081dfdce96",
-        "timestamp": "2026-10-04T23:43:28+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "872f892f480ebf6141304f1d3b48cb20aef3224d",
-        "timestamp": "2026-10-04T21:41:18Z"
-      },
-      {
-        "message": "RESEARCH: dispatch priority source-PIT and candidate wave",
-        "sha": "69dc4a5bebd04c189948ea7014eb5d0c604cca46",
-        "timestamp": "2026-10-04T23:41:06+02:00"
       }
     ]
   },
@@ -2765,7 +2782,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "75d96aea954e1eeed9f7cb00848b730d1671fc5b",
+  "source_master_sha": "b3d472d4e5208a9b6351b6c6b6f06ee5667c1906",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -2879,6 +2896,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37237315800"
+    "run_id": "37237371019"
   }
 }
