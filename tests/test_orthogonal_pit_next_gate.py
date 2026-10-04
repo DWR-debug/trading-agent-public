@@ -30,9 +30,9 @@ def test_global_boundary_remains_closed():
     assert result["global_boundary"]["live_execution"] is False
 
 def test_new_literature_candidates_are_source_first_and_non_authorizing():
-    assert NEXT_GATES["Q202"] == "SOURCE_FEASIBILITY_REQUIRED"
-    assert NEXT_GATES["Q203"] == "SOURCE_FEASIBILITY_REQUIRED"
-    assert NEXT_GATES["Q204"] == "SOURCE_FEASIBILITY_REQUIRED"
+    assert NEXT_GATES["Q202"] == "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT"
+    assert NEXT_GATES["Q203"] == "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT"
+    assert NEXT_GATES["Q204"] == "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT"
     result = compile_state()
     current = {item["candidate_id"]: item for item in result["candidates"]}
     for candidate_id in ["Q202", "Q203", "Q204"]:
