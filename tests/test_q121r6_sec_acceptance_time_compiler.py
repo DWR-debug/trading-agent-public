@@ -121,3 +121,10 @@ def test_q121r6_404_failure_payload_includes_source_url():
     source = Path(__import__("automation.q121r6_sec_acceptance_time_compiler", fromlist=["__name__"]).__file__).read_text(encoding="utf-8")
     assert '"source_url": archive_header_url(row["filename"])' in source
     assert "Q121R6_DEBUG_404" in source
+
+def test_q121r6_archive_smoke_probe_is_present():
+    from pathlib import Path
+    source = Path("automation/q121r6_sec_archive_url_smoke.py").read_text(encoding="utf-8")
+    assert "Q121R6_WINDOWS_URL_SMOKE_OK" in source
+    assert "000110465924093411" in source
+    assert "data/1007587/" in source
