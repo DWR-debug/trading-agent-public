@@ -28,7 +28,7 @@ FILING_RE = re.compile(
     r" at (?P<filed_h>\d{1,2}):(?P<filed_min>\d{2}) (?P<ampm>am|pm)"
     r"Scheduled Pub\. Date:(?P<pub_m>\d{1,2})/(?P<pub_d>\d{1,2})/(?P<pub_y>\d{4})",
     re.IGNORECASE,
-))
+)
 
 
 def fetch(url: str) -> tuple[int, bytes]:
