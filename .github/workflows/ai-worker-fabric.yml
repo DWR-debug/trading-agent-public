@@ -23,8 +23,11 @@ on:
       - "automation/research_os_scheduler.py"
       - "automation/research_hypothesis_compiler.py"
       - "automation/autonomous_control_plane.py"
-  schedule:
-    - cron: '0 */6 * * *'
+      - "ai_requests/AI-2026-10-04-Q187-Q192-ADVERSARIAL.json"
+      - "research/frontier/q187_q192_candidate_wave_2026_10_04.json"
+      - "research/evidence/q187_q192_source_feasibility_latest.json"
+  # OpenRouter free is deliberately event-driven. Repeating unchanged research
+  # prompts on a timer wastes scarce free capacity without increasing information.
   workflow_dispatch:
 
 permissions:
@@ -45,6 +48,7 @@ jobs:
           - AI-2026-09-30-Q101-NEGATIVE-EVIDENCE
           - AI-2026-09-30-Q102-REGIME-STATE-DESIGN
           - AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT
+          - AI-2026-10-04-Q187-Q192-ADVERSARIAL
     concurrency:
       group: trading-agent-ai-${{ matrix.provider }}-${{ matrix.task }}
       cancel-in-progress: false
@@ -75,6 +79,7 @@ jobs:
             AI-2026-09-30-Q101-NEGATIVE-EVIDENCE) echo 'path=ai_requests/AI-2026-09-30-Q101-NEGATIVE-EVIDENCE.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-09-30-Q102-REGIME-STATE-DESIGN) echo 'path=ai_requests/AI-2026-09-30-Q102-REGIME-STATE-DESIGN.json' >> "$GITHUB_OUTPUT" ;;
             AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT) echo 'path=ai_requests/AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT.json' >> "$GITHUB_OUTPUT" ;;
+            AI-2026-10-04-Q187-Q192-ADVERSARIAL) echo 'path=ai_requests/AI-2026-10-04-Q187-Q192-ADVERSARIAL.json' >> "$GITHUB_OUTPUT" ;;
             *) exit 1 ;;
           esac
 
