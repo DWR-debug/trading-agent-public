@@ -86,18 +86,6 @@ jobs:
             set "RC=!ERRORLEVEL!"
             if "!EXIT_CODE!"=="0" set "EXIT_CODE=!RC!"
           )
-          if /I "%LANE%"=="autonomous_frontier_qa" (
-            "%PY_EXE%" -m automation.research_os_scheduler --run-number "%GITHUB_RUN_NUMBER%" --output "research/runs/self_hosted/autonomous/%GITHUB_RUN_ID%/%LANE%/research_os_resource_schedule.json"
-            if errorlevel 1 (
-              set "RC=!ERRORLEVEL!"
-              if "!EXIT_CODE!"=="0" set "EXIT_CODE=!RC!"
-            )
-            "%PY_EXE%" -m automation.research_os_source_probe --bucket "%GITHUB_RUN_NUMBER%" --bucket-count 4 --max-sources 4 --output "research/runs/self_hosted/autonomous/%GITHUB_RUN_ID%/%LANE%/research_os_source_probe.json"
-            if errorlevel 1 (
-              set "RC=!ERRORLEVEL!"
-              if "!EXIT_CODE!"=="0" set "EXIT_CODE=!RC!"
-            )
-          )
           endlocal & exit /b %EXIT_CODE%
 
       - name: Stage autonomous evidence for upload
@@ -289,7 +277,7 @@ jobs:
         shell: cmd
         run: |
           @echo off
-          powershell.exe -NoProfile -NonInteractive -Command "$slot=[int][math]::Floor(([DateTimeOffset]::UtcNow.ToUnixTimeSeconds()) / 21600) %% 6; switch($slot){0{$task='AI-2026-09-29-Q091-ADVERSARIAL'}1{$task='AI-2026-09-28-Q089-ADVERSARIAL'}2{$task='AI-2026-09-28-UNUSUAL-FRONTIER'}3{$task='AI-2026-09-30-Q100-FRONTIER-FEASIBILITY'}4{$task='AI-2026-09-30-Q101-NEGATIVE-EVIDENCE'}5{$task='AI-2026-09-30-Q102-REGIME-STATE-DESIGN'}}; 'task='+$task | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append; 'slot='+$slot | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append; 'path=ai_requests\'+$task+'.json' | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append; 'GEMINI_LOCAL_ROTATION slot='+$slot+' task='+$task"
+          powershell.exe -NoProfile -NonInteractive -Command "$slot=[int][math]::Floor(([DateTimeOffset]::UtcNow.ToUnixTimeSeconds()) / 21600) %% 6; switch($slot){0{$task='AI-2026-09-29-Q091-ADVERSARIAL'}1{$task='AI-2026-09-28-Q089-ADVERSARIAL'}2{$task='AI-2026-09-28-UNUSUAL-FRONTIER'}3{$task='AI-2026-09-30-Q100-FRONTIER-FEASIBILITY'}4{$task='AI-2026-09-30-Q101-NEGATIVE-EVIDENCE'}5{$task='AI-2026-09-30-Q102-REGIME-STATE-DESIGN'}}; 'task='+$task | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append; 'task_id='+$task | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append; 'slot='+$slot | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append; 'path=ai_requests\'+$task+'.json' | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append; 'GEMINI_LOCAL_ROTATION slot='+$slot+' task='+$task"
 
       - name: Run bounded Gemini worker
         shell: cmd
