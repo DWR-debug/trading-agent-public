@@ -42,4 +42,4 @@ def test_status_generator_exposes_q179_q184_receipts():
     assert "q179_q184_pit_readiness_r1_latest.json" in text
     assert '"q179_q184_source_feasibility": q179_q184_source_receipt' in text
     assert '"q179_q184_pit_readiness_r1": q179_q184_pit_receipt' in text
-    assert "Q179-Q184 Orthogonal Source/PIT Frontier" in text
+    assert "Q179–Q184 Orthogonal Source/PIT Frontier" in text
