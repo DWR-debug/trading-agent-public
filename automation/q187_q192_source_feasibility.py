@@ -34,7 +34,8 @@ PROBES: dict[str, dict[str, Any]] = {
                 "filters": {
                     "time_period": [
                         {"start_date": "2025-01-01", "end_date": "2025-01-02"}
-                    ]
+                    ],
+                    "award_type_codes": ["A", "B", "C", "D"]
                 },
                 "fields": [
                     "Award ID",
@@ -44,7 +45,7 @@ PROBES: dict[str, dict[str, Any]] = {
                 ],
                 "page": 1,
                 "limit": 1,
-                "sort": "Action Date",
+                "sort": "Transaction Amount",
                 "order": "desc",
             },
             "required_keys": [
