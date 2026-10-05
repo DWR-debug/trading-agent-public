@@ -29,6 +29,11 @@
 - S10 output remains non-scientific and cannot authorize performance or promotion.
 - **PERMANENT LITERATURE-RESEARCH RULE — ACTIVE:** The Trading Agent continuously searches for new, genuinely orthogonal economic mechanisms, information channels and cross-disciplinary relationships. Discovery is run on a recurring daily/weekly research cadence plus an independent public-metadata scout. Every promising finding is verified against primary sources, separated from existing candidate lineages, cheap-falsified where possible, and scored by novelty, PIT feasibility, reproducibility and information gain per compute. Negative/insufficient findings are retained to prevent cyclic rediscovery. Literature claims never become project evidence by themselves and can never authorize performance, holdout selection, ranking, tuning, promotion or live execution.
 
+### Weekly Deep Research — Q215/Q216 Active
+- **Q215:** public-source observability gap — P1; cross-channel information-diffusion state with explicit anti-double-counting constraints.
+- **Q216:** macro-vintage revision exposure state — P1-RISK; macro-vintage revision-reliability state only.
+- Both remain discovery/source/PIT-only; no performance, holdout selection, ranking, tuning, promotion or live execution.
+
 ### Permanent Capacity Saturation & Rolling Research Waves
 
 - **STATUS: ACTIVE_AND_PERSISTENT.** Useful free compute is continuously routed whenever a real bounded backlog exists.
