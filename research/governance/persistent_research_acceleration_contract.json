@@ -158,10 +158,12 @@
     "scheduler_cadence": "every_10_minutes",
     "rule": "When useful free capacity exists and a non-duplicate bounded backlog exists, keep the lane occupied with the highest-priority ready task.",
     "current_window": {
-      "window_id": "TA-2H-2026-10-05-1735Z",
-      "start_utc": "2026-10-05T17:35:00Z",
-      "end_utc": "2026-10-05T19:35:00Z",
-      "phases": [
+      "window_id": "TA-28M-2026-10-05-1958Z",
+      "start_utc": "2026-10-05T19:58:00Z",
+      "end_utc": "2026-10-05T20:26:00Z",
+      "duration_minutes": 28,
+      "cadence_minutes": 5,
+      "phase_order": [
         "W1_SOURCE_PIT_CLOCK_CLOSURE",
         "W2_CANDIDATE_CONTRACTS_AND_INFORMATION_TIMING",
         "W3_NEXT_GATE_AND_INDEPENDENT_REPRODUCTION",
@@ -180,7 +182,8 @@
     },
     "start_alignment": "2026-10-05T16:11:31Z",
     "dispatch_authority": "capacity-saturation-rolling-waves.yml = sole automatic dispatcher; priority-research-wave-dispatch.yml = manual-only",
-    "anti_scheinbeschäftigung": "Do not rerun successful source probes or tests merely to occupy a runner. Route only defined receipt-dependent next gates, independent reproductions, candidate/source/PIT closures, or materially useful governance/provenance QA. Idle is valid only when no useful independent executable backlog exists."
+    "anti_scheinbeschäftigung": "Do not rerun successful source probes or tests merely to occupy a runner. Route only defined receipt-dependent next gates, independent reproductions, candidate/source/PIT closures, or materially useful governance/provenance QA. Idle is valid only when no useful independent executable backlog exists.",
+    "session_mode": "ACTIVE_28_MIN_AUTONOMOUS"
   },
   "chat_continuity": {
     "state_store": "repository",
