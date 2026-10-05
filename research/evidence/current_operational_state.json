@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T06:42:24.249166+00:00",
+  "generated_at_utc": "2026-10-05T06:43:13.866985+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4136,6 +4136,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: refresh research control board snapshot",
+        "sha": "4babeba91c19782cf0205a31fb729c4a7d799097",
+        "timestamp": "2026-10-05T08:42:58+02:00"
+      },
+      {
+        "message": "DOCS: document resource control board and live assignment model",
+        "sha": "73d81337f587b1358548c3fb07572a76745bba84",
+        "timestamp": "2026-10-05T08:42:51+02:00"
+      },
+      {
+        "message": "TEST: cover resource dashboard assignment mapping",
+        "sha": "11998a29c2d2daea0643023f6ff6506930486c02",
+        "timestamp": "2026-10-05T08:42:43+02:00"
+      },
+      {
+        "message": "DASHBOARD: add research control board UI for resources workers lanes AI and gates",
+        "sha": "28384c79dac626910d9a9a95b1f858640ab73bcb",
+        "timestamp": "2026-10-05T08:42:33+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4de079cd3ed45522bcd435e9430a065525a5a621",
+        "timestamp": "2026-10-05T06:42:25Z"
+      },
+      {
         "message": "DASHBOARD: allow actions-read for live work and runner snapshots",
         "sha": "3c9f2fe0a141982c2caac3f5c500cdbc754f9fa2",
         "timestamp": "2026-10-05T08:42:11+02:00"
@@ -4149,31 +4174,6 @@
         "message": "DASHBOARD: add fleet, live assignments, AI and research work-board data",
         "sha": "e9d70fdb09bfb3ec2c3462e8a33536ff13fdbe16",
         "timestamp": "2026-10-05T08:41:56+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "7d075e199acabbb5734295c639f694af08e76b3f",
-        "timestamp": "2026-10-05T06:41:40Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "eb08e520fcdeae8974e9515359a31ae403a1d4eb",
-        "timestamp": "2026-10-05T06:41:21Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "e5321f7c555e5dc74f0864d55bea0d9bf4214773",
-        "timestamp": "2026-10-05T06:38:31Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "50a075420118a82f3a54dd488aa2f0239337513e",
-        "timestamp": "2026-10-05T06:36:04Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "1aa2160fd76af7d2260476cba9984483cadbd7aa",
-        "timestamp": "2026-10-05T06:35:48Z"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "3c9f2fe0a141982c2caac3f5c500cdbc754f9fa2",
+  "source_master_sha": "4babeba91c19782cf0205a31fb729c4a7d799097",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37273758534"
+    "run_id": "37273824028"
   }
 }
