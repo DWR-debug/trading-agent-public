@@ -1,0 +1,3 @@
+# Q215 — Public-Source Observability Gap
+
+Discovery-only. Q215 measures the age of an already-public external state at the later formal issuer-disclosure boundary. It must not re-add upstream event content, amount or severity. A fixed two-channel event identity, both earliest defensible public clocks, SEC filing/amendment lineage, frozen entity mapping and independent PIT reproduction are mandatory. If intraday availability is not proven, use a conservative next-session boundary. Cheap falsifiers: timestamp permutation, future amendment injection, identity shuffle, issuer-only collapse, and clock fallback. Priority P1; main risk is historical PIT.
