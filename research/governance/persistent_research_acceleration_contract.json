@@ -9,7 +9,7 @@
     "Verify current public master and current operational/evidence state before acting.",
     "Snapshot live runner, workflow, agent and bounded mobile capacity; never trust stale availability claims.",
     "Route every meaningful task to the smallest suitable free resource and execute independent work in parallel.",
-    "Use S10 opportunistically for deterministic mechanical research QA; semantic utility/evidence-critic runs remain manual or receipt-gated. Trigger mechanical QA on meaningful research/governance changes and every two hours; do not manufacture work solely to create activity.",
+    "Use S10 as a continuously routed bounded mechanical research/QA worker: schedule every 20 minutes, plus meaningful research/governance pushes; rotate deterministic provenance, frontier-governance, PIT/clock/lineage, capacity-dispatch and negative-evidence/dedup checks. Semantic utility/evidence-critic runs remain manual or explicitly receipt-gated. Never manufacture work solely to create activity; when no independent useful task exists, the device may be idle.",
     "Default S10 routing is deterministic mechanical QA; event-driven semantic utility review remains explicit and non-default.",
     "Do not duplicate already-running work and do not consume quotas merely to create activity."
   ],
@@ -53,8 +53,16 @@
       "full_acceptance": "onboarding_or_explicit_revalidation_only",
       "event_driven_review": "meaningful research-runner or critical-governance change",
       "duplicate_work": "forbidden",
-      "recurring_schedule": "every 2 hours plus meaningful research/governance push events",
-      "semantic_ai": "manual/explicit utility or acceptance only; no default routing"
+      "recurring_schedule": "every 20 minutes plus meaningful research/governance push events",
+      "semantic_ai": "manual/explicit utility or acceptance only; no default routing",
+      "task_rotation": [
+        "PROVENANCE_STATUS",
+        "FRONTIER_GOVERNANCE",
+        "PIT_CLOCK_AND_LINEAGE",
+        "CAPACITY_DISPATCH",
+        "NEGATIVE_EVIDENCE_DEDUP"
+      ],
+      "routing_rule": "Treat S10 as a continuously routable bounded QA lane. Prefer changing, independent repository/research-state checks; skip duplicate active work."
     },
     "lane_isolation": {
       "required": true,
