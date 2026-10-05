@@ -27,6 +27,22 @@ Permanent background capacity remains active outside the window: Windows A/B and
 
 This capacity rule never creates scientific authority. Performance, holdout selection, ranking, tuning, promotion and live execution remain closed unless the independent existing governance chain authorizes them.
 
+## 2ab. Top-candidate development overlay — 2026-10-05
+
+The permanent capacity loop now carries an explicit top-candidate overlay so that newly developed mechanisms are not left idle merely because the older frontier rotation has already passed them.
+
+Priority order for the current design-only wave:
+1. Q218 — mandatory/voluntary disclosure semantic wedge.
+2. Q220 — narrative/structured XBRL representation gap.
+3. Q221 — government R&D to procurement-option-value state.
+4. Q219 — filing-change × options-response information-processing wedge.
+
+Windows A / Formal Readiness receives inherited-source consistency, PIT-contract and provenance audits for these candidates while continuing current Q121-R6 / Q104 / Q119-Q122 readiness work. Windows B / Frontier Discovery receives deterministic source/census work for SEC/EDGAR, SEC Financial Statement and Notes datasets, historical SEC files and USAspending. Runner C handles long deterministic next-gate and independent-QA work when its long-run slot is free.
+
+A top-candidate overlay may advance only source/PIT/structure readiness. It must fail closed when a historical public clock, identity mapping, revision lineage or deterministic feature definition cannot be proven. Literature-derived mechanisms do not become project evidence merely because a paper reports an effect.
+
+This overlay is a routing rule, not a scientific ranking rule. It does not authorize performance, holdout selection, threshold or parameter search, asset selection, promotion or live execution.
+
 ## 2a. Persistent acceleration policy
 ## 2b. Permanent literature-research plane
 
