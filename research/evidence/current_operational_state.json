@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T11:24:50.807324+00:00",
+  "generated_at_utc": "2026-10-05T11:25:06.570983+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4136,6 +4136,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3cf6aaa90a3c3a3f822d84c151febd1b0d3ff1ff",
+        "timestamp": "2026-10-05T11:24:53Z"
+      },
+      {
         "message": "RESEARCH: extend hypothesis compiler to current frontier",
         "sha": "e95a610602442a468abc1409f928f7f9c1610117",
         "timestamp": "2026-10-05T13:24:45+02:00"
@@ -4169,11 +4174,6 @@
         "message": "OPS: refresh resource dashboard snapshot",
         "sha": "4fe0b07c5eb53095745ba7cddd9bbb22c6bc2682",
         "timestamp": "2026-10-05T11:22:39Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "8abafb8294c97345ff6a0f9dea3eb443604ba6d4",
-        "timestamp": "2026-10-05T11:22:30Z"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e95a610602442a468abc1409f928f7f9c1610117",
+  "source_master_sha": "3cf6aaa90a3c3a3f822d84c151febd1b0d3ff1ff",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37302747381"
+    "run_id": "37302760248"
   }
 }
