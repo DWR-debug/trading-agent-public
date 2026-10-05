@@ -92,6 +92,11 @@
       <div id="ai"></div>
     </article>
 
+    <article class="card">
+      <h2>Android fleet</h2>
+      <div id="android"></div>
+    </article>
+
     <article class="card wide">
       <h2>Research frontier and next gates</h2>
       <div id="research"></div>
@@ -199,6 +204,19 @@ function render(data){
     "<div class='small'>Resource: "+esc(lm.lane_b?.slot||"Windows self-hosted B")+"</div>"+
     "<div>"+(lm.lane_b?.focus||[]).map(x=>badge("focus",x)).join("")+"</div>"+
     "<p class='small muted'>Separate candidate/trial identity, branches/workflows and immutable receipts are required.</p>";
+
+
+  $("android").innerHTML=(data.android_fleet||[]).length?
+    "<table><thead><tr><th>Device</th><th>Runner</th><th>Arch / runtime</th><th>Status</th><th>Busy</th><th>Assignments</th></tr></thead><tbody>"+
+    (data.android_fleet||[]).map(x=>"<tr>"+
+      "<td class='rowtitle'>"+esc(x.resource_id)+"</td>"+
+      "<td><code>"+esc(x.runner_name)+"</code></td>"+
+      "<td>"+esc(x.architecture||"—")+" / "+esc(x.runtime||"—")+"</td>"+
+      "<td>"+badge("status",x.live_status,stateClass(x.live_status))+"</td>"+
+      "<td>"+badge("busy",x.busy?"true":"false",x.busy?"warn":"")+"</td>"+
+      "<td>"+esc(x.current_assignments??0)+"</td>"+
+    "</tr>").join("")+"</tbody></table>"
+    : "<div class='empty'>No Android fleet registry entries were available in this snapshot.</div>";
 
   $("ai").innerHTML="<table><thead><tr><th>Provider</th><th>Status</th><th>Task</th><th>Observed</th><th>Mode</th><th>Model</th></tr></thead><tbody>"+
     (data.ai_fabric||[]).map(x=>"<tr>"+
