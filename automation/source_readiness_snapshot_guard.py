@@ -24,6 +24,7 @@ RECEIPTS = {
     "Q197-Q198": ROOT / "research/evidence/q197_q198_source_feasibility_latest.json",
     "Q199-Q201": ROOT / "research/evidence/q199_q201_source_feasibility_latest.json",
     "Q202-Q204": ROOT / "research/evidence/q202_q204_information_timing_feasibility_latest.json",
+    "Q229-Q230": ROOT / "research/evidence/q229_q230_source_feasibility_latest.json",
 }
 
 DURABLE_KEYS = (
@@ -63,6 +64,7 @@ def classify(receipt: dict[str, Any]) -> str:
         "DISCOVERY_SOURCE_FEASIBILITY_COMPLETED",
         "SOURCE_COMPONENT_READY",
         "HISTORICAL_SOURCE_COMPONENT_READY",
+        "SOURCE_FEASIBILITY_ONLY",
     }:
         return "NON_SOURCE_READY_STATE"
     return "DURABLE_HISTORICAL_BOUND" if has_durable_binding(receipt) else "PROVISIONAL_LIVE_PROBE_ONLY"
