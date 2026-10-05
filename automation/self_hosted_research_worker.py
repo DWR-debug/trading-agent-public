@@ -359,6 +359,29 @@ LANES: dict[str, list[list[str]]] = {
     "data_qa": [
         [
             PYTHON,
+            "-c",
+            (
+                "import json,urllib.request,urllib.error; "
+                "from pathlib import Path; "
+                "urls={'sec_submissions':'https://data.sec.gov/submissions/CIK0000320193.json',"
+                "'sec_filing_index':'https://www.sec.gov/Archives/edgar/data/320193/000032019326000090/aapl-20260704.htm',"
+                "'sec_fs_notes':'https://www.sec.gov/data-research/sec-markets-data/financial-statement-notes-data-sets',"
+                "'sec_xbrl_api':'https://www.sec.gov/search-filings/edgar-application-programming-interfaces',"
+                "'usaspending':'https://www.usaspending.gov/'}; "
+                "out={'schema_version':1,'task':'top_candidate_source_preflight','candidates':['Q218','Q219','Q220','Q221'],"
+                "'performance':False,'holdout_selection':False,'ranking':False,'tuning':False,'promotion':False,'live_execution':False,'checks':[]}; "
+                "hdr={'User-Agent':'TradingAgent-Public-Research/1.0 research@example.invalid'}; "
+                "for k,u in urls.items(): "
+                " \\n"
+                "  try:\\n"
+                "   req=urllib.request.Request(u,headers=hdr); r=urllib.request.urlopen(req,timeout=20); b=r.read(4096); out['checks'].append({'name':k,'url':u,'status':getattr(r,'status',200),'content_type':r.headers.get('Content-Type'),'sample_bytes':len(b)})\\n"
+                "  except Exception as e: out['checks'].append({'name':k,'url':u,'error':type(e).__name__+':'+str(e)}) "
+                "p=Path('research/runs/self_hosted/top_candidate_source_preflight.json'); p.parent.mkdir(parents=True,exist_ok=True); p.write_text(json.dumps(out,indent=2)+'\\n',encoding='utf-8'); "
+                "print('TOP_CANDIDATE_SOURCE_PREFLIGHT',json.dumps(out,sort_keys=True))"
+            ),
+        ],
+        [
+            PYTHON,
             "-m",
             "pytest",
             "-q",
@@ -442,6 +465,23 @@ LANES: dict[str, list[list[str]]] = {
     ],
     "design_qa": [[PYTHON, "-m", "automation.q022_design_guard"]],
     "local_reproduction": [
+        [
+            PYTHON,
+            "-c",
+            (
+                "import json; from pathlib import Path; "
+                "checks=['research/evidence/q108_pit_integration_2026_10_01.json',"
+                "'research/evidence/q129_independent_pit_2026_10_03.json',"
+                "'research/evidence/q197_q198_source_feasibility_latest.json',"
+                "'research/evidence/q199_q201_source_feasibility_latest.json']; "
+                "out={'schema_version':1,'task':'top_candidate_inheritance_audit','candidates':['Q218','Q219','Q220','Q221'],"
+                "'scientific_evidence':False,'performance_authorization':False,'checks':[]}; "
+                "[(out['checks'].append({'path':p,'exists':Path(p).is_file(),'bytes':Path(p).stat().st_size if Path(p).is_file() else 0})) for p in checks]; "
+                "Path('research/runs/self_hosted/top_candidate_inheritance_audit.json').parent.mkdir(parents=True,exist_ok=True); "
+                "Path('research/runs/self_hosted/top_candidate_inheritance_audit.json').write_text(json.dumps(out,indent=2)+'\\n',encoding='utf-8'); "
+                "print('TOP_CANDIDATE_INHERITANCE_AUDIT',json.dumps(out,sort_keys=True))"
+            ),
+        ],
         [
             PYTHON,
             "-m",
