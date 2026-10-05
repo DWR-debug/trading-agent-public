@@ -542,3 +542,74 @@ The broader reusable control is a typed event lineage:
 latent_process -> first_public_observation -> response/confirmation -> closure/amendment.
 
 This lineage is a governance primitive, not a candidate family and must not itself be performance-ranked.
+
+
+## 28. Q229 — regulator-disclosed complaint → management-response state
+
+A deep source scan identifies a potentially useful public information channel that differs from filing text, investor demand and regulatory review: **complaints submitted by consumers and the firm's subsequent response process**.
+
+The CFPB Consumer Complaint Database is freely downloadable and exposes complaint submission date, company, product/issue and company-response attributes. The CFPB states that complaints sent to companies for response are generally published after the company responds or after 15 days, whichever comes first, and that the database updates generally daily. The CFPB also warns that the database is not a statistical sample of consumer experience and that raw company-level counts must be interpreted relative to firm size/market share. citeturn496534search0turn496534search8
+
+This suggests a two-clock mechanism analogous to Q227 but economically different:
+- latent clock: complaint submission/receipt;
+- public clock: first public database observation;
+- response clock: company response and disposition.
+
+The candidate should therefore avoid treating complaint count as the signal. More interesting predeclared states are topic/severity composition, response timeliness, disposition, unresolved status at publication, and **complaint–response divergence**.
+
+Recent 2026 research is unusually close to the proposed object. Cai et al. report that consumer complaints reveal latent firm problems associated with lower future stock returns and weaker operating performance, with product-quality, false-advertising and transaction-trap topics more informative than logistics complaints. A separate 2023 study finds that regulator-disclosed consumer complaints induce peer-bank learning in local mortgage markets. These are mechanism motivation, not project evidence. citeturn452164search3turn452164search5
+
+A major control is publication selection: only complaints eligible for company response enter the public database, and publication occurs after a response or 15 days. The public dataset therefore does not measure latent complaint incidence without selection. That selection must be frozen rather than statistically “corrected” using outcomes.
+
+Useful cross-domain replication routes exist. The FCC Consumer Complaints Data starts on October 31, 2014 and is public-domain; the FCC states that it does not verify the facts alleged. FINRA's Rule 4530 system also records quarterly customer-complaint statistics by problem and product. citeturn452164search9turn452164search13
+
+Decision: **Q229 remains P1 source-feasibility exploratory**. It should move toward the active frontier only after the public-observation clock, historical taxonomy, company/issuer mapping and publication-selection controls are mechanically reproducible.
+
+## 29. Q230 — cross-capital-structure bond-implied equity information state
+
+A second strong result comes from current cross-asset research. A September 2026 paper by Auh and Kim reports that corporate-bond signals predict next-month equity returns for the same issuers after stock controls and attributes the mechanism to segmentation between bond and equity markets. A related 2026 paper reports bond-to-equity spillovers across capital-structure factors. citeturn511378search0turn511378search7
+
+The important project distinction is that Q230 is **not ordinary bond momentum**. The proposed object is the information-processing gap between two specialized investor clienteles:
+bond market state -> equity repricing.
+
+The free-data feasibility route is materially better than the enhanced TRACE route might initially suggest. FINRA states that public Trade Activity contains up to ten years of end-of-day data, while enhanced historical transaction data with otherwise non-disseminated fields require a paid agreement. FINRA's public API documentation exposes a corporate/agency security master and daily-list routes as well as market-close/end-of-day files. citeturn403955search0turn403955search1turn403955search18
+
+This gives a strict first implementation:
+- use only free public end-of-day TRACE information;
+- no paid historical data;
+- construct a deterministic bond-security -> issuer mapping;
+- aggregate across eligible bonds under a fixed predeclared rule;
+- separate rate-market and broad credit effects from issuer-specific bond information;
+- require bond information to precede the equity decision boundary;
+- preserve bond lifecycle, cancellation/reversal and maturity changes.
+
+The major unknown is therefore **not the economic mechanism but the free historical implementation contract**: whether the public EOD route supplies enough stable issuer-linked observations to construct an immutable long panel without licensed data.
+
+Decision: **Q230 remains P1 source-feasibility exploratory**, with a potentially high priority if the free TRACE source census passes.
+
+## 30. New architecture lesson from current trading-agent systems
+
+The current open-source trading-agent landscape reinforces a useful division of labor rather than suggesting new alpha by itself.
+
+TradingAgents v0.6.0 now emphasizes parallel analysts, persisted run reports, per-model-tier providers, point-in-time backtesting and settlement of completed decisions while analysis continues. FinRobot uses a lead orchestrator, specialized research/modeling/synthesis agents, explicit bull/bear/judge debate, and deterministic financial computation separated from LLM narration. FinAgent combines multimodal market intelligence, chart-based reflection, investor-flow inputs and diversified memory retrieval. FinMem emphasizes layered memory and explicit temporal handling of financial information. citeturn476947search2turn476947search5turn476947search0turn911978academia56
+
+The project-level inference is narrower and more important:
+1. agent parallelism should maximize **independent source discovery and verification**;
+2. memory should persist evidence, provenance and failed hypotheses, not just model prose;
+3. deterministic computation should own all scientific state transitions;
+4. LLM agents should propose, challenge and synthesize but never grant scientific authority;
+5. post-decision outcome settlement is useful for agent learning, but must remain outside the frozen historical prefix used to generate the original decision.
+
+No observed open-source agent result is treated as project performance evidence.
+
+## 31. Cross-domain source scan — important negative and nested findings
+
+Several additional public data systems are rich enough to matter, but do not currently justify new top-level candidates:
+
+**EPA ECHO.** EPA provides downloadable compliance/enforcement datasets, including inspection dates/findings, violations, enforcement actions and penalties; formal enforcement histories extend back to cases concluded after September 30, 2000. However, ECHO is refreshed from underlying source databases on a weekly schedule and some displayed compliance statuses are allegations rather than final adjudications. This makes ECHO promising for a nested Q195/Q225 regulatory-state research track but not yet for a clean new candidate. citeturn850783search0turn850783search1turn850783search6
+
+**FCC ULS.** FCC's Universal Licensing System provides public application/license data and daily/weekly transaction files, while spectrum licensing and leasing can encode economically meaningful capacity changes. Historical public datasets exist, but the open-data catalog page for the main ULS dataset itself has not been updated since 2017, so current historical-prefix/revision semantics are not yet strong enough for top-level candidate admission. citeturn324017search0turn324017search1turn324017search13
+
+**USPTO maintenance fees.** USPTO confirms that utility and reissue utility patents require maintenance fees at fixed 3.0–3.5, 7.0–7.5 and 11.0–11.5 year windows, and that payment histories and expiration notices are publicly available. This could encode an economically interesting **option-exercise / abandonment state** distinct from patent publication or citations. However, current public storefront access and historical bulk reproducibility need a dedicated source census before it is promoted beyond a nested Q196/Q211 mechanism. citeturn645904search1turn645904search6
+
+These paths should be explored only when their source/PIT contract provides enough incremental information to justify the compute.
