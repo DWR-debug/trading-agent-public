@@ -13,6 +13,8 @@ on:
 permissions:
   contents: write
   actions: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: trading-agent-resource-dashboard
@@ -63,3 +65,30 @@ jobs:
           done
           echo "Unable to persist dashboard snapshot after retries." >&2
           exit 1
+
+  deploy_pages:
+    needs: update
+    if: github.repository == 'DWR-debug/trading-agent-public' && needs.update.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout published master
+        uses: actions/checkout@v6
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload current dashboard
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs
+
+      - name: Deploy current dashboard
+        id: deployment
+        uses: actions/deploy-pages@v4
