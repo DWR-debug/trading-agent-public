@@ -413,5 +413,51 @@
       "live_execution": false
     },
     "principle": "Continuously search for unusual, economically coherent and genuinely orthogonal information advantages; verify first, cheap-falsify early, preserve dead ends, and never convert literature claims directly into project evidence."
+  },
+  "rolling_capacity_control": {
+    "status": "ACTIVE",
+    "workflow": ".github/workflows/capacity-saturation-rolling-waves.yml",
+    "lease": "research/run_requests/rolling_capacity_window_2026-10-05.json",
+    "cadence_utc": "*/10 * * * *",
+    "objective": "Ideal useful utilization of every available independent lane whenever real bounded backlog exists; no artificial activity.",
+    "current_window": {
+      "window_id": "TA-2H-2026-10-05-1602Z",
+      "start_utc": "2026-10-05T16:02:00Z",
+      "end_utc": "2026-10-05T18:02:00Z",
+      "phases": [
+        "W1 SOURCE_PIT_CLOSURE",
+        "W2 CANDIDATE_AND_INFORMATION_TIMING",
+        "W3 NEXT_GATE_AND_REPRODUCTION",
+        "W4 DISCOVERY_AND_CONSOLIDATION"
+      ]
+    },
+    "wave_policy": [
+      "W1 close source/PIT/clock gates and start Runner-C long deterministic research when free",
+      "W2 compile bounded candidate contracts and information-timing components",
+      "W3 compile next logical gates and independent reproduction",
+      "W4 refresh literature discovery and consolidate the next logical state"
+    ],
+    "existing_continuous_capacity": [
+      "Permanent Windows research loop every 10 minutes",
+      "Hosted deterministic frontier every 10 minutes",
+      "Runner-C opportunistic capacity pulse every 20 minutes",
+      "S10 bounded mechanical QA every 2 hours and relevant pushes",
+      "Free AI fabric every 6 hours when entitlement/auth passes"
+    ],
+    "rules": {
+      "no_duplicate_running_work": true,
+      "no_artificial_quota_consumption": true,
+      "prefer_smallest_useful_free_resource": true,
+      "phase_ordering_preferred": true,
+      "downstream_fail_closed": true
+    },
+    "scientific_boundary": {
+      "performance": false,
+      "holdout_selection": false,
+      "ranking": false,
+      "tuning": false,
+      "promotion": false,
+      "live_execution": false
+    }
   }
 }
