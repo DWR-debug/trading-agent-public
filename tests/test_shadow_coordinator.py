@@ -98,6 +98,15 @@ def test_shadow_event_replay_is_deterministic_and_detects_tampering():
         validate_shadow_event_replay(tampered)
 
 
+def test_shadow_event_replay_rejects_non_accepted_event_types():
+    coordinator = PaperShadowCoordinator(PortfolioRiskController(2000.0))
+    coordinator.admit(_intent("SPY", "2026-10-05T12:00:00Z"))
+    exported = coordinator.export()
+    exported[0]["event_type"] = "OTHER_EVENT"
+    with pytest.raises(ShadowCoordinatorError, match="SHADOW_INTENT_ACCEPTED"):
+        validate_shadow_event_replay(exported)
+
+
 def test_shadow_event_replay_rejects_authorizing_flags():
     coordinator = PaperShadowCoordinator(PortfolioRiskController(2000.0))
     coordinator.admit(_intent("SPY", "2026-10-05T12:00:00Z"))
