@@ -43,6 +43,8 @@ def _time_column(header: list[str]) -> str | None:
 
 def _normalize_time(value: str) -> datetime | None:
     value = value.strip()
+    if len(value) >= 2 and value[0] == value[-1] == '"' :
+        value = value[1:-1]
     if not value:
         return None
     for candidate in (value, value[:-2] + ":" + value[-2:] if len(value) > 5 and value[-5] in ("+", "-") and value[-2:].isdigit() else value):
