@@ -1,3 +1,5 @@
+> **STATUTEN-EBENE:** Dauerhafte Arbeits- und Kontinuitätsregeln stehen in `docs/TRADING_AGENT_PROJECT_STATUTES.md`; Ziele/Nordstern bleiben in diesem Dokument und `research/governance/project_north_star.json`.
+
 # Trading Agent — Dauerhafter Projektkontext
 
 ## 0. Kanonischer Nordstern
