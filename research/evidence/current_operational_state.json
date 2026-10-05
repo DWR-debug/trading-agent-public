@@ -1451,7 +1451,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-05T22:32:49.918481+00:00",
+    "generated_at_utc": "2026-10-05T22:33:15.241383+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1459,7 +1459,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "559bcf9cad899360daaf7d3773da9d4b311dcce5"
+    "source_master_sha": "d9c9cfaa44f488ed7b07fd76bbc80893033688f7"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1757,7 +1757,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T22:32:49.918481+00:00",
+  "generated_at_utc": "2026-10-05T22:33:15.241383+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4454,6 +4454,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: normalize quoted Q224 request timestamps",
+        "sha": "d9c9cfaa44f488ed7b07fd76bbc80893033688f7",
+        "timestamp": "2026-10-06T00:33:03+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b3fd70e0c1bdf23fa689807399e84117cf7ba3c0",
+        "timestamp": "2026-10-05T22:33:00Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "042a035b7191248b29d20a7a781fb6fecd046f18",
+        "timestamp": "2026-10-05T22:32:56Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "7131f1683007f4673b93b3fbc9198f94e8383298",
+        "timestamp": "2026-10-05T22:32:53Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "f65fadb4dda8cb723988e9f05538d6595c83b78d",
+        "timestamp": "2026-10-05T22:32:51Z"
+      },
+      {
         "message": "DOCS: persist Q230 broad-credit control refinement",
         "sha": "559bcf9cad899360daaf7d3773da9d4b311dcce5",
         "timestamp": "2026-10-06T00:32:48+02:00"
@@ -4467,31 +4492,6 @@
         "message": "RESEARCH: strengthen Q230 with predeclared free credit-market controls",
         "sha": "6cec1533c0b6b10b48bd19206ef513d5a699a08d",
         "timestamp": "2026-10-06T00:32:39+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "bfbdfac3905d10f8a9107de9a07edaa14f08f930",
-        "timestamp": "2026-10-05T22:32:04Z"
-      },
-      {
-        "message": "RESEARCH: add deterministic Q224 request-time semantic parsing",
-        "sha": "6846083d192dfec65f29da3b551c4ea1d3c5871d",
-        "timestamp": "2026-10-06T00:31:49+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "20ff4aa4caf328473d1663619e0cd043b68dede1",
-        "timestamp": "2026-10-05T22:31:39Z"
-      },
-      {
-        "message": "FIX: use core PowerShell time formatting in Q230 constrained mode",
-        "sha": "19e48d3aecccb372c96863dc5589bb126036e87a",
-        "timestamp": "2026-10-06T00:31:27+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9849f35b527680974d98009f47f12685e1896a30",
-        "timestamp": "2026-10-05T22:31:22Z"
       }
     ]
   },
@@ -4589,7 +4589,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "559bcf9cad899360daaf7d3773da9d4b311dcce5",
+  "source_master_sha": "d9c9cfaa44f488ed7b07fd76bbc80893033688f7",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4703,6 +4703,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37383145896"
+    "run_id": "37383186786"
   }
 }
