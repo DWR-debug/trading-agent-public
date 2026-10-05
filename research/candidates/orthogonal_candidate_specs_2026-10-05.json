@@ -358,6 +358,50 @@
       "scientific_boundary": "discovery_contract_only",
       "priority": "P1-RISK",
       "risk_state_only": true
+    },
+    {
+      "id": "Q217",
+      "issue_number": 1084,
+      "name": "Cognitive processing friction decomposition",
+      "mechanism": "Public corporate information can impose heterogeneous processing costs. Separate cognitive/processing friction from information quantity, document size and boilerplate rather than treating length as the mechanism. The first stage is a deterministic decomposition of SEC filing characteristics; no return ranking is allowed.",
+      "event_clock": "Earliest admissible public SEC filing boundary for the frozen filing prefix; later amendments and normalized/current text cannot alter the historical prefix.",
+      "features": [
+        "text_complexity",
+        "information_quantity",
+        "boilerplate_share",
+        "structural_complexity",
+        "deterministic_processing_friction_residual_after_fixed_size_quantity_controls"
+      ],
+      "direction": "two-sided processing/reliability state; no return sign assumed ex ante",
+      "cheap_falsifiers": [
+        "document-length-only collapse",
+        "boilerplate-only collapse",
+        "calendar/random text permutation invariance",
+        "investor-sophistication or liquidity controls eliminate all separation",
+        "document-type instability",
+        "future-text/amendment injection"
+      ],
+      "gates": [
+        "historical SEC filing archive completeness",
+        "accepted/public clock and immutable filing prefix",
+        "deterministic feature compiler with fixed formulas",
+        "empirical separability and proxy-falsification suite",
+        "fixed issuer/security mapping and amendment lineage",
+        "independent PIT reproduction"
+      ],
+      "non_overlap": [
+        "Q131-R1",
+        "Q214",
+        "Q211",
+        "Q204"
+      ],
+      "literature_basis": [
+        "Du & Tang (2026), Cognitive Load and Information Processing in Financial Markets: Theory and Evidence from Disclosure Complexity, arXiv:2507.07037 v2",
+        "Cookson, Moon & Noh (2025), Speculative and Informative, Review of Corporate Finance Studies"
+      ],
+      "scientific_boundary": "discovery_contract_only",
+      "priority": "P1",
+      "risk_note": "Must merge back into Q131 rather than remain separate if the decomposition is not empirically distinct."
     }
   ],
   "blocked_or_composite_tracks": {
@@ -373,6 +417,6 @@
     "promotion",
     "live execution"
   ],
-  "revision": 5,
-  "triggered_by": "WEEKLY_DEEP_RESEARCH_2026-10-05_Q215_Q216"
+  "revision": 6,
+  "triggered_by": "WEEKLY_DEEP_RESEARCH_2026-10-05_Q217_COGNITIVE_PROCESSING_FRICTION"
 }
