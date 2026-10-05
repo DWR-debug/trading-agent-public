@@ -1,0 +1,124 @@
+name: Manual AI via Groq LiteLLM
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/litellm_manual_groq.trigger"
+  workflow_dispatch:
+    inputs:
+      manual_prompt:
+        description: "Bounded research-support prompt. Never paste API keys, passwords or other secrets."
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-manual-groq-litellm
+  cancel-in-progress: false
+
+jobs:
+  run:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install pinned AI dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check -r requirements-ai.txt
+
+      - name: Build effective task contract
+        id: task
+        env:
+          MANUAL_PROMPT: ${{ github.event.inputs.manual_prompt }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+
+          source = Path("ai_requests/AI-2026-10-05-MANUAL-INFORMATION-TIMING-REVIEW.json")
+          task = json.loads(source.read_text(encoding="utf-8"))
+          prompt = os.environ.get("MANUAL_PROMPT", "").strip()
+          if prompt:
+              if len(prompt) > 50000:
+                  raise SystemExit("manual_prompt exceeds 50,000 characters")
+              task["prompt"] = prompt
+              task["manual_input"] = True
+              task["manual_prompt_sha256"] = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+          else:
+              task["manual_input"] = False
+          out = Path(os.environ["RUNNER_TEMP"]) / "manual_task.json"
+          out.write_text(json.dumps(task, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8").write(f"path={out}\n")
+          PY
+
+      - name: Run bounded Groq worker through LiteLLM
+        env:
+          AI_EXTERNAL_PROVIDER_ALLOWLIST: ${{ secrets.AI_EXTERNAL_PROVIDER_ALLOWLIST }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_FREE_MODE_CONFIRMED: ${{ secrets.GROQ_FREE_MODE_CONFIRMED }}
+          TRADING_AGENT_LITELLM_TRANSPORT: "true"
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/manual-groq-output"
+          python -m automation.ai_worker_fabric \
+            --run \
+            --provider groq_free \
+            --task "${{ steps.task.outputs.path }}" \
+            --output "$RUNNER_TEMP/manual-groq-output/AI-2026-10-05-MANUAL-INFORMATION-TIMING-REVIEW__groq_free.json"
+
+      - name: Publish non-scientific worker state
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          state_dir="ops/ai_worker_state"
+          mkdir -p "$state_dir"
+          state_file="$state_dir/AI-2026-10-05-MANUAL-INFORMATION-TIMING-REVIEW__groq_free.json"
+          output="$RUNNER_TEMP/manual-groq-output/AI-2026-10-05-MANUAL-INFORMATION-TIMING-REVIEW__groq_free.json"
+          if [ -f "$output" ]; then
+            cp "$output" "$state_file"
+          else
+            printf '%s\n' '{"schema_version":1,"task_id":"AI-2026-10-05-MANUAL-INFORMATION-TIMING-REVIEW","provider":"groq_free","transport":"litellm","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' > "$state_file"
+          fi
+          payload="$(base64 -w 0 "$state_file")"
+          for attempt in 1 2 3 4 5; do
+            current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/contents/${state_file}?ref=master" --jq '.sha' 2>/dev/null || true)"
+            if [ -n "$current_sha" ]; then
+              if gh api --method PUT "/repos/$GITHUB_REPOSITORY/contents/${state_file}" -f message='OPS: record manual Groq LiteLLM worker state' -f content="$payload" -f branch='master' -f sha="$current_sha" >/dev/null; then exit 0; fi
+            else
+              if gh api --method PUT "/repos/$GITHUB_REPOSITORY/contents/${state_file}" -f message='OPS: record manual Groq LiteLLM worker state' -f content="$payload" -f branch='master' >/dev/null; then exit 0; fi
+            fi
+            sleep 2
+          done
+          echo 'Unable to publish manual Groq LiteLLM worker state.' >&2
+          exit 1
+
+      - name: Upload worker artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: manual-groq-litellm-${{ github.run_id }}-${{ github.run_attempt }}
+          path: "$RUNNER_TEMP/manual-groq-output/"
+          if-no-files-found: warn
+          retention-days: 14
