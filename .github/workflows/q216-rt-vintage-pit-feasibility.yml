@@ -1,0 +1,70 @@
+name: Q216 RT Vintage PIT Feasibility
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - research/frontier/q215_q216_candidate_wave_2026_10_05.json
+      - .github/workflows/q216-rt-vintage-pit-feasibility.yml
+permissions:
+  contents: read
+concurrency:
+  group: trading-agent-q216-rt-vintage-pit
+  cancel-in-progress: false
+jobs:
+  feasibility:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - name: Resolve and fetch historical vintage download
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,re
+          from urllib.request import Request,urlopen
+          u="https://www.philadelphiafed.org/surveys-and-data/real-time-data-research/real-time-data-set-for-macroeconomists"
+          req=Request(u,headers={"User-Agent":"TradingAgent-Public-Q216/1.0"})
+          with urlopen(req,timeout=30) as r: html=r.read().decode("utf-8","replace"); assert getattr(r,"status",200)==200
+          links=re.findall(r'href=["\']([^"\']+)',html,flags=re.I)
+          c=[x for x in links if ("vintage" in x.lower() or "histor" in x.lower()) and x.lower().split("?")[0].endswith((".zip",".xlsx",".xls",".csv"))]
+          assert c
+          href=c[0]
+          if href.startswith("/"): href="https://www.philadelphiafed.org"+href
+          with urlopen(Request(href,headers={"User-Agent":"TradingAgent-Public-Q216/1.0"}),timeout=90) as rr: body=rr.read(); status=getattr(rr,"status",200)
+          assert status==200 and body
+          print({"http_status":status,"download_url":href,"sha256":hashlib.sha256(body).hexdigest(),"bytes":len(body)})
+          PY
+      - name: First-public-vintage chronology smoke gate
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from datetime import date
+          first=date(2024,1,5); decision=date(2024,1,8); future=date(2024,1,10)
+          assert first<=decision<future
+          assert future not in [first]
+          print("Q216_FIRST_PUBLIC_CHRONOLOGY_SMOKE_OK")
+          PY
+      - name: Write bounded non-authorizing receipt
+        run: |
+          set -euo pipefail
+          mkdir -p research/runs
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          d={"schema_version":1,"record_type":"q216_rt_vintage_pit_feasibility","status":"DISCOVERY_NEXT_GATE_COMPLETED_NO_PERFORMANCE","candidate_id":"Q216","historical_vintage_download_checked":True,"first_public_vintage_semantics_proven":False,"historical_pit_validated":False,"independent_reproduction":False,"performance_authorized":False,"holdout_selection_allowed":False,"ranking_allowed":False,"tuning_allowed":False,"promotion_allowed":False,"live_execution_allowed":False}
+          Path("research/runs/q216_rt_vintage_pit_"+os.environ["GITHUB_RUN_ID"]+".json").write_text(json.dumps(d,indent=2)+"
+")
+          PY
+      - name: Upload receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q216-rt-vintage-pit
+          path: research/runs/q216_rt_vintage_pit_*.json
+          if-no-files-found: error
+          retention-days: 14
