@@ -40,8 +40,7 @@ jobs:
           import json,os
           from pathlib import Path
           d={"schema_version":1,"record_type":"q217_q131_orthogonality_audit","status":"DISCOVERY_ORTHOGONALITY_AUDIT_COMPLETED_NO_PERFORMANCE","candidate_id":"Q217","distinctness_proven":False,"empirical_separability_required":True,"merge_back_if_non_distinct":True,"performance_authorized":False,"holdout_selection_allowed":False,"ranking_allowed":False,"tuning_allowed":False,"promotion_allowed":False,"live_execution_allowed":False}
-          Path("research/runs/q217_q131_orthogonality_"+os.environ["GITHUB_RUN_ID"]+".json").write_text(json.dumps(d,indent=2)+"
-")
+          Path("research/runs/q217_q131_orthogonality_"+os.environ["GITHUB_RUN_ID"]+".json").write_text(json.dumps(d,indent=2)+"\n")
           PY
       - name: Upload receipt
         if: always()
