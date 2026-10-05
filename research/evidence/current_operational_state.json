@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T06:48:19.517497+00:00",
+  "generated_at_utc": "2026-10-05T06:51:03.594213+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2216,7 +2216,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "c35fbefb440ba37ad74c363b7deca6a0deec5dc3afdf2cc6df3da318c671d934",
+    "receipt_fingerprint": "0a7697d9b6371955a7e61da1703cc00c46c22848bac63c0946c28b4a7f47dc3b",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2264,7 +2264,7 @@
           }
         ],
         "clock_contract": "Transaction identity/date is distinct from daily/weekly dissemination files.",
-        "content_sha256": "d7ca88fd7f43eb86cefe183a4103e3d6b4ef383d143a2e6989adbc74d0541abd",
+        "content_sha256": "c3379ee70ed17f4d39e488eccaba5a28fb6d7d66bf87d70eb35468eaf1c55955",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2294,7 +2294,7 @@
           }
         ],
         "clock_contract": "Issued/received document records are distinct from later corrections and underlying event dates.",
-        "content_sha256": "442b90781a15f63075ae08ad92196e262ec3ec828a3469bc20c99c81233dd17f",
+        "content_sha256": "9048ae47dd280519f640be86d3d627a1d2effa6c897501cb57782080e89473c3",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -2315,7 +2315,7 @@
           }
         ],
         "clock_contract": "Recall publication date is distinct from the underlying safety-issue report date.",
-        "content_sha256": "d1e58e96f21a1959b4f4d32b75e76aa6ad7ed7704f35c290f0f54dc7b920904c",
+        "content_sha256": "b9a4e4d67b48fbb0db63e8498fc448b9f6d62e254e32e096c76e8d90b8e73a53",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2332,7 +2332,7 @@
           }
         ],
         "clock_contract": "Investigation event and publication times remain distinct.",
-        "content_sha256": "1e2aa514ce76c4c3824fff7b03deff97bf23e3301e2d7ec5e32162bcd6a3ef36",
+        "content_sha256": "04157e8713836532ed090f2f1b4d934c5c97de8f1bbac52811399e9524392baa",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2349,7 +2349,7 @@
           }
         ],
         "clock_contract": "The DOL public catalog establishes the dataset boundary; inspection/opening and later catalog refresh times remain distinct.",
-        "content_sha256": "43e821ef114f34fe98ce3e5a93bf8b36d40f9e9a2da0a3bd8c5e3cdea50c97ad",
+        "content_sha256": "075ccc46bab2ade9d9683fc5e43655f1152a1ee1510884a25bcb23e35aa57361",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -3829,7 +3829,7 @@
         "version_date_count": 0
       }
     },
-    "receipt_fingerprint": "f27b98b0d61789a4f5d0014fc8b7427a7004c221c33dffaeedf03a010992abf7",
+    "receipt_fingerprint": "41c95c26cf1c30f13024e6763790f18aae2c94ad3f48d5c4da3aee80ddb3e335",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -3903,7 +3903,7 @@
             "url": "https://ppubs.uspto.gov/basic/"
           }
         ],
-        "content_sha256": "710222b19b3b9ae28e6f4fbb08bbbdd2a89c3c1c27347feffb581be270c16cb0",
+        "content_sha256": "241d3c1ec0f6ae015d691e2177948ad2a7afcbaacd7c00f0daffb4388a790598",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -4136,6 +4136,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "d810dd331c966df5431781c86f027176beac52fa",
+        "timestamp": "2026-10-05T06:49:20Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "7dbeb71e5a5239740a5bb8a1ca98558490ff4d20",
+        "timestamp": "2026-10-05T06:48:39Z"
+      },
+      {
+        "message": "OPS: refresh resource dashboard snapshot",
+        "sha": "a0faa7bac6b91d428cd65963cdd0d37817fac50b",
+        "timestamp": "2026-10-05T06:48:27Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "360fa242607bda8a25fe8e4c33e2a98cb7edf789",
+        "timestamp": "2026-10-05T06:48:24Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9e2527bd073bd795c05ef1d5905e86803f3ada4a",
+        "timestamp": "2026-10-05T06:48:21Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "d9d04118b52bdaf695fdb66c0c168f38195419c6",
         "timestamp": "2026-10-05T06:48:08Z"
@@ -4149,31 +4174,6 @@
         "message": "TEST: guard candidate-level Q202-Q205 dashboard rendering",
         "sha": "89ff73db05f1fe023a1fa2a2ef73aeacdf40e0be",
         "timestamp": "2026-10-05T08:47:59+02:00"
-      },
-      {
-        "message": "FIX: deduplicate Q205 and mark runner snapshot availability explicitly",
-        "sha": "6ca38eef380e962b58cacb89f3fe8bbb3cfa8bee",
-        "timestamp": "2026-10-05T08:47:51+02:00"
-      },
-      {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "20cae868aa3aa737ddde4e070db01f78d7b73452",
-        "timestamp": "2026-10-05T06:47:48Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "08dbf5bb4b858d8c8abf800e5ebf34afff9a4633",
-        "timestamp": "2026-10-05T06:47:42Z"
-      },
-      {
-        "message": "OPS: deploy generated dashboard snapshot within refresh workflow",
-        "sha": "8bb4ea5ccc59cc62273299fc427755b506a181b4",
-        "timestamp": "2026-10-05T08:47:27+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "c651d6f13bffec4cf8886b4a53325e976a5ce7f8",
-        "timestamp": "2026-10-05T06:46:43Z"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d9d04118b52bdaf695fdb66c0c168f38195419c6",
+  "source_master_sha": "d810dd331c966df5431781c86f027176beac52fa",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37274267091"
+    "run_id": "37274500401"
   }
 }
