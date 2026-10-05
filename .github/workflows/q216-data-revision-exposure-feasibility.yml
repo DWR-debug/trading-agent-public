@@ -1,0 +1,88 @@
+name: Q216 Macro-Vintage Revision Exposure Feasibility
+on:
+  push:
+    branches: [master]
+    paths:
+      - research/frontier/q215_q216_candidate_wave_2026_10_05.json
+      - docs/research_design/Q216_DATA_REVISION_EXPOSURE_STATE_2026-10-05.md
+      - .github/workflows/q216-data-revision-exposure-feasibility.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: trading-agent-q216-data-revision-exposure
+  cancel-in-progress: false
+jobs:
+  feasibility:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - name: Validate discovery contract
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('research/frontier/q215_q216_candidate_wave_2026_10_05.json').read_text())
+          c=next(x for x in d['candidates'] if x['id']=='Q216')
+          assert c['scientific_boundary']=='discovery_contract_only'
+          assert c['score']['orthogonality']==5
+          print('Q216_CONTRACT_OK')
+          PY
+      - name: Probe Philadelphia Fed real-time vintage source
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          from urllib.request import Request,urlopen
+          u='https://www.philadelphiafed.org/surveys-and-data/real-time-data-research/real-time-data-set-for-macroeconomists'
+          req=Request(u,headers={'User-Agent':'TradingAgent-Public-Q216/1.0'})
+          with urlopen(req,timeout=20) as r: body=r.read(); status=getattr(r,'status',200); html=body.decode('utf-8','replace')
+          markers={'vintages':'vintages' in html.lower(),'complete_vintage_history':'Complete vintage history' in html,'download':'Download' in html}
+          assert status==200 and all(markers.values())
+          print({'http_status':status,'content_sha256':hashlib.sha256(body).hexdigest(),'markers':markers})
+          PY
+      - name: Probe SEC exposure component
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from urllib.request import Request,urlopen
+          u='https://data.sec.gov/submissions/CIK0000789019.json'
+          req=Request(u,headers={'User-Agent':'TradingAgent-Public-Q216/1.0'})
+          with urlopen(req,timeout=20) as r: data=json.loads(r.read().decode())
+          assert data.get('filings',{}).get('recent')
+          print('Q216_SEC_EXPOSURE_COMPONENT_OK')
+          PY
+      - name: Synthetic future-vintage PIT gate
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from datetime import date
+          decision=date(2024,1,8); first=date(2024,1,5); future=date(2024,1,10)
+          assert first<=decision and future>decision and future not in [first]
+          print('Q216_FUTURE_VINTAGE_BLOCK_OK')
+          PY
+      - name: Write boundary receipt
+        run: |
+          set -euo pipefail
+          mkdir -p research/runs
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          d={'schema_version':1,'record_type':'q216_source_feasibility','status':'DISCOVERY_SOURCE_COMPONENT_COMPLETED_NO_PERFORMANCE','candidate_id':'Q216','rt_vintage_source_component_checked':True,'issuer_exposure_source_component_checked':True,'first_public_vintage_semantics_proven':False,'historical_pit_validated':False,'independent_reproduction':False,'performance_authorized':False,'holdout_selection_allowed':False,'ranking_allowed':False,'tuning_allowed':False,'promotion_allowed':False,'live_execution_allowed':False}
+          Path('research/runs/q216_revision_'+os.environ['GITHUB_RUN_ID']+'.json').write_text(json.dumps(d,indent=2)+'\n')
+          PY
+      - name: Upload receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q216-revision
+          path: research/runs/q216_revision_*.json
+          if-no-files-found: error
+          retention-days: 14
