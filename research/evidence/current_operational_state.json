@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T07:52:42.430009+00:00",
+  "generated_at_utc": "2026-10-05T08:07:37.250402+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4136,6 +4136,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "6d3115a9529aa8d7b8c14618c317bf9454a8caa4",
+        "timestamp": "2026-10-05T07:56:26Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "37fd56a40387edb765fac91f5c1911bc162ddf77",
+        "timestamp": "2026-10-05T07:52:45Z"
+      },
+      {
         "message": "OPS: advance paper-forward MTM state",
         "sha": "91957ca028487bd0f5437d68e09026ebc43caa88",
         "timestamp": "2026-10-05T07:45:28Z"
@@ -4164,16 +4174,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "5d9f98f7c14b89c10d8ecc2aa0f80d28544cb3fe",
         "timestamp": "2026-10-05T07:16:19Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "bca818fdf308aece49e90faf8d59399a04165d38",
-        "timestamp": "2026-10-05T07:13:58Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "65036af4058cf70084eae8c838781e52552bff38",
-        "timestamp": "2026-10-05T07:11:41Z"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "91957ca028487bd0f5437d68e09026ebc43caa88",
+  "source_master_sha": "6d3115a9529aa8d7b8c14618c317bf9454a8caa4",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37280194615"
+    "run_id": "37281678325"
   }
 }
