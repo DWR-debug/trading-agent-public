@@ -515,6 +515,18 @@
         "issue_number": 1094,
         "performance_authorization_allowed": false,
         "state": "DESIGN_ONLY_ACTIVE"
+      },
+      {
+        "candidate_inventory_path": "research/frontier/q224_edgar_document_demand_2026_10_05.json",
+        "class": "sec_edgar_document_demand_acquisition_shock",
+        "code": "Q224",
+        "design_document": "docs/research_design/DEEP_CANDIDATE_RESEARCH_SYNTHESIS_2026-10-05.md",
+        "next_gate": "bounded modern-window historical log reconstruction + request-quality audit + filing-boundary join + mutation/PIT checks",
+        "note": "Modern SEC EDGAR request-demand source is feasible only on the documented modern window; the 2017-07-01 through 2020-05-18 gap and legacy/modern schema differences are retained as a hard boundary. Q224 remains outside the Q218-Q221 top-candidate wave until source/PIT and separability gates pass.",
+        "parent_code": "LITERATURE-DISCOVERY-PLANE",
+        "performance_authorization_allowed": false,
+        "priority": "P1",
+        "state": "SOURCE_COMPONENT_READY_WITH_HISTORICAL_GAP"
       }
     ],
     "active_research_registry": {
@@ -1422,7 +1434,8 @@
       "Q218",
       "Q219",
       "Q220",
-      "Q221"
+      "Q221",
+      "Q224"
     ],
     "canonical_sources": {
       "active_research_registry": "research/governance/active_research_registry.json",
@@ -1438,7 +1451,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-05T22:26:24.296530+00:00",
+    "generated_at_utc": "2026-10-05T22:26:46.815139+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1446,7 +1459,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "9adc02e83d7c089a247f8a2c3ee5a63a1884692a"
+    "source_master_sha": "7b30b869db4e5c3417c2d60f8ea816bf08774e1f"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1744,7 +1757,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T22:26:24.296530+00:00",
+  "generated_at_utc": "2026-10-05T22:26:46.815139+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4441,6 +4454,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "7b30b869db4e5c3417c2d60f8ea816bf08774e1f",
+        "timestamp": "2026-10-05T22:26:33Z"
+      },
+      {
+        "message": "GOV: persist Q224 as active bounded research track",
+        "sha": "c121c6c93710f2d0a7c4d419e07598c77f8cc388",
+        "timestamp": "2026-10-06T00:26:26+02:00"
+      },
+      {
         "message": "FIX: avoid PSCustomObject conversion in constrained Q230 PowerShell",
         "sha": "9adc02e83d7c089a247f8a2c3ee5a63a1884692a",
         "timestamp": "2026-10-06T00:26:11+02:00"
@@ -4469,16 +4492,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "a0bc94daa9cd4e07827ac81c706e99d5a1d7578f",
         "timestamp": "2026-10-05T22:06:13Z"
-      },
-      {
-        "message": "FIX: use valid cmd shell with explicit PowerShell bypass for Q230",
-        "sha": "fbfcf5d9364f327b80ee8c02fff6ecbd67ef483f",
-        "timestamp": "2026-10-06T00:06:00+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e507ab8fed482bc872ceb86b91d2d8e8c4f6f22a",
-        "timestamp": "2026-10-05T22:05:28Z"
       }
     ]
   },
@@ -4576,7 +4589,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9adc02e83d7c089a247f8a2c3ee5a63a1884692a",
+  "source_master_sha": "7b30b869db4e5c3417c2d60f8ea816bf08774e1f",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4690,6 +4703,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37382456246"
+    "run_id": "37382484794"
   }
 }
