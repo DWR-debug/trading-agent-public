@@ -27,6 +27,14 @@
       "physical_windows_slots": 3,
       "reserved_long_run_slot": "Windows self-hosted slot C",
       "long_run_label": "trading-agent-long",
+      "opportunistic_capacity_lane": {
+        "runner_slot": "Windows self-hosted slot C",
+        "label": "trading-agent-long",
+        "schedule_utc": "*/20 * * * *",
+        "purpose": "Independent deterministic QA/reproduction between long formal-reproduction events; no candidate ranking or performance work.",
+        "preemption_rule": "Shares the long-capacity concurrency group; higher-priority long reproduction can cancel the pulse.",
+        "scientific_evidence": false
+      },
       "autonomous_frontier_default_workers": 3,
       "other_qa_and_reproduction_default_workers": 1,
       "hard_worker_cap": 4,
