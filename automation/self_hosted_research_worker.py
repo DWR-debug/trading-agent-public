@@ -359,8 +359,10 @@ LANES: dict[str, list[list[str]]] = {
     "data_qa": [
         [
             PYTHON,
-            "-c",
-            "exec("+JSON.stringify(code)+")",
+            "-m",
+            "automation.top_candidate_source_preflight",
+            "--output",
+            "research/runs/self_hosted/top_candidate_source_preflight.json",
         ],
         [
             PYTHON,
