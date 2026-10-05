@@ -17,7 +17,8 @@ def test_q224_fixed_modern_controls_and_schema_contract():
     m = _module()
     assert list(m.CONTROLS) == ["2020-05-19", "2022-12-30", "2025-06-30"]
     assert all(url.endswith(".zip") for url in m.CONTROLS.values())
-    assert m.EXPECTED == {"_time", "uri_path"}
+    assert m.EXPECTED == {"uri_path"}
+    assert m.EXPECTED_TIME == {"_time", "time"}
     assert m.URI_RE.search("/Archives/edgar/data/1067701/000106770120000046/") is not None
 
 
