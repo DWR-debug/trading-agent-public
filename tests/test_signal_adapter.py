@@ -35,6 +35,7 @@ def _exposure():
 def test_signal_mapping_is_explicit(kind, expected):
     packet = signal_to_packet(
         _signal(kind),
+        candidate_id="Q-TEST-FROZEN",
         decision_time_utc="2026-10-05T12:00:00Z",
         market_observation_time_utc="2026-10-05T11:59:00Z",
         input_fingerprint="input",
@@ -47,6 +48,7 @@ def test_signal_mapping_is_explicit(kind, expected):
 def test_signal_mapping_does_not_use_confidence_implicitly():
     packet = signal_to_packet(
         _signal(SignalType.BUY),
+        candidate_id="Q-TEST-FROZEN",
         decision_time_utc="2026-10-05T12:00:00Z",
         market_observation_time_utc="2026-10-05T11:59:00Z",
         input_fingerprint="input",
