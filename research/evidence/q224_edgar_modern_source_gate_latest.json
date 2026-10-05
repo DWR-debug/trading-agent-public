@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "task_id": "Q-2026-10-06-Q224-EDGAR-MODERN-WINDOW-SOURCE-GATE",
   "status": "SOURCE_ARCHIVE_INTEGRITY_COMPLETED_NO_PERFORMANCE",
-  "generated_at_utc": "2026-10-05T22:29:57.448207+00:00",
+  "generated_at_utc": "2026-10-05T22:32:43.384267+00:00",
   "candidate_id": "Q224",
   "source_contract": {
     "official_dataset": "SEC EDGAR Log File Data Sets",
@@ -41,7 +41,30 @@
         "sample_rows_read": 250,
         "sample_uri_regex_matches": 215,
         "sample_uri_match_rate": 0.86,
-        "first_rows_sha256": "97184e1d3474dd54642dea61f7dcde0ec9f77f2f7d22bddb9a49102aea76bb8d"
+        "first_rows_sha256": "97184e1d3474dd54642dea61f7dcde0ec9f77f2f7d22bddb9a49102aea76bb8d",
+        "request_time_parse_rate": 1.0,
+        "request_time_examples": [
+          {
+            "raw": "2020-05-19T18:50:41.000-0400",
+            "normalized_iso": "2020-05-19T18:50:41-04:00"
+          },
+          {
+            "raw": "2020-05-19T18:50:41.000-0400",
+            "normalized_iso": "2020-05-19T18:50:41-04:00"
+          },
+          {
+            "raw": "2020-05-19T18:50:41.000-0400",
+            "normalized_iso": "2020-05-19T18:50:41-04:00"
+          },
+          {
+            "raw": "2020-05-19T18:50:41.000-0400",
+            "normalized_iso": "2020-05-19T18:50:41-04:00"
+          },
+          {
+            "raw": "2020-05-19T18:50:41.000-0400",
+            "normalized_iso": "2020-05-19T18:50:41-04:00"
+          }
+        ]
       },
       "error": null,
       "download_bytes": 3887187
@@ -71,7 +94,30 @@
         "sample_rows_read": 250,
         "sample_uri_regex_matches": 193,
         "sample_uri_match_rate": 0.772,
-        "first_rows_sha256": "e9f5ae23a0fc39754abdeeac013016d40d9ef7e201e831d73c7536f2a5957ef2"
+        "first_rows_sha256": "e9f5ae23a0fc39754abdeeac013016d40d9ef7e201e831d73c7536f2a5957ef2",
+        "request_time_parse_rate": 1.0,
+        "request_time_examples": [
+          {
+            "raw": "2022-12-30T23:59:58.997-0500",
+            "normalized_iso": "2022-12-30T23:59:58.997000-05:00"
+          },
+          {
+            "raw": "2022-12-30T23:59:58.993-0500",
+            "normalized_iso": "2022-12-30T23:59:58.993000-05:00"
+          },
+          {
+            "raw": "2022-12-30T23:59:58.992-0500",
+            "normalized_iso": "2022-12-30T23:59:58.992000-05:00"
+          },
+          {
+            "raw": "2022-12-30T23:59:58.991-0500",
+            "normalized_iso": "2022-12-30T23:59:58.991000-05:00"
+          },
+          {
+            "raw": "2022-12-30T23:59:58.987-0500",
+            "normalized_iso": "2022-12-30T23:59:58.987000-05:00"
+          }
+        ]
       },
       "error": null,
       "download_bytes": 294991286
@@ -101,7 +147,30 @@
         "sample_rows_read": 250,
         "sample_uri_regex_matches": 226,
         "sample_uri_match_rate": 0.904,
-        "first_rows_sha256": "a33150023449b01a2494bdc3c27336d4f281a38475306d4c3e666da2f3bd8590"
+        "first_rows_sha256": "a33150023449b01a2494bdc3c27336d4f281a38475306d4c3e666da2f3bd8590",
+        "request_time_parse_rate": 0.96,
+        "request_time_examples": [
+          {
+            "raw": " \"2025-06-30T23:59:58.997-0400\"",
+            "normalized_iso": null
+          },
+          {
+            "raw": "2025-06-30T23:59:58.997-0400",
+            "normalized_iso": "2025-06-30T23:59:58.997000-04:00"
+          },
+          {
+            "raw": "2025-06-30T23:59:58.988-0400",
+            "normalized_iso": "2025-06-30T23:59:58.988000-04:00"
+          },
+          {
+            "raw": "2025-06-30T23:59:58.986-0400",
+            "normalized_iso": "2025-06-30T23:59:58.986000-04:00"
+          },
+          {
+            "raw": "2025-06-30T23:59:58.985-0400",
+            "normalized_iso": "2025-06-30T23:59:58.985000-04:00"
+          }
+        ]
       },
       "error": null,
       "download_bytes": 1159445743
@@ -141,5 +210,5 @@
     "2017_07_01_to_2020_05_18_available": false,
     "legacy_modern_schema_splice_allowed": false
   },
-  "receipt_fingerprint": "1f01c19fd876794d55f442dca838517e3b5108b675c26ad8eee2b52e76387bc9"
+  "receipt_fingerprint": "0b90235271c41b5e4e99a8700fdbd10c4bbcc7846c16d9caebe19f7b6d415aee"
 }
