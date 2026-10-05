@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `f9c0308c8464dd2d87b308850c30a38e45859de9`
+**Current operational snapshot:** `76bd8884250a96c571c0d43deaad2e83926d598e`
 
-**Generated (UTC):** `2026-10-05T15:47:10.613908+00:00`
+**Generated (UTC):** `2026-10-05T15:47:39.429992+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -48,6 +48,15 @@
 - Q091 fixed-portfolio performance is **AUTHORIZED** only when the active registry says so; the one-shot performance workflow remains fail-closed and consumes authorization only through immutable reconciliation.
 
 ### Active research registry
+
+#### Permanent literature frontier
+
+- **LITERATURE-DISCOVERY-PLANE:** ACTIVE_AND_PERSISTENT; daily/weekly assistant research plus a free 6-hour public-metadata scout. Discovery only.
+- **Q211:** patent semantic information state — P1 source/PIT feasibility; distinct from patent publication/citation timing and price-only momentum.
+- **Q212:** supply-chain disclosure sentiment propagation — P1 feasibility; network disclosure information only, with historical relationship/PIT requirements explicit.
+- **Q213:** news-disagreement elasticity — P2 contingent; remains blocked until multi-year public intraday equity/news PIT feasibility is proven.
+- **Q214:** disclosure-implied forward-beta/risk-structure state — P1-RISK; risk-state only, deliberately separated from Q088 peer-return/comomentum.
+- All four are discovery-only. Literature claims are not project evidence; no performance, holdout selection, ranking, tuning, promotion or live execution may be derived from them.
 
 - Q081-R2: **HISTORICAL_IMPLEMENTATION_INVALIDATED**; infrastructure-rebased corrective reproduction; no performance authorization.
 - Q089: **PERFORMANCE_COMPLETED_NO_ARM_PASSED_ALL_13_GATES**; fresh symbol-disjoint successor to quarantined Q086; separate performance authorization remains required.
