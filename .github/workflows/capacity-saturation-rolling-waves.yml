@@ -1,0 +1,109 @@
+name: Capacity Saturation & Rolling Research Waves
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  push:
+    branches: [master]
+    paths:
+      - "research/run_requests/rolling_capacity_window_2026-10-05.json"
+      - ".github/workflows/capacity-saturation-rolling-waves.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: trading-agent-capacity-saturation-waves
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Validate rolling capacity contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from datetime import datetime
+          p=json.load(open("research/run_requests/rolling_capacity_window_2026-10-05.json",encoding="utf-8"))
+          s=datetime.fromisoformat(p["start_utc"].replace("Z","+00:00"))
+          e=datetime.fromisoformat(p["end_utc"].replace("Z","+00:00"))
+          assert (e-s).total_seconds()==7200
+          assert p["cadence_minutes"]==10
+          assert p["safety"]["PAPER_ONLY"] is True
+          assert all(p["safety"][k] is False for k in ("performance","holdout_selection","ranking","tuning","promotion","live_execution"))
+          assert [w["start_after_minutes"] for w in p["phases"]] == [0,30,60,90]
+          print("ROLLING_CAPACITY_CONTRACT_OK")
+          PY
+          python -m pytest -q tests/test_rolling_capacity_window.py
+
+      - name: Dispatch current logical wave without duplicates
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          now_epoch="$(date -u +%s)"
+          start_iso="$(jq -r .start_utc research/run_requests/rolling_capacity_window_2026-10-05.json)"
+          end_iso="$(jq -r .end_utc research/run_requests/rolling_capacity_window_2026-10-05.json)"
+          start_epoch="$(date -d "$start_iso" +%s)"
+          end_epoch="$(date -d "$end_iso" +%s)"
+          if (( now_epoch < start_epoch || now_epoch >= end_epoch )); then
+            echo "ROLLING_CAPACITY_WINDOW=INACTIVE"
+            exit 0
+          fi
+          elapsed=$(( (now_epoch - start_epoch) / 60 ))
+          phase="W1"
+          phase_offset=0
+          if (( elapsed >= 90 )); then phase="W4"; phase_offset=5400
+          elif (( elapsed >= 60 )); then phase="W3"; phase_offset=3600
+          elif (( elapsed >= 30 )); then phase="W2"; phase_offset=1800
+          fi
+          phase_start_epoch=$((start_epoch + phase_offset))
+          echo "ROLLING_CAPACITY_PHASE=$phase"
+
+          case "$phase" in
+            W1) workflows=(q121r6-sec-acceptance-time-compilation.yml q185-q186-source-feasibility.yml q187-q192-source-feasibility.yml q187-q192-pit-readiness-r1.yml q188-q192-pit-census-r2.yml q197-q198-source-feasibility.yml q198-pit-clock-census.yml q199-q201-source-feasibility.yml q214-disclosure-risk-feasibility.yml windows-runner-c-long-research.yml);;
+            W2) workflows=(q193-q196-source-feasibility.yml orthogonal-candidate-development.yml q202-q204-information-timing-feasibility.yml q205-nlrb-source-feasibility.yml q119-treasury-source-feasibility.yml);;
+            W3) workflows=(orthogonal-pit-next-gate.yml windows-runner-c-long-research.yml);;
+            W4) workflows=(literature-frontier-scout.yml research-orchestrator.yml orthogonal-pit-next-gate.yml);;
+          esac
+
+          runs="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs?per_page=100")"
+          for workflow in "${workflows[@]}"; do
+            wf_url="https://github.com/$GITHUB_REPOSITORY/actions/workflows/$workflow"
+            phase_runs="$(printf '%s' "$runs" | jq --arg wf "$wf_url" --argjson phase_start_epoch "$phase_start_epoch" '[.workflow_runs[] | select(.workflow_url == $wf) | select((.created_at | fromdateiso8601) >= $phase_start_epoch)]')"
+            active="$(printf '%s' "$phase_runs" | jq '[.[] | select(.status != "completed")] | length')"
+            if (( active > 0 )); then
+              echo "SKIP_ACTIVE $workflow"
+              continue
+            fi
+            attempts="$(printf '%s' "$phase_runs" | jq 'length')"
+            success="$(printf '%s' "$phase_runs" | jq '[.[] | select(.conclusion == "success")] | length')"
+            if (( success > 0 )); then
+              echo "SKIP_SUCCESS $workflow"
+              continue
+            fi
+            if (( attempts > 1 )); then
+              echo "SKIP_RETRY_LIMIT $workflow attempts=$attempts"
+              continue
+            fi
+            if gh workflow run "$workflow" --repo "$GITHUB_REPOSITORY" --ref master; then
+              echo "DISPATCHED $workflow"
+            else
+              echo "DISPATCH_FAILED $workflow"
+              exit 1
+            fi
+          done
