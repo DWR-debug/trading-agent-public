@@ -76,7 +76,19 @@ jobs:
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add research/evidence/groq_api_key_smoke_test.json
-          git diff --cached --quiet && exit 0
-          git commit -m "OPS: record Groq API key smoke test"
-          git push origin HEAD:master
+          for attempt in 1 2 3 4 5; do
+            git fetch --no-tags origin master
+            git checkout -B groq-smoke-receipt origin/master
+            git add research/evidence/groq_api_key_smoke_test.json
+            if git diff --cached --quiet; then
+              echo "Receipt already present on current master."
+              exit 0
+            fi
+            git commit -m "OPS: record Groq API key smoke test"
+            if git push origin HEAD:master; then
+              exit 0
+            fi
+            git reset --hard origin/master
+          done
+          echo "Could not persist Groq smoke receipt after 5 CAS-style push attempts."
+          exit 1
