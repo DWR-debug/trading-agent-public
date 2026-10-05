@@ -86,26 +86,12 @@ jobs:
           if errorlevel 1 exit /b 1
 
       - name: Write run manifest
-        shell: powershell
+        shell: cmd
         run: |
-          $ErrorActionPreference = "Stop"
-          New-Item -ItemType Directory -Force -Path "research/runs/windows_runner_c" | Out-Null
-          $files = Get-ChildItem -LiteralPath "research/runs/windows_runner_c" -File -Recurse | ForEach-Object {
-            [ordered]@{ path=$_.FullName; bytes=$_.Length }
-          }
-          [ordered]@{
-            schema_version=1
-            runner_role="long_deterministic_research"
-            runner_name=$env:RUNNER_NAME
-            source_commit=$env:GITHUB_SHA
-            paper_only=$true
-            live_trading_enabled=$false
-            orders_enabled=$false
-            automatic_promotion=$false
-            formal_evidence_allowed=$false
-            generated_at_utc=[DateTimeOffset]::UtcNow.ToString("o")
-            files=$files
-          } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath "research/runs/windows_runner_c/run_manifest.json" -Encoding utf8
+          @echo off
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-runner-c\tools\python.exe"
+          "%PY_EXE%" -c "import json,os; from pathlib import Path; root=Path(r'research/runs/windows_runner_c'); files=[{'path':str(p.relative_to(root)).replace('\\\\','/'),'bytes':p.stat().st_size} for p in root.rglob('*') if p.is_file() and p.name!='run_manifest.json']; out={'schema_version':1,'runner_role':'long_deterministic_research','runner_name':os.environ.get('RUNNER_NAME'),'source_commit':os.environ.get('GITHUB_SHA'),'paper_only':True,'live_trading_enabled':False,'orders_enabled':False,'automatic_promotion':False,'formal_evidence_allowed':False,'generated_at_utc':__import__('datetime').datetime.now(__import__('datetime').timezone.utc).isoformat(),'files':files}; (root/'run_manifest.json').write_text(json.dumps(out,indent=2,ensure_ascii=False)+'\\n',encoding='utf-8')"
+          if errorlevel 1 exit /b 1
 
       - name: Upload long-run workpack
         if: always()
