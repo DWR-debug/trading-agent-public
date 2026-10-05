@@ -152,3 +152,12 @@ Der aktuelle operative Zustand bleibt research/evidence/current_operational_stat
 Der Chat-Einstiegspunkt bleibt docs/TRADING_AGENT_CHAT_ENTRYPOINT.md.
 Die wiederverwendbare Android-/Samsung-Integrationsvorlage ist docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md.
 Die Fleet-Konfiguration ist ops/android_phone_resources.json; die Fleet-Betriebsbeschreibung ist docs/SAMSUNG_ANDROID_PHONE_FLEET.md.
+
+
+## Dauerhafte Runner-Auslastungsregel — 2026-10-05
+
+Windows Self-Hosted A und B gelten innerhalb der Projektfreigaben als dauerhaft routbare Forschungskapazität. **A = Formal Readiness / lokale Reproduktion; B = Frontier Discovery / Data-QA.** Unabhängige Arbeiten werden parallel vergeben; nach jeder Freigabe eines Slots wird der nächste sinnvolle bounded Task aus der aktuellen Frontier bzw. den formalen Readiness-Gates gezogen.
+
+S10 ist die separate ARM64-Mobile-QA-Lane mit adaptiver mechanischer Research-QA. Der Standardpuls läuft alle 20 Minuten plus bei relevanten Research-/Governance-Änderungen und rotiert zwischen Provenance/Status, Frontier-Governance, PIT/Clock/Lineage, Capacity-Dispatch und Negative-Evidence/Dedup. Semantische Utility-/Evidence-Critic-Arbeit bleibt ausdrücklich receipt-gated.
+
+„Forschung darf nicht stillstehen“ bedeutet: Solange mindestens eine zulässige, unabhängige und sinnvoll begrenzte Aufgabe existiert, wird sie an eine freie geeignete Ressource geroutet. Es bedeutet nicht, künstliche Jobs zu erzeugen oder wissenschaftliche Gates zu überspringen.

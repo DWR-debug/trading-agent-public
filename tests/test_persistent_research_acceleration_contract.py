@@ -51,14 +51,14 @@ def test_os_state_binds_acceleration_contract_and_s10_event_review():
     ]
     assert payload["two_lane_research_mode"]["status"] == "ACTIVE"
     assert payload["resource_routing"]["s10"]["event_driven_review"] == (
-        "meaningful research-runner or critical-governance change plus regular two-hour mechanical-QA cadence; semantic review remains explicit"
+        "meaningful research-runner or critical-governance change plus a 20-minute adaptive mechanical-QA cadence; semantic review remains explicit"
     )
     assert payload["chatless_night_policy"]["s10"]["event_driven_review"] is True
 
 def test_s10_defaults_to_mechanical_qa_in_phone_workflow():
     text = (ROOT / ".github" / "workflows" / "s10-phone-worker.yml").read_text(encoding="utf-8")
-    assert 'cron: "0 */2 * * *"' in text
+    assert 'cron: "*/20 * * * *"' in text
     assert 'default: "mechanical_qa"' in text
     assert "S10_TASK:" in text
     assert "mechanical_qa" in text
-    assert "automation.s10_mechanical_research_qa" in text
+    assert "automation.s10_adaptive_mechanical_research_qa" in text

@@ -51,8 +51,8 @@ jobs:
   autonomous_pc:
     if: github.repository == 'DWR-debug/trading-agent-public'
     concurrency:
-      # Slot 1 is the formal-readiness/reproduction lane.
-      # Slot 2 is the orthogonal frontier-discovery lane.
+      # Windows A = Formal Readiness / local reproduction.
+      # Windows B = Frontier Discovery / data QA.
       group: ${{ matrix.concurrency_group }}
       cancel-in-progress: false
     strategy:
@@ -119,6 +119,7 @@ jobs:
           endlocal & exit /b %EXIT_CODE%
 
       - name: Run Q211-Q213 literature source feasibility
+        if: matrix.lane == 'data_qa'
         shell: cmd
         run: |
           @echo off
