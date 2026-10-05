@@ -35,7 +35,10 @@ def test_time_regression_is_rejected_per_symbol():
 
 def test_kill_switch_blocks_shadow_admission():
     risk = PortfolioRiskController(2000.0)
-    risk.update_equity(1984.0)
+    with pytest.raises(RiskError):
+        risk.update_equity(1984.0)
+    assert risk.kill_switch is True
+
     coordinator = PaperShadowCoordinator(risk)
     with pytest.raises(RiskError):
         coordinator.admit(_intent("SPY", "2026-10-05T12:00:00Z"))
