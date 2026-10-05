@@ -216,3 +216,59 @@ https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5783743
 Onuk, Does informing investors tip off competitors?:
 https://onlinelibrary.wiley.com/doi/10.1002/rfe.70047
 \n
+
+## 11. Q225 — competition-enforcement / remedy-state transitions
+
+The legal/regulatory frontier suggests a distinct candidate class: the **state of a competitive game can change through an investigation, interim restraint, final decision, remedy, appeal or reversal**. The mechanism is the economic state transition, not the legal wording itself.
+
+Legal-source feasibility is stronger when the public boundary is established by regulator or court publication rather than by later financial-media reporting. Initial US discovery found current GovInfo, FTC and CourtListener records, including recent antitrust and patent disputes. This establishes source reachability only; it does not establish a historical PIT panel.
+
+Q225 should remain exploratory until:
+- the first reproducible public decision boundary is defined;
+- remedy/state taxonomy is frozen ex ante;
+- focal/competitor mappings are frozen before outcomes;
+- appeals/corrections are represented as lineage;
+- Q195 enforcement-escalation overlap is explicitly tested.
+
+The candidate is rejected if it collapses to generic enforcement presence, case counts, legal-text sentiment or an existing contract/procurement lineage.
+
+## 12. Q226 — EDGAR document-age composition
+
+Q226 remains a subcandidate of Q224. Its key distinction is the **composition of requested documents by age**, not total request volume. Current-filing-only acquisition and current-plus-historical acquisition are potentially different information-acquisition states.
+
+This design is motivated by earlier EDGAR research in which simultaneous access to current and historical filings was associated with stronger relations than simple current-filing activity. The modern SEC log schema allows request-level timestamp and filing accession recovery but lacks the richer historical IP identity fields of the 2003-2017 dataset.
+
+Therefore Q226 must not claim to identify "deep research" or investor sophistication directly. At the first feasibility stage it measures only observable aggregate age-composition of EDGAR requests. It survives only if that composition is reproducible and not reducible to Q224 total acquisition intensity, Q130 attention, or Q217 filing complexity.
+
+## 13. Measurement warning for Q224/Q226
+
+The recent literature on observable versus unobservable information acquisition creates an important adversarial control: the public observability of research activity can itself change the research behavior. Therefore an observed EDGAR download series is not necessarily a monotonic proxy for latent information demand. Low observed traffic can mean low demand, substitution to less-visible channels, or strategic suppression of observable traces.
+
+This should become a **mandatory alternative explanation** in any eventual Q224/Q226 PIT/performance design. It is a measurement-control requirement, not a reason to discard the candidate before testing.
+
+## 14. Refined research hierarchy
+
+The present frontier should converge rather than expand indefinitely:
+
+- **Primary candidate:** Q224, only after source/PIT feasibility.
+- **Nested mechanism:** Q226, retained inside Q224 unless independent separability appears.
+- **Current top wave:** Q218/Q219/Q220/Q221.
+- **Unranked external-verification candidate:** Q222.
+- **Exploratory overlap test:** Q223.
+- **Exploratory legal-state candidate:** Q225.
+
+This keeps the active shortlist constrained while allowing high-information exploratory ideas to be preserved without prematurely promoting them.
+
+## 15. Agent architecture implication
+
+Current open-source systems reinforce that the strongest reusable architecture ideas are not "LLM predicts returns" but:
+- persistent factual decision/outcome ledgers;
+- explicit separation of proposal/thesis/risk-note/actual-execution events;
+- model/provider specialization by role;
+- data-side contamination controls;
+- factor-adjusted attribution;
+- source-aware selective consensus;
+- explicit cost and strategy-consistency diagnostics.
+
+These patterns should be treated as engineering requirements for reliability and reproducibility rather than as evidence of alpha.
+\n
