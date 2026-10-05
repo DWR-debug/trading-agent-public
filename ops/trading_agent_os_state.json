@@ -528,8 +528,9 @@
         "Q221",
         "Q219"
       ],
-      "new_overlay": "deterministic source preflight for SEC/EDGAR, SEC Financial Statement and Notes, historical SEC archive and USAspending; output top_candidate_source_preflight.json",
-      "scientific_authority": false
+      "new_overlay": "deterministic Q218-Q221 source/census plus q218_q221_candidate_gate_compiler.py; no market outcomes, ranking, tuning or authorization",
+      "scientific_authority": false,
+      "candidate_gate_compiler": "automation/q218_q221_candidate_gate_compiler.py"
     },
     "runner_C": {
       "role": "LONG_DETERMINISTIC_RESEARCH / INDEPENDENT_QA",
@@ -545,6 +546,6 @@
       "promotion": false,
       "live_execution": false
     },
-    "last_refreshed_utc": "2026-10-05T18:55:19.874Z"
+    "last_refreshed_utc": "2026-10-05T19:07:20.782Z"
   }
 }
