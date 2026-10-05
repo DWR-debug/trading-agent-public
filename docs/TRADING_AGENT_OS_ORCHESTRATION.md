@@ -32,6 +32,11 @@ Permanent background capacity remains active outside the window: Windows A/B and
 This capacity rule never creates scientific authority. Performance, holdout selection, ranking, tuning, promotion and live execution remain closed unless the independent existing governance chain authorizes them.
 
 ## 2ab. Top-candidate development overlay — 2026-10-05
+### Q222 design-only extension — 2026-10-05
+
+Q222 — **Technology disclosure–verification credibility gap** — is admitted as an unranked design candidate based on current literature. Its proposed mechanism compares as-filed technology claims with independently observable implementation evidence. It is explicitly merge-or-kill against Q220/Q217/Q211: no separate family survives unless external verification provides an empirically distinct information mechanism and a defensible historical public-observation clock. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.
+
+
 
 The permanent capacity loop now carries an explicit top-candidate overlay so that newly developed mechanisms are not left idle merely because the older frontier rotation has already passed them.
 
