@@ -1,0 +1,93 @@
+name: Windows Independent Capacity Pulse
+
+on:
+  schedule:
+    - cron: "*/20 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-windows-long-runner-c
+  cancel-in-progress: false
+
+jobs:
+  capacity_pulse:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: [self-hosted, trading-agent-long]
+    timeout-minutes: 20
+    steps:
+      - name: Download current master
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "WORK=%RUNNER_TEMP%\trading-agent-capacity-pulse-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          set "ARCHIVE=%RUNNER_TEMP%\trading-agent-capacity-pulse-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%.tar.gz"
+          if exist "%WORK%" rmdir /s /q "%WORK%"
+          mkdir "%WORK%" || exit /b 1
+          curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "%ARCHIVE%" "https://codeload.github.com/DWR-debug/trading-agent-public/tar.gz/%GITHUB_SHA%" || exit /b 1
+          tar.exe -xzf "%ARCHIVE%" -C "%WORK%" || exit /b 1
+          for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
+          endlocal
+
+      - name: Bootstrap pinned Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\python-3.13.15-nuget-capacity-pulse"
+          set "PY_EXE=%PY_ROOT%\tools\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-capacity-pulse.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            mkdir "%PY_ROOT%" 2>nul
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" --version || exit /b 1
+          "%PY_EXE%" -m pip --version >nul 2>&1
+          if errorlevel 1 "%PY_EXE%" -m ensurepip --upgrade
+          "%PY_EXE%" -m pip install --disable-pip-version-check pytest pandas exchange-calendars tzdata==2026.5 || exit /b 1
+          endlocal
+
+      - name: Run bounded independent research QA pack
+        shell: cmd
+        run: |
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "WORK=%RUNNER_TEMP%\trading-agent-capacity-pulse-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          for /d %%D in ("%WORK%\trading-agent-public-*") do set "REPO_SRC=%%~fD"
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-capacity-pulse\tools\python.exe"
+          set /a PACK=GITHUB_RUN_NUMBER %% 4
+          cd /d "%REPO_SRC%" || exit /b 1
+          set "RC=0"
+          if "!PACK!"=="0" (
+            "%PY_EXE%" -m pytest -q tests/test_research_governance_audit.py tests/test_research_gates.py tests/test_long_run_capacity_policy.py
+            if errorlevel 1 set "RC=!ERRORLEVEL!"
+          ) else if "!PACK!"=="1" (
+            "%PY_EXE%" -m pytest -q tests/test_q187_q192_source_feasibility.py tests/test_q188_q192_pit_census_r2.py tests/test_q179_q184_source_feasibility.py
+            if errorlevel 1 set "RC=!ERRORLEVEL!"
+            if "!RC!"=="0" "%PY_EXE%" -m automation.q187_q192_source_feasibility --output "research/runs/self_hosted/capacity_pulse/q187_q192.json"
+          ) else if "!PACK!"=="2" (
+            "%PY_EXE%" -m pytest -q tests/test_q197_q198_source_feasibility.py tests/test_q198_pit_clock_census.py tests/test_q186_pit_readiness_r2.py
+            if errorlevel 1 set "RC=!ERRORLEVEL!"
+            if "!RC!"=="0" "%PY_EXE%" -m automation.q198_pit_clock_census --output "research/runs/self_hosted/capacity_pulse/q198_pit_clock.json"
+          ) else (
+            "%PY_EXE%" -m pytest -q tests/test_q199_q201_source_feasibility.py tests/test_q193_q196_source_feasibility.py tests/test_q121r6_windows_independent_reproduction.py
+            if errorlevel 1 set "RC=!ERRORLEVEL!"
+            if "!RC!"=="0" "%PY_EXE%" -m automation.q199_q201_source_feasibility --output "research/runs/self_hosted/capacity_pulse/q199_q201.json"
+          )
+          set "PULSE_PACK=!PACK!"
+          set "PULSE_RC=!RC!"
+          "%PY_EXE%" -c "import json,os,platform; from pathlib import Path; p=Path('research/runs/self_hosted/capacity_pulse/receipt.json'); p.parent.mkdir(parents=True,exist_ok=True); p.write_text(json.dumps({'schema_version':'1.0','receipt_type':'windows_independent_capacity_pulse','status':'COMPLETED' if int(os.environ.get('PULSE_RC','1'))==0 else 'FAILED','runner_name':os.environ.get('RUNNER_NAME'),'source_sha':os.environ.get('GITHUB_SHA'),'run_id':int(os.environ['GITHUB_RUN_ID']),'pack':int(os.environ['PULSE_PACK']),'formal_evidence_allowed':False,'independent_reproduction_only':True,'paper_only':True,'live_trading_enabled':False,'orders_enabled':False,'automatic_promotion':False,'python_version':platform.python_version()},ensure_ascii=False,sort_keys=True,indent=2)+'\\n',encoding='utf-8')"
+          endlocal & exit /b %RC%
+
+      - name: Upload capacity pulse receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: windows-independent-capacity-pulse-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/self_hosted/capacity_pulse/
+          if-no-files-found: error
+          retention-days: 14
