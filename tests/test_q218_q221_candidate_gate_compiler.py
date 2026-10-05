@@ -56,7 +56,7 @@ def test_compiler_keeps_all_four_candidates_non_authorizing():
     result = compile_gate(_census(), _specs())
     assert set(result["results"]) == {"Q218", "Q219", "Q220", "Q221"}
     assert result["all_source_structure_components_ready"] is True
-    assert result["performance_authorized"] is False
-    assert result["promotion_authorized"] is False
+    assert result["performance_authorization"] is False
+    assert result["promotion_authorization"] is False
     assert result["live_execution"] is False
     assert result["results"]["Q219"]["same_day_use_allowed"] is False

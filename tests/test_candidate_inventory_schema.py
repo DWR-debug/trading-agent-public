@@ -5,7 +5,7 @@ from automation.candidate_robustness_gate import REQUIRED_FIELDS, DEFAULT_INVENT
 ROOT = Path(__file__).resolve().parents[1]
 
 def test_all_default_candidate_inventories_match_gate_schema():
-    assert len(DEFAULT_INVENTORIES) == 14
+    assert len(DEFAULT_INVENTORIES) == 15
     candidates=[]
     for rel in DEFAULT_INVENTORIES:
         data=json.loads((ROOT/rel).read_text(encoding="utf-8"))
@@ -15,8 +15,8 @@ def test_all_default_candidate_inventories_match_gate_schema():
             assert not missing,(c["id"],missing)
             assert "core_hypothesis" not in c,c["id"]
             candidates.append(c)
-    assert len(candidates)==80
-    assert len({c["id"] for c in candidates})==80
+    assert len(candidates)==81
+    assert len({c["id"] for c in candidates})==81
 
 def test_frontier_candidate_contract_contains_no_authorizing_fields():
     forbidden={"performance","return","returns","pnl","drawdown","winner","selected","promotion","parameter_search","threshold_search","horizon_search","asset_search","candidate_selection","family_ranking"}

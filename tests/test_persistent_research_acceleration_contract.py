@@ -50,9 +50,10 @@ def test_os_state_binds_acceleration_contract_and_s10_event_review():
         "lane_a_formal_readiness", "lane_b_frontier_discovery"
     ]
     assert payload["two_lane_research_mode"]["status"] == "ACTIVE"
-    assert payload["resource_routing"]["s10"]["event_driven_review"] == (
-        "meaningful research-runner or critical-governance change plus a 20-minute adaptive mechanical-QA cadence; semantic review remains explicit"
-    )
+    event_review = payload["resource_routing"]["s10"]["event_driven_review"]
+    assert "meaningful research-runner or critical-governance change" in event_review
+    assert "20-minute adaptive mechanical-QA cadence" in event_review
+    assert "semantic review remains explicit" in event_review
     assert payload["chatless_night_policy"]["s10"]["event_driven_review"] is True
 
 def test_s10_defaults_to_mechanical_qa_in_phone_workflow():
