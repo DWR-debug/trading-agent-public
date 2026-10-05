@@ -1560,7 +1560,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T16:11:59.635955+00:00",
+  "generated_at_utc": "2026-10-05T16:12:17.089452+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4251,6 +4251,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "140dc527493b088716a4faed8714fe9635466527",
+        "timestamp": "2026-10-05T16:12:11Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9c5837c6932ffc4ada4c34b7e51848a77ceb611e",
+        "timestamp": "2026-10-05T16:12:02Z"
+      },
+      {
         "message": "GOVERNANCE: align rolling capacity lease with current two-hour window",
         "sha": "7a8857c3ab2c8a26ef4150ccf4d7bac2aeda5569",
         "timestamp": "2026-10-05T18:11:56+02:00"
@@ -4279,16 +4289,6 @@
         "message": "OPS: make rolling research waves cumulative and capacity-limited",
         "sha": "7b439e93b3defc82f5915603484fe5dd12b036dc",
         "timestamp": "2026-10-05T18:10:34+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "abd70b0f345c43d2ec016a7c59b30323f6e50eb7",
-        "timestamp": "2026-10-05T16:09:31Z"
-      },
-      {
-        "message": "OPS: synchronize S10 phone runtime status",
-        "sha": "97f67bd2bfb4b6c04657a2866e0fce5eede47c4a",
-        "timestamp": "2026-10-05T16:09:18Z"
       }
     ]
   },
@@ -4386,7 +4386,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7a8857c3ab2c8a26ef4150ccf4d7bac2aeda5569",
+  "source_master_sha": "140dc527493b088716a4faed8714fe9635466527",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4500,6 +4500,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37338932771"
+    "run_id": "37338961704"
   }
 }
