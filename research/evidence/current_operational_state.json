@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T11:26:32.207199+00:00",
+  "generated_at_utc": "2026-10-05T11:26:53.843230+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4136,6 +4136,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "QA: trigger Windows research loop on agent runtime changes",
+        "sha": "35cbc0d47e442ace0054512c8d7091504615d895",
+        "timestamp": "2026-10-05T13:26:46+02:00"
+      },
+      {
+        "message": "QA: include paper-agent runtime tests in Windows research worker",
+        "sha": "2e8cffed7773a7a3ebc8562595f4ae3e2a4ad363",
+        "timestamp": "2026-10-05T13:26:38+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "66726715a255f0f19cd8eff0dc9607f1603a8d52",
+        "timestamp": "2026-10-05T11:26:34Z"
+      },
+      {
         "message": "RESEARCH: include Q205 in pre-PIT falsification battery",
         "sha": "a4a6b9d6e8fc6be0d903ac8f8aeb6984d094c771",
         "timestamp": "2026-10-05T13:26:20+02:00"
@@ -4159,21 +4174,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "6a22b9ee6c5bc5dcc81da35cf99709c2cc04e647",
         "timestamp": "2026-10-05T11:25:40Z"
-      },
-      {
-        "message": "TEST: pass explicit frozen candidate identity to signal adapter",
-        "sha": "9f5372ce89082ba6c501e7f58204fbe24f5e6176",
-        "timestamp": "2026-10-05T13:25:37+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "ebd69c99e9fd216a2a74e9e808fcbf6a69087e30",
-        "timestamp": "2026-10-05T11:25:33Z"
-      },
-      {
-        "message": "ENG: require explicit frozen candidate identity in signal adapter",
-        "sha": "b6183a4a2eca7b72f9f2af3648a2e850e9ab31f7",
-        "timestamp": "2026-10-05T13:25:30+02:00"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a4a6b9d6e8fc6be0d903ac8f8aeb6984d094c771",
+  "source_master_sha": "35cbc0d47e442ace0054512c8d7091504615d895",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37302935290"
+    "run_id": "37302966282"
   }
 }
