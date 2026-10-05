@@ -15,53 +15,11 @@ jobs:
   dispatch:
     if: github.repository == 'DWR-debug/trading-agent-public'
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v5
-        with:
-          ref: master
-          fetch-depth: 1
       - name: Manual emergency dispatch guard
         run: |
           set -euo pipefail
           echo "MANUAL_PRIORITY_DISPATCH_ONLY=TRUE"
           echo "AUTOMATIC_DISPATCH_AUTHORITY=.github/workflows/capacity-saturation-rolling-waves.yml"
-
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          repo="$GITHUB_REPOSITORY"
-          mapfile -t workflows < <(cat <<'EOF'
-          q121r6-sec-acceptance-time-compilation.yml
-          q185-q186-source-feasibility.yml
-          q187-q192-source-feasibility.yml
-          q187-q192-pit-readiness-r1.yml
-          q188-q192-pit-census-r2.yml
-          q193-q196-source-feasibility.yml
-          q197-q198-source-feasibility.yml
-          q198-pit-clock-census.yml
-          q199-q201-source-feasibility.yml
-          q119-treasury-source-feasibility.yml
-          orthogonal-candidate-development.yml
-          q202-q204-information-timing-feasibility.yml
-          q205-nlrb-source-feasibility.yml
-          q214-disclosure-risk-feasibility.yml
-          q215-observability-gap-feasibility.yml
-          q216-data-revision-exposure-feasibility.yml
-          q217-cognitive-processing-friction-feasibility.yml
-          EOF
-          )
-          if [[ "$GITHUB_EVENT_NAME" == "push" && "$(git log -1 --pretty=%B)" == *"RESEARCH: trigger next logical gate"* ]]; then
-            workflows=("orthogonal-pit-next-gate.yml")
-          fi
-          runs="$(gh api "/repos/${repo}/actions/runs?per_page=200")"
-          for workflow in "${workflows[@]}"; do
-            [[ -f ".github/workflows/${workflow}" ]] || { echo "SKIP_MISSING ${workflow}"; continue; }
-            active="$(printf '%s' "$runs" | jq --arg wf "https://github.com/${repo}/actions/workflows/${workflow}" '[.workflow_runs[] | select(.status != "completed") | select(.workflow_url == $wf)] | length')"
-            if (( active > 0 )); then echo "SKIP_ACTIVE ${workflow} active=${active}"; continue; fi
-            recent_success="$(printf '%s' "$runs" | jq --arg wf "https://github.com/${repo}/actions/workflows/${workflow}" '[.workflow_runs[] | select(.conclusion == "success") | select(.workflow_url == $wf)] | length')"
-            if (( recent_success > 0 )); then echo "SKIP_RECENT_SUCCESS ${workflow}"; continue; fi
-            if gh workflow run "$workflow" --repo "$repo" --ref master; then echo "DISPATCHED ${workflow}"; else echo "DISPATCH_FAILED_NONBLOCKING ${workflow}"; fi
-          done
+          echo "No automatic push/schedule trigger exists for this workflow."
