@@ -1,3 +1,5 @@
+> **VERBINDLICHE PROJEKTSTATUTEN:** `docs/TRADING_AGENT_PROJECT_STATUTES.md` ist die kanonische sprachliche Regelung für dauerhafte Prinzipien, Nutzkapazität, Kontinuität und Projektgedächtnis. Maschinenmirror: `research/governance/project_statutes.json`.
+
 ## Kanonische Startregel für neue "trading agent"-Chats — 2026-09-28
 
 Diese Datei `docs/TRADING_AGENT_PROJECT_MEMORY.md` ist die **kanonische dauerhafte Gedächtnis- und Betriebsdatei** des Projekts. Bei jedem neuen Chat, dessen erste substanzielle Nutzernachricht den Trigger **"trading agent"** enthält oder eindeutig auf das Trading-Agent-Projekt verweist, muss diese Datei vor der Auswahl oder Ausführung des nächsten Entwicklungsschritts berücksichtigt werden.
