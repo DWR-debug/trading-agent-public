@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `7e3d5152b35688da280682e46b3d1fac44b636af`
+**Current operational snapshot:** `3ea2fc02a9eabb23440fca164418f9b110bbc30e`
 
-**Generated (UTC):** `2026-10-05T18:09:31.849765+00:00`
+**Generated (UTC):** `2026-10-05T18:12:18.998646+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -17,8 +17,7 @@
 - Canonical data-layer infrastructure is merged.
 - Bounded agent routing uses two queue lanes with fail-closed task contracts.
 - **Permanent two-lane research mode: ACTIVE.** Lane A = **Formal Readiness** (advanced Coverage/PIT/compiler/provenance/authorization readiness); Lane B = **Frontier Discovery** (orthogonal source/PIT feasibility and cheap falsification). The two Windows slots are isolated by candidate/trial identity, branches/workflows and output/provenance paths. Cross-lane findings cannot retroactively alter a frozen trial.
-
-- **Windows A/B continuous-capacity rule: ACTIVE.** A = Formal Readiness / local reproduction; B = Frontier Discovery / data QA. Both are primary, always-routable research lanes, not fallback capacity. Whenever independent bounded research is ready, both lanes should remain occupied in parallel; after a workpack completes, the next ready gate is routed immediately. If the scientific frontier is temporarily blocked, the lane falls back to provenance/PIT/data-contract/negative-evidence QA rather than fabricating candidate work. This never creates performance authorization.- Three physical research slots are capacity only: they **never** create performance authorization. A performance run remains individually fail-closed until an exact current formal authorization exists.
+- Three physical research slots are capacity only: they **never** create performance authorization. A performance run remains individually fail-closed until an exact current formal authorization exists.
 - Continuous QA is scheduled every 6 hours on GitHub-hosted Windows and uses only the bounded `repo_qa` lane; it consumes no self-hosted Windows research slot.
 - The deterministic frontier loop runs every 10 minutes on free GitHub-hosted Ubuntu; its three 10-step packs cover all 30 frontier-worker steps.
 - Windows Self-Hosted capacity is always routable for bounded local reproduction, data QA, local-AI and hardware-dependent work; three physical slots are intended to run in parallel, with Runner C reserved for long deterministic work and independent reproduction.
