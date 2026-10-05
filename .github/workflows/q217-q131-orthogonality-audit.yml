@@ -1,0 +1,53 @@
+name: Q217 Q131 Orthogonality Audit
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - docs/research_design/Q217_COGNITIVE_PROCESSING_FRICTION_2026-10-05.md
+      - docs/research_design/Q131R1_SEC_DISCLOSURE_COMPLEXITY_2026-10-03.md
+      - research/preregistrations/q131r1_sec_disclosure_complexity_2026_10_03.json
+      - research/frontier/q217_cognitive_processing_friction_2026_10_05.json
+      - .github/workflows/q217-q131-orthogonality-audit.yml
+permissions:
+  contents: read
+jobs:
+  audit:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - name: Validate merge-back rule
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          q217=Path("docs/research_design/Q217_COGNITIVE_PROCESSING_FRICTION_2026-10-05.md").read_text().lower()
+          q131=Path("docs/research_design/Q131R1_SEC_DISCLOSURE_COMPLEXITY_2026-10-03.md").read_text().lower()
+          assert "processing" in q217 and "complexity" in q217 and "merge back" in q217
+          assert "complexity" in q131
+          print("Q217_Q131_MERGE_BACK_RULE_PRESENT")
+          PY
+      - name: Write bounded non-authorizing receipt
+        run: |
+          set -euo pipefail
+          mkdir -p research/runs
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          d={"schema_version":1,"record_type":"q217_q131_orthogonality_audit","status":"DISCOVERY_ORTHOGONALITY_AUDIT_COMPLETED_NO_PERFORMANCE","candidate_id":"Q217","distinctness_proven":False,"empirical_separability_required":True,"merge_back_if_non_distinct":True,"performance_authorized":False,"holdout_selection_allowed":False,"ranking_allowed":False,"tuning_allowed":False,"promotion_allowed":False,"live_execution_allowed":False}
+          Path("research/runs/q217_q131_orthogonality_"+os.environ["GITHUB_RUN_ID"]+".json").write_text(json.dumps(d,indent=2)+"
+")
+          PY
+      - name: Upload receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q217-q131-orthogonality
+          path: research/runs/q217_q131_orthogonality_*.json
+          if-no-files-found: error
+          retention-days: 14
