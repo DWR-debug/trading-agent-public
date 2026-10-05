@@ -255,6 +255,7 @@ ACTIVE_WORKFLOWS = {
     "q229-historical-release-census.yml",
     "q229-q230-source-feasibility.yml",
     "q230-windows-trace-connectivity.yml",
+    "q224-edgar-modern-source-gate.yml",
     "windows-independent-capacity-pulse.yml",
 }
 
