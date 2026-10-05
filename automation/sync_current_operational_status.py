@@ -16,6 +16,7 @@ from automation.q070_pipeline_state import summarize as summarize_q070_pipeline
 ROOT = Path(__file__).resolve().parents[1]
 STATUS_DOC = ROOT / "docs" / "CURRENT_STATUS.md"
 STATUS_JSON = ROOT / "research" / "evidence" / "current_operational_state.json"
+CHAT_HANDOFF = ROOT / "research" / "evidence" / "trading_agent_chat_handoff.json"
 
 
 def _load_json(path: Path, default: Any) -> Any:
@@ -449,6 +450,9 @@ def generate(
             "directed five-year citation dependencies; Q185 targets persistent federal litigation states. "
             "Both remain discovery/PIT-only with no performance or promotion authorization."
         )
+    if any(str(item.get("code")) == "Q217" for item in active_registry.get("active_design_families", [])):
+        recorded_next_research_focus = ("Priority frontier includes Q217 cognitive-processing-friction decomposition alongside Q214-Q216. "
+                                         "Q217 remains discovery/PIT-only and must merge into Q131 if it is not empirically distinct.")
     current = {
         "schema_version": "1.0",
         "status_type": "current_operational_project_state",
@@ -778,6 +782,8 @@ def generate(
     else:
         current["safety"]["status"] = "SAFE"
 
+    frontier_codes = [str(x.get("code")) for x in active_registry.get("active_design_families", []) if x.get("code")]
+    current["chat_handoff"] = {"schema_version":"1.0","record_type":"trading_agent_chat_handoff","generated_at_utc":current["generated_at_utc"],"source_master_sha":source_master_sha,"active_frontier":frontier_codes,"next_research_focus":recorded_next_research_focus,"canonical_sources":current["canonical_sources"],"resume_rule":"Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.","response_rule":"Keep user-facing output bounded and delta-based; persist material state before reporting completion."}
     current_json = json.dumps(current, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
     doc = f"""# Trading Agent — Current Operational Status
 
@@ -813,7 +819,7 @@ def generate(
 ### Permanent Capacity Saturation & Rolling Research Waves
 
 - **STATUS: ACTIVE_AND_PERSISTENT.** Useful free compute is continuously routed whenever a real bounded backlog exists.
-- **Current two-hour activation:** `${rolling_capacity_lease.get("window_id", "NOT_RECORDED")}`, `${rolling_capacity_lease.get("start_utc", "UNKNOWN")}–${rolling_capacity_lease.get("end_utc", "UNKNOWN")}`.
+- **Current two-hour activation:** `{rolling_capacity_lease.get("window_id", "NOT_RECORDED")}`, `{rolling_capacity_lease.get("start_utc", "UNKNOWN")}–{rolling_capacity_lease.get("end_utc", "UNKNOWN")}`.
 - **Scheduler:** every 10 minutes; active duplicates are skipped, phase-successful work is not rerun, and only one bounded retry is permitted after failure/cancellation.
 - **Wave order:** W1 source/PIT/clock closure -> W2 candidate/contracts and information timing -> W3 next-gate compilation and independent reproduction -> W4 literature discovery/consolidation.
 - **Utilization rule:** maximize useful occupancy across Windows A/B/C, hosted Linux, bounded free-AI lanes and S10/mobile support when those resources are reachable and the work is independent and useful. Never manufacture work to consume quota.
@@ -1056,6 +1062,8 @@ def main() -> int:
     doc_path.parent.mkdir(parents=True, exist_ok=True)
     json_path.parent.mkdir(parents=True, exist_ok=True)
     doc_path.write_text(doc, encoding="utf-8")
+    CHAT_HANDOFF.parent.mkdir(parents=True, exist_ok=True)
+    CHAT_HANDOFF.write_text(json.dumps(current["chat_handoff"], ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
     json_path.write_text(
         json.dumps(current, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
         encoding="utf-8",
