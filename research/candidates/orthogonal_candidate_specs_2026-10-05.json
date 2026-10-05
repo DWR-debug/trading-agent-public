@@ -752,6 +752,103 @@
       "scientific_boundary": "discovery_contract_only",
       "priority": "P1_SOURCE_FEASIBILITY",
       "implementation_note": "SEC says filing-review correspondence has been publicly released since 2005 and current guidance places publication at least 20 business days after effectiveness/review completion. The public correspondence clock must therefore be treated separately from the latent SEC review clock."
+    },
+    {
+      "id": "Q229",
+      "issue_number": 1101,
+      "name": "Regulator-disclosed consumer complaint / management-response information state",
+      "mechanism": "Public regulator complaint records can reveal operational problems through complaint topic/severity and the subsequent company-response process. The economically relevant object is complaint-to-response state, not raw complaint volume or generic sentiment.",
+      "event_clock": "Two-clock contract: latent complaint receipt/submission date; tradable public-observation boundary = earliest defensible publication boundary. Response information enters only when public.",
+      "features": [
+        "complaint_topic_composition",
+        "complaint_severity_state",
+        "scale_normalized_complaint_intensity",
+        "complaint_to_response_delay",
+        "response_timeliness_or_disposition",
+        "unresolved_at_publication_state",
+        "complaint_response_divergence",
+        "within_firm_complaint_mix_change"
+      ],
+      "direction": "two-sided outcome; no sign assumed ex ante",
+      "cheap_falsifiers": [
+        "raw_count_or_size_collapse",
+        "generic_sentiment_collapse",
+        "publication_delay_only_collapse",
+        "response_fields_add_no_incremental_structure",
+        "historical_taxonomy_not_reproducible",
+        "issuer_mapping_requires_hindsight",
+        "publication_or_response_selection_cannot_be_bounded"
+      ],
+      "gates": [
+        "historical_CFPB_archive_and_past_release_completeness",
+        "exact_public_observation_boundary",
+        "frozen_company_to_issuer_mapping",
+        "historical_product_issue_taxonomy_compiler",
+        "response_and_redaction_lineage_audit",
+        "scale_and_market_share_controls",
+        "independent_PIT_reproduction_on_symbol_disjoint_issuers"
+      ],
+      "non_overlap": [
+        "Q130",
+        "Q204",
+        "Q217",
+        "Q228",
+        "generic_attention"
+      ],
+      "source_basis": [
+        "CFPB Consumer Complaint Database/API",
+        "FCC Consumer Complaints Data",
+        "FINRA Rule 4530 Customer Complaint Report",
+        "Cai et al. 2026 consumer complaints and managerial responses"
+      ],
+      "scientific_boundary": "discovery_contract_only",
+      "priority": "P1_SOURCE_FEASIBILITY"
+    },
+    {
+      "id": "Q230",
+      "issue_number": 1102,
+      "name": "Cross-capital-structure bond-implied equity information state",
+      "mechanism": "Corporate bond investors and equity investors can incorporate shared firm information at different speeds. An issuer-level bond-implied state or bond/equity disagreement may therefore expose information not yet reflected in equity prices.",
+      "event_clock": "Public FINRA TRACE end-of-day observation boundary; only freely accessible data may be used. Bond observations must precede the equity decision boundary under a conservative session rule.",
+      "features": [
+        "issuer_aggregated_bond_return_or_yield_change",
+        "bond_abnormal_move_vs_rate_and_credit_controls",
+        "bond_equity_information_disagreement",
+        "bond_trading_intensity_or_liquidity_state_when_free_source_supports",
+        "persistence_before_equity_response"
+      ],
+      "direction": "two-sided outcome; no sign assumed ex ante",
+      "cheap_falsifiers": [
+        "equity_momentum_or_beta_collapse",
+        "rate_market_exposure_collapse",
+        "liquidity_explains_all",
+        "issuer_mapping_incomplete",
+        "free_TRACE_history_inadequate",
+        "timing_disappears_under_conservative_boundary",
+        "paid_data_dependency"
+      ],
+      "gates": [
+        "free_TRACE_historical_source_census",
+        "public_EOD_clock_and_revision_semantics",
+        "bond_security_master_and_issuer_mapping",
+        "matched_issuer_panel",
+        "bond_lifecycle_trade_status_audit",
+        "independent_PIT_reproduction_on_symbol_disjoint_issuers"
+      ],
+      "non_overlap": [
+        "Q214",
+        "Q088",
+        "Q219",
+        "Q217",
+        "generic_equity_momentum"
+      ],
+      "source_basis": [
+        "FINRA TRACE public trade activity",
+        "Auh & Kim 2026 Across the Capital Structure: Bond Signals and Equity Returns",
+        "Keshavarz & Sirmans 2026 Momentum Across the Capital Structure"
+      ],
+      "scientific_boundary": "discovery_contract_only",
+      "priority": "P1_SOURCE_FEASIBILITY"
     }
   ],
   "blocked_or_composite_tracks": {
@@ -767,7 +864,7 @@
     "promotion",
     "live execution"
   ],
-  "revision": 10,
-  "triggered_by": "TOP_CANDIDATE_DEVELOPMENT_2026-10-05_Q224_EDGAR_DOCUMENT_DEMAND",
+  "revision": 11,
+  "triggered_by": "DEEP_ORTHOGONAL_FRONTIER_2026-10-05_Q229_Q230",
   "common_statute_reference": "docs/TRADING_AGENT_PROJECT_STATUTES.md"
 }
