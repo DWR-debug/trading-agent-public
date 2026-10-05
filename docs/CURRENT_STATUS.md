@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `df6fa15f3e9bd5b74d730103a5b6c0fcb779a262`
+**Current operational snapshot:** `9d272f416c677ab6a2d52c8ae45f098473c8f76a`
 
-**Generated (UTC):** `2026-10-05T16:45:20.906460+00:00`
+**Generated (UTC):** `2026-10-05T16:46:16.033115+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -29,15 +29,10 @@
 - S10 output remains non-scientific and cannot authorize performance or promotion.
 - **PERMANENT LITERATURE-RESEARCH RULE — ACTIVE:** The Trading Agent continuously searches for new, genuinely orthogonal economic mechanisms, information channels and cross-disciplinary relationships. Discovery is run on a recurring daily/weekly research cadence plus an independent public-metadata scout. Every promising finding is verified against primary sources, separated from existing candidate lineages, cheap-falsified where possible, and scored by novelty, PIT feasibility, reproducibility and information gain per compute. Negative/insufficient findings are retained to prevent cyclic rediscovery. Literature claims never become project evidence by themselves and can never authorize performance, holdout selection, ranking, tuning, promotion or live execution.
 
-### Weekly Deep Research — Q215/Q216 Active
-- **Q215:** public-source observability gap — P1; cross-channel information-diffusion state with explicit anti-double-counting constraints.
-- **Q216:** macro-vintage revision exposure state — P1-RISK; macro-vintage revision-reliability state only.
-- Both remain discovery/source/PIT-only; no performance, holdout selection, ranking, tuning, promotion or live execution.
-
 ### Permanent Capacity Saturation & Rolling Research Waves
 
 - **STATUS: ACTIVE_AND_PERSISTENT.** Useful free compute is continuously routed whenever a real bounded backlog exists.
-- **Current two-hour activation:** `$TA-2H-2026-10-05-1611Z`, `$2026-10-05T16:11:31Z–$2026-10-05T18:11:31Z`.
+- **Current two-hour activation:** `$TA-2H-2026-10-05-1630Z`, `$2026-10-05T16:30:00Z–$2026-10-05T18:30:00Z`.
 - **Scheduler:** every 10 minutes; active duplicates are skipped, phase-successful work is not rerun, and only one bounded retry is permitted after failure/cancellation.
 - **Wave order:** W1 source/PIT/clock closure -> W2 candidate/contracts and information timing -> W3 next-gate compilation and independent reproduction -> W4 literature discovery/consolidation.
 - **Utilization rule:** maximize useful occupancy across Windows A/B/C, hosted Linux, bounded free-AI lanes and S10/mobile support when those resources are reachable and the work is independent and useful. Never manufacture work to consume quota.
