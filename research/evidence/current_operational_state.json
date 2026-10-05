@@ -1399,13 +1399,13 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-05T17:39:15.558027+00:00",
+    "generated_at_utc": "2026-10-05T17:39:46.208118+00:00",
     "next_research_focus": "Priority frontier includes Q217 cognitive-processing-friction decomposition alongside Q214-Q216. Q217 remains discovery/PIT-only and must merge into Q131 if it is not empirically distinct.",
     "record_type": "trading_agent_chat_handoff",
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "9b2278d1716c17d1012bbcf53c50b82f4ce28e1e"
+    "source_master_sha": "10c8bd3a51be1598f91d58c0f512d608aa1bff8d"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1703,7 +1703,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T17:39:15.558027+00:00",
+  "generated_at_utc": "2026-10-05T17:39:46.208118+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2708,7 +2708,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "d59fdce22f0de943c936f7aa79da034b07788d4555b53c258e1e1e136d5729f8",
+    "receipt_fingerprint": "98514d7a1c72dec173dfc3f3a31ea3215221574b31c456d6a7b8fcdfb5507739",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2743,7 +2743,7 @@
           }
         ],
         "clock_contract": "Docket event dates are distinct from underlying incident dates; exact public intraday availability must be proven per event class, otherwise use next-session availability.",
-        "content_sha256": "b68cbba4253a8ecd4fdbf68ad54fcac54c748d3bfd4bd9248ed1d3a2bf03dc49",
+        "content_sha256": "fadfc51e94166f5d6d04d93e18166de543d9fa2223d5ee9cac85a5cce02b1efd",
         "http_status": 403,
         "missing_markers": [
           "RECAP Archive",
@@ -2767,7 +2767,7 @@
           }
         ],
         "clock_contract": "A recorded docket-entry date is not automatically proof of public dissemination time.",
-        "content_sha256": "0a3ad6d18fb14ddf994c9ee76153a97ba3c3598fadfb23518d02bf07d2655c61",
+        "content_sha256": "66afcb25bee572145e88000cfeff88f3f818db0d7ec713df4c8d3d4665e78279",
         "http_status": 403,
         "missing_markers": [
           "Advanced RECAP Search",
@@ -3577,7 +3577,7 @@
       },
       {
         "api_url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-12-16&per_page=1000",
-        "content_sha256": "3ec23f99872d34257a4a0465e5c60d177fea8e77ff35d093850b269bf5e4cf1b",
+        "content_sha256": "89f227bff29916394878c7258dc2673d32da785cc057b157a24a4967568c3c5f",
         "http_status": 200,
         "parsed": {
           "api_count": 124,
@@ -3800,7 +3800,7 @@
       },
       {
         "api_url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2026-10-02&per_page=1000",
-        "content_sha256": "5171797e28210d99b7f1b0415b3fad10312647273bca032eb7567d4c546cf88d",
+        "content_sha256": "48f57d14153c77b48397a18b53d3f06ca75a9850ca93c12705a78f8a06f8c185",
         "http_status": 200,
         "parsed": {
           "api_count": 108,
@@ -4022,7 +4022,7 @@
         "status": "API_PARSED"
       }
     ],
-    "receipt_fingerprint": "2968548dbfba70f28f57b044c041285082fb70bd4d36ad3df1154995b964d713",
+    "receipt_fingerprint": "ce3f22eb3b3b34e7094b56b20fc218d34113fb8c5d3cbba4df894277ea6ea13f",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -4395,6 +4395,36 @@
     "recent_commits": [
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "10c8bd3a51be1598f91d58c0f512d608aa1bff8d",
+        "timestamp": "2026-10-05T17:39:36Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6114eb11b8980e3e223303668c732bd2f19a1840",
+        "timestamp": "2026-10-05T17:39:32Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "f3e7dbcd1286ab16fe4089fc4f86c572f6169a33",
+        "timestamp": "2026-10-05T17:39:26Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "8fb2e5df050e917a86e4b8e20a851d6ed9a5d8db",
+        "timestamp": "2026-10-05T17:39:23Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "ab2e13e8c220ef7413982e96c3a371e854c870b9",
+        "timestamp": "2026-10-05T17:39:19Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "0563d46f4716fe5d0dfdb8b915b3c92d75277c42",
+        "timestamp": "2026-10-05T17:39:16Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "9b2278d1716c17d1012bbcf53c50b82f4ce28e1e",
         "timestamp": "2026-10-05T17:39:12Z"
       },
@@ -4402,36 +4432,6 @@
         "message": "GOVERNANCE: synchronize dispatch authority and chat resilience",
         "sha": "7f2436371607ca0238476e9af4b4c3acedd09579",
         "timestamp": "2026-10-05T19:39:09+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "7db87a4226b7312d405f6be5a7498b49008dad94",
-        "timestamp": "2026-10-05T17:39:06Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "118d3ba65895e055a64a3f2ae04bb886d43aa737",
-        "timestamp": "2026-10-05T17:39:04Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "dd6bf82452f2e0f3bb778065c63b1c8f7605fcb8",
-        "timestamp": "2026-10-05T17:39:02Z"
-      },
-      {
-        "message": "FIX: remove stale priority dispatcher block",
-        "sha": "5faa87427e851ba0922402f916fb9e60685a2af7",
-        "timestamp": "2026-10-05T19:38:58+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "efa21b02b5b9e7ce4826a17899ea701255daa288",
-        "timestamp": "2026-10-05T17:38:47Z"
-      },
-      {
-        "message": "OPS: make priority dispatcher manual-only",
-        "sha": "55669343421244ef9243ab4be10f154e9dd78da4",
-        "timestamp": "2026-10-05T19:38:36+02:00"
       }
     ]
   },
@@ -4529,7 +4529,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9b2278d1716c17d1012bbcf53c50b82f4ce28e1e",
+  "source_master_sha": "10c8bd3a51be1598f91d58c0f512d608aa1bff8d",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4643,6 +4643,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37350006787"
+    "run_id": "37350029935"
   }
 }
