@@ -60,6 +60,7 @@ NEXT_GATES = {
     "Q219": "POST_FILING_OPTIONS_RESPONSE_PIT_REQUIRED",
     "Q220": "DETERMINISTIC_NARRATIVE_XBRL_MAPPING_AND_PIT",
     "Q221": "HISTORICAL_USASPENDING_PUBLIC_BOUNDARY_AND_ISSUER_MAPPING",
+    "Q222": "HISTORICAL_SEC_IMPLEMENTATION_EVIDENCE_CLOCK_AND_ENTITY_MAPPING",
     "Q186": "READY_FOR_CITATION_PUBLICATION_ORDERING_AND_HISTORICAL_COMPLETENESS",
     "Q187-Q192": "READY_FOR_CANDIDATE_SPECIFIC_HISTORICAL_PIT_RECONSTRUCTION",
 }
@@ -101,7 +102,7 @@ def compile_state() -> dict:
     assert specs.get("shared_contract", {}).get("live_execution") is False
 
     ids = [c.get("id") for c in specs.get("candidates", [])]
-    assert ids == ["Q194", "Q195", "Q196", "Q197", "Q199", "Q201", "Q202", "Q203", "Q204", "Q205", "Q215", "Q216", "Q217", "Q218", "Q219", "Q220", "Q221"]
+    assert ids == ["Q194", "Q195", "Q196", "Q197", "Q199", "Q201", "Q202", "Q203", "Q204", "Q205", "Q215", "Q216", "Q217", "Q218", "Q219", "Q220", "Q221", "Q222"]
 
     candidates = []
 
