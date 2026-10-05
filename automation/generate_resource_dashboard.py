@@ -39,6 +39,46 @@ def candidate_highlights(state: dict) -> list[dict]:
     return out
 
 
+
+def flatten_registry(state: dict[str, Any]) -> list[dict[str, Any]]:
+    registry = state.get("active_research_registry", {})
+    if isinstance(registry, dict):
+        registry = registry.get("active_design_families", [])
+    if not isinstance(registry, list):
+        return []
+    return [x for x in registry if isinstance(x, dict) and x.get("code") and x.get("state")]
+
+
+def research_board(state: dict[str, Any], os_state: dict[str, Any]) -> list[dict[str, Any]]:
+    items = flatten_registry(state)
+    priority_items = os_state.get("frontier_status_2026_10_04", {}).get("priority_order", [])
+    priority_map = {
+        str(item.get("candidate")): str(item.get("next_gate") or "")
+        for item in priority_items
+        if isinstance(item, dict) and item.get("candidate")
+    }
+    out = []
+    for item in items:
+        code = str(item["code"])
+        next_gate = str(item.get("next_gate") or item.get("note") or "")
+        next_gate = priority_map.get(code, next_gate)
+        if code in {"104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116", "117", "118", "119", "120", "121", "Q121-R1", "Q121-R2"}:
+            lane = "FORMAL READINESS"
+        elif code in {"084", "088", "082"}:
+            lane = "LEGACY / FEASIBILITY"
+        else:
+            lane = "FRONTIER DISCOVERY"
+        out.append({
+            "code": code,
+            "state": str(item["state"]),
+            "lane": lane,
+            "issue_number": item.get("issue_number"),
+            "next_gate": next_gate,
+            "performance_authorization_allowed": bool(item.get("performance_authorization_allowed", False)),
+        })
+    return out[-40:]
+
+
 def run_cmd_json(args: list[str]) -> dict[str, Any] | list[Any] | None:
     try:
         env = os.environ.copy()
