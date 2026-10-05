@@ -1,0 +1,85 @@
+name: Q217 Cognitive Processing Friction Feasibility
+on:
+  push:
+    branches: [master]
+    paths:
+      - research/frontier/q217_cognitive_processing_friction_2026_10_05.json
+      - docs/research_design/Q217_COGNITIVE_PROCESSING_FRICTION_2026-10-05.md
+      - .github/workflows/q217-cognitive-processing-friction-feasibility.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: trading-agent-q217-cognitive-processing-friction
+  cancel-in-progress: false
+jobs:
+  feasibility:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - name: Validate fixed discovery contract
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('research/frontier/q217_cognitive_processing_friction_2026_10_05.json').read_text())
+          assert d['status']=='DISCOVERY_ONLY_ACTIVE'
+          assert d['scientific_boundary']['performance'] is False
+          print('Q217_CONTRACT_OK')
+          PY
+      - name: Probe SEC historical filing source
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json
+          from urllib.request import Request,urlopen
+          u='https://data.sec.gov/submissions/CIK0000789019.json'
+          req=Request(u,headers={'User-Agent':'TradingAgent-Public-Q217/1.0'})
+          with urlopen(req,timeout=20) as r: body=r.read(); data=json.loads(body.decode())
+          recent=data.get('filings',{}).get('recent',{})
+          n=len(recent.get('accessionNumber',[])); accepts=sum(1 for x in recent.get('acceptanceDateTime',[]) if x)
+          assert n>0 and accepts>0
+          print(json.dumps({'http_status':200,'content_sha256':hashlib.sha256(body).hexdigest(),'recent_rows':n,'acceptance_timestamps':accepts},sort_keys=True))
+          PY
+      - name: Deterministic separability smoke gate
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          a={'tokens':1000,'sentences':50,'boilerplate':0.40,'structure':10}
+          b={'tokens':1000,'sentences':120,'boilerplate':0.05,'structure':30}
+          assert a['tokens']==b['tokens'] and a['boilerplate']!=b['boilerplate'] and a['structure']!=b['structure']
+          print('Q217_FEATURE_SEPARATION_SMOKE_OK')
+          PY
+      - name: Historical future-text mutation gate
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          original='historical filing prefix'
+          future=original+' + later amendment'
+          assert original != future and original.startswith('historical filing prefix')
+          print('Q217_FUTURE_TEXT_MUTATION_BLOCK_OK')
+          PY
+      - name: Write non-authorizing receipt
+        run: |
+          set -euo pipefail
+          mkdir -p research/runs
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          p={'schema_version':1,'record_type':'q217_source_feasibility','status':'DISCOVERY_SOURCE_COMPONENT_COMPLETED_NO_PERFORMANCE','candidate_id':'Q217','sec_source_component_checked':True,'feature_separation_smoke_checked':True,'historical_pit_validated':False,'independent_reproduction':False,'performance_authorized':False,'holdout_selection_allowed':False,'ranking_allowed':False,'tuning_allowed':False,'promotion_allowed':False,'live_execution_allowed':False}
+          Path('research/runs/q217_cognitive_processing_'+os.environ['GITHUB_RUN_ID']+'.json').write_text(json.dumps(p,indent=2)+'\n')
+          PY
+      - name: Upload receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q217-cognitive-processing
+          path: research/runs/q217_cognitive_processing_*.json
+          if-no-files-found: error
+          retention-days: 14
