@@ -815,12 +815,14 @@
         "bond_abnormal_move_vs_rate_and_credit_controls",
         "bond_equity_information_disagreement",
         "bond_trading_intensity_or_liquidity_state_when_free_source_supports",
-        "persistence_before_equity_response"
+        "persistence_before_equity_response",
+        "broad_finra_credit_market_control_state"
       ],
       "direction": "two-sided outcome; no sign assumed ex ante",
       "cheap_falsifiers": [
         "equity_momentum_or_beta_collapse",
         "rate_market_exposure_collapse",
+        "broad_credit_market_state_explains_move",
         "liquidity_explains_all",
         "issuer_mapping_incomplete",
         "free_TRACE_history_inadequate",
@@ -829,6 +831,7 @@
       ],
       "gates": [
         "free_TRACE_historical_source_census",
+        "free_FINRA_credit_breadth_sentiment_control_source",
         "public_EOD_clock_and_revision_semantics",
         "bond_security_master_and_issuer_mapping",
         "matched_issuer_panel",
@@ -848,7 +851,8 @@
         "Keshavarz & Sirmans 2026 Momentum Across the Capital Structure"
       ],
       "scientific_boundary": "discovery_contract_only",
-      "priority": "P1_SOURCE_FEASIBILITY"
+      "priority": "P1_SOURCE_FEASIBILITY",
+      "implementation_note": "Issuer-level bond state must be orthogonalized against broad rates and the freely accessible FINRA Corporate Debt Market Breadth/Sentiment state before any later outcome test. This control is predeclared and is not itself an alpha candidate."
     }
   ],
   "blocked_or_composite_tracks": {
