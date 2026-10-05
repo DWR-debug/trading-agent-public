@@ -14,7 +14,33 @@
       "falsifiability": 5,
       "data_machability": 3,
       "expected_information_gain": 4,
-      "next_gate": "historical two-channel identity bridge + both public clocks + issuer lineage + independent PIT"
+      "next_gate": "historical two-channel identity bridge + both public clocks + issuer lineage + independent PIT",
+      "scientific_boundary": "discovery_contract_only",
+      "score": {
+        "orthogonality": 5,
+        "falsifiability": 5,
+        "data_machability": 3,
+        "expected_information_gain": 4
+      },
+      "features": [
+        "binary_external_state_preexists_at_issuer_disclosure",
+        "age_of_prior_public_state_in_calendar_or_trading_days_using_fixed_rule",
+        "verified_two_channel_event_identity"
+      ],
+      "cheap_falsifiers": [
+        "timestamp permutation",
+        "future-amendment injection",
+        "external-event/issuer identity shuffle",
+        "issuer-disclosure-only collapse",
+        "conservative next-session boundary"
+      ],
+      "gates": [
+        "two-channel historical event-identity bridge",
+        "earliest defensible public clocks",
+        "SEC filing/amendment lineage",
+        "frozen issuer mapping",
+        "independent PIT reproduction"
+      ]
     },
     {
       "id": "Q216",
@@ -26,7 +52,33 @@
       "data_machability": 4,
       "expected_information_gain": 4,
       "risk_state_only": true,
-      "next_gate": "complete historical vintage panel + first-public semantics + frozen exposure mapping + independent PIT"
+      "next_gate": "complete historical vintage panel + first-public semantics + frozen exposure mapping + independent PIT",
+      "scientific_boundary": "discovery_contract_only",
+      "score": {
+        "orthogonality": 5,
+        "falsifiability": 4,
+        "data_machability": 4,
+        "expected_information_gain": 4
+      },
+      "features": [
+        "historical_revision_propensity_from_prior_vintages_only",
+        "fixed_firm_or_industry_exposure_to_predeclared_macro_series",
+        "vintage_uncertainty_state_using_fixed_pre_event_aggregation_rule"
+      ],
+      "cheap_falsifiers": [
+        "future-vintage injection",
+        "exposure permutation",
+        "final-vintage substitution",
+        "vintage-date shuffle",
+        "remove revision layer"
+      ],
+      "gates": [
+        "complete historical real-time vintage panel",
+        "first-public semantics",
+        "frozen issuer/industry exposure mapping",
+        "deterministic prior-vintage compiler",
+        "independent PIT reproduction"
+      ]
     }
   ],
   "anti_double_counting": [
