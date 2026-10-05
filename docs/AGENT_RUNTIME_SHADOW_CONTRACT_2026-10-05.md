@@ -42,6 +42,8 @@ The runtime produces only a PaperIntent with route paper_shadow. It has no
 broker client, order-submission method, candidate-selection method, promotion
 method, return evaluation, holdout access, ranking logic or parameter search.
 
+The `agent_runtime/decision_adapter.py` layer accepts only the exact frozen-decision schema, rejects outcome/search fields, and adds a deterministic intent fingerprint. `agent_runtime/shadow_replay.py` verifies monotone decision-time order, uniqueness, and a reproducible intent-chain fingerprint. These are integration/provenance controls; they do not create scientific evidence.
+
 ## Research boundary
 
 This package does not:
