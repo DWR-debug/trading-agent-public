@@ -166,7 +166,7 @@ def infer_resource(workflow: str, job: str, runner: str | None) -> str:
 
 
 def current_work() -> list[dict[str, Any]]:
-    data = run_cmd_json([f"/repos/{REPO}/actions/runs?per_page=80"])
+    data = run_cmd_json([f"/repos/{REPO}/actions/runs?per_page=100"])
     if not isinstance(data, dict):
         return []
     active = [
@@ -212,6 +212,95 @@ def current_work() -> list[dict[str, Any]]:
             })
         if len(out) >= 36:
             break
+    return out
+
+
+
+def expanded_candidate_board(
+    evidence: dict[str, Any],
+    os_state: dict[str, Any],
+    base_board: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    board = list(base_board)
+    candidate_ids = []
+    specs_path = ROOT / "research" / "candidates" / "orthogonal_candidate_specs_2026-10-04.json"
+    try:
+        specs = json.loads(specs_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        specs = {}
+    for candidate in specs.get("candidates", []) if isinstance(specs, dict) else []:
+        if isinstance(candidate, dict) and candidate.get("id") in {"Q202", "Q203", "Q204"}:
+            candidate_ids.append(candidate["id"])
+
+    receipt_path = ROOT / "research" / "evidence" / "q202_q204_information_timing_feasibility_latest.json"
+    next_gate_path = ROOT / "research" / "evidence" / "orthogonal_next_gate_latest.json"
+    try:
+        receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        receipt = {}
+    try:
+        next_gate = json.loads(next_gate_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        next_gate = {}
+
+    source_states = {
+        str(x.get("candidate_id")): str(x.get("status"))
+        for x in receipt.get("candidate_results", [])
+        if isinstance(x, dict) and x.get("candidate_id")
+    }
+    next_gate_map = {
+        str(x.get("candidate_id")): str(x.get("next_gate") or "")
+        for x in next_gate.get("candidates", [])
+        if isinstance(x, dict) and x.get("candidate_id")
+    }
+
+    for candidate_id in candidate_ids:
+        spec = next((x for x in specs.get("candidates", []) if x.get("id") == candidate_id), {})
+        board.append({
+            "code": candidate_id,
+            "state": source_states.get(candidate_id, "SOURCE/PIT STATUS NOT AVAILABLE"),
+            "lane": "FRONTIER DISCOVERY",
+            "issue_number": 1073,
+            "next_gate": next_gate_map.get(candidate_id) or str((spec.get("gates") or ["historical PIT reconstruction"])[0]),
+            "performance_authorization_allowed": False,
+        })
+
+    q205 = next((x for x in flatten_registry(evidence) if str(x.get("code")) == "Q205"), None)
+    if q205:
+        board.append({
+            "code": "Q205",
+            "state": str(q205.get("state")),
+            "lane": "FRONTIER DISCOVERY",
+            "issue_number": q205.get("issue_number"),
+            "next_gate": str(q205.get("next_gate") or q205.get("note") or "historical PIT reconstruction"),
+            "performance_authorization_allowed": bool(q205.get("performance_authorization_allowed", False)),
+        })
+
+    return board
+
+
+def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, Any]], work: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    out = []
+    runner_by_name = {str(r.get("name")): r for r in runners}
+    for resource in configured:
+        assignments = [w for w in work if w.get("resource") == resource["name"]]
+        runner = runner_by_name.get(resource["configured_runner"])
+        if runner:
+            live_status = "online / busy" if runner.get("busy") else str(runner.get("status") or "unknown")
+        elif assignments:
+            live_status = f"active work assigned ({len(assignments)})"
+        elif resource["type"] in {"cloud", "service"}:
+            live_status = "not assigned in snapshot"
+        else:
+            live_status = "configured / live runner state unavailable"
+        out.append({
+            **resource,
+            "live_status": live_status,
+            "busy": bool(runner.get("busy")) if runner else bool(assignments),
+            "labels": runner.get("labels", []) if runner else [],
+            "current_assignments": len(assignments),
+            "current_tasks": [w.get("task") for w in assignments[:4]],
+        })
     return out
 
 
@@ -296,7 +385,7 @@ def main() -> None:
     latest_line = next((line for line in status_text.splitlines() if "Latest recorded formal result:" in line), "")
     latest_result = latest_line.split(":", 1)[1].strip() if ":" in latest_line else "not recorded"
 
-    state_board = research_board(evidence, os_state)
+    state_board = expanded_candidate_board(evidence, os_state, research_board(evidence, os_state))
     work = current_work()
     runners = runner_snapshot()
     ai = ai_provider_state()
@@ -316,22 +405,28 @@ def main() -> None:
             "research_tracks": len(state_board),
             "ai_providers": len(ai),
         },
-        "resources": [
-            {"name": "Windows self-hosted A", "type": "physical", "role": "Formal readiness / local reproduction", "configured_runner": "LHT-N133732", "authority": "bounded capacity; no automatic performance authorization"},
-            {"name": "Windows self-hosted B", "type": "physical", "role": "Frontier discovery / data QA", "configured_runner": "LHT-N133732-2", "authority": "bounded capacity; no automatic performance authorization"},
-            {"name": "Windows self-hosted C", "type": "physical", "role": "Long deterministic runs / independent reproduction", "configured_runner": "LHT-N133732-3", "authority": "bounded capacity; no automatic performance authorization"},
-            {"name": "GitHub-hosted Ubuntu x64", "type": "cloud", "role": "Deterministic frontier, CI, source/PIT workflows", "configured_runner": "ubuntu-24.04", "authority": "non-authorizing unless an exact formal gate says otherwise"},
-            {"name": "GitHub-hosted ARM64", "type": "cloud", "role": "Architecture-diverse CI / reproduction", "configured_runner": "ubuntu-24.04-arm", "authority": "non-authorizing unless an exact formal gate says otherwise"},
-            {"name": "S10 / Android", "type": "physical", "role": "Deterministic mechanical QA", "configured_runner": "S10-TERMUX", "authority": "non-scientific support only"},
-            {"name": "Samsung Android fleet", "type": "physical", "role": "Prepared bounded utility capacity; five labelled slots", "configured_runner": "SAMSUNG-PHONE-01..05", "authority": "bounded support only; activation is online/acceptance gated"},
-            {"name": "Free AI pool", "type": "cloud", "role": "Adversarial / design / engineering review", "configured_runner": "OpenRouter Free / Groq Free / Gemini / Mistral", "authority": "AI output never authorizes performance or promotion"},
-            {"name": "Bounded Agent Queue", "type": "cloud", "role": "Bounded engineering / review requests", "configured_runner": "agent-request-queue", "authority": "no paid fallback; no scientific authority"},
-            {"name": "Codespaces fallback", "type": "cloud", "role": "Interactive debugging / data QA", "configured_runner": "manual", "authority": "fallback only; unattended default disabled"},
-            {"name": "Paper Forward / Shadow", "type": "simulation", "role": "Paper-only monitoring and MTM ledger", "configured_runner": "scheduled workflows", "authority": "simulation only; no live orders"},
-            {"name": "Dashboard / GitHub Pages", "type": "service", "role": "Operational visibility and status publication", "configured_runner": "GitHub Pages", "authority": "read-only operational snapshot"},
-        ],
+        "resources": enrich_resources(
+            [
+                {"name": "Windows self-hosted A", "type": "physical", "role": "Formal readiness / local reproduction", "configured_runner": "LHT-N133732", "authority": "bounded capacity; no automatic performance authorization"},
+                {"name": "Windows self-hosted B", "type": "physical", "role": "Frontier discovery / data QA", "configured_runner": "LHT-N133732-2", "authority": "bounded capacity; no automatic performance authorization"},
+                {"name": "Windows self-hosted C", "type": "physical", "role": "Long deterministic runs / independent reproduction", "configured_runner": "LHT-N133732-3", "authority": "bounded capacity; no automatic performance authorization"},
+                {"name": "GitHub-hosted Ubuntu x64", "type": "cloud", "role": "Deterministic frontier, CI, source/PIT workflows", "configured_runner": "ubuntu-24.04", "authority": "non-authorizing unless an exact formal gate says otherwise"},
+                {"name": "GitHub-hosted ARM64", "type": "cloud", "role": "Architecture-diverse CI / reproduction", "configured_runner": "ubuntu-24.04-arm", "authority": "non-authorizing unless an exact formal gate says otherwise"},
+                {"name": "S10 / Android", "type": "physical", "role": "Deterministic mechanical QA", "configured_runner": "S10-TERMUX", "authority": "non-scientific support only"},
+                {"name": "Samsung Android fleet", "type": "physical", "role": "Prepared bounded utility capacity; five labelled slots", "configured_runner": "SAMSUNG-PHONE-01..05", "authority": "bounded support only; activation is online/acceptance gated"},
+                {"name": "Free AI pool", "type": "cloud", "role": "Adversarial / design / engineering review", "configured_runner": "OpenRouter Free / Groq Free / Gemini / Mistral", "authority": "AI output never authorizes performance or promotion"},
+                {"name": "Bounded Agent Queue", "type": "cloud", "role": "Bounded engineering / review requests", "configured_runner": "agent-request-queue", "authority": "no paid fallback; no scientific authority"},
+                {"name": "Codespaces fallback", "type": "cloud", "role": "Interactive debugging / data QA", "configured_runner": "manual", "authority": "fallback only; unattended default disabled"},
+                {"name": "Paper Forward / Shadow", "type": "simulation", "role": "Paper-only monitoring and MTM ledger", "configured_runner": "scheduled workflows", "authority": "simulation only; no live orders"},
+                {"name": "Dashboard / GitHub Pages", "type": "service", "role": "Operational visibility and status publication", "configured_runner": "GitHub Pages", "authority": "read-only operational snapshot"},
+            ],
+            runners,
+            work,
+        ),
         "runner_live_snapshot": runners,
         "work_assignments": work,
+        "workload_by_resource": {name: sum(1 for w in work if w.get("resource") == name) for name in sorted({w.get("resource") for w in work if w.get("resource")})},
+        "workload_by_lane": {lane: sum(1 for w in work if w.get("lane") == lane) for lane in sorted({w.get("lane") for w in work if w.get("lane")})},
         "recent_activity_24h": recent_activity(),
         "ai_fabric": ai,
         "android_fleet": [
