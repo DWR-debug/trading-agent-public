@@ -80,3 +80,5 @@ ORDERS_ENABLED=False
 AUTOMATIC_PROMOTION=False
 
 This document and package provide no performance authorization.
+
+The agent_runtime/shadow_coordinator.py layer is the final runtime admission boundary. It validates the immutable paper intent, invokes the existing portfolio risk controller for kill-switch/limit checks, and emits only a SHADOW_INTENT_ACCEPTED ledger event. It contains no broker/order API and does not create scientific evidence.
