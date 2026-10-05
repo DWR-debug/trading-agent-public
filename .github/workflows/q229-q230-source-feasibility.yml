@@ -1,0 +1,170 @@
+name: Q229-Q230 Source Feasibility
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/candidates/orthogonal_candidate_specs_2026-10-05.json"
+      - ".github/workflows/q229-q230-source-feasibility.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-q229-q230-source-feasibility
+  cancel-in-progress: true
+
+jobs:
+  source_probe:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Run deterministic source probes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/runs/q229_q230_source_feasibility research/evidence
+          python - <<'PY'
+          import hashlib, json, ssl
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+          from urllib.error import HTTPError, URLError
+
+          OUT = Path("research/runs/q229_q230_source_feasibility")
+          UA = "TradingAgent-Public-Q229-Q230-Source-Feasibility/1.0"
+          ctx = ssl.create_default_context()
+
+          targets = [
+              ("Q229_CFPB_PAGE", "https://www.consumerfinance.gov/data-research/consumer-complaints/",
+               ["Consumer Complaint Database","updates daily","past database releases"]),
+              ("Q229_CFPB_API_DOCS", "https://cfpb.github.io/api/ccdb/",
+               ["date_received","company_response","timely"]),
+              ("Q229_CFPB_SWAGGER", "https://raw.githubusercontent.com/cfpb/ccdb5-api/main/swagger-config.yaml",
+               ["consumer complaint database","company_public_response","date_received_min"]),
+              ("Q229_CFPB_API_LIVE", "https://www.consumerfinance.gov/data-research/consumer-complaints/search/api/v1/?size=1",
+               ["hits","_meta"]),
+              ("Q230_FINRA_API_SPEC", "https://www.finra.org/sites/default/files/2023-06/Web-API-Specifications-for-TRACE-Corporate-Agency-Debt-v4.12.pdf",
+               ["CAMASTER","DAILYLISTCA","CORPBONDSBREOD"]),
+              ("Q230_FINRA_PUBLIC_DATA", "https://www.finra.org/filing-reporting/trace",
+               ["TRACE","market data"]),
+              ("Q230_FINRA_DOWNLOAD_ROUTE", "https://download.finratraqs.org/DownloadHandler.ashx?action=DOWNLOAD&file=CAMASTER&facility=TRACE",
+               []),
+          ]
+
+          results = []
+          for name, url, markers in targets:
+              rec = {"name": name, "url": url, "reachable": False, "http_status": None,
+                     "content_sha256": None, "content_bytes": 0, "missing_markers": [],
+                     "scientific_boundary": {"performance": False, "ranking": False, "tuning": False,
+                                            "holdout_selection": False, "promotion": False, "live_execution": False}}
+              try:
+                  req = Request(url, headers={"User-Agent": UA, "Accept": "*/*"})
+                  with urlopen(req, timeout=30, context=ctx) as resp:
+                      body = resp.read()
+                      text = body.decode("utf-8", errors="replace")
+                      rec["http_status"] = getattr(resp, "status", 200)
+                      rec["content_bytes"] = len(body)
+                      rec["content_sha256"] = hashlib.sha256(body).hexdigest()
+                      rec["reachable"] = True
+                      low = text.lower()
+                      rec["missing_markers"] = [m for m in markers if m.lower() not in low]
+              except HTTPError as exc:
+                  rec["http_status"] = exc.code
+                  try:
+                      body = exc.read()
+                      rec["content_bytes"] = len(body)
+                      rec["content_sha256"] = hashlib.sha256(body).hexdigest()
+                  except Exception:
+                      pass
+              except (URLError, TimeoutError, OSError) as exc:
+                  rec["error"] = f"{type(exc).__name__}:{exc}"
+              results.append(rec)
+
+          q229 = [r for r in results if r["name"].startswith("Q229_")]
+          q230 = [r for r in results if r["name"].startswith("Q230_")]
+
+          payload = {
+              "schema_version": "1.0",
+              "task_id": "Q-2026-10-05-Q229-Q230-SOURCE-FEASIBILITY",
+              "status": "SOURCE_FEASIBILITY_ONLY",
+              "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+              "candidates": {
+                  "Q229": {
+                      "source_status": "PASS" if all(r["reachable"] for r in q229[:3]) else "BLOCKED",
+                      "live_api_probe_status": next((r["http_status"] for r in q229 if r["name"]=="Q229_CFPB_API_LIVE"), None),
+                      "historical_pit_validated": False,
+                      "notes": [
+                          "CFPB publication is conditional on company response or 15-day rule; this probe does not backdate a public signal.",
+                          "Current source availability does not prove historical immutable-prefix reconstruction.",
+                          "Complaint narratives/public visualizations are treated separately from structured complaint fields."
+                      ]
+                  },
+                  "Q230": {
+                      "source_status": "PASS" if all(r["reachable"] for r in q230[:2]) else "PARTIAL",
+                      "public_download_route_status": next((r["http_status"] for r in q230 if r["name"]=="Q230_FINRA_DOWNLOAD_ROUTE"), None),
+                      "historical_pit_validated": False,
+                      "paid_enhanced_data_allowed": False,
+                      "notes": [
+                          "Only free public TRACE routes are admissible.",
+                          "No CUSIP-license assumption, paid enhanced history, or ETF proxy substitution is permitted.",
+                          "Security-master/issuer mapping remains a separate historical gate."
+                      ]
+                  }
+              },
+              "results": results,
+              "governance": {
+                  "performance_authorized": False,
+                  "holdout_selection_allowed": False,
+                  "ranking_allowed": False,
+                  "parameter_search_allowed": False,
+                  "threshold_search_allowed": False,
+                  "horizon_search_allowed": False,
+                  "promotion_allowed": False,
+                  "live_execution_allowed": False
+              },
+              "next_gate": {
+                  "Q229": "historical_public_release_batch_and_company_to_issuer_mapping_census",
+                  "Q230": "free_TRACE_historical_panel_security_master_and_issuer_mapping_census"
+              }
+          }
+          raw = json.dumps(payload, sort_keys=True, separators=(",",":"), ensure_ascii=False)
+          payload["bundle_fingerprint"] = hashlib.sha256(raw.encode()).hexdigest()
+          (OUT / "source_feasibility.json").write_text(json.dumps(payload, indent=2, ensure_ascii=False)+"\n", encoding="utf-8")
+          print("Q229_SOURCE_STATUS="+payload["candidates"]["Q229"]["source_status"])
+          print("Q230_SOURCE_STATUS="+payload["candidates"]["Q230"]["source_status"])
+          print("Q229_Q230_SOURCE_FINGERPRINT="+payload["bundle_fingerprint"])
+          PY
+
+      - name: Persist source-feasibility receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp research/runs/q229_q230_source_feasibility/source_feasibility.json research/evidence/q229_q230_source_feasibility_latest.json
+          for attempt in 1 2 3 4 5; do
+            current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+            if python3 automation/github_contents_publish.py               --repository "$GITHUB_REPOSITORY"               --branch master               --base-sha "$current_sha"               --file "research/evidence/q229_q230_source_feasibility_latest.json=research/evidence/q229_q230_source_feasibility_latest.json"; then
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          exit 1
+
+      - name: Upload source receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q229-q230-source-feasibility-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q229_q230_source_feasibility/source_feasibility.json
+          if-no-files-found: error
+          retention-days: 30
