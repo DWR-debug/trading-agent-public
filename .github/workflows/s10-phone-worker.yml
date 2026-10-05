@@ -31,8 +31,10 @@ on:
       - "docs/research_design/TRADINGAGENTS_ARCHITECTURE_REPLICATION_2026-10-05.md"
       - "automation/s10_mechanical_research_qa.py"
       - "tests/test_s10_mechanical_research_qa.py"
+      - "automation/s10_adaptive_mechanical_research_qa.py"
+      - "tests/test_s10_adaptive_mechanical_research_qa.py"
   schedule:
-    - cron: "0 */2 * * *"
+    - cron: "*/20 * * * *"
   workflow_dispatch:
     inputs:
       task:
@@ -111,7 +113,7 @@ jobs:
               raise SystemExit("S10 interface is not available after bounded recovery")
           PY
 
-      - name: Run deterministic S10 mechanical research QA
+      - name: Run adaptive S10 mechanical research QA
         if: env.S10_TASK == 'mechanical_qa'
         shell: bash
         env:
@@ -121,9 +123,9 @@ jobs:
           cd "$REPO_SRC"
           OUT="$GITHUB_WORKSPACE/research/runs/s10_phone/$GITHUB_RUN_ID"
           mkdir -p "$OUT"
-          python3 -m automation.s10_mechanical_research_qa \
+          python3 -m automation.s10_adaptive_mechanical_research_qa \
             --repo-root "$REPO_SRC" \
-            --output "$OUT/mechanical_research_qa.json"
+            --output "$OUT/adaptive_mechanical_research_qa.json"
           python3 - <<'PY'
           import json
           from datetime import date
@@ -176,7 +178,7 @@ jobs:
           assert q193["robustness_contract"]["no_composition_before_component_pit"] is True
           print("S10 embedded deterministic contract checks: PASS")
           PY
-          cat "$OUT/mechanical_research_qa.json"
+          cat "$OUT/adaptive_mechanical_research_qa.json"
 
       - name: Run bounded S10 utility review
         if: env.S10_TASK == 'utility_review'
