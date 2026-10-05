@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T10:50:58.373709+00:00",
+  "generated_at_utc": "2026-10-05T10:51:11.702216+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4136,6 +4136,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "fada0504845c36adc92b5742ab249c14857384f1",
+        "timestamp": "2026-10-05T10:51:08Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "697da44960a664c479c5a3661f04bed77262de8c",
+        "timestamp": "2026-10-05T10:51:00Z"
+      },
+      {
         "message": "OPS: record third-runner capacity pulse",
         "sha": "51b2262deca5c2a999b3b0bc22cd46016e3cb4a0",
         "timestamp": "2026-10-05T12:50:55+02:00"
@@ -4164,16 +4174,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "2d3655dc2cac4e3d8ae22c233761f57beb9358fc",
         "timestamp": "2026-10-05T10:50:20Z"
-      },
-      {
-        "message": "TEST: update Q121-R6 shard parallelism contract",
-        "sha": "13a720fb4d7e8f74e4e81702ca25cc4409bc71b1",
-        "timestamp": "2026-10-05T12:50:05+02:00"
-      },
-      {
-        "message": "PERF: allow four Q121-R6 shards in parallel",
-        "sha": "a357de2ad44e3bcacf3c6a23ab4ad2c553e25a08",
-        "timestamp": "2026-10-05T12:50:02+02:00"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "51b2262deca5c2a999b3b0bc22cd46016e3cb4a0",
+  "source_master_sha": "fada0504845c36adc92b5742ab249c14857384f1",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37299153077"
+    "run_id": "37299174887"
   }
 }
