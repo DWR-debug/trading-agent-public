@@ -66,6 +66,7 @@ jobs:
           fi
 
           elapsed=$(( (now_epoch - start_epoch) / 60 ))
+          current_sha="$GITHUB_SHA"
           declare -a workflows=()
 
           add_phase() {
@@ -104,14 +105,14 @@ jobs:
               continue
             fi
 
-            recent_failed="$(printf '%s' "$workflow_runs" | jq --argjson start_epoch "$start_epoch" '[.[] | select((.created_at | fromdateiso8601) >= $start_epoch) | select(.conclusion == "failure" or .conclusion == "cancelled" or .conclusion == "timed_out")] | length')"
-            recent_success="$(printf '%s' "$workflow_runs" | jq --argjson start_epoch "$start_epoch" '[.[] | select((.created_at | fromdateiso8601) >= $start_epoch) | select(.conclusion == "success")] | length')"
+            current_success="$(printf '%s' "$workflow_runs" | jq --arg sha "$current_sha" '[.[] | select(.head_sha == $sha) | select(.conclusion == "success")] | length')"
+            current_failed="$(printf '%s' "$workflow_runs" | jq --arg sha "$current_sha" --argjson start_epoch "$start_epoch" '[.[] | select(.head_sha == $sha) | select((.created_at | fromdateiso8601) >= $start_epoch) | select(.conclusion == "failure" or .conclusion == "cancelled" or .conclusion == "timed_out")] | length')"
 
-            if (( recent_success > 0 )); then
-              echo "SKIP_SUCCESS $workflow"
+            if (( current_success > 0 )); then
+              echo "SKIP_CURRENT_SHA_SUCCESS $workflow"
               continue
             fi
-            if (( recent_failed > 1 )); then
+            if (( current_failed > 1 )); then
               echo "SKIP_RETRY_LIMIT $workflow"
               continue
             fi
