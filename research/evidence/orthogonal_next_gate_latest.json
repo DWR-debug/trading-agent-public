@@ -2,8 +2,8 @@
   "schema_version": "1.0",
   "receipt_type": "orthogonal_next_gate_compiler",
   "task_id": "Q-2026-10-04-ORTHOGONAL-NEXT-GATE",
-  "generated_at_utc": "2026-10-05T18:45:05.003331+00:00",
-  "source_spec_sha256": "9d9e8ca9cbf07a20fb9444714321d4800c84fcb3f14545b025e607d21a39a4f7",
+  "generated_at_utc": "2026-10-05T18:46:28.571463+00:00",
+  "source_spec_sha256": "c6a093995b78685064da38dc890a9346aa3e3cba1258d356faea9ee77b7f0905",
   "status": "NEXT_LOGICAL_GATES_COMPILED_NO_PERFORMANCE",
   "candidates": [
     {
@@ -313,6 +313,70 @@
       "performance_allowed": false
     },
     {
+      "candidate_id": "Q205",
+      "next_gate": "SOURCE_FEASIBILITY_REQUIRED",
+      "source_or_pit_receipt": null,
+      "execution_authorized": false,
+      "performance_allowed": false,
+      "source_feasibility_required": true
+    },
+    {
+      "candidate_id": "Q215",
+      "next_gate": "SOURCE_FEASIBILITY_REQUIRED",
+      "source_or_pit_receipt": null,
+      "execution_authorized": false,
+      "performance_allowed": false,
+      "source_feasibility_required": true
+    },
+    {
+      "candidate_id": "Q216",
+      "next_gate": "SOURCE_FEASIBILITY_REQUIRED",
+      "source_or_pit_receipt": null,
+      "execution_authorized": false,
+      "performance_allowed": false,
+      "source_feasibility_required": true
+    },
+    {
+      "candidate_id": "Q217",
+      "next_gate": "SOURCE_FEASIBILITY_REQUIRED",
+      "source_or_pit_receipt": null,
+      "execution_authorized": false,
+      "performance_allowed": false,
+      "source_feasibility_required": true
+    },
+    {
+      "candidate_id": "Q218",
+      "next_gate": "HISTORICAL_SEC_MANDATORY_VOLUNTARY_PAIRING_AND_PIT",
+      "source_or_pit_receipt": null,
+      "execution_authorized": false,
+      "performance_allowed": false,
+      "source_feasibility_required": true
+    },
+    {
+      "candidate_id": "Q219",
+      "next_gate": "POST_FILING_OPTIONS_RESPONSE_PIT_REQUIRED",
+      "source_or_pit_receipt": null,
+      "execution_authorized": false,
+      "performance_allowed": false,
+      "source_feasibility_required": true
+    },
+    {
+      "candidate_id": "Q220",
+      "next_gate": "DETERMINISTIC_NARRATIVE_XBRL_MAPPING_AND_PIT",
+      "source_or_pit_receipt": null,
+      "execution_authorized": false,
+      "performance_allowed": false,
+      "source_feasibility_required": true
+    },
+    {
+      "candidate_id": "Q221",
+      "next_gate": "HISTORICAL_USASPENDING_PUBLIC_BOUNDARY_AND_ISSUER_MAPPING",
+      "source_or_pit_receipt": null,
+      "execution_authorized": false,
+      "performance_allowed": false,
+      "source_feasibility_required": true
+    },
+    {
       "candidate_id": "Q186",
       "next_gate": "READY_FOR_CITATION_PUBLICATION_ORDERING_AND_HISTORICAL_COMPLETENESS",
       "source_or_pit_receipt": {
@@ -451,5 +515,5 @@
     "live_endpoint_source_readiness_is_provisional": true,
     "immutable_historical_binding_required_before_candidate_pit": true
   },
-  "receipt_fingerprint": "f7d26a777bef61390a0b0b3b34bc6468a59a9a664f6e45c894c4b72a6de954bd"
+  "receipt_fingerprint": "2096bda465bcf93f004766ecbff23a806f8c334738357d174f4ccf26635a2c33"
 }
