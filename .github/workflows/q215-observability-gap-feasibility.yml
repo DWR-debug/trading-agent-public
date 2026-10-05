@@ -1,0 +1,83 @@
+name: Q215 Public-Source Observability Gap Feasibility
+on:
+  push:
+    branches: [master]
+    paths:
+      - research/frontier/q215_q216_candidate_wave_2026_10_05.json
+      - docs/research_design/Q215_PUBLIC_SOURCE_OBSERVABILITY_GAP_2026-10-05.md
+      - .github/workflows/q215-observability-gap-feasibility.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: trading-agent-q215-observability-gap
+  cancel-in-progress: false
+jobs:
+  feasibility:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - name: Validate discovery contract
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('research/frontier/q215_q216_candidate_wave_2026_10_05.json').read_text())
+          c=next(x for x in d['candidates'] if x['id']=='Q215')
+          assert c['scientific_boundary']=='discovery_contract_only'
+          assert c['score']['orthogonality']==5
+          print('Q215_CONTRACT_OK')
+          PY
+      - name: Probe SEC issuer clock component
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,hashlib
+          from urllib.request import Request,urlopen
+          u='https://data.sec.gov/submissions/CIK0000789019.json'
+          req=Request(u,headers={'User-Agent':'TradingAgent-Public-Q215/1.0'})
+          with urlopen(req,timeout=20) as r: body=r.read(); data=json.loads(body.decode())
+          recent=data.get('filings',{}).get('recent',{})
+          rows=[]
+          for i,form in enumerate(recent.get('form',[])):
+              if form in {'8-K','10-Q','10-K'}: rows.append({'form':form,'filingDate':recent.get('filingDate',[None])[i],'acceptanceDateTime':recent.get('acceptanceDateTime',[None])[i],'accessionNumber':recent.get('accessionNumber',[None])[i]})
+          assert rows
+          print(json.dumps({'http_status':200,'content_sha256':hashlib.sha256(body).hexdigest(),'sample_rows':rows[:10]},sort_keys=True))
+          PY
+      - name: Synthetic chronology and future mutation gate
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from datetime import datetime,timedelta,timezone
+          ext=datetime(2026,1,5,14,tzinfo=timezone.utc)
+          issuer=datetime(2026,1,8,15,tzinfo=timezone.utc)
+          later=issuer+timedelta(days=2)
+          age=(issuer-ext).total_seconds()
+          assert issuer>ext
+          assert (later-ext).total_seconds()!=age
+          print('Q215_CHRONOLOGY_MUTATION_OK')
+          PY
+      - name: Write boundary receipt
+        run: |
+          set -euo pipefail
+          mkdir -p research/runs
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          d={'schema_version':1,'record_type':'q215_source_feasibility','status':'DISCOVERY_SOURCE_COMPONENT_COMPLETED_NO_PERFORMANCE','candidate_id':'Q215','sec_clock_component_checked':True,'cross_channel_identity_proven':False,'historical_pit_validated':False,'independent_reproduction':False,'performance_authorized':False,'holdout_selection_allowed':False,'ranking_allowed':False,'tuning_allowed':False,'promotion_allowed':False,'live_execution_allowed':False}
+          Path('research/runs/q215_observability_'+os.environ['GITHUB_RUN_ID']+'.json').write_text(json.dumps(d,indent=2)+'\n')
+          PY
+      - name: Upload receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q215-observability
+          path: research/runs/q215_observability_*.json
+          if-no-files-found: error
+          retention-days: 14
