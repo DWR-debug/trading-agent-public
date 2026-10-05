@@ -15,7 +15,16 @@ import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-SEC_CIK = "320193"
+SEC_CIKS = {
+    "AAPL": "320193",
+    "MSFT": "789019",
+    "AMZN": "1018724",
+    "JPM": "19617",
+    "XOM": "34088",
+    "NVDA": "1045810",
+    "WMT": "104169",
+    "DIS": "1744489",
+}
 FIXED_START = "2025-01-01"
 FIXED_END = "2026-10-05"
 SEC_HEADERS = {"User-Agent": "TradingAgent-Public-Research/1.0 research@example.invalid"}
@@ -31,61 +40,68 @@ def fetch(url: str, limit: int | None = 1000000) -> tuple[int, str, bytes]:
 
 
 def sec_submission_census() -> dict:
-    status, content_type, body = fetch(f"https://data.sec.gov/submissions/CIK{SEC_CIK}.json", None)
-    data = json.loads(body.decode("utf-8"))
-    recent = data.get("filings", {}).get("recent", {})
-    rows = []
-    for i, form in enumerate(recent.get("form", [])):
-        if form not in {"10-K", "8-K"}:
-            continue
-        filing_date = recent.get("filingDate", [None])[i]
-        if not filing_date or not (FIXED_START <= filing_date <= FIXED_END):
-            continue
-        accession = recent["accessionNumber"][i]
-        primary = recent["primaryDocument"][i]
-        index_headers = (
-            f"https://www.sec.gov/Archives/edgar/data/{int(SEC_CIK)}/"
-            f"{accession.replace('-', '')}/{accession}-index-headers.html"
-        )
-        try:
-            _, _, page = fetch(index_headers, None)
-            text = page.decode("utf-8", errors="replace")
-            acceptance = re.findall(r"<ACCEPTANCE-DATETIME>\s*([0-9]{14})", text, flags=re.I)
-            exhibit_991 = bool(re.search(r"EXHIBIT\s+99\.1", text, flags=re.I))
-            earnings_release = bool(re.search(r"EARNINGS\s+RELEASE", text, flags=re.I))
-            rows.append({
-                "form": form,
-                "filing_date": filing_date,
-                "accession": accession,
-                "primary_document": primary,
-                "index_headers_url": index_headers,
-                "acceptance_datetime_found": bool(acceptance),
-                "acceptance_datetime": acceptance[0] if acceptance else None,
-                "exhibit_99_1": exhibit_991,
-                "earnings_release_marker": earnings_release,
-            })
-        except Exception as exc:
-            rows.append({
-                "form": form,
-                "filing_date": filing_date,
-                "accession": accession,
-                "primary_document": primary,
-                "index_headers_url": index_headers,
-                "error": type(exc).__name__ + ":" + str(exc),
-            })
-    latest_10k = next((r for r in rows if r["form"] == "10-K"), None)
-    latest_8k_release = next(
-        (r for r in rows if r["form"] == "8-K" and r.get("exhibit_99_1") and r.get("earnings_release_marker")),
-        None,
-    )
+    issuer_results = {}
+    for symbol, cik in SEC_CIKS.items():
+        status, content_type, body = fetch(f"https://data.sec.gov/submissions/CIK{cik}.json", None)
+        data = json.loads(body.decode("utf-8"))
+        recent = data.get("filings", {}).get("recent", {})
+        rows = []
+        for i, form in enumerate(recent.get("form", [])):
+            if form not in {"10-K", "8-K"}:
+                continue
+            filing_date = recent.get("filingDate", [None])[i]
+            if not filing_date or not (FIXED_START <= filing_date <= FIXED_END):
+                continue
+            accession = recent["accessionNumber"][i]
+            primary = recent["primaryDocument"][i]
+            index_headers = (
+                f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/"
+                f"{accession.replace('-', '')}/{accession}-index-headers.html"
+            )
+            try:
+                _, _, page = fetch(index_headers, None)
+                text = page.decode("utf-8", errors="replace")
+                acceptance = re.findall(r"<ACCEPTANCE-DATETIME>\s*([0-9]{14})", text, flags=re.I)
+                exhibit_991 = bool(re.search(r"EXHIBIT\s+99\.1", text, flags=re.I))
+                earnings_release = bool(re.search(r"EARNINGS\s+RELEASE", text, flags=re.I))
+                rows.append({
+                    "form": form,
+                    "filing_date": filing_date,
+                    "accession": accession,
+                    "primary_document": primary,
+                    "index_headers_url": index_headers,
+                    "acceptance_datetime_found": bool(acceptance),
+                    "acceptance_datetime": acceptance[0] if acceptance else None,
+                    "exhibit_99_1": exhibit_991,
+                    "earnings_release_marker": earnings_release,
+                })
+            except Exception as exc:
+                rows.append({
+                    "form": form,
+                    "filing_date": filing_date,
+                    "accession": accession,
+                    "primary_document": primary,
+                    "index_headers_url": index_headers,
+                    "error": type(exc).__name__ + ":" + str(exc),
+                })
+        annual = [r for r in rows if r["form"] == "10-K"]
+        voluntary = [r for r in rows if r["form"] == "8-K" and r.get("exhibit_99_1") and r.get("earnings_release_marker")]
+        issuer_results[symbol] = {
+            "cik": cik,
+            "status": status,
+            "content_type": content_type,
+            "window_row_count": len(rows),
+            "annual_10k_count": len(annual),
+            "earnings_release_8k_count": len(voluntary),
+            "latest_10k": annual[0] if annual else None,
+            "latest_8k_earnings_release": voluntary[0] if voluntary else None,
+            "pairability_observed": bool(annual and voluntary),
+        }
     return {
-        "status": status,
-        "content_type": content_type,
         "fixed_window": {"start": FIXED_START, "end": FIXED_END},
-        "row_count": len(rows),
-        "latest_10k_control": latest_10k,
-        "latest_8k_earnings_release_control": latest_8k_release,
-        "pairability_observed": bool(latest_10k and latest_8k_release),
+        "issuer_count": len(issuer_results),
+        "issuer_results": issuer_results,
+        "pairable_issuer_count": sum(int(x["pairability_observed"]) for x in issuer_results.values()),
     }
 
 
