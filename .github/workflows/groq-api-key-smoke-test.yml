@@ -89,6 +89,7 @@ jobs:
               exit 0
             fi
             git reset --hard origin/master
+            sleep "$attempt"
           done
           echo "Could not persist Groq smoke receipt after 5 CAS-style push attempts."
           exit 1
