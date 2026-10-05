@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "wave_id": "Q214-2026-10-05",
+  "status": "DESIGN_INVENTORY_ONLY",
+  "purpose": "Literature-derived risk-state candidate using public SEC disclosure similarity; discovery and PIT feasibility only.",
+  "candidates": [
+    {
+      "id": "Q214",
+      "name": "Disclosure-implied forward-beta / risk-structure state",
+      "priority": "P1-RISK",
+      "hypothesis": "Historical mandatory-filing similarity may provide incremental information about future co-movement and forward-looking portfolio risk beyond simple market/sector beta baselines.",
+      "construction": "Accepted 10-K/10-Q filing prefixes only; deterministic text representation; pairwise similarity; forward-beta/co-movement diagnostic.",
+      "sources": [
+        "Dyer, Roulstone & Van Buskirk (2024), Management Science, DOI 10.1287/mnsc.2023.4915",
+        "SEC EDGAR accepted filings"
+      ],
+      "next_gate": "SEC historical archive/PIT contract + deterministic similarity compiler + independent reproduction",
+      "features": [
+        "filing_similarity_matrix",
+        "forward_beta_state",
+        "co_movement_risk_meta_state"
+      ],
+      "non_overlap": ["Q088", "Q131", "Q211", "Q213"],
+      "cheap_falsifiers": [
+        "random_pair_map_permutation",
+        "filing_date_permutation",
+        "future_filing_injection",
+        "amendment_leakage_injection",
+        "sector_beta_baseline",
+        "text_normalization_invariance"
+      ],
+      "performance_authorization_allowed": false,
+      "risk_state_only": true,
+      "scientific_boundary": "discovery_contract_only"
+    }
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false,
+    "paid_resources_allowed": false
+  }
+}
