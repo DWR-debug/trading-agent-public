@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T11:38:44.474148+00:00",
+  "generated_at_utc": "2026-10-05T11:43:06.433075+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2216,7 +2216,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "cf76237df7765e7499d853c467cb2dd2a89d050c0bdee1c0583ec8ff36205b39",
+    "receipt_fingerprint": "3a8c470d380596e2644e64046454cad6510fab5f0bbd2580fc1b40851197f5a4",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2264,7 +2264,7 @@
           }
         ],
         "clock_contract": "Transaction identity/date is distinct from daily/weekly dissemination files.",
-        "content_sha256": "83b84e9a3fe973883d287689015aa1f9c7316da7bb7b7fb4a96a3973e4daccd1",
+        "content_sha256": "28a20da09d2bb58aafcdcc5559d58f221e97979fd7da3e7af20b585a99cd32ab",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2294,7 +2294,7 @@
           }
         ],
         "clock_contract": "Issued/received document records are distinct from later corrections and underlying event dates.",
-        "content_sha256": "9235b95c2cbc652873bb503504f83a86fd47e0520e977bb57b00b629cf90505f",
+        "content_sha256": "1c67f7e56e1f0a3c91e18028b89aa5066270b4a01c8173aad451a0e9e79c5d0c",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -2315,7 +2315,7 @@
           }
         ],
         "clock_contract": "Recall publication date is distinct from the underlying safety-issue report date.",
-        "content_sha256": "d5b334eaf48f8a193c1be025b553757223c90a4d281d919339930a2c8cc5bf84",
+        "content_sha256": "48a6e3168c936e811ccffa3f4cfa131646442cc731697b434dbf91e607004739",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2332,7 +2332,7 @@
           }
         ],
         "clock_contract": "Investigation event and publication times remain distinct.",
-        "content_sha256": "b545104e0aab4da13a7b6946f29b1ec1e6a879a3dbe0fb2ad36d0f34f442c552",
+        "content_sha256": "ffdc3ad62a06c2653d0078c96699f50b4888538eb71e31fb16345431a6703fc0",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2349,7 +2349,7 @@
           }
         ],
         "clock_contract": "The DOL public catalog establishes the dataset boundary; inspection/opening and later catalog refresh times remain distinct.",
-        "content_sha256": "ed34ea52b3237c4be116fb9a058d8e3f86b91c8099af46ed9a489f7cc92315d1",
+        "content_sha256": "a8471625282fa2b6c143ae943f58539b0c2d140b60932d17678d2f0d20f65dbe",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -4136,6 +4136,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "9106df0f82964f66dcf83e5775051c32c656934d",
+        "timestamp": "2026-10-05T11:39:57Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3531007bfc62e69b9a01925200896c671ec9d673",
+        "timestamp": "2026-10-05T11:38:47Z"
+      },
+      {
         "message": "OPS: remove obsolete Q077/Q081 auto-dispatches from status sync",
         "sha": "7a46d2f230bd276bc386ced369851221101b8b88",
         "timestamp": "2026-10-05T13:38:32+02:00"
@@ -4164,16 +4174,6 @@
         "message": "ENG: add append-only paper-shadow intent ledger",
         "sha": "25d79748eb180ac9aa8b9ef3ac5d7bad3fcac89c",
         "timestamp": "2026-10-05T13:37:08+02:00"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "fe0ec28edac1f43b14b551975fd0cbe982f57fe8",
-        "timestamp": "2026-10-05T11:30:24Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5166e84a189674d8ea86b354d4e4e639ee5c57f7",
-        "timestamp": "2026-10-05T11:29:14Z"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7a46d2f230bd276bc386ced369851221101b8b88",
+  "source_master_sha": "9106df0f82964f66dcf83e5775051c32c656934d",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37304245187"
+    "run_id": "37304709305"
   }
 }
