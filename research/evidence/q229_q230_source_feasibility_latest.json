@@ -1,0 +1,172 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-05-Q229-Q230-SOURCE-FEASIBILITY",
+  "status": "SOURCE_FEASIBILITY_ONLY",
+  "generated_at_utc": "2026-10-05T21:36:06.719445+00:00",
+  "candidates": {
+    "Q229": {
+      "source_status": "PASS",
+      "live_api_probe_status": 200,
+      "historical_pit_validated": false,
+      "notes": [
+        "CFPB publication is conditional on company response or 15-day rule; this probe does not backdate a public signal.",
+        "Current source availability does not prove historical immutable-prefix reconstruction.",
+        "Complaint narratives/public visualizations are treated separately from structured complaint fields."
+      ]
+    },
+    "Q230": {
+      "source_status": "PASS",
+      "public_download_route_status": null,
+      "historical_pit_validated": false,
+      "paid_enhanced_data_allowed": false,
+      "notes": [
+        "Only free public TRACE routes are admissible.",
+        "No CUSIP-license assumption, paid enhanced history, or ETF proxy substitution is permitted.",
+        "Security-master/issuer mapping remains a separate historical gate."
+      ]
+    }
+  },
+  "results": [
+    {
+      "name": "Q229_CFPB_PAGE",
+      "url": "https://www.consumerfinance.gov/data-research/consumer-complaints/",
+      "reachable": true,
+      "http_status": 200,
+      "content_sha256": "daec9894bb9386119234ddc864892bc0c9c10dcbebab722bacb7276406cb6172",
+      "content_bytes": 155922,
+      "missing_markers": [],
+      "scientific_boundary": {
+        "performance": false,
+        "ranking": false,
+        "tuning": false,
+        "holdout_selection": false,
+        "promotion": false,
+        "live_execution": false
+      }
+    },
+    {
+      "name": "Q229_CFPB_API_DOCS",
+      "url": "https://cfpb.github.io/api/ccdb/",
+      "reachable": true,
+      "http_status": 200,
+      "content_sha256": "16924754b0c924ec1b823edcfc5f1d5e7ada9b23072914d77cdc6e7a8a9c8605",
+      "content_bytes": 4661,
+      "missing_markers": [
+        "date_received",
+        "company_response",
+        "timely"
+      ],
+      "scientific_boundary": {
+        "performance": false,
+        "ranking": false,
+        "tuning": false,
+        "holdout_selection": false,
+        "promotion": false,
+        "live_execution": false
+      }
+    },
+    {
+      "name": "Q229_CFPB_SWAGGER",
+      "url": "https://raw.githubusercontent.com/cfpb/ccdb5-api/main/swagger-config.yaml",
+      "reachable": true,
+      "http_status": 200,
+      "content_sha256": "a384563b5bf721a448085b2bb4c9e374469b982dedb68da3094cffe677a5bb99",
+      "content_bytes": 19549,
+      "missing_markers": [],
+      "scientific_boundary": {
+        "performance": false,
+        "ranking": false,
+        "tuning": false,
+        "holdout_selection": false,
+        "promotion": false,
+        "live_execution": false
+      }
+    },
+    {
+      "name": "Q229_CFPB_API_LIVE",
+      "url": "https://www.consumerfinance.gov/data-research/consumer-complaints/search/api/v1/?size=1",
+      "reachable": true,
+      "http_status": 200,
+      "content_sha256": "50e47fd90bad9c637e393c014878bdcdbfce588b8fb1fa823b5ee812ae1a107c",
+      "content_bytes": 400452,
+      "missing_markers": [],
+      "scientific_boundary": {
+        "performance": false,
+        "ranking": false,
+        "tuning": false,
+        "holdout_selection": false,
+        "promotion": false,
+        "live_execution": false
+      }
+    },
+    {
+      "name": "Q230_FINRA_API_SPEC",
+      "url": "https://www.finra.org/sites/default/files/2023-06/Web-API-Specifications-for-TRACE-Corporate-Agency-Debt-v4.12.pdf",
+      "reachable": true,
+      "http_status": 200,
+      "content_sha256": "19a94034e1676ea955d75256fb337b7ef8f998e73ba142b69e128d993c4028ce",
+      "content_bytes": 761684,
+      "missing_markers": [
+        "CORPBONDSBREOD"
+      ],
+      "scientific_boundary": {
+        "performance": false,
+        "ranking": false,
+        "tuning": false,
+        "holdout_selection": false,
+        "promotion": false,
+        "live_execution": false
+      }
+    },
+    {
+      "name": "Q230_FINRA_PUBLIC_DATA",
+      "url": "https://www.finra.org/filing-reporting/trace",
+      "reachable": true,
+      "http_status": 200,
+      "content_sha256": "641eae10a549123807d6e3946f82b97488245779c813a85e26a43465b2aacd1a",
+      "content_bytes": 159414,
+      "missing_markers": [],
+      "scientific_boundary": {
+        "performance": false,
+        "ranking": false,
+        "tuning": false,
+        "holdout_selection": false,
+        "promotion": false,
+        "live_execution": false
+      }
+    },
+    {
+      "name": "Q230_FINRA_DOWNLOAD_ROUTE",
+      "url": "https://download.finratraqs.org/DownloadHandler.ashx?action=DOWNLOAD&file=CAMASTER&facility=TRACE",
+      "reachable": false,
+      "http_status": null,
+      "content_sha256": null,
+      "content_bytes": 0,
+      "missing_markers": [],
+      "scientific_boundary": {
+        "performance": false,
+        "ranking": false,
+        "tuning": false,
+        "holdout_selection": false,
+        "promotion": false,
+        "live_execution": false
+      },
+      "error": "URLError:<urlopen error timed out>"
+    }
+  ],
+  "governance": {
+    "performance_authorized": false,
+    "holdout_selection_allowed": false,
+    "ranking_allowed": false,
+    "parameter_search_allowed": false,
+    "threshold_search_allowed": false,
+    "horizon_search_allowed": false,
+    "promotion_allowed": false,
+    "live_execution_allowed": false
+  },
+  "next_gate": {
+    "Q229": "historical_public_release_batch_and_company_to_issuer_mapping_census",
+    "Q230": "free_TRACE_historical_panel_security_master_and_issuer_mapping_census"
+  },
+  "bundle_fingerprint": "289844ac40b2f99ee67202b03d4853397d7a28331c281c5170195ead22240c56"
+}
