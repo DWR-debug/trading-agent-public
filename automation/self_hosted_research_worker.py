@@ -168,6 +168,7 @@ LANES: dict[str, list[list[str]]] = {
             "tests/test_decision_adapter.py",
             "tests/test_shadow_replay.py",
             "tests/test_signal_adapter.py",
+            "tests/test_shadow_ledger.py",
         ],
         [
             PYTHON,
