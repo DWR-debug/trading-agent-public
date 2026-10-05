@@ -224,6 +224,7 @@ ACTIVE_WORKFLOWS = {
     "q188-q192-pit-census-r2.yml",
     "q121r6-windows-independent-reproduction.yml",
     "windows-local-ai-worker.yml",
+    "windows-independent-capacity-pulse.yml",
     "resource-dashboard-update.yml",
     "groq-free-adversarial-worker.yml",
     "groq-api-key-smoke-test.yml",
