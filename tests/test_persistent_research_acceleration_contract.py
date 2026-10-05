@@ -15,8 +15,13 @@ def test_persistent_acceleration_contract_is_active_and_safe():
     assert payload["parallelism_policy"]["self_hosted_windows"]["parallel_lanes"] == 2
     assert payload["parallelism_policy"]["self_hosted_windows"]["autonomous_frontier_default_workers"] == 3
     assert set(payload["parallelism_policy"]["self_hosted_windows"]["lane_roles"]) == {
-        "lane_a_formal_readiness", "lane_b_frontier_discovery"
+        "lane_a_formal_readiness",
+        "lane_b_frontier_discovery",
+        "runner_c_independent_reproduction_and_long_research",
     }
+    assert payload["parallelism_policy"]["self_hosted_windows"]["lane_roles"][
+        "runner_c_independent_reproduction_and_long_research"
+    ]["availability"] == "always_routable"
     assert payload["parallelism_policy"]["lane_isolation"]["required"] is True
     assert payload["parallelism_policy"]["self_hosted_windows"]["hard_worker_cap"] == 4
     assert payload["phone_capacity_policy"]["decision"].startswith("Do not add another physical phone")
