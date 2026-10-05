@@ -168,6 +168,8 @@ Runner-Informationen liefern die aktuelle Verfügbarkeit.
 
 ### Persistenter Sitzungsanker gegen Chat-Split-Brüche
 
+Die aktuelle Frontier-Registrierung enthält Q217 (Cognitive Processing Friction) zusätzlich zu Q214–Q216. Q214 bleibt der bestehende Disclosure-Risk-State; Q217 ersetzt ihn nicht.
+
 Die Modell-Erinnerung ist **kein aktueller Zustandspeicher**. Sie darf dauerhafte Regeln, Architektur,
 Quellenhierarchie und bekannte Governance-Prinzipien enthalten, aber niemals als Autorität für einen
 aktuellen SHA, Runner-Zustand, Agentenstatus, Workflow-Run oder wissenschaftlichen Receipt dienen.
@@ -282,3 +284,8 @@ The chat is a control surface, not the research state store. A connection loss, 
 Long-running work must be persisted in the repository before the chat reports it as completed. Chat responses should report only bounded deltas: reached, running, blocked, verified receipts and next executable gates. Do not serialize large logs, full repository snapshots or repetitive workflow output into the chat. When a task is large, persist intermediate state first and continue from the handoff after any new chat.
 
 A new chat must never assume that an interrupted message means the underlying work was interrupted. It rehydrates from repository state and live GitHub state. Conversely, a chat message never serves as the sole checkpoint for a scientific or operational decision.
+
+
+## Bounded chat-response contract
+
+To reduce connection and maximum-length failures, user-facing responses from the trading-agent orchestrator remain bounded and delta-based. Large logs, raw workflow payloads and full repository snapshots are never serialized into one response. Material progress is checkpointed in the repository and resumable from `research/evidence/trading_agent_chat_handoff.json`.
