@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T14:14:00.418259+00:00",
+  "generated_at_utc": "2026-10-05T14:23:22.269884+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4136,6 +4136,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: align S10 Ubuntu service user with runner",
+        "sha": "fe2a2c51319c06b63a0939d111e20fd3298ae0d9",
+        "timestamp": "2026-10-05T16:23:07+02:00"
+      },
+      {
+        "message": "OPS: harden Android runner start for low-memory CoreCLR",
+        "sha": "40022cb0fd01494b6905f256fe15ff78c0e3290f",
+        "timestamp": "2026-10-05T16:23:04+02:00"
+      },
+      {
+        "message": "OPS: refresh resource dashboard snapshot",
+        "sha": "7fc04d67527416a4c7556b1a1a0a836f9301a0cf",
+        "timestamp": "2026-10-05T14:14:10Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2dc2f3c840d16bc5d6f6d901f45eb70b06a52069",
+        "timestamp": "2026-10-05T14:14:03Z"
+      },
+      {
         "message": "OPS: refresh resource dashboard after next research gate",
         "sha": "7782e4b1ce01359b9790cab616bd72966a007fa1",
         "timestamp": "2026-10-05T16:13:47+02:00"
@@ -4154,26 +4174,6 @@
         "message": "RESEARCH: trigger next logical gate",
         "sha": "7b1e33ee4ba451fc31657df51fdc3a2c31ac7c45",
         "timestamp": "2026-10-05T16:12:22+02:00"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "ffdf47873d68a2b20697d4459687be3adfde5e76",
-        "timestamp": "2026-10-05T13:35:38Z"
-      },
-      {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "a1e60344eec941fac4183073b998c7b7f2740f19",
-        "timestamp": "2026-10-05T13:21:30Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "870f173284d919d02a8178a1b630df88f174e42b",
-        "timestamp": "2026-10-05T13:21:22Z"
-      },
-      {
-        "message": "OPS: refresh resource dashboard trigger R9",
-        "sha": "3d5cc0fc97637a6d672d0c9fbf66c74e31d1c3f3",
-        "timestamp": "2026-10-05T15:21:08+02:00"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7782e4b1ce01359b9790cab616bd72966a007fa1",
+  "source_master_sha": "fe2a2c51319c06b63a0939d111e20fd3298ae0d9",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37323024416"
+    "run_id": "37324269757"
   }
 }
