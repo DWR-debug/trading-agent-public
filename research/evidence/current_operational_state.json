@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T11:37:42.608615+00:00",
+  "generated_at_utc": "2026-10-05T11:38:44.474148+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4136,6 +4136,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: remove obsolete Q077/Q081 auto-dispatches from status sync",
+        "sha": "7a46d2f230bd276bc386ced369851221101b8b88",
+        "timestamp": "2026-10-05T13:38:32+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "f93356a2f83129bbd6a78b99605789e378caf15c",
+        "timestamp": "2026-10-05T11:37:45Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "f7b3b72294101f97b77b0458591ad5810226442c",
         "timestamp": "2026-10-05T11:37:28Z"
@@ -4164,16 +4174,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "5166e84a189674d8ea86b354d4e4e639ee5c57f7",
         "timestamp": "2026-10-05T11:29:14Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6269b9cc52ca6467528d1ea319515d87df1e9092",
-        "timestamp": "2026-10-05T11:28:58Z"
-      },
-      {
-        "message": "TEST: include explicit frozen candidate identity in mapping failure case",
-        "sha": "b41418e5698153d47d628ce00b9c25bf718875a6",
-        "timestamp": "2026-10-05T13:28:49+02:00"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f7b3b72294101f97b77b0458591ad5810226442c",
+  "source_master_sha": "7a46d2f230bd276bc386ced369851221101b8b88",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37304124518"
+    "run_id": "37304245187"
   }
 }
