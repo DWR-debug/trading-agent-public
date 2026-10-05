@@ -38,16 +38,28 @@ jobs:
           set -euo pipefail
           python3 automation/generate_resource_dashboard.py
 
-      - name: Commit changed snapshot
+      - name: Persist changed snapshot
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- docs/dashboard/dashboard_data.json; then
-            echo "DASHBOARD_UPDATE=UNCHANGED"
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/dashboard/dashboard_data.json
-          git commit -m "OPS: refresh resource dashboard snapshot"
-          git push origin HEAD:master
+          for attempt in 1 2 3 4 5; do
+            if git diff --quiet -- docs/dashboard/dashboard_data.json; then
+              echo "DASHBOARD_UPDATE=UNCHANGED"
+              exit 0
+            fi
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add docs/dashboard/dashboard_data.json
+            git commit -m "OPS: refresh resource dashboard snapshot"
+            if git push origin HEAD:master; then
+              echo "DASHBOARD_UPDATE=PERSISTED attempt=$attempt"
+              exit 0
+            fi
+            echo "Dashboard snapshot push raced with another master update on attempt $attempt; rebasing snapshot onto current master."
+            git fetch origin master
+            git reset --hard origin/master
+            python3 automation/generate_resource_dashboard.py
+            sleep "$attempt"
+          done
+          echo "Unable to persist dashboard snapshot after retries." >&2
+          exit 1
