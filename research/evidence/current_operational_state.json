@@ -833,6 +833,28 @@
           "source_feasibility_workflow": ".github/workflows/q205-nlrb-source-feasibility.yml",
           "source_receipt_fingerprint": "11a67dea4117e8f555cbd23f0bac566302759ae50d8c094b897898cbcb094e06",
           "state": "SOURCE_FEASIBILITY_COMPLETED_PIT_READINESS_PENDING"
+        },
+        {
+          "candidate_ids": [
+            "Q211",
+            "Q212",
+            "Q213"
+          ],
+          "candidate_inventory_path": "research/frontier/q211_q213_literature_frontier_2026_10_05.json",
+          "class": "literature_derived_semantic_network_disagreement_frontier",
+          "code": "FRONTIER-Q211-Q213",
+          "design_document": "docs/research_design/LITERATURE_FRONTIER_EXPANSION_2026-10-05.md",
+          "issue_number": 1079,
+          "note": "Literature-derived expansion; discovery-only and candidate-specific PIT/reproduction gated.",
+          "parent_code": "FRONTIER-20260928",
+          "performance_authorization_allowed": false,
+          "priority": [
+            "Q211_P1",
+            "Q212_P1_FEASIBILITY",
+            "Q213_P2_CONTINGENT"
+          ],
+          "source_feasibility_workflow": ".github/workflows/hosted-deterministic-frontier.yml",
+          "state": "SOURCE_FEASIBILITY_ACTIVE"
         }
       ]
     },
@@ -1445,7 +1467,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T15:17:48.334333+00:00",
+  "generated_at_utc": "2026-10-05T15:18:17.402099+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4136,6 +4158,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: update OS focus for Q211-Q213",
+        "sha": "d56471ad86fb7bbb182374e281ba635b946566a7",
+        "timestamp": "2026-10-05T17:18:14+02:00"
+      },
+      {
+        "message": "RESEARCH: wire Q211-Q213 into active registry",
+        "sha": "022a6392979f9d8e284162390643a9694a65fa19",
+        "timestamp": "2026-10-05T17:18:03+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4617f06f66cec9d6ae18c465b22e278397ea34f9",
+        "timestamp": "2026-10-05T15:17:51Z"
+      },
+      {
         "message": "RESEARCH: add Q211-Q213 literature frontier artifact",
         "sha": "786842ee16466da5b346d0879883abde8b82f7f9",
         "timestamp": "2026-10-05T17:17:41+02:00"
@@ -4159,21 +4196,6 @@
         "message": "OPS: synchronize S10 phone runtime status",
         "sha": "7322a297e8026cd21e5b1ec9d62be98469346b83",
         "timestamp": "2026-10-05T14:59:57Z"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "a7fe07c4f024c0352e2d29f547600e5d56194089",
-        "timestamp": "2026-10-05T14:59:33Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "a0b6bfbd4f13ef09e806f206abc81a0bb453475b",
-        "timestamp": "2026-10-05T14:59:30Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "481120c3248bc2d5a6c83d7c94ce351d65be7c74",
-        "timestamp": "2026-10-05T14:59:15Z"
       }
     ]
   },
@@ -4271,7 +4293,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "786842ee16466da5b346d0879883abde8b82f7f9",
+  "source_master_sha": "d56471ad86fb7bbb182374e281ba635b946566a7",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4407,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37331635235"
+    "run_id": "37331702613"
   }
 }
