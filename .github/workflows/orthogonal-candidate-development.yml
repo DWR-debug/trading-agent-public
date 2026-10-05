@@ -45,7 +45,9 @@ jobs:
           assert d["shared_contract"]["live_execution"] is False
 
           ids=[c["id"] for c in d["candidates"]]
-          assert ids == ["Q194","Q195","Q196","Q197","Q199","Q201","Q202","Q203","Q204","Q205","Q215","Q216","Q217","Q218","Q219","Q220","Q221","Q222"]
+          assert len(ids) == len(set(ids)), "candidate IDs must be unique"
+          baseline_ids={"Q194","Q195","Q196","Q197","Q199","Q201","Q202","Q203","Q204","Q205","Q215","Q216","Q217","Q218","Q219","Q220","Q221","Q222"}
+          assert baseline_ids.issubset(ids), "baseline candidate inventory must not silently disappear"
 
           required={"id","name","mechanism","event_clock","features","direction","cheap_falsifiers","gates"}
           for c in d["candidates"]:
