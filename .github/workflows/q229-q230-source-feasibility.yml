@@ -109,7 +109,7 @@ jobs:
                       ]
                   },
                   "Q230": {
-                      "source_status": "PASS" if all(r["reachable"] for r in q230[:2]) else "PARTIAL",
+                      "source_status": "PASS" if all(r["reachable"] for r in q230) else "PARTIAL",
                       "public_download_route_status": next((r["http_status"] for r in q230 if r["name"]=="Q230_FINRA_DOWNLOAD_ROUTE"), None),
                       "historical_pit_validated": False,
                       "paid_enhanced_data_allowed": False,
