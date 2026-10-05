@@ -553,6 +553,50 @@
       ],
       "scientific_boundary": "discovery_contract_only",
       "implementation_note": "The first PIT subgate may use the documented USAspending prime-award publication schedule as a conservative public-observation boundary only after confirming the schedule applies to the exact transaction class and historical period. Action date remains metadata."
+    },
+    {
+      "id": "Q222",
+      "name": "Technology disclosure–verification credibility gap",
+      "mechanism": "A firm's public narrative about adoption or implementation of an emerging technology can diverge from independently observable implementation evidence. The mechanism is the credibility gap between disclosed claims and externally verifiable action, not narrative length, generic novelty, or the narrative-vs-structured-XBRL representation mismatch in Q220.",
+      "event_clock": "SEC as-filed acceptance timestamp; historical filing prefix frozen at that public boundary. External implementation evidence must use its own reproducible historical public-observation boundary and may not be looked up after the event to label the original state.",
+      "features": [
+        "fixed technology-claim intensity in as-filed SEC narrative",
+        "independently verifiable historical implementation indicator from predeclared public evidence",
+        "disclosure-to-implementation divergence",
+        "claim-persistence versus evidence-arrival state"
+      ],
+      "direction": "two-sided outcome; no sign assumed ex ante",
+      "cheap_falsifiers": [
+        "Q220 structured-representation gap fully explains the decomposition",
+        "keyword-count or document-length collapse",
+        "implementation evidence publication lag cannot be bounded historically",
+        "post-event implementation evidence leaks into the event state",
+        "issuer/entity mapping instability",
+        "technology taxonomy is not reproducible from predeclared rules"
+      ],
+      "gates": [
+        "historical SEC filing archive with accepted/as-filed boundary",
+        "historical public implementation evidence with reproducible observation clock",
+        "frozen technology taxonomy and deterministic claim extractor",
+        "immutable issuer/entity mapping",
+        "separate disclosure and implementation lineage audit",
+        "empirical separability from Q220/Q217/Q211",
+        "independent PIT reproduction"
+      ],
+      "non_overlap": [
+        "Q220",
+        "Q217",
+        "Q211",
+        "Q218"
+      ],
+      "literature_basis": [
+        "Jiang, Song & An (2026), Corporate fuzzy disclosure, investors’ limited attention, and capital market overreaction, Journal of Innovation & Knowledge, available online 2026-09-01",
+        "AI washing: Strategic disclosure and backlash (2026), Finance Research Letters 95, 109684",
+        "Digital narrative inflation and corporate innovation: Evidence from large language model semantic scoring (2026), Finance Research Letters, forthcoming issue"
+      ],
+      "scientific_boundary": "discovery_contract_only",
+      "priority": "UNRANKED_DESIGN",
+      "risk_note": "Merge back into Q220 if external verification adds no empirically distinct mechanism or cannot be given a defensible historical public-observation clock."
     }
   ],
   "blocked_or_composite_tracks": {
@@ -569,5 +613,6 @@
     "live execution"
   ],
   "revision": 9,
-  "triggered_by": "TOP_CANDIDATE_DEVELOPMENT_2026-10-05_Q220_XBRL_STRUCTURAL_MAPPING"
+  "triggered_by": "TOP_CANDIDATE_DEVELOPMENT_2026-10-05_Q220_XBRL_STRUCTURAL_MAPPING",
+  "common_statute_reference": "docs/TRADING_AGENT_PROJECT_STATUTES.md"
 }
