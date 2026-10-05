@@ -700,6 +700,58 @@
       "measurement_warning": "FOIA request activity can reveal costly private information before the market sees it, while the public monthly log creates a delayed observation channel. Public-data strategies must not backdate the signal to request submission. Low observed public request activity can also reflect requester substitution or reduced observable behaviour after publication becomes more frequent.",
       "scientific_boundary": "discovery_contract_only",
       "priority": "P1_SOURCE_FEASIBILITY"
+    },
+    {
+      "id": "Q228",
+      "issue_number": 1100,
+      "name": "SEC filing-review dialogue / disclosure-scrutiny state",
+      "mechanism": "Public SEC comment-letter and filer-response dialogue can reveal regulatory scrutiny, unresolved disclosure questions and review friction that are not reducible to raw filing complexity, mandatory/voluntary disclosure allocation, enforcement or generic release latency.",
+      "event_clock": "Earliest public release boundary of SEC filing-review correspondence; latent review start is metadata only. If exact time is unproven, use the next regular trading-session boundary.",
+      "features": [
+        "first_public_SEC_comment_letter_after_frozen_review_cycle",
+        "deterministic_comment_count",
+        "predeclared_comment_topic_composition",
+        "public_response_round_count",
+        "amendment_or_revision_response_state",
+        "review_dialogue_duration_when_both_public_endpoints_are admissible",
+        "unresolved_dialogue_state_at_first_public_correspondence_boundary"
+      ],
+      "direction": "two-sided outcome; no sign assumed ex ante",
+      "cheap_falsifiers": [
+        "Q217_filing_complexity_collapse",
+        "Q218_mandatory_voluntary_disclosure_collapse",
+        "Q195_enforcement_collapse",
+        "Q204_release_latency_only_collapse",
+        "reviewer_selection_or_hindsight_mapping_failure",
+        "historical_correspondence_publication_clock_unreconstructable",
+        "review_cycle_to_filing_linkage_ambiguous",
+        "comment_taxonomy_nonreproducible",
+        "future_comment_or_amendment_changes_historical_prefix"
+      ],
+      "gates": [
+        "historical_EDGAR_correspondence_coverage_census_from_2005",
+        "exact_public_observation_boundary_for_correspondence",
+        "deterministic_review_cycle_filing_identity_compiler",
+        "UPLOAD_vs_CORRESP_provenance_preservation",
+        "comment_topic taxonomy reproducibility",
+        "amendment_and_review_closure_lineage",
+        "independent_PIT_reproduction_on_symbol_disjoint_issuers",
+        "non_overlap_audit_Q217_Q218_Q195_Q204"
+      ],
+      "non_overlap": [
+        "Q217",
+        "Q218",
+        "Q195",
+        "Q204",
+        "Q222"
+      ],
+      "literature_basis": [
+        "Bozanic, Dietrich & Johnson (2017), SEC comment letters and firm disclosure",
+        "Johnston (2017), Regulatory Oversight of Financial Reporting: Securities and Exchange Commission Comment Letters"
+      ],
+      "scientific_boundary": "discovery_contract_only",
+      "priority": "P1_SOURCE_FEASIBILITY",
+      "implementation_note": "SEC says filing-review correspondence has been publicly released since 2005 and current guidance places publication at least 20 business days after effectiveness/review completion. The public correspondence clock must therefore be treated separately from the latent SEC review clock."
     }
   ],
   "blocked_or_composite_tracks": {
