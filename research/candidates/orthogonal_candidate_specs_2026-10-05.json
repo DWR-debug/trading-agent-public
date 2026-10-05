@@ -1,0 +1,306 @@
+{
+  "schema_version": "1.0",
+  "date": "2026-10-05",
+  "purpose": "Deterministic candidate-development contracts for orthogonal public-information mechanisms. Design only; no performance, ranking, tuning, selection, promotion or live execution.",
+  "shared_contract": {
+    "label": "next_regular_session_5_trading_day_excess_return_vs_frozen_benchmark",
+    "decision_boundary": "event_public_observation_boundary; if only a date is available, use next regular trading-session boundary and do not infer an intraday clock",
+    "exposure_mapping": "frozen before outcome observation; issuer/entity mapping is immutable for the trial",
+    "universe": "fresh symbol-disjoint research universe defined by the relevant trial contract",
+    "pre_formal_robustness_gate": true,
+    "scientific_authority": false,
+    "performance_authorization": false,
+    "promotion_authorization": false,
+    "live_execution": false
+  },
+  "candidates": [
+    {
+      "id": "Q194",
+      "name": "Therapeutic-substitution pressure",
+      "mechanism": "A newly public shortage state creates operational substitution pressure across products sharing an ingredient/application or therapeutic-equivalence relationship; affected manufacturer exposure is the fixed economic transmission channel.",
+      "event_clock": "earliest defensible public observation timestamp for the shortage record or explicitly documented next-publication boundary; occurrence time alone is not admissible.",
+      "features": [
+        "binary_new_shortage_state",
+        "fixed_graph_exposure_to_affected_product_or_ingredient",
+        "event_count_by_frozen_manufacturer_exposure"
+      ],
+      "direction": "two-sided outcome; no sign is assumed ex ante",
+      "cheap_falsifiers": [
+        "shift event availability forward by 1-5 sessions while holding the calendar fixed",
+        "shuffle issuer-exposure assignments within the frozen universe",
+        "replace public-observation time with occurrence time and require the candidate to show that the inference changes; otherwise reject clock discipline",
+        "future-mutation test on a historical shortage record"
+      ],
+      "gates": [
+        "historical shortage-state snapshots",
+        "therapeutic/product identity mapping",
+        "manufacturer-to-issuer mapping",
+        "revision and withdrawal lineage",
+        "independent PIT reproduction"
+      ]
+    },
+    {
+      "id": "Q195",
+      "name": "Inspection-to-enforcement escalation",
+      "mechanism": "A transition from public inspection/compliance evidence to a public enforcement action represents an escalation in operational/regulatory information for facility-exposed issuers.",
+      "event_clock": "public observation boundary of the enforcement state; inspection date and violation date are retained as event metadata but are not substituted for dissemination time.",
+      "features": [
+        "binary_new_enforcement_action",
+        "fixed_facility_to_issuer_exposure",
+        "escalation_from_prior_public_compliance_state"
+      ],
+      "direction": "two-sided outcome; no sign is assumed ex ante",
+      "cheap_falsifiers": [
+        "event-time permutation within calendar blocks",
+        "facility-to-issuer map shuffle preserving facility counts",
+        "force a one-session lag and compare only pre-specified semantic invariants",
+        "historical-vintage mutation test"
+      ],
+      "gates": [
+        "historical public observation boundary",
+        "facility identity lineage",
+        "issuer mapping",
+        "enforcement correction/withdrawal lineage",
+        "independent PIT reproduction"
+      ]
+    },
+    {
+      "id": "Q196",
+      "name": "Patent citation provenance state",
+      "mechanism": "The composition of examiner-originated versus applicant-originated citations on newly public patent documents is a fixed technology-information state distinct from raw patent counts or grant shocks.",
+      "event_clock": "patent publication boundary; no later grant date or citation update may enter the historical prefix.",
+      "features": [
+        "examiner_originated_citation_share",
+        "applicant_originated_citation_share",
+        "new_publication_count_by_frozen_issuer_exposure"
+      ],
+      "direction": "two-sided outcome; no sign is assumed ex ante",
+      "cheap_falsifiers": [
+        "publication-date shift by 1-5 sessions",
+        "assignee-to-issuer map shuffle",
+        "origin-label permutation preserving citation totals",
+        "historical citation-lineage mutation test"
+      ],
+      "gates": [
+        "candidate-specific patent publication archive",
+        "examiner/applicant provenance completeness",
+        "frozen assignee-to-issuer map",
+        "correction and lineage handling",
+        "independent PIT reproduction"
+      ]
+    },
+    {
+      "id": "Q197",
+      "name": "Government-demand shock propagation",
+      "mechanism": "A newly public government-procurement award can change the observable demand state of directly exposed contractors; a fixed contractor/network exposure map supplies the economic transmission channel.",
+      "event_clock": "historical public-observation boundary for the award state; action date or contract start date cannot be used as a substitute unless independently justified as publicly observable at the decision point.",
+      "features": [
+        "binary_new_award_public_state",
+        "award_amount_log1p",
+        "fixed_prime_recipient_to_issuer_exposure",
+        "fixed_connected_supplier_or_customer_graph_when separately proven"
+      ],
+      "direction": "two-sided outcome; no sign is assumed ex ante",
+      "cheap_falsifiers": [
+        "shift public-observation boundary by 1-5 sessions",
+        "recipient-to-issuer map shuffle",
+        "calendar-block permutation of award arrivals",
+        "future-amendment mutation test preserving original award identifiers"
+      ],
+      "gates": [
+        "historical award-state reconstruction",
+        "public-observation timestamp or conservative next-session boundary",
+        "frozen recipient identity mapping",
+        "amendment/correction lineage",
+        "independent PIT reproduction"
+      ]
+    },
+    {
+      "id": "Q199",
+      "name": "Patent-publication shock",
+      "mechanism": "Pre-grant publication of a patent application creates an ex-ante technology disclosure event; issuer exposure is fixed from the assignee/applicant identity before outcomes are read.",
+      "event_clock": "official publication boundary of the patent application; later grant or prosecution updates are excluded from the historical prefix.",
+      "features": [
+        "binary_new_publication",
+        "new_publication_count",
+        "fixed_assignee_or_applicant_to_issuer_exposure"
+      ],
+      "direction": "two-sided outcome; no sign is assumed ex ante",
+      "cheap_falsifiers": [
+        "publication-date shift by 1-5 sessions",
+        "assignee-to-issuer map shuffle",
+        "randomize publication arrivals within the same calendar structure",
+        "future-prosecution mutation test"
+      ],
+      "gates": [
+        "historical publication-state archive",
+        "publication-date completeness",
+        "frozen assignee/applicant-to-issuer map",
+        "withdrawal/correction lineage",
+        "independent PIT reproduction"
+      ]
+    },
+    {
+      "id": "Q201",
+      "name": "Clinical-trial results first-posted shock",
+      "mechanism": "The first public posting of structured clinical-trial results creates a distinct disclosure boundary; sponsor/issuer exposure is fixed independently of post-event market outcomes.",
+      "event_clock": "Results First Posted time/date when available; Results First Posted with QC Comments is a later revision state and cannot overwrite the original public prefix.",
+      "features": [
+        "binary_first_results_posted",
+        "new_results_post_count",
+        "fixed_sponsor_to_issuer_exposure",
+        "revision_indicator_after_original_posting"
+      ],
+      "direction": "two-sided outcome; no result-sign classification is required in the first PIT stage",
+      "cheap_falsifiers": [
+        "shift result-posting boundary by 1-5 sessions",
+        "sponsor-to-issuer map shuffle",
+        "calendar-block permutation of result postings",
+        "future QC-comment mutation test"
+      ],
+      "gates": [
+        "historical Results First Posted archive",
+        "explicit posted-time semantics",
+        "frozen sponsor-to-issuer map",
+        "revision/QC lineage",
+        "independent PIT reproduction"
+      ]
+    },
+    {
+      "id": "Q202",
+      "name": "Clinical-trial reporting deadline breach / missing-result state",
+      "mechanism": "A publicly observable failure to provide required clinical-trial results by a fixed statutory reporting boundary is an information-absence event. The mechanism is distinct from the later content of the results themselves and may reflect selective or delayed disclosure.",
+      "event_clock": "The first reproducible public snapshot on or after the fixed reporting deadline at which an applicable trial remains without publicly posted results, after excluding valid certification/extension states known by that boundary.",
+      "features": [
+        "binary_deadline_miss_state",
+        "days_since_fixed_reporting_deadline_capped_by_fixed_rule",
+        "fixed_sponsor_to_issuer_exposure"
+      ],
+      "direction": "two-sided outcome; no sign is assumed ex ante",
+      "cheap_falsifiers": [
+        "permute sponsor-to-issuer mapping",
+        "shift the deadline boundary by one fixed session",
+        "inject future results or future corrections and require historical prefix invariance",
+        "treat a later FDAAA violation notice as if it were the original deadline-miss observation and require the inferred boundary to change"
+      ],
+      "gates": [
+        "historical version snapshots at the statutory boundary",
+        "applicability and valid-extension lineage",
+        "frozen sponsor-to-issuer mapping",
+        "results/revision/QC lineage",
+        "independent PIT reproduction"
+      ],
+      "literature_basis": [
+        "Cochrane 2024, Time to publication for results of clinical trials (PMID 39601300)",
+        "Kim et al. 2017, The significance of the trial outcome was associated with publication rate and time to publication (PMID 28238789)",
+        "Zarin et al./ClinicalTrials.gov reporting-compliance literature"
+      ],
+      "scientific_boundary": "discovery_contract_only"
+    },
+    {
+      "id": "Q203",
+      "name": "Government-demand award × ex-ante financing constraint",
+      "mechanism": "A newly public federal procurement award can relax financing constraints and expand access to credit after award. Conditional on a fixed pre-event financing-constraint state, the same public-demand shock may therefore have a stronger or more persistent economic transmission than an unconditional award indicator.",
+      "event_clock": "Historical public-observation boundary of the award state; award/action date cannot substitute for observation time unless independently proven.",
+      "features": [
+        "binary_new_award_public_state",
+        "fixed_pre_event_financing_constraint_measure",
+        "fixed_prime_recipient_to_issuer_exposure",
+        "fixed_award_amount_log1p"
+      ],
+      "direction": "two-sided outcome; no sign is assumed ex ante",
+      "cheap_falsifiers": [
+        "shuffle financing-constraint values within the frozen event universe",
+        "shift public-observation boundary by one fixed session",
+        "use post-award balance-sheet values and require the construction to fail closed",
+        "permute recipient-to-issuer mapping",
+        "future-amendment mutation preserving original award identity"
+      ],
+      "gates": [
+        "historical award-state reconstruction",
+        "frozen pre-event financing data from latest admissible public filing",
+        "frozen recipient/entity mapping",
+        "amendment/correction lineage",
+        "independent PIT reproduction"
+      ],
+      "literature_basis": [
+        "Hebous & Zimmermann 2021, Can government demand stimulate private investment? Evidence from US federal procurement",
+        "Gabriel 2024, The credit channel of public procurement",
+        "2025, What Can 240,000 New Credit Transactions Tell Us About the Impact of NGEU Funds? (arXiv:2504.01964)"
+      ],
+      "scientific_boundary": "discovery_contract_only"
+    },
+    {
+      "id": "Q204",
+      "name": "Public-information release-lag surprise",
+      "mechanism": "The elapsed interval between an official source's earliest public-observation timestamp and a later, separately defined publication or process-stage date can itself measure information latency. The event remains about information arrival speed, not event content.",
+      "event_clock": "The first reproducible public-observation timestamp supplied by the official source. Underlying occurrence/action/submission dates remain metadata and are not treated as public availability. A stage-to-stage gap is admissible only when both endpoints have independently documented semantics.",
+      "features": [
+        "fixed_public_observation_to_stage_latency",
+        "rolling_pre_event_latency_percentile_using_only_prior_observations",
+        "fixed_event_class_indicator"
+      ],
+      "direction": "two-sided outcome; no sign is assumed ex ante",
+      "cheap_falsifiers": [
+        "randomize release timestamps within fixed calendar blocks",
+        "replace public-observation time with occurrence time and require a detectable contract change",
+        "use future latency distribution statistics and require fail-closed detection",
+        "same-day timestamp ambiguity must be excluded"
+      ],
+      "gates": [
+        "candidate-specific public-observation timestamp completeness",
+        "independently documented semantics for both endpoints of the latency interval",
+        "frozen event-class definition",
+        "pre-event-only latency distribution construction",
+        "revision/correction lineage",
+        "independent PIT reproduction"
+      ],
+      "literature_basis": [
+        "2026 preprint, Fast Numbers, Slow Language: Bridging Quantitative and Qualitative Earnings Signals (arXiv:2606.29734)",
+        "2026 preprint, Buy the Rumor, Sell the News: When Is News Priced In? (arXiv:2608.14014)",
+        "2026 preprint, Time-Series Foundation Models That Understand Data Revisions (arXiv:2609.28576)"
+      ],
+      "scientific_boundary": "discovery_contract_only"
+    },
+    {
+      "id": "Q205",
+      "name": "Labor-representation certification shock",
+      "mechanism": "A newly public NLRB election outcome or certification changes the observable labor-representation state of an employer. The economic channel is potential labor-cost, bargaining-power and operational-governance change; no return sign is assumed ex ante.",
+      "event_clock": "Earliest reproducible NLRB public result/certification boundary. Tally Issued Date is retained as source metadata; if no time-of-day can be proven, use the next regular trading-session boundary rather than infer an intraday clock.",
+      "features": [
+        "binary_union_election_outcome_state",
+        "vote_margin_or_vote_share_when_complete_at_public_boundary",
+        "fixed_employer_to_issuer_mapping"
+      ],
+      "direction": "two-sided outcome; no sign is assumed ex ante",
+      "cheap_falsifiers": [
+        "shift the public-result boundary by one to five trading sessions",
+        "permute employer-to-issuer mappings within the frozen event universe",
+        "randomize outcome labels while preserving election counts and calendar structure",
+        "inject later case updates/certifications and verify the historical prefix is unchanged"
+      ],
+      "gates": [
+        "historical NLRB election/result archive completeness",
+        "public-observation clock or conservative next-session rule",
+        "frozen employer-to-issuer identity mapping",
+        "case-status/certification correction and amendment lineage",
+        "independent historical reproduction"
+      ]
+    }
+  ],
+  "blocked_or_composite_tracks": {
+    "Q193": "Composition remains prohibited until contributing component channels independently pass candidate-specific PIT.",
+    "Q198": "Historical Federal Register Public Inspection By-Date API route is now source-feasible and a four-date PIT clock census completed. Candidate-specific correction/withdrawal lineage, entity mapping and independent reproduction remain required."
+  },
+  "forbidden": [
+    "performance runs",
+    "holdout selection",
+    "return-based ranking",
+    "parameter/threshold/horizon search",
+    "asset selection",
+    "promotion",
+    "live execution"
+  ],
+  "revision": 4,
+  "triggered_by": "Q205_NLRB_SOURCE_FEASIBILITY_COMPLETED"
+}
