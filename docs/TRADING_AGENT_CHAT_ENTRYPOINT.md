@@ -1,3 +1,5 @@
+> **DAUERHAFTE STATUTENREGEL:** Vor jeder `trading agent`-Weiterentwicklung ist `docs/TRADING_AGENT_PROJECT_STATUTES.md` zu berücksichtigen. Wichtige dauerhafte Entscheidungen werden in die passende kanonische Ebene persistiert und nicht nur im Chat belassen.
+
 # Trading Agent — Chat-Einstiegspunkt
 
 ## Kanonischer Projektzweck
