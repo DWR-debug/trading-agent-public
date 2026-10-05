@@ -443,6 +443,31 @@
         "priority": "P1-RISK",
         "risk_state_only": true,
         "state": "SOURCE_FEASIBILITY_ACTIVE"
+      },
+      {
+        "candidate_inventory_path": "research/frontier/q215_q216_candidate_wave_2026_10_05.json",
+        "class": "cross_channel_public_observability_gap",
+        "code": "Q215",
+        "design_document": "docs/research_design/Q215_PUBLIC_SOURCE_OBSERVABILITY_GAP_2026-10-05.md",
+        "issue_number": 1082,
+        "parent_code": "LITERATURE-DISCOVERY-PLANE",
+        "performance_authorization_allowed": false,
+        "priority": "P1",
+        "state": "SOURCE_COMPONENT_FEASIBILITY_ACTIVE",
+        "source_feasibility_workflow": ".github/workflows/q215-observability-gap-feasibility.yml"
+      },
+      {
+        "candidate_inventory_path": "research/frontier/q215_q216_candidate_wave_2026_10_05.json",
+        "class": "macro_vintage_revision_exposure_reliability_state",
+        "code": "Q216",
+        "design_document": "docs/research_design/Q216_DATA_REVISION_EXPOSURE_STATE_2026-10-05.md",
+        "issue_number": 1083,
+        "parent_code": "LITERATURE-DISCOVERY-PLANE",
+        "performance_authorization_allowed": false,
+        "priority": "P1-RISK",
+        "risk_state_only": true,
+        "state": "SOURCE_COMPONENT_FEASIBILITY_ACTIVE",
+        "source_feasibility_workflow": ".github/workflows/q216-data-revision-exposure-feasibility.yml"
       }
     ],
     "active_research_registry": {
@@ -889,6 +914,31 @@
           "priority": "P1-RISK",
           "risk_state_only": true,
           "state": "SOURCE_FEASIBILITY_ACTIVE"
+        },
+        {
+          "candidate_inventory_path": "research/frontier/q215_q216_candidate_wave_2026_10_05.json",
+          "class": "cross_channel_public_observability_gap",
+          "code": "Q215",
+          "design_document": "docs/research_design/Q215_PUBLIC_SOURCE_OBSERVABILITY_GAP_2026-10-05.md",
+          "issue_number": 1082,
+          "parent_code": "LITERATURE-DISCOVERY-PLANE",
+          "performance_authorization_allowed": false,
+          "priority": "P1",
+          "state": "SOURCE_COMPONENT_FEASIBILITY_ACTIVE",
+          "source_feasibility_workflow": ".github/workflows/q215-observability-gap-feasibility.yml"
+        },
+        {
+          "candidate_inventory_path": "research/frontier/q215_q216_candidate_wave_2026_10_05.json",
+          "class": "macro_vintage_revision_exposure_reliability_state",
+          "code": "Q216",
+          "design_document": "docs/research_design/Q216_DATA_REVISION_EXPOSURE_STATE_2026-10-05.md",
+          "issue_number": 1083,
+          "parent_code": "LITERATURE-DISCOVERY-PLANE",
+          "performance_authorization_allowed": false,
+          "priority": "P1-RISK",
+          "risk_state_only": true,
+          "state": "SOURCE_COMPONENT_FEASIBILITY_ACTIVE",
+          "source_feasibility_workflow": ".github/workflows/q216-data-revision-exposure-feasibility.yml"
         }
       ]
     },
@@ -1560,7 +1610,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T16:46:33.557716+00:00",
+  "generated_at_utc": "2026-10-05T17:05:00Z",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4303,10 +4353,15 @@
       "starts_utc": "2026-10-01T00:00:00Z"
     },
     "free_resources_only": true,
-    "hypothetical_reference_capital_eur": 2000.0,
-    "legacy_operational_canary_capital_eur": 500.0,
+    "hypothetical_reference_capital_eur": 2000,
+    "legacy_operational_canary_capital_eur": 500,
     "paid_agent_budget_usd": 0,
-    "paid_api_budget_usd": 0
+    "paid_api_budget_usd": 0,
+    "research_priority": [
+      "Q215",
+      "Q216",
+      "existing source/PIT closures"
+    ]
   },
   "safety": {
     "AUTOMATIC_PROMOTION": false,
@@ -4501,5 +4556,32 @@
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
     "run_id": "37343356441"
+  },
+  "q215": {
+    "candidate_inventory_path": "research/frontier/q215_q216_candidate_wave_2026_10_05.json",
+    "class": "cross_channel_public_observability_gap",
+    "code": "Q215",
+    "design_document": "docs/research_design/Q215_PUBLIC_SOURCE_OBSERVABILITY_GAP_2026-10-05.md",
+    "issue_number": 1082,
+    "parent_code": "LITERATURE-DISCOVERY-PLANE",
+    "performance_authorization_allowed": false,
+    "priority": "P1",
+    "state": "SOURCE_COMPONENT_FEASIBILITY_ACTIVE",
+    "source_feasibility_workflow": ".github/workflows/q215-observability-gap-feasibility.yml",
+    "next_gate": "historical two-channel identity bridge + both public clocks + issuer lineage + independent PIT reproduction"
+  },
+  "q216": {
+    "candidate_inventory_path": "research/frontier/q215_q216_candidate_wave_2026_10_05.json",
+    "class": "macro_vintage_revision_exposure_reliability_state",
+    "code": "Q216",
+    "design_document": "docs/research_design/Q216_DATA_REVISION_EXPOSURE_STATE_2026-10-05.md",
+    "issue_number": 1083,
+    "parent_code": "LITERATURE-DISCOVERY-PLANE",
+    "performance_authorization_allowed": false,
+    "priority": "P1-RISK",
+    "risk_state_only": true,
+    "state": "SOURCE_COMPONENT_FEASIBILITY_ACTIVE",
+    "source_feasibility_workflow": ".github/workflows/q216-data-revision-exposure-feasibility.yml",
+    "next_gate": "complete historical vintage panel + first-public semantics + frozen exposure mapping + independent PIT reproduction"
   }
 }
