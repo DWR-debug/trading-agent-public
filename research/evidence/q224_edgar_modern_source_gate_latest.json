@@ -1,0 +1,134 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-06-Q224-EDGAR-MODERN-WINDOW-SOURCE-GATE",
+  "status": "SOURCE_ARCHIVE_INTEGRITY_COMPLETED_NO_PERFORMANCE",
+  "generated_at_utc": "2026-10-05T22:28:28.870451+00:00",
+  "candidate_id": "Q224",
+  "source_contract": {
+    "official_dataset": "SEC EDGAR Log File Data Sets",
+    "modern_window": "2020-05-19 through 2025-06-30",
+    "historical_gap_excluded": true,
+    "legacy_modern_splice_attempted": false,
+    "fixed_controls": [
+      "2020-05-19",
+      "2022-12-30",
+      "2025-06-30"
+    ]
+  },
+  "results": [
+    {
+      "control_date": "2020-05-19",
+      "url": "https://www.sec.gov/dera/data/Public-EDGAR-log-file-data/2020/Qtr2/log20200519.zip",
+      "reachable": true,
+      "http_status": 200,
+      "content_length": "3887187",
+      "content_type": "application/zip",
+      "accept_ranges": "bytes",
+      "etag": "\"8a9978ea2598251ad40bbf8cd87605ca\"",
+      "sha256": "cfde448ca5ed11f5b3c5c282fcc96e2ba0b98e8d3b29fe850fd5e24989a65103",
+      "zip_valid": true,
+      "schema": {
+        "member": "log20200519.csv",
+        "member_count": 1,
+        "header": [
+          "_time",
+          "uri_path"
+        ],
+        "expected_columns_present": true,
+        "traffic_quality_columns_present": [],
+        "traffic_quality_fields_absent_in_modern_schema": true,
+        "sample_rows_read": 250,
+        "sample_uri_regex_matches": 215,
+        "sample_uri_match_rate": 0.86,
+        "first_rows_sha256": "97184e1d3474dd54642dea61f7dcde0ec9f77f2f7d22bddb9a49102aea76bb8d"
+      },
+      "error": null,
+      "download_bytes": 3887187
+    },
+    {
+      "control_date": "2022-12-30",
+      "url": "https://www.sec.gov/dera/data/Public-EDGAR-log-file-data/2022/Qtr4/log20221230.zip",
+      "reachable": true,
+      "http_status": 200,
+      "content_length": "294991286",
+      "content_type": "application/zip",
+      "accept_ranges": "bytes",
+      "etag": "\"439098a248d417acff40e873caa5affb-36\"",
+      "sha256": "150a484e18fa595c79c1e36a89b1d4c96c7ba055e211a76016d7c15d09455f3b",
+      "zip_valid": true,
+      "schema": {
+        "member": "log20221230.csv",
+        "member_count": 1,
+        "header": [
+          "time",
+          "uri_path"
+        ],
+        "expected_columns_present": false,
+        "traffic_quality_columns_present": [],
+        "traffic_quality_fields_absent_in_modern_schema": true,
+        "sample_rows_read": 250,
+        "sample_uri_regex_matches": 193,
+        "sample_uri_match_rate": 0.772,
+        "first_rows_sha256": "e9f5ae23a0fc39754abdeeac013016d40d9ef7e201e831d73c7536f2a5957ef2"
+      },
+      "error": null,
+      "download_bytes": 294991286
+    },
+    {
+      "control_date": "2025-06-30",
+      "url": "https://www.sec.gov/dera/data/Public-EDGAR-log-file-data/2025/Qtr2/log20250630.zip",
+      "reachable": true,
+      "http_status": 200,
+      "content_length": "1159445743",
+      "content_type": "application/zip",
+      "accept_ranges": "bytes",
+      "etag": "\"12e1ea9915b3b9b2206265d959615af4-139\"",
+      "sha256": "bb2e68317ec69583f35c144065f80f99c1d31f990dbc214acd7a5db07dc40678",
+      "zip_valid": true,
+      "schema": {
+        "member": "log20250630.csv",
+        "member_count": 1,
+        "header": [
+          "time",
+          "uri_path"
+        ],
+        "expected_columns_present": false,
+        "traffic_quality_columns_present": [],
+        "traffic_quality_fields_absent_in_modern_schema": true,
+        "sample_rows_read": 250,
+        "sample_uri_regex_matches": 226,
+        "sample_uri_match_rate": 0.904,
+        "first_rows_sha256": "a33150023449b01a2494bdc3c27336d4f281a38475306d4c3e666da2f3bd8590"
+      },
+      "error": null,
+      "download_bytes": 1159445743
+    }
+  ],
+  "request_quality": {
+    "modern_schema_has_request_time_and_uri": false,
+    "modern_schema_exposes_legacy_crawler_fields": false,
+    "traffic_contamination_fully_resolvable_from_modern_schema": false,
+    "policy": "Do not infer latent investor identity or sophistication; contamination remains an explicit unresolved limitation."
+  },
+  "pit_contract": {
+    "request_time_field": "_time",
+    "filing_identity_recovery": "Deterministic CIK/accession recovery from uri_path is required.",
+    "same_session_use": false,
+    "filing_public_boundary_join_completed": false
+  },
+  "scientific_boundary": {
+    "performance_authorized": false,
+    "holdout_selection_allowed": false,
+    "ranking_allowed": false,
+    "tuning_allowed": false,
+    "promotion_allowed": false,
+    "live_execution_allowed": false
+  },
+  "next_gate": "request-quality-contamination-bounds + filing-acceptance/public-boundary join + mutation/PIT checks + independent reproduction",
+  "negative_evidence": {
+    "continuous_2003_2025_panel": false,
+    "2017_07_01_to_2020_05_18_available": false,
+    "legacy_modern_schema_splice_allowed": false
+  },
+  "receipt_fingerprint": "aae1716b69b3efb2d8df5a3471b60d3a86ef5bc63d883b0b96dc6f4633ee98cf"
+}
