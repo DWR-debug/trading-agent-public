@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `11f79a1050352f11b9d84f1631b227cff7b17741`
+**Current operational snapshot:** `64b3ae8d539d0aca1f8beb31288178e32f3337a8`
 
-**Generated (UTC):** `2026-10-05T17:57:41.467234+00:00`
+**Generated (UTC):** `2026-10-05T18:08:27.095528+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -123,8 +123,8 @@
 
 - Q198 Federal Register: **SOURCE_COMPONENT_READY**; source receipt `00371bfe6f7c5e67418f1b7b5f53582ca2c54ffecac7d0f33bcd7a28d560f688`. Next gate: fixed historical Public Inspection filing clock, correction/withdrawal lineage, immutable reconstruction and independent PIT reproduction.
 - Q197 USAspending: **SOURCE_COMPONENT_READY**; source receipt `00371bfe6f7c5e67418f1b7b5f53582ca2c54ffecac7d0f33bcd7a28d560f688`. Next gate: historical award-state revision/public-observation boundary, frozen pre-event relationship network and independent event-time reproduction.
-- Q199 USPTO: **HISTORICAL_SOURCE_COMPONENT_READY**; source receipt `08e6518cc40071de0704e20904a19ac339cc2d4170c344d6f81fbc2f4382ce97`. Next gate: historical publication-state archive, frozen assignee/technology exposure and independent PIT reproduction.
-- Q201 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `08e6518cc40071de0704e20904a19ac339cc2d4170c344d6f81fbc2f4382ce97`. Next gate: historical results-state revision lineage, explicit posted-time semantics, frozen sponsor/exposure mapping and independent PIT reproduction.
+- Q199 USPTO: **HISTORICAL_SOURCE_COMPONENT_READY**; source receipt `fb2f5fe50fb34696bd3c6426f57e9c5f9d75894cfe7b8bd270ee36bf856e7e38`. Next gate: historical publication-state archive, frozen assignee/technology exposure and independent PIT reproduction.
+- Q201 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `fb2f5fe50fb34696bd3c6426f57e9c5f9d75894cfe7b8bd270ee36bf856e7e38`. Next gate: historical results-state revision lineage, explicit posted-time semantics, frozen sponsor/exposure mapping and independent PIT reproduction.
 - Q198 historical PIT clock census: **Q198_PIT_CLOCK_CENSUS_COMPLETED**; pages parsed **4** / **4**, with fixed dates **2020/01/10, 2020/04/22, 2020/12/16, 2026/10/02**.
 - All four frontier candidates remain non-authorizing: performance/holdout selection/ranking/tuning/promotion/live execution are closed. Source readiness is not PIT validation.
 ### Q202–Q204 Information-Timing Frontier
