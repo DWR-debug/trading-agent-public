@@ -27,7 +27,7 @@ jobs:
           fetch-depth: 1
 
       - name: Probe official FINRA TRACE routes from Windows
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = "Stop"
           New-Item -ItemType Directory -Force research/runs/q230_windows_trace_connectivity | Out-Null
