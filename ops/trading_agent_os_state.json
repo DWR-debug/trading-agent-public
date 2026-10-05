@@ -466,31 +466,11 @@
     "cadence_utc": "*/10 * * * *",
     "objective": "Ideal useful utilization of every available independent lane whenever real bounded backlog exists; no artificial activity.",
     "current_window": {
-      "window_id": "TA-ROLLING-2026-10-05-1744Z",
-      "start_utc": "2026-10-05T17:44:00Z",
-      "end_utc": "2026-10-05T19:44:00Z",
-      "phases": [
-        {
-          "id": "W1",
-          "start_after_minutes": 0,
-          "name": "SOURCE_PIT_CLOSURE"
-        },
-        {
-          "id": "W2",
-          "start_after_minutes": 30,
-          "name": "CANDIDATE_AND_INFORMATION_TIMING"
-        },
-        {
-          "id": "W3",
-          "start_after_minutes": 60,
-          "name": "NEXT_GATE_AND_REPRODUCTION"
-        },
-        {
-          "id": "W4",
-          "start_after_minutes": 90,
-          "name": "DISCOVERY_AND_CONSOLIDATION"
-        }
-      ]
+      "window_id": "TA-28M-2026-10-05-1958Z",
+      "start_utc": "2026-10-05T19:58:00Z",
+      "end_utc": "2026-10-05T20:26:00Z",
+      "cadence_minutes": 5,
+      "mode": "AUTONOMOUS_CANDIDATE_DEVELOPMENT_AND_USEFUL_CAPACITY_REPLENISHMENT"
     },
     "wave_policy": [
       "W1 close source/PIT/clock gates and start Runner-C long deterministic research when free",
