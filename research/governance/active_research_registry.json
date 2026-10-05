@@ -14,7 +14,14 @@
     "replication_after_full_formal_pass_must_be_unchanged": true,
     "universal_candidate_robustness_gate": true,
     "candidate_robustness_gate_module": "automation/candidate_robustness_gate.py",
-    "formal_phase_entry_requires_candidate_robustness_receipt": true
+    "formal_phase_entry_requires_candidate_robustness_receipt": true,
+    "literature_discovery": {
+      "status": "ACTIVE",
+      "policy_path": "research/governance/literature_research_policy.json",
+      "maximum_active_shortlist": 4,
+      "performance_authorization_allowed": false,
+      "anti_convergence": "Orthogonal information mechanism before additional price-only variants."
+    }
   },
   "active_trials": [
     {
@@ -764,6 +771,34 @@
       "performance_authorization_allowed": false,
       "note": "Official NLRB recent-results, election-report and historical-pagination routes returned HTTP 200. Historical completeness, exact public-observation clock, employer-to-issuer mapping and immutable historical PIT remain unproven.",
       "next_gate": "historical NLRB archive completeness + public-clock semantics + frozen employer-to-issuer mapping + case-status lineage + independent PIT reproduction"
+    },
+    {
+      "code": "LITERATURE-DISCOVERY-PLANE",
+      "class": "persistent_literature_and_mechanism_discovery",
+      "state": "ACTIVE",
+      "issue_number": null,
+      "policy_path": "research/governance/literature_research_policy.json",
+      "workflow": ".github/workflows/literature-frontier-scout.yml",
+      "automation_ids": [
+        "6ac3c4590c108191adab58344018282b",
+        "6ac3c45a8b508191bfdd3e449cd4a5a4"
+      ],
+      "performance_authorization_allowed": false,
+      "note": "Permanent recurring literature search; verify primary sources, prefer orthogonal mechanisms, cheap-falsify, assess PIT/reproducibility, and retain negative evidence."
+    },
+    {
+      "code": "Q214",
+      "class": "disclosure_implied_forward_beta_risk_structure",
+      "state": "SOURCE_FEASIBILITY_ACTIVE",
+      "parent_code": "FRONTIER-Q211-Q213",
+      "issue_number": null,
+      "candidate_inventory_path": "research/frontier/q214_disclosure_risk_state_2026_10_05.json",
+      "design_document": "docs/research_design/Q214_DISCLOSURE_IMPLIED_FORWARD_BETA_2026-10-05.md",
+      "performance_authorization_allowed": false,
+      "priority": "P1-RISK",
+      "risk_state_only": true,
+      "next_gate": "SEC historical archive/PIT contract + deterministic similarity compiler + independent reproduction",
+      "note": "Risk-state-only disclosure similarity mechanism, deliberately separated from Q088 peer-return/comomentum."
     }
   ],
   "active_research_registry": {
@@ -1184,26 +1219,32 @@
         "next_gate": "historical NLRB archive completeness + public-clock semantics + frozen employer-to-issuer mapping + case-status lineage + independent PIT reproduction"
       },
       {
-        "code": "FRONTIER-Q211-Q213",
-        "class": "literature_derived_semantic_network_disagreement_frontier",
-        "state": "SOURCE_FEASIBILITY_ACTIVE",
-        "parent_code": "FRONTIER-20260928",
-        "issue_number": 1079,
-        "candidate_inventory_path": "research/frontier/q211_q213_literature_frontier_2026_10_05.json",
-        "design_document": "docs/research_design/LITERATURE_FRONTIER_EXPANSION_2026-10-05.md",
-        "source_feasibility_workflow": ".github/workflows/hosted-deterministic-frontier.yml",
+        "code": "LITERATURE-DISCOVERY-PLANE",
+        "class": "persistent_literature_and_mechanism_discovery",
+        "state": "ACTIVE",
+        "issue_number": null,
+        "policy_path": "research/governance/literature_research_policy.json",
+        "workflow": ".github/workflows/literature-frontier-scout.yml",
+        "automation_ids": [
+          "6ac3c4590c108191adab58344018282b",
+          "6ac3c45a8b508191bfdd3e449cd4a5a4"
+        ],
         "performance_authorization_allowed": false,
-        "candidate_ids": [
-          "Q211",
-          "Q212",
-          "Q213"
-        ],
-        "priority": [
-          "Q211_P1",
-          "Q212_P1_FEASIBILITY",
-          "Q213_P2_CONTINGENT"
-        ],
-        "note": "Literature-derived expansion; discovery-only and candidate-specific PIT/reproduction gated."
+        "note": "Permanent recurring literature search; verify primary sources, prefer orthogonal mechanisms, cheap-falsify, assess PIT/reproducibility, and retain negative evidence."
+      },
+      {
+        "code": "Q214",
+        "class": "disclosure_implied_forward_beta_risk_structure",
+        "state": "SOURCE_FEASIBILITY_ACTIVE",
+        "parent_code": "FRONTIER-Q211-Q213",
+        "issue_number": null,
+        "candidate_inventory_path": "research/frontier/q214_disclosure_risk_state_2026_10_05.json",
+        "design_document": "docs/research_design/Q214_DISCLOSURE_IMPLIED_FORWARD_BETA_2026-10-05.md",
+        "performance_authorization_allowed": false,
+        "priority": "P1-RISK",
+        "risk_state_only": true,
+        "next_gate": "SEC historical archive/PIT contract + deterministic similarity compiler + independent reproduction",
+        "note": "Risk-state-only disclosure similarity mechanism, deliberately separated from Q088 peer-return/comomentum."
       }
     ]
   }
