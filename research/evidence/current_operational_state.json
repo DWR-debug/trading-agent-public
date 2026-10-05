@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T11:29:10.976780+00:00",
+  "generated_at_utc": "2026-10-05T11:37:25.214109+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4136,6 +4136,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "QA: include shadow ledger test in Windows research worker",
+        "sha": "d28abeb2dc9e9714ce1b564dc04c94c63e7e869e",
+        "timestamp": "2026-10-05T13:37:23+02:00"
+      },
+      {
+        "message": "TEST: cover append-only paper-shadow intent ledger",
+        "sha": "bd0ac246bea7d55c468ec8c9d93db0a645cd3cfd",
+        "timestamp": "2026-10-05T13:37:11+02:00"
+      },
+      {
+        "message": "ENG: add append-only paper-shadow intent ledger",
+        "sha": "25d79748eb180ac9aa8b9ef3ac5d7bad3fcac89c",
+        "timestamp": "2026-10-05T13:37:08+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "fe0ec28edac1f43b14b551975fd0cbe982f57fe8",
+        "timestamp": "2026-10-05T11:30:24Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5166e84a189674d8ea86b354d4e4e639ee5c57f7",
+        "timestamp": "2026-10-05T11:29:14Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "6269b9cc52ca6467528d1ea319515d87df1e9092",
         "timestamp": "2026-10-05T11:28:58Z"
@@ -4149,31 +4174,6 @@
         "message": "TEST: update candidate inventory schema count for current frontier",
         "sha": "fc83593497d543bfc4a85eed424f0d273c0ceda0",
         "timestamp": "2026-10-05T13:28:46+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "e679a36760d442d530e42be03ee16f19c334ccc9",
-        "timestamp": "2026-10-05T11:27:24Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "247bba758cbdfaa8531c020a9a8ddceb3ec18e9c",
-        "timestamp": "2026-10-05T11:27:14Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "92e105c2c298e3da1b3e0bc1fa6dcaebc1b58d87",
-        "timestamp": "2026-10-05T11:26:57Z"
-      },
-      {
-        "message": "QA: trigger Windows research loop on agent runtime changes",
-        "sha": "35cbc0d47e442ace0054512c8d7091504615d895",
-        "timestamp": "2026-10-05T13:26:46+02:00"
-      },
-      {
-        "message": "QA: include paper-agent runtime tests in Windows research worker",
-        "sha": "2e8cffed7773a7a3ebc8562595f4ae3e2a4ad363",
-        "timestamp": "2026-10-05T13:26:38+02:00"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "6269b9cc52ca6467528d1ea319515d87df1e9092",
+  "source_master_sha": "d28abeb2dc9e9714ce1b564dc04c94c63e7e869e",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37303196819"
+    "run_id": "37304104071"
   }
 }
