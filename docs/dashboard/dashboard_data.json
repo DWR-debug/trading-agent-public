@@ -111,12 +111,12 @@
       "**Q130-R1:** `Q130R1_SOURCE_FEASIBILITY_COMPLETED`; the frozen historical Wikimedia source probe passed, while publication/revision timing remains outside formal same-day PIT safety.",
       "Q198 Federal Register: **SOURCE_COMPONENT_READY**; source receipt `00a9757ffe4b38011fb9708c3d8fe9a208b2b86774ce55040e31861b2cced802`. Next gate: fixed historical Public Inspection filing clock, correction/withdrawal lineage, immutable reconstruction and independent PIT reproduction.",
       "Q197 USAspending: **SOURCE_COMPONENT_READY**; source receipt `00a9757ffe4b38011fb9708c3d8fe9a208b2b86774ce55040e31861b2cced802`. Next gate: historical award-state revision/public-observation boundary, frozen pre-event relationship network and independent event-time reproduction.",
-      "Q199 USPTO: **HISTORICAL_SOURCE_COMPONENT_READY**; source receipt `61cce4f8564a8a6e27781427ddcbeba953196bfbf03cb0ff04039063d0712ae7`. Next gate: historical publication-state archive, frozen assignee/technology exposure and independent PIT reproduction.",
-      "Q201 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `61cce4f8564a8a6e27781427ddcbeba953196bfbf03cb0ff04039063d0712ae7`. Next gate: historical results-state revision lineage, explicit posted-time semantics, frozen sponsor/exposure mapping and independent PIT reproduction.",
+      "Q199 USPTO: **HISTORICAL_SOURCE_COMPONENT_READY**; source receipt `05b7f000fb3760f3fd9aeceea70af1b552d50517060f7cf7925616d15e1b0a9a`. Next gate: historical publication-state archive, frozen assignee/technology exposure and independent PIT reproduction.",
+      "Q201 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `05b7f000fb3760f3fd9aeceea70af1b552d50517060f7cf7925616d15e1b0a9a`. Next gate: historical results-state revision lineage, explicit posted-time semantics, frozen sponsor/exposure mapping and independent PIT reproduction.",
       "Q198 historical PIT clock census: **Q198_PIT_CLOCK_CENSUS_COMPLETED**; pages parsed **4** / **4**, with fixed dates **2020/01/10, 2020/04/22, 2020/12/16, 2026/10/02**.",
-      "Q202 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `103177d0acd011428eaa46eb8ca896bad4ed37ec730228525995b83f7f03af0d`. Next gate: immutable historical record-version snapshots at the applicable reporting boundary, applicability/certification/extension lineage, frozen sponsor-to-issuer mapping and independent PIT reproduction.",
-      "Q203 Federal procurement × ex-ante financing constraint: **SOURCE_COMPONENT_READY**; source receipt `103177d0acd011428eaa46eb8ca896bad4ed37ec730228525995b83f7f03af0d`. Next gate: immutable historical award-state/public-observation boundary, frozen pre-event financing vintage and entity mapping, correction/amendment lineage and independent PIT reproduction.",
-      "Q204 Public-information release latency: **SOURCE_COMPONENT_READY**; source receipt `103177d0acd011428eaa46eb8ca896bad4ed37ec730228525995b83f7f03af0d`. Next gate: immutable public-observation/process-stage timestamps, fixed event-class semantics, pre-event-only latency calibration and correction/withdrawal lineage.",
+      "Q202 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `df0dee2628dca26d6624f09baaa69b1033c02026ea480f86f74a314415a2d4d1`. Next gate: immutable historical record-version snapshots at the applicable reporting boundary, applicability/certification/extension lineage, frozen sponsor-to-issuer mapping and independent PIT reproduction.",
+      "Q203 Federal procurement × ex-ante financing constraint: **SOURCE_COMPONENT_READY**; source receipt `df0dee2628dca26d6624f09baaa69b1033c02026ea480f86f74a314415a2d4d1`. Next gate: immutable historical award-state/public-observation boundary, frozen pre-event financing vintage and entity mapping, correction/amendment lineage and independent PIT reproduction.",
+      "Q204 Public-information release latency: **SOURCE_COMPONENT_READY**; source receipt `df0dee2628dca26d6624f09baaa69b1033c02026ea480f86f74a314415a2d4d1`. Next gate: immutable public-observation/process-stage timestamps, fixed event-class semantics, pre-event-only latency calibration and correction/withdrawal lineage.",
       "Q202–Q204 remain source/PIT discovery tracks only: performance, holdout selection, ranking, tuning, promotion and live execution remain closed. Source feasibility is not PIT validation."
     ],
     "latest_formal_result": "**performance_completed_no_arm_passed_all_13_gates** for `T-2026-10-01-H06P2R3-PERFORMANCE-01`.",
@@ -419,7 +419,7 @@
     "website_update_button": "opens GitHub Actions workflow dispatch page"
   },
   "dashboard_summary": {
-    "active_work_items": 0,
+    "active_work_items": 6,
     "ai_providers": 4,
     "busy_runners": null,
     "configured_resources": 12,
@@ -427,7 +427,7 @@
     "runner_api_status": "unavailable_or_empty",
     "runner_api_visible": 0
   },
-  "generated_at_utc": "2026-10-05T10:05:23.667222+00:00",
+  "generated_at_utc": "2026-10-05T10:41:43.285559+00:00",
   "governance_notes": [
     "Operational resource availability and active jobs are separate from scientific evidence.",
     "AI worker output is never scientific evidence.",
@@ -463,9 +463,172 @@
       "slot": "Windows self-hosted B"
     }
   },
-  "master_sha": "b0b9a28a6c07b7b50e938560f13b24ad07e96629",
-  "operational_snapshot_sha": "57088dd64f6ed25e3a7ef96c135299df25cccebf",
-  "recent_activity_24h": [],
+  "master_sha": "9605f4306b41dfa2189c8e0fb0fd42b1c4b7bb1b",
+  "operational_snapshot_sha": "0c01b2df2be5f10f210259d271ac93963a4c0cce",
+  "recent_activity_24h": [
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T10:39:22Z",
+      "created_at": "2026-10-05T10:39:02Z",
+      "run_id": 37297921534,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297921534",
+      "status": "success",
+      "task": "Q179-Q184 Source Feasibility"
+    },
+    {
+      "actor": "github-actions[bot]",
+      "completed_at": "2026-10-05T10:35:56Z",
+      "created_at": "2026-10-05T10:35:39Z",
+      "run_id": 37297572971,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297572971",
+      "status": "success",
+      "task": "Current Operational Status Synchronizer"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T10:35:43Z",
+      "created_at": "2026-10-05T10:35:30Z",
+      "run_id": 37297557901,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297557901",
+      "status": "success",
+      "task": "Current Status Drift Guard"
+    },
+    {
+      "actor": "github-actions[bot]",
+      "completed_at": "2026-10-05T10:35:31Z",
+      "created_at": "2026-10-05T10:35:17Z",
+      "run_id": 37297534304,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297534304",
+      "status": "success",
+      "task": "Q205 NLRB Source Feasibility"
+    },
+    {
+      "actor": "github-actions[bot]",
+      "completed_at": "2026-10-05T10:35:47Z",
+      "created_at": "2026-10-05T10:35:16Z",
+      "run_id": 37297531245,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297531245",
+      "status": "success",
+      "task": "Q202-Q204 Information Timing Feasibility"
+    },
+    {
+      "actor": "github-actions[bot]",
+      "completed_at": "2026-10-05T10:35:40Z",
+      "created_at": "2026-10-05T10:35:14Z",
+      "run_id": 37297528463,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297528463",
+      "status": "success",
+      "task": "Orthogonal Candidate Development"
+    },
+    {
+      "actor": "github-actions[bot]",
+      "completed_at": "2026-10-05T10:35:27Z",
+      "created_at": "2026-10-05T10:35:12Z",
+      "run_id": 37297525394,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297525394",
+      "status": "success",
+      "task": "Q119 Treasury Auction Demand-Shape Feasibility"
+    },
+    {
+      "actor": "github-actions[bot]",
+      "completed_at": "2026-10-05T10:35:44Z",
+      "created_at": "2026-10-05T10:35:11Z",
+      "run_id": 37297522192,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297522192",
+      "status": "success",
+      "task": ".github/workflows/q199-q201-source-feasibility.yml"
+    },
+    {
+      "actor": "github-actions[bot]",
+      "completed_at": "2026-10-05T10:35:54Z",
+      "created_at": "2026-10-05T10:35:09Z",
+      "run_id": 37297519206,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297519206",
+      "status": "success",
+      "task": "Q198 Historical PIT Clock Census"
+    },
+    {
+      "actor": "github-actions[bot]",
+      "completed_at": "2026-10-05T10:35:28Z",
+      "created_at": "2026-10-05T10:35:07Z",
+      "run_id": 37297516045,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297516045",
+      "status": "success",
+      "task": "Q197-Q198 Source Feasibility"
+    },
+    {
+      "actor": "github-actions[bot]",
+      "completed_at": "2026-10-05T10:35:24Z",
+      "created_at": "2026-10-05T10:35:06Z",
+      "run_id": 37297513273,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297513273",
+      "status": "success",
+      "task": "Q193-Q196 Source Feasibility"
+    },
+    {
+      "actor": "github-actions[bot]",
+      "completed_at": "2026-10-05T10:35:36Z",
+      "created_at": "2026-10-05T10:35:04Z",
+      "run_id": 37297510126,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297510126",
+      "status": "success",
+      "task": "Q188-Q192 PIT Historical Census R2"
+    },
+    {
+      "actor": "github-actions[bot]",
+      "completed_at": "2026-10-05T10:35:23Z",
+      "created_at": "2026-10-05T10:35:02Z",
+      "run_id": 37297506814,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297506814",
+      "status": "success",
+      "task": "Q187-Q192 PIT Readiness R1"
+    },
+    {
+      "actor": "github-actions[bot]",
+      "completed_at": "2026-10-05T10:35:28Z",
+      "created_at": "2026-10-05T10:35:01Z",
+      "run_id": 37297503681,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297503681",
+      "status": "success",
+      "task": "Q187-Q192 Source Feasibility"
+    },
+    {
+      "actor": "github-actions[bot]",
+      "completed_at": "2026-10-05T10:35:49Z",
+      "created_at": "2026-10-05T10:34:59Z",
+      "run_id": 37297500554,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297500554",
+      "status": "success",
+      "task": "Q185-Q186 A-Priority Source and PIT Readiness"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T10:35:48Z",
+      "created_at": "2026-10-05T10:34:48Z",
+      "run_id": 37297480705,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297480705",
+      "status": "success",
+      "task": "CI"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T10:35:20Z",
+      "created_at": "2026-10-05T10:34:48Z",
+      "run_id": 37297480619,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297480619",
+      "status": "success",
+      "task": "Priority Research Wave Dispatcher"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T10:35:51Z",
+      "created_at": "2026-10-05T10:34:48Z",
+      "run_id": 37297480571,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297480571",
+      "status": "success",
+      "task": "Full Suite Verification"
+    }
+  ],
   "resources": [
     {
       "authority": "bounded capacity; no automatic performance authorization",
@@ -505,12 +668,17 @@
     },
     {
       "authority": "non-authorizing unless an exact formal gate says otherwise",
-      "busy": false,
+      "busy": true,
       "configured_runner": "ubuntu-24.04",
-      "current_assignments": 0,
-      "current_tasks": [],
+      "current_assignments": 5,
+      "current_tasks": [
+        "Hosted Deterministic Frontier Research Loop",
+        "Q121-R6 SEC Acceptance-Time Compilation",
+        "Q121-R6 SEC Acceptance-Time Compilation",
+        "Q121-R6 SEC Acceptance-Time Compilation"
+      ],
       "labels": [],
-      "live_status": "not assigned in snapshot",
+      "live_status": "active work assigned (5)",
       "name": "GitHub-hosted Ubuntu x64",
       "role": "Deterministic frontier, CI, source/PIT workflows",
       "type": "cloud"
@@ -601,12 +769,14 @@
     },
     {
       "authority": "read-only operational snapshot",
-      "busy": false,
+      "busy": true,
       "configured_runner": "GitHub Pages",
-      "current_assignments": 0,
-      "current_tasks": [],
+      "current_assignments": 1,
+      "current_tasks": [
+        "Resource Dashboard Update"
+      ],
       "labels": [],
-      "live_status": "not assigned in snapshot",
+      "live_status": "active work assigned (1)",
       "name": "Dashboard / GitHub Pages",
       "role": "Operational visibility and status publication",
       "type": "service"
@@ -622,7 +792,93 @@
     "paid_usage_usd": 0
   },
   "status_source": "docs/CURRENT_STATUS.md + research/evidence/current_operational_state.json + ops/trading_agent_os_state.json",
-  "work_assignments": [],
-  "workload_by_lane": {},
-  "workload_by_resource": {}
+  "work_assignments": [
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "job": "update",
+      "lane": "PLATFORM / GOVERNANCE",
+      "resource": "Dashboard / GitHub Pages",
+      "run_id": 37298179069,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37298179069",
+      "started_at": "2026-10-05T10:41:29Z",
+      "status": "in_progress",
+      "task": "Resource Dashboard Update",
+      "worker": "GitHub Actions 1000025750"
+    },
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "job": "frontier",
+      "lane": "FRONTIER DISCOVERY",
+      "resource": "GitHub-hosted Ubuntu x64",
+      "run_id": 37298045057,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37298045057",
+      "started_at": "2026-10-05T10:40:12Z",
+      "status": "in_progress",
+      "task": "Hosted Deterministic Frontier Research Loop",
+      "worker": "GitHub Actions 1000025749"
+    },
+    {
+      "actor": "github-actions[bot]",
+      "authority": "non-authorizing operational work",
+      "job": "compile (3)",
+      "lane": "FORMAL READINESS",
+      "resource": "GitHub-hosted Ubuntu x64",
+      "run_id": 37297497258,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297497258",
+      "started_at": "2026-10-05T10:34:57Z",
+      "status": "queued",
+      "task": "Q121-R6 SEC Acceptance-Time Compilation",
+      "worker": "pending runner assignment"
+    },
+    {
+      "actor": "github-actions[bot]",
+      "authority": "non-authorizing operational work",
+      "job": "compile (2)",
+      "lane": "FORMAL READINESS",
+      "resource": "GitHub-hosted Ubuntu x64",
+      "run_id": 37297497258,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297497258",
+      "started_at": "2026-10-05T10:34:57Z",
+      "status": "queued",
+      "task": "Q121-R6 SEC Acceptance-Time Compilation",
+      "worker": "pending runner assignment"
+    },
+    {
+      "actor": "github-actions[bot]",
+      "authority": "non-authorizing operational work",
+      "job": "compile (0)",
+      "lane": "FORMAL READINESS",
+      "resource": "GitHub-hosted Ubuntu x64",
+      "run_id": 37297497258,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297497258",
+      "started_at": "2026-10-05T10:34:57Z",
+      "status": "queued",
+      "task": "Q121-R6 SEC Acceptance-Time Compilation",
+      "worker": "GitHub Actions 1000025745"
+    },
+    {
+      "actor": "github-actions[bot]",
+      "authority": "non-authorizing operational work",
+      "job": "compile (1)",
+      "lane": "FORMAL READINESS",
+      "resource": "GitHub-hosted Ubuntu x64",
+      "run_id": 37297497258,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37297497258",
+      "started_at": "2026-10-05T10:34:57Z",
+      "status": "queued",
+      "task": "Q121-R6 SEC Acceptance-Time Compilation",
+      "worker": "GitHub Actions 1000025746"
+    }
+  ],
+  "workload_by_lane": {
+    "FORMAL READINESS": 4,
+    "FRONTIER DISCOVERY": 1,
+    "PLATFORM / GOVERNANCE": 1
+  },
+  "workload_by_resource": {
+    "Dashboard / GitHub Pages": 1,
+    "GitHub-hosted Ubuntu x64": 5
+  }
 }
