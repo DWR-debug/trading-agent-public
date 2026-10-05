@@ -46,13 +46,6 @@
         "lane_b_frontier_discovery"
       ],
       "night_mode": "continuous; no chat required",
-      "opportunistic_capacity_pulse": {
-        "workflow": ".github/workflows/windows-independent-capacity-pulse.yml",
-        "runner_label": "trading-agent-long",
-        "schedule_utc": "*/20 * * * *",
-        "purpose": "bounded independent deterministic QA/reproduction on the third Windows capacity slot",
-        "formal_evidence_allowed": false
-      },
       "formal_evidence_allowed": false,
       "internal_frontier_workers": 3,
       "max_worker_cap": 4,
