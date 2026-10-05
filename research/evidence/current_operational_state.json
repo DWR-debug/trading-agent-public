@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T12:49:25.925960+00:00",
+  "generated_at_utc": "2026-10-05T12:51:41.082895+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4133,8 +4133,32 @@
     ],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [],
+    "open_pull_requests": [
+      {
+        "baseRefName": "master",
+        "headRefName": "ops/groq-smoke-persist-race-20261005",
+        "number": 1076,
+        "title": "OPS: harden Groq smoke receipt persistence",
+        "updatedAt": "2026-10-05T12:49:54Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1076"
+      }
+    ],
     "recent_commits": [
+      {
+        "message": "OPS: use cmd shell for Windows reproduction under locked PowerShell policy",
+        "sha": "08fd6fec6a1eb626aa773ad0d1288b5a06104723",
+        "timestamp": "2026-10-05T14:51:25+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "27d1e07fa9e79ababa6056da72880131b337569c",
+        "timestamp": "2026-10-05T12:50:08Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "5ae8c4fecebd877ba0704bf398be95b8aec514a1",
+        "timestamp": "2026-10-05T12:49:27Z"
+      },
       {
         "message": "OPS: trigger repaired Windows reproduction on relevant source changes",
         "sha": "30c7e629b2e602b09b69e339266c19a867dde35c",
@@ -4159,21 +4183,6 @@
         "message": "OPS: refresh resource dashboard snapshot",
         "sha": "37a88bf155fcd272ee271737c7c8b60512505474",
         "timestamp": "2026-10-05T12:47:46Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "8d9dbe8e9a0e7a5e461671569c95a5953c69105a",
-        "timestamp": "2026-10-05T12:47:43Z"
-      },
-      {
-        "message": "OPS: harden Windows reproduction checkout against archive extraction race",
-        "sha": "fb5c82f651a9126fec48f1ab5e0ec20add19c42f",
-        "timestamp": "2026-10-05T14:47:26+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "091d23782373a4bd7ae77a2af5bb821675859a96",
-        "timestamp": "2026-10-05T12:45:52Z"
       }
     ]
   },
@@ -4271,7 +4280,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "30c7e629b2e602b09b69e339266c19a867dde35c",
+  "source_master_sha": "08fd6fec6a1eb626aa773ad0d1288b5a06104723",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4394,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37312192212"
+    "run_id": "37312447306"
   }
 }
