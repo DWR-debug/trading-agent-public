@@ -201,7 +201,7 @@
     "status": "NON_NEGOTIABLE",
     "statement": "Es darf keine künstliche Arbeit erzeugt werden. Ausschließlich wertvolle und hilfreiche Rechenarbeit darf ausgeführt werden. Und das so viel wie möglich.",
     "english_equivalent": "No artificial work may be created. Only valuable and helpful compute work may be executed, and as much of it as possible.",
-    "operational_rule": "A useful backlog plus free reachable capacity implies immediate routing; completion-triggered replenishment is preferred over waiting for the next cron tick.",
+    "operational_rule": "A useful backlog plus free reachable capacity implies immediate routing; completion-triggered replenishment is preferred over waiting for the next cron tick, with completion chaining as the primary continuity path.",
     "idle_is_valid_only_when": [
       "no independent executable bounded workpack exists",
       "a required scientific dependency is genuinely blocked",

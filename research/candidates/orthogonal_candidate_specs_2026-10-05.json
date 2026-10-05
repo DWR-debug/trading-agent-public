@@ -648,6 +648,56 @@
       "measurement_warning": "Observed EDGAR acquisition is an observable trace, not latent information demand. Public observability can itself change research behaviour; low observed demand must therefore not be interpreted monotonically.",
       "scientific_boundary": "discovery_contract_only",
       "priority": "UNRANKED_DESIGN"
+    },
+    {
+      "id": "Q227",
+      "name": "SEC FOIA information-acquisition state",
+      "mechanism": "A costly, targeted FOIA request to the SEC reveals a requester's information-acquisition intent about a firm or economically relevant matter. The mechanism differs from EDGAR document access because the requester seeks records held by the regulator that are not simply public archive traffic.",
+      "event_clock": "FOIA request submission date as the conservative public-observation/acquisition boundary; receipt and closure dates are retained as process metadata and may not retroactively define the historical signal.",
+      "features": [
+        "request_count_in_fixed_pre_event_window_by_frozen_issuer",
+        "requester_category_composition",
+        "request_topic_class_composition_from_predeclared_rules",
+        "repeat_request_or_request_breadth_state",
+        "request_target_specificity",
+        "request_category_novelty_relative_to_prior_frozen_history"
+      ],
+      "direction": "two-sided outcome; no sign assumed ex ante",
+      "cheap_falsifiers": [
+        "issuer_or_entity_mapping_permutation",
+        "requester_category_permutation_preserving_total_request_counts",
+        "request_date_shift_by_1_to_5_sessions",
+        "archive_retrieval_requests_collapse_after_excluding_descriptions_that_only_name_already_public_filings",
+        "commercial_bulk_requester_dominance_cannot_be_deterministically bounded",
+        "future_monthly_log_revision_changes_a_frozen_historical_prefix",
+        "request_topic_classification_is_not_reproducible_from_predeclared_rules",
+        "request_target_cannot_be mapped_to_frozen issuer identities without hindsight"
+      ],
+      "gates": [
+        "SEC_FOIA_log_coverage_and_historical_archive_completeness",
+        "public_availability_boundary_confirmation_for_the_exact_log_window",
+        "deterministic_requester_category_and_topic_taxonomy",
+        "frozen_historical_issuer_entity_mapping",
+        "duplicate_and_bulk_requester_concentration_audit",
+        "future_log_mutation_invariance",
+        "request_to_target_mapping_quality_audit",
+        "independent_PIT_reproduction_on_symbol_disjoint_sample"
+      ],
+      "non_overlap": [
+        "Q224",
+        "Q130-R1",
+        "Q204",
+        "Q104",
+        "generic attention",
+        "EDGAR archive download traffic"
+      ],
+      "literature_basis": [
+        "Bao, Brendel, Drake & Su (2026), The information content of private information acquisition: evidence from FOIA requests to the SEC, Review of Accounting Studies"
+      ],
+      "implementation_note": "Start with the currently published SEC monthly FOIA CSVs and a conservative post-2013 window unless the archived 2006-2012 public availability is independently reconstructed. Entity mapping is a first-order gate because SEC FOIA logs expose requester/request-description fields rather than a canonical issuer CIK. Do not use closure/disposition to define the acquisition event, and do not infer that a request produced usable information.",
+      "measurement_warning": "FOIA request activity is a revealed-costly-information-acquisition trace, not direct evidence that the requester traded or that the requested material was ultimately informative. Request-type heterogeneity and commercial archival/due-diligence demand must be modeled as alternative explanations rather than assumed away.",
+      "scientific_boundary": "discovery_contract_only",
+      "priority": "P1_SOURCE_FEASIBILITY"
     }
   ],
   "blocked_or_composite_tracks": {

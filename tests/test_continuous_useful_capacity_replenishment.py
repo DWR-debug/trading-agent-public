@@ -13,7 +13,7 @@ def test_useful_capacity_statute_is_non_negotiable() -> None:
     assert "wertvolle und hilfreiche Rechenarbeit" in rule["statement"]
     assert rule["no_padding"] is True
     assert rule["no_duplicate_work"] is True
-    assert "completion chaining" in rule["operational_rule"]
+    assert "completion-triggered replenishment" in rule["operational_rule"]
 
 
 def test_completion_replenisher_is_event_driven_and_fail_closed() -> None:

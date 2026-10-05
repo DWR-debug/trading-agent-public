@@ -272,3 +272,15 @@ Current open-source systems reinforce that the strongest reusable architecture i
 
 These patterns should be treated as engineering requirements for reliability and reproducibility rather than as evidence of alpha.
 \n
+
+## 16. Q227 — SEC FOIA information-acquisition state
+
+A materially distinct information channel emerged from the SEC FOIA logs. Unlike Q224, which observes archive-access traffic after public filings, Q227 measures the act of filing a costly request to the regulator for records that may not already be publicly available. A 2026 Review of Accounting Studies paper using SEC FOIA logs reports heterogeneous value relevance across requester groups and argues that the request itself can reveal costly information acquisition; the SEC's current FOIA page exposes monthly CSV logs through August 2026.
+
+This is not project performance evidence. The correct project decision is **P1 source feasibility**, not return testing.
+
+The first implementation gate is historical data semantics: public-log coverage must be frozen, requester category definitions must be reproducible, descriptions must be classified under a predeclared deterministic taxonomy, and targets must be mapped to issuers without hindsight. Commercial archive/due-diligence firms can generate large volumes of requests that are not investor research; bulk-request concentration therefore becomes a mandatory alternative explanation.
+
+The acquisition clock should remain the request submission date. Receipt, closure and disposition are process outcomes and must not be used to move the signal backward in time. The project should also explicitly distinguish requests for already-public filing exhibits from requests plausibly seeking otherwise unavailable regulatory information. A collapse after this separation is a valid kill result rather than a reason to search for another parameterization.
+
+Q227 remains separate from Q224 because the observable object, institutional process and contamination risks differ. It should merge into Q224 only if empirical/source analysis shows that FOIA requests add no distinct information-acquisition object beyond EDGAR archive demand.

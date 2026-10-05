@@ -33,6 +33,8 @@ def test_new_literature_candidates_are_source_first_and_non_authorizing():
     assert NEXT_GATES["Q202"] == "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT"
     assert NEXT_GATES["Q203"] == "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT"
     assert NEXT_GATES["Q204"] == "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT"
+    assert NEXT_GATES["Q224"] == "SEC_EDGAR_MODERN_LOG_ARCHIVE_AND_DETERMINISTIC_REQUEST_TO_FILING_MAPPING"
+    assert NEXT_GATES["Q227"] == "SEC_FOIA_HISTORICAL_LOG_ARCHIVE_AND_DETERMINISTIC_REQUEST_TO_ISSUER_MAPPING"
     result = compile_state()
     current = {item["candidate_id"]: item for item in result["candidates"]}
     for candidate_id in ["Q202", "Q203", "Q204"]:
@@ -69,5 +71,10 @@ def test_q205_is_visible_to_next_gate_compiler_without_authority():
     result = compile_state()
     current = {item["candidate_id"]: item for item in result["candidates"]}
     assert "Q205" in current
+    for candidate_id in ["Q224", "Q227"]:
+        assert current[candidate_id]["source_feasibility_required"] is True
+        assert current[candidate_id]["source_or_pit_receipt"] is None
+        assert current[candidate_id]["execution_authorized"] is False
+        assert current[candidate_id]["performance_allowed"] is False
     assert current["Q205"]["execution_authorized"] is False
     assert current["Q205"]["performance_allowed"] is False
