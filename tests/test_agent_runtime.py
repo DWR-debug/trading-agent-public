@@ -117,3 +117,20 @@ def test_candidate_identity_changes_when_contract_changes() -> None:
     candidate = FrozenCandidate.from_mapping(candidate_payload())
     changed = replace(candidate, freeze_ref="test-freeze-v2")
     assert candidate.fingerprint != changed.fingerprint
+
+
+def test_runtime_rejects_wrong_candidate_schema() -> None:
+    payload = candidate_payload()
+    payload["schema_version"] = 2
+    with pytest.raises(AgentRuntimeError, match="schema_version=1"):
+        FrozenCandidate.from_mapping(payload)
+
+
+def test_decision_fingerprint_is_replay_deterministic() -> None:
+    candidate = FrozenCandidate.from_mapping(candidate_payload())
+    runtime = TradingAgentRuntime(candidate, lambda rows: "BUY")
+    first = runtime.decide(observations())
+    second = runtime.decide(observations())
+    assert first.fingerprint == second.fingerprint
+    assert first.observation_fingerprint == second.observation_fingerprint
+    assert first.candidate_fingerprint == second.candidate_fingerprint
