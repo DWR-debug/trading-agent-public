@@ -1,0 +1,109 @@
+name: Q229 Historical CFPB Release Census
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "research/candidates/orthogonal_candidate_specs_2026-10-05.json"
+      - ".github/workflows/q229-historical-release-census.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-q229-historical-release-census
+  cancel-in-progress: true
+
+jobs:
+  census:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Enumerate official CFPB historical release structure
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/runs/q229_historical_release_census
+          python - <<'PY'
+          import hashlib, json, re
+          from datetime import datetime, timezone
+          from urllib.parse import urljoin
+          from urllib.request import Request, urlopen
+          from urllib.error import HTTPError, URLError
+          from pathlib import Path
+
+          ROOT = Path("research/runs/q229_historical_release_census")
+          PAGE = "https://www.consumerfinance.gov/data-research/consumer-complaints/"
+          ARCHIVE = "https://www.consumerfinance.gov/foia-requests/foia-electronic-reading-room/cfpb-consumer-complaint-database-narratives-archive/"
+          UA = "TradingAgent-Public-Q229-Historical-Release-Census/1.0"
+
+          def get(url):
+              req=Request(url,headers={"User-Agent":UA,"Accept":"text/html,*/*"})
+              with urlopen(req,timeout=30) as r:
+                  body=r.read()
+                  return getattr(r,"status",200),body
+
+          results=[]
+          for name,url in [("ccdb_page",PAGE),("historical_narrative_archive",ARCHIVE)]:
+              rec={"name":name,"url":url,"reachable":False,"http_status":None,"bytes":0,"sha256":None}
+              try:
+                  st,b=get(url)
+                  rec.update(reachable=True,http_status=st,bytes=len(b),sha256=hashlib.sha256(b).hexdigest())
+                  text=b.decode("utf-8","replace")
+                  rec["historical_release_link_count"]=len(re.findall(r"(?:CCDB Export|past database release|database release)",text,re.I))
+                  rec["has_past_release_phrase"]=bool(re.search(r"past database releases",text,re.I))
+                  rec["has_taxonomy_phrase"]=bool(re.search(r"original products.*options available on the form",text,re.I))
+                  links=re.findall(r'href=["\']([^"\']+)["\']',text,re.I)
+                  release_links=[urljoin(url,h) for h in links if re.search(r"(?:export|release|complaint.*(?:zip|csv)|ccdb)",h,re.I)]
+                  rec["discovered_release_links"]=sorted(set(release_links))[:100]
+              except (HTTPError,URLError,OSError,TimeoutError) as e:
+                  rec["error"]=f"{type(e).__name__}:{e}"
+              results.append(rec)
+
+          # Historical taxonomy is preserved by complaint-submission-era form choices.
+          payload={
+            "schema_version":"1.0",
+            "task_id":"Q-2026-10-05-Q229-HISTORICAL-RELEASE-CENSUS",
+            "status":"SOURCE_HISTORY_CENSUS_ONLY",
+            "generated_at_utc":datetime.now(timezone.utc).isoformat(),
+            "results":results,
+            "governance":{
+              "performance_authorized":False,"holdout_selection_allowed":False,
+              "ranking_allowed":False,"parameter_search_allowed":False,
+              "threshold_search_allowed":False,"horizon_search_allowed":False,
+              "promotion_allowed":False,"live_execution_allowed":False
+            },
+            "next_gate":"historical_release_link_validation_plus_company_to_issuer_mapping",
+            "critical_boundary":"public release observation must be reconstructed; complaint receipt date may not be used as a tradable clock"
+          }
+          raw=json.dumps(payload,sort_keys=True,separators=(",",":"),ensure_ascii=False)
+          payload["receipt_fingerprint"]=hashlib.sha256(raw.encode()).hexdigest()
+          (ROOT/"release_census.json").write_text(json.dumps(payload,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+          print(json.dumps({"status":payload["status"],"fingerprint":payload["receipt_fingerprint"]},sort_keys=True))
+          PY
+
+      - name: Publish receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp research/runs/q229_historical_release_census/release_census.json research/evidence/q229_historical_release_census_latest.json
+          current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+          python3 automation/github_contents_publish.py             --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$current_sha"             --file "research/evidence/q229_historical_release_census_latest.json=research/evidence/q229_historical_release_census_latest.json"
+
+      - name: Upload receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q229-historical-release-census-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q229_historical_release_census/release_census.json
+          if-no-files-found: error
+          retention-days: 30
