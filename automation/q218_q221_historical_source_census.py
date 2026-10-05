@@ -69,6 +69,7 @@ def sec_submission_census() -> dict:
                     "filing_date": filing_date,
                     "accession": accession,
                     "primary_document": primary,
+                    "report_date": (recent.get("reportDate", [None])[i] if i < len(recent.get("reportDate", [])) else None),
                     "index_headers_url": index_headers,
                     "acceptance_datetime_found": bool(acceptance),
                     "acceptance_datetime": acceptance[0] if acceptance else None,
@@ -81,11 +82,14 @@ def sec_submission_census() -> dict:
                     "filing_date": filing_date,
                     "accession": accession,
                     "primary_document": primary,
+                    "report_date": (recent.get("reportDate", [None])[i] if i < len(recent.get("reportDate", [])) else None),
                     "index_headers_url": index_headers,
                     "error": type(exc).__name__ + ":" + str(exc),
                 })
         annual = [r for r in rows if r["form"] == "10-K"]
         voluntary = [r for r in rows if r["form"] == "8-K" and r.get("exhibit_99_1") and r.get("earnings_release_marker")]
+        annual_dates = {r.get("report_date") for r in annual if r.get("report_date")}
+        matched_dates = sorted({r.get("report_date") for r in voluntary if r.get("report_date") in annual_dates})
         issuer_results[symbol] = {
             "cik": cik,
             "status": status,
@@ -93,9 +97,11 @@ def sec_submission_census() -> dict:
             "window_row_count": len(rows),
             "annual_10k_count": len(annual),
             "earnings_release_8k_count": len(voluntary),
+            "same_report_date_pair_count": len(matched_dates),
+            "matched_report_dates": matched_dates[:8],
             "latest_10k": annual[0] if annual else None,
             "latest_8k_earnings_release": voluntary[0] if voluntary else None,
-            "pairability_observed": bool(annual and voluntary),
+            "pairability_observed": bool(matched_dates),
         }
     return {
         "fixed_window": {"start": FIXED_START, "end": FIXED_END},
