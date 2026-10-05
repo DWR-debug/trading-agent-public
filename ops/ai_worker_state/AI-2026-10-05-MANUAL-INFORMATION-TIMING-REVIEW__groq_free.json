@@ -1,1 +1,56 @@
-{"schema_version":1,"task_id":"AI-2026-10-05-MANUAL-INFORMATION-TIMING-REVIEW","provider":"groq_free","transport":"litellm","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-10-05-MANUAL-INFORMATION-TIMING-REVIEW",
+  "provider": "groq_free",
+  "free_only": true,
+  "preflight": {
+    "provider": "groq_free",
+    "available": true,
+    "binary": null,
+    "free_only": true,
+    "local_mode": false,
+    "litellm_transport_enabled": true,
+    "local_attestation": {
+      "present": false,
+      "path": null
+    },
+    "free_mode_attested": true,
+    "free_mode_attestation": {
+      "eligible": true,
+      "provider": "groq_free",
+      "fixed_model": "openai/gpt-oss-20b",
+      "free_mode_attested": true,
+      "attestation_required": true,
+      "attestation_type": "operator_account_tier_assertion",
+      "attestation_env": "GROQ_FREE_MODE_CONFIRMED",
+      "paid_usage_allowed": false,
+      "paid_fallback_allowed": false,
+      "personal_credit_fallback_allowed": false,
+      "reasons": []
+    },
+    "free_enforcement": "litellm_fixed_provider_route",
+    "reasons": []
+  },
+  "litellm_transport_enabled": true,
+  "task_fingerprint": "c5bf9e5e99a493e64d2eacea79a3f02deef92fb96bc144f1c38ae300eda89d9c",
+  "context_fingerprint": "6561c76b62aac620645da14315f0c0f619a1a390f8305b5f8ac54dbdafc0957b",
+  "observed_at_utc": "2026-10-05T09:04:53.419377Z",
+  "worker_output_is_scientific_evidence": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 7.352,
+  "stdout": "**Worker Handoff – Information‑Timing Frontier Review (Q206‑Q208)**  \n\n| # | Concept | Spurious / Redundancy Rationale (vs. Q196‑Q204, C30‑C33) | Minimum Historical Source Archive | Timestamp Semantics | Identity Mapping | Revision / Correction Lineage | Independent‑Reproduction Requirement | Cheap, Falsifiable Test | Merge / Repair / Discard Recommendation | Notes / Uncertainty |\n|---|---------|-----------------------------------------------------------|-----------------------------------|---------------------|------------------|------------------------------|----------------------------------------|------------------------|----------------------------------------|---------------------|\n| **Q206** | CROSS_CHANNEL_INFORMATION_ARRIVAL_DISPERSION | 1. **Redundancy** – Q197 already captures cross‑channel arrival gaps for the same event type (e.g., SEC filing vs. news release). 2. **Spurious** – If the two “channels” are not truly independent (e.g., both sourced from the same upstream feed), the gap is an artifact of data ingestion rather than market‑relevant timing. 3. **Signal ambiguity** – The fixed pre‑declared arrival‑gap may be driven by reporting policy rather than economic information. | • Archive of two independent public feeds (e.g., SEC EDGAR 8‑K vs. Bloomberg news) with raw timestamps.  • For each event, the original record in both feeds. | Earliest *defensible* public‑observation timestamp (UTC).  Must be the first time the event appears in the feed, not the event occurrence time. | Mapping of event ID → issuer symbol; mapping of feed source → channel label. | For each feed: record of any revisions or corrections (e.g., 8‑K amendments, news edits).  Must preserve the original version. | Provide a snapshot of the two feeds at the time of the event, with the raw timestamp fields intact.  Independent observer must be able to locate the same record. | 1. Sample 50 events; compute the distribution of gaps. 2. Test whether the mean gap differs significantly from zero (t‑test). 3. Verify that the gap persists when the event is re‑identified in a second, independent snapshot. | **Merge** into Q197 (cross‑channel timing) after clarifying that Q206’s focus is on *fixed* pre‑declared gaps rather than content.  If Q197 already covers this, discard Q206. | High uncertainty whether the two channels are truly independent in practice; need to audit feed provenance. |\n| **Q207** | NETWORK_INFORMATION_PROPAGATION_LAG | 1. **Redundancy** – Q201 (supply‑chain diffusion) and Q202 (network lag) already measure deterministic lags between directly connected entities. 2. **Spurious** – The “frozen” relation graph may change after the event, so the lag measured may reflect post‑event graph updates rather than true diffusion speed. 3. **Confounding** – Lags may be driven by simultaneous external shocks (e.g., macro news) rather than network structure. | • Archive of a *frozen* supplier‑relationship graph (e.g., from a commercial database) with node IDs and edge lists.  • Archive of public disclosures for each node (e.g., earnings releases, press releases) with timestamps. | Earliest public‑observation timestamp per entity (UTC).  Must be the first time the entity’s event appears in the public record. | Node ID ↔ issuer symbol; edge list ↔ direct exposure. | For each entity: record of any later corrections to the disclosure (e.g., earnings restatements).  For the graph: record of any later edits to the relationship (e.g., new supplier contracts). | Provide a snapshot of the graph and the set of disclosures at the time of the event, with all timestamps preserved. | 1. For 30 connected pairs, compute lag = t₂ – t₁. 2. Test whether lag correlates with network distance (Spearman). 3. Verify that the lag distribution is stable across a second snapshot. | **Repair**: Clarify that Q207 is a *deterministic* lag measure, distinct from correlation‑based Q202.  If the distinction is not meaningful, merge into Q202. | Uncertainty about the stability of the “frozen” graph; need to confirm that the graph snapshot truly precedes all events. |\n| **Q208** | SCIENCE_TO_PATENT_TRANSLATION_SHOCK | 1. **Redundancy** – Q199 (patent issuance timing) and Q204 (science‑to‑technology link) already capture the lag between scientific publication and patent filing. 2. **Spurious** – The “frozen class” of scientific publications may be ill‑defined; many patents cite multiple papers, making the ordering ambiguous. 3. **Signal dilution** – Using only the first‑public patent may ignore the broader citation network, reducing economic relevance. | • Archive of scientific publications (e.g., PubMed, arXiv) with original publication dates.  • Archive of patent applications (USPTO, EPO) with publication dates and citation lists. | Earliest public‑publication date of the science paper (UTC).  Earliest public‑patent‑application date (UTC). | Mapping of publication DOI ↔ patent citation ID; mapping of patent to issuer. | For each publication: record of retractions or corrections.  For each patent: record of amendments to the citation list. | Provide snapshots of both archives with the raw citation fields and timestamps. | 1. For 40 patent–paper pairs, compute lag = t_patent – t_science. 2. Test whether the lag distribution differs across technology classes (ANOVA). 3. Verify that the lag persists when re‑examining the same pairs in a second snapshot. | **Merge** into Q199 (patent timing) after ensuring that Q208’s focus on *ex‑ante* translation (first‑public patent) is distinct.  If the distinction is marginal, discard Q208. | Uncertainty about the precise definition of the “frozen class” and whether the first‑public patent is truly ex‑ante. |\n\n---\n\n### Proposed Fourth Concept (Unfilled Niche)\n\n| # | Concept | Rationale | Minimum Source Archive | Timestamp Semantics | Identity Mapping | Revision Lineage | Independent Reproduction | Cheap Test | Evidence Burden |\n|---|---------|-----------|------------------------|---------------------|------------------|------------------|--------------------------|------------|-----------------|\n| **Q209** | ESG_DISCLOSURE_TIMING_DISPARITY | ESG reports are increasingly material, yet the *timing* of their public availability varies across channels (company filing vs. third‑party ESG rating agencies).  No existing candidate explicitly captures the *gap* between these two independent disclosures. | • Archive of company ESG filings (e.g., SEC 10‑K ESG sections) with original filing dates.  • Archive of ESG rating agency releases (e.g., MSCI, Sustainalytics) with release dates. | Earliest public‑availability timestamp per channel (UTC).  Must be the first time the ESG information appears in the respective channel. | Company ticker ↔ ESG filing; rating agency report ID ↔ ESG report. | For each ESG filing: record of any amendments or restatements.  For each rating report: record of any revisions. | Provide snapshots of both archives with raw timestamps; independent observer must locate the same filing and rating report. | 1. Sample 30 companies; compute gap = t_rating – t_filing. 2. Test whether the mean gap differs from zero (t‑test). 3. Verify consistency across a second snapshot. | Must provide a verifiable, immutable snapshot of both ESG filing and rating agency release archives for the same date range.  The snapshot must include the raw timestamp fields and any revision history. |\n\n**Uncertainty & Disagreement**  \n- The independence of the two channels in Q206 and Q209 is difficult to guarantee; a shared upstream data provider could invalidate the “gap” signal.  \n- For Q207, the assumption that the relation graph is truly frozen may not hold if supplier contracts are updated after the event.  \n- Q208’s reliance on the first‑public patent may miss cases where the patent cites multiple papers; the ordering of citations within a single application is not always preserved.  \n- The proposed Q209 may overlap with existing ESG‑related candidates (e.g., Q201 if it already covers ESG timing); a careful audit of the current candidate list is needed before committing.\n\n**Next Actions**  \n1. **Audit** the",
+  "stderr": "",
+  "command_binary": "litellm",
+  "api_model": "openai/gpt-oss-20b",
+  "litellm_model": "groq/openai/gpt-oss-20b",
+  "response_id": "chatcmpl-e1dd0d96-da1c-4b33-86fd-83a11b6f0ed4",
+  "response_model": "openai/gpt-oss-20b",
+  "usage": null
+}
