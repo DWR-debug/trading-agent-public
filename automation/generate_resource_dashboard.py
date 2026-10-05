@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).parents[1]
 OUT = ROOT / "docs" / "dashboard" / "dashboard_data.json"
+REPO = os.environ.get("GITHUB_REPOSITORY", "DWR-debug/trading-agent-public")
 
 def git_head() -> str:
     return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
