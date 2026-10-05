@@ -1,3 +1,5 @@
+> **Kapazitätsstatut:** `docs/TRADING_AGENT_PROJECT_STATUTES.md` ist verbindlich. Kostenfreie Ressourcen werden maximal sinnvoll eingesetzt; künstliche Arbeit, künstliche Laufzeitverlängerung und Duplikation sind verboten.
+
 # GitHub Free Resource Operating Model — Trading Agent
 
 Stand: 2026-09-26
