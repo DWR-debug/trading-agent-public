@@ -17,3 +17,18 @@ def test_dashboard_resource_mapping_is_deterministic():
 
 def test_dashboard_resource_identity_never_grants_authority():
     assert infer_resource("Q205 NLRB Source Feasibility", "source_feasibility", None)
+
+
+def test_dashboard_research_board_exposes_q202_to_q205_without_duplicates():
+    from automation.generate_resource_dashboard import expanded_candidate_board, research_board
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).parents[1]
+    evidence = json.loads((root / "research/evidence/current_operational_state.json").read_text(encoding="utf-8"))
+    os_state = json.loads((root / "ops/trading_agent_os_state.json").read_text(encoding="utf-8"))
+    board = expanded_candidate_board(evidence, os_state, research_board(evidence, os_state))
+    ids = [x["code"] for x in board]
+    for candidate_id in ("Q202", "Q203", "Q204", "Q205"):
+        assert candidate_id in ids
+        assert ids.count(candidate_id) == 1
