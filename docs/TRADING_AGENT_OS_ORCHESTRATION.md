@@ -16,6 +16,18 @@ AI- und Coding-Agenten dürfen Forschung technisch beschleunigen, aber weder Hol
 
 
 ## 2a. Persistent acceleration policy
+## 2b. Permanent literature-research plane
+
+The LITERATURE/DISCOVERY ENGINE is a permanent OS capability and must not depend on a single chat session. Its standing rule is:
+
+SEARCH BROADLY AND CREATIVELY -> VERIFY PRIMARY EVIDENCE -> ISOLATE A GENUINELY NEW MECHANISM -> CHEAP-FALSIFY -> ASSESS PIT/DATA/REPRODUCIBILITY -> ONLY THEN OPEN A BOUNDED DISCOVERY CONTRACT.
+
+Recurring research is mandatory: daily assistant literature radar, weekly deep research, and a free GitHub-hosted public-metadata scout every 6 hours. Search across finance, accounting, economics, market microstructure, information diffusion, corporate disclosures, networks, data revisions/vintages, innovation/patents, unusual public-domain information and forward-risk structure. Prefer mechanisms with high information-orthogonality and high information-gain-per-compute.
+
+The literature plane must retain negative evidence (PRUNED, UNVERIFIED, DATA_INSUFFICIENT) and must not repeatedly reopen the same dead end without a new falsifiable premise. Maximum active shortlist: 4. Literature claims are source claims, not project evidence.
+
+The discovery plane is strictly quarantined from scientific authority: no performance evaluation, holdout selection, ranking, parameter/asset/threshold/horizon search, promotion or live execution may be derived from literature results. Candidate-specific PIT, coverage, independent reproduction and the existing authorization chain remain mandatory.
+
 
 The acceleration contract is stored in `research/governance/persistent_research_acceleration_contract.json` and is part of the mandatory start logic for every new `trading agent` chat.
 
