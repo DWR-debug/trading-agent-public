@@ -1399,13 +1399,13 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-05T17:37:53.311043+00:00",
+    "generated_at_utc": "2026-10-05T17:38:43.775058+00:00",
     "next_research_focus": "Priority frontier includes Q217 cognitive-processing-friction decomposition alongside Q214-Q216. Q217 remains discovery/PIT-only and must merge into Q131 if it is not empirically distinct.",
     "record_type": "trading_agent_chat_handoff",
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "9ea7af7efa026f5ae5243ebd7fb65087fc5a908d"
+    "source_master_sha": "55669343421244ef9243ab4be10f154e9dd78da4"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1624,15 +1624,15 @@
       "artificial_quota_consumption": false,
       "cadence": "*/10 * * * *",
       "current_window": {
-        "end_utc": "2026-10-05T18:30:00Z",
-        "start_utc": "2026-10-05T16:30:00Z",
+        "end_utc": "2026-10-05T19:35:00Z",
+        "start_utc": "2026-10-05T17:35:00Z",
         "waves": [
           "SOURCE_PIT_CLOSURE",
           "CANDIDATE_AND_INFORMATION_TIMING",
           "NEXT_GATE_AND_REPRODUCTION",
           "DISCOVERY_AND_CONSOLIDATION"
         ],
-        "window_id": "TA-2H-2026-10-05-1630Z"
+        "window_id": "TA-2H-2026-10-05-1735Z"
       },
       "dispatch_rules": [
         "skip active duplicate work",
@@ -1703,7 +1703,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T17:37:53.311043+00:00",
+  "generated_at_utc": "2026-10-05T17:38:43.775058+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4394,6 +4394,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: make priority dispatcher manual-only",
+        "sha": "55669343421244ef9243ab4be10f154e9dd78da4",
+        "timestamp": "2026-10-05T19:38:36+02:00"
+      },
+      {
+        "message": "OPS: start fresh useful-capacity window with next-gate-only routing",
+        "sha": "3bd72ca5a97ca1c423d90d7add44a17da07e9a78",
+        "timestamp": "2026-10-05T19:38:29+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ddddec6f52c93ba86fc17a29617257a7ef78e1cc",
+        "timestamp": "2026-10-05T17:37:55Z"
+      },
+      {
         "message": "RESEARCH: add Q217 Q131 orthogonality gate",
         "sha": "9ea7af7efa026f5ae5243ebd7fb65087fc5a908d",
         "timestamp": "2026-10-05T19:37:40+02:00"
@@ -4417,21 +4432,6 @@
         "message": "FIX: final Q217 dispatcher indentation",
         "sha": "32697a3c3ee7e09969187f1e3460f4fc79bf1bfb",
         "timestamp": "2026-10-05T19:19:48+02:00"
-      },
-      {
-        "message": "FIX: correct Q217 dispatcher YAML indentation",
-        "sha": "71c1ed94f6174d41bdaab748e0cc2bb9aa70e81e",
-        "timestamp": "2026-10-05T19:18:41+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9dee6c2ad4eb067167ea5feba35bc85324b9335c",
-        "timestamp": "2026-10-05T17:18:32Z"
-      },
-      {
-        "message": "OPS: render active literature frontier in current status",
-        "sha": "daaa1234992902bc46bb7279b90dea5702dc4ebb",
-        "timestamp": "2026-10-05T19:18:14+02:00"
       }
     ]
   },
@@ -4529,7 +4529,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9ea7af7efa026f5ae5243ebd7fb65087fc5a908d",
+  "source_master_sha": "55669343421244ef9243ab4be10f154e9dd78da4",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4643,6 +4643,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37349847570"
+    "run_id": "37349947593"
   }
 }
