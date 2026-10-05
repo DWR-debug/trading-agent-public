@@ -91,7 +91,7 @@ jobs:
             --work-root "$HOME/.cache/trading-agent/s10/runs"
 
       - name: Verify local S10 inference interface
-        if: env.S10_TASK != 'discovery_only'
+        if: env.S10_TASK == 'utility_review' || env.S10_TASK == 'evidence_critic'
         shell: bash
         run: |
           set -euo pipefail
