@@ -450,9 +450,14 @@ def generate(
             "directed five-year citation dependencies; Q185 targets persistent federal litigation states. "
             "Both remain discovery/PIT-only with no performance or promotion authorization."
         )
-    if any(str(item.get("code")) == "Q217" for item in active_registry.get("active_design_families", [])):
-        recorded_next_research_focus = ("Priority frontier includes Q217 cognitive-processing-friction decomposition alongside Q214-Q216. "
-                                         "Q217 remains discovery/PIT-only and must merge into Q131 if it is not empirically distinct.")
+    if any(str(item.get("code")) in {"Q218", "Q219", "Q220", "Q221"} for item in active_registry.get("active_design_families", [])):
+        recorded_next_research_focus = (
+            "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, "
+            "Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, "
+            "and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; "
+            "Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, "
+            "holdout selection, ranking, tuning, promotion or live execution is authorized."
+        )
     current = {
         "schema_version": "1.0",
         "status_type": "current_operational_project_state",
