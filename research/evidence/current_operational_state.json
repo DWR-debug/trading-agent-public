@@ -1467,7 +1467,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T15:18:31.771122+00:00",
+  "generated_at_utc": "2026-10-05T15:19:02.237633+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2472,7 +2472,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "ca95e81dfd37f9f5d1fab7bed7ef66e24a686746603455897a68cc44e223f248",
+    "receipt_fingerprint": "4c762a42a520a4277dd899d8a6a5d32a9dc71ec930ac48cc1d21e817cd9949af",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2507,7 +2507,7 @@
           }
         ],
         "clock_contract": "Docket event dates are distinct from underlying incident dates; exact public intraday availability must be proven per event class, otherwise use next-session availability.",
-        "content_sha256": "0cbfc5dd1309f5d7ec35b7fdda509ed803b0d14bf8131ac612cb3c14be9bc487",
+        "content_sha256": "43ec1ce8201d4835e27403d52fa78b0f49aff7cbbc927d70b642cfe537eba0aa",
         "http_status": 403,
         "missing_markers": [
           "RECAP Archive",
@@ -2531,7 +2531,7 @@
           }
         ],
         "clock_contract": "A recorded docket-entry date is not automatically proof of public dissemination time.",
-        "content_sha256": "ec78e3864df32df72d90dcdee569e8234d2f43d7dad36879962264d5b6ea78bc",
+        "content_sha256": "07d1270da4206853c4a74c2fdae9f39286b9fd5721bf4711ad1f0f569be25b84",
         "http_status": 403,
         "missing_markers": [
           "Advanced RECAP Search",
@@ -4158,6 +4158,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "ac3c6e9e8baa3367dba33c3fcd1bee057b628583",
+        "timestamp": "2026-10-05T15:18:59Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "08690790a2af191fb75c5ae1f325378f39c2f12b",
+        "timestamp": "2026-10-05T15:18:56Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "b2c6b4daad6c09cacbf488d04dedc4030e5295b2",
+        "timestamp": "2026-10-05T15:18:51Z"
+      },
+      {
+        "message": "RESEARCH: route Q211-Q213 to bounded S10 QA",
+        "sha": "4e0236c92c1f31b9496b103880dc00b863ac8260",
+        "timestamp": "2026-10-05T17:18:45+02:00"
+      },
+      {
+        "message": "RESEARCH: wire Q211-Q213 feasibility into Windows loop",
+        "sha": "09869f1e5d4ef454486bfac6f21fbca6f2c553f8",
+        "timestamp": "2026-10-05T17:18:38+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6d2961c66c149963f6bac25121f4a741b6d7af3d",
+        "timestamp": "2026-10-05T15:18:33Z"
+      },
+      {
         "message": "RESEARCH: wire Q211-Q213 feasibility into hosted frontier loop",
         "sha": "6ee256a974f7217799a760ab010a28dc54b8ac74",
         "timestamp": "2026-10-05T17:18:29+02:00"
@@ -4166,36 +4196,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "287b63aff83fd4e983a32b2cce3f186cd02e0a9d",
         "timestamp": "2026-10-05T15:18:25Z"
-      },
-      {
-        "message": "RESEARCH: trigger priority wave R19",
-        "sha": "4d6d571bb4257f9b55d35db5c9b82339d800a316",
-        "timestamp": "2026-10-05T17:18:21+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "705c395ebd99f309151d7db3a51371a864f65e3f",
-        "timestamp": "2026-10-05T15:18:19Z"
-      },
-      {
-        "message": "RESEARCH: update OS focus for Q211-Q213",
-        "sha": "d56471ad86fb7bbb182374e281ba635b946566a7",
-        "timestamp": "2026-10-05T17:18:14+02:00"
-      },
-      {
-        "message": "RESEARCH: wire Q211-Q213 into active registry",
-        "sha": "022a6392979f9d8e284162390643a9694a65fa19",
-        "timestamp": "2026-10-05T17:18:03+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4617f06f66cec9d6ae18c465b22e278397ea34f9",
-        "timestamp": "2026-10-05T15:17:51Z"
-      },
-      {
-        "message": "RESEARCH: add Q211-Q213 literature frontier artifact",
-        "sha": "786842ee16466da5b346d0879883abde8b82f7f9",
-        "timestamp": "2026-10-05T17:17:41+02:00"
       }
     ]
   },
@@ -4293,7 +4293,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "6ee256a974f7217799a760ab010a28dc54b8ac74",
+  "source_master_sha": "ac3c6e9e8baa3367dba33c3fcd1bee057b628583",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4407,6 +4407,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37331725619"
+    "run_id": "37331795983"
   }
 }
