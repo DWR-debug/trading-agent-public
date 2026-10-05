@@ -232,6 +232,7 @@ ACTIVE_WORKFLOWS = {
     "orthogonal-candidate-development.yml",
     "orthogonal-pit-next-gate.yml",
     "q202-q204-information-timing-feasibility.yml",
+    "q205-nlrb-source-feasibility.yml",
     "priority-research-wave-dispatch.yml",
     "windows-runner-c-long-research.yml",
     "runner-c-prepit-falsification.yml",
