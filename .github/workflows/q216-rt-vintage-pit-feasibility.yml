@@ -27,17 +27,22 @@ jobs:
           python - <<'PY'
           import hashlib,re
           from urllib.request import Request,urlopen
-          u="https://www.philadelphiafed.org/surveys-and-data/real-time-data-research/real-time-data-set-for-macroeconomists"
-          req=Request(u,headers={"User-Agent":"TradingAgent-Public-Q216/1.0"})
-          with urlopen(req,timeout=30) as r: html=r.read().decode("utf-8","replace"); assert getattr(r,"status",200)==200
+          page="https://www.philadelphiafed.org/surveys-and-data/real-time-data-research/routput"
+          req=Request(page,headers={"User-Agent":"TradingAgent-Public-Q216/1.0"})
+          with urlopen(req,timeout=30) as r:
+              html=r.read().decode("utf-8","replace")
+              status=getattr(r,"status",200)
+          assert status==200
           links=re.findall(r'href=["\']([^"\']+)',html,flags=re.I)
-          c=[x for x in links if ("vintage" in x.lower() or "histor" in x.lower()) and x.lower().split("?")[0].endswith((".zip",".xlsx",".xls",".csv"))]
-          assert c
-          href=c[0]
+          candidates=[x for x in links if "data-files/xlsx/ROUTPUTQvQd.xlsx" in x]
+          assert candidates, "OFFICIAL_VARIABLE_PAGE_XLSX_LINK_MISSING"
+          href=candidates[0]
           if href.startswith("/"): href="https://www.philadelphiafed.org"+href
-          with urlopen(Request(href,headers={"User-Agent":"TradingAgent-Public-Q216/1.0"}),timeout=90) as rr: body=rr.read(); status=getattr(rr,"status",200)
-          assert status==200 and body
-          print({"http_status":status,"download_url":href,"sha256":hashlib.sha256(body).hexdigest(),"bytes":len(body)})
+          with urlopen(Request(href,headers={"User-Agent":"TradingAgent-Public-Q216/1.0"}),timeout=90) as rr:
+              body=rr.read()
+              dstatus=getattr(rr,"status",200)
+          assert dstatus==200 and body
+          print({"http_status":status,"variable_page":page,"download_url":href,"sha256":hashlib.sha256(body).hexdigest(),"bytes":len(body)})
           PY
       - name: First-public-vintage chronology smoke gate
         run: |
