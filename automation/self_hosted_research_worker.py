@@ -362,6 +362,29 @@ LANES: dict[str, list[list[str]]] = {
             "-m",
             "pytest",
             "-q",
+            "tests/test_q211_q213_literature_frontier.py",
+            "tests/test_q214_disclosure_risk_state.py",
+            "tests/test_candidate_robustness_gate.py",
+        ],
+        [
+            PYTHON,
+            "-c",
+            (
+                "import json; from pathlib import Path; "
+                "p=Path('research/frontier'); "
+                "names=('q215_nhtsa_sec_bridge','q216_rt_vintage_pit','q217_cognitive_processing_friction'); "
+                "files={n:[x for x in p.glob(n+'*.json')] for n in names}; "
+                "assert all(files.values()), files; "
+                "objs=[json.loads(files[n][0].read_text(encoding='utf-8')) for n in names]; "
+                "assert all(any(k in json.dumps(o) for k in ('performance','scientific_boundary')) for o in objs); "
+                "print('Q215_Q217_FRONTIER_CONTRACTS_PRESENT')"
+            ),
+        ],
+        [
+            PYTHON,
+            "-m",
+            "pytest",
+            "-q",
             "tests/test_canonical_snapshot.py",
             "tests/test_github_free_resource_policy.py",
             "tests/test_q193_q196_source_feasibility.py",
