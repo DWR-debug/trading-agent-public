@@ -20,7 +20,8 @@ CONTROLS = {
     "2025-06-30": "https://www.sec.gov/dera/data/Public-EDGAR-log-file-data/2025/Qtr2/log20250630.zip",
 }
 URI_RE = re.compile(r"/Archives/edgar/data/(\d+)/(\d{18})(?:/|$)", re.I)
-EXPECTED = {"_time", "uri_path"}
+EXPECTED_TIME = {"_time", "time"}
+EXPECTED = {"uri_path"}
 
 
 def fetch(url: str, *, range_header: str | None = None) -> bytes:
@@ -67,7 +68,8 @@ def inspect_zip(path: Path) -> dict:
         "member": target,
         "member_count": len(members),
         "header": header,
-        "expected_columns_present": EXPECTED.issubset(cols),
+        "request_time_column": next((name for name in ("_time", "time") if name in cols), None),
+        "expected_columns_present": EXPECTED.issubset(cols) and bool(cols.intersection(EXPECTED_TIME)),
         "traffic_quality_columns_present": sorted(cols.intersection({"ip", "crawler", "browser", "find", "code", "noagent", "norefer"})),
         "traffic_quality_fields_absent_in_modern_schema": not bool(cols.intersection({"ip", "crawler", "browser", "find", "code", "noagent", "norefer"})),
         "sample_rows_read": rows_seen,
@@ -140,12 +142,20 @@ def main() -> int:
             "modern_schema_has_request_time_and_uri": all(
                 bool(r.get("schema", {}).get("expected_columns_present")) for r in successful
             ),
+            "request_time_columns_observed": sorted({
+                r.get("schema", {}).get("request_time_column") for r in successful if r.get("schema", {}).get("request_time_column")
+            }),
+            "schema_field_name_drift_detected": len({
+                r.get("schema", {}).get("request_time_column") for r in successful if r.get("schema", {}).get("request_time_column")
+            }) > 1,
             "modern_schema_exposes_legacy_crawler_fields": False,
             "traffic_contamination_fully_resolvable_from_modern_schema": False,
             "policy": "Do not infer latent investor identity or sophistication; contamination remains an explicit unresolved limitation.",
         },
         "pit_contract": {
-            "request_time_field": "_time",
+            "request_time_fields_observed": sorted({
+                r.get("schema", {}).get("request_time_column") for r in successful if r.get("schema", {}).get("request_time_column")
+            }),
             "filing_identity_recovery": "Deterministic CIK/accession recovery from uri_path is required.",
             "same_session_use": False,
             "filing_public_boundary_join_completed": False,
@@ -158,7 +168,7 @@ def main() -> int:
             "promotion_allowed": False,
             "live_execution_allowed": False,
         },
-        "next_gate": "request-quality-contamination-bounds + filing-acceptance/public-boundary join + mutation/PIT checks + independent reproduction",
+        "next_gate": "schema-variant normalization + request-quality contamination bounds + filing-acceptance/public-boundary join + mutation/PIT checks + independent reproduction",
         "negative_evidence": {
             "continuous_2003_2025_panel": False,
             "2017_07_01_to_2020_05_18_available": False,
