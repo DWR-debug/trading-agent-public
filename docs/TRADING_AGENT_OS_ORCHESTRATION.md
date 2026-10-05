@@ -1,6 +1,6 @@
 # Trading Agent OS — Persistent Orchestration
 
-Stand: 2026-10-04
+Stand: 2026-10-05
 
 ## Zweck
 
@@ -94,8 +94,8 @@ Beide Lanes müssen Candidate-/Trial-IDs, Branches/Workflows, Receipt- und Outpu
 | Free AI Worker Fabric | alle 6 h | adversariales Design/Review | Provider fail-closed überspringen |
 | Bounded Agent Queue | alle 2 h | begrenztes Engineering | Queue bleibt liegen |
 | Self-hosted Capacity Probe | alle 6 h | Runner-/Kapazitätsprüfung | keiner |
-| S10 Phone Research Worker | alle 6 h + relevante Master-Pushes | bounded mobile Utility-Review; ECL nur gezielt | receipt-gated, fail-closed |
-| S10 Throughput Probe | täglich + manuell | isolierte lokale Kapazitätsmessung | kein Scientific Evidence Gate |
+| S10 Phone Research Worker | alle 20 min + relevante Master-Pushes | bounded mobile Utility-Review; ECL nur gezielt | receipt-gated, fail-closed |
+| S10 Throughput Probe | nur diagnostisch/manuell | isolierte lokale Kapazitätsmessung | kein Scientific Evidence Gate |
 | Android Phone Fleet Worker | alle 6 h + manuell | Acceptance neuer Geräte; Utility-Review akzeptierter Geräte | receipt-gated, fail-closed |
 | Evidence-Critic Lab | event-/dispatch-basiert | 36-Fälle Evidence-Critic Benchmark | Ressourcen-/Runtime-Gate |
 
@@ -117,12 +117,12 @@ Jeder neue Kandidat durchläuft vor dem Eintritt in eine formale Phase einen str
 
 ## 4. Aktuelle Forschungspriorität
 
-Die aktuelle Frontier-Spur umfasst Q185–Q201 mit Schwerpunkt auf orthogonalen öffentlichen Informationskanälen. Q185–Q186 verfolgen Patent-/Litigation-PIT, Q187–Q192 historische Source/PIT-Rekonstruktion, Q193–Q196 die vertiefte Kandidatenentwicklung aus administrativen/regulatorischen Quellen, Q197–Q198 Government-Procurement/Federal-Register-Zeitgrenzen und Q199/Q201 Patent-Publikation bzw. Clinical-Trial-Results-Posting. Q198 ist aktuell explizit source-access-blocked und bleibt fail-closed.
+Die aktuelle Frontier-Spur umfasst Q185–Q221 mit Schwerpunkt auf orthogonalen öffentlichen Informationskanälen. Q185–Q186 verfolgen Patent-/Litigation-PIT, Q187–Q192 historische Source/PIT-Rekonstruktion, Q193–Q196 die vertiefte Kandidatenentwicklung aus administrativen/regulatorischen Quellen, Q197–Q201 Government-Procurement/Federal-Register/USPTO/Clinical-Trials-Zeitgrenzen, Q202–Q204 Information-Timing, Q205 die NLRB-Quelle und Q211–Q221 die aktuelle Literatur-/Public-Source-Frontier. Der aktive Top-Candidate-Overlay ist Q218/Q220/Q221/Q219 und bleibt strikt design/source/PIT-only.
 
-Die sechs konkretisierten Kandidaten Q194/Q195/Q196/Q197/Q199/Q201 sind in
-research/candidates/orthogonal_candidate_specs_2026-10-04.json fixiert und werden durch
+Die aktuell validierten 17 Kandidaten Q194/Q195/Q196/Q197/Q199/Q201/Q202/Q203/Q204/Q205/Q215/Q216/Q217/Q218/Q219/Q220/Q221 sind in
+research/candidates/orthogonal_candidate_specs_2026-10-05.json fixiert und werden durch
 .github/workflows/orthogonal-candidate-development.yml rein mechanisch validiert. Der zugehörige Receipt
-ist design-/governance-only und autorisiert keinerlei Performance.
+ist design-/governance-only und autorisiert keinerlei Performance. Für Q218–Q221 ergänzt Windows B den historischen Source-Census durch den deterministischen Candidate-Gate-Compiler.
 
 Lane A verfolgt parallel die bestehenden Formal-Readiness-Gates des aktiven Registers, ohne Holdout-/Asset-/Parameter-/Horizon-Selektion. Lane B verfolgt die Q179–Q201-Orthogonalspur sowie weitere Public-Source-Kandidaten.
 
@@ -144,7 +144,7 @@ Gemini, Mistral und OpenRouter laufen nur bei nachgewiesener kostenloser Zugäng
 
 ## 6. Neuer trading agent-Chat
 
-Ein neuer Chat soll diesen Vertrag zuerst lesen und anschließend den Live-Status aktualisieren. Vergangene Runner-, Auth-, Queue- und Workflow-Angaben sind niemals autoritativ.
+Jeder neue Chat, der mit `trading agent` beginnt, aktiviert diesen Vertrag als verbindlichen Orchestrierungsstandard: Vertrag und kanonischen Zustand lesen, aktuellen `master` und flüchtige Ressourcen live reconciliieren, danach ohne erneute Freigabefrage die nächstzulässige unabhängige Arbeit ausführen. Vergangene Runner-, Auth-, Queue- und Workflow-Angaben sind niemals autoritativ.
 
 Zusätzlich wird der aktuelle S10-Receipt gegen \`ops/s10_runtime_status.json\` geprüft. Bei einem neuen Samsung-Gerät wird zuerst die generische Vorlage verwendet; erst nach Utility Acceptance darf es in das Routing aufgenommen werden.
 
