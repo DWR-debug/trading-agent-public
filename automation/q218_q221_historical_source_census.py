@@ -42,7 +42,8 @@ def fetch(url: str, limit: int | None = 1000000) -> tuple[int, str, bytes]:
 def sec_submission_census() -> dict:
     issuer_results = {}
     for symbol, cik in SEC_CIKS.items():
-        status, content_type, body = fetch(f"https://data.sec.gov/submissions/CIK{cik}.json", None)
+        padded_cik = f"{int(cik):010d}"
+        status, content_type, body = fetch(f"https://data.sec.gov/submissions/CIK{padded_cik}.json", None)
         data = json.loads(body.decode("utf-8"))
         recent = data.get("filings", {}).get("recent", {})
         rows = []
