@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T11:27:12.219788+00:00",
+  "generated_at_utc": "2026-10-05T11:28:56.480213+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4136,6 +4136,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "TEST: include explicit frozen candidate identity in mapping failure case",
+        "sha": "b41418e5698153d47d628ce00b9c25bf718875a6",
+        "timestamp": "2026-10-05T13:28:49+02:00"
+      },
+      {
+        "message": "TEST: update candidate inventory schema count for current frontier",
+        "sha": "fc83593497d543bfc4a85eed424f0d273c0ceda0",
+        "timestamp": "2026-10-05T13:28:46+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "e679a36760d442d530e42be03ee16f19c334ccc9",
+        "timestamp": "2026-10-05T11:27:24Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "247bba758cbdfaa8531c020a9a8ddceb3ec18e9c",
+        "timestamp": "2026-10-05T11:27:14Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "92e105c2c298e3da1b3e0bc1fa6dcaebc1b58d87",
         "timestamp": "2026-10-05T11:26:57Z"
@@ -4154,26 +4174,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "66726715a255f0f19cd8eff0dc9607f1603a8d52",
         "timestamp": "2026-10-05T11:26:34Z"
-      },
-      {
-        "message": "RESEARCH: include Q205 in pre-PIT falsification battery",
-        "sha": "a4a6b9d6e8fc6be0d903ac8f8aeb6984d094c771",
-        "timestamp": "2026-10-05T13:26:20+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "541dcf5c9ec437a3ae349e243c5c15fc2a4889bd",
-        "timestamp": "2026-10-05T11:26:13Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "696f7458a128ad7992e4fe1bec2ff658eada62cc",
-        "timestamp": "2026-10-05T11:25:53Z"
-      },
-      {
-        "message": "ENG: document explicit TradingSignal adapter boundary",
-        "sha": "f55537cdbf3458b75ac40568aec1a51c339a1645",
-        "timestamp": "2026-10-05T13:25:49+02:00"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "92e105c2c298e3da1b3e0bc1fa6dcaebc1b58d87",
+  "source_master_sha": "b41418e5698153d47d628ce00b9c25bf718875a6",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37302979498"
+    "run_id": "37303190705"
   }
 }
