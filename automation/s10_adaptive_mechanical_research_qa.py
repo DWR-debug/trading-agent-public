@@ -84,10 +84,20 @@ def main():
                 if not (root/".github/workflows"/wf).is_file(): failures.append(f"missing_workflow:{wf}")
         findings.append({"capacity_phases":[p.get("id") for p in phases]})
     elif mode=="NEGATIVE_EVIDENCE_DEDUP":
-        neg=literature.get("negative_evidence",[])
-        if not {"PRUNED","UNVERIFIED","DATA_INSUFFICIENT"}.issubset(set(neg if isinstance(neg,list) else [])):
-            failures.append("negative_evidence_taxonomy_incomplete")
-        findings.append({"negative_evidence_taxonomy":neg})
+        taxonomy = {"PRUNED", "UNVERIFIED", "DATA_INSUFFICIENT"}
+        evidence_text = json.dumps({
+            "critical_quality_control": critical,
+            "literature_policy": literature,
+            "current_status": status,
+            "active_registry": registry,
+        }, ensure_ascii=False).upper()
+        missing = sorted(k for k in taxonomy if k not in evidence_text)
+        if missing:
+            failures.append("negative_evidence_taxonomy_incomplete:" + ",".join(missing))
+        findings.append({
+            "negative_evidence_taxonomy_required": sorted(taxonomy),
+            "missing_taxonomy_markers": missing,
+        })
     else:
         if status.get("repository")!="DWR-debug/trading-agent-public": failures.append("status_repository_mismatch")
         if status.get("safety",{}).get("status")!="SAFE": findings.append({"status_safety":"not_explicitly_marked_safe"})
