@@ -1481,15 +1481,15 @@
       "artificial_quota_consumption": false,
       "cadence": "*/10 * * * *",
       "current_window": {
-        "end_utc": "2026-10-05T18:02:00Z",
-        "start_utc": "2026-10-05T16:02:00Z",
+        "end_utc": "2026-10-05T18:11:31Z",
+        "start_utc": "2026-10-05T16:11:31Z",
         "waves": [
-          "W1 source/PIT/clock closure",
-          "W2 candidate/contracts and information timing",
-          "W3 next-gate compilation and independent reproduction",
-          "W4 literature discovery and consolidation"
+          "SOURCE_PIT_CLOSURE",
+          "CANDIDATE_AND_INFORMATION_TIMING",
+          "NEXT_GATE_AND_REPRODUCTION",
+          "DISCOVERY_AND_CONSOLIDATION"
         ],
-        "window_id": "TA-2H-2026-10-05-1602Z"
+        "window_id": "TA-2H-2026-10-05-1611Z"
       },
       "dispatch_rules": [
         "skip active duplicate work",
@@ -1499,9 +1499,9 @@
         "retain downstream fail-closed scientific gates"
       ],
       "lease": "research/run_requests/rolling_capacity_window_2026-10-05.json",
-      "objective": "maximize useful occupancy of genuinely available free capacity without duplicate or artificial work",
+      "objective": "Keep every genuinely useful free research lane occupied when backlog exists; never create duplicate or artificial work.",
       "scientific_authority": false,
-      "status": "ACTIVE_AND_PERSISTENT",
+      "status": "ACTIVE",
       "workflow": ".github/workflows/capacity-saturation-rolling-waves.yml"
     },
     "s10_phone": {
@@ -1560,7 +1560,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T16:12:17.089452+00:00",
+  "generated_at_utc": "2026-10-05T16:12:40.018517+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4251,6 +4251,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: align OS rolling window with active lease",
+        "sha": "82b20fb90ba054f6af98a90fb345727ee7351957",
+        "timestamp": "2026-10-05T18:12:32+02:00"
+      },
+      {
+        "message": "FIX: source rolling capacity window from active lease",
+        "sha": "f14ff408693491dccf8a677fd891659ce097fa66",
+        "timestamp": "2026-10-05T18:12:23+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "88c0e7b17448a937ed22019e55083504d39dc8ba",
+        "timestamp": "2026-10-05T16:12:20Z"
+      },
+      {
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "140dc527493b088716a4faed8714fe9635466527",
         "timestamp": "2026-10-05T16:12:11Z"
@@ -4274,21 +4289,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "12b897e9dd04390e5ff4411caef308e1bdcf8567",
         "timestamp": "2026-10-05T16:11:26Z"
-      },
-      {
-        "message": "FIX: deduplicate rolling waves by current master SHA",
-        "sha": "0cbd4c21466decb41629f3093bbc213ae0205982",
-        "timestamp": "2026-10-05T18:11:07+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "dff704dbb442e008df6ee87849c2de70a9d5afdb",
-        "timestamp": "2026-10-05T16:10:51Z"
-      },
-      {
-        "message": "OPS: make rolling research waves cumulative and capacity-limited",
-        "sha": "7b439e93b3defc82f5915603484fe5dd12b036dc",
-        "timestamp": "2026-10-05T18:10:34+02:00"
       }
     ]
   },
@@ -4386,7 +4386,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "140dc527493b088716a4faed8714fe9635466527",
+  "source_master_sha": "82b20fb90ba054f6af98a90fb345727ee7351957",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4500,6 +4500,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37338961704"
+    "run_id": "37339019148"
   }
 }
