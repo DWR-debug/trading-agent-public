@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T12:17:23.486735+00:00",
+  "generated_at_utc": "2026-10-05T12:30:55.473709+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4136,6 +4136,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "ENG: integrate shadow coordinator with canonical ledger and replay",
+        "sha": "4a4d223499f781d8eec2f0e0c47f555f33690d8b",
+        "timestamp": "2026-10-05T14:30:34+02:00"
+      },
+      {
+        "message": "OPS: refresh resource dashboard snapshot",
+        "sha": "805c3211ae4aa36a1aa59f8092a0a71a9da3f29a",
+        "timestamp": "2026-10-05T12:29:15Z"
+      },
+      {
+        "message": "OPS: record Groq free adversarial worker state",
+        "sha": "bfcd2ff3a32e468604baefc4a4e8c485c6d9e496",
+        "timestamp": "2026-10-05T12:29:10Z"
+      },
+      {
+        "message": "OPS: record Groq free-tier preflight",
+        "sha": "08c152ece26341cd9f17df9efd4052ac0390ab12",
+        "timestamp": "2026-10-05T12:28:51Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "939234d4d4fa8ac216295018a0f4c23e9edb16df",
+        "timestamp": "2026-10-05T12:17:26Z"
+      },
+      {
         "message": "OPS: advance paper-forward MTM state",
         "sha": "d07e8285b7e52f950e4e61e1f775246a5bf0b2fe",
         "timestamp": "2026-10-05T12:14:48Z"
@@ -4149,31 +4174,6 @@
         "message": "OPS: synchronize S10 phone runtime status",
         "sha": "9b945a52fd1ee98b80b0912f4d7b7304b78a925e",
         "timestamp": "2026-10-05T12:12:24Z"
-      },
-      {
-        "message": "OPS: synchronize Android phone fleet receipts",
-        "sha": "198af17c7d3b2e0a9f43c921a48f73d210fedbd0",
-        "timestamp": "2026-10-05T12:10:33Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f85f40e10785a9f794c852fbfdcfc1e798dc1374",
-        "timestamp": "2026-10-05T11:59:01Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "90593abf36d586b9cfbd41c8d21fdc6df9e54fc6",
-        "timestamp": "2026-10-05T11:55:54Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "7a67ceab343f480b9e5b4433667596e69b4475d1",
-        "timestamp": "2026-10-05T11:46:27Z"
-      },
-      {
-        "message": "TEST: align shadow kill-switch test with existing risk controller semantics",
-        "sha": "d9ada794e1d887d28e0c194b2536250244f5e9c5",
-        "timestamp": "2026-10-05T13:46:11+02:00"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d07e8285b7e52f950e4e61e1f775246a5bf0b2fe",
+  "source_master_sha": "4a4d223499f781d8eec2f0e0c47f555f33690d8b",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37308466351"
+    "run_id": "37310025480"
   }
 }
