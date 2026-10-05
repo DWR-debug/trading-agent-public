@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "wave_id": "WEEKLY-DEEP-2026-10-05",
+  "status": "DISCOVERY_ONLY_ACTIVE",
+  "generated_utc": "2026-10-05T16:35:00Z",
+  "source_master_sha": "222202c237ec37d8fe7084b4c588a841dee57400",
+  "candidates": [
+    {
+      "id": "Q215",
+      "issue_number": 1082,
+      "name": "Public-source observability gap",
+      "priority": "P1",
+      "orthogonality": 5,
+      "falsifiability": 5,
+      "data_machability": 3,
+      "expected_information_gain": 4,
+      "next_gate": "historical two-channel identity bridge + both public clocks + issuer lineage + independent PIT"
+    },
+    {
+      "id": "Q216",
+      "issue_number": 1083,
+      "name": "Macro-vintage revision exposure state",
+      "priority": "P1-RISK",
+      "orthogonality": 5,
+      "falsifiability": 4,
+      "data_machability": 4,
+      "expected_information_gain": 4,
+      "risk_state_only": true,
+      "next_gate": "complete historical vintage panel + first-public semantics + frozen exposure mapping + independent PIT"
+    }
+  ],
+  "anti_double_counting": [
+    "Q215 uses only the cross-channel timing relationship; upstream event content is excluded.",
+    "Q216 is a revision/reliability meta-state; it is not a macro-surprise return signal."
+  ],
+  "negative_findings": [
+    {
+      "path": "counterparty-bankruptcy-network",
+      "status": "PRUNED",
+      "reason": "Economic literature is strong, but free historical court coverage is incomplete and heterogeneous; defer pending deterministic archive/PIT route."
+    },
+    {
+      "path": "satellite-container-port-activity",
+      "status": "PRUNED",
+      "reason": "Overlaps Q171-Q178 and adds substantial source/processing complexity without sufficient new mechanism separation."
+    },
+    {
+      "path": "generic-cross-channel-repeated-disclosure-attention",
+      "status": "PRUNED",
+      "reason": "Too close to Q178/Q204 in generic form; only the constrained external-state-to-issuer-disclosure chronology remains as Q215."
+    }
+  ],
+  "scientific_boundary": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "selection_rule": {
+    "shortlist_maximum": 4,
+    "priority_order": [
+      "orthogonality",
+      "falsifiability",
+      "source/PIT feasibility",
+      "independent reproducibility",
+      "expected information gain per compute"
+    ]
+  }
+}
