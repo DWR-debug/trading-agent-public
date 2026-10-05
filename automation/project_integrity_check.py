@@ -242,6 +242,20 @@ ACTIVE_WORKFLOWS = {
     "litellm-groq-one-shot-smoke.yml",
     "litellm-q187-q192-one-shot.yml",
     "litellm-manual-groq-one-shot.yml",
+    "capacity-saturation-rolling-waves.yml",
+    "continuous-useful-capacity-replenisher.yml",
+    "literature-frontier-scout.yml",
+    "q214-disclosure-risk-feasibility.yml",
+    "q215-nhtsa-sec-bridge-feasibility.yml",
+    "q215-observability-gap-feasibility.yml",
+    "q216-data-revision-exposure-feasibility.yml",
+    "q216-rt-vintage-pit-feasibility.yml",
+    "q217-cognitive-processing-friction-feasibility.yml",
+    "q217-q131-orthogonality-audit.yml",
+    "q229-historical-release-census.yml",
+    "q229-q230-source-feasibility.yml",
+    "q230-windows-trace-connectivity.yml",
+    "windows-independent-capacity-pulse.yml",
 }
 
 REQUIRED_FILES = (
