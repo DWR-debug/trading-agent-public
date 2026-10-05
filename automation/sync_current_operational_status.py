@@ -175,6 +175,7 @@ def generate(
         ROOT / "research/run_requests/rolling_capacity_window_2026-10-05.json",
         {"status": "NOT_RECORDED"},
     )
+    project_statutes = _load_json(ROOT / "research/governance/project_statutes.json", {})
     active_trials = {
         str(entry.get("code")): entry
         for entry in active_registry.get("active_trials", [])
@@ -743,6 +744,12 @@ def generate(
             "q023_recorded": checkpoint.get("q023"),
             "note": "Latest recorded research state; not re-evaluated by this synchronizer.",
         },
+        "project_statutes": {
+            "canonical": project_statutes.get("canonical_language", "docs/TRADING_AGENT_PROJECT_STATUTES.md"),
+            "machine_mirror": project_statutes.get("machine_mirror", "research/governance/project_statutes.json"),
+            "status": project_statutes.get("status", "BINDING_ACTIVE"),
+            "useful_capacity_rule": project_statutes.get("useful_capacity_statute"),
+        },
         "resource_policy": {
             "paid_agent_budget_usd": 0,
             "paid_api_budget_usd": 0,
@@ -788,11 +795,13 @@ def generate(
         current["safety"]["status"] = "SAFE"
 
     frontier_codes = [str(x.get("code")) for x in active_registry.get("active_design_families", []) if x.get("code")]
-    current["chat_handoff"] = {"schema_version":"1.0","record_type":"trading_agent_chat_handoff","generated_at_utc":current["generated_at_utc"],"source_master_sha":source_master_sha,"active_frontier":frontier_codes,"next_research_focus":recorded_next_research_focus,"canonical_sources":current["canonical_sources"],"resume_rule":"Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.","response_rule":"Keep user-facing output bounded and delta-based; persist material state before reporting completion."}
+    current["chat_handoff"] = {"schema_version":"1.0","record_type":"trading_agent_chat_handoff","generated_at_utc":current["generated_at_utc"],"source_master_sha":source_master_sha,"active_frontier":frontier_codes,"next_research_focus":recorded_next_research_focus,"canonical_sources":current["canonical_sources"],"project_statutes":"docs/TRADING_AGENT_PROJECT_STATUTES.md","project_continuity_rule":project_statutes.get("useful_capacity_statute"),"resume_rule":"Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.","response_rule":"Keep user-facing output bounded and delta-based; persist material state before reporting completion."}
     current_json = json.dumps(current, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
     doc = f"""# Trading Agent — Current Operational Status
 
 **Current operational snapshot:** `{source_master_sha}`
+
+> **BINDING PROJECT STATUTES:** `docs/TRADING_AGENT_PROJECT_STATUTES.md` — **Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.**
 
 **Generated (UTC):** `{current['generated_at_utc']}`
 
