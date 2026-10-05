@@ -122,7 +122,14 @@
       "promotion": false,
       "live_execution": false
     },
-    "principle": "Continuously discover unusual, economically coherent and genuinely orthogonal information advantages; verify before adoption and preserve dead ends."
+    "principle": "Continuously discover unusual, economically coherent and genuinely orthogonal information advantages; verify before adoption and preserve dead ends.",
+    "current_focus": [
+      "Q214",
+      "Q215",
+      "Q216",
+      "Q217"
+    ],
+    "anti_duplicate_rule": "Do not keep a separate candidate when the proposed mechanism empirically collapses to an existing lineage; merge Q217 back into Q131 if processing-friction decomposition is not distinct."
   },
   "rolling_capacity_wave_control": {
     "status": "ACTIVE",
@@ -130,17 +137,7 @@
     "workflow": ".github/workflows/capacity-saturation-rolling-waves.yml",
     "scheduler_cadence": "every_10_minutes",
     "rule": "When useful free capacity exists and a non-duplicate bounded backlog exists, keep the lane occupied with the highest-priority ready task.",
-    "current_window": {
-      "window_id": "TA-2H-2026-10-05-1611Z",
-      "start_utc": "2026-10-05T16:11:31Z",
-      "end_utc": "2026-10-05T18:11:31Z",
-      "phases": [
-        "W1 SOURCE_PIT_CLOSURE",
-        "W2 CANDIDATE_AND_INFORMATION_TIMING",
-        "W3 NEXT_GATE_AND_REPRODUCTION",
-        "W4 DISCOVERY_AND_CONSOLIDATION"
-      ]
-    },
+    "current_window": "read dynamically from research/run_requests/rolling_capacity_window_2026-10-05.json; never treat an expired window embedded in this contract as current",
     "phase_rule": "Skip active duplicates; skip phase-successful work; allow at most one retry after failure/cancellation; downstream workflows retain their own fail-closed gates.",
     "permanent_extension": "After the two-hour lease expires, the same rule remains permanent through the existing 10-minute A/B loops and 20-minute Runner-C opportunistic pulse.",
     "scientific_boundary": {
