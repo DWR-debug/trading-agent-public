@@ -221,7 +221,7 @@
       "regular_task": "deterministic mechanical research/governance QA",
       "full_acceptance_policy": "36-case R3 benchmark only on onboarding or explicit revalidation; never as recurring default workload",
       "throughput_probe": ".github/workflows/s10-throughput-probe.yml (manual diagnostics only)",
-      "event_driven_review": "meaningful research-runner or critical-governance change plus regular two-hour mechanical-QA cadence; semantic review remains explicit",
+      "event_driven_review": "meaningful research-runner or critical-governance change plus a 20-minute adaptive mechanical-QA cadence; semantic review remains explicit",
       "latest_utility_run_id": "37102979617",
       "latest_utility_status": "S10_UTILITY_REVIEW_COMPLETED",
       "default_mode": "adaptive_mechanical_research_qa",
@@ -466,14 +466,30 @@
     "cadence_utc": "*/10 * * * *",
     "objective": "Ideal useful utilization of every available independent lane whenever real bounded backlog exists; no artificial activity.",
     "current_window": {
-      "window_id": "TA-2H-2026-10-05-1611Z",
-      "start_utc": "2026-10-05T16:11:31Z",
-      "end_utc": "2026-10-05T18:11:31Z",
+      "window_id": "TA-ROLLING-2026-10-05-1744Z",
+      "start_utc": "2026-10-05T17:44:00Z",
+      "end_utc": "2026-10-05T19:44:00Z",
       "phases": [
-        "W1 SOURCE_PIT_CLOSURE",
-        "W2 CANDIDATE_AND_INFORMATION_TIMING",
-        "W3 NEXT_GATE_AND_REPRODUCTION",
-        "W4 DISCOVERY_AND_CONSOLIDATION"
+        {
+          "id": "W1",
+          "start_after_minutes": 0,
+          "name": "SOURCE_PIT_CLOSURE"
+        },
+        {
+          "id": "W2",
+          "start_after_minutes": 30,
+          "name": "CANDIDATE_AND_INFORMATION_TIMING"
+        },
+        {
+          "id": "W3",
+          "start_after_minutes": 60,
+          "name": "NEXT_GATE_AND_REPRODUCTION"
+        },
+        {
+          "id": "W4",
+          "start_after_minutes": 90,
+          "name": "DISCOVERY_AND_CONSOLIDATION"
+        }
       ]
     },
     "wave_policy": [
@@ -546,6 +562,6 @@
       "promotion": false,
       "live_execution": false
     },
-    "last_refreshed_utc": "2026-10-05T19:07:20.782Z"
+    "last_refreshed_utc": "2026-10-05T19:22:11.737Z"
   }
 }
