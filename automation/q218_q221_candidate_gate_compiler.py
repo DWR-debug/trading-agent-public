@@ -51,7 +51,12 @@ def compile_gate(census: dict, specs: dict, q129_contract: dict | None = None) -
         if cid not in spec_ids:
             raise SystemExit(f"missing candidate contract: {cid}")
 
-    q = {str(item["candidate_id"]): item for item in census.get("candidates", [])}
+    q = {
+        "Q218": {"sec_submission_census": census.get("q218_sec_pair_census", {})},
+        "Q219": {"q129_contract_check": census.get("q219_q129_contract", {})},
+        "Q220": {"sec_notes_census": census.get("q220_sec_notes_census", {})},
+        "Q221": {"usa_rdtne_census": census.get("q221_usa_rdtne_census", {})},
+    }
 
     out = {
         "schema_version": 1,
