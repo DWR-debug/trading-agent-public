@@ -1,7 +1,7 @@
 """Paper-only coordinator between frozen agent intent and a shadow ledger.
 
-The coordinator validates safety/risk state and emits an immutable shadow-event
-record. It never calls a broker, creates an order, changes candidate selection,
+The coordinator validates safety/risk state and emits a provenance-bearing shadow
+event. It never calls a broker, creates an order, changes candidate selection,
 tunes parameters, or evaluates performance.
 """
 
@@ -11,10 +11,12 @@ import hashlib
 import json
 from dataclasses import dataclass
 from math import isfinite
+from pathlib import Path
 from typing import Any, Mapping
 
 from agent_runtime.decision_adapter import intent_fingerprint
 from agent_runtime.paper_intent import PaperIntent, PaperIntentError
+from agent_runtime.shadow_ledger import PaperShadowIntentLedger
 from risk.portfolio_controller import PortfolioRiskController
 
 
@@ -51,20 +53,31 @@ class ShadowLedgerEvent:
             "live_execution": self.live_execution,
         }
         return hashlib.sha256(
-            json.dumps(payload, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+            json.dumps(
+                payload, sort_keys=True, separators=(",", ":"), allow_nan=False
+            ).encode("utf-8")
         ).hexdigest()
 
 
 class PaperShadowCoordinator:
-    """Admit valid intents to an in-memory shadow ledger only."""
+    """Admit valid intents to a canonical append-only paper-shadow ledger."""
 
-    def __init__(self, risk_controller: PortfolioRiskController):
+    def __init__(
+        self,
+        risk_controller: PortfolioRiskController,
+        ledger: PaperShadowIntentLedger | None = None,
+    ) -> None:
         self._risk = risk_controller
+        self._ledger = ledger if ledger is not None else PaperShadowIntentLedger()
         self._events: list[ShadowLedgerEvent] = []
 
     @property
     def events(self) -> tuple[ShadowLedgerEvent, ...]:
         return tuple(self._events)
+
+    @property
+    def ledger(self) -> PaperShadowIntentLedger:
+        return self._ledger
 
     def admit(self, intent: PaperIntent) -> ShadowLedgerEvent:
         try:
@@ -79,11 +92,7 @@ class PaperShadowCoordinator:
         if abs(intent.target_exposure) > 1.0:
             raise ShadowCoordinatorError("target exposure exceeds shadow bound")
 
-        existing = [e for e in self._events if e.symbol == intent.symbol]
-        if existing and existing[-1].decision_time_utc > intent.decision_time_utc:
-            raise ShadowCoordinatorError("decision time moved backwards for symbol")
-
-        state = self._risk.status()
+        state = dict(self._risk.status())
         event = ShadowLedgerEvent(
             event_type="SHADOW_INTENT_ACCEPTED",
             candidate_id=intent.candidate_id,
@@ -93,8 +102,18 @@ class PaperShadowCoordinator:
             intent_fingerprint=intent_fingerprint(intent),
             portfolio_state=state,
         )
+        event.fingerprint()
+        self._ledger.append(intent)
         self._events.append(event)
         return event
+
+    def persist_ledger(self, path: str | Path) -> dict[str, object]:
+        """Persist the canonical PaperIntent ledger without outcomes."""
+        return self._ledger.persist(path)
+
+    def event_chain_fingerprint(self) -> str:
+        chain = "|".join(event.fingerprint() for event in self._events).encode("utf-8")
+        return hashlib.sha256(chain).hexdigest()
 
     def export(self) -> list[dict[str, Any]]:
         return [
