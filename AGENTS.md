@@ -1,3 +1,5 @@
+> **BINDING PROJECT STATUTES:** Vor Agentenarbeit `docs/TRADING_AGENT_PROJECT_STATUTES.md` lesen. Nutzkapazitäts-Maxime: **Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.**
+
 # Trading Agent — Agentenvertrag
 
 Dieses Repository ist die technische Referenz für den paper-only Trading Agent.
