@@ -36,6 +36,48 @@ def fetch(url: str, *, range_header: str | None = None) -> bytes:
         return resp.read()
 
 
+def _time_column(header: list[str]) -> str | None:
+    cols = [h.strip() for h in header]
+    return next((name for name in ("_time", "time") if name in cols), None)
+
+
+def _normalize_time(value: str) -> datetime | None:
+    value = value.strip()
+    if not value:
+        return None
+    for candidate in (value, value[:-2] + ":" + value[-2:] if len(value) > 5 and value[-5] in ("+", "-") and value[-2:].isdigit() else value):
+        try:
+            return datetime.fromisoformat(candidate)
+        except ValueError:
+            pass
+    return None
+
+
+def _time_parse_rate(header: list[str], rows: list[list[str]]) -> float:
+    name = _time_column(header)
+    if name is None:
+        return 0.0
+    idx = header.index(name)
+    values = [row[idx] for row in rows if len(row) > idx]
+    parsed = sum(_normalize_time(v) is not None for v in values)
+    return (parsed / len(values)) if values else 0.0
+
+
+def _time_examples(header: list[str], rows: list[list[str]]) -> list[dict]:
+    name = _time_column(header)
+    if name is None:
+        return []
+    idx = header.index(name)
+    out = []
+    for row in rows[:5]:
+        if len(row) <= idx:
+            continue
+        raw = row[idx]
+        parsed = _normalize_time(raw)
+        out.append({"raw": raw, "normalized_iso": parsed.isoformat() if parsed else None})
+    return out
+
+
 def inspect_zip(path: Path) -> dict:
     with zipfile.ZipFile(path) as zf:
         members = [n for n in zf.namelist() if not n.endswith("/")]
@@ -76,6 +118,8 @@ def inspect_zip(path: Path) -> dict:
         "sample_uri_regex_matches": uri_matches,
         "sample_uri_match_rate": (uri_matches / rows_seen) if rows_seen else 0.0,
         "first_rows_sha256": hashlib.sha256(json.dumps(first_rows, ensure_ascii=False, separators=(",", ":")).encode()).hexdigest(),
+        "request_time_parse_rate": _time_parse_rate(header, first_rows),
+        "request_time_examples": _time_examples(header, first_rows),
     }
 
 
