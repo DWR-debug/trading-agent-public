@@ -241,6 +241,7 @@ ACTIVE_WORKFLOWS = {
     "litellm-provider-smoke.yml",
     "litellm-groq-one-shot-smoke.yml",
     "litellm-q187-q192-one-shot.yml",
+    "litellm-manual-groq-one-shot.yml",
 }
 
 REQUIRED_FILES = (
