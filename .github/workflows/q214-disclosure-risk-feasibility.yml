@@ -1,6 +1,11 @@
 name: Q214 Disclosure Risk-State Feasibility
 
 on:
+  push:
+    branches: [master]
+    paths:
+      - "research/frontier/q214_disclosure_risk_state_2026_10_05.json"
+      - ".github/workflows/q214-disclosure-risk-feasibility.yml"
   schedule:
     - cron: "41 */6 * * *"
   workflow_dispatch:
