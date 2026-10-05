@@ -61,7 +61,21 @@ PROVIDER_SPECS = {
 
 LOCAL_ATTESTATION_DEFAULT = Path.home() / ".trading-agent" / "ai_free_attestation.json"
 
-CONTEXT_FILES = {    "AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT": (
+CONTEXT_FILES = {
+    "AI-2026-10-05-MANUAL-INFORMATION-TIMING-REVIEW": (
+        "ai_requests/AI-2026-10-05-MANUAL-INFORMATION-TIMING-REVIEW.json",
+        "docs/CURRENT_STATUS.md",
+        "research/governance/critical_research_quality_control.json",
+        "research/governance/persistent_research_acceleration_contract.json",
+        "research/candidates/orthogonal_candidate_specs_2026-10-04.json",
+        "research/evidence/orthogonal_next_gate_latest.json",
+        "research/evidence/q197_q198_source_feasibility_latest.json",
+        "research/evidence/q202_q204_information_timing_feasibility_latest.json",
+        "docs/research_design/EXTERNAL_RESEARCH_INSPIRATION_2026-09-30.md",
+        "docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md",
+    ),
+
+    {    "AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT": (
         "ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json",
         "docs/CURRENT_STATUS.md",
         "research/governance/critical_research_quality_control.json",
@@ -191,6 +205,17 @@ CONTEXT_TOTAL_LIMIT = 18000
 # Only stable/material context participates in automatic AI deduplication.
 # Volatile status synchronization outputs are intentionally excluded.
 CONTEXT_FINGERPRINT_FILES = {
+    "AI-2026-10-05-MANUAL-INFORMATION-TIMING-REVIEW": (
+        "ai_requests/AI-2026-10-05-MANUAL-INFORMATION-TIMING-REVIEW.json",
+        "research/governance/critical_research_quality_control.json",
+        "research/governance/persistent_research_acceleration_contract.json",
+        "research/candidates/orthogonal_candidate_specs_2026-10-04.json",
+        "research/evidence/orthogonal_next_gate_latest.json",
+        "research/evidence/q197_q198_source_feasibility_latest.json",
+        "research/evidence/q202_q204_information_timing_feasibility_latest.json",
+        "docs/research_design/EXTERNAL_RESEARCH_INSPIRATION_2026-09-30.md",
+        "docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md",
+    ),
     "AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT": (
         "ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json",
         "research/governance/critical_research_quality_control.json",
