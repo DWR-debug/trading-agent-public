@@ -138,6 +138,9 @@ def main() -> int:
             "research/frontier/q109_candidate_wave_2026_10_01.json",
             "research/frontier/q123_candidate_wave_2026_10_02.json",
             "research/frontier/q126_q132_candidate_wave_2026_10_03.json",
+            "research/frontier/q197_q198_candidate_wave_2026_10_04.json",
+            "research/frontier/q199_q201_candidate_wave_2026_10_04.json",
+            "research/frontier/q205_nlrb_robustness_inventory_2026_10_05.json",
         ],
     )
     args = parser.parse_args()
