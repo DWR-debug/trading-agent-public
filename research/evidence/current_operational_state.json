@@ -415,6 +415,34 @@
         "source_feasibility_workflow": ".github/workflows/q205-nlrb-source-feasibility.yml",
         "source_receipt_fingerprint": "11a67dea4117e8f555cbd23f0bac566302759ae50d8c094b897898cbcb094e06",
         "state": "SOURCE_FEASIBILITY_COMPLETED_PIT_READINESS_PENDING"
+      },
+      {
+        "automation_ids": [
+          "6ac3c4590c108191adab58344018282b",
+          "6ac3c45a8b508191bfdd3e449cd4a5a4"
+        ],
+        "class": "persistent_literature_and_mechanism_discovery",
+        "code": "LITERATURE-DISCOVERY-PLANE",
+        "issue_number": null,
+        "note": "Permanent recurring literature search; verify primary sources, prefer orthogonal mechanisms, cheap-falsify, assess PIT/reproducibility, and retain negative evidence.",
+        "performance_authorization_allowed": false,
+        "policy_path": "research/governance/literature_research_policy.json",
+        "state": "ACTIVE",
+        "workflow": ".github/workflows/literature-frontier-scout.yml"
+      },
+      {
+        "candidate_inventory_path": "research/frontier/q214_disclosure_risk_state_2026_10_05.json",
+        "class": "disclosure_implied_forward_beta_risk_structure",
+        "code": "Q214",
+        "design_document": "docs/research_design/Q214_DISCLOSURE_IMPLIED_FORWARD_BETA_2026-10-05.md",
+        "issue_number": null,
+        "next_gate": "SEC historical archive/PIT contract + deterministic similarity compiler + independent reproduction",
+        "note": "Risk-state-only disclosure similarity mechanism, deliberately separated from Q088 peer-return/comomentum.",
+        "parent_code": "FRONTIER-Q211-Q213",
+        "performance_authorization_allowed": false,
+        "priority": "P1-RISK",
+        "risk_state_only": true,
+        "state": "SOURCE_FEASIBILITY_ACTIVE"
       }
     ],
     "active_research_registry": {
@@ -835,25 +863,31 @@
           "state": "SOURCE_FEASIBILITY_COMPLETED_PIT_READINESS_PENDING"
         },
         {
-          "candidate_ids": [
-            "Q211",
-            "Q212",
-            "Q213"
+          "automation_ids": [
+            "6ac3c4590c108191adab58344018282b",
+            "6ac3c45a8b508191bfdd3e449cd4a5a4"
           ],
-          "candidate_inventory_path": "research/frontier/q211_q213_literature_frontier_2026_10_05.json",
-          "class": "literature_derived_semantic_network_disagreement_frontier",
-          "code": "FRONTIER-Q211-Q213",
-          "design_document": "docs/research_design/LITERATURE_FRONTIER_EXPANSION_2026-10-05.md",
-          "issue_number": 1079,
-          "note": "Literature-derived expansion; discovery-only and candidate-specific PIT/reproduction gated.",
-          "parent_code": "FRONTIER-20260928",
+          "class": "persistent_literature_and_mechanism_discovery",
+          "code": "LITERATURE-DISCOVERY-PLANE",
+          "issue_number": null,
+          "note": "Permanent recurring literature search; verify primary sources, prefer orthogonal mechanisms, cheap-falsify, assess PIT/reproducibility, and retain negative evidence.",
           "performance_authorization_allowed": false,
-          "priority": [
-            "Q211_P1",
-            "Q212_P1_FEASIBILITY",
-            "Q213_P2_CONTINGENT"
-          ],
-          "source_feasibility_workflow": ".github/workflows/hosted-deterministic-frontier.yml",
+          "policy_path": "research/governance/literature_research_policy.json",
+          "state": "ACTIVE",
+          "workflow": ".github/workflows/literature-frontier-scout.yml"
+        },
+        {
+          "candidate_inventory_path": "research/frontier/q214_disclosure_risk_state_2026_10_05.json",
+          "class": "disclosure_implied_forward_beta_risk_structure",
+          "code": "Q214",
+          "design_document": "docs/research_design/Q214_DISCLOSURE_IMPLIED_FORWARD_BETA_2026-10-05.md",
+          "issue_number": null,
+          "next_gate": "SEC historical archive/PIT contract + deterministic similarity compiler + independent reproduction",
+          "note": "Risk-state-only disclosure similarity mechanism, deliberately separated from Q088 peer-return/comomentum.",
+          "parent_code": "FRONTIER-Q211-Q213",
+          "performance_authorization_allowed": false,
+          "priority": "P1-RISK",
+          "risk_state_only": true,
           "state": "SOURCE_FEASIBILITY_ACTIVE"
         }
       ]
@@ -1201,6 +1235,13 @@
       "future_full_formal_pass_requires_independent_replication_contract": true,
       "future_performance_authorization_requires_robustness_contract": true,
       "legacy_preregistrations_are_historical": true,
+      "literature_discovery": {
+        "anti_convergence": "Orthogonal information mechanism before additional price-only variants.",
+        "maximum_active_shortlist": 4,
+        "performance_authorization_allowed": false,
+        "policy_path": "research/governance/literature_research_policy.json",
+        "status": "ACTIVE"
+      },
       "only_exactly_listed_authorizations_may_execute": true,
       "only_listed_performance_trials_may_be_authorized": true,
       "paper_only": true,
@@ -1492,7 +1533,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T15:43:44.364235+00:00",
+  "generated_at_utc": "2026-10-05T15:44:08.709036+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4183,6 +4224,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "GOVERNANCE: register permanent literature discovery and Q214",
+        "sha": "d99fde96feaa61954df7289795de9c3b71629798",
+        "timestamp": "2026-10-05T17:43:57+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b2459af6ca6cc5fb6d17ee825a37b6b1fa084c1d",
+        "timestamp": "2026-10-05T15:43:46Z"
+      },
+      {
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "3b25afcbc328408d0bbea2966025d5c0d39271c6",
         "timestamp": "2026-10-05T15:43:36Z"
@@ -4211,16 +4262,6 @@
         "message": "GOVERNANCE: make literature research a mandatory chat entry rule",
         "sha": "36df10e96254195fdf52f0ce0e660f7616a5b31e",
         "timestamp": "2026-10-05T17:43:12+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6f2a33054787c67a642353d609fb08ebb6418027",
-        "timestamp": "2026-10-05T15:43:09Z"
-      },
-      {
-        "message": "GOVERNANCE: anchor permanent literature research plane in OS logic",
-        "sha": "a339e82fb875c48d684e06abe429b980420c1958",
-        "timestamp": "2026-10-05T17:43:05+02:00"
       }
     ]
   },
@@ -4318,7 +4359,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "3b25afcbc328408d0bbea2966025d5c0d39271c6",
+  "source_master_sha": "d99fde96feaa61954df7289795de9c3b71629798",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4432,6 +4473,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37335117424"
+    "run_id": "37335190513"
   }
 }
