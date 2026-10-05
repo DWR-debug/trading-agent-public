@@ -266,6 +266,7 @@ def expanded_candidate_board(
         })
 
     q205 = next((x for x in flatten_registry(evidence) if str(x.get("code")) == "Q205"), None)
+    board = [x for x in board if x.get("code") != "Q205"]
     if q205:
         board.append({
             "code": "Q205",
@@ -431,7 +432,8 @@ def main() -> None:
             "active_work_items": len(work),
             "configured_resources": 12,
             "runner_api_visible": len(runners),
-            "busy_runners": sum(1 for r in runners if r.get("busy") is True),
+            "busy_runners": sum(1 for r in runners if r.get("busy") is True) if runners else None,
+            "runner_api_status": "available" if runners else "unavailable_or_empty",
             "research_tracks": len(state_board),
             "ai_providers": len(ai),
         },
