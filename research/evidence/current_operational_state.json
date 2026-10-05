@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T12:55:06.192917+00:00",
+  "generated_at_utc": "2026-10-05T12:56:37.233136+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4133,17 +4133,18 @@
     ],
     "default_branch": "master",
     "open_agent_ready_issues": [],
-    "open_pull_requests": [
-      {
-        "baseRefName": "master",
-        "headRefName": "ops/agent-queue-budget-reconcile-20261005",
-        "number": 1077,
-        "title": "OPS: harden agent queue budget reconciliation",
-        "updatedAt": "2026-10-05T12:54:18Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1077"
-      }
-    ],
+    "open_pull_requests": [],
     "recent_commits": [
+      {
+        "message": "OPS: harden agent queue budget reconciliation",
+        "sha": "eaf27d396ec5949eed38a128a6be2ad0e6479662",
+        "timestamp": "2026-10-05T14:56:22+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "3465361dcbc525923adad161c9b7e51e633f6be7",
+        "timestamp": "2026-10-05T12:55:09Z"
+      },
       {
         "message": "OPS: record Groq API key smoke test",
         "sha": "9609ea9378bef24e8551472a154627fb16d9f0d1",
@@ -4173,16 +4174,6 @@
         "message": "OPS: record AI worker state",
         "sha": "165e4f04ea9e070fdfb1d3accbb5fa5ace011c7e",
         "timestamp": "2026-10-05T12:53:45Z"
-      },
-      {
-        "message": "OPS: use proven Windows codeload and pinned Python bootstrap",
-        "sha": "4d5dc2a9d3ce2eecc53fa81444fffd2b539e4d2b",
-        "timestamp": "2026-10-05T14:53:41+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "08944504cb386fee271befd7c8b7aa4f2f4162bf",
-        "timestamp": "2026-10-05T12:52:58Z"
       }
     ]
   },
@@ -4280,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "9609ea9378bef24e8551472a154627fb16d9f0d1",
+  "source_master_sha": "eaf27d396ec5949eed38a128a6be2ad0e6479662",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4394,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37312851180"
+    "run_id": "37313037654"
   }
 }
