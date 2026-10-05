@@ -7,6 +7,7 @@ BRIDGE_LOG="$HOME/s10-bridge.log"
 MODEL="Qwen/Qwen2.5-1.5B-Instruct-GGUF:Q4_K_M"
 LLAMA_URL="http://127.0.0.1:8080"
 BRIDGE_URL="http://127.0.0.1:8765"
+S10_UBUNTU_USER="${S10_UBUNTU_USER:-s10}"
 
 command -v llama-server >/dev/null 2>&1 || {
   echo "Install first: pkg install -y llama-cpp"
@@ -54,7 +55,7 @@ curl -fsS "$BRIDGE_URL/health"
 echo
 
 mkdir -p "$HOME/.cache/s10-model"
-proot-distro login ubuntu --user s10runner -- bash -lc '
+proot-distro login ubuntu --user "$S10_UBUNTU_USER" -- bash -lc '
   mkdir -p ~/.trading-agent
   cat > ~/.trading-agent/s10_interface.json <<EOF
 {"schema_version":1,"enabled":true,"mode":"systemone_http","base_url":"http://127.0.0.1:8765","model":"S10-Qwen2.5-1.5B","protocol_path":"/v1/systemone","timeout_seconds":120}
