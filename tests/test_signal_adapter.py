@@ -63,6 +63,7 @@ def test_signal_mapping_requires_complete_mapping():
     with pytest.raises(PaperIntentError):
         signal_to_packet(
             _signal(SignalType.BUY),
+            candidate_id="Q-TEST-FROZEN",
             decision_time_utc="2026-10-05T12:00:00Z",
             market_observation_time_utc="2026-10-05T11:59:00Z",
             input_fingerprint="input",
