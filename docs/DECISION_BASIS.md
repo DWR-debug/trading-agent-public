@@ -60,3 +60,11 @@ LIVE_TRADING_ENABLED=False
 ORDERS_ENABLED=False
 AUTOMATIC_PROMOTION=False
 Kostenpflichtige Agent-/API-Nutzung bleibt 0 USD. AI-Ausgaben sind keine wissenschaftliche Evidenz und keine Autorisierung.
+
+## Verbindliche Projektstatuten
+
+Kanonische Sprachregelung: `docs/TRADING_AGENT_PROJECT_STATUTES.md`.
+
+**Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.**
+
+Dauerhafte Projektentscheidungen werden in der passenden kanonischen Repository-Ebene persistiert; der Chat bleibt Handoff-/Steuerkontext und kein alleiniger Zustandsspeicher.
