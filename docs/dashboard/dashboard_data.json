@@ -419,7 +419,7 @@
     "website_update_button": "opens GitHub Actions workflow dispatch page"
   },
   "dashboard_summary": {
-    "active_work_items": 0,
+    "active_work_items": 11,
     "ai_providers": 4,
     "busy_runners": null,
     "configured_resources": 12,
@@ -427,7 +427,7 @@
     "runner_api_status": "unavailable_or_empty",
     "runner_api_visible": 0
   },
-  "generated_at_utc": "2026-10-05T11:22:38.694725+00:00",
+  "generated_at_utc": "2026-10-05T11:24:22.228137+00:00",
   "governance_notes": [
     "Operational resource availability and active jobs are separate from scientific evidence.",
     "AI worker output is never scientific evidence.",
@@ -463,9 +463,172 @@
       "slot": "Windows self-hosted B"
     }
   },
-  "master_sha": "8abafb8294c97345ff6a0f9dea3eb443604ba6d4",
-  "operational_snapshot_sha": "095b6a73812c7f42b44faf66f22a33dd53b2d3fc",
-  "recent_activity_24h": [],
+  "master_sha": "01402298452fb6a5e937ac144aafebb59b4e9800",
+  "operational_snapshot_sha": "93d07c09c0ded76bdb5987f5f0bd04642aa06f77",
+  "recent_activity_24h": [
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T11:24:21Z",
+      "created_at": "2026-10-05T11:24:11Z",
+      "run_id": 37302695883,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302695883",
+      "status": "success",
+      "task": "Current Status Drift Guard"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T11:24:15Z",
+      "created_at": "2026-10-05T11:23:58Z",
+      "run_id": 37302674358,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302674358",
+      "status": "cancelled",
+      "task": "Current Operational Status Synchronizer"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T11:23:07Z",
+      "created_at": "2026-10-05T11:22:20Z",
+      "run_id": 37302500775,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302500775",
+      "status": "success",
+      "task": "Resource Dashboard Update"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T11:24:04Z",
+      "created_at": "2026-10-05T11:22:20Z",
+      "run_id": 37302500302,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302500302",
+      "status": "cancelled",
+      "task": "CI"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T11:22:33Z",
+      "created_at": "2026-10-05T11:22:20Z",
+      "run_id": 37302500280,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302500280",
+      "status": "success",
+      "task": "Current Operational Status Synchronizer"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T11:22:38Z",
+      "created_at": "2026-10-05T11:22:20Z",
+      "run_id": 37302500238,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302500238",
+      "status": "success",
+      "task": "Deploy Resource Dashboard to GitHub Pages"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T11:23:24Z",
+      "created_at": "2026-10-05T11:22:19Z",
+      "run_id": 37302500205,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302500205",
+      "status": "success",
+      "task": "Full Suite Verification"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T11:23:58Z",
+      "created_at": "2026-10-05T11:22:19Z",
+      "run_id": 37302500177,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302500177",
+      "status": "failure",
+      "task": "T052 Exact Master CI Gate"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T11:22:57Z",
+      "created_at": "2026-10-05T11:21:46Z",
+      "run_id": 37302441473,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302441473",
+      "status": "failure",
+      "task": "T052 Exact Master CI Gate"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T11:22:53Z",
+      "created_at": "2026-10-05T11:21:45Z",
+      "run_id": 37302441406,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302441406",
+      "status": "cancelled",
+      "task": "CI"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T11:22:03Z",
+      "created_at": "2026-10-05T11:21:45Z",
+      "run_id": 37302441325,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302441325",
+      "status": "success",
+      "task": "Orthogonal Candidate Development"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T11:22:21Z",
+      "created_at": "2026-10-05T11:21:45Z",
+      "run_id": 37302441317,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302441317",
+      "status": "cancelled",
+      "task": "Full Suite Verification"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T11:22:12Z",
+      "created_at": "2026-10-05T11:21:45Z",
+      "run_id": 37302441277,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302441277",
+      "status": "success",
+      "task": "Workflow Lint"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T11:22:00Z",
+      "created_at": "2026-10-05T11:21:45Z",
+      "run_id": 37302441273,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302441273",
+      "status": "success",
+      "task": "Current Operational Status Synchronizer"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T11:22:06Z",
+      "created_at": "2026-10-05T11:21:02Z",
+      "run_id": 37302365402,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302365402",
+      "status": "cancelled",
+      "task": "CI"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T11:22:29Z",
+      "created_at": "2026-10-05T11:21:02Z",
+      "run_id": 37302365309,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302365309",
+      "status": "cancelled",
+      "task": "Full Suite Verification"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T11:22:00Z",
+      "created_at": "2026-10-05T11:21:02Z",
+      "run_id": 37302365303,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302365303",
+      "status": "failure",
+      "task": "T052 Exact Master CI Gate"
+    },
+    {
+      "actor": "DWR-debug",
+      "completed_at": "2026-10-05T11:21:20Z",
+      "created_at": "2026-10-05T11:21:01Z",
+      "run_id": 37302365254,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302365254",
+      "status": "success",
+      "task": "Current Operational Status Synchronizer"
+    }
+  ],
   "resources": [
     {
       "authority": "bounded capacity; no automatic performance authorization",
@@ -505,12 +668,15 @@
     },
     {
       "authority": "non-authorizing unless an exact formal gate says otherwise",
-      "busy": false,
+      "busy": true,
       "configured_runner": "ubuntu-24.04",
-      "current_assignments": 0,
-      "current_tasks": [],
+      "current_assignments": 2,
+      "current_tasks": [
+        "Current Status Drift Guard",
+        "Hosted Deterministic Frontier Research Loop"
+      ],
       "labels": [],
-      "live_status": "not assigned in snapshot",
+      "live_status": "active work assigned (2)",
       "name": "GitHub-hosted Ubuntu x64",
       "role": "Deterministic frontier, CI, source/PIT workflows",
       "type": "cloud"
@@ -601,12 +767,14 @@
     },
     {
       "authority": "read-only operational snapshot",
-      "busy": false,
+      "busy": true,
       "configured_runner": "GitHub Pages",
-      "current_assignments": 0,
-      "current_tasks": [],
+      "current_assignments": 1,
+      "current_tasks": [
+        "Resource Dashboard Update"
+      ],
       "labels": [],
-      "live_status": "not assigned in snapshot",
+      "live_status": "active work assigned (1)",
       "name": "Dashboard / GitHub Pages",
       "role": "Operational visibility and status publication",
       "type": "service"
@@ -622,7 +790,159 @@
     "paid_usage_usd": 0
   },
   "status_source": "docs/CURRENT_STATUS.md + research/evidence/current_operational_state.json + ops/trading_agent_os_state.json",
-  "work_assignments": [],
-  "workload_by_lane": {},
-  "workload_by_resource": {}
+  "work_assignments": [
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "job": "guard",
+      "lane": "PLATFORM / GOVERNANCE",
+      "resource": "GitHub-hosted Ubuntu x64",
+      "run_id": 37302695883,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302695883",
+      "started_at": "2026-10-05T11:24:11Z",
+      "status": "queued",
+      "task": "Current Status Drift Guard",
+      "worker": "GitHub Actions 1000025941"
+    },
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "job": "frontier",
+      "lane": "FRONTIER DISCOVERY",
+      "resource": "GitHub-hosted Ubuntu x64",
+      "run_id": 37302691713,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302691713",
+      "started_at": "2026-10-05T11:24:08Z",
+      "status": "in_progress",
+      "task": "Hosted Deterministic Frontier Research Loop",
+      "worker": "GitHub Actions 1000025940"
+    },
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "job": "",
+      "lane": "PLATFORM / GOVERNANCE",
+      "resource": "GitHub-hosted CI",
+      "run_id": 37302691708,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302691708",
+      "started_at": "2026-10-05T11:24:08Z",
+      "status": "pending",
+      "task": "T052 Exact Master CI Gate",
+      "worker": "pending runner assignment"
+    },
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "job": "",
+      "lane": "PLATFORM / GOVERNANCE",
+      "resource": "GitHub-hosted CI",
+      "run_id": 37302691706,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302691706",
+      "started_at": "2026-10-05T11:24:08Z",
+      "status": "pending",
+      "task": "CI",
+      "worker": "pending runner assignment"
+    },
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "job": "synchronize",
+      "lane": "PLATFORM / GOVERNANCE",
+      "resource": "OS control plane",
+      "run_id": 37302691703,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302691703",
+      "started_at": "2026-10-05T11:24:08Z",
+      "status": "pending",
+      "task": "Current Operational Status Synchronizer",
+      "worker": "pending runner assignment"
+    },
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "job": "",
+      "lane": "PLATFORM / GOVERNANCE",
+      "resource": "GitHub-hosted CI",
+      "run_id": 37302691614,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302691614",
+      "started_at": "2026-10-05T11:24:08Z",
+      "status": "pending",
+      "task": "Full Suite Verification",
+      "worker": "pending runner assignment"
+    },
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "job": "update",
+      "lane": "PLATFORM / GOVERNANCE",
+      "resource": "Dashboard / GitHub Pages",
+      "run_id": 37302687062,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302687062",
+      "started_at": "2026-10-05T11:24:06Z",
+      "status": "in_progress",
+      "task": "Resource Dashboard Update",
+      "worker": "GitHub Actions 1000025939"
+    },
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "job": "synchronize",
+      "lane": "PLATFORM / GOVERNANCE",
+      "resource": "OS control plane",
+      "run_id": 37302674358,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302674358",
+      "started_at": "2026-10-05T11:23:58Z",
+      "status": "in_progress",
+      "task": "Current Operational Status Synchronizer",
+      "worker": "GitHub Actions 1000025935"
+    },
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "job": "full_suite",
+      "lane": "PLATFORM / GOVERNANCE",
+      "resource": "GitHub-hosted CI",
+      "run_id": 37302674198,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302674198",
+      "started_at": "2026-10-05T11:23:58Z",
+      "status": "in_progress",
+      "task": "Full Suite Verification",
+      "worker": "GitHub Actions 1000025934"
+    },
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "job": "gate",
+      "lane": "PLATFORM / GOVERNANCE",
+      "resource": "GitHub-hosted CI",
+      "run_id": 37302674183,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302674183",
+      "started_at": "2026-10-05T11:23:58Z",
+      "status": "in_progress",
+      "task": "T052 Exact Master CI Gate",
+      "worker": "GitHub Actions 1000025936"
+    },
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "job": "test (ubuntu-24.04)",
+      "lane": "PLATFORM / GOVERNANCE",
+      "resource": "GitHub-hosted CI",
+      "run_id": 37302674160,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37302674160",
+      "started_at": "2026-10-05T11:23:58Z",
+      "status": "in_progress",
+      "task": "CI",
+      "worker": "GitHub Actions 1000025937"
+    }
+  ],
+  "workload_by_lane": {
+    "FRONTIER DISCOVERY": 1,
+    "PLATFORM / GOVERNANCE": 10
+  },
+  "workload_by_resource": {
+    "Dashboard / GitHub Pages": 1,
+    "GitHub-hosted CI": 6,
+    "GitHub-hosted Ubuntu x64": 2,
+    "OS control plane": 2
+  }
 }
