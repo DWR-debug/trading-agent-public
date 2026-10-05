@@ -1,0 +1,86 @@
+name: Q214 Disclosure Risk-State Feasibility
+
+on:
+  schedule:
+    - cron: "41 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-q214-disclosure-risk
+  cancel-in-progress: false
+
+jobs:
+  feasibility:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Deterministic contract tests
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          inv=json.loads(Path('research/frontier/q214_disclosure_risk_state_2026_10_05.json').read_text())
+          assert inv['status'] == 'DESIGN_INVENTORY_ONLY'
+          c=inv['candidates'][0]
+          assert c['id'] == 'Q214'
+          assert c['risk_state_only'] is True
+          assert c['performance_authorization_allowed'] is False
+          assert set(c['non_overlap']) >= {'Q088','Q131','Q211','Q213'}
+          print('Q214_CONTRACT_OK')
+          PY
+          python -m pytest -q tests/test_q214_disclosure_risk_state.py
+
+      - name: Probe official SEC public filing history
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="research/runs/q214_disclosure_risk/$GITHUB_RUN_ID"
+          mkdir -p "$OUT"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+          root=Path(os.environ['GITHUB_WORKSPACE'])
+          out=root/'research/runs/q214_disclosure_risk'/os.environ['GITHUB_RUN_ID']
+          symbols=['SPGI','NDAQ','AMP','RJF','WMB','VLO','DVN','EMN']
+          req=Request('https://www.sec.gov/files/company_tickers.json',headers={'User-Agent':'TradingAgent-Public-Q214/1.0'})
+          with urlopen(req,timeout=20) as resp: tickers=json.loads(resp.read().decode())
+          results=[]; errors=[]
+          for symbol in symbols:
+              try:
+                  row=next(v for v in tickers.values() if str(v.get('ticker','')).upper()==symbol)
+                  cik=f"{int(row['cik_str']):010d}"
+                  req=Request(f'https://data.sec.gov/submissions/CIK{cik}.json',headers={'User-Agent':'TradingAgent-Public-Q214/1.0'})
+                  with urlopen(req,timeout=20) as resp: data=json.loads(resp.read().decode())
+                  recent=data.get('filings',{}).get('recent',{})
+                  records=[]
+                  for i,form in enumerate(recent.get('form',[])):
+                      if form in {'10-K','10-Q'}:
+                          records.append({'form':form,'filingDate':recent.get('filingDate',[None])[i],'reportDate':recent.get('reportDate',[None])[i],'acceptanceDateTime':recent.get('acceptanceDateTime',[None])[i],'accessionNumber':recent.get('accessionNumber',[None])[i]})
+                  results.append({'symbol':symbol,'cik':cik,'sample_count':len(records),'records':records[:12]})
+              except Exception as exc:
+                  errors.append({'symbol':symbol,'error':f'{type(exc).__name__}:{exc}'})
+          payload={'schema_version':1,'record_type':'q214_disclosure_risk_source_component_probe','status':'SOURCE_COMPONENT_PROBE_COMPLETED_NO_PERFORMANCE','source':'SEC EDGAR public submissions endpoint','controls_fixed':True,'candidate_id':'Q214','results':results,'errors':errors,'pit_validated':False,'independent_reproduction':False,'performance_authorized':False,'holdout_selection_allowed':False,'ranking_allowed':False,'tuning_allowed':False,'promotion_allowed':False,'live_execution_allowed':False,'next_gate':'historical SEC archive completeness + accepted/public clock contract + deterministic similarity compiler + independent reproduction'}
+          (out/'result.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2)+'\n')
+          print('Q214_STATUS='+payload['status'])
+          print('Q214_SYMBOL_RESULTS='+str(len(results)))
+          print('Q214_ERRORS='+str(len(errors)))
+          PY
+
+      - name: Upload Q214 discovery receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q214-disclosure-risk
+          path: research/runs/q214_disclosure_risk/$GITHUB_RUN_ID/
+          if-no-files-found: warn
+          retention-days: 14
