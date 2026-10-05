@@ -1451,7 +1451,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-05T22:28:26.423809+00:00",
+    "generated_at_utc": "2026-10-05T22:28:45.203602+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1459,7 +1459,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "427fddffcf50e85d07bce666770de69604aefd48"
+    "source_master_sha": "dc027b5c14a1a955418580fc31cdc84bd57ae687"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1757,7 +1757,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T22:28:26.423809+00:00",
+  "generated_at_utc": "2026-10-05T22:28:45.203602+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4454,6 +4454,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "dc027b5c14a1a955418580fc31cdc84bd57ae687",
+        "timestamp": "2026-10-05T22:28:32Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "69ac01c57ab1d4897c03b381a7f4154121ba0dfe",
+        "timestamp": "2026-10-05T22:28:29Z"
+      },
+      {
         "message": "TEST: lock Q224 source gate contract",
         "sha": "427fddffcf50e85d07bce666770de69604aefd48",
         "timestamp": "2026-10-06T00:28:19+02:00"
@@ -4482,16 +4492,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "7b30b869db4e5c3417c2d60f8ea816bf08774e1f",
         "timestamp": "2026-10-05T22:26:33Z"
-      },
-      {
-        "message": "GOV: persist Q224 as active bounded research track",
-        "sha": "c121c6c93710f2d0a7c4d419e07598c77f8cc388",
-        "timestamp": "2026-10-06T00:26:26+02:00"
-      },
-      {
-        "message": "FIX: avoid PSCustomObject conversion in constrained Q230 PowerShell",
-        "sha": "9adc02e83d7c089a247f8a2c3ee5a63a1884692a",
-        "timestamp": "2026-10-06T00:26:11+02:00"
       }
     ]
   },
@@ -4589,7 +4589,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "427fddffcf50e85d07bce666770de69604aefd48",
+  "source_master_sha": "dc027b5c14a1a955418580fc31cdc84bd57ae687",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4703,6 +4703,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37382664246"
+    "run_id": "37382683415"
   }
 }
