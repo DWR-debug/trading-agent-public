@@ -29,7 +29,7 @@ DEFAULT_INVENTORIES = (
     "research/frontier/q185_q186_candidate_wave_2026_10_04.json",
     "research/frontier/q197_q198_candidate_wave_2026_10_04.json",
     "research/frontier/q199_q201_candidate_wave_2026_10_04.json",
-    "research/frontier/q205_nlrb_union_certification_candidate_2026_10_05.json",
+    "research/frontier/q205_nlrb_robustness_inventory_2026_10_05.json",
 )
 
 FORBIDDEN_KEYS = {
