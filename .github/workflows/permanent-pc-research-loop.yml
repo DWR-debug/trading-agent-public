@@ -25,6 +25,10 @@ on:
       - "docs/research_design/INFORMATION_DISSEMINATION_LITERATURE_2026-10-05.md"
       - "docs/research_design/TRADINGAGENTS_ARCHITECTURE_REPLICATION_2026-10-05.md"
       - "research/frontier/q205_nlrb_union_certification_candidate_2026_10_05.json"
+      - "research/frontier/q211_q213_literature_frontier_2026_10_05.json"
+      - "docs/research_design/LITERATURE_FRONTIER_EXPANSION_2026-10-05.md"
+      - "automation/q211_q213_literature_source_feasibility.py"
+      - "tests/test_q211_q213_literature_frontier.py"
 
       - "tests/test_q198_pit_clock_census.py"
       - "agent_runtime/**"
@@ -112,6 +116,19 @@ jobs:
             if "!EXIT_CODE!"=="0" set "EXIT_CODE=!RC!"
           )
           endlocal & exit /b %EXIT_CODE%
+
+      - name: Run Q211-Q213 literature source feasibility
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "WORK=%RUNNER_TEMP%\\trading-agent-auto-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          for /d %%D in ("%WORK%\\trading-agent-public-*") do set "REPO_SRC=%%~fD"
+          set "PY_EXE=%RUNNER_TEMP%\\python-3.13.15-nuget-autonomous\\tools\\python.exe"
+          cd /d "%REPO_SRC%" || exit /b 1
+          set "PYTHONPATH=%REPO_SRC%"
+          "%PY_EXE%" automation\\q211_q213_literature_source_feasibility.py --output-dir "research\\runs\\self_hosted\\autonomous\\%GITHUB_RUN_ID%\\${{ matrix.lane }}\\q211_q213"
+          endlocal
 
       - name: Stage autonomous evidence for upload
         if: always()
