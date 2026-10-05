@@ -491,3 +491,54 @@ https://www.federalreserve.gov/supervisionreg/dfa-stress-tests-2026.htm
 https://www.federalreserve.gov/newsevents/pressreleases/bcreg20260624a.htm
 https://www.federalreserve.gov/econres/feds/the-effects-of-bank-capital-buffers-on-bank-lending-and-firm-activity.htm
 https://www.federalreserve.gov/publications/dodd-frank-act-stress-test-publications.htm
+
+
+## 26. New Q228 — regulatory scrutiny is an information channel, not merely a delay
+
+A deeper SEC source review identifies a genuinely different object from simple disclosure complexity or generic release latency. The SEC states that it selectively reviews filings, concentrates on disclosures that may conflict with rules/accounting standards or appear materially deficient in explanation or clarity, and can conduct multiple rounds of comments and filer responses. Public correspondence has been available in EDGAR since 2005; current SEC guidance states that correspondence is released at least 20 business days after effectiveness or completion of the relevant review.
+
+This creates a potentially useful information state:
+issuer disclosure -> regulator scrutiny -> issuer response/amendment -> review closure.
+
+The latent review process is not public at inception, so the first admissible public signal is the release of the SEC correspondence. This is a two-clock problem analogous to Q227 but with a different economic object: Q227 observes costly information acquisition by an outside requester; Q228 observes regulatory scrutiny of the issuer's own disclosure.
+
+Why Q228 is potentially distinct:
+- Q217 measures processing/friction properties of the filing itself;
+- Q218 measures content allocation across mandatory and voluntary channels;
+- Q195 measures inspection/enforcement escalation;
+- Q204 measures timing between public information stages;
+- Q228 measures the regulator's interrogation of the disclosure and the issuer's subsequent response process.
+
+The 2017 literature finds that SEC comment letters concern accounting, financial reporting and disclosure issues and studies their resolution/informational consequences. This is mechanism motivation only.
+
+First feasibility gate:
+1. historical EDGAR correspondence population census from 2005 onward;
+2. deterministic reviewed-filing/review-cycle linkage;
+3. provenance separation of SEC-originated UPLOAD letters and filer CORRESP responses;
+4. public-observation clock reconstruction;
+5. amendment/review-closure lineage;
+6. deterministic topic taxonomy;
+7. independent PIT reproduction.
+
+Cheap merge/kill conditions are explicitly Q217/Q218/Q195/Q204. If comment intensity becomes only a proxy for filing complexity, or if the only persistent object is publication delay, Q228 should be merged or killed rather than tuned.
+
+Sources:
+https://www.sec.gov/answers/commentletters.htm
+https://www.sec.gov/search-filings/edgar-search-assistance/how-search-edgar-correspondence
+https://www.sec.gov/about/divisions-offices/division-corporation-finance/filing-review-process-corp-fin
+https://www.sciencedirect.com/science/article/pii/S0278425417300650
+https://onlinelibrary.wiley.com/doi/10.1111/1911-3846.12297
+
+## 27. Q228 versus Q227 — common clock discipline, different information economics
+
+The project now has two complementary regulatory-observation channels:
+
+- Q227: outside party incurs acquisition cost to request information from the regulator; public signal arrives only when the request becomes observable.
+- Q228: regulator scrutinizes issuer disclosure; public signal arrives only when the correspondence becomes observable.
+
+Both require a latent-process clock distinct from the public-observation clock. Their source schemas, contamination risks and economic mechanisms are sufficiently different to preserve them separately.
+
+The broader reusable control is a typed event lineage:
+latent_process -> first_public_observation -> response/confirmation -> closure/amendment.
+
+This lineage is a governance primitive, not a candidate family and must not itself be performance-ranked.
