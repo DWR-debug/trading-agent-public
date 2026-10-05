@@ -7,8 +7,10 @@ REPO="${TRADING_AGENT_REPO:-DWR-debug/trading-agent-public}"
 PHONE_RESOURCE_ID="${PHONE_RESOURCE_ID:-ANDROID-PHONE}"
 PHONE_RUNNER_NAME="${PHONE_RUNNER_NAME:-${PHONE_RESOURCE_ID}-TERMUX}"
 PHONE_RUNNER_LABEL="${PHONE_RUNNER_LABEL:-android-phone}"
+PHONE_RUNNER_USER="${PHONE_RUNNER_USER:-s10}"
 RUNNER_VERSION="${ACTIONS_RUNNER_VERSION:-2.337.0}"
 RUNNER_DIR="${PHONE_RUNNER_DIR:-/opt/trading-agent-actions-runner}"
+DOTNET_GC_HEAP_HARD_LIMIT="${DOTNET_GC_HEAP_HARD_LIMIT:-268435456}"
 REPO_DIR="${PHONE_REPO_DIR:-$HOME/trading-agent-public}"
 
 case "$(uname -m)" in
@@ -123,7 +125,12 @@ start() {
     termux-wake-lock || true
   fi
   echo "Starting $PHONE_RUNNER_NAME; keep Termux and the phone powered."
-  exec proot-distro login ubuntu -- bash -lc "cd '$RUNNER_DIR' && ./run.sh"
+  exec proot-distro login ubuntu --user "$PHONE_RUNNER_USER" -- env \
+    DOTNET_GCHeapHardLimit="$DOTNET_GC_HEAP_HARD_LIMIT" \
+    COMPlus_GCHeapHardLimit="$DOTNET_GC_HEAP_HARD_LIMIT" \
+    DOTNET_gcServer=0 \
+    COMPlus_gcServer=0 \
+    bash -lc "unset DOTNET_GCHeapHardLimitPercent COMPlus_GCHeapHardLimitPercent; cd '$RUNNER_DIR' && exec ./run.sh"
 }
 
 case "${1:-}" in
