@@ -31,30 +31,26 @@ jobs:
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 15
     steps:
-      - name: Checkout exact source without archive extraction
+      - name: Checkout exact source via Python archive
         shell: cmd
         env:
           GITHUB_TOKEN: ${{ github.token }}
           TARGET_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          REPO_DIR: q185-q186-${{ github.run_id }}-${{ matrix.lane }}
         run: |
-          git init 2>nul || exit /b 1
-          git remote remove origin 2>nul
-          git remote add origin https://github.com/%GITHUB_REPOSITORY%.git || exit /b 1
-          git -c http.extraheader="AUTHORIZATION: bearer %GITHUB_TOKEN%" fetch --no-tags --prune --depth=1 origin %TARGET_REF% || exit /b 1
-          git checkout --force --detach FETCH_HEAD || exit /b 1
-          git rev-parse HEAD || exit /b 1
+          python -c "import io,os,pathlib,shutil,urllib.request,zipfile; repo=os.environ['GITHUB_REPOSITORY']; ref=os.environ['TARGET_REF']; target=pathlib.Path(os.environ['REPO_DIR']); target.mkdir(parents=True,exist_ok=True); stage=pathlib.Path(os.environ['RUNNER_TEMP'])/('q185-archive-'+os.environ['GITHUB_RUN_ID']+'-'+os.environ['GITHUB_JOB']); stage.mkdir(parents=True,exist_ok=True); req=urllib.request.Request('https://api.github.com/repos/'+repo+'/zipball/'+ref,headers={'Authorization':'Bearer '+os.environ['GITHUB_TOKEN'],'Accept':'application/vnd.github+json','User-Agent':'trading-agent-public/q185-q186-windows'}); data=urllib.request.urlopen(req,timeout=60).read(); zipfile.ZipFile(io.BytesIO(data)).extractall(stage); roots=[p for p in stage.iterdir() if p.is_dir()]; assert len(roots)==1; shutil.copytree(roots[0],target,dirs_exist_ok=True); shutil.rmtree(stage,ignore_errors=True)" || exit /b 1
       - name: Run bounded Windows reproduction
         shell: cmd
+        working-directory: q185-q186-${{ github.run_id }}-${{ matrix.lane }}
         env:
           PAPER_ONLY: "True"
           LIVE_TRADING_ENABLED: "False"
           ORDERS_ENABLED: "False"
           AUTOMATIC_PROMOTION: "False"
         run: |
-          $ErrorActionPreference = "Stop"
-          python --version
-          python -m automation.q185_q186_source_feasibility --output "$env:RUNNER_TEMPq185-q186-source-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT-$env:GITHUB_JOB.json"
-          python -m automation.q185_q186_pit_readiness_r1 --source-receipt "$env:RUNNER_TEMPq185-q186-source-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT-$env:GITHUB_JOB.json" --output "$env:RUNNER_TEMPq185-q186-pit-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT-$env:GITHUB_JOB.json"
+          python --version || exit /b 1
+          python -m automation.q185_q186_source_feasibility --output "%RUNNER_TEMP%\q185-q186-source-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT-%GITHUB_JOB%.json" || exit /b 1
+          python -m automation.q185_q186_pit_readiness_r1 --source-receipt "%RUNNER_TEMP%\q185-q186-source-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT-%GITHUB_JOB%.json" --output "%RUNNER_TEMP%\q185-q186-pit-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT-%GITHUB_JOB%.json" || exit /b 1
       - name: Upload bounded Windows receipt
         if: always()
         uses: actions/upload-artifact@v6
