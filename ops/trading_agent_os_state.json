@@ -137,6 +137,24 @@
       "scientific_evidence_allowed": false,
       "paid_usage_allowed": false,
       "selection_or_ranking_allowed": false
+    },
+    "s10_phone": {
+      "workflow": ".github/workflows/s10-phone-worker.yml",
+      "schedule_utc": "*/20 * * * *",
+      "runner": "S10-TERMUX",
+      "mode": "adaptive_mechanical_research_qa",
+      "role": "continuous bounded provenance/frontier/PIT/capacity/negative-evidence QA",
+      "task_rotation": [
+        "PROVENANCE_STATUS",
+        "FRONTIER_GOVERNANCE",
+        "PIT_CLOCK_AND_LINEAGE",
+        "CAPACITY_DISPATCH",
+        "NEGATIVE_EVIDENCE_DEDUP"
+      ],
+      "semantic_review": "manual_or_explicit_receipt_gated_only",
+      "scientific_evidence_allowed": false,
+      "performance_authorization": false,
+      "live_execution": false
     }
   },
   "current_research_focus": {
@@ -202,7 +220,8 @@
       "event_driven_review": "meaningful research-runner or critical-governance change plus regular two-hour mechanical-QA cadence; semantic review remains explicit",
       "latest_utility_run_id": "37102979617",
       "latest_utility_status": "S10_UTILITY_REVIEW_COMPLETED",
-      "default_mode": "mechanical_qa"
+      "default_mode": "adaptive_mechanical_research_qa",
+      "scheduled_cadence": "*/20 * * * *"
     },
     "android_phone_fleet": {
       "status": "TEMPLATE_READY",
@@ -252,12 +271,19 @@
     "persistence": "receipts/artifacts/status are written to repository or Actions artifacts; no open chat required",
     "s10": {
       "enabled": true,
-      "mode": "deterministic_mechanical_qa_default",
-      "trigger": "every two hours plus meaningful research-runner or critical-governance push changes; semantic utility/evidence-critic only when explicitly selected",
+      "mode": "adaptive_mechanical_research_qa",
+      "trigger": "every 20 minutes plus meaningful research-runner or critical-governance push changes",
       "formal_evidence_allowed": false,
       "performance_authorization": false,
       "full_benchmark": "explicit revalidation only",
-      "event_driven_review": true
+      "event_driven_review": true,
+      "task_rotation": [
+        "PROVENANCE_STATUS",
+        "FRONTIER_GOVERNANCE",
+        "PIT_CLOCK_AND_LINEAGE",
+        "CAPACITY_DISPATCH",
+        "NEGATIVE_EVIDENCE_DEDUP"
+      ]
     },
     "android_phone_fleet": {
       "enabled": true,
