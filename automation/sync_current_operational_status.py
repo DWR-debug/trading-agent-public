@@ -170,6 +170,10 @@ def generate(
     except (TypeError, ValueError):
         s10_presence_fresh = False
     active_registry = _load_json(ROOT / "research/governance/active_research_registry.json", {})
+    rolling_capacity_lease = _load_json(
+        ROOT / "research/run_requests/rolling_capacity_window_2026-10-05.json",
+        {"status": "NOT_RECORDED"},
+    )
     active_trials = {
         str(entry.get("code")): entry
         for entry in active_registry.get("active_trials", [])
@@ -515,21 +519,16 @@ def generate(
                 "performance_authorization": False
             },
             "rolling_capacity_waves": {
-                "status": "ACTIVE_AND_PERSISTENT",
+                "status": rolling_capacity_lease.get("status", "ACTIVE_AND_PERSISTENT"),
                 "workflow": ".github/workflows/capacity-saturation-rolling-waves.yml",
                 "lease": "research/run_requests/rolling_capacity_window_2026-10-05.json",
                 "cadence": "*/10 * * * *",
-                "objective": "maximize useful occupancy of genuinely available free capacity without duplicate or artificial work",
+                "objective": rolling_capacity_lease.get("principle", "maximize useful occupancy of genuinely available free capacity without duplicate or artificial work"),
                 "current_window": {
-                    "window_id": "TA-2H-2026-10-05-1602Z",
-                    "start_utc": "2026-10-05T16:02:00Z",
-                    "end_utc": "2026-10-05T18:02:00Z",
-                    "waves": [
-                        "W1 source/PIT/clock closure",
-                        "W2 candidate/contracts and information timing",
-                        "W3 next-gate compilation and independent reproduction",
-                        "W4 literature discovery and consolidation"
-                    ]
+                    "window_id": rolling_capacity_lease.get("window_id"),
+                    "start_utc": rolling_capacity_lease.get("start_utc"),
+                    "end_utc": rolling_capacity_lease.get("end_utc"),
+                    "waves": [p.get("name") for p in rolling_capacity_lease.get("phases", [])]
                 },
                 "dispatch_rules": [
                     "skip active duplicate work",
@@ -814,7 +813,7 @@ def generate(
 ### Permanent Capacity Saturation & Rolling Research Waves
 
 - **STATUS: ACTIVE_AND_PERSISTENT.** Useful free compute is continuously routed whenever a real bounded backlog exists.
-- **Current two-hour activation:** `TA-2H-2026-10-05-1602Z`, 2026-10-05 16:02–18:02 UTC.
+- **Current two-hour activation:** `${rolling_capacity_lease.get("window_id", "NOT_RECORDED")}`, `${rolling_capacity_lease.get("start_utc", "UNKNOWN")}–${rolling_capacity_lease.get("end_utc", "UNKNOWN")}`.
 - **Scheduler:** every 10 minutes; active duplicates are skipped, phase-successful work is not rerun, and only one bounded retry is permitted after failure/cancellation.
 - **Wave order:** W1 source/PIT/clock closure -> W2 candidate/contracts and information timing -> W3 next-gate compilation and independent reproduction -> W4 literature discovery/consolidation.
 - **Utilization rule:** maximize useful occupancy across Windows A/B/C, hosted Linux, bounded free-AI lanes and S10/mobile support when those resources are reachable and the work is independent and useful. Never manufacture work to consume quota.
