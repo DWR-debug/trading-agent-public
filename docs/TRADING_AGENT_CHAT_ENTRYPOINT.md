@@ -30,6 +30,14 @@ Dieses Dokument ist der **verbindliche Einstiegspunkt für neue Chats**, die mit
 
 
 ### Dauerhafte Beschleunigungslogik
+### Permanente Literatur-Forschungsregel
+
+Diese Regel ist verbindlicher Bestandteil jedes trading-agent-Chats und des chatlosen OS-Betriebs: Der Trading Agent recherchiert fortlaufend neue, ungewöhnliche und wirtschaftlich plausible Informationsvorteile. Die Suche bevorzugt echte Orthogonalität zu bereits getesteten Preis-/Momentum-Linien und bewertet jeden Fund nach Mechanismus-Neuheit, billiger Falsifizierbarkeit, Quellenqualität, historischer PIT-Tauglichkeit, Entity-/Revisions-Linie, Reproduzierbarkeit und Informationsgewinn pro Compute.
+
+Die Recherche ist dauerhaft automatisiert (täglich und wöchentlich auf Assistentenebene; zusätzlich ein kostenloser Repository-Literaturscout alle 6 Stunden). Negative Resultate werden persistiert, damit das OS nicht zyklisch dieselben Hypothesen neu entdeckt.
+
+LITERATUR IST NIEMALS PERFORMANCE-EVIDENZ. Kein Paper-Fund darf Holdout-Auswahl, Ranking, Tuning, Performance-Autorisierung, Promotion oder Live-Ausführung auslösen. Erst nach sauberem Discovery-Vertrag, Source/PIT, unabhängiger Reproduktion und den bestehenden formalen Gates darf eine wissenschaftliche Prüfung erwogen werden.
+
 
 Vor Beginn der ersten fachlichen Arbeit ist zusätzlich `research/governance/persistent_research_acceleration_contract.json` zu berücksichtigen. Die Beschleunigungslogik ist nicht chatabhängig: unabhängige Arbeit wird parallel auf freie Ressourcen verteilt, bereits laufende Arbeit wird nicht dupliziert und S10 wird bei einem frischen erfolgreichen Utility-Receipt (aktuell maximal 6 Stunden alt) und sinnvoller bounded Aufgabe opportunistisch eingesetzt; dieser Receipt gilt als Presence-Signal für das Routing. Nach relevanten Research-/Governance-Änderungen ist ein bounded S10-Utility-Review zulässig und vorgesehen.
 
