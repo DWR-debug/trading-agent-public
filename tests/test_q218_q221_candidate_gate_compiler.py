@@ -60,3 +60,16 @@ def test_compiler_keeps_all_four_candidates_non_authorizing():
     assert result["promotion_authorization"] is False
     assert result["live_execution"] is False
     assert result["results"]["Q219"]["same_day_use_allowed"] is False
+
+
+def test_compiler_handles_missing_latest_8k_without_crashing():
+    census = _census()
+    for issuer in census["q218_sec_pair_census"]["issuer_results"].values():
+        issuer["latest_8k_earnings_release"] = None
+        issuer["pairability_observed"] = False
+    result = compile_gate(census, _specs())
+    assert result["results"]["Q218"]["status"] == "SOURCE_STRUCTURE_INCOMPLETE"
+    assert result["results"]["Q218"]["accepted_latest_8k_earnings_release_count"] == 0
+    assert result["performance_authorization"] is False
+    assert result["promotion_authorization"] is False
+    assert result["live_execution"] is False

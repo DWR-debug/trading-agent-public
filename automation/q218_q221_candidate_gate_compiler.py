@@ -81,11 +81,13 @@ def compile_gate(census: dict, specs: dict, q129_contract: dict | None = None) -
     ]
     accepted_10k = sum(
         1 for item in q218_issuers.values()
-        if item.get("latest_10k", {}).get("acceptance_datetime_found") is True
+        if isinstance(item.get("latest_10k"), dict)
+        and item["latest_10k"].get("acceptance_datetime_found") is True
     )
     accepted_8k = sum(
         1 for item in q218_issuers.values()
-        if item.get("latest_8k_earnings_release", {}).get("acceptance_datetime_found") is True
+        if isinstance(item.get("latest_8k_earnings_release"), dict)
+        and item["latest_8k_earnings_release"].get("acceptance_datetime_found") is True
     )
     q218_ready = (
         len(q218_issuers) == 8
