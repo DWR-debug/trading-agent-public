@@ -1,4 +1,0 @@
-RUN_Q077R1_PIT_RECHECK_2026-09-30B
-AUTONOMOUS_WAKE_RESEARCH_RECHECK
-purpose=run_prespecified_pit_only
-performance_authorized=false

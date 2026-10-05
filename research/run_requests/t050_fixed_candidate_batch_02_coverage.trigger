@@ -1,5 +1,0 @@
-RUN_T050_FIXED_CANDIDATE_BATCH_02_COVERAGE
-preregistration=T-2026-09-27-050
-scope=coverage_only
-performance_authorized=false
-holdout_authorized=false

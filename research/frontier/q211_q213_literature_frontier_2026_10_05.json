@@ -1,0 +1,115 @@
+{
+  "schema_version": "1.0",
+  "wave_id": "Q211-Q213-2026-10-05",
+  "status": "DESIGN_INVENTORY_ONLY",
+  "purpose": "Literature-derived orthogonal candidate contracts; source/PIT feasibility only.",
+  "candidates": [
+    {
+      "id": "Q211",
+      "name": "Patent semantic information state",
+      "priority": "P1",
+      "hypothesis": "Semantically informative patent text may contain incremental firm-value information beyond patent counts, citations and publication counts.",
+      "event_clock": "official patent publication boundary; later prosecution/grant/citation updates excluded from historical prefix",
+      "features": [
+        "fixed_vocabulary_semantic_vector",
+        "backward_only_text_novelty",
+        "new_publication_count_by_frozen_issuer_exposure"
+      ],
+      "construction_rule": "Deterministic fixed construction first; no training on post-event documents; pretrained models require a training-corpus leakage audit.",
+      "non_overlap": [
+        "Q199",
+        "Q196"
+      ],
+      "cheap_falsifiers": [
+        "publication-date shift",
+        "assignee-map shuffle",
+        "document permutation",
+        "future-prosecution mutation"
+      ],
+      "gates": [
+        "historical patent publication archive",
+        "full-text completeness",
+        "frozen assignee/applicant mapping",
+        "revision/prosecution lineage",
+        "independent PIT reproduction"
+      ],
+      "performance_authorization_allowed": false,
+      "scientific_boundary": "discovery_contract_only"
+    },
+    {
+      "id": "Q212",
+      "name": "Supply-chain disclosure sentiment propagation",
+      "priority": "P1_FEASIBILITY",
+      "hypothesis": "Customer/supplier disclosure tone may contain focal-firm information not present in the focal firm's own tone, with slower transmission under low attention.",
+      "event_clock": "official public-observation boundary; SEC route uses acceptance timestamp",
+      "features": [
+        "customer_disclosure_tone",
+        "supplier_disclosure_tone",
+        "focal_tone_control",
+        "frozen_network_exposure"
+      ],
+      "construction_rule": "Compare transcript-route source feasibility with a separate public SEC-text adaptation; do not inherit performance claims.",
+      "non_overlap": [
+        "Q207",
+        "Q210",
+        "Q204"
+      ],
+      "cheap_falsifiers": [
+        "edge permutation",
+        "focal-only decomposition",
+        "future-amendment injection",
+        "public-boundary shift"
+      ],
+      "gates": [
+        "historical customer-supplier graph",
+        "historical archive completeness",
+        "public clock",
+        "frozen entity mapping",
+        "revision lineage",
+        "independent PIT"
+      ],
+      "performance_authorization_allowed": false,
+      "scientific_boundary": "discovery_contract_only"
+    },
+    {
+      "id": "Q213",
+      "name": "News-disagreement elasticity state",
+      "priority": "P2_CONTINGENT",
+      "hypothesis": "Volume-volatility elasticity around firm news may capture investor disagreement distinct from raw volume, raw volatility and ordinary sentiment.",
+      "event_clock": "verified firm-news public-observation timestamp",
+      "features": [
+        "volume_volatility_elasticity",
+        "event_class",
+        "optimism_uncertainty_only_if_proven"
+      ],
+      "construction_rule": "Source-feasibility first; no performance until multi-year historical public intraday equity and news PIT contracts pass.",
+      "non_overlap": [
+        "Q204",
+        "Q210",
+        "C31"
+      ],
+      "cheap_falsifiers": [
+        "intraday aggregation perturbation",
+        "publication-time shift",
+        "event-window permutation",
+        "story clustering perturbation"
+      ],
+      "gates": [
+        "multi-year historical intraday equity bars",
+        "historical public-news archive",
+        "timestamp completeness",
+        "stable mapping",
+        "independent PIT"
+      ],
+      "performance_authorization_allowed": false,
+      "scientific_boundary": "discovery_contract_only"
+    }
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false,
+    "paid_resources_allowed": false
+  }
+}

@@ -1,2 +1,0 @@
-Q075 information-channel contract feasibility request 2026-09-28.
-AUTONOMOUS_DISPATCH_2026-09-28T21:24+02:00 Q075_INFORMATION_CONTRACT

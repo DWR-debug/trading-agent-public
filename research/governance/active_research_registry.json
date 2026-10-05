@@ -1182,6 +1182,28 @@
         "performance_authorization_allowed": false,
         "note": "Official NLRB recent-results, election-report and historical-pagination routes returned HTTP 200. Historical completeness, exact public-observation clock, employer-to-issuer mapping and immutable historical PIT remain unproven.",
         "next_gate": "historical NLRB archive completeness + public-clock semantics + frozen employer-to-issuer mapping + case-status lineage + independent PIT reproduction"
+      },
+      {
+        "code": "FRONTIER-Q211-Q213",
+        "class": "literature_derived_semantic_network_disagreement_frontier",
+        "state": "SOURCE_FEASIBILITY_ACTIVE",
+        "parent_code": "FRONTIER-20260928",
+        "issue_number": 1079,
+        "candidate_inventory_path": "research/frontier/q211_q213_literature_frontier_2026_10_05.json",
+        "design_document": "docs/research_design/LITERATURE_FRONTIER_EXPANSION_2026-10-05.md",
+        "source_feasibility_workflow": ".github/workflows/hosted-deterministic-frontier.yml",
+        "performance_authorization_allowed": false,
+        "candidate_ids": [
+          "Q211",
+          "Q212",
+          "Q213"
+        ],
+        "priority": [
+          "Q211_P1",
+          "Q212_P1_FEASIBILITY",
+          "Q213_P2_CONTINGENT"
+        ],
+        "note": "Literature-derived expansion; discovery-only and candidate-specific PIT/reproduction gated."
       }
     ]
   }

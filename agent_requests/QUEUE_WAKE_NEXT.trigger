@@ -1,8 +1,0 @@
-QUEUE_WAKE_NEXT_2026-09-27
-source_master_sha=c74e9a3c07bd3ce9c706dd8881b332165774a417
-purpose=dispatch-next-ready-agent-lanes
-expected_next_tasks=AGENT-019,AGENT-020
-research_computation=false
-performance_selection=false
-promotion=false
-live_execution=false

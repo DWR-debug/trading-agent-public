@@ -1,1 +1,0 @@
-Q070 explicit self-hosted advance request — execute only the already-preregistered Q070 performance path after deterministic frozen-snapshot recovery/verification. Autonomous rerun 2026-09-28T16:30+02:00.

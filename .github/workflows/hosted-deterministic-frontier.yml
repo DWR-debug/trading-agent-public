@@ -18,6 +18,7 @@ on:
       - "automation/q109_n7_common_holder_graph.py"
       - "automation/q121_sec_beneficial_ownership_timing.py"
       - "automation/q126_q132_frontier_feasibility.py"
+      - "automation/q211_q213_literature_source_feasibility.py"
       - "tests/test_candidate_robustness_gate.py"
       - "tests/test_q119_treasury_source_feasibility.py"
       - "tests/test_q120_cftc_source_feasibility.py"
@@ -27,6 +28,7 @@ on:
       - "tests/test_q109_n7_common_holder_graph.py"
       - "tests/test_q121_sec_beneficial_ownership_timing.py"
       - "tests/test_q126_q132_frontier_feasibility.py"
+      - "tests/test_q211_q213_literature_frontier.py"
       - ".github/workflows/hosted-deterministic-frontier.yml"
 
 permissions:
@@ -66,6 +68,12 @@ jobs:
           mkdir -p "research/runs/self_hosted/autonomous/${GITHUB_RUN_ID}/hosted_frontier"
           python -m automation.self_hosted_research_worker             --lane autonomous_frontier_qa             --rotation-index "${GITHUB_RUN_NUMBER}"             --output-dir "research/runs/self_hosted/autonomous/${GITHUB_RUN_ID}/hosted_frontier"
 
+
+      - name: Run Q211-Q213 literature source feasibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          python automation/q211_q213_literature_source_feasibility.py --output-dir "research/runs/self_hosted/autonomous/${GITHUB_RUN_ID}/hosted_frontier/q211_q213"
 
       - name: Validate structural safety and provenance
         if: always()

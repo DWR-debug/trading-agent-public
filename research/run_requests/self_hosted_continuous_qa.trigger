@@ -1,4 +1,0 @@
-RUN_CONTINUOUS_QA_RECHECK_2026-09-29
-AUTONOMOUS_WAKE_CURRENT_MASTER
-purpose=repository_data_design_and_reproduction_qa
-formal_research_evidence=false

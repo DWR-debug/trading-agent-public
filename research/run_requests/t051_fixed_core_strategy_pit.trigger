@@ -1,5 +1,0 @@
-RUN_T051_FIXED_CORE_STRATEGY_PIT
-scope=pit_only
-performance_authorized=false
-holdout_authorized=false
-selection_authorized=false

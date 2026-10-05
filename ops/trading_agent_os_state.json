@@ -2,7 +2,7 @@
   "schema_version": 1,
   "state_type": "TRADING_AGENT_OS_ORCHESTRATION_SNAPSHOT",
   "effective_date_utc": "2026-10-04T19:00:00+02:00",
-  "source_master_sha": "4ebc2b2476c7fda02f435525d1c80dcdde55a2aa",
+  "source_master_sha": "7322a297e8026cd21e5b1ec9d62be98469346b83",
   "purpose": "Persistent orchestration contract for chat-independent Trading Agent research and engineering.",
   "chat_trigger": "trading agent",
   "capacity_pulse_policy": "10-minute schedule with independent lane-scoped Windows concurrency; local_reproduction shares the explicit long-reproduction priority group while data_qa remains independently schedulable",
@@ -41,7 +41,6 @@
       "runner_label": "trading-agent-research",
       "parallel_lanes": 2,
       "purpose": [
-
         "lane_a_formal_readiness",
         "lane_b_frontier_discovery"
       ],
@@ -142,10 +141,10 @@
   },
   "current_research_focus": {
     "completed": "Q119 Treasury demand-shape design merged; I22 SEC filing-arrival session-window correction merged",
-    "active_next": "Q198 Federal Register public-inspection clock reconstruction (A); Q197 USAspending award-state historical revision/observation boundary (A); Q199 USPTO publication/PIT lineage; Q201 ClinicalTrials.gov results-first-posted historical revision lineage; in parallel close Q186 citation/publication ordering. No performance authorization until candidate-specific coverage/PIT/authorization gates pass.",
+    "active_next": "Q121-R6 SEC acceptance-time compilation; Q198/Q197/Q199/Q201 PIT gates; Q186 citation/publication ordering; new Q211 patent semantic and Q212 supply-chain disclosure feasibility; Q213 news-disagreement intraday feasibility only. No performance without candidate-specific authorization.",
     "meta_research": "ECL runtime hardening and first valid model-metrics receipt",
     "governance_engineering": "AGENT-026-R2 two-slot lease; draft PR 642",
-    "discovery_frontier": "Q197/Q198/Q199/Q201 source components are READY from deterministic source-feasibility runs; next gates are candidate-specific historical archive/revision/clock lineage and independent PIT reproduction. Q188-Q192 remain PIT-history gated. Q193 composition remains dependency-gated. Q186 remains the leading deeper PIT workstream for citation-publication ordering. All discovery work is non-authorizing."
+    "discovery_frontier": "Q211/Q212 new literature-derived orthogonal feasibility tracks; Q213 contingent on historical equity-intraday/news PIT feasibility; existing Q197-Q204 and Q186 remain active gates. All discovery is non-authorizing."
   },
   "resource_routing": {
     "self_hosted_windows": [
