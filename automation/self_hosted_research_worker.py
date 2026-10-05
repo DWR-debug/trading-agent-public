@@ -367,6 +367,13 @@ LANES: dict[str, list[list[str]]] = {
         [
             PYTHON,
             "-m",
+            "automation.q218_q221_historical_source_census",
+            "--output",
+            "research/runs/self_hosted/q218_q221_historical_source_census.json",
+        ],
+        [
+            PYTHON,
+            "-m",
             "pytest",
             "-q",
             "tests/test_q211_q213_literature_frontier.py",
