@@ -656,3 +656,20 @@ Sources: https://github.com/TauricResearch/TradingAgents ; https://github.com/AI
 ### Resulting priority
 
 Keep the active top-candidate wave unchanged: Q218 / Q219 / Q220 / Q221. Raise confidence in Q219, Q220 and Q221's mechanism plausibility, while keeping the scientific bottleneck exactly where it belongs: source completeness, public-clock reconstruction, PIT integrity, deterministic compilation, mutation tests and independent reproduction. Q230 remains a high-value exploratory side track until the free historical TRACE contract is proven. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized by this scan.
+
+
+## 33. Q230 refinement — issuer bond signal must be separated from broad credit state
+
+Current FINRA documentation confirms that Corporate and Agency Bond Trade Activity is a public/no-fee dataset with up to ten years of end-of-day data. FINRA's public developer catalog also exposes Corporate Debt Market Breadth and Corporate Debt Market Sentiment datasets. This permits a stronger predeclared Q230 control design: any issuer-level bond-implied equity state should first be expressed relative to rates and a broad credit-market state, rather than allowing common credit-market movement to masquerade as issuer-specific information transfer.
+
+Design implication:
+
+- issuer bond return/yield state;
+- broad rates state;
+- broad FINRA corporate-credit breadth/sentiment state;
+- residual issuer-specific bond state;
+- conservative bond-observation-to-equity-decision clock.
+
+The broad credit state is a control, not an additional candidate family. A Q230 path that collapses after this control is a valid falsification result. Paid TRACE Enhanced Historical Data remains outside the project budget and scientific contract.
+
+Sources: https://www.finra.org/finra-data/fixed-income/about-cna-trade ; https://developer.finra.org/catalog
