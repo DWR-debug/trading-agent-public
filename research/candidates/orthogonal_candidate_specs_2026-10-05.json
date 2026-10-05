@@ -526,7 +526,8 @@
         "competition/agency structure adds no separation",
         "capability proxy is post-event",
         "future production contracts leak into features",
-        "recipient-to-issuer mapping permutation"
+        "recipient-to-issuer mapping permutation",
+        "historical archive publication lag cannot be deterministically mapped to award transaction visibility"
       ],
       "gates": [
         "historical R&D transaction archive",
@@ -535,7 +536,8 @@
         "pre-event recipient/issuer mapping",
         "pre-event capability proxy",
         "transaction/amendment lineage",
-        "independent PIT reproduction"
+        "independent PIT reproduction",
+        "documented USAspending publication-frequency rule and historical archive availability audit"
       ],
       "non_overlap": [
         "Q197",
@@ -543,7 +545,8 @@
         "generic procurement award size",
         "future-contract lookahead"
       ],
-      "scientific_boundary": "discovery_contract_only"
+      "scientific_boundary": "discovery_contract_only",
+      "implementation_note": "The first PIT subgate may use the documented USAspending prime-award publication schedule as a conservative public-observation boundary only after confirming the schedule applies to the exact transaction class and historical period. Action date remains metadata."
     }
   ],
   "blocked_or_composite_tracks": {
@@ -559,6 +562,6 @@
     "promotion",
     "live execution"
   ],
-  "revision": 7,
-  "triggered_by": "TOP_CANDIDATE_DEVELOPMENT_2026-10-05_Q218_Q221"
+  "revision": 8,
+  "triggered_by": "TOP_CANDIDATE_DEVELOPMENT_2026-10-05_Q221_PUBLICATION_CLOCK_REFINEMENT"
 }
