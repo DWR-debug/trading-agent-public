@@ -23,7 +23,8 @@
     "SEC confirms the modern log set begins 2020-05-19 and ends 2025-06-30.",
     "SEC explicitly states the 2017-07-01 to 2020-05-18 interval is no longer available.",
     "Modern and legacy schemas differ; SEC states the modern set omits some variables and excludes SEC-IP-originated searches.",
-    "SEC fair-access documentation separately distinguishes filing acceptance/dissemination timing from archive/index timing."
+    "SEC fair-access documentation separately distinguishes filing acceptance/dissemination timing from archive/index timing.",
+    "Bounded live archive probes found within-window request-time field-name drift: 2020-05-19 uses _time while 2022-12-30 and 2025-06-30 use time; normalization must be per-file and frozen."
   ],
   "negative_evidence": [
     "No defensible continuous 2003-2025 demand panel exists from the official logs because the 2017-2020 interval is unavailable.",
@@ -31,7 +32,7 @@
     "Observed requests are not a direct measure of latent investor information demand; automated/bulk traffic and SEC-originated traffic require deterministic contamination handling.",
     "The source page does not establish that post-2025-06-30 logs are publicly available in the same dataset contract."
   ],
-  "next_gate": "bounded_modern-window_historical_log_reconstruction_plus_request-quality_and_filing-boundary_join",
+  "next_gate": "schema-variant normalization + request-quality contamination bounds + filing-acceptance/public-boundary join + mutation/PIT checks + independent reproduction",
   "cheap_falsifiers": [
     "historical-window mutation changes a closed demand window",
     "accession/CIK recovery is not deterministic from the logged URI schema",
@@ -39,12 +40,28 @@
     "request timestamps cannot be safely aligned after the filing public boundary",
     "demand state collapses mechanically to generic attention or filing complexity"
   ],
-  "non_overlap": ["Q130-R1", "Q204", "Q217", "Q104", "Q215", "Q227"],
+  "non_overlap": [
+    "Q130-R1",
+    "Q204",
+    "Q217",
+    "Q104",
+    "Q215",
+    "Q227"
+  ],
   "routing": {
     "Windows_A": "formal-readiness only; no Q224 performance work",
     "Windows_B": "bounded Q224 source/PIT reconstruction",
     "Runner_C": "independent deterministic reproduction after B produces a frozen source receipt",
     "S10": "not suitable for this source/data task",
     "hosted_free_linux": "source metadata and deterministic parser checks only"
+  },
+  "schema_drift": {
+    "detected": true,
+    "observed_request_time_columns": [
+      "_time",
+      "time"
+    ],
+    "rule": "Treat request-time field name as a schema-version attribute; normalize only after preserving the raw field name and source fingerprint.",
+    "scientific_effect": "No performance or same-session use; this is a source/PIT normalization requirement."
   }
 }
