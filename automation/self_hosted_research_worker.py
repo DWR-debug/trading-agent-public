@@ -372,7 +372,7 @@ LANES: dict[str, list[list[str]]] = {
             "pytest",
             "-q",
             "tests/test_q214_disclosure_risk_state.py",
-            "tests/test_q217_q131_orthogonality_audit.py",
+            "tests/test_candidate_robustness_gate.py",
         ],
         [
             PYTHON,
