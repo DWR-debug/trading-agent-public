@@ -9,7 +9,8 @@
     "Verify current public master and current operational/evidence state before acting.",
     "Snapshot live runner, workflow, agent and bounded mobile capacity; never trust stale availability claims.",
     "Route every meaningful task to the smallest suitable free resource and execute independent work in parallel.",
-    "Use S10 opportunistically for deterministic mechanical research QA; semantic utility/evidence-critic runs remain manual or receipt-gated. Trigger mechanical QA on meaningful research/governance changes and every two hours; do not manufacture work solely to create activity.",
+    "Treat Windows A and B as always-routable primary research capacity, not fallback. Keep both lanes moving in parallel whenever independent bounded work is available; do not wait for the other lane to finish.",
+    "When a candidate-specific workpack finishes, immediately route the next ready gate from the active registry. If the scientific frontier is temporarily blocked, route deterministic provenance/PIT/data-contract/negative-evidence QA instead of manufacturing research.",
     "Default S10 routing is deterministic mechanical QA; event-driven semantic utility review remains explicit and non-default.",
     "Do not duplicate already-running work and do not consume quotas merely to create activity."
   ],
@@ -34,7 +35,7 @@
         "lane_a_formal_readiness": {
           "runner_slot": "Windows self-hosted slot A",
           "purpose": "Coverage/PIT/authorization readiness for fully pre-registered candidates; candidate-specific compiler and provenance closure.",
-          "current_focus": "Q104 I19/I20, I22, Q119/Q120/Q122, Q125-F1",
+          "current_focus": "Q121-R6, Q104 I19/I20, I22, Q119/Q120/Q122/Q125-F1, next-gate compilation and independent reproduction",
           "performance_allowed": "only when the active research registry contains an exact true performance_authorization_allowed for that independent frozen trial",
           "selection_or_ranking": false,
           "availability": "always_routable"
@@ -42,14 +43,15 @@
         "lane_b_frontier_discovery": {
           "runner_slot": "Windows self-hosted slot B",
           "purpose": "Orthogonal source/PIT feasibility, cheap falsification and new information-channel discovery.",
-          "current_focus": "Q171-Q178, Q126-Q132 and related public-domain frontier work",
+          "current_focus": "Q214-Q217, Q197-Q204, Q205 and orthogonal public-domain source/PIT feasibility with cheap falsification",
           "performance_allowed": false,
           "selection_or_ranking": false,
           "availability": "always_routable"
         }
       },
-      "windows_pulse_cadence": "10 minutes while each pulse remains bounded, non-formal, and concurrency-protected",
-      "availability_policy": "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR"
+      "windows_pulse_cadence": "10 minutes plus event-driven pushes; each lane remains continuously routable and independently concurrency-protected",
+      "availability_policy": "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR",
+      "continuity_rule": "When research is needed, never allow both Windows lanes to become idle merely because one workpack completed. At each pulse choose the next ready bounded workpack from the active registry/frontier. If no independent scientific task is ready, run provenance/governance/data-contract QA rather than fabricate a candidate."
     },
     "mobile": {
       "s10_mode": "deterministic_mechanical_qa_default",
