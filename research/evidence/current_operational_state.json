@@ -443,31 +443,6 @@
         "priority": "P1-RISK",
         "risk_state_only": true,
         "state": "SOURCE_FEASIBILITY_ACTIVE"
-      },
-      {
-        "candidate_inventory_path": "research/frontier/q215_q216_candidate_wave_2026_10_05.json",
-        "class": "cross_channel_public_observability_gap",
-        "code": "Q215",
-        "design_document": "docs/research_design/Q215_PUBLIC_SOURCE_OBSERVABILITY_GAP_2026-10-05.md",
-        "issue_number": 1082,
-        "parent_code": "LITERATURE-DISCOVERY-PLANE",
-        "performance_authorization_allowed": false,
-        "priority": "P1",
-        "state": "SOURCE_COMPONENT_FEASIBILITY_ACTIVE",
-        "source_feasibility_workflow": ".github/workflows/q215-observability-gap-feasibility.yml"
-      },
-      {
-        "candidate_inventory_path": "research/frontier/q215_q216_candidate_wave_2026_10_05.json",
-        "class": "macro_vintage_revision_exposure_reliability_state",
-        "code": "Q216",
-        "design_document": "docs/research_design/Q216_DATA_REVISION_EXPOSURE_STATE_2026-10-05.md",
-        "issue_number": 1083,
-        "parent_code": "LITERATURE-DISCOVERY-PLANE",
-        "performance_authorization_allowed": false,
-        "priority": "P1-RISK",
-        "risk_state_only": true,
-        "state": "SOURCE_COMPONENT_FEASIBILITY_ACTIVE",
-        "source_feasibility_workflow": ".github/workflows/q216-data-revision-exposure-feasibility.yml"
       }
     ],
     "active_research_registry": {
@@ -914,31 +889,6 @@
           "priority": "P1-RISK",
           "risk_state_only": true,
           "state": "SOURCE_FEASIBILITY_ACTIVE"
-        },
-        {
-          "candidate_inventory_path": "research/frontier/q215_q216_candidate_wave_2026_10_05.json",
-          "class": "cross_channel_public_observability_gap",
-          "code": "Q215",
-          "design_document": "docs/research_design/Q215_PUBLIC_SOURCE_OBSERVABILITY_GAP_2026-10-05.md",
-          "issue_number": 1082,
-          "parent_code": "LITERATURE-DISCOVERY-PLANE",
-          "performance_authorization_allowed": false,
-          "priority": "P1",
-          "state": "SOURCE_COMPONENT_FEASIBILITY_ACTIVE",
-          "source_feasibility_workflow": ".github/workflows/q215-observability-gap-feasibility.yml"
-        },
-        {
-          "candidate_inventory_path": "research/frontier/q215_q216_candidate_wave_2026_10_05.json",
-          "class": "macro_vintage_revision_exposure_reliability_state",
-          "code": "Q216",
-          "design_document": "docs/research_design/Q216_DATA_REVISION_EXPOSURE_STATE_2026-10-05.md",
-          "issue_number": 1083,
-          "parent_code": "LITERATURE-DISCOVERY-PLANE",
-          "performance_authorization_allowed": false,
-          "priority": "P1-RISK",
-          "risk_state_only": true,
-          "state": "SOURCE_COMPONENT_FEASIBILITY_ACTIVE",
-          "source_feasibility_workflow": ".github/workflows/q216-data-revision-exposure-feasibility.yml"
         }
       ]
     },
@@ -1610,7 +1560,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T17:05:00Z",
+  "generated_at_utc": "2026-10-05T16:53:12.170434+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2615,7 +2565,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "f4a56060db0f5cd3e9a941374a7c1e562c83b0ca37531e6adc1c01d17a1762a4",
+    "receipt_fingerprint": "78454330d7f5a7be84ac37308cfb3ffa9b876fab784e3d76ba79ec2a12e56e38",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2650,7 +2600,7 @@
           }
         ],
         "clock_contract": "Docket event dates are distinct from underlying incident dates; exact public intraday availability must be proven per event class, otherwise use next-session availability.",
-        "content_sha256": "6bf07ec9ade6225ca4c630a419b046dd4e80a140b211d73ececb64566f912c6b",
+        "content_sha256": "f95e0dc1e26c37d3c279849c9ae9dfcf0f5ac82673cbeb32693975e006d5a113",
         "http_status": 403,
         "missing_markers": [
           "RECAP Archive",
@@ -2674,7 +2624,7 @@
           }
         ],
         "clock_contract": "A recorded docket-entry date is not automatically proof of public dissemination time.",
-        "content_sha256": "9b7f1d53fbd628810b5dba63deff5a16e3fd4e14b467642778c8b7dfe032f145",
+        "content_sha256": "c83048b93b7095a57091deb07235e9481f66b30198eb39cb4bc442630274f8ff",
         "http_status": 403,
         "missing_markers": [
           "Advanced RECAP Search",
@@ -2902,7 +2852,7 @@
         "status": "SOURCE_COMPONENT_READY"
       }
     ],
-    "receipt_fingerprint": "74c963843228cdab346d8fae8af9625c3a81cdf544337162023dcd242ed9bca2",
+    "receipt_fingerprint": "00371bfe6f7c5e67418f1b7b5f53582ca2c54ffecac7d0f33bcd7a28d560f688",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2974,7 +2924,7 @@
             "url": "https://www.archives.gov/federal-register/faqs"
           }
         ],
-        "content_sha256": "7506e845fda38b467bc1706a05474119ac6c77b38e6ea23434d811729230a8c3",
+        "content_sha256": "d775e391a5c66eec8b295cdc26e9e381be229e13bfa29433c0d288c98ad254b1",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -2993,7 +2943,7 @@
             "url": "https://www.federalregister.gov/api/v1/public-inspection-documents/2021-07287.json"
           }
         ],
-        "content_sha256": "bb1650d4cae8f361d80314bdf97cf928d9b81340efdf1269276a50afffddc8b5",
+        "content_sha256": "2c2aa37104dd0fd6596ce16bdf735377de1c3a1f59a7cdcd2d3f292ba0a1db14",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -4301,44 +4251,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "dc04dac66f885e873e22492b34c340ed1d3d4d4f",
-        "timestamp": "2026-10-05T16:46:21Z"
+        "message": "FIX: prevent duplicate rolling-wave reruns",
+        "sha": "7952c6a60dd00ea5d33ca76933000b9ebc8edc56",
+        "timestamp": "2026-10-05T18:53:03+02:00"
       },
       {
-        "message": "OPS: update canonical status for Q215 Q216",
-        "sha": "460b4dd4d4fdc280f7631c223aaa8fb91618b895",
-        "timestamp": "2026-10-05T18:46:17+02:00"
+        "message": "FIX: prevent duplicate priority reruns",
+        "sha": "437fbaf1b3a1e7307e6614682b48d50b6e6d20e3",
+        "timestamp": "2026-10-05T18:52:59+02:00"
       },
       {
-        "message": "OPS: register Q215 Q216 operational state",
-        "sha": "9d272f416c677ab6a2d52c8ae45f098473c8f76a",
-        "timestamp": "2026-10-05T18:46:09+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "dbd002c83225af8ba96e92c9e42a871307610d90",
+        "timestamp": "2026-10-05T16:51:39Z"
       },
       {
-        "message": "GOVERNANCE: add Q215 Q216 discovery axes",
-        "sha": "11b8bf2165849392a83aabe08cbd290fa05ae260",
-        "timestamp": "2026-10-05T18:46:05+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "6df98632ee2d573a70370de262e22edcbe75a4b8",
+        "timestamp": "2026-10-05T16:51:29Z"
       },
       {
-        "message": "RESEARCH: trigger Q215 Q216 priority waves",
-        "sha": "97edcce89d846d37baf0334582b166f8dd66c62e",
-        "timestamp": "2026-10-05T18:46:02+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "d0ae27c339a4589e92cf73a631f570caa593c985",
+        "timestamp": "2026-10-05T16:51:26Z"
       },
       {
-        "message": "OPS: retarget rolling research window for Q215 Q216",
-        "sha": "84cfc3a5f1800b76b94bfcc44940d35cbc459aeb",
-        "timestamp": "2026-10-05T18:45:59+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "277f45f187db0e331da9981a80316855d539e275",
+        "timestamp": "2026-10-05T16:51:22Z"
       },
       {
-        "message": "OPS: dispatch Q215 Q216 priority waves",
-        "sha": "19d83a9ffcd7105982e3212e143f0b934b3bd635",
-        "timestamp": "2026-10-05T18:45:55+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "19198beea5b4df707ef8960aa754b1be53f95e45",
+        "timestamp": "2026-10-05T16:51:18Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "62fdd84c98e24876ca227320853e70da288a65e9",
-        "timestamp": "2026-10-05T16:45:23Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "87e9394e0bf9d0a41133c4af1af08fb81ee3a0a1",
+        "timestamp": "2026-10-05T16:51:14Z"
       }
     ]
   },
@@ -4353,15 +4303,10 @@
       "starts_utc": "2026-10-01T00:00:00Z"
     },
     "free_resources_only": true,
-    "hypothetical_reference_capital_eur": 2000,
-    "legacy_operational_canary_capital_eur": 500,
+    "hypothetical_reference_capital_eur": 2000.0,
+    "legacy_operational_canary_capital_eur": 500.0,
     "paid_agent_budget_usd": 0,
-    "paid_api_budget_usd": 0,
-    "research_priority": [
-      "Q215",
-      "Q216",
-      "existing source/PIT closures"
-    ]
+    "paid_api_budget_usd": 0
   },
   "safety": {
     "AUTOMATIC_PROMOTION": false,
@@ -4441,7 +4386,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "dc04dac66f885e873e22492b34c340ed1d3d4d4f",
+  "source_master_sha": "7952c6a60dd00ea5d33ca76933000b9ebc8edc56",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4555,33 +4500,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37343356441"
-  },
-  "q215": {
-    "candidate_inventory_path": "research/frontier/q215_q216_candidate_wave_2026_10_05.json",
-    "class": "cross_channel_public_observability_gap",
-    "code": "Q215",
-    "design_document": "docs/research_design/Q215_PUBLIC_SOURCE_OBSERVABILITY_GAP_2026-10-05.md",
-    "issue_number": 1082,
-    "parent_code": "LITERATURE-DISCOVERY-PLANE",
-    "performance_authorization_allowed": false,
-    "priority": "P1",
-    "state": "SOURCE_COMPONENT_FEASIBILITY_ACTIVE",
-    "source_feasibility_workflow": ".github/workflows/q215-observability-gap-feasibility.yml",
-    "next_gate": "historical two-channel identity bridge + both public clocks + issuer lineage + independent PIT reproduction"
-  },
-  "q216": {
-    "candidate_inventory_path": "research/frontier/q215_q216_candidate_wave_2026_10_05.json",
-    "class": "macro_vintage_revision_exposure_reliability_state",
-    "code": "Q216",
-    "design_document": "docs/research_design/Q216_DATA_REVISION_EXPOSURE_STATE_2026-10-05.md",
-    "issue_number": 1083,
-    "parent_code": "LITERATURE-DISCOVERY-PLANE",
-    "performance_authorization_allowed": false,
-    "priority": "P1-RISK",
-    "risk_state_only": true,
-    "state": "SOURCE_COMPONENT_FEASIBILITY_ACTIVE",
-    "source_feasibility_workflow": ".github/workflows/q216-data-revision-exposure-feasibility.yml",
-    "next_gate": "complete historical vintage panel + first-public semantics + frozen exposure mapping + independent PIT reproduction"
+    "run_id": "37344218497"
   }
 }

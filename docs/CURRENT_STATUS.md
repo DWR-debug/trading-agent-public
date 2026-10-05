@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `dc04dac66f885e873e22492b34c340ed1d3d4d4f`
+**Current operational snapshot:** `7952c6a60dd00ea5d33ca76933000b9ebc8edc56`
 
-**Generated (UTC):** `2026-10-05T16:46:33.557716+00:00`
+**Generated (UTC):** `2026-10-05T16:53:12.170434+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -28,11 +28,6 @@
 - Universal pre-formal candidate robustness gate: **ACTIVE**; structural candidate robustness must pass before PREREGISTRATION, SOURCE_FEASIBILITY, COVERAGE, PIT or PERFORMANCE formal phases.
 - S10 output remains non-scientific and cannot authorize performance or promotion.
 - **PERMANENT LITERATURE-RESEARCH RULE — ACTIVE:** The Trading Agent continuously searches for new, genuinely orthogonal economic mechanisms, information channels and cross-disciplinary relationships. Discovery is run on a recurring daily/weekly research cadence plus an independent public-metadata scout. Every promising finding is verified against primary sources, separated from existing candidate lineages, cheap-falsified where possible, and scored by novelty, PIT feasibility, reproducibility and information gain per compute. Negative/insufficient findings are retained to prevent cyclic rediscovery. Literature claims never become project evidence by themselves and can never authorize performance, holdout selection, ranking, tuning, promotion or live execution.
-
-### Weekly Deep Research — Q215/Q216 Active
-- **Q215:** public-source observability gap — P1; cross-channel information-diffusion state with explicit anti-double-counting constraints.
-- **Q216:** macro-vintage revision exposure state — P1-RISK; macro-vintage revision-reliability state only.
-- Both remain discovery/source/PIT-only; no performance, holdout selection, ranking, tuning, promotion or live execution.
 
 ### Permanent Capacity Saturation & Rolling Research Waves
 
@@ -125,8 +120,8 @@
 - Remaining gates are historical archive reconstruction, exact public-clock proof where not yet established, fixed entity mapping, revision/amendment lineage and independent reproduction. No performance, holdout selection, tuning, ranking, promotion or live execution is authorized.
 ### Q197–Q201 Orthogonal Information Frontier
 
-- Q198 Federal Register: **SOURCE_COMPONENT_READY**; source receipt `74c963843228cdab346d8fae8af9625c3a81cdf544337162023dcd242ed9bca2`. Next gate: fixed historical Public Inspection filing clock, correction/withdrawal lineage, immutable reconstruction and independent PIT reproduction.
-- Q197 USAspending: **SOURCE_COMPONENT_READY**; source receipt `74c963843228cdab346d8fae8af9625c3a81cdf544337162023dcd242ed9bca2`. Next gate: historical award-state revision/public-observation boundary, frozen pre-event relationship network and independent event-time reproduction.
+- Q198 Federal Register: **SOURCE_COMPONENT_READY**; source receipt `00371bfe6f7c5e67418f1b7b5f53582ca2c54ffecac7d0f33bcd7a28d560f688`. Next gate: fixed historical Public Inspection filing clock, correction/withdrawal lineage, immutable reconstruction and independent PIT reproduction.
+- Q197 USAspending: **SOURCE_COMPONENT_READY**; source receipt `00371bfe6f7c5e67418f1b7b5f53582ca2c54ffecac7d0f33bcd7a28d560f688`. Next gate: historical award-state revision/public-observation boundary, frozen pre-event relationship network and independent event-time reproduction.
 - Q199 USPTO: **HISTORICAL_SOURCE_COMPONENT_READY**; source receipt `8de5f09e193478901ae4f853a6b57ece6d6b6d9505b7f4930c4669050d2599fd`. Next gate: historical publication-state archive, frozen assignee/technology exposure and independent PIT reproduction.
 - Q201 ClinicalTrials.gov: **SOURCE_COMPONENT_READY**; source receipt `8de5f09e193478901ae4f853a6b57ece6d6b6d9505b7f4930c4669050d2599fd`. Next gate: historical results-state revision lineage, explicit posted-time semantics, frozen sponsor/exposure mapping and independent PIT reproduction.
 - Q198 historical PIT clock census: **Q198_PIT_CLOCK_CENSUS_COMPLETED**; pages parsed **4** / **4**, with fixed dates **2020/01/10, 2020/04/22, 2020/12/16, 2026/10/02**.
