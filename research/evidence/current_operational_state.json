@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T06:47:39.327673+00:00",
+  "generated_at_utc": "2026-10-05T06:48:02.876250+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4136,6 +4136,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "TEST: guard candidate-level Q202-Q205 dashboard rendering",
+        "sha": "89ff73db05f1fe023a1fa2a2ef73aeacdf40e0be",
+        "timestamp": "2026-10-05T08:47:59+02:00"
+      },
+      {
+        "message": "FIX: deduplicate Q205 and mark runner snapshot availability explicitly",
+        "sha": "6ca38eef380e962b58cacb89f3fe8bbb3cfa8bee",
+        "timestamp": "2026-10-05T08:47:51+02:00"
+      },
+      {
+        "message": "OPS: refresh resource dashboard snapshot",
+        "sha": "20cae868aa3aa737ddde4e070db01f78d7b73452",
+        "timestamp": "2026-10-05T06:47:48Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "08dbf5bb4b858d8c8abf800e5ebf34afff9a4633",
+        "timestamp": "2026-10-05T06:47:42Z"
+      },
+      {
         "message": "OPS: deploy generated dashboard snapshot within refresh workflow",
         "sha": "8bb4ea5ccc59cc62273299fc427755b506a181b4",
         "timestamp": "2026-10-05T08:47:27+02:00"
@@ -4154,26 +4174,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "a635c0decb999ee30958bf25c1749707bb171d36",
         "timestamp": "2026-10-05T06:46:26Z"
-      },
-      {
-        "message": "FIX: make dashboard snapshot commit race-tolerant",
-        "sha": "93adc62a6eafbc9ba08d776bdb48298941ca6209",
-        "timestamp": "2026-10-05T08:46:14+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "bd973cbf1121a19cb8bd7daae13c646f97531070",
-        "timestamp": "2026-10-05T06:46:11Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "c23a6dc17880c6a17204f9a4ea95ff6224f42951",
-        "timestamp": "2026-10-05T06:46:08Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "6340c96fe0a1c64d60609dad80fb290835e08370",
-        "timestamp": "2026-10-05T06:46:05Z"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8bb4ea5ccc59cc62273299fc427755b506a181b4",
+  "source_master_sha": "89ff73db05f1fe023a1fa2a2ef73aeacdf40e0be",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37274214195"
+    "run_id": "37274247303"
   }
 }
