@@ -597,6 +597,57 @@
       "scientific_boundary": "discovery_contract_only",
       "priority": "UNRANKED_DESIGN",
       "risk_note": "Merge back into Q220 if external verification adds no empirically distinct mechanism or cannot be given a defensible historical public-observation clock."
+    },
+    {
+      "id": "Q224",
+      "name": "EDGAR document-demand intensity / acquisition shock",
+      "mechanism": "A public regulatory filing can generate observable post-release acquisition demand in the SEC EDGAR access logs. The mechanism is revealed document-acquisition demand after disclosure, distinct from filing content, complexity, generic external attention, ownership change, or dissemination breadth.",
+      "event_clock": "SEC filing acceptance/public boundary; requests are evaluated only at timestamps strictly after the frozen public boundary.",
+      "features": [
+        "request_count_in_fixed_post_public_window",
+        "request_start_latency_from_filing_boundary",
+        "fixed_subwindow_request_burst_intensity",
+        "request_concentration_across_filing_assets",
+        "deterministic_traffic_quality_state_when_supported_by_the_source_schema"
+      ],
+      "direction": "two-sided outcome; no sign assumed ex ante",
+      "cheap_falsifiers": [
+        "generic_attention_or_Q130_collapse",
+        "Q204_public_release_latency_collapse",
+        "Q217_filing_complexity_collapse",
+        "Q104_institutional_demand_collapse",
+        "automated_or_bulk_traffic_dominates_and_cannot_be_deterministically_bounded",
+        "future_log_mutation_changes_a_closed_historical_window",
+        "modern_and_legacy_log_schemas_are_silently_spliced"
+      ],
+      "gates": [
+        "SEC_2020_2025_EDGAR_log_archive_completeness",
+        "request_timestamp_semantics_and_timezone_reconciliation",
+        "deterministic_CIK_accession_recovery_from_uri_path",
+        "historical_filing_boundary_join",
+        "missing_or_damaged_log_file_audit",
+        "future_log_mutation_invariance",
+        "traffic_quality_or_automation_contamination_audit",
+        "independent_PIT_reproduction_on_symbol_disjoint_filing_sample"
+      ],
+      "non_overlap": [
+        "Q130-R1",
+        "Q204",
+        "Q217",
+        "Q104",
+        "Q215",
+        "Q226"
+      ],
+      "source_basis": [
+        "SEC EDGAR Log File Data Sets",
+        "SEC Variables for EDGAR Log File Data Sets",
+        "Li & Sun 2022 Information acquisition and expected returns",
+        "Lee & Lee 2026 Observable Versus Unobservable Information Acquisition"
+      ],
+      "implementation_note": "Initial feasibility is restricted to the modern SEC log schema (2020-05-19 through 2025-06-30). The 2017-2020 gap and legacy schema differences must remain explicit; no historical splice is permitted without a separate bridge.",
+      "measurement_warning": "Observed EDGAR acquisition is an observable trace, not latent information demand. Public observability can itself change research behaviour; low observed demand must therefore not be interpreted monotonically.",
+      "scientific_boundary": "discovery_contract_only",
+      "priority": "UNRANKED_DESIGN"
     }
   ],
   "blocked_or_composite_tracks": {
@@ -612,7 +663,7 @@
     "promotion",
     "live execution"
   ],
-  "revision": 9,
-  "triggered_by": "TOP_CANDIDATE_DEVELOPMENT_2026-10-05_Q220_XBRL_STRUCTURAL_MAPPING",
+  "revision": 10,
+  "triggered_by": "TOP_CANDIDATE_DEVELOPMENT_2026-10-05_Q224_EDGAR_DOCUMENT_DEMAND",
   "common_statute_reference": "docs/TRADING_AGENT_PROJECT_STATUTES.md"
 }
