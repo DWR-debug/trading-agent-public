@@ -59,3 +59,23 @@ The snapshot is refreshed automatically once per day at **03:35 UTC** by **`.git
 The dashboard is an operational snapshot, not a live runner-control plane and not scientific evidence. It deliberately distinguishes routing assumptions from timestamped execution receipts.
 
 GitHub Pages deployment is defined in **`.github/workflows/github-pages-dashboard.yml`** and publishes the repository's **`/docs`** directory. The Pages root redirects to the dashboard, which is available at **`/dashboard/`** on the repository's Pages domain once Pages is enabled.
+
+
+## Research Control Board upgrade — 2026-10-05
+
+The dashboard is now a machine-generated operational control board rather than a static capacity list.
+
+It presents four distinct operational layers:
+
+1. **Resource fleet** — configured Windows A/B/C, GitHub-hosted x64/ARM64, S10, Samsung fleet, Free AI, bounded agent queue, Codespaces fallback, Paper Forward/Shadow and GitHub Pages.
+2. **Current work board** — active GitHub Actions work with resource/runner, lane, workflow task, job, state, start time and triggering actor. This describes operational assignment only; it is not scientific evidence.
+3. **Research board** — active candidate/trial states, lane, next gate and performance-authority flag from the canonical operational state.
+4. **AI / agent fabric** — latest persisted provider state for OpenRouter Free, Groq Free, Gemini CLI and Mistral, including free-mode state, model and timestamp.
+
+The generator uses the authenticated GitHub Actions API when the dashboard update workflow runs. Runner details are read from the Actions runner endpoint and current work from Actions workflow runs/jobs. When those APIs are unavailable, the snapshot degrades gracefully instead of inventing status.
+
+The word **worker** on the dashboard refers to an actual runner/provider/job assignment where available. The GitHub workflow **actor** is displayed separately because an actor triggering a workflow is not necessarily the worker executing it.
+
+The dashboard remains deliberately non-authorizing. Active/busy runners, provider availability, research stage and work assignment cannot authorize performance, holdout selection, ranking, tuning, promotion or live execution.
+
+The dashboard snapshot is still refreshed deliberately rather than every few minutes to avoid consuming hosted compute merely to produce activity.
