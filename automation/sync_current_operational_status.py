@@ -804,6 +804,15 @@ def generate(
 
 ### Active research registry
 
+#### Permanent literature frontier
+
+- **LITERATURE-DISCOVERY-PLANE:** ACTIVE_AND_PERSISTENT; daily/weekly assistant research plus a free 6-hour public-metadata scout. Discovery only.
+- **Q211:** patent semantic information state — P1 source/PIT feasibility; distinct from patent publication/citation timing and price-only momentum.
+- **Q212:** supply-chain disclosure sentiment propagation — P1 feasibility; network disclosure information only, with historical relationship/PIT requirements explicit.
+- **Q213:** news-disagreement elasticity — P2 contingent; remains blocked until multi-year public intraday equity/news PIT feasibility is proven.
+- **Q214:** disclosure-implied forward-beta/risk-structure state — P1-RISK; risk-state only, deliberately separated from Q088 peer-return/comomentum.
+- All four are discovery-only. Literature claims are not project evidence; no performance, holdout selection, ranking, tuning, promotion or live execution may be derived from them.
+
 - Q081-R2: **{active_trials.get("081R2", {}).get("state", "PREREGISTERED_WAITING_PREFLIGHT")}**; infrastructure-rebased corrective reproduction; no performance authorization.
 - Q089: **{active_trials.get("089", {}).get("state", "UNKNOWN")}**; fresh symbol-disjoint successor to quarantined Q086; separate performance authorization remains required.
 - Q077-R1: **{active_trials.get("077R1", {}).get("state", "PREREGISTERED_WAITING_PREFLIGHT")}**; coverage-only repair after the original Q077 pool left insufficient unused symbols; no performance authorization.
