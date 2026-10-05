@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T11:46:24.136357+00:00",
+  "generated_at_utc": "2026-10-05T11:58:58.758343+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4136,6 +4136,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "90593abf36d586b9cfbd41c8d21fdc6df9e54fc6",
+        "timestamp": "2026-10-05T11:55:54Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "7a67ceab343f480b9e5b4433667596e69b4475d1",
+        "timestamp": "2026-10-05T11:46:27Z"
+      },
+      {
         "message": "TEST: align shadow kill-switch test with existing risk controller semantics",
         "sha": "d9ada794e1d887d28e0c194b2536250244f5e9c5",
         "timestamp": "2026-10-05T13:46:11+02:00"
@@ -4164,16 +4174,6 @@
         "message": "TEST: cover paper-shadow coordinator safety and risk admission",
         "sha": "06d5cd4021b6f69a598cc199cc4c4e61912da0bb",
         "timestamp": "2026-10-05T13:43:50+02:00"
-      },
-      {
-        "message": "ENG: add paper-shadow coordinator and risk admission layer",
-        "sha": "ebd0490a3e33dbc90551543f9e4406fd8f2f0d1e",
-        "timestamp": "2026-10-05T13:43:47+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b94d23abeb0cf70710e638bd7afe96576ab69631",
-        "timestamp": "2026-10-05T11:43:08Z"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d9ada794e1d887d28e0c194b2536250244f5e9c5",
+  "source_master_sha": "90593abf36d586b9cfbd41c8d21fdc6df9e54fc6",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37305070239"
+    "run_id": "37306415488"
   }
 }
