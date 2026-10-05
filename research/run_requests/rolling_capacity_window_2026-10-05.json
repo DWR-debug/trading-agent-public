@@ -2,9 +2,9 @@
   "schema_version": "1.0",
   "record_type": "rolling_capacity_window",
   "status": "ACTIVE",
-  "window_id": "TA-2H-2026-10-05-1630Z",
-  "start_utc": "2026-10-05T16:30:00Z",
-  "end_utc": "2026-10-05T18:30:00Z",
+  "window_id": "TA-2H-2026-10-05-1735Z",
+  "start_utc": "2026-10-05T17:35:00Z",
+  "end_utc": "2026-10-05T19:35:00Z",
   "cadence_minutes": 10,
   "max_dispatch_per_tick": 8,
   "retry_limit_per_workflow_per_phase": 1,
@@ -16,9 +16,6 @@
       "name": "SOURCE_PIT_CLOSURE",
       "objective": "Close currently open source/PIT and clock gates first.",
       "workflows": [
-        "q217-cognitive-processing-friction-feasibility.yml",
-        "q215-observability-gap-feasibility.yml",
-        "q216-data-revision-exposure-feasibility.yml",
         "q121r6-sec-acceptance-time-compilation.yml",
         "q185-q186-source-feasibility.yml",
         "q187-q192-source-feasibility.yml",
@@ -41,7 +38,10 @@
         "orthogonal-candidate-development.yml",
         "q202-q204-information-timing-feasibility.yml",
         "q205-nlrb-source-feasibility.yml",
-        "q119-treasury-source-feasibility.yml"
+        "q119-treasury-source-feasibility.yml",
+        "q215-nhtsa-sec-bridge-feasibility.yml",
+        "q216-rt-vintage-pit-feasibility.yml",
+        "q217-q131-orthogonality-audit.yml"
       ]
     },
     {
@@ -84,8 +84,9 @@
     "Phase ordering is a preference, not a barrier to independent already-ready work; downstream workflows may self-gate and remain fail-closed.",
     "Existing permanent 10-minute self-hosted and hosted frontier loops remain primary continuous lanes and are not redundantly dispatched here.",
     "Runner C is opportunistic: if a higher-priority long reproduction occupies the shared slot, the capacity pulse waits rather than preempts it.",
-    "Scientific authority remains unchanged; this scheduler only allocates execution capacity."
+    "Scientific authority remains unchanged; this scheduler only allocates execution capacity.",
+    "Successful source-feasibility workflows are not re-run as filler; only their explicit next-gate workflows may be scheduled."
   ],
-  "retargeted_at_utc": "2026-10-05T17:05:00Z",
-  "retarget_reason": "Prioritize Q217 cognitive-processing-friction source/PIT discovery alongside Q215/Q216; do not manufacture duplicate work."
+  "retargeted_at_utc": "2026-10-05T17:38:00Z",
+  "retarget_reason": "Fresh useful-capacity window. Only receipt-defined next gates are routed; already-successful Q215/Q216/Q217 source probes are excluded."
 }
