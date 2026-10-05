@@ -457,3 +457,37 @@ Sources:
 https://www.uspto.gov/ip-policy/economic-research/research-datasets/office-action-research-dataset-patents
 https://www.uspto.gov/ip-policy/economic-research/research-datasets/historical-patent-data-files
 https://www.sciencedirect.com/science/article/pii/S0304405X21004785
+
+
+## 25. Regulatory stress-test certification — nested mechanism only
+
+Current Federal Reserve stress-test documentation exposes a particularly clean external-certification clock: the Board publicly releases bank-level supervisory stress-test results at a specified timestamp, and covered institutions have defined subsequent disclosure windows. The 2026 results page also provides bank-level results and historical 2013–2026 datasets. This is a more standardized external-information process than issuer self-reporting.
+
+The economic mechanism is potentially distinct from generic disclosure sentiment: an external supervisor evaluates capital resilience under a fixed scenario and publishes a certification-like state that can influence regulatory capital constraints. Historical Federal Reserve work finds that larger stress-test capital buffers reduce bank lending, with downstream effects on firms' credit access, investment and employment.
+
+Potential state, discovery-only:
+- supervisory stress-loss / capital depletion relative to pre-event capital;
+- change in stress capital buffer requirement;
+- bank-specific external-certification state;
+- pre-event bank capital cushion × supervisory stress sensitivity.
+
+Hard PIT conditions:
+- use only the exact Board publication boundary;
+- pre-event balance-sheet/capital values only;
+- no later bank disclosures to reconstruct the original state;
+- preserve scenario-version lineage and historical methodology changes;
+- distinguish supervisory result publication from the later bank disclosure;
+- do not infer an "unexpected" surprise without an independently frozen pre-event expectation dataset.
+
+Overlap controls:
+- merge with Q214 if it becomes only a risk-state transformation;
+- merge with Q222/Q220 if only a generic external-vs-internal representation gap remains;
+- reject if the result is driven solely by known bank size/capital ratios without incremental stress-test structure.
+
+Decision: keep as a nested regulatory-certification hypothesis. Do not add a top-level candidate until a source/PIT census demonstrates a genuinely distinct observable and sufficient historical coverage.
+
+Sources:
+https://www.federalreserve.gov/supervisionreg/dfa-stress-tests-2026.htm
+https://www.federalreserve.gov/newsevents/pressreleases/bcreg20260624a.htm
+https://www.federalreserve.gov/econres/feds/the-effects-of-bank-capital-buffers-on-bank-lending-and-firm-activity.htm
+https://www.federalreserve.gov/publications/dodd-frank-act-stress-test-publications.htm
