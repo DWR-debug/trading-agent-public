@@ -1,0 +1,69 @@
+name: Q215 NHTSA to SEC Bridge Feasibility
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - research/frontier/q215_q216_candidate_wave_2026_10_05.json
+      - .github/workflows/q215-nhtsa-sec-bridge-feasibility.yml
+permissions:
+  contents: read
+concurrency:
+  group: trading-agent-q215-nhtsa-sec-bridge
+  cancel-in-progress: false
+jobs:
+  feasibility:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - name: Probe historical NHTSA recall archive
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, io, zipfile
+          from urllib.request import Request, urlopen
+          u="https://static.nhtsa.gov/odi/ffdd/rcl/FLAT_RCL_POST_2010.zip"
+          req=Request(u,headers={"User-Agent":"TradingAgent-Public-Q215/1.0"})
+          with urlopen(req,timeout=90) as r: body=r.read(); status=getattr(r,"status",200)
+          assert status==200
+          z=zipfile.ZipFile(io.BytesIO(body))
+          assert z.namelist()
+          print({"http_status":status,"sha256":hashlib.sha256(body).hexdigest(),"members":len(z.namelist()),"sample":z.namelist()[:8]})
+          PY
+      - name: Probe SEC issuer filing clock
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from urllib.request import Request,urlopen
+          u="https://data.sec.gov/submissions/CIK0000789019.json"
+          req=Request(u,headers={"User-Agent":"TradingAgent-Public-Q215/1.0"})
+          with urlopen(req,timeout=30) as r: d=json.loads(r.read().decode())
+          recent=d.get("filings",{}).get("recent",{})
+          assert any(recent.get("acceptanceDateTime",[]))
+          print("Q215_SEC_CLOCK_COMPONENT_OK")
+          PY
+      - name: Write bounded non-authorizing receipt
+        run: |
+          set -euo pipefail
+          mkdir -p research/runs
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          d={"schema_version":1,"record_type":"q215_nhtsa_sec_bridge_feasibility","status":"DISCOVERY_NEXT_GATE_COMPLETED_NO_PERFORMANCE","candidate_id":"Q215","nhtsa_archive_component_checked":True,"sec_clock_component_checked":True,"two_channel_identity_proven":False,"historical_pit_validated":False,"independent_reproduction":False,"performance_authorized":False,"holdout_selection_allowed":False,"ranking_allowed":False,"tuning_allowed":False,"promotion_allowed":False,"live_execution_allowed":False}
+          Path("research/runs/q215_nhtsa_sec_bridge_"+os.environ["GITHUB_RUN_ID"]+".json").write_text(json.dumps(d,indent=2)+"
+")
+          PY
+      - name: Upload receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q215-nhtsa-sec-bridge
+          path: research/runs/q215_nhtsa_sec_bridge_*.json
+          if-no-files-found: error
+          retention-days: 14
