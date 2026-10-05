@@ -9,6 +9,7 @@
     "binary": null,
     "free_only": true,
     "local_mode": false,
+    "litellm_transport_enabled": false,
     "local_attestation": {
       "present": false,
       "path": null
@@ -30,9 +31,10 @@
     "free_enforcement": "fixed_model_openrouter_free",
     "reasons": []
   },
+  "litellm_transport_enabled": false,
   "task_fingerprint": "1bcdfcf7eb7da953528ce0df9b65d39af546277c74e5a857cc04d4d0f1236112",
-  "context_fingerprint": "bcae7fad675e461ae7bf2e2b77d1a9093812b7c9f8816c10b6e3183c7ea837be",
-  "observed_at_utc": "2026-10-04T20:48:21.677103Z",
+  "context_fingerprint": "687ad5b0a8a6d21cab5424d051eebf68387710fa69d491fe6d234bcc59c241f8",
+  "observed_at_utc": "2026-10-05T11:25:08.426695Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -40,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 16.832,
-  "stdout": "**ADVERSARIAL METHODS REVIEW – ORCHESTRATION LAYER**  \n*Independent adversarial second opinion; mechanisms, confounds, and cheap falsification proposals only. No validation, ranking, or gate alteration claimed.*\n\n---\n\n### FINDINGS\n\n| # | Mechanism | Why It Matters | Cheap Deterministic Falsification/Check |\n|---|-----------|----------------|------------------------------------------|\n| **1** | **Track-source overlap & gate confounding**<br>`research_os_scheduler.py` defines 9 tracks with `lane` assignments (`deterministic_frontier`, `adversarial`) and shared source ID spaces. Source IDs across tracks are not explicitly disjoint; next_gate dependencies are only documented, not enforced as acyclic graphs. | If two tracks source-share a common origin (e.g., `SRC-FINRA-SI` appears in both C-SEC and D-MACRO), a state mutation in one track’s source index can silently propagate to the other, creating selection leakage or duplicate-work under the guise of independent lanes. The “deterministic_frontier” lane’s gate chain (`source_and_release_schedule_probe` → `vintage_and_release_time_probe` → …) assumes source freshness that may be stale in sibling tracks. | **Check:** Run `python -c \"from automation.research_os_evidence_bus import source_index; print(source_index().keys())\"` and compute pairwise intersections across `ROS-TRACK-*.source_ids`. If any intersection >0, flag for explicit source-versioning or quarantine separation. |\n| **2** | **Forbidden-key regex gap in hypothesis compiler**<br>`research_hypothesis_compiler.py` rejects candidates with top-level performance fields, but `FORBIDDEN_KEYS` is a flat set. Nested dicts/lists (e.g., `\"metrics\": {\"performance\": 0.42}`) are only validated by the early-robustness gate, whose internals are opaque here. | A candidate could bypass the explicit check by burying performance-adjacent data under a different key path, then pass the compiler if `validate_early_robustness` does not itself inspect those nested paths. This constitutes a covert selection-leakage vector from the intake layer. | **Falsification:** Inject `{\"id\":\"X\",\"name\":\"test\",\"hypothesis\":\"…\",\"construction\":\"…\",\"sources\":[\"S\"],\"next_gate\":\"source_and_release_schedule_probe\",\"metrics\":{\"performance\":0.42}}`. Observe whether the compiler raises `DISCOVERY_FORBIDDEN_FIELDS` or silently forwards. If it passes, the flat-key guard is insufficient. |\n| **3** | **Queue-request recursion blind-spots**<br>`autonomous_control_plane.py` recursively rejects forbidden fields via `.strip().lower()` on dict keys, but list items containing strings are checked element‑wise without key context. A key like `\"score\"` inside a list of candidate summaries would not be caught because the recursion only descends into `dict` values. | Forbidden research-result fields could be smuggled in list-valued fields (e.g., `\"candidates\": [{\"rank\": 1, \"return\": 0.12}]`). The queue would then enter the control plane, and downstream lane routing could implicitly weight those candidates, violating the paper-only constraint. | **Falsification:** Craft a `.request` payload with `\"candidates\":[{\"rank\":1,\"return\":0.05}]` and run `validate_request_snapshot`. If no error is raised, the recursion misses nested-list keys. Fix: extend recursion to normalize all string keys at any depth, not just top-level dicts. |\n| **4** | **Workflow concurrency & state‑drift between cron & push**<br>`permanent-pc-research-loop.yml` triggers on `*/10 * * * *` cron *and* push to `master` with a 2‑slot matrix. The `if: github.repository == 'DWR-debug/trading-agent-public'` guard does not prevent overlapping runs when a push occurs within 10 min of a cron trigger. Concurrency groups `trading-agent-windows-research-capacity-v1` and `trading-agent-windows-research-data-qa-v1` are unnamed beyond this repo; sibling org repos could map to the same group name. | Overlapping runs can read/write the same `research/evidence/current_operational_state.json` without file‑locking, producing stale-state or race‑condition artifacts. A push that modifies a `q*.json` candidate wave between cron execution steps can cause the cron run to act on a partially updated inventory, breaking provenance integrity. | **Check:** Simulate two concurrent `autonomous_pc` jobs with `GITHUB_SHA` differing by one commit on the same `master` branch. Verify whether `current_operational_state.json` reads the pre‑ or post‑push version. If non‑idempotent, add `flock`-based file locking or snapshot‑before‑run steps. |\n| **5** | **Operational‑state JSON: enforcement gap**<br>`research/evidence/current_operational_state.json` lists `state`, `performance_authorization_allowed: false`, and path references, but the JSON itself has no schema enforcement or checksum validation in any shown tooling. State transitions (e.g., `DESIGN_ONLY` → `SOURCE_FEASIBILITY_AND_DOWNSTREAM_GATES_COMPLETED`) are documented but not",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 24.69,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1791146902-JlBS1gTp8ayQxFQm9PNs",
-  "usage": {
-    "prompt_tokens": 5931,
-    "completion_tokens": 3200,
-    "total_tokens": 9131,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 2195,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
