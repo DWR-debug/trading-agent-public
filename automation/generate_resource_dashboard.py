@@ -304,6 +304,36 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
     return out
 
 
+
+def android_fleet_snapshot(runners: list[dict[str, Any]], work: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    try:
+        registry = json.loads(
+            (ROOT / "ops" / "android_phone_resources.json").read_text(encoding="utf-8")
+        )
+    except (OSError, json.JSONDecodeError):
+        registry = {}
+    runner_by_name = {str(r.get("name")): r for r in runners}
+    devices = registry.get("devices", []) if isinstance(registry, dict) else []
+    out = []
+    for device in devices:
+        if not isinstance(device, dict):
+            continue
+        name = str(device.get("runner_name") or "")
+        assignments = [w for w in work if w.get("worker") == name]
+        runner = runner_by_name.get(name)
+        out.append({
+            "resource_id": str(device.get("resource_id") or ""),
+            "runner_name": name,
+            "architecture": str(device.get("architecture") or ""),
+            "runtime": str(device.get("runtime") or ""),
+            "role": str(device.get("role") or "bounded utility support"),
+            "enabled": bool(device.get("enabled", False)),
+            "live_status": runner.get("status") if runner else ("active work assigned" if assignments else "not visible in Actions runner API"),
+            "busy": bool(runner.get("busy")) if runner else bool(assignments),
+            "current_assignments": len(assignments),
+        })
+    return out
+
 def recent_activity() -> list[dict[str, Any]]:
     data = run_cmd_json([f"/repos/{REPO}/actions/runs?per_page=60"])
     if not isinstance(data, dict):
@@ -429,13 +459,7 @@ def main() -> None:
         "workload_by_lane": {lane: sum(1 for w in work if w.get("lane") == lane) for lane in sorted({w.get("lane") for w in work if w.get("lane")})},
         "recent_activity_24h": recent_activity(),
         "ai_fabric": ai,
-        "android_fleet": [
-            {"resource_id": "SAMSUNG-PHONE-01", "runner_name": "SAMSUNG-PHONE-01-TERMUX", "configured": True},
-            {"resource_id": "SAMSUNG-PHONE-02", "runner_name": "SAMSUNG-PHONE-02-TERMUX", "configured": True},
-            {"resource_id": "SAMSUNG-PHONE-03", "runner_name": "SAMSUNG-PHONE-03-TERMUX", "configured": True},
-            {"resource_id": "SAMSUNG-PHONE-04", "runner_name": "SAMSUNG-PHONE-04-TERMUX", "configured": True},
-            {"resource_id": "SAMSUNG-PHONE-05", "runner_name": "SAMSUNG-PHONE-05-TERMUX", "configured": True},
-        ],
+        "android_fleet": android_fleet_snapshot(runners, work),
         "current_research": {
             "latest_formal_result": latest_result,
             "highlights": recent_research_highlights(status_text),
