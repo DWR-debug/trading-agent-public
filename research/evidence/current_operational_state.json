@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T12:43:05.402880+00:00",
+  "generated_at_utc": "2026-10-05T12:47:41.268640+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2216,7 +2216,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "3a8c470d380596e2644e64046454cad6510fab5f0bbd2580fc1b40851197f5a4",
+    "receipt_fingerprint": "43f448b3fb1e39b20b99421bcf63b6438d3630f7ef6a0b441c9818d505cbbed8",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2247,7 +2247,7 @@
           }
         ],
         "clock_contract": "API posted-date fields define public availability; submitted dates are separate.",
-        "content_sha256": "d9ae42a4f31df44d2e163ff1a3964474fc6446b2080c57e3e94311f2f21aefcb",
+        "content_sha256": "6af06c73e67ea82fcbb4618dbb1d6dd2c56b80cd8f3187cd0e9895a7a591edaf",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2264,7 +2264,7 @@
           }
         ],
         "clock_contract": "Transaction identity/date is distinct from daily/weekly dissemination files.",
-        "content_sha256": "28a20da09d2bb58aafcdcc5559d58f221e97979fd7da3e7af20b585a99cd32ab",
+        "content_sha256": "c8929dc4e82c990d8e8b2e83b61f35d5893e2c2aaa942104ce90031159be8e99",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2294,7 +2294,7 @@
           }
         ],
         "clock_contract": "Issued/received document records are distinct from later corrections and underlying event dates.",
-        "content_sha256": "1c67f7e56e1f0a3c91e18028b89aa5066270b4a01c8173aad451a0e9e79c5d0c",
+        "content_sha256": "babcd7c92dbc01aebcc010555fece62503dbca1b6d99d2bd2e5d9572f7822e68",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -2315,7 +2315,7 @@
           }
         ],
         "clock_contract": "Recall publication date is distinct from the underlying safety-issue report date.",
-        "content_sha256": "48a6e3168c936e811ccffa3f4cfa131646442cc731697b434dbf91e607004739",
+        "content_sha256": "4a8939d73d2a23e7e9a096e1f6ff70b12eba3b2cb2660d5400e915a3e7f9c1a0",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2332,7 +2332,7 @@
           }
         ],
         "clock_contract": "Investigation event and publication times remain distinct.",
-        "content_sha256": "ffdc3ad62a06c2653d0078c96699f50b4888538eb71e31fb16345431a6703fc0",
+        "content_sha256": "6332a6c25379f851b5bd009f90bd2d6a58d615111a6c4d562a5c3a9d569f46a5",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2349,7 +2349,7 @@
           }
         ],
         "clock_contract": "The DOL public catalog establishes the dataset boundary; inspection/opening and later catalog refresh times remain distinct.",
-        "content_sha256": "a8471625282fa2b6c143ae943f58539b0c2d140b60932d17678d2f0d20f65dbe",
+        "content_sha256": "b565e1a83023b30f8638a2d7550d58637fc0d1d1c31f72bdd6213c303d7da6b3",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2450,7 +2450,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "3adb52f6311a131ab6cbdc8b6642d47668b050240c812c8da0bce6b296802d07",
+    "receipt_fingerprint": "583afe94e50f9e6e352bfa42d7d57677f5dc4b8bb1f3cd4780e32e0f678b4989",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2485,7 +2485,7 @@
           }
         ],
         "clock_contract": "Docket event dates are distinct from underlying incident dates; exact public intraday availability must be proven per event class, otherwise use next-session availability.",
-        "content_sha256": "6322872d9af761b8e1cfd0a980f5852b55bd68f3164910073113892e07917db0",
+        "content_sha256": "b1ffdf5543ab8ef4b3d75944d29bed61e9766fb276aeebee5d84af5142754e57",
         "http_status": 403,
         "missing_markers": [
           "RECAP Archive",
@@ -2509,7 +2509,7 @@
           }
         ],
         "clock_contract": "A recorded docket-entry date is not automatically proof of public dissemination time.",
-        "content_sha256": "c6f6f5a629f7513074af5a543f4791591d5920f8173ded372579a177ddd1fa61",
+        "content_sha256": "69d747d697990f6fc646d2374727d811c77a9ee45625a83491ec4f95cdaf48ec",
         "http_status": 403,
         "missing_markers": [
           "Advanced RECAP Search",
@@ -2737,7 +2737,7 @@
         "status": "SOURCE_COMPONENT_READY"
       }
     ],
-    "receipt_fingerprint": "c9ae864c358266d45f1395064f5301498ab3daad32a0c43c6a8b7dbf015e8045",
+    "receipt_fingerprint": "adebde755351dc989f9df97cdcba83ffcd9713b9d19d55f2b0321416c9ecd2df",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2774,7 +2774,7 @@
             "url": "https://api.usaspending.gov/api/v2/awards/last_updated/"
           }
         ],
-        "content_sha256": "65d54624b6866fbd30084eed3d44f4f9bb00df84aa22709cf2b0125aa9d79386",
+        "content_sha256": "efff48d8fe0142b14f13d129495d791d5740a85de6cf73f74b6eb79453e87008",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -2809,7 +2809,7 @@
             "url": "https://www.archives.gov/federal-register/faqs"
           }
         ],
-        "content_sha256": "991780f77b96a04593456f125add0a953c956358a82474c63c0ae20e54cba069",
+        "content_sha256": "8f6214cf0aa99d383255bbfd1fc95311aee55ad515fcf225cedeb0864d79aada",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -2828,7 +2828,7 @@
             "url": "https://www.federalregister.gov/api/v1/public-inspection-documents/2021-07287.json"
           }
         ],
-        "content_sha256": "1505cbbad90b8016cacc635ff759c4b109011a23021be965fba581927d6b1514",
+        "content_sha256": "bc59ce7c47b7d7609919799a55fc7031073b9709cb3efd4714b24e7591339947",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -3319,7 +3319,7 @@
       },
       {
         "api_url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-12-16&per_page=1000",
-        "content_sha256": "89b060bd058d9e980c57e0cff2e59b96b77112d1d0e62869f6bb4c25902dff21",
+        "content_sha256": "2917723de5829a6457559c1936fcb7fd716341fa17177780298b753c538fb8c1",
         "http_status": 200,
         "parsed": {
           "api_count": 124,
@@ -3542,7 +3542,7 @@
       },
       {
         "api_url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2026-10-02&per_page=1000",
-        "content_sha256": "74b7f4d6c1f641e06e3e745a8fc03b8cb7b356c1a34a3bd5854db6d350ff4976",
+        "content_sha256": "b1ae023d42d46345027b3712985e6303a8944f71493cf680e15874a3857a984b",
         "http_status": 200,
         "parsed": {
           "api_count": 108,
@@ -3764,7 +3764,7 @@
         "status": "API_PARSED"
       }
     ],
-    "receipt_fingerprint": "b0a123218b7c3b87400fc1a5bffe9697448438febff430b6a2b9d6220d435343",
+    "receipt_fingerprint": "e613c761a094a229d9d50e643384cc697e9dc2db96da27554c70c6cc995024c8",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -3829,7 +3829,7 @@
         "version_date_count": 0
       }
     },
-    "receipt_fingerprint": "9d3bc42f0dcf48d908a68209176a9087ade5ee76cfe8bae694c911f5e212f8b1",
+    "receipt_fingerprint": "1e50da21d03818392aec0e0bf84674d12d6405ebf4d9134ef31bd43372b40da3",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -3859,7 +3859,7 @@
             "url": "https://clinicaltrials.gov/api/v2/studies/NCT00125528"
           }
         ],
-        "content_sha256": "d9ae42a4f31df44d2e163ff1a3964474fc6446b2080c57e3e94311f2f21aefcb",
+        "content_sha256": "6af06c73e67ea82fcbb4618dbb1d6dd2c56b80cd8f3187cd0e9895a7a591edaf",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -3903,7 +3903,7 @@
             "url": "https://ppubs.uspto.gov/basic/"
           }
         ],
-        "content_sha256": "c5547680b4d6d01ed459e9d5f78635acb29484cd1546cd93293d693a0ff0c0e2",
+        "content_sha256": "89e1c0ea784053086a43606c782a06daa718afcbf853669d75df4486c71c35f1",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -3950,14 +3950,14 @@
       "Q204_FR_20200110": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-01-10&per_page=1000",
       "Q204_FR_20201216": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-12-16&per_page=1000"
     },
-    "generated_at_utc": "2026-10-05T10:59:37Z",
+    "generated_at_utc": "2026-10-05T12:43:42Z",
     "governance": {
       "historical_pit_validated": false,
       "live_execution": false,
       "performance_authorized": false,
       "promotion_authorized": false
     },
-    "receipt_fingerprint": "92fd8d4b9a1d9cdd7c995e329f6cd372ae559977be2e9a9f5911b408e1e5b00c",
+    "receipt_fingerprint": "0c79d4319ced032d3ef15728cfb167c727164ef2e25780bf23b093ddc2d34999",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -4003,7 +4003,7 @@
           "url": "https://clinicaltrials.gov/study/NCT00125528?a=2&tab=history"
         },
         "study": {
-          "content_sha256": "d9ae42a4f31df44d2e163ff1a3964474fc6446b2080c57e3e94311f2f21aefcb",
+          "content_sha256": "6af06c73e67ea82fcbb4618dbb1d6dd2c56b80cd8f3187cd0e9895a7a591edaf",
           "http_status": 200,
           "missing_markers": [],
           "reachable": true,
@@ -4093,7 +4093,7 @@
         },
         "2020-12-16": {
           "api_count": 124,
-          "content_sha256": "89b060bd058d9e980c57e0cff2e59b96b77112d1d0e62869f6bb4c25902dff21",
+          "content_sha256": "2917723de5829a6457559c1936fcb7fd716341fa17177780298b753c538fb8c1",
           "correction_or_withdrawal_note_count": 2,
           "http_status": 200,
           "missing_filed_timestamp_count": 1,
@@ -4136,44 +4136,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "dee7fa018723c9de6224e20a7ed6e2f2efeab286",
-        "timestamp": "2026-10-05T12:42:59Z"
-      },
-      {
-        "message": "RESEARCH: trigger authorized priority wave R14",
-        "sha": "5ce5c38162ff520da77265be588995ac53c97102",
-        "timestamp": "2026-10-05T14:42:54+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "31e2759835a551a0b17c9d356b3488e73e67114a",
-        "timestamp": "2026-10-05T12:42:34Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "6a27c5ac604011de651c103b52ce434c2288a59f",
-        "timestamp": "2026-10-05T12:39:31Z"
+        "message": "OPS: harden Windows reproduction checkout against archive extraction race",
+        "sha": "fb5c82f651a9126fec48f1ab5e0ec20add19c42f",
+        "timestamp": "2026-10-05T14:47:26+02:00"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "67bfc543a5a02f71c78390ec4242c7cb39b55a63",
-        "timestamp": "2026-10-05T12:38:05Z"
+        "sha": "091d23782373a4bd7ae77a2af5bb821675859a96",
+        "timestamp": "2026-10-05T12:45:52Z"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "c2e7e256e76dcc89697a3057e07da1f5c798cd40",
-        "timestamp": "2026-10-05T12:37:48Z"
+        "sha": "22f64dabf367522f9f29e5ab837dccf1b892511f",
+        "timestamp": "2026-10-05T12:45:26Z"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "f4b9ff5943f5163c5ecb2c3bd07b6b3d717e486d",
-        "timestamp": "2026-10-05T12:35:02Z"
+        "sha": "e69e096253408842e719324aa140e02aaa781371",
+        "timestamp": "2026-10-05T12:44:56Z"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "856d72eb7f74bbfe14e2cc9894ee3fb4a305b73b",
-        "timestamp": "2026-10-05T12:32:09Z"
+        "sha": "65008cd90db37da0d93b9e2c8006f62f4505dc8d",
+        "timestamp": "2026-10-05T12:44:38Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "c73089f81449489f23ae3b41ddd49f5465237e09",
+        "timestamp": "2026-10-05T12:43:58Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "6ab18f9972752abd6c5694f81ff688e80e27f433",
+        "timestamp": "2026-10-05T12:43:53Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "f4dd65dd0c94e49b0e7bf5b03f410cfc74b72c43",
+        "timestamp": "2026-10-05T12:43:50Z"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "dee7fa018723c9de6224e20a7ed6e2f2efeab286",
+  "source_master_sha": "fb5c82f651a9126fec48f1ab5e0ec20add19c42f",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37311453460"
+    "run_id": "37311985955"
   }
 }
