@@ -1,11 +1,6 @@
 name: Priority Research Wave Dispatcher
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - research/run_requests/priority_wave_dispatch_2026-10-04.trigger
-      - research/run_requests/next_logical_gate_2026-10-04.trigger
   workflow_dispatch:
 
 permissions:
@@ -26,7 +21,12 @@ jobs:
         with:
           ref: master
           fetch-depth: 1
-      - name: Dispatch ready priority workflows
+      - name: Manual emergency dispatch guard
+        run: |
+          set -euo pipefail
+          echo "MANUAL_PRIORITY_DISPATCH_ONLY=TRUE"
+          echo "AUTOMATIC_DISPATCH_AUTHORITY=.github/workflows/capacity-saturation-rolling-waves.yml"
+
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
