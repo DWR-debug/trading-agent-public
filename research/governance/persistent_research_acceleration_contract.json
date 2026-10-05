@@ -123,5 +123,33 @@
       "live_execution": false
     },
     "principle": "Continuously discover unusual, economically coherent and genuinely orthogonal information advantages; verify before adoption and preserve dead ends."
+  },
+  "rolling_capacity_wave_control": {
+    "status": "ACTIVE",
+    "contract_path": "research/run_requests/rolling_capacity_window_2026-10-05.json",
+    "workflow": ".github/workflows/capacity-saturation-rolling-waves.yml",
+    "scheduler_cadence": "every_10_minutes",
+    "rule": "When useful free capacity exists and a non-duplicate bounded backlog exists, keep the lane occupied with the highest-priority ready task.",
+    "current_window": {
+      "window_id": "TA-2H-2026-10-05-1602Z",
+      "start_utc": "2026-10-05T16:02:00Z",
+      "end_utc": "2026-10-05T18:02:00Z",
+      "phases": [
+        "W1 SOURCE_PIT_CLOSURE",
+        "W2 CANDIDATE_AND_INFORMATION_TIMING",
+        "W3 NEXT_GATE_AND_REPRODUCTION",
+        "W4 DISCOVERY_AND_CONSOLIDATION"
+      ]
+    },
+    "phase_rule": "Skip active duplicates; skip phase-successful work; allow at most one retry after failure/cancellation; downstream workflows retain their own fail-closed gates.",
+    "permanent_extension": "After the two-hour lease expires, the same rule remains permanent through the existing 10-minute A/B loops and 20-minute Runner-C opportunistic pulse.",
+    "scientific_boundary": {
+      "performance": false,
+      "holdout_selection": false,
+      "ranking": false,
+      "tuning": false,
+      "promotion": false,
+      "live_execution": false
+    }
   }
 }
