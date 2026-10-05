@@ -514,6 +514,33 @@ def generate(
                 "scientific_authority": False,
                 "performance_authorization": False
             },
+            "rolling_capacity_waves": {
+                "status": "ACTIVE_AND_PERSISTENT",
+                "workflow": ".github/workflows/capacity-saturation-rolling-waves.yml",
+                "lease": "research/run_requests/rolling_capacity_window_2026-10-05.json",
+                "cadence": "*/10 * * * *",
+                "objective": "maximize useful occupancy of genuinely available free capacity without duplicate or artificial work",
+                "current_window": {
+                    "window_id": "TA-2H-2026-10-05-1602Z",
+                    "start_utc": "2026-10-05T16:02:00Z",
+                    "end_utc": "2026-10-05T18:02:00Z",
+                    "waves": [
+                        "W1 source/PIT/clock closure",
+                        "W2 candidate/contracts and information timing",
+                        "W3 next-gate compilation and independent reproduction",
+                        "W4 literature discovery and consolidation"
+                    ]
+                },
+                "dispatch_rules": [
+                    "skip active duplicate work",
+                    "skip phase-successful work",
+                    "allow only one bounded retry after failure/cancellation",
+                    "prefer the smallest suitable free resource",
+                    "retain downstream fail-closed scientific gates"
+                ],
+                "artificial_quota_consumption": False,
+                "scientific_authority": False
+            },
             "two_lane_research_mode": {
                 "status": "ACTIVE",
                 "lane_a": {
@@ -783,6 +810,16 @@ def generate(
 - Universal pre-formal candidate robustness gate: **ACTIVE**; structural candidate robustness must pass before PREREGISTRATION, SOURCE_FEASIBILITY, COVERAGE, PIT or PERFORMANCE formal phases.
 - S10 output remains non-scientific and cannot authorize performance or promotion.
 - **PERMANENT LITERATURE-RESEARCH RULE — ACTIVE:** The Trading Agent continuously searches for new, genuinely orthogonal economic mechanisms, information channels and cross-disciplinary relationships. Discovery is run on a recurring daily/weekly research cadence plus an independent public-metadata scout. Every promising finding is verified against primary sources, separated from existing candidate lineages, cheap-falsified where possible, and scored by novelty, PIT feasibility, reproducibility and information gain per compute. Negative/insufficient findings are retained to prevent cyclic rediscovery. Literature claims never become project evidence by themselves and can never authorize performance, holdout selection, ranking, tuning, promotion or live execution.
+
+### Permanent Capacity Saturation & Rolling Research Waves
+
+- **STATUS: ACTIVE_AND_PERSISTENT.** Useful free compute is continuously routed whenever a real bounded backlog exists.
+- **Current two-hour activation:** `TA-2H-2026-10-05-1602Z`, 2026-10-05 16:02–18:02 UTC.
+- **Scheduler:** every 10 minutes; active duplicates are skipped, phase-successful work is not rerun, and only one bounded retry is permitted after failure/cancellation.
+- **Wave order:** W1 source/PIT/clock closure -> W2 candidate/contracts and information timing -> W3 next-gate compilation and independent reproduction -> W4 literature discovery/consolidation.
+- **Utilization rule:** maximize useful occupancy across Windows A/B/C, hosted Linux, bounded free-AI lanes and S10/mobile support when those resources are reachable and the work is independent and useful. Never manufacture work to consume quota.
+- **Continuous background:** the permanent Windows/hosted 10-minute loops remain active; Runner C uses long deterministic research when useful and the bounded 20-minute capacity pulse otherwise.
+- **Scientific boundary:** capacity allocation never creates performance authorization, holdout selection, ranking, tuning, promotion or live execution.
 
 ### Persistent Literature & Discovery Engine
 
