@@ -17,7 +17,7 @@ from automation.source_readiness_snapshot_guard import classify as classify_sour
 
 ROOT = Path(__file__).resolve().parents[1]
 
-CANDIDATE_SPECS = ROOT / "research/candidates/orthogonal_candidate_specs_2026-10-04.json"
+CANDIDATE_SPECS = ROOT / "research/candidates/orthogonal_candidate_specs_2026-10-05.json"
 
 RECEIPTS = {
     "Q194": ROOT / "research/evidence/q193_q196_source_feasibility_latest.json",
@@ -56,6 +56,10 @@ NEXT_GATES = {
     "Q202": "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT",
     "Q203": "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT",
     "Q204": "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT",
+    "Q218": "HISTORICAL_SEC_MANDATORY_VOLUNTARY_PAIRING_AND_PIT",
+    "Q219": "POST_FILING_OPTIONS_RESPONSE_PIT_REQUIRED",
+    "Q220": "DETERMINISTIC_NARRATIVE_XBRL_MAPPING_AND_PIT",
+    "Q221": "HISTORICAL_USASPENDING_PUBLIC_BOUNDARY_AND_ISSUER_MAPPING",
     "Q186": "READY_FOR_CITATION_PUBLICATION_ORDERING_AND_HISTORICAL_COMPLETENESS",
     "Q187-Q192": "READY_FOR_CANDIDATE_SPECIFIC_HISTORICAL_PIT_RECONSTRUCTION",
 }
@@ -97,7 +101,7 @@ def compile_state() -> dict:
     assert specs.get("shared_contract", {}).get("live_execution") is False
 
     ids = [c.get("id") for c in specs.get("candidates", [])]
-    assert ids == ["Q194", "Q195", "Q196", "Q197", "Q199", "Q201", "Q202", "Q203", "Q204"]
+    assert ids == ["Q194", "Q195", "Q196", "Q197", "Q199", "Q201", "Q202", "Q203", "Q204", "Q205", "Q215", "Q216", "Q217", "Q218", "Q219", "Q220", "Q221"]
 
     candidates = []
 
@@ -133,7 +137,18 @@ def compile_state() -> dict:
                     "performance_allowed": False,
                 })
             continue
-        receipt = load_json(RECEIPTS[cid])
+        receipt_path = RECEIPTS.get(cid)
+        if receipt_path is None or not receipt_path.is_file():
+            candidates.append({
+                "candidate_id": cid,
+                "next_gate": NEXT_GATES.get(cid, "SOURCE_FEASIBILITY_REQUIRED"),
+                "source_or_pit_receipt": None,
+                "execution_authorized": False,
+                "performance_allowed": False,
+                "source_feasibility_required": True,
+            })
+            continue
+        receipt = load_json(receipt_path)
         durability = classify_source_readiness(receipt)
         result = {
             "candidate_id": cid,
