@@ -73,8 +73,19 @@ def validate_shadow_event_replay(
             raise ShadowCoordinatorError(
                 f"shadow event at replay position {position} must contain exactly the frozen event fields"
             )
+        if record["event_type"] != "SHADOW_INTENT_ACCEPTED":
+            raise ShadowCoordinatorError("shadow event type must remain SHADOW_INTENT_ACCEPTED")
         if not isinstance(record["portfolio_state"], Mapping):
             raise ShadowCoordinatorError("shadow event portfolio_state must be a mapping")
+        if not isinstance(record["candidate_id"], str) or not record["candidate_id"]:
+            raise ShadowCoordinatorError("shadow event candidate_id must be a non-empty string")
+        if not isinstance(record["symbol"], str) or not record["symbol"]:
+            raise ShadowCoordinatorError("shadow event symbol must be a non-empty string")
+        if (
+            isinstance(record["target_exposure"], bool)
+            or not isinstance(record["target_exposure"], (int, float))
+        ):
+            raise ShadowCoordinatorError("shadow event target_exposure must be numeric")
         for flag in ("scientific_evidence", "performance_authorization", "promotion", "live_execution"):
             if type(record[flag]) is not bool:
                 raise ShadowCoordinatorError(f"shadow event flag {flag} must be boolean")
