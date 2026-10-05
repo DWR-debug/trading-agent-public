@@ -492,6 +492,28 @@ def generate(
                 "merge_commit": "d81c4399260145e21156064ab76fad77a9969222",
                 "pr": 232,
             },
+            "literature_discovery": {
+                "status": "ACTIVE_AND_PERSISTENT",
+                "policy": "research/governance/literature_research_policy.json",
+                "assistant_automations": ["daily Trading-Agent Literature Radar", "weekly Trading-Agent Deep Research"],
+                "repository_scout_workflow": ".github/workflows/literature-frontier-scout.yml",
+                "cadence": "daily assistant research + weekly deep research + every-6-hours public metadata scout",
+                "principle": "Continuously seek genuinely orthogonal economic mechanisms and public information channels; verify primary sources; cheap-falsify; preserve negative evidence; never use literature discovery for performance selection, holdout tuning, ranking, promotion or live execution.",
+                "shortlist_maximum": 4,
+                "required_dimensions": [
+                    "mechanism_novelty",
+                    "orthogonality_to_existing_lineages",
+                    "cheap_falsifiability",
+                    "source_quality",
+                    "historical_pit_feasibility",
+                    "entity_mapping_feasibility",
+                    "revision_lineage_feasibility",
+                    "independent_reproducibility",
+                    "expected_information_gain_per_compute"
+                ],
+                "scientific_authority": False,
+                "performance_authorization": False
+            },
             "two_lane_research_mode": {
                 "status": "ACTIVE",
                 "lane_a": {
@@ -760,6 +782,17 @@ def generate(
 - Fresh S10 receipts remain mandatory to substantiate successful execution and device-derived evidence. Receipt freshness does not remove the resource from the routing pool.
 - Universal pre-formal candidate robustness gate: **ACTIVE**; structural candidate robustness must pass before PREREGISTRATION, SOURCE_FEASIBILITY, COVERAGE, PIT or PERFORMANCE formal phases.
 - S10 output remains non-scientific and cannot authorize performance or promotion.
+- **PERMANENT LITERATURE-RESEARCH RULE — ACTIVE:** The Trading Agent continuously searches for new, genuinely orthogonal economic mechanisms, information channels and cross-disciplinary relationships. Discovery is run on a recurring daily/weekly research cadence plus an independent public-metadata scout. Every promising finding is verified against primary sources, separated from existing candidate lineages, cheap-falsified where possible, and scored by novelty, PIT feasibility, reproducibility and information gain per compute. Negative/insufficient findings are retained to prevent cyclic rediscovery. Literature claims never become project evidence by themselves and can never authorize performance, holdout selection, ranking, tuning, promotion or live execution.
+
+### Persistent Literature & Discovery Engine
+
+- **Status: ACTIVE_AND_PERSISTENT.** Literature discovery is a permanent OS capability, not a one-off chat task.
+- Recurring assistant research: **daily literature radar** plus **weekly deep research**.
+- Repository metadata scout: **every 6 hours** on free GitHub-hosted compute.
+- Search domains include information arrival/latency, disclosure breadth and networks, semantic novelty, disagreement, market microstructure, institutional behavior, data revisions/vintages, corporate event sequences, patent/innovation networks, unusual public-domain channels and forward-risk structure.
+- Selection rule: maximize genuine mechanism novelty and orthogonality first; then cheap falsifiability, source/PIT feasibility, independent reproducibility and information gain per compute. Maximum shortlist = 4.
+- The engine explicitly records **PRUNED / UNVERIFIED / DATA_INSUFFICIENT** paths to prevent rediscovering the same dead ends.
+- Literature discovery is quarantined from scientific authority: no performance, holdout selection, ranking, parameter/asset/threshold/horizon search, promotion or live execution.
 
 ### Scientific status
 
