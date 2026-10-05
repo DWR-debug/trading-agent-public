@@ -1,0 +1,3 @@
+# Q216 — Macro-Vintage Revision Exposure State
+
+Discovery-only risk/reliability state. Q216 measures firm/industry exposure to macro variables whose first-release values have historically known revision propensity, using prior real-time vintages only. It is not a macro-surprise return signal. Mandatory gates: complete historical vintage panel, first-public semantics, frozen issuer/industry exposure, deterministic prior-vintage compiler, independent PIT reproduction. Cheap falsifiers: future-vintage injection, exposure permutation, final-vintage substitution, vintage-date shuffle, and removal of the revision layer. Priority P1-RISK.
