@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `c2feeb8e83a3fb90cde4e0c4f1c6d40bb9202882`
+**Current operational snapshot:** `32573cf84888764b77036fae76e212563ff6b190`
 
-**Generated (UTC):** `2026-10-05T15:41:02.790794+00:00`
+**Generated (UTC):** `2026-10-05T15:42:27.382234+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -27,6 +27,17 @@
 - Fresh S10 receipts remain mandatory to substantiate successful execution and device-derived evidence. Receipt freshness does not remove the resource from the routing pool.
 - Universal pre-formal candidate robustness gate: **ACTIVE**; structural candidate robustness must pass before PREREGISTRATION, SOURCE_FEASIBILITY, COVERAGE, PIT or PERFORMANCE formal phases.
 - S10 output remains non-scientific and cannot authorize performance or promotion.
+- **PERMANENT LITERATURE-RESEARCH RULE — ACTIVE:** The Trading Agent continuously searches for new, genuinely orthogonal economic mechanisms, information channels and cross-disciplinary relationships. Discovery is run on a recurring daily/weekly research cadence plus an independent public-metadata scout. Every promising finding is verified against primary sources, separated from existing candidate lineages, cheap-falsified where possible, and scored by novelty, PIT feasibility, reproducibility and information gain per compute. Negative/insufficient findings are retained to prevent cyclic rediscovery. Literature claims never become project evidence by themselves and can never authorize performance, holdout selection, ranking, tuning, promotion or live execution.
+
+### Persistent Literature & Discovery Engine
+
+- **Status: ACTIVE_AND_PERSISTENT.** Literature discovery is a permanent OS capability, not a one-off chat task.
+- Recurring assistant research: **daily literature radar** plus **weekly deep research**.
+- Repository metadata scout: **every 6 hours** on free GitHub-hosted compute.
+- Search domains include information arrival/latency, disclosure breadth and networks, semantic novelty, disagreement, market microstructure, institutional behavior, data revisions/vintages, corporate event sequences, patent/innovation networks, unusual public-domain channels and forward-risk structure.
+- Selection rule: maximize genuine mechanism novelty and orthogonality first; then cheap falsifiability, source/PIT feasibility, independent reproducibility and information gain per compute. Maximum shortlist = 4.
+- The engine explicitly records **PRUNED / UNVERIFIED / DATA_INSUFFICIENT** paths to prevent rediscovering the same dead ends.
+- Literature discovery is quarantined from scientific authority: no performance, holdout selection, ranking, parameter/asset/threshold/horizon search, promotion or live execution.
 
 ### Scientific status
 
