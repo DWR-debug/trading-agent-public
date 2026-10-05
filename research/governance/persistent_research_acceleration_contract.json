@@ -124,12 +124,18 @@
     },
     "principle": "Continuously discover unusual, economically coherent and genuinely orthogonal information advantages; verify before adoption and preserve dead ends.",
     "current_focus": [
-      "Q214",
       "Q215",
       "Q216",
-      "Q217"
+      "Q217",
+      "Q211",
+      "Q212"
     ],
-    "anti_duplicate_rule": "Do not keep a separate candidate when the proposed mechanism empirically collapses to an existing lineage; merge Q217 back into Q131 if processing-friction decomposition is not distinct."
+    "anti_duplicate_rule": "Do not keep a separate candidate when the proposed mechanism empirically collapses to an existing lineage; merge Q217 back into Q131 if processing-friction decomposition is not distinct.",
+    "integration_rules": {
+      "speculative_language": "predeclared control/alternative explanation for Q217/Q131, not a new candidate",
+      "customer_related_disclosures": "pre-call business press coverage may be an identification control for Q212, not a second signal family",
+      "crsp_history_revision": "hard reproducibility QA, not a candidate"
+    }
   },
   "rolling_capacity_wave_control": {
     "status": "ACTIVE",
@@ -137,7 +143,17 @@
     "workflow": ".github/workflows/capacity-saturation-rolling-waves.yml",
     "scheduler_cadence": "every_10_minutes",
     "rule": "When useful free capacity exists and a non-duplicate bounded backlog exists, keep the lane occupied with the highest-priority ready task.",
-    "current_window": "read dynamically from research/run_requests/rolling_capacity_window_2026-10-05.json; never treat an expired window embedded in this contract as current",
+    "current_window": {
+      "window_id": "TA-2H-2026-10-05-1735Z",
+      "start_utc": "2026-10-05T17:35:00Z",
+      "end_utc": "2026-10-05T19:35:00Z",
+      "phases": [
+        "W1_SOURCE_PIT_CLOCK_CLOSURE",
+        "W2_CANDIDATE_CONTRACTS_AND_INFORMATION_TIMING",
+        "W3_NEXT_GATE_AND_INDEPENDENT_REPRODUCTION",
+        "W4_DISCOVERY_AND_CONSOLIDATION"
+      ]
+    },
     "phase_rule": "Skip active duplicates; skip phase-successful work; allow at most one retry after failure/cancellation; downstream workflows retain their own fail-closed gates.",
     "permanent_extension": "After the two-hour lease expires, the same rule remains permanent through the existing 10-minute A/B loops and 20-minute Runner-C opportunistic pulse.",
     "scientific_boundary": {
@@ -148,6 +164,14 @@
       "promotion": false,
       "live_execution": false
     },
-    "start_alignment": "2026-10-05T16:11:31Z"
+    "start_alignment": "2026-10-05T16:11:31Z",
+    "dispatch_authority": "capacity-saturation-rolling-waves.yml = sole automatic dispatcher; priority-research-wave-dispatch.yml = manual-only",
+    "anti_scheinbeschäftigung": "Do not rerun successful source probes; route only defined receipt-dependent next gates. Idle is valid when no useful independent backlog exists."
+  },
+  "chat_continuity": {
+    "state_store": "repository",
+    "handoff_path": "research/evidence/trading_agent_chat_handoff.json",
+    "platform_message_hook": "not available",
+    "rule": "Persist material state before reporting completion; chat transcript is never the sole state store; do not commit for every message absent material state change."
   }
 }
