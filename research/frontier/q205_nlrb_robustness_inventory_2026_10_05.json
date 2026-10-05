@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "wave_id": "Q205-ROBUSTNESS-2026-10-05",
+  "status": "DESIGN_INVENTORY_ONLY",
+  "generated_utc": "2026-10-05T11:30:00Z",
+  "purpose": "Schema-normalized wrapper for the universal pre-formal candidate robustness gate. No new scientific content or performance analysis.",
+  "candidates": [
+    {
+      "id": "Q205",
+      "name": "Labor-representation certification shock",
+      "hypothesis": "A newly public NLRB election outcome or certification changes the observable labor-representation state of an employer. The economic channel is potential labor-cost, bargaining-power and operational-governance change; no return sign is assumed ex ante.",
+      "construction": "Use the fixed NLRB election/result event taxonomy and public-observation boundary defined in the candidate contract; preserve case identifiers, certification/tally metadata and a frozen employer-to-issuer mapping. No outcome-conditioned asset, parameter, threshold, horizon or variant selection is permitted.",
+      "sources": [
+        "NLRB Recent Election Results: https://www.nlrb.gov/reports/graphs-data/recent-election-results",
+        "NLRB Election Reports: https://www.nlrb.gov/reports/agency-performance/election-reports",
+        "DiNardo et al., Long-Run Impacts of Unions on Firms: New Evidence from Financial Markets (NBER Working Paper 14709; QJE 2012)"
+      ],
+      "next_gate": "historical NLRB archive completeness + public-clock semantics + frozen employer-to-issuer mapping + case-status lineage + independent PIT reproduction"
+    }
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "provenance": {
+    "source_candidate_path": "research/frontier/q205_nlrb_union_certification_candidate_2026_10_05.json",
+    "source_candidate_sha256": "e1652a0ae6b71031a3b738bbabc9a70a382a12e7"
+  }
+}
