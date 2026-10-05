@@ -30,27 +30,25 @@ def _census():
         "tuning": False,
         "promotion_authorization": False,
         "live_execution": False,
-        "candidates": [
-            {"candidate_id": "Q218", "sec_submission_census": {"issuer_results": issuers}},
-            {"candidate_id": "Q219", "q129_contract_check": {
-                "contract_present": True,
-                "independent_pit_receipt_present": True,
-                "same_day_use_allowed": False,
-            }},
-            {"candidate_id": "Q220", "sec_notes_census": {
-                "zip_parse_ok": True,
-                "required_member_markers_present": {
-                    "sub.txt": True, "tag.txt": True, "dim.txt": True,
-                    "num.txt": True, "txt.txt": True,
-                },
-            }},
-            {"candidate_id": "Q221", "usa_rdtne_census": {
-                "rdtne_marker_found": True,
-                "competition_marker_found": True,
-                "transaction_marker_found": True,
-                "lookahead_used": False,
-            }},
-        ],
+        "q218_sec_pair_census": {"issuer_results": issuers},
+        "q219_q129_contract": {
+            "contract_present": True,
+            "independent_pit_receipt_present": True,
+            "same_day_use_allowed": False,
+        },
+        "q220_sec_notes_census": {
+            "zip_parse_ok": True,
+            "required_member_markers_present": {
+                "sub.txt": True, "tag.txt": True, "dim.txt": True,
+                "num.txt": True, "txt.txt": True,
+            },
+        },
+        "q221_usa_rdtne_census": {
+            "rdtne_marker_found": True,
+            "competition_marker_found": True,
+            "transaction_marker_found": True,
+            "lookahead_used": False,
+        },
     }
 
 
