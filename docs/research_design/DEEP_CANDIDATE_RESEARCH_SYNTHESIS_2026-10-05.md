@@ -613,3 +613,46 @@ Several additional public data systems are rich enough to matter, but do not cur
 **USPTO maintenance fees.** USPTO confirms that utility and reissue utility patents require maintenance fees at fixed 3.0–3.5, 7.0–7.5 and 11.0–11.5 year windows, and that payment histories and expiration notices are publicly available. This could encode an economically interesting **option-exercise / abandonment state** distinct from patent publication or citations. However, current public storefront access and historical bulk reproducibility need a dedicated source census before it is promoted beyond a nested Q196/Q211 mechanism. citeturn645904search1turn645904search6
 
 These paths should be explored only when their source/PIT contract provides enough incremental information to justify the compute.
+
+
+## 32. 2026-10-05/06 external re-check — current primary-source confirmations
+
+This re-check was performed against current public sources after the prior synthesis. It changes no candidate authorization and no scientific evidence boundary.
+
+### Q219 — filing-change × options-response mechanism receives direct 2026 support
+
+The Journal of Financial and Quantitative Analysis reports in 2026 that larger textual changes in 10-Ks are associated with larger post-release increases in option volatility smirks, consistent with options traders reacting to negative information in changed text. The return predictability of textual changes is stronger when the option-smirk response is larger, and the documented reaction is concentrated after release. This materially strengthens the economic plausibility of Q219 while simultaneously raising the importance of its exact post-filing clock and same-session exclusion. It does not authorize performance testing.
+
+Source: https://jfqa.org/2026/03/19/attentive-options-traders-textual-changes-to-10-ks-and-option-volatility-smirk/
+
+### Q220 — the representation layer is economically meaningful, not merely technical
+
+The SEC's Inline XBRL design intentionally combines human-readable and machine-readable information in a single document. The SEC states that its EDGAR APIs expose submission and XBRL data in real time, with typical processing delays below one second for submissions and below one minute for XBRL, although peak filing periods can be slower. Existing empirical work finds iXBRL adoption lowers stock-return drift and facilitates information being impounded after annual-report filings. Therefore Q220 should preserve a strict distinction between (a) economic information content, (b) machine-readable representation/tagging, and (c) user accessibility. A deterministic filing-local four-state representation — narrative-only change / structured-only change / both / neither — is a useful design decomposition, provided mapping is frozen and no later taxonomy correction is allowed to rewrite the historical state.
+
+Sources: https://www.sec.gov/data-research/structured-data/inline-xbrl ; https://www.sec.gov/search-filings/edgar-application-programming-interfaces ; https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3600458
+
+### Q221 — sequence structure should be central, not award size
+
+A current NBER 2026 conference abstract using federal R&D contracts from 1984–2024 reports that R&D awards embed an implicit guarantee of future noncompetitive procurement and that private value is strongly linked to later production contracts from the same R&D-awarding agency, especially for noncompetitive awards and vertically integrated firms. This supports Q221's sequence-state framing: R&D award -> modifications -> same-agency production/procurement realization. The public-clock problem remains independent. SAM.gov now contains former FPDS contract-award data, but current public access explicitly excludes DoD awards unrevealed within 90 days of signing. Consequently Date Signed cannot by itself be treated as the tradable event clock for the full public universe; Q221 must reconstruct first public observability and retain unrevealed intervals as unavailable rather than backdating them.
+
+Sources: https://www.nber.org/conferences/rate-return-research-and-development-investments-fall-2026 ; https://sam.gov/fpds ; https://alpha.sam.gov/contract-data
+
+### Q230 — cross-capital-structure information channel is strongly corroborated
+
+A September 2026 SSRN paper finds issuer-level corporate-bond signals predict next-month equity returns after stock characteristics and interprets the result as gradual information incorporation across segmented bond/equity markets. A second 2026 study reports cross-market effects concentrated in illiquid and hard-to-arbitrage segments. This makes Q230 one of the stronger orthogonal candidates economically, but the project bottleneck remains free historical TRACE implementation, issuer/security mapping and lifecycle/reversal handling. The correct priority is therefore source-panel feasibility, not parameter search.
+
+Sources: https://papers.ssrn.com/sol3/Delivery.cfm/7527218.pdf?abstractid=7527218&mirid=1 ; https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6588823
+
+### Cross-candidate public-clock principle
+
+The latest source review suggests a reusable governance primitive: separate economic_event_time, first_public_observation_time, subsequent_confirmation_time, and correction_or_reversal_time. This is especially important where publication is staged or selectively delayed. SEC EDGAR provides unusually granular public timing for accepted filings; SAM.gov explicitly documents a current DoD unrevealed window; regulatory requests/correspondence and other staged channels can have a similar latent-process/public-observation split. This is a control-plane concept, not a candidate family and must not be performance-ranked.
+
+### Trading-agent architecture re-check
+
+The current TradingAgents repository reached v0.6.0 on 2026-10-03. Its current public documentation emphasizes persisted reports, checkpoint/recovery, time-scoped backtesting, parallel analyst execution and settlement of historical decisions. FinRobot's current repository explicitly separates model reasoning, deterministic software computation, agent orchestration and system verification. FinMem continues to emphasize layered memory and temporal handling of financial information. The useful project inference is narrow: preserve append-only evidence/outcome memory, typed temporal state, parallel independent analysts and deterministic verification; do not infer alpha from the architecture itself.
+
+Sources: https://github.com/TauricResearch/TradingAgents ; https://github.com/AI4Finance-Foundation/FinRobot ; https://mlanthology.org/iclrw/2024/li2024iclrw-finmem/
+
+### Resulting priority
+
+Keep the active top-candidate wave unchanged: Q218 / Q219 / Q220 / Q221. Raise confidence in Q219, Q220 and Q221's mechanism plausibility, while keeping the scientific bottleneck exactly where it belongs: source completeness, public-clock reconstruction, PIT integrity, deterministic compilation, mutation tests and independent reproduction. Q230 remains a high-value exploratory side track until the free historical TRACE contract is proven. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized by this scan.
