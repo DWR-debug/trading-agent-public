@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T09:02:40.457113+00:00",
+  "generated_at_utc": "2026-10-05T09:03:35.524791+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -3284,6 +3284,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: trigger manual Groq LiteLLM literature review",
+        "sha": "ce0ff1020dfacb64c9982b8a366998ff420b1a4f",
+        "timestamp": "2026-10-05T11:03:31+02:00"
+      },
+      {
+        "message": "AI: add manual Groq LiteLLM one-shot workflow",
+        "sha": "36adec5c1ab7dadd936e6dc6c5e1635c115a6079",
+        "timestamp": "2026-10-05T11:03:28+02:00"
+      },
+      {
+        "message": "DOCS: document manual AI input and LiteLLM transport",
+        "sha": "ea1954bc42ac451c5a2e5409460ebcc2a0d7eecf",
+        "timestamp": "2026-10-05T11:03:13+02:00"
+      },
+      {
+        "message": "AI: add bounded manual information-timing research task",
+        "sha": "5c176ec0a10b448588b3a114aba3e6210f27e40b",
+        "timestamp": "2026-10-05T11:03:10+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2e404ef058e8e716dddc2cb6ea77457b643b281e",
+        "timestamp": "2026-10-05T09:02:43Z"
+      },
+      {
         "message": "AI: add manual information-timing research context contract",
         "sha": "73715e1f35bb6d5b8c2f4e22ffffccbe498e87c2",
         "timestamp": "2026-10-05T11:02:27+02:00"
@@ -3297,31 +3322,6 @@
         "message": "OPS: advance paper-forward MTM state",
         "sha": "3c8d441a3d3154bd5c3c1871508c9fc8b7082c1f",
         "timestamp": "2026-10-05T08:58:18Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "b5b937d63c35d66791ca3d29ca9830f3e91884e0",
-        "timestamp": "2026-10-05T08:57:00Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "5ea19ead5853165d8212d434e9cb19f3efb128bd",
-        "timestamp": "2026-10-05T08:55:33Z"
-      },
-      {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "17184f3d49e779ca0eae386200754348b0e7587d",
-        "timestamp": "2026-10-05T08:55:21Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "925b402b114d0ea38fb9b3b435cd3b063c089940",
-        "timestamp": "2026-10-05T08:55:17Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "188c3ea8c4f6de28ee3acb9e3a57087da89eb654",
-        "timestamp": "2026-10-05T08:55:12Z"
       }
     ]
   },
@@ -3419,7 +3419,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "73715e1f35bb6d5b8c2f4e22ffffccbe498e87c2",
+  "source_master_sha": "ce0ff1020dfacb64c9982b8a366998ff420b1a4f",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -3533,6 +3533,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37287429095"
+    "run_id": "37287509888"
   }
 }
