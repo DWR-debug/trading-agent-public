@@ -27,45 +27,10 @@ jobs:
           fetch-depth: 1
 
       - name: Probe official FINRA TRACE routes from Windows
-        shell: powershell -NoProfile -ExecutionPolicy Bypass -File
-        run: |
-          $ErrorActionPreference = "Stop"
-          New-Item -ItemType Directory -Force research/runs/q230_windows_trace_connectivity | Out-Null
-          $urls = @(
-            "https://www.finra.org/filing-reporting/trace",
-            "https://www.finra.org/filing-reporting/trace/instructions-ftp-downloading-issue-master-participant-list-dail",
-            "https://download.finratraqs.org/DownloadHandler.ashx?action=DOWNLOAD&file=CAMASTER&facility=TRACE"
-          )
-          $rows = @()
-          foreach ($u in $urls) {
-            $row = [ordered]@{url=$u;status=$null;ok=$false;bytes=$null;sha256=$null;error=$null}
-            try {
-              $resp = Invoke-WebRequest -Uri $u -UseBasicParsing -TimeoutSec 45 -MaximumRedirection 5
-              $bytes = [System.Text.Encoding]::UTF8.GetBytes([string]$resp.Content)
-              $sha = [System.Security.Cryptography.SHA256]::Create()
-              $hex = ([System.BitConverter]::ToString($sha.ComputeHash($bytes))).Replace("-","").ToLowerInvariant()
-              $row.status = [int]$resp.StatusCode
-              $row.ok = $true
-              $row.bytes = $bytes.Length
-              $row.sha256 = $hex
-            } catch {
-              $row.error = $_.Exception.Message
-            }
-            $rows += [pscustomobject]$row
-          }
-          $payload = [ordered]@{
-            schema_version="1.0"
-            task_id="Q-2026-10-05-Q230-WINDOWS-TRACE-CONNECTIVITY"
-            generated_at_utc=[DateTime]::UtcNow.ToString("o")
-            status="CONNECTIVITY_ONLY"
-            scientific_boundary=@{performance=$false;holdout_selection=$false;ranking=$false;tuning=$false;promotion=$false;live_execution=$false}
-            results=$rows
-            next_gate="free_TRACE_historical_panel_and_security_master_issuer_mapping"
-          }
-          $json=$payload | ConvertTo-Json -Depth 8
-          [IO.File]::WriteAllText("research/runs/q230_windows_trace_connectivity/connectivity.json",$json,[Text.UTF8Encoding]::new($false))
-          Get-Content research/runs/q230_windows_trace_connectivity/connectivity.json
-
+        shell: cmd
+        run: >-
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='Stop'; New-Item -ItemType Directory -Force research/runs/q230_windows_trace_connectivity | Out-Null; $urls=@('https://www.finra.org/filing-reporting/trace','https://www.finra.org/filing-reporting/trace/instructions-ftp-downloading-issue-master-participant-list-dail','https://download.finratraqs.org/DownloadHandler.ashx?action=DOWNLOAD&file=CAMASTER&facility=TRACE'); $rows=@(); foreach($u in $urls){$row=[ordered]@{url=$u;status=$null;ok=$false;bytes=$null;sha256=$null;error=$null}; try{$resp=Invoke-WebRequest -Uri $u -UseBasicParsing -TimeoutSec 45 -MaximumRedirection 5; $bytes=[System.Text.Encoding]::UTF8.GetBytes([string]$resp.Content); $sha=[System.Security.Cryptography.SHA256]::Create(); $hex=([System.BitConverter]::ToString($sha.ComputeHash($bytes))).Replace('-','').ToLowerInvariant(); $row.status=[int]$resp.StatusCode; $row.ok=$true; $row.bytes=$bytes.Length; $row.sha256=$hex}catch{$row.error=$_.Exception.Message}; $rows+=[pscustomobject]$row}; $payload=[ordered]@{schema_version='1.0';task_id='Q-2026-10-05-Q230-WINDOWS-TRACE-CONNECTIVITY';generated_at_utc=[DateTime]::UtcNow.ToString('o');status='CONNECTIVITY_ONLY';scientific_boundary=@{performance=$false;holdout_selection=$false;ranking=$false;tuning=$false;promotion=$false;live_execution=$false};results=$rows;next_gate='free_TRACE_historical_panel_and_security_master_issuer_mapping'}; $json=$payload|ConvertTo-Json -Depth 8; [IO.File]::WriteAllText('research/runs/q230_windows_trace_connectivity/connectivity.json',$json,[Text.UTF8Encoding]::new($false)); Get-Content research/runs/q230_windows_trace_connectivity/connectivity.json"
+        
       - name: Upload connectivity receipt
         if: always()
         uses: actions/upload-artifact@v6
