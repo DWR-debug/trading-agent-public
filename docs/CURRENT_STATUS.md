@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `439fe3d27794574133c873c1893e0c2a60902f51`
+**Current operational snapshot:** `daaa1234992902bc46bb7279b90dea5702dc4ebb`
 
-**Generated (UTC):** `2026-10-05T17:18:04.292699+00:00`
+**Generated (UTC):** `2026-10-05T17:18:28.761617+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -43,6 +43,7 @@
 
 - **Status: ACTIVE_AND_PERSISTENT.** Literature discovery is a permanent OS capability, not a one-off chat task.
 - Recurring assistant research: **daily literature radar** plus **weekly deep research**.
+- **Active literature frontier (registry):** 084, 088, 082, FRONTIER-20260928, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, H06-P2, 120, 121, FRONTIER-Q171-Q178, FRONTIER-Q133-Q170-PIT-R1, Q131-R1, Q121-R1, Q121-R2, Q127-R1, Q130-R1, FRONTIER-Q187-Q192, FRONTIER-Q202-Q204, Q205, LITERATURE-DISCOVERY-PLANE, Q214, Q215, Q216, Q217.
 - Repository metadata scout: **every 6 hours** on free GitHub-hosted compute.
 - Search domains include information arrival/latency, disclosure breadth and networks, semantic novelty, disagreement, market microstructure, institutional behavior, data revisions/vintages, corporate event sequences, patent/innovation networks, unusual public-domain channels and forward-risk structure.
 - Selection rule: maximize genuine mechanism novelty and orthogonality first; then cheap falsifiability, source/PIT feasibility, independent reproducibility and information gain per compute. Maximum shortlist = 4.
