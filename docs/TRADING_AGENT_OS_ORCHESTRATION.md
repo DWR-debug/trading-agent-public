@@ -15,6 +15,18 @@ Bereits laufende Arbeit wird nicht dupliziert. **Nach Abschluss einer Forschungs
 AI- und Coding-Agenten dürfen Forschung technisch beschleunigen, aber weder Holdouts auswählen noch Parameter, Assets oder Horizonte nachträglich optimieren, Performance autorisieren, Kandidaten promoten oder Live-Trading auslösen.
 
 
+## 2aa. Permanent capacity-saturation and rolling-wave rule
+
+The OS treats useful compute capacity as a continuously schedulable research resource, not as a one-off burst. Whenever a free, reachable and independent worker exists and a bounded useful backlog exists, the OS routes the highest-priority ready task to it. Ideal utilization means maximum useful occupancy subject to scientific gates, dependency order, runner health and duplicate-work prevention—not artificial quota consumption.
+
+For bounded multi-step research, the standing wave order is: W1 source/PIT/clock closure -> W2 candidate/contracts and information timing -> W3 next-gate compilation and independent reproduction -> W4 discovery/consolidation. The current two-hour activation is declared in research/run_requests/rolling_capacity_window_2026-10-05.json and polled every 10 minutes by .github/workflows/capacity-saturation-rolling-waves.yml.
+
+Each scheduler pulse must skip active duplicate work, skip a phase task already completed successfully in that phase, permit at most one bounded retry after failure/cancellation, prefer the smallest suitable free resource, and preserve downstream fail-closed gates.
+
+Permanent background capacity remains active outside the window: Windows A/B and hosted frontier loops on their existing 10-minute cadence, Runner C long deterministic work when useful and a 20-minute opportunistic capacity pulse when C is otherwise free, bounded S10/mobile QA, and the free AI fabric when its entitlement gates pass.
+
+This capacity rule never creates scientific authority. Performance, holdout selection, ranking, tuning, promotion and live execution remain closed unless the independent existing governance chain authorizes them.
+
 ## 2a. Persistent acceleration policy
 ## 2b. Permanent literature-research plane
 
