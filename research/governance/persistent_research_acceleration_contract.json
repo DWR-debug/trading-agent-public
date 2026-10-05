@@ -36,7 +36,7 @@
         "lane_a_formal_readiness": {
           "runner_slot": "Windows self-hosted slot A",
           "purpose": "Coverage/PIT/authorization readiness for fully pre-registered candidates; candidate-specific compiler and provenance closure.",
-          "current_focus": "Q121-R6, Q104 I19/I20, I22, Q119/Q120/Q122/Q125-F1, next-gate compilation and independent reproduction",
+          "current_focus": "Q104:I19 remaining historical 13F/security PIT closure, immutable preregistration/authorization readiness and exact independent reproduction",
           "performance_allowed": "only when the active research registry contains an exact true performance_authorization_allowed for that independent frozen trial",
           "selection_or_ranking": false,
           "availability": "always_routable"
@@ -44,15 +44,35 @@
         "lane_b_frontier_discovery": {
           "runner_slot": "Windows self-hosted slot B",
           "purpose": "Orthogonal source/PIT feasibility, cheap falsification and new information-channel discovery.",
-          "current_focus": "Q214-Q217, Q197-Q204, Q205 and orthogonal public-domain source/PIT feasibility with cheap falsification",
+          "current_focus": "Q220, Q228, Q224 and Q227 source/PIT/clock feasibility with cheap falsification; Q218/Q221/Q219 as next independent frontier",
           "performance_allowed": false,
+          "selection_or_ranking": false,
+          "availability": "always_routable"
+        },
+        "runner_c_independent_reproduction_and_long_research": {
+          "runner_slot": "Windows self-hosted slot C",
+          "purpose": "Long deterministic archival parsing, independent reproduction, source/PIT census and materially useful cross-checks that do not duplicate Lane A/B work.",
+          "current_focus": "Q104:I19 independent reproduction when its exact frozen contract is ready; otherwise the highest-priority independent Q220/Q228/Q224/Q227 archive/source workload.",
+          "performance_allowed": "false unless an exact independent performance trial has its own current formal authorization; default role remains pre-performance research/reproduction.",
           "selection_or_ranking": false,
           "availability": "always_routable"
         }
       },
       "windows_pulse_cadence": "10 minutes plus event-driven pushes; each lane remains continuously routable and independently concurrency-protected",
       "availability_policy": "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR",
-      "continuity_rule": "When research is needed, never allow both Windows lanes to become idle merely because one workpack completed. At each pulse choose the next ready bounded workpack from the active registry/frontier. If no independent scientific task is ready, run provenance/governance/data-contract QA rather than fabricate a candidate."
+      "continuity_rule": "When research is needed, use all three Windows slots whenever three mutually independent bounded workpacks exist: A = formal readiness, B = frontier discovery, C = independent reproduction/long deterministic research. Do not reserve C merely as nominal failover capacity. When only two independent workpacks exist, use the third slot for a materially useful downstream-preparation, provenance, PIT, archival or negative-evidence QA task. Idle is valid only when no independent useful bounded workpack exists.",
+      "event_driven_replenishment": {
+        "enabled": true,
+        "priority": [
+          "completion-defined next gate",
+          "independent reproduction",
+          "source/PIT closure",
+          "provenance/data-contract QA",
+          "negative-evidence consolidation"
+        ],
+        "duplicate_prevention": true,
+        "padding_forbidden": true
+      }
     },
     "mobile": {
       "s10_mode": "deterministic_mechanical_qa_default",
@@ -201,7 +221,7 @@
     "status": "NON_NEGOTIABLE",
     "statement": "Es darf keine künstliche Arbeit erzeugt werden. Ausschließlich wertvolle und hilfreiche Rechenarbeit darf ausgeführt werden. Und das so viel wie möglich.",
     "english_equivalent": "No artificial work may be created. Only valuable and helpful compute work may be executed, and as much of it as possible.",
-    "operational_rule": "A useful backlog plus free reachable capacity implies immediate routing; completion-triggered replenishment is preferred over waiting for the next cron tick, with completion chaining as the primary continuity path.",
+    "operational_rule": "A useful backlog plus free reachable capacity implies immediate routing. Use all three Windows research slots when three independent useful bounded workpacks exist; completion-triggered replenishment is preferred over waiting for cron. Never create padding, duplicate a live workpack, or rerun successful work solely to increase utilization.",
     "idle_is_valid_only_when": [
       "no independent executable bounded workpack exists",
       "a required scientific dependency is genuinely blocked",
