@@ -4,7 +4,7 @@ on:
   push:
     branches: [master]
     paths:
-      - "research/candidates/orthogonal_candidate_specs_2026-10-04.json"
+      - "research/candidates/orthogonal_candidate_specs_2026-10-05.json"
       - ".github/workflows/orthogonal-candidate-development.yml"
   workflow_dispatch: {}
 
@@ -36,7 +36,7 @@ jobs:
           import hashlib, json
           from pathlib import Path
 
-          p=Path("research/candidates/orthogonal_candidate_specs_2026-10-04.json")
+          p=Path("research/candidates/orthogonal_candidate_specs_2026-10-05.json")
           d=json.loads(p.read_text(encoding="utf-8"))
           assert d["schema_version"] == "1.0"
           assert d["shared_contract"]["pre_formal_robustness_gate"] is True
@@ -45,7 +45,7 @@ jobs:
           assert d["shared_contract"]["live_execution"] is False
 
           ids=[c["id"] for c in d["candidates"]]
-          assert ids == ["Q194","Q195","Q196","Q197","Q199","Q201","Q202","Q203","Q204"]
+          assert ids == ["Q194","Q195","Q196","Q197","Q199","Q201","Q202","Q203","Q204","Q205"]
 
           required={"id","name","mechanism","event_clock","features","direction","cheap_falsifiers","gates"}
           for c in d["candidates"]:
