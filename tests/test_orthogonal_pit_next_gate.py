@@ -78,3 +78,18 @@ def test_q205_is_visible_to_next_gate_compiler_without_authority():
         assert current[candidate_id]["performance_allowed"] is False
     assert current["Q205"]["execution_authorized"] is False
     assert current["Q205"]["performance_allowed"] is False
+
+
+def test_q229_q230_are_registered_source_first_and_non_authorizing():
+    for candidate_id, expected_gate in [
+        ("Q229", "HISTORICAL_CFPB_PUBLIC_RELEASE_AND_ISSUER_MAPPING"),
+        ("Q230", "FREE_TRACE_HISTORICAL_PANEL_AND_ISSUER_MAPPING"),
+    ]:
+        assert NEXT_GATES[candidate_id] == expected_gate
+    result = compile_state()
+    current = {item["candidate_id"]: item for item in result["candidates"]}
+    for candidate_id in ["Q229", "Q230"]:
+        assert current[candidate_id]["source_feasibility_required"] is True
+        assert current[candidate_id]["source_or_pit_receipt"] is None
+        assert current[candidate_id]["execution_authorized"] is False
+        assert current[candidate_id]["performance_allowed"] is False
