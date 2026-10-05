@@ -13,7 +13,7 @@
     "Default S10 routing is deterministic mechanical QA; event-driven semantic utility review remains explicit and non-default.",
     "Do not duplicate already-running work and do not consume quotas merely to create activity."
   ],
-  "completed_round_chaining": "When a bounded research round completes safely, automatically start the logically next receipt-defined round when its prerequisites are satisfied; never rerun an identical active round and never let a downstream round alter a frozen upstream trial.",
+  "completed_round_chaining": "When a bounded research round or runner lane completes safely, automatically route the next receipt-defined independent round/task when prerequisites are satisfied; never leave an eligible lane intentionally idle while a useful bounded backlog exists.",
   "research_pipeline": [
     "Orthogonal information first; prioritize genuinely distinct information clocks and economic mechanisms.",
     "Cheap falsification before expensive formal work.",
@@ -36,25 +36,36 @@
           "purpose": "Coverage/PIT/authorization readiness for fully pre-registered candidates; candidate-specific compiler and provenance closure.",
           "current_focus": "Q104 I19/I20, I22, Q119/Q120/Q122, Q125-F1",
           "performance_allowed": "only when the active research registry contains an exact true performance_authorization_allowed for that independent frozen trial",
-          "selection_or_ranking": false
+          "selection_or_ranking": false,
+          "availability": "always_routable"
         },
         "lane_b_frontier_discovery": {
           "runner_slot": "Windows self-hosted slot B",
           "purpose": "Orthogonal source/PIT feasibility, cheap falsification and new information-channel discovery.",
           "current_focus": "Q171-Q178, Q126-Q132 and related public-domain frontier work",
           "performance_allowed": false,
-          "selection_or_ranking": false
+          "selection_or_ranking": false,
+          "availability": "always_routable"
         }
       },
-      "windows_pulse_cadence": "10 minutes while each pulse remains bounded, non-formal, and concurrency-protected"
+      "windows_pulse_cadence": "10 minutes while each pulse remains bounded, non-formal, and concurrency-protected",
+      "availability_policy": "ASSUMED_ALWAYS_AVAILABLE_BY_OPERATOR"
     },
     "mobile": {
       "s10_mode": "deterministic_mechanical_qa_default",
       "full_acceptance": "onboarding_or_explicit_revalidation_only",
       "event_driven_review": "meaningful research-runner or critical-governance change",
       "duplicate_work": "forbidden",
-      "recurring_schedule": "every 2 hours plus meaningful research/governance push events",
-      "semantic_ai": "manual/explicit utility or acceptance only; no default routing"
+      "recurring_schedule": "every 20 minutes plus meaningful research/governance push events",
+      "semantic_ai": "manual/explicit utility or acceptance only; no default routing",
+      "task_rotation": [
+        "PROVENANCE_STATUS",
+        "FRONTIER_GOVERNANCE",
+        "PIT_CLOCK_LINEAGE",
+        "CAPACITY_DISPATCH",
+        "NEGATIVE_EVIDENCE_DEDUP"
+      ],
+      "routing_rule": "Keep S10 continuously routable for bounded mechanical research QA; rotate task classes and skip active duplicates."
     },
     "lane_isolation": {
       "required": true,
