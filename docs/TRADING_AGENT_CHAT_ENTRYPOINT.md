@@ -273,3 +273,12 @@ Die operative Leitregel lautet:
 ## Samsung-/Android-Ressourcen
 
 S10 ist die erste live-verifizierte Telefoninstanz. Im Regelbetrieb wird S10 receipt-gated für kleine, unabhängige Utility-/QA-Aufgaben verwendet; der vollständige 36-Fälle-Acceptance-Lauf dient nur Onboarding/Revalidierung. Für weitere Samsung-/Android-Geräte wird ausschließlich die generische Vorlage `docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md` mit `scripts/samsung_termux_phone_runner_template.sh` verwendet. Onlinee neue Geräte durchlaufen einmalig Acceptance, bereits akzeptierte Geräte erhalten Utility-Aufgaben. Zusätzliche Geräte werden einzeln als Kapazitätstest aktiviert und nur bei messbarem Zusatznutzen weiterbetrieben. Das hält Runner-, Runtime-, Receipt- und Governance-Verträge identisch.
+
+
+## Chat resilience and bounded-response rule
+
+The chat is a control surface, not the research state store. A connection loss, response timeout or maximum-chat-length event must not interrupt the research pipeline or require manual reconstruction. The authoritative continuity artifact is `research/evidence/trading_agent_chat_handoff.json`, generated from current repository state. Every new `trading agent` chat reads that compact handoff, then verifies current `master`, live Actions/runners and scientific evidence before acting.
+
+Long-running work must be persisted in the repository before the chat reports it as completed. Chat responses should report only bounded deltas: reached, running, blocked, verified receipts and next executable gates. Do not serialize large logs, full repository snapshots or repetitive workflow output into the chat. When a task is large, persist intermediate state first and continue from the handoff after any new chat.
+
+A new chat must never assume that an interrupted message means the underlying work was interrupted. It rehydrates from repository state and live GitHub state. Conversely, a chat message never serves as the sole checkpoint for a scientific or operational decision.
