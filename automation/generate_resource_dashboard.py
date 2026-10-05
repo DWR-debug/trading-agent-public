@@ -82,7 +82,10 @@ def research_board(state: dict[str, Any], os_state: dict[str, Any]) -> list[dict
 def run_cmd_json(args: list[str]) -> dict[str, Any] | list[Any] | None:
     try:
         env = os.environ.copy()
-        env.setdefault("GH_TOKEN", env.get("GITHUB_TOKEN", ""))
+        token = env.get("GITHUB_TOKEN") or env.get("GH_TOKEN") or ""
+        if not token:
+            return None
+        env["GH_TOKEN"] = token
         raw = subprocess.check_output(
             ["gh", "api", *args],
             cwd=ROOT,
