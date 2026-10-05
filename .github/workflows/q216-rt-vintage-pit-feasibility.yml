@@ -57,8 +57,7 @@ jobs:
           import json,os
           from pathlib import Path
           d={"schema_version":1,"record_type":"q216_rt_vintage_pit_feasibility","status":"DISCOVERY_NEXT_GATE_COMPLETED_NO_PERFORMANCE","candidate_id":"Q216","historical_vintage_download_checked":True,"first_public_vintage_semantics_proven":False,"historical_pit_validated":False,"independent_reproduction":False,"performance_authorized":False,"holdout_selection_allowed":False,"ranking_allowed":False,"tuning_allowed":False,"promotion_allowed":False,"live_execution_allowed":False}
-          Path("research/runs/q216_rt_vintage_pit_"+os.environ["GITHUB_RUN_ID"]+".json").write_text(json.dumps(d,indent=2)+"
-")
+          Path("research/runs/q216_rt_vintage_pit_"+os.environ["GITHUB_RUN_ID"]+".json").write_text(json.dumps(d,indent=2)+"\n")
           PY
       - name: Upload receipt
         if: always()
