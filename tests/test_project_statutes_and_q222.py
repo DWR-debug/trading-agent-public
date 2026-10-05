@@ -36,10 +36,10 @@ def test_q222_is_design_only_and_merge_or_kill_protected():
     assert d["shared_contract"]["live_execution"] is False
 
 
-def test_explicit_28_minute_session_directive_is_bounded():
+def test_current_bounded_session_directive_is_bounded():
     d=json.loads((ROOT/"research/run_requests/rolling_capacity_window_2026-10-05.json").read_text(encoding="utf-8"))
-    assert d["session_mode"]["status"]=="ACTIVE"
-    assert d["session_mode"]["duration_minutes"]==28
+    assert d["session_mode"]["status"] in {"ACTIVE", "ACTIVE_2H"}
+    assert d["session_mode"]["duration_minutes"] == 120
     assert d["session_mode"]["no_artificial_work"] is True
     assert d["session_mode"]["no_duplicate_work"] is True
     assert d["session_mode"]["scientific_boundary_unchanged"] is True
