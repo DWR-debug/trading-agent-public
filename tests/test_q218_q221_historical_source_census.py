@@ -26,8 +26,11 @@ def test_q218_q221_census_is_deterministic_and_non_authorizing(tmp_path, monkeyp
             archive.writestr(name, "fixture")
     zip_bytes = buffer.getvalue()
 
+    seen_submission_urls = []
+
     def fake_fetch(url: str, limit=1000000):
         if "submissions/CIK" in url:
+            seen_submission_urls.append(url)
             return 200, "application/json", sample_json
         if url.endswith("-index-headers.html"):
             return 200, "text/html", b"<ACCEPTANCE-DATETIME>20250215123000 EXHIBIT 99.1 EARNINGS RELEASE"
@@ -46,6 +49,9 @@ def test_q218_q221_census_is_deterministic_and_non_authorizing(tmp_path, monkeyp
     assert result["promotion"] is False
     assert result["live_execution"] is False
     assert result["q218_sec_pair_census"]["pairable_issuer_count"] == 8
+    assert len(seen_submission_urls) == 8
+    assert all("/submissions/CIK" in url and len(url.rsplit("CIK", 1)[1].split(".json", 1)[0]) == 10 for url in seen_submission_urls)
+    assert "CIK0000320193.json" in seen_submission_urls
     assert all(item["pairability_observed"] for item in result["q218_sec_pair_census"]["issuer_results"].values())
     assert result["q220_sec_notes_census"]["zip_parse_ok"] is True
     assert result["q221_usa_rdtne_census"]["rdtne_marker_found"] is True
