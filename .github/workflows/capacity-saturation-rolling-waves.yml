@@ -49,22 +49,28 @@ jobs:
           seen=set(); ready=[]
           for phase in p['phases']:
               if elapsed >= phase['start_after_minutes']:
+                  phase_start=s+datetime.timedelta(minutes=phase['start_after_minutes'])
+                  phase_start_epoch=int(phase_start.timestamp())
                   for wf in phase['workflows']:
-                      if wf not in seen: seen.add(wf); ready.append(wf)
-          for wf in ready: print(wf)
+                      key=(phase['id'],wf)
+                      if key not in seen:
+                          seen.add(key)
+                          ready.append((phase['id'],phase_start_epoch,wf))
+          for phase_id,phase_start_epoch,wf in ready:
+              print(f"{phase_id}|{phase_start_epoch}|{wf}")
           PY
           if [[ "$(head -1 /tmp/ready_workflows.txt)" == "WINDOW_INACTIVE" ]]; then echo "ROLLING_CAPACITY_WINDOW=INACTIVE"; exit 0; fi
           runs="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs?per_page=200")"
           start_epoch="$(date -d "$(jq -r .start_utc research/run_requests/rolling_capacity_window_2026-10-05.json)" +%s)"
           limit="$(jq -r .max_dispatch_per_tick research/run_requests/rolling_capacity_window_2026-10-05.json)"
           count=0
-          while IFS= read -r workflow; do
+          while IFS='|' read -r phase_id phase_start_epoch workflow; do
             [[ -n "$workflow" ]] || continue
-            if (( count >= limit )); then echo "SKIP_DISPATCH_LIMIT ${workflow}"; continue; fi
-            [[ -f ".github/workflows/${workflow}" ]] || { echo "SKIP_MISSING ${workflow}"; continue; }
-            active="$(printf '%s' "$runs" | jq --arg wf "https://github.com/$GITHUB_REPOSITORY/actions/workflows/$workflow" '[.workflow_runs[] | select(.status != "completed") | select(.workflow_url == $wf)] | length')"
-            if (( active > 0 )); then echo "SKIP_ACTIVE ${workflow} active=${active}"; continue; fi
-            recent_success="$(printf '%s' "$runs" | jq --arg wf "https://github.com/$GITHUB_REPOSITORY/actions/workflows/$workflow" --argjson start_epoch "$start_epoch" '[.workflow_runs[] | select(.conclusion == "success") | select(.workflow_url == $wf) | select((.created_at | fromdateiso8601) >= $start_epoch)] | length')"
-            if (( recent_success > 0 )); then echo "SKIP_RECENT_SUCCESS ${workflow}"; continue; fi
-            if gh workflow run "$workflow" --repo "$GITHUB_REPOSITORY" --ref master; then echo "DISPATCHED ${workflow}"; count=$((count+1)); else echo "DISPATCH_FAILED_NONBLOCKING ${workflow}"; fi
+            if (( count >= limit )); then echo "SKIP_DISPATCH_LIMIT ${phase_id} ${workflow}"; continue; fi
+            [[ -f ".github/workflows/${workflow}" ]] || { echo "SKIP_MISSING ${phase_id} ${workflow}"; continue; }
+            active="$(printf '%s' "$runs" | jq --arg wf "https://github.com/$GITHUB_REPOSITORY/actions/workflows/${workflow}" '[.workflow_runs[] | select(.status != "completed") | select(.workflow_url == $wf)] | length')"
+            if (( active > 0 )); then echo "SKIP_ACTIVE ${phase_id} ${workflow} active=${active}"; continue; fi
+            recent_success="$(printf '%s' "$runs" | jq --arg wf "https://github.com/$GITHUB_REPOSITORY/actions/workflows/${workflow}" --argjson phase_start_epoch "${phase_start_epoch}" '[.workflow_runs[] | select(.conclusion == "success") | select(.workflow_url == $wf) | select((.created_at | fromdateiso8601) >= $phase_start_epoch)] | length')"
+            if (( recent_success > 0 )); then echo "SKIP_PHASE_SUCCESS ${phase_id} ${workflow}"; continue; fi
+            if gh workflow run "${workflow}" --repo "$GITHUB_REPOSITORY" --ref master; then echo "DISPATCHED ${phase_id} ${workflow}"; count=$((count+1)); else echo "DISPATCH_FAILED_NONBLOCKING ${phase_id} ${workflow}"; fi
           done < /tmp/ready_workflows.txt
