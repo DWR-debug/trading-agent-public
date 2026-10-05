@@ -1640,7 +1640,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T17:14:19.417308+00:00",
+  "generated_at_utc": "2026-10-05T17:14:36.562582+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4331,6 +4331,11 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize current operational status",
+        "sha": "080a4dcdd4c0482127bf5088f77aaccf8570b2e9",
+        "timestamp": "2026-10-05T17:14:23Z"
+      },
+      {
         "message": "GOVERNANCE: record CRSP history revision QA",
         "sha": "bbafea89bdb5fdba1df92fefa37543941fda5800",
         "timestamp": "2026-10-05T19:14:12+02:00"
@@ -4364,11 +4369,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "b2f058d028c2e6df54d90d1077ba7aff47416f14",
         "timestamp": "2026-10-05T17:13:37Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "5abe770ff835b7cb73d47522811665f909efc1dd",
-        "timestamp": "2026-10-05T17:13:32Z"
       }
     ]
   },
@@ -4466,7 +4466,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "bbafea89bdb5fdba1df92fefa37543941fda5800",
+  "source_master_sha": "080a4dcdd4c0482127bf5088f77aaccf8570b2e9",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4580,6 +4580,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37346893583"
+    "run_id": "37346907002"
   }
 }
