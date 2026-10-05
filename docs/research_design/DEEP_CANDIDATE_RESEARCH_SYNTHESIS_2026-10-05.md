@@ -152,3 +152,67 @@ https://www.usaspending.gov/
 
 SEC Form 8-K guidance:
 https://www.sec.gov/rules-regulations/staff-guidance/compliance-disclosure-interpretations/exchange-act-form-8-k
+
+## 7. New source-backed candidate: Q224 — EDGAR document-demand intensity
+
+SEC EDGAR logs provide a second, materially different information channel: revealed document acquisition after a filing becomes public. The modern 2020-present log schema supplies request timestamp and requested archive path, allowing deterministic recovery of filing CIK/accession. The SEC also documents the missing 2017-2020 interval, schema differences, exclusion of SEC-originating traffic from the newer set, and known data-quality limitations.
+
+Q224 should therefore start as a source/PIT candidate on the 2020-2025 window only. It must not mix the legacy 2003-2017 IP-rich logs into the modern contract without a separate schema bridge.
+
+The literature makes the mechanism more credible than a generic "attention" hypothesis: EDGAR acquisition activity has been associated with future returns and fundamentals, with stronger effects when information is more costly to process. Other work finds attention spillovers across geographically or economically related firms, and recent research studies competitor access specifically.
+
+Project conclusion: Q224 is worth structural feasibility work. Its first tests should be archive completeness, request-to-filing mapping, timestamp semantics, bot/automated-traffic contamination, future-log mutation, and separability from Q130/Q217/Q204/Q104. No return testing is implied by this memo.
+
+## 8. New sub-hypothesis: acquisition demand × processing friction
+
+Q224 and Q217 imply a theoretically interesting interaction: information acquisition demand may carry different meaning when the underlying filing is costly to process. A large acquisition burst for a difficult filing could indicate unusually high perceived information value or unusually high monitoring demand; the same burst for a trivial filing may mean something different.
+
+This is **not** a new top-level candidate and must remain a quarantined sub-hypothesis until Q224 and Q217 independently survive their source/PIT and separability gates. No interaction tuning or threshold search is authorized.
+
+## 9. Agent-system architecture findings
+
+Current open-source agent systems reinforce several project-level engineering patterns:
+
+- TradingAgents v0.6.0 has moved toward saved reports, model-tier separation, automated settlement of past decisions, parallel analysts and stricter run isolation.
+- FinMem/FinAgent emphasize layered or diversified memory retrieval.
+- A live TradingAgents benchmark highlights large behavioral variation across agent architectures and model backbones.
+- KTD-Fin demonstrates that data-side masking is stronger than prompt-only restrictions for controlling memorized historical identity, and that cumulative return can substantially overstate stock-selection skill without factor attribution.
+- TrustTrade emphasizes selective consensus based on agreement, temporal consistency and grounding rather than uniform source trust.
+- Lumibot's current memory design records actual submitted orders and outcome observations as append-only runtime events, separating factual execution history from agent prose.
+
+Project implication: the Trading Agent should increasingly treat **evidence provenance, temporal validity, source reliability and realized-action reconciliation as first-class state**, while keeping LLM reasoning advisory and bounded. This is an architectural strengthening, not evidence of trading alpha.
+
+## 10. Research priority adjustment
+
+Near-term highest-information work is now:
+
+1. Q224 source/PIT feasibility on SEC EDGAR logs.
+2. Q220 XBRL structural mapping and historical-prefix invariance.
+3. Q218 mandatory/voluntary event alignment.
+4. Q221 procurement public-boundary reconstruction.
+5. Q219 options-response join after Q129 integrity confirmation.
+6. Q222 external implementation-clock feasibility.
+7. Q223 overlap audit; prefer merge/reject unless independent corroboration proves distinct.
+
+No candidate should bypass cheap structural falsification merely because the literature appears economically attractive.
+
+## Source anchors added 2026-10-05
+
+SEC EDGAR Log File Data Sets:
+https://www.sec.gov/data-research/sec-markets-data/edgar-log-file-data-sets
+
+SEC EDGAR variables:
+https://www.sec.gov/files/variables-edgar-log-file-data-sets.pdf
+
+Li & Sun, Information acquisition and expected returns:
+https://www.sciencedirect.com/science/article/pii/S0165188922000884
+
+Lehmann & Posch, Proximity-powered attention:
+https://www.sciencedirect.com/science/article/pii/S2214635025000802
+
+Griffin & Wegner, Attention Spillover in EDGAR:
+https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5783743
+
+Onuk, Does informing investors tip off competitors?:
+https://onlinelibrary.wiley.com/doi/10.1002/rfe.70047
+\n
