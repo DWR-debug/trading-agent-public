@@ -1,0 +1,94 @@
+name: Q224 EDGAR Modern Source Gate
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "automation/q224_edgar_document_demand_source_gate.py"
+      - "research/frontier/q224_edgar_document_demand_2026_10_05.json"
+      - ".github/workflows/q224-edgar-modern-source-gate.yml"
+  schedule:
+    - cron: "13 */6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-q224-edgar-modern-source-gate
+  cancel-in-progress: true
+
+jobs:
+  source_gate:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Run bounded Modern-window source gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python automation/q224_edgar_document_demand_source_gate.py \
+            --output "research/runs/q224_edgar_modern_source_gate/${GITHUB_RUN_ID}.json"
+
+      - name: Validate non-authorizing boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p = Path("research/runs/q224_edgar_modern_source_gate") / f"{os.environ['GITHUB_RUN_ID']}.json"
+          d = json.loads(p.read_text(encoding="utf-8"))
+          assert d["candidate_id"] == "Q224"
+          assert d["source_contract"]["modern_window"] == "2020-05-19 through 2025-06-30"
+          assert d["source_contract"]["legacy_modern_splice_attempted"] is False
+          assert d["scientific_boundary"]["performance_authorized"] is False
+          assert d["scientific_boundary"]["holdout_selection_allowed"] is False
+          assert d["scientific_boundary"]["ranking_allowed"] is False
+          assert d["scientific_boundary"]["tuning_allowed"] is False
+          assert d["scientific_boundary"]["promotion_allowed"] is False
+          assert d["scientific_boundary"]["live_execution_allowed"] is False
+          assert d["request_quality"]["traffic_contamination_fully_resolvable_from_modern_schema"] is False
+          assert d["pit_contract"]["same_session_use"] is False
+          assert d["negative_evidence"]["2017_07_01_to_2020_05_18_available"] is False
+          print("Q224_MODERN_SOURCE_GATE_BOUNDARY_OK")
+          PY
+
+      - name: Persist latest receipt
+        if: success() && github.ref == 'refs/heads/master'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          input="research/runs/q224_edgar_modern_source_gate/${GITHUB_RUN_ID}.json"
+          latest="research/evidence/q224_edgar_modern_source_gate_latest.json"
+          cp "$input" "$latest"
+          for attempt in 1 2 3 4 5; do
+            current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+            if python automation/github_contents_publish.py \
+              --repository "$GITHUB_REPOSITORY" \
+              --branch master \
+              --base-sha "$current_sha" \
+              --file "$latest=$latest"; then
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          exit 1
+
+      - name: Upload receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q224-edgar-modern-source-gate-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q224_edgar_modern_source_gate/
+          if-no-files-found: error
+          retention-days: 30
