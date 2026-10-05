@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T09:26:33.457173+00:00",
+  "generated_at_utc": "2026-10-05T09:44:13.485841+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2216,7 +2216,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "d72afcdde280cdd754068e90c25b3f66dbb1b20620dab750e8422e1de12e89cb",
+    "receipt_fingerprint": "4cc10291b6142b0a7e68e1dca9b51cfee866adb796df3b361ce0895112456104",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2264,7 +2264,7 @@
           }
         ],
         "clock_contract": "Transaction identity/date is distinct from daily/weekly dissemination files.",
-        "content_sha256": "b93ea3e993f518bcedd715674b27949f72ddd4bb7d95e310ac3c6b94b215a982",
+        "content_sha256": "31176180a533390d3a0034a0e79525dd2860ad20f740c035fde8c542ea2c1bd7",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2294,7 +2294,7 @@
           }
         ],
         "clock_contract": "Issued/received document records are distinct from later corrections and underlying event dates.",
-        "content_sha256": "46572c0c732c347c362c45919c20185e6201f373f352ec0660438cbd5a044ba6",
+        "content_sha256": "672992fd8da63cb1977ead481291341f5b09b0857f299c57dfb112c8bef25777",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -2315,7 +2315,7 @@
           }
         ],
         "clock_contract": "Recall publication date is distinct from the underlying safety-issue report date.",
-        "content_sha256": "5e9c4297ed9d24f16d1f313acc05b2f7eefefef4eef6b6773b16674edfb613ef",
+        "content_sha256": "bc944f5be9759888b8133a4467646ff3457486932e86ad6ddc05cb512bc3b9f2",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2332,7 +2332,7 @@
           }
         ],
         "clock_contract": "Investigation event and publication times remain distinct.",
-        "content_sha256": "7a2e2767519f7e6f400a1cacdb97ecd81f7b3a1747419d174eee8c31d2c6a1b0",
+        "content_sha256": "09816f16799a7d066c9f8f2215b0d7e2ad31cf5277ead0fc7f5d2ef4168974f5",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -3284,6 +3284,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "61d5216c3e925df3bdd50ea35fd111e9594bca9e",
+        "timestamp": "2026-10-05T09:41:02Z"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "d9c5a4ff4495e5cfe6ee41d34edd292e1e6b6601",
+        "timestamp": "2026-10-05T09:36:54Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "b3429060d29c14a707d07b61b32db4d8e4830c75",
+        "timestamp": "2026-10-05T09:26:35Z"
+      },
+      {
         "message": "OPS: advance paper-forward MTM state",
         "sha": "62c47ccd205151aa0c14022204d42dda3b50a87b",
         "timestamp": "2026-10-05T09:21:11Z"
@@ -3307,21 +3322,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "afd586f3c316921ad957829ae5e4610aa21d9500",
         "timestamp": "2026-10-05T09:06:25Z"
-      },
-      {
-        "message": "RESEARCH: retrigger manual Groq LiteLLM after integrity registration",
-        "sha": "3886bb459c6773caa8f4c4bce59bb724cbe495d8",
-        "timestamp": "2026-10-05T11:06:18+02:00"
-      },
-      {
-        "message": "CI: register manual Groq LiteLLM workflow in integrity allowlist",
-        "sha": "5f1ecfc27fbaa919b0c89a5e08206fff053eca24",
-        "timestamp": "2026-10-05T11:06:10+02:00"
-      },
-      {
-        "message": "OPS: record manual Groq LiteLLM worker state",
-        "sha": "ef375cce1b61684105a46a1aba85157d29023047",
-        "timestamp": "2026-10-05T09:05:02Z"
       }
     ]
   },
@@ -3419,7 +3419,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "62c47ccd205151aa0c14022204d42dda3b50a87b",
+  "source_master_sha": "61d5216c3e925df3bdd50ea35fd111e9594bca9e",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -3533,6 +3533,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37290029175"
+    "run_id": "37291983999"
   }
 }
