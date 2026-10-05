@@ -1399,13 +1399,13 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-05T17:39:00.163167+00:00",
+    "generated_at_utc": "2026-10-05T17:39:15.558027+00:00",
     "next_research_focus": "Priority frontier includes Q217 cognitive-processing-friction decomposition alongside Q214-Q216. Q217 remains discovery/PIT-only and must merge into Q131 if it is not empirically distinct.",
     "record_type": "trading_agent_chat_handoff",
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "5faa87427e851ba0922402f916fb9e60685a2af7"
+    "source_master_sha": "9b2278d1716c17d1012bbcf53c50b82f4ce28e1e"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1703,7 +1703,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T17:39:00.163167+00:00",
+  "generated_at_utc": "2026-10-05T17:39:15.558027+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4087,7 +4087,7 @@
         "version_date_count": 0
       }
     },
-    "receipt_fingerprint": "8de5f09e193478901ae4f853a6b57ece6d6b6d9505b7f4930c4669050d2599fd",
+    "receipt_fingerprint": "fa3c41038277ff49e0e0fad0a1f765dc96bc60791f27bf8a2bfa071578924140",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -4161,7 +4161,7 @@
             "url": "https://ppubs.uspto.gov/basic/"
           }
         ],
-        "content_sha256": "edb35de33499874b3a2815579fae9d4d3207108c4b7b53e894629534fbcf6032",
+        "content_sha256": "8c23eee70b563df68ba227a2a20bbeb6625d298dcb1dd95fc1ec7ec279c0fa57",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -4394,6 +4394,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "9b2278d1716c17d1012bbcf53c50b82f4ce28e1e",
+        "timestamp": "2026-10-05T17:39:12Z"
+      },
+      {
+        "message": "GOVERNANCE: synchronize dispatch authority and chat resilience",
+        "sha": "7f2436371607ca0238476e9af4b4c3acedd09579",
+        "timestamp": "2026-10-05T19:39:09+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "7db87a4226b7312d405f6be5a7498b49008dad94",
+        "timestamp": "2026-10-05T17:39:06Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "118d3ba65895e055a64a3f2ae04bb886d43aa737",
+        "timestamp": "2026-10-05T17:39:04Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "dd6bf82452f2e0f3bb778065c63b1c8f7605fcb8",
+        "timestamp": "2026-10-05T17:39:02Z"
+      },
+      {
         "message": "FIX: remove stale priority dispatcher block",
         "sha": "5faa87427e851ba0922402f916fb9e60685a2af7",
         "timestamp": "2026-10-05T19:38:58+02:00"
@@ -4407,31 +4432,6 @@
         "message": "OPS: make priority dispatcher manual-only",
         "sha": "55669343421244ef9243ab4be10f154e9dd78da4",
         "timestamp": "2026-10-05T19:38:36+02:00"
-      },
-      {
-        "message": "OPS: start fresh useful-capacity window with next-gate-only routing",
-        "sha": "3bd72ca5a97ca1c423d90d7add44a17da07e9a78",
-        "timestamp": "2026-10-05T19:38:29+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ddddec6f52c93ba86fc17a29617257a7ef78e1cc",
-        "timestamp": "2026-10-05T17:37:55Z"
-      },
-      {
-        "message": "RESEARCH: add Q217 Q131 orthogonality gate",
-        "sha": "9ea7af7efa026f5ae5243ebd7fb65087fc5a908d",
-        "timestamp": "2026-10-05T19:37:40+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q216 candidate-specific vintage gate",
-        "sha": "b82b1602f477c8d6daaf997bc2b9e7a28304c1dd",
-        "timestamp": "2026-10-05T19:37:37+02:00"
-      },
-      {
-        "message": "RESEARCH: add Q215 candidate-specific bridge gate",
-        "sha": "bc6aec124292d4e35cefe95315a3c38ac262fddc",
-        "timestamp": "2026-10-05T19:37:34+02:00"
       }
     ]
   },
@@ -4529,7 +4529,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "5faa87427e851ba0922402f916fb9e60685a2af7",
+  "source_master_sha": "9b2278d1716c17d1012bbcf53c50b82f4ce28e1e",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4643,6 +4643,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37349964447"
+    "run_id": "37350006787"
   }
 }
