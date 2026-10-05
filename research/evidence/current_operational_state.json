@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T06:22:09.262308+00:00",
+  "generated_at_utc": "2026-10-05T06:42:24.249166+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2450,7 +2450,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "44c301b32f1e972e93446f659188437e89f7110f8b6a47c9fa162d861a04827a",
+    "receipt_fingerprint": "e7c56d6d11b67f017f50d1be6d2a8ae2ceb79cae9140ef6d6ff49c2b74e45c09",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2485,7 +2485,7 @@
           }
         ],
         "clock_contract": "Docket event dates are distinct from underlying incident dates; exact public intraday availability must be proven per event class, otherwise use next-session availability.",
-        "content_sha256": "679094a35db17e8dd6ff9ff55062bd203bc075e86c88dbf247979c4f2e4a7075",
+        "content_sha256": "6e0cc966fdd284424d75d7a0f9cef2f0fdcaba26dfa9227526f87d6ca663444f",
         "http_status": 403,
         "missing_markers": [
           "RECAP Archive",
@@ -2509,7 +2509,7 @@
           }
         ],
         "clock_contract": "A recorded docket-entry date is not automatically proof of public dissemination time.",
-        "content_sha256": "ce1ef20bd1b2a9127a3f99387e9c9db4b8efdfd3e57ce343d9fe0afad00574c5",
+        "content_sha256": "056b663faca87ec9fdc1a8934ea821c76dc2d27ccb04b7ef3db642bd4c7e7db4",
         "http_status": 403,
         "missing_markers": [
           "Advanced RECAP Search",
@@ -4136,44 +4136,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "b3aecdd4be185e765347ab895e07fe191b2fd7ef",
-        "timestamp": "2026-10-05T06:16:39Z"
+        "message": "DASHBOARD: allow actions-read for live work and runner snapshots",
+        "sha": "3c9f2fe0a141982c2caac3f5c500cdbc754f9fa2",
+        "timestamp": "2026-10-05T08:42:11+02:00"
       },
       {
-        "message": "OPS: synchronize S10 phone runtime status",
-        "sha": "0432cd0b76d8307222692482e278212f2785b820",
-        "timestamp": "2026-10-05T06:14:16Z"
+        "message": "DASHBOARD: complete live snapshot generator imports and repository binding",
+        "sha": "ae29fa2271d4daf58201b5c7a6a45df8ef26e29a",
+        "timestamp": "2026-10-05T08:42:03+02:00"
       },
       {
-        "message": "OPS: synchronize Android phone fleet receipts",
-        "sha": "d88f7d512792ac3c3a6d1af80899601043aafa5d",
-        "timestamp": "2026-10-05T06:13:15Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b3804ede23417f5ec69cf80b01b51645a99a7cd9",
-        "timestamp": "2026-10-05T05:59:34Z"
-      },
-      {
-        "message": "OPS: advance paper-forward MTM state",
-        "sha": "2ca87aa56bb4079ffda0d18c5010a06c32745c6a",
-        "timestamp": "2026-10-05T05:57:20Z"
-      },
-      {
-        "message": "OPS: advance 2000 EUR paper-forward MTM state",
-        "sha": "4599997cdb3d39845d951a096e799c3d92687031",
-        "timestamp": "2026-10-05T05:56:05Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "7358345ffd602fe5d6cca2c758dacb070c3a8040",
-        "timestamp": "2026-10-05T05:44:30Z"
+        "message": "DASHBOARD: add fleet, live assignments, AI and research work-board data",
+        "sha": "e9d70fdb09bfb3ec2c3462e8a33536ff13fdbe16",
+        "timestamp": "2026-10-05T08:41:56+02:00"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "de07f2a0c2d735ad14c0c9153a5931da8049f237",
-        "timestamp": "2026-10-05T05:42:22Z"
+        "sha": "7d075e199acabbb5734295c639f694af08e76b3f",
+        "timestamp": "2026-10-05T06:41:40Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "eb08e520fcdeae8974e9515359a31ae403a1d4eb",
+        "timestamp": "2026-10-05T06:41:21Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "e5321f7c555e5dc74f0864d55bea0d9bf4214773",
+        "timestamp": "2026-10-05T06:38:31Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "50a075420118a82f3a54dd488aa2f0239337513e",
+        "timestamp": "2026-10-05T06:36:04Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "1aa2160fd76af7d2260476cba9984483cadbd7aa",
+        "timestamp": "2026-10-05T06:35:48Z"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "b3aecdd4be185e765347ab895e07fe191b2fd7ef",
+  "source_master_sha": "3c9f2fe0a141982c2caac3f5c500cdbc754f9fa2",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37272048271"
+    "run_id": "37273758534"
   }
 }
