@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T06:43:37.276685+00:00",
+  "generated_at_utc": "2026-10-05T06:44:30.947193+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4136,6 +4136,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "DASHBOARD: expose per-resource workload and candidate-level research board",
+        "sha": "b8e2ae457bb761c6516d162c6f5b97c157fea4a0",
+        "timestamp": "2026-10-05T08:44:18+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2d0b3a83f781e36a7e75994fa01345fe04611479",
+        "timestamp": "2026-10-05T06:43:42Z"
+      },
+      {
+        "message": "OPS: refresh resource dashboard snapshot",
+        "sha": "4e821b5cc0b87de4cd093c4b918fdb2e89959be7",
+        "timestamp": "2026-10-05T06:43:38Z"
+      },
+      {
         "message": "OPS: refresh control board after generator repair",
         "sha": "8d4d962d98006209ed8fb40a7e4467046a5e08f6",
         "timestamp": "2026-10-05T08:43:22+02:00"
@@ -4159,21 +4174,6 @@
         "message": "DOCS: document resource control board and live assignment model",
         "sha": "73d81337f587b1358548c3fb07572a76745bba84",
         "timestamp": "2026-10-05T08:42:51+02:00"
-      },
-      {
-        "message": "TEST: cover resource dashboard assignment mapping",
-        "sha": "11998a29c2d2daea0643023f6ff6506930486c02",
-        "timestamp": "2026-10-05T08:42:43+02:00"
-      },
-      {
-        "message": "DASHBOARD: add research control board UI for resources workers lanes AI and gates",
-        "sha": "28384c79dac626910d9a9a95b1f858640ab73bcb",
-        "timestamp": "2026-10-05T08:42:33+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "4de079cd3ed45522bcd435e9430a065525a5a621",
-        "timestamp": "2026-10-05T06:42:25Z"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8d4d962d98006209ed8fb40a7e4467046a5e08f6",
+  "source_master_sha": "b8e2ae457bb761c6516d162c6f5b97c157fea4a0",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37273858361"
+    "run_id": "37273936166"
   }
 }
