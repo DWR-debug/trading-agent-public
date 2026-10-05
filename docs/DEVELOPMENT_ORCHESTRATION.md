@@ -1,3 +1,5 @@
+> **Dauerhafte Nutzkapazitäts-Regel:** `docs/TRADING_AGENT_PROJECT_STATUTES.md` ist verbindlich. Frei werdende sinnvolle Kapazität wird ereignisgesteuert nachbeschickt; Cron ist Recovery, nicht der primäre Kontinuitätsmechanismus.
+
 # Entwicklungsorchestrierung
 
 Stand: 2026-09-26
