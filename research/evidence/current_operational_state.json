@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T12:53:52.398982+00:00",
+  "generated_at_utc": "2026-10-05T12:55:06.192917+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4136,14 +4136,39 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
-        "headRefName": "ops/groq-smoke-persist-race-20261005",
-        "number": 1076,
-        "title": "OPS: harden Groq smoke receipt persistence",
-        "updatedAt": "2026-10-05T12:49:54Z",
-        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1076"
+        "headRefName": "ops/agent-queue-budget-reconcile-20261005",
+        "number": 1077,
+        "title": "OPS: harden agent queue budget reconciliation",
+        "updatedAt": "2026-10-05T12:54:18Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1077"
       }
     ],
     "recent_commits": [
+      {
+        "message": "OPS: record Groq API key smoke test",
+        "sha": "9609ea9378bef24e8551472a154627fb16d9f0d1",
+        "timestamp": "2026-10-05T12:55:02Z"
+      },
+      {
+        "message": "OPS: harden Groq smoke receipt persistence",
+        "sha": "4fe07cee331ce83c4da5e656208668df966fe588",
+        "timestamp": "2026-10-05T14:54:49+02:00"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "4dd0578637233fe2699c15842cfa49263568ee88",
+        "timestamp": "2026-10-05T12:54:35Z"
+      },
+      {
+        "message": "EVIDENCE: persist Q169 R4 independent reproduction receipt",
+        "sha": "638fcc314c33cc0882c50630c53dbf9a46dacdb1",
+        "timestamp": "2026-10-05T12:54:27Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "6bf0440210548e2aaf03ded24144bf11d34bf382",
+        "timestamp": "2026-10-05T12:53:54Z"
+      },
       {
         "message": "OPS: record AI worker state",
         "sha": "165e4f04ea9e070fdfb1d3accbb5fa5ace011c7e",
@@ -4158,31 +4183,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "08944504cb386fee271befd7c8b7aa4f2f4162bf",
         "timestamp": "2026-10-05T12:52:58Z"
-      },
-      {
-        "message": "OPS: use deterministic Python archive checkout on locked Windows runners",
-        "sha": "6567699f2df7d402fd1bacf2abbb535118f5ec60",
-        "timestamp": "2026-10-05T14:52:43+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "a7e0e5954af79c3073ed8743b2038501cc0a8017",
-        "timestamp": "2026-10-05T12:52:28Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3a596ae071671e472bc6b975e7758705d857e430",
-        "timestamp": "2026-10-05T12:51:44Z"
-      },
-      {
-        "message": "OPS: use cmd shell for Windows reproduction under locked PowerShell policy",
-        "sha": "08fd6fec6a1eb626aa773ad0d1288b5a06104723",
-        "timestamp": "2026-10-05T14:51:25+02:00"
-      },
-      {
-        "message": "OPS: record AI worker state",
-        "sha": "27d1e07fa9e79ababa6056da72880131b337569c",
-        "timestamp": "2026-10-05T12:50:08Z"
       }
     ]
   },
@@ -4280,7 +4280,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "165e4f04ea9e070fdfb1d3accbb5fa5ace011c7e",
+  "source_master_sha": "9609ea9378bef24e8551472a154627fb16d9f0d1",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4394,6 +4394,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37312710747"
+    "run_id": "37312851180"
   }
 }
