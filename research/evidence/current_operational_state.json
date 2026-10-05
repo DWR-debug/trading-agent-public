@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T08:34:33.849106+00:00",
+  "generated_at_utc": "2026-10-05T08:36:32.895611+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4136,6 +4136,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: refresh resource dashboard after research wave",
+        "sha": "45727a128b62d21c3da9b4eec8cd603efcf76b17",
+        "timestamp": "2026-10-05T10:36:20+02:00"
+      },
+      {
+        "message": "OPS: advance 2000 EUR paper-forward MTM state",
+        "sha": "4131232f9e1b050f4a81ef8095a1fd73938ee5bf",
+        "timestamp": "2026-10-05T08:35:52Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "1f85b2ad7ee4c143777f240e0e7a71d945748818",
+        "timestamp": "2026-10-05T08:34:36Z"
+      },
+      {
         "message": "FIX: align workflow integrity registry with Q205",
         "sha": "ccdaae9400f517ba0405eda2826450335a17c500",
         "timestamp": "2026-10-05T10:34:21+02:00"
@@ -4159,21 +4174,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "eb9de040606c91cc440f173cc4ca39fc9d91b6fc",
         "timestamp": "2026-10-05T08:32:05Z"
-      },
-      {
-        "message": "FIX: make Runner C manifest generation execution-policy independent",
-        "sha": "5cc17b561bb1201edf9256dba7ea6bd7907ebbd1",
-        "timestamp": "2026-10-05T10:31:47+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "ddb200667ac0cc1347b33aff852d379aa282f377",
-        "timestamp": "2026-10-05T08:24:53Z"
-      },
-      {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "46656215b9a42441606b1472749a8a0e42c4c253",
-        "timestamp": "2026-10-05T08:24:49Z"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ccdaae9400f517ba0405eda2826450335a17c500",
+  "source_master_sha": "45727a128b62d21c3da9b4eec8cd603efcf76b17",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37284463030"
+    "run_id": "37284674742"
   }
 }
