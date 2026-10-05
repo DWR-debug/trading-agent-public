@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T09:03:52.857930+00:00",
+  "generated_at_utc": "2026-10-05T09:04:27.501559+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -3284,6 +3284,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: retrigger validated manual Groq LiteLLM review",
+        "sha": "2b33ae199e394c7be7a148f070d9728d8ec6b2ef",
+        "timestamp": "2026-10-05T11:04:24+02:00"
+      },
+      {
+        "message": "FIX: satisfy workflow shellcheck in manual LiteLLM path",
+        "sha": "b6f8d9a2b0990940da4338a1782be52af8fa313f",
+        "timestamp": "2026-10-05T11:04:16+02:00"
+      },
+      {
+        "message": "OPS: record manual Groq LiteLLM worker state",
+        "sha": "806e8b0a41c9983804f8a61653d0a8e68709fc60",
+        "timestamp": "2026-10-05T09:04:02Z"
+      },
+      {
+        "message": "FIX: close AI worker context registry after manual contract",
+        "sha": "d8d01746b36e9d05ea8c9b22f2a536125f7927f9",
+        "timestamp": "2026-10-05T11:03:57+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2fa05047f4df98539db2bf62442b7cf46cbd53da",
+        "timestamp": "2026-10-05T09:03:55Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "0a0a63cdd4fbd95b0e579389848755b0dee99b17",
         "timestamp": "2026-10-05T09:03:38Z"
@@ -3297,31 +3322,6 @@
         "message": "AI: add manual Groq LiteLLM one-shot workflow",
         "sha": "36adec5c1ab7dadd936e6dc6c5e1635c115a6079",
         "timestamp": "2026-10-05T11:03:28+02:00"
-      },
-      {
-        "message": "DOCS: document manual AI input and LiteLLM transport",
-        "sha": "ea1954bc42ac451c5a2e5409460ebcc2a0d7eecf",
-        "timestamp": "2026-10-05T11:03:13+02:00"
-      },
-      {
-        "message": "AI: add bounded manual information-timing research task",
-        "sha": "5c176ec0a10b448588b3a114aba3e6210f27e40b",
-        "timestamp": "2026-10-05T11:03:10+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2e404ef058e8e716dddc2cb6ea77457b643b281e",
-        "timestamp": "2026-10-05T09:02:43Z"
-      },
-      {
-        "message": "AI: add manual information-timing research context contract",
-        "sha": "73715e1f35bb6d5b8c2f4e22ffffccbe498e87c2",
-        "timestamp": "2026-10-05T11:02:27+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "3562488339976b3308f85a95fea6b196c6feebaa",
-        "timestamp": "2026-10-05T09:00:51Z"
       }
     ]
   },
@@ -3419,7 +3419,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0a0a63cdd4fbd95b0e579389848755b0dee99b17",
+  "source_master_sha": "2b33ae199e394c7be7a148f070d9728d8ec6b2ef",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -3533,6 +3533,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37287542145"
+    "run_id": "37287620793"
   }
 }
