@@ -6,6 +6,7 @@ on:
     paths-ignore:
       - docs/CURRENT_STATUS.md
       - research/evidence/current_operational_state.json
+      - research/evidence/trading_agent_chat_handoff.json
   workflow_dispatch:
 
 permissions:
@@ -142,6 +143,7 @@ jobs:
             --base-sha "$source_master_sha"
             --file "docs/CURRENT_STATUS.md=docs/CURRENT_STATUS.md"
             --file "research/evidence/current_operational_state.json=research/evidence/current_operational_state.json"
+            --file "research/evidence/trading_agent_chat_handoff.json=research/evidence/trading_agent_chat_handoff.json"
           )
           python -m automation.github_contents_publish "${publish_args[@]}"
 
