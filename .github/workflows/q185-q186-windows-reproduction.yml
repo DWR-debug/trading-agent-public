@@ -1,6 +1,12 @@
 name: Q185-Q186 Windows Bounded Reproduction
 
 on:
+  push:
+    branches: [master]
+    paths:
+      - ".github/workflows/q185-q186-windows-reproduction.yml"
+      - "automation/q185_q186_source_feasibility.py"
+      - "automation/q185_q186_pit_readiness_r1.py"
   workflow_dispatch:
   schedule:
     - cron: "17 */6 * * *"
