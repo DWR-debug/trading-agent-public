@@ -71,7 +71,7 @@ def test_q121r6_workflow_uses_fleet_rate_budget() -> None:
         / "workflows"
         / "q121r6-sec-acceptance-time-compilation.yml"
     ).read_text(encoding="utf-8")
-    assert "max-parallel: 2" in workflow
+    assert "max-parallel: 4" in workflow
     assert "shard_index: [0,1,2,3]" in workflow
     assert "--shard-count 4" in workflow
     assert "--request-gap-seconds 0.25" in workflow
