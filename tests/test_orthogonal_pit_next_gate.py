@@ -55,6 +55,16 @@ def test_new_top_candidates_are_registered_but_source_first():
         assert current[candidate_id]["performance_allowed"] is False
 
 
+def test_q222_is_registered_source_first_and_non_authorizing():
+    assert NEXT_GATES["Q222"] == "HISTORICAL_SEC_IMPLEMENTATION_EVIDENCE_CLOCK_AND_ENTITY_MAPPING"
+    result = compile_state()
+    current = {item["candidate_id"]: item for item in result["candidates"]}
+    assert current["Q222"]["source_or_pit_receipt"] is None
+    assert current["Q222"]["source_feasibility_required"] is True
+    assert current["Q222"]["execution_authorized"] is False
+    assert current["Q222"]["performance_allowed"] is False
+
+
 def test_q205_is_visible_to_next_gate_compiler_without_authority():
     result = compile_state()
     current = {item["candidate_id"]: item for item in result["candidates"]}
