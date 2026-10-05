@@ -290,3 +290,133 @@ Q227 remains separate from Q224 because the observable object, institutional pro
 Q227 requires a stricter two-clock contract than the initial design. The FOIA request submission date is the latent acquisition clock used by the literature, but it is not automatically a tradable public-data clock. The SEC publishes the logs with a changing frequency: retrospective for 2006–2012, annual/quarterly for 2013–2018, and monthly from 2019 in the 2026 study. The study finds that short-window post-request effects are weak during monthly publication, while more frequent public release strengthens price incorporation around the publication of the requests. Therefore our implementation must model the earliest public log-observation boundary separately and prohibit backdating a public strategy feature to the request date.
 
 This refinement increases Q227's scientific quality but also raises its cost. The feasibility gate must reconstruct publication batches and their historical visibility, assign each request to the earliest public batch, and test whether the observable batch signal remains distinct from Q224 EDGAR demand. A request can be economically informative without being immediately tradable by us; that distinction is mandatory.
+
+
+## 18. Current TradingAgents / FinAgent architecture scan — implementation implications
+
+Current open-source agent frameworks have moved materially toward deterministic run state rather than treating an LLM conversation as the experiment itself.
+
+TradingAgents v0.6.0 now separates model providers by reasoning tier, settles prior decisions across all tickers while analysis continues, preserves run settings in reports, and maintains stricter point-in-time behavior for historical backtests. The project has also added parallel analyst execution and unattended CLI runs. These are engineering patterns, not alpha evidence.
+
+Open-Finance-Lab's FinAgent Orchestration framework goes further with a DAG Planner, Orchestrator, Registration Bus, specialized Data/Alpha/Risk/Cost/Portfolio/Execution/Backtest/Audit pools, and a Memory Agent storing structured execution traces. Its stated architecture is explicitly graph- and memory-based.
+
+Project implication:
+- preserve the current separation between hypothesis generation, source/PIT compilation, scientific authorization and execution;
+- make the experiment manifest, data clock, source lineage and outcome settlement first-class state;
+- keep agent prose advisory and require deterministic gates for every transition that can influence scientific authority;
+- prefer parallel independent analyst/source workers but serialize only the immutable decision boundary and reconciliation;
+- strengthen the dashboard around event timelines and provenance, because observability is itself a reliability feature.
+
+No external framework performance claim is project evidence.
+
+## 19. Federal Register public-inspection stage — sharpen Q198, do not create a new candidate
+
+A deeper source review substantially strengthens Q198 rather than creating a separate family.
+
+Federal Register rules state that documents are generally filed for public inspection at least one business day before publication, and that the date and hour of filing are explicitly noted. Current Federal Register issues continue to state that documents are available for public inspection before official publication unless earlier filing is requested.
+
+This creates a clean three-stage information clock for Q198:
+
+1. document filed for public inspection;
+2. official Federal Register publication;
+3. effective date.
+
+The economically relevant insight is therefore not simply "regulatory news." It is a **pre-publication public-observability interval**. The same document can move from legally/publicly inspectable to officially published without changing its substantive content.
+
+Implementation consequence:
+- use the public-inspection filing timestamp as the earliest admissible public boundary when reproducible;
+- retain official publication and effective dates as later state transitions;
+- model emergency/early-inspection deviations separately from the regular schedule;
+- prohibit use of agency submission/receipt times that are not publicly observable;
+- test whether the pre-publication interval is deterministic and sufficiently populated before any outcome work.
+
+The current Q198 issue already contains the correct stage-transition structure, so the result is a contract refinement, not inventory expansion.
+
+## 20. SEC EDGAR request topology — strengthen Q224/Q226
+
+SEC's modern EDGAR log schema exposes request time and the archive path of the requested asset. The archive path encodes the filer CIK and accession number, which permits deterministic filing-level attribution.
+
+This supports a richer but still source-derived view than total request count:
+
+- current-filing vs historical-filing access;
+- index-page vs document/exhibit/structured-data access when the path permits the distinction;
+- breadth of distinct assets requested within one filing;
+- temporal depth of requests following a filing;
+- ratio of contextual/historical access to immediate focal-filing access.
+
+Q226 should remain nested under Q224 until this topology demonstrates incremental information not reducible to total demand.
+
+Important adversarial control:
+- modern logs cover 2020 onward but have a missing 2017–2020 interval and differ materially from the older 2003–2017 data;
+- SEC warns of lost/damaged files and extraction limitations;
+- the newer dataset excludes SEC-originating searches.
+
+Therefore no stitched long panel should be assumed. The first gate remains an immutable modern-window census and mutation test.
+
+## 21. SEC post-acceptance correction lineage — exploratory risk-state idea, not a new top-level candidate
+
+SEC documentation confirms that filer corrective disclosures usually leave both the original filing and the corrective filing publicly available. SEC documentation also states that post-acceptance corrections/deletions can alter EDGAR indexes, with daily, feed and weekly-rebuilt index behavior depending on when the correction is processed.
+
+This suggests a possible future **filing-stability / correction-history risk state**:
+- issuer's historical rate of substantive corrective disclosures;
+- latency from initial acceptance to correction;
+- concentration of corrections by form/section;
+- recurrence of the same correction class.
+
+However, current feasibility is not yet sufficient for a separate candidate. The correction process mixes administrative and substantive errors, and a robust historical prefix requires reconstructing the exact state of EDGAR indexes at the relevant date. Therefore:
+- keep this as a research note under Q131/Q204;
+- investigate source observability first;
+- do not promote unless the historical correction state is mechanically reconstructable and empirically separable from disclosure complexity.
+
+## 22. New economic-system relation — information acquisition has two markets, not one
+
+The Q224/Q227 work suggests a broader unifying hypothesis:
+
+**Information acquisition can have a latent/private clock and a separate public-observation clock.**
+
+Q224: market participant retrieves already-public EDGAR material.
+Q227: participant requests potentially non-public regulatory records.
+Q198: regulator's document becomes publicly inspectable before official publication.
+
+The common object is not "attention." It is the **conversion of costly or staged information acquisition into public observability**.
+
+This creates a useful cross-candidate control layer:
+- acquisition cost/proximity;
+- latent acquisition time;
+- first public observability;
+- subsequent confirmation/publication;
+- later correction or state transition.
+
+The control layer must never merge otherwise distinct economic mechanisms, but it can provide a common causal-clock vocabulary for avoiding accidental look-ahead.
+
+## 23. Decision after external scan
+
+- Q224: remain primary source/PIT candidate.
+- Q226: remain a nested Q224 mechanism until independent separation is demonstrated.
+- Q227: remain P1 and separate from Q224, with the two-clock contract mandatory.
+- Q198: strengthen around public-inspection -> publication -> effective chronology; do not create a new candidate.
+- SEC correction-history idea: exploratory risk-state note only, not candidate inventory.
+- Agent-system findings: implement as provenance/orchestration requirements, not alpha claims.
+
+## Sources added in this scan
+
+TradingAgents current repository:
+https://github.com/TauricResearch/TradingAgents
+
+FinAgent Orchestration current repository:
+https://github.com/Open-Finance-Lab/AgenticTrading
+
+SEC EDGAR log variables:
+https://www.sec.gov/files/variables-edgar-log-file-data-sets.pdf
+
+SEC EDGAR Log File Data Sets:
+https://www.sec.gov/data-research/sec-markets-data/edgar-log-file-data-sets
+
+SEC EDGAR data access and post-acceptance corrections:
+https://www.sec.gov/search-filings/edgar-search-assistance/accessing-edgar-data
+
+SEC corrective disclosure guidance:
+https://www.sec.gov/submit-filings/filer-support-resources/how-do-i-guides/correct-or-delete-filing
+
+Federal Register public-inspection rules:
+https://www.govinfo.gov/content/pkg/CFR-2025-title1-vol1/pdf/CFR-2025-title1-vol1.pdf
