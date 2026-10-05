@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T08:54:24.128729+00:00",
+  "generated_at_utc": "2026-10-05T08:54:39.968029+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2450,7 +2450,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "febf6598a53cc2f8161308634cec93425643e229fa031b1b45514a2be4421e9d",
+    "receipt_fingerprint": "adbcb8abb9a81366af8a2d060f069c9e8693a0e95b50dc43a1e28ab034b1c05d",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2485,7 +2485,7 @@
           }
         ],
         "clock_contract": "Docket event dates are distinct from underlying incident dates; exact public intraday availability must be proven per event class, otherwise use next-session availability.",
-        "content_sha256": "645a88c350d4e83e9e9c40ff8384df636a4c289462694e2088ec78c7f6b5827d",
+        "content_sha256": "35372a8032073f85db345353894c4a1db723cf19ffce057ca4b876514338be69",
         "http_status": 403,
         "missing_markers": [
           "RECAP Archive",
@@ -2509,7 +2509,7 @@
           }
         ],
         "clock_contract": "A recorded docket-entry date is not automatically proof of public dissemination time.",
-        "content_sha256": "bd6302a6f124eb448da8a7f88bc7c2e8665d75a3b4bed35234d7f8290023ac13",
+        "content_sha256": "138df33e36e6fa31e95b6e4a0e0bede1e83dcae4f5a7183d119a2fae468edd11",
         "http_status": 403,
         "missing_markers": [
           "Advanced RECAP Search",
@@ -4136,6 +4136,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "358d24789bbe16eca5ce5116fc74734dfa74e05a",
+        "timestamp": "2026-10-05T08:54:38Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "bb0e1e101d758a2bd3c74669eebf4fb8b2e5e3b9",
+        "timestamp": "2026-10-05T08:54:26Z"
+      },
+      {
         "message": "RESEARCH: launch Q187-Q192 Groq adversarial review",
         "sha": "0dfd4485fc8d7de1cac36cb00aa695d6571d4565",
         "timestamp": "2026-10-05T10:54:16+02:00"
@@ -4164,16 +4174,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "2854978560a1b1d292003795b4c40b49a94b7fef",
         "timestamp": "2026-10-05T08:38:26Z"
-      },
-      {
-        "message": "FIX: restore valid dashboard workflow permissions",
-        "sha": "5ec2dbca114029eee1f0c04156e2929d6b5f397e",
-        "timestamp": "2026-10-05T10:38:11+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6e1fcd926bd59abc2acda965991a123b177b0270",
-        "timestamp": "2026-10-05T08:38:03Z"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0dfd4485fc8d7de1cac36cb00aa695d6571d4565",
+  "source_master_sha": "358d24789bbe16eca5ce5116fc74734dfa74e05a",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37286546400"
+    "run_id": "37286556085"
   }
 }
