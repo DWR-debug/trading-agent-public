@@ -35,6 +35,215 @@ def candidate_highlights(state: dict) -> list[dict]:
             })
     return out
 
+
+def run_cmd_json(args: list[str]) -> dict[str, Any] | list[Any] | None:
+    try:
+        env = os.environ.copy()
+        env.setdefault("GH_TOKEN", env.get("GITHUB_TOKEN", ""))
+        raw = subprocess.check_output(
+            ["gh", "api", *args],
+            cwd=ROOT,
+            text=True,
+            env=env,
+            stderr=subprocess.DEVNULL,
+        )
+        return json.loads(raw)
+    except (OSError, subprocess.CalledProcessError, json.JSONDecodeError):
+        return None
+
+
+def runner_snapshot() -> list[dict[str, Any]]:
+    data = run_cmd_json([f"/repos/{REPO}/actions/runners?per_page=100"])
+    if not isinstance(data, dict):
+        return []
+    return [
+        {
+            "id": r.get("id"),
+            "name": r.get("name"),
+            "status": r.get("status"),
+            "busy": bool(r.get("busy", False)),
+            "labels": [x.get("name") for x in r.get("labels", []) if isinstance(x, dict) and x.get("name")],
+            "os": r.get("os"),
+            "architecture": r.get("architecture"),
+        }
+        for r in data.get("runners", [])
+        if isinstance(r, dict)
+    ]
+
+
+def jobs_for_run(run_id: int) -> list[dict[str, Any]]:
+    data = run_cmd_json([f"/repos/{REPO}/actions/runs/{run_id}/jobs?per_page=100"])
+    if not isinstance(data, dict):
+        return []
+    return [x for x in data.get("jobs", []) if isinstance(x, dict)]
+
+
+def infer_lane(workflow: str, job: str = "") -> str:
+    text = f"{workflow} {job}".lower()
+    if any(k in text for k in ("q104", "q121", "formal readiness", "authorization readiness")):
+        return "FORMAL READINESS"
+    if any(k in text for k in (
+        "q119", "q120", "q126", "q127", "q128", "q129", "q130", "q131", "q132",
+        "q171", "q172", "q173", "q174", "q175", "q176", "q177", "q178",
+        "q179", "q180", "q181", "q182", "q183", "q184", "q185", "q186",
+        "q187", "q188", "q189", "q190", "q191", "q192", "q193", "q194",
+        "q195", "q196", "q197", "q198", "q199", "q201", "q202", "q203",
+        "q204", "q205", "frontier"
+    )):
+        return "FRONTIER DISCOVERY"
+    return "PLATFORM / GOVERNANCE"
+
+
+def infer_resource(workflow: str, job: str, runner: str | None) -> str:
+    rn = (runner or "").lower()
+    wt = f"{workflow} {job}".lower()
+    if rn == "lht-n133732":
+        return "Windows self-hosted A"
+    if rn == "lht-n133732-2":
+        return "Windows self-hosted B"
+    if rn == "lht-n133732-3":
+        return "Windows self-hosted C"
+    if "s10-termux" in rn:
+        return "S10 / Android"
+    if rn.startswith("samsung-phone-"):
+        return "Samsung Android fleet"
+    if "ubuntu-24.04-arm" in wt or "arm64" in wt:
+        return "GitHub-hosted ARM64"
+    if any(k in wt for k in ("free ai", "ai worker", "openrouter", "groq", "gemini", "mistral")):
+        return "Free AI pool"
+    if any(k in wt for k in ("resource dashboard", "github pages", "dashboard update")):
+        return "Dashboard / GitHub Pages"
+    if any(k in wt for k in ("ci", "full suite", "workflow lint", "t052")):
+        return "GitHub-hosted CI"
+    if any(k in wt for k in ("status synchronizer", "control plane", "agent request queue")):
+        return "OS control plane"
+    if "windows" in wt:
+        return "Windows self-hosted"
+    return "GitHub-hosted Ubuntu x64"
+
+
+def current_work() -> list[dict[str, Any]]:
+    data = run_cmd_json([f"/repos/{REPO}/actions/runs?per_page=80"])
+    if not isinstance(data, dict):
+        return []
+    active = [
+        x for x in data.get("workflow_runs", [])
+        if isinstance(x, dict) and x.get("status") in {"queued", "in_progress", "waiting", "pending"}
+    ]
+    active.sort(key=lambda x: str(x.get("created_at", "")), reverse=True)
+    out = []
+    job_budget = 18
+    for run in active:
+        workflow = str(run.get("name") or "")
+        jobs = jobs_for_run(int(run["id"])) if job_budget and run.get("id") else []
+        if jobs:
+            job_budget -= 1
+            jobs = [j for j in jobs if j.get("status") in {"queued", "in_progress", "waiting"}] or jobs[:1]
+            for job in jobs:
+                out.append({
+                    "resource": infer_resource(workflow, str(job.get("name") or ""), job.get("runner_name")),
+                    "lane": infer_lane(workflow, str(job.get("name") or "")),
+                    "worker": job.get("runner_name") or "pending runner assignment",
+                    "job": str(job.get("name") or ""),
+                    "task": workflow,
+                    "status": run.get("status"),
+                    "started_at": run.get("run_started_at") or run.get("created_at"),
+                    "actor": (run.get("actor") or {}).get("login"),
+                    "run_id": run.get("id"),
+                    "run_url": run.get("html_url"),
+                    "authority": "non-authorizing operational work",
+                })
+        else:
+            out.append({
+                "resource": infer_resource(workflow, "", None),
+                "lane": infer_lane(workflow),
+                "worker": "pending runner assignment",
+                "job": "",
+                "task": workflow,
+                "status": run.get("status"),
+                "started_at": run.get("run_started_at") or run.get("created_at"),
+                "actor": (run.get("actor") or {}).get("login"),
+                "run_id": run.get("id"),
+                "run_url": run.get("html_url"),
+                "authority": "non-authorizing operational work",
+            })
+        if len(out) >= 36:
+            break
+    return out
+
+
+def recent_activity() -> list[dict[str, Any]]:
+    data = run_cmd_json([f"/repos/{REPO}/actions/runs?per_page=60"])
+    if not isinstance(data, dict):
+        return []
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=24)
+    out = []
+    for run in data.get("workflow_runs", []):
+        if not isinstance(run, dict) or run.get("status") != "completed":
+            continue
+        raw = run.get("completed_at") or run.get("updated_at")
+        try:
+            ts = datetime.fromisoformat(str(raw).replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        if ts < cutoff:
+            continue
+        out.append({
+            "task": run.get("name"),
+            "status": run.get("conclusion"),
+            "created_at": run.get("created_at"),
+            "completed_at": raw,
+            "actor": (run.get("actor") or {}).get("login"),
+            "run_id": run.get("id"),
+            "run_url": run.get("html_url"),
+        })
+        if len(out) >= 18:
+            break
+    return out
+
+
+def ai_provider_state() -> list[dict[str, Any]]:
+    directory = ROOT / "ops" / "ai_worker_state"
+    latest: dict[str, dict[str, Any]] = {}
+    if directory.is_dir():
+        for path in directory.glob("*.json"):
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            provider = str(data.get("provider") or "unknown")
+            observed = str(data.get("observed_at_utc") or "")
+            if provider not in latest or observed > str(latest[provider].get("observed_at_utc") or ""):
+                latest[provider] = data
+    out = []
+    for provider in ["openrouter_free", "groq_free", "gemini_cli", "mistral_api"]:
+        data = latest.get(provider)
+        if not data:
+            out.append({
+                "provider": provider,
+                "status": "NO RECENT RECEIPT",
+                "task": "",
+                "observed_at_utc": "",
+                "free_only": True,
+                "cost": None,
+                "response_model": "",
+                "scientific_evidence": False,
+            })
+            continue
+        usage = data.get("usage") if isinstance(data.get("usage"), dict) else {}
+        out.append({
+            "provider": provider,
+            "status": str(data.get("status") or "UNKNOWN"),
+            "task": str(data.get("task_id") or ""),
+            "observed_at_utc": str(data.get("observed_at_utc") or ""),
+            "free_only": bool(data.get("free_only", False)),
+            "cost": usage.get("cost") if usage else None,
+            "response_model": str(data.get("response_model") or data.get("api_model") or ""),
+            "scientific_evidence": bool(data.get("worker_output_is_scientific_evidence", False)),
+        })
+    return out
+
+
 def main() -> None:
     status_text = (ROOT / "docs" / "CURRENT_STATUS.md").read_text(encoding="utf-8")
     evidence = json.loads((ROOT / "research" / "evidence" / "current_operational_state.json").read_text(encoding="utf-8"))
@@ -44,23 +253,74 @@ def main() -> None:
     latest_line = next((line for line in status_text.splitlines() if "Latest recorded formal result:" in line), "")
     latest_result = latest_line.split(":", 1)[1].strip() if ":" in latest_line else "not recorded"
 
+    state_board = research_board(evidence, os_state)
+    work = current_work()
+    runners = runner_snapshot()
+    ai = ai_provider_state()
+
     payload = {
-        "schema_version": 1,
+        "schema_version": 2,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "master_sha": git_head(),
         "operational_snapshot_sha": snapshot_sha,
-        "status_source": "docs/CURRENT_STATUS.md + research/evidence/current_operational_state.json",
+        "status_source": "docs/CURRENT_STATUS.md + research/evidence/current_operational_state.json + ops/trading_agent_os_state.json",
         "scientific_boundary": os_state.get("permanent_safety", {}),
+        "dashboard_summary": {
+            "active_work_items": len(work),
+            "configured_resources": 12,
+            "runner_api_visible": len(runners),
+            "busy_runners": sum(1 for r in runners if r.get("busy") is True),
+            "research_tracks": len(state_board),
+            "ai_providers": len(ai),
+        },
         "resources": [
-            {"name": "Windows slot A", "role": "Formal readiness / local reproduction", "cadence": "10 min + event-driven", "authority": "bounded capacity; no automatic performance authorization"},
-            {"name": "Windows slot B", "role": "Frontier discovery / data QA", "cadence": "10 min + event-driven", "authority": "bounded capacity; no automatic performance authorization"},
-            {"name": "GitHub-hosted Ubuntu", "role": "Deterministic frontier / CI / source-PIT", "cadence": "10 min + event-driven", "authority": "non-authorizing unless a separate formal gate says otherwise"},
-            {"name": "S10 / Android", "role": "Deterministic mechanical QA", "cadence": "2 h + meaningful changes", "authority": "non-scientific support only"},
-            {"name": "Free AI pool", "role": "Bounded adversarial / design / engineering review", "cadence": "event-driven", "authority": "AI outputs are never scientific evidence"}
+            {"name": "Windows self-hosted A", "type": "physical", "role": "Formal readiness / local reproduction", "configured_runner": "LHT-N133732", "authority": "bounded capacity; no automatic performance authorization"},
+            {"name": "Windows self-hosted B", "type": "physical", "role": "Frontier discovery / data QA", "configured_runner": "LHT-N133732-2", "authority": "bounded capacity; no automatic performance authorization"},
+            {"name": "Windows self-hosted C", "type": "physical", "role": "Long deterministic runs / independent reproduction", "configured_runner": "LHT-N133732-3", "authority": "bounded capacity; no automatic performance authorization"},
+            {"name": "GitHub-hosted Ubuntu x64", "type": "cloud", "role": "Deterministic frontier, CI, source/PIT workflows", "configured_runner": "ubuntu-24.04", "authority": "non-authorizing unless an exact formal gate says otherwise"},
+            {"name": "GitHub-hosted ARM64", "type": "cloud", "role": "Architecture-diverse CI / reproduction", "configured_runner": "ubuntu-24.04-arm", "authority": "non-authorizing unless an exact formal gate says otherwise"},
+            {"name": "S10 / Android", "type": "physical", "role": "Deterministic mechanical QA", "configured_runner": "S10-TERMUX", "authority": "non-scientific support only"},
+            {"name": "Samsung Android fleet", "type": "physical", "role": "Prepared bounded utility capacity; five labelled slots", "configured_runner": "SAMSUNG-PHONE-01..05", "authority": "bounded support only; activation is online/acceptance gated"},
+            {"name": "Free AI pool", "type": "cloud", "role": "Adversarial / design / engineering review", "configured_runner": "OpenRouter Free / Groq Free / Gemini / Mistral", "authority": "AI output never authorizes performance or promotion"},
+            {"name": "Bounded Agent Queue", "type": "cloud", "role": "Bounded engineering / review requests", "configured_runner": "agent-request-queue", "authority": "no paid fallback; no scientific authority"},
+            {"name": "Codespaces fallback", "type": "cloud", "role": "Interactive debugging / data QA", "configured_runner": "manual", "authority": "fallback only; unattended default disabled"},
+            {"name": "Paper Forward / Shadow", "type": "simulation", "role": "Paper-only monitoring and MTM ledger", "configured_runner": "scheduled workflows", "authority": "simulation only; no live orders"},
+            {"name": "Dashboard / GitHub Pages", "type": "service", "role": "Operational visibility and status publication", "configured_runner": "GitHub Pages", "authority": "read-only operational snapshot"},
         ],
-        "resource_policy": {"windows_slots": 2, "windows_pulse_utc": "*/10 * * * *", "windows_lane_concurrency": {"local_reproduction": "trading-agent-windows-research-capacity-v1", "data_qa": "trading-agent-windows-research-data-qa-v1"}, "local_ai_workflow": ".github/workflows/windows-local-ai-worker.yml", "local_ai_trigger": "manual only", "s10_role": "deterministic mechanical research/governance QA; non-scientific", "hosted_linux_frontier": "*/10 * * * *"},
-        "current_research": {"latest_formal_result": latest_result, "highlights": recent_research_highlights(status_text), "active_registry_tail": candidate_highlights(evidence)},
-        "dashboard_policy": {"daily_update_utc": "03:35", "manual_update": True, "website_update_button": "opens GitHub Actions workflow dispatch page", "pages_source": "/docs on master"}
+        "runner_live_snapshot": runners,
+        "work_assignments": work,
+        "recent_activity_24h": recent_activity(),
+        "ai_fabric": ai,
+        "android_fleet": [
+            {"resource_id": "SAMSUNG-PHONE-01", "runner_name": "SAMSUNG-PHONE-01-TERMUX", "configured": True},
+            {"resource_id": "SAMSUNG-PHONE-02", "runner_name": "SAMSUNG-PHONE-02-TERMUX", "configured": True},
+            {"resource_id": "SAMSUNG-PHONE-03", "runner_name": "SAMSUNG-PHONE-03-TERMUX", "configured": True},
+            {"resource_id": "SAMSUNG-PHONE-04", "runner_name": "SAMSUNG-PHONE-04-TERMUX", "configured": True},
+            {"resource_id": "SAMSUNG-PHONE-05", "runner_name": "SAMSUNG-PHONE-05-TERMUX", "configured": True},
+        ],
+        "current_research": {
+            "latest_formal_result": latest_result,
+            "highlights": recent_research_highlights(status_text),
+            "research_board": state_board,
+        },
+        "lane_model": {
+            "lane_a": os_state.get("two_lane_research_mode", {}).get("lane_a", {}),
+            "lane_b": os_state.get("two_lane_research_mode", {}).get("lane_b", {}),
+            "isolation": os_state.get("two_lane_research_mode", {}).get("isolation", {}),
+        },
+        "dashboard_policy": {
+            "daily_update_utc": "03:35",
+            "manual_update": True,
+            "website_update_button": "opens GitHub Actions workflow dispatch page",
+            "pages_source": "/docs on master",
+            "live_work_note": "Current work assignments are a timestamped GitHub Actions snapshot. They are not runner execution receipts and do not create scientific authority.",
+        },
+        "governance_notes": [
+            "Operational resource availability and active jobs are separate from scientific evidence.",
+            "AI worker output is never scientific evidence.",
+            "Source feasibility and PIT readiness never imply performance authorization.",
+            "Dashboard fields cannot authorize ranking, tuning, promotion or live execution.",
+        ],
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
