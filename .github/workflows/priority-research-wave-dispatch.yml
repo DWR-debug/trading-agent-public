@@ -60,5 +60,7 @@ jobs:
             [[ -f ".github/workflows/${workflow}" ]] || { echo "SKIP_MISSING ${workflow}"; continue; }
             active="$(printf '%s' "$runs" | jq --arg wf "https://github.com/${repo}/actions/workflows/${workflow}" '[.workflow_runs[] | select(.status != "completed") | select(.workflow_url == $wf)] | length')"
             if (( active > 0 )); then echo "SKIP_ACTIVE ${workflow} active=${active}"; continue; fi
+            recent_success="$(printf '%s' "$runs" | jq --arg wf "https://github.com/${repo}/actions/workflows/${workflow}" '[.workflow_runs[] | select(.conclusion == "success") | select(.workflow_url == $wf)] | length')"
+            if (( recent_success > 0 )); then echo "SKIP_RECENT_SUCCESS ${workflow}"; continue; fi
             if gh workflow run "$workflow" --repo "$repo" --ref master; then echo "DISPATCHED ${workflow}"; else echo "DISPATCH_FAILED_NONBLOCKING ${workflow}"; fi
           done
