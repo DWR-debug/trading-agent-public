@@ -1492,7 +1492,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T15:43:29.535039+00:00",
+  "generated_at_utc": "2026-10-05T15:43:44.364235+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4183,6 +4183,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "3b25afcbc328408d0bbea2966025d5c0d39271c6",
+        "timestamp": "2026-10-05T15:43:36Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "1dab39b58280337d52628e4e7c8db30a74f7aea2",
+        "timestamp": "2026-10-05T15:43:32Z"
+      },
+      {
         "message": "GOVERNANCE: deepen persistent literature discovery rule",
         "sha": "e671d4655d68354ddc70ee652875daccefa42f95",
         "timestamp": "2026-10-05T17:43:25+02:00"
@@ -4211,16 +4221,6 @@
         "message": "GOVERNANCE: anchor permanent literature research plane in OS logic",
         "sha": "a339e82fb875c48d684e06abe429b980420c1958",
         "timestamp": "2026-10-05T17:43:05+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "958122b5d867054cf914e9596bdcb803ff4866ad",
-        "timestamp": "2026-10-05T15:42:49Z"
-      },
-      {
-        "message": "TEST: align literature scout contract tests",
-        "sha": "b38c515f0fcdcdb475d63e3340321730e334dccb",
-        "timestamp": "2026-10-05T17:42:38+02:00"
       }
     ]
   },
@@ -4318,7 +4318,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e671d4655d68354ddc70ee652875daccefa42f95",
+  "source_master_sha": "3b25afcbc328408d0bbea2966025d5c0d39271c6",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4432,6 +4432,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37335091981"
+    "run_id": "37335117424"
   }
 }
