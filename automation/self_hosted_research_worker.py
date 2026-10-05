@@ -379,6 +379,8 @@ LANES: dict[str, list[list[str]]] = {
             "tests/test_q211_q213_literature_frontier.py",
             "tests/test_q214_disclosure_risk_state.py",
             "tests/test_candidate_robustness_gate.py",
+            "tests/test_top_candidate_source_preflight.py",
+            "tests/test_q218_q221_historical_source_census.py",
         ],
         [
             PYTHON,
