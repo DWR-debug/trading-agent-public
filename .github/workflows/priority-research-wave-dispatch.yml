@@ -4,8 +4,8 @@ on:
   push:
     branches: [master]
     paths:
-      - "research/run_requests/priority_wave_dispatch_2026-10-04.trigger"
-      - "research/run_requests/next_logical_gate_2026-10-04.trigger"
+      - research/run_requests/priority_wave_dispatch_2026-10-04.trigger
+      - research/run_requests/next_logical_gate_2026-10-04.trigger
   workflow_dispatch:
 
 permissions:
@@ -22,23 +22,18 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - name: Dispatch non-running priority waves
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - name: Dispatch ready priority workflows
         env:
           GH_TOKEN: ${{ github.token }}
-          TRIGGER_MESSAGE: ${{ github.event.head_commit.message }}
         shell: bash
         run: |
           set -euo pipefail
           repo="$GITHUB_REPOSITORY"
-          trigger_message="$TRIGGER_MESSAGE"
-          if [[ "$GITHUB_EVENT_NAME" == "push" && "$trigger_message" == *"RESEARCH: trigger next logical gate"* ]]; then
-            mapfile -t workflows < <(cat <<'EOF'
-          orthogonal-pit-next-gate.yml
-          EOF
-            )
-            echo "MODE=NEXT_LOGICAL_GATE"
-          else
-            mapfile -t workflows < <(cat <<'EOF'
+          mapfile -t workflows < <(cat <<'EOF'
           q121r6-sec-acceptance-time-compilation.yml
           q185-q186-source-feasibility.yml
           q187-q192-source-feasibility.yml
@@ -53,24 +48,17 @@ jobs:
           q202-q204-information-timing-feasibility.yml
           q205-nlrb-source-feasibility.yml
           q214-disclosure-risk-feasibility.yml
-q215-observability-gap-feasibility.yml
-q216-data-revision-exposure-feasibility.yml
+          q215-observability-gap-feasibility.yml
+          q216-data-revision-exposure-feasibility.yml
           EOF
-            )
-            echo "MODE=PRIORITY_WAVE"
+          )
+          if [[ "$GITHUB_EVENT_NAME" == "push" && "$(git log -1 --pretty=%B)" == *"RESEARCH: trigger next logical gate"* ]]; then
+            workflows=("orthogonal-pit-next-gate.yml")
           fi
-
           runs="$(gh api "/repos/${repo}/actions/runs?per_page=200")"
           for workflow in "${workflows[@]}"; do
+            [[ -f ".github/workflows/${workflow}" ]] || { echo "SKIP_MISSING ${workflow}"; continue; }
             active="$(printf '%s' "$runs" | jq --arg wf "https://github.com/${repo}/actions/workflows/${workflow}" '[.workflow_runs[] | select(.status != "completed") | select(.workflow_url == $wf)] | length')"
-            if [ "$active" -gt 0 ]; then
-              echo "SKIP_ACTIVE workflow=${workflow} active=${active}"
-              continue
-            fi
-            if gh workflow run "$workflow" --repo "$repo" --ref master; then
-              echo "DISPATCHED workflow=${workflow}"
-            else
-              echo "DISPATCH_FAILED workflow=${workflow}"
-              exit 1
-            fi
+            if (( active > 0 )); then echo "SKIP_ACTIVE ${workflow} active=${active}"; continue; fi
+            if gh workflow run "$workflow" --repo "$repo" --ref master; then echo "DISPATCHED ${workflow}"; else echo "DISPATCH_FAILED_NONBLOCKING ${workflow}"; fi
           done
