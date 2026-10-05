@@ -653,14 +653,15 @@
       "id": "Q227",
       "name": "SEC FOIA information-acquisition state",
       "mechanism": "A costly, targeted FOIA request to the SEC reveals a requester's information-acquisition intent about a firm or economically relevant matter. The mechanism differs from EDGAR document access because the requester seeks records held by the regulator that are not simply public archive traffic.",
-      "event_clock": "FOIA request submission date as the conservative public-observation/acquisition boundary; receipt and closure dates are retained as process metadata and may not retroactively define the historical signal.",
+      "event_clock": "Two-clock contract: latent acquisition clock = FOIA request submission date; public-observation clock = earliest SEC FOIA-log publication boundary that makes the request visible to the market. Any public-data trading feature must be frozen at the latter boundary or later; request submission is retained only as a historical latent-event attribute.",
       "features": [
-        "request_count_in_fixed_pre_event_window_by_frozen_issuer",
+        "request_count_in_fixed_batch_or_post_public_observation_window_by_frozen_issuer",
         "requester_category_composition",
         "request_topic_class_composition_from_predeclared_rules",
         "repeat_request_or_request_breadth_state",
         "request_target_specificity",
-        "request_category_novelty_relative_to_prior_frozen_history"
+        "request_category_novelty_relative_to_prior_frozen_history",
+        "days_between_request_submission_and_first_public_log_observation"
       ],
       "direction": "two-sided outcome; no sign assumed ex ante",
       "cheap_falsifiers": [
@@ -675,7 +676,8 @@
       ],
       "gates": [
         "SEC_FOIA_log_coverage_and_historical_archive_completeness",
-        "public_availability_boundary_confirmation_for_the_exact_log_window",
+        "public_log_publication_boundary_reconstruction",
+        "request_to_public_observation_batch_assignment",
         "deterministic_requester_category_and_topic_taxonomy",
         "frozen_historical_issuer_entity_mapping",
         "duplicate_and_bulk_requester_concentration_audit",
@@ -694,8 +696,8 @@
       "literature_basis": [
         "Bao, Brendel, Drake & Su (2026), The information content of private information acquisition: evidence from FOIA requests to the SEC, Review of Accounting Studies"
       ],
-      "implementation_note": "Start with the currently published SEC monthly FOIA CSVs and a conservative post-2013 window unless the archived 2006-2012 public availability is independently reconstructed. Entity mapping is a first-order gate because SEC FOIA logs expose requester/request-description fields rather than a canonical issuer CIK. Do not use closure/disposition to define the acquisition event, and do not infer that a request produced usable information.",
-      "measurement_warning": "FOIA request activity is a revealed-costly-information-acquisition trace, not direct evidence that the requester traded or that the requested material was ultimately informative. Request-type heterogeneity and commercial archival/due-diligence demand must be modeled as alternative explanations rather than assumed away.",
+      "implementation_note": "Start with the currently published SEC monthly FOIA CSVs and a conservative post-2013 window unless 2006-2012 public availability is independently reconstructed. The research literature shows that SEC publication frequency changed from retrospective/annual-or-quarterly to monthly and that short-window incorporation is weak while monthly-publication periods strengthen observable effects. Therefore a tradable Q227 contract must use the log-publication boundary, not the private request date, as the public signal clock. Entity mapping is a first-order gate because SEC FOIA logs expose requester/request-description fields rather than a canonical issuer CIK. Do not use closure/disposition to define the public signal.",
+      "measurement_warning": "FOIA request activity can reveal costly private information before the market sees it, while the public monthly log creates a delayed observation channel. Public-data strategies must not backdate the signal to request submission. Low observed public request activity can also reflect requester substitution or reduced observable behaviour after publication becomes more frequent.",
       "scientific_boundary": "discovery_contract_only",
       "priority": "P1_SOURCE_FEASIBILITY"
     }
