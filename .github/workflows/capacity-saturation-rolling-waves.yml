@@ -49,7 +49,7 @@ jobs:
           PY
           python -m pytest -q tests/test_rolling_capacity_window.py
 
-      - name: Dispatch current logical wave without duplicates
+      - name: Dispatch ready cumulative rolling waves
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
@@ -64,44 +64,61 @@ jobs:
             echo "ROLLING_CAPACITY_WINDOW=INACTIVE"
             exit 0
           fi
+
           elapsed=$(( (now_epoch - start_epoch) / 60 ))
-          phase="W1"
-          phase_offset=0
-          if (( elapsed >= 90 )); then phase="W4"; phase_offset=5400
-          elif (( elapsed >= 60 )); then phase="W3"; phase_offset=3600
-          elif (( elapsed >= 30 )); then phase="W2"; phase_offset=1800
-          fi
-          phase_start_epoch=$((start_epoch + phase_offset))
-          echo "ROLLING_CAPACITY_PHASE=$phase"
+          declare -a workflows=()
 
-          case "$phase" in
-            W1) workflows=(q121r6-sec-acceptance-time-compilation.yml q185-q186-source-feasibility.yml q187-q192-source-feasibility.yml q187-q192-pit-readiness-r1.yml q188-q192-pit-census-r2.yml q197-q198-source-feasibility.yml q198-pit-clock-census.yml q199-q201-source-feasibility.yml q214-disclosure-risk-feasibility.yml windows-runner-c-long-research.yml);;
-            W2) workflows=(q193-q196-source-feasibility.yml orthogonal-candidate-development.yml q202-q204-information-timing-feasibility.yml q205-nlrb-source-feasibility.yml q119-treasury-source-feasibility.yml);;
-            W3) workflows=(orthogonal-pit-next-gate.yml windows-runner-c-long-research.yml);;
-            W4) workflows=(literature-frontier-scout.yml research-orchestrator.yml orthogonal-pit-next-gate.yml);;
-          esac
+          add_phase() {
+            local offset="$1"
+            shift
+            if (( elapsed >= offset )); then
+              for workflow in "$@"; do workflows+=("$workflow"); done
+            fi
+          }
 
+          add_phase 0             q121r6-sec-acceptance-time-compilation.yml             q185-q186-source-feasibility.yml             q187-q192-source-feasibility.yml             q187-q192-pit-readiness-r1.yml             q188-q192-pit-census-r2.yml             q197-q198-source-feasibility.yml             q198-pit-clock-census.yml             q199-q201-source-feasibility.yml             q214-disclosure-risk-feasibility.yml             windows-runner-c-long-research.yml
+
+          add_phase 30             q193-q196-source-feasibility.yml             orthogonal-candidate-development.yml             q202-q204-information-timing-feasibility.yml             q205-nlrb-source-feasibility.yml             q119-treasury-source-feasibility.yml
+
+          add_phase 60             orthogonal-pit-next-gate.yml             windows-runner-c-long-research.yml
+
+          add_phase 90             literature-frontier-scout.yml             research-orchestrator.yml             orthogonal-pit-next-gate.yml
+
+          mapfile -t workflows < <(printf '%s
+' "${workflows[@]}" | awk 'NF && !seen[$0]++')
           runs="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs?per_page=100")"
+          dispatch_limit="$(jq -r '.max_dispatch_per_tick' research/run_requests/rolling_capacity_window_2026-10-05.json)"
+          dispatch_count=0
+
           for workflow in "${workflows[@]}"; do
+            if (( dispatch_count >= dispatch_limit )); then
+              echo "SKIP_DISPATCH_LIMIT workflow=$workflow"
+              continue
+            fi
+
             wf_url="https://github.com/$GITHUB_REPOSITORY/actions/workflows/$workflow"
-            phase_runs="$(printf '%s' "$runs" | jq --arg wf "$wf_url" --argjson phase_start_epoch "$phase_start_epoch" '[.workflow_runs[] | select(.workflow_url == $wf) | select((.created_at | fromdateiso8601) >= $phase_start_epoch)]')"
-            active="$(printf '%s' "$phase_runs" | jq '[.[] | select(.status != "completed")] | length')"
+            workflow_runs="$(printf '%s' "$runs" | jq --arg wf "$wf_url" '[.workflow_runs[] | select(.workflow_url == $wf)]')"
+            active="$(printf '%s' "$workflow_runs" | jq '[.[] | select(.status != "completed")] | length')"
             if (( active > 0 )); then
               echo "SKIP_ACTIVE $workflow"
               continue
             fi
-            attempts="$(printf '%s' "$phase_runs" | jq 'length')"
-            success="$(printf '%s' "$phase_runs" | jq '[.[] | select(.conclusion == "success")] | length')"
-            if (( success > 0 )); then
+
+            recent_failed="$(printf '%s' "$workflow_runs" | jq --argjson start_epoch "$start_epoch" '[.[] | select((.created_at | fromdateiso8601) >= $start_epoch) | select(.conclusion == "failure" or .conclusion == "cancelled" or .conclusion == "timed_out")] | length')"
+            recent_success="$(printf '%s' "$workflow_runs" | jq --argjson start_epoch "$start_epoch" '[.[] | select((.created_at | fromdateiso8601) >= $start_epoch) | select(.conclusion == "success")] | length')"
+
+            if (( recent_success > 0 )); then
               echo "SKIP_SUCCESS $workflow"
               continue
             fi
-            if (( attempts > 1 )); then
-              echo "SKIP_RETRY_LIMIT $workflow attempts=$attempts"
+            if (( recent_failed > 1 )); then
+              echo "SKIP_RETRY_LIMIT $workflow"
               continue
             fi
+
             if gh workflow run "$workflow" --repo "$GITHUB_REPOSITORY" --ref master; then
               echo "DISPATCHED $workflow"
+              dispatch_count=$((dispatch_count + 1))
             else
               echo "DISPATCH_FAILED $workflow"
               exit 1
