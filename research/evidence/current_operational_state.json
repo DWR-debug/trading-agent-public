@@ -1438,13 +1438,13 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-05T19:04:08.227736+00:00",
+    "generated_at_utc": "2026-10-05T19:04:36.927915+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "record_type": "trading_agent_chat_handoff",
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "a35bbd8de33b9710a1eb98665e96aff7ac647fbf"
+    "source_master_sha": "c96a7390882b48dd0971948a2cee5da6c5eeacb0"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1742,7 +1742,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T19:04:08.227736+00:00",
+  "generated_at_utc": "2026-10-05T19:04:36.927915+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4433,6 +4433,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize trading-agent chat entrypoint with current persistent routing",
+        "sha": "c96a7390882b48dd0971948a2cee5da6c5eeacb0",
+        "timestamp": "2026-10-05T21:04:17+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8e66e4a39624186ef636e3900e41078992c9e0ba",
+        "timestamp": "2026-10-05T19:04:11Z"
+      },
+      {
         "message": "OPS: trigger Windows research loop on Q218-Q221 gate compiler",
         "sha": "a35bbd8de33b9710a1eb98665e96aff7ac647fbf",
         "timestamp": "2026-10-05T21:04:05+02:00"
@@ -4461,16 +4471,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "9264474b71cc00efcb259ed8e72281cb9cd727a7",
         "timestamp": "2026-10-05T18:55:42Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "cccb7168e9c1538c7e5c06ace5c29d4356d58c69",
-        "timestamp": "2026-10-05T18:55:34Z"
-      },
-      {
-        "message": "OPS: align central OS research focus with Q218-Q221 frontier",
-        "sha": "24c74f0fc1bd18e7515d469bdceca88ead445326",
-        "timestamp": "2026-10-05T20:55:21+02:00"
       }
     ]
   },
@@ -4568,7 +4568,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "a35bbd8de33b9710a1eb98665e96aff7ac647fbf",
+  "source_master_sha": "c96a7390882b48dd0971948a2cee5da6c5eeacb0",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4682,6 +4682,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37360655119"
+    "run_id": "37360715612"
   }
 }
