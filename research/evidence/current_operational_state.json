@@ -483,6 +483,38 @@
         "performance_authorization_allowed": false,
         "priority": "P1",
         "state": "DISCOVERY_SOURCE_PIT_ACTIVE"
+      },
+      {
+        "candidate_inventory_path": "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
+        "class": "mandatory_voluntary_disclosure_semantic_wedge",
+        "code": "Q218",
+        "issue_number": 1094,
+        "performance_authorization_allowed": false,
+        "state": "DESIGN_ONLY_ACTIVE"
+      },
+      {
+        "candidate_inventory_path": "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
+        "class": "filing_change_options_response_information_processing_wedge",
+        "code": "Q219",
+        "issue_number": 1094,
+        "performance_authorization_allowed": false,
+        "state": "DESIGN_ONLY_ACTIVE"
+      },
+      {
+        "candidate_inventory_path": "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
+        "class": "narrative_structured_xbrl_information_representation_gap",
+        "code": "Q220",
+        "issue_number": 1094,
+        "performance_authorization_allowed": false,
+        "state": "DESIGN_ONLY_ACTIVE"
+      },
+      {
+        "candidate_inventory_path": "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
+        "class": "government_rd_procurement_option_value_state",
+        "code": "Q221",
+        "issue_number": 1094,
+        "performance_authorization_allowed": false,
+        "state": "DESIGN_ONLY_ACTIVE"
       }
     ],
     "active_research_registry": {
@@ -1326,6 +1358,9 @@
       "only_listed_performance_trials_may_be_authorized": true,
       "paper_only": true,
       "replication_after_full_formal_pass_must_be_unchanged": true,
+      "top_candidate_wave": "Q218-Q221",
+      "top_candidate_wave_issue": 1094,
+      "top_candidate_wave_status": "DESIGN_ONLY_NON_AUTHORIZING",
       "universal_candidate_robustness_gate": true
     },
     "schema_version": 1
@@ -1383,7 +1418,11 @@
       "Q214",
       "Q215",
       "Q216",
-      "Q217"
+      "Q217",
+      "Q218",
+      "Q219",
+      "Q220",
+      "Q221"
     ],
     "canonical_sources": {
       "active_research_registry": "research/governance/active_research_registry.json",
@@ -1399,13 +1438,13 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-05T18:47:33.802466+00:00",
+    "generated_at_utc": "2026-10-05T18:47:51.961600+00:00",
     "next_research_focus": "Priority frontier includes Q217 cognitive-processing-friction decomposition alongside Q214-Q216. Q217 remains discovery/PIT-only and must merge into Q131 if it is not empirically distinct.",
     "record_type": "trading_agent_chat_handoff",
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "7a0ef00ef87d38b3b4664a1329908900f780119f"
+    "source_master_sha": "b4accd3c5f8bc0d13626ccae36e7ad77e272357b"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1703,7 +1742,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T18:47:33.802466+00:00",
+  "generated_at_utc": "2026-10-05T18:47:51.961600+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4394,6 +4433,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: register Q218-Q221 as active design-only frontier",
+        "sha": "b4accd3c5f8bc0d13626ccae36e7ad77e272357b",
+        "timestamp": "2026-10-05T20:47:47+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2c9ddde8fbe6d955b52b821a835f9c165a224fbd",
+        "timestamp": "2026-10-05T18:47:39Z"
+      },
+      {
+        "message": "TEST: cover top-candidate source preflight contract",
+        "sha": "73d09b9ef5ac3170e921a000c37f9cb8c198c999",
+        "timestamp": "2026-10-05T20:47:36+02:00"
+      },
+      {
         "message": "OPS: trigger Windows research loop on top-candidate source preflight",
         "sha": "7a0ef00ef87d38b3b4664a1329908900f780119f",
         "timestamp": "2026-10-05T20:47:28+02:00"
@@ -4417,21 +4471,6 @@
         "message": "OPS: record AI worker state",
         "sha": "b4e84f441b7484041e23aa955018592c1ddaf847",
         "timestamp": "2026-10-05T18:46:53Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "d29b8dbf2856a839c24bee81510debe2740e5dc2",
-        "timestamp": "2026-10-05T18:46:48Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "391714e60b9eeb5af7f15a20e585a250dfab59ac",
-        "timestamp": "2026-10-05T18:46:34Z"
-      },
-      {
-        "message": "OPS: record Groq free adversarial worker state",
-        "sha": "7e086358ca579ad14d86ac94debe4b586f156664",
-        "timestamp": "2026-10-05T18:46:30Z"
       }
     ]
   },
@@ -4529,7 +4568,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7a0ef00ef87d38b3b4664a1329908900f780119f",
+  "source_master_sha": "b4accd3c5f8bc0d13626ccae36e7ad77e272357b",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4643,6 +4682,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37358603600"
+    "run_id": "37358630867"
   }
 }
