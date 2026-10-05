@@ -1,8 +1,8 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `080a4dcdd4c0482127bf5088f77aaccf8570b2e9`
+**Current operational snapshot:** `2db3a2bf66b24e7bc8d0ed7d8ca201e086ade469`
 
-**Generated (UTC):** `2026-10-05T17:14:36.562582+00:00`
+**Generated (UTC):** `2026-10-05T17:16:22.031881+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -32,7 +32,7 @@
 ### Permanent Capacity Saturation & Rolling Research Waves
 
 - **STATUS: ACTIVE_AND_PERSISTENT.** Useful free compute is continuously routed whenever a real bounded backlog exists.
-- **Current two-hour activation:** `$TA-2H-2026-10-05-1630Z`, `$2026-10-05T16:30:00Z–$2026-10-05T18:30:00Z`.
+- **Current two-hour activation:** `TA-2H-2026-10-05-1630Z`, `2026-10-05T16:30:00Z–2026-10-05T18:30:00Z`.
 - **Scheduler:** every 10 minutes; active duplicates are skipped, phase-successful work is not rerun, and only one bounded retry is permitted after failure/cancellation.
 - **Wave order:** W1 source/PIT/clock closure -> W2 candidate/contracts and information timing -> W3 next-gate compilation and independent reproduction -> W4 literature discovery/consolidation.
 - **Utilization rule:** maximize useful occupancy across Windows A/B/C, hosted Linux, bounded free-AI lanes and S10/mobile support when those resources are reachable and the work is independent and useful. Never manufacture work to consume quota.
