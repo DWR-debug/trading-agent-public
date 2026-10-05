@@ -34,6 +34,8 @@ RECEIPTS = {
     "Q202": ROOT / "research/evidence/q202_q204_information_timing_feasibility_latest.json",
     "Q203": ROOT / "research/evidence/q202_q204_information_timing_feasibility_latest.json",
     "Q204": ROOT / "research/evidence/q202_q204_information_timing_feasibility_latest.json",
+    "Q229": ROOT / "research/evidence/q229_q230_source_feasibility_latest.json",
+    "Q230": ROOT / "research/evidence/q229_q230_source_feasibility_latest.json",
 }
 
 FORBIDDEN = {
@@ -63,6 +65,8 @@ NEXT_GATES = {
     "Q220": "DETERMINISTIC_NARRATIVE_XBRL_MAPPING_AND_PIT",
     "Q221": "HISTORICAL_USASPENDING_PUBLIC_BOUNDARY_AND_ISSUER_MAPPING",
     "Q222": "HISTORICAL_SEC_IMPLEMENTATION_EVIDENCE_CLOCK_AND_ENTITY_MAPPING",
+    "Q229": "HISTORICAL_CFPB_PUBLIC_RELEASE_AND_ISSUER_MAPPING",
+    "Q230": "FREE_TRACE_HISTORICAL_PANEL_AND_ISSUER_MAPPING",
     "Q186": "READY_FOR_CITATION_PUBLICATION_ORDERING_AND_HISTORICAL_COMPLETENESS",
     "Q187-Q192": "READY_FOR_CANDIDATE_SPECIFIC_HISTORICAL_PIT_RECONSTRUCTION",
 }
@@ -104,7 +108,10 @@ def compile_state() -> dict:
     assert specs.get("shared_contract", {}).get("live_execution") is False
 
     ids = [c.get("id") for c in specs.get("candidates", [])]
-    assert ids == ["Q194", "Q195", "Q196", "Q197", "Q199", "Q201", "Q202", "Q203", "Q204", "Q205", "Q215", "Q216", "Q217", "Q218", "Q219", "Q220", "Q221", "Q222", "Q224", "Q227"]
+    assert len(ids) == len(set(ids)), "candidate IDs must be unique"
+    baseline_ids = {"Q194", "Q195", "Q196", "Q197", "Q199", "Q201", "Q202", "Q203", "Q204", "Q205", "Q215", "Q216", "Q217", "Q218", "Q219", "Q220", "Q221", "Q222"}
+    assert baseline_ids.issubset(ids), "baseline candidate inventory must not silently disappear"
+    assert set(NEXT_GATES).issuperset(ids), "every candidate must have an explicit next gate"
 
     candidates = []
 
