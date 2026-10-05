@@ -85,5 +85,43 @@
     "ops/s10_runtime_status.json",
     "ops/android_phone_resources.json",
     "research/governance/critical_research_quality_control.json"
-  ]
+  ],
+  "literature_discovery": {
+    "status": "ACTIVE_AND_PERSISTENT",
+    "policy": "research/governance/literature_research_policy.json",
+    "assistant_automations": [
+      "6ac3c4590c108191adab58344018282b",
+      "6ac3c45a8b508191bfdd3e449cd4a5a4"
+    ],
+    "repository_workflow": ".github/workflows/literature-frontier-scout.yml",
+    "cadence": [
+      "daily",
+      "weekly",
+      "every_6_hours_repository_scout"
+    ],
+    "maximum_active_shortlist": 4,
+    "prioritization": [
+      "mechanism_novelty",
+      "orthogonality",
+      "cheap_falsifiability",
+      "source_quality",
+      "historical_pit_feasibility",
+      "reproducibility",
+      "information_gain_per_compute"
+    ],
+    "negative_evidence_persistence": [
+      "PRUNED",
+      "UNVERIFIED",
+      "DATA_INSUFFICIENT"
+    ],
+    "authority": {
+      "performance": false,
+      "holdout": false,
+      "ranking": false,
+      "tuning": false,
+      "promotion": false,
+      "live_execution": false
+    },
+    "principle": "Continuously discover unusual, economically coherent and genuinely orthogonal information advantages; verify before adoption and preserve dead ends."
+  }
 }
