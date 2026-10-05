@@ -75,6 +75,8 @@ class FrozenCandidate:
     def from_mapping(cls, payload: Mapping[str, Any]) -> "FrozenCandidate":
         if not isinstance(payload, Mapping):
             raise AgentRuntimeError("Candidate payload must be a mapping.")
+        if payload.get("schema_version") != 1:
+            raise AgentRuntimeError("Agent runtime requires candidate schema_version=1.")
         if payload.get("frozen") is not True:
             raise AgentRuntimeError("Agent runtime requires frozen=true.")
         candidate_id = payload.get("candidate_id")
@@ -170,7 +172,10 @@ class DecisionEnvelope:
 
     @property
     def fingerprint(self) -> str:
-        return _fingerprint(self.as_dict())
+        # Runtime timestamps are observability metadata, not part of deterministic identity.
+        payload = self.as_dict()
+        payload.pop("generated_at_utc", None)
+        return _fingerprint(payload)
 
 
 class TradingAgentRuntime:
