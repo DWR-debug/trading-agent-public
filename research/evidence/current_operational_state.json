@@ -1560,7 +1560,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T16:13:01.213745+00:00",
+  "generated_at_utc": "2026-10-05T16:44:10.476656+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4251,6 +4251,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: add Q215 feasibility workflow",
+        "sha": "eed62ba422a449ea03fe08a9e393dcb6cf1a213e",
+        "timestamp": "2026-10-05T18:44:08+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q215 Q216 discovery wave",
+        "sha": "432276c44c7bfac70af54a562ecc36c4735fa076",
+        "timestamp": "2026-10-05T18:44:05+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q216 design",
+        "sha": "3c3e7f13de55ba1c3df9e6592e6a3da365075910",
+        "timestamp": "2026-10-05T18:44:02+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q215 design",
+        "sha": "f380b985e5df03e7008949abc01704c82f9d45b2",
+        "timestamp": "2026-10-05T18:43:53+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "222202c237ec37d8fe7084b4c588a841dee57400",
+        "timestamp": "2026-10-05T16:13:04Z"
+      },
+      {
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "cb61e9a0868ad3fb9c6e6df018fb8b61b3e69c89",
         "timestamp": "2026-10-05T16:12:49Z"
@@ -4264,31 +4289,6 @@
         "message": "OPS: synchronize current operational status",
         "sha": "cf80c7b91a22eb6ee61505e24a61f62f5c8ea1a4",
         "timestamp": "2026-10-05T16:12:43Z"
-      },
-      {
-        "message": "OPS: align OS rolling window with active lease",
-        "sha": "82b20fb90ba054f6af98a90fb345727ee7351957",
-        "timestamp": "2026-10-05T18:12:32+02:00"
-      },
-      {
-        "message": "FIX: source rolling capacity window from active lease",
-        "sha": "f14ff408693491dccf8a677fd891659ce097fa66",
-        "timestamp": "2026-10-05T18:12:23+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "88c0e7b17448a937ed22019e55083504d39dc8ba",
-        "timestamp": "2026-10-05T16:12:20Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "140dc527493b088716a4faed8714fe9635466527",
-        "timestamp": "2026-10-05T16:12:11Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "9c5837c6932ffc4ada4c34b7e51848a77ceb611e",
-        "timestamp": "2026-10-05T16:12:02Z"
       }
     ]
   },
@@ -4386,7 +4386,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "cb61e9a0868ad3fb9c6e6df018fb8b61b3e69c89",
+  "source_master_sha": "eed62ba422a449ea03fe08a9e393dcb6cf1a213e",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4500,6 +4500,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37339039248"
+    "run_id": "37343071574"
   }
 }
