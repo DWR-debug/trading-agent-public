@@ -472,6 +472,17 @@
         "risk_state_only": true,
         "source_feasibility_workflow": ".github/workflows/q216-data-revision-exposure-feasibility.yml",
         "state": "SOURCE_COMPONENT_FEASIBILITY_ACTIVE"
+      },
+      {
+        "candidate_inventory_path": "research/frontier/q217_cognitive_processing_friction_2026_10_05.json",
+        "class": "cognitive_processing_friction_decomposition",
+        "code": "Q217",
+        "design_document": "docs/research_design/Q217_COGNITIVE_PROCESSING_FRICTION_2026-10-05.md",
+        "issue_number": 1084,
+        "parent_code": "LITERATURE-DISCOVERY-PLANE",
+        "performance_authorization_allowed": false,
+        "priority": "P1",
+        "state": "DISCOVERY_SOURCE_PIT_ACTIVE"
       }
     ],
     "active_research_registry": {
@@ -947,6 +958,17 @@
           "risk_state_only": true,
           "source_feasibility_workflow": ".github/workflows/q216-data-revision-exposure-feasibility.yml",
           "state": "SOURCE_COMPONENT_FEASIBILITY_ACTIVE"
+        },
+        {
+          "candidate_inventory_path": "research/frontier/q217_cognitive_processing_friction_2026_10_05.json",
+          "class": "cognitive_processing_friction_decomposition",
+          "code": "Q217",
+          "design_document": "docs/research_design/Q217_COGNITIVE_PROCESSING_FRICTION_2026-10-05.md",
+          "issue_number": 1084,
+          "parent_code": "LITERATURE-DISCOVERY-PLANE",
+          "performance_authorization_allowed": false,
+          "priority": "P1",
+          "state": "DISCOVERY_SOURCE_PIT_ACTIVE"
         }
       ]
     },
@@ -1618,7 +1640,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T16:55:36.902999+00:00",
+  "generated_at_utc": "2026-10-05T17:13:26.368341+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4309,6 +4331,31 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: synchronize Q217 frontier and live source head",
+        "sha": "878fc3f3621edea64a24315830561ab133df2082",
+        "timestamp": "2026-10-05T19:13:25+02:00"
+      },
+      {
+        "message": "GOVERNANCE: add Q217 and chat-resilient rules",
+        "sha": "7fec897e8f314439ccc9d231c7a139deeb51f1f2",
+        "timestamp": "2026-10-05T19:13:21+02:00"
+      },
+      {
+        "message": "GOVERNANCE: register Q217",
+        "sha": "e2ff5e964814e4e11f41faebf3898292cd0baaca",
+        "timestamp": "2026-10-05T19:13:17+02:00"
+      },
+      {
+        "message": "RESEARCH: add Q217 cognitive processing friction",
+        "sha": "8ab38ad73716b6801793e9b9c5dd4d2dffca3452",
+        "timestamp": "2026-10-05T19:13:11+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "2cc117dce3335bdfff625f8d72c8729cd82e9bf3",
+        "timestamp": "2026-10-05T16:55:39Z"
+      },
+      {
         "message": "RESEARCH: register Q215 Q216 in canonical active registry",
         "sha": "f2534696208a52e24d599134bd9bce62c93860ef",
         "timestamp": "2026-10-05T18:54:42+02:00"
@@ -4322,31 +4369,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "6bd872b498282a147788b41dec22740d9e694f82",
         "timestamp": "2026-10-05T16:53:55Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "819202df7f6cb3702ea99a3e2b618f603c23024e",
-        "timestamp": "2026-10-05T16:53:49Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "4a518fb530329ebba8d29c550e0c23dcd57594d8",
-        "timestamp": "2026-10-05T16:53:45Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "a08cfdd8a3d34cc3e440995634eede4d90ff95a2",
-        "timestamp": "2026-10-05T16:53:42Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "3891b4c86ee5c3166b2702abe0b8c9fcd8922764",
-        "timestamp": "2026-10-05T16:53:39Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "d98dafcd907b9313e6052a3ee199a5eac0d76d23",
-        "timestamp": "2026-10-05T16:53:35Z"
       }
     ]
   },
@@ -4444,7 +4466,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f2534696208a52e24d599134bd9bce62c93860ef",
+  "source_master_sha": "878fc3f3621edea64a24315830561ab133df2082",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4558,6 +4580,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37344518650"
+    "run_id": "37346781601"
   }
 }
