@@ -1399,13 +1399,13 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-05T17:55:38.134418+00:00",
+    "generated_at_utc": "2026-10-05T17:57:41.467234+00:00",
     "next_research_focus": "Priority frontier includes Q217 cognitive-processing-friction decomposition alongside Q214-Q216. Q217 remains discovery/PIT-only and must merge into Q131 if it is not empirically distinct.",
     "record_type": "trading_agent_chat_handoff",
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "c497629a174ec8cc11aee62fb84a4470b488cc40"
+    "source_master_sha": "11f79a1050352f11b9d84f1631b227cff7b17741"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1703,7 +1703,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T17:55:38.134418+00:00",
+  "generated_at_utc": "2026-10-05T17:57:41.467234+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4394,6 +4394,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: make rolling capacity dispatch phase-aware",
+        "sha": "11f79a1050352f11b9d84f1631b227cff7b17741",
+        "timestamp": "2026-10-05T19:57:28+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "0ef21532e5c13624af5bca1c4046a2a202183a92",
+        "timestamp": "2026-10-05T17:55:40Z"
+      },
+      {
         "message": "FIX: harden Q214/Q216 discovery source gates",
         "sha": "c497629a174ec8cc11aee62fb84a4470b488cc40",
         "timestamp": "2026-10-05T19:55:26+02:00"
@@ -4422,16 +4432,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "48e4093e0c38bacaf485f63af08a2dea85ac1ad6",
         "timestamp": "2026-10-05T17:53:17Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "1222bff41f76fc482c3a008403a1593f8e3395f8",
-        "timestamp": "2026-10-05T17:53:13Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "c8a2e5d61f1b8a1e9bf05275ebbeb3f5aa2a3ef3",
-        "timestamp": "2026-10-05T17:53:11Z"
       }
     ]
   },
@@ -4529,7 +4529,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "c497629a174ec8cc11aee62fb84a4470b488cc40",
+  "source_master_sha": "11f79a1050352f11b9d84f1631b227cff7b17741",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4643,6 +4643,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37352068787"
+    "run_id": "37352325139"
   }
 }
