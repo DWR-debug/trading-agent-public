@@ -8,6 +8,9 @@ on:
     paths:
       - "research/run_requests/dashboard_refresh.trigger"
       - ".github/workflows/resource-dashboard-update.yml"
+      - "automation/generate_resource_dashboard.py"
+      - "docs/dashboard/index.html"
+      - "ops/trading_agent_os_state.json"
   workflow_dispatch: {}
 
 permissions:

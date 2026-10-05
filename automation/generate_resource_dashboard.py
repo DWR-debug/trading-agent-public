@@ -434,9 +434,10 @@ def main() -> None:
         "dashboard_summary": {
             "active_work_items": len(work),
             "configured_resources": 12,
-            "runner_api_visible": len(runners),
+            "runner_api_visible": len(runners) if runners else None,
             "busy_runners": sum(1 for r in runners if r.get("busy") is True) if runners else None,
             "runner_api_status": "available" if runners else "unavailable_or_empty",
+            "runner_api_note": "GitHub Actions runner inventory is not observable from this dashboard token/snapshot; do not interpret unavailable_or_empty as zero runners.",
             "research_tracks": len(state_board),
             "ai_providers": len(ai),
         },

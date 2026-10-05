@@ -30,6 +30,9 @@ Dieses Dokument ist der **verbindliche Einstiegspunkt für neue Chats**, die mit
 
 
 ### Dauerhafte Beschleunigungslogik
+
+**Verbindliche Nutzkapazitäts-Regel:** Es darf keine künstliche Arbeit erzeugt werden. Ausschließlich wertvolle und hilfreiche Rechenarbeit darf ausgeführt werden. Und das so viel wie möglich. Wenn ein verfügbarer Runner einen echten unabhängigen bounded backlog hat, muss der nächste zulässige Workpack nach Abschluss ereignisgesteuert nachbeschickt werden; der Cron-Takt dient nur noch als Recovery-/Health-Check. Idle ist nur bei fehlender ausführbarer Arbeit, echter Blockade, höherpriorisiertem Besitz oder harter Plattform-/Quota-Grenze zulässig.
+
 ### Permanente Literatur-Forschungsregel
 
 Diese Regel ist verbindlicher Bestandteil jedes trading-agent-Chats und des chatlosen OS-Betriebs: Der Trading Agent recherchiert fortlaufend neue, ungewöhnliche und wirtschaftlich plausible Informationsvorteile. Die Suche bevorzugt echte Orthogonalität zu bereits getesteten Preis-/Momentum-Linien und bewertet jeden Fund nach Mechanismus-Neuheit, billiger Falsifizierbarkeit, Quellenqualität, historischer PIT-Tauglichkeit, Entity-/Revisions-Linie, Reproduzierbarkeit und Informationsgewinn pro Compute.

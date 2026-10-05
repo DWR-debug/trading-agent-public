@@ -1,0 +1,75 @@
+name: Continuous Useful Capacity Replenisher
+
+on:
+  workflow_run:
+    workflows:
+      - Permanent Windows Local Research Loop
+    types: [completed]
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: trading-agent-continuous-useful-capacity-replenisher
+  cancel-in-progress: false
+
+jobs:
+  replenish:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout exact master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Replenish successful useful capacity
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          runs="$(gh api "/repos/$REPO/actions/runs?per_page=200")"
+
+          active_permanent="$(printf '%s' "$runs" | jq '[.workflow_runs[] | select(.name=="Permanent Windows Local Research Loop") | select(.status != "completed")] | length')"
+          if (( active_permanent == 0 )); then
+            should_dispatch=0
+            if [[ "$GITHUB_EVENT_NAME" == "workflow_run" ]]; then
+              if [[ "${{ github.event.workflow_run.name }}" == "Permanent Windows Local Research Loop" &&
+                    "${{ github.event.workflow_run.conclusion }}" == "success" ]]; then
+                should_dispatch=1
+              fi
+            else
+              latest="$(printf '%s' "$runs" | jq -r '[.workflow_runs[] | select(.name=="Permanent Windows Local Research Loop") | select(.status=="completed")] | sort_by(.created_at) | last // empty')"
+              if [[ -z "$latest" ]]; then
+                should_dispatch=1
+              else
+                latest_completed="$(printf '%s' "$latest" | jq -r '.completed_at // .updated_at')"
+                latest_epoch="$(date -d "$latest_completed" +%s)"
+                now_epoch="$(date +%s)"
+                age=$((now_epoch-latest_epoch))
+                latest_conclusion="$(printf '%s' "$latest" | jq -r '.conclusion // ""')"
+                if (( age >= 600 )) && [[ "$latest_conclusion" == "success" ]]; then
+                  should_dispatch=1
+                fi
+              fi
+            fi
+            if (( should_dispatch == 1 )); then
+              echo "REPLENISH permanent-pc-research-loop"
+              gh workflow run permanent-pc-research-loop.yml --repo "$REPO" --ref master
+            else
+              echo "NO_REPLENISH permanent-pc-research-loop"
+            fi
+          else
+            echo "SKIP permanent-pc-research-loop active=$active_permanent"
+          fi
+
+          echo "Scientific boundary unchanged: replenishment only dispatches bounded non-authorizing workflows."

@@ -10,11 +10,12 @@
     "Snapshot live runner, workflow, agent and bounded mobile capacity; never trust stale availability claims.",
     "Route every meaningful task to the smallest suitable free resource and execute independent work in parallel.",
     "Treat Windows A and B as always-routable primary research capacity, not fallback. Keep both lanes moving in parallel whenever independent bounded work is available; do not wait for the other lane to finish.",
+    "Do not leave a reachable configured research runner idle while a useful independent bounded backlog exists: after successful completion, replenish the lane immediately through deterministic completion chaining.",
     "When a candidate-specific workpack finishes, immediately route the next ready gate from the active registry. If the scientific frontier is temporarily blocked, route deterministic provenance/PIT/data-contract/negative-evidence QA instead of manufacturing research.",
     "Default S10 routing is deterministic mechanical QA; event-driven semantic utility review remains explicit and non-default.",
     "Do not duplicate already-running work and do not consume quotas merely to create activity."
   ],
-  "completed_round_chaining": "When a bounded research round or runner lane completes safely, automatically route the next receipt-defined independent round/task when prerequisites are satisfied; never leave an eligible lane intentionally idle while a useful bounded backlog exists.",
+  "completed_round_chaining": "When a bounded research round or runner lane completes successfully, immediately route the next receipt-defined independent round/task when prerequisites are satisfied. Completion chaining must be event-driven where the platform supports it; the existing cron remains a recovery/health-check path. Never leave an eligible research lane intentionally idle while useful bounded backlog exists.",
   "research_pipeline": [
     "Orthogonal information first; prioritize genuinely distinct information clocks and economic mechanisms.",
     "Cheap falsification before expensive formal work.",
@@ -168,7 +169,7 @@
       ]
     },
     "phase_rule": "Skip active duplicates; skip phase-successful work; allow at most one retry after failure/cancellation; downstream workflows retain their own fail-closed gates.",
-    "permanent_extension": "After the two-hour lease expires, the same rule remains permanent through the existing 10-minute A/B loops and 20-minute Runner-C opportunistic pulse.",
+    "permanent_extension": "The rule is permanent. Event-driven completion replenishment is the primary continuity path for A/B; scheduled pulses are recovery/health checks. Runner C chains through its prepared workpack dependencies. No runtime padding is permitted.",
     "scientific_boundary": {
       "performance": false,
       "holdout_selection": false,
@@ -179,12 +180,27 @@
     },
     "start_alignment": "2026-10-05T16:11:31Z",
     "dispatch_authority": "capacity-saturation-rolling-waves.yml = sole automatic dispatcher; priority-research-wave-dispatch.yml = manual-only",
-    "anti_scheinbeschäftigung": "Do not rerun successful source probes; route only defined receipt-dependent next gates. Idle is valid when no useful independent backlog exists."
+    "anti_scheinbeschäftigung": "Do not rerun successful source probes or tests merely to occupy a runner. Route only defined receipt-dependent next gates, independent reproductions, candidate/source/PIT closures, or materially useful governance/provenance QA. Idle is valid only when no useful independent executable backlog exists."
   },
   "chat_continuity": {
     "state_store": "repository",
     "handoff_path": "research/evidence/trading_agent_chat_handoff.json",
     "platform_message_hook": "not available",
     "rule": "Persist material state before reporting completion; chat transcript is never the sole state store; do not commit for every message absent material state change."
+  },
+  "useful_capacity_rule": {
+    "status": "NON_NEGOTIABLE",
+    "statement": "Es darf keine künstliche Arbeit erzeugt werden. Ausschließlich wertvolle und hilfreiche Rechenarbeit darf ausgeführt werden. Und das so viel wie möglich.",
+    "english_equivalent": "No artificial work may be created. Only valuable and helpful compute work may be executed, and as much of it as possible.",
+    "operational_rule": "A useful backlog plus free reachable capacity implies immediate routing; completion-triggered replenishment is preferred over waiting for the next cron tick.",
+    "idle_is_valid_only_when": [
+      "no independent executable bounded workpack exists",
+      "a required scientific dependency is genuinely blocked",
+      "the resource is reserved by a higher-priority independent run",
+      "a hard capacity/quota/entitlement constraint prevents safe execution"
+    ],
+    "no_padding": true,
+    "no_duplicate_work": true,
+    "no_scientific_authority_change": true
   }
 }

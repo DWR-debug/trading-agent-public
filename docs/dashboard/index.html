@@ -161,8 +161,8 @@ function render(data){
   $("overview").innerHTML=[
     ["Active work",s.active_work_items??0],
     ["Configured resources",s.configured_resources??0],
-    ["Visible runners",s.runner_api_visible??0],
-    ["Busy runners",s.busy_runners??0],
+    ["Visible runners",s.runner_api_visible??"n/a"],
+    ["Busy runners",s.busy_runners??"n/a"],
     ["Research tracks",s.research_tracks??0],
     ["AI providers",s.ai_providers??0]
   ].map(x=>"<div class='stat'><div class='n'>"+esc(x[1])+"</div><div class='l'>"+esc(x[0])+"</div></div>").join("");
@@ -240,7 +240,8 @@ function render(data){
     "</tr>").join("")+"</tbody></table>";
 
   const runners=data.runner_live_snapshot||[];
-  $("runners").innerHTML=runners.length?
+  const runnerNote=(data.dashboard_summary||{}).runner_api_note||"";
+  $("runners").innerHTML=(runners.length?
     "<table><thead><tr><th>Runner</th><th>OS / Arch</th><th>Status</th><th>Busy</th><th>Labels</th></tr></thead><tbody>"+
     runners.map(x=>"<tr>"+
       "<td class='rowtitle'>"+esc(x.name)+"</td>"+
@@ -249,7 +250,7 @@ function render(data){
       "<td>"+badge("busy",x.busy?"true":"false",x.busy?"warn":"")+"</td>"+
       "<td>"+(x.labels||[]).map(l=>badge("label",l)).join("")+"</td>"+
     "</tr>").join("")+"</tbody></table>"
-    : "<div class='empty'>Actions runner API data was unavailable for this snapshot. Configured resource identities remain shown above.</div>";
+    : "<div class='empty'>Actions runner API data was unavailable for this snapshot. Configured resource identities remain shown above. "+esc(runnerNote)+"</div>";
 
   const activity=data.recent_activity_24h||[];
   $("activity").innerHTML=activity.length?

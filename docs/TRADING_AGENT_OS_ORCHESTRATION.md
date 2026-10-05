@@ -23,7 +23,9 @@ For bounded multi-step research, the standing wave order is: W1 source/PIT/clock
 
 Each scheduler pulse must skip active duplicate work, skip a phase task already completed successfully in that phase, permit at most one bounded retry after failure/cancellation, prefer the smallest suitable free resource, and preserve downstream fail-closed gates.
 
-Permanent background capacity remains active outside the window: Windows A/B and hosted frontier loops on their existing 10-minute cadence, Runner C long deterministic work when useful and a 20-minute opportunistic capacity pulse when C is otherwise free, bounded S10/mobile QA, and the free AI fabric when its entitlement gates pass.
+Permanent background capacity remains active outside the window: Windows A/B and hosted frontier loops on their existing 10-minute cadence, with event-driven completion replenishment so a successful bounded lane is immediately refilled; Runner C chains its prepared long-workpack dependencies when executable; S10/mobile QA and the free AI fabric remain bounded and entitlement-gated.
+
+**USEFUL-CAPACITY STATUTE:** Es darf keine künstliche Arbeit erzeugt werden. Ausschließlich wertvolle und hilfreiche Rechenarbeit darf ausgeführt werden. Und das so viel wie möglich. A reachable free runner with a real independent bounded backlog must be replenished immediately after completion rather than waiting for the next scheduled pulse. Idle is acceptable only when no useful executable work exists, a dependency is genuinely blocked, a higher-priority run owns the resource, or a hard platform/quota constraint prevents execution.
 
 This capacity rule never creates scientific authority. Performance, holdout selection, ranking, tuning, promotion and live execution remain closed unless the independent existing governance chain authorizes them.
 
@@ -37,7 +39,7 @@ Priority order for the current design-only wave:
 3. Q221 — government R&D to procurement-option-value state.
 4. Q219 — filing-change × options-response information-processing wedge.
 
-Windows A / Formal Readiness receives inherited-source consistency, PIT-contract and provenance audits for these candidates while continuing current Q121-R6 / Q104 / Q119-Q122 readiness work. Windows B / Frontier Discovery receives deterministic source/census work for SEC/EDGAR, SEC Financial Statement and Notes datasets, historical SEC files and USAspending. Runner C handles long deterministic next-gate and independent-QA work when its long-run slot is free.
+Windows A / Formal Readiness receives inherited-source consistency, PIT-contract and provenance audits for these candidates while continuing current Q121-R6 / Q104 / Q119-Q122 readiness work. Windows B / Frontier Discovery receives deterministic source/census work for SEC/EDGAR, SEC Financial Statement and Notes datasets, historical SEC files and USAspending. Runner C handles long deterministic next-gate and independent-QA work when its long-run slot is free, and advances through the prepared RC-LONG workpack chain without artificial runtime padding.
 
 A top-candidate overlay may advance only source/PIT/structure readiness. It must fail closed when a historical public clock, identity mapping, revision lineage or deterministic feature definition cannot be proven. Literature-derived mechanisms do not become project evidence merely because a paper reports an effect.
 
@@ -67,7 +69,7 @@ The two Windows self-hosted lanes remain the primary deterministic capacity. The
 
 S10 is not a background decoration resource. When its latest successful utility receipt is fresh (currently within 6 hours), that receipt is accepted as the S10 operational-presence signal for routing. A separate phone-runner discovery is not required solely to establish presence. Bounded work remains the only permitted use. Its output remains QA/review support only.
 
-Already-running work is never duplicated. No resource is activated merely to consume quota. Scientific evidence, performance authorization, candidate selection, promotion and live trading are unchanged.
+Already-running work is never duplicated. No resource is activated merely to consume quota. Successful completion is an immediate scheduling signal; cron is a recovery path, not the primary source of continuity. Scientific evidence, performance authorization, candidate selection, promotion and live trading are unchanged.
 
 ### Mobile capacity decision rule
 
