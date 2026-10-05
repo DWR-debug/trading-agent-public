@@ -204,12 +204,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          if gh api --silent "/repos/${GITHUB_REPOSITORY}/contents/ops/copilot_free_budget_state.json?ref=master" > "${RUNNER_TEMP}/copilot_budget_state.json"; then
+          if gh api "/repos/${GITHUB_REPOSITORY}/contents/ops/copilot_free_budget_state.json?ref=master" > "${RUNNER_TEMP}/copilot_budget_state.json" && test -s "${RUNNER_TEMP}/copilot_budget_state.json"; then
             python - <<'PY'
           import base64, json, os
           from datetime import datetime, timezone
           from pathlib import Path
-          payload = json.loads(Path(os.environ["RUNNER_TEMP"], "copilot_budget_state.json").read_text(encoding="utf-8"))
+          raw = Path(os.environ["RUNNER_TEMP"], "copilot_budget_state.json").read_text(encoding="utf-8")
+          if not raw.strip():
+              raise RuntimeError("Copilot budget state response was empty")
+          payload = json.loads(raw)
           state = json.loads(base64.b64decode(payload["content"]).decode("utf-8"))
           month = datetime.now(timezone.utc).strftime("%Y-%m")
           used = int(state.get("reserved_sessions", 0)) if state.get("month") == month else 0
