@@ -402,6 +402,148 @@
       "scientific_boundary": "discovery_contract_only",
       "priority": "P1",
       "risk_note": "Must merge back into Q131 rather than remain separate if the decomposition is not empirically distinct."
+    },
+    {
+      "id": "Q218",
+      "name": "Mandatory-voluntary disclosure semantic wedge",
+      "mechanism": "Selective allocation of topics between mandatory and voluntary public disclosures can encode information beyond document size, complexity or generic sentiment.",
+      "event_clock": "SEC acceptance timestamp for the filing/disclosure package; historical prefix frozen at the public boundary.",
+      "features": [
+        "topic_coverage_gap_mandatory_vs_voluntary",
+        "omission_asymmetry_by_topic",
+        "secondary_framing_gap"
+      ],
+      "direction": "two-sided outcome; no sign assumed ex ante",
+      "cheap_falsifiers": [
+        "document-length-only collapse",
+        "global-similarity-only collapse",
+        "channel-label permutation",
+        "same-event alignment shuffle",
+        "amendment injection"
+      ],
+      "gates": [
+        "historical SEC multi-channel completeness",
+        "deterministic 10-K/8-K-event-pair compiler",
+        "fixed topic representation",
+        "acceptance/amendment lineage",
+        "frozen issuer mapping",
+        "independent PIT reproduction"
+      ],
+      "non_overlap": [
+        "Q131-R1",
+        "Q217",
+        "Q204",
+        "Q214",
+        "Q215"
+      ],
+      "scientific_boundary": "discovery_contract_only"
+    },
+    {
+      "id": "Q219",
+      "name": "Filing-change x options-response information-processing wedge",
+      "mechanism": "A public 10-K textual change followed by a post-filing option-volatility-smirk change represents a cross-market information-processing differential rather than an options-only signal.",
+      "event_clock": "SEC acceptance timestamp; Q129 option observations are EOD and same-session use is prohibited unless tighter dissemination is proven.",
+      "features": [
+        "fixed_10k_textual_change",
+        "post_filing_volatility_smirk_change",
+        "text_vs_smirk_response_disagreement"
+      ],
+      "direction": "two-sided outcome; no sign assumed ex ante",
+      "cheap_falsifiers": [
+        "prerelease response equals postrelease response",
+        "smirk-only collapse",
+        "text-only collapse",
+        "one-to-five-session clock instability",
+        "option contract/calendar instability"
+      ],
+      "gates": [
+        "historical 10-K archive",
+        "Q129 source/PIT fingerprint verification",
+        "fixed option selection rule",
+        "deterministic event-time join",
+        "strict post-filing leakage audit",
+        "independent PIT reproduction"
+      ],
+      "non_overlap": [
+        "Q129",
+        "Q211",
+        "Q217",
+        "Q204"
+      ],
+      "scientific_boundary": "discovery_contract_only"
+    },
+    {
+      "id": "Q220",
+      "name": "Narrative-structured information representation gap",
+      "mechanism": "Narrative filing change can be corroborated, absent or contradicted by contemporaneous structured XBRL fact changes; the state is representation mismatch, not generic novelty or length.",
+      "event_clock": "SEC as-filed public filing boundary; later amendments/current text cannot rewrite the historical prefix.",
+      "features": [
+        "narrative_semantic_novelty",
+        "matched_structured_fact_change",
+        "narrative_without_structured_corroboration",
+        "structured_change_without_narrative_change",
+        "section_localized_novelty_tilt"
+      ],
+      "direction": "two-sided outcome; no sign assumed ex ante",
+      "cheap_falsifiers": [
+        "length/readability collapse",
+        "structured-fact-only collapse",
+        "non-reproducible concept mapping",
+        "section-shuffle invariance",
+        "future XBRL/current-text contamination"
+      ],
+      "gates": [
+        "historical synchronized SEC narrative/XBRL archive",
+        "deterministic concept-to-topic mapping",
+        "frozen novelty/section rules",
+        "amendment/as-filed lineage audit",
+        "issuer/security identity freeze",
+        "independent PIT reproduction"
+      ],
+      "non_overlap": [
+        "Q217",
+        "Q211",
+        "Q204",
+        "Q131-R1"
+      ],
+      "scientific_boundary": "discovery_contract_only"
+    },
+    {
+      "id": "Q221",
+      "name": "Government R&D to procurement-option-value state",
+      "mechanism": "Some federal R&D awards can embed an option-like path to future procurement; competition structure and pre-event capability are part of the information mechanism rather than award size alone.",
+      "event_clock": "Earliest defensible historical public-observation boundary for the award; action/modification dates are metadata unless public observability is proven.",
+      "features": [
+        "new_public_rd_award",
+        "award_amount_log1p",
+        "competition_state",
+        "agency_psc_state",
+        "pre_event_capability_or_vertical_integration_proxy"
+      ],
+      "direction": "two-sided outcome; no sign assumed ex ante",
+      "cheap_falsifiers": [
+        "award-size-only collapse",
+        "competition/agency structure adds no separation",
+        "capability proxy is post-event",
+        "future production contracts leak into features",
+        "recipient-to-issuer mapping permutation"
+      ],
+      "gates": [
+        "historical R&D transaction archive",
+        "public-observation boundary reconstruction",
+        "fixed PSC/competition classification",
+        "pre-event recipient/issuer mapping",
+        "pre-event capability proxy",
+        "transaction/amendment lineage",
+        "independent PIT reproduction"
+      ],
+      "non_overlap": [
+        "Q197",
+        "Q203",
+        "generic procurement award size",
+        "future-contract lookahead"
+      ],
+      "scientific_boundary": "discovery_contract_only"
     }
   ],
   "blocked_or_composite_tracks": {
@@ -417,6 +559,6 @@
     "promotion",
     "live execution"
   ],
-  "revision": 6,
-  "triggered_by": "WEEKLY_DEEP_RESEARCH_2026-10-05_Q217_COGNITIVE_PROCESSING_FRICTION"
+  "revision": 7,
+  "triggered_by": "TOP_CANDIDATE_DEVELOPMENT_2026-10-05_Q218_Q221"
 }
