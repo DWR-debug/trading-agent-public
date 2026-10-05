@@ -41,3 +41,23 @@ def test_new_literature_candidates_are_source_first_and_non_authorizing():
         assert current[candidate_id]["performance_allowed"] is False
         assert current[candidate_id]["next_gate"] == "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT"
 
+
+
+def test_new_top_candidates_are_registered_but_source_first():
+    for candidate_id in ["Q218", "Q219", "Q220", "Q221"]:
+        assert candidate_id in NEXT_GATES
+    result = compile_state()
+    current = {item["candidate_id"]: item for item in result["candidates"]}
+    for candidate_id in ["Q218", "Q219", "Q220", "Q221"]:
+        assert current[candidate_id]["source_feasibility_required"] is True
+        assert current[candidate_id]["source_or_pit_receipt"] is None
+        assert current[candidate_id]["execution_authorized"] is False
+        assert current[candidate_id]["performance_allowed"] is False
+
+
+def test_q205_is_visible_to_next_gate_compiler_without_authority():
+    result = compile_state()
+    current = {item["candidate_id"]: item for item in result["candidates"]}
+    assert "Q205" in current
+    assert current["Q205"]["execution_authorized"] is False
+    assert current["Q205"]["performance_allowed"] is False
