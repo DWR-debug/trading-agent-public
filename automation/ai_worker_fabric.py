@@ -75,7 +75,7 @@ CONTEXT_FILES = {
         "docs/research_design/RESEARCH_FRONTIER_UNUSUAL_2026-09-28.md",
     ),
 
-    {    "AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT": (
+    "AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT": (
         "ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json",
         "docs/CURRENT_STATUS.md",
         "research/governance/critical_research_quality_control.json",
