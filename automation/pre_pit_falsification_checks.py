@@ -10,7 +10,7 @@ import hashlib
 import json
 from pathlib import Path
 
-CANDIDATES = ("Q194", "Q195", "Q196", "Q197", "Q199", "Q201")
+CANDIDATES = ("Q194", "Q195", "Q196", "Q197", "Q199", "Q201", "Q205")
 
 
 def sha(value: object) -> str:
