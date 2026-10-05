@@ -1,3 +1,7 @@
+# Binding Project Statutes Reference — 2026-10-05
+
+Dauerhafte Arbeits- und Kontinuitätsregeln: `docs/TRADING_AGENT_PROJECT_STATUTES.md`. Dieser Historien-/Statuslog darf die Statuten nicht stillschweigend überschreiben.
+
 # CURRENT EXECUTION CHECKPOINT — AGENT-014 merged; self-hosted capacity increased — 2026-09-27
 
 - Current canonical master after this status synchronization is the latest commit shown by GitHub; the previous code/state checkpoint was `29a7c0f4fc6850fa05069b8fae32f0534099c5ac`.
