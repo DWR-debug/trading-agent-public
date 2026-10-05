@@ -504,5 +504,46 @@
       "promotion": false,
       "live_execution": false
     }
+  },
+  "top_candidate_capacity_overlay": {
+    "effective_date_utc": "2026-10-05",
+    "status": "ACTIVE",
+    "purpose": "Keep Windows A/B continuously occupied by the highest-information-gain non-authorizing candidate-development gates while preserving lane separation and no-duplicate policy.",
+    "windows_A": {
+      "role": "FORMAL_READINESS / local_reproduction",
+      "priority": [
+        "Q121-R6",
+        "Q104 I19/I20/I22",
+        "Q119/Q120/Q122",
+        "Q198/Q197/Q199/Q201 next gates"
+      ],
+      "new_overlay": "top-candidate inheritance/PIT consistency audit for Q218-Q221",
+      "scientific_authority": false
+    },
+    "windows_B": {
+      "role": "FRONTIER_DISCOVERY / data_qa",
+      "priority": [
+        "Q218",
+        "Q220",
+        "Q221",
+        "Q219"
+      ],
+      "new_overlay": "deterministic source preflight for SEC/EDGAR, SEC Financial Statement and Notes, historical SEC archive and USAspending; output top_candidate_source_preflight.json",
+      "scientific_authority": false
+    },
+    "runner_C": {
+      "role": "LONG_DETERMINISTIC_RESEARCH / INDEPENDENT_QA",
+      "status": "explicitly_reactivated",
+      "scientific_authority": false
+    },
+    "rule": "When a bounded top-candidate gate is ready and no duplicate is active, route it into the appropriate permanent lane immediately; do not use artificial filler.",
+    "safety": {
+      "performance": false,
+      "holdout_selection": false,
+      "ranking": false,
+      "tuning": false,
+      "promotion": false,
+      "live_execution": false
+    }
   }
 }
