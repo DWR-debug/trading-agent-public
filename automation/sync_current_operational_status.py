@@ -830,6 +830,7 @@ def generate(
 
 - **Status: ACTIVE_AND_PERSISTENT.** Literature discovery is a permanent OS capability, not a one-off chat task.
 - Recurring assistant research: **daily literature radar** plus **weekly deep research**.
+- **Active literature frontier (registry):** {", ".join(frontier_codes)}.
 - Repository metadata scout: **every 6 hours** on free GitHub-hosted compute.
 - Search domains include information arrival/latency, disclosure breadth and networks, semantic novelty, disagreement, market microstructure, institutional behavior, data revisions/vintages, corporate event sequences, patent/innovation networks, unusual public-domain channels and forward-risk structure.
 - Selection rule: maximize genuine mechanism novelty and orthogonality first; then cheap falsifiability, source/PIT feasibility, independent reproducibility and information gain per compute. Maximum shortlist = 4.
