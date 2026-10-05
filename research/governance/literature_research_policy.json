@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0",
+  "record_type": "persistent_literature_research_policy",
+  "status": "ACTIVE",
+  "effective_date_utc": "2026-10-05",
+  "purpose": "Continuously discover high-value scientific mechanisms and public information channels without allowing discovery to bypass PIT, robustness, performance or safety gates.",
+  "cadence": {
+    "assistant_daily_literature_radar": "daily",
+    "assistant_weekly_deep_research": "weekly",
+    "repository_public_metadata_scout": "every_6_hours",
+    "research_round_chaining": "after bounded rounds when prerequisites are satisfied"
+  },
+  "search_axes": [
+    "information_arrival_and_latency",
+    "information_breadth_and_network_propagation",
+    "semantic_content_and_novelty",
+    "belief_disagreement_and_heterogeneous_interpretation",
+    "market_microstructure_and_price_discovery",
+    "institutional_ownership_and_allocator_behavior",
+    "public_data_revisions_and_vintages",
+    "corporate_event_sequences_and_correction_lineage",
+    "innovation_patent_and_technology_networks",
+    "unexpected_public_domain_information_channels",
+    "risk_state_and_forward_covariance_information"
+  ],
+  "selection_rule": {
+    "required_dimensions": [
+      "mechanism_novelty",
+      "orthogonality_to_existing_lineages",
+      "cheap_falsifiability",
+      "source_quality",
+      "historical_pit_feasibility",
+      "entity_mapping_feasibility",
+      "revision_lineage_feasibility",
+      "independent_reproducibility",
+      "expected_information_gain_per_compute"
+    ],
+    "shortlist_maximum": 4,
+    "priority_order": [
+      "orthogonal_information_advantage",
+      "cheap_falsification",
+      "historical_pit_feasibility",
+      "reproducibility",
+      "economic_plausibility"
+    ],
+    "anti_convergence": "Do not add another price-only momentum/trend variant when an eligible orthogonal information mechanism is available."
+  },
+  "discovery_boundary": {
+    "source_claims_are_not_project_evidence": true,
+    "performance_authorized": false,
+    "holdout_selection_allowed": false,
+    "ranking_allowed": false,
+    "parameter_search_allowed": false,
+    "asset_search_allowed": false,
+    "threshold_search_allowed": false,
+    "horizon_search_allowed": false,
+    "promotion_allowed": false,
+    "live_execution_allowed": false
+  },
+  "pit_rule": "For every actionable mechanism preserve the earliest defensible public-information boundary separately from later process, revision and observation timestamps.",
+  "negative_evidence_rule": "Persist PRUNED, UNVERIFIED and DATA_INSUFFICIENT outcomes with reasons so automated search does not repeatedly reopen failed or weakly tractable paths.",
+  "candidate_flow": [
+    "discover",
+    "verify_primary_source",
+    "normalize_mechanism_card",
+    "declare_non_overlap",
+    "cheap_falsify",
+    "source_feasibility",
+    "candidate_specific_pit",
+    "independent_reproduction",
+    "only then consider formal authorization under the existing governance"
+  ],
+  "safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false,
+    "paid_resources_allowed": false
+  }
+}
