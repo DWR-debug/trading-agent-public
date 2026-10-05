@@ -13,6 +13,7 @@ from strategies.signals import SignalType, TradingSignal
 def signal_to_packet(
     signal: TradingSignal,
     *,
+    candidate_id: str,
     decision_time_utc: str,
     market_observation_time_utc: str,
     input_fingerprint: str,
@@ -26,8 +27,10 @@ def signal_to_packet(
         raise PaperIntentError("exposure_by_signal must define HOLD, BUY and SELL exactly")
 
     target = exposure_by_signal[signal.signal]
+    if not candidate_id:
+        raise PaperIntentError("candidate_id must be explicitly supplied")
     packet = FrozenDecisionPacket(
-        candidate_id=signal.symbol + ":" + decision_fingerprint,
+        candidate_id=candidate_id,
         symbol=signal.symbol,
         decision_time_utc=decision_time_utc,
         market_observation_time_utc=market_observation_time_utc,
