@@ -50,7 +50,7 @@ jobs:
           q214-disclosure-risk-feasibility.yml
           q215-observability-gap-feasibility.yml
           q216-data-revision-exposure-feasibility.yml
-q217-cognitive-processing-friction-feasibility.yml
+          q217-cognitive-processing-friction-feasibility.yml
           EOF
           )
           if [[ "$GITHUB_EVENT_NAME" == "push" && "$(git log -1 --pretty=%B)" == *"RESEARCH: trigger next logical gate"* ]]; then
