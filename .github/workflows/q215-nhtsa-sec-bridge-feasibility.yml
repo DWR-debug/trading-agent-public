@@ -56,8 +56,7 @@ jobs:
           import json,os
           from pathlib import Path
           d={"schema_version":1,"record_type":"q215_nhtsa_sec_bridge_feasibility","status":"DISCOVERY_NEXT_GATE_COMPLETED_NO_PERFORMANCE","candidate_id":"Q215","nhtsa_archive_component_checked":True,"sec_clock_component_checked":True,"two_channel_identity_proven":False,"historical_pit_validated":False,"independent_reproduction":False,"performance_authorized":False,"holdout_selection_allowed":False,"ranking_allowed":False,"tuning_allowed":False,"promotion_allowed":False,"live_execution_allowed":False}
-          Path("research/runs/q215_nhtsa_sec_bridge_"+os.environ["GITHUB_RUN_ID"]+".json").write_text(json.dumps(d,indent=2)+"
-")
+          Path("research/runs/q215_nhtsa_sec_bridge_"+os.environ["GITHUB_RUN_ID"]+".json").write_text(json.dumps(d,indent=2)+"\n")
           PY
       - name: Upload receipt
         if: always()
