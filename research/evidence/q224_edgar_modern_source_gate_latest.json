@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "task_id": "Q-2026-10-06-Q224-EDGAR-MODERN-WINDOW-SOURCE-GATE",
   "status": "SOURCE_ARCHIVE_INTEGRITY_COMPLETED_NO_PERFORMANCE",
-  "generated_at_utc": "2026-10-05T22:28:28.870451+00:00",
+  "generated_at_utc": "2026-10-05T22:29:22.806207+00:00",
   "candidate_id": "Q224",
   "source_contract": {
     "official_dataset": "SEC EDGAR Log File Data Sets",
@@ -34,6 +34,7 @@
           "_time",
           "uri_path"
         ],
+        "request_time_column": "_time",
         "expected_columns_present": true,
         "traffic_quality_columns_present": [],
         "traffic_quality_fields_absent_in_modern_schema": true,
@@ -63,7 +64,8 @@
           "time",
           "uri_path"
         ],
-        "expected_columns_present": false,
+        "request_time_column": "time",
+        "expected_columns_present": true,
         "traffic_quality_columns_present": [],
         "traffic_quality_fields_absent_in_modern_schema": true,
         "sample_rows_read": 250,
@@ -92,7 +94,8 @@
           "time",
           "uri_path"
         ],
-        "expected_columns_present": false,
+        "request_time_column": "time",
+        "expected_columns_present": true,
         "traffic_quality_columns_present": [],
         "traffic_quality_fields_absent_in_modern_schema": true,
         "sample_rows_read": 250,
@@ -105,13 +108,21 @@
     }
   ],
   "request_quality": {
-    "modern_schema_has_request_time_and_uri": false,
+    "modern_schema_has_request_time_and_uri": true,
+    "request_time_columns_observed": [
+      "_time",
+      "time"
+    ],
+    "schema_field_name_drift_detected": true,
     "modern_schema_exposes_legacy_crawler_fields": false,
     "traffic_contamination_fully_resolvable_from_modern_schema": false,
     "policy": "Do not infer latent investor identity or sophistication; contamination remains an explicit unresolved limitation."
   },
   "pit_contract": {
-    "request_time_field": "_time",
+    "request_time_fields_observed": [
+      "_time",
+      "time"
+    ],
     "filing_identity_recovery": "Deterministic CIK/accession recovery from uri_path is required.",
     "same_session_use": false,
     "filing_public_boundary_join_completed": false
@@ -124,11 +135,11 @@
     "promotion_allowed": false,
     "live_execution_allowed": false
   },
-  "next_gate": "request-quality-contamination-bounds + filing-acceptance/public-boundary join + mutation/PIT checks + independent reproduction",
+  "next_gate": "schema-variant normalization + request-quality contamination bounds + filing-acceptance/public-boundary join + mutation/PIT checks + independent reproduction",
   "negative_evidence": {
     "continuous_2003_2025_panel": false,
     "2017_07_01_to_2020_05_18_available": false,
     "legacy_modern_schema_splice_allowed": false
   },
-  "receipt_fingerprint": "aae1716b69b3efb2d8df5a3471b60d3a86ef5bc63d883b0b96dc6f4633ee98cf"
+  "receipt_fingerprint": "f75e665562cc7b6e13ae74def5cb901578eb24e96571f8455c43f9d4ec2b93d1"
 }
