@@ -2,7 +2,7 @@
   "schema_version": 1,
   "state_type": "TRADING_AGENT_OS_ORCHESTRATION_SNAPSHOT",
   "effective_date_utc": "2026-10-04T19:00:00+02:00",
-  "source_master_sha": "7322a297e8026cd21e5b1ec9d62be98469346b83",
+  "source_master_sha": "2cc117dce3335bdfff625f8d72c8729cd82e9bf3",
   "purpose": "Persistent orchestration contract for chat-independent Trading Agent research and engineering.",
   "chat_trigger": "trading agent",
   "capacity_pulse_policy": "10-minute schedule with independent lane-scoped Windows concurrency; local_reproduction shares the explicit long-reproduction priority group while data_qa remains independently schedulable",
@@ -141,11 +141,20 @@
   },
   "current_research_focus": {
     "completed": "Q119 Treasury demand-shape design merged; I22 SEC filing-arrival session-window correction merged",
-    "active_next": "Q121-R6 SEC acceptance-time compilation; Q198/Q197/Q199/Q201 PIT gates; Q186 citation/publication ordering; new Q211 patent semantic and Q212 supply-chain disclosure feasibility; Q213 news-disagreement intraday feasibility only. No performance without candidate-specific authorization. Q214 disclosure-implied forward-risk state; literature discovery remains continuously active.",
+    "active_next": "Q121-R6 SEC acceptance-time compilation; Q198/Q197/Q199/Q201 PIT gates; Q186 citation/publication ordering; new Q211 patent semantic and Q212 supply-chain disclosure feasibility; Q213 news-disagreement intraday feasibility only. No performance without candidate-specific authorization. Q214 disclosure-implied forward-risk state; literature discovery remains continuously active. Q215/Q216 source-PIT work and Q217 cognitive-processing-friction decomposition; merge Q217 back into Q131 if separability fails.",
     "meta_research": "ECL runtime hardening and first valid model-metrics receipt",
     "governance_engineering": "AGENT-026-R2 two-slot lease; draft PR 642",
     "discovery_frontier": "Q211/Q212 new literature-derived orthogonal feasibility tracks; Q213 contingent on historical equity-intraday/news PIT feasibility; existing Q197-Q204 and Q186 remain active gates. All discovery is non-authorizing.",
-    "literature_discovery": "PERMANENT: daily/weekly assistant research plus a 6-hour free public-metadata scout; prioritize orthogonal mechanisms and retain negative evidence."
+    "literature_discovery": "PERMANENT: daily/weekly assistant research plus a 6-hour free public-metadata scout; prioritize orthogonal mechanisms and retain negative evidence.",
+    "current_research_frontier": [
+      "Q211",
+      "Q212",
+      "Q213",
+      "Q214",
+      "Q215",
+      "Q216",
+      "Q217"
+    ]
   },
   "resource_routing": {
     "self_hosted_windows": [
@@ -386,7 +395,10 @@
       "Q211",
       "Q212",
       "Q213",
-      "Q214"
+      "Q214",
+      "Q215",
+      "Q216",
+      "Q217"
     ],
     "selection_axes": [
       "mechanism_novelty",
