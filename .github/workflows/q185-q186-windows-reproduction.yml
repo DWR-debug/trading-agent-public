@@ -25,15 +25,27 @@ jobs:
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 15
     steps:
-      - name: Checkout exact source
-        uses: actions/checkout@v5
-        with:
-          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
-          path: q185-q186-${{ github.run_id }}-${{ matrix.lane }}
-          fetch-depth: 1
+      - name: Checkout exact source without archive extraction
+        shell: powershell
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          TARGET_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $workspace = Get-Location
+          if (Test-Path (Join-Path $workspace ".git")) {
+            git reset --hard
+            git clean -ffd
+          } else {
+            git init
+          }
+          git remote remove origin 2>$null
+          git remote add origin "https://x-access-token:$env:GITHUB_TOKEN@github.com/$env:GITHUB_REPOSITORY.git"
+          git fetch --no-tags --prune --depth=1 origin $env:TARGET_REF
+          git checkout --force --detach FETCH_HEAD
+          git rev-parse HEAD
       - name: Run bounded Windows reproduction
         shell: powershell
-        working-directory: q185-q186-${{ github.run_id }}-${{ matrix.lane }}
         env:
           PAPER_ONLY: "True"
           LIVE_TRADING_ENABLED: "False"
@@ -42,8 +54,8 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
           python --version
-          python -m automation.q185_q186_source_feasibility --output "$env:RUNNER_TEMP\q185-q186-source-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT-$env:GITHUB_JOB.json"
-          python -m automation.q185_q186_pit_readiness_r1 --source-receipt "$env:RUNNER_TEMP\q185-q186-source-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT-$env:GITHUB_JOB.json" --output "$env:RUNNER_TEMP\q185-q186-pit-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT-$env:GITHUB_JOB.json"
+          python -m automation.q185_q186_source_feasibility --output "$env:RUNNER_TEMPq185-q186-source-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT-$env:GITHUB_JOB.json"
+          python -m automation.q185_q186_pit_readiness_r1 --source-receipt "$env:RUNNER_TEMPq185-q186-source-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT-$env:GITHUB_JOB.json" --output "$env:RUNNER_TEMPq185-q186-pit-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT-$env:GITHUB_JOB.json"
       - name: Upload bounded Windows receipt
         if: always()
         uses: actions/upload-artifact@v6
