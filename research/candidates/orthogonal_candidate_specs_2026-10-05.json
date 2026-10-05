@@ -478,8 +478,8 @@
       "mechanism": "Narrative filing change can be corroborated, absent or contradicted by contemporaneous structured XBRL fact changes; the state is representation mismatch, not generic novelty or length.",
       "event_clock": "SEC as-filed public filing boundary; later amendments/current text cannot rewrite the historical prefix.",
       "features": [
-        "narrative_semantic_novelty",
-        "matched_structured_fact_change",
+        "narrative_semantic_novelty_within_fixed_xbrl_text_block",
+        "matched_structured_fact_change_within_fixed_xbrl_presentation_scope",
         "narrative_without_structured_corroboration",
         "structured_change_without_narrative_change",
         "section_localized_novelty_tilt"
@@ -490,7 +490,8 @@
         "structured-fact-only collapse",
         "non-reproducible concept mapping",
         "section-shuffle invariance",
-        "future XBRL/current-text contamination"
+        "future XBRL/current-text contamination",
+        "XBRL text-block/presentation mapping is incomplete or unstable across the frozen filing sample"
       ],
       "gates": [
         "historical synchronized SEC narrative/XBRL archive",
@@ -498,7 +499,8 @@
         "frozen novelty/section rules",
         "amendment/as-filed lineage audit",
         "issuer/security identity freeze",
-        "independent PIT reproduction"
+        "independent PIT reproduction",
+        "XBRL text-block and presentation-role structural mapping audit"
       ],
       "non_overlap": [
         "Q217",
@@ -506,7 +508,11 @@
         "Q204",
         "Q131-R1"
       ],
-      "scientific_boundary": "discovery_contract_only"
+      "scientific_boundary": "discovery_contract_only",
+      "critical_mapping_rule": "Primary mapping must use reproducible XBRL text-block tags and presentation/relationship structure available in the as-filed filing. A free-form post-outcome semantic topic-to-concept mapping is prohibited. If a section cannot be mapped mechanically, the observation is excluded rather than manually reassigned.",
+      "source_basis": [
+        "XBRL International Inline XBRL Block Tagging 1.0 Working Group Note (2024)"
+      ]
     },
     {
       "id": "Q221",
@@ -562,6 +568,6 @@
     "promotion",
     "live execution"
   ],
-  "revision": 8,
-  "triggered_by": "TOP_CANDIDATE_DEVELOPMENT_2026-10-05_Q221_PUBLICATION_CLOCK_REFINEMENT"
+  "revision": 9,
+  "triggered_by": "TOP_CANDIDATE_DEVELOPMENT_2026-10-05_Q220_XBRL_STRUCTURAL_MAPPING"
 }
