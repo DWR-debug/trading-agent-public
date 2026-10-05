@@ -30,7 +30,7 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
-          New-Item -ItemType Directory -Force researchunsq230_windows_trace_connectivity | Out-Null
+          New-Item -ItemType Directory -Force research/runs/q230_windows_trace_connectivity | Out-Null
           $urls = @(
             "https://www.finra.org/filing-reporting/trace",
             "https://www.finra.org/filing-reporting/trace/instructions-ftp-downloading-issue-master-participant-list-dail",
@@ -63,8 +63,8 @@ jobs:
             next_gate="free_TRACE_historical_panel_and_security_master_issuer_mapping"
           }
           $json=$payload | ConvertTo-Json -Depth 8
-          [IO.File]::WriteAllText("researchunsq230_windows_trace_connectivityconnectivity.json",$json,[Text.UTF8Encoding]::new($false))
-          Get-Content researchunsq230_windows_trace_connectivityconnectivity.json
+          [IO.File]::WriteAllText("research/runs/q230_windows_trace_connectivity/connectivity.json",$json,[Text.UTF8Encoding]::new($false))
+          Get-Content research/runs/q230_windows_trace_connectivity/connectivity.json
 
       - name: Upload connectivity receipt
         if: always()
