@@ -12,7 +12,7 @@ validated research would have no stable runtime interface.
 
 The correct split is therefore:
 
-Research -> frozen decision packet -> runtime validation -> paper/shadow intent
+Research -> frozen decision packet -> runtime validation -> paper/shadow intent -> append-only shadow ledger
 
 The runtime can be built now because it does not need to know which candidate
 will eventually pass. It only needs to enforce the boundary between a frozen
@@ -44,7 +44,7 @@ method, return evaluation, holdout access, ranking logic or parameter search.
 
 The agent_runtime/signal_adapter.py component can translate an already-frozen TradingSignal into the same decision packet, but only when the candidate ID, timestamps, fingerprints and a complete explicit HOLD/BUY/SELL exposure mapping are supplied by the caller. It never derives position sizing from confidence implicitly and never chooses a mapping itself.
 
-The `agent_runtime/decision_adapter.py` layer accepts only the exact frozen-decision schema, rejects outcome/search fields, and adds a deterministic intent fingerprint. `agent_runtime/shadow_replay.py` verifies monotone decision-time order, uniqueness, and a reproducible intent-chain fingerprint. These are integration/provenance controls; they do not create scientific evidence.
+The `agent_runtime/decision_adapter.py` layer accepts only the exact frozen-decision schema, rejects outcome/search fields, and adds a deterministic intent fingerprint. `agent_runtime/shadow_replay.py` verifies monotone decision-time order, uniqueness, and a reproducible intent-chain fingerprint. The `agent_runtime/shadow_ledger.py` component is the canonical append-only intent ledger, and `agent_runtime/shadow_coordinator.py` commits every accepted PaperIntent to it. The `agent_runtime/shadow_event_replay.py` component verifies exported SHADOW_INTENT_ACCEPTED events against stored fingerprints, global time order, uniqueness and non-authorizing flags. These are integration/provenance controls; they do not create scientific evidence.
 
 ## Research boundary
 
