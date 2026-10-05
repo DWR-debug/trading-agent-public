@@ -2,10 +2,10 @@
   "schema_version": "1.0",
   "record_type": "rolling_capacity_window",
   "status": "ACTIVE",
-  "window_id": "TA-ROLLING-2026-10-05-1744Z",
-  "start_utc": "2026-10-05T17:44:00Z",
-  "end_utc": "2026-10-05T19:44:00Z",
-  "cadence_minutes": 10,
+  "window_id": "TA-28M-2026-10-05-1958Z",
+  "start_utc": "2026-10-05T19:58:00Z",
+  "end_utc": "2026-10-05T20:26:00Z",
+  "cadence_minutes": 5,
   "max_dispatch_per_tick": 10,
   "retry_limit_per_workflow_per_phase": 1,
   "principle": "Keep every genuinely useful free research lane occupied when backlog exists; never create duplicate or artificial work.",
@@ -87,6 +87,14 @@
     "Scientific authority remains unchanged; this scheduler only allocates execution capacity.",
     "Successful source-feasibility workflows are not re-run as filler; only their explicit next-gate workflows may be scheduled."
   ],
-  "retargeted_at_utc": "2026-10-05T17:44:00Z",
-  "retarget_reason": "User-approved continuation with all three Windows self-hosted research slots explicitly included as available capacity; route the highest-priority defined non-duplicate W1-W4 work and keep Runner C active when its bounded long-research lane is free."
+  "retargeted_at_utc": "2026-10-05T19:58:00Z",
+  "retarget_reason": "User-authorized 28-minute autonomous orchestration window.",
+  "session_mode": {
+    "status": "ACTIVE",
+    "duration_minutes": 28,
+    "directive": "Autonomous orchestration and candidate development; immediately refill useful free capacity when bounded executable backlog exists.",
+    "no_artificial_work": true,
+    "no_duplicate_work": true,
+    "scientific_boundary_unchanged": true
+  }
 }
