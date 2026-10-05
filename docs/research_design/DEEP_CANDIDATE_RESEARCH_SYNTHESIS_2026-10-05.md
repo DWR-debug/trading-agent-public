@@ -420,3 +420,40 @@ https://www.sec.gov/submit-filings/filer-support-resources/how-do-i-guides/corre
 
 Federal Register public-inspection rules:
 https://www.govinfo.gov/content/pkg/CFR-2025-title1-vol1/pdf/CFR-2025-title1-vol1.pdf
+
+
+## 24. Patent examination capacity as an information-quality state
+
+A new cross-domain connection is worth preserving under Q196/Q211 rather than expanding the top-level inventory.
+
+USPTO provides a historical Office Action Research Dataset covering examiner actions mailed in 2008–mid-2017 and states that newer APIs expose office-action rejection/citation data from October 2017 onward. This creates a potentially useful two-architecture source route, but the transition interval and exact field semantics must be audited before any historical panel is assumed.
+
+Academic evidence indicates that examiner busyness affects patent quality and can predict subsequent stock returns. This does not authorize a project signal; it motivates a structural mechanism: **the same patent-information event may carry different informational quality depending on the institutional processing environment under which it was examined**.
+
+Potential pre-outcome state variables:
+- examiner workload percentile using only information observable by the action boundary;
+- art-unit workload;
+- examiner experience / historical decision dispersion;
+- rejection-type composition in the current office action;
+- lag from application/publication to office action, only where both dates are admissible at the public boundary.
+
+Hard PIT requirement:
+- no future applications may contribute to workload;
+- no later grant/citation/litigation outcome may define the state;
+- public application availability and office-action publication timing must be reconstructed separately;
+- any 2008–mid-2017 / post-Oct-2017 source bridge must prove completeness or retain the transition gap as missing;
+- examiner identity and assignment must be frozen from the contemporaneously public record.
+
+Cheap falsifiers:
+- collapse after controlling for Q196 citation provenance;
+- collapse to patent count/publication timing;
+- workload state cannot be reproduced without future applications;
+- source-architecture transition creates an unresolvable gap;
+- examiner assignment is not stable enough for deterministic historical reconstruction.
+
+Decision: retain as a nested research mechanism, not a new candidate. It is interesting because it shifts the information object from the firm's technological disclosure to the **institutional reliability/processing state behind that disclosure**.
+
+Sources:
+https://www.uspto.gov/ip-policy/economic-research/research-datasets/office-action-research-dataset-patents
+https://www.uspto.gov/ip-policy/economic-research/research-datasets/historical-patent-data-files
+https://www.sciencedirect.com/science/article/pii/S0304405X21004785
