@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from agent_runtime.paper_intent import PaperIntent
+from agent_runtime.paper_intent import PaperIntent, PaperIntentError
 from agent_runtime.shadow_coordinator import PaperShadowCoordinator, ShadowCoordinatorError
 from agent_runtime.shadow_event_replay import validate_shadow_event_replay
 from agent_runtime.shadow_ledger import PaperShadowIntentLedger
