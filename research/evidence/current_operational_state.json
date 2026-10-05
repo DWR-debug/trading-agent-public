@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T12:47:41.268640+00:00",
+  "generated_at_utc": "2026-10-05T12:49:25.925960+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2737,7 +2737,7 @@
         "status": "SOURCE_COMPONENT_READY"
       }
     ],
-    "receipt_fingerprint": "adebde755351dc989f9df97cdcba83ffcd9713b9d19d55f2b0321416c9ecd2df",
+    "receipt_fingerprint": "7bb9f4462f6f6558d3568967480ffc548c8a76f4e80b34f1c1fe5932be442b67",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2809,7 +2809,7 @@
             "url": "https://www.archives.gov/federal-register/faqs"
           }
         ],
-        "content_sha256": "8f6214cf0aa99d383255bbfd1fc95311aee55ad515fcf225cedeb0864d79aada",
+        "content_sha256": "124c1528f31f19be3d0f2b9fe5cf5738eb4173083817505a8fc03cf6c9379035",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -4136,6 +4136,36 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: trigger repaired Windows reproduction on relevant source changes",
+        "sha": "30c7e629b2e602b09b69e339266c19a867dde35c",
+        "timestamp": "2026-10-05T14:49:15+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "8f14d48943641dcca21cb6b634193dffae865628",
+        "timestamp": "2026-10-05T12:48:21Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "36337364430966dff3876ef5ac6f36341d36a86f",
+        "timestamp": "2026-10-05T12:48:04Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "f0f8b44d17785b128644310e19258f0a145d5010",
+        "timestamp": "2026-10-05T12:47:49Z"
+      },
+      {
+        "message": "OPS: refresh resource dashboard snapshot",
+        "sha": "37a88bf155fcd272ee271737c7c8b60512505474",
+        "timestamp": "2026-10-05T12:47:46Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "8d9dbe8e9a0e7a5e461671569c95a5953c69105a",
+        "timestamp": "2026-10-05T12:47:43Z"
+      },
+      {
         "message": "OPS: harden Windows reproduction checkout against archive extraction race",
         "sha": "fb5c82f651a9126fec48f1ab5e0ec20add19c42f",
         "timestamp": "2026-10-05T14:47:26+02:00"
@@ -4144,36 +4174,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "091d23782373a4bd7ae77a2af5bb821675859a96",
         "timestamp": "2026-10-05T12:45:52Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "22f64dabf367522f9f29e5ab837dccf1b892511f",
-        "timestamp": "2026-10-05T12:45:26Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "e69e096253408842e719324aa140e02aaa781371",
-        "timestamp": "2026-10-05T12:44:56Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "65008cd90db37da0d93b9e2c8006f62f4505dc8d",
-        "timestamp": "2026-10-05T12:44:38Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "c73089f81449489f23ae3b41ddd49f5465237e09",
-        "timestamp": "2026-10-05T12:43:58Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "6ab18f9972752abd6c5694f81ff688e80e27f433",
-        "timestamp": "2026-10-05T12:43:53Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "f4dd65dd0c94e49b0e7bf5b03f410cfc74b72c43",
-        "timestamp": "2026-10-05T12:43:50Z"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "fb5c82f651a9126fec48f1ab5e0ec20add19c42f",
+  "source_master_sha": "30c7e629b2e602b09b69e339266c19a867dde35c",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37311985955"
+    "run_id": "37312192212"
   }
 }
