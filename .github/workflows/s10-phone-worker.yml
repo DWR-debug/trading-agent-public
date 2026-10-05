@@ -124,7 +124,7 @@ jobs:
           from pathlib import Path
           from automation.q186_conservative_citation_visibility import conservative_public_date
 
-          root = Path("$REPO_SRC")
+          root = Path(__import__("os").environ["REPO_SRC"])
 
           assert conservative_public_date(
               citing_patent_grant_date=date(2024, 1, 2),
