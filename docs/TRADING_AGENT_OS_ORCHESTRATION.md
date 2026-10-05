@@ -1,3 +1,5 @@
+> **KANONISCHES PROJEKTSTATUT:** `docs/TRADING_AGENT_PROJECT_STATUTES.md`. Jede Orchestrierungsentscheidung folgt der dort festgelegten Nutzkapazitäts-, Kontinuitäts- und Anti-Scheinbeschäftigungs-Regel.
+
 # Trading Agent OS — Persistent Orchestration
 
 Stand: 2026-10-05
