@@ -1445,7 +1445,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T06:45:07.978909+00:00",
+  "generated_at_utc": "2026-10-05T06:45:30.224733+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4136,6 +4136,21 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: dispatch priority waves with control-board visibility",
+        "sha": "5b59164c0394c7a6c8aeba986f2ac6e72f7097f5",
+        "timestamp": "2026-10-05T08:45:17+02:00"
+      },
+      {
+        "message": "OPS: persist latest Q171 WARC material receipt",
+        "sha": "a06d8d6c0c459ee086d6b19cb33f8e9c7636f2db",
+        "timestamp": "2026-10-05T06:45:16Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "4d89da21749ac6b765a94ea21a314c9e126a74c5",
+        "timestamp": "2026-10-05T06:45:10Z"
+      },
+      {
         "message": "OPS: final research control board snapshot refresh",
         "sha": "0c2ec146d52bb686d9ff531e755d32d10447f0ab",
         "timestamp": "2026-10-05T08:44:54+02:00"
@@ -4159,21 +4174,6 @@
         "message": "DASHBOARD: expose per-resource workload and candidate-level research board",
         "sha": "b8e2ae457bb761c6516d162c6f5b97c157fea4a0",
         "timestamp": "2026-10-05T08:44:18+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "2d0b3a83f781e36a7e75994fa01345fe04611479",
-        "timestamp": "2026-10-05T06:43:42Z"
-      },
-      {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "4e821b5cc0b87de4cd093c4b918fdb2e89959be7",
-        "timestamp": "2026-10-05T06:43:38Z"
-      },
-      {
-        "message": "OPS: refresh control board after generator repair",
-        "sha": "8d4d962d98006209ed8fb40a7e4467046a5e08f6",
-        "timestamp": "2026-10-05T08:43:22+02:00"
       }
     ]
   },
@@ -4271,7 +4271,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "0c2ec146d52bb686d9ff531e755d32d10447f0ab",
+  "source_master_sha": "5b59164c0394c7a6c8aeba986f2ac6e72f7097f5",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4385,6 +4385,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37273987699"
+    "run_id": "37274025964"
   }
 }
