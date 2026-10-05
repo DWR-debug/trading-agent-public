@@ -1,3 +1,5 @@
+> **Statutenbindung:** Alle autonome Orchestrierung und Aufsicht unterliegt `docs/TRADING_AGENT_PROJECT_STATUTES.md`, insbesondere der Regel „maximale sinnvolle Auslastung, nicht maximale Aktivität“.
+
 # Trading Agent — Supervision Protocol
 
 Stand: 2026-09-26
