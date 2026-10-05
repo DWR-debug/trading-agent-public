@@ -61,7 +61,6 @@ jobs:
           PY
           if [[ "$(head -1 /tmp/ready_workflows.txt)" == "WINDOW_INACTIVE" ]]; then echo "ROLLING_CAPACITY_WINDOW=INACTIVE"; exit 0; fi
           runs="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs?per_page=200")"
-          start_epoch="$(date -d "$(jq -r .start_utc research/run_requests/rolling_capacity_window_2026-10-05.json)" +%s)"
           limit="$(jq -r .max_dispatch_per_tick research/run_requests/rolling_capacity_window_2026-10-05.json)"
           count=0
           while IFS='|' read -r phase_id phase_start_epoch workflow; do
