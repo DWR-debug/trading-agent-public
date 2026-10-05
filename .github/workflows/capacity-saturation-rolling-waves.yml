@@ -55,6 +55,7 @@ jobs:
           PY
           if [[ "$(head -1 /tmp/ready_workflows.txt)" == "WINDOW_INACTIVE" ]]; then echo "ROLLING_CAPACITY_WINDOW=INACTIVE"; exit 0; fi
           runs="$(gh api "/repos/$GITHUB_REPOSITORY/actions/runs?per_page=200")"
+          start_epoch="$(date -d "$(jq -r .start_utc research/run_requests/rolling_capacity_window_2026-10-05.json)" +%s)"
           limit="$(jq -r .max_dispatch_per_tick research/run_requests/rolling_capacity_window_2026-10-05.json)"
           count=0
           while IFS= read -r workflow; do
@@ -63,5 +64,7 @@ jobs:
             [[ -f ".github/workflows/${workflow}" ]] || { echo "SKIP_MISSING ${workflow}"; continue; }
             active="$(printf '%s' "$runs" | jq --arg wf "https://github.com/$GITHUB_REPOSITORY/actions/workflows/$workflow" '[.workflow_runs[] | select(.status != "completed") | select(.workflow_url == $wf)] | length')"
             if (( active > 0 )); then echo "SKIP_ACTIVE ${workflow} active=${active}"; continue; fi
+            recent_success="$(printf '%s' "$runs" | jq --arg wf "https://github.com/$GITHUB_REPOSITORY/actions/workflows/$workflow" --argjson start_epoch "$start_epoch" '[.workflow_runs[] | select(.conclusion == "success") | select(.workflow_url == $wf) | select((.created_at | fromdateiso8601) >= $start_epoch)] | length')"
+            if (( recent_success > 0 )); then echo "SKIP_RECENT_SUCCESS ${workflow}"; continue; fi
             if gh workflow run "$workflow" --repo "$GITHUB_REPOSITORY" --ref master; then echo "DISPATCHED ${workflow}"; count=$((count+1)); else echo "DISPATCH_FAILED_NONBLOCKING ${workflow}"; fi
           done < /tmp/ready_workflows.txt
