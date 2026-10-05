@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "date": "2026-10-05",
+  "candidate_id": "Q224",
+  "name": "EDGAR document-demand intensity / acquisition shock",
+  "state": "SOURCE_COMPONENT_READY_WITH_HISTORICAL_GAP",
+  "scientific_boundary": "discovery_contract_only",
+  "performance_authorization": false,
+  "holdout_selection": false,
+  "ranking": false,
+  "tuning": false,
+  "promotion_authorization": false,
+  "live_execution": false,
+  "source": {
+    "official_dataset": "SEC EDGAR Log File Data Sets",
+    "modern_window": "2020-05-19 through 2025-06-30",
+    "legacy_window": "2003-01-01 through 2017-06-30",
+    "unavailable_gap": "2017-07-01 through 2020-05-18",
+    "latest_publication_review": "2026-03-03",
+    "clock": "request timestamps in log data must be reconciled to SEC filing acceptance/public boundary; no same-session use unless independently proven"
+  },
+  "new_source_findings": [
+    "SEC confirms the modern log set begins 2020-05-19 and ends 2025-06-30.",
+    "SEC explicitly states the 2017-07-01 to 2020-05-18 interval is no longer available.",
+    "Modern and legacy schemas differ; SEC states the modern set omits some variables and excludes SEC-IP-originated searches.",
+    "SEC fair-access documentation separately distinguishes filing acceptance/dissemination timing from archive/index timing."
+  ],
+  "negative_evidence": [
+    "No defensible continuous 2003-2025 demand panel exists from the official logs because the 2017-2020 interval is unavailable.",
+    "A silent splice of legacy and modern schemas is prohibited.",
+    "Observed requests are not a direct measure of latent investor information demand; automated/bulk traffic and SEC-originated traffic require deterministic contamination handling.",
+    "The source page does not establish that post-2025-06-30 logs are publicly available in the same dataset contract."
+  ],
+  "next_gate": "bounded_modern-window_historical_log_reconstruction_plus_request-quality_and_filing-boundary_join",
+  "cheap_falsifiers": [
+    "historical-window mutation changes a closed demand window",
+    "accession/CIK recovery is not deterministic from the logged URI schema",
+    "traffic-quality contamination cannot be bounded from available fields",
+    "request timestamps cannot be safely aligned after the filing public boundary",
+    "demand state collapses mechanically to generic attention or filing complexity"
+  ],
+  "non_overlap": ["Q130-R1", "Q204", "Q217", "Q104", "Q215", "Q227"],
+  "routing": {
+    "Windows_A": "formal-readiness only; no Q224 performance work",
+    "Windows_B": "bounded Q224 source/PIT reconstruction",
+    "Runner_C": "independent deterministic reproduction after B produces a frozen source receipt",
+    "S10": "not suitable for this source/data task",
+    "hosted_free_linux": "source metadata and deterministic parser checks only"
+  }
+}
