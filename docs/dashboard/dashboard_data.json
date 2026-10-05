@@ -43,29 +43,59 @@
   ],
   "android_fleet": [
     {
-      "configured": true,
+      "architecture": "ARM64",
+      "busy": false,
+      "current_assignments": 0,
+      "enabled": true,
+      "live_status": "not visible in Actions runner API",
       "resource_id": "SAMSUNG-PHONE-01",
-      "runner_name": "SAMSUNG-PHONE-01-TERMUX"
+      "role": "bounded utility validation and later research support",
+      "runner_name": "SAMSUNG-PHONE-01-TERMUX",
+      "runtime": "Termux+proot-distro/Ubuntu"
     },
     {
-      "configured": true,
+      "architecture": "ARM64",
+      "busy": false,
+      "current_assignments": 0,
+      "enabled": true,
+      "live_status": "not visible in Actions runner API",
       "resource_id": "SAMSUNG-PHONE-02",
-      "runner_name": "SAMSUNG-PHONE-02-TERMUX"
+      "role": "bounded utility validation and later research support",
+      "runner_name": "SAMSUNG-PHONE-02-TERMUX",
+      "runtime": "Termux+proot-distro/Ubuntu"
     },
     {
-      "configured": true,
+      "architecture": "ARM64",
+      "busy": false,
+      "current_assignments": 0,
+      "enabled": true,
+      "live_status": "not visible in Actions runner API",
       "resource_id": "SAMSUNG-PHONE-03",
-      "runner_name": "SAMSUNG-PHONE-03-TERMUX"
+      "role": "bounded utility validation and later research support",
+      "runner_name": "SAMSUNG-PHONE-03-TERMUX",
+      "runtime": "Termux+proot-distro/Ubuntu"
     },
     {
-      "configured": true,
+      "architecture": "ARM64",
+      "busy": false,
+      "current_assignments": 0,
+      "enabled": true,
+      "live_status": "not visible in Actions runner API",
       "resource_id": "SAMSUNG-PHONE-04",
-      "runner_name": "SAMSUNG-PHONE-04-TERMUX"
+      "role": "controlled capacity test; bounded utility support only",
+      "runner_name": "SAMSUNG-PHONE-04-TERMUX",
+      "runtime": "Termux+proot-distro/Ubuntu"
     },
     {
-      "configured": true,
+      "architecture": "ARM64",
+      "busy": false,
+      "current_assignments": 0,
+      "enabled": true,
+      "live_status": "not visible in Actions runner API",
       "resource_id": "SAMSUNG-PHONE-05",
-      "runner_name": "SAMSUNG-PHONE-05-TERMUX"
+      "role": "controlled capacity test; bounded utility support only",
+      "runner_name": "SAMSUNG-PHONE-05-TERMUX",
+      "runtime": "Termux+proot-distro/Ubuntu"
     }
   ],
   "current_research": {
@@ -354,6 +384,38 @@
         "next_gate": "historical NLRB archive completeness + public-clock semantics + frozen employer-to-issuer mapping + case-status lineage + independent PIT reproduction",
         "performance_authorization_allowed": false,
         "state": "SOURCE_FEASIBILITY_COMPLETED_PIT_READINESS_PENDING"
+      },
+      {
+        "code": "Q202",
+        "issue_number": 1073,
+        "lane": "FRONTIER DISCOVERY",
+        "next_gate": "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT",
+        "performance_authorization_allowed": false,
+        "state": "SOURCE_COMPONENT_READY"
+      },
+      {
+        "code": "Q203",
+        "issue_number": 1073,
+        "lane": "FRONTIER DISCOVERY",
+        "next_gate": "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT",
+        "performance_authorization_allowed": false,
+        "state": "SOURCE_COMPONENT_READY"
+      },
+      {
+        "code": "Q204",
+        "issue_number": 1073,
+        "lane": "FRONTIER DISCOVERY",
+        "next_gate": "IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT",
+        "performance_authorization_allowed": false,
+        "state": "SOURCE_COMPONENT_READY"
+      },
+      {
+        "code": "Q205",
+        "issue_number": 1074,
+        "lane": "FRONTIER DISCOVERY",
+        "next_gate": "historical NLRB archive completeness + public-clock semantics + frozen employer-to-issuer mapping + case-status lineage + independent PIT reproduction",
+        "performance_authorization_allowed": false,
+        "state": "SOURCE_FEASIBILITY_COMPLETED_PIT_READINESS_PENDING"
       }
     ]
   },
@@ -365,14 +427,14 @@
     "website_update_button": "opens GitHub Actions workflow dispatch page"
   },
   "dashboard_summary": {
-    "active_work_items": 8,
+    "active_work_items": 0,
     "ai_providers": 4,
     "busy_runners": 0,
     "configured_resources": 12,
-    "research_tracks": 33,
+    "research_tracks": 37,
     "runner_api_visible": 0
   },
-  "generated_at_utc": "2026-10-05T06:43:37.413350+00:00",
+  "generated_at_utc": "2026-10-05T06:46:34.033561+00:00",
   "governance_notes": [
     "Operational resource availability and active jobs are separate from scientific evidence.",
     "AI worker output is never scientific evidence.",
@@ -408,253 +470,150 @@
       "slot": "Windows self-hosted B"
     }
   },
-  "master_sha": "8d4d962d98006209ed8fb40a7e4467046a5e08f6",
-  "operational_snapshot_sha": "4babeba91c19782cf0205a31fb729c4a7d799097",
-  "recent_activity_24h": [
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T06:43:26Z",
-      "created_at": "2026-10-05T06:43:19Z",
-      "run_id": 37273849995,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273849995",
-      "status": "cancelled",
-      "task": "CI"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T06:43:26Z",
-      "created_at": "2026-10-05T06:43:19Z",
-      "run_id": 37273849928,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273849928",
-      "status": "cancelled",
-      "task": "Current Operational Status Synchronizer"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T06:43:26Z",
-      "created_at": "2026-10-05T06:43:19Z",
-      "run_id": 37273849914,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273849914",
-      "status": "cancelled",
-      "task": "T052 Exact Master CI Gate"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T06:43:26Z",
-      "created_at": "2026-10-05T06:43:19Z",
-      "run_id": 37273849865,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273849865",
-      "status": "cancelled",
-      "task": "Full Suite Verification"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T06:43:20Z",
-      "created_at": "2026-10-05T06:43:01Z",
-      "run_id": 37273824105,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273824105",
-      "status": "cancelled",
-      "task": "T052 Exact Master CI Gate"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T06:43:20Z",
-      "created_at": "2026-10-05T06:43:01Z",
-      "run_id": 37273824029,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273824029",
-      "status": "cancelled",
-      "task": "CI"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T06:43:25Z",
-      "created_at": "2026-10-05T06:43:01Z",
-      "run_id": 37273824028,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273824028",
-      "status": "cancelled",
-      "task": "Current Operational Status Synchronizer"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T06:43:11Z",
-      "created_at": "2026-10-05T06:43:01Z",
-      "run_id": 37273823957,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273823957",
-      "status": "failure",
-      "task": "Resource Dashboard Update"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T06:43:29Z",
-      "created_at": "2026-10-05T06:43:01Z",
-      "run_id": 37273823939,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273823939",
-      "status": "cancelled",
-      "task": "Full Suite Verification"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T06:43:24Z",
-      "created_at": "2026-10-05T06:42:56Z",
-      "run_id": 37273818405,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273818405",
-      "status": "failure",
-      "task": "Coverage Candidate Discovery (hosted Python)"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T06:43:02Z",
-      "created_at": "2026-10-05T06:42:53Z",
-      "run_id": 37273814473,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273814473",
-      "status": "cancelled",
-      "task": "CI"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T06:43:04Z",
-      "created_at": "2026-10-05T06:42:53Z",
-      "run_id": 37273814441,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273814441",
-      "status": "cancelled",
-      "task": "Full Suite Verification"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T06:43:04Z",
-      "created_at": "2026-10-05T06:42:53Z",
-      "run_id": 37273814436,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273814436",
-      "status": "cancelled",
-      "task": "Current Operational Status Synchronizer"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T06:43:15Z",
-      "created_at": "2026-10-05T06:42:53Z",
-      "run_id": 37273814353,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273814353",
-      "status": "success",
-      "task": "Deploy Resource Dashboard to GitHub Pages"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T06:42:58Z",
-      "created_at": "2026-10-05T06:42:46Z",
-      "run_id": 37273803926,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273803926",
-      "status": "cancelled",
-      "task": "Current Operational Status Synchronizer"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T06:42:55Z",
-      "created_at": "2026-10-05T06:42:46Z",
-      "run_id": 37273803822,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273803822",
-      "status": "cancelled",
-      "task": "CI"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T06:42:58Z",
-      "created_at": "2026-10-05T06:42:46Z",
-      "run_id": 37273803821,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273803821",
-      "status": "cancelled",
-      "task": "Full Suite Verification"
-    },
-    {
-      "actor": "DWR-debug",
-      "completed_at": "2026-10-05T06:42:54Z",
-      "created_at": "2026-10-05T06:42:46Z",
-      "run_id": 37273803819,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273803819",
-      "status": "cancelled",
-      "task": "T052 Exact Master CI Gate"
-    }
-  ],
+  "master_sha": "a635c0decb999ee30958bf25c1749707bb171d36",
+  "operational_snapshot_sha": "5b59164c0394c7a6c8aeba986f2ac6e72f7097f5",
+  "recent_activity_24h": [],
   "resources": [
     {
       "authority": "bounded capacity; no automatic performance authorization",
+      "busy": false,
       "configured_runner": "LHT-N133732",
+      "current_assignments": 0,
+      "current_tasks": [],
+      "labels": [],
+      "live_status": "configured / live runner state unavailable",
       "name": "Windows self-hosted A",
       "role": "Formal readiness / local reproduction",
       "type": "physical"
     },
     {
       "authority": "bounded capacity; no automatic performance authorization",
+      "busy": false,
       "configured_runner": "LHT-N133732-2",
+      "current_assignments": 0,
+      "current_tasks": [],
+      "labels": [],
+      "live_status": "configured / live runner state unavailable",
       "name": "Windows self-hosted B",
       "role": "Frontier discovery / data QA",
       "type": "physical"
     },
     {
       "authority": "bounded capacity; no automatic performance authorization",
+      "busy": false,
       "configured_runner": "LHT-N133732-3",
+      "current_assignments": 0,
+      "current_tasks": [],
+      "labels": [],
+      "live_status": "configured / live runner state unavailable",
       "name": "Windows self-hosted C",
       "role": "Long deterministic runs / independent reproduction",
       "type": "physical"
     },
     {
       "authority": "non-authorizing unless an exact formal gate says otherwise",
+      "busy": false,
       "configured_runner": "ubuntu-24.04",
+      "current_assignments": 0,
+      "current_tasks": [],
+      "labels": [],
+      "live_status": "not assigned in snapshot",
       "name": "GitHub-hosted Ubuntu x64",
       "role": "Deterministic frontier, CI, source/PIT workflows",
       "type": "cloud"
     },
     {
       "authority": "non-authorizing unless an exact formal gate says otherwise",
+      "busy": false,
       "configured_runner": "ubuntu-24.04-arm",
+      "current_assignments": 0,
+      "current_tasks": [],
+      "labels": [],
+      "live_status": "not assigned in snapshot",
       "name": "GitHub-hosted ARM64",
       "role": "Architecture-diverse CI / reproduction",
       "type": "cloud"
     },
     {
       "authority": "non-scientific support only",
+      "busy": false,
       "configured_runner": "S10-TERMUX",
+      "current_assignments": 0,
+      "current_tasks": [],
+      "labels": [],
+      "live_status": "configured / live runner state unavailable",
       "name": "S10 / Android",
       "role": "Deterministic mechanical QA",
       "type": "physical"
     },
     {
       "authority": "bounded support only; activation is online/acceptance gated",
+      "busy": false,
       "configured_runner": "SAMSUNG-PHONE-01..05",
+      "current_assignments": 0,
+      "current_tasks": [],
+      "labels": [],
+      "live_status": "configured / live runner state unavailable",
       "name": "Samsung Android fleet",
       "role": "Prepared bounded utility capacity; five labelled slots",
       "type": "physical"
     },
     {
       "authority": "AI output never authorizes performance or promotion",
+      "busy": false,
       "configured_runner": "OpenRouter Free / Groq Free / Gemini / Mistral",
+      "current_assignments": 0,
+      "current_tasks": [],
+      "labels": [],
+      "live_status": "not assigned in snapshot",
       "name": "Free AI pool",
       "role": "Adversarial / design / engineering review",
       "type": "cloud"
     },
     {
       "authority": "no paid fallback; no scientific authority",
+      "busy": false,
       "configured_runner": "agent-request-queue",
+      "current_assignments": 0,
+      "current_tasks": [],
+      "labels": [],
+      "live_status": "not assigned in snapshot",
       "name": "Bounded Agent Queue",
       "role": "Bounded engineering / review requests",
       "type": "cloud"
     },
     {
       "authority": "fallback only; unattended default disabled",
+      "busy": false,
       "configured_runner": "manual",
+      "current_assignments": 0,
+      "current_tasks": [],
+      "labels": [],
+      "live_status": "not assigned in snapshot",
       "name": "Codespaces fallback",
       "role": "Interactive debugging / data QA",
       "type": "cloud"
     },
     {
       "authority": "simulation only; no live orders",
+      "busy": false,
       "configured_runner": "scheduled workflows",
+      "current_assignments": 0,
+      "current_tasks": [],
+      "labels": [],
+      "live_status": "configured / live runner state unavailable",
       "name": "Paper Forward / Shadow",
       "role": "Paper-only monitoring and MTM ledger",
       "type": "simulation"
     },
     {
       "authority": "read-only operational snapshot",
+      "busy": false,
       "configured_runner": "GitHub Pages",
+      "current_assignments": 0,
+      "current_tasks": [],
+      "labels": [],
+      "live_status": "not assigned in snapshot",
       "name": "Dashboard / GitHub Pages",
       "role": "Operational visibility and status publication",
       "type": "service"
@@ -670,110 +629,7 @@
     "paid_usage_usd": 0
   },
   "status_source": "docs/CURRENT_STATUS.md + research/evidence/current_operational_state.json + ops/trading_agent_os_state.json",
-  "work_assignments": [
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "GitHub-hosted CI",
-      "run_id": 37273858387,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273858387",
-      "started_at": "2026-10-05T06:43:25Z",
-      "status": "pending",
-      "task": "CI",
-      "worker": "pending runner assignment"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "full_suite",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "GitHub-hosted CI",
-      "run_id": 37273858369,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273858369",
-      "started_at": "2026-10-05T06:43:25Z",
-      "status": "queued",
-      "task": "Full Suite Verification",
-      "worker": "GitHub Actions 1000025285"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "GitHub-hosted CI",
-      "run_id": 37273858367,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273858367",
-      "started_at": "2026-10-05T06:43:25Z",
-      "status": "pending",
-      "task": "T052 Exact Master CI Gate",
-      "worker": "pending runner assignment"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "synchronize",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "OS control plane",
-      "run_id": 37273858361,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273858361",
-      "started_at": "2026-10-05T06:43:25Z",
-      "status": "in_progress",
-      "task": "Current Operational Status Synchronizer",
-      "worker": "GitHub Actions 1000025284"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "update",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "Dashboard / GitHub Pages",
-      "run_id": 37273858317,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273858317",
-      "started_at": "2026-10-05T06:43:25Z",
-      "status": "in_progress",
-      "task": "Resource Dashboard Update",
-      "worker": "GitHub Actions 1000025283"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "gate",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "GitHub-hosted CI",
-      "run_id": 37273814360,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273814360",
-      "started_at": "2026-10-05T06:42:53Z",
-      "status": "in_progress",
-      "task": "T052 Exact Master CI Gate",
-      "worker": "GitHub Actions 1000025277"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "test (ubuntu-24.04)",
-      "lane": "PLATFORM / GOVERNANCE",
-      "resource": "GitHub-hosted CI",
-      "run_id": 37273748414,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273748414",
-      "started_at": "2026-10-05T06:42:06Z",
-      "status": "in_progress",
-      "task": "CI",
-      "worker": "GitHub Actions 1000025259"
-    },
-    {
-      "actor": "DWR-debug",
-      "authority": "non-authorizing operational work",
-      "job": "source_feasibility",
-      "lane": "FRONTIER DISCOVERY",
-      "resource": "GitHub-hosted Ubuntu x64",
-      "run_id": 37273396690,
-      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37273396690",
-      "started_at": "2026-10-05T06:37:52Z",
-      "status": "in_progress",
-      "task": "Deep Frontier Public Source Feasibility",
-      "worker": "GitHub Actions 1000025244"
-    }
-  ]
+  "work_assignments": [],
+  "workload_by_lane": {},
+  "workload_by_resource": {}
 }
