@@ -141,10 +141,11 @@
   },
   "current_research_focus": {
     "completed": "Q119 Treasury demand-shape design merged; I22 SEC filing-arrival session-window correction merged",
-    "active_next": "Q121-R6 SEC acceptance-time compilation; Q198/Q197/Q199/Q201 PIT gates; Q186 citation/publication ordering; new Q211 patent semantic and Q212 supply-chain disclosure feasibility; Q213 news-disagreement intraday feasibility only. No performance without candidate-specific authorization.",
+    "active_next": "Q121-R6 SEC acceptance-time compilation; Q198/Q197/Q199/Q201 PIT gates; Q186 citation/publication ordering; new Q211 patent semantic and Q212 supply-chain disclosure feasibility; Q213 news-disagreement intraday feasibility only. No performance without candidate-specific authorization. Q214 disclosure-implied forward-risk state; literature discovery remains continuously active.",
     "meta_research": "ECL runtime hardening and first valid model-metrics receipt",
     "governance_engineering": "AGENT-026-R2 two-slot lease; draft PR 642",
-    "discovery_frontier": "Q211/Q212 new literature-derived orthogonal feasibility tracks; Q213 contingent on historical equity-intraday/news PIT feasibility; existing Q197-Q204 and Q186 remain active gates. All discovery is non-authorizing."
+    "discovery_frontier": "Q211/Q212 new literature-derived orthogonal feasibility tracks; Q213 contingent on historical equity-intraday/news PIT feasibility; existing Q197-Q204 and Q186 remain active gates. All discovery is non-authorizing.",
+    "literature_discovery": "PERMANENT: daily/weekly assistant research plus a 6-hour free public-metadata scout; prioritize orthogonal mechanisms and retain negative evidence."
   },
   "resource_routing": {
     "self_hosted_windows": [
@@ -257,7 +258,20 @@
       "formal_evidence_allowed": false,
       "performance_authorization": false
     },
-    "local_ai": "manual-only bounded Windows worker"
+    "local_ai": "manual-only bounded Windows worker",
+    "literature_discovery": {
+      "enabled": true,
+      "assistant_daily": true,
+      "assistant_weekly": true,
+      "repository_scout": "every_6_hours",
+      "bounded": true,
+      "performance_authorization": false,
+      "holdout_selection": false,
+      "ranking": false,
+      "tuning": false,
+      "promotion": false,
+      "live_execution": false
+    }
   },
   "new_chat_protocol": [
     "Read docs/TRADING_AGENT_CHAT_ENTRYPOINT.md.",
@@ -353,5 +367,51 @@
       "Q197-Q198": "37222425792",
       "Q199-Q201": "37222425840"
     }
+  },
+  "literature_discovery": {
+    "status": "ACTIVE_AND_PERSISTENT",
+    "policy": "research/governance/literature_research_policy.json",
+    "assistant_automations": [
+      "6ac3c4590c108191adab58344018282b",
+      "6ac3c45a8b508191bfdd3e449cd4a5a4"
+    ],
+    "repository_workflow": ".github/workflows/literature-frontier-scout.yml",
+    "cadence": [
+      "daily",
+      "weekly",
+      "every_6_hours_repository_scout"
+    ],
+    "maximum_active_shortlist": 4,
+    "active_frontier": [
+      "Q211",
+      "Q212",
+      "Q213",
+      "Q214"
+    ],
+    "selection_axes": [
+      "mechanism_novelty",
+      "orthogonality",
+      "cheap_falsifiability",
+      "source_quality",
+      "historical_pit_feasibility",
+      "entity_mapping_feasibility",
+      "revision_lineage_feasibility",
+      "independent_reproducibility",
+      "expected_information_gain_per_compute"
+    ],
+    "negative_evidence": [
+      "PRUNED",
+      "UNVERIFIED",
+      "DATA_INSUFFICIENT"
+    ],
+    "authority": {
+      "performance": false,
+      "holdout_selection": false,
+      "ranking": false,
+      "tuning": false,
+      "promotion": false,
+      "live_execution": false
+    },
+    "principle": "Continuously search for unusual, economically coherent and genuinely orthogonal information advantages; verify first, cheap-falsify early, preserve dead ends, and never convert literature claims directly into project evidence."
   }
 }
