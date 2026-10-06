@@ -21,6 +21,9 @@ concurrency:
 
 jobs:
   windows:
+    concurrency:
+      group: trading-agent-top4-${{ matrix.candidate }}
+      cancel-in-progress: false
     name: Windows Top-4 ${{ matrix.candidate }}
     strategy:
       fail-fast: false
@@ -74,6 +77,9 @@ jobs:
           retention-days: 30
 
   hosted_x64:
+    concurrency:
+      group: trading-agent-top4-${{ matrix.candidate }}
+      cancel-in-progress: false
     name: Hosted x64 Top-4 ${{ matrix.candidate }}
     runs-on: ubuntu-24.04
     strategy:
@@ -102,6 +108,9 @@ jobs:
           retention-days: 30
 
   hosted_arm64:
+    concurrency:
+      group: trading-agent-top4-${{ matrix.candidate }}
+      cancel-in-progress: false
     name: Hosted ARM64 Top-4 independent ${{ matrix.candidate }}
     runs-on: ubuntu-24.04-arm
     strategy:
