@@ -445,14 +445,14 @@
     "website_update_button": "opens authenticated GitHub Actions dispatch page; static Pages cannot safely dispatch a write-authorized workflow without a user-authenticated GitHub session or token"
   },
   "dashboard_summary": {
-    "active_capacity_items": 0,
-    "active_work_items": 0,
+    "active_capacity_items": 5,
+    "active_work_items": 9,
     "ai_providers": 4,
-    "available_capacity_items": 3,
-    "blocked_planned_items": 1,
+    "available_capacity_items": 1,
+    "blocked_planned_items": 0,
     "busy_runners": null,
     "configured_resources": 6,
-    "planned_capacity_items": 5,
+    "planned_capacity_items": 1,
     "planned_capacity_note": "bounded advisory plan only; not an execution queue, receipt or scientific authorization.",
     "research_tracks": 43,
     "runner_api_note": "Unavailable runner inventory is shown as unverified, not as zero/offline.",
@@ -460,8 +460,105 @@
     "runner_api_visible": null,
     "unallocated_routable_items": 0
   },
-  "duration_benchmarks": {},
-  "generated_at_utc": "2026-10-06T17:54:42.661828+00:00",
+  "duration_benchmarks": {
+    "CI": {
+      "p50_seconds": 64,
+      "p90_seconds": 69,
+      "sample_count": 9,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Current Operational Status Synchronizer": {
+      "p50_seconds": 17,
+      "p90_seconds": 20,
+      "sample_count": 3,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Free AI Worker Fabric": {
+      "p50_seconds": 134,
+      "p90_seconds": 134,
+      "sample_count": 1,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Full Suite Verification": {
+      "p50_seconds": 67,
+      "p90_seconds": 75,
+      "sample_count": 10,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Orthogonal PIT Next-Gate Compiler": {
+      "p50_seconds": 14,
+      "p90_seconds": 14,
+      "sample_count": 1,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Q133-Q170 PIT Readiness R1": {
+      "p50_seconds": 24,
+      "p90_seconds": 33,
+      "sample_count": 7,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Q179-Q184 PIT Readiness R1": {
+      "p50_seconds": 16,
+      "p90_seconds": 18,
+      "sample_count": 7,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Q179-Q184 Source Feasibility": {
+      "p50_seconds": 16,
+      "p90_seconds": 19,
+      "sample_count": 6,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Q185-Q186 A-Priority Source and PIT Readiness": {
+      "p50_seconds": 40,
+      "p90_seconds": 43,
+      "sample_count": 3,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Q188-Q192 PIT Historical Census R2": {
+      "p50_seconds": 17,
+      "p90_seconds": 21,
+      "sample_count": 7,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Resource Dashboard Update": {
+      "p50_seconds": 56,
+      "p90_seconds": 98,
+      "sample_count": 4,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Spine Next-Gate Autonomous Router": {
+      "p50_seconds": 2,
+      "p90_seconds": 2,
+      "sample_count": 7,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "T052 Exact Master CI Gate": {
+      "p50_seconds": 64,
+      "p90_seconds": 78,
+      "sample_count": 3,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Temporal Identity State Spine Waves": {
+      "p50_seconds": 179,
+      "p90_seconds": 242,
+      "sample_count": 2,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Wide Search Research Lane": {
+      "p50_seconds": 1,
+      "p90_seconds": 2,
+      "sample_count": 8,
+      "source": "recent completed runs; cancelled runs excluded"
+    },
+    "Workflow Lint": {
+      "p50_seconds": 23,
+      "p90_seconds": 24,
+      "sample_count": 2,
+      "source": "recent completed runs; cancelled runs excluded"
+    }
+  },
+  "generated_at_utc": "2026-10-06T17:56:30.096872+00:00",
   "governance_notes": [
     "Operational resource availability and active jobs are separate from scientific evidence.",
     "AI worker output is never scientific evidence.",
@@ -498,12 +595,12 @@
       "slot": "Windows self-hosted B"
     }
   },
-  "master_sha": "cb7cc5342b235c90acfd3c062aa4105fc4a02c9a",
+  "master_sha": "2451f387f75f2031c771d0daecef1cbd669051d3",
   "operational_snapshot_sha": "d2f8c49747e5d6e6d18bfc59578afc66d46ff349",
   "pipeline": [
     {
-      "active": false,
-      "active_jobs": 0,
+      "active": true,
+      "active_jobs": 1,
       "code": "Q218",
       "duration_p90_seconds": null,
       "duration_sample_count": 0,
@@ -515,8 +612,8 @@
       "stage": "DESIGN_ONLY_ACTIVE"
     },
     {
-      "active": false,
-      "active_jobs": 0,
+      "active": true,
+      "active_jobs": 1,
       "code": "Q220",
       "duration_p90_seconds": null,
       "duration_sample_count": 0,
@@ -544,113 +641,48 @@
   "planned_capacity": [
     {
       "blocked_count": 0,
-      "capacity_state": "unknown",
-      "current_assignments": 0,
-      "planned_assignments": [
-        {
-          "basis": "frozen Q104:I19 contract + current acceptance-time join PR",
-          "candidate": "Q104:I19",
-          "duration_sample_count": 0,
-          "execution_status": "planned_not_started",
-          "expected_duration_seconds": null,
-          "lane": "FORMAL READINESS",
-          "plan_id": "Q104-I19-COMPILER",
-          "readiness": "READY_AFTER_ACCEPTANCE_JOIN",
-          "scheduled": true,
-          "task": "concept-specific PIT compiler after 13F acceptance-time join"
-        }
-      ],
-      "planned_count": 1,
+      "capacity_state": "operating",
+      "current_assignments": 1,
+      "planned_assignments": [],
+      "planned_count": 0,
       "resource": "Windows self-hosted A",
-      "unallocated_reason": null
+      "unallocated_reason": "no independent ready non-duplicate work assigned by bounded planner"
     },
     {
       "blocked_count": 0,
-      "capacity_state": "unknown",
-      "current_assignments": 0,
-      "planned_assignments": [
-        {
-          "basis": "current Q218 source/PIT workpack",
-          "candidate": "Q218",
-          "duration_sample_count": 0,
-          "execution_status": "planned_not_started",
-          "expected_duration_seconds": null,
-          "lane": "FRONTIER DISCOVERY",
-          "plan_id": "Q218-PIT",
-          "readiness": "READY_SOURCE_PIT",
-          "scheduled": true,
-          "task": "historical mandatory/voluntary 10-K → 8-K pairing and PIT lineage"
-        }
-      ],
-      "planned_count": 1,
+      "capacity_state": "operating",
+      "current_assignments": 1,
+      "planned_assignments": [],
+      "planned_count": 0,
       "resource": "Windows self-hosted B",
-      "unallocated_reason": null
+      "unallocated_reason": "no independent ready non-duplicate work assigned by bounded planner"
     },
     {
-      "blocked_count": 1,
-      "capacity_state": "unknown",
-      "current_assignments": 0,
-      "planned_assignments": [
-        {
-          "basis": "next gate explicitly requires independent reproduction",
-          "candidate": "Q104:I19",
-          "duration_sample_count": 0,
-          "execution_status": "blocked_on_prerequisite",
-          "expected_duration_seconds": null,
-          "lane": "FORMAL READINESS",
-          "plan_id": "Q104-I19-INDEPENDENT-REPRO",
-          "readiness": "BLOCKED_UNTIL_COMPILER_RECEIPT",
-          "scheduled": false,
-          "task": "independent reproduction of compiler/PIT result"
-        }
-      ],
+      "blocked_count": 0,
+      "capacity_state": "operating",
+      "current_assignments": 1,
+      "planned_assignments": [],
       "planned_count": 0,
       "resource": "Windows self-hosted C",
-      "unallocated_reason": null
+      "unallocated_reason": "no independent ready non-duplicate work assigned by bounded planner"
     },
     {
       "blocked_count": 0,
-      "capacity_state": "available",
-      "current_assignments": 0,
-      "planned_assignments": [
-        {
-          "basis": "USAspending public-clock contract ready; applicability/entity mapping open",
-          "candidate": "Q221",
-          "duration_sample_count": 0,
-          "execution_status": "planned_not_started",
-          "expected_duration_seconds": null,
-          "lane": "FRONTIER DISCOVERY",
-          "plan_id": "Q221-PIT",
-          "readiness": "READY_SOURCE_CLOCK",
-          "scheduled": true,
-          "task": "historical USAspending public boundary and issuer/entity mapping"
-        }
-      ],
-      "planned_count": 1,
+      "capacity_state": "operating",
+      "current_assignments": 1,
+      "planned_assignments": [],
+      "planned_count": 0,
       "resource": "GitHub-hosted Ubuntu x64",
-      "unallocated_reason": null
+      "unallocated_reason": "no independent ready non-duplicate work assigned by bounded planner"
     },
     {
       "blocked_count": 0,
-      "capacity_state": "available",
-      "current_assignments": 0,
-      "planned_assignments": [
-        {
-          "basis": "SEC FSN schema gate + XBRL concept-freeze audit",
-          "candidate": "Q220",
-          "duration_sample_count": 0,
-          "execution_status": "planned_not_started",
-          "expected_duration_seconds": null,
-          "lane": "FRONTIER DISCOVERY",
-          "plan_id": "Q220-PIT",
-          "readiness": "READY_SOURCE_SCHEMA",
-          "scheduled": true,
-          "task": "deterministic narrative/XBRL presentation mapping and PIT"
-        }
-      ],
-      "planned_count": 1,
+      "capacity_state": "operating",
+      "current_assignments": 1,
+      "planned_assignments": [],
+      "planned_count": 0,
       "resource": "GitHub-hosted ARM64",
-      "unallocated_reason": null
+      "unallocated_reason": "no independent ready non-duplicate work assigned by bounded planner"
     },
     {
       "blocked_count": 0,
@@ -678,65 +710,75 @@
   "resources": [
     {
       "authority": "bounded capacity; no automatic performance authorization",
-      "busy": false,
-      "capacity_state": "unknown",
+      "busy": true,
+      "capacity_state": "operating",
       "configured_runner": "LHT-N133732",
-      "current_assignments": 0,
-      "current_tasks": [],
+      "current_assignments": 1,
+      "current_tasks": [
+        "Q104 I19 Historical 13F Identity Census"
+      ],
       "labels": [],
-      "live_status": "unverified / not visible",
+      "live_status": "operating",
       "name": "Windows self-hosted A",
       "role": "Formal readiness / local reproduction",
       "type": "physical"
     },
     {
       "authority": "bounded capacity; no automatic performance authorization",
-      "busy": false,
-      "capacity_state": "unknown",
+      "busy": true,
+      "capacity_state": "operating",
       "configured_runner": "LHT-N133732-2",
-      "current_assignments": 0,
-      "current_tasks": [],
+      "current_assignments": 1,
+      "current_tasks": [
+        "Top-4 Candidate Research Capacity"
+      ],
       "labels": [],
-      "live_status": "unverified / not visible",
+      "live_status": "operating",
       "name": "Windows self-hosted B",
       "role": "Frontier discovery / data QA",
       "type": "physical"
     },
     {
       "authority": "bounded capacity; no automatic performance authorization",
-      "busy": false,
-      "capacity_state": "unknown",
+      "busy": true,
+      "capacity_state": "operating",
       "configured_runner": "LHT-N133732-3",
-      "current_assignments": 0,
-      "current_tasks": [],
+      "current_assignments": 1,
+      "current_tasks": [
+        "Top-4 Candidate Research Capacity"
+      ],
       "labels": [],
-      "live_status": "unverified / not visible",
+      "live_status": "operating",
       "name": "Windows self-hosted C",
       "role": "Long deterministic runs / independent reproduction",
       "type": "physical"
     },
     {
       "authority": "non-authorizing operational capacity",
-      "busy": false,
-      "capacity_state": "available",
+      "busy": true,
+      "capacity_state": "operating",
       "configured_runner": "ubuntu-24.04",
-      "current_assignments": 0,
-      "current_tasks": [],
+      "current_assignments": 1,
+      "current_tasks": [
+        "Q104 I19 Historical 13F Identity Census"
+      ],
       "labels": [],
-      "live_status": "available",
+      "live_status": "operating",
       "name": "GitHub-hosted Ubuntu x64",
       "role": "Deterministic frontier, CI, source/PIT workflows",
       "type": "cloud"
     },
     {
       "authority": "non-authorizing operational capacity",
-      "busy": false,
-      "capacity_state": "available",
+      "busy": true,
+      "capacity_state": "operating",
       "configured_runner": "ubuntu-24.04-arm",
-      "current_assignments": 0,
-      "current_tasks": [],
+      "current_assignments": 1,
+      "current_tasks": [
+        "Q104 I19 Historical 13F Identity Census"
+      ],
       "labels": [],
-      "live_status": "available",
+      "live_status": "operating",
       "name": "GitHub-hosted ARM64",
       "role": "Architecture-diverse CI / reproduction",
       "type": "cloud"
@@ -765,7 +807,190 @@
     "paid_usage_usd": 0
   },
   "status_source": "docs/CURRENT_STATUS.md + research/evidence/current_operational_state.json + ops/trading_agent_os_state.json",
-  "work_assignments": [],
-  "workload_by_lane": {},
-  "workload_by_resource": {}
+  "work_assignments": [
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "duration_sample_count": 2,
+      "duration_source": "recent completed runs; cancelled runs excluded",
+      "elapsed_seconds": 135,
+      "expected_duration_seconds": 179,
+      "expected_finish_at": "2026-10-06T17:59:28.778728+00:00",
+      "job": "windows (W-IDENTITY)",
+      "lane": "PLATFORM / GOVERNANCE",
+      "remaining_seconds": 179,
+      "resource": "Windows self-hosted",
+      "run_id": 37507138061,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37507138061",
+      "started_at": "2026-10-06T17:54:14Z",
+      "status": "queued",
+      "task": "Temporal Identity State Spine Waves",
+      "worker": "pending runner assignment"
+    },
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "duration_sample_count": 2,
+      "duration_source": "recent completed runs; cancelled runs excluded",
+      "elapsed_seconds": 135,
+      "expected_duration_seconds": 179,
+      "expected_finish_at": "2026-10-06T17:59:28.778728+00:00",
+      "job": "windows (W-STATE)",
+      "lane": "PLATFORM / GOVERNANCE",
+      "remaining_seconds": 179,
+      "resource": "Windows self-hosted",
+      "run_id": 37507138061,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37507138061",
+      "started_at": "2026-10-06T17:54:14Z",
+      "status": "queued",
+      "task": "Temporal Identity State Spine Waves",
+      "worker": "pending runner assignment"
+    },
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "duration_sample_count": 2,
+      "duration_source": "recent completed runs; cancelled runs excluded",
+      "elapsed_seconds": 135,
+      "expected_duration_seconds": 179,
+      "expected_finish_at": "2026-10-06T17:59:28.778728+00:00",
+      "job": "windows (W-TEMPORAL)",
+      "lane": "PLATFORM / GOVERNANCE",
+      "remaining_seconds": 179,
+      "resource": "Windows self-hosted",
+      "run_id": 37507138061,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37507138061",
+      "started_at": "2026-10-06T17:54:14Z",
+      "status": "queued",
+      "task": "Temporal Identity State Spine Waves",
+      "worker": "pending runner assignment"
+    },
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "duration_sample_count": 0,
+      "duration_source": "no benchmark available",
+      "elapsed_seconds": 192,
+      "expected_duration_seconds": null,
+      "expected_finish_at": null,
+      "job": "Windows Top-4 Q104:I19",
+      "lane": "FORMAL READINESS",
+      "remaining_seconds": null,
+      "resource": "Windows self-hosted C",
+      "run_id": 37507014827,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37507014827",
+      "started_at": "2026-10-06T17:53:17Z",
+      "status": "pending",
+      "task": "Top-4 Candidate Research Capacity",
+      "worker": "LHT-N133732-3"
+    },
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "duration_sample_count": 0,
+      "duration_source": "no benchmark available",
+      "elapsed_seconds": 192,
+      "expected_duration_seconds": null,
+      "expected_finish_at": null,
+      "job": "Windows Top-4 Q218",
+      "lane": "PLATFORM / GOVERNANCE",
+      "remaining_seconds": null,
+      "resource": "GitHub-hosted CI",
+      "run_id": 37507014827,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37507014827",
+      "started_at": "2026-10-06T17:53:17Z",
+      "status": "pending",
+      "task": "Top-4 Candidate Research Capacity",
+      "worker": "pending runner assignment"
+    },
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "duration_sample_count": 0,
+      "duration_source": "no benchmark available",
+      "elapsed_seconds": 192,
+      "expected_duration_seconds": null,
+      "expected_finish_at": null,
+      "job": "Windows Top-4 Q220",
+      "lane": "PLATFORM / GOVERNANCE",
+      "remaining_seconds": null,
+      "resource": "Windows self-hosted B",
+      "run_id": 37507014827,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37507014827",
+      "started_at": "2026-10-06T17:53:17Z",
+      "status": "pending",
+      "task": "Top-4 Candidate Research Capacity",
+      "worker": "LHT-N133732-2"
+    },
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "duration_sample_count": 0,
+      "duration_source": "no benchmark available",
+      "elapsed_seconds": 346,
+      "expected_duration_seconds": null,
+      "expected_finish_at": null,
+      "job": "windows_census",
+      "lane": "FORMAL READINESS",
+      "remaining_seconds": null,
+      "resource": "Windows self-hosted A",
+      "run_id": 37506679027,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37506679027",
+      "started_at": "2026-10-06T17:50:43Z",
+      "status": "in_progress",
+      "task": "Q104 I19 Historical 13F Identity Census",
+      "worker": "LHT-N133732"
+    },
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "duration_sample_count": 0,
+      "duration_source": "no benchmark available",
+      "elapsed_seconds": 346,
+      "expected_duration_seconds": null,
+      "expected_finish_at": null,
+      "job": "hosted_census (2022-2025-09, ubuntu-24.04-arm)",
+      "lane": "FORMAL READINESS",
+      "remaining_seconds": null,
+      "resource": "GitHub-hosted ARM64",
+      "run_id": 37506679027,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37506679027",
+      "started_at": "2026-10-06T17:50:43Z",
+      "status": "in_progress",
+      "task": "Q104 I19 Historical 13F Identity Census",
+      "worker": "GitHub Actions 1000030197"
+    },
+    {
+      "actor": "DWR-debug",
+      "authority": "non-authorizing operational work",
+      "duration_sample_count": 0,
+      "duration_source": "no benchmark available",
+      "elapsed_seconds": 346,
+      "expected_duration_seconds": null,
+      "expected_finish_at": null,
+      "job": "hosted_census (2018-2021, ubuntu-24.04)",
+      "lane": "FORMAL READINESS",
+      "remaining_seconds": null,
+      "resource": "GitHub-hosted Ubuntu x64",
+      "run_id": 37506679027,
+      "run_url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37506679027",
+      "started_at": "2026-10-06T17:50:43Z",
+      "status": "in_progress",
+      "task": "Q104 I19 Historical 13F Identity Census",
+      "worker": "GitHub Actions 1000030198"
+    }
+  ],
+  "workload_by_lane": {
+    "FORMAL READINESS": 4,
+    "PLATFORM / GOVERNANCE": 5
+  },
+  "workload_by_resource": {
+    "GitHub-hosted ARM64": 1,
+    "GitHub-hosted CI": 1,
+    "GitHub-hosted Ubuntu x64": 1,
+    "Windows self-hosted": 3,
+    "Windows self-hosted A": 1,
+    "Windows self-hosted B": 1,
+    "Windows self-hosted C": 1
+  }
 }
