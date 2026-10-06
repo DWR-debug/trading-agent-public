@@ -60,3 +60,11 @@ def test_top4_balances_hosted_capacity_slots():
     assert "Q219" not in hosted
     assert "trading-agent-research-hosted-ubuntu-24.04" in hosted
     assert "trading-agent-research-hosted-ubuntu-24.04-arm" in hosted
+
+
+
+def test_top4_has_no_global_wave_lock():
+    text=(ROOT/".github/workflows/top4-candidate-research-capacity.yml").read_text(encoding="utf-8")
+    assert "\nconcurrency:\n  group: trading-agent-top4-capacity" not in text
+    assert "trading-agent-research-hosted-ubuntu-24.04" in text
+    assert "trading-agent-research-hosted-ubuntu-24.04-arm" in text
