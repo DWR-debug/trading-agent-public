@@ -224,8 +224,9 @@ def check_sample(row: dict[str, str]) -> dict[str, object]:
         if detail["accepted_datetime"] else None
     )
     conformed = conformed or detail["form"]
+    filed_date_source = "HEADER" if filed_as_of else "FILING_DETAIL" if detail["filed_date"] else "FORM_INDEX"
     filed_as_of = filed_as_of or (
-        detail["filed_date"].replace("-", "") if detail["filed_date"] else None
+        detail["filed_date"].replace("-", "") if detail["filed_date"] else row["filed_date"].replace("-", "")
     )
 
     time.sleep(REQUEST_GAP_SECONDS)
@@ -282,6 +283,7 @@ def check_sample(row: dict[str, str]) -> dict[str, object]:
         "ct_order_document_url": pdf_url,
         "ct_order_document_sha256": sha256_bytes(pdf_body),
         "accepted_datetime": accepted,
+        "filed_date_source": filed_date_source,
         "accepted_datetime_source": (
             "HEADER"
             if re.search(r"ACCEPTANCE-DATETIME[^0-9]{0,80}(\d{14})", htext, re.IGNORECASE)
