@@ -99,9 +99,9 @@
   },
   "phone_capacity_policy": {
     "decision": "Do not add another physical phone merely for nominal capacity.",
-    "current_state": "S10 plus prepared Samsung fleet slots are sufficient for the present architecture.",
-    "activation_rule": "Activate at most one additional Samsung device as a controlled capacity test when measured independent throughput gain is expected.",
-    "promotion_rule": "Keep an additional device in recurring routing only when its measured workload throughput and reliability justify the extra operational complexity.",
+    "current_state": "S10 remains available for bounded mechanical QA; Samsung Android fleet is reserve-only.",
+    "activation_rule": "Do not route additional Samsung devices in recurring capacity. Reactivate only for an explicit bounded diagnostic or controlled capacity experiment with measured expected gain.",
+    "promotion_rule": "No recurring Android-fleet promotion; any reactivation requires a documented throughput/reliability case.",
     "scientific_role": "bounded QA/review/support only; no evidence, selection, ranking, authorization, promotion or live execution."
   },
   "non_negotiable_safety": {
@@ -158,13 +158,10 @@
     },
     "principle": "Continuously discover unusual, economically coherent and genuinely orthogonal information advantages; verify before adoption and preserve dead ends.",
     "current_focus": [
-      "Q224",
-      "Q220",
       "Q218",
-      "Q221",
-      "Q222",
-      "Q229",
-      "Q230"
+      "Q219",
+      "Q220",
+      "Q221"
     ],
     "anti_duplicate_rule": "Do not keep a separate candidate when the proposed mechanism empirically collapses to an existing lineage; merge Q217 back into Q131 if processing-friction decomposition is not distinct.",
     "integration_rules": {
@@ -173,10 +170,11 @@
       "crsp_history_revision": "hard reproducibility QA, not a candidate"
     },
     "candidate_development_focus": [
-      "Q224",
-      "Q222",
-      "Q220",
       "Q218",
+      "Q219",
+      "Q220",
+      "Q221",
+      "Q224",
       "Q229",
       "Q230"
     ]
