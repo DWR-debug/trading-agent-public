@@ -27,7 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: \${{ github.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 1
       - uses: actions/setup-python@v6
         with:
@@ -35,13 +35,13 @@ jobs:
       - name: Run bounded raw-archive route probe
         run: |
           set -euo pipefail
-          mkdir -p research/runs/q220/as_filed_route/\${{ github.run_id }}
-          python -m automation.q220_as_filed_xbrl_population_gate --mode route --output research/runs/q220/as_filed_route/\${{ github.run_id }}/receipt.json
+          mkdir -p research/runs/q220/as_filed_route/${{ github.run_id }}
+          python -m automation.q220_as_filed_xbrl_population_gate --mode route --output research/runs/q220/as_filed_route/${{ github.run_id }}/receipt.json
       - uses: actions/upload-artifact@v6
         if: always()
         with:
-          name: q220-as-filed-route-\${{ github.run_id }}-\${{ github.run_attempt }}
-          path: research/runs/q220/as_filed_route/\${{ github.run_id }}/
+          name: q220-as-filed-route-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q220/as_filed_route/${{ github.run_id }}/
           if-no-files-found: error
           retention-days: 30
 
@@ -55,7 +55,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: \${{ github.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 1
       - name: Bootstrap Python
         shell: cmd
@@ -87,17 +87,17 @@ jobs:
         if: success()
         shell: bash
         env:
-          GH_TOKEN: \${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          src="research/runs/q220/as_filed_population/\${{ github.run_id }}/receipt.json"
+          src="research/runs/q220/as_filed_population/${{ github.run_id }}/receipt.json"
           test -f "$src"
           master_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
           python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$master_sha" --file "research/evidence/q220_as_filed_xbrl_population_latest.json=$src"
       - uses: actions/upload-artifact@v6
         if: always()
         with:
-          name: q220-as-filed-population-\${{ github.run_id }}-\${{ github.run_attempt }}
-          path: research/runs/q220/as_filed_population/\${{ github.run_id }}/
+          name: q220-as-filed-population-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/q220/as_filed_population/${{ github.run_id }}/
           if-no-files-found: error
           retention-days: 30
