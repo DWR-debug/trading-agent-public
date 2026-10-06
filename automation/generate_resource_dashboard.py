@@ -229,7 +229,7 @@ def infer_lane(workflow: str, job: str = "") -> str:
         "q179", "q180", "q181", "q182", "q183", "q184", "q185", "q186",
         "q187", "q188", "q189", "q190", "q191", "q192", "q193", "q194",
         "q195", "q196", "q197", "q198", "q199", "q201", "q202", "q203",
-        "q204", "q205", "frontier"
+        "q204", "q205", "q218", "q219", "q220", "q221", "frontier"
     )):
         return "FRONTIER DISCOVERY"
     return "PLATFORM / GOVERNANCE"
@@ -269,6 +269,11 @@ def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
         "Current Operational Status Synchronizer",
         "Current Status Drift Guard",
         "Spine Next-Gate Autonomous Router",
+        "Workflow Lint",
+        "CI",
+        "Full Suite Verification",
+        "T052 Exact Master CI Gate",
+        "Unified Research Orchestrator",
     }
     active = [
         x for x in runs
@@ -277,20 +282,27 @@ def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
         and str(x.get("name") or "") not in hidden_non_research
     ]
     active.sort(key=lambda x: str(x.get("created_at", "")), reverse=True)
-    out = []
-    job_budget = 18
+    out: list[dict[str, Any]] = []
+    job_budget = 60
     for run in active:
         workflow = str(run.get("name") or "")
         jobs = jobs_for_run(int(run["id"])) if job_budget and run.get("id") else []
         if jobs:
             job_budget -= 1
-            jobs = [j for j in jobs if j.get("status") in {"queued", "in_progress", "waiting"}] or jobs[:1]
+            jobs = [
+                j for j in jobs
+                if j.get("status") in {"queued", "in_progress", "waiting", "pending"}
+            ]
             for job in jobs:
+                job_name = str(job.get("name") or "")
+                lane = infer_lane(workflow, job_name)
+                if lane == "PLATFORM / GOVERNANCE":
+                    continue
                 out.append({
-                    "resource": infer_resource(workflow, str(job.get("name") or ""), job.get("runner_name")),
-                    "lane": infer_lane(workflow, str(job.get("name") or "")),
+                    "resource": infer_resource(workflow, job_name, job.get("runner_name")),
+                    "lane": lane,
                     "worker": job.get("runner_name") or "pending runner assignment",
-                    "job": str(job.get("name") or ""),
+                    "job": job_name,
                     "task": workflow,
                     "status": run.get("status"),
                     "started_at": run.get("run_started_at") or run.get("created_at"),
@@ -300,9 +312,12 @@ def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
                     "authority": "non-authorizing operational work",
                 })
         else:
+            lane = infer_lane(workflow)
+            if lane == "PLATFORM / GOVERNANCE":
+                continue
             out.append({
                 "resource": infer_resource(workflow, "", None),
-                "lane": infer_lane(workflow),
+                "lane": lane,
                 "worker": "pending runner assignment",
                 "job": "",
                 "task": workflow,
@@ -317,7 +332,6 @@ def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
             break
     return out
 
-
 def enrich_work_durations(
     work: list[dict[str, Any]],
     workflow_benchmarks: dict[str, dict[str, int | str]],
@@ -327,7 +341,7 @@ def enrich_work_durations(
     out = []
     for item in work:
         workflow = str(item.get("task") or "")
-        candidate = next((c for c in ("Q218", "Q219", "Q220", "Q221") if c in f"{workflow} {item.get('job', '')}"), None)
+        candidate = next((c for c in ("Q104:I19", "Q218", "Q219", "Q220", "Q221") if c in f"{workflow} {item.get('job', '')}"), None)
         benchmark = job_benchmarks.get(candidate) if workflow == "Top-4 Candidate Research Capacity" else workflow_benchmarks.get(workflow)
         entry = dict(item)
         expected = int(benchmark["p50_seconds"]) if benchmark and benchmark.get("p50_seconds") else None
