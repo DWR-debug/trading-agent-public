@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-06T07:26:32.696469+00:00",
+    "generated_at_utc": "2026-10-06T07:26:50.431913+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "53b618a4f4c8e92c3783429b97cecaafaedff4eb"
+    "source_master_sha": "0abd31a3d77ee38946a994b3544d38cddc8c6630"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1793,7 +1793,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-06T07:26:32.696469+00:00",
+  "generated_at_utc": "2026-10-06T07:26:50.431913+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4490,6 +4490,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: make Top-4 AI tasks declare their own immutable context",
+        "sha": "0abd31a3d77ee38946a994b3544d38cddc8c6630",
+        "timestamp": "2026-10-06T09:26:40+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "cd25a9454216164ee90b896ac5b412b739066464",
+        "timestamp": "2026-10-06T07:26:36Z"
+      },
+      {
         "message": "FIX: declare immutable context for AI-2026-10-06-Q221-TOP4-ADVERSARIAL",
         "sha": "53b618a4f4c8e92c3783429b97cecaafaedff4eb",
         "timestamp": "2026-10-06T09:26:29+02:00"
@@ -4518,16 +4528,6 @@
         "message": "OPS: record exact Top-4 gate paths in workpack receipts",
         "sha": "b885353124e19239cd0adbacd8ccc9efe4d5391b",
         "timestamp": "2026-10-06T09:23:59+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "023aa8672a7b5968512f5d6498071239f3127c0b",
-        "timestamp": "2026-10-06T07:23:25Z"
-      },
-      {
-        "message": "OPS: version Top-4 workpack contracts in receipts",
-        "sha": "e2357ca9bdec81dde81bce67588ba6fd1f32d10f",
-        "timestamp": "2026-10-06T09:23:13+02:00"
       }
     ]
   },
@@ -4625,7 +4625,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "53b618a4f4c8e92c3783429b97cecaafaedff4eb",
+  "source_master_sha": "0abd31a3d77ee38946a994b3544d38cddc8c6630",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4739,6 +4739,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37429662034"
+    "run_id": "37429679022"
   }
 }
