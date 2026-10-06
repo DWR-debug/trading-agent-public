@@ -2,15 +2,15 @@
   "schema_version": "1.0",
   "task_id": "Q-2026-10-05-Q229-HISTORICAL-RELEASE-CENSUS",
   "status": "SOURCE_HISTORY_CENSUS_ONLY",
-  "generated_at_utc": "2026-10-06T12:58:02.682536+00:00",
+  "generated_at_utc": "2026-10-06T16:53:17.359308+00:00",
   "results": [
     {
       "name": "ccdb_page",
       "url": "https://www.consumerfinance.gov/data-research/consumer-complaints/",
       "reachable": true,
       "http_status": 200,
-      "bytes": 155922,
-      "sha256": "74ac4a85f93b7865900499b4657837cf54903a9935d48eaf5c14dfc50e3b9c09",
+      "bytes": 155128,
+      "sha256": "ed1a446e7ab3a96b69d3721d79a3434279de3475f77c4bacb88867ef8776e82b",
       "historical_release_link_count": 1,
       "has_past_release_phrase": true,
       "has_taxonomy_phrase": true,
@@ -19,8 +19,7 @@
         "https://cfpb.github.io/api/ccdb/api.html",
         "https://cfpb.github.io/api/ccdb/fields.html",
         "https://cfpb.github.io/api/ccdb/release-notes.html",
-        "https://files.consumerfinance.gov/ccdb/complaints.csv.zip",
-        "https://www.consumerfinance.gov/about-us/newsroom/?categories=press-release"
+        "https://files.consumerfinance.gov/ccdb/complaints.csv.zip"
       ]
     },
     {
@@ -28,8 +27,8 @@
       "url": "https://www.consumerfinance.gov/foia-requests/foia-electronic-reading-room/cfpb-consumer-complaint-database-narratives-archive/",
       "reachable": true,
       "http_status": 200,
-      "bytes": 143381,
-      "sha256": "557a533367701e91597dabb0b3ffaef1cda08692dbdc2d6c00f2415ec1e575cb",
+      "bytes": 142587,
+      "sha256": "a27ed936d2f9a05f92b8fc898526fd1f89640f4ab1747b1b29e2706c6732ca46",
       "historical_release_link_count": 21,
       "has_past_release_phrase": false,
       "has_taxonomy_phrase": false,
@@ -54,8 +53,7 @@
         "https://files.consumerfinance.gov/f/documents/CCDB_Export_6_April_2024_through_July_2024.zip",
         "https://files.consumerfinance.gov/f/documents/CCDB_Export_7_August_2024_through_October_2024.zip",
         "https://files.consumerfinance.gov/f/documents/CCDB_Export_8_November_2024_through_December_2024.zip",
-        "https://files.consumerfinance.gov/f/documents/CCDB_Export_9_January_2025_through_February_2025.zip",
-        "https://www.consumerfinance.gov/about-us/newsroom/?categories=press-release"
+        "https://files.consumerfinance.gov/f/documents/CCDB_Export_9_January_2025_through_February_2025.zip"
       ]
     }
   ],
@@ -112,5 +110,5 @@
   },
   "next_gate": "historical_release_link_validation_plus_company_to_issuer_mapping",
   "critical_boundary": "public release observation must be reconstructed; complaint receipt date may not be used as a tradable clock",
-  "receipt_fingerprint": "55e3dcaa714ec5e18246ae33d14c0ef268c4e3d77bf31230d62c6b79f403e95b"
+  "receipt_fingerprint": "5507c81bc82aeb9ff923692c33e8d8e820485234cd90e5dfd153cf76bc42ea80"
 }
