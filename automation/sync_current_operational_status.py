@@ -840,6 +840,13 @@ def generate(
 - **Continuous background:** the permanent Windows/hosted 10-minute loops remain active; Runner C uses long deterministic research when useful and the bounded 20-minute capacity pulse otherwise.
 - **Scientific boundary:** capacity allocation never creates performance authorization, holdout selection, ranking, tuning, promotion or live execution.
 
+### Evidence Knowledge Graph + Hypothesis Convergence — 2026-10-06
+
+- **Stufe 4 ACTIVE:** `automation/evidence_graph_stage4_stage5.py` ingests current Evidence/Governance/Candidate/Preregistration records into a provenance-bearing metadata graph and preserves explicit negative/revision relations.
+- **Stufe 5 ACTIVE:** the same engine computes deterministic mechanism-signature overlap and emits `POTENTIAL_CONVERGENCE`, `AMBIGUOUS` and `LIKELY_ORTHOGONAL` review classes plus non-authoritative bridge-hypothesis proposals.
+- **Continuous wave:** `.github/workflows/evidence-graph-stage4-stage5-wave.yml` runs four parallel analyses and a 70-minute material-change-driven event-bus window. The event bus recomputes only after a material input change; there is no runtime padding.
+- **Scientific boundary unchanged:** graph relations and novelty/convergence outputs cannot authorize performance, holdout selection, ranking, tuning, promotion or live execution and cannot mutate frozen trials.
+
 ### Persistent Literature & Discovery Engine
 
 - **Status: ACTIVE_AND_PERSISTENT.** Literature discovery is a permanent OS capability, not a one-off chat task.
