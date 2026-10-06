@@ -541,15 +541,6 @@ def planned_capacity_plan(
             "basis": "current Q218 source/PIT workpack",
         },
         {
-            "plan_id": "Q219-PIT",
-            "candidate": "Q219",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "historical options breadth and deterministic post-filing response PIT",
-            "preferred": ["GitHub-hosted Ubuntu x64", "Windows self-hosted B"],
-            "readiness": "READY_SOURCE_PIT",
-            "basis": "Q129 reproduction plus Q219 breadth lead; PIT still must be proven",
-        },
-        {
             "plan_id": "Q220-PIT",
             "candidate": "Q220",
             "lane": "FRONTIER DISCOVERY",
