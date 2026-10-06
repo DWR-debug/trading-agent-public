@@ -105,8 +105,7 @@ def main():
     runs=data.get("workflow_runs",data if isinstance(data,list) else [])
     out=plan_dispatches(runs,max_dispatches=args.max_dispatches)
     import pathlib
-    pathlib.Path(args.output).write_text(json.dumps(out,indent=2)+"
-",encoding="utf-8")
+    pathlib.Path(args.output).write_text(json.dumps(out,indent=2)+chr(10),encoding="utf-8")
     print(json.dumps(out,sort_keys=True))
 if __name__=="__main__":
     main()
