@@ -2,7 +2,7 @@
   "schema_version": 1,
   "state_type": "TRADING_AGENT_OS_ORCHESTRATION_SNAPSHOT",
   "effective_date_utc": "2026-10-04T19:00:00+02:00",
-  "source_master_sha": "ca84cc7beef77750bf7c7ddbf3f38be70cea6ce4",
+  "source_master_sha": "732276e38c3715594b7a8fbdc5f656d10de9efae",
   "purpose": "Persistent orchestration contract for chat-independent Trading Agent research and engineering.",
   "chat_trigger": "trading agent",
   "capacity_pulse_policy": "10-minute schedule with independent lane-scoped Windows concurrency; local_reproduction shares the explicit long-reproduction priority group while data_qa remains independently schedulable",
@@ -161,24 +161,7 @@
       "live_execution": false
     }
   },
-  "current_research_focus": {
-    "completed": "Q119 Treasury demand-shape design merged; I22 SEC filing-arrival session-window correction merged",
-    "active_next": "Q218/Q220/Q221/Q219 top-candidate source/PIT development; in parallel close Q121-R6, Q198/Q197/Q199/Q201, Q186 and Q187-Q192 defined gates. All remain discovery/source/PIT only.",
-    "meta_research": "ECL runtime hardening and first valid model-metrics receipt",
-    "governance_engineering": "AGENT-026-R2 two-slot lease; draft PR 642",
-    "discovery_frontier": "Q218 mandatory-voluntary disclosure semantic wedge; Q220 narrative-structured XBRL representation gap; Q221 government R&D to procurement option-value state; Q219 filing-change/options-response processing wedge; plus existing Q211-Q217 frontier. Use source/PIT/structure-first cheap falsification.",
-    "literature_discovery": "PERMANENT: daily/weekly assistant research plus 6-hour free public-metadata scout; prioritize genuinely orthogonal mechanisms and preserve negative evidence. Current top-candidate wave Q218-Q221 is active design-only.",
-    "current_research_frontier": [
-      "Q211",
-      "Q212",
-      "Q213",
-      "Q214",
-      "Q215",
-      "Q216",
-      "Q217"
-    ],
-    "knowledge_relation_plane": "Active: shared clocks, identity maps, filing/event substrates, XBRL structure, options PIT, USAspending clock, 13F and Treasury state compilers are reused structurally; T/I/S/R state-transition motifs remain discovery-only."
-  },
+  "current_research_focus": "Q104:I19 formal-readiness closure; Q218 source/PIT event pairing; Q220 clean raw as-filed SEC-XBRL repair; Q221 USAspending public-clock/entity mapping. Q219 remains a deprioritized reserve. All discovery/source/PIT only.",
   "resource_routing": {
     "self_hosted_windows": [
       "LHT-N133732",
@@ -324,7 +307,14 @@
       "tuning": false,
       "promotion": false,
       "live_execution": false
-    }
+    },
+    "rule": "Only bounded scheduled source/PIT/structure work continues without chat; no performance, promotion or live execution.",
+    "overnight_workpacks": [
+      "Q104:I19",
+      "Q218",
+      "Q220",
+      "Q221"
+    ]
   },
   "new_chat_protocol": [
     "Read docs/TRADING_AGENT_CHAT_ENTRYPOINT.md.",
@@ -563,7 +553,16 @@
       "Q224",
       "Q228",
       "Q231"
-    ]
+    ],
+    "top4_order": [
+      "Q104:I19",
+      "Q218",
+      "Q220",
+      "Q221"
+    ],
+    "q219_execution_capacity": false,
+    "q220_repair_required": true,
+    "q220_repair_contract": "docs/research_design/Q220_AS_FILED_XBRL_REPAIR_2026-10-06.md"
   },
   "knowledge_relation_plane": {
     "status": "ACTIVE_METADATA_ONLY",
@@ -621,5 +620,12 @@
     "deploy_workflow": ".github/workflows/resource-dashboard-update.yml",
     "update_button_mode": "authenticated workflow dispatch page; no public write token",
     "android_fleet": "reserve-only"
-  }
+  },
+  "current_research_focus_top_candidate_order": [
+    "Q104:I19",
+    "Q218",
+    "Q220",
+    "Q221"
+  ],
+  "discovery_frontier": "Q218 mandatory-voluntary disclosure wedge; Q220 narrative-structured XBRL representation via raw as-filed SEC archives; Q221 government R&D/procurement option value; Q224 EDGAR document-demand; Q228 SEC scrutiny correspondence; Q227/Q231 FOIA; Q230 bond-equity; Q229 complaint-response."
 }

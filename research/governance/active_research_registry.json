@@ -22,9 +22,23 @@
       "performance_authorization_allowed": false,
       "anti_convergence": "Orthogonal information mechanism before additional price-only variants."
     },
-    "top_candidate_wave": "Q218-Q221",
+    "top_candidate_wave": "Q104:I19,Q218,Q220,Q221",
     "top_candidate_wave_status": "DESIGN_ONLY_NON_AUTHORIZING",
-    "top_candidate_wave_issue": 1094
+    "top_candidate_wave_issue": 1094,
+    "top_candidate_wave_order": [
+      "Q104:I19",
+      "Q218",
+      "Q220",
+      "Q221"
+    ],
+    "top_candidate_wave_repair_rules": {
+      "Q104_I19": "formal-readiness-first; 13F identity closure -> concept PIT compiler -> independent reproduction",
+      "Q218": "SEC mandatory/voluntary event-pair PIT gate",
+      "Q220": "raw as-filed SEC-XBRL repair required before any re-upgrade",
+      "Q221": "USAspending historical public-clock/entity map gate"
+    },
+    "q219_execution_status": "DEPRIORITIZED_RESERVE",
+    "q220_upgrade_rule": "No re-upgrade from normalized/flattened FSN work; only raw as-filed population + deterministic TextBlock/Presentation lineage + independent reproduction."
   },
   "active_trials": [
     {
@@ -963,7 +977,9 @@
             "xbrl_concept_freeze": "research/preregistrations/q104_i19_xbrl_concept_freeze_2026_10_03.json",
             "design_document": "docs/research_design/Q104_I19_EXACT_XBRL_CONCEPT_FREEZE_2026-10-03.md",
             "performance_authorization_allowed": false,
-            "next_gate": "historical 13F archive/security completeness + concept-specific PIT compiler + independent reproduction"
+            "next_gate": "historical 13F archive/security completeness + concept-specific PIT compiler + independent reproduction",
+            "priority": "P1",
+            "top4_execution": true
           }
         }
       },
