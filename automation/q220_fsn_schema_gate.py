@@ -16,7 +16,7 @@ from pathlib import Path
 URL = "https://www.sec.gov/files/dera/data/financial-statement-notes-data-sets/2009q1_notes.zip"
 
 def fetch(url: str) -> bytes:
-    req = urllib.request.Request(url, headers={"User-Agent":"TradingAgent-Public-Q220-FSN-Schema/1.0"})
+    req = urllib.request.Request(url, headers={"User-Agent":"TradingAgent-Public-Research/1.0 research@example.invalid","Accept-Encoding":"identity"})
     with urllib.request.urlopen(req, timeout=30) as r:
         return r.read()
 
