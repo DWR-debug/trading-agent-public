@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "record_type": "bounded_research_wave_request",
+  "status": "ACTIVE",
+  "objective": "Reach the next major OS development step by validating the temporal/identity/state spine and using it to route independent source/PIT research without artificial work.",
+  "waves": [
+    {
+      "id": "W-TEMPORAL",
+      "purpose": "temporal clock contract lint and source-clock reuse audit",
+      "resource": "Windows self-hosted",
+      "scientific_boundary": "metadata_only"
+    },
+    {
+      "id": "W-IDENTITY",
+      "purpose": "identity mapping contract lint and shared-map dependency audit",
+      "resource": "Windows self-hosted",
+      "scientific_boundary": "metadata_only"
+    },
+    {
+      "id": "W-STATE",
+      "purpose": "state-transition compiler and mutation invariance audit",
+      "resource": "Windows self-hosted",
+      "scientific_boundary": "metadata_only"
+    },
+    {
+      "id": "W-INTEGRATION",
+      "purpose": "cross-candidate relation and shared-prerequisite scheduling audit",
+      "resource": "GitHub-hosted x64",
+      "scientific_boundary": "metadata_only"
+    },
+    {
+      "id": "W-REPRO",
+      "purpose": "independent ARM64 reproduction of spine compiler and tests",
+      "resource": "GitHub-hosted ARM64",
+      "scientific_boundary": "metadata_only"
+    }
+  ],
+  "safety": {
+    "PAPER_ONLY": true,
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "anti_artificial_work": true,
+  "completion_rule": "After each wave, route the next useful gate only when an explicit downstream dependency is satisfied; never pad runtime."
+}
