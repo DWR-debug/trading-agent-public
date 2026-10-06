@@ -69,3 +69,28 @@ def test_dashboard_filters_platform_work_from_research_capacity():
         {"id": 2, "name": "CI", "status": "in_progress", "created_at": "2026-10-06T18:01:00Z"},
     ]
     assert current_work_from_runs(runs) == []
+
+
+def test_milestone_history_12h_filters_platform_housekeeping(monkeypatch):
+    from automation.generate_resource_dashboard import _is_material_milestone_commit, _is_research_milestone_run
+
+    assert _is_material_milestone_commit("RESEARCH: advance Q220 source gate") is True
+    assert _is_material_milestone_commit("OPS: remove global top-4 workflow bottleneck") is True
+    assert _is_material_milestone_commit("OPS: refresh resource dashboard snapshot") is False
+    assert _is_material_milestone_commit("OPS: synchronize current operational status") is False
+
+    assert _is_research_milestone_run({
+        "status": "completed", "conclusion": "success",
+        "name": "Q228 SEC Correspondence Source Gate",
+        "display_title": "Q228 SEC Correspondence Source Gate",
+    }) is True
+    assert _is_research_milestone_run({
+        "status": "completed", "conclusion": "success",
+        "name": "Resource Dashboard Update",
+        "display_title": "Resource Dashboard Update",
+    }) is False
+    assert _is_research_milestone_run({
+        "status": "completed", "conclusion": "failure",
+        "name": "Q228 SEC Correspondence Source Gate",
+        "display_title": "Q228 SEC Correspondence Source Gate",
+    }) is False
