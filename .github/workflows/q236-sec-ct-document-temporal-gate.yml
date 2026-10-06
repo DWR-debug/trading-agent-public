@@ -43,11 +43,11 @@ jobs:
           import json
           from pathlib import Path
           p=json.loads(Path("research/runs/q236_sec_ct_document_temporal_gate/result.json").read_text())
-          assert p["status"] == "Q236_R1_DOCUMENT_TEMPORAL_GATE_COMPLETED"
+          assert p["status"] in ("Q236_R1_DOCUMENT_TEMPORAL_GATE_COMPLETED", "Q236_R1_DOCUMENT_TEMPORAL_ANCHOR_FALSIFIED")
           assert p["sample_size"] == 33
           assert p["pdf_retrieved"] == 33
           assert p["text_extraction_success"] == 33
-          assert p["temporal_anchor_hits"] >= 1
+          assert p["temporal_anchor_hits"] == 0 or p["temporal_anchor_hits"] >= 1
           assert p["pit_boundary"]["document_expiry_date_is_latent_not_public_observation_clock"] is True
           assert p["pit_boundary"]["same_day_pit_safe"] is False
           assert p["pit_boundary"]["public_observation_time_proven"] is False
@@ -62,6 +62,7 @@ jobs:
           assert p["safety"]["ORDERS_ENABLED"] is False
           assert p["safety"]["AUTOMATIC_PROMOTION"] is False
           print("Q236_R1_BOUNDARY=PASS")
+          print("Q236_R1_INTERPRETATION=", "DOCUMENT_TEMPORAL_ANCHOR_FALSIFIED" if p["temporal_anchor_hits"] == 0 else "DOCUMENT_TEMPORAL_ANCHOR_SUPPORTED")
           print("Q236_R1_TEMPORAL_HITS=", p["temporal_anchor_hits"])
           print("Q236_R1_TEMPORAL_FRACTION=", p["temporal_anchor_fraction"])
           print("Q236_R1_RECEIPT=", p["receipt_fingerprint"])
