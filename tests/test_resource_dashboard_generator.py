@@ -1,3 +1,4 @@
+from pathlib import Path
 from automation.generate_resource_dashboard import infer_lane, infer_resource
 
 
