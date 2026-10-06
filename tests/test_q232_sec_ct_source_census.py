@@ -1,4 +1,10 @@
-from automation.q232_sec_ct_source_census import accession_from_filename, parse_index, quarter_list, sample_rows
+from automation.q232_sec_ct_source_census import (
+    accession_from_filename,
+    extract_detail_metadata,
+    parse_index,
+    quarter_list,
+    sample_rows,
+)
 
 
 def test_fixed_quarter_window():
@@ -59,3 +65,19 @@ def test_deterministic_sample_first_median_last_per_year():
 def test_accession_filename_without_archive_directory():
     filename = "edgar/data/7032/999999999720001304.txt"
     assert accession_from_filename(filename) == "9999999997-20-001304"
+
+
+def test_extract_detail_metadata_acceptance_fallback():
+    html = """
+    <html><body>
+      Form CT ORDER - Confidential treatment order
+      SEC Accession No. 9999999997-15-010856
+      Filing Date 2015-06-15
+      Accepted 2015-06-15 16:22:10
+    </body></html>
+    """
+    meta = extract_detail_metadata(html)
+    assert meta["accession"] == "9999999997-15-010856"
+    assert meta["form"] == "CT ORDER"
+    assert meta["filed_date"] == "2015-06-15"
+    assert meta["accepted_datetime"] == "2015-06-15T16:22:10"
