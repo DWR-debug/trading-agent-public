@@ -1,10 +1,10 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `488efb362e95a4149f57b4b501cff6ce38e553b2`
+**Current operational snapshot:** `25e2c92102e436a750e1f967fb3ec40ffae458a8`
 
 > **BINDING PROJECT STATUTES:** `docs/TRADING_AGENT_PROJECT_STATUTES.md` — **Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.**
 
-**Generated (UTC):** `2026-10-06T12:12:53.668705+00:00`
+**Generated (UTC):** `2026-10-06T12:13:19.715859+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -40,6 +40,13 @@
 - **Utilization rule:** maximize useful occupancy across Windows A/B/C, hosted Linux, bounded free-AI lanes and S10/mobile support when those resources are reachable and the work is independent and useful. Never manufacture work to consume quota.
 - **Continuous background:** the permanent Windows/hosted 10-minute loops remain active; Runner C uses long deterministic research when useful and the bounded 20-minute capacity pulse otherwise.
 - **Scientific boundary:** capacity allocation never creates performance authorization, holdout selection, ranking, tuning, promotion or live execution.
+
+### Evidence Knowledge Graph + Hypothesis Convergence — 2026-10-06
+
+- **Stufe 4 ACTIVE:** `automation/evidence_graph_stage4_stage5.py` ingests current Evidence/Governance/Candidate/Preregistration records into a provenance-bearing metadata graph and preserves explicit negative/revision relations.
+- **Stufe 5 ACTIVE:** the same engine computes deterministic mechanism-signature overlap and emits `POTENTIAL_CONVERGENCE`, `AMBIGUOUS` and `LIKELY_ORTHOGONAL` review classes plus non-authoritative bridge-hypothesis proposals.
+- **Continuous wave:** `.github/workflows/evidence-graph-stage4-stage5-wave.yml` runs four parallel analyses and a 70-minute material-change-driven event-bus window. The event bus recomputes only after a material input change; there is no runtime padding.
+- **Scientific boundary unchanged:** graph relations and novelty/convergence outputs cannot authorize performance, holdout selection, ranking, tuning, promotion or live execution and cannot mutate frozen trials.
 
 ### Persistent Literature & Discovery Engine
 

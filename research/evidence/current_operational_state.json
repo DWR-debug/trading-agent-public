@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-06T12:12:53.668705+00:00",
+    "generated_at_utc": "2026-10-06T12:13:19.715859+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "488efb362e95a4149f57b4b501cff6ce38e553b2"
+    "source_master_sha": "25e2c92102e436a750e1f967fb3ec40ffae458a8"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1793,7 +1793,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-06T12:12:53.668705+00:00",
+  "generated_at_utc": "2026-10-06T12:13:19.715859+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4491,6 +4491,26 @@
     "recent_commits": [
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "25e2c92102e436a750e1f967fb3ec40ffae458a8",
+        "timestamp": "2026-10-06T12:13:10Z"
+      },
+      {
+        "message": "OPS: refresh resource dashboard snapshot",
+        "sha": "4de1c28efb781989346be78aaf4135ba599a8611",
+        "timestamp": "2026-10-06T12:13:07Z"
+      },
+      {
+        "message": "ORCH: add Stage 4-5 graph status to canonical synchronizer",
+        "sha": "6332d718f1a37473a033df80e670fc60adec0512",
+        "timestamp": "2026-10-06T14:13:03+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c330a23579ad6bfea6c264ed28a33b4411f2abcd",
+        "timestamp": "2026-10-06T12:12:57Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "488efb362e95a4149f57b4b501cff6ce38e553b2",
         "timestamp": "2026-10-06T12:12:51Z"
       },
@@ -4508,26 +4528,6 @@
         "message": "ORCH: document active Stage 4-5 evidence graph architecture",
         "sha": "86ffdde98b97a3410637cc2c5a02e4253c6a2e90",
         "timestamp": "2026-10-06T14:12:40+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "c0a52a2963568bb61524734d6777e763debb3667",
-        "timestamp": "2026-10-06T12:12:18Z"
-      },
-      {
-        "message": "ORCH: activate parallel Stage 4-5 research wave and event bus",
-        "sha": "6dd31da21d81576c2784b18a952c287b1d19ea2e",
-        "timestamp": "2026-10-06T14:12:00+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b58cb79fa505f8928c584e1e14bd98f5159e5ec4",
-        "timestamp": "2026-10-06T12:11:38Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "e597337d6bf8d7b2fe1fbd8a2eb3e5ae097dcad2",
-        "timestamp": "2026-10-06T12:11:21Z"
       }
     ]
   },
@@ -4625,7 +4625,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "488efb362e95a4149f57b4b501cff6ce38e553b2",
+  "source_master_sha": "25e2c92102e436a750e1f967fb3ec40ffae458a8",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4739,6 +4739,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37461647569"
+    "run_id": "37461692064"
   }
 }
