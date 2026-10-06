@@ -17,7 +17,7 @@ on:
       - "research/candidates/orthogonal_candidate_specs_2026-10-05.json"
       - "research/evidence/orthogonal_next_gate_latest.json"
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -25,7 +25,9 @@ permissions:
 
 concurrency:
   group: trading-agent-top4-capacity
-  cancel-in-progress: true
+  # A new source/gate commit supersedes an obsolete wave. A routine
+  # scheduler tick must never cancel a valid in-flight research wave.
+  cancel-in-progress: ${{ github.event_name == 'push' }}
 
 jobs:
   windows:
