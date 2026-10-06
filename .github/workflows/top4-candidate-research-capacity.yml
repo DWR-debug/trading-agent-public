@@ -58,6 +58,7 @@ jobs:
         run: |
           @echo off
           setlocal
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-top4\tools\python.exe"
           cd /d "%GITHUB_WORKSPACE%" || exit /b 1
           set "PYTHONPATH=%GITHUB_WORKSPACE%"
           if not exist "%GITHUB_WORKSPACE%\research\runs\top4\${{ matrix.candidate }}\%GITHUB_RUN_ID%" mkdir "%GITHUB_WORKSPACE%\research\runs\top4\${{ matrix.candidate }}\%GITHUB_RUN_ID%"
