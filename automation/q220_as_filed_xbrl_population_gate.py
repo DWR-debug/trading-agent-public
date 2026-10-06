@@ -93,12 +93,26 @@ def xsd_metadata(body:bytes)->dict[str,object]:
 def presentation_metadata(body:bytes)->dict[str,object]:
     text=body.decode("utf-8",errors="replace")
     roles=sorted(set(re.findall(r'(?:xlink:role|role)\s*=\s*["\']([^"\']+)["\']',text,re.I)))
-    arcs=re.findall(r'<(?:link:)?presentationArc\b[^>]*(?:>|/>)',text,re.I); endpoints=[]
+    locs={}
+    for loc in re.findall(r'<(?:link:)?loc\b([^>]*)>',text,re.I|re.S):
+        attrs={k.lower():v for k,v in re.findall(r'([A-Za-z_:][\w:.-]*)\s*=\s*["\']([^"\']*)["\']',loc,re.I|re.S)}
+        label=attrs.get("xlink:label") or attrs.get("label")
+        href=attrs.get("xlink:href") or attrs.get("href")
+        if label and href:
+            locs[label]=href.rsplit("#",1)[-1]
+    arcs=re.findall(r'<(?:link:)?presentationArc\b[^>]*(?:>|/>)',text,re.I); endpoints=[]; mapped=[]
     for arc in arcs:
-        for key in ("xlink:from","xlink:to","from","to"):
-            m=re.search(re.escape(key)+r'\s*=\s*["\']([^"\']+)["\']',arc,re.I)
-            if m: endpoints.append(m.group(1))
-    return {"sha256":sha256(body),"role_count":len(roles),"presentation_arc_count":len(arcs),"endpoint_count":len(endpoints),"roles":roles[:200],"endpoints":sorted(set(endpoints))[:1000]}
+        attrs={k.lower():v for k,v in re.findall(r'([A-Za-z_:][\w:.-]*)\s*=\s*["\']([^"\']*)["\']',arc,re.I|re.S)}
+        frm=attrs.get("xlink:from") or attrs.get("from")
+        to=attrs.get("xlink:to") or attrs.get("to")
+        if frm: endpoints.append(frm)
+        if to: endpoints.append(to)
+        if frm and frm in locs: mapped.append(locs[frm])
+        if to and to in locs: mapped.append(locs[to])
+    return {"sha256":sha256(body),"role_count":len(roles),"loc_count":len(locs),
+            "presentation_arc_count":len(arcs),"endpoint_count":len(endpoints),
+            "roles":roles[:200],"endpoints":sorted(set(endpoints))[:1000],
+            "loc_concepts":sorted(set(mapped))[:2000]}
 
 def submission_primary_map(cik:str)->dict[str,str]:
     status,body=fetch(f"https://data.sec.gov/submissions/CIK{cik}.json")
@@ -133,8 +147,8 @@ def inspect(row:dict[str,str],pmap:dict[str,str])->dict[str,object]:
     if sx!=200: raise RuntimeError(f"XSD_HTTP_{sx}:{acc}")
     if sp2!=200: raise RuntimeError(f"PRE_HTTP_{sp2}:{acc}")
     instance_name=xml_names[0] if xml_names and fetch(f"{base}/{xml_names[0]}")[0]==200 else None
-    tb=ix_textblocks(p); xm=xsd_metadata(xsd); pm=presentation_metadata(pre); endpoints=" ".join(pm["endpoints"]); locals_=sorted(set(x["local_name"] for x in tb))
-    hits=sorted(x for x in locals_ if f"#{x}" in endpoints or x in endpoints)
+    tb=ix_textblocks(p); xm=xsd_metadata(xsd); pm=presentation_metadata(pre); locals_=sorted(set(x["local_name"] for x in tb))
+    hits=sorted(x for x in locals_ if x in set(pm["loc_concepts"]))
     return {"canonical_key":{"cik":row["cik"],"form":row["form"],"filed_date":row["filed_date"],"accession":acc},"acceptance_datetime":accepted,
             "header_sha256":sha256(h),"directory_index_sha256":sha256(d),"primary_document":primary,"primary_document_sha256":sha256(p),
             "primary_document_bytes":len(p),"xsd":xsd_names[0],"xsd_metadata":xm,"presentation_linkbase":pre_names[0],"presentation_metadata":pm,
