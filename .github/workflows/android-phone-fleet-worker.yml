@@ -1,8 +1,9 @@
 name: Android Phone Fleet Worker
 
+# Reserve-only workflow. No automatic fleet scheduling.
+
 on:
-  schedule:
-    - cron: "0 */6 * * *"
+  # Scheduled routing intentionally removed: Android fleet is reserve-only.
   workflow_dispatch: {}
 
 permissions:
