@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-06T07:16:59.452539+00:00",
+    "generated_at_utc": "2026-10-06T07:17:14.802209+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "ffbe3089575ae77f2625ae30991480f5cfa9381a"
+    "source_master_sha": "f709cd9cf70ad7c78bc26d3e6182dd35c6d88796"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1793,7 +1793,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-06T07:16:59.452539+00:00",
+  "generated_at_utc": "2026-10-06T07:17:14.802209+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4490,6 +4490,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: update AI credit availability plan",
+        "sha": "f709cd9cf70ad7c78bc26d3e6182dd35c6d88796",
+        "timestamp": "2026-10-06T07:17:10Z"
+      },
+      {
+        "message": "OPS: record explicit Top-4 workpack purpose in receipts",
+        "sha": "74e4924fc0779aead70fe2da1eca8e9fe84c029b",
+        "timestamp": "2026-10-06T09:17:08+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "c701340f36ca22eac76c5b17a0df5d0b6304290c",
+        "timestamp": "2026-10-06T07:17:04Z"
+      },
+      {
+        "message": "OPS: bind Top-4 AI reviews to candidate-specific context",
+        "sha": "c3c3ae93a497184c14de9f3c536e325af4bb80df",
+        "timestamp": "2026-10-06T09:16:59+02:00"
+      },
+      {
         "message": "OPS: route free AI capacity to Top-4 adversarial reviews",
         "sha": "ffbe3089575ae77f2625ae30991480f5cfa9381a",
         "timestamp": "2026-10-06T09:16:47+02:00"
@@ -4508,26 +4528,6 @@
         "message": "RESEARCH: add AI-2026-10-06-Q220-TOP4-ADVERSARIAL Top-4 adversarial task",
         "sha": "cc136b72d4d1cadeb9dd6adc329f2db030ec52ec",
         "timestamp": "2026-10-06T09:16:21+02:00"
-      },
-      {
-        "message": "RESEARCH: add AI-2026-10-06-Q219-TOP4-ADVERSARIAL Top-4 adversarial task",
-        "sha": "0a415cad946c527a1111d5d834b994ed3a779ee2",
-        "timestamp": "2026-10-06T09:16:17+02:00"
-      },
-      {
-        "message": "RESEARCH: add AI-2026-10-06-Q218-TOP4-ADVERSARIAL Top-4 adversarial task",
-        "sha": "938d74d584d7722ff99066df74f830ad2f908e7d",
-        "timestamp": "2026-10-06T09:16:15+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "45e1c2e87df53709329439c5126e64e3dc0992cc",
-        "timestamp": "2026-10-06T07:15:38Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b657bc359b9135c9e4726a9af6f64085da02c511",
-        "timestamp": "2026-10-06T07:15:22Z"
       }
     ]
   },
@@ -4625,7 +4625,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "ffbe3089575ae77f2625ae30991480f5cfa9381a",
+  "source_master_sha": "f709cd9cf70ad7c78bc26d3e6182dd35c6d88796",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4739,6 +4739,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37428680191"
+    "run_id": "37428700980"
   }
 }
