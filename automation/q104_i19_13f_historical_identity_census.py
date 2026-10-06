@@ -1,6 +1,7 @@
 """Q104:I19 historical SEC 13F identity/archive census; source/PIT only."""
 from __future__ import annotations
-import argparse,csv,hashlib,html.parser,io,json,re,time,urllib.request,zipfile
+import argparse,csv,hashlib,html.parser,io,json,re,threading,time,urllib.error,urllib.request,zipfile
+from concurrent.futures import ThreadPoolExecutor,as_completed
 from datetime import date,datetime,timezone
 from pathlib import Path
 
@@ -11,7 +12,9 @@ START=date(2013,7,1); END=date(2025,10,1); CUTOFF=date(2025,9,24)
 SHARDS={"2013-2017":(date(2013,7,1),date(2018,1,1)),
         "2018-2021":(date(2018,1,1),date(2022,1,1)),
         "2022-2025-09":(date(2022,1,1),END)}
-UA="DWR-debug/trading-agent-public Q104-I19 historical 13F census/1.0"
+UA="DWR-debug/trading-agent-public Q104-I19 historical 13F census/2.0"
+HEADER_REQUEST_GAP_SECONDS=0.35
+HEADER_WORKERS=8
 
 class LinkParser(html.parser.HTMLParser):
     def __init__(self): super().__init__(); self.links=[]; self.h=None; self.buf=[]
@@ -76,7 +79,79 @@ def frozen_cusips():
     return {s:{norm_cusip(str(k).split(":",1)[1]) for k in x.get("security_keys",[]) if str(k).upper().startswith("CUSIP:")}
             for s,x in payload.get("coverage",{}).items()}
 
-def scan_archive(blob,archive,targets):
+class RateLimiter:
+    def __init__(self,gap_seconds):
+        self.gap_seconds=gap_seconds; self._lock=threading.Lock(); self._next=0.0
+    def wait(self):
+        with self._lock:
+            now=time.monotonic(); delay=self._next-now
+            if delay>0: time.sleep(delay)
+            self._next=time.monotonic()+self.gap_seconds
+
+
+def accession_header_url(cik,accession):
+    cik10=str(cik).strip().zfill(10)
+    normalized=str(accession).strip().replace("-","")
+    acc=str(accession).strip()
+    if not re.fullmatch(r"\d{10}-\d{2}-\d{6}",acc):
+        raise ValueError("SEC_ACCESSION_UNPARSEABLE:"+acc)
+    return f"https://www.sec.gov/Archives/edgar/data/{int(cik10)}/{normalized}/{acc}-index-headers.html"
+
+
+def parse_acceptance_header(text,expected_cik,expected_accession,expected_form,expected_filing_date):
+    accepted=re.search(r"<ACCEPTANCE-DATETIME>\s*([0-9]{14})",text,re.I)
+    accession_m=re.search(r"ACCESSION NUMBER:\s*([0-9]{10}-[0-9]{2}-[0-9]{6})",text,re.I)
+    cik_m=re.search(r"CENTRAL INDEX KEY:\s*([0-9]{10})",text,re.I)
+    form_m=re.search(r"CONFORMED SUBMISSION TYPE:\s*([^\s<]+)",text,re.I)
+    filed_m=re.search(r"FILED AS OF DATE:\s*([0-9]{8})",text,re.I)
+    if not accepted: raise ValueError("MISSING_ACCEPTANCE_DATETIME")
+    if not accession_m or accession_m.group(1)!=expected_accession: raise ValueError("ACCESSION_MISMATCH")
+    if not cik_m or cik_m.group(1)!=str(expected_cik).zfill(10): raise ValueError("FILER_CIK_MISMATCH")
+    if not form_m or form_m.group(1).upper()!=expected_form.upper(): raise ValueError("FORM_MISMATCH")
+    if filed_m:
+        filed=f"{filed_m.group(1)[:4]}-{filed_m.group(1)[4:6]}-{filed_m.group(1)[6:8]}"
+        if filed!=expected_filing_date: raise ValueError("FILING_DATE_MISMATCH")
+    raw=accepted.group(1)
+    return f"{raw[:4]}-{raw[4:6]}-{raw[6:8]}T{raw[8:10]}:{raw[10:12]}:{raw[12:14]}"
+
+
+def enrich_acceptance_times(eligible, target_hits):
+    accession_meta={}
+    for symbol,h in target_hits.items():
+        for accession in h.get("accessions",[]):
+            meta=eligible.get(accession)
+            if meta is None:
+                raise RuntimeError("Q104_I19_ACCESSION_NOT_IN_ELIGIBLE:"+accession)
+            accession_meta.setdefault(accession,meta)
+    limiter=RateLimiter(HEADER_REQUEST_GAP_SECONDS)
+    records={}; failures={}
+    def one(item):
+        accession,meta=item
+        cik=meta.get("filer_cik","")
+        if not cik: raise RuntimeError("MISSING_FILER_CIK:"+accession)
+        url=accession_header_url(cik,accession)
+        limiter.wait()
+        req=urllib.request.Request(url,headers={"User-Agent":UA,"Accept":"text/html,text/plain,*/*","Accept-Encoding":"identity"})
+        try:
+            with urllib.request.urlopen(req,timeout=45) as resp:
+                body=resp.read(); status=int(getattr(resp,"status",200))
+        except urllib.error.HTTPError as exc:
+            raise RuntimeError(f"SEC_HEADER_HTTP_{exc.code}") from exc
+        if status!=200: raise RuntimeError(f"SEC_HEADER_HTTP_{status}")
+        value=parse_acceptance_header(body.decode("utf-8","replace"),cik,accession,meta.get("submission_type",""),meta["filing_date"])
+        return accession,{"accession":accession,"filer_cik":str(cik).zfill(10),"filing_date":meta["filing_date"],"period":meta.get("period"),"submission_type":meta.get("submission_type"),"acceptance_datetime":value,"source_url":url,"header_sha256":hashlib.sha256(body).hexdigest(),"header_bytes":len(body)}
+    with ThreadPoolExecutor(max_workers=HEADER_WORKERS) as ex:
+        futures={ex.submit(one,item):item[0] for item in accession_meta.items()}
+        for future in as_completed(futures):
+            accession=futures[future]
+            try:
+                k,v=future.result(); records[k]=v
+            except Exception as exc:
+                failures[accession]=str(exc)
+    return records,failures
+
+
+def scan_archive(blob,archive,targets,enrich_acceptance=False):
     with zipfile.ZipFile(io.BytesIO(blob)) as zf:
         eligible={}
         for row in tsv(zf,"submission.tsv"):
@@ -84,7 +159,7 @@ def scan_archive(blob,archive,targets):
             if not acc or not raw:continue
             try:d=parse_date(raw)
             except ValueError:continue
-            if d<=CUTOFF: eligible[acc]={"filing_date":d.isoformat(),"period":field(row,"PERIODOFREPORT")}
+            if d<=CUTOFF: eligible[acc]={"filing_date":d.isoformat(),"period":field(row,"PERIODOFREPORT"),"filer_cik":field(row,"CIK"),"submission_type":field(row,"SUBMISSIONTYPE")}
         wanted={c:s for s,cs in targets.items() for c in cs}
         hits={s:{"row_count":0,"cusips":set(),"issuer_names":set(),"class_names":set(),"accessions":set(),"filing_dates":set(),"periods":set()} for s in targets}
         conflicts=set()
@@ -98,7 +173,16 @@ def scan_archive(blob,archive,targets):
             h["class_names"].add(field(row,"TITLEOFCLASS")); h["accessions"].add(acc); h["filing_dates"].add(eligible[acc]["filing_date"]); h["periods"].add(eligible[acc]["period"])
     for h in hits.values():
         for k in ("cusips","issuer_names","class_names","accessions","filing_dates","periods"): h[k]=sorted(x for x in h[k] if x)
-    return {"archive":archive,"archive_sha256":hashlib.sha256(blob).hexdigest(),"archive_bytes":len(blob),"target_hits":hits,"security_identity_conflicts":sorted(conflicts)}
+    acceptance_records={}; acceptance_failures={}
+    if enrich_acceptance:
+        acceptance_records,acceptance_failures=enrich_acceptance_times(eligible,hits)
+        for h in hits.values():
+            by_accession={}
+            for accession in h["accessions"]:
+                if accession in acceptance_records: by_accession[accession]=acceptance_records[accession]
+            h["acceptance_records"]=by_accession
+            h["acceptance_complete"]=(len(by_accession)==len(h["accessions"]) and not acceptance_failures)
+    return {"archive":archive,"archive_sha256":hashlib.sha256(blob).hexdigest(),"archive_bytes":len(blob),"target_hits":hits,"security_identity_conflicts":sorted(conflicts),"acceptance_failures":acceptance_failures,"acceptance_record_count":len(acceptance_records),"target_unique_accession_count":len({acc for h in hits.values() for acc in h["accessions"]})}
 
 def load_page(page_file=None):
     return Path(page_file).read_bytes() if page_file else fetch(PAGE)
@@ -124,7 +208,7 @@ def main():
       "scientific_boundary":{"performance_authorized":False,"holdout_selection_allowed":False,"ranking_allowed":False,"parameter_search_allowed":False,"threshold_search_allowed":False,"horizon_search_allowed":False,"promotion_allowed":False,"live_execution_allowed":False},
       "safety":{"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False},
       "next_gate":"historical security-identity closure + SEC acceptance-time join + concept-specific PIT compiler + independent reproduction"}
-    for q in selected: receipt["archives"].append(scan_archive(fetch(q["url"]),q,targets))
+    for q in selected: receipt["archives"].append(scan_archive(fetch(q["url"]),q,targets,enrich_acceptance=True))
     counts={s:0 for s in targets}; misses={s:[] for s in targets}; names={s:set() for s in targets}; conflicts=set()
     for q in receipt["archives"]:
         for s,h in q["target_hits"].items():
@@ -132,10 +216,17 @@ def main():
             else: misses[s].append(q["archive"]["label"] or q["archive"]["url"])
         conflicts.update(q["security_identity_conflicts"])
     receipt["coverage_summary"]={s:{"archives_with_match":counts[s],"archives_without_match":len(selected)-counts[s],"historical_issuer_names_discovered":sorted(names[s]),"missed_archives":misses[s]} for s in targets}
-    receipt["identity_conflicts"]=sorted(conflicts); receipt["archive_completeness_for_shard"]=len(selected)>0 and len(receipt["archives"])==len(selected)
+    receipt["identity_conflicts"]=sorted(conflicts)
+    receipt["acceptance_failures"]={}
+    for q in receipt["archives"]:
+        for acc,err in q.get("acceptance_failures",{}).items(): receipt["acceptance_failures"][acc]=err
+    acceptance_checked=sum(q.get("acceptance_record_count",0) for q in receipt["archives"])
+    acceptance_targets=sum(q.get("target_unique_accession_count",0) for q in receipt["archives"])
+    receipt["acceptance_time_join"]={"records_checked":acceptance_checked,"target_unique_accessions":acceptance_targets,"failures":len(receipt["acceptance_failures"]),"complete":acceptance_targets==acceptance_checked and not receipt["acceptance_failures"],"timezone_inference":False}
+    receipt["archive_completeness_for_shard"]=len(selected)>0 and len(receipt["archives"])==len(selected)
     receipt["receipt_fingerprint"]=hashlib.sha256(json.dumps(receipt,sort_keys=True,separators=(",",":"),ensure_ascii=False).encode()).hexdigest()
     a.output.parent.mkdir(parents=True,exist_ok=True); a.output.write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
     print(json.dumps({"shard":a.shard,"archive_count":len(selected),"coverage_summary":receipt["coverage_summary"],"fingerprint":receipt["receipt_fingerprint"]},ensure_ascii=False,sort_keys=True))
-    return 0 if all(receipt["synthetic"].values()) and not receipt["identity_conflicts"] and receipt["archive_completeness_for_shard"] else 2
+    return 0 if all(receipt["synthetic"].values()) and not receipt["identity_conflicts"] and receipt["archive_completeness_for_shard"] and receipt["acceptance_time_join"]["complete"] else 2
 
 if __name__=="__main__": raise SystemExit(main())

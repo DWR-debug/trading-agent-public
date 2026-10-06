@@ -61,5 +61,5 @@ def test_scan_archive_counts_unique_target_accessions():
     b=io.BytesIO()
     with zipfile.ZipFile(b,"w",zipfile.ZIP_DEFLATED) as z:
         z.writestr("SUBMISSION.tsv",sub); z.writestr("INFOTABLE.tsv",info)
-    r=scan_archive(b.getvalue(),{"url":"synthetic://unique","label":"unique","period_start":"2026-04-01"},{"SPGI":{"78409V104"},"OTHER":{"78409V104"}})
+    r=scan_archive(b.getvalue(),{"url":"synthetic://unique","label":"unique","period_start":"2026-04-01"},{"SPGI":{"78409V104"},"OTHER":{"78409V105"}})
     assert r["target_unique_accession_count"] == 1
