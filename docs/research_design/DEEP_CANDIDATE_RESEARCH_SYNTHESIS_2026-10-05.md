@@ -673,3 +673,22 @@ Design implication:
 The broad credit state is a control, not an additional candidate family. A Q230 path that collapses after this control is a valid falsification result. Paid TRACE Enhanced Historical Data remains outside the project budget and scientific contract.
 
 Sources: https://www.finra.org/finra-data/fixed-income/about-cna-trade ; https://developer.finra.org/catalog
+
+## 34. 2026-10-06 Q230 refinement — trade-structure and revision controls
+
+The current FINRA public trade-activity documentation exposes a richer trade-state vocabulary than the Q230 price/yield state alone: As-Of status, cancellations/corrections, reporting-party type, side, contra-party type, remuneration and trade status are documented. These fields should not be promoted to an independent alpha family. Their first value is as a **data-quality and provenance control layer** for the cross-capital-structure mechanism.
+
+Implementation rule:
+- preserve the raw public EOD trade record and its original observation boundary;
+- construct the issuer bond state only after deterministic security-to-issuer mapping;
+- where the free EOD route exposes the field consistently across the frozen history, compute a predeclared trade-quality state (late/as-of intensity, correction/cancellation intensity, and other explicitly available trade-status composition);
+- test the issuer bond state both with and without this control;
+- use later corrections/cancellations only for mutation and exclusion-sensitivity tests, never to rewrite the historical decision prefix;
+- fail closed when a field is absent, unstable, or available only through paid/enhanced history.
+
+This produces a stronger Q230 falsification ladder: (1) raw issuer bond move; (2) residual after rates; (3) residual after broad free credit state; (4) residual after free-EOD trade-quality controls; (5) timing under a conservative bond-observation -> equity-decision boundary. A collapse at any step is scientifically useful negative evidence. It does not justify parameter optimization.
+
+The exact availability of these fields in the free 10-year EOD panel remains an empirical source-gate question; the FINRA glossary alone is not treated as proof that every field is downloadable in the same public route.
+
+Source: https://www.finra.org/finra-data/fixed-income/about-trade-activity
+
