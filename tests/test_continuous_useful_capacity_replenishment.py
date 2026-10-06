@@ -88,7 +88,7 @@ def test_dashboard_exposes_planned_capacity_as_non_authorizing_plan():
     assert 'data.planned_capacity||[]' in script
     assert "planned_not_started" in generator
     assert "Geplante Kapazität" in html
-    assert "Geplant / Nicht Gestartet" in script
+    assert "GEPLANT / NICHT GESTARTET" in script
 
 
 def test_planned_capacity_planner_skips_active_duplicates_and_artificial_padding():
