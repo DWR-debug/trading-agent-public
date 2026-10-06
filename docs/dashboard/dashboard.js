@@ -60,8 +60,8 @@ function render(data){
       "<div class='name'>"+esc(x.name)+"</div>"+
       "<div class='state'>"+state+"</div>"+
       "<div class='role'>"+esc(x.role)+"</div>"+
-      "<div class='jobs'>"+esc(x.current_assignments||0)+" aktiver Job"+((x.current_assignments||0)===1?"":"s")+"</div>"+
-      "<div class='small muted'>"+esc(plannedCount)+" geplant</div>"+
+      "<div class='jobs'>"+esc(x.current_assignments||0)+" / "+esc(x.research_capacity_slots||1)+" Research-Slots belegt</div>"+
+      "<div class='small muted'>"+esc(plannedCount)+" geplant · "+esc(Math.max(0,Number(x.research_capacity_slots||1)-Number(x.current_assignments||0)))+" Slot(s) frei</div>"+
       "</div>";
   }).join("")+"</div>";
 
@@ -77,13 +77,14 @@ function render(data){
 
   var planned=data.planned_capacity||[];
   $("planned").innerHTML=planned.length ? "<table><thead><tr><th>Kapazität</th><th>Aktuell</th><th>Geplante nächste Arbeit</th><th>Bereitschaft</th><th>Erwartete Dauer</th><th>Planstatus</th></tr></thead><tbody>"+planned.map(function(x){
-    var p=(x.planned_assignments||[])[0];
-    var label=p ? (esc(p.candidate)+" — "+esc(p.task)) : "keine unabhängige Ready-Arbeit";
+    var ps=x.planned_assignments||[];
+    var p=ps[0];
+    var label=p ? ps.map(function(item){return esc(item.candidate)+" — "+esc(item.task);}).join("<br>") : "keine unabhängige Ready-Arbeit";
     var readiness=p ? esc(p.readiness) : "—";
     var dur=p ? fmtDuration(p.expected_duration_seconds) : "—";
     var status=p ? (p.scheduled ? "<span class='badge planned-badge'>GEPLANT / NICHT GESTARTET</span>" : "<span class='badge blocked-badge'>BLOCKIERT / KEINE DISPOSITION</span>") : "<span class='badge unknown'>nicht zugewiesen</span>";
     var basis=p ? "<div class='small muted'>"+esc(p.basis)+"</div>" : "<div class='small muted'>"+esc(x.unallocated_reason||"")+"</div>";
-    return "<tr><td class='rowtitle'>"+esc(x.resource)+"</td><td>"+esc(x.current_assignments||0)+" aktiver Job"+((x.current_assignments||0)===1?"":"s")+"</td><td>"+label+basis+"</td><td>"+readiness+"</td><td>"+dur+(p?"<div class='small muted'>n="+esc(p.duration_sample_count||0)+"</div>":"")+"</td><td>"+status+"</td></tr>";
+    return "<tr><td class='rowtitle'>"+esc(x.resource)+"</td><td>"+esc(x.current_assignments||0)+" / "+esc(x.research_capacity_slots||1)+" Research-Slots</td><td>"+label+basis+"</td><td>"+readiness+"</td><td>"+dur+(p?"<div class='small muted'>n="+esc(p.duration_sample_count||0)+"</div>":"")+"</td><td>"+status+"</td></tr>";
   }).join("")+"</tbody></table>" : "<div class='empty'>Kein bounded Plan im Snapshot.</div>";
 
   $("pipeline").innerHTML=pipeline.length ? "<table><thead><tr><th>Candidate</th><th>Stage</th><th>Nächster Gate</th><th>Aktuell</th><th>Erwartete Jobdauer</th><th>Samples</th></tr></thead><tbody>"+pipeline.map(function(x){
