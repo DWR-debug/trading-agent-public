@@ -527,6 +527,17 @@
         "performance_authorization_allowed": false,
         "priority": "P1",
         "state": "SOURCE_COMPONENT_READY_WITH_HISTORICAL_GAP"
+      },
+      {
+        "candidate_inventory_path": "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
+        "class": "cross_capital_structure_bond_equity_information_state",
+        "code": "Q230",
+        "issue_number": 1102,
+        "next_gate": "free public FINRA EOD trade-panel route + exact free-field availability audit + bond security-master/issuer mapping + lifecycle/revision controls + independent PIT reproduction",
+        "note": "Economic mechanism is externally supported, but free historical implementation remains the bottleneck. Trade-structure/revision fields are provenance and robustness controls, not additional alpha, and future corrections may not rewrite the historical prefix.",
+        "performance_authorization_allowed": false,
+        "priority": "P1",
+        "state": "SOURCE_FEASIBILITY_ACTIVE"
       }
     ],
     "active_research_registry": {
@@ -1435,7 +1446,8 @@
       "Q219",
       "Q220",
       "Q221",
-      "Q224"
+      "Q224",
+      "Q230"
     ],
     "canonical_sources": {
       "active_research_registry": "research/governance/active_research_registry.json",
@@ -1451,7 +1463,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-05T22:33:15.241383+00:00",
+    "generated_at_utc": "2026-10-06T01:04:26.074221+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1459,7 +1471,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "d9c9cfaa44f488ed7b07fd76bbc80893033688f7"
+    "source_master_sha": "7190b2e11f4d1836b8e0ad119d85708016e24503"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1703,7 +1715,7 @@
     },
     "s10_phone": {
       "acceptance_receipt_sha256": "2e40b9d37bf0fbd22bd752fffdaceb0f7ad955e7df1070d0793acbe77c77796d",
-      "artifact_id": "11371564223",
+      "artifact_id": "11381677335",
       "availability_policy": "ASSUMED_ALWAYS_AVAILABLE",
       "candidate_ranking": false,
       "candidate_selection": false,
@@ -1720,9 +1732,9 @@
       "receipt_status": "S10_UTILITY_ACCEPTED",
       "routing_uses_presence_receipt": false,
       "scientific_evidence": false,
-      "source_commit": "1c2bc8a774a012d8cde2075e18d944aa80e00a31",
+      "source_commit": "805d88ce638a93ce2d05d77c192c9641690a3ae7",
       "status": "S10_UTILITY_ACCEPTED",
-      "workflow_run_id": "37376918299"
+      "workflow_run_id": "37392409415"
     },
     "scientific_compute": {
       "canonical_path": "GitHub-hosted deterministic workflows",
@@ -1757,7 +1769,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-05T22:33:15.241383+00:00",
+  "generated_at_utc": "2026-10-06T01:04:26.074221+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2378,7 +2390,7 @@
         "source_id": "FCC_ULS"
       }
     ],
-    "receipt_fingerprint": "465158f8898d8818a516dfd098094e4577ff960cc5491eb9e788ae39ac459ab2",
+    "receipt_fingerprint": "0af14b836a5c16a013264f779c8f919b871759a6c22c7b8049e7a14701d557e7",
     "receipt_type": "q179_q184_pit_readiness_r1",
     "safety": {
       "AUTOMATIC_PROMOTION": false,
@@ -2409,7 +2421,7 @@
       },
       "https://catalog.data.gov/dataset/dol-enforcement-data-inspection": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "397950da75ff9ad09280939a8a4bfbc3685f653cba24acf4327748320b602189",
+        "content_sha256": "3a6b63e3ed3a9578b992786fff2580a741b2c103191ff0e7ac95c15f36003c95",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://catalog.data.gov/dataset/dol-enforcement-data-inspection"
@@ -2423,7 +2435,7 @@
       },
       "https://ferc.gov/what-elibrary": {
         "classification": "RUNNER_ACCESS_BLOCKED",
-        "content_sha256": "85ea8757c885af19d8c48a8f52bc9f3dc34abe50cbc0d2d367917e74673851bc",
+        "content_sha256": "ca76f7eec24b22218ec72f6000d0200b4c1b54e6955b917b6cc74c9a9f60187f",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -2434,14 +2446,14 @@
       },
       "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "401aa619d6b54cd60a37bb3e4a409e3f66b2985b47525b6ff67300220bc4ccba",
+        "content_sha256": "214f439e46b97bafcc687891f2a673b223e8185ab5bcd68e89e75f0e45c4be51",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4"
       },
       "https://www.ferc.gov/about/what-ferc/frequently-asked-questions-faqs/documents-and-filing/elibrary": {
         "classification": "RUNNER_ACCESS_BLOCKED",
-        "content_sha256": "c346183b571c77761027a9edc483a2b482c9506899de849db291e35fbf005fe2",
+        "content_sha256": "c64af8b9bf197784451e0142baa337a61d312ce1c234558df666413ad76769f5",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -2452,21 +2464,21 @@
       },
       "https://www.nhtsa.gov/nhtsa-datasets-and-apis": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "19be9ef59da322c7bd4c3bcdb9ea877a915af9c2eea6ae9efbd73fc8e3c6a503",
+        "content_sha256": "5a9b47cdd51ffe711489a81db953c7d9495b2166705fd6d2aeae0426b0227096",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis"
       },
       "https://www.ntsb.gov/Pages/CAROL-Data-Dictionary.aspx": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "e36df0fa5dc3f6e39bcc493250fb0078e067346d3068c126f960df9e7314d95c",
+        "content_sha256": "8e0cd9557258f283d4a2833cf3a86aaebe85416940978f7183f900ba43817945",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://www.ntsb.gov/Pages/CAROL-Data-Dictionary.aspx"
       },
       "https://www.ntsb.gov/safety/data/Pages/Data_Stats.aspx": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "17cb0c6819c913e2375b80a70ef292740a63c54c40abfc9e80d7c4129fb34661",
+        "content_sha256": "b1b2714c5ac5ece827cedb453c11f78d1e28d8a8b162b699264f31efcb3b6c4f",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://www.ntsb.gov/safety/data/Pages/Data_Stats.aspx"
@@ -2768,7 +2780,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "06fac720a60c124c1b188e5e131ad1b656a06f5d026f7b93f81cce3a8c90e071",
+    "receipt_fingerprint": "5fb5bd08fa246b5ade84806007af036aed30018932a544539764222a0e7ea74f",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2803,7 +2815,7 @@
           }
         ],
         "clock_contract": "Docket event dates are distinct from underlying incident dates; exact public intraday availability must be proven per event class, otherwise use next-session availability.",
-        "content_sha256": "dd207db371ded816631e3c2365152f58904ee89c3a00fcbe02debdccade46723",
+        "content_sha256": "d27ce41d4174c411254d5c9ffd3e054ff42a30dfb4b439cabd3df9996d3d3c81",
         "http_status": 403,
         "missing_markers": [
           "RECAP Archive",
@@ -2827,7 +2839,7 @@
           }
         ],
         "clock_contract": "A recorded docket-entry date is not automatically proof of public dissemination time.",
-        "content_sha256": "f57d21b9b278de38a3c4c65f94ad583067498d55eff776d7905295b5ff5828a7",
+        "content_sha256": "fd05725dbc7a7377474c1ae46b6bc9fe85c3af842bcf1c0619d78b9565cced41",
         "http_status": 403,
         "missing_markers": [
           "Advanced RECAP Search",
@@ -3055,7 +3067,7 @@
         "status": "SOURCE_COMPONENT_READY"
       }
     ],
-    "receipt_fingerprint": "4bc333fbdd3b6cf88b3f2c9ce698c9a1643dc48a6c9eb9ec440833cff19921b6",
+    "receipt_fingerprint": "08961aeca5008706ce46e844c74f2a3b505fda6705fbf70aa542788846ced9a4",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -3127,7 +3139,7 @@
             "url": "https://www.archives.gov/federal-register/faqs"
           }
         ],
-        "content_sha256": "b9f6760754a03f8e89e22947b4e122d775e57abd4369929f9d46204bf6435e34",
+        "content_sha256": "295e8d5a0f1b13a9548116a101144ab8efba2e878a959edefad7ee2afebef07f",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -3146,7 +3158,7 @@
             "url": "https://www.federalregister.gov/api/v1/public-inspection-documents/2021-07287.json"
           }
         ],
-        "content_sha256": "856b75a07ed80aff7a9d4acf0fad32c9f890cf658eb83f2b687b184fd8172e12",
+        "content_sha256": "823e42c6861d909723e7a1cb2b03c0f7ca2771d95b159fa025908aefb27e6bac",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -3637,7 +3649,7 @@
       },
       {
         "api_url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-12-16&per_page=1000",
-        "content_sha256": "47b338da0fb65af27d3f0036ee7da9f846ec873169d8fc0b6015af43d203be66",
+        "content_sha256": "03674a51f5f7a8226ad2e74bfc39685b186e6be7427f663ad016cb23f85e96c0",
         "http_status": 200,
         "parsed": {
           "api_count": 124,
@@ -3860,7 +3872,7 @@
       },
       {
         "api_url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2026-10-02&per_page=1000",
-        "content_sha256": "77fe36aa2e22da02c20ec2c977b4261fce415b16246240014aeef8d3abfd3da3",
+        "content_sha256": "75f179778734517be89f521a4d41f14fb9351c9800025d71a27f34b8f6e7543e",
         "http_status": 200,
         "parsed": {
           "api_count": 108,
@@ -4082,7 +4094,7 @@
         "status": "API_PARSED"
       }
     ],
-    "receipt_fingerprint": "a87f7d1e18c73da0171ceaeaeced8884ee201eb58f3383d02c06ae2ace0aa4ec",
+    "receipt_fingerprint": "c2aded748af0b2b4896a2efa57e29c88d96aa6edc48470656f88d46c1f5f9749",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -4147,7 +4159,7 @@
         "version_date_count": 0
       }
     },
-    "receipt_fingerprint": "d808444ee482f3e84a3fa95702711505e76cdda361878b9be1d0cf81c89f897d",
+    "receipt_fingerprint": "e1e6fc5322adf3373c1d9b3b5ca0baf43d0635c3c92a9dd78c37ef33e60f057c",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -4221,7 +4233,7 @@
             "url": "https://ppubs.uspto.gov/basic/"
           }
         ],
-        "content_sha256": "cfd558371f5997b573cf4a79f2cd7a3b693c1f94142522223bfd0ec3e987e986",
+        "content_sha256": "4bdec17c7508f044978187ab1ee82e70b91d014b3ade4250f15759fad8856db5",
         "missing_markers": [],
         "probe_classification": "PASS",
         "reachable": true,
@@ -4268,14 +4280,14 @@
       "Q204_FR_20200110": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-01-10&per_page=1000",
       "Q204_FR_20201216": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-12-16&per_page=1000"
     },
-    "generated_at_utc": "2026-10-05T15:45:05Z",
+    "generated_at_utc": "2026-10-06T00:18:44Z",
     "governance": {
       "historical_pit_validated": false,
       "live_execution": false,
       "performance_authorized": false,
       "promotion_authorized": false
     },
-    "receipt_fingerprint": "46d7a2813ea4b97b15702905d62e72bc1c3b67642081b9d0683f2af1ab6fe81b",
+    "receipt_fingerprint": "dd72846b4da698685b8e5336b34efddf1da1fb6e515d4cc7ca4326e0168a8efd",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -4411,7 +4423,7 @@
         },
         "2020-12-16": {
           "api_count": 124,
-          "content_sha256": "3ec23f99872d34257a4a0465e5c60d177fea8e77ff35d093850b269bf5e4cf1b",
+          "content_sha256": "03674a51f5f7a8226ad2e74bfc39685b186e6be7427f663ad016cb23f85e96c0",
           "correction_or_withdrawal_note_count": 2,
           "http_status": 200,
           "missing_filed_timestamp_count": 1,
@@ -4454,44 +4466,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "FIX: normalize quoted Q224 request timestamps",
-        "sha": "d9c9cfaa44f488ed7b07fd76bbc80893033688f7",
-        "timestamp": "2026-10-06T00:33:03+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "7190b2e11f4d1836b8e0ad119d85708016e24503",
+        "timestamp": "2026-10-06T01:04:24Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b3fd70e0c1bdf23fa689807399e84117cf7ba3c0",
-        "timestamp": "2026-10-05T22:33:00Z"
+        "message": "RESEARCH: activate Q230 source-feasibility gate",
+        "sha": "5c0c08284754d03a61e2fe61ea3cc2aab04d42e6",
+        "timestamp": "2026-10-06T03:04:18+02:00"
+      },
+      {
+        "message": "RESEARCH: strengthen Q230 trade-structure provenance controls",
+        "sha": "d5f9d06c4d16441089b56f470241471f09eae31f",
+        "timestamp": "2026-10-06T03:04:11+02:00"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "042a035b7191248b29d20a7a781fb6fecd046f18",
-        "timestamp": "2026-10-05T22:32:56Z"
+        "sha": "4ddecc4df5d950ef246e2c3f6752fb67f760c975",
+        "timestamp": "2026-10-06T00:21:23Z"
+      },
+      {
+        "message": "OPS: record AI worker state",
+        "sha": "46c3678b173cc1fa5efb092543a5e6d6a849da6d",
+        "timestamp": "2026-10-06T00:20:09Z"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "7131f1683007f4673b93b3fbc9198f94e8383298",
-        "timestamp": "2026-10-05T22:32:53Z"
+        "sha": "876f198cd3219d904cca449771b56c1c8e14bacb",
+        "timestamp": "2026-10-06T00:19:29Z"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "f65fadb4dda8cb723988e9f05538d6595c83b78d",
-        "timestamp": "2026-10-05T22:32:51Z"
-      },
-      {
-        "message": "DOCS: persist Q230 broad-credit control refinement",
-        "sha": "559bcf9cad899360daaf7d3773da9d4b311dcce5",
-        "timestamp": "2026-10-06T00:32:48+02:00"
+        "sha": "8d27a736883d2376ca9524a18c18b5a9c25af6a1",
+        "timestamp": "2026-10-06T00:19:05Z"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "9d3baf011f85246f65ce600f8a8435a36f96d7c1",
-        "timestamp": "2026-10-05T22:32:45Z"
-      },
-      {
-        "message": "RESEARCH: strengthen Q230 with predeclared free credit-market controls",
-        "sha": "6cec1533c0b6b10b48bd19206ef513d5a699a08d",
-        "timestamp": "2026-10-06T00:32:39+02:00"
+        "sha": "2431fc66db5f295fb2a9b33afe2d1cc689d7d07f",
+        "timestamp": "2026-10-06T00:18:48Z"
       }
     ]
   },
@@ -4589,7 +4601,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "d9c9cfaa44f488ed7b07fd76bbc80893033688f7",
+  "source_master_sha": "7190b2e11f4d1836b8e0ad119d85708016e24503",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4703,6 +4715,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37383186786"
+    "run_id": "37397279333"
   }
 }
