@@ -113,6 +113,29 @@ When a shared component is refreshed, all dependent candidate lanes inherit only
 the deterministic structural artifact and its provenance. Candidate-specific
 semantic and scientific gates are evaluated independently.
 
+## 2ad. Temporal / Identity / State Spine — 2026-10-06
+
+The Knowledge Relation Plane is now backed by a four-layer **Temporal / Identity / State / Relation (T/I/S/R) Spine**.
+
+The spine is the reusable substrate between raw source receipts and candidate-specific scientific gates:
+**Source -> public clock -> entity identity -> observable state -> state transition -> relation -> candidate receipt.**
+
+T — Temporal Spine preserves occurrence/action time separately from public-observation, release/publication, retrieval and revision timestamps.
+I — Identity Spine preserves source-specific IDs, canonical issuer/security/entity IDs, validity intervals and mapping provenance.
+S — State Spine represents deterministic predeclared states and observable transitions with revision lineage and a closed historical-prefix fingerprint.
+R — Relation Spine connects these objects to candidate contracts, receipts and negative evidence.
+
+The implementation is `research/governance/temporal_identity_state_spine_contract_2026_10_06.json` + `automation/temporal_identity_state_spine.py`.
+The candidate-level readiness matrix is `research/evidence/spine_candidate_readiness_matrix_latest.json`.
+The bounded execution wave is `.github/workflows/temporal-identity-state-spine-waves.yml`.
+
+The spine creates a useful separation between **what happened**, **when it became public**, **to whom it belongs**, and **which observable state changed**. These dimensions must never be silently collapsed.
+
+Critical invariants are fail-closed: public-observation time cannot be later than retrieval time; revisions cannot precede the public boundary; identity validity must cover the event boundary; no-op state transitions are rejected; candidate-specific PIT/revision/identity gates remain mandatory.
+
+The scheduler may reuse T/I/S infrastructure across candidates and prioritize shared unresolved prerequisites by downstream unblocking value. It may not infer scientific similarity or performance from shared infrastructure.
+
+Current active wave objective: independently validate the spine on three Windows lanes, hosted x64 integration and hosted ARM64 reproduction, then use the resulting structural readiness to accelerate Q218/Q219/Q220/Q221 plus Q224/Q228/Q229/Q230/Q231 source/PIT work. This is discovery/source/PIT work only.
 ## 2a. Persistent acceleration policy
 ## 2b. Permanent literature-research plane
 
