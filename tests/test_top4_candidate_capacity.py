@@ -46,7 +46,5 @@ def test_legacy_research_loops_are_manual_only():
     ):
         text=(ROOT/path).read_text(encoding="utf-8")
         assert "workflow_dispatch:" in text
-        assert "
-  schedule:" not in text
-        assert "
-  push:" not in text
+        assert "\n  schedule:" not in text
+        assert "\n  push:" not in text
