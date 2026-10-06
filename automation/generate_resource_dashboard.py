@@ -687,7 +687,8 @@ def planned_capacity_plan(
     return rows
 
 
-\ndef android_fleet_snapshot(runners: list[dict[str, Any]], work: list[dict[str, Any]]) -> list[dict[str, Any]]:
+
+def android_fleet_snapshot(runners: list[dict[str, Any]], work: list[dict[str, Any]]) -> list[dict[str, Any]]:
     try:
         registry = json.loads(
             (ROOT / "ops" / "android_phone_resources.json").read_text(encoding="utf-8")
