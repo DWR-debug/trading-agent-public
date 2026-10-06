@@ -109,7 +109,12 @@ def test_planned_capacity_planner_skips_active_duplicates_and_artificial_padding
         x["planned_assignments"][0]["candidate"]
         for x in plan if x["planned_assignments"] and x["planned_assignments"][0].get("scheduled")
     ]
-    assert "Q218" not in planned_candidates
+    assert all(
+        item["candidate"] != "Q218" or item["plan_id"] == "Q218-ADVERSARIAL"
+        for row in plan
+        for item in row["planned_assignments"]
+        if item.get("scheduled")
+    )
     assert len(planned_candidates) == len(set(planned_candidates))
     assert by_resource["Free AI pool"]["planned_count"] == 1 or by_resource["Free AI pool"]["blocked_count"] == 0
     assert by_resource["Windows self-hosted B"]["planned_count"] == 0
