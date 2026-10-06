@@ -45,10 +45,13 @@ jobs:
           mkdir -p research/runs/spine/router/${GITHUB_RUN_ID}
           gh api "/repos/${GITHUB_REPOSITORY}/actions/runs?per_page=200" > research/runs/spine/router/${GITHUB_RUN_ID}/runs.json
           python -m automation.spine_next_gate_router --runs research/runs/spine/router/${GITHUB_RUN_ID}/runs.json --output research/runs/spine/router/${GITHUB_RUN_ID}/dispatch_plan.json --max-dispatches 5
-          plan="$(cat research/runs/spine/router/${GITHUB_RUN_ID}/dispatch_plan.json)"
+          export ROUTER_RUN_ID="${GITHUB_RUN_ID}"
+          export ROUTER_RUNS_PATH="research/runs/spine/router/${GITHUB_RUN_ID}/runs.json"
+          export ROUTER_PLAN_PATH="research/runs/spine/router/${GITHUB_RUN_ID}/dispatch_plan.json"
           spine_ready="$(python - <<'PY'
-          import json,sys
-          d=json.load(open('research/runs/spine/router/${GITHUB_RUN_ID}/runs.json',encoding='utf-8'))
+          import json, os
+          path=os.environ['ROUTER_RUNS_PATH']
+          d=json.load(open(path,encoding='utf-8'))
           runs=[r for r in d.get('workflow_runs',[]) if r.get('name')=='Temporal Identity State Spine Waves']
           runs.sort(key=lambda r:r.get('created_at',''),reverse=True)
           print('true' if runs and runs[0].get('status')=='completed' and runs[0].get('conclusion')=='success' else 'false')
