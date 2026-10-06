@@ -68,7 +68,7 @@ def sec_submission_census() -> dict:
         items = recent.get("items", [])
         rows = []
         for i, form in enumerate(forms):
-            if form not in {"10-K", "8-K"}:
+            if form not in {"10-K", "10-K/A", "8-K", "8-K/A"}:
                 continue
             filing_date = filing_dates[i] if i < len(filing_dates) else None
             if not filing_date or filing_date > FIXED_END:
@@ -131,6 +131,7 @@ def sec_submission_census() -> dict:
             and r.get("acceptance_datetime_found") is True
         ]
         eight_k = [r for r in rows if r["form"] == "8-K"]
+        amendment_rows = [r for r in rows if r.get("form", "").endswith("/A")]
         for target in annual:
             target_accept = target["acceptance_datetime"]
             prior = [
@@ -195,6 +196,9 @@ def sec_submission_census() -> dict:
                 [r for r in eligible_all if r.get("in_control_window") is True]
             ),
             "pairing_rule": pairing_rule,
+            "pairing_excludes_amended_8k": True,
+            "amendment_count": len(amendment_rows),
+            "amendment_accessions": [r["accession"] for r in amendment_rows],
             "paired_10k_count": len(paired_targets),
             "pairable_report_period_count": len(paired_targets),
             "latest_10k": (
@@ -220,6 +224,9 @@ def sec_submission_census() -> dict:
                         r["paired_8k"].get("report_date") if r.get("paired_8k") else None
                     ),
                     "pair_lower_bound_acceptance": r.get("pair_lower_bound_acceptance"),
+                    "paired_8k_is_amendment": bool(
+                        r.get("paired_8k", {}).get("form", "").endswith("/A")
+                    ) if r.get("paired_8k") else False,
                     "pairing_observed": r.get("pairing_observed") is True,
                 }
                 for r in annual
