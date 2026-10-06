@@ -136,6 +136,47 @@ jobs:
           print("LITERATURE_SCOUT_FINGERPRINT="+payload["bundle_fingerprint"])
           PY
 
+      - name: Scan free public repositories and web-linked research/blog sources
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="research/runs/literature_frontier/$GITHUB_RUN_ID"
+          python - <<'PY'
+          import json, os, urllib.parse, urllib.request
+          from pathlib import Path
+          root=Path(os.environ["GITHUB_WORKSPACE"]) / "research/runs/literature_frontier" / os.environ["GITHUB_RUN_ID"]
+          manifest=json.loads((root/"query_manifest.json").read_text())
+          repo_results=[]; web_results=[]; errors=[]
+          headers={"Accept":"application/vnd.github+json","Authorization":f"Bearer {os.environ.get('GH_TOKEN','')}","User-Agent":"TradingAgent-Public-Literature-Scout/1.0"}
+          for axis, query in manifest["queries"]:
+              try:
+                  gh_url="https://api.github.com/search/repositories?"+urllib.parse.urlencode({"q": f"({query}) in:name,description,readme", "per_page": 5, "sort": "stars", "order": "desc"})
+                  req=urllib.request.Request(gh_url,headers=headers)
+                  with urllib.request.urlopen(req,timeout=20) as resp: data=json.loads(resp.read().decode("utf-8"))
+                  for repo in data.get("items",[]):
+                      repo_results.append({"axis":axis,"source_kind":"public_github_repository","repository":repo.get("full_name"),"description":repo.get("description"),"html_url":repo.get("html_url"),"topics":repo.get("topics",[]),"stargazers_count":repo.get("stargazers_count"),"updated_at":repo.get("updated_at"),"discovery_only":True})
+              except Exception as exc:
+                  errors.append({"axis":axis,"source_kind":"public_github_repository","error":f"{type(exc).__name__}:{exc}"})
+              try:
+                  hn_url="https://hn.algolia.com/api/v1/search?"+urllib.parse.urlencode({"query":query,"tags":"story","hitsPerPage":5})
+                  req=urllib.request.Request(hn_url,headers={"User-Agent":"TradingAgent-Public-Literature-Scout/1.0"})
+                  with urllib.request.urlopen(req,timeout=20) as resp: data=json.loads(resp.read().decode("utf-8"))
+                  for hit in data.get("hits",[]):
+                      if hit.get("url"): web_results.append({"axis":axis,"source_kind":"public_web_link_blog_research","title":hit.get("title"),"url":hit.get("url"),"hn_url":(f"https://news.ycombinator.com/item?id={hit.get('objectID')}" if hit.get("objectID") else None),"created_at":hit.get("created_at"),"points":hit.get("points"),"discovery_only":True})
+              except Exception as exc:
+                  errors.append({"axis":axis,"source_kind":"public_web_link_blog_research","error":f"{type(exc).__name__}:{exc}"})
+          dedup_repo={x.get("repository"):x for x in repo_results if x.get("repository")}
+          dedup_web={x.get("url"):x for x in web_results if x.get("url")}
+          payload={"schema_version":1,"record_type":"free_public_source_discovery","status":"DISCOVERY_METADATA_ONLY","generated_at_utc":__import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),"source_classes":["public_github_repository","public_web_link_blog_research"],"repository_result_count":len(dedup_repo),"web_link_result_count":len(dedup_web),"errors":errors,"repositories":list(dedup_repo.values()),"web_links":list(dedup_web.values()),"governance":{"performance_authorized":False,"holdout_selection_allowed":False,"ranking_for_scientific_selection":False,"parameter_search_allowed":False,"asset_search_allowed":False,"threshold_search_allowed":False,"horizon_search_allowed":False,"promotion_allowed":False,"live_execution_allowed":False,"source_claims_are_not_project_evidence":True,"free_access_scope_is_broad_not_exhaustive":True}}
+          (root/"free_public_sources.json").write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n")
+          print("FREE_PUBLIC_SOURCE_DISCOVERY="+payload["status"])
+          print("FREE_PUBLIC_REPOSITORIES="+str(payload["repository_result_count"]))
+          print("FREE_PUBLIC_WEB_LINKS="+str(payload["web_link_result_count"]))
+          print("FREE_PUBLIC_SOURCE_ERRORS="+str(len(errors)))
+          PY
+
       - name: Upload discovery receipt
         if: always()
         uses: actions/upload-artifact@v6
