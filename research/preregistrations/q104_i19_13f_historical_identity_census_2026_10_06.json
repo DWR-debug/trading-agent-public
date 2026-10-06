@@ -1,0 +1,13 @@
+{
+  "schema_version":"1.0",
+  "task_id":"Q-2026-10-06-104-I19-13F-HISTORICAL-ID-CENSUS",
+  "candidate_id":"Q104:I19",
+  "status":"PREREGISTERED_SOURCE_IDENTITY_CENSUS_ONLY",
+  "data_start":"2013-07-01",
+  "data_end":"2025-09-24",
+  "universe":["SPGI","NDAQ","AMP","RJF","WMB","VLO","DVN","EMN"],
+  "identity_basis":"Frozen current Q113 CUSIPs; historical issuer names are discovery evidence only.",
+  "pit_safety":{"filing_cutoff":"2025-09-24","future_filing_rows_excluded":true,"acceptance_timestamp_not_claimed":true,
+    "performance":false,"holdout_selection":false,"ranking":false,"tuning":false,"promotion":false,"live_execution":false},
+  "scientific_boundary":"Source/identity feasibility only. A passed census does not authorize performance."
+}
