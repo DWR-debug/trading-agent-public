@@ -100,6 +100,10 @@ def scan_archive(blob,archive,targets):
         for k in ("cusips","issuer_names","class_names","accessions","filing_dates","periods"): h[k]=sorted(x for x in h[k] if x)
     return {"archive":archive,"archive_sha256":hashlib.sha256(blob).hexdigest(),"archive_bytes":len(blob),"target_hits":hits,"security_identity_conflicts":sorted(conflicts)}
 
+def load_page(page_file=None):
+    return Path(page_file).read_bytes() if page_file else fetch(PAGE)
+
+
 def synthetic_contract():
     sub="ACCESSION_NUMBER\tFILING_DATE\tPERIODOFREPORT\nA1\t01-JUL-2017\t30-JUN-2017\nA2\t01-NOV-2025\t30-SEP-2025\n"
     info="ACCESSION_NUMBER\tNAMEOFISSUER\tTITLEOFCLASS\tCUSIP\nA1\tOld Name Corp\tCommon Stock\t78409V104\nA2\tFuture Name Corp\tCommon Stock\t78409V104\n"
@@ -110,8 +114,8 @@ def synthetic_contract():
     return {"hash":len(r["archive_sha256"])==64,"matched":h["row_count"]==1,"future_excluded":"Future Name Corp" not in h["issuer_names"],"no_identity_conflict":not r["security_identity_conflicts"]}
 
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument("--shard",choices=sorted(SHARDS),required=True); ap.add_argument("--output",type=Path,required=True); a=ap.parse_args()
-    page=fetch(PAGE); all_archives=discover_archives(page); lo,hi=SHARDS[a.shard]; selected=[x for x in all_archives if lo<=date.fromisoformat(x["period_start"])<hi]; targets=frozen_cusips()
+    ap=argparse.ArgumentParser(); ap.add_argument("--shard",choices=sorted(SHARDS),required=True); ap.add_argument("--output",type=Path,required=True); ap.add_argument("--page-file",type=Path); a=ap.parse_args()
+    page=load_page(a.page_file); all_archives=discover_archives(page); lo,hi=SHARDS[a.shard]; selected=[x for x in all_archives if lo<=date.fromisoformat(x["period_start"])<hi]; targets=frozen_cusips()
     receipt={"schema_version":"1.0","task_id":"Q-2026-10-06-104-I19-13F-HISTORICAL-ID-CENSUS-"+a.shard,"candidate_id":"Q104:I19",
       "status":"13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_SOURCE_ONLY","generated_at_utc":datetime.now(timezone.utc).isoformat(),"official_source":PAGE,
       "source_page_sha256":hashlib.sha256(page).hexdigest(),"data_boundary":{"start_inclusive":START.isoformat(),"end_exclusive":END.isoformat(),"filing_cutoff":CUTOFF.isoformat()},
