@@ -117,7 +117,7 @@ def parse_index(body: bytes) -> list[dict[str, str]]:
         filename = data["filename"]
         if not (START <= filed_date <= END):
             continue
-        if not cik.isdigit() or not re.fullmatch(r"edgar/data/\d{1,10}/\d{18}/\S+", filename):
+        if not cik.isdigit() or not re.fullmatch(r"edgar/data/\d{1,10}/\S+", filename):
             continue
         rows.append({
             "cik": cik.zfill(10),
