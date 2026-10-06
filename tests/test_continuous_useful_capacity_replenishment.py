@@ -133,3 +133,15 @@ def test_dashboard_hides_operational_maintenance_from_active_jobs():
         '"Spine Next-Gate Autonomous Router"',
     ):
         assert marker in generator
+
+
+def test_dashboard_exposes_live_berlin_clock():
+    root = Path(__file__).parents[1]
+    html = (root / "docs/dashboard/index.html").read_text(encoding="utf-8")
+    script = (root / "docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+    assert 'id="clockTime"' in html
+    assert 'id="clockDate"' in html
+    assert 'Europe/Berlin' in html
+    assert 'function updateClock()' in script
+    assert 'timeZone:"Europe/Berlin"' in script
+    assert 'setInterval(updateClock,1000)' in script
