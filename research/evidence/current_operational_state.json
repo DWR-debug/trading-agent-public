@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-06T09:16:08.661945+00:00",
+    "generated_at_utc": "2026-10-06T09:17:04.014652+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "eebac3b6f1bd2790f7a8c0ed9e86881f34580ab8"
+    "source_master_sha": "4ca74cb7a1e8d31d37827f4e6bd0bfd2dcb59d24"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1793,7 +1793,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-06T09:16:08.661945+00:00",
+  "generated_at_utc": "2026-10-06T09:17:04.014652+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4490,44 +4490,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "OPS: fix knowledge relation source formatting",
+        "sha": "4ca74cb7a1e8d31d37827f4e6bd0bfd2dcb59d24",
+        "timestamp": "2026-10-06T11:17:00+02:00"
+      },
+      {
+        "message": "HANDOFF: sync current master snapshot",
+        "sha": "b798a755ffd2af8b13ab4278df48f17bb87e8845",
+        "timestamp": "2026-10-06T11:16:56+02:00"
+      },
+      {
+        "message": "OPS: sync orchestration source snapshot",
+        "sha": "2e2c23f21f7477cc88ae2ded3828e727cb9b87de",
+        "timestamp": "2026-10-06T11:16:53+02:00"
+      },
+      {
+        "message": "STATUS: sync operational source snapshot",
+        "sha": "e10adaf9bffd1d1a62473e1dd4b11009dbfc60dc",
+        "timestamp": "2026-10-06T11:16:49+02:00"
+      },
+      {
+        "message": "STATUS: sync current operational snapshot",
+        "sha": "2869998915d951ae92c948f08dee6bb9c7b7cf97",
+        "timestamp": "2026-10-06T11:16:45+02:00"
+      },
+      {
+        "message": "OPS: refresh resource dashboard snapshot",
+        "sha": "9b405680b04b77d7daebe6d3c27c78bbadbbc83a",
+        "timestamp": "2026-10-06T09:16:20Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "7fc89507d3e34208b5989e2ce4ad80b6d2e9eea9",
+        "timestamp": "2026-10-06T09:16:12Z"
+      },
+      {
         "message": "Merge pull request #1107 from DWR-debug/os/knowledge-relation-plane-2026-10-06",
         "sha": "eebac3b6f1bd2790f7a8c0ed9e86881f34580ab8",
         "timestamp": "2026-10-06T11:15:55+02:00"
-      },
-      {
-        "message": "OPS: add knowledge relation refresh",
-        "sha": "d6205f2810a005b774e3b4bc298410a62c80b429",
-        "timestamp": "2026-10-06T11:15:19+02:00"
-      },
-      {
-        "message": "HANDOFF: persist knowledge relation plane",
-        "sha": "4184f8afd48e3a5cd0f339bd57bf8d0da7d491e8",
-        "timestamp": "2026-10-06T11:15:17+02:00"
-      },
-      {
-        "message": "STATUS: persist knowledge relation operational state",
-        "sha": "8bdf6bf702d0befa93f2cd28a041513d1325e699",
-        "timestamp": "2026-10-06T11:15:13+02:00"
-      },
-      {
-        "message": "STATUS: register knowledge relation plane",
-        "sha": "b7b8bfe51f156dd15d1e1c0f44d30b907ee8183c",
-        "timestamp": "2026-10-06T11:15:09+02:00"
-      },
-      {
-        "message": "OPS: wire knowledge relation plane into chat entrypoint",
-        "sha": "f7b0dfdfeeacca9a381105650ca10c550ae5bf57",
-        "timestamp": "2026-10-06T11:15:06+02:00"
-      },
-      {
-        "message": "OPS: update chat handoff for knowledge relation plane",
-        "sha": "7d99bfb56f2217f8269123b56a7c95d8a2bb2986",
-        "timestamp": "2026-10-06T11:13:45+02:00"
-      },
-      {
-        "message": "OPS: register knowledge relation plane",
-        "sha": "a61f3ecfd47156ccca7e5fdfcd9bc85c973f204b",
-        "timestamp": "2026-10-06T11:13:40+02:00"
       }
     ]
   },
@@ -4542,8 +4542,8 @@
       "starts_utc": "2026-10-01T00:00:00Z"
     },
     "free_resources_only": true,
-    "hypothetical_reference_capital_eur": 2000,
-    "legacy_operational_canary_capital_eur": 500,
+    "hypothetical_reference_capital_eur": 2000.0,
+    "legacy_operational_canary_capital_eur": 500.0,
     "paid_agent_budget_usd": 0,
     "paid_api_budget_usd": 0
   },
@@ -4625,7 +4625,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "7fc89507d3e34208b5989e2ce4ad80b6d2e9eea9",
+  "source_master_sha": "4ca74cb7a1e8d31d37827f4e6bd0bfd2dcb59d24",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4739,6 +4739,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37441764470"
+    "run_id": "37441868746"
   }
 }
