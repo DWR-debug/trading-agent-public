@@ -42,7 +42,7 @@ def main():
         "status":"SOURCE_STRUCTURE_READY_NO_PERFORMANCE" if good else "SOURCE_STRUCTURE_INCOMPLETE",
         "generated_at_utc":datetime.now(timezone.utc).isoformat(),
         "source_contract":{
-            "public_release_start":"2005-05-12 for correspondence through EDGAR; filing-review correspondence concerns filings after Aug 1 2004",
+            "public_release_start":"SEC public release program documented in 2005; guidance covers filing reviews for applicable filings after Aug 1 2004",
             "public_observation":"EDGAR public release boundary of the correspondence record",
             "post_review_delay":"SEC guidance describes at least 20 business days after review completion/effectiveness before public release",
             "forms":{"UPLOAD":"SEC-originated letters to filers","CORRESP":"filer response letters"}
