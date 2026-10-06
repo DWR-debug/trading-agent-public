@@ -36,9 +36,10 @@ WORKPACK_GATE_PATHS={
 
 LANES={
     "Q218":[
-        [PYTHON,"-m","automation.q218_sec_multichannel_source_gate","--output","{OUT}/q218_sec_multichannel_source_gate.json"],
+        [PYTHON,"-m","automation.q218_q221_historical_source_census","--output","{OUT}/q218_q221_historical_source_census.json"],
+        [PYTHON,"-m","automation.q218_q221_candidate_gate_compiler","--census","{OUT}/q218_q221_historical_source_census.json","--output","{OUT}/q218_q221_candidate_gate_compiler.json"],
         [PYTHON,"-m","pytest","-q",*COMMON_TESTS],
-        [PYTHON,"-m","pytest","-q","tests/test_q218_sec_multichannel_source_gate.py","tests/test_q218_q221_candidate_gate_compiler.py"],
+        [PYTHON,"-m","pytest","-q","tests/test_q218_q221_historical_source_census.py","tests/test_q218_q221_candidate_gate_compiler.py"],
     ],
     "Q219":[
         [PYTHON,"-m","automation.q219_options_source_breadth_gate","--output","{OUT}/q219_options_source_breadth_gate.json"],
