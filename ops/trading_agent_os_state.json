@@ -2,7 +2,7 @@
   "schema_version": 1,
   "state_type": "TRADING_AGENT_OS_ORCHESTRATION_SNAPSHOT",
   "effective_date_utc": "2026-10-04T19:00:00+02:00",
-  "source_master_sha": "7fc89507d3e34208b5989e2ce4ad80b6d2e9eea9",
+  "source_master_sha": "ca84cc7beef77750bf7c7ddbf3f38be70cea6ce4",
   "purpose": "Persistent orchestration contract for chat-independent Trading Agent research and engineering.",
   "chat_trigger": "trading agent",
   "capacity_pulse_policy": "10-minute schedule with independent lane-scoped Windows concurrency; local_reproduction shares the explicit long-reproduction priority group while data_qa remains independently schedulable",
@@ -177,7 +177,7 @@
       "Q216",
       "Q217"
     ],
-    "knowledge_relation_plane": "Active: SEC filing/event substrate, XBRL structure, options PIT, USAspending clock, 13F transitions and Treasury demand are connected as reusable metadata components; cross-channel motifs are discovery-only."
+    "knowledge_relation_plane": "Active: shared clocks, identity maps, filing/event substrates, XBRL structure, options PIT, USAspending clock, 13F and Treasury state compilers are reused structurally; T/I/S/R state-transition motifs remain discovery-only."
   },
   "resource_routing": {
     "self_hosted_windows": [
@@ -554,6 +554,22 @@
     "shared_component_rule": "Compute or verify a deterministic structural prerequisite once, then fan out candidate-specific validation.",
     "no_transitive_authority": true,
     "composition_requires_separate_contract": true,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "temporal_identity_state_spine": {
+    "status": "ACTIVE_METADATA_ONLY",
+    "contract": "research/governance/temporal_identity_state_spine_contract_2026_10_06.json",
+    "compiler": "automation/temporal_identity_state_spine.py",
+    "evidence_adapter": "automation/spine_evidence_adapter.py",
+    "next_gate_router": "automation/spine_next_gate_router.py",
+    "workflow": ".github/workflows/temporal-identity-state-spine-waves.yml",
+    "event_driven_follow_on": ".github/workflows/spine-next-gate-autonomous-router.yml",
+    "invariant": "occurrence/action time, public-observation time, identity validity and observable state transition are separate dimensions",
     "performance_authorization": false,
     "holdout_selection": false,
     "ranking": false,
