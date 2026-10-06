@@ -32,6 +32,8 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.13'
+      - name: Install deterministic test dependency
+        run: python -m pip install --disable-pip-version-check pytest
       - name: Build deterministic relation index
         run: |
           python -m automation.knowledge_relation_index --output /tmp/knowledge_relation_index.json
