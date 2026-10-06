@@ -19,3 +19,8 @@ def test_q228_is_an_allowed_target():
 def test_missing_history_is_dispatchable():
     out=plan_dispatches([], now=__import__("datetime").datetime.fromisoformat("2026-10-06T10:30:00+00:00"), max_dispatches=2)
     assert len(out["dispatches"])==2
+
+
+def test_top4_frontier_has_priority():
+    out=plan_dispatches([], now=__import__("datetime").datetime.fromisoformat("2026-10-06T10:30:00+00:00"), max_dispatches=1)
+    assert out["dispatches"] == [".github/workflows/top4-candidate-research-capacity.yml"]
