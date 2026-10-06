@@ -43,3 +43,12 @@ def test_current_bounded_session_directive_is_bounded():
     assert d["session_mode"]["no_artificial_work"] is True
     assert d["session_mode"]["no_duplicate_work"] is True
     assert d["session_mode"]["scientific_boundary_unchanged"] is True
+
+
+def test_top4_operational_state_includes_q219_capacity():
+    import json
+    state=json.loads((ROOT/"ops/trading_agent_os_state.json").read_text(encoding="utf-8"))
+    overlay=state["top_candidate_capacity_overlay"]["windows_B"]
+    assert overlay["priority"] == ["Q218","Q219","Q220","Q221"]
+    assert "Q219" in overlay["new_overlay"]
+    assert "no Q219 top-4 capacity" not in overlay["new_overlay"]
