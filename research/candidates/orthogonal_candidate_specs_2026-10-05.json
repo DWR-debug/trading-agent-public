@@ -861,6 +861,54 @@
       "scientific_boundary": "discovery_contract_only",
       "priority": "P1_SOURCE_FEASIBILITY",
       "implementation_note": "Issuer-level bond state must be orthogonalized against broad rates and the freely accessible FINRA Corporate Debt Market Breadth/Sentiment state before any later outcome test. This control is predeclared and is not itself an alpha candidate. The public trade-structure fields documented by FINRA (Trade Status, As-Of, Side, Contra Party Type, Reporting Party Type, etc.) are to be treated first as provenance/robustness controls, not alpha. Their admissibility is conditional on the exact free EOD route exposing the field consistently across the frozen historical panel. Future corrections/cancellations may be used only as a mutation/exclusion-sensitivity audit; they must never rewrite the historical decision prefix. FINRA documents a free proprietary fixed-income Symbol and public issuer-name/security attributes; Q230 should prefer these free identifiers when the frozen EOD historical route exposes them consistently, and must not introduce a paid CUSIP dependency merely to solve identity. Current-vs-historical issuer mapping remains a separate PIT gate."
+    },
+    {
+      "id": "Q231",
+      "issue_number": 1104,
+      "name": "SEC FOIA information-acquisition state",
+      "mechanism": "Explicit requests for otherwise non-public SEC records can reveal a costly, directed information-acquisition process distinct from EDGAR access demand. Requester category and deterministic request-description structure may contain information about the latent search target and perceived information value.",
+      "event_clock": "Two-clock design: latent/request receipt time versus first public SEC FOIA-log observation. The public log release containing the request is the admissible trading-information boundary; request/receipt date alone is not sufficient.",
+      "features": [
+        "requester_category_composition",
+        "issuer_targeted_request_intensity",
+        "request_description_topic_state",
+        "institutional_vs_probe_vs_ip_request_mix",
+        "open_to_closed_request_state_when_public",
+        "disposition_state_when_public"
+      ],
+      "direction": "two-sided outcome; no sign assumed ex ante",
+      "cheap_falsifiers": [
+        "request_count_or_firm_size_collapse",
+        "requester_category_permutation",
+        "issuer_mapping_requires_hindsight",
+        "monthly_annual_publication_clock_not_reconstructable",
+        "request_description_too_ambiguous_for_deterministic_mapping",
+        "edgar_document_demand_fully_explains_signal",
+        "historical_foia_log_completeness_inadequate",
+        "useful_component_requires_non_public_foia_materials"
+      ],
+      "gates": [
+        "official_SEC_FOIA_log_archive_completeness",
+        "historical_monthly_annual_publication_clock_census",
+        "deterministic_requester_category_compiler",
+        "deterministic_request_description_to_issuer_security_mapping",
+        "mutation_revision_redaction_audit",
+        "Q224_EDGAR_demand_orthogonality_audit",
+        "independent_PIT_reproduction_on_symbol_disjoint_issuers"
+      ],
+      "non_overlap": [
+        "Q224",
+        "Q218",
+        "Q217",
+        "generic_web_attention"
+      ],
+      "source_basis": [
+        "SEC FOIA Logs",
+        "SEC Chief FOIA Officer Report 2026",
+        "Bao, Brendel, Drake & Su (2026), Review of Accounting Studies"
+      ],
+      "scientific_boundary": "discovery_contract_only",
+      "priority": "P1_SOURCE_FEASIBILITY"
     }
   ],
   "blocked_or_composite_tracks": {
