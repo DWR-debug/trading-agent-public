@@ -12,6 +12,9 @@ on:
       - research/evidence/spine_candidate_readiness_matrix_latest.json
       - .github/workflows/spine-next-gate-autonomous-router.yml
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Temporal Identity State Spine Waves"]
+    types: [completed]
 
 permissions:
   contents: read
@@ -23,6 +26,7 @@ concurrency:
 
 jobs:
   route:
+    if: ${{ github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.name == 'Temporal Identity State Spine Waves' && github.event.workflow_run.head_branch == 'master') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
