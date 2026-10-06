@@ -1,10 +1,10 @@
 # Trading Agent — Current Operational Status
 
-**Current operational snapshot:** `e231038585683712cf4800cb4db76b6ebc25c879`
+**Current operational snapshot:** `eebac3b6f1bd2790f7a8c0ed9e86881f34580ab8`
 
 > **BINDING PROJECT STATUTES:** `docs/TRADING_AGENT_PROJECT_STATUTES.md` — **Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.**
 
-**Generated (UTC):** `2026-10-06T09:15:00+00:00`
+**Generated (UTC):** `2026-10-06T09:16:08.661945+00:00`
 
 **Repository:** `DWR-debug/trading-agent-public`
 
@@ -31,15 +31,6 @@
 - S10 output remains non-scientific and cannot authorize performance or promotion.
 - **PERMANENT LITERATURE-RESEARCH RULE — ACTIVE:** The Trading Agent continuously searches for new, genuinely orthogonal economic mechanisms, information channels and cross-disciplinary relationships. Discovery is run on a recurring daily/weekly research cadence plus an independent public-metadata scout. Every promising finding is verified against primary sources, separated from existing candidate lineages, cheap-falsified where possible, and scored by novelty, PIT feasibility, reproducibility and information gain per compute. Negative/insufficient findings are retained to prevent cyclic rediscovery. Literature claims never become project evidence by themselves and can never authorize performance, holdout selection, ranking, tuning, promotion or live execution.
 
-### Knowledge Relation Plane
-
-- ACTIVE_METADATA_ONLY. The OS now maintains a deterministic relation layer at research/governance/knowledge_relation_graph_contract_2026_10_06.json.
-- The layer links reusable source components, public clocks, entity maps, filing/event anchors, state transitions, candidate contracts, receipts and negative evidence.
-- Current high-value reuse paths are SEC acceptance/as-filed infrastructure across Q218/Q219/Q220, Q129 options PIT for Q219, XBRL structure for Q220, USAspending public-clock infrastructure for Q221/Q203, and deterministic 13F/Treasury state compilers for their downstream tracks.
-- Cross-channel motifs are explicitly represented: two-channel confirmation, disclosure-to-market-response, administrative-state-to-issuer-exposure, and narrative/structured/market multi-representation consistency.
-- The scheduler may prioritize an unresolved shared structural component when it unblocks multiple independent candidates. It may not use performance outcomes for that priority.
-- The relation layer is not a strategy layer: it cannot rank candidates, choose assets/parameters/holdouts, authorize performance, promote candidates or alter a frozen trial.
-- Current deterministic materialization: automation/knowledge_relation_index.py; latest committed metadata snapshot: research/evidence/knowledge_relation_index_latest.json.
 ### Permanent Capacity Saturation & Rolling Research Waves
 
 - **STATUS: ACTIVE_AND_PERSISTENT.** Useful free compute is continuously routed whenever a real bounded backlog exists.

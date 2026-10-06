@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-06T08:57:46.391313+00:00",
+    "generated_at_utc": "2026-10-06T09:16:08.661945+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "56a786639fc92503618b211cb820f020e491364d"
+    "source_master_sha": "eebac3b6f1bd2790f7a8c0ed9e86881f34580ab8"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1793,7 +1793,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-06T08:57:46.391313+00:00",
+  "generated_at_utc": "2026-10-06T09:16:08.661945+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2570,7 +2570,7 @@
         "status": "SOURCE_PROBES_PASSED"
       }
     ],
-    "receipt_fingerprint": "c87a298d4c2d5809f24e5ae74fb16cea6c9ea964d4a684e79ac34e5beb8d4d98",
+    "receipt_fingerprint": "47a7b39375fda00f13a0895c0022fc40dd5a4d0058b0024246469d1c4e9e9b57",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -2618,7 +2618,7 @@
           }
         ],
         "clock_contract": "Transaction identity/date is distinct from daily/weekly dissemination files.",
-        "content_sha256": "86a3429b2e475b126e796dd0c67bec142cbfbe4b59533a2bce7d16e171fd0823",
+        "content_sha256": "39c7ed1bffaa2f43b5d43cdd89b43e16d1a1a2f415b2cb14b21f682d59ef903a",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2648,7 +2648,7 @@
           }
         ],
         "clock_contract": "Issued/received document records are distinct from later corrections and underlying event dates.",
-        "content_sha256": "5964b79d6da250388915d70967acd5ec1dbe6c1803327293067eda54d8edeca9",
+        "content_sha256": "f63c5b0bdb0a4d7cc5054f419c42dd46b06e4dcd635cb626b9d6f787597222c7",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -2669,7 +2669,7 @@
           }
         ],
         "clock_contract": "Recall publication date is distinct from the underlying safety-issue report date.",
-        "content_sha256": "069f2caff8381c7204c3685369994e0061701281b67cc07c808f2572c0c49a27",
+        "content_sha256": "a563cef43d805b3be3fe8a6433abc8abad310410f7002ac71eaff09d8dd1c11e",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2686,7 +2686,7 @@
           }
         ],
         "clock_contract": "Investigation event and publication times remain distinct.",
-        "content_sha256": "d733c71cd0d3c420ee298f04111d3ac2037a73f2d69981cb3639a7da707ff360",
+        "content_sha256": "cf3c9b63081673b28d7241227057f0b2581c43d5fd7a9bbfde940e2f1cd2b739",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -2703,7 +2703,7 @@
           }
         ],
         "clock_contract": "The DOL public catalog establishes the dataset boundary; inspection/opening and later catalog refresh times remain distinct.",
-        "content_sha256": "3a9b1758b2a4ee068bf7bb7da129b38de8e678bb503284ee8f4f4eb94eff0a26",
+        "content_sha256": "74e3952ec285a0af36d0cf5776445f5d602d4c4cb7e7f3903942da5fb84eede3",
         "http_status": 200,
         "missing_markers": [],
         "probe_classification": "PASS",
@@ -4490,44 +4490,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: remove duplicate shared census from Top-4 lanes",
-        "sha": "56a786639fc92503618b211cb820f020e491364d",
-        "timestamp": "2026-10-06T10:57:29+02:00"
+        "message": "Merge pull request #1107 from DWR-debug/os/knowledge-relation-plane-2026-10-06",
+        "sha": "eebac3b6f1bd2790f7a8c0ed9e86881f34580ab8",
+        "timestamp": "2026-10-06T11:15:55+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b1de258d28b9c9fa9f1d82f5c69aa8a7cb8bbd59",
-        "timestamp": "2026-10-06T08:55:45Z"
+        "message": "OPS: add knowledge relation refresh",
+        "sha": "d6205f2810a005b774e3b4bc298410a62c80b429",
+        "timestamp": "2026-10-06T11:15:19+02:00"
       },
       {
-        "message": "RESEARCH: freeze new orthogonal information-channel seeds",
-        "sha": "6f9a1380f754f9ce829d02291e0030b7fc5551f6",
-        "timestamp": "2026-10-06T10:55:30+02:00"
+        "message": "HANDOFF: persist knowledge relation plane",
+        "sha": "4184f8afd48e3a5cd0f339bd57bf8d0da7d491e8",
+        "timestamp": "2026-10-06T11:15:17+02:00"
       },
       {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "8221dfb42fa8c759f0efff2084b3fe1c18a70c5d",
-        "timestamp": "2026-10-06T08:49:45Z"
+        "message": "STATUS: persist knowledge relation operational state",
+        "sha": "8bdf6bf702d0befa93f2cd28a041513d1325e699",
+        "timestamp": "2026-10-06T11:15:13+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "cd88b566fccc4f3531c4f784ede6c7c101efcde9",
-        "timestamp": "2026-10-06T08:45:24Z"
+        "message": "STATUS: register knowledge relation plane",
+        "sha": "b7b8bfe51f156dd15d1e1c0f44d30b907ee8183c",
+        "timestamp": "2026-10-06T11:15:09+02:00"
       },
       {
-        "message": "RESEARCH: record Q219 DoltHub options source lead",
-        "sha": "84f955e648c7222e568c6cf39298e114d33b38fd",
-        "timestamp": "2026-10-06T10:45:08+02:00"
+        "message": "OPS: wire knowledge relation plane into chat entrypoint",
+        "sha": "f7b0dfdfeeacca9a381105650ca10c550ae5bf57",
+        "timestamp": "2026-10-06T11:15:06+02:00"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "b9a8667f695b7968ceac57bd2860c8e9c7bd498d",
-        "timestamp": "2026-10-06T08:42:56Z"
+        "message": "OPS: update chat handoff for knowledge relation plane",
+        "sha": "7d99bfb56f2217f8269123b56a7c95d8a2bb2986",
+        "timestamp": "2026-10-06T11:13:45+02:00"
       },
       {
-        "message": "TEST: correct Q218 event-order fixture",
-        "sha": "36eae7d1a45bb3754a37fede4c9ac7b39e1b356e",
-        "timestamp": "2026-10-06T10:42:29+02:00"
+        "message": "OPS: register knowledge relation plane",
+        "sha": "a61f3ecfd47156ccca7e5fdfcd9bc85c973f204b",
+        "timestamp": "2026-10-06T11:13:40+02:00"
       }
     ]
   },
@@ -4542,8 +4542,8 @@
       "starts_utc": "2026-10-01T00:00:00Z"
     },
     "free_resources_only": true,
-    "hypothetical_reference_capital_eur": 2000,
-    "legacy_operational_canary_capital_eur": 500,
+    "hypothetical_reference_capital_eur": 2000.0,
+    "legacy_operational_canary_capital_eur": 500.0,
     "paid_agent_budget_usd": 0,
     "paid_api_budget_usd": 0
   },
@@ -4625,7 +4625,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "e231038585683712cf4800cb4db76b6ebc25c879",
+  "source_master_sha": "eebac3b6f1bd2790f7a8c0ed9e86881f34580ab8",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4739,26 +4739,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37439632531"
-  },
-  "knowledge_relation_plane": {
-    "status": "ACTIVE_METADATA_ONLY",
-    "contract": "research/governance/knowledge_relation_graph_contract_2026_10_06.json",
-    "latest_index": "research/evidence/knowledge_relation_index_latest.json",
-    "index_builder": "automation/knowledge_relation_index.py",
-    "shared_component_count": 10,
-    "active_candidate_links": 17,
-    "explicit_candidate_relations": 5,
-    "discovery_motifs": 4,
-    "purpose": "Efficient reuse of deterministic source/clock/identity infrastructure and structured cross-channel discovery without transitive scientific authority.",
-    "next_useful_action": "Use relation dependencies to schedule shared structural gates first when they block multiple independent candidates; then fan out candidate-specific PIT/identity/revision gates.",
-    "scientific_boundary": {
-      "performance": false,
-      "holdout_selection": false,
-      "ranking": false,
-      "tuning": false,
-      "promotion": false,
-      "live_execution": false
-    }
+    "run_id": "37441764470"
   }
 }
