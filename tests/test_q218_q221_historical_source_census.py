@@ -22,7 +22,7 @@ def test_q218_q221_census_is_deterministic_and_non_authorizing(tmp_path, monkeyp
     ).encode()
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, "w") as archive:
-        for name in ["sub.txt", "tag.txt", "dim.txt", "num.txt", "txt.txt"]:
+        for name in ["sub.tsv", "tag.tsv", "dim.tsv", "num.tsv", "txt.tsv"]:
             archive.writestr(name, "fixture")
     zip_bytes = buffer.getvalue()
 
@@ -33,12 +33,24 @@ def test_q218_q221_census_is_deterministic_and_non_authorizing(tmp_path, monkeyp
             seen_submission_urls.append(url)
             return 200, "application/json", sample_json
         if url.endswith("-index-headers.html"):
-            return 200, "text/html", b"<ACCEPTANCE-DATETIME>20250215123000 EXHIBIT 99.1 EARNINGS RELEASE"
+            return 200, "text/html", b"<ACCEPTANCE-DATETIME>20250215123000"
+        if url.endswith("a8k.htm"):
+            return 200, "text/html", b"ITEM 2.02 RESULTS OF OPERATIONS AND FINANCIAL CONDITION EARNINGS RELEASE"
         if url.endswith(".zip"):
             return 200, "application/zip", zip_bytes
-        return 200, "text/html", b"RESEARCH DEVELOPMENT TEST AND EVALUATION COMPETITION TRANSACTION"
+        if "about-the-data-download.pdf" in url:
+            return 200, "application/pdf", b"USA"
+        if "api.usaspending.gov/docs/endpoints" in url:
+            return 200, "text/html", b"/api/v2/transactions/"
+        return 200, "text/html", b"fixture"
 
     monkeypatch.setattr(census, "fetch", fake_fetch)
+    monkeypatch.setattr(
+        census,
+        "_extract_pdf_text",
+        lambda body: "Frequency of Updates to Prime Award Data for Contracts "
+        "within five days published to USAspending.gov following morning",
+    )
     result = census.run(tmp_path / "census.json")
     assert result["candidate_ids"] == ["Q218", "Q219", "Q220", "Q221"]
     assert result["scientific_evidence"] is False
@@ -54,5 +66,8 @@ def test_q218_q221_census_is_deterministic_and_non_authorizing(tmp_path, monkeyp
     assert any(url.endswith("CIK0000320193.json") for url in seen_submission_urls)
     assert all(item["pairability_observed"] for item in result["q218_sec_pair_census"]["issuer_results"].values())
     assert result["q220_sec_notes_census"]["zip_parse_ok"] is True
-    assert result["q221_usa_rdtne_census"]["rdtne_marker_found"] is True
+    assert result["q221_usa_rdtne_census"]["public_clock_section_found"] is True
+    assert result["q221_usa_rdtne_census"]["contract_modification_within_five_days_found"] is True
+    assert result["q221_usa_rdtne_census"]["publication_sequence_found"] is True
+    assert result["q221_usa_rdtne_census"]["transactions_endpoint_documented"] is True
     assert Path(tmp_path / "census.json").is_file()
