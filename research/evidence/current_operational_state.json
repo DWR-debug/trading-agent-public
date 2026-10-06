@@ -538,6 +538,17 @@
         "performance_authorization_allowed": false,
         "priority": "P1",
         "state": "SOURCE_FEASIBILITY_ACTIVE"
+      },
+      {
+        "candidate_inventory_path": "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
+        "class": "regulator_disclosed_consumer_complaint_management_response_information_state",
+        "code": "Q229",
+        "issue_number": 1101,
+        "next_gate": "historical CFPB release-link validation + public-observation batch reconstruction + complaint taxonomy freeze + company-to-issuer mapping + publication-selection audit",
+        "note": "Structured CFPB archive/history is source-feasible. The complaint receipt date is not a tradable clock; publication occurs after company response or 15 days, whichever comes first. Live narrative availability is not a prerequisite and must remain outside the core contract.",
+        "performance_authorization_allowed": false,
+        "priority": "P1",
+        "state": "SOURCE_HISTORY_CENSUS_COMPLETED"
       }
     ],
     "active_research_registry": {
@@ -1447,7 +1458,8 @@
       "Q220",
       "Q221",
       "Q224",
-      "Q230"
+      "Q230",
+      "Q229"
     ],
     "canonical_sources": {
       "active_research_registry": "research/governance/active_research_registry.json",
@@ -1463,7 +1475,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-06T01:07:17.534824+00:00",
+    "generated_at_utc": "2026-10-06T01:08:07.727725+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1471,7 +1483,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "f0cfabd7fa38b463868179e80117cc6e431c09fd"
+    "source_master_sha": "4870a0c5672d345e2cb979e707a2c1b2fa1bf460"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1769,7 +1781,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-06T01:07:17.534824+00:00",
+  "generated_at_utc": "2026-10-06T01:08:07.727725+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4466,44 +4478,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "RESEARCH: register Q229 source-history gate",
+        "sha": "4870a0c5672d345e2cb979e707a2c1b2fa1bf460",
+        "timestamp": "2026-10-06T03:07:56+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "31c2e83231ea5fb1505039036a10406ec96c8a61",
+        "timestamp": "2026-10-06T01:07:54Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "3159935ffcc6e1b8644f945b146290e3645d421f",
+        "timestamp": "2026-10-06T01:07:50Z"
+      },
+      {
+        "message": "RESEARCH: make CFPB release ZIP probe byte-accurate",
+        "sha": "68c4c549a6f3648fca965c73af7175b9a3bde00e",
+        "timestamp": "2026-10-06T03:07:41+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "ccec7eb9c985a8e9965bae7cd68deeecc65662aa",
+        "timestamp": "2026-10-06T01:07:24Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "762a8bb96ab590c14cd99e81806c1db4c7f4e6c0",
+        "timestamp": "2026-10-06T01:07:19Z"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "ffd08b67bb4e0a749122fee8ec70dab587b09939",
+        "timestamp": "2026-10-06T01:07:17Z"
+      },
+      {
         "message": "RESEARCH: prefer free FINRA symbol for Q230 security identity",
         "sha": "f0cfabd7fa38b463868179e80117cc6e431c09fd",
         "timestamp": "2026-10-06T03:07:07+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "24b3696ca348a904fc7ea58c3284701b2ff9e302",
-        "timestamp": "2026-10-06T01:06:44Z"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "6e8f0d828023b7ae902c274ca65855d633f32b13",
-        "timestamp": "2026-10-06T01:06:15Z"
-      },
-      {
-        "message": "RESEARCH: validate frozen CFPB historical release targets",
-        "sha": "0693e778d66f11144e832d03305f9798b7a8b3df",
-        "timestamp": "2026-10-06T03:05:57+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "7dcbfdc7df4bffc383d2e5b9716aaf6863f1c186",
-        "timestamp": "2026-10-06T01:05:28Z"
-      },
-      {
-        "message": "EVIDENCE: reconcile Q224 source-gate state",
-        "sha": "fda96e18c155092d3083ea4ee15c7d0613c30f33",
-        "timestamp": "2026-10-06T03:05:13+02:00"
-      },
-      {
-        "message": "RESEARCH: align Q230 probe with free FINRA EOD routes",
-        "sha": "c5d52a11546db5a6844c05a339f5121f850c2c76",
-        "timestamp": "2026-10-06T03:05:06+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "d9690feadb8eded16d337bbbf76189c4f738390a",
-        "timestamp": "2026-10-06T01:04:58Z"
       }
     ]
   },
@@ -4601,7 +4613,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "f0cfabd7fa38b463868179e80117cc6e431c09fd",
+  "source_master_sha": "4870a0c5672d345e2cb979e707a2c1b2fa1bf460",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4715,6 +4727,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37397526067"
+    "run_id": "37397595294"
   }
 }
