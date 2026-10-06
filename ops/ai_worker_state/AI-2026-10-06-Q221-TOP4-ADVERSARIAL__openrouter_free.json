@@ -1,1 +1,76 @@
-{"schema_version":1,"task_id":"AI-2026-10-06-Q221-TOP4-ADVERSARIAL","provider":"openrouter_free","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-10-06-Q221-TOP4-ADVERSARIAL",
+  "provider": "openrouter_free",
+  "free_only": true,
+  "preflight": {
+    "provider": "openrouter_free",
+    "available": true,
+    "binary": null,
+    "free_only": true,
+    "local_mode": false,
+    "litellm_transport_enabled": false,
+    "local_attestation": {
+      "present": false,
+      "path": null
+    },
+    "free_mode_attested": true,
+    "free_mode_attestation": {
+      "eligible": true,
+      "provider": "openrouter_free",
+      "fixed_model": "openrouter/free",
+      "free_mode_attested": true,
+      "attestation_required": false,
+      "attestation_type": "provider_fixed_zero_price_route",
+      "attestation_env": null,
+      "paid_usage_allowed": false,
+      "paid_fallback_allowed": false,
+      "personal_credit_fallback_allowed": false,
+      "reasons": []
+    },
+    "free_enforcement": "fixed_model_openrouter_free",
+    "reasons": []
+  },
+  "litellm_transport_enabled": false,
+  "task_fingerprint": "8419c6c6479e293d31a59a4a342b571a095821564b1f5a96744ad19a78d9f946",
+  "context_fingerprint": "96c94400594524ee89493ec30ac5feb39f18fb6463380594220f26d4201dadc0",
+  "observed_at_utc": "2026-10-06T07:40:43.618841Z",
+  "worker_output_is_scientific_evidence": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 18.479,
+  "stdout": "\n\n# Q221 ADVERSARIAL METHODS REVIEW — USAspending Publication Clock & PIT Feasibility\n\n**Reviewer stance:** Independent second opinion. Attacking assumptions, not seeking consensus. Paper-only; no validation, ranking, tuning, or promotion implied.\n\n---\n\n## 1. FINDINGS — Source/PIT vulnerabilities\n\n### 1.1 Clock validated only against the *current* PDF/API, not the research window\nThe clock gate (`q221_usaspending_public_clock_gate.py`) probes the live `about-the-data` PDF and live API docs, then sets `historical_applicability_proven: False`. The `source_clock_contract_ready` conjunction (`all(...)`) therefore validates **2026-era policy text**, not the publication sequence that governed 2025–2026 records. USAspending has undergone multiple schema, latency, and endpoint changes (FPDS-NG → FPDS, API v1 → v2, data-model rewrites). A string match on today's PDF cannot establish that \"award → 3 business days FPDS → following morning\" applied to a 2025 award.\n\n### 1.2 Policy-vs-practice gap is unmeasured\n\"Following morning\" is stated *intent*. Actual observed latency varies by transaction class, agency, and period. The gate never establishes an empirical latency distribution by transaction class, so the clock boundary is a policy claim, not a measured one.\n\n### 1.3 Award-vs-modification asymmetry is untested\nThe gate checks `\"CONTRACT OR MODIFICATION\"` language but does not test whether the clock semantics differ. Modifications can carry retroactive effective dates and be submitted long after the underlying event (e.g., a change order months prior). If the clock applies to the *modification submission date* rather than the *underlying event date*, the event clock is systematically misaligned for a large share of R&D contracts.\n\n### 1.4 Future leakage into the historical prefix (critical PIT failure)\nAll census and preflight scripts query **live endpoints** for the 2025–2026 window. The current API returns the *current* record state — PSC codes, competition fields, recipient info, and even award amounts can be amended post-hoc. Querying live for historical records yields 2026-era versions of 2025 records → look-ahead bias baked into the feature set. No frozen PIT snapshot exists; the gate itself admits this.\n\n### 1.5 R&D classification is unstable across the window\nR&D identification via PSC (8010–8099) and NAICS 54171x is revised periodically; code semantics shift and back-coding is inconsistent. A universe defined by current codes applied to historical records is not stable — a contract coded R&D in 2025 may be re-coded differently in 2026, or vice versa.\n\n### 1.6 Recipient-to-issuer mapping is fragile\nUSAspending recipient names/addresses do not reliably resolve to public equity parents. Parent/subsidiary relationships change within the window (M&A, spin-offs, reorganizations, name changes). No mapping registry or change log exists; mis-mapping directly corrupts the exposure mapping, which the candidate contract declares immutable.\n\n### 1.7 Competition field quality is known-poor\nCompetition codes are frequently missing or mis-coded in USAspending. Using competition as a feature or filter without a quality audit risks systematic missingness correlated with award size/agency.\n\n### 1.8 The `all()` conjunction is brittle and misaligned\nOne missing string in the current PDF fails the entire clock contract; passing validates only current text. The conjunction mixes unrelated checks (DOD 90-day exception, FAR 30-day exception, FPDS 3-business-days) that may not all apply to the R&D transaction class.\n\n---\n\n## 2. COUNTERARGUMENTS — What the current design claims\n\n- The clock gate explicitly flags `historical_applicability_proven: False`, so the design *acknowledges* the vintage gap — but the gate still computes `source_clock_contract_ready` from the same live probes, creating a false-positive-ready signal.\n- The candidate spec declares `event_clock: \"earliest defensible public observation timestamp\"` and `scientific_authority: false`, which is a defensible posture — but the supporting automation does not enforce clock discipline; it only checks for the *presence* of clock language.\n- Lane B (Frontier Discovery) is designated for \"orthogonal source/PIT feasibility and cheap falsification,\" so the current state is consistent with the lane's purpose — the failure is that the falsification tests have not been run.\n\n---\n\n## 3. CONCRETE NEXT ACTIONS — Cheap deterministic falsifiers\n\n| # | Falsifier | Required artifact | Pass/fail criterion |\n|---|-----------|-------------------|---------------------|\n| F1 | Re-run the clock gate against",
+  "stderr": "",
+  "command_binary": "https-openrouter",
+  "api_model": "openrouter/free",
+  "response_id": "gen-1791272443-vVGpahyIcVLHnuq1sqQr",
+  "usage": {
+    "prompt_tokens": 5538,
+    "completion_tokens": 3200,
+    "total_tokens": 8738,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2284,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
+}
