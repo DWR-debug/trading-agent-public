@@ -93,3 +93,12 @@ def test_q229_q230_are_registered_source_first_and_non_authorizing():
         assert current[candidate_id]["source_or_pit_receipt"] is not None
         assert current[candidate_id]["execution_authorized"] is False
         assert current[candidate_id]["performance_allowed"] is False
+
+
+def test_q231_is_registered_source_first_and_non_authorizing():
+    assert NEXT_GATES["Q231"] == "HISTORICAL_SEC_FOIA_PUBLICATION_CLOCK_AND_ISSUER_MAPPING"
+    result = compile_state()
+    current = {item["candidate_id"]: item for item in result["candidates"]}
+    assert current["Q231"]["source_feasibility_required"] is True
+    assert current["Q231"]["execution_authorized"] is False
+    assert current["Q231"]["performance_allowed"] is False
