@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-06T12:46:18.528160+00:00",
+    "generated_at_utc": "2026-10-06T12:50:04.496492+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "da870b193388ea84f07f89f3478ea98096ea0fff"
+    "source_master_sha": "a03815c7ca4beb16f403927afc4bb1e02a555fbb"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1793,7 +1793,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-06T12:46:18.528160+00:00",
+  "generated_at_utc": "2026-10-06T12:50:04.496492+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4490,6 +4490,16 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "FIX: freeze Q104 source page input per shard",
+        "sha": "a03815c7ca4beb16f403927afc4bb1e02a555fbb",
+        "timestamp": "2026-10-06T14:49:50+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "9b812d9e9f9fbb77b1f4bb42b8801ffc3596ffdf",
+        "timestamp": "2026-10-06T12:46:20Z"
+      },
+      {
         "message": "OPS: register active research workflows",
         "sha": "da870b193388ea84f07f89f3478ea98096ea0fff",
         "timestamp": "2026-10-06T14:46:02+02:00"
@@ -4518,16 +4528,6 @@
         "message": "TEST: verify live contract relations enter Stage 4 graph",
         "sha": "2d118dacc3ff65b3c22fc731097b355cf77c8903",
         "timestamp": "2026-10-06T14:17:08+02:00"
-      },
-      {
-        "message": "FIX: materialize nested knowledge relations and negative evidence",
-        "sha": "00fcdfb6f30efa3e0aa50dc8219086374b41aa43",
-        "timestamp": "2026-10-06T14:16:57+02:00"
-      },
-      {
-        "message": "OPS: synchronize current operational status",
-        "sha": "f5a40d1f00551c6be7a82d43cd8443a0652472ad",
-        "timestamp": "2026-10-06T12:15:57Z"
       }
     ]
   },
@@ -4625,7 +4625,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "da870b193388ea84f07f89f3478ea98096ea0fff",
+  "source_master_sha": "a03815c7ca4beb16f403927afc4bb1e02a555fbb",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4739,6 +4739,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37465665459"
+    "run_id": "37466134679"
   }
 }
