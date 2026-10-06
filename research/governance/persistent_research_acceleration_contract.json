@@ -245,5 +245,31 @@
     "scheduler_rule": "Prioritize unresolved shared structural components by the number of independent downstream tasks they unblock; never use performance outcomes for this priority.",
     "composition_rule": "Graph relations do not create composite candidates. Any composition requires a separate frozen contract and independent candidate-specific PIT/coverage/reproduction gates.",
     "w4_role": "metadata consolidation, overlap audit, dependency routing and negative-evidence deduplication"
+  },
+  "temporal_identity_state_spine": {
+    "status": "ACTIVE",
+    "contract": "research/governance/temporal_identity_state_spine_contract_2026_10_06.json",
+    "compiler": "automation/temporal_identity_state_spine.py",
+    "readiness_matrix": "research/evidence/spine_candidate_readiness_matrix_latest.json",
+    "workflow": ".github/workflows/temporal-identity-state-spine-waves.yml",
+    "rule": "Never collapse occurrence time, public-observation time, identity validity or state transition into a single timestamp/label.",
+    "routing": "Resolve shared temporal/identity/state prerequisites once; fan out candidate-specific PIT, revision and mapping gates.",
+    "priority_candidates": [
+      "Q218",
+      "Q219",
+      "Q220",
+      "Q221",
+      "Q224",
+      "Q228",
+      "Q229",
+      "Q230",
+      "Q231"
+    ],
+    "performance_authorized": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
   }
 }
