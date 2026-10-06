@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-10-06-Q218-TOP4-ADVERSARIAL",
+  "providers": [
+    "openrouter_free",
+    "groq_free",
+    "gemini_cli",
+    "mistral_api"
+  ],
+  "scope": "Q218 mandatory-voluntary disclosure semantic wedge: adversarial source/PIT review only",
+  "prompt": "Attack Q218 as a methods reviewer. Focus on deterministic 10-K to 8-K event pairing, SEC acceptance timestamps, filing amendments, report-date vs event-date ambiguity, false pairing of earnings releases, voluntary-vs-mandatory channel classification, issuer identity drift, and whether the semantic wedge can collapse to length/complexity/global similarity. Specify the smallest deterministic falsifier and exact artifact required for each failure mode. Do not inspect or infer market outcomes; do not rank, tune, select holdouts/assets/parameters/horizons; do not alter gates or authorize performance.",
+  "max_runtime_minutes": 15,
+  "deterministic_compute": false,
+  "holdout_selection": false,
+  "parameter_selection": false,
+  "asset_selection": false,
+  "threshold_selection": false,
+  "horizon_selection": false,
+  "research_gate_changes": false,
+  "promotion_decision": false,
+  "live_execution": false,
+  "paid_usage": false,
+  "research_decision": false,
+  "allow_workspace_writes": false
+}
