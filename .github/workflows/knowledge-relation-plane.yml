@@ -1,0 +1,44 @@
+name: Knowledge Relation Plane
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+  push:
+    branches: [master]
+    paths:
+      - research/governance/knowledge_relation_graph_contract_2026_10_06.json
+      - research/candidates/orthogonal_candidate_specs_2026-10-05.json
+      - research/governance/active_research_registry.json
+      - automation/knowledge_relation_index.py
+      - tests/test_knowledge_relation_index.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-agent-knowledge-relation-plane
+  cancel-in-progress: true
+
+jobs:
+  index:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Build deterministic relation index
+        run: |
+          python -m automation.knowledge_relation_index --output /tmp/knowledge_relation_index.json
+          python -m pytest -q tests/test_knowledge_relation_index.py
+      - name: Upload relation index
+        uses: actions/upload-artifact@v6
+        with:
+          name: knowledge-relation-index-${{ github.run_id }}
+          path: /tmp/knowledge_relation_index.json
+          retention-days: 14
