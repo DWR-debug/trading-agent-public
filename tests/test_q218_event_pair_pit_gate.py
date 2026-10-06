@@ -50,3 +50,26 @@ def test_duplicate_fails():
         assert "Q218_DUPLICATE_PAIR_ASSIGNMENT" in str(exc)
     else:
         raise AssertionError("expected rejection")
+
+
+def test_independent_selection_uses_latest_eligible_8k():
+    issuer={"cik":"1","eligible_8k_events":[
+        {"form":"8-K","is_eligible_earnings_release_8k":True,"acceptance_datetime":"20250108120000","accession":"8K1"},
+        {"form":"8-K","is_eligible_earnings_release_8k":True,"acceptance_datetime":"20250109120000","accession":"8K2"},
+    ],"paired_10k_events":[E(paired_8k_accession="8K2",paired_8k_acceptance_datetime="20250109120000")]}
+    rows,s=pair_issuer(issuer)
+    assert s["paired_count"]==1
+    assert rows[0]["paired_8k_accession"]=="8K2"
+
+
+def test_independent_selection_rejects_wrong_selected_pair():
+    issuer={"cik":"1","eligible_8k_events":[
+        {"form":"8-K","is_eligible_earnings_release_8k":True,"acceptance_datetime":"20250108120000","accession":"8K1"},
+        {"form":"8-K","is_eligible_earnings_release_8k":True,"acceptance_datetime":"20250109120000","accession":"8K2"},
+    ],"paired_10k_events":[E(paired_8k_accession="8K1",paired_8k_acceptance_datetime="20250108120000")]}
+    try:
+        pair_issuer(issuer)
+    except SystemExit as exc:
+        assert "Q218_NONDETERMINISTIC_SELECTED_PAIR" in str(exc)
+    else:
+        raise AssertionError("expected independent selection rejection")
