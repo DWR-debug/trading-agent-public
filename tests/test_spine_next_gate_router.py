@@ -14,7 +14,7 @@ def test_active_run_is_skipped():
 
 def test_q228_is_an_allowed_target():
     out=plan_dispatches([])
-    assert ".github/workflows/q228-sec-correspondence-source-gate.yml" in out["dispatches"]
+    assert ".github/workflows/q228-sec-correspondence-source-gate.yml" in {x["workflow"] for x in out["decisions"]}
 
 def test_missing_history_is_dispatchable():
     out=plan_dispatches([], now=__import__("datetime").datetime.fromisoformat("2026-10-06T10:30:00+00:00"), max_dispatches=2)
