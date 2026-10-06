@@ -34,6 +34,8 @@ ACTIVE_WORKFLOWS = {
     "coverage-candidate-discovery.yml",
     "coverage-candidate-search.yml",
     "current-status-sync.yml",
+    "evidence-graph-stage4-stage5-wave.yml",
+    "q104-i19-13f-historical-identity-census.yml",
     "deep-frontier-source-feasibility.yml",
     "q171-material-receipt-sync.yml",
     "q133-q170-pit-readiness.yml",
