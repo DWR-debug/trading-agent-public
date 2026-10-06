@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "21b09ed5e0acf42b25403dd2963bcae798ddd104089622bbf9e10f9b62a084d2",
-  "observed_at_utc": "2026-10-06T10:53:41.684971Z",
+  "observed_at_utc": "2026-10-06T18:37:11.211360Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 15.135,
-  "stdout": "# Adversarial Source/PIT Review — Q202-Q204 / Q205 Frontier\n\n## Findings\n\n### Q202-Q204 (Information-Timing Family)\n1. **Receipt durability failure**: The receipt path `q202_q204_information_timing_feasibility_latest.json` uses a moving-target name (`_latest`). Under `source_readiness_snapshot_guard.py`, this is classified `PROVISIONAL_LIVE_PROBE_ONLY` unless bound to an immutable dated snapshot / vintage SHA — no such binding is visible in the provided context.\n2. **Information absence**: The task scope itself flags \"Q202-Q204 information absence.\" A candidate with missing source coverage cannot produce a durable historical snapshot; the gate `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT` is correctly asserted by the next-gate compiler and must stay blocked.\n3. **Same-day/date-only leakage risk**: Information-timing clocks are the highest-risk family for substituting occurrence time for public-observation time. The shared contract's decision boundary (`event_public_observation_boundary`) must be enforced per-candidate, not assumed.\n4. **Revision/withdrawal lineage unattested**: No QC/prosecution/amendment lineage artifact is referenced for Q202-Q204 sources.\n\n### Q205 (NLRB Labor-Representation Certification)\n5. **Discovery-only, no PIT validation**: Q205 has no source-feasibility receipt at all in the guard's `RECEIPTS` map and no entry in `orthogonal_pit_next_gate.py`. It cannot be advanced until a dated source snapshot exists.\n6. **Mechanism-lineage novelty unattested**: The anti-convergence rule requires a declared information-source class and mechanism lineage. Q205's NLRB certification channel has not declared its orthogonal distance from Q195 (inspection-to-enforcement escalation) or Q194 (therapeutic-substitution pressure).\n7. **Frozen entity/exposure mapping absent**: NLRB certification affects employer/union entities, not issuer mappings. No frozen pre-event mapping contract exists in the provided specs.\n\n### Cross-Candidate Confounding\n8. **SEC clock overlap**: Q202-Q204 information timing and Q199-Q201 financing transmission may share SEC filing-arrival clocks; convergence without independent source classes violates the orthogonal-search principle.\n9. **Regulatory escalation overlap**: Q205 NLRB and Q195 inspection-to-enforcement both use regulatory-agency escalation; mechanism lineage must differentiate dissemination clock vs. enforcement clock.\n10. **Synthetic mutation validity**: The cheap falsifiers (shift event availability, shuffle issuer exposure, replace observation time with occurrence time, future-mutation test) must be re-run in the candidate-specific compiler for Q202-Q204 and Q205; the compiler's current `NEXT_GATES` does not yet include Q205.\n\n## Counterarguments (Preserved Disagreement)\n- A live endpoint probe *could* be sufficient for discovery-only feasibility if explicitly labeled provisional — but it must never be treated as PIT-ready.\n- The `_latest.json` receipt could theoretically contain durable bindings inside its payload; the guard's `has_durable_binding` check must be run against the actual file, which is not available in this workspace.\n\n## Concrete Next Actions\n1. **Q202-Q204**: Produce an immutable dated snapshot of the information-timing source artifact, SHA-bound, with explicit coverage gaps documented. Missing artifact: `q202_q204_information_timing_snapshot_<date>.json` with `immutable_historical_snapshot` key.\n2. **Q205**: File a discovery-only source-feasibility receipt with durable binding; declare mechanism lineage and orthogonal distance from Q195/Q194. Missing artifact: `q205_nlrb_source_feasibility_<date>.json`.\n3. **Compiler**: Add Q205 to `orthogonal_pit_next_gate.py` RECEIPTS and NEXT_GATES; extend mutation tests to the NLRB channel.\n4. **Confounding audit**: Run a cross-candidate clock-source overlap check across Q199-Q201, Q202-Q204, Q205; document shared vs. independent information classes.\n5. **Falsifier**: For each candidate, execute the cheap falsifier \"replace public-observation time with occurrence time\" and require the candidate to show inference change; otherwise reject clock discipline.\n\n## Uncertainty\n- Durable bindings inside `_latest.json` receipts are unverified (workspace files not accessible).\n- Q205 source availability and NLRB publication latency are unknown; no historical vintage has been sampled.\n- The anti-convergence distance metric (`minimum_scheduler_novelty_distance: 0.8`) has not been computed for Q205 against existing candidates.\n\n## Action Handoff\nAll Q202-Q204 and Q205 candidates remain **BLOCKED** at `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT` / `DISCOVERY_ONLY`. No performance authorization, promotion, or live execution is implied. Handoff to deterministic project tooling for receipt audit and compiler gate extension.",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 29.135,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1791284021-lTSia2yQwxNbOEYeslES",
-  "usage": {
-    "prompt_tokens": 5858,
-    "completion_tokens": 1974,
-    "total_tokens": 7832,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 899,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
