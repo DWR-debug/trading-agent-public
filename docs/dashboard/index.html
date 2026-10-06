@@ -1,51 +1,62 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Trading Agent — Research Control Board</title>
-  <meta name="description" content="Operational resource, worker, research and governance dashboard for the Trading Agent OS.">
+  <meta name="description" content="Kompaktes operatives Dashboard für Kapazitäten, aktive Jobs und Top-4-Forschungspipeline.">
   <style>
     :root{
       color-scheme:light dark;
       --border:rgba(127,127,127,.28);
       --muted:#707070;
-      --good:#1b7f3a;
-      --warn:#9a6700;
-      --bad:#b42318;
+      --operating:#b42318;
+      --available:#1b7f3a;
+      --offline:#777;
       --info:#185adb;
     }
     *{box-sizing:border-box}
     body{margin:0;font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif;background:Canvas;color:CanvasText}
     main{max-width:1480px;margin:0 auto;padding:22px}
     header{display:flex;gap:18px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
-    h1{margin:0 0 4px;font-size:29px}
-    h2{margin:0 0 10px;font-size:18px}
-    h3{margin:0 0 8px;font-size:15px}
+    h1{margin:0 0 4px;font-size:28px}
+    h2{margin:0 0 12px;font-size:18px}
     .muted{color:var(--muted)}
     .actions{display:flex;gap:8px;flex-wrap:wrap}
     button,a.button{border:1px solid var(--border);border-radius:9px;padding:9px 12px;background:ButtonFace;color:ButtonText;text-decoration:none;cursor:pointer}
+    .notice{margin-top:16px;border:1px solid var(--border);border-radius:10px;padding:11px 13px}
+    .legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:9px;font-size:12px;color:var(--muted)}
+    .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
+    .dot.operating{background:var(--operating)} .dot.available{background:var(--available)} .dot.unknown{background:var(--offline)}
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;margin-top:18px}
-    .card{grid-column:span 6;border:1px solid var(--border);border-radius:12px;padding:16px;background:color-mix(in srgb,Canvas 97%,CanvasText 3%)}
-    .wide{grid-column:1/-1}
-    .third{grid-column:span 4}
-    .quarter{grid-column:span 3}
-    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
-    .stat{border:1px solid var(--border);border-radius:10px;padding:11px}
-    .stat .n{font-size:23px;font-weight:700}
-    .stat .l{font-size:12px;color:var(--muted)}
+    .card{grid-column:1/-1;border:1px solid var(--border);border-radius:12px;padding:16px;background:color-mix(in srgb,Canvas 97%,CanvasText 3%)}
+    .capacity-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+    .capacity{border:1px solid var(--border);border-radius:10px;padding:12px;min-height:120px}
+    .capacity.operating{border-left:5px solid var(--operating)}
+    .capacity.available{border-left:5px solid var(--available)}
+    .capacity.unknown{border-left:5px solid var(--offline)}
+    .capacity .name{font-weight:700;margin-bottom:7px}
+    .capacity .state{font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.03em}
+    .capacity.operating .state{color:var(--operating)}
+    .capacity.available .state{color:var(--available)}
+    .capacity.unknown .state{color:var(--offline)}
+    .capacity .role{font-size:12px;color:var(--muted);margin-top:6px}
+    .capacity .jobs{margin-top:9px;font-size:12px}
     table{width:100%;border-collapse:collapse}
     th,td{text-align:left;vertical-align:top;padding:8px;border-bottom:1px solid var(--border)}
     th{font-size:12px;color:var(--muted);font-weight:600}
-    code{word-break:break-all}
     .badge{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:2px 7px;font-size:11px;margin:1px 4px 1px 0}
-    .good{color:var(--good)} .warn{color:var(--warn)} .bad{color:var(--bad)} .info{color:var(--info)}
+    .active-badge{color:var(--operating);border-color:color-mix(in srgb,var(--operating) 40%,var(--border))}
+    .good{color:var(--available)}
+    .unknown{color:var(--offline)}
     .rowtitle{font-weight:650}
     .small{font-size:12px}
     .empty{padding:16px;border:1px dashed var(--border);border-radius:10px;color:var(--muted)}
-    .error{border:1px solid var(--bad);border-radius:10px;padding:12px;margin-top:16px}
+    .error{border:1px solid var(--operating);border-radius:10px;padding:12px;margin-top:16px}
     footer{margin-top:18px;font-size:12px}
-    @media(max-width:900px){.card,.third,.quarter{grid-column:1/-1}}
+    code{word-break:break-all}
+    @media(max-width:1100px){.capacity-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:700px){.capacity-grid{grid-template-columns:1fr}.grid{display:block}.card{margin-bottom:14px}}
   </style>
 </head>
 <body>
@@ -53,11 +64,11 @@
   <header>
     <div>
       <h1>Trading Agent — Research Control Board</h1>
-      <div id="meta" class="muted">Loading operational snapshot…</div>
+      <div id="meta" class="muted">Lade operativen Snapshot…</div>
     </div>
     <div class="actions">
-      <button id="refresh">Refresh snapshot</button>
-      <a class="button primary" id="update" target="_blank" rel="noopener"
+      <button id="refresh">Snapshot aktualisieren</button>
+      <a class="button" id="update" target="_blank" rel="noopener"
          href="https://github.com/DWR-debug/trading-agent-public/actions/workflows/resource-dashboard-update.yml">Update &amp; deploy</a>
       <a class="button" target="_blank" rel="noopener"
          href="https://github.com/DWR-debug/trading-agent-public/actions">Actions</a>
@@ -65,69 +76,47 @@
   </header>
 
   <div id="error" hidden class="error"></div>
-  <div class="notice"><strong>Research priority:</strong> Q218 · Q219 · Q220 · Q221 &nbsp;|&nbsp; Android fleet: reserve-only. <span class="statusline" id="updateStatus">Updater uses the authenticated GitHub Actions workflow; the public Pages site never embeds a write token.</span></div>
-  <noscript><div class="error">JavaScript is required for the interactive Research Control Board.</div></noscript>
+
+  <div class="notice">
+    <strong>Priorität:</strong> Q218 → Q219 → Q220 → Q221 · nur Source/PIT/Structure.
+    <div class="legend">
+      <span><span class="dot operating"></span>Rot = sinnvolle Arbeit läuft</span>
+      <span><span class="dot available"></span>Grün = Kapazität verfügbar/routierbar</span>
+      <span><span class="dot unknown"></span>Grau = offline oder aktuell nicht beobachtbar</span>
+    </div>
+  </div>
 
   <section id="app" class="grid" hidden>
-    <article class="card wide">
-      <h2>Control-plane overview</h2>
-      <div id="overview" class="stats"></div>
+    <article class="card">
+      <h2>Aktive Kapazitäten</h2>
+      <div id="capacity"></div>
+      <div class="small muted" style="margin-top:10px">
+        Grün bei Hosted-Ressourcen bedeutet routierbare Konfiguration; es ist kein Ausführungsreceipt.
+        Physische Runner werden nur dann als aktiv markiert, wenn Runner-/Jobdaten das belegen.
+      </div>
     </article>
 
-    <article class="card wide">
-      <h2>Who is working on what?</h2>
+    <article class="card">
+      <h2>Aktive Jobs</h2>
       <div id="work"></div>
     </article>
 
-    <article class="card wide">
-      <h2>Resource fleet</h2>
-      <div id="resources"></div>
-    </article>
-
-    <article class="card wide">
-      <h2>Top-4 candidate frontier</h2>
-      <div id="top4"></div>
+    <article class="card">
+      <h2>Forschungspipeline</h2>
+      <div id="pipeline"></div>
     </article>
 
     <article class="card">
-      <h2>Research lanes</h2>
-      <div id="lanes"></div>
-    </article>
-
-    <article class="card">
-      <h2>AI / agent fabric</h2>
-      <div id="ai"></div>
-    </article>
-
-    <article class="card wide">
-      <h2>Research frontier and next gates</h2>
-      <div id="research"></div>
-    </article>
-
-    <article class="card wide">
-      <h2>Live runner snapshot</h2>
-      <div id="runners"></div>
-    </article>
-
-    <article class="card wide">
-      <h2>Recent 24h activity</h2>
-      <div id="activity"></div>
-    </article>
-
-    <article class="card wide">
-      <h2>Scientific / safety boundary</h2>
-      <div id="safety"></div>
+      <h2>Erreicht / wissenschaftliche Grenze</h2>
+      <div id="achieved"></div>
     </article>
   </section>
 
   <script src="dashboard_bootstrap.js"></script>
-
-<footer class="muted">
-    Operational snapshot only. Active jobs and runner states are not scientific evidence.
-    AI output never authorizes performance, ranking, tuning, promotion or live execution.
+  <footer class="muted">
+    Operatives Telemetrie-Dashboard. Kein Feld erteilt Performance-Autorisierung, Ranking, Tuning, Promotion oder Live-Ausführung.
   </footer>
 </main>
-
 <script src="dashboard.js"></script>
 </body>
 </html>

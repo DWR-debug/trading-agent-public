@@ -11,7 +11,7 @@ def test_resource_availability_policy_is_always_routable_and_safe():
     routing = data["routing_policy"]
     assert routing["self_hosted_windows"] == "ASSUMED_ALWAYS_AVAILABLE"
     assert routing["s10"] == "ASSUMED_ALWAYS_AVAILABLE"
-    assert routing["android_fleet"] == "ASSUMED_ALWAYS_AVAILABLE"
+    assert routing["android_fleet"] == "RESERVE_ONLY"
     assert routing["fresh_receipts_are_required_for_evidence_claims"] is True
     assert data["capacity"]["windows_runner_slots"] == 2
     assert data["capacity"]["permanent_loop_lanes"] == ["local_reproduction", "data_qa"]
