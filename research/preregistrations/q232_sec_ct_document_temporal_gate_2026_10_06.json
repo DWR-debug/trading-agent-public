@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-06-232-R1-CT-DOCUMENT-TEMPORAL-ANCHOR",
+  "candidate_id": "Q232",
+  "parent_gate": "Q-2026-10-06-232-SEC-CT-SOURCE-CENSUS",
+  "status": "PREREGISTERED_DOCUMENT_FEASIBILITY_PIT_ONLY",
+  "purpose": "Determine whether sampled SEC CT ORDER documents contain deterministic, public temporal state anchors suitable for later lineage reconstruction.",
+  "fixed_window": {"start":"2015-01-01","end":"2025-12-31","quarters":44},
+  "sample_rule": "reuse the source-gate population rule: first/median/last recovered CT ORDER accession per calendar year, sorted by filing date then accession",
+  "sample_size_target": 33,
+  "document_source": "exact SEC archive CT ORDER document declared by the complete submission text",
+  "extraction_tool": "pdftotext -layout; record executable version in receipt",
+  "anchors": {
+    "explicit_date_forms": ["Month DD, YYYY", "MM/DD/YYYY", "YYYY-MM-DD"],
+    "temporal_state_terms": ["expire", "expires", "expiration", "extended until", "extended through"],
+    "context_window_characters": 500
+  },
+  "report_only_metrics": [
+    "pdf_http_retrieval",
+    "pdf_sha256",
+    "text_extraction_success",
+    "date_token_count",
+    "temporal_anchor_hit",
+    "decision_anchor_hit",
+    "extraction_tool_version"
+  ],
+  "cheap_falsifiers": [
+    "sample CT ORDER PDFs are not deterministically retrievable from SEC archives",
+    "text extraction fails for a material fraction of the fixed sample",
+    "temporal-state terms do not co-occur with explicit dates often enough to support deterministic document-state reconstruction",
+    "document text is too unstable across the pre/post-2019 regime split for a common extraction contract"
+  ],
+  "pit_boundary": {
+    "document_expiry_date_is_latent_not_public_observation_clock": true,
+    "same_day_pit_safe": false,
+    "public_observation_time_proven": false
+  },
+  "governance": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "promotion": false,
+    "performance_authorized": false,
+    "automatic_promotion": false,
+    "live_execution": false
+  },
+  "safety": {"PAPER_ONLY":true,"LIVE_TRADING_ENABLED":false,"ORDERS_ENABLED":false,"AUTOMATIC_PROMOTION":false}
+}
