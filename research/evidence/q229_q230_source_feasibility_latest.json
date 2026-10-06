@@ -2,11 +2,11 @@
   "schema_version": "1.0",
   "task_id": "Q-2026-10-05-Q229-Q230-SOURCE-FEASIBILITY",
   "status": "SOURCE_FEASIBILITY_ONLY",
-  "generated_at_utc": "2026-10-06T16:54:19.365884+00:00",
+  "generated_at_utc": "2026-10-06T20:10:54.220552+00:00",
   "candidates": {
     "Q229": {
       "source_status": "PASS",
-      "live_api_probe_status": null,
+      "live_api_probe_status": 200,
       "historical_pit_validated": false,
       "notes": [
         "CFPB publication is conditional on company response or 15-day rule; this probe does not backdate a public signal.",
@@ -32,7 +32,7 @@
       "url": "https://www.consumerfinance.gov/data-research/consumer-complaints/",
       "reachable": true,
       "http_status": 200,
-      "content_sha256": "ed1a446e7ab3a96b69d3721d79a3434279de3475f77c4bacb88867ef8776e82b",
+      "content_sha256": "e9a9b9193f9049dcdb2531bb96859be0da46a0bfb8fd114f8de633a6962d29ca",
       "content_bytes": 155128,
       "missing_markers": [],
       "scientific_boundary": {
@@ -85,10 +85,10 @@
     {
       "name": "Q229_CFPB_API_LIVE",
       "url": "https://www.consumerfinance.gov/data-research/consumer-complaints/search/api/v1/?size=1",
-      "reachable": false,
-      "http_status": null,
-      "content_sha256": null,
-      "content_bytes": 0,
+      "reachable": true,
+      "http_status": 200,
+      "content_sha256": "8092b3793a5bacb97be5aa57cb665d343e8ab86ae4ec39cab6c21fa6dd4605e4",
+      "content_bytes": 400444,
       "missing_markers": [],
       "scientific_boundary": {
         "performance": false,
@@ -97,8 +97,7 @@
         "holdout_selection": false,
         "promotion": false,
         "live_execution": false
-      },
-      "error": "TimeoutError:The read operation timed out"
+      }
     },
     {
       "name": "Q230_FINRA_API_SPEC",
@@ -124,7 +123,7 @@
       "url": "https://www.finra.org/filing-reporting/trace",
       "reachable": true,
       "http_status": 200,
-      "content_sha256": "29de60af66097463c27308e272b943b75a45c1b049aa063fb247f0bc22da0667",
+      "content_sha256": "c08873edd5711366801d741232bcde04a60648cba57d7d2b5ad6312719409979",
       "content_bytes": 159414,
       "missing_markers": [],
       "scientific_boundary": {
@@ -169,5 +168,5 @@
     "Q229": "historical_public_release_batch_and_company_to_issuer_mapping_census",
     "Q230": "free_TRACE_historical_panel_security_master_and_issuer_mapping_census"
   },
-  "bundle_fingerprint": "dbfa98f90cbffc4c2c07b2ba2b361f6b2bd03b60dfb3558c5fd607157c114af8"
+  "bundle_fingerprint": "4ef148fe6eab9328e8ffb8f26dace19d45853b15269318e91dbe000bf52819ac"
 }
