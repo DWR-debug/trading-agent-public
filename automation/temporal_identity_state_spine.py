@@ -25,6 +25,57 @@ def assert_safe(obj:dict,label:str)->None:
         if obj.get(k) is True:
             raise SystemExit(f"{label}: forbidden flag {k}=true")
 
+def _required(record:dict, fields:list[str], label:str)->None:
+    missing=[f for f in fields if f not in record]
+    if missing:
+        raise ValueError(f"{label}: missing fields: {','.join(missing)}")
+
+def validate_temporal_record(record:dict, *, label:str="temporal_record")->dict:
+    required=["source_id","source_record_id","event_time","public_observed_at","retrieved_at","revision_time","clock_semantics"]
+    _required(record,required,label)
+    event_time=parse_iso(record["event_time"])
+    public_time=parse_iso(record["public_observed_at"])
+    retrieved_time=parse_iso(record["retrieved_at"])
+    revision_time=parse_iso(record["revision_time"])
+    if public_time > retrieved_time:
+        raise ValueError(f"{label}: public_observed_at after retrieved_at")
+    if revision_time is not None and revision_time < public_time:
+        raise ValueError(f"{label}: revision_time before public_observed_at")
+    return {"event_time":event_time.isoformat() if event_time else None,
+            "public_observed_at":public_time.isoformat(),
+            "retrieved_at":retrieved_time.isoformat(),
+            "revision_time":revision_time.isoformat() if revision_time else None}
+
+def validate_identity_record(record:dict, *, label:str="identity_record")->dict:
+    required=["source_id","source_entity_id","canonical_entity_id","mapping_version","valid_from","valid_to","mapping_status","evidence_fingerprint"]
+    _required(record,required,label)
+    start=parse_iso(record["valid_from"])
+    end=parse_iso(record["valid_to"])
+    if end is not None and end < start:
+        raise ValueError(f"{label}: valid_to before valid_from")
+    if not str(record["evidence_fingerprint"]):
+        raise ValueError(f"{label}: evidence_fingerprint empty")
+    return {"mapping_version":record["mapping_version"],
+            "valid_from":start.isoformat(),
+            "valid_to":end.isoformat() if end else None,
+            "mapping_status":record["mapping_status"]}
+
+def validate_state_transition(record:dict, *, label:str="state_transition")->dict:
+    required=["state_id","entity_id","state_before","state_after","transition_observed_at","source_component","revision_lineage","historical_prefix_fingerprint"]
+    _required(record,required,label)
+    observed=parse_iso(record["transition_observed_at"])
+    if record["state_before"] == record["state_after"]:
+        raise ValueError(f"{label}: no-op transition")
+    if not record["historical_prefix_fingerprint"]:
+        raise ValueError(f"{label}: historical prefix fingerprint empty")
+    if not isinstance(record["revision_lineage"], list):
+        raise ValueError(f"{label}: revision_lineage must be a list")
+    return {"state_id":record["state_id"],
+            "entity_id":record["entity_id"],
+            "transition_observed_at":observed.isoformat(),
+            "state_before":record["state_before"],
+            "state_after":record["state_after"]}
+
 def parse_iso(v):
     if not v: return None
     d=datetime.fromisoformat(str(v).replace("Z","+00:00"))
