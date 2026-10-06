@@ -19,6 +19,13 @@ on:
       - "automation/source_readiness_snapshot_guard.py"
       - "automation/orthogonal_pit_next_gate.py"
       - "ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json"
+      - "automation/top4_candidate_capacity.py"
+      - "automation/q218_q221_historical_source_census.py"
+      - "automation/q218_q221_candidate_gate_compiler.py"
+      - "ai_requests/AI-2026-10-06-Q218-TOP4-ADVERSARIAL.json"
+      - "ai_requests/AI-2026-10-06-Q219-TOP4-ADVERSARIAL.json"
+      - "ai_requests/AI-2026-10-06-Q220-TOP4-ADVERSARIAL.json"
+      - "ai_requests/AI-2026-10-06-Q221-TOP4-ADVERSARIAL.json"
   # OpenRouter free is deliberately event-driven. Repeating unchanged research
   # prompts on a timer wastes scarce free capacity without increasing information.
   workflow_run:
@@ -41,6 +48,10 @@ on:
           - AI-2026-09-30-Q100-FRONTIER-FEASIBILITY
           - AI-2026-09-30-Q101-NEGATIVE-EVIDENCE
           - AI-2026-09-30-Q102-REGIME-STATE-DESIGN
+          - AI-2026-10-06-Q218-TOP4-ADVERSARIAL
+          - AI-2026-10-06-Q219-TOP4-ADVERSARIAL
+          - AI-2026-10-06-Q220-TOP4-ADVERSARIAL
+          - AI-2026-10-06-Q221-TOP4-ADVERSARIAL
       run_secondary_provider:
         description: "Also run the manual Gemini/Mistral secondary review rotation"
         required: true
@@ -126,6 +137,17 @@ jobs:
                   'automation/orthogonal_pit_next_gate.py',
                   'ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json',
               }
+              top4_paths = {
+                  'automation/top4_candidate_capacity.py',
+                  'automation/q218_q221_historical_source_census.py',
+                  'automation/q218_q221_candidate_gate_compiler.py',
+                  'research/candidates/orthogonal_candidate_specs_2026-10-05.json',
+                  'research/evidence/orthogonal_next_gate_latest.json',
+                  'ai_requests/AI-2026-10-06-Q218-TOP4-ADVERSARIAL.json',
+                  'ai_requests/AI-2026-10-06-Q219-TOP4-ADVERSARIAL.json',
+                  'ai_requests/AI-2026-10-06-Q220-TOP4-ADVERSARIAL.json',
+                  'ai_requests/AI-2026-10-06-Q221-TOP4-ADVERSARIAL.json',
+              }
               orch_paths = {
                   'automation/research_os_scheduler.py',
                   'automation/research_hypothesis_compiler.py',
@@ -139,6 +161,13 @@ jobs:
                   tasks.append('AI-2026-10-04-Q187-Q192-ADVERSARIAL')
               if changed.intersection(global_paths):
                   tasks.append('AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT')
+              if changed.intersection(top4_paths):
+                  tasks.extend([
+                      'AI-2026-10-06-Q218-TOP4-ADVERSARIAL',
+                      'AI-2026-10-06-Q219-TOP4-ADVERSARIAL',
+                      'AI-2026-10-06-Q220-TOP4-ADVERSARIAL',
+                      'AI-2026-10-06-Q221-TOP4-ADVERSARIAL',
+                  ])
               if changed.intersection(orch_paths):
                   tasks.append('AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT')
               tasks = sorted(set(tasks))
@@ -161,6 +190,10 @@ jobs:
               task_files = {
                   'AI-2026-10-04-Q187-Q192-ADVERSARIAL': 'ai_requests/AI-2026-10-04-Q187-Q192-ADVERSARIAL.json',
                   'AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT': 'ai_requests/AI-2026-10-02-AGENT-027-ORCHESTRATION-AUDIT.json',
+                  'AI-2026-10-06-Q218-TOP4-ADVERSARIAL': 'ai_requests/AI-2026-10-06-Q218-TOP4-ADVERSARIAL.json',
+                  'AI-2026-10-06-Q219-TOP4-ADVERSARIAL': 'ai_requests/AI-2026-10-06-Q219-TOP4-ADVERSARIAL.json',
+                  'AI-2026-10-06-Q220-TOP4-ADVERSARIAL': 'ai_requests/AI-2026-10-06-Q220-TOP4-ADVERSARIAL.json',
+                  'AI-2026-10-06-Q221-TOP4-ADVERSARIAL': 'ai_requests/AI-2026-10-06-Q221-TOP4-ADVERSARIAL.json',
               }
               deduped = []
               for task_id in tasks:
