@@ -33,8 +33,8 @@
   },
   "litellm_transport_enabled": false,
   "task_fingerprint": "eb8bea49bb9304d3c9646b4185a34c02b9191f863cfd37a9edf0bc6809835592",
-  "context_fingerprint": "e6d6928ad1b66e3b29f35d3a5f04673dd4d5cd3818ac27d3df48ae4152ce4ab1",
-  "observed_at_utc": "2026-10-06T18:20:08.746123Z",
+  "context_fingerprint": "fb76dac5b566e029c8553ccfbf26a721606d89991d4995ccb598a2acfda23654",
+  "observed_at_utc": "2026-10-06T19:57:06.250365Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -44,16 +44,16 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 12.205,
-  "stdout": "\n\n# Q220 Adversarial Source/PIT Review — Worker Handoff\n\n**Task:** AI-2026-10-06-Q220-TOP4-ADVERSARIAL — narrative-structured XBRL representation gap, source/PIT review only. No performance, ranking, tuning, selection, or authorization.\n\n**Review basis:** repository context only (CURRENT_STATUS.md, orthogonal_candidate_specs_2026-10-05.json, q218_q221_historical_source_census.py, q220_fsn_schema_gate.py, q104_xbrl_concept_freeze_audit.py, q104_i19_xbrl_pit_compiler.py). No Q220 preregistration or candidate spec was found in context.\n\n---\n\n## 1. Findings — failure modes\n\n| # | Failure mode | Severity | Evidence in context |\n|---|---|---|---|\n| F1 | **Source vintage mismatch** — FSN archive is `2009q1_notes.zip` but the census window is `2025-01-01` → `2026-10-05`. A 2009 normalized extraction is not a representative contract for 2025–2026 as-filed XBRL. | Critical | `automation/q220_fsn_schema_gate.py` hardcodes the 2009q1 URL; `automation/q218_q221_historical_source_census.py` uses `FIXED_START=\"2025-01-01\"` |\n| F2 | **No Q220 preregistration / concept freeze** — unlike Q104 (which has `q104_orthogonal_candidate_wave_2026_10_01.json` and a concept-freeze audit), no Q220 preregistration, candidate spec, or concept inventory exists in context. The `q104_xbrl_concept_freeze_audit.py` gate does not cover Q220. | Critical | No Q220 prereg file present; only Q194/Q195 in `orthogonal_candidate_specs_2026-10-05.json` |\n| F3 | **Schema gate checks presence, not content** — `q220_fsn_schema_gate.py` verifies member names/headers/samples but never validates text-block completeness, PIT-readiness, or whether `txt` blocks are as-filed XBRL narrative vs. normalized extraction. | High | Gate output dict contains only `members`, `required_member_presence`, `tables` |\n| F4 | **As-filed vs. normalized extraction** — the FSN data set is an SEC-normalized extraction. Custom entity namespaces, taxonomy extensions, and entity-specific presentation roles are typically collapsed to `us-gaap`. \"As-filed\" claims are unsupported. | High | Archive is `dera/data/financial-statement-notes-data-sets`; no custom-namespace handling in gate |\n| F5 | **Single-quarter archive, not a historical archive** — `2009q1_notes.zip` is one quarter. PIT reproducibility across the 2025–2026 window cannot be anchored to it. | High | URL is a single-quarter zip; no versioning/vintage metadata in gate output |\n| F6 | **No amendment handling** — FSN archive has no original/amended flag. Amended filings (10-K/A, 8-K/A) cannot be distinguished, risking future-information leakage. | Medium | Census pairs 10-K/8-K by acceptance order but FSN side has no amendment discipline |\n| F7 | **No duplicate / context-alignment checks** — no deduplication, no `dim`/`num`/`txt` period–unit–context reconciliation. Duplicate facts and misaligned contexts silently corrupt the representation measure.",
+  "duration_seconds": 2.151,
+  "stdout": "User Safety: safe",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1791310809-Ysg1pDzOLmtIS3rrMYJU",
+  "response_id": "gen-1791316626-mlec9BN5IWJCCivz7C8I",
   "usage": {
-    "prompt_tokens": 5448,
-    "completion_tokens": 3200,
-    "total_tokens": 8648,
+    "prompt_tokens": 5726,
+    "completion_tokens": 98,
+    "total_tokens": 5824,
     "cost": 0,
     "is_byok": false,
     "prompt_tokens_details": {
@@ -68,7 +68,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 2401,
+      "reasoning_tokens": 100,
       "image_tokens": 0,
       "audio_tokens": 0
     }
