@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-06T06:38:35.492689+00:00",
+    "generated_at_utc": "2026-10-06T06:54:01.312525+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "891f6a1a6fe08f690952894885d6a651097f007d"
+    "source_master_sha": "41a0c6bae61c015377b547d5be81708e3c638322"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1793,7 +1793,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-06T06:38:35.492689+00:00",
+  "generated_at_utc": "2026-10-06T06:54:01.312525+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -2414,7 +2414,7 @@
         "source_id": "FCC_ULS"
       }
     ],
-    "receipt_fingerprint": "0af14b836a5c16a013264f779c8f919b871759a6c22c7b8049e7a14701d557e7",
+    "receipt_fingerprint": "addbe96faaedb603b92cf308ffa1feb6c9881461f97593234178c41307c581db",
     "receipt_type": "q179_q184_pit_readiness_r1",
     "safety": {
       "AUTOMATIC_PROMOTION": false,
@@ -2445,7 +2445,7 @@
       },
       "https://catalog.data.gov/dataset/dol-enforcement-data-inspection": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "3a6b63e3ed3a9578b992786fff2580a741b2c103191ff0e7ac95c15f36003c95",
+        "content_sha256": "df74b55befa2652e798108fabdceabaac20942c7c30d432e179e6be908051552",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://catalog.data.gov/dataset/dol-enforcement-data-inspection"
@@ -2459,7 +2459,7 @@
       },
       "https://ferc.gov/what-elibrary": {
         "classification": "RUNNER_ACCESS_BLOCKED",
-        "content_sha256": "ca76f7eec24b22218ec72f6000d0200b4c1b54e6955b917b6cc74c9a9f60187f",
+        "content_sha256": "398015e369a74373dee4ccc13813fe7524f98f6420d3e71a6a47c8bef42031b9",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -2470,14 +2470,14 @@
       },
       "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "214f439e46b97bafcc687891f2a673b223e8185ab5bcd68e89e75f0e45c4be51",
+        "content_sha256": "2ea295ff799fad8b5fa9f260590dee484c899e3320c92488721f8898e9c96686",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://opendata.fcc.gov/Wireless/FCC-Universal-Licensing-System-ULS-/x28i-i4z4"
       },
       "https://www.ferc.gov/about/what-ferc/frequently-asked-questions-faqs/documents-and-filing/elibrary": {
         "classification": "RUNNER_ACCESS_BLOCKED",
-        "content_sha256": "c64af8b9bf197784451e0142baa337a61d312ce1c234558df666413ad76769f5",
+        "content_sha256": "d31a3ac52dc00a91be3b50b65a7f9a76126fca80f44009740552d41664251563",
         "http_status": 403,
         "missing_markers": [
           "issued by FERC",
@@ -2488,21 +2488,21 @@
       },
       "https://www.nhtsa.gov/nhtsa-datasets-and-apis": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "5a9b47cdd51ffe711489a81db953c7d9495b2166705fd6d2aeae0426b0227096",
+        "content_sha256": "8cb03b0037d7544e937fd20f81cee0be4aae04fc6752477f40464f5f32b0d2f8",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis"
       },
       "https://www.ntsb.gov/Pages/CAROL-Data-Dictionary.aspx": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "8e0cd9557258f283d4a2833cf3a86aaebe85416940978f7183f900ba43817945",
+        "content_sha256": "ab51748ab00d9066dc9ffd56c8d162265843156048c2af1df935099c6020241f",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://www.ntsb.gov/Pages/CAROL-Data-Dictionary.aspx"
       },
       "https://www.ntsb.gov/safety/data/Pages/Data_Stats.aspx": {
         "classification": "SAMPLE_REACHABLE",
-        "content_sha256": "b1b2714c5ac5ece827cedb453c11f78d1e28d8a8b162b699264f31efcb3b6c4f",
+        "content_sha256": "79244f96d4f43d8557897a455768c135aa9d183ad7dbc0d7926f779b2d874fb4",
         "http_status": 200,
         "missing_markers": [],
         "url": "https://www.ntsb.gov/safety/data/Pages/Data_Stats.aspx"
@@ -3673,7 +3673,7 @@
       },
       {
         "api_url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-12-16&per_page=1000",
-        "content_sha256": "03674a51f5f7a8226ad2e74bfc39685b186e6be7427f663ad016cb23f85e96c0",
+        "content_sha256": "d319ab38387f560a4326192c0213bfcc75d4e7ff122a9368c6abed7792953dce",
         "http_status": 200,
         "parsed": {
           "api_count": 124,
@@ -3896,7 +3896,7 @@
       },
       {
         "api_url": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2026-10-02&per_page=1000",
-        "content_sha256": "75f179778734517be89f521a4d41f14fb9351c9800025d71a27f34b8f6e7543e",
+        "content_sha256": "33c1cc1a5e6f33079b37eac122c22b47d074beb7d7f24619885bd6416b96cce4",
         "http_status": 200,
         "parsed": {
           "api_count": 108,
@@ -4118,7 +4118,7 @@
         "status": "API_PARSED"
       }
     ],
-    "receipt_fingerprint": "c2aded748af0b2b4896a2efa57e29c88d96aa6edc48470656f88d46c1f5f9749",
+    "receipt_fingerprint": "abf453ba4468a3911672ff72d2586ec77c513a42cbbb3e7829742e5c38a8cdca",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -4304,14 +4304,14 @@
       "Q204_FR_20200110": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-01-10&per_page=1000",
       "Q204_FR_20201216": "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2020-12-16&per_page=1000"
     },
-    "generated_at_utc": "2026-10-06T00:18:44Z",
+    "generated_at_utc": "2026-10-06T06:49:35Z",
     "governance": {
       "historical_pit_validated": false,
       "live_execution": false,
       "performance_authorized": false,
       "promotion_authorized": false
     },
-    "receipt_fingerprint": "dd72846b4da698685b8e5336b34efddf1da1fb6e515d4cc7ca4326e0168a8efd",
+    "receipt_fingerprint": "a6ec006163fb91ceeda36f6fb282aa70a2729c22198b863a8ffe1f2f496460cb",
     "safety": {
       "automatic_promotion": false,
       "live_trading_enabled": false,
@@ -4447,7 +4447,7 @@
         },
         "2020-12-16": {
           "api_count": 124,
-          "content_sha256": "03674a51f5f7a8226ad2e74bfc39685b186e6be7427f663ad016cb23f85e96c0",
+          "content_sha256": "d319ab38387f560a4326192c0213bfcc75d4e7ff122a9368c6abed7792953dce",
           "correction_or_withdrawal_note_count": 2,
           "http_status": 200,
           "missing_filed_timestamp_count": 1,
@@ -4490,44 +4490,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "OPS: refresh dashboard after current research update",
-        "sha": "891f6a1a6fe08f690952894885d6a651097f007d",
-        "timestamp": "2026-10-06T08:38:22+02:00"
+        "message": "FIX: correct published dashboard bootstrap newline",
+        "sha": "41a0c6bae61c015377b547d5be81708e3c638322",
+        "timestamp": "2026-10-06T08:53:44+02:00"
+      },
+      {
+        "message": "FIX: persist dashboard bootstrap with snapshot",
+        "sha": "8d5e2bc9b9aa928d128207f6fb766c1c2c00750a",
+        "timestamp": "2026-10-06T08:53:39+02:00"
+      },
+      {
+        "message": "FIX: persist dashboard bootstrap with snapshot",
+        "sha": "f0922e401d064b091048b0eb02c6e67687670642",
+        "timestamp": "2026-10-06T08:53:37+02:00"
       },
       {
         "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "56cc5ffbb2e337991e11f2b3ae46b63aba30c30d",
-        "timestamp": "2026-10-06T06:38:02Z"
+        "sha": "76ef635c50d9931dff9dca7506221312bb1149cb",
+        "timestamp": "2026-10-06T06:53:05Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "0e4218104f3f4f8784c24f6ca4c8ae788ccfc642",
-        "timestamp": "2026-10-06T06:37:38Z"
+        "message": "OPS: record AI worker state",
+        "sha": "a7a9990513510b5407d2991517788f29169e8ded",
+        "timestamp": "2026-10-06T06:51:28Z"
       },
       {
-        "message": "RESEARCH: add Q232 EPA/ECHO design note",
-        "sha": "a24c6374d4389ce0add7a6f86d85de02dff4c75b",
-        "timestamp": "2026-10-06T08:37:23+02:00"
-      },
-      {
-        "message": "RESEARCH: record Q232 EPA/ECHO regulatory escalation lead",
-        "sha": "eeabf7afb57dde12ac35f107a00c7a21771b9ba4",
-        "timestamp": "2026-10-06T08:37:21+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "b6e27cd773a6947cf550c6543e8687540fc49db1",
+        "timestamp": "2026-10-06T06:50:59Z"
       },
       {
         "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "7e4363ce73c7898fb546cef58f1724954f05df62",
-        "timestamp": "2026-10-06T06:36:29Z"
+        "sha": "fd626091133f1ba7ad0c201f7cf1496a49b5313f",
+        "timestamp": "2026-10-06T06:49:51Z"
       },
       {
-        "message": "OPS: synchronize current operational status",
-        "sha": "48316797df4734d8e493deaaa15795eec44b23d3",
-        "timestamp": "2026-10-06T06:36:19Z"
-      },
-      {
-        "message": "OPS: refresh dashboard after render repair",
-        "sha": "fd3bcacadd13a4021ed69a044d8c950567e17a62",
-        "timestamp": "2026-10-06T08:36:06+02:00"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "32727ce5c7e7001525d487c8d3f58df73cc80f04",
+        "timestamp": "2026-10-06T06:49:37Z"
       }
     ]
   },
@@ -4625,7 +4625,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "891f6a1a6fe08f690952894885d6a651097f007d",
+  "source_master_sha": "41a0c6bae61c015377b547d5be81708e3c638322",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4739,6 +4739,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37424864655"
+    "run_id": "37426356777"
   }
 }
