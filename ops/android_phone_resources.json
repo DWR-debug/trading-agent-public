@@ -8,14 +8,15 @@
     "orders_enabled": false,
     "automatic_promotion": false,
     "scientific_evidence": false,
-    "performance_authorization": false
+    "performance_authorization": false,
+    "routing_status": "RESERVE_ONLY"
   },
   "devices": [
     {
       "resource_id": "SAMSUNG-PHONE-01",
       "runner_name": "SAMSUNG-PHONE-01-TERMUX",
       "runner_label": "samsung-phone-01",
-      "enabled": true,
+      "enabled": false,
       "architecture": "ARM64",
       "runtime": "Termux+proot-distro/Ubuntu",
       "descriptor_path": "~/.trading-agent/phone_interface.json",
@@ -26,7 +27,7 @@
       "resource_id": "SAMSUNG-PHONE-02",
       "runner_name": "SAMSUNG-PHONE-02-TERMUX",
       "runner_label": "samsung-phone-02",
-      "enabled": true,
+      "enabled": false,
       "architecture": "ARM64",
       "runtime": "Termux+proot-distro/Ubuntu",
       "descriptor_path": "~/.trading-agent/phone_interface.json",
@@ -37,7 +38,7 @@
       "resource_id": "SAMSUNG-PHONE-03",
       "runner_name": "SAMSUNG-PHONE-03-TERMUX",
       "runner_label": "samsung-phone-03",
-      "enabled": true,
+      "enabled": false,
       "architecture": "ARM64",
       "runtime": "Termux+proot-distro/Ubuntu",
       "descriptor_path": "~/.trading-agent/phone_interface.json",
@@ -48,7 +49,7 @@
       "resource_id": "SAMSUNG-PHONE-04",
       "runner_name": "SAMSUNG-PHONE-04-TERMUX",
       "runner_label": "samsung-phone-04",
-      "enabled": true,
+      "enabled": false,
       "architecture": "ARM64",
       "runtime": "Termux+proot-distro/Ubuntu",
       "descriptor_path": "~/.trading-agent/phone_interface.json",
@@ -59,7 +60,7 @@
       "resource_id": "SAMSUNG-PHONE-05",
       "runner_name": "SAMSUNG-PHONE-05-TERMUX",
       "runner_label": "samsung-phone-05",
-      "enabled": true,
+      "enabled": false,
       "architecture": "ARM64",
       "runtime": "Termux+proot-distro/Ubuntu",
       "descriptor_path": "~/.trading-agent/phone_interface.json",
@@ -67,7 +68,7 @@
       "role": "controlled capacity test; bounded utility support only"
     }
   ],
-  "activation_rule": "A slot is routed only when a runner with the exact unique label is online. Unaccepted online devices run onboarding acceptance; accepted devices run bounded utility review. No scientific evidence or performance authorization is created.",
+  "activation_rule": "Reserved only. No scheduled routing. Manual workflow_dispatch may be used for bounded maintenance/diagnostics; no scientific evidence or performance authorization is created.",
   "slot_rule": "Assign one unique runner label per physical phone. Do not reuse a label across phones.",
   "template_reference": "docs/SAMSUNG_ANDROID_TERMUX_PHONE_TEMPLATE.md"
 }
