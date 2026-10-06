@@ -29,6 +29,8 @@ def pair_issuer(issuer):
         if not target_raw:
             raise SystemExit(f"Q218_MISSING_TARGET_ACCEPTANCE:{issuer.get('cik')}:{event.get('ten_k_accession')}")
         target_dt = parse_acceptance(target_raw, "target_10k")
+        lower_raw = event.get("pair_lower_bound_acceptance")
+        lower_dt = parse_acceptance(lower_raw, "lower_bound") if lower_raw else None
         eligible = []
         for candidate in candidates:
             cand_dt = parse_acceptance(candidate.get("acceptance_datetime"), "candidate_8k")
@@ -44,8 +46,6 @@ def pair_issuer(issuer):
             continue
         pair_raw = event.get("paired_8k_acceptance_datetime")
         pair_dt = parse_acceptance(pair_raw, "paired_8k")
-        lower_raw = event.get("pair_lower_bound_acceptance")
-        lower_dt = parse_acceptance(lower_raw, "lower_bound") if lower_raw else None
         if expected is None or expected.get("accession") != pair_acc:
             raise SystemExit(f"Q218_NONDETERMINISTIC_SELECTED_PAIR:{issuer.get('cik')}:{event.get('ten_k_accession')}:{pair_acc}:{expected.get('accession') if expected else None}")
         if event.get("paired_8k_form", "8-K") != "8-K" or event.get("paired_8k_is_amendment") is True:
