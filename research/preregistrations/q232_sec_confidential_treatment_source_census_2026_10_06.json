@@ -27,7 +27,7 @@
     "index-header page must be HTTP 200",
 
     "CONFORMED SUBMISSION TYPE must be CT ORDER",
-    "ACCEPTANCE-DATETIME must be explicitly present and parseable",
+    "ACCEPTANCE-DATETIME must be explicitly present and parseable in the SEC public filing representations; permitted sources are filing header, filing detail page, or complete submission header",
     "accession number must match the filename-derived accession",
     "filed-as-of-date must match the form-index filing date"
   ],
@@ -45,7 +45,7 @@
   "cheap_falsifiers": [
     "one or more fixed quarterly SEC index transports cannot be retrieved through any official equivalent transport",
     "CT ORDER rows cannot be deterministically parsed",
-    "sampled headers lack acceptance time or contradict index metadata",
+    "the permitted SEC public filing representations lack acceptance time or contradict index metadata",
     "complete submission text or CT ORDER document is not recoverable for sampled rows",
     "event density is too sparse to support a meaningful later structural census",
     "archive identity depends on hindsight or a third-party source"
