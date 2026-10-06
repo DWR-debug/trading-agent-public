@@ -99,6 +99,100 @@ def run_cmd_json(args: list[str]) -> dict[str, Any] | list[Any] | None:
         return None
 
 
+def parse_dt(value: Any) -> datetime | None:
+    if not value:
+        return None
+    try:
+        return datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
+def run_duration_seconds(run: dict[str, Any]) -> int | None:
+    started = parse_dt(run.get("run_started_at") or run.get("created_at"))
+    finished = parse_dt(run.get("completed_at") or run.get("updated_at"))
+    if not started or not finished or finished < started:
+        return None
+    return max(0, int((finished - started).total_seconds()))
+
+
+def median(values: list[int]) -> int | None:
+    if not values:
+        return None
+    values = sorted(values)
+    middle = len(values) // 2
+    if len(values) % 2:
+        return values[middle]
+    return int(round((values[middle - 1] + values[middle]) / 2))
+
+
+def percentile(values: list[int], fraction: float) -> int | None:
+    if not values:
+        return None
+    values = sorted(values)
+    index = min(len(values) - 1, max(0, int(round((len(values) - 1) * fraction))))
+    return values[index]
+
+
+def duration_benchmarks(runs: list[dict[str, Any]], max_samples_per_workflow: int = 20) -> dict[str, dict[str, int | str]]:
+    grouped: dict[str, list[int]] = {}
+    counts: dict[str, int] = {}
+    for run in runs:
+        if not isinstance(run, dict) or run.get("status") != "completed":
+            continue
+        if run.get("conclusion") == "cancelled":
+            continue
+        name = str(run.get("name") or "")
+        duration = run_duration_seconds(run)
+        if not name or duration is None:
+            continue
+        values = grouped.setdefault(name, [])
+        if len(values) < max_samples_per_workflow:
+            values.append(duration)
+        counts[name] = counts.get(name, 0) + 1
+    out: dict[str, dict[str, int | str]] = {}
+    for name, values in grouped.items():
+        out[name] = {
+            "p50_seconds": median(values) or 0,
+            "p90_seconds": percentile(values, 0.90) or 0,
+            "sample_count": len(values),
+            "source": "recent completed runs; cancelled runs excluded",
+        }
+    return out
+
+
+def job_duration_benchmarks(
+    runs: list[dict[str, Any]],
+    workflow_name: str = "Top-4 Candidate Research Capacity",
+    recent_runs: int = 6,
+) -> dict[str, dict[str, int | str]]:
+    samples: dict[str, list[int]] = {}
+    selected = [r for r in runs if isinstance(r, dict) and r.get("name") == workflow_name and r.get("status") == "completed"]
+    for run in selected[:recent_runs]:
+        for job in jobs_for_run(int(run["id"])) if run.get("id") else []:
+            if job.get("status") != "completed" or job.get("conclusion") == "cancelled":
+                continue
+            started = parse_dt(job.get("started_at"))
+            finished = parse_dt(job.get("completed_at"))
+            if not started or not finished or finished < started:
+                continue
+            duration = max(0, int((finished - started).total_seconds()))
+            job_name = str(job.get("name") or "")
+            for candidate in ("Q218", "Q219", "Q220", "Q221"):
+                if candidate in job_name:
+                    samples.setdefault(candidate, []).append(duration)
+                    break
+    return {
+        candidate: {
+            "p50_seconds": median(values) or 0,
+            "p90_seconds": percentile(values, 0.90) or 0,
+            "sample_count": len(values),
+            "source": "Top-4 candidate job history; cancelled jobs excluded",
+        }
+        for candidate, values in samples.items()
+    }
+
+
 def runner_snapshot() -> list[dict[str, Any]]:
     data = run_cmd_json([f"/repos/{REPO}/actions/runners?per_page=100"])
     if not isinstance(data, dict):
@@ -169,12 +263,9 @@ def infer_resource(workflow: str, job: str, runner: str | None) -> str:
     return "GitHub-hosted Ubuntu x64"
 
 
-def current_work() -> list[dict[str, Any]]:
-    data = run_cmd_json([f"/repos/{REPO}/actions/runs?per_page=100"])
-    if not isinstance(data, dict):
-        return []
+def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
     active = [
-        x for x in data.get("workflow_runs", [])
+        x for x in runs
         if isinstance(x, dict) and x.get("status") in {"queued", "in_progress", "waiting", "pending"}
     ]
     active.sort(key=lambda x: str(x.get("created_at", "")), reverse=True)
@@ -217,6 +308,65 @@ def current_work() -> list[dict[str, Any]]:
         if len(out) >= 36:
             break
     return out
+
+
+def enrich_work_durations(
+    work: list[dict[str, Any]],
+    workflow_benchmarks: dict[str, dict[str, int | str]],
+    job_benchmarks: dict[str, dict[str, int | str]],
+) -> list[dict[str, Any]]:
+    now = datetime.now(timezone.utc)
+    out = []
+    for item in work:
+        workflow = str(item.get("task") or "")
+        candidate = next((c for c in ("Q218", "Q219", "Q220", "Q221") if c in f"{workflow} {item.get('job', '')}"), None)
+        benchmark = job_benchmarks.get(candidate) if workflow == "Top-4 Candidate Research Capacity" else workflow_benchmarks.get(workflow)
+        entry = dict(item)
+        expected = int(benchmark["p50_seconds"]) if benchmark and benchmark.get("p50_seconds") else None
+        entry["expected_duration_seconds"] = expected
+        entry["duration_sample_count"] = int(benchmark["sample_count"]) if benchmark else 0
+        entry["duration_source"] = str(benchmark["source"]) if benchmark else "no benchmark available"
+        started = parse_dt(entry.get("started_at"))
+        elapsed = max(0, int((now - started).total_seconds())) if started else 0
+        entry["elapsed_seconds"] = elapsed
+        entry["remaining_seconds"] = max(0, expected - elapsed) if expected is not None and item.get("status") == "in_progress" else expected
+        entry["expected_finish_at"] = (now + timedelta(seconds=entry["remaining_seconds"])).isoformat() if entry["remaining_seconds"] is not None else None
+        out.append(entry)
+    return out
+
+
+def candidate_pipeline(
+    top4: list[dict[str, Any]],
+    work: list[dict[str, Any]],
+    workflow_benchmarks: dict[str, dict[str, int | str]],
+    job_benchmarks: dict[str, dict[str, int | str]],
+) -> list[dict[str, Any]]:
+    result = []
+    active_by_candidate: dict[str, list[dict[str, Any]]] = {c: [] for c in ("Q218", "Q219", "Q220", "Q221")}
+    for item in work:
+        text_value = f"{item.get('task', '')} {item.get('job', '')}"
+        for candidate in active_by_candidate:
+            if candidate in text_value:
+                active_by_candidate[candidate].append(item)
+    for candidate in ("Q218", "Q219", "Q220", "Q221"):
+        row = next((x for x in top4 if str(x.get("code")) == candidate), None)
+        if not row:
+            continue
+        benchmark = job_benchmarks.get(candidate) if candidate != "Q218" else workflow_benchmarks.get("Q218 Event Pair PIT Gate")
+        result.append({
+            "code": candidate,
+            "stage": str(row.get("state") or "not recorded"),
+            "next_gate": str(row.get("next_gate") or "not recorded"),
+            "issue_number": row.get("issue_number"),
+            "active": bool(active_by_candidate[candidate]),
+            "active_jobs": len(active_by_candidate[candidate]),
+            "expected_duration_seconds": int(benchmark["p50_seconds"]) if benchmark else None,
+            "duration_p90_seconds": int(benchmark["p90_seconds"]) if benchmark else None,
+            "duration_sample_count": int(benchmark["sample_count"]) if benchmark else 0,
+            "duration_source": str(benchmark["source"]) if benchmark else "no verified duration history",
+            "performance_authorization_allowed": bool(row.get("performance_authorization_allowed", False)),
+        })
+    return result
 
 
 
@@ -284,24 +434,36 @@ def expanded_candidate_board(
     return board
 
 
+def capacity_state(resource: dict[str, Any], runner: dict[str, Any] | None, assignments: list[dict[str, Any]]) -> str:
+    if assignments or (runner and runner.get("busy")):
+        return "operating"
+    if runner and str(runner.get("status")).lower() == "online":
+        return "available"
+    if resource["type"] == "cloud":
+        return "available"
+    if resource["type"] == "service":
+        return "available"
+    return "unknown"
+
+
 def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, Any]], work: list[dict[str, Any]]) -> list[dict[str, Any]]:
     out = []
     runner_by_name = {str(r.get("name")): r for r in runners}
     for resource in configured:
         assignments = [w for w in work if w.get("resource") == resource["name"]]
         runner = runner_by_name.get(resource["configured_runner"])
-        if runner:
-            live_status = "online / busy" if runner.get("busy") else str(runner.get("status") or "unknown")
-        elif assignments:
-            live_status = f"active work assigned ({len(assignments)})"
-        elif resource["type"] in {"cloud", "service"}:
-            live_status = "not assigned in snapshot"
+        state = capacity_state(resource, runner, assignments)
+        if state == "operating":
+            live_status = "operating"
+        elif state == "available":
+            live_status = "available"
         else:
-            live_status = "configured / live runner state unavailable"
+            live_status = "unverified / not visible"
         out.append({
             **resource,
+            "capacity_state": state,
             "live_status": live_status,
-            "busy": bool(runner.get("busy")) if runner else bool(assignments),
+            "busy": state == "operating",
             "labels": runner.get("labels", []) if runner else [],
             "current_assignments": len(assignments),
             "current_tasks": [w.get("task") for w in assignments[:4]],
@@ -421,7 +583,15 @@ def main() -> None:
     latest_result = latest_line.split(":", 1)[1].strip() if ":" in latest_line else "not recorded"
 
     state_board = expanded_candidate_board(evidence, os_state, research_board(evidence, os_state))
-    work = current_work()
+    runs_payload = run_cmd_json([f"/repos/{REPO}/actions/runs?per_page=100"])
+    recent_runs = runs_payload.get("workflow_runs", []) if isinstance(runs_payload, dict) else []
+    workflow_benchmarks = duration_benchmarks(recent_runs)
+    job_benchmarks = job_duration_benchmarks(recent_runs)
+    work = enrich_work_durations(
+        current_work_from_runs(recent_runs),
+        workflow_benchmarks,
+        job_benchmarks,
+    )
     runners = runner_snapshot()
     ai = ai_provider_state()
 
@@ -429,13 +599,9 @@ def main() -> None:
         {"name": "Windows self-hosted A", "type": "physical", "role": "Formal readiness / local reproduction", "configured_runner": "LHT-N133732", "authority": "bounded capacity; no automatic performance authorization"},
         {"name": "Windows self-hosted B", "type": "physical", "role": "Frontier discovery / data QA", "configured_runner": "LHT-N133732-2", "authority": "bounded capacity; no automatic performance authorization"},
         {"name": "Windows self-hosted C", "type": "physical", "role": "Long deterministic runs / independent reproduction", "configured_runner": "LHT-N133732-3", "authority": "bounded capacity; no automatic performance authorization"},
-        {"name": "GitHub-hosted Ubuntu x64", "type": "cloud", "role": "Deterministic frontier, CI, source/PIT workflows", "configured_runner": "ubuntu-24.04", "authority": "non-authorizing unless an exact formal gate says otherwise"},
-        {"name": "GitHub-hosted ARM64", "type": "cloud", "role": "Architecture-diverse CI / reproduction", "configured_runner": "ubuntu-24.04-arm", "authority": "non-authorizing unless an exact formal gate says otherwise"},
+        {"name": "GitHub-hosted Ubuntu x64", "type": "cloud", "role": "Deterministic frontier, CI, source/PIT workflows", "configured_runner": "ubuntu-24.04", "authority": "non-authorizing operational capacity"},
+        {"name": "GitHub-hosted ARM64", "type": "cloud", "role": "Architecture-diverse CI / reproduction", "configured_runner": "ubuntu-24.04-arm", "authority": "non-authorizing operational capacity"},
         {"name": "Free AI pool", "type": "cloud", "role": "Adversarial / design / engineering review", "configured_runner": "OpenRouter Free / Groq Free / Gemini / Mistral", "authority": "AI output never authorizes performance or promotion"},
-        {"name": "Bounded Agent Queue", "type": "cloud", "role": "Bounded engineering / review requests", "configured_runner": "agent-request-queue", "authority": "no paid fallback; no scientific authority"},
-        {"name": "Codespaces fallback", "type": "cloud", "role": "Interactive debugging / data QA", "configured_runner": "manual", "authority": "fallback only; unattended default disabled"},
-        {"name": "Paper Forward / Shadow", "type": "simulation", "role": "Paper-only monitoring and MTM ledger", "configured_runner": "scheduled workflows", "authority": "simulation only; no live orders"},
-        {"name": "Dashboard / GitHub Pages", "type": "service", "role": "Operational visibility and status publication", "configured_runner": "GitHub Pages", "authority": "read-only operational snapshot"},
     ]
     priority_codes = {"Q218","Q219","Q220","Q221"}
     top4 = [x for x in state_board if x.get("code") in priority_codes]
@@ -453,16 +619,20 @@ def main() -> None:
             "runner_api_visible": len(runners) if runners else None,
             "busy_runners": sum(1 for r in runners if r.get("busy") is True) if runners else None,
             "runner_api_status": "available" if runners else "unavailable_or_empty",
-            "runner_api_note": "GitHub Actions runner inventory is not observable from this dashboard token/snapshot; do not interpret unavailable_or_empty as zero runners.",
+            "runner_api_note": "Unavailable runner inventory is shown as unverified, not as zero/offline.",
             "research_tracks": len(state_board),
             "ai_providers": len(ai),
+            "active_capacity_items": sum(1 for r in enrich_resources(configured_resources, runners, work) if r.get("capacity_state") == "operating"),
+            "available_capacity_items": sum(1 for r in enrich_resources(configured_resources, runners, work) if r.get("capacity_state") == "available"),
         },
         "resources": enrich_resources(configured_resources, runners, work),
         "runner_live_snapshot": runners,
         "work_assignments": work,
+        "pipeline": candidate_pipeline(top4, work, workflow_benchmarks, job_benchmarks),
+        "duration_benchmarks": workflow_benchmarks,
+        "job_duration_benchmarks": job_benchmarks,
         "workload_by_resource": {name: sum(1 for w in work if w.get("resource") == name) for name in sorted({w.get("resource") for w in work if w.get("resource")})},
         "workload_by_lane": {lane: sum(1 for w in work if w.get("lane") == lane) for lane in sorted({w.get("lane") for w in work if w.get("lane")})},
-        "recent_activity_24h": recent_activity(),
         "ai_fabric": ai,
         "current_research": {
             "latest_formal_result": latest_result,
