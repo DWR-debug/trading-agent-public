@@ -154,7 +154,11 @@ def run(output: Path) -> dict[str, object]:
         "schema_version": "1.0",
         "task_id": "Q-2026-10-06-232-R1-CT-DOCUMENT-TEMPORAL-ANCHOR",
         "candidate_id": "Q236",
-        "status": "Q236_R1_DOCUMENT_TEMPORAL_GATE_COMPLETED",
+        "status": (
+            "Q236_R1_DOCUMENT_TEMPORAL_GATE_COMPLETED"
+            if temporal_hits >= 1
+            else "Q236_R1_DOCUMENT_TEMPORAL_ANCHOR_FALSIFIED"
+        ),
         "window": {"start": START.isoformat(), "end": END.isoformat()},
         "sample_rule": "first/median/last per calendar year",
         "sample_size": len(observations),
