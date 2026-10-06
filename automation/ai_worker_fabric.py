@@ -199,6 +199,45 @@ CONTEXT_FILES = {
         "config/settings.py",
     ),
 }
+    "AI-2026-10-06-Q218-TOP4-ADVERSARIAL": (
+        "ai_requests/AI-2026-10-06-Q218-TOP4-ADVERSARIAL.json",
+        "docs/CURRENT_STATUS.md",
+        "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
+        "automation/q218_q221_historical_source_census.py",
+        "automation/q218_q221_candidate_gate_compiler.py",
+        "research/evidence/current_operational_state.json",
+        "research/governance/critical_research_quality_control.json",
+    ),
+    "AI-2026-10-06-Q219-TOP4-ADVERSARIAL": (
+        "ai_requests/AI-2026-10-06-Q219-TOP4-ADVERSARIAL.json",
+        "docs/CURRENT_STATUS.md",
+        "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
+        "research/governance/q129_options_source_contract_2026_10_03.json",
+        "automation/q129_options_source_feasibility.py",
+        "automation/q129_options_pit_reproduction.py",
+        "research/evidence/q129_independent_pit_2026_10_03.json",
+        "research/evidence/current_operational_state.json",
+    ),
+    "AI-2026-10-06-Q220-TOP4-ADVERSARIAL": (
+        "ai_requests/AI-2026-10-06-Q220-TOP4-ADVERSARIAL.json",
+        "docs/CURRENT_STATUS.md",
+        "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
+        "automation/q218_q221_historical_source_census.py",
+        "automation/q104_xbrl_concept_freeze_audit.py",
+        "automation/q104_i19_xbrl_pit_compiler.py",
+        "research/evidence/current_operational_state.json",
+        "research/governance/critical_research_quality_control.json",
+    ),
+    "AI-2026-10-06-Q221-TOP4-ADVERSARIAL": (
+        "ai_requests/AI-2026-10-06-Q221-TOP4-ADVERSARIAL.json",
+        "docs/CURRENT_STATUS.md",
+        "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
+        "automation/q218_q221_historical_source_census.py",
+        "automation/top_candidate_source_preflight.py",
+        "research/evidence/current_operational_state.json",
+        "research/governance/critical_research_quality_control.json",
+    ),
+
 CONTEXT_FILE_LIMIT = 3000
 CONTEXT_TOTAL_LIMIT = 18000
 
@@ -245,6 +284,37 @@ CONTEXT_FINGERPRINT_FILES = {
         "research/governance/active_research_registry.json",
     ),
 }
+
+    "AI-2026-10-06-Q218-TOP4-ADVERSARIAL": (
+        "ai_requests/AI-2026-10-06-Q218-TOP4-ADVERSARIAL.json",
+        "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
+        "automation/q218_q221_historical_source_census.py",
+        "automation/q218_q221_candidate_gate_compiler.py",
+        "research/evidence/current_operational_state.json",
+    ),
+    "AI-2026-10-06-Q219-TOP4-ADVERSARIAL": (
+        "ai_requests/AI-2026-10-06-Q219-TOP4-ADVERSARIAL.json",
+        "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
+        "research/governance/q129_options_source_contract_2026_10_03.json",
+        "automation/q129_options_source_feasibility.py",
+        "automation/q129_options_pit_reproduction.py",
+        "research/evidence/q129_independent_pit_2026_10_03.json",
+    ),
+    "AI-2026-10-06-Q220-TOP4-ADVERSARIAL": (
+        "ai_requests/AI-2026-10-06-Q220-TOP4-ADVERSARIAL.json",
+        "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
+        "automation/q218_q221_historical_source_census.py",
+        "automation/q104_xbrl_concept_freeze_audit.py",
+        "automation/q104_i19_xbrl_pit_compiler.py",
+        "research/evidence/current_operational_state.json",
+    ),
+    "AI-2026-10-06-Q221-TOP4-ADVERSARIAL": (
+        "ai_requests/AI-2026-10-06-Q221-TOP4-ADVERSARIAL.json",
+        "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
+        "automation/q218_q221_historical_source_census.py",
+        "automation/top_candidate_source_preflight.py",
+        "research/evidence/current_operational_state.json",
+    ),
 
 FORBIDDEN_TASK_FLAGS = (
     "deterministic_compute", "holdout_selection", "parameter_selection",
