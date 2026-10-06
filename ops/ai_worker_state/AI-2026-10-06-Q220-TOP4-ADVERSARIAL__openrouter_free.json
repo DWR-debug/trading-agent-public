@@ -33,8 +33,8 @@
   },
   "litellm_transport_enabled": false,
   "task_fingerprint": "eb8bea49bb9304d3c9646b4185a34c02b9191f863cfd37a9edf0bc6809835592",
-  "context_fingerprint": "661a220019618d6c5df434565f119b09ce69533f3f6d4a7901902720e91a1611",
-  "observed_at_utc": "2026-10-06T20:56:01.538504Z",
+  "context_fingerprint": "aa88d2b8d559663840290a62e9320b2007f46c87d59eadc72042d248661673cc",
+  "observed_at_utc": "2026-10-06T21:29:27.105031Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -44,16 +44,16 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 4.943,
-  "stdout": "User Safety: safe",
+  "duration_seconds": 30.043,
+  "stdout": "**Adversarial Methods Review – Q220 Narrative‑Structured XBRL Representation Gap**\n\n---\n\n### Findings (failure modes & minimal deterministic falsifiers)\n\n| # | Failure mode | Why the current gate is insufficient | Minimal deterministic falsifier (artifact) |\n|---|--------------|--------------------------------------|--------------------------------------------|\n| 1 | **XBRL text‑block & presentation‑role mapping** | `q220_fsn_schema_gate.py` only checks that `sub.txt/tsv`, `tag.txt/tsv`, `dim.txt/tsv`, `num.txt/tsv`, `txt.txt/tsv`, `pre.txt/tsv` exist and extracts a few header rows. It never validates that the `txt` block actually contains XBRL facts, that presentation‑role attributes (`!Type`, `!Label`) map to the taxonomy, or that the narrative text is correctly tokenized. | Provide the exact `2009q1_notes.zip` where the required members are present **but** the `txt` block contains mismatched presentation‑role values (e.g., `presentationRole=\"http://example.com/bad\"`). A script that extracts `txt.txt` and asserts `presentationRole` values against the taxonomy is the falsifier. |\n| 2 | **Taxonomy‑extension changes / custom namespaces** | No check that the taxonomy version (e.g., US-GAAP 2023) is the one intended, nor that custom namespaces are declared and used consistently. A zip with a newer taxonomy could change semantics without breaking file existence. | A zip where `sub.txt` references a custom namespace `urn:custom:extension` that is **not** defined in any `dim.txt` or `tag.txt`. The artifact is the raw zip plus a script that parses namespace declarations and validates they match the expected taxonomy. |\n| 3 | **Section identity & mapping fidelity** | The gate assumes `sub`, `tag`, `dim`, `num`, `txt`, `pre` correspond to XBRL sections, but does not verify that rows in `sub.txt` map to `context`, `tag.txt` to `concept`, etc. Mis‑labelled sections would be invisible. | A zip where `sub.txt` contains rows that look like `tag` entries (e.g., `concept` column populated) while `tag.txt` is empty. The artifact is the zip and a script that validates column‑to‑section mapping based on expected headers. |\n| 4 | **Narrative tokenization** | No validation that `txt.txt` tokens are correctly segmented (e.g., sentences, XBRL‑tagged narratives). A zip could contain raw prose without tokenization and still pass. | A zip where `txt.txt` contains a single long paragraph without line breaks or XBRL tags. The falsifier is a script that checks for expected token delimiters or XBRL markup (`<xbrl:>`). |\n| 5 | **Amended filings contamination** | The gate does not differentiate original vs. amended filings. A zip could include amended `10‑K` notes that supersede earlier facts, breaking the “frozen before outcome observation” premise. | A zip where `sub.txt` includes an amendment flag (`amendment=yes`) for a filing that also appears in `sub.txt` without the flag. The artifact is the zip and a script that flags duplicate accession numbers with amendment indicators. |\n| 6 | **Future/current XBRL contamination** | No filter for facts with periods beyond the trial horizon (e.g., 2027 Q1). Such facts could leak future information. | A zip where `num.txt` contains a fact with `period=\"2027-01-01\"` while the trial’s `FIXED_END` is `2026-10-05`. The falsifier is a script that scans `num.txt` for periods outside the allowed range. |\n| 7 | **Duplicate facts** | The gate does not deduplicate across `num.txt` and `txt.txt`. Duplicate entries could inflate filing length without adding information. | A zip where the same `concept`+`context`+`period` appears twice in `num.txt`. The artifact is the zip and a script that detects duplicate rows. |\n| 8 | **Period/unit/context alignment** | No validation that `num.txt` units match `unit` declared in `sub.txt` or that contexts align across tables. Mis‑alignment could cause silent data corruption. | A zip where `num.txt` row has `unit=\"USD\"` but `sub.txt` context declares `unit=\"EUR\"`. The falsifier is a script that joins on `contextID` and checks unit consistency. |\n| 9 | **Proxy for filing length / generic readability** | The gate’s “required member presence” and header‑sample checks are weak proxies for XBRL correctness; a large, well‑formatted but semantically empty file would pass. | A zip where each required member contains 10 000 rows of placeholder text (e.g., “ filler”) but no XBRL facts. The falsifier is a script that validates that each row contains at least one XBRL fact (`concept`, `value`, `unit`). |\n|10| **Source‑contract drift (member names)** | The gate treats the six member names as immutable, but the SEC could rename `sub.txt` → `submission.txt` without breaking the contract. The gate would incorrectly report “required member missing”. | A zip where `sub.txt` is renamed to `submission.txt` and `sub.tsv` is missing. The falsifier is the zip and a script that checks the exact member list against the contract. |\n\n---\n\n### Counterarguments (why the gate may still be considered “bounded”)\n\n* **Intentional source‑only scope** – The project statutes emphasize *paper/shadow/forward* infrastructure and *bounded* research. The gate may be deliberately limited to *source‑census* (existence, basic structure) rather than deep XBRL validation, preserving a clear separation between *source readiness* (Lane A) and *frontier discovery* (Lane B).  \n* **Deterministic reproducibility** – Checking file existence and header rows is cheap, deterministic, and reproducible across environments, whereas full XBRL validation would introduce external dependencies (taxonomy parsers, XBRL validators) that could drift.  \n* **Gate layering** – The current gate is the first of multiple layers; later gates (e.g., concept‑specific PIT compilers) are expected to enforce deeper correctness. The adversarial review should focus on *where* the gap appears, not necessarily on eliminating the gate.\n\n---\n\n### Concrete Next Actions (cheap falsification tests)\n\n1. **Add a lightweight XBRL‑fact validator** – Write a script that, for each required member, extracts rows and asserts:\n   * `txt.txt` rows contain at least one XBRL tag (`<xbrl:>` or `concept=`).\n   * `num.txt` rows have a numeric `value` and a `unit` matching `USD`.\n   * `sub.txt` rows contain a valid `contextID` referencing a `dim.txt` entry.\n   * Run this script on the exact `2009q1_notes.zip` and on a synthetic “bad” zip (e.g., renamed member, mismatched presentation role).  \n\n2. **Namespace & taxonomy version check** – Parse the zip’s `manifest.xml` (if present) or any `.xsd` files to confirm the taxonomy version matches the trial’s frozen version (e.g., US‑GAAP 2023). Fail if a custom namespace appears without a corresponding definition.  \n\n3. **Duplicate & amendment detection** – Implement a deduplication pass on `sub.txt`/`num.txt",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1791320161-oiKFKhTTy9Iot5aNID78",
+  "response_id": "gen-1791322167-VmMEs6AzZ8bz8QhIexhL",
   "usage": {
-    "prompt_tokens": 5729,
-    "completion_tokens": 312,
-    "total_tokens": 6041,
+    "prompt_tokens": 4839,
+    "completion_tokens": 3198,
+    "total_tokens": 8037,
     "cost": 0,
     "is_byok": false,
     "prompt_tokens_details": {
@@ -68,7 +68,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 351,
+      "reasoning_tokens": 0,
       "image_tokens": 0,
       "audio_tokens": 0
     }
