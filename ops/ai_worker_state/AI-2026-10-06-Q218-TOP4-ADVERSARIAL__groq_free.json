@@ -33,8 +33,8 @@
   },
   "litellm_transport_enabled": false,
   "task_fingerprint": "0d93716d6d4b736aa803ad74ce919d8d57856360bc03cfdecc14b0a671220ee1",
-  "context_fingerprint": "b3b812c2733a4ffdced1a67f36f3a99a7527b1481c6295296361c1fd610bad91",
-  "observed_at_utc": "2026-10-06T07:43:02.541260Z",
+  "context_fingerprint": "a7cb8112a5bc1ea99d32d3a5316c8e0b136540d15feee9ea5e8584d5d3057eda",
+  "observed_at_utc": "2026-10-06T10:53:32.595438Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,22 +42,24 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "RATE_LIMITED",
-  "returncode": 429,
-  "duration_seconds": 0.457,
-  "stdout": "",
-  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5177, Requested 5291. Please try again in 18.509999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 3.102,
+  "stdout": "**Worker Handoff – Q218 Orthogonal Candidate Review**  \n*Scope: Deterministic 10‑K ↔ 8‑K pairing, SEC timestamps, filing amendments, event‑date ambiguity, earnings‑release mis‑pairing, voluntary/mandatory classification, issuer drift, semantic‑wedge collapse.*\n\n| # | Failure Mode | Smallest Deterministic Falsifier | Artifact Required | Why it Falsifies |\n|---|--------------|----------------------------------|-------------------|------------------|\n| 1 | **Incorrect 8‑K pairing window** | A symbol whose latest 10‑K acceptance is *after* the latest 8‑K acceptance but *before* the 8‑K filing date. | `SEC_CIKS` mapping + `submissions/CIKXXXXX.json` for that symbol. | The algorithm would pair the 8‑K with the 10‑K even though the 8‑K was accepted *before* the 10‑K, violating the “(preceding 10‑K, target 10‑K]” interval. |\n| 2 | **Missing or inconsistent SEC acceptance timestamps** | A filing record where `acceptance_datetime_found` is `false` or the timestamp is earlier than the filing date. | Same `submissions/CIKXXXXX.json` record. | The compiler assumes a valid timestamp; a missing one causes silent mis‑pairing or exclusion. |\n| 3 | **Amendment mis‑classification** | A 10‑K/A whose `primaryDocument` is an amendment to a prior 10‑K, but the algorithm treats it as a new 10‑K. | `submissions/CIKXXXXX.json` showing both 10‑K and 10‑K/A with overlapping report dates. | The pairing rule would treat the amendment as a new “target” 10‑K, potentially pairing it with an earlier 8‑K that actually belongs to the original 10‑K. |\n| 4 | **Report‑date vs event‑date ambiguity** | A filing where the `reportDate` is *after* the `filingDate` and the acceptance timestamp is *before* the report date. | `submissions/CIKXXXXX.json` record. | The event clock uses the acceptance timestamp; if the report date is later, the candidate may incorrectly assume the event occurred later than it actually did. |\n| 5 | **False earnings‑release pairing** | An 8‑K that contains an earnings release but is paired with a 10‑K that does *not* cover the same quarter. | `submissions/CIKXXXXX.json` showing 8‑K with `Item-2.02/Exhibit-99.1` and a 10‑K with a different `reportDate`. | The candidate’s “binary_new_shortage_state” logic would treat the earnings release as a new event even though it is unrelated to the paired 10‑K. |\n| 6 | **Voluntary vs mandatory channel mis‑labeling** | A 10‑K that is actually a voluntary filing (e.g., a 10‑K/A filed after the deadline) but the algorithm treats it as mandatory. | `submissions/CIKXXXXX.json` with `form` = `10-K/A` and `filingDate` > deadline. | The candidate’s assumption that all 10‑Ks are mandatory would bias the exposure mapping. |\n| 7 | **Issuer identity drift** | A symbol whose CIK changes between two consecutive filings (e.g., due to a corporate action). | `submissions/CIKXXXXX.json` for two consecutive periods. | The pairing logic uses the CIK to identify the issuer; drift would cause a false “new issuer” event. |\n| 8 | **Semantic wedge collapse to length/complexity** | Two distinct filing types (e.g., 10‑K vs 8‑K) that have identical `primaryDocument` length and token count but different semantic content. | `submissions/CIKXXXXX.json` for both filings, plus a text extraction of `primaryDocument`. | If the candidate uses only length/complexity as a proxy for information novelty, it would treat them as the same event, collapsing the wedge. |\n\n---\n\n### Findings\n\n1. **Pairing Window Ambiguity** – The current rule does not guard against 8‑Ks accepted *before* the preceding 10‑K, leading to potential mis‑pairing.\n2. **Timestamp Reliability** – A non‑trivial fraction of filings lack `acceptance_datetime_found`; the compiler silently drops them, biasing the sample.\n3. **Amendment Handling** – 10‑K/A filings are not distinguished from 10‑K; the algorithm may double‑count or mis‑associate earnings releases.\n4. **Event Clock Mis‑alignment** – Using acceptance timestamps ignores the possibility that the report date (the true event) is later, creating a clock drift.\n5. **Earnings‑Release Mis‑pairing** – The current “latest eligible 8‑K” rule can pair an earnings release with a 10‑K covering a different quarter.\n6. **Voluntary vs Mandatory Mis‑labeling** – 10‑K/A filings after the deadline are treated as mandatory, inflating exposure counts.\n7. **Issuer Drift** – Corporate actions that change CIKs are not tracked, causing false “new issuer” events.\n8. **Semantic Wedge Collapse** – Length/complexity alone is insufficient to guarantee orthogonality; two distinct events may appear identical.\n\n---\n\n### Counterarguments / Mitigations (to be evaluated by the formal lane)\n\n- **Rule tightening**: Add explicit checks that 8‑K acceptance > preceding 10‑K acceptance and ≤ target 10‑K acceptance.\n- **Timestamp validation**: Require `acceptance_datetime_found` = true; otherwise flag the filing as “unpaired”.\n- **Amendment flag**: Detect `form` suffix `/A` and treat as amendment; pair only with the original 10‑K.\n- **Report‑date alignment**: Use `reportDate` as the event clock when it is later than the acceptance timestamp.\n- **Quarter alignment**: Ensure 8‑K `Item-2.02/Exhibit-99.1` report period matches the 10‑K report period before pairing.\n- **Voluntary flag**: Mark 10‑K/A after deadline as voluntary; exclude from mandatory exposure mapping.\n- **CIK change tracking**: Maintain a CIK history table; treat a CIK change as a new issuer event only if the symbol changes.\n- **Semantic check**: Incorporate a lightweight NLP similarity metric (e.g., cosine similarity on TF‑IDF) to confirm distinctness beyond length/complexity.\n\n---\n\n### Next Actions (Lane B – Frontier Discovery)\n\n1. **Artifact Retrieval**  \n   - Pull `submissions/CIKXXXXX.json` for symbols identified in the falsifiers above (e.g., `AAPL`, `MSFT`, `AMZN`).  \n   - Extract `primaryDocument` text for length/complexity comparison.\n\n2. **Deterministic Falsifier Scripts**  \n   - Implement a script that, given a symbol, outputs the earliest 8‑K that violates the pairing window.  \n   - Implement a script that flags filings with `acceptance_datetime_found` = false.\n\n3. **Semantic Similarity Test**  \n   - Compute TF‑IDF vectors for 10‑K and 8‑K documents; flag pairs with cosine similarity > 0.95 despite different `form` types.\n\n4. **CIK Drift Tracker**  \n   - Build a simple mapping of symbol → CIK over time; flag any symbol with a CIK change between consecutive filings.\n\n5. **Documentation Update**  \n   - Add a “Pairing‑Rule Validation” section to `docs/research_design/Q218_design.md` summarizing the above checks and required artifacts.\n\n6. **Reporting**  \n   - Produce a concise CSV of all falsifiers found, including symbol, filing dates, acceptance timestamps, and the specific rule violated.\n\n---\n\n### Uncertainty\n\n- **Data Completeness**: The SEC API may omit certain filings; the falsifiers rely on the current snapshot (`ec841a6e343ba7e495ada70fecdd534ad1a856ed`).  \n- **Timestamp Accuracy**: Acceptance timestamps are derived from SEC’s internal system; any systemic lag could affect the pairing window.  \n- **Amendment Identification**: The heuristic `form` suffix `/A` may miss complex amendment structures (e.g., 10‑K/A with multiple amendments).  \n- **Semantic Metric Choice**: TF‑IDF cosine similarity is a proxy; more sophisticated NLP models may yield different similarity thresholds.  \n- **CIK History**: The CIK history table is not yet populated; drift detection depends on accurate historical records.\n\n---",
+  "stderr": "",
   "command_binary": "https-groq",
   "api_model": "openai/gpt-oss-20b",
-  "response_id": null,
-  "usage": null,
-  "quota_block": {
-    "schema_version": 1,
-    "provider": "groq_free",
-    "blocked_at_utc": "2026-10-06T07:43:02.997976Z",
-    "blocked_until_utc": "2026-10-06T08:43:02.997976Z",
-    "reset_seconds": 3600,
-    "reason": "RESOURCE_EXHAUSTED",
-    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5177, Requested 5291. Please try again in 18.509999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  "response_id": "chatcmpl-04762cc8-4a0a-4dea-90b4-6f373a356390",
+  "usage": {
+    "queue_time": 0.083717845,
+    "prompt_tokens": 4986,
+    "prompt_time": 0.283796633,
+    "completion_tokens": 2316,
+    "completion_time": 2.358386308,
+    "total_tokens": 7302,
+    "total_time": 2.6421829409999997,
+    "completion_tokens_details": {
+      "reasoning_tokens": 437
+    }
   }
 }\n
