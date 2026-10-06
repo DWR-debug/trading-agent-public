@@ -33,3 +33,10 @@ def test_top4_q220_lane_uses_contract_qa_not_network_scan():
     text=(ROOT/"automation/top4_candidate_capacity.py").read_text(encoding="utf-8")
     assert "tests/test_q220_as_filed_xbrl_population_gate.py" in text
     assert "q220_fsn_schema_gate" not in text
+
+
+def test_q220_presentation_mapping_resolves_loc_labels_to_concepts():
+    pre=b'''<link:presentationLink><link:loc xlink:label="l1" xlink:href="custom.xsd#RiskFactorsTextBlock"/><link:loc xlink:label="l2" xlink:href="custom.xsd#Root"/><link:presentationArc xlink:from="l2" xlink:to="l1"/></link:presentationLink>'''
+    pm=presentation_metadata(pre)
+    assert pm["loc_count"]==2
+    assert "RiskFactorsTextBlock" in pm["loc_concepts"]
