@@ -2,19 +2,8 @@ name: Windows Runner C Long Research Workpack
 # CAPACITY-REACTIVATION 2026-10-05: explicit Runner-C utilization; no scientific semantics changed.
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - ".github/workflows/windows-runner-c-long-research.yml"
-      - "automation/orthogonal_pit_next_gate.py"
-      - "automation/source_readiness_snapshot_guard.py"
-      - "tests/test_orthogonal_pit_next_gate.py"
-      - "tests/test_source_readiness_snapshot_guard.py"
-      - "research/candidates/orthogonal_candidate_specs_2026-10-04.json"
-      - "research/governance/active_research_registry.json"
-      - ".github/workflows/q121r6-windows-independent-reproduction.yml"
-      - "research/evidence/**"
-      - "research/run_requests/runner_c_long_research.trigger"
+  # Automatic research capacity is owned by the dedicated Top-4 dispatcher.
+  # Legacy broad workpacks remain available for explicit manual recovery only.
   workflow_dispatch:
 
 permissions:
