@@ -33,12 +33,6 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: trading-agent-top4-capacity
-  # A new source/gate commit supersedes an obsolete wave. A routine
-  # scheduler tick must never cancel a valid in-flight research wave.
-  cancel-in-progress: ${{ github.event_name == 'push' }}
-
 jobs:
   windows:
     concurrency:
