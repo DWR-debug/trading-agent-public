@@ -97,6 +97,9 @@ jobs:
           retention-days: 30
 
   hosted_census:
+    concurrency:
+      group: trading-agent-research-hosted-${{ matrix.runner }}
+      cancel-in-progress: false
     needs: [source_snapshot]
     if: github.repository == 'DWR-debug/trading-agent-public'
     strategy:
