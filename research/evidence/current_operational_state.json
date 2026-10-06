@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-06T13:10:37.163513+00:00",
+    "generated_at_utc": "2026-10-06T13:11:42.439722+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "eabc0a6ac98a910386cf1b1bce181a94c38c0cb6"
+    "source_master_sha": "eebfa71dddd53673947f8960ea9ba004963b861e"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1793,7 +1793,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-06T13:10:37.163513+00:00",
+  "generated_at_utc": "2026-10-06T13:11:42.439722+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4490,44 +4490,44 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
-        "message": "DOCS: clarify dashboard update/deploy and Android reserve policy",
-        "sha": "eabc0a6ac98a910386cf1b1bce181a94c38c0cb6",
-        "timestamp": "2026-10-06T15:10:14+02:00"
-      },
-      {
-        "message": "UI: show Top-4 priority board and remove Android card",
-        "sha": "84d97f81d6ec5dfaa8cf9a82aa8c2fe93ed1c5a7",
-        "timestamp": "2026-10-06T15:10:10+02:00"
-      },
-      {
-        "message": "UI: modernize dashboard layout and remove Android from active view",
-        "sha": "97b77945889a44a9a8507d16be87b0b4d65faed8",
-        "timestamp": "2026-10-06T15:10:06+02:00"
-      },
-      {
         "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "f201b999fc8eb792cd53dd66c51e4e8a1f699cb6",
-        "timestamp": "2026-10-06T13:09:45Z"
+        "sha": "eebfa71dddd53673947f8960ea9ba004963b861e",
+        "timestamp": "2026-10-06T13:11:38Z"
       },
       {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "716b8b9e317de505e11c81a713e921e2528106cd",
-        "timestamp": "2026-10-06T13:09:09Z"
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "9d5490dc35a2294fdeb07a3f05483638abf4af82",
+        "timestamp": "2026-10-06T13:11:33Z"
+      },
+      {
+        "message": "OPS: align OS state with active dashboard and reserve Android fleet",
+        "sha": "d6478ba75d06629299f27071589c90cadf486ad3",
+        "timestamp": "2026-10-06T15:11:26+02:00"
+      },
+      {
+        "message": "OPS: prioritize Top-4 candidate development and reserve Android fleet",
+        "sha": "d9c734f00a20c3b32c49cda4d211c5161f474da3",
+        "timestamp": "2026-10-06T15:11:21+02:00"
+      },
+      {
+        "message": "OPS: set Android fleet to reserve-only capacity",
+        "sha": "a91d90d093d41aa98fd424cf2990bf9560f5b127",
+        "timestamp": "2026-10-06T15:11:17+02:00"
+      },
+      {
+        "message": "OPS: trigger dashboard refresh/deploy on dashboard UI changes",
+        "sha": "0711befeff5382db99ca7da326805c21b40884a1",
+        "timestamp": "2026-10-06T15:11:12+02:00"
       },
       {
         "message": "OPS: synchronize current operational status",
-        "sha": "9db2e674c684bb4239015bdb9dbcfc7604f67980",
-        "timestamp": "2026-10-06T13:08:54Z"
+        "sha": "f5a6483e8b8d27a6cb85f53a134b845457614b71",
+        "timestamp": "2026-10-06T13:10:40Z"
       },
       {
-        "message": "UI: refocus dashboard on Top-4 and active research lanes",
-        "sha": "ad392e4e710eb2777b13f070b94dad00ae7a1a28",
-        "timestamp": "2026-10-06T15:08:50+02:00"
-      },
-      {
-        "message": "OPS: refocus dashboard on active research capacity and Top-4",
-        "sha": "74d3ebc88a9426128b287c6ed6f9afb2a5988ac7",
-        "timestamp": "2026-10-06T15:08:46+02:00"
+        "message": "DOCS: clarify dashboard update/deploy and Android reserve policy",
+        "sha": "eabc0a6ac98a910386cf1b1bce181a94c38c0cb6",
+        "timestamp": "2026-10-06T15:10:14+02:00"
       }
     ]
   },
@@ -4625,7 +4625,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "eabc0a6ac98a910386cf1b1bce181a94c38c0cb6",
+  "source_master_sha": "eebfa71dddd53673947f8960ea9ba004963b861e",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4739,6 +4739,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37468702457"
+    "run_id": "37468845925"
   }
 }
