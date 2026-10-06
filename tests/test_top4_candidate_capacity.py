@@ -22,7 +22,10 @@ def test_top4_workpacks_are_mechanistically_separate():
     assert "q218_q221_historical_source_census" in q218
     assert "q129_options_source_feasibility.py" in q219
     assert "q129_options_pit_reproduction.py" in q219
+    assert "q219_options_source_breadth_gate" in q219
     assert "q104_xbrl_concept_freeze_audit.py" in q220
+    assert "q220_fsn_schema_gate" in q220
+    assert "q221_usaspending_public_clock_gate" in q221
     assert "q104_i19_xbrl_pit_compiler.py" in q220
     assert "top_candidate_source_preflight" in q221
 
