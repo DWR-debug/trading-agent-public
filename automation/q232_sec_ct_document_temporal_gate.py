@@ -33,9 +33,19 @@ DATE_RE = re.compile(
 STATE_RE = re.compile(r"\b(expire|expires|expiration|extended until|extended through)\b", re.IGNORECASE)
 DECISION_RE = re.compile(r"\b(grant|granted|deny|denied|confidential treatment order)\b", re.IGNORECASE)
 CT_DOCUMENT_RE = re.compile(
-    r"<DOCUMENT>.*?<TYPE>\s*CT ORDER\b.*?<FILENAME>\s*([^\s<]+)",
+    r"<DOCUMENT>.*?</DOCUMENT>",
     re.IGNORECASE | re.DOTALL,
 )
+
+
+def declared_ct_document_name(complete: str) -> str | None:
+    for block in CT_DOCUMENT_RE.findall(complete):
+        if not re.search(r"<TYPE>\s*CT ORDER\b", block, re.IGNORECASE):
+            continue
+        match = re.search(r"<FILENAME>\s*([^\s<]+)", block, re.IGNORECASE)
+        if match:
+            return match.group(1).strip()
+    return None
 
 
 def sha256_bytes(data: bytes) -> str:
@@ -91,10 +101,9 @@ def pdf_url_for_row(row: dict[str, str]) -> str:
     if status != 200:
         raise RuntimeError(f"Q232_R1_SUBMISSION_HTTP_{status}:{accession}")
     complete = body.decode("utf-8", errors="replace")
-    match = CT_DOCUMENT_RE.search(complete)
-    if not match:
+    document_name = declared_ct_document_name(complete)
+    if not document_name:
         raise RuntimeError(f"Q232_R1_CT_DOCUMENT_NOT_DECLARED:{accession}")
-    document_name = match.group(1).strip()
     return f"https://www.sec.gov/Archives/edgar/data/{cik}/{accession.replace('-', '')}/{document_name}"
 
 
