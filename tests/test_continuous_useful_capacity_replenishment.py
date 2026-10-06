@@ -115,3 +115,16 @@ def test_planned_capacity_planner_skips_active_duplicates_and_artificial_padding
     assert by_resource["Windows self-hosted B"]["planned_count"] == 0
     assert by_resource["Windows self-hosted C"]["blocked_count"] in (0, 1)
     assert all("planned_not_started" in item["planned_assignments"][0]["execution_status"] for item in plan if item["planned_assignments"] and item["planned_assignments"][0].get("scheduled"))
+
+
+
+def test_dashboard_hides_operational_maintenance_from_active_jobs():
+    root = Path(__file__).parents[1]
+    generator = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+    for marker in (
+        '"Resource Dashboard Update"',
+        '"Current Operational Status Synchronizer"',
+        '"Current Status Drift Guard"',
+        '"Spine Next-Gate Autonomous Router"',
+    ):
+        assert marker in generator
