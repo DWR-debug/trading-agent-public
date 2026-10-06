@@ -127,6 +127,15 @@ def choose_primary(items:list[str],preferred:str|None)->str|None:
     c=[n for n in items if n.lower().endswith((".htm",".html")) and "index" not in n.lower()]
     return sorted(c)[0] if c else None
 
+def choose_presentation_source(items:list[str])->tuple[str,str]|None:
+    dedicated=sorted(n for n in items if n.lower().endswith(("_pre.xml","-pre.xml")))
+    if dedicated:
+        return dedicated[0],"dedicated_presentation_linkbase"
+    inline=sorted(n for n in items if n.lower().endswith(("_htm.xml","-htm.xml")))
+    if inline:
+        return inline[0],"xbrl_instance_embedded_presentation"
+    return None
+
 def inspect(row:dict[str,str],pmap:dict[str,str])->dict[str,object]:
     base=archive_base(row["cik"],row["accession"]); acc=row["accession"]
     sh,h=fetch(f"{base}/{acc}-index-headers.html")
@@ -139,7 +148,7 @@ def inspect(row:dict[str,str],pmap:dict[str,str])->dict[str,object]:
     if not primary: raise RuntimeError(f"PRIMARY_DOCUMENT_NOT_FOUND:{acc}")
     sp,p=fetch(f"{base}/{primary}")
     if sp!=200: raise RuntimeError(f"PRIMARY_HTTP_{sp}:{acc}")
-    xsd_names=sorted(n for n in items if n.lower().endswith(".xsd")); pre_names=sorted(n for n in items if n.lower().endswith(("_pre.xml","-pre.xml")))
+    xsd_names=sorted(n for n in items if n.lower().endswith(".xsd")); presentation_source=choose_presentation_source(items); pre_names=[presentation_source[0]] if presentation_source else []
     xml_names=sorted(n for n in items if n.lower().endswith(".xml") and not any(n.lower().endswith(s) for s in ("_pre.xml","-pre.xml","_cal.xml","-cal.xml","_def.xml","-def.xml","_lab.xml","-lab.xml","_ref.xml","-ref.xml")))
     if not xsd_names: raise RuntimeError(f"XSD_NOT_FOUND:{acc}")
     if not pre_names: raise RuntimeError(f"PRESENTATION_NOT_FOUND:{acc}")
@@ -151,7 +160,7 @@ def inspect(row:dict[str,str],pmap:dict[str,str])->dict[str,object]:
     hits=sorted(x for x in locals_ if x in set(pm["loc_concepts"]))
     return {"canonical_key":{"cik":row["cik"],"form":row["form"],"filed_date":row["filed_date"],"accession":acc},"acceptance_datetime":accepted,
             "header_sha256":sha256(h),"directory_index_sha256":sha256(d),"primary_document":primary,"primary_document_sha256":sha256(p),
-            "primary_document_bytes":len(p),"xsd":xsd_names[0],"xsd_metadata":xm,"presentation_linkbase":pre_names[0],"presentation_metadata":pm,
+            "primary_document_bytes":len(p),"xsd":xsd_names[0],"xsd_metadata":xm,"presentation_linkbase":pre_names[0],"presentation_source_type":presentation_source[1],"presentation_metadata":pm,
             "instance_document":instance_name,"instance_available":bool(instance_name),"textblock_fact_count":len(tb),
             "textblock_concepts":sorted(set(x["qname"] for x in tb)),"presentation_mapped_textblock_concepts":hits,
             "presentation_mapping_complete_for_observed_textblocks":bool(tb) and len(hits)>=len(locals_),"raw_archive_as_filed":True,
