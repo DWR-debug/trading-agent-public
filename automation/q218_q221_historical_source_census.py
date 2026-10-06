@@ -186,8 +186,31 @@ def sec_submission_census() -> dict:
             if r.get("is_eligible_earnings_release_8k") is True
         ]
         paired_targets = [r for r in annual if r.get("pairing_observed") is True]
+        eligible_8k_events = [
+            {
+                "form": r.get("form"),
+                "accession": r.get("accession"),
+                "filing_date": r.get("filing_date"),
+                "report_date": r.get("report_date"),
+                "acceptance_datetime": r.get("acceptance_datetime"),
+                "items": r.get("items"),
+                "item_2_02_marker": r.get("item_2_02_marker") is True,
+                "exhibit_99_1": r.get("exhibit_99_1") is True,
+                "earnings_release_marker": r.get("earnings_release_marker") is True,
+                "primary_publication_terms_marker": r.get("primary_publication_terms_marker") is True,
+                "is_eligible_earnings_release_8k": r.get("is_eligible_earnings_release_8k") is True,
+                "in_control_window": r.get("in_control_window") is True,
+                "index_headers_url": r.get("index_headers_url"),
+                "primary_url": r.get("primary_url"),
+            }
+            for r in eight_k
+            if r.get("acceptance_datetime_found") is True
+            and r.get("is_eligible_earnings_release_8k") is True
+            and r.get("in_control_window") is True
+        ]
         issuer_results[symbol] = {
             "cik": cik, "status": status, "content_type": content_type,
+            "eligible_8k_events": eligible_8k_events,
             "window_row_count": sum(
                 1 for r in rows if r.get("in_control_window") is True
             ),
