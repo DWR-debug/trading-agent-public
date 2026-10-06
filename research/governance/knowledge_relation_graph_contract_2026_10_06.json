@@ -1,0 +1,206 @@
+{
+  "schema_version": "1.0",
+  "record_type": "knowledge_relation_graph_contract",
+  "effective_date_utc": "2026-10-06T00:00:00Z",
+  "status": "ACTIVE_METADATA_ONLY",
+  "purpose": "Connect reusable data, clocks, identities, events, state transitions, candidate contracts and evidence provenance so the OS can reuse validated structural work without conflating mechanisms or scientific authority.",
+  "principle": "share deterministic infrastructure, not scientific conclusions",
+  "safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false,
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false
+  },
+  "node_types": [
+    "source_component",
+    "public_clock",
+    "entity_map",
+    "event",
+    "state_transition",
+    "candidate",
+    "hypothesis",
+    "receipt",
+    "negative_evidence",
+    "trial"
+  ],
+  "edge_types": [
+    "depends_on",
+    "reuses_component",
+    "shares_clock",
+    "shares_entity_map",
+    "joins_on",
+    "precedes_public_state",
+    "corroborates",
+    "contradicts",
+    "revises",
+    "blocked_by",
+    "non_overlap_with",
+    "independently_reproduced_by",
+    "derived_from"
+  ],
+  "reusable_components": [
+    {
+      "id": "SEC_ACCEPTANCE_CLOCK",
+      "type": "public_clock",
+      "status": "SOURCE_STRUCTURE_PROVEN",
+      "description": "SEC acceptance timestamp at the admissible public filing boundary.",
+      "evidence": "Q218 source gate receipt; Q121 dual-index work provides independent population anchors.",
+      "reuse_rule": "Clock semantics may be reused; candidate-specific event pairing and same-day interpretation remain separate gates."
+    },
+    {
+      "id": "SEC_AS_FILED_PREFIX",
+      "type": "source_component",
+      "status": "SOURCE_STRUCTURE_PROVEN",
+      "description": "Immutable as-filed SEC filing prefix at the public boundary.",
+      "evidence": "Q218/Q220 candidate contracts and SEC filing archive gates.",
+      "reuse_rule": "Later amendments/current text may not rewrite the historical prefix."
+    },
+    {
+      "id": "SEC_ISSUER_IDENTITY_MAP",
+      "type": "entity_map",
+      "status": "REUSABLE_WITH_CANDIDATE_AUDIT",
+      "description": "Frozen SEC filer/issuer/security identity mapping.",
+      "evidence": "Q111/Q112/Q121 identity architecture and current candidate contracts.",
+      "reuse_rule": "Mapping may be reused only when the candidate-specific semantic identity contract is satisfied."
+    },
+    {
+      "id": "SEC_10K_8K_EVENT_ARCHIVE",
+      "type": "source_component",
+      "status": "SOURCE_STRUCTURE_PROVEN",
+      "description": "Historical SEC 10-K plus earnings-release 8-K channel archive with acceptance metadata.",
+      "evidence": "Q218 source gate observed all 8 issuer channels and fixed acceptance timestamps.",
+      "reuse_rule": "Reuse only the observed source structure; event pairing, amendment lineage and PIT remain candidate-specific."
+    },
+    {
+      "id": "XBRL_TEXTBLOCK_PRESENTATION",
+      "type": "source_component",
+      "status": "SOURCE_STRUCTURE_READY",
+      "description": "XBRL text-block tags and presentation/relationship structure from as-filed filing datasets.",
+      "evidence": "Q220 FSN schema gate and Q104 XBRL infrastructure.",
+      "reuse_rule": "Mappings must remain deterministic; free-form post-outcome semantic reassignment is prohibited."
+    },
+    {
+      "id": "Q129_OPTIONS_EOD_PIT",
+      "type": "source_component",
+      "status": "PIT_CHAIN_REPRODUCED_SAME_DAY_DISABLED",
+      "description": "Pinned historical options input chain with independent PIT reproduction.",
+      "evidence": "Q129 independent PIT receipt fingerprint 41d723734f030d1a212f5eb4b3e6467223a5cfcdeb97c77ffa9713f8889c7587.",
+      "reuse_rule": "EOD observations cannot be treated as same-session information without a separately proven tighter clock."
+    },
+    {
+      "id": "USASPENDING_PUBLICATION_CLOCK",
+      "type": "public_clock",
+      "status": "CLOCK_CONTRACT_READY_HISTORICAL_APPLICABILITY_OPEN",
+      "description": "USAspending/FPDS public-observation publication chain including agency-specific delay exceptions.",
+      "evidence": "Q221 source-clock gate.",
+      "reuse_rule": "DoD/USACE and other exceptions must be classified before candidate PIT use."
+    },
+    {
+      "id": "13F_POSITION_TRANSITION_COMPILER",
+      "type": "source_component",
+      "status": "STRUCTURAL_COMPILER_COMPLETED",
+      "description": "Deterministic manager/security transition compiler.",
+      "evidence": "Q114/Q116 population and compiler work.",
+      "reuse_rule": "Compiler output is structural metadata until candidate-specific PIT and identity gates pass."
+    },
+    {
+      "id": "TREASURY_DEMAND_STATE_COMPILER",
+      "type": "source_component",
+      "status": "STRUCTURAL_COMPILER_COMPLETED",
+      "description": "Deterministic Treasury auction demand state representation.",
+      "evidence": "Q115/Q117 source/compiler/population work.",
+      "reuse_rule": "State representation may be reused; no outcome inference is inherited."
+    }
+  ],
+  "candidate_component_links": [
+    {"candidate": "Q218", "component": "SEC_ACCEPTANCE_CLOCK", "role": "event_clock"},
+    {"candidate": "Q218", "component": "SEC_AS_FILED_PREFIX", "role": "filing_prefix"},
+    {"candidate": "Q218", "component": "SEC_ISSUER_IDENTITY_MAP", "role": "identity"},
+    {"candidate": "Q218", "component": "SEC_10K_8K_EVENT_ARCHIVE", "role": "two_channel_event_source"},
+    {"candidate": "Q219", "component": "SEC_ACCEPTANCE_CLOCK", "role": "event_clock"},
+    {"candidate": "Q219", "component": "SEC_AS_FILED_PREFIX", "role": "filing_prefix"},
+    {"candidate": "Q219", "component": "SEC_ISSUER_IDENTITY_MAP", "role": "identity"},
+    {"candidate": "Q219", "component": "Q129_OPTIONS_EOD_PIT", "role": "post_filing_response_source"},
+    {"candidate": "Q220", "component": "SEC_AS_FILED_PREFIX", "role": "filing_prefix"},
+    {"candidate": "Q220", "component": "SEC_ISSUER_IDENTITY_MAP", "role": "identity"},
+    {"candidate": "Q220", "component": "XBRL_TEXTBLOCK_PRESENTATION", "role": "representation_structure"},
+    {"candidate": "Q221", "component": "USASPENDING_PUBLICATION_CLOCK", "role": "event_clock"},
+    {"candidate": "Q221", "component": "SEC_ISSUER_IDENTITY_MAP", "role": "identity_bridge_when_applicable"},
+    {"candidate": "Q114", "component": "13F_POSITION_TRANSITION_COMPILER", "role": "position_state"},
+    {"candidate": "Q116", "component": "13F_POSITION_TRANSITION_COMPILER", "role": "transition_population"},
+    {"candidate": "Q115", "component": "TREASURY_DEMAND_STATE_COMPILER", "role": "auction_state"},
+    {"candidate": "Q117", "component": "TREASURY_DEMAND_STATE_COMPILER", "role": "population"}
+  ],
+  "candidate_relations": [
+    {
+      "from": "Q218",
+      "to": "Q220",
+      "edge": "shares_clock_and_filing_substrate",
+      "scientific_interpretation": "Infrastructure reuse only; Q218 studies channel allocation, Q220 studies narrative/structured representation."
+    },
+    {
+      "from": "Q218",
+      "to": "Q219",
+      "edge": "joins_on_public_filing_event",
+      "scientific_interpretation": "A common SEC event anchor can align a post-filing market response; it does not imply mechanism equivalence."
+    },
+    {
+      "from": "Q220",
+      "to": "Q219",
+      "edge": "joins_on_public_filing_event",
+      "scientific_interpretation": "Representation state and options response form separate observable endpoints; any composite requires both candidate-specific PIT contracts."
+    },
+    {
+      "from": "Q221",
+      "to": "Q203",
+      "edge": "shares_government_public_observation_infrastructure",
+      "scientific_interpretation": "USAspending clock reuse is permitted; R&D-option-value and financing-constraint mechanisms remain distinct."
+    },
+    {
+      "from": "Q114",
+      "to": "Q116",
+      "edge": "depends_on",
+      "scientific_interpretation": "Q116 is a population/application layer over the deterministic 13F transition compiler."
+    }
+  ],
+  "discovery_motifs": [
+    {
+      "id": "M1_TWO_CHANNEL_STATE_CONFIRMATION",
+      "pattern": "originator_public_state -> independent_regulator_or_structured_confirmation",
+      "examples": ["Q233", "Q218", "Q220"],
+      "rule": "Candidate is about the state transition between channels, not a generic event count."
+    },
+    {
+      "id": "M2_DISCLOSURE_TO_MARKET_RESPONSE",
+      "pattern": "public_filing -> separately timestamped market/instrument response",
+      "examples": ["Q219"],
+      "rule": "Response source clock must be independently proven; same-day leakage is fail-closed."
+    },
+    {
+      "id": "M3_PUBLIC_ADMINISTRATIVE_STATE_TO_CORPORATE_EXPOSURE",
+      "pattern": "public_government_or_regulator_state -> frozen issuer exposure",
+      "examples": ["Q221", "Q197", "Q203", "Q235"],
+      "rule": "Exposure mapping must be pre-event and reproducible; action dates are not public-observation clocks."
+    },
+    {
+      "id": "M4_MULTI_REPRESENTATION_CONSISTENCY",
+      "pattern": "same underlying filing -> narrative/structured/market representations",
+      "examples": ["Q218", "Q219", "Q220"],
+      "rule": "Do not collapse representations into one factor; preserve channel-specific provenance and gates."
+    }
+  ],
+  "orchestration_rules": {
+    "shared_component_rule": "A structural prerequisite may be computed once and reused by every dependent candidate, with candidate-specific downstream validation.",
+    "no_transitive_authority": "Passing a shared component never passes a dependent candidate's PIT, performance or authorization gate.",
+    "cross_candidate_composition": "Never create a composite candidate merely because graph edges exist. Components must first pass their own candidate-specific gates; any composition requires a separate frozen contract.",
+    "negative_evidence_inheritance": "A failed source contract may close all dependent candidate paths until a new falsifiable source route is declared.",
+    "independent_reproduction": "Critical shared components should be reproduced once by an independent route before being treated as reusable structural infrastructure.",
+    "scheduler_use": "Prioritize unresolved shared components with the highest number of blocked independent downstream tasks, but do not use performance outcomes to set this priority."
+  }
+}
