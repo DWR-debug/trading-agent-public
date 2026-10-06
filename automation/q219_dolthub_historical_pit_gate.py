@@ -70,15 +70,25 @@ FROM DOLT_LOG()
     latest = summary_rows[0].get("latest_commit_date") if summary_rows else None
     commit_count = int(summary_rows[0].get("commit_count") or 0) if summary_rows else 0
 
-    eligible_prior = [
-        row for row in history_rows
-        if str(row.get("date") or "")[:10] <= TARGET_DATE
-    ]
-    prior_commit = eligible_prior[0] if eligible_prior else None
+    prior_query = (
+        "SELECT commit_hash, date, message FROM DOLT_LOG() "
+        "WHERE date <= " + repr(TARGET_DATE + " 23:59:59") +
+        " ORDER BY date DESC LIMIT 1"
+    )
+    prior_payload = fetch_sql(prior_query)
+    prior_rows = prior_payload.get("rows") or []
+    prior_commit = prior_rows[0] if prior_rows else None
 
     snapshots = []
     if history_rows:
-        chosen = history_rows[:2]
+        chosen = []
+        if prior_commit:
+            chosen.append(prior_commit)
+        for row in history_rows:
+            if len(chosen) >= 2:
+                break
+            if not prior_commit or str(row.get("commit_hash")) != str(prior_commit.get("commit_hash")):
+                chosen.append(row)
         for row in chosen:
             commit = str(row.get("commit_hash"))
             sample_query = (
@@ -127,6 +137,7 @@ FROM DOLT_LOG()
             "commit_count": commit_count,
             "option_chain_update_commits_observed": len(history_rows),
             "commit_log_query": history_query,
+            "prior_commit_query": prior_query,
         },
         "historical_pit": {
             "commit_at_or_before_target_date_observed": pit_before_target,

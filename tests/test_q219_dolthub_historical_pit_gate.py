@@ -25,3 +25,16 @@ def test_q219_pit_gate_is_non_authorizing():
     gate = (ROOT / "automation/q219_dolthub_historical_pit_gate.py").read_text(encoding="utf-8")
     for token in ("performance_authorization", "holdout_selection", "ranking", "tuning", "promotion", "live_execution"):
         assert f'"{token}": False' in gate
+
+
+def test_q219_pit_gate_uses_targeted_pre_target_history_query():
+    gate = (ROOT / 'automation/q219_dolthub_historical_pit_gate.py').read_text(encoding='utf-8')
+    assert 'WHERE date <= ' in gate
+    assert 'ORDER BY date DESC LIMIT 1' in gate
+    assert 'prior_commit_query' in gate
+
+
+def test_q219_pit_snapshots_prefer_pre_target_commit():
+    gate = (ROOT / 'automation/q219_dolthub_historical_pit_gate.py').read_text(encoding='utf-8')
+    assert 'chosen.append(prior_commit)' in gate
+    assert 'str(row.get("commit_hash")) != str(prior_commit.get("commit_hash"))' in gate
