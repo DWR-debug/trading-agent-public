@@ -61,6 +61,7 @@ function render(data){
       "<div class='state'>"+state+"</div>"+
       "<div class='role'>"+esc(x.role)+"</div>"+
       "<div class='jobs'>"+esc(x.current_assignments||0)+" aktiver Job"+((x.current_assignments||0)===1?"":"s")+"</div>"+
+      "<div class='small muted'>Slots: "+esc(x.research_slots_in_use||0)+"/"+esc(x.research_capacity_slots||1)+" belegt · "+esc(x.research_slots_free||0)+" frei</div>"+
       "<div class='small muted'>"+esc(plannedCount)+" geplant</div>"+
       "</div>";
   }).join("")+"</div>";

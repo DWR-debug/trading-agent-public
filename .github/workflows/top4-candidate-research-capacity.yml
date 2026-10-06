@@ -92,9 +92,9 @@ jobs:
 
   hosted_x64:
     concurrency:
-      group: trading-agent-research-hosted-ubuntu-24.04
+      group: trading-agent-research-hosted-ubuntu-24.04-slot-2
       cancel-in-progress: false
-    name: Hosted x64 Top-4 ${{ matrix.candidate }}
+    name: Hosted x64 Top-4 slot 2 ${{ matrix.candidate }}
     runs-on: ubuntu-24.04
     env:
       TOP4_EXECUTION_MODE: INDEPENDENT_ARCH_REPRODUCTION
@@ -125,9 +125,9 @@ jobs:
 
   hosted_arm64:
     concurrency:
-      group: trading-agent-research-hosted-ubuntu-24.04-arm
+      group: trading-agent-research-hosted-ubuntu-24.04-arm-slot-2
       cancel-in-progress: false
-    name: Hosted ARM64 Top-4 independent ${{ matrix.candidate }}
+    name: Hosted ARM64 Top-4 slot 2 ${{ matrix.candidate }}
     runs-on: ubuntu-24.04-arm
     env:
       TOP4_EXECUTION_MODE: INDEPENDENT_ARCH_REPRODUCTION
