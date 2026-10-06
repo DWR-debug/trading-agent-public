@@ -527,15 +527,6 @@ def planned_capacity_plan(
             "basis": "current Q218 source/PIT workpack",
         },
         {
-            "plan_id": "Q219-PIT",
-            "candidate": "Q219",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "historical options breadth and deterministic post-filing response PIT",
-            "preferred": ["GitHub-hosted Ubuntu x64", "Windows self-hosted B"],
-            "readiness": "READY_SOURCE_PIT",
-            "basis": "Q129 reproduction plus Q219 breadth lead; PIT still must be proven",
-        },
-        {
             "plan_id": "Q220-PIT",
             "candidate": "Q220",
             "lane": "FRONTIER DISCOVERY",
@@ -821,6 +812,23 @@ def main() -> None:
     ]
     priority_codes = {"Q104:I19","Q218","Q220","Q221"}
     top4 = [x for x in state_board if x.get("code") in priority_codes]
+    q104_parent = next((x for x in state_board if str(x.get("code")) == "104"), None)
+    q104_item = None
+    if q104_parent:
+        nested = q104_parent.get("candidate_contracts")
+        if isinstance(nested, dict):
+            nested_i19 = nested.get("Q104:I19")
+            if isinstance(nested_i19, dict):
+                q104_item = {
+                    "code": "Q104:I19",
+                    "state": str(q104_parent.get("state") or "not recorded"),
+                    "lane": "FORMAL READINESS",
+                    "issue_number": q104_parent.get("issue_number"),
+                    "next_gate": str(nested_i19.get("next_gate") or "not recorded"),
+                    "performance_authorization_allowed": bool(nested_i19.get("performance_authorization_allowed", False)),
+                }
+    if q104_item and not any(str(x.get("code")) == "Q104:I19" for x in top4):
+        top4.insert(0, q104_item)
     planned_capacity = planned_capacity_plan(
         enrich_resources(configured_resources, runners, work),
         work,
