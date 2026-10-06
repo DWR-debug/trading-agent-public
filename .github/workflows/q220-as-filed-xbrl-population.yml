@@ -85,18 +85,22 @@ jobs:
           endlocal
       - name: Publish population receipt
         if: success()
-        shell: powershell
+        shell: cmd
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $src = Join-Path $env:GITHUB_WORKSPACE "research\runs\q220\as_filed_population\${{ github.run_id }}\receipt.json"
-          if (-not (Test-Path $src)) { throw "Q220 receipt not found: $src" }
-          $headers = @{ Authorization = "Bearer $env:GH_TOKEN"; Accept = "application/vnd.github+json"; "X-GitHub-Api-Version" = "2022-11-28" }
-          $ref = Invoke-RestMethod -Headers $headers -Uri "https://api.github.com/repos/$env:GITHUB_REPOSITORY/git/ref/heads/master"
-          $master_sha = $ref.object.sha
-          $py = Join-Path $env:RUNNER_TEMP "python-3.13.15-nuget-q220\tools\python.exe"
-          & $py automation/github_contents_publish.py --repository $env:GITHUB_REPOSITORY --branch master --base-sha $master_sha --file "research/evidence/q220_as_filed_xbrl_population_latest.json=$src"
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          @echo off
+          setlocal
+          set "PY_EXE=%RUNNER_TEMP%\python-3.13.15-nuget-q220\tools\python.exe"
+          if not exist "%PY_EXE%" exit /b 1
+          cd /d "%GITHUB_WORKSPACE%" || exit /b 1
+          set "MASTER_SHA="
+          for /f "delims=" %%S in ('"%PY_EXE%" -c "import os,urllib.request,json; u='https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/ref/heads/master'; r=urllib.request.Request(u,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'}); print(json.load(urllib.request.urlopen(r,timeout=30))['object']['sha'])"') do set "MASTER_SHA=%%S"
+          if not defined MASTER_SHA exit /b 1
+          set "PUBLISH_MESSAGE=EVIDENCE: persist Q220 as-filed XBRL population receipt"
+          "%PY_EXE%" automation\github_contents_publish.py --repository "%GITHUB_REPOSITORY%" --branch master --base-sha "%MASTER_SHA%" --file research/evidence/q220_as_filed_xbrl_population_latest.json=research\runs\q220\as_filed_population\%GITHUB_RUN_ID%\receipt.json
+          if errorlevel 1 exit /b 1
+          endlocal
       - uses: actions/upload-artifact@v6
         if: always()
         with:
