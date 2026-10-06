@@ -33,8 +33,8 @@
   },
   "litellm_transport_enabled": false,
   "task_fingerprint": "eb8bea49bb9304d3c9646b4185a34c02b9191f863cfd37a9edf0bc6809835592",
-  "context_fingerprint": "2420fe9374f8bdc55894ca69238b809a3e4dc7c8230a51cdf43826c03496362b",
-  "observed_at_utc": "2026-10-06T07:40:41.774620Z",
+  "context_fingerprint": "aaf61307e8a8b46f0e4075c9e5276bd7ec636bdc4c427181880237ac22cb4f69",
+  "observed_at_utc": "2026-10-06T08:16:58.222865Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -44,16 +44,16 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 44.832,
-  "stdout": "\n\n**Worker Handoff — Q220 Adversarial Review (Methods)**\n\n---\n\n### 1. Failure Modes & Deterministic Falsifiers\n\n| # | Failure Mode | Minimal Deterministic Falsifier | Exact Artifact Needed |\n|---|--------------|--------------------------------|-----------------------|\n| 1 | **Presentation‑role mapping loss** – text blocks are not linked to their presentation roles, so narrative structure is flattened. | Create an XBRL instance where the same text block appears under two different presentation roles (e.g., “Management Discussion” and “Risk Factors”). Feed it to the Q220 pipeline and verify that the two roles produce distinct narrative segments. | A synthetic XBRL instance with explicit `presentation` links and multiple roles. |\n| 2 | **Taxonomy‑extension changes** – custom namespace concepts are ignored or mis‑mapped to base‑taxonomy placeholders. | Inject a custom‑namespace concept (e.g., `my:CustomNote`) into the `tag` table. Check whether the pipeline outputs a generic placeholder or the correct custom label. | A modified `tag` table containing a custom‑namespace entry. |\n| 3 | **Custom‑namespace collisions** – two concepts with the same local name but different namespaces are treated as identical. | Create two concepts: `us‑gaap:Assets` and `my:Assets`. Observe whether the pipeline conflates them in the narrative representation. | A `tag` table with duplicate local names but distinct namespace prefixes. |\n| 4 | **Section‑identity drift** – narrative sections are identified by labels that change across filings (e.g., “MD&A” vs “Management’s Discussion”). | Compare two filings that contain identical narrative text but use different section labels. Verify that the pipeline treats them as the same section. | Two XBRL instances with identical text blocks but different `section` label values. |\n| 5 | **Naive narrative tokenization** – tokenisation splits on punctuation, destroying phrase boundaries and multi‑word concepts. | Feed a text block containing the phrase “material uncertainty regarding going concern”. Check whether the pipeline outputs the intact phrase or a bag‑of‑words. | A `txt` table row with a known multi‑word phrase. |\n| 6 | **Amended‑filing double‑counting** – amended filings contain overlapping text blocks from the original, causing duplicate narrative content. | Create an amended XBRL instance that repeats a text block from the original filing. Verify that the pipeline deduplicates or flags the overlap. | An XBRL instance with two `txt` rows that share the same `fact` reference but differ in `filing_date`. |\n| 7 | **Future/contemporary XBRL contamination** – facts with future periods or mismatched context are included in the narrative. | Inject a `num` row with a period ending after the filing date. Check whether the pipeline filters it out or includes it in the narrative. | A `num` table row with a future `period_end` date. |\n| 8 | **Duplicate‑fact aggregation** – the same fact appears multiple times in the archive (e.g., due to restatements). | Duplicate a `num` row (identical concept, value, period, unit). Observe whether the narrative representation double‑counts the fact. | A `num` table with two identical rows. |\n| 9 | **Period/unit/context mis‑alignment** – a fact’s unit or context is mismatched with its period, causing incorrect narrative mapping. | Create a `num` row where the unit is `USD` but the context references a non‑USD entity. Verify that the pipeline flags or mishandles the inconsistency. | A `num` row with a `unit` field that does not match the context’s currency. |\n| 10 | **Representation‑mismatch proxies filing length** – the narrative representation is a function of the number of text blocks, not their semantic content. | Generate two filings with the same number of `txt` rows but entirely different text. Compare the pipeline’s narrative outputs; if they are identical, the representation is length‑based. | Two `txt` tables with equal row counts but disjoint vocabulary. |\n\n---\n\n### 2. Counterarguments (Pre‑emptive Defences)\n\n- *“The schema gate already verifies required members and headers.”*  \n  → It verifies **presence**, not **semantic correctness**. A correct header list does not guarantee that the pipeline correctly maps presentation roles, handles custom namespaces, or deduplicates facts.\n- *“The pipeline uses local names only, so namespace changes are harmless.”*  \n  →",
+  "duration_seconds": 12.744,
+  "stdout": "\n\n# Q220 — Adversarial Methods Review (Worker Handoff)\n\n**Scope:** Narrative-structured XBRL representation gap — source/PIT contract review only. No performance, ranking, tuning, selection, or authorization.\n\n---\n\n## 1. Findings — Failure Modes\n\n### A. Source-contract fragility (highest severity)\n- `automation/q220_fsn_schema_gate.py` fetches",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1791272441-QIrTS2f77dQlAkTMT7Kw",
+  "response_id": "gen-1791274618-yajqPWHWNyl4VnkvUCGy",
   "usage": {
-    "prompt_tokens": 5180,
+    "prompt_tokens": 5444,
     "completion_tokens": 3200,
-    "total_tokens": 8380,
+    "total_tokens": 8644,
     "cost": 0,
     "is_byok": false,
     "prompt_tokens_details": {
@@ -68,7 +68,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 2788,
+      "reasoning_tokens": 3296,
       "image_tokens": 0,
       "audio_tokens": 0
     }
