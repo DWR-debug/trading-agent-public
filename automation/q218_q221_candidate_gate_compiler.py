@@ -77,7 +77,10 @@ def compile_gate(census: dict, specs: dict, q129_contract: dict | None = None) -
     q218_issuers = q218.get("sec_submission_census", {}).get("issuer_results", {})
     pairable = [
         symbol for symbol, item in q218_issuers.items()
-        if item.get("pairability_observed") is True
+        if (
+            item.get("pairability_observed") is True
+            or int(item.get("pairable_report_period_count", 0) or 0) > 0
+        )
     ]
     accepted_10k = sum(
         1 for item in q218_issuers.values()
@@ -102,6 +105,17 @@ def compile_gate(census: dict, specs: dict, q129_contract: dict | None = None) -
         "pairable_symbols": pairable,
         "accepted_latest_10k_count": accepted_10k,
         "accepted_latest_8k_earnings_release_count": accepted_8k,
+        "pairing_contract": {
+            "historical_pair_count_observed": sum(
+                int(item.get("paired_10k_count", 0) or 0)
+                for item in q218_issuers.values()
+            ),
+            "amendment_exclusion_frozen": all(
+                item.get("pairing_excludes_amended_8k") is True
+                for item in q218_issuers.values()
+                if isinstance(item, dict)
+            ),
+        },
         "next_gate": "HISTORICAL_EVENT_PAIR_PIT_RECONSTRUCTION" if q218_ready else "REPAIR_SEC_MULTI_CHANNEL_SOURCE_COVERAGE",
     }
 
