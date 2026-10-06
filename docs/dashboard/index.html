@@ -65,6 +65,7 @@
   </header>
 
   <div id="error" hidden class="error"></div>
+  <noscript><div class="error">JavaScript is required for the interactive Research Control Board.</div></noscript>
 
   <section id="app" class="grid" hidden>
     <article class="card wide">
@@ -118,7 +119,9 @@
     </article>
   </section>
 
-  <footer class="muted">
+  <script src="dashboard_bootstrap.js"></script>
+
+<footer class="muted">
     Operational snapshot only. Active jobs and runner states are not scientific evidence.
     AI output never authorizes performance, ranking, tuning, promotion or live execution.
   </footer>
@@ -272,15 +275,40 @@ function render(data){
   $("app").hidden=false;
 }
 
+function renderEmbeddedSnapshot(){
+  const snapshot=window.__TRADING_AGENT_SNAPSHOT__;
+  if(snapshot && typeof snapshot==="object"){
+    render(snapshot);
+    return true;
+  }
+  return false;
+}
+
 async function load(){
   $("error").hidden=true;
+  const renderedEmbedded=renderEmbeddedSnapshot();
+  if(!renderedEmbedded){
+    $("meta").textContent="Operational snapshot is not embedded; requesting the published data file…";
+  }
   try{
-    const r=await fetch("dashboard_data.json?ts="+Date.now(),{cache:"no-store"});
+    const controller=typeof AbortController==="function" ? new AbortController() : null;
+    const timer=controller ? setTimeout(()=>controller.abort(),6000) : null;
+    const url=new URL("dashboard_data.json",document.baseURI);
+    url.searchParams.set("ts",String(Date.now()));
+    const options={cache:"no-store"};
+    if(controller) options.signal=controller.signal;
+    const r=await fetch(url.toString(),options);
+    if(timer) clearTimeout(timer);
     if(!r.ok) throw new Error("HTTP "+r.status);
     render(await r.json());
   }catch(e){
-    $("error").textContent="Dashboard snapshot could not be loaded: "+e.message;
-    $("error").hidden=false;
+    const reason=e && e.name==="AbortError" ? "refresh timed out" : (e?.message || String(e));
+    if(!renderedEmbedded){
+      $("error").textContent="Dashboard snapshot could not be loaded: "+reason;
+      $("error").hidden=false;
+    }else{
+      $("meta").insertAdjacentHTML("beforeend"," · <span class='warn'>fresh refresh unavailable: "+esc(reason)+"; embedded snapshot shown</span>");
+    }
   }
 }
 
