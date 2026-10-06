@@ -33,8 +33,8 @@
   },
   "litellm_transport_enabled": false,
   "task_fingerprint": "0d93716d6d4b736aa803ad74ce919d8d57856360bc03cfdecc14b0a671220ee1",
-  "context_fingerprint": "9019de4fdea94a5a25f461110cb0ec90881916e141e3a9f7b6ca1a3e37c033ae",
-  "observed_at_utc": "2026-10-06T19:57:06.048649Z",
+  "context_fingerprint": "28f3eb62affe1ac8269ae41434ebb2ec120ca7518792ca33fe42e0e9b4ad9c45",
+  "observed_at_utc": "2026-10-06T20:56:04.399252Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 37.761,
-  "stdout": "\n\n## Q218 Adversarial Methods Review — Worker Handoff\n\n### 1. Findings (Attack Surfaces)\n\n#### 1.1 Deterministic 10-K → 8-K Pairing Rule\nThe census pairs using: *\"latest eligible Item-2.02/Exhibit-99.1-style 8-K by SEC acceptance timestamp within (preceding 10-K acceptance, target 10-K acceptance]\"*. Three structural weaknesses:\n\n- **Interval emptiness is unhandled.** If no 8-K falls in the interval, `pairability_observed` is presumably `False`, but the compiler silently counts those issuers as unpairable rather than flagging the gap. This is not a bug per se, but it means the \"pairable\" denominator is a subset that may be systematically different from the full universe.\n- **Multiple 8-Ks in interval are under-specified.** \"Latest eligible\" is deterministic only if there is exactly one. If two 8-Ks have the same acceptance timestamp (possible on SEC EDGAR), the tiebreak is undefined. If two 8-Ks have different timestamps, the \"latest\" may not be the economically relevant one (e.g., a delayed 8-K filed after a subsequent 8-K).\n- **Amendment contamination.** The census includes both `8-K` and `8-K/A`. An `8-K/A` filed within the interval may be correcting a prior 8-K that was filed *before* the preceding 10-K. The pairing rule does not distinguish original vs amended, so the \"latest\" could be an amendment whose content is a correction, not new information.\n\n#### 1.2 SEC Acceptance Timestamp as Event Clock\nThe acceptance timestamp is the moment the SEC's EDGAR system accepts the filing into its queue. It is **not** the public dissemination timestamp. Filings can sit in the SEC's pre-publication queue for minutes to hours. For a disclosure-timing candidate, this introduces a non-deterministic jitter that is not bounded or modeled. The census treats acceptance time as if it were the public observation boundary, but the actual public observation boundary is the EDGAR posting time, which is a separate field (`filingDate` + time, or the `publicObservationTime` if available).\n\n#### 1.3 Report-Date vs Event-Date Ambiguity\nThe census uses `filingDate` (from the SEC submissions index) to filter by window, but the pairing interval is defined by acceptance timestamps. The `reportDate` (the end date of the reported period) is retained but not used in pairing logic. This creates a potential mismatch: an 8-K filed in Q1 could report Q4 earnings (because of a late filing), and the 10-K for the same period might have been filed earlier. The pairing would associate the 8-K with the *subsequent* 10-K even though the 8-K's content pertains to the *preceding* period. This is a classic look-ahead/period-misalignment failure.\n\n#### 1.4 False Pairing of Earnings Releases\nNot every 8-K with Item 2.02 or Exhibit 99.1 is an earnings release. Item 2.02 is \"Results of Operations and Financial Condition,\" but it can be used for non-earnings disclosures (e.g., a material event unrelated to earnings that happens to reference financial results). Exhibit 99.1 is a voluntary exhibit that can accompany any material event. The census does not verify that the 8-K is *actually* an earnings release; it only checks form type and item/exhibit codes. A false positive pairing (an 8-K that is not an earnings release) would contaminate any downstream semantic analysis.\n\n#### 1.5 Voluntary-vs-Mandatory Channel Classification\nThe census treats all Item-2.02/Exhibit-99.1 8-Ks as equivalent, but Item 2.02 is mandatory while Exhibit 99.1 is voluntary. If the semantic wedge relies on distinguishing mandatory from voluntary disclosures, collapsing them into a single \"eligible\" class defeats the purpose. The census does not record which channel each 8-K belongs to, so any downstream analysis cannot separate the two.\n\n#### 1.6 Issuer Identity Drift\nThe census uses a fixed `SEC_CIKS` dictionary mapping symbols to CIKs as of the script's creation. If any of the 8 issuers underwent a merger, acquisition, or CIK change during 2025-2026, filings from the pre-change entity would be under a different CIK and would be invisible to the census. The census does not check for CIK continuity or cross-walk files. This could cause a systematic exclusion of filings from a subset of the window for certain issuers.\n\n#### 1.7 Semantic Wedge Collapse to Length/Complexity/Global Similarity\nThe \"semantic wedge\" presumably uses text features (length, complexity, similarity) to distinguish mandatory from voluntary disclosures. If voluntary Exhibit 99.1 filings are short, boilerplate press releases that happen to be attached to 8-Ks, and mandatory Item 2.02 filings are also short and boilerplate (because companies use standardized language), the two distributions may overlap completely. The smallest falsifier: a single 8-K where the Exhibit 99.1 text is longer and more complex than a typical Item 2.02 text, or vice versa, breaking the assumed ordering. More critically, if the semantic features are *global* (e.g., TF-IDF cosine similarity to a reference corpus), the mandatory and voluntary filings may cluster together because they share the same corporate language, industry jargon, and boilerplate.\n\n---\n\n### 2. Counterarguments (What the Census Does Right)\n\n- **Deterministic by construction.** The census uses only SEC EDGAR index data (CIK submissions JSON), which is a stable, versioned, immutable source. No live API probes, no HTML scraping, no interpretation.\n- **Pairing rule is conservative.** By requiring the 8-K acceptance to fall *after* the preceding 10-K acceptance and *on/before* the target 10-K acceptance, the census avoids forward-looking bias. The interval is closed on the right, open on the left, which is the correct structure for \"new information arriving between two 10-K filings.\"\n- **Amendment handling is defensible.** Including `8-K/A` is correct because an amended 8-K is a new filing with its own acceptance timestamp. The \"latest\" rule naturally picks the most recent version.\n- **No market outcomes used.** The census is purely source/PIT infrastructure. It does not read prices, returns, or any market data.\n- **Fixed universe.** The 8 issuers are fixed and small (AAPL, MSFT, AMZN, JPM, XOM, NVDA, WMT, DIS), which makes exhaustive manual verification feasible.\n\n---\n\n### 3. Concrete Next Actions (Smallest Deterministic Falsifiers)\n\nFor each failure mode, the smallest deterministic falsifier and the exact artifact required:\n\n| # | Failure Mode | Smallest Deterministic Falsifier | Exact Artifact Required |\n|---|---|---|---|\n| 1 | **Interval emptiness / unpairable issuers** | One issuer in the window has zero ",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 10.282,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter returned tool-call syntax instead of a final worker handoff.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1791316626-aC2oABpJhUhAqlJ7LS48",
-  "usage": {
-    "prompt_tokens": 5246,
-    "completion_tokens": 3200,
-    "total_tokens": 8446,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 1740,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
