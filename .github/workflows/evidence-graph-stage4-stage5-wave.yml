@@ -1,0 +1,154 @@
+name: Evidence Graph Stage 4-5 Research Wave
+on:
+  push:
+    branches: [master]
+    paths:
+      - "automation/evidence_graph_stage4_stage5.py"
+      - "research/governance/evidence_graph_stage4_stage5_contract_2026_10_06.json"
+      - "research/governance/knowledge_relation_graph_contract_2026_10_06.json"
+      - "research/candidates/orthogonal_candidate_specs_2026-10-05.json"
+      - "research/preregistrations/q104_i19_13f_historical_identity_census_2026_10_06.json"
+      - "tests/test_evidence_graph_stage4_stage5.py"
+      - ".github/workflows/evidence-graph-stage4-stage5-wave.yml"
+  workflow_dispatch: {}
+  schedule:
+    - cron: "7 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-evidence-graph-stage4-stage5
+  cancel-in-progress: true
+
+jobs:
+  parallel_analysis:
+    name: Stage 4-5 $${{ matrix.mode }}
+    strategy:
+      fail-fast: true
+      max-parallel: 4
+      matrix:
+        mode: [relation, negative, novelty, full]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout current master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Run bounded Stage 4-5 analysis
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/$${{ matrix.mode }}"
+          python -m automation.evidence_graph_stage4_stage5 \
+            --mode "$${{ matrix.mode }}" \
+            --output "research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/$${{ matrix.mode }}/result.json"
+      - name: Upload analysis receipt
+        uses: actions/upload-artifact@v6
+        with:
+          name: stage4-stage5-$${{ matrix.mode }}-$${{ github.run_id }}
+          path: research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/$${{ matrix.mode }}/result.json
+          if-no-files-found: error
+          retention-days: 30
+
+  event_bus_window:
+    name: Stage 4 event-bus / Stage 5 continuous window
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    steps:
+      - name: Checkout current master
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Run material-change-driven 70 minute research window
+        env:
+          GH_TOKEN: $${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          START="$(date +%s)"
+          CYCLE=0
+          LAST=""
+          mkdir -p "research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/event_bus"
+          while true; do
+            NOW="$(date +%s)"
+            ELAPSED=$((NOW-START))
+            if [ "$ELAPSED" -ge 4200 ]; then
+              break
+            fi
+            CYCLE=$((CYCLE+1))
+            git fetch --quiet origin master
+            git reset --hard --quiet origin/master
+            CURRENT="$(python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          h=hashlib.sha256()
+          paths=[]
+          for base in ("research/evidence","research/governance","research/candidates","research/preregistrations"):
+              p=Path(base)
+              if p.exists():
+                  paths.extend(x for x in p.rglob("*.json") if x.is_file())
+          for p in sorted(paths):
+              h.update(p.as_posix().encode())
+              h.update(b"\0")
+              h.update(hashlib.sha256(p.read_bytes()).digest())
+          print(h.hexdigest())
+          PY
+          )"
+            if [ "$CURRENT" != "$LAST" ]; then
+              echo "MATERIAL_INPUT_CHANGE cycle=$CYCLE sha=$CURRENT"
+              python -m automation.evidence_graph_stage4_stage5 \
+                --mode full \
+                --output "research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/event_bus/latest_full.json"
+              LAST="$CURRENT"
+              echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) cycle=$CYCLE manifest=$CURRENT" >> \
+                "research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/event_bus/material_changes.log"
+            else
+              echo "NO_MATERIAL_INPUT_CHANGE cycle=$CYCLE"
+            fi
+            sleep 300
+          done
+      - name: Persist latest Stage 4-5 synthesis
+        env:
+          GH_TOKEN: $${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -f "research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/event_bus/latest_full.json" ]; then
+            python -m automation.evidence_graph_stage4_stage5 \
+              --mode full \
+              --output "research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/event_bus/latest_full.json"
+          fi
+          cp "research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/event_bus/latest_full.json" \
+             research/evidence/evidence_graph_stage4_stage5_latest.json
+          for attempt in 1 2 3 4 5; do
+            current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+            if python3 automation/github_contents_publish.py \
+              --repository "$GITHUB_REPOSITORY" \
+              --branch master \
+              --base-sha "$current_sha" \
+              --file "research/evidence/evidence_graph_stage4_stage5_latest.json=research/evidence/evidence_graph_stage4_stage5_latest.json"; then
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          exit 1
+      - name: Upload event-bus receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: stage4-stage5-event-bus-$${{ github.run_id }}
+          path: research/runs/evidence_graph_stage4_stage5/$${{ github.run_id }}/event_bus/
+          if-no-files-found: error
+          retention-days: 30
