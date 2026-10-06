@@ -1,1 +1,52 @@
-{"schema_version":1,"task_id":"AI-2026-10-06-Q219-TOP4-ADVERSARIAL","provider":"openrouter_free","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-10-06-Q219-TOP4-ADVERSARIAL",
+  "provider": "openrouter_free",
+  "free_only": true,
+  "preflight": {
+    "provider": "openrouter_free",
+    "available": true,
+    "binary": null,
+    "free_only": true,
+    "local_mode": false,
+    "litellm_transport_enabled": false,
+    "local_attestation": {
+      "present": false,
+      "path": null
+    },
+    "free_mode_attested": true,
+    "free_mode_attestation": {
+      "eligible": true,
+      "provider": "openrouter_free",
+      "fixed_model": "openrouter/free",
+      "free_mode_attested": true,
+      "attestation_required": false,
+      "attestation_type": "provider_fixed_zero_price_route",
+      "attestation_env": null,
+      "paid_usage_allowed": false,
+      "paid_fallback_allowed": false,
+      "personal_credit_fallback_allowed": false,
+      "reasons": []
+    },
+    "free_enforcement": "fixed_model_openrouter_free",
+    "reasons": []
+  },
+  "litellm_transport_enabled": false,
+  "task_fingerprint": "aa5f605227857f50a291d5a5a6a68e95be764b739bb12801652f9d9ca191d266",
+  "context_fingerprint": "e17c70fbc13e6f305f8f48f05db7ac9c6ee3bd26534fb87ebd8ff2de87a39d0d",
+  "observed_at_utc": "2026-10-06T07:40:41.367352Z",
+  "worker_output_is_scientific_evidence": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 30.164,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
+  "command_binary": "https-openrouter",
+  "api_model": "openrouter/free"
+}
