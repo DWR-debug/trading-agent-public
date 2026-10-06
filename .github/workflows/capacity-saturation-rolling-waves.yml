@@ -69,11 +69,11 @@ jobs:
             [[ -n "$workflow" ]] || continue
             if (( count >= limit )); then echo "SKIP_DISPATCH_LIMIT ${phase_id} ${workflow}"; continue; fi
             [[ -f ".github/workflows/${workflow}" ]] || { echo "SKIP_MISSING ${phase_id} ${workflow}"; continue; }
-            active="$(printf '%s' "$runs" | jq --arg wf "https://github.com/$GITHUB_REPOSITORY/actions/workflows/${workflow}" '[.workflow_runs[] | select(.status != "completed") | select(.workflow_url == $wf)] | length')"
+            active="$(printf '%s' "$runs" | jq --arg wf "https://github.com/$GITHUB_REPOSITORY/actions/workflows/${workflow}" '[.workflow_runs[] | select(.status != "completed") | select(.workflow_url == $wf) | select(.head_branch == "master")] | length')"
             if (( active > 0 )); then echo "SKIP_ACTIVE ${phase_id} ${workflow} active=${active}"; continue; fi
-            recent_success="$(printf '%s' "$runs" | jq --arg wf "https://github.com/$GITHUB_REPOSITORY/actions/workflows/${workflow}" --argjson cooldown_epoch "${cooldown_epoch}" '[.workflow_runs[] | select(.conclusion == "success") | select(.workflow_url == $wf) | select((.created_at | fromdateiso8601) >= $cooldown_epoch)] | length')"
+            recent_success="$(printf '%s' "$runs" | jq --arg wf "https://github.com/$GITHUB_REPOSITORY/actions/workflows/${workflow}" --argjson cooldown_epoch "${cooldown_epoch}" '[.workflow_runs[] | select(.conclusion == "success") | select(.workflow_url == $wf) | select(.head_branch == "master") | select((.created_at | fromdateiso8601) >= $cooldown_epoch)] | length')"
             if (( recent_success > 0 )); then echo "SKIP_RECENT_SUCCESS ${phase_id} ${workflow} cooldown=${cooldown_minutes}m"; continue; fi
-            phase_attempts="$(printf '%s' "$runs" | jq --arg wf "https://github.com/$GITHUB_REPOSITORY/actions/workflows/${workflow}" --argjson phase_start_epoch "${phase_start_epoch}" '[.workflow_runs[] | select(.workflow_url == $wf) | select((.created_at | fromdateiso8601) >= $phase_start_epoch)] | length')"
+            phase_attempts="$(printf '%s' "$runs" | jq --arg wf "https://github.com/$GITHUB_REPOSITORY/actions/workflows/${workflow}" --argjson phase_start_epoch "${phase_start_epoch}" '[.workflow_runs[] | select(.workflow_url == $wf) | select(.head_branch == "master") | select((.created_at | fromdateiso8601) >= $phase_start_epoch)] | length')"
             if (( phase_attempts >= 2 )); then echo "SKIP_RETRY_LIMIT ${phase_id} ${workflow} attempts=${phase_attempts}"; continue; fi
             if gh workflow run "${workflow}" --repo "$GITHUB_REPOSITORY" --ref master; then echo "DISPATCHED ${phase_id} ${workflow}"; count=$((count+1)); else echo "DISPATCH_FAILED_NONBLOCKING ${phase_id} ${workflow}"; fi
           done < /tmp/ready_workflows.txt
