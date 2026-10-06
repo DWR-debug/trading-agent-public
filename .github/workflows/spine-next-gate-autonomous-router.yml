@@ -46,7 +46,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p research/runs/spine/router/${GITHUB_RUN_ID}
+          mkdir -p "research/runs/spine/router/${GITHUB_RUN_ID}"
           gh api "/repos/${GITHUB_REPOSITORY}/actions/runs?per_page=200" > "research/runs/spine/router/${GITHUB_RUN_ID}/runs.json"
           python -m automation.spine_next_gate_router --runs "research/runs/spine/router/${GITHUB_RUN_ID}/runs.json" --output "research/runs/spine/router/${GITHUB_RUN_ID}/dispatch_plan.json" --max-dispatches 5
           export ROUTER_RUN_ID="${GITHUB_RUN_ID}"
