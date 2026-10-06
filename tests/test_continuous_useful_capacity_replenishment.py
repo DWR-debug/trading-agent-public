@@ -34,3 +34,22 @@ def test_dashboard_never_maps_unavailable_runner_inventory_to_zero() -> None:
     assert '"runner_api_visible": len(runners) if runners else None' in text
     html = (root / "docs/dashboard/index.html").read_text(encoding="utf-8")
     assert '["Visible runners",s.runner_api_visible??"n/a"]' in html
+
+
+def test_dashboard_has_synchronous_bootstrap_and_bounded_refresh_fallback() -> None:
+    root = Path(__file__).parents[1]
+    html = (root / "docs/dashboard/index.html").read_text(encoding="utf-8")
+    generator = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+    assert 'src="dashboard_bootstrap.js"' in html
+    assert "renderEmbeddedSnapshot()" in html
+    assert "AbortController" in html
+    assert "6000" in html
+    assert 'BOOTSTRAP = ROOT / "docs" / "dashboard" / "dashboard_bootstrap.js"' in generator
+    assert "window.__TRADING_AGENT_SNAPSHOT__" in generator
+
+
+def test_dashboard_pages_has_single_automatic_publisher() -> None:
+    root = Path(__file__).parents[1]
+    text = (root / ".github/workflows/github-pages-dashboard.yml").read_text(encoding="utf-8")
+    assert "workflow_dispatch: {}" in text
+    assert '  push:\n    branches: [master]' not in text

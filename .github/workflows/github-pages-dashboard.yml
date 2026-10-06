@@ -2,11 +2,9 @@ name: Deploy Resource Dashboard to GitHub Pages
 
 # Pages deployment is intentionally exercised by repository changes so the public dashboard deployment path is auditable.
 on:
-  push:
-    branches: [master]
-    paths:
-      - "docs/**"
-      - ".github/workflows/github-pages-dashboard.yml"
+  # The resource-dashboard-update workflow is the single automatic publisher.
+  # Keeping this workflow manual-only prevents two Pages deployments from racing
+  # and serving an older dashboard artifact after a fresh snapshot commit.
   workflow_dispatch: {}
 
 permissions:
