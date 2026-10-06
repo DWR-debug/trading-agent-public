@@ -31,3 +31,35 @@ def test_frozen_source_page_loader(tmp_path):
     payload=b"<html>frozen</html>"
     p.write_bytes(payload)
     assert load_page(p)==payload
+
+
+def test_accession_header_url_uses_filer_cik_and_normalized_accession():
+    from automation.q104_i19_13f_historical_identity_census import accession_header_url
+    assert accession_header_url("0001045810", "0001045810-26-000065") == "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000065/0001045810-26-000065-index-headers.html"
+
+
+def test_parse_acceptance_header_validates_identity_and_timestamp():
+    from automation.q104_i19_13f_historical_identity_census import parse_acceptance_header
+    raw="""<SEC-HEADER>\nACCESSION NUMBER: 0001045810-26-000065\nCONFORMED SUBMISSION TYPE: 13F-HR\nPUBLIC DOCUMENT COUNT: 3\nCONFORMED PERIOD OF REPORT: 20260331\nFILED AS OF DATE: 20260515\nCENTRAL INDEX KEY: 0001045810\n<ACCEPTANCE-DATETIME>20260515161542\n</SEC-HEADER>"""
+    assert parse_acceptance_header(raw,"0001045810","0001045810-26-000065","13F-HR","2026-05-15") == "2026-05-15T16:15:42"
+
+
+def test_parse_acceptance_header_fails_closed_on_identity_mismatch():
+    import pytest
+    from automation.q104_i19_13f_historical_identity_census import parse_acceptance_header
+    raw="""ACCESSION NUMBER: 0001045810-26-000065\nCONFORMED SUBMISSION TYPE: 13F-HR\nFILED AS OF DATE: 20260515\nCENTRAL INDEX KEY: 0001045810\n<ACCEPTANCE-DATETIME>20260515161542"""
+    with pytest.raises(ValueError, match="ACCESSION_MISMATCH"):
+        parse_acceptance_header(raw,"0001045810","0001045810-26-999999","13F-HR","2026-05-15")
+    with pytest.raises(ValueError, match="FILER_CIK_MISMATCH"):
+        parse_acceptance_header(raw,"0009999999","0001045810-26-000065","13F-HR","2026-05-15")
+
+
+def test_scan_archive_counts_unique_target_accessions():
+    from automation.q104_i19_13f_historical_identity_census import scan_archive
+    sub="ACCESSION_NUMBER\\tFILING_DATE\\tPERIODOFREPORT\\tCIK\\tSUBMISSIONTYPE\\n0001045810-26-000065\\t15-MAY-2026\\t31-MAR-2026\\t0001045810\\t13F-HR\\n"
+    info="ACCESSION_NUMBER\\tNAMEOFISSUER\\tTITLEOFCLASS\\tCUSIP\\n0001045810-26-000065\\tIssuer A\\tCommon Stock\\t78409V104\\n0001045810-26-000065\\tIssuer B\\tCommon Stock\\t999999999\\n"
+    b=io.BytesIO()
+    with zipfile.ZipFile(b,"w",zipfile.ZIP_DEFLATED) as z:
+        z.writestr("SUBMISSION.tsv",sub); z.writestr("INFOTABLE.tsv",info)
+    r=scan_archive(b.getvalue(),{"url":"synthetic://unique","label":"unique","period_start":"2026-04-01"},{"SPGI":{"78409V104"},"OTHER":{"78409V104"}})
+    assert r["target_unique_accession_count"] == 1
