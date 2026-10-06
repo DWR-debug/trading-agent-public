@@ -42,7 +42,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          OUT="research/runs/literature_frontier/$GITHUB_RUN_ID"
           mkdir -p "$OUT"
           cat > "$OUT/query_manifest.json" <<'JSON'
           {
