@@ -71,3 +71,61 @@ def test_q218_q221_census_is_deterministic_and_non_authorizing(tmp_path, monkeyp
     assert result["q221_usa_rdtne_census"]["publication_sequence_found"] is True
     assert result["q221_usa_rdtne_census"]["transactions_endpoint_documented"] is True
     assert Path(tmp_path / "census.json").is_file()
+
+def test_q218_census_excludes_8k_amendments_from_event_pairing(tmp_path, monkeypatch):
+    sample_json = json.dumps(
+        {
+            "filings": {
+                "recent": {
+                    "form": ["10-K", "8-K", "8-K/A"],
+                    "filingDate": ["2025-02-01", "2025-02-15", "2025-02-16"],
+                    "reportDate": ["2024-09-30", "2024-09-30", "2024-09-30"],
+                    "accessionNumber": [
+                        "0000320193-25-000001",
+                        "0000320193-25-000002",
+                        "0000320193-25-000003",
+                    ],
+                    "primaryDocument": ["a10k.htm", "a8k.htm", "a8ka.htm"],
+                    "items": ["", "2.02,9.01", "2.02,9.01"],
+                }
+            }
+        }
+    ).encode()
+
+    def fake_fetch(url: str, limit=1000000):
+        if "submissions/CIK" in url:
+            return 200, "application/json", sample_json
+        if url.endswith("000002-index-headers.html") or url.endswith("-index-headers.html"):
+            if "000003" in url:
+                stamp = "20250201140000"
+            elif "000002" in url:
+                stamp = "20250201130000"
+            else:
+                stamp = "20250201120000"
+            return 200, "text/html", f"<ACCEPTANCE-DATETIME>{stamp}".encode()
+        if url.endswith("a8k.htm"):
+            return 200, "text/html", b"EARNINGS RELEASE RESULTS"
+        if url.endswith("a8ka.htm"):
+            return 200, "text/html", b"EARNINGS RELEASE AMENDMENT"
+        if url.endswith(".zip"):
+            return 200, "application/zip", b"PK\x03\x04"
+        if "about-the-data-download.pdf" in url:
+            return 200, "application/pdf", b"USA"
+        if "api.usaspending.gov/docs/endpoints" in url:
+            return 200, "text/html", b"/api/v2/transactions/"
+        return 200, "text/html", b"fixture"
+
+    monkeypatch.setattr(census, "fetch", fake_fetch)
+    monkeypatch.setattr(
+        census,
+        "_extract_pdf_text",
+        lambda body: "Frequency of Updates to Prime Award Data for Contracts within five days published to USAspending.gov following morning",
+    )
+
+    result = census.run(tmp_path / "census.json")
+    issuer = result["q218_sec_pair_census"]["issuer_results"]["AAPL"]
+    assert issuer["amendment_count"] == 1
+    assert issuer["pairing_excludes_amended_8k"] is True
+    assert issuer["paired_10k_count"] == 1
+    assert issuer["paired_10k_events"][0]["paired_8k_accession"] == "0000320193-25-000002"
+    assert issuer["paired_10k_events"][0]["paired_8k_is_amendment"] is False
