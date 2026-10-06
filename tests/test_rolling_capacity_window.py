@@ -22,3 +22,8 @@ def test_wave_order():
 def test_capacity_dispatcher_ignores_feature_branch_runs_for_master_research():
     workflow = open(".github/workflows/capacity-saturation-rolling-waves.yml", encoding="utf-8").read()
     assert '.head_branch == "master"' in workflow
+
+
+def test_capacity_dispatcher_matches_runs_by_workflow_path():
+    workflow = open(".github/workflows/capacity-saturation-rolling-waves.yml", encoding="utf-8").read()
+    assert '.path == $workflow_path' in workflow
