@@ -1,0 +1,76 @@
+name: Q232 SEC CT Document Temporal Gate
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [master]
+    paths:
+      - "automation/q232_sec_ct_document_temporal_gate.py"
+      - "tests/test_q232_sec_ct_document_temporal_gate.py"
+      - "research/preregistrations/q232_sec_ct_document_temporal_gate_2026_10_06.json"
+      - ".github/workflows/q232-sec-ct-document-temporal-gate.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  document-temporal:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Install PDF extraction utility
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils
+      - name: Contract tests
+        run: python -m pytest -q tests/test_q232_sec_ct_document_temporal_gate.py
+      - name: Run Q232 R1 document temporal gate
+        run: |
+          python -m automation.q232_sec_ct_document_temporal_gate \
+            --output research/runs/q232_sec_ct_document_temporal_gate/result.json
+      - name: Validate non-authorizing boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path("research/runs/q232_sec_ct_document_temporal_gate/result.json").read_text())
+          assert p["status"] == "Q232_R1_DOCUMENT_TEMPORAL_GATE_COMPLETED"
+          assert p["sample_size"] == 33
+          assert p["pdf_retrieved"] == 33
+          assert p["text_extraction_success"] == 33
+          assert p["temporal_anchor_hits"] >= 1
+          assert p["pit_boundary"]["document_expiry_date_is_latent_not_public_observation_clock"] is True
+          assert p["pit_boundary"]["same_day_pit_safe"] is False
+          assert p["pit_boundary"]["public_observation_time_proven"] is False
+          for key in (
+              "performance","holdout_selection","ranking","parameter_search",
+              "threshold_search","horizon_search","asset_search","variant_search",
+              "promotion","performance_authorized","automatic_promotion","live_execution"
+          ):
+              assert p["governance"][key] is False
+          assert p["safety"]["PAPER_ONLY"] is True
+          assert p["safety"]["LIVE_TRADING_ENABLED"] is False
+          assert p["safety"]["ORDERS_ENABLED"] is False
+          assert p["safety"]["AUTOMATIC_PROMOTION"] is False
+          print("Q232_R1_BOUNDARY=PASS")
+          print("Q232_R1_TEMPORAL_HITS=", p["temporal_anchor_hits"])
+          print("Q232_R1_TEMPORAL_FRACTION=", p["temporal_anchor_fraction"])
+          print("Q232_R1_RECEIPT=", p["receipt_fingerprint"])
+          PY
+      - name: Upload Q232 R1 receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q232-sec-ct-document-temporal-gate-${{ github.run_id }}
+          path: research/runs/q232_sec_ct_document_temporal_gate/result.json
+          if-no-files-found: error
+          retention-days: 30
