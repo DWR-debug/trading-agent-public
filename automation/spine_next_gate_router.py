@@ -13,6 +13,7 @@ DEFAULTS = [
     {"workflow": ".github/workflows/q229-q230-source-feasibility.yml", "label": "Q229-Q230-SOURCE", "min_success_age_minutes": 360},
     {"workflow": ".github/workflows/q230-windows-trace-connectivity.yml", "label": "Q230-WINDOWS", "min_success_age_minutes": 360},
     {"workflow": ".github/workflows/q231-sec-foia-source-gate.yml", "label": "Q231", "min_success_age_minutes": 360},
+    {"workflow": ".github/workflows/q228-sec-correspondence-source-gate.yml", "label": "Q228", "min_success_age_minutes": 360},
 ]
 
 def iso(s):
