@@ -128,6 +128,7 @@ R — Relation Spine connects these objects to candidate contracts, receipts and
 The implementation is `research/governance/temporal_identity_state_spine_contract_2026_10_06.json` + `automation/temporal_identity_state_spine.py`.
 The candidate-level readiness matrix is `research/evidence/spine_candidate_readiness_matrix_latest.json`.
 The bounded execution wave is `.github/workflows/temporal-identity-state-spine-waves.yml`.
+The autonomous downstream router is `.github/workflows/spine-next-gate-autonomous-router.yml`. It waits for a successful spine wave, reads only workflow/run state, skips active or recently successful duplicate candidate waves, and dispatches the next useful source/PIT work automatically. It is explicitly capped and cannot dispatch performance/holdout/ranking/tuning/promotion/live-execution workflows.
 
 The spine creates a useful separation between **what happened**, **when it became public**, **to whom it belongs**, and **which observable state changed**. These dimensions must never be silently collapsed.
 
