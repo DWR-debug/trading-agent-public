@@ -425,6 +425,21 @@ def main() -> None:
     runners = runner_snapshot()
     ai = ai_provider_state()
 
+    configured_resources = [
+        {"name": "Windows self-hosted A", "type": "physical", "role": "Formal readiness / local reproduction", "configured_runner": "LHT-N133732", "authority": "bounded capacity; no automatic performance authorization"},
+        {"name": "Windows self-hosted B", "type": "physical", "role": "Frontier discovery / data QA", "configured_runner": "LHT-N133732-2", "authority": "bounded capacity; no automatic performance authorization"},
+        {"name": "Windows self-hosted C", "type": "physical", "role": "Long deterministic runs / independent reproduction", "configured_runner": "LHT-N133732-3", "authority": "bounded capacity; no automatic performance authorization"},
+        {"name": "GitHub-hosted Ubuntu x64", "type": "cloud", "role": "Deterministic frontier, CI, source/PIT workflows", "configured_runner": "ubuntu-24.04", "authority": "non-authorizing unless an exact formal gate says otherwise"},
+        {"name": "GitHub-hosted ARM64", "type": "cloud", "role": "Architecture-diverse CI / reproduction", "configured_runner": "ubuntu-24.04-arm", "authority": "non-authorizing unless an exact formal gate says otherwise"},
+        {"name": "Free AI pool", "type": "cloud", "role": "Adversarial / design / engineering review", "configured_runner": "OpenRouter Free / Groq Free / Gemini / Mistral", "authority": "AI output never authorizes performance or promotion"},
+        {"name": "Bounded Agent Queue", "type": "cloud", "role": "Bounded engineering / review requests", "configured_runner": "agent-request-queue", "authority": "no paid fallback; no scientific authority"},
+        {"name": "Codespaces fallback", "type": "cloud", "role": "Interactive debugging / data QA", "configured_runner": "manual", "authority": "fallback only; unattended default disabled"},
+        {"name": "Paper Forward / Shadow", "type": "simulation", "role": "Paper-only monitoring and MTM ledger", "configured_runner": "scheduled workflows", "authority": "simulation only; no live orders"},
+        {"name": "Dashboard / GitHub Pages", "type": "service", "role": "Operational visibility and status publication", "configured_runner": "GitHub Pages", "authority": "read-only operational snapshot"},
+    ]
+    priority_codes = {"Q218","Q219","Q220","Q221"}
+    top4 = [x for x in state_board if x.get("code") in priority_codes]
+
     payload = {
         "schema_version": 2,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -434,7 +449,7 @@ def main() -> None:
         "scientific_boundary": os_state.get("permanent_safety", {}),
         "dashboard_summary": {
             "active_work_items": len(work),
-            "configured_resources": 12,
+            "configured_resources": len(configured_resources),
             "runner_api_visible": len(runners) if runners else None,
             "busy_runners": sum(1 for r in runners if r.get("busy") is True) if runners else None,
             "runner_api_status": "available" if runners else "unavailable_or_empty",
@@ -442,35 +457,18 @@ def main() -> None:
             "research_tracks": len(state_board),
             "ai_providers": len(ai),
         },
-        "resources": enrich_resources(
-            [
-                {"name": "Windows self-hosted A", "type": "physical", "role": "Formal readiness / local reproduction", "configured_runner": "LHT-N133732", "authority": "bounded capacity; no automatic performance authorization"},
-                {"name": "Windows self-hosted B", "type": "physical", "role": "Frontier discovery / data QA", "configured_runner": "LHT-N133732-2", "authority": "bounded capacity; no automatic performance authorization"},
-                {"name": "Windows self-hosted C", "type": "physical", "role": "Long deterministic runs / independent reproduction", "configured_runner": "LHT-N133732-3", "authority": "bounded capacity; no automatic performance authorization"},
-                {"name": "GitHub-hosted Ubuntu x64", "type": "cloud", "role": "Deterministic frontier, CI, source/PIT workflows", "configured_runner": "ubuntu-24.04", "authority": "non-authorizing unless an exact formal gate says otherwise"},
-                {"name": "GitHub-hosted ARM64", "type": "cloud", "role": "Architecture-diverse CI / reproduction", "configured_runner": "ubuntu-24.04-arm", "authority": "non-authorizing unless an exact formal gate says otherwise"},
-                {"name": "S10 / Android", "type": "physical", "role": "Deterministic mechanical QA", "configured_runner": "S10-TERMUX", "authority": "non-scientific support only"},
-                {"name": "Samsung Android fleet", "type": "physical", "role": "Prepared bounded utility capacity; five labelled slots", "configured_runner": "SAMSUNG-PHONE-01..05", "authority": "bounded support only; activation is online/acceptance gated"},
-                {"name": "Free AI pool", "type": "cloud", "role": "Adversarial / design / engineering review", "configured_runner": "OpenRouter Free / Groq Free / Gemini / Mistral", "authority": "AI output never authorizes performance or promotion"},
-                {"name": "Bounded Agent Queue", "type": "cloud", "role": "Bounded engineering / review requests", "configured_runner": "agent-request-queue", "authority": "no paid fallback; no scientific authority"},
-                {"name": "Codespaces fallback", "type": "cloud", "role": "Interactive debugging / data QA", "configured_runner": "manual", "authority": "fallback only; unattended default disabled"},
-                {"name": "Paper Forward / Shadow", "type": "simulation", "role": "Paper-only monitoring and MTM ledger", "configured_runner": "scheduled workflows", "authority": "simulation only; no live orders"},
-                {"name": "Dashboard / GitHub Pages", "type": "service", "role": "Operational visibility and status publication", "configured_runner": "GitHub Pages", "authority": "read-only operational snapshot"},
-            ],
-            runners,
-            work,
-        ),
+        "resources": enrich_resources(configured_resources, runners, work),
         "runner_live_snapshot": runners,
         "work_assignments": work,
         "workload_by_resource": {name: sum(1 for w in work if w.get("resource") == name) for name in sorted({w.get("resource") for w in work if w.get("resource")})},
         "workload_by_lane": {lane: sum(1 for w in work if w.get("lane") == lane) for lane in sorted({w.get("lane") for w in work if w.get("lane")})},
         "recent_activity_24h": recent_activity(),
         "ai_fabric": ai,
-        "android_fleet": android_fleet_snapshot(runners, work),
         "current_research": {
             "latest_formal_result": latest_result,
             "highlights": recent_research_highlights(status_text),
             "research_board": state_board,
+            "top4": top4,
         },
         "lane_model": {
             "lane_a": os_state.get("two_lane_research_mode", {}).get("lane_a", {}),
@@ -480,7 +478,7 @@ def main() -> None:
         "dashboard_policy": {
             "daily_update_utc": "03:35",
             "manual_update": True,
-            "website_update_button": "opens GitHub Actions workflow dispatch page",
+            "website_update_button": "opens authenticated GitHub Actions dispatch page; static Pages cannot safely dispatch a write-authorized workflow without a user-authenticated GitHub session or token",
             "pages_source": "/docs on master",
             "live_work_note": "Current work assignments are a timestamped GitHub Actions snapshot. They are not runner execution receipts and do not create scientific authority.",
         },
