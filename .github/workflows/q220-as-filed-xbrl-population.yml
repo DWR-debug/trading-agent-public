@@ -1,0 +1,103 @@
+name: Q220 As-Filed SEC-XBRL Population Repair
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "automation/q220_as_filed_xbrl_population_gate.py"
+      - "tests/test_q220_as_filed_xbrl_population_gate.py"
+      - "research/preregistrations/q220_as_filed_xbrl_population_contract_2026_10_06.json"
+      - "docs/research_design/Q220_AS_FILED_XBRL_REPAIR_2026-10-06.md"
+      - ".github/workflows/q220-as-filed-xbrl-population.yml"
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  route_probe:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    concurrency:
+      group: trading-agent-research-hosted-ubuntu-24.04-slot-1
+      cancel-in-progress: false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: \${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Run bounded raw-archive route probe
+        run: |
+          set -euo pipefail
+          mkdir -p research/runs/q220/as_filed_route/\${{ github.run_id }}
+          python -m automation.q220_as_filed_xbrl_population_gate --mode route --output research/runs/q220/as_filed_route/\${{ github.run_id }}/receipt.json
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: q220-as-filed-route-\${{ github.run_id }}-\${{ github.run_attempt }}
+          path: research/runs/q220/as_filed_route/\${{ github.run_id }}/
+          if-no-files-found: error
+          retention-days: 30
+
+  population:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    concurrency:
+      group: trading-agent-q220-as-filed-population
+      cancel-in-progress: true
+    runs-on: [self-hosted, trading-agent-research]
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: \${{ github.sha }}
+          fetch-depth: 1
+      - name: Bootstrap Python
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_ROOT=%RUNNER_TEMP%\\python-3.13.15-nuget-q220"
+          set "PY_EXE=%PY_ROOT%\\tools\\python.exe"
+          set "PY_PKG=%RUNNER_TEMP%\\python.3.13.15-q220.nupkg"
+          if not exist "%PY_EXE%" (
+            curl.exe -L --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 --connect-timeout 20 --max-time 180 -o "%PY_PKG%" "https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg" || exit /b 1
+            if not exist "%PY_ROOT%" mkdir "%PY_ROOT%"
+            tar.exe -xf "%PY_PKG%" -C "%PY_ROOT%" || exit /b 1
+          )
+          "%PY_EXE%" -m ensurepip --upgrade >nul 2>&1
+          endlocal
+      - name: Run full bounded historical population
+        shell: cmd
+        run: |
+          @echo off
+          setlocal
+          set "PY_EXE=%RUNNER_TEMP%\\python-3.13.15-nuget-q220\\tools\\python.exe"
+          cd /d "%GITHUB_WORKSPACE%" || exit /b 1
+          set "PYTHONPATH=%GITHUB_WORKSPACE%"
+          if not exist "research\\runs\\q220\\as_filed_population\\%GITHUB_RUN_ID%" mkdir "research\\runs\\q220\\as_filed_population\\%GITHUB_RUN_ID%"
+          "%PY_EXE%" -m automation.q220_as_filed_xbrl_population_gate --mode population --output "research\\runs\\q220\\as_filed_population\\%GITHUB_RUN_ID%\\receipt.json"
+          endlocal
+      - name: Publish population receipt
+        if: success()
+        shell: bash
+        env:
+          GH_TOKEN: \${{ github.token }}
+        run: |
+          set -euo pipefail
+          src="research/runs/q220/as_filed_population/\${{ github.run_id }}/receipt.json"
+          test -f "$src"
+          master_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+          python automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$master_sha" --file "research/evidence/q220_as_filed_xbrl_population_latest.json=$src"
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: q220-as-filed-population-\${{ github.run_id }}-\${{ github.run_attempt }}
+          path: research/runs/q220/as_filed_population/\${{ github.run_id }}/
+          if-no-files-found: error
+          retention-days: 30

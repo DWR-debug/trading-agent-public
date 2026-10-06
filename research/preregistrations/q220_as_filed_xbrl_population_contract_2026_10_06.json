@@ -1,0 +1,81 @@
+{
+  "schema_version": "1.0",
+  "candidate_id": "Q220",
+  "trial_id": "Q-2026-10-06-Q220-AS-FILED-XBRL-REPAIR",
+  "status": "PREREGISTERED_SOURCE_PIT_STRUCTURE_ONLY",
+  "purpose": "Historical raw SEC filing source/PIT/structure repair only. No performance, ranking, tuning or promotion.",
+  "fixed_universe": {
+    "name": "validation_2026_10_01_q104_sec_treasury_equities",
+    "symbols": [
+      "SPGI",
+      "NDAQ",
+      "AMP",
+      "RJF",
+      "WMB",
+      "VLO",
+      "DVN",
+      "EMN"
+    ],
+    "ciks": {
+      "SPGI": "0000064040",
+      "NDAQ": "0001120193",
+      "AMP": "0000820027",
+      "RJF": "0000720005",
+      "WMB": "0000107263",
+      "VLO": "0001035002",
+      "DVN": "0001090012",
+      "EMN": "0000915389"
+    }
+  },
+  "population_window": {
+    "start": "2019-01-01",
+    "end": "2025-09-24"
+  },
+  "source": {
+    "quarterly_full_index": "https://www.sec.gov/Archives/edgar/full-index/",
+    "raw_archive": "https://www.sec.gov/Archives/edgar/data/",
+    "acceptance_header": "*-index-headers.html",
+    "directory": "index.json",
+    "narrative": "raw as-filed primary filing HTML",
+    "taxonomy": "filing-local extension XSD",
+    "presentation": "filing-local *_pre.xml linkbase"
+  },
+  "concept_spec": {
+    "narrative_rule": "ix:nonNumeric facts with local name ending TextBlock and contextRef; must map to the same filing's presentation network.",
+    "structured_exact_qnames": [
+      "us-gaap:Assets",
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:NetIncomeLoss",
+      "us-gaap:NetCashProvidedByUsedInOperatingActivities",
+      "us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax"
+    ],
+    "substitution_allowed": false
+  },
+  "amendment_policy": "10-K is event population. 10-K/A is separate amendment/correction lineage and never substitutes for original.",
+  "pit_clock": "SEC acceptance datetime from archived submission header",
+  "falsifiers": [
+    "source-vintage mismatch",
+    "post-acceptance mutation",
+    "unstable TextBlock/Presentation mapping",
+    "absence of filing-local extension lineage",
+    "narrative-only or structured-only degeneracy",
+    "document-length proxy collapse",
+    "amendment identity ambiguity"
+  ],
+  "governance": {
+    "performance_authorized": false,
+    "holdout_selection_allowed": false,
+    "ranking_allowed": false,
+    "parameter_search_allowed": false,
+    "threshold_search_allowed": false,
+    "tuning_allowed": false,
+    "promotion_allowed": false,
+    "live_execution_allowed": false
+  },
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  }
+}
