@@ -159,7 +159,7 @@ def detail_url(filename: str) -> str:
 
 def submission_text_url(filename: str) -> str:
     cik, accession = archive_base(filename)
-    return f"https://www.sec.gov/Archives/edgar/data/{cik}/{accession.replace('-', '')}/{accession.replace('-', '')}.txt"
+    return f"https://www.sec.gov/Archives/edgar/data/{cik}/{accession.replace('-', '')}/{accession}.txt"
 
 
 def extract_tag(text: str, tag: str) -> str | None:
