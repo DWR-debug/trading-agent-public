@@ -513,14 +513,14 @@
     }
   },
   "top_candidate_capacity_overlay": {
-    "effective_date_utc": "2026-10-05",
+    "effective_date_utc": "2026-10-06",
     "status": "ACTIVE",
-    "purpose": "Keep Windows A/B continuously occupied by the highest-information-gain non-authorizing candidate-development gates while preserving lane separation and no-duplicate policy.",
+    "purpose": "Prioritize the four highest-information-gain candidate-development tracks without changing scientific authority or dashboard display policy.",
     "windows_A": {
       "role": "FORMAL_READINESS / local_reproduction",
       "priority": [
-        "Q121-R6",
-        "Q104 I19/I20/I22",
+        "Q104 I19",
+        "Q104 I20/I22",
         "Q119/Q120/Q122",
         "Q198/Q197/Q199/Q201 next gates"
       ],
@@ -532,10 +532,9 @@
       "priority": [
         "Q218",
         "Q220",
-        "Q221",
-        "Q219"
+        "Q221"
       ],
-      "new_overlay": "deterministic Q218-Q221 source/census plus q218_q221_candidate_gate_compiler.py; no market outcomes, ranking, tuning or authorization",
+      "new_overlay": "deterministic Q218/Q220/Q221 source-PIT/structure plus bounded Q104:I19 handoff support; no Q219 top-4 capacity.",
       "scientific_authority": false,
       "candidate_gate_compiler": "automation/q218_q221_candidate_gate_compiler.py"
     },
@@ -544,7 +543,7 @@
       "status": "explicitly_reactivated",
       "scientific_authority": false
     },
-    "rule": "When a bounded top-candidate gate is ready and no duplicate is active, route it into the appropriate permanent lane immediately; do not use artificial filler.",
+    "rule": "When a bounded top-candidate gate is ready and no duplicate is active, route it immediately; reserve Q224/Q228/Q231 remains parallel discovery only; never create artificial filler.",
     "safety": {
       "performance": false,
       "holdout_selection": false,
@@ -553,7 +552,18 @@
       "promotion": false,
       "live_execution": false
     },
-    "last_refreshed_utc": "2026-10-05T19:22:11.737Z"
+    "last_refreshed_utc": "2026-10-05T19:22:11.737Z",
+    "active_shortlist": [
+      "Q104:I19",
+      "Q218",
+      "Q220",
+      "Q221"
+    ],
+    "discovery_reserve": [
+      "Q224",
+      "Q228",
+      "Q231"
+    ]
   },
   "knowledge_relation_plane": {
     "status": "ACTIVE_METADATA_ONLY",

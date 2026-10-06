@@ -5,6 +5,14 @@ on:
     branches: [master]
     paths:
       - "automation/top4_candidate_capacity.py"
+      - "automation/q104_i19_13f_historical_identity_census.py"
+      - "automation/q104_i19_xbrl_pit_compiler.py"
+      - "automation/q104_xbrl_concept_freeze_audit.py"
+      - "tests/test_q104_i19_13f_historical_identity_census.py"
+      - "tests/test_q104_i19_historical_identity_census.py"
+      - "tests/test_q104_i19_xbrl_concept_freeze.py"
+      - "tests/test_q104_i19_xbrl_pit_compiler.py"
+      - "tests/test_q104_candidate_wave_contract.py"
       - "automation/q218_sec_multichannel_source_gate.py"
       - "automation/q218_q221_historical_source_census.py"
       - "automation/q218_q221_candidate_gate_compiler.py"
@@ -43,7 +51,7 @@ jobs:
       fail-fast: false
       max-parallel: 3
       matrix:
-        candidate: [Q218,Q219,Q220,Q221]
+        candidate: ["Q104:I19",Q218,Q220,Q221]
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 25
     steps:
