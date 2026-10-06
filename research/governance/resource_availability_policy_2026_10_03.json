@@ -5,7 +5,7 @@
   "routing_policy": {
     "self_hosted_windows": "ASSUMED_ALWAYS_AVAILABLE",
     "s10": "ASSUMED_ALWAYS_AVAILABLE",
-    "android_fleet": "ASSUMED_ALWAYS_AVAILABLE",
+    "android_fleet": "RESERVE_ONLY",
     "routing_may_dispatch_without_fresh_presence_receipt": true,
     "fresh_receipts_are_required_for_evidence_claims": true,
     "availability_assumption_does_not_create_scientific_evidence": true
@@ -16,7 +16,7 @@
       "local_reproduction",
       "data_qa"
     ],
-    "android_device_pool": "all configured Samsung/Android devices are routable",
+    "android_device_pool": "reserve-only; no recurring routing",
     "hosted_failover": "manual_only",
     "two_lane_roles": {
       "formal_readiness": "Advanced Coverage/PIT/compiler/provenance/authorization readiness",
