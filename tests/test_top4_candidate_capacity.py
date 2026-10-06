@@ -57,7 +57,7 @@ def test_legacy_research_loops_are_manual_only():
 
 def test_top4_balances_hosted_capacity_slots():
     text=(ROOT/".github/workflows/top4-candidate-research-capacity.yml").read_text(encoding="utf-8")
-    assert 'candidate: [Q218,Q220,Q221]' in text
+    assert 'candidate: [Q218,Q219,Q220]' in text
     assert text.count('candidate: [Q221]') == 1
     assert text.count('candidate: [Q220]') == 1
     hosted = text.split("  hosted_x64:", 1)[1]
