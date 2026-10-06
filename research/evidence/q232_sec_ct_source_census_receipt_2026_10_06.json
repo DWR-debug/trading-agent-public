@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "task_id": "Q-2026-10-06-232-SEC-CT-SOURCE-CENSUS",
+  "candidate_id": "Q232",
+  "run_id": 37475523888,
+  "run_number": 12,
+  "head_sha": "1aea026d7a27f4a23d3f79b06e95a68be4c3c3e0",
+  "merge_commit_sha_checked": "c2bbe83f6bef898260863bfd6660ee4860c2c79a",
+  "master_at_check": "596071993db02673c74dfca2dc521e22d279a82c",
+  "status": "Q232_SOURCE_FEASIBILITY_PASS",
+  "window": {"start":"2015-01-01","end":"2025-12-31","quarters":44},
+  "population": {
+    "filtered_ct_order_rows": 6493,
+    "unique_accessions": 6493,
+    "calendar_years": 11,
+    "sample_rule": "first/median/last per calendar year",
+    "sample_size": 33
+  },
+  "event_density_by_year": {
+    "2015":1287,"2016":1341,"2017":1282,"2018":1277,"2019":744,
+    "2020":272,"2021":106,"2022":74,"2023":68,"2024":23,"2025":19
+  },
+  "verification": {
+    "quarterly_index_route_retrieved": true,
+    "ct_order_population_reconstructed": true,
+    "sampled_headers_verified": true,
+    "sampled_complete_submission_text_verified": true,
+    "sampled_ct_order_documents_verified": true,
+    "public_observation_time_proven": false,
+    "same_day_pit_safe": false,
+    "approval_extension_unredacted_lineage_compiled": false,
+    "full_linked_exhibit_lineage_compiled": false
+  },
+  "governance": {
+    "performance": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "parameter_search": false,
+    "threshold_search": false,
+    "horizon_search": false,
+    "asset_search": false,
+    "variant_search": false,
+    "promotion": false,
+    "performance_authorized": false,
+    "automatic_promotion": false,
+    "live_execution": false
+  },
+  "safety": {
+    "PAPER_ONLY": true,
+    "LIVE_TRADING_ENABLED": false,
+    "ORDERS_ENABLED": false,
+    "AUTOMATIC_PROMOTION": false
+  },
+  "receipt_fingerprint": "d8d6c75dc94ff5597281782eaa34b1877d7dc0b7c7c9c0d70ac107353e9a76ac",
+  "artifact": {
+    "artifact_id": 11418693006,
+    "artifact_sha256": "ba6519684488f6860023243f5036512e66bf94c813b9a4ad2ff3bc18f449833c",
+    "url": "https://github.com/DWR-debug/trading-agent-public/actions/runs/37475523888/artifacts/11418693006"
+  },
+  "source": "https://www.sec.gov/Archives/edgar/full-index",
+  "interpretation": "Source/PIT feasibility passed. This receipt authorizes no performance research. Next gate: public observation clock, CT-order/extension/refile lineage and structural redaction measurement."
+}
