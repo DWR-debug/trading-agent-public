@@ -11,6 +11,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: trading-agent-q218-event-pair-pit-gate
+  cancel-in-progress: true
 jobs:
   gate:
     runs-on: ubuntu-24.04
