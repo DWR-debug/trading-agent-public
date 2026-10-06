@@ -34,7 +34,7 @@
   "litellm_transport_enabled": false,
   "task_fingerprint": "18d8d23cf1400ed1b7061a831bf4c979cb4f275c927689acde28afd448ae2b43",
   "context_fingerprint": "bb999e0917c2a6c04f9c4e7e37489b2c8fd5fe7de7027994de26c70e4532fb2a",
-  "observed_at_utc": "2026-10-05T21:40:04.840374Z",
+  "observed_at_utc": "2026-10-06T00:19:54.647576Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,35 +42,11 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "SUCCESS",
-  "returncode": 0,
-  "duration_seconds": 13.504,
-  "stdout": "**Adversarial source/PIT review — worker material only**\n\n**Findings**\n1. **Q202–Q204 receipts are provisional.** `source_readiness_snapshot_guard.py` classifies any receipt without a durable binding (`immutable_historical_snapshot`, `vintage_sha256`, etc.) as `PROVISIONAL_LIVE_PROBE_ONLY`. The three candidates share a single receipt file (`q202_q204_information_timing_feasibility_latest.json`), so candidate-specific PIT cannot be isolated from a shared probe.\n2. **Q205 is discovery-only, not source/PIT validated.** Quarantine is operational status, not evidence. No immutable vintage, entity mapping, or certification timeline is present in the supplied context.\n3. **Contract date drift.** `orthogonal_candidate_specs_2026-10-04.json` exists in the context, but `orthogonal_pit_next_gate.py` consumes `orthogonal_candidate_specs_2026-10-05.json`. If the two files differ, the next-gate compiler is running a different contract than the candidate spec — a revision-lineage failure.\n4. **Information-absence failure mode.** The scope explicitly labels Q202–Q204 as “information absence.” Absence observed today is not the same as absence observed at a historical vintage; without an immutable dated snapshot, this is susceptible to retrospective source-readiness drift.\n5. **Same-day/date-only leakage risk.** The shared contract uses `next_regular_session_5_trading_day_excess_return_vs_frozen_benchmark`, but if any candidate substitutes occurrence time for dissemination time, the clock discipline fails.\n\n**Counterarguments (preserved disagreement)**\n- One could argue “information absence” is itself a durable observation. Rebuttal: only if bound to an immutable dated snapshot/vintage; a current probe proving absence today proves nothing about yesterday.\n- One could argue Q205 quarantine is sufficient protection. Rebuttal: quarantine prevents execution, not premature source/PIT claims. Discovery-only status still requires explicit source-class declaration and mechanism lineage.\n\n**Concrete next actions with minimal deterministic falsifiers and exact missing artifacts**\n| Candidate | Next action | Minimal deterministic falsifier | Exact missing artifact |\n|---|---|---|---|\n| Q202–Q204 | Produce per-candidate immutable dated snapshots (do not reuse the shared receipt). | Replay each snapshot in the candidate-specific compiler; if the compiler accepts the shared receipt or a current probe, mapping is drift-prone. | Per-candidate frozen snapshot SHA256 + vintage date + information-absence observation boundary. |\n| Q205 | Declare source class and mechanism lineage; freeze discovery protocol. | Attempt reproduction on a frozen historical vintage; if the vintage lacks the NLRB channel, discovery is not reproducible. | NLRB labor-representation certification vintage snapshot, entity mapping, and certification timeline. |\n| Contract drift | Diff `2026-10-04` vs `2026-10-05` candidate specs. | If diff is non-empty, the next-gate compiler is consuming an unfrozen contract revision. | Explicit frozen contract version with revision lineage and SHA256. |\n| Clock discipline | Run synthetic mutation: replace public-observation time with occurrence time. | If inference does not change, reject clock discipline (per Q194 cheap-falsifier). | Candidate-specific clock-discipline test result. |\n| Overlap/confounding | Audit cross-candidate convergence between Q202–Q204 and existing orthogonal families. | If information source class overlaps an existing price-only lineage without explicit new hypothesis, block. | Source-class declaration and mechanism lineage for each candidate. |\n\n**Uncertainty**\n- I cannot inspect the actual JSON contents of the receipt files; I only have paths. Durability classification is therefore based on guard logic, not file contents.\n- I cannot verify Q205 NLRB channel specifics; the quarantine status is taken as given but unvalidated.\n- The Grok Q194–Q201 review is embedded; I cannot re-run it deterministically from this context alone.\n\n**Structured action handoff**\n1. **Block** Q202–Q204 and Q205 at `IMMUTABLE_HISTORICAL_SNAPSHOT_REQUIRED_BEFORE_PIT` (retain current gate).\n2. **Request** per-candidate frozen snapshots with SHA256 and vintage date for Q202, Q203, Q204.\n3. **Request** Q205 discovery protocol artifact: source class, mechanism lineage, vintage snapshot, entity mapping.\n4. **Request** contract-version reconciliation between 2026-10-04 and 2026-10-05 specs.\n5. **Request** synthetic mutation / clock-discipline test results for each candidate.\n6. **Do not** rank, tune, select assets, change gates, authorize performance, promote, or execute live trading.\n\nThis review is worker material, not scientific evidence. Independent deterministic tooling must reproduce or check these findings before any research decision.",
-  "stderr": "",
+  "status": "FAILED_PROVIDER",
+  "returncode": null,
+  "duration_seconds": 13.69,
+  "stdout": "",
+  "stderr": "OpenRouterFreeError: OpenRouter response contains no textual content.",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free",
-  "response_id": "gen-1791236405-YoyPRwGAlq55JVMxf62j",
-  "usage": {
-    "prompt_tokens": 5864,
-    "completion_tokens": 2727,
-    "total_tokens": 8591,
-    "cost": 0,
-    "is_byok": false,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "cache_write_tokens": 0,
-      "audio_tokens": 0,
-      "video_tokens": 0
-    },
-    "cost_details": {
-      "upstream_inference_cost": 0,
-      "upstream_inference_prompt_cost": 0,
-      "upstream_inference_completions_cost": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 1648,
-      "image_tokens": 0,
-      "audio_tokens": 0
-    }
-  }
+  "api_model": "openrouter/free"
 }
