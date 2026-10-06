@@ -1,0 +1,113 @@
+{
+  "schema_version":"1.0",
+  "record_type":"evidence_graph_stage4_stage5_contract",
+  "effective_date_utc":"2026-10-06T12:00:00Z",
+  "status":"ACTIVE_RESEARCH_ENGINEERING_ONLY",
+  "purpose":"Turn the static Knowledge Relation Plane into an automatically refreshed Evidence Knowledge Graph and add deterministic hypothesis novelty/convergence analysis without inheriting scientific authority.",
+  "stage_4":{
+    "name":"Evidence-Bus -> automatically growing knowledge graph",
+    "inputs":[
+      "research/evidence/**/*.json",
+      "research/governance/**/*.json",
+      "research/candidates/**/*.json",
+      "research/preregistrations/**/*.json"
+    ],
+    "node_types":[
+      "document",
+      "candidate",
+      "receipt",
+      "trial",
+      "source",
+      "clock",
+      "identity",
+      "state",
+      "hypothesis",
+      "negative_evidence"
+    ],
+    "edge_types":[
+      "mentions",
+      "documents_source",
+      "documents_clock",
+      "documents_identity",
+      "documents_state",
+      "has_receipt",
+      "depends_on",
+      "reuses_component",
+      "shares_source",
+      "shares_clock",
+      "shares_identity",
+      "corroborates",
+      "contradicts",
+      "revises",
+      "blocked_by",
+      "derived_from",
+      "non_overlap_with"
+    ],
+    "materiality_rule":"A new graph edge is emitted only from an explicit structured field or a deterministic normalized signature match. Weak text coincidence is stored as a low-confidence discovery hint, never as an accepted scientific relation.",
+    "incremental_rule":"Recompute only when the input manifest changes; the event-bus controller checks the manifest during the active wave window.",
+    "no_authority_rule":"Graph nodes and edges cannot authorize performance, holdout selection, ranking, tuning, promotion or live execution."
+  },
+  "stage_5":{
+    "name":"Automatic hypothesis novelty/convergence check",
+    "signature_fields":[
+      "mechanism",
+      "economic_relation",
+      "information_channel",
+      "event_clock",
+      "state_transition",
+      "identity_basis",
+      "source_components"
+    ],
+    "outputs":[
+      "novelty_score",
+      "convergence_score",
+      "overlap_class",
+      "shared_component_profile",
+      "hypothesis_bridge_proposal"
+    ],
+    "classes":{
+      "POTENTIAL_CONVERGENCE":"high deterministic signature overlap; human/scientific review required",
+      "AMBIGUOUS":"intermediate overlap; retain both lineages until evidence resolves distinction",
+      "LIKELY_ORTHOGONAL":"low overlap under the frozen signature contract"
+    },
+    "thresholds":{
+      "potential_convergence":0.78,
+      "ambiguous":0.45
+    },
+    "proposal_rule":"A bridge proposal is generated only when candidates share a clock/component but have materially different mechanism tokens. It is a reviewable hypothesis proposal, not a candidate and not evidence.",
+    "anti_duplicate_rule":"Do not create a new candidate when deterministic convergence indicates a repackaging of an existing lineage. Route to review/merge analysis instead.",
+    "no_optimization_rule":"Novelty/convergence scores may prioritize research effort and consolidation only; they may not optimize trading parameters, assets, thresholds, horizons or returns."
+  },
+  "negative_evidence":{
+    "explicit_sources":[
+      "negative_evidence",
+      "blocked_by",
+      "contradicts",
+      "revises",
+      "failure_reasons",
+      "status"
+    ],
+    "fail_closed_rule":"A negative or contradictory relation is retained with provenance and is never silently converted into a neutral state."
+  },
+  "continuous_wave":{
+    "duration_target_minutes":70,
+    "poll_interval_minutes":5,
+    "mode":"event_driven_control_plane",
+    "recompute_on_material_change_only":true,
+    "monitoring_is_not_research_padding":true,
+    "early_exit_allowed_when":"the wave is explicitly superseded, the repository becomes unavailable, or a hard safety/capacity constraint prevents continuation",
+    "no_artificial_work":true
+  },
+  "safety":{
+    "PAPER_ONLY":true,
+    "LIVE_TRADING_ENABLED":false,
+    "ORDERS_ENABLED":false,
+    "AUTOMATIC_PROMOTION":false,
+    "performance":false,
+    "holdout_selection":false,
+    "ranking":false,
+    "tuning":false,
+    "promotion":false,
+    "live_execution":false
+  }
+}
