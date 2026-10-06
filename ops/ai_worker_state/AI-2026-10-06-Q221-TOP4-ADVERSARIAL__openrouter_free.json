@@ -33,8 +33,8 @@
   },
   "litellm_transport_enabled": false,
   "task_fingerprint": "8419c6c6479e293d31a59a4a342b571a095821564b1f5a96744ad19a78d9f946",
-  "context_fingerprint": "4545b2908126c8851664a674d6b1f82470bcff0aa77d8deed13c5bf7c3c5219b",
-  "observed_at_utc": "2026-10-06T08:33:33.238637Z",
+  "context_fingerprint": "865bb0fec4d570c871b78e1e552d519f6d5ce7ec12c789f8a12481025ef84e8c",
+  "observed_at_utc": "2026-10-06T08:34:03.093254Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -44,16 +44,16 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 15.984,
-  "stdout": "**Worker Handoff: Q221 Adversarial Source/PIT Review**\n\n**Findings**\n- The existing `q221_usaspending_public_clock_gate.py` only proves current website markers (About-the-Data PDF, API endpoint presence). It explicitly sets `historical_applicability_proven=False`; treating the current page as a candidate clock is therefore provisional telemetry, not a durable historical source.\n- Award-vs-modification semantics: the gate searches for \"CONTRACT OR MODIFICATION\" language, but modifications can embed new options without a new award number. If Q221’s option-value state is modification-driven, the standard award-level dissemination clock may misalign with the event boundary.\n- DOD 90-day delay exception: the gate detects the exception language, but does not exclude DOD transactions from the standard clock. Any DOD R&D contract in the candidate universe invalidates the \"3 business days → following morning\" path for that subset.\n- Transaction history: `/api/v2/transactions/` is documented, but coverage by transaction type, vintage period, and R&D-specific PSC codes is untested. Historical applicability by transaction class remains unproven.\n- PSC stability: PSC codes are reclassified across codebook revisions. A frozen R&D mapping today may drift against the vintage codebook for the candidate period.\n- Recipient-to-issuer mapping: USAspending records the vendor/recipient, not the public issuer. Corporate parent/subsidiary changes can decouple the two; the gate does not test mapping drift.\n- Future-production leakage: the gate does not test whether contracts awarded *after* the event date but entered into USAspending *before* the public observation date leak into the historical prefix.\n\n**Counterarguments to the Candidate Clock**\n- \"Following morning\" fails on weekends/holidays; the next regular session boundary may differ from the website’s calendar.\n- FPDS \"three business days\" is a reporting requirement, not a publication guarantee; actual website lag is untested historically.\n- The About-the-Data PDF is a current document; its described sequence may not hold for earlier periods (pre-2020 migration, API version changes).\n\n**Minimal Deterministic Falsifiers**\n1. A known historical R&D award where USAspending publication date deviates >1 business day from the frozen About-the-Data rule.\n2. A DOD R&D contract with a 90-day delay exception where the option-value state changed before public observation.\n3. A recipient that was a subsidiary at award but parent at event date, demonstrating mapping drift.\n4. A transaction whose PSC code shifted from R&D to non-R&D in a later vintage codebook.\n5. A modification creating a new option published under the original award date, leaking future optionality into the historical prefix.\n\n**Exact Missing Artifacts**\n- Immutable vintage snapshot of the USAspending About-the-Data page from the candidate’s historical period (not the current 2026-10-06 page).\n- Frozen historical transaction extract for the candidate event window with exact publication timestamps.\n- Vintage PSC codebook crosswalk for the candidate period.\n- Corporate hierarchy snapshot (recipient → issuer) for the candidate period.\n- Independent PIT reproduction script with frozen inputs.\n\n**Concrete Next Actions**\n1. Freeze the candidate contract and event window; block PIT until vintage artifacts are archived.\n2. Re-run the clock gate against a historical snapshot, not the live site, to test marker stability.\n3. Build a minimal falsification extract: 5–10 known R&D contracts with known award dates; check publication dates against the frozen rules.\n4. Document the recipient-to-issuer mapping method and test for parent/subsidiary changes in the candidate universe.\n5. Explicitly partition DOD vs non-DOD transactions; if DOD R&D is present, the standard clock must be abandoned for that subset.\n\n**Uncertainty**\n- High: historical applicability of the current publication sequence to pre-2020 periods.\n- High: R&D classification stability across PSC codebook revisions.\n- Medium: recipient-to-issuer mapping durability across corporate actions.\n- The current gate proves current structure only; it does not prove historical vintage behavior.\n\n**Status**\nNo performance authorization, no promotion, no live execution. All findings are paper-only and require independent reproduction by deterministic project tooling before affecting any research decision.",
+  "duration_seconds": 3.671,
+  "stdout": "User Safety: safe",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1791275613-Nl4PPMAqzM2EqDjo8M0E",
+  "response_id": "gen-1791275643-cNplhFhIhhmCLlRqFx5v",
   "usage": {
-    "prompt_tokens": 5769,
-    "completion_tokens": 2498,
-    "total_tokens": 8267,
+    "prompt_tokens": 5830,
+    "completion_tokens": 185,
+    "total_tokens": 6015,
     "cost": 0,
     "is_byok": false,
     "prompt_tokens_details": {
@@ -68,7 +68,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 1833,
+      "reasoning_tokens": 212,
       "image_tokens": 0,
       "audio_tokens": 0
     }
