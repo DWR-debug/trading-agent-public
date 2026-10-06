@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-10-06-Q220-TOP4-ADVERSARIAL",
+  "providers": [
+    "openrouter_free",
+    "groq_free",
+    "gemini_cli",
+    "mistral_api"
+  ],
+  "scope": "Q220 narrative-structured XBRL representation gap: adversarial source/PIT review only",
+  "prompt": "Attack Q220 as a methods reviewer. Focus on as-filed XBRL text-block and presentation-role mapping, taxonomy-extension changes, custom namespaces, section identity, narrative tokenization, amended filings, future/current XBRL contamination, duplicate facts, period/unit/context alignment, and whether the representation mismatch simply proxies filing length or generic readability. Treat the observed SEC financial statement notes archive member names as part of the source contract. For every failure mode give the minimal deterministic falsifier and exact artifact needed. Do not inspect returns or rank/tune/select anything and do not authorize performance.",
+  "max_runtime_minutes": 15,
+  "deterministic_compute": false,
+  "holdout_selection": false,
+  "parameter_selection": false,
+  "asset_selection": false,
+  "threshold_selection": false,
+  "horizon_selection": false,
+  "research_gate_changes": false,
+  "promotion_decision": false,
+  "live_execution": false,
+  "paid_usage": false,
+  "research_decision": false,
+  "allow_workspace_writes": false
+}
