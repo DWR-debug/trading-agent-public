@@ -68,3 +68,12 @@ def test_top4_has_no_global_wave_lock():
     assert "\nconcurrency:\n  group: trading-agent-top4-capacity" not in text
     assert "trading-agent-research-hosted-ubuntu-24.04" in text
     assert "trading-agent-research-hosted-ubuntu-24.04-arm" in text
+
+
+def test_hosted_slots_are_explicitly_leased():
+    text=(ROOT/".github/workflows/top4-candidate-research-capacity.yml").read_text(encoding="utf-8")
+    q104=(ROOT/".github/workflows/q104-i19-13f-historical-identity-census.yml").read_text(encoding="utf-8")
+    assert "trading-agent-research-hosted-ubuntu-24.04-slot-2" in text
+    assert "trading-agent-research-hosted-ubuntu-24.04-arm-slot-2" in text
+    assert "trading-agent-research-hosted-${{ matrix.runner }}-slot-${{ matrix.slot }}" in q104
+    assert 'slot: "1"' in q104

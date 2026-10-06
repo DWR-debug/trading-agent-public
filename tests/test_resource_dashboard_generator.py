@@ -1,3 +1,4 @@
+from pathlib import Path
 from automation.generate_resource_dashboard import infer_lane, infer_resource
 
 
@@ -94,3 +95,11 @@ def test_milestone_history_12h_filters_platform_housekeeping(monkeypatch):
         "name": "Q228 SEC Correspondence Source Gate",
         "display_title": "Q228 SEC Correspondence Source Gate",
     }) is False
+
+
+def test_dashboard_exposes_bounded_hosted_research_slots():
+    root = Path(__file__).parents[1]
+    generator = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
+    assert '"research_capacity_slots": 2' in generator
+    assert '"research_capacity_slots_total"' in generator
+    assert '"research_capacity_slots_free"' in generator

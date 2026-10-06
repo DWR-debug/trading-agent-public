@@ -98,7 +98,7 @@ jobs:
 
   hosted_census:
     concurrency:
-      group: trading-agent-research-hosted-${{ matrix.runner }}
+      group: trading-agent-research-hosted-${{ matrix.runner }}-slot-${{ matrix.slot }}
       cancel-in-progress: false
     needs: [source_snapshot]
     if: github.repository == 'DWR-debug/trading-agent-public'
@@ -109,8 +109,10 @@ jobs:
         include:
           - shard: "2018-2021"
             runner: "ubuntu-24.04"
+            slot: "1"
           - shard: "2022-2025-09"
             runner: "ubuntu-24.04-arm"
+            slot: "1"
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 45
     steps:

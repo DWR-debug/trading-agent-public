@@ -486,6 +486,9 @@ def enrich_resources(configured: list[dict[str, Any]], runners: list[dict[str, A
             "busy": state == "operating",
             "labels": runner.get("labels", []) if runner else [],
             "current_assignments": len(assignments),
+            "research_capacity_slots": max(1, int(resource.get("research_capacity_slots", 1) or 1)),
+            "research_slots_in_use": min(len(assignments), max(1, int(resource.get("research_capacity_slots", 1) or 1))),
+            "research_slots_free": max(0, max(1, int(resource.get("research_capacity_slots", 1) or 1)) - len(assignments)),
             "current_tasks": [w.get("task") for w in assignments[:4]],
         })
     return out
@@ -633,12 +636,15 @@ def planned_capacity_plan(
             continue
         placed = False
         for resource_name in item["preferred"]:
-            if plans.get(resource_name):
-                continue
             resource = next((r for r in resources if str(r["name"]) == resource_name), None)
             if resource is None:
                 continue
-            if resource.get("capacity_state") == "operating":
+            capacity_slots = max(1, int(resource.get("research_capacity_slots", 1) or 1))
+            if len(plans.get(resource_name, [])) >= capacity_slots:
+                continue
+            current_assignments = int(resource.get("current_assignments", 0) or 0)
+            planned_for_resource = len(plans.get(resource_name, []))
+            if current_assignments + planned_for_resource >= capacity_slots:
                 continue
             benchmark = job_benchmarks.get(candidate)
             plans[resource_name].append({
@@ -902,12 +908,12 @@ def main() -> None:
     ai = ai_provider_state()
 
     configured_resources = [
-        {"name": "Windows self-hosted A", "type": "physical", "role": "Formal readiness / local reproduction", "configured_runner": "LHT-N133732", "authority": "bounded capacity; no automatic performance authorization"},
-        {"name": "Windows self-hosted B", "type": "physical", "role": "Frontier discovery / data QA", "configured_runner": "LHT-N133732-2", "authority": "bounded capacity; no automatic performance authorization"},
-        {"name": "Windows self-hosted C", "type": "physical", "role": "Long deterministic runs / independent reproduction", "configured_runner": "LHT-N133732-3", "authority": "bounded capacity; no automatic performance authorization"},
-        {"name": "GitHub-hosted Ubuntu x64", "type": "cloud", "role": "Deterministic frontier, CI, source/PIT workflows", "configured_runner": "ubuntu-24.04", "authority": "non-authorizing operational capacity"},
-        {"name": "GitHub-hosted ARM64", "type": "cloud", "role": "Architecture-diverse CI / reproduction", "configured_runner": "ubuntu-24.04-arm", "authority": "non-authorizing operational capacity"},
-        {"name": "Free AI pool", "type": "cloud", "role": "Adversarial / design / engineering review", "configured_runner": "OpenRouter Free / Groq Free / Gemini / Mistral", "authority": "AI output never authorizes performance or promotion"},
+        {"name": "Windows self-hosted A", "type": "physical", "research_capacity_slots": 1, "role": "Formal readiness / local reproduction", "configured_runner": "LHT-N133732", "authority": "bounded capacity; no automatic performance authorization"},
+        {"name": "Windows self-hosted B", "type": "physical", "research_capacity_slots": 1, "role": "Frontier discovery / data QA", "configured_runner": "LHT-N133732-2", "authority": "bounded capacity; no automatic performance authorization"},
+        {"name": "Windows self-hosted C", "type": "physical", "research_capacity_slots": 1, "role": "Long deterministic runs / independent reproduction", "configured_runner": "LHT-N133732-3", "authority": "bounded capacity; no automatic performance authorization"},
+        {"name": "GitHub-hosted Ubuntu x64", "type": "cloud", "research_capacity_slots": 2, "role": "Deterministic frontier, CI, source/PIT workflows", "configured_runner": "ubuntu-24.04", "authority": "non-authorizing operational capacity"},
+        {"name": "GitHub-hosted ARM64", "type": "cloud", "research_capacity_slots": 2, "role": "Architecture-diverse CI / reproduction", "configured_runner": "ubuntu-24.04-arm", "authority": "non-authorizing operational capacity"},
+        {"name": "Free AI pool", "type": "cloud", "research_capacity_slots": 1, "role": "Adversarial / design / engineering review", "configured_runner": "OpenRouter Free / Groq Free / Gemini / Mistral", "authority": "AI output never authorizes performance or promotion"},
     ]
     priority_codes = {"Q104:I19","Q218","Q220","Q221"}
     top4 = [x for x in state_board if x.get("code") in priority_codes]
@@ -950,6 +956,8 @@ def main() -> None:
             "research_tracks": len(state_board),
             "ai_providers": len(ai),
             "active_capacity_items": sum(1 for r in enrich_resources(configured_resources, runners, work) if r.get("capacity_state") == "operating"),
+            "research_capacity_slots_total": sum(int(r.get("research_capacity_slots", 1) or 1) for r in configured_resources),
+            "research_capacity_slots_free": sum(int(r.get("research_slots_free", 0) or 0) for r in enrich_resources(configured_resources, runners, work)),
             "available_capacity_items": sum(1 for r in enrich_resources(configured_resources, runners, work) if r.get("capacity_state") == "available"),
             "planned_capacity_items": sum(1 for row in planned_capacity for item in row.get("planned_assignments", []) if item.get("scheduled")),
             "blocked_planned_items": sum(1 for row in planned_capacity for item in row.get("planned_assignments", []) if not item.get("scheduled")),
