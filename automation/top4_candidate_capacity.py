@@ -28,7 +28,7 @@ WORKPACK_PURPOSES={
 }
 
 WORKPACK_GATE_PATHS={
-    "Q218":["automation/q218_sec_multichannel_source_gate.py"],
+    "Q218":["automation/q218_sec_multichannel_source_gate.py","automation/q218_event_pair_pit_gate.py"],
     "Q219":["automation/q219_options_source_breadth_gate.py","automation/q129_options_source_feasibility.py","automation/q129_options_pit_reproduction.py"],
     "Q220":["automation/q220_fsn_schema_gate.py","automation/q104_xbrl_concept_freeze_audit.py","automation/q104_i19_xbrl_pit_compiler.py"],
     "Q221":["automation/q221_usaspending_public_clock_gate.py","automation/top_candidate_source_preflight.py"],
@@ -38,7 +38,7 @@ LANES={
     "Q218":[
         [PYTHON,"-m","automation.q218_sec_multichannel_source_gate","--output","{OUT}/q218_sec_multichannel_source_gate.json"],
         [PYTHON,"-m","pytest","-q",*COMMON_TESTS],
-        [PYTHON,"-m","pytest","-q","tests/test_q218_sec_multichannel_source_gate.py","tests/test_q218_q221_candidate_gate_compiler.py"],
+        [PYTHON,"-m","pytest","-q","tests/test_q218_sec_multichannel_source_gate.py","tests/test_q218_event_pair_pit_gate.py","tests/test_q218_q221_candidate_gate_compiler.py"],
     ],
     "Q219":[
         [PYTHON,"-m","automation.q219_options_source_breadth_gate","--output","{OUT}/q219_options_source_breadth_gate.json"],
