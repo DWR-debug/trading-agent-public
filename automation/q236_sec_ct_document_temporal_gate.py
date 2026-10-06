@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
 import json
 import re
@@ -100,7 +101,8 @@ def pdf_url_for_row(row: dict[str, str]) -> str:
     status, body = fetch(submission_url)
     if status != 200:
         raise RuntimeError(f"Q236_R1_SUBMISSION_HTTP_{status}:{accession}")
-    complete = body.decode("utf-8", errors="replace")
+    complete_bytes = gzip.decompress(body) if body.startswith(b"\x1f\x8b") else body
+    complete = complete_bytes.decode("utf-8", errors="replace")
     document_name = declared_ct_document_name(complete)
     if not document_name:
         raise RuntimeError(f"Q236_R1_CT_DOCUMENT_NOT_DECLARED:{accession}")
