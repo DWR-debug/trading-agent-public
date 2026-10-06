@@ -2,94 +2,106 @@
 "use strict";
 var WORKFLOW_URL="https://github.com/DWR-debug/trading-agent-public/actions/workflows/resource-dashboard-update.yml";
 function $(id){return document.getElementById(id);}
-function esc(v){
-  var s=String(v==null?"":v);
-  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+function esc(v){return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");}
+function ts(v){if(!v)return "—";try{return new Date(v).toLocaleString(undefined,{dateStyle:"short",timeStyle:"medium"});}catch(e){return String(v);}}
+function fmtDuration(sec){
+  if(sec==null||Number.isNaN(Number(sec)))return "—";
+  sec=Math.max(0,Math.round(Number(sec)));
+  var h=Math.floor(sec/3600), m=Math.floor((sec%3600)/60), s=sec%60;
+  if(h)return h+" h "+m+" min";
+  if(m)return m+" min "+s+" s";
+  return s+" s";
 }
-function badge(label,value,klass){
-  return "<span class='badge "+(klass||"")+"'><strong>"+esc(label)+"</strong> = "+esc(value)+"</span>";
+function relativeRemaining(sec){
+  if(sec==null)return "—";
+  return sec>0 ? "noch ca. "+fmtDuration(sec) : "voraussichtlich fertig";
 }
-function stateClass(v){
-  var x=String(v||"").toUpperCase();
-  if(["SUCCESS","COMPLETED","ONLINE","IN_PROGRESS","READY","SOURCE_COMPONENT_READY"].some(function(k){return x.indexOf(k)>=0;})) return "good";
-  if(["QUEUED","PENDING","WAITING","PROVISIONAL","PIT_READINESS_PENDING"].some(function(k){return x.indexOf(k)>=0;})) return "warn";
-  if(["FAILURE","OFFLINE","BLOCKED","FALSIFIED","NO RECENT"].some(function(k){return x.indexOf(k)>=0;})) return "bad";
-  return "info";
+function candidateFrom(text){
+  text=String(text||"");
+  return ["Q218","Q219","Q220","Q221"].find(function(c){return text.indexOf(c)>=0;})||"—";
 }
-function ts(v){
-  if(!v) return "—";
-  try{return new Date(v).toLocaleString(undefined,{dateStyle:"short",timeStyle:"medium"});}catch(e){return String(v);}
+function capacityClass(x){
+  var s=String(x.capacity_state||"unknown");
+  return ["operating","available"].indexOf(s)>=0?s:"unknown";
 }
-function link(url,text){
-  return url ? "<a href='"+esc(url)+"' target='_blank' rel='noopener'>"+esc(text)+"</a>" : esc(text);
+function stateBadge(status){
+  var s=String(status||"");
+  var active=["queued","in_progress","waiting","pending"].indexOf(s)>=0;
+  var cls=active?"active-badge":(["success","completed","ready"].some(function(k){return s.toLowerCase().indexOf(k)>=0;})?"good":"unknown");
+  return "<span class='badge "+cls+"'>"+esc(s||"—")+"</span>";
 }
 function render(data){
   var s=data.dashboard_summary||{};
-  var rb=(data.current_research&&data.current_research.research_board)||[];
-  var top4=(data.current_research&&data.current_research.top4)||rb.filter(function(x){return ["Q218","Q219","Q220","Q221"].indexOf(x.code)>=0;});
-  var lm=data.lane_map||{};
-  var work=data.workload||[];
-  var runners=data.runner_live_snapshot||[];
-  var activity=data.recent_activity_24h||[];
-  var safety=data.scientific_boundary||{};
-  $("meta").innerHTML="Snapshot <code>"+esc(data.generated_at_utc)+"</code> · master <code>"+esc(data.master_sha)+"</code> · operational status <code>"+esc(data.operational_snapshot_sha)+"</code>";
-  $("overview").innerHTML=[
-    ["Active work",s.active_work_items==null?0:s.active_work_items],
-    ["Configured resources",s.configured_resources==null?0:s.configured_resources],
-    ["Visible runners",s.runner_api_visible==null?"n/a":s.runner_api_visible],
-    ["Busy runners",s.busy_runners==null?"n/a":s.busy_runners],
-    ["Research tracks",s.research_tracks==null?0:s.research_tracks],
-    ["AI providers",s.ai_providers==null?0:s.ai_providers]
-  ].map(function(x){return "<div class='stat'><div class='n'>"+esc(x[1])+"</div><div class='l'>"+esc(x[0])+"</div></div>";}).join("");
-  $("work").innerHTML=work.length ? "<table><thead><tr><th>Resource / worker</th><th>Lane</th><th>Task</th><th>Job</th><th>Status</th><th>Started</th><th>Actor</th></tr></thead><tbody>"+work.map(function(x){return "<tr><td><div class='rowtitle'>"+esc(x.resource)+"</div><div class='small'>"+esc(x.worker)+"</div></td><td>"+badge("lane",x.lane,stateClass(x.lane))+"</td><td>"+link(x.run_url,x.task)+"<div class='small'>Run "+esc(x.run_id)+"</div></td><td>"+esc(x.job||"—")+"</td><td>"+badge("status",x.status,stateClass(x.status))+"</td><td>"+esc(ts(x.started_at))+"</td><td>"+esc(x.actor||"—")+"</td></tr>";}).join("")+"</tbody></table>" : "<div class='empty'>No active GitHub Actions work was visible in this snapshot.</div>";
-  $("top4").innerHTML=top4.length ? "<table><thead><tr><th>Candidate</th><th>Stage</th><th>Next gate</th><th>Performance authorization</th></tr></thead><tbody>"+top4.map(function(x){return "<tr><td class=\"rowtitle\">"+esc(x.code)+"</td><td>"+badge("stage",x.state,stateClass(x.state))+"</td><td>"+esc(x.next_gate||"—")+"</td><td>"+badge("allowed",x.performance_authorization_allowed?"true":"false",x.performance_authorization_allowed?"bad":"good")+"</td></tr>";}).join("")+"</tbody></table>" : "<div class=\"empty\">Top-4 candidate board is not available in this snapshot.</div>";
-  $("resources").innerHTML="<table><thead><tr><th>Resource</th><th>Type</th><th>Role</th><th>Configured identity</th><th>Live state</th><th>Current assignments</th><th>Authority</th></tr></thead><tbody>"+(data.resources||[]).map(function(x){return "<tr><td><div class='rowtitle'>"+esc(x.name)+"</div></td><td>"+esc(x.type)+"</td><td>"+esc(x.role)+"</td><td><code>"+esc(x.configured_runner)+"</code></td><td>"+badge("state",x.live_status,stateClass(x.live_status))+(x.busy===true?badge("busy","true","good"):"")+"</td><td>"+esc(x.current_assignments==null?0:x.current_assignments)+"</td><td class='small'>"+esc(x.authority)+"</td></tr>";}).join("")+"</tbody></table>";
-  $("lanes").innerHTML="<h3>Lane A — "+esc(lm.lane_a&&lm.lane_a.name||"FORMAL READINESS")+"</h3><div class='small'>Resource: "+esc(lm.lane_a&&lm.lane_a.slot||"Windows self-hosted A")+"</div><div>"+((lm.lane_a&&lm.lane_a.focus)||[]).map(function(x){return badge("focus",x);}).join("")+"</div><hr style='border:0;border-top:1px solid var(--border);margin:14px 0'><h3>Lane B — "+esc(lm.lane_b&&lm.lane_b.name||"FRONTIER DISCOVERY")+"</h3><div class='small'>Resource: "+esc(lm.lane_b&&lm.lane_b.slot||"Windows self-hosted B")+"</div><div>"+((lm.lane_b&&lm.lane_b.focus)||[]).map(function(x){return badge("focus",x);}).join("")+"</div><p class='small muted'>Separate candidate/trial identity, branches/workflows and immutable receipts are required.</p>";
-  $("ai").innerHTML="<table><thead><tr><th>Provider</th><th>Status</th><th>Task</th><th>Observed</th><th>Mode</th><th>Model</th></tr></thead><tbody>"+(data.ai_fabric||[]).map(function(x){return "<tr><td class='rowtitle'>"+esc(x.provider)+"</td><td>"+badge("status",x.status,stateClass(x.status))+"</td><td>"+esc(x.task||"—")+"</td><td>"+esc(ts(x.observed_at_utc))+"</td><td>"+badge("free",x.free_only?"true":"false",x.free_only?"good":"bad")+"</td><td class='small'>"+esc(x.response_model||"—")+"</td></tr>";}).join("")+"</tbody></table>";
-  $("research").innerHTML="<table><thead><tr><th>Code</th><th>Lane</th><th>Stage</th><th>Next gate / constraint</th><th>Perf auth</th><th>Issue</th></tr></thead><tbody>"+rb.map(function(x){return "<tr><td class='rowtitle'>"+esc(x.code)+"</td><td>"+esc(x.lane)+"</td><td>"+badge("stage",x.state,stateClass(x.state))+"</td><td>"+esc(x.next_gate)+"</td><td>"+badge("allowed",x.performance_authorization_allowed?"true":"false",x.performance_authorization_allowed?"bad":"good")+"</td><td>"+esc(x.issue_number==null?"—":x.issue_number)+"</td></tr>";}).join("")+"</tbody></table>";
-  var runnerNote=s.runner_api_note||"";
-  $("runners").innerHTML=runners.length ? "<table><thead><tr><th>Runner</th><th>OS / Arch</th><th>Status</th><th>Busy</th><th>Labels</th></tr></thead><tbody>"+runners.map(function(x){return "<tr><td class='rowtitle'>"+esc(x.name)+"</td><td>"+esc(x.os||"—")+" / "+esc(x.architecture||"—")+"</td><td>"+badge("status",x.status,stateClass(x.status))+"</td><td>"+badge("busy",x.busy?"true":"false",x.busy?"warn":"")+"</td><td>"+(x.labels||[]).map(function(l){return badge("label",l);}).join("")+"</td></tr>";}).join("")+"</tbody></table>" : "<div class='empty'>Actions runner API data was unavailable for this snapshot. Configured resource identities remain shown above. "+esc(runnerNote)+"</div>";
-  $("activity").innerHTML=activity.length ? "<table><thead><tr><th>Task</th><th>Result</th><th>Completed</th><th>Actor</th><th>Run</th></tr></thead><tbody>"+activity.map(function(x){return "<tr><td>"+link(x.run_url,x.task)+"</td><td>"+badge("result",x.status,stateClass(x.status))+"</td><td>"+esc(ts(x.completed_at))+"</td><td>"+esc(x.actor||"—")+"</td><td>"+esc(x.run_id)+"</td></tr>";}).join("")+"</tbody></table>" : "<div class='empty'>No completed activity from the last 24 hours was included.</div>";
-  $("safety").innerHTML=Object.keys(safety).map(function(k){var v=safety[k];return badge(k,String(v),String(v).toLowerCase()==="false"?"good":"warn");}).join("")+"<p class='small muted' style='margin-top:10px'>Latest formal result: "+esc(data.current_research&&data.current_research.latest_formal_result||"not recorded")+"</p>";
+  var resources=(data.resources||[]).filter(function(x){
+    return ["Windows self-hosted A","Windows self-hosted B","Windows self-hosted C","GitHub-hosted Ubuntu x64","GitHub-hosted ARM64","Free AI pool"].indexOf(x.name)>=0;
+  });
+  var work=data.work_assignments||[];
+  var pipeline=data.pipeline||[];
+  var cr=data.current_research||{};
+  $("meta").innerHTML="Snapshot <code>"+esc(data.generated_at_utc)+"</code> · master <code>"+esc(data.master_sha)+"</code> · Status-Quelle <code>"+esc(data.operational_snapshot_sha||"nicht synchron")+"</code>";
+
+  var order={"Windows self-hosted A":0,"Windows self-hosted B":1,"Windows self-hosted C":2,"GitHub-hosted Ubuntu x64":3,"GitHub-hosted ARM64":4,"Free AI pool":5};
+  resources.sort(function(a,b){return order[a.name]-order[b.name];});
+  $("capacity").innerHTML="<div class='capacity-grid'>"+resources.map(function(x){
+    var cls=capacityClass(x);
+    var state=cls==="operating"?"ARBEITET":cls==="available"?"VERFÜGBAR":"NICHT SICHTBAR";
+    return "<div class='capacity "+cls+"'>"+
+      "<div class='name'>"+esc(x.name)+"</div>"+
+      "<div class='state'>"+state+"</div>"+
+      "<div class='role'>"+esc(x.role)+"</div>"+
+      "<div class='jobs'>"+esc(x.current_assignments||0)+" aktiver Job"+((x.current_assignments||0)===1?"":"s")+"</div>"+
+      "</div>";
+  }).join("")+"</div>";
+
+  $("work").innerHTML=work.length ? "<table><thead><tr><th>Kapazität</th><th>Candidate</th><th>Job</th><th>Status</th><th>Start</th><th>Erwartete Dauer</th><th>ETA / Rest</th></tr></thead><tbody>"+work.map(function(x){
+    return "<tr><td class='rowtitle'>"+esc(x.resource)+"<div class='small muted'>"+esc(x.worker)+"</div></td>"+
+      "<td>"+esc(candidateFrom((x.task||"")+" "+(x.job||"")))+"<div class='small'>"+esc(x.task||"")+"</div></td>"+
+      "<td>"+esc(x.job||"—")+"<div class='small'>Run "+esc(x.run_id||"—")+"</div></td>"+
+      "<td>"+stateBadge(x.status)+"</td>"+
+      "<td>"+esc(ts(x.started_at))+"</td>"+
+      "<td>"+fmtDuration(x.expected_duration_seconds)+"<div class='small muted'>n="+esc(x.duration_sample_count||0)+"</div></td>"+
+      "<td>"+relativeRemaining(x.remaining_seconds)+"<div class='small'>"+(x.expected_finish_at?esc(ts(x.expected_finish_at)):"—")+"</div></td></tr>";
+  }).join("")+"</tbody></table>" : "<div class='empty'>Aktuell ist kein aktiver GitHub-Actions-Job im Snapshot sichtbar.</div>";
+
+  $("pipeline").innerHTML=pipeline.length ? "<table><thead><tr><th>Candidate</th><th>Stage</th><th>Nächster Gate</th><th>Aktuell</th><th>Erwartete Jobdauer</th><th>Samples</th></tr></thead><tbody>"+pipeline.map(function(x){
+    var active=x.active;
+    return "<tr><td class='rowtitle'>"+esc(x.code)+"</td>"+
+      "<td>"+esc(x.stage)+"</td>"+
+      "<td>"+esc(x.next_gate||"—")+"</td>"+
+      "<td>"+(active?"<span class='badge active-badge'>ARBEIT LÄUFT ("+esc(x.active_jobs)+")</span>":"<span class='badge unknown'>kein aktiver Job sichtbar</span>")+"</td>"+
+      "<td>"+fmtDuration(x.expected_duration_seconds)+"<div class='small muted'>P90 "+fmtDuration(x.duration_p90_seconds)+"</div></td>"+
+      "<td>"+esc(x.duration_sample_count||0)+"</td></tr>";
+  }).join("")+"</tbody></table>" : "<div class='empty'>Keine Top-4-Pipeline im Snapshot.</div>";
+
+  var highlights=(cr.highlights||[]).slice(-6);
+  $("achieved").innerHTML=
+    "<div class='small'><strong>Letztes formales Ergebnis:</strong> "+esc(cr.latest_formal_result||"nicht aufgezeichnet")+"</div>"+
+    "<div style='margin-top:10px'>"+(highlights.length?highlights.map(function(x){return "<div style='margin:7px 0'>"+esc(x)+"</div>";}).join(""):"<div class='empty'>Keine Highlights im Snapshot.</div>")+"</div>"+
+    "<div class='small muted' style='margin-top:10px'>Performance, Holdout, Ranking, Tuning, Promotion und Live-Ausführung bleiben fail-closed.</div>";
+
   $("app").hidden=false;
 }
-function renderEmbeddedSnapshot(){
-  var snapshot=window.__TRADING_AGENT_SNAPSHOT__;
-  if(snapshot && typeof snapshot==="object"){render(snapshot);return true;}
+function renderEmbedded(){
+  var snap=window.__TRADING_AGENT_SNAPSHOT__;
+  if(snap&&typeof snap==="object"){render(snap);return true;}
   return false;
 }
 function load(){
   $("error").hidden=true;
-  var rendered=renderEmbeddedSnapshot();
-  if(!rendered){$("meta").textContent="Operational snapshot is not embedded; requesting the published data file…";}
+  var rendered=renderEmbedded();
   var url=new URL("dashboard_data.json",document.baseURI);
   url.searchParams.set("ts",String(Date.now()));
-  var controller=typeof AbortController==="function" ? new AbortController() : null;
-  var timeoutId=controller ? setTimeout(function(){controller.abort();},6000) : null;
-  var requestOptions={cache:"no-store"};
-  if(controller){requestOptions.signal=controller.signal;}
-  fetch(url.toString(),requestOptions).then(function(r){
-    if(!r.ok)throw new Error("HTTP "+r.status);
-    return r.json();
-  }).then(function(data){
-    render(data);
-  }).catch(function(e){
-    if(!rendered){
-      $("error").textContent="Dashboard snapshot could not be loaded: "+(e&&e.message||String(e));
-      $("error").hidden=false;
-    }else{
-      $("meta").insertAdjacentHTML("beforeend"," · <span class='warn'>fresh refresh unavailable: "+esc(e&&e.message||String(e))+"; embedded snapshot shown</span>");
-    }
-  }).then(function(){
-    if(timeoutId!==null)clearTimeout(timeoutId);
-  });
+  var controller=typeof AbortController==="function"?new AbortController():null;
+  var timeoutId=controller?setTimeout(function(){controller.abort();},6000):null;
+  var opts={cache:"no-store"}; if(controller)opts.signal=controller.signal;
+  fetch(url.toString(),opts).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}).then(render).catch(function(e){
+    if(!rendered){$("error").textContent="Snapshot konnte nicht geladen werden: "+(e&&e.message||String(e));$("error").hidden=false;}
+    else{$("meta").insertAdjacentHTML("beforeend"," · <span class='unknown'>Netzwerk-Refresh nicht verfügbar; eingebetteter Snapshot wird angezeigt.</span>");}
+  }).then(function(){if(timeoutId!==null)clearTimeout(timeoutId);});
 }
 document.addEventListener("DOMContentLoaded",function(){
   $("refresh").addEventListener("click",load);
-  $("update").href=WORKFLOW_URL;
-  $("update").addEventListener("click",function(){
-    $("updateStatus").textContent="GitHub Actions geöffnet. Dort Start/Run workflow ausführen; der Workflow generiert den Snapshot und deployt danach GitHub Pages automatisch.";
-  });
+  $("update").addEventListener("click",function(){});
   load();
 });
 })();
