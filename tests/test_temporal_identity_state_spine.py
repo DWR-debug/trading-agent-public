@@ -101,3 +101,7 @@ def test_state_transition_rejects_noop():
     except ValueError:
         return
     raise AssertionError("no-op state transition accepted")
+
+def test_historical_nodes_are_reported_but_do_not_fail_current_candidate_integrity():
+    out=compile_spine(base(),relation(),specs(),registry())
+    assert out["graph_integrity"]["current_candidate_reference_integrity_ok"] is True
