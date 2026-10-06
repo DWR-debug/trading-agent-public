@@ -99,6 +99,9 @@ jobs:
           retention-days: 30
 
   hosted_x64:
+    concurrency:
+      group: trading-agent-research-hosted-ubuntu-24.04
+      cancel-in-progress: false
     env:
       TOP4_EXECUTION_MODE: INDEPENDENT_ARCH_REPRODUCTION
     concurrency:
@@ -132,6 +135,9 @@ jobs:
           retention-days: 30
 
   hosted_arm64:
+    concurrency:
+      group: trading-agent-research-hosted-ubuntu-24.04-arm
+      cancel-in-progress: false
     env:
       TOP4_EXECUTION_MODE: INDEPENDENT_ARCH_REPRODUCTION
     concurrency:
