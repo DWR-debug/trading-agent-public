@@ -256,6 +256,7 @@ ACTIVE_WORKFLOWS = {
     "q229-q230-source-feasibility.yml",
     "q230-windows-trace-connectivity.yml",
     "q224-edgar-modern-source-gate.yml",
+    "q231-sec-foia-source-gate.yml",
     "windows-independent-capacity-pulse.yml",
 }
 
