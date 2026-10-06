@@ -692,3 +692,15 @@ The exact availability of these fields in the free 10-year EOD panel remains an 
 
 Source: https://www.finra.org/finra-data/fixed-income/about-trade-activity
 
+## 35. 2026-10-06 Q231 — SEC FOIA information-acquisition state
+
+A current Review of Accounting Studies paper provides a distinct information-acquisition channel: SEC FOIA requests. The authors report heterogeneous value relevance by requester type and use SEC FOIA logs containing requester, organization/category, description, request/receipt dates, status, closure date and final disposition. The SEC itself documents that FOIA logs are posted monthly and that the public archive begins in January 2006. These are external source/economic-mechanism findings, not project performance evidence.
+
+For the project, Q231 is explicitly separated from Q224. Q224 measures demand for access to records already published through EDGAR; Q231 measures deliberate FOIA requests for otherwise non-public SEC records. The crucial PIT rule is therefore **not** to trade on the latent request/receipt date. The admissible public clock is the first public SEC FOIA-log release containing the request. Because the official archive mixes monthly files in newer periods with annual files for earlier years, publication cadence must be reconstructed rather than assumed.
+
+Q231 implementation is source-first: official archive census -> fixed historical file probes -> schema verification -> publication-clock reconstruction -> deterministic requester-category and request-description parsing -> issuer mapping -> Q224 orthogonality audit -> independent PIT reproduction. The August/July B7A exemption logs remain distinct from ordinary request logs. No future closed/disposition information may rewrite the historical prefix.
+
+The current public SEC FOIA archive is unusually strong for source feasibility: it lists logs from January 2006 onward and, in the currently exposed archive, monthly files through 2026 plus annual historical files. The project gate intentionally does **not** infer exact historical publication timestamps from those labels alone; that remains a bounded next gate.
+
+Sources: https://www.sec.gov/foia/frequently-requested-documents/foia-logs ; Bao, Brendel, Drake & Su (2026), Review of Accounting Studies, https://doi.org/10.1007/s11142-026-09988-7
+
