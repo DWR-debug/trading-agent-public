@@ -63,3 +63,10 @@ def test_q220_presentation_source_falls_back_to_inline_xbrl_instance():
 def test_q220_presentation_source_prefers_dedicated_linkbase():
     items=["foo.htm","foo.xsd","foo_htm.xml","foo_pre.xml"]
     assert choose_presentation_source(items) == ("foo_pre.xml", "dedicated_presentation_linkbase")
+
+
+def test_q220_prefixed_qname_matches_sec_presentation_fragment():
+    import re
+    gate = (ROOT / 'automation/q220_as_filed_xbrl_population_gate.py').read_text(encoding='utf-8')
+    assert 'return f"{prefix}_{local}"' in gate
+    assert 'qname_fragment(q)' in gate

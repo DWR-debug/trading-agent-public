@@ -156,8 +156,14 @@ def inspect(row:dict[str,str],pmap:dict[str,str])->dict[str,object]:
     if sx!=200: raise RuntimeError(f"XSD_HTTP_{sx}:{acc}")
     if sp2!=200: raise RuntimeError(f"PRE_HTTP_{sp2}:{acc}")
     instance_name=xml_names[0] if xml_names and fetch(f"{base}/{xml_names[0]}")[0]==200 else None
-    tb=ix_textblocks(p); xm=xsd_metadata(xsd); pm=presentation_metadata(pre); locals_=sorted(set(x["local_name"] for x in tb))
-    hits=sorted(x for x in locals_ if x in set(pm["loc_concepts"]))
+    tb=ix_textblocks(p); xm=xsd_metadata(xsd); pm=presentation_metadata(pre); qnames=sorted(set(x["qname"] for x in tb))
+    loc_concepts=set(pm["loc_concepts"])
+    def qname_fragment(qname:str)->str:
+        if ":" in qname:
+            prefix,local=qname.split(":",1)
+            return f"{prefix}_{local}"
+        return qname
+    hits=sorted(q for q in qnames if qname_fragment(q) in loc_concepts or local_name(q) in loc_concepts)
     return {"canonical_key":{"cik":row["cik"],"form":row["form"],"filed_date":row["filed_date"],"accession":acc},"acceptance_datetime":accepted,
             "header_sha256":sha256(h),"directory_index_sha256":sha256(d),"primary_document":primary,"primary_document_sha256":sha256(p),
             "primary_document_bytes":len(p),"xsd":xsd_names[0],"xsd_metadata":xm,"presentation_linkbase":pre_names[0],"presentation_source_type":presentation_source[1],"presentation_metadata":pm,
