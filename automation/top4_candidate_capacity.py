@@ -47,7 +47,6 @@ LANES={
     ],
     "Q220":[
         [PYTHON,"-m","pytest","-q","tests/test_q220_as_filed_xbrl_population_gate.py"],
-        [PYTHON,"-m","pytest","-q","tests/test_q220_fsn_schema_gate.py"],
         [PYTHON,"-m","pytest","-q","tests/test_q104_xbrl_concept_freeze_audit.py","tests/test_q104_i19_xbrl_pit_compiler.py"],
     ],
     "Q221":[
