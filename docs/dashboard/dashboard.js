@@ -26,6 +26,7 @@ function link(url,text){
 function render(data){
   var s=data.dashboard_summary||{};
   var rb=(data.current_research&&data.current_research.research_board)||[];
+  var top4=(data.current_research&&data.current_research.top4)||rb.filter(function(x){return ["Q218","Q219","Q220","Q221"].indexOf(x.code)>=0;});
   var lm=data.lane_map||{};
   var work=data.workload||[];
   var runners=data.runner_live_snapshot||[];
@@ -41,10 +42,9 @@ function render(data){
     ["AI providers",s.ai_providers==null?0:s.ai_providers]
   ].map(function(x){return "<div class='stat'><div class='n'>"+esc(x[1])+"</div><div class='l'>"+esc(x[0])+"</div></div>";}).join("");
   $("work").innerHTML=work.length ? "<table><thead><tr><th>Resource / worker</th><th>Lane</th><th>Task</th><th>Job</th><th>Status</th><th>Started</th><th>Actor</th></tr></thead><tbody>"+work.map(function(x){return "<tr><td><div class='rowtitle'>"+esc(x.resource)+"</div><div class='small'>"+esc(x.worker)+"</div></td><td>"+badge("lane",x.lane,stateClass(x.lane))+"</td><td>"+link(x.run_url,x.task)+"<div class='small'>Run "+esc(x.run_id)+"</div></td><td>"+esc(x.job||"—")+"</td><td>"+badge("status",x.status,stateClass(x.status))+"</td><td>"+esc(ts(x.started_at))+"</td><td>"+esc(x.actor||"—")+"</td></tr>";}).join("")+"</tbody></table>" : "<div class='empty'>No active GitHub Actions work was visible in this snapshot.</div>";
+  $("top4").innerHTML=top4.length ? "<table><thead><tr><th>Candidate</th><th>Stage</th><th>Next gate</th><th>Performance authorization</th></tr></thead><tbody>"+top4.map(function(x){return "<tr><td class=\"rowtitle\">"+esc(x.code)+"</td><td>"+badge("stage",x.state,stateClass(x.state))+"</td><td>"+esc(x.next_gate||"—")+"</td><td>"+badge("allowed",x.performance_authorization_allowed?"true":"false",x.performance_authorization_allowed?"bad":"good")+"</td></tr>";}).join("")+"</tbody></table>" : "<div class=\"empty\">Top-4 candidate board is not available in this snapshot.</div>";
   $("resources").innerHTML="<table><thead><tr><th>Resource</th><th>Type</th><th>Role</th><th>Configured identity</th><th>Live state</th><th>Current assignments</th><th>Authority</th></tr></thead><tbody>"+(data.resources||[]).map(function(x){return "<tr><td><div class='rowtitle'>"+esc(x.name)+"</div></td><td>"+esc(x.type)+"</td><td>"+esc(x.role)+"</td><td><code>"+esc(x.configured_runner)+"</code></td><td>"+badge("state",x.live_status,stateClass(x.live_status))+(x.busy===true?badge("busy","true","good"):"")+"</td><td>"+esc(x.current_assignments==null?0:x.current_assignments)+"</td><td class='small'>"+esc(x.authority)+"</td></tr>";}).join("")+"</tbody></table>";
   $("lanes").innerHTML="<h3>Lane A — "+esc(lm.lane_a&&lm.lane_a.name||"FORMAL READINESS")+"</h3><div class='small'>Resource: "+esc(lm.lane_a&&lm.lane_a.slot||"Windows self-hosted A")+"</div><div>"+((lm.lane_a&&lm.lane_a.focus)||[]).map(function(x){return badge("focus",x);}).join("")+"</div><hr style='border:0;border-top:1px solid var(--border);margin:14px 0'><h3>Lane B — "+esc(lm.lane_b&&lm.lane_b.name||"FRONTIER DISCOVERY")+"</h3><div class='small'>Resource: "+esc(lm.lane_b&&lm.lane_b.slot||"Windows self-hosted B")+"</div><div>"+((lm.lane_b&&lm.lane_b.focus)||[]).map(function(x){return badge("focus",x);}).join("")+"</div><p class='small muted'>Separate candidate/trial identity, branches/workflows and immutable receipts are required.</p>";
-  var android=data.android_fleet||[];
-  $("android").innerHTML=android.length ? "<table><thead><tr><th>Device</th><th>Runner</th><th>Arch / runtime</th><th>Status</th><th>Busy</th><th>Assignments</th></tr></thead><tbody>"+android.map(function(x){return "<tr><td class='rowtitle'>"+esc(x.resource_id)+"</td><td><code>"+esc(x.runner_name)+"</code></td><td>"+esc(x.architecture||"—")+" / "+esc(x.runtime||"—")+"</td><td>"+badge("status",x.live_status,stateClass(x.live_status))+"</td><td>"+badge("busy",x.busy?"true":"false",x.busy?"warn":"")+"</td><td>"+esc(x.current_assignments==null?0:x.current_assignments)+"</td></tr>";}).join("")+"</tbody></table>" : "<div class='empty'>No Android fleet registry entries were available in this snapshot.</div>";
   $("ai").innerHTML="<table><thead><tr><th>Provider</th><th>Status</th><th>Task</th><th>Observed</th><th>Mode</th><th>Model</th></tr></thead><tbody>"+(data.ai_fabric||[]).map(function(x){return "<tr><td class='rowtitle'>"+esc(x.provider)+"</td><td>"+badge("status",x.status,stateClass(x.status))+"</td><td>"+esc(x.task||"—")+"</td><td>"+esc(ts(x.observed_at_utc))+"</td><td>"+badge("free",x.free_only?"true":"false",x.free_only?"good":"bad")+"</td><td class='small'>"+esc(x.response_model||"—")+"</td></tr>";}).join("")+"</tbody></table>";
   $("research").innerHTML="<table><thead><tr><th>Code</th><th>Lane</th><th>Stage</th><th>Next gate / constraint</th><th>Perf auth</th><th>Issue</th></tr></thead><tbody>"+rb.map(function(x){return "<tr><td class='rowtitle'>"+esc(x.code)+"</td><td>"+esc(x.lane)+"</td><td>"+badge("stage",x.state,stateClass(x.state))+"</td><td>"+esc(x.next_gate)+"</td><td>"+badge("allowed",x.performance_authorization_allowed?"true":"false",x.performance_authorization_allowed?"bad":"good")+"</td><td>"+esc(x.issue_number==null?"—":x.issue_number)+"</td></tr>";}).join("")+"</tbody></table>";
   var runnerNote=s.runner_api_note||"";
@@ -87,6 +87,9 @@ function load(){
 document.addEventListener("DOMContentLoaded",function(){
   $("refresh").addEventListener("click",load);
   $("update").href=WORKFLOW_URL;
+  $("update").addEventListener("click",function(){
+    $("updateStatus").textContent="GitHub Actions geöffnet. Dort Start/Run workflow ausführen; der Workflow generiert den Snapshot und deployt danach GitHub Pages automatisch.";
+  });
   load();
 });
 })();
