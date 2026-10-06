@@ -636,12 +636,13 @@ def planned_capacity_plan(
             continue
         placed = False
         for resource_name in item["preferred"]:
-            if plans.get(resource_name):
-                continue
             resource = next((r for r in resources if str(r["name"]) == resource_name), None)
             if resource is None:
                 continue
-            if resource.get("capacity_state") == "operating":
+            capacity_slots = max(1, int(resource.get("research_capacity_slots", 1) or 1))
+            if len(plans.get(resource_name, [])) >= capacity_slots:
+                continue
+            if resource.get("capacity_state") == "operating" and len(plans.get(resource_name, [])) >= capacity_slots:
                 continue
             benchmark = job_benchmarks.get(candidate)
             plans[resource_name].append({
