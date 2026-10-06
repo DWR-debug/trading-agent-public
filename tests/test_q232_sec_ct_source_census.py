@@ -81,3 +81,9 @@ def test_extract_detail_metadata_acceptance_fallback():
     assert meta["form"] == "CT ORDER"
     assert meta["filed_date"] == "2015-06-15"
     assert meta["accepted_datetime"] == "2015-06-15T16:22:10"
+
+
+def test_submission_text_url_preserves_dashed_ct_order_accession():
+    from automation.q232_sec_ct_source_census import submission_text_url
+    url = submission_text_url("edgar/data/1368148/999999999715010856/9999999997-15-010856-index.htm")
+    assert url.endswith("/999999999715010856/9999999997-15-010856.txt")
