@@ -1,5 +1,5 @@
 from pathlib import Path
-from automation.q220_as_filed_xbrl_population_gate import TARGET_ISSUERS,WINDOW_START,WINDOW_END,ROUTE_QUARTERS,concept_spec,ix_textblocks,xsd_metadata,presentation_metadata
+from automation.q220_as_filed_xbrl_population_gate import TARGET_ISSUERS,WINDOW_START,WINDOW_END,ROUTE_QUARTERS,choose_presentation_source,concept_spec,ix_textblocks,xsd_metadata,presentation_metadata
 ROOT=Path(__file__).parents[1]
 
 def test_q220_population_window_and_identity_are_frozen():
@@ -53,3 +53,13 @@ def test_q220_windows_receipt_publish_uses_powershell_not_bash():
     assert 'shell: powershell' in publish
     assert 'shell: bash' not in publish
     assert 'github_contents_publish.py' in publish
+
+
+def test_q220_presentation_source_falls_back_to_inline_xbrl_instance():
+    items=["dvn-20241231.htm","dvn-20241231.xsd","dvn-20241231_htm.xml","FilingSummary.xml"]
+    assert choose_presentation_source(items) == ("dvn-20241231_htm.xml", "xbrl_instance_embedded_presentation")
+
+
+def test_q220_presentation_source_prefers_dedicated_linkbase():
+    items=["foo.htm","foo.xsd","foo_htm.xml","foo_pre.xml"]
+    assert choose_presentation_source(items) == ("foo_pre.xml", "dedicated_presentation_linkbase")
