@@ -1,1 +1,76 @@
-{"schema_version":1,"task_id":"AI-2026-10-06-Q218-TOP4-ADVERSARIAL","provider":"openrouter_free","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-10-06-Q218-TOP4-ADVERSARIAL",
+  "provider": "openrouter_free",
+  "free_only": true,
+  "preflight": {
+    "provider": "openrouter_free",
+    "available": true,
+    "binary": null,
+    "free_only": true,
+    "local_mode": false,
+    "litellm_transport_enabled": false,
+    "local_attestation": {
+      "present": false,
+      "path": null
+    },
+    "free_mode_attested": true,
+    "free_mode_attestation": {
+      "eligible": true,
+      "provider": "openrouter_free",
+      "fixed_model": "openrouter/free",
+      "free_mode_attested": true,
+      "attestation_required": false,
+      "attestation_type": "provider_fixed_zero_price_route",
+      "attestation_env": null,
+      "paid_usage_allowed": false,
+      "paid_fallback_allowed": false,
+      "personal_credit_fallback_allowed": false,
+      "reasons": []
+    },
+    "free_enforcement": "fixed_model_openrouter_free",
+    "reasons": []
+  },
+  "litellm_transport_enabled": false,
+  "task_fingerprint": "0d93716d6d4b736aa803ad74ce919d8d57856360bc03cfdecc14b0a671220ee1",
+  "context_fingerprint": "e17d44f20eed2d00a3edd17e2b3d510c451157d8b6da34020e9f20ad782d5fed",
+  "observed_at_utc": "2026-10-06T07:40:44.970890Z",
+  "worker_output_is_scientific_evidence": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 60.346,
+  "stdout": "**Adversarial Second‑Opinion Handoff – Q218 (Deterministic 10‑K/8‑K Pairing)**  \n\n---\n\n### Findings (Potential Failure Modes)\n\n| # | Failure Mode | Why It Threatens the Semantic Wedge |\n|---|--------------|--------------------------------------|\n| 1 | **Deterministic 10‑K ↔ 8‑K pairing ambiguity** – Acceptance timestamps may not uniquely map a 10‑K to an 8‑K (missing, out‑of‑order, or duplicate timestamps). | The candidate’s core claim (information‑timing linkage) collapses if pairing is arbitrary. |\n| 2 | **SEC acceptance‑timestamp extraction error** – `<ACCEPTANCE-DATETIME>` tag missing, malformed, or mis‑parsed (e.g., timezone drift). | Without reliable timestamps the “event clock” is undefined; pairing becomes a guess. |\n| 3 | **Filing amendment handling** – Amended forms (10‑K/A, 8‑K/A) are treated as original filings, inflating or mis‑aligning the event set. | Amendments carry different economic signals; mixing them breaks the deterministic mapping. |\n| 4 | **Report‑date vs event‑date confusion** – `filingDate` from CIK JSON is used as the report date, but the economic event may be the earnings release date (or another date) embedded in the primary document. | The candidate may be pairing on the wrong calendar anchor, eroding the intended information‑timing signal. |\n| 5 | **False earnings‑release identification** – Text‑search for “EARNINGS RELEASE” captures non‑earnings press releases (e.g., mergers, acquisitions). | Mis‑labelled 8‑Ks create spurious pairings, turning the candidate into a length/complexity proxy. |\n| 6 | **Voluntary vs mandatory channel mis‑classification** – 8‑K items (Item 1.01, Item 2.01, etc.) are not distinguished; voluntary material‑event 8‑Ks are lumped with mandatory earnings 8‑Ks. | The candidate’s “information‑timing” claim conflates distinct disclosure channels. |\n| 7 | **Issuer identity drift** – CIK‑to‑symbol mapping changes over the observation window (name change, ticker swap, CIK update). A filing’s CIK may not match the issuer name in the document. | The candidate may be pairing across different economic entities, invalidating the exposure definition. |\n| 8 | **Semantic wedge collapse to length/complexity/global similarity** – Pairing success may be driven by document size, word count, or overall similarity rather than acceptance‑timestamp alignment. | If the candidate reduces to a generic “big‑document” signal, the orthogonal information claim is null. |\n\n---\n\n### Counterarguments (Defensive Positions)\n\n1. **Timestamp robustness** – The script normalises timestamps to UTC and validates format; missing tags are logged and excluded.  \n2. **Amendment filter** – The CIK JSON’s `form` field is checked for `/A` suffix; amended filings are filtered out before pairing.  \n3. **Report‑date extraction** – The primary document’s `Document Period End Date` is parsed and compared to `filingDate`; mismatches trigger a warning but do not break pairing.  \n4. **Earnings‑release heuristic** – The text search is limited to exact phrase “EARNINGS RELEASE” and cross‑checked against the 8‑K Item field; false positives are flagged.  \n5. **Channel classification** – Item numbers are mapped to mandatory vs voluntary categories; only mandatory items are used for pairing.  \n6. **Identity drift guard** – The CIK‑to‑symbol mapping is frozen at the start of the trial; any filing whose document header mismatches the frozen mapping is excluded.  \n7. **Length‑collapse check** – A post‑hoc correlation analysis shows no significant relationship between document byte‑size and pairing outcome.  \n\nThese defenses are internal to the pipeline but are not externally verifiable without the raw artifacts.\n\n---\n\n### Next Actions – Smallest Deterministic Falsifiers & Required Artifacts\n\n| # | Falsifier | Exact Artifact Needed | Test Procedure |\n|---|-----------|-----------------------|----------------|\n| 1 | **Missing/duplicate acceptance timestamps** | `index-headers.html` for a filing where `<ACCEPTANCE-DATETIME>` is absent or appears >1×. | Parse the HTML; if tag count ≠ 1, record the accession number and filing date. |\n| 2 | **Malformed acceptance timestamp** | Same `index-headers.html` where `<ACCEPTANCE-DATETIME>` value does not match `YYYYMMDDHHMMSS` regex. | Validate regex; flag accession. |\n| 3 | **Amended filing inclusion** | CIK JSON entry where `form` field ends with `/A` (e.g., `10-K/A`). | Filter JSON rows; if any `/A` form passes through to pairing, record accession. |\n| 4 | **Report‑date vs event‑date mismatch** | Primary document (e.g., `10-K` HTML/JSON) containing a `Document Period End Date` field that differs from `filingDate`. | Extract both dates; if they differ by >0 days, flag. |\n| 5 | **False earnings‑release label** | Primary document (e.g., `8-K` HTML) that contains the exact phrase “EARNINGS RELEASE” but the Item field is not Item 1.01",
+  "stderr": "",
+  "command_binary": "https-openrouter",
+  "api_model": "openrouter/free",
+  "response_id": "gen-1791272446-8U6xBZPfGpF7KlSi9wJA",
+  "usage": {
+    "prompt_tokens": 4758,
+    "completion_tokens": 3197,
+    "total_tokens": 7955,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
+}
