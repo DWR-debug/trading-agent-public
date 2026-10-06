@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "receipt_type": "q219_options_dolthub_source_lead",
+  "candidate_id": "Q219",
+  "generated_utc": "2026-10-06T08:45:00Z",
+  "status": "SOURCE_BREADTH_LEAD_DIRECT_HTTP_OBSERVED",
+  "source": {
+    "repository": "https://www.dolthub.com/repositories/post-no-preference/options",
+    "branch": "master",
+    "database_size_observed": "8.76 GB",
+    "last_updated_statement": "page reported updated within the preceding ~2 hours at live probe time",
+    "api": "https://www.dolthub.com/api/v1alpha1/post-no-preference/options/master",
+    "authentication": "none observed; direct SQL requests succeeded without credentials"
+  },
+  "option_chain_schema": {
+    "columns": ["date","act_symbol","expiration","strike","call_put","bid","ask","vol","delta","gamma","theta","vega","rho"],
+    "table": "option_chain"
+  },
+  "live_probes": [
+    {
+      "query_type": "fixed_2025_08_01_universe_row_counts",
+      "universe": ["AAPL","AMZN","DIS","JPM","MSFT","NVDA","WMT","XOM"],
+      "rows_by_symbol": {"AAPL":134,"AMZN":130,"DIS":112,"JPM":138,"MSFT":136,"NVDA":126,"WMT":118,"XOM":110},
+      "first_expiry": "2025-08-15",
+      "last_expiry": "2025-09-19"
+    },
+    {"query_type":"aapl_recent_date_row_count","date":"2026-10-05","rows":148},
+    {"query_type":"aapl_recent_date_row_count","date":"2026-10-02","rows":148},
+    {"query_type":"aapl_recent_date_row_count","date":"2026-09-30","rows":148},
+    {
+      "query_type":"aapl_schema_sample",
+      "date":"2025-08-01",
+      "sample_rows":10,
+      "observed_quote_fields":["bid","ask","vol","call_put","strike","expiration"]
+    }
+  ],
+  "supplemental_table": {
+    "table":"volatility_history",
+    "columns":["date","act_symbol","hv_current","hv_week_ago","hv_month_ago","hv_year_high","hv_year_high_date","hv_year_low","hv_year_low_date","iv_current","iv_week_ago","iv_month_ago","iv_year_high","iv_year_high_date","iv_year_low","iv_year_low_date"]
+  },
+  "interpretation": {
+    "broad_source_claim_proven": false,
+    "pit_readiness_proven": false,
+    "performance_authorization": false,
+    "holdout_selection": false,
+    "ranking": false,
+    "tuning": false,
+    "promotion": false,
+    "live_execution": false,
+    "remaining_checks": [
+      "frozen historical coverage contract for the Q219 universe",
+      "revision/commit/vintage semantics and immutable reconstruction",
+      "comparison against pinned Q129 overlapping assets where feasible",
+      "deterministic option-selection and IV-field contract",
+      "quote/calendar integrity and same-day information-boundary rule",
+      "independent reproduction on a separate architecture"
+    ]
+  },
+  "provenance_notes": [
+    "Primary observation is the live DoltHub database/API itself, not the secondary article that surfaced the lead.",
+    "Community-maintained mirror status remains a provenance caveat; it is not treated as an exchange-primary source.",
+    "No returns, thresholds, asset selection, ranking, tuning, or performance calculations were performed."
+  ],
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "receipt_fingerprint": "1022933273daa71dedad8deedea75c8813ee21f31ed4e00252eb19d1a60be769"
+}
