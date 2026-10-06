@@ -175,6 +175,9 @@ def check_sample(row: dict[str, str]) -> dict[str, object]:
         raise RuntimeError(f"Q232_HEADER_HTTP_{hstatus}:{row['filename']}")
     htext = hbody.decode("utf-8", errors="replace")
     accession = extract_tag(htext, "ACCESSION NUMBER")
+    if not accession:
+        label_match = re.search(r"ACCESSION NUMBER\\s*:?\\s*(\\d{10}-\\d{2}-\\d{6})", htext, re.IGNORECASE)
+        accession = label_match.group(1) if label_match else None
     accepted_match = re.search(r"<ACCEPTANCE-DATETIME>\s*(\d{14})", htext, re.IGNORECASE)
     accepted = accepted_match.group(1) if accepted_match else None
     conformed = extract_tag(htext, "CONFORMED SUBMISSION TYPE")
