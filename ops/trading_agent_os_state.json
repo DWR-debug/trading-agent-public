@@ -576,5 +576,24 @@
     "tuning": false,
     "promotion": false,
     "live_execution": false
+  },
+  "evidence_graph_stage4_stage5": {
+    "status": "ACTIVE",
+    "contract": "research/governance/evidence_graph_stage4_stage5_contract_2026_10_06.json",
+    "engine": "automation/evidence_graph_stage4_stage5.py",
+    "workflow": ".github/workflows/evidence-graph-stage4-stage5-wave.yml",
+    "latest_receipt": "research/evidence/evidence_graph_stage4_stage5_latest.json",
+    "stage4_status": "IMPLEMENTED_AND_RUNNING",
+    "stage5_status": "IMPLEMENTED_AND_RUNNING",
+    "current_run": "event-driven 70-minute research window; 4 parallel analysis modes",
+    "authority": {
+      "performance": false,
+      "holdout_selection": false,
+      "ranking": false,
+      "tuning": false,
+      "promotion": false,
+      "live_execution": false
+    },
+    "principle": "New receipts grow the metadata graph; deterministic convergence/novelty outputs can trigger review proposals but never create authority or mutate frozen trials."
   }
 }
