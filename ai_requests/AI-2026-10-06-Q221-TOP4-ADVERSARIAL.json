@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-10-06-Q221-TOP4-ADVERSARIAL",
+  "providers": [
+    "openrouter_free",
+    "groq_free",
+    "gemini_cli",
+    "mistral_api"
+  ],
+  "scope": "Q221 government R&D to procurement-option-value state: adversarial source/PIT review only",
+  "prompt": "Attack Q221 as a methods reviewer. Focus on USAspending publication timing, award-vs-modification semantics, transaction history, R&D classification, competition fields, PSC stability, recipient-to-issuer mapping, parent/subsidiary changes, pre-event capability proxies, and the risk of future production contracts leaking into the historical prefix. Use the official About-the-Data publication sequence as a candidate clock but challenge its historical applicability by transaction class and period. Specify minimal deterministic falsifiers and exact missing artifacts. No returns, ranking, tuning, holdout or performance authorization.",
+  "max_runtime_minutes": 15,
+  "deterministic_compute": false,
+  "holdout_selection": false,
+  "parameter_selection": false,
+  "asset_selection": false,
+  "threshold_selection": false,
+  "horizon_selection": false,
+  "research_gate_changes": false,
+  "promotion_decision": false,
+  "live_execution": false,
+  "paid_usage": false,
+  "research_decision": false,
+  "allow_workspace_writes": false
+}
