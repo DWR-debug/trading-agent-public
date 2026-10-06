@@ -18,7 +18,19 @@ function relativeRemaining(sec){
 }
 function candidateFrom(text){
   text=String(text||"");
-  return ["Q218","Q219","Q220","Q221"].find(function(c){return text.indexOf(c)>=0;})||"—";
+  return ["Q104:I19","Q218","Q220","Q221","Q219"].find(function(c){return text.indexOf(c)>=0;})||"—";
+}
+function updateClock(){
+  var now=new Date();
+  var optsTime={timeZone:"Europe/Berlin",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false};
+  var optsDate={timeZone:"Europe/Berlin",weekday:"long",year:"numeric",month:"long",day:"numeric"};
+  try{
+    $("clockTime").textContent=new Intl.DateTimeFormat("de-DE",optsTime).format(now);
+    $("clockDate").textContent=new Intl.DateTimeFormat("de-DE",optsDate).format(now);
+  }catch(e){
+    $("clockTime").textContent=now.toLocaleTimeString();
+    $("clockDate").textContent=now.toLocaleDateString();
+  }
 }
 function capacityClass(x){
   var s=String(x.capacity_state||"unknown");
@@ -115,6 +127,8 @@ function load(){
   }).then(function(){if(timeoutId!==null)clearTimeout(timeoutId);});
 }
 document.addEventListener("DOMContentLoaded",function(){
+  updateClock();
+  setInterval(updateClock,1000);
   $("refresh").addEventListener("click",load);
   $("update").addEventListener("click",function(){});
   load();
