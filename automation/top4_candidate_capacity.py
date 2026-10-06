@@ -27,6 +27,13 @@ WORKPACK_PURPOSES={
     "Q221":"USAspending RDT&E transaction/publication-clock and entity-map diagnostics",
 }
 
+WORKPACK_GATE_PATHS={
+    "Q218":["automation/q218_q221_historical_source_census.py","automation/q218_q221_candidate_gate_compiler.py"],
+    "Q219":["automation/q219_options_source_breadth_gate.py","automation/q129_options_source_feasibility.py","automation/q129_options_pit_reproduction.py"],
+    "Q220":["automation/q220_fsn_schema_gate.py","automation/q218_q221_historical_source_census.py","automation/q104_xbrl_concept_freeze_audit.py","automation/q104_i19_xbrl_pit_compiler.py"],
+    "Q221":["automation/q221_usaspending_public_clock_gate.py","automation/top_candidate_source_preflight.py"],
+}
+
 LANES={
     "Q218":[
         [PYTHON,"-m","automation.q218_q221_historical_source_census","--output","{OUT}/q218_q221_historical_source_census.json"],
@@ -74,6 +81,7 @@ def main()->int:
         "schema_version":1,"candidate":args.candidate,
         "workpack_contract_version":"top4-2026-10-06-v3",
         "workpack_purpose":WORKPACK_PURPOSES[args.candidate],
+        "workpack_gate_paths":WORKPACK_GATE_PATHS[args.candidate],
         "source_commit":os.environ.get("GITHUB_SHA"),
         "runner_name":os.environ.get("RUNNER_NAME"),
         "python_version":platform.python_version(),
