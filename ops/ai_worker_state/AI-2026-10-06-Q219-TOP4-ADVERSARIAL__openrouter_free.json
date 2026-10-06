@@ -33,8 +33,8 @@
   },
   "litellm_transport_enabled": false,
   "task_fingerprint": "aa5f605227857f50a291d5a5a6a68e95be764b739bb12801652f9d9ca191d266",
-  "context_fingerprint": "491410618b8f322009d637398aa9e58046f3f55993f05b4ec2c7ec7ee7ee166e",
-  "observed_at_utc": "2026-10-06T08:33:32.036992Z",
+  "context_fingerprint": "9ac2844cd3a1976f3e2536418511df57d17b4ff72512e4a3563c27194526d5f7",
+  "observed_at_utc": "2026-10-06T08:34:59.624022Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -42,11 +42,35 @@
     "orders_enabled": false,
     "automatic_promotion": false
   },
-  "status": "FAILED_PROVIDER",
-  "returncode": null,
-  "duration_seconds": 39.483,
-  "stdout": "",
-  "stderr": "OpenRouterFreeError: OpenRouter returned tool-call syntax instead of a final worker handoff.",
+  "status": "SUCCESS",
+  "returncode": 0,
+  "duration_seconds": 46.526,
+  "stdout": "User Safety: safe",
+  "stderr": "",
   "command_binary": "https-openrouter",
-  "api_model": "openrouter/free"
+  "api_model": "openrouter/free",
+  "response_id": "gen-1791275700-nTxPtp4WT7JJNXGHDp5j",
+  "usage": {
+    "prompt_tokens": 6352,
+    "completion_tokens": 298,
+    "total_tokens": 6650,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 350,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
 }
