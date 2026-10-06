@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "task_id": "AI-2026-10-06-Q219-TOP4-ADVERSARIAL",
+  "provider": "groq_free",
+  "free_only": true,
+  "preflight": {
+    "provider": "groq_free",
+    "available": true,
+    "binary": null,
+    "free_only": true,
+    "local_mode": false,
+    "litellm_transport_enabled": false,
+    "local_attestation": {
+      "present": false,
+      "path": null
+    },
+    "free_mode_attested": true,
+    "free_mode_attestation": {
+      "eligible": true,
+      "provider": "groq_free",
+      "fixed_model": "openai/gpt-oss-20b",
+      "free_mode_attested": true,
+      "attestation_required": true,
+      "attestation_type": "operator_account_tier_assertion",
+      "attestation_env": "GROQ_FREE_MODE_CONFIRMED",
+      "paid_usage_allowed": false,
+      "paid_fallback_allowed": false,
+      "personal_credit_fallback_allowed": false,
+      "reasons": []
+    },
+    "free_enforcement": "fixed_model_groq_free_with_attestation",
+    "reasons": []
+  },
+  "litellm_transport_enabled": false,
+  "task_fingerprint": "aa5f605227857f50a291d5a5a6a68e95be764b739bb12801652f9d9ca191d266",
+  "context_fingerprint": "fce124dbfe941bdb057612c2d2dd59244ffab26ddac0c36a627f9f862e1e22db",
+  "observed_at_utc": "2026-10-06T07:43:01.460900Z",
+  "worker_output_is_scientific_evidence": false,
+  "safety": {
+    "paper_only": true,
+    "live_trading_enabled": false,
+    "orders_enabled": false,
+    "automatic_promotion": false
+  },
+  "status": "RATE_LIMITED",
+  "returncode": 429,
+  "duration_seconds": 0.251,
+  "stdout": "",
+  "stderr": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5347, Requested 5634. Please try again in 22.3575s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "command_binary": "https-groq",
+  "api_model": "openai/gpt-oss-20b",
+  "response_id": null,
+  "usage": null,
+  "quota_block": {
+    "schema_version": 1,
+    "provider": "groq_free",
+    "blocked_at_utc": "2026-10-06T07:43:01.711721Z",
+    "blocked_until_utc": "2026-10-06T08:43:01.711721Z",
+    "reset_seconds": 3600,
+    "reason": "RESOURCE_EXHAUSTED",
+    "raw_error": "Groq HTTP 429: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-20b` in organization `org_01m44070ctekd8fwrv6k27td1x` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 5347, Requested 5634. Please try again in 22.3575s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  }
+}\n
