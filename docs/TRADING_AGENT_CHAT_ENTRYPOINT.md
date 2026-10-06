@@ -41,7 +41,7 @@ Dieses Dokument ist der **verbindliche Einstiegspunkt für neue Chats**, die mit
 
 ### Permanente Literatur-Forschungsregel
 
-Diese Regel ist verbindlicher Bestandteil jedes trading-agent-Chats und des chatlosen OS-Betriebs: Der Trading Agent recherchiert fortlaufend neue, ungewöhnliche und wirtschaftlich plausible Informationsvorteile. Die Suche bevorzugt echte Orthogonalität zu bereits getesteten Preis-/Momentum-Linien und bewertet jeden Fund nach Mechanismus-Neuheit, billiger Falsifizierbarkeit, Quellenqualität, historischer PIT-Tauglichkeit, Entity-/Revisions-Linie, Reproduzierbarkeit und Informationsgewinn pro Compute.
+Diese Regel ist verbindlicher Bestandteil jedes trading-agent-Chats und des chatlosen OS-Betriebs: Der Trading Agent recherchiert fortlaufend neue, ungewöhnliche und wirtschaftlich plausible Informationsvorteile aus **kostenfrei zugänglicher Fachliteratur, Preprints/Working Papers, öffentlichen Forschungs-/Regulierungsquellen, Blogs/Essays, öffentlichen Repositories und sonstigen rechtmäßig zugänglichen Webquellen**. Die Suche bevorzugt echte Orthogonalität zu bereits getesteten Preis-/Momentum-Linien und bewertet jeden Fund nach Mechanismus-Neuheit, billiger Falsifizierbarkeit, Quellenqualität, historischer PIT-Tauglichkeit, Entity-/Revisions-Linie, Reproduzierbarkeit und Informationsgewinn pro Compute.
 
 Die Recherche ist dauerhaft automatisiert (täglich und wöchentlich auf Assistentenebene; zusätzlich ein kostenloser Repository-Literaturscout alle 6 Stunden). Negative Resultate werden persistiert, damit das OS nicht zyklisch dieselben Hypothesen neu entdeckt.
 
