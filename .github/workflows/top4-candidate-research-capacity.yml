@@ -68,8 +68,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: top4-windows-${{ matrix.candidate }}-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%
-          path: research/runs/top4/${{ matrix.candidate }}/%GITHUB_RUN_ID%/
+          name: top4-windows-${{ matrix.candidate }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: research/runs/top4/${{ matrix.candidate }}/${{ github.run_id }}/
           if-no-files-found: warn
           retention-days: 30
 
