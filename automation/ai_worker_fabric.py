@@ -199,7 +199,6 @@ CONTEXT_FILES = {
         "config/settings.py",
     ),
 }
-}
 CONTEXT_FILE_LIMIT = 3000
 CONTEXT_TOTAL_LIMIT = 18000
 
