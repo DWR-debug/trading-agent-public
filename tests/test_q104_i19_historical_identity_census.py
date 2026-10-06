@@ -56,7 +56,7 @@ def test_parse_acceptance_header_fails_closed_on_identity_mismatch():
 
 def test_scan_archive_counts_unique_target_accessions():
     from automation.q104_i19_13f_historical_identity_census import scan_archive
-    sub="ACCESSION_NUMBER\tFILING_DATE\tPERIODOFREPORT\tCIK\tSUBMISSIONTYPE\n0001045810-26-000065\t15-MAY-2026\t31-MAR-2026\t0001045810\t13F-HR\n"
+    sub="ACCESSION_NUMBER\tFILING_DATE\tPERIODOFREPORT\tCIK\tSUBMISSIONTYPE\n0001045810-26-000065\t15-MAY-2025\t31-MAR-2025\t0001045810\t13F-HR\n"
     info="ACCESSION_NUMBER\tNAMEOFISSUER\tTITLEOFCLASS\tCUSIP\n0001045810-26-000065\tIssuer A\tCommon Stock\t78409V104\n0001045810-26-000065\tIssuer B\tCommon Stock\t999999999\n"
     b=io.BytesIO()
     with zipfile.ZipFile(b,"w",zipfile.ZIP_DEFLATED) as z:
