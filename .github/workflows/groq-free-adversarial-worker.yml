@@ -16,6 +16,10 @@ on:
       - "research/evidence/q197_q198_source_feasibility_latest.json"
       - "research/evidence/q199_q201_source_feasibility_latest.json"
       - ".github/workflows/groq-free-adversarial-worker.yml"
+      - "ai_requests/AI-2026-10-06-Q218-TOP4-ADVERSARIAL.json"
+      - "ai_requests/AI-2026-10-06-Q219-TOP4-ADVERSARIAL.json"
+      - "ai_requests/AI-2026-10-06-Q220-TOP4-ADVERSARIAL.json"
+      - "ai_requests/AI-2026-10-06-Q221-TOP4-ADVERSARIAL.json"
   workflow_dispatch:
     inputs:
       use_litellm_transport:
@@ -39,6 +43,13 @@ jobs:
             github.event.workflow_run.conclusion == 'success') ||
            github.event_name == 'push' ||
            github.event_name == 'workflow_dispatch') }}
+    strategy:
+      fail-fast: false
+      matrix:
+        task: [Q218,Q219,Q220,Q221]
+    concurrency:
+      group: trading-agent-ai-groq-top4-${{ matrix.task }}
+      cancel-in-progress: false
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
@@ -90,9 +101,12 @@ jobs:
           TRADING_AGENT_LITELLM_TRANSPORT: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.use_litellm_transport == 'true' && 'true' || 'false' }}
         run: |
           set -euo pipefail
+          task_id="AI-2026-10-06-${{ matrix.task }}-TOP4-ADVERSARIAL"
+          task_path="ai_requests/${task_id}.json"
+          test -f "$task_path"
           mkdir -p "$RUNNER_TEMP/groq-worker-output"
           set +e
-          python -m automation.ai_worker_fabric --run --provider 'groq_free' --task 'ai_requests/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT.json' --output "$RUNNER_TEMP/groq-worker-output/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT-groq_free.json"
+          python -m automation.ai_worker_fabric --run --provider 'groq_free' --task "$task_path" --output "$RUNNER_TEMP/groq-worker-output/${task_id}-groq_free.json"
           rc=$?
           set -e
           test "$rc" -ne 1
@@ -106,8 +120,9 @@ jobs:
           set -euo pipefail
           state_dir='ops/ai_worker_state'
           mkdir -p "$state_dir"
-          state_file="$state_dir/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT__groq_free.json"
-          output="$RUNNER_TEMP/groq-worker-output/AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT-groq_free.json"
+          task_id="AI-2026-10-06-${{ matrix.task }}-TOP4-ADVERSARIAL"
+          state_file="$state_dir/${task_id}__groq_free.json"
+          output="$RUNNER_TEMP/groq-worker-output/${task_id}-groq_free.json"
           if [ -f "$output" ]; then cp "$output" "$state_file"; else printf '%s\n' '{"schema_version":1,"task_id":"AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT","provider":"groq_free","status":"NO_OUTPUT","worker_output_is_scientific_evidence":false}' > "$state_file"; fi
           payload="$(base64 -w 0 "$state_file")"
           state_url="/repos/$GITHUB_REPOSITORY/contents/${state_file}?ref=master"
@@ -128,7 +143,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: ai-worker-AI-2026-10-04-GLOBAL-ADVERSARIAL-SOURCE-PIT-groq-free-${{ github.run_id }}
+          name: ai-worker-AI-2026-10-06-${{ matrix.task }}-TOP4-ADVERSARIAL-groq-free-${{ github.run_id }}
           path: "$RUNNER_TEMP/groq-worker-output/"
           if-no-files-found: warn
           retention-days: 14
