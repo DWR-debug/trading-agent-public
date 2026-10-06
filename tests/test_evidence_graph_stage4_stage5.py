@@ -47,3 +47,12 @@ def test_safety_contract_exists_and_is_closed():
     assert contract["status"].startswith("ACTIVE")
     assert contract["safety"]["PAPER_ONLY"] is True
     assert contract["stage_5"]["no_optimization_rule"].startswith("Novelty/convergence")
+
+
+def test_live_contract_relations_are_materialized():
+    from automation.evidence_graph_stage4_stage5 import build
+    graph, novelty, bridges, negatives, candidates = build()
+    assert any(edge["type"] == "reuses_component" for edge in graph["edges"])
+    assert any(edge["type"] == "shares_clock_and_filing_substrate" for edge in graph["edges"])
+    assert len(novelty) == len(candidates)
+    assert isinstance(negatives, list)
