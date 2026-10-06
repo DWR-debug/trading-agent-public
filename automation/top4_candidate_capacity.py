@@ -20,6 +20,13 @@ COMMON_TESTS=[
     "tests/test_canonical_snapshot.py",
     "tests/test_github_free_resource_policy.py",
 ]
+WORKPACK_PURPOSES={
+    "Q218":"SEC multi-channel filing/event pairing and acceptance-lineage repair",
+    "Q219":"Q129 option-source/PIT and post-filing leakage diagnostics",
+    "Q220":"as-filed XBRL narrative/structured mapping and concept-freeze diagnostics",
+    "Q221":"USAspending RDT&E transaction/publication-clock and entity-map diagnostics",
+}
+
 LANES={
     "Q218":[
         [PYTHON,"-m","automation.q218_q221_historical_source_census","--output","{OUT}/q218_q221_historical_source_census.json"],
@@ -62,6 +69,7 @@ def main()->int:
     failed=[r["index"] for r in results if r["returncode"]!=0]
     manifest={
         "schema_version":1,"candidate":args.candidate,
+        "workpack_purpose":WORKPACK_PURPOSES[args.candidate],
         "source_commit":os.environ.get("GITHUB_SHA"),
         "runner_name":os.environ.get("RUNNER_NAME"),
         "python_version":platform.python_version(),
