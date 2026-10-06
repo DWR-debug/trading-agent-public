@@ -9,10 +9,14 @@ from urllib.request import Request, urlopen
 
 ROOT_URL="https://www.sec.gov/foia/frequently-requested-documents/foia-logs"
 UA="TradingAgent-Public-Q231-SEC-FOIA-Source-Gate/1.0"
-EXPECTED={
- "request id","requester name","requester organization","requester fee category",
- "request description","date of request","date of receipt","request status",
- "closed date","final disposition"
+REQUIRED_SEMANTIC={"request id","requester name","organization","requester category","request description","received date","request status","closed date","final disposition"}
+ALIASES={
+ "requester organization":"organization", "organization":"organization",
+ "requester fee category":"requester category", "requester category":"requester category", "requester type":"requester category",
+ "date of request":"requested date", "requested date":"requested date",
+ "date of receipt":"received date", "received date":"received date",
+ "request id":"request id", "requester name":"requester name", "request description":"request description",
+ "request status":"request status", "closed date":"closed date", "final disposition":"final disposition"
 }
 CONTROLS=(
  ("latest_monthly",re.compile(r"August 2026\s*$",re.I)),
@@ -31,18 +35,37 @@ def links(html):
   u=urljoin(ROOT_URL,href)
   if re.search(r"foia-log-.*\.(?:csv|zip)$",u,re.I): out.append((txt,u))
  return out
-def header(body):
- line=body.decode("utf-8-sig","replace").splitlines()[0] if body else ""
- return [x.strip().strip('"').lower() for x in line.split(",")]
+def norm(value):
+ value=re.sub(r"[^a-z0-9]+"," ",value.strip().strip('"').lower()).strip()
+ return ALIASES.get(value,value)
+
+def find_header(body):
+ text=body.decode("utf-8-sig","replace")
+ lines=text.splitlines()
+ best=None
+ for idx,line in enumerate(lines[:40]):
+  cols=[norm(x) for x in next(__import__("csv").reader([line]), [])]
+  score=len(set(cols)&REQUIRED_SEMANTIC)
+  if {"request id","request description","received date","request status","closed date","final disposition"}.issubset(set(cols)):
+   return idx,cols
+  if best is None or score>best[0]: best=(score,idx,cols)
+ return (best[1],best[2]) if best else (None,[])
 def probe(label,txt,url):
  try:
   st,h,b=get(url)
-  hd=header(b[:131072])
+  header_line,hd=find_header(b[:131072])
+  required_ok=REQUIRED_SEMANTIC.issubset(set(hd))
+  requested_date_present="requested date" in hd
+  notes=[]
+  if header_line not in (0,None): notes.append("header_is_not_first_csv_line")
+  if not required_ok: notes.append("required_semantic_foia_fields_missing")
+  if not requested_date_present: notes.append("requested_date_field_absent_in_this_vintage")
   return {"label":label,"link_text":txt,"url":url,"reachable":st==200,"http_status":st,
           "content_type":h.get("Content-Type"),"bytes_read":len(b),
-          "sha256":hashlib.sha256(b).hexdigest(),"header":hd,
-          "expected_columns_present":EXPECTED.issubset(hd),
-          "notes":[] if EXPECTED.issubset(hd) else ["schema_header_does_not_cover_documented_foia_log_fields"]}
+          "sha256":hashlib.sha256(b).hexdigest(),"header_line_index":header_line,"header":hd,
+          "required_semantic_fields_present":required_ok,"requested_date_field_present":requested_date_present,
+          "expected_columns_present":required_ok,
+          "notes":notes}
  except Exception as e:
   return {"label":label,"link_text":txt,"url":url,"reachable":False,"http_status":getattr(e,"code",None),
           "content_type":None,"bytes_read":0,"sha256":None,"header":[],"expected_columns_present":False,
