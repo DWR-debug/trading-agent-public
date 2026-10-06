@@ -533,7 +533,8 @@
         "capability proxy is post-event",
         "future production contracts leak into features",
         "recipient-to-issuer mapping permutation",
-        "historical archive publication lag cannot be deterministically mapped to award transaction visibility"
+        "historical archive publication lag cannot be deterministically mapped to award transaction visibility",
+        "standard publication clock applied to DoD/USACE transactions despite documented 90-day delay"
       ],
       "gates": [
         "historical R&D transaction archive",
@@ -543,7 +544,8 @@
         "pre-event capability proxy",
         "transaction/amendment lineage",
         "independent PIT reproduction",
-        "documented USAspending publication-frequency rule and historical archive availability audit"
+        "documented USAspending publication-frequency rule and historical archive availability audit",
+        "agency-specific USAspending publication clock with DoD/USACE 90-day exception handling"
       ],
       "non_overlap": [
         "Q197",
@@ -552,7 +554,7 @@
         "future-contract lookahead"
       ],
       "scientific_boundary": "discovery_contract_only",
-      "implementation_note": "The first PIT subgate may use the documented USAspending prime-award publication schedule as a conservative public-observation boundary only after confirming the schedule applies to the exact transaction class and historical period. Action date remains metadata."
+      "implementation_note": "The first PIT subgate may use the documented USAspending prime-award publication schedule as a conservative public-observation boundary only after confirming the schedule applies to the exact transaction class and historical period. Action date remains metadata. The current official USAspending source documentation describes a standard procurement path through FPDS and a separate 90-day publication delay for DoD/USACE data; the candidate must classify agency/transaction exceptions before assigning a historical public-observation boundary."
     },
     {
       "id": "Q222",
