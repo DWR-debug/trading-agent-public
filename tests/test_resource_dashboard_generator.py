@@ -103,3 +103,10 @@ def test_dashboard_exposes_bounded_hosted_research_slots():
     assert '"research_capacity_slots": 2' in generator
     assert '"research_capacity_slots_total"' in generator
     assert '"research_capacity_slots_free"' in generator
+
+
+def test_dashboard_tracks_q219_in_top4_candidate_capacity():
+    from automation.generate_resource_dashboard import duration_benchmarks, candidate_pipeline
+    top4 = [{"code": "Q219", "state": "DESIGN_ONLY_ACTIVE"}]
+    rows = candidate_pipeline(top4, [], {}, {})
+    assert [x["code"] for x in rows] == ["Q219"]
