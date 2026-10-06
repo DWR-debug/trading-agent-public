@@ -1487,7 +1487,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-06T19:22:09.792080+00:00",
+    "generated_at_utc": "2026-10-06T19:38:50.118137+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1495,7 +1495,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "1496d4f4999bfa38827b7f3aeca826f87493a871"
+    "source_master_sha": "1e542a7d8d8d09602ecc4ce8ed7eb9d703fd6d94"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1793,7 +1793,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-06T19:22:09.792080+00:00",
+  "generated_at_utc": "2026-10-06T19:38:50.118137+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4491,6 +4491,14 @@
     "open_pull_requests": [
       {
         "baseRefName": "master",
+        "headRefName": "research/q220-as-filed-xbrl-repair-20261006",
+        "number": 1131,
+        "title": "RESEARCH: replace Q220 normalized gate with raw as-filed SEC-XBRL repair",
+        "updatedAt": "2026-10-06T19:37:57Z",
+        "url": "https://github.com/DWR-debug/trading-agent-public/pull/1131"
+      },
+      {
+        "baseRefName": "master",
         "headRefName": "ops/elastic-hosted-research-slots-20261006",
         "number": 1128,
         "title": "OPS: use bounded elastic hosted research slots",
@@ -4524,6 +4532,36 @@
     ],
     "recent_commits": [
       {
+        "message": "Merge pull request #1130 from DWR-debug/ops/capacity-slots-q220-repair-20261006",
+        "sha": "1e542a7d8d8d09602ecc4ce8ed7eb9d703fd6d94",
+        "timestamp": "2026-10-06T21:38:32+02:00"
+      },
+      {
+        "message": "FIX: import Path for dashboard slot test",
+        "sha": "a6899072e72327aefc64790380ba53e7ed752e57",
+        "timestamp": "2026-10-06T21:36:12+02:00"
+      },
+      {
+        "message": "FIX: preserve active-resource guard while enabling second hosted slot",
+        "sha": "4a7f676c27548e70d21a887857f5911cfb04da8e",
+        "timestamp": "2026-10-06T21:33:37+02:00"
+      },
+      {
+        "message": "OPS: allow bounded planner to consume second hosted slot",
+        "sha": "2d8319d762a52d2a7ab69c05662e62793b459831",
+        "timestamp": "2026-10-06T21:25:18+02:00"
+      },
+      {
+        "message": "OPS: bound hosted research capacity into explicit architecture slots",
+        "sha": "11baba722c1231a16016ce314a08f93903b3fa5d",
+        "timestamp": "2026-10-06T21:24:24+02:00"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "732276e38c3715594b7a8fbdc5f656d10de9efae",
+        "timestamp": "2026-10-06T19:22:12Z"
+      },
+      {
         "message": "Merge pull request #1129 from DWR-debug/ops/dashboard-12h-milestones-20261006",
         "sha": "1496d4f4999bfa38827b7f3aeca826f87493a871",
         "timestamp": "2026-10-06T21:21:56+02:00"
@@ -4532,36 +4570,6 @@
         "message": "OPS: synchronize S10 phone runtime status",
         "sha": "14906af000a9e6447f51c1a6fa991eca8369a7cf",
         "timestamp": "2026-10-06T19:07:10Z"
-      },
-      {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "65b7029b05e774f1a1efa3d870b1b10e53876deb",
-        "timestamp": "2026-10-06T19:01:25Z"
-      },
-      {
-        "message": "FIX: restore dashboard milestone history functions",
-        "sha": "f56a57edd9565d5c268d93f0eb91c441ced1b879",
-        "timestamp": "2026-10-06T20:56:51+02:00"
-      },
-      {
-        "message": "FIX: correct dashboard milestone payload syntax",
-        "sha": "e6c3d92425b404a8328444c843218c8314205cee",
-        "timestamp": "2026-10-06T20:54:57+02:00"
-      },
-      {
-        "message": "OPS: refresh resource dashboard snapshot",
-        "sha": "e14fa7f584081859b95af47bf640ca418a8cdfce",
-        "timestamp": "2026-10-06T18:52:13Z"
-      },
-      {
-        "message": "FIX: import regex support for milestone history",
-        "sha": "965c4d3b2624f5effaaf8cef7858feec0f389f91",
-        "timestamp": "2026-10-06T20:50:32+02:00"
-      },
-      {
-        "message": "OPS: add 12h milestone history panel",
-        "sha": "882fb6de085177cd27c858c6c7cc50dd3e695c4c",
-        "timestamp": "2026-10-06T20:50:20+02:00"
       }
     ]
   },
@@ -4659,7 +4667,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "1496d4f4999bfa38827b7f3aeca826f87493a871",
+  "source_master_sha": "1e542a7d8d8d09602ecc4ce8ed7eb9d703fd6d94",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4773,6 +4781,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37518414296"
+    "run_id": "37520507432"
   }
 }
