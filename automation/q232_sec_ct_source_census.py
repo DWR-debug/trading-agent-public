@@ -167,41 +167,66 @@ def extract_tag(text: str, tag: str) -> str | None:
     return match.group(1).strip() if match else None
 
 
+def extract_detail_metadata(text: str) -> dict[str, str | None]:
+    normalized = re.sub(r"\s+", " ", text)
+    accession_match = re.search(r"SEC Accession No\.\s*([0-9]{10}-[0-9]{2}-[0-9]{6})", normalized, re.IGNORECASE)
+    form_match = re.search(r"\bForm\s+(CT ORDER)\b", normalized, re.IGNORECASE)
+    filed_match = re.search(r"\bFiling Date\s+(\d{4}-\d{2}-\d{2})\b", normalized, re.IGNORECASE)
+    accepted_match = re.search(
+        r"\bAccepted\s+(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})\b",
+        normalized,
+        re.IGNORECASE,
+    )
+    return {
+        "accession": accession_match.group(1) if accession_match else None,
+        "form": form_match.group(1).upper() if form_match else None,
+        "filed_date": filed_match.group(1) if filed_match else None,
+        "accepted_datetime": accepted_match.group(1).replace(" ", "T") if accepted_match else None,
+    }
+
+
+def extract_submission_metadata(text: str) -> dict[str, str | None]:
+    accession_match = re.search(r"<ACCESSION-DOCUMENT>\s*(\d{10}-\d{2}-\d{6})", text, re.IGNORECASE)
+    accepted_match = re.search(r"<ACCEPTANCE-DATETIME>\s*(\d{14})", text, re.IGNORECASE)
+    form_match = re.search(r"<CONFORMED-SUBMISSION-TYPE>\s*(CT ORDER)\b", text, re.IGNORECASE)
+    return {
+        "accession": accession_match.group(1) if accession_match else None,
+        "accepted_datetime": accepted_match.group(1) if accepted_match else None,
+        "form": form_match.group(1).upper() if form_match else None,
+    }
+
+
 def check_sample(row: dict[str, str]) -> dict[str, object]:
+    expected_accession = accession_from_filename(row["filename"])
+
     hurl = header_url(row["filename"])
     time.sleep(REQUEST_GAP_SECONDS)
     hstatus, hbody = fetch(hurl)
     if hstatus != 200:
         raise RuntimeError(f"Q232_HEADER_HTTP_{hstatus}:{row['filename']}")
     htext = hbody.decode("utf-8", errors="replace")
+
     accession = extract_tag(htext, "ACCESSION NUMBER")
-    if not accession:
-        label_match = re.search(r"ACCESSION NUMBER\\s*:?\\s*(\\d{10}-\\d{2}-\\d{6})", htext, re.IGNORECASE)
-        accession = label_match.group(1) if label_match else None
-    accepted_match = re.search(r"<ACCEPTANCE-DATETIME>\s*(\d{14})", htext, re.IGNORECASE)
+    accepted_match = re.search(r"ACCEPTANCE-DATETIME[^0-9]{0,80}(\d{14})", htext, re.IGNORECASE)
     accepted = accepted_match.group(1) if accepted_match else None
     conformed = extract_tag(htext, "CONFORMED SUBMISSION TYPE")
     filed_as_of = extract_tag(htext, "FILED AS OF DATE")
-    if not accepted:
-        label_match = re.search(r"ACCEPTANCE-DATETIME\s+(\d{14})", htext, re.IGNORECASE)
-        accepted = label_match.group(1) if label_match else None
-    if not conformed:
-        label_match = re.search(r"CONFORMED SUBMISSION TYPE\s*:?\s*([^\r\n]+)", htext, re.IGNORECASE)
-        conformed = label_match.group(1).strip() if label_match else None
-    if not filed_as_of:
-        label_match = re.search(r"FILED AS OF DATE\s*:?\s*(\d{8})", htext, re.IGNORECASE)
-        filed_as_of = label_match.group(1).strip() if label_match else None
 
-    expected_accession = accession_from_filename(row["filename"])
-    if accession and accession != expected_accession:
-        raise RuntimeError(f"Q232_ACCESSION_MISMATCH:{accession}!={expected_accession}")
-    if conformed and conformed.upper() != "CT ORDER":
-        raise RuntimeError(f"Q232_FORM_MISMATCH:{conformed}")
-    if not accepted:
-        raise RuntimeError(f"Q232_ACCEPTANCE_MISSING:{expected_accession}")
-    normalized_filed = f"{filed_as_of[:4]}-{filed_as_of[4:6]}-{filed_as_of[6:8]}" if filed_as_of and re.fullmatch(r"\d{8}", filed_as_of) else filed_as_of
-    if normalized_filed != row["filed_date"]:
-        raise RuntimeError(f"Q232_FILED_DATE_MISMATCH:{expected_accession}:{filed_as_of}:{row['filed_date']}")
+    detail_url_value = detail_url(row["filename"])
+    time.sleep(REQUEST_GAP_SECONDS)
+    dstatus, dbody = fetch(detail_url_value)
+    if dstatus != 200:
+        raise RuntimeError(f"Q232_DETAIL_HTTP_{dstatus}:{expected_accession}")
+    detail = extract_detail_metadata(dbody.decode("utf-8", errors="replace"))
+    accession = accession or detail["accession"]
+    accepted = accepted or (
+        detail["accepted_datetime"].replace("T", "").replace("-", "").replace(":", "")
+        if detail["accepted_datetime"] else None
+    )
+    conformed = conformed or detail["form"]
+    filed_as_of = filed_as_of or (
+        detail["filed_date"].replace("-", "") if detail["filed_date"] else None
+    )
 
     time.sleep(REQUEST_GAP_SECONDS)
     status_text, body_text = fetch(submission_text_url(row["filename"]))
@@ -209,9 +234,30 @@ def check_sample(row: dict[str, str]) -> dict[str, object]:
         raise RuntimeError(f"Q232_SUBMISSION_TEXT_HTTP_{status_text}:{expected_accession}")
     complete_text = gzip.decompress(body_text) if body_text.startswith(b"\x1f\x8b") else body_text
     complete = complete_text.decode("utf-8", errors="replace")
-    if not re.search(r"<TYPE>\s*CT ORDER\b", complete, re.IGNORECASE):
-        raise RuntimeError(f"Q232_COMPLETE_TEXT_FORM_MISSING:{expected_accession}")
-    pdf_name_match = re.search(r"<DOCUMENT>.*?<TYPE>\s*CT ORDER\b.*?<FILENAME>\s*([^\s<]+)", complete, re.IGNORECASE | re.DOTALL)
+    submission = extract_submission_metadata(complete)
+    accession = accession or submission["accession"]
+    accepted = accepted or submission["accepted_datetime"]
+    conformed = conformed or submission["form"]
+
+    if accession and accession != expected_accession:
+        raise RuntimeError(f"Q232_ACCESSION_MISMATCH:{accession}!={expected_accession}")
+    if conformed and conformed.upper() != "CT ORDER":
+        raise RuntimeError(f"Q232_FORM_MISMATCH:{conformed}")
+    if not accepted:
+        raise RuntimeError(f"Q232_ACCEPTANCE_MISSING:{expected_accession}")
+    normalized_filed = (
+        f"{filed_as_of[:4]}-{filed_as_of[4:6]}-{filed_as_of[6:8]}"
+        if filed_as_of and re.fullmatch(r"\d{8}", filed_as_of)
+        else filed_as_of
+    )
+    if normalized_filed != row["filed_date"]:
+        raise RuntimeError(f"Q232_FILED_DATE_MISMATCH:{expected_accession}:{filed_as_of}:{row['filed_date']}")
+
+    pdf_name_match = re.search(
+        r"<DOCUMENT>.*?<TYPE>\s*CT ORDER\b.*?<FILENAME>\s*([^\s<]+)",
+        complete,
+        re.IGNORECASE | re.DOTALL,
+    )
     if not pdf_name_match:
         raise RuntimeError(f"Q232_CT_ORDER_DOCUMENT_NOT_DECLARED:{expected_accession}")
     document_name = pdf_name_match.group(1).strip()
@@ -221,6 +267,7 @@ def check_sample(row: dict[str, str]) -> dict[str, object]:
     pdf_status, pdf_body = fetch(pdf_url)
     if pdf_status != 200 or not pdf_body:
         raise RuntimeError(f"Q232_CT_ORDER_DOCUMENT_HTTP_{pdf_status}:{expected_accession}:{document_name}")
+
     return {
         "accession_number": expected_accession,
         "cik": row["cik"],
@@ -228,16 +275,22 @@ def check_sample(row: dict[str, str]) -> dict[str, object]:
         "filing_date": row["filed_date"],
         "header_url": hurl,
         "header_sha256": sha256_bytes(hbody),
-        "detail_url": detail_url(row["filename"]),
+        "detail_url": detail_url_value,
         "submission_text_url": submission_text_url(row["filename"]),
         "submission_text_sha256": sha256_bytes(body_text),
         "ct_order_document": document_name,
         "ct_order_document_url": pdf_url,
         "ct_order_document_sha256": sha256_bytes(pdf_body),
         "accepted_datetime": accepted,
+        "accepted_datetime_source": (
+            "HEADER"
+            if re.search(r"ACCEPTANCE-DATETIME[^0-9]{0,80}(\d{14})", htext, re.IGNORECASE)
+            else "FILING_DETAIL"
+            if detail["accepted_datetime"]
+            else "SUBMISSION"
+        ),
         "status": "PASS",
     }
-
 
 def sample_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
     by_year: dict[int, list[dict[str, str]]] = {}
