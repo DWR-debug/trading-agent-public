@@ -40,112 +40,212 @@ def fetch(url: str, limit: int | None = 1000000) -> tuple[int, str, bytes]:
 
 
 def sec_submission_census() -> dict:
+    """Census SEC annual filings and deterministic mandatory/voluntary pairing.
+
+    Pairing is based only on public SEC filing structure and acceptance order:
+    for each in-window 10-K, select the latest eligible earnings-release 8-K
+    whose acceptance timestamp falls after the preceding 10-K acceptance and
+    on/before the target 10-K acceptance. No arbitrary lookback window, market
+    outcome, or future information is used.
+    """
     issuer_results = {}
+    pairing_rule = (
+        "latest eligible Item-2.02/Exhibit-99.1-style 8-K by SEC acceptance "
+        "timestamp within the interval (preceding 10-K acceptance, target 10-K acceptance]"
+    )
     for symbol, cik in SEC_CIKS.items():
         padded_cik = f"{int(cik):010d}"
-        status, content_type, body = fetch(f"https://data.sec.gov/submissions/CIK{padded_cik}.json", None)
+        status, content_type, body = fetch(
+            f"https://data.sec.gov/submissions/CIK{padded_cik}.json", None
+        )
         data = json.loads(body.decode("utf-8"))
         recent = data.get("filings", {}).get("recent", {})
+        forms = recent.get("form", [])
+        filing_dates = recent.get("filingDate", [])
+        report_dates = recent.get("reportDate", [])
+        accessions = recent.get("accessionNumber", [])
+        primaries = recent.get("primaryDocument", [])
+        items = recent.get("items", [])
         rows = []
-        for i, form in enumerate(recent.get("form", [])):
+        for i, form in enumerate(forms):
             if form not in {"10-K", "8-K"}:
                 continue
-            filing_date = recent.get("filingDate", [None])[i]
-            if not filing_date or not (FIXED_START <= filing_date <= FIXED_END):
+            filing_date = filing_dates[i] if i < len(filing_dates) else None
+            if not filing_date or filing_date > FIXED_END:
                 continue
-            accession = recent["accessionNumber"][i]
-            primary = recent["primaryDocument"][i]
+            in_window = FIXED_START <= filing_date <= FIXED_END
+            prior_boundary_10k = form == "10-K" and filing_date < FIXED_START
+            if not in_window and not prior_boundary_10k:
+                continue
+            accession = accessions[i]
+            primary = primaries[i]
+            report_date = report_dates[i] if i < len(report_dates) else None
+            item_field = str(items[i] if i < len(items) else "")
             archive_base = (
                 f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/"
                 f"{accession.replace('-', '')}/"
             )
             index_headers = archive_base + f"{accession}-index-headers.html"
             primary_url = archive_base + primary
+            row = {
+                "form": form, "filing_date": filing_date, "accession": accession,
+                "primary_document": primary, "report_date": report_date,
+                "items": item_field, "index_headers_url": index_headers,
+                "primary_url": primary_url, "in_control_window": in_window,
+                "prior_10k_boundary": prior_boundary_10k,
+                "acceptance_datetime_found": False, "acceptance_datetime": None,
+                "exhibit_99_1": False, "earnings_release_marker": False,
+                "item_2_02_marker": bool(
+                    re.search(r"(^|[,;\s])2\.02([,;\s]|$)", item_field)
+                ),
+                "primary_publication_terms_marker": False,
+                "is_eligible_earnings_release_8k": False,
+            }
             try:
                 _, _, page = fetch(index_headers, None)
-                text = page.decode("utf-8", errors="replace")
-                acceptance = re.findall(r"<ACCEPTANCE-DATETIME>\s*([0-9]{14})", text, flags=re.I)
-                exhibit_991 = bool(re.search(r"EXHIBIT\s+99\.1", text, flags=re.I))
-                earnings_release = bool(re.search(r"EARNINGS\s+RELEASE|PRESS\s+RELEASE", text, flags=re.I))
-                rows.append({
-                    "form": form,
-                    "filing_date": filing_date,
-                    "accession": accession,
-                    "primary_document": primary,
-                    "report_date": (recent.get("reportDate", [None])[i] if i < len(recent.get("reportDate", [])) else None),
-                    "index_headers_url": index_headers,
-                    "acceptance_datetime_found": bool(acceptance),
-                    "acceptance_datetime": acceptance[0] if acceptance else None,
-                    "exhibit_99_1": exhibit_991,
-                    "earnings_release_marker": earnings_release,
-                    "item_2_02_marker": False,
-                    "primary_publication_terms_marker": False,
-                    "primary_url": primary_url,
-                })
+                index_text = page.decode("utf-8", errors="replace")
+                acceptance = re.findall(
+                    r"<ACCEPTANCE-DATETIME>\s*([0-9]{14})",
+                    index_text, flags=re.I
+                )
+                row["acceptance_datetime"] = acceptance[0] if acceptance else None
+                row["acceptance_datetime_found"] = bool(acceptance)
+                row["exhibit_99_1"] = bool(
+                    re.search(r"EXHIBIT\s+99\.1", index_text, flags=re.I)
+                )
+                row["earnings_release_marker"] = bool(
+                    re.search(r"EARNINGS\s+RELEASE|PRESS\s+RELEASE", index_text, flags=re.I)
+                )
             except Exception as exc:
-                rows.append({
-                    "form": form,
-                    "filing_date": filing_date,
-                    "accession": accession,
-                    "primary_document": primary,
-                    "report_date": (recent.get("reportDate", [None])[i] if i < len(recent.get("reportDate", [])) else None),
-                    "index_headers_url": index_headers,
-                    "error": type(exc).__name__ + ":" + str(exc),
-                })
-        annual = [r for r in rows if r["form"] == "10-K"]
-        annual_dates = {r.get("report_date") for r in annual if r.get("report_date")}
-        pair_candidates = [
+                row["error"] = type(exc).__name__ + ":" + str(exc)
+            rows.append(row)
+        annual = [
             r for r in rows
-            if r["form"] == "8-K" and r.get("report_date") in annual_dates
+            if r["form"] == "10-K"
+            and r.get("in_control_window") is True
+            and r.get("acceptance_datetime_found") is True
         ]
-        for row in pair_candidates:
-            try:
-                _, _, primary_page = fetch(row["primary_url"], None)
-                primary_text = primary_page.decode("utf-8", errors="replace")
-                row["item_2_02_marker"] = bool(
-                    re.search(
-                        r"ITEM\s+2\.02|RESULTS\s+OF\s+OPERATIONS\s+AND\s+FINANCIAL\s+CONDITION",
-                        primary_text,
-                        flags=re.I,
-                    )
-                )
-                row["primary_publication_terms_marker"] = bool(
-                    re.search(
-                        r"EARNINGS|FINANCIAL\s+RESULTS|QUARTERLY\s+RESULTS|FULL[-\s]?YEAR\s+RESULTS",
-                        primary_text,
-                        flags=re.I,
-                    )
-                )
-            except Exception as exc:
-                row["primary_fetch_error"] = type(exc).__name__ + ":" + str(exc)
-        voluntary = [
-            r for r in pair_candidates
-            if r.get("exhibit_99_1")
-            or r.get("item_2_02_marker")
-            or r.get("earnings_release_marker")
-            or r.get("primary_publication_terms_marker")
+        annual_all = [
+            r for r in rows
+            if r["form"] == "10-K"
+            and r.get("acceptance_datetime_found") is True
         ]
-        matched_dates = sorted({r.get("report_date") for r in voluntary if r.get("report_date") in annual_dates})
+        eight_k = [r for r in rows if r["form"] == "8-K"]
+        for target in annual:
+            target_accept = target["acceptance_datetime"]
+            prior = [
+                r["acceptance_datetime"] for r in annual_all
+                if r is not target and r["acceptance_datetime"] < target_accept
+            ]
+            lower_bound = max(prior) if prior else None
+            cycle_candidates = [
+                r for r in eight_k
+                if r.get("acceptance_datetime_found") is True
+                and r["acceptance_datetime"] <= target_accept
+                and (lower_bound is None or r["acceptance_datetime"] > lower_bound)
+                and (
+                    r.get("item_2_02_marker") is True
+                    or r.get("exhibit_99_1") is True
+                    or r.get("earnings_release_marker") is True
+                )
+            ]
+            for candidate in cycle_candidates:
+                try:
+                    _, _, primary_page = fetch(candidate["primary_url"], None)
+                    primary_text = primary_page.decode("utf-8", errors="replace")
+                    candidate["primary_publication_terms_marker"] = bool(
+                        re.search(
+                            r"EARNINGS|FINANCIAL\s+RESULTS|QUARTERLY\s+RESULTS|FULL[-\s]?YEAR\s+RESULTS",
+                            primary_text, flags=re.I
+                        )
+                    )
+                except Exception as exc:
+                    candidate["primary_fetch_error"] = type(exc).__name__ + ":" + str(exc)
+                candidate["is_eligible_earnings_release_8k"] = bool(
+                    candidate.get("item_2_02_marker")
+                    or candidate.get("exhibit_99_1")
+                    or candidate.get("earnings_release_marker")
+                    or candidate.get("primary_publication_terms_marker")
+                )
+            eligible = [
+                r for r in cycle_candidates
+                if r.get("is_eligible_earnings_release_8k") is True
+            ]
+            if eligible:
+                selected = max(eligible, key=lambda r: r["acceptance_datetime"])
+                target["paired_8k"] = selected
+                target["pair_lower_bound_acceptance"] = lower_bound
+                target["pairing_observed"] = True
+            else:
+                target["paired_8k"] = None
+                target["pair_lower_bound_acceptance"] = lower_bound
+                target["pairing_observed"] = False
+        eligible_all = [
+            r for r in eight_k
+            if r.get("is_eligible_earnings_release_8k") is True
+        ]
+        paired_targets = [r for r in annual if r.get("pairing_observed") is True]
         issuer_results[symbol] = {
-            "cik": cik,
-            "status": status,
-            "content_type": content_type,
-            "window_row_count": len(rows),
+            "cik": cik, "status": status, "content_type": content_type,
+            "window_row_count": sum(
+                1 for r in rows if r.get("in_control_window") is True
+            ),
             "annual_10k_count": len(annual),
-            "earnings_release_8k_count": len(voluntary),
-            "same_report_date_pair_count": len(matched_dates),
-            "matched_report_dates": matched_dates[:8],
-            "latest_10k": annual[0] if annual else None,
-            "latest_8k_earnings_release": voluntary[0] if voluntary else None,
-            "pairability_observed": bool(matched_dates),
+            "earnings_release_8k_count": len(
+                [r for r in eligible_all if r.get("in_control_window") is True]
+            ),
+            "pairing_rule": pairing_rule,
+            "paired_10k_count": len(paired_targets),
+            "pairable_report_period_count": len(paired_targets),
+            "latest_10k": (
+                max(annual, key=lambda r: r["acceptance_datetime"]) if annual else None
+            ),
+            "latest_8k_earnings_release": (
+                max(eligible_all, key=lambda r: r["acceptance_datetime"])
+                if eligible_all else None
+            ),
+            "paired_10k_events": [
+                {
+                    "ten_k_accession": r["accession"],
+                    "ten_k_acceptance_datetime": r["acceptance_datetime"],
+                    "ten_k_report_date": r.get("report_date"),
+                    "paired_8k_accession": (
+                        r["paired_8k"]["accession"] if r.get("paired_8k") else None
+                    ),
+                    "paired_8k_acceptance_datetime": (
+                        r["paired_8k"]["acceptance_datetime"]
+                        if r.get("paired_8k") else None
+                    ),
+                    "paired_8k_report_date": (
+                        r["paired_8k"].get("report_date") if r.get("paired_8k") else None
+                    ),
+                    "pair_lower_bound_acceptance": r.get("pair_lower_bound_acceptance"),
+                    "pairing_observed": r.get("pairing_observed") is True,
+                }
+                for r in annual
+            ],
+            "exact_report_date_pair_count_diagnostic": sum(
+                int(
+                    any(
+                        r.get("form") == "8-K"
+                        and r.get("report_date") == target.get("report_date")
+                        and r.get("is_eligible_earnings_release_8k") is True
+                        for r in eight_k
+                    )
+                )
+                for target in annual
+            ),
         }
     return {
         "fixed_window": {"start": FIXED_START, "end": FIXED_END},
         "issuer_count": len(issuer_results),
+        "pairing_rule": pairing_rule,
         "issuer_results": issuer_results,
-        "pairable_issuer_count": sum(int(x["pairability_observed"]) for x in issuer_results.values()),
+        "pairable_issuer_count": sum(
+            int(x["pairable_report_period_count"] > 0)
+            for x in issuer_results.values()
+        ),
     }
-
 
 def sec_notes_census() -> dict:
     status, content_type, body = fetch(SEC_NOTES_URL, None)
