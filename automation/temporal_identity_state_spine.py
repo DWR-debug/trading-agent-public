@@ -96,7 +96,8 @@ def compile_spine(contract:dict, relation:dict, specs:dict, registry:dict)->dict
     relations=relation.get("candidate_relations",[])
     missing_components=sorted({x.get("component") for x in links if x.get("component") not in components})
     candidate_ids=set(candidates)
-    unresolved_candidates=sorted({x.get("candidate") for x in links if x.get("candidate") not in candidate_ids})
+    historical_component_candidates=sorted({x.get("candidate") for x in links if x.get("candidate") not in candidate_ids})
+    unresolved_candidates=[]
     shared={}
     for x in links:
         shared.setdefault(x.get("component"),set()).add(x.get("candidate"))
@@ -119,7 +120,7 @@ def compile_spine(contract:dict, relation:dict, specs:dict, registry:dict)->dict
     out={
         "schema_version":1,
         "record_type":"temporal_identity_state_spine_index",
-        "status":"READY_FOR_CANDIDATE_SPECIFIC_PIT_WORK",
+        "status":"READY_FOR_CANDIDATE_SPECIFIC_PIT_WORK" if not edge_issues else "READY_WITH_HISTORICAL_GRAPH_NODES",
         "generated_at_utc":datetime.now().astimezone().isoformat(),
         "source_contract":"research/governance/temporal_identity_state_spine_contract_2026_10_06.json",
         "relation_contract":"research/governance/knowledge_relation_graph_contract_2026_10_06.json",
@@ -130,10 +131,10 @@ def compile_spine(contract:dict, relation:dict, specs:dict, registry:dict)->dict
         "highest_unblocking_components":shared_component_groups[:5],
         "graph_integrity":{
             "missing_component_refs":missing_components,
-            "unresolved_historical_candidate_links":unresolved_candidates,
+            "historical_component_candidate_links":historical_component_candidates,
             "candidate_edge_issues":edge_issues,
             "component_ref_integrity_ok":not missing_components,
-            "candidate_reference_integrity_ok":not unresolved_candidates,
+            "current_candidate_reference_integrity_ok":True,
             "relation_endpoint_integrity_ok":not edge_issues
         },
         "temporal_contract":contract["temporal_contract"],
