@@ -92,7 +92,7 @@ jobs:
 
   hosted_x64:
     concurrency:
-      group: trading-agent-research-hosted-ubuntu-24.04
+      group: trading-agent-top4-hosted-ubuntu-24.04-${{ matrix.candidate }}
       cancel-in-progress: false
     name: Hosted x64 Top-4 ${{ matrix.candidate }}
     runs-on: ubuntu-24.04
@@ -125,7 +125,7 @@ jobs:
 
   hosted_arm64:
     concurrency:
-      group: trading-agent-research-hosted-ubuntu-24.04-arm
+      group: trading-agent-top4-hosted-ubuntu-24.04-arm-${{ matrix.candidate }}
       cancel-in-progress: false
     name: Hosted ARM64 Top-4 independent ${{ matrix.candidate }}
     runs-on: ubuntu-24.04-arm
