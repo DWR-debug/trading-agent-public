@@ -39,13 +39,15 @@ LANES={
         [PYTHON,"-m","pytest","-q","tests/test_q218_q221_candidate_gate_compiler.py"],
     ],
     "Q220":[
+        [PYTHON,"-m","automation.q220_fsn_schema_gate","--output","{OUT}/q220_fsn_schema_gate.json"],
         [PYTHON,"-m","automation.q218_q221_historical_source_census","--output","{OUT}/q220_source_census.json"],
-        [PYTHON,"-m","pytest","-q","tests/test_q218_q221_historical_source_census.py"],
+        [PYTHON,"-m","pytest","-q","tests/test_q220_fsn_schema_gate.py","tests/test_q218_q221_historical_source_census.py"],
         [PYTHON,"-m","pytest","-q","tests/test_q104_xbrl_concept_freeze_audit.py","tests/test_q104_i19_xbrl_pit_compiler.py"],
     ],
     "Q221":[
+        [PYTHON,"-m","automation.q221_usaspending_public_clock_gate","--output","{OUT}/q221_usaspending_public_clock_gate.json"],
         [PYTHON,"-m","automation.top_candidate_source_preflight","--output","{OUT}/top_candidate_source_preflight.json"],
-        [PYTHON,"-m","pytest","-q","tests/test_q218_q221_candidate_gate_compiler.py"],
+        [PYTHON,"-m","pytest","-q","tests/test_q221_usaspending_public_clock_gate.py","tests/test_q218_q221_candidate_gate_compiler.py"],
     ],
 }
 
