@@ -885,7 +885,8 @@
         "request_description_too_ambiguous_for_deterministic_mapping",
         "edgar_document_demand_fully_explains_signal",
         "historical_foia_log_completeness_inadequate",
-        "useful_component_requires_non_public_foia_materials"
+        "useful_component_requires_non_public_foia_materials",
+        "schema_variant_changes_the_meaning_of_requester_or_timing_fields"
       ],
       "gates": [
         "official_SEC_FOIA_log_archive_completeness",
@@ -894,7 +895,8 @@
         "deterministic_request_description_to_issuer_security_mapping",
         "mutation_revision_redaction_audit",
         "Q224_EDGAR_demand_orthogonality_audit",
-        "independent_PIT_reproduction_on_symbol_disjoint_issuers"
+        "independent_PIT_reproduction_on_symbol_disjoint_issuers",
+        "historical_FOIA_schema_variant_compiler"
       ],
       "non_overlap": [
         "Q224",
@@ -908,7 +910,8 @@
         "Bao, Brendel, Drake & Su (2026), Review of Accounting Studies"
       ],
       "scientific_boundary": "discovery_contract_only",
-      "priority": "P1_SOURCE_FEASIBILITY"
+      "priority": "P1_SOURCE_FEASIBILITY",
+      "implementation_note": "Observed historical source variants must be normalized only through an explicit alias/header-position compiler: current monthly logs use Organization/Requester Category/Requested Date/Received Date; older annual and monthly vintages can omit Requested Date or use Requester Type, and some files contain a title row before the header. No free-form reinterpretation is allowed."
     }
   ],
   "blocked_or_composite_tracks": {
