@@ -521,12 +521,12 @@
         "class": "sec_edgar_document_demand_acquisition_shock",
         "code": "Q224",
         "design_document": "docs/research_design/DEEP_CANDIDATE_RESEARCH_SYNTHESIS_2026-10-05.md",
-        "next_gate": "bounded modern-window historical log reconstruction + request-quality audit + filing-boundary join + mutation/PIT checks",
-        "note": "Modern SEC EDGAR request-demand source is feasible only on the documented modern window; the 2017-07-01 through 2020-05-18 gap and legacy/modern schema differences are retained as a hard boundary. Q224 remains outside the Q218-Q221 top-candidate wave until source/PIT and separability gates pass.",
+        "next_gate": "schema-variant normalization + request-quality contamination bounds + filing-acceptance/public-boundary join + mutation/PIT checks + independent reproduction",
+        "note": "Modern SEC EDGAR request-demand source is archive-integrity validated on fixed controls across the modern window. The 2017-07-01 through 2020-05-18 gap, modern field-name drift and unresolved traffic-contamination/public-boundary issues remain hard gates; Q224 stays outside the Q218-Q221 top-candidate wave until separability/PIT passes.",
         "parent_code": "LITERATURE-DISCOVERY-PLANE",
         "performance_authorization_allowed": false,
         "priority": "P1",
-        "state": "SOURCE_COMPONENT_READY_WITH_HISTORICAL_GAP"
+        "state": "SOURCE_ARCHIVE_INTEGRITY_COMPLETED_NO_PERFORMANCE"
       },
       {
         "candidate_inventory_path": "research/candidates/orthogonal_candidate_specs_2026-10-05.json",
@@ -1463,7 +1463,7 @@
       "trial_ledger": "research/evidence/trial_ledger.json",
       "two_lane_research_contract": "research/governance/persistent_research_acceleration_contract.json"
     },
-    "generated_at_utc": "2026-10-06T01:04:47.934885+00:00",
+    "generated_at_utc": "2026-10-06T01:05:25.497945+00:00",
     "next_research_focus": "Top-candidate development frontier is active: Q218 mandatory/voluntary disclosure semantic wedge, Q220 narrative/structured XBRL representation gap, Q221 government R&D to procurement option-value state, and Q219 filing-change/options-response processing wedge. Priority is source/PIT/structure work only; Q217 remains discovery/PIT-only and merges into Q131 if empirical separability fails. No performance, holdout selection, ranking, tuning, promotion or live execution is authorized.",
     "project_continuity_rule": "Es darf keine künstliche Arbeit erzeugt werden. Es darf ausschließlich wertvolle und hilfreiche Rechenarbeit ausgeführt werden. Und das so viel wie möglich, kontinuierlich. Wir müssen immer besser werden.",
     "project_statutes": "docs/TRADING_AGENT_PROJECT_STATUTES.md",
@@ -1471,7 +1471,7 @@
     "response_rule": "Keep user-facing output bounded and delta-based; persist material state before reporting completion.",
     "resume_rule": "Treat chat transcript as handoff context only; read this compact artifact, then verify current master, live Actions/runners and scientific evidence before acting.",
     "schema_version": "1.0",
-    "source_master_sha": "8c8cb76e5499b6510d716834543acf8148820122"
+    "source_master_sha": "fda96e18c155092d3083ea4ee15c7d0613c30f33"
   },
   "engineering_state": {
     "agent_orchestration": {
@@ -1769,7 +1769,7 @@
       "status": "ACTIVE"
     }
   },
-  "generated_at_utc": "2026-10-06T01:04:47.934885+00:00",
+  "generated_at_utc": "2026-10-06T01:05:25.497945+00:00",
   "h06_independent_pit": {
     "conclusion": "The independent H06 PIT replay reproduces the canonical semantic checks exactly. The earlier reconciliation failure was a contract bug comparing full report fingerprints that include path-dependent metadata. The corrected semantic reconciliation passed.",
     "data_contract": {
@@ -4466,6 +4466,26 @@
     "open_pull_requests": [],
     "recent_commits": [
       {
+        "message": "EVIDENCE: reconcile Q224 source-gate state",
+        "sha": "fda96e18c155092d3083ea4ee15c7d0613c30f33",
+        "timestamp": "2026-10-06T03:05:13+02:00"
+      },
+      {
+        "message": "RESEARCH: align Q230 probe with free FINRA EOD routes",
+        "sha": "c5d52a11546db5a6844c05a339f5121f850c2c76",
+        "timestamp": "2026-10-06T03:05:06+02:00"
+      },
+      {
+        "message": "EVIDENCE: publish deterministic research artifacts",
+        "sha": "d9690feadb8eded16d337bbbf76189c4f738390a",
+        "timestamp": "2026-10-06T01:04:58Z"
+      },
+      {
+        "message": "OPS: synchronize current operational status",
+        "sha": "16319e27b64ce520fce4bd21f3d567ad8fa1b47f",
+        "timestamp": "2026-10-06T01:04:51Z"
+      },
+      {
         "message": "OPS: synchronize current operational status",
         "sha": "8c8cb76e5499b6510d716834543acf8148820122",
         "timestamp": "2026-10-06T01:04:35Z"
@@ -4484,26 +4504,6 @@
         "message": "EVIDENCE: publish deterministic research artifacts",
         "sha": "85d8283cfcb3bc9ec3daf0e1c7dcb1f936e2b110",
         "timestamp": "2026-10-06T01:04:27Z"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "7190b2e11f4d1836b8e0ad119d85708016e24503",
-        "timestamp": "2026-10-06T01:04:24Z"
-      },
-      {
-        "message": "RESEARCH: activate Q230 source-feasibility gate",
-        "sha": "5c0c08284754d03a61e2fe61ea3cc2aab04d42e6",
-        "timestamp": "2026-10-06T03:04:18+02:00"
-      },
-      {
-        "message": "RESEARCH: strengthen Q230 trade-structure provenance controls",
-        "sha": "d5f9d06c4d16441089b56f470241471f09eae31f",
-        "timestamp": "2026-10-06T03:04:11+02:00"
-      },
-      {
-        "message": "EVIDENCE: publish deterministic research artifacts",
-        "sha": "4ddecc4df5d950ef246e2c3f6752fb67f760c975",
-        "timestamp": "2026-10-06T00:21:23Z"
       }
     ]
   },
@@ -4601,7 +4601,7 @@
       "trial_id": "T-2026-09-27-048"
     }
   },
-  "source_master_sha": "8c8cb76e5499b6510d716834543acf8148820122",
+  "source_master_sha": "fda96e18c155092d3083ea4ee15c7d0613c30f33",
   "source_pit_frontier_outcomes": {
     "as_of_utc": "2026-10-03T18:14:45Z",
     "boundary": "source/PIT feasibility and engineering evidence only; no performance authorization",
@@ -4715,6 +4715,6 @@
   "workflow": {
     "name": "Current Operational Status Synchronizer",
     "purpose": "Keep current operational status synchronized with master without mutating scientific evidence.",
-    "run_id": "37397302701"
+    "run_id": "37397366197"
   }
 }
