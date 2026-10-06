@@ -1,0 +1,157 @@
+name: Q104 I19 Historical 13F Identity Census
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "automation/q104_i19_13f_historical_identity_census.py"
+      - "automation/q104_i19_13f_historical_identity_census_merge.py"
+      - "research/preregistrations/q104_i19_13f_historical_identity_census_2026_10_06.json"
+      - "research/evidence/q113_13f_q107_coverage_result.json"
+      - "tests/test_q104_i19_13f_historical_identity_census.py"
+      - ".github/workflows/q104-i19-13f-historical-identity-census.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-agent-q104-i19-13f-historical-identity-census
+  cancel-in-progress: true
+
+jobs:
+  census:
+    if: github.repository == 'DWR-debug/trading-agent-public'
+    strategy:
+      fail-fast: true
+      max-parallel: 3
+      matrix:
+        include:
+          - shard: "2013-2017"
+            runner: '["self-hosted","trading-agent-research"]'
+            platform: windows
+          - shard: "2018-2021"
+            runner: ubuntu-24.04
+            platform: linux
+          - shard: "2022-2025-09"
+            runner: ubuntu-24.04-arm
+            platform: arm64
+    runs-on: ${ fromJSON(matrix.runner) }
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - name: Bootstrap Python on Windows
+        if: matrix.platform == 'windows'
+        shell: cmd
+        run: |
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "PY_ROOT=%RUNNER_TEMP%\q104-python-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          set "PY_PKG=%RUNNER_TEMP%\python.3.13.15-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%.nupkg"
+          mkdir "!PY_ROOT!"
+          curl.exe -L --fail --silent --show-error --retry 3 --retry-delay 2 -o "!PY_PKG!" https://api.nuget.org/v3-flatcontainer/python/3.13.15/python.3.13.15.nupkg
+          tar.exe -xf "!PY_PKG!" -C "!PY_ROOT!"
+          echo !PY_ROOT!>>"%GITHUB_PATH%"
+          echo !PY_ROOT!\tools>>"%GITHUB_PATH%"
+          endlocal
+      - name: Setup Python on hosted
+        if: matrix.platform != 'windows'
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Run census hosted
+        if: matrix.platform != 'windows'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "research/runs/q104_i19_13f_census/${ matrix.shard }"
+          python -m automation.q104_i19_13f_historical_identity_census --shard "${ matrix.shard }" --output "research/runs/q104_i19_13f_census/${ matrix.shard }/shard_receipt.json"
+      - name: Run census Windows
+        if: matrix.platform == 'windows'
+        shell: cmd
+        run: |
+          if not exist "research\runs\q104_i19_13f_census\${ matrix.shard }" mkdir "research\runs\q104_i19_13f_census\${ matrix.shard }"
+          python.exe -m automation.q104_i19_13f_historical_identity_census --shard "${ matrix.shard }" --output "research\runs\q104_i19_13f_census\${ matrix.shard }\shard_receipt.json"
+      - name: Upload shard receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q104-i19-13f-census-${ matrix.shard }-${ github.run_id }-${ github.run_attempt }
+          path: research/runs/q104_i19_13f_census/${ matrix.shard }/shard_receipt.json
+          if-no-files-found: error
+          retention-days: 30
+
+  merge:
+    needs: census
+    if: github.repository == 'DWR-debug/trading-agent-public' && needs.census.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 1
+      - uses: actions/download-artifact@v6
+        with:
+          pattern: q104-i19-13f-census-*
+          path: research/runs/q104_i19_13f_census/merged
+          merge-multiple: false
+      - name: Merge and publish receipt
+        env:
+          GH_TOKEN: ${ github.token }
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json
+          from datetime import datetime,timezone
+          from pathlib import Path
+          root=Path("research/runs/q104_i19_13f_census/merged")
+          payloads=[json.loads(p.read_text(encoding="utf-8")) for p in root.rglob("shard_receipt.json")]
+          expected={"2013-2017","2018-2021","2022-2025-09"}
+          shards={p["shard"] for p in payloads}
+          if shards!=expected: raise SystemExit("Q104_I19_MISSING_OR_DUPLICATE_SHARDS")
+          urls=[]; source_hashes=set(); frozen=None; archives=[]; conflicts=set()
+          for p in payloads:
+              source_hashes.add(p["source_page_sha256"])
+              if frozen is None: frozen=p["frozen_cusips"]
+              elif frozen!=p["frozen_cusips"]: raise SystemExit("Q104_I19_FROZEN_CUSIP_MISMATCH")
+              for a in p["archives"]:
+                  u=a["archive"]["url"]
+                  if u in urls: raise SystemExit("Q104_I19_DUPLICATE_ARCHIVE")
+                  urls.append(u); archives.append(a); conflicts.update(a.get("security_identity_conflicts",[]))
+          if len(source_hashes)!=1: raise SystemExit("Q104_I19_SOURCE_PAGE_HASH_MISMATCH")
+          archives.sort(key=lambda x:(x["archive"]["period_start"],x["archive"]["url"]))
+          summary={}
+          for symbol in sorted(frozen):
+              matched=sum(1 for a in archives if a["target_hits"].get(symbol,{}).get("row_count",0)>0)
+              summary[symbol]={"archives_with_match":matched,"archives_without_match":len(archives)-matched}
+          receipt={"schema_version":"1.0","task_id":"Q-2026-10-06-104-I19-13F-HISTORICAL-ID-CENSUS","candidate_id":"Q104:I19",
+                   "status":"13F_HISTORICAL_CUSIP_IDENTITY_CENSUS_COMPLETED_SOURCE_ONLY",
+                   "generated_at_utc":datetime.now(timezone.utc).isoformat(),
+                   "official_source":"https://www.sec.gov/data-research/sec-markets-data/form-13f-data-sets",
+                   "source_page_sha256":next(iter(source_hashes)),"completed_shards":sorted(shards),"archive_count":len(archives),
+                   "frozen_cusips":frozen,"archives":archives,"coverage_summary":summary,"identity_conflicts":sorted(conflicts),
+                   "scientific_boundary":{"performance_authorized":False,"holdout_selection_allowed":False,"ranking_allowed":False,"parameter_search_allowed":False,"threshold_search_allowed":False,"horizon_search_allowed":False,"promotion_allowed":False,"live_execution_allowed":False},
+                   "safety":{"paper_only":True,"live_trading_enabled":False,"orders_enabled":False,"automatic_promotion":False},
+                   "next_gate":"historical security-identity closure + SEC acceptance-time join + concept-specific PIT compiler + independent reproduction"}
+          receipt["receipt_fingerprint"]=hashlib.sha256(json.dumps(receipt,sort_keys=True,separators=(",",":"),ensure_ascii=False).encode()).hexdigest()
+          Path("research/evidence").mkdir(exist_ok=True)
+          Path("research/evidence/q104_i19_13f_historical_identity_census_latest.json").write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+          PY
+          for attempt in 1 2 3 4 5; do
+            current_sha="$(gh api "/repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq '.object.sha')"
+            if python3 automation/github_contents_publish.py --repository "$GITHUB_REPOSITORY" --branch master --base-sha "$current_sha" --file "research/evidence/q104_i19_13f_historical_identity_census_latest.json=research/evidence/q104_i19_13f_historical_identity_census_latest.json"; then exit 0; fi
+            sleep "$attempt"
+          done
+          exit 1
+      - name: Upload merged receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: q104-i19-13f-historical-identity-census-${ github.run_id }-${ github.run_attempt }
+          path: research/evidence/q104_i19_13f_historical_identity_census_latest.json
+          if-no-files-found: error
+          retention-days: 30
