@@ -15,7 +15,10 @@ def test_q219_top4_routes_historical_pit_gate():
     workflow = (ROOT / ".github/workflows/top4-candidate-research-capacity.yml").read_text(encoding="utf-8")
     assert "automation/q219_dolthub_historical_pit_gate.py" in workflow
     assert "research/preregistrations/q219_dolthub_historical_pit_gate_2026_10_06.json" in workflow
-    assert 'q219_dolthub_historical_pit_gate.json' in workflow
+    assert 'automation/q219_dolthub_historical_pit_gate.py' in workflow
+    lane = (ROOT / 'automation/top4_candidate_capacity.py').read_text(encoding='utf-8')
+    assert 'automation/q219_dolthub_historical_pit_gate.py' in lane
+    assert 'q219_dolthub_historical_pit_gate.json' in lane
 
 
 def test_q219_pit_gate_is_non_authorizing():
