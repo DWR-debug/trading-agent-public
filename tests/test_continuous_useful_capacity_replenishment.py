@@ -152,3 +152,12 @@ def test_dashboard_research_note_excludes_platform_load():
     generator = (root / "automation/generate_resource_dashboard.py").read_text(encoding="utf-8")
     assert "CI, Status-Synchronisierung und Pages" in html
     assert '"CI"' in generator and '"Full Suite Verification"' in generator
+
+
+def test_dashboard_shows_research_slot_capacity():
+    root=Path(__file__).parents[1]
+    js=(root/"docs/dashboard/dashboard.js").read_text(encoding="utf-8")
+    html=(root/"docs/dashboard/index.html").read_text(encoding="utf-8")
+    assert "Research-Slots belegt" in js
+    assert "Slot(s) frei" in js
+    assert "CI, Status-Synchronisierung und Pages" in html
