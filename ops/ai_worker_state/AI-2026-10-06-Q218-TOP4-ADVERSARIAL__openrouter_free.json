@@ -33,8 +33,8 @@
   },
   "litellm_transport_enabled": false,
   "task_fingerprint": "0d93716d6d4b736aa803ad74ce919d8d57856360bc03cfdecc14b0a671220ee1",
-  "context_fingerprint": "f3c4838e6451ea7bd8b45f325636683b565eb609556746393ee6c5599b3c5699",
-  "observed_at_utc": "2026-10-06T08:16:56.831493Z",
+  "context_fingerprint": "33915b9e1f23702a277dcea7b4cec34d8dea9c134f91cec0c697b83b12ab7774",
+  "observed_at_utc": "2026-10-06T08:33:31.285165Z",
   "worker_output_is_scientific_evidence": false,
   "safety": {
     "paper_only": true,
@@ -44,16 +44,16 @@
   },
   "status": "SUCCESS",
   "returncode": 0,
-  "duration_seconds": 31.155,
-  "stdout": "## Adversarial Review: Q218 Mandatory-Voluntary Disclosure Semantic Wedge\n\n### Scope note\nThis is a methods-attack on source/PIT structure only. No market outcomes, no ranking, no gate alteration, no performance authorization.\n\n### Findings & smallest deterministic falsifiers\n\n| # | Failure mode | Smallest deterministic falsifier | Exact artifact required |\n|---|---|---|---|\n| 1 | **False earnings-release pairing** — pairing 10-K with any latest Item 2.02/Exhibit 99.1 8-K conflates mandatory earnings disclosure with the \"voluntary\" wedge. | ≥1 paired 8-K whose Exhibit 99.1 text hash is a substring/normalized match of the paired 10-K MD&A or risk-factor text. | `q218_sec_pair_census.issuer_results[symbol].pairing_items[].exhibit_99_1_sha256` vs `latest_10k.item7_sha256` |\n| 2 | **Amendment/withdrawal lineage ignored** — census uses acceptance timestamp but not `isAmended`; a later amendment can retroactively change the \"latest\" filing. | Any paired 10-K or 8-K with `filingMetadata.isAmended=true` and `acceptance_datetime` within trial window. | `data.sec.gov/submissions/CIK{padded}.json` `filings.recent` amendment flags + `filingIndex` HTML |\n| 3 | **Report-date vs event-date ambiguity** — 8-K `eventDate` may predate the prior 10-K, so the paired \"new\" information is not new. | Paired 8-K `eventDate` < preceding 10-K `reportDate`. | 8-K `eventDate` field from SEC filing metadata |\n| 4 | **Voluntary-vs-mandatory classification absent** — the census pairs by form type, not by mandatory/voluntary item class. Item 2.02 earnings releases are mandatory for LAF filers. | >50% of paired 8-Ks are Item 2.02/2.03/2.04 (mandatory-ish) rather than voluntary items (7.01, 9.01). | `filing.recent.items` per 8-K; classification rule doc |\n| 5 | **Issuer identity drift** — static `SEC_CIKS` map ignores name changes, CIK reuse, subsidiary filings. | `entityName` or `sic` change for any symbol in window; or CIK reuse event. | Submissions endpoint `entityName`, `sic`, `formerCIKs` |\n| 6 | **Wedge collapses to length/complexity** — \"voluntary\" channel effect indistinguishable from text-length/complexity confound. | Partial correlation of 8-K word count with outcome controlling for 10-K length exceeds partial r of the wedge variable. | `text_stats.word_count` per filing exhibit text |\n| 7 | **Same-day acceptance leakage** — 10-K and 8-K share acceptance datetime; information wedge is zero but pairing stands. | `acceptance_datetime` equality between paired filings. | `acceptance_datetime` fields |\n\n### Counterarguments to anticipate\n- Defense: \"latest eligible\" rule + interval bracketing already enforces temporal ordering. Rebuttal: temporal ordering ≠ information novelty; amendment and event-date failures remain.\n- Defense: Item 2.02 is \"earnings release\" and therefore voluntary disclosure. Rebuttal: for LAF filers, Item 2.02 is effectively mandatory via SEC rules; the wedge classification must be explicit, not assumed.\n\n### Concrete next actions\n1. Complete the truncated `q218_q221_historical_source_census.py` snippet (line cuts at `in_window = FIXED_START <= filing_date <= FIXE`) and re-run to produce a full `q218_sec_pair_census.json` receipt.\n2. Add `isAmended`, `eventDate`, `acceptance_datetime`, `items` fields to the census output.\n3. Run the 7 falsifier checks above as a deterministic PIT compiler step; any single failure blocks formal readiness.\n4. Document the voluntary-vs-mandatory item-class mapping as a separate frozen artifact before any candidate proceeds.\n\n### Uncertainty\n- The census script provided is truncated; I cannot verify the full pairing logic, interval bracketing, or null-handling from the snippet alone.\n- I cannot confirm whether SEC acceptance timestamps in the submissions endpoint reflect final acceptance or preliminary receipt; this requires an immutable dated snapshot of the endpoint response.\n- No claim is made about the validity of the wedge itself; only that the current source/PIT structure has at least 7 identifiable collapse modes that require explicit falsification before formal readiness.\n\n### Worker-material disclaimer\nThis is adversarial source/PIT review only. It is not scientific evidence, not a backtest, not a performance authorization, and not a promotion recommendation. Independent reproduction by deterministic project tooling is required before any research decision is affected.",
+  "duration_seconds": 110.406,
+  "stdout": "**Q218 Methods Review: Adversarial Source/PIT Fracture Analysis**\n\n### Findings (failure modes in 10-K → 8-K deterministic pairing)\n\n| Failure Mode | Why it breaks the pairing | Smallest deterministic falsifier | Exact artifact required |\n|---|---|---|---|\n| **1. Acceptance-timestamp vs filing-date mismatch** | Pairing rule cites “SEC acceptance timestamp”; census code uses `filingDate` from SEC submissions JSON. `acceptance_datetime` may be absent, null, or differ from `filingDate`. | Two issuers in same window where `acceptance_datetime` is missing/epoch-zero while `",
   "stderr": "",
   "command_binary": "https-openrouter",
   "api_model": "openrouter/free",
-  "response_id": "gen-1791274617-TVeU96aG3FTceIoGmVXf",
+  "response_id": "gen-1791275611-8lqTLk5XDLgmijsxaLmm",
   "usage": {
-    "prompt_tokens": 5764,
-    "completion_tokens": 2554,
-    "total_tokens": 8318,
+    "prompt_tokens": 5584,
+    "completion_tokens": 3200,
+    "total_tokens": 8784,
     "cost": 0,
     "is_byok": false,
     "prompt_tokens_details": {
@@ -68,7 +68,7 @@
       "upstream_inference_completions_cost": 0
     },
     "completion_tokens_details": {
-      "reasoning_tokens": 1382,
+      "reasoning_tokens": 3086,
       "image_tokens": 0,
       "audio_tokens": 0
     }
