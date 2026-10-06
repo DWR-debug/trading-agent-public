@@ -150,14 +150,22 @@ def compile_gate(census: dict, specs: dict, q129_contract: dict | None = None) -
     }
 
     q221 = q.get("Q221", {}).get("usa_rdtne_census", {})
-    q221_ready = all(q221.get(key) is True for key in (
-        "rdtne_marker_found", "competition_marker_found", "transaction_marker_found"
-    ))
+    # Consume the current Q221 census contract directly. Earlier compiler
+    # revisions expected obsolete marker names that the live census never
+    # emitted, creating a false-negative source-readiness result.
+    q221_ready = (
+        q221.get("source_clock_contract_ready") is True
+        and q221.get("transactions_endpoint_documented") is True
+        and q221.get("lookahead_used") is False
+    )
     out["results"]["Q221"] = {
         "status": "USASPENDING_SOURCE_STRUCTURE_READY_FOR_PUBLIC_BOUNDARY_TEST" if q221_ready else "USASPENDING_SOURCE_STRUCTURE_INCOMPLETE",
-        "rdtne_marker_found": bool(q221.get("rdtne_marker_found")),
-        "competition_marker_found": bool(q221.get("competition_marker_found")),
-        "transaction_marker_found": bool(q221.get("transaction_marker_found")),
+        "source_clock_contract_ready": bool(q221.get("source_clock_contract_ready")),
+        "contract_update_within_five_days": bool(q221.get("contract_update_within_five_days")),
+        "publication_following_morning": bool(q221.get("publication_following_morning")),
+        "transactions_endpoint_documented": bool(q221.get("transactions_endpoint_documented")),
+        "dod_90_day_delay_exception_found": bool(q221.get("dod_90_day_delay_exception_found")),
+        "fpds_three_business_days_found": bool(q221.get("fpds_three_business_days_found")),
         "lookahead_used": bool(q221.get("lookahead_used")),
         "next_gate": "HISTORICAL_PUBLIC_OBSERVATION_BOUNDARY_AND_ENTITY_MAPPING" if q221_ready else "REPAIR_USASPENDING_SOURCE_COMPONENT",
     }
