@@ -23,6 +23,11 @@
     h2{margin:0 0 12px;font-size:18px}
     .muted{color:var(--muted)}
     .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .clock-panel{margin-top:14px;display:flex;align-items:baseline;justify-content:space-between;gap:18px;border:2px solid var(--info);border-radius:12px;padding:13px 16px;background:color-mix(in srgb,Canvas 96%,var(--info) 4%)}
+    .clock-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--info)}
+    .clock-time{font-size:30px;font-weight:800;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+    .clock-date{font-size:13px;color:var(--muted);text-align:right}
+    @media(max-width:700px){.clock-panel{display:block}.clock-date{text-align:left;margin-top:4px}}
     button,a.button{border:1px solid var(--border);border-radius:9px;padding:9px 12px;background:ButtonFace;color:ButtonText;text-decoration:none;cursor:pointer}
     .notice{margin-top:16px;border:1px solid var(--border);border-radius:10px;padding:11px 13px}
     .legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:9px;font-size:12px;color:var(--muted)}
@@ -77,6 +82,14 @@
     </div>
   </header>
 
+  <div id="clockPanel" class="clock-panel" aria-live="polite">
+    <div>
+      <div class="clock-title">Aktuelle Uhrzeit · Europe/Berlin</div>
+      <div id="clockTime" class="clock-time">--:--:--</div>
+    </div>
+    <div id="clockDate" class="clock-date">—</div>
+  </div>
+
   <div id="error" hidden class="error"></div>
 
   <div class="notice">
@@ -95,6 +108,7 @@
       <div class="small muted" style="margin-top:10px">
         Grün bei Hosted-Ressourcen bedeutet routierbare Konfiguration; es ist kein Ausführungsreceipt.
         Physische Runner werden nur dann als aktiv markiert, wenn Runner-/Jobdaten das belegen.
+        Die Jobzahl hier umfasst ausschließlich Research-/Kandidatenarbeit; CI, Status-Synchronisierung und Pages sind getrennte Plattformlast.
       </div>
     </article>
 

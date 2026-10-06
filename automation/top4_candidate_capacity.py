@@ -83,6 +83,7 @@ def main()->int:
         "workpack_gate_paths":WORKPACK_GATE_PATHS[args.candidate],
         "source_commit":os.environ.get("GITHUB_SHA"),
         "runner_name":os.environ.get("RUNNER_NAME"),
+        "execution_mode":os.environ.get("TOP4_EXECUTION_MODE","STANDARD_BOUNDED_RESEARCH"),
         "python_version":platform.python_version(),
         "generated_at_utc":datetime.now(timezone.utc).isoformat(),
         "results":results,"failed_steps":failed,

@@ -229,7 +229,7 @@ def infer_lane(workflow: str, job: str = "") -> str:
         "q179", "q180", "q181", "q182", "q183", "q184", "q185", "q186",
         "q187", "q188", "q189", "q190", "q191", "q192", "q193", "q194",
         "q195", "q196", "q197", "q198", "q199", "q201", "q202", "q203",
-        "q204", "q205", "frontier"
+        "q204", "q205", "q218", "q219", "q220", "q221", "frontier"
     )):
         return "FRONTIER DISCOVERY"
     return "PLATFORM / GOVERNANCE"
@@ -269,6 +269,11 @@ def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
         "Current Operational Status Synchronizer",
         "Current Status Drift Guard",
         "Spine Next-Gate Autonomous Router",
+        "Workflow Lint",
+        "CI",
+        "Full Suite Verification",
+        "T052 Exact Master CI Gate",
+        "Unified Research Orchestrator",
     }
     active = [
         x for x in runs
@@ -277,20 +282,24 @@ def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
         and str(x.get("name") or "") not in hidden_non_research
     ]
     active.sort(key=lambda x: str(x.get("created_at", "")), reverse=True)
-    out = []
-    job_budget = 18
+    out: list[dict[str, Any]] = []
+    job_budget = 60
     for run in active:
         workflow = str(run.get("name") or "")
         jobs = jobs_for_run(int(run["id"])) if job_budget and run.get("id") else []
         if jobs:
             job_budget -= 1
-            jobs = [j for j in jobs if j.get("status") in {"queued", "in_progress", "waiting"}] or jobs[:1]
+            jobs = [j for j in jobs if j.get("status") in {"queued", "in_progress", "waiting", "pending"}]
             for job in jobs:
+                job_name = str(job.get("name") or "")
+                lane = infer_lane(workflow, job_name)
+                if lane == "PLATFORM / GOVERNANCE":
+                    continue
                 out.append({
-                    "resource": infer_resource(workflow, str(job.get("name") or ""), job.get("runner_name")),
-                    "lane": infer_lane(workflow, str(job.get("name") or "")),
+                    "resource": infer_resource(workflow, job_name, job.get("runner_name")),
+                    "lane": lane,
                     "worker": job.get("runner_name") or "pending runner assignment",
-                    "job": str(job.get("name") or ""),
+                    "job": job_name,
                     "task": workflow,
                     "status": run.get("status"),
                     "started_at": run.get("run_started_at") or run.get("created_at"),
@@ -300,9 +309,12 @@ def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
                     "authority": "non-authorizing operational work",
                 })
         else:
+            lane = infer_lane(workflow)
+            if lane == "PLATFORM / GOVERNANCE":
+                continue
             out.append({
                 "resource": infer_resource(workflow, "", None),
-                "lane": infer_lane(workflow),
+                "lane": lane,
                 "worker": "pending runner assignment",
                 "job": "",
                 "task": workflow,
@@ -316,7 +328,6 @@ def current_work_from_runs(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
         if len(out) >= 36:
             break
     return out
-
 
 def enrich_work_durations(
     work: list[dict[str, Any]],
@@ -525,15 +536,6 @@ def planned_capacity_plan(
             "preferred": ["Windows self-hosted B", "GitHub-hosted Ubuntu x64"],
             "readiness": "READY_SOURCE_PIT",
             "basis": "current Q218 source/PIT workpack",
-        },
-        {
-            "plan_id": "Q219-PIT",
-            "candidate": "Q219",
-            "lane": "FRONTIER DISCOVERY",
-            "task": "historical options breadth and deterministic post-filing response PIT",
-            "preferred": ["GitHub-hosted Ubuntu x64", "Windows self-hosted B"],
-            "readiness": "READY_SOURCE_PIT",
-            "basis": "Q129 reproduction plus Q219 breadth lead; PIT still must be proven",
         },
         {
             "plan_id": "Q220-PIT",
@@ -821,6 +823,20 @@ def main() -> None:
     ]
     priority_codes = {"Q104:I19","Q218","Q220","Q221"}
     top4 = [x for x in state_board if x.get("code") in priority_codes]
+    q104_parent = next((x for x in state_board if str(x.get("code")) == "104"), None)
+    if q104_parent:
+        nested = q104_parent.get("candidate_contracts")
+        if isinstance(nested, dict):
+            nested_i19 = nested.get("Q104:I19")
+            if isinstance(nested_i19, dict) and not any(str(x.get("code")) == "Q104:I19" for x in top4):
+                top4.insert(0, {
+                    "code": "Q104:I19",
+                    "state": str(q104_parent.get("state") or "not recorded"),
+                    "lane": "FORMAL READINESS",
+                    "issue_number": q104_parent.get("issue_number"),
+                    "next_gate": str(nested_i19.get("next_gate") or "not recorded"),
+                    "performance_authorization_allowed": bool(nested_i19.get("performance_authorization_allowed", False)),
+                })
     planned_capacity = planned_capacity_plan(
         enrich_resources(configured_resources, runners, work),
         work,

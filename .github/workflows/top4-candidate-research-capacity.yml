@@ -49,7 +49,7 @@ jobs:
       fail-fast: false
       max-parallel: 3
       matrix:
-        candidate: ["Q104:I19",Q218,Q220,Q221]
+        candidate: [Q218,Q220,Q221]
     runs-on: [self-hosted, trading-agent-research]
     timeout-minutes: 25
     steps:
@@ -98,14 +98,16 @@ jobs:
 
   hosted_x64:
     concurrency:
-      group: trading-agent-top4-${{ matrix.candidate }}
+      group: trading-agent-research-hosted-ubuntu-24.04
       cancel-in-progress: false
     name: Hosted x64 Top-4 ${{ matrix.candidate }}
     runs-on: ubuntu-24.04
+    env:
+      TOP4_EXECUTION_MODE: INDEPENDENT_ARCH_REPRODUCTION
     strategy:
       fail-fast: false
       matrix:
-        candidate: ["Q104:I19",Q218,Q220,Q221]
+        candidate: [Q221]
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
@@ -129,14 +131,16 @@ jobs:
 
   hosted_arm64:
     concurrency:
-      group: trading-agent-top4-${{ matrix.candidate }}
+      group: trading-agent-research-hosted-ubuntu-24.04-arm
       cancel-in-progress: false
     name: Hosted ARM64 Top-4 independent ${{ matrix.candidate }}
     runs-on: ubuntu-24.04-arm
+    env:
+      TOP4_EXECUTION_MODE: INDEPENDENT_ARCH_REPRODUCTION
     strategy:
       fail-fast: false
       matrix:
-        candidate: [Q218,Q219,Q220,Q221]
+        candidate: [Q220]
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5

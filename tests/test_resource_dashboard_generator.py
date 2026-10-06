@@ -4,6 +4,9 @@ from automation.generate_resource_dashboard import infer_lane, infer_resource
 def test_dashboard_lane_mapping_is_deterministic():
     assert infer_lane("Q121-R6 SEC Acceptance-Time Compilation") == "FORMAL READINESS"
     assert infer_lane("Q205 NLRB Source Feasibility") == "FRONTIER DISCOVERY"
+    assert infer_lane("Top-4 Candidate Research Capacity", "Windows Top-4 Q218") == "FRONTIER DISCOVERY"
+    assert infer_lane("Top-4 Candidate Research Capacity", "Windows Top-4 Q220") == "FRONTIER DISCOVERY"
+    assert infer_lane("Top-4 Candidate Research Capacity", "Windows Top-4 Q221") == "FRONTIER DISCOVERY"
     assert infer_lane("T052 Exact Master CI Gate") == "PLATFORM / GOVERNANCE"
 
 
@@ -57,3 +60,12 @@ def test_dashboard_capacity_state_is_explicit():
     assert capacity_state(physical, {"status":"online","busy":False}, []) == "available"
     assert capacity_state(physical, None, []) == "unknown"
     assert capacity_state(cloud, None, []) == "available"
+
+
+def test_dashboard_filters_platform_work_from_research_capacity():
+    from automation.generate_resource_dashboard import current_work_from_runs
+    runs = [
+        {"id": 1, "name": "Full Suite Verification", "status": "in_progress", "created_at": "2026-10-06T18:00:00Z"},
+        {"id": 2, "name": "CI", "status": "in_progress", "created_at": "2026-10-06T18:01:00Z"},
+    ]
+    assert current_work_from_runs(runs) == []
